@@ -12,7 +12,7 @@
 #----------------------------------------------------------------------------
 # 12/02/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o Updated for 2.5 compatability.
+# o Updated for 2.5 compatibility.
 #
 
 """
@@ -69,16 +69,16 @@ if sys.platform == "win32":
 else:
     _greekEncoding = str(wx.FONTENCODING_ISO8859_7)
 
-_families = {"fixed" : wx.FONTFAMILY_TELETYPE, "default" : wx.FONTFAMILY_DEFAULT, 
+_families = {"fixed" : wx.FONTFAMILY_TELETYPE, "default" : wx.FONTFAMILY_DEFAULT,
              "decorative" : wx.FONTFAMILY_DECORATIVE, "roman" : wx.FONTFAMILY_ROMAN,
-             "script" : wx.FONTFAMILY_SCRIPT, "swiss" : wx.FONTFAMILY_SWISS, 
+             "script" : wx.FONTFAMILY_SCRIPT, "swiss" : wx.FONTFAMILY_SWISS,
              "modern" : wx.FONTFAMILY_MODERN}
 _styles = {"normal" : wx.FONTSTYLE_NORMAL, "slant" : wx.FONTSTYLE_SLANT, "italic" : wx.FONTSTYLE_ITALIC}
 _weights = {"normal" : wx.FONTWEIGHT_NORMAL, "light" : wx.FONTWEIGHT_LIGHT, "bold" : wx.FONTWEIGHT_BOLD}
 
 # The next three classes: Renderer, SizeRenderer and DCRenderer are
 # what you will need to override to extend the XML language. All of
-# the font stuff as well as the subscript and superscript stuff are in 
+# the font stuff as well as the subscript and superscript stuff are in
 # Renderer.
 
 _greek_letters = ("alpha", "beta", "gamma", "delta", "epsilon",  "zeta",
@@ -88,7 +88,7 @@ _greek_letters = ("alpha", "beta", "gamma", "delta", "epsilon",  "zeta",
 
 def iround(number):
     return int(round(number))
-    
+
 def iceil(number):
     return int(math.ceil(number))
 
@@ -121,7 +121,7 @@ class Renderer:
             Renderer.defaultSize = wx.NORMAL_FONT.GetPointSize()
         if Renderer.defaultEncoding is None:
             Renderer.defaultEncoding = wx.Font.GetDefaultEncoding()
-        
+
     def getY(self):
         if self._y is None:
             self.minY = self.maxY = self._y = self.dc.GetTextExtent("M")[1]
@@ -129,7 +129,7 @@ class Renderer:
     def setY(self, value):
         self._y = y
     y = property(getY, setY)
-        
+
     def startElement(self, name, attrs):
         method = "start_" + name
         if not hasattr(self, method):
@@ -144,7 +144,7 @@ class Renderer:
             pass
         else:
             raise ValueError("XML tag '%s' not supported" % methname)
-        
+
     def characterData(self, data):
         self.dc.SetFont(self.getCurrentFont())
         for i, chunk in enumerate(data.split('\n')):
@@ -213,7 +213,7 @@ class Renderer:
 
     def end_sup(self):
         self.fonts.pop()
-        self.offsets.pop()        
+        self.offsets.pop()
 
     def getCurrentFont(self):
         font = self.fonts[-1]
@@ -227,10 +227,10 @@ class Renderer:
     def getCurrentColor(self):
         font = self.fonts[-1]
         return wx.TheColourDatabase.FindColour(font.get("color", self.defaultColor))
-        
+
     def getCurrentPen(self):
         return wx.Pen(self.getCurrentColor(), 1, wx.PENSTYLE_SOLID)
-        
+
     def renderCharacterData(self, data, x, y):
         raise NotImplementedError()
 
@@ -262,19 +262,19 @@ def _addGreek():
             self.end_font()
         setattr(Renderer, "start_%s" % name.capitalize(), start)
         setattr(Renderer, "end_%s" % name.capitalize(), end)
-_addGreek()    
+_addGreek()
 
 
 
 class SizeRenderer(Renderer):
     """Processes text as if rendering it, but just computes the size."""
-    
+
     def __init__(self, dc=None):
         Renderer.__init__(self, dc, 0, 0)
-    
+
     def renderCharacterData(self, data, x, y):
         pass
-        
+
     def start_angle(self, attrs):
         self.characterData("M")
 
@@ -291,9 +291,9 @@ class SizeRenderer(Renderer):
         self.characterData("M")
 
     def start_times(self, attrs):
-        self.characterData("M")        
+        self.characterData("M")
 
-    
+
 class DCRenderer(Renderer):
     """Renders text to a wxPython device context DC."""
 
@@ -309,7 +309,7 @@ class DCRenderer(Renderer):
         self.dc.DrawLine(iround(self.x), iround(y), iround( self.x+width), iround(y))
         self.dc.DrawLine(iround(self.x), iround(y), iround(self.x+width), iround(y-width))
         self.updateDims(width, height, descent, leading)
-      
+
 
     def start_infinity(self, attrs):
         self.dc.SetFont(self.getCurrentFont())
@@ -352,7 +352,7 @@ def RenderToRenderer(str, renderer, enclose=True):
         p.CharacterDataHandler = renderer.characterData
         p.Parse(str, 1)
     except xml.parsers.expat.error as err:
-        raise ValueError('error parsing text text "%s": %s' % (str, err)) 
+        raise ValueError('error parsing text text "%s": %s' % (str, err))
 
 
 # Public interface
@@ -383,7 +383,7 @@ def RenderToBitmap(str, background=None, enclose=1):
     if background is None:
         dc.SetBackground(wx.WHITE_BRUSH)
     else:
-        dc.SetBackground(background) 
+        dc.SetBackground(background)
     dc.Clear()
     renderer = DCRenderer(dc, y=dy)
     RenderToRenderer(str, renderer, enclose)
@@ -401,8 +401,8 @@ def RenderToDC(str, dc, x, y, enclose=1):
     width, height, dy = GetFullExtent(str, dc)
     renderer = DCRenderer(dc, x, y+dy)
     RenderToRenderer(str, renderer, enclose)
-    
-    
+
+
 class StaticFancyText(wx.StaticBitmap):
     def __init__(self, window, id, text, *args, **kargs):
         args = list(args)
@@ -413,7 +413,7 @@ class StaticFancyText(wx.StaticBitmap):
             background = args.pop(0)
         else:
             background = wx.Brush(window.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID)
-        
+
         bmp = RenderToBitmap(text, background)
         wx.StaticBitmap.__init__(self, window, id, bmp, *args, **kargs)
 
@@ -438,14 +438,14 @@ This module exports four main methods::
     def RenderToDC(str, dc, x, y, enclose=True)
 </font>
 In all cases, 'str' is an XML string. Note that start and end tags
-are only required if *enclose* is set to False. In this case the 
+are only required if *enclose* is set to False. In this case the
 text should be wrapped in FancyText tags.
 
 In addition, the module exports one class::
 <font family="fixed" style="slant">
     class StaticFancyText(self, window, id, text, background, ...)
 </font>
-This class works similar to StaticText except it interprets its text 
+This class works similar to StaticText except it interprets its text
 as FancyText.
 
 The text can support<sup>superscripts</sup> and <sub>subscripts</sub>, text
@@ -478,7 +478,7 @@ The End"""
     frame.Show()
     app.MainLoop()
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
     test()
 
 

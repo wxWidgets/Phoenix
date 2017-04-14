@@ -44,7 +44,7 @@ File naming conventions:
 
 
 Installing Wheels
-------------------
+-----------------
 
 The *.whl binaries in this directory are provided using Python's "wheel"
 format, which is an archive format with some extra meta-data that can
@@ -73,6 +73,30 @@ number to the command, like this:
     pip install -U --pre \
         -f https://wxpython.org/Phoenix/snapshot-builds/ \
         wxPython_Phoenix==3.0.3.dev1641+76cf834
+
+There are also snapshot builds available for a few of the common Linux
+distributions, located under the following folder:
+
+    https://wxpython.org/Phoenix/snapshot-builds/linux/
+
+
+Wheels for Linux
+----------------
+
+Since there are various options for distro and wx port (GTK2 or GTK3) then the
+files can not all be located in the same folder like we can do for the Windows
+and OSX builds.  This just simply means that you'll need to drill down a
+little further to find the URL to give to pip.  For example, to get the GTK3
+Phoenix builds for Ubuntu 16.04 (and 16.10, LinuxMint 18, and probably others)
+you can use a pip command like this:
+
+    pip install -U --pre \
+        -f https://wxpython.org/Phoenix/snapshot-builds/linux/gtk3/ubuntu-16.04 \
+        wxPython_Phoenix
+
+
+Getting Pip
+-----------
 
 If you don't already have pip then you can install it with commands
 like this:

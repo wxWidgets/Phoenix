@@ -10,7 +10,7 @@ class webview_Tests(wtc.WidgetTestCase):
     def test_webview1(self):
         wv = webview.WebView.New()
         wv.Create(self.frame)
-    
+
     def test_webview2(self):
         wv = webview.WebView.New(self.frame)
 
@@ -24,8 +24,8 @@ class webview_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(h, list))
         if len(h):
             self.assertTrue(isinstance(h[0], webview.WebViewHistoryItem))
-    
-    
+
+
     def test_webview5(self):
         webview.WEBVIEW_ZOOM_TINY
         webview.WEBVIEW_ZOOM_SMALL
@@ -54,7 +54,7 @@ class webview_Tests(wtc.WidgetTestCase):
         webview.WebViewBackendDefault
         webview.WebViewBackendIE
         webview.WebViewBackendWebKit
-        
+
 
     def test_webview6(self):
         webview.wxEVT_COMMAND_WEBVIEW_NAVIGATING
@@ -63,15 +63,15 @@ class webview_Tests(wtc.WidgetTestCase):
         webview.wxEVT_COMMAND_WEBVIEW_ERROR
         webview.wxEVT_COMMAND_WEBVIEW_NEWWINDOW
         webview.wxEVT_COMMAND_WEBVIEW_TITLE_CHANGED
-        
+
         webview.EVT_WEBVIEW_NAVIGATING
         webview.EVT_WEBVIEW_NAVIGATED
         webview.EVT_WEBVIEW_LOADED
         webview.EVT_WEBVIEW_ERROR
         webview.EVT_WEBVIEW_NEWWINDOW
         webview.EVT_WEBVIEW_TITLE_CHANGED
-        
-        
+
+
 
 #---------------------------------------------------------------------------
 

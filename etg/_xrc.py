@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     28-Nov-2012
-# Copyright:   (c) 2012-2016 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools import ClassDef, MethodDef, ParamDef
 
-PACKAGE   = "wx" 
+PACKAGE   = "wx"
 MODULE    = "_xrc"
 NAME      = "_xrc"   # Base name of the file to generate to for this script
 DOCSTRING = """\
@@ -19,11 +19,11 @@ The classes in this module enable loading widgets and layout from XML.
 """
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxXmlResource',
            'wxXmlResourceHandler',
-           ]    
-    
+           ]
+
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
@@ -40,7 +40,7 @@ OTHERDEPS = [  ]
 
 
 #---------------------------------------------------------------------------
- 
+
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
@@ -50,10 +50,10 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
-    module.addImport('_xml')    
+    module.addImport('_xml')
     module.addPyCode('''\
     import wx
     ID_NONE = wx.ID_NONE  # Needed for some parameter defaults in this module
@@ -73,9 +73,9 @@ def run():
         // forward declarations
         class wxAnimation;
         """))
-    
-    #-----------------------------------------------------------------   
-    
+
+    #-----------------------------------------------------------------
+
     c = module.find('wxXmlResource')
     assert isinstance(c, etgtools.ClassDef)
     c.piBases = ['wx.Object']
@@ -88,19 +88,19 @@ def run():
         Py_BEGIN_ALLOW_THREADS
         sipCpp = new sipwxXmlResource({args});
         sipCpp->InitAllHandlers();
-        Py_END_ALLOW_THREADS 
+        Py_END_ALLOW_THREADS
         """
         if 'filemask' in ctor.argsString:
             args = '*filemask,flags,*domain'
         else:
             args = 'flags,*domain'
         ctor.setCppCode_sip(template.format(args=args))
-        
+
 
     c.addPublic()
-    c.addCppMethod('bool', 'LoadFromString', '(wxPyBuffer* data)',
-        doc="Load the resource from a string or other data buffer compatible object.",
-        #protection='public', 
+    c.addCppMethod('bool', 'LoadFromBuffer', '(wxPyBuffer* data)',
+        doc="Load the resource from a bytes string or other data buffer compatible object.",
+        #protection='public',
         body="""\
             static int s_memFileIdx = 0;
 
@@ -125,31 +125,32 @@ def run():
             bool retval = self->Load(wxT("memory:") + filename );
             return retval;
             """)
-    
+    c.addPyCode("XmlResource.LoadFromString = wx.deprecated(XmlResource.LoadFromBuffer, 'Use LoadFromBuffer instead')")
+
     c.find('AddHandler.handler').transfer = True
     c.find('InsertHandler.handler').transfer = True
     c.find('Set.res').transfer = True
     c.find('Set').transferBack = True
     c.find('AddSubclassFactory.factory').transfer = True
-    
-    
-    #-----------------------------------------------------------------    
+
+
+    #-----------------------------------------------------------------
     c = module.find('wxXmlResourceHandler')
 
     # un-ignore all the protected methods
     for item in c.allItems():
         if isinstance(item, etgtools.MethodDef):
             item.ignore(False)
-   
+
     c.find('DoCreateResource').factory = True
-    
+
 
     #-----------------------------------------------------------------
     module.addPyFunction('EmptyXmlResource', '(flags=XRC_USE_LOCALE, domain="")',
         deprecated="Use :class:`xrc.XmlResource` instead",
         doc='A compatibility wrapper for the XmlResource(flags, domain) constructor',
         body='return XmlResource(flags, domain)')
-    
+
     module.addPyFunction('XRCID', '(str_id, value_if_not_found=wx.ID_NONE)',
         doc='Returns a numeric ID that is equivalent to the string ID used in an XML resource.',
         body='return XmlResource.GetXRCID(str_id, value_if_not_found)')
@@ -160,24 +161,24 @@ def run():
 
 
 
-    cls = ClassDef(name='wxXmlSubclassFactory', 
+    cls = ClassDef(name='wxXmlSubclassFactory',
         briefDoc="",
         items=[
             MethodDef(name='wxXmlSubclassFactory', isCtor=True),
             MethodDef(name='~wxXmlSubclassFactory', isDtor=True),
-            MethodDef(name='Create', type='wxObject*', 
+            MethodDef(name='Create', type='wxObject*',
                 isVirtual=True, isPureVirtual=True,
                 items=[ParamDef(type='const wxString&', name='className')])
             ])
     module.addItem(cls)
-    
-    
+
+
 
     module.addPyCode("""\
-        # Create a factory for handling the subclass property of XRC's 
-        # object tag.  This factory will search for the specified 
-        # package.module.class and will try to instantiate it for XRC's 
-        # use.  The class must support instantiation with no parameters and 
+        # Create a factory for handling the subclass property of XRC's
+        # object tag.  This factory will search for the specified
+        # package.module.class and will try to instantiate it for XRC's
+        # use.  The class must support instantiation with no parameters and
         # delayed creation of the UI widget (aka 2-phase create).
 
         def _my_import(name):
@@ -191,11 +192,11 @@ def run():
             for comp in components[1:]:
                 mod = getattr(mod, comp)
             return mod
-        
+
         class XmlSubclassFactory_Python(XmlSubclassFactory):
             def __init__(self):
                 XmlSubclassFactory.__init__(self)
-        
+
             def Create(self, className):
                 assert className.find('.') != -1, "Module name must be specified!"
                 mname = className[:className.rfind('.')]
@@ -203,17 +204,17 @@ def run():
                 module = _my_import(mname)
                 klass = getattr(module, cname)
                 inst = klass()
-                return inst        
-        
+                return inst
+
         XmlResource.AddSubclassFactory(XmlSubclassFactory_Python())
         """)
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
 
-    
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

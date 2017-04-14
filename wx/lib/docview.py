@@ -79,7 +79,7 @@ class Document(wx.EvtHandler):
     The document class can be used to model an application's file-based data. It
     is part of the document/view framework supported by wxWindows, and cooperates
     with the :class:`View`, :class:`DocTemplate` and :class:`DocManager` classes.
-    
+
     Note this wxPython version also keeps track of the modification date of the
     document and if it changes on disk outside of the application, we will warn the
     user before saving to avoid clobbering the file.
@@ -169,14 +169,14 @@ class Document(wx.EvtHandler):
 
     def GetDocumentSaved(self):
         """
-        Returns True if the document has been saved. 
+        Returns True if the document has been saved.
         """
         return self._savedYet
 
 
     def SetDocumentSaved(self, saved=True):
         """
-        Sets whether the document has been saved. 
+        Sets whether the document has been saved.
         """
         self._savedYet = saved
 
@@ -232,7 +232,7 @@ class Document(wx.EvtHandler):
     def GetDocumentModificationDate(self):
         """
         Returns the file's modification date when it was loaded from disk.
-        This is used to check if the file has been modified outside of the application.        
+        This is used to check if the file has been modified outside of the application.
         """
         return self._documentModificationDate
 
@@ -383,14 +383,14 @@ class Document(wx.EvtHandler):
                                 msgTitle,
                                 wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION,
                                 self.GetDocumentWindow())
-    
+
             if res == wx.NO:
                 return True
             elif res == wx.YES:
                 pass
             else: # elif res == wx.CANCEL:
                 return False
-        
+
         if not self._documentFile or not self._savedYet:
             return self.SaveAs()
         return self.OnSaveDocument(self._documentFile)
@@ -430,7 +430,7 @@ class Document(wx.EvtHandler):
 
         if docTemplate.FileMatchesTemplate(filename):
             self.GetDocumentManager().AddFileToHistory(filename)
-            
+
         return True
 
 
@@ -475,7 +475,7 @@ class Document(wx.EvtHandler):
             self.SaveObject(fileObject)
             fileObject.close()
             fileObject = None
-            
+
             if backupFilename:
                 os.remove(backupFilename)
         except:
@@ -484,7 +484,7 @@ class Document(wx.EvtHandler):
             traceback.print_exc()
 
             if fileObject:
-                fileObject.close()  # file is still open, close it, need to do this before removal 
+                fileObject.close()  # file is still open, close it, need to do this before removal
 
             # save failed, remove copied file
             if backupFilename and copied:
@@ -532,7 +532,7 @@ class Document(wx.EvtHandler):
             traceback.print_exc()
 
             if fileObject:
-                fileObject.close()  # file is still open, close it 
+                fileObject.close()  # file is still open, close it
 
             wx.MessageBox("Could not open '%s'.  %s" % (FileNameFromPath(filename), sys.exc_value),
                           msgTitle,
@@ -633,7 +633,7 @@ class Document(wx.EvtHandler):
                                 msgTitle,
                                 wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION,
                                 self.GetDocumentWindow())
-    
+
             if res == wx.NO:
                 self.Modify(False)
                 return True
@@ -747,7 +747,7 @@ class Document(wx.EvtHandler):
         Returns true if the document can be written to its accociated file path.
         """
         if not self._writeable:
-            return False 
+            return False
         if not self._documentFile:  # Doesn't exist, do a save as
             return True
         else:
@@ -805,7 +805,7 @@ class View(wx.EvtHandler):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  
+        suitable event handler function(s).
         """
         return False
 
@@ -857,7 +857,7 @@ class View(wx.EvtHandler):
                     frame.OnTitleIsModified()
                     return True
         return False
-        
+
 
     def OnChangeFilename(self):
         """
@@ -1172,14 +1172,14 @@ class DocTemplate(wx.Object):
     def GetIcon(self):
         """
         Returns the icon, as passed to the document template
-        constructor.  
+        constructor.
         """
         return self._icon
 
 
     def SetIcon(self, flags):
         """
-        Sets the icon.  
+        Sets the icon.
         """
         self._icon = icon
 
@@ -1214,7 +1214,7 @@ class DocTemplate(wx.Object):
         false otherwise.
         """
         return (self._flags & TEMPLATE_NO_CREATE) != TEMPLATE_NO_CREATE
-        
+
 
     def GetDocumentName(self):
         """
@@ -1273,7 +1273,7 @@ class DocTemplate(wx.Object):
         """
         ext = FindExtension(path)
         if not ext: return False
-        
+
         extList = self.GetFileFilter().replace('*','').split(';')
         return ext in extList
 
@@ -1352,7 +1352,7 @@ class DocManager(wx.EvtHandler):
 
     def GetFlags(self):
         """
-        Returns the document manager's flags.  
+        Returns the document manager's flags.
         """
         return self._flags
 
@@ -1434,7 +1434,7 @@ class DocManager(wx.EvtHandler):
         """
         return self.CloseDocuments(force = False)
 
-    
+
     def OnFileNew(self, event):
         """
         Creates a new document and reads in the selected file.
@@ -1497,7 +1497,7 @@ class DocManager(wx.EvtHandler):
                 self.printData = wx.PrintData()
                 self.printData.SetPaperId(wx.PAPER_LETTER)
             self.printData.SetPrintMode(wx.PRINT_MODE_PRINTER)
-                
+
             pdd = wx.PrintDialogData(self.printData)
             printer = wx.Printer(pdd)
             printer.Print(view.GetFrame(), printout)
@@ -1516,17 +1516,17 @@ class DocManager(wx.EvtHandler):
         if not hasattr(self, "printData"):
             self.printData = wx.PrintData()
             self.printData.SetPaperId(wx.PAPER_LETTER)
-            
+
         data = wx.PrintDialogData(self.printData)
         printDialog = wx.PrintDialog(parentWin, data)
         printDialog.GetPrintDialogData().SetSetupDialog(True)
         printDialog.ShowModal()
-        
+
         # this makes a copy of the wx.PrintData instead of just saving
         # a reference to the one inside the PrintDialogData that will
         # be destroyed when the dialog is destroyed
         self.printData = wx.PrintData(printDialog.GetPrintDialogData().GetPrintData())
-        
+
         printDialog.Destroy()
 
 
@@ -1545,7 +1545,7 @@ class DocManager(wx.EvtHandler):
                 self.printData = wx.PrintData()
                 self.printData.SetPaperId(wx.PAPER_LETTER)
             self.printData.SetPrintMode(wx.PRINT_MODE_PREVIEW)
-                
+
             data = wx.PrintDialogData(self.printData)
             # Pass two printout objects: for preview, and possible printing.
             preview = wx.PrintPreview(printout, view.OnCreatePrintout(), data)
@@ -1756,7 +1756,7 @@ class DocManager(wx.EvtHandler):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  
+        suitable event handler function(s).
         """
         id = event.GetId()
         view = self.GetCurrentView()
@@ -1827,7 +1827,7 @@ class DocManager(wx.EvtHandler):
         wxPython version supports the document manager's
         ``wx.lib.docview.DOC_OPEN_ONCE`` and ``wx.lib.docview.DOC_NO_VIEW``
         flag.
-        
+
         if ``wx.lib.docview.DOC_OPEN_ONCE`` is present, trying to open the
         same file multiple times will just return the same document. if
         ``wx.lib.docview.DOC_NO_VIEW`` is present, opening a file will
@@ -1895,7 +1895,7 @@ class DocManager(wx.EvtHandler):
                         document.GetDocumentTemplate().CreateView(document, flags)
                         document.UpdateAllViews()
                         firstView = document.GetFirstView()
-                        
+
                     if firstView and firstView.GetFrame() and not (flags & DOC_NO_VIEW):
                         firstView.GetFrame().SetFocus()  # Not in wxWindows code but useful nonetheless
                         if hasattr(firstView.GetFrame(), "IsIconized") and firstView.GetFrame().IsIconized():  # Not in wxWindows code but useful nonetheless
@@ -2110,7 +2110,7 @@ class DocManager(wx.EvtHandler):
         Given a path, try to find template that matches the extension. This is
         only an approximate method of finding a template for creating a
         document.
-        
+
         Note this wxPython verson looks for and returns a default template
         if no specific template is found.
         """
@@ -2118,7 +2118,7 @@ class DocManager(wx.EvtHandler):
         for temp in self._templates:
             if temp.FileMatchesTemplate(path):
                 return temp
-                
+
             if "*.*" in temp.GetFileFilter():
                 default = temp
         return default
@@ -2171,12 +2171,12 @@ class DocManager(wx.EvtHandler):
         else:
             path = None
         dlg.Destroy()
-            
-        if path:  
+
+        if path:
             theTemplate = self.FindTemplateForPath(path)
             return (theTemplate, path)
-        
-        return (None, None)           
+
+        return (None, None)
 
 
     def OnOpenFileFailure(self):
@@ -2400,7 +2400,7 @@ class DocParentFrame(wx.Frame):
     def ProcessEvent(self, event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  
+        suitable event handler function(s).
         """
         return self._docManager and self._docManager.ProcessEvent(event)
 
@@ -2408,7 +2408,7 @@ class DocParentFrame(wx.Frame):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  
+        suitable event handler function(s).
         """
         return self._docManager and self._docManager.ProcessUpdateUIEvent(event)
 
@@ -2465,7 +2465,7 @@ class DocChildFrame(wx.Frame):
 
     def __init__(self, doc, view, frame, id, title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE, name="frame"):
         """
-        Constructor.  
+        Constructor.
         """
         wx.Frame.__init__(self, frame, id, title, pos, size, style, name)
         wx.EVT_ACTIVATE(self, self.OnActivate)
@@ -2505,7 +2505,7 @@ class DocChildFrame(wx.Frame):
     def ProcessEvent(self, event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  
+        suitable event handler function(s).
         """
         if self._childView:
             self._childView.Activate(True)
@@ -2523,7 +2523,7 @@ class DocChildFrame(wx.Frame):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  
+        suitable event handler function(s).
         """
         if self.GetParent():
             self.GetParent().ProcessUpdateUIEvent(event)
@@ -2538,7 +2538,7 @@ class DocChildFrame(wx.Frame):
         event.Skip()
         if self._childView:
             self._childView.Activate(event.GetActive())
-        
+
 
     def OnCloseWindow(self, event):
         """
@@ -2606,7 +2606,7 @@ class DocMDIParentFrame(wx.MDIParentFrame):
 
     def __init__(self, manager, frame, id, title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE, name="frame"):
         """
-        Constructor.  
+        Constructor.
         """
         wx.MDIParentFrame.__init__(self, frame, id, title, pos, size, style, name)
         self._docManager = manager
@@ -2646,7 +2646,7 @@ class DocMDIParentFrame(wx.MDIParentFrame):
     def ProcessEvent(self, event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  
+        suitable event handler function(s).
         """
         return self._docManager and self._docManager.ProcessEvent(event)
 
@@ -2654,7 +2654,7 @@ class DocMDIParentFrame(wx.MDIParentFrame):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  
+        suitable event handler function(s).
         """
         return self._docManager and self._docManager.ProcessUpdateUIEvent(event)
 
@@ -2754,7 +2754,7 @@ class DocMDIChildFrame(wx.MDIChildFrame):
     def ProcessEvent(event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  
+        suitable event handler function(s).
         """
         if self._activeEvent == event:
             return False
@@ -2863,7 +2863,7 @@ class DocMDIChildFrame(wx.MDIChildFrame):
             else:
                 if title.endswith("*"):
                     title = title[:-1]
-                    self.SetTitle(title)                
+                    self.SetTitle(title)
                 else:
                     return
 

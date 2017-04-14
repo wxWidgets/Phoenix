@@ -41,7 +41,7 @@ non-critical information to the user.
     The Python implementation of :class:`InfoBar` is a direct translation of the generic C++
     implementation of :class:`InfoBar`.
 
- 
+
 This class provides another way to show messages to the user, intermediate between message
 boxes and status bar messages. The message boxes are modal and thus interrupt the users work
 flow and should be used sparingly for this reason. However status bar messages are often
@@ -53,7 +53,7 @@ user to react to the information presented. It always has a close button at the 
 the user to dismiss it so it isn't necessary to provide a button just to close it.
 
 :class:`InfoBar` calls its parent `Layout()` method (if its parent is **not** managed by :class:`~aui.framemanager`
-or :class:`~lib.agw.aui.framemanager.AuiManager`) and assumes that it will change the parent layout appropriately depending
+or :class:`~wx.lib.agw.aui.framemanager.AuiManager`) and assumes that it will change the parent layout appropriately depending
 on whether the info bar itself is shown or hidden. Usually this is achieved by simply using a
 sizer for the parent window layout and adding wxInfoBar to this sizer as one of the items.
 Considering the usual placement of the info bars, normally this sizer should be a vertical
@@ -70,7 +70,7 @@ For example::
 
     info = InfoBar(parent)
     bitmap = wx.Bitmap('nice_bitmap.png', wx.BITMAP_TYPE_PNG)
-    
+
     info.AddButton(wx.NewId(), 'New Button', bitmap)
 
 
@@ -96,12 +96,12 @@ The simplest possible example of using this class would be::
 
             panel = wx.Panel(self)
             sizer.Add(panel, 1, wx.EXPAND)
-            
+
             # ... Add other frame controls to the sizer ...
             self.SetSizer(sizer)
 
             wx.CallLater(2000, self.SomeMethod)
-            
+
 
         def SomeMethod(self):
 
@@ -170,7 +170,7 @@ try:
     import wx.aui
 except ImportError:
     CPP_AUI = False
-    
+
 from .aui import framemanager as framemanager
 
 # These are for the AutoWrapStaticText class
@@ -222,7 +222,7 @@ def GetCloseButtonBitmap(win, size, colBg, flags=0):
     dc.SelectObject(bmp)
     dc.SetBackground(wx.Brush(colBg))
     dc.Clear()
-    
+
     wx.RendererNative.Get().DrawTitleBarBitmap(win, dc, wx.Rect(size), wx.TITLEBAR_BUTTON_CLOSE, flags)
     dc.SelectObject(wx.NullBitmap)
 
@@ -287,7 +287,7 @@ class AutoWrapStaticText(StaticText):
 
         if width < 0:
             return
-        
+
         self.Freeze()
 
         dc = wx.ClientDC(self)
@@ -310,7 +310,7 @@ class AutoWrapStaticText(StaticText):
         :param string `label`: the new :class:`AutoWrapStaticText` text label;
         :param bool `wrapped`: ``True`` if this method was called by the developer using :meth:`~AutoWrapStaticText.SetLabel`,
          ``False`` if it comes from the :meth:`~AutoWrapStaticText.OnSize` event handler.
-         
+
         :note: Reimplemented from :class:`wx.Control`.
         """
 
@@ -362,7 +362,7 @@ class InfoBar(wx.Control):
         colBg = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK)
         self.SetBackgroundColour(colBg)
         self.SetOwnForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOTEXT))
-        
+
         # create the controls: icon,text and the button to dismiss the
         # message.
 
@@ -377,13 +377,13 @@ class InfoBar(wx.Control):
             # sizeBmp = wx.ArtProvider.GetSizeHint(wx.ART_BUTTON)
             sizeBmp = (16, 16)
             bmp = GetCloseButtonBitmap(self, sizeBmp, colBg)
-        
+
         self._button = wx.BitmapButton(self, wx.ID_ANY, bmp, style=wx.BORDER_NONE)
 
         if wx.Platform != '__WXGTK__':
             self._button.SetBitmapPressed(GetCloseButtonBitmap(self, sizeBmp, colBg, wx.CONTROL_PRESSED))
             self._button.SetBitmapCurrent(GetCloseButtonBitmap(self, sizeBmp, colBg, wx.CONTROL_CURRENT))
-            
+
         self._button.SetBackgroundColour(colBg)
         self._button.SetToolTip(_("Hide this notification message."))
 
@@ -399,9 +399,9 @@ class InfoBar(wx.Control):
         sizer.Add(self._button, wx.SizerFlags().Centre().Border())
         self.SetSizer(sizer)
 
-        self.Bind(wx.EVT_BUTTON, self.OnButton)        
-            
-    
+        self.Bind(wx.EVT_BUTTON, self.OnButton)
+
+
     def Init(self):
         """ Common initialization code. """
 
@@ -410,11 +410,11 @@ class InfoBar(wx.Control):
         self._button = None
         self._showEffect = wx.SHOW_EFFECT_MAX
         self._hideEffect = wx.SHOW_EFFECT_MAX
-        
+
         # use default effect duration
         self._effectDuration = 0
 
-        
+
     def SetFont(self, font):
         """
         Overridden base class methods changes the font of the text message.
@@ -423,17 +423,17 @@ class InfoBar(wx.Control):
         message part. By default a larger and bold version of the standard font is used.
 
         :param `font`: a valid instance of :class:`wx.Font`.
-        
+
         :note: Reimplemented from :class:`wx.Window`.
         """
-        
+
         if not wx.Control.SetFont(self, font):
             return False
-        
+
         # check that we're not called before Create()
         if self._text:
             self._text.SetFont(font)
-            
+
         return True
 
 
@@ -451,14 +451,14 @@ class InfoBar(wx.Control):
          ``BarPlacement_Top``               0x1 :class:`InfoBar` is placed at the top of its parent.
          ``BarPlacement_Bottom``            0x2 :class:`InfoBar` is placed at the bottom of its parent.
          ========================== =========== ==================================================
-        
+
         """
-        
+
         sizer = self.GetContainingSizer()
 
         if not sizer:
             return BarPlacement_Unknown
-        
+
         siblings = sizer.GetChildren()
         lSib = len(siblings) - 1
 
@@ -480,12 +480,12 @@ class InfoBar(wx.Control):
          `ShowEffect` Flag                  Hex Value   Description
          ================================== =========== ==================================================
          ``wx.SHOW_EFFECT_NONE``                    0x0 No effect, equivalent to normal `Show()` or `Hide()` call.
-         ``wx.SHOW_EFFECT_SLIDE_TO_TOP``            0x7 Slide the :class:`InfoBar` window to the top. 
-         ``wx.SHOW_EFFECT_SLIDE_TO_BOTTOM``         0x8 Slide the :class:`InfoBar` window to the bottom. 
+         ``wx.SHOW_EFFECT_SLIDE_TO_TOP``            0x7 Slide the :class:`InfoBar` window to the top.
+         ``wx.SHOW_EFFECT_SLIDE_TO_BOTTOM``         0x8 Slide the :class:`InfoBar` window to the bottom.
          ================================== =========== ==================================================
-        
+
         """
-        
+
         if self._showEffect != wx.SHOW_EFFECT_MAX:
             return self._showEffect
 
@@ -514,12 +514,12 @@ class InfoBar(wx.Control):
          `ShowEffect` Flag                  Hex Value   Description
          ================================== =========== ==================================================
          ``wx.SHOW_EFFECT_NONE``                    0x0 No effect, equivalent to normal `Show()` or `Hide()` call.
-         ``wx.SHOW_EFFECT_SLIDE_TO_TOP``            0x7 Slide the :class:`InfoBar` window to the top. 
-         ``wx.SHOW_EFFECT_SLIDE_TO_BOTTOM``         0x8 Slide the :class:`InfoBar` window to the bottom. 
+         ``wx.SHOW_EFFECT_SLIDE_TO_TOP``            0x7 Slide the :class:`InfoBar` window to the top.
+         ``wx.SHOW_EFFECT_SLIDE_TO_BOTTOM``         0x8 Slide the :class:`InfoBar` window to the bottom.
          ================================== =========== ==================================================
-        
+
         """
-        
+
         if self._hideEffect != wx.SHOW_EFFECT_MAX:
             return self._hideEffect
 
@@ -542,18 +542,18 @@ class InfoBar(wx.Control):
         """ Returns the default border style for :class:`InfoBar`. """
 
         return wx.BORDER_NONE
-    
-        
+
+
     def UpdateParent(self):
         """
         Updates the parent layout appearance, but only if this :class:`InfoBar` parent is **not** managed
-        by :class:`framemanager` or :class:`~lib.agw.aui.framemanager.AuiManager`.
+        by :class:`framemanager` or :class:`~wx.lib.agw.aui.framemanager.AuiManager`.
         """
-        
+
         parent = self.GetParent()
         parent.Layout()
         parent.Refresh()
-        
+
 
     def DoHide(self):
         """ Hides this :class:`InfoBar` with whatever hiding effect has been chosen. """
@@ -565,7 +565,7 @@ class InfoBar(wx.Control):
             managers = (framemanager.AuiManager, wx.aui.AuiManager)
         else:
             managers = (framemanager.AuiManager, )
-        
+
         if not isinstance(handler, managers):
             self.UpdateParent()
         else:
@@ -582,21 +582,21 @@ class InfoBar(wx.Control):
         # internal visibility flag to force Layout() to take us into account(an
         # alternative solution to this hack would be to temporarily set
         # wx.RESERVE_SPACE_EVEN_IF_HIDDEN flag but it's not really better)
-        
+
         # just change the internal flag indicating that the window is visible,
         # without really showing it
         self.GetParent().Freeze()
-        
+
         wx.Control.Show(self)
-        
+
         # adjust the parent layout to account for us
         self.UpdateParent()
-        
+
         # reset the flag back before really showing the window or it wouldn't be
         # shown at all because it would believe itself already visible
         wx.Control.Show(self, False)
         self.GetParent().Thaw()
-        
+
         # finally do really show the window.
         self.ShowWithEffect(self.GetShowEffect(), self.GetEffectDuration())
 
@@ -628,27 +628,27 @@ class InfoBar(wx.Control):
           by the native versions. For example, the GTK+ native implementation doesn't show icons at all but
           uses this parameter to select the appropriate background colour for the notification.
         """
-        
+
         # first update the controls
         icon = flags & wx.ICON_MASK
         iconSize = 0
-        
+
         if not icon or icon == wx.ICON_NONE:
             self._icon.Hide()
-            
+
         else: # do show an icon
             bitmap = wx.ArtProvider.GetBitmap(FLAGS2ART[flags], wx.ART_BUTTON)
             iconSize = bitmap.GetWidth() + wx.SizerFlags().Border().GetDefaultBorder()
             self._icon.SetBitmap(bitmap)
             self._icon.Show()
-            
+
         # notice the use of EscapeMnemonics() to ensure that "&" come through
         # correctly
         self._text.SetLabel(wx.Control.EscapeMnemonics(msg))
-        
+
         parentSize = self.GetParent().GetSize()
         self._text.Wrap(parentSize.x - iconSize - wx.SizerFlags().Border().GetDefaultBorder())
-        
+
         # then show this entire window if not done yet
         if not self.IsShown():
             self.DoShow()
@@ -662,12 +662,12 @@ class InfoBar(wx.Control):
 
         This method hides the window and lays out the parent window to account for
         its disappearance (unlike a simple `Hide()`), but only if this :class:`InfoBar`
-        parent is **not** managed by :class:`framemanager` or :class:`~lib.agw.aui.framemanager.AuiManager`.
+        parent is **not** managed by :class:`framemanager` or :class:`~wx.lib.agw.aui.framemanager.AuiManager`.
         """
-        
+
         self.DoHide()
 
-        
+
     def AddButton(self, btnid, label='', bitmap=wx.NullBitmap):
         """
         Adds a button to be shown in the info bar.
@@ -700,12 +700,12 @@ class InfoBar(wx.Control):
              button events in the parent frame.
 
         """
-        
+
         sizer = self.GetSizer()
 
         if not sizer:
             raise Exception("must be created first")
-        
+
         # user-added buttons replace the standard close button so remove it if we
         # hadn't done it yet
         if sizer.Detach(self._button):
@@ -717,11 +717,11 @@ class InfoBar(wx.Control):
             # Add the bitmap to the button
             button.SetBitmap(bitmap, wx.LEFT)
             button.SetBitmapMargins((2, 2)) # default is 4 but that seems too big to me.
-        
+
         if wx.Platform == '__WXMAC__':
             # smaller buttons look better in the(narrow)info bar under OS X
             button.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)
-     
+
         sizer.Add(button, wx.SizerFlags().Centre().DoubleBorder())
 
         if self.IsShown():
@@ -736,7 +736,7 @@ class InfoBar(wx.Control):
          same id is used in the :class:`InfoBar` (which is in any case not recommended), the last,
          i.e. most recently added, button with this `id` is removed.
         """
-        
+
         sizer = self.GetSizer()
 
         if not sizer:
@@ -782,7 +782,7 @@ class InfoBar(wx.Control):
              :class:`InfoBar` and handle them in your derived class or use `self.Bind(...)` to handle the
              button events in the parent frame.
         """
-        
+
         self.DoHide()
 
 
@@ -807,21 +807,21 @@ class InfoBar(wx.Control):
         ==================================== ===========================================================
         `ShowEffect` Flag                    Description
         ==================================== ===========================================================
-        ``SHOW_EFFECT_NONE``                 No effect, equivalent to normal `Show()` or `Hide()` call.                      
-        ``SHOW_EFFECT_ROLL_TO_LEFT``         Roll window to the left.                      
-        ``SHOW_EFFECT_ROLL_TO_RIGHT``        Roll window to the right.                      
-        ``SHOW_EFFECT_ROLL_TO_TOP``          Roll window to the top.                      
-        ``SHOW_EFFECT_ROLL_TO_BOTTOM``       Roll window to the bottom.                      
-        ``SHOW_EFFECT_SLIDE_TO_LEFT``        Slide window to the left.                      
-        ``SHOW_EFFECT_SLIDE_TO_RIGHT``       Slide window to the right.                      
-        ``SHOW_EFFECT_SLIDE_TO_TOP``         Slide window to the top.                      
-        ``SHOW_EFFECT_SLIDE_TO_BOTTOM``      Slide window to the bottom.                      
-        ``SHOW_EFFECT_BLEND``                Fade in or out effect.                      
-        ``SHOW_EFFECT_EXPAND``               Expanding or collapsing effect.                      
+        ``SHOW_EFFECT_NONE``                 No effect, equivalent to normal `Show()` or `Hide()` call.
+        ``SHOW_EFFECT_ROLL_TO_LEFT``         Roll window to the left.
+        ``SHOW_EFFECT_ROLL_TO_RIGHT``        Roll window to the right.
+        ``SHOW_EFFECT_ROLL_TO_TOP``          Roll window to the top.
+        ``SHOW_EFFECT_ROLL_TO_BOTTOM``       Roll window to the bottom.
+        ``SHOW_EFFECT_SLIDE_TO_LEFT``        Slide window to the left.
+        ``SHOW_EFFECT_SLIDE_TO_RIGHT``       Slide window to the right.
+        ``SHOW_EFFECT_SLIDE_TO_TOP``         Slide window to the top.
+        ``SHOW_EFFECT_SLIDE_TO_BOTTOM``      Slide window to the bottom.
+        ``SHOW_EFFECT_BLEND``                Fade in or out effect.
+        ``SHOW_EFFECT_EXPAND``               Expanding or collapsing effect.
         ==================================== ===========================================================
-        
+
         """
-        
+
         self._showEffect = showEffect
         self._hideEffect = hideEffect
 
@@ -836,13 +836,13 @@ class InfoBar(wx.Control):
         """
 
         self._effectDuration = duration
-        
+
 
     def GetEffectDuration(self):
         """ Return the effect animation duration currently used, in milliseconds. """
 
         return self._effectDuration
-    
+
 
 if __name__ == '__main__':
 
@@ -861,12 +861,12 @@ if __name__ == '__main__':
 
             panel = wx.Panel(self)
             sizer.Add(panel, 1, wx.EXPAND)
-            
+
             # ... Add other frame controls to the sizer ...
             self.SetSizer(sizer)
 
             wx.CallLater(2000, self.SomeMethod)
-            
+
 
         def SomeMethod(self):
 

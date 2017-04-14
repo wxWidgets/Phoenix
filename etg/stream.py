@@ -3,26 +3,26 @@
 # Author:      Robin Dunn
 #
 # Created:     18-Nov-2011
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "stream"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxStreamBase',
            'wxInputStream',
            'wxOutputStream',
-           ]    
+           ]
 
-    
+
 OTHERDEPS = [ 'src/stream_input.cpp',
               'src/stream_output.cpp',
               ]
@@ -49,23 +49,23 @@ def run():
                      EnumValueDef(name='wxSTREAM_READ_ERROR'),
                      ])
     module.insertItem(0, e)
-    
+
     e = EnumDef(name='wxSeekMode')
     e.items.extend([ EnumValueDef(name='wxFromStart'),
                      EnumValueDef(name='wxFromCurrent'),
                      EnumValueDef(name='wxFromEnd'),
                      ])
     module.insertItem(1, e)
-    
-    
+
+
     #-----------------------------------------------------------------
     c = module.find('wxStreamBase')
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
     tools.removeVirtuals(c)
     c.find('operator!').ignore()
-    
-    
+
+
     #-----------------------------------------------------------------
     c = module.find('wxInputStream')
     c.abstract = True
@@ -105,7 +105,7 @@ def run():
     c.addCppMethod('bool', 'eof', '()', """\
         return self->Eof();
         """)
-    
+
     c.addCppCode("""\
         // helper used by the read and readline methods to make a PyObject
         static PyObject* _makeReadBufObj(wxInputStream* self, wxMemoryBuffer& buf) {
@@ -123,7 +123,7 @@ def run():
             return obj;
         }
         """)
-            
+
 
     c.addCppMethod('PyObject*', 'read', '()', """\
         wxMemoryBuffer buf;
@@ -136,7 +136,7 @@ def run():
         }
         return _makeReadBufObj(self, buf);
         """)
-    
+
     c.addCppMethod('PyObject*', 'read', '(ulong size)', """\
         wxMemoryBuffer buf;
 
@@ -150,7 +150,7 @@ def run():
         wxMemoryBuffer buf;
         char ch = 0;
 
-        // read until \\n 
+        // read until \\n
         while ((ch != '\\n') && (self->CanRead())) {
             ch = self->GetC();
             buf.AppendByte(ch);
@@ -174,61 +174,57 @@ def run():
 
     c.addCppCode("""\
         PyObject* _wxInputStream_readline(wxInputStream* self);
-        
+
         // This does the real work of the readlines methods
-        static PyObject* _readlinesHelper(wxInputStream* self, 
+        static PyObject* _readlinesHelper(wxInputStream* self,
                                           bool useSizeHint=false, ulong sizehint=0) {
             PyObject* pylist;
-    
+
             // init list
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
-            pylist = PyList_New(0);
-            wxPyEndBlockThreads(blocked);
-    
-            if (!pylist) {
-                wxPyBlock_t blocked = wxPyBeginBlockThreads();
-                PyErr_NoMemory();
-                wxPyEndBlockThreads(blocked);
-                return NULL;
+            {
+                wxPyThreadBlocker blocker;
+                pylist = PyList_New(0);
+
+                if (!pylist) {
+                    PyErr_NoMemory();
+                    return NULL;
+                }
             }
-    
+
             // read sizehint bytes or until EOF
             ulong i;
             for (i=0; (self->CanRead()) && (useSizeHint || (i < sizehint));) {
                 PyObject* s = _wxInputStream_readline(self);
                 if (s == NULL) {
-                    wxPyBlock_t blocked = wxPyBeginBlockThreads();
+                    wxPyThreadBlocker blocker;
                     Py_DECREF(pylist);
-                    wxPyEndBlockThreads(blocked);
                     return NULL;
                 }
-                wxPyBlock_t blocked = wxPyBeginBlockThreads();
+                wxPyThreadBlocker blocker;
                 PyList_Append(pylist, s);
                 i += PyBytes_Size(s);
-                wxPyEndBlockThreads(blocked);
             }
-    
+
             // error check
             wxStreamError err = self->GetLastError();
             if (err != wxSTREAM_NO_ERROR && err != wxSTREAM_EOF) {
-                wxPyBlock_t blocked = wxPyBeginBlockThreads();
+                wxPyThreadBlocker blocker;
                 Py_DECREF(pylist);
                 PyErr_SetString(PyExc_IOError,"IOError in wxInputStream");
-                wxPyEndBlockThreads(blocked);
                 return NULL;
-            }    
-            return pylist;        
+            }
+            return pylist;
         }
         """)
-    
+
     c.addCppMethod('PyObject*', 'readlines', '()', """\
         return _readlinesHelper(self);
         """)
     c.addCppMethod('PyObject*', 'readlines', '(ulong sizehint)', """\
         return _readlinesHelper(self, true, sizehint);
         """)
-    
-    
+
+
     #-----------------------------------------------------------------
     c = module.find('wxOutputStream')
     c.abstract = True
@@ -271,24 +267,24 @@ def run():
         return false; //self->Eof();
         """)
 
-    c.addCppMethod('void', 'write', '(PyObject* data)', """\
-        // We use only strings for the streams, not unicode
-        PyObject* str = PyObject_Bytes(data);
-        if (! str) {
-            PyErr_SetString(PyExc_TypeError, "Unable to convert to string");
-            return;
+    c.addCppMethod('PyObject*', 'write', '(PyObject* data)', """\
+        // We use only bytes objects (strings in 2.7) for the streams, never unicode
+        wxPyThreadBlocker blocker;
+        if (!PyBytes_Check(data)) {
+            PyErr_SetString(PyExc_TypeError, "Bytes object expected");
+            return NULL;
         }
-        self->Write(PyBytes_AS_STRING(str), PyBytes_GET_SIZE(str));
-        Py_DECREF(str);
+        self->Write(PyBytes_AS_STRING(data), PyBytes_GET_SIZE(data));
+        RETURN_NONE();
         """)
-    
+
     # TODO: Add a writelines(sequence) method
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

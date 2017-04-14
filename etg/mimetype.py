@@ -3,41 +3,41 @@
 # Author:      Robin Dunn
 #
 # Created:     16-May-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "mimetype"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ "wxFileType",
            "wxFileTypeInfo",
            "wxMimeTypesManager",
-           ]    
-    
+           ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     c = module.find('wxFileType')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     c.addPublic()
-    
+
     # Change semantics for some methods to return values instead of using
     # output parameters. This is for Classic compatibility as well as being a
     # bit more pythonic.
@@ -60,13 +60,13 @@ def run():
             example, it may contain the following two elements for the MIME
             type "text/html" (notice the absence of the leading dot): "html"
             and "htm".
-            
+
             This function is not implemented on Windows, there is no (efficient)
             way to retrieve associated extensions from the given MIME type on
-            this platform. """, 
+            this platform. """,
         body="""\
             wxArrayString* arr = new wxArrayString;
-            self->GetExtensions(*arr); return arr; 
+            self->GetExtensions(*arr); return arr;
             """)
 
     c.find('GetMimeType').ignore()
@@ -83,15 +83,15 @@ def run():
         factory=True,
         doc="""\
             Same as GetMimeType but returns a list of types.  This will usually contain
-            only one item, but sometimes, such as on Unix with KDE more than one type 
+            only one item, but sometimes, such as on Unix with KDE more than one type
             if there are differences between KDE< mailcap and mime.types.""",
         body="""\
             wxArrayString* arr = new wxArrayString;
             self->GetMimeTypes(*arr);
             return arr;
             """)
-    
-    
+
+
     c.find('GetIcon').ignore()
     c.addCppMethod('wxIcon*', 'GetIcon', '()',
         factory = True,
@@ -113,25 +113,36 @@ def run():
             else
                 return NULL;
             """)
-    
 
-    c.find('GetOpenCommand').findOverload('command').ignore()
+
+    for m in c.find('GetOpenCommand').all():
+        m.ignore()
     c.addCppMethod('wxString', 'GetOpenCommand', '(const wxFileType::MessageParameters& params)',
         doc="""\
-            Returns the command which must be executed (see wx.Execute()) in order 
-            to open the file of the given type. The name of the file as well as 
+            Returns the command which must be executed (see wx.Execute()) in order
+            to open the file of the given type. The name of the file as well as
             any other parameters is retrieved from MessageParameters() class.""",
         body="""\
             wxString rv;
             self->GetOpenCommand(&rv, *params);
             return new wxString(rv);
             """)
+    c.addCppMethod('wxString', 'GetOpenCommand', '(const wxString& filename)',
+        doc="""\
+            Returns the command which should be used to open the given
+            filename. An empty string is returned to indicate that an error
+            occurred (typically meaning that there is no standard way to open
+            this kind of files).""",
+        body="""\
+            return new wxString( self->GetOpenCommand(*filename) );
+            """)
+
 
     c.find('GetPrintCommand').ignore()
     c.addCppMethod('wxString', 'GetPrintCommand', '(const wxFileType::MessageParameters& params)',
         doc="""\
             Returns the command which must be executed (see wxExecute()) in order to
-            print the file of the given type. The name of the file is retrieved from 
+            print the file of the given type. The name of the file is retrieved from
             the MessageParameters class.""",
         body="""\
             wxString rv;
@@ -139,12 +150,19 @@ def run():
             return new wxString(rv);
             """)
 
-    c.find('GetAllCommands.verbs').out = True
-    c.find('GetAllCommands.commands').out = True
+    m = c.find('GetAllCommands')
+    m.find('verbs').out = True
+    m.find('commands').out = True
+    m.type = 'void'
+    m.briefDoc = \
+        "Returns a tuple containing the `verbs` and `commands` arrays, " \
+        "corresponding for the registered information for this mime type."
+
+
 
     c.addCppMethod('PyObject*', 'GetIconInfo', '()',
         doc="""\
-            Returns a tuple containing the Icon for this file type, the file where the 
+            Returns a tuple containing the Icon for this file type, the file where the
             icon is found, and the index of the image in that file, if applicable.
             """,
         body="""\
@@ -158,7 +176,7 @@ def run():
                 // Make a tuple and put the values in it
                 wxPyThreadBlocker blocker;
                 PyObject* tuple = PyTuple_New(3);
-                PyTuple_SetItem(tuple, 0, 
+                PyTuple_SetItem(tuple, 0,
                     wxPyConstructObject(new wxIcon(loc), wxT("wxIcon"), true));
                 PyTuple_SetItem(tuple, 1, wx2PyString(iconFile));
                 PyTuple_SetItem(tuple, 2, wxPyInt_FromLong(iconIndex));
@@ -167,12 +185,12 @@ def run():
             else
                 RETURN_NONE();
             """)
-    
-    
-    
+
+
+
     #-----------------------------------------------------------------
     c = module.find('wxFileTypeInfo')
-    
+
     # Ignore the variadic nature of this ctor
     ctor = c.find('wxFileTypeInfo').findOverload('extension')
     ctor.items[-1].ignore()
@@ -185,8 +203,8 @@ def run():
         return fti;
         """)
     ctor.useDerivedName = False
-    
-    
+
+
     #-----------------------------------------------------------------
     c = module.find('wxMimeTypesManager')
     c.addPrivateCopyCtor()
@@ -202,13 +220,13 @@ def run():
             self->EnumAllFileTypes(*arr);
             return arr;
             """)
-    
-    
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

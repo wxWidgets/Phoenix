@@ -36,7 +36,7 @@
 
 
 """
-:class:`~lib.agw.advancedsplash.AdvancedSplash` tries to reproduce the behavior of :class:`~adv.SplashScreen`, with
+:class:`~wx.lib.agw.advancedsplash.AdvancedSplash` tries to reproduce the behavior of :class:`~adv.SplashScreen`, with
 some enhancements.
 
 
@@ -64,11 +64,11 @@ Sample usage::
     app = wx.App(0)
 
     frame = wx.Frame(None, -1, "AdvancedSplash Test")
-    
+
     imagePath = "my_splash_image.png"
     bitmap = wx.Bitmap(imagePath, wx.BITMAP_TYPE_PNG)
     shadow = wx.WHITE
-    
+
     splash = AS.AdvancedSplash(frame, bitmap=bitmap, timeout=5000,
                                agwStyle=AS.AS_TIMEOUT |
                                AS.AS_CENTER_ON_PARENT |
@@ -76,7 +76,7 @@ Sample usage::
                                shadowcolour=shadow)
 
     app.MainLoop()
-    
+
 
 None of the options are strictly required (a part of the `bitmap` parameter).
 If you use the defaults you get a very simple :class:`AdvancedSplash`.
@@ -138,7 +138,7 @@ import wx
 
 # These Are Used To Declare If The AdvancedSplash Should Be Destroyed After The
 # Timeout Or Not
-                        
+
 AS_TIMEOUT = 1
 """ :class:`AdvancedSplash` will be destroyed after `timeout` milliseconds. """
 AS_NOTIMEOUT = 2
@@ -167,7 +167,7 @@ class AdvancedSplash(wx.Frame):
     :class:`AdvancedSplash` tries to reproduce the behavior of :class:`~adv.SplashScreen`, with
     some enhancements.
 
-    This is the main class implementation.    
+    This is the main class implementation.
     """
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=wx.FRAME_NO_TASKBAR | wx.FRAME_SHAPED | wx.STAY_ON_TOP,
@@ -195,7 +195,7 @@ class AdvancedSplash(wx.Frame):
         :param integer `timeout`: if you construct :class:`AdvancedSplash` using the style ``AS_TIMEOUT``,
          :class:`AdvancedSplash` will be destroyed after `timeout` milliseconds;
         :param integer `agwStyle`: this value specifies the :class:`AdvancedSplash` styles:
-        
+
          ======================= =========== ==================================================
          Window Styles           Hex Value   Description
          ======================= =========== ==================================================
@@ -222,7 +222,7 @@ class AdvancedSplash(wx.Frame):
          - The ``AS_TIMEOUT`` style is set but `timeout` is not a positive integer;
          - The ``AS_SHADOW_BITMAP`` style is set but `shadowcolour` is not a valid wxPython colour;
          - The :class:`AdvancedSplash` bitmap is an invalid :class:`wx.Bitmap`.
-         
+
         """
 
         wx.Frame.__init__(self, parent, id, "", pos, size, style)
@@ -361,7 +361,7 @@ class AdvancedSplash(wx.Frame):
         Handles the ``wx.EVT_MOUSE_EVENTS`` events for :class:`AdvancedSplash`.
 
         :param `event`: a :class:`MouseEvent` to be processed.
-        
+
         :note: This reproduces the behavior of :class:`~adv.SplashScreen`.
         """
 
@@ -376,7 +376,7 @@ class AdvancedSplash(wx.Frame):
         Handles the ``wx.EVT_CHAR`` event for :class:`AdvancedSplash`.
 
         :param `event`: a :class:`KeyEvent` to be processed.
-        
+
         :note: This reproduces the behavior of :class:`~adv.SplashScreen`.
         """
 
@@ -388,7 +388,7 @@ class AdvancedSplash(wx.Frame):
         Handles the ``wx.EVT_CLOSE`` event for :class:`AdvancedSplash`.
 
         :param `event`: a :class:`CloseEvent` to be processed.
-        
+
         :note: This reproduces the behavior of :class:`~adv.SplashScreen`.
         """
 
@@ -437,7 +437,7 @@ class AdvancedSplash(wx.Frame):
         """
 
         if font is None:
-            self._textfont = wx.Font(1, wx.SWISS, wx.NORMAL, wx.BOLD, False)
+            self._textfont = wx.Font(1, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
             self._textsize = 10.0
             self._textfont.SetPointSize(self._textsize)
         else:
@@ -557,7 +557,7 @@ if __name__ == '__main__':
 
     app = wx.App(0)
 
-    bitmap = wx.Bitmap(100, 100)    
+    bitmap = wx.Bitmap(100, 100)
     splash = AdvancedSplash(None, bitmap=bitmap, timeout=5000)
 
     app.MainLoop()

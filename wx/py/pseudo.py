@@ -73,8 +73,8 @@ class PseudoFileIn(PseudoFile):
 
     def isatty(self):
         return 1
-        
-        
+
+
 class PseudoFileOut(PseudoFile):
 
     def __init__(self, write):

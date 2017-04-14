@@ -12,9 +12,9 @@
 Editra Control Library: PlateButton
 
 The PlateButton is a custom owner drawn flat button, that in many ways emulates
-the buttons found the bookmark bar of the Safari browser. It can be used as a 
-drop in replacement for wx.Button/wx.BitmapButton under most circumstances. It 
-also offers a wide range of options for customizing its appearance, a 
+the buttons found the bookmark bar of the Safari browser. It can be used as a
+drop in replacement for wx.Button/wx.BitmapButton under most circumstances. It
+also offers a wide range of options for customizing its appearance, a
 description of each of the main style settings is listed below.
 
 Main Button Styles:
@@ -76,7 +76,7 @@ Requirements:
 __author__ = "Cody Precord <cprecord@editra.org>"
 
 __all__ = ["PlateButton",
-           "PLATE_NORMAL", "PLATE_PRESSED", "PLATE_HIGHLIGHT", 
+           "PLATE_NORMAL", "PLATE_PRESSED", "PLATE_HIGHLIGHT",
 
            "PB_STYLE_DEFAULT", "PB_STYLE_GRADIENT", "PB_STYLE_SQUARE",
            "PB_STYLE_NOBG", "PB_STYLE_DROPARROW", "PB_STYLE_TOGGLE",
@@ -119,11 +119,11 @@ class PlateButton(wx.Control):
     displaying bitmaps and having an attached dropdown menu.
 
     """
-    def __init__(self, parent, id=wx.ID_ANY, label='', bmp=None, 
+    def __init__(self, parent, id=wx.ID_ANY, label='', bmp=None,
                  pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=PB_STYLE_DEFAULT, name=wx.ButtonNameStr):
         """Create a PlateButton
-        
+
         :keyword string `label`: Buttons label text
         :keyword wx.Bitmap `bmp`: Buttons bitmap
         :keyword `style`: Button style
@@ -336,7 +336,7 @@ class PlateButton(wx.Control):
         color = GetHighlightColour()
         pcolor = AdjustColour(color, -12)
         colors = dict(default=True,
-                      hlight=color, 
+                      hlight=color,
                       press=pcolor,
                       htxt=BestLabelColour(self.GetForegroundColour()))
         return colors
@@ -345,7 +345,7 @@ class PlateButton(wx.Control):
     def __LeaveWindow(self):
         """Handle updating the buttons state when the mouse cursor leaves"""
         if (self._style & PB_STYLE_TOGGLE) and self._pressed:
-            self._SetState(PLATE_PRESSED) 
+            self._SetState(PLATE_PRESSED)
         else:
             self._SetState(PLATE_NORMAL)
             self._pressed = False
@@ -358,7 +358,7 @@ class PlateButton(wx.Control):
 
         .. note::
             the state may be altered by mouse actions
-            
+
         .. note::
             Internal use only!
 
@@ -373,7 +373,7 @@ class PlateButton(wx.Control):
 
     def _ToggleState(self):
         """Toggle button state
-        
+
         ..note::
             Internal Use Only!
 
@@ -414,7 +414,7 @@ class PlateButton(wx.Control):
 
     def DoGetBestSize(self):
         """Calculate the best size of the button
-        
+
         :return: :class:`wx.Size`
 
         """
@@ -427,7 +427,7 @@ class PlateButton(wx.Control):
             lsize = self.GetFullTextExtent(self.Label)
             width += lsize[0]
             height += lsize[1]
-            
+
         if self._bmp['enable'] is not None:
             bsize = self._bmp['enable'].Size
             width += (bsize[0] + 10)
@@ -454,9 +454,9 @@ class PlateButton(wx.Control):
 
     def GetBackgroundBrush(self, dc):
         """Get the brush for drawing the background of the button
-        
+
         :return: :class:`wx.Brush`
-        
+
         ..note::
             used internally when on gtk
 
@@ -487,7 +487,7 @@ class PlateButton(wx.Control):
 
     def GetBitmapLabel(self):
         """Get the label bitmap
-        
+
         :return: :class:`wx.Bitmap` or None
 
         """
@@ -496,7 +496,7 @@ class PlateButton(wx.Control):
     # GetBitmap Aliases for BitmapButton api
     GetBitmapFocus = GetBitmapLabel
     GetBitmapHover = GetBitmapLabel
-    
+
     # Alias for GetLabel
     GetLabelText = wx.Control.GetLabel
 
@@ -511,9 +511,9 @@ class PlateButton(wx.Control):
 
     def GetState(self):
         """Get the current state of the button
-        
+
         :return: int
-        
+
         .. seeAlso::
             PLATE_NORMAL, PLATE_HIGHLIGHT, PLATE_PRESSED
 
@@ -528,7 +528,7 @@ class PlateButton(wx.Control):
 
     def IsPressed(self):
         """Return if button is pressed (PB_STYLE_TOGGLE)
-        
+
         :return: bool
 
         """
@@ -540,7 +540,7 @@ class PlateButton(wx.Control):
     def OnErase(self, evt):
         """Trap the erase event to keep the background transparent
         on windows.
-        
+
         :param `evt`: wx.EVT_ERASE_BACKGROUND
 
         """
@@ -556,7 +556,7 @@ class PlateButton(wx.Control):
     def OnKeyUp(self, evt):
         """Execute a single button press action when the Return key is pressed
         and this control has the focus.
-        
+
         :param `evt`: wx.EVT_KEY_UP
 
         """
@@ -598,7 +598,7 @@ class PlateButton(wx.Control):
                 event = PlateBtnDropArrowPressed()
                 event.SetEventObject(self)
                 self.EventHandler.ProcessEvent(event)
-        
+
         self.SetFocus()
 
 
@@ -624,7 +624,7 @@ class PlateButton(wx.Control):
     def OnMenuClose(self, evt):
         """Refresh the control to a proper state after the menu has been
         dismissed.
-        
+
         :param `evt`: wx.EVT_MENU_CLOSE
 
         """
@@ -640,7 +640,7 @@ class PlateButton(wx.Control):
 
     def SetBitmap(self, bmp):
         """Set the bitmap displayed in the button
-        
+
         :param `bmp`: :class:`wx.Bitmap`
 
         """
@@ -693,7 +693,7 @@ class PlateButton(wx.Control):
         """Set the color of the label. The optimal label color is usually
         automatically selected depending on the button color. In some
         cases the colors that are chosen may not be optimal.
-        
+
         The normal state must be specified, if the other two params are left
         Null they will be automatically guessed based on the normal color. To
         prevent this automatic color choices from happening either specify
@@ -724,7 +724,7 @@ class PlateButton(wx.Control):
         drop arrow of the button.
 
         :param wx.Menu `menu`: :class:`wx.Menu` to use as a PopupMenu
-        
+
         .. note::
             Arrow is not drawn unless a menu is set
 
@@ -741,7 +741,7 @@ class PlateButton(wx.Control):
         """Set the color used for highlighting the pressed state
 
         :param wx.Colour `color`: :class:`wx.Colour`
-        
+
         .. note::
             also resets all text colours as necessary
 

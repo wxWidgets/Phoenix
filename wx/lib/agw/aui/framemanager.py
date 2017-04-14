@@ -731,7 +731,7 @@ class AuiPaneInfo(object):
     def IsNotebookDockable(self):
         """
         Returns ``True`` if a pane can be docked on top to another to create a
-        :class:`~lib.agw.aui.auibook.AuiNotebook`.
+        :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
         """
 
         return self.HasFlag(self.optionNotebookDockable)
@@ -830,7 +830,7 @@ class AuiPaneInfo(object):
         ``AUI_MINIMIZE_POS_LEFT``           0x03 Minimizes the pane on its left tool bar
         ``AUI_MINIMIZE_POS_RIGHT``          0x04 Minimizes the pane on its right tool bar
         ``AUI_MINIMIZE_POS_BOTTOM``         0x05 Minimizes the pane on its bottom tool bar
-        ``AUI_MINIMIZE_POS_TOOLBAR``        0x06 Minimizes the pane on a target :class:`~lib.agw.aui.auibar.AuiToolBar`
+        ``AUI_MINIMIZE_POS_TOOLBAR``        0x06 Minimizes the pane on a target :class:`~wx.lib.agw.aui.auibar.AuiToolBar`
         ``AUI_MINIMIZE_POS_MASK``           0x17 Mask to filter the position flags
         ``AUI_MINIMIZE_CAPT_HIDE``           0x0 Hides the caption of the minimized pane
         ``AUI_MINIMIZE_CAPT_SMART``         0x08 Displays the caption in the best rotation (horizontal or clockwise)
@@ -1205,9 +1205,9 @@ class AuiPaneInfo(object):
 
     def Minimize(self):
         """
-        Makes the pane minimized in a :class:`~lib.agw.aui.auibar.AuiToolBar`.
+        Makes the pane minimized in a :class:`~wx.lib.agw.aui.auibar.AuiToolBar`.
 
-        Clicking on the minimize button causes a new :class:`~lib.agw.aui.auibar.AuiToolBar` to be created
+        Clicking on the minimize button causes a new :class:`~wx.lib.agw.aui.auibar.AuiToolBar` to be created
         and added to the frame manager, (currently the implementation is such that
         panes at West will have a toolbar at the right, panes at South will have
         toolbars at the bottom etc...) and the pane is hidden in the manager.
@@ -1233,7 +1233,7 @@ class AuiPaneInfo(object):
         ``AUI_MINIMIZE_POS_LEFT``           0x03 Minimizes the pane on its left tool bar
         ``AUI_MINIMIZE_POS_RIGHT``          0x04 Minimizes the pane on its right tool bar
         ``AUI_MINIMIZE_POS_BOTTOM``         0x05 Minimizes the pane on its bottom tool bar
-        ``AUI_MINIMIZE_POS_TOOLBAR``        0x06 Minimizes the pane on a target :class:`~lib.agw.aui.auibar.AuiToolBar`
+        ``AUI_MINIMIZE_POS_TOOLBAR``        0x06 Minimizes the pane on a target :class:`~wx.lib.agw.aui.auibar.AuiToolBar`
         ============================== ========= ==============================
 
         The caption of the minimized pane can be displayed in different modes:
@@ -1265,7 +1265,7 @@ class AuiPaneInfo(object):
         need to be copied back and forth every time the perspective has changed, we
         only store the toobar **name**.
 
-        :param `toolbarPane`: an instance of :class:`AuiPaneInfo`, containing a :class:`~lib.agw.aui.auibar.AuiToolBar`.
+        :param `toolbarPane`: an instance of :class:`AuiPaneInfo`, containing a :class:`~wx.lib.agw.aui.auibar.AuiToolBar`.
 
         .. note::
 
@@ -1366,7 +1366,7 @@ class AuiPaneInfo(object):
     def NotebookPage(self, id, tab_position=1000):
         """
         Forces a pane to be a notebook page, so that the pane can be
-        docked on top to another to create a :class:`~lib.agw.aui.auibook.AuiNotebook`.
+        docked on top to another to create a :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
 
         :param integer `id`: the notebook id;
         :param integer `tab_position`: the tab number of the pane once docked in a notebook.
@@ -1385,7 +1385,7 @@ class AuiPaneInfo(object):
 
     def NotebookControl(self, id):
         """
-        Forces a pane to be a notebook control (:class:`~lib.agw.aui.auibook.AuiNotebook`).
+        Forces a pane to be a notebook control (:class:`~wx.lib.agw.aui.auibook.AuiNotebook`).
 
         :param integer `id`: the notebook id.
         """
@@ -1401,25 +1401,25 @@ class AuiPaneInfo(object):
 
 
     def HasNotebook(self):
-        """ Returns whether a pane has a :class:`~lib.agw.aui.auibook.AuiNotebook` or not. """
+        """ Returns whether a pane has a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` or not. """
 
         return self.notebook_id >= 0
 
 
     def IsNotebookPage(self):
-        """ Returns whether the pane is a notebook page in a :class:`~lib.agw.aui.auibook.AuiNotebook`. """
+        """ Returns whether the pane is a notebook page in a :class:`~wx.lib.agw.aui.auibook.AuiNotebook`. """
 
         return self.notebook_id >= 0 and self.dock_direction == AUI_DOCK_NOTEBOOK_PAGE
 
 
     def IsNotebookControl(self):
-        """ Returns whether the pane is a notebook control (:class:`~lib.agw.aui.auibook.AuiNotebook`). """
+        """ Returns whether the pane is a notebook control (:class:`~wx.lib.agw.aui.auibook.AuiNotebook`). """
 
         return not self.IsNotebookPage() and self.HasNotebook()
 
 
     def SetNameFromNotebookId(self):
-        """ Sets the pane name once docked in a :class:`~lib.agw.aui.auibook.AuiNotebook` using the notebook id. """
+        """ Sets the pane name once docked in a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` using the notebook id. """
 
         if self.notebook_id >= 0:
             self.name = "__notebook_%d"%self.notebook_id
@@ -1591,7 +1591,7 @@ class AuiPaneInfo(object):
 
     def NotebookDockable(self, b=True):
         """
-        Indicates whether a pane can be docked in an automatic :class:`~lib.agw.aui.auibook.AuiNotebook`.
+        Indicates whether a pane can be docked in an automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
 
         :param bool `b`: whether the pane can be docked in a notebook or not.
         """
@@ -1915,7 +1915,7 @@ class AuiDockingGuide(wx.Frame):
         To be overridden by parent classes.
 
         :param bool `valid`: whether a pane can be docked on top to another to form an automatic
-         :class:`~lib.agw.aui.auibook.AuiNotebook`.
+         :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
         """
 
         return 0
@@ -2593,10 +2593,10 @@ class AuiCenterDockingGuide(AuiDockingGuide):
     def ValidateNotebookDocking(self, valid):
         """
         Sets whether a pane can be docked on top of another to create an automatic
-        :class:`~lib.agw.aui.auibook.AuiNotebook`.
+        :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
 
         :param bool `valid`: whether a pane can be docked on top to another to form an automatic
-         :class:`~lib.agw.aui.auibook.AuiNotebook`.
+         :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
         """
 
         if not self._useAero:
@@ -3100,7 +3100,6 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         :param `event`: a :class:`CloseEvent` to be processed.
         """
-
         if self._owner_mgr:
             self._owner_mgr.OnFloatingPaneClosed(self._pane_window, event)
 
@@ -3451,7 +3450,7 @@ def DrawResizeHint(dc, rect):
     if wx.Platform == "__WXMSW__" and wx.App.GetComCtl32Version() >= 600:
         if wx.GetOsVersion()[1] > 5:
             # Windows Vista
-            dc.SetPen(wx.Pen("black", 2, wx.SOLID))
+            dc.SetPen(wx.Pen("black", 2, wx.PENSTYLE_SOLID))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
         else:
             # Draw the nice XP style splitter
@@ -3928,7 +3927,7 @@ def PaneSortFunc(p1, p2):
 
 def GetNotebookRoot(panes, notebook_id):
     """
-    Returns the :class:`~lib.agw.aui.auibook.AuiNotebook` which has the specified `notebook_id`.
+    Returns the :class:`~wx.lib.agw.aui.auibook.AuiNotebook` which has the specified `notebook_id`.
 
     :param `panes`: a list of :class:`AuiPaneInfo` instances;
     :param integer `notebook_id`: the target notebook id.
@@ -4553,11 +4552,9 @@ class AuiManager(wx.EvtHandler):
 
     def DestroyGuideWindows(self):
         """ Destroys the VS2005 HUD guide windows. """
-
         for guide in self._guides:
             if guide.host:
                 guide.host.Destroy()
-
         self._guides = []
 
 
@@ -4574,7 +4571,6 @@ class AuiManager(wx.EvtHandler):
         """ Destroys the standard wxAUI hint window. """
 
         if self._hint_window:
-
             self._hint_window.Destroy()
             self._hint_window = None
 
@@ -4603,7 +4599,7 @@ class AuiManager(wx.EvtHandler):
     def OnDestroy(self, event) :
 
         if self._frame == event.GetEventObject():
-            self.UnInit();
+            self.UnInit()
 
 
     def GetArtProvider(self):
@@ -5176,7 +5172,7 @@ class AuiManager(wx.EvtHandler):
 
     def CreateNotebook(self):
         """
-        Creates an automatic :class:`~lib.agw.aui.auibook.AuiNotebook` when a pane is docked on
+        Creates an automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook` when a pane is docked on
         top of another pane.
         """
 
@@ -5215,7 +5211,7 @@ class AuiManager(wx.EvtHandler):
         """
         Sets the default AGW-specific window style for automatic notebooks.
 
-        :param integer `agwStyle`: the underlying :class:`~lib.agw.aui.auibook.AuiNotebook` window style.
+        :param integer `agwStyle`: the underlying :class:`~wx.lib.agw.aui.auibook.AuiNotebook` window style.
          This can be a combination of the following bits:
 
          ==================================== ==================================
@@ -5234,7 +5230,7 @@ class AuiManager(wx.EvtHandler):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~wx.lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
          ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
@@ -6403,6 +6399,8 @@ class AuiManager(wx.EvtHandler):
 
             if p.frame:
                 p.frame.SetSizer(None)
+                while p.frame.GetEventHandler() is not p.frame:
+                    p.frame.PopEventHandler()
                 p.frame.Destroy()
             p.frame = None
 
@@ -6544,7 +6542,7 @@ class AuiManager(wx.EvtHandler):
 
 
     def UpdateNotebook(self):
-        """ Updates the automatic :class:`~lib.agw.aui.auibook.AuiNotebook` in the layout (if any exists). """
+        """ Updates the automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook` in the layout (if any exists). """
 
         # Workout how many notebooks we need.
         max_notebook = -1
@@ -7311,9 +7309,9 @@ class AuiManager(wx.EvtHandler):
 
     def PaneFromTabEvent(self, event):
         """
-        Returns a :class:`AuiPaneInfo` from a :class:`~lib.agw.aui.auibook.AuiNotebook` event.
+        Returns a :class:`AuiPaneInfo` from a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` event.
 
-        :param `event`: a :class:`~lib.agw.aui.auibook.AuiNotebookEvent` event.
+        :param `event`: a :class:`~wx.lib.agw.aui.auibook.AuiNotebookEvent` event.
         """
 
         obj = event.GetEventObject()
@@ -7344,7 +7342,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the ``EVT_AUINOTEBOOK_BEGIN_DRAG`` event.
 
-        :param `event`: a :class:`~lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
+        :param `event`: a :class:`~wx.lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         if self._masterManager:
@@ -7394,7 +7392,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the ``EVT_AUINOTEBOOK_PAGE_CLOSE`` event.
 
-        :param `event`: a :class:`~lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
+        :param `event`: a :class:`~wx.lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         if self._masterManager:
@@ -7428,7 +7426,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the ``EVT_AUINOTEBOOK_PAGE_CHANGED`` event.
 
-        :param `event`: a :class:`~lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
+        :param `event`: a :class:`~wx.lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         if self._masterManager:
@@ -7454,7 +7452,7 @@ class AuiManager(wx.EvtHandler):
 
 
     def GetNotebooks(self):
-        """ Returns all the automatic :class:`~lib.agw.aui.auibook.AuiNotebook` in the :class:`AuiManager`. """
+        """ Returns all the automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook` in the :class:`AuiManager`. """
 
         if self._masterManager:
             return self._masterManager.GetNotebooks()
@@ -7464,7 +7462,7 @@ class AuiManager(wx.EvtHandler):
 
     def SetMasterManager(self, manager):
         """
-        Sets the master manager for an automatic :class:`~lib.agw.aui.auibook.AuiNotebook`.
+        Sets the master manager for an automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
 
         :param `manager`: an instance of :class:`AuiManager`.
         """
@@ -7508,7 +7506,7 @@ class AuiManager(wx.EvtHandler):
         Switches the toolbar orientation from vertical to horizontal and vice-versa.
         This is especially useful for vertical docked toolbars once they float.
 
-        :param `pane`: an instance of :class:`AuiPaneInfo`, which may have a :class:`~lib.agw.aui.auibar.AuiToolBar`
+        :param `pane`: an instance of :class:`AuiPaneInfo`, which may have a :class:`~wx.lib.agw.aui.auibar.AuiToolBar`
          window associated with it.
         """
 
@@ -10039,9 +10037,9 @@ class AuiManager(wx.EvtHandler):
 
     def MinimizePane(self, paneInfo, mgrUpdate=True):
         """
-        Minimizes a pane in a newly and automatically created :class:`~lib.agw.aui.auibar.AuiToolBar`.
+        Minimizes a pane in a newly and automatically created :class:`~wx.lib.agw.aui.auibar.AuiToolBar`.
 
-        Clicking on the minimize button causes a new :class:`~lib.agw.aui.auibar.AuiToolBar` to be created
+        Clicking on the minimize button causes a new :class:`~wx.lib.agw.aui.auibar.AuiToolBar` to be created
         and added to the frame manager (currently the implementation is such that
         panes at West will have a toolbar at the right, panes at South will have
         toolbars at the bottom etc...) and the pane is hidden in the manager.
@@ -10550,7 +10548,7 @@ class AuiManager(wx.EvtHandler):
         """
         Starts a timer for sliding in and out a minimized pane.
 
-        :param `toolbar`: the :class:`~lib.agw.aui.auibar.AuiToolBar` containing the minimized pane tool.
+        :param `toolbar`: the :class:`~wx.lib.agw.aui.auibar.AuiToolBar` containing the minimized pane tool.
         """
 
         toolbar_pane = self.GetPane(toolbar)

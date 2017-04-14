@@ -139,14 +139,14 @@ def GetValidMenuImages():
     keys = catalog.keys()
     valid_images = []
     counter = 0
-    
+
     for key in keys:
         bmp = catalog[key].GetBitmap()
         if bmp.GetWidth() == 16 and bmp.GetHeight() == 16:
             valid_images.append(bmp)
 
     return valid_images
-        
+
 #----------------------------------------------------------------------
 
 class ShortcutEditorDemo(wx.Frame):
@@ -156,12 +156,12 @@ class ShortcutEditorDemo(wx.Frame):
         wx.Frame.__init__(self, parent, -1, 'ShortcutEditor wxPython Demo :-D', size=(900, 800))
 
         self.log = log
-        
+
         self.valid_images = GetValidMenuImages()
         self.used_shortcuts = []
 
-        self.SetIcon(images.Mondrian.GetIcon())        
-        
+        self.SetIcon(images.Mondrian.GetIcon())
+
         self.MakeMenuBar()
         self.MakeAcceleratorTable()
 
@@ -169,11 +169,11 @@ class ShortcutEditorDemo(wx.Frame):
         dlg.FromMenuBar(self)
         dlg.FromAcceleratorTable(self.accelTable)
 
-        self.AddTopMenuBitmaps(dlg)        
+        self.AddTopMenuBitmaps(dlg)
 
         dlg.Bind(SE.EVT_SHORTCUT_CHANGING, self.OnShortcutChanging)
         dlg.Bind(SE.EVT_SHORTCUT_CHANGED, self.OnShortcutChanged)
-        
+
         self.CenterOnScreen()
         self.Show()
         self.Raise()
@@ -191,7 +191,7 @@ class ShortcutEditorDemo(wx.Frame):
 
             self.AppendMenus(menu, title)
 
-            bar.Append(menu, title)            
+            bar.Append(menu, title)
             top_menus.append(menu)
 
         self.SetMenuBar(bar)
@@ -205,7 +205,7 @@ class ShortcutEditorDemo(wx.Frame):
         for i in range(6):
             name = 'Accelerator %d'%(i+1)
             choice = random.choice(list(SE.ACCELERATORS.keys()))
-            
+
             if choice == wx.ACCEL_ALT:
                 letter = random.choice(COMBINATIONS)
 
@@ -214,7 +214,7 @@ class ShortcutEditorDemo(wx.Frame):
                     wxk = inv_keyMap[letter]
                 else:
                     wxk = ord(letter)
-                
+
             else:
                 wxk = random.choice(list(SE.KEYMAP.keys()))
 
@@ -222,13 +222,13 @@ class ShortcutEditorDemo(wx.Frame):
             saved_accel = (name, choice, wxk, ACCEL_IDS[i])
 
             self.Bind(wx.EVT_MENU, self.OnAcceleratorShortcuts, id=ACCEL_IDS[i])
-            
+
             table.append(accel)
             saved_table.append(saved_accel)
 
         self.accelTable = saved_table
         self.SetAcceleratorTable(wx.AcceleratorTable(table))
-        
+
 
     def AppendMenus(self, top_menu, title, recursive=''):
 
@@ -259,9 +259,9 @@ class ShortcutEditorDemo(wx.Frame):
                     # Get a random image for the menu
                     bmp = random.choice(self.valid_images)
                     dummy_item.SetBitmap(bmp)
-                
+
                 recursive = ''
-                
+
             top_menu.Append(sub_menu)
 
             if random.randint(0, 1) == 1 and index < num_menus - 1:
@@ -279,7 +279,7 @@ class ShortcutEditorDemo(wx.Frame):
 
         letter = random.choice(COMBINATIONS)
         shortcut = '\t%s+' + letter
-        
+
         if rand == 1:
             # Ctrl + character
             modifier = 'Ctrl'
@@ -296,7 +296,7 @@ class ShortcutEditorDemo(wx.Frame):
 
         if shortcut in self.used_shortcuts:
             return self.CreateShortcut()
-        
+
         self.used_shortcuts.append(shortcut)
         return shortcut
 
@@ -321,10 +321,10 @@ class ShortcutEditorDemo(wx.Frame):
 
         dlg.ToMenuBar(self)
         dlg.ToAcceleratorTable(self)
-                
+
         dlg.Destroy()
-        
-            
+
+
     def OnMenuShortcuts(self, event):
 
         itemId = event.GetId()
@@ -345,7 +345,7 @@ class ShortcutEditorDemo(wx.Frame):
             if ids == itemId:
                 self.log.write('You have selected the accelerator for %s (%s)'%(label, accel))
                 break
-            
+
 
     def OnShortcutChanging(self, event):
 

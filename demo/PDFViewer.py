@@ -3,7 +3,6 @@
 import wx
 
 try:
-    import pyPdf
     from wx.lib.pdfviewer import pdfViewer, pdfButtonPanel
     havePyPdf = True
 except ImportError:
@@ -17,7 +16,7 @@ class TestPanel(wx.Panel):
         hsizer = wx.BoxSizer( wx.HORIZONTAL )
         vsizer = wx.BoxSizer( wx.VERTICAL )
         self.buttonpanel = pdfButtonPanel(self, wx.NewId(),
-                                wx.DefaultPosition, wx.DefaultSize, 0)  
+                                wx.DefaultPosition, wx.DefaultSize, 0)
         vsizer.Add(self.buttonpanel, 0,
                                 wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5)
         self.viewer = pdfViewer( self, wx.NewId(), wx.DefaultPosition,
@@ -26,7 +25,7 @@ class TestPanel(wx.Panel):
         loadbutton = wx.Button(self, wx.NewId(), "Load PDF file",
                                 wx.DefaultPosition, wx.DefaultSize, 0 )
         vsizer.Add(loadbutton, 0, wx.ALIGN_CENTER|wx.ALL, 5)
-        hsizer.Add(vsizer, 1, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5) 
+        hsizer.Add(vsizer, 1, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5)
         self.SetSizer(hsizer)
         self.SetAutoLayout(True)
 
@@ -35,7 +34,7 @@ class TestPanel(wx.Panel):
         self.viewer.buttonpanel = self.buttonpanel
 
         self.Bind(wx.EVT_BUTTON, self.OnLoadButton, loadbutton)
-        
+
     def OnLoadButton(self, event):
         dlg = wx.FileDialog(self, wildcard="*.pdf")
         if dlg.ShowModal() == wx.ID_OK:
@@ -51,10 +50,13 @@ def runTest(frame, nb, log):
         win = TestPanel(nb, log)
         return win
     else:
-        from Main import MessagePanel
-        win = MessagePanel(nb, 
-                           'This demo requires the pyPdf package to be installed.\n'
-                           'See: http://pybrary.net/pyPdf/', 
+        from wx.lib.msgpanel import MessagePanel
+        win = MessagePanel(nb,
+                           'This demo requires either the\n'
+                           'PyMuPDF see http://pythonhosted.org/PyMuPDF\n'
+                           'or\n'
+                           'PyPDF2 see http://pythonhosted.org/PyPDF2\n'
+                           'package installed.\n',
                            'Sorry', wx.ICON_WARNING)
         return win
 
@@ -66,9 +68,22 @@ The wx.lib.pdfviewer.pdfViewer class is derived from wx.ScrolledWindow
 and can display and print PDF files. The whole file can be scrolled from
 end to end at whatever magnification (zoom-level) is specified.
 
-<p> The viewer uses <b>pyPdf</b> to parse the pdf file so it is a requirement that
-this must be installed. The pyPdf home page is http://pybrary.net/pyPdf/
-and the library can also be downloaded from http://pypi.python.org/pypi/pyPdf/1.12
+<p> The viewer checks for the <b>PyMuPDF</b> then the <b>PyPDF2</b> package.
+If neither are installed an import error exception will be raised.
+
+<p>PyMuPDF contains the Python bindings for the underlying MuPDF library, a cross platform,
+complete PDF rendering library that is GPL licenced. PyMuPDF version 1.9.2 or later is required.
+
+<p>Further details on PyMuPDF can be found via http://pythonhosted.org/PyMuPDF
+
+<p>PyPDF2 provides a PdfFileReader class that is used to read the content stream of a PDF
+file which is subsequently rendered by the viewer itself.
+Please note that this is not a complete implementation of the pdf specification and
+will probably fail to render any random PDF file you supply. However it does seem to
+behave correctly with files that have been produced by ReportLab using Western languages.
+The main limitation is that it doesn't currently support embedded fonts.
+
+<p>Additional details on PyPDF2 can be found via http://pythonhosted.org/PyPDF2
 
 <p> There is an optional pdfButtonPanel class, derived from wx.lib.agw.buttonpanel,
 that can be placed, for example, at the top of the scrolled viewer window,
@@ -81,12 +96,6 @@ Externally callable methods are: LoadFile, Save, Print, SetZoom, and GoPage.
 <p> The viewer renders the pdf file content using Cairo if installed,
 otherwise wx.GraphicsContext is used. Printing is achieved by writing
 directly to a wx.PrintDC and using wx.Printer.
-
-<p> Please note that pdfviewer is a far from complete implementation of the pdf
-specification and will probably fail to display any random file you supply. 
-However it does seem to be OK with the sort of files produced by ReportLab that
-use Western languages. The biggest limitation is probably that it doesn't (yet?)
-support embedded fonts and will substitute one of the standard fonts instead.
 
 </body></html>
 """

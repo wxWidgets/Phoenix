@@ -8,7 +8,7 @@ but uses memory more efficiently for large images and high zoom levels.)
 """
 
 ## Set a path to an Image file here:
-ImageFile = "white_tank.jpg" 
+ImageFile = "white_tank.jpg"
 
 
 import wx
@@ -41,9 +41,9 @@ class DrawFrame(wx.Frame):
         Canvas.MaxScale=20 # sets the maximum zoom level
         self.Canvas = Canvas
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
 
-        
+
         # create the image:
         image = wx.Image(ImageFile)
         self.width, self.height = image.GetSize()
@@ -53,10 +53,10 @@ class DrawFrame(wx.Frame):
                                         Position = 'tl',
                                         )
         Canvas.AddObject(img)
-        
+
         self.Show()
         Canvas.ZoomToBB()
-        
+
     def OnMove(self, event):
         """
         Updates the status bar with the world coordinates
@@ -68,10 +68,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

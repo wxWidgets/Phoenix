@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     18-Jan-2009
-# Copyright:   (c) 2009 Total Control Software
+# Copyright:   (c) 2009-2017 Total Control Software
 # Licence:     wxWidgets license
 #
 # Tags:        phoenix-port, unittest, documented
@@ -38,7 +38,7 @@ def AdjustRectToScreen(rect, adjust=(0,0)):
 
     :rtype: `rect`
     """
-    
+
     assert isinstance(rect, wx.Rect)
     if -1 in rect.Get():
         # bail out if there are any -1's in the dimensions
@@ -74,7 +74,7 @@ def AdjustRectToScreen(rect, adjust=(0,0)):
     if rect.top < ca.top:
         rect.height -= (ca.top - rect.top)
         rect.top = ca.top
-        
+
     # make final adjustments if needed
     adjust = wx.Size(*adjust)
     if rect.width > (ca.width - adjust.width):

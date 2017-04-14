@@ -8,7 +8,7 @@ import sys
 class progdlg_Tests(wtc.WidgetTestCase):
 
     @unittest.skipIf(sys.platform.startswith("win"), "not running on Windows")
-    def test_progdlg1(self):        
+    def test_progdlg1(self):
         max = 50
         dlg = wx.GenericProgressDialog("Progress dialog example",
                                 "An informative message",
@@ -21,13 +21,13 @@ class progdlg_Tests(wtc.WidgetTestCase):
         while keepGoing and count < max:
             count += 1
             #wx.MilliSleep(250)
-            self.myYield()            
+            self.myYield()
             (keepGoing, skip) = dlg.Update(count)
 
         dlg.Destroy()
-    
+
     @unittest.skipIf(sys.platform.startswith("win"), "not running on Windows")
-    def test_progdlg2(self):        
+    def test_progdlg2(self):
         max = 50
         dlg = wx.ProgressDialog("Progress dialog example",
                                 "An informative message",
@@ -40,11 +40,11 @@ class progdlg_Tests(wtc.WidgetTestCase):
         while keepGoing and count < max:
             count += 1
             #wx.MilliSleep(250)
-            self.myYield()            
+            self.myYield()
             (keepGoing, skip) = dlg.Update(count)
 
         dlg.Destroy()
-    
+
 #---------------------------------------------------------------------------
 
 

@@ -20,7 +20,7 @@ class TestPanel(wx.Panel):
 
         box = wx.StaticBox(self, wx.NewId(), "" )
         buttonsizer = wx.StaticBoxSizer(box, wx.HORIZONTAL )
-    
+
         b1 = wx.Button(self, wx.NewId(), "First")
         buttonsizer.Add(b1, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnFirstPageButton, b1)
@@ -28,13 +28,13 @@ class TestPanel(wx.Panel):
         b2 = wx.Button(self,  wx.NewId(), "Previous")
         buttonsizer.Add(b2, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnPreviousPageButton, b2)
-        
+
         tx1 = wx.StaticText(self, wx.NewId(), "   Go to page" )
         buttonsizer.Add(tx1, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
         tc1 = wx.TextCtrl(self, wx.NewId(), "0", size=[30,-1])
         buttonsizer.Add( tc1, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
         self.Bind(wx.EVT_TEXT, self.OnGotoPage, tc1)
-    
+
         b3 = wx.Button(self, wx.NewId(), "Next")
         buttonsizer.Add(b3, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnNextPageButton, b3)
@@ -45,7 +45,7 @@ class TestPanel(wx.Panel):
 
         tx2 = wx.StaticText(self, wx.NewId(), "     Zoom")
         buttonsizer.Add(tx2, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
- 
+
         ch1 = wx.Choice(self, wx.NewId(),
                         choices=["Default", "Fit", "FitH", "FitV",
                                  "25%", "50%", "75%", "100%", "125%", "200%", "400%"])
@@ -58,7 +58,7 @@ class TestPanel(wx.Panel):
 
         box = wx.StaticBox(self, wx.NewId(), "" )
         rightsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-    
+
         b5 = wx.Button(self, wx.NewId(), "Load PDF")
         rightsizer.Add(b5, proportion=0, flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnLoadButton, b5)
@@ -129,7 +129,7 @@ class TestPanel(wx.Panel):
                 self.pdf.setZoom(percent)
             except ValueError:
                 pass
-        
+
     def OnLoadButton(self, event):
         dlg = wx.FileDialog(self, wildcard="*.pdf")
         if dlg.ShowModal() == wx.ID_OK:

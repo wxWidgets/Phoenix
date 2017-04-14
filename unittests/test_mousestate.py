@@ -4,7 +4,7 @@ import wx
 #---------------------------------------------------------------------------
 
 class MouseState(unittest.TestCase):
-    
+
     def test_MouseState(self):
         ms = wx.MouseState()
 
@@ -21,9 +21,9 @@ class MouseState(unittest.TestCase):
         ms.aux1IsDown
         ms.aux2IsDown
         ms.Position
-        
-    
-    
+
+
+
 #---------------------------------------------------------------------------
 
 

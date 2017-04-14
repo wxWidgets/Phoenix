@@ -24,7 +24,7 @@ class TestPanel(wx.Panel):
         dc.SetFont(wx.Font(16, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, True))
         dc.DrawText("Bitmap alpha blending (on all ports but gtk+ 1.2)",
                     25,25)
-        
+
         bmp = wx.Bitmap(opj('bitmaps/toucan.png'))
         if "gtk1" in wx.PlatformInfo:
             # Try to make up for lack of alpha support in wxGTK (gtk+
@@ -42,7 +42,7 @@ class TestPanel(wx.Panel):
             # convert back to a wx.Bitmap
             bmp = img.ConvertToBitmap()
 
-            
+
         dc.DrawBitmap(bmp, 25,100, True)
 
         dc.SetFont(self.GetFont())
@@ -51,7 +51,7 @@ class TestPanel(wx.Panel):
             y += dc.GetCharHeight() + 5
             dc.DrawText(msg, 200, y)
         dc.DrawBitmap(bmp, 250,100, True)
-        
+
 
 
 #----------------------------------------------------------------------

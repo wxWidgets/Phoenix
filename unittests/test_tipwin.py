@@ -14,8 +14,8 @@ class tipwin_Tests(wtc.WidgetTestCase):
         self.waitFor(100)
         w.Close()
 
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

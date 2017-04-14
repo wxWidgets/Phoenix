@@ -5,10 +5,10 @@ import wx.lib.mixins.inspection as wit
 #---------------------------------------------------------------------------
 
 class wit_TestCase(unittest.TestCase):
-    
+
     def test_App(self):
         app = wit.InspectableApp()
-    
+
     def test_App_OnInit(self):
         class MyApp(wit.InspectableApp):
             def OnInit(self):
@@ -29,8 +29,8 @@ class wit_TestCase(unittest.TestCase):
         self.assertTrue(app.onInit_called)
 
 
-            
-                
+
+
 #---------------------------------------------------------------------------
 
 

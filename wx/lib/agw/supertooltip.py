@@ -30,7 +30,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.supertooltip.SuperToolTip` is a class that mimics the behaviour of :class:`TipWindow` and generic tooltip
+:class:`~wx.lib.agw.supertooltip.SuperToolTip` is a class that mimics the behaviour of :class:`TipWindow` and generic tooltip
 windows, although it is a custom-drawn widget.
 
 
@@ -215,7 +215,7 @@ def MakeBold(font):
     """
 
     newFont = wx.Font(font.GetPointSize(), font.GetFamily(), font.GetStyle(),
-                      wx.BOLD, font.GetUnderlined(), font.GetFaceName())
+                      wx.FONTWEIGHT_BOLD, font.GetUnderlined(), font.GetFaceName())
 
     return newFont
 
@@ -1262,11 +1262,11 @@ class SuperToolTip(object):
 
         self._messageFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._headerFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._headerFont.SetWeight(wx.BOLD)
+        self._headerFont.SetWeight(wx.FONTWEIGHT_BOLD)
         self._footerFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._footerFont.SetWeight(wx.BOLD)
+        self._footerFont.SetWeight(wx.FONTWEIGHT_BOLD)
         self._hyperlinkFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._hyperlinkFont.SetWeight(wx.BOLD)
+        self._hyperlinkFont.SetWeight(wx.FONTWEIGHT_BOLD)
         self._hyperlinkFont.SetUnderlined(True)
 
 

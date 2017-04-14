@@ -13,7 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 """
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 #
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -67,6 +67,7 @@ class PyColourBox(wx.Panel):
         """Sets the box's current couple to the given tuple."""
         self.colour = colour
         self.colour_box.SetBackgroundColour(wx.Colour(*self.colour))
+        self.colour_box.Refresh()
 
     def Update(self):
         wx.Panel.Update(self)

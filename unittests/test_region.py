@@ -8,7 +8,7 @@ pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 #---------------------------------------------------------------------------
 
 class region_Tests(wtc.WidgetTestCase):
-    
+
     def test_regionCtors(self):
         r = wx.Region()
         r = wx.Region(10, 10, 100, 100)
@@ -19,8 +19,8 @@ class region_Tests(wtc.WidgetTestCase):
         bmp = wx.Bitmap(pngFile)
         r = wx.Region(bmp)
         r = wx.Region(bmp, 'black')
-        
-        
+
+
     def test_regionIterator1(self):
         region = wx.Region([(10,10), (100, 100), (10, 100)])
         iterator = wx.RegionIterator(region)
@@ -32,7 +32,7 @@ class region_Tests(wtc.WidgetTestCase):
             count += 1
         self.assertTrue(count > 0)
 
-        
+
     def test_regionIterator2(self):
         region = wx.Region([(10,10), (100, 100), (10, 100)])
         count = 0
@@ -50,7 +50,7 @@ class region_Tests(wtc.WidgetTestCase):
         region.Contains(wx.Point(10,20))
         region.Contains(wx.Rect(10,20,4,4))
         region.Subtract(wx.Rect(10,20,4,4))
-        
+
 #---------------------------------------------------------------------------
 
 

@@ -32,7 +32,7 @@ class DrawFrame(wx.Frame):
     def __init__(self,parent, id,title,position,size):
         wx.Frame.__init__(self,parent, id,title,position, size)
 
-        self.CreateStatusBar()            
+        self.CreateStatusBar()
         # Add the Canvas
         NC = NavCanvas.NavCanvas(self,
                                  size= (500,500),
@@ -40,10 +40,10 @@ class DrawFrame(wx.Frame):
                                  Debug = 0,
                                  BackgroundColor = "DARK SLATE BLUE",
                                  )
-        
+
         self.Canvas = NC.Canvas
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
 
         # Add some buttons to the Toolbar
         tb = NC.ToolBar
@@ -65,7 +65,7 @@ class DrawFrame(wx.Frame):
 
         self.RBBoxMode = GUI.RubberBandBox(self.NewRect)
         self.Canvas.SetMode(self.RBBoxMode)
-                
+
         self.Canvas.ZoomToBB()
 
         self.Show(True)
@@ -102,10 +102,10 @@ class DrawFrame(wx.Frame):
 app = wx.App()
 DrawFrame(None, -1, "FloatCanvas Rectangle Drawer", wx.DefaultPosition, (700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

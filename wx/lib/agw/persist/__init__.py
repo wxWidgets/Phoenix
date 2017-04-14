@@ -25,7 +25,7 @@ The persistence framework involves:
   the original class -- which has no special persistence support -- and PersistenceManager;
 * **PersistentHandlers** which handle different kind of saving/restoring actions depending
   on the widget kind.
-  
+
 
 Using Persistent Windows
 ========================
@@ -104,7 +104,7 @@ Example of using a notebook control which automatically remembers the last open 
 
             self.book = wx.Notebook(self, wx.ID_ANY)
 
-            # Very important step!!            
+            # Very important step!!
             self.book.SetName("MyBook") # Do not use the default name!!
 
             self.book.AddPage(wx.Panel(self.book), "Hello")
@@ -136,7 +136,7 @@ Example of using a notebook control which automatically remembers the last open 
 
 
 .. _persistent-windows:
-    
+
 Defining Custom Persistent Windows
 ==================================
 
@@ -148,7 +148,7 @@ for your custom class MyWidget you just need to:
   objects, typically something like "widget";
 * Implement its `Save()` and `Restore()` methods to actually save and restore the widget
   settings using `PersistentObject.SaveValue()` and `PersistentObject.RestoreValue()` methods.
-  
+
 If you want to add persistence support for a class not deriving from wx.Window, you need
 to derive MyPersistentWidget directly from PersistentObject and so implement its
 `PersistentObject.GetName()` method too. Additionally, you must ensure that
@@ -159,7 +159,7 @@ can be only done automatically for windows.
 TODOs
 =====
 
-* Find a way to handle :class:`ToolBar` UI settings as it has been done for :class:`~lib.agw.aui.auibar.AuiToolBar`:
+* Find a way to handle :class:`ToolBar` UI settings as it has been done for :class:`~wx.lib.agw.aui.auibar.AuiToolBar`:
   current :class:`ToolBar` doesn't seem to have easy access to the underlying toolbar tools;
 * Implement handler(s) for :class:`grid.Grid` for row/columns sizes (possibly adding another style
   to `PersistenceManager` as :class:`grid.Grid` sets up arrays to store individual row and column
@@ -172,10 +172,10 @@ TODOs
 License And Version
 ===================
 
-`PersistentObjects` library is distributed under the wxPython license. 
+`PersistentObjects` library is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 27 Mar 2013, 21.00 GMT
-Version 0.5. 
+Version 0.5.
 
 """
 

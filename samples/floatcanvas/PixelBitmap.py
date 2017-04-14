@@ -20,27 +20,27 @@ FC = FloatCanvas
 class PixelBitmap:
     """
     An unscaled bitmap that can be put on top of the canvas using:
-    
+
     Canvas.GridOver = MyPixelBitmap
-    
+
     It will always be drawn on top of everything else, and be positioned
     according to pixel coordinates on teh screen, regardless of zoom and
     pan position.
-    
+
     """
     def __init__(self, Bitmap, XY, Position = 'tl'):
         """
         PixelBitmap (Bitmap, XY, Position='tl')
 
         Bitmap is a wx.Bitmap or wx.Image
-        
+
         XY is the (x,y) location to place the bitmap, in pixel coordinates
-        
+
         Position indicates from where in the window the position is relative to:
            'tl' indicated the position from the top left the the window (the detault)
            'br' the bottom right
            'cr the center right, etc.
-        
+
         """
         if type(Bitmap) == wx.Bitmap:
             self.Bitmap = Bitmap
@@ -51,7 +51,7 @@ class PixelBitmap:
 
         self.XY = np.asarray(XY, dtype=np.int).reshape((2,))
         self.Position = Position
-        
+
         (self.Width, self.Height) = self.Bitmap.GetWidth(), self.Bitmap.GetHeight()
         self.ShiftFun = FC.TextObjectMixin.ShiftFunDict[Position]
 
@@ -62,7 +62,7 @@ class PixelBitmap:
             XY = (XY[0], h - XY[1] - self.Height)
         elif self.Position[0] == 'c':
             XY = (XY[0], XY[1] + (h - self.Height)/2)
-            
+
         if self.Position[1] == 'r':
             XY = (w - XY[0] - self.Width, XY[1])
         elif self.Position[1] == 'c':
@@ -77,7 +77,7 @@ class GridGroup:
     def _Draw(self, *args):
         for grid in self.Grids:
             grid._Draw(*args)
-        
+
 class DrawFrame(wx.Frame):
 
     """
@@ -97,8 +97,8 @@ class DrawFrame(wx.Frame):
                                      Debug = 0,
                                      BackgroundColor = "DARK SLATE BLUE",
                                      ).Canvas
-        
-        
+
+
         Point = (45,40)
         Box = Canvas.AddCircle(Point,
                                Diameter = 10,
@@ -118,7 +118,7 @@ class DrawFrame(wx.Frame):
                            ])
         Canvas.GridOver = grids
 
-        FloatCanvas.EVT_MOTION(Canvas, self.OnMove ) 
+        FloatCanvas.EVT_MOTION(Canvas, self.OnMove )
 
         self.Show()
         Canvas.ZoomToBB()
@@ -135,10 +135,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False) # true to get its own output window.
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

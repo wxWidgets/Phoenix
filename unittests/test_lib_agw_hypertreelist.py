@@ -13,7 +13,7 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
         tree = HTL.HyperTreeList(self.frame)
         self.assertEqual(tree.GetAGWWindowStyleFlag(), CT.TR_DEFAULT_STYLE)
         self.assertEqual(tree.GetRootItem(), None)
-    
+
     def test_lib_agw_hypertreelistTreeItem(self):
         tree = HTL.HyperTreeList(self.frame)
         tree.AddColumn("First column")
@@ -25,7 +25,7 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
         r = tree.GetRootItem()
         self.assertTrue(r is root)
         self.assertTrue(r == root)
-        
+
         child = tree.AppendItem(root, 'child item')
         self.assertTrue(child is not root)
         self.assertTrue(child != root)
@@ -34,20 +34,20 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
         tree = HTL.HyperTreeList(self.frame)
         tree.AddColumn("First column")
         tree.AddColumn("Second column")
-        
+
         self.assertEqual(tree.GetColumnCount(), 2)
         tree.RemoveColumn(0)
         self.assertEqual(tree.GetColumnCount(), 1)
 
         self.assertEqual(tree.GetColumnWidth(0), HTL._DEFAULT_COL_WIDTH)
-                
+
         tree.AddColumn("Second column")
         tree.SetColumnShown(1, False)
         self.assertTrue(not tree.IsColumnShown(1))
-        
+
         tree.SetColumnEditable(0, True)
         self.assertTrue(tree.IsColumnEditable(0))
-                        
+
     def test_lib_agw_hypertreelistConstantsExist(self):
         HTL.TR_ALIGN_WINDOWS
         HTL.TR_AUTO_CHECK_CHILD
@@ -77,7 +77,7 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
         HTL.EVT_TREE_ITEM_CHECKING
         HTL.EVT_TREE_ITEM_HYPERLINK
 
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -8,16 +8,16 @@ class sizer_Tests(wtc.WidgetTestCase):
 
     def test_sizerBox(self):
         bs = wx.BoxSizer()
-        
+
     def test_sizerStatBox(self):
         sbs1 = wx.StaticBoxSizer(wx.StaticBox(self.frame, label='label'), wx.VERTICAL)
         sbs2 = wx.StaticBoxSizer(wx.HORIZONTAL, self.frame, 'label')
-        
+
     def test_sizerGrid(self):
         gs1 = wx.GridSizer(4, 5, 6)
         gs2 = wx.GridSizer(4, (5,6))
         gs3 = wx.GridSizer(cols=4, hgap=5, vgap=6)
-        
+
     def test_sizerFlexGrid(self):
         fgs1 = wx.FlexGridSizer(4, 5, 6)
         fgs2 = wx.FlexGridSizer(4, (5,6))
@@ -31,33 +31,33 @@ class sizer_Tests(wtc.WidgetTestCase):
         fgs.AddGrowableCol(3, 2)
         fgs.AddGrowableRow(2)
         fgs.RemoveGrowableRow(2)
-        
+
         self.frame.SetSizer(fgs)
         self.frame.Layout()
-        
+
         widths = fgs.GetColWidths()
         heights = fgs.GetRowHeights()
         self.assertEqual(4, len(widths))
         self.assertEqual(5, len(heights))
-       
-        
+
+
     def test_sizer2(self):
         s = wx.BoxSizer(wx.VERTICAL)
         s.Add(wx.Panel(self.frame))
         s2 = wx.BoxSizer()
         s.Add(s2)
         self.frame.SetSizer(s)
-        
+
     def test_sizerUserData(self):
         bs = wx.BoxSizer()
         si = bs.Add(wx.Panel(self.frame), userData="MyData")
         self.assertTrue(si.GetUserData() == "MyData")
-        
+
     def test_sizerFlags(self):
         bs = wx.BoxSizer()
-        bs.Add(wx.Panel(self.frame), 
+        bs.Add(wx.Panel(self.frame),
                wx.SizerFlags(2).Border(wx.ALL, 5).Align(wx.ALIGN_RIGHT))
-        
+
     def test_sizerAddMany(self):
         bs = wx.BoxSizer()
         bs.AddMany([ wx.Panel(self.frame),                  # item w/o tuple
@@ -87,7 +87,7 @@ class sizer_Tests(wtc.WidgetTestCase):
         bs.Add(w, h, wx.SizerFlags(1))
         bs.Add( (w, h), wx.SizerFlags(2) )
         bs.Add(wx.Size(w,h), wx.SizerFlags(3))
-        
+
     def test_sizerSpacers3(self):
         bs = wx.BoxSizer()
         w = 5
@@ -132,8 +132,8 @@ class sizer_Tests(wtc.WidgetTestCase):
         self.assertTrue(bs)
         bs.Destroy()
         self.assertFalse(bs)
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

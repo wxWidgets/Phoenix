@@ -3,45 +3,45 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Mar-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "listctrl"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ "wxListItemAttr",
            "wxListItem",
            "wxListCtrl",
            "wxListView",
            "wxListEvent",
-           ]    
-    
+           ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
 
     #-------------------------------------------------------
     c = module.find('wxListItem')
     assert isinstance(c, etgtools.ClassDef)
     c.find('SetData').findOverload('void *').ignore()
     c.find('GetData').type = 'long'
-    
+
     #-------------------------------------------------------
     c = module.find('wxListCtrl')
     tools.fixWindowClass(c)
@@ -57,13 +57,13 @@ def run():
                   'OnGetItemText']:
         c.find(name).ignore(False)
         c.find(name).isVirtual = True
-    
-    
+
+
     # Tweaks to allow passing and using a Python callable object for the sort
     # compare function. First provide a sort callback function that can call the
     # Python function.
     c.addCppCode("""\
-        static int wxCALLBACK wxPyListCtrl_SortItems(wxIntPtr item1, wxIntPtr item2, wxIntPtr funcPtr) 
+        static int wxCALLBACK wxPyListCtrl_SortItems(wxIntPtr item1, wxIntPtr item2, wxIntPtr funcPtr)
         {
             int retval = 0;
             PyObject* func = (PyObject*)funcPtr;
@@ -74,7 +74,7 @@ def run():
         #else
             PyObject* args = Py_BuildValue("(LL)", item1, item2);
         #endif
-            
+
             PyObject* result = PyEval_CallObject(func, args);
             Py_DECREF(args);
             if (result) {
@@ -84,7 +84,7 @@ def run():
             return retval;
         }
         """)
-    
+
     # Next, provide an alternate implementation of SortItems that will use that callback.
     sim = c.find('SortItems')
     assert isinstance(sim, etgtools.MethodDef)
@@ -94,10 +94,10 @@ def run():
     sim.setCppCode("""\
         if (!PyCallable_Check(fnSortCallBack))
             return false;
-        return self->SortItems((wxListCtrlCompare)wxPyListCtrl_SortItems, 
-                               (wxIntPtr)fnSortCallBack);       
+        return self->SortItems((wxListCtrlCompare)wxPyListCtrl_SortItems,
+                               (wxIntPtr)fnSortCallBack);
     """)
-    
+
     # Change the semantics of GetColumn to return the item as the return
     # value instead of through a prameter.
     # bool GetColumn(int col, wxListItem& item) const;
@@ -118,9 +118,9 @@ def run():
         if (self->GetColumn(col, item))
             return new wxListItem(item);
         else
-            return NULL;       
+            return NULL;
         """)
-    
+
     # Do the same for GetItem
     # bool GetItem(wxListItem& info) const;
     c.find('GetItem').ignore()
@@ -136,7 +136,7 @@ def run():
         self->GetItem(*info);
         return info;
         """)
-    
+
     # bool GetItemPosition(long item, wxPoint& pos) const;
     c.find('GetItemPosition').ignore()
     c.addCppMethod('wxPoint*', 'GetItemPosition', '(long item)',
@@ -147,7 +147,7 @@ def run():
         self->GetItemPosition(item, *pos);
         return pos;
         """)
-    
+
     # bool GetItemRect(long item, wxRect& rect, int code = wxLIST_RECT_BOUNDS) const;
     c.find('GetItemRect').ignore()
     c.addCppMethod('wxRect*', 'GetItemRect', '(long item, int code = wxLIST_RECT_BOUNDS)',
@@ -160,8 +160,8 @@ def run():
         self->GetItemRect(item, *rect, code);
         return rect;
         """)
-    
-    
+
+
     c.find('EditLabel.textControlClass').ignore()
     c.find('EndEditLabel').ignore()
     c.find('AssignImageList.imageList').transfer = True
@@ -169,7 +169,7 @@ def run():
     c.find('HitTest.ptrSubItem').ignore()
 
     c.addCppMethod(
-        'PyObject*', 'HitTestSubItem', '(const wxPoint& point)', 
+        'PyObject*', 'HitTestSubItem', '(const wxPoint& point)',
         pyArgsString="HitTestSubItem(point) -> (item, flags, subitem)",
         doc="Determines which item (if any) is at the specified point, giving details in flags.",
         body="""\
@@ -185,7 +185,7 @@ def run():
             """)
 
 
-        
+
     # Some deprecated aliases for Classic renames
     c.addPyCode('ListCtrl.FindItemData = wx.deprecated(ListCtrl.FindItem, "Use FindItem instead.")')
     c.addPyCode('ListCtrl.FindItemAtPos = wx.deprecated(ListCtrl.FindItem, "Use FindItem instead.")')
@@ -193,8 +193,8 @@ def run():
     c.addPyCode('ListCtrl.InsertImageItem = wx.deprecated(ListCtrl.InsertItem, "Use InsertItem instead.")')
     c.addPyCode('ListCtrl.InsertImageStringItem = wx.deprecated(ListCtrl.InsertItem, "Use InsertItem instead.")')
     c.addPyCode('ListCtrl.SetStringItem = wx.deprecated(ListCtrl.SetItem, "Use SetItem instead.")')
-    
-    
+
+
     # Provide a way to determine if column ordering is possble
     c.addCppMethod('bool', 'HasColumnOrderSupport', '()',
         """\
@@ -204,7 +204,7 @@ def run():
             return false;
         #endif
         """)
-    
+
     # And provide implementation of those methods that will work whether or
     # not wx has column ordering support
     c.find('GetColumnOrder').setCppCode("""\
@@ -215,7 +215,7 @@ def run():
             return 0;
         #endif
         """)
-        
+
     c.find('GetColumnIndexFromOrder').setCppCode("""\
         #ifdef wxHAS_LISTCTRL_COLUMN_ORDER
             return self->GetColumnIndexFromOrder(pos);
@@ -224,7 +224,7 @@ def run():
             return 0;
         #endif
         """)
-        
+
     c.find('GetColumnsOrder').type = 'wxArrayInt*'
     c.find('GetColumnsOrder').factory=True
     c.find('GetColumnsOrder').setCppCode("""\
@@ -235,7 +235,7 @@ def run():
             return new wxArrayInt();
         #endif
         """)
-        
+
     c.find('SetColumnsOrder').setCppCode("""\
         #ifdef wxHAS_LISTCTRL_COLUMN_ORDER
             return self->SetColumnsOrder(*orders);
@@ -254,8 +254,8 @@ def run():
         else: state = 0
         self.SetItemState(idx, state, wx.LIST_STATE_SELECTED)
         """)
-    
-    c.addPyMethod('Focus', '(self, idx)', 
+
+    c.addPyMethod('Focus', '(self, idx)',
         doc='Focus and show the given item.',
         body="""\
         self.SetItemState(idx, wx.LIST_STATE_FOCUSED, wx.LIST_STATE_FOCUSED)
@@ -309,8 +309,8 @@ def run():
                 self.SetItem(pos, i, text_type(entry[i]))
             return pos
         """)
-        
-        
+
+
     c.addCppMethod('wxWindow*', 'GetMainWindow', '()',
         body="""\
         #if defined(__WXMSW__) || defined(__WXMAC__)
@@ -320,7 +320,7 @@ def run():
         #endif
         """)
 
-        
+
     #-------------------------------------------------------
     c = module.find('wxListView')
     tools.fixWindowClass(c)
@@ -350,7 +350,7 @@ def run():
         EVT_LIST_COL_DRAGGING      = PyEventBinder(wxEVT_LIST_COL_DRAGGING     , 1)
         EVT_LIST_COL_END_DRAG      = PyEventBinder(wxEVT_LIST_COL_END_DRAG     , 1)
         EVT_LIST_ITEM_FOCUSED      = PyEventBinder(wxEVT_LIST_ITEM_FOCUSED     , 1)
-        
+
         # deprecated wxEVT aliases
         wxEVT_COMMAND_LIST_BEGIN_DRAG         = wxEVT_LIST_BEGIN_DRAG
         wxEVT_COMMAND_LIST_BEGIN_RDRAG        = wxEVT_LIST_BEGIN_RDRAG
@@ -373,12 +373,12 @@ def run():
         wxEVT_COMMAND_LIST_COL_END_DRAG       = wxEVT_LIST_COL_END_DRAG
         wxEVT_COMMAND_LIST_ITEM_FOCUSED       = wxEVT_LIST_ITEM_FOCUSED
         """)
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

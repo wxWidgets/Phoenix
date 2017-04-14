@@ -50,11 +50,11 @@ Usage example::
             wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
             self._ribbon = RB.RibbonBar(self, wx.ID_ANY)
-            
+
             home = RB.RibbonPage(self._ribbon, wx.ID_ANY, "Examples", CreateBitmap("ribbon"))
             toolbar_panel = RB.RibbonPanel(home, wx.ID_ANY, "Toolbar", wx.NullBitmap, wx.DefaultPosition,
                                            wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
-            
+
             toolbar = RB.RibbonToolBar(toolbar_panel, ID_MAIN_TOOLBAR)
             toolbar.AddTool(wx.ID_ANY, CreateBitmap("align_left"))
             toolbar.AddTool(wx.ID_ANY, CreateBitmap("align_center"))
@@ -95,7 +95,7 @@ Usage example::
             shapes.AddButton(ID_CIRCLE, "Circle", CreateBitmap("circle"), CreateBitmap("circle_small"),
                              help_string="This is a tooltip for the circle button demonstrating another tooltip",
                              kind=RB.RIBBON_BUTTON_TOGGLE)
-                             
+
             shapes.AddSimpleButton(ID_CROSS, "Cross", CreateBitmap("cross"), "")
             shapes.AddHybridButton(ID_TRIANGLE, "Triangle", CreateBitmap("triangle"))
             shapes.AddSimpleButton(ID_SQUARE, "Square", CreateBitmap("square"), "")
@@ -115,13 +115,13 @@ Usage example::
                                          wx.ArtProvider.GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(32, 32)), "")
             provider_bar.AddSimpleButton(ID_AUI_PROVIDER, "AUI Provider", CreateBitmap("aui_style"), "")
             provider_bar.AddSimpleButton(ID_MSW_PROVIDER, "MSW Provider", CreateBitmap("msw_style"), "")
-            
+
             primary_panel = RB.RibbonPanel(scheme, wx.ID_ANY, "Primary Colour", CreateBitmap("colours"))
             self._primary_gallery = self.PopulateColoursPanel(primary_panel, self._default_primary, ID_PRIMARY_COLOUR)
 
             secondary_panel = RB.RibbonPanel(scheme, wx.ID_ANY, "Secondary Colour", CreateBitmap("colours"))
             self._secondary_gallery = self.PopulateColoursPanel(secondary_panel, self._default_secondary, ID_SECONDARY_COLOUR)
-        
+
             dummy_2 = RB.RibbonPage(self._ribbon, wx.ID_ANY, "Empty Page", CreateBitmap("empty"))
             dummy_3 = RB.RibbonPage(self._ribbon, wx.ID_ANY, "Another Page", CreateBitmap("empty"))
 
@@ -129,7 +129,7 @@ Usage example::
 
             self._logwindow = wx.TextCtrl(self, wx.ID_ANY, "", wx.DefaultPosition, wx.DefaultSize,
                                           wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_LEFT | wx.TE_BESTWRAP | wx.BORDER_NONE)
-        
+
             s = wx.BoxSizer(wx.VERTICAL)
 
             s.Add(self._ribbon, 0, wx.EXPAND)
@@ -147,7 +147,7 @@ Usage example::
     frame.Show()
 
     app.MainLoop()
-    
+
 
 
 What's New
@@ -169,11 +169,11 @@ New features recently implemented:
 License And Version
 ===================
 
-RIBBON library is distributed under the wxPython license. 
+RIBBON library is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
-Version 0.3. 
+Version 0.3.
 
 """
 

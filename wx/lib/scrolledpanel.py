@@ -8,7 +8,7 @@
 #----------------------------------------------------------------------------
 # 12/11/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 #
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -44,10 +44,10 @@ Usage example::
 
     text = '''
     ScrolledPanel extends wx.ScrolledWindow, adding all
-    the necessary bits to set up scroll handling for you. 
+    the necessary bits to set up scroll handling for you.
 
     Here are three fixed size examples of its use. The
-    demo panel for this sample is also using it -- the 
+    demo panel for this sample is also using it -- the
     wx.StaticLine below is intentionally made too long so a scrollbar will be
     activated.'''
 
@@ -63,7 +63,7 @@ Usage example::
             vbox = wx.BoxSizer(wx.VERTICAL)
 
             desc = wx.StaticText(self, -1, text)
-                                
+
             desc.SetForegroundColour("Blue")
             vbox.Add(desc, 0, wx.ALIGN_LEFT | wx.ALL, 5)
             vbox.Add(wx.StaticLine(self, -1, size=(1024, -1)), 0, wx.ALL, 5)
@@ -90,7 +90,7 @@ class ScrolledPanel(wx.ScrolledWindow):
     :class:`ScrolledWindow`, providing automatic scrollbar and scrolling
     behavior and the tab traversal management that :class:`ScrolledWindow` lacks.
     """
-    
+
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.TAB_TRAVERSAL,
                  name="scrolledpanel"):
@@ -117,7 +117,7 @@ class ScrolledPanel(wx.ScrolledWindow):
         self.Bind(wx.EVT_CHILD_FOCUS, self.OnChildFocus)
 
 
-    def SetupScrolling(self, scroll_x=True, scroll_y=True, rate_x=20, rate_y=20, 
+    def SetupScrolling(self, scroll_x=True, scroll_y=True, rate_x=20, rate_y=20,
                        scrollToTop=True, scrollIntoView=True):
         """
         This function sets up the event handling necessary to handle
@@ -130,10 +130,10 @@ class ScrolledPanel(wx.ScrolledWindow):
         :param bool `scroll_y`: ``True`` to allow vertical scrolling, ``False`` otherwise;
         :param int `rate_x`: the horizontal scroll increment;
         :param int `rate_y`: the vertical scroll increment;
-        :param bool `scrollToTop`: ``True`` to scroll all way to the top, ``False`` otherwise;        
+        :param bool `scrollToTop`: ``True`` to scroll all way to the top, ``False`` otherwise;
         :param bool `scrollIntoView`: ``True`` to scroll a focused child into view, ``False`` otherwise.
         """
-        
+
         self.scrollIntoView = scrollIntoView
 
         # The following is all that is needed to integrate the sizer and the scrolled window
@@ -149,7 +149,7 @@ class ScrolledPanel(wx.ScrolledWindow):
             if rate_y:
                 h += rate_y - (h % rate_y)
             self.SetVirtualSize( (w, h) )
-        self.SetScrollRate(rate_x, rate_y)        
+        self.SetScrollRate(rate_x, rate_y)
         wx.CallAfter(self._SetupAfter, scrollToTop) # scroll back to top after initial events
 
 
@@ -166,25 +166,25 @@ class ScrolledPanel(wx.ScrolledWindow):
 
         :param `evt`: a :class:`ChildFocusEvent` event to be processed.
         """
-        
+
         child = evt.GetWindow()
         if self.scrollIntoView:
             self.ScrollChildIntoView(child)
             evt.Skip()
-        
+
 
     def ScrollChildIntoView(self, child):
         """
         Scroll the panel so that the specified child window is in view.
 
         :param wx.Window `child`: any :class:`wx.Window` - derived control.
-        
+
         .. note:: This method looks redundant if `evt.Skip()` is
            called as well - the base :class:`ScrolledWindow` widget now seems
            to be doing the same thing anyway.
 
         """
-        
+
         sppu_x, sppu_y = self.GetScrollPixelsPerUnit()
         vs_x, vs_y   = self.GetViewStart()
         cr = child.GetRect()
@@ -210,7 +210,7 @@ class ScrolledPanel(wx.ScrolledWindow):
                 new_vs_x = vs_x + diff
             else:
                 new_vs_x = vs_x + (cr.x / sppu_x)
-                
+
         # is it below the bottom ?
         if cr.bottom > clntsz.height and sppu_y > 0:
             diff = math.ceil(1.0 * (cr.bottom - clntsz.height + 1) / sppu_y)

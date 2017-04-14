@@ -14,7 +14,7 @@ class lib_agw_labelbook_Tests(wtc.WidgetTestCase):
 
         book = LB.FlatImageBook(self.frame)
         self.assertEqual(book.GetPageCount(), 0)
-        
+
     def test_lib_agw_labelbookPages(self):
         nb = LB.LabelBook(self.frame)
         p1 = wx.Panel(nb)
@@ -22,7 +22,7 @@ class lib_agw_labelbook_Tests(wtc.WidgetTestCase):
         p2 = wx.Panel(nb)
         nb.AddPage(p2, "Page2")
         nb.SetSelection(0)
-        
+
         nb = LB.FlatImageBook(self.frame)
         p1 = wx.Panel(nb)
         nb.AddPage(p1, "Page1")
@@ -39,7 +39,7 @@ class lib_agw_labelbook_Tests(wtc.WidgetTestCase):
 
         for style in [LB.INB_LEFT, LB.INB_RIGHT]:
             nb.SetAGWWindowStyleFlag(style)
-            
+
         nb = LB.FlatImageBook(self.frame)
         p1 = wx.Panel(nb)
         nb.AddPage(p1, "Page1")
@@ -56,7 +56,7 @@ class lib_agw_labelbook_Tests(wtc.WidgetTestCase):
         p2 = wx.Panel(nb)
         nb.AddPage(p2, "Page2")
         nb.DeleteAllPages()
-            
+
         nb = LB.FlatImageBook(self.frame)
         p1 = wx.Panel(nb)
         nb.AddPage(p1, "Page1")
@@ -65,7 +65,7 @@ class lib_agw_labelbook_Tests(wtc.WidgetTestCase):
 
         for index in range(nb.GetPageCount()-1, -1, -1):
             nb.DeletePage(index)
-                        
+
     def test_lib_agw_labelbookConstantsExist(self):
         LB.INB_BOTTOM
         LB.INB_LEFT
@@ -85,7 +85,7 @@ class lib_agw_labelbook_Tests(wtc.WidgetTestCase):
         LB.INB_DEFAULT_STYLE
 
         self.assertEqual(LB.INB_DEFAULT_STYLE, LB.INB_BORDER | LB.INB_TOP | LB.INB_USE_PIN_BUTTON)
-        
+
         LB.INB_TAB_AREA_BACKGROUND_COLOUR
         LB.INB_ACTIVE_TAB_COLOUR
         LB.INB_TABS_BORDER_COLOUR
@@ -109,7 +109,7 @@ class lib_agw_labelbook_Tests(wtc.WidgetTestCase):
 
         self.assertEqual(LB.EVT_IMAGENOTEBOOK_PAGE_CHANGED, wx.EVT_NOTEBOOK_PAGE_CHANGED)
         self.assertEqual(LB.EVT_IMAGENOTEBOOK_PAGE_CHANGING, wx.EVT_NOTEBOOK_PAGE_CHANGING)
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

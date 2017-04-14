@@ -11,7 +11,7 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
         dv.DataViewCustomRenderer.__init__(self, *args, **kw)
         self.log = log
         self.value = None
-        
+
 
     def SetValue(self, value):
         #self.log.write('SetValue: %s' % value)
@@ -115,17 +115,17 @@ class TestPanel(wx.Panel):
         # Create a dataview control
         self.dvc = dv.DataViewCtrl(self,
                                    style=wx.BORDER_THEME
-                                   | dv.DV_ROW_LINES 
+                                   | dv.DV_ROW_LINES
                                    #| dv.DV_HORIZ_RULES
                                    | dv.DV_VERT_RULES
                                    | dv.DV_MULTIPLE
                                    )
-        
+
         # Create an instance of the model
         if model is None:
             self.model = TestModel(data, log)
         else:
-            self.model = model            
+            self.model = model
         self.dvc.AssociateModel(self.model)
 
         # Now we create some columns.
@@ -142,10 +142,10 @@ class TestPanel(wx.Panel):
             column = dv.DataViewColumn(title, renderer, col, width=width)
             column.Alignment = wx.ALIGN_LEFT
             self.dvc.AppendColumn(column)
-                                  
-        self.Sizer = wx.BoxSizer(wx.VERTICAL) 
+
+        self.Sizer = wx.BoxSizer(wx.VERTICAL)
         self.Sizer.Add(self.dvc, 1, wx.EXPAND)
-        
+
 
 
 #----------------------------------------------------------------------

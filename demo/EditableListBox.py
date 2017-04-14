@@ -13,7 +13,7 @@ class TestPanel(wx.Panel):
         self.elb = wx.adv.EditableListBox(
                     self, -1, "List of Stuff", (50,50), (250, 250),
                     style=wx.adv.EL_DEFAULT_STYLE |
-                          wx.adv.EL_NO_REORDER |
+                          #wx.adv.EL_NO_REORDER |
                           wx.adv.EL_ALLOW_NEW |
                           wx.adv.EL_ALLOW_EDIT |
                           wx.adv.EL_ALLOW_DELETE)

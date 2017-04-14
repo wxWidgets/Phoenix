@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import wx
+import wx.adv
 import images
 import random
 
@@ -10,7 +11,7 @@ W = 2000
 H = 2000
 SW = 150
 SH = 150
-SHAPE_COUNT = 2500
+SHAPE_COUNT = 750
 hitradius = 5
 
 #---------------------------------------------------------------------------
@@ -58,7 +59,7 @@ class MyCanvas(wx.ScrolledWindow):
         self.SetScrollRate(20,20)
 
         # create a PseudoDC to record our drawing
-        self.pdc = wx.PseudoDC()
+        self.pdc = wx.adv.PseudoDC()
         self.pen_cache = {}
         self.brush_cache = {}
         self.DoDrawing(self.pdc)
@@ -81,7 +82,7 @@ class MyCanvas(wx.ScrolledWindow):
     def OffsetRect(self, r):
         xView, yView = self.GetViewStart()
         xDelta, yDelta = self.GetScrollPixelsPerUnit()
-        r.OffsetXY(-(xView*xDelta),-(yView*yDelta))
+        r.Offset(-(xView*xDelta),-(yView*yDelta))
 
     def OnMouse(self, event):
         global hitradius
@@ -123,14 +124,14 @@ class MyCanvas(wx.ScrolledWindow):
     def RandomPen(self):
         c = random.choice(colours)
         t = random.randint(1, 4)
-        if not self.pen_cache.has_key( (c, t) ):
+        if (c, t) not in self.pen_cache:
             self.pen_cache[(c, t)] = wx.Pen(c, t)
         return self.pen_cache[(c, t)]
 
 
     def RandomBrush(self):
         c = random.choice(colours)
-        if not self.brush_cache.has_key(c):
+        if c not in self.brush_cache:
             self.brush_cache[c] = wx.Brush(c)
 
         return self.brush_cache[c]
@@ -144,12 +145,15 @@ class MyCanvas(wx.ScrolledWindow):
         # wx.PaintDC and then blit the bitmap to it when dc is
         # deleted.
         dc = wx.BufferedPaintDC(self)
-        # use PrepateDC to set position correctly
-        self.PrepareDC(dc)
+
         # we need to clear the dc BEFORE calling PrepareDC
         bg = wx.Brush(self.GetBackgroundColour())
         dc.SetBackground(bg)
         dc.Clear()
+
+        # use PrepareDC to set position correctly
+        self.PrepareDC(dc)
+
         # create a clipping rect from our position and size
         # and the Update Region
         xv, yv = self.GetViewStart()
@@ -158,8 +162,11 @@ class MyCanvas(wx.ScrolledWindow):
         rgn = self.GetUpdateRegion()
         rgn.Offset(x,y)
         r = rgn.GetBox()
-        # draw to the dc using the calculated clipping rect
+
+        # Draw the saved drawing operations to the dc using the calculated
+        # clipping rect
         self.pdc.DrawToDCClipped(dc,r)
+
 
     def DoDrawing(self, dc):
         random.seed()
@@ -298,9 +305,9 @@ def runTest(frame, nb, log):
 overview = """
 <html>
 <body>
-<h2>wx.PseudoDC</h2>
+<h2>wx.adv.PseudoDC</h2>
 
-The wx.PseudoDC class provides a way to record operations on a DC and then
+The wx.adv.PseudoDC class provides a way to record operations on a DC and then
 play them back later.  The PseudoDC can be passed to a drawing routine as
 if it were a real DC.  All Drawing methods are supported except Blit but
 GetXXX methods are not supported and none of the drawing methods return
@@ -308,11 +315,11 @@ a value. The PseudoDC records the drawing to an operation
 list.  The operations can be played back to a real DC using:<pre>
 DrawToDC(dc)
 </pre>
-The operations can be tagged with an id in order to associated them with a
+The operations can be tagged with an id in order to associate them with a
 specific object.  To do this use:<pre>
     SetId(id)
 </pre>
-Every operation after this will be associated with id until SetId is called
+Every operation after this will be associated with that tag id until SetId is called
 again.  The PseudoDC also supports object level clipping.  To enable this use:<pre>
     SetIdBounds(id,rect)
 </pre>
@@ -320,7 +327,7 @@ for each object that should be clipped.  Then use:<pre>
     DrawToDCClipped(dc, clippingRect)
 </pre>
 To draw the PseudoDC to a real dc. This is useful for large scrolled windows
-where many objects are offscreen.
+where many objects are off screen.
 
 Objects can be moved around without re-drawing using:<pre>
     TranslateId(id, dx, dy)

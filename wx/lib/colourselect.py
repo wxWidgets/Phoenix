@@ -30,7 +30,7 @@
 
 # 12/01/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o Updated for 2.5 compatability.
+# o Updated for 2.5 compatibility.
 #
 
 """
@@ -54,7 +54,7 @@ Sample usage::
     import wx.lib.colourselect as csel
 
     class MyFrame(wx.Frame):
-    
+
         def __init__(self, parent, title):
 
             wx.Frame.__init__(self, parent, wx.ID_ANY, title, size=(400, 300))
@@ -65,8 +65,8 @@ Sample usage::
 
         def OnChooseBackground(self, event):
 
-            col1 = event.GetValue()        
-            self.panel.SetBackgroundColour(col1)        
+            col1 = event.GetValue()
+            self.panel.SetBackgroundColour(col1)
             event.Skip()
 
     app = wx.App()
@@ -111,7 +111,7 @@ class ColourSelectEvent(wx.PyCommandEvent):
 
         :rtype: :class:`wx.Colour`
         """
-        
+
         return self.value
 
 
@@ -180,11 +180,11 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
         if label:
             mdc = wx.MemoryDC(wx.Bitmap(1,1))
             w, h = mdc.GetTextExtent(label)
-            w += 6
-            h += 6
+            w += 8
+            h += 8
         else:
-            w, h = 20, 20
-            
+            w, h = 22, 22
+
         size.width = size.width if size.width != -1 else w
         size.height = size.height if size.height != -1 else h
         super(ColourSelect, self).__init__(parent, id, wx.Bitmap(w,h),
@@ -234,7 +234,7 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
         """
 
         self.SetColour(colour)
-        
+
 
     def SetColour(self, colour):
         """
@@ -302,14 +302,14 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
 
     def MakeBitmap(self):
         """ Creates a bitmap representation of the current selected colour. """
-        
+
         bdr = 8
         width, height = self.GetSize()
 
         # yes, this is weird, but it appears to work around a bug in wxMac
         if "wxMac" in wx.PlatformInfo and width == height:
             height -= 1
-            
+
         bmp = wx.Bitmap(width-bdr, height-bdr)
         dc = wx.MemoryDC()
         dc.SelectObject(bmp)
@@ -326,7 +326,7 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
             dc.SetTextForeground(fcolour)
             dc.DrawLabel(label, (0,0, width-bdr, height-bdr),
                          wx.ALIGN_CENTER)
-            
+
         dc.SelectObject(wx.NullBitmap)
         return bmp
 
@@ -340,11 +340,11 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
 
         self.SetBitmapLabel(bmp)
         self.Refresh()
-        
+
 
     def OnChange(self):
         """ Fires the ``EVT_COLOURSELECT`` event, as the user has changed the current colour. """
-        
+
         evt = ColourSelectEvent(self.GetId(), self.GetValue())
         evt.SetEventObject(self)
         wx.PostEvent(self, evt)
@@ -381,5 +381,5 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
 
         # moved after dlg.Destroy, since who knows what the callback will do...
         if changed:
-            self.OnChange() 
+            self.OnChange()
 

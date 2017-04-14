@@ -39,7 +39,7 @@ class SamplePane(wx.Panel):
         self.SetBackgroundColour(wx.Colour(255,255,255))
 
         label = label + "\nEnjoy the LabelBook && FlatImageBook demo!"
-        static = wx.StaticText(self, -1, label, pos=(10, 10))        
+        static = wx.StaticText(self, -1, label, pos=(10, 10))
 
 #----------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ class LabelBookDemo(wx.Frame):
         self.fittext = wx.CheckBox(self.leftpanel, -1, "Fit Label Text")
         self.boldtext = wx.CheckBox(self.leftpanel, -1, "Bold Label Text")
         self.boldselection = wx.CheckBox(self.leftpanel, -1, "Bold Selected Tab")
-        
+
         self.textsize = wx.TextCtrl(self.leftpanel, -1, "1.0",style=wx.TE_PROCESS_ENTER)
         self.background = csel.ColourSelect(self.leftpanel, -1, "Choose...",
                                             wx.Colour(132, 164, 213), size=(-1, 20))
@@ -142,7 +142,7 @@ class LabelBookDemo(wx.Frame):
 
         self.SetSize((800,700))
 
-        self.SetIcon(images.Mondrian.GetIcon())  
+        self.SetIcon(images.Mondrian.GetIcon())
         self.CenterOnScreen()
 
         self.initializing = False
@@ -157,7 +157,7 @@ class LabelBookDemo(wx.Frame):
         self.fittext.SetValue(1)
         self.border.SetValue(1)
         self.onlytext.SetValue(1)
-       
+
 
     def DoLayout(self):
 
@@ -175,7 +175,7 @@ class LabelBookDemo(wx.Frame):
         sizer_2.Add(self.bookdirection, 0, wx.ALL, 3)
         leftsizer.Add(sizer_2, 0, wx.ALL|wx.EXPAND, 5)
 
-        sizer_3.Add(self.border, 0, wx.ALL, 3)        
+        sizer_3.Add(self.border, 0, wx.ALL, 3)
         sizer_3.Add(self.onlytext, 0, wx.LEFT|wx.BOTTOM, 3)
         sizer_3.Add(self.onlyimages, 0, wx.LEFT|wx.BOTTOM, 3)
         sizer_3.Add(self.shadow, 0, wx.LEFT|wx.BOTTOM, 3)
@@ -249,7 +249,7 @@ class LabelBookDemo(wx.Frame):
             if self.bookdirection.GetSelection() > 1:
                 self.bookdirection.SetSelection(0)
 
-            self.SetUserColours()                
+            self.SetUserColours()
             self.book.SetFontSizeMultiple(1.0)
             self.book.SetFontBold(False)
 
@@ -263,7 +263,7 @@ class LabelBookDemo(wx.Frame):
             self.book.AddPage(SamplePane(self.book, _pageColours[indx], label),
                               txts, True, indx)
 
-        self.book.SetSelection(0)            
+        self.book.SetSelection(0)
 
         if not self.initializing:
             panelsizer.Add(self.book, 1, wx.EXPAND)
@@ -318,8 +318,8 @@ class LabelBookDemo(wx.Frame):
             style |= INB_FIT_LABELTEXT
         if self.boldselection.IsEnabled() and self.boldselection.GetValue():
             style |= INB_BOLD_TAB_SELECTION
-            
-        if self.book: 
+
+        if self.book:
             self.book.SetFontBold(self.boldtext.GetValue())
 
         return style
@@ -369,7 +369,7 @@ class LabelBookDemo(wx.Frame):
 
         style = self.GetBookStyles()
         self.book.SetAGWWindowStyleFlag(style)
-       
+
         self.book.SetFontSizeMultiple(float(self.textsize.GetValue()))
         if self.textsize.GetValue() != self._oldTextSize:
             self.book.ResizeTabArea()
@@ -473,7 +473,7 @@ class LabelBookDemo(wx.Frame):
 
     def OnDeleteAllPages(self, event):
 
-        self.book.DeleteAllPages()        
+        self.book.DeleteAllPages()
 
 
     def CreateMenu(self):

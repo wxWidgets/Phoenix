@@ -1,22 +1,22 @@
 
 """
-This is the Advanced Generic Widgets package (AGW). It provides many 
-custom-drawn wxPython controls: some of them can be used as a replacement 
-of the platform native controls, others are simply an addition to the 
+This is the Advanced Generic Widgets package (AGW). It provides many
+custom-drawn wxPython controls: some of them can be used as a replacement
+of the platform native controls, others are simply an addition to the
 already rich wxPython widgets set.
 
 
 Description:
 
-AGW contains many different modules, listed below. Items labelled with 
+AGW contains many different modules, listed below. Items labelled with
 an asterisk were already present in :mod:`lib` before:
 
 - AdvancedSplash: reproduces the behaviour of :class:`~adv.SplashScreen`, with more
   advanced features like custom shapes and text animations;
 - AquaButton: this is another custom-drawn button class which
   *approximatively* mimics the behaviour of Aqua buttons on the Mac;
-- AUI: a pure-Python implementation of :mod:`~lib.agw.aui`, with many bug fixes and
-  new features like HUD docking and :class:`~lib.agw.aui.auibook.AuiNotebook` tab arts;
+- AUI: a pure-Python implementation of :mod:`~wx.lib.agw.aui`, with many bug fixes and
+  new features like HUD docking and :class:`~wx.lib.agw.aui.auibook.AuiNotebook` tab arts;
 - BalloonTip: allows you to display tooltips in a balloon style window
   (actually a frame), similarly to the Windows XP balloon help;
 - ButtonPanel (*): a panel with gradient background shading with the
@@ -75,7 +75,7 @@ an asterisk were already present in :mod:`lib` before:
   you can find in text editors software;
 - ShapedButton: this class tries to fill the lack of "custom shaped" controls
   in wxPython. It can be used to build round buttons or elliptic buttons;
-- ShortcutEditor: a widget that allows the user to customize and change 
+- ShortcutEditor: a widget that allows the user to customize and change
   keyboard shortcuts via a dialog;
 - SpeedMeter: this widget tries to reproduce the behavior of some car
   controls (but not only), by creating an "angular" control;

@@ -7,7 +7,7 @@
 #
 # Created:
 # Version:
-# Date:         
+# Date:
 # Licence:      wxWindows license
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
@@ -21,7 +21,7 @@ Container for related ribbon panels, and a tab within a ribbon bar.
 See Also
 ========
 
-:class:`~lib.agw.ribbon.bar.RibbonBar`, :class:`~lib.agw.ribbon.panel.RibbonPanel`
+:class:`~wx.lib.agw.ribbon.bar.RibbonBar`, :class:`~wx.lib.agw.ribbon.panel.RibbonPanel`
 
 """
 
@@ -50,7 +50,7 @@ def GetSizeInOrientation(size, orientation):
         return size.GetHeight()
     elif orientation == wx.BOTH:
         return size.GetWidth() * size.GetHeight()
-    
+
     return 0
 
 
@@ -81,8 +81,8 @@ class RibbonPageScrollButton(RibbonControl):
     def OnPaint(self, event):
 
         dc = wx.AutoBufferedPaintDC(self)
-        
-        if self._art:        
+
+        if self._art:
             self._art.DrawScrollButton(dc, self, wx.Rect(0, 0, *self.GetSize()), self._flags)
 
 
@@ -108,11 +108,11 @@ class RibbonPageScrollButton(RibbonControl):
     def OnMouseUp(self, event):
 
         if self._flags & RIBBON_SCROLL_BTN_ACTIVE:
-            
+
             self._flags &= ~RIBBON_SCROLL_BTN_ACTIVE
             self.Refresh(False)
             result = self._flags & RIBBON_SCROLL_BTN_DIRECTION_MASK
-            
+
             if result in [RIBBON_SCROLL_BTN_DOWN, RIBBON_SCROLL_BTN_RIGHT]:
                 self._sibling.ScrollLines(1)
             elif result in [RIBBON_SCROLL_BTN_UP, RIBBON_SCROLL_BTN_LEFT]:
@@ -125,9 +125,9 @@ class RibbonPage(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: pointer to a parent window, an instance of :class:`~lib.agw.ribbon.bar.RibbonBar`;
+        :param `parent`: pointer to a parent window, an instance of :class:`~wx.lib.agw.ribbon.bar.RibbonBar`;
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create an identifier;
-        :param `label`: label to be used in the :class:`~lib.agw.ribbon.bar.RibbonBar`'s tab list for this page (if the
+        :param `label`: label to be used in the :class:`~wx.lib.agw.ribbon.bar.RibbonBar`'s tab list for this page (if the
          ribbon bar is set to display labels);
         :param `icon`: the icon used for the page in the ribbon bar tab area (if the ribbon bar is
          set to display icons);
@@ -137,17 +137,17 @@ class RibbonPage(RibbonControl):
         RibbonControl.__init__(self, parent, id, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE)
 
         self.CommonInit(label, icon)
-        
+
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
-        
+
 
     def CommonInit(self, label, icon):
 
         self.SetName(label)
         self.SetLabel(label)
-        
+
         self._old_size = wx.Size(0, 0)
         self._icon = icon
         self._scroll_left_btn = None
@@ -167,20 +167,20 @@ class RibbonPage(RibbonControl):
         """
         Set the art provider to be used.
 
-        Normally called automatically by :class:`~lib.agw.ribbon.bar.RibbonBar` when the page is created, or the
+        Normally called automatically by :class:`~wx.lib.agw.ribbon.bar.RibbonBar` when the page is created, or the
         art provider changed on the bar. The new art provider will be propagated to the
         children of the page.
 
         :param `art`: an art provider.
 
-        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
         self._art = art
         for child in self.GetChildren():
             if isinstance(child, RibbonControl):
                 child.SetArtProvider(art)
-            
+
 
     def AdjustRectToIncludeScrollButtons(self, rect):
         """
@@ -192,25 +192,25 @@ class RibbonPage(RibbonControl):
          reduced, and the x and y will not be increased.
         """
 
-        if self._scroll_buttons_visible:        
+        if self._scroll_buttons_visible:
             if self.GetMajorAxis() == wx.VERTICAL:
                 if self._scroll_left_btn:
                     rect.SetY(rect.GetY() - self._scroll_left_btn.GetSize().GetHeight())
                     rect.SetHeight(rect.GetHeight() + self._scroll_left_btn.GetSize().GetHeight())
-                
-                if self._scroll_right_btn:                
+
+                if self._scroll_right_btn:
                     rect.SetHeight(rect.GetHeight() + self._scroll_right_btn.GetSize().GetHeight())
-                
-            else:            
-                if self._scroll_left_btn:                
+
+            else:
+                if self._scroll_left_btn:
                     rect.SetX(rect.GetX() - self._scroll_left_btn.GetSize().GetWidth())
                     rect.SetWidth(rect.GetWidth() + self._scroll_left_btn.GetSize().GetWidth())
-                
-                if self._scroll_right_btn:                
+
+                if self._scroll_right_btn:
                     rect.SetWidth(rect.GetWidth() + self._scroll_right_btn.GetSize().GetWidth())
 
         return rect
-    
+
 
     def OnEraseBackground(self, event):
         """
@@ -242,7 +242,7 @@ class RibbonPage(RibbonControl):
         """
         Get the direction in which ribbon panels are stacked within the page.
 
-        This is controlled by the style of the containing :class:`~lib.agw.ribbon.bar.RibbonBar`, meaning that all
+        This is controlled by the style of the containing :class:`~wx.lib.agw.ribbon.bar.RibbonBar`, meaning that all
         pages within a bar will have the same major axis. As well as being the direction
         in which panels are stacked, it is also the axis in which scrolling will occur
         (when required).
@@ -252,9 +252,9 @@ class RibbonPage(RibbonControl):
 
         if self._art and (self._art.GetFlags() & RIBBON_BAR_FLOW_VERTICAL):
             return wx.VERTICAL
-        else:        
+        else:
             return wx.HORIZONTAL
-    
+
 
     def ScrollLines(self, lines):
         """
@@ -292,24 +292,24 @@ class RibbonPage(RibbonControl):
 
         :returns: ``True`` if the page scrolled at least one pixel in the given direction,
          ``False`` if it did not scroll.
-         
+
         :see: :meth:`~RibbonPage.GetMajorAxis`, :meth:`~RibbonPage.ScrollLines`
         """
 
-        if pixels < 0:        
+        if pixels < 0:
             if self._scroll_amount == 0:
                 return False
-            
+
             if self._scroll_amount < -pixels:
                 pixels = -self._scroll_amount
-        
-        elif pixels > 0:        
+
+        elif pixels > 0:
             if self._scroll_amount == self._scroll_amount_limit:
                 return False
-            
+
             if self._scroll_amount + pixels > self._scroll_amount_limit:
                 pixels = self._scroll_amount_limit - self._scroll_amount
-        
+
         else:
             return False
 
@@ -321,9 +321,9 @@ class RibbonPage(RibbonControl):
                 x -= pixels
             else:
                 y -= pixels
-                
+
             child.SetPosition(wx.Point(x, y))
-        
+
         self.ShowScrollButtons()
         self.Refresh()
         return True
@@ -352,27 +352,27 @@ class RibbonPage(RibbonControl):
         :param `height`: the page height, in pixels.
         """
 
-        if self._scroll_buttons_visible:        
+        if self._scroll_buttons_visible:
             if self.GetMajorAxis() == wx.HORIZONTAL:
                 if self._scroll_left_btn:
                     w = self._scroll_left_btn.GetSize().GetWidth()
                     self._scroll_left_btn.SetPosition(wx.Point(x, y))
                     x += w
                     width -= w
-                
-                if self._scroll_right_btn:                
+
+                if self._scroll_right_btn:
                     w = self._scroll_right_btn.GetSize().GetWidth()
                     width -= w
                     self._scroll_right_btn.SetPosition(wx.Point(x + width, y))
-                
-            else:            
-                if self._scroll_left_btn:                
+
+            else:
+                if self._scroll_left_btn:
                     h = self._scroll_left_btn.GetSize().GetHeight()
                     self._scroll_left_btn.SetPosition(wx.Point(x, y))
                     y += h
                     height -= h
-                
-                if self._scroll_right_btn:                
+
+                if self._scroll_right_btn:
                     h = self._scroll_right_btn.GetSize().GetHeight()
                     height -= h
                     self._scroll_right_btn.SetPosition(wx.Point(x, y + height))
@@ -381,7 +381,7 @@ class RibbonPage(RibbonControl):
             width = 0
         if height < 0:
             height = 0
-            
+
         self.SetSize(x, y, width, height)
 
 
@@ -414,7 +414,7 @@ class RibbonPage(RibbonControl):
            resize may be forced even in this case (supported in wx 2.6.2 and later and only implemented
            for MSW and ignored elsewhere currently).
         """
-        
+
         # When a resize triggers the scroll buttons to become visible, the page is resized.
         # This resize from within a resize event can cause (MSW) wxWidgets some confusion,
         # and report the 1st size to the 2nd size event. Hence the most recent size is
@@ -428,7 +428,7 @@ class RibbonPage(RibbonControl):
                     self._size_in_major_axis_for_children += self._scroll_left_btn.GetSize().GetWidth()
                 if self._scroll_right_btn:
                     self._size_in_major_axis_for_children += self._scroll_right_btn.GetSize().GetWidth()
-                    
+
         else:
             self._size_in_major_axis_for_children = height
 
@@ -457,15 +457,15 @@ class RibbonPage(RibbonControl):
 
         self._old_size = wx.Size(*new_size)
         x, y = new_size
-        
+
         if x > 0 and y > 0:
             self.Layout()
-        else:        
+        else:
             # Simplify other calculations by pretending new size is zero in both
             # X and Y
             new_size = wx.Size(0, 0)
             # When size == 0, no point in doing any layout
-        
+
         event.Skip()
 
 
@@ -479,7 +479,7 @@ class RibbonPage(RibbonControl):
 
         # ... and then proceed as normal
         RibbonControl.RemoveChild(self, child)
-        
+
 
     def Realize(self):
         """
@@ -490,66 +490,66 @@ class RibbonPage(RibbonControl):
         called automatically when :meth:`RibbonBar.Realize() <lib.agw.ribbon.bar.RibbonBar.Realize>` is called. Will invoke
         :meth:`RibbonPanel.Realize() <lib.agw.ribbon.panel.RibbonPanel.Realize>` for all child panels.
 
-        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
         status = True
         self._collapse_stack = []
-        
+
         for child in self.GetChildren():
-            if not isinstance(child, RibbonControl):            
+            if not isinstance(child, RibbonControl):
                 continue
-            
-            if not child.Realize():            
+
+            if not child.Realize():
                 status = False
-            
+
             child.SetSize(wx.Size(*child.GetMinSize()))
 
-        x, y = self.GetSize()        
+        x, y = self.GetSize()
         if x > 0 and y > 0:
             status = self.Layout() and status
-        
+
         return status
 
 
     def Layout(self):
 
-        if len(self.GetChildren()) == 0:        
+        if len(self.GetChildren()) == 0:
             return True
 
         origin_ = wx.Point(self._art.GetMetric(RIBBON_ART_PAGE_BORDER_LEFT_SIZE), self._art.GetMetric(RIBBON_ART_PAGE_BORDER_TOP_SIZE))
         major_axis = self.GetMajorAxis()
-        
-        if self._scroll_buttons_visible:        
-            if major_axis == wx.HORIZONTAL:            
+
+        if self._scroll_buttons_visible:
+            if major_axis == wx.HORIZONTAL:
                 origin_.x -= self._scroll_amount
                 if self._scroll_left_btn:
                     origin_.x -= self._scroll_left_btn.GetSize().GetWidth()
-            else:            
+            else:
                 origin_.y -= self._scroll_amount
                 if self._scroll_left_btn:
                     origin_.y -= self._scroll_left_btn.GetSize().GetHeight()
-            
+
         origin = wx.Point(*origin_)
-        
-        if major_axis == wx.HORIZONTAL:        
+
+        if major_axis == wx.HORIZONTAL:
             gap = self._art.GetMetric(RIBBON_ART_PANEL_X_SEPARATION_SIZE)
             minor_axis_size = self.GetSize().GetHeight() - origin.y - self._art.GetMetric(RIBBON_ART_PAGE_BORDER_BOTTOM_SIZE)
-        else:        
+        else:
             gap = self._art.GetMetric(RIBBON_ART_PANEL_Y_SEPARATION_SIZE)
             minor_axis_size = self.GetSize().GetWidth() - origin.x - self._art.GetMetric(RIBBON_ART_PAGE_BORDER_RIGHT_SIZE)
 
         if minor_axis_size < 0:
             minor_axis_size = 0
- 
+
         for iteration in range(1, 3):
-        
+
             for child in self.GetChildren():
                 w, h = child.GetSize()
                 if major_axis == wx.HORIZONTAL:
                     child.SetSize(origin.x, origin.y, w, minor_axis_size)
                     origin.x += w + gap
-                else:                
+                else:
                     child.SetSize(origin.x, origin.y, minor_axis_size, h)
                     origin.y += h + gap
 
@@ -559,12 +559,12 @@ class RibbonPage(RibbonControl):
                 else:
                     available_space = self._size_in_major_axis_for_children - self._art.GetMetric(RIBBON_ART_PAGE_BORDER_BOTTOM_SIZE) - origin.y + gap
 
-                if self._scroll_buttons_visible:                
+                if self._scroll_buttons_visible:
                     available_space -= self._scroll_amount
                     if self._scroll_right_btn != None:
                         available_space += GetSizeInOrientation(self._scroll_right_btn.GetSize(), major_axis)
 
-                if available_space > 0:                
+                if available_space > 0:
                     if self._scroll_buttons_visible:
                         self.HideScrollButtons()
                         break
@@ -572,13 +572,13 @@ class RibbonPage(RibbonControl):
                     result = self.ExpandPanels(major_axis, available_space)
                     if not result:
                         break
-                
-                elif available_space < 0:                
-                    if self._scroll_buttons_visible:                    
+
+                elif available_space < 0:
+                    if self._scroll_buttons_visible:
                         # Scroll buttons already visible - not going to be able to downsize any more
                         self._scroll_amount_limit = -available_space
                         if self._scroll_amount > self._scroll_amount_limit:
-                            self.ScrollPixels(self._scroll_amount_limit - self._scroll_amount)                    
+                            self.ScrollPixels(self._scroll_amount_limit - self._scroll_amount)
                     else:
                         result = self.CollapsePanels(major_axis, -available_space)
                         if not result:
@@ -586,10 +586,10 @@ class RibbonPage(RibbonControl):
                             self._scroll_amount_limit = -available_space
                             self.ShowScrollButtons()
                             break
-                        
-                else:                
+
+                else:
                     break
-                
+
             origin = wx.Point(*origin_) # Reset the origin
 
         return True
@@ -601,7 +601,7 @@ class RibbonPage(RibbonControl):
             self._scroll_left_btn.Show(show)
         if self._scroll_right_btn:
             self._scroll_right_btn.Show(show)
-            
+
         return RibbonControl.Show(self, show)
 
 
@@ -613,7 +613,7 @@ class RibbonPage(RibbonControl):
 
         return self._icon
 
-    
+
     def HideScrollButtons(self):
 
         self._scroll_amount = 0
@@ -626,72 +626,72 @@ class RibbonPage(RibbonControl):
         show_left = True
         show_right = True
         reposition = False
-        
-        if self._scroll_amount == 0:        
+
+        if self._scroll_amount == 0:
             show_left = False
-        
-        if self._scroll_amount >= self._scroll_amount_limit:        
+
+        if self._scroll_amount >= self._scroll_amount_limit:
             show_right = False
             self._scroll_amount = self._scroll_amount_limit
-        
+
         self._scroll_buttons_visible = show_left or show_right
 
         if show_left:
             if self._scroll_left_btn == None:
-            
+
                 temp_dc = wx.MemoryDC()
-                
-                if self.GetMajorAxis() == wx.HORIZONTAL:                
+
+                if self.GetMajorAxis() == wx.HORIZONTAL:
                     direction = RIBBON_SCROLL_BTN_LEFT
                     size = self._art.GetScrollButtonMinimumSize(temp_dc, self.GetParent(), direction)
-                    size.SetHeight(self.GetSize().GetHeight())                
-                else:                
+                    size.SetHeight(self.GetSize().GetHeight())
+                else:
                     direction = RIBBON_SCROLL_BTN_UP
                     size = self._art.GetScrollButtonMinimumSize(temp_dc, self.GetParent(), direction)
                     size.SetWidth(self.GetSize().GetWidth())
-                
+
                 self._scroll_left_btn = RibbonPageScrollButton(self, -1, self.GetPosition(), size, direction)
-                if not self.IsShown():                
+                if not self.IsShown():
                     self._scroll_left_btn.Hide()
-                
+
                 reposition = True
-            
-        else:        
-            if self._scroll_left_btn != None:            
+
+        else:
+            if self._scroll_left_btn != None:
                 self._scroll_left_btn.Destroy()
                 self._scroll_left_btn = None
                 reposition = True
-            
-        if show_right:        
-            if self._scroll_right_btn == None:            
+
+        if show_right:
+            if self._scroll_right_btn == None:
 
                 temp_dc = wx.MemoryDC()
 
-                if self.GetMajorAxis() == wx.HORIZONTAL:                
+                if self.GetMajorAxis() == wx.HORIZONTAL:
                     direction = RIBBON_SCROLL_BTN_RIGHT
                     size = self._art.GetScrollButtonMinimumSize(temp_dc, self.GetParent(), direction)
-                    size.SetHeight(self.GetSize().GetHeight())                
-                else:                
+                    size.SetHeight(self.GetSize().GetHeight())
+                else:
                     direction = RIBBON_SCROLL_BTN_DOWN
                     size = self._art.GetScrollButtonMinimumSize(temp_dc, self.GetParent(), direction)
                     size.SetWidth(self.GetSize().GetWidth())
-                
+
                 initial_pos = self.GetPosition() + wx.Point(*self.GetSize()) - wx.Point(*size)
                 self._scroll_right_btn = RibbonPageScrollButton(self, -1, initial_pos, size, direction)
-                if not self.IsShown():                
+                if not self.IsShown():
                     self._scroll_right_btn.Hide()
-                
+
                 reposition = True
-            
-        else:        
-            if self._scroll_right_btn != None:            
+
+        else:
+            if self._scroll_right_btn != None:
                 self._scroll_right_btn.Destroy()
                 self._scroll_right_btn = None
                 reposition = True
-                
-        if reposition:        
+
+        if reposition:
             self.GetParent().RepositionPage(self)
-        
+
 
     def ExpandPanels(self, direction, maximum_amount):
 
@@ -700,18 +700,18 @@ class RibbonPage(RibbonControl):
         while maximum_amount > 0:
             smallest_size = 10000
             smallest_panel = None
-            
+
             for panel in self.GetChildren():
-                
+
                 if not isinstance(panel, RibbonPanel):
                     continue
 
                 if panel.IsSizingContinuous():
                     size = GetSizeInOrientation(panel.GetSize(), direction)
-                    if size < smallest_size:                    
+                    if size < smallest_size:
                         smallest_size = size
-                        smallest_panel = panel                    
-                else:                
+                        smallest_panel = panel
+                else:
                     current = panel.GetSize()
                     size = GetSizeInOrientation(current, direction)
                     if size < smallest_size:
@@ -720,28 +720,28 @@ class RibbonPage(RibbonControl):
                             smallest_size = size
                             smallest_panel = panel
 
-            if smallest_panel != None:            
+            if smallest_panel != None:
                 if smallest_panel.IsSizingContinuous():
                     size = wx.Size(*smallest_panel.GetSize())
                     amount = maximum_amount
-                    
-                    if amount > 32:                    
+
+                    if amount > 32:
                         # For "large" growth, grow self panel a bit, and then re-allocate
                         # the remainder (which may come to self panel again anyway)
                         amount = 32
-                    
-                    if direction & wx.HORIZONTAL:                    
+
+                    if direction & wx.HORIZONTAL:
                         size.x += amount
-                    
-                    if direction & wx.VERTICAL:                    
+
+                    if direction & wx.VERTICAL:
                         size.y += amount
-                    
+
                     smallest_panel.SetSize(size)
                     maximum_amount -= amount
                     self._collapse_stack.append(smallest_panel)
                     expanded_something = True
-                
-                else:                
+
+                else:
                     current = smallest_panel.GetSize()
                     larger = smallest_panel.GetNextLargerSize(direction)
                     delta = larger - current
@@ -750,19 +750,19 @@ class RibbonPage(RibbonControl):
                         maximum_amount -= GetSizeInOrientation(delta, direction)
                         self._collapse_stack.append(smallest_panel)
                         expanded_something = True
-                    else:                    
+                    else:
                         break
-                    
-            else:            
+
+            else:
                 break
 
         if expanded_something:
             self.Refresh()
             return True
-        else:        
+        else:
             return False
 
-    
+
     def CollapsePanels(self, direction, minimum_amount):
 
         collapsed_something = False
@@ -770,23 +770,23 @@ class RibbonPage(RibbonControl):
         while minimum_amount > 0:
             largest_size = 0
             largest_panel = None
-            
-            if self._collapse_stack:            
+
+            if self._collapse_stack:
                 # For a more consistent panel layout, try to collapse panels which
                 # were recently expanded.
                 largest_panel = self._collapse_stack[-1]
                 self._collapse_stack.pop(len(self._collapse_stack)-1)
-            else:            
+            else:
                 for panel in self.GetChildren():
                     if not isinstance(panel, RibbonPanel):
                         continue
-                    
+
                     if panel.IsSizingContinuous():
                         size = GetSizeInOrientation(panel.GetSize(), direction)
-                        if size > largest_size:                        
+                        if size > largest_size:
                             largest_size = size
                             largest_panel = panel
-                    else:                    
+                    else:
                         current = panel.GetSize()
                         size = GetSizeInOrientation(current, direction)
                         if size > largest_size:
@@ -794,45 +794,45 @@ class RibbonPage(RibbonControl):
                             if smaller != current and GetSizeInOrientation(smaller, direction) < size:
                                 largest_size = size
                                 largest_panel = panel
-            
-            if largest_panel != None:            
+
+            if largest_panel != None:
                 if largest_panel.IsSizingContinuous():
                     size = largest_panel.GetSize()
                     amount = minimum_amount
-                    
-                    if amount > 32:                    
+
+                    if amount > 32:
                         # For "large" contraction, reduce self panel a bit, and
                         # then re-allocate the remainder of the quota (which may
                         # come to this panel again anyway)
                         amount = 32
-                    
-                    if direction & wx.HORIZONTAL:                    
+
+                    if direction & wx.HORIZONTAL:
                         size.x -= amount
-                    
-                    if direction & wx.VERTICAL:                    
+
+                    if direction & wx.VERTICAL:
                         size.y -= amount
-                    
+
                     largest_panel.SetSize(size)
                     minimum_amount -= amount
                     collapsed_something = True
-                
-                else:                
+
+                else:
                     current = largest_panel.GetSize()
                     smaller = largest_panel.GetNextSmallerSize(direction)
                     delta = current - smaller
                     largest_panel.SetSize(smaller)
                     minimum_amount -= GetSizeInOrientation(delta, direction)
                     collapsed_something = True
-                
-            else:            
+
+            else:
                 break
 
-        if collapsed_something:        
+        if collapsed_something:
             self.Refresh()
-            return True       
-        else:        
+            return True
+        else:
             return False
-        
+
 
     def DismissExpandedPanel(self):
         """
@@ -849,10 +849,10 @@ class RibbonPage(RibbonControl):
         for panel in self.GetChildren():
             if not isinstance(panel, RibbonPanel):
                 continue
-            
-            if panel.GetExpandedPanel() != None:            
+
+            if panel.GetExpandedPanel() != None:
                 return panel.HideExpanded()
-            
+
         return False
 
 
@@ -871,18 +871,18 @@ class RibbonPage(RibbonControl):
             child_min = child.GetMinSize()
             minSize.x = max(minSize.x, child_min.x)
             minSize.y = max(minSize.y, child_min.y)
-        
-        if self.GetMajorAxis() == wx.HORIZONTAL:        
+
+        if self.GetMajorAxis() == wx.HORIZONTAL:
             minSize.x = -1
             if minSize.y != -1:
                 minSize.y += self._art.GetMetric(RIBBON_ART_PAGE_BORDER_TOP_SIZE) + self._art.GetMetric(RIBBON_ART_PAGE_BORDER_BOTTOM_SIZE)
-            
-        else:        
-            if minSize.x != -1:            
+
+        else:
+            if minSize.x != -1:
                 minSize.x += self._art.GetMetric(RIBBON_ART_PAGE_BORDER_LEFT_SIZE) + self._art.GetMetric(RIBBON_ART_PAGE_BORDER_RIGHT_SIZE)
-            
+
             minSize.y = -1
-        
+
         return minSize
 
 
@@ -893,7 +893,7 @@ class RibbonPage(RibbonControl):
         as it would have after a call to `Fit()`.
 
         :return: An instance of :class:`wx.Size`.
-        
+
         :note: Overridden from :class:`wx.Control`.
         """
 
@@ -905,34 +905,34 @@ class RibbonPage(RibbonControl):
 
             for child in self.GetChildren():
                 child_best = child.GetBestSize()
-                if child_best.x != -1:                
+                if child_best.x != -1:
                     best.IncBy(child_best.x, 0)
-                
+
                 best.y = max(best.y, child_best.y)
                 count += 1
 
-            if count > 1:            
+            if count > 1:
                 best.IncBy((count - 1) * self._art.GetMetric(RIBBON_ART_PANEL_X_SEPARATION_SIZE), 0)
-            
-        else:        
+
+        else:
             best.x = -1
 
             for child in self.GetChildren():
                 child_best = child.GetBestSize()
                 best.x = max(best.x, child_best.x)
-                
-                if child_best.y != -1:                
+
+                if child_best.y != -1:
                     best.IncBy(0, child_best.y)
-                
+
                 count += 1
-            
-            if count > 1:            
+
+            if count > 1:
                 best.IncBy(0, (count - 1) * self._art.GetMetric(RIBBON_ART_PANEL_Y_SEPARATION_SIZE))
 
-        if best.x != -1:        
+        if best.x != -1:
             best.x += self._art.GetMetric(RIBBON_ART_PAGE_BORDER_LEFT_SIZE) + self._art.GetMetric(RIBBON_ART_PAGE_BORDER_RIGHT_SIZE)
-        
-        if best.y != -1:        
+
+        if best.y != -1:
             best.y += self._art.GetMetric(RIBBON_ART_PAGE_BORDER_TOP_SIZE) + self._art.GetMetric(RIBBON_ART_PAGE_BORDER_BOTTOM_SIZE)
 
         return best

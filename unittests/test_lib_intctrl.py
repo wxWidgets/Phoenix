@@ -15,7 +15,7 @@ class IntCtrlTests(wtc.WidgetTestCase):
         t3.ChangeValue(16)
         self.assertTrue(not t3.IsInBounds())
 
-      
+
 #---------------------------------------------------------------------------
 
 

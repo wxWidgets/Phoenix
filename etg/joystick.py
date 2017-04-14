@@ -3,34 +3,34 @@
 # Author:      Robin Dunn
 #
 # Created:     19-May-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_adv"
 NAME      = "joystick"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ "wxJoystick",
-           ]    
-    
+           ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode("""\
         #if !wxUSE_JOYSTICK && !defined(__WXMSW__)
         // A C++ stub class for wxJoystick for platforms that don't have it.
@@ -52,7 +52,7 @@ def run():
             int GetVPosition() const { return -1; }
             int GetMovementThreshold() const { return -1; }
             void SetMovementThreshold(int threshold) {}
-        
+
             bool IsOk(void) const { return false; }
             static int GetNumberJoysticks() { return -1; }
             int GetManufacturerId() const { return -1; }
@@ -76,7 +76,7 @@ def run():
             int GetUMax() const { return -1; }
             int GetVMin() const { return -1; }
             int GetVMax() const { return -1; }
-        
+
             bool HasRudder() const { return false; }
             bool HasZ() const { return false; }
             bool HasU() const { return false; }
@@ -84,23 +84,24 @@ def run():
             bool HasPOV() const { return false; }
             bool HasPOV4Dir() const { return false; }
             bool HasPOVCTS() const { return false; }
-        
+
             bool SetCapture(wxWindow* win, int pollingFreq = 0) { return false; }
             bool ReleaseCapture() { return false; }
         };
-        #endif        
+        #endif
         """)
-    
-    
-    #c = module.find('')
-    #assert isinstance(c, etgtools.ClassDef)
-    
-    
+
+
+    c = module.find('wxJoystick')
+    assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

@@ -1,6 +1,6 @@
 # 12/07/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 Compatability changes
+# o 2.5 Compatibility changes
 #
 
 import wx
@@ -17,7 +17,7 @@ class FoldOutWindow(wx.PopupWindow):
         self.inWindow=False
         self.Bind(wx.EVT_ENTER_WINDOW, self.evEnter)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.evLeave)
-        
+
     def InitColors(self):
         faceClr = wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW)
         self.SetBackgroundColour(faceClr)
@@ -53,7 +53,7 @@ class FoldOutWindow(wx.PopupWindow):
         self.inWindow=True
         self.rect=self.GetRect()
         event.Skip()
-        
+
     def evLeave(self,event):
         if self.inWindow:
             if not self.rect.Inside(self.ClientToScreen(event.GetPosition())):
@@ -62,9 +62,9 @@ class FoldOutWindow(wx.PopupWindow):
         event.Skip()
 
 
-        
 
-        
+
+
 class FoldOutMenu(wx.BitmapButton):
     def __init__(self,parent,id,bitmap,pos = wx.DefaultPosition,
                  size = wx.DefaultSize, style = wx.BU_AUTODRAW,

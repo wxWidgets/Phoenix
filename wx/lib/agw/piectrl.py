@@ -29,7 +29,7 @@
 
 
 """
-:class:`~lib.agw.piectrl.PieCtrl` and :class:`~lib.agw.piectrl.ProgressPie` are simple classes that reproduce the behavior of a pie
+:class:`~wx.lib.agw.piectrl.PieCtrl` and :class:`~wx.lib.agw.piectrl.ProgressPie` are simple classes that reproduce the behavior of a pie
 chart.
 
 
@@ -48,17 +48,17 @@ Usage
 
 Usage example::
 
-    import wx    
+    import wx
     import wx.lib.agw.piectrl as PC
 
     class MyFrame(wx.Frame):
 
         def __init__(self, parent):
-        
+
             wx.Frame.__init__(self, parent, -1, "PieCtrl Demo")
 
             panel = wx.Panel(self)
-    
+
             # create a simple PieCtrl with 3 sectors
             mypie = PC.PieCtrl(panel, -1, wx.DefaultPosition, wx.Size(180,270))
 
@@ -456,7 +456,7 @@ class PieCtrl(wx.Window):
     :class:`PieCtrl` is somewhat a "static" control, that you may create in order to display
     a simple pie chart on a :class:`Panel` or similar.
     """
-    
+
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=0, name="PieCtrl"):
         """
@@ -876,7 +876,7 @@ class ProgressPie(PieCtrl):
     :class:`ProgressPie` tries to emulate the behavior of :class:`ProgressDialog`, but
     using a pie chart instead of a gauge.
     """
-    
+
     def __init__(self, parent, maxvalue, value, id=wx.ID_ANY,
                  pos=wx.DefaultPosition, size=wx.DefaultSize, style=0):
         """
@@ -989,16 +989,16 @@ class ProgressPie(PieCtrl):
 
 if __name__ == '__main__':
 
-    import wx    
+    import wx
 
     class MyFrame(wx.Frame):
 
         def __init__(self, parent):
-        
+
             wx.Frame.__init__(self, parent, -1, "PieCtrl Demo")
 
             panel = wx.Panel(self)
-    
+
             # create a simple PieCtrl with 3 sectors
             mypie = PieCtrl(panel, -1, wx.DefaultPosition, wx.Size(180,270))
 

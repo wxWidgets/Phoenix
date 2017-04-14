@@ -49,7 +49,7 @@ class rose:
 
     # The following data is accessible by callers, but there are set
     # methods for most everything and various method calls to client methods
-    # to display current values.    
+    # to display current values.
     style = 100         # Angular distance along curve between points
     sincr = -1          # Amount to increment style by in auto mode
     petals = 2          # Lobes on the rose (even values have 2X lobes)
@@ -66,7 +66,7 @@ class rose:
     # Other variables that the application shouldn't access.
     verbose = 0         # No good way to set this at the moment.
     nextpt = 0          # Next position to draw on next clock tick
-    
+
     # Internal states:
     INT_IDLE, INT_DRAW, INT_SEARCH, INT_WAIT, INT_RESIZE = range(5)
     int_state = INT_IDLE
@@ -74,7 +74,7 @@ class rose:
     # Command states
     CMD_STOP, CMD_GO = range(2)
     cmd_state = CMD_STOP
-    
+
     # Return full rose line (a tuple of (x, y) tuples).  Not used by interactive
     # clients but still useful for command line and batch clients.
     # This is the "purest" code and doesn't require the App* methods defined
@@ -91,7 +91,7 @@ class rose:
         return line
 
     # Generate vectors for the next chunk of rose.
-    
+
     # This is not meant to be called from an external module, as it is closely
     # coupled to parameters set up within the class and limits set up by
     # restart().  Restart() initializes all data this needs to start drawing a
@@ -122,7 +122,7 @@ class rose:
     def make_tables(self, vectors):
         self.sin_table = [sin(2.0 * pi * i / vectors) for i in range(vectors)]
         self.cos_table = [cos(2.0 * pi * i / vectors) for i in range(vectors)]
-            
+
     # Rescale (x,y) data to match our window.  Note the negative scaling in the
     # Y direction, this compensates for Y moving down the screen, but up on
     # graph paper.
@@ -186,7 +186,7 @@ class rose:
         self.center = (xsize / 2, ysize / 2)
         self.scale = min(xsize, ysize) / 2.1
         self.repaint(delay)
-        
+
     # Called from App or above.  From App, called with small delay because
     # some window managers will produce a flood of expose events or call us
     # before initialization is done.
@@ -196,7 +196,7 @@ class rose:
             self.int_state = self.INT_RESIZE
             self.AppCancelTimer()
             self.AppAfter(delay, self.clock)
-            
+
     # Method that returns the next style and petal values for automatic
     # mode and remembers them internally.  Keep things scaled in the
     # range [0:nvec) because there's little reason to exceed that.
@@ -253,7 +253,7 @@ class rose:
             self.pincr = -self.pincr
         else:
             self.AppSetIncrs(self.sincr, self.pincr)
-        
+
     # Forward/Skip button.  CMD_STOP & CMD_GO both just call resume.
     def cmd_step(self):
         self.resume()           # Draw next pattern
@@ -292,7 +292,7 @@ class rose:
             self.AppSetParam(self.style, self.petals, self.nvec)
             self.AppSetIncrs(self.sincr, self.pincr)
             delay = self.restart()      # Calls us to start drawing
-        
+
         if delay == 0:
             if self.verbose:
                 print_('clock: going idle from state', self.int_state)
@@ -310,7 +310,7 @@ class rose:
     # We restrict the style and petals parameters to the range [0: nvec)
     # since numbers outside of that range aren't interesting. We don't
     # immediately update the value in the application, we probably should.
-    
+
     # NW control window - key parameters
     def SetStyle(self, value):
         self.style = value % self.nvec

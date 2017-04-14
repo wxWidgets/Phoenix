@@ -32,16 +32,16 @@ class Song(object):
         m = random.choice(range(12))
         y = random.choice(range(1980, 2005))
         self.date = wx.DateTime.FromDMY(d,m,y)
-        
+
     def __repr__(self):
         return 'Song: %s-%s' % (self.artist, self.title)
-    
+
 
 class Genre(object):
     def __init__(self, name):
         self.name = name
         self.songs = []
-        
+
     def __repr__(self):
         return 'Genre: ' + self.name
 
@@ -49,7 +49,7 @@ class Genre(object):
 
 # This model acts as a bridge between the DataViewCtrl and the music data, and
 # organizes it hierarchically as a collection of Genres, each of which is a
-# collection of songs. 
+# collection of songs.
 
 # This model provides these data columns:
 #
@@ -66,7 +66,7 @@ class MyTreeListModel(dv.PyDataViewModel):
         dv.PyDataViewModel.__init__(self)
         self.data = data
         self.log = log
-       
+
         # The PyDataViewModel derives from both DataViewModel and from
         # DataViewItemObjectMapper, which has methods that help associate
         # data view items with Python objects. Normally a dictionary is used
@@ -75,20 +75,20 @@ class MyTreeListModel(dv.PyDataViewModel):
         # WeakValueDictionary instead.
         self.UseWeakRefs(True)
 
-                
+
     # Report how many columns this model provides data for.
     def GetColumnCount(self):
         return 6
 
-    
-    def GetChildren(self, parent, children):  
+
+    def GetChildren(self, parent, children):
         # The view calls this method to find the children of any node in the
         # control. There is an implicit hidden root node, and the top level
         # item(s) should be reported as children of this node. A List view
         # simply provides all items as children of this hidden root. A Tree
         # view adds additional items as children of the other items, as needed,
         # to provide the tree hierachy.
-        
+
         # If the parent item is invalid then it represents the hidden root
         # item, so we'll use the genre objects as its children and they will
         # end up being the collection of visible roots in our tree.
@@ -96,7 +96,7 @@ class MyTreeListModel(dv.PyDataViewModel):
             for genre in self.data:
                 children.append(self.ObjectToItem(genre))
             return len(self.data)
-        
+
         # Otherwise we'll fetch the python object associated with the parent
         # item and make DV items for each of it's child objects.
         node = self.ItemToObject(parent)
@@ -105,11 +105,11 @@ class MyTreeListModel(dv.PyDataViewModel):
                 children.append(self.ObjectToItem(song))
             return len(node.songs)
         return 0
-    
+
 
     def IsContainer(self, item):
         # Return True if the item has children, False otherwise.
-        
+
         # The hidden root is a container
         if not item:
             return True
@@ -118,33 +118,33 @@ class MyTreeListModel(dv.PyDataViewModel):
         if isinstance(node, Genre):
             return True
         # but everything else (the song objects) are not
-        return False    
+        return False
 
 
     def GetParent(self, item):
         # Return the item which is this item's parent.
         ##self.log.write("GetParent\n")
-        
+
         if not item:
             return dv.NullDataViewItem
 
-        node = self.ItemToObject(item)        
+        node = self.ItemToObject(item)
         if isinstance(node, Genre):
             return dv.NullDataViewItem
         elif isinstance(node, Song):
             for g in self.data:
                 if g.name == node.genre:
                     return self.ObjectToItem(g)
-            
-        
+
+
     def GetValue(self, item, col):
         # Return the value to be displayed for this item and column. For this
         # example we'll just pull the values from the data objects we
         # associated with the items in GetChildren.
-        
+
         # Fetch the data object for this item.
         node = self.ItemToObject(item)
-        
+
         if isinstance(node, Genre):
             # We'll only use the first column for the Genre objects,
             # for the other columns lets just return empty values
@@ -156,8 +156,8 @@ class MyTreeListModel(dv.PyDataViewModel):
                        5 : False,
                        }
             return mapper[col]
-            
-        
+
+
         elif isinstance(node, Song):
             mapper = { 0 : node.genre,
                        1 : node.artist,
@@ -167,10 +167,10 @@ class MyTreeListModel(dv.PyDataViewModel):
                        5 : node.like,
                        }
             return mapper[col]
-        
+
         else:
             raise RuntimeError("unknown node type")
-        
+
 
 
     def GetAttr(self, item, col, attr):
@@ -181,14 +181,14 @@ class MyTreeListModel(dv.PyDataViewModel):
             attr.SetBold(True)
             return True
         return False
-    
-    
+
+
     def SetValue(self, value, item, col):
         self.log.write("SetValue: col %d,  %s\n" % (col, value))
-        
+
         # We're not allowing edits in column zero (see below) so we just need
         # to deal with Song objects and cols 1 - 5
-        
+
         node = self.ItemToObject(item)
         if isinstance(node, Song):
             if col == 1:
@@ -218,17 +218,17 @@ class TestPanel(wx.Panel):
                                    | dv.DV_VERT_RULES
                                    | dv.DV_MULTIPLE
                                    )
-        
+
         # Create an instance of our model...
         if model is None:
             self.model = MyTreeListModel(data, log)
         else:
-            self.model = model            
+            self.model = model
 
         # Tel the DVC to use the model
         self.dvc.AssociateModel(self.model)
 
-        # Define the columns that we want in the view.  Notice the 
+        # Define the columns that we want in the view.  Notice the
         # parameter which tells the view which col in the data model to pull
         # values from for each view column.
         if 0:
@@ -240,46 +240,46 @@ class TestPanel(wx.Panel):
             self.dvc.AppendColumn(c0)
         else:
             self.dvc.AppendTextColumn("Genre",   0, width=80)
-            
+
         c1 = self.dvc.AppendTextColumn("Artist",   1, width=170, mode=dv.DATAVIEW_CELL_EDITABLE)
         c2 = self.dvc.AppendTextColumn("Title",    2, width=260, mode=dv.DATAVIEW_CELL_EDITABLE)
         c3 = self.dvc.AppendDateColumn('Acquired', 4, width=100, mode=dv.DATAVIEW_CELL_ACTIVATABLE)
         c4 = self.dvc.AppendToggleColumn('Like',   5, width=40, mode=dv.DATAVIEW_CELL_ACTIVATABLE)
-        
+
         # Notice how we pull the data from col 3, but this is the 6th col
         # added to the DVC. The order of the view columns is not dependent on
         # the order of the model columns at all.
         c5 = self.dvc.AppendTextColumn("id", 3, width=40,  mode=dv.DATAVIEW_CELL_EDITABLE)
         c5.Alignment = wx.ALIGN_RIGHT
-        
+
         # Set some additional attributes for all the columns
         for c in self.dvc.Columns:
             c.Sortable = True
             c.Reorderable = True
 
-            
+
         self.Sizer = wx.BoxSizer(wx.VERTICAL)
         self.Sizer.Add(self.dvc, 1, wx.EXPAND)
-        
+
         b1 = wx.Button(self, label="New View", name="newView")
         self.Bind(wx.EVT_BUTTON, self.OnNewView, b1)
-        
+
         self.Sizer.Add(b1, 0, wx.ALL, 5)
-        
-        
+
+
     def OnNewView(self, evt):
         f = wx.Frame(None, title="New view, shared model", size=(600,400))
         TestPanel(f, self.log, model=self.model)
         b = f.FindWindowByName("newView")
         b.Disable()
         f.Show()
-        
-        
+
+
 #----------------------------------------------------------------------
 
 def main():
     from data import musicdata
-    
+
     # our data structure will be a collection of Genres, each of which is a
     # collection of Songs
     data = dict()
@@ -297,11 +297,11 @@ def main():
     pnl = TestPanel(frm, sys.stdout, data=data)
     frm.Show()
     app.MainLoop()
-    
+
 
 #----------------------------------------------------------------------
 
 
 if __name__ == '__main__':
     main()
-    
+

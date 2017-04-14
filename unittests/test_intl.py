@@ -30,8 +30,8 @@ class intl_Tests(wtc.WidgetTestCase):
         loc = wx.Locale(wx.LANGUAGE_SPANISH)
         st = loc.GetString('Next')
         self.assertEqual(st, 'Siguiente')
-        
-            
+
+
     def test_intlConstants(self):
         # just a few of them to make sure the file is included properly
         wx.LANGUAGE_AFRIKAANS
@@ -39,7 +39,7 @@ class intl_Tests(wtc.WidgetTestCase):
         wx.LANGUAGE_AMHARIC
 
 
-        
+
 #---------------------------------------------------------------------------
 
 

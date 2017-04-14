@@ -5,15 +5,15 @@ import wx
 #---------------------------------------------------------------------------
 
 class Events(unittest.TestCase):
-    
+
     # Test the constructors to make sure the classes are not abstract, except
     # for wx.Event
-    
+
     def test_Event_ctor(self):
         with self.assertRaises(TypeError):
             # it's an abstract class, so it can't be instantiated
             evt = wx.Event()
-    
+
     def test_CommandEvent_ctor(self):
         evt = wx.CommandEvent()
 
@@ -45,6 +45,7 @@ class Events(unittest.TestCase):
         evt = wx.FocusEvent()
 
     def test_HelpEvent_ctor(self):
+        app = wx.App()
         evt = wx.HelpEvent()
 
     def test_IconizeEvent_ctor(self):
@@ -126,8 +127,8 @@ class Events(unittest.TestCase):
 
     def test_WindowDestroyEvent_ctor(self):
         evt = wx.WindowDestroyEvent()
-        
-        
+
+
     def test_eventBinding(self):
         class Frame(wx.Frame):
             def __init__(self, *args, **kw):
@@ -143,8 +144,8 @@ class Events(unittest.TestCase):
         frm.SetSize((200,100))
         #app.MainLoop()
         self.assertTrue(frm.gotEvent)
-        
-        
+
+
     def test_DropFilesEvent_tweaks(self):
         evt = wx.DropFilesEvent(123, 'one two three four five'.split())
         self.assertTrue(evt.NumberOfFiles == 5)
@@ -160,8 +161,8 @@ class Events(unittest.TestCase):
         wx.EVT_CATEGORY_TIMER
         wx.EVT_CATEGORY_THREAD
         wx.EVT_CATEGORY_ALL
-        
-        
+
+
     def test_evtHandlerSubclass(self):
         class MyEvtHandler(wx.EvtHandler):
             def __init__(self, **kwds):
@@ -169,8 +170,8 @@ class Events(unittest.TestCase):
 
         eh = MyEvtHandler()
         eh.Destroy()
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

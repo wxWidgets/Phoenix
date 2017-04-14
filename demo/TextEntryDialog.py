@@ -40,8 +40,8 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-This class represents a dialog that requests a one-line text string from the user. 
-It is implemented as a generic wxWindows dialog. Along with the usual wx.Dialog 
+This class represents a dialog that requests a one-line text string from the user.
+It is implemented as a generic wxWindows dialog. Along with the usual wx.Dialog
 style flags, all of the wx.TextCtrl TE_* style flags are accepted, so, for example,
 wx.TE_PASSWORD could be used to create a password dialog.
 

@@ -22,12 +22,12 @@ class HugeTable(gridlib.GridTableBase):
         return attr
 
 
-    
+
     # This is all it takes to make a custom data table to plug into a
     # wxGrid.  There are many more methods that can be overridden, but
     # the ones shown below are the required ones.  This table simply
     # provides strings containing the row and column values.
-    
+
     def GetNumberRows(self):
         return 10000
 
@@ -59,8 +59,8 @@ class HugeTableGrid(gridlib.Grid):
         # Otherwise you would need to keep a reference to it, but that
         # would allow other grids to use the same table.
         self.SetTable(table, True)
-        
-        self.Bind(gridlib.EVT_GRID_CELL_RIGHT_CLICK, self.OnRightDown)  
+
+        self.Bind(gridlib.EVT_GRID_CELL_RIGHT_CLICK, self.OnRightDown)
 
     def OnRightDown(self, event):
         print("hello")

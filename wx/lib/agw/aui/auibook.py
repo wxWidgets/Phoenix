@@ -20,7 +20,7 @@ customize the control's look and feel.
 
 An effort has been made to try to maintain an API as similar to that of :class:`Notebook`.
 
-The default theme that is used is :class:`~lib.agw.aui.tabart.AuiDefaultTabArt`, which provides a modern, glossy
+The default theme that is used is :class:`~wx.lib.agw.aui.tabart.AuiDefaultTabArt`, which provides a modern, glossy
 look and feel. The theme can be changed by calling :meth:`AuiNotebook.SetArtProvider() <AuiNotebook.SetArtProvider>`.
 """
 
@@ -640,7 +640,7 @@ class TabNavigatorWindow(wx.Dialog):
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(wx.Bitmap(1, 1))
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         mem_dc.SetFont(font)
 
         panelHeight = mem_dc.GetCharHeight()
@@ -809,7 +809,7 @@ class TabNavigatorWindow(wx.Dialog):
 
         # get the text position, and draw it
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         mem_dc.SetFont(font)
         fontHeight = mem_dc.GetCharHeight()
 
@@ -921,7 +921,7 @@ class AuiTabContainer(object):
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
          ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~wx.lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -1396,7 +1396,7 @@ class AuiTabContainer(object):
                 total_width += size[0]
                 tab_width[i] = size[0]
 
-            if i >= self._tab_offset:            
+            if i >= self._tab_offset:
                 if i+1 < page_count:
                     visible_width += x_extent
                 else:
@@ -1426,7 +1426,7 @@ class AuiTabContainer(object):
             for button in self._buttons:
                 if button.id == AUI_BUTTON_LEFT or \
                    button.id == AUI_BUTTON_RIGHT:
-                    
+
                     button.cur_state |= AUI_BUTTON_STATE_HIDDEN
 
         # Re-calculate the width of visible buttons (may have been hidden/shown)
@@ -2287,7 +2287,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
                     if self.HasCapture():
                         self.ReleaseMouse()
-                        
+
                     if self._agwFlags & AUI_NB_TAB_FLOAT:
                         self._drag_image.BeginDrag(wx.Point(0,0), self, fullScreen=True)
                     else:
@@ -2327,7 +2327,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         :rtype: :class:`wx.Window`.
         """
-        
+
         screen_pt = wx.GetMousePosition()
         client_pt = self.ScreenToClient(screen_pt)
         return self.TabHitTest(client_pt.x, client_pt.y)
@@ -2340,7 +2340,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         :param wx.Window `wnd`: the window pointed by the mouse.
         """
-        
+
         self._tooltip_wnd = wnd
         if (wnd is None and self._hover_button is None) or not wx.GetApp().IsActive():
             self.StopTooltipTimer()
@@ -2352,7 +2352,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
     def StopTooltipTimer(self):
         """ Stops the timer keeping track of tooltips and mouse movements on the tab area. """
-        
+
         if self._tooltip_timer:
             self._tooltip_timer.Stop()
             self._tooltip_timer = None
@@ -2364,13 +2364,13 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
-        
+
         self.RestartTooltipTimer(self.GetPointedToTab())
 
 
     def ShowTooltip(self):
         """ Shows the tooltip on the tab. """
-        
+
         wnd = self.GetPointedToTab()
         if wnd != self._tooltip_wnd:
             self.RestartTooltipTimer(wnd)
@@ -2840,7 +2840,7 @@ class AuiNotebook(wx.Panel):
 
     An effort has been made to try to maintain an API as similar to that of :class:`Notebook`.
 
-    The default theme that is used is :class:`~lib.agw.aui.tabart.AuiDefaultTabArt`, which provides a modern, glossy
+    The default theme that is used is :class:`~wx.lib.agw.aui.tabart.AuiDefaultTabArt`, which provides a modern, glossy
     look and feel. The theme can be changed by calling :meth:`AuiNotebook.SetArtProvider`.
     """
 
@@ -2875,7 +2875,7 @@ class AuiNotebook(wx.Panel):
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
          ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~wx.lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -2930,14 +2930,14 @@ class AuiNotebook(wx.Panel):
         .. note::
 
            This method has been added to safely un-initialize the underlying
-           :class:`~lib.agw.aui.framemanager.AuiManager` which manages the :class:`AuiNotebook`
+           :class:`~wx.lib.agw.aui.framemanager.AuiManager` which manages the :class:`AuiNotebook`
            layout (i.e., tab split, re-ordering, tab floating etc...).
-         
+
         """
-        
+
         self._mgr.UnInit()
         return wx.Panel.Destroy(self)
-        
+
 
     def __getitem__(self, index):
         """
@@ -2956,7 +2956,7 @@ class AuiNotebook(wx.Panel):
 
 
         """
-        
+
         if index < self.GetPageCount():
             return self.GetPage(index)
         else:
@@ -2989,7 +2989,7 @@ class AuiNotebook(wx.Panel):
 
         self._normal_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._selected_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._selected_font.SetWeight(wx.BOLD)
+        self._selected_font.SetWeight(wx.FONTWEIGHT_BOLD)
 
         self.SetArtProvider(TA.AuiDefaultTabArt())
 
@@ -3283,7 +3283,7 @@ class AuiNotebook(wx.Panel):
 
 
     def UpdateHintWindowSize(self):
-        """ Updates the :class:`~lib.agw.aui.framemanager.AuiManager` hint window size. """
+        """ Updates the :class:`~wx.lib.agw.aui.framemanager.AuiManager` hint window size. """
 
         size = self.CalculateNewSplitSize()
 
@@ -3369,7 +3369,7 @@ class AuiNotebook(wx.Panel):
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
          ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~wx.lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -4324,7 +4324,7 @@ class AuiNotebook(wx.Panel):
 
 
     def GetAuiManager(self):
-        """ Returns the associated :class:`~lib.agw.aui.framemanager.AuiManager`. """
+        """ Returns the associated :class:`~wx.lib.agw.aui.framemanager.AuiManager`. """
 
         return self._mgr
 
@@ -4424,7 +4424,7 @@ class AuiNotebook(wx.Panel):
             return
 
         selection = self.GetSelection()
-        
+
         # choose a split size
         if self.GetPageCount() > 2:
             split_size = self.CalculateNewSplitSize()
@@ -4493,7 +4493,7 @@ class AuiNotebook(wx.Panel):
                     selection -= 1
 
                 active_page = selection
-            
+
             src_tabs.SetActivePage(active_page)
             src_tabs.DoShowHide()
             src_tabs.Refresh()
@@ -4569,7 +4569,7 @@ class AuiNotebook(wx.Panel):
 
            Due to a bug on MSW, for disabled pages :func:`FindWindowAtPoint`
            returns the wrong window. See http://trac.wxwidgets.org/ticket/2942
-           
+
         """
 
         if not self._sash_dclick_unsplit:
@@ -5148,10 +5148,10 @@ class AuiNotebook(wx.Panel):
 
            When the notebook is more or less full screen, tabs cannot be dragged far
            enough outside of the notebook to become floating pages.
-           
+
         """
         from . import framemanager
-        
+
         root_manager = framemanager.GetManager(self)
         page_title = self.GetPageText(page_index)
         page_contents = self.GetPage(page_index)
@@ -5252,7 +5252,7 @@ class AuiNotebook(wx.Panel):
         """
         Re-docks a floating :class:`AuiNotebook` tab in the original position, when possible.
 
-        :param `pane`: an instance of :class:`~lib.agw.aui.framemanager.AuiPaneInfo`.
+        :param `pane`: an instance of :class:`~wx.lib.agw.aui.framemanager.AuiPaneInfo`.
         """
         from . import framemanager
 
@@ -5734,7 +5734,7 @@ class AuiNotebook(wx.Panel):
         wx.Panel.SetFont(self, font)
 
         selectedFont = wx.Font(font.GetPointSize(), font.GetFamily(),
-                               font.GetStyle(), wx.BOLD, font.GetUnderlined(),
+                               font.GetStyle(), wx.FONTWEIGHT_BOLD, font.GetUnderlined(),
                                font.GetFaceName(), font.GetEncoding())
 
         self.SetNormalFont(font)
@@ -5898,7 +5898,7 @@ class AuiNotebook(wx.Panel):
         Clones the tab area buttons when the :class:`AuiNotebook` is being split.
 
         :see: :meth:`AddTabAreaButton`
-        
+
         :note: Standard buttons for :class:`AuiNotebook` are not cloned, only custom ones.
         """
 
@@ -5955,6 +5955,7 @@ class AuiNotebook(wx.Panel):
                 continue
 
             self.SetSelectionToPage(page)
+            self.Update()
             pageText.append(page.caption)
 
             rect = page.window.GetScreenRect()
@@ -5977,7 +5978,7 @@ class AuiNotebook(wx.Panel):
 
         # create some items for the list
         for indx, text in enumerate(pageText):
-            listCtrl.InsertImageStringItem(10000, text, indx)
+            listCtrl.InsertItem(10000, text, indx)
 
         self.AddPage(listCtrl, "AuiNotebook Preview", True, bitmap=auinotebook_preview.GetBitmap(), disabled_bitmap=wx.NullBitmap)
         return True

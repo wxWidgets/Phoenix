@@ -5,7 +5,7 @@
 // Author:      Robin Dunn
 //
 // Created:     18-Aug-2012
-// Copyright:   (c) 2013 by Total Control Software
+// Copyright:   (c) 2012-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ PyObject* wxPyDrawTextList(wxDC& dc, PyObject* textList, PyObject* pyPoints,
 PyObject* wxPyDrawXXXList(wxDC& dc, wxPyDrawListOp_t doDraw,
                           PyObject* pyCoords, PyObject* pyPens, PyObject* pyBrushes)
 {
-    wxPyBlock_t blocked = wxPyBeginBlockThreads(); 
+    wxPyBlock_t blocked = wxPyBeginBlockThreads();
 
     bool      isFastSeq  = PyList_Check(pyCoords) || PyTuple_Check(pyCoords);
     bool      isFastPens = PyList_Check(pyPens) || PyTuple_Check(pyPens);
@@ -193,7 +193,7 @@ bool wxPyDrawXXXEllipse(wxDC& dc, PyObject* coords)
 }
 
 
-wxPoint* wxPoint_LIST_helper(PyObject* source, int *count); 
+wxPoint* wxPoint_LIST_helper(PyObject* source, int *count);
 
 bool wxPyDrawXXXPolygon(wxDC& dc, PyObject* coords)
 {

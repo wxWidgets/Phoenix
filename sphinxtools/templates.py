@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ TEMPLATE_INHERITANCE = '''
 .. raw:: html
 
    <div id="toggleBlock" onclick="return toggleVisibility(this)" class="closed" style="cursor:pointer;">
-   <img id="toggleBlock-trigger" src="_static/images/closed.png"/>    
+   <img id="toggleBlock-trigger" src="_static/images/closed.png"/>
    Inheritance diagram for %s <strong>%s</strong>:
    </div>
    <div id="toggleBlock-summary" style="display:block;"></div>
@@ -63,21 +63,21 @@ TEMPLATE_APPEARANCE = '''
 .. figure:: _static/images/widgets/fullsize/wxmsw/%s
    :alt: wxMSW
    :figclass: floatleft
-   
+
    **wxMSW**
 
 
 .. figure:: _static/images/widgets/fullsize/wxmac/%s
    :alt: wxMAC
    :figclass: floatright
-   
+
    **wxMAC**
 
 
 .. figure:: _static/images/widgets/fullsize/wxgtk/%s
    :alt: wxGTK
    :figclass: floatcenter
-   
+
    **wxGTK**
 
 
@@ -141,7 +141,7 @@ TEMPLATE_PROPERTY_SUMMARY = '''
 TEMPLATE_API = '''
 |api| Class API
 ===============
-   
+
 '''
 
 # Template for the standalone function summary for a module (wx, wx.dataview

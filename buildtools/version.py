@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -18,11 +18,11 @@ VER_RELEASE      = 3      # wxPython RELEASE number for the given wxWidgets
 
 VER_FLAGS        = ""     # wxPython release flags
 
-# The VER_FLAGS value is appended to the version number constructed from first
-# 3 components and should be set according to the following patterns. These
-# should help us to better follow the PEP-0440 notions of version numbers,
-# where public version identifiers are supposed to conform to the following
-# scheme:
+# The VER_FLAGS value is appended to the version number constructed from the
+# first 3 components and should be set according to the following patterns.
+# These should help us to better follow the PEP-0440 notions of version
+# numbers, where public version identifiers are supposed to conform to the
+# following scheme:
 #
 #      [N!]N(.N)*[{a|b|rc}N][.postN][.devN]
 #

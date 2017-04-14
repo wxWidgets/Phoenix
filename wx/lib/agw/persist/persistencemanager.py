@@ -25,8 +25,8 @@
 # --------------------------------------------------------------------------- #
 
 """
-This module contains the definitions of :class:`~lib.agw.persist.persitencemanager.PersistentObject`
-and :class:`~lib.agw.persist.persitencemanager.PersistenceManager` objects.
+This module contains the definitions of :class:`~wx.lib.agw.persist.persitencemanager.PersistentObject`
+and :class:`~wx.lib.agw.persist.persitencemanager.PersistenceManager` objects.
 """
 
 import os
@@ -66,7 +66,7 @@ class PersistentObject(object):
 
         :param `window`: an instance of :class:`wx.Window`;
         :param `persistenceHandler`: if not ``None``, this should a custom handler derived
-         from :class:`~lib.agw.persist.persist_handlers.AbstractHandler`.
+         from :class:`~wx.lib.agw.persist.persist_handlers.AbstractHandler`.
         """
 
         self._name = window.GetName()
@@ -454,7 +454,7 @@ class PersistenceManager(object):
 
         :param `window`: an instance of :class:`wx.Window`;
         :param `persistenceHandler`: if not ``None``, this should a custom handler derived
-         from :class:`~lib.agw.persist.persist_handlers.AbstractHandler`.
+         from :class:`~wx.lib.agw.persist.persist_handlers.AbstractHandler`.
 
         .. note::
 
@@ -707,13 +707,13 @@ class PersistenceManager(object):
 
         return self._hasRestored
 
-    
+
     @HasRestoredProp.setter
     def HasRestoredProp(self, flag):
         """
         This property keeps track if any of the windows managed by
         :class:`PersistenceManager` has had its settings restored.
-        
+
         :param boolean `flag`: True will be remembered
         """
 
@@ -800,7 +800,7 @@ class PersistenceManager(object):
         this method checks the style `PM_PERSIST_CONTROL_VALUE` and if if it is
         not set it will also check the variable `persistValue` of the individual
         window.
- 
+
         :param `obj`: an instance of :class:`PersistentObject`;
         :param `keyName`: a string specifying the key name.
         """

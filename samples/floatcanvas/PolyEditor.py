@@ -50,7 +50,7 @@ class DrawFrame(wx.Frame):
 
         self.SetMenuBar(MenuBar)
 
-        self.CreateStatusBar()            
+        self.CreateStatusBar()
         # Add the Canvas
         self.Canvas = NavCanvas.NavCanvas(self,-1,(500,500),
                                           Debug = 0,
@@ -59,9 +59,9 @@ class DrawFrame(wx.Frame):
 
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
-        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp) 
-        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftClick) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp)
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftClick)
 
         self.ResetSelections()
 
@@ -226,12 +226,12 @@ class PolyEditor(wx.App):
 
 PolyEditor(0).MainLoop()# put in True if you want output to go to it's own window.
 
-   
-    
-     
-    
-    
-    
+
+
+
+
+
+
 
 
 

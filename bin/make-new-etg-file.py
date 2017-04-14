@@ -36,23 +36,23 @@ etgstub = """\
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "%(module)s"
 NAME      = "%(name)s"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ %(items)s
-           ]    
-    
+           ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
@@ -61,13 +61,13 @@ def run():
 
     #c = module.find('')
     #assert isinstance(c, etgtools.ClassDef)
-    
-    
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()
@@ -78,7 +78,7 @@ if __name__ == '__main__':
 
 unitteststub = """\
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -88,7 +88,7 @@ class %(name)s_Tests(wtc.WidgetTestCase):
     # TODO: Remove this test and add real ones.
     def test_%(name)s1(self):
         self.fail("Unit tests for %(name)s not implemented yet.")
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
@@ -103,11 +103,11 @@ def main():
     if not args:
         parser.print_help()
         return
-    
+
     item_str = ""
     for item in options.items.split(","):
         item_str += "'%s',\n" % item
-    
+
     values = {
         "author"    : options.author,
         "copyright" : options.copyright,
@@ -118,7 +118,7 @@ def main():
         "filename"  : args[0] + ".py",
         "module"    : args[1],
     }
-    
+
     writeFile(
         os.path.join(root_dir, "etg", values["filename"]), etgstub, values)
     writeFile(

@@ -35,15 +35,15 @@ for name in dir(wx):
         val = getattr(wx, name)
         if six.PY3 and isinstance(val, bytes):
             val = val.decode('utf-8')
-        BAD_DEFAULT_NAMES.append(val) 
+        BAD_DEFAULT_NAMES.append(val)
 
 for name in dir(dv):
     if "NameStr" in name:
         val = getattr(dv, name)
         if six.PY3 and isinstance(val, bytes):
             val = val.decode('utf-8')
-        BAD_DEFAULT_NAMES.append(val)         
-            
+        BAD_DEFAULT_NAMES.append(val)
+
 # ----------------------------------------------------------------------------------- #
 # String constants used by BookHandler
 

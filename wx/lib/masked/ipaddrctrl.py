@@ -105,7 +105,7 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
         :param string `name`: the window name;
         :param boolean `setupEventHandling`: setup event handling by default.
 
-        """       
+        """
 
         if 'mask' not in kwargs:
             kwargs['mask'] = mask = "###.###.###.###"
@@ -183,9 +183,9 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
         splits it into an array of 4 fields, justifies it
         appropriately, and inserts it into the control.
         Invalid values will raise a ValueError exception.
-        
+
         :param string `value`: the IP address in the form '000.000.000.000'
-        
+
         """
 ##        dbg('IpAddrCtrl::SetValue(%s)' % str(value), indent=1)
         if not isinstance(value, six.string_types):

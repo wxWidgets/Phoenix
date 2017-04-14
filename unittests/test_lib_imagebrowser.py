@@ -12,19 +12,19 @@ class imagebrowser_Tests(wtc.WidgetTestCase):
         # a typical use case
         dlg = ib.ImageDialog(self.frame, set_dir=os.getcwd())
         dlg.Destroy()
-        
+
     def test_imagebrowserDlgGetters(self):
         dlg = ib.ImageDialog(None)
         dlg.GetFile()
         dlg.GetDirectory()
         dlg.Destroy()
-        
+
     def test_imagebrowserDlgChangeTypes(self):
         dlg = ib.ImageDialog(None)
         dlg.ChangeFileTypes((("GIF (*.gif)", "*.gif"),
                              ("PNG (*.png)", "*.png")))
         dlg.Destroy()
-        
+
 #---------------------------------------------------------------------------
 
 

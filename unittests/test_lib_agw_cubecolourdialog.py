@@ -7,7 +7,7 @@ import wx.lib.agw.cubecolourdialog as CCD
 #---------------------------------------------------------------------------
 
 class lib_agw_cubecolourdialog_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_cubecolourdialogCtor(self):
         colourData = wx.ColourData()
         colourData.SetColour(wx.RED)
@@ -23,7 +23,7 @@ class lib_agw_cubecolourdialog_Tests(wtc.WidgetTestCase):
         self.assertTrue(dlg.GetAGWWindowStyleFlag() > 0)
 
         colour = dlg.GetRGBAColour()
-        self.assertEqual(colour, wx.Colour('blue'))            
+        self.assertEqual(colour, wx.Colour('blue'))
 
         ccd_colour = CCD.Colour(wx.Colour(colour))
         html = CCD.rgb2html(ccd_colour)
@@ -32,7 +32,7 @@ class lib_agw_cubecolourdialog_Tests(wtc.WidgetTestCase):
     def test_lib_agw_cubecolourdialogConstantsExist(self):
         # CubeColourDialog agwStyle
         CCD.CCD_SHOW_ALPHA
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

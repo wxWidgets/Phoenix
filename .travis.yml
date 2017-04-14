@@ -4,12 +4,25 @@
 
 language: python
     
-python: 
-    - "2.7"
-    #- "3.4"  # Just do one Python for now.
-    
-sudo: false
-    
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      python: 2.7
+    - os: linux
+      dist: precise
+      sudo: required
+      python: 2.7
+    - os: linux
+      dist: trusty
+      sudo: required
+      python: 3.4
+    - os: linux
+      dist: precise
+      sudo: required
+      python: 3.4
+  # redundant specification of `sudo` and `python` because of travis-ci.org's way of parsing `.travis.yml`
     
 # Available build steps:
 # 1. before_install
@@ -38,10 +51,11 @@ addons:
     - libnotify-dev
 
 
-# So install them in this step instead.
 install:
     - echo "****** travis install step"
-    #- pip install sphinx  # Add this if building of the docs is added in the next section
+    - pip install -U pip
+    - pip install -U -r requirements.txt
+    - pip list
 
 
 script:
@@ -51,6 +65,7 @@ script:
     - python build.py etg --nodoc
     - python build.py sip
     - python build.py build_py --jobs=4
+    - sudo python build.py install
     # TODO: Add running of the tests
     
     

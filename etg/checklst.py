@@ -4,7 +4,8 @@
 #              Robin Dunn
 #
 # Created:     06-Sept-2011
-# Copyright:   (c) 2013 by Kevin Ollivier
+# Copyright:   (c) 2011 by Kevin Ollivier
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -17,23 +18,23 @@ NAME      = "checklst"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxCheckListBox' ]
-    
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     c = module.find('wxCheckListBox')
     assert isinstance(c, etgtools.ClassDef)
-    
+
     c.find('wxCheckListBox').findOverload('wxString choices').ignore()
     c.find('wxCheckListBox').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
 
@@ -42,30 +43,30 @@ def run():
 
     tools.fixWindowClass(c)
 
-    
+
     # We already have the Python methods below, so just ignore this new method for now.
     c.find('GetCheckedItems').ignore()
-    
+
     c.addPyMethod('GetCheckedItems', '(self)', doc="""\
         GetCheckedItems()
-    
+
         Return a sequence of integers corresponding to the checked items in
         the control, based on :meth:`IsChecked`.""",
         body="return tuple([i for i in range(self.Count) if self.IsChecked(i)])")
 
-    c.addPyMethod('GetCheckedStrings', '(self)', 
+    c.addPyMethod('GetCheckedStrings', '(self)',
         doc="""\
             GetCheckedStrings()
-     
+
             Return a tuple of strings corresponding to the checked
             items of the control, based on :meth:`GetChecked`.""",
         body="return tuple([self.GetString(i) for i in self.GetCheckedItems()])")
-    
-    c.addPyMethod('SetCheckedItems', '(self, indexes)', 
+
+    c.addPyMethod('SetCheckedItems', '(self, indexes)',
         doc="""\
             SetCheckedItems(indexes)
 
-            Sets the checked state of items if the index of the item is 
+            Sets the checked state of items if the index of the item is
             found in the indexes sequence.""",
         body="""\
             for i in indexes:
@@ -73,7 +74,7 @@ def run():
             for i in range(self.Count):
                 self.Check(i, i in indexes)""")
 
-    c.addPyMethod('SetCheckedStrings', '(self, strings)', 
+    c.addPyMethod('SetCheckedStrings', '(self, strings)',
         doc="""\
             SetCheckedStrings(strings)
 
@@ -90,17 +91,17 @@ def run():
                   deprecated='Use GetCheckedItems instead.')
     c.addPyMethod('SetChecked', '(self, indexes)', 'return self.SetCheckedItems(indexes)',
                   deprecated='Use SetCheckedItems instead.')
-                  
+
     c.addPyProperty('Checked GetChecked SetChecked')
-    c.addPyProperty('CheckedItems GetCheckedItems SetCheckedItems')    
+    c.addPyProperty('CheckedItems GetCheckedItems SetCheckedItems')
     c.addPyProperty('CheckedStrings GetCheckedStrings SetCheckedStrings')
-    
-    
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

@@ -1,9 +1,9 @@
 #----------------------------------------------------------------------
 # Name:        wx.lib.eventStack
-# Purpose:     These mixins implement a push and pop menu/UI update event 
+# Purpose:     These mixins implement a push and pop menu/UI update event
 #              handler system at the wx.App level. This is useful for resolving
-#              cases where multiple views may want to respond to an event 
-#              (say, wx.ID_COPY) and where you also want a "default" handler 
+#              cases where multiple views may want to respond to an event
+#              (say, wx.ID_COPY) and where you also want a "default" handler
 #              for the event (and UI update status) when there is no active
 #              view which wishes to handle the event.
 #
@@ -55,7 +55,7 @@ class AppEventHandlerMixin:
 
             AddUIHandlerForID(ID, handlerFunc)
 
-    
+
     in their EVT_SET_FOCUS handler, and call Remove(UI)HandlerForID(ID) in their
     EVT_KILL_FOCUS handler.
     """

@@ -1,6 +1,6 @@
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 #
 
 def RestOfLine(sx, width, data, bool):

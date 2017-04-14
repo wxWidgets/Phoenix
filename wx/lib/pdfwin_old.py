@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     22-March-2004
-# Copyright:   (c) 2004 by Total Control Software
+# Copyright:   (c) 2004-2017 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ def get_acroversion():
         except WindowsError:
             regKey = _winreg.HKEY_CURRENT_USER
             adobesoft = _winreg.OpenKey(regKey, r'Software\Adobe')
-            
+
         for index in range(_winreg.QueryInfoKey(adobesoft)[0]):
             key = _winreg.EnumKey(adobesoft, index)
             if "acrobat" in key.lower():
@@ -44,7 +44,7 @@ def get_acroversion():
         if acroversions:
             _acroversion = acroversions[0]
     return _acroversion
-            
+
 
 #----------------------------------------------------------------------
 
@@ -74,12 +74,12 @@ if get_acroversion() >= 7.0:
     class PDFWindowError(RuntimeError):
         def __init__(self):
             RuntimeError.__init__(self, "A PDF must be loaded before calling this method.")
-            
+
 
     class PDFWindow(wx.Panel):
         def __init__(self, *args, **kw):
             wx.Panel.__init__(self, *args, **kw)
-            
+
             # Make a new class that derives from the WebBrowser class
             # in the COM module imported above.  This class also
             # derives from wxWindow and implements the machinery
@@ -90,7 +90,7 @@ if get_acroversion() >= 7.0:
             sizer.Add(self.ie, 1, wx.EXPAND)
             self.SetSizer(sizer)
 
-            
+
         def LoadFile(self, fileName):
             """
             Opens and displays the specified document within the browser.
@@ -100,7 +100,7 @@ if get_acroversion() >= 7.0:
             else:
                 self.ie.Navigate2(fileName)
                 return True  # can we sense failure at this point?
-            
+
         def GetVersions(self):
             """
             Deprecated: No longer available - do not use.
@@ -109,7 +109,7 @@ if get_acroversion() >= 7.0:
                 return self.ie.Document.GetVersions()
             else:
                 raise PDFWindowError()
-            
+
         def Print(self):
             """
             Prints the document according to the specified options in a user dialog box.
@@ -118,7 +118,7 @@ if get_acroversion() >= 7.0:
                 return self.ie.Document.Print()
             else:
                 raise PDFWindowError()
-            
+
         def goBackwardStack(self):
             """
             Goes to the previous view on the view stack, if it exists.
@@ -221,9 +221,9 @@ if get_acroversion() >= 7.0:
             Prints the document according to the specified options in
             a user dialog box. These options may include embedded
             printing and specifying which printer is to be used.
-            
+
             NB. The page range in the dialog defaults to
-            'From Page 1 to 1' - Use Print() above instead. (dfh) 
+            'From Page 1 to 1' - Use Print() above instead. (dfh)
             """
             if self.ie.Document:
                 return self.ie.Document.printWithDialog()
@@ -242,7 +242,7 @@ if get_acroversion() >= 7.0:
             current location within the page and zoom level.  npage is
             the page number of the destination page.  The first page
             in a document is page 0.
-            
+
             ## Oh no it isn't! The first page is 1 (dfh)
             """
             if self.ie.Document:
@@ -253,7 +253,7 @@ if get_acroversion() >= 7.0:
         def setLayoutMode(self, layoutMode):
             """
             LayoutMode possible values:
-            
+
                 =================  ====================================
                 'DontCare'         use the current user preference
                 'SinglePage'       use single page mode (as in pre-Acrobat
@@ -284,9 +284,9 @@ if get_acroversion() >= 7.0:
             Sets the page mode to display the document only, or to
             additionally display bookmarks or thumbnails.  pageMode =
             'none' or 'bookmarks' or 'thumbs'.
-            
+
             ## NB.'thumbs' is case-sensitive, the other are not (dfh)
-            """   
+            """
             if self.ie.Document:
                 return self.ie.Document.setPageMode(pageMode)
             else:
@@ -356,7 +356,7 @@ if get_acroversion() >= 7.0:
             offset. Possible values of viewMode are as in setView
             above. offset is the horizontal or vertical coordinate
             positioned either at the left or top edge.
-            """    
+            """
             if self.ie.Document:
                 return self.ie.Document.setViewScroll(viewMode, offset)
             else:
@@ -377,7 +377,7 @@ if get_acroversion() >= 7.0:
             Sets the magnification according to the specified value,
             and scrolls the page view both horizontally and vertically
             according to the specified amounts.
-            
+
             :param left:  the horizontal coordinate positioned at the left edge.
             :param top:   the vertical coordinate positioned at the top edge.
             """
@@ -386,7 +386,7 @@ if get_acroversion() >= 7.0:
             else:
                 raise PDFWindowError()
 
-        
+
 
 elif get_acroversion() is not None:
     import wx.activex
@@ -532,13 +532,13 @@ elif get_acroversion() is not None:
 #  --------------------
 #  src
 #      type:string  arg:string  canGet:True  canSet:True
-#  
+#
 #  messagehandler
 #      type:VT_VARIANT  arg:VT_VARIANT  canGet:True  canSet:True
-#  
-#  
-#  
-#  
+#
+#
+#
+#
 #  METHODS
 #  --------------------
 #  QueryInterface
@@ -548,19 +548,19 @@ elif get_acroversion() is not None:
 #              in:True  out:False  optional:False  type:unsupported type 29
 #          ppvObj
 #              in:False  out:True  optional:False  type:unsupported type 26
-#  
+#
 #  AddRef
 #      retType:  int
-#  
+#
 #  Release
 #      retType:  int
-#  
+#
 #  GetTypeInfoCount
 #      retType:  VT_VOID
 #      params:
 #          pctinfo
 #              in:False  out:True  optional:False  type:int
-#  
+#
 #  GetTypeInfo
 #      retType:  VT_VOID
 #      params:
@@ -570,7 +570,7 @@ elif get_acroversion() is not None:
 #              in:True  out:False  optional:False  type:int
 #          pptinfo
 #              in:False  out:True  optional:False  type:unsupported type 26
-#  
+#
 #  GetIDsOfNames
 #      retType:  VT_VOID
 #      params:
@@ -584,7 +584,7 @@ elif get_acroversion() is not None:
 #              in:True  out:False  optional:False  type:int
 #          rgdispid
 #              in:False  out:True  optional:False  type:int
-#  
+#
 #  Invoke
 #      retType:  VT_VOID
 #      params:
@@ -604,73 +604,73 @@ elif get_acroversion() is not None:
 #              in:False  out:True  optional:False  type:unsupported type 29
 #          puArgErr
 #              in:False  out:True  optional:False  type:int
-#  
+#
 #  LoadFile
 #      retType:  bool
 #      params:
 #          fileName
 #              in:True  out:False  optional:False  type:string
-#  
+#
 #  setShowToolbar
 #      retType:  VT_VOID
 #      params:
 #          On
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  gotoFirstPage
 #      retType:  VT_VOID
-#  
+#
 #  gotoLastPage
 #      retType:  VT_VOID
-#  
+#
 #  gotoNextPage
 #      retType:  VT_VOID
-#  
+#
 #  gotoPreviousPage
 #      retType:  VT_VOID
-#  
+#
 #  setCurrentPage
 #      retType:  VT_VOID
 #      params:
 #          n
 #              in:True  out:False  optional:False  type:int
-#  
+#
 #  goForwardStack
 #      retType:  VT_VOID
-#  
+#
 #  goBackwardStack
 #      retType:  VT_VOID
-#  
+#
 #  setPageMode
 #      retType:  VT_VOID
 #      params:
 #          pageMode
 #              in:True  out:False  optional:False  type:string
-#  
+#
 #  setLayoutMode
 #      retType:  VT_VOID
 #      params:
 #          layoutMode
 #              in:True  out:False  optional:False  type:string
-#  
+#
 #  setNamedDest
 #      retType:  VT_VOID
 #      params:
 #          namedDest
 #              in:True  out:False  optional:False  type:string
-#  
+#
 #  Print
 #      retType:  VT_VOID
-#  
+#
 #  printWithDialog
 #      retType:  VT_VOID
-#  
+#
 #  setZoom
 #      retType:  VT_VOID
 #      params:
 #          percent
 #              in:True  out:False  optional:False  type:double
-#  
+#
 #  setZoomScroll
 #      retType:  VT_VOID
 #      params:
@@ -680,13 +680,13 @@ elif get_acroversion() is not None:
 #              in:True  out:False  optional:False  type:double
 #          top
 #              in:True  out:False  optional:False  type:double
-#  
+#
 #  setView
 #      retType:  VT_VOID
 #      params:
 #          viewMode
 #              in:True  out:False  optional:False  type:string
-#  
+#
 #  setViewScroll
 #      retType:  VT_VOID
 #      params:
@@ -694,7 +694,7 @@ elif get_acroversion() is not None:
 #              in:True  out:False  optional:False  type:string
 #          offset
 #              in:True  out:False  optional:False  type:double
-#  
+#
 #  setViewRect
 #      retType:  VT_VOID
 #      params:
@@ -706,7 +706,7 @@ elif get_acroversion() is not None:
 #              in:True  out:False  optional:False  type:double
 #          height
 #              in:True  out:False  optional:False  type:double
-#  
+#
 #  printPages
 #      retType:  VT_VOID
 #      params:
@@ -714,7 +714,7 @@ elif get_acroversion() is not None:
 #              in:True  out:False  optional:False  type:int
 #          to
 #              in:True  out:False  optional:False  type:int
-#  
+#
 #  printPagesFit
 #      retType:  VT_VOID
 #      params:
@@ -724,25 +724,25 @@ elif get_acroversion() is not None:
 #              in:True  out:False  optional:False  type:int
 #          shrinkToFit
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  printAll
 #      retType:  VT_VOID
-#  
+#
 #  printAllFit
 #      retType:  VT_VOID
 #      params:
 #          shrinkToFit
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  setShowScrollbars
 #      retType:  VT_VOID
 #      params:
 #          On
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  GetVersions
 #      retType:  VT_VARIANT
-#  
+#
 #  setCurrentHightlight
 #      retType:  VT_VOID
 #      params:
@@ -754,7 +754,7 @@ elif get_acroversion() is not None:
 #              in:True  out:False  optional:False  type:int
 #          d
 #              in:True  out:False  optional:False  type:int
-#  
+#
 #  setCurrentHighlight
 #      retType:  VT_VOID
 #      params:
@@ -766,24 +766,24 @@ elif get_acroversion() is not None:
 #              in:True  out:False  optional:False  type:int
 #          d
 #              in:True  out:False  optional:False  type:int
-#  
+#
 #  postMessage
 #      retType:  VT_VOID
 #      params:
 #          strArray
 #              in:True  out:False  optional:False  type:VT_VARIANT
-#  
-#  
-#  
-#  
+#
+#
+#
+#
 #  EVENTS
 #  --------------------
 #  Error
 #      retType:  VT_VOID
-#  
+#
 #  Message
 #      retType:  VT_VOID
-#  
-#  
-#  
-#  
+#
+#
+#
+#

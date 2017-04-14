@@ -79,7 +79,7 @@ class build_ext (build_ext_base):
 
     def _sip_output_dir(self):
         return self.build_temp
-    
+
     def build_extension (self, ext):
         oldforce = self.force
 
@@ -148,4 +148,3 @@ class build_ext (build_ext_base):
                     "-b", sbf,
                     "-I", self._sip_sipfiles_dir(),
                     source])
-

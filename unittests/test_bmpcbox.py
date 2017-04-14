@@ -16,33 +16,33 @@ class bmpcbox_Tests(wtc.WidgetTestCase):
 
     def test_bmpcbox1(self):
         pnl = wx.Panel(self.frame)
-        
+
         bcb = wx.adv.BitmapComboBox(pnl)
         for idx, name in enumerate(imgFiles):
             bmp = wx.Bitmap(name)
             bcb.Append(os.path.basename(name), bmp)
-            
+
         bcb.GetItemBitmap(0)
         bcb.SetItemBitmap(0, wx.NullBitmap)
-        
+
         bcb.SetClientObject(2, "Hello")
         self.assertEqual(bcb.GetClientObject(2), "Hello")
-        
+
         bcb.SetClientData(2, "Bye")
         self.assertEqual(bcb.GetClientData(2), "Bye")
 
 
     def test_bmpcbox2(self):
         pnl = wx.Panel(self.frame)
-        
+
         bcb = wx.adv.BitmapComboBox(pnl)
         for idx, name in enumerate(imgFiles):
             bmp = wx.Bitmap(name)
             bcb.Append(os.path.basename(name), bmp, str(idx))
-        
+
         self.assertEqual(bcb.GetClientData(2), "2")
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

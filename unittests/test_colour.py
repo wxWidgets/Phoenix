@@ -5,23 +5,23 @@ from unittests import wtc
 #---------------------------------------------------------------------------
 
 class Colour(wtc.WidgetTestCase):
-        
+
     def test_default_ctor(self):
         c = wx.Colour()
         self.assertTrue(not c.IsOk())
         self.assertTrue(c.Get() == (-1,-1,-1,255))
 
-                        
+
     def test_rgb_ctor(self):
         c = wx.Colour(1,2,3)
         self.assertTrue(c.Get(False) == (1,2,3))
 
-        
+
     def test_rgba_ctor(self):
         c = wx.Colour(1,2,3,4)
         self.assertTrue(c.Get() == (1,2,3,4))
 
-        
+
     def test_copy_ctor(self):
         c1 = wx.Colour(1,2,3,4)
         c2 = wx.Colour(c1)
@@ -33,8 +33,8 @@ class Colour(wtc.WidgetTestCase):
     def test_GetPixel(self):
         c1 = wx.Colour(1,2,3,4)
         p = c1.GetPixel()
-        
-        
+
+
     if hasattr(wx, 'testColourTypeMap'):
         def test_ColourTypemaps(self):
             c = wx.testColourTypeMap('red')
@@ -51,8 +51,8 @@ class Colour(wtc.WidgetTestCase):
             self.assertTrue(c.Get() == (1, 2, 3, 0xff))
             c = wx.testColourTypeMap( (1,2,3,4) )
             self.assertTrue(c.Get() == (1, 2, 3, 4))
-    
-    
+
+
 #---------------------------------------------------------------------------
 
 

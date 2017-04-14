@@ -3,7 +3,7 @@
 # 11/17/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
-# 
+#
 # 11/28/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Changed the event binding slightly.
@@ -64,7 +64,7 @@ class TestPanel(wx.Panel):
             }
 
         et = evt.GetEventType()
-        
+
         if et in map:
             evtType = map[et]
         else:
@@ -83,7 +83,7 @@ class TestPanel(wx.Panel):
         self.log.write("FindReplaceDialog closing...\n")
         evt.GetDialog().Destroy()
         self.EnableButtons()
-        
+
 
 #---------------------------------------------------------------------------
 
@@ -97,17 +97,17 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-FindReplaceDialog is a standard modeless dialog which is used to allow the user 
-to search for some text (and possibly replace it with something else). The actual 
-searching is supposed to be done in the owner window which is the parent of this 
-dialog. Note that it means that unlike for the other standard dialogs this one 
-<u>must have a parent window</u>. Also note that there is no way to use this 
+FindReplaceDialog is a standard modeless dialog which is used to allow the user
+to search for some text (and possibly replace it with something else). The actual
+searching is supposed to be done in the owner window which is the parent of this
+dialog. Note that it means that unlike for the other standard dialogs this one
+<u>must have a parent window</u>. Also note that there is no way to use this
 dialog in a modal way; <b>it is always, by design and implementation, modeless</b>.
 
-FileReplaceDialog requires the use of <b>FindReplaceData</b>. This holds the 
-data for the dialog. It is used to initialize the dialog with the default values 
-and will keep the last values from the dialog when it is closed. It is also 
-updated each time a FindDialogEvent is generated so instead of using the 
+FileReplaceDialog requires the use of <b>FindReplaceData</b>. This holds the
+data for the dialog. It is used to initialize the dialog with the default values
+and will keep the last values from the dialog when it is closed. It is also
+updated each time a FindDialogEvent is generated so instead of using the
 FindDialogEvent methods you can also directly query this object. <b>Care must be
 taken not to use this object after the dialog is destroyed.</b> The data within
 will be invalid after the parent dialog is destroyed.

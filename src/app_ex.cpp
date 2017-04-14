@@ -18,7 +18,7 @@
 #ifdef __WXMSW__             // If building for Windows...
 
 //----------------------------------------------------------------------
-// This gets run when the DLL is loaded.  We just need to save the 
+// This gets run when the DLL is loaded.  We just need to save the
 // instance handle.
 //----------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ BOOL WINAPI DllMain(
 //----------------------------------------------------------------------
 
 
-class wxPyApp : public wxApp 
+class wxPyApp : public wxApp
 {
     DECLARE_ABSTRACT_CLASS(wxPyApp)
 
@@ -54,13 +54,13 @@ public:
         //m_callFilterEvent = false;
         ms_appInstance = this;
     }
-    
+
     ~wxPyApp() {
         ms_appInstance = NULL;
         wxApp::SetInstance(NULL);
     }
 
-    
+
 #ifndef __WXMAC__
     virtual void MacNewFile() {}
     virtual void MacOpenFile(const wxString &) {}
@@ -72,28 +72,28 @@ public:
 #endif
 
 #ifdef __WXMAC__
-    static long GetMacAboutMenuItemId()               { return s_macAboutMenuItemId; }    
-    static long GetMacPreferencesMenuItemId()         { return s_macPreferencesMenuItemId; }    
-    static long GetMacExitMenuItemId()                { return s_macExitMenuItemId; }    
+    static long GetMacAboutMenuItemId()               { return s_macAboutMenuItemId; }
+    static long GetMacPreferencesMenuItemId()         { return s_macPreferencesMenuItemId; }
+    static long GetMacExitMenuItemId()                { return s_macExitMenuItemId; }
     static wxString GetMacHelpMenuTitleName()         { return s_macHelpMenuTitleName; }
-    static void SetMacAboutMenuItemId(long val)       { s_macAboutMenuItemId = val; }    
+    static void SetMacAboutMenuItemId(long val)       { s_macAboutMenuItemId = val; }
     static void SetMacPreferencesMenuItemId(long val) { s_macPreferencesMenuItemId = val; }
-    static void SetMacExitMenuItemId(long val)        { s_macExitMenuItemId = val; }    
+    static void SetMacExitMenuItemId(long val)        { s_macExitMenuItemId = val; }
     static void SetMacHelpMenuTitleName(const wxString& val) { s_macHelpMenuTitleName = val; }
 #else
     static long GetMacAboutMenuItemId()               { return 0; }
-    static long GetMacPreferencesMenuItemId()         { return 0; } 
+    static long GetMacPreferencesMenuItemId()         { return 0; }
     static long GetMacExitMenuItemId()                { return 0; }
     static wxString GetMacHelpMenuTitleName()         { return wxEmptyString; }
-    static void SetMacAboutMenuItemId(long)           { }    
+    static void SetMacAboutMenuItemId(long)           { }
     static void SetMacPreferencesMenuItemId(long)     { }
-    static void SetMacExitMenuItemId(long)            { }    
+    static void SetMacExitMenuItemId(long)            { }
     static void SetMacHelpMenuTitleName(const wxString&) { }
 #endif
 
     wxAppAssertMode  GetAssertMode() { return m_assertMode; }
-    void SetAssertMode(wxAppAssertMode mode) { 
-        m_assertMode = mode; 
+    void SetAssertMode(wxAppAssertMode mode) {
+        m_assertMode = mode;
         if (mode & wxAPP_ASSERT_SUPPRESS)
             wxDisableAsserts();
         else
@@ -106,20 +106,20 @@ public:
                                  const wxChar *cond,
                                  const wxChar *msg);
 
-    
+
     // Implementing OnInit is optional for wxPython apps
     virtual bool OnInit()     { return true; }
     virtual void OnPreInit()  { }
-    
+
     void _BootstrapApp();
-    virtual int MainLoop(); 
+    virtual int MainLoop();
 
     static bool IsDisplayAvailable();
 
     // implementation only
-    void SetStartupComplete(bool val) { m_startupComplete = val; } 
+    void SetStartupComplete(bool val) { m_startupComplete = val; }
     static wxPyApp* ms_appInstance;
-    
+
 private:
     wxAppAssertMode m_assertMode;
     bool m_startupComplete;
@@ -149,9 +149,9 @@ void wxPyApp::OnAssertFailure(const wxChar *file,
         buf.Printf(wxT("C++ assertion \"%s\" failed at %s(%d)"), cond, file, line);
         if ( func && *func )
             buf << wxT(" in ") << func << wxT("()");
-        if (msg != NULL) 
+        if (msg != NULL)
             buf << wxT(": ") << msg;
-        
+
         // set the exception
         wxPyThreadBlocker blocker;
         PyObject* s = wx2PyString(buf);
@@ -172,15 +172,15 @@ void wxPyApp::OnAssertFailure(const wxChar *file,
                    file, line, cond);
         if ( func && *func )
             buf << wxT(" in ") << func << wxT("()");
-        if (msg != NULL) 
+        if (msg != NULL)
             buf << wxT(": ") << msg;
         wxLogDebug(buf);
     }
 
     // do the normal wx assert dialog?
     if (m_assertMode & wxAPP_ASSERT_DIALOG)
-        wxApp::OnAssertFailure(file, line, func, cond, msg);    
-}    
+        wxApp::OnAssertFailure(file, line, func, cond, msg);
+}
 
 
 void wxPyApp::_BootstrapApp()
@@ -190,7 +190,7 @@ void wxPyApp::_BootstrapApp()
 
     // Only initialize wxWidgets once
     if (! haveInitialized) {
-        
+
         // Copy the values in Python's sys.argv list to a C array of char* to
         // be passed to the wxEntryStart function below.
         #if PY_MAJOR_VERSION >= 3
@@ -203,14 +203,14 @@ void wxPyApp::_BootstrapApp()
         {
             wxPyThreadBlocker blocker;
             PyObject* sysargv = PySys_GetObject("argv");
-            if (sysargv != NULL) {            
+            if (sysargv != NULL) {
                 argc = PyList_Size(sysargv);
                 argv = new argType*[argc+1];
                 int x;
                 for(x=0; x<argc; x++) {
                     PyObject *pyArg = PyList_GetItem(sysargv, x); // borrowed reference
                     // if there isn't anything in sys.argv[0] then set it to the python executable
-                    if (x == 0 && PyObject_Length(pyArg) < 1) 
+                    if (x == 0 && PyObject_Length(pyArg) < 1)
                         pyArg = PySys_GetObject("executable");
                     #if PY_MAJOR_VERSION >= 3
                         int len = PyObject_Length(pyArg);
@@ -223,7 +223,7 @@ void wxPyApp::_BootstrapApp()
                 argv[argc] = NULL;
             }
         }
-        
+
         // Initialize wxWidgets
 #ifdef __WXOSX__
         wxMacAutoreleasePool autoreleasePool;
@@ -245,7 +245,7 @@ void wxPyApp::_BootstrapApp()
     else {
         this->argc = 0;
     }
-    
+
     // It's now ok to generate exceptions for assertion errors.
     SetStartupComplete(true);
 
@@ -257,17 +257,17 @@ void wxPyApp::_BootstrapApp()
         result = CallOnInit();
     else
         result = OnInit();
-        
+
 //#ifdef __WXOSX_COCOA__
 //    OSXSetInitWasCalled(true);  TODO: consider adding this method to wxApp
 //#endif
-    
+
     if (! result) {
         wxPyErr_SetString(PyExc_SystemExit, "OnInit returned false, exiting...");
     }
 
     haveInitialized = true;
-    
+
 error:
     return;
 }
@@ -297,7 +297,7 @@ int wxPyApp::MainLoop()
 
 
 // Function to test if the Display (or whatever is the platform equivallent)
-// can be connected to.  
+// can be connected to.
 bool wxPyApp::IsDisplayAvailable()
 {
 #ifdef __WXGTK__
@@ -328,7 +328,7 @@ bool wxPyApp::IsDisplayAvailable()
     */
     if (CGMainDisplayID() == 0) {
         rv = false;
-    } else 
+    } else
 #endif
     {
         // Also foreground the application on the first call as a side-effect.

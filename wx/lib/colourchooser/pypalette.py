@@ -20,7 +20,7 @@ from __future__ import absolute_import
 
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 #
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -36,6 +36,9 @@ from . import  canvas
 import  colorsys
 
 from wx.lib.embeddedimage import PyEmbeddedImage
+
+# Size of Image
+IMAGE_SIZE = (200,192)
 
 Image = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAAMgAAADACAYAAABBCyzzAAAABHNCSVQICAgIfAhkiAAACwNJ"
@@ -116,34 +119,63 @@ class PyPalette(canvas.Canvas):
     def __init__(self, parent, id):
         """Creates a palette object."""
         # Load the pre-generated palette XPM
-        
+
         # Leaving this in causes warning messages in some cases.
         # It is the responsibility of the app to init the image
         # handlers, IAW RD
         #wx.InitAllImageHandlers()
-        
+
         self.palette = Image.GetBitmap()
-        canvas.Canvas.__init__ (self, parent, id, size=(200, 192))
+        self.point = None
+
+        canvas.Canvas.__init__ (self, parent, id, forceClientSize=IMAGE_SIZE)
+
+    def DoGetBestClientSize(self):
+        """Overridden to create a client window that exactly fits our bitmap"""
+        return self.palette.GetSize()
+
+    def xInBounds(self, x):
+        """Limit x to [0,width)"""
+        if x < 0:
+            x = 0
+        if x >= self.buffer.width:
+            x = self.buffer.width - 1
+        return x
+
+    def yInBounds(self, y):
+        """Limit y to [0,height)"""
+        if y < 0:
+            y = 0
+        if y >= self.buffer.height:
+            y = self.buffer.height - 1
+        return y
 
     def GetValue(self, x, y):
         """Returns a colour value at a specific x, y coordinate pair. This
         is useful for determining the colour found a specific mouse click
         in an external event handler."""
+        x = self.xInBounds(x)
+        y = self.yInBounds(y)
         return self.buffer.GetPixelColour(x, y)
 
     def DrawBuffer(self):
         """Draws the palette XPM into the memory buffer."""
-        #self.GeneratePaletteBMP ("foo.bmp")
         self.buffer.DrawBitmap(self.palette, 0, 0, 0)
+
+        if self.point:
+            colour = wx.Colour(0, 0, 0)
+            self.buffer.SetPen(wx.Pen(colour, 1, wx.PENSTYLE_SOLID))
+            self.buffer.SetBrush(wx.Brush(colour, wx.BRUSHSTYLE_TRANSPARENT))
+            self.buffer.DrawCircle(self.point[0], self.point[1], 3)
 
     def HighlightPoint(self, x, y):
         """Highlights an area of the palette with a little circle around
         the coordinate point"""
-        colour = wx.Colour(0, 0, 0)
-        self.buffer.SetPen(wx.Pen(colour, 1, wx.PENSTYLE_SOLID))
-        self.buffer.SetBrush(wx.Brush(colour, wx.BRUSHSTYLE_TRANSPARENT))
-        self.buffer.DrawCircle(x, y, 3)
-        self.Refresh()
+        self.point = (self.xInBounds(x), self.yInBounds(y))
+        self.ReDraw()
+
+    def ClearPoint(self):
+        self.point = None
 
     def GeneratePaletteBMP(self, file_name, granularity=1):
         """The actual palette drawing algorithm.

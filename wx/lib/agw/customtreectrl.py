@@ -40,7 +40,7 @@
 
 
 """
-:class:`~lib.agw.customtreectrl.CustomTreeCtrl` is a class that mimics the behaviour of :class:`TreeCtrl`, with some more
+:class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl` is a class that mimics the behaviour of :class:`TreeCtrl`, with some more
 enhancements.
 
 
@@ -5410,7 +5410,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             child, cookie = self.GetNextChild(item, cookie)
 
         self._sendEvent = True
-        self._dirty = True        
+        self._dirty = True
 
 
     def ExpandAll(self):
@@ -6547,7 +6547,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             if wx.Platform == "__WXMAC__":
                 if not self._hasFocus:
                     dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                    dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT), 1, wx.SOLID))
+                    dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT), 1, wx.PENSTYLE_SOLID))
                 else:
                     dc.SetBrush(self._hilightBrush)
             else:

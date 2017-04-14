@@ -25,7 +25,7 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
         self.pub.setListenerExcHandler(excPublisher)
 
         # create a listener that raises an exception:
-        from lib_pubsub_except_raisinglistener import getRaisingListener
+        from .lib_pubsub_except_raisinglistener import getRaisingListener
         raisingListener = getRaisingListener()
 
         self.pub.setNotificationFlags(all=False)
@@ -42,7 +42,7 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
 
     def testHandleExcept1b(self):
         # create a listener that raises an exception:
-        from lib_pubsub_except_raisinglistener import getRaisingListener
+        from .lib_pubsub_except_raisinglistener import getRaisingListener
         raisingListener = getRaisingListener()
         self.pub.subscribe(raisingListener, 'testHandleExcept1b')
 
@@ -66,9 +66,12 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
                 # finally the string for formatted traceback:
                 msg = excTraceback.getFormattedString()
                 assert msg.startswith('  File')
-                assert msg.endswith("global name 'RuntimeError2' is not defined\n")
+                assert msg.endswith("name 'RuntimeError2' is not defined\n")
 
         from wx.lib.pubsub.utils.exchandling import ExcPublisher
+        if not self.pub.getDefaultTopicMgr().hasTopicDefinition(ExcPublisher.topicUncaughtExc):
+            excPublisher = ExcPublisher(self.pub.getDefaultTopicMgr() )
+            self.pub.setListenerExcHandler(excPublisher)
         topic = self.pub.getDefaultTopicMgr().getTopic(ExcPublisher.topicUncaughtExc)
         assert not topic.hasListeners()
         handler = UncaughtExcListener()

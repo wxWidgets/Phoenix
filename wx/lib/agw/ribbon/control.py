@@ -7,7 +7,7 @@
 #
 # Created:
 # Version:
-# Date:         
+# Date:
 # Licence:      wxWindows license
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
@@ -21,7 +21,7 @@ Description
 ===========
 
 Despite what the name may imply, it is not the top-level control for creating a
-ribbon interface - that is :class:`~lib.agw.ribbon.bar.RibbonBar`. Ribbon controls often have a region which
+ribbon interface - that is :class:`~wx.lib.agw.ribbon.bar.RibbonBar`. Ribbon controls often have a region which
 is "transparent", and shows the contents of the ribbon page or panel behind it.
 
 If implementing a new ribbon control, then it may be useful to realise that this
@@ -29,7 +29,7 @@ effect is done by the art provider when painting the background of the control,
 and hence in the paint handler for the new control, you should call a draw background
 method on the art provider (:meth:`RibbonMSWArtProvider.DrawButtonBarBackground() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.DrawButtonBarBackground>` and
 :meth:`RibbonMSWArtProvider.DrawToolBarBackground() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.DrawToolBarBackground>` typically just redraw what is behind the
-rectangle being painted) if you want transparent regions. 
+rectangle being painted) if you want transparent regions.
 
 """
 
@@ -64,7 +64,7 @@ class RibbonControl(wx.Control):
 
         if isinstance(parent, RibbonControl):
             self._art = parent.GetArtProvider()
-    
+
 
     def SetArtProvider(self, art):
         """
@@ -96,13 +96,13 @@ class RibbonControl(wx.Control):
         """
         Returns ``True`` if this window can take any size (greater than its minimum size),
         ``False`` if it can only take certain sizes.
-        
+
         :see: :meth:`~RibbonControl.GetNextSmallerSize`, :meth:`~RibbonControl.GetNextLargerSize`
         """
 
         return True
 
-    
+
     def DoGetNextSmallerSize(self, direction, size):
         """
         Implementation of :meth:`~RibbonControl.GetNextSmallerSize`.
@@ -116,12 +116,12 @@ class RibbonControl(wx.Control):
 
         # Dummy implementation for code which doesn't check for IsSizingContinuous() == true
         minimum = self.GetMinSize()
-        
+
         if direction & wx.HORIZONTAL and size.x > minimum.x:
-            size.x -= 1        
+            size.x -= 1
         if direction & wx.VERTICAL and size.y > minimum.y:
             size.y -= 1
-        
+
         return size
 
 
@@ -141,7 +141,7 @@ class RibbonControl(wx.Control):
             size.x += 1
         if direction & wx.VERTICAL:
             size.y += 1
-        
+
         return size
 
 
@@ -155,7 +155,7 @@ class RibbonControl(wx.Control):
 
         :returns: if there is no smaller size, otherwise a suitable size which is smaller
          in the given direction(s), and the same as in the other direction (if any).
-         
+
         :see: :meth:`~RibbonControl.IsSizingContinuous`, :meth:`~RibbonControl.DoGetNextSmallerSize`
         """
 
@@ -175,7 +175,7 @@ class RibbonControl(wx.Control):
 
         :returns: if there is no larger size, otherwise a suitable size which is larger
          in the given direction(s), and the same as in the other direction (if any).
-         
+
         :see: :meth:`~RibbonControl.IsSizingContinuous`, :meth:`~RibbonControl.DoGetNextLargerSize`
         """
 
@@ -201,5 +201,5 @@ class RibbonControl(wx.Control):
 
         pass
 
-    
+
 

@@ -15,19 +15,19 @@ class tipdlg_Tests(wtc.WidgetTestCase):
         wx.CallLater(150, self.closeDialogs)
         wx.adv.ShowTip(self.frame, tp)
         self.myYield()
-        
-        
+
+
     def test_tipdlg2(self):
         class MyTipProvider(wx.adv.TipProvider):
             def GetTip(self):
                 return "This is my tip"
-            
+
         wx.CallLater(150, self.closeDialogs)
         wx.adv.ShowTip(self.frame, MyTipProvider(0))
         self.myYield()
 
-                       
-                
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

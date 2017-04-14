@@ -23,11 +23,11 @@ static ULONG_PTR wxPySetActivationContext()
 
     OSVERSIONINFO info;
     wxZeroMemory(info);
-    info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO); 
+    info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     GetVersionEx(&info);
     if (info.dwMajorVersion < 5)
         return 0;
-    
+
     ULONG_PTR cookie = 0;
     HANDLE h;
     ACTCTX actctx;
@@ -40,7 +40,7 @@ static ULONG_PTR wxPySetActivationContext()
     actctx.lpResourceName = MAKEINTRESOURCE(2);
     actctx.hModule = wxGetInstance();
     actctx.dwFlags = ACTCTX_FLAG_HMODULE_VALID | ACTCTX_FLAG_RESOURCE_NAME_VALID;
-    
+
     h = CreateActCtx(&actctx);
     if (h == INVALID_HANDLE_VALUE) {
         wxLogLastError(wxT("CreateActCtx"));
@@ -49,7 +49,7 @@ static ULONG_PTR wxPySetActivationContext()
 
     if (! ActivateActCtx(h, &cookie))
         wxLogLastError(wxT("ActivateActCtx"));
-    
+
     return cookie;
 }
 
@@ -98,7 +98,7 @@ void _wxPyCleanup()
     wxEntryCleanup();
 }
 
-PyObject* wxAssertionError = NULL;        // Exception object raised for wxASSERT failures
+PyObject* wxAssertionError = NULL;      // Exception object raised for wxASSERT failures
 
 void wxPyCoreModuleInject(PyObject* moduleDict)
 {
@@ -109,12 +109,12 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 
     // An alias that should be deprecated sometime
     PyDict_SetItemString(moduleDict, "PyAssertionError", wxAssertionError);
-    
-    
-//    // Create an exception object to use when the app object hasn't been created yet
-//    wxPyNoAppError = PyErr_NewException("wx._core.PyNoAppError",
-//                                        PyExc_RuntimeError, NULL);
-//    PyDict_SetItemString(moduleDict, "PyNoAppError", wxPyNoAppError);
+
+
+    // Create an exception object to use when the app object hasn't been created yet
+    wxPyNoAppError = PyErr_NewException("wx._core.PyNoAppError",
+                                        PyExc_RuntimeError, NULL);
+    PyDict_SetItemString(moduleDict, "PyNoAppError", wxPyNoAppError);
 
 #ifdef __WXGTK__
 #define wxPort "__WXGTK__"
@@ -131,10 +131,10 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 
     wxInitAllImageHandlers();
 
-    // TODO: Find some blackmagic way to deprecate wx.Platform such that it raises 
-    // a wraning when used...  Maybe a class that returns wx.Port for any __getattr__?
+    // TODO: Find some magic way to deprecate wx.Platform such that it raises
+    // a warning when used...  Maybe a class that returns wx.Port for any __getattr__?
     PyDict_SetItemString(moduleDict, "Port", PyUnicode_FromString(wxPort));
-    PyDict_SetItemString(moduleDict, "Platform", PyUnicode_FromString(wxPort));    
+    PyDict_SetItemString(moduleDict, "Platform", PyUnicode_FromString(wxPort));
 
     // Make a tuple of strings that gives more info about the platform and build.
     PyObject* PlatformInfo = PyList_New(0);

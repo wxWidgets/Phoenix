@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 // Name:        arrayholder.sip
-// Purpose:     
+// Purpose:
 //
 // Author:      Robin Dunn
 //
 // Created:     14-March-2012
-// Copyright:   (c) 2013 by Total Control Software
+// Copyright:   (c) 2012-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -22,13 +22,13 @@ class wxCArrayHolder
 %TypeHeaderCode
 #include "arrayholder.h"
 %End
-    
+
 public:
     wxCArrayHolder();
     ~wxCArrayHolder();
-    
+
 private:
-    wxCArrayHolder(const wxCArrayHolder<Type>&);  // no copies    
+    wxCArrayHolder(const wxCArrayHolder<Type>&);  // no copies
     wxCArrayHolder& operator=(wxCArrayHolder<Type>); // no assignment
 };
 

@@ -28,7 +28,11 @@ class filesys_Tests(wtc.WidgetTestCase):
     def test_filesys04(self):
         wx.FileSystem.AddHandler(wx.MemoryFSHandler())
 
-        
+    def test_filesysMemoryFSHandler(self):
+        memoryFS = wx.MemoryFSHandler()
+        memoryFS.AddFile('test.txt', 'This is a test')
+        self.assertTrue(memoryFS.FindFirst('test.txt') == 'test.txt')
+
     # TODO: Add more tests.
         
 #---------------------------------------------------------------------------

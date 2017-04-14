@@ -45,14 +45,14 @@ class TestPanel(wx.Panel):
 
         btn1 = wx.Button(self, -1, "Load File")
         self.Bind(wx.EVT_BUTTON, self.OnLoadFile, btn1)
-        
+
         btn2 = wx.Button(self, -1, "Play")
         self.Bind(wx.EVT_BUTTON, self.OnPlay, btn2)
         self.playBtn = btn2
-        
+
         btn3 = wx.Button(self, -1, "Pause")
         self.Bind(wx.EVT_BUTTON, self.OnPause, btn3)
-        
+
         btn4 = wx.Button(self, -1, "Stop")
         self.Bind(wx.EVT_BUTTON, self.OnStop, btn4)
 
@@ -64,8 +64,8 @@ class TestPanel(wx.Panel):
         self.st_size = StaticText(self, -1, size=(100,-1))
         self.st_len  = StaticText(self, -1, size=(100,-1))
         self.st_pos  = StaticText(self, -1, size=(100,-1))
-        
-        
+
+
         # setup the layout
         sizer = wx.GridBagSizer(5,5)
         sizer.Add(self.mc, (1,1), span=(5,1))#, flag=wx.EXPAND)
@@ -85,8 +85,8 @@ class TestPanel(wx.Panel):
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.OnTimer)
         self.timer.Start(100)
-        
-        
+
+
 
     def OnLoadFile(self, evt):
         dlg = wx.FileDialog(self, message="Choose a media file",
@@ -99,7 +99,7 @@ class TestPanel(wx.Panel):
 
 
     def DoLoadFile(self, path):
-        
+
         if not self.mc.Load(path):
             wx.MessageBox("Unable to load %s: Unsupported format?" % path,
                           "ERROR",
@@ -113,7 +113,7 @@ class TestPanel(wx.Panel):
 
     def OnMediaLoaded(self, evt):
         self.playBtn.Enable()
-    
+
     def OnPlay(self, evt):
         if not self.mc.Play():
             wx.MessageBox("Unable to Play media : Unsupported format?",
@@ -126,10 +126,10 @@ class TestPanel(wx.Panel):
 
     def OnPause(self, evt):
         self.mc.Pause()
-    
+
     def OnStop(self, evt):
         self.mc.Stop()
-    
+
 
     def OnSeek(self, evt):
         offset = self.slider.GetValue()
@@ -157,7 +157,7 @@ def runTest(frame, nb, log):
         win = MessagePanel(nb, 'wx.MediaCtrl is not available on this platform.',
                            'Sorry', wx.ICON_WARNING)
         return win
-    
+
 
 #----------------------------------------------------------------------
 
@@ -174,10 +174,10 @@ may require specific codecs to be installed.
 
 <p>
 wx.MediaCtrl uses native backends to render media, for example on Windows
-there is a ActiveMovie/DirectShow backend, and on Macintosh there is a 
+there is a ActiveMovie/DirectShow backend, and on Macintosh there is a
 QuickTime backend.
 <p>
-wx.MediaCtrl is not currently available on unix systems. 
+wx.MediaCtrl is not currently available on unix systems.
 
 </body></html>
 """

@@ -15,7 +15,7 @@
 Dock art provider code - a dock provider provides all drawing functionality to
 the AUI dock manager. This allows the dock manager to have a plugable look-and-feel.
 
-By default, a :class:`~lib.agw.aui.framemanager` uses an instance of this class called :mod:`~lib.agw.aui.dockart`
+By default, a :class:`~wx.lib.agw.aui.framemanager` uses an instance of this class called :mod:`~wx.lib.agw.aui.dockart`
 which provides bitmap art and a colour scheme that is adapted to the major platforms'
 look. You can either derive from that class to alter its behaviour or write a
 completely new dock art class. Call :meth:`AuiManager.SetArtProvider() <lib.agw.aui.framemanager.AuiManager.SetArtProvider>`
@@ -54,7 +54,7 @@ class AuiDefaultDockArt(object):
     Dock art provider code - a dock provider provides all drawing functionality to the AUI dock manager.
     This allows the dock manager to have a plugable look-and-feel.
 
-    By default, a :class:`~lib.agw.aui.framemanager.AuiManager` uses an instance of this class called
+    By default, a :class:`~wx.lib.agw.aui.framemanager.AuiManager` uses an instance of this class called
     :class:`AuiDefaultDockArt` which provides bitmap art and a colour scheme that is adapted to the major
     platforms' look. You can either derive from that class to alter its behaviour or
     write a completely new dock art class.
@@ -108,8 +108,8 @@ class AuiDefaultDockArt(object):
 
     **Button States**
 
-    These are the possible pane button / :class:`~lib.agw.aui.auibook.AuiNotebook` button /
-    :class:`~lib.agw.aui.auibar.AuiToolBar` button states:
+    These are the possible pane button / :class:`~wx.lib.agw.aui.auibook.AuiNotebook` button /
+    :class:`~wx.lib.agw.aui.auibar.AuiToolBar` button states:
 
     ============================================  ======================================
     Button State Constant                         Description
@@ -125,8 +125,8 @@ class AuiDefaultDockArt(object):
 
     **Button Identifiers**
 
-    These are the possible pane button / :class:`~lib.agw.aui.auibook.AuiNotebook` button /
-    :class:`~lib.agw.aui.auibar.AuiToolBar` button identifiers:
+    These are the possible pane button / :class:`~wx.lib.agw.aui.auibook.AuiNotebook` button /
+    :class:`~wx.lib.agw.aui.auibar.AuiToolBar` button identifiers:
 
     ============================================  ======================================
     Button Identifier                             Description
@@ -136,9 +136,9 @@ class AuiDefaultDockArt(object):
     ``AUI_BUTTON_MINIMIZE``                       Shows a minimize button on the pane
     ``AUI_BUTTON_PIN``                            Shows a pin button on the pane
     ``AUI_BUTTON_OPTIONS``                        Shows an option button on the pane (not implemented)
-    ``AUI_BUTTON_WINDOWLIST``                     Shows a window list button on the pane (for :class:`~lib.agw.aui.auibook.AuiNotebook`)
-    ``AUI_BUTTON_LEFT``                           Shows a left button on the pane (for :class:`~lib.agw.aui.auibook.AuiNotebook`)
-    ``AUI_BUTTON_RIGHT``                          Shows a right button on the pane (for :class:`~lib.agw.aui.auibook.AuiNotebook`)
+    ``AUI_BUTTON_WINDOWLIST``                     Shows a window list button on the pane (for :class:`~wx.lib.agw.aui.auibook.AuiNotebook`)
+    ``AUI_BUTTON_LEFT``                           Shows a left button on the pane (for :class:`~wx.lib.agw.aui.auibook.AuiNotebook`)
+    ``AUI_BUTTON_RIGHT``                          Shows a right button on the pane (for :class:`~wx.lib.agw.aui.auibook.AuiNotebook`)
     ``AUI_BUTTON_UP``                             Shows an up button on the pane (not implemented)
     ``AUI_BUTTON_DOWN``                           Shows a down button on the pane (not implemented)
     ``AUI_BUTTON_CUSTOM1``                        Shows a custom button on the pane (not implemented)
@@ -554,10 +554,10 @@ class AuiDefaultDockArt(object):
         # Draw the icon centered vertically
         if pane.icon.IsOk():
             if pane.HasCaptionLeft():
-                bmp = wx.ImageFromBitmap(pane.icon).Rotate90(clockwise=False)
-                dc.DrawBitmap(bmp.ConvertToBitmap(), rect.x+(rect.width-pane.icon.GetWidth())/2, rect.y+rect.height-2-pane.icon.GetHeight(), True)
+                bmp = wx.Bitmap(pane.icon).ConvertToImage().Rotate90(clockwise=False)
+                dc.DrawBitmap(bmp.ConvertToBitmap(), rect.x+(rect.width-pane.icon.GetWidth())//2, rect.y+rect.height-2-pane.icon.GetHeight(), True)
             else:
-                dc.DrawBitmap(pane.icon, rect.x+2, rect.y+(rect.height-pane.icon.GetHeight())/2, True)
+                dc.DrawBitmap(pane.icon, rect.x+2, rect.y+(rect.height-pane.icon.GetHeight())//2, True)
 
 
     def DrawCaption(self, dc, window, text, rect, pane):
@@ -608,7 +608,7 @@ class AuiDefaultDockArt(object):
         if captionLeft:
             dc.DrawRotatedText(draw_text, rect.x+(rect.width/2)-(h/2)-1, rect.y+rect.height-3-caption_offset, 90)
         else:
-            dc.DrawText(draw_text, rect.x+3+caption_offset, rect.y+(rect.height/2)-(h/2)-1)
+            dc.DrawText(draw_text, rect.x+3+caption_offset, rect.y+(rect.height//2)-(h//2)-1)
 
 
     def RequestUserAttention(self, dc, window, text, rect, pane):
@@ -738,11 +738,11 @@ class AuiDefaultDockArt(object):
 
         if isVertical:
             old_x = rect.x
-            rect.x = rect.x + (rect.width/2) - (bmp.GetWidth()/2)
+            rect.x = rect.x + (rect.width//2) - (bmp.GetWidth()//2)
             rect.width = old_x + rect.width - rect.x - 1
         else:
             old_y = rect.y
-            rect.y = rect.y + (rect.height/2) - (bmp.GetHeight()/2)
+            rect.y = rect.y + (rect.height//2) - (bmp.GetHeight()//2)
             rect.height = old_y + rect.height - rect.y - 1
 
         if button_state == AUI_BUTTON_STATE_PRESSED:
@@ -769,7 +769,7 @@ class AuiDefaultDockArt(object):
                 bmp = DarkenBitmap(bmp, self._active_caption_colour, StepColour(self._active_caption_colour, 110))
 
         if isVertical:
-            bmp = wx.ImageFromBitmap(bmp).Rotate90(clockwise=False).ConvertToBitmap()
+             bmp = wx.Bitmap(bmp).ConvertToImage().Rotate90(clockwise=False).ConvertToBitmap()
 
         # draw the button itself
         dc.DrawBitmap(bmp, rect.x, rect.y, True)
@@ -790,7 +790,7 @@ class AuiDefaultDockArt(object):
 
             x = rect.x + int((1.0/4.0)*rect.width)
             xend = rect.x + int((3.0/4.0)*rect.width)
-            y = rect.y + (rect.height/2) - 1
+            y = rect.y + (rect.height//2) - 1
 
             while 1:
                 dc.SetPen(self._gripper_pen3)
@@ -806,7 +806,7 @@ class AuiDefaultDockArt(object):
 
             y = rect.y + int((1.0/4.0)*rect.height)
             yend = rect.y + int((3.0/4.0)*rect.height)
-            x = rect.x + (rect.width/2) - 1
+            x = rect.x + (rect.width//2) - 1
 
             while 1:
                 dc.SetPen(self._gripper_pen3)
@@ -937,7 +937,7 @@ class ModernDockArt(AuiDefaultDockArt):
         """
         Default class constructor.
 
-        :param wx.Window `win`: the window managed by :class:`~lib.agw.aui.framemanager.AuiManager`.
+        :param wx.Window `win`: the window managed by :class:`~wx.lib.agw.aui.framemanager.AuiManager`.
         """
 
         AuiDefaultDockArt.__init__(self)
@@ -952,8 +952,8 @@ class ModernDockArt(AuiDefaultDockArt):
             self.hTheme1 = winxptheme.OpenThemeData(hwnd, "Window")
             self.usingTheme = True
 
-        if not self.hTheme1:
-            self.usingTheme = False
+            if not self.hTheme1:
+                self.usingTheme = False
 
         self._button_size = 13
 

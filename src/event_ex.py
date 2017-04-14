@@ -76,10 +76,10 @@ EVT_MOUSE_EVENTS = wx.PyEventBinder([ wxEVT_LEFT_DOWN,
                                       wxEVT_LEAVE_WINDOW,
                                       wxEVT_MOUSEWHEEL,
                                       wxEVT_AUX1_DOWN,
-                                      wxEVT_AUX1_UP,      
+                                      wxEVT_AUX1_UP,
                                       wxEVT_AUX1_DCLICK,
-                                      wxEVT_AUX2_DOWN,  
-                                      wxEVT_AUX2_UP,      
+                                      wxEVT_AUX2_DOWN,
+                                      wxEVT_AUX2_UP,
                                       wxEVT_AUX2_DCLICK,
                                      ])
 
@@ -172,7 +172,7 @@ EVT_TOOL_ENTER = wx.PyEventBinder( wxEVT_TOOL_ENTER, 1)
 EVT_TOOL_DROPDOWN = wx.PyEventBinder( wxEVT_TOOL_DROPDOWN, 1)
 EVT_CHECKLISTBOX = wx.PyEventBinder( wxEVT_CHECKLISTBOX, 1)
 EVT_COMBOBOX_DROPDOWN = wx.PyEventBinder( wxEVT_COMBOBOX_DROPDOWN , 1)
-EVT_COMBOBOX_CLOSEUP  = wx.PyEventBinder( wxEVT_COMBOBOX_CLOSEUP , 1) 
+EVT_COMBOBOX_CLOSEUP  = wx.PyEventBinder( wxEVT_COMBOBOX_CLOSEUP , 1)
 
 EVT_COMMAND_LEFT_CLICK = wx.PyEventBinder( wxEVT_COMMAND_LEFT_CLICK, 1)
 EVT_COMMAND_LEFT_DCLICK = wx.PyEventBinder( wxEVT_COMMAND_LEFT_DCLICK, 1)
@@ -203,8 +203,8 @@ EVT_JOY_BUTTON_UP = wx.PyEventBinder( wxEVT_JOY_BUTTON_UP )
 EVT_JOY_MOVE = wx.PyEventBinder( wxEVT_JOY_MOVE )
 EVT_JOY_ZMOVE = wx.PyEventBinder( wxEVT_JOY_ZMOVE )
 EVT_JOYSTICK_EVENTS = wx.PyEventBinder([ wxEVT_JOY_BUTTON_DOWN,
-                                        wxEVT_JOY_BUTTON_UP, 
-                                        wxEVT_JOY_MOVE, 
+                                        wxEVT_JOY_BUTTON_UP,
+                                        wxEVT_JOY_MOVE,
                                         wxEVT_JOY_ZMOVE,
                                         ])
 

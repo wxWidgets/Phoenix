@@ -7,7 +7,7 @@
 #
 # Created:
 # Version:
-# Date:         
+# Date:
 # Licence:      wxWindows license
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
@@ -23,11 +23,11 @@ This allows a ribbon bar to have a pluggable look-and-feel, while retaining the 
 underlying behaviour. As a single art provider is used for all ribbon components, a
 ribbon bar usually has a consistent (though unique) appearance.
 
-By default, a :class:`~lib.agw.ribbon.bar.RibbonBar` uses an instance of a class called
-:class:`~lib.agw.ribbon.art_default.RibbonDefaultArtProvider`,
-which resolves to :class:`~lib.agw.ribbon.art_aui.RibbonAUIArtProvider`,
-:class:`~lib.agw.ribbon.art_msw.RibbonMSWArtProvider`, or
-:class:`~lib.agw.ribbon.art_osx.RibbonOSXArtProvider` - whichever is most appropriate
+By default, a :class:`~wx.lib.agw.ribbon.bar.RibbonBar` uses an instance of a class called
+:class:`~wx.lib.agw.ribbon.art_default.RibbonDefaultArtProvider`,
+which resolves to :class:`~wx.lib.agw.ribbon.art_aui.RibbonAUIArtProvider`,
+:class:`~wx.lib.agw.ribbon.art_msw.RibbonMSWArtProvider`, or
+:class:`~wx.lib.agw.ribbon.art_osx.RibbonOSXArtProvider` - whichever is most appropriate
 to the current platform. These art providers are all
 slightly configurable with regard to colours and fonts, but for larger modifications,
 you can derive from one of these classes, or write a completely new art provider class.
@@ -38,7 +38,7 @@ Call :meth:`RibbonBar.SetArtProvider() <lib.agw.ribbon.bar.RibbonBar.SetArtProvi
 See Also
 ========
 
-:class:`~lib.agw.ribbon.bar.RibbonBar`
+:class:`~wx.lib.agw.ribbon.bar.RibbonBar`
 """
 
 import wx
@@ -70,13 +70,13 @@ def FontFromFont(original):
 
     return newFont
 
-    
+
 class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def __init__(self):
 
         RibbonMSWArtProvider.__init__(self)
-        
+
         if wx.Platform == "__WXMAC__":
             k = Carbon.Appearance.kThemeBrushToolbarBackground if CARBON else 52
             if hasattr(wx, 'MacThemeColour'):
@@ -86,7 +86,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
                 brush.MacSetTheme(k)
                 base_colour = brush.GetColour()
         else:
-            
+
             base_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
 
         self.SetColourScheme(base_colour, wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT),
@@ -150,11 +150,11 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         """
 
         RibbonMSWArtProvider.SetFont(self, id, font)
-        
-        if id == RIBBON_ART_TAB_LABEL_FONT:        
+
+        if id == RIBBON_ART_TAB_LABEL_FONT:
             self._tab_active_label_font = FontFromFont(self._tab_label_font)
             self._tab_active_label_font.SetWeight(wx.FONTWEIGHT_BOLD)
-    
+
 
     def GetColour(self, id):
         """
@@ -194,7 +194,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             return self._gallery_button_disabled_background_brush.GetColour()
         else:
             return RibbonMSWArtProvider.GetColour(self, id)
-    
+
 
     def SetColour(self, id, colour):
         """
@@ -233,7 +233,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             self._gallery_button_disabled_background_brush.SetColour(colour)
         else:
             RibbonMSWArtProvider.SetColour(self, id, colour)
-    
+
 
     def SetColourScheme(self, primary, secondary, tertiary):
         """
@@ -342,18 +342,18 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         text_height = 0
         icon_height = 0
 
-        if len(pages) <= 1 and (self._flags & RIBBON_BAR_ALWAYS_SHOW_TABS) == 0:        
+        if len(pages) <= 1 and (self._flags & RIBBON_BAR_ALWAYS_SHOW_TABS) == 0:
             # To preserve space, a single tab need not be displayed. We still need
             # one pixel of border though.
-            return 1        
+            return 1
 
-        if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS:        
+        if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS:
             dc.SetFont(self._tab_active_label_font)
             text_height = dc.GetTextExtent("ABCDEFXj")[1]
-        
+
         if self._flags & RIBBON_BAR_SHOW_PAGE_ICONS:
             for info in pages:
-                if info.page.GetIcon().IsOk():                
+                if info.page.GetIcon().IsOk():
                     icon_height = max(icon_height, info.page.GetIcon().GetHeight())
 
         return max(text_height, icon_height) + 10
@@ -364,7 +364,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         Draw a single tab in the tab region of a ribbon bar.
 
         :param `dc`: The device context to draw onto;
-        :param `wnd`: The window which is being drawn onto (not the :class:`~lib.agw.ribbon.page.RibbonPage`
+        :param `wnd`: The window which is being drawn onto (not the :class:`~wx.lib.agw.ribbon.page.RibbonPage`
          associated with the tab being drawn);
         :param `tab`: The rectangle within which to draw, and also the tab label,
          icon, and state (active and/or hovered). The drawing rectangle will be
@@ -380,13 +380,13 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         dc.SetFont(self._tab_label_font)
         dc.SetPen(wx.TRANSPARENT_PEN)
-        
-        if tab.active or tab.hovered:        
-            if tab.active:            
+
+        if tab.active or tab.hovered:
+            if tab.active:
                 dc.SetFont(self._tab_active_label_font)
                 dc.SetBrush(self._background_brush)
                 dc.DrawRectangle(tab.rect.x, tab.rect.y + tab.rect.height - 1, tab.rect.width - 1, 1)
-            
+
             grad_rect = wx.Rect(*tab.rect)
             grad_rect.height -= 4
             grad_rect.width -= 1
@@ -395,9 +395,9 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             dc.SetBrush(self._tab_active_top_background_brush)
             dc.DrawRectangle(tab.rect.x, tab.rect.y + 3, tab.rect.width - 1, grad_rect.y - tab.rect.y - 3)
             dc.GradientFillLinear(grad_rect, self._tab_active_background_colour, self._tab_active_background_gradient_colour, wx.SOUTH)
-        
+
         else:
-        
+
             btm_rect = wx.Rect(*tab.rect)
             btm_rect.height -= 4
             btm_rect.width -= 1
@@ -410,7 +410,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             grad_rect.y += 3
             grad_rect.height = btm_rect.y - grad_rect.y
             dc.GradientFillLinear(grad_rect, self._tab_hover_background_top_colour, self._tab_hover_background_top_gradient_colour, wx.SOUTH)
-        
+
         border_points = [wx.Point() for i in range(5)]
         border_points[0] = wx.Point(0, 3)
         border_points[1] = wx.Point(1, 2)
@@ -426,26 +426,26 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         bar = tab.page.GetParent()
         icon = wx.NullBitmap
-        
+
         if isinstance(bar, BAR.RibbonBar) and bar.GetPage(0) == tab.page:
             is_first_tab = True
 
-        if self._flags & RIBBON_BAR_SHOW_PAGE_ICONS:        
+        if self._flags & RIBBON_BAR_SHOW_PAGE_ICONS:
             icon = tab.page.GetIcon()
             if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS == 0:
                 if icon.IsOk():
                     x = tab.rect.x + (tab.rect.width - icon.GetWidth()) / 2
                     dc.DrawBitmap(icon, x, tab.rect.y + 1 + (tab.rect.height - 1 - icon.GetHeight()) / 2, True)
-            
+
         if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS:
             label = tab.page.GetLabel()
-            
-            if label.strip():            
+
+            if label.strip():
                 dc.SetTextForeground(self._tab_label_colour)
                 dc.SetBackgroundMode(wx.TRANSPARENT)
 
                 offset = 0
-                
+
                 if icon.IsOk():
                     offset += icon.GetWidth() + 2
 
@@ -455,26 +455,26 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
                     x = 8
                 elif x < 1:
                     x = 1
-                    
+
                 width = tab.rect.width - x - 2
                 x += tab.rect.x + offset
                 y = tab.rect.y + (tab.rect.height - text_height) / 2
-                
-                if icon.IsOk():                
+
+                if icon.IsOk():
                     dc.DrawBitmap(icon, x - offset, tab.rect.y + (tab.rect.height - icon.GetHeight()) / 2, True)
-                
+
                 dc.SetClippingRegion(x, tab.rect.y, width, tab.rect.height)
                 dc.DrawText(label, x, y)
-            
+
         # Draw the left hand edge of the tab only for the first tab (subsequent
         # tabs use the right edge of the prior tab as their left edge). As this is
         # outside the rectangle for the tab, only draw it if the leftmost part of
         # the tab is within the clip rectangle (the clip region has to be cleared
         # to draw outside the tab).
-        if is_first_tab and old_clip.x <= tab.rect.x and tab.rect.x < old_clip.x + old_clip.width:        
+        if is_first_tab and old_clip.x <= tab.rect.x and tab.rect.x < old_clip.x + old_clip.width:
             dc.DestroyClippingRegion()
             dc.DrawLine(tab.rect.x - 1, tab.rect.y + 4, tab.rect.x - 1, tab.rect.y + tab.rect.height - 1)
-    
+
 
     def GetBarTabWidth(self, dc, wnd, label, bitmap, ideal=None, small_begin_need_separator=None,
                        small_must_have_separator=None, minimum=None):
@@ -496,24 +496,24 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         """
 
         width = mini = 0
-        
-        if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS and label.strip():        
+
+        if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS and label.strip():
             dc.SetFont(self._tab_active_label_font)
             width += dc.GetTextExtent(label)[0]
             mini += min(30, width) # enough for a few chars
-            
-            if bitmap.IsOk():            
+
+            if bitmap.IsOk():
                 # gap between label and bitmap
                 width += 4
                 mini += 2
-            
+
         if self._flags & RIBBON_BAR_SHOW_PAGE_ICONS and bitmap.IsOk():
             width += bitmap.GetWidth()
             mini += bitmap.GetWidth()
 
-        ideal = width + 16        
-        small_begin_need_separator = mini        
-        small_must_have_separator = mini        
+        ideal = width + 16
+        small_begin_need_separator = mini
+        small_must_have_separator = mini
         minimum = mini
 
         return ideal, small_begin_need_separator, small_must_have_separator, minimum
@@ -544,7 +544,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto (which is commonly the
-         :class:`~lib.agw.ribbon.page.RibbonPage` whose background is being drawn, but doesn't have to be);
+         :class:`~wx.lib.agw.ribbon.page.RibbonPage` whose background is being drawn, but doesn't have to be);
         :param `rect`: The rectangle within which to draw.
 
         :see: :meth:`RibbonMSWArtProvider.GetPageBackgroundRedrawArea() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetPageBackgroundRedrawArea>`
@@ -596,7 +596,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         true_rect = wx.Rect(*rect)
         arrow_points = [wx.Point() for i in range(3)]
 
-        if style & RIBBON_SCROLL_BTN_FOR_MASK == RIBBON_SCROLL_BTN_FOR_TABS:        
+        if style & RIBBON_SCROLL_BTN_FOR_MASK == RIBBON_SCROLL_BTN_FOR_TABS:
             true_rect.y += 2
             true_rect.height -= 2
             dc.SetPen(self._tab_border_pen)
@@ -607,7 +607,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             dc.SetPen(self._page_border_pen)
 
         result = style & RIBBON_SCROLL_BTN_DIRECTION_MASK
-        
+
         if result == RIBBON_SCROLL_BTN_LEFT:
             dc.DrawLine(true_rect.GetRight(), true_rect.y, true_rect.GetRight(), true_rect.y + true_rect.height)
             arrow_points[0] = wx.Point(rect.width / 2 - 2, rect.height / 2)
@@ -634,11 +634,11 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         else:
             return
-        
+
         x = rect.x
         y = rect.y
 
-        if style & RIBBON_SCROLL_BTN_ACTIVE:        
+        if style & RIBBON_SCROLL_BTN_ACTIVE:
             x += 1
             y += 1
 
@@ -667,17 +667,17 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         dc.SetFont(self._panel_label_font)
         label_size = wx.Size(*dc.GetTextExtent(wnd.GetLabel()))
         label_height = label_size.GetHeight() + 5
-        
-        if self._flags & RIBBON_BAR_FLOW_VERTICAL:        
+
+        if self._flags & RIBBON_BAR_FLOW_VERTICAL:
             client_size.IncBy(4, label_height + 6)
             if client_offset is not None:
                 client_offset = wx.Point(2, label_height + 3)
-        
-        else:        
+
+        else:
             client_size.IncBy(6, label_height + 4)
             if client_offset is not None:
                 client_offset = wx.Point(3, label_height + 2)
-        
+
         return client_size
 
 
@@ -701,12 +701,12 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         label_size = wx.Size(*dc.GetTextExtent(wnd.GetLabel()))
         label_height = label_size.GetHeight() + 5
 
-        if self._flags & RIBBON_BAR_FLOW_VERTICAL:        
+        if self._flags & RIBBON_BAR_FLOW_VERTICAL:
             size.DecBy(4, label_height + 6)
             if client_offset is not None:
                 client_offset = wx.Point(2, label_height + 3)
-        
-        else:        
+
+        else:
             size.DecBy(6, label_height + 4)
             if client_offset is not None:
                 client_offset = wx.Point(3, label_height + 2)
@@ -715,7 +715,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             size.x = 0
         if size.y < 0:
             size.y = 0
-            
+
         return size, client_offset
 
 
@@ -782,17 +782,17 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         label_height = label_size.GetHeight() + 5
         label_rect = wx.Rect(*true_rect)
         label_rect.height = label_height - 1
-        
+
         dc.DrawLine(label_rect.x, label_rect.y + label_rect.height, label_rect.x + label_rect.width, label_rect.y + label_rect.height)
 
         label_bg_colour = self._panel_label_background_colour
         label_bg_grad_colour = self._panel_label_background_gradient_colour
-        
-        if wnd.IsHovered():        
+
+        if wnd.IsHovered():
             label_bg_colour = self._panel_hover_label_background_colour
             label_bg_grad_colour = self._panel_hover_label_background_gradient_colour
             dc.SetTextForeground(self._panel_hover_label_colour)
-        else:        
+        else:
             dc.SetTextForeground(self._panel_label_colour)
 
         if wx.Platform == "__WXMAC__":
@@ -804,7 +804,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         dc.DrawText(wnd.GetLabel(), label_rect.x + 3, label_rect.y + 2)
 
         if wnd.IsHovered():
-        
+
             gradient_rect = wx.Rect(*true_rect)
             gradient_rect.y += label_rect.height + 1
             gradient_rect.height = true_rect.height - label_rect.height - 3
@@ -826,7 +826,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
             else:
                 dc.DrawBitmap(self._panel_extension_bitmap[0], label_rect.GetRight() - 10, label_rect.GetBottom() - 10, True)
-                
+
 
     def DrawMinimisedPanel(self, dc, wnd, rect, bitmap):
         """
@@ -865,9 +865,9 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
                 temp = colour
                 colour = gradient
                 gradient = temp
-            
+
             dc.GradientFillLinear(true_rect, colour, gradient, wx.SOUTH)
-        
+
         preview = self.DrawMinimisedPanelCommon(dc, wnd, true_rect)
 
         dc.SetPen(self._panel_border_pen)
@@ -879,7 +879,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         preview_caption_rect.height = 7
         preview.y += preview_caption_rect.height
         preview.height -= preview_caption_rect.height
-        
+
         if wx.Platform == "__WXMAC__":
             dc.GradientFillLinear(preview_caption_rect, self._panel_hover_label_background_gradient_colour,
                                   self._panel_hover_label_background_colour, wx.SOUTH)
@@ -891,10 +891,10 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             dc.GradientFillLinear(preview, self._page_hover_background_colour,
                                   self._page_hover_background_gradient_colour, wx.SOUTH)
 
-        if bitmap.IsOk():        
+        if bitmap.IsOk():
             dc.DrawBitmap(bitmap, preview.x + (preview.width - bitmap.GetWidth()) / 2,
                           preview.y + (preview.height - bitmap.GetHeight()) / 2, True)
-        
+
 
     def DrawPartialPanelBackground(self, dc, wnd, rect):
 
@@ -912,16 +912,16 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
                 if not panel.IsHovered():
                     return
                 break
-            
+
             offset += parent.GetPosition()
             parent = panel.GetParent()
-        
+
         if panel is None:
             return
 
         background = wx.Rect(0, 0, *panel.GetSize())
         background = self.RemovePanelPadding(background)
-        
+
         background.x += 1
         background.width -= 2
         dc.SetFont(self._panel_label_font)
@@ -941,7 +941,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             bg_grad_clr = self._page_hover_background_gradient_colour
 
         paint_rect.Intersect(background)
-        
+
         if not paint_rect.IsEmpty():
             starting_colour = RibbonInterpolateColour(bg_clr, bg_grad_clr, paint_rect.y, background.y, background.y + background.height)
             ending_colour = RibbonInterpolateColour(bg_clr, bg_grad_clr, paint_rect.y + paint_rect.height, background.y, background.y + background.height)
@@ -949,10 +949,10 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             paint_rect.y -= offset.y
             dc.GradientFillLinear(paint_rect, starting_colour, ending_colour, wx.SOUTH)
 
-    
+
     def DrawGalleryBackground(self, dc, wnd, rect):
         """
-        Draw the background and chrome for a :class:`~lib.agw.ribbon.gallery.RibbonGallery` control.
+        Draw the background and chrome for a :class:`~wx.lib.agw.ribbon.gallery.RibbonGallery` control.
 
         This should draw the border, brackground, scroll buttons, extension button, and
         any other UI elements which are not attached to a specific gallery item.
@@ -961,9 +961,9 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `wnd`: The window which is being drawn onto, which is always the gallery
          whose background and chrome is being drawn. Attributes used during drawing like
          the gallery hover state and individual button states can be queried from this
-         parameter by :meth:`RibbonGallery.IsHovered() <lib.agw.ribbon.gallery.RibbonGallery.IsHovered>`, 
+         parameter by :meth:`RibbonGallery.IsHovered() <lib.agw.ribbon.gallery.RibbonGallery.IsHovered>`,
          :meth:`RibbonGallery.GetExtensionButtonState() <lib.agw.ribbon.gallery.RibbonGallery.GetExtensionButtonState>`,
-         :meth:`RibbonGallery.GetUpButtonState() <lib.agw.ribbon.gallery.RibbonGallery.GetUpButtonState>`, and 
+         :meth:`RibbonGallery.GetUpButtonState() <lib.agw.ribbon.gallery.RibbonGallery.GetUpButtonState>`, and
          :meth:`RibbonGallery.GetDownButtonState() <lib.agw.ribbon.gallery.RibbonGallery.GetDownButtonState>`;
         :param `rect`: The rectangle within which to draw. This rectangle is the entire
          area of the gallery control, not just the client rectangle.
@@ -972,19 +972,19 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         self.DrawPartialPanelBackground(dc, wnd, rect)
 
-        if wnd.IsHovered():        
+        if wnd.IsHovered():
             dc.SetPen(wx.TRANSPARENT_PEN)
             dc.SetBrush(self._gallery_hover_background_brush)
-            
-            if self._flags & RIBBON_BAR_FLOW_VERTICAL:            
-                dc.DrawRectangle(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 16)            
-            else:            
+
+            if self._flags & RIBBON_BAR_FLOW_VERTICAL:
+                dc.DrawRectangle(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 16)
+            else:
                 dc.DrawRectangle(rect.x + 1, rect.y + 1, rect.width - 16, rect.height - 2)
-            
+
         dc.SetPen(self._gallery_border_pen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.DrawRectangle(rect.x, rect.y, rect.width, rect.height)
-        
+
         self.DrawGalleryBackgroundCommon(dc, wnd, rect)
 
 
@@ -994,14 +994,14 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         extra_width = 0
         reduced_rect = wx.Rect(*rect)
         reduced_rect.Deflate(1, 1)
-        
-        if self._flags & RIBBON_BAR_FLOW_VERTICAL:        
+
+        if self._flags & RIBBON_BAR_FLOW_VERTICAL:
             reduced_rect.width += 1
             extra_width = 1
-        else:        
+        else:
             reduced_rect.height += 1
             extra_height = 1
-        
+
         if state == RIBBON_GALLERY_BUTTON_NORMAL:
             dc.GradientFillLinear(reduced_rect, self._gallery_button_background_colour, self._gallery_button_background_gradient_colour, wx.SOUTH)
             btn_bitmap = bitmaps[0]
@@ -1022,14 +1022,14 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             dc.SetPen(wx.TRANSPARENT_PEN)
             dc.SetBrush(self._gallery_button_disabled_background_brush)
             dc.DrawRectangle(reduced_rect.x, reduced_rect.y, reduced_rect.width, reduced_rect.height)
-            btn_bitmap = bitmaps[3]        
+            btn_bitmap = bitmaps[3]
 
         dc.DrawBitmap(btn_bitmap, reduced_rect.x + reduced_rect.width / 2 - 2, (rect.y + rect.height / 2) - 2, True)
 
 
     def DrawGalleryItemBackground(self, dc, wnd, rect, item):
         """
-        Draw the background of a single item in a :class:`~lib.agw.ribbon.gallery.RibbonGallery` control.
+        Draw the background of a single item in a :class:`~wx.lib.agw.ribbon.gallery.RibbonGallery` control.
 
         This is painted on top of a gallery background, and behind the items bitmap.
         Unlike :meth:`~RibbonAUIArtProvider.DrawButtonBarButton` and :meth:`~RibbonAUIArtProvider.DrawTool`, it is not expected to draw the
@@ -1046,9 +1046,9 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
          context previously painted with :meth:`~RibbonAUIArtProvider.DrawGalleryBackground`;
         :param `item`: The item whose background is being painted. Typically the
          background will vary if the item is hovered, active, or selected;
-         :meth:`RibbonGallery.GetSelection() <lib.agw.ribbon.gallery.RibbonGallery.GetSelection>`, 
+         :meth:`RibbonGallery.GetSelection() <lib.agw.ribbon.gallery.RibbonGallery.GetSelection>`,
          :meth:`RibbonGallery.GetActiveItem() <lib.agw.ribbon.gallery.RibbonGallery.GetActiveItem>`, and
-         :meth:`RibbonGallery.GetHoveredItem() <lib.agw.ribbon.gallery.RibbonGallery.GetHoveredItem>` 
+         :meth:`RibbonGallery.GetHoveredItem() <lib.agw.ribbon.gallery.RibbonGallery.GetHoveredItem>`
          can be called to test if the given item is in one of these states.
 
         """
@@ -1057,7 +1057,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             return
 
         dc.SetPen(self._gallery_item_border_pen)
-        
+
         if wnd.GetActiveItem() == item or wnd.GetSelection() == item:
             dc.SetBrush(self._gallery_button_active_background_brush)
         else:
@@ -1068,7 +1068,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawButtonBarBackground(self, dc, wnd, rect):
         """
-        Draw the background for a :class:`~lib.agw.ribbon.buttonbar.RibbonButtonBar` control.
+        Draw the background for a :class:`~wx.lib.agw.ribbon.buttonbar.RibbonButtonBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto (which will typically
@@ -1082,7 +1082,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawButtonBarButton(self, dc, wnd, rect, kind, state, label, bitmap_large, bitmap_small):
         """
-        Draw a single button for a :class:`~lib.agw.ribbon.buttonbar.RibbonButtonBar` control.
+        Draw a single button for a :class:`~wx.lib.agw.ribbon.buttonbar.RibbonButtonBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto;
@@ -1105,7 +1105,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             kind = RIBBON_BUTTON_NORMAL
             if state & RIBBON_BUTTONBAR_BUTTON_TOGGLED:
                 state ^= RIBBON_BUTTONBAR_BUTTON_ACTIVE_MASK
-    
+
         if state & (RIBBON_BUTTONBAR_BUTTON_HOVER_MASK | RIBBON_BUTTONBAR_BUTTON_ACTIVE_MASK):
             dc.SetPen(self._button_bar_hover_border_pen)
             bg_rect = wx.Rect(*rect)
@@ -1113,27 +1113,27 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
             if kind == RIBBON_BUTTON_HYBRID:
                 result = state & RIBBON_BUTTONBAR_BUTTON_SIZE_MASK
-                
+
                 if result == RIBBON_BUTTONBAR_BUTTON_LARGE:
                     iYBorder = rect.y + bitmap_large.GetHeight() + 4
                     partial_bg = wx.Rect(*rect)
-                    
-                    if state & RIBBON_BUTTONBAR_BUTTON_NORMAL_HOVERED:                    
-                        partial_bg.SetBottom(iYBorder - 1)                    
-                    else:                    
+
+                    if state & RIBBON_BUTTONBAR_BUTTON_NORMAL_HOVERED:
+                        partial_bg.SetBottom(iYBorder - 1)
+                    else:
                         partial_bg.height -= (iYBorder - partial_bg.y + 1)
                         partial_bg.y = iYBorder + 1
-                    
+
                     dc.DrawLine(rect.x, iYBorder, rect.x + rect.width, iYBorder)
                     bg_rect.Intersect(partial_bg)
 
-                elif result == RIBBON_BUTTONBAR_BUTTON_MEDIUM:                    
+                elif result == RIBBON_BUTTONBAR_BUTTON_MEDIUM:
                     iArrowWidth = 9
-                    
-                    if state & RIBBON_BUTTONBAR_BUTTON_NORMAL_HOVERED:                    
+
+                    if state & RIBBON_BUTTONBAR_BUTTON_NORMAL_HOVERED:
                         bg_rect.width -= iArrowWidth
-                        dc.DrawLine(bg_rect.x + bg_rect.width, rect.y, bg_rect.x + bg_rect.width, rect.y + rect.height)                    
-                    else:                   
+                        dc.DrawLine(bg_rect.x + bg_rect.width, rect.y, bg_rect.x + bg_rect.width, rect.y + rect.height)
+                    else:
                         iArrowWidth -= 1
                         bg_rect.x += bg_rect.width - iArrowWidth
                         bg_rect.width = iArrowWidth
@@ -1143,14 +1143,14 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             dc.DrawRectangle(rect.x, rect.y, rect.width, rect.height)
 
             dc.SetPen(wx.TRANSPARENT_PEN)
-            
+
             if state & RIBBON_BUTTONBAR_BUTTON_ACTIVE_MASK:
                 dc.SetBrush(self._button_bar_active_background_brush)
             else:
                 dc.SetBrush(self._button_bar_hover_background_brush)
-                
+
             dc.DrawRectangle(bg_rect.x, bg_rect.y, bg_rect.width, bg_rect.height)
-        
+
         dc.SetFont(self._button_bar_label_font)
         dc.SetTextForeground(self._button_bar_label_colour)
         self.DrawButtonBarButtonForeground(dc, rect, kind, state, label, bitmap_large, bitmap_small)
@@ -1158,11 +1158,11 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawToolBarBackground(self, dc, wnd, rect):
         """
-        Draw the background for a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar` control.
+        Draw the background for a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The which is being drawn onto. In most cases this will be
-         a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
+         a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. Some of this rectangle
          will later be drawn over using :meth:`~RibbonAUIArtProvider.DrawToolGroupBackground` and :meth:`~RibbonAUIArtProvider.DrawTool`,
          but not all of it will (unless there is only a single group of tools).
@@ -1174,11 +1174,11 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawToolGroupBackground(self, dc, wnd, rect):
         """
-        Draw the background for a group of tools on a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar` control.
+        Draw the background for a group of tools on a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto. In most cases this will
-         be a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
+         be a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. This rectangle is a union
          of the individual tools' rectangles. As there are no gaps between tools, this
          rectangle will be painted over exactly once by calls to :meth:`~RibbonAUIArtProvider.DrawTool`. The
@@ -1199,13 +1199,13 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawTool(self, dc, wnd, rect, bitmap, kind, state):
         """
-        Draw a single tool (for a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar` control).
+        Draw a single tool (for a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar` control).
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto. In most cases this will
-         be a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
+         be a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. The size of this rectangle
-         will at least the size returned by :meth:`RibbonMSWArtProvider.GetToolSize() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetToolSize>`, 
+         will at least the size returned by :meth:`RibbonMSWArtProvider.GetToolSize() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetToolSize>`,
          and the height of it will
          be equal for all tools within the same group. The rectangle will be entirely
          within a rectangle on the same device context previously painted with
@@ -1225,29 +1225,29 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         bg_rect = wx.Rect(*rect)
         bg_rect.Deflate(1, 1)
-        
+
         if state & RIBBON_TOOLBAR_TOOL_LAST == 0:
             bg_rect.width += 1
-            
+
         is_custom_bg = (state & (RIBBON_TOOLBAR_TOOL_HOVER_MASK | RIBBON_TOOLBAR_TOOL_ACTIVE_MASK)) != 0
         is_split_hybrid = kind == RIBBON_BUTTON_HYBRID and is_custom_bg
 
         # Background
-        if is_custom_bg:        
+        if is_custom_bg:
             dc.SetPen(wx.TRANSPARENT_PEN)
             dc.SetBrush(self._tool_hover_background_brush)
             dc.DrawRectangle(bg_rect.x, bg_rect.y, bg_rect.width, bg_rect.height)
-            
-            if state & RIBBON_TOOLBAR_TOOL_ACTIVE_MASK:            
+
+            if state & RIBBON_TOOLBAR_TOOL_ACTIVE_MASK:
                 active_rect = wx.Rect(*bg_rect)
-                
-                if kind == RIBBON_BUTTON_HYBRID:                
+
+                if kind == RIBBON_BUTTON_HYBRID:
                     active_rect.width -= 8
-                    
-                    if state & RIBBON_TOOLBAR_TOOL_DROPDOWN_ACTIVE:                    
+
+                    if state & RIBBON_TOOLBAR_TOOL_DROPDOWN_ACTIVE:
                         active_rect.x += active_rect.width
                         active_rect.width = 8
-                    
+
                 dc.SetBrush(self._tool_active_background_brush)
                 dc.DrawRectangle(active_rect.x, active_rect.y, active_rect.width, active_rect.height)
 
@@ -1256,28 +1256,28 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             dc.SetPen(self._toolbar_hover_borden_pen)
         else:
             dc.SetPen(self._toolbar_border_pen)
-            
+
         if state & RIBBON_TOOLBAR_TOOL_FIRST == 0:
             existing = dc.GetPixel(rect.x, rect.y + 1)
-            
-            if existing == wx.NullColour or existing != self._toolbar_hover_borden_pen.GetColour():            
+
+            if existing == wx.NullColour or existing != self._toolbar_hover_borden_pen.GetColour():
                 dc.DrawLine(rect.x, rect.y + 1, rect.x, rect.y + rect.height - 1)
-                    
+
         if is_custom_bg:
             border_rect = wx.Rect(*bg_rect)
             border_rect.Inflate(1, 1)
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.DrawRectangle(border_rect.x, border_rect.y, border_rect.width, border_rect.height)
-        
+
         # Foreground
         avail_width = bg_rect.GetWidth()
 
-        if kind & RIBBON_BUTTON_DROPDOWN: 
+        if kind & RIBBON_BUTTON_DROPDOWN:
             avail_width -= 8
-            if is_split_hybrid:            
+            if is_split_hybrid:
                 dc.DrawLine(rect.x + avail_width + 1, rect.y, rect.x + avail_width + 1, rect.y + rect.height)
-            
+
             dc.DrawBitmap(self._toolbar_drop_bitmap, bg_rect.x + avail_width + 2, bg_rect.y + (bg_rect.height / 2) - 2, True)
-        
+
         dc.DrawBitmap(bitmap, bg_rect.x + (avail_width - bitmap.GetWidth()) / 2, bg_rect.y + (bg_rect.height - bitmap.GetHeight()) / 2, True)
 

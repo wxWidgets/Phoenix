@@ -6,14 +6,14 @@
 # Author:      Riaan Booysen
 #
 # Created:     15-Dec-2000
-# Copyright:   (c) 2000 by Total Control Software
+# Copyright:   (c) 2000-2017 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 # 11/30/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
 # o Tested with updated demo
-# 
+#
 """
 `LayoutAnchors` is a class that implements Delphi's Anchors using
 `wx.LayoutConstraints`.
@@ -62,7 +62,7 @@ class LayoutAnchors(wx.LayoutConstraints):
                             | +-------*-------+ |
                             +-------------------+
         * = anchored edge
-        
+
     """
     def __init__(self, control, left=1, top=1, right=0, bottom=0):
         wx.LayoutConstraints.__init__(self)
@@ -96,7 +96,7 @@ class LayoutAnchors(wx.LayoutConstraints):
                 size.AsIs()
         else:
             size.AsIs()
-            
+
             if not side2Anchor:
                 centre.PercentOf(parent, sizeEdge,
                                  int(((cPos + cSize / 2.0) / pSize)*100))

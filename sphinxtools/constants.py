@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ CONSTANT_INSTANCES = ['NullAcceleratorTable', 'TheApp', 'DefaultPosition', 'Defa
                       'NullFont', 'NullBrush', 'NullPalette', 'NullPen', 'EmptyString',
                       'TheFontList', 'NullIcon', 'NullBitmap', 'constructor', 'ThePenList',
                       'DefaultValidator', 'String.Capitalize']
-                      
+
 # Phoenix full version
 VERSION = '%d.%d.%d' % (version.VER_MAJOR, version.VER_MINOR, version.VER_RELEASE)
 
@@ -53,11 +53,11 @@ PUNCTUATION = '!"#$%\'()*,./:;<=>?@\\^{|}~'
 SECTIONS = [('return'    , ':returns:'),
             ('since'     , '.. versionadded::'),
             ('deprecated', '.. deprecated::'),
-            ('warning'   , '.. warning::'),            
+            ('warning'   , '.. warning::'),
             ('remarks'   , '.. note::'),
             ('remark'    , '.. note::'),
             ('available' , '.. availability::'),
-            ('note'      , '.. note::'),            
+            ('note'      , '.. note::'),
             ('see'       , '.. seealso::'),
             ('todo'      , '.. todo::'),
             ('par'       , '')]
@@ -84,6 +84,8 @@ MODULENAME_REPLACE = {'_core'    : 'wx.',
                       '_media'   : 'wx.media.',
                       '_msw'     : 'wx.msw.',
                       '_ribbon'  : 'wx.ribbon.',
+                      '_propgrid': 'wx.propgrid.',
+                      '_aui'     : 'wx.aui.',
                       }
 
 
@@ -229,7 +231,7 @@ TYPE_DESCRIPTION = ['library',
                     'package',
                     'py_module', 'pyd_module', 'pyc_module', 'pyw_module',
                     'klass',
-                    'function', 
+                    'function',
                     'method', 'static_method', 'class_method', 'instance_method',
                     'method_descriptor', 'builtin_method', 'builtin_function',
                     'property',

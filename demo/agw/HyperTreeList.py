@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#	Tags: phoenix-port, py3-port
+#   Tags: phoenix-port, py3-port
 
 import os
 import string

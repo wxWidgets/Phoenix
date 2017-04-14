@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     26-Jan-2007
-# Copyright:   (c) 2007 by Total Control Software
+# Copyright:   (c) 2007-2017 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags:        py3-port, phoenix-port, documented
@@ -18,8 +18,8 @@
 # to provide Hot-Key access to the inspection tool.
 
 """
-This modules provides the :class:`~lib.inspection.InspectionTool` and everything else needed to
-provide the Widget Inspection Tool (WIT).
+This modules provides the :class:`~wx.lib.inspection.InspectionTool` and
+everything else needed to provide the Widget Inspection Tool (WIT).
 """
 
 
@@ -45,11 +45,17 @@ class InspectionTool:
     # instances of this class are actually using the same set of
     # instance data.  See
     # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/66531
-    __shared_state = {}
+    __shared_state = None
+
     def __init__(self):
-        self.__dict__ = self.__shared_state
+        if not InspectionTool.__shared_state:
+            InspectionTool.__shared_state = self.__dict__
+        else:
+            self.__dict__ = InspectionTool.__shared_state
+
         if not hasattr(self, 'initialized'):
             self.initialized = False
+
 
     def Init(self, pos=wx.DefaultPosition, size=wx.Size(850,700),
              config=None, locals=None, app=None):
@@ -83,11 +89,11 @@ class InspectionTool:
         """
         Creates the inspection frame if it hasn't been already, and
         raises it if neccessary.
-        
+
         :param `selectObj`: Pass a widget or sizer to have that object be
                      preselected in widget tree.
         :param boolean `refreshTree`: rebuild the widget tree, default False
-        
+
         """
         if not self.initialized:
             self.Init()
@@ -209,7 +215,7 @@ class InspectionFrame(wx.Frame):
         collapseTreeBmp = CollapseTree.GetBitmap()
         highlightItemBmp = HighlightItem.GetBitmap()
         evtWatcherBmp = EvtWatcher.GetBitmap()
-        
+
         toggleFillingBmp = ShowFilling.GetBitmap()
 
         refreshTool = tbar.AddTool(-1, 'Refresh', refreshBmp,
@@ -227,7 +233,7 @@ class InspectionFrame(wx.Frame):
                                          shortHelp='Attempt to highlight live item (F6)')
         evtWatcherTool = tbar.AddTool(-1, 'Events', evtWatcherBmp,
                                       shortHelp='Watch the events of the selected item (F7)')
-        
+
         toggleFillingTool = tbar.AddTool(-1, 'Filling', toggleFillingBmp,
                                          shortHelp='Show PyCrust \'filling\' (F8)',
                                          kind=wx.ITEM_CHECK)
@@ -355,7 +361,7 @@ class InspectionFrame(wx.Frame):
     def OnHighlightItem(self, evt):
         self.HighlightCurrentItem()
 
-        
+
     def OnWatchEvents(self, evt):
         item = self.tree.GetSelection()
         obj = self.tree.GetItemData(item)
@@ -364,7 +370,7 @@ class InspectionFrame(wx.Frame):
             watcher = ew.EventWatcher(self)
             watcher.watch(obj)
             watcher.Show()
-            
+
     def OnWatchEventsUI(self, evt):
         item = self.tree.GetSelection()
         if item:
@@ -398,7 +404,7 @@ class InspectionFrame(wx.Frame):
         self.Move(pos)
         rect = utils.AdjustRectToScreen(self.GetRect())
         self.SetRect(rect)
-        
+
         perspective = config.Read('perspective', '')
         if perspective:
             try:
@@ -422,9 +428,10 @@ class InspectionFrame(wx.Frame):
             config.WriteInt('Window/PosX', px)
             config.WriteInt('Window/PosY', py)
 
-        perspective = self.mgr.SavePerspective()
-        config.Write('perspective', perspective)
-        config.WriteBool('includeSizers', self.includeSizers)
+        if hasattr(self, "mgr"):
+            perspective = self.mgr.SavePerspective()
+            config.Write('perspective', perspective)
+            config.WriteBool('includeSizers', self.includeSizers)
 
 #---------------------------------------------------------------------------
 
@@ -554,8 +561,8 @@ class InspectionTree(TreeBaseClass):
         if hasattr(widget, 'GetName'):
             return "%s (\"%s\")" % (widget.__class__.__name__, widget.GetName())
         return widget.__class__.__name__
-    
-    
+
+
     def GetTextForSizer(self, sizer):
         """
         Returns the string to be used in the tree for a sizer
@@ -671,7 +678,7 @@ class InspectionInfoPanel(wx.stc.StyledTextCtrl):
         st.append(self.Fmt('virtual size',obj.GetVirtualSize()))
         st.append(self.Fmt('IsEnabled',   obj.IsEnabled()))
         st.append(self.Fmt('IsShown',     obj.IsShown()))
-        st.append(self.Fmt('IsFrozen',    obj.IsFrozen()))        
+        st.append(self.Fmt('IsFrozen',    obj.IsFrozen()))
         st.append(self.Fmt('fg color',    obj.GetForegroundColour()))
         st.append(self.Fmt('bg color',    obj.GetBackgroundColour()))
         st.append(self.Fmt('label',       obj.GetLabel()))
@@ -744,7 +751,7 @@ class InspectionInfoPanel(wx.stc.StyledTextCtrl):
         if hasattr(obj, '_parentSizer'):
             st.append('')
             st += self.FmtSizerItem(obj._parentSizer.GetItem(obj))
-            
+
         return st
 
 
@@ -814,16 +821,16 @@ class _InspectionHighlighter(object):
     color3 = '#00008B'     # for items in sizers
 
     highlightTime = 3000   # how long to display the highlights
-    
+
                            # how to draw it
     useOverlay = 'wxMac' in wx.PlatformInfo
-    
-    
+
+
     def __init__(self):
         if self.useOverlay:
             self.overlay = wx.Overlay()
-            
-    
+
+
     def HighlightCurrentItem(self, tree):
         """
         Draw a highlight rectangle around the item represented by the
@@ -897,7 +904,7 @@ class _InspectionHighlighter(object):
                     continue
                 r = self.AdjustRect(tlw, win, r)
                 dc.DrawRectangle(r)
-                    
+
         # Next highlight the area allocated to each item in the sizer.
         # Each kind of sizer will need to be done a little
         # differently.
@@ -907,7 +914,7 @@ class _InspectionHighlighter(object):
             for item in sizer.GetChildren():
                 ir = self.AdjustRect(tlw, win, item.Rect)
                 dc.DrawRectangle(ir)
-        
+
         # wx.BoxSizer, wx.StaticBoxSizer
         elif isinstance(sizer, wx.BoxSizer):
             # NOTE: we have to do some reverse-engineering here for
@@ -1012,7 +1019,7 @@ class _InspectionHighlighter(object):
         else:
             dc = wx.ScreenDC()
             dco = None
-            
+
         dc.SetPen(wx.Pen(colour, penWidth))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1027,7 +1034,7 @@ class _InspectionHighlighter(object):
 
         return dc, dco
 
-    
+
     def DoUnhighlight(self, tlw, rect):
         if not tlw:
             return
@@ -1041,7 +1048,7 @@ class _InspectionHighlighter(object):
             self.overlay.Reset()
         else:
             tlw.RefreshRect(rect)
-            
+
 
     def FlickerTLW(self, tlw):
         """
@@ -1053,7 +1060,7 @@ class _InspectionHighlighter(object):
         tlw.Hide()
         self.cl = wx.CallLater(300, self._Toggle, tlw)
 
-        
+
     def _Toggle(self, tlw):
         if tlw.IsShown():
             tlw.Hide()

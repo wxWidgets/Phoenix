@@ -12,16 +12,16 @@ class popupwin_Tests(wtc.WidgetTestCase):
         p.Show()
         wx.CallAfter(p.Destroy)
         self.myYield()
-        
+
     def test_popupwinDefaultCtor(self):
         p = wx.PopupWindow()
         p.Create(self.frame)
-        
+
     def test_popuptranswinCtor(self):
         p = wx.PopupTransientWindow(self.frame, wx.BORDER_SIMPLE)
         p.Popup()
         p.Dismiss()
-        
+
 #---------------------------------------------------------------------------
 
 

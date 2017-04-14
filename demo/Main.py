@@ -6,7 +6,7 @@
 # Author:       Robin Dunn
 #
 # Created:      A long time ago, in a galaxy far, far away...
-# Copyright:    (c) 1999 by Total Control Software
+# Copyright:    (c) 1999-2017 by Total Control Software
 # Licence:      wxWindows license
 # Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
@@ -1172,7 +1172,7 @@ class DemoError(object):
             self.exception_type = excType.__name__
         else:
             self.exception_type = excType
-        
+
         # If it's a syntax error, extra information needs
         # to be added to the traceback
         if excType is SyntaxError:
@@ -1471,7 +1471,7 @@ class wxPythonDemo(wx.Frame):
                 imgList.Add(bmp)
             for indx in range(9):
                 bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
-                imgList.Add(bmp)    
+                imgList.Add(bmp)
             self.nb.AssignImageList(imgList)
 
         self.BuildMenuBar()
@@ -2459,13 +2459,10 @@ class wxPythonDemo(wx.Frame):
 
 
     def OnOpenWidgetInspector(self, evt):
-        # Activate the widget inspection tool
+        # Activate the widget inspection tool, giving it a widget to preselect
+        # in the tree.  Use either the one under the cursor, if any, or this
+        # frame.
         from wx.lib.inspection import InspectionTool
-        if not InspectionTool().initialized:
-            InspectionTool().Init()
-
-        # Find a widget to be selected in the tree.  Use either the
-        # one under the cursor, if any, or this frame.
         wnd = wx.FindWindowAtPointer()
         if not wnd:
             wnd = self

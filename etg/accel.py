@@ -4,7 +4,8 @@
 #              Robin Dunn
 #
 # Created:     06-Sept-2011
-# Copyright:   (c) 2013 by Wide Open Technologies
+# Copyright:   (c) 2011 by Wide Open Technologies
+# Copyright:   (c) 2013-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -17,16 +18,16 @@ NAME      = "accel"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 'wxAcceleratorEntry', 'wxAcceleratorTable', ]    
-    
+# this script.
+ITEMS  = [ 'wxAcceleratorEntry', 'wxAcceleratorTable', ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
@@ -37,8 +38,8 @@ def run():
 
     c = module.find('wxAcceleratorTable')
     assert isinstance(c, etgtools.ClassDef)
-    tools.removeVirtuals(c)    
-       
+    tools.removeVirtuals(c)
+
     # Replace the implementation of the AcceleratorTable ctor so it can
     # accept a Python sequence of tuples or AcceleratorEntry objects like
     # Classic does. Using the arraySize and array annotations does let us
@@ -49,11 +50,11 @@ def run():
 
     # Ignore the current constructor
     c.find('wxAcceleratorTable').findOverload('entries').ignore()
-        
+
     # and add the code for the new constructor
     c.addCppCtor(
         briefDoc="TODO",
-        argsString='(PyObject* entries)', 
+        argsString='(PyObject* entries)',
         body="""\
     const char* errmsg = "Expected a sequence of 3-tuples or wx.AcceleratorEntry objects.";
     if (!PySequence_Check(entries)) {
@@ -82,7 +83,7 @@ def run():
             tmpEntries[idx].Set(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3));
             Py_DECREF(o1);
             Py_DECREF(o2);
-            Py_DECREF(o3);            
+            Py_DECREF(o3);
         }
         else {
             PyErr_SetString(PyExc_TypeError, errmsg);
@@ -90,7 +91,7 @@ def run():
         }
         Py_DECREF(obj);
     }
-    
+
     wxAcceleratorTable* table = new wxAcceleratorTable(count, tmpEntries);
     delete tmpEntries;
     return table;
@@ -99,8 +100,8 @@ def run():
     # Mac doesn't have this, and we don't real with resource files from
     # wxPython anyway.
     c.find('wxAcceleratorTable').findOverload('resource').ignore()
-    
-    
+
+
     module.addPyFunction('GetAccelFromString', '(label)',
         deprecated=True,
         body="""\
@@ -108,12 +109,12 @@ def run():
             accel.FromString(label)
             return accel
             """)
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

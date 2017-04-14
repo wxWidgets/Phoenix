@@ -9,32 +9,32 @@ Provide the Topic class.
 from weakref import ref as weakref
 
 from .listener import (
-    Listener, 
+    Listener,
     ListenerValidator,
 )
 
 from .topicutils import (
-    ALL_TOPICS, 
-    stringize, 
-    tupleize, 
-    validateName, 
+    ALL_TOPICS,
+    stringize,
+    tupleize,
+    validateName,
     smartDedent,
 )
 
 from .topicexc import (
-    TopicDefnError, 
-    TopicNameError, 
+    TopicDefnError,
+    TopicNameError,
     ExcHandlerError,
 )
 
 from .publishermixin import PublisherMixin
 
 from .topicargspec import (
-    ArgsInfo, 
-    ArgSpecGiven, 
-    topicArgsFromCallable, 
-    SenderMissingReqdMsgDataError, 
-    SenderUnknownMsgDataError, 
+    ArgsInfo,
+    ArgSpecGiven,
+    topicArgsFromCallable,
+    SenderMissingReqdMsgDataError,
+    SenderUnknownMsgDataError,
     MessageDataSpecError,
 )
 
@@ -43,24 +43,24 @@ from .. import py2and3
 
 class Topic(PublisherMixin):
     """
-    Represent topics in pubsub. Contains information about a topic, 
-    including topic's message data specification (MDS), the list of 
-    subscribed listeners, docstring for the topic. It allows Python-like 
+    Represent topics in pubsub. Contains information about a topic,
+    including topic's message data specification (MDS), the list of
+    subscribed listeners, docstring for the topic. It allows Python-like
     access to subtopics (e.g. A.B is subtopic B of topic A).
     """
 
     def __init__(self, treeConfig, nameTuple, description,
         msgArgsInfo, parent=None):
         """Create a topic. Should only be called by TopicManager via its
-        getOrCreateTopic() method (which gets called in several places 
+        getOrCreateTopic() method (which gets called in several places
         in pubsub, such as sendMessage, subscribe, and newTopic).
-        
+
         :param treeConfig: topic tree configuration settings
         :param nameTuple: topic name, in tuple format (no dots)
         :param description: "docstring" for topic
         :param ArgsInfo msgArgsInfo: object that defines MDS for topic
         :param parent: parent of topic
-        
+
         :raises ValueError: invalid topic name
         """
         if parent is None:
@@ -76,19 +76,19 @@ class Topic(PublisherMixin):
         PublisherMixin.__init__(self)
 
         self.__validator = None
-        # Registered listeners were originally kept in a Python list; however 
-        # a few methods require lookup of the Listener for the given callable, 
+        # Registered listeners were originally kept in a Python list; however
+        # a few methods require lookup of the Listener for the given callable,
         # which is an O(n) operation. A set() could have been more suitable but
-        # there is no way of retrieving an element from a set without iterating 
-        # over the set, again an O(n) operation. A dict() is ok too. Because 
+        # there is no way of retrieving an element from a set without iterating
+        # over the set, again an O(n) operation. A dict() is ok too. Because
         # Listener.__eq__(callable) returns true if the Listener instance wraps
-        # the given callable, and because Listener.__hash__ produces the hash 
-        # value of the wrapped callable, calling dict[callable] on a 
-        # dict(Listener -> Listener) mapping will be O(1) in most cases: 
-        # the dict will take the callables hash, find the list of Listeners that 
-        # have that hash, and then iterate over that inner list to find the 
+        # the given callable, and because Listener.__hash__ produces the hash
+        # value of the wrapped callable, calling dict[callable] on a
+        # dict(Listener -> Listener) mapping will be O(1) in most cases:
+        # the dict will take the callables hash, find the list of Listeners that
+        # have that hash, and then iterate over that inner list to find the
         # Listener instance which satisfies Listener == callable, and will return
-        # the Listener. 
+        # the Listener.
         self.__listeners = dict()
 
         # specification:
@@ -123,11 +123,11 @@ class Topic(PublisherMixin):
     def setMsgArgSpec(self, argsDocs, required=()):
         """Specify the message data for topic messages.
         :param argsDocs: a dictionary of keyword names (message data name) and data 'docstring'; cannot be None
-        :param required: a list of those keyword names, appearing in argsDocs, 
+        :param required: a list of those keyword names, appearing in argsDocs,
         which are required (all others are assumed optional)
-            
-        Can only be called if this info has not been already set at construction 
-        or in a previous call. 
+
+        Can only be called if this info has not been already set at construction
+        or in a previous call.
         :raise RuntimeError: if MDS already set at construction or previous call."""
         assert self.__parentTopic is not None # for root of tree, this method never called!
         if argsDocs is None:
@@ -317,7 +317,7 @@ class Topic(PublisherMixin):
         ``notifyUnsubscribe(listener, self)`` on all registered notification
         handlers (see pub.addNotificationHandler)."""
         unsubdLisnr = self.__listeners.pop(listener, None)
-        if unsubdLisnr is None: 
+        if unsubdLisnr is None:
             return None
 
         unsubdLisnr._unlinkFromTopic_()
@@ -331,7 +331,7 @@ class Topic(PublisherMixin):
     def unsubscribeAllListeners(self, filter=None):
         """Clears list of subscribed listeners. If filter is given, it must
         be a function that takes a listener and returns true if the listener
-        should be unsubscribed. Returns the list of Listener for listeners 
+        should be unsubscribed. Returns the list of Listener for listeners
         that were unsubscribed."""
         unsubd = []
         if filter is None:
@@ -415,8 +415,8 @@ class Topic(PublisherMixin):
 
     def __finalize(self):
         """Finalize the topic specification, which currently means
-        creating the listener validator for this topic. This allows 
-        calls to subscribe() to validate that listener adheres to 
+        creating the listener validator for this topic. This allows
+        calls to subscribe() to validate that listener adheres to
         topic's message data specification (MDS)."""
         assert self.__msgArgs.isComplete()
         assert not self.hasMDS()

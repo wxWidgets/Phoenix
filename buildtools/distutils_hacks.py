@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2013-2017 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ class wx_extra_clean(distutils.command.clean.clean):
         from distutils.filelist import FileList
 
         distutils.command.clean.clean.run(self)
-        
+
         cfg = Config()
         if self.all:
             fl = FileList()
@@ -136,8 +136,8 @@ class wx_install_headers(distutils.command.install_headers.install_headers):
 
 
 
-            
-            
+
+
 #----------------------------------------------------------------------
 # These functions and class are copied from distutils in Python 2.5
 # and then grafted back into the distutils modules so we can change
@@ -157,7 +157,7 @@ def _darwin_compiler_fixup(compiler_so, cc_args):
     This is needed because '-arch ARCH' adds another architecture to the
     build, without a way to remove an architecture. Furthermore GCC will
     barf if multiple '-isysroot' arguments are present.
-    
+
     I've further modified our copy of this function to check if there
     is a -isysroot flag in the CC/CXX values in the environment. If so then we
     want to make sure that we keep that one and strip the others, instead of
@@ -165,7 +165,7 @@ def _darwin_compiler_fixup(compiler_so, cc_args):
     """
     ccHasSysroot = '-isysroot' in os.environ.get('CC', '') \
                  or '-isysroot' in os.environ.get('CXX', '')
-    
+
     stripArch = stripSysroot = 0
 
     compiler_so = list(compiler_so)
@@ -201,7 +201,7 @@ def _darwin_compiler_fixup(compiler_so, cc_args):
             except ValueError:
                 break
 
-    # Check if the SDK that is used during compilation actually exists, 
+    # Check if the SDK that is used during compilation actually exists,
     # the universal build requires the usage of a universal SDK and not all
     # users have that installed by default.
     sysroot = None
@@ -235,7 +235,7 @@ class MyUnixCCompiler(distutils.unixccompiler.UnixCCompiler):
                        extra_postargs)
         except DistutilsExecError as msg:
             raise CompileError(msg)
-        
+
 _orig_parse_makefile = distutils.sysconfig.parse_makefile
 def _parse_makefile(filename, g=None):
     rv = _orig_parse_makefile(filename, g)
@@ -265,15 +265,15 @@ _orig_setup_compile = distutils.ccompiler.CCompiler._setup_compile
 def _setup_compile(self, outdir, macros, incdirs, sources, depends, extra):
     macros, objects, extra, pp_opts, build = \
           _orig_setup_compile(self, outdir, macros, incdirs, sources, depends, extra)
-    
+
     # Remove items from the build collection that don't need to be built
     # because their obj file is newer than the source fle and any other
     # dependencies.
     for obj in objects:
         src, ext = build[obj]
         if not newer_group([src] + depends, obj):
-            del build[obj]            
-    return macros, objects, extra, pp_opts, build        
+            del build[obj]
+    return macros, objects, extra, pp_opts, build
 
 distutils.ccompiler.CCompiler._setup_compile = _setup_compile
 
@@ -327,7 +327,7 @@ if os.name == 'nt' and  sys.version_info >= (2,6):
 
 
 #----------------------------------------------------------------------
-            
+
 
 from .sipdistutils import build_ext
 
@@ -339,20 +339,20 @@ class etgsip_build_ext(build_ext):
     def _find_sip(self):
         cfg = Config()
         return cfg.SIP
-   
+
     def _sip_inc_dir(self):
         cfg = Config()
         return cfg.SIPINC
-    
+
     def _sip_sipfiles_dir(self):
         cfg = Config()
         return cfg.SIPFILES
 
     def _sip_output_dir(self):
         cfg = Config()
-        return cfg.SIPOUT   
-        
-    
+        return cfg.SIPOUT
+
+
     def build_extension(self, extension):
         """
         Modify the dependency list, adding the sip files generated
@@ -367,7 +367,7 @@ class etgsip_build_ext(build_ext):
         # let the base class do the rest
         return build_ext.build_extension(self, extension)
 
-    
+
     def swig_sources (self, sources, extension):
         """
         Run our ETG scripts to generate their .sip files, and adjust
@@ -379,13 +379,13 @@ class etgsip_build_ext(build_ext):
             return
 
         cfg = Config()
-        
+
         etg_sources = [s for s in sources if s.startswith('etg/')]
         other_sources = [s for s in sources if not s.startswith('etg/')]
-        
+
         for etg in etg_sources:
             sipfile = etg2sip(etg)
-            
+
             deps = [etg]
             ns = loadETG(etg)
             if hasattr(ns, 'OTHERDEPS'):
@@ -398,14 +398,14 @@ class etgsip_build_ext(build_ext):
 
             if '%Module(' in file(sipfile).read():
                 other_sources.append(sipfile)
-                
+
         # now call the base class version of this method
         return build_ext.swig_sources(self, other_sources, extension)
-        
-    
+
+
     def _sip_compile(self, sip_bin, source, sbf):
         cfg = Config()
-        
+
         other_opts = []
         base = os.path.basename(source)
         if base.startswith('_'):
@@ -413,9 +413,8 @@ class etgsip_build_ext(build_ext):
             pycode = posixjoin(cfg.PKGDIR, pycode)
             other_opts = ['-X', 'pycode:'+pycode]
         self.spawn([sip_bin] + self.sip_opts +
-                   other_opts + 
+                   other_opts +
                    ["-c", self._sip_output_dir(),
                     "-b", sbf,
                     "-I", self._sip_sipfiles_dir(),
                     source])
-

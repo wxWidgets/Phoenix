@@ -5,13 +5,13 @@ import wx
 #---------------------------------------------------------------------------
 
 class CheckListBoxTests(wtc.WidgetTestCase):
-    
+
     def test_CheckBoxCtors(self):
         c = wx.CheckListBox(self.frame, choices="one two three four".split())
         c = wx.CheckListBox(self.frame, -1, wx.Point(10,10), wx.Size(80,-1),
-                            "one two three four".split(),)                
-                
-        
+                            "one two three four".split(),)
+
+
     def test_CheckListBoxDefaultCtor(self):
         c = wx.CheckListBox()
         c.Create(self.frame, choices="one two three four".split())
@@ -22,7 +22,7 @@ class CheckListBoxTests(wtc.WidgetTestCase):
         self.assertTrue(callable(c.GetCheckedStrings))
         self.assertTrue(callable(c.SetChecked))
         self.assertTrue(callable(c.SetCheckedStrings))
-        
+
     def test_pyMethods2(self):
         c = wx.CheckListBox(self.frame, choices="one two three four".split())
         c.SetCheckedItems([1,3])
@@ -30,7 +30,7 @@ class CheckListBoxTests(wtc.WidgetTestCase):
         c.SetCheckedStrings(['one', 'two'])
         self.assertTrue(set(c.GetCheckedStrings()) == set(['one', 'two']))
         self.assertTrue(set(c.GetCheckedItems()) == set([0,1]))
-        
+
     def test_pyProperties(self):
         c = wx.CheckListBox(self.frame, choices="one two three four".split())
         c.SetCheckedItems([1,3])
@@ -38,14 +38,14 @@ class CheckListBoxTests(wtc.WidgetTestCase):
 
         c.CheckedItems = [2]
         self.assertTrue(set(c.CheckedItems) == set([2]))
-        
+
         c.SetCheckedStrings(['one', 'two'])
         self.assertTrue(set(c.CheckedStrings) == set(['one', 'two']))
 
-        c.CheckedStrings = ['three']        
+        c.CheckedStrings = ['three']
         self.assertTrue(set(c.GetCheckedItems()) == set([2]))
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

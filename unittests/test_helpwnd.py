@@ -20,9 +20,9 @@ class helpwnd_Tests(wtc.WidgetTestCase):
         hc.AddBook(os.path.join(helpPath, 'another.hhp'))
 
         self.frame.SendSizeEvent()
-        self.myYield()
-        
-        
+        self.waitFor(50)
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

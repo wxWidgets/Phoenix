@@ -107,7 +107,7 @@ class ribbon_art_Tests(wtc.WidgetTestCase):
         wx.ribbon.RIBBON_ART_TOOL_ACTIVE_BACKGROUND_COLOUR
         wx.ribbon.RIBBON_ART_TOOL_ACTIVE_BACKGROUND_GRADIENT_COLOUR
 
-        
+
     def test_ribbon_art2(self):
         wx.ribbon.RIBBON_SCROLL_BTN_LEFT
         wx.ribbon.RIBBON_SCROLL_BTN_RIGHT
@@ -127,7 +127,7 @@ class ribbon_art_Tests(wtc.WidgetTestCase):
         wx.ribbon.RIBBON_BUTTON_DROPDOWN
         wx.ribbon.RIBBON_BUTTON_HYBRID
         wx.ribbon.RIBBON_BUTTON_TOGGLE
-        
+
         wx.ribbon.RIBBON_BUTTONBAR_BUTTON_SMALL
         wx.ribbon.RIBBON_BUTTONBAR_BUTTON_MEDIUM
         wx.ribbon.RIBBON_BUTTONBAR_BUTTON_LARGE
@@ -147,8 +147,8 @@ class ribbon_art_Tests(wtc.WidgetTestCase):
         wx.ribbon.RIBBON_GALLERY_BUTTON_HOVERED,
         wx.ribbon.RIBBON_GALLERY_BUTTON_ACTIVE,
         wx.ribbon.RIBBON_GALLERY_BUTTON_DISABLED
-        
-    
+
+
     def test_ribbon_art3(self):
         art = wx.ribbon.RibbonMSWArtProvider()
 

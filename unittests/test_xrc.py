@@ -9,24 +9,24 @@ xrcFile = os.path.join(os.path.dirname(__file__), 'xrctest.xrc')
 #---------------------------------------------------------------------------
 
 class xrc_Tests(wtc.WidgetTestCase):
-    
+
     def checkXmlRes(self, xmlres):
         assert isinstance(xmlres, xrc.XmlResource)
         f = xmlres.LoadFrame(self.frame, 'MainFrame')
-        self.assertNotEqual(f, None) 
+        self.assertNotEqual(f, None)
         f.Show()
 
         self.myYield()
-        
+
         id = xrc.XRCID('MainPanel')
         self.assertTrue(id != -1)
         self.assertTrue(isinstance(id, int))
-        
+
         ctrl = xrc.XRCCTRL(f, 'TitleText')
         self.assertTrue(ctrl != None)
         self.assertTrue(isinstance(ctrl, wx.StaticText))
-        
-        
+
+
     def test_xrc1(self):
         xmlres = xrc.XmlResource(xrcFile)
         self.checkXmlRes(xmlres)
@@ -46,13 +46,13 @@ class xrc_Tests(wtc.WidgetTestCase):
     def test_xrc4(self):
         xmlres = xrc.XmlResource(xrcFile)
         p = xmlres.LoadObjectRecursively(self.frame, 'MainPanel', 'wxPanel')
-        self.assertNotEqual(p, None) 
+        self.assertNotEqual(p, None)
         self.frame.SendSizeEvent()
         self.myYield()
-        
-    #---------------------------------------------------------------------------        
+
+    #---------------------------------------------------------------------------
     # Tests for custom handlers
-    
+
     # This test does not allow for 2-phase create or creating the instance of
     # the resource before filling it with widgets or etc. See also the next
     # test and try to keep the two of them in sync as much as possible.
@@ -61,8 +61,8 @@ class xrc_Tests(wtc.WidgetTestCase):
             <resource>
             <object class="wxFrame" name="MainFrame">
                 <size>400,250</size>
-                <title>This is a test</title>  
-                <!-- Notice that the class is NOT a standard wx class -->        
+                <title>This is a test</title>
+                <!-- Notice that the class is NOT a standard wx class -->
                 <object class="MyCustomPanel" name="MyPanel">
                     <size>200,100</size>
                     <object class="wxStaticText" name="label1">
@@ -72,14 +72,14 @@ class xrc_Tests(wtc.WidgetTestCase):
                 </object>
             </object>
             </resource>'''
-        
+
         # this is the class that will be created for the resource
         class MyCustomPanel(wx.Panel):
             def __init__(self, parent, id, pos, size, style, name):
                 wx.Panel.__init__(self, parent, id, pos, size, style, name)
-        
+
                 # This is the little bit of customization that we do for this
-                # silly example.  
+                # silly example.
                 self.Bind(wx.EVT_SIZE, self.OnSize)
                 t = wx.StaticText(self, -1, "MyCustomPanel")
                 f = t.GetFont()
@@ -87,7 +87,7 @@ class xrc_Tests(wtc.WidgetTestCase):
                 f.SetPointSize(f.GetPointSize()+2)
                 t.SetFont(f)
                 self.t = t
-        
+
             def OnSize(self, evt):
                 sz = self.GetSize()
                 w, h = self.t.GetTextExtent(self.t.GetLabel())
@@ -103,15 +103,15 @@ class xrc_Tests(wtc.WidgetTestCase):
                 self.AddStyle("wxWS_EX_VALIDATE_RECURSIVELY", wx.WS_EX_VALIDATE_RECURSIVELY)
                 self.AddStyle("wxCLIP_CHILDREN", wx.CLIP_CHILDREN)
                 self.AddWindowStyles()
-        
+
             def CanHandle(self, node):
                 return self.IsOfClass(node, "MyCustomPanel")
-        
+
             def DoCreateResource(self):
                 # Ensure that the instance hasn't been created yet (since
                 # we're not using 2-phase create)
                 assert self.GetInstance() is None
-        
+
                 # Now create the object
                 panel = MyCustomPanel(self.GetParentAsWindow(),
                                       self.GetID(),
@@ -122,34 +122,34 @@ class xrc_Tests(wtc.WidgetTestCase):
                                       )
                 self.SetupWindow(panel)
                 self.CreateChildren(panel)
-                return panel        
-        
+                return panel
+
         # now load it
         xmlres = xrc.XmlResource()
-        xmlres.InsertHandler( MyCustomPanelXmlHandler() )        
+        xmlres.InsertHandler( MyCustomPanelXmlHandler() )
         success = xmlres.LoadFromString(resource)
-        
+
         f = xmlres.LoadFrame(self.frame, 'MainFrame')
-        self.assertNotEqual(f, None) 
+        self.assertNotEqual(f, None)
         f.Show()
         self.myYield()
 
         panel = xrc.XRCCTRL(f, 'MyPanel')
-        self.assertNotEqual(panel, None) 
+        self.assertNotEqual(panel, None)
         self.assertTrue(isinstance(panel, MyCustomPanel))
-        
+
 
 
     # This test shows how to do basically the same as above while still
     # allowing the instance to be created before loading the content.
-    
+
     def test_xrc6(self):
         resource = b'''<?xml version="1.0"?>
             <resource>
             <object class="wxFrame" name="MainFrame">
                 <size>400,250</size>
-                <title>This is a test</title>  
-                <!-- Notice that the class is NOT a standard wx class -->        
+                <title>This is a test</title>
+                <!-- Notice that the class is NOT a standard wx class -->
                 <object class="MyCustomPanel" name="MyPanel">
                     <size>200,100</size>
                     <object class="wxStaticText" name="label1">
@@ -159,7 +159,7 @@ class xrc_Tests(wtc.WidgetTestCase):
                 </object>
             </object>
             </resource>'''
-        
+
         # this is the class that will be created for the resource
         class MyCustomPanel(wx.Panel):
             def __init__(self):
@@ -174,7 +174,7 @@ class xrc_Tests(wtc.WidgetTestCase):
                 f.SetPointSize(f.GetPointSize()+2)
                 t.SetFont(f)
                 self.t = t
-        
+
             def OnSize(self, evt):
                 sz = self.GetSize()
                 w, h = self.t.GetTextExtent(self.t.GetLabel())
@@ -190,16 +190,16 @@ class xrc_Tests(wtc.WidgetTestCase):
                 self.AddStyle("wxWS_EX_VALIDATE_RECURSIVELY", wx.WS_EX_VALIDATE_RECURSIVELY)
                 self.AddStyle("wxCLIP_CHILDREN", wx.CLIP_CHILDREN)
                 self.AddWindowStyles()
-        
+
             def CanHandle(self, node):
                 return self.IsOfClass(node, "MyCustomPanel")
-        
+
             def DoCreateResource(self):
                 panel = self.GetInstance()
                 if panel is None:
                     # if not, then create the instance (but not the window)
                     panel = MyCustomPanel()
-                
+
                 # Now create the UI object
                 panel.Create(self.GetParentAsWindow(),
                              self.GetID(),
@@ -210,30 +210,30 @@ class xrc_Tests(wtc.WidgetTestCase):
                              )
                 self.SetupWindow(panel)
                 self.CreateChildren(panel)
-                return panel        
-        
+                return panel
+
         # now load it
         xmlres = xrc.XmlResource()
-        xmlres.InsertHandler( MyCustomPanelXmlHandler() )        
+        xmlres.InsertHandler( MyCustomPanelXmlHandler() )
         success = xmlres.LoadFromString(resource)
-        
+
         f = xmlres.LoadFrame(self.frame, 'MainFrame')
-        self.assertNotEqual(f, None) 
+        self.assertNotEqual(f, None)
         f.Show()
         self.myYield()
 
         panel = xrc.XRCCTRL(f, 'MyPanel')
-        self.assertNotEqual(panel, None) 
+        self.assertNotEqual(panel, None)
         self.assertTrue(isinstance(panel, MyCustomPanel))
-        
-        
-        
-    #---------------------------------------------------------------------------        
+
+
+
+    #---------------------------------------------------------------------------
     # Tests for the Subclass Factory
     def test_xrc7(self):
         resource = b'''<?xml version="1.0"?>
             <resource>
-                <!-- Notice that the class IS a standard wx class and that a subclass is specified -->        
+                <!-- Notice that the class IS a standard wx class and that a subclass is specified -->
                 <object class="wxPanel" name="MyPanel" subclass="unittests.xrcfactorytest.MyCustomPanel">
                     <size>200,100</size>
                     <object class="wxStaticText" name="label1">
@@ -242,22 +242,22 @@ class xrc_Tests(wtc.WidgetTestCase):
                     </object>
                 </object>
             </resource>'''
-        
-        
+
+
         # now load it
         xmlres = xrc.XmlResource()
         success = xmlres.LoadFromString(resource)
-        
+
         panel = xmlres.LoadPanel(self.frame, "MyPanel")
         self.frame.SendSizeEvent()
         self.myYield()
 
-        self.assertNotEqual(panel, None) 
+        self.assertNotEqual(panel, None)
         from unittests import xrcfactorytest
         self.assertTrue(isinstance(panel, xrcfactorytest.MyCustomPanel))
-        
-        
-        
+
+
+
 #---------------------------------------------------------------------------
 
 

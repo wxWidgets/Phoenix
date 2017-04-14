@@ -3,20 +3,20 @@
 # Author:      Robin Dunn
 #
 # Created:     25-Feb-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "filesys"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ "wxFileSystem",
            "wxFSFile",
            "wxFileSystemHandler",
@@ -24,19 +24,19 @@ ITEMS  = [ "wxFileSystem",
            "wxArchiveFSHandler",
            "wxFilterFSHandler",
            "wxInternetFSHandler",
-           ]    
-    
+           ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     c = module.find('wxFileSystem')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
@@ -54,36 +54,58 @@ def run():
         klass.addItem(etgtools.WigCode("""\
             virtual bool CanOpen(const wxString& location);
             virtual wxFSFile* OpenFile(wxFileSystem& fs, const wxString& location);
+            virtual wxString FindFirst(const wxString& spec, int flags = 0);
+            virtual wxString FindNext();
             """))
 
 
     c = module.find('wxArchiveFSHandler')
-    c.addPrivateCopyCtor();
+    _fixHandlerClass(c)
+    c.addPrivateCopyCtor()
     module.addPyCode('ZipFSHandler = wx.deprecated(ArchiveFSHandler, "Use ArchiveFSHandler instead.")')
-    _fixHandlerClass(c)
-    
-    c = module.find('wxFSFile')
-    c.addPrivateCopyCtor();
-    _fixHandlerClass(c)
-    
-    c = module.find('wxFilterFSHandler')
-    c.addPrivateCopyCtor();
-    _fixHandlerClass(c)
-    
-    c = module.find('wxInternetFSHandler')
-    c.addPrivateCopyCtor();
-    _fixHandlerClass(c)
-    
-    c = module.find('wxMemoryFSHandler')
-    c.addPrivateCopyCtor();
-    _fixHandlerClass(c)
 
-    
+    c = module.find('wxFSFile')
+    c.addPrivateCopyCtor()
+
+    c = module.find('wxFilterFSHandler')
+    _fixHandlerClass(c)
+    c.addPrivateCopyCtor()
+
+    c = module.find('wxInternetFSHandler')
+    _fixHandlerClass(c)
+    c.addPrivateCopyCtor()
+
+
+    c = module.find('wxMemoryFSHandler')
+    _fixHandlerClass(c)
+    c.addPrivateCopyCtor()
+
+    # Make some more python-friendly versions of the AddFile methods accepting raw data
+    c.find('AddFile').findOverload('binarydata').ignore()
+    c.find('AddFileWithMimeType').findOverload('binarydata').ignore()
+
+    c.addCppMethod('void', 'AddFile', '(const wxString& filename, wxPyBuffer* binarydata)',
+        isStatic=True,
+        doc="Add a file from raw data in a python buffer compatible object.",
+        body="""\
+            wxMemoryFSHandler::AddFile(*filename, binarydata->m_ptr, binarydata->m_len);
+            """)
+
+    c.addCppMethod('void', 'AddFileWithMimeType',
+                   '(const wxString& filename, wxPyBuffer* binarydata, const wxString& mimetype)',
+        isStatic=True,
+        doc="Add a file from raw data in a python buffer compatible object.",
+        body="""\
+            wxMemoryFSHandler::AddFileWithMimeType(
+                    *filename, binarydata->m_ptr, binarydata->m_len, *mimetype);
+            """)
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

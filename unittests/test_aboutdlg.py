@@ -15,9 +15,9 @@ class aboutdlg_Tests(wtc.WidgetTestCase):
         info.SetDescription('This is a very goofy application')
         info.SetCopyright('(c) by Goofy Enterprises, Inc.')
         info.SetLicence('free-for-all')
-        return info 
+        return info
 
-    
+
     def test_aboutdlgNative(self):
         if not 'wxMSW' in wx.PlatformInfo:
             info = self._makeInfo()

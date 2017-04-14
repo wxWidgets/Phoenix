@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -45,9 +45,9 @@ class ODict(UserDict):
        in the dict) is not considered to create a new item, and does not affect the
        position of that key in the order. However, if an item is deleted, then a
        new item with the same key is added, this is considered a new item.
-        
+
     """
-    
+
     def __init__(self, dict = None):
         self._keys = []
         UserDict.__init__(self, dict)
@@ -147,7 +147,7 @@ def underscore2Capitals(string):
 
     :param string `string`: the string to be analyzed.
 
-    :rtype: `string`    
+    :rtype: `string`
     """
 
     items = string.split('_')[1:]
@@ -155,7 +155,7 @@ def underscore2Capitals(string):
 
     for item in items:
         newstr += item.capitalize()
-        
+
     return newstr
 
 
@@ -178,8 +178,12 @@ def replaceCppItems(line):
         if item in CPP_ITEMS:
             continue
 
-        if 'wxString' in item:
+        if 'wxString' == item:
             item = 'string'
+        elif 'wxCoord' == item:
+            item = 'int'
+        elif 'time_t' == item:
+            item = 'int'
         elif item == 'char':
             item = 'int'
         elif item == 'double':
@@ -195,7 +199,7 @@ def replaceCppItems(line):
                     # Avoid replacing standalone '&&' and similar
                     for cpp in CPP_ITEMS[0:2]:
                         item = item.replace(cpp, '')
-            
+
         newstr.append(item)
 
     newstr = ''.join(newstr)
@@ -225,7 +229,7 @@ def pythonizeType(ptype, is_param):
         ptype = ptype[3:]    # ***
     else:
         ptype = wx2Sphinx(replaceCppItems(ptype))[1]
-        
+
     ptype = ptype.replace('::', '.').replace('*&', '')
     ptype = ptype.replace('int const', 'int')
     ptype = ptype.replace('Uint32', 'int').replace('**', '').replace('Int32', 'int')
@@ -234,15 +238,15 @@ def pythonizeType(ptype, is_param):
 
     for item in ['unsignedchar', 'unsignedint', 'unsignedlong', 'unsigned']:
         ptype = ptype.replace(item, 'int')
-    
-    ptype = ptype.strip()        
+
+    ptype = ptype.strip()
     ptype = removeWxPrefix(ptype)
 
     if '. wx' in ptype: #***
         ptype = ptype.replace('. wx', '.')
 
     plower = ptype.lower()
-    
+
     if plower == 'double':
         ptype = 'float'
 
@@ -251,13 +255,13 @@ def pythonizeType(ptype, is_param):
 
     if plower in ['coord', 'byte', 'fileoffset', 'short', 'time_t', 'intptr', 'uintptr', 'windowid']:
         ptype = 'int'
-        
+
     if plower in ['longlong']:
         ptype = 'long'
-                  
+
     cpp =    ['ArrayString', 'ArrayInt', 'ArrayDouble']
     python = ['list of strings', 'list of integers', 'list of floats']
-    
+
     for c, p in zip(cpp, python):
         ptype = ptype.replace(c, p)
 
@@ -266,7 +270,7 @@ def pythonizeType(ptype, is_param):
 
     if 'FileName' in ptype:
         ptype = 'string'
-        
+
     if ptype.endswith('&'):
         ptype = ptype[0:-1]
         if ' ' not in ptype:
@@ -297,7 +301,7 @@ def convertToPython(text):
     3. Uppercase constants (i.e., like ID_ANY, HORIZONTAL and so on) are converted
        into inline literals (i.e., ``ID_ANY``, ``HORIZONTAL``).
     4. The "wx" prefix is removed from all the words in the input `text`.  #***
-    
+
     :param string `text`: any string.
 
     :rtype: `string`
@@ -307,7 +311,7 @@ def convertToPython(text):
 
     newlines = []
     unwanted = ['Include file', '#include']
-    
+
     for line in text.splitlines():
 
         newline = []
@@ -320,22 +324,22 @@ def convertToPython(text):
         spacer = ' '*(len(line) - len(line.lstrip()))
 
         line = replaceCppItems(line)
-        
+
         for word in RE_KEEP_SPACES.split(line):
 
             if word == VERSION:
                 newline.append(word)
                 continue
-            
+
             newword = word
             for s in PUNCTUATION:
                 newword = newword.replace(s, "")
-            
+
             if newword in VALUE_MAP:
                 word = word.replace(newword, VALUE_MAP[newword])
                 newline.append(word)
                 continue
-                
+
             if newword not in IGNORE and not newword.startswith('wx.'):
                 word = removeWxPrefix(word)
                 newword = removeWxPrefix(newword)
@@ -347,7 +351,7 @@ def convertToPython(text):
                 word = "`%s`" % word
                 newline.append(word)
                 continue
-                
+
             if (newword.upper() == newword and newword not in PUNCTUATION and
                 newword not in IGNORE and len(newword.strip()) > 1 and
                 not isNumeric(newword) and newword not in ['DC', 'GCDC']):
@@ -368,7 +372,7 @@ def convertToPython(text):
     formatted = formatted.replace('\\', '\\\\')
 
     return formatted
-            
+
 
 # ----------------------------------------------------------------------- #
 
@@ -383,15 +387,15 @@ def findDescendants(element, tag, descendants=None):
      is the first call to the function.
 
     :rtype: `list`
-    
+
     .. note:: This is a recursive function, and it is only used in the `etgtools.extractors.py`
        script.
 
     """
-    
+
     if descendants is None:
         descendants = []
-        
+
     for childElement in element:
         if childElement.tag == tag:
             descendants.append(childElement)
@@ -399,7 +403,7 @@ def findDescendants(element, tag, descendants=None):
         descendants = findDescendants(childElement, tag, descendants)
 
     return descendants
-    
+
 
 # ----------------------------------------------------------------------- #
 
@@ -422,7 +426,7 @@ def findControlImages(elementOrString):
 
     :returns: A list of image paths, every element of it representing a screenshot on
      a different platform. An empty list if returned if no screenshots have been found.
-     
+
     .. note:: If a screenshot doesn't exist for one (or more) platform but it
        exists for others, the missing images will be replaced by the "no_appearance.png"
        file (you can find it inside the ``WIDGETS_IMAGES_ROOT`` folder.
@@ -448,30 +452,30 @@ def findControlImages(elementOrString):
 
         png_file = class_name + '.png'
         appearance[sub_folder] = ''
-        
+
         possible_image = os.path.join(image_folder, sub_folder, png_file)
         new_path = os.path.join(WIDGETS_IMAGES_ROOT, sub_folder)
 
-        py_png_file = py_class_name + '.png'        
+        py_png_file = py_class_name + '.png'
         new_file = os.path.join(new_path, py_png_file)
 
         if os.path.isfile(new_file):
 
             appearance[sub_folder] = py_png_file
-        
+
         elif os.path.isfile(possible_image):
 
             if not os.path.isdir(new_path):
                 os.makedirs(new_path)
-                            
+
             if not os.path.isfile(new_file):
                 shutil.copyfile(possible_image, new_file)
 
             appearance[sub_folder] = py_png_file
-            
+
     if not any(list(appearance.values())):
         return []
-    
+
     for sub_folder, image in list(appearance.items()):
         if not image:
             appearance[sub_folder] = '../no_appearance.png'
@@ -502,8 +506,8 @@ def makeSummary(class_name, item_list, template, kind, add_tilde=True):
         substr = ':%s:`~%s`'%(kind, method)
         maxlen = max(maxlen, len(substr))
 
-    maxlen = max(80, maxlen)        
-    
+    maxlen = max(80, maxlen)
+
     summary = '='*maxlen + ' ' + '='*80 + "\n"
     format = '%-' + str(maxlen) + 's %s'
 
@@ -527,17 +531,17 @@ def makeSummary(class_name, item_list, template, kind, add_tilde=True):
 
         if '===' in new_docs:
             new_docs = ''
-            
+
         elif new_docs.rstrip().endswith(':'):
             # Avoid Sphinx warnings
             new_docs = new_docs.rstrip(':')
-                            
+
         summary += format%(substr, new_docs) + '\n'
 
     summary += '='*maxlen + ' ' + '='*80 + "\n"
 
     return template % summary
-    
+
 
 # ----------------------------------------------------------------------- #
 
@@ -547,7 +551,7 @@ header = """\
    This file was generated by Phoenix's sphinx generator and associated
    tools, do not edit by hand.
 
-   Copyright: (c) 2011-2016 by Total Control Software
+   Copyright: (c) 2011-2017 by Total Control Software
    License:   wxWindows License
 
 """
@@ -586,16 +590,16 @@ def chopDescription(text):
     """
 
     description = ''
-    
+
     for line in text.splitlines():
         line = line.strip()
-        
+
         if not line or line.startswith('..') or line.startswith('|'):
             continue
 
         description = line
         break
-    
+
     return description
 
 
@@ -646,7 +650,7 @@ def pickleItem(description, current_module, name, kind):
     :param string `name`: the function/class name.
     :param string `kind`: can be `function` or `class`.
     """
-    
+
     if kind == 'function':
         pickle_file = os.path.join(SPHINXROOT, current_module + 'functions.pkl')
     else:
@@ -720,7 +724,7 @@ def wx2Sphinx(name):
     imm = ItemModuleMap()
     if lookup in imm:
         fullname = imm[lookup] + lookup + remainder
-        
+
     return newname, fullname
 
 
@@ -767,7 +771,7 @@ def formatContributedSnippets(kind, contrib_snippets):
         text = TEMPLATE_CONTRIB
     else:
         text = '\n' + spacer + '|contributed| **Contributed Examples:**\n\n'
-    
+
     for indx, snippet in enumerate(contrib_snippets):
         with open(snippet, 'rt') as fid:
             lines = fid.readlines()
@@ -787,7 +791,7 @@ def formatContributedSnippets(kind, contrib_snippets):
         text += RAW_2%(spacer, spacer)
 
         text += '\n\n%s|\n\n'%spacer
-        
+
     return text
 
 
@@ -805,7 +809,7 @@ def formatExternalLink(fullname, inheritance=False):
      i.e. `exceptions.Exception` or `threading.Thread`;
     :param bool `inheritance`: ``True`` if the call is coming from :mod:`inheritance`,
      ``False`` otherwise.
-    """    
+    """
 
     if fullname.count('.') == 0:
         if not inheritance:
@@ -815,7 +819,7 @@ def formatExternalLink(fullname, inheritance=False):
     parts = fullname.split('.')
     possible_external = parts[-2] + '.'
     real_name = '.'.join(parts[-2:])
-    
+
     if possible_external.startswith('_'):
         # funny ctypes...
         possible_external = possible_external[1:]
@@ -826,7 +830,7 @@ def formatExternalLink(fullname, inheritance=False):
             return ':class:`%s`'%fullname
 
         return ''
-    
+
     base_address = EXTERN_INHERITANCE[possible_external]
 
     if 'numpy' in real_name:
@@ -845,5 +849,5 @@ def formatExternalLink(fullname, inheritance=False):
 def isPython3():
     """ Returns ``True`` if we are using Python 3.x. """
 
-    return sys.version_info >= (3, )    
+    return sys.version_info >= (3, )
 

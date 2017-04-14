@@ -12,8 +12,8 @@ class statbox_Tests(wtc.WidgetTestCase):
     def test_statboxDefaultCtor(self):
         s = wx.StaticBox()
         s.Create(self.frame, label='StaticBox')
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

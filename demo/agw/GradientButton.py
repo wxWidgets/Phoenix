@@ -19,7 +19,7 @@ except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.gradientbutton as GB
     bitmapDir = "agw/bitmaps/"
 
-            
+
 class GradientButtonDemo(wx.Panel):
 
     def __init__(self, parent, log):
@@ -53,15 +53,15 @@ class GradientButtonDemo(wx.Panel):
         self.DoLayout()
         self.BindEvents()
 
-        
+
     def DoLayout(self):
 
         frameSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer = wx.BoxSizer(wx.VERTICAL)
-        btnSizer = wx.BoxSizer(wx.HORIZONTAL)        
+        btnSizer = wx.BoxSizer(wx.HORIZONTAL)
         colourSizer = wx.FlexGridSizer(4, 4, 1, 10)
 
-        label1 = wx.StaticText(self.mainPanel, -1, "Welcome to the GradientButton demo for wxPython!")        
+        label1 = wx.StaticText(self.mainPanel, -1, "Welcome to the GradientButton demo for wxPython!")
         mainSizer.Add(label1, 0, wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, 10)
 
         mainSizer.Add(self.btn1, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 15)
@@ -70,7 +70,7 @@ class GradientButtonDemo(wx.Panel):
 
         firstStrings = ["Top Start", "Bottom Start", "Pressed Top", "Text Colour"]
         secondStrings = ["Top End", "Bottom End", "Pressed Bottom", ""]
-        
+
         for strings in firstStrings:
             label = wx.StaticText(self.mainPanel, -1, strings)
             colourSizer.Add(label, 0, wx.ALIGN_CENTER|wx.EXPAND)
@@ -89,7 +89,7 @@ class GradientButtonDemo(wx.Panel):
 
         boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
-        
+
         for child in self.mainPanel.GetChildren():
             if isinstance(child, wx.StaticText):
                 child.SetFont(boldFont)
@@ -103,7 +103,7 @@ class GradientButtonDemo(wx.Panel):
         except:
             self.btn1.SetFont(boldFont)
             self.btn2.SetFont(boldFont)
-            
+
         self.mainPanel.SetSizer(mainSizer)
         mainSizer.Layout()
         frameSizer.Add(self.mainPanel, 1, wx.EXPAND)
@@ -131,13 +131,13 @@ class GradientButtonDemo(wx.Panel):
             method = getattr(self.btn2, method)
             method(colour)
 
-            
+
     def OnButton(self, event):
 
         obj = event.GetEventObject()
         self.log.write("You clicked %s\n"%obj.GetLabel())
 
-        
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

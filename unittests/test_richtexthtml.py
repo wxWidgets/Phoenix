@@ -11,9 +11,9 @@ class richtexthtml_Tests(wtc.WidgetTestCase):
 
         handler = wx.richtext.RichTextHTMLHandler()
         wx.richtext.RichTextBuffer.AddHandler(handler)
-        
-        
-        
+
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

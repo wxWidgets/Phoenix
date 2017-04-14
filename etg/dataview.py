@@ -1,9 +1,11 @@
 #---------------------------------------------------------------------------
 # Name:        etg/dataview.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     10-Sept-2011
-# Copyright:   (c) 2013 by Kevin Ollivier, Robin Dunn
+# Copyright:   (c) 2011 by Kevin Ollivier
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -17,18 +19,18 @@ NAME      = "dataview"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 
+# this script.
+ITEMS  = [
             'wxDataViewItem',
             'wxDataViewItemAttr',
             'wxDataViewIconText',
             'wxDataViewModelNotifier',
-            
+
             'wxDataViewModel',
             'wxDataViewListModel',
             'wxDataViewIndexListModel',
             'wxDataViewVirtualListModel',
-            
+
             'wxDataViewRenderer',
             'wxDataViewCustomRenderer',
             'wxDataViewTextRenderer',
@@ -36,22 +38,22 @@ ITEMS  = [
             'wxDataViewProgressRenderer',
             'wxDataViewSpinRenderer',
             'wxDataViewToggleRenderer',
-            'wxDataViewChoiceRenderer',         
+            'wxDataViewChoiceRenderer',
             #'wxDataViewChoiceByIndexRenderer',  # only available in generic dvc
-            'wxDataViewDateRenderer',           
+            'wxDataViewDateRenderer',
             'wxDataViewBitmapRenderer',
-            
+
             'wxDataViewColumn',
             'wxDataViewCtrl',
             'wxDataViewEvent',
-            
+
             'wxDataViewListCtrl',
             'wxDataViewListStore',
-            
+
             'wxDataViewTreeCtrl',
             'wxDataViewTreeStore',
          ]
-    
+
 
 #---------------------------------------------------------------------------
 
@@ -59,7 +61,7 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
@@ -96,20 +98,20 @@ def run():
     module.addPyCode("NullDataViewItem = DataViewItem()")
 
 
-    #-----------------------------------------------------------------    
+    #-----------------------------------------------------------------
     c = module.find('wxDataViewModel')
     c.addAutoProperties()
-    
+
     c.find('~wxDataViewModel').ignore(False)
-    
+
     c.find('AddNotifier.notifier').transfer = True
     c.find('RemoveNotifier.notifier').transferBack = True
-    
+
     # Change the GetValue method to return the value instead of passing it
     # through a parameter for modification.
     c.find('GetValue.variant').out = True
-        
-    
+
+
     # The DataViewItemObjectMapper class helps map from data items to Python
     # objects, and is used as a base class of PyDataViewModel as a
     # convenience.
@@ -121,23 +123,23 @@ def run():
             :meth:`ObjectToItem` to create a :class:`DataViewItem` using a Python object as its ID,
             and use :meth:`ItemToObject` to fetch that Python object again later for a given
             :class:`DataViewItem`.
-    
+
             By default a regular dictionary is used to implement the ID to object
             mapping. Optionally a WeakValueDictionary can be useful when there will be
             a high turnover of objects and mantaining an extra reference to the
             objects would be unwise.  If weak references are used then the objects
             associated with data items must be weak-referenceable.  (Things like
             stock lists and dictionaries are not.)  See :meth:`UseWeakRefs`.
-            
+
             This class is used in :class:`PyDataViewModel` as a mixin for convenience.
             """,
         items=[
-            PyFunctionDef('__init__', '(self)', 
+            PyFunctionDef('__init__', '(self)',
                 body="""\
                     self.mapper = dict()
                     self.usingWeakRefs = False
                     """),
-            
+
             PyFunctionDef('ObjectToItem', '(self, obj)',
                 doc="Create a :class:`DataViewItem` for the object, and remember the ID-->obj mapping.",
                 body="""\
@@ -146,7 +148,7 @@ def run():
                     while oid > sys.maxsize:
                         # risk of conflict here... May need some more thought.
                         oid -= sys.maxsize
-                    self.mapper[oid] = obj 
+                    self.mapper[oid] = obj
                     return DataViewItem(oid)
                     """),
 
@@ -156,8 +158,8 @@ def run():
                     oid = int(item.GetID())
                     return self.mapper[oid]
                     """),
-            
-            PyFunctionDef('UseWeakRefs', '(self, flag)', 
+
+            PyFunctionDef('UseWeakRefs', '(self, flag)',
                 doc="""\
                     Switch to or from using a weak value dictionary for keeping the ID to
                     object map.""",
@@ -178,22 +180,22 @@ def run():
     module.addPyClass('PyDataViewModel', ['DataViewModel', 'DataViewItemObjectMapper'],
         doc="A convenience class that is a :class:`DataViewModel` combined with an object mapper.",
         items=[
-            PyFunctionDef('__init__', '(self)', 
+            PyFunctionDef('__init__', '(self)',
                 body="""\
                     DataViewModel.__init__(self)
                     DataViewItemObjectMapper.__init__(self)
                     """)
-            ]) 
+            ])
 
 
     #-----------------------------------------------------------------
     c = module.find('wxDataViewListModel')
-    c.addAutoProperties()    
-    
+    c.addAutoProperties()
+
     # Change the GetValueByRow method to return the value instead of passing
     # it through a parameter for modification.
     c.find('GetValueByRow.variant').out = True
-    
+
     # declare implementations for base class virtuals
     c.addItem(etgtools.WigCode("""\
         virtual wxDataViewItem GetParent( const wxDataViewItem &item ) const;
@@ -204,20 +206,20 @@ def run():
         virtual bool IsEnabled(const wxDataViewItem &item, unsigned int col) const;
         virtual bool IsListModel() const;
         """))
-    
-    
+
+
     # Add some of the pure virtuals since there are undocumented
     # implementations of them in these classes. The others will need to be
     # implemented in Python classes derived from these.
     for name in ['wxDataViewIndexListModel', 'wxDataViewVirtualListModel']:
         c = module.find(name)
-                
+
         c.addItem(etgtools.WigCode("""\
             virtual unsigned int GetRow(const wxDataViewItem& item) const;
             virtual unsigned int GetCount() const;
             virtual unsigned int GetChildren( const wxDataViewItem &item, wxDataViewItemArray &children ) const;
             """))
-    
+
 
     # compatibility aliases
     module.addPyCode("""\
@@ -227,28 +229,37 @@ def run():
 
 
     #-----------------------------------------------------------------
-                             
+
     def _fixupBoolGetters(method, sig):
         method.type = 'void'
         method.find('value').out = True
         method.cppSignature = sig
-        
-        
-    c = module.find('wxDataViewRenderer')    
+
+
+    c = module.find('wxDataViewRenderer')
     c.addPrivateCopyCtor()
     c.abstract = True
     c.addAutoProperties()
     c.find('GetView').ignore(False)
-    
-    
+
     # Change variant getters to return the value
-    for name, sig in [ 
+    for name, sig in [
         ('GetValue',               'bool (wxDVCVariant& value)'),
         ('GetValueFromEditorCtrl', 'bool (wxWindow * editor, wxDVCVariant& value)'),
         ]:
         _fixupBoolGetters(c.find(name), sig)
-    
-    
+
+
+    c = module.find('wxDataViewCustomRenderer')
+    _fixupBoolGetters(c.find('GetValueFromEditorCtrl'),
+                      'bool (wxWindow * editor, wxDVCVariant& value)')
+    c.find('GetTextExtent').ignore(False)
+
+    module.addPyCode("""\
+        PyDataViewCustomRenderer = wx.deprecated(DataViewCustomRenderer,
+                                                 "Use DataViewCustomRenderer instead")""")
+
+
     # Add the pure virtuals since there are undocumented implementations of
     # them in all these classes
     for name in [ 'wxDataViewTextRenderer',
@@ -263,24 +274,15 @@ def run():
                   ]:
         c = module.find(name)
         c.addAutoProperties()
-        
+
         c.addItem(etgtools.WigCode("""\
             virtual bool SetValue( const wxDVCVariant &value );
             virtual void GetValue( wxDVCVariant &value /Out/ ) const [bool (wxDVCVariant& value)];
             %Property(name=Value, get=GetValue, set=SetValue)
             """))
-        
-        
-    c = module.find('wxDataViewCustomRenderer')
-    _fixupBoolGetters(c.find('GetValueFromEditorCtrl'),
-                      'bool (wxWindow * editor, wxDVCVariant& value)')
-    c.find('GetTextExtent').ignore(False)
-    
-    module.addPyCode("""\
-        PyDataViewCustomRenderer = wx.deprecated(DataViewCustomRenderer,
-                                                 "Use DataViewCustomRenderer instead")""")
-    
-    # The SpinRenderer has a few more pure virtuals that need to be declared
+
+
+    # The SpinRenderer has a few additional pure virtuals that need to be declared
     # since it derives from DataViewCustomRenderer
     c = module.find('wxDataViewSpinRenderer')
     c.addItem(etgtools.WigCode("""\
@@ -288,12 +290,12 @@ def run():
         virtual bool Render(wxRect cell, wxDC* dc, int state);
         """))
 
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxDataViewColumn')
     for m in c.find('wxDataViewColumn').all():
         m.find('renderer').transfer = True
-        
+
     # declare the virtuals from wxSettableHeaderColumn
     c.addItem(etgtools.WigCode("""\
         virtual void SetTitle(const wxString& title);
@@ -311,13 +313,13 @@ def run():
         virtual bool IsSortKey() const;
         virtual void SetSortOrder(bool ascending);
         virtual bool IsSortOrderAscending() const;
-        
+
         virtual void SetResizeable(bool resizable);
         virtual void SetSortable(bool sortable);
         virtual void SetReorderable(bool reorderable);
         virtual void SetHidden(bool hidden);
         """))
-    
+
     c.addAutoProperties()
     c.addProperty('Title', 'GetTitle', 'SetTitle')
     c.addProperty('Bitmap', 'GetBitmap', 'SetBitmap')
@@ -326,9 +328,9 @@ def run():
     c.addProperty('Alignment', 'GetAlignment', 'SetAlignment')
     c.addProperty('Flags', 'GetFlags', 'SetFlags')
     c.addProperty('SortOrder', 'IsSortOrderAscending', 'SetSortOrder')
-    
-    
-    
+
+
+
     #-----------------------------------------------------------------
     c = module.find('wxDataViewCtrl')
     tools.fixWindowClass(c)
@@ -336,33 +338,33 @@ def run():
 
     c.find('AssociateModel.model').transfer = True
     c.find('AssociateModel').pyName = '_AssociateModel'
-    c.addPyMethod('AssociateModel', '(self, model)', 
+    c.addPyMethod('AssociateModel', '(self, model)',
         doc="""\
             Associates a :class:`DataViewModel` with the control.
-            Ownership of the model object is passed to C++, however it 
+            Ownership of the model object is passed to C++, however it
             is reference counted so it can be shared with other views.
             """,
         body="""\
             import wx.siplib
             wasPyOwned = wx.siplib.ispyowned(model)
             self._AssociateModel(model)
-            # Ownership of the python object has just been transferred to 
-            # C++, so DecRef the C++ instance associated with this python 
+            # Ownership of the python object has just been transferred to
+            # C++, so DecRef the C++ instance associated with this python
             # reference.
             if wasPyOwned:
                 model.DecRef()
             """)
-        
+
     c.find('PrependColumn.col').transfer = True
     c.find('InsertColumn.col').transfer = True
     c.find('AppendColumn.col').transfer = True
-    
+
     c.addPyMethod('GetColumns', '(self)',
         doc="Returns a list of column objects.",
         body="return [self.GetColumn(i) for i in range(self.GetColumnCount())]")
-    
+
     c.find('GetSelections').ignore()
-    c.addCppMethod('wxDataViewItemArray*', 'GetSelections', '()', 
+    c.addCppMethod('wxDataViewItemArray*', 'GetSelections', '()',
         isConst=True, factory=True,
         doc="Returns a list of the currently selected items.",
         body="""\
@@ -382,9 +384,9 @@ def run():
         body="""\
             wxDataViewItem*   item = new wxDataViewItem();;
             wxDataViewColumn* col = NULL;
-            
+
             self->HitTest(*point, *item, col);
-            
+
             wxPyThreadBlocker blocker;
             PyObject* value = PyTuple_New(2);
             PyObject* item_obj =
@@ -401,17 +403,17 @@ def run():
             // PyTuple steals a reference, so we don't need to decref the items here
             return value;
             """)
-    
-    
+
+
     #-----------------------------------------------------------------
     c = module.find('wxDataViewEvent')
     tools.fixEventClass(c)
-    
+
     c.addProperty('EditCancelled', 'IsEditCancelled', 'SetEditCanceled')
-    
+
     c.find('SetCache.from').name = 'from_'
     c.find('SetCache.to').name = 'to_'
-    
+
     c.find('GetDataBuffer').ignore()
     c.addCppMethod('PyObject*', 'GetDataBuffer', '()', isConst=True,
         doc="Gets the data buffer for a drop data transfer",
@@ -423,8 +425,8 @@ def run():
     # TODO: SetDataBuffer
 
     c.find('SetDataObject.obj').transfer = True
-    
-    
+
+
     module.addPyCode("""\
         EVT_DATAVIEW_SELECTION_CHANGED         = wx.PyEventBinder( wxEVT_DATAVIEW_SELECTION_CHANGED, 1)
         EVT_DATAVIEW_ITEM_ACTIVATED            = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_ACTIVATED, 1)
@@ -432,7 +434,7 @@ def run():
         EVT_DATAVIEW_ITEM_EXPANDED             = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_EXPANDED, 1)
         EVT_DATAVIEW_ITEM_COLLAPSING           = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_COLLAPSING, 1)
         EVT_DATAVIEW_ITEM_EXPANDING            = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_EXPANDING, 1)
-        EVT_DATAVIEW_ITEM_START_EDITING        = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_START_EDITING, 1)    
+        EVT_DATAVIEW_ITEM_START_EDITING        = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_START_EDITING, 1)
         EVT_DATAVIEW_ITEM_EDITING_STARTED      = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_EDITING_STARTED, 1)
         EVT_DATAVIEW_ITEM_EDITING_DONE         = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_EDITING_DONE, 1)
         EVT_DATAVIEW_ITEM_VALUE_CHANGED        = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_VALUE_CHANGED, 1)
@@ -442,10 +444,10 @@ def run():
         EVT_DATAVIEW_COLUMN_SORTED             = wx.PyEventBinder( wxEVT_DATAVIEW_COLUMN_SORTED, 1)
         EVT_DATAVIEW_COLUMN_REORDERED          = wx.PyEventBinder( wxEVT_DATAVIEW_COLUMN_REORDERED, 1)
         EVT_DATAVIEW_ITEM_BEGIN_DRAG           = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_BEGIN_DRAG, 1)
-        EVT_DATAVIEW_ITEM_DROP_POSSIBLE        = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_DROP_POSSIBLE, 1)      
+        EVT_DATAVIEW_ITEM_DROP_POSSIBLE        = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_DROP_POSSIBLE, 1)
         EVT_DATAVIEW_ITEM_DROP                 = wx.PyEventBinder( wxEVT_DATAVIEW_ITEM_DROP, 1)
         EVT_DATAVIEW_CACHE_HINT                = wx.PyEventBinder( wxEVT_DATAVIEW_CACHE_HINT, 1 )
-        
+
         # deprecated wxEVT aliases
         wxEVT_COMMAND_DATAVIEW_SELECTION_CHANGED          = wxEVT_DATAVIEW_SELECTION_CHANGED
         wxEVT_COMMAND_DATAVIEW_ITEM_ACTIVATED             = wxEVT_DATAVIEW_ITEM_ACTIVATED
@@ -467,11 +469,11 @@ def run():
         wxEVT_COMMAND_DATAVIEW_ITEM_DROP_POSSIBLE         = wxEVT_DATAVIEW_ITEM_DROP_POSSIBLE
         wxEVT_COMMAND_DATAVIEW_ITEM_DROP                  = wxEVT_DATAVIEW_ITEM_DROP
         """)
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxDataViewListCtrl')
     tools.fixWindowClass(c)
-    
+
     c.find('GetStore').overloads = []
 
     c.find('AppendItem.values').type = 'const wxVariantVector&'
@@ -479,20 +481,20 @@ def run():
     c.find('InsertItem.values').type = 'const wxVariantVector&'
 
     c.find('GetValue.value').out = True
-    
+
     for name in 'AppendColumn InsertColumn PrependColumn'.split():
         for m in c.find(name).all():
             m.find('column').transfer = True
-    
-    
+
+
     c = module.find('wxDataViewListStore')
     c.find('AppendItem.values').type = 'const wxVariantVector&'
     c.find('PrependItem.values').type = 'const wxVariantVector&'
     c.find('InsertItem.values').type = 'const wxVariantVector&'
     c.find('GetValueByRow.value').out = True
     c.addAutoProperties()
-    
-    
+
+
     #-----------------------------------------------------------------
     c = module.find('wxDataViewTreeCtrl')
     tools.fixWindowClass(c)
@@ -502,12 +504,12 @@ def run():
     c = module.find('wxDataViewTreeStore')
     c.addAutoProperties()
 
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

@@ -57,7 +57,7 @@ decoding errors. For example::
 
 In addition, some tasks within the build currently expect to be able to use
 Cygwin on Windows (https://www.cygwin.com/) to do its work. If you have
-Cygwin installed in one of the default locations (c:\cygwin or c:\cygwin64)
+Cygwin installed in one of the default locations (c:\\cygwin or c:\\cygwin64)
 then all is well. If you have it installed somewhere else then you can set
 CYGWIN_BASE in the environment and the build tool will use that for the base
 dir.
@@ -221,7 +221,7 @@ like this::
 
 
 Project directory structure
-----------------------------
+---------------------------
 
 There are a lot of subfolders in this directory, here is a brief
 explanation to help a newbie find their way around.
@@ -350,6 +350,9 @@ Extrapolate accordingly for other linux distributions or other unixes.
 * libnotify-dev
 * freeglut3
 * freeglut3-dev
+
+If your Linux distribution has gstreamer 1.0 available then you can install
+the dev packages for that instead of the 0.10 version.
 
 **Mac OSX**
 

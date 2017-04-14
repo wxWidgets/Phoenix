@@ -24,29 +24,29 @@ if sys.version_info < (3,):
 def make_class_tree(tree):
 
     class_tree = []
-    
+
     if isinstance(tree, list):
         for node in tree:
             class_tree.append(make_class_tree(node))
     else:
         name = tree[0].__name__
         class_tree.append(name)
-        
+
     return class_tree
-    
+
 
 def generic_summary(libraryItem, stream):
 
     write_toc = True
     add_tilde = [True, True]
-    
+
     if libraryItem.kind in [object_types.LIBRARY, object_types.PACKAGE]:
         list1 = libraryItem.GetItemByKind(object_types.PACKAGE)
         list2 = libraryItem.GetItemByKind(object_types.PY_MODULE, object_types.PYW_MODULE)
 
         templ = [templates.TEMPLATE_PACKAGE_SUMMARY, templates.TEMPLATE_MODULE_SUMMARY]
         refs = ['mod', 'mod']
-        
+
     elif libraryItem.kind in range(object_types.PY_MODULE, object_types.PYW_MODULE+1):
         list1 = libraryItem.GetItemByKind(object_types.FUNCTION)
         list2 = libraryItem.GetItemByKind(object_types.KLASS, recurse=True)
@@ -63,16 +63,16 @@ def generic_summary(libraryItem, stream):
         templ = [templates.TEMPLATE_METHOD_SUMMARY, templates.TEMPLATE_PROPERTY_SUMMARY]
         refs = ['meth', 'attr']
         add_tilde = [True, True]
-        
-    else:        
+
+    else:
         raise Exception('Invalid library item: %s'%libraryItem.GetShortName())
-    
-    toctree = ''                
+
+    toctree = ''
 
     for index, sub_list in enumerate([list1, list2]):
         table = []
         for item in sub_list:
-            
+
             if item.is_redundant:
                 continue
 
@@ -87,7 +87,7 @@ def generic_summary(libraryItem, stream):
         if table:
             summary = makeSummary(libraryItem.name, table, templ[index], refs[index], add_tilde[index])
             stream.write(summary)
-            
+
     if toctree and write_toc:
         stream.write(templates.TEMPLATE_TOCTREE%toctree)
         stream.write('\n\n')
@@ -108,7 +108,7 @@ def replaceWxDot(text):
 
         if old not in text:
             continue
-        
+
         if new in [':keyword', ':param']:
             if not space_added:
                 space_added = True
@@ -116,7 +116,7 @@ def replaceWxDot(text):
                 text = text.replace(old, new_with_newline, 1)
 
         text = text.replace(old, new)
-    
+
     lines = text.splitlines(True)
     newtext = ''
 
@@ -148,9 +148,9 @@ def GetTopLevelParent(klass):
 
     if not parent:
         return klass
-    
+
     parents = [parent]
-    
+
     while parent:
         parent = parent.parent
         parents.append(parent)
@@ -167,7 +167,7 @@ def findInHierarchy(klass, newlink):
 def findBestLink(klass, newlink):
 
     parent_class = klass.parent
-    
+
     if klass.kind in range(object_types.FUNCTION, object_types.INSTANCE_METHOD):
         if parent_class.GetShortName() == newlink:
             return ':class:`%s`'%newlink
@@ -200,9 +200,9 @@ def killEpydoc(klass, newtext):
 
     if not epydocs:
         return newtext
-    
+
     newepydocs = epydocs[:]
-    
+
     for item in epydocs:
         if '#{' in item:
             # this is for masked stuff
@@ -215,7 +215,7 @@ def killEpydoc(klass, newtext):
 
         start = regex.index('{')
         end   = regex.index('}')
-        
+
         if 'U{' in regex:
             # Simple link, leave it as it is
             newlink = regex[start+1:end]
@@ -248,7 +248,7 @@ def killEpydoc(klass, newtext):
                 bestlink = findBestLink(klass, newlink)
                 if bestlink:
                     newlink = bestlink
-                
+
         else:
             # Something else, don't bother for the moment
             continue
@@ -259,7 +259,7 @@ def killEpydoc(klass, newtext):
 
 
 class ParentBase(object):
-    
+
     def __init__(self, name, kind):
 
         self.name = name
@@ -281,7 +281,7 @@ class ParentBase(object):
         for child in self.children:
             if child.name == klass.name:
                 return
-            
+
         klass.parent = self
         self.children.append(klass)
 
@@ -298,7 +298,7 @@ class ParentBase(object):
 
         if self.comments is None or not self.comments.strip():
             self.comments = ''
-            
+
         for child in self.children:
             child.Save()
 
@@ -321,7 +321,7 @@ class ParentBase(object):
     def GetObject(self):
 
         return self.obj_type
-    
+
 
     def GetChildren(self):
 
@@ -337,7 +337,7 @@ class ParentBase(object):
         """
 
         count = len(self.children)
-        
+
         if not recursively:
             return count
 
@@ -345,10 +345,10 @@ class ParentBase(object):
 
         for n in range(count):
             total += self.children[n].GetChildrenCount()
-        
+
         return total
 
-        
+
     def GetKindCount(self, minObj, maxObj=None):
 
         if maxObj is None:
@@ -359,10 +359,10 @@ class ParentBase(object):
             if minObj <= child.kind <= maxObj:
                 count += 1
 
-        return count                
+        return count
 
 
-    def GetItemByKind(self, minObj, maxObj=None, recurse=False):    
+    def GetItemByKind(self, minObj, maxObj=None, recurse=False):
 
         if maxObj is None:
             maxObj = minObj
@@ -375,13 +375,13 @@ class ParentBase(object):
                 if recurse:
                     items = items + child.GetItemByKind(minObj, maxObj, recurse)
 
-        return items 
+        return items
 
 
     def ToRest(self, class_summary):
 
         pass
-    
+
 
 class Library(ParentBase):
 
@@ -401,8 +401,8 @@ class Library(ParentBase):
 
     def GetShortName(self):
 
-        return self.name        
-    
+        return self.name
+
 
     def Walk(self, obj, class_summary):
 
@@ -413,7 +413,7 @@ class Library(ParentBase):
         children = obj.GetChildren()
 
         if not children:
-            return 
+            return
 
         # check each name
         for child in children:
@@ -431,14 +431,14 @@ class Library(ParentBase):
 
         if obj is None:
             obj = self
-            
+
         # must have at least root folder
         children = obj.GetChildren()
         bestlink = ''
-        
+
         if not children:
             return bestlink
-        
+
         # check each name
         for child in children:
 
@@ -458,12 +458,12 @@ class Library(ParentBase):
                     return ':attr:`~%s`'%child.name
 
             bestlink = self.FindItem(newlink, child)
-            
+
             if bestlink:
                 return bestlink
 
         return bestlink
-            
+
 
     def GetPythonVersion(self):
 
@@ -500,7 +500,7 @@ class Library(ParentBase):
             if child.kind == object_types.KLASS:
                 if child.is_redundant:
                     continue
-                
+
                 class_dict[child.name] = (child.method_list, child.bases, chopDescription(child.docs))
 
             # recursively scan other folders, appending results
@@ -525,7 +525,7 @@ class Module(ParentBase):
     def __init__(self, name, kind):
 
         ParentBase.__init__(self, name, kind)
-        
+
         self.filename = ''
         self.sphinx_file = makeSphinxFile(name)
 
@@ -535,7 +535,7 @@ class Module(ParentBase):
             return
 
         self.order = object_types.PY_MODULE
-                    
+
         for dummy, icon, description in MODULE_TO_ICON:
             if icon == kind:
                 self.obj_type = description
@@ -558,11 +558,11 @@ class Module(ParentBase):
         stream.write('.. module:: %s\n\n' % self.name)
         stream.write('.. currentmodule:: %s\n\n' % self.name)
         stream.write('.. highlight:: python\n\n')
-            
+
         header = templates.TEMPLATE_DESCRIPTION % (self.name, self.name)
-        
+
         stream.write(header)
-        
+
         newtext = replaceWxDot(self.docs)
         newtext = killEpydoc(self, newtext)
 
@@ -574,7 +574,7 @@ class Module(ParentBase):
         # Remove this line to get back the inheritance diagram for a module
         #
         self.inheritance_diagram = None
-        
+
         if self.kind != object_types.PACKAGE:
             print(('%s - %s (module)'%(spacer, self.name)))
             if self.inheritance_diagram:
@@ -597,7 +597,7 @@ class Module(ParentBase):
 
         if count > 0:
             stream.write('\n\nFunctions\n------------\n\n')
-            
+
         for fun in functions:
             if fun.is_redundant:
                 continue
@@ -626,7 +626,7 @@ class Class(ParentBase):
             subs = []
 
         sups = list(obj.__bases__)
-            
+
         sortedSubClasses = []
         sortedSupClasses = []
 
@@ -650,8 +650,8 @@ class Class(ParentBase):
 
             sortedSupClasses.append(sup)
 
-        sortedSupClasses.sort()    
-           
+        sortedSupClasses.sort()
+
         for s in subs:
             s = repr(s)
 
@@ -668,18 +668,18 @@ class Class(ParentBase):
 
         if len(sortedSubClasses) == 1 and sortedSubClasses[0] == 'object':
             sortedSubClasses = []
-        
+
         if len(sortedSupClasses) == 1 and sortedSupClasses[0] == 'object':
             sortedSupClasses = []
 
         self.class_tree = make_class_tree(getclasstree(getmro(obj)))
-        
+
         self.subClasses = sortedSubClasses
         self.superClasses = sortedSupClasses
 
         self.signature = ''
         self.inheritance_diagram = None
-        
+
         self.order = 3
         self.obj_type = 'Class'
         self.sphinx_file = makeSphinxFile(name)
@@ -700,7 +700,7 @@ class Class(ParentBase):
 
         class_docs = replaceWxDot(self.docs)
         class_docs = killEpydoc(self, class_docs)
-        
+
         header = templates.TEMPLATE_DESCRIPTION % (self.name, self.name)
         stream.write(header)
         stream.write(class_docs + '\n\n')
@@ -736,27 +736,27 @@ class Class(ParentBase):
         docs = ''
         for line in class_docs.splitlines(True):
             docs += ' '*3 + line
-            
+
         stream.write(docs + '\n\n')
 
         methods = self.GetItemByKind(object_types.METHOD, object_types.INSTANCE_METHOD)
         properties = self.GetItemByKind(object_types.PROPERTY)
-        
+
         for meth in methods:
             meth.Write(stream)
-                    
+
         for prop in properties:
             prop.Write(stream, short_name)
-            
+
         writeSphinxOutput(stream, self.sphinx_file)
         self.bases = self.superClasses
-        
+
 
     def Save(self):
 
         ParentBase.Save(self)
         pop = -1
-        
+
         for index, child in enumerate(self.children):
             name = child.GetShortName()
             if name == '__init__':
@@ -781,29 +781,29 @@ class Class(ParentBase):
 
         if self.GetShortName().startswith('__test') or '.extern.' in self.name:
             self.is_redundant = True
-            
+
         if self.is_redundant:
             return
 
         methods = self.GetItemByKind(object_types.METHOD, object_types.INSTANCE_METHOD)
         method_list = []
-        
+
         for meth in methods:
             if not meth.is_redundant:
                 method_list.append(meth.GetShortName())
 
         self.method_list = method_list
         self.bases = self.superClasses
-        
+
 
 class ChildrenBase(object):
-    
+
     def __init__(self, name, kind):
 
         self.name = name
         self.kind = kind
 
-        self.order = 4        
+        self.order = 4
 
         self.docs = ''
         self.comments = ''
@@ -831,11 +831,11 @@ class ChildrenBase(object):
     def GetChildren(self):
 
         return []
-    
+
 
     def GetChildrenCount(self, recursively=True):
 
-        return 0        
+        return 0
 
 
     def GetObject(self):
@@ -844,7 +844,7 @@ class ChildrenBase(object):
 
 
     def Save(self):
-        
+
         if self.docs is None:
             self.docs = ''
 
@@ -855,25 +855,25 @@ class ChildrenBase(object):
     def ToRest(self, class_summary):
 
         pass
-    
+
 
 class Method(ChildrenBase):
 
     def __init__(self, name, kind):
 
         ChildrenBase.__init__(self, name, kind)
-        
+
         self.order = 5
-        
+
         self.arguments = []
         self.signature = ''
 
         self.obj_type = 'Method/Function'
-        
+
 
     def Save(self):
 
-        ChildrenBase.Save(self)        
+        ChildrenBase.Save(self)
 
         newargs = []
         if self.arguments and any(self.arguments[0]):
@@ -884,7 +884,7 @@ class Method(ChildrenBase):
 
         self.arguments = newargs
         self.signature = self.signature.rstrip(':').lstrip()
-        
+
         if self.signature.startswith('def '):
             self.signature = self.signature[4:]
 
@@ -899,16 +899,16 @@ class Method(ChildrenBase):
 
         if '*' in self.signature:
             self.signature = self.signature.replace('*', r'\*')
-            
+
         if not self.signature.strip():
-            self.is_redundant = True            
+            self.is_redundant = True
 
 
     def Write(self, stream):
 
         if self.is_redundant:
             return
-        
+
         if self.kind == object_types.FUNCTION:
             stream.write('.. function:: %s\n\n'%self.signature)
             indent = 3*' '
@@ -924,10 +924,10 @@ class Method(ChildrenBase):
         if not self.docs.strip():
             stream.write('\n')
             return
-            
+
         text = ''
         newdocs = replaceWxDot(self.docs)
-        
+
         for line in newdocs.splitlines(True):
             text += indent + line
 
@@ -959,10 +959,10 @@ class Property(ChildrenBase):
                 self.setter = item.fset.__class__.__name__
             if item.fdel:
                 self.deleter = item.fdel.__class__.__name__
-            
+
         self.docs = getdoc(item)
         self.comments = getcomments(item)
-        
+
         self.obj_type = 'Property'
         self.order = 6
 
@@ -998,7 +998,7 @@ class Attribute(ChildrenBase):
             specs = str(specs)
         else:
             specs = unicode(specs)
-            
+
         start, end = specs.find("'"), specs.rfind("'")
         specs = specs[start+1:end]
 
@@ -1011,19 +1011,19 @@ class Attribute(ChildrenBase):
             try:
                 uspecs = uspecs + 'TYPE'
                 kind = getattr(object_types, uspecs)
-            except AttributeError:                
+            except AttributeError:
                 kind = object_types.UNKNOWNTYPE
-        
+
         try:
             reprValue = repr(value.__class__)
         except (NameError, AttributeError):
             reprValue = ''
-            
+
         if 'class' in strValue or 'class' in reprValue:
             kind = object_types.INSTANCETYPE
 
         ChildrenBase.__init__(self, name, kind)
-        
+
         self.value = strValue
         self.specs = specs
 
@@ -1034,7 +1034,7 @@ class Attribute(ChildrenBase):
 
         self.obj_type = 'Attribute'
         self.order = 7
-        
+
 
     def ToRest(self, class_summary):
 

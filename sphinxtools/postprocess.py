@@ -4,7 +4,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ def makeHeadings():
     Generates the "headings.inc" file containing the substitution reference
     for the small icons used in the Sphinx titles, sub-titles and so on.
 
-    The small icons are stored into the ``SPHINX_IMAGES_ROOT`` folder.    
+    The small icons are stored into the ``SPHINX_IMAGES_ROOT`` folder.
 
     .. note:: The "headings.inc" file is created in the ``SPHINXROOT`` folder
        (see `sphinxtools/constants.py`).
@@ -40,7 +40,7 @@ def makeHeadings():
 
     images = glob.glob(SPHINX_IMAGES_ROOT + '/*.png')
     images.sort()
-    
+
     heading_file = os.path.join(SPHINXROOT, 'headings.inc')
 
     text = ""
@@ -55,7 +55,7 @@ def makeHeadings():
 
         text += templates.TEMPLATE_HEADINGS % (name, os.path.normpath(rel_path), width)
 
-    writeIfChanged(heading_file, text)    
+    writeIfChanged(heading_file, text)
 
 # ----------------------------------------------------------------------- #
 
@@ -69,7 +69,7 @@ def genIndexes(sphinxDir):
     """
 
     pklfiles = glob.glob(sphinxDir + '/*.pkl')
-    
+
     for file in pklfiles:
         if file.endswith('functions.pkl'):
             reformatFunctions(file)
@@ -98,9 +98,9 @@ def buildEnumsAndMethods(sphinxDir):
 
     pf = PickleFile(os.path.join(sphinxDir, 'class_summary.pkl'))
     class_summary = pf.read()
-    
+
     unreferenced_classes = {}
-    
+
     textfiles = glob.glob(sphinxDir + '/*.txt')
     enum_files = glob.glob(sphinxDir + '/*.enumeration.txt')
 
@@ -111,10 +111,10 @@ def buildEnumsAndMethods(sphinxDir):
 
     for enum in enum_base:
         enum_dict[':meth:`%s`'%enum] = ':ref:`%s`'%enum
-    
+
     for input in textfiles:
-                
-        fid = textfile_open(input, 'rt') 
+
+        fid = textfile_open(input, 'rt')
         orig_text = text = fid.read()
         fid.close()
 
@@ -129,7 +129,7 @@ def buildEnumsAndMethods(sphinxDir):
                 lindex = text.index(start)
                 rindex = text.index(end)
                 text = text[0:lindex] + text[rindex:]
-            
+
         # Replace the "Perl Note" stuff, we don't need it
         newtext = ''
         for line in text.splitlines():
@@ -138,10 +138,10 @@ def buildEnumsAndMethods(sphinxDir):
             newtext += line + '\n'
 
         text = newtext
-    
+
         text = findInherited(input, class_summary, enum_base, text)
         text, unreferenced_classes = removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, text)
-        
+
         text = text.replace('non-NULL', 'not ``None``')
         text = text.replace(',,', ',').replace(', ,', ',')
 
@@ -151,25 +151,30 @@ def buildEnumsAndMethods(sphinxDir):
 
         # Replacement for wx.grid stuff
         text = text.replace(' int *,', ' int,')
-        
+
         if 'DocstringsGuidelines' not in input:
             # Leave the DocstringsGuidelines.txt file alone on these ones
-            text = text.replace(':note:', '.. note::')            
+            text = text.replace(':note:', '.. note::')
             text = text.replace(':see:', '.. seealso::')
-            
+
         text = text.replace('`String`&', 'string')
         text = text.replace('See also\n', '.. seealso:: ')
 
         # Avoid Sphinx warnings on wx.TreeCtrl
         text = text.replace('**( `', '** ( `')
-        
+
         # Replace EmptyString stuff
         for item in ['wx.EmptyString', 'EmptyString']:
             text = text.replace(item, '""')
-        
+
         # Replace ArrayXXX stuff...
-        for cpp in ['ArrayString()', 'ArrayInt()', 'ArrayDouble()', 'ArrayString']:
+        for cpp in ['ArrayString()', 'ArrayInt()', 'ArrayDouble()']:
             text = text.replace(cpp, '[]')
+
+        for cpp, py in [('`ArrayString`', 'list of strings'),
+                        ('`ArrayInt`', 'list of integers'),
+                        ('`ArrayDouble`', 'list of floats')]:
+           text = text.replace(cpp, py)
 
         # Remove lines with "Event macros" in them...
         text = text.replace('Event macros:', '')
@@ -178,7 +183,7 @@ def buildEnumsAndMethods(sphinxDir):
         text = addSpacesToLinks(text)
 
         if text != orig_text:
-            fid = textfile_open(input, 'wt')  
+            fid = textfile_open(input, 'wt')
             fid.write(text)
             fid.close()
 
@@ -197,12 +202,12 @@ def buildEnumsAndMethods(sphinxDir):
     keys = list(unreferenced_classes.keys())
     keys.sort()
 
-    fid = textfile_open(os.path.join(SPHINXROOT, 'unreferenced_classes.inc'), 'wt') 
+    fid = textfile_open(os.path.join(SPHINXROOT, 'unreferenced_classes.inc'), 'wt')
     fid.write('\n')
     fid.write('='*50 + ' ' + '='*50 + '\n')
     fid.write('%-50s %-50s\n'%('Reference', 'File Name(s)'))
     fid.write('='*50 + ' ' + '='*50 + '\n')
-              
+
     for key in keys:
         fid.write('%-50s %-50s\n'%(key, ', '.join(unreferenced_classes[key])))
 
@@ -210,7 +215,7 @@ def buildEnumsAndMethods(sphinxDir):
     fid.close()
 
     print((warn%(len(keys))))
-            
+
 
 # ----------------------------------------------------------------------- #
 
@@ -225,24 +230,24 @@ def findInherited(input, class_summary, enum_base, text):
     regex = re.findall(r':meth:\S+', text)
 
     for regs in regex:
-        
+
         hasdot = '.' in regs
         hastilde = '~' in regs
 
         if regs.count('`') < 2:
             continue
-        
+
         full_name = regs[regs.index('`')+1:regs.rindex('`')]
         full_name = full_name.replace('~', '')
 
         curr_class = dummy = os.path.split(os.path.splitext(input)[0])[1]
-        
+
         if hasdot:
             newstr = full_name.split('.')
             curr_class, meth_name = '.'.join(newstr[0:-1]), newstr[-1]
         else:
             meth_name = full_name
-        
+
         if meth_name == curr_class:
             newtext = ':ref:`%s`'%meth_name
             text = text.replace(regs, newtext, 1)
@@ -253,15 +258,15 @@ def findInherited(input, class_summary, enum_base, text):
 ##            newtext = ':ref:`%s`'%meth_name
 ##            text = text.replace(regs, newtext, 1)
 ##            continue
-                        
+
 
         if meth_name in CONSTANT_INSTANCES:
             text = text.replace(regs, '``%s``'%meth_name, 1)
             continue
-            
+
         if curr_class not in class_summary:
             continue
-        
+
         methods, bases, short_description = class_summary[curr_class]
         methods = [m.split('.')[-1] for m in methods]
 
@@ -282,10 +287,10 @@ def findInherited(input, class_summary, enum_base, text):
 
             submethods, subbases, subshort = class_summary[cls]
             short_submethods = [m.split('.')[-1] for m in submethods]
-            
+
             if meth_name in short_submethods:
                 if not hasdot:
-                    newstr = ':meth:`~%s.%s`'%(cls, meth_name)                        
+                    newstr = ':meth:`~%s.%s`'%(cls, meth_name)
                 elif not hastilde:
                     newstr = ':meth:`%s.%s <%s.%s>`'%(curr_class, meth_name, cls, meth_name)
                 elif hasdot:
@@ -293,12 +298,12 @@ def findInherited(input, class_summary, enum_base, text):
                 else:
                     newstr = ':meth:`%s.%s <%s.%s>`'%(curr_class, meth_name, cls, meth_name)
 
-                break                        
+                break
 
         if newstr:
             text = text.replace(regs, newstr, 1)
 
-    return text            
+    return text
 
 
 # ----------------------------------------------------------------------- #
@@ -306,7 +311,7 @@ def findInherited(input, class_summary, enum_base, text):
 def removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, text):
 
     regex = re.findall(':ref:`(.*?)`', text)
-    
+
     for reg in regex:
         if reg in class_summary or reg in enum_base:
             continue
@@ -330,10 +335,10 @@ def removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, te
         split = os.path.split(input)[1]
         if split not in unreferenced_classes[reg]:
             unreferenced_classes[reg].append(split)
-                
+
         text = text.replace(':ref:`%s`'%reg, '`%s`     '%reg, 1)
 
-    return text, unreferenced_classes        
+    return text, unreferenced_classes
 
 
 # ----------------------------------------------------------------------- #
@@ -353,10 +358,10 @@ def reformatFunctions(file):
 
     text_file = os.path.splitext(file)[0] + '.txt'
     local_file = os.path.split(file)[1]
-    
+
     if not newer(file, text_file):
         return
-    
+
     pf = PickleFile(file)
     functions = pf.read()
 
@@ -399,7 +404,7 @@ def reformatFunctions(file):
 
     for fun in names:
         text += functions[fun] + '\n'
-    
+
     writeIfChanged(text_file, text)
 
 # ----------------------------------------------------------------------- #
@@ -443,7 +448,7 @@ def makeModuleIndex(sphinxDir, file):
     text = ''
     if module:
         text += '\n\n.. module:: %s\n\n' % module
-        
+
     text += templates.TEMPLATE_CLASS_INDEX % (label, module_docstring)
 
     text += 80*'=' + ' ' + 80*'=' + '\n'
@@ -496,7 +501,7 @@ def makeModuleIndex(sphinxDir, file):
         toctree += '   %s\n' % item
 
     text += templates.TEMPLATE_TOCTREE % toctree
-        
+
     writeIfChanged(text_file, text)
 
 
@@ -525,7 +530,7 @@ def genGallery():
     for folder in platforms:
         plat_folder = os.path.join(image_folder, folder)
         os.chdir(plat_folder)
-        
+
         image_files[folder] = glob.glob('*.png')
 
     os.chdir(pwd)
@@ -542,7 +547,7 @@ def genGallery():
     keys.sort()
 
     text = ''
-    
+
     for key in keys:
         possible_png = key
         html = html_files[possible_png]
@@ -561,7 +566,7 @@ def genGallery():
 
     gallery = os.path.join(SPHINXROOT, '_templates', 'gallery.html')
     writeIfChanged(gallery, templates.TEMPLATE_GALLERY % text)
-        
+
 
 # ----------------------------------------------------------------------- #
 
@@ -580,7 +585,7 @@ def addPrettyTable(text):
 
     text = text.replace('class="docutils">', othertext)
     text = text.replace('class="last docutils">', othertext)
-    
+
     return text
 
 
@@ -590,13 +595,13 @@ def classToFile(line):
 
     if '&#8211' not in line:
         return line
-    
-    if 'href' in line and '<li>' in line and '(' in line and ')' in line:        
+
+    if 'href' in line and '<li>' in line and '(' in line and ')' in line:
         indx1 = line.index('href=')
         if 'title=' in line:
             indx2 = line.rindex('title=')
             paramdesc = line[indx1+6:indx2-2]
-            
+
             if '.html#' in paramdesc:
                 newparamdesc = paramdesc[:]
                 lower = paramdesc.index('#') + 1
@@ -637,9 +642,9 @@ def addJavaScript(text):
     index = text.rfind('</body>')
     newtext = text[0:index] + jsCode + text[index:]
 
-    return newtext 
-    
-    
+    return newtext
+
+
 # ----------------------------------------------------------------------- #
 
 def postProcess(folder):
@@ -656,7 +661,7 @@ def postProcess(folder):
 
     for indx, enum in enumerate(enum_base):
         html_file = os.path.split(enum_files[indx])[1]
-        base = enum.split('.')[-1]        
+        base = enum.split('.')[-1]
         new = '(<a class="reference internal" href="%s" title="%s"><em>%s</em></a>)'%(html_file, base, base)
         enum_dict['(<em>%s</em>)'%enum] = new
 
@@ -666,7 +671,7 @@ def postProcess(folder):
             continue
 
         methods_done = properties_done = False
-        
+
         fid = open(files, "rt")
         orig_text = text = fid.read()
         fid.close()
@@ -677,7 +682,7 @@ def postProcess(folder):
             text = changeSVNRevision(text)
         else:
             text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
-        
+
         text = text.replace('&#8211; <p>', '&#8211; ')
         text = text.replace('<p><img alt="overload"', '<br><p><img alt="overload"')
         text = text.replace('<strong>Overloaded Implementations</strong>', '<em><strong>Overloaded Implementations</strong></em>')
@@ -691,30 +696,30 @@ def postProcess(folder):
         newtext = ''
         splitted_text = text.splitlines()
         len_split = len(splitted_text)
-        
+
         for index, line in enumerate(splitted_text):
             if '<div class="admonition-availability admonition' in line:
                 line = '<div class="admonition-availability admonition availability">'
-                
+
             if index < len_split - 1:
 
-                if line.strip() == '<br><hr />' or line.strip() == '<dd><br><hr />':                    
+                if line.strip() == '<br><hr />' or line.strip() == '<dd><br><hr />':
                     next_line = splitted_text[index+1]
                     stripline = next_line.strip()
-                    
+
                     if (stripline == '<dl class="staticmethod">' or stripline == '<dl class="method">' \
                        or stripline == '<dl class="classmethod">') and not methods_done:
                         line = '<br><h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>' + '\n' + line
                         methods_done = True
-                        
+
                     elif stripline == '<dl class="attribute">' and not properties_done:
                         line = '<br><h3>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>' + '\n' + line
                         properties_done = True
 
             if '<em>  ' in line and '&#8211;' in line:
                 line = line.replace('<em>  ', '<em>')
-                
-            newtext += line + '\n'                
+
+            newtext += line + '\n'
 
         for old, new in list(enum_dict.items()):
             newtext = newtext.replace(old, new)
@@ -745,12 +750,12 @@ def tooltipsOnInheritance(text, class_summary):
 
     graphviz = graphviz[0]
     original = graphviz[:]
-    
+
     html_links = re.findall('href="(.*?)"', graphviz)
     titles = re.findall('title="(.*?)"', graphviz)
 
     ReST = ['ref', 'class', 'mod', 'meth', 'attr']
-    
+
     for link, title in zip(html_links, titles):
         if 'http://' in link:
             # No tooltip for this one
@@ -766,7 +771,7 @@ def tooltipsOnInheritance(text, class_summary):
         if not short_description.strip():
             # Leave the default tooltip
             continue
-        
+
         replace_string = 'title="%s"'%title
         description = short_description.replace('\n', ' ').lstrip()
 
@@ -781,4 +786,3 @@ def tooltipsOnInheritance(text, class_summary):
 
     return text
 
-    

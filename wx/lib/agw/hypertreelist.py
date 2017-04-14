@@ -42,7 +42,7 @@
 
 
 """
-:class:`~lib.agw.hypertreelist.HyperTreeList` is a class that mimics the behaviour of :class:`~adv.TreeListCtrl`, with
+:class:`~wx.lib.agw.hypertreelist.HyperTreeList` is a class that mimics the behaviour of :class:`~adv.TreeListCtrl`, with
 some more functionalities.
 
 
@@ -53,14 +53,14 @@ Description
 almost the same base functionalities plus some more enhancements. This class does
 not rely on the native control, as it is a full owner-drawn tree-list control.
 
-:class:`HyperTreeList` is somewhat an hybrid between :class:`~lib.agw.customtreectrl.CustomTreeCtrl` and :class:`adv.TreeListCtrl`.
+:class:`HyperTreeList` is somewhat an hybrid between :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl` and :class:`adv.TreeListCtrl`.
 
 In addition to the standard :class:`adv.TreeListCtrl` behaviour this class supports:
 
 * CheckBox-type items: checkboxes are easy to handle, just selected or unselected
   state with no particular issues in handling the item's children;
 * Added support for 3-state value checkbox items;
-* RadioButton-type items: since I elected to put radiobuttons in :class:`~lib.agw.customtreectrl.CustomTreeCtrl`, I
+* RadioButton-type items: since I elected to put radiobuttons in :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl`, I
   needed some way to handle them, that made sense. So, I used the following approach:
 
   - All peer-nodes that are radiobuttons will be mutually exclusive. In other words,
@@ -910,7 +910,7 @@ class TreeListHeaderWindow(wx.Window):
 
         dc = wx.ScreenDC()
         dc.SetLogicalFunction(wx.INVERT)
-        dc.SetPen(wx.Pen(wx.BLACK, 2, wx.SOLID))
+        dc.SetPen(wx.Pen(wx.BLACK, 2, wx.PENSTYLE_SOLID))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         self.AdjustDC(dc)
@@ -1273,7 +1273,7 @@ class TreeListItem(GenericTreeItem):
     This class holds all the information and methods for every single item in
     :class:`HyperTreeList`.
 
-    :note: Subclassed from :class:`~lib.agw.customtreectrl.GenericTreeItem`.
+    :note: Subclassed from :class:`~wx.lib.agw.customtreectrl.GenericTreeItem`.
     """
 
     def __init__(self, mainWin, parent, text="", ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
@@ -2021,7 +2021,7 @@ class TreeListMainWindow(CustomTreeCtrl):
     """
     This class represents the main window (and thus the main column) in :class:`HyperTreeList`.
 
-    :note: This is a subclass of :class:`~lib.agw.customtreectrl.CustomTreeCtrl`.
+    :note: This is a subclass of :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl`.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -2062,7 +2062,7 @@ class TreeListMainWindow(CustomTreeCtrl):
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful for checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`~lib.agw.customtreectrl.CustomTreeCtrl` is low.
+         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl` is low.
          ``TR_VIRTUAL``                    0x100000 :class:`HyperTreeList` will have virtual behaviour.
          ============================== =========== ==================================================
 
@@ -2618,7 +2618,7 @@ class TreeListMainWindow(CustomTreeCtrl):
     def SetMainColumn(self, column):
         """
         Sets the :class:`HyperTreeList` main column (i.e. the position of the underlying
-        :class:`~lib.agw.customtreectrl.CustomTreeCtrl`.
+        :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl`.
 
         :param `column`: if not ``None``, an integer specifying the column index.
          If it is ``None``, the main column index is used.
@@ -2631,7 +2631,7 @@ class TreeListMainWindow(CustomTreeCtrl):
     def GetMainColumn(self):
         """
         Returns the :class:`HyperTreeList` main column (i.e. the position of the underlying
-        :class:`~lib.agw.customtreectrl.CustomTreeCtrl`.
+        :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl`.
         """
 
         return self._main_column
@@ -2961,7 +2961,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                     dc.SetTextForeground(colText)
 
             if self.HasAGWFlag(TR_COLUMN_LINES):  # vertical lines between columns
-                pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.SOLID)
+                pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.PENSTYLE_SOLID)
                 dc.SetPen((self.GetBackgroundColour() == wx.WHITE and [pen] or [wx.WHITE_PEN])[0])
                 dc.DrawLine(x_colstart+col_w-1, item.GetY(), x_colstart+col_w-1, item.GetY()+total_h)
 
@@ -3100,7 +3100,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 total_width = self._owner.GetHeaderWindow().GetWidth()
                 # if the background colour is white, choose a
                 # contrasting colour for the lines
-                pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.SOLID)
+                pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.PENSTYLE_SOLID)
                 dc.SetPen((self.GetBackgroundColour() == wx.WHITE and [pen] or [wx.WHITE_PEN])[0])
                 dc.DrawLine(0, y_top, total_width, y_top)
                 dc.DrawLine(0, y_top+h, total_width, y_top+h)
@@ -4146,7 +4146,7 @@ class HyperTreeList(wx.Control):
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful for checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`~lib.agw.customtreectrl.CustomTreeCtrl` is low.
+         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl` is low.
          ``TR_VIRTUAL``                    0x100000 :class:`HyperTreeList` will have virtual behaviour.
          ============================== =========== ==================================================
 
@@ -4307,7 +4307,7 @@ class HyperTreeList(wx.Control):
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful for checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`~lib.agw.customtreectrl.CustomTreeCtrl` is low.
+         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl` is low.
          ``TR_VIRTUAL``                    0x100000 :class:`HyperTreeList` will have virtual behaviour.
          ============================== =========== ==================================================
 
@@ -4418,7 +4418,7 @@ class HyperTreeList(wx.Control):
             font = self._header_win.GetFont()
             dc = wx.ClientDC(self._header_win)
             width2, dummy, dummy = dc.GetMultiLineTextExtent(self._header_win.GetColumnText(column))
- 
+
             width2 += 2*_EXTRA_WIDTH + _MARGIN
             width = max(width1, width2)
 

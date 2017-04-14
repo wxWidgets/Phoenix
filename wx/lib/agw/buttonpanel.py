@@ -31,7 +31,7 @@
 A custom panel class with gradient background shading with the possibility to
 add buttons and controls still respecting the gradient background.
 
-  
+
 Description
 ===========
 
@@ -94,14 +94,14 @@ Usage example::
 
         def __init__(self, parent, id=-1, title="ButtonPanel", pos=wx.DefaultPosition,
                      size=(800, 600), style=wx.DEFAULT_FRAME_STYLE):
-                 
+
             wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
             mainPanel = wx.Panel(self, -1)
             self.logtext = wx.TextCtrl(mainPanel, -1, "", style=wx.TE_MULTILINE)
 
-            vSizer = wx.BoxSizer(wx.VERTICAL) 
-            mainPanel.SetSizer(vSizer) 
+            vSizer = wx.BoxSizer(wx.VERTICAL)
+            mainPanel.SetSizer(vSizer)
 
             titleBar = BP.ButtonPanel(mainPanel, -1, "A Simple Test & Demo")
 
@@ -171,14 +171,14 @@ This class processes the following events:
 ================= ==================================================
 Event Name        Description
 ================= ==================================================
-``wx.EVT_BUTTON`` Process a `wxEVT_COMMAND_BUTTON_CLICKED` event, when a button is clicked. 
+``wx.EVT_BUTTON`` Process a `wxEVT_COMMAND_BUTTON_CLICKED` event, when a button is clicked.
 ================= ==================================================
 
 
 License And Version
 ===================
 
-:class:`ButtonPanel` is distributed under the wxPython license. 
+:class:`ButtonPanel` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
@@ -267,8 +267,8 @@ _DELAY = 3000
 if wx.VERSION_STRING < "2.7":
     wx.Rect.Contains = lambda self, point: wx.Rect.Inside(self, point)
 
- 
-def BrightenColour(colour, factor): 
+
+def BrightenColour(colour, factor):
     """
     Brighten the input colour by a factor.
 
@@ -283,7 +283,7 @@ def BrightenColour(colour, factor):
         red = 255
     else:
         red = val
-        
+
     val = colour.Green()*factor
     if val > 255:
         green = 255
@@ -309,7 +309,7 @@ def MakeDisabledBitmap(original):
 
     :return: A greyed-out representation of the input bitmap, an instance of :class:`wx.Bitmap`.
     """
-    
+
     img = original.ConvertToImage()
     return wx.Bitmap(img.ConvertToGreyscale())
 
@@ -352,17 +352,17 @@ class BPArt(object):
             self._buttontext_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT)
             self._separator_pen = wx.Pen(BrightenColour(base_colour, 0.9))
             self._gradient_type = BP_GRADIENT_NONE
-            
+
         self._buttontext_inactive_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
         self._selection_brush = wx.Brush(wx.Colour(225, 225, 255))
         self._selection_pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
-        
+
         sysfont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._caption_font = wx.Font(sysfont.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD,
                                      False, sysfont.GetFaceName())
         self._buttontext_font = wx.Font(sysfont.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD,
                                         False, sysfont.GetFaceName())
-   
+
         self._separator_size = 7
         self._margins_size = wx.Size(6, 6)
         self._caption_border_size = 3
@@ -387,7 +387,7 @@ class BPArt(object):
 
         :return: An integer representing the option value for the input `id`.
 
-        :raise: `Exception` if the `id` is not recognized.        
+        :raise: `Exception` if the `id` is not recognized.
         """
 
         if id == BP_SEPARATOR_SIZE:
@@ -409,9 +409,9 @@ class BPArt(object):
         :param integer `id`: the identification bit for the size value;
         :param integer `new_val`: the new value for the size.
 
-        :raise: `Exception` if the `id` is not recognized.        
+        :raise: `Exception` if the `id` is not recognized.
 
-        :see: :meth:`~BPArt.GetMetric` for a list of meaningful size ids.        
+        :see: :meth:`~BPArt.GetMetric` for a list of meaningful size ids.
         """
 
         if id == BP_SEPARATOR_SIZE:
@@ -487,7 +487,7 @@ class BPArt(object):
 
         :raise: `Exception` if the `id` is not recognized.
 
-        :see: :meth:`~BPArt.GetColour` for a list of meaningful colour ids. 
+        :see: :meth:`~BPArt.GetColour` for a list of meaningful colour ids.
         """
 
         if id == BP_BACKGROUND_COLOUR:
@@ -512,7 +512,7 @@ class BPArt(object):
             self._separator_pen.SetColour(colour)
         else:
             raise Exception("\nERROR: Invalid Colour Ordinal. ")
-        
+
 
     GetColor = GetColour
     SetColor = SetColour
@@ -534,14 +534,14 @@ class BPArt(object):
 
         :return: An instance of :class:`wx.Font` for the input `id`.
 
-        :raise: `Exception` if the `id` is not recognized.         
+        :raise: `Exception` if the `id` is not recognized.
         """
 
         if id == BP_TEXT_FONT:
             return self._caption_font
         elif id == BP_BUTTONTEXT_FONT:
             return self._buttontext_font
-        
+
         return wx.NoneFont
 
 
@@ -554,9 +554,9 @@ class BPArt(object):
 
         :raise: `Exception` if the `id` is not recognized.
 
-        :see: :meth:`~BPArt.GetFont` for a list of meaningful font ids. 
+        :see: :meth:`~BPArt.GetFont` for a list of meaningful font ids.
         """
-        
+
         if id == BP_TEXT_FONT:
             self._caption_font = font
         elif id == BP_BUTTONTEXT_FONT:
@@ -569,31 +569,31 @@ class BPArt(object):
 
         :param integer `gradient`: can be one of the following bits:
 
-         ============================ ======= ============================ 
+         ============================ ======= ============================
          Gradient Type                 Value  Description
          ============================ ======= ============================
          ``BP_GRADIENT_NONE``               0 No gradient shading should be used to paint the background
          ``BP_GRADIENT_VERTICAL``           1 Vertical gradient shading should be used to paint the background
          ``BP_GRADIENT_HORIZONTAL``         2 Horizontal gradient shading should be used to paint the background
          ============================ ======= ============================
-        
+
         """
 
         self._gradient_type = gradient
-        
+
 
     def GetGradientType(self):
         """
         Returns the gradient type for :class:`BPArt` drawings.
 
         :return: An integer representing the gradient type.
-        
+
         :see: :meth:`~BPArt.SetGradientType` for a list of possible gradient types.
         """
 
-        return self._gradient_type        
+        return self._gradient_type
 
-        
+
     def DrawSeparator(self, dc, rect, isVertical):
         """
         Draws a separator in :class:`ButtonPanel`.
@@ -603,7 +603,7 @@ class BPArt(object):
         :param bool `isVertical`: ``True`` if :class:`ButtonPanel` is in vertical orientation,
          ``False`` otherwise.
         """
-                    
+
         dc.SetPen(self._separator_pen)
 
         if isVertical:
@@ -630,12 +630,12 @@ class BPArt(object):
         textColour = self._caption_text_colour
         textFont = self._caption_font
         padding = self._padding_size
-            
-        dc.SetTextForeground(textColour) 
+
+        dc.SetTextForeground(textColour)
         dc.SetFont(textFont)
 
         dc.DrawText(captionText, rect.x + padding.x, rect.y+padding.y)
-            
+
 
     def DrawButton(self, dc, rect, buttonBitmap, isVertical, buttonStatus,
                    isToggled, textAlignment, text=""):
@@ -652,24 +652,24 @@ class BPArt(object):
         :param integer `textAlignment`: the text alignment inside the button;
         :param string `text`: the button label.
         """
-        
+
         bmpxsize, bmpysize = buttonBitmap.GetWidth(), buttonBitmap.GetHeight()
         dx = dy = focus = 0
-        
+
         borderw = self._caption_border_size
         padding = self._padding_size
 
         buttonFont = self._buttontext_font
         dc.SetFont(buttonFont)
-        
+
         if isVertical:
-            
+
             rect = wx.Rect(borderw, rect.y, rect.width-2*borderw, rect.height)
-            
+
             if text != "":
 
                 textW, textH = dc.GetTextExtent(text)
-                
+
                 if textAlignment == BP_BUTTONTEXT_ALIGN_RIGHT:
                     fullExtent = bmpxsize + padding.x//2 + textW
                     bmpypos = rect.y + (rect.height - bmpysize)//2
@@ -684,8 +684,8 @@ class BPArt(object):
             else:
                 bmpxpos = rect.x + (rect.width - bmpxsize)//2
                 bmpypos = rect.y + (rect.height - bmpysize)//2
-                
-                
+
+
         else:
 
             rect = wx.Rect(rect.x, borderw, rect.width, rect.height-2*borderw)
@@ -693,7 +693,7 @@ class BPArt(object):
             if text != "":
 
                 textW, textH = dc.GetTextExtent(text)
-                
+
                 if textAlignment == BP_BUTTONTEXT_ALIGN_RIGHT:
                     fullExtent = bmpxsize + padding.x//2 + textW
                     bmpypos = rect.y + (rect.height - bmpysize)//2
@@ -709,18 +709,18 @@ class BPArt(object):
             else:
                 bmpxpos = rect.x + (rect.width - bmpxsize)//2
                 bmpypos = rect.y + (rect.height - bmpysize)//2
-                    
-        # Draw a button 
+
+        # Draw a button
         # [ Padding | Text | .. Buttons .. | Padding ]
 
-        if buttonStatus in ["Pressed", "Toggled", "Hover"]:                
-            dc.SetBrush(self._selection_brush) 
+        if buttonStatus in ["Pressed", "Toggled", "Hover"]:
+            dc.SetBrush(self._selection_brush)
             dc.SetPen(self._selection_pen)
             dc.DrawRoundedRectangle(rect, 4)
 
         if buttonStatus == "Pressed" or isToggled:
             dx = dy = 1
-            
+
         if buttonBitmap:
             dc.DrawBitmap(buttonBitmap, bmpxpos+dx, bmpypos+dy, True)
 
@@ -728,7 +728,7 @@ class BPArt(object):
             isEnabled = buttonStatus != "Disabled"
             self.DrawLabel(dc, text, isEnabled, textxpos+dx, textypos+dy)
 
-                
+
     def DrawLabel(self, dc, text, isEnabled, xpos, ypos):
         """
         Draws the label for a button.
@@ -744,7 +744,7 @@ class BPArt(object):
             dc.SetTextForeground(self._buttontext_inactive_colour)
         else:
             dc.SetTextForeground(self._buttontext_colour)
-            
+
         dc.DrawText(text, xpos, ypos)
 
 
@@ -758,17 +758,17 @@ class BPArt(object):
         """
 
         if style & BP_USE_GRADIENT:
-            # Draw gradient colour in the backgroud of the panel 
+            # Draw gradient colour in the backgroud of the panel
             self.FillGradientColour(dc, rect)
 
         # Draw a rectangle around the panel
         backBrush = (style & BP_USE_GRADIENT and [wx.TRANSPARENT_BRUSH] or \
                      [self._background_brush])[0]
-        
-        dc.SetBrush(backBrush) 
+
+        dc.SetBrush(backBrush)
         dc.SetPen(self._border_pen)
-        dc.DrawRectangle(rect) 
-        
+        dc.DrawRectangle(rect)
+
 
     def FillGradientColour(self, dc, rect):
         """
@@ -778,8 +778,8 @@ class BPArt(object):
         :param wx.Rect `rect`: the :class:`ButtonPanel` client rectangle.
         """
 
-        if rect.height < 1 or rect.width < 1: 
-            return 
+        if rect.height < 1 or rect.width < 1:
+            return
 
         isVertical = self._gradient_type == BP_GRADIENT_VERTICAL
         size = (isVertical and [rect.height] or [rect.width])[0]
@@ -796,19 +796,19 @@ class BPArt(object):
         bstep = float((col2.Blue() - col1.Blue()))/float(size)
 
         for coord in range(start, start + size):
-         
+
             currCol = wx.Colour(col1.Red() + int(rf), col1.Green() + int(gf), col1.Blue() + int(bf))
-            dc.SetBrush(wx.Brush(currCol, wx.SOLID)) 
+            dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.SetPen(wx.Pen(currCol))
             if isVertical:
-                dc.DrawLine(rect.x, coord, rect.x + rect.width, coord) 
+                dc.DrawLine(rect.x, coord, rect.x + rect.width, coord)
             else:
                 dc.DrawLine(coord, rect.y, coord, rect.y + rect.height)
-                
+
             rf += rstep
             gf += gstep
-            bf += bstep 
-                
+            bf += bstep
+
 
 class StatusBarTimer(wx.Timer):
     """ Timer used for deleting :class:`StatusBar` long help after ``_DELAY`` seconds."""
@@ -818,11 +818,11 @@ class StatusBarTimer(wx.Timer):
         Default class constructor.
         For internal use: do not call it in your code!
 
-        :param `owner`: an instance of :class:`ButtonPanel`.        
+        :param `owner`: an instance of :class:`ButtonPanel`.
         """
-        
+
         wx.Timer.__init__(self)
-        self._owner = owner        
+        self._owner = owner
 
 
     def Notify(self):
@@ -830,7 +830,7 @@ class StatusBarTimer(wx.Timer):
 
         self._owner.OnStatusBarTimer()
 
-        
+
 class Control(wx.EvtHandler):
     """
     This class represents a base class for all pseudo controls used in
@@ -840,7 +840,7 @@ class Control(wx.EvtHandler):
     def __init__(self, parent, size=wx.Size(-1, -1), id=wx.ID_ANY):
         """
         Default class constructor.
-        
+
         :param wx.Window `parent`: the control parent object. Must not be ``None``;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -856,7 +856,7 @@ class Control(wx.EvtHandler):
             self._id = wx.NewId()
         else:
             self._id = id
-        
+
         self._size = size
         self._isshown = True
         self._focus = False
@@ -885,22 +885,22 @@ class Control(wx.EvtHandler):
     def IsShown(self):
         """ Returns ``True`` if the window is shown, ``False`` if it has been hidden. """
 
-        return self._isshown        
-        
+        return self._isshown
+
 
     def GetId(self):
         """
         Returns the identifier of the window.
 
         :return: An integer representing the identifier of the window.
-        
+
         :note: Each window has an integer identifier. If the application has not provided
          one (or the default ``wx.ID_ANY``) an unique identifier with a negative value will
          be generated.
         """
 
         return self._id
-    
+
 
     def GetBestSize(self):
         """
@@ -922,7 +922,7 @@ class Control(wx.EvtHandler):
 
         :returns: ``True`` if the window has been disabled, ``False`` if it had been
          already disabled before the call to this function.
-         
+
         :note: This is functionally equivalent of calling :meth:`~Control.Enable` with a ``False`` flag.
         """
 
@@ -931,7 +931,7 @@ class Control(wx.EvtHandler):
 
     def Enable(self, enable=True):
         """
-        Enable or disable the window for user input. 
+        Enable or disable the window for user input.
 
         :param bool `enable`: If ``True``, enables the window for input. If ``False``, disables the window.
 
@@ -944,7 +944,7 @@ class Control(wx.EvtHandler):
 
         self.disabled = not enable
         return True
-    
+
 
     def SetFocus(self, focus=True):
         """
@@ -955,7 +955,7 @@ class Control(wx.EvtHandler):
 
         self._focus = focus
 
-        
+
     def HasFocus(self):
         """
         Returns whether the control has the focus or not.
@@ -964,8 +964,8 @@ class Control(wx.EvtHandler):
         """
 
         return self._focus
-    
-                
+
+
     def OnMouseEvent(self, x, y, event):
         """
         Handles the ``wx.EVT_MOUSE_EVENTS`` events for the control.
@@ -974,7 +974,7 @@ class Control(wx.EvtHandler):
         :param integer `y`: the mouse `y` position;
         :param `event`: the :class:`MouseEvent` event to be processed.
         """
-        
+
         pass
 
 
@@ -984,7 +984,7 @@ class Control(wx.EvtHandler):
 
         :param wx.Rect `rect`: the control client rectangle.
         """
-        
+
         pass
 
 
@@ -994,27 +994,27 @@ class Sizer(object):
     a new class that derives from this class and :class:`wx.Sizer` and intercepts
     any methods that add to the wx sizer.
     """
-    
+
     def __init__(self):
         """
         Default class constructor.
         For internal use: do not call it in your code!
         """
-        
+
         self.children = [] # list of child Pseudo Controls
-    
-    # Sizer doesn't use the x1,y1,x2,y2 so allow it to 
+
+    # Sizer doesn't use the x1,y1,x2,y2 so allow it to
     # be called with or without the coordinates
     def Draw(self, dc, x1=0, y1=0, x2=0, y2=0):
         """ Draws all the children of the sizer. """
-        
+
         for item in self.children:
             # use sizer coordinates rather than
             # what is passed in
             c = item.GetUserData()
             c.Draw(dc, item.GetRect())
 
-            
+
     def GetBestSize(self):
         """
         This functions returns the best acceptable minimal size for the sizer object.
@@ -1029,7 +1029,7 @@ class Sizer(object):
 # Pseudo BoxSizer
 class BoxSizer(Sizer, wx.BoxSizer):
     """ Pseudo-class that imitates :class:`BoxSizer`. """
-    
+
     def __init__(self, orient=wx.HORIZONTAL):
         """
         Constructor for :class:`BoxSizer`.
@@ -1037,7 +1037,7 @@ class BoxSizer(Sizer, wx.BoxSizer):
         :param integer `orient`: may be one of ``wx.VERTICAL`` or ``wx.HORIZONTAL`` for creating
          either a column sizer or a row sizer.
         """
-        
+
         wx.BoxSizer.__init__(self, orient)
         Sizer.__init__(self)
 
@@ -1059,57 +1059,47 @@ class BoxSizer(Sizer, wx.BoxSizer):
          a horizontal :class:`BoxSizer` with three children, two of which are supposed to change their
          size with the sizer. Then the two stretchable windows would get a value of 1 each to
          make them grow and shrink equally with the sizer's horizontal dimension.
-        :param integer `flag`: this parameter can be used to set a number of flags which can be combined using the binary OR operator ``|``. 
-         Two main behaviours are defined using these flags. One is the border around a window: the border parameter determines the border 
-         width whereas the flags given here determine which side(s) of the item that the border will be added. The other flags determine 
+        :param integer `flag`: this parameter can be used to set a number of flags which can be combined using the binary OR operator ``|``.
+         Two main behaviours are defined using these flags. One is the border around a window: the border parameter determines the border
+         width whereas the flags given here determine which side(s) of the item that the border will be added. The other flags determine
          how the sizer item behaves when the space allotted to the sizer changes, and is somewhat dependent on the specific kind of sizer used:
 
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | Sizer Flag                                                          | Description                                                                 |
-         +=====================================================================+=============================================================================+
-         | ``wx.TOP``                                                          | These flags are used to specify which side(s) of the sizer                  |
-         +---------------------------------------------------------------------+ item the border width will apply to.                                        | 
-         | ``wx.BOTTOM``                                                       |                                                                             |
-         +---------------------------------------------------------------------+                                                                             |
-         | ``wx.LEFT``                                                         |                                                                             |
-         +---------------------------------------------------------------------+                                                                             |
-         | ``wx.RIGHT``                                                        |                                                                             |
-         +---------------------------------------------------------------------+                                                                             |
-         | ``wx.ALL``                                                          |                                                                             |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.EXPAND``                                                       | The item will be expanded to fill the space assigned to                     |
-         |                                                                     | the item.                                                                   |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.SHAPED``                                                       | The item will be expanded as much as possible while also                    |
-         |                                                                     | maintaining its aspect ratio                                                |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.FIXED_MINSIZE``                                                | Normally :class:`wx.Sizer` will use                                            |
-         |                                                                     | :meth:`wx.Window.GetEffectiveMinSize` to                                       |
-         |                                                                     | determine what the minimal size of window items should be, and will use that| 
-         |                                                                     | size to calculate the layout. This allows layouts to adjust when an item    |
-         |                                                                     | changes and its best size becomes different. If you would rather have a     |
-         |                                                                     | window item stay the size it started with then use ``wx.FIXED_MINSIZE``.    |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.RESERVE_SPACE_EVEN_IF_HIDDEN``                                 | Normally `Sizers` don't allocate space for hidden windows or other items.   | 
-         |                                                                     | This flag overrides this behavior so that sufficient space is allocated for |
-         |                                                                     | the window even if it isn't visible. This makes it possible to dynamically  |
-         |                                                                     | show and hide controls without resizing parent dialog, for example. This    |
-         |                                                                     | function is new since wxWidgets version 2.8.8                               |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.ALIGN_CENTER`` **or** ``wx.ALIGN_CENTRE``                      | The ``wx.ALIGN*`` flags allow you to specify the alignment of the item      |
-         +---------------------------------------------------------------------+ within the space allotted to it by the sizer, adjusted for the border if    |
-         | ``wx.ALIGN_LEFT``                                                   | any.                                                                        |
-         +---------------------------------------------------------------------+                                                                             | 
-         | ``wx.ALIGN_RIGHT``                                                  |                                                                             |
-         +---------------------------------------------------------------------+                                                                             | 
-         | ``wx.ALIGN_TOP``                                                    |                                                                             |
-         +---------------------------------------------------------------------+                                                                             | 
-         | ``wx.ALIGN_BOTTOM``                                                 |                                                                             |
-         +---------------------------------------------------------------------+                                                                             | 
-         | ``wx.ALIGN_CENTER_VERTICAL`` **or** ``wx.ALIGN_CENTRE_VERTICAL``    |                                                                             |
-         +---------------------------------------------------------------------+                                                                             | 
-         | ``wx.ALIGN_CENTER_HORIZONTAL`` **or** ``wx.ALIGN_CENTRE_HORIZONTAL``|                                                                             |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | Sizer Flag                                                            | Description                                                                  |
+         +=======================================================================+==============================================================================+
+         | | ``wx.TOP``                                                          | These flags are used to specify which side(s) of the sizer                   |
+         | | ``wx.BOTTOM``                                                       | item the border width will apply to.                                         |
+         | | ``wx.LEFT``                                                         |                                                                              |
+         | | ``wx.RIGHT``                                                        |                                                                              |
+         | | ``wx.ALL``                                                          |                                                                              |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | ``wx.EXPAND``                                                         | The item will be expanded to fill the space assigned to                      |
+         |                                                                       | the item.                                                                    |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | ``wx.SHAPED``                                                         | The item will be expanded as much as possible while also                     |
+         |                                                                       | maintaining its aspect ratio                                                 |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | ``wx.FIXED_MINSIZE``                                                  | Normally :class:`wx.Sizer` will use                                          |
+         |                                                                       | :meth:`wx.Window.GetEffectiveMinSize` to                                     |
+         |                                                                       | determine what the minimal size of window items should be, and will use that |
+         |                                                                       | size to calculate the layout. This allows layouts to adjust when an item     |
+         |                                                                       | changes and its best size becomes different. If you would rather have a      |
+         |                                                                       | window item stay the size it started with then use ``wx.FIXED_MINSIZE``.     |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | ``wx.RESERVE_SPACE_EVEN_IF_HIDDEN``                                   | Normally `Sizers` don't allocate space for hidden windows or other items.    |
+         |                                                                       | This flag overrides this behavior so that sufficient space is allocated for  |
+         |                                                                       | the window even if it isn't visible. This makes it possible to dynamically   |
+         |                                                                       | show and hide controls without resizing parent dialog, for example. This     |
+         |                                                                       | function is new since wxWidgets version 2.8.8                                |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | | ``wx.ALIGN_CENTER`` **or** ``wx.ALIGN_CENTRE``                      | The ``wx.ALIGN*`` flags allow you to specify the alignment of the item       |
+         | | ``wx.ALIGN_LEFT``                                                   | within the space allotted to it by the sizer, adjusted for the border if     |
+         | | ``wx.ALIGN_RIGHT``                                                  | any.                                                                         |
+         | | ``wx.ALIGN_TOP``                                                    |                                                                              |
+         | | ``wx.ALIGN_BOTTOM``                                                 |                                                                              |
+         | | ``wx.ALIGN_CENTER_VERTICAL`` **or** ``wx.ALIGN_CENTRE_VERTICAL``    |                                                                              |
+         | | ``wx.ALIGN_CENTER_HORIZONTAL`` **or** ``wx.ALIGN_CENTRE_HORIZONTAL``|                                                                              |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
 
         :param integer `border`: determines the border width, if the flag parameter is set
          to include any border flag.
@@ -1173,7 +1163,7 @@ class BoxSizer(Sizer, wx.BoxSizer):
                 self.children.insert(realIndex,szitem)
             else:
                 self.children.insert(before,szitem)
-                
+
         else:
             wx.BoxSizer.Insert(self, before, item, proportion, flag, border, userData)
 
@@ -1189,12 +1179,12 @@ class BoxSizer(Sizer, wx.BoxSizer):
         :param integer `indx`: the zero-based index of an item to remove;
         :param bool `pop`: whether to remove the sizer item from the list of children.
         """
-        
+
         if pop >= 0:
             self.children.pop(pop)
 
         wx.BoxSizer.Remove(self, indx)
-        
+
 
     def Layout(self):
         """
@@ -1202,7 +1192,7 @@ class BoxSizer(Sizer, wx.BoxSizer):
         child to or removed a child (window, other sizer or space) from the sizer
         while keeping the current dimension.
         """
-        
+
         for ii, child in enumerate(self.GetChildren()):
             item = child.GetUserData()
             if item and child.IsShown():
@@ -1210,7 +1200,7 @@ class BoxSizer(Sizer, wx.BoxSizer):
 
         wx.BoxSizer.Layout(self)
 
-        
+
     def Show(self, item, show=True):
         """
         Shows or hides the sizer item.
@@ -1218,13 +1208,13 @@ class BoxSizer(Sizer, wx.BoxSizer):
         :param `item`: the sizer item we want to show/hide;
         :param bool `show`: ``True`` to show the item, ``False`` to hide it.
         """
-        
+
         child = self.GetChildren()[item]
         if child and child.GetUserData():
             child.GetUserData().Show(show)
 
         wx.BoxSizer.Show(self, item, show)
-    
+
 
 # ---------------------------------------------------------------------------- #
 # Class Separator
@@ -1237,19 +1227,19 @@ class Separator(Control):
     This class holds all the information to size and draw a separator inside
     :class:`ButtonPanel`.
     """
-    
+
     def __init__(self, parent):
         """
         Default class constructor.
-        
+
         :param `parent`: the separator parent object, an instance of :class:`ButtonPanel`.
         """
-        
+
         self._isshown = True
         self._parent = parent
         Control.__init__(self, parent)
 
-    
+
     def GetBestSize(self):
         """
         Returns the separator best size.
@@ -1262,8 +1252,8 @@ class Separator(Control):
             return wx.Size(10, self._parent._art.GetMetric(BP_SEPARATOR_SIZE))
         else:
             return wx.Size(self._parent._art.GetMetric(BP_SEPARATOR_SIZE), 10)
-        
-    
+
+
     def Draw(self, dc, rect):
         """
         Draws the separator. Actually the drawing is done in :class:`BPArt`.
@@ -1275,9 +1265,9 @@ class Separator(Control):
         if not self.IsShown():
             return
 
-        isVertical = self._parent.IsVertical()        
+        isVertical = self._parent.IsVertical()
         self._parent._art.DrawSeparator(dc, rect, isVertical)
-        
+
 
 # ---------------------------------------------------------------------------- #
 # Class ButtonPanelText
@@ -1290,7 +1280,7 @@ class ButtonPanelText(Control):
     def __init__(self, parent, text=""):
         """
         Default class constructor.
-        
+
         :param `parent`: the text parent object, an instance of :class:`ButtonPanel`;
         :param string `text`: the actual main caption string.
         """
@@ -1298,7 +1288,7 @@ class ButtonPanelText(Control):
         self._text = text
         self._isshown = True
         self._parent = parent
-        
+
         Control.__init__(self, parent)
 
 
@@ -1306,7 +1296,7 @@ class ButtonPanelText(Control):
         """
         Returns the caption text.
 
-        :return: A string representing the caption text.    
+        :return: A string representing the caption text.
         """
 
         return self._text
@@ -1329,9 +1319,9 @@ class ButtonPanelText(Control):
         textFont = self._parent._art.GetFont(BP_TEXT_FONT)
         dc.SetFont(textFont)
 
-        return dc        
+        return dc
 
-        
+
     def GetBestSize(self):
         """
         Returns the best size for the main caption in :class:`ButtonPanel`.
@@ -1344,14 +1334,14 @@ class ButtonPanelText(Control):
 
         dc = self.CreateDC()
         rect = self._parent.GetClientRect()
-        
+
         tw, th = dc.GetTextExtent(self._text)
         padding = self._parent._art.GetMetric(BP_PADDING_SIZE)
         self._size = wx.Size(tw+2*padding.x, th+2*padding.y)
 
         return self._size
 
-    
+
     def Draw(self, dc, rect):
         """
         Draws the main caption. Actually the drawing is done in :class:`BPArt`.
@@ -1365,8 +1355,8 @@ class ButtonPanelText(Control):
 
         captionText = self.GetText()
         self._parent._art.DrawCaption(dc, rect, captionText)
-        
-            
+
+
 # -- ButtonInfo class implementation ----------------------------------------
 # This class holds information about every button that is added to
 # ButtonPanel.  It is an auxiliary class that you should use
@@ -1395,7 +1385,7 @@ class ButtonInfo(Control):
         :param string `longHelp`: this string is shown in the statusbar (if any) of the parent
          frame when the mouse pointer is inside the button.
         """
-        
+
         if id == wx.ID_ANY:
             id = wx.NewId()
 
@@ -1412,12 +1402,12 @@ class ButtonInfo(Control):
             disabledbmp = MakeDisabledBitmap(bmp)
         else:
             disabledbmp = wx.NullBitmap
-            
+
         self._bitmaps = {"Normal": bmp, "Toggled": None, "Disabled": disabledbmp,
-                         "Hover": None, "Pressed": None}        
+                         "Hover": None, "Pressed": None}
 
         Control.__init__(self, parent, id=id)
-        
+
 
     def GetBestSize(self):
         """
@@ -1428,7 +1418,7 @@ class ButtonInfo(Control):
 
         xsize = self.GetBitmap().GetWidth()
         ysize = self.GetBitmap().GetHeight()
-        
+
         if self.HasText():
             # We have text in the button
             dc = wx.ClientDC(self._parent)
@@ -1445,7 +1435,7 @@ class ButtonInfo(Control):
 
         border = self._parent._art.GetMetric(BP_BORDER_SIZE)
         padding = self._parent._art.GetMetric(BP_PADDING_SIZE)
-        
+
         if self._parent.IsVertical():
             xsize = xsize + 2*border
         else:
@@ -1455,7 +1445,7 @@ class ButtonInfo(Control):
 
         return self._size
 
-    
+
     def Draw(self, dc, rect):
         """
         Draws the button on :class:`ButtonPanel`. Actually the drawing is done in :class:`BPArt`.
@@ -1478,8 +1468,8 @@ class ButtonInfo(Control):
                                      buttonStatus, isToggled, textAlignment, text)
 
         self.SetRect(rect)
-        
-        
+
+
     def CheckRefresh(self, status):
         """
         Checks whether a :class:`ButtonPanel` repaint is needed or not. This is a convenience function.
@@ -1491,7 +1481,7 @@ class ButtonInfo(Control):
         if status == self._status:
             self._parent.RefreshRect(self.GetRect())
 
-        
+
     def SetBitmap(self, bmp, status="Normal"):
         """
         Sets the bitmap associated with this instance of :class:`ButtonInfo`.
@@ -1526,7 +1516,7 @@ class ButtonInfo(Control):
                 if self._bitmaps["Toggled"] is not None:
                     return self._bitmaps["Toggled"]
             return self._bitmaps["Normal"]
-            
+
         return self._bitmaps[status]
 
 
@@ -1557,7 +1547,7 @@ class ButtonInfo(Control):
 
         :return: An integer representing the button id.
         """
-        
+
         return self._id
 
 
@@ -1569,7 +1559,7 @@ class ButtonInfo(Control):
         """
 
         self._rect = rect
-        
+
 
     def SetStatus(self, status):
         """
@@ -1580,10 +1570,10 @@ class ButtonInfo(Control):
 
         if status == self._status:
             return
-        
+
         if self.GetToggled() and status == "Normal":
             status = "Toggled"
-            
+
         self._status = status
         self._parent.RefreshRect(self.GetRect())
 
@@ -1609,7 +1599,7 @@ class ButtonInfo(Control):
             return
 
         self._textAlignment = alignment
-        
+
 
     def GetToggled(self):
         """
@@ -1622,7 +1612,7 @@ class ButtonInfo(Control):
             return False
 
         return self._toggle
-    
+
 
     def SetToggled(self, toggle=True):
         """
@@ -1670,22 +1660,22 @@ class ButtonInfo(Control):
 
         :param bool `enable`: ``True`` to enable the button, ``False`` otherwise.
         """
-        
+
         if enable:
             self._status = "Normal"
         else:
             self._status = "Disabled"
-        
+
 
     def IsEnabled(self):
         """
         Returns ``True`` if this instance of :class:`ButtonInfo` is enabled for input,
         ``False`` otherwise.
         """
-        
+
         return self._status != "Disabled"
-        
-    
+
+
     def SetText(self, text=""):
         """
         Sets the button label text.
@@ -1714,7 +1704,7 @@ class ButtonInfo(Control):
         """
 
         return self._text != ""
-    
+
 
     def SetKind(self, kind=wx.ITEM_NORMAL):
         """
@@ -1742,7 +1732,7 @@ class ButtonInfo(Control):
 
         :param string `help`: the string for the short help.
         """
-        
+
         self._shortHelp = help
 
 
@@ -1774,13 +1764,13 @@ class ButtonInfo(Control):
         """
 
         return self._longHelp
-    
-                
+
+
     Bitmap = property(GetBitmap, SetBitmap)
     Id     = property(GetId, SetId)
     Rect   = property(GetRect, SetRect)
     Status = property(GetStatus, SetStatus)
-    
+
 
 # -- ButtonPanel class implementation ----------------------------------
 # This is the main class.
@@ -1803,10 +1793,10 @@ class ButtonPanel(wx.Panel):
         :param integer `alignment`: alignment of buttons (left or right);
         :param string `name`: window class name.
         """
-        
+
         wx.Panel.__init__(self, parent, id, wx.DefaultPosition, wx.DefaultSize,
                           wx.NO_BORDER, name=name)
-        
+
         self._vButtons = []
         self._vSeparators = []
 
@@ -1822,19 +1812,19 @@ class ButtonPanel(wx.Panel):
 
         self._controlCreated = False
 
-        direction = (self.IsVertical() and [wx.VERTICAL] or [wx.HORIZONTAL])[0]            
+        direction = (self.IsVertical() and [wx.VERTICAL] or [wx.HORIZONTAL])[0]
         self._mainsizer = BoxSizer(direction)
         self.SetSizer(self._mainsizer)
 
         margins = self._art.GetMetric(BP_MARGINS_SIZE)
-        
+
         # First spacer to create some room before the first text/button/control
         self._mainsizer.Add((margins.x, margins.y), 0)
-        
-        # Last spacer to create some room before the last text/button/control
-        self._mainsizer.Add((margins.x, margins.y), 0)        
 
-        self.Bind(wx.EVT_SIZE, self.OnSize)        
+        # Last spacer to create some room before the last text/button/control
+        self._mainsizer.Add((margins.x, margins.y), 0)
+
+        self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_MOTION, self.OnMouseMove)
@@ -1842,11 +1832,11 @@ class ButtonPanel(wx.Panel):
         self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnMouseLeave)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnMouseEnterWindow)
-        
+
         self.SetBarText(text)
         self.LayoutItems()
-        
-    
+
+
     def SetBarText(self, text):
         """
         Sets the main caption text.
@@ -1856,7 +1846,7 @@ class ButtonPanel(wx.Panel):
          """
 
         self.Freeze()
-        
+
         text = text.strip()
 
         if self._controlCreated:
@@ -1864,7 +1854,7 @@ class ButtonPanel(wx.Panel):
 
         self._text = ButtonPanelText(self, text)
         lenChildren = len(self._mainsizer.GetChildren())
-        
+
         if text == "":
             # Even if we have no text, we insert it an empty spacer anyway
             # it is easier to handle if you have to recreate the sizer after.
@@ -1883,19 +1873,19 @@ class ButtonPanel(wx.Panel):
             self._mainsizer.Insert(1, self._text, 0, wx.ALIGN_CENTER,
                                     userData=self._text, realIndex=0)
             self._mainsizer.Insert(2, (0, 0), 1, wx.EXPAND)
-            
+
         else:
             self._mainsizer.Insert(lenChildren-1, self._text, 0, wx.ALIGN_CENTER,
                                    userData=self._text, realIndex=lenChildren)
             self._mainsizer.Insert(lenChildren-1, (0, 0), 1, wx.EXPAND)
-                
+
 
     def RemoveText(self):
         """ Removes the main caption text. """
-        
+
         lenChildren = len(self._mainsizer.GetChildren())
         lenCustom = len(self._vButtons) + len(self._vSeparators) + 1
-        
+
         if self.IsStandard():
             # Detach the text
             self._mainsizer.Remove(1, 0)
@@ -1906,10 +1896,10 @@ class ButtonPanel(wx.Panel):
             # Detach the text
             self._mainsizer.Remove(lenChildren-2, lenCustom-1)
             if self.HasBarText():
-                # Detach the expandable spacer            
+                # Detach the expandable spacer
                 self._mainsizer.Remove(lenChildren-3, -1)
 
-                    
+
     def GetBarText(self):
         """
         Returns the main caption text.
@@ -1929,20 +1919,20 @@ class ButtonPanel(wx.Panel):
 
         return hasattr(self, "_text") and self._text.GetText() != ""
 
-            
+
     def AddButton(self, btnInfo):
         """
         Adds a button to :class:`ButtonPanel`.
 
         :param `btnInfo`: an instance of :class:`ButtonInfo`.
-        
+
         :note: Remember to pass a :class:`ButtonInfo` instance to this method, and not a
          standard :class:`Button` or a :class:`ToolBar` tool.
         """
 
         lenChildren = len(self._mainsizer.GetChildren())
         self._mainsizer.Insert(lenChildren-1, btnInfo, 0, wx.ALIGN_CENTER|wx.EXPAND, userData=btnInfo)
-            
+
         self._vButtons.append(btnInfo)
 
 
@@ -1953,12 +1943,12 @@ class ButtonPanel(wx.Panel):
         :param tuple `size`: the spacer size as a tuple;
         :param integer `proportion`: the spacer proportion (0 for fixed-size, 1 or more for a
          stretchable one);
-        :param integer `flag`: one of the :class:`BoxSizer` flags. 
+        :param integer `flag`: one of the :class:`BoxSizer` flags.
         """
 
         lenChildren = len(self._mainsizer.GetChildren())
         self._mainsizer.Insert(lenChildren-1, size, proportion, flag)
-            
+
 
     def AddControl(self, control, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=None):
         """
@@ -1969,32 +1959,32 @@ class ButtonPanel(wx.Panel):
          stretchable one);
         :param integer `flag`: one of the :class:`BoxSizer` flags;
         :param integer `border`: the control border width (in pixels), if the `flag` parameter
-         is set to include any border flag.        
+         is set to include any border flag.
         """
 
         lenChildren = len(self._mainsizer.GetChildren())
-        
+
         if border is None:
             border = self._art.GetMetric(BP_PADDING_SIZE)
             border = max(border.x, border.y)
 
         self._mainsizer.Insert(lenChildren-1, control, proportion, flag, border)
-        
+
 
     def AddSeparator(self):
         """ Adds a separator line to :class:`ButtonPanel`. """
 
         lenChildren = len(self._mainsizer.GetChildren())
         separator = Separator(self)
-        
+
         self._mainsizer.Insert(lenChildren-1, separator, 0, wx.EXPAND)
         self._vSeparators.append(separator)
-        
+
 
     def RemoveAllButtons(self):
         """
         Remove all the buttons from :class:`ButtonPanel`.
-        
+
         :note: This function is for internal use only. If you are interested in
          manipulating a :class:`ButtonPanel` in real time (ie. removing things on it)
          have a look at the :meth:`~ButtonPanel.Clear` method.
@@ -2002,11 +1992,11 @@ class ButtonPanel(wx.Panel):
 
         self._vButtons = []
 
-        
+
     def RemoveAllSeparators(self):
         """
         Remove all the separators from :class:`ButtonPanel`.
-        
+
         :note: This function is for internal use only. If you are interested in
          manipulating a :class:`ButtonPanel` in real time (ie. removing things on it)
          have a look at the :meth:`~ButtonPanel.Clear` method.
@@ -2018,34 +2008,34 @@ class ButtonPanel(wx.Panel):
     def Clear(self):
         """
         Clears the :class:`ButtonPanel`.
-        
+
         Can be used to reset the :class:`ButtonPanel` if you'd like have a new set of
         buttons on the panel.
         """
-        
+
         if self.HasBarText():
             bartext = self.GetBarText()
         else:
             bartext = None
-        
+
         self.Freeze()
-        
+
         self._currentButton = -1
         self._mainsizer.Clear()
         self.ReCreateSizer(bartext)
 
-        
+
     def GetAlignment(self):
         """
         Returns the buttons alignment.
 
         :return: An integer specifying the buttons alignment.
-        
+
         :see: :meth:`~ButtonPanel.SetAlignment` for a set of valid alignment bits.
         """
 
         return self._alignment
-    
+
 
     def SetAlignment(self, alignment):
         """
@@ -2060,23 +2050,23 @@ class ButtonPanel(wx.Panel):
          ``BP_ALIGN_LEFT``            2 Buttons are aligned on the left
          ``BP_ALIGN_TOP``             4 Buttons are aligned at the top
          ``BP_ALIGN_BOTTOM``          8 Buttons are aligned at the bottom
-         ====================== ======= ==========================        
+         ====================== ======= ==========================
         """
 
         if alignment == self._alignment:
             return
 
         self.Freeze()
-        
+
         text = self.GetBarText()
-        
+
         # Remove the text in any case
         self.RemoveText()
 
         # Remove the first and last spacers
         self._mainsizer.Remove(0, -1)
         self._mainsizer.Remove(len(self._mainsizer.GetChildren())-1, -1)
-        
+
         self._alignment = alignment
 
         # Recreate the sizer accordingly to the new alignment
@@ -2091,7 +2081,7 @@ class ButtonPanel(wx.Panel):
         """
 
         return self._alignment not in [BP_ALIGN_RIGHT, BP_ALIGN_LEFT]
-        
+
 
     def IsStandard(self):
         """
@@ -2106,7 +2096,7 @@ class ButtonPanel(wx.Panel):
     def DoLayout(self):
         """
         Do the Layout for :class:`ButtonPanel`.
-        
+
         :note: Call this method every time you make a modification to the layout
          or to the customizable sizes of the pseudo controls.
         """
@@ -2116,7 +2106,7 @@ class ButtonPanel(wx.Panel):
 
         self._mainsizer.SetItemMinSize(0, (margins.x, margins.y))
         self._mainsizer.SetItemMinSize(lenChildren-1, (margins.x, margins.y))
-        
+
         self._controlCreated = True
         self.LayoutItems()
 
@@ -2125,7 +2115,7 @@ class ButtonPanel(wx.Panel):
         size = self.GetSize()
         self.SetSize((size.x+1, size.y+1))
         self.SetSize((size.x, size.y))
-        
+
         if self.IsFrozen():
             self.Thaw()
 
@@ -2137,23 +2127,23 @@ class ButtonPanel(wx.Panel):
         :param string `text`: the text to display as main caption. If `text` is set to ``None``,
          the main caption will not be displayed.
         """
-        
+
         children = self._mainsizer.GetChildren()
         self.RemoveAllButtons()
         self.RemoveAllSeparators()
 
         # Create a new sizer depending on the alignment chosen
-        direction = (self.IsVertical() and [wx.VERTICAL] or [wx.HORIZONTAL])[0]            
+        direction = (self.IsVertical() and [wx.VERTICAL] or [wx.HORIZONTAL])[0]
         self._mainsizer = BoxSizer(direction)
 
         margins = self._art.GetMetric(BP_MARGINS_SIZE)
         # First spacer to create some room before the first text/button/control
         self._mainsizer.Add((margins.x, margins.y), 0)
-        
+
         # Last spacer to create some room before the last text/button/control
         self._mainsizer.Add((margins.x, margins.y), 0)
-                
-        # This is needed otherwise SetBarText goes mad        
+
+        # This is needed otherwise SetBarText goes mad
         self._controlCreated = False
 
         for child in children:
@@ -2164,7 +2154,7 @@ class ButtonPanel(wx.Panel):
                     self.AddButton(child.GetUserData())
                 elif isinstance(userData, Separator):
                     self.AddSeparator()
-                    
+
             else:
                 if child.IsSpacer():
                     # This is a spacer, expandable or not
@@ -2179,11 +2169,11 @@ class ButtonPanel(wx.Panel):
 
         if text is not None:
             self.SetBarText(text)
-        
+
         self.DoLayout()
-        
+
         self.Thaw()
-        
+
 
     def DoGetBestSize(self):
         """
@@ -2193,7 +2183,7 @@ class ButtonPanel(wx.Panel):
 
         :return: An instance of :class:`wx.Size`.
 
-        :note: Overridden from :class:`Panel`.        
+        :note: Overridden from :class:`Panel`.
         """
 
         w = h = btnWidth = btnHeight = 0
@@ -2204,7 +2194,7 @@ class ButtonPanel(wx.Panel):
         margins = self._art.GetMetric(BP_MARGINS_SIZE)
         separator_size = self._art.GetMetric(BP_SEPARATOR_SIZE)
 
-        # Add the space required for the main caption        
+        # Add the space required for the main caption
         if self.HasBarText():
             w, h = self._text.GetBestSize()
             if isVertical:
@@ -2216,12 +2206,12 @@ class ButtonPanel(wx.Panel):
 
         # Add the button's sizes
         for btn in self._vButtons:
-            
-            bw, bh = btn.GetBestSize()            
+
+            bw, bh = btn.GetBestSize()
             btnWidth = max(btnWidth, bw)
             btnHeight = max(btnHeight, bh)
 
-            if isVertical:            
+            if isVertical:
                 w = max(w, btnWidth)
                 h += bh
             else:
@@ -2244,7 +2234,7 @@ class ButtonPanel(wx.Panel):
             h += 2*margins.y + len(self._vSeparators)*separator_size
         else:
             w += 2*margins.x + len(self._vSeparators)*separator_size
-            
+
         return wx.Size(w, h)
 
 
@@ -2255,12 +2245,12 @@ class ButtonPanel(wx.Panel):
         :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
-        dc = wx.BufferedPaintDC(self) 
+        dc = wx.BufferedPaintDC(self)
         rect = self.GetClientRect()
 
         self._art.DrawButtonPanel(dc, rect, self._agwStyle)
         self._mainsizer.Draw(dc)
-                
+
 
     def OnEraseBackground(self, event):
         """
@@ -2272,8 +2262,8 @@ class ButtonPanel(wx.Panel):
         """
 
         pass
-    
- 
+
+
     def OnSize(self, event):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`ButtonPanel`.
@@ -2292,7 +2282,7 @@ class ButtonPanel(wx.Panel):
         self.LayoutItems()
         self.Refresh()
 
-        event.Skip() 
+        event.Skip()
 
 
     def LayoutItems(self):
@@ -2302,12 +2292,12 @@ class ButtonPanel(wx.Panel):
         """
 
         nonspacers, allchildren = self.GetNonFlexibleChildren()
-        
+
         if self.HasBarText():
             self.FlexibleLayout(nonspacers, allchildren)
         else:
             self.SizeLayout(nonspacers, allchildren)
-            
+
         self._mainsizer.Layout()
 
 
@@ -2321,7 +2311,7 @@ class ButtonPanel(wx.Panel):
 
         size = self.GetSize()
         isVertical = self.IsVertical()
-        
+
         corner = 0
         indx1 = len(nonspacers)
 
@@ -2331,11 +2321,11 @@ class ButtonPanel(wx.Panel):
                 indx1 = nonspacers.index(item)
                 break
 
-        # Leave out the last spacer, it has to be there always        
+        # Leave out the last spacer, it has to be there always
         for ii in range(len(nonspacers)-1):
             indx = children.index(nonspacers[ii])
             self._mainsizer.Show(indx, ii < indx1)
-                
+
 
     def GetItemSize(self, item, isVertical):
         """
@@ -2347,7 +2337,7 @@ class ButtonPanel(wx.Panel):
 
         :return: An instance of :class:`wx.Size`.
         """
-        
+
         if item.GetUserData():
             return item.GetUserData().GetBestSize()[isVertical]
         else:
@@ -2364,15 +2354,15 @@ class ButtonPanel(wx.Panel):
 
         if len(nonspacers) < 2:
             return
-        
+
         isVertical = self.IsVertical()
         isStandard = self.IsStandard()
-        
+
         size = self.GetSize()[isVertical]
         padding = self._art.GetMetric(BP_PADDING_SIZE)
-        
+
         fixed = (isStandard and [nonspacers[1]] or [nonspacers[-2]])[0]
-        
+
         if isStandard:
             nonspacers.reverse()
             leftendx = fixed.GetSize()[isVertical] + padding.x
@@ -2381,7 +2371,7 @@ class ButtonPanel(wx.Panel):
             size = 0
 
         count = lennonspacers = len(nonspacers)
-        
+
         for item in nonspacers:
             if isStandard:
                 size -= self.GetItemSize(item, isVertical)
@@ -2391,16 +2381,16 @@ class ButtonPanel(wx.Panel):
                 size += self.GetItemSize(item, isVertical)
                 if size > rightstartx:
                     break
-                
+
             count = count - 1
 
         nonspacers.reverse()
-        
+
         for jj in range(2, lennonspacers):
             indx = allchildren.index(nonspacers[jj])
             self._mainsizer.Show(indx, jj >= count)
 
-        
+
     def GetNonFlexibleChildren(self):
         """
         Returns all the :class:`ButtonPanel` main sizer's children that are not
@@ -2411,7 +2401,7 @@ class ButtonPanel(wx.Panel):
 
         children1 = []
         children2 = list(self._mainsizer.GetChildren())
-        
+
         for child in children2:
             if child.IsSpacer():
                 if child.GetUserData() or child.GetProportion() == 0:
@@ -2428,7 +2418,7 @@ class ButtonPanel(wx.Panel):
 
         :return: A list of items inside :class:`ButtonPanel` that are wxPython controls.
         """
-    
+
         children2 = self._mainsizer.GetChildren()
         children1 = [child for child in children2 if not child.IsSpacer()]
 
@@ -2461,17 +2451,17 @@ class ButtonPanel(wx.Panel):
         """
         Returns the :class:`ButtonPanel` window style.
 
-        :see: :meth:`~ButtonPanel.SetStyle` for a list of valid window styles.        
+        :see: :meth:`~ButtonPanel.SetStyle` for a list of valid window styles.
         """
 
         return self._agwStyle
 
-        
+
     def OnMouseMove(self, event):
         """
         Handles the ``wx.EVT_MOTION`` event for :class:`ButtonPanel`.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         # Check to see if we are hovering a button
@@ -2482,7 +2472,7 @@ class ButtonPanel(wx.Panel):
             self.RepaintOldSelection()
             self._currentButton = -1
             return
-        
+
         btn = self._vButtons[tabId]
 
         if not btn.IsEnabled():
@@ -2492,7 +2482,7 @@ class ButtonPanel(wx.Panel):
 
         if tabId != self._currentButton:
             self.RepaintOldSelection()
-        
+
         if btn.GetRect().Contains(event.GetPosition()):
             if btn.GetStatus() != "Pressed":
                 btn.SetStatus("Hover")
@@ -2502,40 +2492,40 @@ class ButtonPanel(wx.Panel):
         if tabId != self._currentButton:
             self.RemoveHelp()
             self.DoGiveHelp(btn)
-            
+
         self._currentButton = tabId
-                 
-        event.Skip() 
- 
+
+        event.Skip()
+
 
     def OnLeftDown(self, event):
         """
         Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`ButtonPanel`.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
- 
+
         tabId, hit = self.HitTest(event.GetPosition())
 
         if hit == BP_HT_BUTTON:
             btn = self._vButtons[tabId]
-            if btn.IsEnabled():                 
+            if btn.IsEnabled():
                 btn.SetStatus("Pressed")
                 self._currentButton = tabId
- 
+
 
     def OnLeftUp(self, event):
         """
         Handles the ``wx.EVT_LEFT_UP`` event for :class:`ButtonPanel`.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
-        
+
         tabId, flags = self.HitTest(event.GetPosition())
-        
+
         if flags != BP_HT_BUTTON:
             return
-            
+
         hit = self._vButtons[tabId]
 
         if hit.GetStatus() == "Disabled":
@@ -2544,26 +2534,26 @@ class ButtonPanel(wx.Panel):
         for btn in self._vButtons:
             if btn != hit:
                 btn.SetFocus(False)
-                
-        if hit.GetStatus() == "Pressed": 
+
+        if hit.GetStatus() == "Pressed":
             hit.SetToggled(not hit.GetToggled())
-            
-            # Update the button status to be hovered 
+
+            # Update the button status to be hovered
             hit.SetStatus("Hover")
             hit.SetFocus()
             self._currentButton = tabId
 
-            # Fire a button click event 
+            # Fire a button click event
             btnEvent = wx.CommandEvent(wx.wxEVT_COMMAND_BUTTON_CLICKED, hit.GetId())
             btnEvent.SetEventObject(hit)
-            self.GetEventHandler().ProcessEvent(btnEvent) 
-            
+            self.GetEventHandler().ProcessEvent(btnEvent)
+
 
     def OnMouseLeave(self, event):
         """
         Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`ButtonPanel`.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         # Reset all buttons statuses
@@ -2573,21 +2563,21 @@ class ButtonPanel(wx.Panel):
             btn.SetStatus("Normal")
 
         self.RemoveHelp()
-                
-        event.Skip() 
- 
+
+        event.Skip()
+
 
     def OnMouseEnterWindow(self, event):
         """
         Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`ButtonPanel`.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         tabId, flags = self.HitTest(event.GetPosition())
 
         if flags == BP_HT_BUTTON:
-            
+
             hit = self._vButtons[tabId]
 
             if hit.GetStatus() == "Disabled":
@@ -2596,9 +2586,9 @@ class ButtonPanel(wx.Panel):
 
             self.DoGiveHelp(hit)
             self._currentButton = tabId
-                        
-        event.Skip() 
- 
+
+        event.Skip()
+
 
     def DoGiveHelp(self, hit):
         """
@@ -2618,16 +2608,16 @@ class ButtonPanel(wx.Panel):
         longHelp = hit.GetLongHelp()
         if not longHelp:
             return
-        
+
         topLevel = wx.GetTopLevelParent(self)
-        
+
         if isinstance(topLevel, wx.Frame) and topLevel.GetStatusBar():
             statusBar = topLevel.GetStatusBar()
 
             if self._statusTimer and self._statusTimer.IsRunning():
                 self._statusTimer.Stop()
                 statusBar.PopStatusText(0)
-                
+
             statusBar.PushStatusText(longHelp, 0)
             self._statusTimer = StatusBarTimer(self)
             self._statusTimer.Start(_DELAY, wx.TIMER_ONE_SHOT)
@@ -2649,13 +2639,13 @@ class ButtonPanel(wx.Panel):
             self._statusTimer.Stop()
             statusBar.PopStatusText(0)
             self._statusTimer = None
-        
+
 
     def RepaintOldSelection(self):
         """ Repaints the old selected/hovered button. """
-        
+
         current = self._currentButton
-        
+
         if current == -1:
             return
 
@@ -2665,14 +2655,14 @@ class ButtonPanel(wx.Panel):
 
         btn.SetStatus("Normal")
 
-                
+
     def OnStatusBarTimer(self):
         """ Handles the timer expiring to delete the long help string in :class:`StatusBar`. """
 
         topLevel = wx.GetTopLevelParent(self)
-        statusBar = topLevel.GetStatusBar()        
+        statusBar = topLevel.GetStatusBar()
         statusBar.PopStatusText(0)
-        
+
 
     def SetUseHelp(self, useHelp=True):
         """
@@ -2694,20 +2684,20 @@ class ButtonPanel(wx.Panel):
         :return: ``True`` if the short and long help strings should be displayed as tooltips
          and :class:`StatusBar` items respectively, ``False`` otherwise.
         """
-        
+
         return self._useHelp
 
-    
+
     def HitTest(self, pt):
         """
         HitTest method for :class:`ButtonPanel`.
 
         :param `pt`: the mouse position, an instance of :class:`wx.Point`.
-        
+
         :returns: an instance of :class:`ButtonInfo` and the hit flag ``BP_HT_BUTTON`` if a button
          client rectangle contains the input point `pt`, or ``wx.NOT_FOUND`` and ``BP_HT_NONE``.
         """
-         
+
         for ii in range(len(self._vButtons)):
             if not self._vButtons[ii].IsEnabled():
                 continue
@@ -2715,13 +2705,13 @@ class ButtonPanel(wx.Panel):
                 return ii, BP_HT_BUTTON
 
         return wx.NOT_FOUND, BP_HT_NONE
- 
+
 
     def GetBPArt(self):
         """ Returns the associated :class:`BPArt` art provider. """
 
         return self._art
-    
+
 
     def SetBPArt(self, art):
         """
@@ -2729,7 +2719,7 @@ class ButtonPanel(wx.Panel):
 
         :param `art`: an instance of :class:`BPArt`.
         """
-        
+
         self._art = art
         self.Refresh()
 
@@ -2758,8 +2748,8 @@ class ButtonPanel(wx.Panel):
                 raise Exception("\nERROR: Thawing Unfrozen ButtonPanel?")
 
             self._freezeCount = self._freezeCount - 1
-            wx.Panel.Thaw(self)        
-        
+            wx.Panel.Thaw(self)
+
 
         def IsFrozen(self):
             """ Returns ``True`` if the window is currently frozen by a call to :meth:`~ButtonPanel.Freeze`. """
@@ -2775,14 +2765,14 @@ if __name__ == '__main__':
 
         def __init__(self, parent, id=-1, title='ButtonPanel', pos=wx.DefaultPosition,
                      size=(800, 600), style=wx.DEFAULT_FRAME_STYLE):
-                 
+
             wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
             mainPanel = wx.Panel(self, -1)
             self.logtext = wx.TextCtrl(mainPanel, -1, '', style=wx.TE_MULTILINE)
 
-            vSizer = wx.BoxSizer(wx.VERTICAL) 
-            mainPanel.SetSizer(vSizer) 
+            vSizer = wx.BoxSizer(wx.VERTICAL)
+            mainPanel.SetSizer(vSizer)
 
             titleBar = ButtonPanel(mainPanel, -1, 'A Simple Test & Demo')
 

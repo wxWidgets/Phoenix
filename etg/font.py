@@ -3,42 +3,54 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "font"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [  'wxFontInfo',
             'wxFont',
             'wxFontList',
-           ]    
-    
+           ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
-    # customizing the generated code and docstrings.    
-    
+    # customizing the generated code and docstrings.
+
     c = module.find('wxFont')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
-    
+
+    # Set mustHaveApp on all ctors except the default ctor
+    for ctor in c.find('wxFont').all():
+        if ctor.isCtor and ctor.argsString != '()':
+            ctor.mustHaveApp()
+
+    for func in c.find('New').all():
+        func.mustHaveApp()
+
+    c.find('GetDefaultEncoding').mustHaveApp()
+    c.find('SetDefaultEncoding').mustHaveApp()
+
+
     # FFont factory function for backwards compatibility
-    module.addCppFunction('wxFont*', 'FFont', 
+    module.addCppFunction('wxFont*', 'FFont',
                           """(int pointSize,
                               wxFontFamily family,
                               int flags = wxFONTFLAG_DEFAULT,
@@ -49,10 +61,10 @@ def run():
         wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
         return font;
         """, factory=True)
-    
+
     for item in c.findAll('New'):
         item.factory = True
-    
+
     c.addProperty('Encoding GetEncoding SetEncoding')
     c.addProperty('FaceName GetFaceName SetFaceName')
     c.addProperty('Family GetFamily SetFamily')
@@ -63,7 +75,7 @@ def run():
     c.addProperty('Style GetStyle SetStyle')
     c.addProperty('Weight GetWeight SetWeight')
 
-    # TODO, there is now a Underlined method so we can't have a
+    # TODO, there is now an Underlined method so we can't have a
     # property of the same name.
     #c.addProperty('Underlined GetUnderlined SetUnderlined')
     #c.addProperty('Strikethrough GetStrikethrough SetStrikethrough')
@@ -72,7 +84,7 @@ def run():
         return self->IsOk();
         """)
 
-    c.addCppMethod('void*', 'GetHFONT', '()', 
+    c.addCppMethod('void*', 'GetHFONT', '()',
         doc="Returns the font's native handle.",
         body="""\
         #ifdef __WXMSW__
@@ -81,8 +93,8 @@ def run():
             return 0;
         #endif
         """)
-    
-    c.addCppMethod('void*', 'OSXGetCGFont', '()', 
+
+    c.addCppMethod('void*', 'OSXGetCGFont', '()',
         doc="Returns the font's native handle.",
         body="""\
         #ifdef __WXMAC__
@@ -92,7 +104,7 @@ def run():
         #endif
         """)
 
-    c.addCppMethod('void*', 'GetPangoFontDescription', '()', 
+    c.addCppMethod('void*', 'GetPangoFontDescription', '()',
         doc="Returns the font's native handle.",
         body="""\
         #ifdef __WXGTK__
@@ -101,9 +113,9 @@ def run():
             return 0;
         #endif
         """)
-    
-    
-       
+
+
+
     # The stock Font items are documented as simple pointers, but in reality
     # they are macros that evaluate to a function call that returns a font
     # pointer, and that is only valid *after* the wx.App object has been
@@ -111,7 +123,7 @@ def run():
     # to come up with another solution. So instead we will just create
     # uninitialized fonts in a block of Python code, that will then be
     # initialized later when the wx.App is created.
-    c.addCppMethod('void', '_copyFrom', '(const wxFont* other)', 
+    c.addCppMethod('void', '_copyFrom', '(const wxFont* other)',
                    "*self = *other;",
                    briefDoc="For internal use only.")  # ??
     pycode = '# These stock fonts will be initialized when the wx.App object is created.\n'
@@ -145,19 +157,19 @@ def run():
         wx.NORMAL = int(wx.FONTWEIGHT_NORMAL)
         wx.LIGHT  = int(wx.FONTWEIGHT_LIGHT)
         wx.BOLD   = int(wx.FONTWEIGHT_BOLD)
-        
+
         wx.NORMAL = int(wx.FONTSTYLE_NORMAL)
         wx.ITALIC = int(wx.FONTSTYLE_ITALIC)
         wx.SLANT  = int(wx.FONTSTYLE_SLANT)
-        """)        
+        """)
 
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
-    
+
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

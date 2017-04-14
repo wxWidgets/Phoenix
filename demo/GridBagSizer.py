@@ -66,7 +66,7 @@ class TestFrame(wx.Frame):
         gbs.AddGrowableCol(2)
 
         box = wx.BoxSizer()
-        box.Add(gbs, 0, wx.ALL, 10)
+        box.Add(gbs, 1, wx.EXPAND | wx.ALL, 10)
 
         p.SetSizerAndFit(box)
         self.SetClientSize(p.GetSize())

@@ -56,7 +56,7 @@ class SkipNextPage(wx.adv.WizardPage):
         else:
             self.next.GetNext().SetPrev(self.next)
             return self.next
-        
+
     def GetPrev(self):
         return self.prev
 
@@ -144,7 +144,7 @@ class TestPanel(wx.Panel):
 
     def OnWizFinished(self, evt):
         self.log.write("OnWizFinished\n")
-        
+
 
     def OnRunSimpleWizard(self, evt):
         # Create the wizard and the pages

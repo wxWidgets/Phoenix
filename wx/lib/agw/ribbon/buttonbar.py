@@ -7,7 +7,7 @@
 #
 # Created:
 # Version:
-# Date:         
+# Date:
 # Licence:      wxWindows license
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
@@ -230,7 +230,7 @@ class RibbonButtonBar(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: pointer to a parent window, typically a :class:`~lib.agw.ribbon.panel.RibbonPanel`;
+        :param `parent`: pointer to a parent window, typically a :class:`~wx.lib.agw.ribbon.panel.RibbonPanel`;
         :type `parent`: :class:`wx.Window`
         :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
@@ -585,7 +585,7 @@ class RibbonButtonBar(RibbonControl):
         added buttons will not be displayed. In normal situations, it will be called
         automatically when :meth:`RibbonBar.Realize() <lib.agw.ribbon.bar.RibbonBar.Realize>` is called.
 
-        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
         if not self._layouts_valid:
@@ -719,7 +719,7 @@ class RibbonButtonBar(RibbonControl):
         Set the art provider to be used.
 
         In many cases, setting the art provider will also set the art provider on all
-        child windows which extend :class:`~lib.agw.ribbon.control.RibbonControl`. In most cases, controls will not
+        child windows which extend :class:`~wx.lib.agw.ribbon.control.RibbonControl`. In most cases, controls will not
         take ownership of the given pointer, with the notable exception being
         :meth:`RibbonBar.SetArtProvider() <lib.agw.ribbon.bar.RibbonBar.SetArtProvider>`.
 

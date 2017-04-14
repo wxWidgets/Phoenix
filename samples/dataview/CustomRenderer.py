@@ -114,17 +114,17 @@ class TestPanel(wx.Panel):
 
         # Create a dataview control
         self.dvc = dv.DataViewCtrl(self, style=wx.BORDER_THEME
-                                               | dv.DV_ROW_LINES 
+                                               | dv.DV_ROW_LINES
                                                #| dv.DV_HORIZ_RULES
                                                | dv.DV_VERT_RULES
                                                | dv.DV_MULTIPLE
                                                )
-        
+
         # Create an instance of the model
         if model is None:
             self.model = TestModel(data, log)
         else:
-            self.model = model            
+            self.model = model
         self.dvc.AssociateModel(self.model)
 
         # Now we create some columns.
@@ -140,24 +140,24 @@ class TestPanel(wx.Panel):
             column = dv.DataViewColumn(title, renderer, col, width=width)
             column.Alignment = wx.ALIGN_LEFT
             self.dvc.AppendColumn(column)
-                               
-        # Layout   
-        self.Sizer = wx.BoxSizer(wx.VERTICAL) 
+
+        # Layout
+        self.Sizer = wx.BoxSizer(wx.VERTICAL)
         self.Sizer.Add(self.dvc, 1, wx.EXPAND)
-        
+
 
 
 #----------------------------------------------------------------------
 
 def main():
     from data import musicdata
-    
+
     app = wx.App()
     frm = wx.Frame(None, title="CustomRenderer sample", size=(700,500))
     pnl = TestPanel(frm, sys.stdout, data=musicdata)
     frm.Show()
     app.MainLoop()
-    
+
 
 
 

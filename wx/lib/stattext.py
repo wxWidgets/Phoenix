@@ -7,13 +7,13 @@
 # Author:      Robin Dunn
 #
 # Created:     8-July-2002
-# Copyright:   (c) 2002 by Total Control Software
+# Copyright:   (c) 2002-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------
 # 12/12/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 # o Untested.
 #
 
@@ -50,7 +50,7 @@ Sample usage::
     app = wx.App(0)
 
     frame = wx.Frame(None, -1, "wx.lib.stattext Test")
-    panel = wx.Panel(frame)    
+    panel = wx.Panel(frame)
 
     st1 = ST.GenStaticText(panel, -1, "This is an example of static text", (20, 10))
 
@@ -62,7 +62,7 @@ Sample usage::
 
     frame.Show()
     app.MainLoop()
-    
+
 
 """
 
@@ -76,7 +76,7 @@ if wx.Platform == "__WXMAC__":
         from Carbon.Appearance import kThemeBrushDialogBackgroundActive
     except ImportError:
         kThemeBrushDialogBackgroundActive = 1
-        
+
 #----------------------------------------------------------------------
 
 class GenStaticText(wx.Control):
@@ -120,7 +120,7 @@ class GenStaticText(wx.Control):
             self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         else:
             self.SetBackgroundStyle(wx.BG_STYLE_SYSTEM)
-            
+
 
 
     def SetLabel(self, label):
@@ -130,7 +130,7 @@ class GenStaticText(wx.Control):
 
         :param string `label`: the static text label (i.e., its text label).
         """
-        
+
         wx.Control.SetLabel(self, label)
         style = self.GetWindowStyleFlag()
         self.InvalidateBestSize()
@@ -147,7 +147,7 @@ class GenStaticText(wx.Control):
         :param wx.Font `font`: a valid font instance, which will be the new font used
          to display the text.
         """
-        
+
         wx.Control.SetFont(self, font)
         style = self.GetWindowStyleFlag()
         self.InvalidateBestSize()
@@ -163,14 +163,14 @@ class GenStaticText(wx.Control):
 
         .. note:: Overridden from :class:`wx.Control`.
         """
-        
+
         label = self.GetLabel()
         font = self.GetFont()
         if not font:
             font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         dc = wx.ClientDC(self)
         dc.SetFont(font)
-        
+
         maxWidth = totalHeight = 0
         for line in label.split('\n'):
             if line == '':
@@ -186,7 +186,7 @@ class GenStaticText(wx.Control):
 
     def Enable(self, enable=True):
         """
-        Enable or disable the widget for user input. 
+        Enable or disable the widget for user input.
 
         :param bool `enable`: If ``True``, enables the window for input. If
           ``False``, disables the window.
@@ -206,7 +206,7 @@ class GenStaticText(wx.Control):
         self.Refresh()
 
         return retVal
-    
+
 
     def Disable(self):
         """
@@ -214,7 +214,7 @@ class GenStaticText(wx.Control):
 
         :returns: ``True`` if the window has been disabled, ``False`` if it had been
          already disabled before the call to this function.
-         
+
         .. note:: This is functionally equivalent of calling :meth:`~wx.Control.Enable`
            with a ``False`` flag.
 
@@ -244,7 +244,7 @@ class GenStaticText(wx.Control):
 
         .. note:: Overridden from :class:`wx.Control`.
         """
-        
+
         return wx.StaticText.GetClassDefaultAttributes()
 
 
@@ -258,14 +258,14 @@ class GenStaticText(wx.Control):
 
         return True
 
-    
+
     def OnPaint(self, event):
         """
         Handles the ``wx.EVT_PAINT`` for :class:`GenStaticText`.
 
         :param `event`: a :class:`wx.PaintEvent` event to be processed.
         """
-        
+
         if BUFFERED:
             dc = wx.BufferedPaintDC(self)
         else:
@@ -289,7 +289,7 @@ class GenStaticText(wx.Control):
             dc.SetTextForeground(self.GetForegroundColour())
         else:
             dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
-            
+
         dc.SetFont(self.GetFont())
         label = self.GetLabel()
         style = self.GetWindowStyleFlag()

@@ -10,8 +10,8 @@ Definitions related to message data specification.
 from .listener import getArgs as getListenerArgs
 from .validatedefnargs import MessageDataSpecError
 from .topicargspecimpl import (
-    SenderMissingReqdMsgDataError, 
-    SenderUnknownMsgDataError, 
+    SenderMissingReqdMsgDataError,
+    SenderUnknownMsgDataError,
     ArgsInfo
 )
 

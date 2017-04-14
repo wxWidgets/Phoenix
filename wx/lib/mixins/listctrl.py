@@ -5,13 +5,13 @@
 # Author:      Robin Dunn
 #
 # Created:     15-May-2001
-# Copyright:   (c) 2001 by Total Control Software
+# Copyright:   (c) 2001-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------------
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 # o ListCtrlSelectionManagerMix untested.
 #
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)

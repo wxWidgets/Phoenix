@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     16-Jun-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,9 +33,14 @@ def run():
     
     c = module.find('wxBusyInfo')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
-    
-    
+
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Destroy()')
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
