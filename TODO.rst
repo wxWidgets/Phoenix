@@ -157,17 +157,4 @@ Other Assorted Stuff
     relationship instead of having to use has-a? Docs say that virtual methods
     can't be present with the Mixin annotation, so it may not work...
 
-  * Consider adding immutable versions of 'value' types like wx.Point,
-    wx.Size, wx.Colour, etc. so they can be used as keys in a dictionary or
-    added to sets, and still retain some of their component meanings like x, y
-    or width, height. Perhaps it could bo done with namedtuples with methods
-    added on in a subclass to make it simple to convert back and forth...
-
-    Or... idea #2: simply add a method to wx.Point and the others like
-    ``Immutable()`` or ``MakeImmutable()`` or something similar which returns
-    an appropriate namedtuple, and then update the convertFromType SIP code to
-    also accept objects of that namedtuple type for automatic conversion to
-    the C++ type. (Although since they are derived from tuple it probably will
-    not need to be changed, but we should probably add some type-checking
-    there to be safe.)
 
