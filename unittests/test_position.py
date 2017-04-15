@@ -48,6 +48,19 @@ class position_Tests(wtc.WidgetTestCase):
         self.assertTrue(p4 == p1)
 
 
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.Position(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.Row == obj.Row
+        assert im.Col == obj.Col
+        obj2 = wx.Position(im)
+        assert obj == obj2
+
+
+
+
 #---------------------------------------------------------------------------
 
 

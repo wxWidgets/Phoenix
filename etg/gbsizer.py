@@ -51,6 +51,9 @@ def run():
         """,
         briefDoc="Set both the row and column properties.")
 
+    tools.addGetIMMethodTemplate(module, c, ['row', 'col'])
+
+
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.GBPosition"+str(self.Get())')
@@ -91,6 +94,8 @@ def run():
         self->SetColspan(colspan);
         """,
         briefDoc="Set both the rowspan and colspan properties.")
+
+    tools.addGetIMMethodTemplate(module, c, ['rowspan', 'colspan'])
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')

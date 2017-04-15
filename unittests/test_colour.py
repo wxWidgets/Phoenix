@@ -42,6 +42,19 @@ class Colour(wtc.WidgetTestCase):
             p = wx.Colour(wx.Rect(1,2,3,4))
 
 
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.Colour(1,2,3,4)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.red == obj.red
+        assert im.green == obj.green
+        assert im.blue == obj.blue
+        assert im.alpha == obj.alpha
+        obj2 = wx.Colour(im)
+        assert obj == obj2
+
+
     if hasattr(wx, 'testColourTypeMap'):
         def test_ColourTypemaps(self):
             c = wx.testColourTypeMap('red')

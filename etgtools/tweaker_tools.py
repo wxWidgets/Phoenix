@@ -616,6 +616,33 @@ def checkForUnitTestModule(module):
 
 #---------------------------------------------------------------------------
 
+def addGetIMMethodTemplate(module, klass, fields):
+    """
+    Add a bit of code to the module, and add a GetIM method to the klass which
+    returns an immutable representation self.
+    """
+    name = klass.pyName or klass.name
+    if name.startswith('wx'):
+        name = name[2:]
+
+    module.addPyCode("""\
+        from collections import namedtuple
+        _im_{name} = namedtuple('_im_{name}', {fields})
+        del namedtuple
+        """.format(name=name, fields=str(fields)))
+
+    klass.addPyMethod('GetIM', '(self)',
+        doc="""\
+            Returns an immutable representation of the ``wx.{name}`` object, based on ``namedtuple``.
+            
+            This new object is hashable and can be used as a dictionary key,
+            be added to sets, etc.  It can be converted back into a real ``wx.{name}``
+            with a simple statement like this: ``obj = wx.{name}(imObj)``.
+            """.format(name=name),
+        body="return _im_{name}(*self.Get())".format(name=name)
+        )
+
+#---------------------------------------------------------------------------
 
 def convertTwoIntegersTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.

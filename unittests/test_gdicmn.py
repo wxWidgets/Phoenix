@@ -117,6 +117,17 @@ class Point(unittest.TestCase):
         self.assertEqual(p6, (-4,-6))
 
 
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.Point(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.x == obj.x
+        assert im.y == obj.y
+        obj2 = wx.Point(im)
+        assert obj == obj2
+
+
     def test_converters(self):
         # Ensure that other types that are sequence-like can't be
         # auto-converted, the copy constructor is good-enough for testing this
@@ -241,6 +252,17 @@ class Size(unittest.TestCase):
             s[2]
 
 
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.Size(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.width == obj.width
+        assert im.height == obj.height
+        obj2 = wx.Size(im)
+        assert obj == obj2
+
+
     def test_converters(self):
         # Ensure that other types that are sequence-like can't be
         # auto-converted, the copy constructor is good-enough for testing this
@@ -271,6 +293,18 @@ class RealPoint(unittest.TestCase):
         p = wx.RealPoint(12.3, 45.6)
         p.x += 2
         p.y += 2
+
+
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.RealPoint(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.x == obj.x
+        assert im.y == obj.y
+        obj2 = wx.RealPoint(im)
+        assert obj == obj2
+
 
 
 
@@ -310,6 +344,19 @@ class Rect(unittest.TestCase):
         r = wx.Rect(wx.Size(50,100))
         self.assertTrue(r.width == 50 and r.height == 100)
         self.assertTrue(r.x == 0 and r.y == 0)
+
+
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.Rect(1,2,3,4)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.x == obj.x
+        assert im.y == obj.y
+        assert im.width == obj.width
+        assert im.height == obj.height
+        obj2 = wx.Rect(im)
+        assert obj == obj2
 
 
     def test_converters(self):
