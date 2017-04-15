@@ -109,6 +109,9 @@ def run():
         pyArgsString="() -> (x,y)",
         briefDoc="Return the x and y properties as a tuple.")
 
+    tools.addGetIMMethodTemplate(module, c, ['x', 'y'])
+
+
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.Point"+str(self.Get())')
@@ -179,6 +182,8 @@ def run():
         """,
         pyArgsString="() -> (width, height)",
         briefDoc="Return the width and height properties as a tuple.")
+
+    tools.addGetIMMethodTemplate(module, c, ['width', 'height'])
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
@@ -258,6 +263,8 @@ def run():
         pyArgsString="() -> (x, y, width, height)",
         briefDoc="Return the rectangle's properties as a tuple.")
 
+    tools.addGetIMMethodTemplate(module, c, ['x', 'y', 'width', 'height'])
+
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.Rect"+str(self.Get())')
@@ -309,6 +316,8 @@ def run():
         """,
         pyArgsString="() -> (x, y)",
         briefDoc="Return the point's properties as a tuple.")
+
+    tools.addGetIMMethodTemplate(module, c, ['x', 'y'])
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')

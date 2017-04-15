@@ -106,6 +106,29 @@ class gbsizer_Tests(wtc.WidgetTestCase):
         self.assertTrue(items[2].IsSpacer())
         self.assertTrue(items[0].Border == 5)
 
+
+    def test_GetIM_position(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.GBPosition(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.row == obj.row
+        assert im.col == obj.col
+        obj2 = wx.GBPosition(im)
+        assert obj == obj2
+
+    def test_GetIM_span(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.GBSpan(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.rowspan == obj.rowspan
+        assert im.colspan == obj.colspan
+        obj2 = wx.GBSpan(im)
+        assert obj == obj2
+
+
+
 #---------------------------------------------------------------------------
 
 
