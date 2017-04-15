@@ -42,9 +42,17 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxTreeListItem')
     assert isinstance(c, etgtools.ClassDef)
+
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();
         """)
+
+    c.addCppMethod('long', '__hash__', '()', """\
+        return (long)self->GetID();
+        """)
+
+    c.addCppMethod('bool', '__eq__', '(wxTreeListItem* other)', "return (self->GetID() == other->GetID());")
+    c.addCppMethod('bool', '__ne__', '(wxTreeListItem* other)', "return (self->GetID() != other->GetID());")
 
 
     #-----------------------------------------------------------------
