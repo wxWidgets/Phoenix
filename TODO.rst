@@ -198,3 +198,5 @@ Other Dev Stuff
     require less conditionals in the code, since you mostly just write
     py3-compatible code and py2 compatibility is handled in python-future.
 
+  * Add a mapped type for ButtonLabel that converts from a string or stock ID.
+    See #276.

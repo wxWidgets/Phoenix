@@ -43,6 +43,8 @@ def run():
     # These argument types are actually ButtonLabel, but the class is a private
     # helper. We will always be passing in strings, and ButtonLabel will implicitly
     # convert.
+    #
+    # TODO: Add a mapped type for ButtonLabel that converts from a string or stock ID. See #276
     c.find('SetHelpLabel.help').type = 'const wxString&'
     c.find('SetOKCancelLabels.ok').type = 'const wxString&'
     c.find('SetOKCancelLabels.cancel').type = 'const wxString&'
