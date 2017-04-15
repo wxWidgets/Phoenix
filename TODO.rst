@@ -157,4 +157,6 @@ Other Assorted Stuff
     relationship instead of having to use has-a? Docs say that virtual methods
     can't be present with the Mixin annotation, so it may not work...
 
+  * Add a mapped type for ButtonLabel that converts from a string or stock ID.
+    See #276.
 

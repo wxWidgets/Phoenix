@@ -287,6 +287,17 @@ class richtextbuffer_Tests(wtc.WidgetTestCase):
 
 
 
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.richtext.RichTextRange(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.Start == obj.Start
+        assert im.End == obj.End
+        obj2 = wx.richtext.RichTextRange(im)
+        assert obj == obj2
+
+
 
 
 

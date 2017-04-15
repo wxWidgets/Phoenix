@@ -65,6 +65,8 @@ def run():
         Get() -> (x,y)\n
         Return the x and y properties as a tuple.""")
 
+    tools.addGetIMMethodTemplate(module, c, ['x', 'y'])
+
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.Point2D"+str(self.Get())')
@@ -109,6 +111,8 @@ def run():
         briefDoc="""\
         Get() -> (x, y, width, height)\n
         Return the rectangle's properties as a tuple.""")
+
+    tools.addGetIMMethodTemplate(module, c, ['x', 'y', 'width', 'height'])
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')

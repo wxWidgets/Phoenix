@@ -163,6 +163,8 @@ def run():
         briefDoc="""\
         Returns the RGB intensity values as a tuple, optionally the alpha value as well.""")
 
+    tools.addGetIMMethodTemplate(module, c, ['red', 'green', 'blue', 'alpha'])
+
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
