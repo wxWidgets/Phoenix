@@ -39,6 +39,15 @@ HOWTO Release wxPython Phoenix
 12. Upload to PyPI with::
 
         cd ~/release-builds
-        twine upload *
+        twine upload wxPython-4*
 
-13.
+    (Twine doesn't know what to do with the docs file so it needs to be excluded.)
+
+13. Tag the released revision in git, using a name like wxPython-4.0.0 (using
+    the actual version number of course.)
+
+14. Bump the version numbers in buildtools/version.py appropriately for the
+    next anticipated release, so future snapshot builds will be recognized as
+    pre-release development versions for the next official release, not the
+    one just completed.
+
