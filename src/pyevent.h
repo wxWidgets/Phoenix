@@ -23,7 +23,7 @@
 // of the event instance.
 
 // NOTE: This class is intentionally not exposed to SIP as there is no
-// need for it in Python code. Intead we just tell SIP that the __*attr__
+// need for it in Python code. Instead we just tell SIP that the __*attr__
 // methods are in the event classes. (See wxPyEvent and wxPyCommandEvent
 // below and in etg/pyevent.py.)
 

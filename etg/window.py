@@ -224,6 +224,12 @@ def run():
     c.find('SetSizer.sizer').transfer = True
     c.find('SetSizerAndFit.sizer').transfer = True
 
+    # Change some =0 default values to =NULL so the docs will make more sense
+    c.find('FindWindowById.parent').default='NULL'
+    c.find('FindWindowByLabel.parent').default='NULL'
+    c.find('FindWindowByName.parent').default='NULL'
+
+
     # Define some properties using the getter and setter methods
     c.addProperty('AcceleratorTable GetAcceleratorTable SetAcceleratorTable')
     c.addProperty('AutoLayout GetAutoLayout SetAutoLayout')

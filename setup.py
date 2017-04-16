@@ -24,28 +24,45 @@ except ImportError:
     haveWheel = False
 
 from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
+import buildtools.version as version
 
 
 #----------------------------------------------------------------------
 
-NAME             = "wxPython_Phoenix"
-DESCRIPTION      = "Cross platform GUI toolkit for Python, Phoenix verison"
+NAME             = version.PROJECT_NAME
+DESCRIPTION      = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
 AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"
 URL              = "http://wxPython.org/"
 #DOWNLOAD_URL     = "http://wxPython.org/download.php"
-DOWNLOAD_URL     = "http://wxpython.org/Phoenix/snapshot-builds/"
+#DOWNLOAD_URL     = "http://wxpython.org/Phoenix/snapshot-builds/"
+DOWNLOAD_URL     = "https://pypi.python.org/pypi/{}".format(NAME)
 LICENSE          = "wxWidgets Library License (LGPL derivative)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,awesome"
 
 LONG_DESCRIPTION = """\
-wxPython_Phoenix is a new implementation of wxPython focused on
-improving speed, maintainability and extensibility. Just like "Classic"
-wxPython it wraps the wxWidgets C++ toolkit and provides access to the user
-interface portions of the wx API, enabling Python applications to have a GUI
-on Windows, Macs or Unix systems with a native look and feel and requiring
-very little (if any) platform specific code.
+Welcome to wxPython's Project Phoenix! Phoenix is the improved next-generation
+wxPython, "better, stronger, faster than he was before." This new
+implementation is focused on improving speed, maintainability and
+extensibility. Just like "Classic" wxPython, Phoenix wraps the wxWidgets C++
+toolkit and provides access to the user interface portions of the wxWidgets
+API, enabling Python applications to have a native GUI on Windows, Macs or
+Unix systems, with a native look and feel and requiring very little (if any)
+platform specific code.
+
+For more information please refer to the
+`README file <https://github.com/wxWidgets/Phoenix/blob/master/README.rst>`_,
+the `Migration Guide <https://wxpython.org/Phoenix/docs/html/MigrationGuide.html>`_,
+or the `wxPython API documentation <https://wxpython.org/Phoenix/docs/html/main.html>`_.
+"""
+
+# or maybe LONG_DESCRIPTION=open("README.rst").read() ??
+
+if version.VER_FLAGS:
+    LONG_DESCRIPTION += """
+:note: To install pre-release versions don't forget to add the ``--pre`` flag 
+    to the ``pip install`` command.
 """
 
 CLASSIFIERS      = """\
@@ -56,14 +73,14 @@ Environment :: X11 Applications :: GTK
 Intended Audience :: Developers
 License :: OSI Approved
 Operating System :: MacOS :: MacOS X
-Operating System :: Microsoft :: Windows :: Windows XP
-Operating System :: Microsoft :: Windows :: Windows Vista
 Operating System :: Microsoft :: Windows :: Windows 7
+Operating System :: Microsoft :: Windows :: Windows 10
 Operating System :: POSIX
 Programming Language :: Python :: 2.7
-Programming Language :: Python :: 3.3
 Programming Language :: Python :: 3.4
 Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3.6
+Programming Language :: Python :: Implementation :: CPython
 Topic :: Software Development :: User Interfaces
 """
 
@@ -299,7 +316,7 @@ ENTRY_POINTS = {
         "img2xpm = wx.tools.img2xpm:main",
         "pywxrc = wx.tools.pywxrc:main",
 #        ],
-#    'gui_scripts' : [
+#    'gui_scripts' : [  # TODO: Why was this done?
         "helpviewer = wx.tools.helpviewer:main",
         "pycrust = wx.py.PyCrust:main",
         "pyshell = wx.py.PyShell:main",

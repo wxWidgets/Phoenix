@@ -62,7 +62,7 @@ class SimpleNameValueDialog(wx.Dialog):
         btnSizer.AddButton(wx.Button(self, wx.ID_CANCEL))
         btnSizer.Realize()
         self.Sizer.Add(btnSizer, 0, wx.EXPAND|wx.ALL, MARGIN)
-        self.FindWindowById(wx.ID_OK).SetDefault()
+        self.FindWindow(wx.ID_OK).SetDefault()
 
         self.Fit()
 

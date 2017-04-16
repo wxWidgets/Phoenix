@@ -85,7 +85,7 @@ def run():
              const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize,
              long style=0, const wxString& name="GLCanvas",
              const wxPalette& palette=wxNullPalette)""",
-        pyArgsString="(self, parent, id=ID_ANY, attribList=None, pos=DefaultPosition, size=DefaultSize, style=0, name='GLCanvas', palette=NullPalette)",
+        pyArgsString="(parent, id=wx.ID_ANY, attribList=None, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, name='GLCanvas', palette=wx.NullPalette)",
         body="""\
             const int* attribPtr = NULL;
             if (attribList)

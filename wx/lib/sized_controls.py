@@ -864,8 +864,8 @@ class SizedDialog(wx.Dialog):
         self.GetSizer().Add(sizer, 0, wx.EXPAND | wx.BOTTOM | wx.RIGHT, self.GetDialogBorder())
 
         # Temporary hack to fix button ordering problems.
-        cancel = self.FindWindowById(wx.ID_CANCEL, parent=self)
-        no = self.FindWindowById(wx.ID_NO, parent=self)
+        cancel = self.FindWindow(wx.ID_CANCEL)
+        no = self.FindWindow(wx.ID_NO)
         if no and cancel:
             cancel.MoveAfterInTabOrder(no)
 

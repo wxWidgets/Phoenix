@@ -48,18 +48,25 @@ PYSHORTVER = '27'
 PYTHON = None  # it will be set later
 PYTHON_ARCH = 'UNKNOWN'
 
-# wx version numbers
+# convenience access to the wxPython version digits
 version2 = "%d.%d" % (version.VER_MAJOR, version.VER_MINOR)
 version3 = "%d.%d.%d" % (version.VER_MAJOR, version.VER_MINOR, version.VER_RELEASE)
 version2_nodot = version2.replace(".", "")
 version3_nodot = version3.replace(".", "")
-unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or even?
+
+# same for the wxWidgets version
+wxversion2 = "%d.%d" % (version.wxVER_MAJOR, version.wxVER_MINOR)
+wxversion3 = "%d.%d.%d" % (version.wxVER_MAJOR, version.wxVER_MINOR, version.wxVER_RELEASE)
+wxversion2_nodot = wxversion2.replace(".", "")
+wxversion3_nodot = wxversion3.replace(".", "")
+
+unstable_series = (version.wxVER_MINOR % 2) == 1  # is the minor version odd or even?
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 devMode = False
 
-baseName = 'wxPython_Phoenix'
+baseName = version.PROJECT_NAME
 eggInfoName = baseName + '.egg-info'
 defaultMask='%s-%s*' % (baseName, version.VER_MAJOR)
 
@@ -126,6 +133,7 @@ Usage: ./build.py [command(s)] [options]
       install_py    Install wxPython only
 
       sdist         Build a tarball containing all source files
+      sdist_demo    Build a tarball containing just the demo and samples folders 
       bdist         Create a binary tarball release of wxPython Phoenix
       bdist_docs    Build a tarball containing the documentation
       bdist_egg     Build a Python egg.  Requires magic.
@@ -381,6 +389,8 @@ def makeOptionParser():
     OPTS = [
         ("python",         ("",    "The python executable to build for.")),
         ("debug",          (False, "Build wxPython with debug symbols")),
+        ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
+        ("release",        (False, "Turn off some development options for a release build.")),
         ("keep_hash_lines",(False, "Don't remove the '#line N' lines from the SIP generated code")),
         ("gtk3",           (False, "On Linux build for gtk3 (default gtk2)")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
@@ -422,8 +432,6 @@ def makeOptionParser():
         ("cairo",          (False, "Allow Cairo use with wxGraphicsContext (Windows only)")),
         ("x64",            (False, "Use and build for the 64bit version of Python on Windows")),
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
-        ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
-        ("release_build",  (False, "Turn off some development options for a release build.")),
         ("pytest_timeout", ("0",   "Timeout, in seconds, for stopping stuck test cases. (Currently not working as expected, so disabled by default.)")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
         ("vagrant_vms",    ("all", "Comma separated list of VM names to use for the build_vagrant command. Defaults to \"all\"")),
@@ -459,7 +467,7 @@ def parseArgs(args):
         options.no_magic = True
 
     # Some options don't make sense for release builds
-    if options.release_build:
+    if options.release:
         options.debug = False
         options.both = False
         options.relwithdebug = False
@@ -651,37 +659,39 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     msg("Uploading %s..." % fileName)
 
     # NOTE: It is expected that there will be a host entry defined in
-    # ~/.ssh/config named wxpython-rbot, with the proper host, user,
-    # identity file, etc. needed for making an SSH connection to the
-    # snapshots server.
-    host = 'wxpython-rbot'
-    if options.release_build:
+    # ~/.ssh/config named wxpython-rbot, with the proper host, user, identity
+    # file, etc. needed for making an SSH connection to the snapshots server.
+    # Release builds work similarly with their own host configuration defined
+    # in the ~/.ssh/config file.
+    if options.release:
+        host = 'wxpython-release'
         uploadDir = 'release-builds'
     else:
+        host = 'wxpython-rbot'
         uploadDir = 'snapshot-builds'
 
     # copy the new file to the server
     cmd = 'scp {} {}:{}'.format(fileName, host, uploadDir)
-    #msg(cmd)
     runcmd(cmd)
 
     # Make sure it is readable by all
     cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, uploadDir, os.path.basename(fileName))
     runcmd(cmd)
 
-    # get the list of all snapshot files on the server
-    cmd = 'ssh {} "cd {}; ls {}"'.format(host, uploadDir, mask)
-    allFiles = runcmd(cmd, getOutput=True)
-    allFiles = allFiles.strip().split('\n')
-    allFiles.sort()
+    if not options.release:
+        # get the list of all snapshot files on the server
+        cmd = 'ssh {} "cd {}; ls {}"'.format(host, uploadDir, mask)
+        allFiles = runcmd(cmd, getOutput=True)
+        allFiles = allFiles.strip().split('\n')
+        allFiles.sort()
 
-    # Leave the last keep number of builds, including this new one, on the server.
-    # Delete the rest.
-    rmFiles = allFiles[:-keep]
-    if rmFiles:
-        msg("Deleting %s" % ", ".join(rmFiles))
-        cmd = 'ssh {} "cd {}; rm {}"'.format(host, uploadDir, " ".join(rmFiles))
-        runcmd(cmd)
+        # Leave the last keep number of builds, including this new one, on the server.
+        # Delete the rest.
+        rmFiles = allFiles[:-keep]
+        if rmFiles:
+            msg("Deleting %s" % ", ".join(rmFiles))
+            cmd = 'ssh {} "cd {}; rm {}"'.format(host, uploadDir, " ".join(rmFiles))
+            runcmd(cmd)
 
     msg("Upload complete!")
 
@@ -692,14 +702,15 @@ def uploadTree(srcPath, destPath, options, keep=30):
     """
     msg("Uploading tree at {}...".format(srcPath))
 
-    host = 'wxpython-rbot'
-    if options.release_build:
+    if options.release:
+        host = 'wxpython-release'
         uploadDir = opj('release-builds', destPath)
     else:
+        host = 'wxpython-rbot'
         uploadDir = opj('snapshot-builds', destPath)
 
     # Ensure the destination exists
-    cmd = 'ssh {0} "if [ ! -d {1} ]; then mkdir {1}; fi"'.format(host, uploadDir)
+    cmd = 'ssh {0} "if [ ! -d {1} ]; then mkdir -p {1}; fi"'.format(host, uploadDir)
     runcmd(cmd)
 
     # Upload the tree
@@ -710,10 +721,11 @@ def uploadTree(srcPath, destPath, options, keep=30):
     cmd = 'ssh {} "chmod -R a+r {}"'.format(host, uploadDir)
     runcmd(cmd)
 
-    # Remove files that were last modified more than `keep` days ago
-    msg("Cleaning up old builds.")
-    cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
-    runcmd(cmd)
+    if not options.release:
+        # Remove files that were last modified more than `keep` days ago
+        msg("Cleaning up old builds.")
+        cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
+        runcmd(cmd)
 
     msg("Tree upload and cleanup complete!")
 
@@ -830,7 +842,7 @@ def cmd_docset_wx(options, args):
     # Remove any existing docset in the dist dir and move the new docset in
     srcname = posixjoin(wxDir(), 'docs/doxygen/out/docset',
                         'wxWidgets-%s.docset' % cfg.VERSION[:3])
-    destname = 'dist/wxWidgets-%s.docset' % version3
+    destname = 'dist/wxWidgets-%s.docset' % wxversion3
     if not os.path.isdir(srcname):
         msg('ERROR: %s not found' % srcname)
         sys.exit(1)
@@ -1164,7 +1176,7 @@ def cmd_build_wx(options, args):
         PREFIX = options.prefix
         if options.mac_framework and isDarwin:
             # TODO:  Don't hard-code this path
-            PREFIX = "/Library/Frameworks/wx.framework/Versions/%s" %  version2
+            PREFIX = "/Library/Frameworks/wx.framework/Versions/%s" %  wxversion2
         if PREFIX:
             build_options.append('--prefix=%s' % PREFIX)
 
@@ -1253,7 +1265,7 @@ def copyWxDlls(options):
         msw = getMSWSettings(options)
         cfg = Config()
 
-        ver = version3_nodot if unstable_series else version2_nodot
+        ver = wxversion3_nodot if unstable_series else wxversion2_nodot
         arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
         dlls = list()
         if not options.debug or options.both:
@@ -1524,8 +1536,8 @@ def cmd_clean_wx(options, args):
             options.debug = True
         msw = getMSWSettings(options)
         deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
-        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version2_nodot, msw.dll_type))))
-        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version3_nodot, msw.dll_type))))
+        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion2_nodot, msw.dll_type))))
+        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion3_nodot, msw.dll_type))))
         if PYTHON_ARCH == '64bit':
             deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll_x64' % (getVisCVersion(), msw.dll_type)))
         else:
@@ -1553,8 +1565,8 @@ def cmd_clean_py(options, args):
         files += glob.glob(opj(cfg.PKGDIR, wc))
     if isWindows:
         msw = getMSWSettings(options)
-        for wc in [ 'wx*' + version2_nodot + msw.dll_type + '*.dll',
-                    'wx*' + version3_nodot + msw.dll_type + '*.dll']:
+        for wc in [ 'wx*' + wxversion2_nodot + msw.dll_type + '*.dll',
+                    'wx*' + wxversion3_nodot + msw.dll_type + '*.dll']:
             files += glob.glob(opj(cfg.PKGDIR, wc))
     delFiles(files)
 
@@ -1662,12 +1674,11 @@ def cmd_sdist(options, args):
     if not os.path.exists('dist'):
         os.mkdir('dist')
 
-    if isGit:
-        # pull out an archive copy of the repo files
-        msg('Exporting Phoenix...')
-        runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
-        msg('Exporting wxWidgets...')
-        runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (WSRC, WDEST), echoCmd=False)
+    # pull out an archive copy of the repo files
+    msg('Exporting Phoenix...')
+    runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
+    msg('Exporting wxWidgets...')
+    runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (WSRC, WDEST), echoCmd=False)
 
     # copy Phoenix's generated code into the archive tree
     msg('Copying generated files...')
@@ -1680,7 +1691,7 @@ def cmd_sdist(options, args):
         for name in glob.glob(posixjoin('wx', wc)):
             copyFile(name, destdir)
 
-    # Also add the waf executable
+    # Also add the waf executable, fetching it first if we don't already have it
     getWafCmd()
     copyFile('bin/waf-%s' % wafCurrentVersion, os.path.join(PDEST, 'bin'))
 
@@ -1690,7 +1701,7 @@ def cmd_sdist(options, args):
 
     # Add some extra stuff to the root folder
     cmd_egg_info(options, args, egg_base=PDEST)
-    copyFile(opj(PDEST, 'wxPython_Phoenix.egg-info/PKG-INFO'),
+    copyFile(opj(PDEST, '{}.egg-info/PKG-INFO'.format(baseName)),
              opj(PDEST, 'PKG-INFO'))
 
     # build the tarball
@@ -1712,6 +1723,58 @@ def cmd_sdist(options, args):
         uploadPackage(tarfilename, options)
 
     msg("Source release built at %s" % tarfilename)
+
+
+
+def cmd_sdist_demo(options, args):
+    # Build a tarball containing the demo and samples
+    cmdTimer = CommandTimer('sdist_demo')
+    assert os.getcwd() == phoenixDir()
+
+    cfg = Config()
+
+    isGit = os.path.exists('.git')
+    if not isGit:
+        msg("Sorry, I don't know what to do in this source tree, no git workspace found.")
+        return
+
+    # make a tree for building up the archive files
+    PDEST = 'build/sdist_demo'
+    if not os.path.exists(PDEST):
+        os.makedirs(PDEST)
+
+    # and a place to put the final tarball
+    if not os.path.exists('dist'):
+        os.mkdir('dist')
+
+    # pull out an archive copy of the repo files
+    msg('Exporting Phoenix/demo...')
+    runcmd('git archive HEAD demo | tar -x -C %s' % PDEST, echoCmd=False)
+    msg('Exporting Phoenix/demo/samples...')
+    runcmd('git archive HEAD samples | tar -x -C %s' % PDEST, echoCmd=False)
+
+    # Add in the README file
+    copyFile('packaging/README-sdist_demo.txt', posixjoin(PDEST, 'README.txt'))
+
+    # build the tarball
+    msg('Archiving Phoenix demo and samples...')
+    rootname = "%s-demo-%s" % (baseName, cfg.VERSION)
+    tarfilename = "dist/%s.tar.gz" % rootname
+    if os.path.exists(tarfilename):
+        os.remove(tarfilename)
+    tarball = tarfile.open(name=tarfilename, mode="w:gz")
+    pwd = pushDir(PDEST)
+    for name in glob.glob('*'):
+        tarball.add(name, os.path.join(rootname, name))
+    tarball.close()
+    msg('Cleaning up...')
+    del pwd
+    shutil.rmtree(PDEST)
+
+    if options.upload:
+        uploadPackage(tarfilename, options)
+
+    msg("demo and samples tarball built at %s" % tarfilename)
 
 
 
@@ -1773,7 +1836,7 @@ def cmd_setrev(options, args):
     cmdTimer = CommandTimer('setrev')
     assert os.getcwd() == phoenixDir()
 
-    if options.release_build:
+    if options.release:
         # Ignore this command for release builds, they are not supposed to
         # include current VCS revision info in the version number.
         msg('This is a release build, setting REV.txt skipped')

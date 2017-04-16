@@ -10,58 +10,12 @@ I've decided that they will not be done or no longer apply.
 
 
 
-Checklist for all new etg files
--------------------------------
-    * Use a filename that matches the wxWidgets/interface/wx file name
-      that the classes and other stuff is being loaded from.  This
-      means that there will be lots of very small files in etg, but it
-      will help to find the interface header source to compare what is
-      being declared there with what is being generated, and to better
-      understand what may need tweaked in the etg script file.
+WAF Tool
+--------
 
-    * Read the corresponding interface file and ensure that all classes
-      declared in it are listed in the ITEMS list in the etg file,
-      unless the class should not be wrapped for some reason.  Other
-      items from the interface file will be included automatically.
+ * Update WAF
+ * Add support for using the cygwin and mingw32 compilers?
 
-    * Do not list classes from other interface files in the etg file.
-
-    * Check for any extras added to each class in Classic wxPython and
-      evaluate whether the same extras should be added to the Phoenix
-      version.  For example, there may be additional C methods added
-      on to the class with %extend or %pythoncode that need to be
-      carried over to Phoenix, such as __nonzero__, etc.  Also look
-      for methods where Classic indicates that ownership should be
-      transferred, or other special directives.
-
-    * Check for backwards compatibility issues with Classic wxPython
-      and document in the MigrationGuide. Compatibility issues
-      resulting from not renaming all the overloads can probably be
-      left undocumented, we'll probably be adding some of them back as
-      deprecated methods eventually, and the programmers should be
-      able to figure out the rest once they've started porting some
-      code.
-
-    * For window classes check if there are other virtual methods
-      besides those added in addWindowVirtuals() that should be
-      unignored.
-
-    * UNITTESTS!  Create a unit test script in the unittests folder
-      using the same base file name.  It should at least check that
-      every non-abstract class can be constructed, and should also
-      have tests for things that are added or tweaked in the etg
-      script.  Other things that needed no tweaks are ok to be left
-      untested for the time being, although porting over some of the
-      the old unittest code from Classic would also be a good idea, but
-      priority should be given to testing those things that had to be
-      tweaked or added.
-
-
-
-
-WAF Build
----------
-Add support for using the cygwin and mingw32 compilers.
 
 
 Stubs for Optional Classes
@@ -80,6 +34,7 @@ the generation of the empty stub code for those classes.  ("Almost" because
 we'll need to specify which classes to do it for, and what #define flag to
 check if the the feature is available in wxWidgets or if the stubs should be
 compiled.)
+
 
 
 Sphinx tweaks
@@ -113,8 +68,8 @@ to be untangled:
 
 
 
-Other Dev Stuff
----------------
+Other Assorted Stuff
+--------------------
 
   * Locate and/or add items for the various functions and things in Classic's
     _functions.i module.
@@ -143,13 +98,8 @@ Other Dev Stuff
   * Reimplement the classes in the valgen, valnum and valtext headers as
     Python code, and make them visible in the core wx namespace?
 
-  * Should the demo/version.py file be maintained in the source repository?
-    Or just let it always be generated like wx/__version__.py?
-
   * Should demo/Main.py ignore anything in the version strings after the '-'
     when comparing?
-
-
 
   * Potential reference count issue with wxGridCellCoordsArray?  Code
     like this::
@@ -170,14 +120,13 @@ Other Dev Stuff
 
   * wx.Window.DoEraseBackground?
 
-
   * Add tests and/or demo for DnD in DataViewCtrl. Since the DnD is done
     internally and the DataViewEvent is used for passing the data objects
     around we may need to do something to help convert the raw data to python
     DataObjects.
 
   * Add meaningful __hash__ methods for wx.Colour, wx.Point, etc.?
-    
+
   * Double-check wx.PyEvent and wx.PyCommandEvent, does the __getattr__,
     etc. work with properties?  See:
     https://groups.google.com/d/msg/wxpython-dev/dMrpaKs_d0U/nVMY7lMvAwAJ
@@ -198,5 +147,16 @@ Other Dev Stuff
     require less conditionals in the code, since you mostly just write
     py3-compatible code and py2 compatibility is handled in python-future.
 
+  * Add type hinting to the .pyi stub files, as well as @overload decorators
+    to document the C++ overloaded methods. See https://www.python.org/dev/peps/pep-0484/
+
+  * Add doc files for the image handler classes, so we can add wrappers for them.
+
+  * Investigate SIP's Mixin annotation for use with wx.ComboPopup class, will
+    it allow it to be combined with a widget class, giving an is-a
+    relationship instead of having to use has-a? Docs say that virtual methods
+    can't be present with the Mixin annotation, so it may not work...
+
   * Add a mapped type for ButtonLabel that converts from a string or stock ID.
     See #276.
+
