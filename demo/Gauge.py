@@ -15,7 +15,7 @@ class TestPanel(wx.Panel):
         self.g1 = wx.Gauge(self, -1, 50, (110, 50), (250, -1))
         self.g2 = wx.Gauge(self, -1, 75, (110, 95), (250, -1))
 
-        if 'wxMac' not in wx.PlaformInfo:
+        if 'wxMac' not in wx.PlatformInfo:
             self.g3 = wx.Gauge(self, -1, 100, (110, 135), (-1, 100), wx.GA_VERTICAL)
 
         self.Bind(wx.EVT_TIMER, self.TimerHandler)
@@ -33,7 +33,7 @@ class TestPanel(wx.Panel):
 
         self.g1.SetValue(self.count)
         self.g2.Pulse()
-        if 'wxMac' not in wx.PlaformInfo:
+        if 'wxMac' not in wx.PlatformInfo:
             self.g3.Pulse()
 
 
