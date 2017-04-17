@@ -25,7 +25,7 @@ if [ "$PORT" == "" ]; then
 fi
 
 
-TARBALL=$(ls ~/dist/wxPython_Phoenix-*.tar.gz)
+TARBALL=$(ls ~/dist/wxPython-*.tar.gz)
 if [ "$TARBALL" == "" ]; then
     echo "ERROR: Source tarball not found."
     exit 1
@@ -42,7 +42,7 @@ function do_build {
     TAG=$2
     FLAG=$3
 
-    rm -rf ~/wxPython_Phoenix-*
+    rm -rf ~/wxPython-*
 
     # setup
     echo "**** do_build $VENV $TAG $FLAG ****"
@@ -56,7 +56,7 @@ function do_build {
     tar xzf $TARBALL
 
     # move into the source tree
-    cd ~/wxPython_Phoenix-*
+    cd ~/wxPython-*
 
     # update packages
     pip install -U pip
@@ -75,7 +75,7 @@ function do_build {
 
     # clean up
     cd ~
-    rm -rf ~/wxPython_Phoenix-*
+    rm -rf ~/wxPython-*
     export PATH=$ORIG_PATH
 }
 
