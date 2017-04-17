@@ -5,6 +5,9 @@ HOWTO Release wxPython Phoenix
        documentation or anything silly like that...
 
 
+0. Update the Phoenix/packaging/ANNOUNCE.txt document with details about this
+   release. Check-in the file.
+
 1. Ensure the buildbot master and slaves are running, and that
    ~/release-builds on Havok is empty
 
@@ -21,33 +24,44 @@ HOWTO Release wxPython Phoenix
 
 7. Click the Force Build button
 
-8. Go do something else for a couple hours...
+8. This can be done while the other builds are still running. Fetch the source
+   tarball when it is finished and put it in Phoenix/dist. Run the following::
 
-9. ...it's still not done, come back later...
+        python setup.py build_vagrant --release --upload
+
+9. Go do something else for a couple hours...
+
+10. ...it's still not done, come back later...
 
 
 
-10. When the build is done and successful then the release version of the docs
+11. When the build is done and successful then the release version of the docs
     src and wheel files should be on Havok in ~/release-builds. Do whatever
     testing should be done.
 
-11. Digitally sign the files with this command::
+12. Digitally sign the files with this command::
 
         cd ~/release-builds
         for f in *.whl *.tar.gz; do gpg --detach-sign -a $f; done
 
-12. Upload to PyPI with::
+13. Upload to PyPI with::
 
         cd ~/release-builds
         twine upload wxPython-4*
 
     (Twine doesn't know what to do with the docs file so it needs to be excluded.)
 
-13. Tag the released revision in git, using a name like wxPython-4.0.0 (using
+14. Upload the docs and demos tarballs to ?????. Upload the linux wheels to ????
+
+15. Tag the released revision in git, using a name like wxPython-4.0.0 (using
     the actual version number of course.)
 
-14. Bump the version numbers in buildtools/version.py appropriately for the
+16. Bump the version numbers in buildtools/version.py appropriately for the
     next anticipated release, so future snapshot builds will be recognized as
     pre-release development versions for the next official release, not the
     one just completed.
+
+17. If making an announcement about this release, (I think it's okay not to for
+    minor releases or smallish bug fixes,) send the text to the email addresses
+    listed at the top of the packaging/ANNOUNCE.txt file.
 
