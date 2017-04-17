@@ -523,7 +523,7 @@ class PolySpline(PolyLine):
         dc.SetPen(pen)
         if coord is None:
             if len(self.scaled):  # bugfix for Mac OS X
-                dc.DrawSpline(self.scaled)
+                dc.DrawSpline(self.scaled.tolist())
         else:
             dc.DrawLines(coord)  # draw legend line
 
