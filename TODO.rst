@@ -160,3 +160,8 @@ Other Assorted Stuff
   * Add a mapped type for ButtonLabel that converts from a string or stock ID.
     See #276.
 
+  * Build zips containing the .pdb files for the Windows builds. Figure out
+    where would be a good place to host them and also tarballs of the wxPython
+    docs and demo.
+
+  * Move these TODOs to issues at github with a TODO label.
