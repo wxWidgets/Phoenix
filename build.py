@@ -1491,9 +1491,9 @@ def cmd_bdist_egg(options, args):
     _doSimpleSetupCmd(options, args, 'bdist_egg')
     cfg = Config()
     if options.upload:
-        filemask = "dist/%s-%s-*.egg" % (baseName, cfg.VERSION.replace('-', '_'))
+        filemask = "dist/%s-%s-*.egg" % (baseName, cfg.VERSION)
         filenames = glob.glob(filemask)
-        assert len(filenames) == 1
+        assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
 
 
@@ -1501,9 +1501,9 @@ def cmd_bdist_wheel(options, args):
     _doSimpleSetupCmd(options, args, 'bdist_wheel')
     cfg = Config()
     if options.upload:
-        filemask = "dist/%s-%s-*.whl" % (baseName, cfg.VERSION.replace('-', '_'))
+        filemask = "dist/%s-%s-*.whl" % (baseName, cfg.VERSION)
         filenames = glob.glob(filemask)
-        assert len(filenames) == 1
+        assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
 
 
@@ -1511,9 +1511,9 @@ def cmd_bdist_wininst(options, args):
     _doSimpleSetupCmd(options, args, 'bdist_wininst')
     cfg = Config()
     if options.upload:
-        filemask = "dist/%s-%s-*.exe" % (baseName, cfg.VERSION.replace('-', '_'))
+        filemask = "dist/%s-%s-*.exe" % (baseName, cfg.VERSION)
         filenames = glob.glob(filemask)
-        assert len(filenames) == 1
+        assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
 
 

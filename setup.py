@@ -59,11 +59,6 @@ or the `wxPython API documentation <https://wxpython.org/Phoenix/docs/html/main.
 
 # or maybe LONG_DESCRIPTION=open("README.rst").read() ??
 
-if version.VER_FLAGS:
-    LONG_DESCRIPTION += """
-:note: To install pre-release versions don't forget to add the ``--pre`` flag 
-    to the ``pip install`` command.
-"""
 
 CLASSIFIERS      = """\
 Development Status :: 3 - Alpha
