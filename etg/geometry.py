@@ -68,6 +68,8 @@ def run():
     tools.addGetIMMethodTemplate(module, c, ['x', 'y'])
 
     # Add sequence protocol methods and other goodies
+    c.addPyMethod('__eq__', '(self, other)',       'return isinstance(other, type(self)) and self.Get() == other.Get()')
+    c.addPyMethod('__hash__', '(self)',            'return hash(self.Get())')
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.Point2D"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
@@ -115,6 +117,8 @@ def run():
     tools.addGetIMMethodTemplate(module, c, ['x', 'y', 'width', 'height'])
 
     # Add sequence protocol methods and other goodies
+    c.addPyMethod('__eq__', '(self, other)',       'return isinstance(other, type(self)) and self.Get() == other.Get()')
+    c.addPyMethod('__hash__', '(self)',            'return hash(self.Get())')
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.Rect2D"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')

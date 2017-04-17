@@ -197,6 +197,22 @@ class richtextbuffer_Tests(wtc.WidgetTestCase):
         r[1] = 222
         self.assertEqual(r.Get(), (111,222))
 
+    def test_richtextrange_eq_hash(self):
+        tupl1 = (0, 10)
+        r1 = wx.richtext.RichTextRange(*tupl1)
+        r12 = wx.richtext.RichTextRange(*tupl1)
+        r2 = wx.richtext.RichTextRange(2, 10)
+        # __eq__ and __hash__ must both be defined
+        # eq must assert that elements are of the same class
+        self.assertFalse(r1 == tupl1)
+        self.assertTrue(hash(r1) == hash(tupl1))
+        # then within that class, hash must follow eq
+        self.assertTrue(r1 == r12)
+        self.assertFalse(id(r1) == id(r12))
+        self.assertTrue(hash(r1) == hash(r12))
+
+        self.assertFalse(r1 == r2)
+        self.assertFalse(hash(r1) == hash(r2))
 
     def test_richtextbuffer15(self):
         s1 = wx.richtext.RichTextSelection()

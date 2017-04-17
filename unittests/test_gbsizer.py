@@ -12,6 +12,23 @@ class gbsizer_Tests(wtc.WidgetTestCase):
         p3 = wx.GBPosition(p2)
         p4 = wx.GBPosition( (2,1) )
 
+    def test_gbposition_eq_hash(self):
+        tupl1 = (0, 10)
+        p1 = wx.GBPosition(*tupl1)
+        p12 = wx.GBPosition(*tupl1)
+        p2 = wx.GBPosition(2, 10)
+        # __eq__ and __hash__ must both be defined
+        # eq must assert that elements are of the same class
+        self.assertFalse(p1 == tupl1)
+        self.assertTrue(hash(p1) == hash(tupl1))
+        # then within that class, hash must follow eq
+        self.assertTrue(p1 == p12)
+        self.assertFalse(id(p1) == id(p12))
+        self.assertTrue(hash(p1) == hash(p12))
+
+        self.assertFalse(p1 == p2)
+        self.assertFalse(hash(p1) == hash(p2))
+
     def test_gbsizer_pos2(self):
         p1 = wx.GBPosition(3,4)
         p1.row
@@ -26,10 +43,9 @@ class gbsizer_Tests(wtc.WidgetTestCase):
 
     def test_gbsizer_pos3(self):
         p1 = wx.GBPosition(3,4)
-        self.assertTrue(p1 == (3,4))
         self.assertTrue(p1.Get() == (3,4))
         p1.Set(5,6)
-        self.assertTrue(p1 == (5,6))
+        self.assertTrue(p1.Get() == (5,6))
 
     def test_gbsizer_pos4(self):
         p1 = wx.GBPosition(3,4)
@@ -48,6 +64,23 @@ class gbsizer_Tests(wtc.WidgetTestCase):
         s3 = wx.GBSpan(s2)
         s4 = wx.GBSpan( (2,1) )
 
+    def test_gbspan_eq_hash(self):
+        tupl1 = (3, 4)
+        s1 = wx.GBSpan(*tupl1)
+        s12 = wx.GBSpan(*tupl1)
+        s2 = wx.GBSpan(3, 5)
+        # __eq__ and __hash__ must both be defined
+        # eq must assert that elements are of the same class
+        self.assertFalse(s1 == tupl1)
+        self.assertTrue(hash(s1) == hash(tupl1))
+        # then within that class, hash must follow eq
+        self.assertTrue(s1 == s12)
+        self.assertFalse(id(s1) == id(s12))
+        self.assertTrue(hash(s1) == hash(s12))
+
+        self.assertFalse(s1 == s2)
+        self.assertFalse(hash(s1) == hash(s2))
+
     def test_gbsizer_span2(self):
         s1 = wx.GBSpan(3,4)
         s1.rowspan
@@ -62,10 +95,9 @@ class gbsizer_Tests(wtc.WidgetTestCase):
 
     def test_gbsizer_span3(self):
         s1 = wx.GBSpan(3,4)
-        self.assertTrue(s1 == (3,4))
         self.assertTrue(s1.Get() == (3,4))
         s1.Set(5,6)
-        self.assertTrue(s1 == (5,6))
+        self.assertTrue(s1.Get() == (5,6))
 
     def test_gbsizer_span4(self):
         s1 = wx.GBSpan(3,4)

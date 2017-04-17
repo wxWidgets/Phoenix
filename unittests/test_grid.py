@@ -20,6 +20,22 @@ class grid_Tests(wtc.WidgetTestCase):
         c1 = wx.grid.GridCellCoords()
         c2 = wx.grid.GridCellCoords(5,10)
 
+    def test_gridcellcoords_eq_hash(self):
+        tupl1 = (0, 10)
+        r1 = wx.grid.GridCellCoords(*tupl1)
+        r12 = wx.grid.GridCellCoords(*tupl1)
+        r2 = wx.grid.GridCellCoords(2, 10)
+        # __eq__ and __hash__ must both be defined
+        # eq must assert that elements are of the same class
+        self.assertFalse(r1 == tupl1)
+        self.assertTrue(hash(r1) == hash(tupl1))
+        # then within that class, hash must follow eq
+        self.assertTrue(r1 == r12)
+        self.assertFalse(id(r1) == id(r12))
+        self.assertTrue(hash(r1) == hash(r12))
+
+        self.assertFalse(r1 == r2)
+        self.assertFalse(hash(r1) == hash(r2))
 
     def test_grid02(self):
         r = wx.grid.GridCellAutoWrapStringRenderer()

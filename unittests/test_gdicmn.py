@@ -8,14 +8,32 @@ class Point(unittest.TestCase):
 
     def test_default_ctor(self):
         p = wx.Point()
-        self.assertTrue(p == (0,0))
+        self.assertTrue(p.Get() == (0,0))
 
     def test_xy_ctor(self):
         p = wx.Point(123,456)
 
     def test_RealPoint_ctor(self):
         p = wx.Point(wx.RealPoint(1.2, 2.9))
-        self.assertTrue(p == (1,2))
+        self.assertTrue(p.Get() == (1,2))
+
+    def test_eq_hash(self):
+        for cls in (wx.Point, wx.RealPoint):
+            tupl1 = (0, 10)
+            p1 = cls(*tupl1)
+            p12 = cls(*tupl1)
+            p2 = cls(2, 10)
+            # __eq__ and __hash__ must both be defined
+            # eq must assert that elements are of the same class
+            self.assertFalse(p1 == tupl1)
+            self.assertTrue(hash(p1) == hash(tupl1))
+            # then within that class, hash must follow eq
+            self.assertTrue(p1 == p12)
+            self.assertFalse(id(p1) == id(p12))
+            self.assertTrue(hash(p1) == hash(p12))
+
+            self.assertFalse(p1 == p2)
+            self.assertFalse(hash(p1) == hash(p2))
 
     def test_copy_ctor(self):
         p1 = wx.Point(3,4)
@@ -33,7 +51,7 @@ class Point(unittest.TestCase):
 
     def test_DefaultPosition(self):
         wx.DefaultPosition
-        self.assertTrue(wx.DefaultPosition == (-1,-1))
+        self.assertTrue(wx.DefaultPosition.Get() == (-1,-1))
 
     def test_FullySpecified(self):
         p = wx.Point(1,2)
@@ -47,7 +65,7 @@ class Point(unittest.TestCase):
         p.x += 1
         p.y += 2
         self.assertTrue(p.x == 3 and p.y == 5)
-        self.assertTrue(p == (3,5))
+        self.assertTrue(p.Get() == (3,5))
 
     def test_Get(self):
         p = wx.Point(5,6)
@@ -89,7 +107,7 @@ class Point(unittest.TestCase):
         self.assertTrue(x == 5 and y == 6)
         p[0] += 1  # tests both getitem and setitem
         p[1] += 2
-        self.assertTrue(p == (6,8))
+        self.assertTrue(p.Get() == (6,8))
         with self.assertRaises(IndexError):
             p[2]
 
@@ -109,12 +127,12 @@ class Point(unittest.TestCase):
         self.assertTrue(isinstance(p5, wx.Point))
         self.assertTrue(isinstance(p6, wx.Point))
 
-        self.assertEqual(p1, (8,8))
-        self.assertEqual(p2, (8,8))
-        self.assertEqual(p3, (8,12))
-        self.assertEqual(p4, (2,3))
-        self.assertEqual(p5, (0,4))
-        self.assertEqual(p6, (-4,-6))
+        self.assertEqual(p1.Get(), (8,8))
+        self.assertEqual(p2.Get(), (8,8))
+        self.assertEqual(p3.Get(), (8,12))
+        self.assertEqual(p4.Get(), (2,3))
+        self.assertEqual(p5.Get(), (0,4))
+        self.assertEqual(p6.Get(), (-4,-6))
 
 
     def test_GetIM(self):
@@ -142,7 +160,7 @@ class Size(unittest.TestCase):
 
     def test_default_ctor(self):
         s = wx.Size()
-        self.assertTrue(s == (0,0))
+        self.assertTrue(s.Get() == (0,0))
 
     def test_wh_ctor(self):
         s = wx.Size(100,200)
@@ -157,49 +175,66 @@ class Size(unittest.TestCase):
         with self.assertRaises(TypeError):
             s = wx.Size("aa", "bb")
 
+    def test_eq_hash(self):
+        tupl1 = (0, 10)
+        s1 = wx.Size(*tupl1)
+        s12 = wx.Size(*tupl1)
+        s2 = wx.Size(2, 10)
+        # __eq__ and __hash__ must both be defined
+        # eq must assert that elements are of the same class
+        self.assertFalse(s1 == tupl1)
+        self.assertTrue(hash(s1) == hash(tupl1))
+        # then within that class, hash must follow eq
+        self.assertTrue(s1 == s12)
+        self.assertFalse(id(s1) == id(s12))
+        self.assertTrue(hash(s1) == hash(s12))
+
+        self.assertFalse(s1 == s2)
+        self.assertFalse(hash(s1) == hash(s2))
+
     def test_DecBy(self):
         s = wx.Size(100,100)
         s.DecBy(wx.Point(5,5))
-        self.assertTrue(s == (95,95))
+        self.assertTrue(s.Get() == (95,95))
         s.DecBy(wx.Size(5,5))
-        self.assertTrue(s == (90,90))
+        self.assertTrue(s.Get() == (90,90))
         s.DecBy(5,5)
-        self.assertTrue(s == (85,85))
+        self.assertTrue(s.Get() == (85,85))
         s.DecBy(5)
-        self.assertTrue(s == (80,80))
+        self.assertTrue(s.Get() == (80,80))
         s.DecBy( (5,5) )
-        self.assertTrue(s == (75,75))
+        self.assertTrue(s.Get() == (75,75))
 
 
     def test_IncBy(self):
         s = wx.Size(50,50)
         s.IncBy(wx.Point(5,5))
-        self.assertTrue(s == (55,55))
+        self.assertTrue(s.Get() == (55,55))
         s.IncBy(wx.Size(5,5))
-        self.assertTrue(s == (60,60))
+        self.assertTrue(s.Get() == (60,60))
         s.IncBy(5,5)
-        self.assertTrue(s == (65,65))
+        self.assertTrue(s.Get() == (65,65))
         s.IncBy(5)
-        self.assertTrue(s == (70,70))
+        self.assertTrue(s.Get() == (70,70))
         s.IncBy( (5,5) )
-        self.assertTrue(s == (75,75))
+        self.assertTrue(s.Get() == (75,75))
 
     def test_DecTo(self):
         s = wx.Size(5, 15)
         s.DecTo( (10,10) )
-        self.assertTrue(s == (5,10))
+        self.assertTrue(s.Get() == (5,10))
 
     def test_IncTo(self):
         s = wx.Size(5, 15)
         s.IncTo( (10,10) )
-        self.assertTrue(s == (10,15))
+        self.assertTrue(s.Get() == (10,15))
 
     def test_properties(self):
         s = wx.Size(23,34)
         self.assertTrue(s.width == 23 and s.height == 34)
         s.width += 1
         s.height += 1
-        self.assertTrue(s == (24,35))
+        self.assertTrue(s.Get() == (24,35))
 
     def test_operators(self):
         s1 = wx.Size(100,200)
@@ -218,7 +253,7 @@ class Size(unittest.TestCase):
 
     def test_DefaultSize(self):
         ds = wx.DefaultSize
-        self.assertTrue(ds == (-1,-1))
+        self.assertTrue(ds.Get() == (-1,-1))
 
     def test_GetSet(self):
         s = wx.Size(100,200)
@@ -231,7 +266,7 @@ class Size(unittest.TestCase):
     def test_SetDefaults(self):
         s = wx.Size(50, -1)
         s.SetDefaults( (25,25) )
-        self.assertTrue(s == (50,25))
+        self.assertTrue(s.Get() == (50,25))
 
     def test_FullySpecified(self):
         self.assertTrue(wx.Size(40,50).IsFullySpecified())
@@ -247,7 +282,7 @@ class Size(unittest.TestCase):
         self.assertTrue(5 == 5 and h == 6)
         s[0] += 1  # tests both getitem and setitem
         s[1] += 2
-        self.assertTrue(s == (6,8))
+        self.assertTrue(s.Get() == (6,8))
         with self.assertRaises(IndexError):
             s[2]
 
@@ -322,7 +357,7 @@ class Rect(unittest.TestCase):
         r1 = wx.Rect(x=1, y=2, width=3, height=4)
         r2 = wx.Rect(width=3, height=4, x=1, y=2)
         self.assertTrue(r1 == r2)
-        self.assertTrue(r2 == (1,2,3,4))
+        self.assertTrue(r2.Get() == (1,2,3,4))
 
     def test_possize_ctor(self):
         r = wx.Rect(wx.Point(10,10), wx.Size(100,100))
@@ -344,6 +379,23 @@ class Rect(unittest.TestCase):
         r = wx.Rect(wx.Size(50,100))
         self.assertTrue(r.width == 50 and r.height == 100)
         self.assertTrue(r.x == 0 and r.y == 0)
+
+    def test_eq_hash(self):
+        tupl1 = (1, 2, 3, 4)
+        r1 = wx.Rect(*tupl1)
+        r12 = wx.Rect(*tupl1)
+        r2 = wx.Rect(1, 2, 4, 3)
+        # __eq__ and __hash__ must both be defined
+        # eq must assert that elements are of the same class
+        self.assertFalse(r1 == tupl1)
+        self.assertTrue(hash(r1) == hash(tupl1))
+        # then within that class, hash must follow eq
+        self.assertTrue(r1 == r12)
+        self.assertFalse(id(r1) == id(r12))
+        self.assertTrue(hash(r1) == hash(r12))
+
+        self.assertFalse(r1 == r2)
+        self.assertFalse(hash(r1) == hash(r2))
 
 
     def test_GetIM(self):
