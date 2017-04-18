@@ -510,7 +510,7 @@ The wxversion module
 --------------------
 
 The ``wxversion`` module is gone, and will not be coming back.  The old way of
-handling muti-version installs and choosing between them was a giant hack in
+handling multi-version installs and choosing between them was a giant hack in
 my opinion, and I regretted doing it shortly after it was implemented.  However
 since there wasn't any other way that made sense at the time, and since some
 people were using it already, it got left in the distribution.  But one of the

@@ -670,7 +670,7 @@ Added ToolTipString property to wx.Window.
 
 Other minor fixes.
 
-Udpates from the AGW and Editra projects.
+Updates from the AGW and Editra projects.
 
 
 
