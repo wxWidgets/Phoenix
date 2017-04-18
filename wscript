@@ -84,7 +84,7 @@ def configure(conf):
     conf.check_python_version(minver=(2,7,0))
     if isWindows:
         # Search for the Python headers without doing some stuff that could
-        # iccorectly fail on Windows. See my_check_python_headers below.
+        # incorrectly fail on Windows. See my_check_python_headers below.
         conf.my_check_python_headers()
     else:
         conf.check_python_headers()
