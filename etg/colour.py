@@ -198,17 +198,7 @@ def run():
                 return 1;
             if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
                 return 1;
-            if (PyTuple_Check(sipPy) || PyList_Check(sipPy)) {
-                size_t len = PySequence_Size(sipPy);
-                if (len != 3 && len != 4)
-                    return 0;
-                // ensure all the items in the sequence are numbers
-                for (int idx=0; idx<len; idx+=1) {
-                    PyObject* o = PySequence_Fast_GET_ITEM(sipPy, idx);
-                    bool isNum = PyNumber_Check(o);
-                    if (!isNum)
-                        return 0;
-                }
+            if (wxPyNumberSequenceCheck(sipPy, 4) || wxPyNumberSequenceCheck(sipPy, 3)) {
                 return 1;
             }
             return 0;
@@ -255,20 +245,24 @@ def run():
                 return sipGetState(sipTransferObj);
             }
         }
-        // Is it a 3 or 4 element sequence?
-        else if (PyTuple_Check(sipPy) || PyList_Check(sipPy)) {
+        // Is it a sequence? (if so then length was checked above)
+        else if (wxPyNumberSequenceCheck(sipPy)) {
             size_t len = PySequence_Size(sipPy);
 
-            PyObject* o1 = PySequence_Fast_GET_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_Fast_GET_ITEM(sipPy, 1);
-            PyObject* o3 = PySequence_Fast_GET_ITEM(sipPy, 2);
+            PyObject* o1 = PySequence_ITEM(sipPy, 0);
+            PyObject* o2 = PySequence_ITEM(sipPy, 1);
+            PyObject* o3 = PySequence_ITEM(sipPy, 2);
             if (len == 3)
                 *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3));
             else {
-                PyObject* o4 = PySequence_Fast_GET_ITEM(sipPy, 3);
+                PyObject* o4 = PySequence_ITEM(sipPy, 3);
                 *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3),
                                           wxPyInt_AsLong(o4));
+                Py_DECREF(o4);            
             }
+            Py_DECREF(o1);
+            Py_DECREF(o2);
+            Py_DECREF(o3);
             return sipGetState(sipTransferObj);
         }
 

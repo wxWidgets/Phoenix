@@ -30,6 +30,23 @@ class Colour(wtc.WidgetTestCase):
         self.assertTrue(c1.Get() == c2.Get())
 
 
+    def test_seq_ctor1(self):
+        c = wx.Colour( [1,2,3,4] )
+        self.assertTrue(c.Get() == (1,2,3,4))
+
+
+    def test_seq_ctor2(self):
+        c = wx.Colour( [1,2,3] )
+        self.assertTrue(c.Get(False) == (1,2,3))
+
+
+    def test_numpy_ctor(self):
+        import numpy
+        a = numpy.array( [1,2,3,4] )
+        c = wx.Colour(a)
+        self.assertTrue(c.Get() == (1,2,3,4))
+
+
     def test_GetPixel(self):
         c1 = wx.Colour(1,2,3,4)
         p = c1.GetPixel()

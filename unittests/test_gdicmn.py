@@ -31,6 +31,15 @@ class Point(unittest.TestCase):
         with self.assertRaises(TypeError):
             p = wx.Point(1,2,3)
 
+    def test_seq_ctor(self):
+        p = wx.Point( [123,456] )
+
+    def test_numpy_ctor(self):
+        import numpy
+        a = numpy.array([123,456])
+        p = wx.Point(a)
+
+
     def test_DefaultPosition(self):
         wx.DefaultPosition
         self.assertTrue(wx.DefaultPosition == (-1,-1))
@@ -331,11 +340,13 @@ class Rect(unittest.TestCase):
         self.assertTrue(r == wx.Rect(pos=(10,10), size=(100,100)))
 
     def test_tlbr_ctor(self):
-        # TODO: we have to use keyword args here since wx.Point has sequence
-        # protocol methods then it can also match the typemap for wxSize and
-        # the other ctor is found first. Check if there is a way to fix or
-        # work around this.
         r = wx.Rect(topLeft=wx.Point(10,10), bottomRight=wx.Point(100,100))
+        self.assertTrue(r.width == 91 and r.height == 91)
+        self.assertTrue(r.bottomRight == wx.Point(100,100))
+        self.assertTrue(r.topLeft == wx.Point(10,10))
+
+    def test_tlbr_ctor2(self):
+        r = wx.Rect(wx.Point(10,10), wx.Point(100,100))
         self.assertTrue(r.width == 91 and r.height == 91)
         self.assertTrue(r.bottomRight == wx.Point(100,100))
         self.assertTrue(r.topLeft == wx.Point(10,10))
@@ -344,6 +355,15 @@ class Rect(unittest.TestCase):
         r = wx.Rect(wx.Size(50,100))
         self.assertTrue(r.width == 50 and r.height == 100)
         self.assertTrue(r.x == 0 and r.y == 0)
+
+    def test_seq_ctor(self):
+        r1 = wx.Rect( [1,2,3,4] )
+        self.assertTrue(r1 == (1,2,3,4))
+
+    def test_numpy_ctor(self):
+        import numpy
+        r1 = wx.Rect( numpy.array([1,2,3,4]) )
+        self.assertTrue(r1 == (1,2,3,4))
 
 
     def test_GetIM(self):

@@ -653,13 +653,8 @@ def convertTwoIntegersTemplate(CLASS):
        if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
            return 1;
 
-       if ((PyTuple_Check(sipPy) || PyList_Check(sipPy)) && PySequence_Size(sipPy) == 2) {{
-           int rval = 1;
-           PyObject* o1 = PySequence_Fast_GET_ITEM(sipPy, 0);
-           PyObject* o2 = PySequence_Fast_GET_ITEM(sipPy, 1);
-           if (!PyNumber_Check(o1) || !PyNumber_Check(o2))
-               rval = 0;
-           return rval;
+       if (wxPyNumberSequenceCheck(sipPy, 2)) {{
+           return 1;
        }}
        return 0;
    }}
@@ -673,9 +668,11 @@ def convertTwoIntegersTemplate(CLASS):
     }}
 
     // or create a new instance
-    PyObject* o1 = PySequence_Fast_GET_ITEM(sipPy, 0);
-    PyObject* o2 = PySequence_Fast_GET_ITEM(sipPy, 1);
+    PyObject* o1 = PySequence_ITEM(sipPy, 0);
+    PyObject* o2 = PySequence_ITEM(sipPy, 1);
     *sipCppPtr = new {CLASS}(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2));
+    Py_DECREF(o1);
+    Py_DECREF(o2);
     return SIP_TEMPORARY;
     """.format(**locals())
 
@@ -689,15 +686,8 @@ def convertFourIntegersTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if ((PyTuple_Check(sipPy) || PyList_Check(sipPy)) && PySequence_Size(sipPy) == 4) {{
-            int rval = 1;
-            PyObject* o1 = PySequence_Fast_GET_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_Fast_GET_ITEM(sipPy, 1);
-            PyObject* o3 = PySequence_Fast_GET_ITEM(sipPy, 2);
-            PyObject* o4 = PySequence_Fast_GET_ITEM(sipPy, 3);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4))
-                rval = 0;
-            return rval;
+        if (wxPyNumberSequenceCheck(sipPy, 4)) {{
+            return 1;
         }}
         return 0;
     }}
@@ -710,12 +700,16 @@ def convertFourIntegersTemplate(CLASS):
         return 0; // not a new instance
     }}
     // or create a new instance
-    PyObject* o1 = PySequence_Fast_GET_ITEM(sipPy, 0);
-    PyObject* o2 = PySequence_Fast_GET_ITEM(sipPy, 1);
-    PyObject* o3 = PySequence_Fast_GET_ITEM(sipPy, 2);
-    PyObject* o4 = PySequence_Fast_GET_ITEM(sipPy, 3);
+    PyObject* o1 = PySequence_ITEM(sipPy, 0);
+    PyObject* o2 = PySequence_ITEM(sipPy, 1);
+    PyObject* o3 = PySequence_ITEM(sipPy, 2);
+    PyObject* o4 = PySequence_ITEM(sipPy, 3);
     *sipCppPtr = new {CLASS}(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2),
                              wxPyInt_AsLong(o3), wxPyInt_AsLong(o4));
+    Py_DECREF(o1);
+    Py_DECREF(o2);
+    Py_DECREF(o3);
+    Py_DECREF(o4);
     return SIP_TEMPORARY;
     """.format(**locals())
 
@@ -730,14 +724,9 @@ def convertTwoDoublesTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if ((PyTuple_Check(sipPy) || PyList_Check(sipPy)) && PySequence_Size(sipPy) == 2) {{
-            int rval = 1;
-            PyObject* o1 = PySequence_Fast_GET_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_Fast_GET_ITEM(sipPy, 1);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2))
-                rval = 0;
-            return rval;
-        }}
+       if (wxPyNumberSequenceCheck(sipPy, 2)) {{
+           return 1;
+       }}
         return 0;
     }}
 
@@ -750,9 +739,11 @@ def convertTwoDoublesTemplate(CLASS):
     }}
 
     // or create a new instance
-    PyObject* o1 = PySequence_Fast_GET_ITEM(sipPy, 0);
-    PyObject* o2 = PySequence_Fast_GET_ITEM(sipPy, 1);
+    PyObject* o1 = PySequence_ITEM(sipPy, 0);
+    PyObject* o2 = PySequence_ITEM(sipPy, 1);
     *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2));
+    Py_DECREF(o1);
+    Py_DECREF(o2);
     return SIP_TEMPORARY;
     """.format(**locals())
 
@@ -766,15 +757,8 @@ def convertFourDoublesTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if ((PyTuple_Check(sipPy) || PyList_Check(sipPy)) && PySequence_Size(sipPy) == 4) {{
-            int rval = 1;
-            PyObject* o1 = PySequence_Fast_GET_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_Fast_GET_ITEM(sipPy, 1);
-            PyObject* o3 = PySequence_Fast_GET_ITEM(sipPy, 2);
-            PyObject* o4 = PySequence_Fast_GET_ITEM(sipPy, 3);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4))
-                rval = 0;
-            return rval;
+        if (wxPyNumberSequenceCheck(sipPy, 4)) {{
+            return 1;
         }}
         return 0;
     }}
@@ -788,12 +772,16 @@ def convertFourDoublesTemplate(CLASS):
     }}
 
     // or create a new instance
-    PyObject* o1 = PySequence_Fast_GET_ITEM(sipPy, 0);
-    PyObject* o2 = PySequence_Fast_GET_ITEM(sipPy, 1);
-    PyObject* o3 = PySequence_Fast_GET_ITEM(sipPy, 2);
-    PyObject* o4 = PySequence_Fast_GET_ITEM(sipPy, 3);
+    PyObject* o1 = PySequence_ITEM(sipPy, 0);
+    PyObject* o2 = PySequence_ITEM(sipPy, 1);
+    PyObject* o3 = PySequence_ITEM(sipPy, 2);
+    PyObject* o4 = PySequence_ITEM(sipPy, 3);
     *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2),
                              PyFloat_AsDouble(o3), PyFloat_AsDouble(o4));
+    Py_DECREF(o1);
+    Py_DECREF(o2);
+    Py_DECREF(o3);
+    Py_DECREF(o4);
     return SIP_TEMPORARY;
     """.format(**locals())
 
