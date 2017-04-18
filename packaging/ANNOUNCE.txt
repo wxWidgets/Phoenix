@@ -8,8 +8,8 @@
    ]]
 
 
-Announcing
-----------
+Announcing wxPython 4.0.0a1
+---------------------------
 
 https://pypi.python.org/pypi/wxPython/4.0.0a1
 
