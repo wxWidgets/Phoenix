@@ -57,9 +57,9 @@ class TriangleShape1(FC.Polygon, ShapeMixin):
                                   FillColor    = "Red",
                                   FillStyle    = "Solid")
         ShapeMixin.__init__(self)
-        
+
     def CompPoints(self, XY, L):
-        c = L/ N.sqrt(3) 
+        c = L/ N.sqrt(3)
 
         Points = N.array(((0, c),
                           ( L/2.0, -c/2.0),
@@ -80,18 +80,18 @@ class DrawFrame(wx.Frame):
     def __init__(self,parent, id,title,position,size):
         wx.Frame.__init__(self,parent, id,title,position, size)
 
-        self.CreateStatusBar()            
+        self.CreateStatusBar()
         # Add the Canvas
         Canvas = NavCanvas.NavCanvas(self,-1,(500,500),
                                           ProjectionFun = None,
                                           Debug = 0,
                                           BackgroundColor = "DARK SLATE BLUE",
                                           ).Canvas
-        
+
         self.Canvas = Canvas
 
-        Canvas.Bind(FC.EVT_MOTION, self.OnMove ) 
-        Canvas.Bind(FC.EVT_LEFT_UP, self.OnLeftUp ) 
+        Canvas.Bind(FC.EVT_MOTION, self.OnMove )
+        Canvas.Bind(FC.EVT_LEFT_UP, self.OnLeftUp )
 
         Canvas.AddRectangle((-5,-5),
                             (10,10),
@@ -105,7 +105,7 @@ class DrawFrame(wx.Frame):
                           (1,0),
                           (0.5, 1)),
                          N.float_)
-        
+
         data  = (( (0,0),  1),
                  ( (3,3),  2),
                  ( (-2,3), 2.5 ),
@@ -174,10 +174,10 @@ if __name__ == "__main__":
     x = DrawFrame(None, -1, "FloatCanvas TextBox Test App", wx.DefaultPosition, (700,700) )
     x.Show()
     app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

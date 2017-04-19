@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         GUIMode.py
 # Purpose:
@@ -32,18 +31,18 @@ from .Utilities import BBox
 class Cursors(object):
     """
     Class to hold the standard Cursors
-    
+
     """
     def __init__(self):
         if "wxMac" in wx.PlatformInfo: # use 16X16 cursors for wxMac
             self.HandCursor = wx.Cursor(Resources.getHand16Image())
             self.GrabHandCursor = wx.Cursor(Resources.getGrabHand16Image())
-        
+
             img = Resources.getMagPlus16Image()
             img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
             img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 6)
             self.MagPlusCursor = wx.Cursor(img)
-        
+
             img = Resources.getMagMinus16Image()
             img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
             img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 6)
@@ -51,12 +50,12 @@ class Cursors(object):
         else: # use 24X24 cursors for GTK and Windows
             self.HandCursor = wx.Cursor(Resources.getHandImage())
             self.GrabHandCursor = wx.Cursor(Resources.getGrabHandImage())
-        
+
             img = Resources.getMagPlusImage()
             img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 9)
             img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 9)
             self.MagPlusCursor = wx.Cursor(img)
-        
+
             img = Resources.getMagMinusImage()
             img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 9)
             img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 9)
@@ -75,7 +74,7 @@ class GUIBase(object):
         Default class constructor.
 
         :param `Canvas`: the canvas the GUI mode is attached too
-        
+
         """
         self.Canvas = Canvas # set the FloatCanvas for the mode
                              # it gets set when the Mode is set on the Canvas.
@@ -216,7 +215,7 @@ class GUIMove(ZoomWithMouseWheel, GUIBase):
         self.StartMove = None
         self.MidMove = None
         self.PrevMoveXY = None
-        
+
         ## timer to give a delay when moving so that buffers aren't re-built too many times.
         self.MoveTimer = wx.PyTimer(self.OnMoveTimer)
 
@@ -360,7 +359,7 @@ class GUIZoomIn(ZoomWithMouseWheel, GUIBase):
                 dc.DrawRectangle(*self.PrevRBBox)
             self.PrevRBBox = ( xy_c - wh/2, wh )
             dc.DrawRectangle( *self.PrevRBBox )
-            
+
     def UpdateScreen(self):
         """
         Update gets called if the screen has been repainted in the middle of a zoom in
@@ -385,7 +384,7 @@ class GUIZoomOut(ZoomWithMouseWheel, GUIBase):
     def __init__(self, Canvas=None):
         GUIBase.__init__(self, Canvas)
         self.Cursor = self.Cursors.MagMinusCursor
-        
+
     def OnLeftDown(self, event):
         self.Canvas.Zoom(1/1.5, event.GetPosition(), centerCoords="pixel")
 

@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -7,7 +7,7 @@ import os
 #---------------------------------------------------------------------------
 
 class utils_Tests(wtc.WidgetTestCase):
-    
+
     def test_utilsWindowDisabler(self):
         wd = wx.WindowDisabler()
         self.assertTrue(not self.frame.IsEnabled())
@@ -15,22 +15,25 @@ class utils_Tests(wtc.WidgetTestCase):
 
         wd = wx.WindowDisabler(self.frame)
         self.assertTrue(    self.frame.IsEnabled())
-        
+
     def test_utilsBusyCursor(self):
         self.assertTrue(not wx.IsBusy())
         bc = wx.BusyCursor()
         self.assertTrue(   wx.IsBusy())
         del bc
         self.assertTrue(not wx.IsBusy())
-        
+
     def test_utilsBusyCursor2(self):
         self.assertTrue(not wx.IsBusy())
         wx.BeginBusyCursor()
         self.assertTrue(   wx.IsBusy())
         wx.EndBusyCursor()
         self.assertTrue(not wx.IsBusy())
-        
-        
+
+    def test_utilsBusyCursor3(self):
+        with wx.BusyCursor():
+            self.myYield()
+
     def test_utilsSomeOtherStuff(self):
         wx.GetBatteryState()
         wx.GetPowerType()
@@ -45,8 +48,8 @@ class utils_Tests(wtc.WidgetTestCase):
         wx.GetUserId()
         wx.GetOsDescription()
 
-        
-    def test_utilsVersionInfo(self):        
+
+    def test_utilsVersionInfo(self):
         vi = wx.GetLibraryVersionInfo()
         assert isinstance(vi, wx.VersionInfo)
         vi.ToString()
@@ -57,9 +60,9 @@ class utils_Tests(wtc.WidgetTestCase):
         vi.Description
         vi.Name
         vi.VersionString
-        
-        
-        
+
+
+
 #---------------------------------------------------------------------------
 
 

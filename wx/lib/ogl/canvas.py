@@ -23,28 +23,28 @@ NoDragging, StartDraggingLeft, ContinueDraggingLeft, StartDraggingRight, Continu
 
 def WhollyContains(contains, contained):
     """Helper function.
-    
+
     :param `contains`: the containing shape
     :param `contained`: the contained shape
     :returns: `True` if 'contains' wholly contains 'contained'
-    
+
     """
     xp1, yp1 = contains.GetX(), contains.GetY()
     xp2, yp2 = contained.GetX(), contained.GetY()
-    
+
     w1, h1 = contains.GetBoundingBoxMax()
     w2, h2 = contained.GetBoundingBoxMax()
-    
+
     left1 = xp1 - w1 / 2.0
     top1 = yp1 - h1 / 2.0
     right1 = xp1 + w1 / 2.0
     bottom1 = yp1 + h1 / 2.0
-    
+
     left2 = xp2 - w2 / 2.0
     top2 = yp2 - h2 / 2.0
     right2 = xp2 + w2 / 2.0
     bottom2 = yp2 + h2 / 2.0
-    
+
     return ((left1 <= left2) and (top1 <= top2) and (right1 >= right2) and (bottom1 >= bottom2))
 
 
@@ -52,7 +52,7 @@ class ShapeCanvas(wx.ScrolledWindow):
     """The :class:`ShapeCanvas` class."""
     def __init__(self, parent = None, id = -1, pos = wx.DefaultPosition, size = wx.DefaultSize, style = wx.BORDER, name = "ShapeCanvas"):
         """Default class constructor.
-        
+
         Default class constructor.
 
         :param `parent`: parent window
@@ -61,16 +61,16 @@ class ShapeCanvas(wx.ScrolledWindow):
          chosen by either the windowing system or wxPython, depending on platform
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform
-        :param integer `style`: the underlying :class:`Window` style
+        :param integer `style`: the underlying :class:`wx.Window` style
         :param str `name`: the window name
-        
-        :type parent: :class:`Window`
-        :type pos: tuple or :class:`Point`
-        :type size: tuple or :class:`Size`
-        
+
+        :type parent: :class:`wx.Window`
+        :type pos: tuple or :class:`wx.Point`
+        :type size: tuple or :class:`wx.Size`
+
         """
         wx.ScrolledWindow.__init__(self, parent, id, pos, size, style, name)
-        
+
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
 
         self._shapeDiagram = None
@@ -81,7 +81,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         self._firstDragX = 0
         self._firstDragY = 0
         self._checkTolerance = True
-        
+
         self._Overlay = wx.Overlay()
         self._Buffer = wx.Bitmap(10, 10)
 
@@ -101,7 +101,7 @@ class ShapeCanvas(wx.ScrolledWindow):
 
         if self.GetDiagram():
             self.GetDiagram().Redraw(dc)
-    
+
     def OnSize(self, evt):
         """
         The size handler, it initializes the buffer to the size of the window.
@@ -112,22 +112,22 @@ class ShapeCanvas(wx.ScrolledWindow):
         Size = (max(Size[0], 1), max(Size[1], 1))
         self._Buffer = wx.Bitmap(Size[0], Size[1])
         self.Draw()
-        
+
     def SetDiagram(self, diag):
         """Set the diagram associated with this canvas.
-        
+
         :param `diag`: an instance of :class:`~lib.ogl.Diagram`
-        
+
         """
         self._shapeDiagram = diag
 
     def GetDiagram(self):
         """Get the diagram associated with this canvas."""
         return self._shapeDiagram
-    
+
     def OnPaint(self, evt):
         """
-        The paint handler, uses :class:`BufferedPaintDC` to draw the 
+        The paint handler, uses :class:`BufferedPaintDC` to draw the
         buffer to the screen.
         """
         dc = wx.BufferedPaintDC(self)
@@ -159,7 +159,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         if dragging:
             if self._checkTolerance:
                 # the difference between two logical coordinates is a logical coordinate
-                dx = abs(x - self._firstDragX) 
+                dx = abs(x - self._firstDragX)
                 dy = abs(y - self._firstDragY)
                 toler = self.GetDiagram().GetMouseTolerance()
                 if (dx <= toler) and (dy <= toler):
@@ -231,7 +231,7 @@ class ShapeCanvas(wx.ScrolledWindow):
             # Continue dragging
             self.OnDragLeft(False, self._oldDragX, self._oldDragY, keys)
             self.OnDragLeft(True, x, y, keys)
-            self._oldDragX, self._oldDragY = x, y                
+            self._oldDragX, self._oldDragY = x, y
 
         elif evt.LeftUp() and not self._draggedShape and self._dragState == ContinueDraggingLeft:
             self._dragState = NoDragging
@@ -324,18 +324,18 @@ class ShapeCanvas(wx.ScrolledWindow):
                     self.OnRightClick(x, y, keys)
                     self._draggedShape = None
                     self._dragState = NoDragging
-              
+
         self.Draw()
 
     def FindShape(self, x, y, info = None, notObject = None):
         """
         Find shape at given position.
-        
+
         :param `x`: the x position
         :param `y`: the y position
         :param `info`: ???
         :param `notObject`: ???
-        
+
         """
         nearest = 100000.0
         nearest_attachment = 0
@@ -375,11 +375,11 @@ class ShapeCanvas(wx.ScrolledWindow):
             # On second pass, only ever consider non-composites or
             # divisions. If children want to pass up control to
             # the composite, that's up to them.
-            if (object.IsShown() and 
-                   (isinstance(object, DivisionShape) or 
-                    not isinstance(object, CompositeShape)) and 
-                    object.HitTest(x, y) and 
-                    (info == None or isinstance(object, info)) and 
+            if (object.IsShown() and
+                   (isinstance(object, DivisionShape) or
+                    not isinstance(object, CompositeShape)) and
+                    object.HitTest(x, y) and
+                    (info == None or isinstance(object, info)) and
                     (not notObject or not notObject.HasDescendant(object))):
                 temp_attachment, dist = object.HitTest(x, y)
                 if not isinstance(object, LineShape):
@@ -398,46 +398,46 @@ class ShapeCanvas(wx.ScrolledWindow):
     def AddShape(self, object, addAfter = None):
         """
         Add a shape to canvas.
-        
+
         :param `object`: the :class:`~lib.ogl.Shape` instance to add
         :param `addAfter`: None or the :class:`~lib.ogl.Shape` after which
          above shape is to be added.
-        
+
         """
         self.GetDiagram().AddShape(object, addAfter)
 
     def InsertShape(self, object):
         """
         Insert a shape to canvas.
-        
+
         :param `object`: the :class:`~lib.ogl.Shape` instance to insert
-        
+
         """
         self.GetDiagram().InsertShape(object)
 
     def RemoveShape(self, object):
         """
         Remove a shape from canvas.
-        
+
         :param `object`: the :class:`~lib.ogl.Shape` instance to be removed
-        
+
         """
         self.GetDiagram().RemoveShape(object)
 
     def GetQuickEditMode(self):
         """Get quick edit mode."""
         return self.GetDiagram().GetQuickEditMode()
-    
+
     def Redraw(self, dc):
         """Redraw the diagram."""
         self.GetDiagram().Redraw(dc)
 
     def Snap(self, x, y):
         """Snap ???
-        
+
         :param `x`: the x position
         :param `y`: the y position
-        
+
         """
         return self.GetDiagram().Snap(x, y)
 

@@ -105,7 +105,7 @@ value entry ctrl:""")
 
         grid1.Add( self.limit_target, 0, wx.ALIGN_LEFT|wx.ALL, 5 )
         grid1.Add( self.limit_on_field_change, 0, wx.ALIGN_LEFT|wx.ALL, 5 )
-        
+
         hbox1 = wx.BoxSizer( wx.HORIZONTAL )
         hbox1.Add( (17,5), 0, wx.ALIGN_LEFT|wx.ALL, 5)
         hbox1.Add( self.allow_none, 0, wx.ALIGN_LEFT|wx.ALL, 5 )
@@ -113,13 +113,13 @@ value entry ctrl:""")
         grid1.Add( (5,5), 0, wx.ALIGN_LEFT|wx.ALL, 5)
 
         grid1.Add( self.group_digits, 0, wx.ALIGN_LEFT|wx.LEFT, 5 )
-        grid1.Add( self.allow_negative, 0, wx.ALIGN_LEFT|wx.ALL, 5 )        
+        grid1.Add( self.allow_negative, 0, wx.ALIGN_LEFT|wx.ALL, 5 )
         hbox2 = wx.BoxSizer( wx.HORIZONTAL )
         hbox2.Add( (17,5), 0, wx.ALIGN_LEFT|wx.ALL, 5)
         hbox2.Add( self.use_parens, 0, wx.ALIGN_LEFT|wx.ALL, 5 )
         grid1.Add( hbox2, 0, wx.ALIGN_LEFT|wx.ALL, 5)
         grid1.Add( (5,5), 0, wx.ALIGN_LEFT|wx.ALL, 5)
-        
+
         grid1.Add( self.select_on_entry, 0, wx.ALIGN_LEFT|wx.LEFT, 5 )
         grid1.Add( (5,5), 0, wx.ALIGN_LEFT|wx.ALL, 5)
         grid1.Add( (5,5), 0, wx.ALIGN_LEFT|wx.ALL, 5)

@@ -1,4 +1,4 @@
-{% extends "!layout.html" %}
+{% extends "basic/layout.html" %}
 
 {%- set render_sidebar = (not embedded) and (not theme_nosidebar|tobool)
     and (sidebars != []) and (pagename != 'index') %}
@@ -32,28 +32,13 @@
         <li><img src="_static/images/sphinxdocs/phoenix_small.png" alt=""/></li>
         <li><a href="index.html" style="color: rgb(238, 152, 22); hover: rgb(53, 95, 124);">Home</a> |&nbsp;</li>
         <li><a href="gallery.html" style="color: rgb(238, 152, 22); hover: rgb(53, 95, 124);;">Gallery</a> |&nbsp;</li>
-        <li><a href="main.html" style="color: rgb(238, 152, 22); hover: rgb(53, 95, 124);">Docs</a> &raquo; </li>
+        <li><a href="main.html" style="color: rgb(238, 152, 22); hover: rgb(53, 95, 124);">API Docs</a> &raquo; </li>
 
         {%- for parent in parents %}
-          <li><a href="{{ parent.link|e }}" {% if loop.last %}{{ accesskey("U") }}{% endif %}>{{ parent.title }}</a>{{ reldelim1 }}</li>
+          <li><a href="{{ parent.link|e }}" {% if loop.last %}{{ accesskey("U") }}{% endif %}>
+              {{ parent.title }}</a>{{ reldelim1 }}</li>
         {%- endfor %}
         <li class="reltitle"> {{ title }}</li>
-
-        {%- if pagename != 'search' %}
-        <li id="searchbox" style="display: none;" class="right">
-          <form class="search" action="{{ pathto('search') }}" method="get">
-            <span>{{ _('Search:') }}</span>
-            <input type="text" name="q" size="18" />
-            <input type="submit" value="{{ _('Go') }}" />
-            <input type="hidden" name="check_keywords" value="yes" />
-            <input type="hidden" name="area" value="default" />
-          </form>
-        </li>
-        <script type="text/javascript">$('#searchbox').show(0);</script>
-        {%- endif %}
-
-        </ul>
-        <ul class="row2">
 
         {%- for rellink in rellinks %}
         <li class="right" {% if loop.first %}style="margin-right: 10px"{% endif %}>
@@ -61,8 +46,8 @@
              {{ accesskey(rellink[2]) }}>{{ rellink[3] }}</a>
           {%- if not loop.first %}{{ reldelim2 }}{% endif %}</li>
         {%- endfor %}
-        
-      </ul>
+
+        </ul>
     </div>
 {%- endmacro %}
 

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     06-Jun-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,8 +37,9 @@ def run():
     c = module.find('wxWizardPage')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c, False)
-    
-    
+    module.addPyCode("PyWizardPage = wx.deprecated(WizardPage, 'Use WizardPage instead.')")
+
+
     c = module.find('wxWizardPageSimple')
     tools.fixWindowClass(c, False)
     c.addItem(etgtools.WigCode("""\
@@ -60,7 +61,7 @@ def run():
         EVT_WIZARD_CANCEL        = wx.PyEventBinder( wxEVT_WIZARD_CANCEL, 1)
         EVT_WIZARD_HELP          = wx.PyEventBinder( wxEVT_WIZARD_HELP, 1)
         EVT_WIZARD_FINISHED      = wx.PyEventBinder( wxEVT_WIZARD_FINISHED, 1)
-        EVT_WIZARD_PAGE_SHOWN    = wx.PyEventBinder( wxEVT_WIZARD_PAGE_SHOWN, 1)    
+        EVT_WIZARD_PAGE_SHOWN    = wx.PyEventBinder( wxEVT_WIZARD_PAGE_SHOWN, 1)
         """)
     
     

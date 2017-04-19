@@ -24,9 +24,9 @@ from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 #from floatcanvas import FloatCanvas as FC
 
 
-colors = [ (255, 0  , 0  ), 
-           (0  , 255, 0  ), 
-           (0  , 0,   255), 
+colors = [ (255, 0  , 0  ),
+           (0  , 255, 0  ),
+           (0  , 0,   255),
            (255, 255, 0  ),
            (255,   0, 255),
            (0  , 255, 255),
@@ -49,11 +49,11 @@ class DrawFrame(wx.Frame):
                                          Debug = 0,
                                          BackgroundColor = "Black",
                                          )
-        
+
         self.Canvas = Canvas
 
         self.Canvas.Bind(wx.EVT_SIZE, self.OnSize)
-        
+
         # build the squares:
         w = 10
         dx = 14
@@ -104,10 +104,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

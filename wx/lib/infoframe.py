@@ -51,10 +51,10 @@ it this way::
     InformationalMessagesFrame = PyInformationalMessagesFrame( \
                                                 options_from_progname,  # (default = "")
                                                 txt),                   # (default = "informational messages")
-                                          
+
     #^^^^ early in the program
     # ...
-    
+
     InformationalMessagesFrame(list_of_items)
 
     # where list_of_items:
@@ -62,7 +62,7 @@ it this way::
     # comma-separated list of items to display.
     # Note that these will never be separated by spaces as they may
     # be when used in the Python 'print' command
-    
+
 
 The latter statement, of course, may be repeated arbitrarily often.
 The window will not appear until it is written to, and it may be
@@ -131,7 +131,7 @@ write() which displays it's argument.
 All (well, most) of this is made clear by the example code at the end
 of this file, which is run if the file is run by itself; otherwise,
 see the appropriate "stub" file in the wxPython demo.
- 
+
 """
 
 import  os

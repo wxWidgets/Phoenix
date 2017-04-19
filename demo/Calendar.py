@@ -416,7 +416,7 @@ class PrintCalend:
         printout2 = SetPrintout(self)
         self.preview = wx.PrintPreview(printout, printout2, self.printData)
 
-        if not self.preview.Ok():
+        if not self.preview.IsOk():
             wx.MessageBox("There was a problem printing!", "Printing", wx.OK)
             return
 

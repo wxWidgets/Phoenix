@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.hyperlink as HL
@@ -7,7 +7,7 @@ import wx.lib.agw.hyperlink as HL
 #---------------------------------------------------------------------------
 
 class lib_agw_hyperlink_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_hyperlinkCtor(self):
         link = HL.HyperLinkCtrl(self.frame, -1, 'wxPython Main Page', pos=(100, 100),
                                 URL='http://www.wxpython.org/')
@@ -32,7 +32,7 @@ class lib_agw_hyperlink_Tests(wtc.WidgetTestCase):
 
         self.assertEqual(link.GetURL(), url)
 
-            
+
     def test_lib_agw_hyperlinkEvents(self):
         HL.EVT_HYPERLINK_LEFT
         HL.EVT_HYPERLINK_MIDDLE

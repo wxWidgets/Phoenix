@@ -13,7 +13,7 @@
 #---------------------------------------------------------------------------
 # 12/02/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o Updated for 2.5 compatability.
+# o Updated for 2.5 compatibility.
 #
 
 """
@@ -222,7 +222,7 @@ class EventManager:
             name = aWin.GetClassName()
             i    = id(aWin)
             return '%s #%d' % (name, i)
-        except wx.PyDeadObjectError:
+        except RuntimeError:
             return '(dead wx.Object)'
 
 

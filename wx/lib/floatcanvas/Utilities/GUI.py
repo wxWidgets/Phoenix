@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         GUI.py
 # Purpose:      Contains GUI related utilities for FloatCanvas
@@ -23,7 +22,7 @@ So far, they are:
 RubberBandBox: used to draw a RubberBand Box on the screen
 
 """
- 
+
 import numpy as np
 
 import wx
@@ -51,7 +50,7 @@ class RubberBandBox(GUIMode.GUIBase):
         self.Canvas = None # this will be set when the mode is set on a Canvas
         self.CallBack = CallBack
         self.Tol = Tol
-        
+
         self.Drawing = False
         self.RBRect = None
         self.StartPointWorld = None
@@ -74,12 +73,12 @@ class RubberBandBox(GUIMode.GUIBase):
                 self.RBRect = ((x, y), (w, h) )
                 dc.DrawRectangle(*self.RBRect)
         self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
-                
+
     def OnLeftDown(self, event):
         # Start drawing
         self.Drawing = True
         self.StartPoint = event.GetPosition()
-            
+
     def OnLeftUp(self, event):
         # Stop Drawing
         if self.Drawing:

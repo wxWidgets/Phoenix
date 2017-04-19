@@ -63,7 +63,7 @@ class CustomDataTable(gridlib.GridTableBase):
 
     def GetValue(self, row, col):
         id = self.identifiers[col]
-        return self.data[row][id]
+        return str(self.data[row][id])
 
     def SetValue(self, row, col, value):
         id = self.identifiers[col]
@@ -107,9 +107,9 @@ class CustomDataTable(gridlib.GridTableBase):
             msg = gridlib.GridTableMessage(
                     self, gridlib.GRIDTABLE_NOTIFY_COLS_DELETED, frm, 1
                     )
-                    
+
             grid.ProcessTableMessage(msg)
-            
+
             msg = gridlib.GridTableMessage(
                     self, gridlib.GRIDTABLE_NOTIFY_COLS_INSERTED, to, 1
                     )

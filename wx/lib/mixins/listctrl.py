@@ -5,13 +5,13 @@
 # Author:      Robin Dunn
 #
 # Created:     15-May-2001
-# Copyright:   (c) 2001 by Total Control Software
+# Copyright:   (c) 2001-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------------
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 # o ListCtrlSelectionManagerMix untested.
 #
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
@@ -33,7 +33,7 @@
 
 import  locale
 import  wx
-import wx.lib.six as six
+import six
 
 if six.PY3:
     # python 3 lacks cmp:
@@ -849,7 +849,7 @@ class ListRowHighlighter:
             color = self._color
         local_defaultb = self._defaultb
         local_mode = self._mode
-        for row in xrange(self.GetItemCount()):
+        for row in range(self.GetItemCount()):
             if local_mode & HIGHLIGHT_EVEN:
                 dohlight = not row % 2
             else:

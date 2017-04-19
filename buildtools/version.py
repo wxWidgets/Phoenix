@@ -1,28 +1,38 @@
 #----------------------------------------------------------------------
 # Name:        buildtools.version
-# Purpose:     wxPython version numbers used in the build.  This can be
-#              considered the master copy of the version digits.
+# Purpose:     wxPython project name and version numbers used in the
+#              build.  This can be considered the master copy of the
+#              version digits and project name.
 #
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
+# Master copy of the project name
+PROJECT_NAME     = 'wxPython'
 
-VER_MAJOR        = 3      # Matches wxWidgets MAJOR version number
-VER_MINOR        = 0      # Matches wxWidgets MINOR version number
-VER_RELEASE      = 3      # wxPython RELEASE number for the given wxWidgets
-                          # MAJOR.MINOR version.
 
-VER_FLAGS        = ""     # wxPython release flags
+# The version numbers for wxPython are no longer kept in sync with the
+# wxWidgets version number. In the past the common version number was used to
+# indicate which version of wxWidgets should be used for the wxPython build.
+# Now wxWidgets is a git submodule, and the linked version is included in the
+# wxPython source tarball. That said, we should still bump up the MAJOR and
+# MINOR numbers each time there is a corresponding bump in the wxWidgets
+# version numbers.
+VER_MAJOR        = 4
+VER_MINOR        = 0
+VER_RELEASE      = 0
 
-# The VER_FLAGS value is appended to the version number constructed from first
-# 3 components and should be set according to the following patterns. These
-# should help us to better follow the PEP-0440 notions of version numbers,
-# where public version identifiers are supposed to conform to the following
-# scheme:
+VER_FLAGS        = "a2"     # wxPython release flags
+
+# The VER_FLAGS value is appended to the version number constructed from the
+# first 3 components and should be set according to the following patterns.
+# These should help us to better follow the PEP-0440 notions of version
+# numbers, where public version identifiers are supposed to conform to the
+# following scheme:
 #
 #      [N!]N(.N)*[{a|b|rc}N][.postN][.devN]
 #
@@ -41,9 +51,16 @@ VER_FLAGS        = ""     # wxPython release flags
 #                  release
 #
 #   ".dev12345"    for daily snapshot builds, by default this is automatically
-#                  pulled from the REV.txt file made by the setrev command,
+#                  pulled from the REV.txt file made by the setrev build command,
 #                  if it exists, and is appended to VER_FLAGS
 #
 #
 # See also:
 #   http://www.python.org/dev/peps/pep-0440/
+
+
+# The version numbers of wxWidgets to be used in the build
+wxVER_MAJOR        = 3
+wxVER_MINOR        = 0
+wxVER_RELEASE      = 0  # only used when wxVER_MINOR is an odd value
+

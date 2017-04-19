@@ -29,7 +29,7 @@ class ControlPane(wx.Panel):
                             majorDimension=1)
         hvBox.SetSelection(0)
         self.Bind(wx.EVT_RADIOBOX, self.OnSetHV, hvBox)
-        
+
         luCheck = wx.CheckBox(self, -1, "Live Update")
         luCheck.SetValue(True)
         self.Bind(wx.EVT_CHECKBOX, self.OnSetLiveUpdate, luCheck)
@@ -49,7 +49,7 @@ class ControlPane(wx.Panel):
     def OnSetHV(self, evt):
         rb = evt.GetEventObject()
         self.GetParent().SetOrientation(rb.GetSelection())
-        
+
 
     def OnSetLiveUpdate(self, evt):
         check = evt.GetEventObject()
@@ -58,7 +58,7 @@ class ControlPane(wx.Panel):
 
     def OnSwapButton(self, evt):
         self.GetParent().Swap2and4()
-        
+
 
 
 class TestPanel(wx.Panel):
@@ -67,7 +67,7 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
 
         cp = ControlPane(self)
-        
+
         splitter = MultiSplitterWindow(self, style=wx.SP_LIVE_UPDATE)
         self.splitter = splitter
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -117,7 +117,7 @@ class TestPanel(wx.Panel):
         self.log.write( "Changed sash:%d  %s\n" %
                         (evt.GetSashIdx(), evt.GetSashPosition()))
 
-            
+
     def SetOrientation(self, value):
         if value:
             self.splitter.SetOrientation(wx.VERTICAL)
@@ -125,13 +125,13 @@ class TestPanel(wx.Panel):
             self.splitter.SetOrientation(wx.HORIZONTAL)
         self.splitter.SizeWindows()
 
-            
+
     def SetLiveUpdate(self, enable):
         if enable:
             self.splitter.SetWindowStyle(wx.SP_LIVE_UPDATE)
         else:
             self.splitter.SetWindowStyle(0)
-            
+
 
     def Swap2and4(self):
         win2 = self.splitter.GetWindow(1)

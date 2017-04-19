@@ -7,19 +7,19 @@
 """
 
 import unittest
-import wtc
+from unittests import wtc
 
 from difflib import ndiff, unified_diff, context_diff
 
 
 #---------------------------------------------------------------------------
 
-    
+
 class lib_pubsub_NotifyFlagChanges(wtc.PubsubTestCase):
 
     def testFlagChanges(self):
         savedFlags = self.pub.getNotificationFlags()
-    
+
         self.pub.setNotificationFlags(all=True, sendMessage=False, deadListener=False)
         flags = self.pub.getNotificationFlags()
         assert not flags['sendMessage']
@@ -28,7 +28,7 @@ class lib_pubsub_NotifyFlagChanges(wtc.PubsubTestCase):
         assert flags['delTopic']
         assert flags['subscribe']
         assert flags['unsubscribe']
-    
+
         self.pub.setNotificationFlags(subscribe=False, deadListener=True)
         flags = self.pub.getNotificationFlags()
         assert not flags['sendMessage']
@@ -37,7 +37,7 @@ class lib_pubsub_NotifyFlagChanges(wtc.PubsubTestCase):
         assert flags['delTopic']
         assert flags['deadListener']
         assert flags['unsubscribe']
-    
+
         self.pub.setNotificationFlags(all=False, subscribe=True, unsubscribe=True)
         flags = self.pub.getNotificationFlags()
         assert not flags['sendMessage']
@@ -46,10 +46,10 @@ class lib_pubsub_NotifyFlagChanges(wtc.PubsubTestCase):
         assert not flags['delTopic']
         assert flags['subscribe']
         assert flags['unsubscribe']
-    
+
         self.pub.setNotificationFlags(** savedFlags)
-    
-        
+
+
 #---------------------------------------------------------------------------
 
 

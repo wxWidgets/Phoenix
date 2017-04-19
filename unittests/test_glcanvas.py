@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.glcanvas
 
@@ -26,12 +26,12 @@ class glcanvas_Tests(wtc.WidgetTestCase):
         wx.glcanvas.WX_GL_MIN_ACCUM_ALPHA
         wx.glcanvas.WX_GL_SAMPLE_BUFFERS
         wx.glcanvas.WX_GL_SAMPLES
-        
+
 
     def test_glcanvas2(self):
         cvs = wx.glcanvas.GLCanvas(self.frame)
         ctx = wx.glcanvas.GLContext(cvs)
-        
+
 
     def test_glcanvas3(self):
         attribs = [wx.glcanvas.WX_GL_DEPTH_SIZE, 32,
@@ -39,14 +39,14 @@ class glcanvas_Tests(wtc.WidgetTestCase):
                    0]
         cvs = wx.glcanvas.GLCanvas(self.frame, attribList=attribs)
 
-        
+
     def test_glcanvas4(self):
         attribs = [wx.glcanvas.WX_GL_DEPTH_SIZE, 32,
                    wx.glcanvas.WX_GL_DOUBLEBUFFER,
                    0]
         wx.glcanvas.GLCanvas.IsDisplaySupported(attribs)
-        
-                   
+
+
 #---------------------------------------------------------------------------
 
 

@@ -25,9 +25,9 @@ class DrawFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
         self.CreateStatusBar()
-        
+
         panel = NavPanel(self)
-        
+
         self.Show()
 
 class NavPanel(NavCanvas.NavCanvas):
@@ -40,10 +40,10 @@ class NavPanel(NavCanvas.NavCanvas):
                                      ProjectionFun = None,
                                      BackgroundColor = "DARK SLATE BLUE",
                                      )
-        
+
         self.parent_frame = parent
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
-        
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
+
         # create the image:
         self.Canvas.AddPolygon( ( (2,3),
                                    (5,6),
@@ -51,9 +51,9 @@ class NavPanel(NavCanvas.NavCanvas):
                                  FillColor = "red",
                                  )
 
-        
+
         wx.CallAfter(self.Canvas.ZoomToBB) # so it will get called after everything is created and sized
-                
+
     def OnMove(self, event):
         """
         Updates the status bar with the world coordinates

@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.stc as stc
 
@@ -34,13 +34,13 @@ class stc_Tests(wtc.WidgetTestCase):
     def test_stcDefaultCtor(self):
         ed = stc.StyledTextCtrl()
         ed.Create(self.frame)
-        
+
     def test_stcStyleTextCtrl1(self):
         ed = stc.StyledTextCtrl(self.frame)
         ed.SetText(text)
         ed.EmptyUndoBuffer()
         ed.GotoPos(0)
-        
+
         ed.SetMarginType(1, stc.STC_MARGIN_SYMBOL)
         ed.MarkerDefine(0, stc.STC_MARK_ROUNDRECT, "#CCFF00", "RED")
         ed.MarkerDefine(1, stc.STC_MARK_CIRCLE, "FOREST GREEN", "SIENNA")
@@ -52,7 +52,7 @@ class stc_Tests(wtc.WidgetTestCase):
         ed.MarkerAdd(4, 3)
         ed.MarkerAdd(5, 0)
 
-    
+
     def test_stcStyleTextCtrl2(self):
         ed = stc.StyledTextCtrl(self.frame)
         ed.SetText(text)
@@ -64,7 +64,7 @@ class stc_Tests(wtc.WidgetTestCase):
         ed.IndicatorSetStyle(1, stc.STC_INDIC_DIAGONAL)
         ed.IndicatorSetForeground(1, wx.BLUE)
         ed.IndicatorSetStyle(2, stc.STC_INDIC_STRIKE)
-        ed.IndicatorSetForeground(2, wx.RED)    
+        ed.IndicatorSetForeground(2, wx.RED)
         ed.StartStyling(100, stc.STC_INDICS_MASK)
         ed.SetStyling(10, stc.STC_INDIC0_MASK)
         ed.SetStyling(8, stc.STC_INDIC1_MASK)
@@ -76,7 +76,7 @@ class stc_Tests(wtc.WidgetTestCase):
         ed.SetText(text)
         ed.EmptyUndoBuffer()
         ed.GotoPos(0)
-        
+
         ed.StyleSetSpec(stc.STC_STYLE_DEFAULT, "size:%d,face:%s" % (pb, face3))
         ed.StyleClearAll()
         ed.StyleSetSpec(1, "size:%d,bold,face:%s,fore:#0000FF" % (pb, face1))
@@ -85,15 +85,15 @@ class stc_Tests(wtc.WidgetTestCase):
         ed.StyleSetSpec(4, "face:%s,size:%d" % (face1, pb-1))
         ed.StyleSetSpec(5, "back:#FFF0F0")
         ed.StartStyling(80, 0xff)
-        ed.SetStyling(6, 1)    
+        ed.SetStyling(6, 1)
         ed.StartStyling(100, 0xff)
         ed.SetStyling(20, 2)
         ed.StartStyling(180, 0xff)
         ed.SetStyling(4, 3)
         ed.SetStyling(2, 0)
         ed.SetStyling(10, 4)
-        
-        
+
+
     def test_stcStyleTextCtrl5(self):
         ed = stc.StyledTextCtrl(self.frame)
         ed.SetText(text)
@@ -103,7 +103,7 @@ class stc_Tests(wtc.WidgetTestCase):
         ed.SetMarginType(0, stc.STC_MARGIN_NUMBER)
         ed.SetMarginWidth(0, 22)
         ed.StyleSetSpec(stc.STC_STYLE_LINENUMBER, "size:%d,face:%s" % (pb-2, face1))
-        
+
 
     def test_stcStyleTextCtrl6(self):
         ed = stc.StyledTextCtrl(self.frame)
@@ -113,15 +113,15 @@ class stc_Tests(wtc.WidgetTestCase):
 
         textbytes = ed.GetStyledText(100,150)
         self.assertTrue(isinstance(textbytes, memoryview))
-        
+
         pointer = ed.GetCharacterPointer()
         self.assertTrue(isinstance(pointer, memoryview))
-        
+
         line, pos = ed.GetCurLine()
         self.assertTrue(len(line) != 0)
         self.assertTrue(isinstance(pos, int))
-       
-        
+
+
     def test_stcStyleTextCtrl8(self):
         ed = stc.StyledTextCtrl(self.frame)
         ed.SetText(text)
@@ -130,17 +130,17 @@ class stc_Tests(wtc.WidgetTestCase):
 
         raw = ed.GetLineRaw(5)
         self.assertTrue(isinstance(raw, bytes))
-        
+
         ed.AddTextRaw(b"some new text")
-        
-        
-        
+
+
+
     def test_stcStyleTextCtrlConstantsExist(self):
         # This is not even close to the full set of constants in the module,
         # but just a represenative few to help ensure that the code
         # generation is continuing to do what it is supposed to be doing.
         stc.STC_P_DEFAULT
-        stc.STC_P_DECORATOR        
+        stc.STC_P_DECORATOR
         stc.STC_KEY_DOWN
         stc.STC_MARK_CIRCLE
         stc.STC_MARGIN_NUMBER
@@ -151,11 +151,11 @@ class stc_Tests(wtc.WidgetTestCase):
         stc.STC_CMD_REDO
         stc.STC_CMD_LINEENDEXTEND
         stc.STC_CMD_PARADOWN
-        
-        
+
+
     def test_stcEvent(self):
         evt = stc.StyledTextEvent(stc.wxEVT_STC_CHANGE)
-        
+
     def test_stcEventConstantsExist(self):
         stc.wxEVT_STC_CHANGE
         stc.wxEVT_STC_STYLENEEDED
@@ -189,7 +189,7 @@ class stc_Tests(wtc.WidgetTestCase):
         stc.wxEVT_STC_AUTOCOMP_CANCELLED
         stc.wxEVT_STC_AUTOCOMP_CHAR_DELETED
         stc.wxEVT_STC_HOTSPOT_RELEASE_CLICK
-        
+
     def test_stcEventBinderssExist(self):
         stc.EVT_STC_CHANGE
         stc.EVT_STC_STYLENEEDED
@@ -222,9 +222,30 @@ class stc_Tests(wtc.WidgetTestCase):
         stc.EVT_STC_INDICATOR_RELEASE
         stc.EVT_STC_AUTOCOMP_CANCELLED
         stc.EVT_STC_AUTOCOMP_CHAR_DELETED
-        
-        
-        
+
+
+    def test_stcHasTextCtrlMethods(self):
+        # Just ensure that the common TextCtrl methods are present. This is
+        # done because the C++ class either derives from wxTextEntryBase
+        # or from wxTextCtrlIface, but these classes are not part of the API
+        # (and thus are not wrapped), so we have to kludge things.
+        # See etg/_stc.py for details.
+
+        t = stc.StyledTextCtrl(self.frame)
+        t.Cut
+        t.CanCut
+        t.DiscardEdits
+        t.GetDefaultStyle
+        t.GetNumberOfLines
+        t.GetStyle
+        t.IsModified
+        t.HitTest
+        t.AppendText
+        t.WriteText
+        t.ChangeValue
+
+
+
 #---------------------------------------------------------------------------
 
 

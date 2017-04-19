@@ -23,7 +23,7 @@ user hits '.' when typing.
 """
 
 import  wx
-import  wx.lib.six as six
+import  six
 from wx.lib.masked import BaseMaskedTextCtrl
 
 # jmg 12/9/03 - when we cut ties with Py 2.2 and earlier, this would
@@ -91,21 +91,21 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
         """
         Default class constructor.
 
-        :param Window `parent`: the window parent. Must not be ``None``;
+        :param wx.Window `parent`: the window parent. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param string `value`: value to be shown;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
         :param integer `style`: the window style;
-        :param Validator `validator`: this is mainly provided for data-transfer, as control does
+        :param wx.Validator `validator`: this is mainly provided for data-transfer, as control does
           its own validation;
         :param string `name`: the window name;
         :param boolean `setupEventHandling`: setup event handling by default.
 
-        """       
+        """
 
         if 'mask' not in kwargs:
             kwargs['mask'] = mask = "###.###.###.###"
@@ -183,9 +183,9 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
         splits it into an array of 4 fields, justifies it
         appropriately, and inserts it into the control.
         Invalid values will raise a ValueError exception.
-        
+
         :param string `value`: the IP address in the form '000.000.000.000'
-        
+
         """
 ##        dbg('IpAddrCtrl::SetValue(%s)' % str(value), indent=1)
         if not isinstance(value, six.string_types):

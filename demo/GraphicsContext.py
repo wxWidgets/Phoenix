@@ -1,10 +1,17 @@
 #!/usr/bin/env python
 
 import wx
+g = wx
+
+import os
 import colorsys
 from math import cos, sin, radians
 
 from Main import opj
+
+# To help test compatibility of the generic GraphicsContext classes uncomment
+# this line:
+#import wx.lib.graphics as g
 
 #----------------------------------------------------------------------
 
@@ -62,21 +69,30 @@ class TestPanel(wx.Panel):
     def MakeGC(self, dc):
         try:
             if False:
-                # If you want to force the use of Cairo instead of the
-                # native GraphicsContext backend then create the
-                # context like this.  It works on Windows so far, (on
-                # wxGTK the Cairo context is already being used as the
-                # native default.)
+                # If you want to force the use of Cairo instead of the native
+                # GraphicsContext backend then create the context like this.
+                # It works on Windows so far, (on wxGTK the Cairo context is
+                # already being used as the native default.)
+                #
+                # On Windows we also need to ensure that the cairo DLLs are
+                # found on the PATH, so let's add the wx package dir to the
+                # PATH here.  In a real application you will probably want to
+                # be smarter about this.
+                wxdir = os.path.dirname(wx.__file__) + os.pathsep
+                if not wxdir in os.environ.get('PATH', ""):
+                    os.environ['PATH'] = wxdir + os.environ.get('PATH', "")
+
                 gcr = wx.GraphicsRenderer.GetCairoRenderer
                 gc = gcr() and gcr().CreateContext(dc)
+
                 if gc is None:
-                    wx.MessageBox("Unable to create Cairo Context.", "Oops")
-                    gc = wx.GraphicsContext.Create(dc)
+                    wx.MessageBox("Unable to create Cairo Context this way.", "Oops")
+                    gc = g.GraphicsContext.Create(dc)
             else:
                 # Otherwise, creating it this way will use the native
                 # backend, (GDI+ on Windows, CoreGraphics on Mac, or
                 # Cairo on GTK).
-                gc = wx.GraphicsContext.Create(dc)
+                gc = g.GraphicsContext.Create(dc)
 
         except NotImplementedError:
             dc.DrawText("This build of wxPython does not support the wx.GraphicsContext "
@@ -201,7 +217,7 @@ The new advanced 2D drawing API is implemented via the
 wx.GraphicsContext and wx.GraphicsPath classes.  They wrap GDI+ on
 Windows, Cairo on wxGTK and CoreGraphics on OS X.  They allow
 path-based drawing with alpha-blending and anti-aliasing, and use a
-floating point cooridnate system.
+floating point coordinate system.
 
 <p>When viewing this sample pay attention to how the rounded edges are
 smoothed with anti-aliased drawing, and how the shapes on the lower

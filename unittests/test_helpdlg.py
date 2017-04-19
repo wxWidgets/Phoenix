@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.html
 
@@ -15,10 +15,11 @@ class helpdlg_Tests(wtc.WidgetTestCase):
         data.AddBook(os.path.join(helpPath, 'testing.hhp'))
         data.AddBook(os.path.join(helpPath, 'another.hhp'))
         dlg = wx.html.HtmlHelpDialog(data)
-        
+        dlg.Create(self.frame)
+
         self.myYield()
         dlg.Destroy()
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

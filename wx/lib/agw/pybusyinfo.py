@@ -27,7 +27,7 @@
 # --------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.pybusyinfo.PyBusyInfo` constructs a busy info window and displays a message in it.
+:class:`~wx.lib.agw.pybusyinfo.PyBusyInfo` constructs a busy info window and displays a message in it.
 
 
 Description
@@ -59,28 +59,28 @@ Usage
 
 Usage example::
 
-    import wx    
+    import wx
     import wx.lib.agw.pybusyinfo as PBI
 
     class MyFrame(wx.Frame):
 
         def __init__(self, parent):
-        
+
             wx.Frame.__init__(self, parent, -1, "PyBusyInfo Demo")
 
             panel = wx.Panel(self)
-    
+
             b = wx.Button(panel, -1, "Test PyBusyInfo ", (50,50))
             self.Bind(wx.EVT_BUTTON, self.OnButton, b)
 
 
         def OnButton(self, event):
-            
+
             message = "Please wait 5 seconds, working..."
             busy = PBI.PyBusyInfo(message, parent=self, title="Really Busy")
 
             wx.Yield()
-            
+
             for indx in xrange(5):
                 wx.MilliSleep(1000)
 
@@ -143,13 +143,13 @@ class PyInfoFrame(wx.Frame):
     def __init__(self, parent, message, title, icon):
         """
         Default class constructor.
-        
+
         :param `parent`: the frame parent;
         :param `message`: the message to display in the :class:`PyBusyInfo`;
         :param `title`: the main :class:`PyBusyInfo` title;
-        :param `icon`: an icon to draw as the frame icon, an instance of :class:`Bitmap`.
+        :param `icon`: an icon to draw as the frame icon, an instance of :class:`wx.Bitmap`.
         """
-        
+
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, wx.DefaultPosition,
                           wx.DefaultSize, wx.NO_BORDER|wx.FRAME_TOOL_WINDOW|wx.FRAME_SHAPED|wx.STAY_ON_TOP)
 
@@ -171,7 +171,7 @@ class PyInfoFrame(wx.Frame):
         # Bind the events to draw ourselves
         panel.Bind(wx.EVT_PAINT, self.OnPaint)
         panel.Bind(wx.EVT_ERASE_BACKGROUND, self.OnErase)
-            
+
         self.Centre(wx.BOTH)
 
         # Create a non-rectangular region to set the frame shape
@@ -181,7 +181,7 @@ class PyInfoFrame(wx.Frame):
         dc.SetBackground(wx.Brush(wx.Colour(0, 0, 0)))
         dc.Clear()
         dc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1))
-        dc.DrawRoundedRectangle(0, 0, size.x, size.y, 12)                
+        dc.DrawRoundedRectangle(0, 0, size.x, size.y, 12)
         r = wx.Region(bmp, wx.Colour(0, 0, 0))
         # Store the non-rectangular region
         self.reg = r
@@ -198,7 +198,7 @@ class PyInfoFrame(wx.Frame):
         """
         Sets :class:`PyInfoFrame` shape using the region created from the bitmap.
 
-        :param `event`: a :class:`WindowCreateEvent` event (GTK only, as GTK supports setting
+        :param `event`: a :class:`wx.WindowCreateEvent` event (GTK only, as GTK supports setting
          the window shape only during window creation).
         """
 
@@ -206,7 +206,7 @@ class PyInfoFrame(wx.Frame):
         if event:
             # GTK only
             event.Skip()
-            
+
 
     def OnPaint(self, event):
         """
@@ -216,7 +216,7 @@ class PyInfoFrame(wx.Frame):
         """
 
         panel = event.GetEventObject()
-        
+
         dc = wx.BufferedPaintDC(panel)
         dc.Clear()
 
@@ -237,7 +237,7 @@ class PyInfoFrame(wx.Frame):
         dc.DrawLabel(self._message, rect2, alignment=wx.ALIGN_CENTER|wx.ALIGN_CENTER)
 
         # Draw the top title
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         dc.SetFont(font)
         dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT)))
         dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT))
@@ -249,7 +249,7 @@ class PyInfoFrame(wx.Frame):
             dc.DrawBitmap(self._icon, 5, 5, True)
         else:
             textXPos, textYPos = 5, 0
-        
+
         dc.DrawText(self._title, textXPos, textYPos+5)
         dc.DrawLine(5, 25, rect.width-5, 25)
 
@@ -257,7 +257,7 @@ class PyInfoFrame(wx.Frame):
         dc.SetPen(wx.Pen(startColour, 1))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.DrawRoundedRectangle(0, 0, size.x, size.y-1, 12)
-        
+
 
     def OnErase(self, event):
         """
@@ -265,13 +265,13 @@ class PyInfoFrame(wx.Frame):
 
         :param `event`: a :class:`EraseEvent` event to be processed.
 
-        :note: This method is intentionally empty to reduce flicker.        
+        :note: This method is intentionally empty to reduce flicker.
         """
 
         # This is empty on purpose, to avoid flickering
         pass
 
-                
+
 # -------------------------------------------------------------------- #
 # The actual PyBusyInfo implementation
 # -------------------------------------------------------------------- #
@@ -284,11 +284,11 @@ class PyBusyInfo(object):
     def __init__(self, message, parent=None, title=_("Busy"), icon=wx.NullBitmap):
         """
         Default class constructor.
-        
+
         :param `parent`: the :class:`PyBusyInfo` parent;
         :param `message`: the message to display in the :class:`PyBusyInfo`;
         :param `title`: the main :class:`PyBusyInfo` title;
-        :param `icon`: an icon to draw as the frame icon, an instance of :class:`Bitmap`.
+        :param `icon`: an icon to draw as the frame icon, an instance of :class:`wx.Bitmap`.
 
         :note: If `parent` is not ``None`` you must ensure that it is not closed
          while the busy info is shown.
@@ -302,7 +302,7 @@ class PyBusyInfo(object):
 
         # Added for the screenshot-taking tool
         self.Show()
-        
+
 
     def __del__(self):
         """ Overloaded method, for compatibility with wxWidgets. """
@@ -319,7 +319,7 @@ class PyBusyInfo(object):
         top, although this is not needed if :meth:`PyBusyInfo.Show` is called immediately after the frame creation.
 
         :param bool `show`: ``True`` to show the :class:`PyBusyInfo` frame, ``False`` to hide it.
-        
+
         :return: ``True`` if the window has been shown or hidden or ``False`` if nothing was done
          because it already was in the requested state.
 
@@ -332,14 +332,14 @@ class PyBusyInfo(object):
 
         .. versionadded:: 0.9.5
         """
-        
+
         retVal = self._infoFrame.Show(show)
 
         if show:
             self._infoFrame.Refresh()
             self._infoFrame.Update()
 
-        return retVal        
+        return retVal
 
 
     def Update(self):
@@ -360,27 +360,27 @@ class PyBusyInfo(object):
 
 if __name__ == '__main__':
 
-    import wx    
+    import wx
 
     class MyFrame(wx.Frame):
 
         def __init__(self, parent):
-        
+
             wx.Frame.__init__(self, parent, -1, "PyBusyInfo Demo")
 
             panel = wx.Panel(self)
-    
+
             b = wx.Button(panel, -1, "Test PyBusyInfo ", (50,50))
             self.Bind(wx.EVT_BUTTON, self.OnButton, b)
 
 
         def OnButton(self, event):
-            
+
             message = "Please wait 5 seconds, working..."
             busy = PyBusyInfo(message, parent=self, title="Really Busy")
 
             wx.Yield()
-            
+
             for indx in range(5):
                 wx.MilliSleep(1000)
 

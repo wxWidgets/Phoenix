@@ -23,7 +23,7 @@ class TestPanel(wx.Panel):
         self.fbbh = filebrowse.FileBrowseButtonWithHistory(
             self, -1, size=(450, -1),  changeCallback = self.fbbhCallback
             )
-            
+
         self.dbb = filebrowse.DirBrowseButton(
             self, -1, size=(450, -1), changeCallback = self.dbbCallback
             )
@@ -88,9 +88,9 @@ overview = """<html><body>
 
 </body><</html>
 """ % ( filebrowse.FileBrowseButton.__doc__,
-        filebrowse.FileBrowseButtonWithHistory.__doc__ , 
+        filebrowse.FileBrowseButtonWithHistory.__doc__ ,
         filebrowse.DirBrowseButton.__doc__
-        ) 
+        )
 
 
 if __name__ == '__main__':

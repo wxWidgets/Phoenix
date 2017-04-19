@@ -5,12 +5,12 @@
 # Author:      Robin Dunn
 #
 # Created:     5-June-2001
-# Copyright:   (c) 2001 by Total Control Software
+# Copyright:   (c) 2001-2017 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------------
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 # o Untested
 #
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)

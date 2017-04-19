@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     22-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -11,16 +11,16 @@ import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "app"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxAppConsole',
-           'wxApp',           
-           ]    
+           'wxApp',
+           ]
 
 OTHERDEPS = [ 'src/app_ex.cpp',   # and some C++ code too
               ]
@@ -31,36 +31,36 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-            
+
     module.find('wxDISABLE_DEBUG_SUPPORT').ignore()
 
     c = module.find('wxAppConsole')
     assert isinstance(c, etgtools.ClassDef)
 
-    etgtools.prependText(c.detailedDoc, 
+    etgtools.prependText(c.detailedDoc,
          "Note that it is not intended for this class to be used directly from "
          "Python. It is wrapped just for inheriting its methods from :class:`App`.")
-    
+
     # There's no need for the command line stuff as Python has its own ways to
     # deal with that
     c.find('argc').ignore()
-    c.find('argv').ignore()    
+    c.find('argv').ignore()
     c.find('OnCmdLineError').ignore()
     c.find('OnCmdLineHelp').ignore()
     c.find('OnCmdLineParsed').ignore()
     c.find('OnInitCmdLine').ignore()
-    
+
     c.find('HandleEvent').ignore()
     c.find('UsesEventLoop').ignore()
 
     # We will use OnAssertFailure, but I don't think we should let it be
-    # overridden in Python. 
+    # overridden in Python.
     c.find('OnAssertFailure').ignore()
-    
+
     # TODO: Decide if these should be visible from Python. They are for
     # dealing with C/C++ exceptions, but perhaps we could also add the ability
     # to deal with unhandled Python exceptions using these (overridable)
@@ -68,37 +68,37 @@ def run():
     c.find('OnExceptionInMainLoop').ignore()
     c.find('OnFatalException').ignore()
     c.find('OnUnhandledException').ignore()
-        
+
     # Release the GIL for potentially blocking or long-running functions
     c.find('MainLoop').releaseGIL()
     c.find('ProcessPendingEvents').releaseGIL()
     c.find('Yield').releaseGIL()
-    
+
     c.addProperty('AppDisplayName GetAppDisplayName SetAppDisplayName')
     c.addProperty('AppName GetAppName SetAppName')
     c.addProperty('ClassName GetClassName SetClassName')
     c.addProperty('VendorDisplayName GetVendorDisplayName SetVendorDisplayName')
     c.addProperty('VendorName GetVendorName SetVendorName')
     c.addProperty('Traits GetTraits')
-    
+
     #-------------------------------------------------------
     c = module.find('wxApp')
-    
+
     # Add a new C++ wxPyApp class that adds empty Mac* methods for other
     # platforms, and other goodies, then change the name so SIP will
     # generate code wrapping this class as if it was the wxApp class seen in
-    # the DoxyXML. 
+    # the DoxyXML.
     c.includeCppCode('src/app_ex.cpp')
-    
+
     # Now change the class name, ctors and dtor names from wxApp to wxPyApp
-    for item in c.allItems():  
+    for item in c.allItems():
         if item.name == 'wxApp':
-            item.name = 'wxPyApp' 
+            item.name = 'wxPyApp'
         if item.name == '~wxApp':
             item.name = '~wxPyApp'
-    
+
     c.find('ProcessMessage').ignore()
-     
+
     c.addCppMethod('void', 'MacHideApp', '()',
         doc="""\
             Hide all application windows just as the user can do with the
@@ -137,12 +137,12 @@ def run():
             """)
 
 
-    # Remove the virtualness from these methods 
-    for m in [ 'GetDisplayMode', 'GetLayoutDirection', 'GetTopWindow', 'IsActive', 
-               'SafeYield', 'SafeYieldFor', 'SetDisplayMode', 
+    # Remove the virtualness from these methods
+    for m in [ 'GetDisplayMode', 'GetLayoutDirection', 'GetTopWindow', 'IsActive',
+               'SafeYield', 'SafeYieldFor', 'SetDisplayMode',
                'SetNativeTheme', ]:
         c.find(m).isVirtual = False
-    
+
     # Methods we implement in wxPyApp beyond what are in wxApp, plus some
     # overridden virtuals (or at least some that we want the wrapper
     # generator to treat as if they are overridden.)
@@ -181,29 +181,29 @@ def run():
         protection='public', type='wxAppAssertMode', name='GetAssertMode', argsString='()',
         briefDoc="Returns the current mode for how the application responds to wx asserts.",
         className=c.name))
-    
+
     m = etgtools.MethodDef(
         protection='public', type='void', name='SetAssertMode', argsString='(wxAppAssertMode mode)',
         briefDoc="""\
-        Set the mode indicating how the application responds to wx assertion 
-        statements. Valid settings are a combination of these flags: 
-        
-            - wx.APP_ASSERT_SUPPRESS 
-            - wx.APP_ASSERT_EXCEPTION 
-            - wx.APP_ASSERT_DIALOG 
+        Set the mode indicating how the application responds to wx assertion
+        statements. Valid settings are a combination of these flags:
+
+            - wx.APP_ASSERT_SUPPRESS
+            - wx.APP_ASSERT_EXCEPTION
+            - wx.APP_ASSERT_DIALOG
             - wx.APP_ASSERT_LOG
-            
+
         The default behavior is to raise a wx.wxAssertionError exception.
         """,
         className=c.name)
-    
+
     m.addItem(etgtools.ParamDef(type='wxAppAssertMode', name='wxAppAssertMode'))
     c.addItem(m)
 
     c.addItem(etgtools.MethodDef(
         protection='public', isStatic=True, type='bool', name='IsDisplayAvailable', argsString='()',
         briefDoc="""\
-        Returns True if the application is able to connect to the system's 
+        Returns True if the application is able to connect to the system's
         display, or whatever the equivallent is for the platform.""",
         className=c.name))
 
@@ -217,11 +217,11 @@ def run():
     c.addProperty('LayoutDirection GetLayoutDirection')
     c.addProperty('UseBestVisual GetUseBestVisual SetUseBestVisual')
     c.addProperty('TopWindow GetTopWindow SetTopWindow')
-    
-    
+
+
     #-------------------------------------------------------
-    
-    
+
+
     module.addHeaderCode("""\
         enum wxAppAssertMode {
             wxAPP_ASSERT_SUPPRESS  = 1,
@@ -234,7 +234,7 @@ def run():
     for eitem in "wxAPP_ASSERT_SUPPRESS wxAPP_ASSERT_EXCEPTION wxAPP_ASSERT_DIALOG wxAPP_ASSERT_LOG".split():
         enum.addItem(etgtools.EnumValueDef(name=eitem))
     module.insertItemBefore(c, enum)
-    
+
     module.addHeaderCode("""\
         class wxPyApp;
         wxPyApp* wxGetApp();
@@ -248,14 +248,18 @@ def run():
 
     module.find('wxYield').releaseGIL()
     module.find('wxSafeYield').releaseGIL()
-    
+
+    module.addPyFunction('YieldIfNeeded', '()',
+        doc="Convenience function for wx.GetApp().Yield(True)",
+        body="return wx.GetApp().Yield(True)")
+
     #-------------------------------------------------------
-    
+
     # Now add extractor objects for the main App class as a Python class,
     # deriving from the wx.PyApp class that we created above. Also define the
     # stdio helper class too.
 
-    
+
     module.addPyClass('PyOnDemandOutputWindow', ['object'],
         doc="""\
             A class that can be used for redirecting Python's stdout and
@@ -272,11 +276,11 @@ def run():
                     self.size   = (450, 300)
                     self.parent = None
                     """),
- 
+
             PyFunctionDef('SetParent', '(self, parent)',
                 doc="""Set the window to be used as the popup Frame's parent.""",
                 body="""self.parent = parent"""),
-    
+
             PyFunctionDef('CreateOutputWindow', '(self, txt)',
                 doc="",
                 body="""\
@@ -288,7 +292,7 @@ def run():
                     self.frame.Show(True)
                     self.frame.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
                     """),
-            
+
             PyFunctionDef('OnCloseWindow', '(self, event)',
                 doc="",
                 body="""\
@@ -298,12 +302,12 @@ def run():
                     self.text  = None
                     self.parent = None
                     """),
-    
+
             # These methods provide the file-like output behaviour.
             PyFunctionDef('write', '(self, text)',
                 doc="""\
                     Create the output window if needed and write the string to it.
-                    If not called in the context of the gui thread then CallAfter is 
+                    If not called in the context of the gui thread then CallAfter is
                     used to do the work there.
                     """,
                 body="""\
@@ -318,94 +322,94 @@ def run():
                         else:
                             self.text.AppendText(text)
                      """),
-            
+
             PyFunctionDef('close', '(self)',
                 doc="",
                 body="""\
                     if self.frame is not None:
                         wx.CallAfter(self.frame.Close)
                     """),
-    
+
             PyFunctionDef('flush', '(self)', 'pass'),
             ])
-        
+
 
     module.addPyClass('App', ['PyApp'],
         doc="""\
             The ``wx.App`` class represents the application and is used to:
-        
+
               * bootstrap the wxPython system and initialize the underlying
                 gui toolkit
               * set and get application-wide properties
               * implement the native windowing system main message or event loop,
                 and to dispatch events to window instances
               * etc.
-        
+
             Every wx application must have a single ``wx.App`` instance, and all
             creation of UI objects should be delayed until after the ``wx.App`` object
             has been created in order to ensure that the gui platform and wxWidgets
             have been fully initialized.
-        
+
             Normally you would derive from this class and implement an ``OnInit``
             method that creates a frame and then calls ``self.SetTopWindow(frame)``,
             however ``wx.App`` is also usable on it's own without derivation.
             """,
-        
+
         items=[
             PyCodeDef('outputWindowClass = PyOnDemandOutputWindow'),
-            
+
             PyFunctionDef('__init__', '(self, redirect=False, filename=None, useBestVisual=False, clearSigInt=True)',
                 doc="""\
-                    Construct a ``wx.App`` object.  
-    
+                    Construct a ``wx.App`` object.
+
                     :param redirect: Should ``sys.stdout`` and ``sys.stderr`` be
                         redirected?  Defaults to False. If ``filename`` is None
                         then output will be redirected to a window that pops up
                         as needed.  (You can control what kind of window is created
                         for the output by resetting the class variable
                         ``outputWindowClass`` to a class of your choosing.)
-            
+
                     :param filename: The name of a file to redirect output to, if
                         redirect is True.
-            
+
                     :param useBestVisual: Should the app try to use the best
                         available visual provided by the system (only relevant on
                         systems that have more than one visual.)  This parameter
                         must be used instead of calling `SetUseBestVisual` later
                         on because it must be set before the underlying GUI
                         toolkit is initialized.
-            
+
                     :param clearSigInt: Should SIGINT be cleared?  This allows the
                         app to terminate upon a Ctrl-C in the console like other
                         GUI apps will.
-            
+
                     :note: You should override OnInit to do application
                         initialization to ensure that the system, toolkit and
                         wxWidgets are fully initialized.
                     """,
                 body="""\
                     PyApp.__init__(self)
-            
+
                     # make sure we can create a GUI
                     if not self.IsDisplayAvailable():
-                        
+
                         if wx.Port == "__WXMAC__":
                             msg = "This program needs access to the screen. Please run with a\\n" \\
                                   "Framework build of python, and only when you are logged in\\n" \\
                                   "on the main display of your Mac."
-                            
+
                         elif wx.Port == "__WXGTK__":
                             msg ="Unable to access the X Display, is $DISPLAY set properly?"
-            
+
                         else:
                             msg = "Unable to create GUI"
                             # TODO: more description is needed for wxMSW...
-            
+
                         raise SystemExit(msg)
-                    
+
                     # This has to be done before OnInit
                     self.SetUseBestVisual(useBestVisual)
-            
+
                     # Set the default handler for SIGINT.  This fixes a problem
                     # where if Ctrl-C is pressed in the console that started this
                     # app then it will not appear to do anything, (not even send
@@ -418,24 +422,24 @@ def run():
                             signal.signal(signal.SIGINT, signal.SIG_DFL)
                         except:
                             pass
-            
+
                     # Save and redirect the stdio to a window?
                     self.stdioWin = None
                     self.saveStdio = (_sys.stdout, _sys.stderr)
                     if redirect:
                         self.RedirectStdio(filename)
-            
-                    # Use Python's install prefix as the default  
+
+                    # Use Python's install prefix as the default
                     wx.StandardPaths.Get().SetInstallPrefix(_sys.prefix)
-            
+
                     # Until the new native control for wxMac is up to par, still use the generic one.
                     wx.SystemOptions.SetOption("mac.listctrl.always_use_generic", 1)
-            
+
                     # This finishes the initialization of wxWindows and then calls
                     # the OnInit that should be present in the derived class
                     self._BootstrapApp()
                     """),
-    
+
             PyFunctionDef('OnPreInit', '(self)',
                 doc="""\
                     Things that must be done after _BootstrapApp has done its thing, but
@@ -444,17 +448,17 @@ def run():
                     this method from there.
                     """,
                 body="wx.StockGDI._initStockObjects()"),
-            
+
             PyFunctionDef('__del__', '(self)',
                 doc="",
                 body="""\
                     # Just in case the MainLoop was overridden without calling RestoreStio
                     self.RestoreStdio()
                     """),
-    
+
             PyFunctionDef('SetTopWindow', '(self, frame)',
                 doc="""\
-                    Set the \"main\" top level window, which will be used for the parent of 
+                    Set the \"main\" top level window, which will be used for the parent of
                     the on-demand output window as well as for dialogs that do not have
                     an explicit parent set.
                     """,
@@ -463,7 +467,7 @@ def run():
                         self.stdioWin.SetParent(frame)
                     wx.PyApp.SetTopWindow(self, frame)
                     """),
-            
+
             PyFunctionDef('MainLoop', '(self)',
                 doc="""Execute the main GUI event loop""",
                 body="""\
@@ -471,7 +475,7 @@ def run():
                     self.RestoreStdio()
                     return rv
                     """),
-    
+
             PyFunctionDef('RedirectStdio', '(self, filename=None)',
                 doc="""Redirect sys.stdout and sys.stderr to a file or a popup window.""",
                 body="""\
@@ -481,7 +485,7 @@ def run():
                         self.stdioWin = self.outputWindowClass()
                         _sys.stdout = _sys.stderr = self.stdioWin
                     """),
-        
+
             PyFunctionDef('RestoreStdio', '(self)',
                 doc="",
                 body="""\
@@ -490,7 +494,7 @@ def run():
                     except:
                         pass
                     """),
-        
+
             PyFunctionDef('SetOutputWindowAttributes', '(self, title=None, pos=None, size=None)',
                 doc="""\
                     Set the title, position and/or size of the output window if the stdio
@@ -506,10 +510,10 @@ def run():
                         if size is not None:
                             self.stdioWin.size = size
                     """),
-            
+
             PyFunctionDef('Get', '()', isStatic=True,
                 doc="""\
-                    A staticmethod returning the currently active application object.  
+                    A staticmethod returning the currently active application object.
                     Essentially just a more pythonic version of :meth:`GetApp`.""",
                 body="return GetApp()"
                 )
@@ -526,21 +530,22 @@ def run():
             ])
 
 
-
     module.find('wxInitialize').ignore()
     module.find('wxUninitialize').ignore()
 
     for item in module.allItems():
         if item.name == 'wxEntry':
             item.ignore()
-                
 
-    
+
+    module.find('wxWakeUpIdle').mustHaveApp()
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------

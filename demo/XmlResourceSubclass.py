@@ -5,7 +5,7 @@ import  wx.xrc  as  xrc
 
 #----------------------------------------------------------------------
 
-resourceText = r'''<?xml version="1.0"?>
+resourceText = br'''<?xml version="1.0"?>
 <resource>
 
 <!-- Notice that the class IS a standard wx class, and a custom
@@ -26,17 +26,16 @@ resourceText = r'''<?xml version="1.0"?>
 
 class MyCustomPanel(wx.Panel):
     def __init__(self):
-        p = wx.PrePanel()
+        wx.Panel.__init__(self)
         # the Create step is done by XRC.
-        self.PostCreate(p)
         self.Bind(wx.EVT_WINDOW_CREATE, self.OnCreate)
         self.Bind(wx.EVT_SIZE, self.OnSize)
-        
-        
+
+
     def OnCreate(self, evt):
         # This is the little bit of customization that we do for this
         # silly example.  It could just as easily have been done in
-        # the resource.  We do it in the EVT_WINDOW_CREATE handler 
+        # the resource.  We do it in the EVT_WINDOW_CREATE handler
         # because the window doesn't really exist yet in the __init__.
         if self is evt.GetEventObject():
             t = wx.StaticText(self, -1, "MyCustomPanel")
@@ -55,7 +54,7 @@ class MyCustomPanel(wx.Panel):
             sz = self.GetSize()
             w, h = self.t.GetTextExtent(self.t.GetLabel())
             self.t.SetPosition(((sz.width-w)/2, (sz.height-h)/2))
-    
+
 #----------------------------------------------------------------------
 
 
@@ -75,8 +74,8 @@ class TestPanel(wx.Panel):
         line = wx.StaticLine(self, -1)
 
         # Load the resource
-        res = xrc.EmptyXmlResource()
-        res.LoadFromString(resourceText)
+        res = xrc.XmlResource()
+        res.LoadFromBuffer(resourceText)
 
         # Now create a panel from the resource data
         panel = res.LoadPanel(self, "MyPanel")
@@ -89,7 +88,6 @@ class TestPanel(wx.Panel):
         sizer.Add(panel, 1, wx.EXPAND|wx.ALL, 5)
 
         self.SetSizer(sizer)
-        self.SetAutoLayout(True)
 
 
 #----------------------------------------------------------------------

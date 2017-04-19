@@ -1,5 +1,5 @@
 """
-Some topic definition validation functions. 
+Some topic definition validation functions.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.

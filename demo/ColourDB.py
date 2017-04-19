@@ -110,8 +110,8 @@ class TestWindow(wx.ScrolledWindow):
             rect = rgn.GetBox()
             pixStart = vs[1]*self.lineHeight + rect.y
             pixStop  = pixStart + rect.height
-            start = pixStart / self.lineHeight - 1
-            stop = pixStop / self.lineHeight
+            start = pixStart // self.lineHeight - 1
+            stop = pixStop // self.lineHeight
         else:
             start = 0
             stop = numColours

@@ -9,7 +9,7 @@
 #----------------------------------------------------------------------------
 # 12/02/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 Compatability changes
+# o 2.5 Compatibility changes
 #
 # 12/07/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -42,7 +42,7 @@ warningmsg = r"""\
 """
 
 warnings.warn(warningmsg, DeprecationWarning, stacklevel=2)
-    
+
 if wx.Platform == '__WXGTK__':
     #
     # For wxGTK all we have to do is set the wxTB_DOCKABLE flag

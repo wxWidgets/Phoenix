@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.foldpanelbar as FPB
@@ -7,21 +7,21 @@ import wx.lib.agw.foldpanelbar as FPB
 #---------------------------------------------------------------------------
 
 class lib_agw_foldpanelbar_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_foldpanelbarCtor(self):
         panel_bar = FPB.FoldPanelBar(self.frame, -1, agwStyle=FPB.FPB_VERTICAL)
-        
+
         fold_panel = panel_bar.AddFoldPanel("Thing")
         thing = wx.TextCtrl(fold_panel, -1, size=(400, -1), style=wx.TE_MULTILINE)
-        
+
         panel_bar.AddFoldPanelWindow(fold_panel, thing)
 
     def test_lib_agw_foldpanelbarMethods(self):
         panel_bar = FPB.FoldPanelBar(self.frame, -1, agwStyle=FPB.FPB_VERTICAL)
-        
+
         fold_panel = panel_bar.AddFoldPanel("Thing")
         thing = wx.TextCtrl(fold_panel, -1, size=(400, -1), style=wx.TE_MULTILINE)
-        
+
         panel_bar.AddFoldPanelWindow(fold_panel, thing)
 
         # Some methods tests...
@@ -38,7 +38,7 @@ class lib_agw_foldpanelbar_Tests(wtc.WidgetTestCase):
         panel_bar.Collapse(foldpanel)
         self.assertTrue(not foldpanel.IsExpanded())
 
-        
+
     def test_lib_agw_foldpanelbarConstantsExist(self):
         FPB.CAPTIONBAR_FILLED_RECTANGLE
         FPB.CAPTIONBAR_GRADIENT_H
@@ -65,7 +65,7 @@ class lib_agw_foldpanelbar_Tests(wtc.WidgetTestCase):
     def test_lib_agw_foldpanelbarEvents(self):
         FPB.EVT_CAPTIONBAR
         FPB.wxEVT_CAPTIONBAR
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

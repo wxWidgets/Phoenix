@@ -8,11 +8,14 @@
 =================================================
 
 
-:class:`~grid.Grid` and its related classes are used for displaying and editing tabular data.
+:class:`~wx.grid.Grid` and its related classes are used for displaying
+and editing tabular data.
 
-:class:`~grid.Grid` supports custom attributes for the table cells, allowing to completely 
-customize its appearance and uses a separate grid table (:class:`~grid.GridTableBase` -derived) 
-class for the data management meaning that it can be used to display arbitrary amounts of data.
+:class:`~wx.grid.Grid` supports custom attributes for the table cells,
+allowing to completely customize its appearance and uses a separate
+grid table (:class:`~wx.grid.GridTableBase` -derived) class for the
+data management meaning that it can be used to display arbitrary
+amounts of data.
 
 
 .. _grid getting started:
@@ -20,17 +23,16 @@ class for the data management meaning that it can be used to display arbitrary a
 Getting Started
 ---------------
 
-For simple applications you need only refer to the :class:`~grid.Grid` class in your code. 
-This example shows how you might create a grid in a frame or dialog constructor and illustrates
+For simple applications you need only refer to the
+:class:`~wx.grid.Grid` class in your code.  This example shows how you
+might create a grid in a frame or dialog constructor and illustrates
 some of the formatting functions::
 
     import wx
     import wx.grid
 
     class GridFrame(wx.Frame):
-
         def __init__(self, parent):
-
             wx.Frame.__init__(self, parent)
             
             # Create a wxGrid object
@@ -74,37 +76,37 @@ some of the formatting functions::
         app.MainLoop()
 
 
-Here is a list of classes related to :class:`~grid.Grid`:
+Here is a list of classes related to :class:`~wx.grid.Grid`:
 
-- :class:`~grid.Grid`: The main grid control class itself.
-- :class:`~grid.GridTableBase`: The base class for grid data provider.
-- :class:`~grid.GridStringTable`: Simple :class:`~grid.GridTableBase` implementation 
+- :class:`~wx.grid.Grid`: The main grid control class itself.
+- :class:`~wx.grid.GridTableBase`: The base class for grid data provider.
+- :class:`~wx.grid.GridStringTable`: Simple :class:`~wx.grid.GridTableBase` implementation 
   supporting only string data items and storing them all in memory (hence suitable 
   for not too large grids only).
-- :class:`~grid.GridCellAttr`: A cell attribute, allowing to customize its appearance 
+- :class:`~wx.grid.GridCellAttr`: A cell attribute, allowing to customize its appearance 
   as well as the renderer and editor used for displaying and editing it.
-- :class:`~grid.GridCellAttrProvider`: The object responsible for storing and retrieving the cell attributes.
-- :class:`~grid.GridColLabelWindow`: The window showing the grid columns labels.
-- :class:`~grid.GridRowLabelWindow`: The window showing the grid rows labels.
-- :class:`~grid.GridCornerLabelWindow`: The window used in the upper left grid corner.
-- :class:`~grid.GridWindow`: The window representing the main part of the grid.
-- :class:`~grid.GridCellRenderer`: Base class for objects used to display a cell value.
-- :class:`~grid.GridCellStringRenderer`: Renderer showing the cell as a text string.
-- :class:`~grid.GridCellNumberRenderer`: Renderer showing the cell as an integer number.
-- :class:`~grid.GridCellFloatRenderer`: Renderer showing the cell as a floating point number.
-- :class:`~grid.GridCellBoolRenderer`: Renderer showing the cell as checked or unchecked box.
-- :class:`~grid.GridCellEditor`: Base class for objects used to edit the cell value.
-- :class:`~grid.GridCellStringEditor`: Editor for cells containing text strings.
-- :class:`~grid.GridCellNumberEditor`: Editor for cells containing integer numbers.
-- :class:`~grid.GridCellFloatEditor`: Editor for cells containing floating point numbers.
-- :class:`~grid.GridCellBoolEditor`: Editor for boolean-valued cells.
-- :class:`~grid.GridCellChoiceEditor`: Editor allowing to choose one of the predefined strings (and possibly enter new one).
-- :class:`~grid.GridEvent`: The event sent by most of :class:`~grid.Grid` actions.
-- :class:`~grid.GridSizeEvent`: The special event sent when a grid column or row is resized.
-- :class:`~grid.GridRangeSelectEvent`: The special event sent when a range of cells is selected in the grid.
-- :class:`~grid.GridEditorCreatedEvent`: The special event sent when a cell editor is created.
-- :class:`~grid.GridSelection`: The object efficiently representing the grid selection.
-- :class:`~grid.GridTypeRegistry`: Contains information about the data types supported by the grid.
+- :class:`~wx.grid.GridCellAttrProvider`: The object responsible for storing and retrieving the cell attributes.
+- :class:`~wx.grid.GridColLabelWindow`: The window showing the grid columns labels.
+- :class:`~wx.grid.GridRowLabelWindow`: The window showing the grid rows labels.
+- :class:`~wx.grid.GridCornerLabelWindow`: The window used in the upper left grid corner.
+- :class:`~wx.grid.GridWindow`: The window representing the main part of the grid.
+- :class:`~wx.grid.GridCellRenderer`: Base class for objects used to display a cell value.
+- :class:`~wx.grid.GridCellStringRenderer`: Renderer showing the cell as a text string.
+- :class:`~wx.grid.GridCellNumberRenderer`: Renderer showing the cell as an integer number.
+- :class:`~wx.grid.GridCellFloatRenderer`: Renderer showing the cell as a floating point number.
+- :class:`~wx.grid.GridCellBoolRenderer`: Renderer showing the cell as checked or unchecked box.
+- :class:`~wx.grid.GridCellEditor`: Base class for objects used to edit the cell value.
+- :class:`~wx.grid.GridCellStringEditor`: Editor for cells containing text strings.
+- :class:`~wx.grid.GridCellNumberEditor`: Editor for cells containing integer numbers.
+- :class:`~wx.grid.GridCellFloatEditor`: Editor for cells containing floating point numbers.
+- :class:`~wx.grid.GridCellBoolEditor`: Editor for boolean-valued cells.
+- :class:`~wx.grid.GridCellChoiceEditor`: Editor allowing to choose one of the predefined strings (and possibly enter new one).
+- :class:`~wx.grid.GridEvent`: The event sent by most of :class:`~wx.grid.Grid` actions.
+- :class:`~wx.grid.GridSizeEvent`: The special event sent when a grid column or row is resized.
+- :class:`~wx.grid.GridRangeSelectEvent`: The special event sent when a range of cells is selected in the grid.
+- :class:`~wx.grid.GridEditorCreatedEvent`: The special event sent when a cell editor is created.
+- :class:`~wx.grid.GridSelection`: The object efficiently representing the grid selection.
+- :class:`~wx.grid.GridTypeRegistry`: Contains information about the data types supported by the grid.
 
 
 
@@ -115,24 +117,33 @@ Column and Row Sizes
 
 .. note::
 
-   This section will discuss the resizing of :class:`~grid.Grid` rows only to avoid repetitions 
-   but everything in it also applies to grid columns, just replace Row in the method names with Col.
+   This section will discuss the resizing of :class:`~wx.grid.Grid` rows
+   only to avoid repetitions but everything in it also applies to grid
+   columns, just replace Row in the method names with Col.
 
 
-Initially all :class:`~grid.Grid` rows have the same height, which can be modified for all of them 
-at once using :meth:`~grid.Grid.SetDefaultRowSize`. However, unlike simpler controls such as :class:`ListBox`
-or :class:`ListCtrl`, :class:`~grid.Grid` also allows its rows to be individually resized to have their
-own height using :meth:`~grid.Grid.SetRowSize` (as a special case, a row may be hidden entirely by 
-setting its size to 0, which is done by a helper :meth:`~grid.Grid.HideRow` method). It is also 
-possible to resize a row to fit its contents with :meth:`~grid.Grid.AutoSizeRow` or do it for all 
-rows at once with :meth:`~grid.Grid.AutoSizeRows`.
+Initially all :class:`~wx.grid.Grid` rows have the same height, which
+can be modified for all of them at once using
+:meth:`~wx.grid.Grid.SetDefaultRowSize`. However, unlike simpler
+controls such as :class:`wx.ListBox` or :class:`wx.ListCtrl`,
+:class:`~wx.grid.Grid` also allows its rows to be individually resized
+to have their own height using :meth:`~wx.grid.Grid.SetRowSize` (as a
+special case, a row may be hidden entirely by setting its size to 0,
+which is done by a helper :meth:`~wx.grid.Grid.HideRow` method). It is
+also possible to resize a row to fit its contents with
+:meth:`~wx.grid.Grid.AutoSizeRow` or do it for all rows at once with
+:meth:`~wx.grid.Grid.AutoSizeRows`.
 
-Additionally, by default the user can also drag the row separator lines to resize the rows interactively. 
-This can be forbidden completely by calling :meth:`~grid.Grid.DisableDragRowSize` or just for the 
-individual rows using :meth:`~grid.Grid.DisableRowResize`.
+Additionally, by default the user can also drag the row separator
+lines to resize the rows interactively.  This can be forbidden
+completely by calling :meth:`~wx.grid.Grid.DisableDragRowSize` or just
+for the individual rows using :meth:`~wx.grid.Grid.DisableRowResize`.
 
-If you do allow the user to resize the grid rows, it may be a good idea to save their heights and 
-restore it when the grid is recreated the next time (possibly during a next program execution): 
-the functions :meth:`~grid.Grid.GetRowSizes` and :meth:`~grid.Grid.SetRowSizes` can help with this, 
-you will just need to serialize :class:`~grid.GridSizesInfo` structure returned by the former in 
-some way and deserialize it back before calling the latter.
+If you do allow the user to resize the grid rows, it may be a good
+idea to save their heights and restore it when the grid is recreated
+the next time (possibly during a next program execution): the
+functions :meth:`~wx.grid.Grid.GetRowSizes` and
+:meth:`~wx.grid.Grid.SetRowSizes` can help with this, you will just
+need to serialize :class:`~wx.grid.GridSizesInfo` structure returned
+by the former in some way and deserialize it back before calling the
+latter.

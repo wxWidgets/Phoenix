@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -14,17 +14,17 @@ class fdrepdlg_Tests(wtc.WidgetTestCase):
         wx.FR_NOUPDOWN
         wx.FR_NOMATCHCASE
         wx.FR_NOWHOLEWORD
-        
+
     def test_fdrepdlgDlg(self):
         data = wx.FindReplaceData()
         data.SetFindString('find string')
         data.SetReplaceString('replace')
         self.assertEqual(data.FindString, 'find string')
-        
+
         dlg = wx.FindReplaceDialog(self.frame, data, 'Find Stuff')
         dlg.GetData()
         dlg.Destroy()
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

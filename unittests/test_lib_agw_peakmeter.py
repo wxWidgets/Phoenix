@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import random
 
@@ -37,7 +37,7 @@ class lib_agw_peakmeter_Tests(wtc.WidgetTestCase):
         self.assertTrue(peak.GetAGWWindowStyleFlag() & PM.PM_HORIZONTAL == 0)
 
         self.assertEqual(peak.GetRangeValue(), (1, 10, 20))
-        
+
     def test_lib_agw_peakmeterConstantsExist(self):
         PM.BAND_DEFAULT
         PM.BAND_PERCENT
@@ -46,7 +46,7 @@ class lib_agw_peakmeter_Tests(wtc.WidgetTestCase):
         PM.GRID_INCREASEBY
         PM.LEDS_DEFAULT
         PM.PM_HORIZONTAL
-        PM.PM_VERTICAL        
+        PM.PM_VERTICAL
 
 #---------------------------------------------------------------------------
 

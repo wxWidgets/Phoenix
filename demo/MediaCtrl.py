@@ -26,13 +26,9 @@ class TestPanel(wx.Panel):
 
         # Create some controls
         try:
-            backend = ""
-            if 'wxMSW' in wx.PlatformInfo:
-                # the default backend doesn't always send the EVT_MEDIA_LOADED
-                # event which we depend upon, so use a different backend by
-                # default for this demo.
-                backend = wx.media.MEDIABACKEND_QUICKTIME
-                
+            backend = "" # let MediaCtrl choose default backend
+            #backend=wx.media.MEDIABACKEND_DIRECTSHOW
+            #backend=wx.media.MEDIABACKEND_WMP10
             self.mc = wx.media.MediaCtrl()
             ok = self.mc.Create(self, style=wx.SIMPLE_BORDER,
                                 szBackend=backend)
@@ -42,18 +38,21 @@ class TestPanel(wx.Panel):
             self.Destroy()
             raise
 
+        # the following event is not sent with the Windows default backend
+        # MEDIABACKEND_DIRECTSHOW
+        # choose above e.g. MEDIABACKEND_WMP10 if this is a problem for you
         self.Bind(wx.media.EVT_MEDIA_LOADED, self.OnMediaLoaded)
 
         btn1 = wx.Button(self, -1, "Load File")
         self.Bind(wx.EVT_BUTTON, self.OnLoadFile, btn1)
-        
+
         btn2 = wx.Button(self, -1, "Play")
         self.Bind(wx.EVT_BUTTON, self.OnPlay, btn2)
         self.playBtn = btn2
-        
+
         btn3 = wx.Button(self, -1, "Pause")
         self.Bind(wx.EVT_BUTTON, self.OnPause, btn3)
-        
+
         btn4 = wx.Button(self, -1, "Stop")
         self.Bind(wx.EVT_BUTTON, self.OnStop, btn4)
 
@@ -65,8 +64,8 @@ class TestPanel(wx.Panel):
         self.st_size = StaticText(self, -1, size=(100,-1))
         self.st_len  = StaticText(self, -1, size=(100,-1))
         self.st_pos  = StaticText(self, -1, size=(100,-1))
-        
-        
+
+
         # setup the layout
         sizer = wx.GridBagSizer(5,5)
         sizer.Add(self.mc, (1,1), span=(5,1))#, flag=wx.EXPAND)
@@ -86,8 +85,8 @@ class TestPanel(wx.Panel):
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.OnTimer)
         self.timer.Start(100)
-        
-        
+
+
 
     def OnLoadFile(self, evt):
         dlg = wx.FileDialog(self, message="Choose a media file",
@@ -100,19 +99,21 @@ class TestPanel(wx.Panel):
 
 
     def DoLoadFile(self, path):
-        self.playBtn.Disable()
+
         if not self.mc.Load(path):
             wx.MessageBox("Unable to load %s: Unsupported format?" % path,
                           "ERROR",
                           wx.ICON_ERROR | wx.OK)
+            self.playBtn.Disable()
         else:
             self.mc.SetInitialSize()
             self.GetSizer().Layout()
             self.slider.SetRange(0, self.mc.Length())
+            self.playBtn.Enable()
 
     def OnMediaLoaded(self, evt):
         self.playBtn.Enable()
-    
+
     def OnPlay(self, evt):
         if not self.mc.Play():
             wx.MessageBox("Unable to Play media : Unsupported format?",
@@ -125,10 +126,10 @@ class TestPanel(wx.Panel):
 
     def OnPause(self, evt):
         self.mc.Pause()
-    
+
     def OnStop(self, evt):
         self.mc.Stop()
-    
+
 
     def OnSeek(self, evt):
         offset = self.slider.GetValue()
@@ -156,7 +157,7 @@ def runTest(frame, nb, log):
         win = MessagePanel(nb, 'wx.MediaCtrl is not available on this platform.',
                            'Sorry', wx.ICON_WARNING)
         return win
-    
+
 
 #----------------------------------------------------------------------
 
@@ -173,10 +174,10 @@ may require specific codecs to be installed.
 
 <p>
 wx.MediaCtrl uses native backends to render media, for example on Windows
-there is a ActiveMovie/DirectShow backend, and on Macintosh there is a 
+there is a ActiveMovie/DirectShow backend, and on Macintosh there is a
 QuickTime backend.
 <p>
-wx.MediaCtrl is not currently available on unix systems. 
+wx.MediaCtrl is not currently available on unix systems.
 
 </body></html>
 """

@@ -1,12 +1,12 @@
 //--------------------------------------------------------------------------
 // Name:        wxpy_api.sip
-// Purpose:     The implementation of the API functions that are exported 
+// Purpose:     The implementation of the API functions that are exported
 //              from the core extension module.
 //
 // Author:      Robin Dunn
 //
 // Created:     19-Nov-2010
-// Copyright:   (c) 2013 by Total Control Software
+// Copyright:   (c) 2010-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -25,8 +25,8 @@
 //--------------------------------------------------------------------------
 // wxString conversion
 
-// See also the wxString MappedType.  This code is similar, but doesn't 
-// allocate a new wxString instance on the heap, is able to convert 
+// See also the wxString MappedType.  This code is similar, but doesn't
+// allocate a new wxString instance on the heap, is able to convert
 // non-string/unicode objects to unicode, and won't raise exceptions
 static wxString i_Py2wxString(PyObject* source)
 {
@@ -41,12 +41,12 @@ static wxString i_Py2wxString(PyObject* source)
             PyErr_Clear();
             return wxEmptyString;
         }
-    }            
+    }
     else if (!PyUnicode_Check(source)) {
 #if PY_MAJOR_VERSION >= 3
         uni = PyObject_Str(source);
 #else
-        uni = PyObject_Unicode(source); 
+        uni = PyObject_Unicode(source);
 #endif
         if (PyErr_Occurred()) {
             PyErr_Clear();
@@ -63,8 +63,8 @@ static wxString i_Py2wxString(PyObject* source)
     return target;
 }
 
-    
-// TODO:  This might be a good way to share the string conversion code here and in string.sip...    
+
+// TODO:  This might be a good way to share the string conversion code here and in string.sip...
 // A function to convert a Python string or unicode object to a wxString
 // NOTE that it is inline so it should go in the header section
 //inline wxString Py2wxString(PyObject* obj, bool setException=false, int& isErr=0) {
@@ -92,9 +92,13 @@ static wxString i_Py2wxString(PyObject* source)
 //        Py_DECREF(uni) // release the temporary Unicode object we may have created
 //    return str;
 //}
-    
+
 //--------------------------------------------------------------------------
 // Wrapped object checks and converters
+//
+// TODO: Add some versions of these helpers that take a sipTypeDef
+// instead of a name? They're accessible everywhere we need them, and
+// it may be enough of an efficiency boost to make it worth it.
 
 // Create a PyObject of the requested type from a void* and a class name.
 static PyObject* i_wxPyConstructObject(void* ptr,
@@ -105,13 +109,13 @@ static PyObject* i_wxPyConstructObject(void* ptr,
     wxString nsDelimiter = "::";
     int pos = name.Find(nsDelimiter);
     if (pos != wxNOT_FOUND)
-        name = name.Mid(pos + nsDelimiter.Len());    
+        name = name.Mid(pos + nsDelimiter.Len());
 
     const sipTypeDef* td = sipFindType(name);
     if (!td)
         return NULL;
     PyObject* transferObj = setThisOwn ? Py_None : NULL;
-    return sipConvertFromType(ptr, td, transferObj);     
+    return sipConvertFromType(ptr, td, transferObj);
 }
 
 
@@ -121,6 +125,7 @@ static bool i_wxPyWrappedPtr_Check(PyObject* obj)
     return PyObject_TypeCheck(obj, sipWrapper_Type);
 }
 
+
 // Check if a PyObject is a specific wrapped class or subclass
 static bool i_wxPyWrappedPtr_TypeCheck(PyObject* obj, const wxString& className)
 {
@@ -129,6 +134,7 @@ static bool i_wxPyWrappedPtr_TypeCheck(PyObject* obj, const wxString& className)
         return false;
     return sipCanConvertToType(obj, td, SIP_NO_CONVERTORS);
 }
+
 
 // Convert a wrapped SIP object to its C++ pointer, ensuring that it is of the expected type
 static bool i_wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& className)
@@ -143,12 +149,13 @@ static bool i_wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& c
     return true;
 }
 
+
 //--------------------------------------------------------------------------
 // Deal with the GIL
 
 // Calls from wxWindows back to Python code, or even any PyObject
 // manipulations, PyDECREF's and etc. should be wrapped in calls to these functions:
-static wxPyBlock_t i_wxPyBeginBlockThreads() 
+static wxPyBlock_t i_wxPyBeginBlockThreads()
 {
     if (! Py_IsInitialized()) {
         return (wxPyBlock_t)0;
@@ -157,16 +164,17 @@ static wxPyBlock_t i_wxPyBeginBlockThreads()
     return state;
 }
 
-static void i_wxPyEndBlockThreads(wxPyBlock_t blocked) 
+static void i_wxPyEndBlockThreads(wxPyBlock_t blocked)
 {
     if (! Py_IsInitialized()) {
         return;
-    }            
+    }
     PyGILState_Release(blocked);
 }
 
 //--------------------------------------------------------------------------
 // Commonly used helpers for converting small sequences of numbers
+// TODO: Are these still needed?
 
 // A helper for converting a 2 element sequence to a pair of integers
 static bool i_wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
@@ -197,7 +205,7 @@ static bool i_wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
 }
 
 // A helper for converting a 4 element sequence to a set of integers
-static bool i_wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4) 
+static bool i_wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4)
 {
     bool isFast = PyList_Check(source) || PyTuple_Check(source);
     PyObject *o1, *o2, *o3, *o4;
@@ -243,9 +251,9 @@ class wxVariantDataPyObject : public wxPyUserDataHelper<wxVariantData>
 public:
     explicit wxVariantDataPyObject(PyObject* obj = 0)
         : wxPyUserDataHelper<wxVariantData>(obj) {}
-    
+
     virtual bool Eq(wxVariantData& data) const;
-    
+
     virtual wxString GetType() const { return wxT("PyObject"); }
     wxVariantData* Clone() const { return new wxVariantDataPyObject(BorrowData()); }
 };
@@ -269,41 +277,77 @@ bool wxVariantDataPyObject::Eq(wxVariantData& data) const
 //
 // These functions are here in the API so they can be used by both the
 // wxVariant MappedType and by other classes or types that want to add support
-// for additional kinds of nativly supported types (see dataview for example.)
+// for additional kinds of natively supported types (see dataview for example.)
 
 // PyObject --> wxVariant
 wxVariant i_wxVariant_in_helper(PyObject* obj)
 {
     wxVariant value;
-    
-    if (PyBytes_Check(obj) || PyUnicode_Check(obj)) 
+
+    if (PyBytes_Check(obj) || PyUnicode_Check(obj))
         value = Py2wxString(obj);
+
     else if (PyBool_Check(obj))
         value = (obj == Py_True);
+
     else if (wxPyInt_Check(obj))
         value = (long)wxPyInt_AS_LONG(obj);
+
     else if (PyLong_Check(obj))
         value = (long)PyLong_AsLong(obj);
+
     else if (PyFloat_Check(obj))
         value = PyFloat_AS_DOUBLE(obj);
-    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxDateTime"))) {
+
+    else if (obj == Py_None)
+        value.MakeNull();
+
+    else if (sipCanConvertToType(obj, sipType_wxDateTime, 0)) {
         wxDateTime* ptr;
-        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxDateTime"));
+        int state = 0;
+        int isErr = 0;
+        ptr = (wxDateTime*)sipConvertToType(obj, sipType_wxDateTime, NULL, 0, &state, &isErr);
         value = *ptr;
+        sipReleaseType(ptr, sipType_wxDateTime, state);
     }
+
     else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxBitmap"))) {
         wxBitmap* ptr;
         wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxBitmap"));
         value << *ptr;
     }
+
+    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxImage"))) {
+        wxImage* ptr;
+        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxImage"));
+        value << *ptr;
+    }
+
     else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxIcon"))) {
         wxIcon* ptr;
         wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxIcon"));
-        value <<*ptr;
+        value << *ptr;
     }
+
+    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxColour"))) {
+        wxColour* ptr;
+        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxColour"));
+        value << *ptr;
+    }
+
+    else if (sipCanConvertToType(obj, sipType_wxArrayString, 0)) {
+        wxArrayString* ptr;
+        int state = 0;
+        int isErr = 0;
+        ptr = (wxArrayString*)sipConvertToType(obj, sipType_wxArrayString, NULL, 0, &state, &isErr);
+        value = *ptr;
+        sipReleaseType(ptr, sipType_wxArrayString, state);
+    }
+
     else
+        // Just use the PyObject itself
         value = new wxVariantDataPyObject(obj);
-        
+
     return value;
 }
 
@@ -312,46 +356,88 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
 PyObject* i_wxVariant_out_helper(const wxVariant& value)
 {
     PyObject* obj;
-        
-    if (value.IsType("string"))
+
+    if (value.IsNull()) {
+        obj = Py_None;
+        Py_INCREF(obj);
+    }
+
+    else if (value.IsType("string"))
         obj = wx2PyString(value.GetString());
+
     else if (value.IsType("bool"))
         obj = PyBool_FromLong((long)value.GetBool());
+
     else if (value.IsType("long"))
         obj = PyLong_FromLong(value.GetLong());
+
     else if (value.IsType("double"))
         obj = PyFloat_FromDouble(value.GetDouble());
-    else if ( value.IsType("datetime") )
-    {
+
+    else if ( value.IsType("datetime") ) {
         wxDateTime val = value.GetDateTime();
-        obj = wxPyConstructObject(new wxDateTime(val), wxT("wxDateTime"));
+        obj = wxPyConstructObject(new wxDateTime(val), "wxDateTime", true);
     }
-    else if ( value.IsType("wxBitmap") )
-    {
+
+    else if ( value.IsType("wxBitmap") ) {
         wxBitmap val;
         val << value;
-        obj = wxPyConstructObject(new wxBitmap(val), wxT("wxBitmap"));
+        obj = wxPyConstructObject(new wxBitmap(val), "wxBitmap", true);
     }
-    else if ( value.IsType("wxIcon") )
-    {
+
+    else if ( value.IsType("wxImage") ) {
+        wxImage val;
+        val << value;
+        obj = wxPyConstructObject(new wxImage(val), "wxImage", true);
+    }
+
+    else if ( value.IsType("wxIcon") ) {
         wxIcon val;
         val << value;
-        obj = wxPyConstructObject(new wxIcon(val), wxT("wxIcon"));
+        obj = wxPyConstructObject(new wxIcon(val), "wxIcon", true);
     }
-    else if ( value.IsType("PyObject") )
-    {
+
+    else if ( value.IsType("wxColour") ) {
+        wxColour val;
+        val << value;
+        obj = wxPyConstructObject(new wxColour(val), "wxColour", true);
+    }
+
+    else if ( value.IsType("arrstring") ) {
+        wxArrayString arr = value.GetArrayString();
+        obj = sipConvertFromType(&arr, sipType_wxArrayString, NULL);
+    }
+
+    else if ( value.IsType("PyObject") ) {
         wxVariantDataPyObject* data = (wxVariantDataPyObject*)value.GetData();
         obj = data->GetData();
     }
-    else
-    {
+
+    else {
         wxString msg = "Unexpected type (\"" + value.GetType() + "\") in wxVariant.";
         wxPyErr_SetString(PyExc_TypeError, msg.mb_str());
         obj = NULL;
-    }       
+    }
+
     return obj;
 }
 
+
+//--------------------------------------------------------------------------
+// Check if the app object has been created. Raises an exception if not.
+
+// Exception for when the wx.App hasn't been created yet
+// (Initialized in wxPyCoreModuleInject)
+PyObject* wxPyNoAppError = NULL;
+
+bool i_wxPyCheckForApp() {
+    if (wxTheApp != NULL)
+        return true;
+    else {
+        PyErr_SetString(wxPyNoAppError, "The wx.App object must be created first!");
+        return false;
+    }
+}
 
 
 //--------------------------------------------------------------------------
@@ -367,7 +453,8 @@ static wxPyAPI  API = {
     i_wxPy4int_seq_helper,
     i_wxPyWrappedPtr_TypeCheck,
     i_wxVariant_in_helper,
-    i_wxVariant_out_helper
+    i_wxVariant_out_helper,
+    i_wxPyCheckForApp
 };
 %End
 
@@ -379,6 +466,7 @@ static wxPyAPI  API = {
     PyObject* wxmodDict = PyModule_GetDict(wxmod);
     PyObject* apiObj = PyCapsule_New(&API, "wx._wxPyAPI", NULL);
     PyDict_SetItemString(wxmodDict, "_wxPyAPI", apiObj);
+
     Py_XDECREF(apiObj);
     Py_DECREF(wxmod);
     wxPyGetAPIPtr();

@@ -66,7 +66,7 @@ class TestPanel(wx.Panel):
 
         b = MyButton(self, -1, " Click me ", (30,30))
         self.Bind(wx.EVT_BUTTON, self.OnClick, id=b.GetId())
-        
+
         # This is our custom event binder created above.
         self.Bind(EVT_BUTTON_CLICKPOS, self.OnMyEvent, id=b.GetId())
 
@@ -94,7 +94,7 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-This demo is a contrived example of defining an event class in wxPython and 
+This demo is a contrived example of defining an event class in wxPython and
 sending it up the containment hierarchy for processing.
 
 V2.5 note: this demo also shows the new style of creating event binders that

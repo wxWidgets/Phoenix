@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     18-Sept-2006
-# Copyright:   (c) 2006 by Total Control Software
+# Copyright:   (c) 2006-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, unittest, documented
 #
@@ -47,7 +47,7 @@ Sample usage::
     class MyFrame(wx.Frame):
 
         def __init__(self):
-        
+
             wx.Frame.__init__(self, None, title="Test ExpandoTextCtrl")
             self.pnl = p = wx.Panel(self)
             self.eom = ExpandoTextCtrl(p, size=(250,-1),
@@ -77,7 +77,7 @@ Sample usage::
             frameSizer = wx.BoxSizer()
             frameSizer.Add(p, 1, wx.EXPAND)
             self.SetSizer(frameSizer)
-            
+
             self.Fit()
 
 
@@ -89,12 +89,12 @@ Sample usage::
             # just resize the frame to fit the new needs of the sizer.
             self.Fit()
 
-            
+
         def OnWriteText(self, evt):
             self.eom.WriteText("This is a test...  Only a test.  If this had "
                                "been a real emergency you would have seen the "
                                "quick brown fox jump over the lazy dog.")
-        
+
         def OnAppendText(self, evt):
             self.eom.AppendText("Appended text.")
 
@@ -134,10 +134,10 @@ class ExpandoTextCtrl(wx.TextCtrl):
     the EVT_ETC_LAYOUT_NEEDED event in the container and make any
     other layout adjustments that may be needed.
     """
-    
+
     _defaultHeight = -1
     _leading = 1   # TODO: find a way to calculate this, it may vary by platform
-    
+
     def __init__(self, parent, id=-1, value="",
                  pos=wx.DefaultPosition,  size=wx.DefaultSize,
                  style=0, validator=wx.DefaultValidator, name="expando"):
@@ -151,13 +151,13 @@ class ExpandoTextCtrl(wx.TextCtrl):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param integer `style`: the underlying :class:`Control` style;
-        :param Validator `validator`: the window validator;
+        :param integer `style`: the underlying :class:`wx.Control` style;
+        :param wx.Validator `validator`: the window validator;
         :param string `name`: the widget name.
 
-        :type parent: :class:`Window`
-        :type pos: tuple or :class:`Point`
-        :type size: tuple or :class:`Size`
+        :type parent: :class:`wx.Window`
+        :type pos: tuple or :class:`wx.Point`
+        :type size: tuple or :class:`wx.Size`
         """
 
         # find the default height of a single line control
@@ -177,7 +177,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
         self.maxHeight = -1
         if value:
             wx.CallAfter(self._adjustCtrl)
-                        
+
         self.Bind(wx.EVT_TEXT, self.OnTextChanged)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
@@ -201,7 +201,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
 
         :rtype: int
         """
-        
+
         return self.maxHeight
 
 
@@ -209,20 +209,20 @@ class ExpandoTextCtrl(wx.TextCtrl):
         """
         Sets the font for the :class:`ExpandoTextCtrl`.
 
-        :param Font font: font to associate with the :class:`ExpandoTextCtrl`, pass
+        :param wx.Font font: font to associate with the :class:`ExpandoTextCtrl`, pass
          ``NullFont`` to reset to the default font.
 
         :rtype: bool
         :returns: ``True`` if the font was really changed, ``False`` if it was already
          set to this font and nothing was done.
         """
-        
+
         retVal = wx.TextCtrl.SetFont(self, font)
         self.numLines = -1
         self._adjustCtrl()
 
         return retVal
-        
+
 
     def WriteText(self, text):
         """
@@ -238,9 +238,9 @@ class ExpandoTextCtrl(wx.TextCtrl):
            will be at the end of the inserted text, so subsequent write operations will
            be appended. To append text after the user may have interacted with the control,
            call :meth:`TextCtrl.SetInsertionPointEnd` before writing.
-           
+
         """
-        
+
         # work around a bug of a lack of a EVT_TEXT when calling
         # WriteText on wxMac
         wx.TextCtrl.WriteText(self, text)
@@ -255,7 +255,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
 
         .. seealso:: :meth:`WriteText`
         """
-        
+
         # Instead of using wx.TextCtrl.AppendText append and set the
         # insertion point ourselves.  This works around a bug on wxMSW
         # where it scrolls the old text out of view, and since there
@@ -274,13 +274,13 @@ class ExpandoTextCtrl(wx.TextCtrl):
         # check if any adjustments are needed on every text update
         self._adjustCtrl()
         evt.Skip()
-        
+
 
     def OnSize(self, evt):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`ExpandoTextCtrl`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         # The number of lines needed can change when the ctrl is resized too.
@@ -320,7 +320,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
                 evt.height = height
                 evt.numLines = numLines
                 self.GetEventHandler().ProcessEvent(evt)
-                
+
 
     def _getDefaultHeight(self, parent):
         # checked for cached value
@@ -334,7 +334,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
         return sz.height
 
 
-    if 'wxGTK' in wx.PlatformInfo or 'wxOSX-cocoa' in wx.PlatformInfo: 
+    if 'wxGTK' in wx.PlatformInfo or 'wxOSX-cocoa' in wx.PlatformInfo:
         # GetNumberOfLines in some ports doesn't count wrapped lines, so we
         # need to implement our own.
         def GetNumberOfLines(self):
@@ -342,7 +342,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
             width = self.GetClientSize().width
             dc = wx.ClientDC(self)
             dc.SetFont(self.GetFont())
-            count = 0 
+            count = 0
             for line in text.split('\n'):
                 count += 1
                 w, h = dc.GetTextExtent(line)
@@ -350,7 +350,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
                     # the width of the text is wider than the control,
                     # calc how many lines it will be wrapped to
                     count += self._wrapLine(line, dc, width)
-                    
+
             if not count:
                 count = 1
             return count
@@ -360,11 +360,11 @@ class ExpandoTextCtrl(wx.TextCtrl):
                 return wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
             else:
                 return 0
-            
+
         def _wrapLine(self, line, dc, width):
             # Estimate where the control will wrap the lines and
             # return the count of extra lines needed.
-            pte = dc.GetPartialTextExtents(line)  
+            pte = dc.GetPartialTextExtents(line)
             width -= wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
             if not pte or width < pte[0]:
                 return 1

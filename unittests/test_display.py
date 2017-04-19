@@ -1,12 +1,12 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 #import os; print(os.getpid())
 
 #---------------------------------------------------------------------------
 
 class display_Tests(wtc.WidgetTestCase):
-    
+
     def test_display(self):
         d = wx.Display()
         r = d.GetClientArea()
@@ -18,7 +18,7 @@ class display_Tests(wtc.WidgetTestCase):
         vm = m[0]
         self.assertTrue(isinstance(vm, wx.VideoMode))
         self.assertTrue(vm.IsOk())
-        
+
 #---------------------------------------------------------------------------
 
 

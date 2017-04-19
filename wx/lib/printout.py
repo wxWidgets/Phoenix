@@ -16,7 +16,7 @@
 # add index to data list after parsing total pages for paging
 #----------------------------------------------------------------------------
 # 12/10/2003 - Jeff Grimmett (grimmtooth@softhome.net)
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 #----------------------------------------------------------------------------
 # 11/23/2004 - Vernon Cole (wnvcole@peppermillcas.com)
 # o Generalize for non-2-dimensional sequences and non-text data
@@ -26,6 +26,8 @@
 import  copy
 import  types
 import  wx
+
+import six
 
 class PrintBase(object):
     def SetPrintFont(self, font):      # set the DC font parameters
@@ -271,7 +273,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
         self.column.append(pos_x)
 
         #module logic expects two dimensional data -- fix input if needed
-        if isinstance(self.data,types.StringTypes):
+        if isinstance(self.data, six.string_types):
             self.data = [[copy.copy(self.data)]] # a string becomes a single cell
         try:
             rows = len(self.data)
@@ -280,7 +282,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
             rows = 1
         first_value = self.data[0]
 
-        if isinstance(first_value, types.StringTypes): # a sequence of strings
+        if isinstance(first_value, six.string_types): # a sequence of strings
             if self.label == [] and self.set_column == []:
                 data = []
                 for x in self.data:     #becomes one column
@@ -560,7 +562,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
         self.col = 0
         max_y = 0
         for vtxt in row_val:
-            if not isinstance(vtxt,types.StringTypes):
+            if not isinstance(vtxt, six.string_types):
                 vtxt = str(vtxt)
             self.region = self.column[self.col+1] - self.column[self.col]
             self.indent = self.column[self.col]
@@ -681,7 +683,10 @@ class PrintTable(object):
         self.row_line_colour = {}
 
         self.parentFrame = parentFrame
-        self.SetPreviewSize()
+        if parentFrame:
+            self.SetPreviewSize(parentFrame.GetPosition(), parentFrame.GetSize())
+        else:
+            self.SetPreviewSize()
 
         self.printData = wx.PrintData()
         self.scale = 1.0

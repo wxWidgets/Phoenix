@@ -58,7 +58,7 @@ class XLSGridDemo(wx.Panel):
 
     def OnButton(self, evt):
 
-        XLSGridFrame(None)        
+        XLSGridFrame(None)
 
 
 class XLSGridFrame(wx.Frame):
@@ -78,7 +78,7 @@ class XLSGridFrame(wx.Frame):
         menuBar = wx.MenuBar()
         fileMenu = wx.Menu()
         helpMenu = wx.Menu()
-        
+
         item = wx.MenuItem(fileMenu, wx.ID_ANY, "E&xit", "Exit XLSGrid demo")
         self.Bind(wx.EVT_MENU, self.OnClose, item)
         fileMenu.Append(item)
@@ -86,7 +86,7 @@ class XLSGridFrame(wx.Frame):
         item = wx.MenuItem(helpMenu, wx.ID_ANY, "About...", "Shows the about dialog")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
         helpMenu.Append(item)
-        
+
         menuBar.Append(fileMenu, "&File")
         menuBar.Append(helpMenu, "&Help")
 
@@ -94,10 +94,10 @@ class XLSGridFrame(wx.Frame):
 
         statusbar = self.CreateStatusBar(2, wx.STB_SIZEGRIP)
         statusbar.SetStatusWidths([-2, -1])
-        
+
         statusbar_fields = [("wxPython XLSGrid Demo, Andrea Gavana @ 08 Aug 2011"),
                             ("Welcome To wxPython!")]
-        
+
         for i in range(len(statusbar_fields)):
             statusbar.SetStatusText(statusbar_fields[i], i)
 
@@ -120,11 +120,11 @@ class XLSGridPanel(wx.Panel):
     def __init__(self, parent):
 
         wx.Panel.__init__(self, parent)
-        
+
         self.start_button = wx.Button(self, -1, "Start")
         self.grid = XG.XLSGrid(self)
 
-        self.grid.Hide()        
+        self.grid.Hide()
 
         self.DoLayout()
 
@@ -135,7 +135,7 @@ class XLSGridPanel(wx.Panel):
 
         xlrd_ver = xlrd.__VERSION__
         string_xlrd = "Version " + xlrd_ver
-        
+
         if xlrd_ver <= "0.7.1":
             string_xlrd += ": hyperlink and rich-text functionalities will not work. xlrd 0.7.2 (SVN) is required for this."
         else:
@@ -145,7 +145,7 @@ class XLSGridPanel(wx.Panel):
             string_pywin32 = "You have pywin32! XLSGrid cells should appear exactly as in Excel (WYSIWYG)."
         else:
             string_pywin32 = "You don't have pywin32. Cell string formatting will be severely limited."
-            
+
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         top_sizer = wx.BoxSizer(wx.HORIZONTAL)
         top_right_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -171,14 +171,14 @@ class XLSGridPanel(wx.Panel):
         self.SetSizer(main_sizer)
 
         main_sizer.Layout()
-        
+
 
     def OnStart(self, event):
 
         event.Skip()
-        
+
         filename = os.path.join(os.path.abspath(dataDir), "Example_1.xls")
-        
+
         if not os.path.isfile(filename):
             dlg = wx.MessageDialog(self, 'Error: the file "Example_1.xls" is not in the "data" directory',
                                    'XLSGridDemo Error', wx.OK | wx.ICON_ERROR)
@@ -187,7 +187,7 @@ class XLSGridPanel(wx.Panel):
             return
 
         busy = wx.BusyInfo("Reading Excel file, please wait...")
-        
+
         sheetname = "Example_1"
         book = xlrd.open_workbook(filename, formatting_info=1)
 
@@ -200,7 +200,7 @@ class XLSGridPanel(wx.Panel):
 
         self.grid.Show()
         self.grid.PopulateGrid(book, sheet, texts, comments)
-        
+
         self.start_button.Enable(False)
         self.Layout()
 
@@ -215,7 +215,7 @@ def runTest(frame, nb, log):
     else:
         msg = 'This demo requires the xlrd package to be installed.\n' \
               'See: http://pypi.python.org/pypi/xlrd'
-        
+
         if _isStandalone:
             dlg = wx.MessageDialog(nb, msg, 'Sorry', wx.ICON_WARNING|wx.OK)
             dlg.ShowModal()
@@ -224,9 +224,9 @@ def runTest(frame, nb, log):
         else:
             from Main import MessagePanel
             win = MessagePanel(nb, msg, 'Sorry', wx.ICON_WARNING)
-            
+
         return win
-    
+
 #----------------------------------------------------------------------
 
 overview = XG.__doc__

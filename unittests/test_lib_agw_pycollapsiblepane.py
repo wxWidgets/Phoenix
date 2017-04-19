@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.pycollapsiblepane as PCP
@@ -7,7 +7,7 @@ import wx.lib.agw.pycollapsiblepane as PCP
 #---------------------------------------------------------------------------
 
 class lib_agw_pycollapsiblepane_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_pycollapsiblepaneCtor(self):
         pane = PCP.PyCollapsiblePane(self.frame, label='Some Data',
                                      style=wx.CP_DEFAULT_STYLE|wx.CP_NO_TLW_RESIZE)
@@ -26,7 +26,7 @@ class lib_agw_pycollapsiblepane_Tests(wtc.WidgetTestCase):
         self.assertEqual(pane.GetLabel(), 'Some Data')
         self.assertTrue(pane.IsCollapsed())
         self.assertTrue(not pane.IsExpanded())
-        
+
         pane.Expand()
         self.assertTrue(pane.IsExpanded())
 
@@ -39,7 +39,7 @@ class lib_agw_pycollapsiblepane_Tests(wtc.WidgetTestCase):
 
     def test_lib_agw_pycollapsiblepaneEvents(self):
         PCP.EVT_COLLAPSIBLEPANE_CHANGED
-        
+
 
 #---------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.buttonpanel as BP
@@ -7,15 +7,15 @@ import wx.lib.agw.buttonpanel as BP
 #---------------------------------------------------------------------------
 
 class lib_agw_buttonpanel_Tests(wtc.WidgetTestCase):
-        
-        
+
+
     def test_lib_agw_buttonpanelCtor(self):
         bar = BP.ButtonPanel(self.frame, -1, 'sample text')
         btn = BP.ButtonInfo(bar, wx.NewId(),
                             wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (32, 32)),
                             text='Button 1')
         bar.AddButton(btn)
-        
+
     def test_lib_agw_buttonpanelMethods(self):
         bar = BP.ButtonPanel(self.frame, -1, 'sample text')
         btn = BP.ButtonInfo(bar, wx.NewId(),
@@ -30,12 +30,12 @@ class lib_agw_buttonpanel_Tests(wtc.WidgetTestCase):
 
         self.assertTrue(bar.IsStandard())
         self.assertTrue(not bar.IsVertical())
-                
+
     def test_lib_agw_buttonpanelConstantsExist(self):
         # ButtonPanel agwStyle
         BP.BP_DEFAULT_STYLE
         BP.BP_USE_GRADIENT
-        
+
         # ButtonPanel alignments
         BP.BP_ALIGN_LEFT
         BP.BP_ALIGN_RIGHT
@@ -50,7 +50,7 @@ class lib_agw_buttonpanel_Tests(wtc.WidgetTestCase):
         BP.BP_GRADIENT_NONE
         BP.BP_GRADIENT_VERTICAL
         BP.BP_GRADIENT_HORIZONTAL
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

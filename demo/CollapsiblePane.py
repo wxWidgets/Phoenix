@@ -33,12 +33,12 @@ class TestPanel(wx.Panel):
         self.btn = btn = wx.Button(self, label=btnlbl1)
         self.Bind(wx.EVT_BUTTON, self.OnToggle, btn)
         sizer.Add(btn, 0, wx.ALL, 25)
-        
-        
+
+
     def OnToggle(self, evt):
         self.cp.Collapse(self.cp.IsExpanded())
         self.OnPaneChanged()
-        
+
 
     def OnPaneChanged(self, evt=None):
         if evt:
@@ -55,7 +55,7 @@ class TestPanel(wx.Panel):
             self.cp.SetLabel(label1)
             self.btn.SetLabel(btnlbl1)
         self.btn.SetInitialSize()
-        
+
 
     def MakePaneContent(self, pane):
         '''Just make a few controls to put on the collapsible pane'''
@@ -70,16 +70,16 @@ class TestPanel(wx.Panel):
         city  = wx.TextCtrl(pane, -1, "", size=(150,-1));
         state = wx.TextCtrl(pane, -1, "", size=(50,-1));
         zip   = wx.TextCtrl(pane, -1, "", size=(70,-1));
-        
+
         addrSizer = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
         addrSizer.AddGrowableCol(1)
-        addrSizer.Add(nameLbl, 0, 
+        addrSizer.Add(nameLbl, 0,
                 wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL)
         addrSizer.Add(name, 0, wx.EXPAND)
         addrSizer.Add(addrLbl, 0,
                 wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL)
         addrSizer.Add(addr1, 0, wx.EXPAND)
-        addrSizer.Add((5,5)) 
+        addrSizer.Add((5,5))
         addrSizer.Add(addr2, 0, wx.EXPAND)
 
         addrSizer.Add(cstLbl, 0,

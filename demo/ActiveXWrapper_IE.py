@@ -120,7 +120,7 @@ class TestPanel(wx.Window):
         dlg.Destroy()
 
     def OnHomeButton(self, event):
-        self.ie.GoHome() 
+        self.ie.GoHome()
 
     def OnPrevPageButton(self, event):
         self.ie.GoBack()

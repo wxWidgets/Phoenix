@@ -12,7 +12,7 @@ this module returns the following information:
   item in the wxPython demo;
 * GetDemos: returns all the demos in the AGW package;
 * GetOverview: returns a wx.html-ready representation of the AGW docs.
-                       
+
 These meta data are merged into the wxPython demo tree at startup.
 
 Last updated: Andrea Gavana @ 04 Feb 2013, 21.00 GMT.
@@ -43,7 +43,7 @@ _agwDocs = wx.lib.agw.__doc__
 def GetDemoBitmap():
     """ Returns the bitmap to be used in the demo tree for the AGW package. """
 
-    # Get the image as PyEmbeddedImage    
+    # Get the image as PyEmbeddedImage
     image = PyEmbeddedImage(
         b"iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAvdJ"
         b"REFUOI2NkX1I3HUcx1/f7+/B85yXpXa38o+ltIdzGRUUs4fpClaYi5iFERpkG6yQtkEEBZ0Q"
@@ -94,7 +94,7 @@ def GetRecentAdditions():
     else:
         recentAdditions = ['AGWInfoBar', 'PersistentControls', 'ShortcutEditor', 'XLSGrid']
 
-    # Return the Recent Additions for AGW    
+    # Return the Recent Additions for AGW
     return recentAdditions
 
 
@@ -107,7 +107,7 @@ def GetDemos():
     # The tree item text for AGW
     AGWTreeItem = "Advanced Generic Widgets"
 
-    # The AGW demos    
+    # The AGW demos
     AGWDemos = ['AdvancedSplash', 'AquaButton', 'AUI', 'BalloonTip',
                 'ButtonPanel', 'CubeColourDialog', 'CustomTreeCtrl',
                 'FlatMenu', 'FlatNotebook', 'FloatSpin',
@@ -140,8 +140,8 @@ def GetOverview():
     _agwDocs = wx.lib.agw.__doc__
 
     _agwDocs = _agwDocs.replace("`", "").replace("L{", "").replace("}", "")
-    
-    # Split the docs in many lines                       
+
+    # Split the docs in many lines
     splitted = _agwDocs.split("\n")
     # Add the title
     strs = "<html><body>\n<h2><center>Advanced Generic Widgets (AGW)</center></h2>\n\n"
@@ -196,6 +196,6 @@ def GetOverview():
         # Show wx things with the <code> tag
         strs = strs.replace(widget, "<code>%s</code>"%widget)
 
-    # Return the beautified AGW docs, ready for wx.html    
+    # Return the beautified AGW docs, ready for wx.html
     return strs
 

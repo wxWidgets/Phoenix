@@ -1,33 +1,33 @@
 
 """
-This is the Advanced Generic Widgets package (AGW). It provides many 
-custom-drawn wxPython controls: some of them can be used as a replacement 
-of the platform native controls, others are simply an addition to the 
+This is the Advanced Generic Widgets package (AGW). It provides many
+custom-drawn wxPython controls: some of them can be used as a replacement
+of the platform native controls, others are simply an addition to the
 already rich wxPython widgets set.
 
 
 Description:
 
-AGW contains many different modules, listed below. Items labelled with 
+AGW contains many different modules, listed below. Items labelled with
 an asterisk were already present in :mod:`lib` before:
 
 - AdvancedSplash: reproduces the behaviour of :class:`~adv.SplashScreen`, with more
   advanced features like custom shapes and text animations;
 - AquaButton: this is another custom-drawn button class which
   *approximatively* mimics the behaviour of Aqua buttons on the Mac;
-- AUI: a pure-Python implementation of :mod:`~lib.agw.aui`, with many bug fixes and
-  new features like HUD docking and :class:`~lib.agw.aui.auibook.AuiNotebook` tab arts;
+- AUI: a pure-Python implementation of :mod:`~wx.lib.agw.aui`, with many bug fixes and
+  new features like HUD docking and :class:`~wx.lib.agw.aui.auibook.AuiNotebook` tab arts;
 - BalloonTip: allows you to display tooltips in a balloon style window
   (actually a frame), similarly to the Windows XP balloon help;
 - ButtonPanel (*): a panel with gradient background shading with the
   possibility to add buttons and controls still respecting the gradient
   background;
-- CubeColourDialog: an alternative implementation of :class:`ColourDialog`, it
+- CubeColourDialog: an alternative implementation of :class:`wx.ColourDialog`, it
   offers different functionalities like colour wheel and RGB cube;
 - CustomTreeCtrl (*): mimics the behaviour of :class:`TreeCtrl`, with almost the
   same base functionalities plus a bunch of enhancements and goodies;
 - FlatMenu: as the name implies, it is a generic menu implementation,
-  offering the same :class:`MenuBar` / :class:`Menu` / :class:`ToolBar` capabilities and much more;
+  offering the same :class:`wx.MenuBar` / :class:`wx.Menu` / :class:`ToolBar` capabilities and much more;
 - FlatNotebook (*): a full implementation of the :class:`Notebook`, and designed
   to be a drop-in replacement for :class:`Notebook` with enhanced capabilities;
 - FloatSpin: this class implements a floating point spinctrl, cabable (in
@@ -75,7 +75,7 @@ an asterisk were already present in :mod:`lib` before:
   you can find in text editors software;
 - ShapedButton: this class tries to fill the lack of "custom shaped" controls
   in wxPython. It can be used to build round buttons or elliptic buttons;
-- ShortcutEditor: a widget that allows the user to customize and change 
+- ShortcutEditor: a widget that allows the user to customize and change
   keyboard shortcuts via a dialog;
 - SpeedMeter: this widget tries to reproduce the behavior of some car
   controls (but not only), by creating an "angular" control;

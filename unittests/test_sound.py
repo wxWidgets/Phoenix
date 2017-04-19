@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.adv
 import sys, os
@@ -14,12 +14,12 @@ class sound_Tests(wtc.WidgetTestCase):
         wx.adv.SOUND_SYNC
         wx.adv.SOUND_ASYNC
         wx.adv.SOUND_LOOP
-        
+
     def test_sound2(self):
         sound = wx.adv.Sound(wavFile)
         self.assertTrue(sound.IsOk())
         rv = sound.Play(wx.adv.SOUND_SYNC)
-        
+
     @unittest.skipIf(sys.platform == 'darwin', 'CreateFromBuffer not implemented on Mac')
     def test_sound3(self):
         sound = wx.adv.Sound()
@@ -32,7 +32,7 @@ class sound_Tests(wtc.WidgetTestCase):
 
     def test_sound4(self):
         rv = wx.adv.Sound.PlaySound(wavFile, wx.adv.SOUND_SYNC)
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

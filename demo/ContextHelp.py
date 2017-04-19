@@ -63,7 +63,6 @@ class TestPanel(wx.Panel):
         sizer.Add(text)
         text.Bind(wx.EVT_HELP, self.OnCtxHelp2, text)
 
-
         border = wx.BoxSizer(wx.VERTICAL)
         border.Add(sizer, 0, wx.ALL, 25)
 
@@ -74,7 +73,8 @@ class TestPanel(wx.Panel):
 
     # On the second text control above, we intercept the help event. This is where
     # we process it. Anything could happen here. In this case we're just printing
-    # some stuff about it, then passing it on, at which point we see the help tip.
+    # some stuff about it, then passing it on with Skip(), at which point we
+    # see the help tip.
     def OnCtxHelp(self, evt):
         self.log.write("OnCtxHelp: %s" % evt)
         evt.Skip()

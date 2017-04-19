@@ -52,7 +52,7 @@ class MaskedComboBoxSelectEvent(wx.PyCommandEvent):
 class MaskedComboBoxEventHandler(wx.EvtHandler):
     """
     This handler ensures that the derived control can react to events
-    from the base control before any external handlers run, to ensure 
+    from the base control before any external handlers run, to ensure
     proper behavior.
     """
     def __init__(self, combobox):
@@ -92,22 +92,22 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         """
         Default class constructor.
 
-        :param Window `parent`: the window parent. Must not be ``None``;
+        :param wx.Window `parent`: the window parent. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param string `value`: value to be shown;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
         :param list `choices`: a list of valid choices;
         :param integer `style`: the window style;
-        :param Validator `validator`: this is mainly provided for data-transfer, as control does
+        :param wx.Validator `validator`: this is mainly provided for data-transfer, as control does
           its own validation;
         :param string `name`: the window name;
         :param boolean `setupEventHandling`: setup event handling by default.
 
-        """       
+        """
 
         kwargs['choices'] = choices                 ## set up maskededit to work with choice list too
 
@@ -136,7 +136,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
 
         self._PostInit(style=style, setupEventHandling=setupEventHandling,
                        name=name, value=value, **kwargs)
-        
+
 
     def _PostInit(self, style=wx.CB_DROPDOWN,
                   setupEventHandling = True,        ## setup event handling by default):
@@ -148,7 +148,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         self.__readonly = style & wx.CB_READONLY == wx.CB_READONLY
 
         if not hasattr(self, 'controlInitialized'):
-            
+
             self.controlInitialized = True          ## must have been called via XRC, therefore base class is constructed
             if 'choices' not in kwargs:
                 choices=[]
@@ -218,7 +218,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         # clean up associated event handler object:
         if self.RemoveEventHandler(self.evt_handler):
             wx.CallAfter(self.evt_handler.Destroy)
-        event.Skip()        
+        event.Skip()
 
 
     def _CalcSize(self, size=None):
@@ -233,13 +233,13 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
     def SetFont(self, *args, **kwargs):
         """
         Set the font, then recalculate control size, if appropriate.
-        
+
         see :meth:`ComboBox.SetFont` for valid arguments
-        
+
         """
         wx.ComboBox.SetFont(self, *args, **kwargs)
         if self._autofit:
-##            dbg('calculated size:', self._CalcSize())            
+##            dbg('calculated size:', self._CalcSize())
             self.SetClientSize(self._CalcSize())
             width = self.GetSize().width
             height = self.GetBestSize().height
@@ -321,11 +321,11 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         This function redefines the externally accessible :meth:`ComboBox.SetValue`
         to be a smart "paste" of the text in question, so as not to corrupt the
         masked control.
-        
+
         .. note::
-          
+
           This must be done in the class derived from the base wx control.
-        
+
         """
 ##        dbg('MaskedComboBox::SetValue(%s)' % value, indent=1)
         if not self._mask:
@@ -378,7 +378,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
 ##        dbg('adjusted value: "%s"' % value)
 
         # Attempt to compensate for fact that calling .SetInsertionPoint() makes the
-        # selection index -1, even if the resulting set value is in the list.  
+        # selection index -1, even if the resulting set value is in the list.
         # So, if we are setting a value that's in the list, use index selection instead.
         if value in self._choices:
             index = self._choices.index(value)
@@ -405,11 +405,11 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         """
         This function redefines the externally accessible :meth:`ComboBox.Refresh`
         to validate the contents of the masked control as it refreshes.
-        
+
         .. note::
-        
+
           This must be done in the class derived from the base wx control.
-          
+
         """
         self._CheckValid()
         self._Refresh()
@@ -428,11 +428,11 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         This function redefines the externally accessible :meth:`ComboBox.Cut`
         to be a smart "erase" of the text in question, so as not to corrupt the
         masked control.
-        
+
         .. note::
-          
+
           This must be done in the class derived from the base wx control.
-          
+
         """
         if self._mask:
             self._Cut()             # call the mixin's Cut method
@@ -445,11 +445,11 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         This function redefines the externally accessible :meth:`ComboBox.Paste`
         to be a smart "paste" of the text in question, so as not to corrupt the
         masked control.
-        
-        .. note:: 
-        
+
+        .. note::
+
           This must be done in the class derived from the base wx control.
-          
+
         """
         if self._mask:
             self._Paste()           # call the mixin's Paste method
@@ -516,7 +516,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
 
     def AppendItems( self, choices ):
         """
-        :meth:`~lib.masked.combobox.ComboBox.AppendItems` is handled in terms 
+        :meth:`~lib.masked.combobox.ComboBox.AppendItems` is handled in terms
         of :meth:`lib.masked.combobox.ComboBox.Append`, to avoid code replication.
         """
         for choice in choices:
@@ -526,7 +526,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
     def Clear( self ):
         """
         This base control function override is necessary so the derived control
-        can keep track of any additions to the list of choices, because 
+        can keep track of any additions to the list of choices, because
         :class:`ComboBox`  doesn't have an accessor for the choice list.
         """
         if self._mask:
@@ -600,9 +600,9 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         """
         Necessary override for bookkeeping on choice selection, to keep current
         value current.
-        
+
         :param integer `index`: index to choice item to be set
-        
+
         """
 ##        dbg('MaskedComboBox::SetSelection(%d)' % index, indent=1)
         if self._mask:
@@ -813,7 +813,7 @@ __i = 0
 ##  Version 1.4
 ##  1. Added handler for EVT_COMBOBOX to address apparently inconsistent behavior
 ##     of control when the dropdown control is used to do a selection.
-##     NOTE: due to misbehavior of wx.ComboBox re: losing all concept of the 
+##     NOTE: due to misbehavior of wx.ComboBox re: losing all concept of the
 ##      current selection index if SetInsertionPoint() is called, which is required
 ##      to support masked .SetValue(), this control is flaky about retaining selection
 ##      information.  I can't truly fix this without major changes to the base control,

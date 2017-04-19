@@ -6,7 +6,7 @@
 # Author:       Robin Dunn
 #
 # Created:      A long time ago, in a galaxy far, far away...
-# Copyright:    (c) 1999 by Total Control Software
+# Copyright:    (c) 1999-2017 by Total Control Software
 # Licence:      wxWindows license
 # Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
@@ -67,10 +67,10 @@ from wx.adv import TaskBarIcon as TaskBarIcon
 from wx.adv import SplashScreen as SplashScreen
 import wx.lib.mixins.inspection
 
-import wx.lib.six as six
-from wx.lib.six import exec_, BytesIO
-from wx.lib.six.moves import cPickle
-from wx.lib.six.moves import urllib
+import six
+from six import exec_, BytesIO
+from six.moves import cPickle
+from six.moves import urllib
 
 import version
 
@@ -1172,7 +1172,7 @@ class DemoError(object):
             self.exception_type = excType.__name__
         else:
             self.exception_type = excType
-        
+
         # If it's a syntax error, extra information needs
         # to be added to the traceback
         if excType is SyntaxError:
@@ -1471,7 +1471,7 @@ class wxPythonDemo(wx.Frame):
                 imgList.Add(bmp)
             for indx in range(9):
                 bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
-                imgList.Add(bmp)    
+                imgList.Add(bmp)
             self.nb.AssignImageList(imgList)
 
         self.BuildMenuBar()
@@ -2459,13 +2459,10 @@ class wxPythonDemo(wx.Frame):
 
 
     def OnOpenWidgetInspector(self, evt):
-        # Activate the widget inspection tool
+        # Activate the widget inspection tool, giving it a widget to preselect
+        # in the tree.  Use either the one under the cursor, if any, or this
+        # frame.
         from wx.lib.inspection import InspectionTool
-        if not InspectionTool().initialized:
-            InspectionTool().Init()
-
-        # Find a widget to be selected in the tree.  Use either the
-        # one under the cursor, if any, or this frame.
         wnd = wx.FindWindowAtPointer()
         if not wnd:
             wnd = self
@@ -2679,7 +2676,7 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         # Create and show the splash screen.  It will then create and
         # show the main frame when it is time to do so.  Normally when
         # using a SplashScreen you would create it, show it and then
-        # continue on with the applicaiton's initialization, finally
+        # continue on with the application's initialization, finally
         # creating and showing the main application window(s).  In
         # this case we have nothing else to do so we'll delay showing
         # the main frame until later (see ShowMain above) so the users

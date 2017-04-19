@@ -11,7 +11,7 @@
 #----------------------------------------------------------------------------
 # 12/07/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 Compatability changes
+# o 2.5 Compatibility changes
 #
 # 12/18/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -27,7 +27,7 @@ import  wx.grid
 
 #----------------------------------------------------------------------------
 # event class and macros
-# 
+#
 # New style 12/7/03
 #
 
@@ -121,7 +121,7 @@ class ColDragWindow(wx.Window):
         if x == pos:
             self.Refresh()              # Need to display insertion point
         else:
-            self.MoveXY(pos,y)
+            self.Move(pos,y)
 
     def GetMoveColumn(self):
         return self.moveColumn
@@ -184,7 +184,7 @@ class RowDragWindow(wx.Window):
         if y == pos:
             self.Refresh()              # Need to display insertion point
         else:
-            self.MoveXY(x,pos)
+            self.Move(x,pos)
 
     def GetMoveRow(self):
         return self.moveRow
@@ -248,6 +248,13 @@ class GridColMover(wx.EvtHandler):
         self.Bind(wx.EVT_MOTION, self.OnMouseMove)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnPress)
         self.Bind(wx.EVT_LEFT_UP, self.OnRelease)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+
+
+    def OnDestroy(self, evt):
+        assert self.lwin.GetEventHandler() is self
+        self.lwin.PopEventHandler(True)
+
 
     def OnMouseMove(self,evt):
         if not self.isDragging:
@@ -256,7 +263,7 @@ class GridColMover(wx.EvtHandler):
             _rlSize = self.grid.GetRowLabelSize()
             if abs(self.startX - evt.X) >= 3 \
                    and abs(evt.X - self.lastX) >= 3:
-                self.lastX = evt.X 
+                self.lastX = evt.X
                 self.didMove = True
                 sx,y = self.grid.GetViewStart()
                 w,h = self.lwin.GetClientSize()
@@ -373,6 +380,13 @@ class GridRowMover(wx.EvtHandler):
         self.Bind(wx.EVT_MOTION, self.OnMouseMove)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnPress)
         self.Bind(wx.EVT_LEFT_UP, self.OnRelease)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+
+
+    def OnDestroy(self, evt):
+        assert self.lwin.GetEventHandler() is self
+        self.lwin.PopEventHandler(True)
+
 
     def OnMouseMove(self,evt):
         if not self.isDragging:
@@ -392,9 +406,9 @@ class GridRowMover(wx.EvtHandler):
                 elif evt.Y > h:
                     y += evt.Y - h
 
-                if y < 1: 
+                if y < 1:
                     y = 0
-                else: 
+                else:
                     y /= self.uy
 
                 if y != sy:
@@ -411,7 +425,7 @@ class GridRowMover(wx.EvtHandler):
 
                 py = y - self.cellY
 
-                if py < 0 + _clSize: 
+                if py < 0 + _clSize:
                     py = 0 + _clSize
 
                 if py > h - self.rowWin.GetSize()[1] + _clSize:
@@ -434,14 +448,14 @@ class GridRowMover(wx.EvtHandler):
             return
 
         row = self.grid.YToRow(py + sy)
-                
+
         if row == wx.NOT_FOUND:
             evt.Skip()
             return
-     
+
         self.isDragging = True
         self.didMove = False
-                        
+
         rect = self.grid.RowToRect(row)
         self.cellY = py + sy - rect.y
         size = self.lwin.GetSize()

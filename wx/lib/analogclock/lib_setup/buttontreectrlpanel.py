@@ -74,7 +74,7 @@ class ButtonTreeCtrlPanel(wx.Panel):
             n = [self.checkbox_unchecked, self.checkbox_checked, \
                  self.checkbox_tri][value]
 
-            self.tree.SetPyData(item, (value, style))
+            self.tree.SetItemData(item, (value, style))
             self.tree.SetItemImage(item, n, wx.TreeItemIcon_Normal)
 
         elif style == wx.RB_SINGLE:
@@ -82,25 +82,25 @@ class ButtonTreeCtrlPanel(wx.Panel):
                 parent = self.tree.GetItemParent(item)
                 (child, cookie) = self.tree.GetFirstChild(parent)
 
-                if self.tree.GetPyData(child):
-                    self.tree.SetPyData(child, (False, wx.RB_SINGLE))
+                if self.tree.GetItemData(child):
+                    self.tree.SetItemData(child, (False, wx.RB_SINGLE))
                     self.tree.SetItemImage(child, self.radiobox_unchecked, \
                                            wx.TreeItemIcon_Normal)
 
                 for x in range(1, self.tree.GetChildrenCount(parent, False)):
                     (child, cookie) = self.tree.GetNextChild(parent, cookie)
 
-                    if self.tree.GetPyData(child):
-                        self.tree.SetPyData(child, (False, wx.RB_SINGLE))
+                    if self.tree.GetItemData(child):
+                        self.tree.SetItemData(child, (False, wx.RB_SINGLE))
                         self.tree.SetItemImage(child, self.radiobox_unchecked, \
                                                wx.TreeItemIcon_Normal)
 
-                self.tree.SetPyData(item, (True, wx.RB_SINGLE))
+                self.tree.SetItemData(item, (True, wx.RB_SINGLE))
                 self.tree.SetItemImage(item, self.radiobox_checked, \
                                        wx.TreeItemIcon_Normal)
 
             else:
-                self.tree.SetPyData(item, (False, wx.RB_SINGLE))
+                self.tree.SetItemData(item, (False, wx.RB_SINGLE))
                 self.tree.SetItemImage(item, self.radiobox_unchecked, \
                                        wx.TreeItemIcon_Normal)
 
@@ -111,13 +111,13 @@ class ButtonTreeCtrlPanel(wx.Panel):
         cil = []
         (child, cookie) = self.tree.GetFirstChild(parent)
         if child.IsOk():
-            d = self.tree.GetPyData(child)
+            d = self.tree.GetItemData(child)
             if value is None or (d and d[0] == value):
                 cil.append(child)
             for x in range(1, self.tree.GetChildrenCount(parent, False)):
                 (child, cookie) = self.tree.GetNextChild(parent, cookie)
                 if child.IsOk():
-                    d = self.tree.GetPyData(child)
+                    d = self.tree.GetItemData(child)
                     if value is None or (d and d[0] == value):
                         cil.append(child)
         return cil
@@ -134,7 +134,7 @@ class ButtonTreeCtrlPanel(wx.Panel):
             v = (value, style)
 
         this_item = self.tree.AppendItem(parent, label)
-        self.tree.SetPyData(this_item, v)
+        self.tree.SetItemData(this_item, v)
 
         if v:
             self._doLogicTest(style, value, this_item)
@@ -168,13 +168,13 @@ class ButtonTreeCtrlPanel(wx.Panel):
 
 
     def SetItemValue(self, item, value):
-        data = self.tree.GetPyData(item)
+        data = self.tree.GetItemData(item)
         if data:
             self._doLogicTest(data[1], value, item)
 
 
     def GetItemValue(self, item):
-        data = self.tree.GetPyData(item)
+        data = self.tree.GetItemData(item)
         if data:
             return data[0]
         else:
@@ -196,7 +196,7 @@ class ButtonTreeCtrlPanel(wx.Panel):
     def GetRootItems(self):
         cil = []
         for x in range(0, len(self.allitems)):
-            d = self.tree.GetPyData(self.allitems[x])
+            d = self.tree.GetItemData(self.allitems[x])
             if not d:
                 cil.append(self.allitems[x])
         return cil
@@ -239,7 +239,7 @@ class ButtonTreeCtrlPanel(wx.Panel):
     def OnLeftClicks(self, evt):
         item, flags = self.tree.HitTest(evt.GetPosition())
         if item:
-            text, data = self.tree.GetItemText(item), self.tree.GetPyData(item)
+            text, data = self.tree.GetItemText(item), self.tree.GetItemData(item)
             if data:
                 style = data[1]
                 if style == wx.CHK_2STATE:

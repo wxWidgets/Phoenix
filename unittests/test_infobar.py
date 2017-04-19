@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -12,7 +12,7 @@ class infobar_Tests(wtc.WidgetTestCase):
     def test_infobarDefaultCtor(self):
         ib = wx.InfoBar()
         ib.Create(self.frame)
-        
+
     def test_infobar1(self):
         ib = wx.InfoBar(self.frame)
         ib.ShowMessage("hello world")
@@ -27,7 +27,7 @@ class infobar_Tests(wtc.WidgetTestCase):
         self.myYield()
         ib.RemoveButton(wx.ID_SAVE)
         ib.Dismiss()
-        
+
 #---------------------------------------------------------------------------
 
 

@@ -7,7 +7,7 @@
 #
 # Created:
 # Version:
-# Date:        
+# Date:
 # Licence:      wxWindows license
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
@@ -21,12 +21,12 @@ import math
 
 def RibbonInterpolateColour(start_colour, end_colour, position, start_position, end_position):
 
-    if position <= start_position:    
+    if position <= start_position:
         return start_colour
-    
-    if position >= end_position:    
+
+    if position >= end_position:
         return end_colour
-    
+
     position -= start_position
     end_position -= start_position
     r = end_colour.Red() - start_colour.Red()
@@ -60,7 +60,7 @@ def RibbonDrawParallelGradientLines(dc, nlines, line_origins, stepx, stepy, nums
     gd = end_colour.Green() - start_colour.Green()
     bd = end_colour.Blue() - start_colour.Blue()
 
-    for step in range(numsteps):    
+    for step in range(numsteps):
         r = start_colour.Red() + (((step*rd*100)/numsteps)/100)
         g = start_colour.Green() + (((step*gd*100)/numsteps)/100)
         b = start_colour.Blue() + (((step*bd*100)/numsteps)/100)
@@ -68,10 +68,10 @@ def RibbonDrawParallelGradientLines(dc, nlines, line_origins, stepx, stepy, nums
         p = wx.Pen(wx.Colour(r, g, b))
         dc.SetPen(p)
 
-        for n in range(nlines):        
+        for n in range(nlines):
             dc.DrawLine(offset_x + line_origins[n].x, offset_y + line_origins[n].y,
                         offset_x + line_origins[n].x + stepx, offset_y + line_origins[n].y + stepy)
-        
+
         offset_x += stepx
         offset_y += stepy
 
@@ -88,34 +88,34 @@ class RibbonHSLColour(object):
     def __init__(self, h=0.0, s=0.0, l=0.0):
 
         if isinstance(h, wx.Colour):
-            
+
             red, green, blue = h.Red()/255.0, h.Green()/255.0, h.Blue()/255.0
             Min = min(red, min(green, blue))
             Max = max(red, max(green, blue))
             luminance = 0.5 * (Max + Min)
-            
-            if Min == Max:            
+
+            if Min == Max:
                 # colour is a shade of grey
                 hue = 0.0
                 saturation = 0.0
-            
-            else:            
+
+            else:
                 if luminance <= 0.5:
                     saturation = (Max - Min) / (Max + Min)
                 else:
                     saturation = (Max - Min) / (2.0 - (Max + Min))
 
-                if Max == red:                
+                if Max == red:
                     hue = 60.0 * (green - blue) / (Max - Min)
                     if hue < 0.0:
                         hue += 360.0
-                
-                elif Max == green:                
+
+                elif Max == green:
                     hue = 60.0 * (blue - red) / (Max - Min)
                     hue += 120.0
-                
+
                 else: # Max == blue
-                 
+
                     hue = 60.0 * (red - green) / (Max - Min)
                     hue += 240.0
 
@@ -128,14 +128,14 @@ class RibbonHSLColour(object):
             self.hue = h
             self.saturation = s
             self.luminance = l
-        
+
 
     def ToRGB(self):
 
         _hue = (self.hue - math.floor(self.hue / 360.0) * 360.0)
         _saturation = self.saturation
         _luminance = self.luminance
-        
+
         if _saturation > 1.0:
             _saturation = 1.0
         if _saturation < 0.0:
@@ -145,16 +145,16 @@ class RibbonHSLColour(object):
         if _luminance < 0.0:
             _luminance = 0.0
 
-        if _saturation == 0.0:        
+        if _saturation == 0.0:
             # colour is a shade of grey
             red = blue = green = _luminance
-        
+
         else:
-        
+
             tmp2 = (_luminance < 0.5 and [_luminance*(1.0 + _saturation)] or [(_luminance+_saturation) - (_luminance*_saturation)])[0]
             tmp1 = 2.0 * _luminance - tmp2
             tmp3R = _hue + 120.0
-            
+
             if tmp3R > 360.0:
                 tmp3R -= 360.0
             if tmp3R < 60.0:
@@ -167,7 +167,7 @@ class RibbonHSLColour(object):
                 red = tmp1
 
             tmp3G = _hue
-            
+
             if tmp3G > 360.0:
                 tmp3G -= 360.0
             if tmp3G < 60.0:
@@ -180,7 +180,7 @@ class RibbonHSLColour(object):
                 green = tmp1
 
             tmp3B = _hue + 240.0
-            
+
             if tmp3B > 360.0:
                 tmp3B -= 360.0
             if tmp3B < 60.0:
@@ -191,7 +191,7 @@ class RibbonHSLColour(object):
                 blue = tmp1 + (tmp2 - tmp1) * (240.0 - tmp3B) / 60.0
             else:
                 blue = tmp1
-        
+
         return wx.Colour(int(red * 255.0), int(green * 255.0), int(blue * 255.0))
 
 
@@ -227,9 +227,9 @@ class RibbonHSLColour(object):
 
 
 class RibbonPageTabInfo(object):
-    
+
     def __init__(self):
-            
+
         self.page = -1
         self.active = False
         self.hovererd = False
@@ -238,6 +238,6 @@ class RibbonPageTabInfo(object):
         self.small_begin_need_separator_width = 0
         self.small_must_have_separator_width = 0
         self.minimum_width = 0
-        
-        
-                  
+
+
+

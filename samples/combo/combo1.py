@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     1-June-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -19,19 +19,19 @@ class NullLog:
     def write(self, *args):
         #print(' '.join(args))
         pass
-        
+
 
 #----------------------------------------------------------------------
 # This class is used to provide an interface between a ComboCtrl and the
-# ListCtrl that is used as the popoup for the combo widget.  
+# ListCtrl that is used as the popoup for the combo widget.
 
 class ListCtrlComboPopup(wx.ComboPopup):
-        
+
     def __init__(self):
         wx.ComboPopup.__init__(self)
         self.log = NullLog()
         self.lc = None
-        
+
 
     def AddItem(self, txt):
         self.lc.InsertItem(self.lc.GetItemCount(), txt)
@@ -130,12 +130,12 @@ class ListCtrlComboPopup(wx.ComboPopup):
     # Return true if you want delay the call to Create until the popup
     # is shown for the first time. It is more efficient, but note that
     # it is often more convenient to have the control created
-    # immediately.    
+    # immediately.
     # Default returns false.
     def LazyCreate(self):
         self.log.write("ListCtrlComboPopup.LazyCreate")
         return wx.ComboPopup.LazyCreate(self)
-        
+
 
 
 
@@ -149,7 +149,7 @@ class TestFrame(wx.Frame):
         # Create a ComboCtrl
         cc = self.cc = wx.ComboCtrl(pnl, pos=(10,10), size=(275,-1))
         cc.SetHint('Click the button -->')
-        
+
         # Create a Popup
         popup = ListCtrlComboPopup()
 
@@ -160,11 +160,11 @@ class TestFrame(wx.Frame):
         # Add some items to the listctrl.
         for x in range(75):
             popup.AddItem("Item-%02d" % x)
-        
+
 
 #----------------------------------------------------------------------
-    
-    
+
+
 if __name__ == '__main__':
     app = wx.App(False)
     frm = TestFrame(None)

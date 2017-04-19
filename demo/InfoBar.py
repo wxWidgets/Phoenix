@@ -10,7 +10,7 @@ flags = [ (wx.ICON_NONE,        "ICON_NONE"),
           (wx.ICON_WARNING,     "ICON_WARNING"),
           (wx.ICON_ERROR,       "ICON_ERROR")
           ]
-          
+
 
 class TestPanel(wx.Panel):
     def __init__(self, parent, log):
@@ -25,7 +25,7 @@ class TestPanel(wx.Panel):
         self.message = wx.TextCtrl(panel, -1, "Hello World", size=(250,-1))
         self.flags = wx.Choice(panel, choices=[f[1] for f in flags])
         self.flags.SetSelection(1) # wx.ICON_INFORMATION is the default
-        
+
         smBtn = wx.Button(panel, -1, "Show Message")
         dmBtn = wx.Button(panel, -1, "Dismiss")
         addBtn = wx.Button(panel, -1, "Add Button")
@@ -48,10 +48,10 @@ class TestPanel(wx.Panel):
         panel.Sizer = wx.BoxSizer(wx.VERTICAL)
         text = """\
 An info bar is a transient window shown at top or bottom of its parent window
-to display non-critical information to the user."""        
+to display non-critical information to the user."""
         panel.Sizer.Add(wx.StaticText(panel, -1, text), 0, wx.TOP|wx.LEFT, 25)
         panel.Sizer.Add(fgs, 1, wx.EXPAND|wx.ALL, 25)
-                                   
+
         self.Sizer = wx.BoxSizer(wx.VERTICAL)
         self.Sizer.Add(self.info, 0, wx.EXPAND)
         self.Sizer.Add(panel, 1, wx.EXPAND)
@@ -85,7 +85,7 @@ to display non-critical information to the user."""
         # Skip().
         evt.Skip()
 
-      
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

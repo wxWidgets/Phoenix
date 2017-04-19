@@ -1,0 +1,87 @@
+
+[[ send to:
+   wxpython-users@googlegroups.com,
+   wxpython-dev@googlegroups.com,
+   wx-users@googlegroups.com,
+   wx-announce@googlegroups.com,
+   Python-Announce-List@Python.Org
+   ]]
+
+
+Announcing wxPython 4.0.0a1
+---------------------------
+
+https://pypi.python.org/pypi/wxPython/4.0.0a1
+
+I'm pleased to announce that wxPython's Project Phoenix has made it's public
+debut as wxPython 4.0.0a1, available from PyPI. Don't let the fact that it is
+marked as an "alpha" release scare you away. It is an alpha simply because
+this is the **first** in several ways:
+
+  * It's the first real release of Phoenix, which is built on a different
+    foundation than Classic wxPython was.
+
+  * It's the first wxPython release intended to be fully available from PyPI and
+    buildable/installable by pip on all of the supported platforms.
+
+  * It's the first release for Python3 (binaries for 3.5 and 3.6 are provided,
+    and building for 3.4 is still possible as well). In addition, Python 2.7
+    is also supported from the same codebase, with binaries available.
+
+  * The wheel files are fully self-contained and relocatable on the supported
+    platforms, so they are installable in virtual environments without needing
+    to be able to find specific versions of the wxWidgets shared libraries
+    (or others) at fixed locations elsewhere in the file-system.
+
+  * And as with most alphas, there are still a few things that are not
+    finished or polished yet.
+
+But even with all that, many people have been using the pre-release snapshots
+of Phoenix for quite a while now, and it has been relatively stable and solid
+for them.
+
+
+
+What is wxPython?
+-----------------
+
+wxPython is a cross-platform GUI toolkit for the Python programming language.
+It allows Python programmers to create programs with a robust, highly
+functional graphical user interface, simply and easily. It is implemented as a
+set of Python extension modules that wrap the GUI components of the popular
+wxWidgets cross platform library, which is written in C++. Supported platforms
+are Microsoft Windows, Mac OS X and macOS, and Linux or other unix-like
+systems with GTK2 or GTK3 libraries. In most cases the native widgets are used
+on each platform to provide a 100% native look and feel for the application.
+
+
+What is wxPython Phoenix?
+-------------------------
+
+wxPython's Project Phoenix is a new from-the-ground-up implementation of
+wxPython, created with the intent of making wxPython “better, stronger, faster
+than he was before.” In other words, this new implementation is focused on
+improving speed, maintainability and extensibility of wxPython, as well as
+removing most of the cruft that had accumulated over the long life of Classic
+wxPython.
+
+The project has been in development off and on, mostly behind the scenes, for
+many years. For the past few years automated snapshot builds have been
+available for those adventurous enough to try it, and many people eventually
+started using the snapshots in their projects, even for production releases.
+While there are still some things on the periphery that need to be completed,
+the core of the new wxPython extension modules which wrap the wxWidgets code
+has been stable for a long time now.
+
+Due to some things being cleaned up, reorganized, simplified and dehackified
+wxPython Phoenix is not completely backwards compatible with wxPython Classic.
+This is intended. In general, however, the API differences tend to be minor
+and some applications can use Phoenix with slight, or even no modifications.
+In some other cases the correct way to do things was also available in Classic
+and it's only the wrong way that has been removed from Phoenix.  For more
+information there is a Migration Guide document available at:
+https://wxpython.org/Phoenix/docs/html/MigrationGuide.html
+
+The new wxPython API reference documentation, including all Python-specific
+additions and customizations, and docs for the wx.lib package, is located at:
+https://wxpython.org/Phoenix/docs/html/main.html

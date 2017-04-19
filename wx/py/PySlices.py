@@ -16,7 +16,7 @@ import os
 
 class App(wx.App):
     """PySlices standalone application."""
-    
+
     def __init__(self, filename=None):
         self.filename = filename
         import wx
@@ -27,7 +27,7 @@ class App(wx.App):
         import os
         import wx
         from wx import py
-        
+
         self.SetAppName("pyslices")
         confDir = wx.StandardPaths.Get().GetUserDataDir()
         if not os.path.exists(confDir):
@@ -35,7 +35,7 @@ class App(wx.App):
         fileName = os.path.join(confDir, 'config')
         self.config = wx.FileConfig(localFilename=fileName)
         self.config.SetRecordDefaults(True)
-        
+
         self.frame = py.crustslices.CrustSlicesFrame(config=self.config, dataDir=confDir,
                                                      filename=self.filename)
 ##        self.frame.startupFileName = os.path.join(confDir,'pycrust_startup')
@@ -43,8 +43,8 @@ class App(wx.App):
         self.frame.Show()
         self.SetTopWindow(self.frame)
         return True
-    
-    
+
+
 '''
 The main() function needs to handle being imported, such as with the
 pycrust script that wxPython installs:
@@ -63,7 +63,7 @@ def main(filename=None):
         filename = sys.argv[1]
     if filename:
         filename = os.path.realpath(filename)
-    
+
     import __main__
     md = __main__.__dict__
     keepers = original

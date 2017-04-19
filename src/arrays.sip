@@ -5,7 +5,7 @@
 // Author:      Robin Dunn
 //
 // Created:     2-Sept-2011
-// Copyright:   (c) 2013 by Total Control Software
+// Copyright:   (c) 2011-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -22,7 +22,7 @@
         if (!sipIsErr) {
             int success = TRUE;
             // ensure that it is a sequence
-            if (! PySequence_Check(sipPy)) 
+            if (! PySequence_Check(sipPy))
                 success = FALSE;
             // Ensure it is not a string or unicode object (they are sequences)
             else if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
@@ -38,13 +38,13 @@
                         break;
                     }
                     Py_DECREF(item);
-                }    
+                }
             }
-            if (!success)            
+            if (!success)
                 PyErr_SetString(PyExc_TypeError, "Sequence of string or unicode objects expected.");
             return success;
         }
-        
+
         // Code to create a new wxArrayString and convert a compatible PyObject
         wxArrayString *array = new wxArrayString;
         Py_ssize_t i, len = PySequence_Length(sipPy);
@@ -61,7 +61,7 @@
                     Py_DECREF(item);
                     return 0;
                 }
-            }            
+            }
             wxString string;
             size_t len = PyUnicode_GET_SIZE(item);
             if (len) {
@@ -80,7 +80,7 @@
         return sipGetState(sipTransferObj);
     %End
 
-         
+
     %ConvertFromTypeCode
         // Code to convert a wxArrayString to a Python list of strings.
         PyObject* list = PyList_New(0);
@@ -91,7 +91,7 @@
         }
         return list;
     %End
-    
+
 };
 
 
@@ -115,7 +115,7 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
         if (!sipIsErr) {
             int success = TRUE;
             // ensure that it is a sequence
-            if (! PySequence_Check(sipPy)) 
+            if (! PySequence_Check(sipPy))
                 success = FALSE;
             // ensure each item is a number object
             else {
@@ -128,13 +128,13 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
                         break;
                     }
                     Py_DECREF(item);
-                }    
+                }
             }
-            if (!success)            
+            if (!success)
                 PyErr_SetString(PyExc_TypeError, "Sequence of numbers expected.");
             return success;
         }
-        
+
         // Code to create a new wxArrayInt and convert a compatible PyObject
         wxArrayInt *array = new wxArrayInt;
         Py_ssize_t i, len = PySequence_Length(sipPy);
@@ -155,7 +155,7 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
         return sipGetState(sipTransferObj);
     %End
 
-         
+
     %ConvertFromTypeCode
         // Code to convert a wxArrayInt to a Python list of integers.
         PyObject* list = PyList_New(0);
@@ -166,7 +166,7 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
         }
         return list;
     %End
-    
+
 };
 
 
@@ -191,7 +191,7 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
         if (!sipIsErr) {
             int success = TRUE;
             // ensure that it is a sequence
-            if (! PySequence_Check(sipPy)) 
+            if (! PySequence_Check(sipPy))
                 success = FALSE;
             // ensure each item is a number object
             else {
@@ -204,13 +204,13 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
                         break;
                     }
                     Py_DECREF(item);
-                }    
+                }
             }
-            if (!success)            
+            if (!success)
                 PyErr_SetString(PyExc_TypeError, "Sequence of numbers expected.");
             return success;
         }
-        
+
         // Code to create a new wxArrayDouble and convert a compatible PyObject
         wxArrayDouble *array = new wxArrayDouble;
         Py_ssize_t i, len = PySequence_Length(sipPy);
@@ -231,7 +231,7 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
         return sipGetState(sipTransferObj);
     %End
 
-         
+
     %ConvertFromTypeCode
         // Code to convert a wxArrayDouble to a Python list of floating point values.
         PyObject* list = PyList_New(0);
@@ -242,7 +242,7 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
         }
         return list;
     %End
-    
+
 };
 
 

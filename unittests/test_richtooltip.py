@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.adv
 
@@ -25,8 +25,8 @@ class richtooltip_Tests(wtc.WidgetTestCase):
         tt.SetTimeout(200)
         tt.ShowFor(self.frame)
         self.waitFor(300)
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

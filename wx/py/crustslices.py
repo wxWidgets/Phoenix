@@ -45,7 +45,7 @@ class CrustSlices(crust.Crust):
         # navigation key, but the SlicesShell window uses it to insert lines.
         style = self.GetWindowStyle()
         self.SetWindowStyle(style & ~wx.TAB_TRAVERSAL)
-        
+
         self.sliceshell = SlicesShell(parent=self, introText=intro,
                                  locals=locals, InterpClass=InterpClass,
                                  startupScript=startupScript,
@@ -54,7 +54,7 @@ class CrustSlices(crust.Crust):
                                  enableShellMode=enableShellMode,
                                  hideFoldingMargin=hideFoldingMargin,
                                  *args, **kwds)
-        
+
         self.editor = self.sliceshell
         self.shell = self.sliceshell
         if rootObject is None:
@@ -68,23 +68,23 @@ class CrustSlices(crust.Crust):
         # Add 'filling' to the interpreter's locals.
         self.sliceshell.interp.locals['filling'] = self.filling
         self.notebook.AddPage(page=self.filling, text='Namespace', select=True)
-        
+
         self.display = crust.Display(parent=self.notebook)
         self.notebook.AddPage(page=self.display, text='Display')
         # Add 'pp' (pretty print) to the interpreter's locals.
         self.sliceshell.interp.locals['pp'] = self.display.setItem
         self.display.nbTab = self.notebook.GetPageCount()-1
-        
+
         self.calltip = crust.Calltip(parent=self.notebook,ShellClassName='SlicesShell')
         self.notebook.AddPage(page=self.calltip, text='Calltip')
-        
+
         self.sessionlisting = crust.SessionListing(parent=self.notebook,ShellClassName='SlicesShell')
         self.notebook.AddPage(page=self.sessionlisting, text='History')
-        
+
         self.dispatcherlisting = crust.DispatcherListing(parent=self.notebook)
         self.notebook.AddPage(page=self.dispatcherlisting, text='Dispatcher')
 
-        
+
         # Initialize in an unsplit mode, and check later after loading
         # settings if we should split or not.
         self.sliceshell.Hide()
@@ -115,12 +115,12 @@ class CrustSlicesFrame(crust.CrustFrame):
         frame.Frame.__init__(self, parent, id, title, pos, size, style,
                              shellName='PySlices')
         frame.ShellFrameMixin.__init__(self, config, dataDir)
-        
+
         if size == wx.DefaultSize:
             self.SetSize((800, 600))
-        
+
         intro = 'PySlices %s - The Flakiest Python Shell... Cut up!' % VERSION
-        
+
         self.SetStatusText(intro.replace('\n', ', '))
         self.crust = CrustSlices(parent=self, intro=intro,
                                  rootObject=rootObject,
@@ -138,24 +138,24 @@ class CrustSlicesFrame(crust.CrustFrame):
         self.buffer = self.sliceshell.buffer
         # Override the filling so that status messages go to the status bar.
         self.crust.filling.tree.setStatusText = self.SetStatusText
-        
+
         # Override the shell so that status messages go to the status bar.
         self.sliceshell.setStatusText = self.SetStatusText
-        
+
         self.sliceshell.SetFocus()
         self.LoadSettings()
-        
+
         self.currentDirectory = os.path.expanduser('~')
-        
+
         if filename!=None:
             self.bufferOpen(filename)
-        
+
         self.Bind(wx.EVT_IDLE, self.OnIdle)
 
     def OnClose(self, event):
         """Event handler for closing."""
         self.bufferClose()
-    
+
     def OnAbout(self, event):
         """Display an About window."""
         title = 'About PySlices'
@@ -176,7 +176,7 @@ class CrustSlicesFrame(crust.CrustFrame):
         """Change between Slices Mode and Shell Mode"""
         frame.Frame.OnEnableShellMode(self,event)
         self.sliceshell.ToggleShellMode(self.enableShellMode)
-    
+
     def OnHideFoldingMargin(self,event):
         """Change between Slices Mode and Shell Mode"""
         frame.Frame.OnHideFoldingMargin(self,event)
@@ -190,7 +190,7 @@ class CrustSlicesFrame(crust.CrustFrame):
         """Event handler for idle time."""
         self._updateTitle()
         event.Skip()
-    
+
     def _updateTitle(self):
         """Show current title information."""
         title = self.GetTitle()
@@ -202,7 +202,7 @@ class CrustSlicesFrame(crust.CrustFrame):
         else:
             if title.startswith('* '):
                 self.SetTitle(title[2:])
-    
+
     def hasBuffer(self):
         """Return True if there is a current buffer."""
         if self.buffer:
@@ -221,7 +221,7 @@ class CrustSlicesFrame(crust.CrustFrame):
         self.crust.sliceshell.destroy()
         self.bufferDestroy()
         self.Destroy()
-        
+
         return False
 
     def bufferCreate(self, filename=None):
@@ -229,7 +229,7 @@ class CrustSlicesFrame(crust.CrustFrame):
         self.bufferDestroy()
         buffer = Buffer()
         self.panel = panel = wx.Panel(parent=self, id=-1)
-        panel.Bind (wx.EVT_ERASE_BACKGROUND, lambda x: x)        
+        panel.Bind (wx.EVT_ERASE_BACKGROUND, lambda x: x)
         editor = Editor(parent=panel)
         panel.editor = editor
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -242,7 +242,7 @@ class CrustSlicesFrame(crust.CrustFrame):
         self.setEditor(editor)
         self.editor.setFocus()
         self.SendSizeEvent()
-        
+
 
     def bufferDestroy(self):
         """Destroy the current buffer."""
@@ -280,7 +280,7 @@ class CrustSlicesFrame(crust.CrustFrame):
             cancel = self.bufferSuggestSave()
             if cancel:
                 return cancel
-        
+
         if file==None:
             file=wx.FileSelector('Open a PySlices File',
                                  wildcard='*.pyslices',
@@ -298,7 +298,7 @@ class CrustSlicesFrame(crust.CrustFrame):
             self.buffer.modulename = self.buffer.doc.filebase
             self.sliceshell.ScrollToLine(0)
         return
-    
+
 ##     def bufferPrint(self):
 ##         """Print buffer."""
 ##         pass
@@ -306,7 +306,7 @@ class CrustSlicesFrame(crust.CrustFrame):
 ##     def bufferRevert(self):
 ##         """Revert buffer to version of file on disk."""
 ##         pass
-    
+
     # was self.buffer.save(self): # """Save buffer."""
     def simpleSave(self,confirmed=False):
         filepath = self.buffer.doc.filepath
@@ -327,7 +327,7 @@ class CrustSlicesFrame(crust.CrustFrame):
             self.sliceshell.SetSavePoint()
             self.SetTitle( os.path.split(filepath)[1] + ' - PySlices')
             self.sliceshell.NeedsCheckForSave=False
-    
+
     def bufferSave(self):
         """Save buffer to its file."""
         if self.buffer.doc.filepath:
@@ -352,7 +352,7 @@ class CrustSlicesFrame(crust.CrustFrame):
         if result.path not in ['',None]:
             if result.path[-9:]!=".pyslices":
                 result.path+=".pyslices"
-            
+
             self.buffer.doc = document.Document(result.path)
             self.buffer.name = self.buffer.doc.filename
             self.buffer.modulename = self.buffer.doc.filebase
@@ -361,7 +361,7 @@ class CrustSlicesFrame(crust.CrustFrame):
         else:
             cancel = True
         return cancel
-    
+
     def bufferSaveACopy(self):
         """Save buffer to a new filename."""
         filedir = ''
@@ -369,11 +369,11 @@ class CrustSlicesFrame(crust.CrustFrame):
             filedir = self.buffer.doc.filedir
         result = editor.saveSingle(title='Save a Copy of PySlices File',directory=filedir,
                                    wildcard='PySlices Files (*.pyslices)|*.pyslices')
-        
+
         if result.path not in ['',None]:
             if result.path[-9:]!=".pyslices":
                 result.path+=".pyslices"
-            
+
             # if not os.path.exists(result.path):
             try: # Allow overwrite...
                 fid = open(result.path, 'wb')
@@ -381,12 +381,12 @@ class CrustSlicesFrame(crust.CrustFrame):
             finally:
                 if fid:
                     fid.close()
-                
+
             cancel = False
         else:
             cancel = True
         return cancel
-    
+
     def bufferSuggestSave(self):
         """Suggest saving changes.  Return True if user selected Cancel."""
         result = editor.messageDialog(parent=None,

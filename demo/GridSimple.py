@@ -77,7 +77,7 @@ class SimpleGrid(gridlib.Grid): ##, mixins.GridAutoEditMixin):
         self.SetCellRenderer(15,0, renderer)
         self.SetCellValue(15,0, "The text in this cell will be rendered with word-wrapping")
 
-        
+
         # test all the events
         self.Bind(gridlib.EVT_GRID_CELL_LEFT_CLICK, self.OnCellLeftClick)
         self.Bind(gridlib.EVT_GRID_CELL_RIGHT_CLICK, self.OnCellRightClick)
@@ -146,7 +146,7 @@ class SimpleGrid(gridlib.Grid): ##, mixins.GridAutoEditMixin):
     def OnGridColSort(self, evt):
         self.log.write("OnGridColSort: %s %s" % (evt.GetCol(), self.GetSortingColumn()))
         self.SetSortingColumn(evt.GetCol())
-        
+
     def OnRowSize(self, evt):
         self.log.write("OnRowSize: row %d, %s\n" %
                        (evt.GetRowOrCol(), evt.GetPosition()))

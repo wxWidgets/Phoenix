@@ -6,12 +6,11 @@ import wx
 #----------------------------------------------------------------------
 
 text = """\
-Right-click on the panel above the line to get a menu.  This menu will
-be managed by a FileHistory object and so the files you select will
-automatically be added to the end of the menu and will be selectable
-the next time the menu is viewed.  The filename selected, either via the
-Open menu item, or from the history, will be displayed in the log
-window below.
+Right-click on this panel to get a menu.  This menu will be managed by a
+FileHistory object and so the files you select will automatically be added to
+the end of the menu and will be selectable the next time the menu is viewed.
+The filename selected, either via the Open menu item, or from the history,
+will be displayed in the log window below.
 """
 
 #----------------------------------------------------------------------

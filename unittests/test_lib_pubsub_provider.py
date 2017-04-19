@@ -7,7 +7,7 @@
 """
 import os
 import unittest
-import wtc
+from unittests import wtc
 
 from textwrap import dedent
 
@@ -227,8 +227,11 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
         assert diffs == ['- ', '+         ']
 
         # now for module:
+        import sys
+        sys.path.append(os.path.dirname(__file__))
         provider = self.pub.addTopicDefnProvider('lib_pubsub_provider_expect',
                                                  self.pub.TOPIC_TREE_FROM_MODULE)
+        sys.path.remove(os.path.dirname(__file__))
         self.pub.instantiateAllDefinedTopics(provider)
         modDoc = provider.getTreeDoc()
         assert modDoc.startswith('\nTree docs, can be anything you')
@@ -248,7 +251,7 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
         assert self.pub.getDefaultTopicMgr().getTopic('root_topic1', True) is None
         assert self.pub.getDefaultTopicMgr().getTopic('root_topic2.sub_topic21', True) is None
 
-        import lib_pubsub_provider_my_import_topics
+        from . import lib_pubsub_provider_my_import_topics
         provider = self.pub.addTopicDefnProvider(lib_pubsub_provider_my_import_topics,
                                       self.pub.TOPIC_TREE_FROM_CLASS)
         self.pub.instantiateAllDefinedTopics(provider)

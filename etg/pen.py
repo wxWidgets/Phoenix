@@ -3,36 +3,41 @@
 # Author:      Robin Dunn
 #
 # Created:     31-Aug-2011
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "pen"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 'wxPen', 'wxPenList', ]    
-    
+# this script.
+ITEMS  = [ 'wxPen', 'wxPenList', ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     c = module.find('wxPen')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
+
+    # Set mustHaveApp on all ctors except the default ctor
+    for ctor in c.find('wxPen').all():
+        if ctor.isCtor and ctor.argsString != '()':
+            ctor.mustHaveApp()
 
     # The stipple bitmap ctor is not implemented on wxGTK
     c.find('wxPen').findOverload('wxBitmap').ignore()
@@ -77,7 +82,7 @@ def run():
         sipCpp->SetDashes(len, holder->m_array);
         """)
 
-    
+
     c.addAutoProperties()
 
     # The stock Pen items are documented as simple pointers, but in reality
@@ -87,7 +92,7 @@ def run():
     # to come up with another solution. So instead we will just create
     # uninitialized pens in a block of Python code, that will then be
     # intialized later when the wx.App is created.
-    c.addCppMethod('void', '_copyFrom', '(const wxPen* other)', 
+    c.addCppMethod('void', '_copyFrom', '(const wxPen* other)',
                    "*self = *other;",
                    briefDoc="For internal use only.")  # ??
     pycode = '# These stock pens will be initialized when the wx.App object is created.\n'
@@ -97,10 +102,10 @@ def run():
             pycode += '%s = Pen()\n' % tools.removeWxPrefix(item.name)
     module.addPyCode(pycode)
 
-    
+
     # it is delay-initialized, see stockgdi.sip
     module.find('wxThePenList').ignore()
-    
+
 
 
     # Some aliases that should be phased out eventually, (sooner rather than
@@ -108,19 +113,19 @@ def run():
     # and so are not found in the documentation...
     module.addPyCode("""\
         wx.SOLID       = int(wx.PENSTYLE_SOLID)
-        wx.DOT         = int(wx.PENSTYLE_DOT) 
+        wx.DOT         = int(wx.PENSTYLE_DOT)
         wx.LONG_DASH   = int(wx.PENSTYLE_LONG_DASH)
-        wx.SHORT_DASH  = int(wx.PENSTYLE_SHORT_DASH) 
-        wx.DOT_DASH    = int(wx.PENSTYLE_DOT_DASH) 
-        wx.USER_DASH   = int(wx.PENSTYLE_USER_DASH) 
-        wx.TRANSPARENT = int(wx.PENSTYLE_TRANSPARENT) 
+        wx.SHORT_DASH  = int(wx.PENSTYLE_SHORT_DASH)
+        wx.DOT_DASH    = int(wx.PENSTYLE_DOT_DASH)
+        wx.USER_DASH   = int(wx.PENSTYLE_USER_DASH)
+        wx.TRANSPARENT = int(wx.PENSTYLE_TRANSPARENT)
         """)
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

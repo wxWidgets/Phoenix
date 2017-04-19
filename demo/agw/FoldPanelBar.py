@@ -6,7 +6,7 @@ import wx.adv
 import os
 import sys
 
-from wx.lib.six import BytesIO
+from six import BytesIO
 
 try:
     dirName = os.path.dirname(os.path.abspath(__file__))
@@ -53,7 +53,7 @@ zzW\xcff&\xb8,\x89\xa8@Q\xd6\xaaf\xdfRm,\xee\xb1BDxr#\xae\xf5|\xddo\xd6\xe2H\
 \xb7w\xf3\x1d$\x7f\xc1\xe0\xbd\xa7\xeb\xa0(,"Kc\x12\xc1+\xfd\xe8\tI\xee\xed)\
 \xbf\xbcN\xc1{D\x04k\x05#\x12\xfd\xf2a\xde[\x81\x87\xbb\xdf\x9cr\x1a\x87\xd3\
 0)\xba>\x83\xd5\xb97o\xe0\xaf\x04\xff\x13?\x00\xd2\xfb\xa9`z\xac\x80w\x00\
-\x00\x00\x00IEND\xaeB`\x82' 
+\x00\x00\x00IEND\xaeB`\x82'
 
 def GetCollapsedIconBitmap():
     return wx.Bitmap(GetCollapsedIconImage())
@@ -84,7 +84,7 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x06\
 \xd8|\xb9\x0f\xd3\x9a\x8a\xc7\x08\x00\x9f?\xdd%\xde\x07\xda\x93\xc3{\x19C\
 \x8a\x9c\x03\x0b8\x17\xe8\x9d\xbf\x02.>\x13\xc0n\xff{PJ\xc5\xfdP\x11""<\xbc\
 \xff\x87\xdf\xf8\xbf\xf5\x17FF\xaf\x8f\x8b\xd3\xe6K\x00\x00\x00\x00IEND\xaeB\
-`\x82' 
+`\x82'
 
 def GetExpandedIconBitmap():
     return wx.Bitmap(GetExpandedIconImage())
@@ -121,14 +121,14 @@ def GetMondrianIcon():
 # ----------------------------------------------------------------------------
 
 class Extended(wx.Frame):
-    
+
     def __init__(self, parent, id=wx.ID_ANY, title="", pos=wx.DefaultPosition,
                  size=(700,650), style=wx.DEFAULT_FRAME_STYLE):
 
         wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
         self._flags = 0
-        
+
         self.SetIcon(GetMondrianIcon())
         self.SetMenuBar(self.CreateMenuBar())
 
@@ -159,23 +159,23 @@ class Extended(wx.Frame):
         self.ID_WINDOW_LEFT1 = 101
         self.ID_WINDOW_RIGHT1 = 102
         self.ID_WINDOW_BOTTOM = 103
-    
+
         self._leftWindow1.Bind(wx.adv.EVT_SASH_DRAGGED_RANGE, self.OnFoldPanelBarDrag,
                                id=100, id2=103)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_SCROLL, self.OnSlideColour)
-        
+
         self.ReCreateFoldPanel(0)
-        
+
 
     def OnSize(self, event):
 
         wx.adv.LayoutAlgorithm().LayoutWindow(self, self.remainingSpace)
         event.Skip()
-        
+
 
     def OnQuit(self, event):
- 
+
         self.Destroy()
 
 
@@ -188,7 +188,7 @@ class Extended(wx.Frame):
               "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
               "Based On Jorgen Bodde C++ demo implementation.\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-              
+
         dlg = wx.MessageDialog(self, msg, "FoldPanelBar Extended Demo",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Verdana"))
@@ -197,14 +197,14 @@ class Extended(wx.Frame):
 
 
     def OnToggleWindow(self, event):
-        
+
         self._leftWindow1.Show(not self._leftWindow1.IsShown())
         # Leaves bits of itself behind sometimes
         wx.adv.LayoutAlgorithm().LayoutWindow(self, self.remainingSpace)
         self.remainingSpace.Refresh()
 
         event.Skip()
-        
+
 
     def OnFoldPanelBarDrag(self, event):
 
@@ -220,7 +220,7 @@ class Extended(wx.Frame):
         self.remainingSpace.Refresh()
 
         event.Skip()
-        
+
 
     def ReCreateFoldPanel(self, fpb_flags):
 
@@ -235,44 +235,44 @@ class Extended(wx.Frame):
         Images = wx.ImageList(16,16)
         Images.Add(GetExpandedIconBitmap())
         Images.Add(GetCollapsedIconBitmap())
-            
+
         item = self._pnl.AddFoldPanel("Caption Colours", collapsed=False,
                                       foldIcons=Images)
 
         self._pnl.AddFoldPanelWindow(item, wx.StaticText(item, -1, "Adjust The First Colour"),
-                                     fpb.FPB_ALIGN_WIDTH, 5, 20) 
+                                     fpb.FPB_ALIGN_WIDTH, 5, 20)
 
         # RED colour spin control
         self._rslider1 = wx.Slider(item, -1, 0, 0, 255)
-        self._pnl.AddFoldPanelWindow(item, self._rslider1, fpb.FPB_ALIGN_WIDTH, 2, 20) 
+        self._pnl.AddFoldPanelWindow(item, self._rslider1, fpb.FPB_ALIGN_WIDTH, 2, 20)
 
         # GREEN colour spin control
         self._gslider1 = wx.Slider(item, -1, 0, 0, 255)
-        self._pnl.AddFoldPanelWindow(item, self._gslider1, fpb.FPB_ALIGN_WIDTH, 0, 20) 
+        self._pnl.AddFoldPanelWindow(item, self._gslider1, fpb.FPB_ALIGN_WIDTH, 0, 20)
 
         # BLUE colour spin control
         self._bslider1 = wx.Slider(item, -1, 0, 0, 255)
-        self._pnl.AddFoldPanelWindow(item, self._bslider1, fpb.FPB_ALIGN_WIDTH,  0, 20) 
-        
+        self._pnl.AddFoldPanelWindow(item, self._bslider1, fpb.FPB_ALIGN_WIDTH,  0, 20)
+
         self._pnl.AddFoldPanelSeparator(item)
 
         self._pnl.AddFoldPanelWindow(item, wx.StaticText(item, -1, "Adjust The Second Colour"),
-                                     fpb.FPB_ALIGN_WIDTH, 5, 20) 
+                                     fpb.FPB_ALIGN_WIDTH, 5, 20)
 
         # RED colour spin control
         self._rslider2 = wx.Slider(item, -1, 0, 0, 255)
-        self._pnl.AddFoldPanelWindow(item, self._rslider2, fpb.FPB_ALIGN_WIDTH, 2, 20) 
+        self._pnl.AddFoldPanelWindow(item, self._rslider2, fpb.FPB_ALIGN_WIDTH, 2, 20)
 
         # GREEN colour spin control
         self._gslider2 = wx.Slider(item, -1, 0, 0, 255)
-        self._pnl.AddFoldPanelWindow(item, self._gslider2, fpb.FPB_ALIGN_WIDTH, 0, 20) 
+        self._pnl.AddFoldPanelWindow(item, self._gslider2, fpb.FPB_ALIGN_WIDTH, 0, 20)
 
         # BLUE colour spin control
         self._bslider2 = wx.Slider(item, -1, 0, 0, 255)
-        self._pnl.AddFoldPanelWindow(item, self._bslider2, fpb.FPB_ALIGN_WIDTH, 0, 20) 
+        self._pnl.AddFoldPanelWindow(item, self._bslider2, fpb.FPB_ALIGN_WIDTH, 0, 20)
 
         self._pnl.AddFoldPanelSeparator(item)
-        
+
         button1 = wx.Button(item, wx.ID_ANY, "Apply To All")
         button1.Bind(wx.EVT_BUTTON, self.OnExpandMe)
         self._pnl.AddFoldPanelWindow(item, button1)
@@ -302,11 +302,11 @@ class Extended(wx.Frame):
         self.ID_USE_SINGLE = wx.NewId()
         self.ID_USE_RECTANGLE = wx.NewId()
         self.ID_USE_FILLED_RECTANGLE = wx.NewId()
-        
+
         currStyle =  wx.RadioButton(item, self.ID_USE_VGRADIENT, "&Vertical Gradient")
         self._pnl.AddFoldPanelWindow(item, currStyle, fpb.FPB_ALIGN_WIDTH,
                                      fpb.FPB_DEFAULT_SPACING, 10)
-        
+
         currStyle.SetValue(True)
 
         radio1 = wx.RadioButton(item, self.ID_USE_HGRADIENT, "&Horizontal Gradient")
@@ -319,17 +319,17 @@ class Extended(wx.Frame):
         radio2.Bind(wx.EVT_RADIOBUTTON, self.OnStyleChange)
         radio3.Bind(wx.EVT_RADIOBUTTON, self.OnStyleChange)
         radio4.Bind(wx.EVT_RADIOBUTTON, self.OnStyleChange)
-        
-        self._pnl.AddFoldPanelWindow(item, radio1, fpb.FPB_ALIGN_WIDTH, fpb.FPB_DEFAULT_SPACING, 10) 
-        self._pnl.AddFoldPanelWindow(item, radio2, fpb.FPB_ALIGN_WIDTH, fpb.FPB_DEFAULT_SPACING, 10) 
-        self._pnl.AddFoldPanelWindow(item, radio3, fpb.FPB_ALIGN_WIDTH, fpb.FPB_DEFAULT_SPACING, 10) 
-        self._pnl.AddFoldPanelWindow(item, radio4, fpb.FPB_ALIGN_WIDTH, fpb.FPB_DEFAULT_SPACING, 10) 
+
+        self._pnl.AddFoldPanelWindow(item, radio1, fpb.FPB_ALIGN_WIDTH, fpb.FPB_DEFAULT_SPACING, 10)
+        self._pnl.AddFoldPanelWindow(item, radio2, fpb.FPB_ALIGN_WIDTH, fpb.FPB_DEFAULT_SPACING, 10)
+        self._pnl.AddFoldPanelWindow(item, radio3, fpb.FPB_ALIGN_WIDTH, fpb.FPB_DEFAULT_SPACING, 10)
+        self._pnl.AddFoldPanelWindow(item, radio4, fpb.FPB_ALIGN_WIDTH, fpb.FPB_DEFAULT_SPACING, 10)
 
         self._pnl.AddFoldPanelSeparator(item)
 
         self._single = wx.CheckBox(item, -1, "&Only This Caption")
         self._pnl.AddFoldPanelWindow(item, self._single, fpb.FPB_ALIGN_WIDTH,
-                                     fpb.FPB_DEFAULT_SPACING, 10) 
+                                     fpb.FPB_DEFAULT_SPACING, 10)
 
         # one more panel to finish it
 
@@ -339,25 +339,25 @@ class Extended(wx.Frame):
         item = self._pnl.AddFoldPanel("Misc Stuff", collapsed=True, foldIcons=Images,
                                       cbstyle=cs)
 
-        button2 = wx.Button(item, wx.NewId(), "Collapse All")        
-        self._pnl.AddFoldPanelWindow(item, button2) 
+        button2 = wx.Button(item, wx.NewId(), "Collapse All")
+        self._pnl.AddFoldPanelWindow(item, button2)
         self._pnl.AddFoldPanelWindow(item, wx.StaticText(item, -1, "Enter Some Comments"),
-                                     fpb.FPB_ALIGN_WIDTH, 5, 20) 
+                                     fpb.FPB_ALIGN_WIDTH, 5, 20)
         self._pnl.AddFoldPanelWindow(item, wx.TextCtrl(item, -1, "Comments"),
                                      fpb.FPB_ALIGN_WIDTH, fpb.FPB_DEFAULT_SPACING, 10)
 
         button2.Bind(wx.EVT_BUTTON, self.OnCollapseMe)
         self.radiocontrols = [currStyle, radio1, radio2, radio3, radio4]
-        
+
         self._leftWindow1.SizeWindows()
-        
+
 
     def OnCreateBottomStyle(self, event):
 
         # recreate with style collapse to bottom, which means
         # all panels that are collapsed are placed at the bottom,
         # or normal
-        
+
         if event.IsChecked():
             self.GetMenuBar().Check(self._singlestyle, False)
             self.GetMenuBar().Check(self._exclusivestyle, False)
@@ -371,7 +371,7 @@ class Extended(wx.Frame):
 
 
     def OnCreateNormalStyle(self, event):
-        
+
         # recreate with style where only one panel at the time is
         # allowed to be opened
 
@@ -402,7 +402,7 @@ class Extended(wx.Frame):
             self._flags = self._flags & ~fpb.FPB_EXCLUSIVE_FOLD
 
         self.ReCreateFoldPanel(self._flags)
-        
+
 
     def OnCollapseMe(self, event):
 
@@ -428,7 +428,7 @@ class Extended(wx.Frame):
             if items.GetValue():
                 break
             counter = counter + 1
-            
+
         if counter == 0:
             mystyle = fpb.CAPTIONBAR_GRADIENT_V
         elif counter == 1:
@@ -457,7 +457,7 @@ class Extended(wx.Frame):
         for items in self.radiocontrols:
             if items.GetValue():
                 break
-            
+
             counter = counter + 1
 
         if counter == 0:
@@ -470,36 +470,36 @@ class Extended(wx.Frame):
             mystyle = fpb.CAPTIONBAR_RECTANGLE
         else:
             mystyle = fpb.CAPTIONBAR_FILLED_RECTANGLE
-            
+
         style.SetFirstColour(col1)
         style.SetSecondColour(col2)
         style.SetCaptionStyle(mystyle)
 
         item = self._pnl.GetFoldPanel(0)
         self._pnl.ApplyCaptionStyle(item, style)
-        
+
 
     def OnStyleChange(self, event):
 
         style = fpb.CaptionBarStyle()
-        
+
         eventid = event.GetId()
-        
+
         if eventid == self.ID_USE_HGRADIENT:
             style.SetCaptionStyle(fpb.CAPTIONBAR_GRADIENT_H)
-            
+
         elif eventid == self.ID_USE_VGRADIENT:
             style.SetCaptionStyle(fpb.CAPTIONBAR_GRADIENT_V)
-            
+
         elif eventid == self.ID_USE_SINGLE:
             style.SetCaptionStyle(fpb.CAPTIONBAR_SINGLE)
-            
+
         elif eventid == self.ID_USE_RECTANGLE:
             style.SetCaptionStyle(fpb.CAPTIONBAR_RECTANGLE)
-            
+
         elif eventid == self.ID_USE_FILLED_RECTANGLE:
             style.SetCaptionStyle(fpb.CAPTIONBAR_FILLED_RECTANGLE)
-                
+
         else:
             raise "ERROR: Undefined Style Selected For CaptionBar: " + repr(eventid)
 
@@ -516,7 +516,7 @@ class Extended(wx.Frame):
             self._pnl.ApplyCaptionStyle(item, style)
         else:
             self._pnl.ApplyCaptionStyleAll(style)
-    
+
 
     def CreateMenuBar(self, with_window=False):
 
@@ -530,7 +530,7 @@ class Extended(wx.Frame):
         FPB_EXCLUSIVE_FOLD = wx.NewId()
         FPBTEST_TOGGLE_WINDOW = wx.NewId()
         FPBTEST_ABOUT = wx.NewId()
-        
+
         file_menu.Append(FPBTEST_QUIT, "&Exit")
 
         option_menu = None
@@ -541,15 +541,15 @@ class Extended(wx.Frame):
             option_menu.Append(FPBTEST_REFRESH, "&Refresh picture")
 
         # make fold panel menu
-        
+
         fpb_menu = wx.Menu()
         fpb_menu.AppendCheckItem(FPB_BOTTOM_FOLD, "Create with &fpb.FPB_COLLAPSE_TO_BOTTOM")
-        
+
         # Now Implemented!
         fpb_menu.AppendCheckItem(FPB_SINGLE_FOLD, "Create with &fpb.FPB_SINGLE_FOLD")
 
         # Now Implemented!
-        fpb_menu.AppendCheckItem(FPB_EXCLUSIVE_FOLD, "Create with &fpb.FPB_EXCLUSIVE_FOLD")        
+        fpb_menu.AppendCheckItem(FPB_EXCLUSIVE_FOLD, "Create with &fpb.FPB_EXCLUSIVE_FOLD")
 
         fpb_menu.AppendSeparator()
         fpb_menu.Append(FPBTEST_TOGGLE_WINDOW, "&Toggle FoldPanelBar")
@@ -561,10 +561,10 @@ class Extended(wx.Frame):
 
         menu_bar.Append(file_menu, "&File")
         menu_bar.Append(fpb_menu, "&FoldPanel")
-        
+
         if option_menu:
             menu_bar.Append(option_menu, "&Options")
-            
+
         menu_bar.Append(help_menu, "&Help")
 
         self.Bind(wx.EVT_MENU, self.OnAbout, id=FPBTEST_ABOUT)
@@ -589,7 +589,7 @@ class FoldTestPanel(wx.Panel):
 
     def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=wx.NO_BORDER | wx.TAB_TRAVERSAL):
-        
+
         wx.Panel.__init__(self, parent, id, pos, size, style)
 
         self.CreateControls()
@@ -607,7 +607,7 @@ class FoldTestPanel(wx.Panel):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(sizer)
-        
+
         subpanel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
                             wx.NO_BORDER | wx.TAB_TRAVERSAL)
         sizer.Add(subpanel, 1, wx.GROW | wx.ADJUST_MINSIZE, 5)
@@ -618,9 +618,9 @@ class FoldTestPanel(wx.Panel):
 
         item5 = wx.Choice(subpanel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
                           itemstrings, 0)
-        
+
         subsizer.Add(item5, 0, wx.GROW | wx.ALL, 5)
-        
+
         item6 = wx.TextCtrl(subpanel, wx.ID_ANY, "", wx.DefaultPosition, wx.DefaultSize,
                             wx.TE_MULTILINE)
         subsizer.Add(item6, 1, wx.GROW | wx.ALL, 5)
@@ -644,7 +644,7 @@ class Collapsed(wx.Frame):
                  size=(400,300), style=wx.DEFAULT_FRAME_STYLE):
 
         wx.Frame.__init__(self, parent, id, title, pos, size, style)
-        
+
         self.SetIcon(GetMondrianIcon())
         self.SetMenuBar(self.CreateMenuBar())
 
@@ -654,10 +654,10 @@ class Collapsed(wx.Frame):
         self.statusbar.SetStatusText("Welcome to wxPython!", 1)
 
         self.CreateFoldBar()
-        
+
 
     def CreateFoldBar(self, vertical=True):
-        
+
         if vertical:
             self.SetSize((500,600))
         else:
@@ -671,14 +671,14 @@ class Collapsed(wx.Frame):
         item = bar.AddFoldPanel("Test me", collapsed=False)
         button1 = wx.Button(item, wx.ID_ANY, "Collapse Me")
         button1.Bind(wx.EVT_BUTTON, self.OnCollapseMe)
-        
+
         bar.AddFoldPanelWindow(item, button1, fpb.FPB_ALIGN_LEFT)
 
         item = bar.AddFoldPanel("Test me too!", collapsed=True)
 
         button2 = wx.Button(item, wx.ID_ANY, "Expand First One")
         button2.Bind(wx.EVT_BUTTON, self.OnExpandMe)
-        
+
         bar.AddFoldPanelWindow(item, button2)
         bar.AddFoldPanelSeparator(item)
 
@@ -726,7 +726,7 @@ class Collapsed(wx.Frame):
         FoldPanelBarTest_About = wx.NewId()
         FoldPanelBarTest_Horizontal = wx.NewId()
         FoldPanelBarTest_Vertical = wx.NewId()
-        
+
         menuFile = wx.Menu()
         menuFile.Append(FoldPanelBarTest_Horizontal, "&Horizontal\tAlt-H")
         menuFile.Append(FoldPanelBarTest_Vertical, "&Vertical\tAlt-V")
@@ -781,7 +781,7 @@ class Collapsed(wx.Frame):
         self.pnl.Collapse(self.pnl.GetFoldPanel(1))
 
 
-    
+
 # ----------------------------------------------------------------------------
 # NotCollapsed Implementation
 # ----------------------------------------------------------------------------
@@ -791,7 +791,7 @@ class NotCollapsed(wx.Frame):
                  size=(400,300), style=wx.DEFAULT_FRAME_STYLE):
 
         wx.Frame.__init__(self, parent, id, title, pos, size, style)
-        
+
         self.SetIcon(GetMondrianIcon())
         self.SetMenuBar(self.CreateMenuBar())
 
@@ -804,12 +804,12 @@ class NotCollapsed(wx.Frame):
                                agwStyle=fpb.FPB_VERTICAL)
 
         item = pnl.AddFoldPanel("Test Me", collapsed=False)
-        
+
         button1 = wx.Button(item, wx.ID_ANY, "Collapse Me")
-        
+
         pnl.AddFoldPanelWindow(item, button1, fpb.FPB_ALIGN_LEFT)
         pnl.AddFoldPanelSeparator(item)
-        
+
         button1.Bind(wx.EVT_BUTTON, self.OnCollapseMe)
 
         item = pnl.AddFoldPanel("Test Me Too!", collapsed=True)
@@ -818,7 +818,7 @@ class NotCollapsed(wx.Frame):
         pnl.AddFoldPanelSeparator(item)
 
         button2.Bind(wx.EVT_BUTTON, self.OnExpandMe)
-        
+
         newfoldpanel = FoldTestPanel(item, wx.ID_ANY)
         pnl.AddFoldPanelWindow(item, newfoldpanel)
 
@@ -848,7 +848,7 @@ class NotCollapsed(wx.Frame):
 
         FoldPanelBarTest_Quit = wx.NewId()
         FoldPanelBarTest_About = wx.NewId()
-        
+
         menuFile = wx.Menu()
         menuFile.Append(FoldPanelBarTest_Quit, "E&xit\tAlt-X", "Quit This Program")
 
@@ -930,7 +930,7 @@ class TestPanel(wx.Panel):
     def OnButton3(self, evt):
         frame = NotCollapsed(self, title="FoldPanelBar NotCollapsed Demo")
         frame.Show()
-    
+
 
 #---------------------------------------------------------------------------
 

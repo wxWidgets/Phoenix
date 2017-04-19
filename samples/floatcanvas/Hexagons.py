@@ -50,7 +50,7 @@ class DrawFrame(wx.Frame):
     def MakeHexagons(self):
         print("Building %i Hexagons"%NumHexagons)
         # get a list of colors for random colors
-        
+
         wx.lib.colourdb.updateColourDB()
         self.colors = wx.lib.colourdb.getColourList()
         print("Max colors:", len(self.colors))
@@ -63,7 +63,7 @@ class DrawFrame(wx.Frame):
                      (-D  , 0),
                      (-D/2, h),
                      (D/2 , h),
-                     )) 
+                     ))
         Centers = uniform(-100, 100, (NumHexagons, 2))
         for center in Centers:
             # scale the hexagon
@@ -87,10 +87,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False)
 DrawFrame(None, -1, "FloatCanvas Demo App", wx.DefaultPosition, (700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

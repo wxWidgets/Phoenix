@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -10,33 +10,33 @@ delay = 100
 #---------------------------------------------------------------------------
 
 class lib_busy_Tests(wtc.WidgetTestCase):
-    
-    def test_lib_busy1(self):        
+
+    def test_lib_busy1(self):
         with BusyInfo("short message...", self.frame):
             wx.MilliSleep(delay*2)
         wx.MilliSleep(delay)
         self.myYield()
-        
-    def test_lib_busy2(self):        
+
+    def test_lib_busy2(self):
         with BusyInfo("This is my longer short message.  Please be patient...", self.frame):
             wx.MilliSleep(delay*2)
         wx.MilliSleep(delay)
         self.myYield()
 
-    def test_lib_busy3(self):        
+    def test_lib_busy3(self):
         busy = BusyInfo("Without using the context manager...", self.frame)
         wx.MilliSleep(delay*2)
         del busy
         wx.MilliSleep(delay)
         self.myYield()
-        
-    def test_lib_busy4(self):        
+
+    def test_lib_busy4(self):
         with BusyInfo("Without using the parent window..."):
             wx.MilliSleep(delay*2)
         wx.MilliSleep(delay)
         self.myYield()
-    
-    def test_lib_busy5(self):                
+
+    def test_lib_busy5(self):
         message = """A long message with line breaks:
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
@@ -49,10 +49,10 @@ laborum."""
             wx.MilliSleep(delay*2)
         wx.MilliSleep(delay)
         self.myYield()
-                
-        
-                
-        
+
+
+
+
 #---------------------------------------------------------------------------
 
 

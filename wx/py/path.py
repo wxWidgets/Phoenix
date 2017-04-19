@@ -25,7 +25,7 @@ def ls(str='*',fullpath=False):
             print(os.path.split(i)[1])
 
 # This prints the results of running a command in the GUI shell but be warned!
-# This is a blocking call, and if you open any kind of interactive 
+# This is a blocking call, and if you open any kind of interactive
 # command-line program like python or bash, the shell will permanantly
 # freeze!
 # If you want this kind of behavior to be available, please use ipython

@@ -35,7 +35,7 @@ Description
 
 `framemanager.py` is the central module of the AUI class framework.
 
-:class:`AuiManager` manages the panes associated with it for a particular :class:`Frame`, using
+:class:`AuiManager` manages the panes associated with it for a particular :class:`wx.Frame`, using
 a pane's :class:`AuiPaneInfo` information to determine each pane's docking and floating
 behavior. AuiManager uses wxPython' sizer mechanism to plan the layout of each frame.
 It uses a replaceable dock art class to do all drawing, so all drawing is localized
@@ -102,7 +102,7 @@ import wx.lib.sized_controls as sc
 import time
 import warnings
 
-import wx.lib.six as six
+import six
 
 from . import auibar
 from . import auibook
@@ -386,9 +386,9 @@ class AuiManagerEvent(wx.PyCommandEvent):
 
     def SetDC(self, pdc):
         """
-        Associates a :class:`DC` device context to this event.
+        Associates a :class:`wx.DC` device context to this event.
 
-        :param `pdc`: a :class:`DC` device context object.
+        :param `pdc`: a :class:`wx.DC` device context object.
         """
 
         self.dc = pdc
@@ -421,7 +421,7 @@ class AuiManagerEvent(wx.PyCommandEvent):
 
 
     def GetDC(self):
-        """ Returns the associated :class:`DC` device context (if any). """
+        """ Returns the associated :class:`wx.DC` device context (if any). """
 
         return self.dc
 
@@ -731,7 +731,7 @@ class AuiPaneInfo(object):
     def IsNotebookDockable(self):
         """
         Returns ``True`` if a pane can be docked on top to another to create a
-        :class:`~lib.agw.aui.auibook.AuiNotebook`.
+        :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
         """
 
         return self.HasFlag(self.optionNotebookDockable)
@@ -830,7 +830,7 @@ class AuiPaneInfo(object):
         ``AUI_MINIMIZE_POS_LEFT``           0x03 Minimizes the pane on its left tool bar
         ``AUI_MINIMIZE_POS_RIGHT``          0x04 Minimizes the pane on its right tool bar
         ``AUI_MINIMIZE_POS_BOTTOM``         0x05 Minimizes the pane on its bottom tool bar
-        ``AUI_MINIMIZE_POS_TOOLBAR``        0x06 Minimizes the pane on a target :class:`~lib.agw.aui.auibar.AuiToolBar`
+        ``AUI_MINIMIZE_POS_TOOLBAR``        0x06 Minimizes the pane on a target :class:`~wx.lib.agw.aui.auibar.AuiToolBar`
         ``AUI_MINIMIZE_POS_MASK``           0x17 Mask to filter the position flags
         ``AUI_MINIMIZE_CAPT_HIDE``           0x0 Hides the caption of the minimized pane
         ``AUI_MINIMIZE_CAPT_SMART``         0x08 Displays the caption in the best rotation (horizontal or clockwise)
@@ -866,13 +866,13 @@ class AuiPaneInfo(object):
 
     def Window(self, w):
         """
-        Associate a :class:`Window` derived window to this pane.
+        Associate a :class:`wx.Window` derived window to this pane.
 
         This normally does not need to be specified, as the window pointer is
         automatically assigned to the :class:`AuiPaneInfo` structure as soon as it is
         added to the manager.
 
-        :param `w`: a :class:`Window` derived window.
+        :param `w`: a :class:`wx.Window` derived window.
         """
 
         self.window = w
@@ -1045,9 +1045,9 @@ class AuiPaneInfo(object):
         Sets the minimum size of the pane.
 
         This method is split in 2 versions depending on the input type. If `arg1` is
-        a :class:`Size` object, then :meth:`~AuiPaneInfo.MinSize1` is called. Otherwise, :meth:`~AuiPaneInfo.MinSize2` is called.
+        a :class:`wx.Size` object, then :meth:`~AuiPaneInfo.MinSize1` is called. Otherwise, :meth:`~AuiPaneInfo.MinSize2` is called.
 
-        :param `arg1`: a :class:`Size` object, a (x, y) tuple or or a `x` coordinate.
+        :param `arg1`: a :class:`wx.Size` object, a (x, y) tuple or or a `x` coordinate.
         :param `arg2`: a `y` coordinate (only if `arg1` is a `x` coordinate, otherwise unused).
         """
 
@@ -1089,9 +1089,9 @@ class AuiPaneInfo(object):
         Sets the maximum size of the pane.
 
         This method is split in 2 versions depending on the input type. If `arg1` is
-        a :class:`Size` object, then :meth:`~AuiPaneInfo.MaxSize1` is called. Otherwise, :meth:`~AuiPaneInfo.MaxSize2` is called.
+        a :class:`wx.Size` object, then :meth:`~AuiPaneInfo.MaxSize1` is called. Otherwise, :meth:`~AuiPaneInfo.MaxSize2` is called.
 
-        :param `arg1`: a :class:`Size` object, a (x, y) tuple or a `x` coordinate.
+        :param `arg1`: a :class:`wx.Size` object, a (x, y) tuple or a `x` coordinate.
         :param `arg2`: a `y` coordinate (only if `arg1` is a `x` coordinate, otherwise unused).
         """
 
@@ -1135,9 +1135,9 @@ class AuiPaneInfo(object):
         this size as much as possible when docking or floating the pane.
 
         This method is split in 2 versions depending on the input type. If `arg1` is
-        a :class:`Size` object, then :meth:`BestSize1` is called. Otherwise, :meth:`BestSize2` is called.
+        a :class:`wx.Size` object, then :meth:`BestSize1` is called. Otherwise, :meth:`BestSize2` is called.
 
-        :param `arg1`: a :class:`Size` object, a (x, y) tuple or a `x` coordinate.
+        :param `arg1`: a :class:`wx.Size` object, a (x, y) tuple or a `x` coordinate.
         :param `arg2`: a `y` coordinate (only if `arg1` is a `x` coordinate, otherwise unused).
         """
 
@@ -1179,7 +1179,7 @@ class AuiPaneInfo(object):
         """
         Sets the position of the floating pane.
 
-        :param `pos`: a :class:`Point` or a tuple indicating the pane floating position.
+        :param `pos`: a :class:`wx.Point` or a tuple indicating the pane floating position.
         """
 
         self.floating_pos = wx.Point(*pos)
@@ -1190,7 +1190,7 @@ class AuiPaneInfo(object):
         """
         Sets the size of the floating pane.
 
-        :param `size`: a :class:`Size` or a tuple indicating the pane floating size.
+        :param `size`: a :class:`wx.Size` or a tuple indicating the pane floating size.
         """
 
         self.floating_size = wx.Size(*size)
@@ -1205,9 +1205,9 @@ class AuiPaneInfo(object):
 
     def Minimize(self):
         """
-        Makes the pane minimized in a :class:`~lib.agw.aui.auibar.AuiToolBar`.
+        Makes the pane minimized in a :class:`~wx.lib.agw.aui.auibar.AuiToolBar`.
 
-        Clicking on the minimize button causes a new :class:`~lib.agw.aui.auibar.AuiToolBar` to be created
+        Clicking on the minimize button causes a new :class:`~wx.lib.agw.aui.auibar.AuiToolBar` to be created
         and added to the frame manager, (currently the implementation is such that
         panes at West will have a toolbar at the right, panes at South will have
         toolbars at the bottom etc...) and the pane is hidden in the manager.
@@ -1233,7 +1233,7 @@ class AuiPaneInfo(object):
         ``AUI_MINIMIZE_POS_LEFT``           0x03 Minimizes the pane on its left tool bar
         ``AUI_MINIMIZE_POS_RIGHT``          0x04 Minimizes the pane on its right tool bar
         ``AUI_MINIMIZE_POS_BOTTOM``         0x05 Minimizes the pane on its bottom tool bar
-        ``AUI_MINIMIZE_POS_TOOLBAR``        0x06 Minimizes the pane on a target :class:`~lib.agw.aui.auibar.AuiToolBar`
+        ``AUI_MINIMIZE_POS_TOOLBAR``        0x06 Minimizes the pane on a target :class:`~wx.lib.agw.aui.auibar.AuiToolBar`
         ============================== ========= ==============================
 
         The caption of the minimized pane can be displayed in different modes:
@@ -1265,7 +1265,7 @@ class AuiPaneInfo(object):
         need to be copied back and forth every time the perspective has changed, we
         only store the toobar **name**.
 
-        :param `toolbarPane`: an instance of :class:`AuiPaneInfo`, containing a :class:`~lib.agw.aui.auibar.AuiToolBar`.
+        :param `toolbarPane`: an instance of :class:`AuiPaneInfo`, containing a :class:`~wx.lib.agw.aui.auibar.AuiToolBar`.
 
         .. note::
 
@@ -1366,7 +1366,7 @@ class AuiPaneInfo(object):
     def NotebookPage(self, id, tab_position=1000):
         """
         Forces a pane to be a notebook page, so that the pane can be
-        docked on top to another to create a :class:`~lib.agw.aui.auibook.AuiNotebook`.
+        docked on top to another to create a :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
 
         :param integer `id`: the notebook id;
         :param integer `tab_position`: the tab number of the pane once docked in a notebook.
@@ -1385,7 +1385,7 @@ class AuiPaneInfo(object):
 
     def NotebookControl(self, id):
         """
-        Forces a pane to be a notebook control (:class:`~lib.agw.aui.auibook.AuiNotebook`).
+        Forces a pane to be a notebook control (:class:`~wx.lib.agw.aui.auibook.AuiNotebook`).
 
         :param integer `id`: the notebook id.
         """
@@ -1401,25 +1401,25 @@ class AuiPaneInfo(object):
 
 
     def HasNotebook(self):
-        """ Returns whether a pane has a :class:`~lib.agw.aui.auibook.AuiNotebook` or not. """
+        """ Returns whether a pane has a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` or not. """
 
         return self.notebook_id >= 0
 
 
     def IsNotebookPage(self):
-        """ Returns whether the pane is a notebook page in a :class:`~lib.agw.aui.auibook.AuiNotebook`. """
+        """ Returns whether the pane is a notebook page in a :class:`~wx.lib.agw.aui.auibook.AuiNotebook`. """
 
         return self.notebook_id >= 0 and self.dock_direction == AUI_DOCK_NOTEBOOK_PAGE
 
 
     def IsNotebookControl(self):
-        """ Returns whether the pane is a notebook control (:class:`~lib.agw.aui.auibook.AuiNotebook`). """
+        """ Returns whether the pane is a notebook control (:class:`~wx.lib.agw.aui.auibook.AuiNotebook`). """
 
         return not self.IsNotebookPage() and self.HasNotebook()
 
 
     def SetNameFromNotebookId(self):
-        """ Sets the pane name once docked in a :class:`~lib.agw.aui.auibook.AuiNotebook` using the notebook id. """
+        """ Sets the pane name once docked in a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` using the notebook id. """
 
         if self.notebook_id >= 0:
             self.name = "__notebook_%d"%self.notebook_id
@@ -1591,7 +1591,7 @@ class AuiPaneInfo(object):
 
     def NotebookDockable(self, b=True):
         """
-        Indicates whether a pane can be docked in an automatic :class:`~lib.agw.aui.auibook.AuiNotebook`.
+        Indicates whether a pane can be docked in an automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
 
         :param bool `b`: whether the pane can be docked in a notebook or not.
         """
@@ -1887,9 +1887,9 @@ class AuiDockingGuide(wx.Frame):
         :param `parent`: the :class:`AuiManager` parent;
         :param integer `id`: the window identifier. It may take a value of -1 to indicate a default value.
         :param string `title`: the caption to be displayed on the frame's title bar.
-        :param Point `pos`: the window position. A value of (-1, -1) indicates a default position,
+        :param wx.Point `pos`: the window position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform.
-        :param Size `size`: the window size. A value of (-1, -1) indicates a default size, chosen by
+        :param wx.Size `size`: the window size. A value of (-1, -1) indicates a default size, chosen by
          either the windowing system or wxPython, depending on platform.
         :param integer `style`: the window style.
         :param string `name`: the name of the window. This parameter is used to associate a name with the
@@ -1915,7 +1915,7 @@ class AuiDockingGuide(wx.Frame):
         To be overridden by parent classes.
 
         :param bool `valid`: whether a pane can be docked on top to another to form an automatic
-         :class:`~lib.agw.aui.auibook.AuiNotebook`.
+         :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
         """
 
         return 0
@@ -1936,7 +1936,7 @@ class AuiDockingGuideWindow(wx.Window):
         Default class constructor. Used internally, do not call it in your code!
 
         :param `parent`: the :class:`AuiManager` parent;
-        :param Rect `rect`: the window rect;
+        :param wx.Rect `rect`: the window rect;
         :param integer `direction`: one of ``wx.TOP``, ``wx.BOTTOM``, ``wx.LEFT``, ``wx.RIGHT``,
          ``wx.CENTER``;
         :param bool `center`: whether the calling class is a :class:`AuiCenterDockingGuide`;
@@ -1992,7 +1992,7 @@ class AuiDockingGuideWindow(wx.Window):
         """
         Draws the docking guide background.
 
-        :param `dc`: a :class:`DC` device context object.
+        :param `dc`: a :class:`wx.DC` device context object.
         """
 
         rect = self.GetClientRect()
@@ -2031,8 +2031,8 @@ class AuiDockingGuideWindow(wx.Window):
         """
         Draws a dotted line (not used if the docking guide images are ok).
 
-        :param `dc`: a :class:`DC` device context object;
-        :param `point`: a :class:`Point` where to start drawing the dotted line;
+        :param `dc`: a :class:`wx.DC` device context object;
+        :param `point`: a :class:`wx.Point` where to start drawing the dotted line;
         :param integer `length`: the length of the dotted line;
         :param bool `vertical`: whether it is a vertical docking guide window or not.
         """
@@ -2049,7 +2049,7 @@ class AuiDockingGuideWindow(wx.Window):
         """
         Draws the docking guide icon (not used if the docking guide images are ok).
 
-        :param `dc`: a :class:`DC` device context object.
+        :param `dc`: a :class:`wx.DC` device context object.
         """
 
         rect = wx.Rect(*self.GetClientRect())
@@ -2119,7 +2119,7 @@ class AuiDockingGuideWindow(wx.Window):
         """
         Draws the docking guide arrow icon (not used if the docking guide images are ok).
 
-        :param `dc`: a :class:`DC` device context object.
+        :param `dc`: a :class:`wx.DC` device context object.
         """
 
         rect = self.GetClientRect()
@@ -2176,7 +2176,7 @@ class AuiDockingGuideWindow(wx.Window):
         """
         Draws the whole docking guide window (not used if the docking guide images are ok).
 
-        :param `dc`: a :class:`DC` device context object.
+        :param `dc`: a :class:`wx.DC` device context object.
         """
 
         self.DrawBackground(dc)
@@ -2192,7 +2192,7 @@ class AuiDockingGuideWindow(wx.Window):
         images if the mouse is inside the docking guide or unfocused images if it is
         outside.
 
-        :param `pos`: a :class:`Point` mouse position.
+        :param `pos`: a :class:`wx.Point` mouse position.
         """
 
         inside = self.GetScreenRect().Contains(pos)
@@ -2301,7 +2301,7 @@ class AuiSingleDockingGuide(AuiDockingGuide):
         """
         Moves the docking window to the new position. Overridden in children classes.
 
-        :param Point `pos`: the new docking guide position.
+        :param wx.Point `pos`: the new docking guide position.
         """
 
         pass
@@ -2311,7 +2311,7 @@ class AuiSingleDockingGuide(AuiDockingGuide):
         """
         Sets the correct shape for the docking guide window.
 
-        :param `event`: on wxGTK, a :class:`WindowCreateEvent` event to process.
+        :param `event`: on wxGTK, a :class:`wx.WindowCreateEvent` event to process.
         """
 
         self.SetShape(self.region)
@@ -2363,7 +2363,7 @@ class AuiSingleDockingGuide(AuiDockingGuide):
         images if the mouse is inside the docking guide or unfocused images if it is
         outside.
 
-        :param Point `pos`: the mouse position.
+        :param wx.Point `pos`: the mouse position.
         """
 
         self.target.UpdateDockGuide(pos)
@@ -2518,7 +2518,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         """
         Sets the correct shape for the docking guide window.
 
-        :param `event`: on wxGTK, a :class:`WindowCreateEvent` event to process.
+        :param `event`: on wxGTK, a :class:`wx.WindowCreateEvent` event to process.
         """
 
         self.SetShape(self.region)
@@ -2535,7 +2535,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         images if the mouse is inside the docking guide or unfocused images if it is
         outside.
 
-        :param Point `pos`: the mouse position.
+        :param wx.Point `pos`: the mouse position.
         """
 
         if not self._useAero:
@@ -2593,10 +2593,10 @@ class AuiCenterDockingGuide(AuiDockingGuide):
     def ValidateNotebookDocking(self, valid):
         """
         Sets whether a pane can be docked on top of another to create an automatic
-        :class:`~lib.agw.aui.auibook.AuiNotebook`.
+        :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
 
         :param bool `valid`: whether a pane can be docked on top to another to form an automatic
-         :class:`~lib.agw.aui.auibook.AuiNotebook`.
+         :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
         """
 
         if not self._useAero:
@@ -2613,7 +2613,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         """
         Moves the docking guide window to the new position.
 
-        :param Point `pos`: the new docking guide position.
+        :param wx.Point `pos`: the new docking guide position.
         """
 
         if not self._useAero:
@@ -2702,9 +2702,9 @@ class AuiDockingHintWindow(wx.Frame):
         :param `parent`: the :class:`AuiManager` parent;
         :param integer `id`: the window identifier. It may take a value of -1 to indicate a default value.
         :param string `title`: the caption to be displayed on the frame's title bar;
-        :param Point `pos`: the window position. A value of (-1, -1) indicates a default position,
+        :param wx.Point `pos`: the window position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param Size `size`: the window size. A value of (-1, -1) indicates a default size, chosen by
+        :param wx.Size `size`: the window size. A value of (-1, -1) indicates a default size, chosen by
          either the windowing system or wxPython, depending on platform;
         :param integer `style`: the window style;
         :param string `name`: the name of the window. This parameter is used to associate a name with the
@@ -2826,7 +2826,7 @@ class AuiDockingHintWindow(wx.Frame):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`AuiDockingHintWindow`.
 
-        :param `event`: a :class:`SizeEvent` to be processed.
+        :param `event`: a :class:`wx.SizeEvent` to be processed.
         """
 
         if self._blindMode or not self.CanSetTransparent():
@@ -3087,7 +3087,7 @@ class AuiFloatingFrame(wx.MiniFrame):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`AuiFloatingFrame`.
 
-        :param `event`: a :class:`SizeEvent` to be processed.
+        :param `event`: a :class:`wx.SizeEvent` to be processed.
         """
 
         if self._owner_mgr and self._send_size:
@@ -3100,7 +3100,6 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         :param `event`: a :class:`CloseEvent` to be processed.
         """
-
         if self._owner_mgr:
             self._owner_mgr.OnFloatingPaneClosed(self._pane_window, event)
 
@@ -3292,7 +3291,7 @@ class AuiFloatingFrame(wx.MiniFrame):
         """
         The user is moving the floating pane.
 
-        :param Rect `rect`: the pane client rectangle;
+        :param wx.Rect `rect`: the pane client rectangle;
         :param integer `direction`: the direction in which the pane is moving, can be one of
          ``wx.NORTH``, ``wx.SOUTH``, ``wx.EAST`` or ``wx.WEST``.
 
@@ -3445,13 +3444,13 @@ def DrawResizeHint(dc, rect):
     """
     Draws a resize hint while a sash is dragged.
 
-    :param Rect `rect`: a rectangle which specifies the sash dimensions.
+    :param wx.Rect `rect`: a rectangle which specifies the sash dimensions.
     """
 
     if wx.Platform == "__WXMSW__" and wx.App.GetComCtl32Version() >= 600:
         if wx.GetOsVersion()[1] > 5:
             # Windows Vista
-            dc.SetPen(wx.Pen("black", 2, wx.SOLID))
+            dc.SetPen(wx.Pen("black", 2, wx.PENSTYLE_SOLID))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
         else:
             # Draw the nice XP style splitter
@@ -3710,7 +3709,7 @@ def FindPaneInDock(dock, window):
     If found, the corresponding :class:`AuiDockInfo` pointer is returned, otherwise ``None``.
 
     :param `dock`: a :class:`AuiDockInfo` structure;
-    :param Window `window`: the window associated to the pane we are seeking.
+    :param wx.Window `window`: the window associated to the pane we are seeking.
     """
 
     for p in dock.panes:
@@ -3754,7 +3753,7 @@ def GetInternalFrameRect(window, docks):
     """
     Returns the window rectangle excluding toolbars.
 
-    :param `window`: a :class:`Window` derived window;
+    :param `window`: a :class:`wx.Window` derived window;
     :param `docks`: a list of :class:`AuiDockInfo` structures.
     """
 
@@ -3778,8 +3777,8 @@ def CheckOutOfWindow(window, pt):
     """
     Checks if a point is outside the window rectangle.
 
-    :param `window`: a :class:`Window` derived window;
-    :param `pt`: a :class:`Point` object.
+    :param `window`: a :class:`wx.Window` derived window;
+    :param `pt`: a :class:`wx.Point` object.
     """
 
     auiWindowMargin = 30
@@ -3793,9 +3792,9 @@ def CheckEdgeDrop(window, docks, pt):
     """
     Checks on which edge of a window the drop action has taken place.
 
-    :param `window`: a :class:`Window` derived window;
+    :param `window`: a :class:`wx.Window` derived window;
     :param `docks`: a list of :class:`AuiDockInfo` structures;
-    :param `pt`: a :class:`Point` object.
+    :param `pt`: a :class:`wx.Point` object.
     """
 
     screenPt = window.ClientToScreen(pt)
@@ -3928,7 +3927,7 @@ def PaneSortFunc(p1, p2):
 
 def GetNotebookRoot(panes, notebook_id):
     """
-    Returns the :class:`~lib.agw.aui.auibook.AuiNotebook` which has the specified `notebook_id`.
+    Returns the :class:`~wx.lib.agw.aui.auibook.AuiNotebook` which has the specified `notebook_id`.
 
     :param `panes`: a list of :class:`AuiPaneInfo` instances;
     :param integer `notebook_id`: the target notebook id.
@@ -4023,7 +4022,7 @@ def GetManager(window):
     """
     This function will return the aui manager for a given window.
 
-    :param Window `window`: this parameter should be any child window or grand-child
+    :param wx.Window `window`: this parameter should be any child window or grand-child
      window (and so on) of the frame/window managed by :class:`AuiManager`. The window
      does not need to be managed by the manager itself, nor does it even need
      to be a child or sub-child of a managed window. It must however be inside
@@ -4048,7 +4047,7 @@ def GetManager(window):
 
 class AuiManager(wx.EvtHandler):
     """
-    AuiManager manages the panes associated with it for a particular :class:`Frame`,
+    AuiManager manages the panes associated with it for a particular :class:`wx.Frame`,
     using a pane's :class:`AuiManager` information to determine each pane's docking and
     floating behavior. :class:`AuiManager` uses wxPython's sizer mechanism to plan the
     layout of each frame. It uses a replaceable dock art class to do all drawing,
@@ -4109,7 +4108,7 @@ class AuiManager(wx.EvtHandler):
         """
         Default class constructor.
 
-        :param Window `managed_window`: specifies the window which should be managed;
+        :param wx.Window `managed_window`: specifies the window which should be managed;
         :param integer `agwFlags`: specifies options which allow the frame management behavior to be
          modified. `agwFlags` can be a combination of the following style bits:
 
@@ -4219,6 +4218,7 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
         self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
 
         self.Bind(wx.EVT_MOVE, self.OnMove)
         self.Bind(wx.EVT_SYS_COLOUR_CHANGED, self.OnSysColourChanged)
@@ -4238,7 +4238,7 @@ class AuiManager(wx.EvtHandler):
         """
         Creates a floating frame for the windows.
 
-        :param Window `parent`: the floating frame parent;
+        :param wx.Window `parent`: the floating frame parent;
         :param `pane_info`: the :class:`AuiPaneInfo` class with all the pane's information.
         """
 
@@ -4265,7 +4265,7 @@ class AuiManager(wx.EvtHandler):
         """
         This version of :meth:`GetPane` looks up a pane based on a 'pane window'.
 
-        :param `window`: a :class:`Window` derived window.
+        :param `window`: a :class:`wx.Window` derived window.
 
         :see: :meth:`~AuiManager.GetPane`
         """
@@ -4302,7 +4302,7 @@ class AuiManager(wx.EvtHandler):
         The pane info's structure may then be modified. Once a pane's info is modified, :meth:`Update`
         must be called to realize the changes in the UI.
 
-        :param `item`: either a pane name or a :class:`Window`.
+        :param `item`: either a pane name or a :class:`wx.Window`.
         """
 
         if isinstance(item, six.string_types):
@@ -4321,7 +4321,7 @@ class AuiManager(wx.EvtHandler):
         """
         Shows or hides a pane based on the window passed as input.
 
-        :param Window `window`: any subclass or derivation of :class:`Window`;
+        :param wx.Window `window`: any subclass or derivation of :class:`wx.Window`;
         :param bool `show`: ``True`` to show the pane, ``False`` otherwise.
         """
 
@@ -4384,7 +4384,7 @@ class AuiManager(wx.EvtHandler):
         input point belongs to.
 
         :param `panes`: a list of :class:`AuiPaneInfo` instances;
-        :param Point `pt`: the mouse position.
+        :param wx.Point `pt`: the mouse position.
         """
 
         for paneInfo in panes:
@@ -4459,7 +4459,7 @@ class AuiManager(wx.EvtHandler):
         Frame management is not restricted to just frames. Child windows or custom
         controls are also allowed.
 
-        :param Window `managed_window`: specifies the window which should be managed by
+        :param wx.Window `managed_window`: specifies the window which should be managed by
          the AUI manager.
         """
 
@@ -4511,7 +4511,7 @@ class AuiManager(wx.EvtHandler):
         Frame management is not restricted to just frames. Child windows or custom
         controls are also allowed.
 
-        :param Window `managed_window`: specifies the window which should be managed by
+        :param wx.Window `managed_window`: specifies the window which should be managed by
          the AUI manager.
 
         .. deprecated:: 0.6
@@ -4553,11 +4553,9 @@ class AuiManager(wx.EvtHandler):
 
     def DestroyGuideWindows(self):
         """ Destroys the VS2005 HUD guide windows. """
-
         for guide in self._guides:
             if guide.host:
                 guide.host.Destroy()
-
         self._guides = []
 
 
@@ -4574,7 +4572,6 @@ class AuiManager(wx.EvtHandler):
         """ Destroys the standard wxAUI hint window. """
 
         if self._hint_window:
-
             self._hint_window.Destroy()
             self._hint_window = None
 
@@ -4582,7 +4579,7 @@ class AuiManager(wx.EvtHandler):
     def UnInit(self):
         """
         Uninitializes the framework and should be called before a managed frame or
-        window is destroyed. :meth:`UnInit` is usually called in the managed :class:`Frame` / :class:`Window`
+        window is destroyed. :meth:`UnInit` is usually called in the managed :class:`wx.Frame` / :class:`wx.Window`
         destructor.
 
         It is necessary to call this function before the managed frame or window is
@@ -4603,7 +4600,7 @@ class AuiManager(wx.EvtHandler):
     def OnDestroy(self, event) :
 
         if self._frame == event.GetEventObject():
-            self.UnInit();
+            self.UnInit()
 
 
     def GetArtProvider(self):
@@ -4698,9 +4695,9 @@ class AuiManager(wx.EvtHandler):
 
         In your code, simply call :meth:`AddPane`.
 
-        :param Window `window`: the child window to manage;
+        :param wx.Window `window`: the child window to manage;
         :param `arg1`: a :class:`AuiPaneInfo` or an integer value (direction);
-        :param `arg2`: a :class:`AuiPaneInfo` or a :class:`Point` (drop position);
+        :param `arg2`: a :class:`AuiPaneInfo` or a :class:`wx.Point` (drop position);
         :param `target`: a :class:`AuiPaneInfo` to be turned into a notebook
          and new pane added to it as a page. (additionally, target can be any pane in
          an existing notebook)
@@ -4891,7 +4888,7 @@ class AuiManager(wx.EvtHandler):
         `insert_level` parameter is used to disambiguate this. The parameter `insert_level`
         can take a value of ``AUI_INSERT_PANE``, ``AUI_INSERT_ROW`` or ``AUI_INSERT_DOCK``.
 
-        :param Window `window`: the window to be inserted and managed;
+        :param wx.Window `window`: the window to be inserted and managed;
         :param `pane_info`: the insert location for the new window;
         :param integer `insert_level`: the insertion level of the new pane.
         """
@@ -4950,7 +4947,7 @@ class AuiManager(wx.EvtHandler):
         by `window`. The window, if in a floated frame, is reparented to the frame
         managed by :class:`AuiManager`.
 
-        :param Window `window`: the window to be un-managed.
+        :param wx.Window `window`: the window to be un-managed.
         """
 
         for p in self._panes:
@@ -5159,7 +5156,7 @@ class AuiManager(wx.EvtHandler):
         """
         Activates the pane to which `window` is associated.
 
-        :param `window`: a :class:`Window` derived window.
+        :param `window`: a :class:`wx.Window` derived window.
         """
 
         if self.GetAGWFlags() & AUI_MGR_ALLOW_ACTIVE_PANE:
@@ -5176,7 +5173,7 @@ class AuiManager(wx.EvtHandler):
 
     def CreateNotebook(self):
         """
-        Creates an automatic :class:`~lib.agw.aui.auibook.AuiNotebook` when a pane is docked on
+        Creates an automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook` when a pane is docked on
         top of another pane.
         """
 
@@ -5215,7 +5212,7 @@ class AuiManager(wx.EvtHandler):
         """
         Sets the default AGW-specific window style for automatic notebooks.
 
-        :param integer `agwStyle`: the underlying :class:`~lib.agw.aui.auibook.AuiNotebook` window style.
+        :param integer `agwStyle`: the underlying :class:`~wx.lib.agw.aui.auibook.AuiNotebook` window style.
          This can be a combination of the following bits:
 
          ==================================== ==================================
@@ -5234,7 +5231,7 @@ class AuiManager(wx.EvtHandler):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~wx.lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
          ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
@@ -5611,7 +5608,7 @@ class AuiManager(wx.EvtHandler):
         """
         Adds a pane into the existing layout (in an existing dock).
 
-        :param `cont`: a :class:`Sizer` object;
+        :param `cont`: a :class:`wx.Sizer` object;
         :param `dock`: the :class:`AuiDockInfo` structure in which to add the pane;
         :param `pane`: the :class:`AuiPaneInfo` instance to add to the dock;
         :param `uiparts`: a list of UI parts in the interface;
@@ -5800,7 +5797,7 @@ class AuiManager(wx.EvtHandler):
         """
         Adds a dock into the existing layout.
 
-        :param `cont`: a :class:`Sizer` object;
+        :param `cont`: a :class:`wx.Sizer` object;
         :param `dock`: the :class:`AuiDockInfo` structure to add to the layout;
         :param `uiparts`: a list of UI parts in the interface;
         :param bool `spacer_only`: whether to add a simple spacer or a real window.
@@ -6343,7 +6340,7 @@ class AuiManager(wx.EvtHandler):
 
     def Update(self):
         if '__WXGTK__' in wx.PlatformInfo:
-            self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
+            wx.CallAfter(self.DoUpdate)
         else:
             self.DoUpdate()
 
@@ -6403,6 +6400,8 @@ class AuiManager(wx.EvtHandler):
 
             if p.frame:
                 p.frame.SetSizer(None)
+                while p.frame.GetEventHandler() is not p.frame:
+                    p.frame.PopEventHandler()
                 p.frame.Destroy()
             p.frame = None
 
@@ -6544,7 +6543,7 @@ class AuiManager(wx.EvtHandler):
 
 
     def UpdateNotebook(self):
-        """ Updates the automatic :class:`~lib.agw.aui.auibook.AuiNotebook` in the layout (if any exists). """
+        """ Updates the automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook` in the layout (if any exists). """
 
         # Workout how many notebooks we need.
         max_notebook = -1
@@ -6875,7 +6874,7 @@ class AuiManager(wx.EvtHandler):
 
     def DoFrameLayout(self):
         """
-        This is an internal function which invokes :meth:`Sizer.Layout() <Sizer.Layout>`
+        This is an internal function which invokes :meth:`wx.Sizer.Layout() <Sizer.Layout>`
         on the frame's main sizer, then measures all the various UI items
         and updates their internal rectangles.
 
@@ -6924,7 +6923,7 @@ class AuiManager(wx.EvtHandler):
         pane specified. This allows the caller to get the exact rectangle
         of the pane in question, including decorations like caption and border.
 
-        :param Window `wnd`: the window to which the pane border belongs to.
+        :param wx.Window `wnd`: the window to which the pane border belongs to.
         """
 
         for part in self._uiparts:
@@ -7311,9 +7310,9 @@ class AuiManager(wx.EvtHandler):
 
     def PaneFromTabEvent(self, event):
         """
-        Returns a :class:`AuiPaneInfo` from a :class:`~lib.agw.aui.auibook.AuiNotebook` event.
+        Returns a :class:`AuiPaneInfo` from a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` event.
 
-        :param `event`: a :class:`~lib.agw.aui.auibook.AuiNotebookEvent` event.
+        :param `event`: a :class:`~wx.lib.agw.aui.auibook.AuiNotebookEvent` event.
         """
 
         obj = event.GetEventObject()
@@ -7344,7 +7343,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the ``EVT_AUINOTEBOOK_BEGIN_DRAG`` event.
 
-        :param `event`: a :class:`~lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
+        :param `event`: a :class:`~wx.lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         if self._masterManager:
@@ -7394,7 +7393,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the ``EVT_AUINOTEBOOK_PAGE_CLOSE`` event.
 
-        :param `event`: a :class:`~lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
+        :param `event`: a :class:`~wx.lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         if self._masterManager:
@@ -7428,7 +7427,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the ``EVT_AUINOTEBOOK_PAGE_CHANGED`` event.
 
-        :param `event`: a :class:`~lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
+        :param `event`: a :class:`~wx.lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         if self._masterManager:
@@ -7454,7 +7453,7 @@ class AuiManager(wx.EvtHandler):
 
 
     def GetNotebooks(self):
-        """ Returns all the automatic :class:`~lib.agw.aui.auibook.AuiNotebook` in the :class:`AuiManager`. """
+        """ Returns all the automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook` in the :class:`AuiManager`. """
 
         if self._masterManager:
             return self._masterManager.GetNotebooks()
@@ -7464,7 +7463,7 @@ class AuiManager(wx.EvtHandler):
 
     def SetMasterManager(self, manager):
         """
-        Sets the master manager for an automatic :class:`~lib.agw.aui.auibook.AuiNotebook`.
+        Sets the master manager for an automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
 
         :param `manager`: an instance of :class:`AuiManager`.
         """
@@ -7508,7 +7507,7 @@ class AuiManager(wx.EvtHandler):
         Switches the toolbar orientation from vertical to horizontal and vice-versa.
         This is especially useful for vertical docked toolbars once they float.
 
-        :param `pane`: an instance of :class:`AuiPaneInfo`, which may have a :class:`~lib.agw.aui.auibar.AuiToolBar`
+        :param `pane`: an instance of :class:`AuiPaneInfo`, which may have a :class:`~wx.lib.agw.aui.auibar.AuiToolBar`
          window associated with it.
         """
 
@@ -7554,8 +7553,8 @@ class AuiManager(wx.EvtHandler):
 
         :param `docks`: a list of :class:`AuiDockInfo` classes;
         :param `panes`: a list of :class:`AuiPaneInfo` instances;
-        :param Point `pt`: a mouse position to check for a drop operation;
-        :param Point `offset`: a possible offset from the input point `pt`.
+        :param wx.Point `pt`: a mouse position to check for a drop operation;
+        :param wx.Point `offset`: a possible offset from the input point `pt`.
         """
 
         if target.IsToolbar():
@@ -7608,8 +7607,8 @@ class AuiManager(wx.EvtHandler):
         :param `docks`: a list of :class:`AuiDockInfo` classes;
         :param `panes`: a list of :class:`AuiPaneInfo` instances;
         :param `target`: the target pane containing the toolbar, an instance of :class:`AuiPaneInfo`;
-        :param Point `pt`: a mouse position to check for a drop operation;
-        :param Point `offset`: a possible offset from the input point `pt`.
+        :param wx.Point `pt`: a mouse position to check for a drop operation;
+        :param wx.Point `offset`: a possible offset from the input point `pt`.
         """
 
         drop = self.CopyTarget(target)
@@ -7736,7 +7735,7 @@ class AuiManager(wx.EvtHandler):
         :param `panes`: a list of :class:`AuiPaneInfo` instances;
         :param `target`: the target pane containing the window, an instance of
          :class:`AuiPaneInfo`;
-        :param Point `pt`: a mouse position to check for a drop operation.
+        :param wx.Point `pt`: a mouse position to check for a drop operation.
         """
 
         screenPt = self._frame.ClientToScreen(pt)
@@ -7856,7 +7855,7 @@ class AuiManager(wx.EvtHandler):
         :param `docks`: a list of :class:`AuiDockInfo` classes;
         :param `panes`: a list of :class:`AuiPaneInfo` instances;
         :param `target`: the target pane containing the toolbar, an instance of :class:`AuiPaneInfo`;
-        :param Point `pt`: a mouse position to check for a drop operation.
+        :param wx.Point `pt`: a mouse position to check for a drop operation.
         """
 
         screenPt = self._frame.ClientToScreen(pt)
@@ -8086,7 +8085,7 @@ class AuiManager(wx.EvtHandler):
         """
         Shows the AUI hint window.
 
-        :param Rect `rect`: the hint rect calculated in advance.
+        :param wx.Rect `rect`: the hint rect calculated in advance.
         """
 
         if rect == self._last_hint:
@@ -8190,9 +8189,9 @@ class AuiManager(wx.EvtHandler):
         """
         Draws a pane button in the caption (convenience function).
 
-        :param `dc`: a :class:`DC` device context object;
+        :param `dc`: a :class:`wx.DC` device context object;
         :param `part`: the UI part to analyze, an instance of :class:`AuiDockUIPart`;
-        :param Point `pt`: the mouse location.
+        :param wx.Point `pt`: the mouse location.
         """
 
         if not self.IsPaneButtonVisible(part):
@@ -8247,9 +8246,9 @@ class AuiManager(wx.EvtHandler):
         specified drop point, the the rectangle hint will be returned in
         screen coordinates. Otherwise, an empty rectangle is returned.
 
-        :param Window `pane_window`: it is the window pointer of the pane being dragged;
-        :param Point `pt`: is the mouse position, in client coordinates;
-        :param Point `offset`: describes the offset that the mouse is from the upper-left
+        :param wx.Window `pane_window`: it is the window pointer of the pane being dragged;
+        :param wx.Point `pt`: is the mouse position, in client coordinates;
+        :param wx.Point `offset`: describes the offset that the mouse is from the upper-left
          corner of the item being dragged.
         """
 
@@ -8341,9 +8340,9 @@ class AuiManager(wx.EvtHandler):
         rectangle, it shows it by calling :meth:`ShowHint`, otherwise it hides any hint
         rectangle currently shown.
 
-        :param Window `pane_window`: it is the window pointer of the pane being dragged;
-        :param Point `pt`: is the mouse position, in client coordinates;
-        :param Point `offset`: describes the offset that the mouse is from the upper-left
+        :param wx.Window `pane_window`: it is the window pointer of the pane being dragged;
+        :param wx.Point `pt`: is the mouse position, in client coordinates;
+        :param wx.Point `offset`: describes the offset that the mouse is from the upper-left
          corner of the item being dragged.
         """
 
@@ -8431,8 +8430,8 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the resizing of a floating pane.
 
-        :param Window `wnd`: the window managed by the pane;
-        :param Size `size`: the new pane floating size.
+        :param wx.Window `wnd`: the window managed by the pane;
+        :param wx.Size `size`: the new pane floating size.
         """
 
         # try to find the pane
@@ -8453,7 +8452,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the close event of a floating pane.
 
-        :param Window `wnd`: the window managed by the pane;
+        :param wx.Window `wnd`: the window managed by the pane;
         :param `event`: a :class:`CloseEvent` to be processed.
         """
 
@@ -8485,7 +8484,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the activation event of a floating pane.
 
-        :param Window `wnd`: the window managed by the pane.
+        :param wx.Window `wnd`: the window managed by the pane.
         """
 
         pane = self.GetPane(wnd)
@@ -8502,8 +8501,8 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the move event of a floating pane.
 
-        :param Window `wnd`: the window managed by the pane;
-        :param `eventOrPt`: a :class:`MoveEvent` to be processed or an instance of :class:`Point`.
+        :param wx.Window `wnd`: the window managed by the pane;
+        :param `eventOrPt`: a :class:`MoveEvent` to be processed or an instance of :class:`wx.Point`.
         """
 
         pane = self.GetPane(wnd)
@@ -8528,8 +8527,8 @@ class AuiManager(wx.EvtHandler):
         Snaps a floating pane to one of the main frame sides.
 
         :param `pane`: a :class:`AuiPaneInfo` instance;
-        :param Point `pane_pos`: the new pane floating position;
-        :param Size `pane_size`: the new pane floating size;
+        :param wx.Point `pane_pos`: the new pane floating position;
+        :param wx.Size `pane_size`: the new pane floating size;
         :param bool `toSnap`: a bool variable to check if :meth:`SnapPane` was called from
          a move event.
         """
@@ -8577,8 +8576,8 @@ class AuiManager(wx.EvtHandler):
         Repositions a pane after the main frame has been moved/resized.
 
         :param `pane`: a :class:`AuiPaneInfo` instance;
-        :param Point `wnd_pos`: the main frame position;
-        :param Size `wnd_size`: the main frame size.
+        :param wx.Point `wnd_pos`: the main frame position;
+        :param wx.Size `wnd_size`: the main frame size.
         """
 
         pane_pos = pane.floating_pos
@@ -8606,9 +8605,9 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the mouse click on the pane gripper.
 
-        :param Window `pane_window`: the window managed by the pane;
-        :param Point `start`: the mouse-click position;
-        :param Point `offset`: an offset point from the `start` position.
+        :param wx.Window `pane_window`: the window managed by the pane;
+        :param wx.Point `start`: the mouse-click position;
+        :param wx.Point `offset`: an offset point from the `start` position.
         """
 
         # try to find the pane
@@ -8743,7 +8742,7 @@ class AuiManager(wx.EvtHandler):
         Default behavior can be invoked in the overridden function by calling
         :meth:`OnRender`.
 
-        :param `dc`: a :class:`DC` device context object.
+        :param `dc`: a :class:`wx.DC` device context object.
         """
 
         e = AuiManagerEvent(wxEVT_AUI_RENDER)
@@ -8756,7 +8755,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the mouse double click on the pane caption.
 
-        :param Window `pane_window`: the window managed by the pane.
+        :param wx.Window `pane_window`: the window managed by the pane.
         """
 
         # try to find the pane
@@ -8849,7 +8848,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`AuiManager`.
 
-        :param `event`: a :class:`SizeEvent` to be processed.
+        :param `event`: a :class:`wx.SizeEvent` to be processed.
         """
 
         skipped = False
@@ -10039,9 +10038,9 @@ class AuiManager(wx.EvtHandler):
 
     def MinimizePane(self, paneInfo, mgrUpdate=True):
         """
-        Minimizes a pane in a newly and automatically created :class:`~lib.agw.aui.auibar.AuiToolBar`.
+        Minimizes a pane in a newly and automatically created :class:`~wx.lib.agw.aui.auibar.AuiToolBar`.
 
-        Clicking on the minimize button causes a new :class:`~lib.agw.aui.auibar.AuiToolBar` to be created
+        Clicking on the minimize button causes a new :class:`~wx.lib.agw.aui.auibar.AuiToolBar` to be created
         and added to the frame manager (currently the implementation is such that
         panes at West will have a toolbar at the right, panes at South will have
         toolbars at the bottom etc...) and the pane is hidden in the manager.
@@ -10338,8 +10337,8 @@ class AuiManager(wx.EvtHandler):
         Animates the minimization/docking of a pane a la Eclipse, using a :class:`ScreenDC`
         to draw a "moving docking rectangle" on the screen.
 
-        :param Rect `win_rect`: the original pane screen rectangle;
-        :param Rect `pane_rect`: the newly created toolbar/pane screen rectangle.
+        :param wx.Rect `win_rect`: the original pane screen rectangle;
+        :param wx.Rect `pane_rect`: the newly created toolbar/pane screen rectangle.
 
         :note: This functionality is not available on wxMAC as this platform doesn't have
          the ability to use :class:`ScreenDC` to draw on-screen and on Windows > Vista.
@@ -10522,7 +10521,7 @@ class AuiManager(wx.EvtHandler):
         """
         Requests the user attention by intermittently highlighting the pane caption.
 
-        :param Window `pane_window`: the window managed by the pane;
+        :param wx.Window `pane_window`: the window managed by the pane;
         """
 
         # try to find the pane
@@ -10550,7 +10549,7 @@ class AuiManager(wx.EvtHandler):
         """
         Starts a timer for sliding in and out a minimized pane.
 
-        :param `toolbar`: the :class:`~lib.agw.aui.auibar.AuiToolBar` containing the minimized pane tool.
+        :param `toolbar`: the :class:`~wx.lib.agw.aui.auibar.AuiToolBar` containing the minimized pane tool.
         """
 
         toolbar_pane = self.GetPane(toolbar)

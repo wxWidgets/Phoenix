@@ -5,8 +5,9 @@
 
 """
 
+import six
 import unittest
-import wtc
+from unittests import wtc
 
 from wx.lib.pubsub.core.weakmethod import WeakMethod
 from wx.lib.pubsub.core import listener
@@ -194,7 +195,9 @@ class lib_pubsub_ArgsInfo(wtc.PubsubTestCase):
                 def tmpFn(self):
                     pass
             Listener( DOA.tmpFn, ArgsInfoMock() )
-        self.assertRaises(ValueError, getListener1)
+        # Py3 doesn't have unbound methods so this won't throw a ValueError
+        if not six.PY3:
+            self.assertRaises(ValueError, getListener1)
 
         # test DOA of tmp callable:
         def getListener2():

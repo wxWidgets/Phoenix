@@ -18,7 +18,7 @@ class TestPanel(wx.Panel):
             self, parent, -1,
             style=wx.TAB_TRAVERSAL|wx.CLIP_CHILDREN|wx.NO_FULL_REPAINT_ON_RESIZE
             )
-            
+
         self.log = log
         self.current = "http://wxPython.org/"
         self.frame = frame
@@ -68,7 +68,7 @@ class TestPanel(wx.Panel):
         self.location = wx.ComboBox(
                             self, -1, "", style=wx.CB_DROPDOWN|wx.TE_PROCESS_ENTER
                             )
-        
+
         self.Bind(wx.EVT_COMBOBOX, self.OnLocationSelect, self.location)
         self.location.Bind(wx.EVT_KEY_UP, self.OnLocationKey)
         self.location.Bind(wx.EVT_CHAR, self.IgnoreReturn)
@@ -145,7 +145,7 @@ class TestPanel(wx.Panel):
 
     def OnCheckCanGoBack(self, event):
         event.Enable(self.ie.CanGoBack())
-        
+
     def OnCheckCanGoForward(self, event):
         event.Enable(self.ie.CanGoForward())
 
@@ -162,7 +162,7 @@ class TestPanel(wx.Panel):
     # Here are some of the event methods for the IE COM events.  See
     # the MSDN docs for DWebBrowserEvents2 for details on what events
     # are available, and what the parameters are.
-    
+
     def BeforeNavigate2(self, this, pDisp, URL, Flags, TargetFrameName,
                         PostData, Headers, Cancel):
         self.log.write('BeforeNavigate2: %s\n' % URL[0])
@@ -174,7 +174,7 @@ class TestPanel(wx.Panel):
                 # so setting the value means it will be returned and
                 # checked in the COM control.
                 Cancel[0] = True
-                
+
 
     def NewWindow3(self, this, pDisp, Cancel, Flags, urlContext, URL):
         self.log.write('NewWindow3: %s\n' % URL)
@@ -182,7 +182,7 @@ class TestPanel(wx.Panel):
 
     #def ProgressChange(self, this, progress, progressMax):
     #    self.log.write('ProgressChange: %d of %d\n' % (progress, progressMax))
-        
+
     def DocumentComplete(self, this, pDisp, URL):
         self.current = URL[0]
         self.location.SetValue(self.current)
@@ -195,7 +195,7 @@ class TestPanel(wx.Panel):
         if self.frame:
             self.frame.SetStatusText(Text)
 
-        
+
 
 #----------------------------------------------------------------------
 # for the demo framework...

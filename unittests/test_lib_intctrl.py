@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.lib.intctrl as IC
 
@@ -15,7 +15,7 @@ class IntCtrlTests(wtc.WidgetTestCase):
         t3.ChangeValue(16)
         self.assertTrue(not t3.IsInBounds())
 
-      
+
 #---------------------------------------------------------------------------
 
 

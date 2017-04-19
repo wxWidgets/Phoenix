@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from wx.lib.six.moves import cPickle
+from six.moves import cPickle
 import  wx
 
 #----------------------------------------------------------------------

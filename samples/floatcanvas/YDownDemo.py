@@ -47,9 +47,9 @@ class DrawFrame(wx.Frame):
                                      Debug = 0,
                                      BackgroundColor = "DARK SLATE BLUE",
                                      ).Canvas
-      
+
         self.Canvas = Canvas
-        
+
         Point = (0,0)
         Box = Canvas.AddRectangle(Point,
                                   (80,100),
@@ -59,14 +59,14 @@ class DrawFrame(wx.Frame):
         Canvas.AddText("%s"%(Point,), Point, Position="cr")
         Canvas.AddPoint(Point, Diameter=3, Color = "red")
 
-        
+
         Point = (0,100)
         Canvas.AddText("%s"%(Point,), Point, Position="cr")
         Canvas.AddPoint(Point, Diameter=3, Color = "red")
-        
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
 
-        
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
+
+
         self.Show()
         Canvas.ZoomToBB()
 
@@ -80,10 +80,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         FloatCanvas.py
 # Purpose:
@@ -26,16 +25,16 @@ container type control::
                                  Debug=0,
                                  BackgroundColor="White",
                                  )
-    
+
 
     # add a circle
     cir = FloatCanvas.Circle((10, 10), 100)
     self.Canvas.AddObject(cir)
-    
+
     # add a rectangle
     rect = FloatCanvas.Rectangle((110, 10), (100, 100), FillColor='Red')
     self.Canvas.AddObject(rect)
-    
+
     self.Canvas.Draw()
 
 
@@ -47,11 +46,11 @@ from __future__ import division
 
 import sys
 mac = sys.platform.startswith("darwin")
- 
+
 import numpy as N
 from time import clock
 import wx
-from wx.lib import six
+import six
 
 from .FCObjects import *
 
@@ -108,7 +107,7 @@ class _MouseEvent(wx.PyCommandEvent):
 class FloatCanvas(wx.Panel):
     """
     The main class of the floatcanvas package :class:`~lib.floatcanvas.FloatCanvas`.
-    
+
     """
 
     def __init__(self, parent, id = -1,
@@ -121,19 +120,19 @@ class FloatCanvas(wx.Panel):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
-        :param `size`: a tuple or :class:`Size`
+        :param `size`: a tuple or :class:`wx.Size`
         :param `ProjectionFun`: This allows you to change the transform from
-         world to pixel coordinates. We can point to :meth:`~lib.floatcanvas.FloatCanvas.FloatCanvas.FlatEarthProjection` 
+         world to pixel coordinates. We can point to :meth:`~lib.floatcanvas.FloatCanvas.FloatCanvas.FlatEarthProjection`
          for an example -- though that should really be a class method, or even
          better, simply a function in the module. There is a tiny bit on info
          in the error message in FloatCanvas.SetProjectionFun()
 
          (Note: this really should get re-factored to allow more generic
          projections...)
-        :param string `BackgroundColor`: any value accepted by :class:`Brush` 
-        :param `Debug`: activate debug, currently it prints some debugging 
+        :param string `BackgroundColor`: any value accepted by :class:`wx.Brush`
+        :param `Debug`: activate debug, currently it prints some debugging
          information, could be improved.
 
         """
@@ -168,9 +167,9 @@ class FloatCanvas(wx.Panel):
         ## CHB: I'm leaving these out for now.
         #self.Bind(wx.EVT_ENTER_WINDOW, self. )
         #self.Bind(wx.EVT_LEAVE_WINDOW, self. )
-    
+
         self.SetProjectionFun(ProjectionFun)
-        
+
         self.GUIMode = None # making sure the arrribute exists
         self.SetMode(GUIMode.GUIMouse()) # make the default Mouse Mode.
 
@@ -182,7 +181,7 @@ class FloatCanvas(wx.Panel):
 
 #        self.CreateCursors()
 
-        
+
     def InitAll(self):
         """
         Sets everything in the Canvas to default state.
@@ -226,11 +225,11 @@ class FloatCanvas(wx.Panel):
     def SetProjectionFun(self, ProjectionFun):
         """
         Set a custom projection function
-        
+
         :param `ProjectionFun`: valid entries are ``FlatEarth``, ``None``
           or a callable object that takes the ``ViewPortCenter`` and returns
           ``MapProjectionVector``
-        
+
         """
         if ProjectionFun == 'FlatEarth':
             self.ProjectionFun = self.FlatEarthProjection
@@ -248,7 +247,7 @@ class FloatCanvas(wx.Panel):
         """
         Compute the scaling array for the flat-earth projection
 
-        :param `CenterPoint`: center point of viewport (lon, lat) -- the 
+        :param `CenterPoint`: center point of viewport (lon, lat) -- the
          longitude is scaled to the latitude of this point. a 2-tuple, or a
          (2,) `NumPy <http://www.numpy.org/>`_ array of point coordinates
 
@@ -265,7 +264,7 @@ class FloatCanvas(wx.Panel):
     def SetMode(self, Mode):
         """
         Set the GUImode to any of the available mode.
-        
+
         :param `Mode`: a valid GUI Mode, out of the box valid modes
          are subclassed from :class:`~lib.floatcanvas.GUIMode.GUIBase` or a mode
          can also be user defined.
@@ -307,7 +306,7 @@ class FloatCanvas(wx.Panel):
         def GetHitTestColor(self, xy):
             """
             Get the hit test colour
-            
+
             :param `xy`: the position to get the hit test colour for
             """
             if self._ForegroundHTBitmap:
@@ -325,7 +324,7 @@ class FloatCanvas(wx.Panel):
         def GetHitTestColor(self,  xy ):
             """
             Get the hit test colour
-            
+
             :param `xy`: the position to get the hit test colour for
             """
             dc = wx.MemoryDC()
@@ -339,7 +338,7 @@ class FloatCanvas(wx.Panel):
     def UnBindAll(self):
         """Removes all bindings to Objects."""
         self.HitDict = None
-    
+
     def _CallHitCallback(self, Object, xy, HitEvent):
         """
         A little book keeping to be done when a callback is called.
@@ -484,7 +483,7 @@ class FloatCanvas(wx.Panel):
         if self.GUIMode:
             self.GUIMode.OnRightUp(event)
         event.Skip()
-        
+
     def KeyDownEvent(self, event):
         """Key down event."""
         if self.GUIMode:
@@ -522,7 +521,7 @@ class FloatCanvas(wx.Panel):
     def MakeNewHTBitmap(self):
         """
         Off screen Bitmap used for Hit tests on background objects
-        
+
         """
         self._HTBitmap = wx.Bitmap(self.PanelSize[0],
                                         self.PanelSize[1],
@@ -534,7 +533,7 @@ class FloatCanvas(wx.Panel):
         ##       added after the backgound is drawn
         """
         Off screen Bitmap used for Hit tests on foreground objects
-        
+
         """
         self._ForegroundHTBitmap = wx.Bitmap(self.PanelSize[0],
                                                   self.PanelSize[1],
@@ -570,7 +569,7 @@ class FloatCanvas(wx.Panel):
         #    self.GUIMode.DrawOnTop(dc)
         #except AttributeError:
         #    pass
-    
+
     def Draw(self, Force=False):
         """
 
@@ -663,14 +662,14 @@ class FloatCanvas(wx.Panel):
             print("Drawing took %f seconds of CPU time"%(clock()-start))
             if self._HTBitmap is not None:
                 self._HTBitmap.SaveFile('junk.png', wx.BITMAP_TYPE_PNG)
-        
+
         ## Clear the font cache. If you don't do this, the X font server
         ## starts to take up Massive amounts of memory This is mostly a
         ## problem with very large fonts, that you get with scaled text
         ## when zoomed in.
         DrawObject.FontList = {}
 
-    def _ShouldRedraw(DrawList, ViewPortBB): 
+    def _ShouldRedraw(DrawList, ViewPortBB):
         # lrk: Returns the objects that should be redrawn
         ## fixme: should this check be moved into the object?
         BB2 = ViewPortBB
@@ -685,15 +684,15 @@ class FloatCanvas(wx.Panel):
         """
         Move the image in the window.
 
-        :param tuple `shift`: is an (x, y) tuple defining amount to shift in 
+        :param tuple `shift`: is an (x, y) tuple defining amount to shift in
          each direction
         :param string `CoordType`: defines what coordinates to use, valid entries
          are:
-         
+
          ============== ======================================================
          Coordtype      Description
          ============== ======================================================
-         `Panel`        shift the image by some fraction of the size of the 
+         `Panel`        shift the image by some fraction of the size of the
                         displayed image
          `Pixel`        shift the image by some number of pixels
          `World`        shift the image by an amount of floating point world
@@ -729,35 +728,35 @@ class FloatCanvas(wx.Panel):
         :param center: a tuple of (x,y) coordinates of the center of the viewport,
                        after zooming. If center is not given, the center will stay the same.
 
-        :param centerCoords: flag indicating whether the center given is in pixel or world 
+        :param centerCoords: flag indicating whether the center given is in pixel or world
                              coords. Options are: "world" or "pixel"
         :param keepPointInPlace: boolean flag. If False, the center point is what's given.
                                  If True, the image is shifted so that the given center point
-                                 is kept in the same pixel space. This facilitates keeping the 
+                                 is kept in the same pixel space. This facilitates keeping the
                                  same point under the mouse when zooming with the scroll wheel.
         """
         if center is None:
             center = self.ViewPortCenter
             centerCoords = 'World' #override input if they don't give a center point.
-    
+
         if centerCoords == "Pixel":
             oldpoint = self.PixelToWorld( center )
         else:
             oldpoint = N.array(center, N.float)
-    
+
         self.Scale = self.Scale*factor
         if keepPointInPlace:
             self.SetToNewScale(False)
-    
+
             if centerCoords == "Pixel":
                 newpoint = self.PixelToWorld( center )
             else:
                 newpoint = N.array(center, N.float)
             delta = (newpoint - oldpoint)
-            self.MoveImage(-delta, 'World')       
+            self.MoveImage(-delta, 'World')
         else:
             self.ViewPortCenter = oldpoint
-            self.SetToNewScale()         
+            self.SetToNewScale()
 
     def ZoomToBB(self, NewBB=None, DrawFlag=True):
 
@@ -802,9 +801,9 @@ class FloatCanvas(wx.Panel):
     def SetToNewScale(self, DrawFlag=True):
         """
         Set to the new scale
-        
+
         :param boolean `DrawFlag`: draw the canvas
-        
+
         """
         Scale = self.Scale
         if self.MinScale is not None:
@@ -821,9 +820,9 @@ class FloatCanvas(wx.Panel):
     def RemoveObjects(self, Objects):
         """"
         Remove objects from canvas
-        
+
         :param list `Objects`: a list of :class:`DrawObjects` to remove
-        
+
         """
         for Object in Objects:
             self.RemoveObject(Object, ResetBB=False)
@@ -832,10 +831,10 @@ class FloatCanvas(wx.Panel):
     def RemoveObject(self, Object, ResetBB=True):
         """"
         Remove object from canvas
-        
+
         :param DrawObject `Object`: a :class:`DrawObjects` to remove
         :param boolean `ResetBB`: reset the bounding box
-        
+
         """
         ##fixme: Using the list.remove method is kind of slow
         if Object.InForeground:
@@ -938,11 +937,11 @@ class FloatCanvas(wx.Panel):
     def AddObject(self, obj):
         """
         Add an object to the canvas
-        
+
         :param DrawObject `obj`: the object to add
-        
+
         :return: DrawObject
-        
+
         """
         # put in a reference to the Canvas, so remove and other stuff can work
         obj._Canvas = self
@@ -958,9 +957,9 @@ class FloatCanvas(wx.Panel):
     def AddObjects(self, Objects):
         """
         Add objects to the canvas
-        
+
         :param list `Objects`: a list of :class:`DrawObject`
-                
+
         """
         for Object in Objects:
             self.AddObject(Object)
@@ -968,7 +967,7 @@ class FloatCanvas(wx.Panel):
     def _DrawObjects(self, dc, DrawList, ScreenDC, ViewPortBB, HTdc=None):
         """
         This is a convenience function;
-        
+
         This function takes the list of objects and draws them to specified
         device context.
         """
@@ -988,10 +987,10 @@ class FloatCanvas(wx.Panel):
     def SaveAsImage(self, filename, ImageType=wx.BITMAP_TYPE_PNG):
         """
         Saves the current image as an image file.
-        
+
         :param string `filename`: the name of the image file
-        :param `ImageType`: format to use, see :ref:`BitmapType` and the note in
-         :meth:`Bitmap.SaveFile`
+        :param `ImageType`: format to use, see :ref:`wx.BitmapType` and the note in
+         :meth:`wx.Bitmap.SaveFile`
 
         """
 

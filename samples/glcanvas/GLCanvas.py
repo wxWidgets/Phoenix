@@ -21,13 +21,13 @@ class MyCanvasBase(glcanvas.GLCanvas):
         glcanvas.GLCanvas.__init__(self, parent, -1)
         self.init = False
         self.context = glcanvas.GLContext(self)
-        
+
         self.lastx = self.x = 30
         self.lasty = self.y = 30
         self.size = None
-        
+
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
-        
+
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseDown)
@@ -44,7 +44,7 @@ class MyCanvasBase(glcanvas.GLCanvas):
     def DoSetViewport(self):
         size = self.size = self.GetClientSize()
         self.SetCurrent(self.context)
-        glViewport(0, 0, size.width, size.height)        
+        glViewport(0, 0, size.width, size.height)
 
 
     def OnPaint(self, event):

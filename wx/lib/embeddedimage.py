@@ -15,13 +15,13 @@
 import base64
 
 import wx
-from wx.lib.six import BytesIO
+from six import BytesIO
 
 try:
     b64decode = base64.b64decode
 except AttributeError:
     b64decode = base64.decodestring
-    
+
 
 class PyEmbeddedImage(object):
     """

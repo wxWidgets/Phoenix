@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -9,16 +9,16 @@ pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 #---------------------------------------------------------------------------
 
 class lib_buttons_Tests(wtc.WidgetTestCase):
-    
+
     def test_lib_buttons1(self):
-        
+
         btn = buttons.GenButton(self.frame, label='label')
         btn = buttons.GenButton(self.frame, -1, 'label', (10,10), (100,-1), wx.BU_LEFT)
-        
+
         bmp = wx.Bitmap(pngFile)
         btn = buttons.GenBitmapButton(self.frame, bitmap=bmp)
         btn = buttons.GenBitmapTextButton(self.frame, label='label', bitmap=bmp)
-        
+
         btn.SetBitmapFocus(bmp)
         btn.SetBitmapDisabled(bmp)
         btn.SetBitmapSelected(bmp)
@@ -28,17 +28,17 @@ class lib_buttons_Tests(wtc.WidgetTestCase):
 
         self.assertTrue(btn.GetValue())
         self.assertEqual(btn.GetBitmapLabel(), bmp)
-        
-        
+
+
     def test_lib_buttons2(self):
-        
+
         btn = buttons.ThemedGenButton(self.frame, label='label')
         btn = buttons.ThemedGenButton(self.frame, -1, 'label', (10,10), (100,-1), wx.BU_LEFT)
-        
+
         bmp = wx.Bitmap(pngFile)
         btn = buttons.ThemedGenBitmapButton(self.frame, bitmap=bmp)
         btn = buttons.ThemedGenBitmapTextButton(self.frame, label='label', bitmap=bmp)
-        
+
         btn.SetBitmapFocus(bmp)
         btn.SetBitmapDisabled(bmp)
         btn.SetBitmapSelected(bmp)
@@ -48,9 +48,9 @@ class lib_buttons_Tests(wtc.WidgetTestCase):
 
         self.assertTrue(btn.GetValue())
         self.assertEqual(btn.GetBitmapLabel(), bmp)
-        
-                
-        
+
+
+
 #---------------------------------------------------------------------------
 
 

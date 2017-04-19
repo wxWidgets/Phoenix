@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -16,7 +16,7 @@ class pen_Tests(wtc.WidgetTestCase):
         p.SetStyle(wx.PENSTYLE_SOLID)
         self.assertTrue(p.IsOk())
 
-        
+
     def test_penCtor2(self):
         p = wx.Pen(wx.BLUE)
         self.assertTrue(p.IsOk())
@@ -25,7 +25,7 @@ class pen_Tests(wtc.WidgetTestCase):
         p = wx.Pen('blue')
         self.assertTrue(p.IsOk())
         self.assertTrue(p.GetColour() == wx.BLUE)
-        
+
         p = wx.Pen('#0000FF')
         self.assertTrue(p.IsOk())
         self.assertTrue(p.GetColour() == wx.BLUE)
@@ -36,8 +36,8 @@ class pen_Tests(wtc.WidgetTestCase):
         p2 = wx.Pen(p1)
         self.assertTrue( p1 is not p2)
         self.assertTrue( p1 == p2)
-        
-        
+
+
     def test_penNull(self):
         wx.NullPen
         self.assertTrue(not wx.NullPen.IsOk())
@@ -49,8 +49,8 @@ class pen_Tests(wtc.WidgetTestCase):
         if p:
             test = True
         self.assertTrue(test)
-        
-        
+
+
     def test_penStock(self):
         for p in [wx.RED_PEN, wx.BLUE_PEN, wx.CYAN_PEN, wx.GREEN_PEN,
                   wx.YELLOW_PEN, wx.BLACK_PEN, wx.WHITE_PEN,
@@ -63,12 +63,12 @@ class pen_Tests(wtc.WidgetTestCase):
     def test_penDashes(self):
         p = wx.Pen()
         p.Style = wx.PENSTYLE_USER_DASH
-        p.Width = 1        
+        p.Width = 1
         dashes = [1,2,2,1]
         p.SetDashes(dashes)
         d = p.GetDashes()
         self.assertTrue(d == dashes)
-        
+
 
     def test_penProperties(self):
         p = wx.Pen(wx.BLUE)
@@ -79,8 +79,8 @@ class pen_Tests(wtc.WidgetTestCase):
         p.Stipple
         p.Style
         p.Width
-        
-            
+
+
     def test_penConstants(self):
         wx.PENSTYLE_INVALID
         wx.PENSTYLE_SOLID
@@ -117,7 +117,7 @@ class pen_Tests(wtc.WidgetTestCase):
         p = wx.Pen('red', 1, wx.STIPPLE)
 
 
-        
+
 #---------------------------------------------------------------------------
 
 

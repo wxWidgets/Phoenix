@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -13,8 +13,8 @@ class menuitem_Tests(wtc.WidgetTestCase):
         m1 = wx.MenuItem()
         m2 = wx.MenuItem(None, -1, "Menu Item", "Help text", wx.ITEM_NORMAL)
         m2.SetBitmap(wx.Bitmap(pngFile))
-        
-        
+
+
     def test_menuitemProperties(self):
         m = wx.MenuItem()
         m.BackgroundColour
@@ -32,15 +32,15 @@ class menuitem_Tests(wtc.WidgetTestCase):
         m.SubMenu
         m.Text
         m.TextColour
-        
-        
+
+
     def test_menuitemKinds(self):
         wx.ITEM_CHECK
         wx.ITEM_DROPDOWN
         wx.ITEM_NORMAL
         wx.ITEM_RADIO
         wx.ITEM_SEPARATOR
-        
+
 #---------------------------------------------------------------------------
 
 

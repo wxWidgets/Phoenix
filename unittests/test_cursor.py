@@ -1,7 +1,7 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
-import wx.lib.six as six
+import six
 import os
 
 pngFile = os.path.join(os.path.dirname(__file__), 'pointy.png')
@@ -10,7 +10,7 @@ curFile = os.path.join(os.path.dirname(__file__), 'horse.cur')
 #---------------------------------------------------------------------------
 
 class CursorTests(wtc.WidgetTestCase):
-    
+
     def test_CursorCtors(self):
         # stock
         c = wx.Cursor(wx.CURSOR_HAND)
@@ -19,7 +19,7 @@ class CursorTests(wtc.WidgetTestCase):
         # from file
         c = wx.Cursor(curFile, wx.BITMAP_TYPE_CUR)
         self.assertTrue(c.IsOk())
-        
+
         # from image
         img = wx.Image(pngFile)
         img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 1)
@@ -30,7 +30,7 @@ class CursorTests(wtc.WidgetTestCase):
         # copy
         c2 = wx.Cursor(c)
         self.assertTrue(c2.IsOk())
-        
+
 
     def test_CursorStockIDsExist(self):
         wx.CURSOR_ARROW
@@ -62,8 +62,8 @@ class CursorTests(wtc.WidgetTestCase):
         wx.CURSOR_DEFAULT
         wx.CURSOR_COPY_ARROW
         wx.CURSOR_ARROWWAIT
-        
-        
+
+
     def test_Cursor__nonzero__(self):
         c1 = wx.Cursor()
         self.assertTrue( not c1.IsOk() )
@@ -85,13 +85,13 @@ class CursorTests(wtc.WidgetTestCase):
             nzcheck = True
         self.assertTrue(nzcheck)
 
-        
+
     def test_NullCursor(self):
         # just make sure this one exists
         wx.NullCursor
         self.assertTrue(not wx.NullCursor.IsOk())
 
-         
+
     def test_StockCursorsExist(self):
         wx.STANDARD_CURSOR
         wx.HOURGLASS_CURSOR
@@ -101,8 +101,8 @@ class CursorTests(wtc.WidgetTestCase):
         self.assertTrue(wx.STANDARD_CURSOR.IsOk())
         self.assertTrue(wx.HOURGLASS_CURSOR.IsOk())
         self.assertTrue(wx.CROSS_CURSOR.IsOk())
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

@@ -1,10 +1,10 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import sys
 
 # Is it just this module or the whole test suite being run?
-runningStandalone = False  
+runningStandalone = False
 
 #---------------------------------------------------------------------------
 
@@ -30,24 +30,24 @@ class mousemanager_Tests(wtc.WidgetTestCase):
                 pass
             def MouseClickCancelled(self, item):
                 pass
-        
+
         pnl = wx.Panel(self.frame)
         self.frame.SendSizeEvent()  # make sure it fills the frame
-        
+
         mm = MyMEM(pnl)
         self.waitFor(100)
-        
+
         uia = wx.UIActionSimulator()
         uia.MouseMove(pnl.ClientToScreen((10,10)))
         self.waitFor(100)
         uia.MouseClick()
         self.waitFor(100)
-        
+
         self.assertTrue(hasattr(mm, 'hitTest'))
         self.assertTrue(hasattr(mm, 'mouseClicked'))
-        
+
         del mm
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

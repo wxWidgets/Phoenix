@@ -73,7 +73,7 @@ class DrawOp(object):
     def Rotate(self, x, y, theta, sinTheta, cosTheta):
         """not implemented???"""
         pass
-    
+
 class OpSetGDI(DrawOp):
     """Set font, brush, text colour."""
     def __init__(self, theOp, theImage, theGdiIndex, theMode = 0):
@@ -121,7 +121,7 @@ class OpSetGDI(DrawOp):
         elif self._op == DRAWOP_SET_BK_MODE:
             dc.SetBackgroundMode(self._mode)
 
-    
+
 class OpSetClipping(DrawOp):
     """Set/destroy clipping."""
     def __init__(self, theOp, theX1, theY1, theX2, theY2):
@@ -191,7 +191,7 @@ class OpDraw(DrawOp):
             self._y3 *= scaleY
 
         self._radius *= scaleX
-        
+
     def Translate(self, x, y):
         self._x1 += x
         self._y1 += y
@@ -316,8 +316,8 @@ class OpPolyDraw(DrawOp):
         return FindEndForPolyline([ p[0] + xOffset for p in self._points ],
                                   [ p[1] + yOffset for p in self._points ],
                                   x1, y1, x2, y2)
-    
-                    
+
+
 class PseudoMetaFile(object):
     """
     A simple metafile-like class which can load data from a Windows
@@ -331,10 +331,10 @@ class PseudoMetaFile(object):
         self._outlinePen = None
         self._fillBrush = None
         self._outlineOp = -1
-        
+
         self._ops = []
         self._gdiObjects = []
-        
+
         self._outlineColours = []
         self._fillColours = []
 
@@ -375,7 +375,7 @@ class PseudoMetaFile(object):
 
     def SetRotateable(self, rot):
         self._rotateable = rot
-        
+
     def GetRotateable(self):
         return self._rotateable
 
@@ -384,7 +384,7 @@ class PseudoMetaFile(object):
 
     def GetOutlineColours(self):
         return self._outlineColours
-    
+
     def Draw(self, dc, xoffset, yoffset):
         for op in self._ops:
             op.Do(dc, xoffset, yoffset)
@@ -461,7 +461,7 @@ class PseudoMetaFile(object):
             elif op.GetOp() == DRAWOP_DRAW_ARC:
                 # TODO: don't yet know how to calculate the bounding box
                 # for an arc. So pretend it's a line; to get a correct
-                # bounding box, draw a blank rectangle first, of the 
+                # bounding box, draw a blank rectangle first, of the
                 # correct size.
                 if op._x1 < minX:
                     minX = op._x1
@@ -505,9 +505,9 @@ class PseudoMetaFile(object):
 
         w = max(abs(boundMinX), abs(boundMaxX)) * 2
         h = max(abs(boundMinY), abs(boundMaxY)) * 2
-        
+
         self.SetSize(w, h)
-        
+
         if shape:
             shape.SetWidth(self._width)
             shape.SetHeight(self._height)
@@ -618,7 +618,7 @@ class PseudoMetaFile(object):
     def SetBackgroundMode(self, mode):
         op = OpSetGDI(DRAWOP_SET_BK_MODE, self, 0)
         self._ops.append(op)
-        
+
 class DrawnShape(RectangleShape):
     """
     Draws a pseudo-metafile shape, which can be loaded from a simple
@@ -637,7 +637,7 @@ class DrawnShape(RectangleShape):
         RectangleShape.__init__(self, 100, 50)
         self._saveToFile = True
         self._currentAngle = DRAWN_ANGLE_0
-        
+
         self._metafiles=PseudoMetaFile(), PseudoMetaFile(), PseudoMetaFile(), PseudoMetaFile()
 
     def OnDraw(self, dc):
@@ -752,7 +752,7 @@ class DrawnShape(RectangleShape):
             p = op.GetPerimeterPoint(x1, y1, x2, y2, self.GetX(), self.GetY(), self.GetAttachmentMode())
             if p:
                 return p
-            
+
         return RectangleShape.GetPerimeterPoint(self, x1, y1, x2, y2)
 
     def LoadFromMetaFile(self, filename):
@@ -879,7 +879,7 @@ class DrawnShape(RectangleShape):
         * DRAWN_ANGLE_270
         """
         return self._currentAngle
-    
+
     def GetRotation(self):
         """Return the current rotation of the shape in radians."""
         return self._rotation

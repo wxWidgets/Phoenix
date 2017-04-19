@@ -5,7 +5,7 @@
 # Author:      Cody Precord
 #
 # Created:     13-March-2001
-# Copyright:   (c) 2001 by Total Control Software
+# Copyright:   (c) 2001-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, documented
 #----------------------------------------------------------------------
@@ -36,10 +36,10 @@ def AdjustAlpha(colour, alpha):
     :param integer `alpha`: the new value for the colour alpha channel (between 0
      and 255).
 
-    :rtype: :class:`Colour`
-    :returns: A new :class:`Colour` with the alpha channel specified as input
+    :rtype: :class:`wx.Colour`
+    :returns: A new :class:`wx.Colour` with the alpha channel specified as input
     """
-    
+
     return wx.Colour(colour.Red(), colour.Green(), colour.Blue(), alpha)
 
 
@@ -47,13 +47,13 @@ def AdjustColour(color, percent, alpha=wx.ALPHA_OPAQUE):
     """
     Brighten/darken input colour by `percent` and adjust alpha
     channel if needed. Returns the modified color.
-    
-    :param Colour `color`: color object to adjust;
+
+    :param wx.Colour `color`: color object to adjust;
     :param integer `percent`: percent to adjust +(brighten) or -(darken);
     :param integer `alpha`: amount to adjust alpha channel.
 
-    :rtype: :class:`Colour`
-    :returns: A new darkened/lightened :class:`Colour` with the alpha channel
+    :rtype: :class:`wx.Colour`
+    :returns: A new darkened/lightened :class:`wx.Colour` with the alpha channel
      specified as input
     """
 
@@ -75,13 +75,13 @@ def BestLabelColour(color, bw=False):
     """
     Get the best color to use for the label that will be drawn on
     top of the given color.
-    
-    :param Colour `color`: background color that text will be drawn on;
+
+    :param wx.Colour `color`: background color that text will be drawn on;
     :param bool `bw`: If ``True``, only return black or white.
 
-    :rtype: :class:`Colour`
+    :rtype: :class:`wx.Colour`
     """
-    
+
     avg = sum(color.Get()) / 3
     if avg > 192:
         txt_color = wx.BLACK
@@ -99,10 +99,10 @@ def BestLabelColour(color, bw=False):
 def GetHighlightColour():
     """
     Gets the default highlight color.
-    
-    :rtype: :class:`Colour`
+
+    :rtype: :class:`wx.Colour`
     """
-    
+
     if wx.Platform == '__WXMAC__':
         if CARBON:
             if wx.VERSION < (2, 9, 0, 0, ''):

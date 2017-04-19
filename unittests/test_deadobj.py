@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -13,7 +13,7 @@ class deadobj_Tests(wtc.WidgetTestCase):
         # is still safe to call methods of that window object.
         p = wx.Panel(self.frame)
         self.assertTrue(True if p else False)
-        
+
         p.Destroy()
         self.assertFalse(True if p else False)
 
@@ -31,8 +31,8 @@ class deadobj_Tests(wtc.WidgetTestCase):
         # the test environment.
         if 'wxMSW' not in wx.PlatformInfo:
             self.assertFalse(True if f else False)
-        
-        
+
+
     def test_deadobjException(self):
         # There should be a RuntimeError exception if we try to use an object
         # after it's C++ parts have been detroyed.
@@ -40,8 +40,8 @@ class deadobj_Tests(wtc.WidgetTestCase):
         p.Destroy()
         with self.assertRaises(RuntimeError):
             p.IsShown()
-            
-        
+
+
 #---------------------------------------------------------------------------
 
 

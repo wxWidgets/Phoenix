@@ -6,12 +6,12 @@
 # Author:      Robin Dunn
 #
 # Created:     21-Nov-2006
-# Copyright:   (c) 2006 by Total Control Software
+# Copyright:   (c) 2006-2017 by Total Control Software
 # Licence:     wxWindows license
-# 
+#
 # Tags: phoenix-port, documented, unittest
 #----------------------------------------------------------------------------
-# 
+#
 # NOTE: This class was originally based on ideas sent to the
 # wxPython-users mail list by Dan Eloff.
 """
@@ -24,7 +24,7 @@ Description
 ===========
 
 The Widget Inspection Tool (WIT) is very useful debugging tool provided with
-wxPython, especially useful to debug layout issues when using :class:`Sizer`.
+wxPython, especially useful to debug layout issues when using :class:`wx.Sizer`.
 
 The :class:`InspectableApp` is a "pre-mixed" :class:`App` and the
 :class:`InspectionMixin` allows you to mix it with your custom :class:`App`
@@ -44,20 +44,20 @@ InspectableApp usage::
     import wx
     import wx.lib.sized_controls as sc
     import wx.lib.mixins.inspection as wit
-    
+
     app = wit.InspectableApp()
-    
+
     frame = sc.SizedFrame(None, -1, "WIT InspectableApp")
-    
+
     pane = frame.GetContentsPane()
     pane.SetSizerType("horizontal")
-    
+
     b1 = wx.Button(pane, wx.ID_ANY)
     t1 = wx.TextCtrl(pane, -1)
     t1.SetSizerProps(expand=True)
-    
+
     frame.Show()
-    
+
     app.MainLoop()
 
 
@@ -66,25 +66,25 @@ InspectionMixin usage::
     import wx
     import wx.lib.sized_controls as sc
     import wx.lib.mixins.inspection as wit
-    
+
     class MyApp(wx.App, wit.InspectionMixin):
         def OnInit(self):
             self.Init()  # initialize the inspection tool
             return True
-    
+
     app = MyApp()
-    
+
     frame = sc.SizedFrame(None, -1, "WIT InspectionMixin")
-    
+
     pane = frame.GetContentsPane()
     pane.SetSizerType("horizontal")
-    
+
     b1 = wx.Button(pane, wx.ID_ANY)
     t1 = wx.TextCtrl(pane, -1)
     t1.SetSizerProps(expand=True)
-    
+
     frame.Show()
-    
+
     app.MainLoop()
 
 """
@@ -118,7 +118,7 @@ class InspectionMixin(object):
                        alt=True, cmd=True, shift=False, keyCode=ord('I')):
         """
         Make the event binding that will activate the InspectionFrame window.
-        
+
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
@@ -133,7 +133,7 @@ class InspectionMixin(object):
         :param boolean `cmd`: use ctrl/cmd in the short cut sequence
         :param boolean `shift`: use shift in the short cut sequence
         :param string `keyCode`: the key code for the short cut sequence
-        
+
         """
         self.Bind(wx.EVT_KEY_DOWN, self._OnKeyPress)
         self._alt = alt

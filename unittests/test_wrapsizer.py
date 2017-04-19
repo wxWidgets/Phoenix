@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -12,7 +12,7 @@ class wrapsizer_Tests(wtc.WidgetTestCase):
         ws.Add(wx.Panel(self.frame))
         ws.Add(wx.Panel(self.frame))
 
-        
+
 #---------------------------------------------------------------------------
 
 

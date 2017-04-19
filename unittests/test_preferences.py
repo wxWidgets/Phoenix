@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -18,7 +18,7 @@ class preferences_Tests(wtc.WidgetTestCase):
                 box.Add(cb2, 0, wx.ALL, 5)
                 self.Sizer = wx.BoxSizer()
                 self.Sizer.Add(box, 0, wx.ALL, 10)
-                
+
         class MyPrefsPage(wx.PreferencesPage):
             def GetName(self):
                 return 'MyPrefsPage'
@@ -26,15 +26,16 @@ class preferences_Tests(wtc.WidgetTestCase):
                 return wx.ArtProvider.GetBitmap(wx.ART_HELP, wx.ART_TOOLBAR, (32,32))
             def CreateWindow(self, parent):
                 return MyPrefsPanel(parent)
-            
+
         prefEd = wx.PreferencesEditor()
         page1 = MyPrefsPage()
         page2 = MyPrefsPage()
         prefEd.AddPage(page1)
         prefEd.AddPage(page2)
+        wx.CallLater(250, prefEd.Dismiss)
         prefEd.Show(self.frame)
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

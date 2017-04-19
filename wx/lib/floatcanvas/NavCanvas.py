@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         NavCanvas.py
 # Purpose:      Combines FloatCanvas with Navigation controls
@@ -32,16 +31,16 @@ container type control::
     # add a circle
     cir = FloatCanvas.Circle((10, 10), 100)
     self.Canvas.AddObject(cir)
-    
+
     # add a rectangle
     rect = FloatCanvas.Rectangle((110, 10), (100, 100), FillColor='Red')
     self.Canvas.AddObject(rect)
-    
+
     self.Canvas.Draw()
-    
+
 
 Many samples are available in the `wxPhoenix/samples/floatcanvas` folder.
-        
+
 
 """
 
@@ -53,7 +52,7 @@ class NavCanvas(wx.Panel):
     :class:`~lib.floatcanvas.NavCanvas.NavCanvas` encloses a
     :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas` in a :class:`Panel` and
     adds a Navigation toolbar.
-    
+
     """
 
     def __init__(self,
@@ -64,9 +63,9 @@ class NavCanvas(wx.Panel):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
-        :param `size`: a tuple or :class:`Size`
+        :param `size`: a tuple or :class:`wx.Size`
         :param `**kwargs`: will be passed on to :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas`
         """
         wx.Panel.__init__(self, parent, id, size=size)
@@ -76,7 +75,7 @@ class NavCanvas(wx.Panel):
                       ("Zoom Out", GUIMode.GUIZoomOut(), Resources.getMagMinusBitmap()),
                       ("Pan",      GUIMode.GUIMove(),    Resources.getHandBitmap()),
                       ]
-        
+
         self.BuildToolbar()
         ## Create the vertical sizer for the toolbar and Panel
         box = wx.BoxSizer(wx.VERTICAL)
@@ -106,16 +105,16 @@ class NavCanvas(wx.Panel):
         tb.Realize()
         ## fixme: remove this when the bug is fixed!
         #wx.CallAfter(self.HideShowHack) # this required on wxPython 2.8.3 on OS-X
-    
+
     def AddToolbarModeButtons(self, tb, Modes):
         """
         Add the mode buttons to the tool bar.
-        
+
         :param ToolBar `tb`: the toolbar instance
         :param list `Modes`: a list of modes to add, out of the box valid modes
          are subclassed from :class:`~lib.floatcanvas.GUIMode.GUIBase` or modes
          can also be user defined.
-        
+
         """
         self.ModesDict = {}
         for Mode in Modes:
@@ -130,9 +129,9 @@ class NavCanvas(wx.Panel):
     def AddToolbarZoomButton(self, tb):
         """
         Add the zoom button to the tool bar.
-        
+
         :param ToolBar `tb`: the toolbar instance
-        
+
         """
         tb.AddSeparator()
 

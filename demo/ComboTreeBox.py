@@ -13,10 +13,10 @@ class TestComboTreeBox(wx.Panel):
         self.log = log
         panelSizer = wx.FlexGridSizer(cols=2)
         panelSizer.AddGrowableCol(1)
-        for style, labelText in [(0, 'Default style:'), 
+        for style, labelText in [(0, 'Default style:'),
                                  (wx.CB_READONLY, 'Read-only style:')]:
             label = wx.StaticText(self, label=labelText)
-            panelSizer.Add(label, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, 
+            panelSizer.Add(label, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL,
                            border=5)
             comboBox = self._createComboTreeBox(style)
             panelSizer.Add(comboBox, flag=wx.EXPAND|wx.ALL, border=5)
@@ -32,9 +32,9 @@ class TestComboTreeBox(wx.Panel):
                 for k in range(5):
                     comboBox.Append('Item %d.%d.%d'%(i,j, k), grandChild)
         return comboBox
-        
+
     def _bindEventHandlers(self, comboBox):
-        for eventType, handler in [(wx.EVT_COMBOBOX, self.OnItemSelected), 
+        for eventType, handler in [(wx.EVT_COMBOBOX, self.OnItemSelected),
                                    (wx.EVT_TEXT, self.OnItemEntered)]:
             comboBox.Bind(eventType, handler)
 

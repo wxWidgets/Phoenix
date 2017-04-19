@@ -1,20 +1,20 @@
 //--------------------------------------------------------------------------
-// Name: wacky_ints.sip 
+// Name: wacky_ints.sip
 //
 // Purpose: Implements a %MappedType for size_t and others in order to
-//          deal with different sizeof's on different platforms. They're 
+//          deal with different sizeof's on different platforms. They're
 //          32bit on some, 64bit on others.
 //
 // Author:      Robin Dunn
 //
 // Created:     4-March-2016
-// Copyright:   (c) 2016 by Total Control Software
+// Copyright:   (c) 2016-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
 
 // size_t will either be equivalent to an unsigned long, or to an
-// unsigned long long. wxWidgets' configure script has already figured out 
+// unsigned long long. wxWidgets' configure script has already figured out
 // which it is, so we can make it conditional on those results.
 
 %MappedType size_t {
@@ -42,7 +42,7 @@
 };
 
 
-// This type is a signed integer value that is large enough to hold a 
+// This type is a signed integer value that is large enough to hold a
 // pointer.  Again we'll use the results of wxWidgets configuration.
 %MappedType wxIntPtr {
 
@@ -78,7 +78,7 @@
 };
 
 
-// This type is an unsigned integer value that is large enough to hold a 
+// This type is an unsigned integer value that is large enough to hold a
 // pointer.  Again we'll use the results of wxWidgets configuration.
 %MappedType wxUIntPtr {
 

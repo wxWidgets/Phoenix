@@ -7,7 +7,7 @@
 #
 # Created:
 # Version:
-# Date:         
+# Date:
 # Licence:      wxWindows license
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ Event Name                               Description
 
 import wx
 
-import wx.lib.six as six
+import six
 
 from .control import RibbonControl
 from .art import *
@@ -207,7 +207,7 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
         """
         Display a popup menu as a result of this (dropdown clicked) event.
 
-        :param `menu`: an instance of :class:`Menu`.
+        :param `menu`: an instance of :class:`wx.Menu`.
         """
 
         pos = wx.Point()
@@ -230,18 +230,18 @@ class RibbonButtonBar(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: pointer to a parent window, typically a :class:`~lib.agw.ribbon.panel.RibbonPanel`;
-        :type `parent`: :class:`Window`
+        :param `parent`: pointer to a parent window, typically a :class:`~wx.lib.agw.ribbon.panel.RibbonPanel`;
+        :type `parent`: :class:`wx.Window`
         :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
          should generate a default position for the window;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: window size. ``wx.DefaultSize`` indicates that wxPython should
          generate a default size for the window. If no suitable size can be found, the
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `agwStyle`: the AGW-specific window style, currently unused.
         """
 
@@ -267,14 +267,14 @@ class RibbonButtonBar(RibbonControl):
 
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
-        :param `bitmap_small`: small bitmap of the new button, an instance of :class:`Bitmap`. If left as :class:`NullBitmap`,
+        :param `bitmap_small`: small bitmap of the new button, an instance of :class:`wx.Bitmap`. If left as :class:`NullBitmap`,
          then a small bitmap will be automatically generated. Must be the same size
          as all other small bitmaps used on the button bar;
-        :param `bitmap_disabled`: large bitmap of the new button when it is disabled, an instance of :class:`Bitmap`.
+        :param `bitmap_disabled`: large bitmap of the new button when it is disabled, an instance of :class:`wx.Bitmap`.
          If left as :class:`NullBitmap`, then a bitmap will be automatically generated from `bitmap`;
-        :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled, an instance of :class:`Bitmap`.
+        :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled, an instance of :class:`wx.Bitmap`.
          If left as :class:`NullBitmap`, then a bitmap will be automatically generated from `bitmap_small`;
         :param integer `kind`: the kind of button to add, one of the following values:
 
@@ -306,7 +306,7 @@ class RibbonButtonBar(RibbonControl):
 
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button;
         :param integer `kind`: the kind of button to add.
@@ -329,14 +329,14 @@ class RibbonButtonBar(RibbonControl):
         :param integer `pos`: the position at which the new button must be inserted (zero-based);
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
-        :param `bitmap_small`: small bitmap of the new button, an instance of :class:`Bitmap`. If left as :class:`NullBitmap`,
+        :param `bitmap_small`: small bitmap of the new button, an instance of :class:`wx.Bitmap`. If left as :class:`NullBitmap`,
          then a small bitmap will be automatically generated. Must be the same size
          as all other small bitmaps used on the button bar;
-        :param `bitmap_disabled`: large bitmap of the new button when it is disabled, an instance of :class:`Bitmap`.
+        :param `bitmap_disabled`: large bitmap of the new button when it is disabled, an instance of :class:`wx.Bitmap`.
          If left as :class:`NullBitmap`, then a bitmap will be automatically generated from `bitmap`;
-        :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled, an instance of :class:`Bitmap`.
+        :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled, an instance of :class:`wx.Bitmap`.
          If left as :class:`NullBitmap`, then a bitmap will be automatically generated from `bitmap_small`;
         :param integer `kind`: the kind of button to add;
         :param string `help_string`: the UI help string to associate with the new button;
@@ -424,7 +424,7 @@ class RibbonButtonBar(RibbonControl):
 
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -443,7 +443,7 @@ class RibbonButtonBar(RibbonControl):
         :param integer `pos`: the position at which the new button must be inserted (zero-based);
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -463,7 +463,7 @@ class RibbonButtonBar(RibbonControl):
 
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -482,7 +482,7 @@ class RibbonButtonBar(RibbonControl):
         :param integer `pos`: the position at which the new button must be inserted (zero-based);
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -502,7 +502,7 @@ class RibbonButtonBar(RibbonControl):
 
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -521,7 +521,7 @@ class RibbonButtonBar(RibbonControl):
         :param integer `pos`: the position at which the new button must be inserted (zero-based);
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -553,8 +553,8 @@ class RibbonButtonBar(RibbonControl):
         """
         Resize and scale the `original` bitmap to the dimensions specified in `size`.
 
-        :param `original`: the original bitmap, an instance of :class:`Bitmap`;
-        :param `size`: the size to which the input bitmap must be rescaled, an instance of :class:`Size`.
+        :param `original`: the original bitmap, an instance of :class:`wx.Bitmap`;
+        :param `size`: the size to which the input bitmap must be rescaled, an instance of :class:`wx.Size`.
 
         :return: A scaled representation of the input bitmap.
         """
@@ -568,7 +568,7 @@ class RibbonButtonBar(RibbonControl):
         """
         Converts the `original` bitmap into a visually-looking disabled one.
 
-        :param `original`: the original bitmap, an instance of :class:`Bitmap`.
+        :param `original`: the original bitmap, an instance of :class:`wx.Bitmap`.
 
         :return: A visually-looking disabled representation of the input bitmap.
         """
@@ -585,7 +585,7 @@ class RibbonButtonBar(RibbonControl):
         added buttons will not be displayed. In normal situations, it will be called
         automatically when :meth:`RibbonBar.Realize() <lib.agw.ribbon.bar.RibbonBar.Realize>` is called.
 
-        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
         if not self._layouts_valid:
@@ -719,7 +719,7 @@ class RibbonButtonBar(RibbonControl):
         Set the art provider to be used.
 
         In many cases, setting the art provider will also set the art provider on all
-        child windows which extend :class:`~lib.agw.ribbon.control.RibbonControl`. In most cases, controls will not
+        child windows which extend :class:`~wx.lib.agw.ribbon.control.RibbonControl`. In most cases, controls will not
         take ownership of the given pointer, with the notable exception being
         :meth:`RibbonBar.SetArtProvider() <lib.agw.ribbon.bar.RibbonBar.SetArtProvider>`.
 
@@ -760,7 +760,7 @@ class RibbonButtonBar(RibbonControl):
         Controls which have non-continuous sizing must override this virtual function
         rather than :meth:`RibbonControl.GetNextSmallerSize() <lib.agw.ribbon.control.RibbonControl.GetNextSmallerSize>`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
 
         result = wx.Size(*_result)
@@ -793,7 +793,7 @@ class RibbonButtonBar(RibbonControl):
         Controls which have non-continuous sizing must override this virtual function
         rather than :meth:`RibbonControl.GetNextLargerSize() <lib.agw.ribbon.control.RibbonControl.GetNextLargerSize>`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
 
         nlayouts = i = len(self._layouts)
@@ -866,7 +866,7 @@ class RibbonButtonBar(RibbonControl):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`RibbonButtonBar`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         new_size = event.GetSize()
@@ -891,7 +891,7 @@ class RibbonButtonBar(RibbonControl):
         This function sends one or more :class:`UpdateUIEvent` to the window.
 
         The particular implementation depends on the window; for example a :class:`ToolBar` will
-        send an update UI event for each toolbar button, and a :class:`Frame` will send an
+        send an update UI event for each toolbar button, and a :class:`wx.Frame` will send an
         update UI event for each menubar menu item.
 
         You can call this function from your application to ensure that your UI is up-to-date
@@ -978,7 +978,7 @@ class RibbonButtonBar(RibbonControl):
         This method normally just returns the value set by `SetMinSize`, but it can be
         overridden to do the calculation on demand.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
 
         return wx.Size(*self._layouts[-1].overall_size)
@@ -990,9 +990,9 @@ class RibbonButtonBar(RibbonControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return wx.Size(*self._layouts[0].overall_size)

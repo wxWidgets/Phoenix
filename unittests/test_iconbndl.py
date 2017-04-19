@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -15,24 +15,24 @@ class iconbndl_Tests(wtc.WidgetTestCase):
         ib.AddIcon(icoFile)
         ib.AddIcon(wx.Icon(icoFile))
         i = ib.GetIcon()
-        
+
     def test_iconbndl2(self):
         ib = wx.IconBundle(icoFile)
         ib2 = wx.IconBundle(ib)
-        
-        
+
+
     def test_iconbndl3(self):
         ib = wx.IconBundle(wx.Icon(icoFile))
-         
+
     def test_iconbndl4(self):
         ib = wx.IconBundle()
 
         ib.Icon
         ib.IconCount
-        
+
         wx.NullIconBundle
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

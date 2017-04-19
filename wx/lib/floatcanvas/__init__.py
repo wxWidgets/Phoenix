@@ -1,7 +1,6 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         __init__.py
-# Purpose:		The FloatCanvas package
+# Purpose:      The FloatCanvas package
 #
 # Author:
 #
@@ -12,7 +11,7 @@
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
-This is the floatcanvas package, the main classes are 
+This is the floatcanvas package, the main classes are
 :class:`~lib.floatcanvas.FloatCanvas` and
 :class:`~lib.floatcanvas.NavCanvas`, in each class documentation there
 is at least one sample on how to use them and many more samples are provided
@@ -47,7 +46,7 @@ It is double buffered, so re-draws after the window is uncovered by
 something else are very quick.
 
 It relies on `NumPy <http://www.numpy.org/>`_, which is needed for speed
-(maybe, I haven't profiled properly) and convenience. 
+(maybe, I haven't profiled properly) and convenience.
 
 Bugs and Limitations: Lots: patches, fixes welcome
 

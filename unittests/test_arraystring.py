@@ -1,8 +1,6 @@
 import unittest
 import wx
-import wtc
-import sys
-import wx.lib.six as six
+import six
 
 #---------------------------------------------------------------------------
 
@@ -14,7 +12,7 @@ else:
 
 
 class ArrayString(unittest.TestCase):
-        
+
     if hasattr(wx, 'testArrayStringTypemap'):
         def test_ArrayStringTypemaps(self):
             # basic conversion of list or tuples of strings
@@ -22,7 +20,7 @@ class ArrayString(unittest.TestCase):
             self.assertEqual(wx.testArrayStringTypemap(seqList), ['a', 'b', 'hello world'])
             seqTuple = ('a', alt('b'), 'hello world')
             self.assertEqual(wx.testArrayStringTypemap(seqTuple), ['a', 'b', 'hello world'])
-            
+
         def test_ArrayStringTypemapErrors(self):
             # test error conditions
             with self.assertRaises(TypeError):
@@ -31,7 +29,7 @@ class ArrayString(unittest.TestCase):
                 wx.testArrayStringTypemap(alt("ALT sequence"))
             with self.assertRaises(TypeError):
                 wx.testArrayStringTypemap(["list", "with", "non-string", "items", 123])
-            
+
 
 #---------------------------------------------------------------------------
 

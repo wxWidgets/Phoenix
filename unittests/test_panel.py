@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -12,8 +12,8 @@ class panel_Tests(wtc.WidgetTestCase):
     def test_panelDefaultCtor(self):
         p = wx.Panel()
         p.Create(self.frame)
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

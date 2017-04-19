@@ -3,7 +3,7 @@
 # Author:       Will Sadkin
 # Created:      09/06/2003
 # Copyright:   (c) 2003-2007 by Will Sadkin
-# 
+#
 # License:     wxWidgets license
 # Tags:        phoenix-port, py3-port, unittest, documented
 #----------------------------------------------------------------------------
@@ -117,7 +117,7 @@ masked.NumCtrl:
   allowNone
         Boolean indicating whether or not the control is allowed to be
         empty, representing a value of None for the control.
-        
+
   allowNegative
         Boolean indicating whether or not control is allowed to hold
         negative numbers.
@@ -325,7 +325,7 @@ SetLimitOnFieldChange()
     out-of-bounds values, but will prevent field change if attempted
     via navigation, and if the control loses focus, it will change
     the value to the nearest bound.
-    
+
 GetLimitOnFieldChange()
 
 IsLimitedOnFieldChange()
@@ -401,7 +401,7 @@ GetAutoSize()
 import  copy
 
 import  wx
-import  wx.lib.six as six
+import  six
 
 from sys import maxsize
 MAXINT = maxsize     # (constants should be in upper case)
@@ -520,21 +520,21 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         """
         Default class constructor.
 
-        :param Window `parent`: the window parent. Must not be ``None``;
+        :param wx.Window `parent`: the window parent. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param integer `value`: value to be shown;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
         :param integer `style`: the window style;
-        :param Validator `validator`: this is mainly provided for data-transfer, as control does
+        :param wx.Validator `validator`: this is mainly provided for data-transfer, as control does
           its own validation;
         :param string `name`: the window name;
 
-        """       
-        
+        """
+
 ##        dbg('masked.NumCtrl::__init__', indent=1)
 
         # Set defaults for control:
@@ -884,7 +884,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##            dbg('old_groupchar: "%s" newgroupchar: "%s"' % (old_groupchar, self._groupChar))
         if 'decimalChar' in kwargs and self._decimalChar != old_decimalchar and text.find(old_decimalchar) != -1:
             text = old_numvalue
-        
+
         if text != self._GetValue():
             if self._decimalChar != '.':
                 # ensure latest decimal char is in "numeric value" so it won't be removed
@@ -1068,7 +1068,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 # and/or just leaving the sign character or changing the sign,
                 # so we can do appropriate things to the value of the control,
                 # we can't just immediately test to see if the value is valid
-                # If all of these special cases are not in play, THEN we can do 
+                # If all of these special cases are not in play, THEN we can do
                 # a limits check and see if the value is otherwise ok...
 
 ##                dbg('self._isNeg?', self._isNeg)
@@ -1076,7 +1076,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##                    dbg('just a negative sign; old value < 0; setting replacement of 0')
                     replacement = 0
                     self._isNeg = False
-                elif int_str[:2] == '-0': 
+                elif int_str[:2] == '-0':
                     if self._oldvalue < 0:
 ##                        dbg('-0; setting replacement of 0')
                         replacement = 0
@@ -1247,9 +1247,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         """
         Handles an event indicating that the text control's value
         has changed, and issue EVT_NUM event.
-        
-        .. note:: 
-        
+
+        .. note::
+
           Using :meth:`TextCtrl.SetValue` to change the control's contents from
           within a EVT_CHAR handler can cause double text events. So we check
           for actual changes to the text before passing the events on.
@@ -1296,9 +1296,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         or colored if not limited but the value is out-of-bounds.
         A ValueError exception will be raised if an invalid value
         is specified.
-        
+
         :param integer `value`: new value
-        
+
         """
 ##        dbg('NumCtrl::SetValue(%s)' % value, indent=1)
         BaseMaskedTextCtrl.SetValue( self, self._toGUI(value) )
@@ -1312,11 +1312,11 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         or colored if not limited but the value is out-of-bounds.
         A ValueError exception will be raised if an invalid value
         is specified.
-        
+
         This method does not fire a change event.
-        
+
         :param integer `value`: new value
-        
+
         """
 ##        dbg('NumCtrl::ChangeValue(%s)' % value, indent=1)
         BaseMaskedTextCtrl.ChangeValue( self, self._toGUI(value) )
@@ -1326,9 +1326,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
     def SetIntegerWidth(self, value):
         """
         Set the integer width of the control
-        
+
         :param integer `value`: the width value
-        
+
         """
         self.SetParameters(integerWidth=value)
 
@@ -1341,9 +1341,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
     def SetFractionWidth(self, value):
         """
         Set the fraction width of the control
-        
+
         :param integer `value`: the width value
-        
+
         """
         self.SetParameters(fractionWidth=value)
 
@@ -1368,10 +1368,10 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
         If min > the max value allowed by the width of the control,
         the function will return False, and the min will not be set.
-        
+
         :param `min`: Minium value for the control
         :type `min`: integer or None
-        
+
         """
 ##        dbg('NumCtrl::SetMin(%s)' % repr(min), indent=1)
         if( self._max is None
@@ -1472,9 +1472,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         If called with a value of False, this function will disable value
         limiting, but coloring of out-of-bounds values will still take
         place if bounds have been set for the control.
-        
+
         :param boolean `limited`: define value limiting
-        
+
         """
         self.SetParameters(limited = limited)
 
@@ -1525,9 +1525,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         of the control falls within the current bounds.  This function can
         also be called with a value to see if that value would fall within
         the current bounds of the given control.
-        
+
         :param `value`: value to check
-        
+
         """
 ##        dbg('IsInBounds(%s)' % repr(value), indent=1)
         if value is None:
@@ -1566,9 +1566,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         of the control is currently None, and allow_none is False, the
         value of the control will be set to the minimum value of the
         control, or 0 if no lower bound is set.
-        
+
         :param boolean `allow_none`: True if None is allowed
-        
+
         """
         self._allowNone = allow_none
         if not allow_none and self.GetValue() is None:

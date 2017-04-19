@@ -7,7 +7,7 @@
 # Author:       Robin Dunn
 #
 # Created:      6-March-2000
-# Copyright:    (c) 2000 by Total Control Software
+# Copyright:    (c) 2000-2017 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
 
@@ -149,7 +149,7 @@ def main(argv):
         raise SystemExit
 
     # ensure the CWD is the demo folder
-    demoFolder = os.path.dirname(__file__)
+    demoFolder = os.path.realpath(os.path.dirname(__file__))
     os.chdir(demoFolder)
 
     name, ext  = os.path.splitext(argv[1])

@@ -1,14 +1,14 @@
 //--------------------------------------------------------------------------
 // Name:        wxpy_api.h
-// Purpose:     Some utility functions and such that can be used in other 
-//              snippets of C++ code to help reduce complexity, etc.  They 
+// Purpose:     Some utility functions and such that can be used in other
+//              snippets of C++ code to help reduce complexity, etc.  They
 //              are all either macros, inline functions, or functions that
 //              are exported from the core extension module.
 //
 // Author:      Robin Dunn
 //
 // Created:     19-Nov-2010
-// Copyright:   (c) 2013 by Total Control Software
+// Copyright:   (c) 2010-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -41,7 +41,7 @@
 #include <wx/wx.h>
 
 //--------------------------------------------------------------------------
-// The API items that can be inline functions or macros.  
+// The API items that can be inline functions or macros.
 // These are made available simply by #including this header file.
 //--------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 #define wxPyErr_SetString(err, str) \
     wxPyBLOCK_THREADS(PyErr_SetString(err, str))
 
-   
+
 // Raise NotImplemented exceptions
 #define wxPyRaiseNotImplemented() \
     wxPyBLOCK_THREADS( PyErr_SetNone(PyExc_NotImplementedError) )
@@ -110,7 +110,7 @@ inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) 
 }
 
 
-// Macros to work around differences in the Python 3 API
+// Macros to work around some of the differences in the Python 3 API
 #if PY_MAJOR_VERSION >= 3
     #define wxPyInt_Check            PyLong_Check
     #define wxPyInt_AsLong           PyLong_AsLong
@@ -138,7 +138,7 @@ inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) 
     #define wxPyNumber_Int           PyNumber_Int
 #endif
 
-inline 
+inline
 Py_ssize_t wxPyUnicode_AsWideChar(PyObject* unicode, wchar_t* w, Py_ssize_t size)
 {
     // GIL should already be held
@@ -147,6 +147,48 @@ Py_ssize_t wxPyUnicode_AsWideChar(PyObject* unicode, wchar_t* w, Py_ssize_t size
 #else
     return PyUnicode_AsWideChar((PyUnicodeObject*)unicode, w, size);
 #endif
+}
+
+
+inline bool wxPyNumberSequenceCheck(PyObject* obj, int reqLength=-1) {
+    // Used in the various places where a sequence of numbers can be converted
+    // to a wx type, like wxPoint, wxSize, wxColour, etc. Returns true if the
+    // object is a Tuple, List or numpy Array of the proper length.
+
+    // tuples or lists are easy
+    bool isFast = (PyTuple_Check(obj) || PyList_Check(obj));
+
+    if (!isFast ) {
+        // If it's not one of those, then check for an array.
+        // It's probably not a good idea to do it this way, but this allows us
+        // to check if the object is a numpy array without requiring that
+        // numpy be imported even for those applications tha are not using it.
+        if (strcmp(obj->ob_type->tp_name, "numpy.ndarray") != 0)
+            return false;
+    }
+
+    // Bail out here if the length isn't given
+    if (reqLength == -1)
+        return true;
+
+    // Now check that the length matches the expected length
+    if (PySequence_Length(obj) != reqLength)
+        return false;
+
+    // Check that each item is a number
+    for (int i=0; i<reqLength; i+=1) {
+        PyObject* item;
+        if (isFast)
+            item = PySequence_Fast_GET_ITEM(obj, i);
+        else
+            item = PySequence_ITEM(obj, i);
+        bool isNum = PyNumber_Check(item);
+        if (!isFast)
+            Py_DECREF(item);
+        if (!isNum)
+            return false;
+    }
+    return true;
 }
 
 
@@ -169,6 +211,7 @@ struct wxPyAPI {
     bool          (*p_wxPyWrappedPtr_TypeCheck)(PyObject* obj, const wxString& className);
     wxVariant     (*p_wxVariant_in_helper)(PyObject* obj);
     PyObject*     (*p_wxVariant_out_helper)(const wxVariant& value);
+    bool          (*p_wxPyCheckForApp)();
     // Always add new items here at the end.
 };
 
@@ -177,13 +220,13 @@ struct wxPyAPI {
 inline wxPyAPI* wxPyGetAPIPtr()
 {
     static wxPyAPI* wxPyAPIPtr = NULL;
-    
+
     if (wxPyAPIPtr == NULL) {
         PyGILState_STATE state = PyGILState_Ensure();
         wxPyAPIPtr = (wxPyAPI*)PyCapsule_Import("wx._wxPyAPI", 0);
         // uncomment if needed for debugging
         //if (PyErr_Occurred()) { PyErr_Print(); }
-        //wxASSERT_MSG(wxPyAPIPtr != NULL, wxT("wxPyAPIPtr is NULL!!!"));  
+        //wxASSERT_MSG(wxPyAPIPtr != NULL, wxT("wxPyAPIPtr is NULL!!!"));
         PyGILState_Release(state);
     }
 
@@ -195,13 +238,13 @@ inline wxPyAPI* wxPyGetAPIPtr()
 
 // Convert a PyObject to a wxString
 // Assumes that the GIL has already been acquired.
-inline wxString Py2wxString(PyObject* source) 
+inline wxString Py2wxString(PyObject* source)
     { return wxPyGetAPIPtr()->p_Py2wxString(source); }
 
 
 // Create a PyObject of the requested type from a void* and a class name.
 // Assumes that the GIL has already been acquired.
-inline PyObject* wxPyConstructObject(void* ptr, const wxString& className, bool setThisOwn=false) 
+inline PyObject* wxPyConstructObject(void* ptr, const wxString& className, bool setThisOwn=false)
     { return wxPyGetAPIPtr()->p_wxPyConstructObject(ptr, className, setThisOwn); }
 
 
@@ -217,36 +260,39 @@ inline bool wxPyWrappedPtr_TypeCheck(PyObject* obj, const wxString& className)
 // Convert a wrapped SIP object to its C++ pointer, ensuring that it is of the expected type
 inline bool wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& className)
     { return wxPyGetAPIPtr()->p_wxPyConvertWrappedPtr(obj, ptr, className); }
-    
-    
+
+
 // Calls from wxWindows back to Python code, or even any PyObject
 // manipulations, PyDECREF's and etc. should be wrapped in calls to these functions:
-inline wxPyBlock_t wxPyBeginBlockThreads() 
+inline wxPyBlock_t wxPyBeginBlockThreads()
     { return wxPyGetAPIPtr()->p_wxPyBeginBlockThreads(); }
-    
-inline void wxPyEndBlockThreads(wxPyBlock_t blocked) 
+
+inline void wxPyEndBlockThreads(wxPyBlock_t blocked)
     { wxPyGetAPIPtr()->p_wxPyEndBlockThreads(blocked); }
-    
-    
+
+
 
 // A helper for converting a 2 element sequence to a pair of integers
 inline bool wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
     { return wxPyGetAPIPtr()->p_wxPy2int_seq_helper(source, i1, i2); }
 
 // A helper for converting a 4 element sequence to a set of integers
-inline bool wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4) 
+inline bool wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4)
     { return wxPyGetAPIPtr()->p_wxPy4int_seq_helper(source, i1, i2, i3, i4); }
-   
-    
+
+
 // Convert a PyObject to a wxVariant
 inline wxVariant wxVariant_in_helper(PyObject* obj)
     { return wxPyGetAPIPtr()->p_wxVariant_in_helper(obj); }
-    
-// Convert a wxVariant to a PyObject    
+
+// Convert a wxVariant to a PyObject
 inline PyObject* wxVariant_out_helper(const wxVariant& value)
     { return wxPyGetAPIPtr()->p_wxVariant_out_helper(value); }
 
-    
+
+inline bool wxPyCheckForApp()
+    { return wxPyGetAPIPtr()->p_wxPyCheckForApp(); }
+
 
 //--------------------------------------------------------------------------
 // Convenience helper for RAII-style thread blocking
@@ -262,33 +308,33 @@ public:
         if (m_block) {
             wxPyEndBlockThreads(m_oldstate);
         }
-    } 
+    }
 
 private:
     void operator=(const wxPyThreadBlocker&);
-    explicit wxPyThreadBlocker(const wxPyThreadBlocker&);    
+    explicit wxPyThreadBlocker(const wxPyThreadBlocker&);
     wxPyBlock_t m_oldstate;
     bool        m_block;
 };
-  
-  
+
+
 //--------------------------------------------------------------------------
 // helper template to make common code for all of the various user data owners
 
 template<typename Base>
 class wxPyUserDataHelper : public Base {
 public:
-    explicit wxPyUserDataHelper(PyObject* obj = NULL) 
-        : m_obj(obj ? obj : Py_None) 
+    explicit wxPyUserDataHelper(PyObject* obj = NULL)
+        : m_obj(obj ? obj : Py_None)
     {
         wxPyThreadBlocker blocker;
-        Py_INCREF(m_obj);   
-    }  
-    
+        Py_INCREF(m_obj);
+    }
+
     ~wxPyUserDataHelper()
     {   // normally the derived class does the clean up, or deliberately leaks
         // by setting m_obj to 0, but if not then do it here.
-        if (m_obj) {    
+        if (m_obj) {
             wxPyThreadBlocker blocker;
             Py_DECREF(m_obj);
             m_obj = 0;
@@ -301,7 +347,7 @@ public:
         Py_INCREF(m_obj);
         return m_obj;
     }
-    
+
     // Return Value: Borrowed reference
     PyObject* BorrowData() const {
         return m_obj;
@@ -315,7 +361,7 @@ public:
             Py_INCREF(m_obj);
         }
     }
-    
+
     // Return the object in udata or None if udata is null
     // Return Value: New reference
     static PyObject* SafeGetData(wxPyUserDataHelper<Base>* udata) {
@@ -324,18 +370,42 @@ public:
         Py_INCREF(obj);
         return obj;
     }
-    
+
     // Set the m_obj to null, this should only be used during clean up, when
     // the object should be leaked.
     // Calling any other methods on this object is then undefined behaviour
     void ReleaseDataDuringCleanup()
     {
-        m_obj = 0;        
+        m_obj = 0;
     }
 
 private:
     PyObject* m_obj;
 };
 
-//--------------------------------------------------------------------------  
+
+
+// A wxClientData that holds a reference to a Python object
+class wxPyClientData : public wxPyUserDataHelper<wxClientData>
+{
+public:
+    wxPyClientData(PyObject* obj = NULL)
+        : wxPyUserDataHelper<wxClientData>(obj)
+    { }
+};
+
+
+
+
+// A wxObject object that holds a reference to a Python object
+class wxPyUserData : public wxPyUserDataHelper<wxObject>
+{
+public:
+    wxPyUserData(PyObject* obj = NULL)
+        : wxPyUserDataHelper<wxObject>(obj)
+    { }
+};
+
+
+//--------------------------------------------------------------------------
 #endif

@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.adv
 
@@ -20,16 +20,16 @@ class sashwin_Tests(wtc.WidgetTestCase):
         wx.adv.SASH_NONE
         wx.adv.SASH_STATUS_OK
         wx.adv.SASH_STATUS_OUT_OF_RANGE
-        
+
         wx.adv.wxEVT_SASH_DRAGGED
         wx.adv.EVT_SASH_DRAGGED
-        
+
     def test_sashwin2(self):
         sw = wx.adv.SashWindow(self.frame)
 
     def test_sashwin3(self):
         evt = wx.adv.SashEvent()
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

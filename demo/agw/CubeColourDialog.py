@@ -28,16 +28,16 @@ class CubeColourDialogDemo(wx.Panel):
         b = wx.Button(self, -1, "Create and Show a CubeColourDialog", (50, 70))
         self.Bind(wx.EVT_BUTTON, self.OnButton, b)
 
-        self.log = log        
+        self.log = log
 
 
     def OnButton(self, evt):
 
         if not hasattr(self, "colourData"):
             self.colourData = wx.ColourData()
-            
+
         self.colourData.SetColour(self.GetBackgroundColour())
-        
+
         dlg = CCD.CubeColourDialog(self, self.colourData)
 
         if dlg.ShowModal() == wx.ID_OK:

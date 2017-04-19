@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -18,7 +18,7 @@ class iconloc_Tests(wtc.WidgetTestCase):
         loc = wx.IconLocation()
         loc.SetFileName(icoFile)
         i = wx.Icon(loc)
-        
+
 #---------------------------------------------------------------------------
 
 

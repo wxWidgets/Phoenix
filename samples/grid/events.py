@@ -12,7 +12,7 @@ class SimpleGrid(wx.grid.Grid):
 
         self.SetCellValue(6, 3, "You can veto editing this cell")
 
-        
+
         # test all the events
         self.Bind(wx.grid.EVT_GRID_CELL_LEFT_CLICK, self.OnCellLeftClick)
         self.Bind(wx.grid.EVT_GRID_CELL_RIGHT_CLICK, self.OnCellRightClick)
@@ -81,7 +81,7 @@ class SimpleGrid(wx.grid.Grid):
     def OnGridColSort(self, evt):
         self.log.write("OnGridColSort: %s %s" % (evt.GetCol(), self.GetSortingColumn()))
         self.SetSortingColumn(evt.GetCol())
-        
+
     def OnRowSize(self, evt):
         self.log.write("OnRowSize: row %d, %s\n" %
                        (evt.GetRowOrCol(), evt.GetPosition()))

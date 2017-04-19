@@ -30,16 +30,16 @@ class DrawFrame(wx.Frame):
                                      Debug = 0,
                                      BackgroundColor = "DARK SLATE BLUE",
                                      ).Canvas
-        
+
         self.Canvas = Canvas
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
 
         Pts = ((45,40), (20, 15), (10, 40), (30,30))
-        
+
         Points = Canvas.AddPointSet(Pts, Diameter=3, Color="Red")
         Points.HitLineWidth = 10
-        
+
         Points.Bind(FloatCanvas.EVT_FC_ENTER_OBJECT, self.OnOverPoints)
         Points.Bind(FloatCanvas.EVT_FC_LEAVE_OBJECT, self.OnLeavePoints)
         Points.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.OnLeftDown)
@@ -66,10 +66,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

@@ -10,13 +10,13 @@ from code import InteractiveInterpreter, compile_command
 from . import dispatcher
 from . import introspect
 import wx
-import wx.lib.six
+import six
 
 class Interpreter(InteractiveInterpreter):
     """Interpreter based on code.InteractiveInterpreter."""
-    
-    
-    def __init__(self, locals=None, rawin=None, 
+
+
+    def __init__(self, locals=None, rawin=None,
                  stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr,
                  showInterpIntro=True):
         """Create an interactive interpreter object."""
@@ -25,7 +25,7 @@ class Interpreter(InteractiveInterpreter):
         self.stdout = stdout
         self.stderr = stderr
         if rawin:
-            from wx.lib.six.moves import builtins
+            from six.moves import builtins
             builtins.raw_input = rawin
             del builtins
         if showInterpIntro:
@@ -45,32 +45,32 @@ class Interpreter(InteractiveInterpreter):
         # List of lists to support recursive push().
         self.commandBuffer = []
         self.startupScript = None
-    
+
     def push(self, command, astMod=None):
         """Send command to the interpreter to be executed.
-        
+
         Because this may be called recursively, we append a new list
         onto the commandBuffer list and then append commands into
         that.  If the passed in command is part of a multi-line
         command we keep appending the pieces to the last list in
         commandBuffer until we have a complete command. If not, we
         delete that last list."""
-        
+
         # In case the command is unicode try encoding it
-        if not wx.lib.six.PY3:
+        if not six.PY3:
             if type(command) == unicode:
                 try:
                     command = command.encode('utf-8')
                 except UnicodeEncodeError:
                     pass # otherwise leave it alone
-                
+
         if not self.more:
             try: del self.commandBuffer[-1]
             except IndexError: pass
         if not self.more: self.commandBuffer.append([])
         self.commandBuffer[-1].append(command)
         source = '\n'.join(self.commandBuffer[-1])
-        
+
         # If an ast code module is passed, pass it to runModule instead
         more=False
         if astMod != None:
@@ -81,7 +81,7 @@ class Interpreter(InteractiveInterpreter):
         dispatcher.send(signal='Interpreter.push', sender=self,
                         command=command, more=more, source=source)
         return more
-        
+
     def runsource(self, source):
         """Compile and run source code in the interpreter."""
         stdin, stdout, stderr = sys.stdin, sys.stdout, sys.stderr
@@ -91,8 +91,8 @@ class Interpreter(InteractiveInterpreter):
         # this was a cute idea, but didn't work...
         #more = self.runcode(compile(source,'',
         #               ('exec' if self.useExecMode else 'single')))
-        
-        
+
+
         # If sys.std* is still what we set it to, then restore it.
         # But, if the executed source changed sys.std*, assume it was
         # meant to be changed and leave it. Power to the people.
@@ -109,7 +109,7 @@ class Interpreter(InteractiveInterpreter):
         else:
             self.stderr = sys.stderr
         return more
-        
+
     def runModule(self, mod):
         """Compile and run an ast module in the interpreter."""
         stdin, stdout, stderr = sys.stdin, sys.stdout, sys.stderr
@@ -132,14 +132,14 @@ class Interpreter(InteractiveInterpreter):
         else:
             self.stderr = sys.stderr
         return False
-    
+
     def getAutoCompleteKeys(self):
         """Return list of auto-completion keycodes."""
         return [ord('.')]
 
     def getAutoCompleteList(self, command='', *args, **kwds):
         """Return list of auto-completion options for a command.
-        
+
         The list of options will be based on the locals namespace."""
         stdin, stdout, stderr = sys.stdin, sys.stdout, sys.stderr
         sys.stdin, sys.stdout, sys.stderr = \
@@ -151,20 +151,20 @@ class Interpreter(InteractiveInterpreter):
 
     def getCallTip(self, command='', *args, **kwds):
         """Return call tip text for a command.
-        
+
         Call tip information will be based on the locals namespace."""
         return introspect.getCallTip(command, self.locals, *args, **kwds)
 
 
 class InterpreterAlaCarte(Interpreter):
     """Demo Interpreter."""
-    
-    def __init__(self, locals, rawin, stdin, stdout, stderr, 
+
+    def __init__(self, locals, rawin, stdin, stdout, stderr,
                  ps1='main prompt', ps2='continuation prompt'):
         """Create an interactive interpreter object."""
-        Interpreter.__init__(self, locals=locals, rawin=rawin, 
+        Interpreter.__init__(self, locals=locals, rawin=rawin,
                              stdin=stdin, stdout=stdout, stderr=stderr)
         sys.ps1 = ps1
         sys.ps2 = ps2
 
-   
+

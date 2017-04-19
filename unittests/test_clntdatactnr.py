@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -11,8 +11,8 @@ class clntdatactnr_Tests(wtc.WidgetTestCase):
         data.SetClientData("This is a test")
         val = data.GetClientData()
         self.assertEqual(val, "This is a test")
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------------
 # Name:        img2pyartprov.py
-# Purpose:     
+# Purpose:
 #
 # Author:      Riaan Booysen
 #
@@ -45,7 +45,7 @@ class Img2PyArtProvider(wx.ArtProvider):
 
     def GenerateArtIdList(self):
         return [self.artIdPrefix+name for name in self.index]
-            
+
     def CreateBitmap(self, artId, artClient, size):
         if artId.startswith(self.artIdPrefix):
             name = artId[len(self.artIdPrefix):]

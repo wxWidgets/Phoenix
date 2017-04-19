@@ -27,16 +27,16 @@ class MultiDirDialogDemo(wx.Panel):
         wx.Panel.__init__(self, parent)
 
         self.log = log
-        
+
         self.mainPanel = wx.Panel(self)
         self.dialogSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "Dialog Styles")
-        
+
         self.dd_multiple = wx.CheckBox(self.mainPanel, -1, "MDD.DD_MULTIPLE")
         self.dd_must = wx.CheckBox(self.mainPanel, -1, "wx.DD_DIR_MUST_EXIST")
         self.dd_new = wx.CheckBox(self.mainPanel, -1, "wx.DD_NEW_DIR_BUTTON")
-        
+
         self.showDialog = wx.Button(self.mainPanel, -1, "Show MultiDirDialog")
-        
+
         self.SetProperties()
         self.DoLayout()
 
@@ -44,7 +44,7 @@ class MultiDirDialogDemo(wx.Panel):
 
 
     def SetProperties(self):
-        
+
         self.showDialog.SetDefault()
 
 
@@ -65,13 +65,13 @@ class MultiDirDialogDemo(wx.Panel):
         mainSizer.Add(self.showDialog, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5)
         mainSizer.Add((10, 0), 0, 0, 0)
 
-        panelSizer.Add(mainSizer, 0, wx.EXPAND)        
+        panelSizer.Add(mainSizer, 0, wx.EXPAND)
         self.mainPanel.SetSizer(panelSizer)
 
         frameSizer.Add(self.mainPanel, 1, wx.EXPAND)
         self.SetSizer(frameSizer)
         frameSizer.Layout()
-        
+
 
     def OnShowDialog(self, event):
 
@@ -84,7 +84,7 @@ class MultiDirDialogDemo(wx.Panel):
         userPath = wx.StandardPaths.Get().GetUserDataDir()
         dlg = MDD.MultiDirDialog(self, title="Custom MultiDirDialog :-D", defaultPath=userPath,
                                  agwStyle=dlgStyle)
-        
+
         dlg.SetIcon(images.Mondrian.GetIcon())
         if dlg.ShowModal() != wx.ID_OK:
             self.log.write("You Cancelled The Dialog!\n")
@@ -94,7 +94,7 @@ class MultiDirDialogDemo(wx.Panel):
         paths = dlg.GetPaths()
         for indx, path in enumerate(paths):
             self.log.write("Path %d: %s\n"%(indx+1, path))
-            
+
         dlg.Destroy()
 
 

@@ -7,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2013-2017 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ runSilently = False
 #----------------------------------------------------------------------
 
 class Configuration(object):
-    
+
     ##SIP      = SIPdefault         # Where is the sip binary?
     SIPINC   = 'sip/siplib'       # Use our local copy of sip.h
     SIPGEN   = 'sip/gen'          # Where the generated .sip files go
@@ -67,10 +67,10 @@ class Configuration(object):
     # monolithic DLL or as a collection of DLLs.  This flag controls
     # which set of libs will be used on Windows.  (For other platforms
     # it is automatic via using wx-config.)
-    
+
     WXDLLVER = None
     # Version part of wxWidgets LIB/DLL names
-    
+
     COMPILER = 'msvc'
     # Used to select which compiler will be used on Windows.  This not
     # only affects distutils, but also some of the default flags and
@@ -83,18 +83,18 @@ class Configuration(object):
 
     NO_SCRIPTS = False
     # Don't install the tools/script files
-    
+
     PKGDIR = 'wx'
     # The name of the top-level package
 
     # ---------------------------------------------------------------
     # Basic initialization and configuration code
-    
+
     def __init__(self, noWxConfig=False):
         self.CLEANUP = list()
-        
+
         self.resetVersion()
-        
+
         # change the PORT default for wxMac
         if sys.platform[:6] == "darwin":
             self.WXPORT = 'osx_cocoa'
@@ -111,37 +111,39 @@ class Configuration(object):
 
         self.WXPLAT2 = None
         self.WXDIR = wxDir()
-        
+
         self.includes = [phoenixDir() + '/sip/siplib',  # to get our version of sip.h
                          phoenixDir() + '/src',         # for any hand-written headers
                          ]
 
         self.DOXY_XML_DIR = os.path.join(self.WXDIR, 'docs/doxygen/out/xml')
 
-        self.SIPOPTS  = ' '.join(['-w',    # enable warnings
+        self.SIPOPTS  = ' '.join([
+                         '-w',    # enable warnings
                          '-o',    # turn on auto-docstrings
-                         #'-e',   # turn on exceptions support
+                         '-g',    # turn on acquire/release of GIL for everything
+                         #'-e',    # turn on exceptions support
                          #'-T',    # turn off writing the timestamp to the generated files                         '-g',    # always release and reaquire the GIL
-                         #'-r',   # turn on function call tracing
+                         #'-r',    # turn on function call tracing
                          '-I', os.path.join(phoenixDir(), 'src'),
                          '-I', os.path.join(phoenixDir(), 'sip', 'gen'),
                          ])
-                         
+
         if noWxConfig:
             # this is as far as we go for now
             return
 
         # otherwise do the rest of it
         self.finishSetup()
-        
-        
+
+
     def finishSetup(self, wx_config=None, debug=None):
         if wx_config is not None:
             self.WX_CONFIG = wx_config
 
         if debug is not None:
             self.debug = debug
-            
+
         #---------------------------------------
         # MSW specific settings
         if os.name == 'nt' and  self.COMPILER == 'msvc':
@@ -149,18 +151,18 @@ class Configuration(object):
             # from the wxWidgets makefiles for MSVC, other compilers settings
             # will probably vary...
             self.WXPLAT = '__WXMSW__'
-        
+
             if os.environ.get('CPU', None) in ['AMD64', 'X64']:
                 self.VCDLL = 'vc%s_x64_dll' % getVisCVersion()
             else:
                 self.VCDLL = 'vc%s_dll' % getVisCVersion()
-                
+
             self.includes += ['include',
                               opj(self.WXDIR, 'lib', self.VCDLL, 'msw'  + self.libFlag()),
                               opj(self.WXDIR, 'include'),
                               opj(self.WXDIR, 'contrib', 'include'),
                               ]
-        
+
             self.defines = [ ('WIN32', None),
                              ('_WINDOWS', None),
                              (self.WXPLAT, None),
@@ -168,45 +170,45 @@ class Configuration(object):
                              ('ISOLATION_AWARE_ENABLED', None),
                              #('NDEBUG',),  # using a 1-tuple makes it do an undef
                              ]
-        
+
             self.libs = []
             self.libdirs = [ opj(self.WXDIR, 'lib', self.VCDLL) ]
             if self.MONOLITHIC:
                 self.libs += makeLibName('')
             else:
-                self.libs += [ 'wxbase' + self.WXDLLVER + self.libFlag(), 
+                self.libs += [ 'wxbase' + self.WXDLLVER + self.libFlag(),
                                'wxbase' + self.WXDLLVER + self.libFlag() + '_net',
                                self.makeLibName('core')[0],
                                ]
-        
+
             self.libs += ['kernel32', 'user32', 'gdi32', 'comdlg32',
                           'winspool', 'winmm', 'shell32', 'oldnames', 'comctl32',
                           'odbc32', 'ole32', 'oleaut32', 'uuid', 'rpcrt4',
                           'advapi32', 'wsock32']
-        
+
             self.cflags = [ '/UNDEBUG',
                             '/Gy',
                             '/EHsc',
                             # '/GX-'  # workaround for internal compiler error in MSVC on some machines
                             ]
             self.lflags = None
-        
+
             # Other MSVC flags...
             # Uncomment these to have debug info for all kinds of builds
             #self.cflags += ['/Od', '/Z7']
             #self.lflags = ['/DEBUG', ]
 
-        
+
         #---------------------------------------
         # Posix (wxGTK, wxMac or mingw32) settings
         elif os.name == 'posix' or COMPILER == 'mingw32':
             self.Verify_WX_CONFIG()
             self.includes += ['include']
-            self.defines = [ #('NDEBUG',),  # using a 1-tuple makes it do an undef                            
+            self.defines = [ #('NDEBUG',),  # using a 1-tuple makes it do an undef
                              ]
             self.libdirs = []
             self.libs = []
-        
+
             self.cflags = self.getWxConfigValue('--cxxflags')
             self.cflags = self.cflags.split()
             if self.debug:
@@ -214,11 +216,11 @@ class Configuration(object):
                 self.cflags.append('-O0')
             else:
                 self.cflags.append('-O3')
-        
+
             lflags = self.getWxConfigValue('--libs')
             self.MONOLITHIC = (lflags.find("_xrc") == -1)
             self.lflags = lflags.split()
-        
+
             self.WXBASENAME = self.getWxConfigValue('--basename')
             self.WXRELEASE  = self.getWxConfigValue('--release')
             self.WXPREFIX   = self.getWxConfigValue('--prefix')
@@ -228,13 +230,13 @@ class Configuration(object):
             # wxMac settings
             if sys.platform[:6] == "darwin":
                 self.WXPLAT = '__WXMAC__'
-            
+
                 if self.WXPORT == 'osx_carbon':
                 # Flags and such for a Darwin (Max OS X) build of Python
                     self.WXPLAT2 = '__WXOSX_CARBON__'
                 else:
                     self.WXPLAT2 = '__WXOSX_COCOA__'
-        
+
                 self.libs = ['stdc++']
                 if not self.ARCH == "":
                     for arch in self.ARCH.split(','):
@@ -242,11 +244,11 @@ class Configuration(object):
                         self.cflags.append(arch)
                         self.lflags.append("-arch")
                         self.lflags.append(arch)
-        
+
                 if not os.environ.get('CC') or not os.environ.get('CXX'):
                     self.CC =  os.environ["CC"]  = self.getWxConfigValue('--cc')
                     self.CXX = os.environ["CXX"] = self.getWxConfigValue('--cxx')
-        
+
                     # We want to use the linker command from wx to make sure
                     # we get the right sysroot, but we also need to ensure that
                     # the other linker flags that distutils wants to use are
@@ -261,14 +263,14 @@ class Configuration(object):
                             # Strip this argument and the next one:
                             del LDSHARED[index:index+2]
                         except ValueError:
-                            break            
+                            break
                     LDSHARED = ' '.join(LDSHARED)
                     # Combine with wx's ld command and stash it in the env
                     # where distutils will get it later.
                     LDSHARED = self.getWxConfigValue('--ld').replace(' -o', '') + ' ' + LDSHARED
                     os.environ["LDSHARED"]  = LDSHARED
-                    
-                    
+
+
             # wxGTK settings
             else:
                 # Set flags for other Unix type platforms
@@ -293,23 +295,23 @@ class Configuration(object):
                     portcfg = ''
                 else:
                     raise SystemExit("Unknown WXPORT value: " + self.WXPORT)
-        
+
                 self.cflags += portcfg.split()
-        
+
                 # Some distros (e.g. Mandrake) put libGLU in /usr/X11R6/lib, but
                 # wx-config doesn't output that for some reason.  For now, just
                 # add it unconditionally but we should really check if the lib is
                 # really found there or wx-config should be fixed.
                 if self.WXPORT != 'msw':
                     self.libdirs.append("/usr/X11R6/lib")
-                
+
             # Move the various -I, -D, etc. flags we got from the config scripts
             # into the distutils lists.
             self.cflags = self.adjustCFLAGS(self.cflags, self.defines, self.includes)
             self.lflags = self.adjustLFLAGS(self.lflags, self.libdirs, self.libs)
 
             self.cflags.insert(0, '-UNDEBUG')
-        
+
             if self.debug and self.WXPORT == 'msw' and self.COMPILER != 'mingw32':
                 self.defines.append( ('_DEBUG', None) )
 
@@ -322,11 +324,11 @@ class Configuration(object):
                 if val:
                     name = name+'='+val
                 self.wafDefines.append(name)
-                    
+
 
     # ---------------------------------------------------------------
     # Helper functions
-    
+
     def resetVersion(self):
         # load the version numbers into this instance's namespace
         versionfile = opj(os.path.split(__file__)[0], 'version.py')
@@ -340,15 +342,15 @@ class Configuration(object):
             f = open('REV.txt')
             self.VER_FLAGS += f.read().strip()
             f.close()
-            
-        self.VERSION = "%s.%s.%s%s" % (self.VER_MAJOR, 
-                                       self.VER_MINOR, 
+
+        self.VERSION = "%s.%s.%s%s" % (self.VER_MAJOR,
+                                       self.VER_MINOR,
                                        self.VER_RELEASE,
                                        self.VER_FLAGS)
-        
-        self.WXDLLVER = '%d%d' % (self.VER_MAJOR, self.VER_MINOR)
-        
-    
+
+        self.WXDLLVER = '%d%d' % (self.wxVER_MAJOR, self.wxVER_MINOR)
+
+
     def parseCmdLine(self):
         self.debug = '--debug' in sys.argv or '-g' in sys.argv
 
@@ -387,7 +389,7 @@ class Configuration(object):
                 port = "x11univ"
             flags =  ' --toolkit=%s' % port
             flags += ' --unicode=yes'
-            flags += ' --version=%s.%s' % (self.VER_MAJOR, self.VER_MINOR)
+            flags += ' --version=%s.%s' % (self.wxVER_MAJOR, self.wxVER_MINOR)
 
             searchpath = os.environ["PATH"]
             for p in searchpath.split(':'):
@@ -439,12 +441,12 @@ class Configuration(object):
         else:
             # TODO: Python3 version using os.walk generator
             return []
-    
-    
+
+
     def find_data_files(self, srcdir, *wildcards, **kw):
         # get a list of all files under the srcdir matching wildcards,
         # returned in a format to be used for install_data
-        
+
         def walk_helper(arg, dirname, files):
             if '.svn' in dirname:
                 return
@@ -454,12 +456,12 @@ class Configuration(object):
                 wc_name = opj(dirname, wc)
                 for f in files:
                     filename = opj(dirname, f)
-                    
+
                     if fnmatch.fnmatch(filename, wc_name) and not os.path.isdir(filename):
                         names.append(filename)
             if names:
                 lst.append( (dirname, names ) )
-    
+
         file_list = []
         recursive = kw.get('recursive', True)
         if recursive:
@@ -469,8 +471,8 @@ class Configuration(object):
                         srcdir,
                         [os.path.basename(f) for f in glob.glob(opj(srcdir, '*'))])
         return file_list
-    
-    
+
+
     def makeLibName(self, name, checkMonolithic=False, isMSWBase=False):
         if checkMonolithic and self.MONOLITHIC:
             return []
@@ -482,8 +484,8 @@ class Configuration(object):
         else:
             libname = 'wx%s%s%s' % (basename, self.WXDLLVER, self.libFlag())
         return [libname]
-    
-    
+
+
     def libFlag(self):
         if not self.debug:
             rv = ''
@@ -493,18 +495,18 @@ class Configuration(object):
             rv = 'u' + rv
         return rv
 
-    
+
     def findLib(self, name, libdirs):
         name = self.makeLibName(name)[0]
         if os.name == 'posix' or self.COMPILER == 'mingw32':
             lflags = self.getWxConfigValue('--libs')
             lflags = lflags.split()
-            
+
             # if wx-config --libs output does not start with -L, wx is
             # installed with a standard prefix and wx-config does not
             # output these libdirs because they are already searched by
             # default by the compiler and linker.
-            if lflags[0][:2] != '-L':  
+            if lflags[0][:2] != '-L':
                 dirs = libdirs + ['/usr/lib', '/usr/local/lib']
             else:
                 dirs = libdirs
@@ -516,10 +518,10 @@ class Configuration(object):
             if glob.glob(p+'*') != []:
                 return True
         return False
-    
-    
-  
-    
+
+
+
+
     def adjustCFLAGS(self, cflags, defines, includes):
         """
         Extract the raw -I, -D, and -U flags from cflags and put them into
@@ -540,9 +542,9 @@ class Configuration(object):
             else:
                 newCFLAGS.append(flag)
         return newCFLAGS
-    
-    
-    
+
+
+
     def adjustLFLAGS(self, lflags, libdirs, libs):
         """
         Extract the -L and -l flags from lflags and put them in libdirs and
@@ -557,9 +559,9 @@ class Configuration(object):
             else:
                 newLFLAGS.append(flag)
         return newLFLAGS
-    
 
-    
+
+
 # We'll use a factory function so we can use the Configuration class as a singleton
 _config = None
 
@@ -577,7 +579,7 @@ def msg(text):
     if not runSilently:
         print(text)
 
-        
+
 def opj(*args):
     path = os.path.join(*args)
     return os.path.normpath(path)
@@ -606,7 +608,7 @@ def loadETG(name):
             self.__dict__['__name__'] = 'namespace'
         def nsdict(self):
             return self.__dict__
-            
+
     ns = _Namespace()
     myExecfile(name, ns.nsdict())
     return ns
@@ -618,7 +620,7 @@ def etg2sip(etgfile):
 
     sipfile = posixjoin(cfg.SIPGEN, sipfile)
     return sipfile
- 
+
 
 def _getSbfValue(etg, keyName):
     cfg = Config()
@@ -649,8 +651,8 @@ def findCmd(cmd):
         if os.path.exists(c):
             return c
     return None
-    
-    
+
+
 def phoenixDir():
     return os.path.abspath(posixjoin(os.path.dirname(__file__), '..'))
 
@@ -679,27 +681,27 @@ def copyFile(src, dest, verbose=False):
         os.symlink(linkto, dest)
     else:
         shutil.copy2(src, dest)
-        
-        
+
+
 def copyIfNewer(src, dest, verbose=False):
     if os.path.isdir(dest):
         dest = os.path.join(dest, os.path.basename(src))
     if newer(src, dest):
         copyFile(src, dest, verbose)
-        
-        
+
+
 def writeIfChanged(filename, text):
     """
     Check the current contents of filename and only overwrite with text if
     the content is different (therefore preserving the timestamp if there is
     no update.)
     """
-        
+
     if os.path.exists(filename):
         f = textfile_open(filename, 'rt')
         current = f.read()
         f.close()
-        
+
         if current == text:
             return
 
@@ -713,14 +715,14 @@ def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
     print("**** macFixDependencyInstallName(%s, %s, %s, %s)" % (destdir, prefix, extension, buildDir))
     pwd = os.getcwd()
     os.chdir(destdir+prefix+'/lib')
-    dylibs = glob.glob('*.dylib')   
+    dylibs = glob.glob('*.dylib')
     for lib in dylibs:
         #cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s' % \
         #      (destdir+prefix,lib,  prefix,lib,  extension)
         cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s' % \
               (buildDir,lib,  prefix,lib,  extension)
         print(cmd)
-        os.system(cmd)        
+        os.system(cmd)
     os.chdir(pwd)
 
 
@@ -741,7 +743,7 @@ def macSetLoaderNames(filenames):
                 newName = '@loader_path/' + os.path.basename(curName)
                 cmd = 'install_name_tool -change %s %s %s' % (curName, newName, filename)
                 os.system(cmd)
-        
+
 
 def getVcsRev():
     # Some helpers for the code below
@@ -749,10 +751,10 @@ def getVcsRev():
         import datetime
         now = datetime.datetime.now()
         return "%d%02d%02d.%02d%02d" % (now.year, now.month, now.day, now.hour, now.minute)
-    
+
     def _getSvnRevision():
         if not os.path.exists('.svn'):
-            return None            
+            return None
         svnrev = None
         try:
             rev = runcmd('svnversion', getOutput=True, echoCmd=False)
@@ -760,7 +762,7 @@ def getVcsRev():
             return None
         svnrev = rev.split(':')[0]
         return svnrev
-            
+
     def _getGitRevision():
         try:
             revcount = runcmd('git rev-list --count HEAD', getOutput=True, echoCmd=False)
@@ -768,7 +770,7 @@ def getVcsRev():
         except:
             return None
         return "{}+{}".format(revcount, revhash)
-            
+
     # Try getting the revision number from SVN, or GIT, or just fall back
     # to the date.
     svnrev = _getSvnRevision()
@@ -781,6 +783,22 @@ def getVcsRev():
 
 
 def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
+    """
+    Runs a give command-line command, optionally returning the output.
+    """
+    if isinstance(cmd, list):
+        # add quotes to elements of the command that need it
+        cmd = cmd[:]
+        for idx, item in enumerate(cmd):
+            if ' ' in item or '\t' in item or ';' in item:
+                if item[0] not in ['"', "'"]:
+                    if '"' in item:
+                        item = item.replace('"', '\\"')
+                    item = '"{}"'.format(item)
+                    cmd[idx] = item
+        # convert the resulting command to a string
+        cmd = ' '.join(cmd)
+
     if echoCmd:
         msg(cmd)
 
@@ -788,7 +806,7 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
     if getOutput:
         otherKwArgs = dict(stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT)
-        
+
     sp = subprocess.Popen(cmd, shell=True, env=os.environ, **otherKwArgs)
 
     output = None
@@ -798,7 +816,7 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
         if sys.version_info > (3,):
             output = output.decode(outputEncoding)
         output = output.rstrip()
-        
+
     rval = sp.wait()
     if rval:
         # Failed!
@@ -808,10 +826,10 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
             print(output)
         if fatal:
             sys.exit(rval)
-    
+
     return output
-        
-    
+
+
 def myExecfile(filename, ns):
     if sys.version_info < (3,):
         execfile(filename, ns)
@@ -819,7 +837,7 @@ def myExecfile(filename, ns):
         with open(filename, 'r') as f:
             exec(f.read(), ns)
 
-    
+
 def textfile_open(filename, mode='rt'):
     """
     Simple wrapper around open() that will use codecs.open on Python2 and
@@ -846,9 +864,9 @@ def getSipFiles(names):
             if os.path.exists(name):
                 files.append(name)
     return files
-            
 
-    
+
+
 def getVisCVersion():
     text = runcmd("cl.exe", getOutput=True, echoCmd=False)
     if 'Version 13' in text:
@@ -857,12 +875,14 @@ def getVisCVersion():
         return '90'
     if 'Version 16' in text:
         return '100'
+    if 'Version 18' in text:
+        return '120'
     if 'Version 19' in text:
         return '140'
     # TODO: Add more tests to get the other versions...
     else:
         return 'FIXME'
-    
+
 
 _haveObjDump = None
 def canGetSOName():
@@ -876,7 +896,7 @@ def getSOName(filename):
     output = runcmd('objdump -p %s' % filename, True)
     result = re.search('^\s+SONAME\s+(.+)$', output, re.MULTILINE)
     if result:
-        return result.group(1)    
+        return result.group(1)
     return None
 
 

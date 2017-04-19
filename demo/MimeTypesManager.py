@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 #----------------------------------------------------------------------
 # Name:        wxMimeTypesManager
 # Purpose:     Demonstrate use of wx.MimeTypesManager, wx.FileType
@@ -20,7 +18,7 @@ import images
 
 # helper function to make sure we don't convert unicode objects to strings
 # or vice versa when converting lists and None values to text.
-import wx.lib.six as six
+import six
 convert = six.text_type
 
 #----------------------------------------------------------------------------
@@ -299,21 +297,21 @@ class MimeTypesDemoPanel(wx.Panel):
         mime = ft.GetMimeType() or ""
 
         #------- OPEN command
-        cmd = ft.GetOpenCommand(filename, mime)
+        params = wx.FileType.MessageParameters(filename, mime)
+        cmd = ft.GetOpenCommand(params)
         self.opencommand.SetValue(convert(cmd))
 
         #------- PRINT command
-        cmd = ft.GetPrintCommand(filename, mime)
+        cmd = ft.GetPrintCommand(params)
         self.printcommand.SetValue(convert(cmd))
 
         #------- All commands
-        all = ft.GetAllCommands(filename, mime)
+        verbs, commands = ft.GetAllCommands(params)
 
-        if all is None:
+        if not verbs and not commands:
             self.allcommands.SetValue("")
         else:
-            verbs, commands = all
-            text = pprint.pformat(map(None, verbs, commands))
+            text = pprint.pformat(list(zip(verbs, commands)))
             self.allcommands.SetValue(text)
 
 

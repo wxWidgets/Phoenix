@@ -37,7 +37,7 @@ class DrawFrame(wx.Frame):
         Canvas = NC.Canvas
         self.Canvas = Canvas
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
 
         Point = (45,40)
 
@@ -52,7 +52,7 @@ class DrawFrame(wx.Frame):
         self.GroupA.AddObjects((C2,T))
         Canvas.AddObject(self.GroupA)
 
-        
+
         ## create another Groups of objects
 
         R = FloatCanvas.Rectangle((15, 15),(10, 18), FillColor="orange")
@@ -63,7 +63,7 @@ class DrawFrame(wx.Frame):
 
         self.GroupB = FloatCanvas.Group((R,E,C,C2,T))
         Canvas.AddObject(self.GroupB)
-       
+
         self.Groups = {"A":self.GroupA, "B":self.GroupB}
 
         # Add a couple of tools to the Canvas Toolbar
@@ -106,10 +106,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

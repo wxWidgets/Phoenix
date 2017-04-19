@@ -28,7 +28,7 @@
 # --------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.flatnotebook.FlatNotebook` is a full, generic and owner-drawn implementation of :class:`Notebook`.
+:class:`~wx.lib.agw.flatnotebook.FlatNotebook` is a full, generic and owner-drawn implementation of :class:`Notebook`.
 
 
 Description
@@ -78,16 +78,16 @@ Usage example::
 
         def __init__(self, parent):
 
-            wx.Frame.__init(self, parent, -1, "FlatNotebook Demo")        
+            wx.Frame.__init(self, parent, -1, "FlatNotebook Demo")
 
             panel = wx.Panel(self)
-            
+
             notebook = fnb.FlatNotebook(panel, -1)
-            
+
             for i in range(3):
                 caption = "Page %d"%(i+1)
                 notebook.AddPage(self.CreatePage(notebook, caption), caption)
-                
+
             sizer = wx.BoxSizer(wx.VERTICAL)
             sizer.Add(notebook, 1, wx.ALL | wx.EXPAND, 5)
             panel.SetSizer(sizer)
@@ -105,8 +105,8 @@ Usage example::
             wx.StaticText(p, -1, caption, (20,20))
             wx.TextCtrl(p, -1, "", (20,40), (150,-1))
             return p
-        
-        
+
+
     # our normal wxApp-derived class, as usual
 
     app = wx.App(0)
@@ -192,7 +192,7 @@ import math
 import weakref
 import pickle
 
-import wx.lib.six as six
+import six
 
 # Used on OSX to get access to carbon api constants
 if wx.Platform == '__WXMAC__':
@@ -779,7 +779,7 @@ def LightColour(colour, percent):
     """
     Brighten the input colour by a percentage.
 
-    :param `colour`: a valid :class:`Colour` instance;
+    :param `colour`: a valid :class:`wx.Colour` instance;
     :param `percent`: the percentage by which the input colour should be brightened.
     """
 
@@ -796,18 +796,19 @@ def LightColour(colour, percent):
     r = colour.Red() + ((i*rd*100)/high)/100
     g = colour.Green() + ((i*gd*100)/high)/100
     b = colour.Blue() + ((i*bd*100)/high)/100
-    return wx.Colour(r, g, b)
+    a = colour.Alpha()
+    return wx.Colour(int(r), int(g), int(b), int(a))
 
 
 def FormatColour(colour):
     """
-    Convert the input `colour` into a valid :class:`Colour` instance, using whatever typemap
+    Convert the input `colour` into a valid :class:`wx.Colour` instance, using whatever typemap
     accepted by wxWidgets/wxPython.
-    
-    :param `colour`: can be an instance of :class:`Colour`, a 3 or 4 integer tuple, a hex
+
+    :param `colour`: can be an instance of :class:`wx.Colour`, a 3 or 4 integer tuple, a hex
      string, a string representing the colour name or ``None``.
 
-    :returns: a valid instance of :class:`Colour` or ``None`` if the input `colour` was ``None``
+    :returns: a valid instance of :class:`wx.Colour` or ``None`` if the input `colour` was ``None``
      in the first place.
     """
 
@@ -831,7 +832,7 @@ def PaintStraightGradientBox(dc, rect, startColour, endColour, vertical=True):
     """
     Draws a gradient coloured box from `startColour` to `endColour`.
 
-    :param `dc`: an instance of :class:`DC`;
+    :param `dc`: an instance of :class:`wx.DC`;
     :param `rect`: the rectangle to fill with the gradient shading;
     :param `startColour`: the first colour in the gradient shading;
     :param `endColour`: the last colour in the gradient shading;
@@ -878,7 +879,7 @@ def AdjustColour(colour, percent, alpha=wx.ALPHA_OPAQUE):
     """
     Brighten/darken input colour by `percent` and adjust `alpha` channel if needed.
 
-    :param `colour`: colour object to adjust, an instance of :class:`Colour`;
+    :param `colour`: colour object to adjust, an instance of :class:`wx.Colour`;
     :param `percent`: percent to adjust ``+`` (brighten) or ``-`` (darken);
     :param `alpha`: amount to adjust the alpha channel.
 
@@ -899,10 +900,8 @@ def AdjustColour(colour, percent, alpha=wx.ALPHA_OPAQUE):
     return wx.Colour(red, green, blue, alpha)
 
 
-if wx.VERSION_STRING < "2.8.9.2":
-    adjust_colour = AdjustColour
-else:
-    from wx.lib.colourutils import AdjustColour as adjust_colour
+
+from wx.lib.colourutils import AdjustColour as adjust_colour
 
 
 # -----------------------------------------------------------------------------
@@ -913,7 +912,7 @@ def DrawButton(dc, rect, focus, upperTabs):
     """
     Draws a :class:`FlatNotebook` tab.
 
-    :param `dc`: an instance of :class:`DC`;
+    :param `dc`: an instance of :class:`wx.DC`;
     :param `rect`: the tab's client rectangle;
     :param `focus`: ``True`` if the tab has focus, ``False`` otherwise;
     :param `upperTabs`: ``True`` if the tabs are at the top, ``False`` if they are
@@ -1116,7 +1115,7 @@ class PageInfo(object):
 
         :param `caption`: the tab caption;
         :param `imageindex`: the tab image index based on the assigned (set)
-         :class:`ImageList` (if any);
+         :class:`wx.ImageList` (if any);
         :param `tabangle`: the tab angle (only on standard tabs, from 0 to 15
          degrees);
         :param `enabled`: sets the tab as enabled or disabled.
@@ -1155,7 +1154,7 @@ class PageInfo(object):
         """
         Sets the tab position.
 
-        :param `value`: an instance of :class:`Point`.
+        :param `value`: an instance of :class:`wx.Point`.
         """
 
         self._pos = value
@@ -1171,7 +1170,7 @@ class PageInfo(object):
         """
         Sets the tab size.
 
-        :param `value`: an instance of :class:`Size`.
+        :param `value`: an instance of :class:`wx.Size`.
         """
 
         self._size = value
@@ -1229,7 +1228,7 @@ class PageInfo(object):
         """
         Sets the tab text colour for this tab.
 
-        :param `colour`: an instance of :class:`Colour`. You can pass ``None`` or
+        :param `colour`: an instance of :class:`wx.Colour`. You can pass ``None`` or
          :class:`NullColour` to return to the default page text colour.
         """
 
@@ -1261,7 +1260,7 @@ class PageInfo(object):
         """
         Sets the tab region.
 
-        :param `points`: a Python list of :class:`Point`
+        :param `points`: a Python list of :class:`wx.Point`
         """
 
         self._region = wx.Region(points)
@@ -1277,7 +1276,7 @@ class PageInfo(object):
         """
         Sets the button 'X' area rect.
 
-        :param `xrect`: an instance of :class:`Rect`, specifying the client rectangle
+        :param `xrect`: an instance of :class:`wx.Rect`, specifying the client rectangle
          of the 'X' button.
         """
 
@@ -1300,7 +1299,7 @@ class PageInfo(object):
         """
         Sets the tab colour.
 
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
@@ -1480,7 +1479,7 @@ class TabNavigatorWindow(wx.Dialog):
         Used internally.
 
         :param `parent`: the :class:`TabNavigatorWindow` parent window;
-        :param `icon`: a valid :class:`Bitmap` object representing the icon to be displayed
+        :param `icon`: a valid :class:`wx.Bitmap` object representing the icon to be displayed
          in the :class:`TabNavigatorWindow`.
         """
 
@@ -1501,7 +1500,7 @@ class TabNavigatorWindow(wx.Dialog):
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(wx.Bitmap(1,1))
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         mem_dc.SetFont(font)
 
         panelHeight = mem_dc.GetCharHeight()
@@ -1675,7 +1674,7 @@ class TabNavigatorWindow(wx.Dialog):
 
         # get the text position, and draw it
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         mem_dc.SetFont(font)
         fontHeight = mem_dc.GetCharHeight()
 
@@ -1726,9 +1725,9 @@ class FNBRenderer(object):
                 brush = wx.Brush(wx.BLACK)
                 brush.MacSetTheme(k)
                 c = brush.GetColour()
-            self._focusPen = wx.Pen(c, 2, wx.SOLID)
+            self._focusPen = wx.Pen(c, 2, wx.PENSTYLE_SOLID)
         else:
-            self._focusPen = wx.Pen(wx.BLACK, 1, wx.USER_DASH)
+            self._focusPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_USER_DASH)
             self._focusPen.SetDashes([1, 1])
             self._focusPen.SetCap(wx.CAP_BUTT)
 
@@ -1835,7 +1834,7 @@ class FNBRenderer(object):
         """
         Draws the left and right scrolling arrows.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `pc`: an instance of :class:`FlatNotebook`;
         :param `rect`: the client rectangle containing the scrolling arrows.
         """
@@ -1849,7 +1848,7 @@ class FNBRenderer(object):
         Draws the left navigation arrow.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -1893,7 +1892,7 @@ class FNBRenderer(object):
         Draws the right navigation arrow.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -1909,7 +1908,7 @@ class FNBRenderer(object):
         if agwStyle & FNB_NAV_BUTTONS_WHEN_NEEDED:
             if pc._pagesInfoVec[-1].GetPosition() != wx.Point(-1, -1) and pc._nFrom == 0:
                 return
-            
+
         # Set the bitmap according to the button status
         if pc._nRightButtonStatus == FNB_BTN_HOVER:
             arrowBmp = wx.Bitmap(right_arrow_hilite_xpm)
@@ -1938,7 +1937,7 @@ class FNBRenderer(object):
         Draws the drop-down arrow in the navigation area.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -1974,7 +1973,7 @@ class FNBRenderer(object):
         Draw the 'X' navigation button in the navigation area.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -2011,7 +2010,7 @@ class FNBRenderer(object):
         Draws the 'X' in the selected tab.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the current tab client rectangle;
         :param `tabIdx`: the index of the current tab;
         :param `btnStatus`: the status of the 'X' button in the current tab.
@@ -2050,7 +2049,7 @@ class FNBRenderer(object):
         Draws a line over the tabs.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `selTabX1`: first x coordinate of the tab line;
         :param `selTabX2`: second x coordinate of the tab line.
         """
@@ -2225,7 +2224,7 @@ class FNBRenderer(object):
         Actually draws the tabs in :class:`FlatNotebook`.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -2396,7 +2395,7 @@ class FNBRenderer(object):
         """
         Draws a focus rectangle like the native :class:`Notebook`.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
         :param `page`: an instance of :class:`PageInfo`, representing a page in the notebook.
         """
@@ -2558,7 +2557,7 @@ class FNBRendererDefault(FNBRenderer):
         Draws a tab using the `Standard` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -2693,7 +2692,7 @@ class FNBRendererFirefox2(FNBRenderer):
         Draws a tab using the `Firefox 2` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -2807,7 +2806,7 @@ class FNBRendererVC71(FNBRenderer):
         Draws a tab using the `VC71` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -2932,7 +2931,7 @@ class FNBRendererFancy(FNBRenderer):
         Draws a tab using the `Fancy` style, similar to the `VC71` one but with gradients.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -3050,7 +3049,7 @@ class FNBRendererVC8(FNBRenderer):
         Draws all the tabs using `VC8` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -3203,7 +3202,7 @@ class FNBRendererVC8(FNBRenderer):
         Draws a tab using the `VC8` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -3350,8 +3349,8 @@ class FNBRendererVC8(FNBRenderer):
         Fills a tab with a gradient shading.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
-        :param `tabPoints`: a Python list of :class:`Point` representing the tab outline;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `tabPoints`: a Python list of :class:`wx.Point` representing the tab outline;
         :param `bSelectedTab`: ``True`` if the tab is selected, ``False`` otherwise;
         :param `tabIdx`: the index of the tab;
         """
@@ -3442,7 +3441,7 @@ class FNBRendererVC8(FNBRenderer):
         """
         Returns the `x` start position of a tab.
 
-        :param `tabPoints`: a Python list of :class:`Point` representing the tab outline;
+        :param `tabPoints`: a Python list of :class:`wx.Point` representing the tab outline;
         :param `y`: the y start position of the tab;
         :param `style`: can be ``FNB_BOTTOM`` or the default (tabs at top).
         """
@@ -3507,7 +3506,7 @@ class FNBRendererVC8(FNBRenderer):
         """
         Returns the `x` end position of a tab.
 
-        :param `tabPoints`: a Python list of :class:`Point` representing the tab outline;
+        :param `tabPoints`: a Python list of :class:`wx.Point` representing the tab outline;
         :param `y`: the y end position of the tab;
         :param `style`: can be ``FNB_BOTTOM`` or the default (tabs at top).
         """
@@ -3681,7 +3680,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         Draws a tab using the `Ribbon Tabs` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -3761,7 +3760,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         Actually draws the tabs in :class:`FlatNotebook`.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -4092,7 +4091,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets a custom panel to show when there are no pages left in :class:`FlatNotebook`.
 
-        :param `panel`: any subclass of :class:`Window` will do, as long as it is suitable
+        :param `panel`: any subclass of :class:`wx.Window` will do, as long as it is suitable
          to be used as a notebook page. Examples include :class:`Panel`, :class:`ScrolledWindow`,
          and so on.
         """
@@ -4149,7 +4148,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the text colour for the active tab.
 
-        :param `textColour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `textColour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
@@ -4270,7 +4269,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the image list for the page control.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self._pages.SetImageList(imageList)
@@ -4280,7 +4279,7 @@ class FlatNotebook(wx.Panel):
         """
         Assigns the image list for the page control.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self._pages.AssignImageList(imageList)
@@ -4534,7 +4533,7 @@ class FlatNotebook(wx.Panel):
         """
         Returns the index at which the window is found.
 
-        :param `win`: an instance of :class:`Window`.
+        :param `win`: an instance of :class:`wx.Window`.
         """
 
         try:
@@ -4572,7 +4571,7 @@ class FlatNotebook(wx.Panel):
         """
         Set the icon used by the :class:`TabNavigatorWindow`.
 
-        :param `bmp`: a valid :class:`Bitmap` object.
+        :param `bmp`: a valid :class:`wx.Bitmap` object.
         """
 
         if isinstance(bmp, wx.Bitmap) and bmp.IsOk():
@@ -4853,7 +4852,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the popup menu associated to a right click on a tab.
 
-        :param `menu`: an instance of :class:`Menu`.
+        :param `menu`: an instance of :class:`wx.Menu`.
         """
 
         self._pages._pRightClickMenu = menu
@@ -4873,9 +4872,9 @@ class FlatNotebook(wx.Panel):
         """
         Sets the gradient colours for the tab.
 
-        :param `fr`: the first gradient colour, an instance of :class:`Colour`;
-        :param `to`: the second gradient colour, an instance of :class:`Colour`;
-        :param `border`: the border colour, an instance of :class:`Colour`.
+        :param `fr`: the first gradient colour, an instance of :class:`wx.Colour`;
+        :param `to`: the second gradient colour, an instance of :class:`wx.Colour`;
+        :param `border`: the border colour, an instance of :class:`wx.Colour`.
         """
 
         self._pages._colourFrom = fr
@@ -4887,7 +4886,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the starting colour for the gradient.
 
-        :param `fr`: the first gradient colour, an instance of :class:`Colour`.
+        :param `fr`: the first gradient colour, an instance of :class:`wx.Colour`.
         """
 
         self._pages._colourFrom = fr
@@ -4897,7 +4896,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the ending colour for the gradient.
 
-        :param `to`: the second gradient colour, an instance of :class:`Colour`;
+        :param `to`: the second gradient colour, an instance of :class:`wx.Colour`;
         """
 
         self._pages._colourTo = to
@@ -4907,7 +4906,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the tab border colour.
 
-        :param `border`: the border colour, an instance of :class:`Colour`.
+        :param `border`: the border colour, an instance of :class:`wx.Colour`.
         """
 
         self._pages._colourBorder = border
@@ -4999,7 +4998,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the non active tabs text colour.
 
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
@@ -5021,7 +5020,7 @@ class FlatNotebook(wx.Panel):
         Sets the tab text colour individually.
 
         :param `page`: an integer specifying the page index;
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple). You can
          pass ``None`` or :class:`NullColour` to return to the default page text colour.
         """
@@ -5033,7 +5032,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the area behind the tabs colour.
 
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
@@ -5050,7 +5049,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the active tab colour.
 
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
@@ -5136,7 +5135,7 @@ class PageContainer(wx.Panel):
 
         if "__WXGTK__" in wx.PlatformInfo:
             boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-            boldFont.SetWeight(wx.BOLD)
+            boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
             memDc.SetFont(boldFont)
 
         height = memDc.GetCharHeight()
@@ -5260,7 +5259,7 @@ class PageContainer(wx.Panel):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`PageContainer`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         # When resizing the control, try to fit to screen as many tabs as we can
@@ -5507,7 +5506,7 @@ class PageContainer(wx.Panel):
         """
         HitTest method for :class:`PageContainer`.
 
-        :param `pt`: an instance of :class:`Point`, to test for hits.
+        :param `pt`: an instance of :class:`wx.Point`, to test for hits.
 
         :return: The hit test flag (if any) and the hit page index (if any). The return
          value can be one of the following bits:
@@ -6064,7 +6063,7 @@ class PageContainer(wx.Panel):
         Sets the tab text colour individually.
 
         :param `page`: an integer specifying the page index;
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple). You can
          pass ``None`` or :class:`NullColour` to return to the default page text colour.
         """
@@ -6466,7 +6465,7 @@ class PageContainer(wx.Panel):
         """
         Handles the ``wx.EVT_MENU`` event for :class:`PageContainer`.
 
-        :param `event`: a :class:`MenuEvent` event to be processed.
+        :param `event`: a :class:`wx.MenuEvent` event to be processed.
         """
 
         selection = event.GetId() - 1
@@ -6510,7 +6509,7 @@ class PageContainer(wx.Panel):
         """
         Sets the image list for the :class:`PageContainer`.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self._ImageList = imglist
@@ -6520,7 +6519,7 @@ class PageContainer(wx.Panel):
         """
         Assigns the image list for the :class:`PageContainer`.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self._ImageList = imglist

@@ -71,7 +71,7 @@
 import wx
 import clroses
 import wx.lib.colourselect as cs
-from wx.lib.six import print_
+from six import print_
 
 # Class SpinPanel creates a control that includes both a StaticText widget
 # which holds the the name of a parameter and a SpinCtrl widget which
@@ -96,7 +96,7 @@ class SpinPanel(wx.Panel):
         sizer.Add((1,1), 1)
         sizer.Add(self.sc)
         self.SetSizer(sizer)
-        
+
         global spin_panels
         spin_panels[name] = self
 
@@ -128,7 +128,7 @@ class RosePanel(wx.Panel):
         # set default colors
         self.SetBackgroundColour((51, 51, 51))    # gray20
         self.SetForegroundColour((164, 211, 238)) # lightskyblue2
-        
+
         # connect the size and paint events to handlers
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -139,7 +139,7 @@ class RosePanel(wx.Panel):
         size = self.GetClientSize()
         self.buffer = wx.Bitmap(max(1, size.width),
                                 max(1, size.height))
-        
+
     def Clear(self):
         dc = self.useBuffer and wx.MemoryDC(self.buffer) or wx.ClientDC(self)
         dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
@@ -163,7 +163,7 @@ class RosePanel(wx.Panel):
 
     def TriggerRedraw(self):
         self.GetParent().TriggerRedraw()
-    
+
     def OnSize(self, evt):
         self.resizeNeeded = True
 
@@ -203,9 +203,9 @@ class OptionsPanel(wx.Panel):
             sizer.Add((4,4))
             sizer.Add(lbl, 0, wx.ALIGN_CENTER_VERTICAL)
             return sizer, btn
-        
+
         s, self.fg = makeCButton('Foreground')
-        sizer.Add(s)        
+        sizer.Add(s)
         s, self.bg = makeCButton('Background')
         sizer.Add(s)
         self.SetSizer(sizer)
@@ -233,7 +233,7 @@ class OptionsPanel(wx.Panel):
     def OnUseBuffer(self, evt):
         self.rose.useBuffer = evt.IsChecked()
         self.rose.TriggerRedraw()
-        
+
     def OnSetFG(self, evt):
         self.rose.SetForegroundColour(evt.GetValue())
         self.rose.TriggerRedraw()
@@ -277,12 +277,12 @@ class MyFrame(wx.Frame, clroses.rose):
                     sizer.Add(st, 0, wx.EXPAND)
             panel.SetSizer(sizer)
             return panel
-    
+
         wx.Frame.__init__(self, None, title="Roses in wxPython")
 
         self.rose_panel = RosePanel(self)
         self.side_panel = wx.Panel(self)
-        
+
         # The cmd panel is four buttons whose names and foreground colors
         # change.  Plop them in a StaticBox like the SpinPanels.  Use
         # a 2x2 grid, but StaticBoxSizer can't handle that.  Therefore,
@@ -330,14 +330,14 @@ class MyFrame(wx.Frame, clroses.rose):
                                  ('Skip first', 0,    0, 3600),
                                  ('Draw only' , 1, 3600, 3600)),
                                 (('Takes', 'Takes 0000 vectors'), ))
-        
+
         self.tim_panel = makeSP('Timing',
                                (('Vec/tick' , 1,   20, 3600),
                                 ('msec/tick', 1,   50, 1000),
                                 ('Delay'    , 1, 2000, 9999)))
 
         self.opt_panel = OptionsPanel(self.side_panel, self.rose_panel)
-            
+
         # put them all on in a sizer attached to the side_panel
         panelSizer = wx.BoxSizer(wx.VERTICAL)
         panelSizer.Add(self.cmd_panel, 0, wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT, 5)
@@ -412,12 +412,12 @@ class MyFrame(wx.Frame, clroses.rose):
     # implement the missing parts of the functionality needed to do
     # the actual work of getting the diagram to the screen and etc.
     # Those are implemented here as the App* methods.
-    
+
     def AppClear(self):
         if verbose:
             print_('AppClear: clear screen')
         self.rose_panel.Clear()
-        
+
     def AppCreateLine(self, line):
         # print('AppCreateLine, len', len(line), 'next', self.nextpt)
         self.rose_panel.DrawLines(line)
@@ -439,7 +439,7 @@ class MyFrame(wx.Frame, clroses.rose):
         spin_panels['Maximum'].SetValue(maxvec)
         spin_panels['Skip first'].SetValue(skipvec)
         spin_panels['Draw only'].SetValue(drawvec)
-        
+
     def AppSetTakesVec(self, takes):
         spin_panels['Takes'].SetLabel('Takes %d vectors' % takes)
 
@@ -453,7 +453,7 @@ class MyFrame(wx.Frame, clroses.rose):
     # Command buttons change their names based on the whether we're in auto
     # or manual mode.
     def AppCmdLabels(self, labels):
-        for name, label in map(None, ('Go', 'Redraw', 'Backward', 'Forward'), labels):
+        for name, label in zip(('Go', 'Redraw', 'Backward', 'Forward'), labels):
             ctrl_buttons[name].SetLabel(label)
             ctrl_buttons[name].SetForegroundColour(self.labelColours[label])
 
@@ -463,7 +463,7 @@ class MyFrame(wx.Frame, clroses.rose):
     # AppAfter and OnTimer alternate, but don't verify that AppCancelTimer()
     # is canceling anything as callers of that may be uncertain about what's
     # happening.
-    
+
     # Method to provide a single callback after some amount of time.
     def AppAfter(self, msec, callback):
         if self.timer_callback:
@@ -491,7 +491,7 @@ class MyFrame(wx.Frame, clroses.rose):
 
 
     resize_delay = 300
-    
+
     def TriggerResize(self, size):
         self.resize(size, self.resize_delay)
         self.resize_delay = 100

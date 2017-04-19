@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -10,7 +10,7 @@ pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 #---------------------------------------------------------------------------
 
 class lib_agw_gradientbutton_Tests(wtc.WidgetTestCase):
-    
+
     def test_lib_agw_gradientbuttonCtor(self):
 
         # Initialize GradientButton 1 (with image)
@@ -18,7 +18,7 @@ class lib_agw_gradientbutton_Tests(wtc.WidgetTestCase):
         btn1 = GB.GradientButton(self.frame, -1, bitmap, "GradientButton")
         # Initialize GradientButton 2 (no image)
         btn2 = GB.GradientButton(self.frame, -1, None, "Hello World!")
-        
+
 
     def test_lib_agw_gradientbuttonMethods(self):
         # Initialize AquaButton 2 (no image)
@@ -30,7 +30,7 @@ class lib_agw_gradientbutton_Tests(wtc.WidgetTestCase):
         btn2.SetTopStartColour(wx.Colour('grey'))
         btn2.SetBottomStartColour(wx.WHITE)
         btn2.SetPressedBottomColour(wx.BLACK)
-        
+
 
 #---------------------------------------------------------------------------
 

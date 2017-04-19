@@ -11,11 +11,11 @@ class MyGrid(grid.Grid, glr.GridWithLabelRenderersMixin):
         grid.Grid.__init__(self, *args, **kw)
         glr.GridWithLabelRenderersMixin.__init__(self)
 
-        
+
 class MyRowLabelRenderer(glr.GridLabelRenderer):
     def __init__(self, bgcolor):
         self._bgcolor = bgcolor
-        
+
     def Draw(self, grid, dc, rect, row):
         dc.SetBrush(wx.Brush(self._bgcolor))
         dc.SetPen(wx.TRANSPARENT_PEN)
@@ -24,12 +24,12 @@ class MyRowLabelRenderer(glr.GridLabelRenderer):
         text = grid.GetRowLabelValue(row)
         self.DrawBorder(grid, dc, rect)
         self.DrawText(grid, dc, rect, text, hAlign, vAlign)
-        
-    
+
+
 class MyColLabelRenderer(glr.GridLabelRenderer):
     def __init__(self, bgcolor):
         self._bgcolor = bgcolor
-        
+
     def Draw(self, grid, dc, rect, col):
         dc.SetBrush(wx.Brush(self._bgcolor))
         dc.SetPen(wx.TRANSPARENT_PEN)
@@ -38,20 +38,20 @@ class MyColLabelRenderer(glr.GridLabelRenderer):
         text = grid.GetColLabelValue(col)
         self.DrawBorder(grid, dc, rect)
         self.DrawText(grid, dc, rect, text, hAlign, vAlign)
-    
-        
+
+
 class MyCornerLabelRenderer(glr.GridLabelRenderer):
     def __init__(self):
         import images
         self._bmp = images.Smiles.getBitmap()
-        
+
     def Draw(self, grid, dc, rect, rc):
         x = rect.left + (rect.width - self._bmp.GetWidth()) / 2
         y = rect.top + (rect.height - self._bmp.GetHeight()) / 2
         dc.DrawBitmap(self._bmp, x, y, True)
-        
-        
-        
+
+
+
 class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         self.log = log
@@ -59,17 +59,17 @@ class TestPanel(wx.Panel):
 
         ROWS = 27
         COLS = 15
-        
+
         g = MyGrid(self, size=(100,100))
         g.CreateGrid(ROWS, COLS)
 
         g.SetCornerLabelRenderer(MyCornerLabelRenderer())
-        
+
         for row in range(0, ROWS, 3):
             g.SetRowLabelRenderer(row+0, MyRowLabelRenderer('#ffe0e0'))
             g.SetRowLabelRenderer(row+1, MyRowLabelRenderer('#e0ffe0'))
             g.SetRowLabelRenderer(row+2, MyRowLabelRenderer('#e0e0ff'))
-            
+
         for col in range(0, COLS, 3):
             g.SetColLabelRenderer(col+0, MyColLabelRenderer('#e0ffe0'))
             g.SetColLabelRenderer(col+1, MyColLabelRenderer('#e0e0ff'))
@@ -77,8 +77,8 @@ class TestPanel(wx.Panel):
 
         self.Sizer = wx.BoxSizer()
         self.Sizer.Add(g, 1, wx.EXPAND)
-        
-        
+
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

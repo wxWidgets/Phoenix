@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -34,8 +34,8 @@ class asserts_Tests(wtc.WidgetTestCase):
         wx.GetApp().SetAssertMode(wx.APP_ASSERT_EXCEPTION)
         with self.assertRaises(wx.wxAssertionError):
             wx.NullBitmap.ConvertToImage()
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

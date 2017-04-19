@@ -5,7 +5,7 @@
 // Author:      Robin Dunn
 //
 // Created:     30-July-2012
-// Copyright:   (c) 2013 by Total Control Software
+// Copyright:   (c) 2012-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -27,11 +27,11 @@
         return sipGetState(sipTransferObj);
     %End
 
-         
+
     %ConvertFromTypeCode
         // Convert a wxString to a Python Unicode object.  See wxpy_api.sip
         return wx2PyString(sipCpp->GetFullPath());
-    %End    
+    %End
 };
 
 

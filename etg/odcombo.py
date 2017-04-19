@@ -3,36 +3,36 @@
 # Author:      Robin Dunn
 #
 # Created:     04-Jun-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_adv"
 NAME      = "odcombo"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ "wxOwnerDrawnComboBox",
-           ]    
-    
+           ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wx/odcombo.h>')
-    
+
     c = module.find('wxOwnerDrawnComboBox')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
@@ -67,7 +67,7 @@ def run():
         virtual void SetString(unsigned int n, const wxString& s);
         virtual int GetSelection() const;
         virtual void SetSelection(int n);
-                
+
         virtual wxString GetStringSelection() const;
         %MethodCode
             sipRes = new wxString(sipCpp->wxItemContainerImmutable::GetStringSelection());
@@ -83,13 +83,13 @@ def run():
         virtual void DoSetPopupControl(wxComboPopup* popup);
         virtual void DoShowPopup(const wxRect& rect, int flags);
         """))
-    
-    
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

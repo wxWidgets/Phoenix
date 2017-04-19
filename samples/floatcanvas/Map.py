@@ -23,7 +23,7 @@ class DrawFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
 
-        self.CreateStatusBar()            
+        self.CreateStatusBar()
 
         # Add the Canvas
         NC = NavCanvas.NavCanvas(self,-1,
@@ -33,10 +33,10 @@ class DrawFrame(wx.Frame):
                                  BackgroundColor = "White",
                                  )
         self.Canvas = NC.Canvas
-        
+
         self.LoadMap(TestFileName)
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
 
         self.Show()
         self.Canvas.ZoomToBB()
@@ -73,5 +73,5 @@ class DrawFrame(wx.Frame):
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
+
+
