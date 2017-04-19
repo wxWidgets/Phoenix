@@ -89,8 +89,9 @@ def configure(conf):
     else:
         conf.check_python_headers()
 
-    # fetch and save the debug option
+    # fetch and save the debug options
     conf.env.debug = conf.options.debug
+    conf.env.msvc_relwithdebug = conf.options.msvc_relwithdebug
 
     # Ensure that the headers in siplib and Phoenix's src dir can be found
     conf.env.INCLUDES_WXPY = ['sip/siplib', 'src']
@@ -156,18 +157,17 @@ def configure(conf):
                         lst.remove(opt)
                     except ValueError:
                         pass
+                # NOTE: /Z7 is used so the debug info will be in each object
+                # file instead of a separate PDB file. This will result in
+                # much faster builds since VC won't have to serialize access
+                # to the .pdb file. OTOH, separate PDB files are generated for
+                # the --msvc_relwithdebug option, which is handled below in
+                # the makeETGRule() function.
                 lst[1:1] = '/Od /MDd /Z7 /D_DEBUG'.split()
 
             conf.env['LINKFLAGS_PYEXT'].append('/DEBUG')
             conf.env['LIB_PYEXT'][0] += '_d'
 
-        # And similar tweaks for non-debug builds with the relwithdebug flag
-        # turned on.
-        elif conf.options.msvc_relwithdebug:
-            for listname in ['CFLAGS_PYEXT', 'CXXFLAGS_PYEXT']:
-                lst = conf.env[listname]
-                lst[1:1] = ['/Z7']
-            conf.env['LINKFLAGS_PYEXT'].append('/DEBUG')
 
     else:
         # Configuration stuff for non-Windows ports using wx-config
@@ -503,6 +503,7 @@ def build(bld):
 
 
     # Create the build tasks for each of our extension modules.
+    addRelwithdebugFlags(bld, 'siplib')
     siplib = bld(
         features = 'c cxx cshlib cxxshlib pyext',
         target   = makeTargetName(bld, 'siplib'),
@@ -516,7 +517,7 @@ def build(bld):
                     'sip/siplib/threads.c',
                     'sip/siplib/voidptr.c',
                     ],
-        uselib   = 'WX WXPY',
+        uselib   = 'siplib WX WXPY',
     )
     makeExtCopyRule(bld, 'siplib')
 
@@ -574,7 +575,8 @@ def makeTargetName(bld, name):
 def makeExtCopyRule(bld, name):
     name = makeTargetName(bld, name)
     src = bld.env.pyext_PATTERN % name
-    tgt = 'pkg.%s' % name  # just a name to be touched to serve as a timestamp of the copy
+    # just a name to be touched to serve as the timestamp of the copy
+    tgt = 'pkg.%s' % os.path.splitext(src)[0]
     bld(rule=copyFileToPkg, source=src, target=tgt, after=name)
 
 
@@ -587,6 +589,11 @@ def copyFileToPkg(task):
     open(tgt, "wb").close() # essentially just a unix 'touch' command
     tgt = opj(cfg.PKGDIR, os.path.basename(src))
     copy_file(src, tgt, verbose=1)
+    if isWindows and task.env.msvc_relwithdebug:
+        # also copy the .pdb file
+        src = src.replace('.pyd', '.pdb')
+        tgt = opj(cfg.PKGDIR, os.path.basename(src))
+        copy_file(src, tgt, verbose=1)
     return 0
 
 
@@ -599,16 +606,29 @@ def _copyEnvGroup(env, srcPostfix, destPostfix):
             newKey = key[:-len(srcPostfix)] + destPostfix
             env[newKey] = copy.copy(env[key])
 
+
 # Make extension module build rules using info gleaned from an ETG script
 def makeETGRule(bld, etgScript, moduleName, libFlags):
     from buildtools.config   import loadETG, getEtgSipCppFiles
+
+    addRelwithdebugFlags(bld, moduleName)
     rc = ['src/wxc.rc'] if isWindows else []
     etg = loadETG(etgScript)
     bld(features='c cxx cxxshlib pyext',
         target=makeTargetName(bld, moduleName),
         source=getEtgSipCppFiles(etg) + rc,
-        uselib='{} WXPY'.format(libFlags),
+        uselib='{} {} WXPY'.format(moduleName, libFlags),
         )
     makeExtCopyRule(bld, moduleName)
+
+
+# Add flags to create .pdb files for debugging with MSVC
+def addRelwithdebugFlags(bld, moduleName):
+    if isWindows and bld.env.msvc_relwithdebug:
+        compile_flags = ['/Zi', '/FS', '/Fd_tmp_{}.pdb'.format(moduleName)]
+        bld.env['CFLAGS_{}'.format(moduleName)] = compile_flags
+        bld.env['CXXFLAGS_{}'.format(moduleName)] = compile_flags
+        bld.env['LINKFLAGS_{}'.format(moduleName)] = ['/DEBUG']
+
 
 #-----------------------------------------------------------------------------
