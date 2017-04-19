@@ -42,6 +42,11 @@ File naming conventions:
 
    - It is built for CPython version 3.5
 
+   - "cp35m" indicates the name of the Application Binary Interface (ABI) that
+     this package is compatible with.  Pip matches this with the ABI of the
+     Python being used to run pip to know if the wxPython wheel is compatible
+     with the target Python.
+
    - It is built for the macosx operating system
 
    - It is built for OSX version 10.6 or greater
