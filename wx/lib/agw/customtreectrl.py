@@ -7976,9 +7976,6 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 ##                        if item.HasPlus():
                         self.Toggle(item)
 
-        #TODO/Bug?: Temp Hack - MCow. Phoenix after rightclick menu item gets set to white or background colour
-        # and becomes invisible. Set to black in meantime
-        self.SetItemTextColour(thisItem, wx.BLACK) #self.GetItemTextColour(thisItem)
 
     def OnInternalIdle(self):
         """
