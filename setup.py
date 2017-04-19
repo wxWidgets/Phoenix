@@ -39,7 +39,7 @@ URL              = "http://wxPython.org/"
 DOWNLOAD_URL     = "https://pypi.python.org/pypi/{}".format(NAME)
 LICENSE          = "wxWidgets Library License (LGPL derivative)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
-KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,awesome"
+KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,user-interface,awesome"
 
 LONG_DESCRIPTION = """\
 Welcome to wxPython's Project Phoenix! Phoenix is the improved next-generation
