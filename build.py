@@ -1480,6 +1480,28 @@ def cmd_install_py(options, args):
     runcmd(cmd)
 
 
+def cmd_build_pdbzip(options, args):
+    if isWindows and options.relwithdebug:
+        cmdTimer = CommandTimer('build_pdbzip')
+        cfg = Config()
+        filenames = glob.glob('./wx/*.pdb')
+        if not filenames:
+            msg('No PDB files found in ./wx!')
+            return
+        arch = 'win_amd64' if PYTHON_ARCH == '64bit' else 'win32'
+        zipname = 'dist/{}-pdb-{}-{}.zip'.format(baseName, cfg.VERSION, arch)
+        from zipfile import ZipFile, ZIP_DEFLATED
+        with ZipFile(zipname, 'w', ZIP_DEFLATED) as zip:
+            for name in filenames:
+                zip.write(name)
+        msg('PDB zip file created at: {}'.format(zipname))
+
+        for name in filenames:
+            os.unlink(name)
+        msg('PDB files removed from ./wx')
+        return zipname
+
+
 def _doSimpleSetupCmd(options, args, setupCmd):
     cmdTimer = CommandTimer(setupCmd)
     VERBOSE = '--verbose' if options.verbose else ''
@@ -1488,6 +1510,7 @@ def _doSimpleSetupCmd(options, args, setupCmd):
 
 
 def cmd_bdist_egg(options, args):
+    pdbzip = cmd_build_pdbzip(options, args)
     _doSimpleSetupCmd(options, args, 'bdist_egg')
     cfg = Config()
     if options.upload:
@@ -1495,9 +1518,11 @@ def cmd_bdist_egg(options, args):
         filenames = glob.glob(filemask)
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
-
+        if pdbzip:
+            uploadPackage(pdbzip, options)
 
 def cmd_bdist_wheel(options, args):
+    pdbzip = cmd_build_pdbzip(options, args)
     _doSimpleSetupCmd(options, args, 'bdist_wheel')
     cfg = Config()
     if options.upload:
@@ -1505,9 +1530,12 @@ def cmd_bdist_wheel(options, args):
         filenames = glob.glob(filemask)
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
+        if pdbzip:
+            uploadPackage(pdbzip, options)
 
 
 def cmd_bdist_wininst(options, args):
+    pdbzip = cmd_build_pdbzip(options, args)
     _doSimpleSetupCmd(options, args, 'bdist_wininst')
     cfg = Config()
     if options.upload:
@@ -1515,10 +1543,13 @@ def cmd_bdist_wininst(options, args):
         filenames = glob.glob(filemask)
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
+        if pdbzip:
+            uploadPackage(pdbzip, options)
 
 
-def cmd_bdist_msi(options, args):
-    _doSimpleSetupCmd(options, args, 'bdist_msi')
+#def cmd_bdist_msi(options, args):
+#    cmd_build_pdbzip(options, args)
+#    _doSimpleSetupCmd(options, args, 'bdist_msi')
 
 
 def cmd_egg_info(options, args, egg_base=None):
