@@ -1581,3 +1581,40 @@ catalog['ZW'] = PyEmbeddedImage(
     "wIIVizYnkjqdTqVSGQ5662+uXq53mCmpjD05I0sCoac0t/PzW+r3+wMMnzXvHj01Uk6LgBMW"
     "Fv6/iZO+8mozbf/Ynj02K9dEeqOoOoo9znvty/IXxrxcMJLCp60AAAAASUVORK5CYII=")
 
+if __name__ == '__main__':
+    # Easy image extraction.
+    import wx
+    import sys
+    if sys.version_info[0] == 2:
+        PY2 = True
+        PY3 = False
+    elif sys.version_info[0] == 3:
+        PY2 = False
+        PY3 = True
+    if PY2:
+        answer = int(raw_input('Enter 1 to extract all bitmaps: '))
+    elif PY3:
+        answer = int(input('Enter 1 to extract all bitmaps: '))
+    if answer == 1:
+        app = wx.App(0)
+        import os
+        gAppDir = os.path.dirname(os.path.abspath(__file__))
+        extractDir = gAppDir + os.sep + 'extracted_flagart_bitmaps'
+        if not os.path.exists(extractDir):
+            # Create directory.
+            os.mkdir(extractDir)
+        ## print(globals())
+        for key, bitmap in list(catalog.items()):
+            ## print(key, bitmap)
+            try:
+                bmp = bitmap.GetBitmap()
+                bmp.SaveFile(extractDir + os.sep + '%s.png' % key, wx.BITMAP_TYPE_PNG)
+                print('Extracting bitmap: %s.png' % key)
+            except Exception:
+                pass
+        app.MainLoop()
+        if PY2:
+            raw_input('Press Enter To Exit.')
+        elif PY3:
+            input('Press Enter To Exit.')
+
