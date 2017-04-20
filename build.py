@@ -470,7 +470,6 @@ def parseArgs(args):
     if options.release:
         options.debug = False
         options.both = False
-        options.relwithdebug = False
         if os.path.exists('REV.txt'):
             os.unlink('REV.txt')
 
@@ -1489,7 +1488,8 @@ def cmd_build_pdbzip(options, args):
             msg('No PDB files found in ./wx!')
             return
         arch = 'win_amd64' if PYTHON_ARCH == '64bit' else 'win32'
-        zipname = 'dist/{}-pdb-{}-{}.zip'.format(baseName, cfg.VERSION, arch)
+        pyver = 'py{}'.format(PYSHORTVER)
+        zipname = 'dist/{}-pdb-{}-{}-{}.zip'.format(baseName, cfg.VERSION, pyver, arch)
         from zipfile import ZipFile, ZIP_DEFLATED
         with ZipFile(zipname, 'w', ZIP_DEFLATED) as zip:
             for name in filenames:
