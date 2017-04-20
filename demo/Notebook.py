@@ -85,17 +85,19 @@ class TestNB(wx.Notebook):
 
 
     def OnPageChanged(self, event):
-        old = event.GetOldSelection()
-        new = event.GetSelection()
-        sel = self.GetSelection()
-        self.log.write('OnPageChanged,  old:%d, new:%d, sel:%d\n' % (old, new, sel))
+        if self:
+            old = event.GetOldSelection()
+            new = event.GetSelection()
+            sel = self.GetSelection()
+            self.log.write('OnPageChanged,  old:%d, new:%d, sel:%d\n' % (old, new, sel))
         event.Skip()
 
     def OnPageChanging(self, event):
-        old = event.GetOldSelection()
-        new = event.GetSelection()
-        sel = self.GetSelection()
-        self.log.write('OnPageChanging, old:%d, new:%d, sel:%d\n' % (old, new, sel))
+        if self:
+            old = event.GetOldSelection()
+            new = event.GetSelection()
+            sel = self.GetSelection()
+            self.log.write('OnPageChanging, old:%d, new:%d, sel:%d\n' % (old, new, sel))
         event.Skip()
 
 #----------------------------------------------------------------------------
