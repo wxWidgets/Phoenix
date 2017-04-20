@@ -1592,9 +1592,9 @@ if __name__ == '__main__':
         PY2 = False
         PY3 = True
     if PY2:
-        answer = int(raw_input('Enter 1 to extract all bitmaps: '))
+        answer = int(raw_input('Enter 1 to extract all bitmaps: \nEnter 2 for preview of images:'))
     elif PY3:
-        answer = int(input('Enter 1 to extract all bitmaps: '))
+        answer = int(input('Enter 1 to extract all bitmaps:  \nEnter 2 for preview of images:'))
     if answer == 1:
         app = wx.App(0)
         import os
@@ -1617,4 +1617,50 @@ if __name__ == '__main__':
             raw_input('Press Enter To Exit.')
         elif PY3:
             input('Press Enter To Exit.')
-
+    # Sample app.
+    elif answer == 2:
+        import wx
+        from wx.lib.scrolledpanel import ScrolledPanel
+        import wx.lib.dragscroller
+        app = wx.App()
+        sz = wx.GetDisplaySize()
+        frame = wx.Frame(None, -1, 'Preview All Embedable Images',
+                         size=(sz[0] - 150, sz[1] - 150))
+        sp = ScrolledPanel(frame, -1)
+        global gScrolledPanel
+        gScrolledPanel = sp
+        def OnSize(event):
+            gScrolledPanel.Refresh()
+        def OnStartDragScroll(event):
+            gScrolledPanel.dragonscroll.Start(event.GetPosition())
+        def OnStopDragScroll(event):
+            gScrolledPanel.dragonscroll.Stop()
+            gScrolledPanel.Refresh()
+            gScrolledPanel.PostSizeEvent()
+        sp.dragonscroll = wx.lib.dragscroller.DragScroller(scrollwin=sp)
+        sp.Bind(wx.EVT_MIDDLE_DOWN, OnStartDragScroll)
+        sp.Bind(wx.EVT_MIDDLE_UP, OnStopDragScroll)
+        sp.Bind(wx.EVT_RIGHT_DOWN, OnStartDragScroll)
+        sp.Bind(wx.EVT_RIGHT_UP, OnStopDragScroll)
+        sp.Bind(wx.EVT_SIZE, OnSize)
+        vbSizer = wx.BoxSizer(wx.VERTICAL)
+        wSizer1 = wx.WrapSizer(wx.VERTICAL)
+        ## wSizer1 = wx.WrapSizer(wx.HORIZONTAL)
+        wSizer1_Add = wSizer1.Add
+        wxStaticBitmap = wx.StaticBitmap
+        wxToolTip = wx.ToolTip
+        wxEXPAND = wx.EXPAND
+        wxALL = wx.ALL
+        for name, pyembimg in list(catalog.items()):
+            sb = wxStaticBitmap(sp, -1, pyembimg.GetBitmap())
+            sb.SetToolTip(wxToolTip(str(name)))
+            wSizer1_Add(sb, 0, wxALL, 3)
+        sp.SetSizer(wSizer1)
+        vbSizer.Add(sp, 1, wxEXPAND | wxALL, 3)
+        sp.SetupScrolling()
+        frame.SetSizer(vbSizer)
+        frame.Centre()
+        frame.Show()
+        app.MainLoop()
+    else:
+        pass
