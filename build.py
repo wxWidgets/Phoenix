@@ -412,7 +412,7 @@ def makeOptionParser():
                                    "or when distributing wxPython as an egg.)  When using "
                                    "this flag you should either build with an already "
                                    "installed wxWidgets, or allow this script to build and "
-                                   "install wxWidgets.")),
+                                   "install wxWidgets independently of wxPython.")),
 
         ("build_dir",      ("",    "Directory to store wx build files. (Not used on Windows)")),
         ("prefix",         ("",    "Prefix value to pass to the wx build.")),
