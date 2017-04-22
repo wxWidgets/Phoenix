@@ -841,7 +841,7 @@ def cmd_docset_wx(options, args):
 
     # Remove any existing docset in the dist dir and move the new docset in
     srcname = posixjoin(wxDir(), 'docs/doxygen/out/docset',
-                        'wxWidgets-%s.docset' % cfg.VERSION[:3])
+                        'wxWidgets-%s.docset' % wxversion2)
     destname = 'dist/wxWidgets-%s.docset' % wxversion3
     if not os.path.isdir(srcname):
         msg('ERROR: %s not found' % srcname)
