@@ -346,6 +346,7 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
 
     else
         // Just use the PyObject itself
+        PyErr_Clear();
         value = new wxVariantDataPyObject(obj);
 
     return value;
