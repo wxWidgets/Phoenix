@@ -39,6 +39,7 @@ class TestModel(dv.DataViewIndexListModel):
     def SetValueByRow(self, value, row, col):
         self.log.write("SetValue: (%d,%d) %s\n" % (row, col, value))
         self.data[row][col] = value
+        return True
 
     # Report how many columns this model provides data for.
     def GetColumnCount(self):

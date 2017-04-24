@@ -81,7 +81,7 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
     def GetValueFromEditorCtrl(self, editor):
         self.log.write('GetValueFromEditorCtrl: %s' % editor)
         value = editor.GetValue()
-        return value
+        return True, value
 
 
     # The LeftClick and Activate methods serve as notifications
