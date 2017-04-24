@@ -172,6 +172,19 @@ class Events(unittest.TestCase):
         eh.Destroy()
 
 
+
+    def test_ClientData1(self):
+        evt = wx.CommandEvent()
+        evt.SetClientData('hello')
+        assert evt.GetClientData() == 'hello'
+
+
+    def test_ClientData2(self):
+        evt = wx.CommandEvent()
+        evt.SetClientObject('hello')
+        assert evt.GetClientObject() == 'hello'
+
+
 #---------------------------------------------------------------------------
 
 
