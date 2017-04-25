@@ -2019,15 +2019,15 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         if self._is_dragging:
 
-            if self.HasCapture():
-                self.ReleaseMouse()
-
             self._is_dragging = False
             if self._drag_image:
                 self._drag_image.EndDrag()
                 del self._drag_image
                 self._drag_image = None
                 self.GetParent().Refresh()
+                
+            if self.HasCapture():
+                self.ReleaseMouse()
 
             evt = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_END_DRAG, self.GetId())
             evt.SetSelection(self.GetIdxFromWindow(self._click_tab))
