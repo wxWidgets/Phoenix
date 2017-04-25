@@ -224,7 +224,7 @@ def run():
 
             # Code for C++ --> Python calls. This is used when a C++ method
             # call needs to be reflected to a call to the overridden Python
-            # method, so we need to translate between the real C++ siganture
+            # method, so we need to translate between the real C++ signature
             # and the Python signature.
             virtualCatcherCode="""\
                 // VirtualCatcherCode for wx.grid.GridCellEditor.EndEdit

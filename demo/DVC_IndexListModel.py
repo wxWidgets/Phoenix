@@ -7,7 +7,7 @@ import wx.dataview as dv
 #----------------------------------------------------------------------
 
 # This model class provides the data to the view when it is asked for.
-# Since it is a list-only model (no hierachical data) then it is able
+# Since it is a list-only model (no hierarchical data) then it is able
 # to be referenced by row rather than by item object, so in this way
 # it is easier to comprehend and use than other model types.  In this
 # example we also provide a Compare function to assist with sorting of
@@ -39,6 +39,7 @@ class TestModel(dv.DataViewIndexListModel):
     def SetValueByRow(self, value, row, col):
         self.log.write("SetValue: (%d,%d) %s\n" % (row, col, value))
         self.data[row][col] = value
+        return True
 
     # Report how many columns this model provides data for.
     def GetColumnCount(self):
