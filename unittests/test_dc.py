@@ -172,7 +172,7 @@ class dc_Tests(wtc.WidgetTestCase):
     def test_dcPointLists(self):
         dc = wx.ClientDC(self.frame)
         dc.DrawLines([wx.Point(5,5), wx.Point(25,5), wx.Point(25,25), wx.Point(25,5), wx.Point(5,5)])
-        dc.DrawLines([(15,15), (35,15), (35,35), (35,15), (15,15)])
+        dc.DrawLines( [(15,15), (35,15), (35,35), (35,15), (15,15)] )
 
 
 #---------------------------------------------------------------------------
