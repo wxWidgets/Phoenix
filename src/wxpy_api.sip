@@ -344,9 +344,11 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
         sipReleaseType(ptr, sipType_wxArrayString, state);
     }
 
-    else
+    else {
         // Just use the PyObject itself
+        PyErr_Clear();
         value = new wxVariantDataPyObject(obj);
+    }
 
     return value;
 }
