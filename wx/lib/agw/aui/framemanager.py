@@ -7376,7 +7376,12 @@ class AuiManager(wx.EvtHandler):
                 if paneInfo.IsMaximized():
                     self.RestorePane(paneInfo)
                 paneInfo.Float()
-                self.Update()
+
+                # The call to Update may result in
+                # the notebook that generated this
+                # event being deleted, so we have
+                # to do the call asynchronously.
+                wx.CallAfter(self.Update)
 
                 self._action_window = paneInfo.window
 
@@ -7417,8 +7422,15 @@ class AuiManager(wx.EvtHandler):
                 if e.GetVeto():
                     return
 
-                self.ClosePane(p)
-                self.Update()
+                # Close/update asynchronously, because
+                # the notebook which generated the event
+                # (and triggered this method call) will
+                # be deleted. 
+                def close():
+                    self.ClosePane(p)
+                    self.Update()
+
+                wx.CallAfter(close)
             else:
                 event.Skip()
 

@@ -5581,7 +5581,7 @@ class AuiNotebook(wx.Panel):
 
                 else:
                     main_idx = self._tabs.GetIdxFromWindow(close_wnd)
-                    self.DeletePage(main_idx)
+                    wx.CallAfter(self.DeletePage, main_idx)
 
                 # notify owner that the tab has been closed
                 e2 = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSED, self.GetId())
