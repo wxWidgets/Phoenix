@@ -38,6 +38,12 @@ def run():
 
     tools.fixWindowClass(c)
 
+
+    # Let SIP know about other virtual methods that may be implemented here
+    c.addItem(etgtools.WigCode("""\
+        virtual bool DeleteAllPages();    
+        """))
+
     module.addGlobalStr('wxNotebookNameStr', c)
 
     module.addPyCode("""\
@@ -47,7 +53,7 @@ def run():
 
     module.addPyCode("""\
         # Aliases for the "best book" control as described in the overview
-        BookCtrl =                               Notebook
+        BookCtrl =                       Notebook
         wxEVT_BOOKCTRL_PAGE_CHANGED =    wxEVT_NOTEBOOK_PAGE_CHANGED
         wxEVT_BOOKCTRL_PAGE_CHANGING =   wxEVT_NOTEBOOK_PAGE_CHANGING
         EVT_BOOKCTRL_PAGE_CHANGED =      EVT_NOTEBOOK_PAGE_CHANGED
