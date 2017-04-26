@@ -41,6 +41,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxGBPosition')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->GetRow(), self->GetCol());
         """,
         pyArgsString="() -> (row, col)",
@@ -85,6 +86,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxGBSpan')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->GetRowspan(), self->GetColspan());
         """,
         pyArgsString="() -> (rowspan, colspan)",

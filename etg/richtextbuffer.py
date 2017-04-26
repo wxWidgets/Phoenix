@@ -166,6 +166,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxRichTextRange')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->GetStart(), self->GetEnd());
         """,
         pyArgsString="() -> (start, end)",
