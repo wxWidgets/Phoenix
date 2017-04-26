@@ -229,6 +229,7 @@ def run():
     def _fixupBoolGetters(method, sig):
         method.type = 'void'
         method.find('value').out = True
+        method.find('value').type = 'wxDVCVariant&'
         method.cppSignature = sig
 
 
@@ -240,16 +241,36 @@ def run():
 
     # Change variant getters to return the value
     for name, sig in [
-        ('GetValue',               'bool (wxDVCVariant& value)'),
-        ('GetValueFromEditorCtrl', 'bool (wxWindow * editor, wxDVCVariant& value)'),
+        ('GetValue',               'bool (wxVariant& value)'),
+        ('GetValueFromEditorCtrl', 'bool (wxWindow * editor, wxVariant& value)'),
         ]:
         _fixupBoolGetters(c.find(name), sig)
 
+    m = c.find('SetValue')
+    m.find('value').type = 'wxDVCVariant&'
+    m.cppSignature = 'bool (const wxVariant& value)'
+
+
 
     c = module.find('wxDataViewCustomRenderer')
-    _fixupBoolGetters(c.find('GetValueFromEditorCtrl'),
-                      'bool (wxWindow * editor, wxDVCVariant& value)')
+    m = c.find('GetValueFromEditorCtrl')
+    _fixupBoolGetters(m, 'bool (wxWindow * editor, wxVariant& value)')
+
+    # Change the virtual method handler code to follow the same pattern as the
+    # tweaked public API, namely that the value is the return value instead of
+    # an out parameter.
+    m.virtualCatcherCode = """\
+        PyObject *sipResObj = sipCallMethod(&sipIsErr, sipMethod, "D", editor, sipType_wxWindow, NULL);
+        if (sipResObj == Py_None) {
+            sipRes = false;
+        } else {
+            sipRes = true;
+            sipParseResult(&sipIsErr, sipMethod, sipResObj, "H5", sipType_wxDVCVariant, &value);
+        }
+        """
+
     c.find('GetTextExtent').ignore(False)
+
 
     module.addPyCode("""\
         PyDataViewCustomRenderer = wx.deprecated(DataViewCustomRenderer,
@@ -272,10 +293,10 @@ def run():
         c.addAutoProperties()
 
         c.addItem(etgtools.WigCode("""\
-            virtual bool SetValue( const wxDVCVariant &value );
-            virtual void GetValue( wxDVCVariant &value /Out/ ) const [bool (wxDVCVariant& value)];
+            virtual bool SetValue( const wxDVCVariant &value ) [bool (const wxVariant& value)];
+            virtual void GetValue( wxDVCVariant &value /Out/ ) const [bool (wxVariant& value)];
             %Property(name=Value, get=GetValue, set=SetValue)
-            """))
+            """, protection='public'))
 
 
     # The SpinRenderer has a few additional pure virtuals that need to be declared
@@ -284,7 +305,7 @@ def run():
     c.addItem(etgtools.WigCode("""\
         virtual wxSize GetSize() const;
         virtual bool Render(wxRect cell, wxDC* dc, int state);
-        """))
+        """, protection='public'))
 
 
     #-----------------------------------------------------------------
