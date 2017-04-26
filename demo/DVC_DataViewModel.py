@@ -20,7 +20,7 @@ def makeBlank(self):
 
 #----------------------------------------------------------------------
 # We'll use instaces of these classes to hold our music data. Items in the
-# tree will get associated back to the coresponding Song or Genre object.
+# tree will get associated back to the corresponding Song or Genre object.
 
 class Song(object):
     def __init__(self, id, artist, title, genre):
