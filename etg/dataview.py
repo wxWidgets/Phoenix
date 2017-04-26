@@ -251,27 +251,26 @@ def run():
     m.cppSignature = 'bool (const wxVariant& value)'
 
 
+
     c = module.find('wxDataViewCustomRenderer')
     m = c.find('GetValueFromEditorCtrl')
     _fixupBoolGetters(m, 'bool (wxWindow * editor, wxVariant& value)')
 
-    # m.virtualCatcherCode = """\
-    #     bool sipRes = 0;
-    #     PyObject *sipResObj = sipCallMethod(0, sipMethod, "D", editor, sipType_wxWindow, NULL);
-    #
-    # sipParseResultEx(sipGILState, sipErrorHandler, sipPySelf, sipMethod, sipResObj, "(bH5)", &sipRes, sipType_wxDVCVariant, &value);
-    #
-    # return sipRes;
-    #
-    #     """
+    # Change the virtual method handler code to follow the same pattern as the
+    # tweaked public API, namely that the value is the return value instead of
+    # an out parameter.
+    m.virtualCatcherCode = """\
+        PyObject *sipResObj = sipCallMethod(&sipIsErr, sipMethod, "D", editor, sipType_wxWindow, NULL);
+        if (sipResObj == Py_None) {
+            sipRes = false;
+        } else {
+            sipRes = true;
+            sipParseResult(&sipIsErr, sipMethod, sipResObj, "H5", sipType_wxDVCVariant, &value);
+        }
+        """
 
     c.find('GetTextExtent').ignore(False)
 
-    c.addItem(etgtools.WigCode("""\
-        virtual bool SetValue( const wxDVCVariant &value ) [bool (const wxVariant& value)];
-        virtual void GetValue( wxDVCVariant &value /Out/ ) const [bool (wxVariant& value)];
-        %Property(name=Value, get=GetValue, set=SetValue)
-        """, protection='public'))
 
     module.addPyCode("""\
         PyDataViewCustomRenderer = wx.deprecated(DataViewCustomRenderer,
@@ -306,7 +305,7 @@ def run():
     c.addItem(etgtools.WigCode("""\
         virtual wxSize GetSize() const;
         virtual bool Render(wxRect cell, wxDC* dc, int state);
-        """))
+        """, protection='public'))
 
 
     #-----------------------------------------------------------------

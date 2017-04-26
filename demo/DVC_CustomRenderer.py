@@ -19,7 +19,7 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
         return True
 
     def GetValue(self):
-        #self.log.write('GetValue')
+        self.log.write('GetValue')
         return self.value
 
     def GetSize(self):
@@ -32,8 +32,8 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
 
 
     def Render(self, rect, dc, state):
-        if state != 0:
-            self.log.write('Render: %s, %d' % (rect, state))
+        #if state != 0:
+        #    self.log.write('Render: %s, %d' % (rect, state))
 
         if not state & dv.DATAVIEW_CELL_SELECTED:
             # we'll draw a shaded background to see if the rect correctly
