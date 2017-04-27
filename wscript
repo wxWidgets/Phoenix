@@ -157,12 +157,12 @@ def configure(conf):
                         lst.remove(opt)
                     except ValueError:
                         pass
-                # NOTE: /Z7 is used so the debug info will be in each object
-                # file instead of a separate PDB file. This will result in
-                # much faster builds since VC won't have to serialize access
-                # to the .pdb file. OTOH, separate PDB files are generated for
-                # the --msvc_relwithdebug option, which is handled below in
-                # the makeETGRule() function.
+                # NOTE: For --debug builds the /Z7 flag is used so the debug
+                # info will be in each object file instead of a separate PDB
+                # file. This will result in much faster builds since VC won't
+                # have to serialize access to the .pdb file. OTOH, separate
+                # PDB files are generated for the --msvc_relwithdebug option,
+                # which is handled below in the makeETGRule() function.
                 lst[1:1] = '/Od /MDd /Z7 /D_DEBUG'.split()
 
             conf.env['LINKFLAGS_PYEXT'].append('/DEBUG')
