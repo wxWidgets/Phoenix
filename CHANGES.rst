@@ -1,12 +1,54 @@
 .. -*- coding: utf-8 -*-
 
+
 Recent Changes for wxPython
-=====================================================================
+===========================
+
+
+4.0.0a2
+-------
+* 30-Apr-2017
+
+Various tweaks and bug fixes:
+
+  * Allow numpy arrays to be auto-converted to simple sequence value types like
+    wx.Size, wx.Colour, etc.
+
+  * A couple of fixes to lib/agw/aui to prevent segfaults under OSX when
+    AuiNotebook tabs are closed
+
+  * Fix wx._core.wxAssertionError in wx.lib.agw.aui when dragging a notebook tab
+
+  * Fix the [G|S]etClientData methods in wx.CommandEvent to behave the same
+    way they are in wx.ClientDataContainer.
+
+  * Fix the SetFonts methods in wx.html classes
+
+  * Several fixes in wx.dataview related to overriding methods
+
+  * Fixed some flickering in wx.lib.agw.aui.framemanager
+
+  * Fixed problem with wrong implementation of wxNotebook::DeleteAllPages being
+    called on Windows
+
+  * Added the missing wx.grid.GRID_AUTOSIZE flag
+
+  * Fixed crash due to the object created in an XmlSubclassFactory being
+    destroyed too soon
+
+
+Added building and bundling of the PDB files for wxWidgets and the wxPython
+extensions on Windows.  For the time being they will be downloadable from
+https://wxPython.org/Phoenix/releases along with archives for the
+documentation as well as the demo and samples.
+
+
+
 
 
 4.0.0a1  "The Phoenix Rises!"
-=============================
-*
+-----------------------------
+* 15-Apr-2017
 
 This is the first official release of the wxPython Phoenix project! ("And the
 crowd goes wild!") Don't let the fact that it is marked as an "alpha" release

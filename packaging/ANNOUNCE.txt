@@ -8,38 +8,12 @@
    ]]
 
 
-Announcing wxPython 4.0.0a1
+Announcing wxPython 4.0.0a2
 ---------------------------
 
-https://pypi.python.org/pypi/wxPython/4.0.0a1
+https://pypi.python.org/pypi/wxPython/4.0.0a2
 
-I'm pleased to announce that wxPython's Project Phoenix has made it's public
-debut as wxPython 4.0.0a1, available from PyPI. Don't let the fact that it is
-marked as an "alpha" release scare you away. It is an alpha simply because
-this is the **first** in several ways:
-
-  * It's the first real release of Phoenix, which is built on a different
-    foundation than Classic wxPython was.
-
-  * It's the first wxPython release intended to be fully available from PyPI and
-    buildable/installable by pip on all of the supported platforms.
-
-  * It's the first release for Python3 (binaries for 3.5 and 3.6 are provided,
-    and building for 3.4 is still possible as well). In addition, Python 2.7
-    is also supported from the same codebase, with binaries available.
-
-  * The wheel files are fully self-contained and relocatable on the supported
-    platforms, so they are installable in virtual environments without needing
-    to be able to find specific versions of the wxWidgets shared libraries
-    (or others) at fixed locations elsewhere in the file-system.
-
-  * And as with most alphas, there are still a few things that are not
-    finished or polished yet.
-
-But even with all that, many people have been using the pre-release snapshots
-of Phoenix for quite a while now, and it has been relatively stable and solid
-for them.
-
+[ Copy changes here ]
 
 
 What is wxPython?
