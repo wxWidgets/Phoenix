@@ -55,9 +55,11 @@ For more information please refer to the
 `README file <https://github.com/wxWidgets/Phoenix/blob/master/README.rst>`_,
 the `Migration Guide <https://wxpython.org/Phoenix/docs/html/MigrationGuide.html>`_,
 or the `wxPython API documentation <https://wxpython.org/Phoenix/docs/html/main.html>`_.
-"""
 
-# or maybe LONG_DESCRIPTION=open("README.rst").read() ??
+Archive files containing a copy of the wxPython documentation, the demo and
+samples, and also a set of MSVC .pdb files for Windows are available 
+`here <https://wxpython.org/Phoenix/releases/>`_.
+"""
 
 
 CLASSIFIERS      = """\
