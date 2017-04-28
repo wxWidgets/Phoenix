@@ -15,6 +15,17 @@ class grid_Tests(wtc.WidgetTestCase):
     # will probably be easier to test features and interoperability between
     # the classes in a non-unitest situation. See Phoenix/samples/grid
 
+    def test_grid00(self):
+        wx.grid.GRID_AUTOSIZE
+        wx.grid.GRID_COLUMN
+        wx.grid.GRID_ROW
+        wx.grid.GRID_DRAW_ROWS_HEADER
+        wx.grid.GRID_DRAW_COLS_HEADER
+        wx.grid.GRID_DRAW_CELL_LINES
+        wx.grid.GRID_DRAW_BOX_RECT
+        wx.grid.GRID_DRAW_SELECTION
+        wx.grid.GRID_DRAW_DEFAULT
+
 
     def test_grid01(self):
         c1 = wx.grid.GridCellCoords()
