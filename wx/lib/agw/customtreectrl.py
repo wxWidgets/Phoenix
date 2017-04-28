@@ -5867,7 +5867,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             if wx.Platform in ["__WXMSW__", "__WXMAC__"]:
                 self.Update()
         else:
-            wx.SafeYield()
+            wx.YieldIfNeeded()
 
         # now scroll to the item
         item_y = item.GetY()
@@ -7541,7 +7541,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             if wx.Platform in ["__WXMSW__", "__WXMAC__"]:
                 self.Update()
             else:
-                wx.SafeYield()
+                wx.YieldIfNeeded()
 
         if self._editCtrl != None and item != self._editCtrl.item():
             self._editCtrl.StopEditing()
@@ -7805,7 +7805,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                 self.Refresh()
             else:
                 # Probably this is not enough on GTK. Try a Refresh() if it does not work.
-                wx.SafeYield()
+                wx.YieldIfNeeded()
 
         else:
 
