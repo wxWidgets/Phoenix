@@ -58,7 +58,7 @@ or the `wxPython API documentation <https://wxpython.org/Phoenix/docs/html/main.
 
 Archive files containing a copy of the wxPython documentation, the demo and
 samples, and also a set of MSVC .pdb files for Windows are available 
-`here <https://wxpython.org/Phoenix/releases/>`_.
+`here <https://wxpython.org/Phoenix/release-extras/>`_.
 """
 
 

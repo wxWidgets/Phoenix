@@ -36,11 +36,15 @@ Various tweaks and bug fixes:
   * Fixed crash due to the object created in an XmlSubclassFactory being
     destroyed too soon
 
+  * Fixed crash in wx.lib.agw.toasterbox
+
+  * Fixed crash when using wx.xrc.XmlSubclassFactory
+
 
 Added building and bundling of the PDB files for wxWidgets and the wxPython
-extensions on Windows.  For the time being they will be downloadable from
-https://wxPython.org/Phoenix/releases along with archives for the
-documentation as well as the demo and samples.
+extensions on Windows.  Until a better place is found they will be
+downloadable from https://wxPython.org/Phoenix/release-extras, along with
+archives for the documentation as well as the demo and samples.
 
 
 

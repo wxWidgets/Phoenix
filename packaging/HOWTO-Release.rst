@@ -37,7 +37,7 @@ HOWTO Release wxPython Phoenix
 
 11. When the build is done and successful then the release version of the docs
     src and wheel files should be on Havok in ~/release-builds. Do whatever
-    testing should be done.
+    smoke-testing should be done.
 
 12. Digitally sign the files with this command::
 
@@ -49,9 +49,14 @@ HOWTO Release wxPython Phoenix
         cd ~/release-builds
         twine upload wxPython-4*
 
-    (Twine doesn't know what to do with the docs file so it needs to be excluded.)
+    (Twine doesn't know what to do with the docs and other files so they need
+    to be excluded.)
 
-14. Upload the docs and demos tarballs to ?????. Upload the linux wheels to ????
+14. Upload the docs, demos and pdb archive files to wxpython.org/Phoenix/release-extras/::
+
+        VERSION={current release version number}
+        ssh wxpython-extras -c "mkdir -p wxpython-extras/$VERSION"
+        scp wxPython-[^0-9]* wxpython-extras:wxpython-extras/$VERSION"
 
 15. Tag the released revision in git, using a name like wxPython-4.0.0 (using
     the actual version number of course.)
@@ -61,7 +66,8 @@ HOWTO Release wxPython Phoenix
     pre-release development versions for the next official release, not the
     one just completed.
 
-17. If making an announcement about this release, (I think it's okay not to for
-    minor releases or smallish bug fixes,) send the text to the email addresses
-    listed at the top of the packaging/ANNOUNCE.txt file.
+17. If making an announcement about this release, (I think it's okay not to
+    for minor releases or smallish bug fixes,) send the text in
+    packaging/ANNOUNCE.txt to the email addresses listed at the top of the
+    file.
 
