@@ -386,7 +386,7 @@ https://groups.google.com/forum/#!forum/wxpython-dev and join in.
 Latest Snapshot Builds
 ----------------------
 
-You can find the snapshots of the latest wxPython Phoenix build files,
+You can find snapshots of the latest wxPython Phoenix build files,
 including source snapshots, wheels files for Windows and Mac, and etc. at:
 https://wxpython.org/Phoenix/snapshot-builds/.  These files are built at most
 once per day, on any day that has had a commit to the master branch.
