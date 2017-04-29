@@ -166,7 +166,7 @@ def run():
             MethodDef(name='wxXmlSubclassFactory', isCtor=True),
             MethodDef(name='~wxXmlSubclassFactory', isDtor=True),
             MethodDef(name='Create', type='wxObject*',
-                isVirtual=True, isPureVirtual=True,
+                isVirtual=True, isPureVirtual=True, factory=True,
                 items=[ParamDef(type='const wxString&', name='className')])
             ])
     module.addItem(cls)
