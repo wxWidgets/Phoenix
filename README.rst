@@ -383,6 +383,14 @@ get involved please subscribe to the group at
 https://groups.google.com/forum/#!forum/wxpython-dev and join in.
 
 
+Latest Bleeding Edge Snapshot Builds
+------------------------------------
+
+You can find the latest builds for various platforms here(src, .whl, docs, etc...).
+
+https://wxpython.org/Phoenix/snapshot-builds/
+
+
 .. image:: docs/phoenix-fire-md.png
    :width: 100%
 
