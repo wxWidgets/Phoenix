@@ -814,7 +814,7 @@ def _doDox(arg):
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
         pwd = pushDir(posixjoin(wxDir(), 'docs/doxygen'))
-        cmd = './regen.sh %s' % arg
+        cmd = 'bash ./regen.sh %s' % arg
     runcmd(cmd)
 
 
