@@ -50,7 +50,7 @@ HOWTO Release wxPython Phoenix
         twine upload wxPython-4*
 
     (Twine doesn't know what to do with the docs and other files so they need
-    to be excluded.)
+    to be excluded by the wildcard.)
 
 14. Upload the docs, demos and pdb archive files to wxpython.org/Phoenix/release-extras/::
 
@@ -59,7 +59,7 @@ HOWTO Release wxPython Phoenix
         scp wxPython-[^0-9]* wxpython-extras:wxpython-extras/$VERSION"
 
 15. Tag the released revision in git, using a name like wxPython-4.0.0 (using
-    the actual version number of course.)
+    the actual version number of course.) Push the tag upstream.
 
 16. Bump the version numbers in buildtools/version.py appropriately for the
     next anticipated release, so future snapshot builds will be recognized as
