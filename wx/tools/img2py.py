@@ -56,7 +56,7 @@ Options:
     -n <name>      Normally generic names (getBitmap, etc.) are used for the
                    image access functions.  If you use this option you can
                    specify a name that should be used to customize the access
-                   fucntions, (getNameBitmap, etc.)
+                   functions, (getNameBitmap, etc.)
 
     -c             Maintain a catalog of names that can be used to reference
                    images.  Catalog can be accessed via catalog and
@@ -73,7 +73,7 @@ Options:
     -i             Also output a function to return the image as a wxIcon.
 
     -f             Generate code compatible with the old function interface.
-                   (This option is ON by default in 2.8, use -F to turn off.)
+                   (This option is ON by default in 2.8, use -f to turn off.)
 
 You can also import this module from your Python scripts, and use its img2py()
 function. See its docstring for more info.
