@@ -141,7 +141,7 @@ class TestFrame(wx.Frame):
 
         p = wx.Panel(self, -1, style=0)
         grid = CustTableGrid(p, log)
-        b = wx.Button(p, -1, "Another Control...")
+        b = wx.Button(p, -1, "Testing with another control...")
         b.SetDefault()
         self.Bind(wx.EVT_BUTTON, self.OnButton, b)
         b.Bind(wx.EVT_SET_FOCUS, self.OnButtonFocus)
