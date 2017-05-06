@@ -7,7 +7,9 @@ Recent Changes for wxPython
 
 4.0.0a2
 -------
-* 30-Apr-2017
+* 6-May-2017
+
+This build of wxPython is based on the official wxWidgets 3.0.3 release.
 
 Various tweaks and bug fixes:
 
@@ -40,12 +42,14 @@ Various tweaks and bug fixes:
 
   * Fixed crash when using wx.xrc.XmlSubclassFactory
 
+  * Fixed wx.grid.GridTableBase.GetValue and related methods to work more like
+    they did in Classic, so non-string values can be used a little more
+    easily.
 
 Added building and bundling of the PDB files for wxWidgets and the wxPython
 extensions on Windows.  Until a better place is found they will be
 downloadable from https://wxPython.org/Phoenix/release-extras, along with
 archives for the documentation as well as the demo and samples.
-
 
 
 
