@@ -11,7 +11,7 @@ Recent Changes for wxPython
 
 This build of wxPython is based on the official wxWidgets 3.0.3 release.
 
-Various tweaks and bug fixes:
+This release is mostly various bug fixes and other tweaks, such as:
 
   * Allow numpy arrays to be auto-converted to simple sequence value types like
     wx.Size, wx.Colour, etc.
