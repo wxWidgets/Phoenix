@@ -13,7 +13,48 @@ Announcing wxPython 4.0.0a2
 
 https://pypi.python.org/pypi/wxPython/4.0.0a2
 
-[ Copy changes here ]
+This build of wxPython is based on the official wxWidgets 3.0.3 release.
+
+This release is mostly various bug fixes and other tweaks, such as:
+
+  * Allow numpy arrays to be auto-converted to simple sequence value types like
+    wx.Size, wx.Colour, etc.
+
+  * A couple of fixes to lib/agw/aui to prevent segfaults under OSX when
+    AuiNotebook tabs are closed
+
+  * Fix wx._core.wxAssertionError in wx.lib.agw.aui when dragging a notebook tab
+
+  * Fix the [G|S]etClientData methods in wx.CommandEvent to behave the same
+    way they are in wx.ClientDataContainer.
+
+  * Fix the SetFonts methods in wx.html classes
+
+  * Several fixes in wx.dataview related to overriding methods
+
+  * Fixed some flickering in wx.lib.agw.aui.framemanager
+
+  * Fixed problem with wrong implementation of wxNotebook::DeleteAllPages being
+    called on Windows
+
+  * Added the missing wx.grid.GRID_AUTOSIZE flag
+
+  * Fixed crash due to the object created in an XmlSubclassFactory being
+    destroyed too soon
+
+  * Fixed crash in wx.lib.agw.toasterbox
+
+  * Fixed crash when using wx.xrc.XmlSubclassFactory
+
+  * Fixed wx.grid.GridTableBase.GetValue and related methods to work more like
+    they did in Classic, so non-string values can be used a little more
+    easily.
+
+Added building and bundling of the PDB files for wxWidgets and the wxPython
+extensions on Windows.  Until a better place is found they will be
+downloadable from https://wxPython.org/Phoenix/release-extras, along with
+archives for the documentation as well as the demo and samples.
+
 
 
 What is wxPython?
