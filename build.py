@@ -1482,6 +1482,10 @@ def cmd_install_py(options, args):
 def cmd_build_pdbzip(options, args):
     if isWindows and options.relwithdebug:
         cmdTimer = CommandTimer('build_pdbzip')
+
+        if not os.path.exists('dist'):
+            os.mkdir('dist')
+
         cfg = Config()
         filenames = glob.glob('./wx/*.pdb')
         if not filenames:
