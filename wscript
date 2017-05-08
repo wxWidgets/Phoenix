@@ -625,7 +625,12 @@ def makeETGRule(bld, etgScript, moduleName, libFlags):
 # Add flags to create .pdb files for debugging with MSVC
 def addRelwithdebugFlags(bld, moduleName):
     if isWindows and bld.env.msvc_relwithdebug:
-        compile_flags = ['/Zi', '/FS', '/Fd_tmp_{}.pdb'.format(moduleName)]
+        compile_flags = ['/Zi', '/Fd_tmp_{}.pdb'.format(moduleName)]
+        if sys.version_info > (3,4):
+            # It looks like the /FS flag doesn't exist in the compilers used
+            # by the earlier Pythons. But it also appears that it isn't needed
+            # there either.  :)
+            compile_flags.append('/FS')
         bld.env['CFLAGS_{}'.format(moduleName)] = compile_flags
         bld.env['CXXFLAGS_{}'.format(moduleName)] = compile_flags
         bld.env['LINKFLAGS_{}'.format(moduleName)] = ['/DEBUG']
