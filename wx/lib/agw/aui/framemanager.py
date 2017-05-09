@@ -6346,6 +6346,7 @@ class AuiManager(wx.EvtHandler):
             self.DoUpdate()
 
     def DoUpdateEvt(self, evt):
+        self.Unbind(wx.EVT_WINDOW_CREATE)
         wx.CallAfter(self.DoUpdate)
 
     def DoUpdate(self):
