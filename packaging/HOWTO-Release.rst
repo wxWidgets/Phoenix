@@ -24,14 +24,15 @@ HOWTO Release wxPython Phoenix
 
 7. Click the Force Build button
 
-8. This can be done while the other builds are still running. Fetch the source
-   tarball when it is finished and put it in Phoenix/dist. Run the following::
+8. Building wheel files for some linux distros can be done while the other
+   builds are still running. Fetch the source tarball when it is finished and put
+   it in Phoenix/dist. Run the following::
 
         python setup.py build_vagrant --release --upload
 
 9. Go do something else for a couple hours...
 
-10. ...it's still not done, come back later...
+10. ...it's still not done, come back later. Or maybe tomorrow...
 
 
 
@@ -55,18 +56,22 @@ HOWTO Release wxPython Phoenix
 14. Upload the docs, demos and pdb archive files to wxpython.org/Phoenix/release-extras/::
 
         VERSION={current release version number}
-        ssh wxpython-extras -c "mkdir -p wxpython-extras/$VERSION"
-        scp wxPython-[^0-9]* wxpython-extras:wxpython-extras/$VERSION"
+        ssh wxpython-extras "mkdir -p wxpython-extras/$VERSION"
+        scp wxPython-[^0-9]* wxpython-extras:wxpython-extras/$VERSION
 
-15. Tag the released revision in git, using a name like wxPython-4.0.0 (using
-    the actual version number of course.) Push the tag upstream.
+15. Upload the Linux wheels::
 
-16. Bump the version numbers in buildtools/version.py appropriately for the
+        scp -r linux wxpython-extras:wxpython-extras/
+
+16. Tag the released revision in git, using a name like wxPython-4.0.0 (using
+    the actual version number of course.) Push the tag to all remotes.
+
+17. Bump the version numbers in buildtools/version.py appropriately for the
     next anticipated release, so future snapshot builds will be recognized as
     pre-release development versions for the next official release, not the
     one just completed.
 
-17. If making an announcement about this release, (I think it's okay not to
+18. If making an announcement about this release, (I think it's okay not to
     for minor releases or smallish bug fixes,) send the text in
     packaging/ANNOUNCE.txt to the email addresses listed at the top of the
     file.
