@@ -5867,7 +5867,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             if wx.Platform in ["__WXMSW__", "__WXMAC__"]:
                 self.Update()
         else:
-            wx.SafeYield(onlyIfNeeded=True)
+            wx.SafeYield()
 
         # now scroll to the item
         item_y = item.GetY()
