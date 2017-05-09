@@ -19,8 +19,8 @@ def makeBlank(self):
     return empty
 
 #----------------------------------------------------------------------
-# We'll use instaces of these classes to hold our music data. Items in the
-# tree will get associated back to the coresponding Song or Genre object.
+# We'll use instances of these classes to hold our music data. Items in the
+# tree will get associated back to the corresponding Song or Genre object.
 
 class Song(object):
     def __init__(self, id, artist, title, genre):
@@ -61,7 +61,7 @@ class Genre(object):
 #     1. Artist:  string
 #     2. Title:   string
 #     3. id:      integer
-#     4. Aquired: date
+#     4. Acquired: date
 #     5. Liked:   bool
 #
 
@@ -114,7 +114,7 @@ class MyTreeListModel(dv.PyDataViewModel):
             return len(self.data)
 
         # Otherwise we'll fetch the python object associated with the parent
-        # item and make DV items for each of it's child objects.
+        # item and make DV items for each of its child objects.
         node = self.ItemToObject(parent)
         if isinstance(node, Genre):
             for song in node.songs:
@@ -248,11 +248,11 @@ class TestPanel(wx.Panel):
         else:
             self.model = model
 
-        # Tel the DVC to use the model
+        # Tell the DVC to use the model
         self.dvc.AssociateModel(self.model)
 
         # Define the columns that we want in the view.  Notice the
-        # parameter which tells the view which col in the data model to pull
+        # parameter which tells the view which column in the data model to pull
         # values from for each view column.
         if 1:
             # here is an example of adding a column with full control over the renderer, etc.
@@ -271,7 +271,7 @@ class TestPanel(wx.Panel):
         c3 = self.dvc.AppendDateColumn('Acquired', 4, width=100, mode=dv.DATAVIEW_CELL_ACTIVATABLE)
         c4 = self.dvc.AppendToggleColumn('Like',   5, width=40, mode=dv.DATAVIEW_CELL_ACTIVATABLE)
 
-        # Notice how we pull the data from col 3, but this is the 6th col
+        # Notice how we pull the data from col 3, but this is the 6th column
         # added to the DVC. The order of the view columns is not dependent on
         # the order of the model columns at all.
         c5 = self.dvc.AppendTextColumn("id", 3, width=40,  mode=dv.DATAVIEW_CELL_EDITABLE)

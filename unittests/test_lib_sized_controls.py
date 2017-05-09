@@ -62,15 +62,11 @@ class sizedDialog_Tests(wtc.WidgetTestCase):
         ok = wx.Button(dlg.GetContentsPane(), wx.ID_OK, pos=(10,10))
         cancel = wx.Button(dlg.GetContentsPane(), wx.ID_CANCEL, pos=(100,10))
 
-        if 'wxMac' not in wx.PlatformInfo:
-            # Something is causing a hang when running one of these tests, so
-            # for now we'll not actually test ShowModal on Macs.
-            # TODO: FIX THIS!!
-            wx.CallLater(250, dlg.EndModal, wx.ID_OK)
-            val = dlg.ShowModal()
-            dlg.Destroy()
-            self.assertTrue(val == wx.ID_OK)
-            self.myYield()
+        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+        val = dlg.ShowModal()
+        dlg.Destroy()
+        self.assertTrue(val == wx.ID_OK)
+        self.myYield()
 
 
     #def test_dialogDefaultCtor(self):

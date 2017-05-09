@@ -329,7 +329,7 @@ class ResizeWidget(wx.Panel):
         def _doAfterAddChild(self, id):
             if not self:
                 return
-            child = self.FindWindowById(id)
+            child = self.FindWindow(id)
             self._managedChild = child
             self.AdjustToChild()
             self._sendEvent()

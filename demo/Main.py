@@ -2676,7 +2676,7 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         # Create and show the splash screen.  It will then create and
         # show the main frame when it is time to do so.  Normally when
         # using a SplashScreen you would create it, show it and then
-        # continue on with the applicaiton's initialization, finally
+        # continue on with the application's initialization, finally
         # creating and showing the main application window(s).  In
         # this case we have nothing else to do so we'll delay showing
         # the main frame until later (see ShowMain above) so the users

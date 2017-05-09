@@ -105,7 +105,7 @@ class FixWxPrefix(object):
     def _getCoreTopLevelNames(self):
         # Since the real wx.core module may not exist yet, and since actually
         # executing code at this point is probably a bad idea, try parsing the
-        # core.pi file and pulling the top level names from it.
+        # core.pyi file and pulling the top level names from it.
         import ast
 
         def _processItem(item, names):
@@ -120,7 +120,7 @@ class FixWxPrefix(object):
                 names.append(item.name)
 
         names = list()
-        filename = 'wx/core.pi'
+        filename = 'wx/core.pyi'
         if PY3:
             with open(filename, 'rt', encoding='utf-8') as f:
                 text = f.read()
@@ -616,6 +616,33 @@ def checkForUnitTestModule(module):
 
 #---------------------------------------------------------------------------
 
+def addGetIMMethodTemplate(module, klass, fields):
+    """
+    Add a bit of code to the module, and add a GetIM method to the klass which
+    returns an immutable representation self.
+    """
+    name = klass.pyName or klass.name
+    if name.startswith('wx'):
+        name = name[2:]
+
+    module.addPyCode("""\
+        from collections import namedtuple
+        _im_{name} = namedtuple('_im_{name}', {fields})
+        del namedtuple
+        """.format(name=name, fields=str(fields)))
+
+    klass.addPyMethod('GetIM', '(self)',
+        doc="""\
+            Returns an immutable representation of the ``wx.{name}`` object, based on ``namedtuple``.
+            
+            This new object is hashable and can be used as a dictionary key,
+            be added to sets, etc.  It can be converted back into a real ``wx.{name}``
+            with a simple statement like this: ``obj = wx.{name}(imObj)``.
+            """.format(name=name),
+        body="return _im_{name}(*self.Get())".format(name=name)
+        )
+
+#---------------------------------------------------------------------------
 
 def convertTwoIntegersTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
@@ -626,15 +653,8 @@ def convertTwoIntegersTemplate(CLASS):
        if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
            return 1;
 
-       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {{
-           int rval = 1;
-           PyObject* o1 = PySequence_ITEM(sipPy, 0);
-           PyObject* o2 = PySequence_ITEM(sipPy, 1);
-           if (!PyNumber_Check(o1) || !PyNumber_Check(o2))
-               rval = 0;
-           Py_DECREF(o1);
-           Py_DECREF(o2);
-           return rval;
+       if (wxPyNumberSequenceCheck(sipPy, 2)) {{
+           return 1;
        }}
        return 0;
    }}
@@ -666,19 +686,8 @@ def convertFourIntegersTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
-            int rval = 1;
-            PyObject* o1 = PySequence_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_ITEM(sipPy, 1);
-            PyObject* o3 = PySequence_ITEM(sipPy, 2);
-            PyObject* o4 = PySequence_ITEM(sipPy, 3);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4))
-                rval = 0;
-            Py_DECREF(o1);
-            Py_DECREF(o2);
-            Py_DECREF(o3);
-            Py_DECREF(o4);
-            return rval;
+        if (wxPyNumberSequenceCheck(sipPy, 4)) {{
+            return 1;
         }}
         return 0;
     }}
@@ -699,6 +708,8 @@ def convertFourIntegersTemplate(CLASS):
                              wxPyInt_AsLong(o3), wxPyInt_AsLong(o4));
     Py_DECREF(o1);
     Py_DECREF(o2);
+    Py_DECREF(o3);
+    Py_DECREF(o4);
     return SIP_TEMPORARY;
     """.format(**locals())
 
@@ -713,16 +724,9 @@ def convertTwoDoublesTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {{
-            int rval = 1;
-            PyObject* o1 = PySequence_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_ITEM(sipPy, 1);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2))
-                rval = 0;
-            Py_DECREF(o1);
-            Py_DECREF(o2);
-            return rval;
-        }}
+       if (wxPyNumberSequenceCheck(sipPy, 2)) {{
+           return 1;
+       }}
         return 0;
     }}
 
@@ -753,19 +757,8 @@ def convertFourDoublesTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
-            int rval = 1;
-            PyObject* o1 = PySequence_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_ITEM(sipPy, 1);
-            PyObject* o3 = PySequence_ITEM(sipPy, 2);
-            PyObject* o4 = PySequence_ITEM(sipPy, 3);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4))
-                rval = 0;
-            Py_DECREF(o1);
-            Py_DECREF(o2);
-            Py_DECREF(o3);
-            Py_DECREF(o4);
-            return rval;
+        if (wxPyNumberSequenceCheck(sipPy, 4)) {{
+            return 1;
         }}
         return 0;
     }}
@@ -784,9 +777,11 @@ def convertFourDoublesTemplate(CLASS):
     PyObject* o3 = PySequence_ITEM(sipPy, 2);
     PyObject* o4 = PySequence_ITEM(sipPy, 3);
     *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2),
-    PyFloat_AsDouble(o3), PyFloat_AsDouble(o4));
+                             PyFloat_AsDouble(o3), PyFloat_AsDouble(o4));
     Py_DECREF(o1);
     Py_DECREF(o2);
+    Py_DECREF(o3);
+    Py_DECREF(o4);
     return SIP_TEMPORARY;
     """.format(**locals())
 

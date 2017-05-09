@@ -26,7 +26,8 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
         # has a helper function we can use for measuring text that is
         # aware of any custom attributes that may have been set for
         # this item.
-        size = self.GetTextExtent(self.value)
+        value = self.value if self.value else ""
+        size = self.GetTextExtent(value)
         return size
 
 
@@ -45,7 +46,8 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
         # And then finish up with this helper function that draws the
         # text for us, dealing with alignment, font and color
         # attributes, etc
-        self.RenderText(self.value,
+        value = self.value if self.value else ""
+        self.RenderText(value,
                         4,   # x-offset, to compensate for the rounded rectangles
                         rect,
                         dc,

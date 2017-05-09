@@ -163,6 +163,8 @@ def run():
         briefDoc="""\
         Returns the RGB intensity values as a tuple, optionally the alpha value as well.""")
 
+    tools.addGetIMMethodTemplate(module, c, ['red', 'green', 'blue', 'alpha'])
+
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
@@ -196,22 +198,12 @@ def run():
                 return 1;
             if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
                 return 1;
-            if (PySequence_Check(sipPy)) {
-                size_t len = PySequence_Size(sipPy);
-                if (len != 3 && len != 4)
-                    return 0;
-                // ensure all the items in the sequence are numbers
-                for (int idx=0; idx<len; idx+=1) {
-                    PyObject* o = PySequence_ITEM(sipPy, idx);
-                    bool isNum = PyNumber_Check(o);
-                    Py_DECREF(o);
-                    if (!isNum)
-                        return 0;
-                }
+            if (wxPyNumberSequenceCheck(sipPy, 4) || wxPyNumberSequenceCheck(sipPy, 3)) {
                 return 1;
             }
             return 0;
         }
+
         // otherwise do the conversion
         // is it None?
         if (sipPy == Py_None) {
@@ -253,20 +245,20 @@ def run():
                 return sipGetState(sipTransferObj);
             }
         }
-        // Is it a 3 or 4 element sequence?
-        else if (PySequence_Check(sipPy)) {
-            size_t len = PyObject_Length(sipPy);
+        // Is it a sequence? (if so then length was checked above)
+        else if (wxPyNumberSequenceCheck(sipPy)) {
+            size_t len = PySequence_Size(sipPy);
 
-            PyObject* o1 = PySequence_GetItem(sipPy, 0);
-            PyObject* o2 = PySequence_GetItem(sipPy, 1);
-            PyObject* o3 = PySequence_GetItem(sipPy, 2);
+            PyObject* o1 = PySequence_ITEM(sipPy, 0);
+            PyObject* o2 = PySequence_ITEM(sipPy, 1);
+            PyObject* o3 = PySequence_ITEM(sipPy, 2);
             if (len == 3)
                 *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3));
             else {
-                PyObject* o4 = PySequence_GetItem(sipPy, 3);
+                PyObject* o4 = PySequence_ITEM(sipPy, 3);
                 *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3),
                                           wxPyInt_AsLong(o4));
-                Py_DECREF(o4);
+                Py_DECREF(o4);            
             }
             Py_DECREF(o1);
             Py_DECREF(o2);

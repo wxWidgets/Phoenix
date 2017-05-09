@@ -9,6 +9,12 @@ versions of Python. The source tarball can be used to build wxPython Phoenix
 for other platforms. See Phoenix/README.rst in the source tarball for more
 information.
 
+If you are wanting to install an official release build of wxPython this is
+not the place to be. You should go to PyPI instead, or use pip with the
+default server address.
+
+    https://pypi.python.org/pypi/wxPython
+
 
 File naming conventions:
 ------------------------
@@ -21,20 +27,25 @@ File naming conventions:
 
  - The "*-docs-*.tar.gz" files are compressed archives of the documentation.
 
- - The bulk of the filename follows the convensions for naming wheels
+ - The bulk of the filename follows the conventions for naming wheels
    (https://www.python.org/dev/peps/pep-0427/#file-name-convention). For
    example:
 
-      wxPython_Phoenix-3.0.3.dev1549+fa6f31f-cp33-cp33m-macosx_10_6_intel.whl
+      wxPython-4.0.0a2.dev2973+5ff6be7-cp35-cp35m-macosx_10_6_intel.whl
 
    means:
 
-   - This is the wxPython_Phoenix package
+   - This is the "wxPython" package
 
-   - It is version 3.0.3.dev1549+fa6f31f (a development version, with
+   - It is version 4.0.0a2.dev2973+5ff6be7 (a development version, with
      the build number derived from the source control system.)
 
-   - It is built for CPython version 3.3
+   - It is built for CPython version 3.5
+
+   - "cp35m" indicates the name of the Application Binary Interface (ABI) that
+     this package is compatible with.  Pip matches this with the ABI of the
+     Python being used to run pip to know if the wxPython wheel is compatible
+     with the target Python.
 
    - It is built for the macosx operating system
 
@@ -59,12 +70,12 @@ this:
 
     pip install -U --pre \
         -f https://wxpython.org/Phoenix/snapshot-builds/ \
-        wxPython_Phoenix
+        wxPython
 
 NOTE: if there isn't a binary here for the latest version of Phoenix
 that matches your Python version, then the command above will download
 the latest version of the source and will try to build Phoenix for
-you.  This will not be successfull if you do not have appropriate
+you.  This will not be successful if you do not have appropriate
 development tools and dependent libraries installed.
 
 To install a specific binary from this site you can append the version
@@ -72,7 +83,7 @@ number to the command, like this:
 
     pip install -U --pre \
         -f https://wxpython.org/Phoenix/snapshot-builds/ \
-        wxPython_Phoenix==3.0.3.dev1641+76cf834
+        wxPython==4.0.0a2.dev2973+5ff6be7
 
 There are also snapshot builds available for a few of the common Linux
 distributions, located under the following folder:
@@ -92,7 +103,7 @@ you can use a pip command like this:
 
     pip install -U --pre \
         -f https://wxpython.org/Phoenix/snapshot-builds/linux/gtk3/ubuntu-16.04 \
-        wxPython_Phoenix
+        wxPython
 
 
 Getting Pip

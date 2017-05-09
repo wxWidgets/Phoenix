@@ -4218,6 +4218,8 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
         self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        if '__WXGTK__' in wx.PlatformInfo:
+            self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
 
         self.Bind(wx.EVT_MOVE, self.OnMove)
         self.Bind(wx.EVT_SYS_COLOUR_CHANGED, self.OnSysColourChanged)
@@ -6339,7 +6341,7 @@ class AuiManager(wx.EvtHandler):
 
     def Update(self):
         if '__WXGTK__' in wx.PlatformInfo:
-            self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
+            wx.CallAfter(self.DoUpdate)
         else:
             self.DoUpdate()
 
@@ -7375,7 +7377,12 @@ class AuiManager(wx.EvtHandler):
                 if paneInfo.IsMaximized():
                     self.RestorePane(paneInfo)
                 paneInfo.Float()
-                self.Update()
+
+                # The call to Update may result in
+                # the notebook that generated this
+                # event being deleted, so we have
+                # to do the call asynchronously.
+                wx.CallAfter(self.Update)
 
                 self._action_window = paneInfo.window
 
@@ -7416,8 +7423,15 @@ class AuiManager(wx.EvtHandler):
                 if e.GetVeto():
                     return
 
-                self.ClosePane(p)
-                self.Update()
+                # Close/update asynchronously, because
+                # the notebook which generated the event
+                # (and triggered this method call) will
+                # be deleted. 
+                def close():
+                    self.ClosePane(p)
+                    self.Update()
+
+                wx.CallAfter(close)
             else:
                 event.Skip()
 

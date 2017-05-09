@@ -171,6 +171,8 @@ def run():
         pyArgsString="() -> (start, end)",
         briefDoc="Return the start and end properties as a tuple.")
 
+    tools.addGetIMMethodTemplate(module, c, ['Start', 'End'])
+
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "RichTextRange"+str(self.Get())')

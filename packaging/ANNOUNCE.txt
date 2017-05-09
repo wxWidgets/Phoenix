@@ -1,0 +1,102 @@
+
+[[ send to:
+   wxpython-users@googlegroups.com,
+   wxpython-dev@googlegroups.com,
+   wx-users@googlegroups.com,
+   wx-announce@googlegroups.com,
+   Python-Announce-List@Python.Org
+   ]]
+
+
+Announcing wxPython 4.0.0a2
+---------------------------
+
+https://pypi.python.org/pypi/wxPython/4.0.0a2
+
+This build of wxPython is based on the official wxWidgets 3.0.3 release.
+
+This release is mostly various bug fixes and other tweaks, such as:
+
+  * Allow numpy arrays to be auto-converted to simple sequence value types like
+    wx.Size, wx.Colour, etc.
+
+  * A couple of fixes to lib/agw/aui to prevent segfaults under OSX when
+    AuiNotebook tabs are closed
+
+  * Fix wx._core.wxAssertionError in wx.lib.agw.aui when dragging a notebook tab
+
+  * Fix the [G|S]etClientData methods in wx.CommandEvent to behave the same
+    way they are in wx.ClientDataContainer.
+
+  * Fix the SetFonts methods in wx.html classes
+
+  * Several fixes in wx.dataview related to overriding methods
+
+  * Fixed some flickering in wx.lib.agw.aui.framemanager
+
+  * Fixed problem with wrong implementation of wxNotebook::DeleteAllPages being
+    called on Windows
+
+  * Added the missing wx.grid.GRID_AUTOSIZE flag
+
+  * Fixed crash due to the object created in an XmlSubclassFactory being
+    destroyed too soon
+
+  * Fixed crash in wx.lib.agw.toasterbox
+
+  * Fixed crash when using wx.xrc.XmlSubclassFactory
+
+  * Fixed wx.grid.GridTableBase.GetValue and related methods to work more like
+    they did in Classic, so non-string values can be used a little more
+    easily.
+
+Added building and bundling of the PDB files for wxWidgets and the wxPython
+extensions on Windows.  Until a better place is found they will be
+downloadable from https://wxPython.org/Phoenix/release-extras, along with
+archives for the documentation as well as the demo and samples.
+
+
+
+What is wxPython?
+-----------------
+
+wxPython is a cross-platform GUI toolkit for the Python programming language.
+It allows Python programmers to create programs with a robust, highly
+functional graphical user interface, simply and easily. It is implemented as a
+set of Python extension modules that wrap the GUI components of the popular
+wxWidgets cross platform library, which is written in C++. Supported platforms
+are Microsoft Windows, Mac OS X and macOS, and Linux or other unix-like
+systems with GTK2 or GTK3 libraries. In most cases the native widgets are used
+on each platform to provide a 100% native look and feel for the application.
+
+
+What is wxPython Phoenix?
+-------------------------
+
+wxPython's Project Phoenix is a new from-the-ground-up implementation of
+wxPython, created with the intent of making wxPython “better, stronger, faster
+than he was before.” In other words, this new implementation is focused on
+improving speed, maintainability and extensibility of wxPython, as well as
+removing most of the cruft that had accumulated over the long life of Classic
+wxPython.
+
+The project has been in development off and on, mostly behind the scenes, for
+many years. For the past few years automated snapshot builds have been
+available for those adventurous enough to try it, and many people eventually
+started using the snapshots in their projects, even for production releases.
+While there are still some things on the periphery that need to be completed,
+the core of the new wxPython extension modules which wrap the wxWidgets code
+has been stable for a long time now.
+
+Due to some things being cleaned up, reorganized, simplified and dehackified
+wxPython Phoenix is not completely backwards compatible with wxPython Classic.
+This is intended. In general, however, the API differences tend to be minor
+and some applications can use Phoenix with slight, or even no modifications.
+In some other cases the correct way to do things was also available in Classic
+and it's only the wrong way that has been removed from Phoenix.  For more
+information there is a Migration Guide document available at:
+https://wxpython.org/Phoenix/docs/html/MigrationGuide.html
+
+The new wxPython API reference documentation, including all Python-specific
+additions and customizations, and docs for the wx.lib package, is located at:
+https://wxpython.org/Phoenix/docs/html/main.html

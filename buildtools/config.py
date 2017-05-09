@@ -348,7 +348,7 @@ class Configuration(object):
                                        self.VER_RELEASE,
                                        self.VER_FLAGS)
 
-        self.WXDLLVER = '%d%d' % (self.VER_MAJOR, self.VER_MINOR)
+        self.WXDLLVER = '%d%d' % (self.wxVER_MAJOR, self.wxVER_MINOR)
 
 
     def parseCmdLine(self):
@@ -389,7 +389,7 @@ class Configuration(object):
                 port = "x11univ"
             flags =  ' --toolkit=%s' % port
             flags += ' --unicode=yes'
-            flags += ' --version=%s.%s' % (self.VER_MAJOR, self.VER_MINOR)
+            flags += ' --version=%s.%s' % (self.wxVER_MAJOR, self.wxVER_MINOR)
 
             searchpath = os.environ["PATH"]
             for p in searchpath.split(':'):

@@ -357,15 +357,25 @@ def run():
     # wxCommandEvent
     c = module.find('wxCommandEvent')
 
+    # The [G|S]etClientData methods deal with untyped void* values, which we
+    # don't support. The [G|S]etClientObject methods use wxClientData instances
+    # which we have a MappedType for, so make the ClientData methods just be
+    # aliases for ClientObjects. From the Python programmer's perspective they
+    # would be virtually the same anyway.
+    c.find('SetClientObject.clientObject').transfer = True
+    c.find('SetClientObject.clientObject').name = 'data'
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
+    c.find('GetClientObject').pyName = 'GetClientData'
+    c.find('SetClientObject').pyName = 'SetClientData'
+    c.addPyMethod('GetClientObject', '(self)',
+        doc="Alias for :meth:`GetClientData`",
+        body="return self.GetClientData()")
+    c.addPyMethod('SetClientObject', '(self, data)',
+        doc="Alias for :meth:`SetClientData`",
+        body="self.SetClientData(data)")
+    c.addPyProperty('ClientData GetClientData SetClientData')
 
-    c.addPyCode("""\
-        CommandEvent.GetClientData = CommandEvent.GetClientObject
-        CommandEvent.SetClientData = CommandEvent.SetClientObject""")
-
-    c.addProperty('ClientObject GetClientObject SetClientObject')
-    c.addPyCode('CommandEvent.ClientData = CommandEvent.ClientObject')
     c.addProperty('ExtraLong GetExtraLong SetExtraLong')
     c.addProperty('Int GetInt SetInt')
     c.addProperty('Selection GetSelection')

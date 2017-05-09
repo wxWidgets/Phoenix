@@ -19,7 +19,7 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
         return True
 
     def GetValue(self):
-        #self.log.write('GetValue')
+        self.log.write('GetValue')
         return self.value
 
     def GetSize(self):
@@ -27,12 +27,13 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
         # has a helper function we can use for measuring text that is
         # aware of any custom attributes that may have been set for
         # this item.
-        return self.GetTextExtent(self.value)
+        value = self.value if self.value else ""
+        return self.GetTextExtent(value)
 
 
     def Render(self, rect, dc, state):
-        if state != 0:
-            self.log.write('Render: %s, %d' % (rect, state))
+        #if state != 0:
+        #    self.log.write('Render: %s, %d' % (rect, state))
 
         if not state & dv.DATAVIEW_CELL_SELECTED:
             # we'll draw a shaded background to see if the rect correctly
@@ -45,14 +46,15 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
         # And then finish up with this helper function that draws the
         # text for us, dealing with alignment, font and color
         # attributes, etc
-        self.RenderText(self.value,
+        value = self.value if self.value else ""
+        self.RenderText(value,
                         4,   # x-offset, to compensate for the rounded rectangles
                         rect,
                         dc,
                         state # wxDataViewCellRenderState flags
                         )
-
         return True
+
 
     # The HasEditorCtrl, CreateEditorCtrl and GetValueFromEditorCtrl
     # methods need to be implemented if this renderer is going to
@@ -101,7 +103,7 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
 
 #----------------------------------------------------------------------
 
-# To help focus this sammple on the custom renderer, we'll reuse the
+# To help focus this sample on the custom renderer, we'll reuse the
 # model class from another sample.
 from DVC_IndexListModel import TestModel
 

@@ -42,6 +42,8 @@ def run():
         pyArgsString="() -> (row,col)",
         briefDoc="Return the row and col properties as a tuple.")
 
+    tools.addGetIMMethodTemplate(module, c, ['Row', 'Col'])
+
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.Position"+str(self.Get())')

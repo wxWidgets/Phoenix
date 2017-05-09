@@ -45,10 +45,12 @@ def run():
     c = module.find('wxHtmlEasyPrinting')
     c.mustHaveApp()
     c.addPrivateCopyCtor()
+    tools.fixHtmlSetFonts(c)
 
     c = module.find('wxHtmlPrintout')
     c.mustHaveApp()
     c.addPrivateCopyCtor()
+    tools.fixHtmlSetFonts(c)
 
 
     #-----------------------------------------------------------------

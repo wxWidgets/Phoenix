@@ -150,6 +150,48 @@ Py_ssize_t wxPyUnicode_AsWideChar(PyObject* unicode, wchar_t* w, Py_ssize_t size
 }
 
 
+inline bool wxPyNumberSequenceCheck(PyObject* obj, int reqLength=-1) {
+    // Used in the various places where a sequence of numbers can be converted
+    // to a wx type, like wxPoint, wxSize, wxColour, etc. Returns true if the
+    // object is a Tuple, List or numpy Array of the proper length.
+
+    // tuples or lists are easy
+    bool isFast = (PyTuple_Check(obj) || PyList_Check(obj));
+
+    if (!isFast ) {
+        // If it's not one of those, then check for an array.
+        // It's probably not a good idea to do it this way, but this allows us
+        // to check if the object is a numpy array without requiring that
+        // numpy be imported even for those applications tha are not using it.
+        if (strcmp(obj->ob_type->tp_name, "numpy.ndarray") != 0)
+            return false;
+    }
+
+    // Bail out here if the length isn't given
+    if (reqLength == -1)
+        return true;
+
+    // Now check that the length matches the expected length
+    if (PySequence_Length(obj) != reqLength)
+        return false;
+
+    // Check that each item is a number
+    for (int i=0; i<reqLength; i+=1) {
+        PyObject* item;
+        if (isFast)
+            item = PySequence_Fast_GET_ITEM(obj, i);
+        else
+            item = PySequence_ITEM(obj, i);
+        bool isNum = PyNumber_Check(item);
+        if (!isFast)
+            Py_DECREF(item);
+        if (!isNum)
+            return false;
+    }
+    return true;
+}
+
+
 //--------------------------------------------------------------------------
 // These are the API items whose implementation can not or should not be
 // inline functions or macros. The implementations will instead be accessed

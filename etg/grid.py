@@ -20,20 +20,20 @@ DOCSTRING = ""
 ITEMS  = [ 'wxGridCellCoords',
 
            'wxGridCellRenderer',
+           'wxGridCellStringRenderer',
            'wxGridCellAutoWrapStringRenderer',
            'wxGridCellBoolRenderer',
            'wxGridCellDateTimeRenderer',
            'wxGridCellEnumRenderer',
            'wxGridCellFloatRenderer',
            'wxGridCellNumberRenderer',
-           'wxGridCellStringRenderer',
 
            'wxGridCellEditor',
+           'wxGridCellTextEditor',
            'wxGridCellAutoWrapStringEditor',
            'wxGridCellBoolEditor',
            'wxGridCellChoiceEditor',
            'wxGridCellEnumEditor',
-           'wxGridCellTextEditor',
            'wxGridCellFloatEditor',
            'wxGridCellNumberEditor',
 
@@ -102,6 +102,8 @@ def run():
         """,
         pyArgsString="() -> (row,col)",
         briefDoc="Return the row and col properties as a tuple.")
+
+    tools.addGetIMMethodTemplate(module, c, ['Row', 'Col'])
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
@@ -222,7 +224,7 @@ def run():
 
             # Code for C++ --> Python calls. This is used when a C++ method
             # call needs to be reflected to a call to the overridden Python
-            # method, so we need to translate between the real C++ siganture
+            # method, so we need to translate between the real C++ signature
             # and the Python signature.
             virtualCatcherCode="""\
                 // VirtualCatcherCode for wx.grid.GridCellEditor.EndEdit
@@ -311,6 +313,82 @@ def run():
     module.addPyCode("PyGridTableBase = wx.deprecated(GridTableBase, 'Use GridTableBase instead.')")
 
 
+    # Make the GetValue methods easier to use from Python.  For example,
+    # instead of needing to always return a string, the GetValue in the derived
+    # class can return any type (as long as the renderer and editor knows how
+    # to deal with it, and the value can be converted to a string for display).
+    m = c.find('GetValue')
+    m.type = 'PyObject*'
+    m.cppSignature = 'wxString (int row, int col)'
+    m.setCppCode("return wx2PyString(self->GetValue(row, col));")
+    m.virtualCatcherCode = """\
+        // virtualCatcherCode for GridTableBase.GetValue
+        PyObject *result = sipCallMethod(&sipIsErr, sipMethod, "ii", row, col);
+        if (result == Py_None) {
+            sipRes = "";
+        }
+        else {
+            if (!PyBytes_Check(result) && !PyUnicode_Check(result)) {
+                PyObject* old = result;
+                result = PyObject_Str(result);
+                Py_DECREF(old);
+            }
+            sipRes = Py2wxString(result);
+        }
+        Py_XDECREF(result);
+        """
+
+    # SetValue is okay as-is...
+
+
+    # Replace these virtuals in the base class with Python methods, they just
+    # need to call GetValue or SetValue directly since they must already be
+    # implemented in the derived Python class because they are pure virtual.
+    c.addPyMethod('GetValueAsLong', '(self, row, col)',
+        body="""\
+            val = self.GetValue(row, col)
+            try:
+                return int(val)
+            except ValueError:
+                return 0
+            """, docsIgnored=True)
+
+    c.addPyMethod('GetValueAsDouble', '(self, row, col)',
+        body="""\
+            val = self.GetValue(row, col)
+            try:
+                return float(val)
+            except ValueError:
+                return 0.0
+            """, docsIgnored=True)
+
+    c.addPyMethod('GetValueAsBool', '(self, row, col)',
+        body="""\
+            val = self.GetValue(row, col)
+            try:
+                return bool(val)
+            except ValueError:
+                return False
+            """, docsIgnored=True)
+
+    c.addPyMethod('SetValueAsLong', '(self, row, col, value)',
+        body="self.SetValue(row, col, int(value))", docsIgnored=True)
+
+    c.addPyMethod('SetValueAsDouble', '(self, row, col, value)',
+        body="self.SetValue(row, col, float(value))", docsIgnored=True)
+
+    c.addPyMethod('SetValueAsBool', '(self, row, col, value)',
+        body="self.SetValue(row, col, bool(value))", docsIgnored=True)
+
+
+    # Should we add support for using generic PyObjects in the *AsCustom
+    # methods? I don't think it is necessary due to the GetValue
+    # modifications above, so for now, at least, let.s just ignore them.
+    c.find('GetValueAsCustom').ignore()
+    c.find('SetValueAsCustom').ignore()
+    
+
+
     #-----------------------------------------------------------------
     c = module.find('wxGridTableMessage')
     c.addPrivateCopyCtor()
@@ -355,6 +433,7 @@ def run():
     # ownership of the Python proxy object to match.
     c.find('SetTable').pyName = '_SetTable'
     c.addPyMethod('SetTable', '(self, table, takeOwnership=False, selmode=Grid.GridSelectCells)',
+        piArgsString='(self, table, takeOwnership=False, selmode=GridSelectCells)',
         doc="Set the Grid Table to be used by this grid.",
         body="""\
             val = self._SetTable(table, takeOwnership, selmode)
