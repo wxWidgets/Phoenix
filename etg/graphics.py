@@ -111,6 +111,7 @@ def run():
         body="""\
         wxDouble width = 0.0, height = 0.0;
         self->GetTextExtent(*text, &width, &height, NULL, NULL);
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(dd)", width, height);
         """)
 
