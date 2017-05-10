@@ -233,6 +233,11 @@ def run():
         body="return (self.MinX(), self.MinY(), self.MaxX(), self.MaxY())")
 
 
+    m = c.find('GetHandle')
+    m.type = 'wxUIntPtr*'
+    m.setCppCode("return new wxUIntPtr((wxUIntPtr)self->GetHandle());")
+
+
     c.addCppMethod('long', 'GetHDC', '()', """\
         #ifdef __WXMSW__
             return (long)self->GetHandle();
