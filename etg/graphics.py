@@ -140,7 +140,7 @@ def run():
         """)
 
     # Also reimplement the main StrokeLines method to reuse the same helper
-    # function as StrokLineSegments
+    # function as StrokeLineSegments
     m = c.find('StrokeLines').findOverload('points').ignore()
     c.addCppMethod('void', 'StrokeLines', '(PyObject* points)',
         pyArgsString="(point2Ds)",
