@@ -5,6 +5,18 @@ Recent Changes for wxPython
 ===========================
 
 
+4.0.0a3 (or maybe b1 ???)
+-------
+*
+
+Fixed a few cases where the GIL was not acquired before building tuples of
+values. The problems associated with this (hangs or crashes) were sporadic and
+seemingly random, and did not appear until there was a background thread that
+was very busy. Running under a debug build of Python revealed the problem
+almost immediately. Yay Python!
+
+
+
 4.0.0a2
 -------
 * 6-May-2017
