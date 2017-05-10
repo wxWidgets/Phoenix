@@ -30,7 +30,7 @@ import datetime
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
-                               macFixDependencyInstallName, macSetLoaderNames, \
+                               macSetLoaderNames, \
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
                                getVisCVersion, getToolsPlatformName
 
@@ -960,7 +960,7 @@ def cmd_sphinx(options, args):
     del pwd2
 
     msg('Postprocessing sphinx output...')
-    postProcess(htmlDir)
+    postProcess(htmlDir, options)
 
 
 def cmd_wxlib(options, args):
