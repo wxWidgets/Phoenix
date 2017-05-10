@@ -15,7 +15,7 @@ HOWTO Release wxPython Phoenix
 
 3. Log in to buildbot master
 
-4. On the "Builders" page check the dist-* and the bdist-* builders
+4. On the "Builders" page check all of the dist-* builders
 
 5. Set a name/value pair to buildargs/--release
 
@@ -24,7 +24,7 @@ HOWTO Release wxPython Phoenix
 
 7. Click the Force Build button
 
-8. Building wheel files for some linux distros can be done while the other
+8. Building wheel files for selected linux distros can be done while the other
    builds are still running. Fetch the source tarball when it is finished and put
    it in Phoenix/dist. Run the following::
 
