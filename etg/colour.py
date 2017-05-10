@@ -154,6 +154,7 @@ def run():
             blue =  self->Blue();
             alpha = self->Alpha();
         }
+        wxPyThreadBlocker blocker;
         if (includeAlpha)
             return sipBuildResult(0, "(iiii)", red, green, blue, alpha);
         else

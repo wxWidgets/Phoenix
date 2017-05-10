@@ -59,6 +59,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxPoint2DDouble')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(dd)", self->m_x, self->m_y);
         """,
         briefDoc="""\
@@ -105,6 +106,7 @@ def run():
     c.convertFromPyObject = tools.convertFourDoublesTemplate('wxRect2DDouble')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(dddd)",
                     self->m_x, self->m_y, self->m_width, self->m_height);
         """,

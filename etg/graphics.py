@@ -111,6 +111,7 @@ def run():
         body="""\
         wxDouble width = 0.0, height = 0.0;
         self->GetTextExtent(*text, &width, &height, NULL, NULL);
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(dd)", width, height);
         """)
 
@@ -139,7 +140,7 @@ def run():
         """)
 
     # Also reimplement the main StrokeLines method to reuse the same helper
-    # function as StrokLineSegments
+    # function as StrokeLineSegments
     m = c.find('StrokeLines').findOverload('points').ignore()
     c.addCppMethod('void', 'StrokeLines', '(PyObject* points)',
         pyArgsString="(point2Ds)",

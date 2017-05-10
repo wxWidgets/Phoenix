@@ -37,6 +37,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxPosition')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->GetRow(), self->GetCol());
         """,
         pyArgsString="() -> (row,col)",
