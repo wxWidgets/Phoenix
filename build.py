@@ -990,16 +990,13 @@ def cmd_wxtools(options, args):
     msg('Command wxtools has been folded into command wxlib.')
 
 
-def cmd_docs_bdist(options, args):
-    # TODO: get rid of this function after a while
-    cmd_bdist_docs(options, args)
-
 def cmd_bdist_docs(options, args):
-    cmdTimer = CommandTimer('docs_bdist')
+    cmdTimer = CommandTimer('bdist_docs')
     pwd = pushDir(phoenixDir())
 
     cfg = Config()
 
+    msg("Archiving wxPython Phoenix documentation...")
     rootname = "%s-docs-%s" % (baseName, cfg.VERSION)
     tarfilename = "dist/%s.tar.gz" % rootname
 
@@ -1008,17 +1005,46 @@ def cmd_bdist_docs(options, args):
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
 
-    msg("Archiving Phoenix documentation...")
-    tarball = tarfile.open(name=tarfilename, mode="w:gz")
-    tarball.add('docs/html', os.path.join(rootname, 'docs/html'),
-                filter=lambda info: None if '.svn' in info.name else info)
-    tarball.close()
+    with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
+        tarball.add('docs/html', os.path.join(rootname, 'docs/html'),
+                    filter=lambda info: None if '.svn' in info.name else info)
 
     if options.upload:
         uploadPackage(tarfilename, options, keep=5,
                       mask='%s-docs-%s*' % (baseName, cfg.VER_MAJOR))
 
     msg('Documentation tarball built at %s' % tarfilename)
+
+
+    # pythonhosted.org can host the wxPython documentation for us, so let's
+    # use it for the docs associated with the latest release of wxPython.  It
+    # requires that the docs be in a .zip file with an index.html file at the
+    # top level. To build this we'll just need to do like the above tarball
+    # code, except add the files from within the docs/html folder so they will
+    # all be at the top level of the archive.  shutil.make_archive can be used
+    # in this case because we don't need to rewrite the pathnames in the
+    # archive.
+    if options.release:
+        msg("Archiving wxPython Phoenix documentation for pythonhosted.org...")
+        rootname = "%s-docs-pythonhosted-%s" % (baseName, cfg.VERSION)
+        zipfilename = "dist/%s.zip" % rootname
+
+        if os.path.exists(zipfilename):
+            os.remove(zipfilename)
+
+        # with zipfile.ZipFile(zipfilename, 'w', zipfile.ZIP_DEFLATED) as zip:
+        #     pwd2 = pushDir('docs/html')
+
+        zipfilename = shutil.make_archive(base_name=os.path.splitext(zipfilename)[0],
+                                          format="zip",
+                                          root_dir="docs/html")
+
+        if options.upload:
+            uploadPackage(zipfilename, options, keep=5,
+                          mask='%s-docs-pythonhosted-%s*' % (baseName, cfg.VER_MAJOR))
+
+        msg('Pythonhosted zip file built at %s' % zipfilename)
+
 
 
 def cmd_sip(options, args):

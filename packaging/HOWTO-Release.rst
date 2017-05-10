@@ -53,25 +53,28 @@ HOWTO Release wxPython Phoenix
     (Twine doesn't know what to do with the docs and other files so they need
     to be excluded by the wildcard.)
 
-14. Upload the docs, demos and pdb archive files to wxpython.org/Phoenix/release-extras/::
+14. Upload the wxPython-docs-pythonhosted*.zip documentation file using the
+    form on PyPI. Remove the local copy of the file before the next step.
+
+15. Upload the docs, demos and pdb archive files to wxpython.org/Phoenix/release-extras/::
 
         VERSION={current release version number}
         ssh wxpython-extras "mkdir -p wxpython-extras/$VERSION"
         scp wxPython-[^0-9]* wxpython-extras:wxpython-extras/$VERSION
 
-15. Upload the Linux wheels::
+16. Upload the Linux wheels::
 
         scp -r linux wxpython-extras:wxpython-extras/
 
-16. Tag the released revision in git, using a name like wxPython-4.0.0 (using
+17. Tag the released revision in git, using a name like wxPython-4.0.0 (using
     the actual version number of course.) Push the tag to all remotes.
 
-17. Bump the version numbers in buildtools/version.py appropriately for the
+18. Bump the version numbers in buildtools/version.py appropriately for the
     next anticipated release, so future snapshot builds will be recognized as
     pre-release development versions for the next official release, not the
     one just completed.
 
-18. If making an announcement about this release, (I think it's okay not to
+19. If making an announcement about this release, (I think it's okay not to
     for minor releases or smallish bug fixes,) send the text in
     packaging/ANNOUNCE.txt to the email addresses listed at the top of the
     file.
