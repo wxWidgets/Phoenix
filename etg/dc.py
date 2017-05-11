@@ -245,16 +245,16 @@ def run():
             wxPyRaiseNotImplemented();
             return 0;
         #endif""")
-    c.addCppMethod('void*', 'GetCGContext', '()', """\
+    c.addCppMethod('wxUIntPtr*', 'GetCGContext', '()', """\
         #ifdef __WXMAC__
-            return self->GetHandle();
+            return new wxUIntPtr((wxUIntPtr)self->GetHandle());
         #else
             wxPyRaiseNotImplemented();
             return NULL;
         #endif""")
-    c.addCppMethod('void*', 'GetGdkDrawable', '()', """\
+    c.addCppMethod('wxUIntPtr*', 'GetGdkDrawable', '()', """\
         #ifdef __WXGTK__
-            return self->GetHandle();
+            return new wxUIntPtr((wxUIntPtr)self->GetHandle());
         #else
             wxPyRaiseNotImplemented();
             return NULL;
