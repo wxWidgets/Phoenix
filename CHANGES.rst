@@ -15,6 +15,13 @@ seemingly random, and did not appear until there was a background thread that
 was very busy. Running under a debug build of Python revealed the problem
 almost immediately. Yay Python!
 
+Return an integer value from wx.DC.GetHandle instead of a wrapped voidptr
+object, similar to how it is done for wx.Window.GetHandle.
+
+Make wx.TreeItemID hashable, with meaningful hash value and equality
+operators, so it can be used as a dictionary key in Py3.
+
+
 
 
 4.0.0a2
