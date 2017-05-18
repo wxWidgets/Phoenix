@@ -9941,7 +9941,7 @@ class AuiManager(wx.EvtHandler):
         if not pane.IsOk():
             raise Exception("Pane window not found")
 
-        if pane.IsFloating():
+        if pane.IsFloating() and pane.frame is not None:
             pane.floating_pos = pane.frame.GetPosition()
             if pane.frame._transparent != pane.transparent or self._agwFlags & AUI_MGR_TRANSPARENT_DRAG:
                 pane.frame.SetTransparent(pane.transparent)
