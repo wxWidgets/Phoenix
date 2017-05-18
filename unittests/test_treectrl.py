@@ -28,6 +28,13 @@ class treectrl_Tests(wtc.WidgetTestCase):
         self.assertTrue(child is not root)
         self.assertTrue(child != root)
 
+        # Can TreeItemId be a dictionary key?
+        d = dict()
+        d[root] = 'root'
+        d[child] = 'child'
+        assert d[root] == 'root'
+        assert d[r] == 'root'
+
 
     def test_treectrlTreeItemData(self):
         value = 'Some Python Object'
