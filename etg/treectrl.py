@@ -42,6 +42,18 @@ def run():
         return self->IsOk();
         """)
 
+    c.addCppMethod('bool', '__eq__', '(const wxTreeItemId* other)', """\
+        return *self == *other;
+        """)
+    c.addCppMethod('bool', '__neq__', '(const wxTreeItemId* other)', """\
+        return *self != *other;
+        """)
+
+    c.addPyMethod('__hash__', '(self)', """\
+        return hash(int(self.GetID()))
+        """)
+
+
     td = etgtools.TypedefDef(name='wxTreeItemIdValue', type='void*')
     module.insertItemBefore(c, td)
 
