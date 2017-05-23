@@ -47,17 +47,6 @@ unittest/test_atc.py
 ~~ Samuel Dunn
 """
 
-# Benefits: As stated, allows unit testing within a full App mainloop.
-#           Allows developers to quickly construct a test case by developing a
-#               single widget
-#           TestCase class is generated from the widget provided to atc. The
-#               generated TestCase class  mimics the widget to allow pytest
-#               to behave  normally. This allows  unsquashed testing (jamming
-#               plural tests into one runtime)
-#           Generated TestCase class should play nice with all unittest features
-#           Generated TestCase classes are unique, allowing plural per test
-#               module
-
 # TODO:
 #   Ensure full TestCase API is available within the app
 #   automatically apply TestCritical decorator to test_ methods in widget
