@@ -2,6 +2,51 @@
 # Application Test Case
 # Allows testing wx features within the context of an application
 
+"""
+Application Test Case allows python's unittest framework to run full wx 
+applications within a test case with out any need to manually drive the main 
+eventloop. This reduces buginess within tested features that require a running
+mainloop, such as event-based behavior.
+
+ATC accomplishes this by receiving a widget class and constructing a test case class
+from the widget. When unittest invokes a test within this testcase the application
+will be started and the test sequence will begin. 
+
+The widget given to ATC will look like it is a test case itself, aside from a few 
+nuances. Which are as follows:
+1) The widget MUST derive from the given class: TestWidget
+    This class provides the code necessary to automate tests and convey results.
+    Furthermore, anything that derives TestWidget must also derive from at least wx.EventHandler
+2) Some methods will need to be decorated with 'testCritical' to perform as expected.
+    More on this later.
+3) The ATC testcase class must be created and assigned to the global scope so unittest can detect it.
+    This is performed with createATC(test_widget_derivation)
+
+ATC requires some additional code in order to perform correctly. It needs:
+1) to know which methods are critical. That is which ones are not allowed to have
+  an exception escape their frame.
+2) When a test fails or passes
+
+First, a decorator method 'testCritical' is provided. this decorator will automatically fail 
+the current test if an an unhandled exception occurs within the decorated function.
+Secondly, TestWidget provides the methods TestWidget.testPassed and TestWidget.TestFailed
+to specify a test result. When these methods are called the application will exit and 
+results will be delivered to unittest
+
+Important notes:
+The TestCase class can be accessed using TestWidget.getTestCase(), this is usefull for 
+utilizing standard testcase methods such as failUnless, assert____() and so on.
+These TestCase methods will only work within testCritical methods. Otherwise 
+the exceptions raised by them will pass silently into the Python/wx sandwhich. 
+
+
+The following files contain ATC examples:
+unittests/test_frame.py
+unittest/test_atc.py
+
+~~ Samuel Dunn
+"""
+
 # Benefits: As stated, allows unit testing within a full App mainloop.
 #           Allows developers to quickly construct a test case by developing a
 #               single widget
@@ -13,19 +58,10 @@
 #           Generated TestCase classes are unique, allowing plural per test
 #               module
 
-# Drawbacks: Generated test case class has to be applied to a __main__ module
-#               global scope member. Need to look into unittest.TestDiscorvery
-#               to correct this behavior
-#           Code is currently a bit sloppy, Revisions will be made before a
-#               formal PR to improve documentation and clean up the code.
-#
-
 # TODO:
 #   Ensure full TestCase API is available within the app
 #   automatically apply TestCritical decorator to test_ methods in widget
-#   Ensure TestCritical decorator plays nice with preserving other decorations
-#       such that decoration order does not matter
-#   Add stack trace printouts upon TestDone(False) or TestCritical exception
+#   Explore option of having the same application instance runn all test sequences.
 
 
 __version__ = "0.0.3"
