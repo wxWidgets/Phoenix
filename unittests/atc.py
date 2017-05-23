@@ -145,11 +145,12 @@ def createATC(widget_cls, autoshow = True):
 
     class ApplicationTestCase(unittest.TestCase):
         pass
-
+        
     methods = [meth for meth in dir(widget_cls) if (meth.startswith("test_") and callable(getattr(widget_cls, meth)))]
 
     for meth in methods:
         test_func = __CreateTestMethod(app, meth)
+        
         # ensure any other deocrated data is preserved:
         basemeth = getattr(widget_cls, meth)
         for attr in dir(basemeth):
@@ -268,8 +269,6 @@ class TestWidget:
     @testCritical   # automatically apply exception blocking to test_ methods.. indirectly
     def __OnTest(self, evt):
         testfunc = getattr(self, evt.case)
-
-        six.print_("Testing: %s" % evt.case)
         testfunc()
     
     def __print_stacktrace(self):
