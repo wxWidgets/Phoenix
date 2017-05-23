@@ -97,6 +97,7 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxDataViewModel')
     c.addAutoProperties()
+    tools.fixRefCountedClass(c)
 
     c.find('~wxDataViewModel').ignore(False)
 
@@ -187,6 +188,7 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxDataViewListModel')
     c.addAutoProperties()
+    tools.fixRefCountedClass(c)
 
     # Change the GetValueByRow method to return the value instead of passing
     # it through a parameter for modification.
@@ -520,6 +522,7 @@ def run():
 
     c = module.find('wxDataViewTreeStore')
     c.addAutoProperties()
+    tools.fixRefCountedClass(c)
 
 
     #-----------------------------------------------------------------

@@ -134,6 +134,7 @@ def run():
     def fixRendererClass(name):
         klass = module.find(name)
         assert isinstance(klass, etgtools.ClassDef)
+        tools.fixRefCountedClass(klass)
         tools.addAutoProperties(klass)
 
         methods = [
@@ -152,6 +153,7 @@ def run():
     c.addPrivateCopyCtor()
     c.find('~wxGridCellRenderer').ignore(False)
     c.find('Clone').factory = True
+    tools.fixRefCountedClass(c)
 
     for name in ITEMS:
         if 'Cell' in name and 'Renderer' in name:
@@ -164,6 +166,7 @@ def run():
     def fixEditorClass(name):
         klass = module.find(name)
         assert isinstance(klass, etgtools.ClassDef)
+        tools.fixRefCountedClass(klass)
         tools.addAutoProperties(klass)
 
         methods = [
@@ -249,6 +252,7 @@ def run():
     c.addPrivateCopyCtor()
     c.find('~wxGridCellEditor').ignore(False)
     c.find('Clone').factory = True
+    tools.fixRefCountedClass(c)
 
     c = module.find('wxGridCellChoiceEditor')
     c.find('wxGridCellChoiceEditor').findOverload('count').ignore()
@@ -264,6 +268,7 @@ def run():
     c.addPrivateCopyCtor()
     c.find('~wxGridCellAttr').ignore(False)
     c.find('Clone').factory = True
+    tools.fixRefCountedClass(c)
 
     c.find('GetAlignment.hAlign').out = True
     c.find('GetAlignment.vAlign').out = True
@@ -272,7 +277,7 @@ def run():
     c.find('GetSize.num_rows').out = True
     c.find('GetSize.num_cols').out = True
 
-    c.find('SetEditor.editor').transfer = True
+    c.find('SetEditor.editor').transfer = True  # these are probably redundant now...
     c.find('SetRenderer.renderer').transfer = True
 
 
