@@ -500,23 +500,24 @@ def build(bld):
 
 
     # Create the build tasks for each of our extension modules.
-    addRelwithdebugFlags(bld, 'siplib')
-    siplib = bld(
-        features = 'c cxx cshlib cxxshlib pyext',
-        target   = makeTargetName(bld, 'siplib'),
-        source   = ['sip/siplib/apiversions.c',
-                    'sip/siplib/array.c',
-                    'sip/siplib/bool.cpp',
-                    'sip/siplib/descriptors.c',
-                    'sip/siplib/objmap.c',
-                    'sip/siplib/qtlib.c',
-                    'sip/siplib/siplib.c',
-                    'sip/siplib/threads.c',
-                    'sip/siplib/voidptr.c',
-                    ],
-        uselib   = 'siplib WX WXPY',
-    )
-    makeExtCopyRule(bld, 'siplib')
+
+    # addRelwithdebugFlags(bld, 'siplib')
+    # siplib = bld(
+    #     features = 'c cxx cshlib cxxshlib pyext',
+    #     target   = makeTargetName(bld, 'siplib'),
+    #     source   = ['sip/siplib/apiversions.c',
+    #                 'sip/siplib/array.c',
+    #                 'sip/siplib/bool.cpp',
+    #                 'sip/siplib/descriptors.c',
+    #                 'sip/siplib/objmap.c',
+    #                 'sip/siplib/qtlib.c',
+    #                 'sip/siplib/siplib.c',
+    #                 'sip/siplib/threads.c',
+    #                 'sip/siplib/voidptr.c',
+    #                 ],
+    #     uselib   = 'siplib WX WXPY',
+    # )
+    # makeExtCopyRule(bld, 'siplib')
 
     # Add build rules for each of our ETG generated extension modules
     makeETGRule(bld, 'etg/_core.py',       '_core',      'WX')

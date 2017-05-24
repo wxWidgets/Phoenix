@@ -36,15 +36,12 @@ if [ "$PLATFORM" = "darwin" ]; then
 	--sdk=$SDK \
 	--arch=i386 \
 	--universal \
-	--sip-module wx.siplib \
 	$*
 
     make -C sipgen clean all
 
 else
-    $PYTHON configure.py \
-	--sip-module wx.siplib \
-	$*
+    $PYTHON configure.py $*
 
     make -C sipgen clean all
 fi
