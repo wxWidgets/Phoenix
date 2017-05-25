@@ -366,6 +366,15 @@ def fixSetStatusWidths(m):
         """)
 
 
+def fixRefCountedClass(klass):
+    # Set the Transfer annotation on the ctors, because the C++ objects
+    # own themselves and will delete themselves when their C++ refcount
+    # drops to zero.
+    for item in klass.allItems():
+        if isinstance(item, extractors.MethodDef) and item.isCtor:
+            item.transfer = True
+
+
 
 def removeVirtuals(klass):
     """
