@@ -39,7 +39,6 @@ INCLUDES = [  # base and core stuff
               'defs',
               'debug',
               'object',
-              'wxpy_api',
               'arrayholder',
               'string',
               'filename',
@@ -68,7 +67,8 @@ INCLUDES = [  # base and core stuff
               'position',
               'colour',
 
-              'stream', 'filesys',
+              'stream',
+              'filesys',
 
               # GDI and graphics
               'image',

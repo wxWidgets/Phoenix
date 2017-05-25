@@ -111,6 +111,7 @@ class Configuration(object):
 
         self.includes = [phoenixDir() + '/sip/siplib',  # to get our version of sip.h
                          phoenixDir() + '/src',         # for any hand-written headers
+                         phoenixDir() + '/wxpy_api',    # for our internal API module
                          ]
 
         self.DOXY_XML_DIR = os.path.join(self.WXDIR, 'docs/doxygen/out/xml')
@@ -539,7 +540,6 @@ class Configuration(object):
             else:
                 newCFLAGS.append(flag)
         return newCFLAGS
-
 
 
     def adjustLFLAGS(self, lflags, libdirs, libs):

@@ -60,7 +60,8 @@ def addGetAllFormats(klass, pureVirtual=False):
             for (size_t i=0; i<count; i++) {
                 wxDataFormat* format = new wxDataFormat(formats[i]);
                 PyObject* obj = wxPyConstructObject((void*)format, wxT("wxDataFormat"), true);
-                PyList_SET_ITEM(list, i, obj); // PyList_SET_ITEM steals a reference
+                PyList_SetItem(list, i, obj); 
+                // PyList_SetItem borrows the reference, so no need to decref it
             }
             delete [] formats;
             return list;

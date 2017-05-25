@@ -69,7 +69,7 @@ def run():
             cArray = new char*[count];
 
             for(int x=0; x<count; x++) {
-                PyObject* item = PyList_GET_ITEM(listOfBytes, x);
+                PyObject* item = PyList_GetItem(listOfBytes, x);
                 if (!PyBytes_Check(item)) {
                     PyErr_SetString(PyExc_TypeError, errMsg);
                     delete [] cArray;

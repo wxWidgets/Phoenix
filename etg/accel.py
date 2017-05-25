@@ -69,7 +69,7 @@ def run():
     }
     int idx;
     for (idx=0; idx<count; idx++) {
-        PyObject* obj = PySequence_ITEM(entries, idx);
+        PyObject* obj = PySequence_GetItem(entries, idx);
         if (sipCanConvertToType(obj, sipType_wxAcceleratorEntry, SIP_NO_CONVERTORS)) {
             int err = 0;
             wxAcceleratorEntry* entryPtr = reinterpret_cast<wxAcceleratorEntry*>(
@@ -77,9 +77,9 @@ def run():
             tmpEntries[idx] = *entryPtr;
         }
         else if (PySequence_Check(obj) && PySequence_Size(obj) == 3) {
-            PyObject* o1 = PySequence_ITEM(obj, 0);
-            PyObject* o2 = PySequence_ITEM(obj, 1);
-            PyObject* o3 = PySequence_ITEM(obj, 2);
+            PyObject* o1 = PySequence_GetItem(obj, 0);
+            PyObject* o2 = PySequence_GetItem(obj, 1);
+            PyObject* o3 = PySequence_GetItem(obj, 2);
             tmpEntries[idx].Set(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3));
             Py_DECREF(o1);
             Py_DECREF(o2);

@@ -1,0 +1,43 @@
+diff --git a/src/wxpy_api.h b/src/wxpy_api.h
+index 9e9edfb..1f6504b 100644
+--- a/src/wxpy_api.h
++++ b/src/wxpy_api.h
+@@ -101,12 +101,23 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
+ // Make a memory view object from a C buffer and size.
+ inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) {
+     // GIL should already be held
+-    Py_buffer view;
+-    int flags = PyBUF_FORMAT|PyBUF_ND;
+-    if (!readOnly)
+-        flags |= PyBUF_WRITABLE;
+-    PyBuffer_FillInfo(&view, NULL, ptr, len, readOnly ? 1:0, flags);
+-    return PyMemoryView_FromBuffer(&view);
++//    Py_buffer view;
++//    int flags = PyBUF_FORMAT|PyBUF_ND;
++//    if (!readOnly)
++//        flags |= PyBUF_WRITABLE;
++//    PyBuffer_FillInfo(&view, NULL, ptr, len, readOnly ? 1:0, flags);
++//    return PyMemoryView_FromBuffer(&view);
++
++    // Create a sip.array of bytes, and then convert to a memoryview which is
++    // basically the same thing but is a documented built-in Python type
++    // TODO: Consider just returning the array object instead.
++    int flags = 0;
++    if (readOnly)
++        flags |= SIP_READ_ONLY;
++    PyObject* array = sipConvertToArray(ptr, "B", len, flags);
++    PyObject* mem = PyMemoryView_FromObject(array);
++    Py_DECREF(array);
++    return mem;
+ }
+ 
+ 
+@@ -162,7 +173,7 @@ inline bool wxPyNumberSequenceCheck(PyObject* obj, int reqLength=-1) {
+         // If it's not one of those, then check for an array.
+         // It's probably not a good idea to do it this way, but this allows us
+         // to check if the object is a numpy array without requiring that
+-        // numpy be imported even for those applications tha are not using it.
++        // numpy be imported even for those applications that are not using it.
+         if (strcmp(obj->ob_type->tp_name, "numpy.ndarray") != 0)
+             return false;
+     }

@@ -96,9 +96,9 @@ def run():
         wxPyThreadBlocker blocker;
             PyObject* ret = PyTuple_New(3);
             if (ret) {
-                PyTuple_SET_ITEM(ret, 0, PyBool_FromLong(flag));
-                PyTuple_SET_ITEM(ret, 1, wx2PyString(str));
-                PyTuple_SET_ITEM(ret, 2, wxPyInt_FromLong(index));
+                PyTuple_SetItem(ret, 0, PyBool_FromLong(flag));
+                PyTuple_SetItem(ret, 1, wx2PyString(str));
+                PyTuple_SetItem(ret, 2, wxPyInt_FromLong(index));
             }
             return ret;
         }
