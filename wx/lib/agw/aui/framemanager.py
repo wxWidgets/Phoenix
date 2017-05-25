@@ -3033,7 +3033,7 @@ class AuiFloatingFrame(wx.MiniFrame):
             self.SetMinSize(min_size)
 
         self._mgr.AddPane(self._pane_window, contained_pane)
-        self._mgr.Update()
+        self._mgr.DoUpdate()
 
         if pane.min_size.IsFullySpecified():
             # because SetSizeHints() calls Fit() too (which sets the window
@@ -9419,7 +9419,7 @@ class AuiManager(wx.EvtHandler):
             e = self.FireEvent(wxEVT_AUI_PANE_FLOATED, self._action_pane, canVeto=False)
 
             if not self._action_pane.frame:
-                self.Update()
+                self.DoUpdate()
 
             self._action_window = self._action_pane.window
 
