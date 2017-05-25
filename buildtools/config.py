@@ -558,6 +558,20 @@ class Configuration(object):
         return newLFLAGS
 
 
+    def set_limited_api(self, use_limited_api):
+        """
+        Add a define for Py_LIMITED_API if the option is enabled
+        """
+        name = 'Py_LIMITED_API'
+        version = '0x03040000'
+        if use_limited_api:
+            # not sure yet where it needs to go, so put it everywhere ;-)
+            self.defines.append( (name, version) )
+            self.wafDefines.append('{}={}'.format(name, version))
+            # and return it too
+            return '-D{}={}'.format(name, version)
+
+
 
 # We'll use a factory function so we can use the Configuration class as a singleton
 _config = None

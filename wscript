@@ -37,6 +37,8 @@ def options(opt):
                    help='Turn on debug compile options.')
     opt.add_option('--python', dest='python', default='', action='store',
                    help='Full path to the Python executable to use.')
+    opt.add_option('--py_limited_api', dest='py_limited_api', default='', action='store',
+                   help='Turn on Py_LIMITED_API for multi-python version builds.')
     opt.add_option('--wx_config', dest='wx_config', default='wx-config', action='store',
                    help='Full path to the wx-config script to be used for this build.')
     opt.add_option('--no_magic', dest='no_magic', action='store_true', default=False,
@@ -100,6 +102,7 @@ def configure(conf):
         # Windows/MSVC specific stuff
 
         cfg.finishSetup(debug=conf.env.debug)
+        cfg.set_limited_api(conf.options.py_limited_api)
 
         conf.env.INCLUDES_WX = cfg.includes
         conf.env.DEFINES_WX = cfg.wafDefines
@@ -180,6 +183,10 @@ def configure(conf):
         conf.env.wx_config = conf.options.wx_config
         cfg.finishSetup(conf.env.wx_config, conf.env.debug)
 
+        pla_flag = cfg.set_limited_api(conf.options.py_limited_api)
+        conf.env.CFLAGS_WXPY.append(pla_flag)
+        conf.env.CXXFLAGS_WXPY.append(pla_flag)
+
         # Check wx-config exists and fetch some values from it
         rpath = ' --no-rpath' if not conf.options.no_magic else ''
         conf.check_cfg(path=conf.options.wx_config, package='',
@@ -187,7 +194,7 @@ def configure(conf):
                        uselib_store='WX', mandatory=True)
 
         # Run it again with different libs options to get different
-        # sets of flags stored to use with varous extension modules below.
+        # sets of flags stored to use with various extension modules below.
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs adv,core,net' + rpath,
                        uselib_store='WXADV', mandatory=True)
@@ -471,6 +478,9 @@ def build(bld):
     from buildtools.config   import opj, updateLicenseFiles
 
     cfg.finishSetup(bld.env.wx_config)
+
+    # Is this needed here or is the flag remembered from the configure step?
+    # cfg.set_limited_api(conf.options.py_limited_api)
 
     # Copy the license files from wxWidgets
     updateLicenseFiles(cfg)

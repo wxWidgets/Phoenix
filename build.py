@@ -391,7 +391,11 @@ def makeOptionParser():
         ("debug",          (False, "Build wxPython with debug symbols")),
         ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
         ("release",        (False, "Turn off some development options for a release build.")),
+
+        ("py_limited_api", (False, "Set flags to use the Python Limited API.")),
+
         ("keep_hash_lines",(False, "Don't remove the '#line N' lines from the SIP generated code")),
+
         ("gtk3",           (False, "On Linux build for gtk3 (default gtk2)")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
         ("osx_carbon",     (False, "Build the OSX Carbon port on Mac (unsupported)")),
@@ -1397,6 +1401,9 @@ def cmd_build_py(options, args):
         build_options.append('--msvc_relwithdebug')
     if options.gtk3:
         build_options.append('--gtk3')
+
+    if options.py_limited_api:
+        build_options.append('--py_limited_api')
 
     build_options.append('--python="%s"' % PYTHON)
     build_options.append('--out=%s' % wafBuildDir) # this needs to be the last option
