@@ -17,7 +17,7 @@
 
 #if defined(__APPLE__)
     // When it's possible that we're building universal binaries with both
-    // 32-bit and 64-bit architectures then these need to be undefed because
+    // 32-bit and 64-bit architectures then these need to be undef'ed because
     // otherwise the values set by configure could conflict with those set
     // based on runtime flags in Python's headers.  We also do something
     // similar in wx/platform.h so it's okay to undef them now because they
@@ -98,16 +98,6 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 #define RETURN_NONE()    { wxPyBLOCK_THREADS(Py_INCREF(Py_None)); return Py_None; }
 
 
-// Make a memory view object from a C buffer and size.
-inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) {
-    // GIL should already be held
-    Py_buffer view;
-    int flags = PyBUF_FORMAT|PyBUF_ND;
-    if (!readOnly)
-        flags |= PyBUF_WRITABLE;
-    PyBuffer_FillInfo(&view, NULL, ptr, len, readOnly ? 1:0, flags);
-    return PyMemoryView_FromBuffer(&view);
-}
 
 
 // Macros to work around some of the differences in the Python 3 API
@@ -150,47 +140,6 @@ Py_ssize_t wxPyUnicode_AsWideChar(PyObject* unicode, wchar_t* w, Py_ssize_t size
 }
 
 
-inline bool wxPyNumberSequenceCheck(PyObject* obj, int reqLength=-1) {
-    // Used in the various places where a sequence of numbers can be converted
-    // to a wx type, like wxPoint, wxSize, wxColour, etc. Returns true if the
-    // object is a Tuple, List or numpy Array of the proper length.
-
-    // tuples or lists are easy
-    bool isFast = (PyTuple_Check(obj) || PyList_Check(obj));
-
-    if (!isFast ) {
-        // If it's not one of those, then check for an array.
-        // It's probably not a good idea to do it this way, but this allows us
-        // to check if the object is a numpy array without requiring that
-        // numpy be imported even for those applications tha are not using it.
-        if (strcmp(obj->ob_type->tp_name, "numpy.ndarray") != 0)
-            return false;
-    }
-
-    // Bail out here if the length isn't given
-    if (reqLength == -1)
-        return true;
-
-    // Now check that the length matches the expected length
-    if (PySequence_Length(obj) != reqLength)
-        return false;
-
-    // Check that each item is a number
-    for (int i=0; i<reqLength; i+=1) {
-        PyObject* item;
-        if (isFast)
-            item = PySequence_Fast_GET_ITEM(obj, i);
-        else
-            item = PySequence_ITEM(obj, i);
-        bool isNum = PyNumber_Check(item);
-        if (!isFast)
-            Py_DECREF(item);
-        if (!isNum)
-            return false;
-    }
-    return true;
-}
-
 
 //--------------------------------------------------------------------------
 // These are the API items whose implementation can not or should not be
@@ -212,6 +161,11 @@ struct wxPyAPI {
     wxVariant     (*p_wxVariant_in_helper)(PyObject* obj);
     PyObject*     (*p_wxVariant_out_helper)(const wxVariant& value);
     bool          (*p_wxPyCheckForApp)();
+    PyObject*     (*p_wxPyMakeBuffer)(void* ptr, Py_ssize_t len, bool readOnly);
+    bool          (*p_wxPyNumberSequenceCheck)(PyObject* obj, int reqLength);
+    void*         (*p_wxPyGetCppPtr)(sipSimpleWrapper* sipPyObj);
+    PyObject*     (*p_wxPyMethod_Self)(PyObject* method);
+
     // Always add new items here at the end.
 };
 
@@ -290,8 +244,25 @@ inline PyObject* wxVariant_out_helper(const wxVariant& value)
     { return wxPyGetAPIPtr()->p_wxVariant_out_helper(value); }
 
 
+// Check if a wx.App object has been created
 inline bool wxPyCheckForApp()
     { return wxPyGetAPIPtr()->p_wxPyCheckForApp(); }
+
+
+// Create a buffer object from a pointer and size
+inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false)
+    { return wxPyGetAPIPtr()->p_wxPyMakeBuffer(ptr, len, readOnly); }
+
+// Check if an object is a sequence of numbers
+inline bool wxPyNumberSequenceCheck(PyObject* obj, int reqLength=-1)
+    { return wxPyGetAPIPtr()->p_wxPyNumberSequenceCheck(obj, reqLength); }
+
+
+inline void* wxPyGetCppPtr(sipSimpleWrapper* sipPyObj)
+    { return wxPyGetAPIPtr()->p_wxPyGetCppPtr(sipPyObj); }
+
+inline PyObject* wxPyMethod_Self(PyObject* method)
+    { return wxPyGetAPIPtr()->p_wxPyMethod_Self(method); }
 
 
 //--------------------------------------------------------------------------
