@@ -4218,6 +4218,7 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
         self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
         if '__WXGTK__' in wx.PlatformInfo:
             self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
 
@@ -4598,7 +4599,20 @@ class AuiManager(wx.EvtHandler):
                     klass.RemoveEventHandler(handler)
 
 
+    def OnClose(self, ev):
+        """Called when the managed window is closed. Makes sure that :meth:`UnInit`
+        is called.
+        """
+
+        ev.Skip()
+        if ev.GetEventObject() == self._frame:
+            wx.CallAfter(self.UnInit)
+
+
     def OnDestroy(self, event) :
+        """Called when the managed window is destroyed. Makes sure that :meth:`UnInit`
+        is called.
+        """
 
         if self._frame == event.GetEventObject():
             self.UnInit()
@@ -4968,6 +4982,7 @@ class AuiManager(wx.EvtHandler):
                     # reparent to self._frame and destroy the pane
                     p.window.Reparent(self._frame)
                     p.frame.SetSizer(None)
+                    p.frame._mgr.UnInit()
                     p.frame.Destroy()
                     p.frame = None
 
