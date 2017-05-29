@@ -6360,6 +6360,10 @@ class AuiManager(wx.EvtHandler):
         must be called. This construction allows pane flicker to be avoided by updating
         the whole layout at one time.
         """
+
+        if not self.GetManagedWindow():
+            return
+
         if '__WXGTK__' in wx.PlatformInfo:
             self.GetManagedWindow().Freeze()
         self._hover_button = None
