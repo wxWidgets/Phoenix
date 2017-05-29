@@ -3090,7 +3090,7 @@ class AuiFloatingFrame(wx.MiniFrame):
         :param `event`: a :class:`wx.SizeEvent` to be processed.
         """
 
-        if self._owner_mgr and self._send_size:
+        if self._owner_mgr and self._send_size and self.IsShownOnScreen():
             self._owner_mgr.OnFloatingPaneResized(self._pane_window, event.GetSize())
 
 
@@ -6869,7 +6869,8 @@ class AuiManager(wx.EvtHandler):
             if guide.dock_direction == AUI_DOCK_CENTER:
                 guide.host.ValidateNotebookDocking(paneInfo.IsNotebookDockable())
 
-            guide.host.UpdateDockGuide(mousePos)
+            if guide.host.IsShownOnScreen():
+                guide.host.UpdateDockGuide(mousePos)
 
         paneInfo.window.Lower()
 
@@ -8682,6 +8683,9 @@ class AuiManager(wx.EvtHandler):
         if not self._frame.GetSizer():
             return
 
+        if not self._frame.IsShownOnScreen():
+            return
+
         mouse = wx.GetMouseState()
         mousePos = wx.Point(mouse.GetX(), mouse.GetY())
         point = self._frame.ScreenToClient(mousePos)
@@ -9670,7 +9674,7 @@ class AuiManager(wx.EvtHandler):
                 ShowDockingGuides(self._guides, True)
                 break
 
-        self.DrawHintRect(pane.window, clientPt, action_offset)
+        wx.CallAfter(self.DrawHintRect, pane.window, clientPt, action_offset)
 
 
     def OnMotion_DragMovablePane(self, eventOrPt):
