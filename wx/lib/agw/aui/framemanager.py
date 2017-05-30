@@ -2195,6 +2195,9 @@ class AuiDockingGuideWindow(wx.Window):
         :param `pos`: a :class:`wx.Point` mouse position.
         """
 
+        if not self.GetTopLevelParent().IsShownOnScreen() and self.IsShownOnScreen():
+            return
+
         inside = self.GetScreenRect().Contains(pos)
 
         if inside:
