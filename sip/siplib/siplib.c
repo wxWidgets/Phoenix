@@ -9918,13 +9918,16 @@ static int sipWrapperType_init(sipWrapperType *self, PyObject *args,
 
             self->wt_td = ((sipWrapperType *)base)->wt_td;
 
-            /* Call any new type handler. */
-            new_user_type_handler = find_new_user_type_handler(
-                    (sipWrapperType *)sipTypeAsPyTypeObject(self->wt_td));
+            if (self->wt_td != NULL)
+            {
+                /* Call any new type handler. */
+                new_user_type_handler = find_new_user_type_handler(
+                        (sipWrapperType *)sipTypeAsPyTypeObject(self->wt_td));
 
-            if (new_user_type_handler != NULL)
-                if (new_user_type_handler(self) < 0)
-                    return -1;
+                if (new_user_type_handler != NULL)
+                    if (new_user_type_handler(self) < 0)
+                        return -1;
+            }
         }
     }
     else

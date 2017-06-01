@@ -2195,6 +2195,9 @@ class AuiDockingGuideWindow(wx.Window):
         :param `pos`: a :class:`wx.Point` mouse position.
         """
 
+        if not self.GetTopLevelParent().IsShownOnScreen() and self.IsShownOnScreen():
+            return
+
         inside = self.GetScreenRect().Contains(pos)
 
         if inside:
@@ -3033,7 +3036,7 @@ class AuiFloatingFrame(wx.MiniFrame):
             self.SetMinSize(min_size)
 
         self._mgr.AddPane(self._pane_window, contained_pane)
-        self._mgr.Update()
+        self._mgr.DoUpdate()
 
         if pane.min_size.IsFullySpecified():
             # because SetSizeHints() calls Fit() too (which sets the window
@@ -3090,7 +3093,7 @@ class AuiFloatingFrame(wx.MiniFrame):
         :param `event`: a :class:`wx.SizeEvent` to be processed.
         """
 
-        if self._owner_mgr and self._send_size:
+        if self._owner_mgr and self._send_size and self.IsShownOnScreen():
             self._owner_mgr.OnFloatingPaneResized(self._pane_window, event.GetSize())
 
 
@@ -4218,6 +4221,7 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
         self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
         if '__WXGTK__' in wx.PlatformInfo:
             self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
 
@@ -4598,7 +4602,20 @@ class AuiManager(wx.EvtHandler):
                     klass.RemoveEventHandler(handler)
 
 
+    def OnClose(self, ev):
+        """Called when the managed window is closed. Makes sure that :meth:`UnInit`
+        is called.
+        """
+
+        ev.Skip()
+        if ev.GetEventObject() == self._frame:
+            wx.CallAfter(self.UnInit)
+
+
     def OnDestroy(self, event) :
+        """Called when the managed window is destroyed. Makes sure that :meth:`UnInit`
+        is called.
+        """
 
         if self._frame == event.GetEventObject():
             self.UnInit()
@@ -4968,6 +4985,7 @@ class AuiManager(wx.EvtHandler):
                     # reparent to self._frame and destroy the pane
                     p.window.Reparent(self._frame)
                     p.frame.SetSizer(None)
+                    p.frame._mgr.UnInit()
                     p.frame.Destroy()
                     p.frame = None
 
@@ -6360,6 +6378,10 @@ class AuiManager(wx.EvtHandler):
         must be called. This construction allows pane flicker to be avoided by updating
         the whole layout at one time.
         """
+
+        if not self.GetManagedWindow():
+            return
+
         if '__WXGTK__' in wx.PlatformInfo:
             self.GetManagedWindow().Freeze()
         self._hover_button = None
@@ -6869,7 +6891,8 @@ class AuiManager(wx.EvtHandler):
             if guide.dock_direction == AUI_DOCK_CENTER:
                 guide.host.ValidateNotebookDocking(paneInfo.IsNotebookDockable())
 
-            guide.host.UpdateDockGuide(mousePos)
+            if guide.host.IsShownOnScreen():
+                guide.host.UpdateDockGuide(mousePos)
 
         paneInfo.window.Lower()
 
@@ -8682,6 +8705,9 @@ class AuiManager(wx.EvtHandler):
         if not self._frame.GetSizer():
             return
 
+        if not self._frame.IsShownOnScreen():
+            return
+
         mouse = wx.GetMouseState()
         mousePos = wx.Point(mouse.GetX(), mouse.GetY())
         point = self._frame.ScreenToClient(mousePos)
@@ -9419,7 +9445,7 @@ class AuiManager(wx.EvtHandler):
             e = self.FireEvent(wxEVT_AUI_PANE_FLOATED, self._action_pane, canVeto=False)
 
             if not self._action_pane.frame:
-                self.Update()
+                self.DoUpdate()
 
             self._action_window = self._action_pane.window
 
@@ -9670,7 +9696,7 @@ class AuiManager(wx.EvtHandler):
                 ShowDockingGuides(self._guides, True)
                 break
 
-        self.DrawHintRect(pane.window, clientPt, action_offset)
+        wx.CallAfter(self.DrawHintRect, pane.window, clientPt, action_offset)
 
 
     def OnMotion_DragMovablePane(self, eventOrPt):

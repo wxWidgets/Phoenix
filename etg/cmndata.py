@@ -59,6 +59,9 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
 
+    c.addCppMethod('wxSize*', 'GetPaperSize', '()', 'return new wxSize(self->GetPaperSize());')
+    c.addCppMethod('void', 'SetPaperSize', '(const wxSize* sz)', 'self->SetPaperSize(*sz);')
+
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();
         """)

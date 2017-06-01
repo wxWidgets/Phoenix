@@ -21,7 +21,6 @@
 %ModuleCode
 // wxPython's API helper and utility functions
 
-
 //--------------------------------------------------------------------------
 // wxString conversion
 
@@ -441,6 +440,92 @@ bool i_wxPyCheckForApp() {
     }
 }
 
+//--------------------------------------------------------------------------
+// Make a memory view object from a C buffer and size.
+
+PyObject* i_wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) {
+    // GIL should already be held
+    Py_buffer view;
+    int flags = PyBUF_FORMAT|PyBUF_ND;
+    if (!readOnly)
+        flags |= PyBUF_WRITABLE;
+    PyBuffer_FillInfo(&view, NULL, ptr, len, readOnly ? 1:0, flags);
+    return PyMemoryView_FromBuffer(&view);
+
+//    // TODO: Consider using a sip.array object instead, like this:
+//    // Create a sip.array of bytes, and then convert to a memoryview which is
+//    // basically the same thing but is a documented built-in Python type
+//    int flags = 0;
+//    if (readOnly)
+//        flags |= SIP_READ_ONLY;
+//    PyObject* array = sipConvertToArray(ptr, "B", len, flags);
+//    return array;
+}
+
+
+//--------------------------------------------------------------------------
+// Check if an object is suitable for conversion to various "value" types that
+// can be created from a sequence of numbers, such as wx.Point, wx.Colour,
+// wx.Rect, etc.
+
+bool i_wxPyNumberSequenceCheck(PyObject* obj, int reqLength=-1) {
+    // Used in the various places where a sequence of numbers can be converted
+    // to a wx type, like wxPoint, wxSize, wxColour, etc. Returns true if the
+    // object is a Tuple, List or numpy Array of the proper length.
+
+    // tuples or lists are easy
+    bool isFast = (PyTuple_Check(obj) || PyList_Check(obj));
+
+    if (!isFast ) {
+        // If it's not one of those, then check for an array.
+        // It's probably not a good idea to do it this way, but this allows us
+        // to check if the object is a numpy array without requiring that
+        // numpy be imported even for those applications that are not using it.
+        if (strcmp(obj->ob_type->tp_name, "numpy.ndarray") != 0)
+            return false;
+    }
+
+    // Bail out here if the length isn't given
+    if (reqLength == -1)
+        return true;
+
+    // Now check that the length matches the expected length
+    if (PySequence_Length(obj) != reqLength)
+        return false;
+
+    // Check that each item is a number
+    for (int i=0; i<reqLength; i+=1) {
+        PyObject* item;
+        if (isFast)
+            item = PySequence_Fast_GET_ITEM(obj, i);
+        else
+            item = PySequence_ITEM(obj, i);
+        bool isNum = PyNumber_Check(item);
+        if (!isFast)
+            Py_DECREF(item);
+        if (!isNum)
+            return false;
+    }
+    return true;
+}
+
+
+//--------------------------------------------------------------------------
+// Get the pointer to the C++ object out of the sipSimpleWrapper structure.
+// Yes, it's super unsafe and probably stupid, but here it is...
+
+void* i_wxPyGetCppPtr(sipSimpleWrapper* sipPyObj) {
+    return sipPyObj->data;
+}
+
+//--------------------------------------------------------------------------
+// Call the PyMethod_Self API, which is not available when the Python
+// limited API is activated.
+
+inline PyObject* i_wxPyMethod_Self(PyObject* method) {
+    return PyMethod_Self(method);
+}
+
 
 //--------------------------------------------------------------------------
 // An instance of the API structure
@@ -456,7 +541,11 @@ static wxPyAPI  API = {
     i_wxPyWrappedPtr_TypeCheck,
     i_wxVariant_in_helper,
     i_wxVariant_out_helper,
-    i_wxPyCheckForApp
+    i_wxPyCheckForApp,
+    i_wxPyMakeBuffer,
+    i_wxPyNumberSequenceCheck,
+    i_wxPyGetCppPtr,
+    i_wxPyMethod_Self
 };
 %End
 

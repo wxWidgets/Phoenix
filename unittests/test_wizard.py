@@ -72,6 +72,32 @@ class wizard_Tests(wtc.WidgetTestCase):
         wiz.Destroy()
 
 
+    def test_wizard4(self):
+        # Create the wizard
+        bmp = wx.Bitmap(pngFile)
+        wiz = wx.adv.Wizard(self.frame, title="Test Wizard 2", bitmap=bmp)
+
+        # create the pages
+        pages = []
+        for i in range(5):
+            pages.append(MySimpleWizPage(wiz, str(i+1)))
+
+        # set the next/prev pages
+        for idx, p in enumerate(pages):
+            p.SetNext(pages[idx+1] if idx < len(pages)-1 else None)
+            p.SetPrev(pages[idx-1] if idx > 0 else None)
+
+        wiz.FitToPage(pages[0])
+        wx.CallLater(100, self._autoPilot, wiz)
+
+        # Simply test if these new methods exist
+        wiz.ShowPage(pages[2])
+        wiz.IsRunning()
+
+        wiz.RunWizard(pages[0])
+        wiz.Destroy()
+
+
     def _autoPilot(self, wiz):
         # simulate clicking the next button until the wizard closes
         if not wiz or not wiz.GetCurrentPage():

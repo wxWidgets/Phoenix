@@ -626,10 +626,12 @@ def makeETGRule(bld, etgScript, moduleName, libFlags):
 def addRelwithdebugFlags(bld, moduleName):
     if isWindows and bld.env.msvc_relwithdebug:
         compile_flags = ['/Zi', '/Fd_tmp_{}.pdb'.format(moduleName)]
-        if sys.version_info > (3,4):
+        if sys.version_info > (3,5):
             # It looks like the /FS flag doesn't exist in the compilers used
             # by the earlier Pythons. But it also appears that it isn't needed
             # there either.  :)
+            # TODO: It would be better to base this on the actual compiler being
+            # used, not the Python version
             compile_flags.append('/FS')
         bld.env['CFLAGS_{}'.format(moduleName)] = compile_flags
         bld.env['CXXFLAGS_{}'.format(moduleName)] = compile_flags
