@@ -21,6 +21,22 @@ object, similar to how it is done for wx.Window.GetHandle.
 Make wx.TreeItemID hashable, with meaningful hash value and equality
 operators, so it can be used as a dictionary key in Py3.
 
+Fixed crash in wx.grid.GridTable.GetAttr, and potentially other cases of
+classes derived from wx.RefCounter.
+
+Add ShowPage and IsRunning methods to wx.adv.Wizard.
+
+Fixed various GTK specific bugs and other cleanup in wx.lib.agw.aui.
+
+Updated to SIP 4.19.2
+
+Restored builders for Python 3.4 to the buildbot.
+
+Restore the wrappers for GetPaperSize and SetPaperSize to wx.PrintData.
+
+Fix crashing problem when a wx.TreeItemId was compared with None.
+
+
 
 
 
