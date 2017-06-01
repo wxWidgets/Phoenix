@@ -43,9 +43,11 @@ def run():
         """)
 
     c.addCppMethod('bool', '__eq__', '(const wxTreeItemId* other)', """\
+        if (other == NULL) return false; 
         return *self == *other;
         """)
     c.addCppMethod('bool', '__neq__', '(const wxTreeItemId* other)', """\
+        if (other == NULL) return true;
         return *self != *other;
         """)
 
