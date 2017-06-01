@@ -42,18 +42,19 @@ def run():
         return self->IsOk();
         """)
 
-    c.addCppMethod('bool', '__eq__', '(const wxTreeItemId* other)', """\
-        if (other == NULL) return false; 
+    c.addCppMethod('bool', '__eq__', '(const wxTreeItemId& other)', """\
         return *self == *other;
         """)
-    c.addCppMethod('bool', '__neq__', '(const wxTreeItemId* other)', """\
-        if (other == NULL) return true;
+    c.addCppMethod('bool', '__neq__', '(const wxTreeItemId& other)', """\
         return *self != *other;
         """)
 
     c.addPyMethod('__hash__', '(self)', """\
         return hash(int(self.GetID()))
         """)
+
+    module.find('operator==').ignore()
+    module.find('operator!=').ignore()
 
 
     td = etgtools.TypedefDef(name='wxTreeItemIdValue', type='void*')
