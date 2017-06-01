@@ -1577,9 +1577,9 @@ def cmd_bdist_wininst(options, args):
             uploadPackage(pdbzip, options)
 
 
-#def cmd_bdist_msi(options, args):
-#    cmd_build_pdbzip(options, args)
-#    _doSimpleSetupCmd(options, args, 'bdist_msi')
+def cmd_bdist_msi(options, args):
+    cmd_build_pdbzip(options, args)
+    _doSimpleSetupCmd(options, args, 'bdist_msi')
 
 
 def cmd_egg_info(options, args, egg_base=None):
