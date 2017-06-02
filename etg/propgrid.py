@@ -44,8 +44,9 @@ def run():
     tools.fixWindowClass(c)
     module.addGlobalStr('wxPropertyGridNameStr', c)
 
-    for m in c.find('RegisterEditorClass').all():
-        m.find('editor').transfer = True
+    for name in ['RegisterEditorClass', 'DoRegisterEditorClass']:
+        for m in c.find(name).all():
+            m.find('editor').transfer = True
 
 
     # TODO: provide a way to use a Python callable as a sort function
