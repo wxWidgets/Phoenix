@@ -101,6 +101,13 @@ def run():
         EVT_PG_COL_END_DRAG = wx.PyEventBinder( wxEVT_PG_COL_END_DRAG, 1 )
         """)
 
+    module.addItem(etgtools.WigCode("""\
+        enum {
+            wxPG_SUBID1,
+            wxPG_SUBID2,
+            wxPG_SUBID_TEMP1,
+        };
+        """))
 
     # Switch all wxVariant types to wxPGVariant, so the propgrid-specific
     # version of the MappedType will be used for converting to/from Python
