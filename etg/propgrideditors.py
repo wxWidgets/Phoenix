@@ -44,6 +44,13 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
 
+    c.addPyMethod('AddButton', '(self, label, id=-2)',
+        doc='A simple wrapper around the PGMultiButton.Add method, for backwards compatibility.',
+        body="self.Add(label, id)")
+
+    c.addPyMethod('AddBitmapButton', '(self, bitmap, id=-2)',
+        doc='A simple wrapper around the PGMultiButton.Add method, for backwards compatibility.',
+        body="self.Add(bitmap, id)")
 
     # Switch all wxVariant types to wxPGVariant, so the propgrid-specific
     # version of the MappedType will be used for converting to/from Python
