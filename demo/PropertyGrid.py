@@ -319,6 +319,7 @@ class SampleMultiButtonEditor(wxpg.PGTextCtrlEditor):
                                    property,
                                    pos,
                                    buttons.GetPrimarySize())
+        wnd = wnd.m_primary
 
         # Finally, move buttons-subwindow to correct position and make sure
         # returned wxPGWindowList contains our custom button list.
@@ -331,7 +332,7 @@ class SampleMultiButtonEditor(wxpg.PGTextCtrlEditor):
         # PGMultiButton instance.
         self.buttons = buttons
 
-        return (wnd, buttons)
+        return wxpg.PGWindowList(wnd, buttons)
 
     def OnEvent(self, propGrid, prop, ctrl, event):
         if event.GetEventType() == wx.wxEVT_COMMAND_BUTTON_CLICKED:
@@ -429,7 +430,7 @@ class TrivialPropertyEditor(wxpg.PGEditor):
             btn = wx.Button(propgrid.GetPanel(), wxpg.PG_SUBID2, '...',
                             (x+w, y),
                             (bw, h), wx.WANTS_CHARS)
-            return (tc, btn)
+            return wxpg.PGWindowList(tc, btn)
         except:
             import traceback
             print(traceback.print_exc())
@@ -503,8 +504,7 @@ class LargeImagePickerCtrl(wx.Panel):
     Control created and used by LargeImageEditor.
     """
     def __init__(self):
-        pre = wx.PrePanel()
-        self.PostCreate(pre)
+        wx.Panel.__init__(self)
 
     def Create(self, parent, id_, pos, size, style = 0):
         wx.Panel.Create(self, parent, id_, pos, size,
@@ -586,18 +586,10 @@ class LargeImageEditor(wxpg.PGEditor):
                 lipc.Hide()
             lipc.Create(propgrid.GetPanel(), wxpg.PG_SUBID1, (x,y), (w,h))
             lipc.SetProperty(property)
-            # Hmmm.. how to have two-stage creation without subclassing?
-            #btn = wx.PreButton()
-            #pre = wx.PreWindow()
-            #self.PostCreate(pre)
-            #if sys.platform == 'win32':
-            #    btn.Hide()
-            #btn.Create(propgrid, wxpg.PG_SUBID2, '...', (x2-bw,pos[1]),
-            #           (bw,h), wx.WANTS_CHARS)
             btn = wx.Button(propgrid.GetPanel(), wxpg.PG_SUBID2, '...',
                             (x+w, y),
                             (bw, h), wx.WANTS_CHARS)
-            return (lipc, btn)
+            return wxpg.PGWindowList(lipc, btn)
         except:
             import traceback
             print(traceback.print_exc())

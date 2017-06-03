@@ -66,6 +66,9 @@ def run():
 
     module.addInclude(INCLUDES)
 
+    module.addInitializerCode("""\
+        wxPGInitResourceModule();
+        """)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
