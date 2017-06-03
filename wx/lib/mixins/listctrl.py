@@ -756,6 +756,7 @@ class CheckListCtrlMixin(object):
         """
         bmp = wx.Bitmap(*size)
         dc = wx.MemoryDC(bmp)
+        dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
         wx.RendererNative.Get().DrawCheckBox(self, dc,
                                              (0, 0, size[0], size[1]), flag)
