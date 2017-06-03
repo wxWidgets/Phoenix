@@ -1038,6 +1038,8 @@ def cmd_bdist_docs(options, args):
         zipfilename = shutil.make_archive(base_name=os.path.splitext(zipfilename)[0],
                                           format="zip",
                                           root_dir="docs/html")
+        zipfilename = os.path.relpath(zipfilename)
+        zipfilename = zipfilename.replace('\\', '/')
 
         if options.upload:
             uploadPackage(zipfilename, options, keep=5,
