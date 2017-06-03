@@ -8,55 +8,45 @@
    ]]
 
 
-Announcing wxPython 4.0.0a2
+Announcing wxPython 4.0.0a3
 ---------------------------
 
-https://pypi.python.org/pypi/wxPython/4.0.0a2
+https://pypi.python.org/pypi/wxPython/4.0.0a3
 
-This build of wxPython is based on the official wxWidgets 3.0.3
-release.
+Fixed a few cases where the GIL was not acquired before building tuples of
+values. The problems associated with this (hangs or crashes) were sporadic and
+seemingly random, and did not appear until there was a background thread that
+was very busy. Running under a debug build of Python revealed the problem
+almost immediately. Yay Python!
 
-This release is mostly various bug fixes and other tweaks, such as:
+Return an integer value from wx.DC.GetHandle instead of a wrapped voidptr
+object, similar to how it is done for wx.Window.GetHandle.
 
-  * Allow numpy arrays to be auto-converted to simple sequence value
-    types like wx.Size, wx.Colour, etc.
+Make wx.TreeItemID hashable, with meaningful hash value and equality
+operators, so it can be used as a dictionary key in Py3.
 
-  * A couple of fixes to lib/agw/aui to prevent segfaults under OSX
-    when AuiNotebook tabs are closed
+Fixed crash in wx.grid.GridTable.GetAttr, and potentially other cases of
+classes derived from wx.RefCounter.
 
-  * Fix wx._core.wxAssertionError in wx.lib.agw.aui when dragging a
-    notebook tab
+Add ShowPage and IsRunning methods to wx.adv.Wizard.
 
-  * Fix the [G|S]etClientData methods in wx.CommandEvent to behave the
-    same way they are in wx.ClientDataContainer.
+Fixed various GTK specific bugs and other cleanup in wx.lib.agw.aui.
 
-  * Fix the SetFonts methods in wx.html classes
+Updated to SIP 4.19.2
 
-  * Several fixes in wx.dataview related to overriding methods
+Restored builders for Python 3.4 to the buildbot.
 
-  * Fixed some flickering in wx.lib.agw.aui.framemanager
+Restore the wrappers for GetPaperSize and SetPaperSize to wx.PrintData.
 
-  * Fixed problem with wrong implementation of
-    wxNotebook::DeleteAllPages being called on Windows
+Fix crashing problem when a wx.TreeItemId was compared with None.
 
-  * Added the missing wx.grid.GRID_AUTOSIZE flag
+Fix for missing checkbox images in CheckListCtrlMixin on Linux and OSX.
 
-  * Fixed crash due to the object created in an XmlSubclassFactory
-    being destroyed too soon
+Fix another crashing problem in propgrid, and a few other propgrid issues too.
 
-  * Fixed crash in wx.lib.agw.toasterbox
-
-  * Fixed crash when using wx.xrc.XmlSubclassFactory
-
-  * Fixed wx.grid.GridTableBase.GetValue and related methods to work
-    more like they did in Classic, so non-string values can be used a
-    little more easily.
-
-Added building and bundling of the PDB files for wxWidgets and the
-wxPython extensions on Windows.  Until a better place is found they
-will be downloadable from https://wxPython.org/Phoenix/release-extras,
-along with archives for the documentation as well as the demo and
-samples.
+The release version of the documentation can now be found at
+http://pythonhosted.org/wxPython. The documentation created during the
+snapshot builds is still located at https://wxpython.org/Phoenix/docs/html/
 
 
 
