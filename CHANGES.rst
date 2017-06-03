@@ -5,9 +5,9 @@ Recent Changes for wxPython
 ===========================
 
 
-4.0.0a3 (or maybe b1 ???)
+4.0.0a3
 -------
-*
+* 2-June-2017
 
 Fixed a few cases where the GIL was not acquired before building tuples of
 values. The problems associated with this (hangs or crashes) were sporadic and
@@ -36,7 +36,9 @@ Restore the wrappers for GetPaperSize and SetPaperSize to wx.PrintData.
 
 Fix crashing problem when a wx.TreeItemId was compared with None.
 
+Fix for missing checkbox images in CheckListCtrlMixin on Linux and OSX.
 
+Fix another crashing problem in propgrid, and a few other propgrid issues too.
 
 
 
