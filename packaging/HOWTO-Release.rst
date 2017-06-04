@@ -53,8 +53,12 @@ HOWTO Release wxPython Phoenix
     (Twine doesn't know what to do with the docs and other files so they need
     to be excluded by the wildcard.)
 
-14. Upload the wxPython-docs-pythonhosted*.zip documentation file using the
-    form on PyPI. Remove the local copy of the file before the next step.
+14. Upload the wxPython-docs-*.tar.gz documentation file to docs.wxpython.org::
+
+        scp wxPython-docs-4.0.0a3.tar.gz wxpython-docs:wxpython-docs/tmp
+
+    TODO: Automate this!
+    Go to the site and unpack the new docs into the document root.
 
 15. Upload the docs, demos and pdb archive files to wxpython.org/Phoenix/release-extras/::
 

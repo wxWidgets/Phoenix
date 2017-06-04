@@ -45,8 +45,8 @@ Fix for missing checkbox images in CheckListCtrlMixin on Linux and OSX.
 Fix another crashing problem in propgrid, and a few other propgrid issues too.
 
 The release version of the documentation can now be found at
-http://pythonhosted.org/wxPython. The documentation created during the
-snapshot builds is still located at https://wxpython.org/Phoenix/docs/html/
+https://docs.wxPython.org/ The documentation created during the
+snapshot builds is still located at https://wxPython.org/Phoenix/docs/html/
 
 
 

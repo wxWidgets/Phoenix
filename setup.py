@@ -27,6 +27,10 @@ from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
 import buildtools.version as version
 
 
+# Create a buildtools.config.Configuration object
+cfg = Config(noWxConfig=True)
+DOCS_BASE='http://docs.wxPython.org'
+
 #----------------------------------------------------------------------
 
 NAME             = version.PROJECT_NAME
@@ -52,14 +56,15 @@ Unix systems, with a native look and feel and requiring very little (if any)
 platform specific code.
 
 For more information please refer to the
-`README file <https://github.com/wxWidgets/Phoenix/blob/master/README.rst>`_,
-the `Migration Guide <https://wxpython.org/Phoenix/docs/html/MigrationGuide.html>`_,
-or the `wxPython API documentation <https://wxpython.org/Phoenix/docs/html/main.html>`_.
+`README file <https://github.com/wxWidgets/Phoenix/blob/wxPython-{version}/README.rst>`_,
+the `Migration Guide <{docs_base}/MigrationGuide.html>`_,
+or the `wxPython API documentation <{docs_base}/main.html>`_.
 
 Archive files containing a copy of the wxPython documentation, the demo and
 samples, and also a set of MSVC .pdb files for Windows are available 
 `here <https://wxpython.org/Phoenix/release-extras/>`_.
-"""
+""".format(version=cfg.VERSION, docs_base=DOCS_BASE)
+
 
 
 CLASSIFIERS      = """\
@@ -300,9 +305,6 @@ distutils.dir_util.copy_tree = wx_copy_tree
 
 
 #----------------------------------------------------------------------
-
-# Create a buildtools.config.Configuration object
-cfg = Config(noWxConfig=True)
 
 WX_PKGLIST = [cfg.PKGDIR] + [cfg.PKGDIR + '.' + pkg for pkg in find_packages('wx')]
 
