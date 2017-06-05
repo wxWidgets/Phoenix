@@ -28,7 +28,7 @@ HOWTO Release wxPython Phoenix
    builds are still running. Fetch the source tarball when it is finished and put
    it in Phoenix/dist. Run the following::
 
-        python setup.py build_vagrant --release --upload
+        python build.py build_vagrant --release --upload
 
 9. Go do something else for a couple hours...
 
@@ -43,7 +43,7 @@ HOWTO Release wxPython Phoenix
 12. Digitally sign the files with this command::
 
         cd ~/release-builds
-        for f in *.whl *.tar.gz; do gpg --detach-sign -a $f; done
+        for f in wxPython-4*; do gpg --detach-sign -a $f; done
 
 13. Upload to PyPI with::
 
@@ -55,7 +55,7 @@ HOWTO Release wxPython Phoenix
 
 14. Upload the wxPython-docs-*.tar.gz documentation file to docs.wxpython.org::
 
-        scp wxPython-docs-4.0.0a3.tar.gz wxpython-docs:wxpython-docs/tmp
+        scp wxPython-docs-*.tar.gz wxpython-docs:wxpython-docs/tmp
 
     TODO: Automate this!
     Go to the site and unpack the new docs into the document root.
