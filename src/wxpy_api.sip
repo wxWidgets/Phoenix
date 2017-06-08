@@ -431,11 +431,12 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
 // (Initialized in wxPyCoreModuleInject)
 PyObject* wxPyNoAppError = NULL;
 
-bool i_wxPyCheckForApp() {
+bool i_wxPyCheckForApp(bool raiseException) {
     if (wxTheApp != NULL)
         return true;
     else {
-        PyErr_SetString(wxPyNoAppError, "The wx.App object must be created first!");
+        if (raiseException)
+            PyErr_SetString(wxPyNoAppError, "The wx.App object must be created first!");
         return false;
     }
 }
