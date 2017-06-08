@@ -84,22 +84,13 @@ if 'wxOSX' in wx.PlatformInfo:
     import wx.lib.buttons
     class BitmapButton(wx.lib.buttons.GenBitmapButton):
         def __init__(self, *args, **kw):
-            style = kw.get('style', 0)
-            style |= wx.BU_EXACTFIT
-            kw['style'] = style
             super(BitmapButton, self).__init__(*args, **kw)
             self.SetBezelWidth(1)
             self.SetInitialSize()
             print(self.GetSize(), self.GetBestSize())
 
-
 else:
-    class BitmapButton(wx.BitmapButton):
-        def __init__(self, *args, **kw):
-            style = kw.get('style', 0)
-            style |= wx.BU_EXACTFIT
-            kw['style'] = style
-            super(BitmapButton, self).__init__(*args, **kw)
+    BitmapButton = wx.BitmapButton
 
 
 _ = wx.GetTranslation
@@ -388,25 +379,25 @@ class ImagePanel(wx.Panel):
         vbox.Add(hbox_ctrls, 0, wx.ALIGN_RIGHT|wx.TOP, 4)
 
         bmp = GetNamedBitmap('White')
-        btn = BitmapButton(self, ID_WHITE_BG, bmp)
+        btn = BitmapButton(self, ID_WHITE_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to white"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
         bmp = GetNamedBitmap('Grey')
-        btn = BitmapButton(self, ID_GREY_BG, bmp)
+        btn = BitmapButton(self, ID_GREY_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to grey"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
         bmp = GetNamedBitmap('Black')
-        btn = BitmapButton(self, ID_BLACK_BG, bmp)
+        btn = BitmapButton(self, ID_BLACK_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to black"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
         bmp = GetNamedBitmap('Checked')
-        btn = BitmapButton(self, ID_CHECK_BG, bmp)
+        btn = BitmapButton(self, ID_CHECK_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to checkered pattern"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
@@ -415,19 +406,19 @@ class ImagePanel(wx.Panel):
         hbox_ctrls.AddSpacer(7)
 
         bmp = GetNamedBitmap('NoFrame')
-        btn = BitmapButton(self, ID_NO_FRAME, bmp)
+        btn = BitmapButton(self, ID_NO_FRAME, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
         btn.SetToolTip(_("No framing around image"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
         bmp = GetNamedBitmap('BoxFrame')
-        btn = BitmapButton(self, ID_BOX_FRAME, bmp)
+        btn = BitmapButton(self, ID_BOX_FRAME, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
         btn.SetToolTip(_("Frame image with a box"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
         bmp = GetNamedBitmap('CropFrame')
-        btn = BitmapButton(self, ID_CROP_FRAME, bmp)
+        btn = BitmapButton(self, ID_CROP_FRAME, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
         btn.SetToolTip(_("Frame image with a dimmed background"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
@@ -490,14 +481,14 @@ class ImageDialog(wx.Dialog):
         hbox_loc.Add(self.dir, 1, wx.GROW|wx.ALIGN_LEFT|wx.ALL, 5)
 
         up_bmp = wx.ArtProvider.GetBitmap(wx.ART_GO_DIR_UP, wx.ART_BUTTON, (16,16))
-        btn = BitmapButton(self, -1, up_bmp)
+        btn = BitmapButton(self, -1, up_bmp, style=wx.BU_EXACTFIT)
         btn.SetHelpText(_("Up one level"))
         btn.SetToolTip(_("Up one level"))
         self.Bind(wx.EVT_BUTTON, self.OnUpDirectory, btn)
         hbox_loc.Add(btn, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 2)
 
         folder_bmp = wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN, wx.ART_BUTTON, (16,16))
-        btn = BitmapButton(self, -1, folder_bmp)
+        btn = BitmapButton(self, -1, folder_bmp, style=wx.BU_EXACTFIT)
         btn.SetHelpText(_("Browse for a &folder..."))
         btn.SetToolTip(_("Browse for a folder..."))
         self.Bind(wx.EVT_BUTTON, self.OnChooseDirectory, btn)
