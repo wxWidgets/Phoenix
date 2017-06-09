@@ -528,6 +528,22 @@ inline PyObject* i_wxPyMethod_Self(PyObject* method) {
 }
 
 
+
+//--------------------------------------------------------------------------
+// Cleanup and reinitialize the wxModules. This is needed because sometimes an
+// Extension module will first be imported *after* the wx.App has been
+// created, so the wxModules in that extension will not have been registered
+// and initialized because they were not yet in memory.
+
+void i_wxPyReinitializeModules() {
+    if (i_wxPyCheckForApp(false)) {
+        wxModule::CleanUpModules();
+        wxModule::RegisterModules();
+        wxModule::InitializeModules();
+    }
+}
+
+
 //--------------------------------------------------------------------------
 // An instance of the API structure
 static wxPyAPI  API = {
@@ -546,7 +562,8 @@ static wxPyAPI  API = {
     i_wxPyMakeBuffer,
     i_wxPyNumberSequenceCheck,
     i_wxPyGetCppPtr,
-    i_wxPyMethod_Self
+    i_wxPyMethod_Self,
+    i_wxPyReinitializeModules
 };
 %End
 

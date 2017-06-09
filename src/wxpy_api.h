@@ -165,6 +165,7 @@ struct wxPyAPI {
     bool          (*p_wxPyNumberSequenceCheck)(PyObject* obj, int reqLength);
     void*         (*p_wxPyGetCppPtr)(sipSimpleWrapper* sipPyObj);
     PyObject*     (*p_wxPyMethod_Self)(PyObject* method);
+    void          (*p_wxPyReinitializeModules)();
 
     // Always add new items here at the end.
 };
@@ -263,6 +264,11 @@ inline void* wxPyGetCppPtr(sipSimpleWrapper* sipPyObj)
 
 inline PyObject* wxPyMethod_Self(PyObject* method)
     { return wxPyGetAPIPtr()->p_wxPyMethod_Self(method); }
+
+
+inline void wxPyReinitializeModules()
+    { return wxPyGetAPIPtr()->p_wxPyReinitializeModules(); }
+
 
 
 //--------------------------------------------------------------------------
