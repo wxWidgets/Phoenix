@@ -61,7 +61,7 @@ def run():
     module.addInclude(INCLUDES)
 
     module.addInitializerCode("""\
-        //wxXmlInitResourceModule();
+        wxXmlInitResourceModule();
         wxXmlResource::Get()->InitAllHandlers();
         """)
 

@@ -87,14 +87,10 @@ def run():
         #include <wx/html/helpdlg.h>
         """)
 
-    # Redo the initialization of wxModules in the case where wx.html is first
-    # imported after the wx.App has been created.
+    # Redo the initialization of wxModules in the case where this extension
+    # module is not imported until *after* the wx.App has been created.
     module.addInitializerCode("""\
-        if (wxPyCheckForApp(false)) {
-            wxModule::CleanUpModules();
-            wxModule::RegisterModules();
-            wxModule::InitializeModules();
-        }
+        wxPyReinitializeModules();
         """)
 
     #-----------------------------------------------------------------
