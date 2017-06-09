@@ -160,11 +160,12 @@ struct wxPyAPI {
     bool          (*p_wxPyWrappedPtr_TypeCheck)(PyObject* obj, const wxString& className);
     wxVariant     (*p_wxVariant_in_helper)(PyObject* obj);
     PyObject*     (*p_wxVariant_out_helper)(const wxVariant& value);
-    bool          (*p_wxPyCheckForApp)();
+    bool          (*p_wxPyCheckForApp)(bool raiseException);
     PyObject*     (*p_wxPyMakeBuffer)(void* ptr, Py_ssize_t len, bool readOnly);
     bool          (*p_wxPyNumberSequenceCheck)(PyObject* obj, int reqLength);
     void*         (*p_wxPyGetCppPtr)(sipSimpleWrapper* sipPyObj);
     PyObject*     (*p_wxPyMethod_Self)(PyObject* method);
+    void          (*p_wxPyReinitializeModules)();
 
     // Always add new items here at the end.
 };
@@ -245,8 +246,8 @@ inline PyObject* wxVariant_out_helper(const wxVariant& value)
 
 
 // Check if a wx.App object has been created
-inline bool wxPyCheckForApp()
-    { return wxPyGetAPIPtr()->p_wxPyCheckForApp(); }
+inline bool wxPyCheckForApp(bool raiseException=true)
+    { return wxPyGetAPIPtr()->p_wxPyCheckForApp(raiseException); }
 
 
 // Create a buffer object from a pointer and size
@@ -263,6 +264,11 @@ inline void* wxPyGetCppPtr(sipSimpleWrapper* sipPyObj)
 
 inline PyObject* wxPyMethod_Self(PyObject* method)
     { return wxPyGetAPIPtr()->p_wxPyMethod_Self(method); }
+
+
+inline void wxPyReinitializeModules()
+    { return wxPyGetAPIPtr()->p_wxPyReinitializeModules(); }
+
 
 
 //--------------------------------------------------------------------------
