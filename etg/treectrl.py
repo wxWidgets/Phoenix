@@ -45,7 +45,7 @@ def run():
     c.addCppMethod('bool', '__eq__', '(const wxTreeItemId& other)', """\
         return *self == *other;
         """)
-    c.addCppMethod('bool', '__neq__', '(const wxTreeItemId& other)', """\
+    c.addCppMethod('bool', '__ne__', '(const wxTreeItemId& other)', """\
         return *self != *other;
         """)
 
