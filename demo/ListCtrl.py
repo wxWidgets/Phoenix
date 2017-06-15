@@ -155,7 +155,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.list.Bind(wx.EVT_RIGHT_UP, self.OnRightClick)
 
     def OnUseNative(self, event):
-        wx.SystemOptions.SetOptionInt("mac.listctrl.always_use_generic", not event.IsChecked())
+        wx.SystemOptions.SetOption("mac.listctrl.always_use_generic", not event.IsChecked())
         wx.GetApp().GetTopWindow().LoadDemo("ListCtrl")
 
     def PopulateList(self):
