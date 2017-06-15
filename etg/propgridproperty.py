@@ -90,6 +90,9 @@ def run():
                 self.SetAttribute(name, value)
             """)
 
+    c.find('AddPrivateChild.prop').transfer = True
+    c.find('AddChild.prop').transfer = True
+
 
     c = module.find('wxPGChoicesData')
     tools.ignoreConstOverloads(c)

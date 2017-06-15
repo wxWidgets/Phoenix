@@ -111,7 +111,7 @@ class IntProperty2(wxpg.PGProperty):
         # wxPGVFBFlags work properly.
         oldvfb__ = validationInfo.GetFailureBehavior()
 
-        # Mark the cell if validaton failred
+        # Mark the cell if validation failed
         validationInfo.SetFailureBehavior(wxpg.PG_VFB_MARK_CELL)
 
         if value < -10000 or value > 10000:
@@ -147,17 +147,12 @@ class SizeProperty(wxpg.PGProperty):
     def _ConvertValue(self, value):
         """ Utility convert arbitrary value to a real wx.Size.
         """
-        from operator import isSequenceType
-        if isinstance(value, wx.Point):
-            value = wx.Size(value.x, value.y)
-        elif isSequenceType(value):
+        import collections
+        if isinstance(value, collections.Sequence) or hasattr(value, '__getitem__'):
             value = wx.Size(*value)
         return value
 
     def ChildChanged(self, thisValue, childIndex, childValue):
-        # FIXME: This does not work yet. ChildChanged needs be fixed "for"
-        #        wxPython in wxWidgets SVN trunk, and that has to wait for
-        #        2.9.1, as wxPython 2.9.0 uses WX_2_9_0_BRANCH.
         size = self._ConvertValue(self.m_value)
         if childIndex == 0:
             size.x = childValue
@@ -751,7 +746,7 @@ class TestPanel( wx.Panel ):
 
         pg.Append( wxpg.PropertyCategory("4 - Additional Properties") )
         #pg.Append( wxpg.PointProperty("Point",value=panel.GetPosition()) )
-        #pg.Append( SizeProperty("Size",value=panel.GetSize()) )
+        pg.Append( SizeProperty("Size", value=panel.GetSize()) )
         #pg.Append( wxpg.FontDataProperty("FontData") )
         pg.Append( wxpg.IntProperty("IntWithSpin",value=256) )
         pg.SetPropertyEditor("IntWithSpin","SpinCtrl")
