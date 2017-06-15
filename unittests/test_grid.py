@@ -314,6 +314,22 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.Grid.SetCellHighlightPenWidth  # Does it exist
 
 
+    def test_grid42(self):
+        # old names
+        wx.grid.Grid.GridSelectCells
+        wx.grid.Grid.GridSelectRows
+        wx.grid.Grid.GridSelectColumns
+        wx.grid.Grid.GridSelectRowsOrColumns
+
+
+    def test_grid43(self):
+        # new names
+        wx.grid.Grid.SelectCells
+        wx.grid.Grid.SelectRows
+        wx.grid.Grid.SelectColumns
+        wx.grid.Grid.SelectRowsOrColumns
+
+
     def test_GetIM(self):
         # Test the immutable version returned by GetIM
         obj = wx.grid.GridCellCoords(1,2)

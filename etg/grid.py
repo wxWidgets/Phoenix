@@ -438,8 +438,8 @@ def run():
     # object to the grid, so we need to optionally update the
     # ownership of the Python proxy object to match.
     c.find('SetTable').pyName = '_SetTable'
-    c.addPyMethod('SetTable', '(self, table, takeOwnership=False, selmode=Grid.GridSelectCells)',
-        piArgsString='(self, table, takeOwnership=False, selmode=GridSelectCells)',
+    c.addPyMethod('SetTable', '(self, table, takeOwnership=False, selmode=Grid.SelectCells)',
+        piArgsString='(self, table, takeOwnership=False, selmode=SelectCells)',
         doc="Set the Grid Table to be used by this grid.",
         body="""\
             val = self._SetTable(table, takeOwnership, selmode)
@@ -458,6 +458,20 @@ def run():
         wxSize GetSizeAvailableForScrollTarget(const wxSize& size);
         """, protection='private'))
 
+
+    # Rename some nested enum values
+    c.find('wxGridSelectionModes.wxGridSelectCells').pyName = 'SelectCells'
+    c.find('wxGridSelectionModes.wxGridSelectRows').pyName = 'SelectRows'
+    c.find('wxGridSelectionModes.wxGridSelectColumns').pyName = 'SelectColumns'
+    c.find('wxGridSelectionModes.wxGridSelectRowsOrColumns').pyName = 'SelectRowsOrColumns'
+
+    # But also keep aliases for the old names, just in case
+    c.addPyCode("""\
+        Grid.GridSelectCells = Grid.SelectCells
+        Grid.GridSelectRows = Grid.SelectRows
+        Grid.GridSelectColumns = Grid.SelectColumns
+        Grid.GridSelectRowsOrColumns = Grid.SelectRowsOrColumns
+        """)
 
     #-----------------------------------------------------------------
     c = module.find('wxGridUpdateLocker')
