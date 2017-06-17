@@ -707,6 +707,11 @@ class TestPanel( wx.Panel ):
 
         pg.Append( wxpg.PropertyCategory("1 - Basic Properties") )
         pg.Append( wxpg.StringProperty("String",value="Some Text") )
+
+        sp = pg.Append( wxpg.StringProperty('StringProperty w/ Password flag', value='ABadPassword') )
+        sp.SetAttribute('Hint', 'This is a hint')
+        sp.SetAttribute('Password', True)
+
         pg.Append( wxpg.IntProperty("Int",value=100) )
         pg.Append( wxpg.FloatProperty("Float",value=100.0) )
         pg.Append( wxpg.BoolProperty("Bool",value=True) )
