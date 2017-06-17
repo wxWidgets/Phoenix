@@ -540,6 +540,7 @@ void i_wxPyReinitializeModules() {
         wxModule::CleanUpModules();
         wxModule::RegisterModules();
         wxModule::InitializeModules();
+        wxInitAllImageHandlers();
     }
 }
 
