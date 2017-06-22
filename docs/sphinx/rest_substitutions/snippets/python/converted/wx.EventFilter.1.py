@@ -30,7 +30,7 @@
                 
     
                 # Continue processing the event normally as well.
-                self.Event_Skip
+                return self.Event_Skip
                 
         
             # This function could be called periodically from some timer to
