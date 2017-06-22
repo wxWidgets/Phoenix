@@ -241,7 +241,7 @@ class EventChooser(wx.Panel):
             text = _eventIdMap.get(typeId, "[Unknown]")
             if text.lower().find(searched) == -1:
                 continue
-            self.lc.InsertStringItem(count, text)
+            self.lc.InsertItem(count, text)
             self.lc.SetItemData(count, index)
             if flag:
                 self.lc.CheckItem(count)
@@ -260,7 +260,7 @@ class EventChooser(wx.Panel):
 
 
     def onItemActivated(self, evt):
-        self.lc.ToggleItem(evt.m_itemIndex)
+        self.lc.ToggleItem(evt.GetIndex())
 
     def onCheckAll(self, evt):
         self.doUpdate = False
@@ -363,7 +363,8 @@ class EventWatcher(wx.Frame):
     def updateBindings(self):
         widget = self._watchedWidget
         self.unwatch()
-        self.watch(widget)
+        if widget:
+            self.watch(widget)
 
 
     def onWatchedEvent(self, evt):
