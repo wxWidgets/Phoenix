@@ -9,7 +9,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Dec-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macSetLoaderNames, \
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
-                               getVisCVersion, getToolsPlatformName
+                               getVisCVersion, getToolsPlatformName, updateLicenseFiles
 
 import buildtools.version as version
 
@@ -1753,6 +1753,10 @@ def cmd_sdist(options, args):
         destdir = posixjoin(PDEST, 'wx')
         for name in glob.glob(posixjoin('wx', wc)):
             copyFile(name, destdir)
+
+    # Copy the license files from wxWidgets
+    updateLicenseFiles(cfg)
+    shutil.copytree('license', opj(PDEST, 'license'))
 
     # Also add the waf executable, fetching it first if we don't already have it
     getWafCmd()

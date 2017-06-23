@@ -468,15 +468,12 @@ def build(bld):
     sys.path.insert(0, thisdir)
 
     from distutils.file_util import copy_file
-    from distutils.dir_util  import mkpath
-    from buildtools.config   import opj
+    from buildtools.config   import opj, updateLicenseFiles
 
     cfg.finishSetup(bld.env.wx_config)
 
-    # update the license files
-    mkpath('license')
-    for filename in ['preamble.txt', 'licence.txt', 'licendoc.txt', 'lgpl.txt']:
-        copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename), update=1, verbose=1)
+    # Copy the license files from wxWidgets
+    updateLicenseFiles(cfg)
 
     # create the package's __version__ module
     open(opj(cfg.PKGDIR, '__version__.py'), 'w').write(

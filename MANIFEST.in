@@ -5,6 +5,7 @@
 #
 
 recursive-include   wx  **
+recursive-include   license  *.txt
 
 recursive-exclude   wx  .git
 recursive-exclude   wx  *.pyc

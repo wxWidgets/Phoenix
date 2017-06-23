@@ -16,16 +16,13 @@ import os
 import glob
 import fnmatch
 import re
-import tempfile
 import shutil
-import codecs
 import subprocess
 import platform
 
 from distutils.file_util import copy_file
 from distutils.dir_util  import mkpath
 from distutils.dep_util  import newer
-from distutils.spawn     import spawn
 
 import distutils.sysconfig
 
@@ -907,3 +904,13 @@ def getToolsPlatformName(useLinuxBits=False):
         if useLinuxBits:
             name += platform.architecture()[0][:2]
     return name
+
+
+def updateLicenseFiles(cfg):
+    from distutils.file_util import copy_file
+    from distutils.dir_util  import mkpath
+
+    mkpath('license')
+    for filename in ['preamble.txt', 'licence.txt', 'licendoc.txt', 'lgpl.txt']:
+        copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename), update=1, verbose=1)
+
