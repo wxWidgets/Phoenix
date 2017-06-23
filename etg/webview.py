@@ -131,6 +131,13 @@ def run():
     tools.addAutoProperties(c)
 
 
+    for name in [ 'wxWebViewHandler',
+                  'wxWebViewArchiveHandler',
+                  'wxWebViewFSHandler' ]:
+        c = module.find(name)
+        c.find('GetFile').factory = True
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
