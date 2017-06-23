@@ -910,7 +910,15 @@ def updateLicenseFiles(cfg):
     from distutils.file_util import copy_file
     from distutils.dir_util  import mkpath
 
+    # Copy the license files from wxWidgets
     mkpath('license')
-    for filename in ['preamble.txt', 'licence.txt', 'licendoc.txt', 'lgpl.txt']:
+    for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt', 'gpl.txt']:
         copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename), update=1, verbose=1)
 
+    # Combine the relevant files into a single LICENSE.txt file
+    text = ''
+    for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt']:
+        with open(opj('license', filename), 'r') as f:
+            text += f.read() + '\n\n'
+    with open('LICENSE.txt', 'w') as f:
+        f.write(text)

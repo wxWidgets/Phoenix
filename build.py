@@ -1757,6 +1757,7 @@ def cmd_sdist(options, args):
     # Copy the license files from wxWidgets
     updateLicenseFiles(cfg)
     shutil.copytree('license', opj(PDEST, 'license'))
+    copyFile('LICENSE.txt', PDEST)
 
     # Also add the waf executable, fetching it first if we don't already have it
     getWafCmd()

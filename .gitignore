@@ -16,6 +16,7 @@ mydbstub.py*
 /tmp
 /dist
 /license
+/LICENSE.txt
 /*.egg-info
 /REV.txt
 /.idea
