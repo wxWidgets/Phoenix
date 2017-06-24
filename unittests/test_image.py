@@ -260,7 +260,37 @@ class image_Tests(wtc.WidgetTestCase):
         imghndlr = TestImageHandler()
         wx.Image.AddHandler(imghndlr)
 
+    def test_imageHandlerStandardDerivations(self):
+        # checks that all of the standard wx derivations are available.
+        wx.GIFHandler()
+        wx.IFFHandler()
+        wx.JPEGHandler()
+        wx.PCXHandler()
+        wx.PNGHandler()
+        wx.PNMHandler()
+        wx.TGAHandler()
+        wx.TIFFHandler()
+        wx.XPMHandler()
 
+    def test_imageHandlerStandardDerivationsDerivation(self):
+        for cls in (wx.GIFHandler, wx.IFFHandler, wx.JPEGHandler,
+                    wx.PCXHandler, wx.PNGHandler, wx.PNMHandler,
+                    wx.TGAHandler, wx.TIFFHandler,wx.XPMHandler):
+
+            class TestImageHandler(cls):
+                def __init__(self):
+                    cls.__init__(self)
+                    self.Name = "%s File" % cls.__name__
+                    self.Extension = "foo"
+                    self.MimeType = 'image/foo'
+                    self.Type = wx.BITMAP_TYPE_JPEG
+
+                def DoCanRead(self, stream):
+                    return True
+
+            imghndlr = TestImageHandler()
+            wx.Image.AddHandler(imghndlr)
+            
 #---------------------------------------------------------------------------
 
 
