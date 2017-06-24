@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ URL              = "http://wxPython.org/"
 #DOWNLOAD_URL     = "http://wxPython.org/download.php"
 #DOWNLOAD_URL     = "http://wxpython.org/Phoenix/snapshot-builds/"
 DOWNLOAD_URL     = "https://pypi.python.org/pypi/{}".format(NAME)
-LICENSE          = "wxWidgets Library License (LGPL derivative)"
+LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,user-interface,awesome"
 
