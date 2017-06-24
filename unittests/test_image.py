@@ -280,17 +280,19 @@ class image_Tests(wtc.WidgetTestCase):
             class TestImageHandler(cls):
                 def __init__(self):
                     cls.__init__(self)
-                    self.Name = "%s File" % cls.__name__
-                    self.Extension = "foo"
-                    self.MimeType = 'image/foo'
-                    self.Type = wx.BITMAP_TYPE_JPEG
+                    ext = cls.__name__.replace("Handler", "")
+                    self.Name = "%s File" % ext
+                    self.Extension = ext
+                    self.MimeType = 'image/ext'
+
+                    self.Type = getattr(wx, "BITMAP_TYPE_%s" % ext)
 
                 def DoCanRead(self, stream):
                     return True
 
             imghndlr = TestImageHandler()
             wx.Image.AddHandler(imghndlr)
-            
+
 #---------------------------------------------------------------------------
 
 
