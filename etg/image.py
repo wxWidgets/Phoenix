@@ -24,7 +24,13 @@ ITEMS  = [ 'wxImage',
            'wxImageHandler',
            'wxTIFFHandler',
            'wxGIFHandler',
-           "wxPNGHandler"
+           "wxIFFHandler",
+           "wxJPEGHandler",
+           "wxPCXHandler",
+           "wxPNGHandler",
+           "wxPNMHandler",
+           "wxTGAHandler",
+           "wxXPMHandler"
            #'wxQuantize',
            #'wxPalette',
            ]
@@ -577,16 +583,56 @@ def run():
     c.find('DoGetImageCount').ignore(False)
     c.find('DoCanRead').ignore(False)
 
-
-    #-------------------------------------------------------
-    # tweak for TIFFHandler, presently no tweaks needed.
-
     #-------------------------------------------------------
     # tweak for GIFHandler
     # need to include anidecod.h, otherwise use of forward declared class
     # compilation errors will occur.
+    c = module.find('wxGIFHandler')
+    c.find('DoCanRead').ignore(False)
+
     module.addHeaderCode("#include <wx/anidecod.h>")
     module.addItem(tools.wxArrayWrapperTemplate('wxImageArray', 'wxImage', module))
+
+    #-------------------------------------------------------
+    # tweak for IFFHandler
+    c = module.find('wxIFFHandler')
+    c.find('DoCanRead').ignore(False)     
+    
+    #-------------------------------------------------------
+    # tweak for JPEGHandler
+    c = module.find('wxJPEGHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for PCXHandler
+    c = module.find('wxPCXHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for PNGHandler
+    c = module.find('wxPNGHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for PNMHandler
+    c = module.find('wxPNMHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for TGAHandler
+    c = module.find('wxTGAHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for TIFFHandler
+    c = module.find('wxTIFFHandler') 
+    c.find('GetLibraryVersionInfo').ignore() 
+    c.find('DoCanRead').ignore(False) 
+
+    #-------------------------------------------------------
+    # tweak for XPMHandler
+    c = module.find('wxXPMHandler')
+    c.find('DoCanRead').ignore(False)
 
     #-------------------------------------------------------
 
