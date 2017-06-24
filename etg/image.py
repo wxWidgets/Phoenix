@@ -579,12 +579,7 @@ def run():
 
 
     #-------------------------------------------------------
-    c = module.find('wxTIFFHandler')
-    c.addPrivateCopyCtor()
-    c.find('GetLibraryVersionInfo').ignore()
-
-    c.find('DoGetImageCount').ignore(False)
-    c.find('DoCanRead').ignore(False)
+    # tweak for TIFFHandler, presently no tweaks needed.
 
     #-------------------------------------------------------
     # tweak for GIFHandler
