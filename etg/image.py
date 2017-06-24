@@ -22,6 +22,9 @@ DOCSTRING = ""
 ITEMS  = [ 'wxImage',
            'wxImageHistogram',
            'wxImageHandler',
+           'wxTIFFHandler',
+           'wxGIFHandler',
+           "wxPNGHandler"
            #'wxQuantize',
            #'wxPalette',
            ]
@@ -574,6 +577,21 @@ def run():
     c.find('DoGetImageCount').ignore(False)
     c.find('DoCanRead').ignore(False)
 
+
+    #-------------------------------------------------------
+    c = module.find('wxTIFFHandler')
+    c.addPrivateCopyCtor()
+    c.find('GetLibraryVersionInfo').ignore()
+
+    c.find('DoGetImageCount').ignore(False)
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for GIFHandler
+    # need to include anidecod.h, otherwise use of forward declared class
+    # compilation errors will occur.
+    module.addHeaderCode("#include <wx/anidecod.h>")
+    module.addItem(tools.wxArrayWrapperTemplate('wxImageArray', 'wxImage', module))
 
     #-------------------------------------------------------
 
