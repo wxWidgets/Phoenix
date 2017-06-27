@@ -22,6 +22,7 @@ DOCSTRING = ""
 ITEMS  = [ 'wxConfigBase',
            'wxFileConfig',
            'wxConfigPathChanger',
+           'interface_2wx_2config_8h.xml'
            ]
 
 #---------------------------------------------------------------------------
