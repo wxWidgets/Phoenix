@@ -84,6 +84,9 @@ def run():
     c = module.find('wxDirProperty')
     c.find('OnButtonClick.value').inOut = True
 
+    c = module.find('wxArrayStringProperty')
+    c.find('GenerateValueAsString').ignore(False)
+
     c = module.find('wxPGArrayEditorDialog')
     tools.fixWindowClass(c, hideVirtuals=False, ignoreProtected=False)
 
