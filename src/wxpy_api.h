@@ -167,6 +167,10 @@ struct wxPyAPI {
     PyObject*     (*p_wxPyMethod_Self)(PyObject* method);
     void          (*p_wxPyReinitializeModules)();
 
+    int           (*p_wxPyDateTime_Check)(PyObject *obj);
+    int           (*p_wxPyDate_Check)(PyObject *obj);
+    wxDateTime*   (*p_wxPyDateTime_ToWxDateTime)(PyObject *obj);
+    wxDateTime*   (*p_wxPyDate_ToWxDateTime)(PyObject *obj);
     // Always add new items here at the end.
 };
 
@@ -269,6 +273,19 @@ inline PyObject* wxPyMethod_Self(PyObject* method)
 inline void wxPyReinitializeModules()
     { return wxPyGetAPIPtr()->p_wxPyReinitializeModules(); }
 
+
+
+inline int wxPyDateTime_Check(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDateTime_Check(obj); }
+
+inline int wxPyDate_Check(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDate_Check(obj); }
+
+inline wxDateTime* wxPyDateTime_ToWxDateTime(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDateTime_ToWxDateTime(obj); }
+
+inline wxDateTime* wxPyDate_ToWxDateTime(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDate_ToWxDateTime(obj); }
 
 
 //--------------------------------------------------------------------------
