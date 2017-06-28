@@ -6,6 +6,7 @@ wheel
 twine
 sphinx
 requests
+pyaml
 pytest
 pytest-xdist
 pytest-timeout
