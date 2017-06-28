@@ -552,14 +552,6 @@ void i_wxPyReinitializeModules() {
 // Route the various usages of the PyDate_ APIs through our API, so we only
 // have to worry about PyDateTime_IMPORT being needed in one compilation unit.
 
-%ModuleHeaderCode
-    #include <datetime.h>
-%End
-
-%InitialisationCode
-    PyDateTime_IMPORT;
-%End
-
 int i_wxPyDateTime_Check(PyObject *obj) {
     return PyDateTime_Check(obj);
 }
@@ -611,6 +603,15 @@ static wxPyAPI  API = {
     i_wxPyDateTime_ToWxDateTime,
     i_wxPyDate_ToWxDateTime
 };
+%End
+
+
+%ModuleHeaderCode
+    #include <datetime.h>
+%End
+
+%InitialisationCode
+    PyDateTime_IMPORT;
 %End
 
 
