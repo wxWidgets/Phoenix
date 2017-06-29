@@ -55,6 +55,9 @@ def run():
     c.find('StringToValue.variant').out = True
     c.find('IntToValue.variant').out = True
 
+    c.addProperty('m_value GetValue SetValue')
+
+
     # SIP needs to be able to make a copy of the wxPGAttributeStorage value
     # but the C++ class doesn't have a copy ctor and the default will cause it
     # to lose references to the variants it contains, so let's just override
