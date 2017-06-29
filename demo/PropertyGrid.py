@@ -77,8 +77,8 @@ class IntProperty2(wxpg.PGProperty):
         """
         return "IntProperty2"
 
-    def GetEditor(self):
-        return "TextCtrl"
+    def DoGetEditorClass(self):
+        return wxpg.PropertyGridInterface.GetEditorByName("TextCtrl")
 
     def ValueToString(self, value, flags):
         return str(value)
@@ -136,8 +136,8 @@ class SizeProperty(wxpg.PGProperty):
     def GetClassName(self):
         return self.__class__.__name__
 
-    def GetEditor(self):
-        return "TextCtrl"
+    def DoGetEditorClass(self):
+        return wxpg.PropertyGridInterface.GetEditorByName("TextCtrl")
 
     def RefreshChildren(self):
         size = self.m_value
@@ -174,28 +174,40 @@ class DirsProperty(wxpg.ArrayStringProperty):
     """
     def __init__(self, label, name = wxpg.PG_LABEL, value=[]):
         wxpg.ArrayStringProperty.__init__(self, label, name, value)
-
+        self.m_display = ''
         # Set default delimiter
         self.SetAttribute("Delimiter", ',')
 
-    def GetEditor(self):
-        return "TextCtrlAndButton"
+
+    # NOTE: In the Classic version of the propgrid classes, all of the wrapped
+    # property classes override DoGetEditorClass so it calls GetEditor and
+    # looks up the class using that name, and hides DoGetEditorClass from the
+    # usable API. Jumping through those hoops is no longer needed in Phoenix
+    # as Phoenix allows overriding all necessary virtual methods without
+    # special support in the wrapper code, so we just need to override
+    # DoGetEditorClass here instead.
+    def DoGetEditorClass(self):
+        return wxpg.PropertyGridInterface.GetEditorByName("TextCtrlAndButton")
+
 
     def ValueToString(self, value, flags):
+        # let's just use the cached display value
         return self.m_display
+
 
     def OnSetValue(self):
         self.GenerateValueAsString()
 
+
     def DoSetAttribute(self, name, value):
         retval = super(DirsProperty, self).DoSetAttribute(name, value)
 
-        #
         # Must re-generate cached string when delimiter changes
         if name == "Delimiter":
             self.GenerateValueAsString(delim=value)
 
         return retval
+
 
     def GenerateValueAsString(self, delim=None):
         """ This function creates a cached version of displayed text
@@ -213,6 +225,7 @@ class DirsProperty(wxpg.ArrayStringProperty):
             text = ', '.join(ls)
         self.m_display = text
 
+
     def StringToValue(self, text, argFlags):
         """ If failed, return False or (False, None). If success, return tuple
             (True, newValue).
@@ -223,6 +236,7 @@ class DirsProperty(wxpg.ArrayStringProperty):
             return super(DirsProperty, self).StringToValue(text, 0)
         v = [a.strip() for a in text.split(delim)]
         return (True, v)
+
 
     def OnEvent(self, propgrid, primaryEditor, event):
         if event.GetEventType() == wx.wxEVT_COMMAND_BUTTON_CLICKED:
@@ -247,6 +261,7 @@ class DirsProperty(wxpg.ArrayStringProperty):
             return retval
 
         return False
+
 
 
 class PyObjectPropertyValue:
@@ -380,9 +395,8 @@ class SingleChoiceProperty(wxpg.StringProperty):
 
         self.dialog_choices = dialog_choices
 
-    def GetEditor(self):
-        # Set editor to have button
-        return "TextCtrlAndButton"
+    def DoGetEditorClass(self):
+        return wxpg.PropertyGridInterface.GetEditorByName("TextCtrlAndButton")
 
     def GetEditorDialog(self):
         # Set what happens on button click
