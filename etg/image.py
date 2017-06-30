@@ -46,6 +46,18 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    module.addHeaderCode("""\
+        #include <wx/imaggif.h>
+        #include <wx/imagiff.h>
+        #include <wx/imagjpeg.h>
+        #include <wx/imagpcx.h>
+        #include <wx/imagpng.h>
+        #include <wx/imagpnm.h>
+        #include <wx/imagtga.h>
+        #include <wx/imagtiff.h>
+        #include <wx/imagxpm.h>
+        """)
+
     c = module.find('wxImage')
     assert isinstance(c, etgtools.ClassDef)
     c.find('wxImage').findOverload('(const char *const *xpmData)').ignore()
@@ -582,6 +594,18 @@ def run():
 
     c.find('DoGetImageCount').ignore(False)
     c.find('DoCanRead').ignore(False)
+
+    module.addHeaderCode("""\
+        #include <wx/imaggif.h>
+        #include <wx/imagiff.h>
+        #include <wx/imagjpeg.h>
+        #include <wx/imagpcx.h>
+        #include <wx/imagpng.h>
+        #include <wx/imagpnm.h>
+        #include <wx/imagtga.h>
+        #include <wx/imagtiff.h>
+        #include <wx/imagxpm.h>
+        """)
 
     #-------------------------------------------------------
     # tweak for GIFHandler

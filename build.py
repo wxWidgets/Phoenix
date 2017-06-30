@@ -1551,7 +1551,8 @@ def cmd_bdist_egg(options, args):
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
         if pdbzip:
-            uploadPackage(pdbzip, options)
+            uploadPackage(pdbzip, options, keep=24,
+                          mask='%s-pdb-%s*' % (baseName, cfg.VER_MAJOR))
 
 def cmd_bdist_wheel(options, args):
     pdbzip = cmd_build_pdbzip(options, args)
@@ -1563,7 +1564,8 @@ def cmd_bdist_wheel(options, args):
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
         if pdbzip:
-            uploadPackage(pdbzip, options)
+            uploadPackage(pdbzip, options, keep=24,
+                          mask='%s-pdb-%s*' % (baseName, cfg.VER_MAJOR))
 
 
 def cmd_bdist_wininst(options, args):
@@ -1576,7 +1578,8 @@ def cmd_bdist_wininst(options, args):
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
         if pdbzip:
-            uploadPackage(pdbzip, options)
+            uploadPackage(pdbzip, options, keep=24,
+                          mask='%s-pdb-%s*' % (baseName, cfg.VER_MAJOR))
 
 
 def cmd_bdist_msi(options, args):
@@ -1840,7 +1843,8 @@ def cmd_sdist_demo(options, args):
     shutil.rmtree(PDEST)
 
     if options.upload:
-        uploadPackage(tarfilename, options)
+        uploadPackage(tarfilename, options, keep=5,
+                      mask='%s-demo-%s*' % (baseName, cfg.VER_MAJOR))
 
     msg("demo and samples tarball built at %s" % tarfilename)
 
