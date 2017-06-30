@@ -397,6 +397,7 @@ def main(wxDir, args):
             flags["wxUSE_POSTSCRIPT"] = "1"
             flags["wxUSE_AFM_FOR_POSTSCRIPT"] = "0"
             flags["wxUSE_DATEPICKCTRL_GENERIC"] = "1"
+            flags["wxUSE_IFF"] = "1"
 
             # Remove this when Windows XP finally dies, or when there is a
             # solution for ticket #13116...
