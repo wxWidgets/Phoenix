@@ -56,11 +56,11 @@ def run():
     # too useful to ignore, so add a MethodDef for it here.
     m = MethodDef(name='ShowPage', type='bool', isVirtual=True,
             briefDoc="Show the given wizard page.",
-            detailedDoc="""\
+            detailedDoc=["""\
                 Calls TransferDataFromWindow on the current page first, and
                 returns false without changing the page if it returned false.
                 Returns True/False to indicate if the page was actually
-                changed.""",
+                changed."""],
             items=[ParamDef(name='page', type='wxWizardPage*'),
                    ParamDef(name='goingForward', type='bool', default='true')])
     c.addItem(m)
