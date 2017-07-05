@@ -61,8 +61,8 @@ the `Migration Guide <{docs_base}/MigrationGuide.html>`_,
 or the `wxPython API documentation <{docs_base}/main.html>`_.
 
 Archive files containing a copy of the wxPython documentation, the demo and
-samples, and also a set of MSVC .pdb files for Windows are available 
-`here <https://wxpython.org/Phoenix/release-extras/>`_.
+samples, and also a set of MSVC .pdb files for Windows are available at sourceforge, 
+`here <https://sourceforge.net/projects/wxpython/files/wxPython4/extras/>`_.
 """.format(version=cfg.VERSION, docs_base=DOCS_BASE)
 
 
