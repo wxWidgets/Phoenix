@@ -5,6 +5,48 @@ Recent Changes for wxPython
 ===========================
 
 
+4.0.0a4
+-------
+* ????
+
+Various little tweaks and fixes in some of the demo samples.
+
+Fixes in wx.lib.imagebrowser so it looks and acts better on OSX.
+
+Fixed problem due to wxModules not being initialized when non-core extensions
+are imported.
+
+Fixed issue in wx.TreeItemId comparison methods affecting PyCrust and other
+tools.
+
+Restore the simplified names for the wxGridSElectionModes enum that were
+present in Classic.
+
+Add accessors for the internal widgets in the wx.EditableListBox.
+
+Fixes in wx.lib.eventwatcher to avoid deprecated methods and other Phoenix
+related changes.
+
+Correctly transfer ownership of the input stream in wx.FSFile.
+
+Ensure the license files are getting into the source tarball and the binary
+wheel files.
+
+Add wrappers for the classes derived from wxImageHandler.
+
+Fix wx.lib.plot.polyline to not attempt to draw the spline if there are less
+than 3 points.
+
+Transfer the ownership of the prop arg in wx.propgrid.PGProperty.AddChild and
+AddPrivateChild. Various other fixes in wx.propgrid classes for backwards
+compatibility and to fix problems caused by mismatches between customizations
+that were done for Classic and how Phoenix does things by default..
+
+
+
+
+
+
 4.0.0a3
 -------
 * 3-June-2017
