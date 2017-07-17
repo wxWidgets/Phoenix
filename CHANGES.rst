@@ -1,13 +1,17 @@
-.. -*- coding: utf-8 -*-
+.. title: wxPython Changelog
+.. slug: changes
+.. author: Robin
+.. description: 
+.. type: text
 
 
-Recent Changes for wxPython
-===========================
+wxPython Changelog
+==================
 
 
 4.0.0a4
 -------
-* ????
+* (not yet released)
 
 Various little tweaks and fixes in some of the demo samples.
 
@@ -96,38 +100,38 @@ This build of wxPython is based on the official wxWidgets 3.0.3 release.
 
 This release is mostly various bug fixes and other tweaks, such as:
 
-  * Allow numpy arrays to be auto-converted to simple sequence value types like
-    wx.Size, wx.Colour, etc.
+* Allow numpy arrays to be auto-converted to simple sequence value types like
+  wx.Size, wx.Colour, etc.
 
-  * A couple of fixes to lib/agw/aui to prevent segfaults under OSX when
-    AuiNotebook tabs are closed
+* A couple of fixes to lib/agw/aui to prevent segfaults under OSX when
+  AuiNotebook tabs are closed
 
-  * Fix wx._core.wxAssertionError in wx.lib.agw.aui when dragging a notebook tab
+* Fix wx._core.wxAssertionError in wx.lib.agw.aui when dragging a notebook tab
 
-  * Fix the [G|S]etClientData methods in wx.CommandEvent to behave the same
-    way they are in wx.ClientDataContainer.
+* Fix the [G|S]etClientData methods in wx.CommandEvent to behave the same
+  way they are in wx.ClientDataContainer.
 
-  * Fix the SetFonts methods in wx.html classes
+* Fix the SetFonts methods in wx.html classes
 
-  * Several fixes in wx.dataview related to overriding methods
+* Several fixes in wx.dataview related to overriding methods
 
-  * Fixed some flickering in wx.lib.agw.aui.framemanager
+* Fixed some flickering in wx.lib.agw.aui.framemanager
 
-  * Fixed problem with wrong implementation of wxNotebook::DeleteAllPages being
-    called on Windows
+* Fixed problem with wrong implementation of wxNotebook::DeleteAllPages being
+  called on Windows
 
-  * Added the missing wx.grid.GRID_AUTOSIZE flag
+* Added the missing wx.grid.GRID_AUTOSIZE flag
 
-  * Fixed crash due to the object created in an XmlSubclassFactory being
-    destroyed too soon
+* Fixed crash due to the object created in an XmlSubclassFactory being
+  destroyed too soon
 
-  * Fixed crash in wx.lib.agw.toasterbox
+* Fixed crash in wx.lib.agw.toasterbox
 
-  * Fixed crash when using wx.xrc.XmlSubclassFactory
+* Fixed crash when using wx.xrc.XmlSubclassFactory
 
-  * Fixed wx.grid.GridTableBase.GetValue and related methods to work more like
-    they did in Classic, so non-string values can be used a little more
-    easily.
+* Fixed wx.grid.GridTableBase.GetValue and related methods to work more like
+  they did in Classic, so non-string values can be used a little more
+  easily.
 
 Added building and bundling of the PDB files for wxWidgets and the wxPython
 extensions on Windows.  Until a better place is found they will be
@@ -146,15 +150,15 @@ crowd goes wild!") Don't let the fact that it is marked as an "alpha" release
 scare you away. It is an alpha simply because this is the **first** in several
 ways:
 
-  * It's the first real release of Phoenix, which is built on a different
-    foundation than Classic wxPython was.
+* It's the first real release of Phoenix, which is built on a different
+  foundation than Classic wxPython was.
 
-  * It's the first wxPython release intended to be fully available from PyPI and
-    buildable/installable by pip.
+* It's the first wxPython release intended to be fully available from PyPI and
+  buildable/installable by pip.
 
-  * It's the first release for Python 3.
+* It's the first release for Python 3.
 
-  * And there are still a few things that are not finished or polished yet.
+* And there are still a few things that are not finished or polished yet.
 
 But even with all that, many people have been using the pre-release snapshots
 of Phoenix for quite a while now, and it has been relatively stable and solid
@@ -838,15 +842,15 @@ use code like this::
 
 The list of wx classes that can now be used as context managers is:
 
-  * wx.Dialog
-  * wx.BusyInfo
-  * wx.BusyCursor
-  * wx.WindowDisabler
-  * wx.LogNull
-  * wx.DCTextColourChanger
-  * wx.DCPenChanger
-  * wx.DCBrushChanger
-  * wx.DCClipper
+* wx.Dialog
+* wx.BusyInfo
+* wx.BusyCursor
+* wx.WindowDisabler
+* wx.LogNull
+* wx.DCTextColourChanger
+* wx.DCPenChanger
+* wx.DCBrushChanger
+* wx.DCClipper
 
 A new class has been added that is also a context manager, called
 wx.FrozenWindow.  It will freeze the window passed to it upon entry to
@@ -1326,33 +1330,33 @@ Update to 1.0 of TreeMixin.
 wx.lib.customtreectrl: Patch from Andrea that fixes the following
 problems/issues:
 
- * ZeroDivisionError when using the Vista selection style and calling
-   SelectItem; for some strange reason, sometimes the item rect is
-   not initialized and that generates the ZeroDivisionError when
-   painting the selection rectangle;
+* ZeroDivisionError when using the Vista selection style and calling
+  SelectItem; for some strange reason, sometimes the item rect is
+  not initialized and that generates the ZeroDivisionError when
+  painting the selection rectangle;
 
- * Added a DeleteWindow method to GenericTreeItem class, for items
-   that hold a widget next to them;
+* Added a DeleteWindow method to GenericTreeItem class, for items
+  that hold a widget next to them;
 
- * Renamed CustomTreeCtrl method IsEnabled to IsItemEnabled, otherwise
-   it conflicts with wx.Window.IsEnabled;
+* Renamed CustomTreeCtrl method IsEnabled to IsItemEnabled, otherwise
+  it conflicts with wx.Window.IsEnabled;
 
- * Now CustomTreeCtrl behaves correctly when the widget attached to an
-   item is narrower (in height) than the item text;
+* Now CustomTreeCtrl behaves correctly when the widget attached to an
+  item is narrower (in height) than the item text;
 
 
 wx.lib.flatnotebook: Patch from Andrea that implements the following:
 
- * A new style FNB_FF2: my intentions were to make it like Firefox 2,
-   however it turned out to be an hybrid between wxAUI notebook glose
-   style & FF2 ...I still think it looks OK. The main purpose for
-   making it more like wxAUI is to allow applications that uses both
-   to have same look and feel (or as close as it can get...);
+* A new style FNB_FF2: my intentions were to make it like Firefox 2,
+  however it turned out to be an hybrid between wxAUI notebook glose
+  style & FF2 ...I still think it looks OK. The main purpose for
+  making it more like wxAUI is to allow applications that uses both
+  to have same look and feel (or as close as it can get...);
 
- * Changed the behavior of the left/right rotation arrows to rotate
-   single tab at a time and not bulk of tabs;
+* Changed the behavior of the left/right rotation arrows to rotate
+  single tab at a time and not bulk of tabs;
 
- * Updated the demo module.
+* Updated the demo module.
 
 XRCed now uses a wx.FileHistory object for managing the recent files
 menu. 
@@ -1370,27 +1374,27 @@ to highlight the future parent of the new item.
 
 Updates to MaskedEdit controls from Will Sadkin:
 
-  maskededit.py:
-    Added parameter option stopFieldChangeIfInvalid, which can be used to 
-    relax the validation rules for a control, but make best efforts to stop 
-    navigation out of that field should its current value be invalid.  Note: 
-    this does not prevent the value from remaining invalid if focus for the 
-    control is lost, via mousing etc.
+maskededit.py:
+  Added parameter option stopFieldChangeIfInvalid, which can be used to 
+  relax the validation rules for a control, but make best efforts to stop 
+  navigation out of that field should its current value be invalid.  Note: 
+  this does not prevent the value from remaining invalid if focus for the 
+  control is lost, via mousing etc.
 
-  numctrl.py, demo / MaskedNumCtrl.py:
-    In response to user request, added limitOnFieldChange feature, so that
-    out-of-bounds values can be temporarily added to the control, but should
-    navigation be attempted out of an invalid field, it will not navigate,
-    and if focus is lost on a control so limited with an invalid value, it
-    will change the value to the nearest bound.
+numctrl.py, demo / MaskedNumCtrl.py:
+  In response to user request, added limitOnFieldChange feature, so that
+  out-of-bounds values can be temporarily added to the control, but should
+  navigation be attempted out of an invalid field, it will not navigate,
+  and if focus is lost on a control so limited with an invalid value, it
+  will change the value to the nearest bound.
 
-  combobox.py:
-    Added handler for EVT_COMBOBOX to address apparently inconsistent behavior
-    of control when the dropdown control is used to do a selection.
+combobox.py:
+  Added handler for EVT_COMBOBOX to address apparently inconsistent behavior
+  of control when the dropdown control is used to do a selection.
 
-  textctrl.py
-    Added support for ChangeValue() function, similar to that of the base
-    control, added in wxPython 2.7.1.1.
+textctrl.py
+  Added support for ChangeValue() function, similar to that of the base
+  control, added in wxPython 2.7.1.1.
 
 Update to latest FloatCanvas from Chris Barker.
 
@@ -1443,19 +1447,19 @@ upper left corner instead of the baseline, etc.
 
 wx.lib.customtreectrl patches from Andrea:
 
-  1. ExpandAll has been renamed as ExpandAllChildren, and the new
-     ExpandAll now takes no input arguments (consistent with
-     wx.TreeCtrl)
+1. ExpandAll has been renamed as ExpandAllChildren, and the new
+   ExpandAll now takes no input arguments (consistent with
+   wx.TreeCtrl)
 
-  2. ctstyle keyword is now defaulted to 0: every style related to
-     CustomTreeCtrl and the underlying wx.PyScrolledWindow should be
-     declared using the keyword "style" only. For backward
-     compatibility, ctstyle continues to work as I merged ctstyle and
-     style in the __init__ method.
+2. ctstyle keyword is now defaulted to 0: every style related to
+   CustomTreeCtrl and the underlying wx.PyScrolledWindow should be
+   declared using the keyword "style" only. For backward
+   compatibility, ctstyle continues to work as I merged ctstyle and
+   style in the __init__ method.
 
-  3. GetClassDefaultAttributes is now a classmethod.
+3. GetClassDefaultAttributes is now a classmethod.
 
-  4. UnselectAll bug fixed.
+4. UnselectAll bug fixed.
 
 
 Renamed the wx.lib.inspect and wx.lib.mixins.inspect modules to
@@ -1464,36 +1468,36 @@ standard Python library.
 
 Lots of changes to XRCed from Roman Rolinsky:
 
-  *  Preferences for default "sizeritem" parameters for new panels and
-     controls can be configured ("File">"Preferences...").
+*  Preferences for default "sizeritem" parameters for new panels and
+   controls can be configured ("File">"Preferences...").
 
-  *  Implemented comment object for including simple one-line comments and
-     comment directives as tree nodes. No validation is performed for a
-     valid XML string so comments must not contain "-->". Comment directive
-     is a special comment starting with '%' character, followed by a line
-     of python code. It is executed using 'exec' when the resource file is
-     opened. This is useful to import plugin modules containing custom
-     handlers which are specific to the resource file, hovewer this is of
-     course a security hole if you use foreign XRC files. A warning is
-     displayed if the preference option 'ask' is selected (by default).
+*  Implemented comment object for including simple one-line comments and
+   comment directives as tree nodes. No validation is performed for a
+   valid XML string so comments must not contain "-->". Comment directive
+   is a special comment starting with '%' character, followed by a line
+   of python code. It is executed using 'exec' when the resource file is
+   opened. This is useful to import plugin modules containing custom
+   handlers which are specific to the resource file, hovewer this is of
+   course a security hole if you use foreign XRC files. A warning is
+   displayed if the preference option 'ask' is selected (by default).
 
-  *  Added support for custom controls and plugin modules. Refer to this
-     wxPythonWiki for the details:  http://wiki.wxpython.org/index.cgi/XRCed#custom
+*  Added support for custom controls and plugin modules. Refer to this
+   wxPythonWiki for the details:  http://wiki.wxpython.org/index.cgi/XRCed#custom
 
-  *  Tool panel sections can be collapsed/expanded by clicking on the
-     label of a tool group.
+*  Tool panel sections can be collapsed/expanded by clicking on the
+   label of a tool group.
 
-  *  Some undo/redo and other fixes.
+*  Some undo/redo and other fixes.
 
-  *  Fixes for wxMSW (notebook highlighting, control sizes, tree Unselect).
+*  Fixes for wxMSW (notebook highlighting, control sizes, tree Unselect).
 
-  *  Notebook page highlighting fix. Highlight resizes when the window
-     is resized. ParamUnit spin button detects event handler re-entry
-     (wxGTK probably has a bug in wxSpinButton with repeated events).
+*  Notebook page highlighting fix. Highlight resizes when the window
+   is resized. ParamUnit spin button detects event handler re-entry
+   (wxGTK probably has a bug in wxSpinButton with repeated events).
 
-  *  Fix for dealing with empty 'growable' property, using MiniFrame
-     for properties panel, the panel is restored together with the
-     main window.
+*  Fix for dealing with empty 'growable' property, using MiniFrame
+   for properties panel, the panel is restored together with the
+   main window.
 
 
 
@@ -1606,15 +1610,15 @@ on the Mac.)
 
 Added some modules from Riaan Booysen:  
 
-    * wx.lib.flagart:  contains icons of the flags of many countries.
+* wx.lib.flagart:  contains icons of the flags of many countries.
 
-    * wx.lib.art.img2pyartprov: makes images embedded in a python file
-      with img2py available via the wx.ArtProvider.
+* wx.lib.art.img2pyartprov: makes images embedded in a python file
+  with img2py available via the wx.ArtProvider.
 
-    * wx.lib.langlistctrl: A wx.ListCtrl for selecting a language,
-      which uses the country flag icons.
+* wx.lib.langlistctrl: A wx.ListCtrl for selecting a language,
+  which uses the country flag icons.
 
-    * An I18N sample for the demo.
+* An I18N sample for the demo.
 
 wx.lib.masked: Patch from Will Sadkin.  Includes Unicode fixes, plus
 more helpful exceptions and ability to designate fields in mask
@@ -1655,14 +1659,16 @@ wx.aui: The classes in the wx.aui module have been renamed to be more
 consistent with each other, and make it easier to recognize in the
 docs and etc. that they belong together.
 
-    FrameManager -->       AuiManager
-    FrameManagerEvent -->  AuiManagerEvent
-    PaneInfo -->           AuiPaneInfo
-    FloatingPane -->       AuiFloatingPane
-    DockArt -->            AuiDockArt
-    TabArt -->             AuiTabArt
-    AuiMultiNotebook -->   AuiNotebook
-    AuiNotebookEvent -->   AuiNotebookEvent
+======================  =================
+FrameManager -->        AuiManager
+FrameManagerEvent -->   AuiManagerEvent
+PaneInfo -->            AuiPaneInfo
+FloatingPane -->        AuiFloatingPane
+DockArt -->             AuiDockArt
+TabArt -->              AuiTabArt
+AuiMultiNotebook -->    AuiNotebook
+AuiNotebookEvent -->    AuiNotebookEvent
+======================  =================
        
 wx.lib.customtreectrl: A patch from Frank Niessink which adds an
 additional style (TR_AUTO_CHECK_PARENT) that (un)checks a parent when
@@ -1727,20 +1733,20 @@ Patch #1579280: Some mimetype optimizations on unix-like systems.
 
 wxMac: Several wx.webkit.WebKitCtrl enhancements/fixes, including:
 
-    - new methods for increasing/decreasing text size, getting
-      selection, getting/setting scroll position, printing, enabling
-      editing, and running JavaScripts on the page.
+- new methods for increasing/decreasing text size, getting
+  selection, getting/setting scroll position, printing, enabling
+  editing, and running JavaScripts on the page.
 
-    - added new event (wx.webkit.WebKitBeforeLoadEvent) for catching, and
-      possibly vetoing, load events before they occur.
+- added new event (wx.webkit.WebKitBeforeLoadEvent) for catching, and
+  possibly vetoing, load events before they occur.
 
-    - wx.webkit.WebKitCtrl now fires mouse events for certain events
-      that it was eating before. This improves wxSplitterWindow
-      resizing behavior.
+- wx.webkit.WebKitCtrl now fires mouse events for certain events
+  that it was eating before. This improves wxSplitterWindow
+  resizing behavior.
 
-    - refactoring of the sizing logic to move the Cocoa view.  Tested
-      with splitter windows, panels, notebooks and all position
-      correctly with this.
+- refactoring of the sizing logic to move the Cocoa view.  Tested
+  with splitter windows, panels, notebooks and all position
+  correctly with this.
 
 Some improvements to the drawing code in CustomTreeCtrl.
 
@@ -1756,24 +1762,24 @@ Fixed refcount leak in wx.Window.GetChildren.
 
 The following deprecated items have been removed:
 
-    * wx.Bitmap SetQuality and GetQuality methods
+* wx.Bitmap SetQuality and GetQuality methods
 
-    * The wx.GetNumberFromUser function
+* The wx.GetNumberFromUser function
 
-    * wx.EVT_LIST_GET_INFO and wx.EVT_LIST_SET_INFO
+* wx.EVT_LIST_GET_INFO and wx.EVT_LIST_SET_INFO
 
-    * wx.BookCtrlSizer and wx.NotebookSizer
+* wx.BookCtrlSizer and wx.NotebookSizer
 
-    * The PostScript-specific methods of wx.PrintData
+* The PostScript-specific methods of wx.PrintData
 
-    * wx.PrintDialogData SetSetupDialog and GetSetupDialog methods
+* wx.PrintDialogData SetSetupDialog and GetSetupDialog methods
 
-    * wx.FontMapper SetConfig method
+* wx.FontMapper SetConfig method
 
-    * wx.html.HtmlSearchStatus.GetContentsItem method
+* wx.html.HtmlSearchStatus.GetContentsItem method
 
-    * wx.html.HtmlHelpData.GetContents, GetContentsCnt, GetIndex, and
-      GetIndexCnt methods
+* wx.html.HtmlHelpData.GetContents, GetContentsCnt, GetIndex, and
+  GetIndexCnt methods
 
 
 wx.EventLoop is now implemented for wxMac.
@@ -1820,28 +1826,28 @@ Note that the old way with the "base_*" function still works, but you
 will get a DeprecationWarning from calling base_OnBeginDocument.  The
 classes affected by this are:
 
-    * wx.DropSource
-    * wx.DropTarget
-    * wx.TextDropTarget
-    * wx.FileDropTarget
-    * wx.PyLog   (also added the ability to override Flush)
-    * wx.PyApp   (also added the ability to override ExitMainLoop)
-    * wx.Printout
-    * wx.PyPrintPreview
-    * wx.PyPreviewFrame
-    * wx.PreviewControlBar
-    * wx.Process
-    * wx.PyControl
-    * wx.PyPanel
-    * wx.PyScrolledWindow
-    * wx.PyWindow
-    * wx.Timer
-    * wx.grid.PyGridCellRenderer
-    * wx.grid.PyGridCellEditor
-    * wx.grid.PyGridCellAttrProvider
-    * wx.grid.PyGridTableBase
-    * wx.html.HtmlWindow
-    * wx.wizard.PyWizardPage
+* wx.DropSource
+* wx.DropTarget
+* wx.TextDropTarget
+* wx.FileDropTarget
+* wx.PyLog   (also added the ability to override Flush)
+* wx.PyApp   (also added the ability to override ExitMainLoop)
+* wx.Printout
+* wx.PyPrintPreview
+* wx.PyPreviewFrame
+* wx.PreviewControlBar
+* wx.Process
+* wx.PyControl
+* wx.PyPanel
+* wx.PyScrolledWindow
+* wx.PyWindow
+* wx.Timer
+* wx.grid.PyGridCellRenderer
+* wx.grid.PyGridCellEditor
+* wx.grid.PyGridCellAttrProvider
+* wx.grid.PyGridTableBase
+* wx.html.HtmlWindow
+* wx.wizard.PyWizardPage
 
 
 Added the wx.DC.GradientFillConcentric and wx.DC.GradientFillLinear
@@ -2287,17 +2293,17 @@ Some fixes to XRCed to make encoding errors a bit more user friendly.
 
 XRCed changes from Roman Rolinsky:
 
-    * Added new controls (Choicebook, Listbook, StatusBar,
-      DatePicker), and completed style flags. Test window is opened
-      for an available parent control if no specific view
-      defined. Better handling of exceptions (highlighting does not
-      'stick' anymore).
+* Added new controls (Choicebook, Listbook, StatusBar,
+  DatePicker), and completed style flags. Test window is opened
+  for an available parent control if no specific view
+  defined. Better handling of exceptions (highlighting does not
+  'stick' anymore).
 
-    * Use system clipboard for Copy/Paste.
+* Use system clipboard for Copy/Paste.
 
-    * Improved some dialogs (window styles, growable cols). Changed
-      the range for wxSpinCtrl min/max to all integers (default 0/100
-      is not always good).
+* Improved some dialogs (window styles, growable cols). Changed
+  the range for wxSpinCtrl min/max to all integers (default 0/100
+  is not always good).
 
 Updates for wx.lib.foldpanelbar and wx.lib.hyperlink from Andrea
 Gavana.
@@ -2360,92 +2366,92 @@ Lots of PyCrust enhancments started by Franz Steinaeusler, Adi Sieker,
 and Sebastian Haase, and which in turn were further enhanced, fixed
 tweaked and finished up by me.  The changes include the following:
 
-    * The Autocomplete and Calltip windows can now be opened manually
-      with Ctrl-Space and Ctrl-Shift-Space.
+* The Autocomplete and Calltip windows can now be opened manually
+  with Ctrl-Space and Ctrl-Shift-Space.
 
-    * In the stand alone PyCrust app the various option settings,
-      window size and position, and etc. are saved and restored at the
-      next run.
+* In the stand alone PyCrust app the various option settings,
+  window size and position, and etc. are saved and restored at the
+  next run.
 
-    * Added a help dialog bound to the F1 key that shows the key
-      bindings.
+* Added a help dialog bound to the F1 key that shows the key
+  bindings.
 
-    * Added a new text completion function that suggests words from
-      the history.  Bound to Shift-Return.
+* Added a new text completion function that suggests words from
+  the history.  Bound to Shift-Return.
 
-    * F11 will toggle the maximized state of the frame.
+* F11 will toggle the maximized state of the frame.
 
-    * switched to Bind() from wx.EVT_*().
+* switched to Bind() from wx.EVT_*().
 
-    * Display of line numbers can be toggled.
+* Display of line numbers can be toggled.
 
-    * F12 toggles a "free edit" mode of the shell buffer.  This mode
-      is useful, for example, if you would like to remove some output
-      or errors or etc. from the buffer before doing a copy/paste.
-      The free edit mode is designated by the use of a red,
-      non-flashing caret.
+* F12 toggles a "free edit" mode of the shell buffer.  This mode
+  is useful, for example, if you would like to remove some output
+  or errors or etc. from the buffer before doing a copy/paste.
+  The free edit mode is designated by the use of a red,
+  non-flashing caret.
 
-    * Ctrl-Shift-F will fold/unfold (hide/show) the selected lines.
+* Ctrl-Shift-F will fold/unfold (hide/show) the selected lines.
 
-    * General code cleanup and fixes.
+* General code cleanup and fixes.
 
-    * Use wx.StandardPaths to determine the location of the config
-      files.
+* Use wx.StandardPaths to determine the location of the config
+  files.
 
-    * Use wx.SP_LIVE_UPDATE on crust and filling windows.
+* Use wx.SP_LIVE_UPDATE on crust and filling windows.
 
-    * Extended the saving of the config info and other new features to
-      the PyShell app too.  Additionally, other apps that embed a
-      PyCrust or a PyShell can pass their own wx.Config object and
-      have the Py code save/restore its settings to/from there.
+* Extended the saving of the config info and other new features to
+  the PyShell app too.  Additionally, other apps that embed a
+  PyCrust or a PyShell can pass their own wx.Config object and
+  have the Py code save/restore its settings to/from there.
 
-    * All of the classes with config info get an opportunity to
-      save/load their own settings instead of putting all the
-      save/load code in one place that then has to reach all over the
-      place to do anything.
+* All of the classes with config info get an opportunity to
+  save/load their own settings instead of putting all the
+  save/load code in one place that then has to reach all over the
+  place to do anything.
 
-    * Enable editing of the startup python code, which will either be
-      the file pointed to by PYTHONSTARTUP or a file in the config dir
-      if PYTHONSTARTUP is not set in the environment.
+* Enable editing of the startup python code, which will either be
+  the file pointed to by PYTHONSTARTUP or a file in the config dir
+  if PYTHONSTARTUP is not set in the environment.
 
-    * Added an option to skip the running of the startup code when
-      PyShell or PyCrust starts.
+* Added an option to skip the running of the startup code when
+  PyShell or PyCrust starts.
 
-    * PyCrust adds a pp(item) function to the shell's namespace that
-      pretty prints the item in the Display tab of the notebook.
-      Added code to raise that tab when pp() is called.
+* PyCrust adds a pp(item) function to the shell's namespace that
+  pretty prints the item in the Display tab of the notebook.
+  Added code to raise that tab when pp() is called.
 
-    * Added an option for whether to insert text for function
-      parameters when popping up the call tip.
+* Added an option for whether to insert text for function
+  parameters when popping up the call tip.
 
-    * Added Find and Find-Next functions that use the
-      wx.FindReplaceDialog.
+* Added Find and Find-Next functions that use the
+  wx.FindReplaceDialog.
 
 
 Applied patches from Will Sadkin for wx.lib.masked modules:
 
-    * Now ignores kill focus events when being destroyed.
+* Now ignores kill focus events when being destroyed.
 
-    * Added missing call to set insertion point on changing fields.
+* Added missing call to set insertion point on changing fields.
 
-    * Modified SetKeyHandler() to accept None as means of removing
-      one.
+* Modified SetKeyHandler() to accept None as means of removing
+  one.
 
-    * Fixed keyhandler processing for group and decimal character
-      changes.
+* Fixed keyhandler processing for group and decimal character
+  changes.
 
-    * Fixed a problem that prevented input into the integer digit of a
-      integerwidth=1 numctrl, if the current value was 0.
+* Fixed a problem that prevented input into the integer digit of a
+  integerwidth=1 numctrl, if the current value was 0.
 
-    * Fixed logic involving processing of "_signOk" flag, to remove
-      default sign key handlers if false, so that
-      SetAllowNegative(False) in the NumCtrl works properly.
+* Fixed logic involving processing of "_signOk" flag, to remove
+  default sign key handlers if false, so that
+  SetAllowNegative(False) in the NumCtrl works properly.
 
-    * Fixed selection logic for numeric controls so that if
-      selectOnFieldEntry is true, and the integer portion of an
-      integer format control is selected and the sign position is
-      selected, the sign keys will always result in a negative value,
-      rather than toggling the previous sign.
+* Fixed selection logic for numeric controls so that if
+  selectOnFieldEntry is true, and the integer portion of an
+  integer format control is selected and the sign position is
+  selected, the sign keys will always result in a negative value,
+  rather than toggling the previous sign.
 
 wx.FontMapper.SetConfig is deprecated.  You should instead just set an
 application-wide config object with wx.Config.Set, which wx.FontMapper
@@ -2463,7 +2469,7 @@ A variety of updates to wx.lib.floatcanvas, including Added
 DrawObjects, including a ScaledTextBox, with auto-wrapping, etc, and
 Scaled and Unscaled Bitmap Objects.
 
-       WARNING: Changed all DrawObjects to take an (x,y) pair rather
+.. warning:: Changed all DrawObjects to take an (x,y) pair rather
        than individual x,y parameters. Also changed rectangles and
        ellipses to take (w,h) pair. This is an API change, but should
        be easy to accommodate, all you need to do is add a parenthesis
@@ -2698,17 +2704,17 @@ able to do in a unicode build, and in an ansi build it will depend on
 the content of the utf-8 used being compatible with the current
 encoding, (you'll get an exception otherwise.)
 
-      ===================  ====================
-      AddTextRaw           AddTextUTF8
-      InsertTextRaw        InsertTextUTF8
-      GetCurLineRaw        GetCurLineUTF8
-      GetLineRaw           GetLineUTF8
-      GetSelectedTextRaw   GetSelectedTextUTF8
-      GetTextRangeRaw      GetTextRangeUTF8
-      SetTextRaw           SetTextUTF8
-      GetTextRaw           GetTextUTF8
-      AppendTextRaw        AppendTextUTF8
-      ===================  ====================
+===================  ====================
+AddTextRaw           AddTextUTF8
+InsertTextRaw        InsertTextUTF8
+GetCurLineRaw        GetCurLineUTF8
+GetLineRaw           GetLineUTF8
+GetSelectedTextRaw   GetSelectedTextUTF8
+GetTextRangeRaw      GetTextRangeUTF8
+SetTextRaw           SetTextUTF8
+GetTextRaw           GetTextUTF8
+AppendTextRaw        AppendTextUTF8
+===================  ====================
 
 
 wx.stc.StyledTextCtrl:  Added the StyleSetFontEncoding(style, enc)
@@ -2934,22 +2940,22 @@ wxPython's .i files, or building their own extension modules or
 etc. that need to interact with the wxPython swigged types.  For the
 morbidly curious, here are a few more details:
 
-    * Since it is now possible easily and simply share the SWIG type
-      tables across modules I reverted to always using the stock SWIG
-      runtime instead of my slightly hacked up version of it exported
-      via the wxPython C API.
+* Since it is now possible easily and simply share the SWIG type
+  tables across modules I reverted to always using the stock SWIG
+  runtime instead of my slightly hacked up version of it exported
+  via the wxPython C API.
 
-    * The %name directive is now deprecated so I replaced most uses of
-      it with a custom %Rename macro that uses %rename internally.
-      These will evetually need to be replaced with a DocDecl macro
-      when docstrings are added for those items.
+* The %name directive is now deprecated so I replaced most uses of
+  it with a custom %Rename macro that uses %rename internally.
+  These will evetually need to be replaced with a DocDecl macro
+  when docstrings are added for those items.
 
-    * The "this" attribute of all SWIGged classes is no longer a
-      string containing a "swigified pointer", but rather a custom
-      built-in type that holds the real C pointer to the object and
-      the type info.  It can be converted to a string like the old
-      value using str() or to the long integer value of the pointer
-      using long().
+* The "this" attribute of all SWIGged classes is no longer a
+  string containing a "swigified pointer", but rather a custom
+  built-in type that holds the real C pointer to the object and
+  the type info.  It can be converted to a string like the old
+  value using str() or to the long integer value of the pointer
+  using long().
 
 Added SetDefaultPyEncoding and GetDefaultPyEncoding functions which
 will set/get the encoding used by wxPython to convert string or
@@ -3297,43 +3303,43 @@ version installs, and comes with an uninstaller script.
 -------
 * 27-Aug-2004
 
-Predominantly a bug-fix release.
+Predominantly a bug-fix release:
 
-  * Fixed fatal error due to improper wrapping of wx.FSFile.
+* Fixed fatal error due to improper wrapping of wx.FSFile.
 
-  * Fixed return type of EditableListBox.GetListCtrl
+* Fixed return type of EditableListBox.GetListCtrl
 
-  * Give generic tree and list controls a DoGetBestSize so they play
-    nicer with sizers when there is no minimal size.
+* Give generic tree and list controls a DoGetBestSize so they play
+  nicer with sizers when there is no minimal size.
 
-  * Some tweaks in the demo and samples to correct layout, some
-    flicker problems, and namespace use.
+* Some tweaks in the demo and samples to correct layout, some
+  flicker problems, and namespace use.
 
-  * Add wx.Image.ConvertAlphaToMask
+* Add wx.Image.ConvertAlphaToMask
 
-  * Minor corrections in wx.lib.dialogs
+* Minor corrections in wx.lib.dialogs
 
-  * wx.FileHistory constructor now accepts the documented 2nd
-    parameter.
+* wx.FileHistory constructor now accepts the documented 2nd
+  parameter.
 
-  * Corrections for exceptions in the new ogl
+* Corrections for exceptions in the new ogl
 
-  * Fixed XRCed to not use reparenting of windows to implement caching
-    of property panels, since Reparent on wxMac is not implemented.
+* Fixed XRCed to not use reparenting of windows to implement caching
+  of property panels, since Reparent on wxMac is not implemented.
 
-  * Add support for wxTAB_TRAVERSAL to the XRC handler for
-    wxScrolledWindow.
+* Add support for wxTAB_TRAVERSAL to the XRC handler for
+  wxScrolledWindow.
 
-  * Add support for all wxListBox styles to the XRC handler for
-    wxCheckListBox.
+* Add support for all wxListBox styles to the XRC handler for
+  wxCheckListBox.
 
-  * Fix for wx.Listbook.DeleteAllPages to really delete everything.
+* Fix for wx.Listbook.DeleteAllPages to really delete everything.
 
-  * wxGTK2 now supports alpha blended bitmap drawing
+* wxGTK2 now supports alpha blended bitmap drawing
 
-  * Made wx.grid.Grid play nicer with sizers.
+* Made wx.grid.Grid play nicer with sizers.
 
-  * etc.
+* etc.
 
 
 
@@ -4009,27 +4015,27 @@ wx counterparts except they allow some of the more common C++ virtual
 methods to be overridden in Python derived classes.  The methods
 supported are:
 
-    DoMoveWindow
-    DoSetSize
-    DoSetClientSize
-    DoSetVirtualSize
-    DoGetSize
-    DoGetClientSize
-    DoGetPosition
-    DoGetVirtualSize
-    DoGetBestSize
-    InitDialog
-    TransferDataFromWindow
-    TransferDataToWindow
-    Validate
-    AcceptsFocus
-    AcceptsFocusFromKeyboard
-    GetMaxSize
-    AddChild
-    RemoveChild
+- DoMoveWindow
+- DoSetSize
+- DoSetClientSize
+- DoSetVirtualSize
+- DoGetSize
+- DoGetClientSize
+- DoGetPosition
+- DoGetVirtualSize
+- DoGetBestSize
+- InitDialog
+- TransferDataFromWindow
+- TransferDataToWindow
+- Validate
+- AcceptsFocus
+- AcceptsFocusFromKeyboard
+- GetMaxSize
+- AddChild
+- RemoveChild
 
-    If there are other methods that you think should be supported
-    please let me know.
+If there are other methods that you think should be supported
+please let me know.
 
 Changed wxGenButton to derive from wxPyControl and overload
 DoGetBestSize and AcceptsFocus.
@@ -4538,17 +4544,17 @@ generates the event binding.  This means that if you are using any of
 the following method names without a EVT_* call that you need to
 modify your code to add the EVT_* to hook the event to the method.
 
-    OnChar
-    OnSize
-    OnEraseBackground
-    OnSysColourChanged
-    OnInitDialog
-    OnPaint
-    OnIdle
-    OnActivate
-    OnMenuHighlight
-    OnCloseWindow
-    OnScroll
+- OnChar
+- OnSize
+- OnEraseBackground
+- OnSysColourChanged
+- OnInitDialog
+- OnPaint
+- OnIdle
+- OnActivate
+- OnMenuHighlight
+- OnCloseWindow
+- OnScroll
 
 Added wxSpinCtrl.
 
@@ -4633,7 +4639,7 @@ Renamed wxTreeCtrl.GetParent to GetItemParent to avoid a name clash
 with wxWindow.GetParent.
 
 Added wxIntersectRect to compute the intersection of two wxRect's.
-It is used like this:
+It is used like this::
 
    intersect = wxIntersectRect(rect1, rect2)
 
@@ -4655,7 +4661,7 @@ The C++ wxToolBar classes have been redone, and so have the wxPython
 wrappers.  There have been slight modifications to some of the methods
 but shouldn't impact anybody too much.  I took the opportunity to add
 support for setting user data on each toolbar tool.  The new AddTool
-methods look like this:
+methods look like this::
 
         def AddTool(ID,
                     bitmap,
@@ -4906,16 +4912,16 @@ patches so there is really no reason to stick with the current (very
 old) release...  This version of SWIG gives the following new
 features:
 
-    1. Keyword arguments.  You no longer have to specify all the
-       parameters with defaults to a method just to specify a
-       non-default value on the end.  You can now do this instead:
+1. Keyword arguments.  You no longer have to specify all the
+   parameters with defaults to a method just to specify a
+   non-default value on the end.  You can now do this instead::
 
-          win = wxWindow(parent, -1, style = mystyle)
+      win = wxWindow(parent, -1, style = mystyle)
 
-    2. There is now an an equivalence between Python's None and C++'s
-       NULL.  This means that any methods that might return NULL will
-       now return None and you can use None where wxWindows might be
-       expecting NULL.  This makes things much more snake-ish.
+2. There is now an an equivalence between Python's None and C++'s
+   NULL.  This means that any methods that might return NULL will
+   now return None and you can use None where wxWindows might be
+   expecting NULL.  This makes things much more snake-ish.
 
 
 There is a new build system based on a new Python program instead of
@@ -5197,3 +5203,4 @@ The first "modern" version of wxPython.  See
 http://wiki.wxpython.org/index.cgi/WxPythonHistory
 
 
+.. -*- coding: utf-8 -*-
