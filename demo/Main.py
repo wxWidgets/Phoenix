@@ -1354,7 +1354,7 @@ class DemoTaskBarIcon(TaskBarIcon):
         elif "wxGTK" in wx.PlatformInfo:
             img = img.Scale(22, 22)
         # wxMac can be any size upto 128x128, so leave the source img alone....
-        icon = wx.IconFromBitmap(img.ConvertToBitmap())
+        icon = wx.Icon(img.ConvertToBitmap())
         return icon
 
 
