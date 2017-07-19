@@ -467,10 +467,10 @@ def run():
 
     # But also keep aliases for the old names, just in case
     c.addPyCode("""\
-        Grid.GridSelectCells = Grid.SelectCells
-        Grid.GridSelectRows = Grid.SelectRows
-        Grid.GridSelectColumns = Grid.SelectColumns
-        Grid.GridSelectRowsOrColumns = Grid.SelectRowsOrColumns
+        Grid.wxGridSelectCells = Grid.SelectCells
+        Grid.wxGridSelectRows = Grid.SelectRows
+        Grid.wxGridSelectColumns = Grid.SelectColumns
+        Grid.wxGridSelectRowsOrColumns = Grid.SelectRowsOrColumns
         """)
 
     #-----------------------------------------------------------------

@@ -522,7 +522,7 @@ class PolySpline(PolyLine):
         pen.SetCap(wx.CAP_ROUND)
         dc.SetPen(pen)
         if coord is None:
-            if len(self.scaled):  # bugfix for Mac OS X
+            if len(self.scaled) >= 3:
                 dc.DrawSpline(self.scaled)
         else:
             dc.DrawLines(coord)  # draw legend line

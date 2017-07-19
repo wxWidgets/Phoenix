@@ -122,6 +122,12 @@ class WindowTests(wtc.WidgetTestCase):
         val = self.frame.DLG_UNIT((10, 10))
         _check(val)
 
+        val = wx.DLG_UNIT(self.frame, wx.Point(10, 10))
+        assert isinstance(val, wx.Point)
+        
+        val = wx.DLG_UNIT(self.frame, wx.Size(10, 10))
+        assert isinstance(val, wx.Size)
+        
         wx.DLG_SZE
         wx.DLG_PNT
 
