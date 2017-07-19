@@ -23,7 +23,7 @@ are imported.
 Fixed issue in wx.TreeItemId comparison methods affecting PyCrust and other
 tools.
 
-Restore the simplified names for the wxGridSElectionModes enum that were
+Restore the simplified names for the wxGridSelectionModes enum that were
 present in Classic.
 
 Add accessors for the internal widgets in the wx.EditableListBox.
@@ -44,7 +44,7 @@ than 3 points.
 Transfer the ownership of the prop arg in wx.propgrid.PGProperty.AddChild and
 AddPrivateChild. Various other fixes in wx.propgrid classes for backwards
 compatibility and to fix problems caused by mismatches between customizations
-that were done for Classic and how Phoenix does things by default..
+that were done for Classic and how Phoenix does things by default.
 
 
 
