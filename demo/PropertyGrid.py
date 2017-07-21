@@ -508,79 +508,9 @@ class TrivialPropertyEditor(wxpg.PGEditor):
         ctrl.SetFocus()
 
 
-class LargeImagePickerCtrl(wx.Panel):
-    """\
-    Control created and used by LargeImageEditor.
-    """
-    def __init__(self):
-        wx.Panel.__init__(self)
-
-    def Create(self, parent, id_, pos, size, style = 0):
-        wx.Panel.Create(self, parent, id_, pos, size,
-                        style | wx.BORDER_SIMPLE)
-        img_spc = size[1]
-        self.tc = wx.TextCtrl(self, -1, "", (img_spc,0), (2048,size[1]),
-                              wx.BORDER_NONE)
-        self.SetBackgroundColour(wx.WHITE)
-        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
-        self.property = None
-        self.bmp = None
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
-
-    def OnPaint(self, event):
-        dc = wx.BufferedPaintDC(self)
-
-        whiteBrush = wx.Brush(wx.WHITE)
-        dc.SetBackground(whiteBrush)
-        dc.Clear()
-
-        bmp = self.bmp
-        if bmp:
-            dc.DrawBitmap(bmp, 2, 2)
-        else:
-            dc.SetPen(wx.Pen(wx.BLACK))
-            dc.SetBrush(whiteBrush)
-            dc.DrawRectangle(2, 2, 64, 64)
-
-    def RefreshThumbnail(self):
-        """\
-        We use here very simple image scaling code.
-        """
-        if not self.property:
-            self.bmp = None
-            return
-
-        path = self.property.DoGetValue()
-
-        if not os.path.isfile(path):
-            self.bmp = None
-            return
-
-        image = wx.Image(path)
-        image.Rescale(64, 64)
-        self.bmp = wx.Bitmap(image)
-
-    def SetProperty(self, property):
-        self.property = property
-        self.tc.SetValue(property.GetDisplayedString())
-        self.RefreshThumbnail()
-
-    def SetValue(self, s):
-        self.RefreshThumbnail()
-        self.tc.SetValue(s)
-
-    def GetLastPosition(self):
-        return self.tc.GetLastPosition()
-
-   # def SetValidator(self, validator):
-   #     print(validator)
-   #     if hasattr(self, 'tc'):
-   #         self.tc.SetValidator(validator)
-
-
 
 class LargeImageEditor(wxpg.PGEditor):
-    """\
+    """
     Double-height text-editor with image in front.
     """
     def __init__(self):
@@ -596,32 +526,44 @@ class LargeImageEditor(wxpg.PGEditor):
             bw = propgrid.GetRowHeight()
             w -= bw
 
-            #
-            property.SetValidator(wx.DefaultValidator)
+            self.property = property
 
-            lipc = LargeImagePickerCtrl()
-            if sys.platform.startswith('win'):
-                lipc.Hide()
-            lipc.Create(propgrid.GetPanel(), wxpg.PG_SUBID1, (x,y), (w,h))
-            lipc.SetProperty(property)
+            self.RefreshThumbnail()
+            self.statbmp = wx.StaticBitmap(propgrid.GetPanel(), -1, self.bmp, (x,y))
+            self.tc = wx.TextCtrl(propgrid.GetPanel(), -1,  "",
+                                  (x+h,y), (2048,h), wx.BORDER_NONE)
+
             btn = wx.Button(propgrid.GetPanel(), wxpg.PG_SUBID2, '...',
                             (x+w, y),
                             (bw, h), wx.WANTS_CHARS)
-            return wxpg.PGWindowList(lipc, btn)
+
+            # When the textctrl is destroyed, destroy the statbmp too
+            def _cleanupStatBmp(evt):
+                if self.statbmp:
+                    self.statbmp.Destroy()
+            self.tc.Bind(wx.EVT_WINDOW_DESTROY, _cleanupStatBmp)
+
+            return wxpg.PGWindowList(self.tc, btn)
         except:
             import traceback
             print(traceback.print_exc())
+
 
     def GetName(self):
         return "LargeImageEditor"
 
 
     def UpdateControl(self, property, ctrl):
-        ctrl.SetValue(property.GetDisplayedString())
+        s = property.GetDisplayedString()
+        self.tc.SetValue(s)
+        self.RefreshThumbnail()
+        self.statbmp.SetBitmap(self.bmp)
+
 
     def DrawValue(self, dc, rect, property, text):
         if not property.IsValueUnspecified():
             dc.DrawText(property.GetDisplayedString(), rect.x+5, rect.y)
+
 
     def OnEvent(self, propgrid, property, ctrl, event):
         """ Return True if modified editor value should be committed to
@@ -653,8 +595,7 @@ class LargeImageEditor(wxpg.PGEditor):
         """ Return tuple (wasSuccess, newValue), where wasSuccess is True if
             different value was acquired succesfully.
         """
-        tc = ctrl.tc
-        textVal = tc.GetValue()
+        textVal = self.tc.GetValue()
 
         if property.UsesAutoUnspecified() and not textVal:
             return (None, True)
@@ -669,18 +610,49 @@ class LargeImageEditor(wxpg.PGEditor):
 
         return (res, value)
 
+
     def SetValueToUnspecified(self, property, ctrl):
-        ctrl.tc.Remove(0,len(ctrl.tc.GetValue()))
+        ctrl.Remove(0, len(ctrl.GetValue()))
+        self.RefreshThumbnail()
+        self.statbmp.SetBitmap(self.bmp)
+
 
     def SetControlStringValue(self, property, ctrl, txt):
-        ctrl.SetValue(txt)
+        self.tc.SetValue(txt)
+        self.RefreshThumbnail()
+        self.statbmp.SetBitmap(self.bmp)
 
-    # def OnFocus(self, property, ctrl):
-    #    ctrl.tc.SetSelection(-1,-1)
-    #    ctrl.tc.SetFocus()
 
     def CanContainCustomImage(self):
         return True
+
+
+    def RefreshThumbnail(self):
+        """
+        We use here very simple image scaling code.
+        """
+        def _makeEmptyBmp():
+            bmp = wx.Bitmap(64,64)
+            dc = wx.MemoryDC()
+            dc.SelectObject(bmp)
+            dc.SetPen(wx.Pen(wx.BLACK))
+            dc.SetBrush(wx.WHITE_BRUSH)
+            dc.DrawRectangle(0, 0, 64, 64)
+            return bmp
+
+        if not self.property:
+            self.bmp = _makeEmptyBmp()
+            return
+
+        path = self.property.DoGetValue()
+
+        if not os.path.isfile(path):
+            self.bmp = _makeEmptyBmp()
+            return
+
+        image = wx.Image(path)
+        image.Rescale(64, 64)
+        self.bmp = wx.Bitmap(image)
 
 
 ############################################################################
