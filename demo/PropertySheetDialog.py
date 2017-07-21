@@ -210,7 +210,7 @@ def runTest(frame, nb, log):
 infoText = """\
 A wx.adv.PropertySheetDialog provides a standard framework to show settings or
 preferences for your applications.  You just need to provide panels for each
-'page' top be shown in the dialog and the PropertySheetDialog takes care of
+'page' to be shown in the dialog and the PropertySheetDialog takes care of
 showing those panels in one of several kinds of book controls, adding buttons,
 etc.
 """

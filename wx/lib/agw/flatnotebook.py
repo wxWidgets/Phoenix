@@ -6455,7 +6455,7 @@ class PageContainer(wx.Panel):
             if wx.VERSION > (2, 6, 3, 0) and self.TabHasImage(i):
                 item.SetBitmap(self.GetImageList().GetBitmap(pi.GetImageIndex()))
 
-            popupMenu.AppendItem(item)
+            popupMenu.Append(item)
             item.Enable(pi.GetEnabled())
 
         self.PopupMenu(popupMenu)

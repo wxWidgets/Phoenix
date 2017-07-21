@@ -290,7 +290,7 @@ class Filling(wx.SplitterWindow):
                                 static=static)
         self.text = FillingText(parent=self, static=static)
 
-        wx.CallLater(1, self.SplitVertically, self.tree, self.text, 200)
+        wx.CallLater(25, self.SplitVertically, self.tree, self.text, 200)
 
         self.SetMinimumPaneSize(1)
 
