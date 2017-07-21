@@ -572,6 +572,12 @@ class LargeImagePickerCtrl(wx.Panel):
     def GetLastPosition(self):
         return self.tc.GetLastPosition()
 
+   # def SetValidator(self, validator):
+   #     print(validator)
+   #     if hasattr(self, 'tc'):
+   #         self.tc.SetValidator(validator)
+
+
 
 class LargeImageEditor(wxpg.PGEditor):
     """\
@@ -590,6 +596,9 @@ class LargeImageEditor(wxpg.PGEditor):
             bw = propgrid.GetRowHeight()
             w -= bw
 
+            #
+            property.SetValidator(wx.DefaultValidator)
+
             lipc = LargeImagePickerCtrl()
             if sys.platform.startswith('win'):
                 lipc.Hide()
@@ -602,6 +611,10 @@ class LargeImageEditor(wxpg.PGEditor):
         except:
             import traceback
             print(traceback.print_exc())
+
+    def GetName(self):
+        return "LargeImageEditor"
+
 
     def UpdateControl(self, property, ctrl):
         ctrl.SetValue(property.GetDisplayedString())
@@ -662,9 +675,9 @@ class LargeImageEditor(wxpg.PGEditor):
     def SetControlStringValue(self, property, ctrl, txt):
         ctrl.SetValue(txt)
 
-    def OnFocus(self, property, ctrl):
-        ctrl.tc.SetSelection(-1,-1)
-        ctrl.tc.SetFocus()
+    # def OnFocus(self, property, ctrl):
+    #    ctrl.tc.SetSelection(-1,-1)
+    #    ctrl.tc.SetFocus()
 
     def CanContainCustomImage(self):
         return True
