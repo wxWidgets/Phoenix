@@ -103,31 +103,36 @@ class WindowTests(wtc.WidgetTestCase):
 
 
     def test_DLG_UNIT(self):
-        def _check(val):
+        def _check(val, typ):
+            assert isinstance(val, typ)
             a, b = val
             assert isinstance(a, int)
             assert isinstance(b, int)
 
         val = wx.DLG_UNIT(self.frame, wx.Point(10,10))
-        _check(val)
+        _check(val, wx.Point)
+
         val = wx.DLG_UNIT(self.frame, wx.Size(10,10))
-        _check(val)
+        _check(val, wx.Size)
+
         val = wx.DLG_UNIT(self.frame, (10,10))
-        _check(val)
+        _check(val, tuple)
+
+        val = wx.DLG_UNIT(self.frame, [10,10])
+        _check(val, tuple)
 
         val = self.frame.DLG_UNIT(wx.Point(10, 10))
-        _check(val)
-        val = self.frame.DLG_UNIT(wx.Size(10, 10))
-        _check(val)
-        val = self.frame.DLG_UNIT((10, 10))
-        _check(val)
+        _check(val, wx.Point)
 
-        val = wx.DLG_UNIT(self.frame, wx.Point(10, 10))
-        assert isinstance(val, wx.Point)
-        
-        val = wx.DLG_UNIT(self.frame, wx.Size(10, 10))
-        assert isinstance(val, wx.Size)
-        
+        val = self.frame.DLG_UNIT(wx.Size(10, 10))
+        _check(val, wx.Size)
+
+        val = self.frame.DLG_UNIT((10, 10))
+        _check(val, tuple)
+
+        val = self.frame.DLG_UNIT([10, 10])
+        _check(val, tuple)
+
         wx.DLG_SZE
         wx.DLG_PNT
 

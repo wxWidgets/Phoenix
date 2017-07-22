@@ -202,7 +202,11 @@ def run():
             A convenience wrapper for :meth:`ConvertDialogToPixels`.
             """,
         body="""\
-            return self.ConvertDialogToPixels(dlg_unit)
+            is_wxType = isinstance(dlg_unit, (wx.Size, wx.Point))
+            pix = self.ConvertDialogToPixels(dlg_unit)
+            if not is_wxType:
+                pix = tuple(pix)
+            return pix
             """)
 
 
@@ -359,11 +363,16 @@ def run():
         def DLG_UNIT(win, dlg_unit, val2=None):
             """
             Convenience function for converting a wx.Point, wx.Size or
-            (x,y) in dialog units to pixels.
+            (x,y) in dialog units to pixels, using the given window as a 
+            reference.
             """
             if val2 is not None:
                 dlg_unit = (dlg_unit, val2)
-            return win.ConvertDialogToPixels(dlg_unit)
+            is_wxType = isinstance(dlg_unit, (wx.Size, wx.Point))
+            pix = win.ConvertDialogToPixels(dlg_unit)
+            if not is_wxType:
+                pix = tuple(pix)
+            return pix
 
         DLG_PNT = wx.deprecated(DLG_UNIT, "Use DLG_UNIT instead.")
         DLG_SZE = wx.deprecated(DLG_UNIT, "Use DLG_UNIT instead.")
