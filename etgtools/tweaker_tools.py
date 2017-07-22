@@ -412,6 +412,8 @@ def addWindowVirtuals(klass):
         ('InformFirstDirection',     'bool InformFirstDirection(int direction, int size, int availableOtherDir)'),
         ('SetCanFocus',              'void SetCanFocus(bool canFocus)'),
         ('Destroy',                  'bool Destroy()'),
+        ('SetValidator',             'void SetValidator( const wxValidator &validator )'),
+        ('GetValidator',             'wxValidator* GetValidator()'),
 
         ## What about these?
         #bool HasMultiplePages() const

@@ -678,7 +678,7 @@ def postProcess(folder, options):
 
         split = os.path.split(files)[1]
 
-        if split == 'main.html':
+        if split == 'index.html':
             text = changeWelcomeText(text, options)
         else:
             text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
@@ -751,7 +751,7 @@ def changeWelcomeText(text, options):
             from git revision: 
             <a href="https://github.com/wxWidgets/Phoenix/commit/{revhash}">{revhash}</a>.
             """.format(version=cfg.VERSION, today=TODAY, revhash=revhash)
-    text = text.replace('|WELCOME|', welcomeText)
+    text = text.replace('!WELCOME!', welcomeText)
     return text
 
 

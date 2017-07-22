@@ -306,8 +306,10 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
         int state = 0;
         int isErr = 0;
         ptr = (wxDateTime*)sipConvertToType(obj, sipType_wxDateTime, NULL, 0, &state, &isErr);
-        value = *ptr;
-        sipReleaseType(ptr, sipType_wxDateTime, state);
+        if (!isErr) {
+            value = *ptr;
+            sipReleaseType(ptr, sipType_wxDateTime, state);
+        }
     }
 
     else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxBitmap"))) {
@@ -339,8 +341,10 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
         int state = 0;
         int isErr = 0;
         ptr = (wxArrayString*)sipConvertToType(obj, sipType_wxArrayString, NULL, 0, &state, &isErr);
-        value = *ptr;
-        sipReleaseType(ptr, sipType_wxArrayString, state);
+        if (!isErr) {
+            value = *ptr;
+            sipReleaseType(ptr, sipType_wxArrayString, state);
+        }
     }
 
     else {
@@ -544,6 +548,35 @@ void i_wxPyReinitializeModules() {
     }
 }
 
+//--------------------------------------------------------------------------
+// Route the various usages of the PyDate_ APIs through our API, so we only
+// have to worry about PyDateTime_IMPORT being needed in one compilation unit.
+
+int i_wxPyDateTime_Check(PyObject *obj) {
+    return PyDateTime_Check(obj);
+}
+
+int i_wxPyDate_Check(PyObject *obj) {
+    return PyDate_Check(obj);
+}
+
+wxDateTime* i_wxPyDateTime_ToWxDateTime(PyObject *obj) {
+    return new wxDateTime(PyDateTime_GET_DAY(obj),
+                          (wxDateTime::Month)(PyDateTime_GET_MONTH(obj)-1),
+                          PyDateTime_GET_YEAR(obj),
+                          PyDateTime_DATE_GET_HOUR(obj),
+                          PyDateTime_DATE_GET_MINUTE(obj),
+                          PyDateTime_DATE_GET_SECOND(obj),
+                          PyDateTime_DATE_GET_MICROSECOND(obj)/1000); // micro to milli
+}
+
+wxDateTime* i_wxPyDate_ToWxDateTime(PyObject *obj) {
+    return new wxDateTime(PyDateTime_GET_DAY(obj),
+                          (wxDateTime::Month)(PyDateTime_GET_MONTH(obj)-1),
+                          PyDateTime_GET_YEAR(obj));
+}
+
+
 
 //--------------------------------------------------------------------------
 // An instance of the API structure
@@ -564,9 +597,23 @@ static wxPyAPI  API = {
     i_wxPyNumberSequenceCheck,
     i_wxPyGetCppPtr,
     i_wxPyMethod_Self,
-    i_wxPyReinitializeModules
+    i_wxPyReinitializeModules,
+    i_wxPyDateTime_Check,
+    i_wxPyDate_Check,
+    i_wxPyDateTime_ToWxDateTime,
+    i_wxPyDate_ToWxDateTime
 };
 %End
+
+
+%ModuleHeaderCode
+    #include <datetime.h>
+%End
+
+%InitialisationCode
+    PyDateTime_IMPORT;
+%End
+
 
 
 %PostInitialisationCode

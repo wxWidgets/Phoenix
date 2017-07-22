@@ -872,7 +872,7 @@ def cmd_docset_py(options, args):
     # update its Info.plist file
     docset = os.path.abspath(docset)
     runcmd('defaults write {}/Contents/Info isJavaScriptEnabled true'.format(docset))
-    runcmd('defaults write {}/Contents/Info dashIndexFilePath main.html'.format(docset))
+    runcmd('defaults write {}/Contents/Info dashIndexFilePath index.html'.format(docset))
     runcmd('defaults write {}/Contents/Info DocSetPlatformFamily wxpy'.format(docset))
     runcmd('plutil -convert xml1 {}/Contents/Info.plist'.format(docset))
 

@@ -58,7 +58,7 @@ platform specific code.
 For more information please refer to the
 `README file <https://github.com/wxWidgets/Phoenix/blob/wxPython-{version}/README.rst>`_,
 the `Migration Guide <{docs_base}/MigrationGuide.html>`_,
-or the `wxPython API documentation <{docs_base}/main.html>`_.
+or the `wxPython API documentation <{docs_base}/index.html>`_.
 
 Archive files containing a copy of the wxPython documentation, the demo and
 samples, and also a set of MSVC .pdb files for Windows are available at sourceforge, 

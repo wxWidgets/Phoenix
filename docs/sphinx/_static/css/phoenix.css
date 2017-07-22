@@ -723,3 +723,14 @@ tt {
 .myactive {background-color: rgb(230, 230, 230);  background-position: 0 5px;}
 
 
+p.mybiglink a.mybiglink {
+    font-size: 1.2em;
+    color: #355f7c;
+    text-decoration: none;
+
+}
+
+table.contentstable p.mybiglink {
+    line-height: 150%;
+}
+
