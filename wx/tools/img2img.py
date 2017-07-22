@@ -4,13 +4,13 @@
 #
 # Author:      Robin Dunn
 #
-# Copyright:   (c) 2002 by Total Control Software
+# Copyright:   (c) 2002-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o V2.5 compatability update 
+# o V2.5 compatibility update
 #
 
 import  getopt

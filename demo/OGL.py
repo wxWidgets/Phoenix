@@ -4,7 +4,7 @@
 # 11/20/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
-# 
+#
 # 20040508 - Pierre Hjälm
 #
 # o Changed to use the python version of OGL
@@ -51,7 +51,7 @@ class DrawnShape(ogl.DrawnShape):
 
         # Make sure to call CalculateSize when all drawing is done
         self.CalculateSize()
-        
+
 #----------------------------------------------------------------------
 
 class DiamondShape(ogl.PolygonShape):
@@ -106,7 +106,7 @@ class CompositeDivisionShape(ogl.CompositeShape):
 
         for division in self.GetDivisions():
             division.SetSensitivityFilter(0)
-        
+
 #----------------------------------------------------------------------
 
 class CompositeShape(ogl.CompositeShape):
@@ -121,7 +121,7 @@ class CompositeShape(ogl.CompositeShape):
 
         constraining_shape.SetBrush(wx.BLUE_BRUSH)
         constrained_shape2.SetBrush(wx.RED_BRUSH)
-        
+
         self.AddChild(constraining_shape)
         self.AddChild(constrained_shape1)
         self.AddChild(constrained_shape2)
@@ -139,7 +139,7 @@ class CompositeShape(ogl.CompositeShape):
         # If we don't do this the shape will take all left-clicks for itself
         constraining_shape.SetSensitivityFilter(0)
 
-        
+
 #----------------------------------------------------------------------
 
 class DividedShape(ogl.DividedShape):
@@ -287,27 +287,27 @@ class TestWindow(ogl.ShapeCanvas):
         dsBrush = wx.Brush("WHEAT", wx.BRUSHSTYLE_SOLID)
 
         self.MyAddShape(
-            CompositeDivisionShape(self), 
+            CompositeDivisionShape(self),
             270, 310, wx.BLACK_PEN, wx.BLUE_BRUSH, "Division"
             )
-        
+
         self.MyAddShape(
-            CompositeShape(self), 
+            CompositeShape(self),
             100, 260, wx.BLACK_PEN, wx.RED_BRUSH, "Composite"
             )
-        
+
         self.MyAddShape(
-            ogl.CircleShape(80), 
+            ogl.CircleShape(80),
             75, 110, wx.Pen(wx.BLUE, 3), wx.GREEN_BRUSH, "Circle"
             )
-            
+
         self.MyAddShape(
-            ogl.TextShape(120, 45), 
+            ogl.TextShape(120, 45),
             160, 35, wx.GREEN_PEN, wx.LIGHT_GREY_BRUSH, "OGL is now a\npure Python lib!"
             )
 
         self.MyAddShape(
-            ogl.RectangleShape(85, 50), 
+            ogl.RectangleShape(85, 50),
             305, 60, wx.BLACK_PEN, wx.LIGHT_GREY_BRUSH, "Rectangle"
             )
 
@@ -317,17 +317,17 @@ class TestWindow(ogl.ShapeCanvas):
             )
 
         ds = self.MyAddShape(
-            DividedShape(140, 150, self), 
+            DividedShape(140, 150, self),
             520, 265, wx.BLACK_PEN, dsBrush, ''
             )
 
         self.MyAddShape(
-            DiamondShape(90, 90), 
+            DiamondShape(90, 90),
             355, 260, wx.Pen(wx.BLUE, 3, wx.PENSTYLE_DOT), wx.RED_BRUSH, "Polygon"
             )
-            
+
         self.MyAddShape(
-            RoundedRectangleShape(95, 70), 
+            RoundedRectangleShape(95, 70),
             345, 145, wx.Pen(wx.RED, 2), rRectBrush, "Rounded Rect"
             )
 
@@ -406,7 +406,7 @@ def runTest(frame, nb, log):
 
     win = TestWindow(nb, log, frame)
     return win
-    
+
 #----------------------------------------------------------------------
 
 

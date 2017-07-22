@@ -1,18 +1,19 @@
-.. wxPython (Phoenix) documentation master file, created by
-   sphinx-quickstart on Fri Dec 09 11:27:02 2011.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. wxPython Phoenix documentation
+   Created:   9-Dec-2011
+   Copyright: (c) 2011-2016 by Total Control Software
+   License:   wxWindows License
 
-==============================================
-Welcome to wxPython (Phoenix)'s documentation!
-==============================================
+=======================================
+Welcome to the wxPython Phoenix Project
+=======================================
 
 
 wxPython
 ========
 
-wxPython is a **GUI toolkit** for the `Python <http://www.python.org/>`_ programming language. It allows Python programmers to 
-create programs with a robust, highly functional graphical user interface, simply and easily. 
+wxPython is a **GUI toolkit** for the `Python <http://www.python.org/>`_
+programming language. It allows Python programmers to create programs with a
+robust, highly functional graphical user interface, simply and easily.
 
 .. figure:: _static/images/sphinxdocs/central_bar.png
    :align: center
@@ -23,20 +24,24 @@ create programs with a robust, highly functional graphical user interface, simpl
 What is wxPython
 ----------------
 
-wxPython is a **GUI toolkit** for the `Python <http://www.python.org/>`_ programming language. It allows Python programmers to 
-create programs with a robust, highly functional graphical user interface, simply and easily. 
-It is implemented as a Python extension module (native code) that wraps the popular `wxWidgets <http://wxwidgets.org/>`_ cross 
-platform GUI library, which is written in C++. 
+wxPython is a **GUI toolkit** for the `Python <http://www.python.org/>`_
+programming language. It allows Python programmers to create programs with a
+robust, highly functional graphical user interface, simply and easily. It is
+implemented as a Python extension module (native code) that wraps the popular
+`wxWidgets <http://wxwidgets.org/>`_ cross platform GUI library, which is
+written in C++.
 
-Like Python and wxWidgets, wxPython is *Open Source* which means that it is free for anyone to use and 
-the source code is available for anyone to look at and modify. Or anyone can contribute fixes or 
-enhancements to the project. 
+Like Python and wxWidgets, wxPython is *Open Source* which means that it is
+free for anyone to use and the source code is available for anyone to look at
+and modify. Or anyone can contribute fixes or enhancements to the project.
 
-wxPython is a *cross-platform* toolkit. This means that the same program will run on multiple platforms 
-without modification. Currently supported platforms are 32-bit Microsoft Windows, most Unix or unix-like 
-systems, and Macintosh OS X+, in most cases the native widgets are used on each platform.
+wxPython is a *cross-platform* toolkit. This means that the same program will
+run on multiple platforms without modification. Currently supported platforms
+are 32-bit Microsoft Windows, most Unix or unix-like systems, and Macintosh OS
+X+, in most cases the native widgets are used on each platform.
 
-Since the language is Python, wxPython programs are **simple, easy** to write and easy to understand.
+Since the language is Python, wxPython programs are **simple, easy** to write
+and easy to understand.
 
 As an example, this is a simple "Hello World" program with wxPython::
 
@@ -50,85 +55,57 @@ As an example, this is a simple "Hello World" program with wxPython::
     app.MainLoop()
 
 
-The GUI layouts you can build with wxPython are almost infinite: it has an extremely rich set of widgets (derived from `wxWidgets`) and
-greatly extended by a huge set of pure-Python controls written over the years.
-
- 
-Prerequisites
--------------
-
-Like any other complex piece of software, wxPython requires other software in order to function properly. 
-Obviously you'll need `Python <http://www.python.org/>`_ itself, but if you're reading this you've probably already got 
-Python and are just here looking for the `best GUI toolkit <http://www.wxpython.org/quotes.php>`_ available for Python. 
-Check out the details for your platform of choice here: 
-
-Win32
-^^^^^
-
-* If you have a modern up to date version of Windows and use the binary installer for wxPython found below, you probably 
-  don't need anything else. 
-
-* If your tree controls have strange background colors, try loading this `MS Common Controls Update <http://download.microsoft.com/download/platformsdk/Comctl32/5.80.2614.3600/W9XNT4/EN-US/50comupd.exe>`_ 
-  as wxWidgets does something that causes a bug in one of the older versions to manifest itself. Another way to get this update 
-  is to install Internet Explorer or MS Office apps, so if the system has those already then you probably don't need to worry about this. 
-
-* wxPython's `wx.glcanvas.GLCanvas` class only provides the GL Context and a wx.Window to put it in, so if you want to use 
-  the wxGLCanvas you will also need the `PyOpenGL <http://pyopengl.sourceforge.net/>`_ Python extension modules as well. 
+The GUI layouts you can build with wxPython are almost infinite: it has an
+extremely rich set of widgets (derived from `wxWidgets`) and greatly extended
+by a huge set of pure-Python controls written over the years.
 
 
-Linux/Unix/Etc.
-^^^^^^^^^^^^^^^
+What is wxPython Phoenix?
+-------------------------
 
-* The first thing you'll need are the `glib and gtk+ <http://www.gtk.org/>`_ libraries. Before you run off and download the sources 
-  check your system, you probably already have it. Most distributions of Linux come with it and you'll start seeing it on many 
-  other systems too now that Sun and others have chosen GNOME as the desktop of choice. If you don't have glib and gtk+ already, 
-  you can get the sources `here <ftp://ftp.gtk.org/pub/gtk/>`_. Build and install them following the directions included. 
+**Phoenix** is the code name of a new implementation of wxPython.  The name comes
+from the `mythical bird <https://en.wikipedia.org/wiki/Phoenix_(mythology)>`_
+that bursts into flames at the end of its life and from the ashes is reborn as
+a new, stronger, and better phoenix.  Likewise the intent with the
+*wxPython Phoenix* project is throw almost everything from *wxPython Classic*
+into the fire to be built anew from the ashes of its former self, without all
+of the old crud that had built up over the long life of Classic.
 
-* In order to use the wxGLCanvas you'll need to have either OpenGL or the `Mesa3D <http://www.mesa3d.org/>`_ library on your system. 
-  wxPython's `wx.glcanvas.GLCanvas` only provides the GL Context and a :class:`Window` to put it in, so you will also need the PyOpenGL 
-  Python extension modules as well, if you want to use OpenGL. 
+Much of that crud were rather hacky things which had to be done to
+work around limitations of the technology available at the time.  Those are
+easy to get rid of.  Others are things that seemed good at the time, but in
+retrospect turned out to be bad ideas.  Some of those are a little more
+tricky, but still a good idea to change.  The end result will be a new
+wxPython that is better, stronger, and faster than he was before, and which is
+easier to maintain, extend and document.
 
-  If you are building wxPython yourself and don't care to use OpenGL/Mesa then you can easily skip building it and can ignore 
-  this step. See the `build instructions <http://www.wxpython.org/BUILD.html>`_ for details. 
+Although there hasn't been a formal release yet, Phoenix is already in a
+usable state with snapshot builds available after new commits are merged,
+and is in active use on a number of projects already.  Progress is still being
+made and an official release is on the way.  Stay tuned to the wxPython
+developer and user groups for more information and announcements.
 
+Meanwhile, here are some important links:
 
-Mac OS X
-^^^^^^^^
+  * The `MigrationGuide <MigrationGuide.html>`_ will help you understand the
+    differences between wxPython Phoenix and Classic.  In addition,
+    `classic_vs_phoenix <classic_vs_phoenix.html>`_ documents
+    some names that have been changed, or which haven't yet been ported to
+    Phoenix.
 
-The wxPython binaries for OSX are mountable disk images. Simply double click to mount the image and then run the installer application
-in the image. Download the image that matches the version of Python that you want to use it with, and unless you know for sure that you
-need the ansi build please get the Unicode build. 
+  * The new wxPython API documentation is available `here <main.html>`_.
 
-These binaries should work on all versions of OSX from 10.3.9 onwards on either PPC or i386 architectures. Since they use the Carbon API
- they are limited to running in 32-bit mode.
+  * The `Project Phoenix <http://wiki.wxpython.org/ProjectPhoenix>`_ section
+    of the wxPython wiki has information about the background of, and reasons
+    for this project, as well as information for developers who want to help
+    out.
 
-
-OK, I'm interested. What do I do next?
---------------------------------------
-
-You can download the `Prebuild binary of wxPython
-<http://www.wxpython.org/download.php#binaries>`_ which includes
-the source code for wxPython.
-
-Prebuilt binaries are available for Microsoft Windows, Linux and Mac OS X.
-
-Don't forget to download the wxPython demo and the documentation!
-
-
-Bleeding-edge source
---------------------
-
-If you are a very keen developer, you can get the source code and other
-project files from the `wxWidgets/Phoenix Github repository <https://github.com/wxWidgets/Phoenix>`_.
-Be sure to read the README.rst file there to learn how to build wxWidgets 
-and Phoenix for yourself.
+  * Source code and issue tracking are available at the
+    `Phoenix GitHub <https://github.com/wxWidgets/Phoenix>`_ repository. Be
+    sure to read the README.rst file there to learn how to build wxWidgets and
+    Phoenix for yourself.
 
 
-
-wxPython Documentation
-----------------------
-
-The new wxPython API documentation is available `here <main.html>`_.
 
 
 .. toctree::
@@ -139,8 +116,8 @@ The new wxPython API documentation is available `here <main.html>`_.
    MigrationGuide
    TODO
    DocstringsGuidelines
-   functions
-   1classindex
+   wx.functions
+   wx.1moduleindex
    app_overview
    bitmap_overview
    bookctrl_overview
@@ -178,30 +155,28 @@ The new wxPython API documentation is available `here <main.html>`_.
    window_ids_overview
    window_sizing_overview
    window_styles_overview
-   adv.1classindex
-   adv.functions
-   dataview.1classindex
-   glcanvas.1classindex
-   grid.1classindex
-   html.1classindex
-   html.functions
-   html2.1classindex
-   richtext.1classindex
-   richtext.functions
-   stc.1classindex
-   webkit.1classindex
-   xml.1classindex
-   xrc.1classindex
-   xrc.functions
-   lib
-   py
-   tools
+   wx.adv.1moduleindex
+   wx.adv.functions
+   wx.dataview.1moduleindex
+   wx.glcanvas.1moduleindex
+   wx.grid.1moduleindex
+   wx.html.1moduleindex
+   wx.html.functions
+   wx.html2.1moduleindex
+   wx.richtext.1moduleindex
+   wx.richtext.functions
+   wx.stc.1moduleindex
+   wx.webkit.1moduleindex
+   wx.xml.1moduleindex
+   wx.xrc.1moduleindex
+   wx.xrc.functions
+   wx.media.1moduleindex
+   wx.msw.1moduleindex
+   wx.ribbon.1moduleindex
+   wx.aui.1moduleindex
+   wx.propgrid.1moduleindex
+   wx.lib
+   wx.py
+   wx.tools
 
-
-Indices and tables
-==================
-
-* `genindex`
-* `modindex`
-* `search`
 

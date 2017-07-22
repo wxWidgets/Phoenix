@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-import  wx
-import  wx.adv
+import wx
+import wx.dataview
 
-import  images
+import images
 
 #----------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
-        self.tree = wx.adv.TreeListCtrl(self, -1, style =
+        self.tree = wx.dataview.TreeListCtrl(self, -1, style =
                                         wx.TR_DEFAULT_STYLE
                                         #| wx.TR_HAS_BUTTONS
                                         #| wx.TR_TWIST_BUTTONS
@@ -40,7 +40,7 @@ class TestPanel(wx.Panel):
         ##self.tree.SetMainColumn(0) # the one with the tree in it...
         self.tree.SetColumnWidth(0, 175)
 
-        self.root = self.tree.InsertItem(self.tree.GetRootItem(), wx.adv.TLI_FIRST, "The Root Item")
+        self.root = self.tree.InsertItem(self.tree.GetRootItem(), wx.dataview.TLI_FIRST, "The Root Item")
 
         self.tree.SetItemText(self.root, 1, "col 1 root")
         self.tree.SetItemText(self.root, 2, "col 2 root")
@@ -78,18 +78,17 @@ class TestPanel(wx.Panel):
         self.tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate)
 
 
-    def OnActivate(self, evt):
-        self.log.write('OnActivate: %s' % self.tree.GetItemText(evt.GetItem()))
+    def OnActivate(self, event):
+        self.log.write('OnActivate: %s' % self.tree.GetItemText(event.GetItem()))
 
-
-    def OnRightUp(self, evt):
-        pos = evt.GetPosition()
+    def OnRightUp(self, event):
+        pos = event.GetPosition()
         item, flags, col = self.tree.HitTest(pos)
         if item:
             self.log.write('Flags: %s, Col:%s, Text: %s' %
                            (flags, col, self.tree.GetItemText(item, col)))
 
-    def OnSize(self, evt):
+    def OnSize(self, event):
         self.tree.SetSize(self.GetSize())
 
 

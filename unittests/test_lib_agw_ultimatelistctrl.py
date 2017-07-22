@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.ultimatelistctrl as ULC
@@ -7,7 +7,7 @@ import wx.lib.agw.ultimatelistctrl as ULC
 #---------------------------------------------------------------------------
 
 class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_ultimatelistctrlCtorReport(self):
         ulc = ULC.UltimateListCtrl(self.frame, agwStyle=wx.LC_REPORT)
 
@@ -88,7 +88,7 @@ class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
         #wx.EVT_LIST_FOOTER_RIGHT_CLICK
         #wx.EVT_LIST_ITEM_LEFT_CLICK
         #wx.EVT_LIST_END_DRAG
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

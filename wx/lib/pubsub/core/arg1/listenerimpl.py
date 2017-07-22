@@ -27,16 +27,16 @@ class Message:
 class Listener(ListenerBase):
     """
     Wraps a callable so it can be stored by weak reference and introspected
-    to verify that it adheres to a topic's MDS. 
-    
-    A Listener instance has the same hash value as the callable that it wraps. 
+    to verify that it adheres to a topic's MDS.
 
-    A callable will be given data when a message is sent to it. In the arg1 
-    protocol only one object can be sent via sendMessage, it is put in a 
-    Message object in its "data" field, the listener receives the Message 
-    object. 
+    A Listener instance has the same hash value as the callable that it wraps.
+
+    A callable will be given data when a message is sent to it. In the arg1
+    protocol only one object can be sent via sendMessage, it is put in a
+    Message object in its "data" field, the listener receives the Message
+    object.
     """
-    
+
     def __call__(self, actualTopic, data):
         """Call the listener with data. Note that it raises RuntimeError
         if listener is dead. Should always return True (False would require

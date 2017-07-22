@@ -15,7 +15,7 @@ standard or anything.  Feel free to rename the module, I do.
 Usage:
 
     python genax.py CLSID|progID className
-    
+
 """
 
 import wx
@@ -26,7 +26,7 @@ import sys
 def main(args=None):
     if not args:
         args = sys.argv
-        
+
     if len(args) < 3:
         print(__doc__)
         sys.exit(1)
@@ -44,7 +44,7 @@ def main(args=None):
     f.Close()
     app.MainLoop()
 
-    
+
 if __name__ == "__main__":
     main(sys.argv)
-    
+

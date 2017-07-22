@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.adv
 
@@ -15,8 +15,8 @@ class timectrl_Tests(wtc.WidgetTestCase):
         tc.SetTime(12, 34, 59)
         h, m, s = tc.GetTime()
         self.assertEqual( (h, m, s),  (12, 34, 59) )
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

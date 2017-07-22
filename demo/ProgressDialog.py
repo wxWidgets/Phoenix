@@ -3,7 +3,7 @@
 # 11/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
-# 
+#
 # 11/30/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o wx.ProgressDialog appears to be broken. No abort button
@@ -46,13 +46,13 @@ class TestPanel(wx.Panel):
             count += 1
             wx.MilliSleep(250)
             wx.Yield()
-            
+
             if count >= max / 2:
                 (keepGoing, skip) = dlg.Update(count, "Half-time!")
             else:
                 (keepGoing, skip) = dlg.Update(count)
 
-                
+
         dlg.Destroy()
 
 #---------------------------------------------------------------------------
@@ -67,16 +67,16 @@ def runTest(frame, nb, log):
 
 overview = """\
 <html><body>
-This class represents a dialog that shows a short message and a progress bar. 
+This class represents a dialog that shows a short message and a progress bar.
 Optionally, it can display an ABORT button
 <p>
-This dialog indicates the progress of some event that takes a while to accomplish, 
+This dialog indicates the progress of some event that takes a while to accomplish,
 usually, such as file copy progress, download progress, and so on. The display
 is <b>completely</b> under control of the program; you must update the dialog from
-within the program creating it. 
+within the program creating it.
 <p>
 When the dialog closes, you must check to see if the user aborted the process or
-not, and act accordingly -- that is, if the PD_CAN_ABORT style flag is set. 
+not, and act accordingly -- that is, if the PD_CAN_ABORT style flag is set.
 If not then you may progress blissfully onward.
 </body></html>
 """

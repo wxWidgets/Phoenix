@@ -41,8 +41,8 @@ replacement for the standard :class:`MessageDialog`, with these extra functional
 * Custom icons for the ``OK``, ``Yes``, ``No``, ``Cancel`` and ``Help`` buttons;
 * Possibility to set an icon to the dialog;
 * More visibility to the button getting the focus;
-* Support for Aqua buttons or Gradient buttons instead of themed ones (see :class:`~lib.agw.aquabutton.AquaButton`
-  and :class:`~lib.agw.gradientbutton.GradientButton`);
+* Support for Aqua buttons or Gradient buttons instead of themed ones (see :class:`~wx.lib.agw.aquabutton.AquaButton`
+  and :class:`~wx.lib.agw.gradientbutton.GradientButton`);
 * Possibility to automatically wrap long lines of text;
 * Good old Python code :-D .
 
@@ -59,12 +59,12 @@ Usage example::
 
     # Our normal wxApp-derived class, as usual
     app = wx.App(0)
-    
+
     main_message = "Hello world! I am the main message."
-    
+
     dlg = GMD.GenericMessageDialog(None, main_message, "A Nice Message Box",
                                    agwStyle=wx.ICON_INFORMATION | wx.OK)
-                                   
+
     dlg.ShowModal()
     dlg.Destroy()
 
@@ -98,16 +98,16 @@ bitlist containing flags chosen from the following:
 =========================== =========== ==================================================
 Window Styles               Hex Value   Description
 =========================== =========== ==================================================
-``wx.OK``                           0x4 Shows an ``OK`` button.  
-``wx.CANCEL``                      0x10 Shows a ``Cancel`` button.  
+``wx.OK``                           0x4 Shows an ``OK`` button.
+``wx.CANCEL``                      0x10 Shows a ``Cancel`` button.
 ``wx.YES_NO``                       0xA Show ``Yes`` and ``No`` buttons.
-``wx.YES_DEFAULT``                  0x0 Used with ``wx.YES_NO``, makes ``Yes`` button the default - which is the default behaviour.  
-``wx.NO_DEFAULT``                  0x80 Used with ``wx.YES_NO``, makes ``No`` button the default.  
-``wx.ICON_EXCLAMATION``           0x100 Shows an exclamation mark icon.  
-``wx.ICON_HAND``                  0x200 Shows an error icon.  
-``wx.ICON_ERROR``                 0x200 Shows an error icon - the same as ``wx.ICON_HAND``.  
-``wx.ICON_QUESTION``              0x400 Shows a question mark icon.  
-``wx.ICON_INFORMATION``           0x800 Shows an information icon.  
+``wx.YES_DEFAULT``                  0x0 Used with ``wx.YES_NO``, makes ``Yes`` button the default - which is the default behaviour.
+``wx.NO_DEFAULT``                  0x80 Used with ``wx.YES_NO``, makes ``No`` button the default.
+``wx.ICON_EXCLAMATION``           0x100 Shows an exclamation mark icon.
+``wx.ICON_HAND``                  0x200 Shows an error icon.
+``wx.ICON_ERROR``                 0x200 Shows an error icon - the same as ``wx.ICON_HAND``.
+``wx.ICON_QUESTION``              0x400 Shows a question mark icon.
+``wx.ICON_INFORMATION``           0x800 Shows an information icon.
 =========================== =========== ==================================================
 
 
@@ -429,7 +429,7 @@ class StdDialogButtonSizer(wx.BoxSizer):
         """ Default class constructor. """
 
         wx.BoxSizer.__init__(self, wx.HORIZONTAL)
-        
+
         self._buttonAffirmative = None
         self._buttonApply = None
         self._buttonNegative = None
@@ -445,8 +445,8 @@ class StdDialogButtonSizer(wx.BoxSizer):
         """
 
         buttonId = mybutton.GetId()
-        
-        if buttonId in [wx.ID_OK, wx.ID_YES, wx.ID_SAVE]:    
+
+        if buttonId in [wx.ID_OK, wx.ID_YES, wx.ID_SAVE]:
             self._buttonAffirmative = mybutton
 
         elif buttonId == wx.ID_APPLY:
@@ -457,7 +457,7 @@ class StdDialogButtonSizer(wx.BoxSizer):
             self._buttonCancel = mybutton
         elif buttonId in [wx.ID_HELP, wx.ID_CONTEXT_HELP]:
             self._buttonHelp = mybutton
-            
+
 
     def SetAffirmativeButton(self, button):
         """
@@ -493,7 +493,7 @@ class StdDialogButtonSizer(wx.BoxSizer):
         """ Realizes the sizer depending on the platform. """
 
         if wx.Platform == "__WXMAC__":
-            
+
             self.Add((0, 0), 0, wx.LEFT, 6)
             if self._buttonHelp:
                 self.Add(self._buttonHelp, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, 6)
@@ -502,7 +502,7 @@ class StdDialogButtonSizer(wx.BoxSizer):
                 # HIG POLICE BULLETIN - destructive buttons need extra padding
                 # 24 pixels on either side
                 self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, 12)
-            
+
             # extra whitespace between help/negative and cancel/ok buttons
             self.Add((0, 0), 1, wx.EXPAND, 0)
 
@@ -510,7 +510,7 @@ class StdDialogButtonSizer(wx.BoxSizer):
                 self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, 6)
                 # Cancel or help should be default
                 # self._buttonCancel.SetDefaultButton()
-            
+
             # Ugh, Mac doesn't really have apply dialogs, so I'll just
             # figure the best place is between Cancel and OK
             if self._buttonApply:
@@ -523,10 +523,10 @@ class StdDialogButtonSizer(wx.BoxSizer):
                     self._buttonAffirmative.SetLabel(_("Save"))
                     if self._buttonNegative:
                         self._buttonNegative.SetLabel(_("Don't Save"))
-                
+
             # Extra space around and at the right
             self.Add((12, 24))
-            
+
         elif wx.Platform == "__WXGTK__":
 
             self.Add((0, 0), 0, wx.LEFT, 9)
@@ -538,7 +538,7 @@ class StdDialogButtonSizer(wx.BoxSizer):
 
             if self._buttonNegative:
                 self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, 3)
-            
+
             # according to HIG, in explicit apply windows the order is:
             # [ Help                     Apply   Cancel   OK ]
             if self._buttonApply:
@@ -548,10 +548,10 @@ class StdDialogButtonSizer(wx.BoxSizer):
                 self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, 3)
                 # Cancel or help should be default
                 # self._buttonCancel.SetDefaultButton()
-            
+
             if self._buttonAffirmative:
                 self.Add(self._buttonAffirmative, 0, wx.ALIGN_CENTRE | wx.LEFT, 6)
-                
+
         elif wx.Platform == "__WXMSW__":
             # Windows
             # center-justify buttons
@@ -562,10 +562,10 @@ class StdDialogButtonSizer(wx.BoxSizer):
 
             if self._buttonNegative:
                 self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonNegative.ConvertDialogToPixels(wx.Size(2, 0)).x)
-            
+
             if self._buttonCancel:
                 self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonCancel.ConvertDialogToPixels(wx.Size(2, 0)).x)
-            
+
             if self._buttonApply:
                 self.Add(self._buttonApply, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonApply.ConvertDialogToPixels(wx.Size(2, 0)).x)
 
@@ -588,15 +588,15 @@ class StdDialogButtonSizer(wx.BoxSizer):
 
             if self._buttonAffirmative:
                 self.Add(self._buttonAffirmative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonAffirmative.ConvertDialogToPixels(wx.Size(4, 0)).x)
-            
+
             if self._buttonNegative:
                 self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonNegative.ConvertDialogToPixels(wx.Size(4, 0)).x)
-            
+
             if self._buttonCancel:
                 self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonCancel.ConvertDialogToPixels(wx.Size(4, 0)).x)
                 # Cancel or help should be default
                 # self._buttonCancel.SetDefaultButton()
-            
+
 
 class GenericMessageDialog(wx.Dialog):
     """
@@ -621,8 +621,8 @@ class GenericMessageDialog(wx.Dialog):
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
          ``GMD_DEFAULT``                       0 Uses normal generic buttons
-         ``GMD_USE_AQUABUTTONS``            0x20 Uses :class:`~lib.agw.aquabutton.AquaButton` buttons instead of generic buttons.
-         ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses :class:`~lib.agw.gradientbutton.GradientButton` buttons instead of generic buttons.
+         ``GMD_USE_AQUABUTTONS``            0x20 Uses :class:`~wx.lib.agw.aquabutton.AquaButton` buttons instead of generic buttons.
+         ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses :class:`~wx.lib.agw.gradientbutton.GradientButton` buttons instead of generic buttons.
          =========================== =========== ==================================================
 
          The styles above are mutually exclusive. The style chosen above can be combined with a
@@ -631,16 +631,16 @@ class GenericMessageDialog(wx.Dialog):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``wx.OK``                           0x4 Shows an ``OK`` button.  
-         ``wx.CANCEL``                      0x10 Shows a ``Cancel`` button.  
+         ``wx.OK``                           0x4 Shows an ``OK`` button.
+         ``wx.CANCEL``                      0x10 Shows a ``Cancel`` button.
          ``wx.YES_NO``                       0xA Show ``Yes`` and ``No`` buttons.
-         ``wx.YES_DEFAULT``                  0x0 Used with ``wx.YES_NO``, makes ``Yes`` button the default - which is the default behaviour.  
-         ``wx.NO_DEFAULT``                  0x80 Used with ``wx.YES_NO``, makes ``No`` button the default.  
-         ``wx.ICON_EXCLAMATION``           0x100 Shows an exclamation mark icon.  
-         ``wx.ICON_HAND``                  0x200 Shows an error icon.  
-         ``wx.ICON_ERROR``                 0x200 Shows an error icon - the same as ``wx.ICON_HAND``.  
-         ``wx.ICON_QUESTION``              0x400 Shows a question mark icon.  
-         ``wx.ICON_INFORMATION``           0x800 Shows an information icon.  
+         ``wx.YES_DEFAULT``                  0x0 Used with ``wx.YES_NO``, makes ``Yes`` button the default - which is the default behaviour.
+         ``wx.NO_DEFAULT``                  0x80 Used with ``wx.YES_NO``, makes ``No`` button the default.
+         ``wx.ICON_EXCLAMATION``           0x100 Shows an exclamation mark icon.
+         ``wx.ICON_HAND``                  0x200 Shows an error icon.
+         ``wx.ICON_ERROR``                 0x200 Shows an error icon - the same as ``wx.ICON_HAND``.
+         ``wx.ICON_QUESTION``              0x400 Shows a question mark icon.
+         ``wx.ICON_INFORMATION``           0x800 Shows an information icon.
          =========================== =========== ==================================================
 
         :param `pos`: the dialog position on screen;
@@ -651,7 +651,7 @@ class GenericMessageDialog(wx.Dialog):
 
         :note: Notice that not all styles are compatible: only one of ``wx.OK`` and ``wx.YES_NO`` may be
          specified (and one of them must be specified) and at most one default button style can be used
-         and it is only valid if the corresponding button is shown in the message box.         
+         and it is only valid if the corresponding button is shown in the message box.
         """
 
         wx.Dialog.__init__(self, parent, wx.ID_ANY, caption, pos, size, style)
@@ -662,28 +662,28 @@ class GenericMessageDialog(wx.Dialog):
 
         # The extended message placeholder
         self._extendedMessage = ''
-        
+
         # Labels for the buttons, initially empty meaning that the defaults should
-        # be used, use GetYes/No/OK/CancelLabel() to access them    
+        # be used, use GetYes/No/OK/CancelLabel() to access them
         self._yes = self._no = self._ok = self._cancel = self._help = ''
 
         # Icons for the buttons, initially empty meaning that the defaults should
-        # be used, use GetYes/No/OK/CancelBitmap() to access them    
+        # be used, use GetYes/No/OK/CancelBitmap() to access them
         self._yesBitmap = self._noBitmap = self._okBitmap = self._cancelBitmap = self._helpBitmap = None
-        
+
         self._created = False
-    
+
 
     def CreateMessageDialog(self):
         """ Actually creates the :class:`GenericMessageDialog`, just before showing it on screen. """
 
         message = self.GetMessage()
-        
+
         topsizer = wx.BoxSizer(wx.VERTICAL)
         icon_text = wx.BoxSizer(wx.HORIZONTAL)
 
         case = self._agwStyle & wx.ICON_MASK
-        
+
         if case == wx.ICON_ERROR:
             bitmap = _error
 
@@ -699,9 +699,9 @@ class GenericMessageDialog(wx.Dialog):
         # Populate the sizers...
         icon = wx.StaticBitmap(self, -1, bitmap.GetBitmap())
         icon_text.Add(icon, 0, wx.ALIGN_CENTER_HORIZONTAL)
-    
+
         textsizer = wx.BoxSizer(wx.VERTICAL)
-        
+
         # We want to show the main message in a different font to make it stand
         # out if the extended message is used as well. This looks better and is
         # more consistent with the native dialogs under MSW and GTK.
@@ -715,7 +715,7 @@ class GenericMessageDialog(wx.Dialog):
 
             for index in range(len(msgSizer.GetChildren())):
                 msgSizer.GetItem(index).GetWindow().SetFont(boldFont)
-                
+
             textsizer.Add(msgSizer, wx.SizerFlags().Border(wx.BOTTOM, 20))
             lowerMessage = self.GetExtendedMessage()
 
@@ -745,7 +745,7 @@ class GenericMessageDialog(wx.Dialog):
         topsizer.SetSizeHints(self)
         topsizer.Fit(self)
         size = self.GetSize()
-        
+
         if size.x < size.y*3//2:
             size.x = size.y*3//2
             self.SetSize(size)
@@ -768,8 +768,8 @@ class GenericMessageDialog(wx.Dialog):
                     child.SetUseFocusIndicator(False)
 
         self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigation)
-        self.SwitchFocus()        
-        
+        self.SwitchFocus()
+
 
     def EndDialog(self, rc):
         """
@@ -778,15 +778,15 @@ class GenericMessageDialog(wx.Dialog):
 
         :param `rc`: one of the ``wx.ID_YES``, ``wx.ID_NO``, ``wx.ID_OK``, ``wx.ID_CANCEL`` constants.
 
-        :note: the `rc` parameter is unused if the dialog is not modal.        
+        :note: the `rc` parameter is unused if the dialog is not modal.
         """
 
         if self.IsModal():
             self.EndModal(rc)
         else:
             self.Hide()
-                    
-        
+
+
     def OnYes(self, event):
         """ :class:`GenericMessageDialog` had received a ``wx.ID_YES`` answer. """
 
@@ -810,7 +810,7 @@ class GenericMessageDialog(wx.Dialog):
 
         # Allow cancellation via ESC/Close button except if
         # only YES and NO are specified.
-        
+
         if self._agwStyle & wx.YES_NO != wx.YES_NO or self._agwStyle & wx.CANCEL:
             self.EndDialog(wx.ID_CANCEL)
 
@@ -848,7 +848,7 @@ class GenericMessageDialog(wx.Dialog):
             self.OnOk(None)
         elif key in [ord("h"), ord("H")] and wx.ID_HELP in ids:
             self.OnHelp(None)
-            
+
         event.Skip()
 
 
@@ -872,16 +872,16 @@ class GenericMessageDialog(wx.Dialog):
         button = wx.Window.FindFocus()
         buttonId = button.GetId()
         self.EndDialog(buttonId)
-            
+
 
     def SwitchFocus(self):
         """ Switch focus between buttons. """
 
         current = wx.Window.FindFocus()
         font = self.GetFont()
-        boldFont = wx.Font(font.GetPointSize(), font.GetFamily(), font.GetStyle(), wx.BOLD,
+        boldFont = wx.Font(font.GetPointSize(), font.GetFamily(), font.GetStyle(), wx.FONTWEIGHT_BOLD,
                            font.GetUnderlined(), font.GetFaceName())
-        
+
         for child in self.GetChildren():
             if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton) or \
                isinstance(child, AB.AquaButton) or isinstance(child, GB.GradientButton):
@@ -891,9 +891,9 @@ class GenericMessageDialog(wx.Dialog):
                 else:
                     # Restore the other buttons...
                     child.SetFont(font)
-                child.Refresh()                
+                child.Refresh()
 
-        
+
     def CreateButtonSizer(self, flags):
         """
         Creates a sizer with standard buttons.
@@ -910,7 +910,7 @@ class GenericMessageDialog(wx.Dialog):
          ``wx.NO_DEFAULT``      0x80 Used with ``wx.YES`` and ``wx.NO``, makes ``No`` button the default
          ``wx.HELP``          0x8000 Show a ``Help`` button
          ================= ========= ==========================
-        
+
         :note: The sizer lays out the buttons in a manner appropriate to the platform.
         """
 
@@ -938,7 +938,7 @@ class GenericMessageDialog(wx.Dialog):
             topsizer.Add(wx.StaticLine(self), wx.SizerFlags().Expand().DoubleBorder(wx.BOTTOM))
             topsizer.Add(sizer, wx.SizerFlags().Expand())
             sizer = topsizer
-            
+
         return sizer
 
 
@@ -952,7 +952,7 @@ class GenericMessageDialog(wx.Dialog):
 
         :note: The sizer lays out the buttons in a manner appropriate to the platform.
         """
-        
+
         sizer = StdDialogButtonSizer()
         no = yes = ok = None
         if flags & wx.OK:
@@ -965,7 +965,7 @@ class GenericMessageDialog(wx.Dialog):
             klass = GB.GradientButton
         else:
             klass = buttons.ThemedGenBitmapTextButton
-            
+
         if flags & wx.OK:
             ok = klass(self, wx.ID_OK, self.GetCustomOKBitmap(), self.GetCustomOKLabel())
             sizer.AddButton(ok)
@@ -973,19 +973,19 @@ class GenericMessageDialog(wx.Dialog):
         if flags & wx.CANCEL:
             cancel = klass(self, wx.ID_CANCEL, self.GetCustomCancelBitmap(), self.GetCustomCancelLabel())
             sizer.AddButton(cancel)
-        
+
         if flags & wx.YES:
             yes = klass(self, wx.ID_YES, self.GetCustomYesBitmap(), self.GetCustomYesLabel())
             sizer.AddButton(yes)
-        
+
         if flags & wx.NO:
             no = klass(self, wx.ID_NO, self.GetCustomNoBitmap(), self.GetCustomNoLabel())
             sizer.AddButton(no)
-                
+
         if flags & wx.HELP:
             help = klass(self, wx.ID_HELP, self.GetCustomHelpBitmap(), self.GetCustomHelpLabel())
             sizer.AddButton(help)
-        
+
         if flags & wx.NO_DEFAULT:
             if no:
                 no.SetDefault()
@@ -997,7 +997,7 @@ class GenericMessageDialog(wx.Dialog):
             elif yes:
                 yes.SetDefault()
                 yes.SetFocus()
-            
+
         if flags & wx.OK:
             self.SetAffirmativeId(wx.ID_OK)
         elif flags & wx.YES:
@@ -1032,7 +1032,7 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return _("No")
-    
+
 
     def GetDefaultOKLabel(self):
         """
@@ -1131,7 +1131,7 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return (self._help and [self._help] or [self.GetDefaultHelpLabel()])[0]
-    
+
 
     # Customization of the message box buttons
     def SetYesNoLabels(self, yes, no):
@@ -1144,20 +1144,20 @@ class GenericMessageDialog(wx.Dialog):
         Typically, if the function was used successfully, the main dialog message may need to be changed, e.g.::
 
             main_message = "Hello world! I am the main message."
-    
+
             dlg = GenericMessageDialog(None, main_message, "A Nice Message Box",
                                        agwStyle=wx.ICON_INFORMATION | wx.OK)
-                                       
+
             if dlg.SetYesNoLabels(_("&Quit"), _("&Don't quit")):
                 dlg.SetMessage(_("What do you want to do?"))
 
             else: # buttons have standard "Yes"/"No" values, so rephrase the question
                 dlg.SetMessage(_("Do you really want to quit?"))
 
-                
+
         .. versionadded:: 0.9.3
         """
-        
+
         self._yes, self._no = yes, no
         return True
 
@@ -1174,7 +1174,7 @@ class GenericMessageDialog(wx.Dialog):
 
         .. versionadded:: 0.9.3
         """
-        
+
         self._yes, self._no, self._cancel = yes, no, cancel
         return True
 
@@ -1223,8 +1223,8 @@ class GenericMessageDialog(wx.Dialog):
 
         self._help = help
         return True
-    
-    
+
+
     # Test if any custom labels were set
     def HasCustomLabels(self):
         """
@@ -1264,7 +1264,7 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return _no.GetBitmap()
-    
+
 
     def GetDefaultOKBitmap(self):
         """
@@ -1308,7 +1308,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomOKBitmap(self):
         """
         If a custom icon has been used for the ``OK`` button, this method will return
-        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        it as an instance of :class:`wx.Bitmap`. Otherwise, the default one (as defined in
         :meth:`~GenericMessageDialog.GetDefaultOKBitmap`) is returned.
 
         .. versionadded:: 0.9.3
@@ -1320,7 +1320,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomYesBitmap(self):
         """
         If a custom icon has been used for the ``Yes`` button, this method will return
-        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        it as an instance of :class:`wx.Bitmap`. Otherwise, the default one (as defined in
         :meth:`~GenericMessageDialog.GetDefaultYesBitmap`) is returned.
 
         .. versionadded:: 0.9.3
@@ -1332,7 +1332,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomNoBitmap(self):
         """
         If a custom icon has been used for the ``No`` button, this method will return
-        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        it as an instance of :class:`wx.Bitmap`. Otherwise, the default one (as defined in
         :meth:`~GenericMessageDialog.GetDefaultNoBitmap`) is returned.
 
         .. versionadded:: 0.9.3
@@ -1344,7 +1344,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomCancelBitmap(self):
         """
         If a custom icon been used for the ``Cancel`` button, this method will return
-        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        it as an instance of :class:`wx.Bitmap`. Otherwise, the default one (as defined in
         :meth:`~GenericMessageDialog.GetDefaultCancelBitmap`) is returned.
 
         .. versionadded:: 0.9.3
@@ -1356,26 +1356,26 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomHelpBitmap(self):
         """
         If a custom icon has been used for the ``Help`` button, this method will return
-        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        it as an instance of :class:`wx.Bitmap`. Otherwise, the default one (as defined in
         :meth:`~GenericMessageDialog.GetDefaultHelpBitmap`) is returned.
 
         .. versionadded:: 0.9.3
         """
 
         return (self._helpBitmap and [self._helpBitmap] or [self.GetDefaultHelpBitmap()])[0]
-    
+
 
     # Customization of the message box buttons icons
     def SetYesNoBitmaps(self, yesBitmap, noBitmap):
         """
         Overrides the default icons of the ``Yes`` and ``No`` buttons.
 
-        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of :class:`Bitmap`;
-        :param `noBitmap`: the new icon for the ``No`` button, an instance of :class:`Bitmap`.
+        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of :class:`wx.Bitmap`;
+        :param `noBitmap`: the new icon for the ``No`` button, an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.3
         """
-        
+
         self._yesBitmap, self._noBitmap = yesBitmap, noBitmap
         return True
 
@@ -1384,13 +1384,13 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icons of the ``Yes`` and ``No`` buttons.
 
-        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of :class:`Bitmap`;
-        :param `noBitmap`: the new icon for the ``No`` button, an instance of :class:`Bitmap`;
-        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of :class:`Bitmap`.
+        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of :class:`wx.Bitmap`;
+        :param `noBitmap`: the new icon for the ``No`` button, an instance of :class:`wx.Bitmap`;
+        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.3
         """
-        
+
         self._yesBitmap, self._noBitmap, self._cancelBitmap = yesBitmap, noBitmap, cancelBitmap
         return True
 
@@ -1399,7 +1399,7 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icon of the ``OK`` button.
 
-        :param `yesBitmap`: the new icon for the ``OK`` button, an instance of :class:`Bitmap`;
+        :param `yesBitmap`: the new icon for the ``OK`` button, an instance of :class:`wx.Bitmap`;
 
         .. versionadded:: 0.9.3
         """
@@ -1412,8 +1412,8 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icons of the ``OK`` and ``Cancel`` buttons.
 
-        :param `okBitmap`: the new icon for the ``OK`` button, an instance of :class:`Bitmap`;
-        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of :class:`Bitmap`.
+        :param `okBitmap`: the new icon for the ``OK`` button, an instance of :class:`wx.Bitmap`;
+        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.3
         """
@@ -1426,15 +1426,15 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icon of the ``Help`` button.
 
-        :param `helpBitmap`: the new icon for the ``Help`` button, an instance of :class:`Bitmap`.
+        :param `helpBitmap`: the new icon for the ``Help`` button, an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.3
         """
 
         self._helpBitmap = helpBitmap
         return True
-    
-    
+
+
     # Test if any custom icons were set
     def HasCustomBitmaps(self):
         """
@@ -1450,7 +1450,7 @@ class GenericMessageDialog(wx.Dialog):
 
         return False
 
-    
+
     def WrapMessage(self, message, wrap, font=None):
         """
         Wraps the input message to multi lines so that the resulting new message
@@ -1459,16 +1459,16 @@ class GenericMessageDialog(wx.Dialog):
         :param `message`: the original input message;
         :param `wrap`: wraps the string in `message` so that every line is at most
          `wrap` pixels long;
-        :param `font`: if not ``None``, it should be an instance of :class:`Font` to be
+        :param `font`: if not ``None``, it should be an instance of :class:`wx.Font` to be
          used to measure and then wrap the input `message`.
 
         :return: a new message wrapped at maximum `wrap` pixels wide.
-        
+
         :todo: Estabilish if wrapping all messages by default is a better idea than
          provide a keyword parameter to :class:`GenericMessageDialog`. A default maximum
          line width might be the wxMac one, at 360 pixels.
         """
-        
+
         dc = wx.ClientDC(self)
 
         if font is None:
@@ -1490,7 +1490,7 @@ class GenericMessageDialog(wx.Dialog):
 
         :note: Reimplemented from :class:`Dialog`.
         """
-        
+
         if not self._created:
 
             self._created = True
@@ -1546,7 +1546,7 @@ class GenericMessageDialog(wx.Dialog):
 
         self._extendedMessage = extendedMessage
 
-        
+
     def GetExtendedMessage(self):
         """
         Returns a string representing the extended :class:`GenericMessageDialog` message.
@@ -1556,7 +1556,7 @@ class GenericMessageDialog(wx.Dialog):
 
         return self._extendedMessage
 
-    
+
     def GetMessageDialogStyle(self):
         """
         Returns the AGW-specific window style for :class:`GenericMessageDialog`.
@@ -1590,12 +1590,12 @@ if __name__ == '__main__':
 
     # Our normal wxApp-derived class, as usual
     app = wx.App(0)
-    
+
     main_message = "Hello world! I am the main message."
-    
+
     dlg = GenericMessageDialog(None, main_message, "A Nice Message Box",
                                agwStyle=wx.ICON_INFORMATION|wx.OK)
-                                   
+
     dlg.ShowModal()
     dlg.Destroy()
 

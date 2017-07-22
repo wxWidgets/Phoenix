@@ -5,13 +5,14 @@
 // Author:      Kevin Ollivier, Robin Dunn
 //
 // Created:     20-Sept-2011
-// Copyright:   (c) 2013 by Kevin Ollivier, Robin Dunn
+// Copyright:   (c) 2011 by Kevin Ollivier
+// Copyright:   (c) 2011-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
 // We always convert wxVariant to / from the native Python types since its purpose
 // is basically to allow a variable to be multiple types in C++
-%MappedType wxVariant
+%MappedType wxVariant /AllowNone/
 {
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility.
@@ -87,12 +88,18 @@
 
 
 
-// Used just for unittesting the MappedType code, it can be removed later
+// Used just for unit testing the MappedType code, it can be removed later
 %ModuleCode
 wxVariant testVariantTypemap(const wxVariant& var)
 {
     wxVariant local = var;  // force a copy
     return local;
 }
+
+wxString testVariantTypeName(const wxVariant& var)
+{
+    return var.GetType();
+}
 %End
 wxVariant testVariantTypemap(const wxVariant& var);
+wxString testVariantTypeName(const wxVariant& var);

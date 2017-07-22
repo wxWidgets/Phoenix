@@ -50,7 +50,7 @@ class TestPanel(wx.Panel):
             tm = t.timeit(num)
             log.write("%d passes creating %dx%d images in %f seconds\n"
                       "\t%f seconds per pass " % (num, DIM,DIM, tm, tm/num))
-            
+
         if not USE_NUMPY:
             log.write("using raw access\n")
             self.redBmp   = self.MakeBitmap(178,  34,  34)
@@ -101,9 +101,9 @@ class TestPanel(wx.Panel):
         # avoids the iterator/generator magic, but it is not nearly as
         # 'clean' looking ;-)
         #pixels = pixelData.GetPixels()
-        #for y in xrange(DIM):
+        #for y in range(DIM):
         #    pixels.MoveTo(pixelData, 0, y)
-        #    for x in xrange(DIM):
+        #    for x in range(DIM):
         #        pixels.Set(red, green, blue, alpha)
         #        pixels.nextPixel()
 
@@ -112,17 +112,17 @@ class TestPanel(wx.Panel):
         # Next we'll use the pixel accessor to set the border pixels
         # to be fully opaque
         pixels = pixelData.GetPixels()
-        for x in xrange(DIM):
+        for x in range(DIM):
             pixels.MoveTo(pixelData, x, 0)
             pixels.Set(red, green, blue, wx.ALPHA_OPAQUE)
             pixels.MoveTo(pixelData, x, DIM-1)
             pixels.Set(red, green, blue, wx.ALPHA_OPAQUE)
-        for y in xrange(DIM):
+        for y in range(DIM):
             pixels.MoveTo(pixelData, 0, y)
             pixels.Set(red, green, blue, wx.ALPHA_OPAQUE)
             pixels.MoveTo(pixelData, DIM-1, y)
             pixels.Set(red, green, blue, wx.ALPHA_OPAQUE)
-            
+
         return bmp
 
 
@@ -149,9 +149,9 @@ class TestPanel(wx.Panel):
         # finally, use the array to create a bitmap
         bmp = wx.Bitmap.FromBufferRGBA(DIM, DIM, arr)
         return bmp
-    
-           
-        
+
+
+
 #----------------------------------------------------------------------
 
 if __name__ == '__main__':
@@ -160,4 +160,4 @@ if __name__ == '__main__':
     pnl = TestPanel(frm, sys.stdout)
     frm.Show()
     app.MainLoop()
-    
+

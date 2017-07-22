@@ -9,34 +9,33 @@ wxPython Project Phoenix
 Introduction
 ------------
 
-Welcome to wxPython's Project Phoenix! This project is a new implementation
-of wxPython focused on improving speed, maintainability and extensibility.
-Just like "Classic" wxPython it wraps the wxWidgets C++ toolkit and provides
-access to the user interface portions of the wx API, enabling Python
-applications to have a GUI on Windows, Macs or Unix systems with a native
-look and feel and requiring very little (if any) platform specific code.
-
-See http://wiki.wxpython.org/ProjectPhoenix for more information about this
-project and information about how you can help out.
+Welcome to wxPython's Project Phoenix! Phoenix is the improved next-generation
+wxPython, "better, stronger, faster than he was before." This new
+implementation is focused on improving speed, maintainability and
+extensibility. Just like "Classic" wxPython, Phoenix wraps the wxWidgets C++
+toolkit and provides access to the user interface portions of the wxWidgets
+API, enabling Python applications to have a native GUI on Windows, Macs or
+Unix systems, with a native look and feel and requiring very little (if any)
+platform specific code.
 
 
 .. contents:: **Contents**
 
 
-How to build Phoenix
---------------------
+How to build wxPython Phoenix
+-----------------------------
 
 First of all, review the section below about prerequisites.
 
-All aspects of the Phoenix build are managed through a series of commands
-provided by the build.py script. There is also a setup.py script available
-for those who are used to the standard distutils or setuptools types of
-builds. The setup.py script assumes that all of the code generation steps
+All aspects of the wxPython Phoenix build are managed through a series of
+commands provided by the build.py script. There is also a setup.py script
+available for those who are used to the standard distutils or setuptools types
+of builds. The setup.py script assumes that all of the code generation steps
 have already been performed, and so it is suitable for use when building from
 a source snapshot tarball or when using easy_install or pip. The setup.py
 script will delegate to build.py for the actual build, and build.py will
 delegate to setup.py when doing setuptoolsy things like performing an install
-or building an egg.
+or building a wheel.
 
 Using the build.py script allows for greater control over the build process
 than setup.py does, including commands for performing the various
@@ -57,7 +56,7 @@ decoding errors. For example::
 
 In addition, some tasks within the build currently expect to be able to use
 Cygwin on Windows (https://www.cygwin.com/) to do its work. If you have
-Cygwin installed in one of the default locations (c:\cygwin or c:\cygwin64)
+Cygwin installed in one of the default locations (c:\\cygwin or c:\\cygwin64)
 then all is well. If you have it installed somewhere else then you can set
 CYGWIN_BASE in the environment and the build tool will use that for the base
 dir.
@@ -93,9 +92,9 @@ details. However be aware that doing so will require a wxWidgets that is
 unreleased preview snapshots. In other words, the wxWidgets build should use
 code from the wxWidgets source repository within a few days of when the
 Phoenix code was checked out. Currently Phoenix is expecting to be used with
-a wxWidgets built from the ``wxPy-3.0-branch`` git branch.
+a wxWidgets built from the ``WX_3_0_BRANCH`` git branch.
 
-On the other hand, it is probably best to just let Phoenix build and bundle
+On the other hand, it is probably best to just let wxPython build and bundle
 wxWidgets. The build tools will by default build wxWidgets in a way that
 allows it to be bundled with the wxPython extension modules as part of the
 wxPython package, meaning it can peacefully coexist with any wxWidgets
@@ -114,11 +113,11 @@ The build phase of the build.py script will copy the results of the wxWidgets
 and Phoenix builds into the wx folder in the Phoenix source tree. This will
 allow you to run and test Phoenix directly from the source tree without
 installing it, if desired. You just need to set ``PYTHONPATH`` appropriately,
-or you can use ``python setup.py develop`` to install an .egg-link file in
-your current Python site-packages folder that will point to the folder where
-you built Phoenix. When you are finished testing you can then use the install
-or one of the bdist commands like you normally would for other Python
-packages.
+or you can use ``python setup.py develop`` or ``pip install -e .`` to install
+an .egg-link file in your current Python site-packages folder that will point
+to the folder where you built wxPython Phoenix. When you are finished testing
+you can then use the install or one of the bdist commands like you normally
+would for other Python packages.
 
 
 
@@ -129,7 +128,7 @@ The following ``build.py`` commands are required to be able to build Phoenix
 from scratch. In other words, from a pristine source tree with none of the
 generated code present yet. They can be run individually or you can specify
 all of them on a single command line, in the order given. Once a command has
-succeded in one run of build.py there is no need to run that command again in
+succeeded in one run of build.py there is no need to run that command again in
 a later run, unless you've changed something which that command has the
 responsibility to process. Many of the commands require the results of the
 earlier commands, so at least the first time you run the build you will need
@@ -173,20 +172,20 @@ Some other useful commands and options are:
   handy for things like buildbots running in a virtualenv for one Python
   that need to be able to run builds for other versions too.
 
-  If build.py is still not able to find the correct Python given the M.N
-  on the command line then you can specify the full path to the python
-  executable you want to use with the ``--python`` option.
+  If build.py is not able to find the correct Python given the M.N on the
+  command line then you can specify the full path to the python executable you
+  want to use with the ``--python`` option.
 
 * **test**: Runs all of Phoenix's unittests.
 
 * **--nodoc**: This option turns off the sphinx generator when running the
   etg scripts. If you don't plan on generating the documentation then this
-  will speed up the proccessing of the etg command.
+  will speed up the processing of the etg command.
 
 Please see the output of ``python build.py --help`` for information about
 commands and options not mentioned here. And, as always, if there is any
 discrepancy between this document and the source code in the build.py script,
-then the source code is right. ;-)
+then the source code is correct. ;-)
 
 The build.py script will download doxygen, sip and waf for your platform as
 needed if they are not already in your Phoenix/bin folder. If prebuilt
@@ -221,7 +220,7 @@ like this::
 
 
 Project directory structure
-----------------------------
+---------------------------
 
 There are a lot of subfolders in this directory, here is a brief
 explanation to help a newbie find their way around.
@@ -233,10 +232,9 @@ explanation to help a newbie find their way around.
   from build.py and setup.py and which assist with configuring and running
   the build.
 
-* **etg**: This is where the Extractor-Tweaker-Generator scripts are stored
-  (see the ProjectPhoenix link above.) These scripts are invoked by the build
-  and they will read the XML files produced by Doxygen and will produce
-  interface definition files for SIP.
+* **etg**: This is where the "Extractor-Tweaker-Generator" scripts are stored.
+  These scripts are invoked by the build and they will read the XML files
+  produced by Doxygen and will produce interface definition files for SIP.
 
 * **etgtools**: This Python package contains modules which assist with the
   parsing of the XML files, tweaking the collection of objects produced by
@@ -259,7 +257,7 @@ explanation to help a newbie find their way around.
 
 * **sip/cpp**: The code produced when running SIP is put in this folder. It
   will be C++ source and header files, and also some extra files with
-  information about the source files produced so the build knows what files
+  information about the source files produced, so the build knows what files
   to compile.
 
 * **sip/siplib**: This is a copy of the SIP runtime library. We have our
@@ -286,18 +284,18 @@ Naming of files
 To help keep things a little easier when looking for things that need to be
 worked on, the file names in the Phoenix project will mirror the names of the
 files in the wxWidgets interface headers folder. For example, if there is a
-interface/wx/FOO.h and we are processing the XML produced for that file then
-the ETG script for the classes and other items will be named etg/FOO.py and it
-will produce sip/gen/FOO.sip, unit tests will be in unittests/test_FOO.py,
-and so on.
+``interface/wx/FOO.h`` and we are processing the XML produced for that file
+then the ETG script for the classes and other items will be named
+``etg/FOO.py`` and it will produce ``sip/gen/FOO.sip``, unit tests will be in
+``unittests/test_FOO.py``, and so on.
 
 In most cases more than one ETG/SIP file will be used to create a single
 Python extension module. In those cases there will be one ETG script used to
 bring all the others together into the single extension module (by using the
 back-end generator's include feature for example.) The names of those scripts
-will have a leading underscore, such as etg/_core.py, and all the scripts that
-are intended to be included in that extension module should specify that name
-in their MODULE variable.
+will have a leading underscore, such as ``etg/_core.py``, and all the scripts
+that are intended to be included in that extension module should specify that
+name in their MODULE variable.
 
 
 Prerequisites
@@ -313,7 +311,7 @@ a PR for updating this document.
 All the source code needed for wxWidgets and wxPython Phoenix are
 included in the wxWidgets and Phoenix source trees. In addition to a
 stock Python installation you will also need a copy of Visual Studio 2008
-(for Python2.7 compatibility) or Visual Studio 2010 (for Python 3.x
+(for Python2.7 compatibility) or Visual Studio 2015 (for Python 3.x
 support). It should also be possible to build using Mingw32, but there
 will need to be some changes made to the build scripts to support that.
 
@@ -321,10 +319,10 @@ You may also want to get a copy of the MS SDK in order to have newer
 definitions of the Windows API. I typically use 7.0 or 7.1 with Visual
 Studio 2008.
 
-Unfortunately Microsoft no longer distributes Visual Studio 2008. But
-don't panic! They have recently made available a "Microsoft Visual C++
-Compiler for Python 2.7" package. I haven't tried it but I expect it will
-work fine for building Phoenix. Plus it's free! You can get it at:
+Unfortunately Microsoft no longer distributes Visual Studio 2008. But don't
+panic! They have recently made available a "Microsoft Visual C++ Compiler for
+Python 2.7" package, which can also be used for building Phoenix for Python
+2.7. Plus it's free! You can get it at:
 http://www.microsoft.com/en-us/download/details.aspx?id=44266
 
 If you want to build Phoenix with debug info then you will need to first
@@ -351,6 +349,9 @@ Extrapolate accordingly for other linux distributions or other unixes.
 * freeglut3
 * freeglut3-dev
 
+If your Linux distribution has gstreamer 1.0 available then you can install
+the dev packages for that instead of the 0.10 version.
+
 **Mac OSX**
 
 Like the Windows platform all the source and libs you need for building
@@ -366,8 +367,7 @@ Also like on Windows, using the same or similar compiler that was used to
 build Python usually helps things to work better and have a better chance
 for success. For example, the stock Python 2.7 will try to use "gcc-4.2"
 when building extensions, but newer versions of Xcode may not have that
-command available. I am currently using Xcode 4.6.3, and I have symlinks
-in ``/usr/local/bin`` pointing to the ``/usr/bin/llvm-*-4.2`` executables.
+command available. I am currently using Xcode 7.1.1.
 
 If all else fails it is not too hard to build Python yourself using
 whatever Xcode you have installed, and then use that Python when building
@@ -381,6 +381,15 @@ Most discussions about Phoenix happen on the wxPython-dev google group
 (a.k.a. the wxPython-dev mail list.) If you have questions or would like to
 get involved please subscribe to the group at
 https://groups.google.com/forum/#!forum/wxpython-dev and join in.
+
+
+Latest Snapshot Builds
+----------------------
+
+You can find snapshots of the latest wxPython Phoenix build files,
+including source snapshots, wheels files for Windows and Mac, and etc. at:
+https://wxpython.org/Phoenix/snapshot-builds/.  These files are built at most
+once per day, on any day that has had a commit to the master branch.
 
 
 .. image:: docs/phoenix-fire-md.png

@@ -13,30 +13,30 @@ class TestPanel(wx.Panel):
         self.recordingKeys = False
         self.stopwatchKeys = wx.StopWatch()
         self.uisim = wx.UIActionSimulator()
-        
-        
+
+
         # create widgets and bind events
         keyLabel = wx.StaticText(self, -1, "Key Events")
         keyLabel.SetFont(wx.FFont(18, wx.SWISS, wx.FONTFLAG_BOLD))
-        
+
         self.txt = wx.TextCtrl(self, size=(300,-1))
         self.txt.Bind(wx.EVT_KEY_DOWN, self.OnTxtKeyDown)
         self.txt.Bind(wx.EVT_KEY_UP, self.OnTxtKeyUp)
-        
+
         self.recordBtn = buttons.GenToggleButton(self, -1, "Record")
         self.Bind(wx.EVT_BUTTON, self.OnToggleRecordKeys, self.recordBtn)
         self.recordBtn.SetToolTip(
             "Click this button and then type some keys in the\n"
             "textctrl.  Click here again when done.")
-        
+
         self.playbackKeysBtn = buttons.GenButton(self, -1, "Playback")
         self.Bind(wx.EVT_BUTTON, self.OnPlaybackKeys, self.playbackKeysBtn)
         self.playbackKeysBtn.SetToolTip(
             "Record some key events and then click here to\n"
             "replay the recorded events.")
         self.playbackKeysBtn.Disable()
-        
-        
+
+
         # create the layout
         gbs = wx.GridBagSizer(10,10)
         gbs.Add(keyLabel, (0,0), span=(1,2))
@@ -46,7 +46,7 @@ class TestPanel(wx.Panel):
         btnsizer.Add((10,10))
         btnsizer.Add(self.playbackKeysBtn)
         gbs.Add(btnsizer, (2,1), span=(1,2))
-        
+
         self.Sizer = wx.BoxSizer()
         self.Sizer.Add(gbs, 1, wx.EXPAND|wx.ALL, 20)
 
@@ -64,7 +64,7 @@ class TestPanel(wx.Panel):
             self.playbackKeysBtn.Enable()
             self.recordBtn.SetLabel('Record')
 
-            
+
     def OnPlaybackKeys(self, evt):
         self._playbackEvents = self.keyEvents[:]  # make a copy so we can pop()
         if self._playbackEvents:
@@ -72,8 +72,8 @@ class TestPanel(wx.Panel):
             self.txt.Clear()
             self.txt.SetFocus()
             self._setNextKeyEvent()
-            
-            
+
+
     def _playbackKey(self, evtType, key, modifiers):
         if evtType == 'down':
             self.uisim.KeyDown(key, modifiers)
@@ -84,15 +84,15 @@ class TestPanel(wx.Panel):
             self._setNextKeyEvent()
         else:
             self.playbackKeysBtn.Enable()
-            
+
 
     def _setNextKeyEvent(self):
         evtType, key, modifiers, milli = self._playbackEvents.pop(0)
         milli = max(milli/2, 1) # play back faster than it was recorded
         print(evtType, key, modifiers, milli)
         wx.CallLater(milli, self._playbackKey, evtType, key, modifiers)
-            
-    
+
+
     def _onKeyEvent(self, evt, evtType):
         evt.Skip()
         if not self.recordingKeys:
@@ -108,12 +108,12 @@ class TestPanel(wx.Panel):
 
     def OnTxtKeyDown(self, evt):
         self._onKeyEvent(evt, 'down')
-        
+
     def OnTxtKeyUp(self, evt):
         self._onKeyEvent(evt, 'up')
 
-        
-        
+
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
@@ -129,7 +129,7 @@ def runTest(frame, nb, log):
               "Sorry", wx.ICON_WARNING)
         return win
 
-    
+
 #----------------------------------------------------------------------
 
 

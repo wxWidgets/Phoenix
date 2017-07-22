@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-  
+
 import wx
 import wx.lib.fancytext as fancytext
 
@@ -51,18 +51,18 @@ overview = \
 </pre>
 
 In all cases, 'str' is an XML string. Note that start and end tags
-are only required if *enclose* is set to False. In this case the 
+are only required if *enclose* is set to False. In this case the
 text should be wrapped in FancyText tags.
 
 <p>In addition, the module exports one class::
 <pre>
     class StaticFancyText(self, window, id, text, background, ...)
 </pre>
-This class works similar to StaticText except it interprets its text 
+This class works similar to StaticText except it interprets its text
 as FancyText.
 
 <p>The text can support<sup>superscripts</sup> and <sub>subscripts</sub>, text
-in different <font size="+3">sizes</font>, <font color="blue">colors</font>, 
+in different <font size="+3">sizes</font>, <font color="blue">colors</font>,
 <i>styles</i>, <b>weights</b> and
 <font family="script">families</font>. It also supports a limited set of symbols,
 currently <times/>, <infinity/>, <angle/> as well as greek letters in both

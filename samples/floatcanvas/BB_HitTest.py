@@ -29,8 +29,8 @@ def BB_HitTest(self, event, HitEvent):
         xy = self.PixelToWorld( xy_p ) #Convert to the correct coords
         for key2 in self.HitDict[HitEvent].keys():
             #Get Mouse Event Position
-            bb =  self.HitDict[HitEvent][key2].BoundingBox                
-            if bb.PointInside(xy): 
+            bb =  self.HitDict[HitEvent][key2].BoundingBox
+            if bb.PointInside(xy):
                 Object = self.HitDict[HitEvent][key2]
                 objects.append(Object)
                 try:
@@ -44,7 +44,7 @@ def BB_HitTest(self, event, HitEvent):
                 Object = self.HitDict[HitEvent][key2]
         if len(objects) > 0: #If no objects then do nothing
             #Get the highest index object
-            highest_object = objects[object_index_list.index(max(object_index_list))] 
+            highest_object = objects[object_index_list.index(max(object_index_list))]
             highest_object.HitCoords = xy
             highest_object.HitCoordsPixel = xy_p
             highest_object.CallBackFuncs[HitEvent](highest_object)
@@ -74,10 +74,10 @@ class DrawFrame(wx.Frame):
                                      Debug = 0,
                                      BackgroundColor = "DARK SLATE BLUE",
                                      ).Canvas
-        
+
         self.Canvas = Canvas
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
 
         Point = (45,40)
         Text = Canvas.AddScaledText("A String",
@@ -118,10 +118,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

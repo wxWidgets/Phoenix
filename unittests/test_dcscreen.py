@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import sys
 
@@ -7,7 +7,7 @@ import sys
 
 
 class ScreenDCTests(wtc.WidgetTestCase):
-            
+
     def test_ScreenDC1(self):
         dc = wx.ScreenDC()
         dc.DrawLine(0,0, 50,50)

@@ -47,11 +47,11 @@ class TestWindow(stc.StyledTextCtrl):
             wx.Font(fSize, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
             )
 
-        ## if self.doc:
-            ## self.SetDocPointer(self.doc)
-        ## else:
-        self.SetText(sampleText)
-        TestWindow.doc = self.GetDocPointer()
+        if self.doc:
+            self.SetDocPointer(self.doc)
+        else:
+            self.SetText(sampleText)
+            TestWindow.doc = self.GetDocPointer()
 
 
     def ShutDownDemo(self):

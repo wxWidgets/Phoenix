@@ -3,25 +3,26 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
-PACKAGE   = "wx" 
+PACKAGE   = "wx"
 MODULE    = "_glcanvas"
 NAME      = "_glcanvas"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+These classes enable viewing and interacting with an OpenGL context in a wx.Window.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 'wxGLContext', 
+# this script.
+ITEMS  = [ 'wxGLContext',
            'wxGLCanvas',
-          ]    
-    
+          ]
+
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
@@ -38,7 +39,7 @@ OTHERDEPS = [  ]
 
 
 #---------------------------------------------------------------------------
- 
+
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
@@ -48,23 +49,24 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode('import wx', order=10)
     module.addInclude(INCLUDES)
- 
+
 
     #-----------------------------------------------------------------
-    
+
     module.addHeaderCode('#include <wx/glcanvas.h>')
-    
-    
+
+
     c = module.find('wxGLContext')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
-    
-    
+
+
 
     c = module.find('wxGLCanvas')
     tools.fixWindowClass(c)
@@ -83,7 +85,7 @@ def run():
              const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize,
              long style=0, const wxString& name="GLCanvas",
              const wxPalette& palette=wxNullPalette)""",
-        pyArgsString="(self, parent, id=ID_ANY, attribList=None, pos=DefaultPosition, size=DefaultSize, style=0, name='GLCanvas', palette=NullPalette)",
+        pyArgsString="(parent, id=wx.ID_ANY, attribList=None, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, name='GLCanvas', palette=wx.NullPalette)",
         body="""\
             const int* attribPtr = NULL;
             if (attribList)
@@ -92,8 +94,8 @@ def run():
             """,
         noDerivedCtor=False,
         )
-     
-    
+
+
     m = c.find('IsDisplaySupported')
     m.find('attribList').type = 'wxArrayInt*'
     m.setCppCode_sip("""\
@@ -102,13 +104,13 @@ def run():
             attribPtr = &attribList->front();
         sipRes = wxGLCanvas::IsDisplaySupported(attribPtr);
         """)
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
 
-    
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

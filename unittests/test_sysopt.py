@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -13,7 +13,7 @@ class sysopt_Tests(wtc.WidgetTestCase):
         wx.SystemOptions.GetOptionInt(opt)
         wx.SystemOptions.SetOption(opt, 123)
         wx.SystemOptions.SetOption(opt, val)
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

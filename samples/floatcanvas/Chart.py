@@ -36,10 +36,10 @@ class DrawFrame(wx.Frame):
 #                                     Debug = 0,
 #                                     BackgroundColor = "White",
 #                                     )
-        
+
         self.Canvas = Canvas
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
         self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeft)
 
 
@@ -49,7 +49,7 @@ class DrawFrame(wx.Frame):
         self.SpaceWidth = 1
         self.Labels = ["SW Tasks", "Set RX Rf"] + ["A Row Label"]*16
         self.NumRows = len(self.Labels)
-    
+
         self.BuildChartBackground()
         self.AddLabels()
         self.Show()
@@ -69,20 +69,20 @@ class DrawFrame(wx.Frame):
                                 LineColor = None,
                                 FillColor = "LightGrey",
                                 FillStyle = "Solid",)
-        
+
         # put a dashed line in every 1 unit:
         for i in range(16):
             Canvas.AddLine(((i*self.SpaceWidth,bottom),(i*self.SpaceWidth,top)),
                            LineColor = "Black",
                            LineStyle = "Dot",
-                           # or "Dot", "ShortDash", "LongDash","ShortDash", "DotDash"  
+                           # or "Dot", "ShortDash", "LongDash","ShortDash", "DotDash"
                            LineWidth    = 1,)
     def AddLabels(self):
         Canvas = self.Canvas
 
         for i, label in enumerate(self.Labels):
             Canvas.AddScaledText(label,
-                                 ( -self.TextWidth, -(i+0.2)*self.LineHeight ), 
+                                 ( -self.TextWidth, -(i+0.2)*self.LineHeight ),
                                  Size = 0.6 * self.LineHeight,
                                  Color = "Black",
                                  BackgroundColor = None,
@@ -111,10 +111,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

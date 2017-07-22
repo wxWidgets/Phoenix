@@ -9,7 +9,7 @@ disabled, as it is more rigorous for testing purposes.
 """
 
 import unittest
-import wtc
+from unittests import wtc
 
 from wx.lib.pubsub.core import getListenerID
 
@@ -234,6 +234,7 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
 
     def testTopicUnspecifiedError(self):
         #pub.TopicDefnError, pub.setTopicUnspecifiedFatal
+        self.pub.getDefaultTopicMgr().getOrCreateTopic('a.b')
         self.assertRaises(self.pub.TopicDefnError, self.pub.setTopicUnspecifiedFatal)
         self.pub.setTopicUnspecifiedFatal(checkExisting=False)
         def fn():

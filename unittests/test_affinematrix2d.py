@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -14,8 +14,8 @@ class affinematrix2d_Tests(wtc.WidgetTestCase):
         self.assertTrue(len(values) == 2)
         self.assertTrue(isinstance(values[0], wx.Matrix2D))
         self.assertTrue(isinstance(values[1], wx.Point2D))
-            
-            
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

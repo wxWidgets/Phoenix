@@ -1,10 +1,10 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.lib.throbber as th
 
 
-import throbImages
+from unittests import throbImages
 
 #---------------------------------------------------------------------------
 
@@ -16,11 +16,11 @@ class lib_throbber_Tests(wtc.WidgetTestCase):
                   for i in throbImages.index
                   if i not in ['eclouds', 'logo']]
         w = th.Throbber(pnl, -1, images, size=(36, 36))
-        
+
     def test_lib_throbber_Events(self):
         th.EVT_UPDATE_THROBBER
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

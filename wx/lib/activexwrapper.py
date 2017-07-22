@@ -4,14 +4,14 @@
 #
 # Author:      Robin Dunn
 #
-# Copyright:   (c) 2000 by Total Control Software
+# Copyright:   (c) 2000-2017 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 # 11/30/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
 # o Tested with updated demo
-# 
+#
 
 import  wx
 
@@ -29,8 +29,8 @@ except ImportError:
         else:
             raise       # original error message
     else:
-        message = "ActiveXWrapper requires PythonWin. Please install the PyWin32 package." 
-    raise ImportError(message) 
+        message = "ActiveXWrapper requires PythonWin. Please install the PyWin32 package."
+    raise ImportError(message)
 
 ##from win32con import WS_TABSTOP, WS_VISIBLE
 WS_TABSTOP = 0x00010000
@@ -98,12 +98,12 @@ def MakeActiveXClass(CoClass, eventClass=None, eventObj=None):
 
 # These functions will be used as methods in the new class
 def axw__init__(self, parent, ID=-1, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0):
-    
+
     # init base classes
     pywin.mfc.activex.Control.__init__(self)
     wx.Window.__init__( self, parent, -1, pos, size, style|wx.NO_FULL_REPAINT_ON_RESIZE)
     #self.this.own(False)  # this should be set in wx.Window.__init__ when it calls _setOORInfo, but...
-        
+
     win32ui.EnableControlContainer()
     self._eventObj = self._eventObj  # move from class to instance
 

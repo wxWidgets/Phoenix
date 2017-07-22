@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -16,21 +16,21 @@ class power_Tests(wtc.WidgetTestCase):
         wx.BATTERY_CRITICAL_STATE
         wx.BATTERY_SHUTDOWN_STATE
         wx.BATTERY_UNKNOWN_STATE
-      
+
         wx.wxEVT_POWER_SUSPENDING
         wx.wxEVT_POWER_SUSPENDED
         wx.wxEVT_POWER_SUSPEND_CANCEL
         wx.wxEVT_POWER_RESUME
-        
+
         wx.EVT_POWER_SUSPENDING
         wx.EVT_POWER_SUSPENDED
         wx.EVT_POWER_SUSPEND_CANCEL
         wx.EVT_POWER_RESUME
-        
+
         wx.PowerEvent
-        
-        
-        
+
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

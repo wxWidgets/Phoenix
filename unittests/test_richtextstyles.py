@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.richtext
 
@@ -16,10 +16,10 @@ class richtextstyles_Tests(wtc.WidgetTestCase):
         ctrl.Create(self.frame)
 
 
-    @unittest.expectedFailure   # RichTextStyleDefinition is abstract
     def test_richtextstyles03(self):
-        sdef = wx.richtext.RichTextStyleDefinition()
-        
+        with self.assertRaises(TypeError):
+            sdef = wx.richtext.RichTextStyleDefinition()
+
 
     def test_richtextstyles04(self):
         sdef = wx.richtext.RichTextParagraphStyleDefinition()
@@ -40,7 +40,7 @@ class richtextstyles_Tests(wtc.WidgetTestCase):
         wx.richtext.RichTextStyleListBox.RICHTEXT_STYLE_CHARACTER
         wx.richtext.RichTextStyleListBox.RICHTEXT_STYLE_LIST
         wx.richtext.RichTextStyleListBox.RICHTEXT_STYLE_BOX
-        
+
 
     def test_richtextstyles6(self):
         ctrl = wx.richtext.RichTextStyleComboCtrl(self.frame)
@@ -62,7 +62,7 @@ class richtextstyles_Tests(wtc.WidgetTestCase):
     def test_richtextstyles10(self):
         sdef = wx.richtext.RichTextStyleSheet()
 
-    
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -32,7 +32,6 @@ class TestPanel(wx.Panel):
         bmp = images.Robin.GetBitmap()
         StaticBitmap(self, -1, bmp, (80, 150))
 
-        StaticText(self, -1, "Hey, if Ousterhout can do it, so can I.", (200, 175))
 
 
 #----------------------------------------------------------------------

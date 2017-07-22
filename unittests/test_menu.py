@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -14,7 +14,7 @@ class menu_Tests(wtc.WidgetTestCase):
         for label in "one two three four".split():
             m.Append(-1, label)
         return m
-    
+
     def makeMenuWithSubmenu(self):
         m = self.makeMenu()
         m.AppendSeparator()
@@ -22,18 +22,18 @@ class menu_Tests(wtc.WidgetTestCase):
         m.Append(-1, 'submenu', m2)
         return m
 
-        
+
     def test_menu1(self):
         m = self.makeMenu()
         items = m.GetMenuItems()
         self.assertTrue(len(items) == 4)
         self.assertTrue(isinstance(items[0], wx.MenuItem))
-        
+
     def test_menu2(self):
         m = self.makeMenuWithSubmenu()
         items = m.GetMenuItems()
         self.assertTrue(len(items) == 6)
-     
+
     def test_menu3(self):
         m = self.makeMenuWithSubmenu()
         items = []
@@ -69,20 +69,20 @@ class menu_Tests(wtc.WidgetTestCase):
             mb.Append(m, label)
         menu = m
         item = menu.FindItemByPosition(0)
-        
+
         i, m = mb.FindItem(item.GetId())
         self.assertTrue(i is item)
         self.assertTrue(m is menu)
         i = mb.FindItemById(item.GetId())
         self.assertTrue(i is item)
-        
+
         i, m = menu.FindItem(item.GetId())
         self.assertTrue(i is item)
         self.assertTrue(m is menu)
         i = menu.FindItemById(item.GetId())
         self.assertTrue(i is item)
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

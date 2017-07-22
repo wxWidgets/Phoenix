@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 try:
@@ -15,7 +15,7 @@ class lib_agw_xlsgrid_Tests(wtc.WidgetTestCase):
     @unittest.skipIf(skipIt, 'Requires xlrd')
     def test_lib_agw_xlsgridCtor(self):
         xg = XG.XLSGrid(self.frame)
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

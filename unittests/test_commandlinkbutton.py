@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx, wx.adv
 
 #---------------------------------------------------------------------------
@@ -20,7 +20,7 @@ class commandlinkbutton_Tests(wtc.WidgetTestCase):
         b.Label
         b.MainLabel
         b.Note
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

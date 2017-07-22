@@ -813,7 +813,7 @@ import  string
 import  sys
 
 import  wx
-import  wx.lib.six as six
+import  six
 
 # jmg 12/9/03 - when we cut ties with Py 2.2 and earlier, this would
 # be a good place to implement the 2.3 logger class
@@ -3073,7 +3073,7 @@ class MaskedEditMixin:
                 else:
                     excludes += field._excludeChars.decode(self._defaultEncoding)
             if not isinstance(self._ctrl_constraints, six.text_type):
-                if six.PY3: 
+                if six.PY3:
                     excludes += field._excludeChars
                 else:
                     excludes += self._ctrl_constraints._excludeChars.decode(self._defaultEncoding)
@@ -4894,7 +4894,7 @@ class MaskedEditMixin:
             except:
                 value = None
 
-            if value < 0 and value is not None:
+            if value is not None and value < 0:
                 signpos = text.find('-')
                 if signpos == -1:
                     signpos = text.find('(')

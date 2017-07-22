@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -8,12 +8,12 @@ import os
 class frame_Tests(wtc.WidgetTestCase):
 
     def test_frameStyles(self):
-        wx.FRAME_NO_TASKBAR     
-        wx.FRAME_TOOL_WINDOW    
+        wx.FRAME_NO_TASKBAR
+        wx.FRAME_TOOL_WINDOW
         wx.FRAME_FLOAT_ON_PARENT
         wx.FRAME_SHAPED
-        
-        
+
+
     def test_frameCtors(self):
         f = wx.Frame(None)
         f.Show()
@@ -34,8 +34,8 @@ class frame_Tests(wtc.WidgetTestCase):
         f.Show()
         f.MacGetTopLevelWindowRef()
         f.Close()
-        
-        
+
+
     def test_frameProperties(self):
         f = wx.Frame(None)
         f.Show()
@@ -46,11 +46,22 @@ class frame_Tests(wtc.WidgetTestCase):
         f.TmpDefaultItem
         f.OSXModified
         f.MacMetalAppearance
-        
+
         f.Close()
-        
-        
-        
+
+
+    def test_frameRestore(self):
+        f = wx.Frame(self.frame, title="Title", pos=(50,50), size=(100,100))
+        f.Show()
+        f.Maximize()
+        self.myYield()
+        assert f.IsMaximized()
+        f.Restore()
+        self.myYield()
+        assert not f.IsMaximized()
+        f.Close()
+
+
 #---------------------------------------------------------------------------
 
 

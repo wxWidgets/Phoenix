@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -13,8 +13,8 @@ class overlay_Tests(wtc.WidgetTestCase):
         odc.Clear()
         del odc
         o.Reset()
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -83,7 +83,7 @@ class DrawFrame(wx.Frame):
         self.timer = None
 
         self.DrawAxis()
-        
+
         return None
 
 

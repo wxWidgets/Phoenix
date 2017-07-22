@@ -25,7 +25,7 @@ class DividedShapeControlPoint(ControlPoint):
     def __init__(self, the_canvas, object, region, size, the_m_xoffset, the_m_yoffset, the_type):
         """
         Default class constructor.
-        
+
         :param `theCanvas`: a :class:`~lib.ogl.Canvas`
         :param `object`: not used ???
         :param `region`: an instance of :class:`~lib.ogl.ShapeRegion`
@@ -33,7 +33,7 @@ class DividedShapeControlPoint(ControlPoint):
         :param float `the_m_xoffset`: the the_m_xoffset position ???
         :param float `the_m_yoffset`: the the_m_yoffset position ???
         :param int `the_type`: one of the following types
-        
+
          ======================================== ==================================
          Control point type                       Description
          ======================================== ==================================
@@ -41,7 +41,7 @@ class DividedShapeControlPoint(ControlPoint):
          `CONTROL_POINT_HORIZONTAL`               Horizontal
          `CONTROL_POINT_DIAGONAL`                 Diagonal
          ======================================== ==================================
-        
+
         """
         ControlPoint.__init__(self, the_canvas, object, size, the_m_xoffset, the_m_yoffset, the_type)
         self.regionId = region
@@ -75,7 +75,7 @@ class DividedShapeControlPoint(ControlPoint):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         dividedObject = self._shape
-        
+
         x1 = dividedObject.GetX() - dividedObject.GetWidth() / 2.0
         y1 = y
         x2 = dividedObject.GetX() + dividedObject.GetWidth() / 2.0
@@ -92,7 +92,7 @@ class DividedShapeControlPoint(ControlPoint):
         dividedObject = self._shape
         if not dividedObject.GetRegions()[self.regionId]:
             return
-        
+
         thisRegion = dividedObject.GetRegions()[self.regionId]
         nextRegion = None
 
@@ -110,7 +110,7 @@ class DividedShapeControlPoint(ControlPoint):
         # Save values
         theRegionTop = 0
         nextRegionBottom = 0
-        
+
         for i in range(len(dividedObject.GetRegions())):
             region = dividedObject.GetRegions()[i]
             proportion = region._regionProportionY
@@ -119,7 +119,7 @@ class DividedShapeControlPoint(ControlPoint):
 
             if region == thisRegion:
                 thisRegionTop = currentY
-                
+
                 if i + 1 < len(dividedObject.GetRegions()):
                     nextRegion = dividedObject.GetRegions()[i + 1]
             if region == nextRegion:
@@ -154,7 +154,7 @@ class DividedShapeControlPoint(ControlPoint):
         dividedObject.SetRegionSizes()
         dividedObject.Draw(dc)
         dividedObject.GetEventHandler().OnMoveLinks(dc)
-        
+
 
 class DividedShape(RectangleShape):
     """
@@ -165,10 +165,10 @@ class DividedShape(RectangleShape):
     def __init__(self, w, h):
         """
         Default class constructor.
-        
+
         :param `w`: width of rectangle
         :param `h`: heigth of rectangle
-        
+
         """
         RectangleShape.__init__(self, w, h)
         self.ClearRegions()
@@ -235,11 +235,11 @@ class DividedShape(RectangleShape):
     def SetSize(self, w, h, recursive = True):
         """
         Set the size.
-        
+
         :param `w`: width of rectangle
         :param `h`: heigth of rectangle
         :param `recursive`: not implemented
-        
+
         """
         self.SetAttachmentSize(w, h)
         self._width = w
@@ -260,7 +260,7 @@ class DividedShape(RectangleShape):
             defaultProportion = 0.0
         currentY = self._ypos - self._height / 2.0
         maxY = self._ypos + self._height / 2.0
-        
+
         for region in self.GetRegions():
             if region._regionProportionY <= 0:
                 proportion = defaultProportion
@@ -281,14 +281,14 @@ class DividedShape(RectangleShape):
     def GetAttachmentPosition(self, attachment, nth = 0, no_arcs = 1, line = None):
         """
         Get the attachment position.
-        
+
         Attachment points correspond to regions in the divided box.
-        
+
         :param `attachment`: the attachment ???
         :param `nth`: get nth attachment ???
         :param `no_arcs`: ???
         :param `line`: ???
-        
+
         """
         totalNumberAttachments = len(self.GetRegions()) * 2 + 2
         if self.GetAttachmentMode() == ATTACHMENT_MODE_NONE or attachment >= totalNumberAttachments:
@@ -376,7 +376,7 @@ class DividedShape(RectangleShape):
     def GetNumberOfAttachments(self):
         """
         Get the number of attachments.
-        
+
         There are two attachments for each region (left and right),
         plus one on the top and one on the bottom.
         """
@@ -392,9 +392,9 @@ class DividedShape(RectangleShape):
     def AttachmentIsValid(self, attachment):
         """
         Is the attachment valid?
-        
+
         :param `attachment`: the attachment
-        
+
         """
         totalNumberAttachments = len(self.GetRegions()) * 2 + 2
         if attachment >= totalNumberAttachments:
@@ -432,9 +432,9 @@ class DividedShape(RectangleShape):
     def ResetControlPoints(self):
         """
         Reset the control points.
-        
+
         :note: May only have the region handles, (n - 1) of them
-        
+
         """
 
         if len(self._controlPoints) > len(self.GetRegions()) - 1:
@@ -464,13 +464,13 @@ class DividedShape(RectangleShape):
                 currentY = actualY
 
                 i += 1
-                
+
     def EditRegions(self):
         """
         Edit the region colours and styles. Not implemented.
         """
         print("EditRegions() is unimplemented")
-        
+
     def OnRightClick(self, x, y, keys = 0, attachment = 0):
         """The right click handler."""
         if keys & KEY_CTRL:

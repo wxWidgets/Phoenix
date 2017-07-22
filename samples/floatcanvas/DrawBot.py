@@ -42,11 +42,11 @@ class DrawFrame(wx.Frame):
                                           Debug = 0,
                                           BackgroundColor = "White",
                                           ).Canvas
-        
+
 
         self.Show(True)
         self.MakePic()
-                
+
         return None
 
     def MakePic(self):
@@ -69,4 +69,4 @@ class DrawFrame(wx.Frame):
 app = wx.App()
 DrawFrame(None, -1, "FloatCanvas Demo App", wx.DefaultPosition, (700,700) )
 app.MainLoop()
-    
+

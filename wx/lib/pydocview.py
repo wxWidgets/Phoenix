@@ -679,7 +679,7 @@ class DocTabbedChildFrame(wx.Panel):
                 if title.endswith("*"):
                     title = title[:-1]
                     self.SetTitle(title)
-        
+
 
     def ProcessEvent(event):
         """
@@ -1174,7 +1174,7 @@ class DocMDIChildFrame(wx.MDIChildFrame):
             else:
                 if title.endswith("*"):
                     title = title[:-1]
-                    self.SetTitle(title)                
+                    self.SetTitle(title)
                 else:
                     return
 
@@ -2880,11 +2880,11 @@ class WindowMenuService(DocService):
             windowMenu = wx.Menu()
         else:
             needWindowMenu = False
-            
+
         if self.GetDocumentManager().GetFlags() & wx.lib.docview.DOC_SDI:
             if not _WINDOWS:  # Arrange All and window navigation doesn't work on Linux
                 return
-                
+
             item = windowMenu.Append(self.ARRANGE_WINDOWS_ID, _("&Arrange All"), _("Arrange the open windows"))
             wx.EVT_MENU(frame, self.ARRANGE_WINDOWS_ID, frame.ProcessEvent)
             wx.EVT_UPDATE_UI(frame, self.ARRANGE_WINDOWS_ID, frame.ProcessUpdateUIEvent)
@@ -2972,7 +2972,7 @@ class WindowMenuService(DocService):
         elif wx.GetApp().GetUseTabbedMDI():
             if id == self.SELECT_NEXT_WINDOW_ID:
                 self.BuildWindowMenu(event.GetEventObject())  # build file list only when we are updating the windows menu
-                
+
                 notebook = wx.GetApp().GetTopWindow()._notebook
                 i = notebook.GetSelection()
                 if i == -1:
@@ -3056,8 +3056,8 @@ class WindowMenuService(DocService):
             if numPages > len(self._selectWinIds):
                 for i in range(len(self._selectWinIds), numPages):
                     self._selectWinIds.append(wx.NewId())
-                    wx.EVT_MENU(currentFrame, self._selectWinIds[i], self.OnCtrlKeySelect)                    
-            
+                    wx.EVT_MENU(currentFrame, self._selectWinIds[i], self.OnCtrlKeySelect)
+
             for i in range(0, numPages):
                 if i == 0 and not self._sep:
                     self._sep = windowMenu.AppendSeparator()

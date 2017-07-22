@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     11-Dec-2002
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2002-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------
@@ -17,7 +17,7 @@ Usage:
     helpviewer [--cache=path] helpfile [helpfile(s)...]
 
     Where helpfile is the path to either a .hhp file or a .zip file
-    which contians a .hhp file.  The .hhp files are the same as those
+    which contains a .hhp file.  The .hhp files are the same as those
     used by Microsoft's HTML Help Workshop for creating CHM files.
 """
 
@@ -30,7 +30,7 @@ def makeOtherFrame(helpctrl):
     import wx
     parent = helpctrl.GetFrame()
     otherFrame = wx.Frame(parent)
-    
+
 
 def main(args=sys.argv):
     if len(args) < 2:
@@ -74,9 +74,10 @@ def main(args=sys.argv):
 
     # The frame used by the HtmlHelpController is set to not prevent
     # app exit, so in the case of a standalone helpviewer like this
-    # when the about box or search box is closed the help frame will
-    # be the only one left and the app will close unexpectedly.  To
-    # work around this we'll create another frame that is never shown,
+    # when the Print dialog is closed the help frame will be the only
+    # one left and the app will close unexpectedly. [Strangely, this
+    # doesn't happen when the Options dialog is closed].
+    # To work around this we'll create another frame that is never shown,
     # but which will be closed when the helpviewer frame is closed.
     wx.CallAfter(makeOtherFrame, helpctrl)
 

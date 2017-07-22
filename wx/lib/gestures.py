@@ -66,8 +66,8 @@ This allows the user to change the mouse button/modifiers at runtime.
 Changelog:
 0.0.1:  Treats a mouse leaving event as mouse up.
         (Bug Report, Thanks Peter Damoc).
-        
-    
+
+
 0.0.0:  Initial Release.
 '''
 
@@ -89,31 +89,31 @@ import wx
 class MouseGestures:
     def __init__(self, parent, Auto=True, MouseButton=wx.MOUSE_BTN_MIDDLE):
         self.parent = parent
-                
+
         self.gestures = []
         self.actions = []
         self.actionarguments = []
-        
+
         self.mousebutton = MouseButton
         self.modifiers = []
-        
+
         self.recording = False
-        
+
         self.lastposition = (-1, -1)
-        
+
         self.pen = wx.Pen(wx.Colour(0, 144, 255), 5)
 
         self.dc = wx.ScreenDC()
         self.dc.SetPen(self.pen)
-        
+
         self.showgesture = False
-        
+
         self.wobbletolerance = 7
-                
+
         self.rawgesture = ''
-        
+
         self.SetAuto(Auto)
-    
+
     def _check_modifiers(self, event):
         '''Internal:  Returns True if all needed modifiers are down
         for the given event.'''
@@ -127,12 +127,12 @@ class MouseGestures:
                 good = good and event.AltDown()
             return good
         return True
-            
+
     def AddGesture(self, gesture, action, *args):
         '''Registers a gesture, and an associated function, with any arguments needed.'''
         #Make Sure not a duplicate:
         self.RemoveGesture(gesture)
-        
+
         self.gestures.append(gesture)
         self.actions.append(action)
         self.actionarguments.append(args)
@@ -147,14 +147,14 @@ class MouseGestures:
         '''Stops recording the points to create the mouse gesture from,
         and creates the mouse gesture, returns the result as a string.'''
         self.recording = False
-        
+
         #Figure out the gestures (Look for occurances of 5 in a row or more):
-            
+
         tempstring = '0'
         possiblechange = '0'
-        
+
         directions = ''
-        
+
         for g in self.rawgesture:
             l = len(tempstring)
             if g != tempstring[l - 1]:
@@ -172,29 +172,29 @@ class MouseGestures:
                 else:
                     directions += g
                 tempstring = '0'
-        
+
         if self.showgesture:
             self.parent.Refresh()
-                
+
         return directions
-    
+
     def GetDirection(self, point1, point2):
         '''Gets the direction between two points.'''
         #point1 is the old point
         #point2 is current
-                
+
         x1, y1 = point1
         x2, y2 = point2
-                
+
         #(Negative = Left, Up)
         #(Positive = Right, Down)
-        
+
         horizontal = x2 - x1
         vertical = y2 - y1
-                
+
         horizontalchange = abs(horizontal) > 0
         verticalchange = abs(vertical) > 0
-                
+
         if horizontalchange and verticalchange:
             ah = abs(horizontal)
             av = abs(vertical)
@@ -206,7 +206,7 @@ class MouseGestures:
                 if (av / ah) > 2:
                     horizontal = 0
                     horizontalchange = False
-        
+
         if horizontalchange and verticalchange:
             #Diagonal
             if (horizontal > 0) and (vertical > 0):
@@ -229,11 +229,11 @@ class MouseGestures:
                     return 'D'
                 else:
                     return 'U'
-    
+
     def GetRecording(self):
         '''Returns whether or not Gesture Recording has started.'''
         return self.recording
-        
+
     def OnMotion(self, event):
         '''Internal.  Used if Start() has been run'''
         if self.recording:
@@ -245,11 +245,11 @@ class MouseGestures:
                     px1, py1 = self.parent.ClientToScreen(self.lastposition)
                     px2, py2 = self.parent.ClientToScreen(currentposition)
                     self.dc.DrawLine(px1, py1, px2, py2)
-                
+
             self.lastposition = currentposition
-                        
+
         event.Skip()
-    
+
     def OnMouseEvent(self, event):
         '''Internal.  Used in Auto Mode.'''
         if event.ButtonDown(self.mousebutton) and self._check_modifiers(event):
@@ -258,49 +258,49 @@ class MouseGestures:
             result = self.End()
             self.DoAction(result)
         event.Skip()
-                    
+
     def RemoveGesture(self, gesture):
         '''Removes a gesture, and its associated action'''
         if gesture in self.gestures:
             i = self.gestures.index(gesture)
-            
+
             del self.gestures[i]
             del self.actions[i]
             del self.actionarguments[i]
-    
+
     def SetAuto(self, auto):
         '''Warning:  Once auto is set, it stays set, unless you manually use UnBind'''
         if auto:
             self.parent.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseEvent)
             self.parent.Bind(wx.EVT_MOTION, self.OnMotion)
-    
+
     def SetGesturePen(self, pen):
         '''Sets the wx pen used to visually represent each gesture'''
         self.pen = pen
         self.dc.SetPen(self.pen)
-    
+
     def SetGesturePen(self, colour, width):
         '''Sets the colour and width of the line drawn to visually represent each gesture'''
         self.pen = wx.Pen(colour, width)
         self.dc.SetPen(self.pen)
-    
+
     def SetGesturesVisible(self, vis):
         '''Sets whether a line is drawn to visually represent each gesture'''
         self.showgesture = vis
-        
+
     def SetModifiers(self, modifiers=[]):
         '''Takes an array of wx Key constants (Control, Shift, and/or Alt).
         Leave empty to unset all modifiers.'''
         self.modifiers = modifiers
-    
+
     def SetMouseButton(self, mousebutton):
         '''Takes the wx constant for the target mousebutton'''
         self.mousebutton = mousebutton
-    
+
     def SetWobbleTolerance(self, wobbletolerance):
         '''Sets just how much wobble this class can take!'''
         self.WobbleTolerance = wobbletolerance
-        
+
     def Start(self):
         '''Starts recording the points to create the mouse gesture from'''
         self.recording = True

@@ -7,10 +7,10 @@ import warnings
 #---------------------------------------------------------------------------
 
 class App(unittest.TestCase):
-    
+
     def test_App(self):
         app = wx.App()
-    
+
     def test_App_OnInit(self):
         class MyApp(wx.App):
             def OnInit(self):
@@ -36,13 +36,13 @@ class App(unittest.TestCase):
             app = MyApp()
             app.MainLoop()
             self.assertTrue(app.onExit_called)
-        
+
     def test_version(self):
         v = wx.version()
         wx.VERSION
         wx.VERSION_STRING
         wx.__version__
-    
+
     def test_PySimpleApp(self):
         # wx.PySimpleApp is supposed to be deprecated, make sure it is.
         with warnings.catch_warnings():
@@ -50,7 +50,7 @@ class App(unittest.TestCase):
             with self.assertRaises(wx.wxPyDeprecationWarning):
                 app = wx.PySimpleApp()
 
-                
+
     def test_CallAfter(self):
         class MyApp(wx.App):
             def OnInit(self):
@@ -62,11 +62,11 @@ class App(unittest.TestCase):
             def doAfter(self, a, b, c):
                 self.callAfter_called = True
                 self.frame.Close()
-                
+
         app = MyApp()
         app.MainLoop()
         self.assertTrue(app.callAfter_called)
-                
+
 #---------------------------------------------------------------------------
 
 

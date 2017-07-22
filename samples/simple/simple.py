@@ -25,7 +25,7 @@ class MyFrame(wx.Frame):
         # Create the menubar
         menuBar = wx.MenuBar()
 
-        # and a menu 
+        # and a menu
         menu = wx.Menu()
 
         # add an item to the menu, using \tKeyName automatically
@@ -41,7 +41,7 @@ class MyFrame(wx.Frame):
         self.SetMenuBar(menuBar)
 
         self.CreateStatusBar()
-        
+
 
         # Now create the Panel to put the other controls on.
         panel = wx.Panel(self)
@@ -73,7 +73,7 @@ class MyFrame(wx.Frame):
         self.SetSizer(sizer)
         self.Fit()
         self.CenterOnScreen(wx.BOTH)
-        
+
 
     def OnTimeToClose(self, evt):
         """Event handler for the button click."""
@@ -97,7 +97,7 @@ class MyApp(AppBaseClass):
 
         frame.Show(True)
         return True
-        
+
 app = MyApp(redirect=True)
 app.MainLoop()
 

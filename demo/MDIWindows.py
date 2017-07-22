@@ -36,22 +36,9 @@ class TestPanel(wx.Panel):
         exe, spawn = self.GetPyExecutable()
         spawn(os.P_NOWAIT, exe, exe, "MDISashDemo.py")
 
-    # TODO: This hack can be removed once we fix the way the Python
-    # app bundles are generated so that they are not bundling and 
-    # pointing to an otherwise unused and non-GUI-friendly version of
-    # Python on OS X.
     def GetPyExecutable(self):
-        if 'wxMac' in wx.PlatformInfo:
-            # sys.executable will be wrong if running the demo from
-            # an app bundle.  But the bundle is always using a system
-            # framework so just hardcode the path to it.
-            if sys.version[:3] == "2.4":
-                return '/usr/local/bin/pythonw', os.spawnl
-            else:
-                return '/usr/bin/pythonw', os.spawnl    
-        else:
-            return sys.executable, os.spawnl
-        
+        return sys.executable, os.spawnl
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

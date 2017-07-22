@@ -6,7 +6,7 @@ in Python.
 """
 
 import time
-import wx                  
+import wx
 
 ##import os; raw_input('PID: %d\nPress enter...' % os.getpid())
 
@@ -27,7 +27,7 @@ class MyFrame(wx.Frame):
 
         panel = wx.Panel(self)
         sizer = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
-        
+
         self.sizeCtrl = wx.TextCtrl(panel, -1, "", style=wx.TE_READONLY)
         sizer.Add(wx.StaticText(panel, -1, "Size:"))
         sizer.Add(self.sizeCtrl)
@@ -43,7 +43,7 @@ class MyFrame(wx.Frame):
         border = wx.BoxSizer()
         border.Add(sizer, 0, wx.ALL, 20)
         panel.SetSizer(border)
-        
+
 
     def OnCloseWindow(self, event):
         self.Destroy()
@@ -71,22 +71,22 @@ class MyEventLoop(wx.GUIEventLoop):
         self.exitCode = 0
         self.shouldExit = False
 
-        
+
     def DoMyStuff(self):
         # Do whatever you want to have done for each iteration of the event
         # loop. In this example we'll just sleep a bit to simulate something
         # real happening.
         time.sleep(0.10)
 
-        
+
     def Run(self):
         # Set this loop as the active one. It will automatically reset to the
         # original evtloop when the context manager exits.
         with wx.EventLoopActivator(self):
             while True:
-                
+
                 self.DoMyStuff()
-            
+
                 # Generate and process idles events for as long as there
                 # isn't anything else to do
                 while not self.shouldExit and not self.Pending() and self.ProcessIdle():
@@ -94,7 +94,7 @@ class MyEventLoop(wx.GUIEventLoop):
 
                 if self.shouldExit:
                     break
-                
+
                 # dispatch all the pending events and call Dispatch() to wait
                 # for the next message
                 if not self.ProcessEvents():
@@ -103,8 +103,8 @@ class MyEventLoop(wx.GUIEventLoop):
                 # Currently on wxOSX Pending always returns true, so the
                 # ProcessIdle above is not ever called. Call it here instead.
                 if 'wxOSX' in wx.PlatformInfo:
-                    self.ProcessIdle()           
-            
+                    self.ProcessIdle()
+
             # Proces remaining queued messages, if any
             while True:
                 checkAgain = False
@@ -116,29 +116,29 @@ class MyEventLoop(wx.GUIEventLoop):
                     checkAgain = True
                 if not checkAgain:
                     break
-                
+
         return self.exitCode
 
-    
+
     def Exit(self, rc=0):
         self.exitCode = rc
         self.shouldExit = True
         self.OnExit()
         self.WakeUp()
-        
-        
+
+
     def ProcessEvents(self):
         if wx.GetApp():
-            wx.GetApp().ProcessPendingEvents()        
-            
+            wx.GetApp().ProcessPendingEvents()
+
         if self.shouldExit:
             return False
-        
+
         return self.Dispatch()
 
 
-        
-        
+
+
 
 class MyApp(wx.App):
 

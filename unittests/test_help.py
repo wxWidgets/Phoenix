@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -10,7 +10,7 @@ class help_Tests(wtc.WidgetTestCase):
         #hc = wx.HelpController()
         pass
 
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

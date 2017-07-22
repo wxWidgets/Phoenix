@@ -7,7 +7,7 @@
 # Created:      5/15/03
 # Copyright:    (c) 2003-2006 ActiveGrid, Inc. (Port of wxWindows classes by Julian Smart et al)
 # License:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, docs
 #----------------------------------------------------------------------------
 
 
@@ -78,8 +78,8 @@ class Document(wx.EvtHandler):
     """
     The document class can be used to model an application's file-based data. It
     is part of the document/view framework supported by wxWindows, and cooperates
-    with the wxView, wxDocTemplate and wxDocManager classes.
-    
+    with the :class:`View`, :class:`DocTemplate` and :class:`DocManager` classes.
+
     Note this wxPython version also keeps track of the modification date of the
     document and if it changes on disk outside of the application, we will warn the
     user before saving to avoid clobbering the file.
@@ -114,6 +114,7 @@ class Document(wx.EvtHandler):
         method is called from the wxPython docview framework directly since
         wxPython does not have a virtual ProcessEvent function.
         """
+        # TODO: ProcessEvent is virtual now, should this method just go away?
         return False
 
 
@@ -148,7 +149,7 @@ class Document(wx.EvtHandler):
         The document type name given to the wxDocTemplate constructor,
         copied to this document when the document is created. If several
         document templates are created that use the same document type, this
-        variable is used in wxDocManager::CreateView to collate a list of
+        variable is used in :meth:`DocManager.CreateView` to collate a list of
         alternative view types that can be used on this kind of document.
         """
         return self._documentTypeName
@@ -156,10 +157,10 @@ class Document(wx.EvtHandler):
 
     def SetDocumentName(self, name):
         """
-        Sets he document type name given to the wxDocTemplate constructor,
+        Sets the document type name given to the :class:`DocTemplate` constructor,
         copied to this document when the document is created. If several
         document templates are created that use the same document type, this
-        variable is used in wxDocManager::CreateView to collate a list of
+        variable is used in :meth:`DocManager.CreateView` to collate a list of
         alternative view types that can be used on this kind of document. Do
         not change the value of this variable.
         """
@@ -168,16 +169,14 @@ class Document(wx.EvtHandler):
 
     def GetDocumentSaved(self):
         """
-        Returns True if the document has been saved.  This method has been
-        added to wxPython and is not in wxWindows.
+        Returns True if the document has been saved.
         """
         return self._savedYet
 
 
     def SetDocumentSaved(self, saved=True):
         """
-        Sets whether the document has been saved.  This method has been
-        added to wxPython and is not in wxWindows.
+        Sets whether the document has been saved.
         """
         self._savedYet = saved
 
@@ -193,7 +192,7 @@ class Document(wx.EvtHandler):
         """
         Sets the command processor to be used for this document. The document
         will then be responsible for its deletion. Normally you should not
-        call this; override OnCreateCommandProcessor instead.
+        call this; override :meth:`OnCreateCommandProcessor` instead.
         """
         self._commandProcessor = processor
 
@@ -213,8 +212,9 @@ class Document(wx.EvtHandler):
         Call with true to mark the document as modified since the last save,
         false otherwise. You may need to override this if your document view
         maintains its own record of being modified (for example if using
-        xTextWindow to view and edit the document).
-        This method has been extended to notify its views that the dirty flag has changed.
+        :class:`wx.TextWindow` to view and edit the document).
+        This method has been extended to notify its views that the dirty
+        flag has changed.
         """
         self._documentModified = modify
         self.UpdateAllViews(hint=("modify", self, self._documentModified))
@@ -223,8 +223,8 @@ class Document(wx.EvtHandler):
     def SetDocumentModificationDate(self):
         """
         Saves the file's last modification date.
-        This is used to check if the file has been modified outside of the application.
-        This method has been added to wxPython and is not in wxWindows.
+        This is used to check if the file has been modified outside of
+        the application.
         """
         self._documentModificationDate = os.path.getmtime(self.GetFilename())
 
@@ -232,8 +232,7 @@ class Document(wx.EvtHandler):
     def GetDocumentModificationDate(self):
         """
         Returns the file's modification date when it was loaded from disk.
-        This is used to check if the file has been modified outside of the application.        
-        This method has been added to wxPython and is not in wxWindows.
+        This is used to check if the file has been modified outside of the application.
         """
         return self._documentModificationDate
 
@@ -241,7 +240,6 @@ class Document(wx.EvtHandler):
     def IsDocumentModificationDateCorrect(self):
         """
         Returns False if the file has been modified outside of the application.
-        This method has been added to wxPython and is not in wxWindows.
         """
         if not os.path.exists(self.GetFilename()):  # document must be in memory only and can't be out of date
             return True
@@ -291,9 +289,9 @@ class Document(wx.EvtHandler):
 
     def Close(self):
         """
-        Closes the document, by calling OnSaveModified and then (if this true)
-        OnCloseDocument. This does not normally delete the document object:
-        use DeleteAllViews to do this implicitly.
+        Closes the document, by calling :meth:`OnSaveModified` and then (if this true)
+        :meth:`OnCloseDocument`. This does not normally delete the document object:
+        use :meth:`DeleteAllViews` to do this implicitly.
         """
         if self.OnSaveModified():
             if self.OnCloseDocument():
@@ -306,7 +304,7 @@ class Document(wx.EvtHandler):
 
     def OnCloseDocument(self):
         """
-        The default implementation calls DeleteContents (an empty
+        The default implementation calls :meth:`DeleteContents` (an empty
         implementation) sets the modified flag to false. Override this to
         supply additional behaviour when the document is closed with Close.
         """
@@ -318,9 +316,9 @@ class Document(wx.EvtHandler):
 
     def DeleteAllViews(self):
         """
-        Calls wxView.Close and deletes each view. Deleting the final view will
+        Calls :meth:`View.Close` and deletes each view. Deleting the final view will
         implicitly delete the document itself, because the wxView destructor
-        calls RemoveView. This in turns calls wxDocument::OnChangedViewList,
+        calls RemoveView. This in turn calls :meth:`Document.OnChangedViewList`,
         whose default implemention is to save and delete the document if no
         views exist.
         """
@@ -370,8 +368,8 @@ class Document(wx.EvtHandler):
 
     def Save(self):
         """
-        Saves the document by calling OnSaveDocument if there is an associated
-        filename, or SaveAs if there is no filename.
+        Saves the document by calling :meth:`OnSaveDocument` if there is an
+        associated filename, or :meth:`SaveAs` if there is no filename.
         """
         if not self.IsModified():  # and self._savedYet:  This was here, but if it is not modified who cares if it hasn't been saved yet?
             return True
@@ -385,14 +383,14 @@ class Document(wx.EvtHandler):
                                 msgTitle,
                                 wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION,
                                 self.GetDocumentWindow())
-    
+
             if res == wx.NO:
                 return True
             elif res == wx.YES:
                 pass
             else: # elif res == wx.CANCEL:
                 return False
-        
+
         if not self._documentFile or not self._savedYet:
             return self.SaveAs()
         return self.OnSaveDocument(self._documentFile)
@@ -400,7 +398,7 @@ class Document(wx.EvtHandler):
 
     def SaveAs(self):
         """
-        Prompts the user for a file to save to, and then calls OnSaveDocument.
+        Prompts the user for a file to save to, and then calls :meth:`OnSaveDocument`.
         """
         docTemplate = self.GetDocumentTemplate()
         if not docTemplate:
@@ -432,16 +430,16 @@ class Document(wx.EvtHandler):
 
         if docTemplate.FileMatchesTemplate(filename):
             self.GetDocumentManager().AddFileToHistory(filename)
-            
+
         return True
 
 
     def OnSaveDocument(self, filename):
         """
         Constructs an output file for the given filename (which must
-        not be empty), and calls SaveObject. If SaveObject returns true, the
-        document is set to unmodified; otherwise, an error message box is
-        displayed.
+        not be empty), and calls :meth:`SaveObject`. If :meth:`SaveObject`
+        returns true, the document is set to unmodified; otherwise, an
+        error message box is displayed.
         """
         if not filename:
             return False
@@ -477,7 +475,7 @@ class Document(wx.EvtHandler):
             self.SaveObject(fileObject)
             fileObject.close()
             fileObject = None
-            
+
             if backupFilename:
                 os.remove(backupFilename)
         except:
@@ -486,7 +484,7 @@ class Document(wx.EvtHandler):
             traceback.print_exc()
 
             if fileObject:
-                fileObject.close()  # file is still open, close it, need to do this before removal 
+                fileObject.close()  # file is still open, close it, need to do this before removal
 
             # save failed, remove copied file
             if backupFilename and copied:
@@ -510,7 +508,7 @@ class Document(wx.EvtHandler):
     def OnOpenDocument(self, filename):
         """
         Constructs an input file for the given filename (which must not
-        be empty), and calls LoadObject. If LoadObject returns true, the
+        be empty), and calls :meth:`LoadObject`. If LoadObject returns true, the
         document is set to unmodified; otherwise, an error message box is
         displayed. The document's views are notified that the filename has
         changed, to give windows an opportunity to update their titles. All of
@@ -534,7 +532,7 @@ class Document(wx.EvtHandler):
             traceback.print_exc()
 
             if fileObject:
-                fileObject.close()  # file is still open, close it 
+                fileObject.close()  # file is still open, close it
 
             wx.MessageBox("Could not open '%s'.  %s" % (FileNameFromPath(filename), sys.exc_value),
                           msgTitle,
@@ -552,8 +550,8 @@ class Document(wx.EvtHandler):
 
     def LoadObject(self, file):
         """
-        Override this function and call it from your own LoadObject before
-        loading your own data. LoadObject is called by the framework
+        Override this function and call it from your own ``LoadObject`` before
+        loading your own data. ``LoadObject`` is called by the framework
         automatically when the document contents need to be loaded.
 
         Note that the wxPython version simply sends you a Python file object,
@@ -564,8 +562,8 @@ class Document(wx.EvtHandler):
 
     def SaveObject(self, file):
         """
-        Override this function and call it from your own SaveObject before
-        saving your own data. SaveObject is called by the framework
+        Override this function and call it from your own ``SaveObject`` before
+        saving your own data. ``SaveObject`` is called by the framework
         automatically when the document contents need to be saved.
 
         Note that the wxPython version simply sends you a Python file object,
@@ -611,7 +609,7 @@ class Document(wx.EvtHandler):
         """
         Override this function if you want a different (or no) command
         processor to be created when the document is created. By default, it
-        returns an instance of wxCommandProcessor.
+        returns an instance of :class:`CommandProcessor`.
         """
         return CommandProcessor()
 
@@ -635,7 +633,7 @@ class Document(wx.EvtHandler):
                                 msgTitle,
                                 wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION,
                                 self.GetDocumentWindow())
-    
+
             if res == wx.NO:
                 self.Modify(False)
                 return True
@@ -672,7 +670,7 @@ class Document(wx.EvtHandler):
     def AddView(self, view):
         """
         If the view is not already in the list of views, adds the view and
-        calls OnChangedViewList.
+        calls :meth:`OnChangedViewList`.
         """
         if not view in self._documentViews:
             self._documentViews.append(view)
@@ -683,7 +681,7 @@ class Document(wx.EvtHandler):
     def RemoveView(self, view):
         """
         Removes the view from the document's list of views, and calls
-        OnChangedViewList.
+        :meth:`OnChangedViewList`.
         """
         if view in self._documentViews:
             self._documentViews.remove(view)
@@ -693,7 +691,7 @@ class Document(wx.EvtHandler):
 
     def OnCreate(self, path, flags):
         """
-        The default implementation calls DeleteContents (an empty
+        The default implementation calls :meth:`DeleteContents` (an empty
         implementation) sets the modified flag to false. Override this to
         supply additional behaviour when the document is opened with Open.
         """
@@ -735,7 +733,7 @@ class Document(wx.EvtHandler):
     def SetFilename(self, filename, notifyViews = False):
         """
         Sets the filename for this document. Usually called by the framework.
-        If notifyViews is true, wxView.OnChangeFilename is called for all
+        If notifyViews is true, :meth:`View.OnChangeFilename` is called for all
         views.
         """
         self._documentFile = filename
@@ -747,10 +745,9 @@ class Document(wx.EvtHandler):
     def GetWriteable(self):
         """
         Returns true if the document can be written to its accociated file path.
-        This method has been added to wxPython and is not in wxWindows.
         """
         if not self._writeable:
-            return False 
+            return False
         if not self._documentFile:  # Doesn't exist, do a save as
             return True
         else:
@@ -759,10 +756,10 @@ class Document(wx.EvtHandler):
 
     def SetWriteable(self, writeable):
         """
-        Set to False if the document can not be saved.  This will disable the ID_SAVE_AS
-        event and is useful for custom documents that should not be saveable.  The ID_SAVE
-        event can be disabled by never Modifying the document.  This method has been added
-        to wxPython and is not in wxWindows.
+        Set to False if the document can not be saved.  This will disable the
+        ``ID_SAVE_AS`` event and is useful for custom documents that should
+        not be saveable.  The ``ID_SAVE`` event can be disabled by never
+        modifying the document.
         """
         self._writeable = writeable
 
@@ -771,8 +768,8 @@ class View(wx.EvtHandler):
     """
     The view class can be used to model the viewing and editing component of
     an application's file-based data. It is part of the document/view
-    framework supported by wxWindows, and cooperates with the wxDocument,
-    wxDocTemplate and wxDocManager classes.
+    framework supported by wxWindows, and cooperates with the :class:`Document`,
+    :class:`DocTemplate` and :class:`DocManager` classes.
     """
 
     def __init__(self):
@@ -797,9 +794,7 @@ class View(wx.EvtHandler):
     def ProcessEvent(self, event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         if not self.GetDocument() or not self.GetDocument().ProcessEvent(event):
             return False
@@ -810,16 +805,14 @@ class View(wx.EvtHandler):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         return False
 
 
     def OnActivateView(self, activate, activeView, deactiveView):
         """
-        Called when a view is activated by means of wxView::Activate. The
+        Called when a view is activated by means of :meth:`View.Activate`. The
         default implementation does nothing.
         """
         pass
@@ -844,7 +837,7 @@ class View(wx.EvtHandler):
     def OnPrint(self, dc, info):
         """
         Override this to print the view for the printing framework.  The
-        default implementation calls View.OnDraw.
+        default implementation calls :meth:`View.OnDraw`.
         """
         self.OnDraw(dc)
 
@@ -852,7 +845,7 @@ class View(wx.EvtHandler):
     def OnUpdate(self, sender, hint):
         """
         Called when the view should be updated. sender is a pointer to the
-        view that sent the update request, or NULL if no single view requested
+        view that sent the update request, or None if no single view requested
         the update (for instance, when the document is opened). hint is as yet
         unused but may in future contain application-specific information for
         making updating more efficient.
@@ -864,7 +857,7 @@ class View(wx.EvtHandler):
                     frame.OnTitleIsModified()
                     return True
         return False
-        
+
 
     def OnChangeFilename(self):
         """
@@ -906,7 +899,7 @@ class View(wx.EvtHandler):
 
     def GetViewName(self):
         """
-        Gets the name associated with the view (passed to the wxDocTemplate
+        Gets the name associated with the view (passed to the :class:`DocTemplate`
         constructor). Not currently used by the framework.
         """
         return self._viewTypeName
@@ -921,7 +914,7 @@ class View(wx.EvtHandler):
 
     def Close(self, deleteWindow=True):
         """
-        Closes the view by calling OnClose. If deleteWindow is true, this
+        Closes the view by calling :meth:`OnClose`. If deleteWindow is true, this
         function should delete the window associated with the view.
         """
         if self.OnClose(deleteWindow = deleteWindow):
@@ -932,14 +925,14 @@ class View(wx.EvtHandler):
 
     def Activate(self, activate=True):
         """
-        Call this from your view frame's OnActivate member to tell the
+        Call this from your view frame's ``OnActivate`` member to tell the
         framework which view is currently active. If your windowing system
-        doesn't call OnActivate, you may need to call this function from
+        doesn't call ``OnActivate``, you may need to call this function from
         OnMenuCommand or any place where you know the view must be active, and
         the framework will need to get the current view.
 
-        The prepackaged view frame wxDocChildFrame calls wxView.Activate from
-        its OnActivate member and from its OnMenuCommand member.
+        The prepackaged view frame :class:`DocChildFrame` calls ``View.Activate` from
+        its ``OnActivate`` member and from its ``OnMenuCommand`` member.
         """
         if self.GetDocument() and self.GetDocumentManager():
             self.OnActivateView(activate, self, self.GetDocumentManager().GetCurrentView())
@@ -949,9 +942,9 @@ class View(wx.EvtHandler):
     def OnClose(self, deleteWindow=True):
         """
         Implements closing behaviour. The default implementation calls
-        wxDocument.Close to close the associated document. Does not delete the
+        :meth:`Document.Close` to close the associated document. Does not delete the
         view. The application may wish to do some cleaning up operations in
-        this function, if a call to wxDocument::Close succeeded. For example,
+        this function, if a call to :meth:`Document::Close` succeeded. For example,
         if your application's all share the same window, you need to
         disassociate the window from the view and perhaps clear the window. If
         deleteWindow is true, delete the frame associated with the view.
@@ -964,10 +957,11 @@ class View(wx.EvtHandler):
 
     def OnCreate(self, doc, flags):
         """
-        wxDocManager or wxDocument creates a wxView via a wxDocTemplate. Just
-        after the wxDocTemplate creates the wxView, it calls wxView::OnCreate.
-        In its OnCreate member function, the wxView can create a
-        wxDocChildFrame or a derived class. This wxDocChildFrame provides user
+        :class:`DocManager` or :class:`Document` creates a :class:`View` via
+        a :class:`DocTemplate`. Just after the :class:`DocTemplate` creates
+        the :class:`View`, it calls :meth:`xView.OnCreate`. In its ``OnCreate``
+        member function, the ``View`` can create a :class:`DocChildFrame` or
+        a derived class. This :class:`DocChildFrame` provides user
         interface elements to view and/or edit the contents of the wxDocument.
 
         By default, simply returns true. If the function returns false, the
@@ -978,14 +972,14 @@ class View(wx.EvtHandler):
 
     def OnCreatePrintout(self):
         """
-        Returns a wxPrintout object for the purposes of printing. It should
-        create a new object every time it is called; the framework will delete
+        Returns a :class:`wx.Printout` object for the purposes of printing. It
+        should create a new object every time it is called; the framework will delete
         objects it creates.
 
-        By default, this function returns an instance of wxDocPrintout, which
-        prints and previews one page by calling wxView.OnDraw.
+        By default, this function returns an instance of :class:`DocPrintout`, which
+        prints and previews one page by calling :meth:`View.OnDraw`.
 
-        Override to return an instance of a class other than wxDocPrintout.
+        Override to return an instance of a class other than :class:`DocPrintout`.
         """
         return DocPrintout(self, self.GetDocument().GetPrintableName())
 
@@ -993,9 +987,9 @@ class View(wx.EvtHandler):
     def GetFrame(self):
         """
         Gets the frame associated with the view (if any). Note that this
-        "frame" is not a wxFrame at all in the generic MDI implementation
+        "frame" is not a :class:`wx.Frame` at all in the generic MDI implementation
         which uses the notebook pages instead of the frames and this is why
-        this method returns a wxWindow and not a wxFrame.
+        this method returns a :class:`wx.Window` and not a :class:`wx.Frame`.
         """
         return self._viewFrame
 
@@ -1003,8 +997,8 @@ class View(wx.EvtHandler):
     def SetFrame(self, frame):
         """
         Sets the frame associated with this view. The application should call
-        this if possible, to tell the view about the frame.  See GetFrame for
-        the explanation about the mismatch between the "Frame" in the method
+        this if possible, to tell the view about the frame.  See :meth:`GetFrame`
+        for the explanation about the mismatch between the "Frame" in the method
         name and the type of its parameter.
         """
         self._viewFrame = frame
@@ -1022,7 +1016,7 @@ class View(wx.EvtHandler):
 
 class DocTemplate(wx.Object):
     """
-    The wxDocTemplate class is used to model the relationship between a
+    The :class:`DocTemplate` class is used to model the relationship between a
     document class and a view class.
     """
 
@@ -1060,13 +1054,13 @@ class DocTemplate(wx.Object):
         return a new view instance on demand.
 
         flags is a bit list of the following:
-        wx.TEMPLATE_VISIBLE The template may be displayed to the user in
+        ``TEMPLATE_VISIBLE``: The template may be displayed to the user in
         dialogs.
 
-        wx.TEMPLATE_INVISIBLE The template may not be displayed to the user in
+        ``TEMPLATE_INVISIBLE``: The template may not be displayed to the user in
         dialogs.
 
-        wx.DEFAULT_TEMPLATE_FLAGS Defined as wxTEMPLATE_VISIBLE.
+        ``DEFAULT_TEMPLATE_FLAGS``: Defined as ``TEMPLATE_VISIBLE``.
         """
         self._docManager = manager
         self._description = description
@@ -1178,16 +1172,14 @@ class DocTemplate(wx.Object):
     def GetIcon(self):
         """
         Returns the icon, as passed to the document template
-        constructor.  This method has been added to wxPython and is
-        not in wxWindows.
+        constructor.
         """
         return self._icon
 
 
     def SetIcon(self, flags):
         """
-        Sets the icon.  This method has been added to wxPython and is not
-        in wxWindows.
+        Sets the icon.
         """
         self._icon = icon
 
@@ -1220,11 +1212,9 @@ class DocTemplate(wx.Object):
         """
         Returns true if the document template can be shown in "New" dialogs,
         false otherwise.
-        
-        This method has been added to wxPython and is not in wxWindows.
         """
         return (self._flags & TEMPLATE_NO_CREATE) != TEMPLATE_NO_CREATE
-        
+
 
     def GetDocumentName(self):
         """
@@ -1283,16 +1273,16 @@ class DocTemplate(wx.Object):
         """
         ext = FindExtension(path)
         if not ext: return False
-        
+
         extList = self.GetFileFilter().replace('*','').split(';')
         return ext in extList
 
 
 class DocManager(wx.EvtHandler):
     """
-    The wxDocManager class is part of the document/view framework supported by
-    wxWindows, and cooperates with the wxView, wxDocument and wxDocTemplate
-    classes.
+    The :class:`DocManager` class is part of the document/view framework,
+    and cooperates with the :class:`View`, :class:`Document` and
+    :class:`DocTemplate` classes.
     """
 
     def __init__(self, flags=DEFAULT_DOCMAN_FLAGS, initialize=True):
@@ -1362,8 +1352,7 @@ class DocManager(wx.EvtHandler):
 
     def GetFlags(self):
         """
-        Returns the document manager's flags.  This method has been
-        added to wxPython and is not in wxWindows.
+        Returns the document manager's flags.
         """
         return self._flags
 
@@ -1394,8 +1383,8 @@ class DocManager(wx.EvtHandler):
 
     def Clear(self, force=True):
         """
-        Closes all currently opened document by callling CloseDocuments and
-        clears the document manager's templates.
+        Closes all currently opened document by callling :meth:`CloseDocuments`
+        and clears the document manager's templates.
         """
         if not self.CloseDocuments(force):
             return False
@@ -1405,16 +1394,16 @@ class DocManager(wx.EvtHandler):
 
     def Initialize(self):
         """
-        Initializes data; currently just calls OnCreateFileHistory. Some data
+        Initializes data; currently just calls :meth:`OnCreateFileHistory`. Some data
         cannot always be initialized in the constructor because the programmer
         must be given the opportunity to override functionality. In fact
-        Initialize is called from the wxDocManager constructor, but this can
+        ``Initialize`` is called from the :class:`DocManager` constructor, but this can
         be vetoed by passing false to the second argument, allowing the
-        derived class's constructor to call Initialize, possibly calling a
-        different OnCreateFileHistory from the default.
+        derived class's constructor to call ``Initialize``, possibly calling a
+        different :meth:`OnCreateFileHistory` from the default.
 
-        The bottom line: if you're not deriving from Initialize, forget it and
-        construct wxDocManager with no arguments.
+        The bottom line: if you're not deriving from ``Initialize``, forget it and
+        construct :class:`DocManager` with no arguments.
         """
         self.OnCreateFileHistory()
         return True
@@ -1423,7 +1412,7 @@ class DocManager(wx.EvtHandler):
     def OnCreateFileHistory(self):
         """
         A hook to allow a derived class to create a different type of file
-        history. Called from Initialize.
+        history. Called from :meth:`Initialize`.
         """
         self._fileHistory = wx.FileHistory()
 
@@ -1445,7 +1434,7 @@ class DocManager(wx.EvtHandler):
         """
         return self.CloseDocuments(force = False)
 
-    
+
     def OnFileNew(self, event):
         """
         Creates a new document and reads in the selected file.
@@ -1474,8 +1463,8 @@ class DocManager(wx.EvtHandler):
 
     def OnFileSave(self, event):
         """
-        Saves the current document by calling wxDocument.Save for the current
-        document.
+        Saves the current document by calling :meth:`Document.Save` for
+        the current document.
         """
         doc = self.GetCurrentDocument()
         if not doc:
@@ -1485,7 +1474,7 @@ class DocManager(wx.EvtHandler):
 
     def OnFileSaveAs(self, event):
         """
-        Calls wxDocument.SaveAs for the current document.
+        Calls :meth:`Document.SaveAs` for the current document.
         """
         doc = self.GetCurrentDocument()
         if not doc:
@@ -1495,8 +1484,8 @@ class DocManager(wx.EvtHandler):
 
     def OnPrint(self, event):
         """
-        Prints the current document by calling its View's OnCreatePrintout
-        method.
+        Prints the current document by calling its View's
+        :meth:`~View.OnCreatePrintout` method.
         """
         view = self.GetCurrentView()
         if not view:
@@ -1508,7 +1497,7 @@ class DocManager(wx.EvtHandler):
                 self.printData = wx.PrintData()
                 self.printData.SetPaperId(wx.PAPER_LETTER)
             self.printData.SetPrintMode(wx.PRINT_MODE_PRINTER)
-                
+
             pdd = wx.PrintDialogData(self.printData)
             printer = wx.Printer(pdd)
             printer.Print(view.GetFrame(), printout)
@@ -1527,24 +1516,24 @@ class DocManager(wx.EvtHandler):
         if not hasattr(self, "printData"):
             self.printData = wx.PrintData()
             self.printData.SetPaperId(wx.PAPER_LETTER)
-            
+
         data = wx.PrintDialogData(self.printData)
         printDialog = wx.PrintDialog(parentWin, data)
         printDialog.GetPrintDialogData().SetSetupDialog(True)
         printDialog.ShowModal()
-        
+
         # this makes a copy of the wx.PrintData instead of just saving
         # a reference to the one inside the PrintDialogData that will
         # be destroyed when the dialog is destroyed
         self.printData = wx.PrintData(printDialog.GetPrintDialogData().GetPrintData())
-        
+
         printDialog.Destroy()
 
 
     def OnPreview(self, event):
         """
-        Previews the current document by calling its View's OnCreatePrintout
-        method.
+        Previews the current document by calling its View's
+        :meth:`~View.OnCreatePrintout` method.
         """
         view = self.GetCurrentView()
         if not view:
@@ -1556,7 +1545,7 @@ class DocManager(wx.EvtHandler):
                 self.printData = wx.PrintData()
                 self.printData.SetPaperId(wx.PAPER_LETTER)
             self.printData.SetPrintMode(wx.PRINT_MODE_PREVIEW)
-                
+
             data = wx.PrintDialogData(self.printData)
             # Pass two printout objects: for preview, and possible printing.
             preview = wx.PrintPreview(printout, view.OnCreatePrintout(), data)
@@ -1767,9 +1756,7 @@ class DocManager(wx.EvtHandler):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         id = event.GetId()
         view = self.GetCurrentView()
@@ -1821,29 +1808,30 @@ class DocManager(wx.EvtHandler):
         Creates a new document in a manner determined by the flags parameter,
         which can be:
 
-        wx.lib.docview.DOC_NEW Creates a fresh document.
-        wx.lib.docview.DOC_SILENT Silently loads the given document file.
+        ``wx.lib.docview.DOC_NEW`` Creates a fresh document.
+        ``wx.lib.docview.DOC_SILENT`` Silently loads the given document file.
 
-        If wx.lib.docview.DOC_NEW is present, a new document will be created and returned,
-        possibly after asking the user for a template to use if there is more
-        than one document template. If wx.lib.docview.DOC_SILENT is present, a new document
-        will be created and the given file loaded into it. If neither of these
-        flags is present, the user will be presented with a file selector for
-        the file to load, and the template to use will be determined by the
-        extension (Windows) or by popping up a template choice list (other
-        platforms).
+        If ``wx.lib.docview.DOC_NEW`` is present, a new document will be
+        created and returned, possibly after asking the user for a template to
+        use if there is more than one document template. ``If
+        wx.lib.docview.DOC_SILENT`` is present, a new document will be created
+        and the given file loaded into it. If neither of these flags is
+        present, the user will be presented with a file selector for the file
+        to load, and the template to use will be determined by the extension
+        (Windows) or by popping up a template choice list (other platforms).
 
         If the maximum number of documents has been reached, this function
         will delete the oldest currently loaded document before creating a new
         one.
 
-        wxPython version supports the document manager's wx.lib.docview.DOC_OPEN_ONCE
-        and wx.lib.docview.DOC_NO_VIEW flag.
-        
-        if wx.lib.docview.DOC_OPEN_ONCE is present, trying to open the same file multiple 
-        times will just return the same document.
-        if wx.lib.docview.DOC_NO_VIEW is present, opening a file will generate the document,
-        but not generate a corresponding view.
+        wxPython version supports the document manager's
+        ``wx.lib.docview.DOC_OPEN_ONCE`` and ``wx.lib.docview.DOC_NO_VIEW``
+        flag.
+
+        if ``wx.lib.docview.DOC_OPEN_ONCE`` is present, trying to open the
+        same file multiple times will just return the same document. if
+        ``wx.lib.docview.DOC_NO_VIEW`` is present, opening a file will
+        generate the document, but not generate a corresponding view.
         """
         templates = []
         for temp in self._templates:
@@ -1907,7 +1895,7 @@ class DocManager(wx.EvtHandler):
                         document.GetDocumentTemplate().CreateView(document, flags)
                         document.UpdateAllViews()
                         firstView = document.GetFirstView()
-                        
+
                     if firstView and firstView.GetFrame() and not (flags & DOC_NO_VIEW):
                         firstView.GetFrame().SetFocus()  # Not in wxWindows code but useful nonetheless
                         if hasattr(firstView.GetFrame(), "IsIconized") and firstView.GetFrame().IsIconized():  # Not in wxWindows code but useful nonetheless
@@ -2122,14 +2110,15 @@ class DocManager(wx.EvtHandler):
         Given a path, try to find template that matches the extension. This is
         only an approximate method of finding a template for creating a
         document.
-        
-        Note this wxPython verson looks for and returns a default template if no specific template is found.
+
+        Note this wxPython verson looks for and returns a default template
+        if no specific template is found.
         """
         default = None
         for temp in self._templates:
             if temp.FileMatchesTemplate(path):
                 return temp
-                
+
             if "*.*" in temp.GetFileFilter():
                 default = temp
         return default
@@ -2159,7 +2148,7 @@ class DocManager(wx.EvtHandler):
         On other platforms, if there is more than one document template a
         choice list is popped up, followed by a file selector.
 
-        This function is used in wxDocManager.CreateDocument.
+        This function is used in :meth:`DocManager.CreateDocument`.
         """
         if wx.Platform == "__WXMSW__" or wx.Platform == "__WXGTK__" or wx.Platform == "__WXMAC__":
             descr = ''
@@ -2182,12 +2171,12 @@ class DocManager(wx.EvtHandler):
         else:
             path = None
         dlg.Destroy()
-            
-        if path:  
+
+        if path:
             theTemplate = self.FindTemplateForPath(path)
             return (theTemplate, path)
-        
-        return (None, None)           
+
+        return (None, None)
 
 
     def OnOpenFileFailure(self):
@@ -2200,7 +2189,7 @@ class DocManager(wx.EvtHandler):
     def SelectDocumentType(self, temps, sort=False):
         """
         Returns a document template by asking the user (if there is more than
-        one template). This function is used in wxDocManager.CreateDocument.
+        one template). This function is used in :methW`DocManager.CreateDocument`.
 
         Parameters
 
@@ -2247,7 +2236,12 @@ class DocManager(wx.EvtHandler):
 
     def SelectViewType(self, temps, sort=False):
         """
-        Returns a document template by asking the user (if there is more than one template), displaying a list of valid views. This function is used in wxDocManager::CreateView. The dialog normally will not appear because the array of templates only contains those relevant to the document in question, and often there will only be one such.
+        Returns a document template by asking the user (if there is
+        more than one template), displaying a list of valid views.
+        This function is used in wxDocManager::CreateView. The dialog
+        normally will not appear because the array of templates only
+        contains those relevant to the document in question, and
+        often there will only be one such.
         """
         templates = []
         strings = []
@@ -2278,8 +2272,7 @@ class DocManager(wx.EvtHandler):
 
     def GetTemplates(self):
         """
-        Returns the document manager's template list.  This method has been added to
-        wxPython and is not in wxWindows.
+        Returns the document manager's template list.
         """
         return self._templates
 
@@ -2354,15 +2347,17 @@ class DocManager(wx.EvtHandler):
 
 class DocParentFrame(wx.Frame):
     """
-    The wxDocParentFrame class provides a default top-level frame for
+    The :class:`DocParentFrame` class provides a default top-level frame for
     applications using the document/view framework. This class can only be
     used for SDI (not MDI) parent frames.
 
-    It cooperates with the wxView, wxDocument, wxDocManager and wxDocTemplates
-    classes.
+    It cooperates with the :class:`View`, :class:`Document`, :class:`DocManager`
+    and :class:`DocTemplates` classes.
     """
 
-    def __init__(self, manager, frame, id, title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE, name="frame"):
+    def __init__(self, manager, frame, id, title, pos=wx.DefaultPosition,
+                 size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE,
+                 name="frame"):
         """
         Constructor.  Note that the event table must be rebuilt for the
         frame since the EvtHandler is not virtual.
@@ -2405,9 +2400,7 @@ class DocParentFrame(wx.Frame):
     def ProcessEvent(self, event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         return self._docManager and self._docManager.ProcessEvent(event)
 
@@ -2415,9 +2408,7 @@ class DocParentFrame(wx.Frame):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         return self._docManager and self._docManager.ProcessUpdateUIEvent(event)
 
@@ -2462,20 +2453,19 @@ class DocParentFrame(wx.Frame):
 
 class DocChildFrame(wx.Frame):
     """
-    The wxDocChildFrame class provides a default frame for displaying
+    The :class:`DocChildFrame` class provides a default frame for displaying
     documents on separate windows. This class can only be used for SDI (not
     MDI) child frames.
 
-    The class is part of the document/view framework supported by wxWindows,
-    and cooperates with the wxView, wxDocument, wxDocManager and wxDocTemplate
-    classes.
+    The class is part of the document/view framework and cooperates with
+    the :class:`View`, :class:`Document`, :class:`DocManager` and
+    :class:`DocTemplate` classes.
     """
 
 
     def __init__(self, doc, view, frame, id, title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE, name="frame"):
         """
-        Constructor.  Note that the event table must be rebuilt for the
-        frame since the EvtHandler is not virtual.
+        Constructor.
         """
         wx.Frame.__init__(self, frame, id, title, pos, size, style, name)
         wx.EVT_ACTIVATE(self, self.OnActivate)
@@ -2515,9 +2505,7 @@ class DocChildFrame(wx.Frame):
     def ProcessEvent(self, event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         if self._childView:
             self._childView.Activate(True)
@@ -2535,9 +2523,7 @@ class DocChildFrame(wx.Frame):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         if self.GetParent():
             self.GetParent().ProcessUpdateUIEvent(event)
@@ -2552,7 +2538,7 @@ class DocChildFrame(wx.Frame):
         event.Skip()
         if self._childView:
             self._childView.Activate(event.GetActive())
-        
+
 
     def OnCloseWindow(self, event):
         """
@@ -2609,19 +2595,18 @@ class DocChildFrame(wx.Frame):
 
 class DocMDIParentFrame(wx.MDIParentFrame):
     """
-    The wxDocMDIParentFrame class provides a default top-level frame for
+    The :class:`DocMDIParentFrame` class provides a default top-level frame for
     applications using the document/view framework. This class can only be
     used for MDI parent frames.
 
-    It cooperates with the wxView, wxDocument, wxDocManager and wxDocTemplate
-    classes.
+    It cooperates with the :class:`View`, :class:`Document`,
+    :class:`DocManager` and :class:`DocTemplate` classes.
     """
 
 
     def __init__(self, manager, frame, id, title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE, name="frame"):
         """
-        Constructor.  Note that the event table must be rebuilt for the
-        frame since the EvtHandler is not virtual.
+        Constructor.
         """
         wx.MDIParentFrame.__init__(self, frame, id, title, pos, size, style, name)
         self._docManager = manager
@@ -2661,9 +2646,7 @@ class DocMDIParentFrame(wx.MDIParentFrame):
     def ProcessEvent(self, event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         return self._docManager and self._docManager.ProcessEvent(event)
 
@@ -2671,9 +2654,7 @@ class DocMDIParentFrame(wx.MDIParentFrame):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         return self._docManager and self._docManager.ProcessUpdateUIEvent(event)
 
@@ -2718,12 +2699,12 @@ class DocMDIParentFrame(wx.MDIParentFrame):
 
 class DocMDIChildFrame(wx.MDIChildFrame):
     """
-    The wxDocMDIChildFrame class provides a default frame for displaying
+    The :class:`DocMDIChildFrame` class provides a default frame for displaying
     documents on separate windows. This class can only be used for MDI child
     frames.
 
-    The class is part of the document/view framework supported by wxWindows,
-    and cooperates with the wxView, wxDocument, wxDocManager and wxDocTemplate
+    The class is part of the document/view framework and cooperates with the
+    :class:`View`, :class:`Document`, :class:`DocManager` and :class:`DocTemplate`
     classes.
     """
 
@@ -2773,9 +2754,7 @@ class DocMDIChildFrame(wx.MDIChildFrame):
     def ProcessEvent(event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         if self._activeEvent == event:
             return False
@@ -2872,7 +2851,6 @@ class DocMDIChildFrame(wx.MDIChildFrame):
         """
         Add/remove to the frame's title an indication that the document is dirty.
         If the document is dirty, an '*' is appended to the title
-        This method has been added to wxPython and is not in wxWindows.
         """
         title = self.GetTitle()
         if title:
@@ -2885,15 +2863,15 @@ class DocMDIChildFrame(wx.MDIChildFrame):
             else:
                 if title.endswith("*"):
                     title = title[:-1]
-                    self.SetTitle(title)                
+                    self.SetTitle(title)
                 else:
                     return
 
 
 class DocPrintout(wx.Printout):
     """
-    DocPrintout is a default Printout that prints the first page of a document
-    view.
+    DocPrintout is a default :class:`wx.Printout` that prints the first
+    page of a document view.
     """
 
 
@@ -2953,24 +2931,24 @@ class DocPrintout(wx.Printout):
 
 class Command(wx.Object):
     """
-    wxCommand is a base class for modelling an application command, which is
-    an action usually performed by selecting a menu item, pressing a toolbar
-    button or any other means provided by the application to change the data
-    or view.
+    ``Command`` is a base class for modelling an application command,
+    which is an action usually performed by selecting a menu item, pressing a
+    toolbar button or any other means provided by the application to
+    change the data or view.
     """
 
 
     def __init__(self, canUndo = False, name = None):
         """
-        Constructor. wxCommand is an abstract class, so you will need to
+        Constructor. :class:`Command` is an abstract class, so you will need to
         derive a new class and call this constructor from your own constructor.
 
-        canUndo tells the command processor whether this command is undo-able.
+        ``canUndo`` tells the command processor whether this command is undo-able.
         You can achieve the same functionality by overriding the CanUndo member
         function (if for example the criteria for undoability is context-
         dependent).
 
-        name must be supplied for the command processor to display the command
+        ``name`` must be supplied for the command processor to display the command
         name in the application's edit menu.
         """
         self._canUndo = canUndo
@@ -2979,7 +2957,7 @@ class Command(wx.Object):
 
     def CanUndo(self):
         """
-        Returns true if the command can be undone, false otherwise.
+        Returns ``True`` if the command can be undone, false otherwise.
         """
         return self._canUndo
 
@@ -2994,7 +2972,7 @@ class Command(wx.Object):
     def Do(self):
         """
         Override this member function to execute the appropriate action when
-        called. Return true to indicate that the action has taken place, false
+        called. Return ``True`` to indicate that the action has taken place, false
         otherwise. Returning false will indicate to the command processor that
         the action is not undoable and should not be added to the command
         history.
@@ -3004,10 +2982,11 @@ class Command(wx.Object):
 
     def Undo(self):
         """
-        Override this member function to un-execute a previous Do. Return true
-        to indicate that the action has taken place, false otherwise. Returning
-        false will indicate to the command processor that the action is not
-        redoable and no change should be made to the command history.
+        Override this member function to un-execute a previous :meth:`Do`.
+        Return ``True`` to indicate that the action has taken place, ``False``
+        otherwise. Returning ``False`` will indicate to the command processor
+        that the action is not redoable and no change should be made to the
+        command history.
 
         How you implement this command is totally application dependent, but
         typical strategies include:
@@ -3028,15 +3007,15 @@ class Command(wx.Object):
 
 class CommandProcessor(wx.Object):
     """
-    wxCommandProcessor is a class that maintains a history of wxCommands, with
-    undo/redo functionality built-in. Derive a new class from this if you want
-    different behaviour.
+    :class:`CommandProcessor` is a class that maintains a history of
+    :class:`Commands`, with undo/redo functionality built-in. Derive a
+    new class from this if you want different behaviour.
     """
 
 
     def __init__(self, maxCommands=-1):
         """
-        Constructor.  maxCommands may be set to a positive integer to limit
+        Constructor.  ``maxCommands`` may be set to a positive integer to limit
         the number of commands stored to it, otherwise (and by default) the
         list of commands can grow arbitrarily.
         """
@@ -3096,7 +3075,7 @@ class CommandProcessor(wx.Object):
     def SetEditMenu(self, menu):
         """
         Tells the command processor to update the Undo and Redo items on this
-        menu as appropriate. Set this to NULL if the menu is about to be
+        menu as appropriate. Set this to ``None`` if the menu is about to be
         destroyed and command operations may still be performed, or the
         command processor may try to access an invalid pointer.
         """
@@ -3163,8 +3142,8 @@ class CommandProcessor(wx.Object):
 
     def CanUndo(self):
         """
-        Returns true if the currently-active command can be undone, false
-        otherwise.
+        Returns ``True`` if the currently-active command can be undone,
+        ``False`` otherwise.
         """
         if self._GetCurrentCommand() == None:
             return False
@@ -3173,8 +3152,8 @@ class CommandProcessor(wx.Object):
 
     def CanRedo(self):
         """
-        Returns true if the currently-active command can be redone, false
-        otherwise.
+        Returns ``True`` if the currently-active command can be redone,
+        ``False`` otherwise.
         """
         return self._GetCurrentRedoCommand() != None
 
@@ -3182,13 +3161,13 @@ class CommandProcessor(wx.Object):
     def Submit(self, command, storeIt=True):
         """
         Submits a new command to the command processor. The command processor
-        calls wxCommand::Do to execute the command; if it succeeds, the
+        calls :meth:`Command.Do` to execute the command; if it succeeds, the
         command is stored in the history list, and the associated edit menu
         (if any) updated appropriately. If it fails, the command is deleted
         immediately. Once Submit has been called, the passed command should
         not be deleted directly by the application.
 
-        storeIt indicates whether the successful command should be stored in
+        ``storeIt`` indicates whether the successful command should be stored in
         the history list.
         """
         done = command.Do()

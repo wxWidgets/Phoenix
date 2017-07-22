@@ -18,14 +18,14 @@ class ThreadedTask(threading.Thread):
         self.counter = 0
         self.sleepTime = random.random()/2
         self.timeToDie = False
-        
+
     def run(self):
         while not self.timeToDie:
             time.sleep(self.sleepTime)
             self.counter += 1
             print('thread: %5s count: %d' % (self.name, self.counter))
-            
-            
+
+
 
 class MainFrame(wx.Frame):
     def __init__(self):
@@ -36,8 +36,8 @@ class MainFrame(wx.Frame):
         self.pnl.Bind(wx.EVT_CONTEXT_MENU, self.onShowMenu)
         btn = wx.Button(self.pnl, label='timed test', pos=(10, 60))
         self.Bind(wx.EVT_BUTTON, self.onOtherButton, btn)
-        
-        
+
+
     def onButton(self, evt):
         dlg = wx.Dialog(self, title='close this dialog', size=(300,150))
         dlg.ShowModal()
@@ -58,8 +58,8 @@ class MainFrame(wx.Frame):
                 s.IncBy(4,6)
         wx.MessageBox('%d reps performed in %f seconds' % (reps, time.time() - start),
                       'Results')
-        
-   
+
+
     def onShowMenu(self, evt):
         menu = wx.Menu()
         menu.Append(-1, 'one')
@@ -67,13 +67,13 @@ class MainFrame(wx.Frame):
         menu.Append(-1, 'three')
         self.pnl.PopupMenu(menu)
         menu.Destroy()
-        
-        
+
+
 
 threads = [ ThreadedTask(name='one'), ThreadedTask(name='two'), ThreadedTask(name='three') ]
 for t in threads:
     t.start()
-        
+
 app = wx.App()
 frm = MainFrame()
 frm.Show()
@@ -81,5 +81,4 @@ app.MainLoop()
 
 for t in threads:
     t.timeToDie = True
-    
-    
+

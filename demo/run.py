@@ -7,7 +7,7 @@
 # Author:       Robin Dunn
 #
 # Created:      6-March-2000
-# Copyright:    (c) 2000 by Total Control Software
+# Copyright:    (c) 2000-2017 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ import sys, os
 # stuff for debugging
 print("Python %s" % sys.version)
 print("wx.version: %s" % wx.version())
-##print("pid: %s" % os.getpid()); raw_input("Press Enter...")
+##print("pid: %s" % os.getpid()); input("Press Enter...")
 
 assertMode = wx.APP_ASSERT_DIALOG
 ##assertMode = wx.APP_ASSERT_EXCEPTION
@@ -149,7 +149,7 @@ def main(argv):
         raise SystemExit
 
     # ensure the CWD is the demo folder
-    demoFolder = os.path.dirname(__file__)
+    demoFolder = os.path.realpath(os.path.dirname(__file__))
     os.chdir(demoFolder)
 
     name, ext  = os.path.splitext(argv[1])

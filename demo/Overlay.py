@@ -26,7 +26,8 @@ class TestPanel(wx.Panel):
         self.endPos = None
         self.overlay = wx.Overlay()
 
-        self.cropbitmap = wx.Bitmap('bitmaps/cropshot24x20.png', wx.BITMAP_TYPE_PNG)
+        self.cropbitmap = wx.Bitmap('bitmaps/cropshot24x20.png')
+        self.honeyBitmap = wx.Bitmap('bitmaps/honeycomb300.png')
 
         self.wxPenStylesDict = OrderedDict([
             ('Solid'               , wx.PENSTYLE_SOLID),
@@ -36,38 +37,46 @@ class TestPanel(wx.Panel):
             ('Dot Dash'            , wx.PENSTYLE_DOT_DASH),
             ('User Dash'           , wx.PENSTYLE_USER_DASH),
             ('Transparent'         , wx.PENSTYLE_TRANSPARENT),
-            ('Stipple'             , wx.PENSTYLE_STIPPLE),
+            #('Stipple'             , wx.PENSTYLE_STIPPLE),
             ('BDiagonal Hatch'     , wx.PENSTYLE_BDIAGONAL_HATCH),
             ('CrossDiag Hatch'     , wx.PENSTYLE_CROSSDIAG_HATCH),
             ('FDiagonal Hatch'     , wx.PENSTYLE_FDIAGONAL_HATCH),
             ('Cross Hatch'         , wx.PENSTYLE_CROSS_HATCH),
             ('Horizontal Hatch'    , wx.PENSTYLE_HORIZONTAL_HATCH),
             ('Vertical Hatch'      , wx.PENSTYLE_VERTICAL_HATCH),
-            ('First Hatch'         , wx.PENSTYLE_FIRST_HATCH),
-            ('Last Hatch'          , wx.PENSTYLE_LAST_HATCH),
         ])
 
         list = []
         for key, value in self.wxPenStylesDict.items():
             list.append(key)
         self.penstylesCombo = wx.ComboBox(self, -1, choices=list,
-                                          pos=(10, 5), size=(100, -1),
+                                          size=(150, -1),
                                           style=wx.CB_READONLY)
         self.penstylesCombo.SetSelection(0)
         self.penstylesCombo.SetToolTip('Pen Style')
 
         self.overlayPenWidth = wx.SpinCtrl(self, -1, value='',
-                                           pos=(120, 5),
-                                           size=(100, -1),
+                                           size=(75, -1),
                                            style=wx.SP_ARROW_KEYS,
                                            min=1, max=24, initial=1)
         self.overlayPenWidth.SetToolTip('Pen Width')
 
-        self.overlayPenColor = wx.ColourPickerCtrl(self, -1, colour=wx.BLUE,
-                                                   pos=(230, 5), size=(100, -1))
+        from wx.lib.colourselect import ColourSelect
+        self.overlayPenColor = ColourSelect(self, -1, colour=wx.BLUE)
         self.overlayPenColor.SetToolTip('Pen Color')
 
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        sizer.Add(self.penstylesCombo, 0, wx.ALL, 5)
+        sizer.Add(self.overlayPenWidth, 0, wx.ALL, 5)
+        sizer.Add(self.overlayPenColor, 0, wx.ALL, 5)
+        box = wx.BoxSizer(wx.VERTICAL)
+        box.Add(sizer, 0)
+        box.Add((1,1), 1)
+
+        self.SetSizer(box)
+
         self.OnSize()
+
 
     def OnLeftDown(self, event):
         # Capture the mouse and save the starting posiiton for the rubber-band
@@ -76,6 +85,7 @@ class TestPanel(wx.Panel):
         ## print('self.startPos:', self.startPos)
         self.SetFocus()
         ## print('OnLeftDown')
+
 
     def OnMouseMove(self, event):
         if event.Dragging() and event.LeftIsDown():
@@ -95,20 +105,26 @@ class TestPanel(wx.Panel):
             odc = wx.DCOverlay(self.overlay, dc)
             odc.Clear()
 
+            # Mac's DC is already the same as a GCDC, and it causes
+            # problems with the overlay if we try to use an actual
+            # wx.GCDC so don't try it.  If you do not need to use a
+            # semi-transparent background then you can leave this out.
+            if 'wxMac' not in wx.PlatformInfo:
+                dc = wx.GCDC(dc)
+
+            # Set the pen, for the box's border
             dc.SetPen(wx.Pen(colour=self.overlayPenColor.GetColour(),
                              width=self.overlayPenWidth.GetValue(),
                              style=self.wxPenStylesDict[self.penstylesCombo.GetString(self.penstylesCombo.GetSelection())]))
-            if 'wxMac' in wx.PlatformInfo:
-                dc.SetBrush(wx.Brush(wx.Colour(0xC0, 0xC0, 0xC0, 0x80)))
-            else:
-                dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
+            # Create a brush (for the box's interior) with the same colour,
+            # but 50% transparency.
+            bc = self.overlayPenColor.GetColour()
+            bc = wx.Colour(bc.red, bc.green, bc.blue, 0x80)
+            dc.SetBrush(wx.Brush(bc))
+
+            # Draw the rectangle
             dc.DrawRectangle(rect)
-
-            #Draw Pos Text
-            ## text = u'%s'%evtPos
-            ## width, height = dc.GetTextExtent(text)
-            ## dc.DrawText(text, x=evtPos[0]+2, y=evtPos[1]-height)
 
             if evtPos[0] < self.startPos[0]:  # draw on left side of rect, not inside it
                 dc.DrawBitmap(self.cropbitmap,
@@ -121,6 +137,7 @@ class TestPanel(wx.Panel):
 
             del odc  # Make sure the odc is destroyed before the dc is.
             ## print('OnMouseMove')
+
 
     def OnLeftUp(self, event):
         if self.HasCapture():
@@ -140,7 +157,11 @@ class TestPanel(wx.Panel):
         self.overlay.Reset()
         ## print('OnLeftUp')
 
+
     def OnSize(self, event=None):
+        if event:
+            event.Skip()
+
         x, y = self.GetSize()
         if x <= 0 or y <= 0:
             return
@@ -152,12 +173,13 @@ class TestPanel(wx.Panel):
         dc.SetBackground(self.background)
         dc.Clear()
 
-        dc.DrawBitmap(wx.Bitmap('bitmaps/snakey_render.png'), 10, 35)
-        dc.DrawBitmap(wx.Bitmap('bitmaps/honeycomb300.png'), 100, 210)
+        dc.DrawBitmap(self.honeyBitmap, 40, 40)
+        dc.SetFont(wx.Font(wx.FontInfo(18)))
+        dc.DrawText('Drag the mouse on this window.', 325, 100)
 
         del dc
         self.Refresh()
-        self.Update()
+        #self.Update()
 
     def OnPaint(self, event):
         dc = wx.BufferedPaintDC(self, self.buffer)

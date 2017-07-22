@@ -84,13 +84,13 @@ class DemoTreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop,
     def OnGetItemTextColour(self, indices):
         # Show how to change the item text colour. In this case second level
         # items are coloured red and third level items are blue. All other
-        # items have the default text colour.
+        # items are black
         if len(indices) % 2 == 0:
             return wx.RED
         elif len(indices) % 3 == 0:
             return wx.BLUE
         else:
-            return super(DemoTreeMixin, self).OnGetItemTextColour(indices)
+            return wx.BLACK
 
     def OnGetItemBackgroundColour(self, indices):
         # Show how to change the item background colour. In this case the
@@ -126,31 +126,31 @@ class VirtualTreeCtrl(DemoTreeMixin, wx.TreeCtrl):
     pass
 
 
-class VirtualTreeListCtrl(DemoTreeMixin, wx.adv.TreeListCtrl):
-    def __init__(self, *args, **kwargs):
-        kwargs['style'] = wx.TR_DEFAULT_STYLE | wx.TR_FULL_ROW_HIGHLIGHT
-        super(VirtualTreeListCtrl, self).__init__(*args, **kwargs)
-        self.AppendColumn('Column 0')
-        self.AppendColumn('Column 1')
-        for art in wx.ART_TIP, wx.ART_WARNING:
-            self.imageList.Add(wx.ArtProvider.GetBitmap(art, wx.ART_OTHER,
-                                                        (16, 16)))
-
-    def OnGetItemText(self, indices, column=0):
-        # Return a different label depending on column.
-        return '%s, column %d'%\
-            (super(VirtualTreeListCtrl, self).OnGetItemText(indices), column)
-
-    def OnGetItemImage(self, indices, which, column=0):
-        # Also change the image of the other columns when the item has
-        # children.
-        if column == 0:
-            return super(VirtualTreeListCtrl, self).OnGetItemImage(indices,
-                                                                   which)
-        elif self.OnGetChildrenCount(indices):
-            return 4
-        else:
-            return 3
+# class VirtualTreeListCtrl(DemoTreeMixin, wx.adv.TreeListCtrl):
+#     def __init__(self, *args, **kwargs):
+#         kwargs['style'] = wx.TR_DEFAULT_STYLE | wx.TR_FULL_ROW_HIGHLIGHT
+#         super(VirtualTreeListCtrl, self).__init__(*args, **kwargs)
+#         self.AppendColumn('Column 0')
+#         self.AppendColumn('Column 1')
+#         for art in wx.ART_TIP, wx.ART_WARNING:
+#             self.imageList.Add(wx.ArtProvider.GetBitmap(art, wx.ART_OTHER,
+#                                                         (16, 16)))
+#
+#     def OnGetItemText(self, indices, column=0):
+#         # Return a different label depending on column.
+#         return '%s, column %d'%\
+#             (super(VirtualTreeListCtrl, self).OnGetItemText(indices), column)
+#
+#     def OnGetItemImage(self, indices, which, column=0):
+#         # Also change the image of the other columns when the item has
+#         # children.
+#         if column == 0:
+#             return super(VirtualTreeListCtrl, self).OnGetItemImage(indices,
+#                                                                    which)
+#         elif self.OnGetChildrenCount(indices):
+#             return 4
+#         else:
+#             return 3
 
 
 class VirtualCustomTreeCtrl(DemoTreeMixin,
@@ -192,7 +192,7 @@ class TreeNotebook(wx.Notebook):
         super(TreeNotebook, self).__init__(*args, **kwargs)
         self.trees = []
         for class_, title in [(VirtualTreeCtrl, 'TreeCtrl'),
-                              (VirtualTreeListCtrl, 'TreeListCtrl'),
+                              #(VirtualTreeListCtrl, 'TreeListCtrl'),
                               (VirtualCustomTreeCtrl, 'CustomTreeCtrl')]:
             tree = class_(self, treemodel=treemodel, log=log)
             self.trees.append(tree)

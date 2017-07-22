@@ -7,7 +7,7 @@
 #
 # Created:
 # Version:
-# Date:         
+# Date:
 # Licence:      wxWindows license
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
@@ -54,13 +54,13 @@ def GetSizeInOrientation(size, orientation):
 
     if orientation == wx.HORIZONTAL:
         return size.GetWidth()
-    
+
     if orientation == wx.VERTICAL:
         return size.GetHeight()
-    
+
     if orientation == wx.BOTH:
         return size.GetWidth() * size.GetHeight()
-    
+
     return 0
 
 
@@ -82,48 +82,48 @@ class RibbonToolBarEvent(wx.PyCommandEvent):
 
     def GetBar(self):
         """ Returns an instance of :class:`RibbonToolBar`. """
-        
+
         return self._bar
 
-    
+
     def SetBar(self, bar):
         """
         Sets the current :class:`RibbonToolBar` for this event.
 
         :param `bar`: an instance of :class:`RibbonToolBar`.
         """
-        
+
         self._bar = bar
-        
+
 
     def PopupMenu(self, menu):
         """
         Pops up the given menu and returns control when the user has dismissed the menu.
 
         If a menu item is selected, the corresponding menu event is generated and will
-        be processed as usual. 
+        be processed as usual.
 
-        :param `menu`: the menu to pop up, an instance of :class:`Menu`.
+        :param `menu`: the menu to pop up, an instance of :class:`wx.Menu`.
 
-        :note: Just before the menu is popped up, :meth:`Menu.UpdateUI` is called to ensure
+        :note: Just before the menu is popped up, :meth:`wx.Menu.UpdateUI` is called to ensure
          that the menu items are in the correct state. The menu does not get deleted by
          the window.
         """
 
         pos = wx.Point()
-        
-        if self._bar._active_tool:        
+
+        if self._bar._active_tool:
             # Find the group which contains the tool
             group_count = len(self._bar._groups)
             tobreak = False
 
-            for g in range(group_count):            
+            for g in range(group_count):
                 group = self._bar._groups[g]
                 tool_count = len(group.tools)
-                
-                for t in range(tool_count):                
+
+                for t in range(tool_count):
                     tool = group.tools[t]
-                    if tool == self._bar._active_tool:                    
+                    if tool == self._bar._active_tool:
                         pos = wx.Point(*group.position)
                         pos += tool.position
                         pos.y += tool.size.GetHeight()
@@ -133,14 +133,14 @@ class RibbonToolBarEvent(wx.PyCommandEvent):
 
                 if tobreak:
                     break
-                    
+
         return self._bar.PopupMenu(menu, pos)
 
 
 class RibbonToolBarToolBase(object):
 
     def __init__(self):
-        
+
         self.help_string = ""
         self.bitmap = wx.NullBitmap
         self.bitmap_disabled = wx.NullBitmap
@@ -172,8 +172,8 @@ class RibbonToolBar(RibbonControl):
 
         """
         Default class constructor.
-        
-        :param `parent`: pointer to a parent window, typically a :class:`~lib.agw.ribbon.panel.RibbonPanel`;
+
+        :param `parent`: pointer to a parent window, typically a :class:`~wx.lib.agw.ribbon.panel.RibbonPanel`;
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
@@ -204,7 +204,7 @@ class RibbonToolBar(RibbonControl):
     def CommonInit(self, style):
 
         self._groups = []
-        
+
         self.AppendGroup()
         self._hover_tool = None
         self._active_tool = None
@@ -308,7 +308,7 @@ class RibbonToolBar(RibbonControl):
 
         :see: :meth:`~RibbonToolBar.AddTool`
         """
-        
+
         return self.AddTool(tool_id, bitmap, wx.NullBitmap, help_string, RIBBON_BUTTON_TOGGLE, None)
 
 
@@ -328,7 +328,7 @@ class RibbonToolBar(RibbonControl):
         """
 
         return self.InsertTool(pos, tool_id, bitmap, wx.NullBitmap, help_string, RIBBON_BUTTON_TOGGLE, None)
-    
+
 
     def AddTool(self, tool_id, bitmap, bitmap_disabled=wx.NullBitmap, help_string="", kind=RIBBON_BUTTON_NORMAL, client_data=None):
         """
@@ -345,7 +345,7 @@ class RibbonToolBar(RibbonControl):
         :param `client_data`: client data to associate with the new tool.
 
         :returns: An opaque pointer which can be used only with other tool bar methods.
-        
+
         :see: :meth:`~RibbonToolBar.AddDropdownTool`, :meth:`~RibbonToolBar.AddHybridTool`, :meth:`~RibbonToolBar.AddSeparator`
         """
 
@@ -369,7 +369,7 @@ class RibbonToolBar(RibbonControl):
         :param `client_data`: client data to associate with the new tool.
 
         :returns: An opaque pointer which can be used only with other tool bar methods.
-        
+
         :see: :meth:`~RibbonToolBar.AddTool`, :meth:`~RibbonToolBar.AddDropdownTool`, :meth:`~RibbonToolBar.AddHybridTool`, :meth:`~RibbonToolBar.AddSeparator`
 
         .. versionadded:: 0.9.5
@@ -381,15 +381,15 @@ class RibbonToolBar(RibbonControl):
         tool = RibbonToolBarToolBase()
         tool.id = tool_id
         tool.bitmap = bitmap
-        
-        if bitmap_disabled.IsOk():        
+
+        if bitmap_disabled.IsOk():
             if bitmap.GetSize() != bitmap_disabled.GetSize():
                 raise Exception("Exception")
-            
+
             tool.bitmap_disabled = bitmap_disabled
         else:
             tool.bitmap_disabled = self.MakeDisabledBitmap(bitmap)
-            
+
         tool.help_string = help_string
         tool.kind = kind
         tool.client_data = client_data
@@ -402,7 +402,7 @@ class RibbonToolBar(RibbonControl):
 
         for group in self._groups:
             tool_count = len(group.tools)
-            
+
             if pos <= tool_count:
                 group.tools.insert(pos, tool)
                 return tool
@@ -449,13 +449,13 @@ class RibbonToolBar(RibbonControl):
                 return self.InsertGroup(index+1).dummy_tool
 
             tool_count = len(group.tools)
-            
+
             if pos < tool_count:
                 new_group = self.InsertGroup(index+1)
 
                 for t in range(pos, tool_count):
                     new_group.tools.append(group.tools[t])
-                    
+
                 group.tools = group.tools[0:pos]
                 return group.dummy_tool
 
@@ -489,7 +489,7 @@ class RibbonToolBar(RibbonControl):
         group.position = wx.Point(0, 0)
         group.size = wx.Size(0, 0)
         self._groups.insert(pos, group)
-        
+
         return group
 
 
@@ -508,14 +508,14 @@ class RibbonToolBar(RibbonControl):
         Removes the specified tool from the toolbar and deletes it.
 
         :param `tool_id`: id of the tool to delete.
-        
+
         :returns: ``True`` if the tool was deleted, ``False`` otherwise.
 
         :see: :meth:`~RibbonToolBar.DeleteToolByPos`
-        
+
         .. versionadded:: 0.9.5
         """
-        
+
         for group in self._groups:
             for tool in group.tools:
                 if tool.id == tool_id:
@@ -531,13 +531,13 @@ class RibbonToolBar(RibbonControl):
         specified position `pos` and not the one with the given id.
 
         Useful to delete separators.
-        
+
         :param `pos`: zero-based position of the tool to delete.
-        
+
         :returns: ``True`` if the tool was deleted, ``False`` otherwise.
 
         :see: :meth:`~RibbonToolBar.DeleteTool`
-        
+
         .. versionadded:: 0.9.5
         """
 
@@ -548,7 +548,7 @@ class RibbonToolBar(RibbonControl):
                 # Remove tool
                 group.tools.pop(pos)
                 return True
-            
+
             elif pos == tool_count:
                 # Remove separator
                 if index < len(self._groups) - 1:
@@ -574,7 +574,7 @@ class RibbonToolBar(RibbonControl):
 
         .. versionadded:: 0.9.5
         """
-        
+
         for group in self._groups:
             for tool in group.tools:
                 if tool.id == tool_id:
@@ -601,10 +601,10 @@ class RibbonToolBar(RibbonControl):
 
             if pos < tool_count:
                 return group.tools[pos]
-            
+
             elif pos >= tool_count:
                 return None
-            
+
         return None
 
 
@@ -623,7 +623,7 @@ class RibbonToolBar(RibbonControl):
         # If only one group, no separator.
         if len(self._groups) > 1:
             count += len(self._groups) - 1
-            
+
         return count
 
 
@@ -649,11 +649,11 @@ class RibbonToolBar(RibbonControl):
 
         .. versionadded:: 0.9.5
         """
-        
+
         tool = self.FindById(tool_id)
         if tool is None:
             raise Exception("Invalid tool id")
-        
+
         return tool.client_data
 
 
@@ -687,7 +687,7 @@ class RibbonToolBar(RibbonControl):
         tool = self.FindById(tool_id)
         if tool is None:
             raise Exception("Invalid tool id")
-    
+
         return tool.help_string
 
 
@@ -710,17 +710,17 @@ class RibbonToolBar(RibbonControl):
     def GetToolPos(self, tool_id):
         """
         Returns the tool position in the toolbar, or ``wx.NOT_FOUND`` if the tool is not found.
-        
+
         :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`.
 
         .. versionadded:: 0.9.5
         """
-        
+
         pos = 0
         for group in self._groups:
-            
+
             for tool in group.tools:
-            
+
                 if tool.id == tool_id:
                     return pos
 
@@ -743,7 +743,7 @@ class RibbonToolBar(RibbonControl):
 
         .. versionadded:: 0.9.5
         """
-        
+
         tool = self.FindById(tool_id)
         if tool is None:
             raise Exception("Invalid tool id")
@@ -773,7 +773,7 @@ class RibbonToolBar(RibbonControl):
         Sets the bitmap to be used by the tool with the given ID when the tool is in a disabled state.
 
         :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
-        :param `bitmap`: an instance of :class:`Bitmap`.
+        :param `bitmap`: an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.5
         """
@@ -798,7 +798,7 @@ class RibbonToolBar(RibbonControl):
         tool = self.FindById(tool_id)
         if tool is None:
             raise Exception("Invalid tool id")
-        
+
         tool.help_string = helpString
 
 
@@ -807,7 +807,7 @@ class RibbonToolBar(RibbonControl):
         Sets the bitmap to be used by the tool with the given ID when the tool is enabled.
 
         :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
-        :param `bitmap`: an instance of :class:`Bitmap`.
+        :param `bitmap`: an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.5
         """
@@ -822,25 +822,25 @@ class RibbonToolBar(RibbonControl):
     def EnableTool(self, tool_id, enable=True):
         """
         Enables or disables a single tool on the bar.
-        
+
         :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
         :param `enable`: ``True`` to enable the tool, ``False`` to disable it.
 
         .. versionadded:: 0.9.5
         """
-        
+
         tool = self.FindById(tool_id)
         if tool is None:
             raise Exception("Invalid tool id")
 
         if enable:
-        
+
             if tool.state & RIBBON_TOOLBAR_TOOL_DISABLED:
                 tool.state &= ~RIBBON_TOOLBAR_TOOL_DISABLED
                 self.Refresh()
-            
+
         else:
-        
+
             if (tool.state & RIBBON_TOOLBAR_TOOL_DISABLED) == 0:
                 tool.state |= RIBBON_TOOLBAR_TOOL_DISABLED
                 self.Refresh()
@@ -849,7 +849,7 @@ class RibbonToolBar(RibbonControl):
     def ToggleTool(self, tool_id, checked=True):
         """
         Toggles on or off a single tool on the bar.
-        
+
         :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
         :param `checked`: ``True`` to toggle on the tool, ``False`` to toggle it off.
 
@@ -869,18 +869,18 @@ class RibbonToolBar(RibbonControl):
                 tool.state &= ~RIBBON_TOOLBAR_TOOL_TOGGLED
                 self.Refresh()
 
-    
+
     def IsSizingContinuous(self):
         """
         Returns ``True`` if this window can take any size (greater than its minimum size),
         ``False`` if it can only take certain sizes.
-        
+
         :see: :meth:`RibbonControl.GetNextSmallerSize() <lib.agw.ribbon.control.RibbonControl.GetNextSmallerSize>`,
          :meth:`RibbonControl.GetNextLargerSize() <lib.agw.ribbon.control.RibbonControl.GetNextLargerSize>`
         """
 
         return False
-    
+
 
     def DoGetNextSmallerSize(self, direction, relative_to):
         """
@@ -895,20 +895,20 @@ class RibbonToolBar(RibbonControl):
         tobreak = False
 
         for nrows in range(self._nrows_max, self._nrows_min-1, -1):
-        
+
             size = wx.Size(*self._sizes[nrows - self._nrows_min])
             original = wx.Size(*size)
-            
+
             if direction == wx.HORIZONTAL:
-                if size.GetWidth() < relative_to.GetWidth() and size.GetHeight() <= relative_to.GetHeight():                
+                if size.GetWidth() < relative_to.GetWidth() and size.GetHeight() <= relative_to.GetHeight():
                     size.SetHeight(relative_to.GetHeight())
                     tobreak = True
-            
+
             elif direction == wx.VERTICAL:
-                if size.GetWidth() <= relative_to.GetWidth() and size.GetHeight() < relative_to.GetHeight():                
+                if size.GetWidth() <= relative_to.GetWidth() and size.GetHeight() < relative_to.GetHeight():
                     size.SetWidth(relative_to.GetWidth())
                     tobreak = True
-                
+
             elif direction == wx.BOTH:
                 if size.GetWidth() < relative_to.GetWidth() and size.GetHeight() < relative_to.GetHeight():
                     pass
@@ -918,7 +918,7 @@ class RibbonToolBar(RibbonControl):
                 area = GetSizeInOrientation(original, direction)
                 if tobreak:
                     break
-            
+
         return result
 
 
@@ -934,22 +934,22 @@ class RibbonToolBar(RibbonControl):
         result = wx.Size(*relative_to)
         area = 10000
         tobreak = False
-        
+
         for nrows in range(self._nrows_min, self._nrows_max+1):
 
             size = wx.Size(*self._sizes[nrows - self._nrows_min])
             original = wx.Size(*size)
 
             if direction == wx.HORIZONTAL:
-                if size.GetWidth() > relative_to.GetWidth() and size.GetHeight() <= relative_to.GetHeight():                
+                if size.GetWidth() > relative_to.GetWidth() and size.GetHeight() <= relative_to.GetHeight():
                     size.SetHeight(relative_to.GetHeight())
                     tobreak = True
 
             elif direction == wx.VERTICAL:
-                if size.GetWidth() <= relative_to.GetWidth() and size.GetHeight() > relative_to.GetHeight():                
+                if size.GetWidth() <= relative_to.GetWidth() and size.GetHeight() > relative_to.GetHeight():
                     size.SetWidth(relative_to.GetWidth())
                     tobreak = True
-            
+
             elif direction == wx.BOTH:
                 if size.GetWidth() > relative_to.GetWidth() and size.GetHeight() > relative_to.GetHeight():
                     tobreak = True
@@ -959,7 +959,7 @@ class RibbonToolBar(RibbonControl):
                 area = GetSizeInOrientation(original, direction)
                 if tobreak:
                     break
-            
+
         return result
 
 
@@ -984,7 +984,7 @@ class RibbonToolBar(RibbonControl):
             raise Exception("Exception")
         if nMin > nMax:
             raise Exception("Exception")
-            
+
         self._nrows_min = nMin
         self._nrows_max = nMax
 
@@ -1001,7 +1001,7 @@ class RibbonToolBar(RibbonControl):
         Must be called after tools are added to the tool bar, as otherwise the newly
         added tools will not be displayed.
 
-        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
         if self._art == None:
@@ -1012,13 +1012,13 @@ class RibbonToolBar(RibbonControl):
         group_count = len(self._groups)
 
         for group in self._groups:
-        
+
             prev = None
             tool_count = len(group.tools)
             tallest = 0
-            
+
             for t, tool in enumerate(group.tools):
-            
+
                 tool.size, tool.dropdown = self._art.GetToolSize(temp_dc, self, tool.bitmap.GetSize(), tool.kind, t==0, t==(tool_count-1))
                 tool.state = tool.state & ~RIBBON_TOOLBAR_TOOL_DISABLED
                 if t == 0:
@@ -1027,21 +1027,21 @@ class RibbonToolBar(RibbonControl):
                     tool.state |= RIBBON_TOOLBAR_TOOL_LAST
                 if tool.size.GetHeight() > tallest:
                     tallest = tool.size.GetHeight()
-                if prev:                
+                if prev:
                     tool.position = wx.Point(*prev.position)
                     tool.position.x += prev.size.x
-                else:                
+                else:
                     tool.position = wx.Point(0, 0)
 
                 prev = tool
-            
+
             if tool_count == 0:
                 group.size = wx.Size(0, 0)
             else:
                 group.size = wx.Size(prev.position.x + prev.size.x, tallest)
                 for tool in group.tools:
                     tool.size.SetHeight(tallest)
-            
+
         # Calculate the minimum size for each possible number of rows
         sep = self._art.GetMetric(RIBBON_ART_TOOL_GROUP_SEPARATION_SIZE)
         smallest_area = 10000
@@ -1054,7 +1054,7 @@ class RibbonToolBar(RibbonControl):
         # See if we're sizing flexibly (i.e. wrapping), and set min size differently
         sizingFlexibly = False
         panel = self.GetParent()
-        
+
         if isinstance(panel, RibbonPanel) and (panel.GetFlags() & RIBBON_PANEL_FLEXIBLE):
             sizingFlexibly = True
 
@@ -1062,35 +1062,35 @@ class RibbonToolBar(RibbonControl):
         # use the smallest possible height (and therefore largest width).
         if sizingFlexibly:
             major_axis = wx.HORIZONTAL
-        
+
         for nrows in range(self._nrows_min, self._nrows_max+1):
-        
+
             for r in range(nrows):
                 row_sizes[r] = wx.Size(0, 0)
-                
+
             for g in range(group_count):
-            
+
                 group = self._groups[g]
                 shortest_row = 0
 
-                for r in range(1, nrows):                
+                for r in range(1, nrows):
                     if row_sizes[r].GetWidth() < row_sizes[shortest_row].GetWidth():
                         shortest_row = r
-                
+
                 row_sizes[shortest_row].x += group.size.x + sep
                 if group.size.y > row_sizes[shortest_row].y:
                     row_sizes[shortest_row].y = group.size.y
-            
+
             size = wx.Size(0, 0)
-            
-            for r in range(nrows):            
+
+            for r in range(nrows):
                 if row_sizes[r].GetWidth() != 0:
                     row_sizes[r].DecBy(sep, 0)
                 if row_sizes[r].GetWidth() > size.GetWidth():
                     size.SetWidth(row_sizes[r].GetWidth())
-                    
+
                 size.IncBy(0, row_sizes[r].y)
-            
+
             self._sizes[nrows - self._nrows_min] = size
 
             if GetSizeInOrientation(size, major_axis) < smallest_area:
@@ -1108,7 +1108,7 @@ class RibbonToolBar(RibbonControl):
             # so that we're able to vary the size of the panel according to
             # the space the toolbar takes up.
             self.SetMinSize(minSize)
-    
+
         # Position the groups
         dummy_event = wx.SizeEvent(self.GetSize())
         self.OnSize(dummy_event)
@@ -1120,7 +1120,7 @@ class RibbonToolBar(RibbonControl):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`RibbonToolBar`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         if self._art == None:
@@ -1134,7 +1134,7 @@ class RibbonToolBar(RibbonControl):
         # See if we're sizing flexibly, and set min size differently
         sizingFlexibly = False
         panel = self.GetParent()
-        
+
         if isinstance(panel, RibbonPanel) and (panel.GetFlags() & RIBBON_PANEL_FLEXIBLE):
             sizingFlexibly = True
 
@@ -1144,10 +1144,10 @@ class RibbonToolBar(RibbonControl):
             major_axis = wx.HORIZONTAL
 
         bestSize = wx.Size(*self._sizes[0])
-    
-        if self._nrows_max != self._nrows_min:        
+
+        if self._nrows_max != self._nrows_min:
             area = 0
-            for i in range(self._nrows_max - self._nrows_min + 1):            
+            for i in range(self._nrows_max - self._nrows_min + 1):
                 if self._sizes[i].x <= size.x and self._sizes[i].y <= size.y and \
                    GetSizeInOrientation(self._sizes[i], major_axis) > area:
                     area = GetSizeInOrientation(self._sizes[i], major_axis)
@@ -1161,10 +1161,10 @@ class RibbonToolBar(RibbonControl):
         group_count = len(self._groups)
         for group in self._groups:
             shortest_row = 0
-            for r in range(1, row_count):            
+            for r in range(1, row_count):
                 if row_sizes[r].GetWidth() < row_sizes[shortest_row].GetWidth():
                     shortest_row = r
-            
+
             group.position = wx.Point(row_sizes[shortest_row].x, shortest_row)
             row_sizes[shortest_row].x += group.size.x + sep
             if group.size.y > row_sizes[shortest_row].y:
@@ -1174,17 +1174,17 @@ class RibbonToolBar(RibbonControl):
         total_height = 0
         for r in range(row_count):
             total_height += row_sizes[r].GetHeight()
-            
+
         rowsep = (size.GetHeight() - total_height) / (row_count + 1)
         rowypos = [0]*row_count
         rowypos[0] = rowsep
-        for r in range(1, row_count):          
+        for r in range(1, row_count):
             rowypos[r] = rowypos[r - 1] + row_sizes[r - 1].GetHeight() + rowsep
 
         # Set group y positions
         for group in self._groups:
             group.position.y = rowypos[group.position.y]
-        
+
 
     def GetBestSizeForParentSize(self, parentSize):
         """ Finds the best width and height given the parent's width and height. """
@@ -1205,14 +1205,14 @@ class RibbonToolBar(RibbonControl):
 
         if self._nrows_max != self._nrows_min:
             area = 0
-            for i in range(self._nrows_max - self._nrows_min + 1):            
+            for i in range(self._nrows_max - self._nrows_min + 1):
 
                 if self._sizes[i].x <= size.x and self._sizes[i].y <= size.y and \
                    GetSizeInOrientation(self._sizes[i], major_axis) > area:
                     area = GetSizeInOrientation(self._sizes[i], major_axis)
                     row_count = self._nrows_min + i
                     bestSize = wx.Size(*self._sizes[i])
-        
+
         return bestSize
 
 
@@ -1222,9 +1222,9 @@ class RibbonToolBar(RibbonControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of :class:`Size`.
-        
-        :note: Overridden from :class:`Control`.
+        :return: An instance of :class:`wx.Size`.
+
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return self.GetMinSize()
@@ -1258,7 +1258,7 @@ class RibbonToolBar(RibbonControl):
         for group in self._groups:
             tool_count = len(group.tools)
 
-            if tool_count != 0:            
+            if tool_count != 0:
                 self._art.DrawToolGroupBackground(dc, self, wx.Rect(group.position, group.size))
 
                 for tool in group.tools:
@@ -1268,7 +1268,7 @@ class RibbonToolBar(RibbonControl):
                         self._art.DrawTool(dc, self, rect, tool.bitmap_disabled, tool.kind, tool.state)
                     else:
                         self._art.DrawTool(dc, self, rect, tool.bitmap, tool.kind, tool.state)
-            
+
 
     def OnMouseMove(self, event):
         """
@@ -1283,12 +1283,12 @@ class RibbonToolBar(RibbonControl):
         for group in self._groups:
 
             if group.position.x <= pos.x and pos.x < group.position.x + group.size.x \
-               and group.position.y <= pos.y and pos.y < group.position.y + group.size.y: 
+               and group.position.y <= pos.y and pos.y < group.position.y + group.size.y:
                 pos -= group.position
-                
+
                 for tool in group.tools:
                     if tool.position.x <= pos.x and pos.x < tool.position.x + tool.size.x \
-                       and tool.position.y <= pos.y and pos.y < tool.position.y + tool.size.y:                    
+                       and tool.position.y <= pos.y and pos.y < tool.position.y + tool.size.y:
                         pos -= tool.position
                         new_hover = tool
                         break
@@ -1298,44 +1298,44 @@ class RibbonToolBar(RibbonControl):
             self.SetToolTip(new_hover.help_string)
         elif self.GetToolTip() and new_hover != self._hover_tool:
             self.SetToolTip("")
-            
+
         if new_hover != self._hover_tool:
-            if self._hover_tool:            
+            if self._hover_tool:
                 self._hover_tool.state &= ~(RIBBON_TOOLBAR_TOOL_HOVER_MASK | RIBBON_TOOLBAR_TOOL_ACTIVE_MASK)
-            
+
             self._hover_tool = new_hover
-            
-            if new_hover:            
+
+            if new_hover:
                 what = RIBBON_TOOLBAR_TOOL_NORMAL_HOVERED
                 if new_hover.dropdown.Contains(pos):
                     what = RIBBON_TOOLBAR_TOOL_DROPDOWN_HOVERED
 
                 new_hover.state |= what
-                
+
                 if new_hover == self._active_tool:
-                
+
                     new_hover.state &= ~RIBBON_TOOLBAR_TOOL_ACTIVE_MASK
                     new_hover.state |= (what << 2)
-                
+
             self.Refresh(False)
-        
+
         elif self._hover_tool and self._hover_tool.kind == RIBBON_BUTTON_HYBRID:
             newstate = self._hover_tool.state & ~RIBBON_TOOLBAR_TOOL_HOVER_MASK
             what = RIBBON_TOOLBAR_TOOL_NORMAL_HOVERED
-            
+
             if self._hover_tool.dropdown.Contains(pos):
                 what = RIBBON_TOOLBAR_TOOL_DROPDOWN_HOVERED
-                
+
             newstate |= what
 
-            if newstate != self._hover_tool.state:            
+            if newstate != self._hover_tool.state:
                 self._hover_tool.state = newstate
-                if self._hover_tool == self._active_tool:                
+                if self._hover_tool == self._active_tool:
                     self._hover_tool.state &= ~RIBBON_TOOLBAR_TOOL_ACTIVE_MASK
                     self._hover_tool.state |= (what << 2)
-                
+
                 self.Refresh(False)
-            
+
 
     def OnMouseDown(self, event):
         """
@@ -1345,12 +1345,12 @@ class RibbonToolBar(RibbonControl):
         """
 
         self.OnMouseMove(event)
-        
-        if self._hover_tool:        
+
+        if self._hover_tool:
             self._active_tool = self._hover_tool
             self._active_tool.state |= (self._active_tool.state & RIBBON_TOOLBAR_TOOL_HOVER_MASK) << 2
             self.Refresh(False)
-    
+
 
     def OnMouseLeave(self, event):
         """
@@ -1359,11 +1359,11 @@ class RibbonToolBar(RibbonControl):
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
-        if self._hover_tool:        
+        if self._hover_tool:
             self._hover_tool.state &= ~RIBBON_TOOLBAR_TOOL_HOVER_MASK
             self._hover_tool = None
             self.Refresh(False)
-    
+
 
     def OnMouseUp(self, event):
         """
@@ -1372,12 +1372,12 @@ class RibbonToolBar(RibbonControl):
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
-        if self._active_tool:        
-            if self._active_tool.state & RIBBON_TOOLBAR_TOOL_ACTIVE_MASK:            
+        if self._active_tool:
+            if self._active_tool.state & RIBBON_TOOLBAR_TOOL_ACTIVE_MASK:
                 evt_type = wxEVT_COMMAND_RIBBONTOOL_CLICKED
                 if self._active_tool.state & RIBBON_TOOLBAR_TOOL_DROPDOWN_ACTIVE:
                     evt_type = wxEVT_COMMAND_RIBBONTOOL_DROPDOWN_CLICKED
-                    
+
                 notification = RibbonToolBarEvent(evt_type, self._active_tool.id)
                 notification.SetEventObject(self)
                 notification.SetBar(self)
@@ -1386,7 +1386,7 @@ class RibbonToolBar(RibbonControl):
                 if self._active_tool.kind == RIBBON_BUTTON_TOGGLE:
                     self._active_tool.state ^= RIBBON_BUTTONBAR_BUTTON_TOGGLED
                     notification.SetInt(self._active_tool.state & RIBBON_BUTTONBAR_BUTTON_TOGGLED)
-            
+
             # Notice that m_active_tool could have been reset by the event handler
             # above so we need to test it again.
             if self._active_tool:
@@ -1404,7 +1404,7 @@ class RibbonToolBar(RibbonControl):
 
         if self._active_tool and not event.LeftIsDown():
             self._active_tool = None
-        
+
 
     def GetDefaultBorder(self):
         """ Returns the default border style for :class:`RibbonToolBar`. """
@@ -1417,7 +1417,7 @@ class RibbonToolBar(RibbonControl):
         This function sends one or more :class:`UpdateUIEvent` to the window.
 
         The particular implementation depends on the window; for example a :class:`ToolBar` will
-        send an update UI event for each toolbar button, and a :class:`Frame` will send an
+        send an update UI event for each toolbar button, and a :class:`wx.Frame` will send an
         update UI event for each menubar menu item.
 
         You can call this function from your application to ensure that your UI is up-to-date
@@ -1440,9 +1440,9 @@ class RibbonToolBar(RibbonControl):
                     self.UpdateWindowUI(wx.UPDATE_UI_FROMIDLE)
 
 
-        
+
         .. versionadded:: 0.9.5
-        """        
+        """
 
         wx.Control.UpdateWindowUI(self, flags)
 
@@ -1457,9 +1457,9 @@ class RibbonToolBar(RibbonControl):
                 event = wx.UpdateUIEvent(id)
                 event.SetEventObject(self)
 
-                if self.ProcessWindowEvent(event):                
+                if self.ProcessWindowEvent(event):
                     if event.GetSetEnabled():
                         self.EnableTool(id, event.GetEnabled())
                     if event.GetSetChecked():
                         self.ToggleTool(id, event.GetChecked())
-    
+

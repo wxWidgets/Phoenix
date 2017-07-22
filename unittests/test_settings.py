@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -47,7 +47,7 @@ class settings_Tests(wtc.WidgetTestCase):
         wx.SYS_COLOUR_MENUBAR
         wx.SYS_COLOUR_LISTBOXTEXT
         wx.SYS_COLOUR_LISTBOXHIGHLIGHTTEXT
-        
+
         wx.SYS_COLOUR_DESKTOP
         wx.SYS_COLOUR_3DFACE
         wx.SYS_COLOUR_3DSHADOW
@@ -55,7 +55,7 @@ class settings_Tests(wtc.WidgetTestCase):
         wx.SYS_COLOUR_3DHIGHLIGHT
         wx.SYS_COLOUR_3DHILIGHT
         wx.SYS_COLOUR_FRAMEBK
-        
+
         wx.SYS_MOUSE_BUTTONS
         wx.SYS_BORDER_X
         wx.SYS_BORDER_Y
@@ -97,27 +97,27 @@ class settings_Tests(wtc.WidgetTestCase):
 
         wx.SYS_CAN_DRAW_FRAME_DECORATIONS
         wx.SYS_CAN_ICONIZE_FRAME
-        wx.SYS_TABLET_PRESENT 
+        wx.SYS_TABLET_PRESENT
 
         wx.SYS_SCREEN_NONE
-    
+
         wx.SYS_SCREEN_TINY
-        wx.SYS_SCREEN_PDA 
-        wx.SYS_SCREEN_SMALL 
+        wx.SYS_SCREEN_PDA
+        wx.SYS_SCREEN_SMALL
         wx.SYS_SCREEN_DESKTOP
 
 
     def test_settingsGetFont(self):
         f = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
         self.assertTrue(isinstance(f, wx.Font))
-        
+
     def test_settingsGetColour(self):
         c = wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW)
         self.assertTrue(isinstance(c, wx.Colour))
-        
+
     def test_settingsGetMetric(self):
         m = wx.SystemSettings.GetMetric(wx.SYS_BORDER_X)
-            
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -1,11 +1,9 @@
-#!/usr/bin/env python
+import random
+import time
+from six.moves import _thread
 
-import  random
-import  time
-import  thread
-
-import  wx
-import  wx.lib.newevent
+import wx
+import wx.lib.newevent
 
 #----------------------------------------------------------------------
 
@@ -23,7 +21,7 @@ class CalcBarThread:
 
     def Start(self):
         self.keepGoing = self.running = True
-        thread.start_new_thread(self.Run, ())
+        _thread.start_new_thread(self.Run, ())
 
     def Stop(self):
         self.keepGoing = False

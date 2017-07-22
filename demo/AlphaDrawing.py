@@ -16,7 +16,7 @@ provides the wx.DC API on top of the new wx.GraphicsContext class)
 then these squares should be transparent.
 """
         wx.StaticText(self, -1, txt, (20, 20))
-        
+
 
     def OnPaint(self, evt):
         pdc = wx.PaintDC(self)
@@ -42,8 +42,8 @@ then these squares should be transparent.
         #dc.SetBrush(wx.Brush(wx.Colour(0,0,255, 64)))
         #dc.DrawCircle(50, 275, 25)
         #dc.DrawEllipse(100, 275, 75, 50)
-        
-        
+
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

@@ -27,7 +27,7 @@ class TestPanel(wx.Panel):
             self.log.write("before Play...\n")
             sound.Play(wx.adv.SOUND_SYNC)
             self.log.write("...after Play\n")
-        except NotImplementedError, v:
+        except NotImplementedError as v:
             wx.MessageBox(str(v), "Exception Message")
 
 
@@ -39,13 +39,13 @@ class TestPanel(wx.Panel):
                 # sounds can also be loaded from a buffer object
                 data = open(opj('data/plan.wav'), 'rb').read()
                 sound = wx.SoundFromData(data)
-                
+
             self.log.write("before Play...\n")
             sound.Play(wx.adv.SOUND_ASYNC)
             self.sound = sound  # save a reference (This shoudln't be needed, but there seems to be a bug...)
             # wx.YieldIfNeeded()
             self.log.write("...after Play\n")
-        except NotImplementedError, v:
+        except NotImplementedError as v:
             wx.MessageBox(str(v), "Exception Message")
 
 
@@ -61,8 +61,8 @@ class TestPanel(wx.Panel):
 
                 # another way to do it.
                 wx.adv.Sound.PlaySound(dlg.GetPath(), wx.adv.SOUND_SYNC)
-                
-            except NotImplementedError, v:
+
+            except NotImplementedError as v:
                 wx.MessageBox(str(v), "Exception Message")
         dlg.Destroy()
 
@@ -79,7 +79,7 @@ def runTest(frame, nb, log):
 overview = """<html><body>
 <h2>Sound</h2>
 This class represents a short wave file, in Windows WAV format, that can
-be stored in memory and played. 
+be stored in memory and played.
 <p>
 This demo offers two examples, both driven by buttons, but obviously the event
 that drives the playing of the sound can come from anywhere.

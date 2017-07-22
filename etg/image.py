@@ -4,7 +4,8 @@
 #              Robin Dunn
 #
 # Created:     25-Aug-2011
-# Copyright:   (c) 2013 by Wide Open Technologies
+# Copyright:   (c) 2011 by Wide Open Technologies
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -17,13 +18,22 @@ NAME      = "image"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 'wxImage', 
+# this script.
+ITEMS  = [ 'wxImage',
            'wxImageHistogram',
-           'wxImageHandler',  
+           'wxImageHandler',
+           'wxTIFFHandler',
+           'wxGIFHandler',
+           "wxIFFHandler",
+           "wxJPEGHandler",
+           "wxPCXHandler",
+           "wxPNGHandler",
+           "wxPNMHandler",
+           "wxTGAHandler",
+           "wxXPMHandler"
            #'wxQuantize',
            #'wxPalette',
-           ]    
+           ]
 
 #---------------------------------------------------------------------------
 
@@ -31,18 +41,20 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     c = module.find('wxImage')
     assert isinstance(c, etgtools.ClassDef)
     c.find('wxImage').findOverload('(const char *const *xpmData)').ignore()
 
     c.find('GetHandlers').ignore()  # TODO
-    
-    
+
+    c.find('wxImage').findOverload('wxBitmap').mustHaveApp()
+
+
     # Ignore the ctors taking raw data buffers, so we can add in our own
     # versions that are a little smarter (accept any buffer object, check
     # the data length, etc.)
@@ -51,18 +63,19 @@ def run():
     c.find('wxImage').findOverload('int width, int height, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
     c.find('wxImage').findOverload('const wxSize &sz, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
 
+
     c.addCppCtor_sip('(int width, int height, wxPyBuffer* data)',
         doc="Creates an image from RGB data in memory.",
         body="""\
-            if (! data->checkSize(width*height*3)) 
+            if (! data->checkSize(width*height*3))
                 return NULL;
             void* copy = data->copy();
-            if (! copy) 
+            if (! copy)
                 return NULL;
             sipCpp = new sipwxImage;
-            sipCpp->Create(width, height, (byte*)copy);            
+            sipCpp->Create(width, height, (byte*)copy);
             """)
-      
+
     c.addCppCtor_sip('(int width, int height, wxPyBuffer* data, wxPyBuffer* alpha)',
         doc="Creates an image from RGB data in memory, plus an alpha channel",
         body="""\
@@ -74,19 +87,19 @@ def run():
             sipCpp = new sipwxImage;
             sipCpp->Create(width, height, (byte*)dcopy, (byte*)acopy, false);
             """)
-      
+
     c.addCppCtor_sip('(const wxSize& size, wxPyBuffer* data)',
         doc="Creates an image from RGB data in memory.",
         body="""\
-            if (! data->checkSize(size->x*size->y*3)) 
+            if (! data->checkSize(size->x*size->y*3))
                 return NULL;
             void* copy = data->copy();
-            if (! copy) 
+            if (! copy)
                 return NULL;
             sipCpp = new sipwxImage;
             sipCpp->Create(size->x, size->y, (byte*)copy, false);
             """)
-      
+
     c.addCppCtor_sip('(const wxSize& size, wxPyBuffer* data, wxPyBuffer* alpha)',
         doc="Creates an image from RGB data in memory, plus an alpha channel",
         body="""\
@@ -98,26 +111,26 @@ def run():
             sipCpp = new sipwxImage;
             sipCpp->Create(size->x, size->y, (byte*)dcopy, (byte*)acopy, false);
             """)
-      
-      
+
+
     # Do the same for the Create method overloads that need to deal with data buffers
     c.find('Create').findOverload('int width, int height, unsigned char *data, bool static_data').ignore()
     c.find('Create').findOverload('const wxSize &sz, unsigned char *data, bool static_data').ignore()
     c.find('Create').findOverload('int width, int height, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
     c.find('Create').findOverload('const wxSize &sz, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
-      
-    c.addCppMethod('bool', 'Create', '(int width, int height, wxPyBuffer* data)', 
+
+    c.addCppMethod('bool', 'Create', '(int width, int height, wxPyBuffer* data)',
         doc="Create a new image initialized with the given RGB data.",
         body="""\
-            if (! data->checkSize(width*height*3)) 
+            if (! data->checkSize(width*height*3))
                 return false;
             void* copy = data->copy();
-            if (! copy) 
+            if (! copy)
                 return false;
             return self->Create(width, height, (byte*)copy);
             """)
-      
-    c.addCppMethod('bool', 'Create', '(int width, int height, wxPyBuffer* data, wxPyBuffer* alpha)', 
+
+    c.addCppMethod('bool', 'Create', '(int width, int height, wxPyBuffer* data, wxPyBuffer* alpha)',
         doc="Create a new image initialized with the given RGB data and Alpha data.",
         body="""\
             void* dcopy; void* acopy;
@@ -127,19 +140,19 @@ def run():
                 return false;
             return self->Create(width, height, (byte*)dcopy, (byte*)acopy);
             """)
-      
-    c.addCppMethod('bool', 'Create', '(const wxSize& size, wxPyBuffer* data)', 
+
+    c.addCppMethod('bool', 'Create', '(const wxSize& size, wxPyBuffer* data)',
         doc="Create a new image initialized with the given RGB data.",
         body="""\
-            if (! data->checkSize(size->x*size->y*3)) 
+            if (! data->checkSize(size->x*size->y*3))
                 return false;
             void* copy = data->copy();
-            if (! copy) 
+            if (! copy)
                 return false;
             return self->Create(size->x, size->y, (byte*)copy);
             """)
-      
-    c.addCppMethod('bool', 'Create', '(const wxSize& size, wxPyBuffer* data, wxPyBuffer* alpha)', 
+
+    c.addCppMethod('bool', 'Create', '(const wxSize& size, wxPyBuffer* data, wxPyBuffer* alpha)',
         doc="Create a new image initialized with the given RGB data and Alpha data.",
         body="""\
             void* dcopy; void* acopy;
@@ -149,8 +162,8 @@ def run():
                 return false;
             return self->Create(size->x, size->y, (byte*)dcopy, (byte*)acopy);
             """)
-      
-      
+
+
     # And also do similar for SetData and SetAlpha
     m = c.find('SetData').findOverload('unsigned char *data')
     bd, dd = m.briefDoc, m.detailedDoc
@@ -176,7 +189,7 @@ def run():
             return;
         self->SetData((byte*)copy, new_width, new_height, false);
         """)
-      
+
     m = c.find('SetAlpha').findOverload('unsigned char *alpha')
     bd, dd = m.briefDoc, m.detailedDoc
     m.ignore()
@@ -193,7 +206,7 @@ def run():
 
 
     # GetData() and GetAlpha() return a copy of the image data/alpha bytes as
-    # a bytearray object. 
+    # a bytearray object.
     c.find('GetData').ignore()
     c.addCppMethod('PyObject*', 'GetData', '()',
         doc="Returns a copy of the RGB bytes of the image.",
@@ -202,9 +215,9 @@ def run():
             Py_ssize_t len = self->GetWidth() * self->GetHeight() * 3;
             PyObject* rv = NULL;
             wxPyBLOCK_THREADS( rv = PyByteArray_FromStringAndSize((const char*)data, len));
-            return rv;           
+            return rv;
             """)
-    
+
     c.find('GetAlpha').findOverload('()').ignore()
     c.addCppMethod('PyObject*', 'GetAlpha', '()',
         doc="Returns a copy of the Alpha bytes of the image.",
@@ -213,12 +226,12 @@ def run():
             Py_ssize_t len = self->GetWidth() * self->GetHeight();
             PyObject* rv = NULL;
             wxPyBLOCK_THREADS( rv = PyByteArray_FromStringAndSize((const char*)data, len));
-            return rv;           
+            return rv;
             """)
-    
-    
+
+
     # GetDataBuffer, GetAlphaBuffer provide direct access to the image's
-    # internal buffers as a writable buffer object.  We'll use memoryview 
+    # internal buffers as a writable buffer object.  We'll use memoryview
     # objects.
     c.addCppMethod('PyObject*', 'GetDataBuffer', '()',
         doc="""\
@@ -254,25 +267,25 @@ def run():
         doc="""\
         Sets the internal image data pointer to point at a Python buffer
         object.  This can save making an extra copy of the data but you must
-        ensure that the buffer object lives lives at least as long as the 
+        ensure that the buffer object lives lives at least as long as the
         :class:`Image` does.""",
         body="""\
             if (!data->checkSize(self->GetWidth() * self->GetHeight() * 3))
                 return;
             // True means don't free() the pointer
-            self->SetData((byte*)data->m_ptr, true);  
+            self->SetData((byte*)data->m_ptr, true);
             """)
     c.addCppMethod('void', 'SetDataBuffer', '(wxPyBuffer* data, int new_width, int new_height)',
         doc="""\
         Sets the internal image data pointer to point at a Python buffer
         object.  This can save making an extra copy of the data but you must
-        ensure that the buffer object lives lives at least as long as the 
+        ensure that the buffer object lives lives at least as long as the
         :class:`Image` does.""",
         body="""\
             if (!data->checkSize(new_width * new_height * 3))
                 return;
             // True means don't free() the pointer
-            self->SetData((byte*)data->m_ptr, new_width, new_height, true);  
+            self->SetData((byte*)data->m_ptr, new_width, new_height, true);
             """)
 
 
@@ -280,7 +293,7 @@ def run():
         doc="""\
         Sets the internal image alpha pointer to point at a Python buffer
         object.  This can save making an extra copy of the data but you must
-        ensure that the buffer object lives lives at least as long as the 
+        ensure that the buffer object lives lives at least as long as the
         :class:`Image` does.""",
         body="""\
             if (!alpha->checkSize(self->GetWidth() * self->GetHeight()))
@@ -291,7 +304,7 @@ def run():
 
 
 
-      
+
     def setParamsPyInt(name):
         """Set the pyInt flag on 'unsigned char' params"""
         method = c.find(name)
@@ -299,7 +312,7 @@ def run():
             for p in m.items:
                 if p.type == 'unsigned char':
                     p.pyInt = True
-                
+
     setParamsPyInt('Replace')
     setParamsPyInt('ConvertAlphaToMask')
     setParamsPyInt('ConvertToMono')
@@ -320,7 +333,7 @@ def run():
     c.find('FindFirstUnusedColour.r').out = True
     c.find('FindFirstUnusedColour.g').out = True
     c.find('FindFirstUnusedColour.b').out = True
-    
+
     c.find('GetAlpha').findOverload('int x, int y').pyInt = True
     c.find('GetRed').pyInt = True
     c.find('GetGreen').pyInt = True
@@ -328,7 +341,7 @@ def run():
     c.find('GetMaskRed').pyInt = True
     c.find('GetMaskGreen').pyInt = True
     c.find('GetMaskBlue').pyInt = True
-    
+
     c.find('GetOrFindMaskColour').type = 'void'
     c.find('GetOrFindMaskColour.r').pyInt = True
     c.find('GetOrFindMaskColour.g').pyInt = True
@@ -336,38 +349,38 @@ def run():
     c.find('GetOrFindMaskColour.r').out = True
     c.find('GetOrFindMaskColour.g').out = True
     c.find('GetOrFindMaskColour.b').out = True
-    
+
     c.find('RGBValue.red').pyInt = True
     c.find('RGBValue.green').pyInt = True
     c.find('RGBValue.blue').pyInt = True
     c.find('RGBValue.RGBValue.r').pyInt = True
     c.find('RGBValue.RGBValue.g').pyInt = True
     c.find('RGBValue.RGBValue.b').pyInt = True
-   
-   
+
+
     c.addCppMethod('int', '__nonzero__', '()', 'return self->IsOk();')
 
-    c.addPyMethod('ConvertToBitmap', '(self, depth=-1)', 
+    c.addPyMethod('ConvertToBitmap', '(self, depth=-1)',
         doc="""\
         ConvertToBitmap(depth=-1) -> Bitmap\n
-        Convert the image to a :class:`Bitmap`.""",
+        Convert the image to a :class:`wx.Bitmap`.""",
         body="""\
         bmp = wx.Bitmap(self, depth)
         return bmp
         """)
-    
-    c.addPyMethod('ConvertToMonoBitmap', '(self, red, green, blue)', 
+
+    c.addPyMethod('ConvertToMonoBitmap', '(self, red, green, blue)',
         doc="""\
         ConvertToMonoBitmap(red, green, blue) -> Bitmap\n
-        Creates a monochrome version of the image and returns it as a :class:`Bitmap`.""",
+        Creates a monochrome version of the image and returns it as a :class:`wx.Bitmap`.""",
         body="""\
         mono = self.ConvertToMono( red, green, blue )
         bmp = wx.Bitmap( mono, 1 )
-        return bmp    
+        return bmp
         """)
-   
 
-    c.addCppMethod('wxImage*', 'AdjustChannels', 
+
+    c.addCppMethod('wxImage*', 'AdjustChannels',
         '(double factor_red, double factor_green, double factor_blue, double factor_alpha=1.0)',
         doc="""\
         This function muliplies all 4 channels (red, green, blue, alpha) with
@@ -442,9 +455,9 @@ def run():
             // no alpha yet but we want to adjust -> create
             dest->SetAlpha(); // create an empty alpha channel (not initialized)
             dst_alpha = dest->GetAlpha();
-    
+
             wxCHECK_MSG( dst_alpha, NULL, wxT("unable to create alpha data") );
-    
+
             for ( unsigned i = 0; i < alphalen; ++i )
             {
                 dst_alpha[i] = (byte) wxMin( 255, (int) (factor_alpha * 255) );
@@ -473,7 +486,7 @@ def run():
 
         return dest;""",
         factory=True)
-                               
+
     c.addProperty('Width GetWidth')
     c.addProperty('Height GetHeight')
     c.addProperty('MaskBlue GetMaskBlue')
@@ -487,10 +500,10 @@ def run():
                          deprecated="Use :class:`Image` instead.",
                          doc='A compatibility wrapper for the wx.Image(width, height) constructor',
                          body='return Image(width, height, clear)')
-    
+
     module.addPyFunction('ImageFromBitmap', '(bitmap)',
                          deprecated="Use bitmap.ConvertToImage instead.",
-                         doc='Create a :class:`Image` from a :class:`Bitmap`',
+                         doc='Create a :class:`Image` from a :class:`wx.Bitmap`',
                          body='return bitmap.ConvertToImage()')
 
     module.addPyFunction('ImageFromStream', '(stream, type=BITMAP_TYPE_ANY, index=-1)',
@@ -509,7 +522,7 @@ def run():
                          body='return Image(width, height, data, alpha)')
 
 
-    
+
     module.addPyFunction('ImageFromBuffer', '(width, height, dataBuffer, alphaBuffer=None)',
         doc="""\
             Creates a :class:`Image` from the data in `dataBuffer`.  The `dataBuffer`
@@ -518,13 +531,13 @@ def run():
             contain a series of RGB bytes and be width*height*3 bytes long.  A buffer
             object can optionally be supplied for the image's alpha channel data, and
             it is expected to be width*height bytes long.
-        
+
             The :class:`Image` will be created with its data and alpha pointers initialized
             to the memory address pointed to by the buffer objects, thus saving the
             time needed to copy the image data from the buffer object to the :class:`Image`.
             While this has advantages, it also has the shoot-yourself-in-the-foot
             risks associated with sharing a C pointer between two objects.
-        
+
             To help alleviate the risk a reference to the data and alpha buffer
             objects are kept with the :class:`Image`, so that they won't get deleted until
             after the wx.Image is deleted.  However please be aware that it is not
@@ -544,10 +557,10 @@ def run():
             img._alpha = alphaBuffer
             return img
             """)
-    
+
     #-------------------------------------------------------
     c = module.find('wxImageHistogram')
-    c.bases = ['wxObject']
+    c.bases = [] # wxImageHistogramBase doesn't actually exist
     setParamsPyInt('MakeKey')
     c.find('FindFirstUnusedColour').type = 'void'
     c.find('FindFirstUnusedColour.r').pyInt = True
@@ -559,25 +572,86 @@ def run():
     c.find('FindFirstUnusedColour.r').out = True
     c.find('FindFirstUnusedColour.g').out = True
     c.find('FindFirstUnusedColour.b').out = True
-    
-    
+
+
 
     #-------------------------------------------------------
     c = module.find('wxImageHandler')
-    c.abstract = True
     c.addPrivateCopyCtor()
     c.find('GetLibraryVersionInfo').ignore()
 
     c.find('DoGetImageCount').ignore(False)
     c.find('DoCanRead').ignore(False)
+
+    module.addHeaderCode("""\
+        #include <wx/imaggif.h>
+        #include <wx/imagiff.h>
+        #include <wx/imagjpeg.h>
+        #include <wx/imagpcx.h>
+        #include <wx/imagpng.h>
+        #include <wx/imagpnm.h>
+        #include <wx/imagtga.h>
+        #include <wx/imagtiff.h>
+        #include <wx/imagxpm.h>
+        """)
+
+    #-------------------------------------------------------
+    # tweak for GIFHandler
+    # need to include anidecod.h, otherwise use of forward declared class
+    # compilation errors will occur.
+    c = module.find('wxGIFHandler')
+    c.find('DoCanRead').ignore(False)
+
+    module.addHeaderCode("#include <wx/anidecod.h>")
+    module.addItem(tools.wxArrayWrapperTemplate('wxImageArray', 'wxImage', module))
+
+    #-------------------------------------------------------
+    # tweak for IFFHandler
+    c = module.find('wxIFFHandler')
+    c.find('DoCanRead').ignore(False)     
     
+    #-------------------------------------------------------
+    # tweak for JPEGHandler
+    c = module.find('wxJPEGHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for PCXHandler
+    c = module.find('wxPCXHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for PNGHandler
+    c = module.find('wxPNGHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for PNMHandler
+    c = module.find('wxPNMHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for TGAHandler
+    c = module.find('wxTGAHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for TIFFHandler
+    c = module.find('wxTIFFHandler') 
+    c.find('GetLibraryVersionInfo').ignore() 
+    c.find('DoCanRead').ignore(False) 
+
+    #-------------------------------------------------------
+    # tweak for XPMHandler
+    c = module.find('wxXPMHandler')
+    c.find('DoCanRead').ignore(False)
 
     #-------------------------------------------------------
 
     module.find('wxIMAGE_ALPHA_TRANSPARENT').pyInt = True
     module.find('wxIMAGE_ALPHA_OPAQUE').pyInt = True
     module.find('wxIMAGE_ALPHA_THRESHOLD').pyInt = True
-    
+
     # These are defines for string objects, not integers, so we can't
     # generate code for them the same way as integer values. Since they are
     # #defines we can't just tell SIP that they are global wxString objects
@@ -593,15 +667,15 @@ def run():
             value = item.value
             for txt in ['wxString(', 'wxT(', ')']:
                 value = value.replace(txt, '')
-                
+
             pycode += '%s = %s\n' % (name, value)
     module.addPyCode(pycode)
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

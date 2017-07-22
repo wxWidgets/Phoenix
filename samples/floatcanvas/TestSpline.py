@@ -23,7 +23,7 @@ from wx.lib.floatcanvas import NavCanvas
 class Spline(FC.Line):
     def __init__(self, *args, **kwargs):
             FC.Line.__init__(self, *args, **kwargs)
-            
+
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         Points = WorldToPixel(self.Points)
         dc.SetPen(self.Pen)
@@ -56,21 +56,21 @@ class DrawFrame(wx.Frame):
         MenuBar.Append(help_menu, "&Help")
 
         self.SetMenuBar(MenuBar)
-        self.CreateStatusBar()            
+        self.CreateStatusBar()
 
         # Add the Canvas
         self.Canvas = NavCanvas.NavCanvas(self,
                                           BackgroundColor = "White",
                                           ).Canvas
 
-        self.Canvas.Bind(FC.EVT_MOTION, self.OnMove) 
+        self.Canvas.Bind(FC.EVT_MOTION, self.OnMove)
 
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         self.DrawTest()
         self.Show()
         self.Canvas.ZoomToBB()
-        
+
     def OnAbout(self, event):
         print("OnAbout called")
 
@@ -94,7 +94,7 @@ class DrawFrame(wx.Frame):
 
     def DrawTest(self,event=None):
         wx.GetApp().Yield()
-        
+
         Canvas = self.Canvas
 
         Points = [(0, 0),
@@ -135,7 +135,7 @@ class DrawFrame(wx.Frame):
         MyLine = FC.Spline(Points,
                       LineWidth = 3,
                       LineColor = "Blue")
-                      
+
         Canvas.AddObject(MyLine)
         Canvas.AddPointSet(Points,
                            Color = "Red",
@@ -148,7 +148,7 @@ class DrawFrame(wx.Frame):
                   (70, 185),
                   (160,60),
                   ]
-        
+
         Canvas.AddSpline(Points,
                              LineWidth = 5,
                              LineColor = "Purple")
@@ -163,7 +163,7 @@ class DemoApp(wx.App):
 
         self.SetTopWindow(frame)
         return True
-      
+
 app = DemoApp(False)# put in True if you want output to go to it's own window.
 app.MainLoop()
 

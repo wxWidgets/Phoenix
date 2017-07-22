@@ -12,7 +12,8 @@ img {
  */
 
 div.body p, div.body dd, div.body li {
-  line-height: 125%;
+    line-height: 120%;
+    text-align: left;
 }
 
 ul.simple { 
@@ -88,7 +89,8 @@ div.body h4 {
  */
 
 body { 
-  background-color: rgb(230,230,230);
+    background-color: rgb(230,230,230);
+    font-size: 0.90em;
 }
 
 div.headerimage {
@@ -104,7 +106,7 @@ div.document {
   position: relative;
   margin-left: 240px;
   z-index: 0;
-  top: 50px;
+  top: 30px;
 }
 
 div.sphinxsidebar {
@@ -118,15 +120,26 @@ div.sphinxsidebar {
     height: auto;
     z-index: 1;
     left: 0;
-    top: 50px;
-    bottom: 0;  
+    top: 30px;
+    bottom: 0;    
+}
+
+div#searchbox {
+    margin-top: 30px;
+}
+
+div#sourcelink {
+    position: absolute; 
+    bottom: 0;
+    font-style: italic;
+    font-size: small;
 }
 
 div.related {
     background-image: url('../images/sphinxdocs/navigation.png');
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
-    font-size: 1em;
+    font-size: 90%;
     position: fixed;
     line-height: normal;
     position: fixed;
@@ -160,19 +173,21 @@ div.related ul li.right {
     font-size: small;
     float: right;
     margin-right: 5px;
-    margin-top: 0;
 }
 
 div.related ul li#searchbox.right {
     float: right;
     margin-right: 5px;
     margin-top:  7px;
+    font-size: 90%;
 }
+
 div.related ul li a {
     margin: 0;
     padding: 0 5px 0 5px;
     line-height: normal;
     color: #EE9816;
+    font-size: 90%;
 }
 
 div.related ul li.reltitle {
@@ -201,6 +216,18 @@ div.sphinxsidebar p {
 
 div.sphinxsidebar a {
   color: #355f7c;
+}
+
+div.section a {
+    color:  #ca7900;
+    font-size: 0.95em;
+    letter-spacing: 0.01em;
+    font-weight: normal;
+    font-style: normal;
+}
+
+div.section a:hover {
+    color: #2491cf;
 }
 
 div.sphinxsidebar ul.want-points {
@@ -339,7 +366,7 @@ div.admonition p {
 div.admonition {
     background-color: #98F5FF;
     border: 1px solid #00B2EE;
-    text-align: justify;
+    text-align: left;
     background-image: url('../images/sphinxdocs/todo.png');
     background-repeat: no-repeat;
     background-position: 5px 5px;  
@@ -353,7 +380,7 @@ div.admonition {
 div.seealso {
     background-color: #ffc;
     border: 1px solid #ff6;
-    text-align: justify;
+    text-align: left;
     background-image: url('../images/sphinxdocs/seealso.png');
     background-repeat: no-repeat;
     background-position: 5px 5px;  
@@ -367,7 +394,7 @@ div.seealso {
 div.warning {
     background-color: #ffe4e4;
     border: 1px solid #f66;
-    text-align: justify;
+    text-align: left;
     background-image: url('../images/sphinxdocs/warning.png');
     background-repeat: no-repeat;
     background-position: 5px 5px;  
@@ -381,7 +408,7 @@ div.warning {
 div.todo {
     background-color: #ccccff;
     border: 1px solid #cc99ff;
-    text-align: justify;
+    text-align: left;
     background-image: url('../images/sphinxdocs/todo.png');
     background-repeat: no-repeat;
     background-position: 5px 5px;  
@@ -395,7 +422,7 @@ div.todo {
 div.caution {
     background-color: #ccffff;
     border: 1px solid #99ccff;
-    text-align: justify;
+    text-align: left;
 }
 
 .caution tt {
@@ -405,7 +432,7 @@ div.caution {
 div.important {
     background-color: #ffcc33;
     border: 1px solid #ff9900;
-    text-align: justify;
+    text-align: left;
 }
 
 .important tt {
@@ -415,7 +442,7 @@ div.important {
 div.tip {
     background-color: #ccff33;
     border: 1px solid #33cc33;
-    text-align: justify;
+    text-align: left;
 }
 
 .tip tt {
@@ -426,7 +453,7 @@ div.tip {
 div.note {
     background-color: #eee;
     border: 1px solid #ccc;
-    text-align: justify;
+    text-align: left;
     background-image: url('../images/sphinxdocs/info.png');
     background-repeat: no-repeat;
     background-position: 5px 5px;  
@@ -440,7 +467,7 @@ div.note {
 div.availability {
     background-color: #e8f7c4;
     border: 1px solid #adff2f;
-    text-align: justify;
+    text-align: left;
     background-image: url('../images/sphinxdocs/available.png');
     background-repeat: no-repeat;
     background-position: 5px 5px;  
@@ -490,7 +517,7 @@ table.footnote td, table.footnote th {
 
 pre {
     font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', 'Trebuchet MS', monospace;
-    font-size: 0.95em;
+    font-size: 0.90em;
     letter-spacing: 0.015em;
     padding: 0.5em;
     border: 1px solid #ccc;
@@ -503,6 +530,9 @@ cite, code, tt {
     letter-spacing: 0.01em;
 }
 
+code.descname, code.descclassname  {
+    font-weight: bold;
+}
 a.headerlink {
     color: #c60f0f;
     font-size: 0.8em;
@@ -525,12 +555,9 @@ dt:hover > a.headerlink {
 a em {
     color: #CA7900;
     background-color: transparent;
-    font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', 'Trebuchet MS', monospace;
-    font-weight: bold;
+    font: italic 0.95em 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', 'Trebuchet MS', monospace;
     border: 0;
     letter-spacing: 0.01em;
-    font-style: normal;
-    font-size: 0.95em;
     letter-spacing: 0.01em;
 }
 

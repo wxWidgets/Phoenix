@@ -6,21 +6,21 @@
 # Author:      Robin Dunn
 #
 # Created:     13-March-2001
-# Copyright:   (c) 2001 by Total Control Software
+# Copyright:   (c) 2001-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, unittest, documented
 #----------------------------------------------------------------------
 
 """
-This module loads additional colour names/values into the :class:`ColourDatabase`.
+This module loads additional colour names/values into the :class:`wx.ColourDatabase`.
 
 
 Description
 ===========
 
-This module loads additional colour names/values into the :class:`ColourDatabase`.
+This module loads additional colour names/values into the :class:`wx.ColourDatabase`.
 
-The :mod:`colourdb` will update the wxPython :class:`ColourDatabase` using a pre-defined
+The :mod:`wx.Colourdb` will update the wxPython :class:`wx.ColourDatabase` using a pre-defined
 set of colour names/colour tuples, hard-coded in this module source code.
 
 
@@ -722,7 +722,9 @@ def getColourInfoList():
 _haveUpdated = False
 
 def updateColourDB():
-    """ Updates the :class:`ColourDatabase` by adding new colour names and RGB values. """
+    """
+    Updates the :class:`wx.ColourDatabase` by adding new colour names and RGB values.
+    """
 
     global _haveUpdated
     if not _haveUpdated:

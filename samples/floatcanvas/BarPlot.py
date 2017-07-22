@@ -20,12 +20,12 @@ MaxValue = 2000
 def YScaleFun(center):
     """
     Function that returns a scaling vector to scale y data to same range as x data
-    
+
     This is used by FloatCanvas as a "projection function", so that you can have
     a different scale for X and Y. With the default projection, X and Y are the same scale.
 
     """
-    
+
     # center gets ignored in this case
     return N.array((1, float(NumChannels)/MaxValue), N.float)
 
@@ -34,7 +34,7 @@ def ScaleWorldToPixel(self, Lengths):
         This is a new version of a function that will get passed to the
         drawing functions of the objects, to Change a length from world to
         pixel coordinates.
-        
+
         This version uses the "ceil" function, so that fractional pixel get
         rounded up, rather than down.
 
@@ -63,14 +63,14 @@ class DrawFrame(wx.Frame):
                                      BackgroundColor = "DARK SLATE BLUE",
                                      ProjectionFun = YScaleFun,
                                      )
-        
+
         self.Canvas = Canvas = NC.Canvas
         #self.Canvas.ScaleWorldToPixel = ScaleWorldToPixel
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
 
         self.Values = random.randint(0, MaxValue, (NumChannels,))
-       
+
         self.Bars = []
         self.BarWidth = 0.75
         # add an X axis
@@ -88,7 +88,7 @@ class DrawFrame(wx.Frame):
                                       FillStyle    = "Solid",
                                       )
             self.Bars.append(bar)
-        
+
         # Add a couple a button the Toolbar
 
         tb = NC.ToolBar
@@ -106,7 +106,7 @@ class DrawFrame(wx.Frame):
         self.Show()
         Canvas.ZoomToBB()
         Canvas.Draw(True)
-   
+
 
     def OnMove(self, event):
         """
@@ -118,7 +118,7 @@ class DrawFrame(wx.Frame):
             channel = "%i,"%(channel+1)
         else:
             channel = ""
-            
+
         if value >=0:
             value = "%3g"%value
         else:
@@ -128,16 +128,16 @@ class DrawFrame(wx.Frame):
     def ResetData(self, event):
         self.Values = random.randint(0, MaxValue, (NumChannels,))
         for i, bar in enumerate(self.Bars):
-            bar.SetShape(bar.XY, (self.BarWidth, self.Values[i])) 
+            bar.SetShape(bar.XY, (self.BarWidth, self.Values[i]))
         self.Canvas.Draw(Force=True)
 
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

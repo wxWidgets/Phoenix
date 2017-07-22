@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.piectrl as PC
@@ -36,7 +36,7 @@ class lib_agw_piectrl_Tests(wtc.WidgetTestCase):
         self.assertEqual(part2.GetValue(), 200)
 
         self.assertEqual(mypie.GetRotationAngle(), 0)
-        
+
 
 #---------------------------------------------------------------------------
 

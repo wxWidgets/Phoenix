@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.rulerctrl as RC
@@ -7,7 +7,7 @@ import wx.lib.agw.rulerctrl as RC
 #---------------------------------------------------------------------------
 
 class lib_agw_rulerctrl_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_rulerctrlCtor(self):
         ruler = RC.RulerCtrl(self.frame, -1, orient=wx.HORIZONTAL, style=wx.SUNKEN_BORDER)
 
@@ -16,7 +16,7 @@ class lib_agw_rulerctrl_Tests(wtc.WidgetTestCase):
 
         # Some methods tests...
         self.assertEqual(ruler.GetFormat(), RC.RealFormat)
-        
+
     def test_lib_agw_rulerctrlEvents(self):
         RC.EVT_INDICATOR_CHANGED
         RC.EVT_INDICATOR_CHANGING

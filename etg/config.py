@@ -4,7 +4,8 @@
 #              Robin Dunn
 #
 # Created:     10-Sept-2011
-# Copyright:   (c) 2013 by Kevin Ollivier
+# Copyright:   (c) 2011 by Kevin Ollivier
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -17,26 +18,30 @@ NAME      = "config"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 'wxConfigBase', 
-           'wxFileConfig', 
+# this script.
+ITEMS  = [ 'wxConfigBase',
+           'wxFileConfig',
            'wxConfigPathChanger',
+           'interface_2wx_2config_8h.xml'
            ]
-    
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     c = module.find('wxConfigBase')
     assert isinstance(c, etgtools.ClassDef)
-    
+    c.mustHaveApp()
+    c.find('Get').mustHaveApp()
+    c.find('Create').mustHaveApp()
+
     c.abstract = True
     ctor = c.find('wxConfigBase')
     ctor.items.remove(ctor.find('conv'))
@@ -44,13 +49,13 @@ def run():
 
     c.find('Set').transferBack = True      # Python takes ownership of the return value
     c.find('Set.pConfig').transfer = True  # C++ takes ownership of the arg
-    
+
     for func in c.findAll('Read'):
         if not 'wxString' in func.type:
             func.ignore()
         else:
             func.find('defaultVal').default = 'wxEmptyString'
-            
+
     c.addCppMethod('long', 'ReadInt', '(const wxString& key, long defaultVal=0)',  """\
         long rv;
         self->Read(*key, &rv, defaultVal);
@@ -68,7 +73,7 @@ def run():
         return rv;
         """)
 
-    
+
     c.find('Write').overloads = []
     c.addCppMethod('bool', 'WriteInt', '(const wxString& key, long value)', """\
         return self->Write(*key, value);
@@ -79,13 +84,13 @@ def run():
     c.addCppMethod('bool', 'WriteBool', '(const wxString& key, bool value)', """\
         return self->Write(*key, value);
         """)
-    
-    
+
+
     c.find('GetFirstGroup').ignore()
     c.find('GetNextGroup').ignore()
     c.find('GetFirstEntry').ignore()
     c.find('GetNextEntry').ignore()
-    
+
     c.addCppCode("""\
         static PyObject* _Config_EnumerationHelper(bool flag, wxString& str, long index) {
         wxPyThreadBlocker blocker;
@@ -101,7 +106,7 @@ def run():
 
     c.addCppMethod('PyObject*', 'GetFirstGroup', '()',
         doc="""\
-            GetFirstGroup() -> (more, value, index)\n            
+            GetFirstGroup() -> (more, value, index)\n
             Allows enumerating the subgroups in a config object.  Returns a tuple
             containing a flag indicating if there are more items, the name of the
             current item, and an index to pass to GetNextGroup to fetch the next
@@ -113,7 +118,7 @@ def run():
             more = self->GetFirstGroup(value, index);
             return _Config_EnumerationHelper(more, value, index);
             """)
-            
+
     c.addCppMethod('PyObject*', 'GetNextGroup', '(long index)',
         doc="""\
             GetNextGroup(long index) -> (more, value, index)\n
@@ -127,8 +132,8 @@ def run():
             more = self->GetNextGroup(value, index);
             return _Config_EnumerationHelper(more, value, index);
             """)
-    
-            
+
+
     c.addCppMethod('PyObject*', 'GetFirstEntry', '()',
         doc="""\
             GetFirstEntry() -> (more, value, index)\n
@@ -143,7 +148,7 @@ def run():
             more = self->GetFirstEntry(value, index);
             return _Config_EnumerationHelper(more, value, index);
             """)
-    
+
     c.addCppMethod('PyObject*', 'GetNextEntry', '(long index)',
         doc="""\
             GetNextEntry() -> (more, value, index)\n
@@ -158,9 +163,10 @@ def run():
             return _Config_EnumerationHelper(more, value, index);
             """)
 
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxFileConfig')
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
     c.find('wxFileConfig').findOverload('wxInputStream').find('conv').ignore()
     ctor = c.find('wxFileConfig').findOverload('wxString').find('conv').ignore()
@@ -173,16 +179,16 @@ def run():
     c.find('GetNextGroup').ignore()
     c.find('GetFirstEntry').ignore()
     c.find('GetNextEntry').ignore()
-    
 
-    
+
+
     #-----------------------------------------------------------------
     # In C++ wxConfig is a #define to some other config class. We'll let our
     # backend generator believe that it's a real class with that name. It will
     # end up using the wxConfig #defined in the C++ code, and will actually be
     # whatever is the default config class for the platform.
     wc = etgtools.WigCode("""\
-    class wxConfig : wxConfigBase 
+    class wxConfig : wxConfigBase
     {
     public:
         wxConfig(const wxString& appName = wxEmptyString,
@@ -191,7 +197,7 @@ def run():
                  const wxString& globalFilename = wxEmptyString,
                  long style = wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE);
         ~wxConfig();
-        
+
         // pure virtuals with implementations here
         const wxString & GetPath() const;
         void SetPath(const wxString & strPath);
@@ -200,19 +206,19 @@ def run():
         bool HasEntry(const wxString & strName) const;
         bool HasGroup(const wxString & strName) const;
         bool Flush(bool bCurrentOnly = false);
-        bool RenameEntry(const wxString & oldName, const wxString & newName); 
+        bool RenameEntry(const wxString & oldName, const wxString & newName);
         bool RenameGroup(const wxString & oldName, const wxString & newName);
         bool DeleteAll();
         bool DeleteEntry(const wxString & key, bool bDeleteGroupIfEmpty = true);
         bool DeleteGroup(const wxString & key);
-    
+
     private:
         wxConfig(const wxConfig&);
     };
     """)
     module.addItem(wc)
 
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxConfigPathChanger')
     assert isinstance(c, etgtools.ClassDef)
@@ -221,12 +227,12 @@ def run():
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
 
-        
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

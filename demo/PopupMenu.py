@@ -8,12 +8,13 @@ import images
 
 text = """\
 
-Right-click on any bare area of this panel (or Ctrl-click on the Mac)
-to show a popup menu.  Then look at the code for this sample.  Notice
-how the PopupMenu method is similar to the ShowModal method of a
-wx.Dialog in that it doesn't return until the popup menu has been
-dismissed.  The event handlers for the popup menu items can either be
-attached to the menu itself, or to the window that invokes PopupMenu.
+Right-click on any bare area of this panel (or Ctrl-click on Macs
+if you don't have a multi-button mouse) to show a popup menu.
+Then look at the code for this sample.  Notice how the PopupMenu
+method is similar to the ShowModal method of a wx.Dialog in that
+it doesn't return until the popup menu has been dismissed.  The
+event handlers for the popup menu items can either be attached to
+the menu itself, or to the window that invokes PopupMenu.
 """
 
 #----------------------------------------------------------------------

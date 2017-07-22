@@ -578,7 +578,7 @@ def add_metaclass(metaclass):
 
 def getexcobj():
     return sys.exc_info()[1]
-    
+
 if PY3:
     xrange = range
 else:
@@ -598,7 +598,7 @@ else:
         return dictObj.values()
     def nextiter(container):
         return container.next()
-        
+
 if PY3:
     def isstring(obj):
         return isinstance(obj, str)

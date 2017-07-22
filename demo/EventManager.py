@@ -2,12 +2,13 @@
 
 #---------------------------------------------------------------------------
 # Name:        EventManager.py
-# Purpose:     A module to demonstrate wxPython.lib.evtmgr.EventManager.
+# Purpose:     A module to demonstrate wx.lib.evtmgr.EventManager.
 #
 # Author:      Robb Shecter (robb@acm.org)
 #
 # Created:     16-December-2002
-# Copyright:   (c) 2002 by Robb Shecter (robb@acm.org)
+# Copyright:   (c) 2002-2017 by Robb Shecter (robb@acm.org),
+#              Total Control Software
 # Licence:     wxWindows license
 #---------------------------------------------------------------------------
 
@@ -136,7 +137,7 @@ class InnerTile(wx.Window):
     FINAL_COLOR = wx.Colour( 20, 80,240)
     OFF_COLOR   = wx.Colour(185,190,185)
     # Some pre-computation.
-    DELTAS            = map(lambda a,b: b-a, START_COLOR.Get(), FINAL_COLOR.Get())
+    DELTAS            = list(map(lambda a,b: b-a, START_COLOR.Get(), FINAL_COLOR.Get()))
     START_COLOR_TUPLE = START_COLOR.Get()
 
     """
@@ -185,7 +186,8 @@ class InnerTile(wx.Window):
         self.makeColorFromTuple(mouseEvent.GetPosition())
 
 
-    def makeColorFromTuple(self, (x, y)):
+    def makeColorFromTuple(self, xy):
+        x, y    = xy
         MAX     = 180.0
         scaled  = min((x + y) * self.factor, MAX)  # In range [0..MAX]
         percent = scaled / MAX

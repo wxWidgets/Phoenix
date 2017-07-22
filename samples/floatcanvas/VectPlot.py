@@ -21,11 +21,11 @@ from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 class DrawFrame(wx.Frame):
     def __init__(self,parent, id,title,position,size):
         wx.Frame.__init__(self,parent, id,title,position, size)
-        
+
         ## Set up the MenuBar
-        
+
         MenuBar = wx.MenuBar()
-        
+
         file_menu = wx.Menu()
         item = file_menu.Append(wx.ID_ANY, "E&xit","Terminate the program")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
@@ -35,22 +35,22 @@ class DrawFrame(wx.Frame):
         item = draw_menu.Append(wx.ID_ANY, "&Plot","Re-do Plot")
         self.Bind(wx.EVT_MENU, self.Plot, item)
         MenuBar.Append(draw_menu, "&Plot")
-       
-        
+
+
         help_menu = wx.Menu()
         item = help_menu.Append(wx.ID_ANY, "&About",
                                 "More information About this program")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
         MenuBar.Append(help_menu, "&Help")
-        
+
         self.SetMenuBar(MenuBar)
-        
-                
+
+
         self.CreateStatusBar()
         self.SetStatusText("")
-        
+
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
-        
+
         # Add the Canvas
         self.Canvas = NavCanvas.NavCanvas(self ,wx.ID_ANY ,(500,300),
                                           ProjectionFun = None,
@@ -60,13 +60,13 @@ class DrawFrame(wx.Frame):
 
         self.Canvas.NumBetweenBlits = 1000
 
-        
+
         self.Show(True)
- 
+
         self.Plot()
         return None
-        
-        
+
+
     def OnAbout(self, event):
         dlg = wx.MessageDialog(self, "This is a small program to demonstrate\n"
                                "the use of the FloatCanvas\n"
@@ -74,20 +74,20 @@ class DrawFrame(wx.Frame):
                                "About Me", wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
-        
+
     def ZoomToFit(self,event):
         self.Canvas.ZoomToBB()
-        
+
     def OnQuit(self,event):
         self.Close(True)
-        
+
     def OnCloseWindow(self, event):
         self.Destroy()
 
-        
+
     def DrawAxis(self):
         Canvas = self.Canvas
-      
+
         # Draw the Axis
 
         # Note: the AddRectangle Parameters all have sensible
@@ -145,59 +145,59 @@ class DrawFrame(wx.Frame):
         self.Canvas.Draw()
         self.Canvas.SaveAsImage("junk.png")
 
-    
+
 class DemoApp(wx.App):
     """
     How the demo works:
-    
+
     Either under the Draw menu, or on the toolbar, you can push Run and Stop
 
     "Run" start an oscilloscope like display of a moving sine curve
     "Stop" stops it.
-    
+
     While the plot os running (or not) you can zoom in and out and move
     about the picture. There is a tool bar with three tools that can be
     selected.
-    
+
     The magnifying glass with the plus is the zoom in tool. Once selected,
     if you click the image, it will zoom in, centered on where you
     clicked. If you click and drag the mouse, you will get a rubber band
     box, and the image will zoom to fit that box when you release it.
-    
+
     The magnifying glass with the minus is the zoom out tool. Once selected,
     if you click the image, it will zoom out, centered on where you
     clicked.
-    
+
     The hand is the move tool. Once selected, if you click and drag on
     the image, it will move so that the part you clicked on ends up
     where you release the mouse. Nothing is changed while you are
     dragging, but you can see the outline of the former picture.
-    
+
     I'd like the cursor to change as you change tools, but the stock
     wx.Cursors didn't include anything I liked, so I stuck with the
     pointer. Please let me know if you have any nice cursor images for me to
     use.
-    
-    
+
+
     Any bugs, comments, feedback, questions, and especially code are welcome:
-    
+
     -Chris Barker
-    
+
     Chris.Barker@noaa.gov
-    
+
     """
-    
+
     def OnInit(self):
         frame = DrawFrame(None, wx.ID_ANY, "Plotting Test",wx.DefaultPosition,wx.Size(700,400))
 
         self.SetTopWindow(frame)
 
         return True
-            
-    
+
+
 if __name__ == "__main__":
 
     app = DemoApp(0)
     app.MainLoop()
-    
-    
+
+

@@ -40,7 +40,7 @@
 
 
 """
-:class:`~lib.agw.customtreectrl.CustomTreeCtrl` is a class that mimics the behaviour of :class:`TreeCtrl`, with some more
+:class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl` is a class that mimics the behaviour of :class:`TreeCtrl`, with some more
 enhancements.
 
 
@@ -81,7 +81,7 @@ to the standard :class:`TreeCtrl` behaviour this class supports:
 * Customized drag and drop images built on the fly;
 * Setting the :class:`CustomTreeCtrl` item buttons to a personalized imagelist;
 * Setting the :class:`CustomTreeCtrl` check/radio item icons to a personalized imagelist;
-* Changing the style of the lines that connect the items (in terms of :class:`Pen` styles);
+* Changing the style of the lines that connect the items (in terms of :class:`wx.Pen` styles);
 * Using an image as a :class:`CustomTreeCtrl` background (currently only in "tile" mode);
 * Adding images to any item in the leftmost area of the :class:`CustomTreeCtrl` client window.
 * Separator-type items which are simply visual indicators that are meant to set apart
@@ -312,7 +312,7 @@ import wx
 from wx.lib.expando import ExpandoTextCtrl
 
 # Python 2/3 compatibility helper
-import wx.lib.six as six
+import six
 
 # ----------------------------------------------------------------------------
 # Constants
@@ -546,9 +546,9 @@ def MakeDisabledBitmap(original):
     """
     Creates a disabled-looking bitmap starting from the input one.
 
-    :param `original`: an instance of :class:`Bitmap` to be greyed-out.
+    :param `original`: an instance of :class:`wx.Bitmap` to be greyed-out.
 
-    :return: An instance of :class:`Bitmap`, containing a disabled-looking
+    :return: An instance of :class:`wx.Bitmap`, containing a disabled-looking
      representation of the original item image.
     """
 
@@ -561,9 +561,9 @@ def DrawTreeItemButton(win, dc, rect, flags):
     """
     Draw the expanded/collapsed icon for a tree control item.
 
-    :param `win`: an instance of :class:`Window`;
-    :param `dc`: an instance of :class:`DC`;
-    :param Rect `rect`: the client rectangle where to draw the tree item button;
+    :param `win`: an instance of :class:`wx.Window`;
+    :param `dc`: an instance of :class:`wx.DC`;
+    :param wx.Rect `rect`: the client rectangle where to draw the tree item button;
     :param integer `flags`: contains ``wx.CONTROL_EXPANDED`` bit for expanded tree items.
 
     :note: This is a simple replacement of :meth:`RendererNative.DrawTreeItemButton`.
@@ -626,7 +626,7 @@ def ChopText(dc, text, max_size):
     Chops the input `text` if its size does not fit in `max_size`, by cutting the
     text and adding ellipsis at the end.
 
-    :param `dc`: a :class:`DC` device context;
+    :param `dc`: a :class:`wx.DC` device context;
     :param `text`: the text to chop;
     :param `max_size`: the maximum size in which the text should fit.
 
@@ -838,10 +838,10 @@ class TreeItemAttr(object):
         Default class constructor.
         For internal use: do not call it in your code!
 
-        :param `colText`: the text colour, an instance of :class:`Colour`;
-        :param `colBack`: the tree item background colour, an instance of :class:`Colour`;
-        :param `colBorder`: the tree item border colour, an instance of :class:`Colour`;
-        :param `font`: the tree item font, an instance of :class:`Font`.
+        :param `colText`: the text colour, an instance of :class:`wx.Colour`;
+        :param `colBack`: the tree item background colour, an instance of :class:`wx.Colour`;
+        :param `colBorder`: the tree item border colour, an instance of :class:`wx.Colour`;
+        :param `font`: the tree item font, an instance of :class:`wx.Font`.
         """
 
         self._colText = colText
@@ -854,7 +854,7 @@ class TreeItemAttr(object):
         """
         Sets the text colour attribute.
 
-        :param `colText`: an instance of :class:`Colour`.
+        :param `colText`: an instance of :class:`wx.Colour`.
         """
 
         self._colText = colText
@@ -864,7 +864,7 @@ class TreeItemAttr(object):
         """
         Sets the item background colour attribute.
 
-        :param `colBack`: an instance of :class:`Colour`.
+        :param `colBack`: an instance of :class:`wx.Colour`.
         """
 
         self._colBack = colBack
@@ -874,7 +874,7 @@ class TreeItemAttr(object):
         """
         Sets the item border colour attribute.
 
-        :param `colBack`: an instance of :class:`Colour`.
+        :param `colBack`: an instance of :class:`wx.Colour`.
 
         .. versionadded:: 0.9.6
         """
@@ -886,7 +886,7 @@ class TreeItemAttr(object):
         """
         Sets the item font attribute.
 
-        :param `font`: an instance of :class:`Font`.
+        :param `font`: an instance of :class:`wx.Font`.
         """
 
         self._font = font
@@ -940,7 +940,7 @@ class TreeItemAttr(object):
         """
         Returns the attribute text colour.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._colText
@@ -950,7 +950,7 @@ class TreeItemAttr(object):
         """
         Returns the attribute background colour.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._colBack
@@ -960,7 +960,7 @@ class TreeItemAttr(object):
         """
         Returns the attribute border colour.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         .. versionadded:: 0.9.6
         """
@@ -972,7 +972,7 @@ class TreeItemAttr(object):
         """
         Returns the attribute font.
 
-        :return: An instance of :class:`Font`.
+        :return: An instance of :class:`wx.Font`.
         """
 
         return self._font
@@ -1002,7 +1002,7 @@ class CommandTreeEvent(wx.CommandEvent):
         :param integer `evtId`: the event identifier;
         :param `item`: an instance of :class:`GenericTreeItem`;
         :param integer `evtKey`: a character ordinal;
-        :param `point`: an instance of :class:`Point`;
+        :param `point`: an instance of :class:`wx.Point`;
         :param string `label`: a :class:`GenericTreeItem` text label.
         """
 
@@ -1063,7 +1063,7 @@ class CommandTreeEvent(wx.CommandEvent):
         (for ``EVT_TREE_BEGIN_DRAG`` and ``EVT_TREE_BEGIN_RDRAG`` events only)
         or the click position.
 
-        :return: An instance of :class:`Point`.
+        :return: An instance of :class:`wx.Point`.
         """
 
         return self._pointDrag
@@ -1075,7 +1075,7 @@ class CommandTreeEvent(wx.CommandEvent):
         (for ``EVT_TREE_BEGIN_DRAG`` and ``EVT_TREE_BEGIN_RDRAG`` events only)
         or the click position.
 
-        :param `pt`: an instance of :class:`Point`.
+        :param `pt`: an instance of :class:`wx.Point`.
         """
 
         self._pointDrag = pt
@@ -1205,7 +1205,7 @@ class TreeEvent(CommandTreeEvent):
         :param integer `evtId`: the event identifier;
         :param `item`: an instance of :class:`GenericTreeItem`;
         :param integer `evtKey`: a character ordinal;
-        :param `point`: an instance of :class:`Point`;
+        :param `point`: an instance of :class:`wx.Point`;
         :param string `label`: a :class:`GenericTreeItem` text label.
         """
 
@@ -1306,7 +1306,7 @@ class TreeTextCtrl(ExpandoTextCtrl):
         :param `item`: an instance of :class:`GenericTreeItem`.
 
         :raise: `Exception` when the item has an associated image but the parent
-         :class:`CustomTreeCtrl` does not have a :class:`ImageList` assigned.
+         :class:`CustomTreeCtrl` does not have a :class:`wx.ImageList` assigned.
         """
 
         self._owner = owner
@@ -1573,7 +1573,7 @@ class GenericTreeItem(object):
          =============== =========================================
 
         :param `wnd`: if not ``None``, a non-toplevel window to be displayed next to
-         the item, an instance of :class:`Window`;
+         the item, an instance of :class:`wx.Window`;
         :param integer `image`: an index within the normal image list specifying the image to
          use for the item in unselected state;
         :param integer `selImage`: an index within the normal image list specifying the image to
@@ -1726,7 +1726,7 @@ class GenericTreeItem(object):
          ================================= ========================
 
         :return: An integer index that can be used to retrieve the item image inside
-         a :class:`ImageList`.
+         a :class:`wx.ImageList`.
         """
 
         return self._images[which]
@@ -1749,7 +1749,7 @@ class GenericTreeItem(object):
          ================================= ========================
 
         :return: An integer index that can be used to retrieve the item check image inside
-         a :class:`ImageList`.
+         a :class:`wx.ImageList`.
 
         :note: This method is meaningful only for radio & check items.
         """
@@ -1763,7 +1763,7 @@ class GenericTreeItem(object):
         leftmost part of the client area of :class:`CustomTreeCtrl`.
 
         :return: An integer index that can be used to retrieve the item leftmost image inside
-         a :class:`ImageList`.
+         a :class:`wx.ImageList`.
         """
 
         return self._leftimage
@@ -1914,7 +1914,7 @@ class GenericTreeItem(object):
         Sets the window associated to the item.
 
         :param `wnd`: a non-toplevel window to be displayed next to the item, any
-         subclass of :class:`Window`.
+         subclass of :class:`wx.Window`.
 
         :raise: `Exception` if the input `item` is a separator and `wnd` is not ``None``.
         """
@@ -1952,7 +1952,7 @@ class GenericTreeItem(object):
         """
         Returns the window associated to the item (if any).
 
-        :return: An instance of any :class:`Window` derived class, excluding top-level windows.
+        :return: An instance of any :class:`wx.Window` derived class, excluding top-level windows.
         """
 
         return self._wnd
@@ -2477,7 +2477,7 @@ class GenericTreeItem(object):
         """
         :meth:`~GenericTreeItem.HitTest` method for an item. Called from the main window :meth:`CustomTreeCtrl.HitTest() <customtreectrl.CustomTreeCtrl.HitTest>`.
 
-        :param `point`: the point to test for the hit (an instance of :class:`Point`);
+        :param `point`: the point to test for the hit (an instance of :class:`wx.Point`);
         :param `theCtrl`: the main :class:`CustomTreeCtrl` tree;
         :param integer `flags`: a bitlist of hit locations;
         :param integer `level`: the item's level inside the tree hierarchy.
@@ -2573,7 +2573,7 @@ class GenericTreeItem(object):
         Returns the current item image.
 
         :return: An integer index that can be used to retrieve the item image inside
-         a :class:`ImageList`.
+         a :class:`wx.ImageList`.
         """
 
         image = _NO_IMAGE
@@ -2608,7 +2608,7 @@ class GenericTreeItem(object):
         Returns the current item check image.
 
         :return: An integer index that can be used to retrieve the item check image inside
-         a :class:`ImageList`.
+         a :class:`wx.ImageList`.
         """
 
         if self._type == 0:
@@ -2649,14 +2649,14 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the underlying :class:`ScrolledWindow` style;
         :param integer `agwStyle`: the AGW-specific window style for :class:`CustomTreeCtrl`. It can be a
          combination of the following bits:
@@ -2687,7 +2687,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          ``TR_TOOLTIP_ON_LONG_ITEMS``      0x100000 Flag used to show tooltips on long items when the horizontal space for :class:`CustomTreeCtrl` is low.
          ============================== =========== ==================================================
 
-        :param Validator `validator`: window validator;
+        :param wx.Validator `validator`: window validator;
         :param string `name`: window name.
         """
 
@@ -2878,7 +2878,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Handles the ``wx.EVT_WINDOW_DESTROY`` event for :class:`CustomTreeCtrl`.
 
-        :param `event`: a :class:`WindowDestroyEvent` event to be processed.
+        :param `event`: a :class:`wx.WindowDestroyEvent` event to be processed.
         """
 
         # Here there may be something I miss... do I have to destroy
@@ -2905,7 +2905,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param integer `x`: the width of the bitmap;
         :param integer `y`: the height of the bitmap.
 
-        :return: An instance of :class:`Bitmap`, representing a native looking checkbox or radiobutton.
+        :return: An instance of :class:`wx.Bitmap`, representing a native looking checkbox or radiobutton.
         """
 
         bmp = wx.Bitmap(x, y)
@@ -3070,7 +3070,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the colour for items in a disabled state.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         self._disabledColour = colour
@@ -3081,7 +3081,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the colour for items in a disabled state.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._disabledColour
@@ -3408,7 +3408,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         from the parent window.
 
         The base class version returns ``False``, but this method is overridden in
-        :class:`Control` where it returns ``True``.
+        :class:`wx.Control` where it returns ``True``.
 
         :class:`CustomTreeCtrl` does not inherit colours from anyone.
         """
@@ -3583,7 +3583,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          ================================= ========================
 
         :return: An integer index that can be used to retrieve the item image inside
-         a :class:`ImageList`.
+         a :class:`wx.ImageList`.
         """
 
         return item.GetImage(which)
@@ -3597,7 +3597,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param `item`: an instance of :class:`GenericTreeItem`.
 
         :return: An integer index that can be used to retrieve the item leftmost image inside
-         a :class:`ImageList`.
+         a :class:`wx.ImageList`.
         """
 
         return item.GetLeftImage()
@@ -3625,7 +3625,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         :param `item`: an instance of :class:`GenericTreeItem`.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return item.Attr().GetTextColour()
@@ -3637,7 +3637,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         :param `item`: an instance of :class:`GenericTreeItem`.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return item.Attr().GetBackgroundColour()
@@ -3649,7 +3649,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         :param `item`: an instance of :class:`GenericTreeItem`.
 
-        :return: An instance of :class:`Font`.
+        :return: An instance of :class:`wx.Font`.
         """
 
         font = item.Attr().GetFont()
@@ -3802,7 +3802,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Sets the item text colour or separator horizontal line colour.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         item.Attr().SetTextColour(colour)
@@ -3814,7 +3814,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Sets the item background colour.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         item.Attr().SetBackgroundColour(colour)
@@ -3838,7 +3838,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Sets the item font.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
-        :param `font`: a valid :class:`Font` instance.
+        :param `font`: a valid :class:`wx.Font` instance.
         """
 
         item.Attr().SetFont(font)
@@ -3849,7 +3849,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the :class:`CustomTreeCtrl` font.
 
-        :param `font`: a valid :class:`Font` instance.
+        :param `font`: a valid :class:`wx.Font` instance.
 
         :note: Overridden from :class:`ScrolledWindow`.
         """
@@ -3881,7 +3881,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the font used to render hypertext items.
 
-        :return: An instance of :class:`Font`.
+        :return: An instance of :class:`wx.Font`.
 
         :note: This method is meaningful only for hypertext-like items.
         """
@@ -3893,7 +3893,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the font used to render hypertext items.
 
-        :param `font`: a valid :class:`Font` instance.
+        :param `font`: a valid :class:`wx.Font` instance.
 
         :note: This method is meaningful only for hypertext-like items.
         """
@@ -3906,7 +3906,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the colour used to render a non-visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
 
         :note: This method is meaningful only for hypertext-like items.
         """
@@ -3919,7 +3919,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the colour used to render a non-visited hypertext item.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         :note: This method is meaningful only for hypertext-like items.
         """
@@ -3931,7 +3931,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the colour used to render a visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
 
         :note: This method is meaningful only for hypertext-like items.
         """
@@ -3944,7 +3944,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the colour used to render a visited hypertext item.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         :note: This method is meaningful only for hypertext-like items.
         """
@@ -3984,7 +3984,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the colour used to highlight focused selected items.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
 
         :note: This is applied only if gradient and Windows Vista selection
          styles are disabled.
@@ -3998,7 +3998,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the colour used to highlight unfocused selected items.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
 
         :note: This is applied only if gradient and Windows Vista selection
          styles are disabled.
@@ -4012,7 +4012,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the colour used to highlight focused selected items.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         :note: This is used only if gradient and Windows Vista selection
          styles are disabled.
@@ -4025,7 +4025,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the colour used to highlight unfocused selected items.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         :note: This is used only if gradient and Windows Vista selection
          styles are disabled.
@@ -4038,7 +4038,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the first gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour is taken from the system value ``wx.SYS_COLOUR_HIGHLIGHT``.
         """
 
@@ -4054,7 +4054,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the second gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour generated is a slightly darker version of the :class:`CustomTreeCtrl`
          background colour.
         """
@@ -4077,7 +4077,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the first gradient colour for gradient-style selections.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._firstcolour
@@ -4087,7 +4087,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the second gradient colour for gradient-style selections.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._secondcolour
@@ -4155,7 +4155,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the pen used to draw the selected item border.
 
-        :param `pen`: an instance of :class:`Pen`.
+        :param `pen`: an instance of :class:`wx.Pen`.
 
         :note: The border pen is not used if the Windows Vista selection style is applied.
         """
@@ -4168,7 +4168,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the pen used to draw the selected item border.
 
-        :return: An instance of :class:`Pen`.
+        :return: An instance of :class:`wx.Pen`.
 
         :note: The border pen is not used if the Windows Vista selection style is applied.
         """
@@ -4180,7 +4180,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the pen used to draw the connecting lines between items.
 
-        :param `pen`: an instance of :class:`Pen`.
+        :param `pen`: an instance of :class:`wx.Pen`.
         """
 
         self._dottedPen = pen
@@ -4191,7 +4191,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the pen used to draw the connecting lines between items.
 
-        :return: An instance of :class:`Pen`.
+        :return: An instance of :class:`wx.Pen`.
         """
 
         return self._dottedPen
@@ -4201,7 +4201,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the :class:`CustomTreeCtrl` background image.
 
-        :param `image`: if not ``None``, an instance of :class:`Bitmap`.
+        :param `image`: if not ``None``, an instance of :class:`wx.Bitmap`.
 
         :note: At present, the background image can only be used in "tile" mode.
 
@@ -4216,7 +4216,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the :class:`CustomTreeCtrl` background image (if any).
 
-        :return: An instance of :class:`Bitmap` if a background image is present, ``None`` otherwise.
+        :return: An instance of :class:`wx.Bitmap` if a background image is present, ``None`` otherwise.
 
         :note: At present, the background image can only be used in "tile" mode.
 
@@ -4230,7 +4230,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the pen colour for separator-type items.
 
-        :param `colour`: a valid instance of :class:`Colour`.
+        :param `colour`: a valid instance of :class:`wx.Colour`.
         """
 
         self._separatorPen = wx.Pen(colour, 1)
@@ -4241,7 +4241,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the pen colour for separator-type items.
 
-        :return: An instance of :class:`Colour` representing the separator pen colour.
+        :return: An instance of :class:`wx.Colour` representing the separator pen colour.
         """
 
         return self._separatorPen.GetColour()
@@ -4263,7 +4263,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         :param `item`: an instance of :class:`GenericTreeItem`.
 
-        :return: An instance of :class:`Window` if the item has an associated window, ``None`` otherwise.
+        :return: An instance of :class:`wx.Window` if the item has an associated window, ``None`` otherwise.
         """
 
         return item.GetWindow()
@@ -4860,7 +4860,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param integer `ct_type`: the item type (see :meth:`~CustomTreeCtrl.SetItemType` for a list of valid
          item types);
         :param `wnd`: if not ``None``, a non-toplevel window to show next to the item, any
-         subclass of :class:`Window` except top-level windows;
+         subclass of :class:`wx.Window` except top-level windows;
         :param integer `image`: an index within the normal image list specifying the image to
          use for the item in unselected state;
         :param integer `selImage`: an index within the normal image list specifying the image to
@@ -4927,7 +4927,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param integer `ct_type`: the item type (see :meth:`~CustomTreeCtrl.SetItemType` for a list of valid
          item types);
         :param `wnd`: if not ``None``, a non-toplevel window to show next to the item,
-         any subclass of :class:`Window` except top-level windows;
+         any subclass of :class:`wx.Window` except top-level windows;
         :param integer `image`: an index within the normal image list specifying the image to
          use for the item in unselected state;
         :param  integer `selImage`: an index within the normal image list specifying the image to
@@ -4998,7 +4998,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param integer `ct_type`: the item type (see :meth:`~CustomTreeCtrl.SetItemType` for a list of valid
          item types);
         :param `wnd`: if not ``None``, a non-toplevel window to show next to the item, any
-         subclass of :class:`Window` except top-level windows;
+         subclass of :class:`wx.Window` except top-level windows;
         :param integer `image`: an index within the normal image list specifying the image to
          use for the item in unselected state;
         :param integer `selImage`: an index within the normal image list specifying the image to
@@ -5027,7 +5027,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param integer `ct_type`: the item type (see :meth:`~CustomTreeCtrl.SetItemType` for a list of valid
          item types);
         :param `wnd`: if not ``None``, a non-toplevel window to show next to the item,
-         any subclass of :class:`Window`;
+         any subclass of :class:`wx.Window`;
         :param integer `image`: an index within the normal image list specifying the image to
          use for the item in unselected state;
         :param integer `selImage`: an index within the normal image list specifying the image to
@@ -5071,7 +5071,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param integer `ct_type`: the item type (see :meth:`~CustomTreeCtrl.SetItemType` for a list of valid
          item types);
         :param `wnd`: if not ``None``, a non-toplevel window to show next to the item,
-         any subclass of :class:`Window`;
+         any subclass of :class:`wx.Window`;
         :param integer `image`: an index within the normal image list specifying the image to
          use for the item in unselected state;
         :param integer `selImage`: an index within the normal image list specifying the image to
@@ -5122,7 +5122,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param integer `ct_type`: the item type (see :meth:`~CustomTreeCtrl.SetItemType` for a list of valid
          item types);
         :param `wnd`: if not ``None``, a non-toplevel window to show next to the item,
-         any subclass of :class:`Window`;
+         any subclass of :class:`wx.Window`;
         :param integer `image`: an index within the normal image list specifying the image to
          use for the item in unselected state;
         :param integer `selImage`: an index within the normal image list specifying the image to
@@ -5410,7 +5410,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             child, cookie = self.GetNextChild(item, cookie)
 
         self._sendEvent = True
-        self._dirty = True        
+        self._dirty = True
 
 
     def ExpandAll(self):
@@ -5867,7 +5867,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             if wx.Platform in ["__WXMSW__", "__WXMAC__"]:
                 self.Update()
         else:
-            wx.SafeYield()
+            wx.YieldIfNeeded()
 
         # now scroll to the item
         item_y = item.GetY()
@@ -5943,7 +5943,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the normal image list associated with :class:`CustomTreeCtrl`.
 
-        :return: An instance of :class:`ImageList`.
+        :return: An instance of :class:`wx.ImageList`.
         """
 
         return self._imageListNormal
@@ -5954,7 +5954,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Returns the buttons image list associated with :class:`CustomTreeCtrl` (from
         which application-defined button images are taken).
 
-        :return: An instance of :class:`ImageList`.
+        :return: An instance of :class:`wx.ImageList`.
         """
 
         return self._imageListButtons
@@ -5965,7 +5965,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Returns the state image list associated with :class:`CustomTreeCtrl` (from which
         application-defined state images are taken).
 
-        :return: An instance of :class:`ImageList`.
+        :return: An instance of :class:`wx.ImageList`.
         """
 
         return self._imageListState
@@ -5975,7 +5975,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the image list used to build the check/radio buttons in :class:`CustomTreeCtrl`.
 
-        :return: An instance of :class:`ImageList`.
+        :return: An instance of :class:`wx.ImageList`.
         """
 
         return self._imageListCheck
@@ -5987,7 +5987,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         the leftmost part of the client area. Any item can have a leftmost image associated
         with it.
 
-        :return: An instance of :class:`ImageList`.
+        :return: An instance of :class:`wx.ImageList`.
         """
 
         return self._imageListLeft
@@ -6065,7 +6065,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the normal image list for :class:`CustomTreeCtrl`.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         if self._ownsImageListNormal:
@@ -6096,7 +6096,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         the leftmost part of the client area. Any item can have a leftmost image associated
         with it.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self._imageListLeft = imageList
@@ -6123,7 +6123,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Sets the state image list for :class:`CustomTreeCtrl` (from which application-defined
         state images are taken).
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         if self._ownsImageListState:
@@ -6138,7 +6138,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Sets the buttons image list for :class:`CustomTreeCtrl` (from which application-defined
         button images are taken).
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         if self._ownsImageListButtons:
@@ -6156,7 +6156,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         :param integer `sizex`: the width of the bitmaps in the `imglist`, in pixels;
         :param integer `sizey`: the height of the bitmaps in the `imglist`, in pixels;
-        :param `imglist`: an instance of :class:`ImageList`.
+        :param `imglist`: an instance of :class:`wx.ImageList`.
         """
 
         # Image list to hold disabled versions of each control
@@ -6234,7 +6234,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Assigns the normal image list.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self.SetImageList(imageList)
@@ -6245,7 +6245,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Assigns the state image list.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self.SetStateImageList(imageList)
@@ -6256,7 +6256,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Assigns the button image list.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self.SetButtonsImageList(imageList)
@@ -6269,7 +6269,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         the leftmost part of the client area. Any item can have a leftmost image associated
         with it.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self.SetLeftImageList(imageList)
@@ -6316,8 +6316,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Gradient fill from colour 1 to colour 2 from top to bottom.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the rectangle to be filled with the gradient shading;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the rectangle to be filled with the gradient shading;
         :param bool `hasfocus`: ``True`` if the main :class:`CustomTreeCtrl` has focus, ``False``
          otherwise.
         """
@@ -6363,8 +6363,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Gradient fill from colour 1 to colour 2 from left to right.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the rectangle to be filled with the gradient shading;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the rectangle to be filled with the gradient shading;
         :param bool `hasfocus`: ``True`` if the main :class:`CustomTreeCtrl` has focus, ``False``
          otherwise.
         """
@@ -6411,8 +6411,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Draws the selected item(s) with the Windows Vista style.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the rectangle to be filled with the gradient shading;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the rectangle to be filled with the gradient shading;
         :param bool `hasfocus`: ``True`` if the main :class:`CustomTreeCtrl` has focus, ``False``
          otherwise.
         """
@@ -6476,7 +6476,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Actually draws an item.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param integer `level`: the item level in the tree hierarchy;
         :param integer `align`: an integer specifying the alignment type:
 
@@ -6547,7 +6547,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             if wx.Platform == "__WXMAC__":
                 if not self._hasFocus:
                     dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                    dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT), 1, wx.SOLID))
+                    dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT), 1, wx.PENSTYLE_SOLID))
                 else:
                     dc.SetBrush(self._hilightBrush)
             else:
@@ -6766,7 +6766,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Paint a level in the hierarchy of :class:`CustomTreeCtrl`.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param integer `level`: the item level in the tree hierarchy;
         :param integer `y`: the current vertical position in the :class:`ScrolledWindow`;
         :param integer `align`: an integer specifying the alignment type:
@@ -7030,7 +7030,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`CustomTreeCtrl`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         if self.HasAGWFlag(TR_ELLIPSIZE_LONG_ITEMS):
@@ -7076,7 +7076,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Tiles the background image to fill all the available area.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
 
         .. todo:: Support background images also in stretch and centered modes.
         """
@@ -7425,7 +7425,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Calculates which (if any) item is under the given point, returning the tree item
         at this point plus extra information flags.
 
-        :param `point`: an instance of :class:`Point`, a point to test for hits;
+        :param `point`: an instance of :class:`wx.Point`, a point to test for hits;
         :param integer `flags`: a bitlist of the following values:
 
          ================================== =============== =================================
@@ -7494,7 +7494,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param bool `textOnly`: if ``True``, only the rectangle around the item's label will
          be returned, otherwise the item's image is also taken into account.
 
-        :return: An instance of :class:`Rect`.
+        :return: An instance of :class:`wx.Rect`.
 
         :note: The rectangle coordinates are logical, not physical ones. So, for example,
          the `x` coordinate may be negative if the tree has a horizontal scrollbar and its
@@ -7541,7 +7541,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             if wx.Platform in ["__WXMSW__", "__WXMAC__"]:
                 self.Update()
             else:
-                wx.SafeYield()
+                wx.YieldIfNeeded()
 
         if self._editCtrl != None and item != self._editCtrl.item():
             self._editCtrl.StopEditing()
@@ -7805,7 +7805,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                 self.Refresh()
             else:
                 # Probably this is not enough on GTK. Try a Refresh() if it does not work.
-                wx.SafeYield()
+                wx.YieldIfNeeded()
 
         else:
 
@@ -7976,9 +7976,6 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 ##                        if item.HasPlus():
                         self.Toggle(item)
 
-        #TODO/Bug?: Temp Hack - MCow. Phoenix after rightclick menu item gets set to white or background colour
-        # and becomes invisible. Set to black in meantime
-        self.SetItemTextColour(thisItem, wx.BLACK) #self.GetItemTextColour(thisItem)
 
     def OnInternalIdle(self):
         """
@@ -7987,7 +7984,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         application defining an `OnIdle` handler in a derived class.
 
         This method may be used to do delayed painting, for example, and most
-        implementations call :meth:`Window.UpdateWindowUI` in order to send update events
+        implementations call :meth:`wx.Window.UpdateWindowUI` in order to send update events
         to the window in idle time.
         """
 
@@ -8024,7 +8021,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Calculates overall position and size of an item.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param integer `level`: the item level in the tree hierarchy;
         :param integer `align`: an integer specifying the alignment type:
 
@@ -8113,7 +8110,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Calculates the level of an item inside the tree hierarchy.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param integer `level`: the item level in the tree hierarchy;
         :param integer `y`: the current vertical position inside the :class:`ScrolledWindow`;
         :param integer `align`: an integer specifying the alignment type:
@@ -8344,7 +8341,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          event handler function under Windows and automatically under GTK.
 
         :note: Setting the background colour does not cause an immediate refresh, so
-         you may wish to call :meth:`Window.ClearBackground` or :meth:`Window.Refresh` after
+         you may wish to call :meth:`wx.Window.ClearBackground` or :meth:`wx.Window.Refresh` after
          calling this function.
 
         :note: Overridden from :class:`ScrolledWindow`.
@@ -8402,7 +8399,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
 
         :note: Overridden from :class:`ScrolledWindow`.
         """
@@ -8504,7 +8501,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          colour, if the field doesn't make sense as is the case for `colBg` for the
          controls with themed background.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         attr = wx.VisualAttributes()

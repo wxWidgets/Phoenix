@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     8-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -11,14 +11,18 @@ import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
-PACKAGE   = "wx" 
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "_core"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+The classes in this module are the most commonly used classes for wxPython,
+which is why they have been made visible in the core `wx` namespace.
+Everything you need for building typical GUI applications is here.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ ]    
+# this script.
+ITEMS  = [ ]
 
 
 
@@ -43,20 +47,20 @@ INCLUDES = [  # base and core stuff
               'clntdata',
               'clntdatactnr',
               'userdata',
-              'wxpybuffer',              
-              
+              'wxpybuffer',
+
               'stockgdi',
               'longlong',
               'wxdatetime',
               'stopwatch',
-              
+
               'windowid',
               'platinfo',
               'vidmode',
               'display',
               'intl',
               'translation',
-              
+
               'cmndata',
               'gdicmn',
               'geometry',
@@ -90,9 +94,10 @@ INCLUDES = [  # base and core stuff
               'graphics',
               'imaglist',
               'overlay',
+              'palette',
               'renderer',
               'rawbmp',
-              
+
               # more core
               'accel',
               'log',
@@ -110,7 +115,7 @@ INCLUDES = [  # base and core stuff
               'pyevent',
               'sizer', 'gbsizer', 'wrapsizer',
               'stdpaths',
-              
+
               'eventfilter',
               'evtloop',
               'apptrait',
@@ -121,11 +126,11 @@ INCLUDES = [  # base and core stuff
               'window',
               'validate',
               'panel',
-              'menuitem',              
+              'menuitem',
               'menu',
               'scrolwin',
               'vscroll',
-              
+
               # controls
               'control',
               'ctrlsub',
@@ -154,7 +159,7 @@ INCLUDES = [  # base and core stuff
               'headercol',
               'headerctrl',
               'srchctrl',
-              'radiobox', 
+              'radiobox',
               'radiobut',
               'slider',
               'spinbutt',
@@ -174,7 +179,7 @@ INCLUDES = [  # base and core stuff
               'toolbook',
               'treebook',
               'vlbox',
-              
+
               # toplevel and dialogs
               'nonownedwnd',
               'toplevel',
@@ -196,12 +201,13 @@ INCLUDES = [  # base and core stuff
               'rearrangectrl',
               'minifram',
               'textdlg',
+              'numdlg',
 
               # misc
               'power',
               'utils',
               'process',
-              'uiaction', 
+              'uiaction',
               'snglinst',
               'help',
               'cshelp',
@@ -222,6 +228,8 @@ INCLUDES = [  # base and core stuff
               'fswatcher',
               'preferences',
               'modalhook',
+              'unichar',
+              'stockitem',
               ]
 
 
@@ -235,7 +243,7 @@ OTHERDEPS = [ 'src/core_ex.py',
 
 
 #---------------------------------------------------------------------------
- 
+
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
@@ -245,9 +253,9 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wxpy_api.h>')
-    
+
     module.addInclude(INCLUDES)
     module.includePyCode('src/core_ex.py', order=10)
 
@@ -278,20 +286,20 @@ def run():
             handlers have been completed.  This is also good for making GUI
             method calls from non-GUI threads.  Any extra positional or
             keyword args are passed on to the callable when it is called.
-            
+
             :param PyObject callableObj: the callable object
             :param args: arguments to be passed to the callable object
             :param kw: keywords to be passed to the callable object
-            
+
             .. seealso::
-                :class:`CallLater`
-            
+                :ref:`wx.CallLater`
+
             """,
         body="""\
             assert callable(callableObj), "callableObj is not callable"
             app = wx.GetApp()
             assert app is not None, 'No wx.App created yet'
-        
+
             if not hasattr(app, "_CallAfterId"):
                 app._CallAfterId = wx.NewEventType()
                 app.Connect(-1, -1, app._CallAfterId,
@@ -304,38 +312,36 @@ def run():
             wx.PostEvent(app, evt)""")
 
 
-    module.addPyClass('CallLater', ['object'], 
+    module.addPyClass('CallLater', ['object'],
         doc="""\
-            A convenience class for :class:`Timer`, that calls the given callable
+            A convenience class for :class:`wx.Timer`, that calls the given callable
             object once after the given amount of milliseconds, passing any
             positional or keyword args.  The return value of the callable is
-            availbale after it has been run with the :meth:`~CallLater.GetResult` method.
-            
+            available after it has been run with the :meth:`~wx.CallLater.GetResult`
+            method.
+
             If you don't need to get the return value or restart the timer
             then there is no need to hold a reference to this object.  It will
             hold a reference to itself while the timer is running (the timer
-            has a reference to :meth:`~CallLater.Notify`) but the cycle will be broken when
-            the timer completes, automatically cleaning up the :class:`CallLater`
-            object.
-                        
+            has a reference to :meth:`~wx.CallLater.Notify`) but the cycle will be
+            broken when the timer completes, automatically cleaning up the
+            :class:`wx.CallLater` object.
+
             .. seealso::
-                :func:`CallAfter`
-                
+                :func:`wx.CallAfter`
+
             """,
         items = [
             PyFunctionDef('__init__', '(self, millis, callableObj, *args, **kwargs)',
                 doc="""\
-                    A convenience class for :class:`Timer`, that calls the given callable
-                    object once after the given amount of milliseconds, passing any
-                    positional or keyword args.  The return value of the callable is
-                    availbale after it has been run with the :meth:`~CallLater.GetResult` method.
+                    Constructs a new :class:`wx.CallLater` object.
 
-                    :param int millis: number of milli seconds
+                    :param int millis: number of milliseconds to delay until calling the callable object
                     :param PyObject callableObj: the callable object
                     :param args: arguments to be passed to the callable object
                     :param kw: keywords to be passed to the callable object
                 """,
-                
+
                 body="""\
                     assert callable(callableObj), "callableObj is not callable"
                     self.millis = millis
@@ -347,10 +353,10 @@ def run():
                     self.result = None
                     self.timer = None
                     self.Start()"""),
-            
+
             PyFunctionDef('__del__', '(self)', 'self.Stop()'),
-            
-            PyFunctionDef('Start', '(self, millis=None, *args, **kwargs)', 
+
+            PyFunctionDef('Start', '(self, millis=None, *args, **kwargs)',
                 doc="""\
                     (Re)start the timer
 
@@ -370,55 +376,55 @@ def run():
                     self.timer.Start(self.millis, wx.TIMER_ONE_SHOT)
                     self.running = True"""),
             PyCodeDef('Restart = Start'),
-            
-            PyFunctionDef('Stop', '(self)', 
+
+            PyFunctionDef('Stop', '(self)',
                 doc="Stop and destroy the timer.",
                 body="""\
                     if self.timer is not None:
                         self.timer.Stop()
                         self.timer = None"""),
-            
+
             PyFunctionDef('GetInterval', '(self)', """\
                 if self.timer is not None:
                     return self.timer.GetInterval()
                 else:
                     return 0"""),
-            
-            PyFunctionDef('IsRunning', '(self)', 
+
+            PyFunctionDef('IsRunning', '(self)',
                 """return self.timer is not None and self.timer.IsRunning()"""),
-            
-            PyFunctionDef('SetArgs', '(self, *args, **kwargs)', 
+
+            PyFunctionDef('SetArgs', '(self, *args, **kwargs)',
                 doc="""\
                     (Re)set the args passed to the callable object.  This is
-                    useful in conjunction with :meth:`Restart` if you want to schedule a
-                    new call to the same callable object but with different
-                    parameters.
+                    useful in conjunction with :meth:`Start` if
+                    you want to schedule a new call to the same callable
+                    object but with different parameters.
 
                     :param args: arguments to be passed to the callable object
                     :param kw: keywords to be passed to the callable object
-                    
+
                     """,
                 body="""\
                     self.args = args
                     self.kwargs = kwargs"""),
-            
+
             PyFunctionDef('HasRun', '(self)', 'return self.hasRun',
                 doc="""\
                     Returns whether or not the callable has run.
-                    
+
                     :rtype: bool
-                    
+
                     """),
 
             PyFunctionDef('GetResult', '(self)', 'return self.result',
                 doc="""\
                     Returns the value of the callable.
-                    
+
                     :rtype: a Python object
-                    :return: result from callable                    
+                    :return: result from callable
                     """),
 
-            PyFunctionDef('Notify', '(self)', 
+            PyFunctionDef('Notify', '(self)',
                 doc="The timer has expired so call the callable.",
                 body="""\
                     if self.callable and getattr(self.callable, 'im_self', True):
@@ -429,9 +435,9 @@ def run():
                     if not self.running:
                         # if it wasn't restarted, then cleanup
                         wx.CallAfter(self.Stop)"""),
-            
+
             PyPropertyDef('Interval', 'GetInterval'),
-            PyPropertyDef('Result', 'GetResult'),                    
+            PyPropertyDef('Result', 'GetResult'),
             ])
 
     module.addPyCode("FutureCall = deprecated(CallLater, 'Use CallLater instead.')")
@@ -445,7 +451,7 @@ def run():
     module.addCppFunction('bool', 'IsMainThread', '()',
         doc="Returns ``True`` if the current thread is what wx considers the GUI thread.",
         body="return wxThread::IsMain();")
-    
+
 
     module.addInitializerCode("""\
         wxPyPreInit(sipModuleDict);
@@ -458,14 +464,14 @@ def run():
     # Here is the function it calls
     module.includeCppCode('src/core_ex.cpp')
     module.addItem(etgtools.WigCode("void _wxPyCleanup();"))
-    
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
 
-    
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

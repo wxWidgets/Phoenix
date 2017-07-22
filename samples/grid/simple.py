@@ -5,7 +5,7 @@ class TestGrid(wx.grid.Grid):
     def __init__(self, *args, **kw):
         wx.grid.Grid.__init__(self, *args, **kw)
         self.CreateGrid(25, 25)
-        
+
         # Show some simple cell formatting
         self.SetColSize(3, 200)
         self.SetRowSize(4, 45)
@@ -33,7 +33,7 @@ class TestGrid(wx.grid.Grid):
 
         # you can set cell attributes for the whole row (or column)
         self.SetRowAttr(5, attr)
-        
+
         self.SetColLabelValue(0, "Custom")
         self.SetColLabelValue(1, "column")
         self.SetColLabelValue(2, "labels")
@@ -55,15 +55,15 @@ class TestGrid(wx.grid.Grid):
         self.SetCellRenderer(15,0, renderer)
         self.SetCellValue(15,0, "The text in this cell will be rendered with word-wrapping")
         self.SetRowSize(15, 40)
-        
 
-        
+
+
 class TestFrame(wx.Frame):
     def __init__(self, *args, **kw):
         wx.Frame.__init__(self, *args, **kw)
         self.grid = TestGrid(self)
 
-        
+
 app = wx.App()
 frm = TestFrame(None, title="Simple Test Grid", size=(700,500))
 frm.Show()

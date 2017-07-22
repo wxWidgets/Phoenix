@@ -8,7 +8,7 @@
 // Author:      Robin Dunn
 //
 // Created:     26-Apr-2012
-// Copyright:   (c) 2013 by Total Control Software
+// Copyright:   (c) 2012-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@
                 return TRUE;
             return FALSE;
         }
-        
+
         // Code to create a new wxPyBuffer from the PyObject
         wxPyBuffer* buf =  new wxPyBuffer();
         buf->create(sipPy);
@@ -37,7 +37,7 @@
     %End
 
 
-    // This isn't being used anywhere yet, but it should work.         
+    // This isn't being used anywhere yet, but it should work.
     %ConvertFromTypeCode
         return wxPyMakeBuffer(sipCpp->m_ptr, sipCpp->m_len);
     %End
@@ -62,7 +62,7 @@
                 return TRUE;
             return FALSE;
         }
-        
+
         // Code to create a new wxMemoryBuffer from the PyObject
         wxPyBuffer pybuf;
         pybuf.create(sipPy);
@@ -91,7 +91,7 @@
                 return TRUE;
             return FALSE;
         }
-        
+
         // Code to create a new wxCharBuffer from the PyObject
         char* bbuf;
         Py_ssize_t blen;

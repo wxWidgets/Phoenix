@@ -33,12 +33,12 @@ class TestPanel(wx.Panel):
         self.log = log
 
         #Mouse Gestures:
-    
+
         self.mg = MouseGestures(self, Auto=True,
                                 MouseButton=wx.MOUSE_BTN_RIGHT)
-        
+
         self.mg.SetGesturesVisible(True)
-        
+
         self.mg.AddGesture('LR', self.ShowSomethingClever, 'Left then Right!')
         self.mg.AddGesture('39', self.ShowSomethingClever, 'You made a V!')
         self.mg.AddGesture('L', self.LogSomethingClever, 'You moved left')
@@ -47,15 +47,15 @@ class TestPanel(wx.Panel):
         self.mg.AddGesture('DR', self.OnDownThenRight)
         self.mg.AddGesture('LDRU', self.SetToBlue)
         self.mg.AddGesture('RDLU', self.SetToOrange)
-        
+
         #Widgets:
-            
+
         self.btnAddGesture = wx.Button(self, ID_GESTURE, 'Add New Gesture')
         self.btnChangeMouseButton = wx.Button(self, ID_MOUSE, 'Change Mouse Button')
         self.btnChangeModifier = wx.Button(self, ID_MODIFIER, 'Change Modifier')
         self.btnToggleVisible = wx.ToggleButton(self, ID_VISIBLE, 'Toggle Gestures Visible')
         self.btnToggleVisible.SetValue(True)
-        
+
         msg = "Mouse Gestures"
         text = wx.StaticText(self, -1, "", style=wx.ALIGN_CENTRE)
         text.SetFont(wx.Font(24, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
@@ -64,12 +64,12 @@ class TestPanel(wx.Panel):
         w,h = text.GetTextExtent(msg)
         text.SetSize(wx.Size(w,h+1))
         text.SetForegroundColour(wx.BLUE)
-        
+
         #Sizer:
         outsideSizer = wx.BoxSizer(wx.VERTICAL)
-        
+
         btnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        
+
         outsideSizer.Add(text, 0, wx.EXPAND|wx.ALL, 5)
         outsideSizer.Add(wx.StaticLine(self, -1), 0, wx.EXPAND)
         outsideSizer.Add(wx.StaticText(self, -1, '   '), 0, wx.EXPAND)
@@ -83,7 +83,7 @@ class TestPanel(wx.Panel):
         btnSizer.Add(self.btnChangeModifier, 0, wx.SHAPED)
         btnSizer.Add(self.btnToggleVisible, 0, wx.SHAPED)
         outsideSizer.Add(btnSizer, 0, wx.SHAPED)
-        
+
         self.SetAutoLayout(True)
         self.SetSizer(outsideSizer)
 
@@ -95,30 +95,30 @@ class TestPanel(wx.Panel):
 
     def LogSomethingClever(self, somethingclever):
         self.log.WriteText(somethingclever)
-    
+
     def OnAddGesture(self, event):
         d = wx.TextEntryDialog(self, "Enter Gesture (LRUD1379) (EG Right Then Up Then DownLeft is RU1):", "Add New Gesture", "")
         answer1 = d.ShowModal()
         gesture = d.GetValue()
         d.Destroy()
-        
+
         d = wx.TextEntryDialog(self, 'Print the following text on "%s":' % gesture, "Gesture Action", "")
         answer2 = d.ShowModal()
         text = d.GetValue()
         d.Destroy()
-        
+
         if (answer1 == wx.ID_OK) and (answer2 == wx.ID_OK):
             self.mg.AddGesture(gesture.upper(), self.LogSomethingClever, text)
-    
+
     def OnChangeModifiers(self, event):
         choices = [wx.WXK_CONTROL, wx.WXK_SHIFT, wx.WXK_ALT]
         schoices = ['Control', 'Shift', 'Alt']
-        
+
         d = wx.lib.dialogs.MultipleChoiceDialog(self, 'Select Modifier Keys:\n(Select None if you do not want to use modifier keys\n\n', "Change Modifier Keys", schoices)
         answer = d.ShowModal()
         tuply = d.GetValue()
         d.Destroy()
-        
+
         if (answer == wx.ID_OK):
             if len(tuply) > 0:
                 modifiers = []
@@ -131,7 +131,7 @@ class TestPanel(wx.Panel):
             else:
                 self.mg.SetModifiers()
                 self.log.WriteText('UnSet All Modifiers')
-    
+
     def OnChangeMouseButton(self, event):
         choices = [wx.MOUSE_BTN_LEFT, wx.MOUSE_BTN_MIDDLE, wx.MOUSE_BTN_RIGHT]
         schoices = ['Left', 'Middle', 'Right']
@@ -144,7 +144,7 @@ class TestPanel(wx.Panel):
         if (answer == wx.ID_OK):
             self.mg.SetMouseButton(choices[i])
             self.log.WriteText('Set the Mouse Button to ' + schoices[i])
-        
+
     def OnDownThenRight(self):
         self.log.WriteText('You made an "L"!')
 
@@ -159,7 +159,7 @@ class TestPanel(wx.Panel):
     def SetToBlue(self):
         self.mg.SetGesturePen(wx.Colour(0, 144, 255), 5)
         self.log.WriteText('Set Gesture Colour to Blue')
-        
+
     def SetToOrange(self):
         self.mg.SetGesturePen(wx.Colour(255, 156, 0), 5)
         self.log.WriteText('Set Gesture Colour to Orange')

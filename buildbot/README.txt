@@ -15,5 +15,4 @@ server with these commands:
 
     scp buildbot/master.cfg  wxpybb@buildbot.wxpython.org:/home/wxpybb/buildbot
     ssh wxpybb@buildbot.wxpython.org "cd /home/wxpybb && ./reconfig"
-    
-    
+

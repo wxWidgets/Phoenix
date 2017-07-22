@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.pybusyinfo as PBI
@@ -14,12 +14,12 @@ class lib_agw_pybusyinfo_Tests(wtc.WidgetTestCase):
 
         wx.Yield()
         self.assertTrue(busy._infoFrame.IsShown())
-            
+
         for indx in range(5):
             wx.MilliSleep(10)
 
         del busy
-        
+
 
 #---------------------------------------------------------------------------
 

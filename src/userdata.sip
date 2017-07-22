@@ -1,31 +1,19 @@
 //--------------------------------------------------------------------------
 // Name:        userdata.sip
-// Purpose:     
+// Purpose:
 //
 // Author:      Kevin Ollivier
 //
 // Created:     06-Sept-2011
-// Copyright:   (c) 2013 by Wide Open Technologies
+// Copyright:   (c) 2011 by Wide Open Technologies
+// Copyright:   (c) 2011-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
 
-%ModuleHeaderCode
-// A wxObject object that holds a reference to a Python object
-class wxPyUserData : public wxPyUserDataHelper<wxObject>
-{
-public:
-    wxPyUserData(PyObject* obj = NULL)
-        : wxPyUserDataHelper<wxObject>(obj)
-    { }
-};
-
-%End
-
-
-// We'll use the wxPyUserData defined above wherever a wxObject parameter or 
+// We'll use the wxPyUserData defined above wherever a wxObject parameter or
 // return value is specified in the API.  This MappedType code will convert to/from a
-// PyObject so it will be totally transparent to the programmer and from their 
+// PyObject so it will be totally transparent to the programmer and from their
 // perspective any python object is being stored as the client data.
 %MappedType wxPyUserData
 {
@@ -34,14 +22,14 @@ public:
         if (!sipIsErr) {
             return TRUE; // any python object is valid
         }
-        
+
         // Code to create a new wxPyUserData from the PyObject
         wxPyUserData* data =  new wxPyUserData(sipPy);
         *sipCppPtr = data;
         return sipGetState(sipTransferObj);
     %End
 
-         
+
     %ConvertFromTypeCode
         // Code to convert a wxPyUserData back to the PyObject.
         PyObject* obj;

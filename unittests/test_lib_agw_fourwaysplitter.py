@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.fourwaysplitter as FWS
@@ -7,13 +7,13 @@ import wx.lib.agw.fourwaysplitter as FWS
 #---------------------------------------------------------------------------
 
 class lib_agw_fourwaysplitter_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_fourwaysplitterCtor(self):
-        splitter = FWS.FourWaySplitter(self.frame, -1, agwStyle=wx.SP_LIVE_UPDATE)        
+        splitter = FWS.FourWaySplitter(self.frame, -1, agwStyle=wx.SP_LIVE_UPDATE)
 
 
     def test_lib_agw_fourwaysplitterMethods(self):
-        splitter = FWS.FourWaySplitter(self.frame, -1, agwStyle=wx.SP_LIVE_UPDATE)        
+        splitter = FWS.FourWaySplitter(self.frame, -1, agwStyle=wx.SP_LIVE_UPDATE)
 
         panels = []
         # Put in some coloured panels...
@@ -24,7 +24,7 @@ class lib_agw_fourwaysplitter_Tests(wtc.WidgetTestCase):
 
             splitter.AppendWindow(panel)
             panels.append(panel)
-        
+
         # Some methods tests...
         for index in range(4):
             self.assertEqual(splitter.GetWindow(index), panels[index])
@@ -38,11 +38,11 @@ class lib_agw_fourwaysplitter_Tests(wtc.WidgetTestCase):
         self.assertEqual(splitter.GetWindow(0), window)
 
         splitter.SetExpanded(0)
-        
+
         for index in range(1, 4):
             self.assertTrue(not splitter.GetWindow(index).IsShown())
-            
-        
+
+
     def test_lib_agw_fourwaysplitterConstantsExist(self):
         FWS.FLAG_CHANGED
         FWS.FLAG_PRESSED
@@ -54,7 +54,7 @@ class lib_agw_fourwaysplitter_Tests(wtc.WidgetTestCase):
     def test_lib_agw_fourwaysplitterEvents(self):
         FWS.EVT_SPLITTER_SASH_POS_CHANGED
         FWS.EVT_SPLITTER_SASH_POS_CHANGING
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -1,6 +1,12 @@
-pip
+# Phoenix build and test requirements
+appdirs
 setuptools
-six 
-wheel 
-Sphinx 
-docutils
+six
+wheel
+twine
+sphinx
+requests
+pytest
+pytest-xdist
+pytest-timeout
+numpy

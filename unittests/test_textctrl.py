@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -32,16 +32,16 @@ class textctrl_Tests(wtc.WidgetTestCase):
         t = wx.TextCtrl(self.frame, style=wx.TE_READONLY)
         t = wx.TextCtrl(self.frame, style=wx.TE_PASSWORD)
         t = wx.TextCtrl(self.frame, style=wx.TE_MULTILINE)
-        
+
 
     def test_textctrlDefaultCtor(self):
         t = wx.TextCtrl()
         t.Create(self.frame)
-        
-        
+
+
     def test_textctrlProperties(self):
         t = wx.TextCtrl(self.frame)
-        
+
         t.DefaultStyle
         t.NumberOfLines
         t.Hint
@@ -56,7 +56,7 @@ class textctrl_Tests(wtc.WidgetTestCase):
         ta = wx.TextAttr()
         ta2 = wx.TextAttr(ta)
         ta3 = wx.TextAttr('black', 'white', wx.NORMAL_FONT, wx.TEXT_ALIGNMENT_RIGHT)
-        
+
     def test_textctrlTextAttrProperties(self):
         ta = wx.TextAttr()
 

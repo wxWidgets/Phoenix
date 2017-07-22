@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.html
 
@@ -9,14 +9,14 @@ class helpdata_Tests(wtc.WidgetTestCase):
 
     def test_helpdata1(self):
         obj = wx.html.HtmlBookRecord("file", "path", "title", "start")
-        
+
     def test_helpdata2(self):
         obj = wx.html.HtmlHelpDataItem()
-        
+
     def test_helpdata3(self):
         obj = wx.html.HtmlHelpData()
-        
-        
+
+
     def test_helpdata4(self):
         wx.html.HF_TOOLBAR,
         wx.html.HF_CONTENTS,
@@ -60,7 +60,7 @@ class helpdata_Tests(wtc.WidgetTestCase):
         wx.html.ID_HTML_SEARCHBUTTON,
         wx.html.ID_HTML_SEARCHCHOICE,
         wx.html.ID_HTML_COUNTINFO
-    
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

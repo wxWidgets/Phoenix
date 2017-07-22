@@ -36,7 +36,7 @@ class TestColourSelect(wx.Panel):
                          "and wxColourDialog Classes.  Click Button to get Colour Values")
         mainSizer.Add(t, 0, wx.ALL, 3)
 
-        b = wx.Button(self, -1, "Show All Colours")
+        b = wx.Button(self, -1, "Log All Current Colours")
         self.Bind(wx.EVT_BUTTON, self.OnShowAll, id=b.GetId())
         mainSizer.Add(b, 0, wx.ALL, 3)
 
@@ -55,7 +55,7 @@ class TestColourSelect(wx.Panel):
         # build several examples of buttons with different colours and sizes
         buttonData = [
             ("Default Size",         (255, 255, 0),   wx.DefaultSize, ""),
-            ("Another Size",         (255, 0, 255),   (60, 20),      ""),
+            ("Another Size",         (255, 0, 255),   (60, 22),      ""),
             ("Another Colour",       (0, 255, 0),     wx.DefaultSize, ""),
             ("Larger Size",          (0, 0, 255),     (60, 60),      ""),
             ("With a Label",         (127, 0, 255),   wx.DefaultSize, "Colour..."),

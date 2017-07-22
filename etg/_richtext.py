@@ -3,23 +3,31 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Oct-2012
-# Copyright:   (c) 2015 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
-PACKAGE   = "wx" 
+PACKAGE   = "wx"
 MODULE    = "_richtext"
 NAME      = "_richtext"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+The :class:`RichTextCtrl` is a generic, ground-up implementation of a rich
+text control capable of showing multiple text styles and images.  This module
+contains the control and many supporting classes needed for using the features
+of the :class:`RichTextCtrl`.
+
+.. note:: Due to some internal dynamic initialization in wxWidgets, this
+          module should be imported **before** the :class:`wx.App` object is
+          created.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ ]    
-    
+# this script.
+ITEMS  = [ ]
+
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
@@ -32,7 +40,7 @@ INCLUDES = [ 'richtextbuffer',
              'richtextstyles',
              'richtextstyledlg',
              'richtextsymboldlg',
-             #'richtextformatdlg',             TODO: Needs wxPropertySheetDialog
+             'richtextformatdlg',
              ]
 
 
@@ -45,33 +53,39 @@ OTHERDEPS = [  ]
 
 
 #---------------------------------------------------------------------------
- 
+
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
-    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING,
+                                check4unittest = False)
     etgtools.parseDoxyXML(module, ITEMS)
-    module.check4unittest = False
 
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode("import wx", order=10)
     module.addImport('_xml')
-    module.addPyCode("import wx.xml", order=10)
     module.addImport('_html')
-    module.addPyCode("import wx.html", order=10)
-    
+    module.addImport('_adv')
+
     module.addInclude(INCLUDES)
-          
+
+    # Redo the initialization of wxModules in the case where this extension
+    # module is not imported until *after* the wx.App has been created.
+    module.addInitializerCode("""\
+        wxPyReinitializeModules();
+        """)
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
 
-    
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

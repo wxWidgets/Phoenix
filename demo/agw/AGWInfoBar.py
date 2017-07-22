@@ -27,14 +27,14 @@ def GetValidImages():
     keys = catalog.keys()
     valid_images = []
     counter = 0
-    
+
     for key in keys:
         bmp = catalog[key].GetBitmap()
         if bmp.GetWidth() == 16 and bmp.GetHeight() == 16:
             valid_images.append(bmp)
 
     return valid_images
-        
+
 #----------------------------------------------------------------------
 
 flags = [ (wx.ICON_NONE,        "ICON_NONE"),
@@ -43,7 +43,7 @@ flags = [ (wx.ICON_NONE,        "ICON_NONE"),
           (wx.ICON_WARNING,     "ICON_WARNING"),
           (wx.ICON_ERROR,       "ICON_ERROR")
           ]
-          
+
 
 class TestPanel(wx.Panel):
     def __init__(self, parent, log):
@@ -53,7 +53,7 @@ class TestPanel(wx.Panel):
         # Create the InfoBar.  It starts out in a hidden state so it
         # won't be visible until we need it.
         self.info = IB.InfoBar(self)
-        
+
         panel = wx.Panel(self)
 
         self.message = wx.TextCtrl(panel, -1, "Hello World", size=(250,-1))
@@ -61,7 +61,7 @@ class TestPanel(wx.Panel):
         self.flags.SetSelection(1) # wx.ICON_INFORMATION is the default
 
         self.checkBitmap = wx.CheckBox(panel, -1, 'With Bitmap')
-        
+
         smBtn = wx.Button(panel, -1, "Show Message")
         dmBtn = wx.Button(panel, -1, "Dismiss")
         addBtn = wx.Button(panel, -1, "Add Button")
@@ -89,10 +89,10 @@ class TestPanel(wx.Panel):
         panel.Sizer = wx.BoxSizer(wx.VERTICAL)
         text = """\
 An info bar is a transient window shown at top or bottom of its parent window
-to display non-critical information to the user."""        
+to display non-critical information to the user."""
         panel.Sizer.Add(wx.StaticText(panel, -1, text), 0, wx.TOP|wx.LEFT, 25)
         panel.Sizer.Add(fgs, 1, wx.EXPAND|wx.ALL, 25)
-                                   
+
         self.Sizer = wx.BoxSizer(wx.VERTICAL)
         self.Sizer.Add(self.info, 0, wx.EXPAND)
         self.Sizer.Add(panel, 1, wx.EXPAND)
@@ -102,7 +102,7 @@ to display non-critical information to the user."""
         self.Bind(wx.EVT_BUTTON, self.OnAddButton, addBtn)
 
         self.valid_images = GetValidImages()
-        
+
 
     def OnShowMessage(self, event):
         msg = self.message.GetValue()
@@ -121,7 +121,7 @@ to display non-critical information to the user."""
             bitmap = random.choice(self.valid_images)
         else:
             bitmap = wx.NullBitmap
-        
+
         self.info.AddButton(btnId, "New Button", bitmap)
         self.info.Bind(wx.EVT_BUTTON, self.OnButtonClicked, id=btnId)
 
@@ -134,7 +134,7 @@ to display non-critical information to the user."""
         # Skip().
         event.Skip()
 
-      
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

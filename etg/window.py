@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -11,16 +11,16 @@ import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools import ClassDef, MethodDef, ParamDef
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "window"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxVisualAttributes',
-           'wxWindow' ]    
-    
+           'wxWindow' ]
+
 OTHERDEPS = [ 'src/window_ex.cpp',   # some helper C++ code
               ]
 
@@ -30,16 +30,18 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
-    # customizing the generated code and docstrings.    
+    # customizing the generated code and docstrings.
 
     c = module.find('wxWindow')
     assert isinstance(c, etgtools.ClassDef)
     module.addGlobalStr('wxPanelNameStr', c)
-        
-    
+
+    c.find('FindFocus').mustHaveApp()
+    c.find('GetCapture').mustHaveApp()
+
     # First we need to let the wrapper generator know about wxWindowBase since
     # AddChild and RemoveChild need to use that type in order to be virtualized.
     winbase = ClassDef(name='wxWindowBase', bases=['wxEvtHandler'], abstract=True,
@@ -49,15 +51,15 @@ def run():
                         items=[ParamDef(name='child', type='wxWindowBase*')])
                    ])
     module.insertItemBefore(c, winbase)
-    
+
     # Now change the base class of wxWindow
     c.bases = ['wxWindowBase']
-    
+
     # And fix the arg types we get from Doxy
     c.find('AddChild.child').type = 'wxWindowBase*'
     c.find('RemoveChild.child').type = 'wxWindowBase*'
-    
-    
+
+
     # We now return you to our regularly scheduled programming...
     c.includeCppCode('src/window_ex.cpp')
 
@@ -88,23 +90,23 @@ def run():
     c.find('ProcessEvent').releaseGIL()
     c.find('ProcessWindowEvent').releaseGIL()
     c.find('ProcessWindowEventLocally').releaseGIL()
-    
+
     # Add a couple wrapper functions for symmetry with the getters of the same name
     c.addPyMethod('SetRect', '(self, rect)', 'return self.SetSize(rect)')
     c.addPyProperty('Rect GetRect SetRect')
     c.addPyMethod('SetClientRect', '(self, rect)', 'return self.SetClientSize(rect)')
     c.addPyProperty('ClientRect GetClientRect SetClientRect')
-                    
+
     m = c.find('GetTextExtent').findOverload('int *')
     m.pyName = 'GetFullTextExtent'
     m.find('w').out = True
     m.find('h').out = True
     m.find('descent').out = True
     m.find('externalLeading').out = True
-    
+
     c.find('GetHandle').type = 'wxUIntPtr*'
     c.find('GetHandle').setCppCode("return new wxUIntPtr(wxPyGetWinHandle(self));")
-    
+
     c.addCppMethod('void*', 'GetGtkWidget', '()', """\
     #ifdef __WXGTK__
         return (void*)self->GetHandle();
@@ -112,15 +114,15 @@ def run():
         return NULL;
     #endif
     """)
-    
+
     c.addCppMethod('void', 'AssociateHandle', '(long handle)',
         doc="Associate the window with a new native handle",
         body="self->AssociateHandle((WXWidget)handle);")
     c.addCppMethod('void', 'DissociateHandle', '()',
         doc="Dissociate the current native handle from the window",
         body="self->DissociateHandle();")
-        
-    
+
+
     # Add some new methods
     c.addCppMethod('wxWindow*', 'GetTopLevelParent', '()',
                    'return wxGetTopLevelParent(self);',
@@ -128,7 +130,7 @@ def run():
 
     c.addCppMethod('bool', 'MacIsWindowScrollbar', '(const wxWindow* sb)', """\
     #ifdef __WXMAC__
-        return self->MacIsWindowScrollbar(sb); 
+        return self->MacIsWindowScrollbar(sb);
     #else
         return false;
     #endif
@@ -136,14 +138,14 @@ def run():
     pyArgsString="(sb)",
     briefDoc="Is the given widget one of this window's built-in scrollbars?  Only applicable on Mac.")
 
-    
-    c.addCppMethod('void', 'SetDimensions', '(int x, int y, int width, int height, int sizeFlags=wxSIZE_AUTO)', 
+
+    c.addCppMethod('void', 'SetDimensions', '(int x, int y, int width, int height, int sizeFlags=wxSIZE_AUTO)',
         pyArgsString="(x, y, width, height, sizeFlags=SIZE_AUTO)",
         body="""\
         self->SetSize(x, y, width, height, sizeFlags);
         """)
     c.addPyCode("Window.SetDimensions = wx.deprecated(Window.SetDimensions, 'Use SetSize instead.')")
-    
+
     # Make the Register/UnregisterHotKey functions be available on Windows,
     # and empty stubs otherwise
     c.find('RegisterHotKey').setCppCode("""\
@@ -159,11 +161,11 @@ def run():
     #else
         return false;
     #endif
-    """)    
+    """)
     c.find('RegisterHotKey').isVirtual = False
     c.find('UnregisterHotKey').isVirtual = False
 
-    
+
     c.find('SetDoubleBuffered').setCppCode("""\
     #if defined(__WXGTK20__) || defined(__WXGTK3__) || defined(__WXMSW__)
         self->SetDoubleBuffered(on);
@@ -185,27 +187,35 @@ def run():
     c.addPyMethod('DestroyLater', '(self)',
         doc="""\
            Schedules the window to be destroyed in the near future.
-           
+
            This should be used whenever Destroy could happen too soon, such
            as when there may still be events for this window or its children
-           waiting in the event queue. 
+           waiting in the event queue.
            """,
         body="""\
             self.Hide()
             wx.GetApp().ScheduleForDestruction(self)
             """)
-    
-    
+
+    c.addPyMethod('DLG_UNIT', '(self, dlg_unit)',
+        doc="""\
+            A convenience wrapper for :meth:`ConvertDialogToPixels`.
+            """,
+        body="""\
+            return self.ConvertDialogToPixels(dlg_unit)
+            """)
+
+
     # MSW only.  Do we want them wrapped?
     c.find('GetAccessible').ignore()
     c.find('SetAccessible').ignore()
-    
+
     # Make some of the protected methods visible and overridable from Python
     c.find('SendDestroyEvent').ignore(False)
 
     c.find('Destroy').transferThis=True
     c.addPyMethod('PostCreate', '(self, pre)', 'pass', deprecated='PostCreate is no longer necessary.')
-    
+
     # transfer ownership of these parameters to the C++ object
     c.find('SetCaret.caret').transfer = True
     c.find('SetToolTip.tip').transfer = True
@@ -213,7 +223,13 @@ def run():
     c.find('SetConstraints.constraints').transfer = True
     c.find('SetSizer.sizer').transfer = True
     c.find('SetSizerAndFit.sizer').transfer = True
-    
+
+    # Change some =0 default values to =NULL so the docs will make more sense
+    c.find('FindWindowById.parent').default='NULL'
+    c.find('FindWindowByLabel.parent').default='NULL'
+    c.find('FindWindowByName.parent').default='NULL'
+
+
     # Define some properties using the getter and setter methods
     c.addProperty('AcceleratorTable GetAcceleratorTable SetAcceleratorTable')
     c.addProperty('AutoLayout GetAutoLayout SetAutoLayout')
@@ -279,6 +295,7 @@ def run():
 
     # for compatibility with Classic
     c.addPyMethod('GetPositionTuple', '(self)', 'return self.GetPosition()', deprecated='Use GetPosition instead')
+    c.addPyMethod('GetSizeTuple', '(self)', 'return self.GetSize()', deprecated='Use GetSize instead')
     c.addPyMethod('MoveXY',  '(self, x, y)', 'return self.Move(x, y)', deprecated='Use Move instead.')
     c.addPyMethod('SetSizeWH', '(self, w, h)', 'return self.SetSize(w,h)', deprecated='Use SetSize instead.')
     c.addPyMethod('SetVirtualSizeWH', '(self, w, h)', 'return self.SetVirtualSize(w,h)', deprecated='Use SetVirtualSize instead.')
@@ -287,15 +304,19 @@ def run():
     c.addPyMethod('ConvertDialogPointToPixels', '(self, point)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
     c.addPyMethod('ConvertDialogSizeToPixels', '(self, size)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
 
+    c.addPyMethod('SetSizeHintsSz', '(self, minSize, maxSize=wx.DefaultSize, incSize=wx.DefaultSize)',
+                  'return self.SetSizeHints(minSize, maxSize, incSize)',
+                  deprecated='Use SetSizeHints instead.')
+
 
     # TODO: the C++ DoEraseBackground is protected in wxMSW. We need a way to
-    # unprotect it, like adding a shim in the sip class...    
+    # unprotect it, like adding a shim in the sip class...
     #c.addHeaderCode("""\
     #    #ifdef __WXMSW__
     #    #include <wx/msw/dc.h>
     #    #endif
     #    """)
-    #c.addCppMethod('bool', 'DoEraseBackground', '(wxDC* dc)', 
+    #c.addCppMethod('bool', 'DoEraseBackground', '(wxDC* dc)',
     #    doc="Default erase background implementation.",
     #    body="""\
     #    #ifdef __WXMSW__
@@ -310,14 +331,14 @@ def run():
 
     # this is a nested class
     c.find('ChildrenRepositioningGuard').addPrivateCopyCtor()
-    module.insertItem(0, 
+    module.insertItem(0,
             etgtools.TypedefDef(type='wxWindow::ChildrenRepositioningGuard',
                                 name='ChildrenRepositioningGuard'))
 
-        
+
     #-----------------------------------------------------------------------
     # Other stuff
-    
+
     module.addPyCode('''\
     class FrozenWindow(object):
         """
@@ -333,38 +354,58 @@ def run():
         def __exit__(self, exc_type, exc_val, exc_tb):
             self._win.Thaw()
     ''')
-    
-    
+
+    module.addPyCode('''\
+        def DLG_UNIT(win, dlg_unit, val2=None):
+            """
+            Convenience function for converting a wx.Point, wx.Size or
+            (x,y) in dialog units to pixels.
+            """
+            if val2 is not None:
+                dlg_unit = (dlg_unit, val2)
+            return win.ConvertDialogToPixels(dlg_unit)
+
+        DLG_PNT = wx.deprecated(DLG_UNIT, "Use DLG_UNIT instead.")
+        DLG_SZE = wx.deprecated(DLG_UNIT, "Use DLG_UNIT instead.")
+        ''')
+
+
     # Add a wrapper for wxWindowList and a new iterator class for it that
     # makes wxWindowList quack like a read-only Python sequence.
     module.addItem(tools.wxListWrapperTemplate('wxWindowList', 'wxWindow', module))
-    
-    module.addCppFunction('wxWindowList*', 'GetTopLevelWindows', '()', 
+
+    module.addCppFunction('wxWindowList*', 'GetTopLevelWindows', '()',
         noCopy=True,
         briefDoc="Returns a list-like object of the the application's top-level windows, (frames,dialogs, etc.)",
         body="return &wxTopLevelWindows;")
-    
+
     module.addPyCode("PyWindow = wx.deprecated(Window, 'Use Window instead.')")
 
 
     module.find('wxFindWindowAtPointer.pt').out = True
-    
-   
-    module.addCppFunction('wxWindow*', 'FindWindowById', '(long id, const wxWindow* parent=NULL)', 
+
+    module.find('wxFindWindowAtPointer').mustHaveApp()
+    module.find('wxGetActiveWindow').mustHaveApp()
+    module.find('wxGetTopLevelParent').mustHaveApp()
+
+
+    module.addCppFunction('wxWindow*', 'FindWindowById', '(long id, const wxWindow* parent=NULL)',
         doc="""\
             FindWindowById(id, parent=None) -> Window
-        
+
             Find the first window in the application with the given id. If parent
             is None, the search will start from all top-level frames and dialog
             boxes; if non-None, the search will be limited to the given window
             hierarchy. The search is recursive in both cases.
             """,
-        body="return wxWindow::FindWindowById(id, parent);")
-    
-    module.addCppFunction('wxWindow*', 'FindWindowByName', '(const wxString& name, const wxWindow* parent=NULL)', 
+        body="return wxWindow::FindWindowById(id, parent);",
+        mustHaveAppFlag=True)
+
+
+    module.addCppFunction('wxWindow*', 'FindWindowByName', '(const wxString& name, const wxWindow* parent=NULL)',
         doc="""\
             FindWindowByName(name, parent=None) -> Window
-            
+
             Find a window by its name (as given in a window constructor or Create
             function call). If parent is None, the search will start from all
             top-level frames and dialog boxes; if non-None, the search will be
@@ -372,25 +413,28 @@ def run():
             cases.
 
             If no window with the name is found, wx.FindWindowByLabel is called.""",
-        body="return wxWindow::FindWindowByName(*name, parent);")
-    
-    module.addCppFunction('wxWindow*', 'FindWindowByLabel', '(const wxString& label, const wxWindow* parent=NULL)', 
+        body="return wxWindow::FindWindowByName(*name, parent);",
+        mustHaveAppFlag=True)
+
+
+    module.addCppFunction('wxWindow*', 'FindWindowByLabel', '(const wxString& label, const wxWindow* parent=NULL)',
         doc="""\
             FindWindowByLabel(label, parent=None) -> Window
-            
+
             Find a window by its label. Depending on the type of window, the label
             may be a window title or panel item label. If parent is None, the
             search will start from all top-level frames and dialog boxes; if
             non-None, the search will be limited to the given window
             hierarchy. The search is recursive in both cases.""",
-        body="return wxWindow::FindWindowByLabel(*label, parent);")
-    
+        body="return wxWindow::FindWindowByLabel(*label, parent);",
+        mustHaveAppFlag=True)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
-    
+
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

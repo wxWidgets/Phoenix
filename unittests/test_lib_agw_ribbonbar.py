@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.ribbon as RB
@@ -35,14 +35,30 @@ def CreateBitmap(xpm):
     return bmp
 
 class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
-        
+
+    def setUp(self):
+        super(lib_agw_ribbon_Tests, self).setUp()
+
+        self.realRibbonGalleryOnPaint = RB.RibbonGallery.OnPaint
+        def MonkeyPatchedOnPaint(self, event): pass
+        RB.RibbonGallery.OnPaint = MonkeyPatchedOnPaint
+
+        self.realRibbonGalleryLayout = RB.RibbonGallery.Layout
+        def MonkeyPatchedLayout(self): return False
+        RB.RibbonGallery.Layout = MonkeyPatchedLayout
+
+    def tearDown(self):
+        super(lib_agw_ribbon_Tests, self).tearDown()
+        RB.RibbonGallery.OnPaint = self.realRibbonGalleryOnPaint
+        RB.RibbonGallery.Layout = self.realRibbonGalleryLayout
+
     def test_lib_agw_ribbonCtor(self):
         rib = RB.RibbonBar(self.frame, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
 
         home = RB.RibbonPage(rib, wx.ID_ANY, "Examples", CreateBitmap("ribbon"))
         toolbar_panel = RB.RibbonPanel(home, wx.ID_ANY, "Toolbar", wx.NullBitmap, wx.DefaultPosition,
                                        wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
-        
+
         toolbar = RB.RibbonToolBar(toolbar_panel, wx.ID_ANY)
         toolbar.AddTool(wx.ID_ANY, CreateBitmap("align_left"))
         toolbar.AddTool(wx.ID_ANY, CreateBitmap("align_center"))
@@ -50,7 +66,7 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
         toolbar.AddHybridTool(wx.ID_NEW, wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_OTHER, wx.Size(16, 15)))
         toolbar.AddSeparator()
         toolbar.AddDropdownTool(wx.ID_UNDO, wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_OTHER, wx.Size(16, 15)))
-                                 
+
     def test_lib_agw_ribbonControlCtor(self):
         rib = RB.RibbonBar(self.frame, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
         RB.RibbonControl(rib)
@@ -67,7 +83,7 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
 
     def test_lib_agw_ribbonPanelCtor(self):
         rib = RB.RibbonBar(self.frame, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
-        page = RB.RibbonPage(rib, wx.ID_ANY, "Appearance")    
+        page = RB.RibbonPage(rib, wx.ID_ANY, "Appearance")
         RB.RibbonPanel(page)
 
     def test_lib_agw_ribbonArtProviders(self):
@@ -76,7 +92,7 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
         rib.SetArtProvider(RB.RibbonAUIArtProvider())
         rib.SetArtProvider(RB.RibbonMSWArtProvider())
         rib.SetArtProvider(RB.RibbonOSXArtProvider())
-        
+
     def test_lib_agw_ribbonEvents(self):
         RB.EVT_RIBBONBAR_PAGE_CHANGED
         RB.EVT_RIBBONBAR_PAGE_CHANGING
@@ -102,7 +118,7 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
         RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS
         RB.RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS
         RB.RIBBON_BAR_ALWAYS_SHOW_TABS
-        
+
     def test_lib_agw_pyprogressConstantsExists(self):
         RB.RIBBON_ART_TAB_SEPARATION_SIZE
         RB.RIBBON_ART_PAGE_BORDER_LEFT_SIZE
@@ -203,8 +219,8 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
         RB.RIBBON_ART_TOOL_ACTIVE_BACKGROUND_TOP_COLOUR
         RB.RIBBON_ART_TOOL_ACTIVE_BACKGROUND_TOP_GRADIENT_COLOUR
         RB.RIBBON_ART_TOOL_ACTIVE_BACKGROUND_COLOUR
-        RB.RIBBON_ART_TOOL_ACTIVE_BACKGROUND_GRADIENT_COLOUR        
-        
+        RB.RIBBON_ART_TOOL_ACTIVE_BACKGROUND_GRADIENT_COLOUR
+
         # RibbonScrollButtonStyle
         RB.RIBBON_SCROLL_BTN_LEFT
         RB.RIBBON_SCROLL_BTN_RIGHT
@@ -219,13 +235,13 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
         RB.RIBBON_SCROLL_BTN_FOR_TABS
         RB.RIBBON_SCROLL_BTN_FOR_PAGE
         RB.RIBBON_SCROLL_BTN_FOR_MASK
-        
+
         # RibbonButtonKind
         RB.RIBBON_BUTTON_NORMAL
         RB.RIBBON_BUTTON_DROPDOWN
         RB.RIBBON_BUTTON_HYBRID
         RB.RIBBON_BUTTON_TOGGLE
-        
+
         # RibbonButtonBarButtonState
         RB.RIBBON_BUTTONBAR_BUTTON_SMALL
         RB.RIBBON_BUTTONBAR_BUTTON_MEDIUM
@@ -246,8 +262,8 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
         RB.RIBBON_GALLERY_BUTTON_HOVERED
         RB.RIBBON_GALLERY_BUTTON_ACTIVE
         RB.RIBBON_GALLERY_BUTTON_DISABLED
-        
-        
+
+
         RB.RIBBON_BAR_SHOW_PAGE_LABELS
         RB.RIBBON_BAR_SHOW_PAGE_ICONS
         RB.RIBBON_BAR_FLOW_HORIZONTAL
@@ -257,7 +273,7 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
         RB.RIBBON_BAR_ALWAYS_SHOW_TABS
         RB.RIBBON_BAR_DEFAULT_STYLE
         RB.RIBBON_BAR_FOLDBAR_STYLE
-        
+
         RB.RIBBON_TOOLBAR_TOOL_FIRST
         RB.RIBBON_TOOLBAR_TOOL_LAST
         RB.RIBBON_TOOLBAR_TOOL_POSITION_MASK
@@ -270,18 +286,18 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
         RB.RIBBON_TOOLBAR_TOOL_DISABLED
         RB.RIBBON_TOOLBAR_TOOL_TOGGLED
         RB.RIBBON_TOOLBAR_TOOL_STATE_MASK
-        
+
         RB.RIBBON_PANEL_NO_AUTO_MINIMISE
         RB.RIBBON_PANEL_EXT_BUTTON
         RB.RIBBON_PANEL_MINIMISE_BUTTON
         RB.RIBBON_PANEL_STRETCH
         RB.RIBBON_PANEL_FLEXIBLE
-            
+
         RB.RIBBON_PANEL_DEFAULT_STYLE
 
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
     unittest.main()
-    
+
 

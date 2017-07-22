@@ -13,14 +13,14 @@ esac
 PYTHON=$TOOLS/Python$VER/python.exe
 
 if [ ! -x $PYTHON ]; then
-    echo Something is wrong with the Python at $PYTHON	
+    echo Something is wrong with the Python at $PYTHON
     exit 1
 fi
 
 MYBINDIR=$(dirname $(readlink -f $0))
 
 cd /c/projects/sip/sip
-SIPVER=`$PYTHON configure.py --version | grep -v "This is SIP"`
+SIPVER=$($PYTHON -c "import sys,configure; sys.stdout.write(configure.sip_version_str);")
 
 $PYTHON configure.py \
     --sip-module wx.siplib \

@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.adv
 
@@ -12,8 +12,8 @@ class notifmsg_Tests(wtc.WidgetTestCase):
         nf.Show()
         self.waitFor(300)
         nf.Close()
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

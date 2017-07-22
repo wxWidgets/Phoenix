@@ -33,7 +33,7 @@ import numpy as N
 class MovingObjectMixin:
     """
     Methods required for a Moving object
-    
+
     """
 
     def GetOutlinePoints(self):
@@ -46,20 +46,20 @@ class MovingObjectMixin:
                                )
 
         return OutlinePoints
-        
+
 
 class ConnectorObjectMixin:
     """
     Mixin class for DrawObjects that can be connected with lines
-    
+
     NOte that this versionony works for Objects that have an "XY" attribute:
       that is, one that is derived from XHObjectMixin.
-    
+
     """
-    
+
     def GetConnectPoint(self):
         return self.XY
-        
+
 class MovingBitmap(FC.ScaledBitmap, MovingObjectMixin, ConnectorObjectMixin):
     """
     ScaledBitmap Object that can be moved
@@ -67,7 +67,7 @@ class MovingBitmap(FC.ScaledBitmap, MovingObjectMixin, ConnectorObjectMixin):
     ## All we need to do is is inherit from:
     ##  ScaledBitmap, MovingObjectMixin and ConnectorObjectMixin
     pass
-    
+
 class MovingCircle(FC.Circle, MovingObjectMixin, ConnectorObjectMixin):
     """
     ScaledBitmap Object that can be moved
@@ -75,7 +75,7 @@ class MovingCircle(FC.Circle, MovingObjectMixin, ConnectorObjectMixin):
     ## All we need to do is is inherit from:
     ##  ScaledBitmap, MovingObjectMixin and ConnectorObjectMixin
     pass
-    
+
 class MovingArc(FC.Arc, MovingObjectMixin, ConnectorObjectMixin):
     """
     ScaledBitmap Object that can be moved
@@ -83,7 +83,7 @@ class MovingArc(FC.Arc, MovingObjectMixin, ConnectorObjectMixin):
     ## All we need to do is is inherit from:
     ##  ScaledBitmap, MovingObjectMixin and ConnectorObjectMixin
     pass
-    
+
 class ConnectorLine(FC.LineOnlyMixin, FC.DrawObject,):
     """
 
@@ -100,8 +100,8 @@ class ConnectorLine(FC.LineOnlyMixin, FC.DrawObject,):
                  InForeground = False):
         FC.DrawObject.__init__(self, InForeground)
 
-        self.Object1 =  Object1       
-        self.Object2 =  Object2       
+        self.Object1 =  Object1
+        self.Object2 =  Object2
         self.LineColor = LineColor
         self.LineStyle = LineStyle
         self.LineWidth = LineWidth
@@ -127,8 +127,8 @@ class ConnectorLine(FC.LineOnlyMixin, FC.DrawObject,):
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.DrawLines(Points)
-    
-    
+
+
 class TriangleShape1(FC.Polygon, MovingObjectMixin):
 
     def __init__(self, XY, L):
@@ -153,9 +153,9 @@ class TriangleShape1(FC.Polygon, MovingObjectMixin):
     ## Override the default OutlinePoints
     def GetOutlinePoints(self):
         return self.Points
-        
+
     def CompPoints(self, XY, L):
-        c = L/ N.sqrt(3) 
+        c = L/ N.sqrt(3)
 
         Points = N.array(((0, c),
                           ( L/2.0, -c/2.0),
@@ -176,24 +176,24 @@ class DrawFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
 
-        self.CreateStatusBar()            
+        self.CreateStatusBar()
         # Add the Canvas
         Canvas = NavCanvas.NavCanvas(self,-1,(500,500),
                                           ProjectionFun = None,
                                           Debug = 0,
                                           BackgroundColor = "DARK SLATE BLUE",
                                           ).Canvas
-        
+
         self.Canvas = Canvas
 
-        Canvas.Bind(FC.EVT_MOTION, self.OnMove ) 
-        Canvas.Bind(FC.EVT_LEFT_UP, self.OnLeftUp ) 
+        Canvas.Bind(FC.EVT_MOTION, self.OnMove )
+        Canvas.Bind(FC.EVT_LEFT_UP, self.OnLeftUp )
 
         Points = N.array(((0,0),
                           (1,0),
                           (0.5, 1)),
                          N.float)
-        
+
         data  = (( (0,0),  1),
                  ( (3,3),  2),
                  ( (-2,3), 2.5 ),
@@ -218,16 +218,16 @@ class DrawFrame(wx.Frame):
                            )
         Line = ConnectorLine(Bitmaps[0], Bitmaps[1], LineWidth=3, LineColor="Red")
         Canvas.AddObject(Line)
-        
-        
-        
+
+
+
         ## then add them to the Canvas, so they are on top of the line
         for bmp in Bitmaps:
             Canvas.AddObject(bmp)
             bmp.Bind(FC.EVT_FC_LEFT_DOWN, self.ObjectHit)
 
         A = MovingArc((-5, 0),(-2, 2),(-5, 2), LineColor="Red", LineWidth=2)
-        self.Canvas.AddObject(A)    
+        self.Canvas.AddObject(A)
         A.Bind(FC.EVT_FC_LEFT_DOWN, self.ObjectHit)
 
         self.Show(True)
@@ -272,7 +272,7 @@ class DrawFrame(wx.Frame):
             if self.MoveObject is not None:
                 dxy = event.GetPosition() - self.StartPoint
                 dxy = self.Canvas.ScalePixelToWorld(dxy)
-                self.MovingObject.Move(dxy) 
+                self.MovingObject.Move(dxy)
                 self.MoveTri = None
             self.Canvas.Draw(True)
 

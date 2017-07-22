@@ -44,15 +44,15 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
     can prevent exposure of those optional attributes of their base
     class that do not make sense for their derivation.  Therefore,
     we define::
-    
+
         BaseMaskedTextCtrl(TextCtrl, MaskedEditMixin)
 
     and::
-    
+
         masked.TextCtrl(BaseMaskedTextCtrl, MaskedEditAccessorsMixin).
 
     This allows us to then derive::
-    
+
         masked.NumCtrl( BaseMaskedTextCtrl )
 
     and not have to expose all the same accessor functions for the
@@ -73,21 +73,21 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
         """
         Default class constructor.
 
-        :param Window `parent`: the window parent. Must not be ``None``;
+        :param wx.Window `parent`: the window parent. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param string `value`: value to be shown;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
         :param integer `style`: the window style;
-        :param Validator `validator`: this is mainly provided for data-transfer, as control does
+        :param wx.Validator `validator`: this is mainly provided for data-transfer, as control does
           its own validation;
         :param string `name`: the window name;
         :param boolean `setupEventHandling`: setup event handling by default.
 
-        """       
+        """
 
         if not hasattr(self, 'this'):
             wx.TextCtrl.__init__(self, parent, id, value='',
@@ -203,9 +203,9 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
         This function redefines the externally accessible :meth:`TextCtrl.SetValue`
         to be a smart "paste" of the text in question, so as not to corrupt the
         masked control.
-        
+
         .. note::
-          
+
           This must be done in the class derived from the base wx control.
         """
         self.ModifyValue(value, use_change_value=False)
@@ -214,9 +214,9 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
         """
         Provided to accomodate similar functionality added to base
         control in wxPython 2.7.1.1.
-        
+
         :param string `value`: new value for control, this will not fire an event
-        
+
         """
         self.ModifyValue(value, use_change_value=True)
 
@@ -297,12 +297,12 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
     def SetFont(self, *args, **kwargs):
         """
         Set the font, then recalculate control size, if appropriate.
-        
+
         see :meth:`TextCtrl.SetFont` for valid arguements
         """
         wx.TextCtrl.SetFont(self, *args, **kwargs)
         if self._autofit:
-##            dbg('calculated size:', self._CalcSize())            
+##            dbg('calculated size:', self._CalcSize())
             self.SetClientSize(self._CalcSize())
             width = self.GetSize().width
             height = self.GetBestSize().height
@@ -335,9 +335,9 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
         """
         This function redefines the externally accessible :meth:`TextCtrl.Refresh`
         to validate the contents of the masked control as it refreshes.
-        
+
         .. note::
-          
+
           This must be done in the class derived from the base wx control.
         """
 ##        dbg('MaskedTextCtrl::Refresh', indent=1)
@@ -359,11 +359,11 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
         This function redefines the externally accessible :meth:`TextCtrl.Cut`
         to be a smart "erase" of the text in question, so as not to corrupt the
         masked control.
-        
+
         .. note::
-        
+
           This must be done in the class derived from the base wx control.
-        
+
         """
         if self._mask:
             self._Cut()             # call the mixin's Cut method
@@ -376,11 +376,11 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
         This function redefines the externally accessible :meth:`TextCtrl.Paste`
         to be a smart "paste" of the text in question, so as not to corrupt the
         masked control.
-        
-        .. note:: 
-        
+
+        .. note::
+
           This must be done in the class derived from the base wx control.
-        
+
         """
         if self._mask:
             self._Paste()                   # call the mixin's Paste method

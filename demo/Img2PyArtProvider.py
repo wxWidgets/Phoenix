@@ -11,10 +11,10 @@ class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
-        
+
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(sizer)
-        
+
         title = wx.StaticText(self, -1, "Img2PyArtProvider")
         title.SetFont(wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         sizer.Add(title, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
@@ -33,9 +33,9 @@ class TestPanel(wx.Panel):
         bmp = wx.Bitmap(32,22)
         self.bmpFlag = wx.StaticBitmap(self, -1, bmp)
         box.Add(self.bmpFlag, 0, wx.ALIGN_CENTER_VERTICAL)
-        
+
         sizer.Add(box, 0, wx.CENTER|wx.ALL, 10)
-        
+
         self.country = 'BLANK'
         global FlagArtProvider
         if FlagArtProvider is None:
@@ -45,7 +45,7 @@ class TestPanel(wx.Panel):
 
         self.getArt()
 
-        
+
     def OnSelectCountry(self, evt):
         self.log.write("OnSelectCountry\n")
         self.country = evt.GetString()
@@ -58,14 +58,14 @@ class TestPanel(wx.Panel):
             bmp = wx.Bitmap(32,22)
             self.clearBmp(bmp)
         self.bmpFlag.SetBitmap(bmp)
-        
+
 
     def clearBmp(self, bmp):
         dc = wx.MemoryDC()
         dc.SelectObject(bmp)
         dc.SetBackground(wx.Brush("white"))
         dc.Clear()
- 
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

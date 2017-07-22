@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -12,7 +12,7 @@ class rawbmp_Tests(wtc.WidgetTestCase):
         green = 20
         blue = 30
         alpha = 128
-        
+
         bmp = wx.Bitmap(DIM, DIM, 32)
         pixelData = wx.AlphaPixelData(bmp)
         self.assertTrue(pixelData)

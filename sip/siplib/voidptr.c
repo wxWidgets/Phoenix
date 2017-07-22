@@ -1,7 +1,7 @@
 /*
  * SIP library code.
  *
- * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -22,7 +22,6 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "sip.h"
 #include "sipint.h"
 #include "array.h"
 
@@ -314,7 +313,11 @@ static PyNumberMethods sipVoidPtr_NumberMethods = {
     0,                      /* nb_inplace_floor_divide */
     0,                      /* nb_inplace_true_divide */
 #if PY_VERSION_HEX >= 0x02050000
-    0                       /* nb_index */
+    0,                      /* nb_index */
+#endif
+#if PY_VERSION_HEX >= 0x03050000
+    0,                      /* nb_matrix_multiply */
+    0,                      /* nb_inplace_matrix_multiply */
 #endif
 };
 
@@ -1063,10 +1066,14 @@ static int vp_convertor(PyObject *arg, struct vp_values *vp)
 
         if (PyErr_Occurred())
         {
-#if PY_VERSION_HEX >= 0x03010000
-            PyErr_SetString(PyExc_TypeError, "a single integer, CObject, None, buffer protocol implementor or another sip.voidptr object is required");
+#if defined(SIP_USE_PYCAPSULE)
+#if defined(SIP_SUPPORT_PYCOBJECT)
+            PyErr_SetString(PyExc_TypeError, "a single integer, Capsule, CObject, None, bytes-like object or another sip.voidptr object is required");
 #else
-            PyErr_SetString(PyExc_TypeError, "a single integer, Capsule, CObject, None, buffer protocol implementor or another sip.voidptr object is required");
+            PyErr_SetString(PyExc_TypeError, "a single integer, Capsule, None, bytes-like object or another sip.voidptr object is required");
+#endif
+#else
+            PyErr_SetString(PyExc_TypeError, "a single integer, CObject, None, bytes-like object or another sip.voidptr object is required");
 #endif
             return 0;
         }

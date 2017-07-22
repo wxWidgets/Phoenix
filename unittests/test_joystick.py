@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.adv
 
@@ -15,7 +15,7 @@ class joystick_Tests(wtc.WidgetTestCase):
         wx.JOY_BUTTON2
         wx.JOY_BUTTON3
         wx.JOY_BUTTON4
-        
+
         wx.wxEVT_JOY_BUTTON_DOWN
         wx.wxEVT_JOY_BUTTON_UP
         wx.wxEVT_JOY_MOVE
@@ -27,11 +27,11 @@ class joystick_Tests(wtc.WidgetTestCase):
         wx.EVT_JOY_ZMOVE
         wx.EVT_JOYSTICK_EVENTS
 
-    
+
     def test_joystick2(self):
-        j = wx.adv.Joystick()  
-        
-        
+        j = wx.adv.Joystick()
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

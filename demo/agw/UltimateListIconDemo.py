@@ -852,7 +852,7 @@ class TestFrame(wx.Frame):
         il = wx.ImageList(64, 64, True)
         imgs = list(catalog.keys())
         imgs.sort()
-        
+
         for img in imgs:
             bmp = catalog[img].GetBitmap()
             il_max = il.Add(bmp)
@@ -869,14 +869,14 @@ class TestFrame(wx.Frame):
         info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
         info._format = 0
         info._text = "Artist\nName"
-        
+
         self.list.InsertColumnInfo(0, info)
 
         info = ULC.UltimateListItem()
         info._format = wx.LIST_FORMAT_RIGHT
         info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
         info._text = "Title"
-        
+
         self.list.InsertColumnInfo(1, info)
 
         info = ULC.UltimateListItem()
@@ -888,7 +888,7 @@ class TestFrame(wx.Frame):
 
         for i in range(3):
             self.list.SetColumnWidth(i, 130)
-        
+
         # create some items for the list
         for x in range(25):
             img = x % (il_max+1)
@@ -896,7 +896,7 @@ class TestFrame(wx.Frame):
             self.list.InsertImageStringItem(x, text, img)
 
         self.SetIcon(images.Mondrian.GetIcon())
-        self.Show()            
+        self.Show()
 
 #---------------------------------------------------------------------------
 

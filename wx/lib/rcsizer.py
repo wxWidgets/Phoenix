@@ -5,12 +5,12 @@
 # Author:      Robin Dunn, adapted from code by Niki Spahiev
 #
 # Created:     26-Feb-2002
-# Copyright:   (c) 2002 by Total Control Software
+# Copyright:   (c) 2002-2017 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 # 12/10/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 # o There appears to be a prob with the wx.Sizer.GetSize() method.
 #
 # 12/23/2003 - Jeff Grimmett (grimmtooth@softhome.net)
@@ -33,7 +33,7 @@ encouraged to switch.
 import  operator
 import  wx
 
-import wx.lib.six as six
+import six
 if six.PY3:
     from functools import reduce as reduce
 

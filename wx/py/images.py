@@ -3,7 +3,7 @@
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com> / David Mashburn <david.n.mashburn@gmail.com>"
 
 import wx
-from wx.lib.six import BytesIO
+from six import BytesIO
 
 def getPyIcon(shellName='PyCrust'):
     icon = wx.Icon()
@@ -18,7 +18,7 @@ def getPyImage(shellName='PyCrust'):
     return wx.Image(stream)
 
 def getPyData(shellName='PyCrust'):
-    if shellName=='PyCrust':     
+    if shellName=='PyCrust':
         return \
 b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00 \x00\x00\x00 \x08\x06\x00\
 \x00\x00szz\xf4\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\x04\

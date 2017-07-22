@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.pygauge as PG
@@ -7,7 +7,7 @@ import wx.lib.agw.pygauge as PG
 #---------------------------------------------------------------------------
 
 class lib_agw_pygauge_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_pygaugeCtor(self):
         gauge = PG.PyGauge(self.frame, style=wx.GA_HORIZONTAL)
 
@@ -26,9 +26,9 @@ class lib_agw_pygauge_Tests(wtc.WidgetTestCase):
         self.assertEqual(gauge.GetBarColour(), wx.Colour('red'))
         self.assertEqual(gauge.GetBackgroundColour(), wx.Colour('white'))
         self.assertEqual(gauge.GetBorderColour(), wx.Colour('black'))
-        
+
         self.assertEqual(gauge.GetRange(), 120)
-        
+
 
 #---------------------------------------------------------------------------
 

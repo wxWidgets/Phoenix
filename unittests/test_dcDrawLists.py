@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import random
 try:
@@ -7,7 +7,7 @@ try:
     haveNumpy = True
 except ImportError:
     haveNumpy = False
-    
+
 #---------------------------------------------------------------------------
 
 w = 600
@@ -146,13 +146,13 @@ class dcDrawLists_Tests(wtc.WidgetTestCase):
         dc.SetPen(wx.Pen("BLACK", 1))
 
         pens = makeRandomPens()
-        
+
         dc.DrawPointList(makeRandomPoints())
         dc.DrawPointList(makeRandomPoints(), wx.Pen("RED", 1))
         dc.DrawPointList(makeRandomPoints(), pens)
         del dc
-        
-        
+
+
     @unittest.skipIf(not haveNumpy, "Numpy required for this test")
     def test_dcDrawPointArray(self):
         pnl = wx.Panel(self.frame)
@@ -161,27 +161,27 @@ class dcDrawLists_Tests(wtc.WidgetTestCase):
         dc.SetPen(wx.Pen("BLACK", 1))
 
         pens = makeRandomPens()
-        
+
         dc.DrawPointList(np.array(makeRandomPoints()))
         dc.DrawPointList(np.array(makeRandomPoints()), wx.Pen("RED", 1))
         dc.DrawPointList(np.array(makeRandomPoints()), pens)
         del dc
 
-        
+
     def test_dcDrawLineLists(self):
         pnl = wx.Panel(self.frame)
         self.frame.SetSize((w,h))
         dc = wx.ClientDC(pnl)
         dc.SetPen(wx.Pen("BLACK", 1))
-        
+
         pens = makeRandomPens()
-        
+
         dc.DrawLineList(makeRandomLines())
         dc.DrawLineList(makeRandomLines(), wx.Pen("RED", 2))
         dc.DrawLineList(makeRandomLines(), pens)
         del dc
-        
-        
+
+
     def test_dcDrawRectangleLists(self):
         pnl = wx.Panel(self.frame)
         self.frame.SetSize((w,h))
@@ -191,14 +191,14 @@ class dcDrawLists_Tests(wtc.WidgetTestCase):
 
         pens = makeRandomPens()
         brushes = makeRandomBrushes()
-    
+
         dc.DrawRectangleList(makeRandomRectangles())
         dc.DrawRectangleList(makeRandomRectangles(),pens)
         dc.DrawRectangleList(makeRandomRectangles(),pens[0],brushes)
         dc.DrawRectangleList(makeRandomRectangles(),pens,brushes[0])
         dc.DrawRectangleList(makeRandomRectangles(),None,brushes)
         del dc
-        
+
 
     @unittest.skipIf(not haveNumpy, "Numpy required for this test")
     def test_dcDrawRectangleArray(self):
@@ -210,15 +210,15 @@ class dcDrawLists_Tests(wtc.WidgetTestCase):
 
         pens = makeRandomPens()
         brushes = makeRandomBrushes()
-    
+
         dc.DrawRectangleList(np.array(makeRandomRectangles()))
         dc.DrawRectangleList(np.array(makeRandomRectangles()),pens)
         dc.DrawRectangleList(np.array(makeRandomRectangles()),pens[0],brushes)
         dc.DrawRectangleList(np.array(makeRandomRectangles()),pens,brushes[0])
         dc.DrawRectangleList(np.array(makeRandomRectangles()),None,brushes)
         del dc
-        
-        
+
+
     def test_dcDrawElipseLists(self):
         pnl = wx.Panel(self.frame)
         self.frame.SetSize((w,h))
@@ -228,15 +228,15 @@ class dcDrawLists_Tests(wtc.WidgetTestCase):
 
         pens = makeRandomPens()
         brushes = makeRandomBrushes()
-    
+
         dc.DrawEllipseList(makeRandomRectangles())
         dc.DrawEllipseList(makeRandomRectangles(),pens)
         dc.DrawEllipseList(makeRandomRectangles(),pens[0],brushes)
         dc.DrawEllipseList(makeRandomRectangles(),pens,brushes[0])
         dc.DrawEllipseList(makeRandomRectangles(),None,brushes)
         del dc
- 
-        
+
+
     def test_dcDrawPloygonLists(self):
         pnl = wx.Panel(self.frame)
         self.frame.SetSize((w,h))
@@ -247,7 +247,7 @@ class dcDrawLists_Tests(wtc.WidgetTestCase):
         pens = makeRandomPens()
         brushes = makeRandomBrushes()
         polygons = makeRandomPolygons()
- 
+
         dc.DrawPolygonList(polygons)
         dc.DrawPolygonList(polygons, pens)
         dc.DrawPolygonList(polygons, pens[0],brushes)
@@ -255,23 +255,23 @@ class dcDrawLists_Tests(wtc.WidgetTestCase):
         dc.DrawPolygonList(polygons, None,brushes)
         del dc
 
-        
+
     def test_dcDrawTextLists(self):
         pnl = wx.Panel(self.frame)
         self.frame.SetSize((w,h))
         dc = wx.ClientDC(pnl)
         dc.SetBackgroundMode(wx.SOLID)
-        
+
         points = makeRandomPoints()
         fore = makeRandomColors()
         back = makeRandomColors()
         texts = makeRandomText()
-        
+
         dc.DrawTextList(texts, points, fore, back)
         del dc
-        
-        
-        
+
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

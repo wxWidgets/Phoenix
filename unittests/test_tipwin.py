@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -14,8 +14,8 @@ class tipwin_Tests(wtc.WidgetTestCase):
         self.waitFor(100)
         w.Close()
 
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

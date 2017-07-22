@@ -5,13 +5,13 @@
 # Author:      Robin Dunn
 #
 # Created:     15-May-2001
-# Copyright:   (c) 2001 by Total Control Software
+# Copyright:   (c) 2001-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------------
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 # o ListCtrlSelectionManagerMix untested.
 #
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
@@ -33,7 +33,7 @@
 
 import  locale
 import  wx
-import wx.lib.six as six
+import six
 
 if six.PY3:
     # python 3 lacks cmp:
@@ -698,7 +698,7 @@ HISTORY:
 1.1     - Initial version
 """
 
-class CheckListCtrlMixin:
+class CheckListCtrlMixin(object):
     """
     This is a mixin for ListCtrl which add a checkbox in the first
     column of each row. It is inspired by limodou's CheckList.py(which
@@ -738,8 +738,16 @@ class CheckListCtrlMixin:
 
         self.Bind(wx.EVT_LEFT_DOWN, self.__OnLeftDown_)
 
-        # override the default methods of ListCtrl/ListView
-        self.InsertStringItem = self.__InsertStringItem_
+        # Monkey-patch in a new InsertItem so we can also set the image ID for the item
+        self._origInsertItem = self.InsertItem
+        self.InsertItem = self.__InsertItem_
+
+
+    def __InsertItem_(self, *args, **kw):
+        index = self._origInsertItem(*args, **kw)
+        self.SetItemImage(index, self.uncheck_image)
+        return index
+
 
     def __CreateBitmap(self, flag=0, size=(16, 16)):
         """Create a bitmap of the platforms native checkbox. The flag
@@ -748,15 +756,13 @@ class CheckListCtrlMixin:
         """
         bmp = wx.Bitmap(*size)
         dc = wx.MemoryDC(bmp)
+        dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
         wx.RendererNative.Get().DrawCheckBox(self, dc,
                                              (0, 0, size[0], size[1]), flag)
         dc.SelectObject(wx.NullBitmap)
         return bmp
 
-    def __InsertStringItem_(self, index, label):
-        index = self.InsertItem(index, label, 0)
-        return index
 
     def __OnLeftDown_(self, evt):
         (index, flags) = self.HitTest(evt.GetPosition())
@@ -849,7 +855,7 @@ class ListRowHighlighter:
             color = self._color
         local_defaultb = self._defaultb
         local_mode = self._mode
-        for row in xrange(self.GetItemCount()):
+        for row in range(self.GetItemCount()):
             if local_mode & HIGHLIGHT_EVEN:
                 dohlight = not row % 2
             else:

@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.floatspin as FS
@@ -7,7 +7,7 @@ import wx.lib.agw.floatspin as FS
 #---------------------------------------------------------------------------
 
 class lib_agw_floatspin_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_floatspinCtor(self):
         floatspin = FS.FloatSpin(self.frame, min_val=0, max_val=1,
                                  increment=0.01, value=0.1, agwStyle=FS.FS_LEFT)
@@ -39,25 +39,25 @@ class lib_agw_floatspin_Tests(wtc.WidgetTestCase):
         self.assertEqual(floatspin.GetMin(), 0)
         self.assertEqual(floatspin.GetMax(), 1)
         self.assertEqual(floatspin.GetIncrement(), FS.FixedPoint(str(0.01), 20))
-        
-        
+
+
     def test_lib_agw_floatspinConstantsExist(self):
         FS.DEFAULT_PRECISION
         FS.FS_CENTRE
         FS.FS_LEFT
         FS.FS_READONLY
-        FS.FS_RIGHT        
+        FS.FS_RIGHT
 
     def test_lib_agw_floatspinEvents(self):
         FS.EVT_FLOATSPIN
         FS.wxEVT_FLOATSPIN
-        
+
     def test_lib_agw_floatspin_fixedpoint(self):
         f1 = FS.FixedPoint(20)
         f2 = FS.FixedPoint(30)
         f3 = FS.FixedPoint("20", 20)
         f4 = FS.FixedPoint("20", 20)
-        
+
         self.assertEqual(f1, 20)
         self.assertEqual(f2, 30)
         self.assertEqual(f3, f4)

@@ -124,7 +124,7 @@ def GetMonthList():
 
     rtype: `list`
     """
-    
+
     monthlist = []
     for i in range(13):
         name = Month[i]
@@ -135,9 +135,9 @@ def GetMonthList():
 
 def MakeColor(in_color):
     """
-    Try and create a :class:`Colour`.
+    Try and create a :class:`wx.Colour`.
 
-    :returns: a :class:`Colour` instance to `in_colour`
+    :returns: a :class:`wx.Colour` instance to `in_colour`
     """
     try:
         color = wx.Colour(in_color)
@@ -172,7 +172,7 @@ class CalDraw:
         """
         Default class constructor
 
-        :param Window `parent`: parent window.
+        :param wx.Window `parent`: parent window.
 
         """
         self.pwidth = 1
@@ -221,8 +221,8 @@ class CalDraw:
         """
         Set the font and background color of the week title.
 
-        :param `font_color`: the font color, a value as is accepted by :class:`Colour`
-        :param `week_color`: the week color, a value as is accepted by :class:`Colour`
+        :param `font_color`: the font color, a value as is accepted by :class:`wx.Colour`
+        :param `week_color`: the week color, a value as is accepted by :class:`wx.Colour`
         """
         self.colors[COLOR_HEADER_FONT] = MakeColor(font_color)
         self.colors[COLOR_HEADER_BACKGROUND] = MakeColor(week_color)
@@ -289,7 +289,7 @@ class CalDraw:
         """
         Draw the calendar.
 
-        :param `DC`: the :class:`DC` to use to draw on.
+        :param `DC`: the :class:`wx.DC` to use to draw upon.
         :param `sel_list`: a list of days to override the weekend highlight.
         """
         self.InitScale()
@@ -333,7 +333,7 @@ class CalDraw:
         """
         Draw a border around the outside of the main display rectangle.
 
-        :param `DC`: the :class:`DC` to use
+        :param `DC`: the :class:`wx.DC` to use
         :param `transparent`: use a transparent brush, default is ``False``.
 
         """
@@ -352,7 +352,7 @@ class CalDraw:
         """
         Draw the focus indicator
 
-        :param `DC`: the :class:`DC` to use
+        :param `DC`: the :class:`wx.DC` to use
 
         """
         if self.outer_border is True:
@@ -473,7 +473,7 @@ class CalDraw:
         """
         Draw the month and year titles.
 
-        :param `DC`: the :class:`DC` to use.
+        :param `DC`: the :class:`wx.DC` to use.
 
         """
         month = Month[self.month]
@@ -503,7 +503,7 @@ class CalDraw:
         """
         Draw the week days.
 
-        :param `DC`: the :class:`DC` to use.
+        :param `DC`: the :class:`wx.DC` to use.
 
         """
         # increase by 1 to include all gridlines
@@ -624,7 +624,7 @@ class CalDraw:
         """
         Draw the day numbers
 
-        :param `DC`: the :class:`DC` to use.
+        :param `DC`: the :class:`wx.DC` to use.
 
         """
         f = wx.Font(10, self.fontfamily, self.fontstyle, self.fontweight)  # initial font setting
@@ -681,7 +681,7 @@ class CalDraw:
         """
         Draw the day text.
 
-        :param `DC`: the :class:`DC` to use.
+        :param `DC`: the :class:`wx.DC` to use.
         :param `key`: the day to draw
 
         """
@@ -724,7 +724,7 @@ class CalDraw:
         """
         Highlight selected days.
 
-        :param `DC`: the :class:`DC` to use
+        :param `DC`: the :class:`wx.DC` to use
 
         """
         for key in self.cal_sel.keys():
@@ -746,7 +746,7 @@ class CalDraw:
         """
         Calculate and draw the grid lines.
 
-        :param `DC`: the :class:`DC` to use
+        :param `DC`: the :class:`wx.DC` to use
 
         """
         DC.SetPen(wx.Pen(MakeColor(self.colors[COLOR_GRID_LINES]), 0))
@@ -805,7 +805,7 @@ class CalDraw:
         Set a color.
 
         :param `name`: the name to assign the color too.
-        :param `value`: the color to use, see :class:`Colour`
+        :param `value`: the color to use, see :class:`wx.Colour`
 
         """
         self.colors[name] = MakeColor(value)
@@ -849,16 +849,16 @@ class Calendar(wx.Control):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the button style (unused);
-        :param Validator `validator`: the validator associated to the button;
+        :param wx.Validator `validator`: the validator associated to the button;
         :param string `name`: the calendar name.
 
         """
@@ -922,7 +922,7 @@ class Calendar(wx.Control):
         Set a color.
 
         :param `name`: the name to be assigned to the color.
-        :param `value`: the color value, see :class:`Colour` for valid values
+        :param `value`: the color value, see :class:`wx.Colour` for valid values
 
         """
         self.colors[name] = MakeColor(value)
@@ -1042,7 +1042,7 @@ class Calendar(wx.Control):
 
         :param `set_size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `set_size`: tuple or :class:`Size`
+        :type `set_size`: tuple or :class:`wx.Size`
 
         """
         self.size = set_size
@@ -1263,7 +1263,7 @@ class Calendar(wx.Control):
         """
         Do the drawing.
 
-        :param `DC`: the :class:`DC` to draw
+        :param `DC`: the :class:`wx.DC` to draw
 
         """
         DC = wx.PaintDC(self)
@@ -1456,7 +1456,7 @@ class CalenDlg(wx.Dialog):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `month`: the month, if None the current day will be used
         :param integer `day`: the day
         :param integer `year`: the year

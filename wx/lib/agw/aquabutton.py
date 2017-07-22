@@ -24,7 +24,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.aquabutton.AquaButton` is another custom-drawn button class which *approximatively* mimics
+:class:`~wx.lib.agw.aquabutton.AquaButton` is another custom-drawn button class which *approximatively* mimics
 the behaviour of Aqua buttons on the Mac.
 
 
@@ -54,19 +54,19 @@ Sample usage::
     app = wx.App(0)
 
     frame = wx.Frame(None, -1, "AquaButton Test")
-    
+
     mainPanel = wx.Panel(frame)
     mainPanel.SetBackgroundColour(wx.WHITE)
-    
+
     # Initialize AquaButton 1 (with image)
     bitmap = wx.Bitmap("my_button_bitmap.png", wx.BITMAP_TYPE_PNG)
     btn1 = AB.AquaButton(mainPanel, -1, bitmap, "AquaButton")
-    
+
     # Initialize AquaButton 2 (no image)
     btn2 = AB.AquaButton(mainPanel, -1, None, "Hello World!")
 
     frame.Show()
-    
+
     app.MainLoop()
 
 
@@ -161,18 +161,18 @@ class AquaButton(wx.Control):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
-        :param Bitmap `bitmap`: the button bitmap (if any);
+        :param wx.Bitmap `bitmap`: the button bitmap (if any);
         :param string `label`: the button text label;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the button style (unused);
-        :param Validator `validator`: the validator associated to the button;
+        :param wx.Validator `validator`: the validator associated to the button;
         :param string `name`: the button name.
         """
 
@@ -234,9 +234,9 @@ class AquaButton(wx.Control):
         """
         Sets the bitmap label for the button.
 
-        :param `bitmap`: the bitmap label to set, an instance of :class:`Bitmap`.
+        :param `bitmap`: the bitmap label to set, an instance of :class:`wx.Bitmap`.
         """
-        
+
         self._bitmap = bitmap
         self.Refresh()
 
@@ -246,11 +246,11 @@ class AquaButton(wx.Control):
         Return light contrast of `colour`. The colour returned is from the scale of
         `colour` ==> white.
 
-        :param `colour`: the input colour to be brightened, a valid instance of :class:`Colour`;
+        :param `colour`: the input colour to be brightened, a valid instance of :class:`wx.Colour`;
         :param integer `percent`: determines how light the colour will be. `percent` = ``100``
          returns white, `percent` = ``0`` returns `colour`.
 
-        :return: A light contrast of the input `colour`, an instance of :class:`Colour`.         
+        :return: A light contrast of the input `colour`, an instance of :class:`wx.Colour`.
         """
 
         end_colour = wx.WHITE
@@ -264,8 +264,9 @@ class AquaButton(wx.Control):
         r = colour.Red() + ((i*rd*100)/high)/100
         g = colour.Green() + ((i*gd*100)/high)/100
         b = colour.Blue() + ((i*bd*100)/high)/100
+        a = colour.Alpha()
 
-        return wx.Colour(r, g, b)
+        return wx.Colour(int(r), int(g), int(b), int(a))
 
 
     def OnPaint(self, event):
@@ -295,10 +296,10 @@ class AquaButton(wx.Control):
 
         elif self._mouseAction == HOVER:
             clr = self._hoverColour
-            
+
         elif self._hasFocus:
             clr = self._focusColour
-            
+
         elif not self.IsEnabled():
             clr = self._disableColour
 
@@ -380,10 +381,10 @@ class AquaButton(wx.Control):
         Returns a rounded :class:`GraphicsPath` rectangle.
 
         :param `gc`: an instance of :class:`GraphicsContext`;
-        :param Rect `rc`: a client rectangle;
+        :param wx.Rect `rc`: a client rectangle;
         :param float `r`: the radius of the rounded part of the rectangle.
 
-        :return: A rounded rectangle, an instance of :class:`GraphicsPath`.        
+        :return: A rounded rectangle, an instance of :class:`GraphicsPath`.
         """
 
         x, y, w, h = rc
@@ -397,7 +398,7 @@ class AquaButton(wx.Control):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`AquaButton`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.Invalidate()
@@ -565,7 +566,7 @@ class AquaButton(wx.Control):
         Given the current font and bezel width settings, calculate
         and set a good size.
 
-        :param `size`: an instance of :class:`Size` or ``None``, in which case the wxWidgets
+        :param `size`: an instance of :class:`wx.Size` or ``None``, in which case the wxWidgets
          :class:`DefaultSize` is used instead.
         """
 
@@ -592,8 +593,8 @@ class AquaButton(wx.Control):
         the same font/colour attributes as the native :class:`Button`.
 
         :return: an instance of :class:`VisualAttributes`.
-        
-        :note: Overridden from :class:`wx.Control`.        
+
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return wx.Button.GetClassDefaultAttributes()
@@ -653,8 +654,8 @@ class AquaButton(wx.Control):
         Overridden base class virtual. Determines the best size of the
         button based on the label and bezel size.
 
-        :return: An instance of :class:`Size`.
-        
+        :return: An instance of :class:`wx.Size`.
+
         :note: Overridden from :class:`wx.Control`.
         """
 
@@ -680,18 +681,18 @@ class AquaButton(wx.Control):
     def DoEnable(self, enable):
         """
         Overridden base class virtual.
-        
-        Need to Refresh otherwise Enable state change done from a 
+
+        Need to Refresh otherwise Enable state change done from a
         `wx.EVT_UPDATE_UI` will not show.
         """
-        self.Refresh() 
+        self.Refresh()
 
 
     def SetBackgroundColour(self, colour):
         """
         Sets the :class:`AquaButton` background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
         :note: Overridden from :class:`wx.Control`.
         """
@@ -705,8 +706,8 @@ class AquaButton(wx.Control):
         """
         Returns the button colour when the mouse is not hovering on the button.
 
-        :return: An instance of :class:`Colour`.
-        
+        :return: An instance of :class:`wx.Colour`.
+
         :note: Overridden from :class:`wx.Control`.
         """
 
@@ -717,7 +718,7 @@ class AquaButton(wx.Control):
         """
         Sets the button colour when the mouse is hovering on the button.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._hoverColour = colour
@@ -728,7 +729,7 @@ class AquaButton(wx.Control):
         """
         Returns the button colour when the mouse is hovering on the button.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._hoverColour
@@ -738,7 +739,7 @@ class AquaButton(wx.Control):
         """
         Sets the button colour when it is disabled.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._disableColour = colour
@@ -749,7 +750,7 @@ class AquaButton(wx.Control):
         """
         Returns the button colour when it is disabled.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._disableColour
@@ -759,7 +760,7 @@ class AquaButton(wx.Control):
         """
         Sets the button shadow colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
         .. versionadded:: 0.9.7
         """
@@ -772,7 +773,7 @@ class AquaButton(wx.Control):
         """
         Returns the button shadow colour.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         .. versionadded:: 0.9.7
         """
@@ -784,7 +785,7 @@ class AquaButton(wx.Control):
         """
         Sets the button rectangular background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
         .. versionadded:: 0.9.7
         """
@@ -797,7 +798,7 @@ class AquaButton(wx.Control):
         """
         Returns the button rectangular background colour.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         .. versionadded:: 0.9.7
         """
@@ -820,7 +821,7 @@ class AquaButton(wx.Control):
         """
         Sets the :class:`AquaButton` foreground (text) colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
         :note: Overridden from :class:`wx.Control`.
         """
@@ -834,8 +835,8 @@ class AquaButton(wx.Control):
         """
         Returns the text colour for :class:`AquaButton`.
 
-        :return: An instance of :class:`Colour`.
-        
+        :return: An instance of :class:`wx.Colour`.
+
         :note: Overridden from :class:`wx.Control`.
         """
 
@@ -846,7 +847,7 @@ class AquaButton(wx.Control):
         """
         Sets the button colour when the button has focus.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._focusColour = colour
@@ -857,7 +858,7 @@ class AquaButton(wx.Control):
         """
         Returns the button colour when the button has focus.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._hoverColour
@@ -878,7 +879,7 @@ class AquaButton(wx.Control):
 
         :note: Under Windows, only dialog box buttons respond to this function. As normal
          under Windows and Motif, pressing return causes the default button to be depressed
-         when the return key is pressed. See also :meth:`Window.SetFocus` which sets the
+         when the return key is pressed. See also :meth:`wx.Window.SetFocus` which sets the
          keyboard focus for windows and text panel items, and :meth:`TopLevelWindow.SetDefaultItem`.
 
         :note: Note that under Motif, calling this function immediately after creation of a button
@@ -986,21 +987,21 @@ class __ToggleMixin(object):
 
         if not self.IsEnabled():
             return
-        
+
         if event.LeftIsDown() and self.HasCapture():
             x, y = event.GetPosition()
             w, h = self.GetClientSize()
-            
+
             if x < w and x >= 0 and y < h and y >= 0:
                 self.up = not self.saveUp
                 self.Refresh()
                 return
-            
+
             if x < 0 or y < 0 or x >= w or y >= h:
                 self.up = self.saveUp
                 self.Refresh()
                 return
-            
+
         event.Skip()
 
 

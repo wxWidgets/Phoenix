@@ -7,7 +7,7 @@
 # Author:       Robin Dunn
 #
 # Created:      A long time ago, in a galaxy far, far away...
-# Copyright:    (c) 1998 by Total Control Software
+# Copyright:    (c) 1998-2017 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
 
@@ -31,26 +31,27 @@ class MyFrame(wx.Frame):
         # Add a panel and some controls to display the size and position
         panel = wx.Panel(self, -1)
 
-        wx.StaticText(panel, -1, "Size:", 
-            wx.DLG_PNT(panel, (4, 4)),  wx.DefaultSize
+        wx.StaticText(panel, -1, "Size:",
+            panel.DLG_UNIT((4, 4)),  wx.DefaultSize
             )
 
-        wx.StaticText(panel, -1, "Pos:", 
-            wx.DLG_PNT(panel, (4, 16)), wx.DefaultSize
+        wx.StaticText(panel, -1, "Pos:",
+            panel.DLG_UNIT((4, 20)), wx.DefaultSize
             )
 
-        self.sizeCtrl = wx.TextCtrl(panel, -1, "", 
-                            wx.DLG_PNT(panel, (24, 4)),
-                            wx.DLG_SZE(panel, (36, -1)),
+        self.sizeCtrl = wx.TextCtrl(panel, -1, "",
+                            panel.DLG_UNIT((24, 4)),
+                            panel.DLG_UNIT((36, -1)),
                             wx.TE_READONLY)
 
-        self.posCtrl = wx.TextCtrl(panel, -1, "", 
-                            wx.DLG_PNT(panel, (24, 16)),
-                            wx.DLG_SZE(panel, (36, -1)),
+        self.posCtrl = wx.TextCtrl(panel, -1, "",
+                            panel.DLG_UNIT((24, 20)),
+                            panel.DLG_UNIT((36, -1)),
                             wx.TE_READONLY)
 
-        #print(wx.DLG_PNT(panel, (24, 4)), wx.DLG_SZE(panel, (36, -1)))
-        #print(wx.DLG_PNT(panel, (24, 16)),wx.DLG_SZE(panel, (36, -1)))
+        #print(wx.DLG_UNIT(panel, (24, 4)), wx.DLG_UNIT(panel, (36, -1)))
+        #print(panel.DLG_UNIT((24, 16)), panel.DLG_UNIT((36, -1)))
+
 
     # This method is called automatically when the CLOSE event is
     # sent to this window

@@ -3,7 +3,7 @@
 # Author:      Dietmar Schwertberger
 #
 # Created:     13-Nov-2015
-# Copyright:   (c) 2015-2016 by Total Control Software
+# Copyright:   (c) 2015-2017 by Total Control Software
 # License:     wxWindows License
 # ---------------------------------------------------------------------------
 
@@ -13,7 +13,9 @@ import etgtools.tweaker_tools as tools
 PACKAGE   = "wx"
 MODULE    = "_msw"
 NAME      = "_msw"  # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+This module contains a few classes that are only available on Windows.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.

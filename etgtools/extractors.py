@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ import xml.etree.ElementTree as et
 from .tweaker_tools import FixWxPrefix, magicMethods, \
                            guessTypeInt, guessTypeFloat, guessTypeStr, \
                            textfile_open
-from sphinxtools.utilities import FindDescendants
+from sphinxtools.utilities import findDescendants
 
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
@@ -38,22 +38,26 @@ class BaseDef(object):
     """
     nameTag = 'name'
     def __init__(self, element=None):
-        self.name = ''          # name of the item
-        self.pyName = ''        # rename to this name
-        self.ignored = False    # skip this item
-        self.briefDoc = ''      # either a string or a single para Element
-        self.detailedDoc = []   # collection of para Elements
+        self.name = ''           # name of the item
+        self.pyName = ''         # rename to this name
+        self.ignored = False     # skip this item
+        self.docsIgnored = False # skip this item when generating docs
+        self.briefDoc = ''       # either a string or a single para Element
+        self.detailedDoc = []    # collection of para Elements
 
         # The items list is used by some subclasses to collect items that are
-        # part of that item, like methods of a ClassDef, etc.
-        self.items = []       
-        
+        # part of that item, like methods of a ClassDef, parameters in a
+        # MethodDef, etc.
+        self.items = []
+
         if element is not None:
             self.extract(element)
 
     def __iter__(self):
         return iter(self.items)
 
+    def __repr__(self):
+        return "{}: '{}', '{}'".format(self.__class__.__name__, self.name, self.pyName)
 
     def extract(self, element):
         # Pull info from the ElementTree element that is pertinent to this
@@ -68,12 +72,12 @@ class BaseDef(object):
             self.briefDoc = bd[0] # Should be just one <para> element
         self.detailedDoc = list(element.find('detaileddescription'))
 
-                
+
     def ignore(self, val=True):
         self.ignored = val
         return self
-                
-        
+
+
     def find(self, name):
         """
         Locate and return an item within this item that has a matching name.
@@ -89,11 +93,11 @@ class BaseDef(object):
                 if not tail:
                     return item
                 else:
-                    return item.find(tail)                
+                    return item.find(tail)
         else: # got though all items with no match
             raise ExtractorError("Unable to find item named '%s' within %s named '%s'" %
                                  (head, self.__class__.__name__, self.name))
-        
+
     def findItem(self, name):
         """
         Just like find() but does not raise an exception if the item is not found.
@@ -103,16 +107,16 @@ class BaseDef(object):
             return item
         except ExtractorError:
             return None
-        
+
 
     def addItem(self, item):
         self.items.append(item)
         return item
-        
+
     def insertItem(self, index, item):
         self.items.insert(index, item)
         return item
-        
+
     def insertItemAfter(self, after, item):
         try:
             idx = self.items.index(after)
@@ -120,7 +124,7 @@ class BaseDef(object):
         except ValueError:
             self.items.append(item)
         return item
-    
+
     def insertItemBefore(self, before, item):
         try:
             idx = self.items.index(before)
@@ -129,7 +133,7 @@ class BaseDef(object):
             self.items.insert(0, item)
         return item
 
-            
+
     def allItems(self):
         """
         Recursively create a sequence for traversing all items in the
@@ -145,10 +149,10 @@ class BaseDef(object):
             if hasattr(item, 'innerclasses'):
                 for o in item.innerclasses:
                     items.extend(o.allItems())
-    
+
         return items
-                
-    
+
+
     def findAll(self, name):
         """
         Search recursivly for items that have the given name.
@@ -158,8 +162,8 @@ class BaseDef(object):
             if item.name == name or item.pyName == name:
                 matches.append(item)
         return matches
-    
-                
+
+
     def _findItems(self):
         # If there are more items to be searched than what is in self.items, a
         # subclass can override this to give a different list.
@@ -177,12 +181,12 @@ class VariableDef(BaseDef):
         super(VariableDef, self).__init__()
         self.type = None
         self.definition = ''
-        self.argsString = '' 
+        self.argsString = ''
         self.pyInt = False
         self.__dict__.update(**kw)
         if element is not None:
             self.extract(element)
-            
+
     def extract(self, element):
         super(VariableDef, self).extract(element)
         self.type = flattenNode(element.find('type'))
@@ -190,7 +194,7 @@ class VariableDef(BaseDef):
         self.argsString = element.find('argsstring').text
 
 
-        
+
 #---------------------------------------------------------------------------
 # These need the same attributes as VariableDef, but we use separate classes
 # so we can identify what kind of element it came from originally.
@@ -223,7 +227,7 @@ class MemberVarDef(VariableDef):
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
-        
+
     def extract(self, element):
         super(MemberVarDef, self).extract(element)
         self.isStatic = element.get('static') == 'yes'
@@ -234,7 +238,7 @@ class MemberVarDef(VariableDef):
         if self.protection == 'protected':
             self.ignore()
 
-           
+
 #---------------------------------------------------------------------------
 
 _globalIsCore = None
@@ -259,14 +263,17 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.pyInt = False            # treat char types as integers
         self.transfer = False         # transfer ownership of return value to C++?
         self.transferBack = False     # transfer ownership of return value from C++ to Python?
-        self.transferThis = False     # ownership of 'this' pointer transfered to C++ 
+        self.transferThis = False     # ownership of 'this' pointer transfered to C++
         self.cppCode = None           # Use this code instead of the default wrapper
         self.noArgParser = False      # set the NoargParser annotation
+        self.mustHaveAppFlag = False
+
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
-            
-                    
+
+
+
     def extract(self, element):
         super(FunctionDef, self).extract(element)
         self.type = flattenNode(element.find('type'))
@@ -279,45 +286,45 @@ class FunctionDef(BaseDef, FixWxPrefix):
             # parameter description items and assign that value as the
             # briefDoc for this ParamDef object.
 
-            
+
     def releaseGIL(self, release=True):
         self.pyReleaseGIL = release
-        
+
     def holdGIL(self, hold=True):
         self.pyHoldGIL = hold
 
-        
+
     def setCppCode_sip(self, code):
         """
         Use the given C++ code instead of that automatically generated by the
         back-end. This is similar to adding a new C++ method, except it uses
         info we've already received from the source XML such as the argument
         types and names, docstring, etc.
-        
-        The code generated for this verison will expect the given code to use
-        SIP specfic variable names, etc. For example::
-        
+
+        The code generated for this version will expect the given code to use
+        SIP specific variable names, etc. For example::
+
             sipRes = sipCpp->Foo();
         """
         self.cppCode = (code, 'sip')
 
-        
+
     def setCppCode(self, code):
         """
         Use the given C++ code instead of that automatically generated by the
         back-end. This is similar to adding a new C++ method, except it uses
         info we've already received from the source XML such as the argument
         types and names, docstring, etc.
-        
+
         The code generated for this version will put the given code in a
         wrapper function that will enable it to be more independent, not SIP
         specific, and also more natural. For example::
-        
+
             return self->Foo();
         """
         self.cppCode = (code, 'function')
 
-            
+
     def checkForOverload(self, methods):
         for m in methods:
             if isinstance(m, FunctionDef) and m.name == self.name:
@@ -326,11 +333,11 @@ class FunctionDef(BaseDef, FixWxPrefix):
                 return True
         return False
 
-    
+
     def all(self):
         return [self] + self.overloads
-    
-    
+
+
     def findOverload(self, matchText, isConst=None, printSig=False):
         """
         Search for an overloaded method that has matchText in its C++ argsString.
@@ -345,7 +352,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                     if o.isConst == isConst:
                         return o
         return None
-    
+
 
     def hasOverloads(self):
         """
@@ -366,9 +373,9 @@ class FunctionDef(BaseDef, FixWxPrefix):
         else:
             parent = self.klass
         item = self.findOverload(matchText)
-        item.pyName = newName    
+        item.pyName = newName
         item.__dict__.update(kw)
-        
+
         if item is self and not self.hasOverloads():
             # We're done, there actually is only one instance of this method
             pass
@@ -383,19 +390,27 @@ class FunctionDef(BaseDef, FixWxPrefix):
             idx = parent.items.index(self)
             parent.items[idx] = first
             parent.insertItemAfter(first, self)
-            
+
         else:
             # Just remove from the overloads list and insert it into the parent.
             self.overloads.remove(item)
             parent.insertItemAfter(self, item)
         return item
-    
-    
-    def ignore(self,  val=True):
-        # If the item being ignored has overloads then try to reorder the
-        # items so the primary item is not an ignored one.
-        super(FunctionDef, self).ignore(val)        
+
+
+    def ignore(self, val=True):
+        # In addition to ignoring this item, reorder any overloads to ensure
+        # the primary overload is not ignored, if possible.
+        super(FunctionDef, self).ignore(val)
         if val and self.overloads:
+            self.reorderOverloads()
+        return self
+
+
+    def reorderOverloads(self):
+        # Reorder a set of overloaded functions such that the primary
+        # FunctionDef is one that is not ignored.
+        if self.overloads and self.ignored:
             all = [self] + self.overloads
             all.sort(key=lambda item: item.ignored)
             first = all[0]
@@ -408,23 +423,22 @@ class FunctionDef(BaseDef, FixWxPrefix):
                 first.overloads = all[1:]
                 idx = parent.items.index(self)
                 parent.items[idx] = first
-        return self
-    
-        
+
+
     def _findItems(self):
         items = list(self.items)
         for o in self.overloads:
             items.extend(o.items)
         return items
-              
-    
+
+
     def makePyArgsString(self):
         """
         Create a pythonized version of the argsString in function and method
         items that can be used as part of the docstring.
-        
+
         TODO: Maybe (optionally) use this syntax to document arg types?
-              http://www.python.org/dev/peps/pep-3107/        
+              http://www.python.org/dev/peps/pep-3107/
         """
         def _cleanName(name):
             for txt in ['const', '*', '&', ' ']:
@@ -432,15 +446,15 @@ class FunctionDef(BaseDef, FixWxPrefix):
             name = name.replace('::', '.')
             name = self.fixWxPrefix(name, True)
             return name
-        
+
         params = list()
         returns = list()
         if self.type and self.type != 'void':
             returns.append(_cleanName(self.type))
-        
+
         defValueMap = { 'true':  'True',
                         'false': 'False',
-                        'NULL':  'None', 
+                        'NULL':  'None',
                         'wxString()': '""',
                         'wxArrayString()' : '[]',
                         'wxArrayInt()' : '[]',
@@ -478,26 +492,26 @@ class FunctionDef(BaseDef, FixWxPrefix):
                     returns.append(s)
                 else:
                     if param.inOut:
-                        returns.append(s)                    
+                        returns.append(s)
                     if param.default:
                         default = param.default
                         if default in defValueMap:
                             default = defValueMap.get(default)
-                        
+
                         s += '=' + '|'.join([_cleanName(x) for x in default.split('|')])
                     params.append(s)
-            
+
         self.pyArgsString = '(' + ', '.join(params) + ')'
         if len(returns) == 1:
             self.pyArgsString += ' -> ' + returns[0]
         if len(returns) > 1:
             self.pyArgsString += ' -> (' + ', '.join(returns) + ')'
 
-        
+
     def collectPySignatures(self):
         """
         Collect the pyArgsStrings for self and any overloads, and create a
-        list of function signatures for the docstrings. 
+        list of function signatures for the docstrings.
         """
         sigs = list()
         for f in [self] + self.overloads:
@@ -506,16 +520,20 @@ class FunctionDef(BaseDef, FixWxPrefix):
                 continue
             if not f.pyArgsString:
                 f.makePyArgsString()
-                
+
             sig = f.pyName or self.fixWxPrefix(f.name)
             if sig in magicMethods:
                 sig = magicMethods[sig]
             sig += f.pyArgsString
             sigs.append(sig)
         return sigs
-        
+
+
+    def mustHaveApp(self, value=True):
+        self.mustHaveAppFlag = value
+
 #---------------------------------------------------------------------------
-        
+
 class MethodDef(FunctionDef):
     """
     Represents a class method, ctor or dtor declaration.
@@ -534,12 +552,12 @@ class MethodDef(FunctionDef):
         self.noDerivedCtor = False    # don't generate a ctor in the derived class for this ctor
         self.cppSignature = None
         self.virtualCatcherCode = None
-        self.__dict__.update(kw)                    
+        self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
         elif not hasattr(self, 'isCore'):
             self.isCore = _globalIsCore
-            
+
 
     def extract(self, element):
         super(MethodDef, self).extract(element)
@@ -556,8 +574,8 @@ class MethodDef(FunctionDef):
         if self.protection == 'protected':
             self.ignore()
 
-    
-               
+
+
 
 #---------------------------------------------------------------------------
 
@@ -576,12 +594,12 @@ class ParamDef(BaseDef):
         self.arraySize = False        # the param is the size of the array
         self.transfer = False         # transfer ownership of arg to C++?
         self.transferBack = False     # transfer ownership of arg from C++ to Python?
-        self.transferThis = False     # ownership of 'this' pointer transfered to this arg 
+        self.transferThis = False     # ownership of 'this' pointer transferred to this arg
         self.keepReference = False    # an extra reference to the arg is held
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
-        
+
     def extract(self, element):
         try:
             self.type = flattenNode(element.find('type'))
@@ -629,47 +647,57 @@ class ClassDef(BaseDef):
         self.allowNone = False      # Allow the convertFrom code to handle None too.
         self.instanceCode = None    # Code to be used to create new instances of this class
         self.innerclasses = []
-        self.isInner = False
-        
+        self.isInner = False        # Is this a nested class?
+        self.klass = None           # if so, then this is the outer class
+        self.mustHaveAppFlag = False
+
         # Stuff that needs to be generated after the class instead of within
         # it. Some back-end generators need to put stuff inside the class, and
         # others need to do it outside the class definition. The generators
         # can move things here for later processing when they encounter those
         # items.
-        self.generateAfterClass = [] 
-        
+        self.generateAfterClass = []
+
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
 
 
-    def findHierarchy(self, element, all_classes, specials, read):
+    def renameClass(self, newName):
+        self.pyName = newName
+        for item in self.items:
+            if hasattr(item, 'className'):
+                item.className = newName
+                for overload in item.overloads:
+                    overload.className = newName
 
+
+    def findHierarchy(self, element, all_classes, specials, read):
         from etgtools import XMLSRC
-        
+
         if not read:
-            nodename = fullname = self.name
-            specials = [nodename]
+            fullname = self.name
+            specials = [fullname]
         else:
-            nodename = fullname = element.text
+            fullname = element.text
 
         baselist = []
 
-        if read:            
+        if read:
             refid = element.get('refid')
             if refid is None:
                 return all_classes, specials
-            
+
             fname = os.path.join(XMLSRC, refid+'.xml')
             root = et.parse(fname).getroot()
-            compounds = FindDescendants(root, 'basecompoundref')
+            compounds = findDescendants(root, 'basecompoundref')
         else:
-            compounds = element.findall('basecompoundref')        
+            compounds = element.findall('basecompoundref')
 
         for c in compounds:
             baselist.append(c.text)
 
-        all_classes[nodename] = (nodename, fullname, baselist)
+        all_classes[fullname] = (fullname, baselist)
 
         for c in compounds:
             all_classes, specials = self.findHierarchy(c, all_classes, specials, True)
@@ -683,16 +711,16 @@ class ClassDef(BaseDef):
         self.nodeBases = self.findHierarchy(element, {}, [], False)
 
         for node in element.findall('basecompoundref'):
-            self.bases.append(node.text)                
+            self.bases.append(node.text)
         for node in element.findall('derivedcompoundref'):
-            self.subClasses.append(node.text)        
+            self.subClasses.append(node.text)
         for node in element.findall('includes'):
             self.includes.append(node.text)
         for node in element.findall('templateparamlist/param'):
             txt = node.find('type').text
             txt = txt.replace('class ', '')
             self.templateParams.append(txt)
-                        
+
         for node in element.findall('innerclass'):
             if node.get('prot') == 'private':
                 continue
@@ -706,9 +734,10 @@ class ClassDef(BaseDef):
             item = ClassDef(innerclass, kind)
             item.protection = node.get('prot')
             item.isInner = True
+            item.klass = self      # This makes a reference cycle but it's okay
             self.innerclasses.append(item)
-        
-        
+
+
         # TODO: Is it possible for there to be memberdef's w/o a sectiondef?
         for node in element.findall('sectiondef/memberdef'):
             # skip any private items
@@ -732,29 +761,29 @@ class ClassDef(BaseDef):
                 continue
             else:
                 raise ExtractorError('Unknown memberdef kind: %s' % kind)
-            
-                
+
+
     def _findItems(self):
         return self.items + self.innerclasses
 
-            
+
     def addHeaderCode(self, code):
         if isinstance(code, list):
             self.headerCode.extend(code)
         else:
             self.headerCode.append(code)
-        
+
     def addCppCode(self, code):
         if isinstance(code, list):
             self.cppCode.extend(code)
         else:
             self.cppCode.append(code)
 
-            
+
     def includeCppCode(self, filename):
         self.addCppCode(textfile_open(filename).read())
-        
-        
+
+
     def addAutoProperties(self):
         """
         Look at MethodDef and PyMethodDef items and generate properties if
@@ -775,7 +804,7 @@ class ClassDef(BaseDef):
                 if arg != 'self':
                     count += 1
             return count
-            
+
         def countPyNonDefaultArgs(item):
             count = 0
             args = item.argsString.replace('(', '').replace(')', '')
@@ -783,7 +812,7 @@ class ClassDef(BaseDef):
                 if arg != 'self' and '=' not in arg:
                     count += 1
             return count
-        
+
         props = dict()
         for item in self.items:
             if isinstance(item, (MethodDef, PyMethodDef)) \
@@ -805,7 +834,7 @@ class ClassDef(BaseDef):
                         ok = True
                         prop.setter = item.name
                         prop.usesPyMethod = True
-                        
+
                 else:
                     # look at all overloads
                     ok = False
@@ -834,7 +863,7 @@ class ClassDef(BaseDef):
                     if hasattr(prop, 'usesPyMethod'):
                         prop = PyPropertyDef(prop.name, prop.getter, prop.setter)
                     props[name] = prop
-                
+
         if props:
             self.addPublic()
         for name, prop in sorted(props.items()):
@@ -847,7 +876,7 @@ class ClassDef(BaseDef):
                 starts_with_number = True
             except:
                 pass
-            
+
             # only create the prop if a method with that name does not exist, and it is a valid name
             if starts_with_number:
                 print('WARNING: Invalid property name %s for class %s' % (name, self.name))
@@ -856,9 +885,9 @@ class ClassDef(BaseDef):
             else:
                 self.items.append(prop)
 
-                
-    
-                
+
+
+
     def addProperty(self, *args, **kw):
         """
         Add a property to a class, with a name, getter function and optionally
@@ -880,16 +909,16 @@ class ClassDef(BaseDef):
             p = PropertyDef(*args, **kw)
         self.items.append(p)
         return p
-    
-    
-    
+
+
+
     def addPyProperty(self, *args, **kw):
         """
         Add a property to a class that can use PyMethods that have been
         monkey-patched into the class. (This property will also be
         jammed in to the class in like manner.)
         """
-        # Read the nice comment in the function above.  Ditto.
+        # Read the nice comment in the method above.  Ditto.
         if len(args) == 1:
             name = getter = setter = ''
             split = args[0].split()
@@ -905,45 +934,48 @@ class ClassDef(BaseDef):
         return p
 
     #------------------------------------------------------------------
- 
-    def _addMethod(self, md):
+
+    def _addMethod(self, md, overloadOkay=True):
         md.klass = self
-        if self.findItem(md.name):
-            self.findItem(md.name).overloads.append(md)
+        if overloadOkay and self.findItem(md.name):
+            item = self.findItem(md.name)
+            item.overloads.append(md)
+            item.reorderOverloads()
         else:
             self.items.append(md)
-        
-    def addCppMethod(self, type, name, argsString, body, doc=None, isConst=False, 
-                     cppSignature=None, **kw):
+
+
+    def addCppMethod(self, type, name, argsString, body, doc=None, isConst=False,
+                     cppSignature=None, overloadOkay=True, **kw):
         """
         Add a new C++ method to a class. This method doesn't have to actually
         exist in the real C++ class. Instead it will be grafted on by the
         back-end wrapper generator such that it is visible in the class in the
         target language.
         """
-        md = CppMethodDef(type, name, argsString, body, doc, isConst, klass=self, 
+        md = CppMethodDef(type, name, argsString, body, doc, isConst, klass=self,
                           cppSignature=cppSignature, **kw)
-        self._addMethod(md)
+        self._addMethod(md, overloadOkay)
         return md
 
-    
-    def addCppCtor(self, argsString, body, doc=None, noDerivedCtor=True, 
+
+    def addCppCtor(self, argsString, body, doc=None, noDerivedCtor=True,
                    useDerivedName=False, cppSignature=None, **kw):
         """
         Add a C++ method that is a constructor.
         """
-        md = CppMethodDef('', self.name, argsString, body, doc=doc, 
-                          isCtor=True, klass=self, noDerivedCtor=noDerivedCtor, 
+        md = CppMethodDef('', self.name, argsString, body, doc=doc,
+                          isCtor=True, klass=self, noDerivedCtor=noDerivedCtor,
                           useDerivedName=useDerivedName, cppSignature=cppSignature, **kw)
         self._addMethod(md)
         return md
 
-    
+
     def addCppDtor(self, body, useDerivedName=False, **kw):
         """
         Add a C++ method that is a destructor.
         """
-        md = CppMethodDef('', '~'+self.name, '()', body, isDtor=True, klass=self, 
+        md = CppMethodDef('', '~'+self.name, '()', body, isDtor=True, klass=self,
                           useDerivedName=useDerivedName, **kw)
         self._addMethod(md)
         return md
@@ -958,20 +990,20 @@ class ClassDef(BaseDef):
         self._addMethod(md)
         return md
 
-    def addCppCtor_sip(self, argsString, body, doc=None, noDerivedCtor=True, 
+    def addCppCtor_sip(self, argsString, body, doc=None, noDerivedCtor=True,
                        cppSignature=None, **kw):
         """
         Add a C++ method that is a constructor.
         """
-        md = CppMethodDef_sip('', self.name, argsString, body, doc=doc, 
-                          isCtor=True, klass=self, noDerivedCtor=noDerivedCtor, 
+        md = CppMethodDef_sip('', self.name, argsString, body, doc=doc,
+                          isCtor=True, klass=self, noDerivedCtor=noDerivedCtor,
                           cppSignature=cppSignature, **kw)
         self._addMethod(md)
         return md
 
     #------------------------------------------------------------------
-    
-    
+
+
     def addPyMethod(self, name, argsString, body, doc=None, **kw):
         """
         Add a (monkey-patched) Python method to this class.
@@ -980,16 +1012,16 @@ class ClassDef(BaseDef):
         self.items.append(pm)
         return pm
 
-    
+
     def addPyCode(self, code):
         """
         Add a snippet of Python code which is to be associated with this class.
-        """        
+        """
         pc = PyCodeDef(code, klass=self, protection = 'public')
         self.items.append(pc)
         return pc
 
-    
+
     def addPublic(self, code=''):
         """
         Adds a 'public:' protection keyword to the class, optionally followed
@@ -999,7 +1031,7 @@ class ClassDef(BaseDef):
         if code:
             text = text + '\n' + code
         self.addItem(WigCode(text))
-         
+
     def addProtected(self, code=''):
         """
         Adds a 'protected:' protection keyword to the class, optionally followed
@@ -1010,7 +1042,7 @@ class ClassDef(BaseDef):
             text = text + '\n' + code
         self.addItem(WigCode(text))
 
-        
+
     def addPrivate(self, code=''):
         """
         Adds a 'private:' protection keyword to the class, optionally followed
@@ -1021,7 +1053,7 @@ class ClassDef(BaseDef):
             text = text + '\n' + code
         self.addItem(WigCode(text))
 
-        
+
     def addCopyCtor(self, prot='protected'):
         # add declaration of a copy constructor to this class
         wig = WigCode("""\
@@ -1031,7 +1063,7 @@ class ClassDef(BaseDef):
 
     def addPrivateCopyCtor(self):
         self.addCopyCtor('private')
-        
+
     def addPrivateAssignOp(self):
         # add declaration of an assignment opperator to this class
         wig = WigCode("""\
@@ -1052,6 +1084,9 @@ private:
 {PROT}:
     {CLASS}();""".format(CLASS=self.name, PROT=prot))
         self.addItem(wig)
+
+    def mustHaveApp(self, value=True):
+        self.mustHaveAppFlag = value
 
 
 #---------------------------------------------------------------------------
@@ -1074,14 +1109,14 @@ class EnumDef(BaseDef):
                     self.ignore()
             self.extract(element)
         self.__dict__.update(kw)
-        
+
     def extract(self, element):
         super(EnumDef, self).extract(element)
         for node in element.findall('enumvalue'):
             value = EnumValueDef(node)
             self.items.append(value)
-            
-           
+
+
 
 
 class EnumValueDef(BaseDef):
@@ -1094,7 +1129,7 @@ class EnumValueDef(BaseDef):
             self.extract(element)
         self.__dict__.update(kw)
 
-            
+
 #---------------------------------------------------------------------------
 
 class DefineDef(BaseDef):
@@ -1107,7 +1142,7 @@ class DefineDef(BaseDef):
             self.name = element.find('name').text
             self.value = flattenNode(element.find('initializer'))
         self.__dict__.update(kw)
-        
+
 
 #---------------------------------------------------------------------------
 
@@ -1144,7 +1179,7 @@ class CppMethodDef(MethodDef):
     NOTE: This one is not automatically extracted, but can be added to
           classes in the tweaker stage
     """
-    def __init__(self, type, name, argsString, body, doc=None, isConst=False, 
+    def __init__(self, type, name, argsString, body, doc=None, isConst=False,
                  cppSignature=None, virtualCatcherCode=None, **kw):
         super(CppMethodDef, self).__init__()
         self.type = type
@@ -1170,13 +1205,13 @@ class CppMethodDef(MethodDef):
         so it can be used to write the code for a new wrapper function.
 
         TODO: It might be better to just refactor the code in the generator
-        so it can be shared more easily intstead of using a hack like this...
+        so it can be shared more easily instead of using a hack like this...
         """
         m = CppMethodDef('', '', '', '')
         m.__dict__.update(method.__dict__)
         return m
-        
-        
+
+
 class CppMethodDef_sip(CppMethodDef):
     """
     Just like the above, but instead of generating a new function from the
@@ -1185,8 +1220,8 @@ class CppMethodDef_sip(CppMethodDef):
     beyond the general scope of the other C++ Method implementation.
     """
     pass
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 class WigCode(BaseDef):
@@ -1238,6 +1273,15 @@ class PyFunctionDef(BaseDef):
         self.overloads = []
         self.__dict__.update(kw)
 
+
+    def hasOverloads(self):
+        """
+        Returns True if there are any overloads that are not ignored.
+        """
+        return bool([x for x in self.overloads if not x.ignored])
+
+
+
 #---------------------------------------------------------------------------
 
 class PyClassDef(BaseDef):
@@ -1261,23 +1305,23 @@ class PyClassDef(BaseDef):
         self.__dict__.update(kw)
 
         self.nodeBases = self.findHierarchy()
-        
+
 
     def findHierarchy(self):
 
         all_classes = {}
-        nodename = fullname = self.name
-        specials = [nodename]
+        fullname = self.name
+        specials = [fullname]
 
         baselist = [base for base in self.bases if base != 'object']
-        all_classes[nodename] = (nodename, fullname, baselist)
+        all_classes[fullname] = (fullname, baselist)
 
         for base in baselist:
-            all_classes[base] = (base, base, [])
+            all_classes[base] = (base, [])
 
         return all_classes, specials
-        
-    
+
+
 #---------------------------------------------------------------------------
 
 class PyMethodDef(PyFunctionDef):
@@ -1290,7 +1334,7 @@ class PyMethodDef(PyFunctionDef):
         self.klass = klass
         self.protection = 'public'
         self.__dict__.update(kw)
-    
+
 #---------------------------------------------------------------------------
 
 class ModuleDef(BaseDef):
@@ -1311,6 +1355,7 @@ class ModuleDef(BaseDef):
         self.postInitializerCode = []
         self.includes = []
         self.imports = []
+        self.isARealModule = (module == name)
 
 
     def parseCompleted(self):
@@ -1335,27 +1380,27 @@ class ModuleDef(BaseDef):
             elif isinstance(item, GlobalVarDef):
                 three.append(item)
             # template instantiations go at the end
-            elif isinstance(item, TypedefDef) and '<' in item.type:  
+            elif isinstance(item, TypedefDef) and '<' in item.type:
                 three.append(item)
-            
+
             else:
                 one.append(item)
         self.items = one + two + three
-        
+
         # give everything an isCore flag
-        global _globalIsCore 
+        global _globalIsCore
         _globalIsCore = self.module == '_core'
         for item in self.allItems():
             item.isCore = _globalIsCore
-        
-        
+
+
 
     def addHeaderCode(self, code):
         if isinstance(code, list):
             self.headerCode.extend(code)
         else:
             self.headerCode.append(code)
-        
+
     def addCppCode(self, code):
         if isinstance(code, list):
             self.cppCode.extend(code)
@@ -1364,38 +1409,38 @@ class ModuleDef(BaseDef):
 
     def includeCppCode(self, filename):
         self.addCppCode(textfile_open(filename).read())
-        
+
     def addInitializerCode(self, code):
         if isinstance(code, list):
             self.initializerCode.extend(code)
         else:
             self.initializerCode.append(code)
-        
+
     def addPreInitializerCode(self, code):
         if isinstance(code, list):
             self.preInitializerCode.extend(code)
         else:
             self.preInitializerCode.append(code)
-        
+
     def addPostInitializerCode(self, code):
         if isinstance(code, list):
             self.postInitializerCode.extend(code)
         else:
             self.postInitializerCode.append(code)
-        
+
     def addInclude(self, name):
         if isinstance(name, list):
             self.includes.extend(name)
         else:
             self.includes.append(name)
-        
+
     def addImport(self, name):
         if isinstance(name, list):
             self.imports.extend(name)
         else:
             self.imports.append(name)
-        
-            
+
+
     def addElement(self, element):
         item = None
         kind = element.get('kind')
@@ -1414,27 +1459,27 @@ class ModuleDef(BaseDef):
             item = FunctionDef(element, module=self)
             if not item.checkForOverload(self.items):
                 self.items.append(item)
-            
+
         elif kind == 'enum':
             inClass = []
             for el in self.items:
                 if isinstance(el, ClassDef):
                     inClass.append(el)
-            
+
             extractingMsg(kind, element)
             item = EnumDef(element, inClass)
             self.items.append(item)
-                        
+
         elif kind == 'variable':
             extractingMsg(kind, element)
             item = GlobalVarDef(element)
             self.items.append(item)
 
-        elif kind == 'typedef': 
+        elif kind == 'typedef':
             extractingMsg(kind, element)
             item = TypedefDef(element)
             self.items.append(item)
-            
+
         elif kind == 'define':
             # if it doesn't have a value, it must be a macro.
             value = flattenNode(element.find("initializer"))
@@ -1455,11 +1500,11 @@ class ModuleDef(BaseDef):
 
         else:
             raise ExtractorError('Unknown module item kind: %s' % kind)
-        
+
         return item
-    
-        
-            
+
+
+
     def addCppFunction(self, type, name, argsString, body, doc=None, **kw):
         """
         Add a new C++ function into the module that is written by hand, not
@@ -1469,7 +1514,7 @@ class ModuleDef(BaseDef):
         self.items.append(md)
         return md
 
-    
+
     def addCppFunction_sip(self, type, name, argsString, body, doc=None, **kw):
         """
         Add a new C++ function into the module that is written by hand, not
@@ -1480,15 +1525,15 @@ class ModuleDef(BaseDef):
         return md
 
 
-    def addPyCode(self, code, order=None):
+    def addPyCode(self, code, order=None, **kw):
         """
         Add a snippet of Python code to the wrapper module.
-        """        
-        pc = PyCodeDef(code, order)
+        """
+        pc = PyCodeDef(code, order, **kw)
         self.items.append(pc)
         return pc
 
-    
+
     def addGlobalStr(self, name, before=None):
         if self.findItem(name):
             self.findItem(name).ignore()
@@ -1498,8 +1543,8 @@ class ModuleDef(BaseDef):
         else:
             self.insertItemBefore(before, gv)
         return gv
-    
-    
+
+
     def includePyCode(self, filename, order=None):
         """
         Add a snippet of Python code from a file to the wrapper module.
@@ -1507,7 +1552,7 @@ class ModuleDef(BaseDef):
         text = textfile_open(filename).read()
         return self.addPyCode(
             "#" + '-=' * 38 + '\n' +
-            ("# This code block was included from %s\n%s\n" % (filename, text)) + 
+            ("# This code block was included from %s\n%s\n" % (filename, text)) +
             "# End of included code block\n"
             "#" + '-=' * 38 + '\n'            ,
             order
@@ -1522,7 +1567,7 @@ class ModuleDef(BaseDef):
         self.items.append(pf)
         return pf
 
-    
+
     def addPyClass(self, name, bases=[], doc=None, items=[], order=None, **kw):
         """
         Add a pure Python class to this module.
@@ -1530,9 +1575,9 @@ class ModuleDef(BaseDef):
         pc = PyClassDef(name, bases, doc, items, order, **kw)
         self.items.append(pc)
         return pc
-    
-    
-    
+
+
+
 #---------------------------------------------------------------------------
 # Some helper functions and such
 #---------------------------------------------------------------------------
@@ -1554,7 +1599,7 @@ def flattenNode(node, rstrip=True):
     text = node.text or ""
     for n in node:
         text += flattenNode(n, rstrip)
-    if node.tail: 
+    if node.tail:
         text += node.tail
         if rstrip:
             text = text.rstrip()
@@ -1572,7 +1617,7 @@ def prettifyNode(elem):
     from xml.dom import minidom
     rough_string = ElementTree.tostring(elem, 'utf-8')
     reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ")    
+    return reparsed.toprettyxml(indent="  ")
 
 
 def appendText(node, text):
@@ -1591,14 +1636,14 @@ def prependText(node, text):
     # If the node has text then just insert the new bti as a string
     if hasattr(node, 'text') and node.text:
         node.text = text + node.text
-        
+
     # otherwise insert it as an element
     else:
         ele = makeTextElement(text)
         node.insert(0, ele)
-        
-    
-    
+
+
+
 def makeTextElement(text):
     element = et.Element('para')
     element.text = text
@@ -1623,7 +1668,7 @@ def _pf(item, indent):
     if '\n' in txt:
         txt = '\n' + txt
     return txt
-        
+
 
 def verbose():
     return '--verbose' in sys.argv
@@ -1631,11 +1676,11 @@ def verbose():
 def extractingMsg(kind, element, nameTag='name'):
     if verbose():
         print('Extracting %s: %s' % (kind, element.find(nameTag).text))
-                                     
+
 def skippingMsg(kind, element):
     if verbose():
         print('Skipping %s: %s' % (kind, element.find('name').text))
-        
-    
+
+
 #---------------------------------------------------------------------------
 

@@ -3,42 +3,42 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Dec-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_grid"
 NAME      = "grid"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxGridCellCoords',
-           
+
            'wxGridCellRenderer',
+           'wxGridCellStringRenderer',
            'wxGridCellAutoWrapStringRenderer',
            'wxGridCellBoolRenderer',
            'wxGridCellDateTimeRenderer',
            'wxGridCellEnumRenderer',
            'wxGridCellFloatRenderer',
            'wxGridCellNumberRenderer',
-           'wxGridCellStringRenderer',
-           
+
            'wxGridCellEditor',
+           'wxGridCellTextEditor',
            'wxGridCellAutoWrapStringEditor',
            'wxGridCellBoolEditor',
            'wxGridCellChoiceEditor',
            'wxGridCellEnumEditor',
-           'wxGridCellTextEditor',
            'wxGridCellFloatEditor',
            'wxGridCellNumberEditor',
-           
+
            'wxGridCellAttr',
-           
+
            'wxGridCornerHeaderRenderer',
            'wxGridHeaderLabelsRenderer',
            'wxGridRowHeaderRenderer',
@@ -46,35 +46,35 @@ ITEMS  = [ 'wxGridCellCoords',
            'wxGridRowHeaderRendererDefault',
            'wxGridColumnHeaderRendererDefault',
            'wxGridCornerHeaderRendererDefault',
-           
+
            'wxGridCellAttrProvider',
            'wxGridTableBase',
            'wxGridTableMessage',
            'wxGridStringTable',
            'wxGridSizesInfo',
-           
+
            'wxGrid',
            'wxGridUpdateLocker',
-           
+
            'wxGridEvent',
            'wxGridSizeEvent',
            'wxGridRangeSelectEvent',
            'wxGridEditorCreatedEvent',
-           
-           ]    
-    
+
+           ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    module.addGlobalStr('wxGridNameStr', module.items[0])    
+
+    module.addGlobalStr('wxGridNameStr', module.items[0])
     module.addPyCode("""\
         GRID_VALUE_STRING =    "string"
         GRID_VALUE_BOOL =      "bool"
@@ -86,23 +86,26 @@ def run():
         GRID_VALUE_CHOICEINT = "choiceint"
         GRID_VALUE_DATETIME =  "datetime"
         """)
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxGridCellCoords')
     assert isinstance(c, etgtools.ClassDef)
     tools.addAutoProperties(c)
     c.find('operator!').ignore()
     c.find('operator=').ignore()
-    
+
     # Add a typemap for 2 element sequences
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxGridCellCoords')
-        
+
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->GetRow(), self->GetCol());
-        """, 
+        """,
         pyArgsString="() -> (row,col)",
         briefDoc="Return the row and col properties as a tuple.")
-    
+
+    tools.addGetIMMethodTemplate(module, c, ['Row', 'Col'])
+
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "GridCellCoords"+str(self.Get())')
@@ -115,26 +118,27 @@ def run():
                   if idx == 0: self.Row = val
                   elif idx == 1: self.Col = val
                   else: raise IndexError
-                  """) 
+                  """)
     c.addPyCode('GridCellCoords.__safe_for_unpickling__ = True')
-    
+
     module.addItem(
         tools.wxArrayWrapperTemplate('wxGridCellCoordsArray', 'wxGridCellCoords', module))
-    
+
 
     #-----------------------------------------------------------------
     c = module.find('wxGridSizesInfo')
     c.find('m_customSizes').ignore()   # TODO: Add support for wxUnsignedToIntHashMap??
-        
-        
+
+
     #-----------------------------------------------------------------
     def fixRendererClass(name):
         klass = module.find(name)
         assert isinstance(klass, etgtools.ClassDef)
+        tools.fixRefCountedClass(klass)
         tools.addAutoProperties(klass)
-        
+
         methods = [
-            ('Clone',       "virtual wxGridCellRenderer* Clone() const;"),
+            ('Clone',       "virtual wxGridCellRenderer* Clone() const /Factory/;"),
             ('Draw',        "virtual void Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, "
                             "    const wxRect& rect, int row, int col, bool isSelected);"),
             ('GetBestSize', "virtual wxSize GetBestSize(wxGrid& grid, wxGridCellAttr& attr, "
@@ -143,28 +147,31 @@ def run():
         for method, code in methods:
             if not klass.findItem(method):
                 klass.addItem(etgtools.WigCode(code))
-                
-         
+
+
     c = module.find('wxGridCellRenderer')
     c.addPrivateCopyCtor()
     c.find('~wxGridCellRenderer').ignore(False)
-    
+    c.find('Clone').factory = True
+    tools.fixRefCountedClass(c)
+
     for name in ITEMS:
         if 'Cell' in name and 'Renderer' in name:
-            fixRendererClass(name)            
-            
+            fixRendererClass(name)
+
     module.addPyCode("PyGridCellRenderer = wx.deprecated(GridCellRenderer, 'Use GridCellRenderer instead.')")
-        
-        
+
+
     #-----------------------------------------------------------------
     def fixEditorClass(name):
         klass = module.find(name)
         assert isinstance(klass, etgtools.ClassDef)
+        tools.fixRefCountedClass(klass)
         tools.addAutoProperties(klass)
 
         methods = [
             ('BeginEdit',  "virtual void BeginEdit(int row, int col, wxGrid* grid);"),
-            ('Clone',      "virtual wxGridCellEditor* Clone() const;"),
+            ('Clone',      "virtual wxGridCellEditor* Clone() const /Factory/;"),
             ('Create',     "virtual void Create(wxWindow* parent, wxWindowID id, wxEvtHandler* evtHandler);"),
             #('EndEdit',    "virtual bool EndEdit(int row, int col, const wxGrid* grid, const wxString& oldval, wxString* newval);"),
             ('ApplyEdit',  "virtual void ApplyEdit(int row, int col, wxGrid* grid);"),
@@ -175,13 +182,13 @@ def run():
             if not klass.findItem(method):
                 klass.addItem(etgtools.WigCode(code))
 
-    
+
         # Fix up EndEdit so it returns newval on success or None on failure
         pureVirtual = False
         if klass.findItem('EndEdit'):
             klass.find('EndEdit').ignore()
             pureVirtual = True
-            
+
         # The Python version of EndEdit has a different signature than the
         # C++ version, so we need to take care of mapping between them so the
         # C++ compiler still recognizes this as a match for the virtual
@@ -189,22 +196,22 @@ def run():
         klass.addCppMethod('PyObject*', 'EndEdit', '(int row, int col, const wxGrid* grid, const wxString& oldval)',
             cppSignature='bool (int row, int col, const wxGrid* grid, const wxString& oldval, wxString* newval)',
             pyArgsString='(row, col, grid, oldval)',
-            isVirtual=True, 
+            isVirtual=True,
             isPureVirtual=pureVirtual,
             doc="""\
                 End editing the cell.
-                
+
                 This function must check if the current value of the editing cell
                 is valid and different from the original value in its string
-                form. If not then simply return None.  If it has changed then 
+                form. If not then simply return None.  If it has changed then
                 this method should save the new value so that ApplyEdit can
-                apply it later and the string representation of the new value 
+                apply it later and the string representation of the new value
                 should be returned.
-                
-                Notice that this method shoiuld not modify the grid as the 
-                change could still be vetoed.                
+
+                Notice that this method shoiuld not modify the grid as the
+                change could still be vetoed.
                 """,
-            
+
             # Code for Python --> C++ calls.  Make it return newval or None.
             body="""\
                 bool rv;
@@ -218,10 +225,10 @@ def run():
                     return Py_None;
                 }
                 """,
-    
+
             # Code for C++ --> Python calls. This is used when a C++ method
             # call needs to be reflected to a call to the overridden Python
-            # method, so we need to translate between the real C++ siganture
+            # method, so we need to translate between the real C++ signature
             # and the Python signature.
             virtualCatcherCode="""\
                 // VirtualCatcherCode for wx.grid.GridCellEditor.EndEdit
@@ -231,7 +238,7 @@ def run():
                                        new wxString(oldval),sipType_wxString,NULL);
                 if (result == Py_None) {
                     sipRes = false;
-                } 
+                }
                 else {
                     sipRes = true;
                     *newval = Py2wxString(result);
@@ -239,43 +246,49 @@ def run():
                 Py_DECREF(result);
                 """  if pureVirtual else "",  # only used with the base class
             )
-        
-        
+
+
     c = module.find('wxGridCellEditor')
     c.addPrivateCopyCtor()
     c.find('~wxGridCellEditor').ignore(False)
+    c.find('Clone').factory = True
+    tools.fixRefCountedClass(c)
 
     c = module.find('wxGridCellChoiceEditor')
     c.find('wxGridCellChoiceEditor').findOverload('count').ignore()
-    
+
     for name in ITEMS:
         if 'Cell' in name and 'Editor' in name:
-            fixEditorClass(name)            
-    
+            fixEditorClass(name)
+
     module.addPyCode("PyGridCellEditor = wx.deprecated(GridCellEditor, 'Use GridCellEditor instead.')")
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxGridCellAttr')
     c.addPrivateCopyCtor()
     c.find('~wxGridCellAttr').ignore(False)
+    c.find('Clone').factory = True
+    tools.fixRefCountedClass(c)
 
     c.find('GetAlignment.hAlign').out = True
     c.find('GetAlignment.vAlign').out = True
     c.find('GetNonDefaultAlignment.hAlign').out = True
     c.find('GetNonDefaultAlignment.vAlign').out = True
+    c.find('GetSize.num_rows').out = True
+    c.find('GetSize.num_cols').out = True
 
-    c.find('SetEditor.editor').transfer = True
+    c.find('SetEditor.editor').transfer = True  # these are probably redundant now...
     c.find('SetRenderer.renderer').transfer = True
 
-    
-    #----------------------------------------------------------------- 
-    # The insanceCode attribute is code that is used to make a default
+
+    #-----------------------------------------------------------------
+    # The instanceCode attribute is code that is used to make a default
     # instance of the class. We can't create them using the same class in
     # this case because they are abstract.
 
     c = module.find('wxGridCornerHeaderRenderer')
     c.instanceCode = 'sipCpp = new wxGridCornerHeaderRendererDefault;'
-    
+
     c = module.find('wxGridRowHeaderRenderer')
     c.instanceCode = 'sipCpp = new wxGridRowHeaderRendererDefault;'
 
@@ -283,22 +296,22 @@ def run():
     c.instanceCode = 'sipCpp = new wxGridColumnHeaderRendererDefault;'
 
 
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxGridCellAttrProvider')
     c.addPrivateCopyCtor()
-    
+
     c.find('SetAttr.attr').transfer = True
     c.find('SetRowAttr.attr').transfer = True
     c.find('SetColAttr.attr').transfer = True
-            
+
     module.addPyCode("PyGridCellAttrProvider = wx.deprecated(GridCellAttrProvider, 'Use GridCellAttrProvider instead.')")
-    
-    
+
+
     #-----------------------------------------------------------------
     c = module.find('wxGridTableBase')
     c.addPrivateCopyCtor()
-    
+
     c.find('SetAttr.attr').transfer = True
     c.find('SetRowAttr.attr').transfer = True
     c.find('SetColAttr.attr').transfer = True
@@ -306,10 +319,86 @@ def run():
     module.addPyCode("PyGridTableBase = wx.deprecated(GridTableBase, 'Use GridTableBase instead.')")
 
 
+    # Make the GetValue methods easier to use from Python.  For example,
+    # instead of needing to always return a string, the GetValue in the derived
+    # class can return any type (as long as the renderer and editor knows how
+    # to deal with it, and the value can be converted to a string for display).
+    m = c.find('GetValue')
+    m.type = 'PyObject*'
+    m.cppSignature = 'wxString (int row, int col)'
+    m.setCppCode("return wx2PyString(self->GetValue(row, col));")
+    m.virtualCatcherCode = """\
+        // virtualCatcherCode for GridTableBase.GetValue
+        PyObject *result = sipCallMethod(&sipIsErr, sipMethod, "ii", row, col);
+        if (result == Py_None) {
+            sipRes = "";
+        }
+        else {
+            if (!PyBytes_Check(result) && !PyUnicode_Check(result)) {
+                PyObject* old = result;
+                result = PyObject_Str(result);
+                Py_DECREF(old);
+            }
+            sipRes = Py2wxString(result);
+        }
+        Py_XDECREF(result);
+        """
+
+    # SetValue is okay as-is...
+
+
+    # Replace these virtuals in the base class with Python methods, they just
+    # need to call GetValue or SetValue directly since they must already be
+    # implemented in the derived Python class because they are pure virtual.
+    c.addPyMethod('GetValueAsLong', '(self, row, col)',
+        body="""\
+            val = self.GetValue(row, col)
+            try:
+                return int(val)
+            except ValueError:
+                return 0
+            """, docsIgnored=True)
+
+    c.addPyMethod('GetValueAsDouble', '(self, row, col)',
+        body="""\
+            val = self.GetValue(row, col)
+            try:
+                return float(val)
+            except ValueError:
+                return 0.0
+            """, docsIgnored=True)
+
+    c.addPyMethod('GetValueAsBool', '(self, row, col)',
+        body="""\
+            val = self.GetValue(row, col)
+            try:
+                return bool(val)
+            except ValueError:
+                return False
+            """, docsIgnored=True)
+
+    c.addPyMethod('SetValueAsLong', '(self, row, col, value)',
+        body="self.SetValue(row, col, int(value))", docsIgnored=True)
+
+    c.addPyMethod('SetValueAsDouble', '(self, row, col, value)',
+        body="self.SetValue(row, col, float(value))", docsIgnored=True)
+
+    c.addPyMethod('SetValueAsBool', '(self, row, col, value)',
+        body="self.SetValue(row, col, bool(value))", docsIgnored=True)
+
+
+    # Should we add support for using generic PyObjects in the *AsCustom
+    # methods? I don't think it is necessary due to the GetValue
+    # modifications above, so for now, at least, let.s just ignore them.
+    c.find('GetValueAsCustom').ignore()
+    c.find('SetValueAsCustom').ignore()
+    
+
+
     #-----------------------------------------------------------------
     c = module.find('wxGridTableMessage')
     c.addPrivateCopyCtor()
-    
+
 
     #-----------------------------------------------------------------
     c = module.find('wxGrid')
@@ -337,19 +426,20 @@ def run():
 
     # This overload is deprecated, so don't generate code for it.
     c.find('SetCellValue').findOverload('wxString &val').ignore()
-    
+
     c.find('SetDefaultEditor.editor').transfer = True
     c.find('SetDefaultRenderer.renderer').transfer = True
-    
+
     for n in ['GetColGridLinePen', 'GetDefaultGridLinePen', 'GetRowGridLinePen']:
         c.find(n).isVirtual = True
 
-        
+
     # The SetTable method can optionally pass ownership of the table
     # object to the grid, so we need to optionally update the
     # ownership of the Python proxy object to match.
     c.find('SetTable').pyName = '_SetTable'
-    c.addPyMethod('SetTable', '(self, table, takeOwnership=False, selmode=Grid.GridSelectCells)',
+    c.addPyMethod('SetTable', '(self, table, takeOwnership=False, selmode=Grid.SelectCells)',
+        piArgsString='(self, table, takeOwnership=False, selmode=SelectCells)',
         doc="Set the Grid Table to be used by this grid.",
         body="""\
             val = self._SetTable(table, takeOwnership, selmode)
@@ -358,7 +448,7 @@ def run():
                 wx.siplib.transferto(table, self)
             return val
         """)
-    
+
 
     # SIP will normally try to add support for overriding this method since
     # it is inherited from super classes, but in this case we want it to be
@@ -367,17 +457,31 @@ def run():
     c.addItem(etgtools.WigCode("""\
         wxSize GetSizeAvailableForScrollTarget(const wxSize& size);
         """, protection='private'))
-              
-    
+
+
+    # Rename some nested enum values
+    c.find('wxGridSelectionModes.wxGridSelectCells').pyName = 'SelectCells'
+    c.find('wxGridSelectionModes.wxGridSelectRows').pyName = 'SelectRows'
+    c.find('wxGridSelectionModes.wxGridSelectColumns').pyName = 'SelectColumns'
+    c.find('wxGridSelectionModes.wxGridSelectRowsOrColumns').pyName = 'SelectRowsOrColumns'
+
+    # But also keep aliases for the old names, just in case
+    c.addPyCode("""\
+        Grid.wxGridSelectCells = Grid.SelectCells
+        Grid.wxGridSelectRows = Grid.SelectRows
+        Grid.wxGridSelectColumns = Grid.SelectColumns
+        Grid.wxGridSelectRowsOrColumns = Grid.SelectRowsOrColumns
+        """)
+
     #-----------------------------------------------------------------
     c = module.find('wxGridUpdateLocker')
     c.addPrivateCopyCtor()
-    
+
     # context manager methods
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
-    
-    
+
+
     #-----------------------------------------------------------------
 
     for name in ['wxGridSizeEvent',
@@ -387,7 +491,7 @@ def run():
                  ]:
         c = module.find(name)
         tools.fixEventClass(c)
-        
+
 
     c.addPyCode("""\
         EVT_GRID_CELL_LEFT_CLICK = wx.PyEventBinder( wxEVT_GRID_CELL_LEFT_CLICK )
@@ -435,13 +539,13 @@ def run():
         EVT_GRID_CMD_COL_SORT =            wx.PyEventBinder( wxEVT_GRID_COL_SORT,           1 )
         EVT_GRID_CMD_TABBING =             wx.PyEventBinder( wxEVT_GRID_TABBING,            1 )
         """)
-        
-    #-----------------------------------------------------------------    
+
+    #-----------------------------------------------------------------
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     22-March-2004
-# Copyright:   (c) 2008 by Total Control Software
+# Copyright:   (c) 2008-2017 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ def get_acroversion():
     return _min_adobe_version
 
 #----------------------------------------------------------------------
-            
+
 if  wx.PlatformInfo[1] == 'wxMSW':
     import wx.lib.activex
     import comtypes.client as cc
@@ -40,7 +40,7 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             _min_adobe_version = 5.0
         except:
             pass    # Adobe Reader not installed (progID is not defined)
-                    # Use get_min_adobe_version() before instantiating PDFWindow 
+                    # Use get_min_adobe_version() before instantiating PDFWindow
 
     #------------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ if  wx.PlatformInfo[1] == 'wxMSW':
         def OnDestroyWindow(self, event):
             wx.CallAfter(self.FreeDlls)
 
-        def FreeDlls(self):    
+        def FreeDlls(self):
             """
             Unloads any DLLs that are no longer in use when all COM object instances are
             released. This prevents the error 'The instruction at "0x0700609c" referenced
@@ -85,37 +85,37 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             Goes to the previous view on the view stack, if it exists.
             """
             return self.ctrl.goBackwardStack()
-            
+
         def goForwardStack(self):
             """
             Goes to the next view on the view stack, if it exists.
             """
             return self.ctrl.goForwardStack()
-            
+
         def gotoFirstPage(self):
             """
             Goes to the first page in the document.
             """
             return self.ctrl.gotoFirstPage()
-            
+
         def gotoLastPage(self):
             """
             Goes to the last page in the document.
             """
             return self.ctrl.gotoLastPage()
-            
+
         def gotoNextPage(self):
             """
             Goes to the next page in the document, if it exists
             """
             return self.ctrl.gotoNextPage()
-            
+
         def gotoPreviousPage(self):
             """
             Goes to the previous page in the document, if it exists.
             """
             return self.ctrl.gotoPreviousPage()
-            
+
         def printAll(self):
             """
             Prints the entire document without displaying a user
@@ -124,7 +124,7 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             if the printing has not completed.
             """
             return self.ctrl.printAll()
-            
+
         def printAllFit(self, shrinkToFit):
             """
             Prints the entire document without a user dialog box, and
@@ -132,13 +132,13 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             imageable area of a page in the printer.
             """
             return self.ctrl.printAllFit(shrinkToFit)
-            
+
         def printPages(self, from_, to):
             """
             Prints the specified pages without displaying a user dialog box.
             """
             return self.ctrl.printPages(from_, to)
-            
+
         def printPagesFit(self, from_, to, shrinkToFit):
             """
             Prints the specified pages without displaying a user
@@ -146,7 +146,7 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             to fit the imageable area of a page in the printer.
             """
             return self.ctrl.printPagesFit( from_, to, shrinkToFit)
-            
+
         def printWithDialog(self):
             """
             Prints the document according to the specified options in
@@ -154,13 +154,13 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             printing and specifying which printer is to be used.
 
             NB. The page range in the dialog defaults to
-            'From Page 1 to 1' - Use Print() above instead. (dfh) 
+            'From Page 1 to 1' - Use Print() above instead. (dfh)
             """
             return self.ctrl.printWithDialog()
-            
+
         def setCurrentHighlight(self, a, b, c, d):
             return self.ctrl.setCurrentHighlight(a, b, c, d)
-            
+
         def setCurrentPage(self, npage):
             """
             Goes to the specified page in the document.  Maintains the
@@ -171,7 +171,7 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             ## Oh no it isn't! The first page is 1 (dfh)
             """
             return self.ctrl.setCurrentPage(npage)
-            
+
         def setLayoutMode(self, layoutMode):
             """
             LayoutMode possible values:
@@ -185,13 +185,13 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             =================  ====================================
             """
             return self.ctrl.setLayoutMode(layoutMode)
-            
+
         def setNamedDest(self, namedDest):
             """
             Changes the page view to the named destination in the specified string.
             """
             return self.ctrl.setNamedDest(namedDest)
-            
+
         def setPageMode(self, pageMode):
             """
             Sets the page mode to display the document only, or to
@@ -199,9 +199,9 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             'none' or 'bookmarks' or 'thumbs'.
 
             ## NB.'thumbs' is case-sensitive, the other are not (dfh)
-            """   
+            """
             return self.ctrl.setPageMode(pageMode)
-            
+
         def setShowScrollbars(self, On):
             """
             Determines whether scrollbars will appear in the document
@@ -210,13 +210,13 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             ## NB. If scrollbars are off, the navigation tools disappear as well (dfh)
             """
             return self.ctrl.setShowScrollbars(On)
-            
+
         def setShowToolbar(self, On):
             """
             Determines whether a toolbar will appear in the application.
             """
             return self.ctrl.setShowToolbar(On)
-            
+
         def setView(self, viewMode):
             """
             Determines how the page will fit in the current view.
@@ -232,7 +232,7 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             ========  ==============================================
             """
             return self.ctrl.setView(viewMode)
-            
+
         def setViewRect(self, left, top, width, height):
             """
             Sets the view rectangle according to the specified coordinates.
@@ -243,7 +243,7 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             :param height: The vertical height of the rectangle.
             """
             return self.ctrl.setViewRect(left, top, width, height)
-            
+
         def setViewScroll(self, viewMode, offset):
             """
             Sets the view of a page according to the specified string.
@@ -252,16 +252,16 @@ if  wx.PlatformInfo[1] == 'wxMSW':
             offset. Possible values of viewMode are as in setView
             above. offset is the horizontal or vertical coordinate
             positioned either at the left or top edge.
-            """    
+            """
             return self.ctrl.setViewScroll(viewMode, offset)
-            
+
         def setZoom(self, percent):
             """
             Sets the magnification according to the specified value
             expressed as a percentage (float)
             """
             return self.ctrl.setZoom(percent)
-            
+
         def setZoomScroll(self, percent, left, top):
             """
             Sets the magnification according to the specified value,
@@ -282,14 +282,14 @@ if  wx.PlatformInfo[1] == 'wxMSW':
 if __name__ == '__main__':
     app = wx.App(False)
     frm = wx.Frame(None, title="AX Test Window")
-    
+
     pdf = PDFWindow(frm)
-    
+
     frm.Show()
     import wx.lib.inspection
     wx.lib.inspection.InspectionTool().Show()
     app.MainLoop()
-                                 
+
 
 
 

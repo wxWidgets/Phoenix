@@ -21,7 +21,7 @@ class TestPanel(wx.Panel):
 
         if True: # for a simpler test case just set this to False and
                  # only the one clock will be created
-            
+
             # A plain clock, with square hour and round minute marks, no
             # shadow, static border
             c2 = ac.AnalogClock(self, style=wx.STATIC_BORDER,
@@ -60,7 +60,7 @@ class TestPanel(wx.Panel):
 
             # A clock with binary numbers shown only at the quarter tick marks,
             # no minutes ticks and different colours.
-            c5 = ac.AnalogClock(self, style = wx.RAISED_BORDER, 
+            c5 = ac.AnalogClock(self, style = wx.RAISED_BORDER,
                                 hoursStyle=ac.TICKS_BINARY,
                                 clockStyle=ac.SHOW_QUARTERS_TICKS| \
                                            ac.SHOW_HOURS_HAND| \
@@ -79,7 +79,7 @@ class TestPanel(wx.Panel):
             c5.SetFaceFillColour(colour)
             c5.SetShadowColour(wx.WHITE)
 
-            # A clock with a sunken border, roman numerals shown only at the 
+            # A clock with a sunken border, roman numerals shown only at the
             # quarter tick marks with a roman font, circular minutes ticks,
             # no seconds hand, no shadows, tick overlapping and different colours.
             c6 = ac.AnalogClock(self, style = wx.SUNKEN_BORDER,

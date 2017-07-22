@@ -59,7 +59,7 @@ def main(filename=None):
         filename = sys.argv[1]
     if filename:
         filename = os.path.realpath(filename)
-    
+
     import __main__
     md = __main__.__dict__
     keepers = original

@@ -31,7 +31,7 @@ static XID GetXWindow(const wxWindow* wxwin) {
 
 
 
-wxUIntPtr wxPyGetWinHandle(const wxWindow* win) 
+wxUIntPtr wxPyGetWinHandle(const wxWindow* win)
 {
 #ifdef __WXMSW__
     return (wxUIntPtr)win->GetHandle();

@@ -34,7 +34,7 @@
 #----------------------------------------------------------------------------
 # 12/13/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o Updated for V2.5 compatability
+# o Updated for V2.5 compatibility
 # o wx.SpinCtl has some issues that cause the control to
 #   lock up. Noted in other places using it too, it's not this module
 #   that's at fault.
@@ -277,7 +277,7 @@ IsLimited()
 import  copy
 
 import  wx
-import  wx.lib.six as six
+import  six
 
 from wx.tools.dbg import Logger
 from wx.lib.masked import Field, BaseMaskedTextCtrl
@@ -364,19 +364,19 @@ class TimeCtrl(BaseMaskedTextCtrl):
         """
         Default class constructor.
 
-        :param Window `parent`: the window parent. Must not be ``None``;
+        :param wx.Window `parent`: the window parent. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param string `value`: value to be shown;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
         :param boolean `fmt24hr`: True to use 24 hour format (sometimes called military format;
         :param SpinButton `spinButton`: an instance of :class:`SpinButton` or
           None;
         :param integer `style`: the window style;
-        :param Validator `validator`: this is mainly provided for data-transfer, as control does
+        :param wx.Validator `validator`: this is mainly provided for data-transfer, as control does
           its own validation;
         :param string `name`: the window name;
 

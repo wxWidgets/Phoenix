@@ -3,23 +3,27 @@
 # Author:      Dietmar Schwertberger
 #
 # Created:     13-Nov-2015
-# Copyright:   (c) 2015 by Total Control Software
+# Copyright:   (c) 2015-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
-PACKAGE   = "wx" 
+PACKAGE   = "wx"
 MODULE    = "_media"
 NAME      = "_media"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+The ``wx.media`` module provides a widget class that allows displaying various
+types of media, such as video and audio files and streaming, using native
+system components.  The wxWidgets media classes are an optional part of the
+build so it may not always be available on your build of wxPython.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ ]    
+# this script.
+ITEMS  = [ ]
 
 
 
@@ -44,7 +48,7 @@ OTHERDEPS = [ ]
 
 
 #---------------------------------------------------------------------------
- 
+
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
@@ -54,21 +58,21 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode('import wx', order=10)
     module.addInclude(INCLUDES)
- 
+
 
     #-----------------------------------------------------------------
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
 
-    
+
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

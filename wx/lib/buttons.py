@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     9-Dec-1999
-# Copyright:   (c) 1999 by Total Control Software
+# Copyright:   (c) 1999-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, unittest, documented
 #----------------------------------------------------------------------
@@ -14,7 +14,7 @@
 #
 # o Updated for wx namespace
 # o Tested with updated demo
-# 
+#
 
 """
 This module implements various forms of generic buttons, meaning that
@@ -47,7 +47,7 @@ Sample usage::
             # Build a bitmap button and a normal one
             bmp = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (16, 16))
             btn1 = buttons.ThemedGenBitmapButton(panel, -1, bmp, pos=(50, 50))
-            
+
             btn2 = buttons.GenButton(panel, -1, "Hello World!", pos=(50, 100))
 
 
@@ -66,7 +66,7 @@ import wx.lib.imageutils as imageutils
 
 class GenButtonEvent(wx.CommandEvent):
     """ Event sent from the generic buttons when the button is activated. """
-    
+
     def __init__(self, eventType, id):
         """
         Default class constructor.
@@ -74,7 +74,7 @@ class GenButtonEvent(wx.CommandEvent):
         :param integer `eventType`: the event type;
         :param integer `id`: the event identifier.
         """
-        
+
         wx.CommandEvent.__init__(self, eventType, id)
         self.isDown = False
         self.theButton = None
@@ -86,7 +86,7 @@ class GenButtonEvent(wx.CommandEvent):
 
         :param bool `isDown`: ``True`` if the button is clicked, ``False`` otherwise.
         """
-        
+
         self.isDown = isDown
 
 
@@ -95,7 +95,7 @@ class GenButtonEvent(wx.CommandEvent):
         Returns the button toggle status as ``True`` if the button is down, ``False``
         otherwise.
 
-        :rtype: bool 
+        :rtype: bool
         """
 
         return self.isDown
@@ -135,32 +135,33 @@ class GenButton(wx.Control):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param string `label`: the button text label;
-        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
-         chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :param `pos`: the control position. A value of (-1, -1) indicates a default
+         position, chosen by either the windowing system or wxPython, depending on
+         platform;
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the button style;
-        :param Validator `validator`: the validator associated with the button;
+        :param wx.Validator `validator`: the validator associated with the button;
         :param string `name`: the button name.
 
-        .. seealso:: :class:`Button` for a list of valid window styles.
+        .. seealso:: :class:`wx.Button` for a list of valid window styles.
         """
-        
+
         cstyle = style
         if cstyle & wx.BORDER_MASK == 0:
             cstyle |= wx.BORDER_NONE
-            
+
         wx.Control.__init__(self, parent, id, pos, size, cstyle, validator, name)
-        
+
         self.up = True
         self.hasFocus = False
         self.style = style
-        
+
         if style & wx.BORDER_NONE:
             self.bezelWidth = 0
             self.useFocusInd = False
@@ -193,7 +194,7 @@ class GenButton(wx.Control):
         need to be bound.  Added so :meth:`__init__` doesn't need to be
         overriden, which is complicated with multiple inheritance.
         """
-        
+
         pass
 
 
@@ -202,28 +203,29 @@ class GenButton(wx.Control):
         Given the current font and bezel width settings, calculate
         and set a good size.
 
-        :param `size`: an instance of :class:`Size` or ``None``, in which case the wxPython
-         ``DefaultSize`` is used instead.        
+        :param `size`: an instance of :class:`wx.Size` or ``None``,
+         in which case the wxPython
+         ``wx.DefaultSize`` is used instead.
         """
-        
+
         if size is None:
-            size = wx.DefaultSize            
+            size = wx.DefaultSize
 
         wx.Control.SetInitialSize(self, size)
-        
+
     SetBestSize = SetInitialSize
-    
+
 
     def DoGetBestSize(self):
         """
         Overridden base class virtual. Determines the best size of the
         button based on the label and bezel size.
 
-        :return: An instance of :class:`Size`.
-        
-        .. note:: Overridden from :class:`Control`.        
+        :return: An instance of :class:`wx.Size`.
+
+        .. note:: Overridden from :class:`wx.Control`.
         """
-        
+
         w, h, useMin = self._GetLabelSize()
         if self.style & wx.BU_EXACTFIT:
             width = w + 2 + 2 * self.bezelWidth + 4 * int(self.useFocusInd)
@@ -238,7 +240,7 @@ class GenButton(wx.Control):
                 height = defSize.height
             width = width + self.bezelWidth - 1
             height = height + self.bezelWidth - 1
-            
+
         return wx.Size(width, height)
 
 
@@ -246,7 +248,7 @@ class GenButton(wx.Control):
         """
         Can this window be given focus by mouse click?
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         return self.IsShown() and self.IsEnabled()
@@ -255,11 +257,11 @@ class GenButton(wx.Control):
     def GetDefaultAttributes(self):
         """
         Overridden base class virtual. By default we should use
-        the same font/colour attributes as the native :class:`Button`.
+        the same font/colour attributes as the native :class:`wx.Button`.
 
-        :return: an instance of :class:`VisualAttributes`.
-        
-        .. note:: Overridden from :class:`Control`.        
+        :return: an instance of :class:`wx.VisualAttributes`.
+
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         return wx.Button.GetClassDefaultAttributes()
@@ -270,11 +272,11 @@ class GenButton(wx.Control):
         Overridden base class virtual. Buttons usually don't inherit
         the parent's colours.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
-        
+
         return False
-    
+
 
     def Enable(self, enable=True):
         """
@@ -282,7 +284,7 @@ class GenButton(wx.Control):
 
         :param bool `enable`: ``True`` to enable the button, ``False`` to disable it.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         if enable != self.IsEnabled():
@@ -296,7 +298,7 @@ class GenButton(wx.Control):
 
         :param integer `width`: the 3D border width, in pixels.
         """
-        
+
         self.bezelWidth = width
 
 
@@ -306,7 +308,7 @@ class GenButton(wx.Control):
 
         :rtype: integer
         """
-        
+
         return self.bezelWidth
 
 
@@ -316,7 +318,7 @@ class GenButton(wx.Control):
 
         :param bool `flag`: ``True`` to draw a focus ring, ``False`` otherwise.
         """
-        
+
         self.useFocusInd = flag
 
 
@@ -327,7 +329,7 @@ class GenButton(wx.Control):
 
         :rtype: bool
         """
-        
+
         return self.useFocusInd
 
 
@@ -336,7 +338,7 @@ class GenButton(wx.Control):
         Calculate a new set of highlight and shadow colours based on
         the background colour. Works okay if the colour is dark...
         """
-        
+
         faceClr = self.GetBackgroundColour()
         r, g, b, a = faceClr
         fr, fg, fb = min(255,r+32), min(255,g+32), min(255,b+32)
@@ -347,14 +349,14 @@ class GenButton(wx.Control):
         self.highlightPenClr = wx.Colour(hr,hg,hb)
         self.focusClr = wx.Colour(hr, hg, hb)
 
-        
+
     def SetBackgroundColour(self, colour):
         """
         Sets the :class:`GenButton` background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         wx.Control.SetBackgroundColour(self, colour)
@@ -363,11 +365,11 @@ class GenButton(wx.Control):
 
     def SetForegroundColour(self, colour):
         """
-        Sets the :class:`GenButton` foreground colour.
+        Sets the :class:`wx.GenButton` foreground colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         wx.Control.SetForegroundColour(self, colour)
@@ -376,35 +378,39 @@ class GenButton(wx.Control):
 
     def SetDefault(self):
         """
-        This sets the :class:`GenButton` to be the default item for the panel or dialog box.
+        This sets the :class:`GenButton` to be the default item for
+        the panel or dialog box.
 
-        .. note:: Under Windows, only dialog box buttons respond to this function. As normal
-           under Windows and Motif, pressing return causes the default button to be depressed
-           when the return key is pressed. See also :meth:`Window.SetFocus` which sets the
-           keyboard focus for windows and text panel items, and :meth:`TopLevelWindow.SetDefaultItem`.
+        .. note:: Under Windows, only dialog box buttons respond to this function.
+           As normal under Windows and Motif, pressing return causes the
+           default button to be depressed when the return key is pressed. See
+           also :meth:`wx.Window.SetFocus` which sets the keyboard focus for
+           windows and text panel items, and
+           :meth:`wx.TopLevelWindow.SetDefaultItem`.
 
-        .. note:: Note that under Motif, calling this function immediately after creation of a button
-           and before the creation of other buttons will cause misalignment of the row of buttons,
-           since default buttons are larger. To get around this, call :meth:`SetDefault` after you
-           have created a row of buttons: wxPython will then set the size of all buttons currently
-           on the panel to the same size.
+        .. note:: Note that under Motif, calling this function immediately after
+           creation of a button and before the creation of other buttons will
+           cause misalignment of the row of buttons, since default buttons are
+           larger. To get around this, call :meth:`wx.SetDefault` after you
+           have created a row of buttons: wxPython will then set the size of
+           all buttons currently on the panel to the same size.
         """
 
         tlw = wx.GetTopLevelParent(self)
         if hasattr(tlw, 'SetDefaultItem'):
             tlw.SetDefaultItem(self)
 
-        
+
     def _GetLabelSize(self):
         """ Used internally. """
-        
+
         w, h = self.GetTextExtent(self.GetLabel())
         return w, h, True
 
 
     def Notify(self):
         """ Actually sends a ``wx.EVT_BUTTON`` event to the listener (if any). """
-        
+
         evt = GenButtonEvent(wx.wxEVT_COMMAND_BUTTON_CLICKED, self.GetId())
         evt.SetIsDown(not self.up)
         evt.SetButtonObj(self)
@@ -462,12 +468,12 @@ class GenButton(wx.Control):
         dc.DrawRectangle(bw+2,bw+2,  w-bw*2-4, h-bw*2-4)
         dc.SetLogicalFunction(wx.COPY)
 
-        
+
     def OnPaint(self, event):
         """
         Handles the ``wx.EVT_PAINT`` event for :class:`GenButton`.
 
-        :param `event`: a :class:`PaintEvent` event to be processed.
+        :param `event`: a :class:`wx.PaintEvent` event to be processed.
         """
 
         (width, height) = self.GetClientSize()
@@ -491,7 +497,7 @@ class GenButton(wx.Control):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`GenButton`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.Refresh()
@@ -500,11 +506,11 @@ class GenButton(wx.Control):
 
     def GetBackgroundBrush(self, dc):
         """
-        Returns the current :class:`Brush` to be used to draw the button background.
+        Returns the current :class:`wx.Brush` to be used to draw the button background.
 
-        :param DC `dc`: the device context used to draw the button background.
+        :param wx.DC `dc`: the device context used to draw the button background.
         """
-        
+
         if self.up:
             colBg = self.GetBackgroundColour()
             brush = wx.Brush(colBg)
@@ -534,12 +540,12 @@ class GenButton(wx.Control):
         """
         Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`GenButton`.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `event`: a :class:`wx.MouseEvent` event to be processed.
         """
 
         if not self.IsEnabled():
             return
-        
+
         self.up = False
         self.CaptureMouse()
         self.SetFocus()
@@ -551,12 +557,12 @@ class GenButton(wx.Control):
         """
         Handles the ``wx.EVT_LEFT_UP`` event for :class:`GenButton`.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `event`: a :class:`wx.MouseEvent` event to be processed.
         """
-        
+
         if not self.IsEnabled() or not self.HasCapture():
             return
-        
+
         if self.HasCapture():
             self.ReleaseMouse()
             if not self.up:    # if the button was down when the mouse was released...
@@ -571,16 +577,16 @@ class GenButton(wx.Control):
         """
         Handles the ``wx.EVT_MOTION`` event for :class:`GenButton`.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `event`: a :class:`wx.MouseEvent` event to be processed.
         """
 
         if not self.IsEnabled() or not self.HasCapture():
             return
-        
+
         if event.LeftIsDown() and self.HasCapture():
             x,y = event.GetPosition()
             w,h = self.GetClientSize()
-            
+
             if self.up and x<w and x>=0 and y<h and y>=0:
                 self.up = False
                 self.Refresh()
@@ -590,7 +596,7 @@ class GenButton(wx.Control):
                 self.up = True
                 self.Refresh()
                 return
-            
+
         event.Skip()
 
 
@@ -598,7 +604,7 @@ class GenButton(wx.Control):
         """
         Handles the ``wx.EVT_SET_FOCUS`` event for :class:`GenButton`.
 
-        :param `event`: a :class:`FocusEvent` event to be processed.
+        :param `event`: a :class:`wx.FocusEvent` event to be processed.
         """
 
         self.hasFocus = True
@@ -610,7 +616,7 @@ class GenButton(wx.Control):
         """
         Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`GenButton`.
 
-        :param `event`: a :class:`FocusEvent` event to be processed.
+        :param `event`: a :class:`wx.FocusEvent` event to be processed.
         """
 
         self.hasFocus = False
@@ -622,13 +628,13 @@ class GenButton(wx.Control):
         """
         Handles the ``wx.EVT_KEY_DOWN`` event for :class:`GenButton`.
 
-        :param `event`: a :class:`KeyEvent` event to be processed.
+        :param `event`: a :class:`wx.KeyEvent` event to be processed.
         """
 
         if self.hasFocus and event.GetKeyCode() == ord(" "):
             self.up = False
             self.Refresh()
-            
+
         event.Skip()
 
 
@@ -636,14 +642,14 @@ class GenButton(wx.Control):
         """
         Handles the ``wx.EVT_KEY_UP`` event for :class:`GenButton`.
 
-        :param `event`: a :class:`KeyEvent` event to be processed.
+        :param `event`: a :class:`wx.KeyEvent` event to be processed.
         """
 
         if self.hasFocus and event.GetKeyCode() == ord(" "):
             self.up = True
             self.Notify()
             self.Refresh()
-            
+
         event.Skip()
 
 
@@ -659,22 +665,22 @@ class GenBitmapButton(GenButton):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
-        :param Bitmap `bitmap`: the button bitmap;
+        :param wx.Bitmap `bitmap`: the button bitmap;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the button style;
-        :param Validator `validator`: the validator associated to the button;
+        :param wx.Validator `validator`: the validator associated to the button;
         :param string `name`: the button name.
 
-        .. seealso:: :class:`Button` for a list of valid window styles.
+        .. seealso:: :class:`wx.Button` for a list of valid window styles.
         """
-        
+
         self.bmpDisabled = None
         self.bmpFocus = None
         self.bmpSelected = None
@@ -686,11 +692,11 @@ class GenBitmapButton(GenButton):
         """
         Returns the bitmap for the button's normal state.
 
-        :rtype: :class:`Bitmap`
+        :rtype: :class:`wx.Bitmap`
 
         .. seealso:: :meth:`SetBitmapLabel`
         """
-        
+
         return self.bmpLabel
 
 
@@ -698,23 +704,23 @@ class GenBitmapButton(GenButton):
         """
         Returns the bitmap for the button's disabled state, which may be invalid.
 
-        :rtype: :class:`Bitmap`
+        :rtype: :class:`wx.Bitmap`
 
         .. seealso:: :meth:`SetBitmapDisabled`
         """
 
         return self.bmpDisabled
 
-    
+
     def GetBitmapFocus(self):
         """
         Returns the bitmap for the button's focused state, which may be invalid.
 
-        :rtype: :class:`Bitmap`
+        :rtype: :class:`wx.Bitmap`
 
         .. seealso:: :meth:`SetBitmapFocus`
         """
-        
+
         return self.bmpFocus
 
 
@@ -722,7 +728,7 @@ class GenBitmapButton(GenButton):
         """
         Returns the bitmap for the button's pressed state, which may be invalid.
 
-        :rtype: :class:`Bitmap`
+        :rtype: :class:`wx.Bitmap`
 
         .. seealso:: :meth:`SetBitmapSelected`
         """
@@ -734,15 +740,15 @@ class GenBitmapButton(GenButton):
         """
         Sets the bitmap for the disabled button appearance.
 
-        :param Bitmap `bitmap`: the bitmap for the disabled button appearance.
+        :param wx.Bitmap `bitmap`: the bitmap for the disabled button appearance.
 
         .. seealso::
 
            :meth:`GetBitmapDisabled`, :meth:`SetBitmapLabel`,
            :meth:`SetBitmapSelected`, :meth:`SetBitmapFocus`
-           
+
         """
-        
+
         self.bmpDisabled = bitmap
 
 
@@ -750,13 +756,13 @@ class GenBitmapButton(GenButton):
         """
         Sets the bitmap for the focused button appearance.
 
-        :param Bitmap `bitmap`: the bitmap for the focused button appearance.
+        :param wx.Bitmap `bitmap`: the bitmap for the focused button appearance.
 
         .. seealso::
 
            :meth:`GetBitmapFocus`, :meth:`SetBitmapLabel`,
            :meth:`SetBitmapSelected`, :meth:`SetBitmapDisabled`
-           
+
         """
 
         self.bmpFocus = bitmap
@@ -767,13 +773,13 @@ class GenBitmapButton(GenButton):
         """
         Sets the bitmap for the selected (depressed) button appearance.
 
-        :param Bitmap `bitmap`: the bitmap for the selected (depressed) button appearance.
+        :param wx.Bitmap `bitmap`: the bitmap for the selected (depressed) button appearance.
 
         .. seealso::
 
            :meth:`GetBitmapSelected`, :meth:`SetBitmapLabel`,
            :meth:`SetBitmapDisabled`, :meth:`SetBitmapFocus`
-           
+
         """
 
         self.bmpSelected = bitmap
@@ -787,12 +793,12 @@ class GenBitmapButton(GenButton):
         If `createOthers` is ``True``, then the other bitmaps will be generated
         on the fly.  Currently, only the disabled bitmap is generated.
 
-        :param Bitmap `bitmap`: the bitmap for the normal button appearance.
+        :param wx.Bitmap `bitmap`: the bitmap for the normal button appearance.
 
         .. note:: This is the bitmap used for the unselected state, and for all other
            states if no other bitmaps are provided.
         """
-        
+
         self.bmpLabel = bitmap
         if bitmap is not None and createOthers:
             image = bitmap.ConvertToImage()
@@ -802,7 +808,7 @@ class GenBitmapButton(GenButton):
 
     def _GetLabelSize(self):
         """ Used internally. """
-        
+
         if not self.bmpLabel:
             return -1, -1, False
 
@@ -829,7 +835,7 @@ class GenBitmapButton(GenButton):
 
 class GenBitmapTextButton(GenBitmapButton):
     """ A generic bitmapped button with text label. """
-    
+
     def __init__(self, parent, id=-1, bitmap=wx.NullBitmap, label='',
                  pos = wx.DefaultPosition, size = wx.DefaultSize,
                  style = 0, validator = wx.DefaultValidator,
@@ -837,23 +843,23 @@ class GenBitmapTextButton(GenBitmapButton):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
-        :param Bitmap `bitmap`: the button bitmap;
+        :param wx.Bitmap `bitmap`: the button bitmap;
         :param string `label`: the button text label;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the button style;
-        :param Validator `validator`: the validator associated to the button;
+        :param wx.Validator `validator`: the validator associated to the button;
         :param string `name`: the button name.
 
-        .. seealso:: :class:`Button` for a list of valid window styles.
+        .. seealso:: :class:`wx.Button` for a list of valid window styles.
         """
-        
+
         GenBitmapButton.__init__(self, parent, id, bitmap, pos, size, style, validator, name)
         self.SetLabel(label)
 
@@ -890,6 +896,7 @@ class GenBitmapTextButton(GenBitmapButton):
             hasMask = bmp.GetMask() is not None
         else:
             bw = bh = 0     # no bitmap -> size is zero
+            hasMask = False
 
         dc.SetFont(self.GetFont())
         if self.IsEnabled():
@@ -915,7 +922,8 @@ class GenBitmapTextButton(GenBitmapButton):
 
 class __ToggleMixin(object):
     """
-    A mixin that allows to transform :class:`GenButton` in the corresponding toggle button.
+    A mixin that allows to transform :class:`GenButton` in the corresponding
+    toggle button.
     """
 
     def SetToggle(self, flag):
@@ -947,7 +955,7 @@ class __ToggleMixin(object):
         """
         Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`GenButton` when used as toggle button.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `event`: a :class:`wx.MouseEvent` event to be processed.
         """
 
         if not self.IsEnabled():
@@ -964,12 +972,12 @@ class __ToggleMixin(object):
         """
         Handles the ``wx.EVT_LEFT_UP`` event for :class:`GenButton` when used as toggle button.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `event`: a :class:`wx.MouseEvent` event to be processed.
         """
 
         if not self.IsEnabled() or not self.HasCapture():
             return
-        
+
         if self.HasCapture():
             self.ReleaseMouse()
             self.Refresh()
@@ -981,7 +989,7 @@ class __ToggleMixin(object):
         """
         Handles the ``wx.EVT_KEY_DOWN`` event for :class:`GenButton` when used as toggle button.
 
-        :param `event`: a :class:`KeyEvent` event to be processed.
+        :param `event`: a :class:`wx.KeyEvent` event to be processed.
         """
 
         event.Skip()
@@ -991,16 +999,16 @@ class __ToggleMixin(object):
         """
         Handles the ``wx.EVT_MOTION`` event for :class:`GenButton` when used as toggle button.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `event`: a :class:`wx.MouseEvent` event to be processed.
         """
 
         if not self.IsEnabled():
             return
-        
+
         if event.LeftIsDown() and self.HasCapture():
             x,y = event.GetPosition()
             w,h = self.GetClientSize()
-            
+
             if x<w and x>=0 and y<h and y>=0:
                 self.up = not self.saveUp
                 self.Refresh()
@@ -1018,7 +1026,7 @@ class __ToggleMixin(object):
         """
         Handles the ``wx.EVT_KEY_UP`` event for :class:`GenButton` when used as toggle button.
 
-        :param `event`: a :class:`KeyEvent` event to be processed.
+        :param `event`: a :class:`wx.KeyEvent` event to be processed.
         """
 
         if self.hasFocus and event.GetKeyCode() == ord(" "):
@@ -1047,7 +1055,7 @@ class GenBitmapTextToggleButton(__ToggleMixin, GenBitmapTextButton):
 
 class __ThemedMixin(object):
     """ Uses the native renderer to draw the bezel, also handle mouse-overs. """
-    
+
 
     def InitOtherEvents(self):
         """ Initializes other events needed for themed buttons. """
@@ -1055,13 +1063,13 @@ class __ThemedMixin(object):
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnMouse)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnMouse)
 
-        
+
     def OnMouse(self, event):
         """
         Handles the ``wx.EVT_ENTER_WINDOW`` and ``wx.EVT_LEAVE_WINDOW`` events for
         :class:`GenButton` when used as a themed button.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `event`: a :class:`wx.MouseEvent` event to be processed.
         """
 
         self.Refresh()
@@ -1069,7 +1077,7 @@ class __ThemedMixin(object):
 
 
     def DrawBezel(self, dc, x1, y1, x2, y2):
-        
+
         rect = wx.Rect(x1, y1, x2, y2)
         if self.up:
             state = 0
@@ -1081,7 +1089,7 @@ class __ThemedMixin(object):
         if self.GetClientRect().Contains(pt):
             state |= wx.CONTROL_CURRENT
         wx.RendererNative.Get().DrawPushButton(self, dc, rect, state)
-    
+
 
 
 class ThemedGenButton(__ThemedMixin, GenButton):
@@ -1095,7 +1103,7 @@ class ThemedGenBitmapButton(__ThemedMixin, GenBitmapButton):
 class ThemedGenBitmapTextButton(__ThemedMixin, GenBitmapTextButton):
     """ A themed generic bitmapped button with text label. """
     pass
-    
+
 class ThemedGenToggleButton(__ThemedMixin, GenToggleButton):
     """ A themed generic toggle button. """
     pass

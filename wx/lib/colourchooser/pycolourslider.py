@@ -16,9 +16,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 """
 
+from __future__ import absolute_import
+
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 #
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -28,7 +30,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 import  wx
 
-import  canvas
+from . import  canvas
 import  colorsys
 
 class PyColourSlider(canvas.Canvas):
@@ -52,7 +54,7 @@ class PyColourSlider(canvas.Canvas):
         # drawing function
         self.SetBaseColour(colour)
 
-        canvas.Canvas.__init__(self, parent, id, size=(self.WIDTH, self.HEIGHT))
+        canvas.Canvas.__init__(self, parent, id, forceClientSize=(self.WIDTH, self.HEIGHT))
 
     def SetBaseColour(self, colour):
         """Sets the base, or target colour, to use as the central colour
@@ -64,11 +66,17 @@ class PyColourSlider(canvas.Canvas):
         the slider."""
         return self.base_colour
 
-    def GetValue(self, pos):
-        """Returns the colour value for a position on the slider. The position
-        must be within the valid height of the slider, or results can be
-        unpredictable."""
-        return self.buffer.GetPixelColour(0, pos)
+    def GetVFromClick(self, pos):
+        """
+        Returns the HSV value "V" based on the location of a mouse click at y offset "pos"
+        """
+        _, height = self.GetClientSize()
+        if pos < 0:
+            return 1             # Snap to max
+        if pos >= height - 1:
+            return 0             # Snap to 0
+
+        return 1 - (pos / self.HEIGHT)
 
     def DrawBuffer(self):
         """Actual implementation of the widget's drawing. We simply draw

@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
 
@@ -25,8 +25,8 @@ class stdpaths_Tests(wtc.WidgetTestCase):
         sp.GetUserLocalDataDir()
         sp.SetInstallPrefix('/opt/foo')
         sp.GetLocalizedResourcesDir('fr')
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

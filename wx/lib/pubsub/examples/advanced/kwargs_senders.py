@@ -8,7 +8,7 @@
 from pubsub import pub
 
 def doSomething1():
-    pub.sendMessage('topic_1.subtopic_11', 
+    pub.sendMessage('topic_1.subtopic_11',
         msg='message for subtopic 11', msg2='other message', extra=123)
 
 

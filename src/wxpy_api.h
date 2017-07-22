@@ -1,14 +1,14 @@
 //--------------------------------------------------------------------------
 // Name:        wxpy_api.h
-// Purpose:     Some utility functions and such that can be used in other 
-//              snippets of C++ code to help reduce complexity, etc.  They 
+// Purpose:     Some utility functions and such that can be used in other
+//              snippets of C++ code to help reduce complexity, etc.  They
 //              are all either macros, inline functions, or functions that
 //              are exported from the core extension module.
 //
 // Author:      Robin Dunn
 //
 // Created:     19-Nov-2010
-// Copyright:   (c) 2013 by Total Control Software
+// Copyright:   (c) 2010-2017 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -17,7 +17,7 @@
 
 #if defined(__APPLE__)
     // When it's possible that we're building universal binaries with both
-    // 32-bit and 64-bit architectures then these need to be undefed because
+    // 32-bit and 64-bit architectures then these need to be undef'ed because
     // otherwise the values set by configure could conflict with those set
     // based on runtime flags in Python's headers.  We also do something
     // similar in wx/platform.h so it's okay to undef them now because they
@@ -41,7 +41,7 @@
 #include <wx/wx.h>
 
 //--------------------------------------------------------------------------
-// The API items that can be inline functions or macros.  
+// The API items that can be inline functions or macros.
 // These are made available simply by #including this header file.
 //--------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 #define wxPyErr_SetString(err, str) \
     wxPyBLOCK_THREADS(PyErr_SetString(err, str))
 
-   
+
 // Raise NotImplemented exceptions
 #define wxPyRaiseNotImplemented() \
     wxPyBLOCK_THREADS( PyErr_SetNone(PyExc_NotImplementedError) )
@@ -98,19 +98,9 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 #define RETURN_NONE()    { wxPyBLOCK_THREADS(Py_INCREF(Py_None)); return Py_None; }
 
 
-// Make a memory view object from a C buffer and size.
-inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) {
-    // GIL should already be held
-    Py_buffer view;
-    int flags = PyBUF_FORMAT|PyBUF_ND;
-    if (!readOnly)
-        flags |= PyBUF_WRITABLE;
-    PyBuffer_FillInfo(&view, NULL, ptr, len, readOnly ? 1:0, flags);
-    return PyMemoryView_FromBuffer(&view);
-}
 
 
-// Macros to work around differences in the Python 3 API
+// Macros to work around some of the differences in the Python 3 API
 #if PY_MAJOR_VERSION >= 3
     #define wxPyInt_Check            PyLong_Check
     #define wxPyInt_AsLong           PyLong_AsLong
@@ -138,7 +128,7 @@ inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) 
     #define wxPyNumber_Int           PyNumber_Int
 #endif
 
-inline 
+inline
 Py_ssize_t wxPyUnicode_AsWideChar(PyObject* unicode, wchar_t* w, Py_ssize_t size)
 {
     // GIL should already be held
@@ -148,6 +138,7 @@ Py_ssize_t wxPyUnicode_AsWideChar(PyObject* unicode, wchar_t* w, Py_ssize_t size
     return PyUnicode_AsWideChar((PyUnicodeObject*)unicode, w, size);
 #endif
 }
+
 
 
 //--------------------------------------------------------------------------
@@ -169,6 +160,17 @@ struct wxPyAPI {
     bool          (*p_wxPyWrappedPtr_TypeCheck)(PyObject* obj, const wxString& className);
     wxVariant     (*p_wxVariant_in_helper)(PyObject* obj);
     PyObject*     (*p_wxVariant_out_helper)(const wxVariant& value);
+    bool          (*p_wxPyCheckForApp)(bool raiseException);
+    PyObject*     (*p_wxPyMakeBuffer)(void* ptr, Py_ssize_t len, bool readOnly);
+    bool          (*p_wxPyNumberSequenceCheck)(PyObject* obj, int reqLength);
+    void*         (*p_wxPyGetCppPtr)(sipSimpleWrapper* sipPyObj);
+    PyObject*     (*p_wxPyMethod_Self)(PyObject* method);
+    void          (*p_wxPyReinitializeModules)();
+
+    int           (*p_wxPyDateTime_Check)(PyObject *obj);
+    int           (*p_wxPyDate_Check)(PyObject *obj);
+    wxDateTime*   (*p_wxPyDateTime_ToWxDateTime)(PyObject *obj);
+    wxDateTime*   (*p_wxPyDate_ToWxDateTime)(PyObject *obj);
     // Always add new items here at the end.
 };
 
@@ -177,13 +179,13 @@ struct wxPyAPI {
 inline wxPyAPI* wxPyGetAPIPtr()
 {
     static wxPyAPI* wxPyAPIPtr = NULL;
-    
+
     if (wxPyAPIPtr == NULL) {
         PyGILState_STATE state = PyGILState_Ensure();
         wxPyAPIPtr = (wxPyAPI*)PyCapsule_Import("wx._wxPyAPI", 0);
         // uncomment if needed for debugging
         //if (PyErr_Occurred()) { PyErr_Print(); }
-        //wxASSERT_MSG(wxPyAPIPtr != NULL, wxT("wxPyAPIPtr is NULL!!!"));  
+        //wxASSERT_MSG(wxPyAPIPtr != NULL, wxT("wxPyAPIPtr is NULL!!!"));
         PyGILState_Release(state);
     }
 
@@ -195,13 +197,13 @@ inline wxPyAPI* wxPyGetAPIPtr()
 
 // Convert a PyObject to a wxString
 // Assumes that the GIL has already been acquired.
-inline wxString Py2wxString(PyObject* source) 
+inline wxString Py2wxString(PyObject* source)
     { return wxPyGetAPIPtr()->p_Py2wxString(source); }
 
 
 // Create a PyObject of the requested type from a void* and a class name.
 // Assumes that the GIL has already been acquired.
-inline PyObject* wxPyConstructObject(void* ptr, const wxString& className, bool setThisOwn=false) 
+inline PyObject* wxPyConstructObject(void* ptr, const wxString& className, bool setThisOwn=false)
     { return wxPyGetAPIPtr()->p_wxPyConstructObject(ptr, className, setThisOwn); }
 
 
@@ -217,36 +219,74 @@ inline bool wxPyWrappedPtr_TypeCheck(PyObject* obj, const wxString& className)
 // Convert a wrapped SIP object to its C++ pointer, ensuring that it is of the expected type
 inline bool wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& className)
     { return wxPyGetAPIPtr()->p_wxPyConvertWrappedPtr(obj, ptr, className); }
-    
-    
+
+
 // Calls from wxWindows back to Python code, or even any PyObject
 // manipulations, PyDECREF's and etc. should be wrapped in calls to these functions:
-inline wxPyBlock_t wxPyBeginBlockThreads() 
+inline wxPyBlock_t wxPyBeginBlockThreads()
     { return wxPyGetAPIPtr()->p_wxPyBeginBlockThreads(); }
-    
-inline void wxPyEndBlockThreads(wxPyBlock_t blocked) 
+
+inline void wxPyEndBlockThreads(wxPyBlock_t blocked)
     { wxPyGetAPIPtr()->p_wxPyEndBlockThreads(blocked); }
-    
-    
+
+
 
 // A helper for converting a 2 element sequence to a pair of integers
 inline bool wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
     { return wxPyGetAPIPtr()->p_wxPy2int_seq_helper(source, i1, i2); }
 
 // A helper for converting a 4 element sequence to a set of integers
-inline bool wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4) 
+inline bool wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4)
     { return wxPyGetAPIPtr()->p_wxPy4int_seq_helper(source, i1, i2, i3, i4); }
-   
-    
+
+
 // Convert a PyObject to a wxVariant
 inline wxVariant wxVariant_in_helper(PyObject* obj)
     { return wxPyGetAPIPtr()->p_wxVariant_in_helper(obj); }
-    
-// Convert a wxVariant to a PyObject    
+
+// Convert a wxVariant to a PyObject
 inline PyObject* wxVariant_out_helper(const wxVariant& value)
     { return wxPyGetAPIPtr()->p_wxVariant_out_helper(value); }
 
-    
+
+// Check if a wx.App object has been created
+inline bool wxPyCheckForApp(bool raiseException=true)
+    { return wxPyGetAPIPtr()->p_wxPyCheckForApp(raiseException); }
+
+
+// Create a buffer object from a pointer and size
+inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false)
+    { return wxPyGetAPIPtr()->p_wxPyMakeBuffer(ptr, len, readOnly); }
+
+// Check if an object is a sequence of numbers
+inline bool wxPyNumberSequenceCheck(PyObject* obj, int reqLength=-1)
+    { return wxPyGetAPIPtr()->p_wxPyNumberSequenceCheck(obj, reqLength); }
+
+
+inline void* wxPyGetCppPtr(sipSimpleWrapper* sipPyObj)
+    { return wxPyGetAPIPtr()->p_wxPyGetCppPtr(sipPyObj); }
+
+inline PyObject* wxPyMethod_Self(PyObject* method)
+    { return wxPyGetAPIPtr()->p_wxPyMethod_Self(method); }
+
+
+inline void wxPyReinitializeModules()
+    { return wxPyGetAPIPtr()->p_wxPyReinitializeModules(); }
+
+
+
+inline int wxPyDateTime_Check(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDateTime_Check(obj); }
+
+inline int wxPyDate_Check(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDate_Check(obj); }
+
+inline wxDateTime* wxPyDateTime_ToWxDateTime(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDateTime_ToWxDateTime(obj); }
+
+inline wxDateTime* wxPyDate_ToWxDateTime(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDate_ToWxDateTime(obj); }
+
 
 //--------------------------------------------------------------------------
 // Convenience helper for RAII-style thread blocking
@@ -262,33 +302,33 @@ public:
         if (m_block) {
             wxPyEndBlockThreads(m_oldstate);
         }
-    } 
+    }
 
 private:
     void operator=(const wxPyThreadBlocker&);
-    explicit wxPyThreadBlocker(const wxPyThreadBlocker&);    
+    explicit wxPyThreadBlocker(const wxPyThreadBlocker&);
     wxPyBlock_t m_oldstate;
     bool        m_block;
 };
-  
-  
+
+
 //--------------------------------------------------------------------------
 // helper template to make common code for all of the various user data owners
 
 template<typename Base>
 class wxPyUserDataHelper : public Base {
 public:
-    explicit wxPyUserDataHelper(PyObject* obj = NULL) 
-        : m_obj(obj ? obj : Py_None) 
+    explicit wxPyUserDataHelper(PyObject* obj = NULL)
+        : m_obj(obj ? obj : Py_None)
     {
         wxPyThreadBlocker blocker;
-        Py_INCREF(m_obj);   
-    }  
-    
+        Py_INCREF(m_obj);
+    }
+
     ~wxPyUserDataHelper()
     {   // normally the derived class does the clean up, or deliberately leaks
         // by setting m_obj to 0, but if not then do it here.
-        if (m_obj) {    
+        if (m_obj) {
             wxPyThreadBlocker blocker;
             Py_DECREF(m_obj);
             m_obj = 0;
@@ -301,7 +341,7 @@ public:
         Py_INCREF(m_obj);
         return m_obj;
     }
-    
+
     // Return Value: Borrowed reference
     PyObject* BorrowData() const {
         return m_obj;
@@ -315,7 +355,7 @@ public:
             Py_INCREF(m_obj);
         }
     }
-    
+
     // Return the object in udata or None if udata is null
     // Return Value: New reference
     static PyObject* SafeGetData(wxPyUserDataHelper<Base>* udata) {
@@ -324,18 +364,42 @@ public:
         Py_INCREF(obj);
         return obj;
     }
-    
+
     // Set the m_obj to null, this should only be used during clean up, when
     // the object should be leaked.
     // Calling any other methods on this object is then undefined behaviour
     void ReleaseDataDuringCleanup()
     {
-        m_obj = 0;        
+        m_obj = 0;
     }
 
 private:
     PyObject* m_obj;
 };
 
-//--------------------------------------------------------------------------  
+
+
+// A wxClientData that holds a reference to a Python object
+class wxPyClientData : public wxPyUserDataHelper<wxClientData>
+{
+public:
+    wxPyClientData(PyObject* obj = NULL)
+        : wxPyUserDataHelper<wxClientData>(obj)
+    { }
+};
+
+
+
+
+// A wxObject object that holds a reference to a Python object
+class wxPyUserData : public wxPyUserDataHelper<wxObject>
+{
+public:
+    wxPyUserData(PyObject* obj = NULL)
+        : wxPyUserDataHelper<wxObject>(obj)
+    { }
+};
+
+
+//--------------------------------------------------------------------------
 #endif

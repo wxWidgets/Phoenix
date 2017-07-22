@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import wx.richtext
 
@@ -11,7 +11,7 @@ class richtextxml_Tests(wtc.WidgetTestCase):
         handler = wx.richtext.RichTextXMLHandler()
         wx.richtext.RichTextBuffer.AddHandler(handler)
 
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

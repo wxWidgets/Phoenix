@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
@@ -11,13 +11,13 @@ class textdlg_Tests(wtc.WidgetTestCase):
         dlg.SetValue("Hello")
         self.assertEqual(dlg.Value, "Hello")
         dlg.Destroy()
-        
+
     def test_textdlg2(self):
         dlg = wx.PasswordEntryDialog(None, "Message", "Caption", "Value")
         dlg.SetValue("Hello")
         self.assertEqual(dlg.Value, "Hello")
         dlg.Destroy()
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

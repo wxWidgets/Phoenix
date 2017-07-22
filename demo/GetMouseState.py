@@ -29,7 +29,7 @@ class TestPanel(wx.Panel):
                       "Mouse and modifier state can be polled with wx.GetMouseState"),
                   0, wx.CENTER|wx.ALL, 10)
         sizer.Add(wx.StaticLine(self), 0, wx.EXPAND|wx.TOP, 10)
-        
+
         row = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(row, 0, wx.CENTER)
 
@@ -99,7 +99,7 @@ class TestPanel(wx.Panel):
         self.cmd = StaticText(self, -1, "False")
         fgs.Add(lbl)
         fgs.Add(self.cmd)
-        
+
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)
         self.timer.Start(100)
@@ -109,7 +109,7 @@ class TestPanel(wx.Panel):
         ms = wx.GetMouseState()
         self.x.SetLabel( str(ms.x) )
         self.y.SetLabel( str(ms.y) )
-        
+
         self.lft.SetLabel( str(ms.leftIsDown) )
         self.mid.SetLabel( str(ms.middleIsDown) )
         self.rgt.SetLabel( str(ms.rightIsDown) )
@@ -126,7 +126,7 @@ class TestPanel(wx.Panel):
     def ShutdownDemo(self):
         self.timer.Stop()
         del self.timer
-        
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

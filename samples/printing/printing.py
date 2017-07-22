@@ -1,5 +1,5 @@
 import wx
-from wx.lib.six import print_
+from six import print_
 import os
 
 FONTSIZE = 10
@@ -54,16 +54,16 @@ class TextDocPrintout(wx.Printout):
         dw, dh = dc.GetSize()
         self.x1 = topLeft.x * self.logUnitsMM
         self.y1 = topLeft.y * self.logUnitsMM
-        self.x2 = dc.DeviceToLogicalXRel(dw) - bottomRight.x * self.logUnitsMM 
-        self.y2 = dc.DeviceToLogicalYRel(dh) - bottomRight.y * self.logUnitsMM 
+        self.x2 = dc.DeviceToLogicalXRel(dw) - bottomRight.x * self.logUnitsMM
+        self.y2 = dc.DeviceToLogicalYRel(dh) - bottomRight.y * self.logUnitsMM
 
         # use a 1mm buffer around the inside of the box, and a few
         # pixels between each line
         self.pageHeight = self.y2 - self.y1 - 2*self.logUnitsMM
-        font = wx.Font(FONTSIZE, wx.FONTFAMILY_TELETYPE, 
+        font = wx.Font(FONTSIZE, wx.FONTFAMILY_TELETYPE,
                        wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         dc.SetFont(font)
-        self.lineHeight = dc.GetCharHeight() 
+        self.lineHeight = dc.GetCharHeight()
         self.linesPerPage = int(self.pageHeight/self.lineHeight)
 
 
@@ -112,7 +112,7 @@ class PrintFrameworkSample(wx.Frame):
         # A text widget to display the doc and let it be edited
         self.tc = wx.TextCtrl(self, -1, "",
                               style=wx.TE_MULTILINE|wx.TE_DONTWRAP)
-        self.tc.SetFont(wx.Font(FONTSIZE, wx.FONTFAMILY_TELETYPE, 
+        self.tc.SetFont(wx.Font(FONTSIZE, wx.FONTFAMILY_TELETYPE,
                                 wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         filename = os.path.join(os.path.dirname(__file__), "sample-text.txt")
         self.tc.SetValue(open(filename).read())
@@ -135,10 +135,10 @@ class PrintFrameworkSample(wx.Frame):
 ##         menu.AppendSeparator()
 
         item = menu.Append(wx.ID_ABOUT, "About", "About this application")
-        self.Bind(wx.EVT_MENU, self.OnAbout, item)                           
+        self.Bind(wx.EVT_MENU, self.OnAbout, item)
         item = menu.Append(wx.ID_EXIT, "E&xit\tCtrl-Q", "Close this application")
         self.Bind(wx.EVT_MENU, self.OnExit, item)
-        
+
         menubar = wx.MenuBar()
         menubar.Append(menu, "&File")
         self.SetMenuBar(menubar)
@@ -187,7 +187,7 @@ class PrintFrameworkSample(wx.Frame):
 
     def OnPrintPreview(self, evt):
         data = wx.PrintDialogData(self.pdata)
-        text = self.tc.GetValue() 
+        text = self.tc.GetValue()
         printout1 = TextDocPrintout(text, "title", self.margins)
         printout2 = TextDocPrintout(text, "title", self.margins)
         preview = wx.PrintPreview(printout1, printout2, data)
@@ -205,7 +205,7 @@ class PrintFrameworkSample(wx.Frame):
     def OnPrint(self, evt):
         data = wx.PrintDialogData(self.pdata)
         printer = wx.Printer(data)
-        text = self.tc.GetValue() 
+        text = self.tc.GetValue()
         printout = TextDocPrintout(text, "title", self.margins)
         useSetupDialog = True
         if not printer.Print(self, printout, useSetupDialog) \
@@ -241,8 +241,8 @@ class PrintFrameworkSample(wx.Frame):
             print_("GetPrinterName:", self.pdata.GetPrinterName())
 
         dlg.Destroy()
-        
-    
+
+
 app = wx.App()
 frm = PrintFrameworkSample()
 frm.Show()

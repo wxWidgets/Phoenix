@@ -4,7 +4,7 @@
 #
 # 12/17/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o Removed wx prefix from class name, 
+# o Removed wx prefix from class name,
 #   updated reverse renamer
 #
 
@@ -19,9 +19,9 @@ import  wx.html as  html
 
 class PyClickableHtmlWindow(html.HtmlWindow):
     """
-    Class for a wxHtmlWindow which responds to clicks on links by opening a
-    browser pointed at that link, and to shift-clicks by copying the link
-    to the clipboard.
+    Class for a :class:`wx.html.HtmlWindow` which responds to clicks on
+    links by opening a browser pointed at that link, and to shift-clicks
+    by copying the link to the clipboard.
     """
     def __init__(self,parent,ID,**kw):
         html.HtmlWindow.__init__(self, parent, ID, **kw)
