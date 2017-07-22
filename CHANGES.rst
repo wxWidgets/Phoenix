@@ -13,39 +13,43 @@ wxPython Changelog
 -------
 * (not yet released)
 
-Various little tweaks and fixes in some of the demo samples.
+Changes in this release include the following:
 
-Fixes in wx.lib.imagebrowser so it looks and acts better on OSX.
+* Various little tweaks and fixes in some of the demo samples.
 
-Fixed problem due to wxModules not being initialized when non-core extensions
-are imported.
+* Fixes in wx.lib.imagebrowser so it looks and acts better on OSX.
 
-Fixed issue in wx.TreeItemId comparison methods affecting PyCrust and other
-tools.
+* Fixed problem due to wxModules not being initialized when non-core
+  extensions are imported.
 
-Restore the simplified names for the wxGridSelectionModes enum that were
-present in Classic.
+* Fixed issue in wx.TreeItemId comparison methods affecting PyCrust and
+  other tools.
 
-Add accessors for the internal widgets in the wx.EditableListBox.
+* Restore the simplified names for the wxGridSelectionModes enum that were
+  present in Classic.
 
-Fixes in wx.lib.eventwatcher to avoid deprecated methods and other Phoenix
-related changes.
+* Add accessors for the internal widgets in the wx.EditableListBox.
 
-Correctly transfer ownership of the input stream in wx.FSFile.
+* Fixes in wx.lib.eventwatcher to avoid deprecated methods and other Phoenix
+  related changes.
 
-Ensure the license files are getting into the source tarball and the binary
-wheel files.
+* Correctly transfer ownership of the input stream in wx.FSFile.
 
-Add wrappers for the classes derived from wxImageHandler.
+* Ensure the license files are getting into the source tarball and the
+  binary wheel files.
 
-Fix wx.lib.plot.polyline to not attempt to draw the spline if there are less
-than 3 points.
+* Add wrappers for the classes derived from wxImageHandler.
 
-Transfer the ownership of the prop arg in wx.propgrid.PGProperty.AddChild and
-AddPrivateChild. Various other fixes in wx.propgrid classes for backwards
-compatibility and to fix problems caused by mismatches between customizations
-that were done for Classic and how Phoenix does things by default.
+* Fix wx.lib.plot.polyline to not attempt to draw the spline if there are
+  less than 3 points.
 
+* Transfer the ownership of the prop arg in wx.propgrid.PGProperty.AddChild
+  and AddPrivateChild. Various other fixes in wx.propgrid classes for
+  backwards compatibility and to fix problems caused by mismatches between
+  customizations that were done for Classic and how Phoenix does things by
+  default. Also solved some problems in the PropertyGrid sample in the demo.
+
+* Add missing HtmlCell.FindCellByPos.
 
 
 
