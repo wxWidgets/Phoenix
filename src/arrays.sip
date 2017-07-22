@@ -62,6 +62,7 @@
                     return 0;
                 }
             }
+            PyErr_Clear();
             wxString string;
             size_t len = PyUnicode_GET_SIZE(item);
             if (len) {

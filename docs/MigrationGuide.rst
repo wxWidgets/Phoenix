@@ -531,6 +531,26 @@ confident that you'll be much happier with this approach.
 
 
 
+Property Grid
+-------------
+
+In Classic, custom classes derived from ``wx.propgrid.PGProperty`` could
+specify which editor to use by providing a ``GetEditor`` method that returned a
+string.  This method does not exist in C++, and was hacked in to the Python
+wrapper classes in order to remove or simplify other wrapper related problems.
+
+Those problems are no longer present in Phoenix and so it is easiest to go
+back to the way C++ handles selecting the cell editor and avoid needing to
+awkwardly kludge things together in order to maintain full compatibility.  If
+you have a property class that implements the ``GetEditor`` method then adding
+the following method to your property class will enable the propgrid to fetch
+the editor instance properly::
+
+    def DoGetEditorClass(self):
+        return wx.propgrid.PropertyGridInterface.GetEditorByName(self.GetEditor())
+
+
+
 .. toctree::
    :maxdepth: 2
    :hidden:
