@@ -63,12 +63,12 @@ HOWTO Release wxPython Phoenix
 15. Upload the docs, demos and pdb archive files to wxpython.org/Phoenix/release-extras/::
 
         VERSION={current release version number}
-        ssh wxpython-extras "mkdir -p wxpython-extras/$VERSION"
-        scp wxPython-[^0-9]* wxpython-extras:wxpython-extras/$VERSION
+        ssh wxpython-extras "mkdir -p wxpython-extras/htdocs/wxPython4/extras/$VERSION"
+        scp wxPython-[^0-9]* wxpython-extras:wxpython-extras/htdocs/wxPython4/extras/$VERSION
 
 16. Upload the Linux wheels::
 
-        scp -r linux wxpython-extras:wxpython-extras/
+        scp -r linux wxpython-extras:wxpython-extras/htdocs/wxPython4/extras/
 
 17. Tag the released revision in git, using a name like wxPython-4.0.0 (using
     the actual version number of course.) Push the tag to all remotes.
@@ -83,3 +83,4 @@ HOWTO Release wxPython Phoenix
     packaging/ANNOUNCE.txt to the email addresses listed at the top of the
     file.
 
+20. Add a news post to the wxPython site about the release.

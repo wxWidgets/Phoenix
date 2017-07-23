@@ -9,9 +9,12 @@ wxPython Changelog
 ==================
 
 
-4.0.0a4
+4.0.0b1
 -------
-* (not yet released)
+* 22-July-2017
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b1
+Extras: https://extras.wxPython.org/wxPython4/extras/
 
 Changes in this release include the following:
 
@@ -51,6 +54,10 @@ Changes in this release include the following:
 
 * Add missing HtmlCell.FindCellByPos.
 
+* Enhance the DLG_UNIT convenience function such that if something other than
+  a wx.Point or wx.Size was passed in then the return value will be a tuple.
+  This eliminates some surprises that are possible due to auto-conversion of
+  tuples to points or sizes.
 
 
 
