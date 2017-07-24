@@ -60,7 +60,7 @@ HOWTO Release wxPython Phoenix
     TODO: Automate this!
     Go to the site and unpack the new docs into the document root.
 
-15. Upload the docs, demos and pdb archive files to wxpython.org/Phoenix/release-extras/::
+15. Upload the docs, demos and pdb archive files to extras.wxpython.org/wxPython4/extras/::
 
         VERSION={current release version number}
         ssh wxpython-extras "mkdir -p wxpython-extras/htdocs/wxPython4/extras/$VERSION"
@@ -70,17 +70,25 @@ HOWTO Release wxPython Phoenix
 
         scp -r linux wxpython-extras:wxpython-extras/htdocs/wxPython4/extras/
 
-17. Tag the released revision in git, using a name like wxPython-4.0.0 (using
+17. Save a copy of everything to the NAS::
+
+        mkdir /stuff/Development/wxPython/wxPython4/extras/$VERSION
+        cp -v wxPython-[^0-9]* /stuff/Development/wxPython/wxPython4/extras/$VERSION
+        cp -v wxPython-4* /stuff/Development/wxPython/wxPython4/pypi
+        cp -rv linux /stuff/Development/wxPython/wxPython4/extras
+
+18. Tag the released revision in git, using a name like wxPython-4.0.0 (using
     the actual version number of course.) Push the tag to all remotes.
 
-18. Bump the version numbers in buildtools/version.py appropriately for the
+19. Bump the version numbers in buildtools/version.py appropriately for the
     next anticipated release, so future snapshot builds will be recognized as
     pre-release development versions for the next official release, not the
     one just completed.
 
-19. If making an announcement about this release, (I think it's okay not to
+20. If making an announcement about this release, (I think it's okay not to
     for minor releases or smallish bug fixes,) send the text in
     packaging/ANNOUNCE.txt to the email addresses listed at the top of the
     file.
 
-20. Add a news post to the wxPython site about the release.
+21. Add a news post to the wxPython site about the release.
+
