@@ -8,51 +8,57 @@
    ]]
 
 
-Announcing wxPython 4.0.0a3
+Announcing wxPython 4.0.0b1
 ===========================
 
-https://pypi.python.org/pypi/wxPython/4.0.0a3
 
-Changes
--------
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b1
+Extras: https://extras.wxPython.org/wxPython4/extras/
 
-Fixed a few cases where the GIL was not acquired before building
-tuples of values. The problems associated with this (hangs or crashes)
-were sporadic and seemingly random, and did not appear until there was
-a background thread that was very busy. Running under a debug build of
-Python revealed the problem almost immediately. Yay Python!
+Changes in this release include the following:
 
-Return an integer value from wx.DC.GetHandle instead of a wrapped
-voidptr object, similar to how it is done for wx.Window.GetHandle.
+* Various little tweaks and fixes in some of the demo samples.
 
-Make wx.TreeItemID hashable, with meaningful hash value and equality
-operators, so it can be used as a dictionary key in Py3.
+* Fixes in wx.lib.imagebrowser so it looks and acts better on OSX.
 
-Fixed crash in wx.grid.GridTable.GetAttr, and potentially other cases
-of classes derived from wx.RefCounter.
+* Fixed problem due to wxModules not being initialized when non-core
+  extensions are imported.
 
-Add ShowPage and IsRunning methods to wx.adv.Wizard.
+* Fixed issue in wx.TreeItemId comparison methods affecting PyCrust and
+  other tools.
 
-Fixed various GTK specific bugs and other cleanup in wx.lib.agw.aui.
+* Restore the simplified names for the wxGridSelectionModes enum that were
+  present in Classic.
 
-Updated to SIP 4.19.2
+* Add accessors for the internal widgets in the wx.EditableListBox.
 
-Restored builders for Python 3.4 to the buildbot.
+* Fixes in wx.lib.eventwatcher to avoid deprecated methods and other Phoenix
+  related changes.
 
-Restore the wrappers for GetPaperSize and SetPaperSize to
-wx.PrintData.
+* Correctly transfer ownership of the input stream in wx.FSFile.
 
-Fix crashing problem when a wx.TreeItemId was compared with None.
+* Ensure the license files are getting into the source tarball and the
+  binary wheel files.
 
-Fix for missing checkbox images in CheckListCtrlMixin on Linux and
-OSX.
+* Add wrappers for the classes derived from wxImageHandler.
 
-Fix another crashing problem in propgrid, and a few other propgrid
-issues too.
+* Fix wx.lib.plot.polyline to not attempt to draw the spline if there are
+  less than 3 points.
 
-The release version of the documentation can now be found at
-https://docs.wxPython.org/ The documentation created during the
-snapshot builds is still located at https://wxPython.org/Phoenix/docs/html
+* Transfer the ownership of the prop arg in wx.propgrid.PGProperty.AddChild
+  and AddPrivateChild. Various other fixes in wx.propgrid classes for
+  backwards compatibility and to fix problems caused by mismatches between
+  customizations that were done for Classic and how Phoenix does things by
+  default. Also solved some problems in the PropertyGrid sample in the demo.
+
+* Add missing HtmlCell.FindCellByPos.
+
+* Enhance the DLG_UNIT convenience function such that if something other than
+  a wx.Point or wx.Size was passed in then the return value will be a tuple.
+  This eliminates some surprises that are possible due to auto-conversion of
+  tuples to points or sizes.
+
+
 
 
 

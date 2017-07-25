@@ -36,10 +36,8 @@ DOCS_BASE='http://docs.wxPython.org'
 NAME             = version.PROJECT_NAME
 DESCRIPTION      = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
 AUTHOR           = "Robin Dunn"
-AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"
+AUTHOR_EMAIL     = "robin@alldunn.com"
 URL              = "http://wxPython.org/"
-#DOWNLOAD_URL     = "http://wxPython.org/download.php"
-#DOWNLOAD_URL     = "http://wxpython.org/Phoenix/snapshot-builds/"
 DOWNLOAD_URL     = "https://pypi.python.org/pypi/{}".format(NAME)
 LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
@@ -61,14 +59,14 @@ the `Migration Guide <{docs_base}/MigrationGuide.html>`_,
 or the `wxPython API documentation <{docs_base}/index.html>`_.
 
 Archive files containing a copy of the wxPython documentation, the demo and
-samples, and also a set of MSVC .pdb files for Windows are available at sourceforge, 
-`here <https://sourceforge.net/projects/wxpython/files/wxPython4/extras/>`_.
+samples, and also a set of MSVC .pdb files for Windows are available  
+`here <https://extras.wxPython.org/wxPython4/extras/>`_.
 """.format(version=cfg.VERSION, docs_base=DOCS_BASE)
 
 
 
 CLASSIFIERS      = """\
-Development Status :: 3 - Alpha
+Development Status :: 4 - Beta
 Environment :: MacOS X :: Cocoa
 Environment :: Win32 (MS Windows)
 Environment :: X11 Applications :: GTK
