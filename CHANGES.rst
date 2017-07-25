@@ -182,7 +182,7 @@ and some applications can use Phoenix with slight, or even no modifications.
 In some other cases the correct way to do things was also available in Classic
 and it's only the wrong way that has been removed from Phoenix.  For more
 information there is a Migration Guide document available at:
-https://wxpython.org/Phoenix/docs/html/MigrationGuide.html
+https://wxpython.org/Phoenix/docs/html/main.html
 
 The new wxPython API reference documentation, including all Python-specific
 additions and customizations, and docs for the wx.lib package, is located at:
@@ -3427,9 +3427,7 @@ life of OGL within wxPython by making it more easily maintainable and
 less prone to getting rusty as there seems to be less and less
 interest in maintaining the C++ version.  At this point there are just
 a couple minor known compatibility differences, please see the
-MigrationGuide_ file for details.
-
-.. _MigrationGuide: MigrationGuide.html
+MigrationGuide file for details.
 
 EVT_STC_POSCHANGED has been removed as it has been deprecated in
 Scintilla for several releases now.
@@ -3483,12 +3481,9 @@ box.
 -----------------------------------------------
 * 2-Apr-2004
 
-(See also the MigrationGuide_ file for details about some of the
+(See also the MigrationGuide file for details about some of the
 big changes that have happened in this release and how you should
 adapt your code.)
-
-.. _MigrationGuide: MigrationGuide.html
-
 
 The wxWindows project and library is now known as wxWidgets.  Please
 see http://www.wxwindows.org/name.htm for more details.  This won't
