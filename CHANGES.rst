@@ -9,6 +9,15 @@ wxPython Changelog
 ==================
 
 
+4.0.0b2
+-------
+* (not yet released)
+
+Added a deprecated compatibility helper for wx.CustomDataFormat.
+
+
+
+
 4.0.0b1
 -------
 * 22-July-2017
