@@ -15,6 +15,8 @@ wxPython Changelog
 
 Added a deprecated compatibility helper for wx.CustomDataFormat.
 
+* Add missing wx.VScrolledWindow methods listed in the docs as deprecated but
+  still present. (#441)
 
 
 
