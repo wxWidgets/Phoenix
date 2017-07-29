@@ -23,6 +23,8 @@ Changes in this release include the following:
 * Transfer ownership of the wx.EvtHandler when pushing/popping them, and also
   for Set/RemoveEventHandler. (#443)
 
+* Add missing wx.VScrolledWindow methods listed in the docs as deprecated but
+  still present. (#441)
 
 
 
