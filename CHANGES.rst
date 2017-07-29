@@ -1,7 +1,7 @@
 .. title: wxPython Changelog
 .. slug: changes
 .. author: Robin
-.. description: 
+.. description: Summary of changes for wxPython releases
 .. type: text
 
 
@@ -13,7 +13,15 @@ wxPython Changelog
 -------
 * (not yet released)
 
-Added a deprecated compatibility helper for wx.CustomDataFormat.
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b1
+Extras: https://extras.wxPython.org/wxPython4/extras/
+
+Changes in this release include the following:
+
+* Added a deprecated compatibility helper for wx.CustomDataFormat.
+
+* Transfer ownership of the wx.EvtHandler when pushing/popping them, and also
+  for Set/RemoveEventHandler. (#443)
 
 
 

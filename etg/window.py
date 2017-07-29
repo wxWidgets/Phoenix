@@ -233,6 +233,14 @@ def run():
     c.find('FindWindowByLabel.parent').default='NULL'
     c.find('FindWindowByName.parent').default='NULL'
 
+    # Transfer ownership of the wx.EvtHandler when pushing/popping them...
+    c.find('PushEventHandler.handler').transfer = True
+    c.find('PopEventHandler').transferBack = True
+
+    # ...and for Set/RemoveEventHandler too
+    c.find('SetEventHandler.handler').transfer = True
+    c.find('RemoveEventHandler.handler').transferBack = True
+
 
     # Define some properties using the getter and setter methods
     c.addProperty('AcceleratorTable GetAcceleratorTable SetAcceleratorTable')
