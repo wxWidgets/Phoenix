@@ -162,6 +162,11 @@ def run():
     module.items.remove(item)
     module.insertItemAfter(c, item)
 
+    module.addPyCode("""\
+        def CustomDataFormat(format):
+            return wx.DataFormat(format)
+        CustomDataFormat = wx.deprecated(CustomDataFormat, "Use wx.DataFormat instead.")
+        """)
 
     #------------------------------------------------------------
     c = module.find('wxDataObject')

@@ -317,7 +317,7 @@ class ToolTipWindowBase(object):
             # We got the header text
             dc.SetFont(headerFont)
             textWidth, textHeight = dc.GetTextExtent(header)
-        maxWidth = max(bmpWidth+(textWidth+self._spacing*3), maxWidth)
+            maxWidth = max(bmpWidth+(textWidth+self._spacing*3), maxWidth)
         # Calculate the header height
         height = max(textHeight, bmpHeight)
         if header:
