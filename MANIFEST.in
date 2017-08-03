@@ -3,6 +3,8 @@
 # still an easy way to specify what data files (non *.py files) should be 
 # included in the package dirs.
 #
+# See cmd_sdist() in build.py for the actual building of the source dist.
+#
 
 recursive-include   wx  **
 recursive-include   license  *.txt
