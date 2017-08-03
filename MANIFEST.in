@@ -8,6 +8,7 @@ recursive-include   wx  **
 recursive-include   license  *.txt
 include             LICENSE.txt
 graft               docs
+prune               docs/sphinx/build
 
 recursive-exclude   wx  .git
 recursive-exclude   wx  *.pyc
