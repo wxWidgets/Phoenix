@@ -2478,8 +2478,8 @@ class wxPythonDemo(wx.Frame):
         self.mainmenu = None
         self.StopDownload()
 
-        # if self.tbicon is not None:
-            # self.tbicon.Destroy()
+        if self.tbicon is not None:
+            self.tbicon.Destroy()
 
         config = GetConfig()
         config.Write('ExpansionState', str(self.tree.GetExpansionState()))
