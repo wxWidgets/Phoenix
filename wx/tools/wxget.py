@@ -33,6 +33,16 @@ else:
     from urllib2 import HTTPError
     import urlparse
 
+def get_docs_demo_url(demo=False):
+    """ Get the URL for the docs or demo."""
+    if demo:
+        pkg = 'demo'
+    else:
+        pkg = 'docs'
+    base_url = "https://extras.wxpython.org/wxPython4/extras/%s/wxPython-%s-%s.tar.gz"
+    ver = wx.version().split(' ')[0]
+    return base_url % (ver, pkg, ver)
+
 def get_save_path(url, dest_dir, force=False):
     """ Get the file save location."""
     if not dest_dir:
@@ -133,7 +143,7 @@ if __name__ == "__main__":  # Only run if this file is called directly
                                wx.YES_NO|wx.CENTER)
         if YES_NO == wx.YES:
             print("Testing with wxDemo")
-            URL = "https://extras.wxpython.org/wxPython4/extras/4.0.0a3/wxPython-demo-4.0.0a3.tar.gz"
+            URL = get_docs_demo_url(True)
         else:
             URL = None
     if URL:
