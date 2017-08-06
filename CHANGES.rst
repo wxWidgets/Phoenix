@@ -13,7 +13,7 @@ wxPython Changelog
 -------
 * (not yet released)
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b1
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b2
 Extras: https://extras.wxPython.org/wxPython4/extras/
 
 Changes in this release include the following:
@@ -25,6 +25,9 @@ Changes in this release include the following:
 
 * Add missing wx.VScrolledWindow methods listed in the docs as deprecated but
   still present. (#441)
+
+* Fixed copy/paste error in wx.BusyInfo.__exit__ (#449)
+
 
 
 

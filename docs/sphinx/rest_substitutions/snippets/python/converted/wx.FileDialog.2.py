@@ -1,17 +1,17 @@
-    
+
         def OnSaveAs(self, event):
-        
-            saveFileDialog = wx.FileDialog(self, "Save XYZ file", "", "",
-                                           "XYZ files (*.xyz)|*.xyz", wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
-    
-            if saveFileDialog.ShowModal() == wx.ID_CANCEL:
-                return     # the user changed idea...
-            
-            # save the current contents in the file
-            # this can be done with e.g. wxPython output streams:
-            output_stream = wx.FileOutputStream(saveFileDialog.GetPath())
-            
-            if not output_stream.IsOk():            
-                wx.LogError("Cannot save current contents in file '%s'."%saveFileDialog.GetPath())
-                return
-            
+
+            with wx.FileDialog(self, "Save XYZ file", wildcard="XYZ files (*.xyz)|*.xyz",
+                               style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
+
+                if fileDialog.ShowModal() == wx.ID_CANCEL:
+                    return     # the user changed their mind
+
+                # save the current contents in the file
+                pathname = fileDialog.GetPath()
+                try:
+                    with open(pathname, 'w') as file:
+                        self.doSaveData(file)
+                except IOError:
+                    wx.LogError("Cannot save current data in file '%s'." % pathname)
+

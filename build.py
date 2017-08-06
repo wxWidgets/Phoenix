@@ -1766,9 +1766,15 @@ def cmd_sdist(options, args):
     getWafCmd()
     copyFile('bin/waf-%s' % wafCurrentVersion, os.path.join(PDEST, 'bin'))
 
-    # and the REV.txt if there is one
+    # And the REV.txt if there is one
     if os.path.exists('REV.txt'):
         copyFile('REV.txt', PDEST)
+
+    # Copy the Sphinx source files in the docs tree, excluding the html and
+    # sphinx/build folders, if present.
+    shutil.rmtree(opj(PDEST, 'docs'), ignore_errors=True)
+    shutil.copytree('docs', opj(PDEST, 'docs'),
+                    ignore=shutil.ignore_patterns('html', 'build', '__pycache__', 'cpp'))
 
     # Add some extra stuff to the root folder
     cmd_egg_info(options, args, egg_base=PDEST)
