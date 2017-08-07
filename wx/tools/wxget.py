@@ -10,13 +10,20 @@
 # Copyright:   (c) 2017 by Steve Barnes
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
+#
+# Module to allow cross platform downloads originally from answers to:
+# https://stackoverflow.com/questions/22676/how-do-i-download-a-file-over-http-using-python
+# by Stan and PabloG then converted to wx.
 #----------------------------------------------------------------------
-"""
-wx Version of wget utility for platform that don't have it already.
 
-Module to allow cross platform downloads originally from answers to:
-https://stackoverflow.com/questions/22676/how-do-i-download-a-file-over-http-using-python
-by Stan and PabloG then converted to wx.
+"""
+wxget.py -- wx Version of wget utility for platform that don't have it already.
+
+Usage:
+    wxget URL [DEST_DIR]
+
+Where URL is a file URL and the optional DEST_DIR is a destination directory to
+download to, (default is to prompt the user).
 """
 from __future__ import (division, absolute_import, print_function, unicode_literals)
 
@@ -41,23 +48,31 @@ def get_docs_demo_url(demo=False):
         pkg = 'docs'
     base_url = "https://extras.wxpython.org/wxPython4/extras/%s/wxPython-%s-%s.tar.gz"
     ver = wx.version().split(' ')[0]
+    major = ver.split('.')[0]
+    if major != '4':
+        raise ValueError("wx Versions before 4 not supported!")
     return base_url % (ver, pkg, ver)
 
 def get_save_path(url, dest_dir, force=False):
     """ Get the file save location."""
+    old_dir = os.getcwd()
     if not dest_dir:
-        dest = os.getcwd()
+        dest_dir = os.getcwd()
+    else:
+        if not os.path.exists(dest_dir):
+            os.makedirs(dest_dir)
+        os.chdir(dest_dir)
     filename = os.path.basename(urlparse.urlsplit(url)[2])
     if not filename:
         filename = 'downloaded.file'
 
     if not force:
         dlg = wx.FileDialog(
-            None, message="Save As ...", defaultDir=dest,
+            None, message="Save As ...", defaultDir=dest_dir,
             defaultFile=filename, style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT
         )
         if dlg.ShowModal() == wx.ID_OK:
-            dest, filename = os.path.split(dlg.GetPath())
+            dest_dir, filename = os.path.split(dlg.GetPath())
         else:
             url = None
         del dlg
@@ -67,8 +82,9 @@ def get_save_path(url, dest_dir, force=False):
         elif not os.path.isdir(dest_dir):
             url = None
 
-    if dest:
-        filename = os.path.join(dest, filename)
+    if dest_dir:
+        filename = os.path.join(dest_dir, filename)
+    os.chdir(old_dir)
 
     return (url, filename)
 
@@ -125,27 +141,28 @@ def download_file(url, dest=None, force=False):
 
     return filename
 
-if __name__ == "__main__":  # Only run if this file is called directly
+def main(args=sys.argv):
+    """ Entry point for wxget."""
     APP = wx.App()
-    MESSAGE = '\n'.join([
-        "USAGE:\n\twxget URL [dest_dir]",
-        "Will get a file from a file URL and save it to the destinaton or ."
-    ])
-    if len(sys.argv) > 2:
-        DEST_DIR = sys.argv[2]
+
+    if len(args) > 2:
+        dest_dir = args[2]
     else:
-        DEST_DIR = None
-    if len(sys.argv) > 1:
-        URL = sys.argv[1]
+        dest_dir = None
+    if len(args) > 1:
+        url = args[1]
     else:
-        print(MESSAGE)
-        YES_NO = wx.MessageBox(MESSAGE+"\nRUN TEST?", "wxget",
+        print(__doc__)
+        yes_no = wx.MessageBox(__doc__+"\n\nRUN TEST?", "wxget",
                                wx.YES_NO|wx.CENTER)
-        if YES_NO == wx.YES:
+        if yes_no == wx.YES:
             print("Testing with wxDemo")
-            URL = get_docs_demo_url(True)
+            url = get_docs_demo_url()
         else:
-            URL = None
-    if URL:
-        FILENAME = download_file(URL)
+            url = None
+    if url:
+        FILENAME = download_file(url)
         print(FILENAME)
+
+if __name__ == "__main__":  # Only run if this file is called directly
+    main()
