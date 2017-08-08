@@ -270,6 +270,24 @@ inline PyObject* wxPyMethod_Self(PyObject* method)
     { return wxPyGetAPIPtr()->p_wxPyMethod_Self(method); }
 
 
+inline void wxPyReinitializeModules()
+    { return wxPyGetAPIPtr()->p_wxPyReinitializeModules(); }
+
+
+// Datetime
+inline int wxPyDateTime_Check(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDateTime_Check(obj); }
+
+inline int wxPyDate_Check(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDate_Check(obj); }
+
+inline wxDateTime* wxPyDateTime_ToWxDateTime(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDateTime_ToWxDateTime(obj); }
+
+inline wxDateTime* wxPyDate_ToWxDateTime(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDate_ToWxDateTime(obj); }
+
+
 //--------------------------------------------------------------------------
 // Convenience helper for RAII-style thread blocking
 
