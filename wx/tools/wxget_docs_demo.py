@@ -102,7 +102,7 @@ def get_item(final, url, cache, name, ext):
                 ["%s is not yet installed." % name,
                  "Go on-line to get it?",
                  "(Select No on charged or slow connections)"]),
-            "Download Prompt", wx.YES_NO|wx.CENTER)
+            "Download Prompt", wx.YES_NO|wx.CENTER|wx.ICON_INFORMATION)
         if yes_no == wx.YES:
             cached = wxget.download_file(url, cache, True)
         else:
@@ -145,7 +145,7 @@ def docs_main(args=sys.argv):
         print("Show Docs at:", location)
         webbrowser.open(location_url)
     else:
-        result = 'Unable to find the wxPython Documentation!'
+        result = 'Unable to find & show the wxPython Documentation!'
         report_error(result)
     done(result)
 
@@ -164,7 +164,7 @@ def demo_main(args=sys.argv):
         #subprocess.check_call(cmds) # Use instead for debug
         print("Demo starting as PID %s - may take a few seconds!" % pid)
     else:
-        result = 'Unable to find the wxPython Demo!'
+        result = 'Unable to find & start the wxPython Demo!'
         report_error(result)
     done(result)
 
