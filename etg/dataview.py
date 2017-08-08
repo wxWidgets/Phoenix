@@ -417,8 +417,8 @@ def run():
                 col_obj = Py_None;
                 Py_INCREF(Py_None);
             }
-            PyTuple_SET_ITEM(value, 0, item_obj);
-            PyTuple_SET_ITEM(value, 1, col_obj);
+            PyTuple_SetItem(value, 0, item_obj);
+            PyTuple_SetItem(value, 1, col_obj);
             // PyTuple steals a reference, so we don't need to decref the items here
             return value;
             """)

@@ -274,7 +274,7 @@ def run():
             PyErr_SetString(PyExc_TypeError, "Bytes object expected");
             return NULL;
         }
-        self->Write(PyBytes_AS_STRING(data), PyBytes_GET_SIZE(data));
+        self->Write(PyBytes_AsString(data), PyBytes_Size(data));
         RETURN_NONE();
         """)
 

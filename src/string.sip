@@ -24,7 +24,7 @@
 
     %ConvertToTypeCode
         #if wxUSE_UNICODE_WCHAR == 0
-        #error wxString converison can only handle WCHAR wxStrings currently
+        #error wxString conversion can only handle WCHAR wxStrings currently
         #endif
 
         // Code to test a PyObject for compatibility with wxString
@@ -45,7 +45,7 @@
             }
         }
         *sipCppPtr = new wxString();
-        size_t len = PyUnicode_GET_SIZE(uni);
+        size_t len = PyUnicode_GetSize(uni);
         if (len) {
             wxPyUnicode_AsWideChar(uni, wxStringBuffer(**sipCppPtr, len), len);
         }

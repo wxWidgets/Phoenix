@@ -83,7 +83,7 @@ def run():
             return;
         }
 
-        self->SetPrivData(PyBytes_AS_STRING(data), PyBytes_GET_SIZE(data));
+        self->SetPrivData(PyBytes_AsString(data), PyBytes_Size(data));
         """)
 
     c.addAutoProperties()

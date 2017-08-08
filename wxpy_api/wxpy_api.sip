@@ -527,11 +527,13 @@ void* i_wxPyGetCppPtr(sipSimpleWrapper* sipPyObj) {
 // Call the PyMethod_Self API, which is not available when the Python
 // limited API is activated.
 
-inline PyObject* i_wxPyMethod_Self(PyObject* method) {
+PyObject* i_wxPyMethod_Self(PyObject* method) {
     return PyMethod_Self(method);
 }
 
-
+bool i_wxPyMethod_Check(PyObject* obj) {
+    return PyMethod_Check(obj);
+}
 
 //--------------------------------------------------------------------------
 // Cleanup and reinitialize the wxModules. This is needed because sometimes an
@@ -578,6 +580,10 @@ wxDateTime* i_wxPyDate_ToWxDateTime(PyObject *obj) {
 
 
 
+int i_wxPyObject_CheckBuffer(PyObject* obj) {
+    return PyObject_CheckBuffer(obj);
+}
+
 //--------------------------------------------------------------------------
 // An instance of the API structure
 static wxPyAPI  API = {
@@ -601,7 +607,8 @@ static wxPyAPI  API = {
     i_wxPyDateTime_Check,
     i_wxPyDate_Check,
     i_wxPyDateTime_ToWxDateTime,
-    i_wxPyDate_ToWxDateTime
+    i_wxPyDate_ToWxDateTime,
+    i_wxPyMethod_Check
 };
 %End
 

@@ -513,7 +513,7 @@ def run():
         }
         for (int i=0; i<count; i++) {
             PyObject* s = wx2PyString(files[i]);
-            PyList_SET_ITEM(list, i, s);
+            PyList_SetItem(list, i, s);
         }
         return list;
         """)
