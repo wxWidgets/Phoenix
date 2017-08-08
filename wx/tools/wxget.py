@@ -32,12 +32,12 @@ import os
 import wx
 
 if sys.version_info >= (3,):
-    from urllib.error import HTTPError
+    from urllib.error import (HTTPError, URLError)
     import urllib.request as urllib2
     import urllib.parse as urlparse
 else:
     import urllib2
-    from urllib2 import HTTPError
+    from urllib2 import (HTTPError, URLError)
     import urlparse
 
 def get_docs_demo_url(demo=False):
@@ -100,7 +100,15 @@ def download_file(url, dest=None, force=False):
         try:
             url_res = urllib2.urlopen(url)
             keep_going = True
-        except HTTPError as err:
+        except (HTTPError, URLError) as err:
+            msg = '\n'.join([
+            "\n\nERROR in Web Access! - you may be behind a firewall",
+            "You may be able to bybass this by using a browser to download:",
+            "\n\t%s\n\nand copying to:\n\n\t%s" % (url, filename),
+            ])
+            print(msg, '\n')
+            wx.MessageBox(msg, caption='WDOWNLOAD ERROR!',
+                          style=wx.OK|wx.CENTRE|wx.ICON_ERROR)
             return "Error: %s" % err
 
     with open(filename, 'wb') as outfile:
