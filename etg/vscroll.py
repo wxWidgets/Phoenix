@@ -104,7 +104,7 @@ def run():
     # virtuals from here is causing more troubles than it is probably worth
     # due to ambiguities, etc... Revisit later if people complain.
 
-    c.addPyMethod('HitTest', '(*args)',
+    c.addPyMethod('HitTest', '(self, *args)',
         doc="Deprecated compatibility helper.",
         deprecated='Use VirtualHitTest instead.',
         body="""\
