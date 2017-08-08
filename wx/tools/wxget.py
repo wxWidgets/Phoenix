@@ -67,15 +67,14 @@ def get_save_path(url, dest_dir, force=False):
         filename = 'downloaded.file'
 
     if not force:
-        dlg = wx.FileDialog(
+        with wx.FileDialog(
             None, message="Save As ...", defaultDir=dest_dir,
             defaultFile=filename, style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT
-        )
-        if dlg.ShowModal() == wx.ID_OK:
-            dest_dir, filename = os.path.split(dlg.GetPath())
-        else:
-            url = None
-        del dlg
+        ) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                dest_dir, filename = os.path.split(dlg.GetPath())
+            else:
+                url = None
     else:
         if not os.path.exists(dest_dir):
             os.makedirs(dest_dir)

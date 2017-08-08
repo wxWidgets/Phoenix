@@ -45,14 +45,12 @@ else:
 import wx
 
 import wxget
-
+print(sys.version_info, sys.version, sys.argv)
 APP = None
-WXVERSION = wx.version().split(' ')[0]
-MAJOR = WXVERSION.split('.')[0]
-if MAJOR != '4':
-    raise ValueError("wx Versions other than 4 not supported!")
+if wx.VERSION[0] != 4:
+    raise ValueError("wx Versions other than 4 not currently supported!")
 
-def endsure_wx_app():
+def ensure_wx_app():
     """ Ensure that there is a wx.App instance."""
     global APP
     if APP is None and not wx.GetApp():
@@ -63,20 +61,20 @@ def endsure_wx_app():
 def get_paths_dict():
     """ Get a dictionary of the required paths."""
     global APP
-    endsure_wx_app()
+    ensure_wx_app()
     sp = wx.StandardPaths.Get()
     pathdict = {}
     pathdict['TempDir'] = sp.GetTempDir()
     pathdict['Cache'] = os.path.join(sp.GetUserLocalDataDir(), 'wxDocsDemoCache',
-                                     WXVERSION)
+                                     wx.VERSION_STRING)
     pathdict['Docs_URL'] = wxget.get_docs_demo_url(False)
-    #pathdict['wxDocs'] = os.path.join(sp.GetAppDocumentsDir(), 'wxDocs', WXVERSION)
+    #pathdict['wxDocs'] = os.path.join(sp.GetAppDocumentsDir(), 'wxDocs', wx.VERSION_STRING)
     pathdict['wxDocs'] = sp.GetAppDocumentsDir()
-    pathdict['Docs_Name'] = "wxPython-docs-%s" % WXVERSION
+    pathdict['Docs_Name'] = "wxPython-docs-%s" % wx.VERSION_STRING
     pathdict['Demo_URL'] = wxget.get_docs_demo_url(True)
-    #pathdict['wxDemo'] = os.path.join(sp.GetUserLocalDataDir(), 'wxDemo', WXVERSION)
+    #pathdict['wxDemo'] = os.path.join(sp.GetUserLocalDataDir(), 'wxDemo', wx.VERSION_STRING)
     pathdict['wxDemo'] = sp.GetUserLocalDataDir()
-    pathdict['Demo_Name'] = "wxPython-demo-%s" % WXVERSION
+    pathdict['Demo_Name'] = "wxPython-demo-%s" % wx.VERSION_STRING
     pathdict['Ext'] = 'tar.gz'
     return pathdict
 
@@ -99,7 +97,16 @@ def get_item(final, url, cache, name, ext):
     cached = os.path.extsep.join([cached, ext])
     print('Looking for cashed', cached)
     if not os.path.exists(cached):  # No cached copy
-        cached = wxget.download_file(url, cache, True)
+        yes_no = wx.MessageBox(
+            "\n".join(
+                ["%s is not yet installed." % name,
+                 "Go on-line to get it?",
+                 "(Select No on charged or slow connections)"]),
+            "Download Prompt", wx.YES_NO|wx.CENTER)
+        if yes_no == wx.YES:
+            cached = wxget.download_file(url, cache, True)
+        else:
+            report_error("Download Cancelled!")
 
     if os.path.exists(cached):  # We now have a cached copy
         unpack_cached(cached, final)
@@ -109,7 +116,7 @@ def get_item(final, url, cache, name, ext):
 
 def report_error(err_text):
     """ Report a problem."""
-    endsure_wx_app()
+    ensure_wx_app()
     wx.MessageBox(err_text, caption='ERROR!',
                   style=wx.OK|wx.CENTRE|wx.ICON_ERROR)
 
@@ -118,15 +125,17 @@ def done(result=0):
     global APP
     if APP:
         print("Closing Launcher App!")  # Debug
-        APP.Destroy()
+        if result:
+            print(result)
+        wx.Exit()
     print("Done!")
     sys.exit(result)
 
 def docs_main(args=sys.argv):
     """ Get/Launch Docs."""
-    endsure_wx_app()
+    ensure_wx_app()
     result = 0
-    print("Launch Docs for wxPython V%s" % WXVERSION)
+    print("Launch Docs for wxPython V%s" % wx.VERSION_STRING)
     pd = get_paths_dict()
     location = get_item(pd['wxDocs'], pd['Docs_URL'], pd['Cache'],
                         pd['Docs_Name'], pd['Ext'])
@@ -136,15 +145,15 @@ def docs_main(args=sys.argv):
         print("Show Docs at:", location)
         webbrowser.open(location_url)
     else:
-        result = 'Unable to find wx.Docs'
+        result = 'Unable to find the wxPython Documentation!'
         report_error(result)
     done(result)
 
 def demo_main(args=sys.argv):
     """ Get/Launch Demo."""
     result = 0
-    endsure_wx_app()
-    print("Launch Demo for wxPython V%s" % WXVERSION)
+    ensure_wx_app()
+    print("Launch Demo for wxPython V%s" % wx.VERSION_STRING)
     pd = get_paths_dict()
     location = get_item(pd['wxDemo'], pd['Demo_URL'], pd['Cache'],
                         pd['Demo_Name'], pd['Ext'])
@@ -155,7 +164,7 @@ def demo_main(args=sys.argv):
         #subprocess.check_call(cmds) # Use instead for debug
         print("Demo starting as PID %s - may take a few seconds!" % pid)
     else:
-        result = 'Unable to find wx.Demo'
+        result = 'Unable to find the wxPython Demo!'
         report_error(result)
     done(result)
 
