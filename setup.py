@@ -61,6 +61,10 @@ or the `wxPython API documentation <{docs_base}/index.html>`_.
 Archive files containing a copy of the wxPython documentation, the demo and
 samples, and also a set of MSVC .pdb files for Windows are available
 `here <https://extras.wxPython.org/wxPython4/extras/>`_.
+
+The utility tools wxdocs & wxdemo will download the appropIATE files with wxget,
+(if necessary), unpack them, (if necessary) & launch the appropriate version of
+the respective items. (Documents are launched in the browser & Demo with python).
 """.format(version=cfg.VERSION, docs_base=DOCS_BASE)
 
 
