@@ -21,6 +21,10 @@ how some things have changed.
    `Docstring Guidelines <https://docs.wxpython.org/DocstringsGuidelines.html>`_
    document.
 
+.. note:: The wxPython Documentation & Demo packages can be fetched, installed
+    & launched with 2 new utilities, wxdocs and wxdemo respectively - fetching &
+    installing are only done if necessary, e.g. after a version update.
+    These both make use of a wxget a, (simplistic, pure wxpython wget), utility.
 
 .. raw:: html
 
@@ -99,7 +103,7 @@ how some things have changed.
    :maxdepth: 2
    :hidden:
    :glob:
-   
+
    MigrationGuide
    TODO
    DocstringsGuidelines
@@ -165,5 +169,3 @@ how some things have changed.
    wx.lib
    wx.py
    wx.tools
-
-
