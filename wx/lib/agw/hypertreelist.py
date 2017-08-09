@@ -3665,7 +3665,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             if self._lastOnSame:
                 if item == self._current and self._curColumn != -1 and \
                    self._owner.GetHeaderWindow().IsColumnEditable(self._curColumn) and \
-                   flags & (wx.TREE_HITTEST_ONITEMLABEL | wx.TREE_HITTEST_ONITEMCOLUMN) and \
+                   flags & (wx.TREE_HITTEST_ONITEMLABEL | TREE_HITTEST_ONITEMCOLUMN) and \
                    ((self._editCtrl != None and column != self._editCtrl.column()) or self._editCtrl is None):
                     self._editTimer.Start(_EDIT_TIMER_TICKS, wx.TIMER_ONE_SHOT)
 
