@@ -59,8 +59,13 @@ the `Migration Guide <{docs_base}/MigrationGuide.html>`_,
 or the `wxPython API documentation <{docs_base}/index.html>`_.
 
 Archive files containing a copy of the wxPython documentation, the demo and
-samples, and also a set of MSVC .pdb files for Windows are available  
+samples, and also a set of MSVC .pdb files for Windows are available
 `here <https://extras.wxPython.org/wxPython4/extras/>`_.
+
+The utility tools wxdocs and wxdemo will download the appropriate files with wxget,
+(if necessary), unpack them, (if necessary) and launch the appropriate version of
+the respective items. (Documents are launched in the default browser and demo is started 
+with python).
 """.format(version=cfg.VERSION, docs_base=DOCS_BASE)
 
 
@@ -314,6 +319,9 @@ ENTRY_POINTS = {
         "pywxrc = wx.tools.pywxrc:main",
 #        ],
 #    'gui_scripts' : [  # TODO: Why was this done?
+        "wxget = wx.tools.wxget:main",  # New wx wget
+        "wxdocs = wx.tools.wxget_docs_demo:docs_main",  # Get/Launch Docs
+        "wxdemo = wx.tools.wxget_docs_demo:demo_main",  # Get/Launch Demo
         "helpviewer = wx.tools.helpviewer:main",
         "pycrust = wx.py.PyCrust:main",
         "pyshell = wx.py.PyShell:main",
