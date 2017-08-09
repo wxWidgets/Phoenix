@@ -1,6 +1,6 @@
 .. wxPython Phoenix documentation
    Created:   9-Dec-2011
-   Copyright: (c) 2011-2016 by Total Control Software
+   Copyright: (c) 2011-2017 by Total Control Software
    License:   wxWindows License
 
 .. include:: headings.inc
@@ -15,16 +15,17 @@ If you are porting your code from Classic wxPython, be sure to read the
 `Migration Guide <MigrationGuide.html>`_  to get a better feel for
 how some things have changed.
 
+You can download a local copy of this documentation using a new utility script
+included with wxPython called ``wxdocs``. It will open the local copy of the
+documentation in your default browser, downloading it first if needed. There
+is also a similar tool called ``wxdemo`` that will download (if needed)
+and launch the wxPython demo for you.
 
 .. note:: If you wish to help in the documentation effort, the main
    docstrings guidelines are outlined in the
    `Docstring Guidelines <https://docs.wxpython.org/DocstringsGuidelines.html>`_
    document.
 
-.. note:: The wxPython Documentation & Demo packages can be fetched, installed
-    & launched with 2 new utilities, wxdocs and wxdemo respectively - fetching &
-    installing are only done if necessary, e.g. after a version update.
-    These both make use of a wxget a, (simplistic, pure wxpython wget), utility.
 
 .. raw:: html
 

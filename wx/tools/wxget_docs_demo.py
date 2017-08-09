@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #----------------------------------------------------------------------
 # Name:        wx.tools.wxget_docs_demo
-# Purpose:     wx fetch & launch demo or docs
+# Purpose:     wx fetch and launch demo or docs
 #
 # Author:      Steve Barnes
 #
@@ -11,7 +11,7 @@
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
 #
-# Module to allow the correct version of the documents &/or demos to be
+# Module to allow the correct version of the documents and/or demos to be
 # launched after, if necessarily being fetched.
 #----------------------------------------------------------------------
 
@@ -95,7 +95,7 @@ def get_item(final, url, cache, name, ext):
 
     cached = os.path.join(cache, name)
     cached = os.path.extsep.join([cached, ext])
-    print('Looking for cashed', cached)
+    print('Looking for cached', cached)
     if not os.path.exists(cached):  # No cached copy
         yes_no = wx.MessageBox(
             "\n".join(
@@ -145,7 +145,7 @@ def docs_main(args=sys.argv):
         print("Show Docs at:", location)
         webbrowser.open(location_url)
     else:
-        result = 'Unable to find & show the wxPython Documentation!'
+        result = 'Unable to find and show the wxPython Documentation!'
         report_error(result)
     done(result)
 
@@ -164,7 +164,7 @@ def demo_main(args=sys.argv):
         #subprocess.check_call(cmds) # Use instead for debug
         print("Demo starting as PID %s - may take a few seconds!" % pid)
     else:
-        result = 'Unable to find & start the wxPython Demo!'
+        result = 'Unable to find and start the wxPython Demo!'
         report_error(result)
     done(result)
 
