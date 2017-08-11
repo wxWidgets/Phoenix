@@ -1422,9 +1422,9 @@ def cmd_build_py(options, args):
         runcmd(cmd)
 
     copyWxDlls(options)
-    if isWindows or isDarwin:
-        cfg = Config()
-        cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
+
+    cfg = Config()
+    cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
 
     print("\n------------ BUILD FINISHED ------------")
     print("To use wxPython from the build folder (without installing):")
@@ -1753,14 +1753,20 @@ def cmd_sdist(options, args):
         for name in glob.glob(posixjoin('sip', srcdir, '*')):
             copyFile(name, destdir)
     for wc in ['*.py', '*.pi', '*.pyi']:
-        destdir = posixjoin(PDEST, 'wx')
-        for name in glob.glob(posixjoin('wx', wc)):
+        destdir = posixjoin(PDEST, cfg.PKGDIR)
+        for name in glob.glob(posixjoin(cfg.PKGDIR, wc)):
             copyFile(name, destdir)
 
     # Copy the license files from wxWidgets
+    msg('Copying license files...')
     updateLicenseFiles(cfg)
     shutil.copytree('license', opj(PDEST, 'license'))
     copyFile('LICENSE.txt', PDEST)
+
+    # Copy the locale message catalogs
+    msg('Copying message catalog files...')
+    cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
+    shutil.copytree(opj(cfg.PKGDIR, 'locale'), opj(PDEST, cfg.PKGDIR, 'locale'))
 
     # Also add the waf executable, fetching it first if we don't already have it
     getWafCmd()
