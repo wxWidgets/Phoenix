@@ -492,8 +492,7 @@ def build(bld):
 
 
     # copy the wx locale message catalogs to the package dir
-    if isWindows or isDarwin:
-        cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
+    cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
 
     # copy __init__.py
     copy_file('src/__init__.py', cfg.PKGDIR, update=1, verbose=1)

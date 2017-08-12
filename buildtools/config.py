@@ -413,7 +413,7 @@ class Configuration(object):
 
 
     def build_locale_dir(self, destdir, verbose=1):
-        """Build a locale dir under the wxPython package. Used for MSW and OSX"""
+        """Build a locale dir under the wxPython package."""
         moFiles = glob.glob(opj(self.WXDIR, 'locale', '*.mo'))
         for src in moFiles:
             lang = os.path.splitext(os.path.basename(src))[0]
