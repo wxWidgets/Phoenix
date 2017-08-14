@@ -491,7 +491,10 @@ class pushDir(object):
 
 
 def getBuildDir(options):
-    BUILD_DIR = opj(phoenixDir(), 'build', 'wxbld')
+    if not isDarwin and not isWindows:
+        BUILD_DIR = opj(phoenixDir(), 'build', 'wxbld', 'gtk3' if options.gtk3 else 'gtk2')
+    else:
+        BUILD_DIR = opj(phoenixDir(), 'build', 'wxbld')
     if options.build_dir:
         BUILD_DIR = os.path.abspath(options.build_dir)
     return BUILD_DIR
