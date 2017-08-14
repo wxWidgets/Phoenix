@@ -1404,10 +1404,13 @@ def cmd_build_py(options, args):
         build_options.append('--jobs=%s' % options.jobs)
     if options.relwithdebug:
         build_options.append('--msvc_relwithdebug')
-    if options.gtk2:
-        build_options.append('--gtk2')
-    if options.gtk3:
-        build_options.append('--gtk3')
+    if not isDarwin and not isWindows:
+        if options.gtk2:
+            build_options.append('--gtk2')
+            wafBuildDir = posixjoin(wafBuildBase, 'gtk2')
+        if options.gtk3:
+            build_options.append('--gtk3')
+            wafBuildDir = posixjoin(wafBuildBase, 'gtk3')
 
     build_options.append('--python="%s"' % PYTHON)
     build_options.append('--out=%s' % wafBuildDir) # this needs to be the last option
