@@ -392,7 +392,8 @@ def makeOptionParser():
         ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
         ("release",        (False, "Turn off some development options for a release build.")),
         ("keep_hash_lines",(False, "Don't remove the '#line N' lines from the SIP generated code")),
-        ("gtk3",           (False, "On Linux build for gtk3 (default gtk2)")),
+        ("gtk2",           (False, "On Linux build for gtk2 (default gtk3)")),
+        ("gtk3",           (True,  "On Linux build for gtk3")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
         ("osx_carbon",     (False, "Build the OSX Carbon port on Mac (unsupported)")),
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
@@ -472,6 +473,9 @@ def parseArgs(args):
         options.both = False
         if os.path.exists('REV.txt'):
             os.unlink('REV.txt')
+
+    if options.gtk2:
+        options.gtk3 = False
 
     return options, args
 
@@ -1248,6 +1252,8 @@ def cmd_build_wx(options, args):
     if options.extra_make:
         build_options.append('--extra_make="%s"' % options.extra_make)
 
+    if options.gtk2:
+        build_options.append('--gtk2')
     if options.gtk3:
         build_options.append('--gtk3')
 
@@ -1395,6 +1401,8 @@ def cmd_build_py(options, args):
         build_options.append('--jobs=%s' % options.jobs)
     if options.relwithdebug:
         build_options.append('--msvc_relwithdebug')
+    if options.gtk2:
+        build_options.append('--gtk2')
     if options.gtk3:
         build_options.append('--gtk3')
 

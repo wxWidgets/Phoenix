@@ -46,8 +46,10 @@ def options(opt):
                    help='One or more comma separated architecture names to be used for '
                    'the Mac builds. Should be at least a subset of the architectures '
                    'used by wxWidgets and Python')
-    opt.add_option('--gtk3', dest='gtk3', action='store_true', default=False,
-                   help='On Linux build for gtk3 (default gtk2)')
+    opt.add_option('--gtk2', dest='gtk2', action='store_true', default=False,
+                   help='On Linux build for gtk2 (default gtk3)')
+    opt.add_option('--gtk3', dest='gtk3', action='store_true', default=True,
+                   help='On Linux build for gtk3')
     opt.add_option('--msvc_arch', dest='msvc_arch', default='x86', action='store',
                    help='The architecture to target for MSVC builds. Supported values '
                    'are: "x86" or "x64"')
@@ -251,10 +253,13 @@ def configure(conf):
         # wxWidgets.  If we ever support other ports then this code will need
         # to be adjusted.
         if not isDarwin:
-            if conf.options.gtk3:
-                gtkflags = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
-            else:
+            if conf.options.gtk2:
+                conf.options.gtk3 = False
+            if conf.options.gtk2:
                 gtkflags = os.popen('pkg-config gtk+-2.0 --cflags', 'r').read()[:-1]
+            else:
+                gtkflags = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
+
             conf.env.CFLAGS_WX   += gtkflags.split()
             conf.env.CXXFLAGS_WX += gtkflags.split()
 
