@@ -11,17 +11,18 @@ matrix:
       sudo: required
       python: 2.7
     - os: linux
-      dist: precise
-      sudo: required
-      python: 2.7
-    - os: linux
       dist: trusty
       sudo: required
       python: 3.4
     - os: linux
-      dist: precise
+      dist: trusty
       sudo: required
-      python: 3.4
+      python: 3.5
+    - os: linux
+      dist: trusty
+      sudo: required
+      python: 3.6
+
   # redundant specification of `sudo` and `python` because of travis-ci.org's way of parsing `.travis.yml`
     
 # Available build steps:
