@@ -66,8 +66,6 @@ script:
     - python build.py etg --nodoc
     - python build.py sip
     - python build.py build_py --jobs=4
+    - python build.py bdist_wheel
     - sudo python build.py install
     # TODO: Add running of the tests
-    
-    
-    
