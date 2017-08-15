@@ -23,6 +23,22 @@ matrix:
       sudo: required
       python: 3.6
 
+# We should try this too
+#    - os: osx
+#      osx_image: xcode7.3
+#      python: 2.7
+#    - os: osx
+#      osx_image: xcode7.3
+#      python: 3.4
+#    - os: osx
+#      osx_image: xcode7.3
+#      python: 3.5
+#    - os: osx
+#      osx_image: xcode7.3
+#      python: 3.6
+
+
+
   # redundant specification of `sudo` and `python` because of travis-ci.org's way of parsing `.travis.yml`
     
 # Available build steps:
