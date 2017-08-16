@@ -39,6 +39,15 @@ Changes in this release include the following:
 * Fix wx.ListCtrl.SetItemData to check that the data value is not out of
   the range of a C long. (#467)
 
+* Changed the default port on *nix builds to be GTK3. The new ``--gtk2`` flag
+  can be used to force a build for GTK2 instead, and the ``--gtk3`` flag still
+  exists, but defaults to True unless ``--gtk2`` is specified. Please note that
+  there is currently no auto-detection of whether GTK3 is available or not, so
+  if you know you need to build for GTK2 then you need to use the build flag,
+  and there is currently no way to specify that flag for builds performed by
+  pip. (#431)
+
+
 
 
 4.0.0b1

@@ -87,7 +87,7 @@ for VENV in ~/venvs/*; do
     if [ $PYVER = all -o $PYVER = $(basename $VENV) ]; then
         # build a package for GTK2?
         if [ $PORT = all -o $PORT = gtk2 ]; then
-            do_build $VENV gtk2
+            do_build $VENV gtk2 --gtk2
         fi
 
         # build a package for GTK3?
