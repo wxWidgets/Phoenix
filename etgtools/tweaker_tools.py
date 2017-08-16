@@ -679,8 +679,8 @@ def convertTwoIntegersTemplate(CLASS):
     }}
 
     // or create a new instance
-    PyObject* o1 = PySequence_ITEM(sipPy, 0);
-    PyObject* o2 = PySequence_ITEM(sipPy, 1);
+    PyObject* o1 = PySequence_GetItem(sipPy, 0);
+    PyObject* o2 = PySequence_GetItem(sipPy, 1);
     *sipCppPtr = new {CLASS}(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2));
     Py_DECREF(o1);
     Py_DECREF(o2);
@@ -711,10 +711,10 @@ def convertFourIntegersTemplate(CLASS):
         return 0; // not a new instance
     }}
     // or create a new instance
-    PyObject* o1 = PySequence_ITEM(sipPy, 0);
-    PyObject* o2 = PySequence_ITEM(sipPy, 1);
-    PyObject* o3 = PySequence_ITEM(sipPy, 2);
-    PyObject* o4 = PySequence_ITEM(sipPy, 3);
+    PyObject* o1 = PySequence_GetItem(sipPy, 0);
+    PyObject* o2 = PySequence_GetItem(sipPy, 1);
+    PyObject* o3 = PySequence_GetItem(sipPy, 2);
+    PyObject* o4 = PySequence_GetItem(sipPy, 3);
     *sipCppPtr = new {CLASS}(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2),
                              wxPyInt_AsLong(o3), wxPyInt_AsLong(o4));
     Py_DECREF(o1);
@@ -750,8 +750,8 @@ def convertTwoDoublesTemplate(CLASS):
     }}
 
     // or create a new instance
-    PyObject* o1 = PySequence_ITEM(sipPy, 0);
-    PyObject* o2 = PySequence_ITEM(sipPy, 1);
+    PyObject* o1 = PySequence_GetItem(sipPy, 0);
+    PyObject* o2 = PySequence_GetItem(sipPy, 1);
     *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2));
     Py_DECREF(o1);
     Py_DECREF(o2);
@@ -783,10 +783,10 @@ def convertFourDoublesTemplate(CLASS):
     }}
 
     // or create a new instance
-    PyObject* o1 = PySequence_ITEM(sipPy, 0);
-    PyObject* o2 = PySequence_ITEM(sipPy, 1);
-    PyObject* o3 = PySequence_ITEM(sipPy, 2);
-    PyObject* o4 = PySequence_ITEM(sipPy, 3);
+    PyObject* o1 = PySequence_GetItem(sipPy, 0);
+    PyObject* o2 = PySequence_GetItem(sipPy, 1);
+    PyObject* o3 = PySequence_GetItem(sipPy, 2);
+    PyObject* o4 = PySequence_GetItem(sipPy, 3);
     *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2),
                              PyFloat_AsDouble(o3), PyFloat_AsDouble(o4));
     Py_DECREF(o1);
@@ -932,7 +932,7 @@ del _{ListClass_pyName}___repr__
         else {{
             Py_ssize_t i, len = PySequence_Length(sipPy);
             for (i=0; i<len; i++) {{
-                PyObject* item = PySequence_ITEM(sipPy, i);
+                PyObject* item = PySequence_GetItem(sipPy, i);
                 if (!sipCanConvertToType(item, sipType_{ItemClass}, SIP_NOT_NONE)) {{
                     Py_DECREF(item);
                     success = FALSE;
@@ -960,7 +960,7 @@ del _{ListClass_pyName}___repr__
     Py_ssize_t i, len = PySequence_Length(sipPy);
     for (i=0; i<len; i++) {{
         int state;
-        PyObject* pyItem = PySequence_ITEM(sipPy, i);
+        PyObject* pyItem = PySequence_GetItem(sipPy, i);
         {ItemClass}* cItem = reinterpret_cast<{ItemClass}*>(
                              sipConvertToType(pyItem, sipType_{ItemClass},
                              NULL, 0, &state, sipIsErr));
@@ -1145,7 +1145,7 @@ static
     else {{
         len = PySequence_Length(source);
         for (idx=0; idx<len; idx++) {{
-            PyObject* item = PySequence_ITEM(source, idx);
+            PyObject* item = PySequence_GetItem(source, idx);
             if (!sipCanConvertToType(item, {sipType}, SIP_NOT_NONE)) {{
                 Py_DECREF(item);
                 goto error0;
@@ -1162,7 +1162,7 @@ static
         return NULL;
     }}
     for (idx=0; idx<len; idx++) {{
-        PyObject* obj = PySequence_ITEM(source, idx);
+        PyObject* obj = PySequence_GetItem(source, idx);
         int state = 0;
         int err = 0;
         {objType}* item = reinterpret_cast<{objType}*>(

@@ -96,7 +96,7 @@ def run():
             for (size_t i=0; i<count; i++) {
                 wxTreeListItem* item = new wxTreeListItem(items[i]);
                 PyObject* obj = wxPyConstructObject((void*)item, wxT("wxTreeListItem"), true);
-                PyList_SET_ITEM(list, i, obj); // PyList_SET_ITEM steals a reference
+                PyList_SetItem(list, i, obj); // steals a reference 
             }
             return list;
         """)

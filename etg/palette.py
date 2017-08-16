@@ -60,9 +60,9 @@ def run():
             unsigned char* blueArray = new unsigned char[count];
 
             for (Py_ssize_t i = 0; i < count; i++) {
-                PyObject* redItem = PySequence_ITEM(red, i);
-                PyObject* greenItem = PySequence_ITEM(green, i);
-                PyObject* blueItem = PySequence_ITEM(blue, i);
+                PyObject* redItem = PySequence_GetItem(red, i);
+                PyObject* greenItem = PySequence_GetItem(green, i);
+                PyObject* blueItem = PySequence_GetItem(blue, i);
                 if (!wxPyInt_Check(redItem) || !wxPyInt_Check(greenItem) || !wxPyInt_Check(blueItem)) {
                     PyErr_SetString(PyExc_TypeError, errMsg);
                     goto pch_exit;

@@ -1,0 +1,70 @@
+
+
+-------------------------------------------------
+Temporary notes, do not commit in the final merge
+-------------------------------------------------
+
+
+New bdist_wheel docs including the --py-limited-api option:
+https://bitbucket.org/HexDecimal/wheel-fork/src/b25d28cc111f8d354e1b8d949a54ffb3c262dfce/docs/index.rst?fileviewer=file-view-default
+
+PEP 384: https://www.python.org/dev/peps/pep-0384/
+
+
+* Can I get rid of wx.siplib and just add dependency on SIP from pypi? Yes, of
+  course, but it would make using interim builds more difficult.
+
+* Can I eliminate all uses of the restricted APIs (at least the buffer related
+  things so far) and use equivalent APIs from siplib itself?  If not then I'll
+  probably have to separate out the incompatible stuff into my own API module
+  like siplib (and could probably include siplib there if desired...)
+
+* How to set the tags in the wheel filename? If bdist_wheel doesn't do it
+  already then it looks like we can override a get_tag(self) method in the
+  customization of the bdist_wheel class we already have...
+
+  For example, from py2exe's setup.py:
+
+    class my_bdist_wheel(bdist_wheel.bdist_wheel):
+        """We change the bdist_wheel command so that it creates a
+        wheel-file compatible with CPython, 3.4, 3.5, and 3.6 only
+        by setting the impl_tag to 'cp33.cp34.cp35.cp36'
+        """
+        def get_tag(self):
+            impl_tag, abi_tag, plat_tag = super().get_tag()
+            return "cp33.cp34.cp35.cp36", abi_tag, plat_tag
+
+
+* The bdist_wheel docs say that --py-limited-api is ignored on Windows???
+
+* The extension modules will need to have a different name, I think. Currently
+  waf is controlling that. Do current versions of waf support py-limited-api
+  or will something new need to be hacked into it?
+
+* Check into what Extension(py_limited_api=True, ...) does in recent versions
+  of setuptools.
+
+
+
+
+Issues discovered so far
+------------------------
+
+ * We WILL need a separate Python version-specific API module, siplib can give
+   us lots of help, but doesn't cover everything
+
+ * all the PyFoo_GET_ITEM type of "faster" macros will need to be changed to
+   their function call equivalents, meaning that our optimizations for those
+   things will be undone.
+
+ * At least most of the new buffer APIs are not available in the limited API
+
+ * It appears that PyDateTime APIs are also not available
+
+ * We access elements of PyMethod and such in a few places, in the limited API
+   those are opaque types.
+
+ * Ditto for sipSimpleWrapper
+
+ * There are a few things currently in wxpy_api like wxPyNoAppError that are
+   expected to end up in the _core module.

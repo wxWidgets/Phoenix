@@ -31,10 +31,15 @@ PyObject* wxPyDrawXXXList(wxDC& dc, wxPyDrawListOp_t doDraw,
                           PyObject* pyCoords, PyObject* pyPens, PyObject* pyBrushes)
 {
     wxPyBlock_t blocked = wxPyBeginBlockThreads();
-
+#ifndef Py_LIMITED_API
     bool      isFastSeq  = PyList_Check(pyCoords) || PyTuple_Check(pyCoords);
     bool      isFastPens = PyList_Check(pyPens) || PyTuple_Check(pyPens);
     bool      isFastBrushes = PyList_Check(pyBrushes) || PyTuple_Check(pyBrushes);
+#else
+    bool      isFastSeq  = false;
+    bool      isFastPens = false;
+    bool      isFastBrushes = false;
+#endif
     int       numObjs = 0;
     int       numPens = 0;
     int       numBrushes = 0;
@@ -61,7 +66,9 @@ PyObject* wxPyDrawXXXList(wxDC& dc, wxPyDrawListOp_t doDraw,
         // Use a new pen?
         if (i < numPens) {
             if (isFastPens) {
+#ifndef Py_LIMITED_API
                 obj = PySequence_Fast_GET_ITEM(pyPens, i);
+#endif
             }
             else {
                 obj = PySequence_GetItem(pyPens, i);
@@ -79,7 +86,9 @@ PyObject* wxPyDrawXXXList(wxDC& dc, wxPyDrawListOp_t doDraw,
         // Use a new brush?
         if (i < numBrushes) {
             if (isFastBrushes) {
+#ifndef Py_LIMITED_API
                 obj = PySequence_Fast_GET_ITEM(pyBrushes, i);
+#endif
             }
             else {
                 obj = PySequence_GetItem(pyBrushes, i);
@@ -97,7 +106,9 @@ PyObject* wxPyDrawXXXList(wxDC& dc, wxPyDrawListOp_t doDraw,
 
         // Get the Coordinates
         if (isFastSeq) {
+#ifndef Py_LIMITED_API
             coords = PySequence_Fast_GET_ITEM(pyCoords, i);
+#endif
         }
         else {
             coords = PySequence_GetItem(pyCoords, i);
@@ -219,10 +230,17 @@ PyObject* wxPyDrawTextList(wxDC& dc, PyObject* textList, PyObject* pyPoints, PyO
 {
     wxPyBlock_t blocked = wxPyBeginBlockThreads();
 
+#ifndef Py_LIMITED_API
     bool      isFastSeq  = PyList_Check(pyPoints) || PyTuple_Check(pyPoints);
     bool      isFastText = PyList_Check(textList) || PyTuple_Check(textList);
     bool      isFastForeground = PyList_Check(foregroundList) || PyTuple_Check(foregroundList);
     bool      isFastBackground = PyList_Check(backgroundList) || PyTuple_Check(backgroundList);
+#else
+    bool      isFastSeq  = false;
+    bool      isFastText = false;
+    bool      isFastForeground = false;
+    bool      isFastBackground = false;
+#endif
     int       numText = 0;
     int       numPoints = 0;
     int       numForeground = 0;
@@ -255,7 +273,9 @@ PyObject* wxPyDrawTextList(wxDC& dc, PyObject* textList, PyObject* pyPoints, PyO
         // Use a new string ?
         if (i < numText) {
             if ( isFastText ) {
+#ifndef Py_LIMITED_API
                 obj = PySequence_Fast_GET_ITEM(textList, i);
+#endif
             }
             else {
                 obj = PySequence_GetItem(textList, i);
@@ -272,7 +292,9 @@ PyObject* wxPyDrawTextList(wxDC& dc, PyObject* textList, PyObject* pyPoints, PyO
         if (i < numForeground) {
             // Use a new foreground ?
             if ( isFastForeground ) {
+#ifndef Py_LIMITED_API
                 obj = PySequence_Fast_GET_ITEM(foregroundList, i);
+#endif
             }
             else {
                 obj = PySequence_GetItem(foregroundList, i);
@@ -290,7 +312,9 @@ PyObject* wxPyDrawTextList(wxDC& dc, PyObject* textList, PyObject* pyPoints, PyO
         if (i < numBackground) {
             // Use a new background ?
             if ( isFastBackground ) {
+#ifndef Py_LIMITED_API
                 obj = PySequence_Fast_GET_ITEM(backgroundList, i);
+#endif
             }
             else {
                 obj = PySequence_GetItem(backgroundList, i);
@@ -307,7 +331,9 @@ PyObject* wxPyDrawTextList(wxDC& dc, PyObject* textList, PyObject* pyPoints, PyO
 
         // Get the point coordinates
         if (isFastSeq) {
+#ifndef Py_LIMITED_API
             obj = PySequence_Fast_GET_ITEM(pyPoints, i);
+#endif
         }
         else {
             obj = PySequence_GetItem(pyPoints, i);
@@ -364,9 +390,9 @@ bool wxPointFromObjects(PyObject* o1, PyObject* o2, wxPoint* point)
 {
     // get the x value
     if (wxPyInt_Check(o1))
-        point->x = (int)wxPyInt_AS_LONG(o1);
+        point->x = (int)wxPyInt_AsLong(o1);
     else if (PyFloat_Check(o1))
-        point->x = (int)PyFloat_AS_DOUBLE(o1);
+        point->x = (int)PyFloat_AsDouble(o1);
     else if (PyNumber_Check(o1))
         point->x = (int)wxPyInt_AsLong(o1);
     else
@@ -374,9 +400,9 @@ bool wxPointFromObjects(PyObject* o1, PyObject* o2, wxPoint* point)
 
     // get the y value
     if (wxPyInt_Check(o2))
-        point->y = (int)wxPyInt_AS_LONG(o2);
+        point->y = (int)wxPyInt_AsLong(o2);
     else if (PyFloat_Check(o2))
-        point->y = (int)PyFloat_AS_DOUBLE(o2);
+        point->y = (int)PyFloat_AsDouble(o2);
     else if (PyNumber_Check(o2))
         point->y = (int)wxPyInt_AsLong(o2);
     else
@@ -391,8 +417,11 @@ wxPoint* wxPoint_LIST_helper(PyObject* source, int *count)
     int idx;
     wxPoint* temp;
     PyObject *o, *o1, *o2;
+#ifndef Py_LIMITED_API
     bool isFast = PyList_Check(source) || PyTuple_Check(source);
-
+#else
+    bool isFast = false;
+#endif
     if (!PySequence_Check(source)) {
         goto error0;
     }
@@ -411,7 +440,9 @@ wxPoint* wxPoint_LIST_helper(PyObject* source, int *count)
     for (idx=0; idx<*count; idx++) {
         // Get an item: try fast way first.
         if (isFast) {
+#ifndef Py_LIMITED_API
             o = PySequence_Fast_GET_ITEM(source, idx);
+#endif
         }
         else {
             o = PySequence_GetItem(source, idx);
@@ -421,10 +452,10 @@ wxPoint* wxPoint_LIST_helper(PyObject* source, int *count)
         }
 
         // Convert o to wxPoint.
-        if ((PyTuple_Check(o) && PyTuple_GET_SIZE(o) == 2) ||
-            (PyList_Check(o) && PyList_GET_SIZE(o) == 2)) {
-            o1 = PySequence_Fast_GET_ITEM(o, 0);
-            o2 = PySequence_Fast_GET_ITEM(o, 1);
+        if ((PyTuple_Check(o) && PyTuple_Size(o) == 2) ||
+            (PyList_Check(o) && PyList_Size(o) == 2)) {
+            o1 = PySequence_GetItem(o, 0);
+            o2 = PySequence_GetItem(o, 1);
             if (!wxPointFromObjects(o1, o2, &temp[idx])) {
                 goto error2;
             }

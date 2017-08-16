@@ -111,6 +111,7 @@ class Configuration(object):
 
         self.includes = [phoenixDir() + '/sip/siplib',  # to get our version of sip.h
                          phoenixDir() + '/src',         # for any hand-written headers
+                         phoenixDir() + '/wxpy_api',    # for our internal API module
                          ]
 
         self.DOXY_XML_DIR = os.path.join(self.WXDIR, 'docs/doxygen/out/xml')
@@ -541,7 +542,6 @@ class Configuration(object):
         return newCFLAGS
 
 
-
     def adjustLFLAGS(self, lflags, libdirs, libs):
         """
         Extract the -L and -l flags from lflags and put them in libdirs and
@@ -556,6 +556,20 @@ class Configuration(object):
             else:
                 newLFLAGS.append(flag)
         return newLFLAGS
+
+
+    def set_limited_api(self, use_limited_api):
+        """
+        Add a define for Py_LIMITED_API if the option is enabled
+        """
+        name = 'Py_LIMITED_API'
+        version = '0x03040000'
+        if use_limited_api:
+            # not sure yet where it needs to go, so put it everywhere ;-)
+            self.defines.append( (name, version) )
+            self.wafDefines.append('{}={}'.format(name, version))
+            # and return it too
+            return '-D{}={}'.format(name, version)
 
 
 

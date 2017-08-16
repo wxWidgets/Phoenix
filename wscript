@@ -37,6 +37,8 @@ def options(opt):
                    help='Turn on debug compile options.')
     opt.add_option('--python', dest='python', default='', action='store',
                    help='Full path to the Python executable to use.')
+    opt.add_option('--py_limited_api', dest='py_limited_api', default='', action='store',
+                   help='Turn on Py_LIMITED_API for multi-python version builds.')
     opt.add_option('--wx_config', dest='wx_config', default='wx-config', action='store',
                    help='Full path to the wx-config script to be used for this build.')
     opt.add_option('--no_magic', dest='no_magic', action='store_true', default=False,
@@ -94,12 +96,13 @@ def configure(conf):
     conf.env.msvc_relwithdebug = conf.options.msvc_relwithdebug
 
     # Ensure that the headers in siplib and Phoenix's src dir can be found
-    conf.env.INCLUDES_WXPY = ['sip/siplib', 'src']
+    conf.env.INCLUDES_WXPY = ['sip/siplib', 'src', 'wxpy_api']
 
     if isWindows:
         # Windows/MSVC specific stuff
 
         cfg.finishSetup(debug=conf.env.debug)
+        cfg.set_limited_api(conf.options.py_limited_api)
 
         conf.env.INCLUDES_WX = cfg.includes
         conf.env.DEFINES_WX = cfg.wafDefines
@@ -180,6 +183,10 @@ def configure(conf):
         conf.env.wx_config = conf.options.wx_config
         cfg.finishSetup(conf.env.wx_config, conf.env.debug)
 
+        pla_flag = cfg.set_limited_api(conf.options.py_limited_api)
+        conf.env.CFLAGS_WXPY.append(pla_flag)
+        conf.env.CXXFLAGS_WXPY.append(pla_flag)
+
         # Check wx-config exists and fetch some values from it
         rpath = ' --no-rpath' if not conf.options.no_magic else ''
         conf.check_cfg(path=conf.options.wx_config, package='',
@@ -187,7 +194,7 @@ def configure(conf):
                        uselib_store='WX', mandatory=True)
 
         # Run it again with different libs options to get different
-        # sets of flags stored to use with varous extension modules below.
+        # sets of flags stored to use with various extension modules below.
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs adv,core,net' + rpath,
                        uselib_store='WXADV', mandatory=True)
@@ -472,6 +479,9 @@ def build(bld):
 
     cfg.finishSetup(bld.env.wx_config)
 
+    # Is this needed here or is the flag remembered from the configure step?
+    # cfg.set_limited_api(conf.options.py_limited_api)
+
     # Copy the license files from wxWidgets
     updateLicenseFiles(cfg)
 
@@ -499,23 +509,24 @@ def build(bld):
 
 
     # Create the build tasks for each of our extension modules.
-    addRelwithdebugFlags(bld, 'siplib')
-    siplib = bld(
-        features = 'c cxx cshlib cxxshlib pyext',
-        target   = makeTargetName(bld, 'siplib'),
-        source   = ['sip/siplib/apiversions.c',
-                    'sip/siplib/array.c',
-                    'sip/siplib/bool.cpp',
-                    'sip/siplib/descriptors.c',
-                    'sip/siplib/objmap.c',
-                    'sip/siplib/qtlib.c',
-                    'sip/siplib/siplib.c',
-                    'sip/siplib/threads.c',
-                    'sip/siplib/voidptr.c',
-                    ],
-        uselib   = 'siplib WX WXPY',
-    )
-    makeExtCopyRule(bld, 'siplib')
+
+    # addRelwithdebugFlags(bld, 'siplib')
+    # siplib = bld(
+    #     features = 'c cxx cshlib cxxshlib pyext',
+    #     target   = makeTargetName(bld, 'siplib'),
+    #     source   = ['sip/siplib/apiversions.c',
+    #                 'sip/siplib/array.c',
+    #                 'sip/siplib/bool.cpp',
+    #                 'sip/siplib/descriptors.c',
+    #                 'sip/siplib/objmap.c',
+    #                 'sip/siplib/qtlib.c',
+    #                 'sip/siplib/siplib.c',
+    #                 'sip/siplib/threads.c',
+    #                 'sip/siplib/voidptr.c',
+    #                 ],
+    #     uselib   = 'siplib WX WXPY',
+    # )
+    # makeExtCopyRule(bld, 'siplib')
 
     # Add build rules for each of our ETG generated extension modules
     makeETGRule(bld, 'etg/_core.py',       '_core',      'WX')

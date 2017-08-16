@@ -5,7 +5,7 @@ static PyObject* wxPyGetMethod(PyObject* py, char* name)
     if (!PyObject_HasAttrString(py, name))
         return NULL;
     PyObject* o = PyObject_GetAttrString(py, name);
-    if (!PyMethod_Check(o) && !PyCFunction_Check(o)) {
+    if (!wxPyMethod_Check(o) && !PyCFunction_Check(o)) {
         Py_DECREF(o);
         return NULL;
     }
@@ -116,11 +116,11 @@ protected:
 
         if (sizeof(wxFileOffset) > sizeof(long))
             // wxFileOffset is a 64-bit value...
-            PyTuple_SET_ITEM(arglist, 0, PyLong_FromLongLong(off));
+            PyTuple_SetItem(arglist, 0, PyLong_FromLongLong(off));
         else
-            PyTuple_SET_ITEM(arglist, 0, wxPyInt_FromLong(off));
+            PyTuple_SetItem(arglist, 0, wxPyInt_FromLong(off));
 
-        PyTuple_SET_ITEM(arglist, 1, wxPyInt_FromLong(mode));
+        PyTuple_SetItem(arglist, 1, wxPyInt_FromLong(mode));
 
 
         PyObject* result = PyEval_CallObject(m_seek, arglist);

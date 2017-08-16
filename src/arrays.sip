@@ -64,7 +64,7 @@
             }
             PyErr_Clear();
             wxString string;
-            size_t len = PyUnicode_GET_SIZE(item);
+            size_t len = PyUnicode_GetSize(item);
             if (len) {
                 wxPyUnicode_AsWideChar(item, wxStringBuffer(string, len), len);
             }
@@ -224,7 +224,7 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
                 Py_DECREF(item);
                 return 0;
             }
-            array->Add(PyFloat_AS_DOUBLE(number));
+            array->Add(PyFloat_AsDouble(number));
             Py_DECREF(item);
             Py_DECREF(number);
         }

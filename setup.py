@@ -90,6 +90,7 @@ Topic :: Software Development :: User Interfaces
 """
 
 DEPENDENCIES = [ 'six',
+                 'sip==4.19.2'
                  ]
 
 isWindows = sys.platform.startswith('win')

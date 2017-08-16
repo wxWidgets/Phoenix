@@ -250,13 +250,13 @@ def run():
         else if (wxPyNumberSequenceCheck(sipPy)) {
             size_t len = PySequence_Size(sipPy);
 
-            PyObject* o1 = PySequence_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_ITEM(sipPy, 1);
-            PyObject* o3 = PySequence_ITEM(sipPy, 2);
+            PyObject* o1 = PySequence_GetItem(sipPy, 0);
+            PyObject* o2 = PySequence_GetItem(sipPy, 1);
+            PyObject* o3 = PySequence_GetItem(sipPy, 2);
             if (len == 3)
                 *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3));
             else {
-                PyObject* o4 = PySequence_ITEM(sipPy, 3);
+                PyObject* o4 = PySequence_GetItem(sipPy, 3);
                 *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3),
                                           wxPyInt_AsLong(o4));
                 Py_DECREF(o4);            

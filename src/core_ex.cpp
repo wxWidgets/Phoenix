@@ -112,9 +112,10 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 
 
     // Create an exception object to use when the app object hasn't been created yet
-    wxPyNoAppError = PyErr_NewException("wx._core.PyNoAppError",
-                                        PyExc_RuntimeError, NULL);
-    PyDict_SetItemString(moduleDict, "PyNoAppError", wxPyNoAppError);
+    // TODO
+    //wxPyNoAppError = PyErr_NewException("wx._core.PyNoAppError",
+    //                                    PyExc_RuntimeError, NULL);
+    //PyDict_SetItemString(moduleDict, "PyNoAppError", wxPyNoAppError);
 
 #ifdef __WXGTK__
 #define wxPort "__WXGTK__"

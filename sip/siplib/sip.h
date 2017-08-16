@@ -250,7 +250,7 @@ extern "C" {
 
 
 /* The name of the sip module. */
-#define SIP_MODULE_NAME     "wx.siplib"
+#define SIP_MODULE_NAME     "sip"
 
 
 /*

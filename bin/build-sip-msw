@@ -22,9 +22,7 @@ MYBINDIR=$(dirname $(readlink -f $0))
 cd /c/projects/sip/sip
 SIPVER=$($PYTHON -c "import sys,configure; sys.stdout.write(configure.sip_version_str);")
 
-$PYTHON configure.py \
-    --sip-module wx.siplib \
-    $*
+$PYTHON configure.py $*
 
 cd sipgen
 nmake clean all

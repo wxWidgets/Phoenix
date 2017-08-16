@@ -23,7 +23,7 @@
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
-            if (PyObject_CheckBuffer(sipPy)              // New buffer interface
+            if (wxPyObject_CheckBuffer(sipPy)            // New buffer interface
                 || PyObject_CheckReadBuffer(sipPy))      // or old buffer interface
                 return TRUE;
             return FALSE;
@@ -58,7 +58,7 @@
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
-            if (PyObject_CheckBuffer(sipPy))
+            if (wxPyObject_CheckBuffer(sipPy))
                 return TRUE;
             return FALSE;
         }

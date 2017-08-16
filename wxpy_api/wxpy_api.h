@@ -3,7 +3,7 @@
 // Purpose:     Some utility functions and such that can be used in other
 //              snippets of C++ code to help reduce complexity, etc.  They
 //              are all either macros, inline functions, or functions that
-//              are exported from the core extension module.
+//              are exported from the wxpy_api extension module.
 //
 // Author:      Robin Dunn
 //
@@ -166,11 +166,12 @@ struct wxPyAPI {
     void*         (*p_wxPyGetCppPtr)(sipSimpleWrapper* sipPyObj);
     PyObject*     (*p_wxPyMethod_Self)(PyObject* method);
     void          (*p_wxPyReinitializeModules)();
-
     int           (*p_wxPyDateTime_Check)(PyObject *obj);
     int           (*p_wxPyDate_Check)(PyObject *obj);
     wxDateTime*   (*p_wxPyDateTime_ToWxDateTime)(PyObject *obj);
     wxDateTime*   (*p_wxPyDate_ToWxDateTime)(PyObject *obj);
+    bool          (*p_wxPyMethod_Check)(PyObject *obj);
+    int           (*p_wxPyObject_CheckBuffer)(PyObject* obj);
     // Always add new items here at the end.
 };
 
@@ -274,7 +275,7 @@ inline void wxPyReinitializeModules()
     { return wxPyGetAPIPtr()->p_wxPyReinitializeModules(); }
 
 
-
+// Datetime
 inline int wxPyDateTime_Check(PyObject *obj)
     { return wxPyGetAPIPtr()->p_wxPyDateTime_Check(obj); }
 
@@ -286,6 +287,15 @@ inline wxDateTime* wxPyDateTime_ToWxDateTime(PyObject *obj)
 
 inline wxDateTime* wxPyDate_ToWxDateTime(PyObject *obj)
     { return wxPyGetAPIPtr()->p_wxPyDate_ToWxDateTime(obj); }
+
+
+
+inline bool wxPyMethod_Check(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyMethod_Check(obj); }
+
+inline int wxPyObject_CheckBuffer(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyObject_CheckBuffer(obj); }
+
 
 
 //--------------------------------------------------------------------------
