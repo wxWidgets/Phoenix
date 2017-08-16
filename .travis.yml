@@ -66,6 +66,9 @@ addons:
     - freeglut3
     - freeglut3-dev
     - libnotify-dev
+    - libsm-dev
+    - libgtk-3-dev
+    - libwebkitgtk-3.0-dev
 
 
 install:

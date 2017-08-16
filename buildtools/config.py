@@ -50,7 +50,7 @@ class Configuration(object):
     # wx-config command will be assembled based on version, port,
     # etc. and it will be looked for on the default $PATH.
 
-    WXPORT = 'gtk2'
+    WXPORT = 'gtk3'
     # On Linux/Unix there are several ports of wxWidgets available.
     # Setting this value lets you select which will be used for the
     # wxPython build.  Possibilities are 'gtk', 'gtk2', 'gtk3' and 'x11'.
@@ -351,6 +351,8 @@ class Configuration(object):
     def parseCmdLine(self):
         self.debug = '--debug' in sys.argv or '-g' in sys.argv
 
+        if '--gtk2' in sys.argv:
+            self.WXPORT = 'gtk2'
         if '--gtk3' in sys.argv:
             self.WXPORT = 'gtk3'
 
