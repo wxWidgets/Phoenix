@@ -5210,7 +5210,7 @@ bug.  Okay so I have to confess that it was just a DSM (Dumb Stupid
 Mistake) on my part but it was nasty none the less because the
 behavior was so different on different platforms.
 
-The dynamicly loaded module on Solaris is still segfaulting, so it
+The dynamically loaded module on Solaris is still segfaulting, so it
 must have been a different issue all along...
 
 
@@ -5221,14 +5221,14 @@ What's New in 0.4
 
 1. Worked on wxGTK compatibility.  It is partially working.  On a
 Solaris/Sparc box wxPython is working but only when it is statically
-linked with the Python interpreter.  When built as a dyamically loaded
+linked with the Python interpreter.  When built as a dynamically loaded
 extension module, things start acting weirdly and it soon seg-faults.
 And on Linux both the statically linked and the dynamically linked
 version segfault shortly after starting up.
 
 2. Added Toolbar, StatusBar and SplitterWindow classes.
 
-3. Varioius bug fixes, enhancements, etc.
+3. Various bug fixes, enhancements, etc.
 
 
 
@@ -5237,8 +5237,7 @@ wxPython 0.3
 ------------
 * 9-Aug-1998
 
-The first "modern" version of wxPython.  See
-http://wiki.wxpython.org/index.cgi/WxPythonHistory
+The first "modern" version of wxPython.  See https://wxpython.org/pages/history/
 
 
 .. -*- coding: utf-8 -*-
