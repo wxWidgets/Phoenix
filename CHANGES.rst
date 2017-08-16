@@ -36,6 +36,8 @@ Changes in this release include the following:
 * Fixes to ensure that the locale message catalogs are included in the
   release files. (#464)
 
+* Fix wx.ListCtrl.SetItemData to check that the data value is not out of
+  the range of a C long. (#467)
 
 
 

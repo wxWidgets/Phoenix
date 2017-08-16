@@ -138,6 +138,16 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 
     PyDict_SetItemString(moduleDict, "wxWidgets_version", wx2PyString(wxVERSION_STRING));
 
+    PyDict_SetItemString(moduleDict, "_sizeof_int", PyLong_FromLong(sizeof(int)));
+    PyDict_SetItemString(moduleDict, "_sizeof_long", PyLong_FromLong(sizeof(long)));
+    PyDict_SetItemString(moduleDict, "_sizeof_longlong", PyLong_FromLong(sizeof(long long)));
+    PyDict_SetItemString(moduleDict, "_sizeof_double", PyLong_FromLong(sizeof(double)));
+    PyDict_SetItemString(moduleDict, "_sizeof_size_t", PyLong_FromLong(sizeof(size_t)));
+    PyDict_SetItemString(moduleDict, "_LONG_MIN", PyLong_FromLong(LONG_MIN));
+    PyDict_SetItemString(moduleDict, "_LONG_MAX", PyLong_FromLong(LONG_MAX));
+    PyDict_SetItemString(moduleDict, "_LLONG_MIN", PyLong_FromLongLong(PY_LLONG_MIN));
+    PyDict_SetItemString(moduleDict, "_LLONG_MAX", PyLong_FromLongLong(PY_LLONG_MAX));
+
     // Make a tuple of strings that gives more info about the platform and build.
     PyObject* PlatformInfo = PyList_New(0);
     PyObject* obj;

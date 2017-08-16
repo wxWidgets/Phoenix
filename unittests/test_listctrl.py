@@ -172,7 +172,26 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.LIST_FIND_RIGHT
 
 
+    def _makeListCtrl(self):
+        lc = wx.ListCtrl(self.frame, style=wx.LC_REPORT)
+        lc.AppendColumn('AAAA')
+        lc.AppendColumn('BBBB')
+        lc.InsertItem(0, 'item 1A')
+        lc.SetItem(0, 1, 'item 1B')
+        return lc
 
+
+    def test_listctrlItemData01(self):
+        lc = self._makeListCtrl()
+        lc.SetItemData(0, 12345)
+        data = lc.GetItemData(0)
+        assert data == 12345
+
+
+    def test_listctrlItemData02(self):
+        lc = self._makeListCtrl()
+        with self.assertRaises(OverflowError):
+            lc.SetItemData(0, wx._core._LONG_MAX + 100)
 
 
 #---------------------------------------------------------------------------
