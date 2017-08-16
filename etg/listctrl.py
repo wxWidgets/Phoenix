@@ -98,6 +98,10 @@ def run():
                                (wxIntPtr)fnSortCallBack);
     """)
 
+    # SetItemData takes a long, so lets return that type from GetItemData too,
+    # instead of a wxUIntPtr.
+    c.find('GetItemData').type = 'long'
+
     # Change the semantics of GetColumn to return the item as the return
     # value instead of through a prameter.
     # bool GetColumn(int col, wxListItem& item) const;
