@@ -272,11 +272,12 @@ def main(wxDir, args):
         if options.gtk2:
             options.gtk3 = False
 
-        if options.gtk3:
-            configure_opts.append("--with-gtk=3")
+        if not sys.platform.startswith("darwin"):
+            if options.gtk3:
+                configure_opts.append("--with-gtk=3")
 
-        if options.gtk2:
-            configure_opts.append("--with-gtk=2")
+            if options.gtk2:
+                configure_opts.append("--with-gtk=2")
 
         wxpy_configure_opts = [
                             "--with-opengl",

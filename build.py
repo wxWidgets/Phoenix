@@ -1244,6 +1244,12 @@ def cmd_build_wx(options, args):
         if options.mac_framework and isDarwin:
             build_options.append("--mac_framework")
 
+        if not isDarwin:
+            if options.gtk2:
+                build_options.append('--gtk2')
+            if options.gtk3:
+                build_options.append('--gtk3')
+
         # Change to what will be the wxWidgets build folder
         # (Note, this needs to be after any testing for file/path existance, etc.
         # because they may be specified as relative paths.)
@@ -1255,10 +1261,6 @@ def cmd_build_wx(options, args):
     if options.extra_make:
         build_options.append('--extra_make="%s"' % options.extra_make)
 
-    if options.gtk2:
-        build_options.append('--gtk2')
-    if options.gtk3:
-        build_options.append('--gtk3')
 
     try:
         # Import and run the wxWidgets build script
