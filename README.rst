@@ -338,19 +338,29 @@ Extrapolate accordingly for other linux distributions or other unixes.
 
 * dpkg-dev
 * build-essential
-* python2.7-dev     # use appropriate Python version
-* libwebkitgtk-dev
+* python2.7-dev     # use appropriate Python version here
 * libjpeg-dev
 * libtiff-dev
-* libgtk2.0-dev
 * libsdl1.2-dev
 * libgstreamer-plugins-base0.10-dev
 * libnotify-dev
 * freeglut3
 * freeglut3-dev
+* libsm-dev
+* libgtk2.0-dev
+* libwebkitgtk-dev
+
+If you are building for GTK3 then you'll also need these packages and
+their dependencies:
+
+* libgtk-3-dev
+* libwebkitgtk-3.0-dev
 
 If your Linux distribution has gstreamer 1.0 available then you can install
-the dev packages for that instead of the 0.10 version.
+the dev packages for that instead of the 0.10 version. For example:
+
+* libgstreamer-plugins-base1.0-dev
+
 
 **Mac OSX**
 
