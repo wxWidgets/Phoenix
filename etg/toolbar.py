@@ -91,7 +91,6 @@ def run():
             except ExtractorError:
                 pass
 
-
     c.find('OnLeftClick').ignore()
     c.find('OnMouseEnter').ignore()
     c.find('OnRightClick').ignore()
