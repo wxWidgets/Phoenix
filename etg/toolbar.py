@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools.extractors import ExtractorError
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -79,6 +80,16 @@ def run():
 
     c.find('AddTool.tool').transfer = True
     c.find('InsertTool.tool').transfer = True
+
+    # Conform the help text parameters.
+    m = c.find('AddTool')
+    for method in m.all():
+        for helper in ('shortHelp', 'longHelp'):
+            try:
+                param = method.find("{}String".format(helper))
+                param.name = helper
+            except ExtractorError:
+                pass
 
     c.find('OnLeftClick').ignore()
     c.find('OnMouseEnter').ignore()
