@@ -51,8 +51,8 @@ def run():
     scrolled.find('GetScrollPixelsPerUnit.xUnit').out = True
     scrolled.find('GetScrollPixelsPerUnit.yUnit').out = True
 
-    scrolled.find('GetVirtualSize.x').out = True
-    scrolled.find('GetVirtualSize.y').out = True
+    # Just ignore this one and let the already tweaked versions be inherited from wx.Window.
+    scrolled.find('GetVirtualSize').ignore()
 
     scrolled.addPrivateCopyCtor()
     scrolled.addPrivateAssignOp()
