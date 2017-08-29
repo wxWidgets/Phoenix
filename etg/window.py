@@ -63,7 +63,7 @@ def run():
     # We now return you to our regularly scheduled programming...
     c.includeCppCode('src/window_ex.cpp')
 
-    # ignore some overloads that will be ambiguous afer wrapping
+    # ignore some overloads that will be ambiguous after wrapping
     c.find('GetChildren').overloads = []
     c.find('GetChildren').noCopy = True
     for name in ['GetVirtualSize',
