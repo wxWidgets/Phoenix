@@ -132,6 +132,7 @@ def addBaseVirtuals(c):
         private:
         virtual size_t GetDataSize(const wxDataFormat& format) const;
         virtual bool   GetDataHere(const wxDataFormat& format, void* buf) const;
+        public:
         """))
 
 

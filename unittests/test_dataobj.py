@@ -254,6 +254,7 @@ class DataObjTests(wtc.WidgetTestCase):
         data1 = list(range(10))
         obj = wx.CustomDataObject('my custom format')
         obj.SetData(pickle.dumps(data1))
+        assert obj.GetDataSize() > 0
         data2 = pickle.loads(obj.GetData().tobytes())
         self.assertEqual(data1, data2)
 
