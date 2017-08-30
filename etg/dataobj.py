@@ -376,8 +376,13 @@ def run():
     c.bases = ['wxDataObject']
 
     addGetAllFormats(c)
-    addBaseVirtuals(c)
-    addSimpleVirtuals(c)
+
+    # It also causes mismatches regarding what virtuals are available
+    # in the base classes. For now just ignore them for this class, if
+    # they are needed then something more creative will need to be
+    # done.
+    #addBaseVirtuals(c)
+    #addSimpleVirtuals(c)
 
 
     #------------------------------------------------------------
