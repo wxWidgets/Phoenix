@@ -132,6 +132,7 @@ def addBaseVirtuals(c):
         private:
         virtual size_t GetDataSize(const wxDataFormat& format) const;
         virtual bool   GetDataHere(const wxDataFormat& format, void* buf) const;
+        public:
         """))
 
 
@@ -376,7 +377,12 @@ def run():
 
     addGetAllFormats(c)
     addBaseVirtuals(c)
-    addSimpleVirtuals(c)
+
+    # It also causes mismatches regarding what virtuals are available
+    # in the base classes. For now just ignore them for this class. If
+    # they really are needed then something more creative will need to
+    # be done.
+    #addSimpleVirtuals(c)
 
 
     #------------------------------------------------------------
