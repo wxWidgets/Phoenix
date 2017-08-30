@@ -47,6 +47,19 @@ Changes in this release include the following:
   and there is currently no way to specify that flag for builds performed by
   pip. (#431)
 
+* Fix parameter names in Toolbar.AddTool methods to be consistent. (#475)
+
+* Remove inconsistent GetVirtualSize method in ScrolledWindow and let it be
+  inherited from wx.Window instead. (#474)
+
+* Fix crashing bug caused by importing a module that reinitializes the
+  wxModule system after having imported wxpyTag. (#468)
+
+* Fix missing methods in various DataObject classes. (They were actually
+  accidentally marked "private" when they should have been public.) (#480)
+
+* Add missing ListCtrl.DeleteAllColumns. (#486)
+
 
 
 
