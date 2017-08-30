@@ -194,6 +194,11 @@ class listctrl_Tests(wtc.WidgetTestCase):
             lc.SetItemData(0, wx._core._LONG_MAX + 100)
 
 
+    def test_listctrlDeleteAllColumns(self):
+        lc = self._makeListCtrl()
+        lc.DeleteAllColumns()
+
+
 #---------------------------------------------------------------------------
 
 
