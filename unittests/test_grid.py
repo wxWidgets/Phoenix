@@ -316,10 +316,10 @@ class grid_Tests(wtc.WidgetTestCase):
 
     def test_grid42(self):
         # old names
-        wx.grid.Grid.GridSelectCells
-        wx.grid.Grid.GridSelectRows
-        wx.grid.Grid.GridSelectColumns
-        wx.grid.Grid.GridSelectRowsOrColumns
+        wx.grid.Grid.wxGridSelectCells
+        wx.grid.Grid.wxGridSelectRows
+        wx.grid.Grid.wxGridSelectColumns
+        wx.grid.Grid.wxGridSelectRowsOrColumns
 
 
     def test_grid43(self):
