@@ -333,6 +333,7 @@ class BufferedWindow(wx.Window):
             # platforms at initialization, but little harm done.
             self.doSetWindowCreated(None)
 
+
     def doSetWindowCreated(self, evt):
         """
         Method to call OnSize on GTK when window is created.
@@ -340,13 +341,13 @@ class BufferedWindow(wx.Window):
         self._isWindowCreated = True
         self.OnSize(None)
 
+
     def Draw(self, dc):
         """
         This method should be overridden when sub-classed.
 
         :param `dc`: an instance of :class:`wx.DC`.
         """
-
         pass
 
 
@@ -522,6 +523,13 @@ class SpeedMeter(BufferedWindow):
         self.SetHandStyle()
         self.DrawExternalArc()
 
+        # If no initial size is set then use (1,1) instead of the (20,20) that
+        # wxWindow will default to. This is so we don't set the initial
+        # self.scale based on (20,20) but will instead wait until the initial
+        # size is set by the sizer. See Draw() implementation below.
+        if size == wx.DefaultSize:
+            size = wx.Size(1,1)
+
         BufferedWindow.__init__(self, parent, id, pos, size,
                                 style=wx.NO_FULL_REPAINT_ON_RESIZE,
                                 bufferedstyle=bufferedstyle)
@@ -567,6 +575,7 @@ class SpeedMeter(BufferedWindow):
         # Get The Radius Of The Sector. Set It A Bit Smaller To Correct Draw After
         radius = min(centerX, centerY) - 2
 
+        self.Radius = radius
         self.Radius = radius
 
         # Get The Angle Of Existance Of The Sector

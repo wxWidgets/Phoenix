@@ -371,7 +371,7 @@ class SpeedMeterDemo(wx.Panel):
         bsizer1 = wx.BoxSizer(wx.VERTICAL)
 
         hsizer1 = wx.BoxSizer(wx.HORIZONTAL)
-        slider = wx.Slider(panel1, -1, 44, 0, 200, size=(-1, 40),
+        slider = wx.Slider(panel1, -1, 44, 0, 200,
                            style=wx.SL_HORIZONTAL | wx.SL_AUTOTICKS | wx.SL_LABELS )
         slider.SetTickFreq(5)
         slider.Bind(wx.EVT_SCROLL, self.OnSliderScroll)
