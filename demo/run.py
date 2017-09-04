@@ -152,6 +152,9 @@ def main(argv):
     demoFolder = os.path.realpath(os.path.dirname(__file__))
     os.chdir(demoFolder)
 
+    sys.path.insert(0, os.path.join(demoFolder, 'agw'))
+    sys.path.insert(0, '.')
+
     name, ext  = os.path.splitext(argv[1])
     module = __import__(name)
 
