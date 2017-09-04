@@ -60,18 +60,11 @@ class TestPanel(wx.Panel):
         self.SetAutoLayout(True)
 
 
-    def __del__(self):
-        if self.process is not None:
-            self.process.Detach()
-            self.process.CloseOutput()
-            self.process = None
-
-
     def OnExecuteBtn(self, evt):
         cmd = self.cmd.GetValue()
 
         self.process = wx.Process(self)
-        self.process.Redirect();
+        self.process.Redirect()
         pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
         self.log.write('OnExecuteBtn: "%s" pid: %s\n' % (cmd, pid))
 
@@ -124,6 +117,17 @@ class TestPanel(wx.Panel):
         self.termBtn.Enable(False)
         self.cmd.Enable(True)
         self.exBtn.Enable(True)
+
+
+    def ShutdownDemo(self):
+        # Called when the demo application is switching to a new sample. Tell
+        # the process to close (by closign its output stream) and then wait
+        # for the termination signals to be received and processed.
+        if self.process is not None:
+            self.process.CloseOutput()
+            wx.MilliSleep(250)
+            wx.Yield()
+            self.process = None
 
 
 #----------------------------------------------------------------------
