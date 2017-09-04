@@ -60,6 +60,10 @@ Changes in this release include the following:
 
 * Add missing ListCtrl.DeleteAllColumns. (#486)
 
+* Various fixes in the demo.
+
+* Fixed improper initial scale factor in wx.lib.agw.speedmeter
+
 
 
 
