@@ -398,7 +398,7 @@ class BufferedWindow(wx.Window):
 
         if self._bufferedstyle == SM_BUFFERED_DC:
             dc = wx.BufferedDC(wx.ClientDC(self), self._Buffer)
-            if not 'wxMac' in wx.PlatformInfo:
+            if 'wxMSW' in wx.PlatformInfo:
                 dc = wx.GCDC(dc)
             self.Draw(dc)
         else:
@@ -406,7 +406,7 @@ class BufferedWindow(wx.Window):
             dc = wx.MemoryDC()
             dc.SelectObject(self._Buffer)
 
-            if not 'wxMac' in wx.PlatformInfo:
+            if 'wxMSW' in wx.PlatformInfo:
                 dc = wx.GCDC(dc)
             self.Draw(dc)
             # update the screen
