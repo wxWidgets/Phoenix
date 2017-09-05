@@ -318,24 +318,25 @@ def fixSizerClass(klass):
         klass.find('RecalcSizes').isPureVirtual = True
 
 
-def fixBookctrlClass(klass, treeBook=False):
+def fixBookctrlClass(klass):
     """
     Add declarations of the pure virtual methods from the base class.
     """
-    klass.addItem(extractors.WigCode("""\
-        virtual int GetPageImage(size_t nPage) const;
-        virtual bool SetPageImage(size_t page, int image);
-        virtual wxString GetPageText(size_t nPage) const;
-        virtual bool SetPageText(size_t page, const wxString& text);
-        virtual int SetSelection(size_t page);
-        virtual int ChangeSelection(size_t page);
-        """))
-    if not treeBook:
-        klass.addItem(extractors.WigCode("""\
-        virtual int GetSelection() const;
-        virtual bool InsertPage(size_t index, wxWindow * page, const wxString & text,
-                                bool select = false, int imageId = NO_IMAGE);
-        """))
+    methods = [
+        ("GetPageImage", "virtual int GetPageImage(size_t nPage) const;"),
+        ("SetPageImage", "virtual bool SetPageImage(size_t page, int image);"),
+        ("GetPageText", "virtual wxString GetPageText(size_t nPage) const;"),
+        ("SetPageText", "virtual bool SetPageText(size_t page, const wxString& text);"),
+        ("GetSelection", "virtual int GetSelection() const;"),
+        ("SetSelection", "virtual int SetSelection(size_t page);"),
+        ("ChangeSelection", "virtual int ChangeSelection(size_t page);"),
+        ("HitTest", "virtual int HitTest(const wxPoint& pt, long* flags /Out/ = NULL) const;"),
+        ("InsertPage", "virtual bool InsertPage(size_t index, wxWindow * page, const wxString & text, bool select = false, int imageId = NO_IMAGE);"),
+        ]
+
+    for name, decl in methods:
+        if not klass.findItem(name):
+            klass.addItem(extractors.WigCode(decl))
 
 
 def fixHtmlSetFonts(klass):

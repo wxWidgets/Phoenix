@@ -20,11 +20,11 @@ Changes in this release include the following:
 
 * Added a deprecated compatibility helper for wx.CustomDataFormat.
 
-* Transfer ownership of the wx.EvtHandler when pushing/popping them, and also
-  for Set/RemoveEventHandler. (#443)
+* Transfer ownership of the wx.EvtHandler object when pushing/popping
+  them, and also for Set/RemoveEventHandler. (#443)
 
-* Add missing wx.VScrolledWindow methods listed in the docs as deprecated but
-  still present. (#441)
+* Add missing wx.VScrolledWindow methods listed in the docs as deprecated
+  but still present. (#441)
 
 * Fixed copy/paste error in wx.BusyInfo.__exit__ (#449)
 
@@ -39,13 +39,14 @@ Changes in this release include the following:
 * Fix wx.ListCtrl.SetItemData to check that the data value is not out of
   the range of a C long. (#467)
 
-* Changed the default port on *nix builds to be GTK3. The new ``--gtk2`` flag
-  can be used to force a build for GTK2 instead, and the ``--gtk3`` flag still
-  exists, but defaults to True unless ``--gtk2`` is specified. Please note that
-  there is currently no auto-detection of whether GTK3 is available or not, so
-  if you know you need to build for GTK2 then you need to use the build flag,
-  and there is currently no way to specify that flag for builds performed by
-  pip. (#431)
+* Changed the default port on *nix builds to be GTK3. The new ``--gtk2``
+  flag for build.py can be used to force a build for GTK2 instead, and
+  the ``--gtk3`` flag still exists, but defaults to True unless
+  ``--gtk2`` is specified. Please note that there is currently no
+  auto-detection of whether GTK3 is available or not, so if you know
+  you need to build for GTK2 then you need to use the build flag, and
+  there is currently no way to specify that flag for builds performed
+  by pip. (#431)
 
 * Fix parameter names in Toolbar.AddTool methods to be consistent. (#475)
 
@@ -63,6 +64,10 @@ Changes in this release include the following:
 * Various fixes in the demo.
 
 * Fixed improper initial scale factor in wx.lib.agw.speedmeter
+
+* Fix for calls to wx.Notebook.HitTest calling the wrong instance (base class
+  version) of the method. (#499)
+
 
 
 

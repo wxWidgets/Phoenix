@@ -37,12 +37,7 @@ def run():
     c.find('OnSelChange').ignore()
 
     tools.fixWindowClass(c)
-
-
-    # Let SIP know about other virtual methods that may be implemented here
-    c.addItem(etgtools.WigCode("""\
-        virtual bool DeleteAllPages();    
-        """))
+    tools.fixBookctrlClass(c)
 
     module.addGlobalStr('wxNotebookNameStr', c)
 

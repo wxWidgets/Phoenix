@@ -36,7 +36,7 @@ def run():
     c = module.find('wxTreebook')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
-    tools.fixBookctrlClass(c, True)
+    tools.fixBookctrlClass(c)
 
     module.addPyCode("""\
         EVT_TREEBOOK_PAGE_CHANGED = wx.PyEventBinder( wxEVT_TREEBOOK_PAGE_CHANGED, 1 )
