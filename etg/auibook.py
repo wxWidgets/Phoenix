@@ -42,6 +42,7 @@ def run():
     c = module.find('wxAuiNotebook')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
+    tools.fixBookctrlClass(c)
 
     c = module.find('wxAuiTabContainer')
     tools.ignoreConstOverloads(c)
