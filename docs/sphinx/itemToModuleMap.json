@@ -5515,6 +5515,7 @@
 "SimpleHelpProvider":"wx.",
 "SimpleHtmlListBox":"wx.html.",
 "SimpleHtmlListBoxNameStr":"wx.html.",
+"Simplebook":"wx.",
 "SingleChoiceDialog":"wx.",
 "SingleInstanceChecker":"wx.",
 "Size":"wx.",

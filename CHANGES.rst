@@ -68,6 +68,8 @@ Changes in this release include the following:
 * Fix for calls to wx.Notebook.HitTest calling the wrong instance (base class
   version) of the method. (#499)
 
+* Add wx.Simplebook class.
+
 
 
 

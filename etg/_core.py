@@ -178,6 +178,7 @@ INCLUDES = [  # base and core stuff
               'listbook',
               'toolbook',
               'treebook',
+              'simplebook',
               'vlbox',
 
               # toplevel and dialogs

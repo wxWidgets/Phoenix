@@ -45,6 +45,7 @@ _treeList = [
         'ToolTip',
         'TimePickerCtrl',
         'BannerWindow',
+        'Simplebook',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -136,6 +137,7 @@ _treeList = [
         'FlatNotebook',
         'Listbook',
         'Notebook',
+        'Simplebook',
         'Toolbook',
         'Treebook',
     ]),
