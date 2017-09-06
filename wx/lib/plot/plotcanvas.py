@@ -2234,10 +2234,15 @@ class PlotCanvas(wx.Panel):
         # 1.1 used as space between lines
         lineHeight = max(legendSymExt[1], legendTextExt[1]) * 1.1
         dc.SetFont(self._getFont(self._fontSizeLegend))
+
+        from .polyobjects import PolyLine
+        from .polyobjects import PolyMarker
+        from .polyobjects import PolyBoxPlot
+
         for i in range(len(graphics)):
             o = graphics[i]
             s = i * lineHeight
-            if isinstance(o, PolyMarker) or isinstance(o, BoxPlot):
+            if isinstance(o, PolyMarker) or isinstance(o, PolyBoxPlot):
                 # draw marker with legend
                 pnt = (trhc[0] + legendLHS + legendSymExt[0] / 2.,
                        trhc[1] + s + lineHeight / 2.)
