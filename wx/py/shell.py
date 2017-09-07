@@ -755,7 +755,7 @@ class Shell(editwindow.EditWindow):
         #sort lowercase
         def _cmp(a,b):
             return  ((a > b) - (a < b))
-        unlist.sort(lambda a, b: _cmp(a.lower(), b.lower()))
+        unlist.sort(key=lambda a, b: _cmp(a.lower(), b.lower()))
 
         #this is more convenient, isn't it?
         self.AutoCompSetIgnoreCase(True)

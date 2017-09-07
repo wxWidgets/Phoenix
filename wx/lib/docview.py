@@ -2219,7 +2219,7 @@ class DocManager(wx.EvtHandler):
         if sort:
             def tempcmp(a, b):
                 return cmp(a.GetDescription(), b.GetDescription())
-            templates.sort(tempcmp)
+            templates.sort(key=tempcmp)
 
         strings = []
         for temp in templates:
@@ -2259,7 +2259,7 @@ class DocManager(wx.EvtHandler):
         if sort:
             def tempcmp(a, b):
                 return cmp(a.GetViewTypeName(), b.GetViewTypeName())
-            templates.sort(tempcmp)
+            templates.sort(key=tempcmp)
 
         res = wx.GetSingleChoiceIndex(_("Select a document view:"),
                                       _("Views"),

@@ -2140,7 +2140,7 @@ class SlicesShell(editwindow.EditWindow):
         unlist = [thlist[i] for i in xrange(len(thlist)) if thlist[i] not in thlist[:i]]
 
         #sort lowercase
-        unlist.sort(lambda a, b: cmp(a.lower(), b.lower()))
+        unlist.sort(key=lambda a, b: cmp(a.lower(), b.lower()))
 
         #this is more convenient, isn't it?
         self.AutoCompSetIgnoreCase(True)

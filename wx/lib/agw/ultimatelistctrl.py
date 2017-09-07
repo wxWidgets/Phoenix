@@ -10406,7 +10406,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         else:
             self.__func = func
 
-        self._lines.sort(self.OnCompareItems)
+        self._lines.sort(key=self.OnCompareItems)
 
         if self.IsShownOnScreen():
             self._dirty = True

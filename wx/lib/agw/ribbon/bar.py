@@ -766,7 +766,7 @@ class RibbonBar(RibbonControl):
                         # Sneaky obj array trickery to not copy the tab descriptors
                         sorted_pages.append(info)
 
-                    sorted_pages.sort(self.OrderPageTabInfoBySmallWidthAsc)
+                    sorted_pages.sort(key=self.OrderPageTabInfoBySmallWidthAsc)
                     width -= tabsep*(numtabs - 1)
 
                     for i, info in enumerate(self._pages):
