@@ -30,7 +30,7 @@ Changes in this release include the following:
 
 * New tool wxget, (a minimal wx implementation of wget)
 
-* New tools wxdocs and wxdemos to launch the respective items fetching and
+* New tools wxdocs and wxdemos to launch the respective items, fetching and
   unpacking as required. (#437)
 
 * Fixes to ensure that the locale message catalogs are included in the
@@ -72,6 +72,9 @@ Changes in this release include the following:
 
 * Fix exception in wx.lib.agw.customtreectrl when calling SortChildren. (#463,
   #500)
+
+* Fix missing imports needed for drawing the legend in wx.lib.plot. (#503)
+
 
 
 
