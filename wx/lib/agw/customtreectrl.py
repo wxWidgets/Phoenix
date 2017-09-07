@@ -5935,8 +5935,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         if len(children) > 1:
             self._dirty = True
-            children = six.sort(children, self.OnCompareItems)
-            item._children = children
+            from functools import cmp_to_key
+            children.sort(key=cmp_to_key(self.OnCompareItems))
 
 
     def GetImageList(self):
