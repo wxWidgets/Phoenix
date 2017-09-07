@@ -70,6 +70,8 @@ Changes in this release include the following:
 
 * Add wx.Simplebook class.
 
+* Fix exception in wx.lib.agw.customtreectrl when calling SortChildren. (#463,
+  #500)
 
 
 
