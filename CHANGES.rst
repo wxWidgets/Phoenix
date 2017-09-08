@@ -28,10 +28,10 @@ Changes in this release include the following:
 
 * Fixed copy/paste error in wx.BusyInfo.__exit__ (#449)
 
-* New tool wxget, (a minimal wx implementation of wget)
+* Added new tool wxget, (a minimal wx implementation of wget)
 
-* New tools wxdocs and wxdemos to launch the respective items, fetching and
-  unpacking as required. (#437)
+* Added new tools wxdocs and wxdemos to launch the respective items,
+  fetching and unpacking as required. (#437)
 
 * Fixes to ensure that the locale message catalogs are included in the
   release files. (#464)
