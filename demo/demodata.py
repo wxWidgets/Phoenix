@@ -38,13 +38,6 @@ _demoPngs = ["overview", "recent", "frame", "dialog", "moredialog", "core",
 _treeList = [
     # new stuff
     ('Recent Additions/Updates', [
-        'FileCtrl',
-        'Overlay',
-        'RearrangeDialog',
-        'RichMessageDialog',
-        'ToolTip',
-        'TimePickerCtrl',
-        'BannerWindow',
         'Simplebook',
     ]),
 
