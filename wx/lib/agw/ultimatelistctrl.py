@@ -236,6 +236,7 @@ import wx
 import math
 import bisect
 import zlib
+from functools import cmp_to_key
 
 import six
 
@@ -10406,7 +10407,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         else:
             self.__func = func
 
-        self._lines.sort(self.OnCompareItems)
+        self._lines.sort(key=cmp_to_key(self.OnCompareItems))
 
         if self.IsShownOnScreen():
             self._dirty = True
