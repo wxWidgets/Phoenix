@@ -522,6 +522,13 @@ class SpeedMeterDemo(wx.Panel):
         self.timer3.Start(500)
 
 
+    def ShutdownDemo(self):
+        self.timer.Stop()
+        self.timer3.Stop()
+        del self.timer
+        del self.timer3
+
+
     def OnSliderScroll(self, event):
 
         slider = event.GetEventObject()
