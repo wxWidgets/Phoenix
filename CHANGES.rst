@@ -78,6 +78,10 @@ Changes in this release include the following:
 * Fix other instances of list.sort using old cmp-style ordering functions.
   (#508)
 
+* Update SizedControls to do a sanity check on the parent's sizer, as GetSizer
+  can return None for SizedParent under certain circumstances, such as when
+  AUI reparents the control during pane movement. (#523)
+
 
 
 
