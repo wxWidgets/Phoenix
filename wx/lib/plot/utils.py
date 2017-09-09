@@ -14,6 +14,8 @@ __docformat__ = "restructuredtext en"
 
 # Standard Library
 import functools
+import inspect
+import itertools
 from warnings import warn as _warn
 
 # Third Party
@@ -22,8 +24,9 @@ import numpy as np
 
 class DisplaySide(object):
     """
-    Generic class for storing booleans describing which sides of a box are
-    displayed. Used for fine-tuning the axis, ticks, and values of a graph.
+    Generic class for describing which sides of a box are displayed.
+
+    Used for fine-tuning the axis, ticks, and values of a graph.
 
     This class somewhat mimics a collections.namedtuple factory function in
     that it is an iterable and can have indiviual elements accessible by name.
@@ -34,13 +37,13 @@ class DisplaySide(object):
     - it contains type checking, only allowing boolean values
     - it contains name checking, only allowing valid_names as attributes
 
-    :param bottom: Display the bottom side?
+    :param bottom: Display the bottom side
     :type bottom: bool
-    :param left: Display the left side?
+    :param left: Display the left side
     :type left: bool
-    :param top: Display the top side?
+    :param top: Display the top side
     :type top: bool
-    :param right: Display the right side?
+    :param right: Display the right side
     :type right: bool
     """
     # TODO: Do I want to replace with __slots__?
@@ -108,11 +111,14 @@ class DisplaySide(object):
         return iter([self.bottom, self.left, self.top, self.right])
 
 
-# TODO: New name: RevertStyle? SavedStyle? Something else?
+# TODO: replace with wx.DCPenChanger/wx.DCBrushChanger, etc.
+#       Alternatively, replace those with this function...
 class TempStyle(object):
     """
-    Combination Decorator and Context Manager to revert pen or brush changes
-    after a method call or block finish.
+    Decorator / Context Manager to revert pen or brush changes.
+
+    Will revert pen, brush, or both to their previous values after a method
+    call or block finish.
 
     :param which: The item to save and revert after execution. Can be
                   one of ``{'both', 'pen', 'brush'}``.
@@ -136,7 +142,6 @@ class TempStyle(object):
        As of 2016-06-15, this can only be used as a decorator for **class
        methods**, not standard functions. There is a plan to try and remove
        this restriction, but I don't know when that will happen...
-
 
     .. epigraph::
 
@@ -235,50 +240,26 @@ class TempStyle(object):
         dc.SetBrush(self.prevBrush)
 
 
-class PendingDeprecation(object):
+def pendingDeprecation(new_func):
     """
-    Decorator which warns the developer about methods that are
-    pending deprecation.
+    Raise `PendingDeprecationWarning` and display a message.
 
-    :param new_func: The new class, method, or function that should be used.
-    :type new_func: str
+    Uses inspect.stack() to determine the name of the item that this
+    is called from.
 
-    ::
-
-        @PendingDeprecation("new_func")
-        def old_func():
-            pass
-
-        # prints the warning:
-        # `old_func` is pending deprecation. Please use `new_func` instead.
-
+    :param new_func: The name of the function that should be used instead.
+    :type new_func: string.
     """
-    _warn_txt = "`{}` is pending deprecation. Please use `{}` instead."
-
-    def __init__(self, new_func):
-        self.new_func = new_func
-
-    def __call__(self, func):
-        """Support for functions"""
-        self.func = func
-#        self._update_docs()
-
-        @functools.wraps(self.func)
-        def wrapper(*args, **kwargs):
-            _warn(self._warn_txt.format(self.func.__name__, self.new_func),
-                  PendingDeprecationWarning)
-            return self.func(*args, **kwargs)
-        return wrapper
-
-    def _update_docs(self):
-        """ Set the docs to that of the decorated function. """
-        self.__name__ = self.func.__name__
-        self.__doc__ = self.func.__doc__
+    warn_txt = "`{}` is pending deprecation. Please use `{}` instead."
+    _warn(warn_txt.format(inspect.stack()[1][3], new_func),
+          PendingDeprecationWarning)
 
 
 def scale_and_shift_point(x, y, scale=1, shift=0):
     """
     Creates a scaled and shifted 2x1 numpy array of [x, y] values.
+
+    The shift value must be in the scaled units.
 
     :param float `x`:        The x value of the unscaled, unshifted point
     :param float `y`:        The y valye of the unscaled, unshifted point
@@ -290,6 +271,7 @@ def scale_and_shift_point(x, y, scale=1, shift=0):
     :rtype: np.array
 
     .. note::
+
        :math:`new = (scale * old) + shift`
     """
     point = scale * np.array([x, y]) + shift
@@ -298,8 +280,7 @@ def scale_and_shift_point(x, y, scale=1, shift=0):
 
 def set_displayside(value):
     """
-    Wrapper around :class:`~wx.lib.plot._DisplaySide` that allowing for
-    "overloaded" calls.
+    Wrapper around :class:`~wx.lib.plot._DisplaySide` that allows for "overloaded" calls.
 
     If ``value`` is a boolean: all 4 sides are set to ``value``
 
@@ -332,6 +313,12 @@ def set_displayside(value):
         raise TypeError(err_txt)
     return DisplaySide(*_value)
 
+
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = itertools.tee(iterable)
+    next(b, None)
+    return zip(a, b)
 
 if __name__ == "__main__":
     raise RuntimeError("This module is not intended to be run by itself.")
