@@ -599,29 +599,33 @@ class SizedParent:
     """
     def AddChild(self, child):
         """
-        Add a child to sizer
+        This extends the default wx.Window behavior to also add the child
+        to its parent's sizer, if one exists, and set default properties.
+        When an entire UI layout is managed via Sizers, this helps reduce
+        the amount of sizer boilerplate code that needs to be written.
 
         :param `child`: child (window or another sizer) to be added to sizer.
         :type `child`: :class:`wx.Window` or :class:`wx.Sizer`
         """
 
-        # Note: The wx.LogNull is used here to suppress a log message
-        # on wxMSW that happens because when AddChild is called the
-        # widget's hwnd hasn't been set yet, so the GetWindowRect that
-        # happens as a result of sizer.Add (in wxSizerItem::SetWindow)
-        # fails.  A better fix would be to defer this code somehow
-        # until after the child widget is fully constructed.
         sizer = self.GetSizer()
-        nolog = wx.LogNull()
-        item = sizer.Add(child)
-        del nolog
-        item.SetUserData({"HGrow":0, "VGrow":0})
+        if sizer:
+            # Note: The wx.LogNull is used here to suppress a log message
+            # on wxMSW that happens because when AddChild is called the
+            # widget's hwnd hasn't been set yet, so the GetWindowRect that
+            # happens as a result of sizer.Add (in wxSizerItem::SetWindow)
+            # fails.  A better fix would be to defer this code somehow
+            # until after the child widget is fully constructed.
+            nolog = wx.LogNull()
+            item = sizer.Add(child)
+            del nolog
+            item.SetUserData({"HGrow": 0, "VGrow": 0})
 
-        # Note: One problem is that the child class given to AddChild
-        # is the underlying wxWidgets control, not its Python subclass. So if
-        # you derive your own class, and override that class' GetDefaultBorder(),
-        # etc. methods, it will have no effect.
-        child.SetDefaultSizerProps()
+            # Note: One problem is that the child class given to AddChild
+            # is the underlying wxWidgets control, not its Python subclass. So if
+            # you derive your own class, and override that class' GetDefaultBorder(),
+            # etc. methods, it will have no effect.
+            child.SetDefaultSizerProps()
 
     def GetSizerType(self):
         """
