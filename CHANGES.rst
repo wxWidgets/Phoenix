@@ -75,6 +75,8 @@ Changes in this release include the following:
 
 * Fix missing imports needed for drawing the legend in wx.lib.plot. (#503)
 
+* Fix other instances of list.sort using old cmp-style ordering functions.
+  (#508)
 
 
 

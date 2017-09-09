@@ -28,7 +28,8 @@ except ImportError:
     imported.  It probably is not installed (it's not part of the
     standard Python distribution). See the Numeric Python site
     (http://numpy.scipy.org) for information on downloading source or
-    binaries."""
+    binaries, or just try `pip install numpy` and it will probably 
+    work."""
     raise ImportError("NumPy not found.\n" + msg)
 
 
@@ -509,7 +510,8 @@ class PlotDemoMainFrame(wx.Frame):
                     'Enables the display of the axes values')
 
         submenu = wx.Menu()
-        submenu_items = ("Bottom", "Left", "Top", "Right")
+        submenu_items = ("Bottom", "Left", "Top", "Right",
+                         "Bottom+Left", "All")
         help_txt = "Enables {} ticks"
         self.ticksSubMenu = submenu
         for _i, item in enumerate(submenu_items, 2501):
@@ -524,6 +526,8 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableTicksLeft, id=2502)
         self.Bind(wx.EVT_MENU, self.OnEnableTicksTop, id=2503)
         self.Bind(wx.EVT_MENU, self.OnEnableTicksRight, id=2504)
+        self.Bind(wx.EVT_MENU, self.OnEnableTicksBottomLeft, id=2505)
+        self.Bind(wx.EVT_MENU, self.OnEnableTicksAll, id=2506)
 
         menu.Append(250, 'Enable Ticks', submenu,
                     'Enables the display of the ticks')
@@ -829,8 +833,8 @@ class PlotDemoMainFrame(wx.Frame):
         self.ticksSubMenu.Check(2502, self.client.enableTicks[1])
         self.ticksSubMenu.Check(2503, self.client.enableTicks[2])
         self.ticksSubMenu.Check(2504, self.client.enableTicks[3])
-#        self.ticksSubMenu.Check(2505, all(self.client.enableTicks[:2]))
-#        self.axesSubMenu.Check(2506, all(self.client.enableTicks))
+        self.ticksSubMenu.Check(2505, all(self.client.enableTicks[:2]))
+        self.ticksSubMenu.Check(2506, all(self.client.enableTicks))
 
     def OnEnableTicksBottom(self, event):
         old = self.client.enableTicks
@@ -854,6 +858,17 @@ class PlotDemoMainFrame(wx.Frame):
         old = self.client.enableTicks
         self.client.enableTicks = (old[0], old[1],
                                    old[2], event.IsChecked())
+        self._checkOtherTicksMenuItems()
+
+    def OnEnableTicksBottomLeft(self, event):
+        checked = event.IsChecked()
+        old = self.client.enableTicks
+        self.client.enableTicks = (checked, checked, old[2], old[3])
+        self._checkOtherTicksMenuItems()
+
+    def OnEnableTicksAll(self, event):
+        checked = event.IsChecked()
+        self.client.enableTicks = tuple([checked] * 4)
         self._checkOtherTicksMenuItems()
 
     # -----------------------------------------------------------------------
