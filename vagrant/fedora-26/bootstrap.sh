@@ -19,10 +19,12 @@ dnf -y install gtk2 gtk2-devel gtk3 gtk3-devel \
 # Install all available Python packages and their dev packages
 dnf -y install python python-tools python-devel python2-virtualenv
 dnf -y install python3 python3-tools python3-devel
+dnf -y install python35
 
 # Set up virtual environments for each Python where the Phoenix builds will be
-# done. set them to the vagrant user so the venv's can be updated by pip later.
+# done. Set them to the vagrant user so the venv's can be updated by pip later.
 mkdir venvs
 virtualenv --python=python2.7 venvs/Py27
+python3.5 -m venv venvs/Py35
 python3.6 -m venv venvs/Py36
 chown -R vagrant:vagrant venvs
