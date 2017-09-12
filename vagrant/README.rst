@@ -1,18 +1,19 @@
-Phoenix builds on various Linux distros with Vagrant
-====================================================
+wxPython 4 builds on various Linux distros with Vagrant
+=======================================================
 
 Vagrant (https://www.vagrantup.com/) is a tool that enables creating and using
 automated, relatively lightweight virtual environments.  Vagrant and the
 Vagrant community provide several base images that are essentially simplistic
 bare-bones installs of various operating systems, that can be thought of as a
 bare canvas ready for provisioning with the needs of whatever applications
-they will be used for.
+they will be used for. The hosting platform can be Windows, Mac OSX, or Linux.
 
-For Phoenix, this means that we can automate the creation and provisioning of
+For wxPython, this means that we can automate the creation and provisioning of
 virtual Linux machines with all the packages installed that are needed for
-building Phoenix.  The subfodlers located in this folder contain the Vagrant
-configurations and a bootstrap script for all of the Linux distros that we
-currently support.
+building wxPython 4.  The each of the numbered subfolders located here contains
+the Vagrant configuration and a bootstrap script for all of the Linux distros
+that we currently support. As long as there is an existing vagrant "box"
+available then adding support for new configurations is fairly simple.
 
 
 Setup
