@@ -14,11 +14,15 @@ if [ "$NAME" == "" ]; then
     exit 1
 fi
 
-PYVER=$2
-if [ "$PYVER" == "" ]; then
-    PYVER=all
+# This is the name of the virtual environment to be built. They should all be
+# named like Py27, Py35, etc. If "all" is given then all the environments in
+# ~/venvs will be used for a build.
+PYENV=$2
+if [ "$PYENV" == "" ]; then
+    PYENV=all
 fi
 
+# Either "gtk2", "gtk3" or "all"
 PORT=$3
 if [ "$PORT" == "" ]; then
     PORT=all
@@ -84,7 +88,7 @@ function do_build {
 # Do a build for each Python virtual environment in ~/venvs
 for VENV in ~/venvs/*; do
 
-    if [ $PYVER = all -o $PYVER = $(basename $VENV) ]; then
+    if [ $PYENV = all -o $PYENV = $(basename $VENV) ]; then
         # build a package for GTK2?
         if [ $PORT = all -o $PORT = gtk2 ]; then
             do_build $VENV gtk2 --gtk2
