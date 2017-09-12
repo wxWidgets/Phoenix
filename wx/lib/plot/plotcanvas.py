@@ -14,7 +14,6 @@ __docformat__ = "restructuredtext en"
 
 # Standard Library
 import sys
-import string as _string
 import time as _time
 
 # Third-Party
@@ -342,7 +341,7 @@ class PlotCanvas(wx.Panel):
             "png": wx.BITMAP_TYPE_PNG,       # Save a PNG file.
         }
 
-        fType = _string.lower(fileName[-3:])
+        fType = fileName[-3:].lower()
         dlg1 = None
         while fType not in extensions:
 
@@ -369,12 +368,12 @@ class PlotCanvas(wx.Panel):
                                      ".",
                                      "",
                                      wildcard_str,
-                                     wx.SAVE | wx.OVERWRITE_PROMPT,
+                                     wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
                                      )
 
             if dlg1.ShowModal() == wx.ID_OK:
                 fileName = dlg1.GetPath()
-                fType = _string.lower(fileName[-3:])
+                fType = fileName[-3:].lower()
             else:                      # exit without saving
                 dlg1.Destroy()
                 return False
