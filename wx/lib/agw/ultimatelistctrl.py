@@ -10147,7 +10147,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if self.InReportView():
             if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
-                current = y/self.GetLineHeight()
+                current = y // self.GetLineHeight()
                 if current < count:
                     newItem, flags = self.HitTestLine(current, x, y)
                     if flags:
