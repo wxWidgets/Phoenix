@@ -1461,7 +1461,7 @@ def cmd_build_vagrant(options, args):
         VMs = [ 'centos-7',
                 'debian-8',
                 'fedora-23',
-                'fedora-24',
+                'fedora-26',
                 'ubuntu-14.04',
                 'ubuntu-16.04',
                 ]

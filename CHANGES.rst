@@ -92,6 +92,8 @@ Changes in this release include the following:
 
 * Fix integer division bug in ultimatelistctrl. (#528)
 
+* Fix bug in wx.SearchCtrl.SetCancelBitmap (#532)
+
 
 
 
