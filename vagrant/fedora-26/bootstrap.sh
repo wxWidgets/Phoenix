@@ -5,6 +5,9 @@ dnf -y update
 dnf -y install yum-utils
 
 
+# Clean old kernels
+package-cleanup -y --oldkernels --count=1
+
 # Install necessary development tools, libs, etc.
 dnf -y group install "Development Tools"
 dnf -y install gcc-c++
