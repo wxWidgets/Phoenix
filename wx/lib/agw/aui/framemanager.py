@@ -1283,7 +1283,7 @@ class AuiPaneInfo(object):
     def Restore(self):
         """ Is the reverse of :meth:`Maximize` and :meth:`Minimize`."""
 
-        return self.SetFlag(self.optionMaximized or self.optionMinimized, False)
+        return self.SetFlag(self.optionMaximized | self.optionMinimized, False)
 
 
     def Fixed(self):
