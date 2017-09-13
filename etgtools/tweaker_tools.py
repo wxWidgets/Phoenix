@@ -229,7 +229,7 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
     Do common tweaks for a window class.
     """
-    # NOTE: it may be okay to just do this for top-level windows
+    # NOTE: it may be okay to just do mustHaveApp for top-level windows
     # TODO: look into that possibility
     klass.mustHaveApp()
 
@@ -260,6 +260,12 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
         # the virtual flags, and then add it back to a select few.
         removeVirtuals(klass)
         addWindowVirtuals(klass)
+
+    if not klass.findItem('GetClassDefaultAttributes'):
+        klass.addItem(extractors.WigCode("""\
+            static wxVisualAttributes
+            GetClassDefaultAttributes(wxWindowVariant variant = wxWINDOW_VARIANT_NORMAL);
+            """))
 
     if not ignoreProtected:
         for item in klass.allItems():
