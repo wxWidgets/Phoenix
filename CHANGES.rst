@@ -80,7 +80,7 @@ Changes in this release include the following:
 
 * Update SizedControls to do a sanity check on the parent's sizer, as GetSizer
   can return None for SizedParent under certain circumstances, such as when
-  AUI reparents the control during pane movement. (#523)
+  AUI reparents the control during pane movement. (#523, #537)
 
 * Added Vagrant configs for Fedora 23 and Fedora 26, and dropped Fedora 24.
   Wheels built on F23 can also be used on F24 and F25, and F26 adds Python 3.6
