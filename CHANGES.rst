@@ -9,9 +9,9 @@ wxPython Changelog
 ==================
 
 
-4.0.0b2 -- "Eclipse, Hurricanes, Floods, and Forest Fires! Oh My!"
-------------------------------------------------------------------
-* 9-Sept-2017
+4.0.0b2 -- "Hurricanes, Floods, and Forest Fires! Oh My!"
+---------------------------------------------------------
+* 16-Sept-2017
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b2
 Extras: https://extras.wxPython.org/wxPython4/extras/
