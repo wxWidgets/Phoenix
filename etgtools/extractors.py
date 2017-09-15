@@ -596,6 +596,7 @@ class ParamDef(BaseDef):
         self.transferBack = False     # transfer ownership of arg from C++ to Python?
         self.transferThis = False     # ownership of 'this' pointer transferred to this arg
         self.keepReference = False    # an extra reference to the arg is held
+        self.constrained = False      # limit auto-conversion of similar types (like float -> int)
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
