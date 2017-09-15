@@ -48,15 +48,15 @@ class property_Tests(wtc.WidgetTestCase):
         c = pg.PGCell()
 
 
-    def test_propgridproperty07(self):
-        attrs = pg.PGAttributeStorage()
-        attrs.Set('name',     'value')
-        attrs.Set('one',      1)
-        attrs.Set('two.one',  2.1)
-        attrs.Set('true',     True)
-        assert attrs.GetCount() == 4
-        assert attrs.FindValue('name') == 'value'
-        # TODO: Add some iteration tests
+    # def test_propgridproperty07(self):
+    #     attrs = pg.PGAttributeStorage()
+    #     attrs.Set('name',     'value')
+    #     attrs.Set('one',      1)
+    #     attrs.Set('two.one',  2.1)
+    #     attrs.Set('true',     True)
+    #     assert attrs.GetCount() == 4
+    #     assert attrs.FindValue('name') == 'value'
+    #     # TODO: Add some iteration tests
 
 
     def test_propgridproperty08(self):

@@ -959,6 +959,8 @@ from .%s import *
                 annotations.append('ArraySize')
             if item.keepReference:
                 annotations.append('KeepReference')
+            if item.constrained:
+                annotations.append('Constrained')
 
         if isinstance(item, (extractors.ParamDef, extractors.FunctionDef)):
             if item.transfer:

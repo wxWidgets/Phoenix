@@ -98,7 +98,6 @@ __date__ = "31 March 2009"
 
 import wx
 # just for isinstance
-import wx.lib.sized_controls as sc
 import time
 import warnings
 
@@ -4470,8 +4469,6 @@ class AuiManager(wx.EvtHandler):
 
         if not managed_window:
             raise Exception("Specified managed window must be non-null. ")
-        if isinstance(managed_window, sc.SizedParent):
-            raise Exception("Do not use wx.lib.sized_control for managed window. ")
 
         self.UnInit()
 
