@@ -701,20 +701,22 @@ class TestPanel( wx.Panel ):
         #
         # Add properties
         #
-
+        # NOTE: in this example the property names are used as variable names
+        # in one of the tests, so they need to be valid python identifiers.
+        #
         pg.AddPage( "Page 1 - Testing All" )
 
         pg.Append( wxpg.PropertyCategory("1 - Basic Properties") )
         pg.Append( wxpg.StringProperty("String",value="Some Text") )
 
-        sp = pg.Append( wxpg.StringProperty('StringProperty w/ Password flag', value='ABadPassword') )
+        sp = pg.Append( wxpg.StringProperty('StringProperty_as_Password', value='ABadPassword') )
         sp.SetAttribute('Hint', 'This is a hint')
         sp.SetAttribute('Password', True)
 
-        pg.Append( wxpg.IntProperty("Int",value=100) )
-        pg.Append( wxpg.FloatProperty("Float",value=100.0) )
-        pg.Append( wxpg.BoolProperty("Bool",value=True) )
-        boolprop = pg.Append( wxpg.BoolProperty("Bool_with_Checkbox",value=True) )
+        pg.Append( wxpg.IntProperty("Int", value=100) )
+        self.fprop = pg.Append( wxpg.FloatProperty("Float", value=123.456) )
+        pg.Append( wxpg.BoolProperty("Bool", value=True) )
+        boolprop = pg.Append( wxpg.BoolProperty("Bool_with_Checkbox", value=True) )
         pg.SetPropertyAttribute(
             "Bool_with_Checkbox",    # You can find the property by name,
             #boolprop,               # or give the property object itself.
