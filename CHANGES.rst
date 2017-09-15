@@ -94,6 +94,10 @@ Changes in this release include the following:
 
 * Fix bug in wx.SearchCtrl.SetCancelBitmap (#532)
 
+* Fixed property grid SetPropertyValue method to not truncate floating point
+  values to integers, and a couple other possible incorrect conversions.
+  (#536)
+
 
 
 
