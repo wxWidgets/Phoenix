@@ -15,6 +15,7 @@ wxPython Changelog
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b2
 Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.0b2``
 
 Changes in this release include the following:
 
