@@ -110,11 +110,24 @@ def run():
         if m.type == 'wxPropertyGridConstIterator':
             m.ignore()
 
-    c.find('SetPropertyValue').findOverload('int value').ignore()
-    c.find('SetPropertyValue').findOverload('bool value').ignore()
-    c.find('SetPropertyValue').findOverload('wxLongLong_t value').ignore()
-    c.find('SetPropertyValue').findOverload('wxULongLong_t value').ignore()
-    c.find('SetPropertyValue').findOverload('wxObject *value').ignore()
+    spv = c.find('SetPropertyValue')
+    spv.findOverload('int value').ignore()
+    spv.findOverload('wxLongLong_t value').ignore()
+    spv.findOverload('wxULongLong_t value').ignore()
+    spv.findOverload('wxObject *value').ignore()
+
+    # Reorder SetPropertyValue overloads so the one taking a long int is not
+    # first. Mark others that could be auto-converted from int as
+    # "constrained" so they will only be used for that specific type. This
+    # should result in SetPropertyValue(id, double) only used for floats and
+    # not ints, opr other things that can convert to int.
+    spv.findOverload('bool value').find('value').constrained = True
+    spv.findOverload('double value').find('value').constrained = True
+    spv_long = spv.findOverload('long value')
+    spv_long.ignore()
+    spv.reorderOverloads() # Ensures an ignored item is not first,
+    spv_long.ignore(False) # and then we can unignore it.
+
 
     c.find('Append.property').transfer = True
     c.find('AppendIn.newProperty').transfer = True
