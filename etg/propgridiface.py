@@ -120,7 +120,7 @@ def run():
     # first. Mark others that could be auto-converted from int as
     # "constrained" so they will only be used for that specific type. This
     # should result in SetPropertyValue(id, double) only used for floats and
-    # not ints, opr other things that can convert to int.
+    # not ints, or other things that can convert to int.
     spv.findOverload('bool value').find('value').constrained = True
     spv.findOverload('double value').find('value').constrained = True
     spv_long = spv.findOverload('long value')
