@@ -952,8 +952,7 @@ def cmd_sphinx(options, args):
     genGallery()
 
     # Copy the hand-edited top level doc files too
-    rstFiles = [os.path.join(phoenixDir(), 'TODO.rst')] + \
-               glob.glob(os.path.join(phoenixDir(), 'docs', '*.rst'))
+    rstFiles = glob.glob(os.path.join(phoenixDir(), 'docs', '*.rst'))
     for rst in rstFiles:
         txt = os.path.join(sphinxDir, os.path.splitext(os.path.basename(rst))[0] + '.txt')
         copyIfNewer(rst, txt)

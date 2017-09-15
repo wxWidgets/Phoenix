@@ -15,6 +15,10 @@ If you are porting your code from Classic wxPython, be sure to read the
 `Migration Guide <MigrationGuide.html>`_  to get a better feel for
 how some things have changed.
 
+If you are new to wxPython then you may want to glance at the various
+`overview documents <Overviews.html>`_ available here to get a feel for
+how things work.
+
 You can download a local copy of this documentation using a new utility script
 included with wxPython called ``wxdocs``. It will open the local copy of the
 documentation in your default browser, downloading it first if needed. There
@@ -106,47 +110,10 @@ and launch the wxPython demo for you.
    :glob:
 
    MigrationGuide
-   TODO
    DocstringsGuidelines
+   Overviews
    wx.functions
    wx.1moduleindex
-   app_overview
-   bitmap_overview
-   bookctrl_overview
-   command_overview
-   common_dialogs_overview
-   config_overview
-   dataobject_overview
-   datetime_overview
-   dc_overview
-   dialog_overview
-   dnd_overview
-   events_overview
-   filesystem_overview
-   font_encodings
-   font_overview
-   grid_overview
-   html_overview
-   internationalization
-   writing_non_english_applications
-   listctrl_overview
-   log_classes_overview
-   printing_framework_overview
-   refcount_overview
-   richtextctrl_overview
-   scrolling_overview
-   sizers_overview
-   splitterwindow_overview
-   standard_event_identifiers
-   stock_items
-   tipprovider_overview
-   toolbar_overview
-   treectrl_overview
-   validator_overview
-   window_deletion_overview
-   window_ids_overview
-   window_sizing_overview
-   window_styles_overview
    wx.adv.1moduleindex
    wx.adv.functions
    wx.dataview.1moduleindex
