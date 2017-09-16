@@ -8,56 +8,98 @@
    ]]
 
 
-Announcing wxPython 4.0.0b1
+Announcing wxPython 4.0.0b2
 ===========================
 
-
-PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b1
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b2
 Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.0b2``
 
 Changes in this release include the following:
 
-* Various little tweaks and fixes in some of the demo samples.
+* Added a deprecated compatibility helper for wx.CustomDataFormat.
 
-* Fixes in wx.lib.imagebrowser so it looks and acts better on OSX.
+* Transfer ownership of the wx.EvtHandler object when pushing/popping
+  them, and also for Set/RemoveEventHandler. (#443)
 
-* Fixed problem due to wxModules not being initialized when non-core
-  extensions are imported.
+* Add missing wx.VScrolledWindow methods listed in the docs as
+  deprecated but still present. (#441)
 
-* Fixed issue in wx.TreeItemId comparison methods affecting PyCrust and
-  other tools.
+* Fixed copy/paste error in wx.BusyInfo.__exit__ (#449)
 
-* Restore the simplified names for the wxGridSelectionModes enum that were
-  present in Classic.
+* Added new tool wxget, (a minimal wx implementation of wget)
 
-* Add accessors for the internal widgets in the wx.EditableListBox.
+* Added new tools wxdocs and wxdemos to launch the respective items,
+  fetching and unpacking as required. (#437)
 
-* Fixes in wx.lib.eventwatcher to avoid deprecated methods and other Phoenix
-  related changes.
+* Fixes to ensure that the locale message catalogs are included in the
+  release files. (#464)
 
-* Correctly transfer ownership of the input stream in wx.FSFile.
+* Fix wx.ListCtrl.SetItemData to check that the data value is not out
+  of the range of a C long. (#467)
 
-* Ensure the license files are getting into the source tarball and the
-  binary wheel files.
+* Changed the default port on *nix builds to be GTK3. The new
+  ``--gtk2`` flag for build.py can be used to force a build for GTK2
+  instead, and the ``--gtk3`` flag still exists, but defaults to True
+  unless ``--gtk2`` is specified. Please note that there is currently
+  no auto-detection of whether GTK3 is available or not, so if you
+  know you need to build for GTK2 then you need to use the build flag,
+  and there is currently no way to specify that flag for builds
+  performed by pip. (#431)
 
-* Add wrappers for the classes derived from wxImageHandler.
+* Fix parameter names in Toolbar.AddTool methods to be
+  consistent. (#475)
 
-* Fix wx.lib.plot.polyline to not attempt to draw the spline if there are
-  less than 3 points.
+* Remove inconsistent GetVirtualSize method in ScrolledWindow and let
+  it be inherited from wx.Window instead. (#474)
 
-* Transfer the ownership of the prop arg in wx.propgrid.PGProperty.AddChild
-  and AddPrivateChild. Various other fixes in wx.propgrid classes for
-  backwards compatibility and to fix problems caused by mismatches between
-  customizations that were done for Classic and how Phoenix does things by
-  default. Also solved some problems in the PropertyGrid sample in the demo.
+* Fix crashing bug caused by importing a module that reinitializes the
+  wxModule system after having imported wxpyTag. (#468)
 
-* Add missing HtmlCell.FindCellByPos.
+* Fix missing methods in various DataObject classes. (They were
+  actually accidentally marked "private" when they should have been
+  public.) (#480)
 
-* Enhance the DLG_UNIT convenience function such that if something other than
-  a wx.Point or wx.Size was passed in then the return value will be a tuple.
-  This eliminates some surprises that are possible due to auto-conversion of
-  tuples to points or sizes.
+* Add missing ListCtrl.DeleteAllColumns. (#486)
 
+* Various fixes in the demo.
+
+* Fixed improper initial scale factor in wx.lib.agw.speedmeter
+
+* Fix for calls to wx.Notebook.HitTest calling the wrong instance
+  (base class version) of the method. (#499)
+
+* Add wx.Simplebook class.
+
+* Fix exception in wx.lib.agw.customtreectrl when calling
+  SortChildren. (#463, #500)
+
+* Fix missing imports needed for drawing the legend in
+  wx.lib.plot. (#503)
+
+* Fix other instances of list.sort using old cmp-style ordering
+  functions.  (#508)
+
+* Update SizedControls to do a sanity check on the parent's sizer, as
+  GetSizer can return None for SizedParent under certain
+  circumstances, such as when AUI reparents the control during pane
+  movement. (#523, #537)
+
+* Added Vagrant configs for Fedora 23 and Fedora 26, and dropped
+  Fedora 24.  Wheels built on F23 can also be used on F24 and F25, and
+  F26 adds Python 3.6 support.
+
+* Fix bitwise OR bug in wx.lib.agw.aui.framemanager. (#493)
+
+* Fix bugs in wx.lib.plot when saving file. (#526)
+
+* Fix integer division bug in ultimatelistctrl. (#528)
+
+* Fix bug in wx.SearchCtrl.SetCancelBitmap (#532)
+
+* Fixed property grid SetPropertyValue method to not truncate floating
+  point values to integers, and a couple other possible incorrect
+  conversions.  (#536)
 
 
 
