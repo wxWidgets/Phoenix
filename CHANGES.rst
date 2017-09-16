@@ -24,8 +24,8 @@ Changes in this release include the following:
 * Transfer ownership of the wx.EvtHandler object when pushing/popping
   them, and also for Set/RemoveEventHandler. (#443)
 
-* Add missing wx.VScrolledWindow methods listed in the docs as deprecated
-  but still present. (#441)
+* Add missing wx.VScrolledWindow methods listed in the docs as
+  deprecated but still present. (#441)
 
 * Fixed copy/paste error in wx.BusyInfo.__exit__ (#449)
 
@@ -37,28 +37,30 @@ Changes in this release include the following:
 * Fixes to ensure that the locale message catalogs are included in the
   release files. (#464)
 
-* Fix wx.ListCtrl.SetItemData to check that the data value is not out of
-  the range of a C long. (#467)
+* Fix wx.ListCtrl.SetItemData to check that the data value is not out
+  of the range of a C long. (#467)
 
-* Changed the default port on *nix builds to be GTK3. The new ``--gtk2``
-  flag for build.py can be used to force a build for GTK2 instead, and
-  the ``--gtk3`` flag still exists, but defaults to True unless
-  ``--gtk2`` is specified. Please note that there is currently no
-  auto-detection of whether GTK3 is available or not, so if you know
-  you need to build for GTK2 then you need to use the build flag, and
-  there is currently no way to specify that flag for builds performed
-  by pip. (#431)
+* Changed the default port on *nix builds to be GTK3. The new
+  ``--gtk2`` flag for build.py can be used to force a build for GTK2
+  instead, and the ``--gtk3`` flag still exists, but defaults to True
+  unless ``--gtk2`` is specified. Please note that there is currently
+  no auto-detection of whether GTK3 is available or not, so if you
+  know you need to build for GTK2 then you need to use the build flag,
+  and there is currently no way to specify that flag for builds
+  performed by pip. (#431)
 
-* Fix parameter names in Toolbar.AddTool methods to be consistent. (#475)
+* Fix parameter names in Toolbar.AddTool methods to be
+  consistent. (#475)
 
-* Remove inconsistent GetVirtualSize method in ScrolledWindow and let it be
-  inherited from wx.Window instead. (#474)
+* Remove inconsistent GetVirtualSize method in ScrolledWindow and let
+  it be inherited from wx.Window instead. (#474)
 
 * Fix crashing bug caused by importing a module that reinitializes the
   wxModule system after having imported wxpyTag. (#468)
 
-* Fix missing methods in various DataObject classes. (They were actually
-  accidentally marked "private" when they should have been public.) (#480)
+* Fix missing methods in various DataObject classes. (They were
+  actually accidentally marked "private" when they should have been
+  public.) (#480)
 
 * Add missing ListCtrl.DeleteAllColumns. (#486)
 
@@ -66,26 +68,28 @@ Changes in this release include the following:
 
 * Fixed improper initial scale factor in wx.lib.agw.speedmeter
 
-* Fix for calls to wx.Notebook.HitTest calling the wrong instance (base class
-  version) of the method. (#499)
+* Fix for calls to wx.Notebook.HitTest calling the wrong instance
+  (base class version) of the method. (#499)
 
 * Add wx.Simplebook class.
 
-* Fix exception in wx.lib.agw.customtreectrl when calling SortChildren. (#463,
-  #500)
+* Fix exception in wx.lib.agw.customtreectrl when calling
+  SortChildren. (#463, #500)
 
-* Fix missing imports needed for drawing the legend in wx.lib.plot. (#503)
+* Fix missing imports needed for drawing the legend in
+  wx.lib.plot. (#503)
 
-* Fix other instances of list.sort using old cmp-style ordering functions.
-  (#508)
+* Fix other instances of list.sort using old cmp-style ordering
+  functions.  (#508)
 
-* Update SizedControls to do a sanity check on the parent's sizer, as GetSizer
-  can return None for SizedParent under certain circumstances, such as when
-  AUI reparents the control during pane movement. (#523, #537)
+* Update SizedControls to do a sanity check on the parent's sizer, as
+  GetSizer can return None for SizedParent under certain
+  circumstances, such as when AUI reparents the control during pane
+  movement. (#523, #537)
 
-* Added Vagrant configs for Fedora 23 and Fedora 26, and dropped Fedora 24.
-  Wheels built on F23 can also be used on F24 and F25, and F26 adds Python 3.6
-  support.
+* Added Vagrant configs for Fedora 23 and Fedora 26, and dropped
+  Fedora 24.  Wheels built on F23 can also be used on F24 and F25, and
+  F26 adds Python 3.6 support.
 
 * Fix bitwise OR bug in wx.lib.agw.aui.framemanager. (#493)
 
@@ -95,9 +99,9 @@ Changes in this release include the following:
 
 * Fix bug in wx.SearchCtrl.SetCancelBitmap (#532)
 
-* Fixed property grid SetPropertyValue method to not truncate floating point
-  values to integers, and a couple other possible incorrect conversions.
-  (#536)
+* Fixed property grid SetPropertyValue method to not truncate floating
+  point values to integers, and a couple other possible incorrect
+  conversions.  (#536)
 
 
 
