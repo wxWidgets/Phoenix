@@ -109,7 +109,7 @@ def get_item(final, url, cache, name, ext, forced=False):
                  "(Select No on charged or slow connections)"]),
             "Download Prompt", wx.YES_NO|wx.CENTER|wx.ICON_INFORMATION)
         if yes_no == wx.YES:
-            cached = wxget.download_file(url, cache, True)
+            cached = wxget.download_file(url, cache, force=forced, trusted=True)
         else:
             report_error("Download Cancelled!")
 
