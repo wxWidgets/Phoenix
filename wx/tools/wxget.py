@@ -97,6 +97,7 @@ def download_file(url, dest=None, force=False):
         return 'Aborted!'
 
     if url:
+        print("Download from:", url)
         try:
             url_res = urllib2.urlopen(url)
             keep_going = True
