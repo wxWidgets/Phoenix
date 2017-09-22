@@ -190,10 +190,13 @@ def download_file(url, dest=None, force=False, trusted=False):
         if not success:
             success = download_pip(url, filename, force, trusted)  # Try urllib
         if not success:
+            split_url = url.split('/')
             msg = '\n'.join([
-                "\n\nERROR in Web Access! - you may be behind a firewall",
-                "You may be able to bybass this by using a browser to download:",
-                "\n\t%s\n\nand copying to:\n\n\t%s" % (url, filename),
+                "\n\nERROR in Web Access! - You may be behind a firewall!",
+                "-" * 52,
+                "You should be able to bybass this by using a browser to download:",
+                "\t%s\nfrom:\t%s\nthen copying the download file to:\n\t%s" % (
+                    split_url[-1], '/'.join(split_url[:-1]), filename),
                 ])
             print(msg, '\n')
             wx.MessageBox(msg, caption='WDOWNLOAD ERROR!',
