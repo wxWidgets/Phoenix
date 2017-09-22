@@ -8,6 +8,21 @@
 wxPython Changelog
 ==================
 
+4.0.0rc1
+--------
+* (not yet released)
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0rc1
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.0rc1``
+
+Changes in this release include the following:
+
+* Fixes in wx.aui to properly transfer ownership of the menubar, and also some
+  tweaks in the AUI_MDI sample in the demo. (#540)
+
+
+
 
 4.0.0b2 -- "Hurricanes, Floods, and Forest Fires! Oh My!"
 ---------------------------------------------------------
