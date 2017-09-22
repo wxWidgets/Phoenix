@@ -90,11 +90,13 @@ def get_save_path(url, dest_dir, force=False):
 
     return (url, filename)
 
-def download_wget(url, filename):
+def download_wget(url, filename, trusted=False):
     """ Try to donwload via wget."""
     result = False
     try:
         cmd = ["wget", url, '-O', filename]
+        if trusted:
+            cmd.append('--no-check-certificate')
         print("Trying:\n  ", ' '.join(cmd))
         result = subprocess.check_call(cmd)
         # note some users may need to add "--no-check-certificate" on some sites
@@ -184,7 +186,7 @@ def download_file(url, dest=None, force=False, trusted=False):
         return 'Aborted!'
 
     if url:
-        success = download_wget(url, filename)  # Try wget
+        success = download_wget(url, filename, trusted)  # Try wget
         if not success:
             success = download_urllib(url, filename)  # Try urllib
         if not success:
