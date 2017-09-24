@@ -114,6 +114,7 @@ def run():
         doc="Alias for :meth:`SetClientData`",
         body="self.SetClientData(n, data)")
 
+    c.find('GetEditorDialog').factory = True
 
 
     c = module.find('wxPGChoicesData')
