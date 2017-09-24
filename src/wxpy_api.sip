@@ -32,6 +32,7 @@ static wxString i_Py2wxString(PyObject* source)
 #if wxUSE_UNICODE_WCHAR == 0
 #error wxString converison can only handle WCHAR wxStrings currently
 #endif
+    PyErr_Clear();
     PyObject* uni = source;
     if (PyBytes_Check(source)) {
         // if it's a string object convert it to unicode first, assumes utf-8
@@ -282,6 +283,8 @@ bool wxVariantDataPyObject::Eq(wxVariantData& data) const
 wxVariant i_wxVariant_in_helper(PyObject* obj)
 {
     wxVariant value;
+
+    PyErr_Clear();
 
     if (PyBytes_Check(obj) || PyUnicode_Check(obj))
         value = Py2wxString(obj);
