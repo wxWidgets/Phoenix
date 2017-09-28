@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from six.moves import cPickle
+import pickle
 import  wx
 
 #----------------------------------------------------------------------
@@ -72,7 +72,7 @@ class DoodlePad(wx.Window):
 
     def StartDragOpperation(self):
         # pickle the lines list
-        linesdata = cPickle.dumps(self.lines, 1)
+        linesdata = pickle.dumps(self.lines)
 
         # create our own data format and use it in a
         # custom data object
@@ -156,8 +156,9 @@ class DoodleDropTarget(wx.DropTarget):
         if self.GetData():
             # convert it back to a list of lines and give it to the viewer
             linesdata = self.data.GetData()
-            lines = cPickle.loads(linesdata)
-            self.dv.SetLines(lines)
+            if linesdata:
+                lines = pickle.loads(linesdata.tobytes())
+                self.dv.SetLines(lines)
 
         # what is returned signals the source what to do
         # with the original data (move, copy, etc.)  In this
