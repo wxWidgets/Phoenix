@@ -22,7 +22,12 @@ Changes in this release include the following:
   tweaks in the AUI_MDI sample in the demo. (#540)
 
 * Added a wx.BUILD_TYPE value to distinguish between development, snapshot,
-  and release builds. The value is also appended to wx.PlatformInfo.
+  and release builds. The value is also appended to wx.PlatformInfo. (Thanks
+  Mesalu!)
+
+* Fix crash when trying to fetch multiple items from a composite data object
+  in wx.DropTarget.OnData. (#550) Also fixed the CustomDragAndDrop sample to
+  not fail on Python 2.7.
 
 
 
