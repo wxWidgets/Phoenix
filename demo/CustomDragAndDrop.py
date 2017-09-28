@@ -97,10 +97,10 @@ class DoodlePad(wx.Window):
         data.Add(bdata)
 
         # And finally, create the drop source and begin the drag
-        # and drop opperation
+        # and drop operation
         dropSource = wx.DropSource(self)
         dropSource.SetData(data)
-        self.log.WriteText("Begining DragDrop\n")
+        self.log.WriteText("Beginning DragDrop\n")
         result = dropSource.DoDragDrop(wx.Drag_AllowMove)
         self.log.WriteText("DragDrop completed: %d\n" % result)
 
@@ -161,7 +161,8 @@ class DoodleDropTarget(wx.DropTarget):
 
         # what is returned signals the source what to do
         # with the original data (move, copy, etc.)  In this
-        # case we just return the suggested value given to us.
+        # case we again just return the suggested value given
+        # to us.
         return d
 
 
@@ -297,7 +298,6 @@ if __name__ == '__main__':
 
     class TestApp(wx.App):
         def OnInit(self):
-            wx.InitAllImageHandlers()
             self.MakeFrame()
             return True
 
