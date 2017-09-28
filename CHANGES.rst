@@ -21,6 +21,9 @@ Changes in this release include the following:
 * Fixes in wx.aui to properly transfer ownership of the menubar, and also some
   tweaks in the AUI_MDI sample in the demo. (#540)
 
+* Added a wx.BUILD_TYPE value to distinguish between development, snapshot,
+  and release builds. The value is also appended to wx.PlatformInfo.
+
 
 
 
