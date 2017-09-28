@@ -26,7 +26,7 @@ Changes in this release include the following:
   Mesalu!)
 
 * Fix crash when trying to fetch multiple items from a composite data object
-  in wx.DropTarget.OnData. (#550) Also fixed the CustomDragAndSrop sample to
+  in wx.DropTarget.OnData. (#550) Also fixed the CustomDragAndDrop sample to
   not fail on Python 2.7.
 
 
