@@ -29,6 +29,12 @@ Changes in this release include the following:
   in wx.DropTarget.OnData. (#550) Also fixed the CustomDragAndDrop sample to
   not fail on Python 2.7.
 
+* Add ability for wxArray wrappers to return a copy of the item in the
+  ``__getitem__`` method. This solves problems where an array that is the
+  return value of some method call is indexed immediately and a reference to
+  the array is not held, which could result in garbage values for the indexed
+  item. Currently this is turned on for just GridCellCoordsArray, but others
+  can be switched in the future if needed. (#297)
 
 
 

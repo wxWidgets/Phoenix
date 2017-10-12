@@ -341,6 +341,31 @@ class grid_Tests(wtc.WidgetTestCase):
         assert obj == obj2
 
 
+    def test_grid44(self):
+        g = wx.grid.Grid(self.frame)
+        g.CreateGrid(10,10)
+        g.SelectBlock((1,1), (5,5))
+
+        tl = g.GetSelectionBlockTopLeft()
+        br = g.GetSelectionBlockBottomRight()
+
+        assert tl[0].Get() == (1,1)
+        assert br[0].Get() == (5,5)
+
+
+    def test_grid45(self):
+        # See issue #297
+        g = wx.grid.Grid(self.frame)
+        g.CreateGrid(10,10)
+        g.SelectBlock((1,1), (5,5))
+
+        tl = g.GetSelectionBlockTopLeft()[0]
+        br = g.GetSelectionBlockBottomRight()[0]
+
+        assert tl.Get() == (1,1)
+        assert br.Get() == (5,5)
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

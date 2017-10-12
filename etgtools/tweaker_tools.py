@@ -988,16 +988,44 @@ del _{ListClass_pyName}___repr__
 
 
 
-def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False):
+def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False, getItemCopy=False):
     moduleName = module.module
     ArrayClass_pyName = removeWxPrefix(ArrayClass)
     itemRef = '*' if itemIsPtr else '&'
     itemDeref = '' if itemIsPtr else '*'
     addrOf = '' if itemIsPtr else '&'
 
-    # *** TODO: This can probably be done in a way that is not SIP-specfic.
+    # *** TODO: This can probably be done in a way that is not SIP-specific.
     # Try creating extractor objects from scratch and attach cppMethods to
     # them as needed, etc..
+
+    if not getItemCopy:
+        getitemMeth = '''\
+        {ItemClass}{itemRef} __getitem__(ulong index);
+        %MethodCode
+            if (index < sipCpp->GetCount()) {{
+                sipRes = {addrOf}sipCpp->Item(index);
+            }}
+            else {{
+                wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
+                sipError = sipErrorFail;
+            }}
+        %End
+        '''.format(**locals())
+    else:
+        getitemMeth = '''\
+        {ItemClass}* __getitem__(ulong index) /Factory/;
+        %MethodCode
+            if (index < sipCpp->GetCount()) {{
+                sipRes = new {ItemClass}(sipCpp->Item(index));
+            }}
+            else {{
+                wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
+                sipError = sipErrorFail;
+            }}
+        %End
+        '''.format(**locals())
+
 
     return extractors.WigCode('''\
 class {ArrayClass}
@@ -1008,16 +1036,7 @@ public:
         sipRes = sipCpp->GetCount();
     %End
 
-    {ItemClass}{itemRef} __getitem__(ulong index);
-    %MethodCode
-        if (index < sipCpp->GetCount()) {{
-            sipRes = {addrOf}sipCpp->Item(index);
-        }}
-        else {{
-            wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
-            sipError = sipErrorFail;
-        }}
-    %End
+    {getitemMeth}
 
     int __contains__({ItemClass}{itemRef} obj);
     %MethodCode
