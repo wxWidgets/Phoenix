@@ -122,7 +122,8 @@ def run():
     c.addPyCode('GridCellCoords.__safe_for_unpickling__ = True')
 
     module.addItem(
-        tools.wxArrayWrapperTemplate('wxGridCellCoordsArray', 'wxGridCellCoords', module))
+        tools.wxArrayWrapperTemplate('wxGridCellCoordsArray', 'wxGridCellCoords', module,
+                                     getItemCopy=True))
 
 
     #-----------------------------------------------------------------
