@@ -338,7 +338,12 @@ class Configuration(object):
         if os.path.exists('REV.txt'):
             f = open('REV.txt')
             self.VER_FLAGS += f.read().strip()
+            self.BUILD_TYPE = 'snapshot'
             f.close()
+        elif os.environ.get('WXPYTHON_RELEASE') == 'yes':
+            self.BUILD_TYPE = 'release'
+        else:
+            self.BUILD_TYPE = 'development'
 
         self.VERSION = "%s.%s.%s%s" % (self.VER_MAJOR,
                                        self.VER_MINOR,

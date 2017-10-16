@@ -8,6 +8,35 @@
 wxPython Changelog
 ==================
 
+4.0.0rc1
+--------
+* (not yet released)
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0rc1
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.0rc1``
+
+Changes in this release include the following:
+
+* Fixes in wx.aui to properly transfer ownership of the menubar, and also some
+  tweaks in the AUI_MDI sample in the demo. (#540)
+
+* Added a wx.BUILD_TYPE value to distinguish between development, snapshot,
+  and release builds. The value is also appended to wx.PlatformInfo. (Thanks
+  Mesalu!)
+
+* Fix crash when trying to fetch multiple items from a composite data object
+  in wx.DropTarget.OnData. (#550) Also fixed the CustomDragAndDrop sample to
+  not fail on Python 2.7.
+
+* Add ability for wxArray wrappers to return a copy of the item in the
+  ``__getitem__`` method. This solves problems where an array that is the
+  return value of some method call is indexed immediately and a reference to
+  the array is not held, which could result in garbage values for the indexed
+  item. Currently this is turned on for just GridCellCoordsArray, but others
+  can be switched in the future if needed. (#297)
+
+
 
 4.0.0b2 -- "Hurricanes, Floods, and Forest Fires! Oh My!"
 ---------------------------------------------------------

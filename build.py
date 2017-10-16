@@ -1368,6 +1368,9 @@ def cmd_build_py(options, args):
 
     BUILD_DIR = getBuildDir(options)
 
+    if options.release:
+        os.environ['WXPYTHON_RELEASE'] = 'yes'
+
     if not isWindows:
         WX_CONFIG = posixjoin(BUILD_DIR, 'wx-config')
         if options.use_syswx:

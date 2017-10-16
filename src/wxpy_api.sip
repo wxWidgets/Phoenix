@@ -32,6 +32,7 @@ static wxString i_Py2wxString(PyObject* source)
 #if wxUSE_UNICODE_WCHAR == 0
 #error wxString converison can only handle WCHAR wxStrings currently
 #endif
+    PyErr_Clear();
     PyObject* uni = source;
     if (PyBytes_Check(source)) {
         // if it's a string object convert it to unicode first, assumes utf-8
@@ -283,6 +284,8 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
 {
     wxVariant value;
 
+    PyErr_Clear();
+
     if (PyBytes_Check(obj) || PyUnicode_Check(obj))
         value = Py2wxString(obj);
 
@@ -450,12 +453,17 @@ bool i_wxPyCheckForApp(bool raiseException) {
 
 PyObject* i_wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) {
     // GIL should already be held
-    Py_buffer view;
-    int flags = PyBUF_FORMAT|PyBUF_ND;
-    if (!readOnly)
-        flags |= PyBUF_WRITABLE;
-    PyBuffer_FillInfo(&view, NULL, ptr, len, readOnly ? 1:0, flags);
-    return PyMemoryView_FromBuffer(&view);
+    if (ptr && len) {
+        Py_buffer view;
+        int flags = PyBUF_FORMAT|PyBUF_ND;
+        if (!readOnly)
+            flags |= PyBUF_WRITABLE;
+        PyBuffer_FillInfo(&view, NULL, ptr, len, readOnly ? 1:0, flags);
+        return PyMemoryView_FromBuffer(&view);
+    } else {
+        Py_INCREF(Py_None); return Py_None;
+        // return PyBytes_FromString("");    TODO: None or an empty string?
+    }
 
 //    // TODO: Consider using a sip.array object instead, like this:
 //    // Create a sip.array of bytes, and then convert to a memoryview which is
