@@ -1246,6 +1246,7 @@
 "GetKeyState":"wx.",
 "GetLibraryVersionInfo":"wx.",
 "GetLinuxDistributionInfo":"wx.",
+"GetLocale":"wx.",
 "GetMousePosition":"wx.",
 "GetMouseState":"wx.",
 "GetNumberFromUser":"wx.",
