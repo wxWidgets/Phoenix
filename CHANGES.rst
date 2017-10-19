@@ -36,6 +36,9 @@ Changes in this release include the following:
   item. Currently this is turned on for just GridCellCoordsArray, but others
   can be switched in the future if needed. (#297)
 
+* Add missing ``wx.GetLocale`` function. (#572)
+
+
 
 
 4.0.0b2 -- "Hurricanes, Floods, and Forest Fires! Oh My!"
