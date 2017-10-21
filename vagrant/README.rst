@@ -55,7 +55,7 @@ example::
     vagrant ssh -c "scripts/build.sh ubuntu-16.04"
     vagrant halt
 
-Please note that currently this will do up to 6 complete builds, one for each
+Please note that currently this will do up to 8 complete builds, one for each
 supported version of Python on that distro, for both gtk2 and gtk3. Additional
 parameters can be passed to the ``build.sh`` script to narrow the build down to
 a specific Python version or port.  See ``scripts/build.sh`` for details.
