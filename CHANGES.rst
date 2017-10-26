@@ -38,6 +38,9 @@ Changes in this release include the following:
 
 * Add missing ``wx.GetLocale`` function. (#572)
 
+* Add methods to wx.TextCtrl for output "file-like" compatibility. (#578)
+
+
 
 
 
