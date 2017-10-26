@@ -40,6 +40,7 @@ Changes in this release include the following:
 
 * Add methods to wx.TextCtrl for output "file-like" compatibility. (#578)
 
+* Fix object ownership issue for menus added to toolbar items. (#580)
 
 
 
