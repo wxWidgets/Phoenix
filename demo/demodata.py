@@ -144,7 +144,7 @@ _treeList = [
         'GenericButtons',
         'GenericDirCtrl',
         'ItemsPicker',
-        #'LEDNumberCtrl',  # TODO
+        'LEDNumberCtrl',
         'MultiSash',
         'PlateButton',
         'PopupControl',
