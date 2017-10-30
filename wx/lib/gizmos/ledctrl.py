@@ -60,12 +60,41 @@ class LEDNumberCtrl(wx.Control):
 
 
 
-    def __init__(self, parent, id=wx.ID_ANY,
-                 pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=LED_ALIGN_LEFT|LED_DRAW_FADED, name='ledctrl'):
-        super(LEDNumberCtrl, self).__init__(parent, id, pos, size, style, name=name)
+    def __init__(self, *args, **kw):
+        """
+        Create a new LEDNumberCtrl.
 
-        # defaults
+        Both the normal constructor style with all parameters, or wxWidgets
+        2-phase style default constructor is supported. If the default
+        constructor is used then the Create method will need to be called
+        later before the widget can actually be used.
+        """
+        if not args and not kw:
+            self._init_default()
+        else:
+            self._init_full(*args, **kw)
+
+    def _init_default(self):
+        super(LEDNumberCtrl, self).__init__()
+        self._init()
+
+    def _init_full(self, parent, id=wx.ID_ANY,
+                   pos=wx.DefaultPosition, size=wx.DefaultSize,
+                   style=LED_ALIGN_LEFT|LED_DRAW_FADED, name='ledctrl'):
+        super(LEDNumberCtrl, self).__init__(parent, id, pos, size, style, name=name)
+        self._init()
+        self._post_create()
+
+
+    def Create(self, parent, id=wx.ID_ANY,
+               pos=wx.DefaultPosition, size=wx.DefaultSize,
+               style=LED_ALIGN_LEFT|LED_DRAW_FADED, name='ledctrl'):
+        super(LEDNumberCtrl, self).Create(parent, id, pos, size, style, name=name)
+        self._post_create()
+
+
+    def _init(self):
+        # set default attributes
         self._alignment = LED_ALIGN_LEFT
         self._lineMargin = -1
         self._digitMargin = -1
@@ -75,11 +104,14 @@ class LEDNumberCtrl(wx.Control):
         self._leftStartPos = -1
         self._value = ''
 
+
+    def _post_create(self):
         self.SetBackgroundColour(wx.BLACK)
         self.SetForegroundColour(wx.GREEN)
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
 
         # flags
+        style = self.GetWindowStyle()
         if style & LED_DRAW_FADED:
             self.SetDrawFaded(True)
         if style  & LED_ALIGN_MASK:
