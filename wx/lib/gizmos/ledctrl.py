@@ -9,6 +9,9 @@
 # Licence:     wxWindows license
 # Tags:
 #----------------------------------------------------------------------
+"""
+Widget to display a series of digits, spaces, dashes or colons in a segmented style.
+"""
 
 import wx
 
@@ -22,6 +25,9 @@ LED_DRAW_FADED = 0x08
 
 class LEDNumberCtrl(wx.Control):
     """
+    The LEDNumberCtrl can be used to display a series of digits, (plus spaces,
+    colons or dashes,) using a style reminiscent of old-timey segmented
+    digital displays.
     """
 
     # constants used internally
@@ -87,25 +93,23 @@ class LEDNumberCtrl(wx.Control):
 
 
     def GetAlignment(self):
-        """
-        """
         return self._alignment
 
 
     def GetDrawFaded(self):
-        """
-        """
         return self._drawFaded
 
 
     def GetValue(self):
-        """
-        """
         return self._value
 
 
     def SetAlignment(self, alignment, redraw=True):
         """
+        Set how the digits will be aligned within the widget.
+
+        Supported values are ``LED_ALIGN_LEFT``, ``LED_ALIGN_RIGHT``,
+        and ``LED_ALIGN_CENTER``.
         """
         if alignment != self._alignment:
             self._alignment = alignment
@@ -117,6 +121,8 @@ class LEDNumberCtrl(wx.Control):
 
     def SetDrawFaded(self, drawFaded, redraw=True):
         """
+        Set whether unlit segments will still be draw with a faded version of
+        the foreground colour.
         """
         if drawFaded != self._drawFaded:
             self._drawFaded = drawFaded
@@ -127,10 +133,11 @@ class LEDNumberCtrl(wx.Control):
 
     def SetValue(self, value, redraw=True):
         """
+        Set the string value to be displayed.
         """
         if value != self._value:
-            for c in value:
-                assert c in '0123456789-.: ', "LEDNumberCtrl can only display numeric string values."
+            for ch in value:
+                assert ch in '0123456789-.: ', "LEDNumberCtrl can only display numeric string values."
 
             self._value = value
             self._recalcInternals(self.GetClientSize())
