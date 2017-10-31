@@ -90,7 +90,7 @@ class LEDNumberCtrl(wx.Control):
                pos=wx.DefaultPosition, size=wx.DefaultSize,
                style=LED_ALIGN_LEFT|LED_DRAW_FADED, name='ledctrl'):
         super(LEDNumberCtrl, self).Create(parent, id, pos, size, style, name=name)
-        self._post_create()
+        return self._post_create()
 
 
     def _init(self):
@@ -122,6 +122,7 @@ class LEDNumberCtrl(wx.Control):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
+        return True
 
 
     def GetAlignment(self):
