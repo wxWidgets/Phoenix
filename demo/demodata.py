@@ -39,6 +39,8 @@ _treeList = [
     # new stuff
     ('Recent Additions/Updates', [
         'Simplebook',
+        'LEDNumberCtrl',
+        'DynamicSashWindow',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -165,7 +167,7 @@ _treeList = [
         'ComboCtrl',
         'ContextHelp',
         'DatePickerCtrl',
-        #'DynamicSashWindow',  # TODO
+        'DynamicSashWindow',
         'EditableListBox',
         'ExpandoTextCtrl',
         'FancyText',

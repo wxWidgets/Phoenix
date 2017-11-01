@@ -13,4 +13,5 @@
 
 
 from .ledctrl import *
+from .dynamicsash import *
 

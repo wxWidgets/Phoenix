@@ -10,18 +10,21 @@ import wx.stc as stc
 
 class TestView(stc.StyledTextCtrl):
     def __init__(self, parent, ID, log):
-        stc.StyledTextCtrl.__init__(self, parent, ID, style=wx.NO_BORDER)
+        #super(TestView, self).__init__()  # Test 2-phase
+        #self.Create(parent, ID, style=wx.NO_BORDER)
+        super(TestView, self).__init__(parent, ID, style=wx.NO_BORDER) # or 1-phase
         self.dyn_sash = parent
         self.log = log
         self.SetupScrollBars()
         self.SetMarginWidth(1,0)
 
         self.StyleSetFont(stc.STC_STYLE_DEFAULT,
-                          wx.Font(10, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+                          wx.Font(12, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
 
         self.Bind(gizmos.EVT_DYNAMIC_SASH_SPLIT, self.OnSplit)
         self.Bind(gizmos.EVT_DYNAMIC_SASH_UNIFY, self.OnUnify)
         #self.SetScrollWidth(500)
+
 
     def SetupScrollBars(self):
         # hook the scrollbars provided by the wxDynamicSashWindow
@@ -38,9 +41,6 @@ class TestView(stc.StyledTextCtrl):
         self.SetVScrollBar(v_bar)
         self.SetHScrollBar(h_bar)
 
-
-    def __del__(self):
-        self.log.write("TestView.__del__\n")
 
     def OnSplit(self, evt):
         self.log.write("TestView.OnSplit\n");
@@ -79,7 +79,9 @@ StyledTextCtrl that is used for the view class in this sample.
 
 class SimpleView(wx.Panel):
     def __init__(self, parent, ID, log):
-        wx.Panel.__init__(self, parent, ID)
+        #wx.Panel.__init__(self)                      # 2-phase create
+        #self.Create(parent, ID)
+        super(SimpleView, self).__init__(parent, ID)  # 1-phase
         self.dyn_sash = parent
         self.log = log
         self.SetBackgroundColour("LIGHT BLUE")
@@ -92,23 +94,17 @@ class SimpleView(wx.Panel):
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
-##     if wx.Platform == "__WXMAC__":
-##         from wx.lib.msgpanel import MessagePanel
-##         win = MessagePanel(nb, 'This demo currently fails on the Mac. The problem is being looked into...',
-##                            'Sorry', wx.ICON_WARNING)
-##         return win
 
-    if 1:
-        win = gizmos.DynamicSashWindow(nb, -1, style =  wx.CLIP_CHILDREN
+    if True:
+        win = gizmos.DynamicSashWindow(nb, -1, #style=0
                                   #| wxDS_MANAGE_SCROLLBARS
                                   #| wxDS_DRAG_CORNER
                                   )
 
-        win.SetFont(wx.Font(10, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         view = TestView(win, -1, log)
         view.SetText(sampleText)
     else:
-        win = wx.DynamicSashWindow(nb, -1)
+        win = gizmos.DynamicSashWindow(nb, -1)
         view = SimpleView(win, -1, log)
     return win
 
