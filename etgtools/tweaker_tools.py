@@ -501,7 +501,7 @@ def addSipConvertToSubClassCode(klass):
 def getEtgFiles(names):
     """
     Create a list of the files from the basenames in the names list that
-    corespond to files in the etg folder.
+    correspond to files in the etg folder.
     """
     return getMatchingFiles(names, 'etg/%s.py')
 
