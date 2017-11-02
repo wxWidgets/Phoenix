@@ -17,29 +17,30 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'wxPGInDialogValidator',
-           'wxStringProperty',
-           'wxNumericPropertyValidator',
-           'wxIntProperty',
-           'wxUIntProperty',
-           'wxFloatProperty',
-           'wxBoolProperty',
-           'wxEnumProperty',
-           'wxEditEnumProperty',
-           'wxFlagsProperty',
-           'wxPGFileDialogAdapter',
-           'wxFileProperty',
-           'wxPGLongStringDialogAdapter',
-           'wxLongStringProperty',
-           'wxDirProperty',
-           'wxArrayStringProperty',
-           'wxPGArrayEditorDialog',
-           'wxPGArrayStringEditorDialog',
+ITEMS  = [ #'wxPGInDialogValidator',
+           #'wxStringProperty',
+           #'wxNumericPropertyValidator',
+           #'wxIntProperty',
+           #'wxUIntProperty',
+           #'wxFloatProperty',
+           #'wxBoolProperty',
+           #'wxEnumProperty',
+           #'wxEditEnumProperty',
+           #'wxFlagsProperty',
+           #'wxPGFileDialogAdapter',
+           #'wxFileProperty',
+           #'wxPGLongStringDialogAdapter',
+           #'wxLongStringProperty',
+           #'wxDirProperty',
+           #'wxArrayStringProperty',
+           #'wxPGArrayEditorDialog',
+           #'wxPGArrayStringEditorDialog',
            ]
 
 #---------------------------------------------------------------------------
 
 def run():
+    return
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)

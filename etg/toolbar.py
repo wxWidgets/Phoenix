@@ -65,14 +65,14 @@ def run():
     gcd.type = 'wxPyUserData*'
     gcd.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetClientData());')
 
-    c.find('SetDropdownMenu.menu').transfer = True
+    #c.find('SetDropdownMenu.menu').transfer = True
 
 
     #---------------------------------------------
     c = module.find('wxToolBar')
     tools.fixWindowClass(c)
     _fixClientData(c)
-    c.find('SetBitmapResource').ignore()
+    #c.find('SetBitmapResource').ignore()
     module.addGlobalStr('wxToolBarNameStr', c)
 
     gcd = c.find('GetToolClientData')

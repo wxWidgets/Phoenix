@@ -51,7 +51,6 @@ def run():
     c.find('GetRounded.y').out = True
 
     # these have link errors
-    c.find('SetPolarCoordinates').ignore()
     c.find('operator/=').findOverload('wxDouble').ignore()
     c.find('operator*=').findOverload('wxDouble').ignore()
 

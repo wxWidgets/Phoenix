@@ -17,21 +17,22 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'wxColourPropertyValue',
-           'wxFontProperty',
-           'wxSystemColourProperty',
-           'wxColourProperty',
-           'wxCursorProperty',
-           'wxImageFileProperty',
-           'wxMultiChoiceProperty',
-           'wxDateProperty',
-           'wxPGSpinCtrlEditor',
+ITEMS  = [ #'wxColourPropertyValue',
+           #'wxFontProperty',
+           #'wxSystemColourProperty',
+           #'wxColourProperty',
+           #'wxCursorProperty',
+           #'wxImageFileProperty',
+           #'wxMultiChoiceProperty',
+           #'wxDateProperty',
+           #'wxPGSpinCtrlEditor',
 
            ]
 
 #---------------------------------------------------------------------------
 
 def run():
+    return
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
