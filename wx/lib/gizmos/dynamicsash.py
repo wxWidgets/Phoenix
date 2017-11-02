@@ -739,7 +739,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         if self._dragging:
             self.DrawSash(self._drag_x, self._drag_y)
             self._drag_x = event.x
-            self._drag_y = event.x
+            self._drag_y = event.y
             self.DrawSash(self._drag_x, self._drag_y)
         elif self._leaf:
             self._leaf.OnMouseMove(event)
@@ -756,7 +756,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         else:
             self._dragging = self._split
             self._drag_x = event.x
-            self._drag_y = event.x
+            self._drag_y = event.y
             self.DrawSash(self._drag_x, self._drag_y)
             self._container.CaptureMouse()
 
