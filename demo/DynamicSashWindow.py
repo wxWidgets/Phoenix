@@ -43,14 +43,14 @@ class TestView(stc.StyledTextCtrl):
 
 
     def OnSplit(self, evt):
-        self.log.write("TestView.OnSplit\n");
+        self.log.write("TestView.OnSplit\n")
         newview = TestView(self.dyn_sash, -1, self.log)
         newview.SetDocPointer(self.GetDocPointer())     # use the same document
         self.SetupScrollBars()
 
 
     def OnUnify(self, evt):
-        self.log.write("TestView.OnUnify\n");
+        self.log.write("TestView.OnUnify\n")
         self.SetupScrollBars()
 
 
@@ -78,6 +78,8 @@ StyledTextCtrl that is used for the view class in this sample.
 # except the default wxDynamicSashWindow behaviour
 
 class SimpleView(wx.Panel):
+    count = 0
+
     def __init__(self, parent, ID, log):
         #wx.Panel.__init__(self)                      # 2-phase create
         #self.Create(parent, ID)
@@ -86,16 +88,28 @@ class SimpleView(wx.Panel):
         self.log = log
         self.SetBackgroundColour("LIGHT BLUE")
         self.Bind(gizmos.EVT_DYNAMIC_SASH_SPLIT, self.OnSplit)
+        self.Bind(gizmos.EVT_DYNAMIC_SASH_UNIFY, self.OnUnify)
+
+        SimpleView.count += 1
+        st = wx.StaticText(self, label=str(SimpleView.count), pos=(15,15))
+        font = st.GetFont()
+        st.SetFont(font.Bold().Scaled(2.0))
+
 
     def OnSplit(self, evt):
-        v = SimpleView(self.dyn_sash, -1, self.log)
+        self.log.write("SimpleView.OnSplit\n")
+        newview = SimpleView(self.dyn_sash, -1, self.log)
+        # It's automatically added to the proper place in the sash window
+
+    def OnUnify(self, evt):
+        self.log.write("SimpleView.OnUnify\n")
 
 
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
 
-    if True:
+    if False:
         win = gizmos.DynamicSashWindow(nb, -1, #style=0
                                   #| wxDS_MANAGE_SCROLLBARS
                                   #| wxDS_DRAG_CORNER
