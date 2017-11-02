@@ -263,14 +263,14 @@ class _DynamicSashReparentEvent(wx.PyEvent):
 
 
 # enum DynamicSashRegion
-_DSR_NONE = 1
-_DSR_VERTICAL_TAB = 2
-_DSR_HORIZONTAL_TAB = 3
-_DSR_CORNER = 4
-_DSR_LEFT_EDGE = 5
-_DSR_TOP_EDGE = 6
-_DSR_RIGHT_EDGE = 7
-_DSR_BOTTOM_EDGE = 8
+_DSR_NONE = 0
+_DSR_VERTICAL_TAB = 1
+_DSR_HORIZONTAL_TAB = 2
+_DSR_CORNER = 3
+_DSR_LEFT_EDGE = 4
+_DSR_TOP_EDGE = 5
+_DSR_RIGHT_EDGE = 6
+_DSR_BOTTOM_EDGE = 7
 
 
 #----------------------------------------------------------------------------
@@ -768,7 +768,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
             self.DrawSash(self._drag_x, self._drag_y)
             self._container.ReleaseMouse()
 
-            sellf.Resize(event.x, event.y)
+            self.Resize(event.x, event.y)
 
             self._dragging = _DSR_NONE
 
