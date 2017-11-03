@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041302
-#define SIP_VERSION_STR     "4.19.2"
+#define SIP_VERSION         0x041304
+#define SIP_VERSION_STR     "4.19.4"
 
 
 /*
@@ -67,6 +67,23 @@ extern "C" {
  * minor number set * to 0.
  *
  * History:
+ *
+ * 12.3 Added SIP_TYPE_SCOPED_ENUM to the sipTypeDef flags.
+ *      Added sip_api_convert_to_enum() to the public API.
+ *      Added sip_api_convert_to_bool() to the public API.
+ *      Added sip_api_long_as_char(), sip_api_long_as_signed_char(),
+ *      sip_api_long_as_unsigned_char(), sip_api_long_as_short(),
+ *      sip_api_long_as_unsigned_short(), sip_api_long_as_int(),
+ *      sip_api_long_as_unsigned_int(), sip_api_long_as_long(),
+ *      sip_api_long_as_unsigned_long(), sip_api_long_as_long_long(),
+ *      sip_api_long_as_unsigned_long_long() to the public API.
+ *      Deprecated sip_api_can_convert_to_enum().
+ *
+ * 12.2 Added sip_api_print_object() to the public API.
+ *      Renamed sip_api_common_dtor() to sip_api_instance_destroyed() and added
+ *      it to the public API.
+ *      Added sipEventType and sip_api_register_event_handler() to the public
+ *      API.
  *
  * 12.1 Added sip_api_enable_gc() to the public API.
  *
@@ -246,7 +263,7 @@ extern "C" {
  * 0.0  Original version.
  */
 #define SIP_API_MAJOR_NR    12
-#define SIP_API_MINOR_NR    1
+#define SIP_API_MINOR_NR    3
 
 
 /* The name of the sip module. */
@@ -413,8 +430,21 @@ typedef struct _sipWrapper sipWrapper;
 
 
 /*
- * Some convenient function pointers.
+ * The different events a handler can be registered for.
  */
+typedef enum
+{
+    sipEventWrappedInstance,    /* After wrapping a C/C++ instance. */
+    sipEventCollectingWrapper,  /* When garbage collecting a wrapper object. */
+    sipEventNrEvents
+} sipEventType;
+
+/*
+ * The event handlers.
+ */
+typedef void (*sipWrappedInstanceEventHandler)(void *sipCpp);
+typedef void (*sipCollectingWrapperEventHandler)(sipSimpleWrapper *sipSelf);
+
 
 /*
  * The operation an access function is being asked to perform.
@@ -426,6 +456,10 @@ typedef enum
     ReleaseGuard        /* Release the guard, if any. */
 } AccessFuncOp;
 
+
+/*
+ * Some convenient function pointers.
+ */
 typedef void *(*sipInitFunc)(sipSimpleWrapper *, PyObject *, PyObject *,
         PyObject **, PyObject **, PyObject **);
 typedef int (*sipFinalFunc)(PyObject *, void *, PyObject *, PyObject **);
@@ -451,7 +485,7 @@ typedef PyObject *(*sipConvertFromFunc)(void *, PyObject *);
 typedef void (*sipVirtErrorHandlerFunc)(sipSimpleWrapper *, sip_gilstate_t);
 typedef int (*sipVirtHandlerFunc)(sip_gilstate_t, sipVirtErrorHandlerFunc,
         sipSimpleWrapper *, PyObject *, ...);
-typedef void (*sipAssignFunc)(void *, SIP_SSIZE_T, const void *);
+typedef void (*sipAssignFunc)(void *, SIP_SSIZE_T, void *);
 typedef void *(*sipArrayFunc)(SIP_SSIZE_T);
 typedef void *(*sipCopyFunc)(const void *, SIP_SSIZE_T);
 typedef void (*sipReleaseFunc)(void *, int);
@@ -1637,7 +1671,15 @@ typedef struct _sipAPIDef {
             PyObject *transferObj, int flags, int *statep, int *iserrp);
     void *(*api_force_convert_to_type)(PyObject *pyObj, const sipTypeDef *td,
             PyObject *transferObj, int flags, int *statep, int *iserrp);
+
+    /*
+     * The following are deprecated parts of the public API.
+     */
     int (*api_can_convert_to_enum)(PyObject *pyObj, const sipTypeDef *td);
+
+    /*
+     * The following are part of the public API.
+     */
     void (*api_release_type)(void *cpp, const sipTypeDef *td, int state);
     PyObject *(*api_convert_from_type)(void *cpp, const sipTypeDef *td,
             PyObject *transferObj);
@@ -1723,7 +1765,15 @@ typedef struct _sipAPIDef {
             const char *fmt, ...);
     int (*api_parse_pair)(PyObject **parseErrp, PyObject *arg0, PyObject *arg1,
             const char *fmt, ...);
-    void (*api_common_dtor)(sipSimpleWrapper *sipSelf);
+
+    /*
+     * The following are part of the public API.
+     */
+    void (*api_instance_destroyed)(sipSimpleWrapper *sipSelf);
+
+    /*
+     * The following are not part of the public API.
+     */
     void (*api_no_function)(PyObject *parseErr, const char *func,
             const char *doc);
     void (*api_no_method)(PyObject *parseErr, const char *scope,
@@ -1808,6 +1858,27 @@ typedef struct _sipAPIDef {
      * The following are part of the public API.
      */
     int (*api_enable_gc)(int enable);
+    void (*api_print_object)(PyObject *o);
+    int (*api_register_event_handler)(sipEventType type, const sipTypeDef *td,
+            void *handler);
+    int (*api_convert_to_enum)(PyObject *obj, const sipTypeDef *td);
+    int (*api_convert_to_bool)(PyObject *obj);
+    int (*api_enable_overflow_checking)(int enable);
+    char (*api_long_as_char)(PyObject *o);
+    signed char (*api_long_as_signed_char)(PyObject *o);
+    unsigned char (*api_long_as_unsigned_char)(PyObject *o);
+    short (*api_long_as_short)(PyObject *o);
+    unsigned short (*api_long_as_unsigned_short)(PyObject *o);
+    int (*api_long_as_int)(PyObject *o);
+    unsigned int (*api_long_as_unsigned_int)(PyObject *o);
+    long (*api_long_as_long)(PyObject *o);
+#if defined(HAVE_LONG_LONG)
+    PY_LONG_LONG (*api_long_as_long_long)(PyObject *o);
+    unsigned PY_LONG_LONG (*api_long_as_unsigned_long_long)(PyObject *o);
+#else
+    void *api_long_as_long_long;
+    void *api_long_as_unsigned_long_long;
+#endif
 } sipAPIDef;
 
 
@@ -1904,6 +1975,7 @@ typedef struct _sipQtAPI {
 #define SIP_TYPE_NAMESPACE  0x0001  /* If the type is a C++ namespace. */
 #define SIP_TYPE_MAPPED     0x0002  /* If the type is a mapped type. */
 #define SIP_TYPE_ENUM       0x0003  /* If the type is a named enum. */
+#define SIP_TYPE_SCOPED_ENUM    0x0004  /* If the type is a scoped enum. */
 #define SIP_TYPE_ABSTRACT   0x0008  /* If the type is abstract. */
 #define SIP_TYPE_SCC        0x0010  /* If the type is subject to sub-class convertors. */
 #define SIP_TYPE_ALLOW_NONE 0x0020  /* If the type can handle None. */
@@ -1920,6 +1992,7 @@ typedef struct _sipQtAPI {
 #define sipTypeIsNamespace(td)  (((td)->td_flags & SIP_TYPE_TYPE_MASK) == SIP_TYPE_NAMESPACE)
 #define sipTypeIsMapped(td) (((td)->td_flags & SIP_TYPE_TYPE_MASK) == SIP_TYPE_MAPPED)
 #define sipTypeIsEnum(td)   (((td)->td_flags & SIP_TYPE_TYPE_MASK) == SIP_TYPE_ENUM)
+#define sipTypeIsScopedEnum(td) (((td)->td_flags & SIP_TYPE_TYPE_MASK) == SIP_TYPE_SCOPED_ENUM)
 #define sipTypeAsPyTypeObject(td)   ((td)->u.td_py_type)
 #define sipTypeName(td)     sipNameFromPool((td)->td_module, (td)->td_cname)
 #define sipTypePluginData(td)   ((td)->td_plugin_data)

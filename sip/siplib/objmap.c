@@ -2,7 +2,7 @@
  * This module implements a hash table class for mapping C/C++ addresses to the
  * corresponding wrapped Python object.
  *
- * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -282,7 +282,7 @@ static void add_object(sipObjectMap *om, void *addr, sipSimpleWrapper *val)
                      * stale alias entry from the object map, triggering a
                      * use-after-free when accessing its C++ object.
                      */
-                    sip_api_common_dtor(sw);
+                    sip_api_instance_destroyed(sw);
                     sipSetNotInMap(sw);
                 }
 
