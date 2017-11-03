@@ -770,6 +770,20 @@ def checkCompiler(quiet=False):
         os.environ['LIB'] = _b(env['lib'])
         os.environ['LIBPATH'] = _b(env['libpath'])
 
+    # NOTE: SIP is now generating code with scoped-enums. Older linux
+    # platforms like what we're using for builds, and also TravisCI for
+    # example, are using GCC versions that are still defaulting to C++98,
+    # so this flag is needed to turn on the C++11 mode. If this flag
+    # causes problems with other non-Windows, non-Darwin compilers then
+    # we'll need to make this a little smarter about what flag (if any)
+    # needs to be used.
+    if not isWindows and not isDarwin:
+        stdflag = '-std=c++11'
+        curflags = os.environ.get('CXXFLAGS', '')
+        if stdflag not in curflags:
+            os.environ['CXXFLAGS'] = '{} {}'.format(stdflag, curflags)
+    #print('**** Using CXXFLAGS:', os.environ.get('CXXFLAGS', ''))
+
 
 def getWafBuildBase():
     base = posixjoin('build', 'waf', PYVER)
