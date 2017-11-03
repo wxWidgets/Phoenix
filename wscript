@@ -513,6 +513,7 @@ def build(bld):
                     'sip/siplib/array.c',
                     'sip/siplib/bool.cpp',
                     'sip/siplib/descriptors.c',
+                    'sip/siplib/int_convertors.c',
                     'sip/siplib/objmap.c',
                     'sip/siplib/qtlib.c',
                     'sip/siplib/siplib.c',
