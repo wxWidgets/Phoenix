@@ -272,6 +272,7 @@ _DSR_TOP_EDGE = 5
 _DSR_RIGHT_EDGE = 6
 _DSR_BOTTOM_EDGE = 7
 
+_isMac = 'wxMac' in wx.PlatformInfo
 
 #----------------------------------------------------------------------------
 
@@ -289,6 +290,9 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         self._split = _DSR_NONE
         self._drag_x = -1
         self._drag_y = -1
+        if _isMac:
+            self._overlay = wx.Overlay()
+            self.DrawSash = self.DrawSash_overlay
 
 
     def __dtor__(self):
@@ -310,7 +314,6 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         self._add_child_target = None
         self._top = None
         self._window = None
-
 
 
     def Create(self):
@@ -338,16 +341,38 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         return True
 
 
-
     def AddChild(self, window):
         if self._add_child_target and self._add_child_target._leaf:
             self._add_child_target._leaf.AddChild(window)
 
 
-    def DrawSash(self, x, y):
-        # TODO: Switch to an implementation based on wx.Overlay instead of
-        #       wx.ScreenDC. Maybe also make it more pretty by using alpha
-        #       instead of a polka-dotty bitmap brush.
+    def DrawSash_overlay(self, x, y, mode):
+        if mode in ['press', 'move--']:
+            # these are not needed for this implementation
+            return
+
+        if mode == 'release':
+            dc = wx.ClientDC(self._container)
+            odc = wx.DCOverlay(self._overlay, dc)
+            odc.Clear()
+            del odc
+            self._overlay.Reset()
+
+        if mode == 'move':
+            dc = wx.ClientDC(self._container)
+            odc = wx.DCOverlay(self._overlay, dc)
+            odc.Clear()
+
+            penclr = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DDKSHADOW)
+            dc.SetPen(wx.Pen(penclr, 1))
+            bshclr = penclr.Get(False) + (0x80,)
+            bshclr = wx.Colour(*bshclr)
+            dc.SetBrush(wx.Brush(bshclr))
+
+            self._doDrawSash(dc, x, y, False)
+
+
+    def DrawSash(self, x, y, mode):
         dc = wx.ScreenDC()
         dc.StartDrawingOnTop(self._container)
 
@@ -364,12 +389,19 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         dc.SetBrush(brush)
         dc.SetLogicalFunction(wx.XOR)
 
+        self._doDrawSash(dc, x, y, True)
+
+        dc.EndDrawingOnTop()
+
+
+    def _doDrawSash(self, dc, x, y, useScreenCoords):
         if (self._dragging == _DSR_CORNER
                 and (self._window.GetWindowStyle() & DS_DRAG_CORNER) != 0):
 
             cx = cy = 0
-            cx, cy = self._container.ClientToScreen((cx, cy))
-            x, y = self._container.ClientToScreen((x, y))
+            if useScreenCoords:
+                cx, cy = self._container.ClientToScreen((cx, cy))
+                x, y = self._container.ClientToScreen((x, y))
 
             if cx < x and cy < y:
                 dc.DrawRectangle(cx - 2, cy - 2, x - cx + 4, 4)
@@ -394,7 +426,8 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
             else:
                 y = 0
 
-            x, y = self._container.ClientToScreen(x, y)
+            if useScreenCoords:
+                x, y = self._container.ClientToScreen(x, y)
 
             w = body_w
             h = body_h
@@ -403,9 +436,6 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
                 dc.DrawRectangle(x, y - 2, w, 4)
             else:
                 dc.DrawRectangle(x - 2, y, 4, h)
-
-        dc.EndDrawingOnTop()
-
 
 
     def ConstrainChildren(self, px, py):
@@ -434,8 +464,6 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
             layout.top.SameAs(self._container, wx.Top)
 
         self._child[1]._container.SetConstraints(layout)
-
-
 
 
     def Split(self, px, py):
@@ -484,7 +512,6 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         self._leaf = None
     
         self._container.Layout()
-
 
 
     def Unify(self, panel):
@@ -546,7 +573,6 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
                                    child_size.GetHeight() * 100.0 / size.GetHeight())
 
             self._container.Layout()
-
 
 
     def Resize(self, x, y):
@@ -666,7 +692,6 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
             v_parent.Unify(v_unify)
 
 
-
     def FindParent(self, side):
         if self._parent is None:
             return None
@@ -686,7 +711,6 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         return self._parent.FindParent(side)
 
 
-
     def FindUpperParent(self, sash_a, sash_b):
         win = sash_a._container.GetParent()
         while win and not win.IsTopLevel():
@@ -696,13 +720,11 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         return sash_a
 
 
-
     def FindFrame(self):
         win = self._window.GetParent()
         while win and not win.IsTopLevel():
             win = win.GetParent()
         return win
-
 
 
     def FindScrollBar(self, child, vert):
@@ -717,7 +739,6 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
             ret = self._child[1].FindScrollBar(child, vert)
 
         return ret
-
 
 
     def OnSize(self, event):
@@ -737,10 +758,10 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
 
     def OnMouseMove(self, event):
         if self._dragging:
-            self.DrawSash(self._drag_x, self._drag_y)
+            self.DrawSash(self._drag_x, self._drag_y, "move--")
             self._drag_x = event.x
             self._drag_y = event.y
-            self.DrawSash(self._drag_x, self._drag_y)
+            self.DrawSash(self._drag_x, self._drag_y, "move")
         elif self._leaf:
             self._leaf.OnMouseMove(event)
 
@@ -757,7 +778,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
             self._dragging = self._split
             self._drag_x = event.x
             self._drag_y = event.y
-            self.DrawSash(self._drag_x, self._drag_y)
+            self.DrawSash(self._drag_x, self._drag_y, "press")
             self._container.CaptureMouse()
 
 
@@ -765,7 +786,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         if ((self._dragging == _DSR_CORNER) and
             (self._window.GetWindowStyle() & DS_DRAG_CORNER) != 0):
 
-            self.DrawSash(self._drag_x, self._drag_y)
+            self.DrawSash(self._drag_x, self._drag_y, "release")
             self._container.ReleaseMouse()
 
             self.Resize(event.x, event.y)
@@ -773,7 +794,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
             self._dragging = _DSR_NONE
 
         elif self._dragging:
-            self.DrawSash(self._drag_x, self._drag_y)
+            self.DrawSash(self._drag_x, self._drag_y, "release")
             self._container.ReleaseMouse()
 
             size = self._container.GetSize()
@@ -912,7 +933,6 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
         return True
 
 
-
     def AddChild(self, window):
         if self._child:
             self._child.Destroy()
@@ -932,12 +952,10 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
         self.AddPendingEvent(event)
 
 
-
     def _checkPendingChild(self):
         if hasattr(self, '_child_ptr'):
             self._child = wx.siplib.wrapinstance(self._child_ptr, wx.Object)
             del self._child_ptr
-
 
 
     def OnReparent(self, event):
@@ -945,7 +963,6 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
         if self._child:
             self._child.Reparent(self._viewport)
         self.ResizeChild(self._viewport.GetSize())
-
 
 
     def GetRegion(self,  x, y):
@@ -973,7 +990,6 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
             return _DSR_BOTTOM_EDGE
     
         return _DSR_NONE
-
 
 
     def ResizeChild(self, size):
@@ -1016,7 +1032,6 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
                 self._child.SetSize(size)
 
 
-
     def FindScrollBar(self, child, vert):
         self._checkPendingChild()
         if self._child == child:
@@ -1024,16 +1039,13 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
         return None
 
 
-
     def OnSize(self, event):
         self._impl._container.Refresh()
-
 
 
     def OnViewSize(self, event):
         if self._viewport is not None:
             self.ResizeChild(self._viewport.GetSize())
-
 
 
     def OnPaint(self, event):
@@ -1114,13 +1126,11 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
             self._viewport.ScrollWindow(nx - pos.x, ny - pos.y)
 
 
-
     def OnFocus(self, event):
         self._checkPendingChild()
         if (event.GetEventObject() == self._hscroll or
                 event.GetEventObject() == self._vscroll):
             self._child.SetFocus()
-
 
 
     def OnMouseMove(self, event):
@@ -1166,7 +1176,7 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
             self._impl._dragging = region
             self._impl._drag_x = event.x
             self._impl._drag_y = event.y
-            self._impl.DrawSash(event.x, event.y)
+            self._impl.DrawSash(event.x, event.y, "press")
             self._impl._container.CaptureMouse()
 
         elif (region == _DSR_LEFT_EDGE or region == _DSR_TOP_EDGE
@@ -1183,9 +1193,8 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
                 parent._dragging = parent._split
                 parent._drag_x = x
                 parent._drag_y = y
-                parent.DrawSash(x, y)
+                parent.DrawSash(x, y, "press")
                 parent._container.CaptureMouse()
-
 
 
     def OnRelease(self, event):
