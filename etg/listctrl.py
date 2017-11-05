@@ -103,21 +103,6 @@ def run():
     c.find('GetItemData').type = 'long'
     c.find('SetItemPtrData').ignore()
 
-    # Monkey-patch SetItemData to ensure the data value isn't too big. It's
-    # limited to a C long...
-    orig = c.find('SetItemData')
-    orig.pyName = '_SetItemData'
-    orig.docsignored = True
-
-    c.addPyMethod('SetItemData', '(self, item, data)',
-        doc="Associates an application-defined data value with this item.",
-        body="""\
-            from wx._core import _LONG_MIN, _LONG_MAX
-            if data < _LONG_MIN or data > _LONG_MAX:
-                raise OverflowError("Values limited to what can be held in a C long.")
-            return self._SetItemData(item, data)
-            """)
-
 
 
     # Change the semantics of GetColumn to return the item as the return

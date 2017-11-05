@@ -98,6 +98,14 @@ def parseAndTweakModule():
             #endif
             """)
 
+    # Methods for "file-like" compatibility
+    c.addCppMethod('void', 'write', '(const wxString* text)',
+        doc="Append text to the textctrl, for file-like compatibility.",
+        body="self->AppendText(*text);")
+    c.addCppMethod('void', 'flush', '()',
+        doc="NOP, for file-like compatibility.",
+        body="")
+
     c = module.find('wxTextUrlEvent')
     tools.fixEventClass(c)
 

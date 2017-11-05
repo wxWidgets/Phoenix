@@ -39,6 +39,10 @@ class intl_Tests(wtc.WidgetTestCase):
         wx.LANGUAGE_AMHARIC
 
 
+    def test_intlGetLocaleFunc(self):
+        # check that this function exists
+        l = wx.GetLocale()
+
 
 #---------------------------------------------------------------------------
 

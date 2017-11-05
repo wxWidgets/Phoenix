@@ -36,6 +36,19 @@ Changes in this release include the following:
   item. Currently this is turned on for just GridCellCoordsArray, but others
   can be switched in the future if needed. (#297)
 
+* Add missing ``wx.GetLocale`` function. (#572)
+
+* Add methods to wx.TextCtrl for output "file-like" compatibility. (#578)
+
+* Fix object ownership issue for menus added to toolbar items. (#580)
+
+* Updated SIP to version 4.19.4. One of the new features of this version is
+  that integer overflows are no longer silently truncated and ignored. In
+  other words, if a wrapped API has a parameter that is a C int type, and you
+  pass a value that is larger than what will fit in that type of integer then
+  an OverflowError exception will be raised.
+
+
 
 
 4.0.0b2 -- "Hurricanes, Floods, and Forest Fires! Oh My!"

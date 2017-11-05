@@ -632,32 +632,32 @@ static void *get_value(sipArrayObject *array, PyObject *value)
         switch (*array->format)
         {
         case 'b':
-            static_data.s_char_t = (signed char)SIPLong_AsLong(value);
+            static_data.s_char_t = sip_api_long_as_char(value);
             data = &static_data.s_char_t;
             break;
 
         case 'B':
-            static_data.u_char_t = (unsigned char)sip_api_long_as_unsigned_long(value);
+            static_data.u_char_t = sip_api_long_as_unsigned_char(value);
             data = &static_data.u_char_t;
             break;
 
         case 'h':
-            static_data.s_short_t = (signed short)SIPLong_AsLong(value);
+            static_data.s_short_t = sip_api_long_as_short(value);
             data = &static_data.s_short_t;
             break;
 
         case 'H':
-            static_data.u_short_t = (unsigned short)sip_api_long_as_unsigned_long(value);
+            static_data.u_short_t = sip_api_long_as_unsigned_short(value);
             data = &static_data.u_short_t;
             break;
 
         case 'i':
-            static_data.s_int_t = SIPLong_AsLong(value);
+            static_data.s_int_t = sip_api_long_as_int(value);
             data = &static_data.s_int_t;
             break;
 
         case 'I':
-            static_data.u_int_t = sip_api_long_as_unsigned_long(value);
+            static_data.u_int_t = sip_api_long_as_unsigned_int(value);
             data = &static_data.u_int_t;
             break;
 
