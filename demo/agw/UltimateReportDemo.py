@@ -779,7 +779,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
 
     def OnItemSelected(self, event):
-        self.currentItem = event.Index
+        self.currentItem = event.GetIndex()
         self.log.write("OnItemSelected: %s, %s, %s, %s\n" %(self.currentItem,
                                                             self.list.GetItemText(self.currentItem),
                                                             self.getColumnText(self.currentItem, 1),
@@ -799,15 +799,15 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
     def OnItemDeselected(self, evt):
         item = evt.GetItem()
-        self.log.write("OnItemDeselected: %d\n" % evt.Index)
+        self.log.write("OnItemDeselected: %d\n" % evt.GetIndex())
 
 ##        # Show how to reselect something we don't want deselected
-##        if evt.Index == 11:
+##        if evt.GetIndex() == 11:
 ##            wx.CallAfter(self.list.SetItemState, 11, wx.LIST_STATE_SELECTED, wx.LIST_STATE_SELECTED)
 
 
     def OnItemActivated(self, event):
-        self.currentItem = event.Index
+        self.currentItem = event.GetIndex()
         self.log.write("OnItemActivated: %s\nTopItem: %s\n" %(self.list.GetItemText(self.currentItem), self.list.GetTopItem()))
 
     def OnBeginEdit(self, event):
