@@ -48,6 +48,9 @@ Changes in this release include the following:
   pass a value that is larger than what will fit in that type of integer then
   an OverflowError exception will be raised.
 
+* Fixed wx.richtext.RichTextBuffer.GetExtWildcard to return a tuple of 2
+  values, as was done in Classic. (#594)
+
 
 
 
