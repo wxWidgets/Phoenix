@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041304
-#define SIP_VERSION_STR     "4.19.4"
+#define SIP_VERSION         0x041305
+#define SIP_VERSION_STR     "4.19.5"
 
 
 /*
@@ -303,6 +303,7 @@ typedef unsigned int uint;
 
 #if PY_MAJOR_VERSION >= 3
 
+#define SIPLong_Check       PyLong_Check
 #define SIPLong_FromLong    PyLong_FromLong
 #define SIPLong_AsLong      PyLong_AsLong
 
@@ -324,6 +325,7 @@ typedef unsigned int uint;
 
 #else
 
+#define SIPLong_Check       PyInt_Check
 #define SIPLong_FromLong    PyInt_FromLong
 #define SIPLong_AsLong      PyInt_AsLong
 
