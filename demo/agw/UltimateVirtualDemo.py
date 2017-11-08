@@ -84,14 +84,14 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
 
     def OnItemSelected(self, event):
 
-        self.currentItem = event.GetIndex()
+        self.currentItem = event.Index
         self.log.write("OnItemSelected: %s, %s, %s, %s\n" %(self.currentItem,
                                                           self.GetItemText(self.currentItem),
                                                           self.getColumnText(self.currentItem, 1),
                                                           self.getColumnText(self.currentItem, 2)))
 
     def OnItemActivated(self, event):
-        self.currentItem = event.GetIndex()
+        self.currentItem = event.Index
         self.log.write("OnItemActivated: %s\nTopItem: %s\n" %(self.GetItemText(self.currentItem), self.GetTopItem()))
 
     def getColumnText(self, index, col):
@@ -100,7 +100,7 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
         return item.GetText()
 
     def OnItemDeselected(self, evt):
-        self.log.write("OnItemDeselected: %s\n" % evt.GetIndex())
+        self.log.write("OnItemDeselected: %s\n" % evt.Index)
 
 
     #---------------------------------------------------
