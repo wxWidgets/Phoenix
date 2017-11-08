@@ -42,11 +42,14 @@ Changes in this release include the following:
 
 * Fix object ownership issue for menus added to toolbar items. (#580)
 
-* Updated SIP to version 4.19.4. One of the new features of this version is
+* Updated SIP to version 4.19.5. One of the new features of this version is
   that integer overflows are no longer silently truncated and ignored. In
   other words, if a wrapped API has a parameter that is a C int type, and you
   pass a value that is larger than what will fit in that type of integer then
   an OverflowError exception will be raised.
+
+* Fixed wx.richtext.RichTextBuffer.GetExtWildcard to return a tuple of 2
+  values, as was done in Classic. (#594)
 
 
 
