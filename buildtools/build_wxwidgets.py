@@ -298,16 +298,14 @@ def main(wxDir, args):
         else:
             wxpy_configure_opts.append("--with-sdl")
 
-        # Try to use use lowest available SDK back to 10.5. Both Carbon and
-        # Cocoa builds require at least the 10.5 SDK now. We only add it to
-        # the wxpy options because this is a hard-requirement for wxPython,
-        # but other cases it is optional and is left up to the developer.
-        # TODO: there should be a command line option to set the SDK...
+        # Set the minimum supported OSX version, and find the oldest SDK
+        # version present on the build machine.
+        # TODO: should there be a command line option to set the SDK?
         if sys.platform.startswith("darwin"):
+            wxpy_configure_opts.append("--with-macosx-version-min=10.6")
             for xcodePath in getXcodePaths():
                 sdks = [ xcodePath+"/SDKs/MacOSX10.{}.sdk".format(n)
-                         for n in range(5, 15) ]
-
+                         for n in range(6, 15) ]
                 # use the lowest available sdk on the build machine
                 for sdk in sdks:
                     if os.path.exists(sdk):
