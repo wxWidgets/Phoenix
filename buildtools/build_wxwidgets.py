@@ -293,8 +293,7 @@ def main(wxDir, args):
                             ]
 
         if sys.platform.startswith("darwin"):
-            #wxpy_configure_opts.append("--enable-monolithic")
-            pass
+            wxpy_configure_opts.append("--with-macosx-version-min=10.6")
         else:
             wxpy_configure_opts.append("--with-sdl")
 
