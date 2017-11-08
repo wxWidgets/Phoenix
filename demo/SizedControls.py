@@ -20,6 +20,10 @@ grids. This class also applies control borders that adhere to the
 native platform's Human Interface Guidelines (HIG) on Win, GTK and
 Mac.
 
+<h3>SizedStaticBox</h3>
+
+Like SizedPanel, but with a wx.StaticBox control instead of a wx.Panel.
+
 <h3>SizedScrolledPanel</h3>
 
 This class automatically creates its own sizer (a vertical box sizer
@@ -315,7 +319,7 @@ class GridFrame(sc.SizedFrame):
 
 class StaticBoxFrame(sc.SizedFrame):
     def __init__(self, parent, id):
-        sc.SizedFrame.__init__(self, parent, id, "Static Box Demo Frame (2.9+)")
+        sc.SizedFrame.__init__(self, parent, id, "Static Box Demo Frame")
 
         pane = self.GetContentsPane()
 
