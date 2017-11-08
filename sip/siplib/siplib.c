@@ -994,8 +994,7 @@ static const sipContainerDef *get_container(const sipTypeDef *td);
 #if PY_VERSION_HEX >= 0x03030000
 static PyObject *get_qualname(const sipTypeDef *td, PyObject *name);
 #endif
-static int convert_to_enum(PyObject *obj, const sipTypeDef *td,
-        int constrained);
+static int convert_to_enum(PyObject *obj, const sipTypeDef *td, int allow_int);
 static void handle_failed_int_conversion(sipParseFailure *pf, PyObject *arg);
 static void enum_expected(PyObject *obj, const sipTypeDef *td);
 static int long_as_nonoverflow_int(PyObject *val_obj);
@@ -5144,7 +5143,7 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
 
                     if (arg != NULL)
                     {
-                        *p = convert_to_enum(arg, td, TRUE);
+                        *p = convert_to_enum(arg, td, FALSE);
 
                         if (PyErr_Occurred())
                             handle_failed_int_conversion(&failure, arg);
@@ -7462,16 +7461,15 @@ static int sip_api_can_convert_to_enum(PyObject *obj, const sipTypeDef *td)
  */
 static int sip_api_convert_to_enum(PyObject *obj, const sipTypeDef *td)
 {
-    return convert_to_enum(obj, td, FALSE);
+    return convert_to_enum(obj, td, TRUE);
 }
 
 
 /*
- * Convert a Python object implementing a named enum to an integer value,
- * optionally applying constraints.
+ * Convert a Python object implementing a named enum (or, optionally, an int)
+ * to an integer value.
  */
-static int convert_to_enum(PyObject *obj, const sipTypeDef *td,
-        int constrained)
+static int convert_to_enum(PyObject *obj, const sipTypeDef *td, int allow_int)
 {
     int val;
 
@@ -7494,23 +7492,29 @@ static int convert_to_enum(PyObject *obj, const sipTypeDef *td,
         if ((val_obj = PyObject_GetAttr(obj, value)) == NULL)
             return -1;
 
-        /* This should never overflow anyway. */
+        /* This will never overflow. */
         val = long_as_nonoverflow_int(val_obj);
 
         Py_DECREF(val_obj);
     }
     else
     {
-        if (constrained)
-            if (!PyObject_TypeCheck((PyObject *)Py_TYPE(obj), &sipEnumType_Type) || !PyObject_TypeCheck(obj, sipTypeAsPyTypeObject(td)))
+        if (PyObject_TypeCheck((PyObject *)Py_TYPE(obj), &sipEnumType_Type))
+        {
+            if (!PyObject_TypeCheck(obj, sipTypeAsPyTypeObject(td)))
             {
                 enum_expected(obj, td);
                 return -1;
             }
 
-        val = long_as_nonoverflow_int(obj);
-
-        if (PyErr_Occurred() && PyErr_ExceptionMatches(PyExc_TypeError))
+            /* This will never overflow. */
+            val = long_as_nonoverflow_int(obj);
+        }
+        else if (allow_int && SIPLong_Check(obj))
+        {
+            val = long_as_nonoverflow_int(obj);
+        }
+        else
         {
             enum_expected(obj, td);
             return -1;
