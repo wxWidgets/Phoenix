@@ -19,7 +19,7 @@ class TestPanel(wx.Panel):
         box2 = wx.StaticBox(self, -1, "This is a wx.StaticBox using wx.StaticBoxSizer")
         bsizer2 = wx.StaticBoxSizer(box2, wx.VERTICAL)
 
-        t = wx.StaticText(self, -1, "Controls placed \"inside\" the box are really its siblings. This method of using wx.StaticBox is deprecated since wxPython 2.9, and can cause issues on Mac and Linux.")
+        t = wx.StaticText(self, -1, "Controls placed \"inside\" the box are really its siblings. This method of using wx.StaticBox is deprecated since wxPython 2.9, and can cause issues on some platforms.")
         bsizer2.Add(t, 1, wx.EXPAND|wx.TOP|wx.LEFT, 10)
 
         border = wx.BoxSizer(wx.VERTICAL)
