@@ -917,10 +917,10 @@ class SizedFrame(wx.Frame):
         return self.mainPanel
 
 
-class SizedStaticBox(wx.StaticBox, sc.SizedParent):
+class SizedStaticBox(wx.StaticBox, SizedParent):
     def __init__(self, *args, **kwargs):
         wx.StaticBox.__init__(self, *args, **kwargs)
-        sizer = wx.BoxSizer(wx.VERTICAL) #TableSizer(1, 0)
+        sizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(sizer)
         self.sizerType = "vertical"
 
@@ -929,7 +929,7 @@ class SizedStaticBox(wx.StaticBox, sc.SizedParent):
         Called automatically by wx, do not call it from user code.
         """
         wx.StaticBox.AddChild(self, child)
-        sc.SizedParent.AddChild(self, child)
+        SizedParent.AddChild(self, child)
 
     def _SetNewSizer(self, sizer):
         """
