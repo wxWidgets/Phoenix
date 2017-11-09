@@ -16,12 +16,13 @@
 The sized controls default HIG compliant sizers under the hood and provides
 a simple interface for customizing those sizers.
 
-The following sized controls exists:
+The following sized controls exist:
 
-:class:`wx.SizedFrame`
-:class:`wx.SizedDialog`
-:class:`wx.SizedPanel`
-:class:`wx.SizedScrolledPanel`
+:class:`SizedFrame`
+:class:`SizedDialog`
+:class:`SizedPanel`
+:class:`SizedScrolledPanel`
+:class `SizedStaticBox`
 
 Description
 ===========
@@ -914,3 +915,27 @@ class SizedFrame(wx.Frame):
         Return the pane to add controls too
         """
         return self.mainPanel
+
+
+class SizedStaticBox(wx.StaticBox, SizedParent):
+    def __init__(self, *args, **kwargs):
+        wx.StaticBox.__init__(self, *args, **kwargs)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.SetSizer(sizer)
+        self.sizerType = "vertical"
+
+    def AddChild(self, child):
+        """
+        Called automatically by wx, do not call it from user code.
+        """
+        wx.StaticBox.AddChild(self, child)
+        SizedParent.AddChild(self, child)
+
+    def _SetNewSizer(self, sizer):
+        """
+        Set a new sizer, detach old sizer, add new one and add items
+        to new sizer.
+        """
+        props = self._DetachFromSizer(sizer)
+        wx.StaticBox.SetSizer(self, sizer)
+        self._AddToNewSizer(sizer, props)

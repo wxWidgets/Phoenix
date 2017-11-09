@@ -20,6 +20,10 @@ grids. This class also applies control borders that adhere to the
 native platform's Human Interface Guidelines (HIG) on Win, GTK and
 Mac.
 
+<h3>SizedStaticBox</h3>
+
+Like SizedPanel, but with a wx.StaticBox control instead of a wx.Panel.
+
 <h3>SizedScrolledPanel</h3>
 
 This class automatically creates its own sizer (a vertical box sizer
@@ -313,6 +317,23 @@ class GridFrame(sc.SizedFrame):
         self.SetMinSize(self.GetSize())
 
 
+class StaticBoxFrame(sc.SizedFrame):
+    def __init__(self, parent, id):
+        sc.SizedFrame.__init__(self, parent, id, "Static Box Demo Frame")
+
+        pane = self.GetContentsPane()
+
+        box = sc.SizedStaticBox(pane, -1, "I am a sized static box")
+        box.SetSizerProps(expand=True, proportion=1)
+        text = wx.StaticText(box, -1, "Now that controls can have wx.StaticBox as a parent, SizedControls supports static boxes via the SizedStaticBox class!")
+        text.SetSizerProps(expand=True, proportion=1)
+
+        self.CreateStatusBar()  # should always do this when there's a resize border
+
+        self.Fit()
+        self.SetMinSize(self.GetSize())
+
+
 #---------------------------------------------------------------------------
 
 class TestPanel(sc.SizedScrolledPanel):
@@ -337,6 +358,9 @@ class TestPanel(sc.SizedScrolledPanel):
         b3.SetSizerProps({'halign': 'center', 'border': ('all', 15)})
         self.Bind(wx.EVT_BUTTON, self.OnGridButton, b3)
 
+        b4 = wx.Button(self, -1, "Sized Controls Static Box Demo")
+        b4.SetSizerProps({'halign': 'center', 'border': ('all', 15)})
+        self.Bind(wx.EVT_BUTTON, self.OnStaticBoxButton, b4)
 
     def OnFormButton(self, evt):
 
@@ -386,6 +410,13 @@ class TestPanel(sc.SizedScrolledPanel):
     def OnGridButton(self, evt):
 
         dlg = GridFrame(self, -1)
+        dlg.CenterOnScreen()
+
+        dlg.Show()
+
+    def OnStaticBoxButton(self, evt):
+
+        dlg = StaticBoxFrame(self, -1)
         dlg.CenterOnScreen()
 
         dlg.Show()
