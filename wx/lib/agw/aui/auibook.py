@@ -4455,7 +4455,7 @@ class AuiNotebook(wx.Panel):
             dest_tabs.AddButton(clone.id, clone.location, clone.bitmap, clone.dis_bitmap)
         # create a pane info structure with the information
         # about where the pane should be added
-        pane_info = framemanager.AuiPaneInfo().Bottom().CaptionVisible(False)
+        pane_info = framemanager.AuiPaneInfo().Bottom().CaptionVisible(False).BestSize(self.CalculateNewSplitSize())
 
         if direction == wx.LEFT:
 
@@ -5061,7 +5061,8 @@ class AuiNotebook(wx.Panel):
                 new_tabs._tabs.SetArtProvider(self._tabs.GetArtProvider().Clone())
                 new_tabs._tabs.SetAGWFlags(self._agwFlags)
 
-                self._mgr.AddPane(new_tabs, framemanager.AuiPaneInfo().Bottom().CaptionVisible(False), mouse_client_pt)
+                self._mgr.AddPane(new_tabs, framemanager.AuiPaneInfo().Bottom().CaptionVisible(False).BestSize(self.CalculateNewSplitSize()),
+                                  mouse_client_pt)
                 self._mgr.Update()
                 dest_tabs = new_tabs._tabs
 
