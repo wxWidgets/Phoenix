@@ -2325,6 +2325,8 @@ class CommandListEvent(wx.PyCommandEvent):
 
         return self.m_itemIndex
 
+    Index = property(GetIndex, doc="See `GetIndex`")
+
 
     def GetColumn(self):
         """
