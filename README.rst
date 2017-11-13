@@ -306,6 +306,7 @@ yourself. There are likely some other things that may not have been mentioned
 here, if you find something else that should be mentioned then please submit
 a PR for updating this document.
 
+
 **Windows**
 
 All the source code needed for wxWidgets and wxPython Phoenix are
@@ -329,12 +330,14 @@ If you want to build Phoenix with debug info then you will need to first
 build a debug version of Python, and then use that Python (python_d.exe) to
 build Phoenix.
 
+
 **Linux**
 
 On Ubuntu the following development packages and their dependencies
 should be installed in order to build Phoenix. Other debian-like distros
 will probably also have these or similarly named packages available.
-Extrapolate accordingly for other linux distributions or other unixes.
+Extrapolate other package names accordingly for other linux distributions
+or other unixes.
 
 * dpkg-dev
 * build-essential
@@ -360,6 +363,12 @@ If your Linux distribution has gstreamer 1.0 available then you can install
 the dev packages for that instead of the 0.10 version. For example:
 
 * libgstreamer-plugins-base1.0-dev
+
+Newer versions of Linux may need some newer versions of dependent packages
+installed, if they are available. For example:
+
+* libwebkit2gtk-4.0-dev
+* libsdl2-dev
 
 
 **Mac OSX**
