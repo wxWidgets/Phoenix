@@ -171,6 +171,9 @@ def replaceCppItems(line):
     """
 
     items = RE_KEEP_SPACES.split(line)
+    
+    # This should get rid of substitutions like "float buffered"...
+    no_conversion = ['click', 'buffer', 'precision']
     newstr = []
 
     for n, item in enumerate(items):
@@ -187,8 +190,15 @@ def replaceCppItems(line):
         elif item == 'char':
             item = 'int'
         elif item == 'double':
-            if len(items) > n+2 and not items[n+2].lower().startswith("click"):
-                item = 'float'
+            if len(items) > n+2:
+                target = items[n+2].lower()
+                replace = True
+                for excluded in no_conversion:
+                    if target.startswith(excluded):
+                        replace = False
+                        break
+                if replace:
+                    item = 'float'
 
         if len(item.replace('``', '')) > 2:
             if '*' in item:
