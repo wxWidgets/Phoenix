@@ -445,6 +445,11 @@ def makeModuleIndex(sphinxDir, file):
     names = list(classes.keys())
     names.sort(key=lambda n: imm.get_fullname(n))
 
+    # Workaround to sort names in a case-insensitive way
+    lower_to_name = {}
+    for name in names:
+        lower_to_name[name.lower()] = name
+    
     text = ''
     if module:
         text += '\n\n.. module:: %s\n\n' % module
@@ -455,7 +460,11 @@ def makeModuleIndex(sphinxDir, file):
     text += '%-80s **Short Description**\n' % '**Class**'
     text += 80*'=' + ' ' + 80*'=' + '\n'
 
-    for cls in names:
+    lower_names = list(lower_to_name.keys())
+    lower_names.sort()
+    
+    for lower in lower_names:
+        cls = lower_to_name[lower]
         out = classes[cls]
         if '=====' in out:
             out = ''
@@ -464,7 +473,8 @@ def makeModuleIndex(sphinxDir, file):
     text += 80*'=' + ' ' + 80*'=' + '\n\n'
 
     contents = []
-    for cls in names:
+    for lower in lower_names:
+        cls = lower_to_name[lower]
         contents.append(wx2Sphinx(cls)[1])
 
     for enum in enum_base:

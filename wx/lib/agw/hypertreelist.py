@@ -1076,7 +1076,8 @@ class TreeListHeaderWindow(wx.Window):
             if event.LeftDown() or event.RightUp():
                 if hit_border and event.LeftDown():
                     self._isDragging = True
-                    self.CaptureMouse()
+                    if not self.HasCapture():
+                        self.CaptureMouse()
                     self._currentX = x
                     self.DrawCurrent()
                     self.SendListEvent(wx.wxEVT_COMMAND_LIST_COL_BEGIN_DRAG, event.GetPosition())
@@ -2102,6 +2103,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
         self.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda evt: None)
 
         # Sets the focus to ourselves: this is useful if you have items
         # with associated widgets.
@@ -3582,7 +3584,8 @@ class TreeListMainWindow(CustomTreeCtrl):
 
                 # we're going to drag this item
                 self._isDragging = True
-                self.CaptureMouse()
+                if not self.HasCapture():
+                    self.CaptureMouse()
                 self.RefreshSelected()
 
                 # in a single selection control, hide the selection temporarily
@@ -3603,8 +3606,8 @@ class TreeListMainWindow(CustomTreeCtrl):
             # end dragging
             self._dragCount = 0
             self._isDragging = False
-            if self.HasCapture():
-                self.ReleaseMouse()
+#            if self.HasCapture():
+#                self.ReleaseMouse()
             self.RefreshSelected()
 
             # send drag end event event

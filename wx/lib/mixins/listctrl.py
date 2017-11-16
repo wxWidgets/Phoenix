@@ -800,12 +800,12 @@ class CheckListCtrlMixin(object):
     def IsChecked(self, index):
         return self.GetItem(index).GetImage() == 1
 
-    def CheckItem(self, index, check = True):
+    def CheckItem(self, index, check=True):
         img_idx = self.GetItem(index).GetImage()
-        if img_idx == 0 and check is True:
+        if img_idx == 0 and check:
             self.SetItemImage(index, 1)
             self.OnCheckItem(index, True)
-        elif img_idx == 1 and check is False:
+        elif img_idx == 1 and not check:
             self.SetItemImage(index, 0)
             self.OnCheckItem(index, False)
 
