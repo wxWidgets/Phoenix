@@ -14,4 +14,5 @@
 
 from .ledctrl import *
 from .dynamicsash import *
+from .treelistctrl import *
 

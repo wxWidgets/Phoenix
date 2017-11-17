@@ -8,7 +8,8 @@
 #---------------------------------------------------------------------------
 
 # This is just a compatibility shim to make the gizmos classes usable from
-# wx.gizmos like in Classic.  They're actually in wx.lib.gizmos now.
+# the wx.gizmos module, like in Classic.  They're actually in the wx.lib.gizmos
+# package now.
 
 from wx.lib.gizmos import *
 
