@@ -51,9 +51,10 @@ def run():
         return (long)self->GetID();
         """)
 
-    c.addCppMethod('bool', '__eq__', '(wxTreeListItem* other)', "return (self->GetID() == other->GetID());")
-    c.addCppMethod('bool', '__ne__', '(wxTreeListItem* other)', "return (self->GetID() != other->GetID());")
-
+    c.addCppMethod('bool', '__eq__', '(wxTreeListItem* other)',
+                   "return other ? (self->GetID() == other->GetID()) : false;")
+    c.addCppMethod('bool', '__ne__', '(wxTreeListItem* other)',
+                   "return other ? (self->GetID() != other->GetID()) : true;")
 
     #-----------------------------------------------------------------
     c = module.find('wxTreeListItemComparator')

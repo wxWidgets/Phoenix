@@ -57,9 +57,7 @@ Changes in this release include the following:
 * Fixes in TextEditMixin to ensure that the new value is passed in the
   event. (#605)
 
-
-
-
+* Fix comparing DataViewItem and TreeListItem objects with None. (#595)
 
 
 
