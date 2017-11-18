@@ -54,6 +54,8 @@ Changes in this release include the following:
 * Various fixes in UltimateListCtrl, HyperTreeList and CheckListCtrlMixin. 
   (#592, #349, #612)
 
+* Fix comparing DataViewItem and TreeListItem objects with None. (#595)
+
 
 
 
