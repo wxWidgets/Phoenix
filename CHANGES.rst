@@ -59,6 +59,11 @@ Changes in this release include the following:
 
 * Fix comparing DataViewItem and TreeListItem objects with None. (#595)
 
+* Fix event type name in wx/lib/sheet.py (#613)
+
+
+
+
 
 
 4.0.0b2 -- "Hurricanes, Floods, and Forest Fires! Oh My!"
