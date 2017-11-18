@@ -37,7 +37,7 @@ def run():
     c = module.find('wxHyperlinkEvent')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_HYPERLINK = wx.PyEventBinder( wxEVT_HYPERLINK, 1 )
 
         # deprecated wxEVT alias

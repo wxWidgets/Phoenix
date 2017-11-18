@@ -46,7 +46,7 @@ def run():
     c = module.find('wxFileSystemWatcherEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_FSWATCHER = wx.PyEventBinder(wxEVT_FSWATCHER)
         """)
 

@@ -115,7 +115,7 @@ def run():
     c = module.find('wxTreeListEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_TREELIST_SELECTION_CHANGED = wx.PyEventBinder( wxEVT_TREELIST_SELECTION_CHANGED )
         EVT_TREELIST_ITEM_EXPANDING =    wx.PyEventBinder( wxEVT_TREELIST_ITEM_EXPANDING )
         EVT_TREELIST_ITEM_EXPANDED =     wx.PyEventBinder( wxEVT_TREELIST_ITEM_EXPANDED )

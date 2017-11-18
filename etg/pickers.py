@@ -62,7 +62,7 @@ def run():
     c = module.find('wxColourPickerEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_COLOURPICKER_CHANGED = wx.PyEventBinder( wxEVT_COLOURPICKER_CHANGED, 1 )
 
         # deprecated wxEVT alias
@@ -110,7 +110,7 @@ def run():
     c = module.find('wxFileDirPickerEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_FILEPICKER_CHANGED = wx.PyEventBinder( wxEVT_FILEPICKER_CHANGED, 1 )
         EVT_DIRPICKER_CHANGED = wx.PyEventBinder( wxEVT_DIRPICKER_CHANGED, 1 )
 
@@ -136,7 +136,7 @@ def run():
     c = module.find('wxFontPickerEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_FONTPICKER_CHANGED = wx.PyEventBinder( wxEVT_FONTPICKER_CHANGED, 1 )
 
         # deprecated wxEVT alias

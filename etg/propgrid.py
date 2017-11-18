@@ -84,7 +84,7 @@ def run():
     c = module.find('wxPropertyGridEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_PG_CHANGED = wx.PyEventBinder( wxEVT_PG_CHANGED, 1 )
         EVT_PG_CHANGING = wx.PyEventBinder( wxEVT_PG_CHANGING, 1 )
         EVT_PG_SELECTED = wx.PyEventBinder( wxEVT_PG_SELECTED, 1 )
