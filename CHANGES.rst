@@ -54,6 +54,9 @@ Changes in this release include the following:
 * Various fixes in UltimateListCtrl, HyperTreeList and CheckListCtrlMixin. 
   (#592, #349, #612)
 
+* Fixes in TextEditMixin to ensure that the new value is passed in the
+  event. (#605)
+
 
 
 

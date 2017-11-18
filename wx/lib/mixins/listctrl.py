@@ -640,11 +640,10 @@ class TextEditMixin:
         evt = wx.ListEvent(wx.wxEVT_COMMAND_LIST_END_LABEL_EDIT, self.GetId())
         evt.Index = self.curRow
         evt.Column = self.curCol
-        item = self.GetItem(self.curRow, self.curCol)
-        evt.Item.SetId(item.GetId())
-        evt.Item.SetColumn(item.GetColumn())
-        evt.Item.SetData(item.GetData())
-        evt.Item.SetText(text) #should be empty string if editor was canceled
+        item = wx.ListItem(self.GetItem(self.curRow, self.curCol))
+        item.SetText(text)
+        evt.SetItem(item)
+
         ret = self.GetEventHandler().ProcessEvent(evt)
         if not ret or evt.IsAllowed():
             if self.IsVirtual():
@@ -652,7 +651,7 @@ class TextEditMixin:
                 # data source
                 self.SetVirtualData(self.curRow, self.curCol, text)
             else:
-                self.SetStringItem(self.curRow, self.curCol, text)
+                self.SetItem(self.curRow, self.curCol, text)
         self.RefreshItem(self.curRow)
 
     def _SelectIndex(self, row):
