@@ -30,7 +30,7 @@
 static wxString i_Py2wxString(PyObject* source)
 {
 #if wxUSE_UNICODE_WCHAR == 0
-#error wxString converison can only handle WCHAR wxStrings currently
+#error wxString conversion can only handle WCHAR wxStrings currently
 #endif
     PyErr_Clear();
     PyObject* uni = source;

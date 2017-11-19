@@ -155,7 +155,7 @@ class BaseDef(object):
 
     def findAll(self, name):
         """
-        Search recursivly for items that have the given name.
+        Search recursively for items that have the given name.
         """
         matches = list()
         for item in self.allItems():

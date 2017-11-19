@@ -61,6 +61,8 @@ Changes in this release include the following:
 
 * Fix event type name in wx/lib/sheet.py (#613)
 
+* The wx.MessageDialog methods which take ButtonLabel parameters are now able
+  to accept either strings or stock IDs. (#607, #276)
 
 
 
