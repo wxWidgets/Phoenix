@@ -296,7 +296,7 @@ def configure(conf):
 
         # Some Mac-specific stuff
         if isDarwin:
-            conf.env.MACOSX_DEPLOYMENT_TARGET = "10.5"
+            conf.env.MACOSX_DEPLOYMENT_TARGET = "10.6"
 
             if conf.options.mac_arch:
                 conf.env.ARCH_WXPY = conf.options.mac_arch.split(',')
