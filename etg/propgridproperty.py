@@ -146,7 +146,7 @@ def run():
                   'wxPG_ATTR_MAX',
                   'wxPG_ATTR_UNITS',
                   'wxPG_ATTR_HINT',
-                  'wxPG_ATTR_INLINE_HELP',
+                  #'wxPG_ATTR_INLINE_HELP',
                   'wxPG_ATTR_AUTOCOMPLETE',
                   'wxPG_BOOL_USE_CHECKBOX',
                   'wxPG_BOOL_USE_DOUBLE_CLICK_CYCLING',
@@ -166,7 +166,7 @@ def run():
                   'wxPG_DATE_PICKER_STYLE',
                   'wxPG_ATTR_SPINCTRL_STEP',
                   'wxPG_ATTR_SPINCTRL_WRAP',
-                  'wxPG_ATTR_SPINCTRL_MOTIONSPIN',
+                  #'wxPG_ATTR_SPINCTRL_MOTIONSPIN',
                   'wxPG_ATTR_MULTICHOICE_USERSTRINGMODE',
                   'wxPG_COLOUR_ALLOW_CUSTOM',
                   'wxPG_COLOUR_HAS_ALPHA',
@@ -183,7 +183,7 @@ def run():
             PG_ATTR_MAX                       = u"Max"
             PG_ATTR_UNITS                     = u"Units"
             PG_ATTR_HINT                      = u"Hint"
-            PG_ATTR_INLINE_HELP               = u"InlineHelp"
+            #PG_ATTR_INLINE_HELP               = u"InlineHelp"
             PG_ATTR_AUTOCOMPLETE              = u"AutoComplete"
             PG_BOOL_USE_CHECKBOX              = u"UseCheckbox"
             PG_BOOL_USE_DOUBLE_CLICK_CYCLING  = u"UseDClickCycling"
@@ -203,7 +203,7 @@ def run():
             PG_DATE_PICKER_STYLE              = u"PickerStyle"
             PG_ATTR_SPINCTRL_STEP             = u"Step"
             PG_ATTR_SPINCTRL_WRAP             = u"Wrap"
-            PG_ATTR_SPINCTRL_MOTIONSPIN       = u"MotionSpin"
+            #PG_ATTR_SPINCTRL_MOTIONSPIN       = u"MotionSpin"
             PG_ATTR_MULTICHOICE_USERSTRINGMODE= u"UserStringMode"
             PG_COLOUR_ALLOW_CUSTOM            = u"AllowCustom"
             PG_COLOUR_HAS_ALPHA               = u"HasAlpha"

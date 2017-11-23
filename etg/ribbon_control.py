@@ -35,8 +35,8 @@ def run():
 
     # Not sure why these are showing up in this module as they are in core, so
     # let's just turn them off here...
-    module.find('wxEllipsizeFlags').ignore()
-    module.find('wxEllipsizeMode').ignore()
+    #module.find('wxEllipsizeFlags').ignore()
+    #module.find('wxEllipsizeMode').ignore()
 
 
     c = module.find('wxRibbonControl')

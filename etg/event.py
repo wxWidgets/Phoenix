@@ -260,10 +260,6 @@ def run():
     for m in c.find('CallAfter').all():
         m.ignore()
 
-    # wxEventTable is not documented so we have to ignore SearchEventTable.
-    # TODO: Should wxEventTable be available to language bindings?
-    c.find('SearchEventTable').ignore()
-
     c.find('QueueEvent.event').transfer = True
     module.find('wxQueueEvent.event').transfer = True
 
