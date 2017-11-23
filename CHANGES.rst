@@ -64,6 +64,9 @@ Changes in this release include the following:
 * The wx.MessageDialog methods which take ButtonLabel parameters are now able
   to accept either strings or stock IDs. (#607, #276)
 
+* Fix wx.EvtHandler.Unbind to work correctly when specifying the handler and
+  it is a bound method. (#624)
+
 
 
 
