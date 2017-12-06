@@ -36,7 +36,7 @@ Changes in this release include the following:
   item. Currently this is turned on for just GridCellCoordsArray, but others
   can be switched in the future if needed. (#297)
 
-* Add missing ``wx.GetLocale`` function. (#572)
+* Add missing wx.GetLocale function. (#572)
 
 * Add methods to wx.TextCtrl for output "file-like" compatibility. (#578)
 
@@ -66,6 +66,14 @@ Changes in this release include the following:
 
 * Fix wx.EvtHandler.Unbind to work correctly when specifying the handler and
   it is a bound method. (#624)
+
+* Ported some of the classes in Classic's gizmos module from C++ to Python,
+  including LEDNumberCtrl, DynamicSashWindow, and TreeListCtrl. The classes
+  are now located in the wx.lib.gizmos package, with a compatibility module at
+  the old wx.gizmos location. Please note that this TreeListCtrl class is a
+  very different implementation than wx.dataview.TreeListCtrl, although there
+  is some overlap in purpose.
+
 
 
 
