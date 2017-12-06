@@ -336,7 +336,7 @@ def run():
     c = module.find('wxListEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_LIST_BEGIN_DRAG        = PyEventBinder(wxEVT_LIST_BEGIN_DRAG       , 1)
         EVT_LIST_BEGIN_RDRAG       = PyEventBinder(wxEVT_LIST_BEGIN_RDRAG      , 1)
         EVT_LIST_BEGIN_LABEL_EDIT  = PyEventBinder(wxEVT_LIST_BEGIN_LABEL_EDIT , 1)

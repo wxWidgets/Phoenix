@@ -37,7 +37,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_DATE_CHANGED = wx.PyEventBinder( wxEVT_DATE_CHANGED, 1 )
         EVT_TIME_CHANGED = wx.PyEventBinder( wxEVT_TIME_CHANGED, 1 )
         """)

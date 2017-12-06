@@ -44,7 +44,7 @@ def run():
     c = module.find('wxRibbonPanelEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED = wx.PyEventBinder(wxEVT_RIBBONPANEL_EXTBUTTON_ACTIVATED, 1)
         """)
 

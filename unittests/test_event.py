@@ -1,10 +1,11 @@
 import unittest
+from unittests import wtc
 import wx
 
 
 #---------------------------------------------------------------------------
 
-class Events(unittest.TestCase):
+class Events(wtc.WidgetTestCase):
 
     # Test the constructors to make sure the classes are not abstract, except
     # for wx.Event
@@ -45,7 +46,6 @@ class Events(unittest.TestCase):
         evt = wx.FocusEvent()
 
     def test_HelpEvent_ctor(self):
-        app = wx.App()
         evt = wx.HelpEvent()
 
     def test_IconizeEvent_ctor(self):
@@ -138,12 +138,86 @@ class Events(unittest.TestCase):
             def OnSize(self, evt):
                 self.gotEvent = True
                 evt.EventObject.Close()
-        app = wx.App()
         frm = Frame(None)
         frm.Show()
         frm.SetSize((200,100))
-        #app.MainLoop()
+        self.myYield()
         self.assertTrue(frm.gotEvent)
+
+
+    def test_eventUnbinding1(self):
+        "Unbind without specifying handler"
+        self.gotEvent = False
+
+        def _onSize(evt):
+            self.gotEvent = True
+
+        self.frame.Bind(wx.EVT_SIZE, _onSize)
+        val = self.frame.Unbind(wx.EVT_SIZE)
+        assert val, "Unbind returned false"
+
+        self.frame.SetSize((200,200))
+        self.myYield()
+        assert not self.gotEvent, "Expected gotEvent to still be False"
+
+
+    def test_eventUnbinding2(self):
+        "Unbind with specifying handler, simple function object"
+        self.gotEvent = False
+
+        def _onSize(evt):
+            self.gotEvent = True
+
+        self.frame.Bind(wx.EVT_SIZE, _onSize)
+        val = self.frame.Unbind(wx.EVT_SIZE, handler=_onSize)
+        assert val, "Unbind returned False"
+
+        self.frame.SetSize((200,200))
+        self.myYield()
+        assert not self.gotEvent, "Expected gotEvent to still be False"
+
+
+    def test_eventUnbinding3(self):
+        "Unbind with specifying handler, a bound method"
+
+        class Frame(wx.Frame):
+            def __init__(self, *args, **kw):
+                wx.Frame.__init__(self, *args, **kw)
+                self.Bind(wx.EVT_SIZE, self.OnSize)
+                self.gotEvent = False
+                self.obj = self.OnSize
+
+            def doUnBind(self):
+                #assert id(self.obj) != id(self.OnSize)  # Strange, but it's possible
+                val = self.Unbind(wx.EVT_SIZE, handler=self.OnSize)
+                assert val, "Unbind returned False"
+
+            def OnSize(self, evt):
+                self.gotEvent = True
+                evt.EventObject.Close()
+
+        frm = Frame(None)
+        frm.doUnBind()
+        frm.Show()
+        frm.SetSize((200,100))
+        self.myYield()
+        assert not frm.gotEvent, "Expected gotEvent to still be False"
+
+
+    def test_eventUnbinding4(self):
+        "Unbind by passing None to Bind()"
+        self.gotEvent = False
+
+        def _onSize(evt):
+            self.gotEvent = True
+
+        self.frame.Bind(wx.EVT_SIZE, _onSize)
+        self.frame.Bind(wx.EVT_SIZE, None)
+
+        self.frame.SetSize((200,200))
+        self.myYield()
+        assert not self.gotEvent, "Expected gotEvent to still be False"
+
 
 
     def test_DropFilesEvent_tweaks(self):

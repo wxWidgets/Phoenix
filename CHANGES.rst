@@ -51,6 +51,23 @@ Changes in this release include the following:
 * Fixed wx.richtext.RichTextBuffer.GetExtWildcard to return a tuple of 2
   values, as was done in Classic. (#594)
 
+* Various fixes in UltimateListCtrl, HyperTreeList and CheckListCtrlMixin. 
+  (#592, #349, #612)
+
+* Fixes in TextEditMixin to ensure that the new value is passed in the
+  event. (#605)
+
+* Fix comparing DataViewItem and TreeListItem objects with None. (#595)
+
+* Fix event type name in wx/lib/sheet.py (#613)
+
+* The wx.MessageDialog methods which take ButtonLabel parameters are now able
+  to accept either strings or stock IDs. (#607, #276)
+
+* Fix wx.EvtHandler.Unbind to work correctly when specifying the handler and
+  it is a bound method. (#624)
+
+
 
 
 

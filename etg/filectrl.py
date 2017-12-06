@@ -67,7 +67,7 @@ def run():
 
     c = module.find('wxFileCtrlEvent')
     tools.fixEventClass(c)
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_FILECTRL_SELECTIONCHANGED = wx.PyEventBinder( wxEVT_FILECTRL_SELECTIONCHANGED, 1)
         EVT_FILECTRL_FILEACTIVATED = wx.PyEventBinder( wxEVT_FILECTRL_FILEACTIVATED, 1)
         EVT_FILECTRL_FOLDERCHANGED = wx.PyEventBinder( wxEVT_FILECTRL_FOLDERCHANGED, 1)

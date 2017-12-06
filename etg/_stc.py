@@ -170,7 +170,7 @@ def run():
     c = module.find('wxStyledTextEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_STC_CHANGE = wx.PyEventBinder( wxEVT_STC_CHANGE, 1 )
         EVT_STC_STYLENEEDED = wx.PyEventBinder( wxEVT_STC_STYLENEEDED, 1 )
         EVT_STC_CHARADDED = wx.PyEventBinder( wxEVT_STC_CHARADDED, 1 )
