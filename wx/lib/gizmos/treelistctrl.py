@@ -1,5 +1,7 @@
 
-# **** THIS IS STILL A WIP ****
+#
+#  **** THIS IS STILL A WIP ****
+#
 
 #----------------------------------------------------------------------
 # Name:        wx.lib.gizmos.treelistctrl
@@ -47,6 +49,508 @@ class _const:
     RENAME_TIMER_TICKS = 250    # minimum rename wait time in ms
 
 
+#--------------------------------------------------------------------------
+
+# modes for navigation
+TL_MODE_NAV_FULLTREE = 0x0000  # default
+TL_MODE_NAV_EXPANDED = 0x0001
+TL_MODE_NAV_VISIBLE  = 0x0002
+TL_MODE_NAV_LEVEL    = 0x0004
+
+# modes for FindItem
+TL_MODE_FIND_EXACT   = 0x0000  # default
+TL_MODE_FIND_PARTIAL = 0x0010
+TL_MODE_FIND_NOCASE  = 0x0020
+
+# additional flag for HitTest
+TREE_HITTEST_ONITEMCOLUMN = 0x2000
+
+TreeListCtrlNameStr = 'treelistctrl'
+
+
+
+class TreeListCtrl(wx.Control):
+    def __init__(self, *args, **kw):
+        self.m_header_win = None
+        self.m_main_win = None
+        self.m_headerHeight = 0
+        super(TreeListCtrl, self).__init__()
+
+        # Do the 2nd phase of the widget creation now too?
+        if args or kw:
+            self.Create(*args, **kw)
+
+
+    def Create(self, parent, id=wx.ID_ANY,
+               pos=wx.DefaultPosition, size=wx.DefaultSize,
+               style=wx.TR_DEFAULT_STYLE,
+               validator=wx.DefaultValidator,
+               name=TreeListCtrlNameStr):
+
+        main_style = style & ~(wxSIMPLE_BORDER|wxSUNKEN_BORDER|wxDOUBLE_BORDER|
+                               wxRAISED_BORDER|wxSTATIC_BORDER)
+        ctrl_style = style & ~(wxVSCROLL|wxHSCROLL)
+
+        if not super(TreeListCtrl, self).Create(parent, id, pos, size, ctrl_style, validator, name):
+           return False
+
+        self.m_main_win = _TreeListMainWindow(self, -1, (0, 0), size, main_style, validator)
+        self.m_header_win = _TreeListHeaderWindow(self, -1, m_main_win, (0, 0), wx.DefaultSize, wx.TAB_TRAVERSAL);
+        self._CalculateAndSetHeaderHeight()
+
+        self.Bind(wx.EVT_SIZE, self.OnSize)
+        return True
+
+
+    def _CalculateAndSetHeaderHeight(self):
+        if self.m_header_win:
+            h = wx.RendererNative.Get().GetHeaderButtonHeight(self.m_header_win)
+
+            # only update if changed
+            if h != self.m_headerHeight:
+                self.m_headerHeight = h
+                self._DoHeaderLayout()
+
+
+    def _DoHeaderLayout(self):
+        w, h = self.GetClientSize()
+        if self.m_header_win:
+            self.m_header_win.SetSize(0, 0, w, self.m_headerHeight)
+            self.m_header_win.Refresh()
+
+        if self.m_main_win:
+            self.m_main_win.SetSize(0, self.m_headerHeight + 1, w, h - self.m_headerHeight - 1)
+
+
+    def OnSize(self, evt):
+        self._DoHeaderLayout()
+
+
+    def GetHeaderWindow(self):
+        return self.m_header_win
+
+    def GetMainWindow(self):
+        return self.m_main_win
+
+
+    # Most methods are simply delegated to the self.m_main_win object. We can
+    # do some Python magic to make that a lot easier to implement, but I think
+    # it is better to keep real methods here so the method signatures and
+    # docstrings  are mor visible to the users of this class.
+
+    def GetCount(self):
+        """get the total number of items in the control"""
+        return self.m_main_win.GetCount()
+
+    def GetIndent(self):
+        return self.m_main_win.GetIndent()
+
+    def SetIndent(self, indent):
+        """
+        The indent is the number of pixels the children are indented relative
+        to the parent's position.
+        """
+        self.m_main_win.SetIndent(indent)
+
+    def GetLineSpacing(self):
+        return self.m_main_win.GetLineSpacing()
+
+    def SetLineSpacing(self, spacing):
+        """
+        The line spacing is the space above and below the text on each line.
+        """
+        self.m_main_win.SetLineSpacing(spacing)
+
+    def GetImageList(self):
+        return self.m_main_win.GetImageList()
+
+    def GetStateImageList(self):
+        return self.m_main_win.GetStateImageList()
+
+    def GetButtonsImageList(self):
+        return self.m_main_win.GetButtonsImageList()
+
+    def SetImageList(self, imageList):
+        self.m_main_win.SetImageList(imageList)
+
+    def SetStateImageList(self, imageList):
+        self.m_main_win.SetStateImageList(imageList)
+
+    def SetButtonsImageList(self, imageList):
+        self.m_main_win.SetButtonsImageList(imageList)
+
+    def AssignImageList(self, imageList):
+        self.m_main_win.AssignImageList(imageList)
+
+    def AssignStateImageList(self, imageList):
+        self.m_main_win.AssignStateImageList(imageList)
+
+    def AssignButtonsImageList(self, imageList):
+        self.m_main_win.AssignButtonsImageList(imageList)
+
+    def GetItemText(self, item, column=-1):
+        if column < 0:
+            column = self.GetMainColumn()
+        return self.m_main_win.GetItemText(item, column)
+
+    def GetItemImage(self, item, column=-1, which=wx.TreeItemIcon_Normal):
+        if column < 0:
+            column = self.GetMainColumn()
+        return self.m_main_win.GetItemImage(item, column, which)
+
+    def GetItemData(self, item):
+        return self.m_main_win.GetItemData(item)
+
+    def GetItemBold(self, item):
+        return self.m_main_win.GetItemBold(item)
+
+    def GetItemTextColour(self, item):
+        return self.m_main_win.GetItemTextColour(item)
+
+    def GetItemBackgroundColour(self, item):
+        return self.m_main_win.GetItemBackgroundColour(item)
+
+    def GetItemFont(self, item):
+        return self.m_main_win.GetItemFont(item)
+
+    def SetItemText(self, item, text, column=-1):
+        if column < 0:
+            column = self.GetMainColumn()
+        self.m_main_win.SetItemText(item, text, column)
+
+    def SetItemImage(self, item, image, column=-1, which=wx.TreeItemIcon_Normal):
+        if column < 0:
+            column = self.GetMainColumn()
+        self.m_main_win.SetItemImage(item, image, column, which)
+
+    def SetItemData(self, item, data):
+        self.m_main_win.SetItemData(item, data)
+
+    def SetItemHasChildren(self, item, hasChildren=True):
+        self.m_main_win.SetItemHasChildren(item, hasChildren)
+
+    def SetItemBold(self, item, bold=True):
+        self.m_main_win.SetItemBold(item, bold)
+
+    def SetItemTextColour(self, item, colour):
+        self.m_main_win.SetItemTextColour(item, colour)
+
+    def SetItemBackgroundColour(self, item, colour):
+        self.m_main_win.SetItemBackgroundColour(item, colour)
+
+    def SetItemFont(self, item, font):
+        self.m_main_win.SetItemFont(item, font)
+
+    def SetFont(self, font):
+        if self.m_header_win:
+            self.m_header_win.SetFont(font)
+            self._CalculateAndSetHeaderHeight()
+            self.m_header_win.Refresh()
+
+        if self.m_main_win:
+            return self.m_main_win.SetFont(font)
+        else:
+            return False
+
+    def SetWindowStyle(self, style):
+        if self.m_main_win:
+            self.m_main_win.SetWindowStyle(style)
+        super(TreeListCtrl, self).SetWindowStyle(style)
+        # TODO: provide something like wxTL_NO_HEADERS to hide m_header_win
+
+    def GetWindowStyle(self):
+        style = super(TreeListCtrl, self).GetWindowStyle()
+        if self.m_main_win:
+            style |= self.m_main_win.GetWindowStyle()
+        return style
+
+    def GetWindowStyleFlag(self):
+        return self.GetWindowStyle()
+
+    def IsVisible(self, item, fullRow=False):
+        return self.m_main_win.IsVisible(item, fullRow)
+
+    def HasChildren(self, item):
+        return self.m_main_win.HasChildren(item)
+
+    def IsExpanded(self, item):
+        return self.m_main_win.IsExpanded(item)
+
+    def IsSelected(self, item):
+        return self.m_main_win.IsSelected(item)
+
+    def IsBold(self, item):
+        return self.m_main_win.IsBold(item)
+
+    def GetChildrenCount(self, item, recursive=True):
+        return self.m_main_win.GetChildrenCount(item, recursive)
+
+    def GetRootItem(self):
+        return self.m_main_win.GetRootItem()
+
+    def GetSelection():
+        return self.m_main_win.GetSelection()
+
+    def GetSelections(self): # --> list of items
+        return self.m_main_win.GetSelections()
+
+    def GetItemParent(self, item):
+        return self.m_main_win.GetItemParent(item)
+
+    def GetCurrentItem(self):
+        return self.m_main_win.GetCurrentItem()
+
+    def SetCurrentItem(self, newItem):
+        self.m_main_win.SetCurrentItem(newItem)
+
+
+    def GetFirstChild(self, item): # --> item, cookie
+        return self.m_main_win.GetFirstChild(item)
+
+    def GetNextChild(self, item, cookie): # --> item, cookie
+        return self.m_main_win.GetNextChild(item, cookie)
+
+    def GetPrevChild(self, item, cookie): # --> item, cookie
+        return self.m_main_win.GetPrevChild(item, cookie)
+
+    def GetLastChild(self, item): # --> item, cookie
+        return self.m_main_win.GetLastChild(item)
+
+
+    def GetNextSibling(self, item):
+        return self.m_main_win.GetNextSibling(item)
+
+    def GetPrevSibling(self, item):
+        return self.m_main_win.GetPrevSibling(item)
+
+    def GetNext(self, item):
+        return self.m_main_win.GetNext(item, True)
+
+    def GetPrev(self, item):
+        return self.m_main_win.GetPrev(item, True)
+
+
+    def GetFirstExpandedItem(self):
+        return self.m_main_win.GetFirstExpandedItem()
+
+    def GetNextExpanded(self, item):
+        return self.m_main_win.GetNextExpanded(item)
+
+    def GetPrevExpanded(self, item):
+        return self.m_main_win.GetPrevExpanded(item)
+
+    def GetFirstVisibleItem(self, fullRow):
+        return self.m_main_win.GetFirstVisibleItem(fullRow)
+
+    def GetNextVisible(self, item, fullRow):
+        return self.m_main_win.GetNextVisible(item, fullRow)
+
+    def GetPrevVisible(self, item, fullRow):
+        return self.m_main_win.GetPrevVisible(item, fullRow)
+
+
+    def AddRoot(self, text, image=-1, selectedImage=-1, data=None):
+        return self.m_main_win.AddRoot(text, image, selectedImage, data)
+
+    def PrependItem(self, parent, text, image=-1, selectedImage=-1, data=None):
+        return self.m_main_win.PrependItem(parent, text, image, selectedImage, data)
+
+    def InsertItem(self, parent, previous_or_index, text, image=-1, selectedImage=-1, data=None):
+        return self.m_main_win.InsertItem(parent, previous_or_index, text, image,
+                                          selectedImage, data);
+
+    def AppendItem(self, parent, text, image=-1, selectedImage=-1, data=None):
+        return self.m_main_win.AppendItem(parent, text, image, selectedImage, data)
+
+
+    def Delete(self, item):
+        self.m_main_win.Delete(item)
+
+    def DeleteChildren(self, item):
+        self.m_main_win.DeleteChildren(item)
+
+    def DeleteRoot(self):
+        self.m_main_win.DeleteRoot()
+
+    def Expand(self, item):
+        self.m_main_win.Expand(item)
+
+    def ExpandAll(self, item):
+        self.m_main_win.ExpandAll(item)
+
+    def Collapse(self, item):
+        self.m_main_win.Collapse(item)
+
+    def CollapseAndReset(self, item):
+        self.m_main_win.CollapseAndReset(item)
+
+    def Toggle(self, item):
+        self.m_main_win.Toggle(item)
+
+    def Unselect(self):
+        self.m_main_win.Unselect()
+
+    def UnselectAll(self):
+        self.m_main_win.UnselectAll()
+
+    def SelectItem(self, item, last=None, unselect_others=True):
+        self.m_main_win.SelectItem (item, last, unselect_others)
+
+    def SelectAll(self):
+        self.m_main_win.SelectAll()
+
+    def EnsureVisible(self, item):
+        self.m_main_win.EnsureVisible(item)
+
+    def ScrollTo(self, item):
+        self.m_main_win.ScrollTo(item)
+
+    def HitTest(self, pos): # --> item, flags, column
+        return self.m_main_win.HitTest(pos)
+
+    def GetBoundingRect(self, item, textOnly=False): # --> rect or None
+        return self.m_main_win.GetBoundingRect(item, textOnly)
+
+    def EditLabel(self, item, column=-1):
+        if column < 0:
+            column = self.GetMainColumn()
+        self.m_main_win.EditLabel(item, column)
+
+
+    def SortChildren(self, item):
+        self.m_main_win.SortChildren(item)
+
+    def FindItem(self, item, text, mode=TL_MODE_FIND_EXACT):
+        return self.m_main_win.FindItem(item, text, mode)
+
+    def SetDragItem(self, item=None):
+        self.m_main_win.SetDragItem(item)
+
+
+    def SetBackgroundColour(self, colour):
+        if not self.m_main_win:
+            return False
+        return self.m_main_win.SetBackgroundColour(colour)
+
+    def SetForegroundColour(self, colour):
+        if not self.m_main_win:
+            return False
+        return self.m_main_win.SetForegroundColour(colour)
+
+
+    def GetColumnCount(self):
+        return self.m_main_win.GetColumnCount()
+
+    def SetColumnWidth(self, column, width):
+        if width == wx.LIST_AUTOSIZE_USEHEADER:
+            font = m_header_win.GetFont()
+            width,_,_,_ = self.m_header_win.GetFullTextExtent(
+                self.m_header_win.GetColumnText(column), font)
+            # search _TreeListHeaderWindow.OnPaint to understand this:
+            width += 2*_const.EXTRA_WIDTH + _const.MARGIN
+        elif width == wx.LIST_AUTOSIZE:
+            width = self.m_main_win.GetBestColumnWidth(column)
+
+        self.m_header_win.SetColumnWidth(column, width)
+        self.m_header_win.Refresh()
+
+    def GetColumnWidth(self, column):
+        return m_header_win.GetColumnWidth(column)
+
+
+    def SetMainColumn(self, column):
+        self.m_main_win.SetMainColumn(column)
+
+    def GetMainColumn(self):
+        return self.m_main_win.GetMainColumn()
+
+    def SetColumnText(self, column, text):
+        self.m_header_win.SetColumnText(column, text)
+        self.m_header_win.Refresh()
+
+    def GetColumnText(self, column):
+        return self.m_header_win.GetColumnText(column)
+
+
+    def AddColumn(self, *args, **kw):
+        if isinstance(args[0], TreeListColumnInfo):
+            self.m_header_win.AddColumn(args[0])
+        else:
+            colInfo = TreeListColumnInfo(*args, **kw)
+            self.m_header_win.AddColumn(colInfo)
+        self._DoHeaderLayout()
+
+    def InsertColumn(self, before, *args, **kw):
+        if isinstance(args[0], TreeListColumnInfo):
+            self.m_header_win.InsertColumn(before, args[0])
+        else:
+            colInfo = TreeListColumnInfo(*args, **kw)
+            self.m_header_win.InsertColumn(before, colInfo)
+        self.m_header_win.Refresh()
+
+    def RemoveColumn(self, column):
+        self.m_header_win.RemoveColumn(column)
+        self.m_header_win.Refresh()
+
+    def SetColumn(self, column, colInfo):
+        self.m_header_win.SetColumn(column, colInfo)
+        self.m_header_win.Refresh()
+
+    def GetColumn(self, column):
+        return self.m_header_win.GetColumn(column)
+
+    def SetColumnImage(self, column, image):
+        self.m_header_win.SetColumn(column, self.GetColumn(column).SetImage(image))
+        self.m_header_win.Refresh()
+
+    def GetColumnImage(self, column):
+        return self.m_header_win.GetColumn(column).GetImage()
+
+    def SetColumnEditable(self, column, edit=True):
+        self.m_header_win.SetColumn(column, self.GetColumn(column).SetEditable(edit))
+
+    def SetColumnShown(self, column, shown=True):
+        assert column != self.GetMainColumn(), "The main column may not be hidden"
+        self.m_header_win.SetColumn(
+            column, self.GetColumn(column).SetShown(True if self.GetMainColumn()==column else shown))
+        m_header_win.Refresh()
+
+    def IsColumnEditable(self, column):
+        return self.m_header_win.GetColumn(column).IsEditable()
+
+    def IsColumnShown(self, column):
+        return self.m_header_win.GetColumn(column).IsShown()
+
+    def SetColumnAlignment(self, column, flag):
+        self.m_header_win.SetColumn(column, self.GetColumn(column).SetAlignment(flag))
+        self.m_header_win.Refresh()
+
+    def GetColumnAlignment(self, column):
+        return self.m_header_win.GetColumn(column).GetAlignment()
+
+    def Refresh(self, erase=True, rect=None):
+        self.m_main_win.Refresh(erase, rect)
+        m_header_win.Refresh(erase, rect)
+
+
+    def SetFocus(self):
+        self.m_main_win.SetFocus()
+
+    def DoGetBestSize(self):
+        # something is better than nothing...
+        return wx.Size(200,200)  # TODO, something better
+
+    def OnGetItemText(self, item, column):
+        return ""
+
+    def OnCompareItems(self, item1, item2):
+        # do the comparison here, and not delegate to self.m_main_win, in order
+        # to let the user override it
+        return cmp(self.GetItemText(item1), self.GetItemText(item2))
+
+
+
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 
 class TreeListColumnInfo(wx.Object):
@@ -112,61 +616,6 @@ class TreeListColumnInfo(wx.Object):
     def SetShown(self, shown):
         self.m_shown = shown
         return self
-
-
-#--------------------------------------------------------------------------
-
-# modes for navigation
-TL_MODE_NAV_FULLTREE = 0x0000  # default
-TL_MODE_NAV_EXPANDED = 0x0001
-TL_MODE_NAV_VISIBLE  = 0x0002
-TL_MODE_NAV_LEVEL    = 0x0004
-
-# modes for FindItem
-TL_MODE_FIND_EXACT   = 0x0000  # default
-TL_MODE_FIND_PARTIAL = 0x0010
-TL_MODE_FIND_NOCASE  = 0x0020
-
-# additional flag for HitTest
-TREE_HITTEST_ONITEMCOLUMN = 0x2000
-
-TreeListCtrlNameStr = 'treelistctrl'
-
-
-
-class TreeListCtrl(wx.Control):
-    def __init__(self, *args, **kw):
-        self.m_header_win = None
-        self.m_main_win = None
-        self.m_headerHeight = 0
-
-        # find which constructor should be used and call it.
-        if not args and not kw:
-            self._init_default()
-        else:
-            self._init_full(*args, **kw)
-
-
-    def _init_default(self):
-        super(TreeListCtrl, self).__init__()
-
-
-    def _init_full(self, parent, id=wx.ID_ANY,
-                   pos=wx.DefaultPosition, size=wx.DefaultSize,
-                   style=wx.TR_DEFAULT_STYLE,
-                   validator=wx.DefaultValidator,
-                   name=TreeListCtrlNameStr):
-        super(TreeListCtrl, self).__init__(parent, id, pos, size, style, validator, name)
-
-
-    def Create(self, parent, id=wx.ID_ANY,
-               pos=wx.DefaultPosition, size=wx.DefaultSize,
-               style=wx.TR_DEFAULT_STYLE,
-               validator=wx.DefaultValidator,
-               name=TreeListCtrlNameStr):
-        super(TreeListCtrl, self).Create(parent, id, pos, size, style, validator, name)
-
-
 
 #--------------------------------------------------------------------------
 
@@ -243,8 +692,8 @@ class TreeListItem(object):
             self.m_images[which] = image
         elif column < len(self.m_col_images):
             self.m_col_images[column] = image
-        elif column < self.m_owner,GetColumnCount():
-            howmany = self.m_owner->GetColumnCount()
+        elif column < self.m_owner.GetColumnCount():
+            howmany = self.m_owner.GetColumnCount()
             while len(self.m_col_images) < howmany:
                 self.m_col_images.append(NO_IMAGE)
             self.m_col_images[column] = image
@@ -322,8 +771,8 @@ class TreeListItem(object):
         self.m_children.insert(index, child)
 
 
-    def GetSize(self, x, y, mainWindow): # --> x,y
-        bottomY = self.m_y + mainWindow->GetLineHeight(self)
+    def GetSize(self, x, y, mainWindow): # -. x,y
+        bottomY = self.m_y + mainWindow.GetLineHeight(self)
         if y < bottomY:
             y = bottomY
         width = self.m_x +  self.m_width
@@ -375,7 +824,7 @@ class TreeListItem(object):
                 # check for image hit
                 if theCtrl.m_imgWidth > 0:
                     imgX = self.m_text_x - theCtrl.m_imgWidth - _const.MARGIN
-                    int imgY = y_mid - theCtrl->m_imgHeight2;
+                    int imgY = y_mid - theCtrl.m_imgHeight2;
                     if ((point.x >= imgX) and (point.x <= (imgX + theCtrl.m_imgWidth)) and
                             (point.y >= imgY) and (point.y <= (imgY + theCtrl.m_imgHeight))):
                         flags |= wx.TREE_HITTEST_ONITEMICON
@@ -397,7 +846,7 @@ class TreeListItem(object):
                 # check for right of label
                 end = 0
                 for i in range(maincol+1):
-                    end += header_win->GetColumnWidth(i)
+                    end += header_win.GetColumnWidth(i)
                 if point.x > (self.m_text_x + self.m_width) and point.x <= end:
                     flags |= wx.TREE_HITTEST_ONITEMRIGHT
                     column = -1 # considered not belonging to main column
@@ -406,9 +855,9 @@ class TreeListItem(object):
                 # else check for each column except main
                 x = 0
                 for j in range(theCtrl.GetColumnCount()):
-                    if not header_win->IsColumnShown(j):
+                    if not header_win.IsColumnShown(j):
                         continue
-                    w = header_win->GetColumnWidth(j)
+                    w = header_win.GetColumnWidth(j)
                     if j != maincol and point.x >= x and point.x < x+w:
                         flags |= wx.TREE_HITTEST_ONITEMCOLUMN
                         column = j
@@ -460,7 +909,6 @@ class TreeListItem(object):
 # It probably could be if needed...
 
 class TreeItemAttr(object):
-
     def __init__(self, colText=wx.NullColour, colBack=wx.NullColour, font=wx.NullFont):
         self.m_colText = colText
         self.m_colBack = colBack
@@ -477,6 +925,7 @@ class TreeItemAttr(object):
     def GetTextColour(self): return self.m_colText
     def GetBackgroundColour(self): return self.m_colBack
     def GetFont(self):  return self.m_font
+
 
 
 #--------------------------------------------------------------------------
