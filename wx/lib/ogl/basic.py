@@ -1275,7 +1275,8 @@ class Shape(ShapeEvtHandler):
 
         # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
-        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
+        self.GetCanvas().PrepareDC(dc)
+        #odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -1307,6 +1308,7 @@ class Shape(ShapeEvtHandler):
 
         # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
+        self.GetCanvas().PrepareDC(dc)
         odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(OGLRBLF)
 
@@ -1338,6 +1340,7 @@ class Shape(ShapeEvtHandler):
 
         # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
+        self.GetCanvas().PrepareDC(dc)
         odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(wx.COPY)
 
