@@ -189,7 +189,7 @@ class Constraint(object):
         y = self._constrainingObject.GetY()
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self._constrainingObject.GetCanvas()._Buffer)
+        dc.SelectObject(self._constrainingObject.GetCanvas().GetBuffer())
 
         if self._constraintType == CONSTRAINT_CENTRED_VERTICALLY:
             n = len(self._constrainedObjects)
@@ -557,7 +557,7 @@ class CompositeShape(RectangleShape):
             return
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
 
         for object in self._children:
             # Scale the position first
@@ -791,7 +791,7 @@ class CompositeShape(RectangleShape):
         division.SetSize(self._width, self._height)
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
 
         division.Move(dc, self.GetX(), self.GetY())
         self.Recompute()
@@ -875,7 +875,7 @@ class DivisionControlPoint(ControlPoint):
         ControlPoint.OnEndDragLeft(self, x, y, keys, attachment)
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
 
         division = self._shape
         divisionParent = division.GetParent()
@@ -1186,7 +1186,7 @@ class DivisionShape(CompositeShape):
             return
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
         dc.SetLogicalFunction(wx.COPY)
 
         self._xpos, self._ypos = self._canvas.Snap(self._xpos, self._ypos)
@@ -1247,7 +1247,7 @@ class DivisionShape(CompositeShape):
             self.Select(False)
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
 
         if direction == wx.VERTICAL:
             # Dividing vertically means notionally putting a horizontal
@@ -1419,7 +1419,7 @@ class DivisionShape(CompositeShape):
         self.SetSize(newW, self.GetHeight())
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
 
         self.Move(dc, newX, self.GetY())
         return True
@@ -1447,7 +1447,7 @@ class DivisionShape(CompositeShape):
         self.SetSize(newW, self.GetHeight())
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
 
         self.Move(dc, newX, self.GetY())
         return True
@@ -1475,7 +1475,7 @@ class DivisionShape(CompositeShape):
         self.SetSize(self.GetWidth(), newH)
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
 
         self.Move(dc, self.GetX(), newY)
         return True
@@ -1556,7 +1556,7 @@ class DivisionShape(CompositeShape):
         unit_x, unit_y = self._canvas.GetScrollPixelsPerUnit()
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
 
         mouse_x = dc.LogicalToDeviceX(x - x1 * unit_x)
         mouse_y = dc.LogicalToDeviceY(y - y1 * unit_y)

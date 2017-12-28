@@ -82,7 +82,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         self._firstDragY = 0
         self._checkTolerance = True
 
-        self._Buffer = wx.Bitmap(10, 10)
+        self._buffer = wx.Bitmap(1, 1)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -92,8 +92,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         """
         Update the buffer with the background and redraw the full diagram.
         """
-        dc = wx.MemoryDC()
-        dc.SelectObject(self._Buffer)
+        dc = wx.MemoryDC(self._buffer)
 
         dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
         dc.Clear() # make sure you clear the bitmap!
@@ -105,12 +104,15 @@ class ShapeCanvas(wx.ScrolledWindow):
         """
         The size handler, it initializes the buffer to the size of the window.
         """
-        Size  = self.GetVirtualSize()
+        size  = self.GetVirtualSize()
 
         # Make sure we don't try to create a 0 size bitmap
-        Size = (max(Size[0], 1), max(Size[1], 1))
-        self._Buffer = wx.Bitmap(Size[0], Size[1])
+        size = wx.Size(max(size.x, 1), max(size.y, 1))
+        self._buffer = wx.Bitmap(size.x, size.y)
         self.Draw()
+
+    def GetBuffer(self):
+        return self._buffer
 
     def SetDiagram(self, diag):
         """Set the diagram associated with this canvas.
@@ -131,7 +133,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         """
         dc = wx.PaintDC(self)
         self.PrepareDC(dc)
-        dc.DrawBitmap(self._Buffer, 0, 0)
+        dc.DrawBitmap(self._buffer, 0, 0)
 
     def OnMouseEvent(self, evt):
         """The mouse event handler."""
