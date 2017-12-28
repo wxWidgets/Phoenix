@@ -1273,10 +1273,8 @@ class Shape(ShapeEvtHandler):
                 self._parent.GetEventHandler().OnDragLeft(draw, x, y, keys, attachment)
             return
 
-        # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
-        #odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -1306,10 +1304,8 @@ class Shape(ShapeEvtHandler):
         DragOffsetX = self._xpos - x
         DragOffsetY = self._ypos - y
 
-        # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
-        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         # New policy: don't erase shape until end of drag.
@@ -1338,10 +1334,8 @@ class Shape(ShapeEvtHandler):
                 self._parent.GetEventHandler().OnEndDragLeft(x, y, keys, attachment)
             return
 
-        # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
-        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(wx.COPY)
 
         xx = x + DragOffsetX
