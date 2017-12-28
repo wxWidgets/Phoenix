@@ -106,7 +106,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         """
         The size handler, it initializes the buffer to the size of the window.
         """
-        Size  = self.GetClientSize()
+        Size  = self.GetVirtualSize()
 
         # Make sure we don't try to create a 0 size bitmap
         Size = (max(Size[0], 1), max(Size[1], 1))
@@ -130,21 +130,13 @@ class ShapeCanvas(wx.ScrolledWindow):
         The paint handler, uses :class:`BufferedPaintDC` to draw the
         buffer to the screen.
         """
-        dc = wx.BufferedPaintDC(self)
+        dc = wx.PaintDC(self)
+        self.PrepareDC(dc)
         dc.DrawBitmap(self._Buffer, 0, 0)
 
     def OnMouseEvent(self, evt):
         """The mouse event handler."""
-        # we just get position, so is using ClientDC fine here?
-        dc = wx.ClientDC(self)
-        x, y = evt.GetLogicalPosition(dc)
-        # del it so we don't get tempted to use it for something else
-        del dc
-        ## result seems to be the same using either here, but not sure which is correct
-        #dc = wx.MemoryDC()
-        #dc.SelectObject(self._Buffer)
-        #x, y = evt.GetLogicalPosition(dc)
-
+        x, y = self.CalcUnscrolledPosition(evt.GetPosition())
         keys = 0
         if evt.ShiftDown():
             keys |= KEY_SHIFT
