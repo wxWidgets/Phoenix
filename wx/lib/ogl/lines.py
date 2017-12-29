@@ -1354,6 +1354,7 @@ class LineShape(Shape):
         """The sizing drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -1383,6 +1384,7 @@ class LineShape(Shape):
         """The sizing begin drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         if pt._type == CONTROL_POINT_LINE:
             pt._originalPos = pt._point
@@ -1425,6 +1427,7 @@ class LineShape(Shape):
         """The sizing end drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         self.SetDisableLabel(False)
 

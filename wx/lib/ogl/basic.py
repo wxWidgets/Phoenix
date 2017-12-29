@@ -522,6 +522,7 @@ class Shape(ShapeEvtHandler):
         if redraw and self.GetCanvas():
             dc = wx.MemoryDC()
             dc.SelectObject(self.GetCanvas().GetBuffer())
+            self.GetCanvas().PrepareDC(dc)
             self.Erase(dc)
             self._shadowMode = mode
             self.Draw(dc)
@@ -1197,6 +1198,7 @@ class Shape(ShapeEvtHandler):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         self.MoveLinks(dc)
 
         if not self.GetCanvas().GetQuickEditMode():
@@ -1441,6 +1443,7 @@ class Shape(ShapeEvtHandler):
         if self.GetCanvas():
             dc = wx.MemoryDC()
             dc.SelectObject(self.GetCanvas().GetBuffer())
+            self.GetCanvas().PrepareDC(dc)
             dc.SetLogicalFunction(OGLRBLF)
             self.Draw(dc)
             dc.SetLogicalFunction(wx.COPY)
@@ -1567,6 +1570,7 @@ class Shape(ShapeEvtHandler):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         self.MoveLinks(dc)
 
     def RemoveLine(self, line):
@@ -2505,6 +2509,7 @@ class Shape(ShapeEvtHandler):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -2586,6 +2591,7 @@ class Shape(ShapeEvtHandler):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         bound_x, bound_y = self.GetBoundingBoxMin()
@@ -2687,6 +2693,7 @@ class Shape(ShapeEvtHandler):
         """The sizing end drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         if self._canvas.HasCapture():
             self._canvas.ReleaseMouse()
@@ -3288,6 +3295,7 @@ class PolygonShape(Shape):
         """The sizing drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -3304,6 +3312,7 @@ class PolygonShape(Shape):
         """The sizing begin drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         self.Erase(dc)
@@ -3335,6 +3344,7 @@ class PolygonShape(Shape):
         """The sizing end drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         if self._canvas.HasCapture():
             self._canvas.ReleaseMouse()

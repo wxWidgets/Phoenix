@@ -190,6 +190,7 @@ class Constraint(object):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self._constrainingObject.GetCanvas().GetBuffer())
+        self._constrainingObject.GetCanvas().PrepareDC(dc)
 
         if self._constraintType == CONSTRAINT_CENTRED_VERTICALLY:
             n = len(self._constrainedObjects)
@@ -558,6 +559,7 @@ class CompositeShape(RectangleShape):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         for object in self._children:
             # Scale the position first
@@ -792,6 +794,7 @@ class CompositeShape(RectangleShape):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         division.Move(dc, self.GetX(), self.GetY())
         self.Recompute()
@@ -876,6 +879,7 @@ class DivisionControlPoint(ControlPoint):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         division = self._shape
         divisionParent = division.GetParent()
@@ -1187,6 +1191,7 @@ class DivisionShape(CompositeShape):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(wx.COPY)
 
         self._xpos, self._ypos = self._canvas.Snap(self._xpos, self._ypos)
@@ -1248,6 +1253,7 @@ class DivisionShape(CompositeShape):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         if direction == wx.VERTICAL:
             # Dividing vertically means notionally putting a horizontal
@@ -1420,6 +1426,7 @@ class DivisionShape(CompositeShape):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         self.Move(dc, newX, self.GetY())
         return True
@@ -1448,6 +1455,7 @@ class DivisionShape(CompositeShape):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         self.Move(dc, newX, self.GetY())
         return True
@@ -1476,6 +1484,7 @@ class DivisionShape(CompositeShape):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         self.Move(dc, self.GetX(), newY)
         return True
@@ -1557,6 +1566,7 @@ class DivisionShape(CompositeShape):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         mouse_x = dc.LogicalToDeviceX(x - x1 * unit_x)
         mouse_y = dc.LogicalToDeviceY(y - y1 * unit_y)

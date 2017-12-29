@@ -50,6 +50,7 @@ class DividedShapeControlPoint(ControlPoint):
         """The drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -68,6 +69,7 @@ class DividedShapeControlPoint(ControlPoint):
         """The begin drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -88,6 +90,7 @@ class DividedShapeControlPoint(ControlPoint):
         """The end drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         dividedObject = self._shape
         if not dividedObject.GetRegions()[self.regionId]:
