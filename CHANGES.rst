@@ -70,6 +70,9 @@ Changes in this release include the following:
 * Fix OGL's ShapeCanvas to draw properly when the window is scrolled, and
   to also adjust the mouse coordinates, etc. (#635)
 
+* Fixed HtmlWindow's OnFoo virtual methods so calls to them are propagated to
+  the Python class. (#642)
+
 
 
 
