@@ -24,12 +24,16 @@ Usage:
 
 Where URL is a file URL and the optional DEST_DIR is a destination directory to
 download to, (default is to prompt the user).
+The --trusted option can be used to surpress certificate checks.
 """
 from __future__ import (division, absolute_import, print_function, unicode_literals)
 
 import sys
 import os
 import wx
+import subprocess
+import ssl
+import pip
 
 if sys.version_info >= (3,):
     from urllib.error import (HTTPError, URLError)
@@ -87,30 +91,30 @@ def get_save_path(url, dest_dir, force=False):
 
     return (url, filename)
 
-def download_file(url, dest=None, force=False):
-    """
-    Download and save a file specified by url to dest directory, with force will
-    operate silently and overwrite any existing file.
-    """
-    url, filename = get_save_path(url, dest, force)
-    if url is None:
-        return 'Aborted!'
+def download_wget(url, filename, trusted=False):
+    """ Try to donwload via wget."""
+    result = False
+    try:
+        cmd = ["wget", url, '-O', filename]
+        if trusted:
+            cmd.append('--no-check-certificate')
+        print("Trying:\n  ", ' '.join(cmd))
+        result = subprocess.check_call(cmd)
+        # note some users may need to add "--no-check-certificate" on some sites
+        result = result == 0
+    except Exception:
+        print("wget did not work or not installed - trying urllib")
+    return result
 
-    if url:
-        try:
-            url_res = urllib2.urlopen(url)
-            keep_going = True
-        except (HTTPError, URLError) as err:
-            msg = '\n'.join([
-            "\n\nERROR in Web Access! - you may be behind a firewall",
-            "You may be able to bybass this by using a browser to download:",
-            "\n\t%s\n\nand copying to:\n\n\t%s" % (url, filename),
-            ])
-            print(msg, '\n')
-            wx.MessageBox(msg, caption='WDOWNLOAD ERROR!',
-                          style=wx.OK|wx.CENTRE|wx.ICON_ERROR)
-            return "Error: %s" % err
-
+def download_urllib(url, filename):
+    """ Try to donwload via urllib."""
+    print("Trying to Download via urllib from:\n  ", url)
+    keep_going = True
+    try:
+        url_res = urllib2.urlopen(url)
+    except (HTTPError, URLError, ssl.CertificateError) as err:
+        print("Error: %s" % err)
+        return False
     with open(filename, 'wb') as outfile:
         block_sz = 8192
         meta = url_res.info()
@@ -146,11 +150,80 @@ def download_file(url, dest=None, force=False):
             wx.Sleep(0.08)  # Give the GUI some update time
         progress.Destroy()
 
+def download_pip(url, filename, force=False, trusted=False):
+    """ Try to donwload via pip."""
+    download_dir = os.path.split(filename)[0]
+    if len(download_dir) == 0:
+        download_dir = '.'
+    print("Trying to use pip to download From:\n  ", url, 'To:\n  ', filename)
+    cmds = ['download', url, '--dest', download_dir, "--no-deps",
+            '--exists-action', 'i']
+    if force:
+        cmds.append('--no-cache-dir')
+    if trusted:
+        host = '/'.join(url.split('/')[:3])  # take up to http://something/ as host
+        cmds.extend(['--trusted-host', host])
+    if force and os.path.exists(filename):
+        print("Delete Existing", filename)
+        os.unlink(filename)
+    print("Running pip",  ' '.join(cmds))
+    try:
+        print("\nAbusing pip so expect an error in the next few lines.")
+        result = pip.main(cmds)
+        print(result)
+    except FileNotFoundError:
+        result = 0
+    return os.path.exists(filename)
+
+def download_file(url, dest=None, force=False, trusted=False):
+    """
+    Download and save a file specified by url to dest directory, with force will
+    operate silently and overwrite any existing file.
+    """
+    url, filename = get_save_path(url, dest, force)
+    keep_going = True
+    success = False
+    if url is None:
+        return 'Aborted!'
+
+    if url:
+        success = download_wget(url, filename, trusted)  # Try wget
+        if not success:
+            success = download_urllib(url, filename)  # Try urllib
+        if not success:
+            success = download_pip(url, filename, force, trusted)  # Try urllib
+        if not success:
+            split_url = url.split('/')
+            msg = '\n'.join([
+                "\n\nERROR in Web Access! - You may be behind a firewall!",
+                "-" * 52,
+                "You should be able to bybass this by using a browser to download:",
+                "\t%s\nfrom:\t%s\nthen copying the download file to:\n\t%s" % (
+                    split_url[-1], '/'.join(split_url[:-1]), filename),
+                ])
+            print(msg, '\n')
+            wx.MessageBox(msg, caption='WDOWNLOAD ERROR!',
+                          style=wx.OK|wx.CENTRE|wx.ICON_ERROR)
+            return "FAILURE or Abort!"
+
     return filename
 
 def main(args=sys.argv):
     """ Entry point for wxget."""
     APP = wx.App()
+    dest_dir = '.'
+    force_flag = '--force'
+    trusted_flag = '--trusted'
+    force = False
+    trusted = False
+
+    if force_flag in args:
+        force = True
+        args.remove(force_flag)
+
+    if trusted_flag in args:
+        trusted = True
+        args.remove(force_flag)
 
     if len(args) > 2:
         dest_dir = args[2]
@@ -168,7 +241,7 @@ def main(args=sys.argv):
         else:
             url = None
     if url:
-        FILENAME = download_file(url)
+        FILENAME = download_file(url, dest_dir, force, trusted)
         print(FILENAME)
 
 if __name__ == "__main__":  # Only run if this file is called directly

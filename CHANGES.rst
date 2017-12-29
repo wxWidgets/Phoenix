@@ -72,6 +72,9 @@ Changes in this release include the following:
 
 * Set a default background color for the generic buttons. (#651)
 
+* Fixed HtmlWindow's OnFoo virtual methods so calls to them are propagated to
+  the Python class. (#642)
+
 
 
 
