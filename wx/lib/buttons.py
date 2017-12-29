@@ -172,7 +172,7 @@ class GenButton(wx.Control):
         self.SetLabel(label)
         self.InheritAttributes()
         self.SetInitialSize(size)
-        self.InitColours()
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE))
 
         self.Bind(wx.EVT_LEFT_DOWN,        self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP,          self.OnLeftUp)
