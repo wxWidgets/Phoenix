@@ -67,6 +67,9 @@ Changes in this release include the following:
 * Fix wx.EvtHandler.Unbind to work correctly when specifying the handler and
   it is a bound method. (#624)
 
+* Fix OGL's ShapeCanvas to draw properly when the window is scrolled, and
+  to also adjust the mouse coordinates, etc. (#635)
+
 
 
 
