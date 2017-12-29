@@ -198,7 +198,7 @@ class Configuration(object):
 
         #---------------------------------------
         # Posix (wxGTK, wxMac or mingw32) settings
-        elif os.name == 'posix' or COMPILER == 'mingw32':
+        elif os.name == 'posix' or self.COMPILER == 'mingw32':
             self.Verify_WX_CONFIG()
             self.includes += ['include']
             self.defines = [ #('NDEBUG',),  # using a 1-tuple makes it do an undef

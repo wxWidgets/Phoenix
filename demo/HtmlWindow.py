@@ -37,7 +37,7 @@ class MyHtmlWindow(html.HtmlWindow):
         if isinstance(cell, html.HtmlWordCell):
             sel = html.HtmlSelection()
             self.log.WriteText('     %s\n' % cell.ConvertToText(sel))
-        super(MyHtmlWindow, self).OnCellClicked(cell, x, y, evt)
+        return super(MyHtmlWindow, self).OnCellClicked(cell, x, y, evt)
 
 
 
