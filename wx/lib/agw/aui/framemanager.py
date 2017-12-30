@@ -5332,7 +5332,7 @@ class AuiManager(wx.EvtHandler):
         options = pane_part.split(";")
         for items in options:
 
-            val_name, value = items.split("=")
+            val_name, value = items.split("=", 1)
             val_name = val_name.strip()
 
             if val_name == "name":
