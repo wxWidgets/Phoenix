@@ -643,7 +643,7 @@ class TreeListHeaderWindow(wx.Window):
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
         self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
 
-        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
 
 
     def SetBuffered(self, buffered):
@@ -2108,7 +2108,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         # Sets the focus to ourselves: this is useful if you have items
         # with associated widgets.
         self.SetFocus()
-        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
 
 
     def SetBuffered(self, buffered):
@@ -2122,9 +2122,9 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         self._buffered = buffered
         if buffered:
-            self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+            self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         else:
-            self.SetBackgroundStyle(wx.BG_STYLE_SYSTEM)
+            self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
 
 
     def IsVirtual(self):
