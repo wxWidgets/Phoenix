@@ -333,6 +333,7 @@ def run():
 
             """,
         items = [
+            PyCodeDef('__instances = {}'),
             PyFunctionDef('__init__', '(self, millis, callableObj, *args, **kwargs)',
                 doc="""\
                     Constructs a new :class:`wx.CallLater` object.
@@ -373,6 +374,7 @@ def run():
                     if args or kwargs:
                         self.SetArgs(*args, **kwargs)
                     self.Stop()
+                    CallLater.__instances[self] = "value irrelevant"  # Maintain a reference to avoid GC
                     self.timer = wx.PyTimer(self.Notify)
                     self.timer.Start(self.millis, wx.TIMER_ONE_SHOT)
                     self.running = True"""),
@@ -381,6 +383,8 @@ def run():
             PyFunctionDef('Stop', '(self)',
                 doc="Stop and destroy the timer.",
                 body="""\
+                    if self in CallLater.__instances:
+                        del CallLater.__instances[self]
                     if self.timer is not None:
                         self.timer.Stop()
                         self.timer = None"""),
