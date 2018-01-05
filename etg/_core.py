@@ -324,8 +324,9 @@ def run():
 
             If you don't need to get the return value or restart the timer
             then there is no need to hold a reference to this object. CallLater
-            maintains references to its instances while they are running. When they,
-            the reference is deleted, and the GC is free to collect naturally.
+            maintains references to its instances while they are running. When they
+            finish, the internal reference is deleted and the GC is free to collect
+            naturally.
 
             .. seealso::
                 :func:`wx.CallAfter`
