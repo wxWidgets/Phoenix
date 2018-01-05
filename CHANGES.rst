@@ -77,8 +77,8 @@ Changes in this release include the following:
 
 * Fixed wx.CallLater to explicitly hold a reference instead of depending on an
   uncollectible cycle to keep the instance around. Like before the cycle is
-  broken and the saved reference is deleted when the timer expires and the
-  callable is called. (#457)
+  broken and the saved reference is deleted after the timer expires and the
+  callable has been called. (#457)
 
 
 
