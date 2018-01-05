@@ -323,17 +323,17 @@ def run():
             method.
 
             If you don't need to get the return value or restart the timer
-            then there is no need to hold a reference to this object.  It will
-            hold a reference to itself while the timer is running (the timer
-            has a reference to :meth:`~wx.CallLater.Notify`) but the cycle will be
-            broken when the timer completes, automatically cleaning up the
-            :class:`wx.CallLater` object.
+            then there is no need to hold a reference to this object. CallLater
+            maintains references to its instances while they are running. When they
+            finish, the internal reference is deleted and the GC is free to collect
+            naturally.
 
             .. seealso::
                 :func:`wx.CallAfter`
 
             """,
         items = [
+            PyCodeDef('__instances = {}'),
             PyFunctionDef('__init__', '(self, millis, callableObj, *args, **kwargs)',
                 doc="""\
                     Constructs a new :class:`wx.CallLater` object.
@@ -374,6 +374,7 @@ def run():
                     if args or kwargs:
                         self.SetArgs(*args, **kwargs)
                     self.Stop()
+                    CallLater.__instances[self] = "value irrelevant"  # Maintain a reference to avoid GC
                     self.timer = wx.PyTimer(self.Notify)
                     self.timer.Start(self.millis, wx.TIMER_ONE_SHOT)
                     self.running = True"""),
@@ -382,6 +383,8 @@ def run():
             PyFunctionDef('Stop', '(self)',
                 doc="Stop and destroy the timer.",
                 body="""\
+                    if self in CallLater.__instances:
+                        del CallLater.__instances[self]
                     if self.timer is not None:
                         self.timer.Stop()
                         self.timer = None"""),
