@@ -52,7 +52,7 @@ def run():
             self->GetSplashWindow()->SetBitmap(*bitmap);
             """)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         SPLASH_CENTER_ON_PARENT = SPLASH_CENTRE_ON_PARENT
         SPLASH_CENTER_ON_SCREEN = SPLASH_CENTRE_ON_SCREEN
         SPLASH_NO_CENTER = SPLASH_NO_CENTRE

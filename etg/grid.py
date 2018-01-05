@@ -122,7 +122,8 @@ def run():
     c.addPyCode('GridCellCoords.__safe_for_unpickling__ = True')
 
     module.addItem(
-        tools.wxArrayWrapperTemplate('wxGridCellCoordsArray', 'wxGridCellCoords', module))
+        tools.wxArrayWrapperTemplate('wxGridCellCoordsArray', 'wxGridCellCoords', module,
+                                     getItemCopy=True))
 
 
     #-----------------------------------------------------------------
@@ -493,7 +494,7 @@ def run():
         tools.fixEventClass(c)
 
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_GRID_CELL_LEFT_CLICK = wx.PyEventBinder( wxEVT_GRID_CELL_LEFT_CLICK )
         EVT_GRID_CELL_RIGHT_CLICK = wx.PyEventBinder( wxEVT_GRID_CELL_RIGHT_CLICK )
         EVT_GRID_CELL_LEFT_DCLICK = wx.PyEventBinder( wxEVT_GRID_CELL_LEFT_DCLICK )

@@ -38,7 +38,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_TASKBAR_MOVE = wx.PyEventBinder (         wxEVT_TASKBAR_MOVE )
         EVT_TASKBAR_LEFT_DOWN = wx.PyEventBinder (    wxEVT_TASKBAR_LEFT_DOWN )
         EVT_TASKBAR_LEFT_UP = wx.PyEventBinder (      wxEVT_TASKBAR_LEFT_UP )

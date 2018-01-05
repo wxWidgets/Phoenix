@@ -84,8 +84,10 @@ def run():
     c.addCppMethod('long', '__hash__', '()', """\
         return (long)self->GetID();
         """)
-    c.addCppMethod('bool', '__eq__', '(wxDataViewItem* other)', "return (self->GetID() == other->GetID());")
-    c.addCppMethod('bool', '__ne__', '(wxDataViewItem* other)', "return (self->GetID() != other->GetID());")
+    c.addCppMethod('bool', '__eq__', '(wxDataViewItem* other)',
+                   "return other ? (self->GetID() == other->GetID()) : false;")
+    c.addCppMethod('bool', '__ne__', '(wxDataViewItem* other)',
+                   "return other ? (self->GetID() != other->GetID()) : true;")
     c.addAutoProperties()
 
 
@@ -249,8 +251,13 @@ def run():
         _fixupBoolGetters(c.find(name), sig)
 
     m = c.find('SetValue')
-    m.find('value').type = 'wxDVCVariant&'
+    m.find('value').type = 'const wxDVCVariant&'
     m.cppSignature = 'bool (const wxVariant& value)'
+
+    m = c.find('CreateEditorCtrl')
+    m.cppSignature = 'wxWindow* (wxWindow * parent, wxRect labelRect, const wxVariant& value)'
+
+    c.find('GetView').ignore(False)
 
 
 
@@ -272,6 +279,9 @@ def run():
         """
 
     c.find('GetTextExtent').ignore(False)
+
+    m = c.find('CreateEditorCtrl')
+    m.cppSignature = 'wxWindow* (wxWindow * parent, wxRect labelRect, const wxVariant& value)'
 
 
     module.addPyCode("""\

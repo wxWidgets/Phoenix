@@ -144,6 +144,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.Bind(wx.EVT_LIST_COL_DRAGGING, self.OnColDragging, self.list)
         self.Bind(wx.EVT_LIST_COL_END_DRAG, self.OnColEndDrag, self.list)
         self.Bind(wx.EVT_LIST_BEGIN_LABEL_EDIT, self.OnBeginEdit, self.list)
+        self.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnEndEdit, self.list)
 
         self.list.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick)
         self.list.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
@@ -260,6 +261,10 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
     def OnBeginEdit(self, event):
         self.log.WriteText("OnBeginEdit")
+        event.Allow()
+
+    def OnEndEdit(self, event):
+        self.log.WriteText("OnEndEdit: " + event.GetText())
         event.Allow()
 
     def OnItemDelete(self, event):

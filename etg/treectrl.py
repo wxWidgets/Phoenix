@@ -162,7 +162,7 @@ def run():
     c = module.find('wxTreeEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_TREE_BEGIN_DRAG        = PyEventBinder(wxEVT_TREE_BEGIN_DRAG       , 1)
         EVT_TREE_BEGIN_RDRAG       = PyEventBinder(wxEVT_TREE_BEGIN_RDRAG      , 1)
         EVT_TREE_BEGIN_LABEL_EDIT  = PyEventBinder(wxEVT_TREE_BEGIN_LABEL_EDIT , 1)

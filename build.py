@@ -75,12 +75,12 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.19.2'
+sipCurrentVersion = '4.19.5'
 sipMD5 = {
-    'darwin'   : '9a1ba6447b05926f8ff58a602bd156ba',
-    'win32'    : 'e358f96f1e10649a62e3657fc599cbb6',
-    'linux32'  : 'd9909d1c12ae758f68c025b644257e20',
-    'linux64'  : '8dc9cd737f9f0a7c1538c0c85ce7120e',
+    'darwin'   : '06308e0a0d3735992a53986fe99bde07',
+    'win32'    : '107f2bbac5445f2a3c5df64000b1e1c3',
+    'linux32'  : '6dc2998b10c1e81bbc5cb9bd007f9345',
+    'linux64'  : '62104b11351b00da3dd5ed6094a2c744',
 }
 
 wafCurrentVersion = '1.7.15-p1'
@@ -770,6 +770,20 @@ def checkCompiler(quiet=False):
         os.environ['LIB'] = _b(env['lib'])
         os.environ['LIBPATH'] = _b(env['libpath'])
 
+    # NOTE: SIP is now generating code with scoped-enums. Older linux
+    # platforms like what we're using for builds, and also TravisCI for
+    # example, are using GCC versions that are still defaulting to C++98,
+    # so this flag is needed to turn on the C++11 mode. If this flag
+    # causes problems with other non-Windows, non-Darwin compilers then
+    # we'll need to make this a little smarter about what flag (if any)
+    # needs to be used.
+    if not isWindows and not isDarwin:
+        stdflag = '-std=c++11'
+        curflags = os.environ.get('CXXFLAGS', '')
+        if stdflag not in curflags:
+            os.environ['CXXFLAGS'] = '{} {}'.format(stdflag, curflags)
+    #print('**** Using CXXFLAGS:', os.environ.get('CXXFLAGS', ''))
+
 
 def getWafBuildBase():
     base = posixjoin('build', 'waf', PYVER)
@@ -1367,6 +1381,9 @@ def cmd_build_py(options, args):
     checkCompiler()
 
     BUILD_DIR = getBuildDir(options)
+
+    if options.release:
+        os.environ['WXPYTHON_RELEASE'] = 'yes'
 
     if not isWindows:
         WX_CONFIG = posixjoin(BUILD_DIR, 'wx-config')

@@ -21,6 +21,61 @@ Changes in this release include the following:
 * Fixes in wx.aui to properly transfer ownership of the menubar, and also some
   tweaks in the AUI_MDI sample in the demo. (#540)
 
+* Added a wx.BUILD_TYPE value to distinguish between development, snapshot,
+  and release builds. The value is also appended to wx.PlatformInfo. (Thanks
+  Mesalu!)
+
+* Fix crash when trying to fetch multiple items from a composite data object
+  in wx.DropTarget.OnData. (#550) Also fixed the CustomDragAndDrop sample to
+  not fail on Python 2.7.
+
+* Add ability for wxArray wrappers to return a copy of the item in the
+  ``__getitem__`` method. This solves problems where an array that is the
+  return value of some method call is indexed immediately and a reference to
+  the array is not held, which could result in garbage values for the indexed
+  item. Currently this is turned on for just GridCellCoordsArray, but others
+  can be switched in the future if needed. (#297)
+
+* Add missing ``wx.GetLocale`` function. (#572)
+
+* Add methods to wx.TextCtrl for output "file-like" compatibility. (#578)
+
+* Fix object ownership issue for menus added to toolbar items. (#580)
+
+* Updated SIP to version 4.19.5. One of the new features of this version is
+  that integer overflows are no longer silently truncated and ignored. In
+  other words, if a wrapped API has a parameter that is a C int type, and you
+  pass a value that is larger than what will fit in that type of integer then
+  an OverflowError exception will be raised.
+
+* Fixed wx.richtext.RichTextBuffer.GetExtWildcard to return a tuple of 2
+  values, as was done in Classic. (#594)
+
+* Various fixes in UltimateListCtrl, HyperTreeList and CheckListCtrlMixin. 
+  (#592, #349, #612)
+
+* Fixes in TextEditMixin to ensure that the new value is passed in the
+  event. (#605)
+
+* Fix comparing DataViewItem and TreeListItem objects with None. (#595)
+
+* Fix event type name in wx/lib/sheet.py (#613)
+
+* The wx.MessageDialog methods which take ButtonLabel parameters are now able
+  to accept either strings or stock IDs. (#607, #276)
+
+* Fix wx.EvtHandler.Unbind to work correctly when specifying the handler and
+  it is a bound method. (#624)
+
+* Fix OGL's ShapeCanvas to draw properly when the window is scrolled, and
+  to also adjust the mouse coordinates, etc. (#635)
+
+* Set a default background color for the generic buttons. (#651)
+
+* Fixed HtmlWindow's OnFoo virtual methods so calls to them are propagated to
+  the Python class. (#642)
+
+
 
 
 

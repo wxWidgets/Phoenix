@@ -37,7 +37,7 @@ Options:
 
 import  sys
 import  wx
-import  img2img
+from . import img2img
 
 app = None
 def main():

@@ -65,6 +65,7 @@ def run():
     gcd.type = 'wxPyUserData*'
     gcd.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetClientData());')
 
+    c.find('SetDropdownMenu.menu').transfer = True
 
 
     #---------------------------------------------
@@ -95,6 +96,8 @@ def run():
     c.find('OnMouseEnter').ignore()
     c.find('OnRightClick').ignore()
     c.find('OnLeftClick').ignore()
+
+    c.find('SetDropdownMenu.menu').transfer = True
 
 
     # Add some deprecated methods to aid with Classic compatibility.

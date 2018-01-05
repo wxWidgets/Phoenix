@@ -198,7 +198,7 @@ class Configuration(object):
 
         #---------------------------------------
         # Posix (wxGTK, wxMac or mingw32) settings
-        elif os.name == 'posix' or COMPILER == 'mingw32':
+        elif os.name == 'posix' or self.COMPILER == 'mingw32':
             self.Verify_WX_CONFIG()
             self.includes += ['include']
             self.defines = [ #('NDEBUG',),  # using a 1-tuple makes it do an undef
@@ -338,7 +338,12 @@ class Configuration(object):
         if os.path.exists('REV.txt'):
             f = open('REV.txt')
             self.VER_FLAGS += f.read().strip()
+            self.BUILD_TYPE = 'snapshot'
             f.close()
+        elif os.environ.get('WXPYTHON_RELEASE') == 'yes':
+            self.BUILD_TYPE = 'release'
+        else:
+            self.BUILD_TYPE = 'development'
 
         self.VERSION = "%s.%s.%s%s" % (self.VER_MAJOR,
                                        self.VER_MINOR,

@@ -48,6 +48,7 @@ INCLUDES = [  # base and core stuff
               'clntdatactnr',
               'userdata',
               'wxpybuffer',
+              'msgdlg_btnlabel',
 
               'stockgdi',
               'longlong',

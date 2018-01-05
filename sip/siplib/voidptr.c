@@ -200,9 +200,7 @@ static PyObject *sipVoidPtr_setwriteable(sipVoidPtrObject *v, PyObject *arg)
 {
     int rw;
 
-    rw = (int)SIPLong_AsLong(arg);
-
-    if (PyErr_Occurred())
+    if ((rw = PyObject_IsTrue(arg)) < 0)
         return NULL;
 
     v->rw = rw;

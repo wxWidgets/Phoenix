@@ -15,10 +15,6 @@ If you are porting your code from Classic wxPython, be sure to read the
 `Migration Guide <MigrationGuide.html>`_  to get a better feel for
 how some things have changed.
 
-If you are new to wxPython then you may want to glance at the various
-`overview documents <Overviews.html>`_ available here to get a feel for
-how things work.
-
 You can download a local copy of this documentation using a new utility script
 included with wxPython called ``wxdocs``. It will open the local copy of the
 documentation in your default browser, downloading it first if needed. There
@@ -33,12 +29,25 @@ and launch the wxPython demo for you.
 
 .. raw:: html
 
-     <h2>API Modules</h2>
+     <h2>Sections</h2>
+
+     <table class="contentstable" align="center" style="margin-left: 25px">
+       <tr><td>
+         <p class="mybiglink"><a class="mybiglink" href="Overviews.html">wx Overview Documents</a><br/>
+            <span class="linkdescr">A collection of overview and how-to documents about various wx topics. </span></p>
+
+         <p class="mybiglink"><a class="mybiglink" href="wx.functions.html">wx functions</a><br/>
+            <span class="linkdescr">The index of top-level functions available in the wx package. </span></p>
+
+       </td></tr>
+      </table>
+
+     <h3>Modules</h3>
 
      <table class="contentstable" align="center" style="margin-left: 25px">
        <tr>
        <td width="50%" valign="top">
-         <p class="mybiglink"><a class="mybiglink" href="wx.1moduleindex.html">wx Core</a><br/>
+         <p class="mybiglink"><a class="mybiglink" href="wx.1moduleindex.html">wx</a><br/>
             <span class="linkdescr">The classes which appear in the main wx namespace</span></p>
 
          <p class="mybiglink"><a class="mybiglink" href="wx.adv.1moduleindex.html">wx.adv</a><br/>
@@ -97,6 +106,9 @@ and launch the wxPython demo for you.
 
          <p class="mybiglink"><a class="mybiglink" href="wx.tools.html">wx.tools</a><br/>
             <span class="linkdescr">Some useful tools and utilities for wxPython.</span></p>
+
+         <p class="mybiglink"><a class="mybiglink" href="wx.functions.html">functions</a><br/>
+            <span class="linkdescr">Top-level functions in the wx package.</span></p>
 
        </td></tr>
      </table>

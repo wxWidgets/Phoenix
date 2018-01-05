@@ -37,15 +37,22 @@ def run():
     c = module.find('wxHtmlWindow')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
-    c.bases = ['wxScrolledWindow']
-
-    c.find('OnCellClicked').ignore(False)
-    c.find('OnCellMouseHover').ignore(False)
-    c.find('AddFilter.filter').transfer = True
-
+    c.bases = ['wxScrolledWindow', 'wxHtmlWindowInterface']
     tools.fixHtmlSetFonts(c)
 
-    # Pure virtuals inherited from wxHtmlWindowInterface
+    c.find('AddFilter.filter').transfer = True
+
+    # Turn the virtual flag back on for some methods
+    for name in [ 'OnLinkClicked',
+                  'OnOpeningURL',
+                  'OnSetTitle',
+                  'OnCellMouseHover',
+                  'OnCellClicked']:
+        c.find(name).isVirtual = True
+        c.find(name).ignore(False)
+
+    # Declare that the pure virtuals inherited from wxHtmlWindowInterface have
+    # implementations here
     c.addItem(etgtools.WigCode("""\
         virtual void SetHTMLWindowTitle(const wxString& title);
         virtual void OnHTMLLinkClicked(const wxHtmlLinkInfo& link);
@@ -62,8 +69,10 @@ def run():
         virtual wxCursor GetHTMLCursor(wxHtmlWindowInterface::HTMLCursor type) const;
         """))
 
+
     c = module.find('wxHtmlLinkEvent')
     tools.fixEventClass(c)
+
 
     c = module.find('wxHtmlCellEvent')
     tools.fixEventClass(c)
