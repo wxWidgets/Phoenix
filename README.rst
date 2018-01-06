@@ -350,14 +350,14 @@ or other unixes.
 * freeglut3
 * freeglut3-dev
 * libsm-dev
-* libgtk2.0-dev
-* libwebkitgtk-dev
-
-If you are building for GTK3 then you'll also need these packages and
-their dependencies:
-
 * libgtk-3-dev
 * libwebkitgtk-3.0-dev
+
+If you are building for GTK2 then you'll also need these packages and
+their dependencies:
+
+* libgtk2.0-dev
+* libwebkitgtk-dev
 
 If your Linux distribution has gstreamer 1.0 available then you can install
 the dev packages for that instead of the 0.10 version. For example:
