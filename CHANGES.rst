@@ -75,6 +75,11 @@ Changes in this release include the following:
 * Fixed HtmlWindow's OnFoo virtual methods so calls to them are propagated to
   the Python class. (#642)
 
+* Fixed wx.CallLater to explicitly hold a reference instead of depending on an
+  uncollectible cycle to keep the instance around. Like before the cycle is
+  broken and the saved reference is deleted after the timer expires and the
+  callable has been called. (#457)
+
 * Ported some of the classes in Classic's gizmos module from C++ to Python,
   including LEDNumberCtrl, DynamicSashWindow, and TreeListCtrl. The classes
   are now located in the wx.lib.gizmos package, with a compatibility module at
