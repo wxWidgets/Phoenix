@@ -3,7 +3,7 @@
 import time
 
 import wx
-import wx.gizmos as gizmos
+import wx.lib.gizmos as gizmos  # Formerly wx.gizmos in Classic
 
 #----------------------------------------------------------------------
 

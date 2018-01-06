@@ -41,6 +41,7 @@ _treeList = [
         'Simplebook',
         'LEDNumberCtrl',
         'DynamicSashWindow',
+        'TreeListCtrl',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -151,7 +152,7 @@ _treeList = [
         'PlateButton',
         'PopupControl',
         'PyColourChooser',
-        'TreeListCtrl',  # TODO or toss it?
+        'TreeListCtrl',
     ]),
 
     # controls coming from other libraries
@@ -191,7 +192,6 @@ _treeList = [
         'ResizeWidget',
         'RichTextCtrl',
         'ScrolledPanel',
-        #'SplitTree',         # TODO or toss it?
         'StyledTextCtrl_1',
         'StyledTextCtrl_2',
         'TablePrint',

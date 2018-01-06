@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import wx
-import wx.gizmos as  gizmos
+import wx.lib.gizmos as gizmos  # Formerly wx.gizmos in Classic
 import wx.stc as stc
 
 #----------------------------------------------------------------------
