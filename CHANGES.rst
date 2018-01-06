@@ -85,7 +85,11 @@ Changes in this release include the following:
   are now located in the wx.lib.gizmos package, with a compatibility module at
   the old wx.gizmos location. Please note that this TreeListCtrl class is a
   very different implementation than wx.dataview.TreeListCtrl, although there
-  is some overlap in purpose.
+  is some overlap in purpose. In addition, the new TreeListCtrl class is not
+  actually a port from the old gizmos.TreeListCtrl but rather just a thin
+  layer around AGW's HyperTreeList. This means that if you are using a non-
+  default style flag you'll need to pass it to the agwStyle parameter instead
+  of the style parameter.
 
 
 
