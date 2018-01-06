@@ -873,9 +873,12 @@ public:
         sipRes = sipCpp->size();
     %End
 
-    {ItemClass}* __getitem__(ulong index);
+    {ItemClass}* __getitem__(long index);
     %MethodCode
-        if (index < sipCpp->size()) {{
+        if (0 > index)
+            index += sipCpp->size();
+
+        if (index < sipCpp->size() && (0 <= index)) {{
             {ListClass}::compatibility_iterator node = sipCpp->Item(index);
             if (node)
                 sipRes = ({ItemClass}*)node->GetData();
