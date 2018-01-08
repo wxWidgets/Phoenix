@@ -80,6 +80,25 @@ def run():
 
 
     #-----------------------------------------------------------------
+    # Add AuiTabCtrl in.
+    c = etgtools.ClassDef(name = "wxAuiTabCtrl",
+        bases = ["wxControl", "wxAuiTabContainer"],
+        mustHaveAppFlag = True,
+        items = [
+            etgtools.MethodDef(name = "wxAuiTabCtrl",
+                classname="wxAuiTabCtrl", isCtor=True,
+                items = [
+                    etgtools.ParamDef(type = "wxWindow*", name = "parent"),
+                    etgtools.ParamDef(type = "wxWindowID", name = "id", default="wxID_ANY"),
+                    etgtools.ParamDef(type = "const wxPoint&", name = "pos", default = "wxDefaultPosition"),
+                    etgtools.ParamDef(type = "const wxSize&", name = "size", default = "wxDefaultSize"),
+                    etgtools.ParamDef(type = "long", name = "style", default = "0") ]),
+            etgtools.MethodDef(type = "bool", name = "IsDragging", classname = "wxAuiTabCtrl", isConst = True)
+            ])
+
+    module.addItem(c)
+
+    #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
 
