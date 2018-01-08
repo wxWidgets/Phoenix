@@ -95,7 +95,7 @@ def run():
                     etgtools.ParamDef(type = "long", name = "style", default = "0") ]),
             etgtools.MethodDef(type = "bool", name = "IsDragging", classname = "wxAuiTabCtrl", isConst = True)
             ])
-
+    tools.fixWindowClass(c)
     module.addItem(c)
 
     #-----------------------------------------------------------------
