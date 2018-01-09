@@ -83,6 +83,10 @@ Changes in this release include the following:
 * Although it's more or less just an implementation detail, add wrappers for
   wx.aui.AuiTabCtrl so references to it will get the correct type. (#664)
 
+* List-like wrapper classes generated for accessing wxLists and wxArrays now
+  support reverse indexing. (#669) For example::
+
+      child = panel.GetChildren()[-1]
 
 
 
