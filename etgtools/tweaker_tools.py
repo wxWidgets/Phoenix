@@ -873,9 +873,12 @@ public:
         sipRes = sipCpp->size();
     %End
 
-    {ItemClass}* __getitem__(ulong index);
+    {ItemClass}* __getitem__(long index);
     %MethodCode
-        if (index < sipCpp->size()) {{
+        if (0 > index)
+            index += sipCpp->size();
+
+        if (index < sipCpp->size() && (0 <= index)) {{
             {ListClass}::compatibility_iterator node = sipCpp->Item(index);
             if (node)
                 sipRes = ({ItemClass}*)node->GetData();
@@ -1001,9 +1004,12 @@ def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False, getIt
 
     if not getItemCopy:
         getitemMeth = '''\
-        {ItemClass}{itemRef} __getitem__(ulong index);
+        {ItemClass}{itemRef} __getitem__(long index);
         %MethodCode
-            if (index < sipCpp->GetCount()) {{
+            if (0 > index)
+                index += sipCpp->GetCount();
+
+            if ((index < sipCpp->GetCount()) && (0 <= index)) {{
                 sipRes = {addrOf}sipCpp->Item(index);
             }}
             else {{
@@ -1014,9 +1020,11 @@ def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False, getIt
         '''.format(**locals())
     else:
         getitemMeth = '''\
-        {ItemClass}* __getitem__(ulong index) /Factory/;
+        {ItemClass}* __getitem__(long index) /Factory/;
         %MethodCode
-            if (index < sipCpp->GetCount()) {{
+            if (0 > index)
+                index += sipCpp->GetCount();
+            if ((index < sipCpp->GetCount()) && (0 <= index)) {{
                 sipRes = new {ItemClass}(sipCpp->Item(index));
             }}
             else {{
@@ -1090,9 +1098,12 @@ public:
         sipRes = sipCpp->GetCount();
     %End
 
-    {ItemClass}* __getitem__(ulong index);
+    {ItemClass}* __getitem__(long index);
     %MethodCode
-        if (index < sipCpp->GetCount()) {{
+        if (0 > index)
+            index += sipCpp->GetCount();
+
+        if ((index < sipCpp->GetCount()) && (0 <= index)) {{
             sipRes = sipCpp->Item(index);
         }}
         else {{
