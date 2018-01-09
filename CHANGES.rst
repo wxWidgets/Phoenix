@@ -80,6 +80,10 @@ Changes in this release include the following:
   broken and the saved reference is deleted after the timer expires and the
   callable has been called. (#457)
 
+* Although it's more or less just an implementation detail, add wrappers for
+  wx.aui.AuiTabCtrl so references to it will get the correct type. (#664)
+
+
 
 
 
