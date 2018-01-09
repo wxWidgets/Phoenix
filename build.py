@@ -1478,6 +1478,7 @@ def cmd_build_vagrant(options, args):
                 'debian-8',
                 'fedora-23',
                 'fedora-26',
+                'fedora-27',
                 'ubuntu-14.04',
                 'ubuntu-16.04',
                 ]
