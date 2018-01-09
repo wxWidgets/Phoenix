@@ -256,6 +256,7 @@
 "AuiTabArt":"wx.aui.",
 "AuiTabContainer":"wx.aui.",
 "AuiTabContainerButton":"wx.aui.",
+"AuiTabCtrl":"wx.aui.",
 "AuiToolBar":"wx.aui.",
 "AuiToolBarArt":"wx.aui.",
 "AuiToolBarArtSetting":"wx.aui.",
