@@ -1476,6 +1476,7 @@ def cmd_build_vagrant(options, args):
     if not options.vagrant_vms or options.vagrant_vms == 'all':
         VMs = [ 'centos-7',
                 'debian-8',
+                'debian-9',
                 'fedora-23',
                 'fedora-26',
                 'fedora-27',
