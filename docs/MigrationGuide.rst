@@ -550,6 +550,29 @@ the editor instance properly::
         return wx.propgrid.PropertyGridInterface.GetEditorByName(self.GetEditor())
 
 
+wx.gizmos
+---------
+
+The ``wx.gizmos`` module in Classic was a set of wrappers around some 3rd-party
+C++ classes. Unfortunately that code has been rotting a little since it has
+been unmaintained for a while. Instead of perpetuating this problem into
+Phoenix the C++ wrappers have been tossed out and some of the more commonly
+used classes from wx.gizmos has been ported to pure Python code, which now
+lives in the ``wx.lib.gizmos`` package. There is also a temporary
+``wx.gizmos`` module provided in order to provide the class names at the old
+location too in order to ease transitioning to the new packge. Please migrate
+your code to use ``wx.lib.gizmos`` as ``wx.gizmos`` will likely go away in a
+future release.
+
+Please note that the new ``TreeListCtrl`` class is actually a thin wrapper
+around AGW's HyperTreeList class since it was already a near perfect superset
+of the old TreeListCtrl features and API. One compatibility difference that
+may arise is that like most widgets in the AGW library the style flags have
+been split into 2 parameters, ``style`` and ``agwSgtyle``, but it should be a
+simple matter of changing existing code to pass the tree-specific style flags
+in the ``agwStyle`` parameter, and wxWidgets common style flags in the
+``style`` parameter.
+
 
 .. toctree::
    :maxdepth: 2

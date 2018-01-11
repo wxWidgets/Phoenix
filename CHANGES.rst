@@ -80,6 +80,7 @@ Changes in this release include the following:
   broken and the saved reference is deleted after the timer expires and the
   callable has been called. (#457)
 
+
 * Although it's more or less just an implementation detail, add wrappers for
   wx.aui.AuiTabCtrl so references to it will get the correct type. (#664)
 
@@ -87,6 +88,18 @@ Changes in this release include the following:
   support reverse indexing. (#669) For example::
 
       child = panel.GetChildren()[-1]
+
+
+* Ported some of the classes in Classic's gizmos module from C++ to Python,
+  including LEDNumberCtrl, DynamicSashWindow, and TreeListCtrl. The classes
+  are now located in the wx.lib.gizmos package, with a compatibility module at
+  the old wx.gizmos location. Please note that this TreeListCtrl class is a
+  very different implementation than wx.dataview.TreeListCtrl, although there
+  is some overlap in purpose. In addition, the new TreeListCtrl class is not
+  actually a port from the old gizmos.TreeListCtrl but rather just a thin
+  layer around AGW's HyperTreeList. This means that if you are using a non-
+  default style flag you'll need to pass it to the agwStyle parameter instead
+  of the style parameter.
 
 
 
