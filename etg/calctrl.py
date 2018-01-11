@@ -70,8 +70,14 @@ def run():
         c.find('HitTest.wd').out = True
         c.find('SetAttr.attr').transfer = True
 
+        c.addPyMethod('PyGetDate', '(self)',
+            doc="Return the date as a Python datetime.date object.",
+            body="return wx.wxdate2pydate(self.GetDate())",
+            deprecated="Use GetDate instead.")
+
+        # We have convertFromPyObject mapping in place for parameters, so we
+        # don't need a full wrapper method for these.
         c.addPyCode("""\
-            {name}.PyGetDate = wx.deprecated({name}.GetDate, 'Use GetDate instead.')
             {name}.PySetDate = wx.deprecated({name}.SetDate, 'Use SetDate instead.')
             {name}.PySetDateRange = wx.deprecated({name}.SetDateRange, 'Use SetDateRange instead.')
             """.format(name=c.name[2:]))
