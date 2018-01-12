@@ -5917,7 +5917,9 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :note: The base class version compares items alphabetically.
         """
 
-        return cmp(self.GetItemText(item1), self.GetItemText(item2))
+        a = self.GetItemText(item1)
+        b = self.GetItemText(item2)
+        return (a > b) - (a < b)  # equivalent to old cmp function
 
 
     def SortChildren(self, item):
