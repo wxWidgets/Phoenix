@@ -17,7 +17,7 @@
 
 #if defined(__APPLE__)
     // When it's possible that we're building universal binaries with both
-    // 32-bit and 64-bit architectures then these need to be undefed because
+    // 32-bit and 64-bit architectures then these need to be undef'ed because
     // otherwise the values set by configure could conflict with those set
     // based on runtime flags in Python's headers.  We also do something
     // similar in wx/platform.h so it's okay to undef them now because they
@@ -98,16 +98,6 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 #define RETURN_NONE()    { wxPyBLOCK_THREADS(Py_INCREF(Py_None)); return Py_None; }
 
 
-// Make a memory view object from a C buffer and size.
-inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) {
-    // GIL should already be held
-    Py_buffer view;
-    int flags = PyBUF_FORMAT|PyBUF_ND;
-    if (!readOnly)
-        flags |= PyBUF_WRITABLE;
-    PyBuffer_FillInfo(&view, NULL, ptr, len, readOnly ? 1:0, flags);
-    return PyMemoryView_FromBuffer(&view);
-}
 
 
 // Macros to work around some of the differences in the Python 3 API
@@ -150,6 +140,7 @@ Py_ssize_t wxPyUnicode_AsWideChar(PyObject* unicode, wchar_t* w, Py_ssize_t size
 }
 
 
+
 //--------------------------------------------------------------------------
 // These are the API items whose implementation can not or should not be
 // inline functions or macros. The implementations will instead be accessed
@@ -169,7 +160,17 @@ struct wxPyAPI {
     bool          (*p_wxPyWrappedPtr_TypeCheck)(PyObject* obj, const wxString& className);
     wxVariant     (*p_wxVariant_in_helper)(PyObject* obj);
     PyObject*     (*p_wxVariant_out_helper)(const wxVariant& value);
-    bool          (*p_wxPyCheckForApp)();
+    bool          (*p_wxPyCheckForApp)(bool raiseException);
+    PyObject*     (*p_wxPyMakeBuffer)(void* ptr, Py_ssize_t len, bool readOnly);
+    bool          (*p_wxPyNumberSequenceCheck)(PyObject* obj, int reqLength);
+    void*         (*p_wxPyGetCppPtr)(sipSimpleWrapper* sipPyObj);
+    PyObject*     (*p_wxPyMethod_Self)(PyObject* method);
+    void          (*p_wxPyReinitializeModules)();
+
+    int           (*p_wxPyDateTime_Check)(PyObject *obj);
+    int           (*p_wxPyDate_Check)(PyObject *obj);
+    wxDateTime*   (*p_wxPyDateTime_ToWxDateTime)(PyObject *obj);
+    wxDateTime*   (*p_wxPyDate_ToWxDateTime)(PyObject *obj);
     // Always add new items here at the end.
 };
 
@@ -248,8 +249,43 @@ inline PyObject* wxVariant_out_helper(const wxVariant& value)
     { return wxPyGetAPIPtr()->p_wxVariant_out_helper(value); }
 
 
-inline bool wxPyCheckForApp()
-    { return wxPyGetAPIPtr()->p_wxPyCheckForApp(); }
+// Check if a wx.App object has been created
+inline bool wxPyCheckForApp(bool raiseException=true)
+    { return wxPyGetAPIPtr()->p_wxPyCheckForApp(raiseException); }
+
+
+// Create a buffer object from a pointer and size
+inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false)
+    { return wxPyGetAPIPtr()->p_wxPyMakeBuffer(ptr, len, readOnly); }
+
+// Check if an object is a sequence of numbers
+inline bool wxPyNumberSequenceCheck(PyObject* obj, int reqLength=-1)
+    { return wxPyGetAPIPtr()->p_wxPyNumberSequenceCheck(obj, reqLength); }
+
+
+inline void* wxPyGetCppPtr(sipSimpleWrapper* sipPyObj)
+    { return wxPyGetAPIPtr()->p_wxPyGetCppPtr(sipPyObj); }
+
+inline PyObject* wxPyMethod_Self(PyObject* method)
+    { return wxPyGetAPIPtr()->p_wxPyMethod_Self(method); }
+
+
+inline void wxPyReinitializeModules()
+    { return wxPyGetAPIPtr()->p_wxPyReinitializeModules(); }
+
+
+
+inline int wxPyDateTime_Check(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDateTime_Check(obj); }
+
+inline int wxPyDate_Check(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDate_Check(obj); }
+
+inline wxDateTime* wxPyDateTime_ToWxDateTime(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDateTime_ToWxDateTime(obj); }
+
+inline wxDateTime* wxPyDate_ToWxDateTime(PyObject *obj)
+    { return wxPyGetAPIPtr()->p_wxPyDate_ToWxDateTime(obj); }
 
 
 //--------------------------------------------------------------------------

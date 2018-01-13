@@ -44,6 +44,7 @@ def run():
     tools.fixWindowClass(c, hideVirtuals=False, ignoreProtected=False)
     tools.ignoreConstOverloads(c)
 
+    c.find('AddPage.pageObj').transfer = True
 
     # Add some extra Python code to be executed when a wxPropertyGridManager
     # is constructed. In Classic with SWIG we did this with %pythonAppend, is

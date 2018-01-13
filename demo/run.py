@@ -25,7 +25,7 @@ import sys, os
 # stuff for debugging
 print("Python %s" % sys.version)
 print("wx.version: %s" % wx.version())
-##print("pid: %s" % os.getpid()); raw_input("Press Enter...")
+##print("pid: %s" % os.getpid()); input("Press Enter...")
 
 assertMode = wx.APP_ASSERT_DIALOG
 ##assertMode = wx.APP_ASSERT_EXCEPTION
@@ -151,6 +151,9 @@ def main(argv):
     # ensure the CWD is the demo folder
     demoFolder = os.path.realpath(os.path.dirname(__file__))
     os.chdir(demoFolder)
+
+    sys.path.insert(0, os.path.join(demoFolder, 'agw'))
+    sys.path.insert(0, '.')
 
     name, ext  = os.path.splitext(argv[1])
     module = __import__(name)

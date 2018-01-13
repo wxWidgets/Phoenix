@@ -14,7 +14,7 @@
 %ModuleHeaderCode
 #include <wx/treebase.h>
 
-// A wxTreeItemData that knows what to do with PyObjects for maintianing the refcount
+// A wxTreeItemData that knows what to do with PyObjects for maintaining the refcount
 class wxPyTreeItemData : public wxPyUserDataHelper<wxTreeItemData>
 {
 public:

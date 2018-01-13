@@ -9,15 +9,22 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 
-        box = wx.StaticBox(self, -1, "This is a wx.StaticBox")
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        box1 = wx.StaticBox(self, -1, "This is a wx.StaticBox")
+        bsizer1 = wx.BoxSizer()
 
-        t = wx.StaticText(self, -1, "Controls placed \"inside\" the box are really its siblings")
-        bsizer.Add(t, 0, wx.TOP|wx.LEFT, 10)
+        t1 = wx.StaticText(box1, -1, "As of wxPython 2.9, wx.StaticBox can now be used as a parent like most other wx widgets. This is now the recommended way of using wx.StaticBox.")
+        bsizer1.Add(t1, 1, wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT, 10)
+        box1.SetSizer(bsizer1)
 
+        box2 = wx.StaticBox(self, -1, "This is a wx.StaticBox using wx.StaticBoxSizer")
+        bsizer2 = wx.StaticBoxSizer(box2, wx.VERTICAL)
 
-        border = wx.BoxSizer()
-        border.Add(bsizer, 1, wx.EXPAND|wx.ALL, 25)
+        t = wx.StaticText(self, -1, "Controls placed \"inside\" the box are really its siblings. This method of using wx.StaticBox is deprecated since wxPython 2.9, and can cause issues on some platforms.")
+        bsizer2.Add(t, 1, wx.EXPAND|wx.TOP|wx.LEFT, 10)
+
+        border = wx.BoxSizer(wx.VERTICAL)
+        border.Add(box1, 1, wx.EXPAND|wx.ALL, 25)
+        border.Add(bsizer2, 1, wx.EXPAND|wx.ALL, 25)
         self.SetSizer(border)
 
 

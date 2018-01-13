@@ -1247,6 +1247,7 @@ class ToasterBoxWindow(wx.Frame):
 
             if self._amount < 0:
                 self.Hide()
+                self.showtime.Stop()
                 if self._parent2:
                     self._parent2.Notify()
 

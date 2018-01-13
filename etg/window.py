@@ -63,7 +63,7 @@ def run():
     # We now return you to our regularly scheduled programming...
     c.includeCppCode('src/window_ex.cpp')
 
-    # ignore some overloads that will be ambiguous afer wrapping
+    # ignore some overloads that will be ambiguous after wrapping
     c.find('GetChildren').overloads = []
     c.find('GetChildren').noCopy = True
     for name in ['GetVirtualSize',
@@ -202,7 +202,11 @@ def run():
             A convenience wrapper for :meth:`ConvertDialogToPixels`.
             """,
         body="""\
-            return self.ConvertDialogToPixels(dlg_unit)
+            is_wxType = isinstance(dlg_unit, (wx.Size, wx.Point))
+            pix = self.ConvertDialogToPixels(dlg_unit)
+            if not is_wxType:
+                pix = tuple(pix)
+            return pix
             """)
 
 
@@ -223,6 +227,20 @@ def run():
     c.find('SetConstraints.constraints').transfer = True
     c.find('SetSizer.sizer').transfer = True
     c.find('SetSizerAndFit.sizer').transfer = True
+
+    # Change some =0 default values to =NULL so the docs will make more sense
+    c.find('FindWindowById.parent').default='NULL'
+    c.find('FindWindowByLabel.parent').default='NULL'
+    c.find('FindWindowByName.parent').default='NULL'
+
+    # Transfer ownership of the wx.EvtHandler when pushing/popping them...
+    c.find('PushEventHandler.handler').transfer = True
+    c.find('PopEventHandler').transferBack = True
+
+    # ...and for Set/RemoveEventHandler too
+    c.find('SetEventHandler.handler').transfer = True
+    c.find('RemoveEventHandler.handler').transferBack = True
+
 
     # Define some properties using the getter and setter methods
     c.addProperty('AcceleratorTable GetAcceleratorTable SetAcceleratorTable')
@@ -353,11 +371,16 @@ def run():
         def DLG_UNIT(win, dlg_unit, val2=None):
             """
             Convenience function for converting a wx.Point, wx.Size or
-            (x,y) in dialog units to pixels.
+            (x,y) in dialog units to pixels, using the given window as a 
+            reference.
             """
             if val2 is not None:
                 dlg_unit = (dlg_unit, val2)
-            return win.ConvertDialogToPixels(dlg_unit)
+            is_wxType = isinstance(dlg_unit, (wx.Size, wx.Point))
+            pix = win.ConvertDialogToPixels(dlg_unit)
+            if not is_wxType:
+                pix = tuple(pix)
+            return pix
 
         DLG_PNT = wx.deprecated(DLG_UNIT, "Use DLG_UNIT instead.")
         DLG_SZE = wx.deprecated(DLG_UNIT, "Use DLG_UNIT instead.")

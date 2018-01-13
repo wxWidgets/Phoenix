@@ -1,0 +1,154 @@
+
+[[ send to:
+   wxpython-users@googlegroups.com,
+   wxpython-dev@googlegroups.com,
+   wx-users@googlegroups.com,
+   wx-announce@googlegroups.com,
+   Python-Announce-List@Python.Org
+   ]]
+
+
+Announcing wxPython 4.0.0b2
+===========================
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b2
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.0b2``
+
+Changes in this release include the following:
+
+* Added a deprecated compatibility helper for wx.CustomDataFormat.
+
+* Transfer ownership of the wx.EvtHandler object when pushing/popping
+  them, and also for Set/RemoveEventHandler. (#443)
+
+* Add missing wx.VScrolledWindow methods listed in the docs as
+  deprecated but still present. (#441)
+
+* Fixed copy/paste error in wx.BusyInfo.__exit__ (#449)
+
+* Added new tool wxget, (a minimal wx implementation of wget)
+
+* Added new tools wxdocs and wxdemos to launch the respective items,
+  fetching and unpacking as required. (#437)
+
+* Fixes to ensure that the locale message catalogs are included in the
+  release files. (#464)
+
+* Fix wx.ListCtrl.SetItemData to check that the data value is not out
+  of the range of a C long. (#467)
+
+* Changed the default port on *nix builds to be GTK3. The new
+  ``--gtk2`` flag for build.py can be used to force a build for GTK2
+  instead, and the ``--gtk3`` flag still exists, but defaults to True
+  unless ``--gtk2`` is specified. Please note that there is currently
+  no auto-detection of whether GTK3 is available or not, so if you
+  know you need to build for GTK2 then you need to use the build flag,
+  and there is currently no way to specify that flag for builds
+  performed by pip. (#431)
+
+* Fix parameter names in Toolbar.AddTool methods to be
+  consistent. (#475)
+
+* Remove inconsistent GetVirtualSize method in ScrolledWindow and let
+  it be inherited from wx.Window instead. (#474)
+
+* Fix crashing bug caused by importing a module that reinitializes the
+  wxModule system after having imported wxpyTag. (#468)
+
+* Fix missing methods in various DataObject classes. (They were
+  actually accidentally marked "private" when they should have been
+  public.) (#480)
+
+* Add missing ListCtrl.DeleteAllColumns. (#486)
+
+* Various fixes in the demo.
+
+* Fixed improper initial scale factor in wx.lib.agw.speedmeter
+
+* Fix for calls to wx.Notebook.HitTest calling the wrong instance
+  (base class version) of the method. (#499)
+
+* Add wx.Simplebook class.
+
+* Fix exception in wx.lib.agw.customtreectrl when calling
+  SortChildren. (#463, #500)
+
+* Fix missing imports needed for drawing the legend in
+  wx.lib.plot. (#503)
+
+* Fix other instances of list.sort using old cmp-style ordering
+  functions.  (#508)
+
+* Update SizedControls to do a sanity check on the parent's sizer, as
+  GetSizer can return None for SizedParent under certain
+  circumstances, such as when AUI reparents the control during pane
+  movement. (#523, #537)
+
+* Added Vagrant configs for Fedora 23 and Fedora 26, and dropped
+  Fedora 24.  Wheels built on F23 can also be used on F24 and F25, and
+  F26 adds Python 3.6 support.
+
+* Fix bitwise OR bug in wx.lib.agw.aui.framemanager. (#493)
+
+* Fix bugs in wx.lib.plot when saving file. (#526)
+
+* Fix integer division bug in ultimatelistctrl. (#528)
+
+* Fix bug in wx.SearchCtrl.SetCancelBitmap (#532)
+
+* Fixed property grid SetPropertyValue method to not truncate floating
+  point values to integers, and a couple other possible incorrect
+  conversions.  (#536)
+
+
+
+
+What is wxPython?
+-----------------
+
+wxPython is a cross-platform GUI toolkit for the Python programming
+language.  It allows Python programmers to create programs with a
+robust, highly functional graphical user interface, simply and
+easily. It is implemented as a set of Python extension modules that
+wrap the GUI components of the popular wxWidgets cross platform
+library, which is written in C++. Supported platforms are Microsoft
+Windows, Mac OS X and macOS, and Linux or other unix-like systems with
+GTK2 or GTK3 libraries. In most cases the native widgets are used on
+each platform to provide a 100% native look and feel for the
+application.
+
+
+What is wxPython Phoenix?
+-------------------------
+
+wxPython's Project Phoenix is a new from-the-ground-up implementation
+of wxPython, created with the intent of making wxPython “better,
+stronger, faster than he was before.” In other words, this new
+implementation is focused on improving speed, maintainability and
+extensibility of wxPython, as well as removing most of the cruft that
+had accumulated over the long life of Classic wxPython.
+
+The project has been in development off and on, mostly behind the
+scenes, for many years. For the past few years automated snapshot
+builds have been available for those adventurous enough to try it, and
+many people eventually started using the snapshots in their projects,
+even for production releases.  While there are still some things on
+the periphery that need to be completed, the core of the new wxPython
+extension modules which wrap the wxWidgets code has been stable for a
+long time now.
+
+Due to some things being cleaned up, reorganized, simplified and
+dehackified wxPython Phoenix is not completely backwards compatible
+with wxPython Classic.  This is intended. In general, however, the API
+differences tend to be minor and some applications can use Phoenix
+with slight, or even no modifications.  In some other cases the
+correct way to do things was also available in Classic and it's only
+the wrong way that has been removed from Phoenix.  For more
+information there is a Migration Guide document available at:
+https://docs.wxpython.org/MigrationGuide.html
+
+The new wxPython API reference documentation, including all
+Python-specific additions and customizations, and docs for the wx.lib
+package, is located at: https://docs.wxpython.org/
+

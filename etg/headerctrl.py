@@ -40,7 +40,7 @@ def run():
     module.addGlobalStr('wxHeaderCtrlNameStr', c)
     module.addHeaderCode('#include <wx/headerctrl.h>')
 
-    # Uningnore the protected virtuals that are indended to be overridden in
+    # Uningnore the protected virtuals that are intended to be overridden in
     # derived classes.
     for name in ['GetColumn', 'UpdateColumnVisibility', 'UpdateColumnsOrder',
                  'UpdateColumnWidthToFit', 'OnColumnCountChanging']:

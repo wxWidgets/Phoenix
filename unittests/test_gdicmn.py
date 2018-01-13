@@ -31,6 +31,15 @@ class Point(unittest.TestCase):
         with self.assertRaises(TypeError):
             p = wx.Point(1,2,3)
 
+    def test_seq_ctor(self):
+        p = wx.Point( [123,456] )
+
+    def test_numpy_ctor(self):
+        import numpy
+        a = numpy.array([123,456])
+        p = wx.Point(a)
+
+
     def test_DefaultPosition(self):
         wx.DefaultPosition
         self.assertTrue(wx.DefaultPosition == (-1,-1))
@@ -116,6 +125,23 @@ class Point(unittest.TestCase):
         self.assertEqual(p5, (0,4))
         self.assertEqual(p6, (-4,-6))
 
+
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.Point(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.x == obj.x
+        assert im.y == obj.y
+        obj2 = wx.Point(im)
+        assert obj == obj2
+
+
+    def test_converters(self):
+        # Ensure that other types that are sequence-like can't be
+        # auto-converted, the copy constructor is good-enough for testing this
+        with self.assertRaises(TypeError):
+            p = wx.Point(wx.Size(10,20))
 
 
 #---------------------------------------------------------------------------
@@ -235,6 +261,24 @@ class Size(unittest.TestCase):
             s[2]
 
 
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.Size(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.width == obj.width
+        assert im.height == obj.height
+        obj2 = wx.Size(im)
+        assert obj == obj2
+
+
+    def test_converters(self):
+        # Ensure that other types that are sequence-like can't be
+        # auto-converted, the copy constructor is good-enough for testing this
+        with self.assertRaises(TypeError):
+            p = wx.Size(wx.Point(10,20))
+
+
 #---------------------------------------------------------------------------
 
 
@@ -258,6 +302,18 @@ class RealPoint(unittest.TestCase):
         p = wx.RealPoint(12.3, 45.6)
         p.x += 2
         p.y += 2
+
+
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.RealPoint(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.x == obj.x
+        assert im.y == obj.y
+        obj2 = wx.RealPoint(im)
+        assert obj == obj2
+
 
 
 
@@ -284,11 +340,13 @@ class Rect(unittest.TestCase):
         self.assertTrue(r == wx.Rect(pos=(10,10), size=(100,100)))
 
     def test_tlbr_ctor(self):
-        # TODO: we have to use keyword args here since wx.Point has sequence
-        # protocol methods then it can also match the typemap for wxSize and
-        # the other ctor is found first. Check if there is a way to fix or
-        # work around this.
         r = wx.Rect(topLeft=wx.Point(10,10), bottomRight=wx.Point(100,100))
+        self.assertTrue(r.width == 91 and r.height == 91)
+        self.assertTrue(r.bottomRight == wx.Point(100,100))
+        self.assertTrue(r.topLeft == wx.Point(10,10))
+
+    def test_tlbr_ctor2(self):
+        r = wx.Rect(wx.Point(10,10), wx.Point(100,100))
         self.assertTrue(r.width == 91 and r.height == 91)
         self.assertTrue(r.bottomRight == wx.Point(100,100))
         self.assertTrue(r.topLeft == wx.Point(10,10))
@@ -298,6 +356,34 @@ class Rect(unittest.TestCase):
         self.assertTrue(r.width == 50 and r.height == 100)
         self.assertTrue(r.x == 0 and r.y == 0)
 
+    def test_seq_ctor(self):
+        r1 = wx.Rect( [1,2,3,4] )
+        self.assertTrue(r1 == (1,2,3,4))
+
+    def test_numpy_ctor(self):
+        import numpy
+        r1 = wx.Rect( numpy.array([1,2,3,4]) )
+        self.assertTrue(r1 == (1,2,3,4))
+
+
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.Rect(1,2,3,4)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.x == obj.x
+        assert im.y == obj.y
+        assert im.width == obj.width
+        assert im.height == obj.height
+        obj2 = wx.Rect(im)
+        assert obj == obj2
+
+
+    def test_converters(self):
+        # Ensure that other types that are sequence-like can't be
+        # auto-converted, the copy constructor is good-enough for testing this
+        with self.assertRaises(TypeError):
+            p = wx.Rect(wx.Colour(1,2,3,4))
 
     # TODO: more tests!
 

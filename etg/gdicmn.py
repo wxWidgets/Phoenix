@@ -91,8 +91,10 @@ def run():
 
     c.addItem(etgtools.WigCode("""\
         wxPoint operator+(const wxPoint& other);
+        wxPoint operator+(const wxSize& other);
         wxPoint operator-();
         wxPoint operator-(const wxPoint& other);
+        wxPoint operator-(const wxSize& other);
         wxPoint operator*(int i);
         wxPoint operator/(int i);
         """))
@@ -102,10 +104,14 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxPoint')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->x, self->y);
         """,
         pyArgsString="() -> (x,y)",
         briefDoc="Return the x and y properties as a tuple.")
+
+    tools.addGetIMMethodTemplate(module, c, ['x', 'y'])
+
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
@@ -173,10 +179,13 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxSize')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->GetWidth(), self->GetHeight());
         """,
         pyArgsString="() -> (width, height)",
         briefDoc="Return the width and height properties as a tuple.")
+
+    tools.addGetIMMethodTemplate(module, c, ['width', 'height'])
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
@@ -250,11 +259,14 @@ def run():
     c.convertFromPyObject = tools.convertFourIntegersTemplate('wxRect')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(iiii)",
                               self->x, self->y, self->width, self->height);
         """,
         pyArgsString="() -> (x, y, width, height)",
         briefDoc="Return the rectangle's properties as a tuple.")
+
+    tools.addGetIMMethodTemplate(module, c, ['x', 'y', 'width', 'height'])
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
@@ -303,10 +315,13 @@ def run():
     c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxRealPoint')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(dd)", self->x, self->y);
         """,
         pyArgsString="() -> (x, y)",
         briefDoc="Return the point's properties as a tuple.")
+
+    tools.addGetIMMethodTemplate(module, c, ['x', 'y'])
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')

@@ -1,7 +1,6 @@
-#!/usr/bin/env python
 
 import wx
-import wx.dataview
+import wx.lib.gizmos as gizmos  # Formerly wx.gizmos in Classic
 
 import images
 
@@ -13,14 +12,15 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
-        self.tree = wx.dataview.TreeListCtrl(self, -1, style =
-                                        wx.TR_DEFAULT_STYLE
-                                        #| wx.TR_HAS_BUTTONS
-                                        #| wx.TR_TWIST_BUTTONS
-                                        #| wx.TR_ROW_LINES
-                                        #| wx.TR_COLUMN_LINES
-                                        #| wx.TR_NO_LINES
-                                        | wx.TR_FULL_ROW_HIGHLIGHT
+        self.tree = gizmos.TreeListCtrl(self, -1, style=0, agwStyle=
+                                        gizmos.TR_DEFAULT_STYLE
+                                        #| gizmos.TR_HAS_BUTTONS
+                                        #| gizmos.TR_TWIST_BUTTONS
+                                        #| gizmos.TR_ROW_LINES
+                                        #| gizmos.TR_COLUMN_LINES
+                                        #| gizmos.TR_NO_LINES
+                                        #| gizmos.TR_LINES_AT_ROOT
+                                        | gizmos.TR_FULL_ROW_HIGHLIGHT
                                    )
 
         isz = (16,16)
@@ -34,61 +34,62 @@ class TestPanel(wx.Panel):
         self.il = il
 
         # create some columns
-        self.tree.AppendColumn("Main column")
-        self.tree.AppendColumn("Column 1")
-        self.tree.AppendColumn("Column 2")
-        ##self.tree.SetMainColumn(0) # the one with the tree in it...
+        self.tree.AddColumn("Main column")
+        self.tree.AddColumn("Column 1")
+        self.tree.AddColumn("Column 2")
+        self.tree.SetMainColumn(0) # the one with the tree in it...
         self.tree.SetColumnWidth(0, 175)
 
-        self.root = self.tree.InsertItem(self.tree.GetRootItem(), wx.dataview.TLI_FIRST, "The Root Item")
 
-        self.tree.SetItemText(self.root, 1, "col 1 root")
-        self.tree.SetItemText(self.root, 2, "col 2 root")
-        self.tree.SetItemImage(self.root, closed=fldridx, opened=fldropenidx)
+        self.root = self.tree.AddRoot("The Root Item")
+        self.tree.SetItemText(self.root, "col 1 root", 1)
+        self.tree.SetItemText(self.root, "col 2 root", 2)
+        self.tree.SetItemImage(self.root, fldridx, which = wx.TreeItemIcon_Normal)
+        self.tree.SetItemImage(self.root, fldropenidx, which = wx.TreeItemIcon_Expanded)
 
 
         for x in range(15):
             txt = "Item %d" % x
             child = self.tree.AppendItem(self.root, txt)
-            self.tree.SetItemText(child, 1, txt + "(c1)")
-            self.tree.SetItemText(child, 2, txt + "(c2)")
-            self.tree.SetItemImage(child, closed=fldridx, opened=fldropenidx)
+            self.tree.SetItemText(child, txt + "(c1)", 1)
+            self.tree.SetItemText(child, txt + "(c2)", 2)
+            self.tree.SetItemImage(child, fldridx, which = wx.TreeItemIcon_Normal)
+            self.tree.SetItemImage(child, fldropenidx, which = wx.TreeItemIcon_Expanded)
 
             for y in range(5):
                 txt = "item %d-%s" % (x, chr(ord("a")+y))
                 last = self.tree.AppendItem(child, txt)
-                self.tree.SetItemText(last, 1, txt + "(c1)")
-                self.tree.SetItemText(last, 2, txt + "(c2)")
-                self.tree.SetItemImage(last, closed=fldridx, opened=fldropenidx)
+                self.tree.SetItemText(last, txt + "(c1)", 1)
+                self.tree.SetItemText(last, txt + "(c2)", 2)
+                self.tree.SetItemImage(last, fldridx, which = wx.TreeItemIcon_Normal)
+                self.tree.SetItemImage(last, fldropenidx, which = wx.TreeItemIcon_Expanded)
 
                 for z in range(5):
                     txt = "item %d-%s-%d" % (x, chr(ord("a")+y), z)
                     item = self.tree.AppendItem(last,  txt)
-                    self.tree.SetItemText(item, 1, txt + "(c1)")
-                    self.tree.SetItemText(item, 2, txt + "(c2)")
-                    #TODO: Phoenix change selected to smiley
-                    self.tree.SetItemImage(item, closed=fileidx, opened=smileidx)
-                    ## self.tree.SetItemImage(item, fileidx, which = wx.TreeItemIcon_Normal)
-                    ## self.tree.SetItemImage(item, smileidx, which = wx.TreeItemIcon_Selected)
-
+                    self.tree.SetItemText(item, txt + "(c1)", 1)
+                    self.tree.SetItemText(item, txt + "(c2)", 2)
+                    self.tree.SetItemImage(item, fileidx, which = wx.TreeItemIcon_Normal)
+                    self.tree.SetItemImage(item, smileidx, which = wx.TreeItemIcon_Selected)
 
         self.tree.Expand(self.root)
 
-        ## self.tree.GetMainWindow().Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
+        self.tree.GetMainWindow().Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
         self.tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate)
 
 
-    def OnActivate(self, event):
-        self.log.write('OnActivate: %s' % self.tree.GetItemText(event.GetItem()))
+    def OnActivate(self, evt):
+        self.log.write('OnActivate: %s' % self.tree.GetItemText(evt.GetItem()))
 
-    def OnRightUp(self, event):
-        pos = event.GetPosition()
+
+    def OnRightUp(self, evt):
+        pos = evt.GetPosition()
         item, flags, col = self.tree.HitTest(pos)
         if item:
             self.log.write('Flags: %s, Col:%s, Text: %s' %
                            (flags, col, self.tree.GetItemText(item, col)))
 
-    def OnSize(self, event):
+    def OnSize(self, evt):
         self.tree.SetSize(self.GetSize())
 
 

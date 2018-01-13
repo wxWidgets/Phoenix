@@ -1354,7 +1354,7 @@ class DemoTaskBarIcon(TaskBarIcon):
         elif "wxGTK" in wx.PlatformInfo:
             img = img.Scale(22, 22)
         # wxMac can be any size upto 128x128, so leave the source img alone....
-        icon = wx.IconFromBitmap(img.ConvertToBitmap())
+        icon = wx.Icon(img.ConvertToBitmap())
         return icon
 
 
@@ -2478,8 +2478,8 @@ class wxPythonDemo(wx.Frame):
         self.mainmenu = None
         self.StopDownload()
 
-        # if self.tbicon is not None:
-            # self.tbicon.Destroy()
+        if self.tbicon is not None:
+            self.tbicon.Destroy()
 
         config = GetConfig()
         config.Write('ExpansionState', str(self.tree.GetExpansionState()))
@@ -2676,7 +2676,7 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         # Create and show the splash screen.  It will then create and
         # show the main frame when it is time to do so.  Normally when
         # using a SplashScreen you would create it, show it and then
-        # continue on with the applicaiton's initialization, finally
+        # continue on with the application's initialization, finally
         # creating and showing the main application window(s).  In
         # this case we have nothing else to do so we'll delay showing
         # the main frame until later (see ShowMain above) so the users

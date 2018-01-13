@@ -87,6 +87,12 @@ def run():
         #include <wx/html/helpdlg.h>
         """)
 
+    # Redo the initialization of wxModules in the case where this extension
+    # module is not imported until *after* the wx.App has been created.
+    module.addInitializerCode("""\
+        wxPyReinitializeModules();
+        """)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

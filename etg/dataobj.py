@@ -50,7 +50,7 @@ def addGetAllFormats(klass, pureVirtual=False):
         isConst=True,
         doc="""\
             Returns a list of wx.DataFormat objects which this data object
-            supports transfering in the given direction.""",
+            supports transferring in the given direction.""",
         body="""\
             size_t count = self->GetFormatCount(dir);
             wxDataFormat* formats = new wxDataFormat[count];
@@ -116,12 +116,12 @@ def addBaseVirtuals(c):
         doc="",
         body="return self->SetData(*format, buf->m_len, buf->m_ptr);",
         virtualCatcherCode="""\
-            {0}* self = ({0}*)sipPySelf->data;
+            {0}* self = static_cast<{0}*>(wxPyGetCppPtr(sipPySelf));
             sipRes = self->{0}::SetData(format, len, buf);
             """.format(c.name))
 
     # We need to let SIP know that the pure virtuals in the base class have
-    # impelmentations in C even though they will not be used much (if at
+    # implementations in C even though they will not be used much (if at
     # all.)
     if not c.findItem('GetFormatCount'):
         c.addItem(
@@ -132,6 +132,7 @@ def addBaseVirtuals(c):
         private:
         virtual size_t GetDataSize(const wxDataFormat& format) const;
         virtual bool   GetDataHere(const wxDataFormat& format, void* buf) const;
+        public:
         """))
 
 
@@ -162,6 +163,11 @@ def run():
     module.items.remove(item)
     module.insertItemAfter(c, item)
 
+    module.addPyCode("""\
+        def CustomDataFormat(format):
+            return wx.DataFormat(format)
+        CustomDataFormat = wx.deprecated(CustomDataFormat, "Use wx.DataFormat instead.")
+        """)
 
     #------------------------------------------------------------
     c = module.find('wxDataObject')
@@ -203,7 +209,7 @@ def run():
             PyObject* resObj = NULL;
             Py_ssize_t size = 0;
 
-            self = PyMethod_Self(sipMethod); // this shouldn't fail, and the reference is borrowed
+            self = wxPyMethod_Self(sipMethod); // this shouldn't fail, and the reference is borrowed
 
             fmtObj = wxPyConstructObject((void*)&format, "wxDataFormat", false);
             if (!fmtObj) goto error;
@@ -277,7 +283,7 @@ def run():
             PyObject* resObj = NULL;
             Py_ssize_t size = 0;
 
-            self = PyMethod_Self(sipMethod);
+            self = wxPyMethod_Self(sipMethod);
 
             sizeObj = PyObject_CallMethod(self, "GetDataSize", "", NULL);
             if (!sizeObj) goto error;
@@ -371,7 +377,12 @@ def run():
 
     addGetAllFormats(c)
     addBaseVirtuals(c)
-    addSimpleVirtuals(c)
+
+    # It also causes mismatches regarding what virtuals are available
+    # in the base classes. For now just ignore them for this class. If
+    # they really are needed then something more creative will need to
+    # be done.
+    #addSimpleVirtuals(c)
 
 
     #------------------------------------------------------------

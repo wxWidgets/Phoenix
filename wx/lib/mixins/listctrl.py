@@ -640,11 +640,10 @@ class TextEditMixin:
         evt = wx.ListEvent(wx.wxEVT_COMMAND_LIST_END_LABEL_EDIT, self.GetId())
         evt.Index = self.curRow
         evt.Column = self.curCol
-        item = self.GetItem(self.curRow, self.curCol)
-        evt.Item.SetId(item.GetId())
-        evt.Item.SetColumn(item.GetColumn())
-        evt.Item.SetData(item.GetData())
-        evt.Item.SetText(text) #should be empty string if editor was canceled
+        item = wx.ListItem(self.GetItem(self.curRow, self.curCol))
+        item.SetText(text)
+        evt.SetItem(item)
+
         ret = self.GetEventHandler().ProcessEvent(evt)
         if not ret or evt.IsAllowed():
             if self.IsVirtual():
@@ -652,7 +651,7 @@ class TextEditMixin:
                 # data source
                 self.SetVirtualData(self.curRow, self.curCol, text)
             else:
-                self.SetStringItem(self.curRow, self.curCol, text)
+                self.SetItem(self.curRow, self.curCol, text)
         self.RefreshItem(self.curRow)
 
     def _SelectIndex(self, row):
@@ -698,7 +697,7 @@ HISTORY:
 1.1     - Initial version
 """
 
-class CheckListCtrlMixin:
+class CheckListCtrlMixin(object):
     """
     This is a mixin for ListCtrl which add a checkbox in the first
     column of each row. It is inspired by limodou's CheckList.py(which
@@ -738,8 +737,16 @@ class CheckListCtrlMixin:
 
         self.Bind(wx.EVT_LEFT_DOWN, self.__OnLeftDown_)
 
-        # override the default methods of ListCtrl/ListView
-        self.InsertStringItem = self.__InsertStringItem_
+        # Monkey-patch in a new InsertItem so we can also set the image ID for the item
+        self._origInsertItem = self.InsertItem
+        self.InsertItem = self.__InsertItem_
+
+
+    def __InsertItem_(self, *args, **kw):
+        index = self._origInsertItem(*args, **kw)
+        self.SetItemImage(index, self.uncheck_image)
+        return index
+
 
     def __CreateBitmap(self, flag=0, size=(16, 16)):
         """Create a bitmap of the platforms native checkbox. The flag
@@ -748,15 +755,13 @@ class CheckListCtrlMixin:
         """
         bmp = wx.Bitmap(*size)
         dc = wx.MemoryDC(bmp)
+        dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
         wx.RendererNative.Get().DrawCheckBox(self, dc,
                                              (0, 0, size[0], size[1]), flag)
         dc.SelectObject(wx.NullBitmap)
         return bmp
 
-    def __InsertStringItem_(self, index, label):
-        index = self.InsertItem(index, label, 0)
-        return index
 
     def __OnLeftDown_(self, evt):
         (index, flags) = self.HitTest(evt.GetPosition())
@@ -794,12 +799,12 @@ class CheckListCtrlMixin:
     def IsChecked(self, index):
         return self.GetItem(index).GetImage() == 1
 
-    def CheckItem(self, index, check = True):
+    def CheckItem(self, index, check=True):
         img_idx = self.GetItem(index).GetImage()
-        if img_idx == 0 and check is True:
+        if img_idx == 0 and check:
             self.SetItemImage(index, 1)
             self.OnCheckItem(index, True)
-        elif img_idx == 1 and check is False:
+        elif img_idx == 1 and not check:
             self.SetItemImage(index, 0)
             self.OnCheckItem(index, False)
 

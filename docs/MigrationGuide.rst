@@ -18,30 +18,35 @@ document the nitty gritty details of the differences, but rather the
 general patterns of the changes will be documented.  Most programmers
 should then be able to work out the details for themselves.
 
+Please note that throughout this document and elsewhere in the project, as
+well as community discussions and such, you may see the term "**Classic**"
+used by itself. This refers to the original implementation of wxPython.
+Likewise, a standalone "**Phoenix**" or "**Project Phoenix**" will generally
+refer to this new implementation of wxPython.
+
 
 Version Numbers
 ---------------
 
-Classic wxPython used version numbers with 4 components, in order to be able
-to specify the exact version of wxWidgets used (3 version number components)
-and an additional component to allow for multiple wxPython releases for each
-wxWidgets release. While this version numbering works okay and solves a
-specific need that wxPython had, it does not follow the common version
-numbering pattern that probably 99% of other software packages use and so it
-is non-intuitive for most users.
+The version numbers for wxPython are no longer kept in sync with the wxWidgets
+version number. In the past the common version number was used to indicate
+exactly which version of wxWidgets should be used for the wxPython build. Now
+wxWidgets is a git submodule, and the linked version is included in the
+wxPython source tarball, so there is no longer any need to use the matching
+version numbers to implicitly specify the version of the wxWidgets source to
+use.
 
-So Phoenix will be moving to a 3 component version number, where the first 2
-components match the MAJOR.MINOR version of wxWidgets being used, and the 3rd
-component of the version number is used to indicate the release of wxPython
-Phoenix using that version of wxWidgets.  It is felt that matching the 3rd
-component of the wxWidgets is no longer as important as it was in the past,
-because the wxWidgets source is being included with the Phoenix source, so
-matching exact versions of the two packages by hand is no longer needed.
+This means that wxPython can go back to a 3-component version number and follow
+the common conventions used by 99% of the other software projects out there.
+The 3 components are commonly called MAJOR, MINOR and RELEASE. Since wxPython
+Phoenix is a major upgrade over wxPython Classic then we will start out with a
+new MAJOR version number to help communicate that this isn't just a little
+update from previous releases.
 
 Additional flags will be appended to the version number in a manner that is
 compliant with Python's PEP-440_. This includes syntax for alpha, beta,
 release candidate releases, post-release builds, development snapshots, etc.
-See `buildtools/version.py` in the Phoenix build tree for more details.
+See ``buildtools/version.py`` in the Phoenix source tree for more details.
 
 .. _PEP-440: https://www.python.org/dev/peps/pep-0440/
 
@@ -50,44 +55,77 @@ Overloaded Functions
 --------------------
 
 In order to support more than one of the versions of an overloaded C++
-function or class method in Classic wxPython, we had to rename all but
-one of them.  For example, for the wxWindow::SetSize method we have
-SetSize, SetDimensions, SetRect and SetSizeWH.  One of the features of
-the new tools used for Project Phoenix is that we no longer need to do
-that and instead we can have just one function or method in the Python
-API and the proper version of the C++ function or method is chosen at
-runtime based on the number and types of parameters passed to the
-function. So in most cases the renamed versions of the overloaded
-functions have been removed and you can call the function with the same
-name as the C++ API.
+function or class method in Classic wxPython, we had to rename all but one of
+them.  For example, for the C++ ``wxWindow::SetSize`` method we have
+``SetSize``, ``SetDimensions``, ``SetRect`` and ``SetSizeWH``.  One of the
+features of the new tools used for Project Phoenix is that we no longer need
+to do that and instead we can have just one function or method in the Python
+API and the proper version of the C++ function or method is chosen at runtime
+based on the number and types of parameters passed to the function. So in most
+cases the renamed versions of the overloaded functions have been removed and
+you can call the function with the same name as the C++ API.
 
-This also includes the default constructor for all widget classes,
-used for the 2-phase create. Previously they were renamed to be the
-class name with "Pre" prepended to it.  For example, wx.PreWindow(),
-wx.PreFrame(), etc.  Now in the Phoenix build of wxPython that is no
-longer necessary and you can just call the class with no parameters
-like normal.
+This also includes the default constructor for all widget classes, used for
+the 2-phase create. Previously they were renamed to be the class name with
+"Pre" prepended to it.  For example, ``wx.PreWindow()``, ``wx.PreFrame()``,
+etc.  Now in the Phoenix build of wxPython that is no longer necessary and you
+can just call the class with no parameters like normal.
 
 For those renamed items that are more commonly used in the old Classic
-wxPython I'll add some aliases that will issue a DeprecationWarning for
-the first release or two after we switch over to the Phoenix version
-of the code, and then remove them in a later release.
+wxPython I'll add some aliases that will issue a ``DeprecationWarning`` for
+the first release or two after we switch over to the Phoenix version of the
+code, and then remove them in a later release.
 
-For a (relatively comprehensive) list of classes, functions and methods
-which need modification while porting your code from Classic to Phoenix,
-please see the :ref:`Classic vs. Phoenix <classic vs phoenix>` document.
+For a (relatively comprehensive) list of classes, functions and methods which
+need modification while porting your code from Classic to Phoenix, please see
+the :ref:`Classic vs. Phoenix <classic vs phoenix>` document.
+
+
+FindWindow Methods
+------------------
+
+One instance of undoing the renames for overloading done in Classic that may
+be not make as much sense as the others is the ``wx.Window.FindWindow``
+methods.  This is because there are new methods in Phoenix that have the same
+names as some of the renames in Classic, so we can't just leave a deprecated
+alias in place that will direct the programmer to use the overloaded version
+of the method instead of the renamed version.
+
+So we now have the following FindWindow-related methods and static methods
+available in the ``wx.Window`` class:
+
+These are non-static and do a recursive search in ``self``::
+
+    wx.Window.FindWindow(self, id)
+    wx.Window.FindWindow(self, name)
+
+These are ``staticmethods`` that either search all windows in the application,
+or the subtree rooted at ``parent`` if it is given::
+
+    wx.Window.FindWindowById(id, parent=None)
+    wx.Window.FindWindowByLabel(label, parent=None)
+    wx.Window.FindWindowByName(name, parent=None)
+
+And these extra module-level helper functions added in Classic are still
+available in Phoenix::
+
+    wx.FindWindowById(id, parent=None)
+    wx.FindWindowByLabel(label, parent=None)
+    wx.FindWindowByName(name, parent=None)
+
+
 
 
 Static Methods 
 -------------- 
 
 In the distant past when SWIG was generating wrapper code for C++ static
-methods it would create a standalone function named ClassName_MethodName for
-it. When Python added support for static methods then SWIG was able to use
-that to make a real static method named ClassName.MethodName, but it still
+methods it would create a standalone function named ``ClassName_MethodName``
+for it. When Python added support for static methods then SWIG was able to use
+that to make a real ``staticmethod`` named ``ClassName.MethodName``, but it still
 generated the standalone function named with the underscore, for
 compatibility. That underscore version of the static methods is now gone, and
-you will get an AttributeError in existing code that is using them. To fix
+you will get an ``AttributeError`` in existing code that is using them. To fix
 the problem simply change the underscore to a dot, for example you should
 change this::
 
@@ -106,12 +144,12 @@ versions of wxPython, in order to help you prepare for the transition.
 Unicode and Auto-Converting Strings
 -----------------------------------
 
-Starting with the wxPython 2.9 release series, there are no longer
-separate ansi/Unicode builds of wxPython.  All wxPython builds are now
-essentially the same as the old Unicode builds. This means that all
-string objects passed to wx API functions or methods are converted to
-Unicode before calling the C++ function or method.  By default Classic
-wxPython would use the encoding specified by the locale that was
+Starting with the wxPython 2.9 release series, there are no longer separate
+ansi/Unicode builds of wxPython.  All wxPython builds are now essentially the
+same as the old Unicode builds. This means that all string objects (in Python
+2.7) or bytes objects (Python 3+) passed to wx API functions or methods are
+converted to Unicode before calling the C++ function or method.  By default
+Classic wxPython would use the encoding specified by the locale that was
 current at the time of the import of the wx module.
 
 However using the default locale could sometimes cause issues because
@@ -122,7 +160,7 @@ their code with.
 
 Project Phoenix takes this Unicode simplification one step further by
 stipulating that only the utf-8 encoding will be used for
-auto-converting string objects to the Unicode objects that will be
+auto-converting string/bytes objects to the Unicode objects that will be
 passed on to the wx APIs.  If you need to deal with text using a
 different encoding then you will need to convert it to Unicode
 yourself before passing the text to the wx API.  For the most part this
@@ -191,12 +229,12 @@ wx.PyDeadObjectError --> RuntimeError
 
 Classic wxPython tracks when the C++ part of some types of objects (pretty
 much just window types) is destroyed and then replaces the proxy object's
-class with one that raises a wx.PyDeadObjectError exception. SIP takes care of
-that for us now in a much better way, so that custom hack is no longer
-present in Phoenix, however a RuntimeError is the exception that is raised
-now. The wx.Window class has a __nonzero__ method that tests if the C++
-object has been deleted, so you can still test the window with an if or other
-conditional statement to see if it is safe to use, like this::
+class with one that raises a ``wx.PyDeadObjectError exception``. SIP takes
+care of that for us now in a much better way, so that custom hack is no longer
+present in Phoenix, however a ``RuntimeError`` is the exception that is raised
+now. The ``wx.Window`` class has a ``__nonzero__`` method that tests if the
+C++ object has been deleted, so you can still test the window with an ``if``
+or other conditional statement to see if it is safe to use, like this::
 
     if someWindow:
         someWindow.doSomething()
@@ -206,11 +244,11 @@ conditional statement to see if it is safe to use, like this::
 wx.PyAssertionError --> wx.wxAssertionError
 -------------------------------------------
 
-This is the exception raised when one of the wxASSERT (or similar) statements
-in the wx C++ code fails. Since it is a wxWidgets assertion and not a
-wxPython assertion the name was changed to make that a little more clear. A
-compatibility alias exists so using wx.PyAssertionError will still work, but
-you should migrate those uses to wx.wxAssertionError if possible.
+This is the exception raised when one of the ``wxASSERT`` (or similar)
+statements in the wx C++ code fails. Since it is a wxWidgets assertion and not
+a wxPython assertion the name was changed to make that a little more clear. A
+compatibility alias exists so using ``wx.PyAssertionError`` will still work,
+but you should migrate those uses to ``wx.wxAssertionError`` if possible.
 
 
 
@@ -232,7 +270,7 @@ will attempt to follow the same organization that wxWidgets uses for putting
 those same classes and functions into DLLs or shared libraries. This means
 that some things that were formerly in the core wx package namespace are no
 longer there. They will have to be used by importing a wx submodule. Most of
-them will be in the wx.adv module. One nice advantage of doing this is that
+them will be in the ``wx.adv`` module. One nice advantage of doing this is that
 if your application is not using any of these lesser used classes then you
 will not have to bundle the new modules (nor the associated wx DLLs) with
 your application when you use py2exe or other executable builder. See
@@ -243,37 +281,37 @@ the :ref:`Classic vs. Phoenix <classic vs phoenix>` document for details.
 wx.ListCtrl
 -----------
 
-In wx.ListItem and wx.ListEvent the ``"m_"`` properties are no longer
-public. Instead use the associated getter/setter methods or the
-auto-generated properties that are using them.
+In ``wx.ListItem`` and ``wx.ListEvent`` the ``"m_"`` properties are no longer
+public. Instead use the associated getter/setter methods or the auto-generated
+properties that are using them.
 
 
 
 wx.TreeCtrl
 -----------
 
-The GetItemData and SetItemData now behave just like GetItemPyData
-and SetItemPyData did in Classic wxPython.  In other words, instead
-of needing to create and use instances of wx.TreeItemData to
-associate Python data objects with tree items, you just use the
-Python objects directly.  It will also work when passing the data
-objects directly to the AppendItem, InsertItem, etc. methods.  (If
-anybody was actually using the wx.TreeItemData objects directly
-before and are unable to adapt then please let Robin know.)  The
-[G|S]etItemPyData members still exist, but are now deprecated
-aliases for [G|S]etItemData.
+The ``GetItemData`` and ``SetItemData`` now behave just like ``GetItemPyData``
+and ``SetItemPyData`` did in Classic wxPython.  In other words, instead of
+needing to create and use instances of ``wx.TreeItemData`` to associate Python
+data objects with tree items, you just use the Python objects directly.  It
+will also work when passing the data objects directly to the ``AppendItem``,
+``InsertItem``, etc. methods.  (If anybody was actually using the
+``wx.TreeItemData`` objects directly before and are unable to adapt then
+please let Robin know.)  The ``[G|S]etItemPyData`` members still exist, but
+are now deprecated aliases for ``[G|S]etItemData``.
 
 
 
 wx.DragImage
 ------------
 
-Phoenix is providing both wx.DragImage and wx.GenericDragImage classes.
-Classic wxPython only provided wx.DragImage, but it was actually using
-wx.GenericDragImage internally for all platforms. wx.DragImage will now be a
-native implementation on Windows, and will still be the generic version
-elsewhere. If you would rather use the generic implementation on Windows too
-then switch to using the wx.GenericDragImage class name.
+Phoenix is now providing both ``wx.DragImage`` and ``wx.GenericDragImage``
+classes. Classic wxPython only provided ``wx.DragImage``, but it was actually
+using ``wx.GenericDragImage`` internally for all platforms. ``wx.DragImage``
+will now be a native implementation on Windows, and will still be the generic
+version where a native implementation is not available. If you would rather
+use the generic implementation on Windows too then switch to using the
+``wx.GenericDragImage`` class name.
 
 
 2-Phase Create
@@ -303,72 +341,71 @@ In Phoenix that should now be done like this::
             self.Create(parent, ID, title)                 # 3
 
 
-Notice that we are (#1) calling the base class __init__ like usual,
-but passing no parameters so the default C++ constructor will be
-invoked. Next (#2, #3) we use self instead of pre because self is now
-a legitimate instance of wx.Dialog, and (#4) there is no longer any
-need to call PostCreate to do its black magic for us because there is
-no longer a rogue instance that needs to be transplanted into self.
+Notice that we are (#1) calling the base class ``__init__`` like usual, but
+passing no parameters so the default C++ constructor will be invoked. Next
+(#2, #3) we use ``self`` instead of ``pre`` because ``self`` is now a legitimate
+instance of ``wx.Dialog``, and (#4) there is no longer any need to call
+``PostCreate`` to do its black magic for us because there is no longer a rogue
+instance that needs to be transplanted into ``self``.
 
 
 
 wx.Image and Python Buffer Objects
 ----------------------------------
 
-wx.Image is now using the new buffer APIs for the constructors and
-methods which accept any object supporting the buffer protocol.  These
-are methods which allow you to set the raw RGB or Alpha data in the
-image in one step.  As a consequence of using the new APIs the objects
-passed must also implement the new buffer interface in order to be
-compatible.  
+``wx.Image`` is now using the new buffer APIs for the constructors and methods
+which accept any object supporting the buffer protocol.  These are methods
+which allow you to set the raw RGB or Alpha data in the image in one step.  As
+a consequence of using the new APIs the objects passed must also implement the
+new buffer interface in order to be compatible.
 
-GetData and GetAlpha now return a copy of the image data as a
-bytearray object instead of a string object.  This means that since
-bytearrays are mutable you can do things like make changes to the data
-and then use it in the SetData of another image.  
+``GetData`` and ``GetAlpha`` now return a copy of the image data as a
+``bytearray`` object instead of a string object.  This means that since
+``bytearrays`` are mutable you can do things like make changes to the data and
+then use it in the ``SetData`` of another image.
 
-GetDataBuffer and GetAlphaBuffer now return memoryview objects, which
-allow direct access to the RGB and Alpha buffers inside the image.
-Just as in Classic you should not use those memoryview buffers after
-the wx.Image has been destroyed.  Using the returned memoryview object
-you can manipulate the RGB or Alpha data inside the wx.Image without
-needing to make a copy of the data.
+``GetDataBuffer`` and ``GetAlphaBuffer`` now return ``memoryview`` objects,
+which allow direct access to the RGB and Alpha buffers inside the image. Just
+as in Classic you should not use those ``memoryview`` buffers after the
+``wx.Image`` has been destroyed.  Using the returned ``memoryview`` object you
+can manipulate the RGB or Alpha data inside the ``wx.Image`` without needing
+to make a copy of the data.
 
-Just as in Classic the SetDataBuffer and SetAlphaBuffer methods allow
-you to tell the wx.Image to use memory buffers in other objects (such
-as a numpy array) as its RGB or Alpha data, as long as the other
-object supports the new buffer protocol.
+Just as in Classic the ``SetDataBuffer`` and ``SetAlphaBuffer`` methods allow
+you to tell the ``wx.Image`` to use memory buffers in other objects (such as a
+numpy array) as its RGB or Alpha data, as long as the other object supports
+the new buffer protocol.
 
 
 
 wx.DropSource
 -------------
 
-We don't (yet) have an easy way to support different APIs per platform
-in the wx class constructors, so wx.DropSource (which optionally takes
-parameters that should be a wx.Icon on wxGTK or a wx.Cursor on the
-other platforms) has been changed to not accept the cursor/icon in the
-constructors.  Instead you'll have to call either SetCursor or SetIcon
-depending on the platform.
+We don't (yet) have an easy way to support different APIs per platform in the
+wx class constructors, so ``wx.DropSource`` (which optionally takes parameters
+that should be a ``wx.Icon`` on wxGTK or a ``wx.Cursor`` on the other
+platforms) has been changed to not accept the cursor/icon in the constructors.
+Instead you'll have to call either ``SetCursor`` or ``SetIcon`` depending on
+the platform.
 
 
 
 wx.DataObject and derived classes
 ---------------------------------
 
-The wx.DataObject and wx.DataObjectSimple classes can now be
-subclassed in Python.  wx.DataObject will let you provide complex
-multi-format data objects that do not need to copy the data until one
-of the formats is requested from the clipboard or a DnD operation.
-wx.DataObjectSimple is a simplification that only deals with one data
+The ``wx.DataObject`` and ``wx.DataObjectSimple`` classes can now be
+subclassed in Python.  ``wx.DataObject`` will let you provide complex
+multi-format data objects that do not need to copy the data until one of the
+formats is requested from the clipboard or a DnD operation.
+``wx.DataObjectSimple`` is a simplification that only deals with one data
 format, (although multiple objects can still be provided with
-wx.DataObjectComposite.)
+``wx.DataObjectComposite``.)
 
-Python buffer objects are used for transferring data to/from the
-clipboard or DnD partner.  Anything that supports the buffer protocol
-can be used for setting or providing data, and a memoryview object is
-created for the APIs where the data object should fetch from or copy
-to a specific memory location.  Here is a simple example::
+Python buffer objects are used for transferring data to/from the clipboard or
+DnD partner.  Anything that supports the buffer protocol can be used for
+setting or providing data, and a ``memoryview`` object is created for the APIs
+where the data object should fetch from or copy to a specific memory location.
+ Here is a simple example::
 
         class MyDataObject(wx.DataObjectSimple):
             def __init__(self, value=''):
@@ -396,56 +433,57 @@ to a specific memory location.  Here is a simple example::
 Multiple Inheritance
 --------------------
 
-The SIP tool currently does not support having more than one wrapped
-C++ class as the base classes of a Python class.  In most cases this
-is not a problem because in wxPython you're more likely to use
-multiple inheritance with simple mix-in classes or similar constructs
-than needing to inherit from more than one wx class.
+The SIP tool currently does not support having more than one wrapped C++ class
+as the base classes of a Python class.  In most cases this is not a problem
+because in wxPython you're more likely to use multiple inheritance with simple
+mix-in classes or similar constructs than needing to inherit from more than
+one wrapped C++ class.
 
-However there is at least one use case where that can be a problem,
-and that is with the ComboCtrl's wx.ComboPopup class.  In wxWidgets
-and also in Classic wxPython you're encouraged to use wx.ComboPopup as
-a mix-in class combined with the widget class that is going to be
-your popup window for the wx.ComboCtrl.  This can not currently be
-done with Phoenix in the same way, but you can also use a widget class
-with a wx.ComboPopup in a has-a relationship rather than an is-a
-relationship.  See samples/combo/combo1.py for an example.
+However there is at least one use case where that can be a problem, and that
+is with the ComboCtrl's ``wx.ComboPopup`` class.  In wxWidgets and also in
+Classic you're encouraged to use ``wx.ComboPopup`` as a mix-in class combined
+with the widget class that is going to be your popup window for the
+``wx.ComboCtrl``.  This can not currently be done with Phoenix in the same
+way, but you can also use a widget class with a ``wx.ComboPopup`` in a has-a
+relationship rather than an is-a relationship.  See
+``samples/combo/combo1.py`` for an example.
 
 
 
 XRC
 ---
 
-The "LoadOnFoo" methods of the XmlResource class were renamed overloads of
-the corresponding "LoadFoo" methods. Since we no longer need to rename
-overloaded methods the "LoadOn" version has been removed and you should just
-use the "LoadFoo" version instead. These methods are used to load some XRC
-content onto an existing window, such as a Frame, instead of creating a new
-Frame for the content.
+The "``LoadOnFoo``" methods of the ``XmlResource`` class were renamed
+overloads of the corresponding "``LoadFoo``" methods. Since we no longer need
+to rename overloaded methods the "``LoadOn``" version has been removed and you
+should just use the "``LoadFoo``" version instead. These methods are used to
+load some XRC content onto an existing window, such as a ``wx.Frame``, instead
+of creating a new ``wx.Frame`` for the content.
 
 
 
 wx.PyEvent and wx.PyCommandEvent
 --------------------------------
 
-Unlike most other ``wx.Py`` classes these two still exist in Phoenix, and are
-still the base classes that you should use when creating your own custom
-event classes. For the most part they work just like they did in Classic, and
-they take care of ensuring that any Python attributes that you assign to
-instances of the class will still be there when the event is delivered to an
-event handler. There is one main difference from Classic however, and that is
-that those attributes are now stored in a dictionary object owned by the C++
+Unlike most other ``wx.Py*`` classes these two still exist in Phoenix, and are
+still the base classes that you should use when creating your own custom event
+classes. For the most part they work just like they did in Classic, and they
+take care of ensuring that any Python attributes that you assign to instances
+of the class will still be there when the event is delivered to an event
+handler. There is one main difference from Classic however, and that is that
+those attributes are now stored in a dictionary object owned by the C++
 instance, instead of being stored directly in the Python instance's
-dictionary. In most cases this won't matter to you at all, but if your
-derived class has a __getattr__ method (or __setattr__ or __delattr__) then
-you will need to get the attributes from that other dictionary instead. You
-can get a reference to that dictionary using _getAttrDict(). For example::
+dictionary. In most cases this won't matter to you at all, but if your derived
+class has a ``__getattr__`` method (or ``__setattr__``, or ``__delattr__``)
+then you will need to get the attributes from that other dictionary instead.
+You can get a reference to that dictionary using ``_getAttrDict()``. For
+example::
 
     def __getattr__(self, name):
         d = self._getAttrDict()
         if name in d:
             return d[name]
-        return getattr(self._someOtherThing, name)
+        return doSomethingElse(name)
 
 
 
@@ -453,11 +491,12 @@ MakeModal
 ---------
 
 Since it is usually not a good idea to make arbitrary top-level windows be
-modal, (you should just use a wx.Dialog instead,) the MakeModal method has
-been removed. The recommended alternative is to use the wx.WindowDisabler
-class instead, but if you prefer the semantics of having a method to call to
-turn on or off the modalness of a window then you can add a method like this
-to your classes to give you a way to do it::
+modal, (you should normally just use a ``wx.Dialog`` instead,) the
+``wx.Frame.MakeModal`` method has been removed. The recommended alternative is
+to use the ``wx.WindowDisabler`` class instead, but if you prefer the
+semantics of having a method to call to turn on or off the modalness of a
+window then you can add a method like this to your classes to give you a way
+to do it::
 
     def MakeModal(self, modal=True):
         if modal and not hasattr(self, '_disabler'):
@@ -471,25 +510,69 @@ The wxversion module
 --------------------
 
 The ``wxversion`` module is gone, and will not be coming back.  The old way of
-handling muti-version installs and choosing between them was a giant hack in
-my opinion, and I regretted doing it not long after it was implemented.  However
+handling multi-version installs and choosing between them was a giant hack in
+my opinion, and I regretted doing it shortly after it was implemented.  However
 since there wasn't any other way that made sense at the time, and since some
 people were using it already, it got left in the distribution.  But one of the
 purposes of the Phoenix project is to remove as many of the hacks and cruft
 from Classic as possible, so wxversion is gone.
 
 These days there are **much** better ways to handle the things that the old
-multi-versioning and version selection features provided.  Since wxPython
-Phoenix is built by default to be self-contained and relocatable on all of the
-platforms, then unlike Classic there is no problem with installing it in
-Python virtual environments.  So if you need to have multiple versions of
-wxPython on your system, then create a virtual environment for each project
-and install the version that each needs in their environments.  If you have
-code that requires a specific version or range of versions of wxPython then
-define the dependency in your ``setup.py`` file or a ``requirements.txt`` file
-and let ``pip`` take care of the details.  I'm confident that you'll be much
-happier with this approach.
+multi-versioning and version selection features that the ``wxversion`` module
+provided.  Since wxPython Phoenix is built by default to be self-contained and
+relocatable on all of the platforms, then unlike Classic there is no problem
+with installing it in Python virtual environments.  So if you need to have
+multiple versions of wxPython on your system, then create a virtual
+environment for each project and install the version that each needs in their
+environments.  If you have code that requires a specific version or range of
+versions of wxPython then define the dependency in your ``setup.py`` file or a
+``requirements.txt`` file and let ``pip`` take care of the details.  I'm
+confident that you'll be much happier with this approach.
 
+
+
+Property Grid
+-------------
+
+In Classic, custom classes derived from ``wx.propgrid.PGProperty`` could
+specify which editor to use by providing a ``GetEditor`` method that returned a
+string.  This method does not exist in C++, and was hacked in to the Python
+wrapper classes in order to remove or simplify other wrapper related problems.
+
+Those problems are no longer present in Phoenix and so it is easiest to go
+back to the way C++ handles selecting the cell editor and avoid needing to
+awkwardly kludge things together in order to maintain full compatibility.  If
+you have a property class that implements the ``GetEditor`` method then adding
+the following method to your property class will enable the propgrid to fetch
+the editor instance properly::
+
+    def DoGetEditorClass(self):
+        return wx.propgrid.PropertyGridInterface.GetEditorByName(self.GetEditor())
+
+
+
+wx.gizmos
+---------
+
+The ``wx.gizmos`` module in Classic was a set of wrappers around some
+3rd-party C++ classes. Unfortunately that code has started rotting a little
+since it has been unmaintained for a while. Instead of perpetuating this
+problem into Phoenix the C++ wrappers have been tossed out and some of the
+more commonly used classes from wx.gizmos has been ported to pure Python code,
+which now lives in the ``wx.lib.gizmos`` package. There is also a temporary
+``wx.gizmos`` module provided in order to provide the class names at the old
+location too in order to ease transitioning to the new packge. Please migrate
+your code to use ``wx.lib.gizmos`` as ``wx.gizmos`` will likely go away in a
+future release.
+
+Please note that the new ``TreeListCtrl`` class is actually a thin wrapper
+around AGW's ``HyperTreeList`` class since it was already a near perfect
+superset of the old TreeListCtrl features and API. One compatibility
+difference that may arise is that like most widgets in the AGW library the
+style flags have been split into 2 parameters, ``style`` and ``agwSgtyle``,
+but it should be a simple matter of changing existing code to pass the
+tree-specific style flags in the ``agwStyle`` parameter, and wxWidgets common
+style flags in the ``style`` parameter.
 
 
 .. toctree::

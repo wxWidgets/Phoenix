@@ -61,7 +61,7 @@ def run():
     module.addInclude(INCLUDES)
 
     module.addInitializerCode("""\
-        //wxXmlInitResourceModule();
+        wxXmlInitResourceModule();
         wxXmlResource::Get()->InitAllHandlers();
         """)
 
@@ -78,7 +78,6 @@ def run():
 
     c = module.find('wxXmlResource')
     assert isinstance(c, etgtools.ClassDef)
-    c.piBases = ['wx.Object']
     c.addPrivateCopyCtor()
 
     # Add a bit of code to the ctors to call InitAllHandlers(), for
@@ -157,7 +156,7 @@ def run():
 
     module.addPyFunction('XRCCTRL', '(window, str_id, *ignoreargs)',
         doc='Returns the child window associated with the string ID in an XML resource.',
-        body='return window.FindWindowById(XRCID(str_id))')
+        body='return window.FindWindow(XRCID(str_id))')
 
 
 
@@ -167,7 +166,7 @@ def run():
             MethodDef(name='wxXmlSubclassFactory', isCtor=True),
             MethodDef(name='~wxXmlSubclassFactory', isDtor=True),
             MethodDef(name='Create', type='wxObject*',
-                isVirtual=True, isPureVirtual=True,
+                isVirtual=True, isPureVirtual=True, factory=True,
                 items=[ParamDef(type='const wxString&', name='className')])
             ])
     module.addItem(cls)

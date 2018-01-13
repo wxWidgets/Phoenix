@@ -236,6 +236,7 @@ import wx
 import math
 import bisect
 import zlib
+from functools import cmp_to_key
 
 import six
 
@@ -2323,6 +2324,8 @@ class CommandListEvent(wx.PyCommandEvent):
         """ Returns the item index. """
 
         return self.m_itemIndex
+
+    Index = property(GetIndex, doc="See `GetIndex`")
 
 
     def GetColumn(self):
@@ -10146,7 +10149,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if self.InReportView():
             if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
-                current = y/self.GetLineHeight()
+                current = y // self.GetLineHeight()
                 if current < count:
                     newItem, flags = self.HitTestLine(current, x, y)
                     if flags:
@@ -10406,7 +10409,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         else:
             self.__func = func
 
-        self._lines.sort(self.OnCompareItems)
+        self._lines.sort(key=cmp_to_key(self.OnCompareItems))
 
         if self.IsShownOnScreen():
             self._dirty = True

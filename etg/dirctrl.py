@@ -38,7 +38,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_DIRCTRL_SELECTIONCHANGED = wx.PyEventBinder( wxEVT_DIRCTRL_SELECTIONCHANGED, 1 )
         EVT_DIRCTRL_FILEACTIVATED = wx.PyEventBinder( wxEVT_DIRCTRL_FILEACTIVATED, 1 )
         """)

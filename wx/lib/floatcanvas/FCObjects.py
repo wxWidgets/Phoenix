@@ -2138,7 +2138,7 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
 
         self.XY = XY
         self.Height = Height
-        (self.bmpWidth, self.bmpHeight) = self.Image.GetWidth(), self.Image.GetHeight()
+        (self.bmpWidth, self.bmpHeight) = float(self.Image.GetWidth()), float(self.Image.GetHeight())
         self.Width = self.bmpWidth / self.bmpHeight * Height
         self.ShiftFun = self.ShiftFunDict[Position]
         self.CalcBoundingBox()
@@ -2225,7 +2225,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
 
         self.XY = N.array(XY, N.float)
         self.Height = Height
-        (self.bmpWidth, self.bmpHeight) = self.Image.GetWidth(), self.Image.GetHeight()
+        (self.bmpWidth, self.bmpHeight) = float(self.Image.GetWidth()), float(self.Image.GetHeight())
         self.bmpWH = N.array((self.bmpWidth, self.bmpHeight), N.int32)
         ## fixme: this should all accommodate different scales for X and Y
         if Width is None:

@@ -61,8 +61,10 @@ wxVariant wxPGVariant_in_helper(PyObject* obj)
     else if (sipCanConvertToType(obj, sipType_wxArrayInt, 0)) {
         wxArrayInt* ptr;
         ptr = (wxArrayInt*)sipConvertToType(obj, sipType_wxArrayInt, NULL, 0, &state, &isErr);
-        value << *ptr;
-        sipReleaseType(ptr, sipType_wxArrayInt, state);
+        if (!isErr) {
+            value << *ptr;
+            sipReleaseType(ptr, sipType_wxArrayInt, state);
+        }
     }
 
     else

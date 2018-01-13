@@ -128,7 +128,7 @@ def run():
                 body="""\
                     success = 0
                     for et in self.evtType:
-                        success += target.Disconnect(id1, id2, et, handler)
+                        success += int(target.Disconnect(id1, id2, et, handler))
                     return success != 0
                     """),
 
@@ -196,8 +196,7 @@ def run():
         body="""\
             if (PyCallable_Check(func)) {
                 self->Connect(id, lastId, eventType,
-                              (wxObjectEventFunction)(wxEventFunction)
-                              &wxPyCallback::EventThunker,
+                              (wxObjectEventFunction)&wxPyCallback::EventThunker,
                               new wxPyCallback(func));
             }
             else if (func == Py_None) {
@@ -219,7 +218,7 @@ def run():
         body="""\
             if (func && func != Py_None) {
                 // Find the current matching binder that has this function
-                // pointer and dissconnect that one.  Unfortuneatly since we
+                // pointer and disconnect that one.  Unfortunately since we
                 // wrapped the PyObject function pointer in another object we
                 // have to do the searching ourselves...
                 wxList::compatibility_iterator node = self->GetDynamicEventTable()->GetFirst();
@@ -229,12 +228,15 @@ def run():
                     if ((entry->m_id == id) &&
                         ((entry->m_lastId == lastId) || (lastId == wxID_ANY)) &&
                         ((entry->m_eventType == eventType) || (eventType == wxEVT_NULL)) &&
-                        // FIXME?
-                        //((entry->m_fn->IsMatching((wxObjectEventFunction)(wxEventFunction)&wxPyCallback::EventThunker))) &&
+                        entry->m_fn->IsMatching(wxObjectEventFunctor((wxObjectEventFunction)&wxPyCallback::EventThunker, NULL)) &&
                         (entry->m_callbackUserData != NULL))
                     {
+                        wxPyThreadBlocker block;
                         wxPyCallback *cb = (wxPyCallback*)entry->m_callbackUserData;
-                        if (cb->m_func == func) {
+                        // NOTE: Just comparing PyObject pointers is not enough, as bound 
+                        // methods can result in different PyObjects each time obj.Method 
+                        // is evaluated. (!!!)
+                        if (PyObject_RichCompareBool(cb->m_func, func, Py_EQ) == 1) {
                             delete cb;
                             self->GetDynamicEventTable()->Erase(node);
                             delete entry;
@@ -247,8 +249,7 @@ def run():
             }
             else {
                 return self->Disconnect(id, lastId, eventType,
-                                        (wxObjectEventFunction)
-                                        &wxPyCallback::EventThunker);
+                                        (wxObjectEventFunction)&wxPyCallback::EventThunker);
             }
         """)
 
@@ -357,15 +358,25 @@ def run():
     # wxCommandEvent
     c = module.find('wxCommandEvent')
 
+    # The [G|S]etClientData methods deal with untyped void* values, which we
+    # don't support. The [G|S]etClientObject methods use wxClientData instances
+    # which we have a MappedType for, so make the ClientData methods just be
+    # aliases for ClientObjects. From the Python programmer's perspective they
+    # would be virtually the same anyway.
+    c.find('SetClientObject.clientObject').transfer = True
+    c.find('SetClientObject.clientObject').name = 'data'
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
+    c.find('GetClientObject').pyName = 'GetClientData'
+    c.find('SetClientObject').pyName = 'SetClientData'
+    c.addPyMethod('GetClientObject', '(self)',
+        doc="Alias for :meth:`GetClientData`",
+        body="return self.GetClientData()")
+    c.addPyMethod('SetClientObject', '(self, data)',
+        doc="Alias for :meth:`SetClientData`",
+        body="self.SetClientData(data)")
+    c.addPyProperty('ClientData GetClientData SetClientData')
 
-    c.addPyCode("""\
-        CommandEvent.GetClientData = CommandEvent.GetClientObject
-        CommandEvent.SetClientData = CommandEvent.SetClientObject""")
-
-    c.addProperty('ClientObject GetClientObject SetClientObject')
-    c.addPyCode('CommandEvent.ClientData = CommandEvent.ClientObject')
     c.addProperty('ExtraLong GetExtraLong SetExtraLong')
     c.addProperty('Int GetInt SetInt')
     c.addProperty('Selection GetSelection')

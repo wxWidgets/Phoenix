@@ -42,10 +42,19 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxTreeListItem')
     assert isinstance(c, etgtools.ClassDef)
+
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();
         """)
 
+    c.addCppMethod('long', '__hash__', '()', """\
+        return (long)self->GetID();
+        """)
+
+    c.addCppMethod('bool', '__eq__', '(wxTreeListItem* other)',
+                   "return other ? (self->GetID() == other->GetID()) : false;")
+    c.addCppMethod('bool', '__ne__', '(wxTreeListItem* other)',
+                   "return other ? (self->GetID() != other->GetID()) : true;")
 
     #-----------------------------------------------------------------
     c = module.find('wxTreeListItemComparator')
@@ -106,7 +115,7 @@ def run():
     c = module.find('wxTreeListEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_TREELIST_SELECTION_CHANGED = wx.PyEventBinder( wxEVT_TREELIST_SELECTION_CHANGED )
         EVT_TREELIST_ITEM_EXPANDING =    wx.PyEventBinder( wxEVT_TREELIST_ITEM_EXPANDING )
         EVT_TREELIST_ITEM_EXPANDED =     wx.PyEventBinder( wxEVT_TREELIST_ITEM_EXPANDED )

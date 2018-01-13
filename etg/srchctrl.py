@@ -58,7 +58,7 @@ def run():
             """\
             #ifdef __WXMAC__
             #else
-                self->SetSearchMenuBitmap(*bmp);
+                self->SetCancelBitmap(*bmp);
             #endif
             """)
 

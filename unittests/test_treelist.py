@@ -65,6 +65,18 @@ class treelist_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(s, list))
         self.assertEqual(len(s), 1)
         self.assertTrue(isinstance(s[0], wx.dataview.TreeListItem))
+        self.assertTrue(root == s[0])
+
+
+    def test_treelistitem_hashable(self):
+        tlc = wx.dataview.TreeListCtrl(self.frame)
+        root = self._populateTree(tlc)
+        d = dict()
+        d[root] = 'root'
+
+        tlc.Select(root)
+        s = tlc.GetSelections()
+        assert d[s[0]] == 'root'
 
 
     def test_treelist3(self):

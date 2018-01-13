@@ -9,7 +9,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Dec-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -30,9 +30,9 @@ import datetime
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
-                               macFixDependencyInstallName, macSetLoaderNames, \
+                               macSetLoaderNames, \
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
-                               getVisCVersion, getToolsPlatformName
+                               getVisCVersion, getToolsPlatformName, updateLicenseFiles
 
 import buildtools.version as version
 
@@ -48,18 +48,25 @@ PYSHORTVER = '27'
 PYTHON = None  # it will be set later
 PYTHON_ARCH = 'UNKNOWN'
 
-# wx version numbers
+# convenience access to the wxPython version digits
 version2 = "%d.%d" % (version.VER_MAJOR, version.VER_MINOR)
 version3 = "%d.%d.%d" % (version.VER_MAJOR, version.VER_MINOR, version.VER_RELEASE)
 version2_nodot = version2.replace(".", "")
 version3_nodot = version3.replace(".", "")
-unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or even?
+
+# same for the wxWidgets version
+wxversion2 = "%d.%d" % (version.wxVER_MAJOR, version.wxVER_MINOR)
+wxversion3 = "%d.%d.%d" % (version.wxVER_MAJOR, version.wxVER_MINOR, version.wxVER_RELEASE)
+wxversion2_nodot = wxversion2.replace(".", "")
+wxversion3_nodot = wxversion3.replace(".", "")
+
+unstable_series = (version.wxVER_MINOR % 2) == 1  # is the minor version odd or even?
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 devMode = False
 
-baseName = 'wxPython_Phoenix'
+baseName = version.PROJECT_NAME
 eggInfoName = baseName + '.egg-info'
 defaultMask='%s-%s*' % (baseName, version.VER_MAJOR)
 
@@ -68,12 +75,12 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.19.1'
+sipCurrentVersion = '4.19.5'
 sipMD5 = {
-    'darwin'   : '864b8b4b2d25594b052093cbcf3af639',
-    'win32'    : '08cb7b0ca7e4d16f6029c2ed3849a848',
-    'linux32'  : 'a63b59202a8d60e52f7731e484ef1291',
-    'linux64'  : 'ae56352f033212c94d3adfd2f48a0070',
+    'darwin'   : '06308e0a0d3735992a53986fe99bde07',
+    'win32'    : '107f2bbac5445f2a3c5df64000b1e1c3',
+    'linux32'  : '6dc2998b10c1e81bbc5cb9bd007f9345',
+    'linux64'  : '62104b11351b00da3dd5ed6094a2c744',
 }
 
 wafCurrentVersion = '1.7.15-p1'
@@ -126,6 +133,7 @@ Usage: ./build.py [command(s)] [options]
       install_py    Install wxPython only
 
       sdist         Build a tarball containing all source files
+      sdist_demo    Build a tarball containing just the demo and samples folders 
       bdist         Create a binary tarball release of wxPython Phoenix
       bdist_docs    Build a tarball containing the documentation
       bdist_egg     Build a Python egg.  Requires magic.
@@ -381,8 +389,11 @@ def makeOptionParser():
     OPTS = [
         ("python",         ("",    "The python executable to build for.")),
         ("debug",          (False, "Build wxPython with debug symbols")),
+        ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
+        ("release",        (False, "Turn off some development options for a release build.")),
         ("keep_hash_lines",(False, "Don't remove the '#line N' lines from the SIP generated code")),
-        ("gtk3",           (False, "On Linux build for gtk3 (default gtk2)")),
+        ("gtk2",           (False, "On Linux build for gtk2 (default gtk3)")),
+        ("gtk3",           (True,  "On Linux build for gtk3")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
         ("osx_carbon",     (False, "Build the OSX Carbon port on Mac (unsupported)")),
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
@@ -402,7 +413,7 @@ def makeOptionParser():
                                    "or when distributing wxPython as an egg.)  When using "
                                    "this flag you should either build with an already "
                                    "installed wxWidgets, or allow this script to build and "
-                                   "install wxWidgets.")),
+                                   "install wxWidgets independently of wxPython.")),
 
         ("build_dir",      ("",    "Directory to store wx build files. (Not used on Windows)")),
         ("prefix",         ("",    "Prefix value to pass to the wx build.")),
@@ -422,8 +433,6 @@ def makeOptionParser():
         ("cairo",          (False, "Allow Cairo use with wxGraphicsContext (Windows only)")),
         ("x64",            (False, "Use and build for the 64bit version of Python on Windows")),
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
-        ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
-        ("release_build",  (False, "Turn off some development options for a release build.")),
         ("pytest_timeout", ("0",   "Timeout, in seconds, for stopping stuck test cases. (Currently not working as expected, so disabled by default.)")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
         ("vagrant_vms",    ("all", "Comma separated list of VM names to use for the build_vagrant command. Defaults to \"all\"")),
@@ -459,12 +468,14 @@ def parseArgs(args):
         options.no_magic = True
 
     # Some options don't make sense for release builds
-    if options.release_build:
+    if options.release:
         options.debug = False
         options.both = False
-        options.relwithdebug = False
         if os.path.exists('REV.txt'):
             os.unlink('REV.txt')
+
+    if options.gtk2:
+        options.gtk3 = False
 
     return options, args
 
@@ -480,7 +491,10 @@ class pushDir(object):
 
 
 def getBuildDir(options):
-    BUILD_DIR = opj(phoenixDir(), 'build', 'wxbld')
+    if not isDarwin and not isWindows:
+        BUILD_DIR = opj(phoenixDir(), 'build', 'wxbld', 'gtk3' if options.gtk3 else 'gtk2')
+    else:
+        BUILD_DIR = opj(phoenixDir(), 'build', 'wxbld')
     if options.build_dir:
         BUILD_DIR = os.path.abspath(options.build_dir)
     return BUILD_DIR
@@ -651,37 +665,39 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     msg("Uploading %s..." % fileName)
 
     # NOTE: It is expected that there will be a host entry defined in
-    # ~/.ssh/config named wxpython-rbot, with the proper host, user,
-    # identity file, etc. needed for making an SSH connection to the
-    # snapshots server.
-    host = 'wxpython-rbot'
-    if options.release_build:
+    # ~/.ssh/config named wxpython-rbot, with the proper host, user, identity
+    # file, etc. needed for making an SSH connection to the snapshots server.
+    # Release builds work similarly with their own host configuration defined
+    # in the ~/.ssh/config file.
+    if options.release:
+        host = 'wxpython-release'
         uploadDir = 'release-builds'
     else:
+        host = 'wxpython-rbot'
         uploadDir = 'snapshot-builds'
 
     # copy the new file to the server
     cmd = 'scp {} {}:{}'.format(fileName, host, uploadDir)
-    #msg(cmd)
     runcmd(cmd)
 
     # Make sure it is readable by all
     cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, uploadDir, os.path.basename(fileName))
     runcmd(cmd)
 
-    # get the list of all snapshot files on the server
-    cmd = 'ssh {} "cd {}; ls {}"'.format(host, uploadDir, mask)
-    allFiles = runcmd(cmd, getOutput=True)
-    allFiles = allFiles.strip().split('\n')
-    allFiles.sort()
+    if not options.release:
+        # get the list of all snapshot files on the server
+        cmd = 'ssh {} "cd {}; ls {}"'.format(host, uploadDir, mask)
+        allFiles = runcmd(cmd, getOutput=True)
+        allFiles = allFiles.strip().split('\n')
+        allFiles.sort()
 
-    # Leave the last keep number of builds, including this new one, on the server.
-    # Delete the rest.
-    rmFiles = allFiles[:-keep]
-    if rmFiles:
-        msg("Deleting %s" % ", ".join(rmFiles))
-        cmd = 'ssh {} "cd {}; rm {}"'.format(host, uploadDir, " ".join(rmFiles))
-        runcmd(cmd)
+        # Leave the last keep number of builds, including this new one, on the server.
+        # Delete the rest.
+        rmFiles = allFiles[:-keep]
+        if rmFiles:
+            msg("Deleting %s" % ", ".join(rmFiles))
+            cmd = 'ssh {} "cd {}; rm {}"'.format(host, uploadDir, " ".join(rmFiles))
+            runcmd(cmd)
 
     msg("Upload complete!")
 
@@ -692,14 +708,15 @@ def uploadTree(srcPath, destPath, options, keep=30):
     """
     msg("Uploading tree at {}...".format(srcPath))
 
-    host = 'wxpython-rbot'
-    if options.release_build:
+    if options.release:
+        host = 'wxpython-release'
         uploadDir = opj('release-builds', destPath)
     else:
+        host = 'wxpython-rbot'
         uploadDir = opj('snapshot-builds', destPath)
 
     # Ensure the destination exists
-    cmd = 'ssh {0} "if [ ! -d {1} ]; then mkdir {1}; fi"'.format(host, uploadDir)
+    cmd = 'ssh {0} "if [ ! -d {1} ]; then mkdir -p {1}; fi"'.format(host, uploadDir)
     runcmd(cmd)
 
     # Upload the tree
@@ -710,10 +727,11 @@ def uploadTree(srcPath, destPath, options, keep=30):
     cmd = 'ssh {} "chmod -R a+r {}"'.format(host, uploadDir)
     runcmd(cmd)
 
-    # Remove files that were last modified more than `keep` days ago
-    msg("Cleaning up old builds.")
-    cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
-    runcmd(cmd)
+    if not options.release:
+        # Remove files that were last modified more than `keep` days ago
+        msg("Cleaning up old builds.")
+        cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
+        runcmd(cmd)
 
     msg("Tree upload and cleanup complete!")
 
@@ -723,9 +741,7 @@ def checkCompiler(quiet=False):
         # Make sure that the compiler that Python wants to use can be found.
         # It will terminate if the compiler is not found or other exceptions
         # are raised.
-        # setuptools is imported to address https://bugs.python.org/issue23246
         cmd = "import distutils.msvc9compiler as msvc; " \
-              "import setuptools; " \
               "mc = msvc.MSVCCompiler(); " \
               "mc.initialize(); " \
               "print(mc.cc)"
@@ -736,9 +752,7 @@ def checkCompiler(quiet=False):
         # Now get the environment variables which that compiler needs from
         # its vcvarsall.bat command and load them into this process's
         # environment.
-        # setuptools is imported to address https://bugs.python.org/issue23246
         cmd = "import distutils.msvc9compiler as msvc; " \
-              "import setuptools; " \
               "arch = msvc.PLAT_TO_VCVARS[msvc.get_platform()]; " \
               "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
               "print(env)"
@@ -755,6 +769,20 @@ def checkCompiler(quiet=False):
         os.environ['INCLUDE'] = _b(env['include'])
         os.environ['LIB'] = _b(env['lib'])
         os.environ['LIBPATH'] = _b(env['libpath'])
+
+    # NOTE: SIP is now generating code with scoped-enums. Older linux
+    # platforms like what we're using for builds, and also TravisCI for
+    # example, are using GCC versions that are still defaulting to C++98,
+    # so this flag is needed to turn on the C++11 mode. If this flag
+    # causes problems with other non-Windows, non-Darwin compilers then
+    # we'll need to make this a little smarter about what flag (if any)
+    # needs to be used.
+    if not isWindows and not isDarwin:
+        stdflag = '-std=c++11'
+        curflags = os.environ.get('CXXFLAGS', '')
+        if stdflag not in curflags:
+            os.environ['CXXFLAGS'] = '{} {}'.format(stdflag, curflags)
+    #print('**** Using CXXFLAGS:', os.environ.get('CXXFLAGS', ''))
 
 
 def getWafBuildBase():
@@ -807,7 +835,7 @@ def _doDox(arg):
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
         pwd = pushDir(posixjoin(wxDir(), 'docs/doxygen'))
-        cmd = './regen.sh %s' % arg
+        cmd = 'bash ./regen.sh %s' % arg
     runcmd(cmd)
 
 
@@ -833,8 +861,8 @@ def cmd_docset_wx(options, args):
 
     # Remove any existing docset in the dist dir and move the new docset in
     srcname = posixjoin(wxDir(), 'docs/doxygen/out/docset',
-                        'wxWidgets-%s.docset' % cfg.VERSION[:3])
-    destname = 'dist/wxWidgets-%s.docset' % version3
+                        'wxWidgets-%s.docset' % wxversion2)
+    destname = 'dist/wxWidgets-%s.docset' % wxversion3
     if not os.path.isdir(srcname):
         msg('ERROR: %s not found' % srcname)
         sys.exit(1)
@@ -865,7 +893,7 @@ def cmd_docset_py(options, args):
     # update its Info.plist file
     docset = os.path.abspath(docset)
     runcmd('defaults write {}/Contents/Info isJavaScriptEnabled true'.format(docset))
-    runcmd('defaults write {}/Contents/Info dashIndexFilePath main.html'.format(docset))
+    runcmd('defaults write {}/Contents/Info dashIndexFilePath index.html'.format(docset))
     runcmd('defaults write {}/Contents/Info DocSetPlatformFamily wxpy'.format(docset))
     runcmd('plutil -convert xml1 {}/Contents/Info.plist'.format(docset))
 
@@ -938,8 +966,7 @@ def cmd_sphinx(options, args):
     genGallery()
 
     # Copy the hand-edited top level doc files too
-    rstFiles = [os.path.join(phoenixDir(), 'TODO.rst')] + \
-               glob.glob(os.path.join(phoenixDir(), 'docs', '*.rst'))
+    rstFiles = glob.glob(os.path.join(phoenixDir(), 'docs', '*.rst'))
     for rst in rstFiles:
         txt = os.path.join(sphinxDir, os.path.splitext(os.path.basename(rst))[0] + '.txt')
         copyIfNewer(rst, txt)
@@ -953,7 +980,7 @@ def cmd_sphinx(options, args):
     del pwd2
 
     msg('Postprocessing sphinx output...')
-    postProcess(htmlDir)
+    postProcess(htmlDir, options)
 
 
 def cmd_wxlib(options, args):
@@ -983,16 +1010,13 @@ def cmd_wxtools(options, args):
     msg('Command wxtools has been folded into command wxlib.')
 
 
-def cmd_docs_bdist(options, args):
-    # TODO: get rid of this function after a while
-    cmd_bdist_docs(options, args)
-
 def cmd_bdist_docs(options, args):
-    cmdTimer = CommandTimer('docs_bdist')
+    cmdTimer = CommandTimer('bdist_docs')
     pwd = pushDir(phoenixDir())
 
     cfg = Config()
 
+    msg("Archiving wxPython Phoenix documentation...")
     rootname = "%s-docs-%s" % (baseName, cfg.VERSION)
     tarfilename = "dist/%s.tar.gz" % rootname
 
@@ -1001,17 +1025,48 @@ def cmd_bdist_docs(options, args):
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
 
-    msg("Archiving Phoenix documentation...")
-    tarball = tarfile.open(name=tarfilename, mode="w:gz")
-    tarball.add('docs/html', os.path.join(rootname, 'docs/html'),
-                filter=lambda info: None if '.svn' in info.name else info)
-    tarball.close()
+    with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
+        tarball.add('docs/html', os.path.join(rootname, 'docs/html'),
+                    filter=lambda info: None if '.svn' in info.name else info)
 
     if options.upload:
         uploadPackage(tarfilename, options, keep=5,
                       mask='%s-docs-%s*' % (baseName, cfg.VER_MAJOR))
 
     msg('Documentation tarball built at %s' % tarfilename)
+
+
+    # # pythonhosted.org can host the wxPython documentation for us, so let's
+    # # use it for the docs associated with the latest release of wxPython.  It
+    # # requires that the docs be in a .zip file with an index.html file at the
+    # # top level. To build this we'll just need to do like the above tarball
+    # # code, except add the files from within the docs/html folder so they will
+    # # all be at the top level of the archive.  shutil.make_archive can be used
+    # # in this case because we don't need to rewrite the pathnames in the
+    # # archive.
+    # if options.release:
+    #     msg("Archiving wxPython Phoenix documentation for pythonhosted.org...")
+    #     rootname = "%s-docs-pythonhosted-%s" % (baseName, cfg.VERSION)
+    #     zipfilename = "dist/%s.zip" % rootname
+    #
+    #     if os.path.exists(zipfilename):
+    #         os.remove(zipfilename)
+    #
+    #     # with zipfile.ZipFile(zipfilename, 'w', zipfile.ZIP_DEFLATED) as zip:
+    #     #     pwd2 = pushDir('docs/html')
+    #
+    #     zipfilename = shutil.make_archive(base_name=os.path.splitext(zipfilename)[0],
+    #                                       format="zip",
+    #                                       root_dir="docs/html")
+    #     zipfilename = os.path.relpath(zipfilename)
+    #     zipfilename = zipfilename.replace('\\', '/')
+    #
+    #     if options.upload:
+    #         uploadPackage(zipfilename, options, keep=5,
+    #                       mask='%s-docs-pythonhosted-%s*' % (baseName, cfg.VER_MAJOR))
+    #
+    #     msg('Pythonhosted zip file built at %s' % zipfilename)
+
 
 
 def cmd_sip(options, args):
@@ -1168,7 +1223,7 @@ def cmd_build_wx(options, args):
         PREFIX = options.prefix
         if options.mac_framework and isDarwin:
             # TODO:  Don't hard-code this path
-            PREFIX = "/Library/Frameworks/wx.framework/Versions/%s" %  version2
+            PREFIX = "/Library/Frameworks/wx.framework/Versions/%s" %  wxversion2
         if PREFIX:
             build_options.append('--prefix=%s' % PREFIX)
 
@@ -1202,6 +1257,12 @@ def cmd_build_wx(options, args):
         if options.mac_framework and isDarwin:
             build_options.append("--mac_framework")
 
+        if not isDarwin:
+            if options.gtk2:
+                build_options.append('--gtk2')
+            if options.gtk3:
+                build_options.append('--gtk3')
+
         # Change to what will be the wxWidgets build folder
         # (Note, this needs to be after any testing for file/path existance, etc.
         # because they may be specified as relative paths.)
@@ -1213,8 +1274,6 @@ def cmd_build_wx(options, args):
     if options.extra_make:
         build_options.append('--extra_make="%s"' % options.extra_make)
 
-    if options.gtk3:
-        build_options.append('--gtk3')
 
     try:
         # Import and run the wxWidgets build script
@@ -1257,7 +1316,7 @@ def copyWxDlls(options):
         msw = getMSWSettings(options)
         cfg = Config()
 
-        ver = version3_nodot if unstable_series else version2_nodot
+        ver = wxversion3_nodot if unstable_series else wxversion2_nodot
         arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
         dlls = list()
         if not options.debug or options.both:
@@ -1323,6 +1382,9 @@ def cmd_build_py(options, args):
 
     BUILD_DIR = getBuildDir(options)
 
+    if options.release:
+        os.environ['WXPYTHON_RELEASE'] = 'yes'
+
     if not isWindows:
         WX_CONFIG = posixjoin(BUILD_DIR, 'wx-config')
         if options.use_syswx:
@@ -1333,7 +1395,7 @@ def cmd_build_py(options, args):
                 WX_CONFIG = 'wx-config' # hope it is on the PATH
 
 
-    wafBuildBase = wafBuildDir  = getWafBuildBase()
+    wafBuildBase = wafBuildDir = getWafBuildBase()
     if isWindows:
         wafBuildDir = posixjoin(wafBuildBase, 'release')
 
@@ -1360,8 +1422,13 @@ def cmd_build_py(options, args):
         build_options.append('--jobs=%s' % options.jobs)
     if options.relwithdebug:
         build_options.append('--msvc_relwithdebug')
-    if options.gtk3:
-        build_options.append('--gtk3')
+    if not isDarwin and not isWindows:
+        if options.gtk2:
+            build_options.append('--gtk2')
+            wafBuildDir = posixjoin(wafBuildBase, 'gtk2')
+        if options.gtk3:
+            build_options.append('--gtk3')
+            wafBuildDir = posixjoin(wafBuildBase, 'gtk3')
 
     build_options.append('--python="%s"' % PYTHON)
     build_options.append('--out=%s' % wafBuildDir) # this needs to be the last option
@@ -1387,9 +1454,9 @@ def cmd_build_py(options, args):
         runcmd(cmd)
 
     copyWxDlls(options)
-    if isWindows or isDarwin:
-        cfg = Config()
-        cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
+
+    cfg = Config()
+    cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
 
     print("\n------------ BUILD FINISHED ------------")
     print("To use wxPython from the build folder (without installing):")
@@ -1409,7 +1476,10 @@ def cmd_build_vagrant(options, args):
     if not options.vagrant_vms or options.vagrant_vms == 'all':
         VMs = [ 'centos-7',
                 'debian-8',
-                'fedora-24',
+                'debian-9',
+                'fedora-23',
+                'fedora-26',
+                'fedora-27',
                 'ubuntu-14.04',
                 'ubuntu-16.04',
                 ]
@@ -1472,6 +1542,33 @@ def cmd_install_py(options, args):
     runcmd(cmd)
 
 
+def cmd_build_pdbzip(options, args):
+    if isWindows and options.relwithdebug:
+        cmdTimer = CommandTimer('build_pdbzip')
+
+        if not os.path.exists('dist'):
+            os.mkdir('dist')
+
+        cfg = Config()
+        filenames = glob.glob('./wx/*.pdb')
+        if not filenames:
+            msg('No PDB files found in ./wx!')
+            return
+        arch = 'win_amd64' if PYTHON_ARCH == '64bit' else 'win32'
+        pyver = 'py{}'.format(PYSHORTVER)
+        zipname = 'dist/{}-pdb-{}-{}-{}.zip'.format(baseName, cfg.VERSION, pyver, arch)
+        from zipfile import ZipFile, ZIP_DEFLATED
+        with ZipFile(zipname, 'w', ZIP_DEFLATED) as zip:
+            for name in filenames:
+                zip.write(name)
+        msg('PDB zip file created at: {}'.format(zipname))
+
+        for name in filenames:
+            os.unlink(name)
+        msg('PDB files removed from ./wx')
+        return zipname
+
+
 def _doSimpleSetupCmd(options, args, setupCmd):
     cmdTimer = CommandTimer(setupCmd)
     VERBOSE = '--verbose' if options.verbose else ''
@@ -1480,36 +1577,48 @@ def _doSimpleSetupCmd(options, args, setupCmd):
 
 
 def cmd_bdist_egg(options, args):
+    pdbzip = cmd_build_pdbzip(options, args)
     _doSimpleSetupCmd(options, args, 'bdist_egg')
     cfg = Config()
     if options.upload:
-        filemask = "dist/%s-%s-*.egg" % (baseName, cfg.VERSION.replace('-', '_'))
+        filemask = "dist/%s-%s-*.egg" % (baseName, cfg.VERSION)
         filenames = glob.glob(filemask)
-        assert len(filenames) == 1
+        assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
-
+        if pdbzip:
+            uploadPackage(pdbzip, options, keep=24,
+                          mask='%s-pdb-%s*' % (baseName, cfg.VER_MAJOR))
 
 def cmd_bdist_wheel(options, args):
+    pdbzip = cmd_build_pdbzip(options, args)
     _doSimpleSetupCmd(options, args, 'bdist_wheel')
     cfg = Config()
     if options.upload:
-        filemask = "dist/%s-%s-*.whl" % (baseName, cfg.VERSION.replace('-', '_'))
+        filemask = "dist/%s-%s-*.whl" % (baseName, cfg.VERSION)
         filenames = glob.glob(filemask)
-        assert len(filenames) == 1
+        assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
+        if pdbzip:
+            uploadPackage(pdbzip, options, keep=24,
+                          mask='%s-pdb-%s*' % (baseName, cfg.VER_MAJOR))
 
 
 def cmd_bdist_wininst(options, args):
+    pdbzip = cmd_build_pdbzip(options, args)
     _doSimpleSetupCmd(options, args, 'bdist_wininst')
     cfg = Config()
     if options.upload:
-        filemask = "dist/%s-%s-*.exe" % (baseName, cfg.VERSION.replace('-', '_'))
+        filemask = "dist/%s-%s-*.exe" % (baseName, cfg.VERSION)
         filenames = glob.glob(filemask)
-        assert len(filenames) == 1
+        assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
+        if pdbzip:
+            uploadPackage(pdbzip, options, keep=24,
+                          mask='%s-pdb-%s*' % (baseName, cfg.VER_MAJOR))
 
 
 def cmd_bdist_msi(options, args):
+    cmd_build_pdbzip(options, args)
     _doSimpleSetupCmd(options, args, 'bdist_msi')
 
 
@@ -1527,10 +1636,9 @@ def cmd_clean_wx(options, args):
         if options.both:
             options.debug = True
         msw = getMSWSettings(options)
-        cfg = Config()
         deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
-        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version2_nodot, msw.dll_type))))
-        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version3_nodot, msw.dll_type))))
+        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion2_nodot, msw.dll_type))))
+        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion3_nodot, msw.dll_type))))
         if PYTHON_ARCH == '64bit':
             deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll_x64' % (getVisCVersion(), msw.dll_type)))
         else:
@@ -1558,8 +1666,8 @@ def cmd_clean_py(options, args):
         files += glob.glob(opj(cfg.PKGDIR, wc))
     if isWindows:
         msw = getMSWSettings(options)
-        for wc in [ 'wx*' + version2_nodot + msw.dll_type + '*.dll',
-                    'wx*' + version3_nodot + msw.dll_type + '*.dll']:
+        for wc in [ 'wx*' + wxversion2_nodot + msw.dll_type + '*.dll',
+                    'wx*' + wxversion3_nodot + msw.dll_type + '*.dll']:
             files += glob.glob(opj(cfg.PKGDIR, wc))
     delFiles(files)
 
@@ -1667,12 +1775,11 @@ def cmd_sdist(options, args):
     if not os.path.exists('dist'):
         os.mkdir('dist')
 
-    if isGit:
-        # pull out an archive copy of the repo files
-        msg('Exporting Phoenix...')
-        runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
-        msg('Exporting wxWidgets...')
-        runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (WSRC, WDEST), echoCmd=False)
+    # pull out an archive copy of the repo files
+    msg('Exporting Phoenix...')
+    runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
+    msg('Exporting wxWidgets...')
+    runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (WSRC, WDEST), echoCmd=False)
 
     # copy Phoenix's generated code into the archive tree
     msg('Copying generated files...')
@@ -1681,21 +1788,38 @@ def cmd_sdist(options, args):
         for name in glob.glob(posixjoin('sip', srcdir, '*')):
             copyFile(name, destdir)
     for wc in ['*.py', '*.pi', '*.pyi']:
-        destdir = posixjoin(PDEST, 'wx')
-        for name in glob.glob(posixjoin('wx', wc)):
+        destdir = posixjoin(PDEST, cfg.PKGDIR)
+        for name in glob.glob(posixjoin(cfg.PKGDIR, wc)):
             copyFile(name, destdir)
 
-    # Also add the waf executable
-    waf = getWafCmd()
+    # Copy the license files from wxWidgets
+    msg('Copying license files...')
+    updateLicenseFiles(cfg)
+    shutil.copytree('license', opj(PDEST, 'license'))
+    copyFile('LICENSE.txt', PDEST)
+
+    # Copy the locale message catalogs
+    msg('Copying message catalog files...')
+    cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
+    shutil.copytree(opj(cfg.PKGDIR, 'locale'), opj(PDEST, cfg.PKGDIR, 'locale'))
+
+    # Also add the waf executable, fetching it first if we don't already have it
+    getWafCmd()
     copyFile('bin/waf-%s' % wafCurrentVersion, os.path.join(PDEST, 'bin'))
 
-    # and the REV.txt if there is one
+    # And the REV.txt if there is one
     if os.path.exists('REV.txt'):
         copyFile('REV.txt', PDEST)
 
+    # Copy the Sphinx source files in the docs tree, excluding the html and
+    # sphinx/build folders, if present.
+    shutil.rmtree(opj(PDEST, 'docs'), ignore_errors=True)
+    shutil.copytree('docs', opj(PDEST, 'docs'),
+                    ignore=shutil.ignore_patterns('html', 'build', '__pycache__', 'cpp'))
+
     # Add some extra stuff to the root folder
     cmd_egg_info(options, args, egg_base=PDEST)
-    copyFile(opj(PDEST, 'wxPython_Phoenix.egg-info/PKG-INFO'),
+    copyFile(opj(PDEST, '{}.egg-info/PKG-INFO'.format(baseName)),
              opj(PDEST, 'PKG-INFO'))
 
     # build the tarball
@@ -1717,6 +1841,59 @@ def cmd_sdist(options, args):
         uploadPackage(tarfilename, options)
 
     msg("Source release built at %s" % tarfilename)
+
+
+
+def cmd_sdist_demo(options, args):
+    # Build a tarball containing the demo and samples
+    cmdTimer = CommandTimer('sdist_demo')
+    assert os.getcwd() == phoenixDir()
+
+    cfg = Config()
+
+    isGit = os.path.exists('.git')
+    if not isGit:
+        msg("Sorry, I don't know what to do in this source tree, no git workspace found.")
+        return
+
+    # make a tree for building up the archive files
+    PDEST = 'build/sdist_demo'
+    if not os.path.exists(PDEST):
+        os.makedirs(PDEST)
+
+    # and a place to put the final tarball
+    if not os.path.exists('dist'):
+        os.mkdir('dist')
+
+    # pull out an archive copy of the repo files
+    msg('Exporting Phoenix/demo...')
+    runcmd('git archive HEAD demo | tar -x -C %s' % PDEST, echoCmd=False)
+    msg('Exporting Phoenix/demo/samples...')
+    runcmd('git archive HEAD samples | tar -x -C %s' % PDEST, echoCmd=False)
+
+    # Add in the README file
+    copyFile('packaging/README-sdist_demo.txt', posixjoin(PDEST, 'README.txt'))
+
+    # build the tarball
+    msg('Archiving Phoenix demo and samples...')
+    rootname = "%s-demo-%s" % (baseName, cfg.VERSION)
+    tarfilename = "dist/%s.tar.gz" % rootname
+    if os.path.exists(tarfilename):
+        os.remove(tarfilename)
+    tarball = tarfile.open(name=tarfilename, mode="w:gz")
+    pwd = pushDir(PDEST)
+    for name in glob.glob('*'):
+        tarball.add(name, os.path.join(rootname, name))
+    tarball.close()
+    msg('Cleaning up...')
+    del pwd
+    shutil.rmtree(PDEST)
+
+    if options.upload:
+        uploadPackage(tarfilename, options, keep=5,
+                      mask='%s-demo-%s*' % (baseName, cfg.VER_MAJOR))
+
+    msg("demo and samples tarball built at %s" % tarfilename)
 
 
 
@@ -1778,7 +1955,7 @@ def cmd_setrev(options, args):
     cmdTimer = CommandTimer('setrev')
     assert os.getcwd() == phoenixDir()
 
-    if options.release_build:
+    if options.release:
         # Ignore this command for release builds, they are not supposed to
         # include current VCS revision info in the version number.
         msg('This is a release build, setting REV.txt skipped')

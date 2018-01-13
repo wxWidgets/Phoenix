@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
 import wx
-try:
-    from agw import aui
-except ImportError: # if it's not there locally, try the wxPython lib.
-    import wx.lib.agw.aui as aui
+import wx.aui as aui
 
 
 text = """\

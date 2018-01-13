@@ -36,6 +36,22 @@ def CreateBitmap(xpm):
 
 class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
 
+    def setUp(self):
+        super(lib_agw_ribbon_Tests, self).setUp()
+
+        self.realRibbonGalleryOnPaint = RB.RibbonGallery.OnPaint
+        def MonkeyPatchedOnPaint(self, event): pass
+        RB.RibbonGallery.OnPaint = MonkeyPatchedOnPaint
+
+        self.realRibbonGalleryLayout = RB.RibbonGallery.Layout
+        def MonkeyPatchedLayout(self): return False
+        RB.RibbonGallery.Layout = MonkeyPatchedLayout
+
+    def tearDown(self):
+        super(lib_agw_ribbon_Tests, self).tearDown()
+        RB.RibbonGallery.OnPaint = self.realRibbonGalleryOnPaint
+        RB.RibbonGallery.Layout = self.realRibbonGalleryLayout
+
     def test_lib_agw_ribbonCtor(self):
         rib = RB.RibbonBar(self.frame, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
 

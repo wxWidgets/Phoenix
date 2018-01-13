@@ -105,7 +105,7 @@ class FixWxPrefix(object):
     def _getCoreTopLevelNames(self):
         # Since the real wx.core module may not exist yet, and since actually
         # executing code at this point is probably a bad idea, try parsing the
-        # core.pi file and pulling the top level names from it.
+        # core.pyi file and pulling the top level names from it.
         import ast
 
         def _processItem(item, names):
@@ -120,7 +120,7 @@ class FixWxPrefix(object):
                 names.append(item.name)
 
         names = list()
-        filename = 'wx/core.pi'
+        filename = 'wx/core.pyi'
         if PY3:
             with open(filename, 'rt', encoding='utf-8') as f:
                 text = f.read()
@@ -229,7 +229,7 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
     Do common tweaks for a window class.
     """
-    # NOTE: it may be okay to just do this for top-level windows
+    # NOTE: it may be okay to just do mustHaveApp for top-level windows
     # TODO: look into that possibility
     klass.mustHaveApp()
 
@@ -260,6 +260,12 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
         # the virtual flags, and then add it back to a select few.
         removeVirtuals(klass)
         addWindowVirtuals(klass)
+
+    if not klass.findItem('GetClassDefaultAttributes'):
+        klass.addItem(extractors.WigCode("""\
+            static wxVisualAttributes
+            GetClassDefaultAttributes(wxWindowVariant variant = wxWINDOW_VARIANT_NORMAL);
+            """))
 
     if not ignoreProtected:
         for item in klass.allItems():
@@ -318,24 +324,25 @@ def fixSizerClass(klass):
         klass.find('RecalcSizes').isPureVirtual = True
 
 
-def fixBookctrlClass(klass, treeBook=False):
+def fixBookctrlClass(klass):
     """
     Add declarations of the pure virtual methods from the base class.
     """
-    klass.addItem(extractors.WigCode("""\
-        virtual int GetPageImage(size_t nPage) const;
-        virtual bool SetPageImage(size_t page, int image);
-        virtual wxString GetPageText(size_t nPage) const;
-        virtual bool SetPageText(size_t page, const wxString& text);
-        virtual int SetSelection(size_t page);
-        virtual int ChangeSelection(size_t page);
-        """))
-    if not treeBook:
-        klass.addItem(extractors.WigCode("""\
-        virtual int GetSelection() const;
-        virtual bool InsertPage(size_t index, wxWindow * page, const wxString & text,
-                                bool select = false, int imageId = NO_IMAGE);
-        """))
+    methods = [
+        ("GetPageImage", "virtual int GetPageImage(size_t nPage) const;"),
+        ("SetPageImage", "virtual bool SetPageImage(size_t page, int image);"),
+        ("GetPageText", "virtual wxString GetPageText(size_t nPage) const;"),
+        ("SetPageText", "virtual bool SetPageText(size_t page, const wxString& text);"),
+        ("GetSelection", "virtual int GetSelection() const;"),
+        ("SetSelection", "virtual int SetSelection(size_t page);"),
+        ("ChangeSelection", "virtual int ChangeSelection(size_t page);"),
+        ("HitTest", "virtual int HitTest(const wxPoint& pt, long* flags /Out/ = NULL) const;"),
+        ("InsertPage", "virtual bool InsertPage(size_t index, wxWindow * page, const wxString & text, bool select = false, int imageId = NO_IMAGE);"),
+        ]
+
+    for name, decl in methods:
+        if not klass.findItem(name):
+            klass.addItem(extractors.WigCode(decl))
 
 
 def fixHtmlSetFonts(klass):
@@ -364,6 +371,15 @@ def fixSetStatusWidths(m):
         const int* ptr = &widths->front();
         self->SetStatusWidths(widths->size(), ptr);
         """)
+
+
+def fixRefCountedClass(klass):
+    # Set the Transfer annotation on the ctors, because the C++ objects
+    # own themselves and will delete themselves when their C++ refcount
+    # drops to zero.
+    for item in klass.allItems():
+        if isinstance(item, extractors.MethodDef) and item.isCtor:
+            item.transfer = True
 
 
 
@@ -403,6 +419,8 @@ def addWindowVirtuals(klass):
         ('InformFirstDirection',     'bool InformFirstDirection(int direction, int size, int availableOtherDir)'),
         ('SetCanFocus',              'void SetCanFocus(bool canFocus)'),
         ('Destroy',                  'bool Destroy()'),
+        ('SetValidator',             'void SetValidator( const wxValidator &validator )'),
+        ('GetValidator',             'wxValidator* GetValidator()'),
 
         ## What about these?
         #bool HasMultiplePages() const
@@ -483,7 +501,7 @@ def addSipConvertToSubClassCode(klass):
 def getEtgFiles(names):
     """
     Create a list of the files from the basenames in the names list that
-    corespond to files in the etg folder.
+    correspond to files in the etg folder.
     """
     return getMatchingFiles(names, 'etg/%s.py')
 
@@ -616,6 +634,33 @@ def checkForUnitTestModule(module):
 
 #---------------------------------------------------------------------------
 
+def addGetIMMethodTemplate(module, klass, fields):
+    """
+    Add a bit of code to the module, and add a GetIM method to the klass which
+    returns an immutable representation self.
+    """
+    name = klass.pyName or klass.name
+    if name.startswith('wx'):
+        name = name[2:]
+
+    module.addPyCode("""\
+        from collections import namedtuple
+        _im_{name} = namedtuple('_im_{name}', {fields})
+        del namedtuple
+        """.format(name=name, fields=str(fields)))
+
+    klass.addPyMethod('GetIM', '(self)',
+        doc="""\
+            Returns an immutable representation of the ``wx.{name}`` object, based on ``namedtuple``.
+            
+            This new object is hashable and can be used as a dictionary key,
+            be added to sets, etc.  It can be converted back into a real ``wx.{name}``
+            with a simple statement like this: ``obj = wx.{name}(imObj)``.
+            """.format(name=name),
+        body="return _im_{name}(*self.Get())".format(name=name)
+        )
+
+#---------------------------------------------------------------------------
 
 def convertTwoIntegersTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
@@ -626,15 +671,8 @@ def convertTwoIntegersTemplate(CLASS):
        if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
            return 1;
 
-       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {{
-           int rval = 1;
-           PyObject* o1 = PySequence_ITEM(sipPy, 0);
-           PyObject* o2 = PySequence_ITEM(sipPy, 1);
-           if (!PyNumber_Check(o1) || !PyNumber_Check(o2))
-               rval = 0;
-           Py_DECREF(o1);
-           Py_DECREF(o2);
-           return rval;
+       if (wxPyNumberSequenceCheck(sipPy, 2)) {{
+           return 1;
        }}
        return 0;
    }}
@@ -666,19 +704,8 @@ def convertFourIntegersTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
-            int rval = 1;
-            PyObject* o1 = PySequence_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_ITEM(sipPy, 1);
-            PyObject* o3 = PySequence_ITEM(sipPy, 2);
-            PyObject* o4 = PySequence_ITEM(sipPy, 3);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4))
-                rval = 0;
-            Py_DECREF(o1);
-            Py_DECREF(o2);
-            Py_DECREF(o3);
-            Py_DECREF(o4);
-            return rval;
+        if (wxPyNumberSequenceCheck(sipPy, 4)) {{
+            return 1;
         }}
         return 0;
     }}
@@ -699,6 +726,8 @@ def convertFourIntegersTemplate(CLASS):
                              wxPyInt_AsLong(o3), wxPyInt_AsLong(o4));
     Py_DECREF(o1);
     Py_DECREF(o2);
+    Py_DECREF(o3);
+    Py_DECREF(o4);
     return SIP_TEMPORARY;
     """.format(**locals())
 
@@ -713,16 +742,9 @@ def convertTwoDoublesTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {{
-            int rval = 1;
-            PyObject* o1 = PySequence_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_ITEM(sipPy, 1);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2))
-                rval = 0;
-            Py_DECREF(o1);
-            Py_DECREF(o2);
-            return rval;
-        }}
+       if (wxPyNumberSequenceCheck(sipPy, 2)) {{
+           return 1;
+       }}
         return 0;
     }}
 
@@ -753,19 +775,8 @@ def convertFourDoublesTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
-            int rval = 1;
-            PyObject* o1 = PySequence_ITEM(sipPy, 0);
-            PyObject* o2 = PySequence_ITEM(sipPy, 1);
-            PyObject* o3 = PySequence_ITEM(sipPy, 2);
-            PyObject* o4 = PySequence_ITEM(sipPy, 3);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4))
-                rval = 0;
-            Py_DECREF(o1);
-            Py_DECREF(o2);
-            Py_DECREF(o3);
-            Py_DECREF(o4);
-            return rval;
+        if (wxPyNumberSequenceCheck(sipPy, 4)) {{
+            return 1;
         }}
         return 0;
     }}
@@ -784,9 +795,11 @@ def convertFourDoublesTemplate(CLASS):
     PyObject* o3 = PySequence_ITEM(sipPy, 2);
     PyObject* o4 = PySequence_ITEM(sipPy, 3);
     *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2),
-    PyFloat_AsDouble(o3), PyFloat_AsDouble(o4));
+                             PyFloat_AsDouble(o3), PyFloat_AsDouble(o4));
     Py_DECREF(o1);
     Py_DECREF(o2);
+    Py_DECREF(o3);
+    Py_DECREF(o4);
     return SIP_TEMPORARY;
     """.format(**locals())
 
@@ -860,9 +873,12 @@ public:
         sipRes = sipCpp->size();
     %End
 
-    {ItemClass}* __getitem__(ulong index);
+    {ItemClass}* __getitem__(long index);
     %MethodCode
-        if (index < sipCpp->size()) {{
+        if (0 > index)
+            index += sipCpp->size();
+
+        if (index < sipCpp->size() && (0 <= index)) {{
             {ListClass}::compatibility_iterator node = sipCpp->Item(index);
             if (node)
                 sipRes = ({ItemClass}*)node->GetData();
@@ -975,16 +991,49 @@ del _{ListClass_pyName}___repr__
 
 
 
-def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False):
+def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False, getItemCopy=False):
     moduleName = module.module
     ArrayClass_pyName = removeWxPrefix(ArrayClass)
     itemRef = '*' if itemIsPtr else '&'
     itemDeref = '' if itemIsPtr else '*'
     addrOf = '' if itemIsPtr else '&'
 
-    # *** TODO: This can probably be done in a way that is not SIP-specfic.
+    # *** TODO: This can probably be done in a way that is not SIP-specific.
     # Try creating extractor objects from scratch and attach cppMethods to
     # them as needed, etc..
+
+    if not getItemCopy:
+        getitemMeth = '''\
+        {ItemClass}{itemRef} __getitem__(long index);
+        %MethodCode
+            if (0 > index)
+                index += sipCpp->GetCount();
+
+            if ((index < sipCpp->GetCount()) && (0 <= index)) {{
+                sipRes = {addrOf}sipCpp->Item(index);
+            }}
+            else {{
+                wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
+                sipError = sipErrorFail;
+            }}
+        %End
+        '''.format(**locals())
+    else:
+        getitemMeth = '''\
+        {ItemClass}* __getitem__(long index) /Factory/;
+        %MethodCode
+            if (0 > index)
+                index += sipCpp->GetCount();
+            if ((index < sipCpp->GetCount()) && (0 <= index)) {{
+                sipRes = new {ItemClass}(sipCpp->Item(index));
+            }}
+            else {{
+                wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
+                sipError = sipErrorFail;
+            }}
+        %End
+        '''.format(**locals())
+
 
     return extractors.WigCode('''\
 class {ArrayClass}
@@ -995,16 +1044,7 @@ public:
         sipRes = sipCpp->GetCount();
     %End
 
-    {ItemClass}{itemRef} __getitem__(ulong index);
-    %MethodCode
-        if (index < sipCpp->GetCount()) {{
-            sipRes = {addrOf}sipCpp->Item(index);
-        }}
-        else {{
-            wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
-            sipError = sipErrorFail;
-        }}
-    %End
+    {getitemMeth}
 
     int __contains__({ItemClass}{itemRef} obj);
     %MethodCode
@@ -1058,9 +1098,12 @@ public:
         sipRes = sipCpp->GetCount();
     %End
 
-    {ItemClass}* __getitem__(ulong index);
+    {ItemClass}* __getitem__(long index);
     %MethodCode
-        if (index < sipCpp->GetCount()) {{
+        if (0 > index)
+            index += sipCpp->GetCount();
+
+        if ((index < sipCpp->GetCount()) && (0 <= index)) {{
             sipRes = sipCpp->Item(index);
         }}
         else {{

@@ -98,8 +98,15 @@ def run():
                                (wxIntPtr)fnSortCallBack);
     """)
 
+    # SetItemData takes a long, so lets return that type from GetItemData too,
+    # instead of a wxUIntPtr.
+    c.find('GetItemData').type = 'long'
+    c.find('SetItemPtrData').ignore()
+
+
+
     # Change the semantics of GetColumn to return the item as the return
-    # value instead of through a prameter.
+    # value instead of through a parameter.
     # bool GetColumn(int col, wxListItem& item) const;
     c.find('GetColumn').ignore()
     c.addCppMethod('wxListItem*', 'GetColumn', '(int col)',
@@ -329,7 +336,7 @@ def run():
     c = module.find('wxListEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_LIST_BEGIN_DRAG        = PyEventBinder(wxEVT_LIST_BEGIN_DRAG       , 1)
         EVT_LIST_BEGIN_RDRAG       = PyEventBinder(wxEVT_LIST_BEGIN_RDRAG      , 1)
         EVT_LIST_BEGIN_LABEL_EDIT  = PyEventBinder(wxEVT_LIST_BEGIN_LABEL_EDIT , 1)

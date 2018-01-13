@@ -15,7 +15,7 @@ from wx.lib import plot as wxplot
 
 class PlotExample(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Example of wx.lib.plot")
+        wx.Frame.__init__(self, None, title="Example of wx.lib.plot", size=(640,480))
 
         # Generate some Data
         x_data = [1, 2, 3, 4, 5, 6, 7, 8, 9]

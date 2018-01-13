@@ -2019,15 +2019,15 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         if self._is_dragging:
 
-            if self.HasCapture():
-                self.ReleaseMouse()
-
             self._is_dragging = False
             if self._drag_image:
                 self._drag_image.EndDrag()
                 del self._drag_image
                 self._drag_image = None
                 self.GetParent().Refresh()
+                
+            if self.HasCapture():
+                self.ReleaseMouse()
 
             evt = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_END_DRAG, self.GetId())
             evt.SetSelection(self.GetIdxFromWindow(self._click_tab))
@@ -4455,7 +4455,7 @@ class AuiNotebook(wx.Panel):
             dest_tabs.AddButton(clone.id, clone.location, clone.bitmap, clone.dis_bitmap)
         # create a pane info structure with the information
         # about where the pane should be added
-        pane_info = framemanager.AuiPaneInfo().Bottom().CaptionVisible(False)
+        pane_info = framemanager.AuiPaneInfo().Bottom().CaptionVisible(False).BestSize(self.CalculateNewSplitSize())
 
         if direction == wx.LEFT:
 
@@ -5061,7 +5061,8 @@ class AuiNotebook(wx.Panel):
                 new_tabs._tabs.SetArtProvider(self._tabs.GetArtProvider().Clone())
                 new_tabs._tabs.SetAGWFlags(self._agwFlags)
 
-                self._mgr.AddPane(new_tabs, framemanager.AuiPaneInfo().Bottom().CaptionVisible(False), mouse_client_pt)
+                self._mgr.AddPane(new_tabs, framemanager.AuiPaneInfo().Bottom().CaptionVisible(False).BestSize(self.CalculateNewSplitSize()),
+                                  mouse_client_pt)
                 self._mgr.Update()
                 dest_tabs = new_tabs._tabs
 
@@ -5581,7 +5582,7 @@ class AuiNotebook(wx.Panel):
 
                 else:
                     main_idx = self._tabs.GetIdxFromWindow(close_wnd)
-                    self.DeletePage(main_idx)
+                    wx.CallAfter(self.DeletePage, main_idx)
 
                 # notify owner that the tab has been closed
                 e2 = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSED, self.GetId())

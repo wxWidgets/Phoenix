@@ -1,6 +1,6 @@
 # --------------------------------------------------------------------------------- #
 # HYPERTREELIST wxPython IMPLEMENTATION
-# Inspired By And Heavily Based On wx.adv.TreeListCtrl.
+# Inspired By And Heavily Based On wx.gizmos.TreeListCtrl in Classic.
 #
 # Andrea Gavana, @ 08 May 2006
 # Latest Revision: 30 Jul 2014, 21.00 GMT
@@ -8,7 +8,7 @@
 #
 # TODO List
 #
-# Almost All The Features Of wx.adv.TreeListCtrl Are Available, And There Is
+# Almost All The Features Of wx.gizmos.TreeListCtrl Are Available, And There Is
 # Practically No Limit In What Could Be Added To This Class. The First Things
 # That Comes To My Mind Are:
 #
@@ -42,26 +42,27 @@
 
 
 """
-:class:`~wx.lib.agw.hypertreelist.HyperTreeList` is a class that mimics the behaviour of :class:`~adv.TreeListCtrl`, with
-some more functionalities.
+:class:`~wx.lib.agw.hypertreelist.HyperTreeList` is a class that combines the
+multicolumn features of a :class:`wx.ListCtrl` in report mode with the
+hierarchical features of a :class:`wx.TreeCtrl`. Although it looks more like a
+:class:`wx.ListCtrl`, the API tends to follow the API of :class:`wx.TreeCtrl`.
 
 
 Description
 ===========
 
-:class:`HyperTreeList` is a class that mimics the behaviour of :class:`adv.TreeListCtrl`, with
-almost the same base functionalities plus some more enhancements. This class does
-not rely on the native control, as it is a full owner-drawn tree-list control.
-
-:class:`HyperTreeList` is somewhat an hybrid between :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl` and :class:`adv.TreeListCtrl`.
-
-In addition to the standard :class:`adv.TreeListCtrl` behaviour this class supports:
+:class:`HyperTreeList` was originally inspired from the
+``wx.gizmos.TreeListCtrl`` class from Classic wxPython. Now in Phoenix the old
+wrapped C++ ``wxTreeListCtrl`` class is gone and this class can be used in its
+place. In addition to the features of the old ``wx.gizmos.TreeListCtrl`` this
+class supports:
 
 * CheckBox-type items: checkboxes are easy to handle, just selected or unselected
   state with no particular issues in handling the item's children;
 * Added support for 3-state value checkbox items;
-* RadioButton-type items: since I elected to put radiobuttons in :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl`, I
-  needed some way to handle them, that made sense. So, I used the following approach:
+* RadioButton-type items: since I elected to put radiobuttons in
+  :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl`, I needed some way to handle
+  them that made sense. So, I used the following approach:
 
   - All peer-nodes that are radiobuttons will be mutually exclusive. In other words,
     only one of a set of radiobuttons that share a common parent can be checked at
@@ -93,7 +94,7 @@ And a lot more. Check the demo for an almost complete review of the functionalit
 Base Functionalities
 ====================
 
-:class:`HyperTreeList` supports all the :class:`adv.TreeListCtrl` styles, except:
+:class:`HyperTreeList` supports all the :class:`wx.TreeCtrl` styles, except:
 
 - ``TR_EXTENDED``: supports for this style is on the todo list (Am I sure of this?).
 
@@ -114,7 +115,9 @@ ellipsized:
   :class:`HyperTreeList` is low (`New in version 0.9.3`).
 
 
-All the methods available in :class:`adv.TreeListCtrl` are also available in :class:`HyperTreeList`.
+Please note that most TreeCtrl-like APIs are available in this class, although
+they may not be visible to IDEs or other tools as they are automatically
+delegated to the :class:`CustomTreeCtrl` or other helper classes.
 
 
 Usage
@@ -135,12 +138,12 @@ Usage example::
 
             tree_list.AddColumn("First column")
 
-            root = tree_list.AddRoot("Root", ct_type=1)
+            root = tree_list.AddRoot("Root")
 
-            parent = tree_list.AppendItem(root, "First child", ct_type=1)
-            child = tree_list.AppendItem(parent, "First Grandchild", ct_type=1)
+            parent = tree_list.AppendItem(root, "First child")
+            child = tree_list.AppendItem(parent, "First Grandchild")
 
-            tree_list.AppendItem(root, "Second child", ct_type=1)
+            tree_list.AppendItem(root, "Second child")
 
 
     # our normal wxApp-derived class, as usual
@@ -158,8 +161,8 @@ Usage example::
 Events
 ======
 
-All the events supported by :class:`adv.TreeListCtrl` are also available in :class:`HyperTreeList`,
-with a few exceptions:
+All the events supported by :class:`wx.TreeCtrl` and some from :class:`wx.ListCtrl` are
+also available in :class:`HyperTreeList`, with a few exceptions:
 
 - ``EVT_TREE_GET_INFO`` (don't know what this means);
 - ``EVT_TREE_SET_INFO`` (don't know what this means);
@@ -181,7 +184,7 @@ Supported Platforms
 ===================
 
 :class:`HyperTreeList` has been tested on the following platforms:
-  * Windows (Windows XP), Vista, 7;
+  * Windows
   * Linux
   * Mac
 
@@ -222,7 +225,7 @@ Window Styles                  Hex Value   Description
 Events Processing
 =================
 
-This class processes the following events:
+This class processes the following events, Note that these are the same events as ``wx.ListCtrl`` and ``wx.TreeCtrl``:
 
 ============================== ==================================================
 Event Name                     Description
@@ -315,6 +318,9 @@ TREE_HITTEST_ONITEMCHECKICON  = 0x4000
 """ On the check icon, if present. """
 
 # HyperTreeList styles
+TR_DEFAULT_STYLE = wx.TR_DEFAULT_STYLE
+""" Default style for HyperTreeList. """
+
 TR_NO_BUTTONS = wx.TR_NO_BUTTONS                               # for convenience
 """ For convenience to document that no buttons are to be drawn. """
 TR_HAS_BUTTONS = wx.TR_HAS_BUTTONS                             # draw collapsed/expanded btns
@@ -356,6 +362,7 @@ TR_ELLIPSIZE_LONG_ITEMS = 0x80000                              # to ellipsize lo
 """ Flag used to ellipsize long items when the horizontal space for :class:`HyperTreeList` columns is low."""
 TR_VIRTUAL = 0x100000
 """ :class:`HyperTreeList` will have virtual behaviour. """
+
 
 # --------------------------------------------------------------------------
 # Additional HyperTreeList style to hide the header
@@ -643,7 +650,7 @@ class TreeListHeaderWindow(wx.Window):
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
         self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
 
-        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
 
 
     def SetBuffered(self, buffered):
@@ -1076,7 +1083,8 @@ class TreeListHeaderWindow(wx.Window):
             if event.LeftDown() or event.RightUp():
                 if hit_border and event.LeftDown():
                     self._isDragging = True
-                    self.CaptureMouse()
+                    if not self.HasCapture():
+                        self.CaptureMouse()
                     self._currentX = x
                     self.DrawCurrent()
                     self.SendListEvent(wx.wxEVT_COMMAND_LIST_COL_BEGIN_DRAG, event.GetPosition())
@@ -2102,11 +2110,12 @@ class TreeListMainWindow(CustomTreeCtrl):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
         self.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda evt: None)
 
         # Sets the focus to ourselves: this is useful if you have items
         # with associated widgets.
         self.SetFocus()
-        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
 
 
     def SetBuffered(self, buffered):
@@ -2120,9 +2129,9 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         self._buffered = buffered
         if buffered:
-            self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+            self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         else:
-            self.SetBackgroundStyle(wx.BG_STYLE_SYSTEM)
+            self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
 
 
     def IsVirtual(self):
@@ -3582,7 +3591,8 @@ class TreeListMainWindow(CustomTreeCtrl):
 
                 # we're going to drag this item
                 self._isDragging = True
-                self.CaptureMouse()
+                if not self.HasCapture():
+                    self.CaptureMouse()
                 self.RefreshSelected()
 
                 # in a single selection control, hide the selection temporarily
@@ -3603,8 +3613,8 @@ class TreeListMainWindow(CustomTreeCtrl):
             # end dragging
             self._dragCount = 0
             self._isDragging = False
-            if self.HasCapture():
-                self.ReleaseMouse()
+#            if self.HasCapture():
+#                self.ReleaseMouse()
             self.RefreshSelected()
 
             # send drag end event event
@@ -3665,7 +3675,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             if self._lastOnSame:
                 if item == self._current and self._curColumn != -1 and \
                    self._owner.GetHeaderWindow().IsColumnEditable(self._curColumn) and \
-                   flags & (wx.TREE_HITTEST_ONITEMLABEL | wx.TREE_HITTEST_ONITEMCOLUMN) and \
+                   flags & (wx.TREE_HITTEST_ONITEMLABEL | TREE_HITTEST_ONITEMCOLUMN) and \
                    ((self._editCtrl != None and column != self._editCtrl.column()) or self._editCtrl is None):
                     self._editTimer.Start(_EDIT_TIMER_TICKS, wx.TIMER_ONE_SHOT)
 
@@ -4102,9 +4112,14 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
 
 class HyperTreeList(wx.Control):
     """
-    :class:`HyperTreeList` is a class that mimics the behaviour of :class:`adv.TreeListCtrl`, with
-    almost the same base functionalities plus some more enhancements. This class does
-    not rely on the native control, as it is a full owner-drawn tree-list control.
+    :class:`HyperTreeList` is a generic widget that combines the multicolumn
+    features of a :class:`wx.ListCtrl` with the hierarchical features of a
+    :class:`wx.TreeCtrl` This class does not rely on native native controls,
+    as it is a full owner-drawn tree-list control.
+
+    Please note that although the methods are not explicitly defined or
+    documented here, most of the API in :class:`CustomTreeCtrl` is available
+    from this class via monkey-patched delegates.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -4119,7 +4134,7 @@ class HyperTreeList(wx.Control):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying :class:`ScrolledWindow` style;
+        :param `style`: the underlying :class:`wx.Control` style;
         :param `agwStyle`: the AGW-specific :class:`HyperTreeList` window style. This can be a combination
          of the following bits:
 

@@ -3,7 +3,7 @@
 #  WAF script for building and installing the wxPython extension modules.
 #
 # Author:      Robin Dunn
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2013 - 2017 by Total Control Software
 # License:     wxWindows License
 #-----------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ def options(opt):
     opt.load('python')
 
     opt.add_option('--debug', dest='debug', action='store_true', default=False,
-                   help='Turn on debug compile options.')
+                   help='Turn on debugger-related compile options.')
     opt.add_option('--python', dest='python', default='', action='store',
                    help='Full path to the Python executable to use.')
     opt.add_option('--wx_config', dest='wx_config', default='wx-config', action='store',
@@ -46,8 +46,10 @@ def options(opt):
                    help='One or more comma separated architecture names to be used for '
                    'the Mac builds. Should be at least a subset of the architectures '
                    'used by wxWidgets and Python')
-    opt.add_option('--gtk3', dest='gtk3', action='store_true', default=False,
-                   help='On Linux build for gtk3 (default gtk2)')
+    opt.add_option('--gtk2', dest='gtk2', action='store_true', default=False,
+                   help='On Linux build for gtk2 (default gtk3)')
+    opt.add_option('--gtk3', dest='gtk3', action='store_true', default=True,
+                   help='On Linux build for gtk3')
     opt.add_option('--msvc_arch', dest='msvc_arch', default='x86', action='store',
                    help='The architecture to target for MSVC builds. Supported values '
                    'are: "x86" or "x64"')
@@ -74,7 +76,6 @@ def configure(conf):
         msvc_version = str( distutils.msvc9compiler.get_build_version() )
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
-        conf.env['NO_MSVC_DETECT'] = 1
         conf.load('msvc')
     else:
         conf.load('compiler_cc compiler_cxx')
@@ -85,13 +86,14 @@ def configure(conf):
     conf.check_python_version(minver=(2,7,0))
     if isWindows:
         # Search for the Python headers without doing some stuff that could
-        # iccorectly fail on Windows. See my_check_python_headers below.
+        # incorrectly fail on Windows. See my_check_python_headers below.
         conf.my_check_python_headers()
     else:
         conf.check_python_headers()
 
-    # fetch and save the debug option
+    # fetch and save the debug options
     conf.env.debug = conf.options.debug
+    conf.env.msvc_relwithdebug = conf.options.msvc_relwithdebug
 
     # Ensure that the headers in siplib and Phoenix's src dir can be found
     conf.env.INCLUDES_WXPY = ['sip/siplib', 'src']
@@ -157,18 +159,17 @@ def configure(conf):
                         lst.remove(opt)
                     except ValueError:
                         pass
+                # NOTE: For --debug builds the /Z7 flag is used so the debug
+                # info will be in each object file instead of a separate PDB
+                # file. This will result in much faster builds since VC won't
+                # have to serialize access to the .pdb file. OTOH, separate
+                # PDB files are generated for the --msvc_relwithdebug option,
+                # which is handled below in the makeETGRule() function.
                 lst[1:1] = '/Od /MDd /Z7 /D_DEBUG'.split()
 
             conf.env['LINKFLAGS_PYEXT'].append('/DEBUG')
             conf.env['LIB_PYEXT'][0] += '_d'
 
-        # And similar tweaks for non-debug builds with the relwithdebug flag
-        # turned on.
-        elif conf.options.msvc_relwithdebug:
-            for listname in ['CFLAGS_PYEXT', 'CXXFLAGS_PYEXT']:
-                lst = conf.env[listname]
-                lst[1:1] = ['/Z7']
-            conf.env['LINKFLAGS_PYEXT'].append('/DEBUG')
 
     else:
         # Configuration stuff for non-Windows ports using wx-config
@@ -252,10 +253,13 @@ def configure(conf):
         # wxWidgets.  If we ever support other ports then this code will need
         # to be adjusted.
         if not isDarwin:
-            if conf.options.gtk3:
-                gtkflags = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
-            else:
+            if conf.options.gtk2:
+                conf.options.gtk3 = False
+            if conf.options.gtk2:
                 gtkflags = os.popen('pkg-config gtk+-2.0 --cflags', 'r').read()[:-1]
+            else:
+                gtkflags = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
+
             conf.env.CFLAGS_WX   += gtkflags.split()
             conf.env.CXXFLAGS_WX += gtkflags.split()
 
@@ -292,7 +296,7 @@ def configure(conf):
 
         # Some Mac-specific stuff
         if isDarwin:
-            conf.env.MACOSX_DEPLOYMENT_TARGET = "10.5"
+            conf.env.MACOSX_DEPLOYMENT_TARGET = "10.6"
 
             if conf.options.mac_arch:
                 conf.env.ARCH_WXPY = conf.options.mac_arch.split(',')
@@ -416,8 +420,6 @@ def my_check_python_headers(conf):
 
     if env.CC_NAME == "msvc":
         from distutils.msvccompiler import MSVCCompiler
-        # setuptools is imported to address https://bugs.python.org/issue23246
-        import setuptools
         dist_compiler = MSVCCompiler()
         dist_compiler.initialize()
         env.append_value('CFLAGS_PYEXT', dist_compiler.compile_options)
@@ -471,41 +473,40 @@ def build(bld):
     sys.path.insert(0, thisdir)
 
     from distutils.file_util import copy_file
-    from distutils.dir_util  import mkpath
-    from buildtools.config   import opj
+    from buildtools.config   import opj, updateLicenseFiles
 
     cfg.finishSetup(bld.env.wx_config)
 
-    # update the license files
-    mkpath('license')
-    for filename in ['preamble.txt', 'licence.txt', 'licendoc.txt', 'lgpl.txt']:
-        copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename), update=1, verbose=1)
+    # Copy the license files from wxWidgets
+    updateLicenseFiles(cfg)
 
     # create the package's __version__ module
     open(opj(cfg.PKGDIR, '__version__.py'), 'w').write(
-        "# This file was generated by Phoenix's wscript.\n\n"
+        "# This file was generated by wxPython's wscript.\n\n"
         "VERSION_STRING    = '%(VERSION)s'\n"
         "MAJOR_VERSION     = %(VER_MAJOR)s\n"
         "MINOR_VERSION     = %(VER_MINOR)s\n"
-        "RELEASE_NUMBER    = %(VER_RELEASE)s\n\n"
+        "RELEASE_NUMBER    = %(VER_RELEASE)s\n"
+        "BUILD_TYPE        = '%(BUILD_TYPE)s'\n\n"
         "VERSION = (MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER, '%(VER_FLAGS)s')\n"
         % cfg.__dict__)
     # and one for the demo folder too
     open('demo/version.py', 'w').write(
-        "# This file was generated by Phoenix's wscript.\n\n"
+        "# This file was generated by wxPython's wscript.\n\n"
         "VERSION_STRING = '%(VERSION)s'\n"
         % cfg.__dict__)
 
 
     # copy the wx locale message catalogs to the package dir
-    if isWindows or isDarwin:
-        cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
+    cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
 
-    # copy __init__.py
-    copy_file('src/__init__.py', cfg.PKGDIR, update=1, verbose=1)
+    # copy .py files that need to go into the root wx package dir
+    for name in ['src/__init__.py', 'src/gizmos.py',]:
+        copy_file(name, cfg.PKGDIR, update=1, verbose=1)
 
 
     # Create the build tasks for each of our extension modules.
+    addRelwithdebugFlags(bld, 'siplib')
     siplib = bld(
         features = 'c cxx cshlib cxxshlib pyext',
         target   = makeTargetName(bld, 'siplib'),
@@ -513,13 +514,14 @@ def build(bld):
                     'sip/siplib/array.c',
                     'sip/siplib/bool.cpp',
                     'sip/siplib/descriptors.c',
+                    'sip/siplib/int_convertors.c',
                     'sip/siplib/objmap.c',
                     'sip/siplib/qtlib.c',
                     'sip/siplib/siplib.c',
                     'sip/siplib/threads.c',
                     'sip/siplib/voidptr.c',
                     ],
-        uselib   = 'WX WXPY',
+        uselib   = 'siplib WX WXPY',
     )
     makeExtCopyRule(bld, 'siplib')
 
@@ -577,7 +579,8 @@ def makeTargetName(bld, name):
 def makeExtCopyRule(bld, name):
     name = makeTargetName(bld, name)
     src = bld.env.pyext_PATTERN % name
-    tgt = 'pkg.%s' % name  # just a name to be touched to serve as a timestamp of the copy
+    # just a name to be touched to serve as the timestamp of the copy
+    tgt = 'pkg.%s' % os.path.splitext(src)[0]
     bld(rule=copyFileToPkg, source=src, target=tgt, after=name)
 
 
@@ -590,6 +593,11 @@ def copyFileToPkg(task):
     open(tgt, "wb").close() # essentially just a unix 'touch' command
     tgt = opj(cfg.PKGDIR, os.path.basename(src))
     copy_file(src, tgt, verbose=1)
+    if isWindows and task.env.msvc_relwithdebug:
+        # also copy the .pdb file
+        src = src.replace('.pyd', '.pdb')
+        tgt = opj(cfg.PKGDIR, os.path.basename(src))
+        copy_file(src, tgt, verbose=1)
     return 0
 
 
@@ -602,16 +610,36 @@ def _copyEnvGroup(env, srcPostfix, destPostfix):
             newKey = key[:-len(srcPostfix)] + destPostfix
             env[newKey] = copy.copy(env[key])
 
+
 # Make extension module build rules using info gleaned from an ETG script
 def makeETGRule(bld, etgScript, moduleName, libFlags):
     from buildtools.config   import loadETG, getEtgSipCppFiles
+
+    addRelwithdebugFlags(bld, moduleName)
     rc = ['src/wxc.rc'] if isWindows else []
     etg = loadETG(etgScript)
     bld(features='c cxx cxxshlib pyext',
         target=makeTargetName(bld, moduleName),
         source=getEtgSipCppFiles(etg) + rc,
-        uselib='{} WXPY'.format(libFlags),
+        uselib='{} {} WXPY'.format(moduleName, libFlags),
         )
     makeExtCopyRule(bld, moduleName)
+
+
+# Add flags to create .pdb files for debugging with MSVC
+def addRelwithdebugFlags(bld, moduleName):
+    if isWindows and bld.env.msvc_relwithdebug:
+        compile_flags = ['/Zi', '/Fd_tmp_{}.pdb'.format(moduleName)]
+        if sys.version_info > (3,5):
+            # It looks like the /FS flag doesn't exist in the compilers used
+            # by the earlier Pythons. But it also appears that it isn't needed
+            # there either.  :)
+            # TODO: It would be better to base this on the actual compiler being
+            # used, not the Python version
+            compile_flags.append('/FS')
+        bld.env['CFLAGS_{}'.format(moduleName)] = compile_flags
+        bld.env['CXXFLAGS_{}'.format(moduleName)] = compile_flags
+        bld.env['LINKFLAGS_{}'.format(moduleName)] = ['/DEBUG']
+
 
 #-----------------------------------------------------------------------------

@@ -48,6 +48,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.find('~wxRefCounter').ignore(False)
     c.addPrivateCopyCtor()
+    tools.fixRefCountedClass(c)
 
 
     #--------------------------------------------------

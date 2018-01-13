@@ -205,7 +205,8 @@ def main(wxDir, args):
         "jobs"          : (defJobs, "Number of jobs to run at one time in make. Default: %s" % defJobs),
         "install"       : (False, "Install the toolkit to the installdir directory, or the default dir."),
         "installdir"    : ("", "Directory where built wxWidgets will be installed"),
-        "gtk3"          : (False, "On Linux build for gtk3 (default gtk2)"),
+        "gtk2"          : (False, "On Linux build for gtk2 (default gtk3"),
+        "gtk3"          : (True,  "On Linux build for gtk3"),
         "mac_distdir"   : (None, "If set on Mac, will create an installer package in the specified dir."),
         "mac_universal_binary"
                         : ("", "Comma separated list of architectures to include in the Mac universal binary"),
@@ -268,8 +269,15 @@ def main(wxDir, args):
         elif options.osx_carbon:
             configure_opts.append("--with-osx_carbon")
 
-        if options.gtk3:
-            configure_opts.append("--with-gtk=3")
+        if options.gtk2:
+            options.gtk3 = False
+
+        if not sys.platform.startswith("darwin"):
+            if options.gtk3:
+                configure_opts.append("--with-gtk=3")
+
+            if options.gtk2:
+                configure_opts.append("--with-gtk=2")
 
         wxpy_configure_opts = [
                             "--with-opengl",
@@ -290,16 +298,14 @@ def main(wxDir, args):
         else:
             wxpy_configure_opts.append("--with-sdl")
 
-        # Try to use use lowest available SDK back to 10.5. Both Carbon and
-        # Cocoa builds require at least the 10.5 SDK now. We only add it to
-        # the wxpy options because this is a hard-requirement for wxPython,
-        # but other cases it is optional and is left up to the developer.
-        # TODO: there should be a command line option to set the SDK...
+        # Set the minimum supported OSX version, and find the oldest SDK
+        # version present on the build machine.
+        # TODO: should there be a command line option to set the SDK?
         if sys.platform.startswith("darwin"):
+            wxpy_configure_opts.append("--with-macosx-version-min=10.6")
             for xcodePath in getXcodePaths():
                 sdks = [ xcodePath+"/SDKs/MacOSX10.{}.sdk".format(n)
-                         for n in range(5, 15) ]
-
+                         for n in range(6, 15) ]
                 # use the lowest available sdk on the build machine
                 for sdk in sdks:
                     if os.path.exists(sdk):
@@ -397,6 +403,7 @@ def main(wxDir, args):
             flags["wxUSE_POSTSCRIPT"] = "1"
             flags["wxUSE_AFM_FOR_POSTSCRIPT"] = "0"
             flags["wxUSE_DATEPICKCTRL_GENERIC"] = "1"
+            flags["wxUSE_IFF"] = "1"
 
             # Remove this when Windows XP finally dies, or when there is a
             # solution for ticket #13116...

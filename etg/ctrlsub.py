@@ -62,6 +62,7 @@ def run():
     # which we have a MappedType for, so make the ClientData methods just be
     # aliases for ClientObjects. From the Python programmer's perspective they
     # would be virtually the same anyway.
+    c.find('SetClientObject.data').transfer = True
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
     c.find('GetClientObject').pyName = 'GetClientData'

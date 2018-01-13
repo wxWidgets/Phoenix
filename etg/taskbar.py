@@ -38,7 +38,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_TASKBAR_MOVE = wx.PyEventBinder (         wxEVT_TASKBAR_MOVE )
         EVT_TASKBAR_LEFT_DOWN = wx.PyEventBinder (    wxEVT_TASKBAR_LEFT_DOWN )
         EVT_TASKBAR_LEFT_UP = wx.PyEventBinder (      wxEVT_TASKBAR_LEFT_UP )
@@ -74,6 +74,15 @@ def run():
         doc="""\
             Show a balloon notification (the icon must have been already
             initialized using SetIcon).  Only implemented for Windows.
+
+            The ``title`` and ``text`` parameters are limited to 63 and 255
+            characters respectively, ``msec`` is the timeout, in milliseconds,
+            before the balloon disappears (will be clamped down to the allowed
+            10-30s range by Windows if it's outside it) and ``flags`` can
+            include wxICON_ERROR/INFO/WARNING to show a corresponding icon.
+
+            Returns ``True`` if balloon was shown, ``False`` on error (incorrect
+            parameters or function unsupported by OS).
             """,
         body="""\
             #ifdef __WXMSW__

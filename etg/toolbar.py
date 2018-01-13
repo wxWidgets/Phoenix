@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools.extractors import ExtractorError
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -64,6 +65,7 @@ def run():
     gcd.type = 'wxPyUserData*'
     gcd.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetClientData());')
 
+    c.find('SetDropdownMenu.menu').transfer = True
 
 
     #---------------------------------------------
@@ -80,10 +82,22 @@ def run():
     c.find('AddTool.tool').transfer = True
     c.find('InsertTool.tool').transfer = True
 
+    # Conform the help text parameters.
+    m = c.find('AddTool')
+    for method in m.all():
+        for helper in ('shortHelp', 'longHelp'):
+            try:
+                param = method.find("{}String".format(helper))
+                param.name = helper
+            except ExtractorError:
+                pass
+
     c.find('OnLeftClick').ignore()
     c.find('OnMouseEnter').ignore()
     c.find('OnRightClick').ignore()
     c.find('OnLeftClick').ignore()
+
+    c.find('SetDropdownMenu.menu').transfer = True
 
 
     # Add some deprecated methods to aid with Classic compatibility.

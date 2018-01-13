@@ -15,6 +15,17 @@ class grid_Tests(wtc.WidgetTestCase):
     # will probably be easier to test features and interoperability between
     # the classes in a non-unitest situation. See Phoenix/samples/grid
 
+    def test_grid00(self):
+        wx.grid.GRID_AUTOSIZE
+        wx.grid.GRID_COLUMN
+        wx.grid.GRID_ROW
+        wx.grid.GRID_DRAW_ROWS_HEADER
+        wx.grid.GRID_DRAW_COLS_HEADER
+        wx.grid.GRID_DRAW_CELL_LINES
+        wx.grid.GRID_DRAW_BOX_RECT
+        wx.grid.GRID_DRAW_SELECTION
+        wx.grid.GRID_DRAW_DEFAULT
+
 
     def test_grid01(self):
         c1 = wx.grid.GridCellCoords()
@@ -301,6 +312,58 @@ class grid_Tests(wtc.WidgetTestCase):
 
     def test_grid41(self):
         wx.grid.Grid.SetCellHighlightPenWidth  # Does it exist
+
+
+    def test_grid42(self):
+        # old names
+        wx.grid.Grid.wxGridSelectCells
+        wx.grid.Grid.wxGridSelectRows
+        wx.grid.Grid.wxGridSelectColumns
+        wx.grid.Grid.wxGridSelectRowsOrColumns
+
+
+    def test_grid43(self):
+        # new names
+        wx.grid.Grid.SelectCells
+        wx.grid.Grid.SelectRows
+        wx.grid.Grid.SelectColumns
+        wx.grid.Grid.SelectRowsOrColumns
+
+
+    def test_GetIM(self):
+        # Test the immutable version returned by GetIM
+        obj = wx.grid.GridCellCoords(1,2)
+        im = obj.GetIM()
+        assert isinstance(im, tuple)
+        assert im.Row == obj.Row
+        assert im.Col == obj.Col
+        obj2 = wx.grid.GridCellCoords(im)
+        assert obj == obj2
+
+
+    def test_grid44(self):
+        g = wx.grid.Grid(self.frame)
+        g.CreateGrid(10,10)
+        g.SelectBlock((1,1), (5,5))
+
+        tl = g.GetSelectionBlockTopLeft()
+        br = g.GetSelectionBlockBottomRight()
+
+        assert tl[0].Get() == (1,1)
+        assert br[0].Get() == (5,5)
+
+
+    def test_grid45(self):
+        # See issue #297
+        g = wx.grid.Grid(self.frame)
+        g.CreateGrid(10,10)
+        g.SelectBlock((1,1), (5,5))
+
+        tl = g.GetSelectionBlockTopLeft()[0]
+        br = g.GetSelectionBlockBottomRight()[0]
+
+        assert tl.Get() == (1,1)
+        assert br.Get() == (5,5)
 
 
 #---------------------------------------------------------------------------

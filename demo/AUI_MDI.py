@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
 import wx
-try:
-    from agw import aui
-except ImportError: # if it's not there locally, try the wxPython lib.
-    import wx.lib.agw.aui as aui
+import wx.aui as aui
+
 
 
 #----------------------------------------------------------------------
@@ -17,10 +15,10 @@ class ParentFrame(aui.AuiMDIParentFrame):
                                           size=(640,480),
                                           style=wx.DEFAULT_FRAME_STYLE)
         self.count = 0
-        mb = self.MakeMenuBar()
-        self.SetMenuBar(mb)
+        self.mb = self.MakeMenuBar()
+        self.SetMenuBar(self.mb)
         self.CreateStatusBar()
-        self.Bind(wx.EVT_CLOSE, self.OnDoClose)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
     def MakeMenuBar(self):
         mb = wx.MenuBar()
@@ -35,13 +33,16 @@ class ParentFrame(aui.AuiMDIParentFrame):
     def OnNewChild(self, evt):
         self.count += 1
         child = ChildFrame(self, self.count)
-        child.Show()
+        #child.Show()
 
     def OnDoClose(self, evt):
+        self.Close()
+
+    def OnCloseWindow(self, evt):
         # Close all ChildFrames first else Python crashes
         for m in self.GetChildren():
             if isinstance(m, aui.AuiMDIClientWindow):
-                for k in m.GetChildren():
+                for k in list(m.GetChildren()):
                     if isinstance(k, ChildFrame):
                         k.Close()
         evt.Skip()

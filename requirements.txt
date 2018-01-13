@@ -1,4 +1,5 @@
 # Phoenix build and test requirements
+appdirs
 setuptools
 six
 wheel

@@ -15,7 +15,7 @@ import glob
 import random
 
 # Phoenix-specific imports
-from buildtools.config import copyIfNewer, writeIfChanged, newer, getVcsRev, textfile_open
+from buildtools.config import Config, writeIfChanged, newer, textfile_open, runcmd
 from etgtools.item_module_map import ItemModuleMap
 
 from . import templates
@@ -445,6 +445,11 @@ def makeModuleIndex(sphinxDir, file):
     names = list(classes.keys())
     names.sort(key=lambda n: imm.get_fullname(n))
 
+    # Workaround to sort names in a case-insensitive way
+    lower_to_name = {}
+    for name in names:
+        lower_to_name[name.lower()] = name
+    
     text = ''
     if module:
         text += '\n\n.. module:: %s\n\n' % module
@@ -455,7 +460,11 @@ def makeModuleIndex(sphinxDir, file):
     text += '%-80s **Short Description**\n' % '**Class**'
     text += 80*'=' + ' ' + 80*'=' + '\n'
 
-    for cls in names:
+    lower_names = list(lower_to_name.keys())
+    lower_names.sort()
+    
+    for lower in lower_names:
+        cls = lower_to_name[lower]
         out = classes[cls]
         if '=====' in out:
             out = ''
@@ -464,7 +473,8 @@ def makeModuleIndex(sphinxDir, file):
     text += 80*'=' + ' ' + 80*'=' + '\n\n'
 
     contents = []
-    for cls in names:
+    for lower in lower_names:
+        cls = lower_to_name[lower]
         contents.append(wx2Sphinx(cls)[1])
 
     for enum in enum_base:
@@ -647,7 +657,7 @@ def addJavaScript(text):
 
 # ----------------------------------------------------------------------- #
 
-def postProcess(folder):
+def postProcess(folder, options):
 
     fileNames = glob.glob(folder + "/*.html")
 
@@ -678,8 +688,8 @@ def postProcess(folder):
 
         split = os.path.split(files)[1]
 
-        if split in ['index.html', 'main.html']:
-            text = changeSVNRevision(text)
+        if split == 'index.html':
+            text = changeWelcomeText(text, options)
         else:
             text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
 
@@ -734,11 +744,27 @@ def postProcess(folder):
 
 # ----------------------------------------------------------------------- #
 
-def changeSVNRevision(text):
-    REVISION = getVcsRev()
-    text = text.replace('|TODAY|', TODAY)
-    text = text.replace('|VCSREV|', REVISION)
+
+def changeWelcomeText(text, options):
+    cfg = Config(noWxConfig=True)
+
+    if options.release:
+        welcomeText = """
+            Welcome! This is the API reference documentation for the <b>{version}
+            release</b> of wxPython Phoenix, built on {today}.
+            """.format(version=cfg.VERSION, today=TODAY)
+    else:
+        revhash  = runcmd('git rev-parse --short HEAD', getOutput=True, echoCmd=False)
+        welcomeText = """
+            Welcome! This is the API documentation for the wxPython Phoenix
+            <b>pre-release snapshot</b> build <b>{version}</b>, last updated {today}
+            from git revision: 
+            <a href="https://github.com/wxWidgets/Phoenix/commit/{revhash}">{revhash}</a>.
+            """.format(version=cfg.VERSION, today=TODAY, revhash=revhash)
+    text = text.replace('!WELCOME!', welcomeText)
     return text
+
+
 
 
 def tooltipsOnInheritance(text, class_summary):

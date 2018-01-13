@@ -96,6 +96,7 @@ See Also
 
 
 import wx
+from functools import cmp_to_key
 
 import six
 
@@ -766,7 +767,7 @@ class RibbonBar(RibbonControl):
                         # Sneaky obj array trickery to not copy the tab descriptors
                         sorted_pages.append(info)
 
-                    sorted_pages.sort(self.OrderPageTabInfoBySmallWidthAsc)
+                    sorted_pages.sort(key=cmp_to_key(self.OrderPageTabInfoBySmallWidthAsc))
                     width -= tabsep*(numtabs - 1)
 
                     for i, info in enumerate(self._pages):

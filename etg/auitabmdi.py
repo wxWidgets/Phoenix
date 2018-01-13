@@ -37,12 +37,15 @@ def run():
     c = module.find('wxAuiMDIParentFrame')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
+    c.find('SetMenuBar.menuBar').transfer = True
+    c.find('SetArtProvider.provider').transfer = True
 
 
     c = module.find('wxAuiMDIChildFrame')
     tools.fixTopLevelWindowClass(c)
     tools.fixSetStatusWidths(c.find('SetStatusWidths'))
-
+    c.find('SetMenuBar.menuBar').transfer = True
+    c.find('Show').isVirtual = True
 
     c = module.find('wxAuiMDIClientWindow')
     tools.fixWindowClass(c)

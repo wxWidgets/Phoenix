@@ -38,13 +38,10 @@ _demoPngs = ["overview", "recent", "frame", "dialog", "moredialog", "core",
 _treeList = [
     # new stuff
     ('Recent Additions/Updates', [
-        'FileCtrl',
-        'Overlay',
-        'RearrangeDialog',
-        'RichMessageDialog',
-        'ToolTip',
-        'TimePickerCtrl',
-        'BannerWindow',
+        'Simplebook',
+        'LEDNumberCtrl',
+        'DynamicSashWindow',
+        'TreeListCtrl',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -136,6 +133,7 @@ _treeList = [
         'FlatNotebook',
         'Listbook',
         'Notebook',
+        'Simplebook',
         'Toolbook',
         'Treebook',
     ]),
@@ -149,12 +147,12 @@ _treeList = [
         'GenericButtons',
         'GenericDirCtrl',
         'ItemsPicker',
-        #'LEDNumberCtrl',  # TODO
+        'LEDNumberCtrl',
         'MultiSash',
         'PlateButton',
         'PopupControl',
         'PyColourChooser',
-        'TreeListCtrl',  # TODO or toss it?
+        'TreeListCtrl',
     ]),
 
     # controls coming from other libraries
@@ -170,7 +168,7 @@ _treeList = [
         'ComboCtrl',
         'ContextHelp',
         'DatePickerCtrl',
-        #'DynamicSashWindow',  # TODO
+        'DynamicSashWindow',
         'EditableListBox',
         'ExpandoTextCtrl',
         'FancyText',
@@ -194,7 +192,6 @@ _treeList = [
         'ResizeWidget',
         'RichTextCtrl',
         'ScrolledPanel',
-        #'SplitTree',         # TODO or toss it?
         'StyledTextCtrl_1',
         'StyledTextCtrl_2',
         'TablePrint',

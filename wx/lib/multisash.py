@@ -698,6 +698,7 @@ class EmptyChild(wx.Window):
 
 #----------------------------------------------------------------------
 
+# TODO: Switch to wx.Overlay instead of screen DC
 
 def DrawSash(win,x,y,direction):
     dc = wx.ScreenDC()

@@ -16,16 +16,13 @@ import os
 import glob
 import fnmatch
 import re
-import tempfile
 import shutil
-import codecs
 import subprocess
 import platform
 
 from distutils.file_util import copy_file
 from distutils.dir_util  import mkpath
 from distutils.dep_util  import newer
-from distutils.spawn     import spawn
 
 import distutils.sysconfig
 
@@ -53,7 +50,7 @@ class Configuration(object):
     # wx-config command will be assembled based on version, port,
     # etc. and it will be looked for on the default $PATH.
 
-    WXPORT = 'gtk2'
+    WXPORT = 'gtk3'
     # On Linux/Unix there are several ports of wxWidgets available.
     # Setting this value lets you select which will be used for the
     # wxPython build.  Possibilities are 'gtk', 'gtk2', 'gtk3' and 'x11'.
@@ -201,7 +198,7 @@ class Configuration(object):
 
         #---------------------------------------
         # Posix (wxGTK, wxMac or mingw32) settings
-        elif os.name == 'posix' or COMPILER == 'mingw32':
+        elif os.name == 'posix' or self.COMPILER == 'mingw32':
             self.Verify_WX_CONFIG()
             self.includes += ['include']
             self.defines = [ #('NDEBUG',),  # using a 1-tuple makes it do an undef
@@ -341,19 +338,26 @@ class Configuration(object):
         if os.path.exists('REV.txt'):
             f = open('REV.txt')
             self.VER_FLAGS += f.read().strip()
+            self.BUILD_TYPE = 'snapshot'
             f.close()
+        elif os.environ.get('WXPYTHON_RELEASE') == 'yes':
+            self.BUILD_TYPE = 'release'
+        else:
+            self.BUILD_TYPE = 'development'
 
         self.VERSION = "%s.%s.%s%s" % (self.VER_MAJOR,
                                        self.VER_MINOR,
                                        self.VER_RELEASE,
                                        self.VER_FLAGS)
 
-        self.WXDLLVER = '%d%d' % (self.VER_MAJOR, self.VER_MINOR)
+        self.WXDLLVER = '%d%d' % (self.wxVER_MAJOR, self.wxVER_MINOR)
 
 
     def parseCmdLine(self):
         self.debug = '--debug' in sys.argv or '-g' in sys.argv
 
+        if '--gtk2' in sys.argv:
+            self.WXPORT = 'gtk2'
         if '--gtk3' in sys.argv:
             self.WXPORT = 'gtk3'
 
@@ -389,7 +393,7 @@ class Configuration(object):
                 port = "x11univ"
             flags =  ' --toolkit=%s' % port
             flags += ' --unicode=yes'
-            flags += ' --version=%s.%s' % (self.VER_MAJOR, self.VER_MINOR)
+            flags += ' --version=%s.%s' % (self.wxVER_MAJOR, self.wxVER_MINOR)
 
             searchpath = os.environ["PATH"]
             for p in searchpath.split(':'):
@@ -416,7 +420,7 @@ class Configuration(object):
 
 
     def build_locale_dir(self, destdir, verbose=1):
-        """Build a locale dir under the wxPython package. Used for MSW and OSX"""
+        """Build a locale dir under the wxPython package."""
         moFiles = glob.glob(opj(self.WXDIR, 'locale', '*.mo'))
         for src in moFiles:
             lang = os.path.splitext(os.path.basename(src))[0]
@@ -907,3 +911,21 @@ def getToolsPlatformName(useLinuxBits=False):
         if useLinuxBits:
             name += platform.architecture()[0][:2]
     return name
+
+
+def updateLicenseFiles(cfg):
+    from distutils.file_util import copy_file
+    from distutils.dir_util  import mkpath
+
+    # Copy the license files from wxWidgets
+    mkpath('license')
+    for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt', 'gpl.txt']:
+        copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename), update=1, verbose=1)
+
+    # Combine the relevant files into a single LICENSE.txt file
+    text = ''
+    for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt']:
+        with open(opj('license', filename), 'r') as f:
+            text += f.read() + '\n\n'
+    with open('LICENSE.txt', 'w') as f:
+        f.write(text)

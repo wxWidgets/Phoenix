@@ -21,7 +21,6 @@
 %ModuleCode
 // wxPython's API helper and utility functions
 
-
 //--------------------------------------------------------------------------
 // wxString conversion
 
@@ -31,8 +30,9 @@
 static wxString i_Py2wxString(PyObject* source)
 {
 #if wxUSE_UNICODE_WCHAR == 0
-#error wxString converison can only handle WCHAR wxStrings currently
+#error wxString conversion can only handle WCHAR wxStrings currently
 #endif
+    PyErr_Clear();
     PyObject* uni = source;
     if (PyBytes_Check(source)) {
         // if it's a string object convert it to unicode first, assumes utf-8
@@ -174,6 +174,7 @@ static void i_wxPyEndBlockThreads(wxPyBlock_t blocked)
 
 //--------------------------------------------------------------------------
 // Commonly used helpers for converting small sequences of numbers
+// TODO: Are these still needed?
 
 // A helper for converting a 2 element sequence to a pair of integers
 static bool i_wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
@@ -283,6 +284,8 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
 {
     wxVariant value;
 
+    PyErr_Clear();
+
     if (PyBytes_Check(obj) || PyUnicode_Check(obj))
         value = Py2wxString(obj);
 
@@ -306,8 +309,10 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
         int state = 0;
         int isErr = 0;
         ptr = (wxDateTime*)sipConvertToType(obj, sipType_wxDateTime, NULL, 0, &state, &isErr);
-        value = *ptr;
-        sipReleaseType(ptr, sipType_wxDateTime, state);
+        if (!isErr) {
+            value = *ptr;
+            sipReleaseType(ptr, sipType_wxDateTime, state);
+        }
     }
 
     else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxBitmap"))) {
@@ -339,13 +344,17 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
         int state = 0;
         int isErr = 0;
         ptr = (wxArrayString*)sipConvertToType(obj, sipType_wxArrayString, NULL, 0, &state, &isErr);
-        value = *ptr;
-        sipReleaseType(ptr, sipType_wxArrayString, state);
+        if (!isErr) {
+            value = *ptr;
+            sipReleaseType(ptr, sipType_wxArrayString, state);
+        }
     }
 
-    else
+    else {
         // Just use the PyObject itself
+        PyErr_Clear();
         value = new wxVariantDataPyObject(obj);
+    }
 
     return value;
 }
@@ -429,14 +438,152 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
 // (Initialized in wxPyCoreModuleInject)
 PyObject* wxPyNoAppError = NULL;
 
-bool i_wxPyCheckForApp() {
+bool i_wxPyCheckForApp(bool raiseException) {
     if (wxTheApp != NULL)
         return true;
     else {
-        PyErr_SetString(wxPyNoAppError, "The wx.App object must be created first!");
+        if (raiseException)
+            PyErr_SetString(wxPyNoAppError, "The wx.App object must be created first!");
         return false;
     }
 }
+
+//--------------------------------------------------------------------------
+// Make a memory view object from a C buffer and size.
+
+PyObject* i_wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) {
+    // GIL should already be held
+    if (ptr && len) {
+        Py_buffer view;
+        int flags = PyBUF_FORMAT|PyBUF_ND;
+        if (!readOnly)
+            flags |= PyBUF_WRITABLE;
+        PyBuffer_FillInfo(&view, NULL, ptr, len, readOnly ? 1:0, flags);
+        return PyMemoryView_FromBuffer(&view);
+    } else {
+        Py_INCREF(Py_None); return Py_None;
+        // return PyBytes_FromString("");    TODO: None or an empty string?
+    }
+
+//    // TODO: Consider using a sip.array object instead, like this:
+//    // Create a sip.array of bytes, and then convert to a memoryview which is
+//    // basically the same thing but is a documented built-in Python type
+//    int flags = 0;
+//    if (readOnly)
+//        flags |= SIP_READ_ONLY;
+//    PyObject* array = sipConvertToArray(ptr, "B", len, flags);
+//    return array;
+}
+
+
+//--------------------------------------------------------------------------
+// Check if an object is suitable for conversion to various "value" types that
+// can be created from a sequence of numbers, such as wx.Point, wx.Colour,
+// wx.Rect, etc.
+
+bool i_wxPyNumberSequenceCheck(PyObject* obj, int reqLength=-1) {
+    // Used in the various places where a sequence of numbers can be converted
+    // to a wx type, like wxPoint, wxSize, wxColour, etc. Returns true if the
+    // object is a Tuple, List or numpy Array of the proper length.
+
+    // tuples or lists are easy
+    bool isFast = (PyTuple_Check(obj) || PyList_Check(obj));
+
+    if (!isFast ) {
+        // If it's not one of those, then check for an array.
+        // It's probably not a good idea to do it this way, but this allows us
+        // to check if the object is a numpy array without requiring that
+        // numpy be imported even for those applications that are not using it.
+        if (strcmp(obj->ob_type->tp_name, "numpy.ndarray") != 0)
+            return false;
+    }
+
+    // Bail out here if the length isn't given
+    if (reqLength == -1)
+        return true;
+
+    // Now check that the length matches the expected length
+    if (PySequence_Length(obj) != reqLength)
+        return false;
+
+    // Check that each item is a number
+    for (int i=0; i<reqLength; i+=1) {
+        PyObject* item;
+        if (isFast)
+            item = PySequence_Fast_GET_ITEM(obj, i);
+        else
+            item = PySequence_ITEM(obj, i);
+        bool isNum = PyNumber_Check(item);
+        if (!isFast)
+            Py_DECREF(item);
+        if (!isNum)
+            return false;
+    }
+    return true;
+}
+
+
+//--------------------------------------------------------------------------
+// Get the pointer to the C++ object out of the sipSimpleWrapper structure.
+// Yes, it's super unsafe and probably stupid, but here it is...
+
+void* i_wxPyGetCppPtr(sipSimpleWrapper* sipPyObj) {
+    return sipPyObj->data;
+}
+
+//--------------------------------------------------------------------------
+// Call the PyMethod_Self API, which is not available when the Python
+// limited API is activated.
+
+inline PyObject* i_wxPyMethod_Self(PyObject* method) {
+    return PyMethod_Self(method);
+}
+
+
+
+//--------------------------------------------------------------------------
+// Cleanup and reinitialize the wxModules. This is needed because sometimes an
+// Extension module will first be imported *after* the wx.App has been
+// created, so the wxModules in that extension will not have been registered
+// and initialized because they were not yet in memory.
+
+void i_wxPyReinitializeModules() {
+    if (i_wxPyCheckForApp(false)) {
+        wxModule::CleanUpModules();
+        wxModule::RegisterModules();
+        wxModule::InitializeModules();
+        wxInitAllImageHandlers();
+    }
+}
+
+//--------------------------------------------------------------------------
+// Route the various usages of the PyDate_ APIs through our API, so we only
+// have to worry about PyDateTime_IMPORT being needed in one compilation unit.
+
+int i_wxPyDateTime_Check(PyObject *obj) {
+    return PyDateTime_Check(obj);
+}
+
+int i_wxPyDate_Check(PyObject *obj) {
+    return PyDate_Check(obj);
+}
+
+wxDateTime* i_wxPyDateTime_ToWxDateTime(PyObject *obj) {
+    return new wxDateTime(PyDateTime_GET_DAY(obj),
+                          (wxDateTime::Month)(PyDateTime_GET_MONTH(obj)-1),
+                          PyDateTime_GET_YEAR(obj),
+                          PyDateTime_DATE_GET_HOUR(obj),
+                          PyDateTime_DATE_GET_MINUTE(obj),
+                          PyDateTime_DATE_GET_SECOND(obj),
+                          PyDateTime_DATE_GET_MICROSECOND(obj)/1000); // micro to milli
+}
+
+wxDateTime* i_wxPyDate_ToWxDateTime(PyObject *obj) {
+    return new wxDateTime(PyDateTime_GET_DAY(obj),
+                          (wxDateTime::Month)(PyDateTime_GET_MONTH(obj)-1),
+                          PyDateTime_GET_YEAR(obj));
+}
+
 
 
 //--------------------------------------------------------------------------
@@ -453,9 +600,28 @@ static wxPyAPI  API = {
     i_wxPyWrappedPtr_TypeCheck,
     i_wxVariant_in_helper,
     i_wxVariant_out_helper,
-    i_wxPyCheckForApp
+    i_wxPyCheckForApp,
+    i_wxPyMakeBuffer,
+    i_wxPyNumberSequenceCheck,
+    i_wxPyGetCppPtr,
+    i_wxPyMethod_Self,
+    i_wxPyReinitializeModules,
+    i_wxPyDateTime_Check,
+    i_wxPyDate_Check,
+    i_wxPyDateTime_ToWxDateTime,
+    i_wxPyDate_ToWxDateTime
 };
 %End
+
+
+%ModuleHeaderCode
+    #include <datetime.h>
+%End
+
+%InitialisationCode
+    PyDateTime_IMPORT;
+%End
+
 
 
 %PostInitialisationCode

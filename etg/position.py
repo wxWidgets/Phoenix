@@ -37,10 +37,13 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxPosition')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->GetRow(), self->GetCol());
         """,
         pyArgsString="() -> (row,col)",
         briefDoc="Return the row and col properties as a tuple.")
+
+    tools.addGetIMMethodTemplate(module, c, ['Row', 'Col'])
 
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')

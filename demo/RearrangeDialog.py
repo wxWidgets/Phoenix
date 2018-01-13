@@ -21,9 +21,10 @@ globalCheckedStrings = []
 
 
 class MyRearrangeDialog(wx.RearrangeDialog):
-    def __init__(self, parent, message, title, order, items):
+    def __init__(self, parent, message, title, order, items, log):
         wx.RearrangeDialog.__init__(self, parent, message, title, order, items)
 
+        self.log = log
         panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.lc = self.GetList()
@@ -65,10 +66,10 @@ class MyRearrangeDialog(wx.RearrangeDialog):
         self.tc.SetValue("%s" % len(self.checkedItems))
 
     def OnListBox(self, event):
-        print('You Selected %s' % (self.lc.GetString(event.GetSelection())))
+        self.log.write('You Selected %s\n' % (self.lc.GetString(event.GetSelection())))
 
     def OnCheck(self, event):
-        print('You Checked %s %s' % (self.lc.GetString(event.GetSelection()),
+        self.log.write('You Checked %s %s\n' % (self.lc.GetString(event.GetSelection()),
                                     self.lc.IsChecked(event.GetSelection())))
         #Update the TextCtrl
         self.checkedItems = self.lc.GetCheckedItems()
@@ -115,7 +116,7 @@ class TestPanel(wx.Panel):
         global globalCheckedStrings
         rd = MyRearrangeDialog(self, message="Rearrangeify Stuff!",
                                title="This is a wx.RearrangeDialog",
-                               order=globalOrder, items=globalItems)
+                               order=globalOrder, items=globalItems, log=self.log)
         if rd.ShowModal() == wx.ID_OK:
             # print('GetOrder: ', rd.GetOrder())
             globalOrder = list(range(rd.lenItems))

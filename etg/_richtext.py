@@ -68,13 +68,17 @@ def run():
     module.addImport('_core')
     module.addPyCode("import wx", order=10)
     module.addImport('_xml')
-    module.addPyCode("import wx.xml", order=10)
     module.addImport('_html')
-    module.addPyCode("import wx.html", order=10)
     module.addImport('_adv')
-    module.addPyCode("import wx.adv", order=10)
 
     module.addInclude(INCLUDES)
+
+    # Redo the initialization of wxModules in the case where this extension
+    # module is not imported until *after* the wx.App has been created.
+    module.addInitializerCode("""\
+        wxPyReinitializeModules();
+        """)
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

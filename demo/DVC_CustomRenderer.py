@@ -11,6 +11,7 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
         dv.DataViewCustomRenderer.__init__(self, *args, **kw)
         self.log = log
         self.value = None
+        self.EnableEllipsize(wx.ELLIPSIZE_END)
 
 
     def SetValue(self, value):
@@ -18,46 +19,62 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
         self.value = value
         return True
 
+
     def GetValue(self):
-        #self.log.write('GetValue')
+        self.log.write('GetValue: {}'.format(value))
         return self.value
+
 
     def GetSize(self):
         # Return the size needed to display the value.  The renderer
         # has a helper function we can use for measuring text that is
         # aware of any custom attributes that may have been set for
         # this item.
-        return self.GetTextExtent(self.value)
+        value = self.value if self.value else ""
+        size = self.GetTextExtent(value)
+        size += (2,2)
+        #self.log.write('GetSize("{}"): {}'.format(value, size))
+        return size
 
 
     def Render(self, rect, dc, state):
-        if state != 0:
-            self.log.write('Render: %s, %d' % (rect, state))
+        #if state != 0:
+        #    self.log.write('Render: %s, %d' % (rect, state))
 
         if not state & dv.DATAVIEW_CELL_SELECTED:
             # we'll draw a shaded background to see if the rect correctly
             # fills the cell
-            dc.SetBrush(wx.Brush('light grey'))
+            dc.SetBrush(wx.Brush('#ffd0d0'))
             dc.SetPen(wx.TRANSPARENT_PEN)
             rect.Deflate(1, 1)
             dc.DrawRoundedRectangle(rect, 2)
 
         # And then finish up with this helper function that draws the
         # text for us, dealing with alignment, font and color
-        # attributes, etc
-        self.RenderText(self.value,
-                        4,   # x-offset, to compensate for the rounded rectangles
+        # attributes, etc.
+        value = self.value if self.value else ""
+        self.RenderText(value,
+                        0,   # x-offset
                         rect,
                         dc,
                         state # wxDataViewCellRenderState flags
                         )
-
         return True
+
+
+    def ActivateCell(self, rect, model, item, col, mouseEvent):
+        self.log.write("ActivateCell")
+        return False
+
 
     # The HasEditorCtrl, CreateEditorCtrl and GetValueFromEditorCtrl
     # methods need to be implemented if this renderer is going to
     # support in-place editing of the cell value, otherwise they can
     # be omitted.
+    #
+    # NOTE: This is well supported only in the DVC implementation on Windows,
+    # so this sample will not turn on the editable mode for the custom
+    # rendered column, see below.
 
     def HasEditorCtrl(self):
         self.log.write('HasEditorCtrl')
@@ -101,7 +118,7 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
 
 #----------------------------------------------------------------------
 
-# To help focus this sammple on the custom renderer, we'll reuse the
+# To help focus this sample on the custom renderer, we'll reuse the
 # model class from another sample.
 from DVC_IndexListModel import TestModel
 
@@ -129,23 +146,40 @@ class TestPanel(wx.Panel):
         self.dvc.AssociateModel(self.model)
 
         # Now we create some columns.
-        c0 = self.dvc.AppendTextColumn("Id", 0, width=40)
-        c0.Alignment = wx.ALIGN_RIGHT
-        c0.MinWidth = 40
+        col = self.dvc.AppendTextColumn("Id", 0, width=40)
+        col.Alignment = wx.ALIGN_RIGHT
+        col.MinWidth = 40
 
-        # We'll use our custom renderer for these columns
-        for title, col, width in [ ('Artist', 1, 170),
-                                   ('Title', 2, 260),
-                                   ('Genre', 3, 80)]:
-            renderer = MyCustomRenderer(self.log, mode=dv.DATAVIEW_CELL_EDITABLE)
-            #renderer.SetMode(dv.DATAVIEW_CELL_EDITABLE)
-            column = dv.DataViewColumn(title, renderer, col, width=width)
-            column.Alignment = wx.ALIGN_LEFT
-            self.dvc.AppendColumn(column)
+        col = self.dvc.AppendTextColumn("Artist", 1, width=170, mode=dv.DATAVIEW_CELL_EDITABLE)
+        col.Alignment = wx.ALIGN_LEFT
+
+        # Use a custom renderer for the Title column.
+        # NOTE: Using an editor with the custom renderer is only well
+        # supported on the Windows version of the DVC, so we won't turn on
+        # editing in that case, and will inform the user about it.
+        if 'wxMSW' in wx.PlatformInfo:
+            custMode = dv.DATAVIEW_CELL_EDITABLE
+        else:
+            custMode = dv.DATAVIEW_CELL_INERT
+            wx.CallAfter(self.ShowMessage)
+        renderer = MyCustomRenderer(self.log, mode=custMode)
+        col = dv.DataViewColumn("Title", renderer, 2, width=260)
+        col.Alignment = wx.ALIGN_LEFT
+        self.dvc.AppendColumn(col)
+
+
+        col = self.dvc.AppendTextColumn("Genre", 3, width=80, mode=dv.DATAVIEW_CELL_EDITABLE)
+        col.Alignment = wx.ALIGN_LEFT
 
         self.Sizer = wx.BoxSizer(wx.VERTICAL)
         self.Sizer.Add(self.dvc, 1, wx.EXPAND)
 
+
+    def ShowMessage(self):
+        msg = "This platform does not have good support for editing cells " \
+              "which have a custom renderer, so the Title column's mode " \
+              "will be set to DATAVIEW_CELL_INERT instead."
+        wx.MessageBox(msg, "Custom Renderer Info", style=wx.OK|wx.ICON_INFORMATION)
 
 
 #----------------------------------------------------------------------

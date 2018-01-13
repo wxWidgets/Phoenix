@@ -55,6 +55,9 @@ def run():
     c.find('StringToValue.variant').out = True
     c.find('IntToValue.variant').out = True
 
+    c.addProperty('m_value GetValue SetValue')
+
+
     # SIP needs to be able to make a copy of the wxPGAttributeStorage value
     # but the C++ class doesn't have a copy ctor and the default will cause it
     # to lose references to the variants it contains, so let's just override
@@ -89,6 +92,29 @@ def run():
             for name,value in attributes.items():
                 self.SetAttribute(name, value)
             """)
+
+    c.find('AddPrivateChild.prop').transfer = True
+    c.find('AddChild.prop').transfer = True
+
+    # The [G|S]etClientData methods deal with untyped void* values, which we
+    # don't support. The [G|S]etClientObject methods use wxClientData instances
+    # which we have a MappedType for, so make the ClientData methods just be
+    # aliases for ClientObjects. From the Python programmer's perspective they
+    # would be virtually the same anyway.
+    c.find('SetClientObject.clientObject').transfer = True
+    c.find('SetClientObject.clientObject').name = 'data'
+    c.find('GetClientData').ignore()
+    c.find('SetClientData').ignore()
+    c.find('GetClientObject').pyName = 'GetClientData'
+    c.find('SetClientObject').pyName = 'SetClientData'
+    c.addPyMethod('GetClientObject', '(self, n)',
+        doc="Alias for :meth:`GetClientData`",
+        body="return self.GetClientData(n)")
+    c.addPyMethod('SetClientObject', '(self, n, data)',
+        doc="Alias for :meth:`SetClientData`",
+        body="self.SetClientData(n, data)")
+
+    c.find('GetEditorDialog').factory = True
 
 
     c = module.find('wxPGChoicesData')
