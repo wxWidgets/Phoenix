@@ -8464,6 +8464,27 @@ static int addStringInstances(PyObject *dict, sipStringInstanceDef *si)
 #endif
             break;
 
+        case 'w':
+            /* The hack for wchar_t. */
+#if defined(HAVE_WCHAR_H)
+            w = PyUnicode_FromWideChar((const wchar_t *)si->si_val, 1);
+            break;
+#else
+            raiseNoWChar();
+            return -1;
+#endif
+
+        case 'W':
+            /* The hack for wchar_t*. */
+#if defined(HAVE_WCHAR_H)
+            w = PyUnicode_FromWideChar((const wchar_t *)si->si_val,
+                    wcslen((const wchar_t *)si->si_val));
+            break;
+#else
+            raiseNoWChar();
+            return -1;
+#endif
+
         default:
             w = SIPBytes_FromString(si->si_val);
         }
