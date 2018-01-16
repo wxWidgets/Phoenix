@@ -61,7 +61,7 @@ By calling :meth:`wx.FileHistory.UseMenu` you can associate a file
 menu with the file history. The menu will then be used for appending
 filenames that are added to the history.
 
-.. note:: 
+.. note::
 
    Please notice that currently if the history already contained
    filenames when UseMenu() is called (e.g. when initializing a second

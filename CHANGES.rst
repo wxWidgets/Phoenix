@@ -51,7 +51,7 @@ Changes in this release include the following:
 * Fixed wx.richtext.RichTextBuffer.GetExtWildcard to return a tuple of 2
   values, as was done in Classic. (#594)
 
-* Various fixes in UltimateListCtrl, HyperTreeList and CheckListCtrlMixin. 
+* Various fixes in UltimateListCtrl, HyperTreeList and CheckListCtrlMixin.
   (#592, #349, #612)
 
 * Fixes in TextEditMixin to ensure that the new value is passed in the

@@ -116,8 +116,8 @@ available in Phoenix::
 
 
 
-Static Methods 
--------------- 
+Static Methods
+--------------
 
 In the distant past when SWIG was generating wrapper code for C++ static
 methods it would create a standalone function named ``ClassName_MethodName``
@@ -130,7 +130,7 @@ the problem simply change the underscore to a dot, for example you should
 change this::
 
     c = wx.SystemSettings_GetColour(wx.SYS_COLOUR_MENUTEXT)
-    
+
 to this::
 
     c = wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENUTEXT)
@@ -199,28 +199,28 @@ that is using the old names to use the new ones instead::
             wx.NORMAL = wx.FONTWEIGHT_NORMAL
             wx.LIGHT  = wx.FONTWEIGHT_LIGHT
             wx.BOLD   = wx.FONTWEIGHT_BOLD
-            
+
             wx.NORMAL = wx.FONTSTYLE_NORMAL
             wx.ITALIC = wx.FONTSTYLE_ITALIC
             wx.SLANT  = wx.FONTSTYLE_SLANT
-            
-            wx.SOLID       = wx.PENSTYLE_SOLID
-            wx.DOT         = wx.PENSTYLE_DOT 
-            wx.LONG_DASH   = wx.PENSTYLE_LONG_DASH 
-            wx.SHORT_DASH  = wx.PENSTYLE_SHORT_DASH 
-            wx.DOT_DASH    = wx.PENSTYLE_DOT_DASH 
-            wx.USER_DASH   = wx.PENSTYLE_USER_DASH 
-            wx.TRANSPARENT = wx.PENSTYLE_TRANSPARENT 
 
-            wx.STIPPLE_MASK_OPAQUE = wx.BRUSHSTYLE_STIPPLE_MASK_OPAQUE 
-            wx.STIPPLE_MASK        = wx.BRUSHSTYLE_STIPPLE_MASK 
-            wx.STIPPLE             = wx.BRUSHSTYLE_STIPPLE 
-            wx.BDIAGONAL_HATCH     = wx.BRUSHSTYLE_BDIAGONAL_HATCH 
-            wx.CROSSDIAG_HATCH     = wx.BRUSHSTYLE_CROSSDIAG_HATCH 
-            wx.FDIAGONAL_HATCH     = wx.BRUSHSTYLE_FDIAGONAL_HATCH 
-            wx.CROSS_HATCH         = wx.BRUSHSTYLE_CROSS_HATCH 
-            wx.HORIZONTAL_HATCH    = wx.BRUSHSTYLE_HORIZONTAL_HATCH 
-            wx.VERTICAL_HATCH      = wx.BRUSHSTYLE_VERTICAL_HATCH 
+            wx.SOLID       = wx.PENSTYLE_SOLID
+            wx.DOT         = wx.PENSTYLE_DOT
+            wx.LONG_DASH   = wx.PENSTYLE_LONG_DASH
+            wx.SHORT_DASH  = wx.PENSTYLE_SHORT_DASH
+            wx.DOT_DASH    = wx.PENSTYLE_DOT_DASH
+            wx.USER_DASH   = wx.PENSTYLE_USER_DASH
+            wx.TRANSPARENT = wx.PENSTYLE_TRANSPARENT
+
+            wx.STIPPLE_MASK_OPAQUE = wx.BRUSHSTYLE_STIPPLE_MASK_OPAQUE
+            wx.STIPPLE_MASK        = wx.BRUSHSTYLE_STIPPLE_MASK
+            wx.STIPPLE             = wx.BRUSHSTYLE_STIPPLE
+            wx.BDIAGONAL_HATCH     = wx.BRUSHSTYLE_BDIAGONAL_HATCH
+            wx.CROSSDIAG_HATCH     = wx.BRUSHSTYLE_CROSSDIAG_HATCH
+            wx.FDIAGONAL_HATCH     = wx.BRUSHSTYLE_FDIAGONAL_HATCH
+            wx.CROSS_HATCH         = wx.BRUSHSTYLE_CROSS_HATCH
+            wx.HORIZONTAL_HATCH    = wx.BRUSHSTYLE_HORIZONTAL_HATCH
+            wx.VERTICAL_HATCH      = wx.BRUSHSTYLE_VERTICAL_HATCH
 
 
 
@@ -238,9 +238,9 @@ or other conditional statement to see if it is safe to use, like this::
 
     if someWindow:
         someWindow.doSomething()
-        
-        
-        
+
+
+
 wx.PyAssertionError --> wx.wxAssertionError
 -------------------------------------------
 
@@ -412,16 +412,16 @@ where the data object should fetch from or copy to a specific memory location.
                 wx.DataObjectSimple.__init__(self)
                 self.SetFormat(wx.DataFormat("my data format"))
                 self.myData = bytes(value)
-                
+
             def GetDataSize(self):
                 return len(self.myData)
-            
+
             def GetDataHere(self, buf):
                 # copy our local data value to buf
                 assert isinstance(buf, memoryview)
                 buf[:] = self.myData
                 return True
-                            
+
             def SetData(self, buf):
                 # copy from buf to our local data value
                 assert isinstance(buf, memoryview)
