@@ -14,6 +14,6 @@
                 if n >= 0:
                     wx.LogMessage("Your most preferred item is \"%s\""%n)
                     break
-                
-            
+
+
 

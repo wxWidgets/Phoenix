@@ -1,2 +1,2 @@
-    
-     GetIcon(wx.Size(size, size)) 
+
+     GetIcon(wx.Size(size, size))
