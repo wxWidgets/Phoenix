@@ -54,8 +54,8 @@ def run():
     # an out parameter.
     m.cppSignature = 'bool (wxVariant& variant, wxPGProperty* property, wxWindow* ctrl)'
     m.virtualCatcherCode = """\
-        PyObject *sipResObj = sipCallMethod(0, sipMethod, "DDD", 
-                                            property, sipType_wxPGProperty, NULL, 
+        PyObject *sipResObj = sipCallMethod(0, sipMethod, "DDD",
+                                            property, sipType_wxPGProperty, NULL,
                                             ctrl, sipType_wxWindow, NULL);
         if (sipResObj == Py_None) {
             sipRes = false;

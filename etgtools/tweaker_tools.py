@@ -652,7 +652,7 @@ def addGetIMMethodTemplate(module, klass, fields):
     klass.addPyMethod('GetIM', '(self)',
         doc="""\
             Returns an immutable representation of the ``wx.{name}`` object, based on ``namedtuple``.
-            
+
             This new object is hashable and can be used as a dictionary key,
             be added to sets, etc.  It can be converted back into a real ``wx.{name}``
             with a simple statement like this: ``obj = wx.{name}(imObj)``.

@@ -233,8 +233,8 @@ def run():
                     {
                         wxPyThreadBlocker block;
                         wxPyCallback *cb = (wxPyCallback*)entry->m_callbackUserData;
-                        // NOTE: Just comparing PyObject pointers is not enough, as bound 
-                        // methods can result in different PyObjects each time obj.Method 
+                        // NOTE: Just comparing PyObject pointers is not enough, as bound
+                        // methods can result in different PyObjects each time obj.Method
                         // is evaluated. (!!!)
                         if (PyObject_RichCompareBool(cb->m_func, func, Py_EQ) == 1) {
                             delete cb;

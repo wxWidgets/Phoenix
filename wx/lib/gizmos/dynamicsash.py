@@ -468,7 +468,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
 
     def Split(self, px, py):
         self.m_add_child_target = None
-    
+
         self.m_child[0] = _DynamicSashWindowImpl(self.m_window)
         self.m_child[0].m_container = wx.Window(self.m_container)
         self.m_child[0].m_parent = self
@@ -483,15 +483,15 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         self.m_child[1].m_parent = self
         self.m_child[1].m_top = self.m_top
         self.m_child[1].Create()
-    
+
         self.m_split = self.m_dragging
         self.ConstrainChildren(px, py)
-    
+
         self.m_top.m_add_child_target = self.m_child[1]
         split = DynamicSashSplitEvent(self.m_child[0].m_leaf.m_child)
         self.m_child[0].m_leaf._checkPendingChild()
         self.m_child[0].m_leaf.m_child.GetEventHandler().ProcessEvent(split)
-    
+
         self.m_child[0].m_leaf.m_vscroll.SetScrollbar(self.m_leaf.m_vscroll.GetThumbPosition(),
                                                       self.m_leaf.m_vscroll.GetThumbSize(),
                                                       self.m_leaf.m_vscroll.GetRange(),
@@ -510,7 +510,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
                                                       self.m_leaf.m_hscroll.GetPageSize())
         self.m_leaf.Destroy()
         self.m_leaf = None
-    
+
         self.m_container.Layout()
 
 
@@ -581,18 +581,18 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         h_unify = -1
         v_unify = -1
         frame = self.FindFrame()
-    
+
         if x < 0:
             x = 0
         if y < 0:
             y = 0
-    
+
         if h_parent:
             _, y = self.m_container.ClientToScreen(0, y)
             _, y = h_parent.m_container.ScreenToClient(0, y)
-    
+
             py = int((y * 100.0) / h_parent.m_container.GetSize().GetHeight() + 0.5)
-    
+
             if py < 10:
                 ho_parent = self.FindParent(_DSR_TOP_EDGE)
                 if ho_parent:
@@ -604,7 +604,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
                                     / h_parent.m_container.GetSize().GetHeight() + 0.5)
                         h_parent.m_child[0].m_container.GetConstraints().height.PercentOf(
                                 h_parent.m_container, wx.Height, py)
-    
+
                         h_parent = ho_parent
                         h_unify = 0
                 else:
@@ -623,7 +623,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
                 py = int((y * 100.0) /
                          (h_parent.m_container.GetSize().GetHeight() +
                           y - self.m_container.GetSize().GetHeight()) + 0.5)
-    
+
                 if py < 10:
                     h_unify = 0
             elif y < 64:
@@ -636,9 +636,9 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
         if v_parent:
             x, _ = self.m_container.ClientToScreen(x, 0)
             x, _ = v_parent.m_container.ScreenToClient(x, 0)
-    
+
             px = int((x * 100.0) / v_parent.m_container.GetSize().GetWidth() + 0.5)
-    
+
             if px < 10:
                 vo_parent = self.FindParent(_DSR_LEFT_EDGE)
                 if vo_parent:
@@ -649,7 +649,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
                                     / v_parent.m_container.GetSize().GetWidth() + 0.5)
                         v_parent.m_child[0].m_container.GetConstraints().width.PercentOf(
                                 v_parent.m_container, wx.Width, px)
-    
+
                         v_parent = vo_parent
                         v_unify = 0
                 else:
@@ -668,12 +668,12 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
                 px = int((x * 100.0) /
                          (v_parent.m_container.GetSize().GetWidth() +
                           x - self.m_container.GetSize().GetWidth()) + 0.5)
-    
+
                 if px < 10:
                     v_unify = 0
             elif x < 64:
                 do_resize = 0
-    
+
             if do_resize:
                 size = frame.GetSize()
                 frame.SetSize(size.GetWidth() + x - self.m_container.GetSize().GetWidth(), size.GetHeight())
@@ -973,7 +973,7 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
         sh = size.GetHeight()
         size = self.m_vscroll.GetSize()
         sw = size.GetWidth()
-    
+
         if x >= w - sw - 3 and x < w and y >= h - sh - 3 and y < h:
             return _DSR_CORNER
         if x >= 3 and x < 10 and y >= h - sh - 3 and y < h - 2:
@@ -988,7 +988,7 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
             return _DSR_RIGHT_EDGE
         if y >= h - 2:
             return _DSR_BOTTOM_EDGE
-    
+
         return _DSR_NONE
 
 
@@ -1002,10 +1002,10 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
                 if best_size.GetHeight() < size.GetHeight():
                     best_size.SetHeight(size.GetHeight())
                 self.m_child.SetSize(best_size)
-    
+
                 hpos = self.m_hscroll.GetThumbPosition()
                 vpos = self.m_vscroll.GetThumbPosition()
-    
+
                 if hpos < 0:
                     hpos = 0
                 if vpos < 0:
@@ -1014,17 +1014,17 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
                     hpos = best_size.GetWidth() - size.GetWidth()
                 if vpos > best_size.GetHeight() - size.GetHeight():
                     vpos = best_size.GetHeight() - size.GetHeight()
-    
+
                 self.m_hscroll.SetScrollbar(hpos, size.GetWidth(),
                                             best_size.GetWidth(), size.GetWidth())
                 self.m_vscroll.SetScrollbar(vpos, size.GetHeight(),
                                             best_size.GetHeight(), size.GetHeight())
-    
+
                 #  Umm, the scrollbars are doing something insane under GTK+ and subtracting
                 #  one from the position I pass in.  This works around that.
                 self.m_hscroll.SetThumbPosition(hpos + hpos - self.m_hscroll.GetThumbPosition())
                 self.m_vscroll.SetThumbPosition(vpos + vpos - self.m_vscroll.GetThumbPosition())
-    
+
                 pos = self.m_child.GetPosition()
                 self.m_viewport.ScrollWindow(-hpos - pos.x, -vpos - pos.y)
 
@@ -1086,7 +1086,7 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
         dc.SetPen(black)
         dc.DrawLine(w - 4, 3, w - 4, 9)
         dc.DrawLine(w - 4, 9, w - sw - 3, 9)
-    
+
         dc.SetPen(highlight)
         dc.DrawLine(4, h - 5, 4, h - sh - 2)
         dc.DrawLine(4, h - sh - 2, 8, h - sh - 2)
@@ -1136,9 +1136,9 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
     def OnMouseMove(self, event):
         if self.m_impl.m_dragging:
             return
-    
+
         region = self.GetRegion(event.x, event.y)
-    
+
         cursor = wx.Cursor(wx.CURSOR_ARROW)
         if region == _DSR_HORIZONTAL_TAB:
             cursor = wx.Cursor(wx.CURSOR_SIZENS)

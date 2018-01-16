@@ -36,7 +36,7 @@ class Availability(Directive):
 
 
    # ----------------------------------------------------------------------- #
-   
+
     def run(self):
         env = self.state.document.settings.env
         targetid = 'index-%s' % env.new_serialno('index')
@@ -182,7 +182,7 @@ def setup(app):
     app.add_javascript('javascript/jquery.collapse.js')
     app.add_javascript('javascript/jquery.cookie.js')
     app.add_javascript('javascript/toggle_visibility.js')
-    
+
     app.add_config_value('availability_include_availabilities', False, False)
 
     app.add_node(availabilitylist)
