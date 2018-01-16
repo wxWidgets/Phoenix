@@ -26,7 +26,7 @@ class ProcessFrame(wx.Frame):
 
         self.Bind(wx.EVT_IDLE, self.OnIdle)
         self.Bind(wx.EVT_END_PROCESS, self.OnProcessEnded)
-        
+
     def OnButton(self, event):
         self.btn.Enable(False)
         self.label.SetValue('')
