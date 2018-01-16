@@ -4,7 +4,7 @@ rem This script runs all examples. This should be mostly for using the
 rem examples as regression tests (after all tests have passed in tests
 rem folder).
 rem One command line argument is required, the python version number to
-rem use, no dots: 24 for 2.4, 30 for 3.0, etc. 
+rem use, no dots: 24 for 2.4, 30 for 3.0, etc.
 rem
 rem (C) Oliver Schoenborn 2009
 
@@ -12,7 +12,7 @@ set PY_VER=%1
 IF "%1" EQU "" (
   SET PY_VER=26
   echo Will use Python 2.6. To use other, put version ID as command line arg
-  echo Example: for Python 2.7 put 27, for 3.0 put 30, etc. 
+  echo Example: for Python 2.7 put 27, for 3.0 put 30, etc.
 )
 
 set PYTHON_EXE=python

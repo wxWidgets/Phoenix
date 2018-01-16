@@ -1,6 +1,6 @@
 #
-# Although we don't use this template to make source distributions, it is 
-# still an easy way to specify what data files (non *.py files) should be 
+# Although we don't use this template to make source distributions, it is
+# still an easy way to specify what data files (non *.py files) should be
 # included in the package dirs.
 #
 # See cmd_sdist() in build.py for the actual building of the source dist.

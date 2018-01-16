@@ -3,7 +3,7 @@
 #
 
 language: python
-    
+
 matrix:
   include:
     - os: linux
@@ -40,7 +40,7 @@ matrix:
 
 
   # redundant specification of `sudo` and `python` because of travis-ci.org's way of parsing `.travis.yml`
-    
+
 # Available build steps:
 # 1. before_install
 # 2. install

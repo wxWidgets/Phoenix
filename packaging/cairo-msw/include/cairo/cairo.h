@@ -868,7 +868,7 @@ typedef struct _cairo_rectangle {
  * @status: Error status of the rectangle list
  * @rectangles: Array containing the rectangles
  * @num_rectangles: Number of rectangles in this list
- * 
+ *
  * A data structure for holding a dynamically allocated
  * array of rectangles.
  *

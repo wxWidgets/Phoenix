@@ -3,7 +3,7 @@ wxEditor component
 
 The wxEditor class implements a simple text editor using wxPython.  You
 can create a custom editor by subclassing wxEditor.  Even though much of
-the editor is implemented in Python, it runs surprisingly smoothly on  
+the editor is implemented in Python, it runs surprisingly smoothly on
 normal hardware with small files.
 
 
@@ -16,7 +16,7 @@ Cursor movement:     Arrow keys
 Beginning of line:   Home
 End of line:         End
 Beginning of buffer: Control-Home
-End of the buffer:   Control-End 
+End of the buffer:   Control-End
 Select text:         Hold down Shift while moving the cursor
 Copy:                Shift-Insert,   Control-C
 Cut:                 Shift-Delete,   Control-X
