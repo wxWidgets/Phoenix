@@ -26,7 +26,6 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 # In case of TB_COMPLEX style, create a panel that contains an image, some
 # text, an hyperlink and a ticker.
 
-from wx.adv import HyperlinkCtrl as hyperlink
 from wx.lib.ticker import Ticker
 
 # ------------------------------------------------------------------------------ #
