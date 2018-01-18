@@ -259,7 +259,7 @@ def run():
                 PyObject* o4 = PySequence_ITEM(sipPy, 3);
                 *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3),
                                           wxPyInt_AsLong(o4));
-                Py_DECREF(o4);            
+                Py_DECREF(o4);
             }
             Py_DECREF(o1);
             Py_DECREF(o2);

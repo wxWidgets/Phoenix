@@ -87,7 +87,7 @@ class ParaFunction(threading.Thread):
     def transferData(self):
         """Send data from aux thread to main thread. The data was put in
         self.queue by the aux thread, and this queue is a Queue.Queue which
-        is a synchronized queue for inter-thread communication. 
+        is a synchronized queue for inter-thread communication.
         Note: This method must be called from main thread."""
         self.transfer += 1
         while not self.queue.empty():

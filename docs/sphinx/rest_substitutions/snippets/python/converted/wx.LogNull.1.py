@@ -1,4 +1,4 @@
-    
+
           # There will normally be a log message if a non-existant file is
           # loaded into a wx.Bitmap.  It can be suppressed with wx.LogNull
           noLog = wx.LogNull()

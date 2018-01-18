@@ -7,13 +7,13 @@
 
 
                     def SetWidth(self, width):
-                        
-                        self.width = width 
+
+                        self.width = width
 
 
                     def GetWidth(self):
 
-                        return self.width 
+                        return self.width
 
 
                 class MyHeaderCtrl(wx.HeaderCtrl):
@@ -22,19 +22,19 @@
 
                         wx.HeaderCtrl.__init__(self, parent)
                         self.cols = []
-                        
+
 
                     def GetColumn(idx):
-                    
+
                         return self.cols[idx]
-                    
+
 
                     def UpdateColumnWidthToFit(self, idx, widthTitle):
 
                         # ... compute minimal width for column idx ...
                         widthContents = self.CalculateMinWidth(idx)
                         self.cols[idx].SetWidth(max(widthContents, widthTitle))
-                        
+
                         return True
-                    
+
 

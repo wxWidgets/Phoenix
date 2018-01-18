@@ -1,2 +1,2 @@
-          
-           event.GetString() 
+
+           event.GetString()

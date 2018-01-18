@@ -21,7 +21,7 @@ using :meth:`wx.DC.Blit`(), or to be used as a drawing surface.
 .. seealso:: :ref:`wx.MemoryDC` for an example of drawing onto a bitmap.
 
 
-All wxPython platforms support XPMs for small bitmaps and icons. 
+All wxPython platforms support XPMs for small bitmaps and icons.
 
 
 

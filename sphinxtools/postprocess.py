@@ -449,7 +449,7 @@ def makeModuleIndex(sphinxDir, file):
     lower_to_name = {}
     for name in names:
         lower_to_name[name.lower()] = name
-    
+
     text = ''
     if module:
         text += '\n\n.. module:: %s\n\n' % module
@@ -462,7 +462,7 @@ def makeModuleIndex(sphinxDir, file):
 
     lower_names = list(lower_to_name.keys())
     lower_names.sort()
-    
+
     for lower in lower_names:
         cls = lower_to_name[lower]
         out = classes[cls]
@@ -758,7 +758,7 @@ def changeWelcomeText(text, options):
         welcomeText = """
             Welcome! This is the API documentation for the wxPython Phoenix
             <b>pre-release snapshot</b> build <b>{version}</b>, last updated {today}
-            from git revision: 
+            from git revision:
             <a href="https://github.com/wxWidgets/Phoenix/commit/{revhash}">{revhash}</a>.
             """.format(version=cfg.VERSION, today=TODAY, revhash=revhash)
     text = text.replace('!WELCOME!', welcomeText)

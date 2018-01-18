@@ -28,19 +28,19 @@ your own sub-class of :ref:`wx.Validator` (neither `TextValidator` nor
 then associated with your input field by calling::
 
      myInputField.SetValidator(myValidator)
-     
-     
+
+
 .. note:: Your :ref:`wx.Validator` sub-class must implement the
    :meth:`wx.Validator.Clone` method.
 
 
-.. note:: 
+.. note::
 
    Note that any :ref:`wx.Window` may have a validator; using the
    ``WS_EX_VALIDATE_RECURSIVELY`` style (see :ref:`Window extended
    styles <window-extra-styles>`) you can also implement recursive
    validation.
-   
+
 
 
 .. _anatomy of a validator:
@@ -105,7 +105,7 @@ being shown.
 .. note:: If you are using a window or panel instead of a dialog, you
     will need to call :meth:`wx.Window.InitDialog` explicitly before
     showing the window.
-   
+
 
 When the user clicks on a button, for example the ``OK`` button, the
 application should first call :meth:`wx.Window.Validate`, which

@@ -186,9 +186,9 @@ def runTest(frame, nb, log):
 overview = """<html><body>
 <h2><center>Simplebook</center></h2>
 
-A wx.Simplebook is a notebook-like control that has no tabs or 
-any other way for the user to be able to select which page is to 
-be shown. Page selection is totally controlled by the application. 
+A wx.Simplebook is a notebook-like control that has no tabs or
+any other way for the user to be able to select which page is to
+be shown. Page selection is totally controlled by the application.
 
 </body></html>
 """

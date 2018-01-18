@@ -108,9 +108,9 @@ Some of advantages in using wxPython log functions are:
   :func:`wx.LogError` in this situation, the exact error code (and the
   corresponding error message) will be given to the user together with
   "high level" message about data file writing error.
-  
 
-  
+
+
 .. _log messages selection:
 
 Log Messages Selection
@@ -222,8 +222,8 @@ of course, may also be used without any change. There are:
 - :ref:`wx.LogNull`: The last log class is quite particular: it doesn't
   do anything. The objects of this class may be instantiated to
   (temporarily) suppress output of `LogXXX` functions.
-  
-  
+
+
 The log targets can also be combined: for example you may wish to
 redirect the messages somewhere else (for example, to a log file) but
 also process them as normally. For this the :ref:`wx.LogChain`,
@@ -338,13 +338,13 @@ nothing happens.
 For example::
 
     wx.LogTrace(wx.TRACE_OleCalls, "Foo.Bar() called")
-    
-    
+
+
 will log the message if it was preceded by::
 
     wx.Log.AddTraceMask(wx.TRACE_OleCalls)
-    
-    
+
+
 The standard trace masks are given in the :func:`wx.LogTrace`
 documentation.
 

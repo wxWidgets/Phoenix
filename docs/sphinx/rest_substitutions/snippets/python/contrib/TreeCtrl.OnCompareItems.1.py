@@ -6,7 +6,7 @@
 
 def OnCompareItems(self, item1, item2):
     """Changes the sort order of the items in the tree control. """
-    
+
     t1 = self.GetItemText(item1)
     t2 = self.GetItemText(item2)
 

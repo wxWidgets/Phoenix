@@ -1,2 +1,2 @@
-    
-        self.ShowColumn(idx, False) 
+
+        self.ShowColumn(idx, False)

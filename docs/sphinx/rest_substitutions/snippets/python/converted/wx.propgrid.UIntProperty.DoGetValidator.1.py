@@ -1,4 +1,4 @@
-    
+
     class MyPropertyClass(wx.propgrid.UIntProperty):
         ...
         def DoGetValidator(self):

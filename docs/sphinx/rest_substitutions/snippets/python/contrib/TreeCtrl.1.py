@@ -1,10 +1,10 @@
 ##Andrea Gavana
 #!/usr/bin/env python
 
-# This sample classifies the Python keywords alphabetically, using the 
-# first letter of the keyword (i.e., ``and`` goes into ``a``, ``for`` 
+# This sample classifies the Python keywords alphabetically, using the
+# first letter of the keyword (i.e., ``and`` goes into ``a``, ``for``
 # goes into ``f`` and so on):
-#      
+#
 #      * For each letter, adds a child to the treectrl root
 #      * In each child of the root item, adds its corresponding keyword(s)
 #
@@ -27,7 +27,7 @@ class TreeFrame(wx.Frame):
         root = tree_ctrl.AddRoot('Python keywords')
 
         letters = []
-        
+
         for kwd in keyword.kwlist:
             first = kwd[0]
             if first not in letters:
@@ -39,7 +39,7 @@ class TreeFrame(wx.Frame):
                 first = kwd[0]
                 if first == letter:
                     sub_item = tree_ctrl.AppendItem(item, kwd)
-                    
+
         tree_ctrl.ExpandAll()
         self.Centre()
 

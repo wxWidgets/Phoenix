@@ -64,7 +64,7 @@ samples, and also a set of MSVC .pdb files for Windows are available
 
 The utility tools wxdocs and wxdemo will download the appropriate files with wxget,
 (if necessary), unpack them, (if necessary) and launch the appropriate version of
-the respective items. (Documents are launched in the default browser and demo is started 
+the respective items. (Documents are launched in the default browser and demo is started
 with python).
 """.format(version=cfg.VERSION, docs_base=DOCS_BASE)
 
