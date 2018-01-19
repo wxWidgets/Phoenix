@@ -101,6 +101,9 @@ Changes in this release include the following:
   default style flag you'll need to pass it to the agwStyle parameter instead
   of the style parameter.
 
+* Fix crash when deleting all wx.dataview.TreeListCtrl items with wxGTK3.
+  (#679)
+
 
 
 
