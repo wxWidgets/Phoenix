@@ -104,6 +104,10 @@ Changes in this release include the following:
 * Fix crash when deleting all wx.dataview.TreeListCtrl items with wxGTK3.
   (#679)
 
+* Fix displaying '&' in the label of wx.RadioBox on GTK. (#39)
+
+
+
 
 
 
