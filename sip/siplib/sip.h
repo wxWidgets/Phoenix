@@ -55,7 +55,7 @@ extern "C" {
  * Define the SIP version number.
  */
 #define SIP_VERSION         0x041307
-#define SIP_VERSION_STR     "4.19.7.dev1801141749"
+#define SIP_VERSION_STR     "4.19.7"
 
 
 /*
