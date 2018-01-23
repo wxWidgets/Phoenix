@@ -106,7 +106,8 @@ Changes in this release include the following:
 
 * Fix displaying '&' in the label of wx.RadioBox on GTK. (#39)
 
-
+* Fix problems of the wrong C++ method being called in wx.ProgressDialog on MS
+  Windows. (#701)
 
 
 
