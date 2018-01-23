@@ -80,8 +80,8 @@ font. The window is sized so that you can only see 16 lines at a
 time. You would use::
 
     SetScrollbar(wx.VERTICAL, 0, 16, 50)
-    
-    
+
+
 .. note:: Note that with the window at this size, the thumb position
    can never go above 50 minus 16, or 34. You can determine how many
    lines are currently visible by dividing the current view size by

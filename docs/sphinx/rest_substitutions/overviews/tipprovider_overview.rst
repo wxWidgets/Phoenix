@@ -64,8 +64,8 @@ searches for translatable strings. The tips will thus get included
 into your generated .po file catalog and be translated at runtime
 along with the rest of your application's translatable strings.
 
-.. note:: 
-   
+.. note::
+
    Each line in the `tips.txt` file needs to strictly begin with
    exactly the 3 characters of underscore-parenthesis-doublequote, and
    end with doublequote-parenthesis, as shown above. Also, remember to

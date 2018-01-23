@@ -14,7 +14,7 @@ class NotebookFrame(wx.Frame):
 
         wx.Frame.__init__(self, parent, title=title)
 
-        # Create the notebook 
+        # Create the notebook
         self.notebook = wx.Notebook(self, style=wx.NB_BOTTOM)
 
         # Setting up the menu
@@ -30,7 +30,7 @@ class NotebookFrame(wx.Frame):
 
         # Adding the 'file_menu' to the menu bar
         menu_bar.Append(file_menu, '&File')
-        
+
         # Adding the menu bar to the frame content
         self.SetMenuBar(menu_bar)
 
@@ -42,11 +42,11 @@ class NotebookFrame(wx.Frame):
         # This is how you pre-establish a file filter so that the dialog
         # only shows the extension(s) you want it to.
         wildcard = 'Python source (*.py)|*.py'
-        
-        dlg = wx.FileDialog(None, message="Choose a Python file", defaultDir=os.getcwd(), 
+
+        dlg = wx.FileDialog(None, message="Choose a Python file", defaultDir=os.getcwd(),
                             defaultFile="", wildcard=wildcard, style=wx.FD_OPEN)
 
-        # Show the dialog and retrieve the user response. If it is the OK response, 
+        # Show the dialog and retrieve the user response. If it is the OK response,
         # process the data.
         if dlg.ShowModal() == wx.ID_OK:
             # This returns the file that was selected

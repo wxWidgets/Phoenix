@@ -1,2 +1,2 @@
-    
+
             window.SetClientSize(child.GetSize())

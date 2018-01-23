@@ -393,7 +393,7 @@ def run():
     # modifications above, so for now, at least, let.s just ignore them.
     c.find('GetValueAsCustom').ignore()
     c.find('SetValueAsCustom').ignore()
-    
+
 
 
     #-----------------------------------------------------------------

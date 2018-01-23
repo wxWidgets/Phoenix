@@ -10,15 +10,15 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "frame"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxFrame' ]
-    
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -34,10 +34,10 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
 
     c.find('wxFrame.title').default = 'wxEmptyString'
-    c.find('Create.title').default = 'wxEmptyString'    
-    
+    c.find('Create.title').default = 'wxEmptyString'
+
     c.find('SetMenuBar.menuBar').transfer = True
-    
+
     # We already have a MappedType for wxArrayInt, so just tweak the
     # interface to use that instead of an array size and a const int pointer.
     tools.fixSetStatusWidths(c.find('SetStatusWidths'))
@@ -46,20 +46,20 @@ def run():
     c.addProperty('StatusBar GetStatusBar SetStatusBar')
     c.addProperty('StatusBarPane GetStatusBarPane SetStatusBarPane')
     c.addProperty('ToolBar GetToolBar SetToolBar')
-    
+
     tools.fixTopLevelWindowClass(c)
 
     # Add back the virtual flag for these methods.
     # TODO: maybe these should go into a tools.addFrameVirtuals function?
     c.find('OnCreateStatusBar').isVirtual = True
     c.find('OnCreateToolBar').isVirtual = True
-    
-    
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

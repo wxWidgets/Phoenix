@@ -1,7 +1,7 @@
 ##Andrea Gavana
 #!/usr/bin/env python
 
-# This sample shows how to retrieve default platform's 
+# This sample shows how to retrieve default platform's
 # bitmaps using wx.ArtProvider
 
 import wx
@@ -18,7 +18,7 @@ class BitmapFrame(wx.Frame):
         bitmap_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         bitmap_sizer.Add((0, 0), 1, wx.EXPAND)
-        
+
         # Show a few bitmaps retrieved via wx.ArtProvider
         for kind in [wx.ART_INFORMATION, wx.ART_WARNING, wx.ART_CDROM, wx.ART_CUT]:
             bmp = wx.ArtProvider.GetBitmap(kind, wx.ART_OTHER, (32, 32))

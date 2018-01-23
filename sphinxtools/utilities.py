@@ -171,7 +171,7 @@ def replaceCppItems(line):
     """
 
     items = RE_KEEP_SPACES.split(line)
-    
+
     # This should get rid of substitutions like "float buffered"...
     no_conversion = ['click', 'buffer', 'precision']
     newstr = []

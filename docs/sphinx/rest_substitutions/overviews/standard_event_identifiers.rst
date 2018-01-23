@@ -12,12 +12,12 @@ used in the following two situations:
 
 - When creating a new window you may specify ``wx.ID_ANY`` to let
   wxPython assign an unused identifier to it automatically
-  
+
 - When installing an event handler using :meth:`EvtHandler.Bind`, you
   may use it to indicate that you want to handle the events coming
   from any control, regardless of its identifier
-  
-  
+
+
 Another standard special identifier value is ``wx.ID_NONE``: this is a
 value which is not matched by any other id.
 

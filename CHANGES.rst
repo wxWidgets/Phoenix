@@ -51,7 +51,7 @@ Changes in this release include the following:
 * Fixed wx.richtext.RichTextBuffer.GetExtWildcard to return a tuple of 2
   values, as was done in Classic. (#594)
 
-* Various fixes in UltimateListCtrl, HyperTreeList and CheckListCtrlMixin. 
+* Various fixes in UltimateListCtrl, HyperTreeList and CheckListCtrlMixin.
   (#592, #349, #612)
 
 * Fixes in TextEditMixin to ensure that the new value is passed in the
@@ -100,6 +100,14 @@ Changes in this release include the following:
   layer around AGW's HyperTreeList. This means that if you are using a non-
   default style flag you'll need to pass it to the agwStyle parameter instead
   of the style parameter.
+
+* Fix crash when deleting all wx.dataview.TreeListCtrl items with wxGTK3.
+  (#679)
+
+* Fix displaying '&' in the label of wx.RadioBox on GTK. (#39)
+
+* Fix problems of the wrong C++ method being called in wx.ProgressDialog on MS
+  Windows. (#701)
 
 
 

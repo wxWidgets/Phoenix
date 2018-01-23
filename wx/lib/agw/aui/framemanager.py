@@ -7447,7 +7447,7 @@ class AuiManager(wx.EvtHandler):
                 # Close/update asynchronously, because
                 # the notebook which generated the event
                 # (and triggered this method call) will
-                # be deleted. 
+                # be deleted.
                 def close():
                     self.ClosePane(p)
                     self.Update()

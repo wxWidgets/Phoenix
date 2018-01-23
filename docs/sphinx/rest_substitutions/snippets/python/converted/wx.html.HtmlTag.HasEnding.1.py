@@ -1,5 +1,5 @@
     # .. code-block:: html
-        
+
     <html><body>
     Hello<p>
     How are you?

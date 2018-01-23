@@ -3,6 +3,7 @@
 # Main ToasterBoxDemo
 
 import wx
+import wx.adv
 import wx.lib.scrolledpanel as scrolled
 
 import os
@@ -25,7 +26,6 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 # In case of TB_COMPLEX style, create a panel that contains an image, some
 # text, an hyperlink and a ticker.
 
-from wx.adv import HyperlinkCtrl as hyperlink
 from wx.lib.ticker import Ticker
 
 # ------------------------------------------------------------------------------ #
@@ -368,8 +368,8 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         sttext = wx.StaticText(panel, -1, strs)
         horsizer1.Add(sttext, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 5)
 
-        hl = hyperlink.HyperLinkCtrl(panel, -1, "My Home Page",
-                                     URL="http://xoomer.alice.it/infinity77/")
+        hl = wx.adv.HyperlinkCtrl(panel, -1, label="My Home Page",
+                                  url="http://xoomer.alice.it/infinity77/")
 
         sizer.Add((0,5))
         sizer.Add(horsizer1, 0, wx.EXPAND)

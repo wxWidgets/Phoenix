@@ -15,7 +15,7 @@ Now (Finally):
   crustslices.py contains: CrustSlices and CrustSlicesFrame
   PyShell.py and PySlicesShell.py are the respective standalone shell apps
   PyCrust.py and PySlices.py are the respective apps that also include Filling
-  
+
   frame.py etc. still continue to service both PyCrust and PySlices.
 
 0.9.7.8 (9/8/09)
@@ -43,7 +43,7 @@ After revising the naming conventions:
   crustslices.py contains: CrustSlices and CrustSlicesFrame
   PyShell.py and PySlicesShell.py are the respective standalone shell apps
   PyCrust.py and PySlices.py are the respective apps that also include Filling
-  
+
   frame.py etc. still continue to service both PyCrust and PySlices.
 
 0.9.7.7 (8/25/2009) (Current--Still Need to SVNAdd the new file PySlicesShell.py)
@@ -160,7 +160,7 @@ On top of these changes I (Robin Dunn) added the following:
   file pointed to by PYTHONSTARTUP or a file in the config dir if
   PYTHONSTARTUP is not set in the environment.
 
-* Added an option to skip the running of the startup code when 
+* Added an option to skip the running of the startup code when
   PyShell or PyCrust starts.
 
 * PyCrust adds a pp(item) function to the shell's namespace that

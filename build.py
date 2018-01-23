@@ -133,7 +133,7 @@ Usage: ./build.py [command(s)] [options]
       install_py    Install wxPython only
 
       sdist         Build a tarball containing all source files
-      sdist_demo    Build a tarball containing just the demo and samples folders 
+      sdist_demo    Build a tarball containing just the demo and samples folders
       bdist         Create a binary tarball release of wxPython Phoenix
       bdist_docs    Build a tarball containing the documentation
       bdist_egg     Build a Python egg.  Requires magic.

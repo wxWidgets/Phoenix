@@ -1,14 +1,14 @@
-    
+
         def OnPaint(self, event):
-        
+
             # Create paint DC
             dc = wx.PaintDC(self)
-    
+
             # Create graphics context from it
             gc = wx.GraphicsContext.Create(dc)
-    
+
             if gc:
-            
+
                 # make a path that contains a circle and some lines
                 gc.SetPen(wx.RED_PEN)
                 path = gc.CreatePath()
@@ -19,7 +19,7 @@
                 path.AddLineToPoint(50.0, 100.0)
                 path.CloseSubpath()
                 path.AddRectangle(25.0, 25.0, 50.0, 50.0)
-    
+
                 gc.StrokePath(path)
-    
-        
+
+

@@ -2025,7 +2025,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
                 del self._drag_image
                 self._drag_image = None
                 self.GetParent().Refresh()
-                
+
             if self.HasCapture():
                 self.ReleaseMouse()
 

@@ -37,7 +37,7 @@ class htmlcell_Tests(wtc.WidgetTestCase):
         c = wx.html.HtmlCell()
         c.FindCellByPos
 
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

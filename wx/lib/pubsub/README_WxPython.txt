@@ -1,9 +1,9 @@
 # this file gets copied to wx/lib/pubsub folder when release to wxPython
 
-For wxPython users: 
+For wxPython users:
 
 The code in this wx/lib/pubsub folder is taken verbatim from the PyPubSub
-project on SourceForge.net. Pubsub originated as a wxPython lib, but it is now 
+project on SourceForge.net. Pubsub originated as a wxPython lib, but it is now
 a standalone project on SourceForge. It is included as part of wxPython
 distribution for convenience to wxPython users, but pubsub can also be installed
 standalone (see installation notes at http://pypubsub.sourceforge.net), or you
