@@ -20,6 +20,7 @@ import wx
 def _displayHook(obj):
     if obj is not None:
         print repr(obj)
+        print (repr(obj))
 
 # add translation macro to builtin similar to what gettext does
 import __builtin__
