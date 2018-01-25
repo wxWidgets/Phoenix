@@ -4579,7 +4579,7 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
         case 'F':
             {
                 /* Python callable object. */
-
+ 
                 PyObject **p = va_arg(va, PyObject **);
 
                 if (arg != NULL)
@@ -4595,14 +4595,14 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                         Py_INCREF(arg);
                     }
                 }
-
+ 
                 break;
             }
 
         case 'H':
             {
                 /* Python callable object or None. */
-
+ 
                 PyObject **p = va_arg(va, PyObject **);
 
                 if (arg != NULL)
@@ -4618,14 +4618,14 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                         Py_INCREF(arg);
                     }
                 }
-
+ 
                 break;
             }
 
         case '!':
             {
                 /* Python object that implements the buffer protocol. */
-
+ 
                 PyObject **p = va_arg(va, PyObject **);
 
                 if (arg != NULL)
@@ -4647,7 +4647,7 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                         Py_INCREF(arg);
                     }
                 }
-
+ 
                 break;
             }
 
@@ -4656,7 +4656,7 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                 /*
                  * Python object that implements the buffer protocol or None.
                  */
-
+ 
                 PyObject **p = va_arg(va, PyObject **);
 
                 if (arg != NULL)
@@ -4678,7 +4678,7 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                         Py_INCREF(arg);
                     }
                 }
-
+ 
                 break;
             }
 
@@ -7124,7 +7124,7 @@ static int isNonlazyMethod(PyMethodDef *pmd)
         "__aexit__",
 #endif
         NULL
-    };
+    };  
 
     const char **l;
 
@@ -8464,6 +8464,27 @@ static int addStringInstances(PyObject *dict, sipStringInstanceDef *si)
 #endif
             break;
 
+        case 'w':
+            /* The hack for wchar_t. */
+#if defined(HAVE_WCHAR_H)
+            w = PyUnicode_FromWideChar((const wchar_t *)si->si_val, 1);
+            break;
+#else
+            raiseNoWChar();
+            return -1;
+#endif
+
+        case 'W':
+            /* The hack for wchar_t*. */
+#if defined(HAVE_WCHAR_H)
+            w = PyUnicode_FromWideChar((const wchar_t *)si->si_val,
+                    wcslen((const wchar_t *)si->si_val));
+            break;
+#else
+            raiseNoWChar();
+            return -1;
+#endif
+
         default:
             w = SIPBytes_FromString(si->si_val);
         }
@@ -9659,11 +9680,11 @@ void sipSaveMethod(sipPyMethod *pm, PyObject *meth)
 static void sip_api_call_hook(const char *hookname)
 {
     PyObject *dictofmods, *mod, *dict, *hook, *res;
-
+ 
     /* Get the dictionary of modules. */
     if ((dictofmods = PyImport_GetModuleDict()) == NULL)
         return;
-
+ 
 #if PY_MAJOR_VERSION >= 3
     /* Get the builtins module. */
     if ((mod = PyDict_GetItemString(dictofmods, "builtins")) == NULL)
@@ -9673,18 +9694,18 @@ static void sip_api_call_hook(const char *hookname)
     if ((mod = PyDict_GetItemString(dictofmods, "__builtin__")) == NULL)
         return;
 #endif
-
+ 
     /* Get it's dictionary. */
     if ((dict = PyModule_GetDict(mod)) == NULL)
         return;
-
+ 
     /* Get the function hook. */
     if ((hook = PyDict_GetItemString(dict, hookname)) == NULL)
         return;
-
+ 
     /* Call the hook and discard any result. */
     res = PyObject_Call(hook, empty_tuple, NULL);
-
+ 
     Py_XDECREF(res);
 }
 
@@ -10522,7 +10543,7 @@ static int sipSimpleWrapper_init(sipSimpleWrapper *self, PyObject *args,
              */
             new_unused_p = &new_unused;
         }
-
+            
         if (final_func((PyObject *)self, sipNew, unused, new_unused_p) < 0)
         {
             Py_XDECREF(unused);
@@ -11315,7 +11336,7 @@ static int sipSimpleWrapper_set_dict(sipSimpleWrapper *sw, PyObject *value,
     }
 
     Py_XDECREF(sw->dict);
-
+    
     Py_XINCREF(value);
     sw->dict = value;
 
@@ -11985,7 +12006,7 @@ static void forgetObject(sipSimpleWrapper *sw)
     }
 
     /*
-     * This is needed because we release the GIL when calling a C++ dtor.
+     * This is needed because we might release the GIL when calling a C++ dtor.
      * Without it the cyclic garbage collector can be invoked from another
      * thread resulting in a crash.
      */

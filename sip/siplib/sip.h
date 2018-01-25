@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041305
-#define SIP_VERSION_STR     "4.19.5"
+#define SIP_VERSION         0x041307
+#define SIP_VERSION_STR     "4.19.7"
 
 
 /*
@@ -1460,6 +1460,8 @@ typedef struct _sipCharInstanceDef {
 
 /*
  * The information describing a string instance to be added to a dictionary.
+ * This is also used as a hack to add (or fix) other types rather than add a
+ * new table type and so requiring a new major version of the API.
  */
 typedef struct _sipStringInstanceDef {
     /* The string name. */
@@ -1468,7 +1470,10 @@ typedef struct _sipStringInstanceDef {
     /* The string value. */
     const char *si_val;
 
-    /* The encoding used, either 'A', 'L', '8' or 'N'. */
+    /*
+     * The encoding used, either 'A', 'L', '8' or 'N'.  'w' and 'W' are also
+     * used to support the fix for wchar_t.
+     */
     char si_encoding;
 } sipStringInstanceDef;
 
