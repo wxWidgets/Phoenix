@@ -24,6 +24,8 @@ def _displayHook(obj):
 # add translation macro to builtin similar to what gettext does
 import __builtin__
 __builtin__.__dict__['_'] = wx.GetTranslation
+import builtins
+builtins.__dict__['_'] = wx.GetTranslation
 
 import app_const as appC
 
