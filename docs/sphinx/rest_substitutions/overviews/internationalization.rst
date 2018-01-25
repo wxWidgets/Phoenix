@@ -66,7 +66,7 @@ The ``.pot`` file is then provided to the translators and they use it to
 generate a ``.po`` file for the language they translate too or they can also use
 the ``.pot`` file to merge new/changed text strings to an existing ``.po`` file.
 
-To do the actual translation we recomment `poEdit` [2]_ , it allows you to
+To do the actual translation we recommend `poEdit` [2]_ , it allows you to
 create or update a translation catalog (``.po`` file) from the ``.pot`` file.
 
 

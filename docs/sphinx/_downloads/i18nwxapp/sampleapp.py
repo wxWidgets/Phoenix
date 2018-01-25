@@ -83,7 +83,7 @@ class AppI18N(sc.SizedFrame):
             defaultDir=os.getcwd(),
             defaultFile="",
             wildcard=wildcard,
-            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+            style=wx.FD_OPEN | wx.FD_MULTIPLE | wx.FD_CHANGE_DIR
             ) as dlg:
 
             # Show the dialog and retrieve the user response. If it is the
