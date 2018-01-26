@@ -109,6 +109,9 @@ Changes in this release include the following:
 * Fix problems of the wrong C++ method being called in wx.ProgressDialog on MS
   Windows. (#701)
 
+* Fixed how the scrollbar events are captured in DynamicSashWindow in order to
+  fix regression in the sample. (#687)
+
 
 
 

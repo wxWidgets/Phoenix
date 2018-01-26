@@ -110,9 +110,9 @@ class SimpleView(wx.Panel):
 def runTest(frame, nb, log):
 
     if True:
-        win = gizmos.DynamicSashWindow(nb, -1, #style=0
-                                  #| wxDS_MANAGE_SCROLLBARS
-                                  #| wxDS_DRAG_CORNER
+        win = gizmos.DynamicSashWindow(nb, -1, style=0
+                                  #| gizmos.DS_MANAGE_SCROLLBARS
+                                  | gizmos.DS_DRAG_CORNER
                                   )
 
         view = TestView(win, -1, log)
