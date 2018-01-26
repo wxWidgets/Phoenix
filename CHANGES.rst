@@ -76,7 +76,7 @@ Changes in this release include the following:
   the Python class. (#642)
 
 * Fixed wx.CallLater to explicitly hold a reference instead of depending on an
-  uncollectible cycle to keep the instance around. Like before the cycle is
+  uncollectable cycle to keep the instance around. Like before the cycle is
   broken and the saved reference is deleted after the timer expires and the
   callable has been called. (#457)
 
