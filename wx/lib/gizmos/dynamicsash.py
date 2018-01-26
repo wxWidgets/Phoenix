@@ -890,19 +890,16 @@ class _DynamicSashWindowLeaf(wx.EvtHandler):
         self.Bind(_EVT_DYNAMIC_SASH_REPARENT, self.OnReparent)
 
         if self.m_impl.m_window.GetWindowStyle() & DS_MANAGE_SCROLLBARS:
-            self.m_hscroll.SetEventHandler(self)
-            self.m_vscroll.SetEventHandler(self)
-
-
-            self.Bind(wx.EVT_SET_FOCUS, self.OnFocus)
-            self.Bind(wx.EVT_SCROLL_TOP, self.OnScroll)
-            self.Bind(wx.EVT_SCROLL_BOTTOM, self.OnScroll)
-            self.Bind(wx.EVT_SCROLL_LINEUP, self.OnScroll)
-            self.Bind(wx.EVT_SCROLL_LINEDOWN, self.OnScroll)
-            self.Bind(wx.EVT_SCROLL_PAGEUP, self.OnScroll)
-            self.Bind(wx.EVT_SCROLL_PAGEDOWN, self.OnScroll)
-            self.Bind(wx.EVT_SCROLL_THUMBTRACK, self.OnScroll)
-            self.Bind(wx.EVT_SCROLL_THUMBRELEASE, self.OnScroll)
+            for sbar in [self.m_hscroll, self.m_vscroll]:
+                sbar.Bind(wx.EVT_SET_FOCUS, self.OnFocus)
+                sbar.Bind(wx.EVT_SCROLL_TOP, self.OnScroll)
+                sbar.Bind(wx.EVT_SCROLL_BOTTOM, self.OnScroll)
+                sbar.Bind(wx.EVT_SCROLL_LINEUP, self.OnScroll)
+                sbar.Bind(wx.EVT_SCROLL_LINEDOWN, self.OnScroll)
+                sbar.Bind(wx.EVT_SCROLL_PAGEUP, self.OnScroll)
+                sbar.Bind(wx.EVT_SCROLL_PAGEDOWN, self.OnScroll)
+                sbar.Bind(wx.EVT_SCROLL_THUMBTRACK, self.OnScroll)
+                sbar.Bind(wx.EVT_SCROLL_THUMBRELEASE, self.OnScroll)
 
         layout = wx.LayoutConstraints()
         size = self.m_hscroll.GetBestSize()
