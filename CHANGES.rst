@@ -102,7 +102,7 @@ Changes in this release include the following:
   of the style parameter.
 
 * Fix crash when deleting all wx.dataview.TreeListCtrl items with wxGTK3.
-  (#679)
+  (#679, #704)
 
 * Fix displaying '&' in the label of wx.RadioBox on GTK. (#39)
 
