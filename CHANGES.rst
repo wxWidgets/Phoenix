@@ -8,13 +8,13 @@
 wxPython Changelog
 ==================
 
-4.0.0rc1
---------
-* (not yet released)
+4.0.0 "The Phoenix Takes Flight!"
+---------------------------------
+* 27-Jan-2018
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0rc1
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.0.0rc1``
+Pip:    ``pip install wxPython==4.0.0``
 
 Changes in this release include the following:
 
