@@ -456,6 +456,12 @@ def makeOptionParser():
 
 
 def parseArgs(args):
+    # If WXPYTHON_BUILD_ARGS is set in the environment, split it and add to args
+    if os.environ.get('WXPYTHON_BUILD_ARGS', None):
+        import shlex
+        args += shlex.split(os.environ.get('WXPYTHON_BUILD_ARGS'))
+
+    # Parse the args into options
     parser = makeOptionParser()
     options, args = parser.parse_args(args)
 

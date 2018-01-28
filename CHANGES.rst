@@ -112,6 +112,8 @@ Changes in this release include the following:
 * Fixed how the scrollbar events are captured in DynamicSashWindow in order to
   fix regression in the sample. (#687)
 
+* Allow extra CLI args to be passed to build.py by setting WXPYTHON_BUILD_ARGS
+  in the environment.
 
 
 
