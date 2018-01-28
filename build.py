@@ -654,7 +654,7 @@ class CommandTimer(object):
         msg('Finished command: %s (%s)' % (self.name, time))
 
 
-def uploadPackage(fileName, options, mask=defaultMask, keep=50):
+def uploadPackage(fileName, options, mask=defaultMask, keep=75):
     """
     Upload the given filename to the configured package server location. Only
     the `keep` most recent files matching `mask` will be kept so the server
@@ -702,7 +702,7 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     msg("Upload complete!")
 
 
-def uploadTree(srcPath, destPath, options, keep=30):
+def uploadTree(srcPath, destPath, options, days=30):
     """
     Similar to the above but uploads a tree of files.
     """
@@ -728,9 +728,9 @@ def uploadTree(srcPath, destPath, options, keep=30):
     runcmd(cmd)
 
     if not options.release:
-        # Remove files that were last modified more than `keep` days ago
+        # Remove files that were last modified more than `days` days ago
         msg("Cleaning up old builds.")
-        cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
+        cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, days)
         runcmd(cmd)
 
     msg("Tree upload and cleanup complete!")
