@@ -1480,14 +1480,14 @@ def cmd_build_vagrant(options, args):
     cmdTimer = CommandTimer('bdist_vagrant')
     cfg = Config(noWxConfig=True)
     if not options.vagrant_vms or options.vagrant_vms == 'all':
-        VMs = [ 'centos-7',
-                'debian-8',
-                'debian-9',
-                'fedora-23',
-                'fedora-26',
-                'fedora-27',
-                'ubuntu-14.04',
-                'ubuntu-16.04',
+        VMs = [ 'centos-7     all all',
+                'debian-8     all all',
+                'debian-9     all all',
+                'fedora-23    all all',
+                'fedora-26    all all',
+                'fedora-27    all gtk3', # no webkitgtk for gtk2??
+                'ubuntu-14.04 all all',
+                'ubuntu-16.04 all all',
                 ]
     elif options.vagrant_vms == 'none':
         VMs = [] # to skip building anything and just upload
