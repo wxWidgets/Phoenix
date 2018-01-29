@@ -175,6 +175,18 @@ class dc_Tests(wtc.WidgetTestCase):
         dc.DrawLines( [(15,15), (35,15), (35,35), (35,15), (15,15)] )
 
 
+    def test_dcContextManager(self):
+        import wx.siplib
+        with wx.ClientDC(self.frame) as dc:
+            dc.DrawLine(0,0,100,100)
+
+            # check ownership
+            assert wx.siplib.ispyowned(dc)
+
+        # check the DC's ownership has changed
+        assert not wx.siplib.ispyowned(dc)
+
+
 #---------------------------------------------------------------------------
 
 

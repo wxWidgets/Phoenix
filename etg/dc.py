@@ -264,6 +264,10 @@ def run():
     c.addPyCode('DC.GetCGContext = wx.deprecated(DC.GetCGContext, "Use GetHandle instead.")')
     c.addPyCode('DC.GetGdkDrawable = wx.deprecated(DC.GetGdkDrawable, "Use GetHandle instead.")')
 
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Destroy()')
+
 
     # This file contains implementations of functions for quickly drawing
     # lists of items on the DC. They are called from the CppMethods defined
