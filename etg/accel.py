@@ -36,6 +36,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
 
+
     c = module.find('wxAcceleratorTable')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
@@ -53,7 +54,11 @@ def run():
 
     # and add the code for the new constructor
     c.addCppCtor(
-        briefDoc="TODO",
+        briefDoc="""\
+            Constructs an AcceleratorTable from a sequence of items
+            where each item is either a wx.AcceleratorEntry or a 
+            corresponding 3-element tuple like (modifiers, keyCode, cmd).
+            """,
         argsString='(PyObject* entries)',
         body="""\
     const char* errmsg = "Expected a sequence of 3-tuples or wx.AcceleratorEntry objects.";
