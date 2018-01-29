@@ -51,6 +51,8 @@ def run():
     c.addPublic()
     tools.removeVirtuals(c)
 
+    c.addDtor('public', True)
+
     # Keep only the wxSize overloads of these
     c.find('GetSize').findOverload('wxCoord').ignore()
     c.find('GetSizeMM').findOverload('wxCoord').ignore()

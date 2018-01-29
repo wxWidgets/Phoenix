@@ -182,9 +182,11 @@ class dc_Tests(wtc.WidgetTestCase):
 
             # check ownership
             assert wx.siplib.ispyowned(dc)
+            assert not wx.siplib.isdeleted(dc)
 
         # check the DC's ownership has changed
         assert not wx.siplib.ispyowned(dc)
+        assert wx.siplib.isdeleted(dc)
 
 
 #---------------------------------------------------------------------------
