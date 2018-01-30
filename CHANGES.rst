@@ -215,6 +215,9 @@ Changes in this release include the following:
   can be handy in the rare cases where something holds on to a DC for too
   long, perhaps unintentionally. (#680)
 
+* Fixed crash due to too aggressive management of wxModules when we load
+  subordinate extensions that have their own wxModules (wx.html, wx.adv, etc.)
+  (#688)
 
 
 
