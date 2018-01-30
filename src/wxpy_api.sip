@@ -549,10 +549,22 @@ inline PyObject* i_wxPyMethod_Self(PyObject* method) {
 
 void i_wxPyReinitializeModules() {
     if (i_wxPyCheckForApp(false)) {
-        wxModule::CleanUpModules();
+        // NOTE: We are intentionally NOT calling wxModule::CleanUpModules
+        // here because that could clear some things that will not be reset
+        // when used again, leading to crashes. For example, in
+        // wxMSWDCImpl::DoGradientFillLinear it is saving a pointer to an API
+        // function in a dyn-loaded DLL. When modules are cleaned up then that
+        // DLL will be unloaded, leaving a dangling function pointer.  We'll
+        // likely end up with multiple instances of some things, but that is
+        // better than the alternaive currently.
+        //wxModule::CleanUpModules();
+
         wxModule::RegisterModules();
         wxModule::InitializeModules();
-        wxInitAllImageHandlers();
+
+        // And since we're not calling CleanUpModules there is no longer any
+        // need to re-init the image handlers.
+        //wxInitAllImageHandlers();
     }
 }
 
