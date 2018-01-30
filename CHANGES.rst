@@ -212,6 +212,12 @@ Changes in this release include the following:
   point values to integers, and a couple other possible incorrect
   conversions.  (#536)
 
+* Added context manager methods to wx.DC that explicitly destroys the C++
+  part of the DC upon exit. Using DCs as context managers is not required, but
+  can be handy in the rare cases where something holds on to a DC for too
+  long, perhaps unintentionally. (#680)
+
+
 
 
 
