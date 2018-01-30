@@ -1495,7 +1495,7 @@ def cmd_build_vagrant(options, args):
         VMs = options.vagrant_vms.split(',')
 
     for vmName in VMs:
-        vmDir = opj(phoenixDir(), 'vagrant', vmName)
+        vmDir = opj(phoenixDir(), 'vagrant', vmName.split()[0])
         pwd = pushDir(vmDir)
         msg('Starting Vagrant VM in {}'.format(vmDir))
         runcmd('vagrant up')
