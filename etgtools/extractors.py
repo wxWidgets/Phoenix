@@ -1072,11 +1072,12 @@ private:
     {CLASS}& operator=(const {CLASS}&);""".format(CLASS=self.name))
         self.addItem(wig)
 
-    def addDtor(self, prot='protected'):
+    def addDtor(self, prot='protected', isVirtual=False):
         # add declaration of a destructor to this class
+        virtual = 'virtual ' if isVirtual else ''
         wig = WigCode("""\
 {PROT}:
-    ~{CLASS}();""".format(CLASS=self.name, PROT=prot))
+    {VIRTUAL}~{CLASS}();""".format(VIRTUAL=virtual, CLASS=self.name, PROT=prot))
         self.addItem(wig)
 
     def addDefaultCtor(self, prot='protected'):
