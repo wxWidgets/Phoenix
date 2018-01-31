@@ -3013,6 +3013,7 @@ class WindowMenuService(DocService):
             currentFrame = wx.GetApp().GetTopWindow()
 
         windowMenuIndex = currentFrame.GetMenuBar().FindMenu(_("&Window"))
+        assert windowMenuIndex != wx.NOT_FOUND, "Menu not found in MenuBar for {}".format(_("&Window"))
         windowMenu = currentFrame.GetMenuBar().GetMenu(windowMenuIndex)
 
         if self.GetDocumentManager().GetFlags() & wx.lib.docview.DOC_SDI:
