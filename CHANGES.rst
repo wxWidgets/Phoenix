@@ -112,6 +112,14 @@ Changes in this release include the following:
 * Fixed how the scrollbar events are captured in DynamicSashWindow in order to
   fix regression in the sample. (#687)
 
+* Added context manager methods to wx.DC that explicitly destroys the C++
+  part of the DC upon exit. Using DCs as context managers is not required, but
+  can be handy in the rare cases where something holds on to a DC for too
+  long, perhaps unintentionally. (#680)
+
+* Fixed crash due to too aggressive management of wxModules when we load
+  subordinate extensions that have their own wxModules (wx.html, wx.adv, etc.)
+  (#688)
 
 
 
@@ -210,14 +218,6 @@ Changes in this release include the following:
   point values to integers, and a couple other possible incorrect
   conversions.  (#536)
 
-* Added context manager methods to wx.DC that explicitly destroys the C++
-  part of the DC upon exit. Using DCs as context managers is not required, but
-  can be handy in the rare cases where something holds on to a DC for too
-  long, perhaps unintentionally. (#680)
-
-* Fixed crash due to too aggressive management of wxModules when we load
-  subordinate extensions that have their own wxModules (wx.html, wx.adv, etc.)
-  (#688)
 
 
 
