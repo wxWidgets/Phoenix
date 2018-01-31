@@ -64,6 +64,7 @@ def run():
     #-----------------------------------------------------------------
 
     module.addHeaderCode('#include <wx/stc/stc.h>')
+    module.addHeaderCode('#include "wxpybuffer.h"')
 
 
     c = module.find('wxStyledTextCtrl')
@@ -161,6 +162,29 @@ def run():
     c.find('MacCheckSpelling').ignore()
     c.find('ShowNativeCaret').ignore()
     c.find('HideNativeCaret').ignore()
+
+    # Change the *RGBAImage methods to accept any buffer object
+    c.find('MarkerDefineRGBAImage').ignore()
+    c.addCppMethod('void', 'MarkerDefineRGBAImage', '(int markerNumber, wxPyBuffer* pixels)',
+        doc="""\
+            Define a marker from RGBA data.\n
+            It has the width and height from RGBAImageSetWidth/Height. You must 
+            ensure that the buffer is at least width*height*4 bytes long. 
+            """,
+        body="""\
+            self->MarkerDefineRGBAImage(markerNumber, (unsigned char*)pixels->m_ptr);
+            """)
+
+    c.find('RegisterRGBAImage').ignore()
+    c.addCppMethod('void', 'RegisterRGBAImage', '(int type, wxPyBuffer* pixels)',
+        doc="""\
+            Register an RGBA image for use in autocompletion lists.\n
+            It has the width and height from RGBAImageSetWidth/Height. You must 
+            ensure that the buffer is at least width*height*4 bytes long.
+            """,
+        body="""\
+            self->RegisterRGBAImage(type, (unsigned char*)pixels->m_ptr);
+            """)
 
 
     # TODO:  Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py)

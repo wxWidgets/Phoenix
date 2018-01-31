@@ -121,6 +121,10 @@ Changes in this release include the following:
   subordinate extensions that have their own wxModules (wx.html, wx.adv, etc.)
   (#688)
 
+* Fixed StyledTextCtrl.MarkerDefineRGBAImage and RegisterRGBAImage methods to
+  be able to accept any Python buffer compatible object for the pixel data. (#716)
+
+
 
 
 
