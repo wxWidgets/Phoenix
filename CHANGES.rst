@@ -10,7 +10,7 @@ wxPython Changelog
 
 4.0.0 "The Phoenix Takes Flight!"
 ---------------------------------
-* 27-Jan-2018
+* 31-Jan-2018
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
@@ -80,7 +80,6 @@ Changes in this release include the following:
   broken and the saved reference is deleted after the timer expires and the
   callable has been called. (#457)
 
-
 * Although it's more or less just an implementation detail, add wrappers for
   wx.aui.AuiTabCtrl so references to it will get the correct type. (#664)
 
@@ -126,6 +125,7 @@ Changes in this release include the following:
 
 * Fixed StyledTextCtrl.MarkerDefineRGBAImage and RegisterRGBAImage methods to
   be able to accept any Python buffer compatible object for the pixel data. (#716)
+
 
 
 
