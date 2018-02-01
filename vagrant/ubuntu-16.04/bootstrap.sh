@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set up and update package repos
-add-apt-repository ppa:fkrull/deadsnakes
+add-apt-repository ppa:deadsnakes/ppa
 apt-get update
 
 # Install necessary development tools, libs, etc.
