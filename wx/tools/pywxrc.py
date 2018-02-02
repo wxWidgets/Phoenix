@@ -213,7 +213,7 @@ class xrc%(windowName)s(wx.%(windowClass)s):
 
 def __init_resources():
     global __res
-    __res = xrc.EmptyXmlResource()
+    __res = xrc.XmlResource()
 """
 
     LOAD_RES_FILE = """\
