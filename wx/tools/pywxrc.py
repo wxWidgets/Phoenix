@@ -74,10 +74,9 @@ class xrc%(windowName)s(wx.%(windowClass)s):
 
     def __init__(self, parent):
         # Two stage creation (see http://wiki.wxpython.org/index.cgi/TwoStageCreation)
-        pre = wx.Pre%(windowClass)s()
-        self.PreCreate(pre)
-        get_resources().LoadOn%(windowClass)s(pre, parent, "%(windowName)s")
-        self.PostCreate(pre)
+        wx.%(windowClass)s.__init__(self)
+        self.PreCreate(self)
+        get_resources().Load%(windowClass)s(self, parent, "%(windowName)s")
 
         # Define variables for the controls, bind event handlers
 """
@@ -86,8 +85,7 @@ class xrc%(windowName)s(wx.%(windowClass)s):
 class %(subclass)s(wx.%(windowClass)s):
     def __init__(self):
         # Two stage creation (see http://wiki.wxpython.org/index.cgi/TwoStageCreation)
-        pre = wx.Pre%(windowClass)s()
-        self.PostCreate(pre)
+        wx.%(windowClass)s.__init__(self)
         self.Bind(wx.EVT_WINDOW_CREATE, self.OnCreate)
 
 #!XRCED:begin-block:%(subclass)s._PostInit
