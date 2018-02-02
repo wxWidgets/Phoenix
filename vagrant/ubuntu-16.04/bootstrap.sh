@@ -28,7 +28,5 @@ virtualenv --python=python2.7 venvs/Py27
 pyvenv-3.5 venvs/Py35
 python3.6 -m venv venvs/Py36
 
-#chown -R vagrant:vagrant venvs
-# This box provides a user named "ubuntu" instead
-chown -R ubuntu:ubuntu venvs
+chown -R vagrant:vagrant venvs
 
