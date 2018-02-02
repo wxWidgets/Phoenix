@@ -50,7 +50,7 @@ release or the snapshots server can be used. With that file in place then a
 build for a specific distro can be done with just a few vagrant commands, for
 example::
 
-    cd vagrant/ubuntu-16.04-x64
+    cd vagrant/ubuntu-16.04
     vagrant up
     vagrant ssh -c "scripts/build.sh ubuntu-16.04"
     vagrant halt
