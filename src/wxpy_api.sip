@@ -439,7 +439,7 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
 PyObject* wxPyNoAppError = NULL;
 
 bool i_wxPyCheckForApp(bool raiseException) {
-    if (wxTheApp != NULL)
+    if (wxApp::GetInstance() != NULL)
         return true;
     else {
         if (raiseException)
