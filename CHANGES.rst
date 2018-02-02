@@ -8,8 +8,8 @@
 wxPython Changelog
 ==================
 
-4.0.1 Lemonade
---------------
+4.0.1 "Lemonade"
+----------------
 * 2-Feb-2018
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.0.1
