@@ -1280,6 +1280,12 @@ def cmd_build_wx(options, args):
     if options.extra_make:
         build_options.append('--extra_make="%s"' % options.extra_make)
 
+    if not isWindows and not isDarwin and not options.no_magic and not options.use_syswx:
+        # Using $ORIGIN in the rpath will cause the dynamic linker to look
+        # for shared libraries in a folder relative to the loading binary's
+        # location. Here we'll use just $ORIGIN so it should look in the same
+        # folder as the wxPython extension modules.
+        os.environ['LD_RUN_PATH'] = '$ORIGIN'
 
     try:
         # Import and run the wxWidgets build script

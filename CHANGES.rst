@@ -8,6 +8,29 @@
 wxPython Changelog
 ==================
 
+4.0.1 Lemonade
+--------------
+* 2-Feb-2018
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.1
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.1``
+
+This release is a quick hot-fix of some issues discovered in 4.0.0 just after
+the release, plus a bit of  low-hanging fruit that was easy to squeeze in too.
+Changes in this release include the following:
+
+* A fix for a segfault that happens upon startup on newer linux releases. (#648)
+
+* Set LD_RUN_PATH for the wxWidgets part of the build so the wx libs that are
+  loaded by other wx libs can be found successfully. (#723)
+
+* Use wxApp::GetInstance to check if there is an existing wxApp object. (#720)
+
+
+
+
+
 4.0.0 "The Phoenix Takes Flight!"
 ---------------------------------
 * 31-Jan-2018
