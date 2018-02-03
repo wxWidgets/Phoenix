@@ -8,6 +8,18 @@
 wxPython Changelog
 ==================
 
+4.1.0
+-----
+* (not yet released)
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.1.0
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.1.0``
+
+
+
+
+
 4.0.1 "Lemonade"
 ----------------
 * 2-Feb-2018
