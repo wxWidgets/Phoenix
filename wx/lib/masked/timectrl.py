@@ -1339,7 +1339,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
             self.SetValue(newvalue)
 
         except ValueError:  # must not be in bounds:
-            if not wx.Validator_IsSilent():
+            if not wx.Validator.IsSilent():
                 wx.Bell()
 ##        dbg(indent=0)
 
