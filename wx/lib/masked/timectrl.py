@@ -44,6 +44,10 @@
 # o wxMaskedTextCtrl -> masked.TextCtrl
 # o wxTimeCtrl -> masked.TimeCtrl
 #
+# 2/4/2018   - jensgoe (mail@jensgoepfert.de)
+# o wx.Validator_IsSilent() -> wx.Validator.IsSilent()
+#
+
 
 """
 *TimeCtrl* provides a multi-cell control that allows manipulation of a time
