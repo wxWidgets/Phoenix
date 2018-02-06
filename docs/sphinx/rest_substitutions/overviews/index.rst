@@ -95,7 +95,7 @@ and launch the wxPython demo for you.
          <p class="mybiglink"><a class="mybiglink" href="wx.propgrid.1moduleindex.html">wx.propgrid</a><br/>
             <span class="linkdescr">PropertyGrid and related classes for editing a grid of name/value pairs. </span></p>
 
-         <p class="mybiglink"><a class="mybiglink" href="wx.xrc.1moduleindex,html">wx.xrc</a><br/>
+         <p class="mybiglink"><a class="mybiglink" href="wx.xrc.1moduleindex.html">wx.xrc</a><br/>
             <span class="linkdescr">Classes for loading widgets and layout from XML</span></p>
 
          <p class="mybiglink"><a class="mybiglink" href="wx.xml.1moduleindex.html">wx.xml</a><br/>
