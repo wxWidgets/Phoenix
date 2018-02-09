@@ -60,6 +60,12 @@ def run():
     c.find('SetSelection.from').name = 'frm'
 
 
+    c.find('GetTextIndent').ignore()
+    c.find('SetTextIndent').ignore()
+    c.addPyCode("ComboCtrl.GetTextIndent = wx.deprecated(ComboCtrl.GetMargins, 'Use GetMargins instead.')")
+    c.addPyCode("ComboCtrl.SetTextIndent = wx.deprecated(ComboCtrl.SetMargins, 'Use SetMargins instead.')")
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

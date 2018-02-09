@@ -570,7 +570,10 @@ def run():
 
     #---------------------------------------
     # wxIconizeEvent
-    module.find('wxIconizeEvent.Iconized').deprecated = True
+    c = module.find('wxIconizeEvent')
+    c.find('Iconized').ignore()
+    c.addPyCode("IconizeEvent.Iconized = wx.deprecated(IconizeEvent.IsIconized, 'Use IsIconized instead')")
+
 
 
     # Apply common fixups for all the event classes

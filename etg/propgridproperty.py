@@ -117,16 +117,28 @@ def run():
     c.find('GetEditorDialog').factory = True
 
 
+    c.find('AddChild').ignore()
+    c.find('GetValueString').ignore()
+    c.addPyCode("PGProperty.AddChild = wx.deprecated(PGProperty.AddPrivateChild, 'Use AddPrivateChild instead')")
+    c.addPyCode("PGProperty.GetValueString = wx.deprecated(PGProperty.GetValueAsString, 'Use GetValueAsString instead')")
+
+
+    #---------------------------------------------------------
     c = module.find('wxPGChoicesData')
     tools.ignoreConstOverloads(c)
     c.bases = ['wxRefCounter']
     c.find('~wxPGChoicesData').ignore(False)
 
 
+    #---------------------------------------------------------
     c = module.find('wxPGChoices')
     c.find('wxPGChoices').findOverload('wxChar **').ignore()
     tools.ignoreConstOverloads(c)
     c.find('operator[]').ignore()
+    c.find('GetId').type = 'wxIntPtr'
+    c.find('GetId').setCppCode_sip("""\
+        sipRes = new  ::wxIntPtr((wxIntPtr)sipCpp->GetId());
+        """)
 
     c.addPyMethod('__getitem__', '(self, index)',
         doc="Returns a reference to a :class:PGChoiceEntry using Python list syntax.",

@@ -170,6 +170,11 @@ def run():
     c.addPyProperty('Menus GetMenus SetMenus')
 
 
+    c.find('GetLabelTop').ignore()
+    c.find('SetLabelTop').ignore()
+    c.addPyCode("MenuBar.GetLabelTop = wx.deprecated(MenuBar.GetMenuLabelText, 'Use GetMenuLabelText instead')")
+    c.addPyCode("MenuBar.SetLabelTop = wx.deprecated(ManuBar.SetMenuLabel, 'Use SetMenuLabel instead')")
+
     module.addItem(tools.wxListWrapperTemplate('wxMenuList', 'wxMenu', module))
 
     #-----------------------------------------------------------------
