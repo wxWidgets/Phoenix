@@ -34,6 +34,11 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
 
+    # Ignore the overloads that require a WXHINSTANCE
+    c.find('wxIconBundle').findOverload('WXHINSTANCE').ignore()
+    c.find('AddIcon').findOverload('WXHINSTANCE').ignore()
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

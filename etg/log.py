@@ -88,6 +88,7 @@ def run():
 
     c = module.find('wxLogStderr')
     c.find('wxLogStderr.fp').ignore()
+    c.find('wxLogStderr.conv').ignore()
     c.addPrivateCopyCtor()
     c.addPrivateAssignOp()
 

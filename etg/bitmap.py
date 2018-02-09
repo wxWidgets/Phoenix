@@ -44,8 +44,10 @@ def run():
     c = module.find('wxBitmap')
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
-
     tools.removeVirtuals(c)
+
+    # TODO: The wxCursor version of the ctor is not implemented on OSX...
+    c.find('wxBitmap').findOverload('wxCursor').ignore()
 
     c.find('wxBitmap.bits').type = 'const char*'
     c.find('wxBitmap.type').default = 'wxBITMAP_TYPE_ANY'

@@ -79,13 +79,18 @@ def run():
 
     # We already have a MappedType for wxArrayInt, so just tweak the
     # interfaces to use that instead of a const int pointer.
-    c.find('wxGLCanvas').ignore()
+    c.find('wxGLCanvas').findOverload('const int *attribList').ignore()
     m = c.addCppCtor_sip(
         argsString="""(
-             wxWindow* parent, wxWindowID id=wxID_ANY, wxArrayInt* attribList=NULL,
-             const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize,
-             long style=0, const wxString& name="GLCanvas",
-             const wxPalette& palette=wxNullPalette)""",
+             wxWindow* parent /TransferThis/, 
+             wxWindowID id=wxID_ANY, 
+             wxArrayInt* attribList=NULL,
+             const wxPoint& pos=wxDefaultPosition, 
+             const wxSize& size=wxDefaultSize,
+             long style=0, 
+             const wxString& name="GLCanvas",
+             const wxPalette& palette=wxNullPalette)
+             """,
         cppSignature="""(
              wxWindow* parent, wxWindowID id=wxID_ANY, const int* attribList=NULL,
              const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize,
@@ -102,7 +107,7 @@ def run():
         )
 
 
-    m = c.find('IsDisplaySupported')
+    m = c.find('IsDisplaySupported').findOverload('attribList')
     m.find('attribList').type = 'wxArrayInt*'
     m.setCppCode_sip("""\
         const int* attribPtr = NULL;

@@ -75,13 +75,6 @@ def run():
         if hasattr(item, 'type') and item.type == 'wxPGPropArg':
             item.type = 'const wxPGPropArgCls &'
 
-
-    td = module.find('wxPGVFBFlags')
-    assert isinstance(td, etgtools.TypedefDef)
-    td.type = 'unsigned char'
-    td.noTypeName = True
-
-
     c = module.find('wxPropertyGridEvent')
     tools.fixEventClass(c)
 
@@ -102,13 +95,6 @@ def run():
         EVT_PG_COL_END_DRAG = wx.PyEventBinder( wxEVT_PG_COL_END_DRAG, 1 )
         """)
 
-    module.addItem(etgtools.WigCode("""\
-        enum {
-            wxPG_SUBID1,
-            wxPG_SUBID2,
-            wxPG_SUBID_TEMP1,
-        };
-        """))
 
     # Switch all wxVariant types to wxPGVariant, so the propgrid-specific
     # version of the MappedType will be used for converting to/from Python
@@ -116,6 +102,21 @@ def run():
     for item in module.allItems():
         if hasattr(item, 'type') and 'wxVariant' in item.type:
             item.type = item.type.replace('wxVariant', 'wxPGVariant')
+
+
+    # Switch wxPGVFBFlags to unsigned char
+    td = module.find('wxPGVFBFlags')
+    td.ignore()
+
+    for name in ['wxPGValidationInfo.GetFailureBehavior',
+                 'wxPGValidationInfo.SetFailureBehavior.failureBehavior',
+                 'wxPropertyGridEvent.GetValidationFailureBehavior',
+                 'wxPropertyGridEvent.SetValidationFailureBehavior.flags',
+                ]:
+        item = module.find(name)
+        assert item.type == 'wxPGVFBFlags'
+        item.type = 'byte'
+
 
 
     c = module.find('wxPropertyGridPopulator')

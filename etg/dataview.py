@@ -238,12 +238,21 @@ def run():
         method.find('value').type = 'wxDVCVariant&'
         method.cppSignature = sig
 
+    def _fixupTypeParam(klass):
+        param = klass.findItem('{}.varianttype'.format(klass.name))
+        if param and param.default == 'GetDefaultType()':
+            param.default = '{}::GetDefaultType()'.format(klass.name)
+
 
     c = module.find('wxDataViewRenderer')
     c.addPrivateCopyCtor()
     c.abstract = True
-    c.addAutoProperties()
     c.find('GetView').ignore(False)
+
+    # TODO: This is only available when wxUSE_ACCESSIBILITY is set to 1
+    c.find('GetAccessibleDescription').ignore()
+
+    c.addAutoProperties()
 
     # Change variant getters to return the value
     for name, sig in [
@@ -264,6 +273,7 @@ def run():
 
 
     c = module.find('wxDataViewCustomRenderer')
+    _fixupTypeParam(c)
     m = c.find('GetValueFromEditorCtrl')
     _fixupBoolGetters(m, 'bool (wxWindow * editor, wxVariant& value)')
 
@@ -305,6 +315,7 @@ def run():
                   ]:
         c = module.find(name)
         c.addAutoProperties()
+        _fixupTypeParam(c)
 
         c.addItem(etgtools.WigCode("""\
             virtual bool SetValue( const wxDVCVariant &value ) [bool (const wxVariant& value)];
@@ -434,6 +445,10 @@ def run():
             // PyTuple steals a reference, so we don't need to decref the items here
             return value;
             """)
+
+
+    # TODO: add support for wxVector templates
+    c.find('GetSortingColumns').ignore()
 
 
     #-----------------------------------------------------------------

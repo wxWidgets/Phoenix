@@ -103,6 +103,13 @@ def run():
     ##    "sipCpp->LoadHistoryItem(wxSharedPtr<wxWebViewHistoryItem>(item));")
 
 
+    c.find('MSWSetModernEmulationLevel').setCppCode("""\
+        #ifdef __WXMSW__
+            return self->MSWSetModernEmulationLevel(modernLevel);
+        #else
+            return false;
+        #endif
+        """)
 
 
 

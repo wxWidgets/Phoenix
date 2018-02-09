@@ -321,6 +321,7 @@ def run():
     #-------------------------------------------------------
     c = module.find('wxRichTextImage')
     _fixDrawObject(c)
+    c.find('LoadAndScaleImageCache.changed').inOut = True
 
     #-------------------------------------------------------
     c = module.find('wxRichTextBuffer')

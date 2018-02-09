@@ -34,6 +34,25 @@ def run():
     c = module.find('wxNotificationMessage')
     assert isinstance(c, etgtools.ClassDef)
 
+    # take care of some methods only available on MSW
+    c.find('UseTaskBarIcon').setCppCode("""\
+        #ifdef __WXMSW__
+            return wxNotificationMessage::UseTaskBarIcon(icon);
+        #else
+            wxPyRaiseNotImplemented();
+            return NULL;
+        #endif
+        """)
+
+    c.find('MSWUseToasts').setCppCode("""\
+        #ifdef __WXMSW__
+            return wxNotificationMessage::MSWUseToasts(*shortcutPath, *appId);
+        #else
+            wxPyRaiseNotImplemented();
+            return false;
+        #endif
+        """)
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -395,6 +395,10 @@ def run():
     c.find('SetValueAsCustom').ignore()
 
 
+    #-----------------------------------------------------------------
+    c = module.find('wxGridStringTable')
+    c.addPrivateCopyCtor()
+
 
     #-----------------------------------------------------------------
     c = module.find('wxGridTableMessage')
@@ -473,6 +477,9 @@ def run():
         Grid.wxGridSelectColumns = Grid.SelectColumns
         Grid.wxGridSelectRowsOrColumns = Grid.SelectRowsOrColumns
         """)
+
+    c.find('SetCellAlignment').findOverload('align').ignore()
+    c.find('SetCellTextColour').overloads = []
 
     #-----------------------------------------------------------------
     c = module.find('wxGridUpdateLocker')

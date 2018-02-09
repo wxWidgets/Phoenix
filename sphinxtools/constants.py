@@ -60,7 +60,9 @@ SECTIONS = [('return'    , ':returns:'),
             ('note'      , '.. note::'),
             ('see'       , '.. seealso::'),
             ('todo'      , '.. todo::'),
-            ('par'       , '')]
+            ('pre'       , ':precondition:'),
+            ('par'       , '')
+            ]
 
 
 # List of things to remove/ignore (there may be more)
@@ -256,10 +258,12 @@ DOXY_2_REST = [('@author:',        '\n.. moduleauthor:: '),
                ('@kwarg',          ':keyword'),
                ('@note:',          '\n.. note:: '),
                ('@package:',       '\n**Package:** '),
-               ('@package',       '\n**Package:** '),
+               ('@package',        '\n**Package:** '),
                ('@postcondition:', '\n:postcondition: '),
                ('@pre:',           '\n:precondition: '),
                ('@precondition:',  '\n:precondition: '),
+               ('@pre',            '\n:precondition: '),
+               ('@precondition',   '\n:precondition: '),
                ('@requires:',      '\n:requires: '),
                ('@returns:',       '\n:returns: '),
                ('@return:',        '\n:returns: '),

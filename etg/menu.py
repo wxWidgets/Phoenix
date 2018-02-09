@@ -155,7 +155,7 @@ def run():
         GetMenus() -> (menu, label)\n
         Return a list of (menu, label) items for the menus in the :class:`MenuBar`.""",
         body="""\
-        return [(self.GetMenu(i), self.GetLabelTop(i)) for i in range(self.GetMenuCount())]
+        return [(self.GetMenu(i), self.GetMenuLabel(i)) for i in range(self.GetMenuCount())]
         """)
     c.addPyMethod('SetMenus', '(self, items)',
         doc="""\

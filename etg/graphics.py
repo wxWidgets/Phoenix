@@ -171,6 +171,9 @@ def run():
         }
         """)
 
+    # TODO: support this?
+    c.find('CreateFromNativeHDC').ignore()
+
     #---------------------------------------------
     c = module.find('wxGraphicsPath')
     tools.removeVirtuals(c)
@@ -191,9 +194,34 @@ def run():
                 p.keepReference = True
     c.find('CreateContextFromImage.image').keepReference = True
 
-    # FIXME: Handle wxEnhMetaFileDC?
+    # TODO: support this?
     c.find('CreateContext').findOverload('wxEnhMetaFileDC').ignore()
 
+    # TODO: support this?
+    c.find('CreateContextFromNativeHDC').ignore()
+
+
+    c.find('GetGDIPlusRenderer').ignore()
+    c.addCppMethod('wxGraphicsRenderer*', 'GetGDIPlusRenderer', '()', isStatic=True,
+        doc="Returns GDI+ renderer (MSW only).",
+        body="""\
+            #ifdef __WXMSW__
+                return wxGraphicsRenderer::GetGDIPlusRenderer();
+            #else
+                return NULL;
+            #endif
+            """)
+
+    c.find('GetDirect2DRenderer').ignore()
+    c.addCppMethod('wxGraphicsRenderer*', 'GetDirect2DRenderer', '()', isStatic=True,
+        doc="Returns Direct2D renderer (MSW only).",
+        body="""\
+            #ifdef __WXMSW__
+                return wxGraphicsRenderer::GetDirect2DRenderer();
+            #else
+                return NULL;
+            #endif
+            """)
 
     #---------------------------------------------
     c = module.find('wxGraphicsMatrix')

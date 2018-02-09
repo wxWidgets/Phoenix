@@ -53,7 +53,10 @@ def run():
     # TODO: maybe these should go into a tools.addFrameVirtuals function?
     c.find('OnCreateStatusBar').isVirtual = True
     c.find('OnCreateToolBar').isVirtual = True
+    c.find('DoGiveHelp').isVirtual = True
 
+    # TODO: support this
+    c.find('MSWGetTaskBarButton').ignore()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
