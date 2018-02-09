@@ -341,7 +341,7 @@ or other unixes.
 
 * dpkg-dev
 * build-essential
-* python2.7-dev     # use appropriate Python version here
+* python2.7-dev         # use appropriate Python version here
 * libjpeg-dev
 * libtiff-dev
 * libsdl1.2-dev
@@ -351,7 +351,7 @@ or other unixes.
 * freeglut3-dev
 * libsm-dev
 * libgtk-3-dev
-* libwebkitgtk-3.0-dev
+* libwebkitgtk-3.0-dev  # or libwebkit2gtk-4.0-dev if available
 
 If you are building for GTK2 then you'll also need these packages and
 their dependencies:
