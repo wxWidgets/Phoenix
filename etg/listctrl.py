@@ -17,7 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ "wxListItemAttr",
+ITEMS  = [ "wxItemAttr",  # TODO: technically this should be in its own etg script...
            "wxListItem",
            "wxListCtrl",
            "wxListView",

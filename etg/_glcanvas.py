@@ -19,7 +19,10 @@ These classes enable viewing and interacting with an OpenGL context in a wx.Wind
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'wxGLContext',
+ITEMS  = [ 'wxGLAttribsBase',
+           'wxGLAttributes',
+           'wxGLContextAttrs',
+           'wxGLContext',
            'wxGLCanvas',
           ]
 
@@ -67,6 +70,9 @@ def run():
     c.addPrivateCopyCtor()
 
 
+    c = module.find('wxGLAttribsBase')
+    assert isinstance(c, etgtools.ClassDef)
+    c.find('GetGLAttrs').ignore()
 
     c = module.find('wxGLCanvas')
     tools.fixWindowClass(c)

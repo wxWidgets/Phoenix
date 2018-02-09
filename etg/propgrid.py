@@ -21,6 +21,7 @@ ITEMS  = [ 'interface_2wx_2propgrid_2propgrid_8h.xml',
            'wxPGValidationInfo',
            'wxPropertyGrid',
            'wxPropertyGridEvent',
+           'wxPropertyGridPopulator',
            ]
 
 #---------------------------------------------------------------------------
@@ -115,6 +116,10 @@ def run():
     for item in module.allItems():
         if hasattr(item, 'type') and 'wxVariant' in item.type:
             item.type = item.type.replace('wxVariant', 'wxPGVariant')
+
+
+    c = module.find('wxPropertyGridPopulator')
+    tools.ignoreConstOverloads(c)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

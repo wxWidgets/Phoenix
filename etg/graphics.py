@@ -24,6 +24,7 @@ ITEMS  = [
             'wxGraphicsBitmap',
             'wxGraphicsBrush',
             'wxGraphicsFont',
+            'wxGraphicsPenInfo',
             'wxGraphicsPen',
             'wxGraphicsContext',
             'wxGraphicsGradientStop',
@@ -223,6 +224,15 @@ def run():
                    pyArgsString='(n)',
                    body="return new wxGraphicsGradientStop(self->Item(n));",
                    factory=True)
+
+
+    #---------------------------------------------
+    c = module.find('wxGraphicsPenInfo')
+    # Ignore Dashes for now
+    # TODO: we need to do something like wx.Pen.SetDashes, but since
+    # GraphicsPenInfo is transitory we can't save the reference in it to the
+    # holder, and the pen will not have been created yet...
+    c.find('Dashes').ignore()
 
 
     #---------------------------------------------

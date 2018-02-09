@@ -17,7 +17,9 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'wxPen', 'wxPenList', ]
+ITEMS  = [ 'wxPenInfo',
+           'wxPen',
+           'wxPenList', ]
 
 #---------------------------------------------------------------------------
 
@@ -103,9 +105,16 @@ def run():
     module.addPyCode(pycode)
 
 
+    c = module.find('wxPenInfo')
+    # Ignore Dashes for now
+    # TODO: we need to do something like SetDashes above, but since PenInfo is
+    # transitory we can't save the reference in it to the holder, and the pen
+    # will not have been created yet...
+    c.find('Dashes').ignore()
+
+
     # it is delay-initialized, see stockgdi.sip
     module.find('wxThePenList').ignore()
-
 
 
     # Some aliases that should be phased out eventually, (sooner rather than

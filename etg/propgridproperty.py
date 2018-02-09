@@ -22,6 +22,7 @@ ITEMS  = [ 'wxPGPaintData',
            'wxPGDefaultRenderer',
            'wxPGCellData',
            'wxPGCell',
+           'wxPGAttributeStorage',
 
            'wxPGProperty',
            'wxPropertyCategory',

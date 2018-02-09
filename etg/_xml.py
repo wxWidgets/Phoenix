@@ -25,6 +25,7 @@ provided by Python.
 ITEMS  = [ 'wxXmlNode',
            'wxXmlAttribute',
            'wxXmlDocument',
+           'wxXmlDoctype',
            ]
 
 

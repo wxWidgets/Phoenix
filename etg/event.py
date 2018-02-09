@@ -63,6 +63,15 @@ ITEMS  = [
     'wxWindowCreateEvent',
     'wxWindowDestroyEvent',
 
+    'wxGestureEvent',
+    'wxPanGestureEvent',
+    'wxZoomGestureEvent',
+    'wxRotateGestureEvent',
+    'wxTwoFingerTapEvent',
+    'wxLongPressEvent',
+    'wxPressAndTapEvent',
+
+
     #'wxThreadEvent',
 
 ]

@@ -35,6 +35,7 @@ ITEMS  = [
             'wxDataViewCustomRenderer',
             'wxDataViewTextRenderer',
             'wxDataViewIconTextRenderer',
+            'wxDataViewCheckIconTextRenderer',
             'wxDataViewProgressRenderer',
             'wxDataViewSpinRenderer',
             'wxDataViewToggleRenderer',
@@ -46,6 +47,7 @@ ITEMS  = [
             'wxDataViewColumn',
             'wxDataViewCtrl',
             'wxDataViewEvent',
+            'wxDataViewValueAdjuster',
 
             'wxDataViewListCtrl',
             'wxDataViewListStore',
