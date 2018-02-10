@@ -35,6 +35,10 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    # Compatibility alias
+    module.addPyCode("""\
+        ListItemAttr = wx.deprecated(ItemAttr, 'Use ItemAttr instead')
+        """)
 
     #-------------------------------------------------------
     c = module.find('wxListItem')
