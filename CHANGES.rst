@@ -16,6 +16,15 @@ PyPI:   https://pypi.python.org/pypi/wxPython/4.1.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.1.0``
 
+New and improved stuff in this release:
+
+*
+
+Other changes in this release:
+
+*
+
+
 
 
 
