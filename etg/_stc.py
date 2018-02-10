@@ -234,6 +234,16 @@ def run():
 
     #-----------------------------------------------------------------
 
+    # Keep some of the old names
+    module.addPyCode("""\
+        # compatibility aliases
+        STC_SCMOD_NORM = STC_KEYMOD_NORM
+        STC_SCMOD_SHIFT = STC_KEYMOD_SHIFT
+        STC_SCMOD_CTRL = STC_KEYMOD_CTRL
+        STC_SCMOD_ALT = STC_KEYMOD_ALT
+        STC_SCMOD_SUPER = STC_KEYMOD_SUPER
+        STC_SCMOD_META = STC_KEYMOD_META
+        """)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
