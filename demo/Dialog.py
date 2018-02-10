@@ -42,7 +42,7 @@ class TestDialog(wx.Dialog):
         text.SetHelpText("Here's some help text for field #1")
         box.Add(text, 1, wx.ALIGN_CENTRE|wx.ALL, 5)
 
-        sizer.Add(box, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        sizer.Add(box, 0, wx.EXPAND|wx.ALL, 5)
 
         box = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -54,10 +54,10 @@ class TestDialog(wx.Dialog):
         text.SetHelpText("Here's some help text for field #2")
         box.Add(text, 1, wx.ALIGN_CENTRE|wx.ALL, 5)
 
-        sizer.Add(box, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        sizer.Add(box, 0, wx.EXPAND|wx.ALL, 5)
 
         line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
-        sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5)
+        sizer.Add(line, 0, wx.EXPAND|wx.RIGHT|wx.TOP, 5)
 
         btnsizer = wx.StdDialogButtonSizer()
 
@@ -75,7 +75,7 @@ class TestDialog(wx.Dialog):
         btnsizer.AddButton(btn)
         btnsizer.Realize()
 
-        sizer.Add(btnsizer, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        sizer.Add(btnsizer, 0, wx.ALL, 5)
 
         self.SetSizer(sizer)
         sizer.Fit(self)
