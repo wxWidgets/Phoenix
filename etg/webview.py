@@ -37,7 +37,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode('#include <wx/webview.h>')
+    module.addHeaderCode("""\
+        #include <wx/webview.h>
+        #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
+            #include <wx/msw/webview_ie.h>
+        #endif
+        """)
 
     module.addGlobalStr('wxWebViewBackendDefault')
     module.addGlobalStr('wxWebViewBackendIE')
@@ -104,8 +109,8 @@ def run():
 
 
     c.find('MSWSetModernEmulationLevel').setCppCode("""\
-        #ifdef __WXMSW__
-            return self->MSWSetModernEmulationLevel(modernLevel);
+        #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
+            return wxWebViewIE::MSWSetModernEmulationLevel(modernLevel);
         #else
             return false;
         #endif
