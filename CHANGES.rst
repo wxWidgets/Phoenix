@@ -25,6 +25,8 @@ Changes in this release include the following:
 * wx.Sizers can now be used as an iterator to iterate over the items within
   the sizer. (#738)
 
+* Fix Python3 division in ThumbnailCtrl. (#746)
+
 
 
 
