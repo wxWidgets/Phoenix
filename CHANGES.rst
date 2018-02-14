@@ -17,6 +17,13 @@ PyPI:   https://pypi.python.org/pypi/wxPython/4.0.2
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.0.2``
 
+Changes in this release include the following:
+
+* Fixed wx.html2.EVT_WEBVIEW_NAVIGATING event not being sent on some versions
+  of Linux. (#741)
+
+* wx.Sizers can now be used as an iterator to iterate over the items within
+  the sizer. (#738)
 
 
 
