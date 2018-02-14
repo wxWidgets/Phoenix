@@ -73,6 +73,8 @@ def run():
     c.find('RegisterFactory').setCppCode_sip(
         "wxWebView::RegisterFactory(*backend, wxSharedPtr<wxWebViewFactory>(factory));")
 
+    c.find('RunScript.output').out = True
+
 
     # Custom code to deal with the
     # wxVector<wxSharedPtr<wxWebViewHistoryItem>> return type of these two
