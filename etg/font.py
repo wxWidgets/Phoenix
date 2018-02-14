@@ -114,6 +114,14 @@ def run():
         #endif
         """)
 
+    c.find('AddPrivateFont').setCppCode("""\
+        #if wxUSE_PRIVATE_FONTS
+            return wxFont::AddPrivateFont(*filename);
+        #else
+            wxPyRaiseNotImplemented();
+            return false;
+        #endif
+        """)
 
 
     # The stock Font items are documented as simple pointers, but in reality
