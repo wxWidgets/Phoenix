@@ -57,6 +57,26 @@ def run():
 
     # TODO: support this
     c.find('MSWGetTaskBarButton').ignore()
+    #c.addCppMethod('wxTaskBarButton*', 'MSWGetTaskBarButton', '()',
+    #    doc="""\
+    #    MSW-specific function for accessing the taskbar button under Windows 7 or later.
+    #
+    #    Returns a :class:`wx.TaskBarButton` pointer representing the taskbar button of the
+    #    window under Windows 7 or later. The returned ``wx.TaskBarButton`` may be
+    #    used, if not ``None``, to access the functionality including thumbnail
+    #    representations, thumbnail toolbars, notification and status overlays,
+    #    and progress indicators.
+    #
+    #    This method will raise a ``NotImplemetedError`` on platforms other than MSW.
+    #    """,
+    #    body="""\
+    #    #ifdef __WXMSW__
+    #        return self->MSWGetTaskBarButton();
+    #    #else
+    #        wxPyRaiseNotImplemented();
+    #        return NULL;
+    #    #endif
+    #    """)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
