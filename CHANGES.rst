@@ -8,7 +8,6 @@
 wxPython Changelog
 ==================
 
-
 4.1.0
 -----
 * (not yet released)
@@ -17,6 +16,13 @@ PyPI:   https://pypi.python.org/pypi/wxPython/4.1.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.1.0``
 
+Starting with this release wxPython has switched to tracking the wxWidgets
+master branch for the wxWidgets source code wxPython is built upon, and which
+is included in the wxPython source archives. Along with this change a new
+``wxPy-4.0.x`` branch has been created in the git repository for continuing
+maintenance releases of the 4.0.x series of wxPython, which will still track
+the ``WX_3_0_BRANCH`` wxWidgets branch.
+
 New and improved stuff in this release:
 
 *
@@ -24,8 +30,6 @@ New and improved stuff in this release:
 Other changes in this release:
 
 *
-
-
 
 
 
