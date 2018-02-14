@@ -74,6 +74,9 @@ def run():
     c = module.find('wxPowerResourceBlocker')
     c.addPrivateCopyCtor()
     c.addPrivateAssignOp()
+    # add context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'pass')
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
