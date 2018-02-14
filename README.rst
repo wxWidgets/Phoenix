@@ -352,6 +352,7 @@ or other unixes.
 * libsm-dev
 * libgtk-3-dev
 * libwebkitgtk-3.0-dev  # or libwebkit2gtk-4.0-dev if available
+* libxtst-dev
 
 If you are building for GTK2 then you'll also need these packages and
 their dependencies:
