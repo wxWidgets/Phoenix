@@ -1731,6 +1731,8 @@ def cmd_clean_vagrant(options, args):
     if os.path.exists(d):
         shutil.rmtree(d)
 
+def cmd_clean_all(options, args):
+    cmd_cleanall(options, args)
 
 def cmd_cleanall(options, args):
     # These take care of all the object, lib, shared lib files created by the
