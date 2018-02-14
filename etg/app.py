@@ -68,6 +68,8 @@ def run():
     c.find('OnExceptionInMainLoop').ignore()
     c.find('OnFatalException').ignore()
     c.find('OnUnhandledException').ignore()
+    c.find('StoreCurrentException').ignore()
+    c.find('RethrowStoredException').ignore()
 
     # Release the GIL for potentially blocking or long-running functions
     c.find('MainLoop').releaseGIL()

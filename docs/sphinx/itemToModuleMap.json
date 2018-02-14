@@ -815,7 +815,7 @@
 "DirProperty":"wx.propgrid.",
 "DirSelector":"wx.",
 "DirSelectorPromptStr":"wx.",
-"Direction":"wx.DataObject.",
+"Direction":"wx.",
 "DisableAsserts":"wx.",
 "Display":"wx.",
 "DisplayChangedEvent":"wx.",
