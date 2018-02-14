@@ -224,6 +224,7 @@ def run():
 
 
     # compatibility aliases
+    # compatibility aliases
     module.addPyCode("""\
         PyDataViewIndexListModel = wx.deprecated(DataViewIndexListModel)
         PyDataViewVirtualListModel = wx.deprecated(DataViewVirtualListModel)
@@ -454,8 +455,6 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxDataViewEvent')
     tools.fixEventClass(c)
-
-    c.addProperty('EditCancelled', 'IsEditCancelled', 'SetEditCancelled')
 
     c.find('SetCache.from').name = 'from_'
     c.find('SetCache.to').name = 'to_'
