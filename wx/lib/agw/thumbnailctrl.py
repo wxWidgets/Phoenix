@@ -1790,7 +1790,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         :param `y`: the mouse `y` position.
         """
 
-        col = (x - self._tBorder)/(self._tWidth + self._tBorder)
+        col = (x - self._tBorder)//(self._tWidth + self._tBorder)
 
         if col >= self._cols:
             col = self._cols - 1
@@ -1942,7 +1942,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             return
 
         # get row
-        row = self.GetSelection()/self._cols
+        row = self.GetSelection()//self._cols
         # calc position to scroll view
 
         paintRect = self.GetPaintRect()
@@ -2584,6 +2584,5 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         self._checktext = True
 
         self.Refresh()
-
 
 
