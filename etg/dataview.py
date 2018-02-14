@@ -224,7 +224,6 @@ def run():
 
 
     # compatibility aliases
-    # compatibility aliases
     module.addPyCode("""\
         PyDataViewIndexListModel = wx.deprecated(DataViewIndexListModel)
         PyDataViewVirtualListModel = wx.deprecated(DataViewVirtualListModel)
