@@ -123,6 +123,10 @@ def run():
         #endif
         """)
 
+    c.addCppMethod('bool', 'CanUsePrivateFont', '()', isStatic=True,
+        doc="Returns ``True`` if this build of wxPython supports using :meth:`AddPrivateFont`.",
+        body="return wxUSE_PRIVATE_FONTS;")
+
 
     # The stock Font items are documented as simple pointers, but in reality
     # they are macros that evaluate to a function call that returns a font
