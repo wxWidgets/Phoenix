@@ -243,6 +243,9 @@ def run():
         if param and param.default == 'GetDefaultType()':
             param.default = '{}::GetDefaultType()'.format(klass.name)
 
+        method = klass.find(klass.name)
+        print(method.pyArgsString)
+
 
     c = module.find('wxDataViewRenderer')
     c.addPrivateCopyCtor()
@@ -322,7 +325,6 @@ def run():
             virtual void GetValue( wxDVCVariant &value /Out/ ) const [bool (wxVariant& value)];
             %Property(name=Value, get=GetValue, set=SetValue)
             """, protection='public'))
-
 
     # The SpinRenderer has a few additional pure virtuals that need to be declared
     # since it derives from DataViewCustomRenderer

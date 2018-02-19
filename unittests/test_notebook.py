@@ -23,7 +23,6 @@ class notebook_Tests(wtc.WidgetTestCase):
         wx.NB_FIXEDWIDTH
         wx.NB_MULTILINE
         wx.NB_NOPAGETHEME
-        wx.NB_FLAT
 
         wx.NB_HITTEST_NOWHERE
         wx.NB_HITTEST_ONICON
