@@ -23,6 +23,7 @@ ITEMS  = [ 'wxAuiManager',
            'wxAuiDockInfo',
            'wxAuiDockUIPart',
            'wxAuiPaneButton',
+           'wxAuiFloatingFrame'
            ]
 
 #---------------------------------------------------------------------------

@@ -17,8 +17,6 @@ class grid_Tests(wtc.WidgetTestCase):
 
     def test_grid00(self):
         wx.grid.GRID_AUTOSIZE
-        wx.grid.GRID_COLUMN
-        wx.grid.GRID_ROW
         wx.grid.GRID_DRAW_ROWS_HEADER
         wx.grid.GRID_DRAW_COLS_HEADER
         wx.grid.GRID_DRAW_CELL_LINES

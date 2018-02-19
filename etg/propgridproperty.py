@@ -22,6 +22,7 @@ ITEMS  = [ 'wxPGPaintData',
            'wxPGDefaultRenderer',
            'wxPGCellData',
            'wxPGCell',
+           'wxPGAttributeStorage',
 
            'wxPGProperty',
            'wxPropertyCategory',
@@ -46,14 +47,32 @@ def run():
     c.find('~wxPGCellData').ignore(False)
     c.bases = ['wxRefCounter']
 
+
+    #---------------------------------------------------------
+    c = module.find('wxPGCell')
+    tools.ignoreConstOverloads(c)
+
+
+    #---------------------------------------------------------
     c = module.find('wxPGCellRenderer')
     c.bases = ['wxRefCounter']
 
 
+    #---------------------------------------------------------
+    c = module.find('wxPGAttributeStorage')
+    c.find('const_iterator').ignore()
+    c.find('StartIteration').ignore()
+    c.find('GetNext').ignore()
+
+
+    #---------------------------------------------------------
     c = module.find('wxPGProperty')
     tools.ignoreConstOverloads(c)
+
     c.find('StringToValue.variant').out = True
     c.find('IntToValue.variant').out = True
+
+    c.find('HasFlag').findOverload('FlagType').ignore()
 
     c.addProperty('m_value GetValue SetValue')
 
@@ -117,16 +136,28 @@ def run():
     c.find('GetEditorDialog').factory = True
 
 
+    c.find('AddChild').ignore()
+    c.find('GetValueString').ignore()
+    c.addPyCode("PGProperty.AddChild = wx.deprecated(PGProperty.AddPrivateChild, 'Use AddPrivateChild instead')")
+    c.addPyCode("PGProperty.GetValueString = wx.deprecated(PGProperty.GetValueAsString, 'Use GetValueAsString instead')")
+
+
+    #---------------------------------------------------------
     c = module.find('wxPGChoicesData')
     tools.ignoreConstOverloads(c)
     c.bases = ['wxRefCounter']
     c.find('~wxPGChoicesData').ignore(False)
 
 
+    #---------------------------------------------------------
     c = module.find('wxPGChoices')
     c.find('wxPGChoices').findOverload('wxChar **').ignore()
     tools.ignoreConstOverloads(c)
     c.find('operator[]').ignore()
+    c.find('GetId').type = 'wxIntPtr'
+    c.find('GetId').setCppCode_sip("""\
+        sipRes = new  ::wxIntPtr((wxIntPtr)sipCpp->GetId());
+        """)
 
     c.addPyMethod('__getitem__', '(self, index)',
         doc="Returns a reference to a :class:PGChoiceEntry using Python list syntax.",
@@ -138,6 +169,7 @@ def run():
         )
 
 
+    #---------------------------------------------------------
     # Ignore some string constants (#defines) coming from dox, and add them
     # back in Python code. They are wchar_t* values and this seemed the
     # simplest way to deal with them.
@@ -146,7 +178,6 @@ def run():
                   'wxPG_ATTR_MAX',
                   'wxPG_ATTR_UNITS',
                   'wxPG_ATTR_HINT',
-                  'wxPG_ATTR_INLINE_HELP',
                   'wxPG_ATTR_AUTOCOMPLETE',
                   'wxPG_BOOL_USE_CHECKBOX',
                   'wxPG_BOOL_USE_DOUBLE_CLICK_CYCLING',
@@ -166,7 +197,7 @@ def run():
                   'wxPG_DATE_PICKER_STYLE',
                   'wxPG_ATTR_SPINCTRL_STEP',
                   'wxPG_ATTR_SPINCTRL_WRAP',
-                  'wxPG_ATTR_SPINCTRL_MOTIONSPIN',
+                  'wxPG_ATTR_SPINCTRL_MOTION',
                   'wxPG_ATTR_MULTICHOICE_USERSTRINGMODE',
                   'wxPG_COLOUR_ALLOW_CUSTOM',
                   'wxPG_COLOUR_HAS_ALPHA',
@@ -183,7 +214,7 @@ def run():
             PG_ATTR_MAX                       = u"Max"
             PG_ATTR_UNITS                     = u"Units"
             PG_ATTR_HINT                      = u"Hint"
-            PG_ATTR_INLINE_HELP               = u"InlineHelp"
+            PG_ATTR_INLINE_HELP               = PG_ATTR_HINT
             PG_ATTR_AUTOCOMPLETE              = u"AutoComplete"
             PG_BOOL_USE_CHECKBOX              = u"UseCheckbox"
             PG_BOOL_USE_DOUBLE_CLICK_CYCLING  = u"UseDClickCycling"
@@ -203,7 +234,8 @@ def run():
             PG_DATE_PICKER_STYLE              = u"PickerStyle"
             PG_ATTR_SPINCTRL_STEP             = u"Step"
             PG_ATTR_SPINCTRL_WRAP             = u"Wrap"
-            PG_ATTR_SPINCTRL_MOTIONSPIN       = u"MotionSpin"
+            PG_ATTR_SPINCTRL_MOTION           = u"MotionSpin"
+            PG_ATTR_SPINCTRL_MOTIONSPIN       = PG_ATTR_SPINCTRL_MOTION
             PG_ATTR_MULTICHOICE_USERSTRINGMODE= u"UserStringMode"
             PG_COLOUR_ALLOW_CUSTOM            = u"AllowCustom"
             PG_COLOUR_HAS_ALPHA               = u"HasAlpha"

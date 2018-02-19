@@ -50,6 +50,10 @@ def run():
                   ]:
         c.find(name).factory = True
 
+    c.find('GetToolkitVersion.major').out = True
+    c.find('GetToolkitVersion.minor').out = True
+    c.find('GetToolkitVersion.micro').out = True
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

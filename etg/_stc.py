@@ -226,10 +226,24 @@ def run():
         EVT_STC_INDICATOR_RELEASE = wx.PyEventBinder( wxEVT_STC_INDICATOR_RELEASE, 1 )
         EVT_STC_AUTOCOMP_CANCELLED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_CANCELLED, 1 )
         EVT_STC_AUTOCOMP_CHAR_DELETED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_CHAR_DELETED, 1 )
+        EVT_STC_CLIPBOARD_COPY = wx.PyEventBinder( wxEVT_STC_CLIPBOARD_COPY, 1)
+        EVT_STC_CLIPBOARD_PASTE = wx.PyEventBinder( wxEVT_STC_CLIPBOARD_PASTE, 1)
+        EVT_STC_AUTOCOMP_COMPLETED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_COMPLETED, 1)
+        EVT_STC_MARGIN_RIGHT_CLICK = wx.PyEventBinder( wxEVT_STC_MARGIN_RIGHT_CLICK, 1)
         """)
 
     #-----------------------------------------------------------------
 
+    # Keep some of the old names
+    module.addPyCode("""\
+        # compatibility aliases
+        STC_SCMOD_NORM = STC_KEYMOD_NORM
+        STC_SCMOD_SHIFT = STC_KEYMOD_SHIFT
+        STC_SCMOD_CTRL = STC_KEYMOD_CTRL
+        STC_SCMOD_ALT = STC_KEYMOD_ALT
+        STC_SCMOD_SUPER = STC_KEYMOD_SUPER
+        STC_SCMOD_META = STC_KEYMOD_META
+        """)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

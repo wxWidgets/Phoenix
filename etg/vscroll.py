@@ -119,47 +119,49 @@ def run():
     c.addCppMethod('unsigned long',  'GetFirstVisibleLine', '()',
         doc="Deprecated compatibility helper.",
         deprecated='Use GetVisibleRowsBegin instead.',
-        body="return self->GetFirstVisibleLine();")
+        body="return self->GetVisibleRowsBegin();")
 
     c.addCppMethod('unsigned long',  'GetLastVisibleLine', '()',
         doc="Deprecated compatibility helper.",
         deprecated='Use GetVisibleRowsEnd instead.',
-        body="return self->GetLastVisibleLine();")
+        body="return self->GetVisibleRowsEnd();")
 
     c.addCppMethod('unsigned long',  'GetLineCount', '()',
         doc="Deprecated compatibility helper.",
         deprecated='Use GetRowCount instead.',
-        body="return self->GetLineCount();")
+        body="return self->GetRowCount();")
 
     c.addCppMethod('void',  'SetLineCount', '(unsigned long count)',
         doc="Deprecated compatibility helper.",
         deprecated='Use SetRowCount instead.',
-        body="self->SetLineCount(count);")
+        body="self->SetRowCount(count);")
 
     c.addCppMethod('void',  'RefreshLine', '(unsigned long line)',
         doc="Deprecated compatibility helper.",
         deprecated='Use RefreshRow instead.',
-        body="self->RefreshLine(line);")
+        body="self->RefreshRow(line);")
 
     c.addCppMethod('void',  'RefreshLines', '(unsigned long from_, unsigned long to_)',
         doc="Deprecated compatibility helper.",
         deprecated='Use RefreshRows instead.',
-        body="self->RefreshLines(from_, to_);")
+        body="self->RefreshRows(from_, to_);")
 
     c.addCppMethod('bool',  'ScrollToLine', '(unsigned long line)',
         doc="Deprecated compatibility helper.",
         deprecated='Use ScrollToRow instead.',
-        body="return self->ScrollToLine(line);")
+        body="return self->ScrollToRow(line);")
 
     c.addCppMethod('bool',  'ScrollLines', '(int lines)',
         doc="Deprecated compatibility helper.",
         deprecated='Use ScrollRows instead.',
-        body="return self->wxVarVScrollLegacyAdaptor::ScrollLines(lines);")
+        #body="return self->wxVarVScrollLegacyAdaptor::ScrollLines(lines);")
+        body="return self->ScrollRows(lines);")
 
     c.addCppMethod('bool',  'ScrollPages', '(int pages)',
         doc="Deprecated compatibility helper.",
         deprecated='Use ScrollRowPages instead.',
-        body="return self->wxVarVScrollLegacyAdaptor::ScrollPages(pages);")
+        #body="return self->wxVarVScrollLegacyAdaptor::ScrollPages(pages);")
+        body="return self->ScrollRowPages(pages);")
 
 
 

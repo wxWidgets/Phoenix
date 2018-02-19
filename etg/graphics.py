@@ -24,6 +24,7 @@ ITEMS  = [
             'wxGraphicsBitmap',
             'wxGraphicsBrush',
             'wxGraphicsFont',
+            'wxGraphicsPenInfo',
             'wxGraphicsPen',
             'wxGraphicsContext',
             'wxGraphicsGradientStop',
@@ -170,6 +171,9 @@ def run():
         }
         """)
 
+    # TODO: support this?
+    c.find('CreateFromNativeHDC').ignore()
+
     #---------------------------------------------
     c = module.find('wxGraphicsPath')
     tools.removeVirtuals(c)
@@ -190,9 +194,34 @@ def run():
                 p.keepReference = True
     c.find('CreateContextFromImage.image').keepReference = True
 
-    # FIXME: Handle wxEnhMetaFileDC?
+    # TODO: support this?
     c.find('CreateContext').findOverload('wxEnhMetaFileDC').ignore()
 
+    # TODO: support this?
+    c.find('CreateContextFromNativeHDC').ignore()
+
+
+    c.find('GetGDIPlusRenderer').ignore()
+    c.addCppMethod('wxGraphicsRenderer*', 'GetGDIPlusRenderer', '()', isStatic=True,
+        doc="Returns GDI+ renderer (MSW only).",
+        body="""\
+            #ifdef __WXMSW__
+                return wxGraphicsRenderer::GetGDIPlusRenderer();
+            #else
+                return NULL;
+            #endif
+            """)
+
+    c.find('GetDirect2DRenderer').ignore()
+    c.addCppMethod('wxGraphicsRenderer*', 'GetDirect2DRenderer', '()', isStatic=True,
+        doc="Returns Direct2D renderer (MSW only).",
+        body="""\
+            #ifdef __WXMSW__
+                return wxGraphicsRenderer::GetDirect2DRenderer();
+            #else
+                return NULL;
+            #endif
+            """)
 
     #---------------------------------------------
     c = module.find('wxGraphicsMatrix')
@@ -223,6 +252,15 @@ def run():
                    pyArgsString='(n)',
                    body="return new wxGraphicsGradientStop(self->Item(n));",
                    factory=True)
+
+
+    #---------------------------------------------
+    c = module.find('wxGraphicsPenInfo')
+    # Ignore Dashes for now
+    # TODO: we need to do something like wx.Pen.SetDashes, but since
+    # GraphicsPenInfo is transitory we can't save the reference in it to the
+    # holder, and the pen will not have been created yet...
+    c.find('Dashes').ignore()
 
 
     #---------------------------------------------

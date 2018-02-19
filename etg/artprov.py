@@ -49,6 +49,9 @@ def run():
     c.find('GetBitmap').mustHaveApp()
     c.find('GetIcon').mustHaveApp()
 
+    c.find('Insert').ignore()
+    c.addPyCode("ArtProvider.Insert = wx.deprecated(ArtProvider.PushBack, 'Use ArtProvider.PushBack instead')")
+
     # Change the types of the art constants from wxString to const char*
     # since that is what they really are.
     artConsts = list()

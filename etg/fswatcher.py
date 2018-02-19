@@ -36,7 +36,7 @@ def run():
     # for platforms that have INOTIFY so we need to fake it elsewhere.
     module.addHeaderCode("""
         #include <wx/fswatcher.h>
-        #ifndef wxHAS_INOTIFY
+        #if !defined(wxHAS_INOTIFY) && !defined(wxHAVE_FSEVENTS_FILE_NOTIFICATIONS)
             const int wxFSW_EVENT_UNMOUNT = 0x2000;
         #endif
         """)

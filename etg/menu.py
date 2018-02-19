@@ -155,7 +155,7 @@ def run():
         GetMenus() -> (menu, label)\n
         Return a list of (menu, label) items for the menus in the :class:`MenuBar`.""",
         body="""\
-        return [(self.GetMenu(i), self.GetLabelTop(i)) for i in range(self.GetMenuCount())]
+        return [(self.GetMenu(i), self.GetMenuLabel(i)) for i in range(self.GetMenuCount())]
         """)
     c.addPyMethod('SetMenus', '(self, items)',
         doc="""\
@@ -169,6 +169,11 @@ def run():
         """)
     c.addPyProperty('Menus GetMenus SetMenus')
 
+
+    c.find('GetLabelTop').ignore()
+    c.find('SetLabelTop').ignore()
+    c.addPyCode("MenuBar.GetLabelTop = wx.deprecated(MenuBar.GetMenuLabelText, 'Use GetMenuLabelText instead')")
+    c.addPyCode("MenuBar.SetLabelTop = wx.deprecated(MenuBar.SetMenuLabel, 'Use SetMenuLabel instead')")
 
     module.addItem(tools.wxListWrapperTemplate('wxMenuList', 'wxMenu', module))
 

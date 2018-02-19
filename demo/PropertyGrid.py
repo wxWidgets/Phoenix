@@ -63,7 +63,7 @@ class ValueObject:
 
 
 class IntProperty2(wxpg.PGProperty):
-    """\
+    """
     This is a simple re-implementation of wxIntProperty.
     """
     def __init__(self, label, name = wxpg.PG_LABEL, value=0):
@@ -71,7 +71,7 @@ class IntProperty2(wxpg.PGProperty):
         self.SetValue(value)
 
     def GetClassName(self):
-        """\
+        """
         This is not 100% necessary and in future is probably going to be
         automated to return class name.
         """
@@ -84,8 +84,9 @@ class IntProperty2(wxpg.PGProperty):
         return str(value)
 
     def StringToValue(self, s, flags):
-        """ If failed, return False or (False, None). If success, return tuple
-            (True, newValue).
+        """
+        If failed, return False or (False, None). If success, return tuple
+        (True, newValue).
         """
         try:
             v = int(s)
@@ -97,8 +98,9 @@ class IntProperty2(wxpg.PGProperty):
         return False
 
     def IntToValue(self, v, flags):
-        """ If failed, return False or (False, None). If success, return tuple
-            (True, newValue).
+        """
+        If failed, return False or (False, None). If success, return tuple
+        (True, newValue).
         """
         if (self.GetValue() != v):
             return (True, v)
@@ -265,7 +267,7 @@ class DirsProperty(wxpg.ArrayStringProperty):
 
 
 class PyObjectPropertyValue:
-    """\
+    """
     Value type of our sample PyObjectProperty. We keep a simple dash-delimited
     list of string given as argument to constructor.
     """
@@ -280,7 +282,7 @@ class PyObjectPropertyValue:
 
 
 class PyObjectProperty(wxpg.PGProperty):
-    """\
+    """
     Another simple example. This time our value is a PyObject.
 
     NOTE: We can't return an arbitrary python object in DoGetValue. It cannot
@@ -404,7 +406,7 @@ class SingleChoiceProperty(wxpg.StringProperty):
 
 
 class TrivialPropertyEditor(wxpg.PGEditor):
-    """\
+    """
     This is a simple re-creation of TextCtrlWithButton. Note that it does
     not take advantage of wx.TextCtrl and wx.Button creation helper functions
     in wx.PropertyGrid.

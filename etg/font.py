@@ -114,6 +114,18 @@ def run():
         #endif
         """)
 
+    c.find('AddPrivateFont').setCppCode("""\
+        #if wxUSE_PRIVATE_FONTS
+            return wxFont::AddPrivateFont(*filename);
+        #else
+            wxPyRaiseNotImplemented();
+            return false;
+        #endif
+        """)
+
+    c.addCppMethod('bool', 'CanUsePrivateFont', '()', isStatic=True,
+        doc="Returns ``True`` if this build of wxPython supports using :meth:`AddPrivateFont`.",
+        body="return wxUSE_PRIVATE_FONTS;")
 
 
     # The stock Font items are documented as simple pointers, but in reality
