@@ -44,7 +44,7 @@ class BaseDef(object):
         self.docsIgnored = False # skip this item when generating docs
         self.briefDoc = ''       # either a string or a single para Element
         self.detailedDoc = []    # collection of para Elements
-        self.deprecated = False
+        self.deprecated = False  # is whatever-this-is deprecated.
 
         # The items list is used by some subclasses to collect items that are
         # part of that item, like methods of a ClassDef, parameters in a
@@ -70,7 +70,7 @@ class BaseDef(object):
             self.name = self.name[loc+2:]
         bd = element.find('briefdescription')
         if len(bd):
-            self.briefDoc = bd[0] # Should be just one <para> elements
+            self.briefDoc = bd[0] # Should be just one <para> element
         self.detailedDoc = list(element.find('detaileddescription'))
 
         # Don't iterate all items, just the para items found in detailedDoc
