@@ -276,6 +276,10 @@ class FunctionDef(BaseDef, FixWxPrefix):
 
     def extract(self, element):
         super(FunctionDef, self).extract(element)
+
+        # Check for deprecation
+        self.deprecated = bool([x for x in element.iter() if isinstance(x, et.Element) and x.get('id', "no_id_present").startswith('deprecated')])
+
         self.type = flattenNode(element.find('type'))
         self.definition = element.find('definition').text
         self.argsString = element.find('argsstring').text
@@ -710,6 +714,9 @@ class ClassDef(BaseDef):
         super(ClassDef, self).extract(element)
 
         self.nodeBases = self.findHierarchy(element, {}, [], False)
+
+        # Check for deprecation:
+        self.deprecated = bool([x for x in element.iter() if isinstance(x, et.Element) and x.get('id', "no_id_present").startswith('deprecated')])
 
         for node in element.findall('basecompoundref'):
             self.bases.append(node.text)
