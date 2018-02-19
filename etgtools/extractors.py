@@ -44,6 +44,7 @@ class BaseDef(object):
         self.docsIgnored = False # skip this item when generating docs
         self.briefDoc = ''       # either a string or a single para Element
         self.detailedDoc = []    # collection of para Elements
+        self.deprecated = False
 
         # The items list is used by some subclasses to collect items that are
         # part of that item, like methods of a ClassDef, parameters in a
@@ -69,9 +70,20 @@ class BaseDef(object):
             self.name = self.name[loc+2:]
         bd = element.find('briefdescription')
         if len(bd):
-            self.briefDoc = bd[0] # Should be just one <para> element
+            self.briefDoc = bd[0] # Should be just one <para> elements
         self.detailedDoc = list(element.find('detaileddescription'))
 
+        # Don't iterate all items, just the para items found in detailedDoc
+        # So that classes with a deprecated methdo don't likewise become deprecated.
+        for etree in self.detailedDoc:
+            for item in etree.iter():
+                itemid = item.get('id')
+                if itemid and itemid.startswith('deprecated'):
+                    self.deprecated = True
+                    break
+
+            if self.deprecated:
+                break
 
     def ignore(self, val=True):
         self.ignored = val
@@ -255,7 +267,6 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.pyArgsString = ''
         self.isOverloaded = False
         self.overloads = []
-        self.deprecated = False       # is the function deprecated
         self.factory = False          # a factory function that creates a new instance of the return value
         self.pyReleaseGIL = False     # release the Python GIL for this function call
         self.pyHoldGIL = False        # hold the Python GIL for this function call
@@ -276,10 +287,6 @@ class FunctionDef(BaseDef, FixWxPrefix):
 
     def extract(self, element):
         super(FunctionDef, self).extract(element)
-
-        # Check for deprecation
-        self.deprecated = bool([x for x in element.iter() if isinstance(x, et.Element) and x.get('id', "no_id_present").startswith('deprecated')])
-
         self.type = flattenNode(element.find('type'))
         self.definition = element.find('definition').text
         self.argsString = element.find('argsstring').text
@@ -640,7 +647,6 @@ class ClassDef(BaseDef):
         self.enum_file = ''         # To link sphinx output classes to enums
         self.includes = []          # .h file for this class
         self.abstract = False       # is it an abstract base class?
-        self.deprecated = False     # mark all methods as deprecated
         self.external = False       # class is in another module
         self.noDefCtor = False      # do not generate a default constructor
         self.singlton = False       # class is a singleton so don't call the dtor until the interpreter exits
@@ -714,9 +720,6 @@ class ClassDef(BaseDef):
         super(ClassDef, self).extract(element)
 
         self.nodeBases = self.findHierarchy(element, {}, [], False)
-
-        # Check for deprecation:
-        self.deprecated = bool([x for x in element.iter() if isinstance(x, et.Element) and x.get('id', "no_id_present").startswith('deprecated')])
 
         for node in element.findall('basecompoundref'):
             self.bases.append(node.text)
