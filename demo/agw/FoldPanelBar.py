@@ -501,7 +501,7 @@ class Extended(wx.Frame):
             style.SetCaptionStyle(fpb.CAPTIONBAR_FILLED_RECTANGLE)
 
         else:
-            raise "ERROR: Undefined Style Selected For CaptionBar: " + repr(eventid)
+            raise ValueError("Undefined Style Selected For CaptionBar: " + repr(eventid))
 
         col1 = wx.Colour(self._rslider1.GetValue(), self._gslider1.GetValue(),
                          self._bslider1.GetValue())
