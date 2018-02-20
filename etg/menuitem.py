@@ -38,17 +38,12 @@ def run():
 
     c.find('SetSubMenu.menu').transfer = True
 
+    # deprecated and removed
     c.find('GetLabel').ignore()
     c.find('GetName').ignore()
     c.find('GetText').ignore()
     c.find('SetText').ignore()
     c.find('GetLabelFromText').ignore()
-
-    c.addPyCode("MenuItem.GetLabel = wx.deprecated(MenuItem.GetItemLabelText, 'Use GetItemLabelText instead')")
-    c.addPyCode("MenuItem.GetName = wx.deprecated(MenuItem.GetItemLabelText, 'Use GetItemLabelText instead')")
-    c.addPyCode("MenuItem.GetText = wx.deprecated(MenuItem.GetItemLabel, 'Use GetItemLabel instead')")
-    c.addPyCode("MenuItem.SetText = wx.deprecated(MenuItem.SetItemLabel, 'Use SetItemLabel instead')")
-    c.addPyCode("MenuItem.GetLabelFromText = wx.deprecated(MenuItem.GetLabelText, 'Use GetLabelText instead')")
 
 
     # These are MSW only. Make them be empty stubs for the other ports

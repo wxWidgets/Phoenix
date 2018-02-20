@@ -135,11 +135,9 @@ def run():
 
     c.find('GetEditorDialog').factory = True
 
-
+    # deprecated and removed
     c.find('AddChild').ignore()
     c.find('GetValueString').ignore()
-    c.addPyCode("PGProperty.AddChild = wx.deprecated(PGProperty.AddPrivateChild, 'Use AddPrivateChild instead')")
-    c.addPyCode("PGProperty.GetValueString = wx.deprecated(PGProperty.GetValueAsString, 'Use GetValueAsString instead')")
 
 
     #---------------------------------------------------------

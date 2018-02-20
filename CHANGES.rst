@@ -29,7 +29,11 @@ New and improved stuff in this release:
 
 Other changes in this release:
 
-*
+* Many of the deprecated items in wxWidgets and wxPython are being or have
+  been removed. Be sure to test your code in 4.0.2 or a later 4.0.x release
+  with warnings enabled so you can see which class, method or function calls
+  you need to change.
+
 
 
 

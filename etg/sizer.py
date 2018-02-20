@@ -94,8 +94,8 @@ def run():
     # Needs wxWin 2.6 compatibility
     c.find('Remove').findOverload('(wxWindow *window)').ignore()
 
+    # deprecated and removed
     c.find('SetVirtualSizeHints').ignore()
-    c.addPyCode("Sizer.SetVirtualSizeHints = wx.deprecated(Sizer.FitInside, 'Use FitInside instead')")
 
     c.addPyMethod('AddMany', '(self, items)',
         doc="""\

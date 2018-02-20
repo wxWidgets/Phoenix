@@ -63,8 +63,8 @@ def run():
     module.find('wxSetDisplayName').ignore()
     module.find('wxPostDelete').ignore()
 
+    # deprecated and removed
     module.find('wxUsleep').ignore()
-    module.addPyCode("Usleep = deprecated(MilliSleep, 'Use MilliSleep instead.')")
 
 
     # ignore all the environment related functions
