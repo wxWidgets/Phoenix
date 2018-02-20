@@ -54,6 +54,12 @@ Changes in this release include the following:
 
 * Fix leaking image list in CheckListCtrlMixin (#752)
 
+* All items marked as deprecated in the wxWidgets interface files will now
+  throw a DeprecationWarning when used from wxPython. Many of these items are
+  disappearing in 4.1 so it's important to ensure they are deprecated at
+  runtime too instead of just in the docs. (#749)
+
+
 
 
 
