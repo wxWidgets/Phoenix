@@ -44,7 +44,7 @@ class BaseDef(object):
         self.docsIgnored = False # skip this item when generating docs
         self.briefDoc = ''       # either a string or a single para Element
         self.detailedDoc = []    # collection of para Elements
-        self.deprecated = False  # is whatever-this-is deprecated.
+        self.deprecated = False  # is this item deprecated
 
         # The items list is used by some subclasses to collect items that are
         # part of that item, like methods of a ClassDef, parameters in a
@@ -73,10 +73,12 @@ class BaseDef(object):
             self.briefDoc = bd[0] # Should be just one <para> element
         self.detailedDoc = list(element.find('detaileddescription'))
 
-        # Don't iterate all items, just the para items found in detailedDoc
-        # So that classes with a deprecated methdo don't likewise become deprecated.
-        for etree in self.detailedDoc:
-            for item in etree.iter():
+
+    def checkDeprecated(self):
+        # Don't iterate all items, just the para items found in detailedDoc,
+        # so that classes with a deprecated method don't likewise become deprecated.
+        for para in self.detailedDoc:
+            for item in para.iter():
                 itemid = item.get('id')
                 if itemid and itemid.startswith('deprecated'):
                     self.deprecated = True
@@ -84,6 +86,7 @@ class BaseDef(object):
 
             if self.deprecated:
                 break
+
 
     def ignore(self, val=True):
         self.ignored = val
@@ -290,6 +293,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.type = flattenNode(element.find('type'))
         self.definition = element.find('definition').text
         self.argsString = element.find('argsstring').text
+        self.checkDeprecated()
         for node in element.findall('param'):
             p = ParamDef(node)
             self.items.append(p)
@@ -719,6 +723,7 @@ class ClassDef(BaseDef):
     def extract(self, element):
         super(ClassDef, self).extract(element)
 
+        self.checkDeprecated()
         self.nodeBases = self.findHierarchy(element, {}, [], False)
 
         for node in element.findall('basecompoundref'):
