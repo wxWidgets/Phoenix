@@ -732,7 +732,7 @@ class CheckListCtrlMixin(object):
 
         self.uncheck_image = self.__imagelist_.Add(uncheck_image)
         self.check_image = self.__imagelist_.Add(check_image)
-        self.SetImageList(self.__imagelist_, wx.IMAGE_LIST_SMALL)
+        self.AssignImageList(self.__imagelist_, wx.IMAGE_LIST_SMALL)
         self.__last_check_ = None
 
         self.Bind(wx.EVT_LEFT_DOWN, self.__OnLeftDown_)
