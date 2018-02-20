@@ -243,10 +243,6 @@ def run():
         if param and param.default == 'GetDefaultType()':
             param.default = '{}::GetDefaultType()'.format(klass.name)
 
-        method = klass.find(klass.name)
-        print(method.pyArgsString)
-
-
     c = module.find('wxDataViewRenderer')
     c.addPrivateCopyCtor()
     c.abstract = True
