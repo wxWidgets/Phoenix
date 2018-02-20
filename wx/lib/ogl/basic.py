@@ -2051,7 +2051,7 @@ class Shape(ShapeEvtHandler):
             shoulder1[1] = neck[1] - totalBranchLength / 2.0
             shoulder2[1] = neck[1] + totalBranchLength / 2.0
         else:
-            raise "Unrecognised attachment point in GetBranchingAttachmentInfo"
+            raise ValueError("Unrecognised attachment point in GetBranchingAttachmentInfo")
         return root, neck, shoulder1, shoulder2
 
     def GetBranchingAttachmentPoint(self, attachment, n):
@@ -2093,7 +2093,7 @@ class Shape(ShapeEvtHandler):
             stemPt[0] = neck[0]
             stemPt[1] = pt[1]
         else:
-            raise "Unrecognised attachment point in GetBranchingAttachmentPoint"
+            raise ValueError("Unrecognised attachment point in GetBranchingAttachmentPoint")
 
         return pt, stemPt
 
@@ -2140,7 +2140,7 @@ class Shape(ShapeEvtHandler):
             root[0] = self.GetX() - width / 2.0
             root[1] = self.GetY()
         else:
-            raise "Unrecognised attachment point in GetBranchingAttachmentRoot"
+            raise ValueError("Unrecognised attachment point in GetBranchingAttachmentRoot")
 
         return root
 
