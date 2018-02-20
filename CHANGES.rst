@@ -52,6 +52,8 @@ Changes in this release include the following:
 
 * Fix Python3 division in ThumbnailCtrl. (#746)
 
+* Fix leaking image list in CheckListCtrlMixin (#752)
+
 
 
 
