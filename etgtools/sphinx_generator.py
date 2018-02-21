@@ -1979,6 +1979,7 @@ class XMLDocString(object):
         else:
             raise Exception('Unhandled docstring kind for %s'%xml_item.__class__.__name__)
 
+
         if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, string_base):
             element = et.Element('deprecated', kind='deprecated')
             element.text = VERSION
@@ -2619,11 +2620,7 @@ class XMLDocString(object):
 
         self.Reformat(stream)
 
-        if hasattr(method, 'deprecated') and method.deprecated:
-            text = method.deprecated
-            if isinstance(text, string_base):
-                text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, text.replace('\n', ' '))
-                stream.write(text)
+        self._dumpDeprecationDirective(method, stream, 6)
 
         possible_py = self.HuntContributedSnippets()
 
@@ -2670,13 +2667,7 @@ class XMLDocString(object):
 
         self.Reformat(stream)
 
-        if hasattr(function, 'deprecated') and function.deprecated:
-            if isinstance(function.deprecated, int):
-                msg = ""
-            else:
-                msg = function.deprecated.replace('\n', ' ')
-            text = '%s %s\n%s%s\n\n'%('   .. deprecated::', VERSION, ' '*6, msg)
-            stream.write(text)
+        self._dumpDeprecationDirective(function, stream, 3)
 
         possible_py = self.HuntContributedSnippets()
 
@@ -2896,6 +2887,23 @@ class XMLDocString(object):
 
         stream.write(docstrings + "\n\n")
 
+    # -----------------------------------------------------------------------
+
+    def _dumpDeprecationDirective(self, defobj, stream, spacing):
+        """
+        Writes the deprecation directive to the stream if necesseary.
+
+        :param BaseDef defobj: The extractor object that is potentially deprecated
+        :param stream: The IO stream to write to
+        :param spacing: indicates how much to pad the directive by, in number of spaces.
+        """
+
+        # all BaseDefs have deprecated now:
+        dep = defobj.deprecated
+        if dep and isinstance(dep, string_base):
+            directive = "{space_a}.. wxdeprecated::\n{space_b}{message}".format(space_a = ' ' * spacing,
+                                                                                space_b = ' ' * (spacing + 3),
+                                                                                message = dep)
 
 # ---------------------------------------------------------------------------
 
@@ -3332,9 +3340,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         stream.write(newdocs + '\n\n')
 
-        if hasattr(pm, 'deprecated') and pm.deprecated:
-            text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, pm.deprecated.replace('\n', ' '))
-            stream.write(text)
+        self._dumpDeprecationDirective(pm, stream, 6)
 
         c = self.current_class
         name = c.pyName if c.pyName else removeWxPrefix(c.name)
