@@ -1067,7 +1067,7 @@ class Section(Node):
 
         elif section_type == 'deprecated':
             # Special treatment for deprecated, wxWidgets devs do not put the version number
-            text = '%s\n%s%s'%(VERSION, sub_spacer, text.lstrip('Deprecated'))
+            text = '\n%s%s'%(sub_spacer, text.lstrip('Deprecated'))
 
         elif section_type == 'par':
             # Horrible hack... Why is there a </para> end tag inside the @par tag???
@@ -2620,7 +2620,7 @@ class XMLDocString(object):
 
         self.Reformat(stream)
 
-        self._dumpDeprecationDirective(method, stream, 6)
+        writeDeprecationDirective(method, stream, 6)
 
         possible_py = self.HuntContributedSnippets()
 
@@ -2667,7 +2667,7 @@ class XMLDocString(object):
 
         self.Reformat(stream)
 
-        self._dumpDeprecationDirective(function, stream, 3)
+        writeDeprecationDirective(function, stream, 3)
 
         possible_py = self.HuntContributedSnippets()
 
@@ -2886,24 +2886,6 @@ class XMLDocString(object):
             docstrings = docstrings[0:index]
 
         stream.write(docstrings + "\n\n")
-
-    # -----------------------------------------------------------------------
-
-    def _dumpDeprecationDirective(self, defobj, stream, spacing):
-        """
-        Writes the deprecation directive to the stream if necesseary.
-
-        :param BaseDef defobj: The extractor object that is potentially deprecated
-        :param stream: The IO stream to write to
-        :param spacing: indicates how much to pad the directive by, in number of spaces.
-        """
-
-        # all BaseDefs have deprecated now:
-        dep = defobj.deprecated
-        if dep and isinstance(dep, string_base):
-            directive = "{space_a}.. wxdeprecated::\n{space_b}{message}".format(space_a = ' ' * spacing,
-                                                                                space_b = ' ' * (spacing + 3),
-                                                                                message = dep)
 
 # ---------------------------------------------------------------------------
 
@@ -3340,7 +3322,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         stream.write(newdocs + '\n\n')
 
-        self._dumpDeprecationDirective(pm, stream, 6)
+        writeDeprecationDirective(pm, stream, 6)
 
         c = self.current_class
         name = c.pyName if c.pyName else removeWxPrefix(c.name)
@@ -3621,5 +3603,21 @@ def guessTypeStr(v):
     if 'wxString' in v.type:
         return True
     return False
+
+def writeDeprecationDirective(defobj, stream, spacing):
+    """
+    Writes the deprecation directive to the stream if necesseary.
+
+    :param BaseDef defobj: The extractor object that is potentially deprecated
+    :param stream: The IO stream to write to
+    :param spacing: indicates how much to pad the directive by, in number of spaces.
+    """
+
+    # all BaseDefs have deprecated now:
+    dep = defobj.deprecated
+    if dep and isinstance(dep, string_base):
+        directive = "{space_a}.. wxdeprecated::\n{space_b}{message}".format(space_a = ' ' * spacing,
+                                                                            space_b = ' ' * (spacing + 3),
+                                                                            message = dep)
 
 # ---------------------------------------------------------------------------
