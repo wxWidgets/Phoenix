@@ -1979,10 +1979,12 @@ class XMLDocString(object):
         else:
             raise Exception('Unhandled docstring kind for %s'%xml_item.__class__.__name__)
 
-
+        # Some of the Exctractors (xml item) will set deprecated themselves, in which case it is set as a
+        # non-empty string. In such cases, this branch will insert a deprecated section into the xml tree
+        # so that the Node Tree (see classes above) will generate the deprecated  tag on their own in self.RecurseXML
         if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, string_base):
             element = et.Element('deprecated', kind='deprecated')
-            element.text = VERSION
+            element.text = xml_item.deprecated
 
             deprecated_section = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
             self.root.AddSection(deprecated_section)
@@ -2620,8 +2622,6 @@ class XMLDocString(object):
 
         self.Reformat(stream)
 
-        writeDeprecationDirective(method, stream, 6)
-
         possible_py = self.HuntContributedSnippets()
 
         if possible_py:
@@ -2666,8 +2666,6 @@ class XMLDocString(object):
         stream.write('\n\n')
 
         self.Reformat(stream)
-
-        writeDeprecationDirective(function, stream, 3)
 
         possible_py = self.HuntContributedSnippets()
 
@@ -3322,8 +3320,6 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         stream.write(newdocs + '\n\n')
 
-        writeDeprecationDirective(pm, stream, 6)
-
         c = self.current_class
         name = c.pyName if c.pyName else removeWxPrefix(c.name)
         imm = ItemModuleMap()
@@ -3603,21 +3599,5 @@ def guessTypeStr(v):
     if 'wxString' in v.type:
         return True
     return False
-
-def writeDeprecationDirective(defobj, stream, spacing):
-    """
-    Writes the deprecation directive to the stream if necesseary.
-
-    :param BaseDef defobj: The extractor object that is potentially deprecated
-    :param stream: The IO stream to write to
-    :param spacing: indicates how much to pad the directive by, in number of spaces.
-    """
-
-    # all BaseDefs have deprecated now:
-    dep = defobj.deprecated
-    if dep and isinstance(dep, string_base):
-        directive = "{space_a}.. wxdeprecated::\n{space_b}{message}".format(space_a = ' ' * spacing,
-                                                                            space_b = ' ' * (spacing + 3),
-                                                                            message = dep)
 
 # ---------------------------------------------------------------------------
