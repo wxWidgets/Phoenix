@@ -10,6 +10,10 @@ from sphinx.locale import _ as convertLocale
 class wxdeprecated_node(nodes.Admonition, nodes.Element): pass
 
 def visit_wxdeprecated_node(self, node):
+    for c in ('admonition', 'wxdeprecated'):
+        if not c in node.get('classes'):
+            node.get('classes').append(c)
+
     self.visit_admonition(node)
 
 def depart_wxdeprecated_node(self, node):
@@ -34,7 +38,7 @@ class wxDeprecated(Directive):
         dn = wxdeprecated_node("\n".join(self.content))
         dn += nodes.title(convertLocale("Deprecated"), convertLocale("Deprecated"))
 
-        # some sphinx magic?
+        # Parse all sub-elements into deprecation_node instance
         self.state.nested_parse(self.content, self.content_offset, dn)
 
         if not hasattr(env, 'all_deprecations'):
