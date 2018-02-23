@@ -31,7 +31,7 @@ jobs:
                 name: install python packages
                 command: |
                     python -m venv venv
-                    . venv/bin/activate
+                    source venv/bin/activate
                     which python
                     which pip
                     pip install -r requirements.txt
@@ -39,11 +39,17 @@ jobs:
             - run: 
                 name: build wxWidgets
                 command: |
+                    source venv/bin/activate
+                    which python
+                    which pip
                     python build.py --jobs=4 dox build_wx
 
             - run: 
                 name: build wxPython
                 command: |
+                    source venv/bin/activate
+                    which python
+                    which pip
                     python build.py --jobs=4 etg --nodoc sip build_py
                     python build.py bdist_wheel
                     python build.py install
