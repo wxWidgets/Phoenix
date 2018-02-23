@@ -13,8 +13,11 @@ jobs:
 
         steps:
             - checkout
-            - run: git submodule sync
-            - run: git submodule update --init --recursive
+            - run:
+                name: checkout submodules
+                command: |
+                    git submodule sync
+                    git submodule update --init --recursive
 
             - run:
                 name: install apt packages
@@ -29,12 +32,14 @@ jobs:
                 command: |
                     python -m venv venv
                     . venv/bin/activate
+                    which python
+                    which pip
                     pip install -r requirements.txt
 
             - run: 
                 name: build wxWidgets
                 command: |
-                    python3 build.py --jobs=4 dox build_wx 
+                    python build.py --jobs=4 dox build_wx
 
             - run: 
                 name: build wxPython
