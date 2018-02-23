@@ -923,26 +923,12 @@ class LineShape(Shape):
                 # | /(x1, y1)
                 # |______________________
                 #
-                theta = 0.0
                 x1 = startPositionX
                 y1 = startPositionY
                 x2 = float(positionOnLineX)
                 y2 = float(positionOnLineY)
 
-                if x1 == x2 and y1 == y2:
-                    theta = 0.0
-                elif x1 == x2 and y1 > y2:
-                    theta = 3.0 * math.pi / 2.0
-                elif x1 == x2 and y2 > y1:
-                    theta = math.pi / 2.0
-                elif x2 > x1 and y2 >= y1:
-                    theta = math.atan((y2 - y1) / (x2 - x1))
-                elif x2 < x1:
-                    theta = math.pi + math.atan((y2 - y1) / (x2 - x1))
-                elif x2 > x1 and y2 < y1:
-                    theta = 2 * math.pi + math.atan((y2 - y1) / (x2 - x1))
-                else:
-                    raise "Unknown arrowhead rotation case"
+                theta = math.atan2(y2 - y1, x2 - x1) % (2 * math.pi)
 
                 # Rotate about the centre of the object, then place
                 # the object on the line.
