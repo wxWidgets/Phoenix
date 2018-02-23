@@ -13,6 +13,8 @@ jobs:
 
         steps:
             - checkout
+            - run: git submodule sync
+            - run: git submodule update --init --recursive
 
             - run:
                 name: install apt packages
@@ -40,5 +42,3 @@ jobs:
                     python build.py --jobs=4 etg --nodoc sip build_py
                     python build.py bdist_wheel
                     python build.py install
-
-          
