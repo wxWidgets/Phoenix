@@ -1067,7 +1067,7 @@ class Section(Node):
 
         elif section_type == 'deprecated':
             # Special treatment for deprecated, wxWidgets devs do not put the version number
-            text = '%s\n%s%s'%(VERSION, sub_spacer, text.lstrip('Deprecated'))
+            text = '\n%s%s'%(sub_spacer, text.lstrip('Deprecated'))
 
         elif section_type == 'par':
             # Horrible hack... Why is there a </para> end tag inside the @par tag???
@@ -1979,9 +1979,12 @@ class XMLDocString(object):
         else:
             raise Exception('Unhandled docstring kind for %s'%xml_item.__class__.__name__)
 
+        # Some of the Exctractors (xml item) will set deprecated themselves, in which case it is set as a
+        # non-empty string. In such cases, this branch will insert a deprecated section into the xml tree
+        # so that the Node Tree (see classes above) will generate the deprecated  tag on their own in self.RecurseXML
         if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, string_base):
             element = et.Element('deprecated', kind='deprecated')
-            element.text = VERSION
+            element.text = xml_item.deprecated
 
             deprecated_section = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
             self.root.AddSection(deprecated_section)
@@ -2619,12 +2622,6 @@ class XMLDocString(object):
 
         self.Reformat(stream)
 
-        if hasattr(method, 'deprecated') and method.deprecated:
-            text = method.deprecated
-            if isinstance(text, string_base):
-                text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, text.replace('\n', ' '))
-                stream.write(text)
-
         possible_py = self.HuntContributedSnippets()
 
         if possible_py:
@@ -2669,14 +2666,6 @@ class XMLDocString(object):
         stream.write('\n\n')
 
         self.Reformat(stream)
-
-        if hasattr(function, 'deprecated') and function.deprecated:
-            if isinstance(function.deprecated, int):
-                msg = ""
-            else:
-                msg = function.deprecated.replace('\n', ' ')
-            text = '%s %s\n%s%s\n\n'%('   .. deprecated::', VERSION, ' '*6, msg)
-            stream.write(text)
 
         possible_py = self.HuntContributedSnippets()
 
@@ -2895,7 +2884,6 @@ class XMLDocString(object):
             docstrings = docstrings[0:index]
 
         stream.write(docstrings + "\n\n")
-
 
 # ---------------------------------------------------------------------------
 
@@ -3331,10 +3319,6 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 newdocs += line + "\n"
 
         stream.write(newdocs + '\n\n')
-
-        if hasattr(pm, 'deprecated') and pm.deprecated:
-            text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, pm.deprecated.replace('\n', ' '))
-            stream.write(text)
 
         c = self.current_class
         name = c.pyName if c.pyName else removeWxPrefix(c.name)

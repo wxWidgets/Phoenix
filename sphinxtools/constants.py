@@ -52,7 +52,7 @@ PUNCTUATION = '!"#$%\'()*,./:;<=>?@\\^{|}~'
 # Conversion between XML sections and ReST sections
 SECTIONS = [('return'    , ':returns:'),
             ('since'     , '.. versionadded::'),
-            ('deprecated', '.. deprecated::'),
+            ('deprecated', '.. wxdeprecated::'),   # use the custom admonition for deprecation
             ('warning'   , '.. warning::'),
             ('remarks'   , '.. note::'),
             ('remark'    , '.. note::'),

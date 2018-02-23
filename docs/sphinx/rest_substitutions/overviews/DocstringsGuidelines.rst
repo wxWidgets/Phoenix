@@ -169,8 +169,8 @@ admonitions:
    world, this may also indicate that a particular widget is not
    supported under one or more platforms;
 
-3. ``.. deprecated::`` : used to mark deprecated methods, classes or
-   functions;
+3. ``.. wxdeprecated::`` : used to mark deprecated methods, classes or
+   functions. Please avoid using ``.. deprecated``. ;
 
 4. ``.. availability::`` : normally employed to make the user
    understand on which platform(s) a particular functionality is

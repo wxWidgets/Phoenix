@@ -478,6 +478,16 @@ div.availability {
     background: #e8f7c4;
 }
 
+div.wxdeprecated {
+  background-color: #ffe6c3;
+  border: 1px solid #edc388;
+  text-align: left;
+  background-image: url('../images/sphinxdocs/warning.png');
+  background-repeat: no-repeat;
+  background-position: 5px 5px;
+  padding-left: 33px;
+}
+
 
  p.admonition-title {
    margin: 10px 10px 5px 0px;
