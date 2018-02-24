@@ -4,6 +4,10 @@
 #
 version: 2
 
+# The configuration in this "shared" section are the things that each job will
+# have in common, and are substituted into the jobs config below. It is the
+# job definitions that specify the things that are unique to each job (like
+# the Python version to use, via the docker image name).
 shared: &shared
     working_directory: ~/repo
 
@@ -52,6 +56,8 @@ shared: &shared
                 python -c "import wx; print(wx.version())"
 
 
+# We use one job for each version of Python that we want to build with. Each
+# one gets its own copy of the shared config above.
 jobs:
     "Python-2.7":
         <<: *shared
@@ -75,7 +81,8 @@ jobs:
             - MAKE_VENV: "python -m venv venv"
 
 
-
+# This workflow defines the jobs that comprise the "build" task. The jobs will
+# be run in parallel.
 workflows:
   version: 2
   build:
