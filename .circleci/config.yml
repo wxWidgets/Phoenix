@@ -3,53 +3,83 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2
+
+shared: &shared
+    working_directory: ~/repo
+
+    steps:
+        - checkout
+        - run:
+            name: checkout submodules
+            command: |
+                git submodule sync
+                git submodule update --init --recursive
+
+        - run:
+            name: install apt packages
+            command: |
+                sudo apt-get update
+                sudo apt-get install -y libgtk2.0-dev libgtk-3-dev libjpeg-dev libtiff-dev \
+                        libsdl1.2-dev libgstreamer-plugins-base1.0-dev libnotify-dev freeglut3 \
+                        freeglut3-dev libsm-dev libwebkitgtk-dev libwebkitgtk-3.0-dev libxtst-dev \
+                        python-virtualenv
+
+        - run:
+            name: install python packages
+            command: |
+                $MAKE_VENV
+                source venv/bin/activate
+                pip install -r requirements.txt
+
+        - run:
+            name: build wxWidgets
+            command: |
+                source venv/bin/activate
+                python build.py --jobs=4 dox build_wx
+
+        - run:
+            name: build wxPython
+            command: |
+                source venv/bin/activate
+                python build.py --jobs=4 etg --nodoc sip build_py
+
+        - run:
+            name: build wheel and test install
+            command: |
+                source venv/bin/activate
+                python build.py bdist_wheel
+                python build.py install
+                python -c "import wx; print(wx.version())"
+
+
 jobs:
-    #Python-3.6:
-    build:
+    "Python-2.7":
+        <<: *shared
         docker:
-            - image: circleci/python:3.6.4-stretch-browsers
+            - image: circleci/python:2.7
+        environment:
+            - MAKE_VENV: "python -m virtualenv venv"
 
-        working_directory: ~/repo
+    "Python-3.5":
+        <<: *shared
+        docker:
+            - image: circleci/python:3.5
+        environment:
+            - MAKE_VENV: "python -m venv venv"
 
-        steps:
-            - checkout
-            - run:
-                name: checkout submodules
-                command: |
-                    git submodule sync
-                    git submodule update --init --recursive
+    "Python-3.6":
+        <<: *shared
+        docker:
+            - image: circleci/python:3.6
+        environment:
+            - MAKE_VENV: "python -m venv venv"
 
-            - run:
-                name: install apt packages
-                command: |
-                    sudo apt-get update
-                    sudo apt-get install -y libgtk2.0-dev libgtk-3-dev libjpeg-dev libtiff-dev \
-                            libsdl1.2-dev libgstreamer-plugins-base1.0-dev libnotify-dev freeglut3 \
-                            freeglut3-dev libsm-dev libwebkitgtk-dev libwebkitgtk-3.0-dev libxtst-dev
 
-            - run:
-                name: install python packages
-                command: |
-                    python -m venv venv
-                    source venv/bin/activate
-                    which python
-                    which pip
-                    pip install -r requirements.txt
 
-            - run: 
-                name: build wxWidgets
-                command: |
-                    source venv/bin/activate
-                    which python
-                    which pip
-                    python build.py --jobs=4 dox build_wx
-
-            - run: 
-                name: build wxPython
-                command: |
-                    source venv/bin/activate
-                    which python
-                    which pip
-                    python build.py --jobs=4 etg --nodoc sip build_py
-                    python build.py bdist_wheel
-                    python build.py install
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "Python-2.7"
+      - "Python-3.5"
+      - "Python-3.6"
