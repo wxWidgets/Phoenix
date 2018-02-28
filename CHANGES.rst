@@ -34,6 +34,8 @@ Changes in this release include the following:
   disappearing in 4.1 so it's important to ensure they are deprecated at
   runtime too instead of just in the docs. (#749)
 
+* Ensure that the attribute list given to the GLCanvas constructor is
+  zero-terminated like it was in Classic. (#770)
 
 
 
