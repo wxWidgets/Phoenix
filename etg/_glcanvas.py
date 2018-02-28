@@ -88,8 +88,10 @@ def run():
         pyArgsString="(parent, id=wx.ID_ANY, attribList=None, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, name='GLCanvas', palette=wx.NullPalette)",
         body="""\
             const int* attribPtr = NULL;
-            if (attribList)
+            if (attribList) {
+                attribList->push_back(0); // ensure it is zero-terminated
                 attribPtr = &attribList->front();
+            }
             sipCpp = new sipwxGLCanvas(parent, id, attribPtr, *pos, *size, style, *name, *palette);
             """,
         noDerivedCtor=False,
@@ -100,8 +102,10 @@ def run():
     m.find('attribList').type = 'wxArrayInt*'
     m.setCppCode_sip("""\
         const int* attribPtr = NULL;
-        if (attribList)
+        if (attribList) {
+            attribList->push_back(0); // ensure it is zero-terminated
             attribPtr = &attribList->front();
+        }
         sipRes = wxGLCanvas::IsDisplaySupported(attribPtr);
         """)
 
