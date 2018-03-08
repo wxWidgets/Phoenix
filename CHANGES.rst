@@ -42,6 +42,10 @@ Changes in this release include the following:
 * Added the wxWidgets version number to the tail end of the string returned by
   wx.version().
 
+* Bind EVT_WINDOW_DESTROY event only to the tree windows in CustomTreeCtrl,
+  since otherwise it would be caught when child windows are destroyed too,
+  which causes problems in this case. (#778)
+
 
 
 
