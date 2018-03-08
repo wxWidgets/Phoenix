@@ -37,6 +37,8 @@ Changes in this release include the following:
 * Ensure that the attribute list given to the GLCanvas constructor is
   zero-terminated like it was in Classic. (#770)
 
+* Updated to the wxWidgets 3.0.4 release version.
+
 
 
 
