@@ -279,7 +279,7 @@ def run():
                     port = 'gtk3'
             else:
                 port = '???'
-            return "%s %s (phoenix)" % (wx.VERSION_STRING, port)
+            return "%s %s (phoenix) %s" % (wx.VERSION_STRING, port, wx.wxWidgets_version)
             """)
 
 

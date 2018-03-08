@@ -68,6 +68,9 @@ Changes in this release include the following:
 
 * Updated to the wxWidgets 3.0.4 release version.
 
+* Added the wxWidgets version number to the tail end of the string returned by
+  wx.version().
+
 
 
 
