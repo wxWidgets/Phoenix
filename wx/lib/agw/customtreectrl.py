@@ -2851,7 +2851,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(EVT_TREE_ITEM_GETTOOLTIP, self.OnGetToolTip)
-        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy, self)
 
         # Sets the focus to ourselves: this is useful if you have items
         # with associated widgets.
@@ -2891,6 +2891,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         if self._findTimer and self._findTimer.IsRunning():
             self._findTimer.Stop()
             del self._findTimer
+            self._findTimer = None
 
         event.Skip()
 
