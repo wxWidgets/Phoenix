@@ -20,7 +20,7 @@ DOCSTRING = ""
 ITEMS  = [
     'wxRefCounter',
     'wxObject',
-#    'wxClassInfo',
+    'wxClassInfo',
 ]
 
 #---------------------------------------------------------------------------
@@ -38,9 +38,13 @@ def run():
 
     module.find('wxCreateDynamicObject').ignore()
 
-    #module.find('wxClassInfo').abstract = True
-    #module.find('wxClassInfo.wxClassInfo').ignore()
 
+    #--------------------------------------------------
+    c = module.find('wxClassInfo')
+    assert isinstance(c, etgtools.ClassDef)
+    module.insertItemBefore(c, etgtools.TypedefDef(type='void*', name='wxObjectConstructorFn'))
+    module.find('wxClassInfo').abstract = True
+    module.find('wxClassInfo.wxClassInfo').ignore()
 
 
     #--------------------------------------------------
@@ -55,7 +59,6 @@ def run():
     c = module.find('wxObject')
     c.find('operator delete').ignore()
     c.find('operator new').ignore()
-    c.find('GetClassInfo').ignore()
     c.find('IsKindOf').ignore()
 
     # EXPERIMENTAL: By turning off the virtualness of the wxObject dtor, and
@@ -72,6 +75,7 @@ def run():
     # those classes with custom C++ code. (See wxFont and wxAcceleratorTable
     # for examples.)
     c.find('~wxObject').isVirtual = False
+    c.find('GetClassInfo').isVirtual = False
 
     c.addCppMethod('const wxChar*', 'GetClassName', '()',
         body='return self->GetClassInfo()->GetClassName();',

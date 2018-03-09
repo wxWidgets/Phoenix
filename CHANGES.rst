@@ -50,6 +50,12 @@ Changes in this release include the following:
   derived classes on Windows. This was due to an optimization that wasn't
   compatible with how the classes are wrapped. (#774)
 
+* Added wrappers for wx.ClassInfo and exposed wx.Object.GetClassInfo. This
+  class is part of wxWidgets' internal type information system abd although
+  it is not very useful for Python applications but it is useful for debugging
+  some internal wxPython issues.
+
+
 
 
 
