@@ -75,6 +75,10 @@ Changes in this release include the following:
   since otherwise it would be caught when child windows are destroyed too,
   which causes problems in this case. (#778)
 
+* Fixed a problem where wx.TreeCtrl.OnCompareItems is not being called in
+  derived classes on Windows. This was due to an optimization that wasn't
+  compatible with how the classes are wrapped. (#774)
+
 
 
 
