@@ -1109,6 +1109,7 @@ def cmd_sip(options, args):
             (sip, cfg.SIPOPTS, tmpdir, sbf, pycode, src_name)
         runcmd(cmd)
 
+        classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }
 
         def processSrc(src, keepHashLines=False):
             with textfile_open(src, 'rt') as f:
@@ -1120,7 +1121,28 @@ def cmd_sip(options, args):
                     # ...or totally remove them by replacing those lines with ''
                     import re
                     srcTxt = re.sub(r'^#line.*\n', '', srcTxt, flags=re.MULTILINE)
+                className = classesNeedingClassInfo.get(os.path.basename(src))
+                if className:
+                    srcTxt = injectClassInfo(className, srcTxt)
             return srcTxt
+
+        def injectClassInfo(className, srcTxt):
+            # inject wxClassInfo macros into the sip generated wrapper class
+            lines = srcTxt.splitlines()
+            # find the beginning of the class declaration
+            for idx, line in enumerate(lines):
+                if line.startswith('class sip{}'.format(className)):
+                    # next line is '{', insert after that
+                    lines[idx+2:idx+2] = ['wxDECLARE_ABSTRACT_CLASS(sip{});'.format(className)]
+                    break
+            # find the '};' that terminates the class
+            for idx, line in enumerate(lines[idx+2:], idx+2):
+                if line.startswith('};'):
+                    lines[idx+1:idx+1] = ['\nwxIMPLEMENT_ABSTRACT_CLASS(sip{0}, {0});'.format(className)]
+                    break
+            # join it back up and return
+            return '\n'.join(lines)
+
 
         # Check each file in tmpdir to see if it is different than the same file
         # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
