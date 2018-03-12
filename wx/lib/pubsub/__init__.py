@@ -5,16 +5,17 @@ Pubsub package initialization.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-_PREVIOUS_RELEASE_DATE = "2013-09-15"
-_PREVIOUS_RELEASE_VER = "3.2.1b"
+# Import pubsub (Version 4.0.0) from site-packages/pubsub
 
-__version__ = "3.3.0"
+# Import all items from the pubsub package so they appear
+# in the wx.lib.pubsub package namespace. This to maintain
+# its appearance as wx.lib.pubsub where it was originally
+# created but subsequently published as a stand-alone package
+# that is currently sourced from https://github.com/schollii/pypubsub
 
-__all__ = [
-    'pub',
-    'utils',
-    'setupkwargs',
-    'setuparg1',
-    '__version__'
-    ]
-
+try:
+    from pubsub import *
+except ImportError:
+    msg = "Stand-alone pubsub not found. Use pip install Pypubsub"
+    raise ImportError(msg)
+    
