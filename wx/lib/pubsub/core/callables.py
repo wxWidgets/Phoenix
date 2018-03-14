@@ -12,7 +12,7 @@ CallArgsInfo regarding its autoTopicArgName data member.
 
 """
 
-from inspect import getargspec, ismethod, isfunction
+from inspect import getfullargspec, ismethod, isfunction
 
 from .. import py2and3
 
@@ -133,7 +133,7 @@ class CallArgsInfo:
         self.autoTopicArgName = None."""
 
         #args, firstArgIdx, defaultVals, acceptsAllKwargs
-        (allParams, varParamName, varOptParamName, defaultVals) = getargspec(func)
+        (allParams, varParamName, varOptParamName, defaultVals, *args) = getfullargspec(func)
         if defaultVals is None:
             defaultVals = []
         else:
