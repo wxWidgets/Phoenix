@@ -79,8 +79,7 @@ you will need to do an additional step. The git repository is set up to bring
 in the wxWidgets code as a git "submodule" so after cloning the Phoenix
 repository, you can get the wxWidgets source with these commands::
 
-  $ git submodule init
-  $ git submodule update
+  $ git submodule update --init --recursive
 
 This will clone the wxWidgets repo into: ``Phoenix/ext/wxWidgets``. Once the
 submodule is updated, the build script should be able to build wxWidgets.
@@ -91,8 +90,8 @@ details. However be aware that doing so will require a wxWidgets that is
 **very** close to the same age as the Phoenix code, at least for the
 unreleased preview snapshots. In other words, the wxWidgets build should use
 code from the wxWidgets source repository within a few days of when the
-Phoenix code was checked out. Currently Phoenix is expecting to be used with
-a wxWidgets built from the ``WX_3_0_BRANCH`` git branch.
+Phoenix code was checked out. Currently the master branch of Phoenix is
+tracking the master branch of wxWidgets.
 
 On the other hand, it is probably best to just let wxPython build and bundle
 wxWidgets. The build tools will by default build wxWidgets in a way that
