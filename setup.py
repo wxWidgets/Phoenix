@@ -90,7 +90,7 @@ Topic :: Software Development :: User Interfaces
 """
 
 DEPENDENCIES = [ 'six',
-                 ]
+                 'PyPubSub']
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
