@@ -251,12 +251,9 @@ class TestPanel(wx.Panel):
             newModel = False
 
         # Tell the DVC to use the model
-        print("*** ref count: {}".format(self.model.GetRefCount()))
         self.dvc.AssociateModel(self.model)
-        print("*** ref count: {}".format(self.model.GetRefCount()))
         if newModel:
             self.model.DecRef()
-        print("*** ref count: {}".format(self.model.GetRefCount()))
 
         # Define the columns that we want in the view.  Notice the
         # parameter which tells the view which column in the data model to pull
