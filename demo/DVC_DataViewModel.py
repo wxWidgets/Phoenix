@@ -245,11 +245,18 @@ class TestPanel(wx.Panel):
         # Create an instance of our model...
         if model is None:
             self.model = MyTreeListModel(data, log)
+            newModel = True # it's a new instance so we need to decref it below
         else:
             self.model = model
+            newModel = False
 
         # Tell the DVC to use the model
+        print("*** ref count: {}".format(self.model.GetRefCount()))
         self.dvc.AssociateModel(self.model)
+        print("*** ref count: {}".format(self.model.GetRefCount()))
+        if newModel:
+            self.model.DecRef()
+        print("*** ref count: {}".format(self.model.GetRefCount()))
 
         # Define the columns that we want in the view.  Notice the
         # parameter which tells the view which column in the data model to pull
