@@ -84,6 +84,10 @@ Changes in this release include the following:
   it is not very useful for Python applications but it is useful for debugging
   some internal wxPython issues.
 
+* Removed the wx.lib.pubsub package, and replaced it with code that imports
+  the standalone PyPubSub in order remain compatible with older code that
+  still uses wx.lib.pubsub. (#782, #792)
+
 
 
 
