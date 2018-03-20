@@ -29,7 +29,7 @@ If neither of them are installed an import error exception will be raised.
 PyMuPDF contains the Python bindings for the underlying MuPDF library, a cross platform,
 complete PDF rendering library that is GPL licenced.
 
-Further details on PyMuPDF can be found via http://pythonhosted.org/PyMuPDF
+Further details on PyMuPDF can be found via https://pymupdf.readthedocs.io/en/latest/
 
 PyPDF2 provides a PdfFileReader class that is used to read the content stream of a PDF
 file which is subsequently rendered by :class:`~wx.lib.pdfviewer.viewer.pdfViewer` itself.
@@ -65,7 +65,6 @@ Sample usage::
             self.viewer = pdfViewer(paneCont, wx.NewId(), wx.DefaultPosition,
                                     wx.DefaultSize,
                                     wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
-            self.viewer.UsePrintDirect = False
 
             self.viewer.SetSizerProps(expand=True, proportion=1)
 
@@ -78,10 +77,7 @@ Sample usage::
         import wx.lib.mixins.inspection as WIT
         app = WIT.InspectableApp(redirect=False)
 
-
         pdfV = PDFViewer(None, size=(800, 600))
-        pdfV.viewer.UsePrintDirect = False
-
         pdfV.viewer.LoadFile(r'a path to a .pdf file')
         pdfV.Show()
 
