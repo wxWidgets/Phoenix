@@ -1,6 +1,4 @@
 
-            musicCtrl = wx.dataview.DataViewCtrl(self, wx.ID_ANY)
-            musicModel = MyMusicModel()
-            musicCtrl.AssociateModel(musicModel.get())
+    ### wxPython does not provide wrappers for wxObjectDataPtr
 
-            # add columns now
+
