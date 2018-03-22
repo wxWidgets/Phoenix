@@ -804,10 +804,10 @@ class IntCtrl(wx.TextCtrl):
         Colors text with oob_color if current value exceeds bounds
         set for control.
         """
-        if not self.IsInBounds(value):
-            self.SetForegroundColour(self.__oob_color)
-        else:
+        if value is None or self.IsInBounds(value):
             self.SetForegroundColour(self.__default_color)
+        else:
+            self.SetForegroundColour(self.__oob_color)
         self.Refresh()
 
 
