@@ -59,6 +59,8 @@ Changes in this release include the following:
   the standalone PyPubSub in order remain compatible with older code that
   still uses wx.lib.pubsub. (#782, #792)
 
+* Fixed bug in wx.lib.intctrl (#790)
+
 
 
 
