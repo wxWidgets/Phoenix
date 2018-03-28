@@ -147,13 +147,18 @@ def run():
                                              not c.findItem(item.name)]
     c.items.extend(items)
 
+    tc_excludes = ['OSXEnableAutomaticQuoteSubstitution',
+                   'OSXEnableAutomaticDashSubstitution',
+                   'OSXDisableAllSmartSubstitutions',
+                   ]
     import textctrl
     mod = textctrl.parseAndTweakModule()
     klass = mod.find('wxTextCtrl')
     items = [item for item in klass.items if isinstance(item, etgtools.MethodDef) and
                                              not item.isCtor and
                                              not item.isDtor and
-                                             not c.findItem(item.name)]
+                                             not c.findItem(item.name) and
+                                             not item.name in tc_excludes]
     c.items.extend(items)
 
     c.find('EmulateKeyPress').ignore()

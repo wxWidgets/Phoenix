@@ -106,9 +106,42 @@ def parseAndTweakModule():
         doc="NOP, for file-like compatibility.",
         body="")
 
+
+    # OSX methods for controlling native features
+    c.addCppMethod('void', 'OSXEnableAutomaticQuoteSubstitution', '(bool enable)',
+        doc="Mac-only method for turning on/off automatic quote substitutions.",
+        body="""\
+            #ifdef __WXMAC__
+                self->OSXEnableAutomaticQuoteSubstitution(enable);
+            #else
+                wxPyRaiseNotImplemented();
+            #endif
+            """)
+
+    c.addCppMethod('void', 'OSXEnableAutomaticDashSubstitution', '(bool enable)',
+        doc="Mac-only method for turning on/off automatic dash substitutions.",
+        body="""\
+            #ifdef __WXMAC__
+                self->OSXEnableAutomaticDashSubstitution(enable);
+            #else
+                wxPyRaiseNotImplemented();
+            #endif
+            """)
+
+    c.addCppMethod('void', 'OSXDisableAllSmartSubstitutions', '()',
+        doc="Mac-only method to disable all automatic text substitutions.",
+        body="""\
+            #ifdef __WXMAC__
+                self->OSXDisableAllSmartSubstitutions();
+            #else
+                wxPyRaiseNotImplemented();
+            #endif
+            """)
+
+
+
     c = module.find('wxTextUrlEvent')
     tools.fixEventClass(c)
-
 
     module.addPyCode("""\
         EVT_TEXT        = wx.PyEventBinder( wxEVT_TEXT, 1)

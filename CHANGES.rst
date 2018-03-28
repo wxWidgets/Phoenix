@@ -23,9 +23,13 @@ is included in the wxPython source archives. Along with this change a new
 maintenance releases of the 4.0.x series of wxPython, which will still track
 the ``WX_3_0_BRANCH`` wxWidgets branch.
 
+
 New and improved stuff in this release:
 
-*
+* Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
+  OSXEnableAutomaticDashSubstitution, and OSXDisableAllSmartSubstitutions
+  methods in wx.TextCtrl.
+
 
 Other changes in this release:
 
