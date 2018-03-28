@@ -783,7 +783,11 @@ def checkCompiler(quiet=False):
     # causes problems with other non-Windows, non-Darwin compilers then
     # we'll need to make this a little smarter about what flag (if any)
     # needs to be used.
-    if not isWindows and not isDarwin:
+    #
+    # NOTE 2: SIP chenged its output such that this doesn't appear to be
+    # needed anymore, but we'll leave the code in place to make it easy to
+    # turn it back on again if/when needed.
+    if False and not isWindows and not isDarwin:
         stdflag = '-std=c++11'
         curflags = os.environ.get('CXXFLAGS', '')
         if stdflag not in curflags:
