@@ -170,6 +170,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
                                enableShellMode=self.enableShellMode,
                                hideFoldingMargin=self.hideFoldingMargin,
                                *args, **kwds)
+        self.shell = self.sliceshell
         self.buffer = self.sliceshell.buffer
 
         # Override the shell so that status messages go to the status bar.
