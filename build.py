@@ -165,7 +165,7 @@ def main(args):
     if not os.path.exists(wxpydir):
         os.makedirs(wxpydir)
 
-    if not args or 'help' in args or '--help' in args or '-h' in args:
+    if not havePyVer ^ havePyPath or 'help' in args or '--help' in args or '-h' in args:
         usage()
         sys.exit(1)
 
@@ -214,6 +214,8 @@ def setPythonVersion(args):
     global PYSHORTVER
     global PYTHON
     global PYTHON_ARCH
+    global havePyVer
+    global havePyPath
 
     havePyVer = False
     havePyPath = False
