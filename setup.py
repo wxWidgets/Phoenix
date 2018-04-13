@@ -71,7 +71,7 @@ with python).
 
 
 CLASSIFIERS      = """\
-Development Status :: 4 - Beta
+Development Status :: 6 - Mature
 Environment :: MacOS X :: Cocoa
 Environment :: Win32 (MS Windows)
 Environment :: X11 Applications :: GTK
