@@ -19,6 +19,7 @@ apt install -y libjpeg-dev libtiff-dev \
 apt install -y python2.7 python2.7-dev libpython2.7-dev python-virtualenv
 ##apt install -y python3.5 python3.5-dev libpython3.5-dev python3.5-venv
 apt install -y python3.6 python3.6-dev libpython3.6-dev python3.6-venv
+apt install -y python3.7 python3.7-dev libpython3.7-dev python3.7-venv
 
 # Set up virtual environments for each Python where the Phoenix builds will be
 # done. set them to the vagrant user so the venv's can be updated by pip later.
@@ -26,6 +27,7 @@ mkdir venvs
 virtualenv --python=python2.7 venvs/Py27
 ##python3.5 -m venv venvs/Py35
 python3.6 -m venv venvs/Py36
+python3.7 -m venv venvs/Py37
 
 chown -R vagrant:vagrant venvs
 
