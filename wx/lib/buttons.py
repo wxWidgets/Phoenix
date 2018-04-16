@@ -172,7 +172,7 @@ class GenButton(wx.Control):
         self.SetLabel(label)
         self.InheritAttributes()
         self.SetInitialSize(size)
-        self.InitColours()
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE))
 
         self.Bind(wx.EVT_LEFT_DOWN,        self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP,          self.OnLeftUp)
@@ -192,7 +192,7 @@ class GenButton(wx.Control):
         """
         Override this method in a subclass to initialize any other events that
         need to be bound.  Added so :meth:`__init__` doesn't need to be
-        overriden, which is complicated with multiple inheritance.
+        overridden, which is complicated with multiple inheritance.
         """
 
         pass

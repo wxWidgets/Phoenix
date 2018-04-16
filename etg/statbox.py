@@ -37,6 +37,21 @@ def run():
     c.find('Create.label').default = 'wxEmptyString'
     tools.fixWindowClass(c)
 
+    # TODO: The window-label ctor is only available on MSW and GTK so disable
+    # for now. Maybe replace it with a factory function that returns None on
+    # OSX??
+    c.find('wxStaticBox').findOverload('wxWindow *label').ignore()
+    c.find('Create').findOverload('wxWindow *label').ignore()
+
+    # "unfix" the 2nd ctor and Create method so the required parameter lists
+    # are different enough for them to be overloaded.
+    #for name in ['wxStaticBox', 'Create']:
+    #    m = c.find(name).findOverload('wxWindow *label')
+    #    m.find('id').default = ''
+
+
+
+
     module.addGlobalStr('wxStaticBoxNameStr', c)
 
     #-----------------------------------------------------------------

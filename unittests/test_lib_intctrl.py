@@ -15,6 +15,13 @@ class IntCtrlTests(wtc.WidgetTestCase):
         t3.ChangeValue(16)
         self.assertTrue(not t3.IsInBounds())
 
+    def test_canSetValueToNone(self):
+        t1 = IC.IntCtrl(self.frame, allow_none=True, value=None)
+        assert t1.GetValue() is None
+        t2 = IC.IntCtrl(self.frame, allow_none=True)
+        t2.SetValue(None)
+        assert t2.GetValue() is None
+
 
 #---------------------------------------------------------------------------
 

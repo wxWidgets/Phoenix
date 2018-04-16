@@ -63,6 +63,15 @@ ITEMS  = [
     'wxWindowCreateEvent',
     'wxWindowDestroyEvent',
 
+    'wxGestureEvent',
+    'wxPanGestureEvent',
+    'wxZoomGestureEvent',
+    'wxRotateGestureEvent',
+    'wxTwoFingerTapEvent',
+    'wxLongPressEvent',
+    'wxPressAndTapEvent',
+
+
     #'wxThreadEvent',
 
 ]
@@ -128,7 +137,7 @@ def run():
                 body="""\
                     success = 0
                     for et in self.evtType:
-                        success += target.Disconnect(id1, id2, et, handler)
+                        success += int(target.Disconnect(id1, id2, et, handler))
                     return success != 0
                     """),
 
@@ -196,8 +205,7 @@ def run():
         body="""\
             if (PyCallable_Check(func)) {
                 self->Connect(id, lastId, eventType,
-                              (wxObjectEventFunction)(wxEventFunction)
-                              &wxPyCallback::EventThunker,
+                              (wxObjectEventFunction)&wxPyCallback::EventThunker,
                               new wxPyCallback(func));
             }
             else if (func == Py_None) {
@@ -219,36 +227,39 @@ def run():
         body="""\
             if (func && func != Py_None) {
                 // Find the current matching binder that has this function
-                // pointer and dissconnect that one.  Unfortuneatly since we
+                // pointer and disconnect that one.  Unfortunately since we
                 // wrapped the PyObject function pointer in another object we
                 // have to do the searching ourselves...
-                wxList::compatibility_iterator node = self->GetDynamicEventTable()->GetFirst();
-                while (node)
+                size_t cookie;
+                wxDynamicEventTableEntry *entry = self->GetFirstDynamicEntry(cookie);
+                while (entry)
                 {
-                    wxDynamicEventTableEntry *entry = (wxDynamicEventTableEntry*)node->GetData();
                     if ((entry->m_id == id) &&
                         ((entry->m_lastId == lastId) || (lastId == wxID_ANY)) &&
                         ((entry->m_eventType == eventType) || (eventType == wxEVT_NULL)) &&
-                        // FIXME?
-                        //((entry->m_fn->IsMatching((wxObjectEventFunction)(wxEventFunction)&wxPyCallback::EventThunker))) &&
+                        entry->m_fn->IsMatching(wxObjectEventFunctor((wxObjectEventFunction)&wxPyCallback::EventThunker, NULL)) &&
                         (entry->m_callbackUserData != NULL))
                     {
+                        wxPyThreadBlocker block;
                         wxPyCallback *cb = (wxPyCallback*)entry->m_callbackUserData;
-                        if (cb->m_func == func) {
+                        // NOTE: Just comparing PyObject pointers is not enough, as bound
+                        // methods can result in different PyObjects each time obj.Method
+                        // is evaluated. (!!!)
+                        if (PyObject_RichCompareBool(cb->m_func, func, Py_EQ) == 1) {
                             delete cb;
-                            self->GetDynamicEventTable()->Erase(node);
-                            delete entry;
-                            return true;
+                            entry->m_callbackUserData = NULL;
+                            // Now Disconnect should work
+                            return self->Disconnect(id, lastId, eventType,
+                                                    (wxObjectEventFunction)&wxPyCallback::EventThunker);
                         }
                     }
-                    node = node->GetNext();
+                    entry = self->GetNextDynamicEntry(cookie);
                 }
                 return false;
             }
             else {
                 return self->Disconnect(id, lastId, eventType,
-                                        (wxObjectEventFunction)
-                                        &wxPyCallback::EventThunker);
+                                        (wxObjectEventFunction)&wxPyCallback::EventThunker);
             }
         """)
 
@@ -258,10 +269,6 @@ def run():
     # the template, probably using PyObject* args.
     for m in c.find('CallAfter').all():
         m.ignore()
-
-    # wxEventTable is not documented so we have to ignore SearchEventTable.
-    # TODO: Should wxEventTable be available to language bindings?
-    c.find('SearchEventTable').ignore()
 
     c.find('QueueEvent.event').transfer = True
     module.find('wxQueueEvent.event').transfer = True
@@ -569,7 +576,11 @@ def run():
 
     #---------------------------------------
     # wxIconizeEvent
-    module.find('wxIconizeEvent.Iconized').deprecated = True
+    c = module.find('wxIconizeEvent')
+
+    # deprecated and removed
+    c.find('Iconized').ignore()
+
 
 
     # Apply common fixups for all the event classes

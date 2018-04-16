@@ -79,8 +79,7 @@ you will need to do an additional step. The git repository is set up to bring
 in the wxWidgets code as a git "submodule" so after cloning the Phoenix
 repository, you can get the wxWidgets source with these commands::
 
-  $ git submodule init
-  $ git submodule update
+  $ git submodule update --init --recursive
 
 This will clone the wxWidgets repo into: ``Phoenix/ext/wxWidgets``. Once the
 submodule is updated, the build script should be able to build wxWidgets.
@@ -91,8 +90,8 @@ details. However be aware that doing so will require a wxWidgets that is
 **very** close to the same age as the Phoenix code, at least for the
 unreleased preview snapshots. In other words, the wxWidgets build should use
 code from the wxWidgets source repository within a few days of when the
-Phoenix code was checked out. Currently Phoenix is expecting to be used with
-a wxWidgets built from the ``WX_3_0_BRANCH`` git branch.
+Phoenix code was checked out. Currently the master branch of Phoenix is
+tracking the master branch of wxWidgets.
 
 On the other hand, it is probably best to just let wxPython build and bundle
 wxWidgets. The build tools will by default build wxWidgets in a way that
@@ -306,6 +305,7 @@ yourself. There are likely some other things that may not have been mentioned
 here, if you find something else that should be mentioned then please submit
 a PR for updating this document.
 
+
 **Windows**
 
 All the source code needed for wxWidgets and wxPython Phoenix are
@@ -329,16 +329,18 @@ If you want to build Phoenix with debug info then you will need to first
 build a debug version of Python, and then use that Python (python_d.exe) to
 build Phoenix.
 
+
 **Linux**
 
 On Ubuntu the following development packages and their dependencies
 should be installed in order to build Phoenix. Other debian-like distros
 will probably also have these or similarly named packages available.
-Extrapolate accordingly for other linux distributions or other unixes.
+Extrapolate other package names accordingly for other linux distributions
+or other unixes.
 
 * dpkg-dev
 * build-essential
-* python2.7-dev     # use appropriate Python version here
+* python2.7-dev         # use appropriate Python version here
 * libjpeg-dev
 * libtiff-dev
 * libsdl1.2-dev
@@ -347,19 +349,26 @@ Extrapolate accordingly for other linux distributions or other unixes.
 * freeglut3
 * freeglut3-dev
 * libsm-dev
-* libgtk2.0-dev
-* libwebkitgtk-dev
+* libgtk-3-dev
+* libwebkitgtk-3.0-dev  # or libwebkit2gtk-4.0-dev if available
+* libxtst-dev
 
-If you are building for GTK3 then you'll also need these packages and
+If you are building for GTK2 then you'll also need these packages and
 their dependencies:
 
-* libgtk-3-dev
-* libwebkitgtk-3.0-dev
+* libgtk2.0-dev
+* libwebkitgtk-dev
 
 If your Linux distribution has gstreamer 1.0 available then you can install
 the dev packages for that instead of the 0.10 version. For example:
 
 * libgstreamer-plugins-base1.0-dev
+
+Newer versions of Linux may need some newer versions of dependent packages
+installed, if they are available. For example:
+
+* libwebkit2gtk-4.0-dev
+* libsdl2-dev
 
 
 **Mac OSX**

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set up and update package repos
-add-apt-repository ppa:fkrull/deadsnakes
+add-apt-repository ppa:deadsnakes/ppa
 apt-get update
 
 # Install necessary development tools, libs, etc.
@@ -11,7 +11,8 @@ apt-get install -y libgtk2.0-dev libgtk-3-dev
 apt-get install -y libjpeg-dev libtiff-dev \
 	libsdl1.2-dev libgstreamer-plugins-base0.10-dev \
 	libnotify-dev freeglut3 freeglut3-dev libsm-dev \
-	libwebkitgtk-dev libwebkitgtk-3.0-dev
+	libwebkitgtk-dev libwebkitgtk-3.0-dev libwebkit2gtk-3.0-dev \
+	libxtst-dev
 
 
 # Install all available Python packages and their dev packages
@@ -24,8 +25,8 @@ apt-get install -y python3.6 python3.6-dev libpython3.6-dev python3.6-venv
 # done. set them to the vagrant user so the venv's can be updated by pip later.
 mkdir venvs
 virtualenv --python=python2.7 venvs/Py27
-pyvenv-3.4 venvs/Py34
-pyvenv-3.5 venvs/Py35
-pyvenv-3.6 venvs/Py36
+python3.4 -m venv venvs/Py34
+python3.5 -m venv venvs/Py35
+python3.6 -m venv venvs/Py36
 chown -R vagrant:vagrant venvs
 

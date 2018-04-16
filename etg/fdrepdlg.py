@@ -37,7 +37,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_FIND = wx.PyEventBinder( wxEVT_FIND, 1 )
         EVT_FIND_NEXT = wx.PyEventBinder( wxEVT_FIND_NEXT, 1 )
         EVT_FIND_REPLACE = wx.PyEventBinder( wxEVT_FIND_REPLACE, 1 )

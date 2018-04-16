@@ -53,13 +53,13 @@ def run():
     """)
 
     c.find('SetInstallPrefix').setCppCode("""\
-    #ifdef __WXMSW__
+    #ifndef wxHAS_STDPATHS_INSTALL_PREFIX
     #else
         self->SetInstallPrefix(*prefix);
     #endif
     """)
     c.find('GetInstallPrefix').setCppCode("""\
-    #ifdef __WXMSW__
+    #ifndef wxHAS_STDPATHS_INSTALL_PREFIX
         return new wxString;
     #else
         return new wxString(self->GetInstallPrefix());

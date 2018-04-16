@@ -17,8 +17,8 @@ The symbols are defined in such a way that they can be combined in a
 For example::
 
     style = wx.CAPTION | wx.MINIMIZE_BOX | wx.MAXIMIZE_BOX | wx.RESIZE_BORDER
-    
-    
+
+
 For the window styles specific to each window class, please see the
 documentation for the window.
 

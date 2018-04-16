@@ -35,6 +35,7 @@ ITEMS  = [
             'wxDataViewCustomRenderer',
             'wxDataViewTextRenderer',
             'wxDataViewIconTextRenderer',
+            'wxDataViewCheckIconTextRenderer',
             'wxDataViewProgressRenderer',
             'wxDataViewSpinRenderer',
             'wxDataViewToggleRenderer',
@@ -46,6 +47,7 @@ ITEMS  = [
             'wxDataViewColumn',
             'wxDataViewCtrl',
             'wxDataViewEvent',
+            'wxDataViewValueAdjuster',
 
             'wxDataViewListCtrl',
             'wxDataViewListStore',
@@ -84,8 +86,10 @@ def run():
     c.addCppMethod('long', '__hash__', '()', """\
         return (long)self->GetID();
         """)
-    c.addCppMethod('bool', '__eq__', '(wxDataViewItem* other)', "return (self->GetID() == other->GetID());")
-    c.addCppMethod('bool', '__ne__', '(wxDataViewItem* other)', "return (self->GetID() != other->GetID());")
+    c.addCppMethod('bool', '__eq__', '(wxDataViewItem* other)',
+                   "return other ? (self->GetID() == other->GetID()) : false;")
+    c.addCppMethod('bool', '__ne__', '(wxDataViewItem* other)',
+                   "return other ? (self->GetID() != other->GetID()) : true;")
     c.addAutoProperties()
 
 
@@ -234,12 +238,20 @@ def run():
         method.find('value').type = 'wxDVCVariant&'
         method.cppSignature = sig
 
+    def _fixupTypeParam(klass):
+        param = klass.findItem('{}.varianttype'.format(klass.name))
+        if param and param.default == 'GetDefaultType()':
+            param.default = '{}::GetDefaultType()'.format(klass.name)
 
     c = module.find('wxDataViewRenderer')
     c.addPrivateCopyCtor()
     c.abstract = True
-    c.addAutoProperties()
     c.find('GetView').ignore(False)
+
+    # TODO: This is only available when wxUSE_ACCESSIBILITY is set to 1
+    c.find('GetAccessibleDescription').ignore()
+
+    c.addAutoProperties()
 
     # Change variant getters to return the value
     for name, sig in [
@@ -249,12 +261,18 @@ def run():
         _fixupBoolGetters(c.find(name), sig)
 
     m = c.find('SetValue')
-    m.find('value').type = 'wxDVCVariant&'
+    m.find('value').type = 'const wxDVCVariant&'
     m.cppSignature = 'bool (const wxVariant& value)'
+
+    m = c.find('CreateEditorCtrl')
+    m.cppSignature = 'wxWindow* (wxWindow * parent, wxRect labelRect, const wxVariant& value)'
+
+    c.find('GetView').ignore(False)
 
 
 
     c = module.find('wxDataViewCustomRenderer')
+    _fixupTypeParam(c)
     m = c.find('GetValueFromEditorCtrl')
     _fixupBoolGetters(m, 'bool (wxWindow * editor, wxVariant& value)')
 
@@ -272,6 +290,9 @@ def run():
         """
 
     c.find('GetTextExtent').ignore(False)
+
+    m = c.find('CreateEditorCtrl')
+    m.cppSignature = 'wxWindow* (wxWindow * parent, wxRect labelRect, const wxVariant& value)'
 
 
     module.addPyCode("""\
@@ -293,13 +314,13 @@ def run():
                   ]:
         c = module.find(name)
         c.addAutoProperties()
+        _fixupTypeParam(c)
 
         c.addItem(etgtools.WigCode("""\
             virtual bool SetValue( const wxDVCVariant &value ) [bool (const wxVariant& value)];
             virtual void GetValue( wxDVCVariant &value /Out/ ) const [bool (wxVariant& value)];
             %Property(name=Value, get=GetValue, set=SetValue)
             """, protection='public'))
-
 
     # The SpinRenderer has a few additional pure virtuals that need to be declared
     # since it derives from DataViewCustomRenderer
@@ -424,11 +445,13 @@ def run():
             """)
 
 
+    # TODO: add support for wxVector templates
+    c.find('GetSortingColumns').ignore()
+
+
     #-----------------------------------------------------------------
     c = module.find('wxDataViewEvent')
     tools.fixEventClass(c)
-
-    c.addProperty('EditCancelled', 'IsEditCancelled', 'SetEditCanceled')
 
     c.find('SetCache.from').name = 'from_'
     c.find('SetCache.to').name = 'to_'

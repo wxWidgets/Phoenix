@@ -8,13 +8,126 @@
 wxPython Changelog
 ==================
 
-4.0.0rc1
---------
+4.1.0
+-----
 * (not yet released)
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0rc1
+PyPI:   https://pypi.python.org/pypi/wxPython/4.1.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.0.0rc1``
+Pip:    ``pip install wxPython==4.1.0``
+
+Starting with this release wxPython has switched to tracking the wxWidgets
+master branch for the wxWidgets source code wxPython is built upon, and which
+is included in the wxPython source archives. Along with this change a new
+``wxPy-4.0.x`` branch has been created in the git repository for continuing
+maintenance releases of the 4.0.x series of wxPython, which will still track
+the ``WX_3_0_BRANCH`` wxWidgets branch.
+
+
+New and improved stuff in this release:
+
+* Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
+  OSXEnableAutomaticDashSubstitution, and OSXDisableAllSmartSubstitutions
+  methods in wx.TextCtrl.
+
+
+Other changes in this release:
+
+* Many of the deprecated items in wxWidgets and wxPython are being or have
+  been removed. Be sure to test your code in 4.0.2 or a later 4.0.x release
+  with warnings enabled so you can see which class, method or function calls
+  you need to change.
+
+
+
+
+
+4.0.2
+-----
+* (not yet released)
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.2
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.2``
+
+Changes in this release include the following:
+
+* Fixed wx.html2.EVT_WEBVIEW_NAVIGATING event not being sent on some versions
+  of Linux. (#741)
+
+* wx.Sizers can now be used as an iterator to iterate over the items within
+  the sizer. (#738)
+
+* Fix Python3 division in ThumbnailCtrl. (#746)
+
+* Fix leaking image list in CheckListCtrlMixin (#752)
+
+* All items marked as deprecated in the wxWidgets interface files will now
+  throw a DeprecationWarning when used from wxPython. Many of these items are
+  disappearing in 4.1 so it's important to ensure they are deprecated at
+  runtime too instead of just in the docs. (#749)
+
+* Ensure that the attribute list given to the GLCanvas constructor is
+  zero-terminated like it was in Classic. (#770)
+
+* Updated to the wxWidgets 3.0.4 release version.
+
+* Added the wxWidgets version number to the tail end of the string returned by
+  wx.version().
+
+* Bind EVT_WINDOW_DESTROY event only to the tree windows in CustomTreeCtrl,
+  since otherwise it would be caught when child windows are destroyed too,
+  which causes problems in this case. (#778)
+
+* Fixed a problem where wx.TreeCtrl.OnCompareItems is not being called in
+  derived classes on Windows. This was due to an optimization that wasn't
+  compatible with how the classes are wrapped. (#774)
+
+* Added wrappers for wx.ClassInfo and exposed wx.Object.GetClassInfo. This
+  class is part of wxWidgets' internal type information system abd although
+  it is not very useful for Python applications but it is useful for debugging
+  some internal wxPython issues.
+
+* Removed the wx.lib.pubsub package, and replaced it with code that imports
+  the standalone PyPubSub in order remain compatible with older code that
+  still uses wx.lib.pubsub. (#782, #792)
+
+* Fixed bug in wx.lib.intctrl (#790)
+
+
+
+
+
+4.0.1 "Lemonade"
+----------------
+* 2-Feb-2018
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.1
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.1``
+
+This release is a quick hot-fix of some issues discovered in 4.0.0 just after
+the release, plus a bit of  low-hanging fruit that was easy to squeeze in too.
+Changes in this release include the following:
+
+* A fix for a segfault that happens upon startup on newer linux releases. (#648)
+
+* Set LD_RUN_PATH for the wxWidgets part of the build so the wx libs that are
+  loaded by other wx libs can be found successfully. (#723)
+
+* Use wxApp::GetInstance to check if there is an existing wxApp object. (#720)
+
+
+
+
+
+4.0.0 "The Phoenix Takes Flight!"
+---------------------------------
+* 31-Jan-2018
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.0``
 
 Changes in this release include the following:
 
@@ -42,11 +155,90 @@ Changes in this release include the following:
 
 * Fix object ownership issue for menus added to toolbar items. (#580)
 
-* Updated SIP to version 4.19.4. One of the new features of this version is
+* Updated SIP to version 4.19.5. One of the new features of this version is
   that integer overflows are no longer silently truncated and ignored. In
   other words, if a wrapped API has a parameter that is a C int type, and you
   pass a value that is larger than what will fit in that type of integer then
   an OverflowError exception will be raised.
+
+* Fixed wx.richtext.RichTextBuffer.GetExtWildcard to return a tuple of 2
+  values, as was done in Classic. (#594)
+
+* Various fixes in UltimateListCtrl, HyperTreeList and CheckListCtrlMixin.
+  (#592, #349, #612)
+
+* Fixes in TextEditMixin to ensure that the new value is passed in the
+  event. (#605)
+
+* Fix comparing DataViewItem and TreeListItem objects with None. (#595)
+
+* Fix event type name in wx/lib/sheet.py (#613)
+
+* The wx.MessageDialog methods which take ButtonLabel parameters are now able
+  to accept either strings or stock IDs. (#607, #276)
+
+* Fix wx.EvtHandler.Unbind to work correctly when specifying the handler and
+  it is a bound method. (#624)
+
+* Fix OGL's ShapeCanvas to draw properly when the window is scrolled, and
+  to also adjust the mouse coordinates, etc. (#635)
+
+* Set a default background color for the generic buttons. (#651)
+
+* Fixed HtmlWindow's OnFoo virtual methods so calls to them are propagated to
+  the Python class. (#642)
+
+* Fixed wx.CallLater to explicitly hold a reference instead of depending on an
+  uncollectable cycle to keep the instance around. Like before the cycle is
+  broken and the saved reference is deleted after the timer expires and the
+  callable has been called. (#457)
+
+* Although it's more or less just an implementation detail, add wrappers for
+  wx.aui.AuiTabCtrl so references to it will get the correct type. (#664)
+
+* List-like wrapper classes generated for accessing wxLists and wxArrays now
+  support reverse indexing. (#669) For example::
+
+      child = panel.GetChildren()[-1]
+
+
+* Ported some of the classes in Classic's gizmos module from C++ to Python,
+  including LEDNumberCtrl, DynamicSashWindow, and TreeListCtrl. The classes
+  are now located in the wx.lib.gizmos package, with a compatibility module at
+  the old wx.gizmos location. Please note that this TreeListCtrl class is a
+  very different implementation than wx.dataview.TreeListCtrl, although there
+  is some overlap in purpose. In addition, the new TreeListCtrl class is not
+  actually a port from the old gizmos.TreeListCtrl but rather just a thin
+  layer around AGW's HyperTreeList. This means that if you are using a non-
+  default style flag you'll need to pass it to the agwStyle parameter instead
+  of the style parameter.
+
+* Fix crash when deleting all wx.dataview.TreeListCtrl items with wxGTK3.
+  (#679, #704)
+
+* Fix displaying '&' in the label of wx.RadioBox on GTK. (#39)
+
+* Fix problems of the wrong C++ method being called in wx.ProgressDialog on MS
+  Windows. (#701)
+
+* Fixed how the scrollbar events are captured in DynamicSashWindow in order to
+  fix regression in the sample. (#687)
+
+* Allow extra CLI args to be passed to build.py by setting WXPYTHON_BUILD_ARGS
+  in the environment.
+
+* Added context manager methods to wx.DC that explicitly destroys the C++
+  part of the DC upon exit. Using DCs as context managers is not required, but
+  can be handy in the rare cases where something holds on to a DC for too
+  long, perhaps unintentionally. (#680)
+
+* Fixed crash due to too aggressive management of wxModules when we load
+  subordinate extensions that have their own wxModules (wx.html, wx.adv, etc.)
+  (#688)
+
+* Fixed StyledTextCtrl.MarkerDefineRGBAImage and RegisterRGBAImage methods to
+  be able to accept any Python buffer compatible object for the pixel data. (#716)
+
 
 
 
@@ -144,6 +336,7 @@ Changes in this release include the following:
 * Fixed property grid SetPropertyValue method to not truncate floating
   point values to integers, and a couple other possible incorrect
   conversions.  (#536)
+
 
 
 

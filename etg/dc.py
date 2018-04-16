@@ -51,6 +51,8 @@ def run():
     c.addPublic()
     tools.removeVirtuals(c)
 
+    c.addDtor('public', True)
+
     # Keep only the wxSize overloads of these
     c.find('GetSize').findOverload('wxCoord').ignore()
     c.find('GetSizeMM').findOverload('wxCoord').ignore()
@@ -263,6 +265,10 @@ def run():
     c.addPyCode('DC.GetHDC = wx.deprecated(DC.GetHDC, "Use GetHandle instead.")')
     c.addPyCode('DC.GetCGContext = wx.deprecated(DC.GetCGContext, "Use GetHandle instead.")')
     c.addPyCode('DC.GetGdkDrawable = wx.deprecated(DC.GetGdkDrawable, "Use GetHandle instead.")')
+
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Destroy()')
 
 
     # This file contains implementations of functions for quickly drawing

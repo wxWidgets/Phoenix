@@ -15,7 +15,8 @@ HOWTO Release wxPython Phoenix
 
 3. Log in to buildbot master
 
-4. On the "Builders" page check all of the dist-* builders
+4. On the "Builders" page check all of the dist-* builders in the Force Selected
+   Builds section
 
 5. Set a name/value pair to buildargs/--release
 

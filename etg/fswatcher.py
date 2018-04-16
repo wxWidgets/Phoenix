@@ -32,10 +32,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    # In the C++ code the wxFSW_EVENT_UNMOUNT item is only part of the enum
+    # for platforms that have INOTIFY so we need to fake it elsewhere.
     module.addHeaderCode("""
         #include <wx/fswatcher.h>
-        #ifndef wxHAS_INOTIFY
-        #define wxFSW_EVENT_UNMOUNT 0x2000
+        #if !defined(wxHAS_INOTIFY) && !defined(wxHAVE_FSEVENTS_FILE_NOTIFICATIONS)
+            const int wxFSW_EVENT_UNMOUNT = 0x2000;
         #endif
         """)
 
@@ -46,7 +48,7 @@ def run():
     c = module.find('wxFileSystemWatcherEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_FSWATCHER = wx.PyEventBinder(wxEVT_FSWATCHER)
         """)
 

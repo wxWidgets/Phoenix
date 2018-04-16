@@ -11,7 +11,7 @@
 Introduction
 ------------
 
-A book control is a convenient way of displaying multiple pages of information, displayed one page at a time. 
+A book control is a convenient way of displaying multiple pages of information, displayed one page at a time.
 wxPython has five variants of this control:
 
 - :ref:`wx.Choicebook`: controlled by a :ref:`wx.Choice`

@@ -54,6 +54,11 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.assertTrue(int(dvi.GetID()) == n)
 
 
+    def test_dataviewItem8(self):
+        dvi = dv.DataViewItem(111)
+        assert (None == dvi) == False
+        assert (None != dvi) == True
+
 
     #-------------------------------------------------------
     def test_dataviewItemAttr1(self):
@@ -414,7 +419,6 @@ class dataview_Tests(wtc.WidgetTestCase):
         evt.GetValue
         evt.SetValue
         evt.IsEditCancelled
-        evt.SetEditCanceled
         evt.SetDataViewColumn
         evt.GetDataViewColumn
         evt.GetPosition

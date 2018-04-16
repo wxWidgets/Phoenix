@@ -1,8 +1,8 @@
 ##Andrea Gavana
 #!/usr/bin/env python
 
-# This sample shows how to create a wx.StatusBar with 2 fields, 
-# set the second field to have double width with respect to the 
+# This sample shows how to create a wx.StatusBar with 2 fields,
+# set the second field to have double width with respect to the
 # first and and display the date of today in the second field.
 
 import wx

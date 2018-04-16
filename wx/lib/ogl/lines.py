@@ -923,26 +923,12 @@ class LineShape(Shape):
                 # | /(x1, y1)
                 # |______________________
                 #
-                theta = 0.0
                 x1 = startPositionX
                 y1 = startPositionY
                 x2 = float(positionOnLineX)
                 y2 = float(positionOnLineY)
 
-                if x1 == x2 and y1 == y2:
-                    theta = 0.0
-                elif x1 == x2 and y1 > y2:
-                    theta = 3.0 * math.pi / 2.0
-                elif x1 == x2 and y2 > y1:
-                    theta = math.pi / 2.0
-                elif x2 > x1 and y2 >= y1:
-                    theta = math.atan((y2 - y1) / (x2 - x1))
-                elif x2 < x1:
-                    theta = math.pi + math.atan((y2 - y1) / (x2 - x1))
-                elif x2 > x1 and y2 < y1:
-                    theta = 2 * math.pi + math.atan((y2 - y1) / (x2 - x1))
-                else:
-                    raise "Unknown arrowhead rotation case"
+                theta = math.atan2(y2 - y1, x2 - x1) % (2 * math.pi)
 
                 # Rotate about the centre of the object, then place
                 # the object on the line.
@@ -1353,7 +1339,8 @@ class LineShape(Shape):
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
         """The sizing drag left handler."""
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -1382,7 +1369,8 @@ class LineShape(Shape):
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
         """The sizing begin drag left handler."""
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         if pt._type == CONTROL_POINT_LINE:
             pt._originalPos = pt._point
@@ -1424,7 +1412,8 @@ class LineShape(Shape):
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
         """The sizing end drag left handler."""
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         self.SetDisableLabel(False)
 

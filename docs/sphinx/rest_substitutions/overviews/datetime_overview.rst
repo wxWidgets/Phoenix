@@ -124,11 +124,11 @@ Here is what can be done:
   :ref:`wx.DateTime` resulting in a new :ref:`wx.DateTime` object and also 2
   objects of the same span class can be added together giving another
   object of the same class.
-  
+
 * **Subtraction**: the same types of operations as above are allowed
   and, additionally, a difference between two :ref:`wx.DateTime` objects
   can be taken and this will yield :ref:`wx.TimeSpan`.
-  
+
 * **Multiplication**: a :ref:`wx.TimeSpan` or :ref:`wx.DateSpan` object can
   be multiplied by an integer number resulting in an object of the
   same type.

@@ -39,9 +39,6 @@ def run():
     c.find('wxTopLevelWindow.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'
 
-    c.find('HandleSettingChange').ignore()
-    c.find('SetLeftMenu').ignore()
-    c.find('SetRightMenu').ignore()
     c.find('IsUsingNativeDecorations').ignore()
     c.find('UseNativeDecorations').ignore()
     c.find('UseNativeDecorationsByDefault').ignore()

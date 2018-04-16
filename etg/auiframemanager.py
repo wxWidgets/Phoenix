@@ -23,6 +23,7 @@ ITEMS  = [ 'wxAuiManager',
            'wxAuiDockInfo',
            'wxAuiDockUIPart',
            'wxAuiPaneButton',
+           'wxAuiFloatingFrame'
            ]
 
 #---------------------------------------------------------------------------
@@ -50,7 +51,7 @@ def run():
     c = module.find('wxAuiManagerEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_AUI_PANE_BUTTON = wx.PyEventBinder( wxEVT_AUI_PANE_BUTTON )
         EVT_AUI_PANE_CLOSE = wx.PyEventBinder( wxEVT_AUI_PANE_CLOSE )
         EVT_AUI_PANE_MAXIMIZE = wx.PyEventBinder( wxEVT_AUI_PANE_MAXIMIZE )

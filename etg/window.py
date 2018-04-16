@@ -371,7 +371,7 @@ def run():
         def DLG_UNIT(win, dlg_unit, val2=None):
             """
             Convenience function for converting a wx.Point, wx.Size or
-            (x,y) in dialog units to pixels, using the given window as a 
+            (x,y) in dialog units to pixels, using the given window as a
             reference.
             """
             if val2 is not None:

@@ -43,6 +43,10 @@ def run():
     for m in c.findAll('ScanParam'):
         m.ignore()
 
+    c.find('GetBeginPos').ignore()
+    c.find('GetEndPos1').ignore()
+    c.find('GetEndPos2').ignore()
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

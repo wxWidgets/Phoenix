@@ -94,6 +94,9 @@ def run():
     # Needs wxWin 2.6 compatibility
     c.find('Remove').findOverload('(wxWindow *window)').ignore()
 
+    # deprecated and removed
+    c.find('SetVirtualSizeHints').ignore()
+
     c.addPyMethod('AddMany', '(self, items)',
         doc="""\
         :meth:`AddMany` is a convenience method for adding several items to a sizer
@@ -151,8 +154,12 @@ def run():
         import wx.siplib
         return not wx.siplib.isdeleted(self)
         """)
-    c.addPyCode('Sizer.__bool__ = Sizer.__nonzero__') # For Python 3
 
+    c.addPyMethod('__iter__', '(self)',
+        doc = "A Py convenience method that allows Sizers to act as iterables that will yield their wx.SizerItems.",
+        body = "for item in self.GetChildren(): yield item")
+
+    c.addPyCode('Sizer.__bool__ = Sizer.__nonzero__') # For Python 3
 
 
     #---------------------------------------------

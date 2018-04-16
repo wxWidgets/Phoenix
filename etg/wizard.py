@@ -17,7 +17,7 @@ NAME      = "wizard"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ "wxWizardPage",
            "wxWizardPageSimple",
            "wxWizard",
@@ -72,7 +72,7 @@ def run():
 
     c = module.find('wxWizardEvent')
     tools.fixEventClass(c)
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_WIZARD_BEFORE_PAGE_CHANGED  = wx.PyEventBinder( wxEVT_WIZARD_BEFORE_PAGE_CHANGED, 1)
         EVT_WIZARD_PAGE_CHANGED  = wx.PyEventBinder( wxEVT_WIZARD_PAGE_CHANGED, 1)
         EVT_WIZARD_PAGE_CHANGING = wx.PyEventBinder( wxEVT_WIZARD_PAGE_CHANGING, 1)

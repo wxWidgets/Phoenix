@@ -3311,7 +3311,7 @@ class CubeColourDialog(wx.Dialog):
         :param `agwStyle`: can only be ``CCD_SHOW_ALPHA`` or ``None``.
         """
 
-        show = self.GetAGWWindowStyleFlag() & CCD_SHOW_ALPHA
+        show = agwStyle & CCD_SHOW_ALPHA
         self._agwStyle = agwStyle
 
         self.mainSizer.Show(self.alphaSizers[0], show)

@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041304
-#define SIP_VERSION_STR     "4.19.4"
+#define SIP_VERSION         0x041307
+#define SIP_VERSION_STR     "4.19.7"
 
 
 /*
@@ -303,6 +303,7 @@ typedef unsigned int uint;
 
 #if PY_MAJOR_VERSION >= 3
 
+#define SIPLong_Check       PyLong_Check
 #define SIPLong_FromLong    PyLong_FromLong
 #define SIPLong_AsLong      PyLong_AsLong
 
@@ -324,6 +325,7 @@ typedef unsigned int uint;
 
 #else
 
+#define SIPLong_Check       PyInt_Check
 #define SIPLong_FromLong    PyInt_FromLong
 #define SIPLong_AsLong      PyInt_AsLong
 
@@ -1458,6 +1460,8 @@ typedef struct _sipCharInstanceDef {
 
 /*
  * The information describing a string instance to be added to a dictionary.
+ * This is also used as a hack to add (or fix) other types rather than add a
+ * new table type and so requiring a new major version of the API.
  */
 typedef struct _sipStringInstanceDef {
     /* The string name. */
@@ -1466,7 +1470,10 @@ typedef struct _sipStringInstanceDef {
     /* The string value. */
     const char *si_val;
 
-    /* The encoding used, either 'A', 'L', '8' or 'N'. */
+    /*
+     * The encoding used, either 'A', 'L', '8' or 'N'.  'w' and 'W' are also
+     * used to support the fix for wchar_t.
+     */
     char si_encoding;
 } sipStringInstanceDef;
 

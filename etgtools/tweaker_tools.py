@@ -501,7 +501,7 @@ def addSipConvertToSubClassCode(klass):
 def getEtgFiles(names):
     """
     Create a list of the files from the basenames in the names list that
-    corespond to files in the etg folder.
+    correspond to files in the etg folder.
     """
     return getMatchingFiles(names, 'etg/%s.py')
 
@@ -652,7 +652,7 @@ def addGetIMMethodTemplate(module, klass, fields):
     klass.addPyMethod('GetIM', '(self)',
         doc="""\
             Returns an immutable representation of the ``wx.{name}`` object, based on ``namedtuple``.
-            
+
             This new object is hashable and can be used as a dictionary key,
             be added to sets, etc.  It can be converted back into a real ``wx.{name}``
             with a simple statement like this: ``obj = wx.{name}(imObj)``.
@@ -873,9 +873,12 @@ public:
         sipRes = sipCpp->size();
     %End
 
-    {ItemClass}* __getitem__(ulong index);
+    {ItemClass}* __getitem__(long index);
     %MethodCode
-        if (index < sipCpp->size()) {{
+        if (0 > index)
+            index += sipCpp->size();
+
+        if (index < sipCpp->size() && (0 <= index)) {{
             {ListClass}::compatibility_iterator node = sipCpp->Item(index);
             if (node)
                 sipRes = ({ItemClass}*)node->GetData();
@@ -1001,9 +1004,12 @@ def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False, getIt
 
     if not getItemCopy:
         getitemMeth = '''\
-        {ItemClass}{itemRef} __getitem__(ulong index);
+        {ItemClass}{itemRef} __getitem__(long index);
         %MethodCode
-            if (index < sipCpp->GetCount()) {{
+            if (0 > index)
+                index += sipCpp->GetCount();
+
+            if ((index < sipCpp->GetCount()) && (0 <= index)) {{
                 sipRes = {addrOf}sipCpp->Item(index);
             }}
             else {{
@@ -1014,9 +1020,11 @@ def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False, getIt
         '''.format(**locals())
     else:
         getitemMeth = '''\
-        {ItemClass}* __getitem__(ulong index) /Factory/;
+        {ItemClass}* __getitem__(long index) /Factory/;
         %MethodCode
-            if (index < sipCpp->GetCount()) {{
+            if (0 > index)
+                index += sipCpp->GetCount();
+            if ((index < sipCpp->GetCount()) && (0 <= index)) {{
                 sipRes = new {ItemClass}(sipCpp->Item(index));
             }}
             else {{
@@ -1090,9 +1098,12 @@ public:
         sipRes = sipCpp->GetCount();
     %End
 
-    {ItemClass}* __getitem__(ulong index);
+    {ItemClass}* __getitem__(long index);
     %MethodCode
-        if (index < sipCpp->GetCount()) {{
+        if (0 > index)
+            index += sipCpp->GetCount();
+
+        if ((index < sipCpp->GetCount()) && (0 <= index)) {{
             sipRes = sipCpp->Item(index);
         }}
         else {{

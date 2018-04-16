@@ -44,7 +44,7 @@ def run():
     c = module.find('wxRibbonBarEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_RIBBONBAR_PAGE_CHANGED    = wx.PyEventBinder(wxEVT_RIBBONBAR_PAGE_CHANGED, 1)
         EVT_RIBBONBAR_PAGE_CHANGING   = wx.PyEventBinder(wxEVT_RIBBONBAR_PAGE_CHANGING,1)
         EVT_RIBBONBAR_TAB_MIDDLE_DOWN = wx.PyEventBinder(wxEVT_RIBBONBAR_TAB_MIDDLE_DOWN, 1)

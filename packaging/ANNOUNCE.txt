@@ -8,98 +8,26 @@
    ]]
 
 
-Announcing wxPython 4.0.0b2
-===========================
+Announcing wxPython 4.0.1
+=========================
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.0.0b2
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.1
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.0.0b2``
+Pip:    ``pip install wxPython==4.0.1``
 
-Changes in this release include the following:
+This release is a quick hot-fix of some issues discovered in 4.0.0
+just after the release, plus a bit of low-hanging fruit that was easy
+to squeeze in too.  Changes in this release include the following:
 
-* Added a deprecated compatibility helper for wx.CustomDataFormat.
+* A fix for a segfault that happens upon startup on newer linux
+  releases. (#648)
 
-* Transfer ownership of the wx.EvtHandler object when pushing/popping
-  them, and also for Set/RemoveEventHandler. (#443)
+* Set LD_RUN_PATH for the wxWidgets part of the build so the wx libs
+  that are loaded by other wx libs can be found successfully. (#723)
 
-* Add missing wx.VScrolledWindow methods listed in the docs as
-  deprecated but still present. (#441)
+* Use wxApp::GetInstance to check if there is an existing wxApp
+  object. (#720)
 
-* Fixed copy/paste error in wx.BusyInfo.__exit__ (#449)
-
-* Added new tool wxget, (a minimal wx implementation of wget)
-
-* Added new tools wxdocs and wxdemos to launch the respective items,
-  fetching and unpacking as required. (#437)
-
-* Fixes to ensure that the locale message catalogs are included in the
-  release files. (#464)
-
-* Fix wx.ListCtrl.SetItemData to check that the data value is not out
-  of the range of a C long. (#467)
-
-* Changed the default port on *nix builds to be GTK3. The new
-  ``--gtk2`` flag for build.py can be used to force a build for GTK2
-  instead, and the ``--gtk3`` flag still exists, but defaults to True
-  unless ``--gtk2`` is specified. Please note that there is currently
-  no auto-detection of whether GTK3 is available or not, so if you
-  know you need to build for GTK2 then you need to use the build flag,
-  and there is currently no way to specify that flag for builds
-  performed by pip. (#431)
-
-* Fix parameter names in Toolbar.AddTool methods to be
-  consistent. (#475)
-
-* Remove inconsistent GetVirtualSize method in ScrolledWindow and let
-  it be inherited from wx.Window instead. (#474)
-
-* Fix crashing bug caused by importing a module that reinitializes the
-  wxModule system after having imported wxpyTag. (#468)
-
-* Fix missing methods in various DataObject classes. (They were
-  actually accidentally marked "private" when they should have been
-  public.) (#480)
-
-* Add missing ListCtrl.DeleteAllColumns. (#486)
-
-* Various fixes in the demo.
-
-* Fixed improper initial scale factor in wx.lib.agw.speedmeter
-
-* Fix for calls to wx.Notebook.HitTest calling the wrong instance
-  (base class version) of the method. (#499)
-
-* Add wx.Simplebook class.
-
-* Fix exception in wx.lib.agw.customtreectrl when calling
-  SortChildren. (#463, #500)
-
-* Fix missing imports needed for drawing the legend in
-  wx.lib.plot. (#503)
-
-* Fix other instances of list.sort using old cmp-style ordering
-  functions.  (#508)
-
-* Update SizedControls to do a sanity check on the parent's sizer, as
-  GetSizer can return None for SizedParent under certain
-  circumstances, such as when AUI reparents the control during pane
-  movement. (#523, #537)
-
-* Added Vagrant configs for Fedora 23 and Fedora 26, and dropped
-  Fedora 24.  Wheels built on F23 can also be used on F24 and F25, and
-  F26 adds Python 3.6 support.
-
-* Fix bitwise OR bug in wx.lib.agw.aui.framemanager. (#493)
-
-* Fix bugs in wx.lib.plot when saving file. (#526)
-
-* Fix integer division bug in ultimatelistctrl. (#528)
-
-* Fix bug in wx.SearchCtrl.SetCancelBitmap (#532)
-
-* Fixed property grid SetPropertyValue method to not truncate floating
-  point values to integers, and a couple other possible incorrect
-  conversions.  (#536)
 
 
 
@@ -142,7 +70,7 @@ Due to some things being cleaned up, reorganized, simplified and
 dehackified wxPython Phoenix is not completely backwards compatible
 with wxPython Classic.  This is intended. In general, however, the API
 differences tend to be minor and some applications can use Phoenix
-with slight, or even no modifications.  In some other cases the
+with slight, or even with no modifications.  In some other cases the
 correct way to do things was also available in Classic and it's only
 the wrong way that has been removed from Phoenix.  For more
 information there is a Migration Guide document available at:

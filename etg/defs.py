@@ -19,7 +19,9 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'defs_8h.xml' ]
+ITEMS  = [ 'defs_8h.xml',
+           'textfile_8h.xml',  # Just for the wxTextFileType enum
+           ]
 
 #---------------------------------------------------------------------------
 
@@ -33,6 +35,8 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    module.addHeaderCode("#include <wx/textfile.h>")
 
     # tweaks for defs.h to help SIP understand the types better
     module.find('wxInt16').type = 'short'
@@ -101,8 +105,9 @@ def run():
         const int RELEASE_NUMBER;
         """))
 
+    # TODO: these should be removed someday
     module.addPyCode("BG_STYLE_CUSTOM = BG_STYLE_PAINT")
-    module.addItem(etgtools.DefineDef(name='wxADJUST_MINSIZE', value='0'))
+    module.addPyCode("ADJUST_MINSIZE = 0")
 
 
     #-----------------------------------------------------------------

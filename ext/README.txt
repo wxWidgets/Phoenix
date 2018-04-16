@@ -18,7 +18,7 @@ To learn more about git submodules, please see the following:
     http://git-scm.com/book/en/v2/Git-Tools-Submodules
     http://blogs.atlassian.com/2013/03/git-submodules-workflows-tips/
     http://www.speirs.org/blog/2009/5/11/understanding-git-submodules.html
-    
+
 
 Notes to self
 =============

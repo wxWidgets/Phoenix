@@ -2802,7 +2802,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             agwStyle &= ~TR_LINES_AT_ROOT
             agwStyle |= TR_NO_LINES
 
-            platform, major, minor = wx.GetOsVersion()
+            platform, major, minor, micro = wx.GetOsVersion()
             if major < 10:
                 agwStyle |= TR_ROW_LINES
 
@@ -2851,7 +2851,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(EVT_TREE_ITEM_GETTOOLTIP, self.OnGetToolTip)
-        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy, self)
 
         # Sets the focus to ourselves: this is useful if you have items
         # with associated widgets.
@@ -2891,6 +2891,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         if self._findTimer and self._findTimer.IsRunning():
             self._findTimer.Stop()
             del self._findTimer
+            self._findTimer = None
 
         event.Skip()
 
@@ -5917,7 +5918,9 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :note: The base class version compares items alphabetically.
         """
 
-        return cmp(self.GetItemText(item1), self.GetItemText(item2))
+        a = self.GetItemText(item1)
+        b = self.GetItemText(item2)
+        return (a > b) - (a < b)  # equivalent to old cmp function
 
 
     def SortChildren(self, item):

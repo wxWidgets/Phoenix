@@ -58,7 +58,7 @@ def run():
 
     c = module.find('wxAuiNotebookEvent')
     tools.fixEventClass(c)
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_AUINOTEBOOK_PAGE_CLOSE = wx.PyEventBinder( wxEVT_AUINOTEBOOK_PAGE_CLOSE, 1 )
         EVT_AUINOTEBOOK_PAGE_CLOSED = wx.PyEventBinder( wxEVT_AUINOTEBOOK_PAGE_CLOSED, 1 )
         EVT_AUINOTEBOOK_PAGE_CHANGED = wx.PyEventBinder( wxEVT_AUINOTEBOOK_PAGE_CHANGED, 1 )
@@ -78,6 +78,25 @@ def run():
 
 
 
+
+    #-----------------------------------------------------------------
+    # Add AuiTabCtrl in.
+    c = etgtools.ClassDef(name = "wxAuiTabCtrl",
+        bases = ["wxControl", "wxAuiTabContainer"],
+        mustHaveAppFlag = True,
+        items = [
+            etgtools.MethodDef(name = "wxAuiTabCtrl",
+                classname="wxAuiTabCtrl", isCtor=True,
+                items = [
+                    etgtools.ParamDef(type = "wxWindow*", name = "parent"),
+                    etgtools.ParamDef(type = "wxWindowID", name = "id", default="wxID_ANY"),
+                    etgtools.ParamDef(type = "const wxPoint&", name = "pos", default = "wxDefaultPosition"),
+                    etgtools.ParamDef(type = "const wxSize&", name = "size", default = "wxDefaultSize"),
+                    etgtools.ParamDef(type = "long", name = "style", default = "0") ]),
+            etgtools.MethodDef(type = "bool", name = "IsDragging", classname = "wxAuiTabCtrl", isConst = True)
+            ])
+    tools.fixWindowClass(c)
+    module.addItem(c)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -62,7 +62,7 @@ def run():
     c = module.find('wxMediaEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
                 EVT_MEDIA_LOADED = wx.PyEventBinder( wxEVT_MEDIA_LOADED )
                 EVT_MEDIA_STOP = wx.PyEventBinder( wxEVT_MEDIA_STOP )
                 EVT_MEDIA_FINISHED = wx.PyEventBinder( wxEVT_MEDIA_FINISHED )

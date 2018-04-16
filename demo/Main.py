@@ -1243,7 +1243,7 @@ class DemoErrorPanel(wx.Panel):
         self.list.SetColumnWidth(2, wx.LIST_AUTOSIZE)
         self.box.Add(wx.StaticText(self, -1, "Traceback:")
                      , 0, wx.ALIGN_CENTER | wx.TOP, 5)
-        self.box.Add(self.list, 1, wx.GROW | wx.ALIGN_CENTER | wx.ALL, 5)
+        self.box.Add(self.list, 1, wx.EXPAND | wx.ALL, 5)
         self.box.Add(wx.StaticText(self, -1, "Entries from the demo module are shown in blue\n"
                                            + "Double-click on them to go to the offending line")
                      , 0, wx.ALIGN_CENTER | wx.BOTTOM, 5)

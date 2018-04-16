@@ -19,7 +19,7 @@ many identical, only differently encoded, packages with your application
 this mechanism you can, for example, distribute only iso8859-13 data and it
 will be handled transparently under all systems.
 
-Please read the :ref:`Internationalization <internationalization>` page which 
+Please read the :ref:`Internationalization <internationalization>` page which
 describes the locales concept.
 
 .. todo:: to be written (do we want to write it?!?!)

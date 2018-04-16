@@ -10,8 +10,16 @@ class AppTraitsTests(wtc.WidgetTestCase):
         t = self.app.GetTraits()
         self.assertTrue(t is not None)
 
-        v = t.GetToolkitVersion()
-        self.assertTrue( len(v) == 3)
+        portID, major, minor, micro = t.GetToolkitVersion()
+        assert portID in [ wx.PORT_MSW,
+                           wx.PORT_MOTIF,
+                           wx.PORT_GTK,
+                           wx.PORT_DFB,
+                           wx.PORT_X11,
+                           wx.PORT_MAC,
+                           wx.PORT_COCOA,
+                           wx.PORT_QT,
+                           ]
 
         t.HasStderr()
         t.IsUsingUniversalWidgets()

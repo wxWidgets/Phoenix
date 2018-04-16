@@ -24,6 +24,7 @@ Usage:
 
 Where URL is a file URL and the optional DEST_DIR is a destination directory to
 download to, (default is to prompt the user).
+The --trusted option can be used to surpress certificate checks.
 """
 from __future__ import (division, absolute_import, print_function, unicode_literals)
 
@@ -213,9 +214,15 @@ def main(args=sys.argv):
     dest_dir = '.'
     force_flag = '--force'
     trusted_flag = '--trusted'
+    force = False
+    trusted = False
 
     if force_flag in args:
         force = True
+        args.remove(force_flag)
+
+    if trusted_flag in args:
+        trusted = True
         args.remove(force_flag)
 
     if len(args) > 2:
@@ -234,7 +241,7 @@ def main(args=sys.argv):
         else:
             url = None
     if url:
-        FILENAME = download_file(url, dest_dir, force)
+        FILENAME = download_file(url, dest_dir, force, trusted)
         print(FILENAME)
 
 if __name__ == "__main__":  # Only run if this file is called directly

@@ -296,7 +296,7 @@ def configure(conf):
 
         # Some Mac-specific stuff
         if isDarwin:
-            conf.env.MACOSX_DEPLOYMENT_TARGET = "10.5"
+            conf.env.MACOSX_DEPLOYMENT_TARGET = "10.6"
 
             if conf.options.mac_arch:
                 conf.env.ARCH_WXPY = conf.options.mac_arch.split(',')
@@ -500,8 +500,9 @@ def build(bld):
     # copy the wx locale message catalogs to the package dir
     cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
 
-    # copy __init__.py
-    copy_file('src/__init__.py', cfg.PKGDIR, update=1, verbose=1)
+    # copy .py files that need to go into the root wx package dir
+    for name in ['src/__init__.py', 'src/gizmos.py',]:
+        copy_file(name, cfg.PKGDIR, update=1, verbose=1)
 
 
     # Create the build tasks for each of our extension modules.

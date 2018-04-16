@@ -5,10 +5,10 @@
     helpstring("My Ole Guid and interface definitions"),
     lcid(0x0),
     version(1.0)
-    ] 
+    ]
 
 library myole4ax
-{  
+{
 
     importlib("stdole2.tlb");
     interface IOleInPlaceUIWindow;
@@ -60,7 +60,7 @@ library myole4ax
         LONG cAccelEntries;
     }   OLEINPLACEFRAMEINFO;
 
-        
+
 //      [
 //              uuid(00000000-0000-0000-C000-000000000046),
 //              odl,
@@ -71,9 +71,9 @@ library myole4ax
 //                 long QueryInterface([in] long priid, [out,in] long* pvObj);
 //                 long AddRef();
 //                 long Release();
-//      }; 
+//      };
 
-        
+
     [
         uuid(00000114-0000-0000-C000-000000000046),
         odl
@@ -127,7 +127,7 @@ library myole4ax
         long TranslateAccelerator([in] long lpmsg);
         long OnFrameWindowActivate([in] long fActivate);
         long OnDocWindowActivate([in] long fActivate);
-        long ResizeBorder([in] StructPtr prcBorder, 
+        long ResizeBorder([in] StructPtr prcBorder,
                           [in] IOleInPlaceUIWindow* pUIWindow,
                           [in] long fFrameWindow);
         long EnableModeless([in] long fEnable);

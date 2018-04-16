@@ -28,7 +28,7 @@ except ImportError:
     imported.  It probably is not installed (it's not part of the
     standard Python distribution). See the Numeric Python site
     (http://numpy.scipy.org) for information on downloading source or
-    binaries, or just try `pip install numpy` and it will probably 
+    binaries, or just try `pip install numpy` and it will probably
     work."""
     raise ImportError("NumPy not found.\n" + msg)
 

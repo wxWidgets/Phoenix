@@ -608,8 +608,8 @@ def run():
     #-------------------------------------------------------
     # tweak for IFFHandler
     c = module.find('wxIFFHandler')
-    c.find('DoCanRead').ignore(False)     
-    
+    c.find('DoCanRead').ignore(False)
+
     #-------------------------------------------------------
     # tweak for JPEGHandler
     c = module.find('wxJPEGHandler')
@@ -637,9 +637,9 @@ def run():
 
     #-------------------------------------------------------
     # tweak for TIFFHandler
-    c = module.find('wxTIFFHandler') 
-    c.find('GetLibraryVersionInfo').ignore() 
-    c.find('DoCanRead').ignore(False) 
+    c = module.find('wxTIFFHandler')
+    c.find('GetLibraryVersionInfo').ignore()
+    c.find('DoCanRead').ignore(False)
 
     #-------------------------------------------------------
     # tweak for XPMHandler

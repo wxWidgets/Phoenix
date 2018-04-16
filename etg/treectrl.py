@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import MethodDef, ParamDef
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -38,6 +39,14 @@ def run():
     #-------------------------------------------------------
     c = module.find('wxTreeItemId')
     assert isinstance(c, etgtools.ClassDef)
+
+    # add the void* ctor missing from the interface
+    ctor = MethodDef(name='wxTreeItemId', isCtor=True,
+                     items=[ ParamDef(name='pItem', type='void*') ])
+    # add it as an overload to the existing ctor
+    c.find('wxTreeItemId').overloads.append(ctor)
+
+
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();
         """)
@@ -162,7 +171,7 @@ def run():
     c = module.find('wxTreeEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_TREE_BEGIN_DRAG        = PyEventBinder(wxEVT_TREE_BEGIN_DRAG       , 1)
         EVT_TREE_BEGIN_RDRAG       = PyEventBinder(wxEVT_TREE_BEGIN_RDRAG      , 1)
         EVT_TREE_BEGIN_LABEL_EDIT  = PyEventBinder(wxEVT_TREE_BEGIN_LABEL_EDIT , 1)

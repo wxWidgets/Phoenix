@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set up and update package repos
-add-apt-repository ppa:fkrull/deadsnakes
+add-apt-repository ppa:deadsnakes/ppa
 apt-get update
 
 # Install necessary development tools, libs, etc.
@@ -13,7 +13,8 @@ apt-get install -y libjpeg-dev libtiff-dev \
 	libsdl1.2-dev libgstreamer-plugins-base0.10-dev \
 	libgstreamer-plugins-base1.0-dev \
 	libnotify-dev freeglut3 freeglut3-dev libsm-dev \
-	libwebkitgtk-dev libwebkitgtk-3.0-dev
+	libwebkitgtk-dev libwebkitgtk-3.0-dev libwebkit2gtk-4.0-dev \
+	libxtst-dev
 
 
 # Install all available Python packages and their dev packages
@@ -28,7 +29,5 @@ virtualenv --python=python2.7 venvs/Py27
 pyvenv-3.5 venvs/Py35
 python3.6 -m venv venvs/Py36
 
-#chown -R vagrant:vagrant venvs
-# This box provides a user named "ubuntu" instead
-chown -R ubuntu:ubuntu venvs
+chown -R vagrant:vagrant venvs
 

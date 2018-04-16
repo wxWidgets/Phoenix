@@ -75,12 +75,12 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.19.4'
+sipCurrentVersion = '4.19.7'
 sipMD5 = {
-    'darwin'   : '48490bda534c6dee00e1551e168a5f25',
-    'win32'    : '9970d6e7f65cf03c600d7b0d906db442',
-    'linux32'  : '3551670d779a591708aea5ec2962dae1',
-    'linux64'  : '76459c118ed02a59a392144d2564247f',
+    'darwin'   : 'd30ca1ffb09c0dbb6326e99d012c55b8',
+    'win32'    : 'dbb882f4f95b1a7419a436280407899c',
+    'linux32'  : '56a763acdf7c0b5725b31a71a9a56160',
+    'linux64'  : 'b349127a4d46452936e4181d96b12c2d',
 }
 
 wafCurrentVersion = '1.7.15-p1'
@@ -133,7 +133,7 @@ Usage: ./build.py [command(s)] [options]
       install_py    Install wxPython only
 
       sdist         Build a tarball containing all source files
-      sdist_demo    Build a tarball containing just the demo and samples folders 
+      sdist_demo    Build a tarball containing just the demo and samples folders
       bdist         Create a binary tarball release of wxPython Phoenix
       bdist_docs    Build a tarball containing the documentation
       bdist_egg     Build a Python egg.  Requires magic.
@@ -456,6 +456,12 @@ def makeOptionParser():
 
 
 def parseArgs(args):
+    # If WXPYTHON_BUILD_ARGS is set in the environment, split it and add to args
+    if os.environ.get('WXPYTHON_BUILD_ARGS', None):
+        import shlex
+        args += shlex.split(os.environ.get('WXPYTHON_BUILD_ARGS'))
+
+    # Parse the args into options
     parser = makeOptionParser()
     options, args = parser.parse_args(args)
 
@@ -654,7 +660,7 @@ class CommandTimer(object):
         msg('Finished command: %s (%s)' % (self.name, time))
 
 
-def uploadPackage(fileName, options, mask=defaultMask, keep=50):
+def uploadPackage(fileName, options, mask=defaultMask, keep=75):
     """
     Upload the given filename to the configured package server location. Only
     the `keep` most recent files matching `mask` will be kept so the server
@@ -702,7 +708,7 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     msg("Upload complete!")
 
 
-def uploadTree(srcPath, destPath, options, keep=30):
+def uploadTree(srcPath, destPath, options, days=30):
     """
     Similar to the above but uploads a tree of files.
     """
@@ -728,9 +734,9 @@ def uploadTree(srcPath, destPath, options, keep=30):
     runcmd(cmd)
 
     if not options.release:
-        # Remove files that were last modified more than `keep` days ago
+        # Remove files that were last modified more than `days` days ago
         msg("Cleaning up old builds.")
-        cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
+        cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, days)
         runcmd(cmd)
 
     msg("Tree upload and cleanup complete!")
@@ -777,7 +783,11 @@ def checkCompiler(quiet=False):
     # causes problems with other non-Windows, non-Darwin compilers then
     # we'll need to make this a little smarter about what flag (if any)
     # needs to be used.
-    if not isWindows and not isDarwin:
+    #
+    # NOTE 2: SIP chenged its output such that this doesn't appear to be
+    # needed anymore, but we'll leave the code in place to make it easy to
+    # turn it back on again if/when needed.
+    if False and not isWindows and not isDarwin:
         stdflag = '-std=c++11'
         curflags = os.environ.get('CXXFLAGS', '')
         if stdflag not in curflags:
@@ -1103,6 +1113,7 @@ def cmd_sip(options, args):
             (sip, cfg.SIPOPTS, tmpdir, sbf, pycode, src_name)
         runcmd(cmd)
 
+        classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }
 
         def processSrc(src, keepHashLines=False):
             with textfile_open(src, 'rt') as f:
@@ -1114,7 +1125,28 @@ def cmd_sip(options, args):
                     # ...or totally remove them by replacing those lines with ''
                     import re
                     srcTxt = re.sub(r'^#line.*\n', '', srcTxt, flags=re.MULTILINE)
+                className = classesNeedingClassInfo.get(os.path.basename(src))
+                if className:
+                    srcTxt = injectClassInfo(className, srcTxt)
             return srcTxt
+
+        def injectClassInfo(className, srcTxt):
+            # inject wxClassInfo macros into the sip generated wrapper class
+            lines = srcTxt.splitlines()
+            # find the beginning of the class declaration
+            for idx, line in enumerate(lines):
+                if line.startswith('class sip{}'.format(className)):
+                    # next line is '{', insert after that
+                    lines[idx+2:idx+2] = ['wxDECLARE_ABSTRACT_CLASS(sip{});'.format(className)]
+                    break
+            # find the '};' that terminates the class
+            for idx, line in enumerate(lines[idx+2:], idx+2):
+                if line.startswith('};'):
+                    lines[idx+1:idx+1] = ['\nwxIMPLEMENT_ABSTRACT_CLASS(sip{0}, {0});'.format(className)]
+                    break
+            # join it back up and return
+            return '\n'.join(lines)
+
 
         # Check each file in tmpdir to see if it is different than the same file
         # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
@@ -1274,6 +1306,12 @@ def cmd_build_wx(options, args):
     if options.extra_make:
         build_options.append('--extra_make="%s"' % options.extra_make)
 
+    if not isWindows and not isDarwin and not options.no_magic and not options.use_syswx:
+        # Using $ORIGIN in the rpath will cause the dynamic linker to look
+        # for shared libraries in a folder relative to the loading binary's
+        # location. Here we'll use just $ORIGIN so it should look in the same
+        # folder as the wxPython extension modules.
+        os.environ['LD_RUN_PATH'] = '$ORIGIN'
 
     try:
         # Import and run the wxWidgets build script
@@ -1474,12 +1512,14 @@ def cmd_build_vagrant(options, args):
     cmdTimer = CommandTimer('bdist_vagrant')
     cfg = Config(noWxConfig=True)
     if not options.vagrant_vms or options.vagrant_vms == 'all':
-        VMs = [ 'centos-7',
-                'debian-8',
-                'fedora-23',
-                'fedora-26',
-                'ubuntu-14.04',
-                'ubuntu-16.04',
+        VMs = [ 'centos-7     all all',
+                'debian-8     all all',
+                'debian-9     all all',
+                'fedora-23    all all',
+                'fedora-26    all all',
+                'fedora-27    all gtk3', # no webkitgtk for gtk2??
+                'ubuntu-14.04 all all',
+                'ubuntu-16.04 all all',
                 ]
     elif options.vagrant_vms == 'none':
         VMs = [] # to skip building anything and just upload
@@ -1487,7 +1527,7 @@ def cmd_build_vagrant(options, args):
         VMs = options.vagrant_vms.split(',')
 
     for vmName in VMs:
-        vmDir = opj(phoenixDir(), 'vagrant', vmName)
+        vmDir = opj(phoenixDir(), 'vagrant', vmName.split()[0])
         pwd = pushDir(vmDir)
         msg('Starting Vagrant VM in {}'.format(vmDir))
         runcmd('vagrant up')
@@ -1717,6 +1757,8 @@ def cmd_clean_vagrant(options, args):
     if os.path.exists(d):
         shutil.rmtree(d)
 
+def cmd_clean_all(options, args):
+    cmd_cleanall(options, args)
 
 def cmd_cleanall(options, args):
     # These take care of all the object, lib, shared lib files created by the
