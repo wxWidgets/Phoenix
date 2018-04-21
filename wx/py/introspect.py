@@ -350,14 +350,14 @@ def getBaseObject(obj):
         # inspect.getargspec() complains that the object isn't a
         # Python function.
         try:
-            if obj.im_self is None:
+            if obj.__self__ is None:
                 # This is an unbound method so we do not drop self
                 # from the argspec, since an instance must be passed
                 # as the first arg.
                 dropSelf = 0
             else:
                 dropSelf = 1
-            obj = obj.im_func
+            obj = obj.__func__
         except AttributeError:
             dropSelf = 0
     elif inspect.isclass(obj):
