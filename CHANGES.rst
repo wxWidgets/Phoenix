@@ -67,6 +67,9 @@ Changes in this release include the following:
 
 * Fix wxGet to be able to use pip v10. (#817)
 
+* Change winid parameter in wx.ScrolledWindow to id, for consistency. (#816)
+
+
 
 
 
