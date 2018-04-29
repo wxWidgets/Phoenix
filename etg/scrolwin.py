@@ -116,7 +116,7 @@ def run():
                 overloads=[
                     MethodDef(name='wxScrolledWindow', isCtor=True, items=[
                         ParamDef(name='parent', type='wxWindow*'),
-                        ParamDef(name='winid', type='wxWindowID', default='wxID_ANY'),
+                        ParamDef(name='id', type='wxWindowID', default='wxID_ANY'),
                         ParamDef(name='pos', type='const wxPoint&', default='wxDefaultPosition'),
                         ParamDef(name='size', type='const wxSize&', default='wxDefaultSize'),
                         ParamDef(name='style', type='long', default='wxScrolledWindowStyle'),
