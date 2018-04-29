@@ -149,6 +149,9 @@ def download_urllib(url, filename):
                                                        message+status)
             wx.Sleep(0.08)  # Give the GUI some update time
         progress.Destroy()
+    
+    result = os.path.exists(filename) and os.stat(filename).st_size > 0
+    return result    
 
 def download_pip(url, filename, force=False, trusted=False):
     """ Try to donwload via pip."""
@@ -156,7 +159,7 @@ def download_pip(url, filename, force=False, trusted=False):
     if len(download_dir) == 0:
         download_dir = '.'
     print("Trying to use pip to download From:\n  ", url, 'To:\n  ', filename)
-    cmds = ['download', url, '--dest', download_dir, "--no-deps",
+    cmds = ['pip', 'download', url, '--dest', download_dir, "--no-deps",
             '--exists-action', 'i']
     if force:
         cmds.append('--no-cache-dir')
@@ -168,12 +171,15 @@ def download_pip(url, filename, force=False, trusted=False):
         os.unlink(filename)
     print("Running pip",  ' '.join(cmds))
     try:
-        print("\nAbusing pip so expect an error in the next few lines.")
-        result = pip.main(cmds)
+        print("\nAbusing pip so expect possible error(s) in the next few lines.")
+        result = subprocess.check_call(cmds)
         print(result)
-    except FileNotFoundError:
+    except (FileNotFoundError, subprocess.CalledProcessError) as Error:
+        print("Download via pip may have Failed!")
+        print(Error)
         result = 0
-    return os.path.exists(filename)
+    result = os.path.exists(filename) and os.stat(filename).st_size > 0
+    return result
 
 def download_file(url, dest=None, force=False, trusted=False):
     """
@@ -241,7 +247,7 @@ def main(args=sys.argv):
         else:
             url = None
     if url:
-        FILENAME = download_file(url, dest_dir, force, trusted)
+        FILENAME = download_file(url=url, dest=dest_dir, force=force, trusted=trusted)
         print(FILENAME)
 
 if __name__ == "__main__":  # Only run if this file is called directly
