@@ -35,8 +35,10 @@ def run():
     c = module.find('wxTextCompleter')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
+    c.addDefaultCtor(prot='public')
 
     c = module.find('wxTextCompleterSimple')
+    c.addDefaultCtor(prot='public')
     # TODO: Change GetCompletions to return the wxArrayString instead of
     # passing it as a parameter?
 
