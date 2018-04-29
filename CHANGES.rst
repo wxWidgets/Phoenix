@@ -61,6 +61,8 @@ Changes in this release include the following:
 
 * Fixed bug in wx.lib.intctrl (#790)
 
+* Fixed subclassing of wx.TextCompleter and wx.TextCompleterSimple (#827)
+
 
 
 
