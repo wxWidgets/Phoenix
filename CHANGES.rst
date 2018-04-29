@@ -63,6 +63,9 @@ Changes in this release include the following:
 
 * Fixed subclassing of wx.TextCompleter and wx.TextCompleterSimple (#827)
 
+* Fixes for Python3 compatibility in PyCrust. (#823)
+
+* Fix wxGet to be able to use pip v10. (#817)
 
 
 
