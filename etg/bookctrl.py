@@ -42,6 +42,21 @@ def run():
 
     c.find('HitTest.flags').out = True
 
+    # Workaround the lack of checking valid page numbers in wxGTK.
+    c.addPyCode("""\
+        def _checkBookPageCount(f):
+            import functools
+            @functools.wraps(f)
+            def wrapper(self, page):
+                if page >= self.GetPageCount():
+                    raise wx.PyAssertionError("invalid notebook page")
+                return f(self, page)
+            return wrapper
+
+        BookCtrlBase.RemovePage = _checkBookPageCount(BookCtrlBase.RemovePage)
+        BookCtrlBase.GetPage = _checkBookPageCount(BookCtrlBase.GetPage)
+        """)
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
