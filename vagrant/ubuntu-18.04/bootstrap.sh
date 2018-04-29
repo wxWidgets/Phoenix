@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set up and update package repos
-#add-apt-repository ppa:deadsnakes/ppa  ## Not yet available for bionic
+add-apt-repository ppa:deadsnakes/ppa
 apt update
 
 # Install necessary development tools, libs, etc.
@@ -17,7 +17,6 @@ apt install -y libjpeg-dev libtiff-dev \
 
 # Install all available Python packages and their dev packages
 apt install -y python2.7 python2.7-dev libpython2.7-dev python-virtualenv
-##apt install -y python3.5 python3.5-dev libpython3.5-dev python3.5-venv
 apt install -y python3.6 python3.6-dev libpython3.6-dev python3.6-venv
 apt install -y python3.7 python3.7-dev libpython3.7-dev python3.7-venv
 
@@ -25,7 +24,6 @@ apt install -y python3.7 python3.7-dev libpython3.7-dev python3.7-venv
 # done. set them to the vagrant user so the venv's can be updated by pip later.
 mkdir venvs
 virtualenv --python=python2.7 venvs/Py27
-##python3.5 -m venv venvs/Py35
 python3.6 -m venv venvs/Py36
 python3.7 -m venv venvs/Py37
 
