@@ -67,6 +67,8 @@ Changes in this release include the following:
 
 * Fix wxGet to be able to use pip v10. (#817)
 
+* Change winid parameter in wx.ScrolledWindow to id, for consistency. (#816)
+
 * Ensure that the page exists in book controls GetPage and RemovePage methods.
   At least one of the wx ports do not do this. (#830)
 
