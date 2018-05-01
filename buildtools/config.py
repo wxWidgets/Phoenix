@@ -770,7 +770,7 @@ def getVcsRev():
     def _getGitRevision():
         try:
             revcount = runcmd('git rev-list --count HEAD', getOutput=True, echoCmd=False)
-            revhash  = runcmd('git rev-parse --short HEAD', getOutput=True, echoCmd=False)
+            revhash  = runcmd('git rev-parse --short=8 HEAD', getOutput=True, echoCmd=False)
         except:
             return None
         return "{}+{}".format(revcount, revhash)
