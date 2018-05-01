@@ -16,6 +16,7 @@ import sys
 import os
 import pprint
 import xml.etree.ElementTree as et
+import copy
 
 from .tweaker_tools import FixWxPrefix, magicMethods, \
                            guessTypeInt, guessTypeFloat, guessTypeStr, \
@@ -1104,6 +1105,21 @@ private:
 
     def mustHaveApp(self, value=True):
         self.mustHaveAppFlag = value
+
+
+    def copyFromClass(self, klass, name):
+        """
+        Copy an item from another class into this class. If it is a pure
+        virtual method in the other class then assume that it has a concrete
+        implementation in this class and change the flag.
+
+        Returns the new item.
+        """
+        item = copy.deepcopy(klass.find(name))
+        if isinstance(item, MethodDef) and item.isPureVirtual:
+            item.isPureVirtual = False
+        self.addItem(item)
+        return item
 
 
 #---------------------------------------------------------------------------

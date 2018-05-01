@@ -32,13 +32,16 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxTextCompleter')
+    c = tc = module.find('wxTextCompleter')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     c.addDefaultCtor(prot='public')
 
     c = module.find('wxTextCompleterSimple')
     c.addDefaultCtor(prot='public')
+    c.copyFromClass(tc, 'Start')
+    c.copyFromClass(tc, 'GetNext')
+
     # TODO: Change GetCompletions to return the wxArrayString instead of
     # passing it as a parameter?
 
