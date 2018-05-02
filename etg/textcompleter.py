@@ -42,8 +42,9 @@ def run():
     c.copyFromClass(tc, 'Start')
     c.copyFromClass(tc, 'GetNext')
 
-    # TODO: Change GetCompletions to return the wxArrayString instead of
-    # passing it as a parameter?
+    # Change GetCompletions to return the wxArrayString instead of passing it
+    # as a parameter
+    c.find('GetCompletions.res').out = True
 
 
     #-----------------------------------------------------------------

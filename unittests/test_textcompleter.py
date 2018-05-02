@@ -27,9 +27,11 @@ class testcompleter_Tests(wtc.WidgetTestCase):
         class MyTextCompleterSimple(wx.TextCompleterSimple):
             def __init__(self):
                 wx.TextCompleterSimple.__init__(self)
-            def GetCompletions(self, prefix, res):
+            def GetCompletions(self, prefix):
+                res = []
                 res.append("one")
                 res.append("two")
+                return res
         t = wx.TextCtrl(self.frame)
         t.AutoComplete(MyTextCompleterSimple())
 

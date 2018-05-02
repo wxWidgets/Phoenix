@@ -72,6 +72,9 @@ Changes in this release include the following:
 * Ensure that the page exists in book controls GetPage and RemovePage methods.
   At least one of the wx ports do not do this. (#830)
 
+* Change wx.TextCompleterSimple.GetCompletions to send the list of strings
+  as a return value, rather than a parameter that gets filled. (#836)
+
 
 
 
