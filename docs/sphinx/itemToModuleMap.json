@@ -2402,6 +2402,7 @@
 "NullPalette":"wx.",
 "NullPen":"wx.",
 "NullRegion":"wx.",
+"NumberEntryDialog":"wx.",
 "NumericPropertyValidator":"wx.propgrid.",
 "NumericType":"wx.propgrid.NumericPropertyValidator.",
 "ODCB_DCLICK_CYCLES":"wx.adv.",
