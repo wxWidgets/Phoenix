@@ -336,7 +336,6 @@ NotebookEvent                                                :class:`wx.BookCtrl
 NotebookPage                                                 ``MISSING``
 NotificationMessage                                          :class:`wx.adv.NotificationMessage`
 NullFileTypeInfo                                             ``MISSING``
-NumberEntryDialog                                            ``MISSING``
 Panel_GetClassDefaultAttributes                              :meth:`wx.Panel.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 PCXHandler                                                   ``MISSING``
 PlatformInformation_GetOperatingSystemDirectory              :meth:`wx.PlatformInfo.GetOperatingSystemDirectory`
