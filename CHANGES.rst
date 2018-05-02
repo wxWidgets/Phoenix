@@ -74,6 +74,8 @@ Changes in this release include the following:
 
 * Added missing wx.NumberEntryDialog
 
+* Change wx.TextCompleterSimple.GetCompletions to send the list of strings
+  as a return value, rather than a parameter that gets filled. (#836)
 
 
 
