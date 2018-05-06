@@ -79,6 +79,9 @@ Changes in this release include the following:
 
 * Enabled the wx.GraphicsContext.Create(metaFileDC) wrapper (#811)
 
+* Metafile support is also available on OSX, so wx.msw.Metafile and
+  wx.msw.MetafileDC have been moved to the core wx module. So they can now be
+  accessed as wx.Metafile and wx.MetafileDC.
 
 
 
