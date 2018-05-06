@@ -92,6 +92,7 @@ INCLUDES = [  # base and core stuff
               'dcprint',
               'dcps',
               'dcsvg',
+              'metafile',
               'graphics',
               'imaglist',
               'overlay',

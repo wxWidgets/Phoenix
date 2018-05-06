@@ -80,9 +80,18 @@ def run():
             if 'DC' in p.name or p.name == 'image':
                 p.keepReference = True
 
-
-    # FIXME: Handle wxEnhMetaFileDC?
-    c.find('Create').findOverload('wxEnhMetaFileDC').ignore()
+    m = c.find('Create').findOverload('wxEnhMetaFileDC')
+    m.find('metaFileDC').type = 'const wxMetafileDC&'
+    m.argsString = '(const wxMetafileDC& metaFileDC)'
+    m.setCppCode("""\
+        #ifdef __WXMSW__
+        #if wxUSE_ENH_METAFILE
+            return wxGraphicsContext::Create(*metaFileDC);
+        #endif
+        #endif        
+            wxPyRaiseNotImplemented();
+            return NULL;
+        """)
 
     c.find('GetSize.width').out = True
     c.find('GetSize.height').out = True
