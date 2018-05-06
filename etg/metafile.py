@@ -22,7 +22,29 @@ ITEMS  = [ 'wxMetafile',
            'wxMetafileDC',
            ]
 
+stubCode = """\
+#if !wxUSE_METAFILE
 
+class wxMetafile : public wxObject
+{
+public:
+    wxMetafile(const wxString& filename = wxEmptyString) { wxPyRaiseNotImplemented(); }
+    ~wxMetafile() {}
+    bool IsOk() { return false; }
+    bool Play(wxDC* dc) { return false; }
+    bool SetClipboard(int width = 0, int height = 0) { return false; }
+};
+
+class wxMetafileDC : public wxMemoryDC
+{
+public:
+    wxMetafileDC(const wxString& filename = wxEmptyString) { wxPyRaiseNotImplemented(); }
+    ~wxMetafileDC() {}
+    wxMetafile* Close() { return NULL; }
+};
+
+#endif
+"""
 #---------------------------------------------------------------------------
 
 def run():
@@ -35,6 +57,7 @@ def run():
     # customizing the generated code and docstrings.
 
     module.addHeaderCode('#include <wx/metafile.h>')
+    module.addHeaderCode(stubCode)
 
     c = module.find('wxMetafile')
     c.addPrivateCopyCtor()
