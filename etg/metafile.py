@@ -12,7 +12,7 @@ import etgtools
 import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"
-MODULE    = "_msw"
+MODULE    = "_core"
 NAME      = "metafile"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
@@ -33,6 +33,8 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    module.addHeaderCode('#include <wx/metafile.h>')
 
     c = module.find('wxMetafile')
     c.addPrivateCopyCtor()
