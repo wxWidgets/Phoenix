@@ -29,7 +29,7 @@ ITEMS = []
 # remove it from this list of Includes, and change the MODULE value in the
 # promoted script to be the same as its NAME.
 
-INCLUDES = ['metafile',
+INCLUDES = [#'metafile',
             'axbase',
             ]
 
