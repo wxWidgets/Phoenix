@@ -30,7 +30,7 @@ def options(opt):
     if isWindows:
         opt.load('msvc')
     else:
-        opt.load('compiler_cc compiler_cxx')
+        opt.load('compiler_c compiler_cxx')
     opt.load('python')
 
     opt.add_option('--debug', dest='debug', action='store_true', default=False,
@@ -78,7 +78,7 @@ def configure(conf):
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
         conf.load('msvc')
     else:
-        conf.load('compiler_cc compiler_cxx')
+        conf.load('compiler_c compiler_cxx')
 
     if conf.options.python:
         conf.env.PYTHON = conf.options.python
