@@ -1520,6 +1520,7 @@ def cmd_build_vagrant(options, args):
                 'fedora-27    all gtk3', # no webkitgtk for gtk2??
                 'ubuntu-14.04 all all',
                 'ubuntu-16.04 all all',
+                'ubuntu-18.04 all all',
                 ]
     elif options.vagrant_vms == 'none':
         VMs = [] # to skip building anything and just upload
