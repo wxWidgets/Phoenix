@@ -116,6 +116,10 @@ Changes in this release include the following:
   wx.msw.MetafileDC have been moved to the core wx module. So they can now be
   accessed as wx.Metafile and wx.MetafileDC.
 
+* Updated the waf tool used by the build to version 2.0.7. This fixes problems
+  with building for Python 3.7.
+
+
 
 
 
