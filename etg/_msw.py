@@ -58,6 +58,11 @@ def run():
     module.addPyCode('import wx', order=10)
     module.addInclude(INCLUDES)
 
+    module.addPyCode("""\
+        Metafile = wx.deprecated(wx.Metafile, 'Metafile has moved to the core wx module.')
+        MetafileDC = wx.deprecated(wx.MetafileDC, 'MetafileDC has moved to the core wx module.') 
+        """)
+
     # -----------------------------------------------------------------
     # -----------------------------------------------------------------
     tools.doCommonTweaks(module)

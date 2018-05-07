@@ -14,6 +14,10 @@
 #ifndef WXPYBUFFER_H
 #define WXPYBUFFER_H
 
+// TODO: When support for Python2 is dropped then look into changing this
+// class such that it holds on to the Py_buffer view object for the lifetime of
+// the wxPyBuffer object. This could help with cases where the buffer is
+// attempted to be accessed when the source object has already been gc'd.
 
 class wxPyBuffer
 {
@@ -24,8 +28,20 @@ public:
     // the Python buffer protocol.  Raises a TypeError if the object can not
     // be used as a buffer.
     bool create(PyObject* obj) {
-        int rv = PyObject_AsReadBuffer(obj, (const void**)&m_ptr, &m_len);
-        return rv != -1;
+        #if PY_MAJOR_VERSION < 3
+            // Old buffer protocol
+            int rv = PyObject_AsReadBuffer(obj, (const void**)&m_ptr, &m_len);
+            return rv != -1;
+        #else
+            // New buffer protocol
+            Py_buffer view;
+            if (PyObject_GetBuffer(obj, &view, PyBUF_SIMPLE) != 0)
+                return false;
+            m_ptr = view.buf;
+            m_len = view.len;
+            PyBuffer_Release(&view);
+            return true;
+        #endif
     }
 
 
