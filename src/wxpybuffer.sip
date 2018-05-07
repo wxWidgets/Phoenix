@@ -24,7 +24,10 @@
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
             if (PyObject_CheckBuffer(sipPy)              // New buffer interface
-                || PyObject_CheckReadBuffer(sipPy))      // or old buffer interface
+                #if PY_MAJOR_VERSION < 3
+                    || PyObject_CheckReadBuffer(sipPy)   // or old buffer interface
+                #endif
+                )
                 return TRUE;
             return FALSE;
         }
