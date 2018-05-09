@@ -119,6 +119,11 @@ Changes in this release include the following:
 * Updated the waf tool used by the build to version 2.0.7. This fixes problems
   with building for Python 3.7.
 
+* Fixed alignment in buttons on MSW which have had foreground or background
+  colors set. (#815)
+
+* Fix for unexpected assertion inside wx.aui.AuiMDIChildFrame.Close.
+
 
 
 
