@@ -2263,9 +2263,9 @@ class AuiSingleDockingGuide(AuiDockingGuide):
             else:
                 self.SetGuideShape()
 
-            self.SetSize(self.region.GetBox().GetSize())
+            self.SetClientSize(self.region.GetBox().GetSize())
         else:
-            self.SetSize((sizeX, sizeY))
+            self.SetClientSize((sizeX, sizeY))
 
         self.rect = wx.Rect(0, 0, sizeX, sizeY)
 
@@ -2414,7 +2414,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         else:
             self.SetGuideShape()
 
-        self.SetSize(self.region.GetBox().GetSize())
+        self.SetClientSize(self.region.GetBox().GetSize())
 
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
