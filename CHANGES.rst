@@ -124,6 +124,7 @@ Changes in this release include the following:
 
 * Fix for unexpected assertion inside wx.aui.AuiMDIChildFrame.Close.
 
+* Fix a bug in setting AuiDockingGuide size. (#727)
 
 
 
