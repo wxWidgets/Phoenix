@@ -93,6 +93,7 @@ Changes in this release include the following:
 
 * Fix a bug in setting AuiDockingGuide size. (#727)
 
+* Remove unnecessary notebook updating (wx.lib.agw.aui). (#851)
 
 
 

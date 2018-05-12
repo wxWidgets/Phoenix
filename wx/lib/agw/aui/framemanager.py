@@ -6379,8 +6379,6 @@ class AuiManager(wx.EvtHandler):
         if not self.GetManagedWindow():
             return
 
-        if '__WXGTK__' in wx.PlatformInfo:
-            self.GetManagedWindow().Freeze()
         self._hover_button = None
         self._action_part = None
 
@@ -6559,8 +6557,6 @@ class AuiManager(wx.EvtHandler):
         if not self._masterManager:
             e = self.FireEvent(wxEVT_AUI_PERSPECTIVE_CHANGED, None, canVeto=False)
 
-        if '__WXGTK__' in wx.PlatformInfo:
-            self.GetManagedWindow().Thaw()
 
 
     def UpdateNotebook(self):
@@ -6673,7 +6669,6 @@ class AuiManager(wx.EvtHandler):
                 # Correct page ordering. The original wxPython code
                 # for this did not work properly, and would misplace
                 # windows causing errors.
-                notebook.Freeze()
                 self._notebooks[nb_idx] = notebook
                 pages = notebook.GetPageCount()
                 selected = notebook.GetPage(notebook.GetSelection())
@@ -6682,27 +6677,35 @@ class AuiManager(wx.EvtHandler):
                 # its current pane, and sort the list by pane.dock_pos
                 # order
                 pages_and_panes = []
-                for idx in reversed(list(range(pages))):
+                for idx in list(range(pages)):
                     page = notebook.GetPage(idx)
                     pane = self.GetPane(page)
                     pages_and_panes.append((page, pane))
-                    notebook.RemovePage(idx)
+
                 sorted_pnp = sorted(pages_and_panes, key=lambda tup: tup[1].dock_pos)
+                if sorted_pnp != pages_and_panes:
+                    notebook.Freeze()
+                    pages_and_panes = []
+                    for idx in reversed(list(range(pages))):
+                        page = notebook.GetPage(idx)
+                        pane = self.GetPane(page)
+                        pages_and_panes.append((page, pane))
+                        notebook.RemovePage(idx)
 
-                # Grab the attributes from the panes which are ordered
-                # correctly, and copy those attributes to the original
-                # panes. (This avoids having to change the ordering
-                # of self._panes) Then, add the page back into the notebook
-                sorted_attributes = [self.GetAttributes(tup[1])
-                                     for tup in sorted_pnp]
-                for attrs, tup in zip(sorted_attributes, pages_and_panes):
-                    pane = tup[1]
-                    self.SetAttributes(pane, attrs)
-                    notebook.AddPage(pane.window, pane.caption)
+                    # Grab the attributes from the panes which are ordered
+                    # correctly, and copy those attributes to the original
+                    # panes. (This avoids having to change the ordering
+                    # of self._panes) Then, add the page back into the notebook
+                    sorted_attributes = [self.GetAttributes(tup[1])
+                                         for tup in sorted_pnp]
+                    for attrs, tup in zip(sorted_attributes, pages_and_panes):
+                        pane = tup[1]
+                        self.SetAttributes(pane, attrs)
+                        notebook.AddPage(pane.window, pane.caption)
 
-                notebook.SetSelection(notebook.GetPageIndex(selected), True)
-                notebook.DoSizing()
-                notebook.Thaw()
+                    notebook.SetSelection(notebook.GetPageIndex(selected), True)
+                    notebook.DoSizing()
+                    notebook.Thaw()
 
                 # It's a keeper.
                 remap_ids[nb] = nb_idx
