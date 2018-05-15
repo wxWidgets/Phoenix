@@ -8760,7 +8760,10 @@ class AuiManager(wx.EvtHandler):
         # has been specified, use it, otherwise
         # make a client dc
         if dc is None:
-            client_dc = wx.ClientDC(self._frame)
+            if not self._frame.IsDoubleBuffered():
+                client_dc = wx.BufferedDC(wx.ClientDC(self._frame), wx.Size(w, h))
+            else:
+                client_dc = wx.ClientDC(self._frame)
             dc = client_dc
 
         # If the frame has a toolbar, the client area

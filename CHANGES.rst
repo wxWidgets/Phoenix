@@ -93,8 +93,9 @@ Changes in this release include the following:
 
 * Fix a bug in setting AuiDockingGuide size. (#727)
 
-* Remove unnecessary notebook updating (wx.lib.agw.aui). (#851)
+* Remove unnecessary notebook updating (wx.lib.agw.aui). (#851, #686)
 
+* Use BufferedDC in Repaint() to mitigate flicker (wx.lib.agw.aui). (#686)
 
 
 4.0.1 "Lemonade"
