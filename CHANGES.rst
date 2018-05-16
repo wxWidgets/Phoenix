@@ -93,6 +93,9 @@ Changes in this release include the following:
 
 * Fix a bug in setting AuiDockingGuide size. (#727)
 
+* Fixed crashing bug when using client data with items in
+  wx.dataview.DataViewTreeCtrl. (#856)
+
 
 
 
