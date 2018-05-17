@@ -101,6 +101,8 @@ Changes in this release include the following:
 
 
 
+* Detach wxControl in AuiToolbar from current sizer before attach to a new one.
+  (#843)
 
 4.0.1 "Lemonade"
 ----------------

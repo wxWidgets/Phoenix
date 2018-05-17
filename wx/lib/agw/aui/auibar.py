@@ -3072,6 +3072,9 @@ class AuiToolBar(wx.Control):
                     sizer_item = sizer.Add((item.spacer_pixels, 1))
 
             elif kind == ITEM_CONTROL:
+                if item.window and item.window.GetContainingSizer():
+                    # Make sure that there is only one sizer to this control
+                    item.window.GetContainingSizer().Detach(item.window);
 
                 vert_sizer = wx.BoxSizer(wx.VERTICAL)
                 vert_sizer.AddStretchSpacer(1)
