@@ -97,6 +97,8 @@ Changes in this release include the following:
 
 * Use BufferedDC in Repaint() to mitigate flicker (wx.lib.agw.aui). (#686)
 
+* Detach wxControl in AuiToolbar from current sizer before attach to a new one.
+  (#843)
 
 4.0.1 "Lemonade"
 ----------------
