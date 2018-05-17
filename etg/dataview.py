@@ -11,7 +11,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
+from etgtools import PyFunctionDef, ParamDef
 
 PACKAGE   = "wx"
 MODULE    = "_dataview"
@@ -538,14 +538,20 @@ def run():
 
 
     #-----------------------------------------------------------------
+    def _setClientDataTrasfer(klass):
+        for item in klass.allItems():
+            if isinstance(item, ParamDef) and item.type == 'wxClientData *':
+                item.transfer = True
+
     c = module.find('wxDataViewTreeCtrl')
     tools.fixWindowClass(c)
+    _setClientDataTrasfer(c)
     c.find('GetStore').overloads = []
-
 
     c = module.find('wxDataViewTreeStore')
     c.addAutoProperties()
     tools.fixRefCountedClass(c)
+    _setClientDataTrasfer(c)
 
 
     #-----------------------------------------------------------------
