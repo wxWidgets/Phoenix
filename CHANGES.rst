@@ -97,6 +97,9 @@ Changes in this release include the following:
 
 * Use BufferedDC in Repaint() to mitigate flicker (wx.lib.agw.aui). (#686)
 
+* Fixed crashing bug when using client data with items in
+  wx.dataview.DataViewTreeCtrl. (#856)
+
 
 4.0.1 "Lemonade"
 ----------------
