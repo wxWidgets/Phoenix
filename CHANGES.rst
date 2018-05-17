@@ -132,10 +132,11 @@ Changes in this release include the following:
 * Fixed crashing bug when using client data with items in
   wx.dataview.DataViewTreeCtrl. (#856)
 
+* Detach wxControl in AuiToolbar from current sizer before attach to a new
+  one. (#843)
 
 
-* Detach wxControl in AuiToolbar from current sizer before attach to a new one.
-  (#843)
+
 
 4.0.1 "Lemonade"
 ----------------
