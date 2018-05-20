@@ -612,7 +612,10 @@ class TextEditMixin:
         y0 = self.GetItemRect(row)[1]
 
         editor = self.editor
-        editor.SetSize(x0-scrolloffset,y0, x1,-1)
+        # It was using -1 as editor height, but it was not showing when in
+        # Linux. So it's calculating text height on the fly
+        height = self.editor.GetTextExtent('M')[1]
+        editor.SetSize(x0-scrolloffset,y0, x1, height)
 
         editor.SetValue(self.GetItem(row, col).GetText())
         editor.Show()
