@@ -80,12 +80,12 @@ jobs:
         environment:
             - MAKE_VENV: "python -m venv venv"
 
-    "Python-3.7":
-        <<: *shared
-        docker:
-            - image: circleci/python:3.7
-        environment:
-            - MAKE_VENV: "python -m venv venv"
+#    "Python-3.7":
+#        <<: *shared
+#        docker:
+#            - image: circleci/python:3.7
+#        environment:
+#            - MAKE_VENV: "python -m venv venv"
 
 
 # This workflow defines the jobs that comprise the "build" task. The jobs will
@@ -97,4 +97,4 @@ workflows:
       - "Python-2.7"
       - "Python-3.5"
       - "Python-3.6"
-      - "Python-3.7"
+#      - "Python-3.7"
