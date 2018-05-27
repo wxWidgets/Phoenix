@@ -102,6 +102,7 @@ Changes in this release include the following:
 * Detach wxControl in AuiToolbar from current sizer before attach to a new
   one. (#843)
 
+* Fix a bug in calculating whether a tool fits into the AuiToolBar. (#863)
 
 
 
