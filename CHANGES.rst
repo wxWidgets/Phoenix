@@ -138,6 +138,7 @@ Changes in this release include the following:
 * Fixed a problem in wx.lib.mixins.listctrl.TextEditMixin where the height of
   the editor widget could be set to zero. (See discussion in #849)
   
+* Fix a bug in calculating whether a tool fits into the AuiToolBar. (#863)
 
 
 
