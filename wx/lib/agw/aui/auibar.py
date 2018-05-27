@@ -2935,11 +2935,12 @@ class AuiToolBar(wx.Control):
 
         cli_w, cli_h = self.GetClientSize()
         rect = self._items[tool_id].sizer_item.GetRect()
+        dropdown_size = self._art.GetElementSize(AUI_TBART_OVERFLOW_SIZE)
 
         if self._agwStyle & AUI_TB_VERTICAL:
             # take the dropdown size into account
             if self._overflow_visible:
-                cli_h -= self._overflow_sizer_item.GetSize().y
+                cli_h -= dropdown_size
 
             if rect.y+rect.height < cli_h:
                 return True
@@ -2948,7 +2949,7 @@ class AuiToolBar(wx.Control):
 
             # take the dropdown size into account
             if self._overflow_visible:
-                cli_w -= self._overflow_sizer_item.GetSize().x
+                cli_w -= dropdown_size
 
             if rect.x+rect.width < cli_w:
                 return True
