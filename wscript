@@ -68,20 +68,18 @@ def configure(conf):
         msvc_version = str( distutils.msvc9compiler.get_build_version() )
 
         # When building for Python 3.7 the msvc_version returned will be  
-        # "14.1" as that is the version of the BasePlatformToolkit that
-        # stock Python 3.7 was built with, a.k.a v141, which is the
-        # default in Visual Studio 2017. However, waf is using "msvc
-        # 15.0" to designate that version rather than "14.1" so we'll
-        # need to catch that case and fix up the msvc_version
-        # accordingly.
+        # "14.1" as that is the version of the BasePlatformToolkit that stock
+        # Python 3.7 was built with, a.k.a v141, which is the default in
+        # Visual Studio 2017. However, waf is using "msvc 15.0" to designate
+        # that version rather than "14.1" so we'll need to catch that case and
+        # fix up the msvc_version accordingly.
         if msvc_version == "14.1" and sys.version_info >= (3,7):
             ##msvc_version = '15.0'
             
-            # On the other hand, microsoft says that v141 and v140
-            # (Visual Studio 2015) are binary compatible, so for now
-            # let's just drop it back to "14.0" until I get all the
-            # details worked out for using VS 2017 everywhere for Python
-            # 3.7.
+            # On the other hand, microsoft says that v141 and v140 (Visual
+            # Studio 2015) are binary compatible, so for now let's just drop
+            # it back to "14.0" until I get all the details worked out for
+            # using VS 2017 everywhere for Python 3.7.
             msvc_version = '14.0'
 
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
