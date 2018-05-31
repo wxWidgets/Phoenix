@@ -140,6 +140,9 @@ Changes in this release include the following:
   
 * Fix a bug in calculating whether a tool fits into the AuiToolBar. (#863)
 
+* Override SetForegroundColour and SetBackgroundColour in MaskedEditMixin (#808)
+
+
 
 
 4.0.1 "Lemonade"
