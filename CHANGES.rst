@@ -109,6 +109,7 @@ Changes in this release include the following:
 
 * Override SetForegroundColour and SetBackgroundColour in MaskedEditMixin (#808)
 
+* Return original AGW window style in AuiToolBar.GetAGWWindowStyleFlag. (#870)
 
 
 
