@@ -142,6 +142,10 @@ Changes in this release include the following:
 
 * Override SetForegroundColour and SetBackgroundColour in MaskedEditMixin (#808)
 
+* Fix a bug in group management on wx.lib.masked.numctrl; previous code used
+  truediv ('/') to calculate _groupSpace, but in python 3.x this lead to a float
+  result, instead of an integer as one would expect. Using floordiv ('//') 
+  instead, solve the problem.
 
 
 
