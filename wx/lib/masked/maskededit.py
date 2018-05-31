@@ -3229,6 +3229,13 @@ class MaskedEditMixin:
 ####        dbg(indent=0)
         return self._fields[self._lookupField[pos]]
 
+    def SetForegroundColour(self, colour):
+        super(MaskedEditMixin, self).SetForegroundColour(colour)
+        self._foregroundColour = colour
+
+    def SetBackgroundColour(self, colour):
+        super(MaskedEditMixin, self).SetBackgroundColour(colour)
+        self._validBackgroundColour = colour
 
     def ClearValue(self):
         """ Blanks the current control value by replacing it with the default value."""
