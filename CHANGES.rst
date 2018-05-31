@@ -102,6 +102,9 @@ Changes in this release include the following:
 * Detach wxControl in AuiToolbar from current sizer before attach to a new
   one. (#843)
 
+* Fixed a problem in wx.lib.mixins.listctrl.TextEditMixin where the height of
+  the editor widget could be set to zero. (See discussion in #849)
+  
 
 
 
