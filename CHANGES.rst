@@ -109,6 +109,8 @@ Changes in this release include the following:
 
 * Override SetForegroundColour and SetBackgroundColour in MaskedEditMixin (#808)
 
+* Add an explicit wx.GraphicsContext.Create overload for wx.AutoBufferedPaintDC. (#783)
+
 * Return original AGW window style in AuiToolBar.GetAGWWindowStyleFlag. (#870)
 
 

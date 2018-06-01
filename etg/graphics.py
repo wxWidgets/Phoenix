@@ -46,7 +46,8 @@ def run():
 
     module.addHeaderCode('#include <wx/gdicmn.h>')
 
-    def markFactories(klass):
+    def markCreateFactories(klass):
+        """Mark all Create methods as factories"""
         for func in klass.allItems():
             if isinstance(func, etgtools.FunctionDef) \
                and func.name.startswith('Create') \
@@ -64,20 +65,16 @@ def run():
     #---------------------------------------------
     c = module.find('wxGraphicsContext')
     assert isinstance(c, etgtools.ClassDef)
-    markFactories(c)
     tools.removeVirtuals(c)
     c.abstract = True
     c.mustHaveApp()
 
-
-    # Ensure that the target DC or image lives as long as the GC does. NOTE:
-    # Since the Creates are static methods there is no self to associate the
-    # extra reference with, but since they are factories then that extra
-    # reference will be held by the return value of the factory instead.
-    for m in c.find('Create').all():
-        for p in m.items:
-            if 'DC' in p.name or p.name == 'image':
-                p.keepReference = True
+    c.addCppMethod('wxGraphicsContext*', 'Create', '(wxAutoBufferedPaintDC* autoPaintDC /KeepReference/)',
+        pyArgsString='(autoPaintDC) -> GraphicsContext',
+        isStatic=True,
+        body="""\
+            return wxGraphicsContext::Create(autoPaintDC);
+            """)
 
     m = c.find('Create').findOverload('wxEnhMetaFileDC')
     m.find('metaFileDC').type = 'const wxMetafileDC&'
@@ -91,6 +88,19 @@ def run():
             wxPyRaiseNotImplemented();
             return NULL;
         """)
+
+    markCreateFactories(c)
+
+    # Ensure that the target DC or image passed to Create lives as long as the
+    # GC does. NOTE: Since the Creates are static methods there is no self to
+    # associate the extra reference with, but since they are factories then
+    # that extra reference will be held by the return value of the factory
+    # instead.
+    for m in c.find('Create').all():
+        for p in m.items:
+            if 'DC' in p.name or p.name == 'image':
+                p.keepReference = True
+
 
     c.find('GetSize.width').out = True
     c.find('GetSize.height').out = True
@@ -190,7 +200,7 @@ def run():
     #---------------------------------------------
     c = module.find('wxGraphicsRenderer')
     tools.removeVirtuals(c)
-    markFactories(c)
+    markCreateFactories(c)
     c.abstract = True
 
     for m in c.find('CreateContext').all():
