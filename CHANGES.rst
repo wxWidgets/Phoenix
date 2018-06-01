@@ -111,6 +111,7 @@ Changes in this release include the following:
 
 * Add an explicit wx.GraphicsContext.Create overload for wx.AutoBufferedPaintDC. (#783)
 
+* Return original AGW window style in AuiToolBar.GetAGWWindowStyleFlag. (#870)
 
 
 
