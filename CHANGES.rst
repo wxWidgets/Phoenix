@@ -134,8 +134,11 @@ Changes in this release include the following:
 
 * Detach wxControl in AuiToolbar from current sizer before attach to a new
   one. (#843)
-
-
+  
+* Fix a bug in group management on wx.lib.masked.numctrl; previous code used
+  truediv ('/') to calculate _groupSpace, but in python 3.x this lead to a float
+  result, instead of an integer as one would expect. Using floordiv ('//') 
+  instead, solve the problem.
 
 
 4.0.1 "Lemonade"
