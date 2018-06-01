@@ -140,6 +140,16 @@ Changes in this release include the following:
   result, instead of an integer as one would expect. Using floordiv ('//') 
   instead, solve the problem.
 
+* Fixed a problem in wx.lib.mixins.listctrl.TextEditMixin where the height of
+  the editor widget could be set to zero. (See discussion in #849)
+  
+* Fix a bug in calculating whether a tool fits into the AuiToolBar. (#863)
+
+* Override SetForegroundColour and SetBackgroundColour in MaskedEditMixin (#808)
+
+* Add an explicit wx.GraphicsContext.Create overload for wx.AutoBufferedPaintDC. (#783)
+
+* Return original AGW window style in AuiToolBar.GetAGWWindowStyleFlag. (#870)
 
 4.0.1 "Lemonade"
 ----------------

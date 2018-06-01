@@ -371,7 +371,7 @@ def getBaseObject(obj):
     elif callable(obj):
         # Get the __call__ method instead.
         try:
-            obj = obj.__call__.im_func
+            obj = obj.__call__.__func__
             dropSelf = 1
         except AttributeError:
             dropSelf = 0
@@ -382,7 +382,7 @@ def getBaseObject(obj):
 def getConstructor(obj):
     """Return constructor for class object, or None if there isn't one."""
     try:
-        return obj.__init__.im_func
+        return obj.__init__.__func__
     except AttributeError:
         for base in obj.__bases__:
             constructor = getConstructor(base)
