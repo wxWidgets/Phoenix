@@ -1706,7 +1706,7 @@ class AuiToolBar(wx.Control):
         :see: :meth:`SetAGWWindowStyleFlag` for an explanation of various AGW-specific style.
         """
 
-        return self._agwStyle
+        return self._originalStyle
 
 
     def SetArtProvider(self, art):
