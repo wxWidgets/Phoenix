@@ -135,11 +135,6 @@ Changes in this release include the following:
 * Detach wxControl in AuiToolbar from current sizer before attach to a new
   one. (#843)
   
-* Fix a bug in group management on wx.lib.masked.numctrl; previous code used
-  truediv ('/') to calculate _groupSpace, but in python 3.x this lead to a float
-  result, instead of an integer as one would expect. Using floordiv ('//') 
-  instead, solve the problem.
-
 * Fixed a problem in wx.lib.mixins.listctrl.TextEditMixin where the height of
   the editor widget could be set to zero. (See discussion in #849)
   
@@ -150,6 +145,15 @@ Changes in this release include the following:
 * Add an explicit wx.GraphicsContext.Create overload for wx.AutoBufferedPaintDC. (#783)
 
 * Return original AGW window style in AuiToolBar.GetAGWWindowStyleFlag. (#870)
+
+* Fix a bug in group management on wx.lib.masked.numctrl; the previous code used
+  truediv ('/') to calculate _groupSpace, but in python 3.x this leads to a float
+  result, instead of an integer as was expected. Using floordiv ('//') instead
+  to solve the problem. (#865)
+
+
+
+
 
 4.0.1 "Lemonade"
 ----------------
