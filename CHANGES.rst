@@ -122,6 +122,9 @@ Changes in this release include the following:
   to properly pass the parameters to the Python implementation, and also fixed
   how the return value is handled. (#742)
 
+* Fixed all implementations of the PGProperty.StringToValue and IntToValue
+  methods to treat the value parameter as a return value. (#742)
+
 
 
 

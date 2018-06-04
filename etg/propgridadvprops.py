@@ -59,6 +59,12 @@ def run():
         if hasattr(item, 'type') and 'wxVariant' in item.type:
             item.type = item.type.replace('wxVariant', 'wxPGVariant')
 
+    # Switch all StringToValue and IntToValue methods to return the variant
+    # value instead of using it as a parameter.
+    for item in module.allItems():
+        if (item.name in ['StringToValue', 'IntToValue'] and item.findItem('variant')):
+            item.find('variant').out = True
+
 
     # Deprecated aliases for the various helper classes in Classic
     module.addPyCode("""\
