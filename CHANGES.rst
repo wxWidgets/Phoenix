@@ -1212,8 +1212,8 @@ it will do the dialog.Destroy() call for you.  This means that you can
 use code like this::
 
     with MyDialog(self, foo, bar) as dlg:
-    	 if dlg.ShowModal() == wx.ID_OK:
-	    # do something with dlg values
+        if dlg.ShowModal() == wx.ID_OK:
+            # do something with dlg values
 
 The list of wx classes that can now be used as context managers is:
 
