@@ -9,8 +9,8 @@ wxPython Changelog
 ==================
 
 
-4.0.2
------
+4.0.2 "Cute as a June bug!"
+---------------------------
 * (not yet released)
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.0.2
