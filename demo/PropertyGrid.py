@@ -481,7 +481,7 @@ class TrivialPropertyEditor(wxpg.PGEditor):
 
     def GetValueFromControl(self, property, ctrl):
         """ Return tuple (wasSuccess, newValue), where wasSuccess is True if
-            different value was acquired succesfully.
+            different value was acquired successfully.
         """
         tc = ctrl
         textVal = tc.GetValue()
@@ -489,8 +489,7 @@ class TrivialPropertyEditor(wxpg.PGEditor):
         if property.UsesAutoUnspecified() and not textVal:
             return (True, None)
 
-        res, value = property.StringToValue(textVal,
-                                            wxpg.PG_EDITABLE_VALUE)
+        res, value = property.StringToValue(textVal, wxpg.PG_FULL_VALUE)
 
         # Changing unspecified always causes event (returning
         # True here should be enough to trigger it).
@@ -507,7 +506,6 @@ class TrivialPropertyEditor(wxpg.PGEditor):
 
     def OnFocus(self, property, ctrl):
         ctrl.SetSelection(-1,-1)
-        ctrl.SetFocus()
 
 
 
