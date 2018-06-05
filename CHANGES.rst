@@ -120,6 +120,13 @@ Changes in this release include the following:
 
 * Hide the window when the tool does not fit into AuiToolBar. (#872)
 
+* Fixed the virtual dispatch code for the PGEditor.GetValueFromControl method
+  to properly pass the parameters to the Python implementation, and also fixed
+  how the return value is handled. (#742)
+
+* Fixed all implementations of the PGProperty.StringToValue and IntToValue
+  methods to treat the value parameter as a return value. (#742)
+
 
 
 

@@ -49,18 +49,18 @@ def run():
     m = c.find('GetValueFromControl')
     m.find('variant').out = True
 
-    # Change the virtual method handler code to follow the same pattern as the
-    # tweaked public API, namely that the value is the return value instead of
-    # an out parameter.
+    # Change the virtual method handler code for GetValueFromControl to follow
+    # the same pattern as the tweaked public API, namely that the value is the
+    # return value instead of an out parameter.
     m.cppSignature = 'bool (wxVariant& variant, wxPGProperty* property, wxWindow* ctrl)'
     m.virtualCatcherCode = """\
-        PyObject *sipResObj = sipCallMethod(0, sipMethod, "DDD",
+        PyObject *sipResObj = sipCallMethod(&sipIsErr, sipMethod, "DD",
                                             property, sipType_wxPGProperty, NULL,
                                             ctrl, sipType_wxWindow, NULL);
         if (sipResObj == Py_None) {
             sipRes = false;
-        } else {
-            sipParseResult(&sipIsErr, sipMethod, sipResObj, "bH5", &sipRes, sipType_wxPGVariant, &variant);
+        } else if (sipResObj && !sipIsErr) {
+            sipParseResult(&sipIsErr, sipMethod, sipResObj, "(bH5)", &sipRes, sipType_wxPGVariant, &variant);
         }
         """
 
