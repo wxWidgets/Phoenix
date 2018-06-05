@@ -29,10 +29,10 @@ Changes in this release include the following:
 
 * Fix leaking image list in CheckListCtrlMixin (#752)
 
-* All items marked as deprecated in the wxWidgets interface files will now
-  throw a DeprecationWarning when used from wxPython. Many of these items are
-  disappearing in 4.1 so it's important to ensure they are deprecated at
-  runtime too instead of just in the docs. (#749)
+* All items marked as deprecated in the wxWidgets interface (documentation)
+  files will now throw a DeprecationWarning when used from wxPython. Many of
+  these items are disappearing in 4.1 so it's important to ensure they are
+  deprecated at runtime too instead of just in the docs. (#749)
 
 * Ensure that the attribute list given to the GLCanvas constructor is
   zero-terminated like it was in Classic. (#770)
@@ -46,13 +46,13 @@ Changes in this release include the following:
   since otherwise it would be caught when child windows are destroyed too,
   which causes problems in this case. (#778)
 
-* Fixed a problem where wx.TreeCtrl.OnCompareItems is not being called in
+* Fixed a problem where wx.TreeCtrl.OnCompareItems was not being called in
   derived classes on Windows. This was due to an optimization that wasn't
   compatible with how the classes are wrapped. (#774)
 
 * Added wrappers for wx.ClassInfo and exposed wx.Object.GetClassInfo. This
-  class is part of wxWidgets' internal type information system abd although
-  it is not very useful for Python applications but it is useful for debugging
+  class is part of wxWidgets' internal type information system and although
+  it is not very useful for Python applications it is useful for debugging
   some internal wxPython issues.
 
 * Removed the wx.lib.pubsub package, and replaced it with code that imports
@@ -99,7 +99,7 @@ Changes in this release include the following:
 * Fixed crashing bug when using client data with items in
   wx.dataview.DataViewTreeCtrl. (#856)
 
-* Detach wxControl in AuiToolbar from current sizer before attach to a new
+* Detach wx.Control in AuiToolbar from current sizer before attach to a new
   one. (#843)
   
 * Fixed a problem in wx.lib.mixins.listctrl.TextEditMixin where the height of
