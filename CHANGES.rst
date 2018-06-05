@@ -129,6 +129,8 @@ Changes in this release include the following:
 
 * Add missing wx.adv.EVT_CALENDAR_WEEK_CLICKED (#875)
 
+* Fixed the stock labels to conform to Windows design guidelines. (#787)
+
 
 
 
