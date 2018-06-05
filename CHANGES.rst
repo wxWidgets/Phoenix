@@ -118,6 +118,8 @@ Changes in this release include the following:
   result, instead of an integer as was expected. Using floordiv ('//') instead
   to solve the problem. (#865)
 
+* Hide the window when the tool does not fit into AuiToolBar. (#872)
+
 * Fixed the virtual dispatch code for the PGEditor.GetValueFromControl method
   to properly pass the parameters to the Python implementation, and also fixed
   how the return value is handled. (#742)

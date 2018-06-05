@@ -2603,7 +2603,7 @@ class AuiToolBar(wx.Control):
     def RefreshOverflowState(self):
         """ Refreshes the overflow button. """
 
-        if not self._overflow_sizer_item:
+        if not self.GetOverflowVisible():
             self._overflow_state = 0
             return
 
@@ -3077,6 +3077,9 @@ class AuiToolBar(wx.Control):
                     # Make sure that there is only one sizer to this control
                     item.window.GetContainingSizer().Detach(item.window);
 
+                if item.window and not item.window.IsShown():
+                    item.window.Show(True)
+
                 vert_sizer = wx.BoxSizer(wx.VERTICAL)
                 vert_sizer.AddStretchSpacer(1)
                 ctrl_sizer_item = vert_sizer.Add(item.window, 0, wx.EXPAND)
@@ -3121,7 +3124,11 @@ class AuiToolBar(wx.Control):
         if self._agwStyle & AUI_TB_OVERFLOW:
 
             overflow_size = self._art.GetElementSize(AUI_TBART_OVERFLOW_SIZE)
-            if overflow_size > 0 and self._overflow_visible:
+            if overflow_size > 0 and (self._custom_overflow_append or \
+                self._custom_overflow_prepend):
+                # add drop down area only if there is any custom overflow
+                # item; otherwise, the overflow button should not affect the
+                # min size.
 
                 if horizontal:
                     self._overflow_sizer_item = sizer.Add((overflow_size, 1), 0, wx.EXPAND)
@@ -3210,7 +3217,7 @@ class AuiToolBar(wx.Control):
         """ Returns the rectangle of the overflow button. """
 
         cli_rect = wx.Rect(wx.Point(0, 0), self.GetClientSize())
-        overflow_rect = wx.Rect(*self._overflow_sizer_item.GetRect())
+        overflow_rect = wx.Rect(0, 0, 0, 0)
         overflow_size = self._art.GetElementSize(AUI_TBART_OVERFLOW_SIZE)
 
         if self._agwStyle & AUI_TB_VERTICAL:
@@ -3334,18 +3341,32 @@ class AuiToolBar(wx.Control):
         else:
             self.SetOrientation(wx.VERTICAL)
 
-        if (x >= y and self._absolute_min_size.x > x) or (y > x and self._absolute_min_size.y > y):
+        horizontal = True
+        if self._agwStyle & AUI_TB_VERTICAL:
+            horizontal = False
 
-            # hide all flexible items
-            for item in self._items:
-                if item.sizer_item and item.proportion > 0 and item.sizer_item.IsShown():
-                    item.sizer_item.Show(False)
-                    item.sizer_item.SetProportion(0)
+        if (horizontal and self._absolute_min_size.x > x) or \
+            (not horizontal and self._absolute_min_size.y > y):
 
             if self._originalStyle & AUI_TB_OVERFLOW:
                 if not self.GetOverflowVisible():
                     self.SetOverflowVisible(True)
-                    realize = True
+
+            # hide all flexible items and items that do not fit into toolbar
+            for i, item in enumerate(self._items):
+                if not item.sizer_item:
+                    continue
+
+                if item.proportion > 0:
+                    if item.sizer_item.IsShown():
+                        item.sizer_item.Show(False)
+                        item.sizer_item.SetProportion(0)
+                elif self.GetToolFitsByIndex(i):
+                    if not item.sizer_item.IsShown():
+                        item.sizer_item.Show(True)
+                else:
+                    if item.sizer_item.IsShown():
+                        item.sizer_item.Show(False)
 
         else:
 
@@ -3353,20 +3374,20 @@ class AuiToolBar(wx.Control):
                not self._custom_overflow_prepend:
                 if self.GetOverflowVisible():
                     self.SetOverflowVisible(False)
-                    realize = True
 
-            # show all flexible items
+            # show all items
             for item in self._items:
-                if item.sizer_item and item.proportion > 0 and not item.sizer_item.IsShown():
+                if not item.sizer_item:
+                    continue
+
+                if not item.sizer_item.IsShown():
                     item.sizer_item.Show(True)
-                    item.sizer_item.SetProportion(item.proportion)
+                    if item.proportion > 0:
+                        item.sizer_item.SetProportion(item.proportion)
 
         self._sizer.SetDimension(0, 0, x, y)
 
-        if realize:
-            self.Realize()
-        else:
-            self.Refresh(False)
+        self.Refresh(False)
 
         self.Update()
 
@@ -3520,7 +3541,7 @@ class AuiToolBar(wx.Control):
             self.OnCustomRender(dc, item, item_rect)
 
         # paint the overflow button
-        if dropdown_size > 0 and self._overflow_sizer_item:
+        if dropdown_size > 0 and self.GetOverflowVisible():
             dropdown_rect = self.GetOverflowRect()
             self._art.DrawOverflowButton(dc, self, dropdown_rect, self._overflow_state)
 
@@ -3569,7 +3590,7 @@ class AuiToolBar(wx.Control):
                 manager.OnGripperClicked(self, managerClientPt, wx.Point(x_drag_offset, y_drag_offset))
                 return
 
-        if self._overflow_sizer_item:
+        if self.GetOverflowVisible():
             overflow_rect = self.GetOverflowRect()
 
             if self._art and self._overflow_visible and overflow_rect.Contains(event.GetPosition()):
@@ -3747,7 +3768,7 @@ class AuiToolBar(wx.Control):
             if gripper_rect.Contains(event.GetPosition()):
                 return
 
-        if self._overflow_sizer_item:
+        if self.GetOverflowVisible():
 
             dropdown_size = self._art.GetElementSize(AUI_TBART_OVERFLOW_SIZE)
             if dropdown_size > 0 and event.GetX() > cli_rect.width - dropdown_size and \
@@ -3813,7 +3834,7 @@ class AuiToolBar(wx.Control):
             if gripper_rect.Contains(event.GetPosition()):
                 return
 
-        if self._overflow_sizer_item:
+        if self.GetOverflowVisible():
 
             dropdown_size = self._art.GetElementSize(AUI_TBART_OVERFLOW_SIZE)
             if dropdown_size > 0 and event.GetX() > cli_rect.width - dropdown_size and \
