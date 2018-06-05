@@ -127,6 +127,8 @@ Changes in this release include the following:
 * Fixed all implementations of the PGProperty.StringToValue and IntToValue
   methods to treat the value parameter as a return value. (#742)
 
+* Add missing wx.adv.EVT_CALENDAR_WEEK_CLICKED (#875)
+
 
 
 
