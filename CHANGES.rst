@@ -118,6 +118,7 @@ Changes in this release include the following:
   result, instead of an integer as was expected. Using floordiv ('//') instead
   to solve the problem. (#865)
 
+* Hide the window when the tool does not fit into AuiToolBar. (#872)
 
 
 
