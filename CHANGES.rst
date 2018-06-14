@@ -11,7 +11,7 @@ wxPython Changelog
 
 4.0.2 "Cute as a June bug!"
 ---------------------------
-* (not yet released)
+* 16-June-2018
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.0.2
 Extras: https://extras.wxPython.org/wxPython4/extras/
