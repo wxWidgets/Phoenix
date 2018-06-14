@@ -6444,6 +6444,18 @@ class AuiManager(wx.EvtHandler):
             pFrame = p.frame
 
             if p.IsFloating():
+                if p.IsToolbar():
+                    bar = p.window
+                    if isinstance(bar, auibar.AuiToolBar):
+                        bar.SetGripperVisible(False)
+                        agwStyle = bar.GetAGWWindowStyleFlag()
+                        bar.SetAGWWindowStyleFlag(agwStyle & ~AUI_TB_VERTICAL)
+                        bar.Realize()
+
+                    s = p.window.GetMinSize()
+                    p.BestSize(s)
+                    p.FloatingSize(wx.DefaultSize)
+
                 if pFrame is None:
                     # we need to create a frame for this
                     # pane, which has recently been floated
@@ -6455,18 +6467,6 @@ class AuiManager(wx.EvtHandler):
                     if self._action in [actionDragFloatingPane, actionDragToolbarPane] and \
                        self._agwFlags & AUI_MGR_TRANSPARENT_DRAG:
                         frame.SetTransparent(150)
-
-                    if p.IsToolbar():
-                        bar = p.window
-                        if isinstance(bar, auibar.AuiToolBar):
-                            bar.SetGripperVisible(False)
-                            agwStyle = bar.GetAGWWindowStyleFlag()
-                            bar.SetAGWWindowStyleFlag(agwStyle & ~AUI_TB_VERTICAL)
-                            bar.Realize()
-
-                        s = p.window.GetMinSize()
-                        p.BestSize(s)
-                        p.FloatingSize(wx.DefaultSize)
 
                     frame.SetPaneWindow(p)
                     p.needsTransparency = True
