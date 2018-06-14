@@ -164,6 +164,7 @@ Changes in this release include the following:
 
 * Fixed the stock labels to conform to Windows design guidelines. (#787)
 
+* Always reset floating size and style when floating a toolbar in agw.aui. (#880)
 
 
 
