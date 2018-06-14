@@ -16,7 +16,155 @@ PyPI:   https://pypi.python.org/pypi/wxPython/4.1.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.1.0``
 
+Starting with this release wxPython has switched to tracking the wxWidgets
+master branch for the wxWidgets source code wxPython is built upon, and which
+is included in the wxPython source archives. Along with this change a new
+``wxPy-4.0.x`` branch has been created in the git repository for continuing
+maintenance releases of the 4.0.x series of wxPython, which will still track
+the ``WX_3_0_BRANCH`` wxWidgets branch.
 
+
+New and improved stuff in this release:
+
+* Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
+  OSXEnableAutomaticDashSubstitution, and OSXDisableAllSmartSubstitutions
+  methods in wx.TextCtrl.
+
+
+Other changes in this release:
+
+* Many of the deprecated items in wxWidgets and wxPython are being or have
+  been removed. Be sure to test your code in 4.0.2 or a later 4.0.x release
+  with warnings enabled so you can see which class, method or function calls
+  you need to change.
+
+
+
+
+
+4.0.2
+-----
+* (not yet released)
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.0.2
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.2``
+
+Changes in this release include the following:
+
+* Fixed wx.html2.EVT_WEBVIEW_NAVIGATING event not being sent on some versions
+  of Linux. (#741)
+
+* wx.Sizers can now be used as an iterator to iterate over the items within
+  the sizer. (#738)
+
+* Fix Python3 division in ThumbnailCtrl. (#746)
+
+* Fix leaking image list in CheckListCtrlMixin (#752)
+
+* All items marked as deprecated in the wxWidgets interface files will now
+  throw a DeprecationWarning when used from wxPython. Many of these items are
+  disappearing in 4.1 so it's important to ensure they are deprecated at
+  runtime too instead of just in the docs. (#749)
+
+* Ensure that the attribute list given to the GLCanvas constructor is
+  zero-terminated like it was in Classic. (#770)
+
+* Updated to the wxWidgets 3.0.4 release version.
+
+* Added the wxWidgets version number to the tail end of the string returned by
+  wx.version().
+
+* Bind EVT_WINDOW_DESTROY event only to the tree windows in CustomTreeCtrl,
+  since otherwise it would be caught when child windows are destroyed too,
+  which causes problems in this case. (#778)
+
+* Fixed a problem where wx.TreeCtrl.OnCompareItems is not being called in
+  derived classes on Windows. This was due to an optimization that wasn't
+  compatible with how the classes are wrapped. (#774)
+
+* Added wrappers for wx.ClassInfo and exposed wx.Object.GetClassInfo. This
+  class is part of wxWidgets' internal type information system abd although
+  it is not very useful for Python applications but it is useful for debugging
+  some internal wxPython issues.
+
+* Removed the wx.lib.pubsub package, and replaced it with code that imports
+  the standalone PyPubSub in order remain compatible with older code that
+  still uses wx.lib.pubsub. (#782, #792)
+
+* Fixed bug in wx.lib.intctrl (#790)
+
+* Fixed subclassing of wx.TextCompleter and wx.TextCompleterSimple (#827)
+
+* Fixes for Python3 compatibility in PyCrust. (#823)
+
+* Fix wxGet to be able to use pip v10. (#817)
+
+* Change winid parameter in wx.ScrolledWindow to id, for consistency. (#816)
+
+* Ensure that the page exists in book controls GetPage and RemovePage methods.
+  At least one of the wx ports do not do this. (#830)
+
+* Added missing wx.NumberEntryDialog
+
+* Change wx.TextCompleterSimple.GetCompletions to send the list of strings
+  as a return value, rather than a parameter that gets filled. (#836)
+
+* Enabled the wx.GraphicsContext.Create(metaFileDC) wrapper (#811)
+
+* Metafile support is also available on OSX, so wx.msw.Metafile and
+  wx.msw.MetafileDC have been moved to the core wx module. So they can now be
+  accessed as wx.Metafile and wx.MetafileDC.
+
+* Updated the waf tool used by the build to version 2.0.7. This fixes problems
+  with building for Python 3.7.
+
+* Fixed alignment in buttons on MSW which have had foreground or background
+  colors set. (#815)
+
+* Fix for unexpected assertion inside wx.aui.AuiMDIChildFrame.Close.
+
+* Fix a bug in setting AuiDockingGuide size. (#727)
+
+* Remove unnecessary AUI notebook updating, and use wx.BufferedDC in Repaint()
+  to mitigate flicker. (wx.lib.agw.aui). (#851, #686)
+
+* Fixed crashing bug when using client data with items in
+  wx.dataview.DataViewTreeCtrl. (#856)
+
+* Detach wxControl in AuiToolbar from current sizer before attach to a new
+  one. (#843)
+  
+* Fixed a problem in wx.lib.mixins.listctrl.TextEditMixin where the height of
+  the editor widget could be set to zero. (See discussion in #849)
+  
+* Fix a bug in calculating whether a tool fits into the AuiToolBar. (#863)
+
+* Override SetForegroundColour and SetBackgroundColour in MaskedEditMixin (#808)
+
+* Add an explicit wx.GraphicsContext.Create overload for wx.AutoBufferedPaintDC. (#783)
+
+* Return original AGW window style in AuiToolBar.GetAGWWindowStyleFlag. (#870)
+
+* Fix a bug in group management on wx.lib.masked.numctrl; the previous code used
+  truediv ('/') to calculate _groupSpace, but in python 3.x this leads to a float
+  result, instead of an integer as was expected. Using floordiv ('//') instead
+  to solve the problem. (#865)
+
+* Hide the window when the tool does not fit into AuiToolBar. (#872)
+
+* Fixed the virtual dispatch code for the PGEditor.GetValueFromControl method
+  to properly pass the parameters to the Python implementation, and also fixed
+  how the return value is handled. (#742)
+
+* Fixed all implementations of the PGProperty.StringToValue and IntToValue
+  methods to treat the value parameter as a return value. (#742)
+
+* Add missing wx.adv.EVT_CALENDAR_WEEK_CLICKED (#875)
+
+* Fixed the stock labels to conform to Windows design guidelines. (#787)
+
+* Always reset floating size and style when floating a toolbar in agw.aui. (#880)
 
 
 

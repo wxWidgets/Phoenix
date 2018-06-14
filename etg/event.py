@@ -63,6 +63,15 @@ ITEMS  = [
     'wxWindowCreateEvent',
     'wxWindowDestroyEvent',
 
+    'wxGestureEvent',
+    'wxPanGestureEvent',
+    'wxZoomGestureEvent',
+    'wxRotateGestureEvent',
+    'wxTwoFingerTapEvent',
+    'wxLongPressEvent',
+    'wxPressAndTapEvent',
+
+
     #'wxThreadEvent',
 
 ]
@@ -221,10 +230,10 @@ def run():
                 // pointer and disconnect that one.  Unfortunately since we
                 // wrapped the PyObject function pointer in another object we
                 // have to do the searching ourselves...
-                wxList::compatibility_iterator node = self->GetDynamicEventTable()->GetFirst();
-                while (node)
+                size_t cookie;
+                wxDynamicEventTableEntry *entry = self->GetFirstDynamicEntry(cookie);
+                while (entry)
                 {
-                    wxDynamicEventTableEntry *entry = (wxDynamicEventTableEntry*)node->GetData();
                     if ((entry->m_id == id) &&
                         ((entry->m_lastId == lastId) || (lastId == wxID_ANY)) &&
                         ((entry->m_eventType == eventType) || (eventType == wxEVT_NULL)) &&
@@ -238,12 +247,13 @@ def run():
                         // is evaluated. (!!!)
                         if (PyObject_RichCompareBool(cb->m_func, func, Py_EQ) == 1) {
                             delete cb;
-                            self->GetDynamicEventTable()->Erase(node);
-                            delete entry;
-                            return true;
+                            entry->m_callbackUserData = NULL;
+                            // Now Disconnect should work
+                            return self->Disconnect(id, lastId, eventType,
+                                                    (wxObjectEventFunction)&wxPyCallback::EventThunker);
                         }
                     }
-                    node = node->GetNext();
+                    entry = self->GetNextDynamicEntry(cookie);
                 }
                 return false;
             }
@@ -259,10 +269,6 @@ def run():
     # the template, probably using PyObject* args.
     for m in c.find('CallAfter').all():
         m.ignore()
-
-    # wxEventTable is not documented so we have to ignore SearchEventTable.
-    # TODO: Should wxEventTable be available to language bindings?
-    c.find('SearchEventTable').ignore()
 
     c.find('QueueEvent.event').transfer = True
     module.find('wxQueueEvent.event').transfer = True
@@ -570,7 +576,11 @@ def run():
 
     #---------------------------------------
     # wxIconizeEvent
-    module.find('wxIconizeEvent.Iconized').deprecated = True
+    c = module.find('wxIconizeEvent')
+
+    # deprecated and removed
+    c.find('Iconized').ignore()
+
 
 
     # Apply common fixups for all the event classes

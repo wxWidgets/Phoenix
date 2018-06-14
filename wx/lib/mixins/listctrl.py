@@ -611,14 +611,15 @@ class TextEditMixin:
 
         y0 = self.GetItemRect(row)[1]
 
-        editor = self.editor
-        editor.SetSize(x0-scrolloffset,y0, x1,-1)
+        def _activate_editor(editor):
+            editor.SetSize(x0-scrolloffset,y0, x1,-1, wx.SIZE_USE_EXISTING)
+            editor.SetValue(self.GetItem(row, col).GetText())
+            editor.Show()
+            editor.Raise()
+            editor.SetSelection(-1,-1)
+            editor.SetFocus()
 
-        editor.SetValue(self.GetItem(row, col).GetText())
-        editor.Show()
-        editor.Raise()
-        editor.SetSelection(-1,-1)
-        editor.SetFocus()
+        wx.CallAfter(_activate_editor, self.editor)
 
         self.curRow = row
         self.curCol = col
@@ -732,7 +733,7 @@ class CheckListCtrlMixin(object):
 
         self.uncheck_image = self.__imagelist_.Add(uncheck_image)
         self.check_image = self.__imagelist_.Add(check_image)
-        self.SetImageList(self.__imagelist_, wx.IMAGE_LIST_SMALL)
+        self.AssignImageList(self.__imagelist_, wx.IMAGE_LIST_SMALL)
         self.__last_check_ = None
 
         self.Bind(wx.EVT_LEFT_DOWN, self.__OnLeftDown_)

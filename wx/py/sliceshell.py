@@ -170,6 +170,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
                                enableShellMode=self.enableShellMode,
                                hideFoldingMargin=self.hideFoldingMargin,
                                *args, **kwds)
+        self.shell = self.sliceshell
         self.buffer = self.sliceshell.buffer
 
         # Override the shell so that status messages go to the status bar.
@@ -609,6 +610,7 @@ class SlicesShell(editwindow.EditWindow):
                  introText='', locals=None, InterpClass=None,
                  startupScript=None, execStartupScript=True,
                  showPySlicesTutorial=True,enableShellMode=False,
+                 useStockId=True,
                  hideFoldingMargin=False, *args, **kwds):
         """Create Shell instance."""
         editwindow.EditWindow.__init__(self, parent, id, pos, size, style)
@@ -800,16 +802,35 @@ class SlicesShell(editwindow.EditWindow):
         self.Bind(wx.EVT_CONTEXT_MENU, self.OnContextMenu)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI)
 
+        # add the option to not use the stock IDs; otherwise the context menu
+        # may not work on Mac without adding the proper IDs to the menu bar
+        if useStockId:
+            self.ID_CUT = wx.ID_CUT
+            self.ID_COPY = wx.ID_COPY
+            self.ID_PASTE = wx.ID_PASTE
+            self.ID_SELECTALL = wx.ID_SELECTALL
+            self.ID_CLEAR = wx.ID_CLEAR
+            self.ID_UNDO = wx.ID_UNDO
+            self.ID_REDO = wx.ID_REDO
+        else:
+            self.ID_CUT = wx.NewId()
+            self.ID_COPY = wx.NewId()
+            self.ID_PASTE = wx.NewId()
+            self.ID_SELECTALL = wx.NewId()
+            self.ID_CLEAR = wx.NewId()
+            self.ID_UNDO = wx.NewId()
+            self.ID_REDO = wx.NewId()
+
         # Assign handlers for edit events
-        self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=wx.ID_CUT)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Copy(), id=wx.ID_COPY)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=self.ID_CUT)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Copy(), id=self.ID_COPY)
         self.Bind(wx.EVT_MENU, lambda evt: self.CopyWithPrompts(), id=frame.ID_COPY_PLUS)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Paste(), id=wx.ID_PASTE)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Paste(), id=self.ID_PASTE)
         self.Bind(wx.EVT_MENU, lambda evt: self.PasteAndRun(), id=frame.ID_PASTE_PLUS)
-        self.Bind(wx.EVT_MENU, lambda evt: self.SelectAll(), id=wx.ID_SELECTALL)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Clear(), id=wx.ID_CLEAR)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Undo(), id=wx.ID_UNDO)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Redo(), id=wx.ID_REDO)
+        self.Bind(wx.EVT_MENU, lambda evt: self.SelectAll(), id=self.ID_SELECTALL)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Clear(), id=self.ID_CLEAR)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Undo(), id=self.ID_UNDO)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Redo(), id=self.ID_REDO)
 
         # Assign handler for idle time.
         self.waiting = False
@@ -3540,21 +3561,21 @@ class SlicesShell(editwindow.EditWindow):
             in order to correctly respect our immutable buffer.
         """
         menu = wx.Menu()
-        menu.Append(wx.ID_UNDO, "Undo")
-        menu.Append(wx.ID_REDO, "Redo")
+        menu.Append(self.ID_UNDO, "Undo")
+        menu.Append(self.ID_REDO, "Redo")
 
         menu.AppendSeparator()
 
-        menu.Append(wx.ID_CUT, "Cut")
-        menu.Append(wx.ID_COPY, "Copy")
-        menu.Append(frame.ID_COPY_PLUS, "Copy Plus")
-        menu.Append(wx.ID_PASTE, "Paste")
-        menu.Append(frame.ID_PASTE_PLUS, "Paste Plus")
-        menu.Append(wx.ID_CLEAR, "Clear")
+        menu.Append(self.ID_CUT, "Cut")
+        menu.Append(self.ID_COPY, "Copy")
+        menu.Append(frame.ID_COPY_PLUS, "Copy With Prompts")
+        menu.Append(self.ID_PASTE, "Paste")
+        menu.Append(frame.ID_PASTE_PLUS, "Paste And Run")
+        menu.Append(self.ID_CLEAR, "Clear")
 
         menu.AppendSeparator()
 
-        menu.Append(wx.ID_SELECTALL, "Select All")
+        menu.Append(self.ID_SELECTALL, "Select All")
         return menu
 
     def OnContextMenu(self, evt):
@@ -3563,15 +3584,15 @@ class SlicesShell(editwindow.EditWindow):
 
     def OnUpdateUI(self, evt):
         id = evt.Id
-        if id in (wx.ID_CUT, wx.ID_CLEAR):
+        if id in (self.ID_CUT, self.ID_CLEAR):
             evt.Enable(self.CanCut())
-        elif id in (wx.ID_COPY, frame.ID_COPY_PLUS):
+        elif id in (self.ID_COPY, frame.ID_COPY_PLUS):
             evt.Enable(self.CanCopy())
-        elif id in (wx.ID_PASTE, frame.ID_PASTE_PLUS):
+        elif id in (self.ID_PASTE, frame.ID_PASTE_PLUS):
             evt.Enable(self.CanPaste())
-        elif id == wx.ID_UNDO:
+        elif id == self.ID_UNDO:
             evt.Enable(self.CanUndo())
-        elif id == wx.ID_REDO:
+        elif id == self.ID_REDO:
             evt.Enable(self.CanRedo())
 
     def LoadPySlicesFile(self,fid):

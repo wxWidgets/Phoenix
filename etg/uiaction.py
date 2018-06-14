@@ -33,7 +33,8 @@ def run():
 
     c = module.find('wxUIActionSimulator')
     assert isinstance(c, etgtools.ClassDef)
-
+    c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

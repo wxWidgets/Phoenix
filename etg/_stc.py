@@ -147,13 +147,18 @@ def run():
                                              not c.findItem(item.name)]
     c.items.extend(items)
 
+    tc_excludes = ['OSXEnableAutomaticQuoteSubstitution',
+                   'OSXEnableAutomaticDashSubstitution',
+                   'OSXDisableAllSmartSubstitutions',
+                   ]
     import textctrl
     mod = textctrl.parseAndTweakModule()
     klass = mod.find('wxTextCtrl')
     items = [item for item in klass.items if isinstance(item, etgtools.MethodDef) and
                                              not item.isCtor and
                                              not item.isDtor and
-                                             not c.findItem(item.name)]
+                                             not c.findItem(item.name) and
+                                             not item.name in tc_excludes]
     c.items.extend(items)
 
     c.find('EmulateKeyPress').ignore()
@@ -226,10 +231,24 @@ def run():
         EVT_STC_INDICATOR_RELEASE = wx.PyEventBinder( wxEVT_STC_INDICATOR_RELEASE, 1 )
         EVT_STC_AUTOCOMP_CANCELLED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_CANCELLED, 1 )
         EVT_STC_AUTOCOMP_CHAR_DELETED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_CHAR_DELETED, 1 )
+        EVT_STC_CLIPBOARD_COPY = wx.PyEventBinder( wxEVT_STC_CLIPBOARD_COPY, 1)
+        EVT_STC_CLIPBOARD_PASTE = wx.PyEventBinder( wxEVT_STC_CLIPBOARD_PASTE, 1)
+        EVT_STC_AUTOCOMP_COMPLETED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_COMPLETED, 1)
+        EVT_STC_MARGIN_RIGHT_CLICK = wx.PyEventBinder( wxEVT_STC_MARGIN_RIGHT_CLICK, 1)
         """)
 
     #-----------------------------------------------------------------
 
+    # Keep some of the old names
+    module.addPyCode("""\
+        # compatibility aliases
+        STC_SCMOD_NORM = STC_KEYMOD_NORM
+        STC_SCMOD_SHIFT = STC_KEYMOD_SHIFT
+        STC_SCMOD_CTRL = STC_KEYMOD_CTRL
+        STC_SCMOD_ALT = STC_KEYMOD_ALT
+        STC_SCMOD_SUPER = STC_KEYMOD_SUPER
+        STC_SCMOD_META = STC_KEYMOD_META
+        """)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -30,7 +30,7 @@ def options(opt):
     if isWindows:
         opt.load('msvc')
     else:
-        opt.load('compiler_cc compiler_cxx')
+        opt.load('compiler_c compiler_cxx')
     opt.load('python')
 
     opt.add_option('--debug', dest='debug', action='store_true', default=False,
@@ -53,14 +53,6 @@ def options(opt):
     opt.add_option('--msvc_arch', dest='msvc_arch', default='x86', action='store',
                    help='The architecture to target for MSVC builds. Supported values '
                    'are: "x86" or "x64"')
-    #opt.add_option('--msvc_ver', dest='msvc_ver', default='9.0', action='store',
-    #               help='The MSVC version to use for the build, if multiple versions are '
-    #               'installed. Currently supported values are: "9.0" or "10.0"')
-
-    # TODO: The waf msvc tool has --msvc_version and --msvc_target options
-    # already. We should just switch to those instead of adding our own
-    # option names...
-
     opt.add_option('--msvc_relwithdebug', dest='msvc_relwithdebug', action='store_true', default=False,
                    help='Turn on debug info for release builds for MSVC builds.')
 
@@ -74,11 +66,27 @@ def configure(conf):
         # Python to know what version of the compiler to use.
         import distutils.msvc9compiler
         msvc_version = str( distutils.msvc9compiler.get_build_version() )
+
+        # When building for Python 3.7 the msvc_version returned will be  
+        # "14.1" as that is the version of the BasePlatformToolkit that stock
+        # Python 3.7 was built with, a.k.a v141, which is the default in
+        # Visual Studio 2017. However, waf is using "msvc 15.0" to designate
+        # that version rather than "14.1" so we'll need to catch that case and
+        # fix up the msvc_version accordingly.
+        if msvc_version == "14.1" and sys.version_info >= (3,7):
+            ##msvc_version = '15.0'
+            
+            # On the other hand, microsoft says that v141 and v140 (Visual
+            # Studio 2015) are binary compatible, so for now let's just drop
+            # it back to "14.0" until I get all the details worked out for
+            # using VS 2017 everywhere for Python 3.7.
+            msvc_version = '14.0'
+
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
         conf.load('msvc')
     else:
-        conf.load('compiler_cc compiler_cxx')
+        conf.load('compiler_c compiler_cxx')
 
     if conf.options.python:
         conf.env.PYTHON = conf.options.python

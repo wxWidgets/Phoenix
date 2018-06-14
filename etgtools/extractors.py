@@ -16,6 +16,7 @@ import sys
 import os
 import pprint
 import xml.etree.ElementTree as et
+import copy
 
 from .tweaker_tools import FixWxPrefix, magicMethods, \
                            guessTypeInt, guessTypeFloat, guessTypeStr, \
@@ -44,6 +45,7 @@ class BaseDef(object):
         self.docsIgnored = False # skip this item when generating docs
         self.briefDoc = ''       # either a string or a single para Element
         self.detailedDoc = []    # collection of para Elements
+        self.deprecated = False  # is this item deprecated
 
         # The items list is used by some subclasses to collect items that are
         # part of that item, like methods of a ClassDef, parameters in a
@@ -71,6 +73,20 @@ class BaseDef(object):
         if len(bd):
             self.briefDoc = bd[0] # Should be just one <para> element
         self.detailedDoc = list(element.find('detaileddescription'))
+
+
+    def checkDeprecated(self):
+        # Don't iterate all items, just the para items found in detailedDoc,
+        # so that classes with a deprecated method don't likewise become deprecated.
+        for para in self.detailedDoc:
+            for item in para.iter():
+                itemid = item.get('id')
+                if itemid and itemid.startswith('deprecated'):
+                    self.deprecated = True
+                    break
+
+            if self.deprecated:
+                break
 
 
     def ignore(self, val=True):
@@ -255,7 +271,6 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.pyArgsString = ''
         self.isOverloaded = False
         self.overloads = []
-        self.deprecated = False       # is the function deprecated
         self.factory = False          # a factory function that creates a new instance of the return value
         self.pyReleaseGIL = False     # release the Python GIL for this function call
         self.pyHoldGIL = False        # hold the Python GIL for this function call
@@ -279,6 +294,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.type = flattenNode(element.find('type'))
         self.definition = element.find('definition').text
         self.argsString = element.find('argsstring').text
+        self.checkDeprecated()
         for node in element.findall('param'):
             p = ParamDef(node)
             self.items.append(p)
@@ -636,7 +652,6 @@ class ClassDef(BaseDef):
         self.enum_file = ''         # To link sphinx output classes to enums
         self.includes = []          # .h file for this class
         self.abstract = False       # is it an abstract base class?
-        self.deprecated = False     # mark all methods as deprecated
         self.external = False       # class is in another module
         self.noDefCtor = False      # do not generate a default constructor
         self.singlton = False       # class is a singleton so don't call the dtor until the interpreter exits
@@ -709,6 +724,7 @@ class ClassDef(BaseDef):
     def extract(self, element):
         super(ClassDef, self).extract(element)
 
+        self.checkDeprecated()
         self.nodeBases = self.findHierarchy(element, {}, [], False)
 
         for node in element.findall('basecompoundref'):
@@ -1089,6 +1105,21 @@ private:
 
     def mustHaveApp(self, value=True):
         self.mustHaveAppFlag = value
+
+
+    def copyFromClass(self, klass, name):
+        """
+        Copy an item from another class into this class. If it is a pure
+        virtual method in the other class then assume that it has a concrete
+        implementation in this class and change the flag.
+
+        Returns the new item.
+        """
+        item = copy.deepcopy(klass.find(name))
+        if isinstance(item, MethodDef) and item.isPureVirtual:
+            item.isPureVirtual = False
+        self.addItem(item)
+        return item
 
 
 #---------------------------------------------------------------------------

@@ -113,12 +113,16 @@ def run():
     tools.fixWindowClass(searchCtrl)
 
     module.addPyCode("""\
-        EVT_SEARCHCTRL_CANCEL_BTN = wx.PyEventBinder( wxEVT_SEARCHCTRL_CANCEL_BTN, 1)
-        EVT_SEARCHCTRL_SEARCH_BTN = wx.PyEventBinder( wxEVT_SEARCHCTRL_SEARCH_BTN, 1)
+        EVT_SEARCH_CANCEL = wx.PyEventBinder( wxEVT_SEARCH_CANCEL, 1)
+        EVT_SEARCH = wx.PyEventBinder( wxEVT_SEARCH, 1)
 
         # deprecated wxEVT aliases
+        wxEVT_SEARCHCTRL_CANCEL_BTN = wxEVT_SEARCH_CANCEL
+        wxEVT_SEARCHCTRL_SEARCH_BTN = wxEVT_SEARCH
         wxEVT_COMMAND_SEARCHCTRL_CANCEL_BTN  = wxEVT_SEARCHCTRL_CANCEL_BTN
         wxEVT_COMMAND_SEARCHCTRL_SEARCH_BTN  = wxEVT_SEARCHCTRL_SEARCH_BTN
+        EVT_SEARCHCTRL_CANCEL_BTN = wx.PyEventBinder( wxEVT_SEARCHCTRL_CANCEL_BTN, 1)
+        EVT_SEARCHCTRL_SEARCH_BTN = wx.PyEventBinder( wxEVT_SEARCHCTRL_SEARCH_BTN, 1)
         """)
 
     #-----------------------------------------------------------------

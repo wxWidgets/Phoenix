@@ -66,11 +66,25 @@ class calctrl_Tests(wtc.WidgetTestCase):
 
 
 
-    def test_calevt(self):
+    def test_calevt1(self):
         evt = wx.adv.CalendarEvent()
         evt.SetDate(wx.DateTime.Today())
         d = evt.PyGetDate()
         assert isinstance(d, datetime.datetime)
+
+
+    def test_calevt2(self):
+        wx.adv.EVT_CALENDAR
+        wx.adv.EVT_CALENDAR_SEL_CHANGED
+        wx.adv.EVT_CALENDAR_WEEKDAY_CLICKED
+        wx.adv.EVT_CALENDAR_PAGE_CHANGED
+        wx.adv.EVT_CALENDAR_WEEK_CLICKED
+
+        wx.adv.wxEVT_CALENDAR_SEL_CHANGED
+        wx.adv.wxEVT_CALENDAR_PAGE_CHANGED
+        wx.adv.wxEVT_CALENDAR_DOUBLECLICKED
+        wx.adv.wxEVT_CALENDAR_WEEKDAY_CLICKED
+        wx.adv.wxEVT_CALENDAR_WEEK_CLICKED
 
 
 #---------------------------------------------------------------------------

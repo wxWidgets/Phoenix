@@ -43,7 +43,7 @@ ColourChangedEventBase, EVT_COLOUR_CHANGED = newevent.NewEvent()
 class ColourChangedEvent(ColourChangedEventBase):
     """Adds GetColour()/GetValue() for compatibility with ColourPickerCtrl and colourselect"""
     def __init__(self, newColour):
-        super().__init__(newColour = newColour)
+        super(ColourChangedEvent, self).__init__(newColour = newColour)
 
     def GetColour(self):
         return self.newColour
@@ -569,7 +569,7 @@ def main():
 
     class CCTestDialog(wx.Dialog):
         def __init__(self, parent, initColour):
-            super().__init__(parent, title="Pick A Colo(u)r")
+            super(CCTestDialog, self).__init__(parent, title="Pick A Colo(u)r")
 
             sizer = wx.BoxSizer(wx.VERTICAL)
             self.chooser = PyColourChooser(self, wx.ID_ANY)
@@ -581,7 +581,7 @@ def main():
 
     class CCTestFrame(wx.Frame):
         def __init__(self):
-            super().__init__(None, -1, 'PyColourChooser Test')
+            super(CCTestFrame, self).__init__(None, -1, 'PyColourChooser Test')
             sizer = wx.BoxSizer(wx.VERTICAL)
 
             sizer.Add(wx.StaticText(self, label="CLICK ME"), 0, wx.CENTER)

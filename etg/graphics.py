@@ -24,6 +24,7 @@ ITEMS  = [
             'wxGraphicsBitmap',
             'wxGraphicsBrush',
             'wxGraphicsFont',
+            'wxGraphicsPenInfo',
             'wxGraphicsPen',
             'wxGraphicsContext',
             'wxGraphicsGradientStop',
@@ -46,7 +47,8 @@ def run():
 
     module.addHeaderCode('#include <wx/gdicmn.h>')
 
-    def markFactories(klass):
+    def markCreateFactories(klass):
+        """Mark all Create methods as factories"""
         for func in klass.allItems():
             if isinstance(func, etgtools.FunctionDef) \
                and func.name.startswith('Create') \
@@ -64,24 +66,42 @@ def run():
     #---------------------------------------------
     c = module.find('wxGraphicsContext')
     assert isinstance(c, etgtools.ClassDef)
-    markFactories(c)
     tools.removeVirtuals(c)
     c.abstract = True
     c.mustHaveApp()
 
+    c.addCppMethod('wxGraphicsContext*', 'Create', '(wxAutoBufferedPaintDC* autoPaintDC /KeepReference/)',
+        pyArgsString='(autoPaintDC) -> GraphicsContext',
+        isStatic=True,
+        body="""\
+            return wxGraphicsContext::Create(autoPaintDC);
+            """)
 
-    # Ensure that the target DC or image lives as long as the GC does. NOTE:
-    # Since the Creates are static methods there is no self to associate the
-    # extra reference with, but since they are factories then that extra
-    # reference will be held by the return value of the factory instead.
+    m = c.find('Create').findOverload('wxEnhMetaFileDC')
+    m.find('metaFileDC').type = 'const wxMetafileDC&'
+    m.argsString = '(const wxMetafileDC& metaFileDC)'
+    m.setCppCode("""\
+        #ifdef __WXMSW__
+        #if wxUSE_ENH_METAFILE
+            return wxGraphicsContext::Create(*metaFileDC);
+        #endif
+        #endif        
+            wxPyRaiseNotImplemented();
+            return NULL;
+        """)
+
+    markCreateFactories(c)
+
+    # Ensure that the target DC or image passed to Create lives as long as the
+    # GC does. NOTE: Since the Creates are static methods there is no self to
+    # associate the extra reference with, but since they are factories then
+    # that extra reference will be held by the return value of the factory
+    # instead.
     for m in c.find('Create').all():
         for p in m.items:
             if 'DC' in p.name or p.name == 'image':
                 p.keepReference = True
 
-
-    # FIXME: Handle wxEnhMetaFileDC?
-    c.find('Create').findOverload('wxEnhMetaFileDC').ignore()
 
     c.find('GetSize.width').out = True
     c.find('GetSize.height').out = True
@@ -170,6 +190,9 @@ def run():
         }
         """)
 
+    # TODO: support this?
+    c.find('CreateFromNativeHDC').ignore()
+
     #---------------------------------------------
     c = module.find('wxGraphicsPath')
     tools.removeVirtuals(c)
@@ -181,7 +204,7 @@ def run():
     #---------------------------------------------
     c = module.find('wxGraphicsRenderer')
     tools.removeVirtuals(c)
-    markFactories(c)
+    markCreateFactories(c)
     c.abstract = True
 
     for m in c.find('CreateContext').all():
@@ -190,9 +213,34 @@ def run():
                 p.keepReference = True
     c.find('CreateContextFromImage.image').keepReference = True
 
-    # FIXME: Handle wxEnhMetaFileDC?
+    # TODO: support this?
     c.find('CreateContext').findOverload('wxEnhMetaFileDC').ignore()
 
+    # TODO: support this?
+    c.find('CreateContextFromNativeHDC').ignore()
+
+
+    c.find('GetGDIPlusRenderer').ignore()
+    c.addCppMethod('wxGraphicsRenderer*', 'GetGDIPlusRenderer', '()', isStatic=True,
+        doc="Returns GDI+ renderer (MSW only).",
+        body="""\
+            #ifdef __WXMSW__
+                return wxGraphicsRenderer::GetGDIPlusRenderer();
+            #else
+                return NULL;
+            #endif
+            """)
+
+    c.find('GetDirect2DRenderer').ignore()
+    c.addCppMethod('wxGraphicsRenderer*', 'GetDirect2DRenderer', '()', isStatic=True,
+        doc="Returns Direct2D renderer (MSW only).",
+        body="""\
+            #ifdef __WXMSW__
+                return wxGraphicsRenderer::GetDirect2DRenderer();
+            #else
+                return NULL;
+            #endif
+            """)
 
     #---------------------------------------------
     c = module.find('wxGraphicsMatrix')
@@ -223,6 +271,15 @@ def run():
                    pyArgsString='(n)',
                    body="return new wxGraphicsGradientStop(self->Item(n));",
                    factory=True)
+
+
+    #---------------------------------------------
+    c = module.find('wxGraphicsPenInfo')
+    # Ignore Dashes for now
+    # TODO: we need to do something like wx.Pen.SetDashes, but since
+    # GraphicsPenInfo is transitory we can't save the reference in it to the
+    # holder, and the pen will not have been created yet...
+    c.find('Dashes').ignore()
 
 
     #---------------------------------------------

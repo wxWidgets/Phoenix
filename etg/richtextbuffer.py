@@ -23,6 +23,7 @@ ITEMS  = [ "wxTextAttrDimension",
            "wxTextAttrDimensionConverter",
            "wxTextAttrBorder",
            "wxTextAttrBorders",
+           "wxTextAttrShadow",
            "wxTextBoxAttr",
            "wxRichTextAttr",
            "wxRichTextProperties",
@@ -132,6 +133,11 @@ def run():
     c = module.find('wxTextAttrBorders')
     tools.ignoreConstOverloads(c)
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+
+
+    #-------------------------------------------------------
+    c = module.find('wxTextAttrShadow')
+    tools.ignoreConstOverloads(c)
 
 
     #-------------------------------------------------------
@@ -315,6 +321,7 @@ def run():
     #-------------------------------------------------------
     c = module.find('wxRichTextImage')
     _fixDrawObject(c)
+    c.find('LoadAndScaleImageCache.changed').inOut = True
 
     #-------------------------------------------------------
     c = module.find('wxRichTextBuffer')

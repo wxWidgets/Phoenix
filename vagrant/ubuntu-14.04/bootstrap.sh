@@ -11,7 +11,8 @@ apt-get install -y libgtk2.0-dev libgtk-3-dev
 apt-get install -y libjpeg-dev libtiff-dev \
 	libsdl1.2-dev libgstreamer-plugins-base0.10-dev \
 	libnotify-dev freeglut3 freeglut3-dev libsm-dev \
-	libwebkitgtk-dev libwebkitgtk-3.0-dev
+	libwebkitgtk-dev libwebkitgtk-3.0-dev libwebkit2gtk-3.0-dev \
+	libxtst-dev
 
 
 # Install all available Python packages and their dev packages

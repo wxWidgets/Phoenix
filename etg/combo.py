@@ -60,6 +60,10 @@ def run():
     c.find('SetSelection.from').name = 'frm'
 
 
+    # deprecated and removed
+    c.find('GetTextIndent').ignore()
+    c.find('SetTextIndent').ignore()
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

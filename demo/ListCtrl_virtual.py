@@ -30,10 +30,10 @@ class TestVirtualList(wx.ListCtrl):
 
         self.SetItemCount(1000000)
 
-        self.attr1 = wx.ListItemAttr()
+        self.attr1 = wx.ItemAttr()
         self.attr1.SetBackgroundColour("yellow")
 
-        self.attr2 = wx.ListItemAttr()
+        self.attr2 = wx.ItemAttr()
         self.attr2.SetBackgroundColour("light blue")
 
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected)

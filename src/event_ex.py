@@ -82,6 +82,7 @@ EVT_MOUSE_EVENTS = wx.PyEventBinder([ wxEVT_LEFT_DOWN,
                                       wxEVT_AUX2_UP,
                                       wxEVT_AUX2_DCLICK,
                                      ])
+EVT_MAGNIFY = wx.PyEventBinder( wxEVT_MAGNIFY )
 
 
 # Scrolling from wxWindow (sent to wxScrolledWindow)
@@ -207,6 +208,14 @@ EVT_JOYSTICK_EVENTS = wx.PyEventBinder([ wxEVT_JOY_BUTTON_DOWN,
                                         wxEVT_JOY_MOVE,
                                         wxEVT_JOY_ZMOVE,
                                         ])
+
+EVT_GESTURE_PAN = wx.PyEventBinder( wxEVT_GESTURE_PAN )
+EVT_GESTURE_ZOOM = wx.PyEventBinder( wxEVT_GESTURE_ZOOM )
+EVT_GESTURE_ROTATE = wx.PyEventBinder( wxEVT_GESTURE_ROTATE )
+EVT_TWO_FINGER_TAP = wx.PyEventBinder( wxEVT_TWO_FINGER_TAP )
+EVT_LONG_PRESS = wx.PyEventBinder( wxEVT_LONG_PRESS )
+EVT_PRESS_AND_TAP = wx.PyEventBinder( wxEVT_PRESS_AND_TAP )
+
 
 # deprecated wxEVT aliases
 wxEVT_COMMAND_BUTTON_CLICKED         = wxEVT_BUTTON

@@ -18,6 +18,8 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
 ITEMS  = [ "wxPowerEvent",
+           'wxPowerResource',
+           'wxPowerResourceBlocker',
            ]
 
 #---------------------------------------------------------------------------
@@ -67,6 +69,14 @@ def run():
         EVT_POWER_SUSPEND_CANCEL   = wx.PyEventBinder( wxEVT_POWER_SUSPEND_CANCEL , 1 )
         EVT_POWER_RESUME           = wx.PyEventBinder( wxEVT_POWER_RESUME , 1 )
         """)
+
+
+    c = module.find('wxPowerResourceBlocker')
+    c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
+    # add context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'pass')
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

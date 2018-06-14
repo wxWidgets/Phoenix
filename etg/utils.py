@@ -63,6 +63,10 @@ def run():
     module.find('wxSetDisplayName').ignore()
     module.find('wxPostDelete').ignore()
 
+    # deprecated and removed
+    module.find('wxUsleep').ignore()
+
+
     # ignore all the environment related functions
     for item in module.allItems():
         if 'Env' in item.name:

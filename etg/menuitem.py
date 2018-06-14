@@ -38,6 +38,14 @@ def run():
 
     c.find('SetSubMenu.menu').transfer = True
 
+    # deprecated and removed
+    c.find('GetLabel').ignore()
+    c.find('GetName').ignore()
+    c.find('GetText').ignore()
+    c.find('SetText').ignore()
+    c.find('GetLabelFromText').ignore()
+
+
     # These are MSW only. Make them be empty stubs for the other ports
     c.find('GetBackgroundColour').type = 'wxColour*'
     c.find('GetBackgroundColour').setCppCode("""\

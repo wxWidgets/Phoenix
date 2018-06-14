@@ -49,6 +49,9 @@ def run():
     c.find('GetBitmap').mustHaveApp()
     c.find('GetIcon').mustHaveApp()
 
+    # deprecated and removed
+    c.find('Insert').ignore()
+
     # Change the types of the art constants from wxString to const char*
     # since that is what they really are.
     artConsts = list()

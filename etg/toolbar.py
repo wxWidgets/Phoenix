@@ -71,8 +71,8 @@ def run():
     #---------------------------------------------
     c = module.find('wxToolBar')
     tools.fixWindowClass(c)
+    tools.ignoreConstOverloads(c)
     _fixClientData(c)
-    c.find('SetBitmapResource').ignore()
     module.addGlobalStr('wxToolBarNameStr', c)
 
     gcd = c.find('GetToolClientData')

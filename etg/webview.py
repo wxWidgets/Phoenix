@@ -37,7 +37,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode('#include <wx/webview.h>')
+    module.addHeaderCode("""\
+        #include <wx/webview.h>
+        #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
+            #include <wx/msw/webview_ie.h>
+        #endif
+        """)
 
     module.addGlobalStr('wxWebViewBackendDefault')
     module.addGlobalStr('wxWebViewBackendIE')
@@ -67,6 +72,8 @@ def run():
     c.find('RegisterFactory.factory').transfer = True
     c.find('RegisterFactory').setCppCode_sip(
         "wxWebView::RegisterFactory(*backend, wxSharedPtr<wxWebViewFactory>(factory));")
+
+    c.find('RunScript.output').out = True
 
 
     # Custom code to deal with the
@@ -103,6 +110,13 @@ def run():
     ##    "sipCpp->LoadHistoryItem(wxSharedPtr<wxWebViewHistoryItem>(item));")
 
 
+    c.find('MSWSetModernEmulationLevel').setCppCode("""\
+        #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
+            return wxWebViewIE::MSWSetModernEmulationLevel(modernLevel);
+        #else
+            return false;
+        #endif
+        """)
 
 
 

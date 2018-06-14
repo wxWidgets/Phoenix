@@ -419,7 +419,6 @@ class dataview_Tests(wtc.WidgetTestCase):
         evt.GetValue
         evt.SetValue
         evt.IsEditCancelled
-        evt.SetEditCanceled
         evt.SetDataViewColumn
         evt.GetDataViewColumn
         evt.GetPosition

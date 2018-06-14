@@ -13,7 +13,8 @@ dnf -y install gtk2 gtk2-devel gtk3 gtk3-devel \
     webkitgtk webkitgtk-devel webkitgtk3 webkitgtk3-devel \
     libjpeg-turbo-devel libpng-devel libtiff-devel \
     SDL SDL-devel gstreamer gstreamer-devel gstreamer-plugins-base-devel \
-    freeglut freeglut-devel libnotify libnotify-devel libSM-devel
+    freeglut freeglut-devel libnotify libnotify-devel libSM-devel \
+    libXtst-devel
 
 
 # Install all available Python packages and their dev packages

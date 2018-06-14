@@ -17,7 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ "wxListItemAttr",
+ITEMS  = [ "wxItemAttr",  # TODO: technically this should be in its own etg script...
            "wxListItem",
            "wxListCtrl",
            "wxListView",
@@ -35,6 +35,10 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    # Compatibility alias
+    module.addPyCode("""\
+        ListItemAttr = wx.deprecated(ItemAttr, 'Use ItemAttr instead')
+        """)
 
     #-------------------------------------------------------
     c = module.find('wxListItem')

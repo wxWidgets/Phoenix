@@ -83,8 +83,8 @@ sipMD5 = {
     'linux64'  : 'b349127a4d46452936e4181d96b12c2d',
 }
 
-wafCurrentVersion = '1.7.15-p1'
-wafMD5 = 'e44003373c965f4221bbdc4c9b846128'
+wafCurrentVersion = '2.0.7'
+wafMD5 = '48ac1250bcccd0674cf461937875ce9a'
 
 doxygenCurrentVersion = '1.8.8'
 doxygenMD5 = {
@@ -783,7 +783,11 @@ def checkCompiler(quiet=False):
     # causes problems with other non-Windows, non-Darwin compilers then
     # we'll need to make this a little smarter about what flag (if any)
     # needs to be used.
-    if not isWindows and not isDarwin:
+    #
+    # NOTE 2: SIP chenged its output such that this doesn't appear to be
+    # needed anymore, but we'll leave the code in place to make it easy to
+    # turn it back on again if/when needed.
+    if False and not isWindows and not isDarwin:
         stdflag = '-std=c++11'
         curflags = os.environ.get('CXXFLAGS', '')
         if stdflag not in curflags:
@@ -1109,6 +1113,7 @@ def cmd_sip(options, args):
             (sip, cfg.SIPOPTS, tmpdir, sbf, pycode, src_name)
         runcmd(cmd)
 
+        classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }
 
         def processSrc(src, keepHashLines=False):
             with textfile_open(src, 'rt') as f:
@@ -1120,7 +1125,28 @@ def cmd_sip(options, args):
                     # ...or totally remove them by replacing those lines with ''
                     import re
                     srcTxt = re.sub(r'^#line.*\n', '', srcTxt, flags=re.MULTILINE)
+                className = classesNeedingClassInfo.get(os.path.basename(src))
+                if className:
+                    srcTxt = injectClassInfo(className, srcTxt)
             return srcTxt
+
+        def injectClassInfo(className, srcTxt):
+            # inject wxClassInfo macros into the sip generated wrapper class
+            lines = srcTxt.splitlines()
+            # find the beginning of the class declaration
+            for idx, line in enumerate(lines):
+                if line.startswith('class sip{}'.format(className)):
+                    # next line is '{', insert after that
+                    lines[idx+2:idx+2] = ['wxDECLARE_ABSTRACT_CLASS(sip{});'.format(className)]
+                    break
+            # find the '};' that terminates the class
+            for idx, line in enumerate(lines[idx+2:], idx+2):
+                if line.startswith('};'):
+                    lines[idx+1:idx+1] = ['\nwxIMPLEMENT_ABSTRACT_CLASS(sip{0}, {0});'.format(className)]
+                    break
+            # join it back up and return
+            return '\n'.join(lines)
+
 
         # Check each file in tmpdir to see if it is different than the same file
         # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
@@ -1494,6 +1520,7 @@ def cmd_build_vagrant(options, args):
                 'fedora-27    all gtk3', # no webkitgtk for gtk2??
                 'ubuntu-14.04 all all',
                 'ubuntu-16.04 all all',
+                'ubuntu-18.04 all all',
                 ]
     elif options.vagrant_vms == 'none':
         VMs = [] # to skip building anything and just upload
@@ -1731,6 +1758,8 @@ def cmd_clean_vagrant(options, args):
     if os.path.exists(d):
         shutil.rmtree(d)
 
+def cmd_clean_all(options, args):
+    cmd_cleanall(options, args)
 
 def cmd_cleanall(options, args):
     # These take care of all the object, lib, shared lib files created by the

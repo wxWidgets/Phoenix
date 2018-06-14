@@ -11,6 +11,7 @@ mydbstub.py*
 .idea
 .cache
 .vagrant
+.vscode
 
 /build
 /tmp
@@ -60,3 +61,5 @@ mydbstub.py*
 /unittests/lib_pubsub_provider_actual.py
 
 ubuntu-xenial-16.04-cloudimg-console.log
+ubuntu-bionic-18.04-cloudimg-console.log
+.pytest_cache

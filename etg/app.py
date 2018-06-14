@@ -68,6 +68,8 @@ def run():
     c.find('OnExceptionInMainLoop').ignore()
     c.find('OnFatalException').ignore()
     c.find('OnUnhandledException').ignore()
+    c.find('StoreCurrentException').ignore()
+    c.find('RethrowStoredException').ignore()
 
     # Release the GIL for potentially blocking or long-running functions
     c.find('MainLoop').releaseGIL()
@@ -117,19 +119,6 @@ def run():
         body="""\
             #ifdef __WXMSW__
                 return wxApp::GetComCtl32Version();
-            #else
-                wxPyRaiseNotImplemented();
-                return 0;
-            #endif
-            """)
-    c.addCppMethod('int', 'GetShell32Version', '()',
-        isStatic=True,
-        doc="""\
-        Returns 400, 470, 471, etc. for shell32.dll 4.00, 4.70, 4.71 or 0 if
-        it wasn't found at all.  Raises an exception on non-Windows platforms.""",
-        body="""\
-            #ifdef __WXMSW__
-                return wxApp::GetShell32Version();
             #else
                 wxPyRaiseNotImplemented();
                 return 0;

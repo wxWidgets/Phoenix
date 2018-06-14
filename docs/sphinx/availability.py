@@ -12,7 +12,7 @@ from docutils import nodes
 from sphinx.locale import _
 from sphinx.environment import NoUri
 from sphinx.util.nodes import set_source_info
-from sphinx.util.compat import Directive, make_admonition
+from docutils.parsers.rst import Directive
 
 # ----------------------------------------------------------------------- #
 class availability_node(nodes.Admonition, nodes.Element): pass
@@ -42,13 +42,12 @@ class Availability(Directive):
         targetid = 'index-%s' % env.new_serialno('index')
         targetnode = nodes.target('', '', ids=[targetid])
 
-        ad = make_admonition(availability_node, self.name, [_('Availability')], self.options,
-                             self.content, self.lineno, self.content_offset,
-                             self.block_text, self.state, self.state_machine)
-        set_source_info(self, ad[0])
-        return [targetnode] + ad
+        avail_node = availability_node('\n'.join(self.content))
+        avail_node += nodes.title(_("Availability"), _("Availability"))
 
+        self.state.nested_parse(self.content, self.content_offset, avail_node)
 
+        return [targetnode, avail_node]
 
 # ----------------------------------------------------------------------- #
 
@@ -165,6 +164,11 @@ def purge_availabilities(app, env, docname):
 # ----------------------------------------------------------------------- #
 
 def visit_availability_node(self, node):
+    classes = node.get('classes')
+    for c in ("admonition", "availability"):
+        if not c in classes:
+            classes.append(c)
+
     self.visit_admonition(node)
 
 

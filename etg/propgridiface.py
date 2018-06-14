@@ -32,6 +32,16 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    # These are duplicates, ignore the ones in this module
+    module.find('wxPG_PROPERTYVALUES_FLAGS').ignore()
+    module.find('wxPG_LABEL').ignore()
+    module.find('wxPG_LABEL_STRING').ignore()
+    module.find('wxPG_COLOUR_BLACK').ignore()
+    module.find('wxPG_COLOUR').ignore()
+    module.find('wxPG_DEFAULT_IMAGE_SIZE').ignore()
+
+
+    #----------------------------------------------------------
     c = module.find('wxPGPropArgCls')
     assert isinstance(c, etgtools.ClassDef)
     c.find('wxPGPropArgCls').findOverload('wxString &').ignore()
@@ -103,12 +113,13 @@ def run():
 
 
     #----------------------------------------------------------
-
     c = module.find('wxPropertyGridInterface')
     c.abstract = True
     for m in c.findAll('GetIterator'):
         if m.type == 'wxPropertyGridConstIterator':
             m.ignore()
+
+    tools.ignoreConstOverloads(c)
 
     spv = c.find('SetPropertyValue')
     spv.findOverload('int value').ignore()
@@ -134,6 +145,10 @@ def run():
     for m in c.find('Insert').all():
         m.find('newProperty').transfer = True
 
+    # Fix some syntax that sip doesn't like
+    p = c.find('GetPropertiesWithFlag.iterFlags')
+    if p.default.startswith('('):
+        p.default = p.default[1:-1]
 
 
     # Tons of Python method implementations ported from Classic...
