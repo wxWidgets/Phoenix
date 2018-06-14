@@ -13,7 +13,7 @@ wxPython Changelog
 ---------------------------
 * 16-June-2018
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.0.2
+PyPI:   https://pypi.org/project/wxPython/4.0.2
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.0.2``
 
