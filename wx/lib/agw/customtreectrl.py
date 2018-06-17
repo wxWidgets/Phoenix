@@ -3,8 +3,8 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 09 Jan 2014, 23.00 GMT
-#
+# Latest Revision: 02 Jul 2018, 00.10 GMT
+# Modified by Helio Guilherme, @ 26 Apr 2018
 #
 # TODO List
 #
@@ -299,14 +299,14 @@ License And Version
 
 :class:`CustomTreeCtrl` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 09 Jan 2014, 23.00 GMT
+Latest Revision: Helio Guilherme @ 09 Aug 2018, 21.35 GMT
 
-Version 2.6
+Version 2.7
 
 """
 
 # Version Info
-__version__ = "2.6"
+__version__ = "2.7"
 
 import wx
 from wx.lib.expando import ExpandoTextCtrl
@@ -1554,7 +1554,7 @@ class GenericTreeItem(object):
     :class:`CustomTreeCtrl`. This is a generic implementation of :class:`TreeItem`.
     """
 
-    def __init__(self, parent, text="", ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
+    def __init__(self, parent, text="", ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False, on_the_right=True):
         """
         Default class constructor.
         For internal use: do not call it in your code!
@@ -1581,6 +1581,8 @@ class GenericTreeItem(object):
          same image is used for both selected and unselected items;
         :param object `data`: associate the given Python object `data` with the item;
         :param bool `separator`: ``True`` if the item is a separator, ``False`` otherwise.
+        :param bool `on_the_right`: ``True`` positions the window on the right of text, ``False``
+         on the left of text and overlapping the image.
 
         :note: Regarding radiobutton-type items (with `ct_type` = 2), the following
          approach is used:
@@ -1663,9 +1665,10 @@ class GenericTreeItem(object):
                 self._enabled = False
 
         self._wnd = wnd             # are we holding a window?
+        self._windowontheright = on_the_right  # on the right, or left?
 
         if wnd:
-            self.SetWindow(wnd)
+            self.SetWindow(wnd, on_the_right)
 
 
     def IsOk(self):
@@ -1909,12 +1912,15 @@ class GenericTreeItem(object):
         self._width = w
 
 
-    def SetWindow(self, wnd):
+    def SetWindow(self, wnd, on_the_right=True):
         """
         Sets the window associated to the item.
 
         :param `wnd`: a non-toplevel window to be displayed next to the item, any
          subclass of :class:`wx.Window`.
+
+        :param bool `on_the_right`: ``True`` positions the window on the right of text, ``False``
+         on the left of text and overlapping the image. New in wxPython 4.0.4.
 
         :raise: `Exception` if the input `item` is a separator and `wnd` is not ``None``.
         """
@@ -1923,6 +1929,7 @@ class GenericTreeItem(object):
             raise Exception("Separator items can not have an associated window")
 
         self._wnd = wnd
+        self._windowontheright = on_the_right
 
         if wnd.GetSizer():      # the window is a complex one hold by a sizer
             size = wnd.GetBestSize()
@@ -1935,6 +1942,11 @@ class GenericTreeItem(object):
         # Do better strategies exist?
         self._wnd.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
 
+        # We also have to bind the wx.EVT_TREE_ITEM_COLLAPSING for the
+        # associated window, for example when it is an agw.animate.AnimationCtrl,
+        # otherwise it would stay visible. See the demo for an example.
+        self._wnd.Bind(wx.EVT_TREE_ITEM_COLLAPSING, self.OnTreeItemCollapsing)
+
         self._height = size.GetHeight() + 2
         self._width = size.GetWidth()
         self._windowsize = size
@@ -1946,6 +1958,7 @@ class GenericTreeItem(object):
         # The window is enabled only if the item is enabled
         self._wnd.Enable(self._enabled)
         self._windowenabled = self._enabled
+
 
 
     def GetWindow(self):
@@ -2019,6 +2032,27 @@ class GenericTreeItem(object):
             treectrl._hasFocus = False
         else:
             treectrl._hasFocus = True
+
+        event.Skip()
+
+
+    def OnTreeItemCollapsing(self, event):
+        """
+        Handles the ``wx.EVT_TREE_ITEM_COLLAPSING`` event for the window associated with the item.
+
+        :param `event`: a :class:`GenericTreeItem` to be processed.
+        """
+        # Helio: This is not OK?
+        #        Should it be more "internal" code?
+        #        It is working on the user application.
+        for item in event.GetItem().GetChildren():
+            itemwindow = item.GetWindow()
+            if itemwindow:  # Hides the attached window if added
+                itemwindow.Hide()
+
+        # Hides the attached window if added
+        #if self._wnd:
+        #    self._wnd.Hide()
 
         event.Skip()
 
@@ -4270,13 +4304,15 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         return item.GetWindow()
 
 
-    def SetItemWindow(self, item, wnd):
+    def SetItemWindow(self, item, wnd, on_the_right=True):
         """
         Sets the window for the given item.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
         :param `wnd`: if not ``None``, a non-toplevel window to be displayed next to
          the item.
+        :param bool `on_the_right`: ``True`` positions the window on the right of text, ``False``
+         on the left of text and overlapping the image. New in wxPython 4.0.4.
 
         :raise: `Exception` if the input `item` is a separator and `wnd` is not ``None``.
         """
@@ -4293,7 +4329,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         else:
             self.DeleteItemWindow(item)
 
-        item.SetWindow(wnd)
+        item.SetWindow(wnd, on_the_right)
         self.CalculatePositions()
         self.Refresh()
         self.AdjustMyScrollbars()
@@ -4850,7 +4886,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 # operations
 # -----------------------------------------------------------------------------
 
-    def DoInsertItem(self, parentId, previous, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
+    def DoInsertItem(self, parentId, previous, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False, on_the_right=True):
         """
         Actually inserts an item in the tree.
 
@@ -4869,6 +4905,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          same image is used for both selected and unselected items;
         :param object `data`: associate the given Python object `data` with the item;
         :param bool `separator`: ``True`` if the item is a separator, ``False`` otherwise.
+        :param bool `on_the_right`: ``True`` positions the window on the right of text, ``False``
+         on the left of text and overlapping the image.
 
         :return: An instance of :class:`GenericTreeItem` upon successful insertion.
 
@@ -4909,7 +4947,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         self._dirty = True     # do this first so stuff below doesn't cause flicker
 
-        item = GenericTreeItem(parent, text, ct_type, wnd, image, selImage, data, separator)
+        item = GenericTreeItem(parent, text, ct_type, wnd, image, selImage, data, separator, on_the_right)
 
         if wnd is not None:
             self._hasWindows = True
@@ -4920,7 +4958,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         return item
 
 
-    def AddRoot(self, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
+    def AddRoot(self, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, on_the_right=True):
         """
         Adds a root item to the :class:`CustomTreeCtrl`.
 
@@ -4935,6 +4973,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          use for the item in selected state; if `image` > -1 and `selImage` is -1, the
          same image is used for both selected and unselected items;
         :param object `data`: associate the given Python object `data` with the item.
+        :param bool `on_the_right`: ``True`` positions the window on the right of text, ``False``
+         on the left of text and overlapping the image.
 
         :return: An instance of :class:`GenericTreeItem` upon successful insertion.
 
@@ -4967,7 +5007,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         self._dirty = True     # do this first so stuff below doesn't cause flicker
 
-        self._anchor = GenericTreeItem(None, text, ct_type, wnd, image, selImage, data)
+        self._anchor = GenericTreeItem(None, text, ct_type, wnd, image, selImage, data, on_the_right)
 
         if wnd is not None:
             self._hasWindows = True
@@ -4989,7 +5029,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         return self._anchor
 
 
-    def PrependItem(self, parent, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
+    def PrependItem(self, parent, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False, on_the_right=True):
         """
         Prepends an item as a first child of parent.
 
@@ -5007,16 +5047,18 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          same image is used for both selected and unselected items;
         :param object `data`: associate the given Python object `data` with the item;
         :param bool `separator`: ``True`` if the item is a separator, ``False`` otherwise.
+        :param bool `on_the_right`: ``True`` positions the window on the right of text, ``False``
+         on the left of text and overlapping the image.
 
         :return: An instance of :class:`GenericTreeItem` upon successful insertion.
 
         :see: :meth:`~CustomTreeCtrl.DoInsertItem` for possible exceptions generated by this method.
         """
 
-        return self.DoInsertItem(parent, 0, text, ct_type, wnd, image, selImage, data, separator)
+        return self.DoInsertItem(parent, 0, text, ct_type, wnd, image, selImage, data, separator, on_the_right)
 
 
-    def InsertItemByItem(self, parentId, idPrevious, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
+    def InsertItemByItem(self, parentId, idPrevious, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False, on_the_right=True):
         """
         Inserts an item after the given previous.
 
@@ -5036,6 +5078,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          same image is used for both selected and unselected items;
         :param object `data`: associate the given Python object `data` with the item;
         :param bool `separator`: ``True`` if the item is a separator, ``False`` otherwise.
+        :param bool `on_the_right`: ``True`` positions the window on the right of text, ``False``
+         on the left of text and overlapping the image.
 
         :return: An instance of :class:`GenericTreeItem` upon successful insertion.
 
@@ -5048,7 +5092,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         if not parent:
             # should we give a warning here?
-            return self.AddRoot(text, ct_type, wnd, image, selImage, data)
+            return self.AddRoot(text, ct_type, wnd, image, selImage, data, on_the_right)
 
         index = -1
         if idPrevious:
@@ -5058,10 +5102,10 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             except:
                 raise Exception("ERROR: Previous Item In CustomTreeCtrl.InsertItem() Is Not A Sibling")
 
-        return self.DoInsertItem(parentId, index+1, text, ct_type, wnd, image, selImage, data, separator)
+        return self.DoInsertItem(parentId, index+1, text, ct_type, wnd, image, selImage, data, separator, on_the_right)
 
 
-    def InsertItemByIndex(self, parentId, idPrevious, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
+    def InsertItemByIndex(self, parentId, idPrevious, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False, on_the_right=True):
         """
         Inserts an item after the given previous.
 
@@ -5080,6 +5124,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          same image is used for both selected and unselected items;
         :param object `data`: associate the given Python object `data` with the item;
         :param bool `separator`: ``True`` if the item is a separator, ``False`` otherwise.
+        :param bool `on_the_right`: ``True`` positions the window on the right of text, ``False``
+         on the left of text and overlapping the image.
 
         :return: An instance of :class:`GenericTreeItem` upon successful insertion.
 
@@ -5092,10 +5138,10 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             # should we give a warning here?
             return self.AddRoot(text, ct_type, wnd, image, selImage, data)
 
-        return self.DoInsertItem(parentId, idPrevious, text, ct_type, wnd, image, selImage, data, separator)
+        return self.DoInsertItem(parentId, idPrevious, text, ct_type, wnd, image, selImage, data, separator, on_the_right)
 
 
-    def InsertItem(self, parentId, input, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
+    def InsertItem(self, parentId, input, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False, on_the_right=True):
         """
         Inserts an item after the given previous.
 
@@ -5108,12 +5154,12 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
 
         if type(input) == type(1):
-            return self.InsertItemByIndex(parentId, input, text, ct_type, wnd, image, selImage, data, separator)
+            return self.InsertItemByIndex(parentId, input, text, ct_type, wnd, image, selImage, data, separator, on_the_right)
         else:
-            return self.InsertItemByItem(parentId, input, text, ct_type, wnd, image, selImage, data, separator)
+            return self.InsertItemByItem(parentId, input, text, ct_type, wnd, image, selImage, data, separator, on_the_right)
 
 
-    def AppendItem(self, parentId, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
+    def AppendItem(self, parentId, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, on_the_right=True):
         """
         Appends an item as a last child of its parent.
 
@@ -5130,6 +5176,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          use for the item in selected state; if `image` > -1 and `selImage` is -1, the
          same image is used for both selected and unselected items;
         :param object `data`: associate the given Python object `data` with the item.
+        :param bool `on_the_right`: ``True`` positions the window on the right of text, ``False``
+         on the left of text and overlapping the image.
 
         :return: An instance of :class:`GenericTreeItem` upon successful insertion.
 
@@ -5140,9 +5188,9 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         if not parent:
             # should we give a warning here?
-            return self.AddRoot(text, ct_type, wnd, image, selImage, data)
+            return self.AddRoot(text, ct_type, wnd, image, selImage, data, on_the_right)
 
-        return self.DoInsertItem(parent, len(parent.GetChildren()), text, ct_type, wnd, image, selImage, data)
+        return self.DoInsertItem(parent, len(parent.GetChildren()), text, ct_type, wnd, image, selImage, data, False, on_the_right)
 
 
     def AppendSeparator(self, parentId):
@@ -6723,8 +6771,12 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             dc.DrawLabel(itemText, textrect)
 
         wnd = item.GetWindow()
+        on_right = item._windowontheright  # Helio: Should I make a getter?
         if wnd:
-            wndx = wcheck + image_w + item.GetX() + text_w + 4
+            if on_right:  # Helio: Original behaviour
+                wndx = wcheck + image_w + item.GetX() + text_w + 4
+            else:
+                wndx = wcheck + item.GetX()
             xa, ya = self.CalcScrolledPosition((0, item.GetY()))
             wndx += xa
             if item.GetHeight() > item.GetWindowSize()[1]:
