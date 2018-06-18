@@ -7,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2018 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ VER_MAJOR        = 4
 VER_MINOR        = 1
 VER_RELEASE      = 0
 
-VER_FLAGS        = "a1"     # wxPython release flags
+VER_FLAGS        = ""     # wxPython release flags
 
 # The VER_FLAGS value is appended to the version number constructed from the
 # first 3 components and should be set according to the following patterns.
