@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2018 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ DESCRIPTION      = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
 AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "robin@alldunn.com"
 URL              = "http://wxPython.org/"
-DOWNLOAD_URL     = "https://pypi.python.org/pypi/{}".format(NAME)
+DOWNLOAD_URL     = "https://pypi.org/project/{}".format(NAME)
 LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,user-interface,awesome"
