@@ -1,9 +1,9 @@
 
 [[ send to:
-   wxpython-users@googlegroups.com,
-   wxpython-dev@googlegroups.com,
-   wx-users@googlegroups.com,
-   wx-announce@googlegroups.com,
+   wxpython-users@googlegroups.com
+   wxpython-dev@googlegroups.com
+   wx-users@googlegroups.com
+   wx-announce@googlegroups.com
    Python-Announce-List@Python.Org
    ]]
 

@@ -86,8 +86,7 @@ HOWTO Release wxPython Phoenix
     pre-release development versions for the next official release, not the
     one just completed.
 
-20. If making an announcement about this release, (I think it's okay not to
-    for minor releases or smallish bug fixes,) send the text in
+20. If making an announcement about this release, send the text in
     packaging/ANNOUNCE.txt to the email addresses listed at the top of the
     file.
 
