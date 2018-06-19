@@ -166,13 +166,13 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         file_menu = wx.Menu()
 
-        AS_EXIT = wx.NewId()
+        AS_EXIT = wx.Window.NewControlId()
         file_menu.Append(AS_EXIT, "&Exit")
         self.Bind(wx.EVT_MENU, self.OnClose, id=AS_EXIT)
 
         help_menu = wx.Menu()
 
-        AS_ABOUT = wx.NewId()
+        AS_ABOUT = wx.Window.NewControlId()
         help_menu.Append(AS_ABOUT, "&About...")
         self.Bind(wx.EVT_MENU, self.OnAbout, id=AS_ABOUT)
 
@@ -431,18 +431,18 @@ class ThumbnailCtrlDemo(wx.Frame):
     def CreatePopups(self):
 
         if not hasattr(self, "popupID1"):
-            self.popupID1 = wx.NewId()
-            self.popupID2 = wx.NewId()
-            self.popupID3 = wx.NewId()
-            self.popupID4 = wx.NewId()
-            self.popupID5 = wx.NewId()
-            self.popupID6 = wx.NewId()
-            self.popupID7 = wx.NewId()
-            self.popupID8 = wx.NewId()
-            self.popupID9 = wx.NewId()
-            self.popupID10 = wx.NewId()
-            self.popupID11 = wx.NewId()
-            self.popupID12 = wx.NewId()
+            self.popupID1 = wx.Window.NewControlId()
+            self.popupID2 = wx.Window.NewControlId()
+            self.popupID3 = wx.Window.NewControlId()
+            self.popupID4 = wx.Window.NewControlId()
+            self.popupID5 = wx.Window.NewControlId()
+            self.popupID6 = wx.Window.NewControlId()
+            self.popupID7 = wx.Window.NewControlId()
+            self.popupID8 = wx.Window.NewControlId()
+            self.popupID9 = wx.Window.NewControlId()
+            self.popupID10 = wx.Window.NewControlId()
+            self.popupID11 = wx.Window.NewControlId()
+            self.popupID12 = wx.Window.NewControlId()
 
             self.Bind(wx.EVT_MENU, self.OnPopupOne, id=self.popupID1)
             self.Bind(wx.EVT_MENU, self.OnPopupTwo, id=self.popupID2)
@@ -480,9 +480,9 @@ class ThumbnailCtrlDemo(wx.Frame):
     def CreateGlobalPopups(self):
 
         if not hasattr(self, "popupID10"):
-            self.popupID10 = wx.NewId()
-            self.popupID11 = wx.NewId()
-            self.popupID12 = wx.NewId()
+            self.popupID10 = wx.Window.NewControlId()
+            self.popupID11 = wx.Window.NewControlId()
+            self.popupID12 = wx.Window.NewControlId()
 
         self.Bind(wx.EVT_MENU, self.OnPopupTen, id=self.popupID10)
         self.Bind(wx.EVT_MENU, self.OnPopupEleven, id=self.popupID11)

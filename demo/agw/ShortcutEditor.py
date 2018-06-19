@@ -33,7 +33,7 @@ TOP_MENUS = ['File', 'Edit', 'View', 'Options', 'Window', 'Help']
 COMBINATIONS = string.ascii_uppercase + string.digits
 COMBINATIONS = [c for c in COMBINATIONS] + list(SE.KEYMAP.values())
 
-ACCEL_IDS = [wx.NewId() for i in range(6)]
+ACCEL_IDS = [wx.Window.NewControlId() for i in range(6)]
 
 _ = wx.GetTranslation
 

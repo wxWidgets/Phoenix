@@ -98,13 +98,13 @@ _ = wx.GetTranslation
 #---------------------------------------------------------------------------
 
 BAD_IMAGE = -1
-ID_WHITE_BG = wx.NewId()
-ID_BLACK_BG = wx.NewId()
-ID_GREY_BG = wx.NewId()
-ID_CHECK_BG = wx.NewId()
-ID_NO_FRAME = wx.NewId()
-ID_BOX_FRAME = wx.NewId()
-ID_CROP_FRAME = wx.NewId()
+ID_WHITE_BG = wx.Window.NewControlId()
+ID_BLACK_BG = wx.Window.NewControlId()
+ID_GREY_BG = wx.Window.NewControlId()
+ID_CHECK_BG = wx.Window.NewControlId()
+ID_NO_FRAME = wx.Window.NewControlId()
+ID_BOX_FRAME = wx.Window.NewControlId()
+ID_CROP_FRAME = wx.Window.NewControlId()
 
 def ConvertBMP(file_nm):
     """

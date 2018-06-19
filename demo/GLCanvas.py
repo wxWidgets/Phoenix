@@ -22,8 +22,8 @@ except ImportError:
 
 
 buttonDefs = {
-    wx.NewId() : ('CubeCanvas', 'Cube'),
-    wx.NewId() : ('ConeCanvas', 'Cone'),
+    wx.Window.NewControlId() : ('CubeCanvas', 'Cube'),
+    wx.Window.NewControlId() : ('ConeCanvas', 'Cone'),
     }
 
 class ButtonPanel(wx.Panel):

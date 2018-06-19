@@ -966,7 +966,7 @@ class Shape(ShapeEvtHandler):
 
     def AssignNewIds(self):
         """Assign new ids to this image and its children."""
-        self._id = wx.NewId()
+        self._id = wx.Window.NewControlId()
         for child in self._children:
             child.AssignNewIds()
 

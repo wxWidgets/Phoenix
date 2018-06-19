@@ -48,18 +48,18 @@ else:
 # Menu items IDs
 #-------------------------------
 
-MENU_STYLE_DEFAULT = wx.NewId()
-MENU_STYLE_XP = wx.NewId()
-MENU_STYLE_2007 = wx.NewId()
-MENU_STYLE_VISTA = wx.NewId()
-MENU_STYLE_MY = wx.NewId()
-MENU_USE_CUSTOM = wx.NewId()
-MENU_LCD_MONITOR = wx.NewId()
-MENU_HELP = wx.NewId()
+MENU_STYLE_DEFAULT = wx.Window.NewControlId()
+MENU_STYLE_XP = wx.Window.NewControlId()
+MENU_STYLE_2007 = wx.Window.NewControlId()
+MENU_STYLE_VISTA = wx.Window.NewControlId()
+MENU_STYLE_MY = wx.Window.NewControlId()
+MENU_USE_CUSTOM = wx.Window.NewControlId()
+MENU_LCD_MONITOR = wx.Window.NewControlId()
+MENU_HELP = wx.Window.NewControlId()
 
-MENU_DISABLE_MENU_ITEM = wx.NewId()
-MENU_REMOVE_MENU = wx.NewId()
-MENU_TRANSPARENCY = wx.NewId()
+MENU_DISABLE_MENU_ITEM = wx.Window.NewControlId()
+MENU_REMOVE_MENU = wx.Window.NewControlId()
+MENU_TRANSPARENCY = wx.Window.NewControlId()
 
 MENU_NEW_FILE = 10005
 MENU_SAVE = 10006
