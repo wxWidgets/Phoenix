@@ -42,6 +42,7 @@ def run():
 
 
     c = module.find('wxAuiMDIChildFrame')
+    c.bases = ['wxTDIChildFrame']
     tools.fixTopLevelWindowClass(c)
     tools.fixSetStatusWidths(c.find('SetStatusWidths'))
     c.find('SetMenuBar.menuBar').transfer = True
