@@ -107,8 +107,8 @@ class TestPanel(wx.Panel):
     def OnRightLink(self, event):
         pos = self._hyper3.GetPosition() + event.GetPosition()
         menuPopUp = wx.Menu("Having a nice day?")
-        ID_MENU_YES = wx.NewId()
-        ID_MENU_NO  = wx.NewId()
+        ID_MENU_YES = wx.Window.NewControlId()
+        ID_MENU_NO  = wx.Window.NewControlId()
         menuPopUp.Append(ID_MENU_YES, "Yes, absolutely!")
         menuPopUp.Append(ID_MENU_NO,  "I've had better")
         self.PopupMenu(menuPopUp)

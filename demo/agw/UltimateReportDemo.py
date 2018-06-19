@@ -855,12 +855,12 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         # only do this part the first time so the events are only bound once
         if not hasattr(self, "popupID1"):
-            self.popupID1 = wx.NewId()
-            self.popupID2 = wx.NewId()
-            self.popupID3 = wx.NewId()
-            self.popupID4 = wx.NewId()
-            self.popupID5 = wx.NewId()
-            self.popupID6 = wx.NewId()
+            self.popupID1 = wx.Window.NewControlId()
+            self.popupID2 = wx.Window.NewControlId()
+            self.popupID3 = wx.Window.NewControlId()
+            self.popupID4 = wx.Window.NewControlId()
+            self.popupID5 = wx.Window.NewControlId()
+            self.popupID6 = wx.Window.NewControlId()
 
             self.Bind(wx.EVT_MENU, self.OnPopupOne, id=self.popupID1)
             self.Bind(wx.EVT_MENU, self.OnPopupTwo, id=self.popupID2)

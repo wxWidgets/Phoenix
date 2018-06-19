@@ -332,8 +332,8 @@ class MegaGrid(Grid.Grid):
 
     def rowPopup(self, row, evt):
         """(row, evt) -> display a popup menu when a row label is right clicked"""
-        appendID = wx.NewId()
-        deleteID = wx.NewId()
+        appendID = wx.Window.NewControlId()
+        deleteID = wx.Window.NewControlId()
         x = self.GetRowSize(row)/2
 
         if not self.GetSelectedRows():
@@ -365,8 +365,8 @@ class MegaGrid(Grid.Grid):
         right clicked"""
         x = self.GetColSize(col)/2
         menu = wx.Menu()
-        id1 = wx.NewId()
-        sortID = wx.NewId()
+        id1 = wx.Window.NewControlId()
+        sortID = wx.Window.NewControlId()
 
         xo, yo = evt.GetPosition()
         self.SelectCol(col)

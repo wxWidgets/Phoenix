@@ -46,8 +46,8 @@ Sample usage::
         time.sleep(DELAY)
         wx.PostEvent(win, GooEvent(id, goo=id))
 
-    ID_CMD1 = wx.NewId()
-    ID_CMD2 = wx.NewId()
+    ID_CMD1 = wx.Window.NewControlId()
+    ID_CMD2 = wx.Window.NewControlId()
 
     class Frame(wx.Frame):
         def __init__(self):
@@ -170,8 +170,8 @@ def _test():
         time.sleep(DELAY)
         wx.PostEvent(win, GooEvent(id, goo=id))
 
-    ID_CMD1 = wx.NewId()
-    ID_CMD2 = wx.NewId()
+    ID_CMD1 = wx.Window.NewControlId()
+    ID_CMD2 = wx.Window.NewControlId()
 
     class Frame(wx.Frame):
         def __init__(self):

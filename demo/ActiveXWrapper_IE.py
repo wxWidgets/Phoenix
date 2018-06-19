@@ -32,38 +32,38 @@ class TestPanel(wx.Window):
         self.ie = theClass(self, -1)
 
 
-        btn = wx.Button(self, wx.NewId(), "Open", style=wx.BU_EXACTFIT)
+        btn = wx.Button(self, wx.ID_ANY, "Open", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnOpenButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
 
-        btn = wx.Button(self, wx.NewId(), "Home", style=wx.BU_EXACTFIT)
+        btn = wx.Button(self, wx.ID_ANY, "Home", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnHomeButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
 
-        btn = wx.Button(self, wx.NewId(), "<--", style=wx.BU_EXACTFIT)
+        btn = wx.Button(self, wx.ID_ANY, "<--", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnPrevPageButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
 
-        btn = wx.Button(self, wx.NewId(), "-->", style=wx.BU_EXACTFIT)
+        btn = wx.Button(self, wx.ID_ANY, "-->", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnNextPageButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
 
-        btn = wx.Button(self, wx.NewId(), "Stop", style=wx.BU_EXACTFIT)
+        btn = wx.Button(self, wx.ID_ANY, "Stop", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnStopButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
 
-        btn = wx.Button(self, wx.NewId(), "Search", style=wx.BU_EXACTFIT)
+        btn = wx.Button(self, wx.ID_ANY, "Search", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSearchPageButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
 
-        btn = wx.Button(self, wx.NewId(), "Refresh", style=wx.BU_EXACTFIT)
+        btn = wx.Button(self, wx.ID_ANY, "Refresh", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnRefreshPageButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
 
         txt = wx.StaticText(self, -1, "Location:")
         btnSizer.Add(txt, 0, wx.CENTER|wx.ALL, 2)
 
-        self.location = wx.ComboBox(self, wx.NewId(), "", style=wx.CB_DROPDOWN)
+        self.location = wx.ComboBox(self, wx.ID_ANY, "", style=wx.CB_DROPDOWN)
         self.Bind(wx.EVT_COMBOBOX, self.OnLocationSelect, self.location)
         self.location.Bind(wx.EVT_KEY_UP, self.OnLocationKey)
         self.location.Bind(wx.EVT_CHAR, self.IgnoreReturn)

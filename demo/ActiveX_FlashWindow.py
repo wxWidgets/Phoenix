@@ -23,11 +23,11 @@ class TestPanel(wx.Panel):
 
         sizer.Add(self.flash, proportion=1, flag=wx.EXPAND)
 
-        btn = wx.Button(self, wx.NewId(), "Open Flash File")
+        btn = wx.Button(self, wx.ID_ANY, "Open Flash File")
         self.Bind(wx.EVT_BUTTON, self.OnOpenFileButton, btn)
         btnSizer.Add(btn, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
 
-        btn = wx.Button(self, wx.NewId(), "Open Flash URL")
+        btn = wx.Button(self, wx.ID_ANY, "Open Flash URL")
         self.Bind(wx.EVT_BUTTON, self.OnOpenURLButton, btn)
         btnSizer.Add(btn, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
 

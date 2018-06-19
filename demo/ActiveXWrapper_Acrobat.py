@@ -48,15 +48,15 @@ class TestPanel(wx.Panel):
 
         sizer.Add(self.pdf, 1, wx.EXPAND)
 
-        btn = wx.Button(self, wx.NewId(), "Open PDF File")
+        btn = wx.Button(self, wx.ID_ANY, "Open PDF File")
         wx.EVT_BUTTON(self, btn.GetId(), self.OnOpenButton)
         btnSizer.Add(btn, 1, wx.EXPAND|wx.ALL, 5)
 
-        btn = wx.Button(self, wx.NewId(), "<-- Previous Page")
+        btn = wx.Button(self, wx.ID_ANY, "<-- Previous Page")
         wx.EVT_BUTTON(self, btn.GetId(), self.OnPrevPageButton)
         btnSizer.Add(btn, 1, wx.EXPAND|wx.ALL, 5)
 
-        btn = wx.Button(self, wx.NewId(), "Next Page -->")
+        btn = wx.Button(self, wx.ID_ANY, "Next Page -->")
         wx.EVT_BUTTON(self, btn.GetId(), self.OnNextPageButton)
         btnSizer.Add(btn, 1, wx.EXPAND|wx.ALL, 5)
 

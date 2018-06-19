@@ -5,7 +5,7 @@ import wx.lib.anchors as anchors
 
 #----------------------------------------------------------------------
 
-# Nifty little trick here; apply wx.NewId() to generate a series of
+# Nifty little trick here; apply wx.Window.NewControlId() to generate a series of
 # IDs used later on in the app.
 
 [   ID_ANCHORSDEMOFRAMEANCHOREDPANEL,
@@ -18,7 +18,7 @@ import wx.lib.anchors as anchors
     ID_ANCHORSDEMOFRAMEBOTTOMCHECKBOX,
     ID_ANCHORSDEMOFRAME,
     ID_ANCHORSDEMOFRAMELEFTCHECKBOX,
- ] = map(lambda _init_ctrls: wx.NewId(), range(10))
+ ] = map(lambda _init_ctrls: wx.Window.NewControlId(), range(10))
 
 # A small note here: while only certain parts of this frame are actually demonstrating
 # the capabilities of the LayoutAnchors feature, all the controls are within the same
