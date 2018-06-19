@@ -194,64 +194,78 @@ def configure(conf):
         rpath = ' --no-rpath' if not conf.options.no_magic else ''
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs core,net' + rpath,
-                       uselib_store='WX', mandatory=True)
+                       uselib_store='WX', mandatory=True,
+                       msg='Finding libs for WX')
 
         # Run it again with different libs options to get different
         # sets of flags stored to use with varous extension modules below.
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs adv,core,net' + rpath,
-                       uselib_store='WXADV', mandatory=True)
+                       uselib_store='WXADV', mandatory=True,
+                       msg='Finding libs for WXADV')
 
         libname = '' if cfg.MONOLITHIC else 'stc,' # workaround bug in wx-config
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args=('--cxxflags --libs %score,net' % libname) + rpath,
-                       uselib_store='WXSTC', mandatory=True)
+                       uselib_store='WXSTC', mandatory=True,
+                       msg='Finding libs for WXSTC')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs html,core,net' + rpath,
-                       uselib_store='WXHTML', mandatory=True)
+                       uselib_store='WXHTML', mandatory=True,
+                       msg='Finding libs for WXHTML')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs gl,core,net' + rpath,
-                       uselib_store='WXGL', mandatory=True)
+                       uselib_store='WXGL', mandatory=True,
+                       msg='Finding libs for WXGL')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs webview,core,net' + rpath,
-                       uselib_store='WXWEBVIEW', mandatory=True)
+                       uselib_store='WXWEBVIEW', mandatory=True,
+                       msg='Finding libs for WXWEBVIEW')
 
         if isDarwin:
             conf.check_cfg(path=conf.options.wx_config, package='',
                            args='--cxxflags --libs core,net' + rpath,
-                           uselib_store='WXWEBKIT', mandatory=True)
+                           uselib_store='WXWEBKIT', mandatory=True,
+                           msg='Finding libs for WXWEBKIT')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs xml,core,net' + rpath,
-                       uselib_store='WXXML', mandatory=True)
+                       uselib_store='WXXML', mandatory=True,
+                       msg='Finding libs for WXXML')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs xrc,xml,core,net' + rpath,
-                       uselib_store='WXXRC', mandatory=True)
+                       uselib_store='WXXRC', mandatory=True,
+                       msg='Finding libs for WXXRC')
 
         libname = '' if cfg.MONOLITHIC else 'richtext,' # workaround bug in wx-config
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs %score,net' % libname + rpath,
-                       uselib_store='WXRICHTEXT', mandatory=True)
+                       uselib_store='WXRICHTEXT', mandatory=True,
+                       msg='Finding libs for WXRICHTEXT')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs media,core,net' + rpath,
-                       uselib_store='WXMEDIA', mandatory=True)
+                       uselib_store='WXMEDIA', mandatory=True,
+                       msg='Finding libs for WXMEDIA')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs ribbon,core,net' + rpath,
-                       uselib_store='WXRIBBON', mandatory=True)
+                       uselib_store='WXRIBBON', mandatory=True,
+                       msg='Finding libs for WXRIBBON')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs propgrid,core' + rpath,
-                       uselib_store='WXPROPGRID', mandatory=True)
+                       uselib_store='WXPROPGRID', mandatory=True,
+                       msg='Finding libs for WXPROPGRID')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs aui,core' + rpath,
-                       uselib_store='WXAUI', mandatory=True)
+                       uselib_store='WXAUI', mandatory=True,
+                       msg='Finding libs for WXAUI')
 
         # ** Add code for new modules here
 
