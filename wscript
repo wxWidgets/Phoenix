@@ -315,6 +315,9 @@ def configure(conf):
         if cfg.CXX:
             conf.env.CXX = cfg.CXX.split()
 
+        if cfg.LDSHARED:
+            conf.env.LINK_CC = cfg.LDSHARED.split()
+            conf.env.LINK_CXX = cfg.LDSHARED.split()
 
         # Some Mac-specific stuff
         if isDarwin:
