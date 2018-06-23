@@ -26,6 +26,7 @@ Changes in this release include the following:
 
 * Sort pages by dock_pos when added to automatic (agw.aui) notebook. (#882)
 
+* Fix a bug in py.introspect.getTokens. (#889)
 
 
 
