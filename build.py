@@ -1515,7 +1515,6 @@ def cmd_build_vagrant(options, args):
         VMs = [ 'centos-7     all all',
                 'debian-8     all all',
                 'debian-9     all all',
-                'fedora-23    all all',
                 'fedora-26    all all',
                 'fedora-27    all gtk3', # no webkitgtk for gtk2
                 'fedora-28    all gtk3', # no webkitgtk for gtk2
