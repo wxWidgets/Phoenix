@@ -150,6 +150,7 @@ Changes in this release include the following:
 
 * Always reset floating size and style when floating a toolbar in agw.aui. (#880)
 
+* Sort pages by dock_pos when added to automatic notebook. (#882)
 
 
 4.0.1 "Lemonade"
