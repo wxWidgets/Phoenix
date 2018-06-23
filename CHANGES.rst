@@ -26,6 +26,9 @@ Changes in this release include the following:
 
 * Sort pages by dock_pos when added to automatic (agw.aui) notebook. (#882)
 
+* Added Vagrant configuration for Fedora-28. Removed Fedora-23 (#884)
+
+
 
 
 
