@@ -265,7 +265,7 @@ class Configuration(object):
                     # Combine with wx's ld command and stash it in the env
                     # where distutils will get it later.
                     LDSHARED = self.getWxConfigValue('--ld').replace(' -o', '') + ' ' + LDSHARED
-                    os.environ["LDSHARED"]  = LDSHARED
+                    self.LDSHARED = os.environ["LDSHARED"]  = LDSHARED
 
 
             # wxGTK settings
