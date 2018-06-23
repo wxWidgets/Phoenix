@@ -9,6 +9,23 @@ wxPython Changelog
 ==================
 
 
+4.0.3 ""
+---------------------------
+* ??-June-2018
+
+PyPI:   https://pypi.org/project/wxPython/4.0.3
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.3``
+
+Changes in this release include the following:
+
+* Fixed a linking problem on macOS. The new waf added an explicit link to the
+  Python shared library which menat that it would try to load it at runtime,
+  even if a different Python (such as Anaconda, EDM or Homebrew) was used to
+  import wxPython. This, of course, caused runtime errors.
+
+
+
 4.0.2 "Cute as a June bug!"
 ---------------------------
 * 16-June-2018
