@@ -24,6 +24,9 @@ Changes in this release include the following:
   even if a different Python (such as Anaconda, EDM or Homebrew) was used to
   import wxPython. This, of course, caused runtime errors. (#892)
 
+* Sort pages by dock_pos when added to automatic (agw.aui) notebook. (#882)
+
+
 
 
 4.0.2 "Cute as a June bug!"
