@@ -55,7 +55,7 @@ Changes in this release include the following:
 * Fixed a linking problem on macOS. The new waf added an explicit link to the
   Python shared library which menat that it would try to load it at runtime,
   even if a different Python (such as Anaconda, EDM or Homebrew) was used to
-  import wxPython. This, of course, caused runtime errors.
+  import wxPython. This, of course, caused runtime errors. (#892)
 
 
 
