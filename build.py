@@ -1517,7 +1517,8 @@ def cmd_build_vagrant(options, args):
                 'debian-9     all all',
                 'fedora-23    all all',
                 'fedora-26    all all',
-                'fedora-27    all gtk3', # no webkitgtk for gtk2??
+                'fedora-27    all gtk3', # no webkitgtk for gtk2
+                'fedora-28    all gtk3', # no webkitgtk for gtk2
                 'ubuntu-14.04 all all',
                 'ubuntu-16.04 all all',
                 'ubuntu-18.04 all all',
