@@ -9,9 +9,9 @@ wxPython Changelog
 ==================
 
 
-4.0.3 ""
----------------------------
-* ??-June-2018
+4.0.3 "Oopsie"
+--------------
+* 24-June-2018
 
 PyPI:   https://pypi.org/project/wxPython/4.0.3
 Extras: https://extras.wxPython.org/wxPython4/extras/
@@ -29,6 +29,7 @@ Changes in this release include the following:
 * Fix a bug in py.introspect.getTokens. (#889)
 
 * Added Vagrant configuration for Fedora-28. Removed Fedora-23 (#884)
+
 
 
 4.0.2 "Cute as a June bug!"
