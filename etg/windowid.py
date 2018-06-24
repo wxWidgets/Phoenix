@@ -92,7 +92,7 @@ def run():
             :class:`wx.WindowIDRef` object (or list of them) that will help 
             manage the reservation of that ID.
 
-            This function is intended to be a drop0-in replacement of the old 
+            This function is intended to be a drop-in replacement of the old 
             and deprecated :func:`wxNewId` function.
             """,
         body="""\
