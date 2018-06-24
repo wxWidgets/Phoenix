@@ -61,6 +61,7 @@ Changes in this release include the following:
 
 * Fix a bug in py.introspect.getTokens. (#889)
 
+* Added Vagrant configuration for Fedora-28. Removed Fedora-23 (#884)
 
 
 4.0.2 "Cute as a June bug!"
