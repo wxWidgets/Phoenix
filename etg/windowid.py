@@ -84,6 +84,27 @@ def run():
     # and finish it up by adding it to the module
     module.addItem(klass)
 
+    # Now, let's add a new Python function to the global scope that reserves an 
+    # ID (or range) and returns a ref object for it. 
+    module.addPyFunction('NewIdRef', '(count=1)', 
+        doc="""\
+            Reserves a new Window ID (or range of WindowIDs) and returns a 
+            :class:`wx.WindowIDRef` object (or list of them) that will help 
+            manage the reservation of that ID.
+
+            This function is intended to be a drop0-in replacement of the old 
+            and deprecated :func:`wxNewId` function.
+            """,
+        body="""\
+            if count == 1:
+                return WindowIDRef(IdManager.ReserveId())
+            else:
+                start = IdManager.ReserveId(count)
+                IDRefs = []
+                for id in range(start, start+count):
+                    IDRefs.append(WindowIDRef(id))
+                return IDRefs
+            """)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
