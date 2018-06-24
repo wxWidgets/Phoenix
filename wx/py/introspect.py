@@ -325,7 +325,8 @@ def getTokens(command):
                 tokens.append(args)
             tokenize.tokenize_loop(f.readline, eater)
         else:
-            tokens = list(tokenize.tokenize(f.readline))
+            for t in tokenize.tokenize(f.readline):
+                tokens.append(t)
     except tokenize.TokenError:
         # This is due to a premature EOF, which we expect since we are
         # feeding in fragments of Python code.
