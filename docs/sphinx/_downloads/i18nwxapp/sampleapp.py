@@ -24,7 +24,7 @@ class AppI18N(sc.SizedFrame):
 
         # file menu
         fileMenu = wx.Menu()
-        closeMenuItem = fileMenu.Append(wx.NewId(),
+        closeMenuItem = fileMenu.Append(wx.ID_ANY,
                                         _(u"Close"),
                                         _(u"Close the application"))
         self.Bind(wx.EVT_MENU, self.onClose, closeMenuItem)
@@ -32,7 +32,7 @@ class AppI18N(sc.SizedFrame):
 
         # edit menu
         manageMenu = wx.Menu()
-        manageSomethingMenuItem = manageMenu.Append(wx.NewId(),
+        manageSomethingMenuItem = manageMenu.Append(wx.ID_ANY,
                                             _(u"Edit something"),
                                             _(u"Edit an entry of something"))
         self.Bind(wx.EVT_MENU, self.doEditSomething, manageSomethingMenuItem)
@@ -41,7 +41,7 @@ class AppI18N(sc.SizedFrame):
 
         # help menu
         helpMenu = wx.Menu()
-        aboutMenuItem = helpMenu.Append(wx.NewId(),
+        aboutMenuItem = helpMenu.Append(wx.ID_ANY,
                                         _(u"&About"),
                                         _(u"About the program"))
         self.Bind(wx.EVT_MENU, self.doAboutBox, aboutMenuItem)
