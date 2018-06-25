@@ -430,7 +430,10 @@ def run():
                         self.RedirectStdio(filename)
 
                     # Use Python's install prefix as the default
-                    wx.StandardPaths.Get().SetInstallPrefix(_sys.prefix)
+                    prefix = _sys.prefix
+                    if isinstance(prefix, (bytes, bytearray)):
+                        prefix = prefix.decode(_sys.getfilesystemencoding())
+                    wx.StandardPaths.Get().SetInstallPrefix(prefix)
 
                     # Until the new native control for wxMac is up to par, still use the generic one.
                     wx.SystemOptions.SetOption("mac.listctrl.always_use_generic", 1)
