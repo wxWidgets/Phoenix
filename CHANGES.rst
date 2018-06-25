@@ -37,6 +37,9 @@ Changes in this release include the following:
   passing it to a window constructor, and can also be used as the source in a
   Bind().
 
+* Fixed issue when sys.prefix is not unicode (Python2) and when its contents 
+  are not translatable to utf-8.
+
 
 
 4.0.2 "Cute as a June bug!"
