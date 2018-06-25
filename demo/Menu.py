@@ -245,7 +245,7 @@ check the source for this sample to see how to implement them.
             pos += 1
 
         # now insert the new item
-        ID = wx.Window.NewControlId()
+        ID = wx.NewIdRef()
         item = wx.MenuItem(menu, ID, "NewItem " + str(ID))
         menu.InsertItem(pos, item)
 

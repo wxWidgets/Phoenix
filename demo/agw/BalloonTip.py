@@ -286,8 +286,8 @@ class BalloonTipDemo(wx.Frame):
         file_menu = wx.Menu()
         help_menu = wx.Menu()
 
-        TEST_QUIT = wx.Window.NewControlId()
-        TEST_ABOUT = wx.Window.NewControlId()
+        TEST_QUIT = wx.NewIdRef()
+        TEST_ABOUT = wx.NewIdRef()
 
         file_menu.Append(TEST_QUIT, "&Exit")
         help_menu.Append(TEST_ABOUT, "&About")

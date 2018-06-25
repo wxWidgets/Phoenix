@@ -297,11 +297,11 @@ class Extended(wx.Frame):
 
         item = self._pnl.AddFoldPanel("Caption Style", False, foldIcons=Images)
 
-        self.ID_USE_VGRADIENT = wx.Window.NewControlId()
-        self.ID_USE_HGRADIENT = wx.Window.NewControlId()
-        self.ID_USE_SINGLE = wx.Window.NewControlId()
-        self.ID_USE_RECTANGLE = wx.Window.NewControlId()
-        self.ID_USE_FILLED_RECTANGLE = wx.Window.NewControlId()
+        self.ID_USE_VGRADIENT = wx.NewIdRef()
+        self.ID_USE_HGRADIENT = wx.NewIdRef()
+        self.ID_USE_SINGLE = wx.NewIdRef()
+        self.ID_USE_RECTANGLE = wx.NewIdRef()
+        self.ID_USE_FILLED_RECTANGLE = wx.NewIdRef()
 
         currStyle =  wx.RadioButton(item, self.ID_USE_VGRADIENT, "&Vertical Gradient")
         self._pnl.AddFoldPanelWindow(item, currStyle, fpb.FPB_ALIGN_WIDTH,
@@ -523,13 +523,13 @@ class Extended(wx.Frame):
         # Make a menubar
         file_menu = wx.Menu()
 
-        FPBTEST_QUIT = wx.Window.NewControlId()
-        FPBTEST_REFRESH = wx.Window.NewControlId()
-        FPB_BOTTOM_FOLD = wx.Window.NewControlId()
-        FPB_SINGLE_FOLD = wx.Window.NewControlId()
-        FPB_EXCLUSIVE_FOLD = wx.Window.NewControlId()
-        FPBTEST_TOGGLE_WINDOW = wx.Window.NewControlId()
-        FPBTEST_ABOUT = wx.Window.NewControlId()
+        FPBTEST_QUIT = wx.NewIdRef()
+        FPBTEST_REFRESH = wx.NewIdRef()
+        FPB_BOTTOM_FOLD = wx.NewIdRef()
+        FPB_SINGLE_FOLD = wx.NewIdRef()
+        FPB_EXCLUSIVE_FOLD = wx.NewIdRef()
+        FPBTEST_TOGGLE_WINDOW = wx.NewIdRef()
+        FPBTEST_ABOUT = wx.NewIdRef()
 
         file_menu.Append(FPBTEST_QUIT, "&Exit")
 
@@ -722,10 +722,10 @@ class Collapsed(wx.Frame):
 
     def CreateMenuBar(self):
 
-        FoldPanelBarTest_Quit = wx.Window.NewControlId()
-        FoldPanelBarTest_About = wx.Window.NewControlId()
-        FoldPanelBarTest_Horizontal = wx.Window.NewControlId()
-        FoldPanelBarTest_Vertical = wx.Window.NewControlId()
+        FoldPanelBarTest_Quit = wx.NewIdRef()
+        FoldPanelBarTest_About = wx.NewIdRef()
+        FoldPanelBarTest_Horizontal = wx.NewIdRef()
+        FoldPanelBarTest_Vertical = wx.NewIdRef()
 
         menuFile = wx.Menu()
         menuFile.Append(FoldPanelBarTest_Horizontal, "&Horizontal\tAlt-H")
@@ -846,8 +846,8 @@ class NotCollapsed(wx.Frame):
 
     def CreateMenuBar(self):
 
-        FoldPanelBarTest_Quit = wx.Window.NewControlId()
-        FoldPanelBarTest_About = wx.Window.NewControlId()
+        FoldPanelBarTest_Quit = wx.NewIdRef()
+        FoldPanelBarTest_About = wx.NewIdRef()
 
         menuFile = wx.Menu()
         menuFile.Append(FoldPanelBarTest_Quit, "E&xit\tAlt-X", "Quit This Program")

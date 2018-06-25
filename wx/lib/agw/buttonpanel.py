@@ -853,7 +853,7 @@ class Control(wx.EvtHandler):
         self._parent = parent
 
         if id == wx.ID_ANY:
-            self._id = wx.Window.NewControlId()
+            self._id = wx.NewIdRef()
         else:
             self._id = id
 
@@ -1387,7 +1387,7 @@ class ButtonInfo(Control):
         """
 
         if id == wx.ID_ANY:
-            id = wx.Window.NewControlId()
+            id = wx.NewIdRef()
 
         self._status = status
         self._rect = wx.Rect()
