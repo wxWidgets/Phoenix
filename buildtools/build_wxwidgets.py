@@ -290,6 +290,7 @@ def main(wxDir, args):
                             "--enable-optimise",
                             "--disable-debugreport",
                             "--enable-uiactionsim",
+                            "--enable-autoidman",
                             ]
 
         if sys.platform.startswith("darwin"):

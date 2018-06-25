@@ -53,7 +53,7 @@ Pip:    ``pip install wxPython==4.0.3``
 Changes in this release include the following:
 
 * Fixed a linking problem on macOS. The new waf added an explicit link to the
-  Python shared library which menat that it would try to load it at runtime,
+  Python shared library which meant that it would try to load it at runtime,
   even if a different Python (such as Anaconda, EDM or Homebrew) was used to
   import wxPython. This, of course, caused runtime errors. (#892)
 
@@ -62,6 +62,14 @@ Changes in this release include the following:
 * Fix a bug in py.introspect.getTokens. (#889)
 
 * Added Vagrant configuration for Fedora-28. Removed Fedora-23 (#884)
+
+* Added wrappers for the wx.WindowIDRef class and added the wx.NewIdRef
+  function. These will make it possible to create reserved Window IDs using the
+  same mechanism which is used when passing wx.ID_ANY to a widget constructor.
+  The object returned by wx.NewIdRef will automatically convert to an int when
+  passing it to a window constructor, and can also be used as the source in a
+  Bind().
+
 
 
 4.0.2 "Cute as a June bug!"

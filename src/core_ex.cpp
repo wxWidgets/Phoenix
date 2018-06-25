@@ -199,6 +199,10 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
     PyList_Append(PlatformInfo, obj);
     Py_DECREF(obj);
 
+#if wxUSE_AUTOID_MANAGEMENT
+    _AddInfoString("autoidman");
+#endif
+
 #undef _AddInfoString
 
     PyObject* PlatformInfoTuple = PyList_AsTuple(PlatformInfo);
