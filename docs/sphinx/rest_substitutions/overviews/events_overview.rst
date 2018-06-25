@@ -408,6 +408,6 @@ user-specified identifiers which must be always positive.
 You can use ``wx.ID_HIGHEST`` to determine the number above which it is
 safe to define your own identifiers. Or, you can use identifiers below
 ``wx.ID_LOWEST``.  Finally, you can allocate identifiers dynamically
-using :func:`wx.NewId` function too. If you use :func:`wx.NewId`
+using :func:`wx.NewIdRef` function too. If you use :func:`wx.NewIdRef`
 consistently in your application, you can be sure that your
 identifiers don't conflict accidentally.
