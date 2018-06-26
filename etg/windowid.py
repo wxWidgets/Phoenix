@@ -72,14 +72,22 @@ def run():
             return self->GetValue();
             """)
 
-
     klass.addCppMethod('int', '__int__', '()',
         doc="Alias for GetValue allowing the IDRef to be passed as the WindowID parameter when creating widgets or etc.",
         body="""\
             return self->GetValue();
             """)
+    
+    klass.addCppMethod('bool', '__eq__', '(wxWindowID id)', "return self->GetValue() == id;")
+    klass.addCppMethod('bool', '__ne__', '(wxWindowID id)', "return self->GetValue() != id;")
+    klass.addCppMethod('bool', '__lt__', '(wxWindowID id)', "return self->GetValue() < id;")
+    klass.addCppMethod('bool', '__gt__', '(wxWindowID id)', "return self->GetValue() > id;")
+    klass.addCppMethod('bool', '__le__', '(wxWindowID id)', "return self->GetValue() <= id;")
+    klass.addCppMethod('bool', '__ge__', '(wxWindowID id)', "return self->GetValue() >= id;")
 
     klass.addPyMethod('__repr__', '(self)', 'return "WindowIDRef: {}".format(self.GetId())')
+    klass.addPyMethod('__hash__', '(self)', 'return hash(self.GetValue())')
+
 
     # and finish it up by adding it to the module
     module.addItem(klass)

@@ -58,7 +58,29 @@ class IdManagerTest(wtc.WidgetTestCase):
         b.Destroy()
 
 
+    def test_WindowIDRef01(self):
+        ref1 = wx.WindowIDRef(wx.IdManager.ReserveId())
+        ref2 = wx.WindowIDRef(wx.IdManager.ReserveId())
 
+        val = ref1 == ref2
+        assert type(val) == bool
+        val = ref1 != ref2
+        assert type(val) == bool
+        val = ref1 > ref2
+        assert type(val) == bool
+        val = ref1 < ref2
+        assert type(val) == bool
+        val = ref1 >= ref2
+        assert type(val) == bool
+        val = ref1 <= ref2
+        assert type(val) == bool
+
+    def test_WindowIDRef02(self):
+        d = {wx.NewIdRef(): 'one',
+             wx.NewIdRef(): 'two'}
+        keys = sorted(d.keys())
+        for k in keys:
+            val = d[k]
 
 #---------------------------------------------------------------------------
 

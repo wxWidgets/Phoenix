@@ -1306,10 +1306,10 @@ class MainPanel(wx.Panel):
 #---------------------------------------------------------------------------
 
 class DemoTaskBarIcon(TaskBarIcon):
-    TBMENU_RESTORE = wx.Window.NewControlId()
-    TBMENU_CLOSE   = wx.Window.NewControlId()
-    TBMENU_CHANGE  = wx.Window.NewControlId()
-    TBMENU_REMOVE  = wx.Window.NewControlId()
+    TBMENU_RESTORE = wx.NewIdRef()
+    TBMENU_CLOSE   = wx.NewIdRef()
+    TBMENU_CHANGE  = wx.NewIdRef()
+    TBMENU_REMOVE  = wx.NewIdRef()
 
     def __init__(self, frame):
         TaskBarIcon.__init__(self, wx.adv.TBI_DOCK) # wx.adv.TBI_CUSTOM_STATUSITEM

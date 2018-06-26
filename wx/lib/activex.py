@@ -120,7 +120,7 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
 
         # Set some wx.Window properties
         if wxid == wx.ID_ANY:
-            wxid = wx.Window.NewControlId()
+            wxid = wx.NewIdRef()
         self.SetId(wxid)
         self.SetName(name)
         self.SetMinSize(size)
