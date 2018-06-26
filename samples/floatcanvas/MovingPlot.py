@@ -170,7 +170,7 @@ class DrawFrame(wx.Frame):
                                    InForeground = 1)
         self.Canvas.Draw()
 
-        self.timerID = wx.NewId()
+        self.timerID = wx.NewIdRef()
         self.timer   = wx.Timer(self,self.timerID)
 
         self.Bind(wx.EVT_TIMER, self.OnTimer, id=self.timerID)

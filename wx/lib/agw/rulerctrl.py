@@ -390,7 +390,7 @@ class Indicator(object):
 
         self._parent = parent
         if id == wx.ID_ANY:
-            id = wx.Window.NewControlId()
+            id = wx.NewIdRef()
 
         self._id = id
         self._colour = None

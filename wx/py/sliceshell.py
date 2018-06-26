@@ -813,13 +813,13 @@ class SlicesShell(editwindow.EditWindow):
             self.ID_UNDO = wx.ID_UNDO
             self.ID_REDO = wx.ID_REDO
         else:
-            self.ID_CUT = wx.Window.NewControlId()
-            self.ID_COPY = wx.Window.NewControlId()
-            self.ID_PASTE = wx.Window.NewControlId()
-            self.ID_SELECTALL = wx.Window.NewControlId()
-            self.ID_CLEAR = wx.Window.NewControlId()
-            self.ID_UNDO = wx.Window.NewControlId()
-            self.ID_REDO = wx.Window.NewControlId()
+            self.ID_CUT = wx.NewIdRef()
+            self.ID_COPY = wx.NewIdRef()
+            self.ID_PASTE = wx.NewIdRef()
+            self.ID_SELECTALL = wx.NewIdRef()
+            self.ID_CLEAR = wx.NewIdRef()
+            self.ID_UNDO = wx.NewIdRef()
+            self.ID_REDO = wx.NewIdRef()
 
         # Assign handlers for edit events
         self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=self.ID_CUT)
