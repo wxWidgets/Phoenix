@@ -1072,13 +1072,13 @@ class HyperTreeListDemo(wx.Frame):
 
         file_menu = wx.Menu()
 
-        AS_EXIT = wx.Window.NewControlId()
+        AS_EXIT = wx.NewIdRef()
         file_menu.Append(AS_EXIT, "&Exit")
         self.Bind(wx.EVT_MENU, self.OnClose, id=AS_EXIT)
 
         help_menu = wx.Menu()
 
-        AS_ABOUT = wx.Window.NewControlId()
+        AS_ABOUT = wx.NewIdRef()
         help_menu.Append(AS_ABOUT, "&About...")
         self.Bind(wx.EVT_MENU, self.OnAbout, id=AS_ABOUT)
 

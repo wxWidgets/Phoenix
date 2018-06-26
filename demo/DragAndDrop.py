@@ -4,9 +4,9 @@ import wx
 
 #----------------------------------------------------------------------
 
-ID_CopyBtn      = wx.Window.NewControlId()
-ID_PasteBtn     = wx.Window.NewControlId()
-ID_BitmapBtn    = wx.Window.NewControlId()
+ID_CopyBtn      = wx.NewIdRef()
+ID_PasteBtn     = wx.NewIdRef()
+ID_BitmapBtn    = wx.NewIdRef()
 
 #----------------------------------------------------------------------
 

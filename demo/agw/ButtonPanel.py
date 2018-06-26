@@ -21,15 +21,15 @@ import random
 
 #----------------------------------------------------------------------
 
-ID_BackgroundColour = wx.Window.NewControlId()
-ID_GradientFrom = wx.Window.NewControlId()
-ID_GradientTo = wx.Window.NewControlId()
-ID_BorderColour = wx.Window.NewControlId()
-ID_CaptionColour = wx.Window.NewControlId()
-ID_ButtonTextColour = wx.Window.NewControlId()
-ID_SelectionBrush = wx.Window.NewControlId()
-ID_SelectionPen = wx.Window.NewControlId()
-ID_SeparatorColour = wx.Window.NewControlId()
+ID_BackgroundColour = wx.NewIdRef()
+ID_GradientFrom = wx.NewIdRef()
+ID_GradientTo = wx.NewIdRef()
+ID_BorderColour = wx.NewIdRef()
+ID_CaptionColour = wx.NewIdRef()
+ID_ButtonTextColour = wx.NewIdRef()
+ID_SelectionBrush = wx.NewIdRef()
+ID_SelectionPen = wx.NewIdRef()
+ID_SeparatorColour = wx.NewIdRef()
 
 
 #----------------------------------------------------------------------

@@ -38,6 +38,9 @@ Changes in this release include the following:
   Bind(). (#896)
 
 
+* Fixed issue when sys.prefix is not unicode (Python2) and when its contents 
+  are not translatable to utf-8.
+
 
 
 4.0.2 "Cute as a June bug!"

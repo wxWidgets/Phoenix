@@ -10,8 +10,8 @@ import images
 SHOW_BACKGROUND = 1
 
 #----------------------------------------------------------------------
-ID_New  = wx.Window.NewControlId()
-ID_Exit = wx.Window.NewControlId()
+ID_New  = wx.NewIdRef()
+ID_Exit = wx.NewIdRef()
 #----------------------------------------------------------------------
 
 class MyParentFrame(wx.MDIParentFrame):

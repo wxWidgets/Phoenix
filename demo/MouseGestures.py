@@ -25,10 +25,10 @@ class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
 
-        ID_GESTURE = wx.Window.NewControlId()
-        ID_MOUSE = wx.Window.NewControlId()
-        ID_MODIFIER = wx.Window.NewControlId()
-        ID_VISIBLE = wx.Window.NewControlId()
+        ID_GESTURE = wx.NewIdRef()
+        ID_MOUSE = wx.NewIdRef()
+        ID_MODIFIER = wx.NewIdRef()
+        ID_VISIBLE = wx.NewIdRef()
 
         self.log = log
 
