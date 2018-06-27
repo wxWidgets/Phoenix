@@ -236,10 +236,12 @@ def run():
         doc="Returns Direct2D renderer (MSW only).",
         body="""\
             #ifdef __WXMSW__
+            #if wxUSE_GRAPHICS_DIRECT2D
                 return wxGraphicsRenderer::GetDirect2DRenderer();
-            #else
-                return NULL;
             #endif
+            #endif        
+                wxPyRaiseNotImplemented();
+                return NULL;
             """)
 
     #---------------------------------------------
