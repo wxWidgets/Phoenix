@@ -370,6 +370,8 @@ installed, if they are available. For example:
 * libwebkit2gtk-4.0-dev
 * libsdl2-dev
 
+If You use a custom built python in a non standard location, You need to
+compile python with the --enable-shared option.
 
 **Mac OSX**
 
@@ -413,4 +415,3 @@ once per day, on any day that has had a commit to the master branch.
 
 .. image:: docs/phoenix-fire-md.png
    :width: 100%
-

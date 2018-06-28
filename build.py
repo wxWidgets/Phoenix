@@ -85,6 +85,9 @@ sipMD5 = {
 
 wafCurrentVersion = '2.0.7'
 wafMD5 = '48ac1250bcccd0674cf461937875ce9a'
+# enable this as soon as waf-2.0.8.bz2 is uploaded to https://wxpython.org/tools
+# wafCurrentVersion = '2.0.8'
+# wafMD5 = 'e1df61f724cc50efedbde867026ce4e3'
 
 doxygenCurrentVersion = '1.8.8'
 doxygenMD5 = {
