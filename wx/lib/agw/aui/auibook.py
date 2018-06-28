@@ -340,6 +340,7 @@ class AuiNotebookPage(object):
         self.rect = wx.Rect()           # tab's hit rectangle
         self.active = False             # True if the page is currently active
         self.enabled = True             # True if the page is currently enabled
+        self.hidden = False             # true if the page is currently hidden
         self.hasCloseButton = True      # True if the page has a close button using the style
                                         # AUI_NB_CLOSE_ON_ALL_TABS
         self.control = None             # A control can now be inside a tab
@@ -1129,8 +1130,11 @@ class AuiTabContainer(object):
             if page.window == wnd:
                 page.active = True
                 found = True
+                page.hidden = False
             else:
                 page.active = False
+
+        self.DoShowHide()
 
         return found
 
@@ -1203,6 +1207,41 @@ class AuiTabContainer(object):
 
         return len(self._pages)
 
+    def GetShownPageCount(self):
+        """ Returns the number of pages shown in the :class:`AuiTabContainer`. """
+        cnt = 0
+        for page in self._pages:
+            if not page.hidden:
+                cnt += 1
+        return cnt
+
+    def GetHidden(self, idx):
+        """
+        Returns whether a tab is hidden or not.
+
+        :param integer `idx`: the tab index.
+        """
+
+        if idx < 0 or idx >= len(self._pages):
+            return False
+
+        return self._pages[idx].hidden
+
+    def HideTab(self, idx, hidden=True):
+        """
+        hides/shows a tab in the :class:`AuiTabContainer`.
+
+        :param integer `idx`: the tab index;
+        :param bool `hidden`: ``True`` to hide a tab, ``False`` to show it.
+        """
+
+        if idx < 0 or idx >= len(self._pages):
+            raise Exception("Invalid Page index")
+
+        self._pages[idx].hidden = hidden
+        if hidden:
+            wnd = self.GetWindowFromIdx(idx)
+            wnd.Show(False)
 
     def GetEnabled(self, idx):
         """
@@ -1232,6 +1271,25 @@ class AuiTabContainer(object):
         wnd = self.GetWindowFromIdx(idx)
         wnd.Enable(enable)
 
+    def FindNextActiveTab(self, idx):
+        """
+        Finds the next active tab in the :class:`AuiTabContainer`.
+
+        :param integer `idx`: the index of the first (most obvious) tab to check for active status;
+        """
+
+        if self.GetEnabled(idx) and not self.GetHidden(idx):
+            return idx
+
+        for indx in range(idx+1, self.GetPageCount()):
+            if self.GetEnabled(indx) and not self.GetHidden(indx):
+                return indx
+
+        for indx in range(idx-1, -1, -1):
+            if self.GetEnabled(indx) and not self.GetHidden(indx):
+                return indx
+
+        return 0
 
     def AddButton(self, id, location, normal_bitmap=wx.NullBitmap, disabled_bitmap=wx.NullBitmap, name=""):
         """
@@ -1370,6 +1428,9 @@ class AuiTabContainer(object):
 
         for i in range(page_count):
             page = self._pages[i]
+
+            if page.hidden:
+                continue
 
             # determine if a close button is on this tab
             close_button = False
@@ -1537,6 +1598,10 @@ class AuiTabContainer(object):
         for i in range(self._tab_offset, page_count):
 
             page = self._pages[i]
+
+            if page.hidden:
+                continue
+
             tab_button = self._tab_close_buttons[i]
 
             # determine if a close button is on this tab
@@ -1676,6 +1741,10 @@ class AuiTabContainer(object):
         for i in range(tabOffset, page_count):
 
             page = self._pages[i]
+
+            if page.hidden:
+                continue
+
             tab_button = self._tab_close_buttons[i]
 
             rect.x = offset
@@ -1738,6 +1807,10 @@ class AuiTabContainer(object):
 
         for i in range(self._tab_offset, len(self._pages)):
             page = self._pages[i]
+
+            if page.hidden:
+                continue
+
             if page.rect.Contains((x,y)):
                 return page.window
 
@@ -2420,15 +2493,21 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         if button == AUI_BUTTON_LEFT or button == AUI_BUTTON_RIGHT:
             if button == AUI_BUTTON_LEFT:
-                if self.GetTabOffset() > 0:
-
-                    self.SetTabOffset(self.GetTabOffset()-1)
-                    self.Refresh()
-                    self.Update()
+                for i in range(self.GetTabOffset()-1, -1, -1):
+                    page = self._pages[i]
+                    if not page.hidden:
+                        self.SetTabOffset(i)
+                        self.Refresh()
+                        self.Update()
+                        break
             else:
-                self.SetTabOffset(self.GetTabOffset()+1)
-                self.Refresh()
-                self.Update()
+                for i in range(self.GetTabOffset()+1, self.GetPageCount()):
+                    page = self._pages[i]
+                    if not page.hidden:
+                        self.SetTabOffset(i)
+                        self.Refresh()
+                        self.Update()
+                        break
 
         elif button == AUI_BUTTON_WINDOWLIST:
             idx = self.GetArtProvider().ShowDropDown(self, self._pages, self.GetActivePage())
@@ -3561,12 +3640,49 @@ class AuiNotebook(wx.Panel):
         :see: :meth:`DeletePage`
         """
 
-        # save active window pointer
+        if not self.HidePage(page_idx):
+            return False
+
         active_wnd = None
         if self._curpage >= 0:
             active_wnd = self._tabs.GetWindowFromIdx(self._curpage)
 
         # save pointer of window being deleted
+        wnd = self._tabs.GetWindowFromIdx(page_idx)
+
+        # make sure we found the page
+        if not wnd:
+            return False
+
+        # find out which onscreen tab ctrl owns this tab
+        ctrl, ctrl_idx = self.FindTab(wnd)
+        if not ctrl:
+            return False
+
+        # remove the tab from main catalog
+        if not self._tabs.RemovePage(wnd):
+            return False
+
+        # remove the tab from the onscreen tab ctrl
+        ctrl.RemovePage(wnd)
+
+        self.RemoveEmptyTabFrames()
+
+        # set the active window since its index may be changed
+        if active_wnd and not self.IsBeingDeleted():
+            self.SetSelectionToWindow(active_wnd)
+
+        return True
+
+    def HidePage(self, page_idx, hidden=True):
+        """
+        Sets whether a page is hidden.
+
+        :param integer `page_idx`: the page index;
+        :param bool `hidden`: ``True`` to hide the page, ``False`` to show it.
+        """
+
+        # save pointer of window being hidden
         wnd = self._tabs.GetWindowFromIdx(page_idx)
         new_active = None
 
@@ -3583,84 +3699,72 @@ class AuiNotebook(wx.Panel):
         is_curpage = (self._curpage == page_idx)
         is_active_in_split = currentPage.active
 
-        # remove the tab from main catalog
-        if not self._tabs.RemovePage(wnd):
-            return False
+        # hide the tab from main catalog
+        self._tabs.HideTab(page_idx, hidden)
 
-        # remove the tab from the onscreen tab ctrl
-        ctrl.RemovePage(wnd)
+        # hide the tab from the onscreen tab ctrl
+        ctrl.HideTab(ctrl_idx, hidden)
 
-        if is_active_in_split:
-
-            ctrl_new_page_count = ctrl.GetPageCount()
-
-            if ctrl_idx >= ctrl_new_page_count:
-                ctrl_idx = ctrl_new_page_count - 1
-
-            if ctrl_idx >= 0 and ctrl_idx < ctrl.GetPageCount():
-
-                ctrl_idx = self.FindNextActiveTab(ctrl_idx, ctrl)
-
-                # set new page as active in the tab split
-                ctrl.SetActivePage(ctrl_idx)
-
-                # if the page deleted was the current page for the
-                # entire tab control, then record the window
-                # pointer of the new active page for activation
-                if is_curpage:
-                    new_active = ctrl.GetWindowFromIdx(ctrl_idx)
-
+        # hide the tab ctrl if there is no shown tab.
+        if ctrl.GetShownPageCount() == 0:
+            self._mgr.ShowPane(self.GetTabFrameFromTabCtrl(ctrl), False)
+            ctrl.Show(False)
         else:
+            self._mgr.ShowPane(self.GetTabFrameFromTabCtrl(ctrl), True)
+            ctrl.Show(True)
 
-            # we are not deleting the active page, so keep it the same
-            new_active = active_wnd
+        if hidden:
 
-        if not new_active:
+            if is_active_in_split:
+                if ctrl.GetShownPageCount() > 0:
 
-            # we haven't yet found a new page to active,
-            # so select the next page from the main tab
-            # catalogue
+                    ctrl_idx = ctrl.FindNextActiveTab(ctrl_idx)
 
-            if 0 <= page_idx < self._tabs.GetPageCount():
-                new_active = self._tabs.GetPage(page_idx).window
-            if not new_active and self._tabs.GetPageCount() > 0:
-                new_active = self._tabs.GetPage(0).window
+                    # set new page as active in the tab split
+                    ctrl.SetActivePage(ctrl_idx)
 
-        self.RemoveEmptyTabFrames()
+                    # if the page hidden was the current page for the
+                    # entire tab control, then record the window
+                    # pointer of the new active page for activation
+                    if is_curpage:
+                        new_active = ctrl.GetWindowFromIdx(ctrl_idx)
+                else:
+                    ctrl.SetNoneActive()
 
-        # set new active pane
-        if new_active:
-            if not self.IsBeingDeleted():
-                self._curpage = -1
-                self.SetSelectionToWindow(new_active)
+            if is_curpage:
+                if not new_active and self.GetShownPageCount() > 0:
+                    idx = self.FindNextActiveTab(page_idx)
+                    new_active = self.GetPage(idx)
+
+                # set new active pane
+                if new_active:
+                    self.SetSelectionToWindow(new_active)
+                else:
+                    # no shown page
+                    self._curpage = -1
+                    self._tabs.SetNoneActive()
         else:
-            self._curpage = -1
-            self._tabs.SetNoneActive()
+            if ctrl.GetActivePage() < 0:
+                # no active page on tab ctrl, set it to wnd
+                ctrl.SetActivePage(wnd)
+
+            if self._curpage < 0:
+                # no current page, set it to wnd
+                self.SetSelectionToWindow(wnd)
+
+        self.Refresh()
 
         return True
 
-
-    def FindNextActiveTab(self, ctrl_idx, ctrl):
+    def FindNextActiveTab(self, idx):
         """
         Finds the next active tab (used mainly when :class:`AuiNotebook` has inactive/disabled
         tabs in it).
 
-        :param integer `ctrl_idx`: the index of the first (most obvious) tab to check for active status;
-        :param `ctrl`: an instance of :class:`AuiTabCtrl`.
+        :param integer `idx`: the index of the first (most obvious) tab to check for active status;
         """
 
-        if self.GetEnabled(ctrl_idx):
-            return ctrl_idx
-
-        for indx in range(ctrl_idx, ctrl.GetPageCount()):
-            if self.GetEnabled(indx):
-                return indx
-
-        for indx in range(ctrl_idx, -1, -1):
-            if self.GetEnabled(indx):
-                return indx
-
-        return 0
+        return self._tabs.FindNextActiveTab(idx)
 
 
     def HideAllTabs(self, hidden=True):
@@ -4187,7 +4291,6 @@ class AuiNotebook(wx.Panel):
             ctrl, ctrl_idx = self.FindTab(wnd)
 
             if ctrl:
-                self._tabs.SetActivePage(wnd)
                 ctrl.SetActivePage(ctrl_idx)
                 self.DoSizing()
                 ctrl.DoShowHide()
@@ -4262,6 +4365,9 @@ class AuiNotebook(wx.Panel):
 
         return self._tabs.GetPageCount()
 
+    def GetShownPageCount(self):
+        """ Returns the number of pages shown in the notebook. """
+        return self._tabs.GetShownPageCount()
 
     def GetPage(self, page_idx):
         """
@@ -4310,6 +4416,14 @@ class AuiNotebook(wx.Panel):
         self._tabs.EnableTab(page_idx, enable)
         self.Refresh()
 
+    def GetHidden(self, page_idx):
+        """
+        Returns whether the page specified by the index `page_idx` is hidden.
+
+        :param integer `page_idx`: the page index.
+        """
+
+        return self._tabs.GetHidden(page_idx)
 
     def DoSizing(self):
         """ Performs all sizing operations in each tab control. """
