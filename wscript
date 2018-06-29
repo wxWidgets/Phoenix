@@ -309,14 +309,13 @@ def configure(conf):
             _cleanFlags(conf, key)
 
         # Waf 2 is now calling pythonX.Y-config for fetching libs and flags,
-        # and it may be outputing flags that will cause an explicit link to
+        # and it may be outputting flags that will cause an explicit link to
         # Python's lib, which we don't want as that could tie us to that
-        # speicifc Python instance instead of the one that is loading the
+        # specific Python instance instead of the one that is loading the
         # wxPython extension modules. That's okay for PYEMBED but not for PYEXT
         # configs.  
-        if not isWindows:
-            conf.env.LIBPATH_PYEXT = []
-            conf.env.LIB_PYEXT = []
+        conf.env.LIBPATH_PYEXT = []
+        conf.env.LIB_PYEXT = []
 
 
         # Use the same compilers that wxWidgets used

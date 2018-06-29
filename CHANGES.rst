@@ -23,6 +23,10 @@ Changes in this release include the following:
 
 * Include the MSVC runtime DLLs for Python 3.7 builds too.
 
+* Clear LIBPATH_PYEXT and LIB_PYEXT for linux builds too. (#904)
+
+
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
