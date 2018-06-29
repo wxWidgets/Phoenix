@@ -9,8 +9,8 @@ wxPython Changelog
 ==================
 
 4.0.4 ""
-------------------------------------------------------
-* ??-June-2018
+--------
+* (not yet released)
 
 PyPI:   https://pypi.org/project/wxPython/4.0.4
 Extras: https://extras.wxPython.org/wxPython4/extras/
@@ -20,8 +20,6 @@ Changes in this release include the following:
 
 * Fixed an issue where wx.lib.intctrl would erroneously attempt to use ``long``
   on Python3
-
-
 
 
 
