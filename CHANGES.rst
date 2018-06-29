@@ -70,11 +70,9 @@ Changes in this release include the following:
   passing it to a window constructor, and can also be used as the source in a
   Bind().
 
-* Fixed issue when sys.prefix is not unicode (Python2) and when its contents
+* Fixed issue when sys.prefix is not unicode (Python2) and when its contents 
   are not translatable to utf-8.
 
-* Fixed an issue where wx.lib.intctrl would erroneously attempt to use ``long``
-  on Python3.
 
 
 4.0.2 "Cute as a June bug!"
@@ -169,10 +167,10 @@ Changes in this release include the following:
 
 * Detach wx.Control in AuiToolbar from current sizer before attach to a new
   one. (#843)
-
+  
 * Fixed a problem in wx.lib.mixins.listctrl.TextEditMixin where the height of
   the editor widget could be set to zero. (See discussion in #849)
-
+  
 * Fix a bug in calculating whether a tool fits into the AuiToolBar. (#863)
 
 * Override SetForegroundColour and SetBackgroundColour in MaskedEditMixin (#808)
