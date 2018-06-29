@@ -39,7 +39,18 @@ Other changes in this release:
   you need to change.
 
 
+4.0.4 ""
+------------------------------------------------------
+* ??-June-2018
 
+PyPI:   https://pypi.org/project/wxPython/4.0.4
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.4``
+
+Changes in this release include the following:
+
+* Fixed an issue where wx.lib.intctrl would erroneously attempt to use ``long``
+  on Python3
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
@@ -71,7 +82,7 @@ Changes in this release include the following:
   Bind(). (#896)
 
 
-* Fixed issue when sys.prefix is not unicode (Python2) and when its contents 
+* Fixed issue when sys.prefix is not unicode (Python2) and when its contents
   are not translatable to utf-8.
 
 
@@ -168,10 +179,10 @@ Changes in this release include the following:
 
 * Detach wx.Control in AuiToolbar from current sizer before attach to a new
   one. (#843)
-  
+
 * Fixed a problem in wx.lib.mixins.listctrl.TextEditMixin where the height of
   the editor widget could be set to zero. (See discussion in #849)
-  
+
 * Fix a bug in calculating whether a tool fits into the AuiToolBar. (#863)
 
 * Override SetForegroundColour and SetBackgroundColour in MaskedEditMixin (#808)
