@@ -859,8 +859,8 @@ class IntCtrl(wx.TextCtrl):
             try:
                 return int( value )
             except ValueError:
-                if self.IsLongAllowed():
-                    return long( value )
+                if self.IsLongAllowed() and (LONGTYPE is not int):
+                    return LONGTYPE( value )
                 else:
                     raise
 
