@@ -314,7 +314,7 @@ def configure(conf):
         # speicifc Python instance instead of the one that is loading the
         # wxPython extension modules. That's okay for PYEMBED but not for PYEXT
         # configs.  
-        if isDarwin:
+        if not isWindows:
             conf.env.LIBPATH_PYEXT = []
             conf.env.LIB_PYEXT = []
 
