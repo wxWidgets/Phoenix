@@ -42,9 +42,9 @@ Other changes in this release:
 
 
 
-4.0.3 ""
----------------------------
-* ??-June-2018
+4.0.3 "The show must go on. (Die show-stoppers! Die!)"
+------------------------------------------------------
+* 25-June-2018
 
 PyPI:   https://pypi.org/project/wxPython/4.0.3
 Extras: https://extras.wxPython.org/wxPython4/extras/
@@ -68,7 +68,8 @@ Changes in this release include the following:
   same mechanism which is used when passing wx.ID_ANY to a widget constructor.
   The object returned by wx.NewIdRef will automatically convert to an int when
   passing it to a window constructor, and can also be used as the source in a
-  Bind().
+  Bind(). (#896)
+
 
 * Fixed issue when sys.prefix is not unicode (Python2) and when its contents 
   are not translatable to utf-8.
