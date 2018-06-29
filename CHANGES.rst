@@ -19,7 +19,9 @@ Pip:    ``pip install wxPython==4.0.4``
 Changes in this release include the following:
 
 * Fixed an issue where wx.lib.intctrl would erroneously attempt to use ``long``
-  on Python3
+  on Python3. (#898)
+
+* Include the MSVC runtime DLLs for Python 3.7 builds too.
 
 
 

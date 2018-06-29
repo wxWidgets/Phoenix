@@ -1370,8 +1370,10 @@ def copyWxDlls(options):
             cairo_root = os.path.join(phoenixDir(), 'packaging', 'cairo-msw')
             dlls += glob.glob(os.path.join(cairo_root, arch, 'bin', '*.dll'))
 
-        # For Python 3.5 and 3.6 builds we also need to copy some VC14 redist DLLs
-        if PYVER in ['3.5', '3.6']:
+        # For Python 3.5 and 3.6 builds we also need to copy some VC14 redist DLLs.
+        # NOTE: Do it for 3.7 too for now. But when we fully switch over to VS 2017 
+        # this may need to change. See notes in wscript about it.
+        if PYVER in ['3.5', '3.6', '3.7']:
             redist_dir = os.path.join(
                 phoenixDir(), 'packaging', 'Py3.5', 'vcredist',
                 arch, 'Microsoft.VC140.CRT', '*.dll')
