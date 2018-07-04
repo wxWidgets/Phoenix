@@ -52,6 +52,8 @@ Changes in this release include the following:
 * Fixed an issue where wx.lib.intctrl would erroneously attempt to use ``long``
   on Python3
 
+* Clear LIBPATH_PYEXT and LIB_PYEXT for linux builds too. (#904)
+
 * Added a dependency on the Pillow package since it's used in some wx.lib.agw
   modules. (PR #908)
 
