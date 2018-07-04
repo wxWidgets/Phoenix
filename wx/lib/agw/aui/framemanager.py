@@ -4334,13 +4334,16 @@ class AuiManager(wx.EvtHandler):
 
         if p.IsOk():
             if p.IsNotebookPage():
-                if show:
-
-                    notebook = self._notebooks[p.notebook_id]
-                    id = notebook.GetPageIndex(p.window)
-                    if id >= 0:
-                        notebook.SetSelection(id)
+                notebook = self._notebooks[p.notebook_id]
+                page_idx = notebook.GetPageIndex(p.window)
+                if page_idx >= 0:
+                    notebook.HidePage(page_idx, not show)
+                    if show:
+                        notebook.SetSelection(page_idx)
+                if notebook.GetShownPageCount() > 0:
                     self.ShowPane(notebook, True)
+                else:
+                    self.ShowPane(notebook, False)
 
             else:
                 p.Show(show)
@@ -5031,14 +5034,14 @@ class AuiManager(wx.EvtHandler):
         if pane_info.window and pane_info.window.IsShown():
             pane_info.window.Show(False)
 
-        # make sure that we are the parent of this window
-        if pane_info.window and pane_info.window.GetParent() != self._frame:
-            pane_info.window.Reparent(self._frame)
-
         # if we have a frame, destroy it
         if pane_info.frame:
+            # make sure that we are the parent of this window
+            if pane_info.window and pane_info.window.GetParent() != self._frame:
+                pane_info.window.Reparent(self._frame)
             pane_info.frame.Destroy()
             pane_info.frame = None
+            pane_info.Hide()
 
         elif pane_info.IsNotebookPage():
             # if we are a notebook page, remove ourselves...
@@ -5053,7 +5056,14 @@ class AuiManager(wx.EvtHandler):
                     notebook = self._notebooks[nid]
                     page_idx = notebook.GetPageIndex(pane_info.window)
                     if page_idx >= 0:
-                        notebook.RemovePage(page_idx)
+                        if not pane_info.IsDestroyOnClose():
+                            self.ShowPane(pane_info.window, False)
+
+        else:
+            if pane_info.window and pane_info.window.GetParent() != self._frame:
+                pane_info.window.Reparent(self._frame)
+            pane_info.Dock().Hide()
+
 
         # now we need to either destroy or hide the pane
         to_destroy = 0
@@ -5066,20 +5076,17 @@ class AuiManager(wx.EvtHandler):
                 if pane_info.dock_direction in [AUI_DOCK_LEFT, AUI_DOCK_RIGHT]:
                     tb.SetAGWWindowStyleFlag(tb.GetAGWWindowStyleFlag() | AUI_TB_VERTICAL)
 
-            pane_info.Dock().Hide()
-
         if pane_info.IsNotebookControl():
 
             notebook = self._notebooks[pane_info.notebook_id]
-            while notebook.GetPageCount():
-                window = notebook.GetPage(0)
-                notebook.RemovePage(0)
+            for idx in range(notebook.GetPageCount()-1, -1, -1):
+                window = notebook.GetPage(idx)
                 info = self.GetPane(window)
-                if info.IsOk():
-                    info.notebook_id = -1
-                    info.dock_direction = AUI_DOCK_NONE
-                    # Note: this could change our paneInfo reference ...
-                    self.ClosePane(info)
+                # close page if its IsDestroyOnClose flag is set
+                if info.IsDestroyOnClose():
+                    if info.IsOk():
+                        # Note: this could change our paneInfo reference ...
+                        self.ClosePane(info)
 
         if to_destroy:
             to_destroy.Destroy()
@@ -6617,6 +6624,7 @@ class AuiManager(wx.EvtHandler):
                     window.Reparent(self._frame)
                     pageCounter -= 1
                     allPages -= 1
+                    paneInfo.Direction(self.GetPane(notebook).dock_direction)
 
                 pageCounter += 1
 
@@ -6675,6 +6683,7 @@ class AuiManager(wx.EvtHandler):
                 if child_pane.IsOk() and notebook_pane.IsOk():
 
                     child_pane.SetDockPos(notebook_pane)
+                    child_pane.Show(notebook_pane.IsShown())
                     child_pane.window.Hide()
                     child_pane.window.Reparent(self._frame)
                     child_pane.frame = None
