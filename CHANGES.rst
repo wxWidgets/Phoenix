@@ -23,6 +23,16 @@ Changes in this release include the following:
 
 * Include the MSVC runtime DLLs for Python 3.7 builds too.
 
+* Added a dependency on the Pillow package since it's used in some wx.lib.agw
+  modules. (PR #908)
+
+* Add flag to hide page in wx.lib.agw.aui.notebook. (#895)
+
+* Switch wx.lib.plot to issue deprecation warnings with PlotPendingDeprecation
+  so it doesn't have to enable all warnings to get them to be shown by default.
+  (#902)
+  
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"

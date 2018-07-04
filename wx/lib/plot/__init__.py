@@ -40,6 +40,7 @@ from .polyobjects import PlotPrintout
 
 from .utils import TempStyle
 from .utils import pendingDeprecation
+from .utils import PlotPendingDeprecation
 
 # For backwards compat.
 BoxPlot = PolyBoxPlot
