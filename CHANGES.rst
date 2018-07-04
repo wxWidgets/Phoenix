@@ -59,6 +59,10 @@ Changes in this release include the following:
 
 * Add flag to hide page in wx.lib.agw.aui.notebook. (#895)
 
+* Switch wx.lib.plot to issue deprecation warnings with PlotPendingDeprecation
+  so it doesn't have to enable all warnings to get them to be shown by default.
+  (#902)
+  
 
 
 

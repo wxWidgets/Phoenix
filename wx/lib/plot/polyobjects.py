@@ -36,10 +36,6 @@ from .utils import TempStyle
 from .utils import pairwise
 
 
-# XXX: Comment out this line to disable deprecation warnings
-warnings.simplefilter('default')
-
-
 class PolyPoints(object):
     """
     Base Class for lines and markers.
