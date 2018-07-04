@@ -19,6 +19,7 @@ import itertools
 from warnings import warn as _warn
 
 # Third Party
+import wx
 import numpy as np
 
 class PlotPendingDeprecation(wx.wxPyDeprecationWarning):
