@@ -25,6 +25,10 @@ Changes in this release include the following:
 
 * Clear LIBPATH_PYEXT and LIB_PYEXT for linux builds too. (#904)
 
+* Added a dependency on the Pillow package since it's used in some wx.lib.agw
+  modules. (PR #908)
+
+* Add flag to hide page in wx.lib.agw.aui.notebook. (#895)
 
 
 
@@ -59,6 +63,7 @@ Changes in this release include the following:
 
 * Fixed issue when sys.prefix is not unicode (Python2) and when its contents 
   are not translatable to utf-8.
+
 
 
 
