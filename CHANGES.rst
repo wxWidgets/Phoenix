@@ -23,6 +23,9 @@ Changes in this release include the following:
 
 * Include the MSVC runtime DLLs for Python 3.7 builds too.
 
+* Added a dependency on the Pillow package since it's used in some wx.lib.agw
+  modules. (#908)
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
