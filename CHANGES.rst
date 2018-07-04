@@ -24,7 +24,10 @@ Changes in this release include the following:
 * Include the MSVC runtime DLLs for Python 3.7 builds too.
 
 * Added a dependency on the Pillow package since it's used in some wx.lib.agw
-  modules. (#908)
+  modules. (PR #908)
+
+* Add flag to hide page in wx.lib.agw.aui.notebook. (#895)
+
 
 
 
@@ -59,7 +62,7 @@ Changes in this release include the following:
 * Fixed issue when sys.prefix is not unicode (Python2) and when its contents 
   are not translatable to utf-8.
 
-* Add flag to hide page in notebook. (#895)
+
 
 
 4.0.2 "Cute as a June bug!"
