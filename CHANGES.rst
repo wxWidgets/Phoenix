@@ -52,6 +52,9 @@ Changes in this release include the following:
 * Fixed an issue where wx.lib.intctrl would erroneously attempt to use ``long``
   on Python3
 
+* Added a dependency on the Pillow package since it's used in some wx.lib.agw
+  modules. (#908)
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
