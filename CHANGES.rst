@@ -33,7 +33,9 @@ Changes in this release include the following:
 * Switch wx.lib.plot to issue deprecation warnings with PlotPendingDeprecation
   so it doesn't have to enable all warnings to get them to be shown by default.
   (#902)
-  
+
+* Fix an issue in wx.lib.agw.aui.AuiManager where the orientation of
+  an AuiToolBar would not be updated when calling LoadPerspective.
 
 
 
