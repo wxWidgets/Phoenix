@@ -84,6 +84,11 @@ class Configuration(object):
     PKGDIR = 'wx'
     # The name of the top-level package
 
+    COPYRIGHT_HOLDER = "Total Control Software"
+    COPYRIGHT_YEAR = "2017"
+    LICENSE_NAME = "wxWindows License"
+    # This information gets added to the top of each generated file.
+
     # ---------------------------------------------------------------
     # Basic initialization and configuration code
 

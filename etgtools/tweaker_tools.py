@@ -121,15 +121,16 @@ class FixWxPrefix(object):
 
         names = list()
         filename = 'wx/core.pyi'
-        if PY3:
-            with open(filename, 'rt', encoding='utf-8') as f:
-                text = f.read()
-        else:
-            with open(filename, 'r') as f:
-                text = f.read()
-        parseTree = ast.parse(text, filename)
-        for item in parseTree.body:
-            _processItem(item, names)
+        if os.path.exists(filename):
+            if PY3:
+                with open(filename, 'rt', encoding='utf-8') as f:
+                    text = f.read()
+            else:
+                with open(filename, 'r') as f:
+                    text = f.read()
+            parseTree = ast.parse(text, filename)
+            for item in parseTree.body:
+                _processItem(item, names)
 
         FixWxPrefix._coreTopLevelNames = names
 

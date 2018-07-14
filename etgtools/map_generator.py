@@ -30,7 +30,10 @@ class ItemMapGenerator(generators.DocsGeneratorBase):
 
     def generate(self, module):
         assert isinstance(module, extractors.ModuleDef)
-        realModuleName = MODULENAME_REPLACE[module.module]
+        try:
+            realModuleName = MODULENAME_REPLACE[module.module]
+        except KeyError:
+            realModuleName = module.module
 
         dispatchMap = {
             extractors.ClassDef : self.generateClass,

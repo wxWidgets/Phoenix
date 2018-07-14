@@ -22,15 +22,19 @@ from buildtools.config import Config
 from .extractors import *
 
 #---------------------------------------------------------------------------
-cfg = Config(noWxConfig=True)
-
-phoenixRoot = cfg.ROOT_DIR
-XMLSRC = cfg.DOXY_XML_DIR
+CONFIG = None
 
 class DoxyXMLError(Exception):
     pass
 
 #---------------------------------------------------------------------------
+
+def setConfig(cfg):
+    global CONFIG
+    CONFIG = cfg
+
+def getConfig():
+    return CONFIG
 
 _filesparsed = set()
 
@@ -43,6 +47,12 @@ def parseDoxyXML(module, class_or_filename_list):
     calculated from that name, otherwise it is treated as a filename in the
     Doxygen XML output folder.
     """
+
+    global CONFIG
+    if not CONFIG:
+        CONFIG = Config(noWxConfig=True)
+
+    XMLSRC = CONFIG.DOXY_XML_DIR
 
     def _classToDoxyName(name, attempts, base='class'):
         import string

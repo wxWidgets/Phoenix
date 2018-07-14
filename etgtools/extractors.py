@@ -22,6 +22,8 @@ from .tweaker_tools import FixWxPrefix, magicMethods, \
                            textfile_open
 from sphinxtools.utilities import findDescendants
 
+import etgtools
+
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
 # methods, functions and other items in the C/C++ API being wrapped.
@@ -673,7 +675,7 @@ class ClassDef(BaseDef):
 
 
     def findHierarchy(self, element, all_classes, specials, read):
-        from etgtools import XMLSRC
+        XMLSRC = etgtools.getConfig().DOXY_XML_DIR
 
         if not read:
             fullname = self.name
@@ -708,6 +710,8 @@ class ClassDef(BaseDef):
     def extract(self, element):
         super(ClassDef, self).extract(element)
 
+        XMLSRC = etgtools.getConfig().DOXY_XML_DIR
+
         self.nodeBases = self.findHierarchy(element, {}, [], False)
 
         for node in element.findall('basecompoundref'):
@@ -724,7 +728,6 @@ class ClassDef(BaseDef):
         for node in element.findall('innerclass'):
             if node.get('prot') == 'private':
                 continue
-            from etgtools import XMLSRC
             ref = node.get('refid')
             fname = os.path.join(XMLSRC, ref+'.xml')
             root = et.parse(fname).getroot()
