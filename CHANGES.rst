@@ -34,6 +34,8 @@ Changes in this release include the following:
   so it doesn't have to enable all warnings to get them to be shown by default.
   (#902)
   
+* Added a Python 3.7 builder on Fedora 28. (#925)
+
 
 
 
