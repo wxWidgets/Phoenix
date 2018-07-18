@@ -38,6 +38,12 @@ Changes in this release include the following:
 
 * Fix the object ownership transfer for wx.Menu.Insert() (#931)
 
+* Reverted the changes which removed the content of the wx.lib.pubsub package
+  and encouraged users to switch to the real PyPubSub package instead. Removing
+  it caused more issues than were expected so it has been restored and the code
+  updated to PyPubSub v3.3.0. Version 4.0.0 is available upstream, but it is not
+  compatible with Python 2.7. (#932)
+
 
 
 
