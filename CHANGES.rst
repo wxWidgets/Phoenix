@@ -36,6 +36,8 @@ Changes in this release include the following:
   
 * Added a Python 3.7 builder on Fedora 28. (#925)
 
+* Added wx.Treebook.GetTreeCtrl and wx.Choicebook.GetChoiceCtrl. (#918)
+
 
 
 
