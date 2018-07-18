@@ -1,9 +1,9 @@
 """
-Contributed by Joshua R English, adapted by Oliver Schoenborn to be
-consistent with pubsub API.
+Contributed by Joshua R English, adapted by Oliver Schoenborn to be 
+consistent with pubsub API. 
 
-An extension for pubsub (http://pubsub.sourceforge.net) so topic tree
-specification can be encoded in XML format rather than pubsub's default
+An extension for pubsub (http://pubsub.sourceforge.net) so topic tree 
+specification can be encoded in XML format rather than pubsub's default 
 Python nested class format.
 
 To use:
@@ -32,7 +32,7 @@ These topic definitions are loaded through an XmlTopicDefnProvider:
 
     pub.addTopicDefnProvider( XmlTopicDefnProvider(xml) )
 
-The XmlTopicDefnProvider also accepts a filename instead of XML string:
+The XmlTopicDefnProvider also accepts a filename instead of XML string: 
 
     provider = XmlTopicDefnProvider("path/to/XMLfile.xml", TOPIC_TREE_FROM_FILE)
     pub.addTopicDefnProvider( provider )
@@ -72,19 +72,19 @@ __all__ = [
     'TOPIC_TREE_FROM_FILE'
     ]
 
-
+    
 def _get_elem(elem):
     """Assume an ETree.Element object or a string representation.
     Return the ETree.Element object"""
     if not ET.iselement(elem):
         try:
             elem = ET.fromstring(elem)
-        except Exception:
+        except:
             py2and3.print_("Value Error", elem)
             raise ValueError("Cannot convert to element")
     return elem
 
-
+    
 TOPIC_TREE_FROM_FILE = 'file'
 
 
@@ -93,7 +93,7 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
     class XmlParserError(RuntimeError): pass
 
     class UnrecognizedSourceFormatError(ValueError): pass
-
+    
     def __init__(self, xml, format=TOPIC_TREE_FROM_STRING):
         self._topics = {}
         self._treeDoc = ''
@@ -164,7 +164,7 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
     def getTreeDoc(self):
         return self._treeDoc
 
-
+    
 class XmlVisitor(ITopicTreeVisitor):
     def __init__(self, elem):
         self.tree = elem
@@ -188,7 +188,7 @@ class XmlVisitor(ITopicTreeVisitor):
         desc_elem = ET.SubElement(this_elem, 'description')
         topicDesc = topicObj.getDescription()
         if topicDesc:
-            desc_elem.text = ' '.join(topicDesc.split())
+            desc_elem.text = ' '.join(topicDesc.split()) 
         else:
             desc_elem.text = "UNDOCUMENTED"
         argDescriptions = topicObj.getArgDescriptions()
@@ -228,7 +228,7 @@ class XmlVisitor(ITopicTreeVisitor):
     def _endChildren(self):
         self.roots.pop()
 
-
+        
 ## http://infix.se/2007/02/06/gentlemen-indent-your-xml
 def indent(elem, level=0):
     i = "\n" + level*"    "

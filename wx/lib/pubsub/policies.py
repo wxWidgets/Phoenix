@@ -1,5 +1,5 @@
 """
-Aggregates policies for pubsub. Mainly, related to messaging protocol.
+Aggregates policies for pubsub. Mainly, related to messaging protocol. 
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
@@ -19,8 +19,6 @@ def setMsgDataArgName(stage, listenerArgName, senderArgNameAny=False):
     senderKwargNameAny = senderArgNameAny
     msgDataArgName = listenerArgName
     msgProtocolTransStage = stage
-    #print('%s' % repr(policies.msgProtocolTransStage))
-    #print('%s' % repr(policies.msgDataProtocol))
-    #print('%s' % repr(policies.senderKwargNameAny))
-    #print('%s' % repr(policies.msgDataArgName))
-    #print('override "arg1" protocol arg name: %s' % argName)
+    #print `policies.msgProtocolTransStage`, `policies.msgDataProtocol`, \
+    #      `policies.senderKwargNameAny`, `policies.msgDataArgName`
+    #print 'override "arg1" protocol arg name:', argName

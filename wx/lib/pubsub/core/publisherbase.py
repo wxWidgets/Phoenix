@@ -4,11 +4,11 @@
 """
 
 from .topicmgr import (
-    TopicManager,
+    TopicManager, 
     TreeConfig
 )
 
-from .. import py2and3
+from .. import py2and3 
 
 
 class PublisherBase:
@@ -17,7 +17,7 @@ class PublisherBase:
     topics and that knows how to subscribe/unsubscribe listeners
     from topics.
     """
-
+    
     def __init__(self, treeConfig = None):
         """If treeConfig is None, a default one is created from an
         instance of TreeConfig."""
@@ -35,7 +35,7 @@ class PublisherBase:
 
     def setListenerExcHandler(self, handler):
         """Set the function to call when a listener raises an exception
-        during a sendMessage(). The handler must adhere to the
+        during a sendMessage(). The handler must adhere to the 
         IListenerExcHandler API. """
         self.__treeConfig.listenerExcHandler = handler
 
@@ -52,7 +52,7 @@ class PublisherBase:
     def setNotificationFlags(self, **kwargs):
         """Set the notification flags on or off for each type of
         pubsub activity. The kwargs keys can be any of the following:
-
+        
         - subscribe:    if True, get notified whenever a listener subscribes to a topic;
         - unsubscribe:  if True, get notified whenever a listener unsubscribes from a topic;
         - deadListener: if True, get notified whenever a subscribed listener has been garbage-collected;
@@ -61,7 +61,7 @@ class PublisherBase:
         - delTopic:     if True, get notified whenever a topic is "deleted" from topic tree;
         - all:          set all of the above to the given value (True or False).
 
-        The kwargs that are None are left at their current value. Those that are
+        The kwargs that are None are left at their current value. Those that are 
         False will cause corresponding notification to be silenced. The 'all'
         is set first, then the others. E.g.
 
@@ -79,19 +79,19 @@ class PublisherBase:
     def setTopicUnspecifiedFatal(self, newVal=True, checkExisting=True):
         """Changes the creation policy for topics.
 
-        By default, pubsub will accept topic names for topics that
-        don't have a message data specification (MDS). This default behavior
+        By default, pubsub will accept topic names for topics that 
+        don't have a message data specification (MDS). This default behavior 
         makes pubsub easier to use initially, but allows topic
         names with typos to go uncaught in common operations such as
-        sendMessage() and subscribe(). In a large application, this
+        sendMessage() and subscribe(). In a large application, this 
         can lead to nasty bugs. Pubsub's default behavior is equivalent
         to setTopicUnspecifiedFatal(false).
-
+        
         When called with newVal=True, any future pubsub operation that
-        requires a topic (such as subscribe and sendMessage) will require
+        requires a topic (such as subscribe and sendMessage) will require 
         an MDS; if none is available, pubsub will raise a TopicDefnError
-        exception.
-
+        exception. 
+        
         If checkExisting is not given or True, all existing
         topics are validated. A TopicDefnError exception is
         raised if one is found to be incomplete (has hasMDS() false).
@@ -126,16 +126,16 @@ class PublisherBase:
     def sendMessage(self, topicName, *args, **kwargs):
         """Send a message for topic name with given data (args and kwargs).
         This will be overridden by derived classes that implement
-        message-sending for different messaging protocols; not all
+        message-sending for different messaging protocols; not all 
         parameters may be accepted."""
         raise NotImplementedError
 
     def subscribe(self, listener, topicName):
         """Subscribe listener to named topic. Raises ListenerMismatchError
         if listener isn't compatible with the topic's MDS. Returns
-        (pubsub.core.Listener, success), where success is False if listener
-        was already subscribed. The pub.core.Listener wraps the callable
-        subscribed and provides introspection-based info about
+        (pubsub.core.Listener, success), where success is False if listener 
+        was already subscribed. The pub.core.Listener wraps the callable 
+        subscribed and provides introspection-based info about 
         the callable.
 
         Note that if 'subscribe' notification is on, the handler's
