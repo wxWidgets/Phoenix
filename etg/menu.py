@@ -54,6 +54,7 @@ def run():
     addTransferAnnotations(c, 'menuItem')
     addTransferAnnotations(c, 'subMenu')
     c.find('AppendSubMenu.submenu').transfer = True
+    c.find('Insert.submenu').transfer = True
 
     # We only need one of these overloads, the non-const/const is not enough
     # to distinguish a unique Python signature.
