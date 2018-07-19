@@ -67,6 +67,7 @@ Changes in this release include the following:
 
 * Fix the object ownership transfer for wx.Menu.Insert() (#931)
 
+* Added wx.Treebook.GetTreeCtrl and wx.Choicebook.GetChoiceCtrl. (#918)
 
 
 
