@@ -30,6 +30,16 @@ class treebook_Tests(wtc.WidgetTestCase):
         book.AddSubPage(wx.Panel(book), 'three')
 
 
+    def test_treebook4(self):
+        book = wx.Treebook(self.frame)
+        book.AddPage(wx.Panel(book), 'one')
+        book.AddPage(wx.Panel(book), 'two')
+        book.AddSubPage(wx.Panel(book), 'three')
+
+        tree = book.GetTreeCtrl()
+        assert isinstance(tree, wx.TreeCtrl)
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

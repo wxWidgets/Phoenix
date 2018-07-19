@@ -38,6 +38,10 @@ def run():
     tools.fixWindowClass(c)
     tools.fixBookctrlClass(c)
 
+    c.addCppMethod('wxTreeCtrl*', 'GetTreeCtrl', '()',
+        doc="Returns the tree control used for selecting pages.",
+        body="return(self->GetTreeCtrl());")
+
     module.addPyCode("""\
         EVT_TREEBOOK_PAGE_CHANGED = wx.PyEventBinder( wxEVT_TREEBOOK_PAGE_CHANGED, 1 )
         EVT_TREEBOOK_PAGE_CHANGING = wx.PyEventBinder( wxEVT_TREEBOOK_PAGE_CHANGING, 1)
