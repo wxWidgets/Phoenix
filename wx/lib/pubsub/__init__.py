@@ -1,5 +1,5 @@
 """
-Pubsub package initialization. 
+Pubsub package initialization.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
@@ -18,3 +18,8 @@ __all__ = [
     '__version__'
     ]
 
+import wx
+import warnings
+warnings.warn('wx.lib.pubsub has been deprecated, plese migrate your '
+              'code to use pypubsub, available on PyPI.',
+              wx.wxPyDeprecationWarning)
