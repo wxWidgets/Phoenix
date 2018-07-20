@@ -42,7 +42,7 @@ Changes in this release include the following:
 
 * Removed the wx.BookCtrlBase.RemovePage workaround as it was causing problems
   and doesn't seem to be necessary any more. The wxWidgets assertions are catching
-  the out of rage error just fine. (#888)
+  the out of range error just fine. (#888)
 
 
 
