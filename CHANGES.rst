@@ -69,18 +69,16 @@ Changes in this release include the following:
 
 * Added wx.Treebook.GetTreeCtrl and wx.Choicebook.GetChoiceCtrl. (#918)
 
-<<<<<<< HEAD
+* Removed the wx.BookCtrlBase.RemovePage workaround as it was causing problems
+  and doesn't seem to be necessary any more. The wxWidgets assertions are catching
+  the out of range error just fine. (#888)
+
 * Reverted the changes which removed the content of the wx.lib.pubsub package
   and encouraged users to switch to the real PyPubSub package instead. Removing
   it caused more issues than were expected so it has been restored and the code
   updated to PyPubSub v3.3.0. Version 4.0.0 is available upstream, but it is not
   compatible with Python 2.7. Now, wx.lib.pubsub is actually deprecated instead
   of just trying to pass control over to the upstream PyPubSub library. (#932)
-=======
-* Removed the wx.BookCtrlBase.RemovePage workaround as it was causing problems
-  and doesn't seem to be necessary any more. The wxWidgets assertions are catching
-  the out of range error just fine. (#888)
->>>>>>> wxPy-4.0.x
 
 
 
