@@ -38,7 +38,8 @@ Changes in this release include the following:
 
 * Fix the object ownership transfer for wx.Menu.Insert() (#931)
 
-* Added wx.Treebook.GetTreeCtrl and wx.Choicebook.GetChoiceCtrl. (#918)
+* Added wx.Treebook.GetTreeCtrl, wx.Listbook.GetListView and
+  wx.Choicebook.GetChoiceCtrl. (#918)
 
 * Removed the wx.BookCtrlBase.RemovePage workaround as it was causing problems
   and doesn't seem to be necessary any more. The wxWidgets assertions are catching
