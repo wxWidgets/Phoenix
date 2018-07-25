@@ -59,6 +59,8 @@ Changes in this release include the following:
 
 * Add flag to hide page in wx.lib.agw.aui.notebook. (#895)
 
+* Improve calltip stability in pyshell. 
+
 
 
 
