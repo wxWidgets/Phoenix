@@ -19,8 +19,11 @@ import itertools
 from warnings import warn as _warn
 
 # Third Party
+import wx
 import numpy as np
 
+class PlotPendingDeprecation(wx.wxPyDeprecationWarning):
+    pass
 
 class DisplaySide(object):
     """
@@ -252,7 +255,7 @@ def pendingDeprecation(new_func):
     """
     warn_txt = "`{}` is pending deprecation. Please use `{}` instead."
     _warn(warn_txt.format(inspect.stack()[1][3], new_func),
-          PendingDeprecationWarning)
+          PlotPendingDeprecation)
 
 
 def scale_and_shift_point(x, y, scale=1, shift=0):

@@ -575,6 +575,27 @@ tree-specific style flags in the ``agwStyle`` parameter, and wxWidgets common
 style flags in the ``style`` parameter.
 
 
+wx.lib.pubsub is deprecated
+---------------------------
+
+Although it originally started as part of this project, for a long time the
+content of the ``wx.lib.pubsub`` package has been coming from a fork of the
+original, called PyPubSub. It's all the same code, but with just a different
+access path. However, now that Python 2.7 support in PyPubSub is no longer being
+maintained in the latest versions, it is now time for wxPython to disconnect
+itself in order to not have to remain on the older version. This means that
+``wx.lib.pubsub`` is now deprecated. 
+
+Switching to the official PyPubSub is simple however, just install the package::
+
+    pip install -U PyPubSub==3.3.0
+
+And then change your import statements that are importing
+``wx.lib.pubsub.whatever``, to just import ``pubsub.whatever`` instead. If you
+are using Python3 and would like the newest version of PyPubSub then you can
+drop the version number from the pip command above.
+
+
 .. toctree::
    :maxdepth: 2
    :hidden:

@@ -59,8 +59,29 @@ Changes in this release include the following:
 
 * Add flag to hide page in wx.lib.agw.aui.notebook. (#895)
 
-* Improve calltip stability in pyshell. 
+* Switch wx.lib.plot to issue deprecation warnings with PlotPendingDeprecation
+  so it doesn't have to enable all warnings to get them to be shown by default.
+  (#902)
+  
+* Added a Python 3.7 builder on Fedora 28. (#925)
 
+* Fix the object ownership transfer for wx.Menu.Insert() (#931)
+
+* Added wx.Treebook.GetTreeCtrl, wx.Listbook.GetListView and
+  wx.Choicebook.GetChoiceCtrl. (#918)
+
+* Removed the wx.BookCtrlBase.RemovePage workaround as it was causing problems
+  and doesn't seem to be necessary any more. The wxWidgets assertions are catching
+  the out of range error just fine. (#888)
+
+* Reverted the changes which removed the content of the wx.lib.pubsub package
+  and encouraged users to switch to the real PyPubSub package instead. Removing
+  it caused more issues than were expected so it has been restored and the code
+  updated to PyPubSub v3.3.0. Version 4.0.0 is available upstream, but it is not
+  compatible with Python 2.7. Now, wx.lib.pubsub is actually deprecated instead
+  of just trying to pass control over to the upstream PyPubSub library. (#932)
+
+* Improve calltip stability in pyshell. 
 
 
 
