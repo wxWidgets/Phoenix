@@ -53,6 +53,7 @@ Changes in this release include the following:
   compatible with Python 2.7. Now, wx.lib.pubsub is actually deprecated instead
   of just trying to pass control over to the upstream PyPubSub library. (#932)
 
+* Improve calltip stability in pyshell. (#941)
 
 
 
