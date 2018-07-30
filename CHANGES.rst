@@ -42,8 +42,9 @@ Changes in this release include the following:
   wx.Choicebook.GetChoiceCtrl. (#918)
 
 * Removed the wx.BookCtrlBase.RemovePage workaround as it was causing problems
-  and doesn't seem to be necessary any more. The wxWidgets assertions are catching
-  the out of range error just fine. (#888)
+  and doesn't seem to be necessary any more. The existing wxWidgets assertions
+  are catching the out of range error just fine, however if wxWidgets was built
+  without the debug helpers turned on then it could still cause a crash. (#888)
 
 * Reverted the changes which removed the content of the wx.lib.pubsub package
   and encouraged users to switch to the real PyPubSub package instead. Removing
