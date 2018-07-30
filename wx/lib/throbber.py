@@ -333,7 +333,7 @@ class Throbber(wx.Panel):
             #FIXME: need to make sure values are within range!!!
             self.sequence = sequence
         else:
-            self.sequence = range(self.frames)
+            self.sequence = list(range(self.frames))
 
         if running:
             self.Start()
