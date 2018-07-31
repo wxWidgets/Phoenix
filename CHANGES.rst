@@ -84,6 +84,9 @@ Changes in this release include the following:
 
 * Improve calltip stability in pyshell. (#941)
 
+* Fix TypeError in wx.lib.throbber. (#924)
+
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
