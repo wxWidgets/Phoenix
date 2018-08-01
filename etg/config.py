@@ -66,9 +66,9 @@ def run():
         rv = self._cpp_ReadInt(key, defaultVal)
         if six.PY2:
             rv = int(rv)
-            return rv
+        return rv
         """)
-           
+
     c.addCppMethod('double', 'ReadFloat', '(const wxString& key, double defaultVal=0.0)', """\
         double rv;
         self->Read(*key, &rv, defaultVal);
