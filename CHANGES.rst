@@ -59,7 +59,7 @@ Changes in this release include the following:
 
 * Add flag to hide page in wx.lib.agw.aui.notebook. (#895)
 
-
+* Add a step to wx.Config.ReadInt to attempt converting from long to int under python2. (#384)
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
