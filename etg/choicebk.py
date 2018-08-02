@@ -38,6 +38,11 @@ def run():
     tools.fixWindowClass(c)
     tools.fixBookctrlClass(c)
 
+    c.addCppMethod('wxChoice*', 'GetChoiceCtrl', '()',
+        doc="Returns the choice control used for selecting pages.",
+        body="return(self->GetChoiceCtrl());")
+
+
     module.addPyCode("""\
         EVT_CHOICEBOOK_PAGE_CHANGED  = wx.PyEventBinder( wxEVT_CHOICEBOOK_PAGE_CHANGED, 1 )
         EVT_CHOICEBOOK_PAGE_CHANGING = wx.PyEventBinder( wxEVT_CHOICEBOOK_PAGE_CHANGING, 1 )

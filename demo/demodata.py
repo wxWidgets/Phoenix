@@ -42,6 +42,7 @@ _treeList = [
         'LEDNumberCtrl',
         'DynamicSashWindow',
         'TreeListCtrl',
+        'NotificationMessage',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -183,6 +184,7 @@ _treeList = [
         'MaskedNumCtrl',
         'MediaCtrl',
         'MultiSplitterWindow',
+        'NotificationMessage',
         'OwnerDrawnComboBox',
         'Pickers',
         'PropertyGrid',

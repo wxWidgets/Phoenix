@@ -38,6 +38,10 @@ def run():
     tools.fixWindowClass(c)
     tools.fixBookctrlClass(c)
 
+    c.addCppMethod('wxListView*', 'GetListView', '()',
+        doc="Returns the list control used for selecting pages.",
+        body="return(self->GetListView());")
+
     module.addPyCode("""\
         EVT_LISTBOOK_PAGE_CHANGED  = wx.PyEventBinder( wxEVT_LISTBOOK_PAGE_CHANGED, 1 )
         EVT_LISTBOOK_PAGE_CHANGING = wx.PyEventBinder( wxEVT_LISTBOOK_PAGE_CHANGING, 1 )
