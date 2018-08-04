@@ -57,6 +57,9 @@ Changes in this release include the following:
 
 * Fix TypeError in wx.lib.throbber. (#924)
 
+* Fix missing parameter tool_id in
+  wx.lib.agw.ribbon.toolbar.RibbonToolBar.AddToggleTool. (#947)
+
 
 
 
