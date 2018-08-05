@@ -89,6 +89,9 @@ Changes in this release include the following:
 * Fix missing parameter tool_id in
   wx.lib.agw.ribbon.toolbar.RibbonToolBar.AddToggleTool. (#947)
 
+* Add a step to wx.Config.ReadInt to attempt converting from long to int 
+  under python2. (#384)
+
 
 
 
