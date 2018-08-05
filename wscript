@@ -158,6 +158,11 @@ def configure(conf):
 
         # ** Add code for new modules here (and below for non-MSW)
 
+
+        # set the name of our siplib module
+        conf.env.CFLAGS_WXPY.append('-DSIP_MODULE_NAME="wx.siplib"')
+        conf.env.CXXFLAGS_WXPY.append('-DSIP_MODULE_NAME="wx.siplib"')
+
         # tweak the PYEXT compile and link flags if making a --debug build
         if conf.env.debug:
             for listname in ['CFLAGS_PYEXT', 'CXXFLAGS_PYEXT']:
@@ -290,6 +295,10 @@ def configure(conf):
             conf.env.DEFINES_PYEXT.remove('NDEBUG')
         conf.env.CFLAGS_WXPY.append('-UNDEBUG')
         conf.env.CXXFLAGS_WXPY.append('-UNDEBUG')
+
+        # set the name of our siplib module
+        conf.env.CFLAGS_WXPY.append('-DSIP_MODULE_NAME="wx.siplib"')
+        conf.env.CXXFLAGS_WXPY.append('-DSIP_MODULE_NAME="wx.siplib"')
 
         # Add basic debug info for all builds
         conf.env.CFLAGS_WXPY.append('-g')

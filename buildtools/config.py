@@ -1,4 +1,5 @@
 #----------------------------------------------------------------------
+#----------------------------------------------------------------------
 # Name:        buildtools.config
 # Purpose:     Code to set and validate platform options and etc. for
 #              the wxPython build.  Moved to their own module and
@@ -119,8 +120,9 @@ class Configuration(object):
                          '-w',    # enable warnings
                          '-o',    # turn on auto-docstrings
                          '-g',    # turn on acquire/release of GIL for everything
+                         '-n', 'wx.siplib', # name of the module containing the siplib
                          #'-e',    # turn on exceptions support
-                         #'-T',    # turn off writing the timestamp to the generated files                         '-g',    # always release and reaquire the GIL
+                         #'-T',    # turn off writing the timestamp to the generated files
                          #'-r',    # turn on function call tracing
                          '-I', os.path.join(phoenixDir(), 'src'),
                          '-I', os.path.join(phoenixDir(), 'sip', 'gen'),

@@ -1,7 +1,7 @@
 /*
  * The SIP module interface.
  *
- * Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041307
-#define SIP_VERSION_STR     "4.19.7"
+#define SIP_VERSION         0x04130c
+#define SIP_VERSION_STR     "4.19.12"
 
 
 /*
@@ -67,6 +67,11 @@ extern "C" {
  * minor number set * to 0.
  *
  * History:
+ *
+ * 12.5 Replaced the sipConvertFromSliceObject() macro with
+ *      sip_api_convert_from_slice_object() in the public API.
+ *
+ * 12.4 Added sip_api_instance_destroyed_ex() to the private API.
  *
  * 12.3 Added SIP_TYPE_SCOPED_ENUM to the sipTypeDef flags.
  *      Added sip_api_convert_to_enum() to the public API.
@@ -263,11 +268,7 @@ extern "C" {
  * 0.0  Original version.
  */
 #define SIP_API_MAJOR_NR    12
-#define SIP_API_MINOR_NR    3
-
-
-/* The name of the sip module. */
-#define SIP_MODULE_NAME     "wx.siplib"
+#define SIP_API_MINOR_NR    5
 
 
 /*
@@ -1886,6 +1887,18 @@ typedef struct _sipAPIDef {
     void *api_long_as_long_long;
     void *api_long_as_unsigned_long_long;
 #endif
+
+    /*
+     * The following are not part of the public API.
+     */
+    void (*api_instance_destroyed_ex)(sipSimpleWrapper **sipSelfp);
+
+    /*
+     * The following are part of the public API.
+     */
+    int (*api_convert_from_slice_object)(PyObject *slice, SIP_SSIZE_T length,
+            SIP_SSIZE_T *start, SIP_SSIZE_T *stop, SIP_SSIZE_T *step,
+            SIP_SSIZE_T *slicelength);
 } sipAPIDef;
 
 
@@ -2004,19 +2017,12 @@ typedef struct _sipQtAPI {
 #define sipTypeName(td)     sipNameFromPool((td)->td_module, (td)->td_cname)
 #define sipTypePluginData(td)   ((td)->td_plugin_data)
 
+
 /*
  * Note that this was never actually documented as being part of the public
  * API.  It is now deprecated.  sipIsUserType() should be used instead.
  */
 #define sipIsExactWrappedType(wt)   (sipTypeAsPyTypeObject((wt)->wt_td) == (PyTypeObject *)(wt))
-
-#if PY_VERSION_HEX >= 0x03020000
-#define sipConvertFromSliceObject   PySlice_GetIndicesEx
-#else
-#define sipConvertFromSliceObject(o, len, start, stop, step, slen) \
-        PySlice_GetIndicesEx((PySliceObject *)(o), (len), (start), (stop), \
-                (step), (slen))
-#endif
 
 
 /*
