@@ -31,6 +31,14 @@ class choicebk_Tests(wtc.WidgetTestCase):
         book.AddPage(wx.Panel(book), 'two')
 
 
+    def test_choicebk4(self):
+        book = wx.Choicebook(self.frame)
+        book.AddPage(wx.Panel(book), 'one')
+        book.AddPage(wx.Panel(book), 'two')
+
+        choice = book.GetChoiceCtrl()
+        assert isinstance(choice, wx.Choice)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

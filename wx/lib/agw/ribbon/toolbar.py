@@ -297,7 +297,7 @@ class RibbonToolBar(RibbonControl):
         return self.InsertTool(pos, tool_id, bitmap, wx.NullBitmap, help_string, RIBBON_BUTTON_HYBRID, None)
 
 
-    def AddToggleTool(self, bitmap, help_string=""):
+    def AddToggleTool(self, tool_id, bitmap, help_string=""):
         """
         Add a toggle tool to the tool bar (simple version).
 

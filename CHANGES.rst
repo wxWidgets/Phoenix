@@ -59,6 +59,39 @@ Changes in this release include the following:
 
 * Add flag to hide page in wx.lib.agw.aui.notebook. (#895)
 
+* Switch wx.lib.plot to issue deprecation warnings with PlotPendingDeprecation
+  so it doesn't have to enable all warnings to get them to be shown by default.
+  (#902)
+  
+* Added a Python 3.7 builder on Fedora 28. (#925)
+
+* Fix the object ownership transfer for wx.Menu.Insert() (#931)
+
+* Added wx.Treebook.GetTreeCtrl, wx.Listbook.GetListView and
+  wx.Choicebook.GetChoiceCtrl. (#918)
+
+* Removed the wx.BookCtrlBase.RemovePage workaround as it was causing problems
+  and doesn't seem to be necessary any more. The existing wxWidgets assertions
+  are catching the out of range error just fine, however if wxWidgets was built
+  without the debug helpers turned on then it could still cause a crash. (#888)
+
+* Reverted the changes which removed the content of the wx.lib.pubsub package
+  and encouraged users to switch to the real PyPubSub package instead. Removing
+  it caused more issues than were expected so it has been restored and the code
+  updated to PyPubSub v3.3.0. Version 4.0.0 is available upstream, but it is not
+  compatible with Python 2.7. Now, wx.lib.pubsub is actually deprecated instead
+  of just trying to pass control over to the upstream PyPubSub library. (#932)
+
+* Improve calltip stability in pyshell. (#941)
+
+* Fix TypeError in wx.lib.throbber. (#924)
+
+* Fix missing parameter tool_id in
+  wx.lib.agw.ribbon.toolbar.RibbonToolBar.AddToggleTool. (#947)
+
+* Add a step to wx.Config.ReadInt to attempt converting from long to int 
+  under python2. (#384)
+
 * Add virtual behavior for wx.RichTextCtrl and wx.TextCtrl's Copy/Cut/Paste methods
   and their Can* counterparts. (#954)
 
