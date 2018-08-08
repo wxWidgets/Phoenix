@@ -76,6 +76,8 @@ def run():
     c.find('SetListStyle.def').name = 'styleDef'
     c.find('ApplyStyle.def').name = 'styleDef'
 
+    tools.fixTextClipboardMethods(c)
+
     c.addPyMethod('GetDefaultStyle', '(self)', 'return self.GetDefaultStyleEx()',
                   deprecated='Use GetDefaultStyleEx instead')
 
