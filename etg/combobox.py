@@ -36,6 +36,8 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
 
+    tools.fixTextClipboardMethods(c)
+
     c.find('wxComboBox').findOverload('wxString choices').ignore()
     c.find('wxComboBox').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
     c.find('wxComboBox').findOverload('wxArrayString').find('value').default = 'wxEmptyString'

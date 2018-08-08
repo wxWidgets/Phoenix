@@ -92,7 +92,8 @@ Changes in this release include the following:
 * Add a step to wx.Config.ReadInt to attempt converting from long to int 
   under python2. (#384)
 
-
+* Add virtual behavior for wx.RichTextCtrl and wx.TextCtrl's Copy/Cut/Paste methods
+  and their Can* counterparts. (#954)
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"

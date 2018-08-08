@@ -47,6 +47,9 @@ def parseAndTweakModule():
     c.find('SetSelection.to').name = 'to_'
     c.find('AutoComplete').findOverload('wxTextCompleter').find('completer').transfer = True
 
+    # Re-enable virtualness for (Can)Cut/Copy/Paste/Undo/Redo
+    tools.fixTextClipboardMethods(c)
+
     return module
 
 #-----------------------------------------------------------------
