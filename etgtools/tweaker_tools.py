@@ -388,9 +388,12 @@ def fixTextClipboardMethods(klass):
 
     :param ClassDef klass: The class to modify.
     """
-    for method in ('Cut', 'Copy', 'Paste', 'Undo', 'Redo'):
-        klass.find(method).isVirtual = True
-        klass.find("Can{}".format(method)).isVirtual = True
+    for name in ('Cut', 'Copy', 'Paste', 'Undo', 'Redo'):
+        for method in (name, "Can{}".format(name)):
+            try:
+                klass.find(method).isVirtual = True
+            except extractors.ExtractorError:
+                pass
 
 def removeVirtuals(klass):
     """
