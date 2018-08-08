@@ -381,7 +381,16 @@ def fixRefCountedClass(klass):
         if isinstance(item, extractors.MethodDef) and item.isCtor:
             item.transfer = True
 
+def fixTextClipboardMethods(klass):
+    """
+    Adds virtual behavior to Copy/Cut/Paste/Undo/Redo methods, and their Can*
+    counterparts, of the given class.
 
+    :param ClassDef klass: The class to modify.
+    """
+    for method in ('Cut', 'Copy', 'Paste', 'Undo', 'Redo'):
+        klass.find(method).isVirtual = True
+        klass.find("Can{}".format(method)).isVirtual = True
 
 def removeVirtuals(klass):
     """

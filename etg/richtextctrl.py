@@ -75,10 +75,8 @@ def run():
 
     c.find('SetListStyle.def').name = 'styleDef'
     c.find('ApplyStyle.def').name = 'styleDef'
-           
-    for method in ("Cut", "Copy", "Paste", "Undo", "Redo"):
-        c.find(method).isVirtual = True
-        c.find("Can{}".format(method)).isVirtual = True
+
+    tools.fixTextClipboardMethods(c)
 
     c.addPyMethod('GetDefaultStyle', '(self)', 'return self.GetDefaultStyleEx()',
                   deprecated='Use GetDefaultStyleEx instead')

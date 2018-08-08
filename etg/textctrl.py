@@ -66,11 +66,6 @@ def parseAndTweakModule():
 
     tools.fixWindowClass(c)
 
-    # Re-enable virtualness for (Can)Cut/Copy/Paste/Undo/Redo
-    for method in ('Cut', 'Copy', 'Paste', 'Undo', 'Redo'):
-        c.find(method).isVirtual = True
-        c.find("Can{}".format(method)).isVirtual = True
-
     c.addCppMethod('void', 'MacCheckSpelling', '(bool check)',
         doc="""\
             Turn on the native spell checking for the text widget on
