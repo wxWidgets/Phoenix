@@ -6,10 +6,8 @@
 -->
 
 **Operating system**:
-**wxPython version**:
-**Stock or custom build**:
-**Python version**:
-**Stock or custom build**:
+**wxPython version & source**: _(pypi, self-built, etc.)_
+**Python version & source**: _(stock, anaconda, EDM, distro, self-built, etc.)_
 
 **Description of the problem**:
 
