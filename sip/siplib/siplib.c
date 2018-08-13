@@ -39,13 +39,21 @@
 
 
 /*
- * The qualified name of the sip module.  The qualified name should be defined
- * in the compiler invocation when creating a package-specific copy.
+ * The qualified and base names of the sip module.  These should be defined in
+ * the compiler invocation when creating a package-specific copy.
  */
 #if !defined(SIP_MODULE_NAME)
-#define SIP_MODULE_NAME     "sip"
+#define SIP_MODULE_NAME     sip
 #endif
 
+#if !defined(SIP_MODULE_BASENAME)
+#define SIP_MODULE_BASENAME sip
+#endif
+
+#define STRINGIFY_EX(s)     #s
+#define STRINGIFY(s)        STRINGIFY_EX(s)
+
+#define SIP_MODULE_NAME_STR STRINGIFY(SIP_MODULE_NAME)
 
 /*
  * The Python metatype for a C++ wrapper type.  We inherit everything from the
@@ -1023,18 +1031,23 @@ static int long_as_nonoverflow_int(PyObject *val_obj);
  * The Python module initialisation function.
  */
 #if PY_MAJOR_VERSION >= 3
-#define SIP_MODULE_ENTRY        PyInit_sip
+#define SIP_MODULE_ENTRY_PREFIX PyInit_
 #define SIP_MODULE_TYPE         PyObject *
 #define SIP_MODULE_DISCARD(m)   Py_DECREF(m)
 #define SIP_FATAL(s)            return NULL
 #define SIP_MODULE_RETURN(m)    return (m)
 #else
-#define SIP_MODULE_ENTRY        initsip
+#define SIP_MODULE_ENTRY_PREFIX init
 #define SIP_MODULE_TYPE         void
 #define SIP_MODULE_DISCARD(m)
 #define SIP_FATAL(s)            Py_FatalError(s)
 #define SIP_MODULE_RETURN(m)
 #endif
+
+#define CONCAT_EX(PREFIX, NAME) PREFIX ## NAME
+#define CONCAT(PREFIX, NAME)    CONCAT_EX(PREFIX, NAME)
+
+#define SIP_MODULE_ENTRY        CONCAT(SIP_MODULE_ENTRY_PREFIX, SIP_MODULE_BASENAME)
 
 #if defined(SIP_STATIC_MODULE)
 SIP_MODULE_TYPE SIP_MODULE_ENTRY(void)
@@ -1069,7 +1082,7 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
 #if PY_MAJOR_VERSION >= 3
     static PyModuleDef module_def = {
         PyModuleDef_HEAD_INIT,
-        SIP_MODULE_NAME,        /* m_name */
+        SIP_MODULE_NAME_STR,    /* m_name */
         NULL,                   /* m_doc */
         -1,                     /* m_size */
         methods,                /* m_methods */
@@ -1099,13 +1112,13 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
     sipWrapperType_Type.tp_base = &PyType_Type;
 
     if (PyType_Ready(&sipWrapperType_Type) < 0)
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to initialise sip.wrappertype type");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to initialise sip.wrappertype type");
 
     if (PyType_Ready((PyTypeObject *)&sipSimpleWrapper_Type) < 0)
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to initialise sip.simplewrapper type");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to initialise sip.simplewrapper type");
 
     if (sip_api_register_py_type((PyTypeObject *)&sipSimpleWrapper_Type) < 0)
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to register sip.simplewrapper type");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to register sip.simplewrapper type");
 
 #if defined(STACKLESS)
     sipWrapper_Type.super.tp_base = (PyTypeObject *)&sipSimpleWrapper_Type;
@@ -1116,33 +1129,33 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
 #endif
 
     if (PyType_Ready((PyTypeObject *)&sipWrapper_Type) < 0)
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to initialise sip.wrapper type");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to initialise sip.wrapper type");
 
     if (PyType_Ready(&sipMethodDescr_Type) < 0)
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to initialise sip.methoddescriptor type");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to initialise sip.methoddescriptor type");
 
     if (PyType_Ready(&sipVariableDescr_Type) < 0)
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to initialise sip.variabledescriptor type");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to initialise sip.variabledescriptor type");
 
     sipEnumType_Type.tp_base = &PyType_Type;
 
     if (PyType_Ready(&sipEnumType_Type) < 0)
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to initialise sip.enumtype type");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to initialise sip.enumtype type");
 
     if (PyType_Ready(&sipVoidPtr_Type) < 0)
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to initialise sip.voidptr type");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to initialise sip.voidptr type");
 
     if (PyType_Ready(&sipArray_Type) < 0)
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to initialise sip.array type");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to initialise sip.array type");
 
 #if PY_MAJOR_VERSION >= 3
     mod = PyModule_Create(&module_def);
 #else
-    mod = Py_InitModule(SIP_MODULE_NAME, methods);
+    mod = Py_InitModule(SIP_MODULE_NAME_STR, methods);
 #endif
 
     if (mod == NULL)
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to initialise sip module");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to initialise sip module");
 
     mod_dict = PyModule_GetDict(mod);
 
@@ -1153,12 +1166,12 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
     if (type_unpickler == NULL || enum_unpickler == NULL)
     {
         SIP_MODULE_DISCARD(mod);
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to get pickle helpers");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to get pickle helpers");
     }
 
     /* Publish the SIP API. */
 #if defined(SIP_USE_PYCAPSULE)
-    obj = PyCapsule_New((void *)&sip_api, SIP_MODULE_NAME "._C_API", NULL);
+    obj = PyCapsule_New((void *)&sip_api, SIP_MODULE_NAME_STR "._C_API", NULL);
 #else
     obj = PyCObject_FromVoidPtr((void *)&sip_api, NULL);
 #endif
@@ -1166,7 +1179,7 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
     if (obj == NULL)
     {
         SIP_MODULE_DISCARD(mod);
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to create _C_API object");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to create _C_API object");
     }
 
     rc = PyDict_SetItemString(mod_dict, "_C_API", obj);
@@ -1175,20 +1188,20 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
     if (rc < 0)
     {
         SIP_MODULE_DISCARD(mod);
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to add _C_API object to module dictionary");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to add _C_API object to module dictionary");
     }
 
     /* These will always be needed. */
     if (objectify("__init__", &init_name) < 0)
     {
         SIP_MODULE_DISCARD(mod);
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to objectify '__init__'");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to objectify '__init__'");
     }
 
     if ((empty_tuple = PyTuple_New(0)) == NULL)
     {
         SIP_MODULE_DISCARD(mod);
-        SIP_FATAL(SIP_MODULE_NAME ": Failed to create empty tuple");
+        SIP_FATAL(SIP_MODULE_NAME_STR ": Failed to create empty tuple");
     }
 
     /* Add the SIP version number, but don't worry about errors. */
@@ -1248,7 +1261,7 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
      * Also install the package-specific module at the top level for backwards
      * compatibility.
      */
-    if (strcmp(SIP_MODULE_NAME, "sip") != 0)
+    if (strcmp(SIP_MODULE_NAME_STR, "sip") != 0)
     {
         PyObject *modules = PySys_GetObject("modules");
 
