@@ -62,7 +62,7 @@ Changes in this release include the following:
 * Switch wx.lib.plot to issue deprecation warnings with PlotPendingDeprecation
   so it doesn't have to enable all warnings to get them to be shown by default.
   (#902)
-  
+
 * Added a Python 3.7 builder on Fedora 28. (#925)
 
 * Fix the object ownership transfer for wx.Menu.Insert() (#931)
@@ -89,13 +89,17 @@ Changes in this release include the following:
 * Fix missing parameter tool_id in
   wx.lib.agw.ribbon.toolbar.RibbonToolBar.AddToggleTool. (#947)
 
-* Add a step to wx.Config.ReadInt to attempt converting from long to int 
+* Add a step to wx.Config.ReadInt to attempt converting from long to int
   under python2. (#384)
 
 * Add virtual behavior for wx.RichTextCtrl and wx.TextCtrl's Copy/Cut/Paste methods
   and their Can* counterparts. (#954)
 
 * Fix IO type in wx.lib.agw.thumbnailctrl  (#959)
+
+* Fix type error that would occur using pycolourchooser. (#957)
+
+
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
 ------------------------------------------------------

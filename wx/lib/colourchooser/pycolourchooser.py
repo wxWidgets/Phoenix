@@ -363,9 +363,11 @@ class PyColourChooser(wx.Panel):
         # Allow values to go full range from 0 to 255
         r, g, b = colorsys.hsv_to_rgb(hsv[0], hsv[1], hsv[2])
 
-        r *= 255.0
-        g *= 255.0
-        b *= 255.0
+        round_tenths = lambda x: int(x + 0.5)
+
+        r = round_tenths(r * 255.0)
+        g = round_tenths(g * 255.0)
+        b = round_tenths(b * 255.0)
 
         return wx.Colour(r, g, b)
 
