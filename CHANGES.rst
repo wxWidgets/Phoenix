@@ -95,7 +95,10 @@ Changes in this release include the following:
 * Add virtual behavior for wx.RichTextCtrl and wx.TextCtrl's Copy/Cut/Paste methods
   and their Can* counterparts. (#954)
 
+* Fix IO type in wx.lib.agw.thumbnailctrl  (#959)
+
 * Fix type error that would occur using pycolourchooser. (#957)
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
