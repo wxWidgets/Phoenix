@@ -396,7 +396,10 @@ class XmlResourceCompiler:
                 if widgetClass == "MenuItem":
                     outputList.append(self.templates.MENUBAR_MENUITEM_VAR % locals())
                 elif widgetClass == "Menu":
-                    label = widget.getElementsByTagName("label")[0]
+                    for e in widget.childNodes:
+                        if e.nodeType == e.ELEMENT_NODE and e.tagName == "label":
+                            label = e
+                            break
                     label = label.childNodes[0].data
                     outputList.append(self.templates.MENUBAR_MENU_VAR % locals())
                 else:
@@ -420,7 +423,10 @@ class XmlResourceCompiler:
                 if widgetClass == "MenuItem":
                     outputList.append(self.templates.MENU_MENUITEM_VAR % locals())
                 elif widgetClass == "Menu":
-                    label = widget.getElementsByTagName("label")[0]
+                    for e in widget.childNodes:
+                        if e.nodeType == e.ELEMENT_NODE and e.tagName == "label":
+                            label = e
+                            break
                     label = label.childNodes[0].data
                     outputList.append(self.templates.MENU_MENU_VAR % locals())
                 else:
@@ -465,22 +471,26 @@ class XmlResourceCompiler:
             widgetName = widget.getAttribute("name")
             if widgetName != "" and widgetClass != "":
                 vars.append(widgetName)
-                if widgetClass not in \
-                       ['tool', 'unknown', 'notebookpage', 'separator',
-                        'sizeritem', 'Menu', 'MenuBar', 'MenuItem']:
-                    outputList.append(self.templates.CREATE_WIDGET_VAR % locals())
-                elif widgetClass == "MenuBar":
+                if widgetClass == "MenuBar":
                     outputList.append(self.templates.FRAME_MENUBAR_VAR % locals())
                 elif widgetClass == "MenuItem":
                     outputList.append(self.templates.FRAME_MENUBAR_MENUITEM_VAR % locals())
                 elif widgetClass == "Menu":
-                    label = widget.getElementsByTagName("label")[0]
+                    # Only look directly under for the "label"
+                    for e in widget.childNodes:
+                        if e.nodeType == e.ELEMENT_NODE and e.tagName == "label":
+                            label = e
+                            break
                     label = label.childNodes[0].data
                     outputList.append(self.templates.FRAME_MENUBAR_MENU_VAR % locals())
-                elif widgetClass == "ToolBar":
-                    outputList.append(self.templates.FRAME_TOOLBAR_VAR % locals())
+#                 elif widgetClass == "ToolBar":
+#                     outputList.append(self.templates.FRAME_TOOLBAR_VAR % locals())
                 elif widgetClass == "tool":
                     outputList.append(self.templates.FRAME_TOOLBAR_TOOL_VAR % locals())
+                elif widgetClass in ('unknown', 'notebookpage', 'separator', 'sizeritem'):
+                    pass
+                else:
+                    outputList.append(self.templates.CREATE_WIDGET_VAR % locals())
 
         return outputList
 
