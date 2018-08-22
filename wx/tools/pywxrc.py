@@ -856,7 +856,6 @@ def main(args=None):
     if not args:
         args = sys.argv[1:]
 
-    resourceFilename = ""
     outputFilename = None
     embedResources = False
     generateGetText = False
@@ -931,7 +930,7 @@ def main(args=None):
         print_("%s." % str(exc), file=sys.stderr)
     else:
         if outputFilename != "-":
-            print_("Resources written to %s." % outputFilename, file=outputFilename)
+            print_("Resources written to %s." % outputFilename, file=sys.stderr)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
