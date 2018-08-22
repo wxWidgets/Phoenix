@@ -73,7 +73,6 @@ class xrc%(windowName)s(wx.%(windowClass)s):
 #!XRCED:end-block:xrc%(windowName)s.PreCreate
 
     def __init__(self, parent):
-        # Two stage creation (see http://wiki.wxpython.org/index.cgi/TwoStageCreation)
         wx.%(windowClass)s.__init__(self)
         self.PreCreate()
         get_resources().Load%(windowClass)s(self, parent, "%(windowName)s")
@@ -84,7 +83,6 @@ class xrc%(windowName)s(wx.%(windowClass)s):
     SUBCLASS_HEADER = """\
 class %(subclass)s(wx.%(windowClass)s):
     def __init__(self):
-        # Two stage creation (see http://wiki.wxpython.org/index.cgi/TwoStageCreation)
         wx.%(windowClass)s.__init__(self)
         self.Bind(wx.EVT_WINDOW_CREATE, self.OnCreate)
 
