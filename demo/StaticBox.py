@@ -10,11 +10,12 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
 
         box1 = wx.StaticBox(self, -1, "This is a wx.StaticBox")
+        topBorder, otherBorder = box1.GetBordersForSizer()
         bsizer1 = wx.BoxSizer(wx.VERTICAL)
-        bsizer1.AddSpacer(20)
+        bsizer1.AddSpacer(topBorder)
 
         t1 = wx.StaticText(box1, -1, "As of wxPython 2.9, wx.StaticBox can now be used as a parent like most other wx widgets. This is now the recommended way of using wx.StaticBox.")
-        bsizer1.Add(t1, 1, wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT, 10)
+        bsizer1.Add(t1, 1, wx.EXPAND|wx.BOTTOM|wx.LEFT|wx.RIGHT, otherBorder+10)
         box1.SetSizer(bsizer1)
 
         box2 = wx.StaticBox(self, -1, "This is a wx.StaticBox using wx.StaticBoxSizer")
