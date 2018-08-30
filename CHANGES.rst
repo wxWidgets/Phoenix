@@ -101,6 +101,8 @@ Changes in this release include the following:
 
 * Optimize line drawing in HyperTreeList. (#973)
 
+* Add wrapper for wx.StaticBox.GetBordersForSizer and use it in the demo to do
+  platform-specific layout of the items in the StaticBox. (#974)
 
 
 
