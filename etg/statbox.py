@@ -9,6 +9,8 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import MethodDef, ParamDef
+
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -36,6 +38,15 @@ def run():
     c.find('wxStaticBox.label').default = 'wxEmptyString'
     c.find('Create.label').default = 'wxEmptyString'
     tools.fixWindowClass(c)
+
+    # This is intentionally not documented, but I think it would be handy to
+    # use from wxPython.
+    meth = MethodDef(name='GetBordersForSizer', isVirtual=True, type='void', protection='public',
+                     briefDoc="Returns extra space that may be needed for borders within a StaticBox.",
+                     items=[ParamDef(name='borderTop', type='int*', out=True),
+                            ParamDef(name='borderOther', type='int*', out=True),
+                            ])
+    c.addItem(meth)
 
     module.addGlobalStr('wxStaticBoxNameStr', c)
 
