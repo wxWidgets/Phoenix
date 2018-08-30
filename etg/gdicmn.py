@@ -96,7 +96,7 @@ def run():
         wxPoint operator-(const wxPoint& other);
         wxPoint operator-(const wxSize& other);
         wxPoint operator*(double d);
-        wxPoint operator/(double d);
+        wxPoint operator/(int i);
         """))
 
 
@@ -166,7 +166,7 @@ def run():
         wxSize operator+(const wxSize& other);
         wxSize operator-(const wxSize& other);
         wxSize operator*(double d);
-        wxSize operator/(double d);
+        wxSize operator/(int i);
 
         wxPoint operator+(const wxPoint& other);
         wxPoint operator-(const wxPoint& other);
@@ -307,7 +307,7 @@ def run():
         wxRealPoint operator+(const wxRealPoint& other);
         wxRealPoint operator-(const wxRealPoint& other);
         wxRealPoint operator*(double d);
-        wxRealPoint operator/(double d);
+        wxRealPoint operator/(int i);
         """))
 
 
