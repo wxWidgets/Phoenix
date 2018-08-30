@@ -99,6 +99,9 @@ Changes in this release include the following:
 
 * Fix type error that would occur using pycolourchooser. (#957)
 
+* Change scalar arithmetic on wx.Point, wx.RealPoint, and wx.Size
+  to truncate the result of the arithmetic, rather than the scalar
+  before arithmetic (#971)
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
