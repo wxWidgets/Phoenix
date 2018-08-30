@@ -95,8 +95,8 @@ def run():
         wxPoint operator-();
         wxPoint operator-(const wxPoint& other);
         wxPoint operator-(const wxSize& other);
-        wxPoint operator*(int i);
-        wxPoint operator/(int i);
+        wxPoint operator*(double d);
+        wxPoint operator/(double d);
         """))
 
 
@@ -165,8 +165,8 @@ def run():
     c.addItem(etgtools.WigCode("""\
         wxSize operator+(const wxSize& other);
         wxSize operator-(const wxSize& other);
-        wxSize operator*(int i);
-        wxSize operator/(int i);
+        wxSize operator*(double d);
+        wxSize operator/(double d);
 
         wxPoint operator+(const wxPoint& other);
         wxPoint operator-(const wxPoint& other);
@@ -306,8 +306,8 @@ def run():
     c.addItem(etgtools.WigCode("""\
         wxRealPoint operator+(const wxRealPoint& other);
         wxRealPoint operator-(const wxRealPoint& other);
-        wxRealPoint operator*(int i);
-        wxRealPoint operator/(int i);
+        wxRealPoint operator*(double d);
+        wxRealPoint operator/(double d);
         """))
 
 
