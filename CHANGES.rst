@@ -73,6 +73,11 @@ Changes in this release include the following:
 
 * Fix type error that would occur using pycolourchooser. (#957)
 
+* Optimize line drawing in HyperTreeList. (#973)
+
+* Add wrapper for wx.StaticBox.GetBordersForSizer and use it in the demo to do
+  platform-specific layout of the items in the StaticBox. (#974)
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
