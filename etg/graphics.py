@@ -73,7 +73,7 @@ def run():
         pyArgsString='(autoPaintDC) -> GraphicsContext',
         isStatic=True,
         body="""\
-            return wxGraphicsContext::Create(autoPaintDC);
+            return wxGraphicsContext::Create(*autoPaintDC);
             """)
 
     m = c.find('Create').findOverload('wxEnhMetaFileDC')
