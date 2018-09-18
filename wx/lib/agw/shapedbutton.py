@@ -909,7 +909,7 @@ class SButton(wx.Window):
 
         width = bmp.GetWidth()
         height = bmp.GetHeight()
-        img = Image.fromstring("RGBA", (width, height), bmp.GetData())
+        img = Image.frombytes("RGBA", (width, height), bmp.GetData())
 
         return img
 
@@ -925,12 +925,12 @@ class SButton(wx.Window):
 
         if alpha:
             image = wx.Image(*pil.size)
-            image.SetData(pil.convert("RGB").tostring())
-            image.SetAlpha(pil.convert("RGBA").tostring()[3::4])
+            image.SetData(pil.convert("RGB").tobytes())
+            image.SetAlpha(pil.convert("RGBA").tobytes()[3::4])
         else:
             image = wx.Image(pil.size[0], pil.size[1])
             new_image = pil.convert('RGB')
-            data = new_image.tostring()
+            data = new_image.tobytes()
             image.SetData(data)
 
         return image

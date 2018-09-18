@@ -506,7 +506,7 @@ class PILImageHandler(object):
         import PIL.ImageEnhance as ImageEnhance
 
         pil = Image.new('RGB', (img.GetWidth(), img.GetHeight()))
-        pil.fromstring(img.GetData())
+        pil.frombytes(img.GetData())
         enh = ImageEnhance.Brightness(pil)
         enh = enh.enhance(1.5)
         img.SetData(enh.convert('RGB').tobytes())
