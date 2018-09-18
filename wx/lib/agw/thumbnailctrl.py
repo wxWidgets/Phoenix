@@ -484,11 +484,11 @@ class PILImageHandler(object):
         pil.thumbnail(thumbnailsize)
         img = wx.Image(pil.size[0], pil.size[1])
 
-        img.SetData(pil.convert("RGB").tostring())
+        img.SetData(pil.convert("RGB").tobytes())
 
         alpha = False
         if "A" in pil.getbands():
-            img.SetAlpha(pil.convert("RGBA").tostring()[3::4])
+            img.SetAlpha(pil.convert("RGBA").tobytes()[3::4])
             alpha = True
 
         return img, originalsize, alpha
@@ -509,7 +509,7 @@ class PILImageHandler(object):
         pil.fromstring(img.GetData())
         enh = ImageEnhance.Brightness(pil)
         enh = enh.enhance(1.5)
-        img.SetData(enh.convert('RGB').tostring())
+        img.SetData(enh.convert('RGB').tobytes())
         return img
 
 
@@ -2457,7 +2457,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
                 fil = opj(thumb.GetFullFileName())
                 pil = Image.open(fil).rotate(newangle)
                 img = wx.Image(pil.size[0], pil.size[1])
-                img.SetData(pil.convert('RGB').tostring())
+                img.SetData(pil.convert('RGB').tobytes())
                 thumb.SetRotation(newangle*pi/180)
             else:
                 img = thumb._threadedimage
