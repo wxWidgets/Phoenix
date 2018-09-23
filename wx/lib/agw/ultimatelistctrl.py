@@ -9229,7 +9229,6 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         newItem = self.GetItem(item, item._col)
         newItem.SetVisited(visited)
         self.SetItem(newItem)
-        self.RefreshLine(item)
 
         return True
 
