@@ -306,10 +306,16 @@ def run():
     c.addItem(etgtools.WigCode("""\
         wxRealPoint operator+(const wxRealPoint& other);
         wxRealPoint operator-(const wxRealPoint& other);
-        wxRealPoint operator*(double d);
         wxRealPoint operator/(int i);
         """))
 
+    # wxRealPoint::operator* truncates to int before assigning to the new point
+    # object, which seems dumb. So let's make our own implementation which
+    # preserves the floating point result.
+    c.addCppMethod('wxRealPoint*', '__mul__', '(double d)', isSlot=True,
+        body="""\
+            return new wxRealPoint(self->x * d, self->y * d);
+            """)
 
     # wxRealPoint typemap
     c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxRealPoint')
