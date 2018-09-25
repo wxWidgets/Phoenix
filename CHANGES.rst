@@ -85,6 +85,10 @@ Changes in this release include the following:
 * Fix rendering and mouse sensitivity in UltimateListCtrl when adding HyperText
   items. (#1010)
   
+* Added a parameter to lib.agw.CustomTreeCtrl.SetItemWindow(), to allow
+  positioning the Window (a small image) on the left of text in a
+  CustomTreeItem. (#PR886).
+
 
 
 
