@@ -75,6 +75,9 @@ Changes in this release include the following:
 * Add wrapper for wx.StaticBox.GetBordersForSizer and use it in the demo to do
   platform-specific layout of the items in the StaticBox. (#974)
 
+* Update wx.Point, wx.RealPoint, and wx.Size to use floating
+  point arithmetic when conducting scalar multiplication (#971)
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
