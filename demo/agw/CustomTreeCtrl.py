@@ -848,8 +848,8 @@ class CustomTreeCtrlDemo(wx.Panel):
                 check = wx.CheckBox(pnl, -1, event)
                 eventssizer.Add(check, 0, tags, 3)
 
-                if event in ["EVT_TREE_ITEM_EXPANDED", "EVT_TREE_ITEM_COLLAPSED",
-                             "EVT_TREE_SEL_CHANGED", "EVT_TREE_SEL_CHANGING"]:
+                if event in ["EVT_TREE_ITEM_EXPANDED", "EVT_TREE_ITEM_EXPANDING", "EVT_TREE_ITEM_COLLAPSED",
+                             "EVT_TREE_ITEM_COLLAPSING", "EVT_TREE_SEL_CHANGED", "EVT_TREE_SEL_CHANGING"]:
 
                     check.SetValue(1)
 
@@ -921,6 +921,9 @@ class CustomTreeCtrlDemo(wx.Panel):
         leftimagelist = wx.CheckBox(pnl, -1, "Use Left ImageList")
         leftimagelist.Bind(wx.EVT_CHECKBOX, self.OnLeftImageList)
 
+        self.windowposition = wx.CheckBox(pnl, -1, "Use Image Window Left of Label")
+        self.windowposition.Bind(wx.EVT_CHECKBOX, self.OnWindowPos)
+
         colourssizer.Add(sizer1, 0, wx.EXPAND)
         colourssizer.Add(sizer2, 0, wx.EXPAND)
         colourssizer.Add(sizer3, 0, wx.EXPAND)
@@ -928,6 +931,7 @@ class CustomTreeCtrlDemo(wx.Panel):
         colourssizer.Add(sizer5, 0, wx.EXPAND)
         colourssizer.Add(sizer6, 0, wx.EXPAND)
         colourssizer.Add(leftimagelist, 0, wx.ALL, 5)
+        colourssizer.Add(self.windowposition, 0, wx.ALL, 5)
 
         sizera = wx.BoxSizer(wx.HORIZONTAL)
         self.checknormal = wx.CheckBox(pnl, -1, "Standard Colours")
@@ -1012,6 +1016,7 @@ class CustomTreeCtrlDemo(wx.Panel):
         self.tree.Destroy()
         self.tree = newtree
         # Todo:  The settings in the leftpanel should be reset too
+        # self.PopulateLeftPanel(self.tree.styles, self.tree.events)  # Crashes on LeftImage selection
 
 
     def OnCheckStyle(self, event):
@@ -1175,6 +1180,18 @@ class CustomTreeCtrlDemo(wx.Panel):
         self.tree.Refresh()
 
 
+    def OnWindowPos(self, event):
+
+        checked = event.IsChecked()
+        self.tree.window_on_the_right = not checked
+        animIcon = self.tree.FindItem(self.tree.GetRootItem(), "item 1-f-4")
+        parentIcon = self.tree.GetItemParent(animIcon)
+        self.tree.Expand(parentIcon)
+        self.tree.Collapse(parentIcon)
+        self.tree.EnsureVisible(animIcon)
+        self.tree.RefreshItemWithWindows()  # only if the style TR_ALIGN_WINDOWS_RIGHT is used
+        self.tree.Refresh()  # Ineffective (only updates when collapse/expand)
+
     def OnCheckNormal(self, event):
 
         self.radiohorizontal.Enable(False)
@@ -1291,6 +1308,11 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         self.events = events
         self.styles = treestyles
         self.item = None
+        self.windowed_item = None
+        # To set the position on Window image (default==True)
+        self.window_on_the_right = True
+        self._animctrl = None
+        self.anim_gif_item = None  # EVT_TREE_ITEM_CHECKED to update position
 
         il = wx.ImageList(16, 16)
 
@@ -1326,6 +1348,12 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         combobox.Bind(wx.EVT_COMBOBOX, self.OnComboBox)
         lenArtIds = len(ArtIDs) - 2
 
+        # This is for SetWindow on TreeItem, when collapsed is on the right, on the left otherwise
+        self.img = list()
+        self.img.append(wx.Bitmap("./bitmaps/pause.png", wx.BITMAP_TYPE_PNG))
+        self.img.append(wx.Bitmap("./bitmaps/play.png", wx.BITMAP_TYPE_PNG))
+        self.Image = wx.StaticBitmap(self, -1,  bitmap=self.img[0])
+
         for x in range(15):
             if x == 1:
                 child = self.AppendItem(self.root, "Item %d" % x + "\nHello World\nHappy wxPython-ing!")
@@ -1342,7 +1370,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
             if random.randint(0, 5) == 0:
                 self.AppendSeparator(self.root)
 
-            for y in range(5):
+            for y in range(6):
                 if y == 0 and x == 1:
                     last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), ct_type=2, wnd=self.gauge)
                 elif y == 1 and x == 2:
@@ -1354,6 +1382,10 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                     last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)))
                 elif y == 4 and x == 1:
                     last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), wnd=combobox)
+                elif y == 5 and x == 1:
+                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)))
+                    last.SetWindow(self.Image, self.window_on_the_right)  # Add the Window on on_the_right=True
+                    self.windowed_item = last
                 else:
                     last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), ct_type=2)
 
@@ -1372,6 +1404,9 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                         item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=1)
                         if random.randint(0, 3) == 1:
                             self.SetItem3State(item, True)
+                        if z == 4 and y == 5 and x == 1:
+                            self._add_animated_gif(item, self.window_on_the_right)
+                            self.anim_gif_item = item
                     elif 0 < z <= 2:
                         item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=2)
                     elif z == 0:
@@ -1405,7 +1440,9 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         if not hasattr(mainframe, "leftpanel"):
             self.Bind(CT.EVT_TREE_ITEM_EXPANDED, self.OnItemExpanded)
+            self.Bind(CT.EVT_TREE_ITEM_EXPANDING, self.OnItemExpanding)
             self.Bind(CT.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed)
+            self.Bind(CT.EVT_TREE_ITEM_COLLAPSING, self.OnItemCollapsing)
             self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
             self.Bind(CT.EVT_TREE_SEL_CHANGING, self.OnSelChanging)
             self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
@@ -1838,7 +1875,13 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         item = event.GetItem()
         if item:
             self.log.write("OnItemExpanding: %s" % self.GetItemText(item) + "\n")
-
+            if item == self.windowed_item:
+                item.DeleteWindow()
+                self.Image = wx.StaticBitmap(self, -1,  bitmap=self.img[1])
+                item.SetWindow(self.Image,  self.window_on_the_right)
+            child = self.GetLastChild(item)
+            if child == self.anim_gif_item:
+                self._add_animated_gif(self.anim_gif_item, self.window_on_the_right)
         event.Skip()
 
 
@@ -1854,9 +1897,48 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         item = event.GetItem()
         if item:
             self.log.write("OnItemCollapsing: %s" % self.GetItemText(item) + "\n")
-
+            if item == self.windowed_item:
+                item.DeleteWindow()
+                self.Image = wx.StaticBitmap(self, -1,  bitmap=self.img[0])
+                item.SetWindow(self.Image,  self.window_on_the_right)
+            # Lets hide all Windows
+            self._collapse_node(item, lambda t: self._hideanimation(t))
         event.Skip()
 
+    def _collapse_node(self, item, func):
+        item_was_expanded = self.IsExpanded(item)
+        if item != self.GetRootItem():
+            func(item)
+            if not self.IsExpanded(item):
+                return
+
+        for child in item.GetChildren():
+            self._collapse_node(child, func)
+
+        if not item_was_expanded:
+            self.Collapse(item)
+
+    def _hideanimation(self, item):
+            itemwindow = item.GetWindow()
+            if itemwindow:
+                itemwindow.Hide()
+
+    def _add_animated_gif(self, item, on_the_right):
+        if self._animctrl:
+            self._animctrl.Stop()
+            self._animctrl.Animation.Destroy()
+            self._animctrl.Destroy()
+            self._animctrl = None
+
+        from wx.adv import Animation, AnimationCtrl
+        img = os.path.join(bitmapDir, 'recording.gif')
+        ani = Animation(img)
+        obj = self
+        rect = (item.GetX()+20, item.GetY()+1)  # Overlaps item icon
+        self._animctrl = AnimationCtrl(obj, -1, ani, rect)
+        self._animctrl.SetBackgroundColour(obj.GetBackgroundColour())
+        item.SetWindow(self._animctrl, on_the_right)
+        self._animctrl.Play()
 
     def OnSelChanged(self, event):
 
@@ -1928,6 +2010,8 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         item = event.GetItem()
         self.log.write("Item " + self.GetItemText(item) + " Has Been Checked!\n")
+        if item == self.anim_gif_item:
+            self._add_animated_gif(item, self.window_on_the_right)
         event.Skip()
 
 
