@@ -18,9 +18,6 @@ Pip:    ``pip install wxPython==4.0.4``
 
 Changes in this release include the following:
 
-* Added a parameter to lib.agw.CustomTreeCtrl.SetItemWindow(), to allow positioning
-  the Window (a small image) on the left of text in a CustomTreeItem (#886).
-
 * Fixed an issue where wx.lib.intctrl would erroneously attempt to use ``long``
   on Python3. (#898)
 
@@ -88,6 +85,10 @@ Changes in this release include the following:
 * Fix rendering and mouse sensitivity in UltimateListCtrl when adding HyperText
   items. (#1010)
   
+* Added a parameter to lib.agw.CustomTreeCtrl.SetItemWindow(), to allow
+  positioning the Window (a small image) on the left of text in a
+  CustomTreeItem. (#PR886).
+
 
 
 
