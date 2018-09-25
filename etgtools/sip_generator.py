@@ -865,7 +865,11 @@ from .%s import *
                 else:
                     if pnames:
                         pnames = ', ' + pnames
-                    stream.write('%s(sipCpp%s);\n' % (fname, pnames))
+                    if method.isSlot:
+                        argname = 'a0'
+                    else:
+                        argname = 'sipCpp'
+                    stream.write('%s(%s%s);\n' % (fname, argname, pnames))
             else:
                 stream.write('%s(%s);\n' % (fname, pnames))
             stream.write('%sPy_END_ALLOW_THREADS\n' % (indent+' '*4))
