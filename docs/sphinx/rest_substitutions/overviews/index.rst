@@ -63,7 +63,7 @@ and launch the wxPython demo for you.
             <span class="linkdescr">A generic, ground-up implementation of a text control capable of showing multiple text styles and images.</span></p>
 
          <p class="mybiglink"><a class="mybiglink" href="wx.ribbon.1moduleindex.html">wx.ribbon</a><br/>
-            <span class="linkdescr">A set of classes for writing a ribbon-based UI, typically a combonation of tabs and toolbar, similar to the UI in MS Office and Windows 10.</span></p>
+            <span class="linkdescr">A set of classes for writing a ribbon-based UI, typically a combination of tabs and toolbar, similar to the UI in MS Office and Windows 10.</span></p>
 
          <p class="mybiglink"><a class="mybiglink" href="wx.html.1moduleindex.html">wx.html</a><br/>
             <span class="linkdescr">Widget and supporting classes for a generic html renderer</span></p>
