@@ -1236,6 +1236,7 @@ class CppMethodDef(MethodDef):
         self.cppSignature = cppSignature
         self.virtualCatcherCode = virtualCatcherCode
         self.isCore = _globalIsCore
+        self.isSlot = False
         self.__dict__.update(kw)
 
     @staticmethod
