@@ -4616,6 +4616,9 @@ class UltimateListLineData(object):
                         dc.SetTextForeground(self._owner.GetHyperTextVisitedColour())
                     else:
                         dc.SetTextForeground(self._owner.GetHyperTextNewColour())
+
+                    font = True
+                    coloured = True
                 else:
                     if font:
                         dc.SetFont(item.GetFont())
@@ -9226,7 +9229,6 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         newItem = self.GetItem(item, item._col)
         newItem.SetVisited(visited)
         self.SetItem(newItem)
-        self.RefreshLine(item)
 
         return True
 
