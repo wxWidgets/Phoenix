@@ -6829,7 +6829,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
                 if item.IsHyperText():
                     start, end = self.GetItemTextSize(item)
-                    rect = wx.Rect(xOld+start, lineY, end, self.GetLineHeight(line))
+                    label_rect = self.GetLineLabelRect(line, col)
+                    rect = wx.Rect(xOld+start, lineY, min(end, label_rect.width), self.GetLineHeight(line))
                     if rect.Contains((x, y)):
                         newItem = self.GetParent().GetItem(line, col)
                         return newItem, ULC_HITTEST_ONITEMLABEL
