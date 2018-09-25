@@ -107,6 +107,14 @@ Changes in this release include the following:
 * Update wx.Point, wx.RealPoint, and wx.Size to use floating
   point arithmetic when conducting scalar multiplication (#971)
 
+* Fix load/save bugs in PySlices (PR#978)
+
+* Replace deprecated PIL.Image.tostring (PR#1005)
+
+* Fix rendering and mouse sensitivity in UltimateListCtrl when adding HyperText
+  items. (#1010)
+  
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
