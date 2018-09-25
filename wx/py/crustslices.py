@@ -135,6 +135,7 @@ class CrustSlicesFrame(crust.CrustFrame):
                                  hideFoldingMargin=self.hideFoldingMargin,
                                  *args, **kwds)
         self.sliceshell = self.crust.sliceshell
+        self.shell = self.sliceshell
         self.buffer = self.sliceshell.buffer
         # Override the filling so that status messages go to the status bar.
         self.crust.filling.tree.setStatusText = self.SetStatusText
