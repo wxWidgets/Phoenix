@@ -338,6 +338,7 @@ def fixBookctrlClass(klass):
         ("ChangeSelection", "virtual int ChangeSelection(size_t page);"),
         ("HitTest", "virtual int HitTest(const wxPoint& pt, long* flags /Out/ = NULL) const;"),
         ("InsertPage", "virtual bool InsertPage(size_t index, wxWindow * page, const wxString & text, bool select = false, int imageId = NO_IMAGE);"),
+        ("DeleteAllPages", "virtual bool DeleteAllPages();")
         ]
 
     for name, decl in methods:
