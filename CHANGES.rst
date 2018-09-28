@@ -90,7 +90,11 @@ Changes in this release include the following:
   CustomTreeItem. (#PR886).
 
 * Declared DeleteAllPages in the notebook subclasses, so the proper C++ 
-implementation will be called. (#972)
+  implementation will be called. (#972)
+
+* Removed wx.lib.floatbar, which has been deprecated forever and probably
+  hasn't been working in nearly as long. (#976)
+
 
 
 
