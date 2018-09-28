@@ -174,7 +174,6 @@ _treeList = [
         'ExpandoTextCtrl',
         'FancyText',
         'FileBrowseButton',
-        'FloatBar',
         'FloatCanvas',
         'HtmlWindow',
         'HTML2_WebView',
