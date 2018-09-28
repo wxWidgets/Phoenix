@@ -89,6 +89,10 @@ Changes in this release include the following:
   positioning the Window (a small image) on the left of text in a
   CustomTreeItem. (#PR886).
 
+* Removed wx.lib.floatbar, which has been deprecated forever and probably
+  hasn't been working in nearly as long. (#976)
+
+
 
 
 
