@@ -89,6 +89,9 @@ Changes in this release include the following:
   positioning the Window (a small image) on the left of text in a
   CustomTreeItem. (#PR886).
 
+* Declared DeleteAllPages in the notebook subclasses, so the proper C++ 
+implementation will be called. (#972)
+
 
 
 
