@@ -205,10 +205,7 @@ class Configuration(object):
         elif os.name == 'posix' or self.COMPILER == 'mingw32':
             self.Verify_WX_CONFIG()
             self.includes += ['include']
-            self.defines = [
-                             #('NDEBUG',),  # using a 1-tuple makes it do an undef
-                             ('SIP_MODULE_NAME', 'wx.siplib'),
-                             ('SIP_MODULE_BASENAME', 'siplib'),
+            self.defines = [ #('NDEBUG',),  # using a 1-tuple makes it do an undef
                              ]
             self.libdirs = []
             self.libs = []
