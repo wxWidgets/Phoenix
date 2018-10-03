@@ -53,7 +53,8 @@
 #define STRINGIFY_EX(s)     #s
 #define STRINGIFY(s)        STRINGIFY_EX(s)
 
-#define SIP_MODULE_NAME_STR STRINGIFY(SIP_MODULE_NAME)
+#define SIP_MODULE_NAME_STR     STRINGIFY(SIP_MODULE_NAME)
+#define SIP_MODULE_BASENAME_STR STRINGIFY(SIP_MODULE_BASENAME)
 
 /*
  * The Python metatype for a C++ wrapper type.  We inherit everything from the
@@ -1261,7 +1262,7 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
      * Also install the package-specific module at the top level for backwards
      * compatibility.
      */
-    if (strcmp(SIP_MODULE_NAME_STR, "sip") != 0)
+    if (strcmp(SIP_MODULE_NAME_STR, "sip") != 0 && strcmp(SIP_MODULE_BASENAME_STR, "sip") == 0)
     {
         PyObject *modules = PySys_GetObject("modules");
 
