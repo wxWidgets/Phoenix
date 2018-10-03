@@ -168,6 +168,8 @@ class Configuration(object):
                              ('WXUSINGDLL', '1'),
                              ('ISOLATION_AWARE_ENABLED', None),
                              #('NDEBUG',),  # using a 1-tuple makes it do an undef
+                             ('SIP_MODULE_NAME', 'wx.siplib'),
+                             ('SIP_MODULE_BASENAME', 'siplib'),
                              ]
 
             self.libs = []
@@ -203,7 +205,10 @@ class Configuration(object):
         elif os.name == 'posix' or self.COMPILER == 'mingw32':
             self.Verify_WX_CONFIG()
             self.includes += ['include']
-            self.defines = [ #('NDEBUG',),  # using a 1-tuple makes it do an undef
+            self.defines = [
+                             #('NDEBUG',),  # using a 1-tuple makes it do an undef
+                             ('SIP_MODULE_NAME', 'wx.siplib'),
+                             ('SIP_MODULE_BASENAME', 'siplib'),
                              ]
             self.libdirs = []
             self.libs = []
