@@ -75,9 +75,9 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.19.13.dev1808121705'
+sipCurrentVersion = '4.19.13'
 sipMD5 = {
-    'darwin'   : 'f15b683630c5a831d00987a1a2729f25',
+    'darwin'   : '2d2958a6f4cceebe5e4facb0114f9b0c',
     'win32'    : 'dbb882f4f95b1a7419a436280407899c',
     'linux32'  : '56a763acdf7c0b5725b31a71a9a56160',
     'linux64'  : 'b349127a4d46452936e4181d96b12c2d',
@@ -1371,7 +1371,7 @@ def copyWxDlls(options):
             dlls += glob.glob(os.path.join(cairo_root, arch, 'bin', '*.dll'))
 
         # For Python 3.5 and 3.6 builds we also need to copy some VC14 redist DLLs.
-        # NOTE: Do it for 3.7 too for now. But when we fully switch over to VS 2017 
+        # NOTE: Do it for 3.7 too for now. But when we fully switch over to VS 2017
         # this may need to change. See notes in wscript about it.
         if PYVER in ['3.5', '3.6', '3.7']:
             redist_dir = os.path.join(
