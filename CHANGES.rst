@@ -95,6 +95,7 @@ Changes in this release include the following:
 * Removed wx.lib.floatbar, which has been deprecated forever and probably
   hasn't been working in nearly as long. (#976)
 
+* Updated SIP to version 4.19.13.
 
 
 
