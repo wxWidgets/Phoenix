@@ -67,7 +67,7 @@ def configure(conf):
         import distutils.msvc9compiler
         msvc_version = str( distutils.msvc9compiler.get_build_version() )
 
-        # When building for Python 3.7 the msvc_version returned will be  
+        # When building for Python 3.7 the msvc_version returned will be
         # "14.1" as that is the version of the BasePlatformToolkit that stock
         # Python 3.7 was built with, a.k.a v141, which is the default in
         # Visual Studio 2017. However, waf is using "msvc 15.0" to designate
@@ -75,7 +75,7 @@ def configure(conf):
         # fix up the msvc_version accordingly.
         if msvc_version == "14.1" and sys.version_info >= (3,7):
             ##msvc_version = '15.0'
-            
+
             # On the other hand, microsoft says that v141 and v140 (Visual
             # Studio 2015) are binary compatible, so for now let's just drop
             # it back to "14.0" until I get all the details worked out for
@@ -157,6 +157,7 @@ def configure(conf):
         conf.env.LIB_WXAUI += cfg.makeLibName('aui')
 
         # ** Add code for new modules here (and below for non-MSW)
+
 
         # tweak the PYEXT compile and link flags if making a --debug build
         if conf.env.debug:
@@ -291,6 +292,13 @@ def configure(conf):
         conf.env.CFLAGS_WXPY.append('-UNDEBUG')
         conf.env.CXXFLAGS_WXPY.append('-UNDEBUG')
 
+        # set the name of our siplib module
+        conf.env.CFLAGS_WXPY.append('-DSIP_MODULE_NAME=wx.siplib')
+        conf.env.CXXFLAGS_WXPY.append('-DSIP_MODULE_NAME=wx.siplib')
+
+        conf.env.CFLAGS_WXPY.append('-DSIP_MODULE_BASENAME=siplib')
+        conf.env.CXXFLAGS_WXPY.append('-DSIP_MODULE_BASENAME=siplib')
+
         # Add basic debug info for all builds
         conf.env.CFLAGS_WXPY.append('-g')
         conf.env.CXXFLAGS_WXPY.append('-g')
@@ -313,7 +321,7 @@ def configure(conf):
         # Python's lib, which we don't want as that could tie us to that
         # specific Python instance instead of the one that is loading the
         # wxPython extension modules. That's okay for PYEMBED but not for PYEXT
-        # configs.  
+        # configs.
         conf.env.LIBPATH_PYEXT = []
         conf.env.LIB_PYEXT = []
 
