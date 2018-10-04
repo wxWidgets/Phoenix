@@ -6530,7 +6530,7 @@ class AuiManager(wx.EvtHandler):
             else:
 
                 if p.IsToolbar():
-#                    self.SwitchToolBarOrientation(p)
+                    self.SwitchToolBarOrientation(p)
                     p.best_size = p.window.GetBestSize()
 
                 if p.window and not p.IsNotebookPage() and p.window.IsShown() != p.IsShown():
