@@ -48,12 +48,13 @@ def run():
     c.find('GetLeftLocation').ignore(False)
     c.find('GetProtocol').ignore(False)
     c.find('GetRightLocation').ignore(False)
+    c.find('OpenFile').factory = True
 
 
     def _fixHandlerClass(klass):
         klass.addItem(etgtools.WigCode("""\
             virtual bool CanOpen(const wxString& location);
-            virtual wxFSFile* OpenFile(wxFileSystem& fs, const wxString& location);
+            virtual wxFSFile* OpenFile(wxFileSystem& fs, const wxString& location) /Factory/;
             virtual wxString FindFirst(const wxString& spec, int flags = 0);
             virtual wxString FindNext();
             """))
