@@ -150,6 +150,9 @@ PyObject *sip_api_invoke_slot_ex(const sipSlot *slot, PyObject *sigargs,
 void *sip_api_convert_rx(sipWrapper *txSelf, const char *sigargs,
         PyObject *rxObj, const char *slot, const char **memberp, int flags);
 int sip_api_save_slot(sipSlot *sp, PyObject *rxObj, const char *slot);
+int sip_api_convert_from_slice_object(PyObject *slice, SIP_SSIZE_T length,
+        SIP_SSIZE_T *start, SIP_SSIZE_T *stop, SIP_SSIZE_T *step,
+        SIP_SSIZE_T *slicelength);
 
 
 /*

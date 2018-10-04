@@ -1,7 +1,7 @@
 /*
  * This file implements the API for the array type.
  *
- * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -238,7 +238,7 @@ static PyObject *sipArray_subscript(PyObject *self, PyObject *key)
     {
         Py_ssize_t start, stop, step, slicelength;
 
-        if (sipConvertFromSliceObject(key, array->len, &start, &stop, &step, &slicelength) < 0)
+        if (sip_api_convert_from_slice_object(key, array->len, &start, &stop, &step, &slicelength) < 0)
             return NULL;
 
         if (step != 1)
@@ -293,7 +293,7 @@ static int sipArray_ass_subscript(PyObject *self, PyObject *key,
     {
         Py_ssize_t stop, step;
 
-        if (sipConvertFromSliceObject(key, array->len, &start, &stop, &step, &len) < 0)
+        if (sip_api_convert_from_slice_object(key, array->len, &start, &stop, &step, &len) < 0)
             return -1;
 
         if (step != 1)

@@ -75,12 +75,12 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.19.7'
+sipCurrentVersion = '4.19.13'
 sipMD5 = {
-    'darwin'   : 'd30ca1ffb09c0dbb6326e99d012c55b8',
-    'win32'    : 'dbb882f4f95b1a7419a436280407899c',
-    'linux32'  : '56a763acdf7c0b5725b31a71a9a56160',
-    'linux64'  : 'b349127a4d46452936e4181d96b12c2d',
+    'darwin'   : '2d2958a6f4cceebe5e4facb0114f9b0c',
+    'win32'    : '83cad605ae09a42440afdf89358c7f82',
+    'linux32'  : 'd9d2f8d1e897d2f238a5c49532d55933',
+    'linux64'  : '19f59f0bceb60dfd9b41f8e63b002492',
 }
 
 wafCurrentVersion = '2.0.8'
@@ -1370,8 +1370,10 @@ def copyWxDlls(options):
             cairo_root = os.path.join(phoenixDir(), 'packaging', 'cairo-msw')
             dlls += glob.glob(os.path.join(cairo_root, arch, 'bin', '*.dll'))
 
-        # For Python 3.5 and 3.6 builds we also need to copy some VC14 redist DLLs
-        if PYVER in ['3.5', '3.6']:
+        # For Python 3.5 and 3.6 builds we also need to copy some VC14 redist DLLs.
+        # NOTE: Do it for 3.7 too for now. But when we fully switch over to VS 2017
+        # this may need to change. See notes in wscript about it.
+        if PYVER in ['3.5', '3.6', '3.7']:
             redist_dir = os.path.join(
                 phoenixDir(), 'packaging', 'Py3.5', 'vcredist',
                 arch, 'Microsoft.VC140.CRT', '*.dll')
