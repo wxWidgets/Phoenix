@@ -127,7 +127,7 @@ Changes in this release include the following:
 * Updated SIP to version 4.19.13.
 
 * Fix an issue in wx.lib.agw.aui.AuiManager where the orientation of
-  an AuiToolBar would not be updated when calling LoadPerspective.
+  an AuiToolBar would not be updated when calling LoadPerspective. (#917)
 
 
 
