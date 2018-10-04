@@ -100,6 +100,10 @@ Changes in this release include the following:
 * Fix an issue in wx.lib.agw.aui.AuiManager where the orientation of
   an AuiToolBar would not be updated when calling LoadPerspective. (#917)
 
+* Fixed a bug in wx.FileSystemHandler.OpenFile where the object ownership was
+  not being transferred corrcetly, causing a crash after a premature object
+  deletion. (#926)
+  
 
 
 
