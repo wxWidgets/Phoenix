@@ -310,8 +310,7 @@ def run():
         body="""\
         if len(entry):
             from six import text_type
-            pos = self.GetItemCount()
-            self.InsertItem(pos, text_type(entry[0]))
+            pos = self.InsertItem(self.GetItemCount(), text_type(entry[0]))
             for i in range(1, len(entry)):
                 self.SetItem(pos, i, text_type(entry[i]))
             return pos
