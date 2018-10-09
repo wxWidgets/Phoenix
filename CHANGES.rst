@@ -130,8 +130,11 @@ Changes in this release include the following:
   an AuiToolBar would not be updated when calling LoadPerspective. (#917)
 
 * Fixed a bug in wx.FileSystemHandler.OpenFile where the object ownership was
-  not being transferred corrcetly, causing a crash after a premature object
+  not being transferred correctly, causing a crash after a premature object
   deletion. (#926)
+
+* Fixed wx.ListCtrl.Append when wx.LC_SORT style is used, so appending items out
+  of order does not lose the data for the remaining columns. (#906)
   
 
 
