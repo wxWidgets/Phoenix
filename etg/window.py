@@ -210,9 +210,24 @@ def run():
             """)
 
 
-    # MSW only.  Do we want them wrapped?
-    c.find('GetAccessible').ignore()
-    c.find('SetAccessible').ignore()
+    # wxAccessbile is MSW only. Provide a NotImplemented fallback for the
+    # other platforms.
+    c.find('GetAccessible').setCppCode("""\
+        #if wxUSE_ACCESSIBILITY
+            return self->GetAccessible();
+        #else
+            wxPyRaiseNotImplemented();
+            return NULL;
+        #endif
+        """)
+    c.find('SetAccessible.accessible').transfer = True
+    c.find('SetAccessible').setCppCode("""\
+        #if wxUSE_ACCESSIBILITY
+            self->SetAccessible(accessible);
+        #else
+            wxPyRaiseNotImplemented();
+        #endif
+        """)
 
     # Make some of the protected methods visible and overridable from Python
     c.find('SendDestroyEvent').ignore(False)

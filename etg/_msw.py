@@ -29,7 +29,7 @@ ITEMS = []
 # remove it from this list of Includes, and change the MODULE value in the
 # promoted script to be the same as its NAME.
 
-INCLUDES = [#'metafile',
+INCLUDES = [
             'axbase',
             ]
 
@@ -60,7 +60,7 @@ def run():
 
     module.addPyCode("""\
         Metafile = wx.deprecated(wx.Metafile, 'Metafile has moved to the core wx module.')
-        MetafileDC = wx.deprecated(wx.MetafileDC, 'MetafileDC has moved to the core wx module.') 
+        MetafileDC = wx.deprecated(wx.MetafileDC, 'MetafileDC has moved to the core wx module.')
         """)
 
     # -----------------------------------------------------------------
