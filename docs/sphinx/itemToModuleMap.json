@@ -6106,6 +6106,7 @@
 "URLDataObject":"wx.",
 "USER_ATTENTION_ERROR":"wx.",
 "USER_ATTENTION_INFO":"wx.",
+"USE_ACCESSIBILITY":"wx.",
 "Uint16":"wx.",
 "Uint32":"wx.",
 "Uint64":"wx.",
