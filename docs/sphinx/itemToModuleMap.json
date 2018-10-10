@@ -52,6 +52,7 @@
 "ACC_NOT_IMPLEMENTED":"wx.",
 "ACC_NOT_SUPPORTED":"wx.",
 "ACC_OK":"wx.",
+"ACC_SELF":"wx.",
 "ACC_SEL_ADDSELECTION":"wx.",
 "ACC_SEL_EXTENDSELECTION":"wx.",
 "ACC_SEL_NONE":"wx.",
