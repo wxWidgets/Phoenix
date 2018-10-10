@@ -1266,3 +1266,130 @@ def guessTypeStr(v):
     return False
 
 #---------------------------------------------------------------------------
+# Tweakers to generate C++ stubs for cases where a feature is optional. By
+# generating stubs then we can still provide the wrapper classes but simply
+# have them raise NotImplemented errors or whatnot.
+
+def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
+    """
+    Generate C++ stubs for all items in the module, except those that are
+    in the optional excludes list.
+    """
+    import copy
+    typeValMap = copy.copy(typeValMap)
+    typeValMap.update({
+        'int': '0',
+        'bool': 'false',
+        #'wxWindow*': 'NULL',
+        })
+
+    # First add a define for the cppFlag (like wxUSE_SOME_FEATURE) so the user
+    # code has a way to check if an optional classis available before using it
+    # and getting an exception.
+    assert isinstance(module, extractors.ModuleDef)
+    if not module.findItem(cppFlag):
+        module.addItem(extractors.DefineDef(name=cppFlag, value='0'))
+        excludes.append(cppFlag)
+
+    # Generate the stub code to a list of strings, which will be joined later
+    code = []
+    code.append('#if !{}'.format(cppFlag))
+
+    for item in module:
+        if item.name in excludes:
+            continue
+
+        dispatchMap = {
+            extractors.DefineDef : _generateDefineStub,
+            extractors.EnumDef :   _generateEnumStub,
+            extractors.ClassDef : _generateClassStub,
+            }
+        func = dispatchMap.get(type(item), None)
+        if func is None:
+            print('WARNING: Unable to generate stub for {}, type {}'.format(
+                item.name, type(item)))
+        else:
+            func(code, item, typeValMap)
+
+    # Terminate the #if and add the code to the module header
+    code.append('#endif //!{}\n'.format(cppFlag))
+    code = '\n'.join(code)
+    module.addHeaderCode(code)
+
+
+def _generateDefineStub(code, define, typeValMap):
+    code.append('#define {} 0'.format(define.name))
+
+
+def _generateEnumStub(code, enum, typeValMap):
+    code.append('\nenum {} {{'.format(enum.name))
+    for item in enum:
+        code.append('    {},'.format(item.name))
+    code.append('};')
+
+
+def _generateClassStub(code, klass, typeValMap):
+    if not klass.bases:
+        code.append('\nclass {} {{'.format(klass.name))
+    else:
+        code.append('\nclass {} : {} {{'.format(klass.name,
+            ', '.join(['public ' + base for base in klass.bases])))
+    code.append('public:')
+
+    for item in klass:
+        dispatchMap = {
+            extractors.MethodDef : _generateMethodStub,
+            }
+        func = dispatchMap.get(type(item), None)
+        if func is None:
+            print('WARNING: Unable to generate stub for {}.{}, type {}'.format(
+                klass.name, item.name, type(item)))
+        else:
+            func(code, item, typeValMap)
+
+    code.append('};')
+
+
+def _generateMethodStub(code, method, typeValMap):
+    assert isinstance(method, extractors.MethodDef)
+    decl = '    '
+    if method.isVirtual:
+        decl += 'virtual '
+    if method.isStatic:
+        decl += 'static '
+    if method.isCtor or method.isDtor:
+        decl += '{}('.format(method.name)
+    else:
+        decl += '{} {}('.format(method.type, method.name)
+
+    params = [param.type for param in method]
+    if params:
+        decl += ', '.join(params)
+
+    decl += ')'
+    if method.isPureVirtual:
+        decl += ' = 0;'
+    code.append(decl)
+
+    if not method.isPureVirtual:
+        impl = '        { '
+        if method.isCtor:
+            impl += 'wxPyRaiseNotImplemented(); '
+
+        if not (method.isCtor or method.isDtor):
+            if not method.type == 'void':
+                rval = typeValMap.get(method.type, None)
+                if rval is None and '*' in method.type:
+                    rval = 'NULL'
+                if rval is None:
+                    print("WARNING: I don't know how to return a '{}' value.".format(method.type))
+                    rval = '0'
+                impl += 'return {}; '.format(rval)
+
+        impl += '}\n'
+        code.append(impl)
+
+    for overload in method.overloads:
+        _generateMethodStub(code, overload, typeValMap)
+
+#---------------------------------------------------------------------------
