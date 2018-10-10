@@ -1369,7 +1369,7 @@ def _generateMethodStub(code, method, typeValMap):
 
     if not method.isPureVirtual:
         impl = '        { '
-        if method.isCtor:
+        if method.isCtor or method.isStatic:
             impl += 'wxPyRaiseNotImplemented(); '
 
         if not (method.isCtor or method.isDtor):
