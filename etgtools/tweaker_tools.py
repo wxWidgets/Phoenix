@@ -1275,14 +1275,6 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
     Generate C++ stubs for all items in the module, except those that are
     in the optional excludes list.
     """
-    import copy
-    typeValMap = copy.copy(typeValMap)
-    typeValMap.update({
-        'int': '0',
-        'bool': 'false',
-        #'wxWindow*': 'NULL',
-        })
-
     # First add a define for the cppFlag (like wxUSE_SOME_FEATURE) so the user
     # code has a way to check if an optional classis available before using it
     # and getting an exception.
@@ -1290,6 +1282,15 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
     if not module.findItem(cppFlag):
         module.addItem(extractors.DefineDef(name=cppFlag, value='0'))
         excludes.append(cppFlag)
+
+    # copy incoming typeValMap so it can be updated with some stock types
+    import copy
+    typeValMap = copy.copy(typeValMap)
+    typeValMap.update({
+        'int': '0',
+        'bool': 'false',
+        #'wxWindow*': 'NULL',
+        })
 
     # Generate the stub code to a list of strings, which will be joined later
     code = []
@@ -1358,15 +1359,10 @@ def _generateMethodStub(code, method, typeValMap):
     if method.isStatic:
         decl += 'static '
     if method.isCtor or method.isDtor:
-        decl += '{}('.format(method.name)
+        decl += '{}'.format(method.name)
     else:
-        decl += '{} {}('.format(method.type, method.name)
-
-    params = [param.type for param in method]
-    if params:
-        decl += ', '.join(params)
-
-    decl += ')'
+        decl += '{} {}'.format(method.type, method.name)
+    decl += method.argsString
     if method.isPureVirtual:
         decl += ' = 0;'
     code.append(decl)
