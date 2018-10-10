@@ -38,6 +38,7 @@ def run():
 
     c = module.find('wxAccessible')
     assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
 
     c.find('GetChild.child').out = True
     c.find('GetChildCount.childCount').out = True
