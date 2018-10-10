@@ -1289,7 +1289,13 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
     typeValMap.update({
         'int': '0',
         'bool': 'false',
-        #'wxWindow*': 'NULL',
+        'double': '0.0',
+        'wxString': 'wxEmptyString',
+        'const wxString &': 'wxEmptyString',
+        'wxString &': 'wxEmptyString',
+        'wxSize': 'wxDefaultSize',
+        'wxPoint': 'wxDefaultPosition',
+        'wxFileOffset': '0',
         })
 
     # Generate the stub code to a list of strings, which will be joined later
@@ -1301,9 +1307,11 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
             continue
 
         dispatchMap = {
-            extractors.DefineDef : _generateDefineStub,
-            extractors.EnumDef :   _generateEnumStub,
-            extractors.ClassDef : _generateClassStub,
+            extractors.DefineDef    : _generateDefineStub,
+            extractors.GlobalVarDef : _generateGlobalStub,
+            extractors.EnumDef      : _generateEnumStub,
+            extractors.ClassDef     : _generateClassStub,
+            extractors.PyCodeDef    : _ignore,
             }
         func = dispatchMap.get(type(item), None)
         if func is None:
@@ -1318,8 +1326,16 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
     module.addHeaderCode(code)
 
 
+def _ignore(*args):
+    pass
+
+
 def _generateDefineStub(code, define, typeValMap):
-    code.append('#define {} 0'.format(define.name))
+    code.append('#define {}  {}'.format(define.name, define.value))
+
+
+def _generateGlobalStub(code, glob, typeValMap):
+    code.append('{} {};'.format(glob.type, glob.name))
 
 
 def _generateEnumStub(code, enum, typeValMap):
@@ -1364,7 +1380,7 @@ def _generateMethodStub(code, method, typeValMap):
         decl += '{} {}'.format(method.type, method.name)
     decl += method.argsString
     if method.isPureVirtual:
-        decl += ' = 0;'
+        decl += ';'
     code.append(decl)
 
     if not method.isPureVirtual:
