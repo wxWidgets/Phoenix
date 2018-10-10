@@ -1283,7 +1283,7 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
         module.addItem(extractors.DefineDef(name=cppFlag, value='0'))
         excludes.append(cppFlag)
 
-    # copy incoming typeValMap so it can be updated with some stock types
+    # Copy incoming typeValMap so it can be updated with some stock types
     import copy
     typeValMap = copy.copy(typeValMap)
     typeValMap.update({
@@ -1298,10 +1298,15 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
         'wxFileOffset': '0',
         })
 
-    # Generate the stub code to a list of strings, which will be joined later
-    code = []
-    code.append('#if !{}'.format(cppFlag))
+    code = _StubCodeHolder(cppFlag)
 
+    # Next add forward declarations of all classes in case they refer to
+    # each other.
+    for item in module:
+        if isinstance(item, extractors.ClassDef):
+            code.hdr.append('class {};'.format(item.name))
+
+    # Now write code for all the items in the module.
     for item in module:
         if item.name in excludes:
             continue
@@ -1320,10 +1325,35 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
         else:
             func(code, item, typeValMap)
 
-    # Terminate the #if and add the code to the module header
-    code.append('#endif //!{}\n'.format(cppFlag))
-    code = '\n'.join(code)
-    module.addHeaderCode(code)
+    # Add the code to the module header
+    module.addHeaderCode(code.renderHdr())
+    if code.cpp:
+        # and possibly the module's C++ file
+        module.addCppCode(code.renderCpp())
+
+
+# A simple class for holding lists of code snippets for the header and
+# possibily the C++ file.
+class _StubCodeHolder:
+    def __init__(self, flag):
+        self.flag = flag
+        self.hdr = []
+        self.cpp = []
+
+    def renderHdr(self):
+        return self.doRender(self.hdr)
+
+    def renderCpp(self):
+        return self.doRender(self.cpp)
+
+    def doRender(self, lst):
+        if not lst:
+            return ''
+        code = ('#if !{}\n'.format(self.flag) +
+                '\n'.join(lst) +
+                '\n#endif //!{}\n'.format(self.flag))
+        return code
+
 
 
 def _ignore(*args):
@@ -1331,27 +1361,29 @@ def _ignore(*args):
 
 
 def _generateDefineStub(code, define, typeValMap):
-    code.append('#define {}  {}'.format(define.name, define.value))
+    code.hdr.append('#define {}  {}'.format(define.name, define.value))
 
 
 def _generateGlobalStub(code, glob, typeValMap):
-    code.append('{} {};'.format(glob.type, glob.name))
+    code.hdr.append('extern {} {};'.format(glob.type, glob.name))
+    code.cpp.append('{} {};'.format(glob.type, glob.name))
 
 
 def _generateEnumStub(code, enum, typeValMap):
-    code.append('\nenum {} {{'.format(enum.name))
+    name = '' if enum.name.startswith('@') else enum.name
+    code.hdr.append('\nenum {} {{'.format(name))
     for item in enum:
-        code.append('    {},'.format(item.name))
-    code.append('};')
+        code.hdr.append('    {},'.format(item.name))
+    code.hdr.append('};')
 
 
 def _generateClassStub(code, klass, typeValMap):
     if not klass.bases:
-        code.append('\nclass {} {{'.format(klass.name))
+        code.hdr.append('\nclass {} {{'.format(klass.name))
     else:
-        code.append('\nclass {} : {} {{'.format(klass.name,
+        code.hdr.append('\nclass {} : {} {{'.format(klass.name,
             ', '.join(['public ' + base for base in klass.bases])))
-    code.append('public:')
+    code.hdr.append('public:')
 
     for item in klass:
         dispatchMap = {
@@ -1364,7 +1396,7 @@ def _generateClassStub(code, klass, typeValMap):
         else:
             func(code, item, typeValMap)
 
-    code.append('};')
+    code.hdr.append('};')
 
 
 def _generateMethodStub(code, method, typeValMap):
@@ -1381,7 +1413,7 @@ def _generateMethodStub(code, method, typeValMap):
     decl += method.argsString
     if method.isPureVirtual:
         decl += ';'
-    code.append(decl)
+    code.hdr.append(decl)
 
     if not method.isPureVirtual:
         impl = '        { '
@@ -1399,7 +1431,7 @@ def _generateMethodStub(code, method, typeValMap):
                 impl += 'return {}; '.format(rval)
 
         impl += '}\n'
-        code.append(impl)
+        code.hdr.append(impl)
 
     for overload in method.overloads:
         _generateMethodStub(code, overload, typeValMap)
