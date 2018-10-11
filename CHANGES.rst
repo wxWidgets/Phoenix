@@ -114,6 +114,9 @@ Changes in this release include the following:
   features are not part of the build. So far, stubs are available for
   wx.Accessible, wx.glcanvas, wx.media and wx.html2.
 
+* Moved the wxpy_api.h file into the wx package at wx/include/wxPython so it
+  will be included in the wheel file. (#961)
+
 
 
 
