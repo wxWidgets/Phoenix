@@ -20,7 +20,7 @@
 %MappedType size_t {
 
     %TypeHeaderCode
-    #include <wxpy_api.h>
+    #include <wxPython/wxpy_api.h>
     %End
 
     %ConvertToTypeCode
@@ -48,7 +48,7 @@
 
     %TypeHeaderCode
     #include <wx/setup.h>
-    #include <wxpy_api.h>
+    #include <wxPython/wxpy_api.h>
     %End
 
     %ConvertToTypeCode
@@ -84,7 +84,7 @@
 
     %TypeHeaderCode
     #include <wx/setup.h>
-    #include <wxpy_api.h>
+    #include <wxPython/wxpy_api.h>
     %End
 
     %ConvertToTypeCode

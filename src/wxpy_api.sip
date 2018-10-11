@@ -12,7 +12,7 @@
 
 
 %ModuleHeaderCode
-#include "wxpy_api.h"
+#include <wxPython/wxpy_api.h>
 %End
 
 //--------------------------------------------------------------------------
