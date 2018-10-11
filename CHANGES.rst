@@ -107,6 +107,13 @@ Changes in this release include the following:
 * Fixed wx.ListCtrl.Append when wx.LC_SORT style is used, so appending items out
   of order does not lose the data for the remaining columns. (#906)
   
+* Add wx.Accessible, it's Windows-only, will raise a NotImplementedError
+  exception on the other platforms. (#958)
+
+* Added the ability to generate stub classes for use when optional wxWidgets
+  features are not part of the build. So far, stubs are available for
+  wx.Accessible, wx.glcanvas, wx.media and wx.html2.
+
 
 
 
