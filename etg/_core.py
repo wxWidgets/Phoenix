@@ -69,7 +69,8 @@ INCLUDES = [  # base and core stuff
               'position',
               'colour',
 
-              'stream', 'filesys',
+              'stream',
+              'filesys',
 
               # GDI and graphics
               'image',
@@ -101,6 +102,7 @@ INCLUDES = [  # base and core stuff
               'rawbmp',
 
               # more core
+              'access',
               'accel',
               'log',
               'dataobj',

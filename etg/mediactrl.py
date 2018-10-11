@@ -29,11 +29,15 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    module.addHeaderCode('#include "wx/mediactrl.h"')
 
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    module.addHeaderCode('#include <wx/mediactrl.h>')
+    module.addHeaderCode('#include <wx/uri.h>')
+    tools.generateStubs('wxUSE_MEDIACTRL', module,
+                        typeValMap={'wxMediaState': 'wxMEDIASTATE_STOPPED'})
 
     c = module.find('wxMediaCtrl')
     c.addPrivateCopyCtor()

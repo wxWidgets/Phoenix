@@ -1581,6 +1581,8 @@ class ModuleDef(BaseDef):
         gv = GlobalVarDef(type='const char*', name=name)
         if before is None:
             self.addItem(gv)
+        elif isinstance(before, int):
+            self.insertItem(before, gv)
         else:
             self.insertItemBefore(before, gv)
         return gv
