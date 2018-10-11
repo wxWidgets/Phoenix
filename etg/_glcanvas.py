@@ -59,13 +59,12 @@ def run():
     #-----------------------------------------------------------------
 
     module.addHeaderCode('#include <wx/glcanvas.h>')
-
+    tools.generateStubs('wxUSE_GLCANVAS', module)
 
     c = module.find('wxGLContext')
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
     c.addPrivateCopyCtor()
-
 
 
     c = module.find('wxGLCanvas')
