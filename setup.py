@@ -319,7 +319,7 @@ ENTRY_POINTS = {
         "img2xpm = wx.tools.img2xpm:main",
         "pywxrc = wx.tools.pywxrc:main",
 #        ],
-#    'gui_scripts' : [  # TODO: Why was this done?
+#    'gui_scripts' : [  # TODO: Why was this commented out?
         "wxget = wx.tools.wxget:main",  # New wx wget
         "wxdocs = wx.tools.wxget_docs_demo:docs_main",  # Get/Launch Docs
         "wxdemo = wx.tools.wxget_docs_demo:demo_main",  # Get/Launch Demo
