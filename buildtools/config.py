@@ -111,7 +111,8 @@ class Configuration(object):
         self.WXDIR = wxDir()
 
         self.includes = [phoenixDir() + '/sip/siplib',  # to get our version of sip.h
-                         phoenixDir() + '/src',         # for any hand-written headers
+                         phoenixDir() + '/wx/include',  # for the wxPython API
+                         phoenixDir() + '/src',         # for other hand-written headers
                          ]
 
         self.DOXY_XML_DIR = os.path.join(self.WXDIR, 'docs/doxygen/out/xml')
