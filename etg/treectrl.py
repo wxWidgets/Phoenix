@@ -47,9 +47,8 @@ def run():
     c.find('wxTreeItemId').overloads.append(ctor)
 
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('bool', '__eq__', '(const wxTreeItemId& other)', """\
         return *self == *other;

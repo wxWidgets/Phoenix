@@ -46,9 +46,8 @@ def run():
     # TODO: This ctor ^^ in Classic has a custom implementation for wxGTK that
     # sets the hotspot. Is that still needed?
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-    """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('long', 'GetHandle', '()', """\
     #ifdef __WXMSW__

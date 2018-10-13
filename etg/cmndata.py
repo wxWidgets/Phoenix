@@ -41,9 +41,8 @@ def run():
 
     c.find('GetPrintData').overloads = []
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addProperty('MarginBottomRight', 'GetMarginBottomRight', 'SetMarginBottomRight')
     c.addProperty('MarginTopLeft', 'GetMarginTopLeft', 'SetMarginTopLeft')
@@ -62,9 +61,8 @@ def run():
     c.addCppMethod('wxSize*', 'GetPaperSize', '()', 'return new wxSize(self->GetPaperSize());')
     c.addCppMethod('void', 'SetPaperSize', '(const wxSize* sz)', 'self->SetPaperSize(*sz);')
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     # TODO: These two methods should use something other than a PyString for
     # holding the data...
@@ -95,9 +93,8 @@ def run():
     tools.removeVirtuals(c)
     c.find('SetSetupDialog').ignore()
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addAutoProperties()
 

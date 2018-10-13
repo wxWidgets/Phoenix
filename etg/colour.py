@@ -171,7 +171,6 @@ def run():
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.Colour"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
-    c.addPyMethod('__nonzero__', '(self)',         'return self.IsOk()')
     c.addPyMethod('__reduce__', '(self)',          'return (Colour, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
@@ -183,6 +182,9 @@ def run():
                   else: raise IndexError
                   """)
     c.addPyCode('Colour.__safe_for_unpickling__ = True')
+
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     # Types that can be converted to wx.Colour:
     #     wxColour (duh)

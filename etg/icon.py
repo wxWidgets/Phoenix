@@ -51,8 +51,8 @@ def run():
             return icon;
             """)
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();""")
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('long', 'GetHandle', '()', """\
         #ifdef __WXMSW__

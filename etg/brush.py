@@ -40,10 +40,8 @@ def run():
         if ctor.isCtor and ctor.argsString != '()':
             ctor.mustHaveApp()
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
-
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppCode("""\
         #ifdef __WXMAC__

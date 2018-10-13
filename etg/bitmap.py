@@ -90,9 +90,8 @@ def run():
         self->SetMask(mask);
         """)
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('long', 'GetHandle', '()',
         doc='MSW-only method to fetch the windows handle for the bitmap.',

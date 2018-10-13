@@ -72,9 +72,9 @@ def run():
         ctor.find('printout').transfer = True
         ctor.find('printoutForPrinting').transfer = True
     c.addPrivateCopyCtor()
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
+
     c.addPyCode("PrintPreview.Ok = wx.deprecated(PrintPreview.IsOk, 'Use IsOk instead.')")
 
     c = module.find('wxPrinter')

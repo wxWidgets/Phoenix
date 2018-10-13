@@ -73,6 +73,7 @@ def run():
     c.addPyMethod('__repr__', '(self)',            'return "wx.Point2D"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
     c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
+    c.addPyMethod('__bool__', '(self)',            'return self.Get() != (0,0)')
     c.addPyMethod('__reduce__', '(self)',          'return (Point2D, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
@@ -121,6 +122,7 @@ def run():
     c.addPyMethod('__repr__', '(self)',            'return "wx.Rect2D"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
     c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0,0,0)')
+    c.addPyMethod('__bool__', '(self)',            'return self.Get() != (0,0,0,0)')
     c.addPyMethod('__reduce__', '(self)',          'return (Rect2D, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
