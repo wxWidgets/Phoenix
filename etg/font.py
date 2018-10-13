@@ -85,9 +85,8 @@ def run():
     #c.addProperty('Underlined GetUnderlined SetUnderlined')
     #c.addProperty('Strikethrough GetStrikethrough SetStrikethrough')
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('void*', 'GetHFONT', '()',
         doc="Returns the font's native handle.",

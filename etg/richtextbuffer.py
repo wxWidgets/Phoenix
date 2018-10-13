@@ -110,11 +110,13 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.find('SetValue').findOverload('units').ignore()
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
 
     #-------------------------------------------------------
     c = module.find('wxTextAttrDimensions')
     tools.ignoreConstOverloads(c)
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
 
     #-------------------------------------------------------
     c = module.find('wxTextAttrSize')
@@ -122,17 +124,20 @@ def run():
     c.find('SetWidth').findOverload('units').ignore()
     c.find('SetHeight').findOverload('units').ignore()
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
 
     #-------------------------------------------------------
     c = module.find('wxTextAttrBorder')
     tools.ignoreConstOverloads(c)
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
 
 
     #-------------------------------------------------------
     c = module.find('wxTextAttrBorders')
     tools.ignoreConstOverloads(c)
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
 
 
     #-------------------------------------------------------
@@ -161,6 +166,7 @@ def run():
     c = module.find('wxRichTextSelection')
     tools.ignoreConstOverloads(c)
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
     c.find('operator[]').ignore()
 
 
@@ -185,6 +191,7 @@ def run():
     c.addPyMethod('__repr__', '(self)',            'return "RichTextRange"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
     c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
+    c.addPyMethod('__bool__', '(self)',            'return self.Get() != (0,0)')
     c.addPyMethod('__reduce__', '(self)',          'return (RichTextRange, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
