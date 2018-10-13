@@ -40,6 +40,8 @@ def run():
 
     c = module.find('wxMask')
     c.mustHaveApp()
+    for m in c.find('Create').all():
+        m.ignore()
 
     c = module.find('wxBitmap')
     assert isinstance(c, etgtools.ClassDef)

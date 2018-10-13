@@ -84,7 +84,7 @@ def run():
 
     c.find('GetPixel').ignore()  # We need to add a typcast
     c.addCppMethod('wxIntPtr*', 'GetPixel', '()', """\
-        #ifdef __WXGTK3__
+        #if defined(__WXGTK3__) || defined(__WXOSX__)
             return new wxIntPtr(0);
         #else
             return new wxIntPtr((wxIntPtr)self->GetPixel());

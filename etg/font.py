@@ -33,6 +33,11 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    c = module.find('wxFontInfo')
+    assert isinstance(c, etgtools.ClassDef)
+    ctor = c.find('wxFontInfo').findOverload('T pointSize')
+    ctor.find('pointSize').type = 'float'
+
     c = module.find('wxFont')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
