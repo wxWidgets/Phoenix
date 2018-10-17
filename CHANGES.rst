@@ -117,6 +117,14 @@ Changes in this release include the following:
 * Moved the wxpy_api.h file into the wx package at wx/include/wxPython so it
   will be included in the wheel file. (#961)
 
+* Fixed how string data is added to a virtual file-like object in
+  wx.MemoryFSHandler. All strings are now added to the file as utf-8 encoded data,
+  in both Python2 and Python3, and will be read from the virtual file the same
+  way. If you need to use some other encoding for some reason you can first
+  convert the text to a bytesarray or other buffer protocol compatible object and
+  then create the virtual file from that data. (#969)
+  
+
 
 
 
