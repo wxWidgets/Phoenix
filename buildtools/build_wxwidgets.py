@@ -297,7 +297,7 @@ def main(wxDir, args):
             #wxpy_configure_opts.append("--enable-monolithic")
             pass
         else:
-            wxpy_configure_opts.append("--without-sdl")
+            wxpy_configure_opts.append("--with-sdl")
 
         # Set the minimum supported OSX version, and find the oldest SDK
         # version present on the build machine.
