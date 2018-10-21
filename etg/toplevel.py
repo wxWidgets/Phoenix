@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     4-Dec-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -66,6 +66,8 @@ def run():
             return 0;
         #endif
         """)
+
+    c.find('GeometrySerializer').abstract = True
 
     c.addProperty('DefaultItem GetDefaultItem SetDefaultItem')
     c.addProperty('Icon GetIcon SetIcon')

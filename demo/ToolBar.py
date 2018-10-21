@@ -123,7 +123,7 @@ class TestToolBar(wx.Frame):
         self.Bind(wx.EVT_TIMER, self.OnClearSB)
 
         tb.AddSeparator()
-        cbID = wx.NewId()
+        cbID = wx.NewIdRef()
 
         tb.AddControl(
             wx.ComboBox(

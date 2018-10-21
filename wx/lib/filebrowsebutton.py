@@ -7,7 +7,7 @@
 #
 # Author:      Mike Fletcher
 #
-# Copyright:   (c) 2000-2017 by Total Control Software
+# Copyright:   (c) 2000-2018 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port
 #----------------------------------------------------------------------
@@ -414,10 +414,10 @@ if __name__ == "__main__":
                 labelText = "Simple dir browse button",
                 style = wx.SUNKEN_BORDER|wx.CLIP_CHILDREN)
             innerbox.Add(  control, 0, wx.EXPAND)
-            ID = wx.NewId()
+            ID = wx.NewIdRef()
             innerbox.Add( wx.Button( panel, ID,"Change Label",  ), 1, wx.EXPAND)
             self.Bind(wx.EVT_BUTTON, self.OnChangeLabel , id=ID)
-            ID = wx.NewId()
+            ID = wx.NewIdRef()
             innerbox.Add( wx.Button( panel, ID,"Change Value",  ), 1, wx.EXPAND)
             self.Bind(wx.EVT_BUTTON, self.OnChangeValue, id=ID )
             panel.SetAutoLayout(True)

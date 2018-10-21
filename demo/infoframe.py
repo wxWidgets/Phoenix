@@ -17,12 +17,12 @@ class MyFrame(wx.Frame):
         menu = wx.Menu()
 
         # Enable output menu item
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         menu.Append(mID, "&Enable output", "Display output frame")
         self.Bind(wx.EVT_MENU, output.EnableOutput, id=mID)
 
         # Disable output menu item
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         menu.Append(mID, "&Disable output", "Close output frame")
         self.Bind(wx.EVT_MENU, output.DisableOutput, id=mID)
 

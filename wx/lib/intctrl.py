@@ -859,8 +859,8 @@ class IntCtrl(wx.TextCtrl):
             try:
                 return int( value )
             except ValueError:
-                if self.IsLongAllowed():
-                    return long( value )
+                if self.IsLongAllowed() and (LONGTYPE is not int):
+                    return LONGTYPE( value )
                 else:
                     raise
 
@@ -942,7 +942,7 @@ if __name__ == '__main__':
             style = wx.DEFAULT_DIALOG_STYLE ):
             wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
-            self.int_ctrl = IntCtrl(self, wx.NewId(), size=(55,20))
+            self.int_ctrl = IntCtrl(self, wx.ID_ANY, size=(55,20))
             self.OK = wx.Button( self, wx.ID_OK, "OK")
             self.Cancel = wx.Button( self, wx.ID_CANCEL, "Cancel")
 

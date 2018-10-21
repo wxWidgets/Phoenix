@@ -173,7 +173,7 @@ class MyCanvas(wx.ScrolledWindow):
         self.objids = []
         self.boundsdict = {}
         for i in range(SHAPE_COUNT):
-            id = wx.NewId()
+            id = wx.NewIdRef()
             dc.SetId(id)
             choice = random.randint(0,8)
             if choice in (0,1):

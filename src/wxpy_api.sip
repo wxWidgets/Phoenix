@@ -6,13 +6,13 @@
 // Author:      Robin Dunn
 //
 // Created:     19-Nov-2010
-// Copyright:   (c) 2010-2017 by Total Control Software
+// Copyright:   (c) 2010-2018 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
 
 %ModuleHeaderCode
-#include "wxpy_api.h"
+#include <wxPython/wxpy_api.h>
 %End
 
 //--------------------------------------------------------------------------

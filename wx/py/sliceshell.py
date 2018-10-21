@@ -813,13 +813,13 @@ class SlicesShell(editwindow.EditWindow):
             self.ID_UNDO = wx.ID_UNDO
             self.ID_REDO = wx.ID_REDO
         else:
-            self.ID_CUT = wx.NewId()
-            self.ID_COPY = wx.NewId()
-            self.ID_PASTE = wx.NewId()
-            self.ID_SELECTALL = wx.NewId()
-            self.ID_CLEAR = wx.NewId()
-            self.ID_UNDO = wx.NewId()
-            self.ID_REDO = wx.NewId()
+            self.ID_CUT = wx.NewIdRef()
+            self.ID_COPY = wx.NewIdRef()
+            self.ID_PASTE = wx.NewIdRef()
+            self.ID_SELECTALL = wx.NewIdRef()
+            self.ID_CLEAR = wx.NewIdRef()
+            self.ID_UNDO = wx.NewIdRef()
+            self.ID_REDO = wx.NewIdRef()
 
         # Assign handlers for edit events
         self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=self.ID_CUT)
@@ -3715,20 +3715,28 @@ class SlicesShell(editwindow.EditWindow):
 
     def SavePySlicesFile(self,fid):
         addComment=False
-        fid.write(usrBinEnvPythonText.replace('\n',os.linesep))
-        fid.write(pyslicesFormatHeaderText[-1].replace('\n',os.linesep))
+        
+        def fid_write(s):
+            fid.write(s.replace('\r\n', '\n')
+                       .replace('\n', os.linesep)
+                       .encode('utf-8'))
+        
+        fid_write(usrBinEnvPythonText)
+        fid_write(pyslicesFormatHeaderText[-1])
         for i in range(self.GetLineCount()):
             markers=self.MarkerGet(i)
             if markers & ( 1<<GROUPING_START | 1<<GROUPING_START_FOLDED ):
-                fid.write(groupingStartText.replace('\n',os.linesep))
+                fid_write(groupingStartText)
             if markers & ( 1<<INPUT_START | 1<<INPUT_START_FOLDED ):
-                fid.write(inputStartText.replace('\n',os.linesep))
+                fid_write(inputStartText)
                 addComment=False
             if markers & ( 1<<OUTPUT_START | 1<<OUTPUT_START_FOLDED ):
-                fid.write(outputStartText.replace('\n',os.linesep))
+                fid_write(outputStartText)
                 addComment=True
-            if addComment: fid.write('#')
-            fid.write(self.GetLine(i).replace('\n',os.linesep))
+            if addComment:
+                fid.write('#')
+            
+            fid_write(self.GetLine(i))
 
     # FIX ME!!
     def LoadPyFileAsSlice(self,fid):

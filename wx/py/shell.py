@@ -318,13 +318,13 @@ class Shell(editwindow.EditWindow):
             self.ID_UNDO = wx.ID_UNDO
             self.ID_REDO = wx.ID_REDO
         else:
-            self.ID_CUT = wx.NewId()
-            self.ID_COPY = wx.NewId()
-            self.ID_PASTE = wx.NewId()
-            self.ID_SELECTALL = wx.NewId()
-            self.ID_CLEAR = wx.NewId()
-            self.ID_UNDO = wx.NewId()
-            self.ID_REDO = wx.NewId()
+            self.ID_CUT = wx.NewIdRef()
+            self.ID_COPY = wx.NewIdRef()
+            self.ID_PASTE = wx.NewIdRef()
+            self.ID_SELECTALL = wx.NewIdRef()
+            self.ID_CLEAR = wx.NewIdRef()
+            self.ID_UNDO = wx.NewIdRef()
+            self.ID_REDO = wx.NewIdRef()
 
         # Assign handlers for edit events
         self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=self.ID_CUT)

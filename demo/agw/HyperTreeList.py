@@ -251,7 +251,7 @@ def GetSmilesImage():
 
 def opj(path):
     """Convert paths to the platform-specific separator"""
-    str = apply(os.path.join, tuple(path.split('/')))
+    str = os.path.join(*tuple(path.split('/')))
     # HACK: on Linux, a leading / gets lost...
     if path.startswith('/'):
         str = '/' + str
@@ -417,14 +417,11 @@ class PenDialog(wx.Dialog):
         else:
             self.parent.SetBorderPen(pen)
 
-        self.Destroy()
-        event.Skip()
+        self.EndModal(wx.ID_OK)
 
 
     def OnCancel(self, event):
-
-        self.Destroy()
-        event.Skip()
+        self.EndModal(wx.ID_CANCEL)
 
 
 #---------------------------------------------------------------------------
@@ -532,18 +529,15 @@ class TreeDialog(wx.Dialog):
 
         selection = self.listicons.GetSelection()
         self.parent.SetTreeButtons(selection)
-        self.Destroy()
-        event.Skip()
+        self.EndModal(wx.ID_OK)
 
 
     def OnCancel(self, event):
-
-        self.Destroy()
-        event.Skip()
+        self.EndModal(wx.ID_CANCEL)
 
 
 #---------------------------------------------------------------------------
-# Just A Dialog To Select Tree Cehck/Radio Item Icons
+# Just A Dialog To Select Tree Check/Radio Item Icons
 #---------------------------------------------------------------------------
 class CheckDialog(wx.Dialog):
 
@@ -669,14 +663,11 @@ class CheckDialog(wx.Dialog):
 
         selection = self.listicons.GetSelection()
         self.parent.SetCheckRadio(selection)
-        self.Destroy()
-        event.Skip()
+        self.EndModal(wx.ID_OK)
 
 
     def OnCancel(self, event):
-
-        self.Destroy()
-        event.Skip()
+        self.EndModal(wx.ID_CANCEL)
 
 
 #---------------------------------------------------------------------------
@@ -818,14 +809,11 @@ class TreeIcons(wx.Dialog):
 
         self.parent.SetNewIcons(newbitmaps)
 
-        self.Destroy()
-        event.Skip()
+        self.EndModal(wx.ID_OK)
 
 
     def OnCancel(self, event):
-
-        self.Destroy()
-        event.Skip()
+        self.EndModal(wx.ID_CANCEL)
 
 
     def GetBitmap(self, input, which):
@@ -1067,18 +1055,20 @@ class HyperTreeListDemo(wx.Frame):
         self.leftpanel.SetBackgroundColour(wx.WHITE)
         self.leftpanel.SetScrollRate(20, 20)
 
+        self.Fit()
+
 
     def CreateMenuBar(self):
 
         file_menu = wx.Menu()
 
-        AS_EXIT = wx.NewId()
+        AS_EXIT = wx.NewIdRef()
         file_menu.Append(AS_EXIT, "&Exit")
         self.Bind(wx.EVT_MENU, self.OnClose, id=AS_EXIT)
 
         help_menu = wx.Menu()
 
-        AS_ABOUT = wx.NewId()
+        AS_ABOUT = wx.NewIdRef()
         help_menu.Append(AS_ABOUT, "&About...")
         self.Bind(wx.EVT_MENU, self.OnAbout, id=AS_ABOUT)
 
@@ -1392,8 +1382,7 @@ class HyperTreeListDemo(wx.Frame):
         dlg = PenDialog(self, -1, oldpen=pen, pentype=0)
 
         dlg.ShowModal()
-
-        event.Skip()
+        dlg.Destroy()
 
 
     def OnColumnFont(self, event):
@@ -1490,7 +1479,7 @@ class HyperTreeListDemo(wx.Frame):
         dlg = PenDialog(self, -1, oldpen=pen, pentype=1)
 
         dlg.ShowModal()
-        event.Skip()
+        dlg.Destroy()
 
 
     def SetBorderPen(self, pen):
@@ -1502,16 +1491,14 @@ class HyperTreeListDemo(wx.Frame):
 
         dlg = TreeDialog(self, -1, oldicons=self.oldicons)
         dlg.ShowModal()
-
-        event.Skip()
+        dlg.Destroy()
 
 
     def OnButtonCheckRadio(self, event):
 
         dlg = CheckDialog(self, -1)
         dlg.ShowModal()
-
-        event.Skip()
+        dlg.Destroy()
 
 
     def SetTreeButtons(self, selection):
@@ -1547,6 +1534,7 @@ class HyperTreeListDemo(wx.Frame):
 
             il.Add(wx.Bitmap(bitmap_check, wx.BITMAP_TYPE_ICO))
             il.Add(wx.Bitmap(bitmap_uncheck, wx.BITMAP_TYPE_ICO))
+            il.Add(wx.Bitmap(bitmap_uncheck, wx.BITMAP_TYPE_ICO)) # TODO: we need an "undetermined check" icon...
             il.Add(wx.Bitmap(bitmap_flag, wx.BITMAP_TYPE_ICO))
             il.Add(wx.Bitmap(bitmap_unflag, wx.BITMAP_TYPE_ICO))
             self.tree.SetImageListCheck(16, 16, il)
@@ -2166,7 +2154,7 @@ class HyperTreeList(HTL.HyperTreeList):
         dlg = TreeIcons(self, -1, bitmaps=bitmaps)
         wx.EndBusyCursor()
         dlg.ShowModal()
-        event.Skip()
+        dlg.Destroy()
 
 
     def SetNewIcons(self, bitmaps):

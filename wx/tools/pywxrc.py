@@ -11,7 +11,7 @@
 #
 #              Editable blocks by Roman Rolinsky
 #
-# Copyright:   (c) 2004-2017 by Total Control Software, 2000 Vaclav Slavik
+# Copyright:   (c) 2004-2018 by Total Control Software, 2000 Vaclav Slavik
 # Licence:     wxWindows license
 # Tags:        phoenix-port
 #----------------------------------------------------------------------
@@ -73,7 +73,6 @@ class xrc%(windowName)s(wx.%(windowClass)s):
 #!XRCED:end-block:xrc%(windowName)s.PreCreate
 
     def __init__(self, parent):
-        # Two stage creation (see http://wiki.wxpython.org/index.cgi/TwoStageCreation)
         wx.%(windowClass)s.__init__(self)
         self.PreCreate()
         get_resources().Load%(windowClass)s(self, parent, "%(windowName)s")
@@ -84,7 +83,6 @@ class xrc%(windowName)s(wx.%(windowClass)s):
     SUBCLASS_HEADER = """\
 class %(subclass)s(wx.%(windowClass)s):
     def __init__(self):
-        # Two stage creation (see http://wiki.wxpython.org/index.cgi/TwoStageCreation)
         wx.%(windowClass)s.__init__(self)
         self.Bind(wx.EVT_WINDOW_CREATE, self.OnCreate)
 
@@ -398,7 +396,10 @@ class XmlResourceCompiler:
                 if widgetClass == "MenuItem":
                     outputList.append(self.templates.MENUBAR_MENUITEM_VAR % locals())
                 elif widgetClass == "Menu":
-                    label = widget.getElementsByTagName("label")[0]
+                    for e in widget.childNodes:
+                        if e.nodeType == e.ELEMENT_NODE and e.tagName == "label":
+                            label = e
+                            break
                     label = label.childNodes[0].data
                     outputList.append(self.templates.MENUBAR_MENU_VAR % locals())
                 else:
@@ -422,7 +423,10 @@ class XmlResourceCompiler:
                 if widgetClass == "MenuItem":
                     outputList.append(self.templates.MENU_MENUITEM_VAR % locals())
                 elif widgetClass == "Menu":
-                    label = widget.getElementsByTagName("label")[0]
+                    for e in widget.childNodes:
+                        if e.nodeType == e.ELEMENT_NODE and e.tagName == "label":
+                            label = e
+                            break
                     label = label.childNodes[0].data
                     outputList.append(self.templates.MENU_MENU_VAR % locals())
                 else:
@@ -467,22 +471,26 @@ class XmlResourceCompiler:
             widgetName = widget.getAttribute("name")
             if widgetName != "" and widgetClass != "":
                 vars.append(widgetName)
-                if widgetClass not in \
-                       ['tool', 'unknown', 'notebookpage', 'separator',
-                        'sizeritem', 'Menu', 'MenuBar', 'MenuItem']:
-                    outputList.append(self.templates.CREATE_WIDGET_VAR % locals())
-                elif widgetClass == "MenuBar":
+                if widgetClass == "MenuBar":
                     outputList.append(self.templates.FRAME_MENUBAR_VAR % locals())
                 elif widgetClass == "MenuItem":
                     outputList.append(self.templates.FRAME_MENUBAR_MENUITEM_VAR % locals())
                 elif widgetClass == "Menu":
-                    label = widget.getElementsByTagName("label")[0]
+                    # Only look directly under for the "label"
+                    for e in widget.childNodes:
+                        if e.nodeType == e.ELEMENT_NODE and e.tagName == "label":
+                            label = e
+                            break
                     label = label.childNodes[0].data
                     outputList.append(self.templates.FRAME_MENUBAR_MENU_VAR % locals())
-                elif widgetClass == "ToolBar":
-                    outputList.append(self.templates.FRAME_TOOLBAR_VAR % locals())
+#                 elif widgetClass == "ToolBar":
+#                     outputList.append(self.templates.FRAME_TOOLBAR_VAR % locals())
                 elif widgetClass == "tool":
                     outputList.append(self.templates.FRAME_TOOLBAR_TOOL_VAR % locals())
+                elif widgetClass in ('unknown', 'notebookpage', 'separator', 'sizeritem'):
+                    pass
+                else:
+                    outputList.append(self.templates.CREATE_WIDGET_VAR % locals())
 
         return outputList
 
@@ -848,7 +856,6 @@ def main(args=None):
     if not args:
         args = sys.argv[1:]
 
-    resourceFilename = ""
     outputFilename = None
     embedResources = False
     generateGetText = False
@@ -923,7 +930,7 @@ def main(args=None):
         print_("%s." % str(exc), file=sys.stderr)
     else:
         if outputFilename != "-":
-            print_("Resources written to %s." % outputFilename, file=outputFilename)
+            print_("Resources written to %s." % outputFilename, file=sys.stderr)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

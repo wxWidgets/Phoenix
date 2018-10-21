@@ -13,6 +13,13 @@ class statbox_Tests(wtc.WidgetTestCase):
         s = wx.StaticBox()
         s.Create(self.frame, label='StaticBox')
 
+    def test_statboxGetBordersForSizer(self):
+        s = wx.StaticBox(self.frame, label='StaticBox')
+        topBorder, otherBorder = s.GetBordersForSizer()
+        assert isinstance(topBorder, int)
+        assert isinstance(otherBorder, int)
+        assert topBorder >= 0
+        assert otherBorder >= 0
 
 #---------------------------------------------------------------------------
 

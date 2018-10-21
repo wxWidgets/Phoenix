@@ -199,6 +199,15 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
     PyList_Append(PlatformInfo, obj);
     Py_DECREF(obj);
 
+#if wxUSE_AUTOID_MANAGEMENT
+    _AddInfoString("autoidman");
+#endif
+
+    wxString sip_version = wxString("sip-") + wxString(SIP_VERSION_STR);
+    obj = wx2PyString(sip_version);
+    PyList_Append(PlatformInfo, obj);
+    Py_DECREF(obj);
+
 #undef _AddInfoString
 
     PyObject* PlatformInfoTuple = PyList_AsTuple(PlatformInfo);

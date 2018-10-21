@@ -290,6 +290,7 @@ def main(wxDir, args):
                             "--enable-optimise",
                             "--disable-debugreport",
                             "--enable-uiactionsim",
+                            "--enable-autoidman",
                             ]
 
         if sys.platform.startswith("darwin"):
@@ -404,6 +405,7 @@ def main(wxDir, args):
             flags["wxUSE_AFM_FOR_POSTSCRIPT"] = "0"
             flags["wxUSE_DATEPICKCTRL_GENERIC"] = "1"
             flags["wxUSE_IFF"] = "1"
+            flags["wxUSE_ACCESSIBILITY"] = "1"
 
             # Remove this when Windows XP finally dies, or when there is a
             # solution for ticket #13116...

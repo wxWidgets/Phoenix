@@ -5,7 +5,7 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -56,11 +56,19 @@ def run():
         else:
             func.find('defaultVal').default = 'wxEmptyString'
 
-    c.addCppMethod('long', 'ReadInt', '(const wxString& key, long defaultVal=0)',  """\
+    c.addCppMethod('long', '_cpp_ReadInt', '(const wxString& key, long defaultVal=0)',  """\
         long rv;
         self->Read(*key, &rv, defaultVal);
         return rv;
         """)
+    c.addPyMethod('ReadInt', '(self, key, defaultVal=0)', body="""\
+        import six
+        rv = self._cpp_ReadInt(key, defaultVal)
+        if six.PY2:
+            rv = int(rv)
+        return rv
+        """)
+
     c.addCppMethod('double', 'ReadFloat', '(const wxString& key, double defaultVal=0.0)', """\
         double rv;
         self->Read(*key, &rv, defaultVal);

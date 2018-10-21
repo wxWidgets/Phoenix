@@ -76,8 +76,8 @@ class AnalogClock(wx.Window):
         self.Setup = None
 
         # Make a context menu.
-        popup1 = wx.NewId()
-        popup2 = wx.NewId()
+        popup1 = wx.NewIdRef()
+        popup2 = wx.NewIdRef()
         cm = self.cm = wx.Menu()
         cm.Append(popup1, "Customize...")
         cm.Append(popup2, "About...")

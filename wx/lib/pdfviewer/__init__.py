@@ -59,10 +59,10 @@ Sample usage::
             super(PDFViewer, self).__init__(parent, **kwds)
 
             paneCont = self.GetContentsPane()
-            self.buttonpanel = pdfButtonPanel(paneCont, wx.NewId(),
+            self.buttonpanel = pdfButtonPanel(paneCont, wx.ID_ANY,
                                     wx.DefaultPosition, wx.DefaultSize, 0)
             self.buttonpanel.SetSizerProps(expand=True)
-            self.viewer = pdfViewer(paneCont, wx.NewId(), wx.DefaultPosition,
+            self.viewer = pdfViewer(paneCont, wx.ID_ANY, wx.DefaultPosition,
                                     wx.DefaultSize,
                                     wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
 

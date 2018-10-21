@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     24-Oct-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode('#include <wxpy_api.h>')
+    module.addHeaderCode('#include <wxPython/wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode('''\
     import wx
@@ -173,8 +173,8 @@ def run():
     c.addCppMethod('void', 'MarkerDefineRGBAImage', '(int markerNumber, wxPyBuffer* pixels)',
         doc="""\
             Define a marker from RGBA data.\n
-            It has the width and height from RGBAImageSetWidth/Height. You must 
-            ensure that the buffer is at least width*height*4 bytes long. 
+            It has the width and height from RGBAImageSetWidth/Height. You must
+            ensure that the buffer is at least width*height*4 bytes long.
             """,
         body="""\
             self->MarkerDefineRGBAImage(markerNumber, (unsigned char*)pixels->m_ptr);
@@ -184,7 +184,7 @@ def run():
     c.addCppMethod('void', 'RegisterRGBAImage', '(int type, wxPyBuffer* pixels)',
         doc="""\
             Register an RGBA image for use in autocompletion lists.\n
-            It has the width and height from RGBAImageSetWidth/Height. You must 
+            It has the width and height from RGBAImageSetWidth/Height. You must
             ensure that the buffer is at least width*height*4 bytes long.
             """,
         body="""\

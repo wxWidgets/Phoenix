@@ -122,7 +122,7 @@ class ArrowHead(object):
             self._metaFile = mf
             self._id = arrowId
             if self._id == -1:
-                self._id = wx.NewId()
+                self._id = wx.NewIdRef()
 
     def _GetType(self):
         return self._arrowType

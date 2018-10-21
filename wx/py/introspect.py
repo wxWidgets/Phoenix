@@ -175,7 +175,7 @@ def getCallTip(command='', locals=None):
         pass
     elif inspect.isfunction(obj):
         # tip1 is a string like: "getCallTip(command='', locals=None)"
-        argspec = inspect.getargspec(obj)
+        argspec = inspect.getargspec(obj) if not PY3 else inspect.getfullargspec(obj)
         argspec = inspect.formatargspec(*argspec)
         if dropSelf:
             # The first parameter to a method is a reference to an
@@ -325,7 +325,8 @@ def getTokens(command):
                 tokens.append(args)
             tokenize.tokenize_loop(f.readline, eater)
         else:
-            tokens = list(tokenize.tokenize(f.readline))
+            for t in tokenize.tokenize(f.readline):
+                tokens.append(t)
     except tokenize.TokenError:
         # This is due to a premature EOF, which we expect since we are
         # feeding in fragments of Python code.

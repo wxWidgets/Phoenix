@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -32,6 +32,11 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    c = module.find('wxFontInfo')
+    assert isinstance(c, etgtools.ClassDef)
+    ctor = c.find('wxFontInfo').findOverload('T pointSize')
+    ctor.find('pointSize').type = 'float'
 
     c = module.find('wxFont')
     assert isinstance(c, etgtools.ClassDef)
@@ -80,9 +85,8 @@ def run():
     #c.addProperty('Underlined GetUnderlined SetUnderlined')
     #c.addProperty('Strikethrough GetStrikethrough SetStrikethrough')
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('void*', 'GetHFONT', '()',
         doc="Returns the font's native handle.",

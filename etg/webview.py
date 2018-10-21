@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Nov-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -43,18 +43,23 @@ def run():
             #include <wx/msw/webview_ie.h>
         #endif
         """)
+    module.addHeaderCode('#include <wx/filesys.h>')
 
-    module.addGlobalStr('wxWebViewBackendDefault')
-    module.addGlobalStr('wxWebViewBackendIE')
-    module.addGlobalStr('wxWebViewBackendWebKit')
+    module.addGlobalStr('wxWebViewBackendDefault', 0)
+    module.addGlobalStr('wxWebViewBackendIE', 0)
+    module.addGlobalStr('wxWebViewBackendWebKit', 0)
+    module.addGlobalStr('wxWebViewNameStr', 0)
+    module.addGlobalStr('wxWebViewDefaultURLStr', 0)
+
+    # This tweak is needed only for the stub code
+    module.find('wxWebViewHandler.wxWebViewHandler').argsString = '(const wxString& scheme="")'
+
+    tools.generateStubs('wxUSE_WEBVIEW', module)
 
     c = module.find('wxWebView')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
     c.abstract = True
-
-    module.addGlobalStr('wxWebViewNameStr', c)
-    module.addGlobalStr('wxWebViewDefaultURLStr', c)
 
     for m in c.find('New').all():
         m.factory = True

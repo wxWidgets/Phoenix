@@ -28,7 +28,7 @@ class TestTreeCtrlPanel(wx.Panel):
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
         self.log = log
-        tID = wx.NewId()
+        tID = wx.NewIdRef()
 
         self.tree = MyTreeCtrl(self, tID, wx.DefaultPosition, wx.DefaultSize,
                                wx.TR_HAS_BUTTONS

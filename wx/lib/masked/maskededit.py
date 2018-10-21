@@ -6529,7 +6529,7 @@ class __test(wx.App):
             self.editList  = []
             rowcount    = 4
 
-            id, id1 = wx.NewId(), wx.NewId()
+            id, id1 = wx.NewIdRef(2)
             self.command1  = wx.Button( self.panel, id, "&Close" )
             self.command2  = wx.Button( self.panel, id1, "&AutoFormats" )
             self.sizer.Add(self.command1, row=0, col=0, flag=wx.ALL, border = 5)
@@ -6704,7 +6704,7 @@ To see a great example of validations in action, try entering a bad email addres
             self.sizer.Add( self.label3, row=3,col=1, flag=wx.ALL,border=5)
             self.sizer.Add( self.label4, row=3,col=2, flag=wx.ALL,border=5)
 
-            id, id1 = wx.NewId(), wx.NewId()
+            id, id1 = wx.NewIdRef(2)
             self.command1  = wx.Button( self.panel, id, "&Close")
             self.command2  = wx.Button( self.panel, id1, "&Print Formats")
             self.panel.Bind(wx.EVT_BUTTON, self.onClick, self.command1)

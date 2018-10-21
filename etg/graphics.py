@@ -5,7 +5,7 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -61,6 +61,7 @@ def run():
     c.mustHaveApp()
     c.addCppMethod('bool', 'IsOk', '()', 'return !self->IsNull();')
     c.addCppMethod('int', '__nonzero__', '()', "return !self->IsNull();")
+    c.addCppMethod('int', '__bool__', '()', "return !self->IsNull();")
 
 
     #---------------------------------------------
@@ -74,7 +75,7 @@ def run():
         pyArgsString='(autoPaintDC) -> GraphicsContext',
         isStatic=True,
         body="""\
-            return wxGraphicsContext::Create(autoPaintDC);
+            return wxGraphicsContext::Create(*autoPaintDC);
             """)
 
     m = c.find('Create').findOverload('wxEnhMetaFileDC')
@@ -85,7 +86,7 @@ def run():
         #if wxUSE_ENH_METAFILE
             return wxGraphicsContext::Create(*metaFileDC);
         #endif
-        #endif        
+        #endif
             wxPyRaiseNotImplemented();
             return NULL;
         """)

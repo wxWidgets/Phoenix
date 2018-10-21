@@ -1,4 +1,5 @@
 #----------------------------------------------------------------------
+#----------------------------------------------------------------------
 # Name:        buildtools.config
 # Purpose:     Code to set and validate platform options and etc. for
 #              the wxPython build.  Moved to their own module and
@@ -7,7 +8,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2013-2017 by Total Control Software
+# Copyright:   (c) 2013-2018 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -110,7 +111,8 @@ class Configuration(object):
         self.WXDIR = wxDir()
 
         self.includes = [phoenixDir() + '/sip/siplib',  # to get our version of sip.h
-                         phoenixDir() + '/src',         # for any hand-written headers
+                         phoenixDir() + '/wx/include',  # for the wxPython API
+                         phoenixDir() + '/src',         # for other hand-written headers
                          ]
 
         self.DOXY_XML_DIR = os.path.join(self.WXDIR, 'docs/doxygen/out/xml')
@@ -119,8 +121,9 @@ class Configuration(object):
                          '-w',    # enable warnings
                          '-o',    # turn on auto-docstrings
                          '-g',    # turn on acquire/release of GIL for everything
+                         '-n', 'wx.siplib', # name of the module containing the siplib
                          #'-e',    # turn on exceptions support
-                         #'-T',    # turn off writing the timestamp to the generated files                         '-g',    # always release and reaquire the GIL
+                         #'-T',    # turn off writing the timestamp to the generated files
                          #'-r',    # turn on function call tracing
                          '-I', os.path.join(phoenixDir(), 'src'),
                          '-I', os.path.join(phoenixDir(), 'sip', 'gen'),
@@ -166,6 +169,8 @@ class Configuration(object):
                              ('WXUSINGDLL', '1'),
                              ('ISOLATION_AWARE_ENABLED', None),
                              #('NDEBUG',),  # using a 1-tuple makes it do an undef
+                             ('SIP_MODULE_NAME', 'wx.siplib'),
+                             ('SIP_MODULE_BASENAME', 'siplib'),
                              ]
 
             self.libs = []
@@ -265,7 +270,7 @@ class Configuration(object):
                     # Combine with wx's ld command and stash it in the env
                     # where distutils will get it later.
                     LDSHARED = self.getWxConfigValue('--ld').replace(' -o', '') + ' ' + LDSHARED
-                    os.environ["LDSHARED"]  = LDSHARED
+                    self.LDSHARED = os.environ["LDSHARED"]  = LDSHARED
 
 
             # wxGTK settings

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     8-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -69,7 +69,8 @@ INCLUDES = [  # base and core stuff
               'position',
               'colour',
 
-              'stream', 'filesys',
+              'stream',
+              'filesys',
 
               # GDI and graphics
               'image',
@@ -101,6 +102,7 @@ INCLUDES = [  # base and core stuff
               'rawbmp',
 
               # more core
+              'access',
               'accel',
               'log',
               'dataobj',
@@ -257,7 +259,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode('#include <wxpy_api.h>')
+    module.addHeaderCode('#include <wxPython/wxpy_api.h>')
 
     module.addInclude(INCLUDES)
     module.includePyCode('src/core_ex.py', order=10)

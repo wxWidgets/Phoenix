@@ -115,7 +115,7 @@ to display non-critical information to the user."""
 
 
     def OnAddButton(self, event):
-        btnId = wx.NewId()
+        btnId = wx.NewIdRef()
 
         if self.checkBitmap.GetValue():
             bitmap = random.choice(self.valid_images)

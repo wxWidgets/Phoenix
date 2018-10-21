@@ -10,4 +10,4 @@ pytest
 pytest-xdist
 pytest-timeout
 numpy
-PyPubSub
+pillow

@@ -98,7 +98,7 @@ def run():
     }
 
     wxAcceleratorTable* table = new wxAcceleratorTable(count, tmpEntries);
-    delete tmpEntries;
+    delete [] tmpEntries;
     return table;
     """)
 

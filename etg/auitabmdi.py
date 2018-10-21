@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Oct-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -42,6 +42,7 @@ def run():
 
 
     c = module.find('wxAuiMDIChildFrame')
+    c.bases = ['wxTDIChildFrame']
     tools.fixTopLevelWindowClass(c)
     tools.fixSetStatusWidths(c.find('SetStatusWidths'))
     c.find('SetMenuBar.menuBar').transfer = True

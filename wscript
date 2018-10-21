@@ -3,7 +3,7 @@
 #  WAF script for building and installing the wxPython extension modules.
 #
 # Author:      Robin Dunn
-# Copyright:   (c) 2013 - 2017 by Total Control Software
+# Copyright:   (c) 2013 - 2018 by Total Control Software
 # License:     wxWindows License
 #-----------------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ def configure(conf):
         import distutils.msvc9compiler
         msvc_version = str( distutils.msvc9compiler.get_build_version() )
 
-        # When building for Python 3.7 the msvc_version returned will be  
+        # When building for Python 3.7 the msvc_version returned will be
         # "14.1" as that is the version of the BasePlatformToolkit that stock
         # Python 3.7 was built with, a.k.a v141, which is the default in
         # Visual Studio 2017. However, waf is using "msvc 15.0" to designate
@@ -75,7 +75,7 @@ def configure(conf):
         # fix up the msvc_version accordingly.
         if msvc_version == "14.1" and sys.version_info >= (3,7):
             ##msvc_version = '15.0'
-            
+
             # On the other hand, microsoft says that v141 and v140 (Visual
             # Studio 2015) are binary compatible, so for now let's just drop
             # it back to "14.0" until I get all the details worked out for
@@ -104,7 +104,7 @@ def configure(conf):
     conf.env.msvc_relwithdebug = conf.options.msvc_relwithdebug
 
     # Ensure that the headers in siplib and Phoenix's src dir can be found
-    conf.env.INCLUDES_WXPY = ['sip/siplib', 'src']
+    conf.env.INCLUDES_WXPY = ['sip/siplib', 'wx/include', 'src']
 
     if isWindows:
         # Windows/MSVC specific stuff
@@ -158,6 +158,7 @@ def configure(conf):
 
         # ** Add code for new modules here (and below for non-MSW)
 
+
         # tweak the PYEXT compile and link flags if making a --debug build
         if conf.env.debug:
             for listname in ['CFLAGS_PYEXT', 'CXXFLAGS_PYEXT']:
@@ -194,64 +195,78 @@ def configure(conf):
         rpath = ' --no-rpath' if not conf.options.no_magic else ''
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs core,net' + rpath,
-                       uselib_store='WX', mandatory=True)
+                       uselib_store='WX', mandatory=True,
+                       msg='Finding libs for WX')
 
         # Run it again with different libs options to get different
         # sets of flags stored to use with varous extension modules below.
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs adv,core,net' + rpath,
-                       uselib_store='WXADV', mandatory=True)
+                       uselib_store='WXADV', mandatory=True,
+                       msg='Finding libs for WXADV')
 
         libname = '' if cfg.MONOLITHIC else 'stc,' # workaround bug in wx-config
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args=('--cxxflags --libs %score,net' % libname) + rpath,
-                       uselib_store='WXSTC', mandatory=True)
+                       uselib_store='WXSTC', mandatory=True,
+                       msg='Finding libs for WXSTC')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs html,core,net' + rpath,
-                       uselib_store='WXHTML', mandatory=True)
+                       uselib_store='WXHTML', mandatory=True,
+                       msg='Finding libs for WXHTML')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs gl,core,net' + rpath,
-                       uselib_store='WXGL', mandatory=True)
+                       uselib_store='WXGL', mandatory=True,
+                       msg='Finding libs for WXGL')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs webview,core,net' + rpath,
-                       uselib_store='WXWEBVIEW', mandatory=True)
+                       uselib_store='WXWEBVIEW', mandatory=True,
+                       msg='Finding libs for WXWEBVIEW')
 
         if isDarwin:
             conf.check_cfg(path=conf.options.wx_config, package='',
                            args='--cxxflags --libs core,net' + rpath,
-                           uselib_store='WXWEBKIT', mandatory=True)
+                           uselib_store='WXWEBKIT', mandatory=True,
+                           msg='Finding libs for WXWEBKIT')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs xml,core,net' + rpath,
-                       uselib_store='WXXML', mandatory=True)
+                       uselib_store='WXXML', mandatory=True,
+                       msg='Finding libs for WXXML')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs xrc,xml,core,net' + rpath,
-                       uselib_store='WXXRC', mandatory=True)
+                       uselib_store='WXXRC', mandatory=True,
+                       msg='Finding libs for WXXRC')
 
         libname = '' if cfg.MONOLITHIC else 'richtext,' # workaround bug in wx-config
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs %score,net' % libname + rpath,
-                       uselib_store='WXRICHTEXT', mandatory=True)
+                       uselib_store='WXRICHTEXT', mandatory=True,
+                       msg='Finding libs for WXRICHTEXT')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs media,core,net' + rpath,
-                       uselib_store='WXMEDIA', mandatory=True)
+                       uselib_store='WXMEDIA', mandatory=True,
+                       msg='Finding libs for WXMEDIA')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs ribbon,core,net' + rpath,
-                       uselib_store='WXRIBBON', mandatory=True)
+                       uselib_store='WXRIBBON', mandatory=True,
+                       msg='Finding libs for WXRIBBON')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs propgrid,core' + rpath,
-                       uselib_store='WXPROPGRID', mandatory=True)
+                       uselib_store='WXPROPGRID', mandatory=True,
+                       msg='Finding libs for WXPROPGRID')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs aui,core' + rpath,
-                       uselib_store='WXAUI', mandatory=True)
+                       uselib_store='WXAUI', mandatory=True,
+                       msg='Finding libs for WXAUI')
 
         # ** Add code for new modules here
 
@@ -277,6 +292,13 @@ def configure(conf):
         conf.env.CFLAGS_WXPY.append('-UNDEBUG')
         conf.env.CXXFLAGS_WXPY.append('-UNDEBUG')
 
+        # set the name of our siplib module
+        conf.env.CFLAGS_WXPY.append('-DSIP_MODULE_NAME=wx.siplib')
+        conf.env.CXXFLAGS_WXPY.append('-DSIP_MODULE_NAME=wx.siplib')
+
+        conf.env.CFLAGS_WXPY.append('-DSIP_MODULE_BASENAME=siplib')
+        conf.env.CXXFLAGS_WXPY.append('-DSIP_MODULE_BASENAME=siplib')
+
         # Add basic debug info for all builds
         conf.env.CFLAGS_WXPY.append('-g')
         conf.env.CXXFLAGS_WXPY.append('-g')
@@ -294,13 +316,24 @@ def configure(conf):
         for key in flags:
             _cleanFlags(conf, key)
 
+        # Waf 2 is now calling pythonX.Y-config for fetching libs and flags,
+        # and it may be outputting flags that will cause an explicit link to
+        # Python's lib, which we don't want as that could tie us to that
+        # specific Python instance instead of the one that is loading the
+        # wxPython extension modules. That's okay for PYEMBED but not for PYEXT
+        # configs.
+        conf.env.LIBPATH_PYEXT = []
+        conf.env.LIB_PYEXT = []
+
 
         # Use the same compilers that wxWidgets used
         if cfg.CC:
             conf.env.CC = cfg.CC.split()
         if cfg.CXX:
             conf.env.CXX = cfg.CXX.split()
-
+        if cfg.LDSHARED:
+            conf.env.LINK_CC = cfg.LDSHARED.split()
+            conf.env.LINK_CXX = cfg.LDSHARED.split()
 
         # Some Mac-specific stuff
         if isDarwin:

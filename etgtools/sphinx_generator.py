@@ -4,7 +4,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -1979,13 +1979,13 @@ class XMLDocString(object):
         else:
             raise Exception('Unhandled docstring kind for %s'%xml_item.__class__.__name__)
 
-        # Some of the Exctractors (xml item) will set deprecated themselves, in which case it is set as a
+        # Some of the Extractors (xml item) will set deprecated themselves, in which case it is set as a
         # non-empty string. In such cases, this branch will insert a deprecated section into the xml tree
         # so that the Node Tree (see classes above) will generate the deprecated  tag on their own in self.RecurseXML
         if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, string_base):
             element = et.Element('deprecated', kind='deprecated')
             element.text = xml_item.deprecated
-
+            
             deprecated_section = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
             self.root.AddSection(deprecated_section)
 

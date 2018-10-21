@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -26,10 +26,6 @@ from sphinxtools.utilities import findDescendants
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
 # methods, functions and other items in the C/C++ API being wrapped.
-#
-# NOTE: Currently very little is being done with the docstrings. They can
-# either be reprocessed later by the document generator or we can do more
-# tinkering with them here.  It just depends on decisions not yet made...
 #---------------------------------------------------------------------------
 
 class BaseDef(object):
@@ -83,10 +79,21 @@ class BaseDef(object):
                 itemid = item.get('id')
                 if itemid and itemid.startswith('deprecated'):
                     self.deprecated = True
-                    break
+                    return
 
-            if self.deprecated:
-                break
+
+    def clearDeprecated(self):
+        """
+        Remove the deprecation notice from the detailedDoc, if any, and reset
+        self.deprecated to False.
+        """
+        self.deprecated = False
+        for para in self.detailedDoc:
+            for item in para.iter():
+                itemid = item.get('id')
+                if itemid and itemid.startswith('deprecated'):
+                    self.detailedDoc.remove(para)
+                    return
 
 
     def ignore(self, val=True):
@@ -1229,6 +1236,7 @@ class CppMethodDef(MethodDef):
         self.cppSignature = cppSignature
         self.virtualCatcherCode = virtualCatcherCode
         self.isCore = _globalIsCore
+        self.isSlot = False
         self.__dict__.update(kw)
 
     @staticmethod
@@ -1573,6 +1581,8 @@ class ModuleDef(BaseDef):
         gv = GlobalVarDef(type='const char*', name=name)
         if before is None:
             self.addItem(gv)
+        elif isinstance(before, int):
+            self.insertItem(before, gv)
         else:
             self.insertItemBefore(before, gv)
         return gv

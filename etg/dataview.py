@@ -5,7 +5,7 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -80,12 +80,10 @@ def run():
     c = module.find('wxDataViewItem')
     assert isinstance(c, etgtools.ClassDef)
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
-    c.addCppMethod('long', '__hash__', '()', """\
-        return (long)self->GetID();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
+    c.addCppMethod('long', '__hash__', '()', "return (long)self->GetID();")
+
     c.addCppMethod('bool', '__eq__', '(wxDataViewItem* other)',
                    "return other ? (self->GetID() == other->GetID()) : false;")
     c.addCppMethod('bool', '__ne__', '(wxDataViewItem* other)',

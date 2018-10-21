@@ -43,8 +43,8 @@ def run():
         #endif
         """)
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();""")
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('int', 'GetIndex', '()', """\
         #ifdef __WXMSW__

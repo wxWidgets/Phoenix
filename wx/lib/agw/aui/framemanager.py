@@ -4234,6 +4234,7 @@ class AuiManager(wx.EvtHandler):
         self.Bind(EVT_AUI_PANE_DOCKED, self.OnPaneDocked)
 
         self.Bind(auibook.EVT_AUINOTEBOOK_BEGIN_DRAG, self.OnTabBeginDrag)
+        self.Bind(auibook.EVT_AUINOTEBOOK_END_DRAG, self.OnTabEndDrag)
         self.Bind(auibook.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnTabPageClose)
         self.Bind(auibook.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnTabSelected)
 
@@ -4333,13 +4334,16 @@ class AuiManager(wx.EvtHandler):
 
         if p.IsOk():
             if p.IsNotebookPage():
-                if show:
-
-                    notebook = self._notebooks[p.notebook_id]
-                    id = notebook.GetPageIndex(p.window)
-                    if id >= 0:
-                        notebook.SetSelection(id)
+                notebook = self._notebooks[p.notebook_id]
+                page_idx = notebook.GetPageIndex(p.window)
+                if page_idx >= 0:
+                    notebook.HidePage(page_idx, not show)
+                    if show:
+                        notebook.SetSelection(page_idx)
+                if notebook.GetShownPageCount() > 0:
                     self.ShowPane(notebook, True)
+                else:
+                    self.ShowPane(notebook, False)
 
             else:
                 p.Show(show)
@@ -5030,14 +5034,14 @@ class AuiManager(wx.EvtHandler):
         if pane_info.window and pane_info.window.IsShown():
             pane_info.window.Show(False)
 
-        # make sure that we are the parent of this window
-        if pane_info.window and pane_info.window.GetParent() != self._frame:
-            pane_info.window.Reparent(self._frame)
-
         # if we have a frame, destroy it
         if pane_info.frame:
+            # make sure that we are the parent of this window
+            if pane_info.window and pane_info.window.GetParent() != self._frame:
+                pane_info.window.Reparent(self._frame)
             pane_info.frame.Destroy()
             pane_info.frame = None
+            pane_info.Hide()
 
         elif pane_info.IsNotebookPage():
             # if we are a notebook page, remove ourselves...
@@ -5052,7 +5056,14 @@ class AuiManager(wx.EvtHandler):
                     notebook = self._notebooks[nid]
                     page_idx = notebook.GetPageIndex(pane_info.window)
                     if page_idx >= 0:
-                        notebook.RemovePage(page_idx)
+                        if not pane_info.IsDestroyOnClose():
+                            self.ShowPane(pane_info.window, False)
+
+        else:
+            if pane_info.window and pane_info.window.GetParent() != self._frame:
+                pane_info.window.Reparent(self._frame)
+            pane_info.Dock().Hide()
+
 
         # now we need to either destroy or hide the pane
         to_destroy = 0
@@ -5065,20 +5076,17 @@ class AuiManager(wx.EvtHandler):
                 if pane_info.dock_direction in [AUI_DOCK_LEFT, AUI_DOCK_RIGHT]:
                     tb.SetAGWWindowStyleFlag(tb.GetAGWWindowStyleFlag() | AUI_TB_VERTICAL)
 
-            pane_info.Dock().Hide()
-
         if pane_info.IsNotebookControl():
 
             notebook = self._notebooks[pane_info.notebook_id]
-            while notebook.GetPageCount():
-                window = notebook.GetPage(0)
-                notebook.RemovePage(0)
+            for idx in range(notebook.GetPageCount()-1, -1, -1):
+                window = notebook.GetPage(idx)
                 info = self.GetPane(window)
-                if info.IsOk():
-                    info.notebook_id = -1
-                    info.dock_direction = AUI_DOCK_NONE
-                    # Note: this could change our paneInfo reference ...
-                    self.ClosePane(info)
+                # close page if its IsDestroyOnClose flag is set
+                if info.IsDestroyOnClose():
+                    if info.IsOk():
+                        # Note: this could change our paneInfo reference ...
+                        self.ClosePane(info)
 
         if to_destroy:
             to_destroy.Destroy()
@@ -5445,6 +5453,17 @@ class AuiManager(wx.EvtHandler):
         # mark all panes currently managed as docked and hidden
         saveCapt = {} # see restorecaption param
         for pane in self._panes:
+
+            # dock the notebook pages
+            if pane.IsNotebookPage():
+                notebook = self._notebooks[pane.notebook_id]
+                idx = notebook.GetPageIndex(pane.window)
+                notebook.RemovePage(idx)
+                pane.window.Reparent(self._frame)
+                nb = self.GetPane(notebook)
+                pane.notebook_id = -1
+                pane.Direction(nb.dock_direction)
+
             pane.Dock().Hide()
             saveCapt[pane.name] = pane.caption
 
@@ -5759,6 +5778,9 @@ class AuiManager(wx.EvtHandler):
         if spacer_only or not pane.window:
             sizer_item = vert_pane_sizer.Add((1, 1), 1, wx.EXPAND)
         else:
+            if pane.window.GetContainingSizer():
+                # Make sure that there is only one sizer to this window
+                pane.window.GetContainingSizer().Detach(pane.window);
             sizer_item = vert_pane_sizer.Add(pane.window, 1, wx.EXPAND)
             vert_pane_sizer.SetItemMinSize(pane.window, (1, 1))
 
@@ -6183,7 +6205,12 @@ class AuiManager(wx.EvtHandler):
             if not dock.fixed:
                 for jj in range(dock_pane_count):
                     pane = dock.panes[jj]
-                    pane.dock_pos = jj
+                    if pane.IsNotebookPage() and pane.notebook_id < len(self._notebooks):
+                        # update dock_pos to its index in notebook
+                        notebook = self._notebooks[pane.notebook_id]
+                        pane.dock_pos = notebook.GetPageIndex(pane.window)
+                    else:
+                        pane.dock_pos = jj
 
             # if the dock mode is fixed, and none of the panes
             # are being moved right now, make sure the panes
@@ -6503,7 +6530,7 @@ class AuiManager(wx.EvtHandler):
             else:
 
                 if p.IsToolbar():
-#                    self.SwitchToolBarOrientation(p)
+                    self.SwitchToolBarOrientation(p)
                     p.best_size = p.window.GetBestSize()
 
                 if p.window and not p.IsNotebookPage() and p.window.IsShown() != p.IsShown():
@@ -6597,12 +6624,14 @@ class AuiManager(wx.EvtHandler):
                     window.Reparent(self._frame)
                     pageCounter -= 1
                     allPages -= 1
+                    paneInfo.Direction(self.GetPane(notebook).dock_direction)
 
                 pageCounter += 1
 
             notebook.DoSizing()
 
         # Add notebook pages that aren't there already...
+        pages_and_panes = {}
         for paneInfo in self._panes:
             if paneInfo.IsNotebookPage():
 
@@ -6613,8 +6642,9 @@ class AuiManager(wx.EvtHandler):
 
                 if page_id < 0:
 
-                    paneInfo.window.Reparent(notebook)
-                    notebook.AddPage(paneInfo.window, title, True, paneInfo.icon)
+                    if paneInfo.notebook_id not in pages_and_panes:
+                        pages_and_panes[paneInfo.notebook_id] = []
+                    pages_and_panes[paneInfo.notebook_id].append(paneInfo)
 
                 # Update title and icon ...
                 else:
@@ -6627,6 +6657,16 @@ class AuiManager(wx.EvtHandler):
             # Wire-up newly created notebooks
             elif paneInfo.IsNotebookControl() and not paneInfo.window:
                 paneInfo.window = self._notebooks[paneInfo.notebook_id]
+
+        for notebook_id, pnp in six.iteritems(pages_and_panes):
+            # sort the panes with dock_pos
+            sorted_pnp = sorted(pnp, key=lambda pane: pane.dock_pos)
+            notebook = self._notebooks[notebook_id]
+            for pane in sorted_pnp:
+                title = (pane.caption == "" and [pane.name] or [pane.caption])[0]
+                pane.window.Reparent(notebook)
+                notebook.AddPage(pane.window, title, True, pane.icon)
+            notebook.DoSizing()
 
         # Delete empty notebooks, and convert notebooks with 1 page to
         # normal panes...
@@ -6643,6 +6683,7 @@ class AuiManager(wx.EvtHandler):
                 if child_pane.IsOk() and notebook_pane.IsOk():
 
                     child_pane.SetDockPos(notebook_pane)
+                    child_pane.Show(notebook_pane.IsShown())
                     child_pane.window.Hide()
                     child_pane.window.Reparent(self._frame)
                     child_pane.frame = None
@@ -6666,46 +6707,7 @@ class AuiManager(wx.EvtHandler):
 
             else:
 
-                # Correct page ordering. The original wxPython code
-                # for this did not work properly, and would misplace
-                # windows causing errors.
                 self._notebooks[nb_idx] = notebook
-                pages = notebook.GetPageCount()
-                selected = notebook.GetPage(notebook.GetSelection())
-
-                # Take each page out of the notebook, group it with
-                # its current pane, and sort the list by pane.dock_pos
-                # order
-                pages_and_panes = []
-                for idx in list(range(pages)):
-                    page = notebook.GetPage(idx)
-                    pane = self.GetPane(page)
-                    pages_and_panes.append((page, pane))
-
-                sorted_pnp = sorted(pages_and_panes, key=lambda tup: tup[1].dock_pos)
-                if sorted_pnp != pages_and_panes:
-                    notebook.Freeze()
-                    pages_and_panes = []
-                    for idx in reversed(list(range(pages))):
-                        page = notebook.GetPage(idx)
-                        pane = self.GetPane(page)
-                        pages_and_panes.append((page, pane))
-                        notebook.RemovePage(idx)
-
-                    # Grab the attributes from the panes which are ordered
-                    # correctly, and copy those attributes to the original
-                    # panes. (This avoids having to change the ordering
-                    # of self._panes) Then, add the page back into the notebook
-                    sorted_attributes = [self.GetAttributes(tup[1])
-                                         for tup in sorted_pnp]
-                    for attrs, tup in zip(sorted_attributes, pages_and_panes):
-                        pane = tup[1]
-                        self.SetAttributes(pane, attrs)
-                        notebook.AddPage(pane.window, pane.caption)
-
-                    notebook.SetSelection(notebook.GetPageIndex(selected), True)
-                    notebook.DoSizing()
-                    notebook.Thaw()
 
                 # It's a keeper.
                 remap_ids[nb] = nb_idx
@@ -7418,6 +7420,18 @@ class AuiManager(wx.EvtHandler):
                 # not our window
                 event.Skip()
 
+    def OnTabEndDrag(self, event):
+        """
+        Handles the ``EVT_AUINOTEBOOK_END_DRAG`` event.
+
+        :param `event`: a :class:`~wx.lib.agw.aui.auibook.AuiNotebookEvent` event to be processed.
+        """
+
+        if self._masterManager:
+            self._masterManager.OnTabEndDrag(event)
+        else:
+            self.Update()
+            event.Skip()
 
     def OnTabPageClose(self, event):
         """

@@ -38,7 +38,7 @@ class DrawFrame(wx.Frame):
         MenuBar.Append(FileMenu, "&File")
 
         view_menu = wx.Menu()
-        zfit = view_menu.Append(wx.NewId(), "Zoom to &Fit", "Zoom to fit the window")
+        zfit = view_menu.Append(wx.ID_ANY, "Zoom to &Fit", "Zoom to fit the window")
         self.Bind(wx.EVT_MENU, self.ZoomToFit, zfit)
         MenuBar.Append(view_menu, "&View")
 

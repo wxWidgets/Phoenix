@@ -3202,14 +3202,15 @@ class TreeListMainWindow(CustomTreeCtrl):
             else:
                 oldY = y_mid + h//2
 
-            for child in item.GetChildren():
-
+            children = item.GetChildren()
+            for child in children:
                 y, x_maincol = self.PaintLevel(child, dc, level+1, y, x_maincol)
 
-                # draw vertical line
-                if not self.HasAGWFlag(wx.TR_NO_LINES):
-                    Y1 = child.GetY() + child.GetHeight()//2
-                    dc.DrawLine(x, oldY, x, Y1)
+
+            if not self.HasAGWFlag(wx.TR_NO_LINES) and children:
+                last_child = children[-1]
+                Y1 = last_child.GetY() + last_child.GetHeight() / 2
+                dc.DrawLine(x, oldY, x, Y1)
 
         return y, x_maincol
 
@@ -3833,7 +3834,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         checkimage = item.GetCurrentCheckedImage()
         if checkimage is not None:
-            wcheck, hcheck = self._imageListCheck.GetSize(checkimage)
+            wcheck, hcheck = self._imageListCheck.GetSize(0)
             wcheck += 2*_MARGIN
         else:
             wcheck = 0

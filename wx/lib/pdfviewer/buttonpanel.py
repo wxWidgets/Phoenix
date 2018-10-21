@@ -97,7 +97,7 @@ class pdfButtonPanel(bp.ButtonPanel):
         for item in panelitems:
             if item[0].lower() == 'btn':
                 x_type, image, kind, popup, handler = item
-                btn = bp.ButtonInfo(self, wx.NewId(),image, kind=kind,
+                btn = bp.ButtonInfo(self, wx.ID_ANY,image, kind=kind,
                                     shortHelp=popup, longHelp='')
                 self.AddButton(btn)
                 btn.Enable(False)

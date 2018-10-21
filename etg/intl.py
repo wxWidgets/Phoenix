@@ -40,6 +40,7 @@ def run():
     c.addPrivateCopyCtor()
 
     c.addCppMethod('int', '__nonzero__', '()', 'return self->IsOk();')
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
 
     c = module.find('wxLanguageInfo')

@@ -21,15 +21,15 @@ import random
 
 #----------------------------------------------------------------------
 
-ID_BackgroundColour = wx.NewId()
-ID_GradientFrom = wx.NewId()
-ID_GradientTo = wx.NewId()
-ID_BorderColour = wx.NewId()
-ID_CaptionColour = wx.NewId()
-ID_ButtonTextColour = wx.NewId()
-ID_SelectionBrush = wx.NewId()
-ID_SelectionPen = wx.NewId()
-ID_SeparatorColour = wx.NewId()
+ID_BackgroundColour = wx.NewIdRef()
+ID_GradientFrom = wx.NewIdRef()
+ID_GradientTo = wx.NewIdRef()
+ID_BorderColour = wx.NewIdRef()
+ID_CaptionColour = wx.NewIdRef()
+ID_ButtonTextColour = wx.NewIdRef()
+ID_SelectionBrush = wx.NewIdRef()
+ID_SelectionPen = wx.NewIdRef()
+ID_SeparatorColour = wx.NewIdRef()
 
 
 #----------------------------------------------------------------------
@@ -605,7 +605,7 @@ class ButtonPanelDemo(wx.Frame):
                 kind = wx.ITEM_NORMAL
                 longHelp = "Simple Button without label No %d"%(count+1)
 
-            btn = bp.ButtonInfo(self.titleBar, wx.NewId(),
+            btn = bp.ButtonInfo(self.titleBar, wx.ID_ANY,
                                 png[0], kind=kind,
                                 shortHelp=shortHelp, longHelp=longHelp)
 
@@ -665,7 +665,7 @@ class ButtonPanelDemo(wx.Frame):
             hasText = random.randint(0, 1)
             itemKind = random.randint(0, 1)
 
-            btn = bp.ButtonInfo(self.titleBar, wx.NewId(), self.pngs[itemImage][0],
+            btn = bp.ButtonInfo(self.titleBar, wx.ID_ANY, self.pngs[itemImage][0],
                                 kind=itemKind)
 
             if hasText:

@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     5-June-2008
-# Copyright:   (c) 2008-2017 by Total Control Software
+# Copyright:   (c) 2008-2018 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 
@@ -120,7 +120,7 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
 
         # Set some wx.Window properties
         if wxid == wx.ID_ANY:
-            wxid = wx.Window.NewControlId()
+            wxid = wx.NewIdRef()
         self.SetId(wxid)
         self.SetName(name)
         self.SetMinSize(size)

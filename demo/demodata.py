@@ -42,6 +42,7 @@ _treeList = [
         'LEDNumberCtrl',
         'DynamicSashWindow',
         'TreeListCtrl',
+        'NotificationMessage',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -173,7 +174,6 @@ _treeList = [
         'ExpandoTextCtrl',
         'FancyText',
         'FileBrowseButton',
-        'FloatBar',
         'FloatCanvas',
         'HtmlWindow',
         'HTML2_WebView',
@@ -183,6 +183,7 @@ _treeList = [
         'MaskedNumCtrl',
         'MediaCtrl',
         'MultiSplitterWindow',
+        'NotificationMessage',
         'OwnerDrawnComboBox',
         'Pickers',
         'PropertyGrid',

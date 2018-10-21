@@ -5,7 +5,7 @@
 #
 # Created:     06-Sept-2011
 # Copyright:   (c) 2013 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -46,9 +46,8 @@ def run():
     # TODO: This ctor ^^ in Classic has a custom implementation for wxGTK that
     # sets the hotspot. Is that still needed?
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-    """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('long', 'GetHandle', '()', """\
     #ifdef __WXMSW__

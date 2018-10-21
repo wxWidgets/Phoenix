@@ -17,11 +17,11 @@ Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.1.0``
 
 Starting with this release wxPython has switched to tracking the wxWidgets
-master branch for the wxWidgets source code wxPython is built upon, and which
-is included in the wxPython source archives. Along with this change a new
+master branch for the wxWidgets source code which wxPython is built upon, and
+which is included in the wxPython source archives. Along with this change a new
 ``wxPy-4.0.x`` branch has been created in the git repository for continuing
-maintenance releases of the 4.0.x series of wxPython, which will still track
-the ``WX_3_0_BRANCH`` wxWidgets branch.
+maintenance releases of the 4.0.x series of wxPython, which will still track the
+``WX_3_0_BRANCH`` wxWidgets branch.
 
 
 New and improved stuff in this release:
@@ -39,14 +39,163 @@ Other changes in this release:
   you need to change.
 
 
-
-
-
-4.0.2
------
+4.0.4 ""
+--------
 * (not yet released)
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.0.2
+PyPI:   https://pypi.org/project/wxPython/4.0.4
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.4``
+
+Changes in this release include the following:
+
+* Fixed an issue where wx.lib.intctrl would erroneously attempt to use ``long``
+  on Python3
+
+* Clear LIBPATH_PYEXT and LIB_PYEXT for linux builds too. (#904)
+
+* Added a dependency on the Pillow package since it's used in some wx.lib.agw
+  modules. (PR #908)
+
+* Add flag to hide page in wx.lib.agw.aui.notebook. (#895)
+
+* Switch wx.lib.plot to issue deprecation warnings with PlotPendingDeprecation
+  so it doesn't have to enable all warnings to get them to be shown by default.
+  (#902)
+
+* Added a Python 3.7 builder on Fedora 28. (#925)
+
+* Fix the object ownership transfer for wx.Menu.Insert() (#931)
+
+* Added wx.Treebook.GetTreeCtrl, wx.Listbook.GetListView and
+  wx.Choicebook.GetChoiceCtrl. (#918)
+
+* Removed the wx.BookCtrlBase.RemovePage workaround as it was causing problems
+  and doesn't seem to be necessary any more. The existing wxWidgets assertions
+  are catching the out of range error just fine, however if wxWidgets was built
+  without the debug helpers turned on then it could still cause a crash. (#888)
+
+* Reverted the changes which removed the content of the wx.lib.pubsub package
+  and encouraged users to switch to the real PyPubSub package instead. Removing
+  it caused more issues than were expected so it has been restored and the code
+  updated to PyPubSub v3.3.0. Version 4.0.0 is available upstream, but it is not
+  compatible with Python 2.7. Now, wx.lib.pubsub is actually deprecated instead
+  of just trying to pass control over to the upstream PyPubSub library. (#932)
+
+* Improve calltip stability in pyshell. (#941)
+
+* Fix TypeError in wx.lib.throbber. (#924)
+
+* Fix missing parameter tool_id in
+  wx.lib.agw.ribbon.toolbar.RibbonToolBar.AddToggleTool. (#947)
+
+* Add a step to wx.Config.ReadInt to attempt converting from long to int
+  under python2. (#384)
+
+* Add virtual behavior for wx.RichTextCtrl and wx.TextCtrl's Copy/Cut/Paste methods
+  and their Can* counterparts. (#954)
+
+* Fix IO type in wx.lib.agw.thumbnailctrl  (#959)
+
+* Fix type error that would occur using pycolourchooser. (#957)
+
+* Optimize line drawing in HyperTreeList. (#973)
+
+* Add wrapper for wx.StaticBox.GetBordersForSizer and use it in the demo to do
+  platform-specific layout of the items in the StaticBox. (#974)
+
+* Update wx.Point, wx.RealPoint, and wx.Size to use floating
+  point arithmetic when conducting scalar multiplication (#971)
+
+* Fix load/save bugs in PySlices (PR#978)
+
+* Replace deprecated PIL.Image.tostring (PR#1005)
+
+* Fix rendering and mouse sensitivity in UltimateListCtrl when adding HyperText
+  items. (#1010)
+  
+* Added a parameter to lib.agw.CustomTreeCtrl.SetItemWindow(), to allow
+  positioning the Window (a small image) on the left of text in a
+  CustomTreeItem. (#PR886).
+
+* Declared DeleteAllPages in the notebook subclasses, so the proper C++ 
+  implementation will be called. (#972)
+
+* Removed wx.lib.floatbar, which has been deprecated forever and probably
+  hasn't been working in nearly as long. (#976)
+
+* Updated SIP to version 4.19.13.
+
+* Fix an issue in wx.lib.agw.aui.AuiManager where the orientation of
+  an AuiToolBar would not be updated when calling LoadPerspective. (#917)
+
+* Fixed a bug in wx.FileSystemHandler.OpenFile where the object ownership was
+  not being transferred correctly, causing a crash after a premature object
+  deletion. (#926)
+
+* Fixed wx.ListCtrl.Append when wx.LC_SORT style is used, so appending items out
+  of order does not lose the data for the remaining columns. (#906)
+  
+* Add wx.Accessible, it's Windows-only, will raise a NotImplementedError
+  exception on the other platforms. (#958)
+
+* Added the ability to generate stub classes for use when optional wxWidgets
+  features are not part of the build. So far, stubs are available for
+  wx.Accessible, wx.glcanvas, wx.media and wx.html2.
+
+* Moved the wxpy_api.h file into the wx package at wx/include/wxPython so it
+  will be included in the wheel file. (#961)
+
+* Fixed how string data is added to a virtual file-like object in
+  wx.MemoryFSHandler. All strings are now added to the file as utf-8 encoded data,
+  in both Python2 and Python3, and will be read from the virtual file the same
+  way. If you need to use some other encoding for some reason you can first
+  convert the text to a bytesarray or other buffer protocol compatible object and
+  then create the virtual file from that data. (#969)
+  
+
+
+
+
+4.0.3 "The show must go on. (Die show-stoppers! Die!)"
+------------------------------------------------------
+* 25-June-2018
+
+PyPI:   https://pypi.org/project/wxPython/4.0.3
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.3``
+
+Changes in this release include the following:
+
+* Fixed a linking problem on macOS. The new waf added an explicit link to the
+  Python shared library which meant that it would try to load it at runtime,
+  even if a different Python (such as Anaconda, EDM or Homebrew) was used to
+  import wxPython. This, of course, caused runtime errors. (#892)
+
+* Sort pages by dock_pos when added to automatic (agw.aui) notebook. (#882)
+
+* Fix a bug in py.introspect.getTokens. (#889)
+
+* Added Vagrant configuration for Fedora-28. Removed Fedora-23 (#884)
+
+* Added wrappers for the wx.WindowIDRef class and added the wx.NewIdRef
+  function. These will make it possible to create reserved Window IDs using the
+  same mechanism which is used when passing wx.ID_ANY to a widget constructor.
+  The object returned by wx.NewIdRef will automatically convert to an int when
+  passing it to a window constructor, and can also be used as the source in a
+  Bind(). (#896)
+
+* Fixed issue when sys.prefix is not unicode (Python2) and when its contents
+  are not translatable to utf-8.
+
+
+
+
+4.0.2 "Cute as a June bug!"
+---------------------------
+* 16-June-2018
+
+PyPI:   https://pypi.org/project/wxPython/4.0.2
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.0.2``
 
@@ -62,10 +211,10 @@ Changes in this release include the following:
 
 * Fix leaking image list in CheckListCtrlMixin (#752)
 
-* All items marked as deprecated in the wxWidgets interface files will now
-  throw a DeprecationWarning when used from wxPython. Many of these items are
-  disappearing in 4.1 so it's important to ensure they are deprecated at
-  runtime too instead of just in the docs. (#749)
+* All items marked as deprecated in the wxWidgets interface (documentation)
+  files will now throw a DeprecationWarning when used from wxPython. Many of
+  these items are disappearing in 4.1 so it's important to ensure they are
+  deprecated at runtime too instead of just in the docs. (#749)
 
 * Ensure that the attribute list given to the GLCanvas constructor is
   zero-terminated like it was in Classic. (#770)
@@ -79,13 +228,13 @@ Changes in this release include the following:
   since otherwise it would be caught when child windows are destroyed too,
   which causes problems in this case. (#778)
 
-* Fixed a problem where wx.TreeCtrl.OnCompareItems is not being called in
+* Fixed a problem where wx.TreeCtrl.OnCompareItems was not being called in
   derived classes on Windows. This was due to an optimization that wasn't
   compatible with how the classes are wrapped. (#774)
 
 * Added wrappers for wx.ClassInfo and exposed wx.Object.GetClassInfo. This
-  class is part of wxWidgets' internal type information system abd although
-  it is not very useful for Python applications but it is useful for debugging
+  class is part of wxWidgets' internal type information system and although
+  it is not very useful for Python applications it is useful for debugging
   some internal wxPython issues.
 
 * Removed the wx.lib.pubsub package, and replaced it with code that imports
@@ -132,12 +281,12 @@ Changes in this release include the following:
 * Fixed crashing bug when using client data with items in
   wx.dataview.DataViewTreeCtrl. (#856)
 
-* Detach wxControl in AuiToolbar from current sizer before attach to a new
+* Detach wx.Control in AuiToolbar from current sizer before attach to a new
   one. (#843)
-  
+
 * Fixed a problem in wx.lib.mixins.listctrl.TextEditMixin where the height of
   the editor widget could be set to zero. (See discussion in #849)
-  
+
 * Fix a bug in calculating whether a tool fits into the AuiToolBar. (#863)
 
 * Override SetForegroundColour and SetBackgroundColour in MaskedEditMixin (#808)
@@ -1250,8 +1399,8 @@ it will do the dialog.Destroy() call for you.  This means that you can
 use code like this::
 
     with MyDialog(self, foo, bar) as dlg:
-    	 if dlg.ShowModal() == wx.ID_OK:
-	    # do something with dlg values
+        if dlg.ShowModal() == wx.ID_OK:
+            # do something with dlg values
 
 The list of wx classes that can now be used as context managers is:
 

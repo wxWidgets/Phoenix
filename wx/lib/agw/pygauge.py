@@ -150,7 +150,7 @@ class PyGauge(wx.Window):
         self._value = [0]
         self._valueSorted = [0]
 
-        self._timerId = wx.NewId()
+        self._timerId = wx.NewIdRef()
         self._timer = None
 
         self._drawIndicatorText = False

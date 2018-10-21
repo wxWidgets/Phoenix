@@ -6,7 +6,7 @@
 # Author:       Robin Dunn
 #
 # Created:      A long time ago, in a galaxy far, far away...
-# Copyright:    (c) 1999-2017 by Total Control Software
+# Copyright:    (c) 1999-2018 by Total Control Software
 # Licence:      wxWindows license
 # Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
@@ -1306,10 +1306,10 @@ class MainPanel(wx.Panel):
 #---------------------------------------------------------------------------
 
 class DemoTaskBarIcon(TaskBarIcon):
-    TBMENU_RESTORE = wx.NewId()
-    TBMENU_CLOSE   = wx.NewId()
-    TBMENU_CHANGE  = wx.NewId()
-    TBMENU_REMOVE  = wx.NewId()
+    TBMENU_RESTORE = wx.NewIdRef()
+    TBMENU_CLOSE   = wx.NewIdRef()
+    TBMENU_CHANGE  = wx.NewIdRef()
+    TBMENU_REMOVE  = wx.NewIdRef()
 
     def __init__(self, frame):
         TaskBarIcon.__init__(self, wx.adv.TBI_DOCK) # wx.adv.TBI_CUSTOM_STATUSITEM

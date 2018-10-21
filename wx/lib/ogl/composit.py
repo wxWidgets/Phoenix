@@ -663,7 +663,7 @@ class CompositeShape(RectangleShape):
         """
         self._constraints.append(constraint)
         if constraint._constraintId == 0:
-            constraint._constraintId = wx.NewId()
+            constraint._constraintId = wx.NewIdRef()
         return constraint
 
     def AddSimpleConstraint(self, type, constraining, constrained):
@@ -677,7 +677,7 @@ class CompositeShape(RectangleShape):
         """
         constraint = Constraint(type, constraining, constrained)
         if constraint._constraintId == 0:
-            constraint._constraintId = wx.NewId()
+            constraint._constraintId = wx.NewIdRef()
         self._constraints.append(constraint)
         return constraint
 

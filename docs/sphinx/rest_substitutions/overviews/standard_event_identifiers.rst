@@ -26,7 +26,7 @@ used by the user code and also are sometimes used by wxPython
 itself. These reserved identifiers are all in the range between
 ``wx.ID_LOWEST`` and ``wx.ID_HIGHEST`` and, accordingly, the user code
 should avoid defining its own constants in this range (e.g. by using
-:func:`wx.NewId` ()).
+:func:`wx.NewIdRef` ()).
 
 Refer to :ref:`the list of stock items <stock items>` for the subset
 of standard IDs which are stock IDs as well.

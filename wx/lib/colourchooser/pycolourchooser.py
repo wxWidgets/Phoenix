@@ -125,8 +125,8 @@ class PyColourChooser(wx.Panel):
                      ] * NO_CUSTOM_COLOURS
     last_custom = 0
 
-    idADD_CUSTOM = wx.NewId()
-    idSCROLL     = wx.NewId()
+    idADD_CUSTOM = wx.NewIdRef()
+    idSCROLL     = wx.NewIdRef()
 
     def __init__(self, parent, id):
         """Creates an instance of the colour chooser. Note that it is best to
@@ -148,7 +148,7 @@ class PyColourChooser(wx.Panel):
         self.colour_boxs = [ ]
         colour_grid = wx.GridSizer(rows=6, cols=8, vgap=0, hgap=0)
         for name in self.colour_names:
-            new_id = wx.NewId()
+            new_id = wx.NewIdRef()
             box = pycolourbox.PyColourBox(self, new_id)
 
             box.GetColourBox().Bind(wx.EVT_LEFT_DOWN, lambda x, b=box: self.onBasicClick(x, b))
@@ -160,7 +160,7 @@ class PyColourChooser(wx.Panel):
         self.custom_boxs = [ ]
         custom_grid = wx.GridSizer(rows=2, cols=8, vgap=0, hgap=0)
         for wxcolour, slidepos in self.custom_colours:
-            new_id = wx.NewId()
+            new_id = wx.NewIdRef()
             custom = pycolourbox.PyColourBox(self, new_id)
 
             custom.GetColourBox().Bind(wx.EVT_LEFT_DOWN, lambda x, b=custom: self.onCustomClick(x, b))
@@ -363,9 +363,11 @@ class PyColourChooser(wx.Panel):
         # Allow values to go full range from 0 to 255
         r, g, b = colorsys.hsv_to_rgb(hsv[0], hsv[1], hsv[2])
 
-        r *= 255.0
-        g *= 255.0
-        b *= 255.0
+        round_tenths = lambda x: int(x + 0.5)
+
+        r = round_tenths(r * 255.0)
+        g = round_tenths(g * 255.0)
+        b = round_tenths(b * 255.0)
 
         return wx.Colour(r, g, b)
 

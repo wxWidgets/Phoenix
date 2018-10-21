@@ -7,7 +7,7 @@
 # Author:       Robin Dunn & Gary Dumer
 #
 # Created:
-# Copyright:    (c) 1998-2017 by Total Control Software
+# Copyright:    (c) 1998-2018 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
 
@@ -90,7 +90,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         wx.Panel.__init__(self, parent, -1, style=wx.WANTS_CHARS)
 
         self.log = log
-        tID = wx.NewId()
+        tID = wx.NewIdRef()
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -304,12 +304,12 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         # only do this part the first time so the events are only bound once
         if not hasattr(self, "popupID1"):
-            self.popupID1 = wx.NewId()
-            self.popupID2 = wx.NewId()
-            self.popupID3 = wx.NewId()
-            self.popupID4 = wx.NewId()
-            self.popupID5 = wx.NewId()
-            self.popupID6 = wx.NewId()
+            self.popupID1 = wx.NewIdRef()
+            self.popupID2 = wx.NewIdRef()
+            self.popupID3 = wx.NewIdRef()
+            self.popupID4 = wx.NewIdRef()
+            self.popupID5 = wx.NewIdRef()
+            self.popupID6 = wx.NewIdRef()
 
             self.Bind(wx.EVT_MENU, self.OnPopupOne, id=self.popupID1)
             self.Bind(wx.EVT_MENU, self.OnPopupTwo, id=self.popupID2)

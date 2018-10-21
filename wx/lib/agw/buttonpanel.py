@@ -105,19 +105,19 @@ Usage example::
 
             titleBar = BP.ButtonPanel(mainPanel, -1, "A Simple Test & Demo")
 
-            btn1 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png4.png", wx.BITMAP_TYPE_PNG))
+            btn1 = BP.ButtonInfo(titleBar, wx.ID_ANY, wx.Bitmap("png4.png", wx.BITMAP_TYPE_PNG))
             titleBar.AddButton(btn1)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn1)
 
-            btn2 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png3.png", wx.BITMAP_TYPE_PNG))
+            btn2 = BP.ButtonInfo(titleBar, wx.ID_ANY, wx.Bitmap("png3.png", wx.BITMAP_TYPE_PNG))
             titleBar.AddButton(btn2)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn2)
 
-            btn3 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png2.png", wx.BITMAP_TYPE_PNG))
+            btn3 = BP.ButtonInfo(titleBar, wx.ID_ANY, wx.Bitmap("png2.png", wx.BITMAP_TYPE_PNG))
             titleBar.AddButton(btn3)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn3)
 
-            btn4 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png1.png", wx.BITMAP_TYPE_PNG))
+            btn4 = BP.ButtonInfo(titleBar, wx.ID_ANY, wx.Bitmap("png1.png", wx.BITMAP_TYPE_PNG))
             titleBar.AddButton(btn4)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn4)
 
@@ -853,7 +853,7 @@ class Control(wx.EvtHandler):
         self._parent = parent
 
         if id == wx.ID_ANY:
-            self._id = wx.NewId()
+            self._id = wx.NewIdRef()
         else:
             self._id = id
 
@@ -1387,7 +1387,7 @@ class ButtonInfo(Control):
         """
 
         if id == wx.ID_ANY:
-            id = wx.NewId()
+            id = wx.NewIdRef()
 
         self._status = status
         self._rect = wx.Rect()
@@ -2776,19 +2776,19 @@ if __name__ == '__main__':
 
             titleBar = ButtonPanel(mainPanel, -1, 'A Simple Test & Demo')
 
-            btn1 = ButtonInfo(titleBar, wx.NewId(),
+            btn1 = ButtonInfo(titleBar, wx.ID_ANY,
                               wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (32, 32)),
                               text='Button 1')
             titleBar.AddButton(btn1)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn1)
 
-            btn2 = ButtonInfo(titleBar, wx.NewId(),
+            btn2 = ButtonInfo(titleBar, wx.ID_ANY,
                               wx.ArtProvider.GetBitmap(wx.ART_TIP, wx.ART_OTHER, (32, 32)),
                               text='Button 2')
             titleBar.AddButton(btn2)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn2)
 
-            btn3 = ButtonInfo(titleBar, wx.NewId(),
+            btn3 = ButtonInfo(titleBar, wx.ID_ANY,
                               wx.ArtProvider.GetBitmap(wx.ART_WARNING, wx.ART_OTHER, (32, 32)),
                               text='Button 3')
 

@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2018 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ DESCRIPTION      = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
 AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "robin@alldunn.com"
 URL              = "http://wxPython.org/"
-DOWNLOAD_URL     = "https://pypi.python.org/pypi/{}".format(NAME)
+DOWNLOAD_URL     = "https://pypi.org/project/{}".format(NAME)
 LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,user-interface,awesome"
@@ -90,7 +90,8 @@ Topic :: Software Development :: User Interfaces
 """
 
 DEPENDENCIES = [ 'six',
-                 'PyPubSub']
+                 'Pillow',
+                 ]
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
@@ -318,7 +319,7 @@ ENTRY_POINTS = {
         "img2xpm = wx.tools.img2xpm:main",
         "pywxrc = wx.tools.pywxrc:main",
 #        ],
-#    'gui_scripts' : [  # TODO: Why was this done?
+#    'gui_scripts' : [  # TODO: Why was this commented out?
         "wxget = wx.tools.wxget:main",  # New wx wget
         "wxdocs = wx.tools.wxget_docs_demo:docs_main",  # Get/Launch Docs
         "wxdemo = wx.tools.wxget_docs_demo:demo_main",  # Get/Launch Demo
