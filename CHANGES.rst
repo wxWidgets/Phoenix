@@ -113,12 +113,12 @@ Changes in this release include the following:
 
 * Fix rendering and mouse sensitivity in UltimateListCtrl when adding HyperText
   items. (#1010)
-  
+
 * Added a parameter to lib.agw.CustomTreeCtrl.SetItemWindow(), to allow
   positioning the Window (a small image) on the left of text in a
   CustomTreeItem. (#PR886).
 
-* Declared DeleteAllPages in the notebook subclasses, so the proper C++ 
+* Declared DeleteAllPages in the notebook subclasses, so the proper C++
   implementation will be called. (#972)
 
 * Removed wx.lib.floatbar, which has been deprecated forever and probably
@@ -135,7 +135,7 @@ Changes in this release include the following:
 
 * Fixed wx.ListCtrl.Append when wx.LC_SORT style is used, so appending items out
   of order does not lose the data for the remaining columns. (#906)
-  
+
 * Add wx.Accessible, it's Windows-only, will raise a NotImplementedError
   exception on the other platforms. (#958)
 
@@ -152,8 +152,8 @@ Changes in this release include the following:
   way. If you need to use some other encoding for some reason you can first
   convert the text to a bytesarray or other buffer protocol compatible object and
   then create the virtual file from that data. (#969)
-  
 
+* Performance update for `wx.lib.agw.customtreectrl` (#1049)
 
 
 
