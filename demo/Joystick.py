@@ -17,9 +17,6 @@ import math
 import wx
 import wx.adv
 
-haveJoystick = True
-if wx.Platform == "__WXMAC__":
-    haveJoystick = False
 
 #----------------------------------------------------------------------------
 
@@ -950,12 +947,12 @@ class JoystickDemoPanel(wx.Panel):
 #----------------------------------------------------------------------------
 
 def runTest(frame, nb, log):
-    if haveJoystick:
+    if wx.adv.Joystick.GetNumberJoysticks() != 0:
         win = JoystickDemoPanel(nb, log)
         return win
     else:
         from wx.lib.msgpanel import MessagePanel
-        win = MessagePanel(nb, 'wx.Joystick is not available on this platform.',
+        win = MessagePanel(nb, 'No joysticks are found on this system.',
                            'Sorry', wx.ICON_WARNING)
         return win
 
