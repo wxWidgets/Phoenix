@@ -957,9 +957,16 @@ class JoystickDemoPanel(wx.Panel):
 #----------------------------------------------------------------------------
 
 def runTest(frame, nb, log):
-    if wx.adv.Joystick.GetNumberJoysticks() != 0:
+    if not wx.adv.USE_JOYSTICK:
+        from wx.lib.msgpanel import MessagePanel
+        win = MessagePanel(nb, 'wx.Joystick is not available on this platform.',
+                        'Sorry', wx.ICON_WARNING)
+        return win
+
+    elif wx.adv.Joystick.GetNumberJoysticks() != 0:
         win = JoystickDemoPanel(nb, log)
         return win
+
     else:
         from wx.lib.msgpanel import MessagePanel
         win = MessagePanel(nb, 'No joysticks are found on this system.',
