@@ -623,9 +623,10 @@ class AxisBar(wx.Gauge):
         self.SetBackgroundColour('light blue')
         self.SetForegroundColour('orange')
 
-        # Capture paint events for purpose of updating
-        # the displayed value.
-        self.Bind(wx.EVT_PAINT, self.onPaint)
+        # NOTE: See comment below
+        # # Capture paint events for purpose of updating
+        # # the displayed value.
+        # self.Bind(wx.EVT_PAINT, self.onPaint)
 
     def Update(self, value, rawvalue):
         # Updates the gauge itself, sets the raw value for
@@ -644,8 +645,17 @@ class AxisBar(wx.Gauge):
 
         # Clear out the gauge
         dc.Clear()
-        # and then carry out business as usual
-        wx.Gauge.OnPaint(self, evt)
+
+        # NOTE: in Classic we exposed wxWindow::OnPaint for MSW, so the default
+        #       paint behavior can be triggered and then we can draw on top of
+        #       that after the native OnPaint is done. For Phoenix, I chose to
+        #       not do this any more, so this breaks. Not sure this is really
+        #       needed for this demo, but if so then we'll nede to find another
+        #       way to do this. In the meantime, this is commented out, and the
+        #       Paint event will also not be captured at all.
+
+        # # and then carry out business as usual
+        # wx.Gauge.OnPaint(self, evt)
 
         # This is the size available to us.
         w, h = dc.GetSize()
