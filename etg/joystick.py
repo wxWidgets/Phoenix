@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import MethodDef
 
 PACKAGE   = "wx"
 MODULE    = "_adv"
@@ -95,6 +96,9 @@ def run():
     c = module.find('wxJoystick')
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
+
+    c.addItem(MethodDef(name='GetMaxButtons', type='int', isConst=True))
+    c.addItem(MethodDef(name='GetMaxAxes', type='int', isConst=True))
 
 
     #-----------------------------------------------------------------
