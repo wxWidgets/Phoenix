@@ -3504,7 +3504,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :see: The :meth:`~CustomTreeCtrl.__init__` method for the `flag` parameter description.
         """
 
-        return self._agwStyle & flag
+        return bool(self._agwStyle & flag)
 
 
     def SetAGWWindowStyleFlag(self, agwStyle):

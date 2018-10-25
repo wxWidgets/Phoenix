@@ -3104,7 +3104,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         # horizontal lines between rows?
         draw_row_lines = self.HasAGWFlag(TR_ROW_LINES)
 
-        if self.IsExposed(exposed_x, exposed_y, _MAX_WIDTH, h + draw_row_lines):
+        if self.IsExposed(exposed_x, exposed_y, _MAX_WIDTH, h + int(draw_row_lines)):
             if draw_row_lines:
                 total_width = self._owner.GetHeaderWindow().GetWidth()
                 # if the background colour is white, choose a
@@ -4365,7 +4365,7 @@ class HyperTreeList(wx.Control):
         """
 
         agwStyle = self.GetAGWWindowStyleFlag()
-        res = (agwStyle & flag and [True] or [False])[0]
+        res = bool(agwStyle & flag)
         return res
 
 
