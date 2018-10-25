@@ -26,12 +26,10 @@ ID_SELECTALL = wx.ID_SELECTALL
 ID_EMPTYBUFFER = wx.NewIdRef()
 ID_ABOUT = wx.ID_ABOUT
 ID_HELP = wx.NewIdRef()
-ID_AUTOCOMP = wx.NewIdRef()
 ID_AUTOCOMP_SHOW = wx.NewIdRef()
 ID_AUTOCOMP_MAGIC = wx.NewIdRef()
 ID_AUTOCOMP_SINGLE = wx.NewIdRef()
 ID_AUTOCOMP_DOUBLE = wx.NewIdRef()
-ID_CALLTIPS = wx.NewIdRef()
 ID_CALLTIPS_SHOW = wx.NewIdRef()
 ID_CALLTIPS_INSERT = wx.NewIdRef()
 ID_COPY_PLUS = wx.NewIdRef()
@@ -52,8 +50,6 @@ ID_DELSETTINGSFILE = wx.NewIdRef()
 ID_EDITSTARTUPSCRIPT = wx.NewIdRef()
 ID_EXECSTARTUPSCRIPT = wx.NewIdRef()
 ID_SHOWPYSLICESTUTORIAL = wx.NewIdRef()
-ID_STARTUP = wx.NewIdRef()
-ID_SETTINGS = wx.NewIdRef()
 ID_FIND = wx.ID_FIND
 ID_FINDNEXT = wx.NewIdRef()
 ID_FINDPREVIOUS = wx.NewIdRef()
@@ -192,10 +188,9 @@ class Frame(wx.Frame):
                  '&Insert Call Tips', wx.ITEM_CHECK)
 
         m = self.optionsMenu = wx.Menu()
-        m.Append(ID_AUTOCOMP, '&Auto Completion', self.autocompMenu,
-                     'Auto Completion Options')
-        m.Append(ID_CALLTIPS, '&Call Tips', self.calltipsMenu,
-                     'Call Tip Options')
+        m.AppendSubMenu(self.autocompMenu, '&Auto Completion',
+                        'Auto Completion Options')
+        m.AppendSubMenu(self.calltipsMenu, '&Call Tips', 'Call Tip Options')
 
         m.AppendSeparator()
 
@@ -206,7 +201,7 @@ class Frame(wx.Frame):
                  'Save history')
         self.historyMenu.Append(ID_CLEARHISTORY, '&Clear History ',
                  'Clear history')
-        m.Append(-1, "&History", self.historyMenu, "History Options")
+        m.AppendSubMenu(self.historyMenu, "&History", "History Options")
 
         self.startupMenu = wx.Menu()
         self.startupMenu.Append(ID_EXECSTARTUPSCRIPT,
@@ -219,7 +214,7 @@ class Frame(wx.Frame):
             self.startupMenu.Append(ID_SHOWPYSLICESTUTORIAL,
                                 '&Show PySlices Tutorial',
                                 'Show PySlices Tutorial', wx.ITEM_CHECK)
-        m.Append(ID_STARTUP, '&Startup', self.startupMenu, 'Startup Options')
+        m.AppendSubMenu(self.startupMenu, '&Startup', 'Startup Options')
 
         self.settingsMenu = wx.Menu()
         if self.shellName in ['PySlices','SymPySlices']:
@@ -239,7 +234,7 @@ class Frame(wx.Frame):
         self.settingsMenu.Append(ID_DELSETTINGSFILE,
                                  '&Revert to default',
                                  'Revert to the default settings')
-        m.Append(ID_SETTINGS, '&Settings', self.settingsMenu, 'Settings Options')
+        m.AppendSubMenu(self.settingsMenu, '&Settings', 'Settings Options')
 
         m = self.helpMenu = wx.Menu()
         m.Append(ID_HELP, '&Help\tF1', 'Help!')
