@@ -50,9 +50,9 @@ release or the snapshots server can be used. With that file in place then a
 build for a specific distro can be done with just a few vagrant commands, for
 example::
 
-    cd vagrant/ubuntu-16.04
+    cd vagrant/ubuntu-18.04
     vagrant up
-    vagrant ssh -c "scripts/build.sh ubuntu-16.04"
+    vagrant ssh -c "scripts/build.sh ubuntu-18.04"
     vagrant halt
 
 Please note that currently this will do up to 8 complete builds, one for each
