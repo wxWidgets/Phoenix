@@ -126,6 +126,10 @@ Changes in this release include the following:
 
 * Performance update for `wx.lib.agw.customtreectrl` (#1049)
 
+* wxWidgets for Mac includes the wxJoystick class now, also update the demo.
+  (#997)
+
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
