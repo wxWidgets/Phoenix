@@ -126,6 +126,10 @@ Changes in this release include the following:
 
 * Performance update for `wx.lib.agw.customtreectrl` (#1049)
 
+* Ensure that colours set in wx.lib.agw.customtreectrl.TreeItemAttr are
+  instances of wx.Colour. (#1032)
+
+  
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
