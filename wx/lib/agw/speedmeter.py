@@ -971,10 +971,11 @@ class SpeedMeter(BufferedWindow):
 
                     for tcount in range(ticknum):
                         if direction == "Advance":
-                            oldinterval = (oldinterval + spacing) - start
-                            stint = oldinterval
+                            oldinterval = (oldinterval + spacing)
+                            stint = oldinterval - start
                         else:
-                            oldinterval = start + (oldinterval + spacing)
+                            #oldinterval = start + (oldinterval + spacing)
+                            oldinterval = (oldinterval + spacing)
                             stint = end - oldinterval
 
                         angle = (stint/float(span))*(startangle-endangle) - startangle
