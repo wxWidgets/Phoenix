@@ -35,7 +35,9 @@ ID_HorizontalGradient = wx.NewIdRef()
 
 ID_Settings = wx.NewIdRef()
 ID_About = wx.NewIdRef()
-ID_FirstPerspective = ID_CreatePerspective+1000
+
+# This reserves count IDs and returns a list of WindowIDRef objects
+ID_FirstPerspective = wx.NewIdRef(100)
 
 
 
@@ -126,9 +128,9 @@ class PyAUIFrame(wx.Frame):
         self._perspectives_menu.Append(ID_CreatePerspective, "Create Perspective")
         self._perspectives_menu.Append(ID_CopyPerspective, "Copy Perspective Data To Clipboard")
         self._perspectives_menu.AppendSeparator()
-        self._perspectives_menu.Append(ID_FirstPerspective+0, "Default Startup")
-        self._perspectives_menu.Append(ID_FirstPerspective+1, "All Panes")
-        self._perspectives_menu.Append(ID_FirstPerspective+2, "Vertical Toolbar")
+        self._perspectives_menu.Append(ID_FirstPerspective[0], "Default Startup")
+        self._perspectives_menu.Append(ID_FirstPerspective[1], "All Panes")
+        self._perspectives_menu.Append(ID_FirstPerspective[2], "Vertical Toolbar")
 
         help_menu = wx.Menu()
         help_menu.Append(ID_About, "About...")
@@ -414,8 +416,8 @@ class PyAUIFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_HorizontalGradient)
 
 
-        self.Bind(wx.EVT_MENU_RANGE, self.OnRestorePerspective, id=ID_FirstPerspective,
-                  id2=ID_FirstPerspective+1000)
+        self.Bind(wx.EVT_MENU_RANGE, self.OnRestorePerspective,
+                  id=ID_FirstPerspective[0], id2=ID_FirstPerspective[-1])
 
 
     def OnPaneClose(self, event):
@@ -584,7 +586,7 @@ class PyAUIFrame(wx.Frame):
         if len(self._perspectives) == 0:
             self._perspectives_menu.AppendSeparator()
 
-        self._perspectives_menu.Append(ID_FirstPerspective + len(self._perspectives), dlg.GetValue())
+        self._perspectives_menu.Append(ID_FirstPerspective[len(self._perspectives)], dlg.GetValue())
         self._perspectives.append(self._mgr.SavePerspective())
 
 
@@ -599,7 +601,7 @@ class PyAUIFrame(wx.Frame):
 
     def OnRestorePerspective(self, event):
 
-        self._mgr.LoadPerspective(self._perspectives[event.GetId() - ID_FirstPerspective])
+        self._mgr.LoadPerspective(self._perspectives[event.GetId() - ID_FirstPerspective[0].Value])
 
 
     def GetStartPosition(self):
