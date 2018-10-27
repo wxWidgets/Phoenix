@@ -155,6 +155,9 @@ Changes in this release include the following:
 
 * Performance update for `wx.lib.agw.customtreectrl` (#1049)
 
+* Ensure that colours set in wx.lib.agw.customtreectrl.TreeItemAttr are
+  instances of wx.Colour. (#1032)
+
 * Fix drawing of ticks in wx.lib.agw.speedmeter when there are negative bounds
   values. (#1013)
 

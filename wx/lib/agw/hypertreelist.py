@@ -2366,7 +2366,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 # operations
 # ----------------------------------------------------------------------------
 
-    def DoInsertItem(self, parent, previous, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
+    def DoInsertItem(self, parent, previous, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, *ignored_args):
         """
         Actually inserts an item in the tree.
 
@@ -2383,7 +2383,7 @@ class TreeListMainWindow(CustomTreeCtrl):
          use for the item in selected state; if `image` > -1 and `selImage` is -1, the
          same image is used for both selected and unselected items;
         :param `data`: associate the given Python object `data` with the item.
-        :param `separator`: unused at the moment, this parameter is present to comply with
+        :param `ignored_args`: unused at the moment, this parameter is present to comply with
          :meth:`CustomTreeCtrl.DoInsertItem() <lib.agw.customtreectrl.CustomTreeCtrl.DoInsertItem>` changed API.
         """
 
