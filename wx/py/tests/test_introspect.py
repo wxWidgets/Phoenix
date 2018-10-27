@@ -2,17 +2,13 @@
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 
-import unittest
-
-# Import from this module's parent directory.
-import os
 import sys
-sys.path.insert(0, os.pardir)
-import introspect
-del sys.path[0]
-del sys
-del os
+import os
 
+import unittest
+from wx.py import introspect
+
+PY3 = sys.version_info[0] == 3
 
 """
 These unittest methods are preferred:
@@ -380,7 +376,7 @@ class GetBaseObjectTestCase(unittest.TestCase):
         eggs = Spam.eggs
         listappend = [].append
         spamda = lambda: None
-        values = (
+        values = [
             ('spam', 'spam', 0),
             (123, 123, 0),
             (12.3, 12.3, 0),
@@ -393,14 +389,17 @@ class GetBaseObjectTestCase(unittest.TestCase):
             (listappend, listappend, 0),
             # User function.
             (ham, ham, 0),
-            # Byte-compiled code.
-            (ham.func_code, ham.func_code, 0),
             # Lambda.
             (spamda, spamda, 0),
-            # Class with init.
-            (Foo, Foo.__init__.im_func, 1),
             # Class with no init.
             (Bar, Bar, 0),
+        ]
+        if not PY3:
+            values.extend([
+            # Byte-compiled code.
+            (ham.func_code, ham.func_code, 0),
+            # Class with init.
+            (Foo, Foo.__init__.im_func, 1),
             # Bound method.
             (spam.foo, spam.foo.im_func, 1),
             # Bound method with self named something else (spam).
@@ -409,7 +408,7 @@ class GetBaseObjectTestCase(unittest.TestCase):
             (eggs, eggs.im_func, 0),
             # Callable instance.
             (spam, spam.__call__.im_func, 1),
-        )
+            ])
         for object, baseObject, dropSelf in values:
             result = introspect.getBaseObject(object)
             self.assertEqual(result, (baseObject, dropSelf))
@@ -628,18 +627,15 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
         GetAttributeTestCase.setUp(self)
         from wx import py
         spam = Spam()
-        self.f = open('test_introspect.py')
-        self.items = (
+        self.f = open(os.path.join(os.path.dirname(__file__), 'test_introspect.py'))
+        self.items = [
             None,
             int(123),
-            long(123),
             float(123),
             complex(123),
             "",
-            unicode(""),
             [],
             (),
-            xrange(0),
             {},
             # Builtin function.
             len,
@@ -647,8 +643,6 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
             [].append,
             # User function.
             ham,
-            # Byte-compiled code.
-            ham.func_code,
             # Lambda.
             lambda: None,
             # Class with no init.
@@ -669,8 +663,6 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
             introspect,
             # Package.
             py,
-            # Buffer.
-            buffer(''),
             # File.
             self.f,
             # Slice.
@@ -681,7 +673,17 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
             BrokenStr,
             # BrokenStr instance.
             brokenStr,
-        )
+        ]
+        if not PY3:
+            self.items.extend([
+                long(123),
+                unicode(""),
+                xrange(0),
+                # Byte-compiled code.
+                ham.func_code,
+                # Buffer.
+                buffer(''),
+            ])
 
     def tearDown(self):
         self.items = None
@@ -695,7 +697,7 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
 
     def test_getAttributeNames_NoSingle(self):
         for item in self.items:
-            result = introspect.getAttributeNames(item, includeSingle=0)
+            result = list(introspect.getAttributeNames(item, includeSingle=0))
             attributes = [attribute for attribute in result \
                           if attribute[0] != '_' or attribute[:2] == '__']
             self.assertEqual(result, attributes,
@@ -703,7 +705,7 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
 
     def test_getAttributeNames_NoDouble(self):
         for item in self.items:
-            result = introspect.getAttributeNames(item, includeDouble=0)
+            result = list(introspect.getAttributeNames(item, includeDouble=0))
             attributes = [attribute for attribute in result \
                           if attribute[:2] != '__']
             self.assertEqual(result, attributes,
@@ -711,8 +713,8 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
 
     def test_getAttributeNames_NoSingleOrDouble(self):
         for item in self.items:
-            result = introspect.getAttributeNames(item, includeSingle=0,
-                                                  includeDouble=0)
+            result = list(introspect.getAttributeNames(item, includeSingle=0,
+                                                       includeDouble=0))
             attributes = [attribute for attribute in result \
                           if attribute[0] != '_']
             self.assertEqual(result, attributes,
@@ -756,7 +758,7 @@ class GetAutoCompleteListTestCase(GetAttributeTestCase):
 
     def test_getAutoCompleteList_NoSingle(self):
         for item in self.items:
-            result = introspect.getAutoCompleteList(item, includeSingle=0)
+            result = list(introspect.getAutoCompleteList(item, includeSingle=0))
             attributes = [attribute for attribute in result \
                           if attribute[0] != '_' or attribute[:2] == '__']
             self.assertEqual(result, attributes,
@@ -764,7 +766,7 @@ class GetAutoCompleteListTestCase(GetAttributeTestCase):
 
     def test_getAutoCompleteList_NoDouble(self):
         for item in self.items:
-            result = introspect.getAutoCompleteList(item, includeDouble=0)
+            result = list(introspect.getAutoCompleteList(item, includeDouble=0))
             attributes = [attribute for attribute in result \
                           if attribute[:2] != '__']
             self.assertEqual(result, attributes,
@@ -772,8 +774,8 @@ class GetAutoCompleteListTestCase(GetAttributeTestCase):
 
     def test_getAutoCompleteList_NoSingleOrDouble(self):
         for item in self.items:
-            result = introspect.getAutoCompleteList(item, includeSingle=0,
-                                                    includeDouble=0)
+            result = list(introspect.getAutoCompleteList(item, includeSingle=0,
+                                                         includeDouble=0))
             attributes = [attribute for attribute in result \
                           if attribute[0] != '_']
             self.assertEqual(result, attributes,
@@ -827,6 +829,7 @@ class Q(P):
 
 class GetConstructorTestCase(unittest.TestCase):
 
+    @unittest.skipIf(PY3, "Python2 specific test")
     def test_getConstructor(self):
         args = ('self', 'a', 'b', 'args', 'kwargs')
         varnames = introspect.getConstructor(O).func_code.co_varnames
@@ -842,6 +845,7 @@ class GetConstructorTestCase(unittest.TestCase):
         for value in values:
             self.assertEqual(introspect.getConstructor(N), None)
 
+    @unittest.skipIf(PY3, "Python2 specific test")
     def test_getConstructor_MultipleInheritance(self):
         # Test old style inheritance rules.
         args = ('self', 'a')

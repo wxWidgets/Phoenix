@@ -129,7 +129,10 @@ Changes in this release include the following:
 * Ensure that colours set in wx.lib.agw.customtreectrl.TreeItemAttr are
   instances of wx.Colour. (#1032)
 
-  
+* Fix drawing of ticks in wx.lib.agw.speedmeter when there are negative bounds
+  values. (#1013)
+
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
