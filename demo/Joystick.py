@@ -953,6 +953,7 @@ class JoystickDemoPanel(wx.Panel):
     def ShutdownDemo(self):
         if self.stick:
             self.stick.ReleaseCapture()
+        self.stick.Destroy()
         self.stick = None
 
 #----------------------------------------------------------------------------
