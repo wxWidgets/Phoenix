@@ -133,7 +133,8 @@ class JoyGauge(wx.Panel):
 
             # Now to draw it.
             dc.SetPen(wx.Pen(wx.RED, 2))
-            dc.CrossHair(x, y)
+            dc.DrawLine(x, 0, x, h)
+            dc.DrawLine(0, y, w, y)
 
 
     def Update(self):
