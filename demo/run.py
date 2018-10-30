@@ -55,7 +55,7 @@ class RunDemoApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         self.SetAssertMode(assertMode)
         self.InitInspection()  # for the InspectionMixin base class
 
-        frame = wx.Frame(None, -1, "RunDemo: " + self.name, pos=(50,50), size=(200,100),
+        frame = wx.Frame(None, -1, "RunDemo: " + self.name, size=(200,100),
                         style=wx.DEFAULT_FRAME_STYLE, name="run a sample")
         frame.CreateStatusBar()
 
