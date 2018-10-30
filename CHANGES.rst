@@ -138,6 +138,10 @@ Changes in this release include the following:
 * Fix wx.html.HtmlPrintout to not be seen as an abstract class, so it can be
   instantiated. (#1060)
 
+* Fix wx.aui.AuiNotbook.SetArtProvider to properly transfer ownership of the art
+  object from Python to C++. This possible double-deletion and related crashing
+  problems. (#1061)
+
 
 
 
