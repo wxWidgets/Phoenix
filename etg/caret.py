@@ -39,9 +39,8 @@ def run():
     c.find('GetPosition').findOverload('int *').ignore()
     c.find('GetSize').findOverload('int *').ignore()
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
 
     #-----------------------------------------------------------------

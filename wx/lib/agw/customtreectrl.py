@@ -857,7 +857,7 @@ class TreeItemAttr(object):
         :param `colText`: an instance of :class:`wx.Colour`.
         """
 
-        self._colText = colText
+        self._colText = wx.Colour(colText)
 
 
     def SetBackgroundColour(self, colBack):
@@ -867,7 +867,7 @@ class TreeItemAttr(object):
         :param `colBack`: an instance of :class:`wx.Colour`.
         """
 
-        self._colBack = colBack
+        self._colBack = wx.Colour(colBack)
 
 
     def SetBorderColour(self, colBorder):
@@ -879,7 +879,7 @@ class TreeItemAttr(object):
         .. versionadded:: 0.9.6
         """
 
-        self._colBorder = colBorder
+        self._colBorder = wx.Colour(colBorder)
 
 
     def SetFont(self, font):
@@ -3504,7 +3504,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :see: The :meth:`~CustomTreeCtrl.__init__` method for the `flag` parameter description.
         """
 
-        return self._agwStyle & flag
+        return bool(self._agwStyle & flag)
 
 
     def SetAGWWindowStyleFlag(self, agwStyle):

@@ -113,12 +113,12 @@ Changes in this release include the following:
 
 * Fix rendering and mouse sensitivity in UltimateListCtrl when adding HyperText
   items. (#1010)
-  
+
 * Added a parameter to lib.agw.CustomTreeCtrl.SetItemWindow(), to allow
   positioning the Window (a small image) on the left of text in a
   CustomTreeItem. (#PR886).
 
-* Declared DeleteAllPages in the notebook subclasses, so the proper C++ 
+* Declared DeleteAllPages in the notebook subclasses, so the proper C++
   implementation will be called. (#972)
 
 * Removed wx.lib.floatbar, which has been deprecated forever and probably
@@ -130,9 +130,47 @@ Changes in this release include the following:
   an AuiToolBar would not be updated when calling LoadPerspective. (#917)
 
 * Fixed a bug in wx.FileSystemHandler.OpenFile where the object ownership was
-  not being transferred corrcetly, causing a crash after a premature object
+  not being transferred correctly, causing a crash after a premature object
   deletion. (#926)
-  
+
+* Fixed wx.ListCtrl.Append when wx.LC_SORT style is used, so appending items out
+  of order does not lose the data for the remaining columns. (#906)
+
+* Add wx.Accessible, it's Windows-only, will raise a NotImplementedError
+  exception on the other platforms. (#958)
+
+* Added the ability to generate stub classes for use when optional wxWidgets
+  features are not part of the build. So far, stubs are available for
+  wx.Accessible, wx.glcanvas, wx.media and wx.html2.
+
+* Moved the wxpy_api.h file into the wx package at wx/include/wxPython so it
+  will be included in the wheel file. (#961)
+
+* Fixed how string data is added to a virtual file-like object in
+  wx.MemoryFSHandler. All strings are now added to the file as utf-8 encoded data,
+  in both Python2 and Python3, and will be read from the virtual file the same
+  way. If you need to use some other encoding for some reason you can first
+  convert the text to a bytesarray or other buffer protocol compatible object and
+  then create the virtual file from that data. (#969)
+
+* Performance update for `wx.lib.agw.customtreectrl` (#1049)
+
+* Ensure that colours set in wx.lib.agw.customtreectrl.TreeItemAttr are
+  instances of wx.Colour. (#1032)
+
+* Fix drawing of ticks in wx.lib.agw.speedmeter when there are negative bounds
+  values. (#1013)
+
+* wxWidgets for Mac includes the wxJoystick class now, also update the demo.
+  (#997)
+
+* Fix wx.html.HtmlPrintout to not be seen as an abstract class, so it can be
+  instantiated. (#1060)
+
+* Fix wx.aui.AuiNotbook.SetArtProvider to properly transfer ownership of the art
+  object from Python to C++. This possible double-deletion and related crashing
+  problems. (#1061)
+
 
 
 

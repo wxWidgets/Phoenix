@@ -53,7 +53,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode('#include <wxpy_api.h>')
+    module.addHeaderCode('#include <wxPython/wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode('import wx', order=10)
     module.addInclude(INCLUDES)
@@ -62,7 +62,7 @@ def run():
     #-----------------------------------------------------------------
 
     module.addHeaderCode('#include <wx/glcanvas.h>')
-
+    tools.generateStubs('wxUSE_GLCANVAS', module)
 
     c = module.find('wxGLContext')
     assert isinstance(c, etgtools.ClassDef)
@@ -82,12 +82,12 @@ def run():
     c.find('wxGLCanvas').findOverload('const int *attribList').ignore()
     m = c.addCppCtor_sip(
         argsString="""(
-             wxWindow* parent /TransferThis/, 
-             wxWindowID id=wxID_ANY, 
+             wxWindow* parent /TransferThis/,
+             wxWindowID id=wxID_ANY,
              wxArrayInt* attribList=NULL,
-             const wxPoint& pos=wxDefaultPosition, 
+             const wxPoint& pos=wxDefaultPosition,
              const wxSize& size=wxDefaultSize,
-             long style=0, 
+             long style=0,
              const wxString& name="GLCanvas",
              const wxPalette& palette=wxNullPalette)
              """,

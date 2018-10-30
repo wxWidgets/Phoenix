@@ -1,9 +1,9 @@
 #---------------------------------------------------------------------------
-# Name:        etg/intl.py
+# Name:        etg/access.py
 # Author:      Robin Dunn
 #
-# Created:     27-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Created:     08-Oct-2018
+# Copyright:   (c) 2018 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -12,15 +12,12 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"
 MODULE    = "_core"
-NAME      = "intl"   # Base name of the file to generate to for this script
+NAME      = "access"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'wxLanguageInfo',
-           'wxLocale',
-
-           'language_8h.xml',
+ITEMS  = [ 'wxAccessible',
            ]
 
 #---------------------------------------------------------------------------
@@ -34,32 +31,31 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxLocale')
+    module.addHeaderCode('#include <wx/access.h>')
+
+    tools.generateStubs('wxUSE_ACCESSIBILITY', module,
+                        typeValMap={'wxAccStatus':'wxACC_NOT_IMPLEMENTED'})
+
+    c = module.find('wxAccessible')
     assert isinstance(c, etgtools.ClassDef)
-    c.addPrivateAssignOp()
     c.addPrivateCopyCtor()
 
-    c.addCppMethod('int', '__nonzero__', '()', 'return self->IsOk();')
-    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
+    c.find('GetChild.child').out = True
+    c.find('GetChildCount.childCount').out = True
+    c.find('GetDefaultAction.actionName').out = True
+    c.find('GetDescription.description').out = True
+    c.find('GetFocus.child').out = True
+    c.find('GetHelpText.helpText').out = True
+    c.find('GetKeyboardShortcut.shortcut').out = True
+    c.find('GetName.name').out = True
+    c.find('GetParent.parent').out = True
+    c.find('GetRole.role').out = True
+    c.find('GetSelections.selections').out = True
+    c.find('GetState.state').out = True
+    c.find('GetValue.strValue').out = True
 
-
-    c = module.find('wxLanguageInfo')
-    c.find('WinLang').ignore()
-    c.find('WinSublang').ignore()
-    c.find('GetLCID').ignore()
-
-
-    module.addPyCode("""\
-    #----------------------------------------------------------------------------
-    # Add the directory where the wxWidgets catalogs were installed
-    # to the default catalog path, if they were put in the pacakge dir.
-    import os
-    _localedir = os.path.join(os.path.dirname(__file__), "locale")
-    if os.path.exists(_localedir):
-        Locale.AddCatalogLookupPathPrefix(_localedir)
-    del os
-    #----------------------------------------------------------------------------
-    """)
+    #TODO: double-check this one
+    c.find('GetLocation.rect').out = True
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

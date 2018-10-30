@@ -2366,7 +2366,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 # operations
 # ----------------------------------------------------------------------------
 
-    def DoInsertItem(self, parent, previous, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
+    def DoInsertItem(self, parent, previous, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, *ignored_args):
         """
         Actually inserts an item in the tree.
 
@@ -2383,7 +2383,7 @@ class TreeListMainWindow(CustomTreeCtrl):
          use for the item in selected state; if `image` > -1 and `selImage` is -1, the
          same image is used for both selected and unselected items;
         :param `data`: associate the given Python object `data` with the item.
-        :param `separator`: unused at the moment, this parameter is present to comply with
+        :param `ignored_args`: unused at the moment, this parameter is present to comply with
          :meth:`CustomTreeCtrl.DoInsertItem() <lib.agw.customtreectrl.CustomTreeCtrl.DoInsertItem>` changed API.
         """
 
@@ -3104,7 +3104,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         # horizontal lines between rows?
         draw_row_lines = self.HasAGWFlag(TR_ROW_LINES)
 
-        if self.IsExposed(exposed_x, exposed_y, _MAX_WIDTH, h + draw_row_lines):
+        if self.IsExposed(exposed_x, exposed_y, _MAX_WIDTH, h + int(draw_row_lines)):
             if draw_row_lines:
                 total_width = self._owner.GetHeaderWindow().GetWidth()
                 # if the background colour is white, choose a
@@ -4365,7 +4365,7 @@ class HyperTreeList(wx.Control):
         """
 
         agwStyle = self.GetAGWWindowStyleFlag()
-        res = (agwStyle & flag and [True] or [False])[0]
+        res = bool(agwStyle & flag)
         return res
 
 

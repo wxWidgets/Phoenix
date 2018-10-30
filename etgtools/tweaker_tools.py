@@ -1266,3 +1266,174 @@ def guessTypeStr(v):
     return False
 
 #---------------------------------------------------------------------------
+# Tweakers to generate C++ stubs for cases where a feature is optional. By
+# generating stubs then we can still provide the wrapper classes but simply
+# have them raise NotImplemented errors or whatnot.
+
+def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
+    """
+    Generate C++ stubs for all items in the module, except those that are
+    in the optional excludes list.
+    """
+    # First add a define for the cppFlag (like wxUSE_SOME_FEATURE) so the user
+    # code has a way to check if an optional classis available before using it
+    # and getting an exception.
+    assert isinstance(module, extractors.ModuleDef)
+    if not module.findItem(cppFlag):
+        module.addItem(extractors.DefineDef(name=cppFlag, value='0'))
+        excludes.append(cppFlag)
+
+    # Copy incoming typeValMap so it can be updated with some stock types
+    import copy
+    typeValMap = copy.copy(typeValMap)
+    typeValMap.update({
+        'int': '0',
+        'bool': 'false',
+        'double': '0.0',
+        'wxString': 'wxEmptyString',
+        'const wxString &': 'wxEmptyString',
+        'wxString &': 'wxEmptyString',
+        'wxSize': 'wxDefaultSize',
+        'wxPoint': 'wxDefaultPosition',
+        'wxFileOffset': '0',
+        })
+
+    code = _StubCodeHolder(cppFlag)
+
+    # Next add forward declarations of all classes in case they refer to
+    # each other.
+    for item in module:
+        if isinstance(item, extractors.ClassDef):
+            code.hdr.append('class {};'.format(item.name))
+
+    # Now write code for all the items in the module.
+    for item in module:
+        if item.name in excludes:
+            continue
+
+        dispatchMap = {
+            extractors.DefineDef    : _generateDefineStub,
+            extractors.GlobalVarDef : _generateGlobalStub,
+            extractors.EnumDef      : _generateEnumStub,
+            extractors.ClassDef     : _generateClassStub,
+            extractors.PyCodeDef    : _ignore,
+            }
+        func = dispatchMap.get(type(item), None)
+        if func is None:
+            print('WARNING: Unable to generate stub for {}, type {}'.format(
+                item.name, type(item)))
+        else:
+            func(code, item, typeValMap)
+
+    # Add the code to the module header
+    module.addHeaderCode(code.renderHdr())
+    if code.cpp:
+        # and possibly the module's C++ file
+        module.addCppCode(code.renderCpp())
+
+
+# A simple class for holding lists of code snippets for the header and
+# possibily the C++ file.
+class _StubCodeHolder:
+    def __init__(self, flag):
+        self.flag = flag
+        self.hdr = []
+        self.cpp = []
+
+    def renderHdr(self):
+        return self.doRender(self.hdr)
+
+    def renderCpp(self):
+        return self.doRender(self.cpp)
+
+    def doRender(self, lst):
+        if not lst:
+            return ''
+        code = ('#if !{}\n'.format(self.flag) +
+                '\n'.join(lst) +
+                '\n#endif //!{}\n'.format(self.flag))
+        return code
+
+
+
+def _ignore(*args):
+    pass
+
+
+def _generateDefineStub(code, define, typeValMap):
+    code.hdr.append('#define {}  {}'.format(define.name, define.value))
+
+
+def _generateGlobalStub(code, glob, typeValMap):
+    code.hdr.append('extern {} {};'.format(glob.type, glob.name))
+    code.cpp.append('{} {};'.format(glob.type, glob.name))
+
+
+def _generateEnumStub(code, enum, typeValMap):
+    name = '' if enum.name.startswith('@') else enum.name
+    code.hdr.append('\nenum {} {{'.format(name))
+    for item in enum:
+        code.hdr.append('    {},'.format(item.name))
+    code.hdr.append('};')
+
+
+def _generateClassStub(code, klass, typeValMap):
+    if not klass.bases:
+        code.hdr.append('\nclass {} {{'.format(klass.name))
+    else:
+        code.hdr.append('\nclass {} : {} {{'.format(klass.name,
+            ', '.join(['public ' + base for base in klass.bases])))
+    code.hdr.append('public:')
+
+    for item in klass:
+        dispatchMap = {
+            extractors.MethodDef : _generateMethodStub,
+            }
+        func = dispatchMap.get(type(item), None)
+        if func is None:
+            print('WARNING: Unable to generate stub for {}.{}, type {}'.format(
+                klass.name, item.name, type(item)))
+        else:
+            func(code, item, typeValMap)
+
+    code.hdr.append('};')
+
+
+def _generateMethodStub(code, method, typeValMap):
+    assert isinstance(method, extractors.MethodDef)
+    decl = '    '
+    if method.isVirtual:
+        decl += 'virtual '
+    if method.isStatic:
+        decl += 'static '
+    if method.isCtor or method.isDtor:
+        decl += '{}'.format(method.name)
+    else:
+        decl += '{} {}'.format(method.type, method.name)
+    decl += method.argsString
+    if method.isPureVirtual:
+        decl += ';'
+    code.hdr.append(decl)
+
+    if not method.isPureVirtual:
+        impl = '        { '
+        if method.isCtor or method.isStatic:
+            impl += 'wxPyRaiseNotImplemented(); '
+
+        if not (method.isCtor or method.isDtor):
+            if not method.type == 'void':
+                rval = typeValMap.get(method.type, None)
+                if rval is None and '*' in method.type:
+                    rval = 'NULL'
+                if rval is None:
+                    print("WARNING: I don't know how to return a '{}' value.".format(method.type))
+                    rval = '0'
+                impl += 'return {}; '.format(rval)
+
+        impl += '}\n'
+        code.hdr.append(impl)
+
+    for overload in method.overloads:
+        _generateMethodStub(code, overload, typeValMap)
+
+#---------------------------------------------------------------------------

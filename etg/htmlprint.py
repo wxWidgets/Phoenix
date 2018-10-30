@@ -52,6 +52,14 @@ def run():
     c.addPrivateCopyCtor()
     tools.fixHtmlSetFonts(c)
 
+    # Ensure sip knows these virtuals are present in this class.
+    c.addItem(etgtools.WigCode("""\
+        bool OnPrintPage(int page);
+        bool HasPage(int page);
+        void GetPageInfo(int *minPage, int *maxPage, int *selPageFrom, int *selPageTo);
+        bool OnBeginDocument(int startPage, int endPage);
+        void OnPreparePrinting();
+        """))
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

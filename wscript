@@ -104,7 +104,7 @@ def configure(conf):
     conf.env.msvc_relwithdebug = conf.options.msvc_relwithdebug
 
     # Ensure that the headers in siplib and Phoenix's src dir can be found
-    conf.env.INCLUDES_WXPY = ['sip/siplib', 'src']
+    conf.env.INCLUDES_WXPY = ['sip/siplib', 'wx/include', 'src']
 
     if isWindows:
         # Windows/MSVC specific stuff

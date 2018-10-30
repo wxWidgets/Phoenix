@@ -61,9 +61,8 @@ def run():
     c.find('wxSound.isResource').ignore()
     c.find('Create.isResource').ignore()
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.find('Play').renameOverload('filename', 'PlaySound')
     c.find('IsPlaying').ignore()

@@ -61,6 +61,7 @@ def run():
     c.mustHaveApp()
     c.addCppMethod('bool', 'IsOk', '()', 'return !self->IsNull();')
     c.addCppMethod('int', '__nonzero__', '()', "return !self->IsNull();")
+    c.addCppMethod('int', '__bool__', '()', "return !self->IsNull();")
 
 
     #---------------------------------------------
@@ -85,7 +86,7 @@ def run():
         #if wxUSE_ENH_METAFILE
             return wxGraphicsContext::Create(*metaFileDC);
         #endif
-        #endif        
+        #endif
             wxPyRaiseNotImplemented();
             return NULL;
         """)

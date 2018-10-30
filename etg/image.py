@@ -359,6 +359,7 @@ def run():
 
 
     c.addCppMethod('int', '__nonzero__', '()', 'return self->IsOk();')
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addPyMethod('ConvertToBitmap', '(self, depth=-1)',
         doc="""\

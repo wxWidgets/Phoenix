@@ -150,6 +150,11 @@ def run():
     #---------------------------------------------------------
     c = module.find('wxPGChoices')
     c.find('wxPGChoices').findOverload('wxChar **').ignore()
+    c.find('wxPGChoices').findOverload('wxString *').ignore()
+    c.find('Add').findOverload('wxChar **').ignore()
+    c.find('Add').findOverload('wxString *').ignore()
+    c.find('Set').findOverload('wxChar **').ignore()
+    c.find('Set').findOverload('wxString *').ignore()
     tools.ignoreConstOverloads(c)
     c.find('operator[]').ignore()
     c.find('GetId').type = 'wxIntPtr'

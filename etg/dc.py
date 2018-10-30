@@ -225,9 +225,8 @@ def run():
         """)
 
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addPyMethod('GetBoundingBox', '(self)', doc="""\
         GetBoundingBox() -> (x1,y1, x2,y2)\n
