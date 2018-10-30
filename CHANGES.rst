@@ -164,6 +164,9 @@ Changes in this release include the following:
 * wxWidgets for Mac includes the wxJoystick class now, also update the demo.
   (#997)
 
+* Fix wx.html.HtmlPrintout to not be seen as an abstract class, so it can be
+  instantiated. (#1060)
+
 
 
 
