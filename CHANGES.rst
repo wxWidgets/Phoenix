@@ -161,6 +161,9 @@ Changes in this release include the following:
 * Fix drawing of ticks in wx.lib.agw.speedmeter when there are negative bounds
   values. (#1013)
 
+* wxWidgets for Mac includes the wxJoystick class now, also update the demo.
+  (#997)
+
 
 
 

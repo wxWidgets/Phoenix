@@ -2,7 +2,7 @@
 
 #----------------------------------------------------------------------------
 # Name:        Joystick.py
-# Purpose:     Demonstrate use of wx.Joystick
+# Purpose:     Demonstrate use of wx.adv.Joystick
 #
 # Author:      Jeff Grimmett (grimmtoo@softhome.net), adapted from original
 #              .wdr-derived demo
@@ -17,9 +17,6 @@ import math
 import wx
 import wx.adv
 
-haveJoystick = True
-if wx.Platform == "__WXMAC__":
-    haveJoystick = False
 
 #----------------------------------------------------------------------------
 
@@ -136,7 +133,8 @@ class JoyGauge(wx.Panel):
 
             # Now to draw it.
             dc.SetPen(wx.Pen(wx.RED, 2))
-            dc.CrossHair(x, y)
+            dc.DrawLine(x, 0, x, h)
+            dc.DrawLine(0, y, w, y)
 
 
     def Update(self):
@@ -626,9 +624,10 @@ class AxisBar(wx.Gauge):
         self.SetBackgroundColour('light blue')
         self.SetForegroundColour('orange')
 
-        # Capture paint events for purpose of updating
-        # the displayed value.
-        self.Bind(wx.EVT_PAINT, self.onPaint)
+        # NOTE: See comment below
+        # # Capture paint events for purpose of updating
+        # # the displayed value.
+        # self.Bind(wx.EVT_PAINT, self.onPaint)
 
     def Update(self, value, rawvalue):
         # Updates the gauge itself, sets the raw value for
@@ -647,15 +646,24 @@ class AxisBar(wx.Gauge):
 
         # Clear out the gauge
         dc.Clear()
-        # and then carry out business as usual
-        wx.Gauge.OnPaint(self, evt)
+
+        # NOTE: in Classic we exposed wxWindow::OnPaint for MSW, so the default
+        #       paint behavior can be triggered and then we can draw on top of
+        #       that after the native OnPaint is done. For Phoenix, I chose to
+        #       not do this any more, so this breaks. Not sure this is really
+        #       needed for this demo, but if so then we'll nede to find another
+        #       way to do this. In the meantime, this is commented out, and the
+        #       Paint event will also not be captured at all.
+
+        # # and then carry out business as usual
+        # wx.Gauge.OnPaint(self, evt)
 
         # This is the size available to us.
         w, h = dc.GetSize()
 
         # This is what we will overlay on the gauge.
         # It reflects the actual value received from the
-        # wx.Joystick.
+        # wx.adv.Joystick.
         txt = str(self.rawvalue)
 
         # Copy the default font, make it bold.
@@ -820,7 +828,7 @@ class Axis(wx.Panel):
 class AxisPanel(wx.Panel):
     #
     # Contained herein is a panel that offers a graphical display
-    # of the levels for all axes supported by wx.Joystick. If
+    # of the levels for all axes supported by wx.adv.Joystick. If
     # your system doesn't have a particular axis, it will be
     # 'dummied' for transparent use.
     #
@@ -945,17 +953,25 @@ class JoystickDemoPanel(wx.Panel):
     def ShutdownDemo(self):
         if self.stick:
             self.stick.ReleaseCapture()
+        self.stick.Destroy()
         self.stick = None
 
 #----------------------------------------------------------------------------
 
 def runTest(frame, nb, log):
-    if haveJoystick:
-        win = JoystickDemoPanel(nb, log)
-        return win
-    else:
+    if not wx.adv.USE_JOYSTICK:
         from wx.lib.msgpanel import MessagePanel
         win = MessagePanel(nb, 'wx.Joystick is not available on this platform.',
+                        'Sorry', wx.ICON_WARNING)
+        return win
+
+    elif wx.adv.Joystick.GetNumberJoysticks() != 0:
+        win = JoystickDemoPanel(nb, log)
+        return win
+
+    else:
+        from wx.lib.msgpanel import MessagePanel
+        win = MessagePanel(nb, 'No joysticks are found on this system.',
                            'Sorry', wx.ICON_WARNING)
         return win
 
@@ -965,13 +981,13 @@ def runTest(frame, nb, log):
 overview = """\
 <html>
 <body>
-<h1>wx.Joystick</h1>
-This demo illustrates the use of the wx.Joystick class, which is an interface to
+<h1>wx.adv.Joystick</h1>
+This demo illustrates the use of the wx.adv.Joystick class, which is an interface to
 one or more joysticks attached to your system.
 
 <p>The data that can be retrieved from the joystick comes in four basic flavors.
 All of these are illustrated in the demo. In fact, this demo illustrates everything
-you <b>can</b> get from the wx.Joystick control.
+you <b>can</b> get from the wx.adv.Joystick control.
 
 <ul>
 <li>Static information such as Manufacturer ID and model name,
@@ -1036,7 +1052,7 @@ versus a four-way hat.
 
 <h2>Caveats</h2>
 
-The wx.Joystick control is in many ways incomplete at the C++ library level, but it is
+The wx.adv.Joystick control is in many ways incomplete at the C++ library level, but it is
 not insurmountable.  In short, while the joystick interface <i>can</i> be event-driven,
 the wx.JoystickEvent class lacks event binders for all event types. Thus, you cannot
 rely on wx.JoystickEvents to tell you when something has changed, necessarilly.
