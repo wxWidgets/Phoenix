@@ -596,6 +596,22 @@ are using Python3 and would like the newest version of PyPubSub then you can
 drop the version number from the pip command above.
 
 
+wx.html.HtmlWindow.OnOpeningURL
+-------------------------------
+
+In Classic the return value of ``wx.html.HtmlWindow.OnOpeningURL`` could be
+either a value from the ``wx.html.HtmlOpeningStatus`` enumeration, or a string
+containing the URL to redirect to. In Phoenix this has been changed to a simpler
+wrapper implementation which requires that both an enum value and a string be
+returned as a tuple. For example::
+
+    def OnHTMLOpeningURL(self, urlType, url):
+        if urlType == wx.html.HTML_URL_IMAGE and url != self.otherURL:
+            return (wx.html.HTML_REDIRECT, self.otherURL)
+        return (wx.html.HTML_OPEN, "")
+
+
+
 .. toctree::
    :maxdepth: 2
    :hidden:

@@ -39,6 +39,11 @@ class MyHtmlWindow(html.HtmlWindow):
             self.log.WriteText('     %s\n' % cell.ConvertToText(sel))
         return super(MyHtmlWindow, self).OnCellClicked(cell, x, y, evt)
 
+    # def OnHTMLOpeningURL(self, urlType, url):
+    #     self.log.WriteText('OnHTMLOpeningURL: %s %s' % (urlType, url))
+    #     if urlType == wx.html.HTML_URL_IMAGE and 'canada' not in url:
+    #         return (wx.html.HTML_REDIRECT, "bitmaps/canada.gif")
+    #     return (wx.html.HTML_OPEN, "")
 
 
 # This filter doesn't really do anything but show how to use filters
