@@ -34,6 +34,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    c = module.find('wxHtmlWindowInterface')
+    assert isinstance(c, etgtools.ClassDef)
+    c.find('OnHTMLOpeningURL.redirect').out = True
+    c.find('OnHTMLOpeningURL.redirect').name = 'redirectTo'
+
+
     c = module.find('wxHtmlWindow')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
@@ -47,7 +53,7 @@ def run():
                   'OnOpeningURL',
                   'OnSetTitle',
                   'OnCellMouseHover',
-                  'OnCellClicked']:
+                  'OnCellClicked' ]:
         c.find(name).isVirtual = True
         c.find(name).ignore(False)
 
@@ -58,7 +64,7 @@ def run():
         virtual void OnHTMLLinkClicked(const wxHtmlLinkInfo& link);
         virtual wxHtmlOpeningStatus OnHTMLOpeningURL(wxHtmlURLType type,
                                                      const wxString& url,
-                                                     wxString *redirect) const;
+                                                     wxString *redirectTo /Out/) const;
         virtual wxPoint HTMLCoordsToWindow(wxHtmlCell *cell,
                                            const wxPoint& pos) const;
         virtual wxWindow* GetHTMLWindow();
