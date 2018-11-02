@@ -32,6 +32,7 @@ class menuitem_Tests(wtc.WidgetTestCase):
         m.SubMenu
         m.Text
         m.TextColour
+        m.Enabled
 
 
     def test_menuitemKinds(self):
