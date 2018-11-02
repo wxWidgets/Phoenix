@@ -148,6 +148,8 @@ def run():
         #endif
         """)
 
+    c.addAutoProperties()
+    c.addItem(etgtools.PropertyDef('Enabled', 'IsEnabled', 'Enable'))
 
     c.find('GetAccel').factory = True
     c.find('GetAccelFromString').ignore()  # Not implemented anywere?
