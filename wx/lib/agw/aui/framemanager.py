@@ -4581,13 +4581,13 @@ class AuiManager(wx.EvtHandler):
                     klass.RemoveEventHandler(handler)
 
 
-    def OnClose(self, ev):
+    def OnClose(self, event):
         """Called when the managed window is closed. Makes sure that :meth:`UnInit`
         is called.
         """
 
-        ev.Skip()
-        if ev.GetEventObject() == self._frame:
+        event.Skip()
+        if event.GetEventObject() == self._frame:
             wx.CallAfter(self.UnInit)
 
 
