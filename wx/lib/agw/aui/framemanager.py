@@ -125,9 +125,6 @@ if wx.Platform == "__WXMSW__":
     except ImportError:
         pass
 
-# wxPython version string
-_VERSION_STRING = wx.VERSION_STRING
-
 # AUI Events
 wxEVT_AUI_PANE_BUTTON = wx.NewEventType()
 wxEVT_AUI_PANE_CLOSE = wx.NewEventType()
@@ -3213,12 +3210,7 @@ class AuiFloatingFrame(wx.MiniFrame):
         self._last2_rect = wx.Rect(*self._last_rect)
         self._last_rect = wx.Rect(*win_rect)
 
-        if _VERSION_STRING < "2.9":
-            leftDown = wx.GetMouseState().LeftDown()
-        else:
-            leftDown = wx.GetMouseState().LeftIsDown()
-
-        if not leftDown:
+        if not wx.GetMouseState().LeftIsDown():
             return
 
         if not self._moving:
@@ -3248,12 +3240,7 @@ class AuiFloatingFrame(wx.MiniFrame):
         """
 
         if self._moving:
-            if _VERSION_STRING < "2.9":
-                leftDown = wx.GetMouseState().LeftDown()
-            else:
-                leftDown = wx.GetMouseState().LeftIsDown()
-
-            if not leftDown:
+            if not wx.GetMouseState().LeftIsDown():
                 self._moving = False
                 self.OnMoveFinished()
             else:
@@ -3363,12 +3350,7 @@ class AuiFloatingFrame(wx.MiniFrame):
         if self._fly_timer.IsRunning():
             return
 
-        if _VERSION_STRING < "2.9":
-            leftDown = wx.GetMouseState().LeftDown()
-        else:
-            leftDown = wx.GetMouseState().LeftIsDown()
-
-        if leftDown:
+        if wx.GetMouseState().LeftIsDown():
             return
 
         rect = wx.Rect(*self.GetScreenRect())
@@ -8252,12 +8234,7 @@ class AuiManager(wx.EvtHandler):
 
         if part.rect.Contains(pt):
 
-            if _VERSION_STRING < "2.9":
-                leftDown = wx.GetMouseState().LeftDown()
-            else:
-                leftDown = wx.GetMouseState().LeftIsDown()
-
-            if leftDown:
+            if wx.GetMouseState().LeftIsDown():
                 state = AUI_BUTTON_STATE_PRESSED
             else:
                 state = AUI_BUTTON_STATE_HOVER
@@ -9924,12 +9901,7 @@ class AuiManager(wx.EvtHandler):
         # when release the button out of the window.
         # TODO: a better fix is needed.
 
-        if _VERSION_STRING < "2.9":
-            leftDown = wx.GetMouseState().LeftDown()
-        else:
-            leftDown = wx.GetMouseState().LeftIsDown()
-
-        if not leftDown:
+        if not wx.GetMouseState().LeftIsDown():
             self._action = actionNone
             self.OnLeftUp_DragToolbarPane(eventOrPt)
 
