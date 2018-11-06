@@ -832,7 +832,6 @@ class TabNavigatorWindow(wx.Dialog):
 
         if self._panel.HasCapture():
             self._panel.ReleaseMouse()
-        bk = self.GetParent()
         self._selectedItem = self._listBox.GetSelection()
         self.EndModal(returnId)
 
