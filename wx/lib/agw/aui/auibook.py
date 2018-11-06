@@ -747,7 +747,8 @@ class TabNavigatorWindow(wx.Dialog):
 
         if event.GetKeyCode() == wx.WXK_CONTROL:
             self.CloseDialog()
-
+        elif event.GetKeyCode() == wx.WXK_ESCAPE:
+            self.CloseDialog(wx.ID_CANCEL)
 
     def OnNavigationKey(self, event):
         """
@@ -826,12 +827,14 @@ class TabNavigatorWindow(wx.Dialog):
         self.CloseDialog()
 
 
-    def CloseDialog(self):
+    def CloseDialog(self, returnId=wx.ID_OK):
         """ Closes the :class:`TabNavigatorWindow` dialog, setting selection in :class:`AuiNotebook`. """
 
+        if self._panel.HasCapture():
+            self._panel.ReleaseMouse()
         bk = self.GetParent()
         self._selectedItem = self._listBox.GetSelection()
-        self.EndModal(wx.ID_OK)
+        self.EndModal(returnId)
 
 
     def GetSelectedPage(self):
