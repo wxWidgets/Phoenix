@@ -953,7 +953,7 @@ class HyperTreeHeaderRenderer(object):
         dc.SetBrush(wx.Brush(color, wx.BRUSHSTYLE_SOLID))
         dc.SetBackgroundMode(wx.SOLID)
         dc.SetPen(wx.TRANSPARENT_PEN)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
         # Draw the column divider on the right
         x = rect.width + rect.x - 2
