@@ -24,6 +24,8 @@ class htmlprint_Tests(wtc.WidgetTestCase):
         hep = wx.html.HtmlEasyPrinting(parentWindow=self.frame)
         hep.SetFonts('', '', [7,8,10,12,16,22,30])
 
+    def test_htmlprint3(self):
+        po = wx.html.HtmlPrintout()
 
 #---------------------------------------------------------------------------
 

@@ -43,6 +43,8 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
     tools.fixBookctrlClass(c)
+    c.find('SetArtProvider.art').transfer = True
+
 
     c = module.find('wxAuiTabContainer')
     tools.ignoreConstOverloads(c)

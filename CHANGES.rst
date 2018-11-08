@@ -126,6 +126,27 @@ Changes in this release include the following:
 
 * Performance update for `wx.lib.agw.customtreectrl` (#1049)
 
+* Ensure that colours set in wx.lib.agw.customtreectrl.TreeItemAttr are
+  instances of wx.Colour. (#1032)
+
+* Fix drawing of ticks in wx.lib.agw.speedmeter when there are negative bounds
+  values. (#1013)
+
+* wxWidgets for Mac includes the wxJoystick class now, also update the demo.
+  (#997)
+
+* Fix wx.html.HtmlPrintout to not be seen as an abstract class, so it can be
+  instantiated. (#1060)
+
+* Fix wx.aui.AuiNotbook.SetArtProvider to properly transfer ownership of the art
+  object from Python to C++. This possible double-deletion and related crashing
+  problems. (#1061)
+
+* Fixed the wrappers for wx.html.HtmlWindow.OnOpeningURL to properly handle the
+  redirect output parameter. (#1068) This is a backwards-incompatible change,
+  please see the Migration Guide for details.
+
+
 
 
 4.0.3 "The show must go on. (Die show-stoppers! Die!)"
