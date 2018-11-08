@@ -69,7 +69,6 @@ with python).
 """.format(version=cfg.VERSION, docs_base=DOCS_BASE)
 
 
-
 CLASSIFIERS      = """\
 Development Status :: 6 - Mature
 Environment :: MacOS X :: Cocoa
@@ -85,6 +84,7 @@ Programming Language :: Python :: 2.7
 Programming Language :: Python :: 3.4
 Programming Language :: Python :: 3.5
 Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.7
 Programming Language :: Python :: Implementation :: CPython
 Topic :: Software Development :: User Interfaces
 """
