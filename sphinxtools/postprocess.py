@@ -53,7 +53,8 @@ def makeHeadings():
         if 'overload' in name or 'contributed' in name:
             width = 16
 
-        text += templates.TEMPLATE_HEADINGS % (name, os.path.normpath(rel_path), width)
+        rel_path = os.path.normpath(rel_path).replace('\\', '/')
+        text += templates.TEMPLATE_HEADINGS % (name, rel_path, width)
 
     writeIfChanged(heading_file, text)
 
