@@ -1637,6 +1637,9 @@ class BasePyControl(wx.Control):
         wx.Control.__init__(self, parent, style=wx.NO_BORDER)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
+        if not self.IsDoubleBuffered():
+            self.SetDoubleBuffered(True)
+
         self._bitmap = bitmap
         mask = wx.Mask(self._bitmap, wx.Colour(192, 192, 192))
         self._bitmap.SetMask(mask)
