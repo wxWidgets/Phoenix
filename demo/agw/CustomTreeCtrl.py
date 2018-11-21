@@ -726,7 +726,7 @@ class TreeIcons(wx.Dialog):
             bmp = images.Smiles.GetBitmap()
         else:
             bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[input]), wx.ART_OTHER, (16,16))
-            if not bmp.Ok():
+            if not bmp.IsOk():
                 bmp = wx.Bitmap(16,16)
                 self.ClearBmp(bmp)
 
@@ -746,7 +746,7 @@ class TreeIcons(wx.Dialog):
                 bmp = images.Smiles.GetBitmap()
             else:
                 bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[input+1]), wx.ART_OTHER, (16,16))
-                if not bmp.Ok():
+                if not bmp.IsOk():
                     bmp = wx.Bitmap(16,16)
                     self.ClearBmp(bmp)
 
