@@ -3052,10 +3052,11 @@ class TreeListMainWindow(CustomTreeCtrl):
                 if item.GetHeight() > item.GetWindowSize(i)[1]:
                     ya += (item.GetHeight() - item.GetWindowSize(i)[1])//2
 
+                if wnd.GetPosition() != (wndx, ya):
+                    wnd.Move(wndx, ya, flags=wx.SIZE_ALLOW_MINUS_ONE)
+                # Force window visible after any position changes were made.
                 if not wnd.IsShown():
                     wnd.Show()
-                if wnd.GetPosition() != (wndx, ya):
-                    wnd.SetPosition((wndx, ya))
 
             x_colstart += col_w
             dc.DestroyClippingRegion()

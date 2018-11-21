@@ -6824,10 +6824,11 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                 # Rightmost alignment of windows
                 wndx = w - item.GetWindowSize().x - 2 + xa
 
+            if wnd.GetPosition() != (wndx, ya):
+                wnd.Move(wndx, ya, flags=wx.SIZE_ALLOW_MINUS_ONE)
+            # Force window visible after any position changes were made.
             if not wnd.IsShown():
                 wnd.Show()
-            if wnd.GetPosition() != (wndx, ya):
-                wnd.SetPosition((wndx, ya))
 
         if separator:
             oldPen = dc.GetPen()
