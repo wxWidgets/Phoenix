@@ -7245,20 +7245,20 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         keyCode = event.GetKeyCode()
 
-        if keyCode in [ord("+"), wx.WXK_ADD]:       # "+"
+        if keyCode in (ord('+'), wx.WXK_ADD, wx.WXK_NUMPAD_ADD):				# "+"
             if self._current.HasPlus() and not self.IsExpanded(self._current) and self.IsItemEnabled(self._current):
                 self.Expand(self._current)
 
-        elif keyCode in [ord("*"), wx.WXK_MULTIPLY]:  # "*"
+        elif keyCode in (ord('*'), wx.WXK_MULTIPLY, wx.WXK_NUMPAD_MULTIPLY):	# "*"
             if not self.IsExpanded(self._current) and self.IsItemEnabled(self._current):
                 # expand all
-                self.ExpandAll(self._current)
+                self.ExpandAllChildren(self._current)
 
-        elif keyCode in [ord("-"), wx.WXK_SUBTRACT]:  # "-"
+        elif keyCode in (ord('-'), wx.WXK_SUBTRACT, wx.WXK_NUMPAD_SUBTRACT):	# "-"
             if self.IsExpanded(self._current):
                 self.Collapse(self._current)
 
-        elif keyCode == wx.WXK_MENU:
+        elif keyCode in (wx.WXK_MENU, wx.WXK_WINDOWS_MENU):
             # Use the item's bounding rectangle to determine position for the event
             itemRect = self.GetBoundingRect(self._current, True)
             event = TreeEvent(wxEVT_TREE_ITEM_MENU, self.GetId())
@@ -7268,7 +7268,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             event.SetEventObject(self)
             self.GetEventHandler().ProcessEvent(event)
 
-        elif keyCode in [wx.WXK_RETURN, wx.WXK_SPACE, wx.WXK_NUMPAD_ENTER]:
+        elif keyCode in (wx.WXK_RETURN, wx.WXK_SPACE, wx.WXK_NUMPAD_ENTER):
 
             if not self.IsItemEnabled(self._current):
                 event.Skip()
