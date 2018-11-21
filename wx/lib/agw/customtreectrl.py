@@ -5034,7 +5034,9 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         self._dirty = True     # do this first so stuff below doesn't cause flicker
 
-        self._anchor = GenericTreeItem(None, text, ct_type, wnd, image, selImage, data, on_the_right)
+        self._anchor = GenericTreeItem(None, text, ct_type=ct_type, wnd=wnd,
+                                       image=image, selImage=selImage,
+                                       data=data, on_the_right=on_the_right)
 
         if wnd is not None:
             self._hasWindows = True
