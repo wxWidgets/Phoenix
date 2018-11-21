@@ -4644,17 +4644,18 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :note: This method returns ``None`` if there are no further siblings.
         """
 
-        i = item
-        parent = i.GetParent()
+        parent = item.GetParent()
 
         if parent == None:
-
             # root item doesn't have any siblings
             return None
 
         siblings = parent.GetChildren()
-        index = siblings.index(i)
-
+        if item not in siblings:
+            # Item is unlinked from tree
+            return None
+        
+        index = siblings.index(item)
         n = index + 1
         return (n == len(siblings) and [None] or [siblings[n]])[0]
 
@@ -4671,17 +4672,18 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :note: This method returns ``None`` if there are no further siblings.
         """
 
-        i = item
-        parent = i.GetParent()
+        parent = item.GetParent()
 
         if parent == None:
-
             # root item doesn't have any siblings
             return None
 
         siblings = parent.GetChildren()
-        index = siblings.index(i)
+        if item not in siblings:
+            # Item is unlinked from tree
+            return None
 
+        index = siblings.index(item)
         return (index == 0 and [None] or [siblings[index-1]])[0]
 
 
