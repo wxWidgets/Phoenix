@@ -5955,31 +5955,26 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         item_y = item.GetY()
         start_x, start_y = self.GetViewStart()
         start_y *= _PIXELS_PER_UNIT
-
         client_w, client_h = self.GetClientSize()
 
-        x, y = 0, 0
+        # Calculate size of entire tree (not necessary anymore?)
+        x, y = self._anchor.GetSize(0, 0, self)
+        y += _PIXELS_PER_UNIT + 2 # one more scrollbar unit + 2 pixels
+        x += _PIXELS_PER_UNIT + 2 # one more scrollbar unit + 2 pixels
+        x_pos = self.GetScrollPos(wx.HORIZONTAL)
 
+        ## Note: The Scroll() method updates all child window positions
+        ##       while the SetScrollBars() does not (on most platforms).
         if item_y < start_y+3:
-
-            # going down
-            x, y = self._anchor.GetSize(x, y, self)
-            y += _PIXELS_PER_UNIT + 2 # one more scrollbar unit + 2 pixels
-            x += _PIXELS_PER_UNIT + 2 # one more scrollbar unit + 2 pixels
-            x_pos = self.GetScrollPos(wx.HORIZONTAL)
-            # Item should appear at top
-            self.SetScrollbars(_PIXELS_PER_UNIT, _PIXELS_PER_UNIT, x//_PIXELS_PER_UNIT, y//_PIXELS_PER_UNIT, x_pos, item_y//_PIXELS_PER_UNIT)
+            # going down, item should appear at top
+            self.Scroll(x_pos, item_y // _PIXELS_PER_UNIT)
+            #self.SetScrollbars(_PIXELS_PER_UNIT, _PIXELS_PER_UNIT, x//_PIXELS_PER_UNIT, y//_PIXELS_PER_UNIT, x_pos, item_y//_PIXELS_PER_UNIT)
 
         elif item_y+self.GetLineHeight(item) > start_y+client_h:
-
-            # going up
-            x, y = self._anchor.GetSize(x, y, self)
-            y += _PIXELS_PER_UNIT + 2 # one more scrollbar unit + 2 pixels
-            x += _PIXELS_PER_UNIT + 2 # one more scrollbar unit + 2 pixels
+            # going up, item should appear at bottom
             item_y += _PIXELS_PER_UNIT+2
-            x_pos = self.GetScrollPos(wx.HORIZONTAL)
-            # Item should appear at bottom
-            self.SetScrollbars(_PIXELS_PER_UNIT, _PIXELS_PER_UNIT, x//_PIXELS_PER_UNIT, y//_PIXELS_PER_UNIT, x_pos, (item_y+self.GetLineHeight(item)-client_h)//_PIXELS_PER_UNIT )
+            self.Scroll(x_pos, (item_y + self.GetLineHeight(item) - client_h) // _PIXELS_PER_UNIT)
+            #self.SetScrollbars(_PIXELS_PER_UNIT, _PIXELS_PER_UNIT, x//_PIXELS_PER_UNIT, y//_PIXELS_PER_UNIT, x_pos, (item_y+self.GetLineHeight(item)-client_h)//_PIXELS_PER_UNIT )
 
 
     def OnCompareItems(self, item1, item2):

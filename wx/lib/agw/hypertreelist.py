@@ -2676,31 +2676,40 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `item`: an instance of :class:`TreeListItem`.
         """
 
+        if not item:
+            return
+
         # ensure that the position of the item it calculated in any case
         if self._dirty:
             self.CalculatePositions()
 
         # now scroll to the item
+        item_y = item.GetY()
         xUnit, yUnit = self.GetScrollPixelsPerUnit()
         start_x, start_y = self.GetViewStart()
         start_y *= yUnit
         client_w, client_h = self.GetClientSize ()
 
-        x, y = self._anchor.GetSize (0, 0, self)
+        # Calculate size of entire tree (not necessary anymore?)
+        x, y = self._anchor.GetSize(0, 0, self)
         x = self._owner.GetHeaderWindow().GetWidth()
         y += yUnit + 2 # one more scrollbar unit + 2 pixels
         x_pos = self.GetScrollPos(wx.HORIZONTAL)
 
-        if item._y < start_y+3:
+        ## Note: The Scroll() method updates all child window positions
+        ##       while the SetScrollBars() does not (on most platforms).
+        if item_y < start_y+3:
             # going down, item should appear at top
-            self.SetScrollbars(xUnit, yUnit, (xUnit and [x//xUnit] or [0])[0], (yUnit and [y//yUnit] or [0])[0],
-                               x_pos, (yUnit and [item._y//yUnit] or [0])[0])
+            self.Scroll(x_pos, (item_y // yUnit) if yUnit > 0 else 0)
+##            self.SetScrollbars(xUnit, yUnit, (xUnit and [x//xUnit] or [0])[0], (yUnit and [y//yUnit] or [0])[0],
+##                               x_pos, (yUnit and [item_y//yUnit] or [0])[0])
 
-        elif item._y+self.GetLineHeight(item) > start_y+client_h:
+        elif item_y+self.GetLineHeight(item) > start_y+client_h:
             # going up, item should appear at bottom
-            item._y += yUnit + 2
-            self.SetScrollbars(xUnit, yUnit, (xUnit and [x//xUnit] or [0])[0], (yUnit and [y//yUnit] or [0])[0],
-                               x_pos, (yUnit and [(item._y+self.GetLineHeight(item)-client_h)//yUnit] or [0])[0])
+            item_y += yUnit + 2
+            self.Scroll(x_pos, ((item_y + self.GetLineHeight(item) - client_h) // yUnit) if yUnit > 0 else 0)
+##            self.SetScrollbars(xUnit, yUnit, (xUnit and [x//xUnit] or [0])[0], (yUnit and [y//yUnit] or [0])[0],
+##                               x_pos, (yUnit and [(item_y+self.GetLineHeight(item)-client_h)//yUnit] or [0])[0])
 
 
     def SetDragItem(self, item):
