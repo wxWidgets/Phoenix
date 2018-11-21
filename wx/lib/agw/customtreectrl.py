@@ -8340,7 +8340,20 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         # set its position
         item.SetX(x+self._spacing)
         item.SetY(y)
-        y += self.GetLineHeight(item)
+        height = self.GetLineHeight(item)
+
+        wnd = item.GetWindow()
+        if wnd:
+            # move its window, if necessary.
+            xa, ya = self.CalcScrolledPosition((0, y))
+            wndWidth, wndHeight = item.GetWindowSize()
+            if height > wndHeight:
+                ya += (height - wndHeight) // 2
+            wndx, wndy = wnd.GetPosition()
+            if wndy != ya:
+                wnd.Move(wndx, ya, flags=wx.SIZE_ALLOW_MINUS_ONE)
+        
+        y += height
 
         if not item.IsExpanded():
             # we don't need to calculate collapsed branches

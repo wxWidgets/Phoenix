@@ -3313,7 +3313,8 @@ class TreeListMainWindow(CustomTreeCtrl):
                 continue
             x_maincol += self._owner.GetHeaderWindow().GetColumnWidth(i)
 
-        y, x_maincol = self.PaintLevel(self._anchor, dc, 0, 0, x_maincol)
+        y = 2
+        y, x_maincol = self.PaintLevel(self._anchor, dc, 0, y, x_maincol)
 
 
     def HitTest(self, point, flags=0):
@@ -3908,7 +3909,24 @@ class TreeListMainWindow(CustomTreeCtrl):
         # set its position
         item.SetX(x)
         item.SetY(y)
-        y += self.GetLineHeight(item)
+        # hidden items don't get a height (height=0).
+        if item.IsHidden():
+            return y
+        height = self.GetLineHeight(item)
+
+        for column in range(self.GetColumnCount()):
+            wnd = item.GetWindow(column)
+            if wnd:
+                # move this window, if necessary.
+                xa, ya = self.CalcScrolledPosition((0, y))
+                wndWidth, wndHeight = item.GetWindowSize(column)
+                if height > wndHeight:
+                    ya += (height - wndHeight) // 2
+                wndx, wndy = wnd.GetPosition()
+                if wndy != ya:
+                    wnd.Move(wndx, ya, flags=wx.SIZE_ALLOW_MINUS_ONE)
+
+        y += height
 
         if not item.IsExpanded():
             # we don't need to calculate collapsed branches
