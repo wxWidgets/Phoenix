@@ -1698,6 +1698,10 @@ class GenericTreeItem(object):
 
         :return: A Python list containing instances of :class:`GenericTreeItem`, representing
          this item's children.
+        :note: The returned value is a reference to the list of children
+        used internally by the tree. It is advised not to change this list
+        and to make a copy before calling other tree methods as they could
+        change the contents of the list.
         """
 
         return self._children
@@ -1791,6 +1795,7 @@ class GenericTreeItem(object):
         :param integer `which`: the image kind.
 
         :see: :meth:`~GenericTreeItem.GetImage` for a description of the `which` parameter.
+        :note: Call :meth:`~CustomTreeCtrl.SetItemImage` instead to refresh the tree properly.
         """
 
         self._images[which] = image
@@ -1803,6 +1808,7 @@ class GenericTreeItem(object):
 
         :param integer `image`: an index within the left image list specifying the image to
          use for the item in the leftmost part of the client area.
+        :note: Call :meth:`~CustomTreeCtrl.SetItemLeftImage` instead to refresh the tree properly.
         """
 
         self._leftimage = image
@@ -1823,6 +1829,7 @@ class GenericTreeItem(object):
         Sets whether an item has the 'plus' button.
 
         :param bool `has`: ``True`` to set the 'plus' button on the item, ``False`` otherwise.
+        :note: Call :meth:`~CustomTreeCtrl.SetItemHasChildren` instead to refresh the tree properly.
         """
 
         self._hasPlus = has
@@ -1833,6 +1840,7 @@ class GenericTreeItem(object):
         Sets the item font bold.
 
         :parameter bool `bold`: ``True`` to have a bold font item, ``False`` otherwise.
+        :note: Call :meth:`~CustomTreeCtrl.SetItemBold` instead to refresh the tree properly.
         """
 
         self._isBold = bold
@@ -1843,6 +1851,7 @@ class GenericTreeItem(object):
         Sets the item font italic.
 
         :parameter bool `italic`: ``True`` to have an italic font item, ``False`` otherwise.
+        :note: Call :meth:`~CustomTreeCtrl.SetItemItalic` instead to refresh the tree properly.
         """
 
         self._isItalic = italic
@@ -1914,7 +1923,7 @@ class GenericTreeItem(object):
 
     def SetWindow(self, wnd, on_the_right=True):
         """
-        Sets the window associated to the item.
+        Sets the window associated to the item. Internal use only.
 
         :param `wnd`: a non-toplevel window to be displayed next to the item, any
          subclass of :class:`wx.Window`.
@@ -1923,6 +1932,7 @@ class GenericTreeItem(object):
          on the left of text and overlapping the image. New in wxPython 4.0.4.
 
         :raise: `Exception` if the input `item` is a separator and `wnd` is not ``None``.
+        :note: Always use :meth:`~CustomTreeCtrl.SetItemWindow` instead to update the tree properly.
         """
 
         if self.IsSeparator() and wnd is not None:
@@ -1972,7 +1982,10 @@ class GenericTreeItem(object):
 
 
     def DeleteWindow(self):
-        """ Deletes the window associated to the item (if any). """
+        """ Deletes the window associated to the item (if any). Internal use only.
+
+        :note: Always use :meth:`~CustomTreeCtrl.DeleteItemWindow` instead to update the tree properly.
+        """
 
         if self._wnd:
             self._wnd.Destroy()
@@ -2090,6 +2103,7 @@ class GenericTreeItem(object):
            must be unchecked.
          - If a radiobutton node becomes unchecked, then all of its child nodes will become
            inactive.
+        :note: Call :meth:`~CustomTreeCtrl.SetItemType` instead to refresh the tree properly.
         """
 
         self._type = ct_type
@@ -2100,6 +2114,7 @@ class GenericTreeItem(object):
         Sets whether the item is hypertext or not.
 
         :param bool `hyper`: ``True`` to set hypertext behaviour, ``False`` otherwise.
+        :note: Call :meth:`~CustomTreeCtrl.SetItemHyperText` instead to refresh the tree properly.
         """
 
         self._hypertext = hyper
@@ -2110,6 +2125,7 @@ class GenericTreeItem(object):
         Sets whether an hypertext item was visited or not.
 
         :param bool `visited`: ``True`` to set a hypertext item as visited, ``False`` otherwise.
+        :note: Call :meth:`~CustomTreeCtrl.SetItemVisited` instead to refresh the tree properly.
         """
 
         self._visited = visited
@@ -2150,13 +2166,19 @@ class GenericTreeItem(object):
 
 
     def Expand(self):
-        """ Expands the item. """
+        """ Expands the item. Internal use only.
+
+        :note: Always use :meth:`~CustomTreeCtrl.Expand` instead to update the tree properly and send events.
+        """
 
         self._isCollapsed = False
 
 
     def Collapse(self):
-        """ Collapses the item. """
+        """ Collapses the item. Internal use only.
+
+        :note: Always use :meth:`~CustomTreeCtrl.Collapse` instead to update the tree properly and send events.
+        """
 
         self._isCollapsed = True
 
@@ -2166,6 +2188,7 @@ class GenericTreeItem(object):
         Sets the item focus/unfocus.
 
         :param bool `set`: ``True`` to set the focus to the item, ``False`` otherwise.
+        :note: Call :meth:`~CustomTreeCtrl.SelectItem` instead to update the tree properly and send events.
         """
 
         self._hasHilight = set
@@ -2302,11 +2325,12 @@ class GenericTreeItem(object):
 
     def Check(self, checked=True):
         """
-        Checks/unchecks an item.
+        Checks/unchecks an item. Internal use only.
 
         :param bool `checked`: ``True`` to check an item, ``False`` to uncheck it.
 
         :note: This is meaningful only for checkbox-like and radiobutton-like items.
+        :note: Always use :meth:`~CustomTreeCtrl.CheckItem` instead to update the tree properly and send events.
         """
 
         self._checked = checked
@@ -2347,6 +2371,7 @@ class GenericTreeItem(object):
         Enables/disables the item.
 
         :param bool `enable`: ``True`` to enable the item, ``False`` to disable it.
+        :note: Call :meth:`~CustomTreeCtrl.EnableItem` instead to update the tree properly.
         """
 
         self._enabled = enable
@@ -2414,9 +2439,10 @@ class GenericTreeItem(object):
 
     def DeleteChildren(self, tree):
         """
-        Deletes the item children.
+        Deletes the item children. Internal use only.
 
         :param `tree`: the main :class:`CustomTreeCtrl` instance.
+        :note: Always use :meth:`~CustomTreeCtrl.DeleteChildren` instead to update the tree properly.
         """
 
         for child in self._children:
@@ -2449,6 +2475,7 @@ class GenericTreeItem(object):
         :param string `text`: the new item label.
 
         :raise: `Exception` if the item is a separator.
+        :note: Call :meth:`~CustomTreeCtrl.SetItemText` to refresh the tree properly.
         """
 
         if self.IsSeparator():
@@ -5808,6 +5835,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         :param `item`: an instance of :class:`GenericTreeItem`;
         :param bool `select`: ``True`` to select an item, ``False`` to deselect it.
+
+        :note: If TR_EXTENDED is set, this actually toggles selection when select=True.
         """
 
         if select:

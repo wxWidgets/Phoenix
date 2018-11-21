@@ -1349,6 +1349,7 @@ class TreeListItem(GenericTreeItem):
         Hides/shows the :class:`TreeListItem`.
 
         :param `hide`: ``True`` to hide the item, ``False`` to show it.
+        :note: Always use :meth:`~HyperTreeList.HideItem` instead to update the tree properly.
         """
 
         self._hidden = hide
@@ -1582,6 +1583,7 @@ class TreeListItem(GenericTreeItem):
         :param `column`: if not ``None``, an integer specifying the column index.
          If it is ``None``, the main column index is used;
         :param `text`: a string specifying the new item label.
+        :note: Call :meth:`~HyperTreeList.SetItemText` instead to refresh the tree properly.
         """
 
         column = (column is not None and [column] or [self._owner.GetMainColumn()])[0]
@@ -1603,6 +1605,7 @@ class TreeListItem(GenericTreeItem):
         :param `which`: the item state.
 
         :see: :meth:`~TreeListItem.GetImage` for a list of valid item states.
+        :note: Call :meth:`~HyperTreeList.SetItemImage` instead to refresh the tree properly.
         """
 
         column = (column is not None and [column] or [self._owner.GetMainColumn()])[0]
@@ -1624,7 +1627,8 @@ class TreeListItem(GenericTreeItem):
 
     def SetTextX(self, text_x):
         """
-        Sets the `x` position of the item text.
+        Sets the `x` position of the item text. Used internally to position
+        text according to column alignment.
 
         :param `text_x`: the `x` position of the item text.
         """
@@ -1634,11 +1638,12 @@ class TreeListItem(GenericTreeItem):
 
     def SetWindow(self, wnd, column=None):
         """
-        Sets the window associated to the item.
+        Sets the window associated to the item. Internal use only.
 
         :param `wnd`: a non-toplevel window to be displayed next to the item;
         :param `column`: if not ``None``, an integer specifying the column index.
          If it is ``None``, the main column index is used.
+        :note: Always use :meth:`~HyperTreeList.SetItemWindow` instead to update the tree properly.
         """
 
         column = (column is not None and [column] or [self._owner.GetMainColumn()])[0]
@@ -2561,7 +2566,8 @@ class TreeListMainWindow(CustomTreeCtrl):
 
 
     def HideWindows(self):
-        """ Hides the windows associated to the items. Used internally. """
+        """Scans all item windows in the tree and hides those whose items
+        they belong to are not currently visible. Used internally. """
 
         for child in self._itemWithWindow:
             if not self.IsItemVisible(child):
@@ -4118,9 +4124,17 @@ class HyperTreeList(wx.Control):
     :class:`wx.TreeCtrl` This class does not rely on native native controls,
     as it is a full owner-drawn tree-list control.
 
+    It manages two widgets internally:
+        :class:`TreeListHeaderWindow`
+        :class:`TreeListMainWindow` based off :class:`CustomTreeCtrl`
+    These widgets can be obtained by the :meth:`~HyperTreeList.GetHeaderWindow`
+    and :meth:`~HyperTreeList.GetMainWindow` methods respectively althought this
+    shouldn't be needed in normal usage.
+
     Please note that although the methods are not explicitly defined or
-    documented here, most of the API in :class:`CustomTreeCtrl` is available
-    from this class via monkey-patched delegates.
+    documented here, most of the API in :class:`TreeListMainWindow` and
+    :class:`CustomTreeCtrl` can be called directly from :class:`HyperTreeList`
+    via monkey-patched delegates.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
