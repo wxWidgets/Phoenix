@@ -2062,6 +2062,9 @@ class HyperTreeList(HTL.HyperTreeList):
         item7 = menu.Append(wx.ID_ANY, "Disable Item")
 
         menu.AppendSeparator()
+        item14 = menu.Append(wx.ID_ANY, "Hide Item")
+        item15 = menu.Append(wx.ID_ANY, "Unhide All Items")
+        menu.AppendSeparator()
         item8 = menu.Append(wx.ID_ANY, "Change Item Icons")
         menu.AppendSeparator()
         item9 = menu.Append(wx.ID_ANY, "Get Other Information For This Item")
@@ -2084,6 +2087,8 @@ class HyperTreeList(HTL.HyperTreeList):
         self.Bind(wx.EVT_MENU, self.OnItemPrepend, item11)
         self.Bind(wx.EVT_MENU, self.OnItemAppend, item12)
         self.Bind(wx.EVT_MENU, self.OnItemBackground, item13)
+        self.Bind(wx.EVT_MENU, self.OnHideItem, item14)
+        self.Bind(wx.EVT_MENU, self.OnUnhideItems, item15)
 
         self.PopupMenu(menu)
         menu.Destroy()
@@ -2142,6 +2147,22 @@ class HyperTreeList(HTL.HyperTreeList):
     def OnDisableItem(self, event):
 
         self.EnableItem(self.current, False)
+        event.Skip()
+
+
+    def OnHideItem(self, event):
+
+        self.HideItem(self.current)
+        event.Skip()
+
+
+    def OnUnhideItems(self, event):
+
+        item = self.GetRootItem()
+        while item:
+            if item.IsHidden():
+                self.HideItem(item, False)
+            item = self.GetNext(item)
         event.Skip()
 
 

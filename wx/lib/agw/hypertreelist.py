@@ -1325,6 +1325,7 @@ class TreeListItem(GenericTreeItem):
 
         self._col_images = []
         self._owner = mainWin
+        self._hidden = False
 
         # We don't know the height here yet.
         self._text_x = 0
@@ -1332,7 +1333,6 @@ class TreeListItem(GenericTreeItem):
         GenericTreeItem.__init__(self, parent, text, ct_type, wnd, image, selImage, data)
 
         self._wnd = [None]             # are we holding a window?
-        self._hidden = False
 
         if wnd:
             self.SetWindow(wnd)
@@ -1398,7 +1398,10 @@ class TreeListItem(GenericTreeItem):
 
         :see: :meth:`TreeListMainWindow.HitTest() <TreeListMainWindow.HitTest>` method for the flags explanation.
         """
-
+        # Hidden items are never evaluated.
+        if self.IsHidden():
+            return None, flags, wx.NOT_FOUND
+        
         # for a hidden root node, don't evaluate it, but do evaluate children
         if not theCtrl.HasAGWFlag(wx.TR_HIDE_ROOT) or level > 0:
 
@@ -1667,7 +1670,7 @@ class TreeListItem(GenericTreeItem):
         wnd.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
 
         # We don't show the window if the item is collapsed
-        if self._isCollapsed:
+        if not self.IsExpanded():
             wnd.Show(False)
 
         # The window is enabled only if the item is enabled
@@ -1776,6 +1779,27 @@ class TreeListItem(GenericTreeItem):
 
         return self._wnd[column].GetSize()
 
+
+    def IsExpanded(self):
+        """
+        Returns whether the item is expanded or not.
+
+        :return: ``True`` if the item is expanded, ``False`` if it is collapsed or hidden.
+        """
+        if self.IsHidden():
+            return False
+        return not self._isCollapsed
+
+
+    def IsEnabled(self):
+        """
+        Returns whether the item is enabled or not.
+
+        :return: ``True`` if the item is enabled, ``False`` if it is disabled or hidden.
+        """
+        if self.IsHidden():
+            return False
+        return self._enabled
 
 #-----------------------------------------------------------------------------
 # EditTextCtrl (internal)
@@ -2279,7 +2303,8 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         :param `item`: an instance of :class:`TreeListItem`;
         """
-
+        if item.IsHidden():
+            return False
         # An item is only visible if it's not a descendant of a collapsed item
         parent = item.GetParent()
 
@@ -3827,7 +3852,11 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `item`: an instance of :class:`TreeListItem`;
         :param `dc`: an instance of :class:`wx.DC`.
         """
-
+        if item.IsHidden():
+            # Hidden items have a height of 0.
+            item.SetHeight(0)
+            return
+        
         attr = item.GetAttributes()
 
         if attr and attr.HasFont():
@@ -4126,7 +4155,13 @@ class TreeListMainWindow(CustomTreeCtrl):
         """
 
         item.Hide(hide)
+        # Recalculate positions and hide child windows.
+        self.CalculatePositions()
+        if self._hasWindows:
+            self.HideWindows()
+        # Refresh the tree.
         self.Refresh()
+        self.AdjustMyScrollbars()
 
 
 #----------------------------------------------------------------------------

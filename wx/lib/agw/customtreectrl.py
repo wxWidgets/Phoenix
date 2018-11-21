@@ -1962,7 +1962,7 @@ class GenericTreeItem(object):
         self._windowsize = size
 
         # We don't show the window if the item is collapsed
-        if self._isCollapsed:
+        if not self.IsExpanded():
             self._wnd.Show(False)
 
         # The window is enabled only if the item is enabled
@@ -2617,7 +2617,7 @@ class GenericTreeItem(object):
                 return self, flags
 
             # if children are expanded, fall through to evaluate them
-            if self._isCollapsed:
+            if not self.IsExpanded():
                 return None, 0
 
         # evaluate children
