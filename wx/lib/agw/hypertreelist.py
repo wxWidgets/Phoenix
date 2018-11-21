@@ -2259,6 +2259,15 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         item.SetWindowEnabled(enable, column)
 
+    def DeleteItemWindow(self, item, column=None):
+        """
+        Deletes the window in the column associated to an item (if any).
+
+        :param `item`: an instance of :class:`GenericTreeItem`.
+        :param `column`: if not ``None``, an integer specifying the column index.
+         If it is ``None``, the main column index is used.
+        """
+        item.DeleteWindow(column=column)
 
 # ----------------------------------------------------------------------------
 # navigation
@@ -4139,8 +4148,8 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "UnCheckRadioParent", "CheckItem", "CheckItem2", "AutoToggleChild", "AutoCheckChild", "AutoCheckParent",
             "CheckChilds", "CheckSameLevel", "GetItemWindowEnabled", "SetItemWindowEnabled", "GetItemType",
             "IsDescendantOf", "SetItemHyperText", "IsItemHyperText", "SetItemBold", "SetItemDropHighlight", "SetItemItalic",
-            "GetEditControl", "ShouldInheritColours", "GetItemWindow", "SetItemWindow", "SetItemTextColour", "HideItem",
-            "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection", "SetItemType", "GetCurrentItem",
+            "GetEditControl", "ShouldInheritColours", "GetItemWindow", "SetItemWindow", "DeleteItemWindow", "SetItemTextColour",
+            "HideItem", "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection", "SetItemType", "GetCurrentItem",
             "SetItem3State", "SetItem3StateValue", "GetItem3StateValue", "IsItem3State", "GetPrev",
             "GetNextShown", "GetPrevShown"]
 
