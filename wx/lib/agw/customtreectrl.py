@@ -4375,6 +4375,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         item.DeleteWindow()
         if item in self._itemWithWindow:
             self._itemWithWindow.remove(item)
+        self._dirty = True
 
 
     def GetItemWindowEnabled(self, item):

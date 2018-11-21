@@ -1726,9 +1726,12 @@ class TreeListItem(GenericTreeItem):
         if column >= len(self._wnd):
             return
 
-        if self._wnd[column]:
-            self._wnd[column].Destroy()
+        wnd = self._wnd[column]
+        if wnd:
+            wnd.Destroy()
             self._wnd[column] = None
+            if not any(self._wnd) and self in self._owner._itemWithWindow:
+                self._owner._itemWithWindow.remove(self)
 
 
     def GetWindowEnabled(self, column=None):
@@ -2270,6 +2273,8 @@ class TreeListMainWindow(CustomTreeCtrl):
         if window:
             self._hasWindows = True
 
+        # Recalculate tree during idle time.
+        self._dirty = True
 
     def SetItemWindowEnabled(self, item, enable=True, column=None):
         """
