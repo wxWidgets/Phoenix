@@ -8753,7 +8753,7 @@ if __name__ == '__main__':
     # our normal wxApp-derived class, as usual
 
     app = wx.App(0)
-
+    locale = wx.Locale(wx.LANGUAGE_DEFAULT)
     frame = MyFrame(None)
     app.SetTopWindow(frame)
     frame.Show()
