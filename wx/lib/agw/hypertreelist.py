@@ -2348,7 +2348,15 @@ class TreeListMainWindow(CustomTreeCtrl):
     def GetFirstVisibleItem(self):
         """ Returns the first visible item. """
 
-        return self.GetNextVisible(self.GetRootItem())
+        root = self.GetRootItem()
+        if not root:
+            return None
+
+        if not self.HasAGWFlag(TR_HIDE_ROOT):
+            if self.IsVisible(root):
+                return root
+            
+        return self.GetNextVisible(root)
 
 
     def GetPrevVisible(self, item):
