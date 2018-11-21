@@ -7304,43 +7304,15 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         # up goes to the previous sibling or to the last
         # of its children if it's expanded
         elif keyCode == wx.WXK_UP:
-            prev = self.GetPrevSibling(self._key_current)
-            if not prev:
-                prev = self.GetItemParent(self._key_current)
-                if prev == self.GetRootItem() and self.HasAGWFlag(TR_HIDE_ROOT):
-                    return
+            # Search for a previous, enabled item.
+            prev = self.GetPrevShown(self._key_current)
+            while prev and self.IsItemEnabled(prev) is False:
+                prev = self.GetPrevShown(prev)
 
-                if prev:
-                    current = self._key_current
-                    # TODO: Huh?  If we get here, we'd better be the first child of our parent.  How else could it be?
-                    if current == self.GetFirstChild(prev)[0] and self.IsItemEnabled(prev):
-                        # otherwise we return to where we came from
-                        self.DoSelectItem(prev, unselect_others, extended_select, from_key=True)
-                        self._key_current = prev
-
-            else:
-                current = self._key_current
-
-                # We are going to another parent node
-                while self.IsExpanded(prev) and self.HasChildren(prev):
-                    child = self.GetLastChild(prev)
-                    if child:
-                        prev = child
-                        current = prev
-
-                # Try to get the previous siblings and see if they are active
-                while prev and not self.IsItemEnabled(prev):
-                    prev = self.GetPrevSibling(prev)
-
-                if not prev:
-                    # No previous siblings active: go to the parent and up
-                    prev = self.GetItemParent(current)
-                    while prev and not self.IsItemEnabled(prev):
-                        prev = self.GetItemParent(prev)
-
-                if prev:
-                    self.DoSelectItem(prev, unselect_others, extended_select, from_key=True)
-                    self._key_current = prev
+            # If we found a valid enabled item, select it.
+            if prev:
+                self.DoSelectItem(prev, unselect_others, extended_select, from_key=True)
+                self._key_current = prev
 
         # left arrow goes to the parent
         elif keyCode == wx.WXK_LEFT:
@@ -7369,73 +7341,147 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             # fall through
 
         elif keyCode == wx.WXK_DOWN:
-            if self.IsExpanded(self._key_current) and self.HasChildren(self._key_current):
 
-                child = self.GetNextActiveItem(self._key_current)
+            # Scan for next enabled item.
+            next = self.GetNextShown(self._key_current)
+            while next and self.IsItemEnabled(next) is False:
+                next = self.GetNextShown(next)
 
-                if child:
-                    self.DoSelectItem(child, unselect_others, extended_select, from_key=True)
-                    self._key_current = child
+            if next:
+                self.DoSelectItem(next, unselect_others, extended_select, from_key=True)
+                self._key_current = next
 
-            else:
-
-                next = self.GetNextSibling(self._key_current)
-
-                if not next:
-                    current = self._key_current
-                    while current and not next:
-                        current = self.GetItemParent(current)
-                        if current:
-                            next = self.GetNextSibling(current)
-                            if not next or not self.IsItemEnabled(next):
-                                next = None
-
-                else:
-                    while next and not self.IsItemEnabled(next):
-                        next = self.GetNext(next)
-
-                if next:
-                    self.DoSelectItem(next, unselect_others, extended_select, from_key=True)
-                    self._key_current = next
-
-
-        # <End> selects the last visible tree item
+        # <End> selects the last enabled tree item.
         elif keyCode == wx.WXK_END:
 
-            last = self.GetRootItem()
+            top = self.GetRootItem()
+            if self.HasAGWFlag(TR_HIDE_ROOT):
+                top, cookie = self.GetFirstChild(top)
+                
+            lastEnabled = None
+            while top:
+                # Keep track of last enabled item encountered.
+                if self.IsItemEnabled(top):
+                    lastEnabled = top
+                # Top-most item is not enabled. Scan for next item.
+                top = self.GetNextShown(top)
 
-            while last and self.IsExpanded(last):
+            if lastEnabled:
+                self.DoSelectItem(lastEnabled, unselect_others, extended_select, from_key=True)
 
-                lastChild = self.GetLastChild(last)
-
-                # it may happen if the item was expanded but then all of
-                # its children have been deleted - so IsExpanded() returned
-                # true, but GetLastChild() returned invalid item
-                if not lastChild:
-                    break
-
-                last = lastChild
-
-            if last and self.IsItemEnabled(last):
-
-                self.DoSelectItem(last, unselect_others, extended_select, from_key=True)
-
-        # <Home> selects the root item
+        # <Home> selects the first enabled tree item.
         elif keyCode == wx.WXK_HOME:
 
-            prev = self.GetRootItem()
-
-            if not prev:
-                return
-
+            top = self.GetRootItem()
             if self.HasAGWFlag(TR_HIDE_ROOT):
-                prev, cookie = self.GetFirstChild(prev)
-                if not prev:
-                    return
+                top, cookie = self.GetFirstChild(top)
+                
+            # Scan for first enabled and displayed item.
+            while top and self.IsItemEnabled(top) is False:
+                top = self.GetNextShown(top)
+                
+            if top:
+                self.DoSelectItem(top, unselect_others, extended_select, from_key=True)
 
-            if self.IsItemEnabled(prev):
-                self.DoSelectItem(prev, unselect_others, extended_select, from_key=True)
+        # <PgUp> moves up by a page
+        elif keyCode in (wx.WXK_PAGEUP, wx.WXK_NUMPAD_PAGEUP):
+            # Get Current tree Item.
+            currentItem = self.GetSelection()
+            if not currentItem:
+                # Nothing selected. Allow normal ScrolledWindow PageUp handling.
+                event.Skip()
+                return
+            # Is the current item visible?
+            clientWidth, clientHeight = self.GetClientSize()
+            itemHeight = currentItem.GetHeight()
+            pageSize = max(int(clientHeight * 0.9), clientHeight - itemHeight)
+            x, y = self.CalcScrolledPosition(0, currentItem.GetY())
+            if y >= 0 and (y + itemHeight) < clientHeight:
+                visCount = 1    # Current item is visible
+            else:
+                visCount = 0    # Current item not visible.
+            # Move upwards in tree until last visible, or pagesize hit.
+            amount = 0
+            targetItem = currentItem
+            prevItem = self.GetPrevShown(currentItem)
+            while prevItem:
+                itemHeight = prevItem.GetHeight()
+                if visCount:
+                    # Is this item also visible?
+                    x, y = self.CalcScrolledPosition(0, prevItem.GetY())
+                    if y >= 0 and (y + itemHeight) < clientHeight:
+                        visCount += 1
+                    else:
+                        if visCount > 1 and targetItem != currentItem:
+                            # Move to top visible item in page.
+                            break   
+                        visCount = 0
+                # Move up to previous item, set as target if it is enabled.
+                if prevItem.IsEnabled():
+                    targetItem = prevItem
+                amount += itemHeight
+                # Break loop if we moved up a page size and have a new target.
+                if amount > pageSize and targetItem != currentItem:
+                    break
+                prevItem = self.GetPrevShown(prevItem)                
+            # If we found a valid target, select it.
+            if targetItem != currentItem:
+                self.DoSelectItem(targetItem, unselect_others=True,
+                                  extended_select=False, from_key=True)
+            else:
+                # No enabled item found. Let ScrolledWindow handle PageUp.
+                event.Skip()
 
+        # <PgDn> moves down by a page
+        elif keyCode in (wx.WXK_PAGEDOWN, wx.WXK_NUMPAD_PAGEDOWN):
+            # Get Current tree Item.
+            currentItem = self.GetSelection()
+            if not currentItem:
+                # Nothing selected. Allow normal ScrolledWindow PgDn handling.
+                event.Skip()
+                return
+            # Is the current item visible?
+            clientWidth, clientHeight = self.GetClientSize()
+            itemHeight = currentItem.GetHeight()
+            pageSize = max(int(clientHeight * 0.9), clientHeight - itemHeight)
+            x, y = self.CalcScrolledPosition(0, currentItem.GetY())
+            if y >= 0 and (y + itemHeight) < clientHeight:
+                visCount = 1    # Current item is visible
+            else:
+                visCount = 0    # Current item not visible.
+            # Move downwards in tree until last visible, or pagesize hit.
+            amount = 0
+            targetItem = currentItem
+            nextItem = self.GetNextShown(currentItem)
+            while nextItem:
+                itemHeight = nextItem.GetHeight()
+                if visCount:
+                    # Is this item also visible?
+                    x, y = self.CalcScrolledPosition(0, nextItem.GetY())
+                    if y >= 0 and (y + itemHeight) < clientHeight:
+                        visCount += 1
+                    else:
+                        if visCount > 1 and targetItem != currentItem:
+                            # Move to last visible item in page.
+                            break   
+                        visCount = 0
+                # Move down to next item, set as target if it is enabled.
+                if nextItem.IsEnabled():
+                    targetItem = nextItem
+                amount += itemHeight
+                # Break loop if we moved down a page size and have a new target.
+                if amount > pageSize and targetItem != currentItem:
+                    break
+                nextItem = self.GetNextShown(nextItem)
+            # If we found a valid target, select it.
+            if targetItem != currentItem:
+                self.DoSelectItem(targetItem, unselect_others=True,
+                                  extended_select=False, from_key=True)
+            else:
+                # No enabled item found. Let ScrolledWindow handle PageDown.
+                event.Skip()
+
+        # Some other key pressed. Consume character for item search.
         else:
 
             if not event.HasModifiers() and ((keyCode >= ord('0') and keyCode <= ord('9')) or \
@@ -7465,8 +7511,64 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             else:
 
                 event.Skip()
+                
 
+    def GetPrevShown(self, item):
+        """
+        Returns the previous displayed item in the tree. This is either the
+        last displayed child of its previous sibling, or its parent item.
+        
+        :param `item`: an instance of :class:`GenericTreeItem`;
 
+        :return: An instance of :class:`GenericTreeItem` or ``None`` if no previous item found (root).
+        """
+        if not item:
+            return None
+        # Try to get previous sibling.
+        prev = self.GetPrevSibling(item)
+        if prev:
+            # Drill down to last displayed child of previous sibling.
+            while self.IsExpanded(prev) and self.HasChildren(prev):
+                prev = self.GetLastChild(prev)
+        else:
+            # No previous sibling. Move to parent.
+            prev = self.GetItemParent(item)
+        # Suppress returning root item if TR_HIDE_ROOT flag is set.
+        if prev == self.GetRootItem() and self.HasAGWFlag(TR_HIDE_ROOT):
+            return None
+        return prev
+    
+
+    def GetNextShown(self, item):
+        """
+        Returns the next displayed item in the tree. This is either the first
+        child of the item (if it is expanded and has children) or its next
+        sibling. If there is no next sibling the tree is walked backwards
+        until a next sibling for one of its parents is found.
+
+        :param `item`: an instance of :class:`GenericTreeItem`;
+
+        :return: An instance of :class:`GenericTreeItem` or ``None`` if no item follows this one.
+        """
+        if not item:
+            return None
+        # Is the item expanded and has children?
+        if self.IsExpanded(item) and self.HasChildren(item):
+            # Next item = first child.
+            next, cookie = self.GetFirstChild(item)
+        else:
+            # Next item = next sibling.
+            sibling = self.GetNextSibling(item)
+            parent = self.GetItemParent(item)
+            while not sibling and parent and parent != self.GetRootItem():
+                # No sibling. Try parent's sibling until root reached.
+                sibling = self.GetNextSibling(parent)
+                parent = self.GetItemParent(parent)
+            next = sibling
+        # Return the next item.
+        return next
+
+    
     def GetNextActiveItem(self, item, down=True):
         """
         Returns the next active item. Used Internally at present.
