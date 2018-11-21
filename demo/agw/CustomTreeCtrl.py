@@ -2088,9 +2088,10 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
     def OnTextCtrl(self, event):
 
-        char = chr(event.GetKeyCode())
+        keycode = event.GetKeyCode()
+        char = chr(keycode) if keycode < 256 else ''
         self.log.write("EDITING THE TEXTCTRL: You Wrote '" + char + \
-                       "' (KeyCode = " + str(event.GetKeyCode()) + ")\n")
+                       "' (KeyCode = " + str(keycode) + ")\n")
         event.Skip()
 
 
