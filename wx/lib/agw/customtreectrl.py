@@ -5841,7 +5841,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param `item`: an instance of :class:`GenericTreeItem`;
         :param bool `select`: ``True`` to select an item, ``False`` to deselect it.
 
-        :note: If TR_EXTENDED is set, this actually toggles selection when select=True.
+        :note: If TR_MULTIPLE is set, this actually toggles selection when select=True.
         """
 
         if select:
