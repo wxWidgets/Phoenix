@@ -1669,9 +1669,9 @@ class TreeListItem(GenericTreeItem):
         # Do better strategies exist?
         wnd.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
 
-        # We don't show the window if the item is collapsed
-        if not self.IsExpanded():
-            wnd.Show(False)
+        ## Hide the window since the position isn't correct yet. It will
+        ## be shown and positioned when the item is painted.
+        wnd.Show(False)
 
         # The window is enabled only if the item is enabled
         wnd.Enable(self._enabled)

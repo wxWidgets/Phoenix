@@ -1961,9 +1961,9 @@ class GenericTreeItem(object):
         self._width = size.GetWidth()
         self._windowsize = size
 
-        # We don't show the window if the item is collapsed
-        if not self.IsExpanded():
-            self._wnd.Show(False)
+        ## Hide the window since the position isn't correct yet. It will
+        ## be shown and positioned when the item is painted.
+        wnd.Show(False)
 
         # The window is enabled only if the item is enabled
         self._wnd.Enable(self._enabled)
