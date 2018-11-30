@@ -1361,8 +1361,8 @@ class TreeListItem(GenericTreeItem):
 
         :param `tree`: the main :class:`TreeListMainWindow` instance.
         """
-
-        for child in self._children:
+        # Iterate over copy of self._children as tree.Delete() will modify it.
+        for child in list(self._children):
             child.DeleteChildren(tree)
             if tree:
                 tree.Delete(child)
