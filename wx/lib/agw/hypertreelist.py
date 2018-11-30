@@ -4179,7 +4179,7 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "GetItemText", "GetItemImage", "GetItemPyData", "GetPyData", "GetItemTextColour",
             "GetItemBackgroundColour", "GetItemFont", "SetItemText", "SetItemImage", "SetItemPyData", "SetPyData",
             "SetItemHasChildren", "SetItemBackgroundColour", "SetItemFont", "IsItemVisible", "HasChildren",
-            "IsExpanded", "IsSelected", "IsBold", "GetChildrenCount", "GetRootItem", "GetSelection", "GetSelections",
+            "IsExpanded", "IsSelected", "IsBold", "GetCount", "GetChildrenCount", "GetRootItem", "GetSelection", "GetSelections",
             "GetItemParent", "GetFirstChild", "GetNextChild", "GetPrevChild", "GetLastChild", "GetNextSibling",
             "GetPrevSibling", "GetNext", "GetFirstExpandedItem", "GetNextExpanded", "GetPrevExpanded",
             "GetFirstVisibleItem", "GetNextVisible", "GetPrevVisible", "AddRoot", "PrependItem", "InsertItem",
