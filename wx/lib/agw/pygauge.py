@@ -505,12 +505,12 @@ class PyGauge(wx.Window):
         """ Internal method which sorts things so we draw the longest bar first. """
 
         if self.GetBarGradient():
-            tmp = sorted(zip(self._value,self._barGradient)); tmp.reverse()
+            tmp = sorted(zip(self._value,self._barGradient), key=lambda x: x[0]); tmp.reverse()
             a, b = list(zip(*tmp))
             self._valueSorted       = list(a)
             self._barGradientSorted = list(b)
         else:
-            tmp = sorted(zip(self._value,self._barColour)); tmp.reverse()
+            tmp = sorted(zip(self._value,self._barColour), key=lambda x: x[0]); tmp.reverse()
             a, b = list(zip(*tmp))
             self._valueSorted     = list(a)
             self._barColourSorted = list(b)
