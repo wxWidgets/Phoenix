@@ -10,7 +10,7 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
 
         wx.StaticText(self, -1, "wx.SpinCtrlDouble:", pos=(25,25))
-        spin = wx.SpinCtrlDouble(self, value='0.00', pos=(75,50), size=(80,-1),
+        spin = wx.SpinCtrlDouble(self, value='0.00', pos=(75,50),
                                  min=-5.0, max=25.25, inc=0.25)
         spin.SetDigits(2)
 
