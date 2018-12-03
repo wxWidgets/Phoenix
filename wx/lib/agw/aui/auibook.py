@@ -606,15 +606,16 @@ class TabNavigatorWindow(wx.Dialog):
     similar to what you would get by hitting ``Alt`` + ``Tab`` on Windows.
     """
 
-    def __init__(self, parent, props):
+    def __init__(self, parent, props, centreOnMouse=False):
         """
         Default class constructor. Used internally.
 
         :param `parent`: the :class:`TabNavigatorWindow` parent;
         :param `props`: the :class:`TabNavigatorProps` object.
+        :param `centreOnMouse`: popup position of the dialog at mouse cursor. Defaults to Centre.
         """
 
-        wx.Dialog.__init__(self, parent, wx.ID_ANY, "", size=props.MinSize, style=0)
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, "", size=props.MinSize, style=wx.RESIZE_BORDER)
 
         self._selectedItem = -1
         self._indexMap = []
@@ -661,6 +662,8 @@ class TabNavigatorWindow(wx.Dialog):
 
         # Connect events to the list box
         self._listBox.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
+        self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)  # Process tab/shift-tab if dialog has focus also.
+        self._panel.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)  # Process tab/shift-tab if panel has focus also.
         self._listBox.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)
         self._listBox.Bind(wx.EVT_LISTBOX_DCLICK, self.OnItemSelected)
 
@@ -668,16 +671,71 @@ class TabNavigatorWindow(wx.Dialog):
         self._panel.Bind(wx.EVT_PAINT, self.OnPanelPaint)
         self._panel.Bind(wx.EVT_ERASE_BACKGROUND, self.OnPanelEraseBg)
 
+        # Connect mouse events to the panel
+        self.delta = (0, 0)
+        self._panel.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
+        self._panel.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+        self._panel.Bind(wx.EVT_MOTION, self.OnMotion)
+
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self._listBox.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self.PopulateListControl(parent)
 
         self.SetInitialSize(props.MinSize)
-        self.Centre()
+        if centreOnMouse:
+            mousePosX, mousePosY = wx.GetMousePosition()
+            sizeW, sizeH = props.MinSize
+            self.SetPosition((mousePosX - sizeW // 2, mousePosY - sizeH // 2))  # CentreOnMouse
+        else:
+            self.Centre()
 
         # Set focus on the list box to avoid having to click on it to change
         # the tab selection under GTK.
         self._listBox.SetFocus()
+
+
+    def OnLeftDown(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` event for self._panel.
+
+        :param `event`: a :class:`MouseEvent` event to be processed.
+        """
+
+        if self._panel.HasCapture():
+            self._panel.ReleaseMouse()
+        self._panel.CaptureMouse()
+        x, y = self.ClientToScreen(event.GetPosition())
+        originx, originy = self.GetPosition()
+        dx = x - originx
+        dy = y - originy
+        self.delta = ((dx, dy))
+        self._panel.SetFocus()
+
+
+    def OnLeftUp(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_UP`` event for self._panel.
+
+        :param `event`: a :class:`MouseEvent` event to be processed.
+        """
+
+        if self._panel.HasCapture():
+            self._panel.ReleaseMouse()
+            self._listBox.SetFocus()
+            self.Refresh()
+
+
+    def OnMotion(self, event):
+        """
+        Handles the ``wx.EVT_MOTION`` event for self._panel.
+
+        :param `event`: a :class:`MouseEvent` event to be processed.
+        """
+
+        if event.Dragging() and event.LeftIsDown():
+            x, y = self.ClientToScreen(event.GetPosition())
+            fp = (x - self.delta[0], y - self.delta[1])
+            self.Move(fp)
 
 
     def OnKeyUp(self, event):
@@ -689,7 +747,8 @@ class TabNavigatorWindow(wx.Dialog):
 
         if event.GetKeyCode() == wx.WXK_CONTROL:
             self.CloseDialog()
-
+        elif event.GetKeyCode() == wx.WXK_ESCAPE:
+            self.CloseDialog(wx.ID_CANCEL)
 
     def OnNavigationKey(self, event):
         """
@@ -768,12 +827,13 @@ class TabNavigatorWindow(wx.Dialog):
         self.CloseDialog()
 
 
-    def CloseDialog(self):
+    def CloseDialog(self, returnId=wx.ID_OK):
         """ Closes the :class:`TabNavigatorWindow` dialog, setting selection in :class:`AuiNotebook`. """
 
-        bk = self.GetParent()
+        if self._panel.HasCapture():
+            self._panel.ReleaseMouse()
         self._selectedItem = self._listBox.GetSelection()
-        self.EndModal(wx.ID_OK)
+        self.EndModal(returnId)
 
 
     def GetSelectedPage(self):
