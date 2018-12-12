@@ -228,10 +228,11 @@ def getRoot(command, terminator=None):
     command = rtrimTerminus(command, terminator)
     if terminator == '.':
         tokens = getTokens(command)
-        if not tokens:
-            return ''
-        if tokens[-1][0] is tokenize.ENDMARKER:
+        if tokens and tokens[-1][0] is tokenize.ENDMARKER:
             # Remove the end marker.
+            del tokens[-1]
+        if tokens and tokens[-1][0] is tokenize.NEWLINE:
+            # Remove newline.
             del tokens[-1]
         if not tokens:
             return ''
@@ -258,7 +259,7 @@ def getRoot(command, terminator=None):
         tokentype = token[0]
         tokenstring = token[1]
         line = token[4]
-        if tokentype is tokenize.ENDMARKER:
+        if tokentype in (tokenize.ENDMARKER, tokenize.NEWLINE):
             continue
         if PY3 and tokentype is tokenize.ENCODING:
             line = lastline
