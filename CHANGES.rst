@@ -18,11 +18,6 @@ Pip:    ``pip install wxPython==4.0.4``
 
 Changes in this release include the following:
 
-* TabNavigatorWindow works similarly like other programs now. Its resizable and
-  draggable so if user has ton of files with long names, it isnt an irritation
-  anymore plastered right in the middle of the screen and cant be worked with
-  easily and Esc now cancels the popup with a proper returnId. (#1096)
-
 * Fixed an issue where wx.lib.intctrl would erroneously attempt to use ``long``
   on Python3. (#898)
 
@@ -150,6 +145,11 @@ Changes in this release include the following:
 * Fixed the wrappers for wx.html.HtmlWindow.OnOpeningURL to properly handle the
   redirect output parameter. (#1068) This is a backwards-incompatible change,
   please see the Migration Guide for details.
+
+* TabNavigatorWindow works similarly to other programs now. It's resizable and
+  draggable so if user has ton of files with long names, it isn't an irritation
+  anymore plastered right in the middle of the screen and can't be worked with
+  easily and ESC now cancels the popup with a proper returnId. (#1096)
 
 
 
