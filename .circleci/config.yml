@@ -23,10 +23,10 @@ shared: &shared
             name: install apt packages
             command: |
                 sudo apt-get update
-                sudo apt-get install -y libgtk2.0-dev libgtk-3-dev libjpeg-dev libtiff-dev \
-                        libsdl1.2-dev libgstreamer-plugins-base1.0-dev libnotify-dev freeglut3 \
-                        freeglut3-dev libsm-dev libwebkitgtk-dev libwebkitgtk-3.0-dev libxtst-dev \
-                        python-virtualenv
+                sudo apt-get install -y libgtk-3-dev libjpeg-dev libtiff-dev \
+                        libsdl2-dev libgstreamer-plugins-base1.0-dev libnotify-dev \
+                        libsm-dev libwebkit2gtk-4.0-dev libxtst-dev \
+                        libgl1-mesa-dev libglu1-mesa-dev python-virtualenv
 
         - run:
             name: install python packages
