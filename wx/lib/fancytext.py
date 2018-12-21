@@ -127,7 +127,7 @@ class Renderer:
             self.minY = self.maxY = self._y = self.dc.GetTextExtent("M")[1]
         return self._y
     def setY(self, value):
-        self._y = y
+        self._y = value
     y = property(getY, setY)
 
     def startElement(self, name, attrs):
