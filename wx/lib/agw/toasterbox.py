@@ -345,7 +345,7 @@ class ToasterBox(wx.Timer):
         else:
             pos = wx.Point((x + (width/2) - (toast_width/2)), (y + (height/2) - (toast_height/2)))
 
-        tb.SetPopupPosition(pos)
+        self.SetPopupPosition(pos)
 
 
     CentreOnParent = CenterOnParent
@@ -372,7 +372,7 @@ class ToasterBox(wx.Timer):
         else:
             pos = wx.Point((width/2) - (toast_width/2), (height/2) - (toast_height/2))
 
-        tb.SetPopupPosition(pos)
+        self.SetPopupPosition(pos)
 
 
     CentreOnScreen = CenterOnScreen
