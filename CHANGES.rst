@@ -151,6 +151,9 @@ Changes in this release include the following:
   anymore plastered right in the middle of the screen and can't be worked with
   easily and ESC now cancels the popup with a proper returnId. (#1096)
 
+* Added missing methods in wx.ListBox, SetItemForegroundColour,
+  SetItemBackgroundColour and SetItemFont. (#1095)
+
 
 
 
