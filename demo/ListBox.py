@@ -77,7 +77,7 @@ class TestListBox(wx.Panel):
 
         wx.StaticText(self, -1, "This example uses the wx.ListBox control.", (45, 10))
         wx.StaticText(self, -1, "Select one:", (15, 50))
-        self.lb1 = wx.ListBox(self, 60, (100, 50), (90, 120), sampleList, wx.LB_SINGLE)
+        self.lb1 = wx.ListBox(self, 60, (100, 50), (90, 120), sampleList, wx.LB_SINGLE|wx.LB_OWNERDRAW)
         self.Bind(wx.EVT_LISTBOX, self.EvtListBox, self.lb1)
         self.Bind(wx.EVT_LISTBOX_DCLICK, self.EvtListBoxDClick, self.lb1)
         self.lb1.Bind(wx.EVT_RIGHT_UP, self.EvtRightButton)
@@ -85,6 +85,9 @@ class TestListBox(wx.Panel):
         self.lb1.Append("with data", "This one has data");
         self.lb1.SetClientData(2, "This one has data");
 
+        # These only work on Windows
+        self.lb1.SetItemBackgroundColour(1, "green")
+        self.lb1.SetItemForegroundColour(2, "red")
 
         wx.StaticText(self, -1, "Select many:", (220, 50))
         self.lb2 = wx.ListBox(self, 70, (320, 50), (90, 120), sampleList, wx.LB_EXTENDED)
