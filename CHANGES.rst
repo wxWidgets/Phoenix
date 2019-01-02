@@ -8,8 +8,9 @@
 wxPython Changelog
 ==================
 
-4.0.4 ""
---------
+
+4.0.4 "What? It's 2019 already?"
+--------------------------------
 * (not yet released)
 
 PyPI:   https://pypi.org/project/wxPython/4.0.4
@@ -153,6 +154,8 @@ Changes in this release include the following:
 
 * Added missing methods in wx.ListBox, SetItemForegroundColour,
   SetItemBackgroundColour and SetItemFont. (#1095)
+
+* Backported a fix in wxWidgets that avoids crashing in hhctrl.ocx (#1104)
 
 
 
