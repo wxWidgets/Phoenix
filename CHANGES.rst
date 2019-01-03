@@ -183,7 +183,8 @@ Changes in this release include the following:
 * Added missing methods in wx.ListBox, SetItemForegroundColour,
   SetItemBackgroundColour and SetItemFont. (#1095)
 
-* Backported a fix in wxWidgets that avoids crashing in hhctrl.ocx (#1104)
+* Backported a fix in wxWidgets that avoids crashing in hhctrl.ocx when using
+  context sensitive help in 64-bit builds on Windows. (#1104)
 
 
 
