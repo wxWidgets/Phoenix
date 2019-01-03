@@ -11,7 +11,7 @@ wxPython Changelog
 
 4.0.4 "What? It's 2019 already?"
 --------------------------------
-* (not yet released)
+* 5-Jan-2019
 
 PyPI:   https://pypi.org/project/wxPython/4.0.4
 Extras: https://extras.wxPython.org/wxPython4/extras/
@@ -148,7 +148,7 @@ Changes in this release include the following:
   please see the Migration Guide for details.
 
 * TabNavigatorWindow works similarly to other programs now. It's resizable and
-  draggable so if user has ton of files with long names, it isn't an irritation
+  draggable so if user has tons of files with long names, it isn't an irritation
   anymore plastered right in the middle of the screen and can't be worked with
   easily and ESC now cancels the popup with a proper returnId. (#1096)
 
