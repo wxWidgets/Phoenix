@@ -6516,6 +6516,7 @@
 "USER_ATTENTION_ERROR":"wx.",
 "USER_ATTENTION_INFO":"wx.",
 "USE_ACCESSIBILITY":"wx.",
+"USE_FSWATCHER":"wx.",
 "USE_GLCANVAS":"wx.glcanvas.",
 "USE_JOYSTICK":"wx.adv.",
 "USE_MEDIACTRL":"wx.media.",
