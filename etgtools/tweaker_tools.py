@@ -1270,7 +1270,8 @@ def guessTypeStr(v):
 # generating stubs then we can still provide the wrapper classes but simply
 # have them raise NotImplemented errors or whatnot.
 
-def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
+def generateStubs(cppFlag, module, excludes=[], typeValMap={},
+                  extraHdrCode=None, extraCppCode=None):
     """
     Generate C++ stubs for all items in the module, except those that are
     in the optional excludes list.
@@ -1305,6 +1306,12 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={}):
     for item in module:
         if isinstance(item, extractors.ClassDef):
             code.hdr.append('class {};'.format(item.name))
+
+    if extraHdrCode:
+        code.hdr.append(extraHdrCode)
+
+    if extraCppCode:
+        code.cpp.append(extraCppCode)
 
     # Now write code for all the items in the module.
     for item in module:

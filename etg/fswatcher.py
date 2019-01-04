@@ -32,11 +32,22 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    c = module.find('wxFileSystemWatcherEvent')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addItem(etgtools.MethodDef(name='Clone', type='wxEvent*', argsString='() const',
+                                 isConst=True, isVirtual=True))
+
+    tools.generateStubs('wxUSE_FSWATCHER', module,
+                        extraHdrCode='static wxFileName _NullFileName;\n',
+                        typeValMap={'const wxFileName &': '_NullFileName',
+                                    'wxFSWWarningType': 'wxFSW_WARNING_NONE'}
+                                    )
+
     # In the C++ code the wxFSW_EVENT_UNMOUNT item is only part of the enum
     # for platforms that have INOTIFY so we need to fake it elsewhere.
     module.addHeaderCode("""
         #include <wx/fswatcher.h>
-        #ifndef wxHAS_INOTIFY
+        #if wxUSE_FSWATCHER && !defined(wxHAS_INOTIFY)
             const int wxFSW_EVENT_UNMOUNT = 0x2000;
         #endif
         """)
