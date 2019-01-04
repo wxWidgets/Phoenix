@@ -19,7 +19,7 @@ Pip:    ``pip install wxPython==4.0.4``
 
 Changes in this release include the following:
 
-* Fixed an issue where wx.lib.intctrl would erroneously attempt to use ``long``
+* Fixed an issue where wx.lib.intctrl would erroneously attempt to use long
   on Python3. (#898)
 
 * Include the MSVC runtime DLLs for Python 3.7 builds too.
@@ -125,7 +125,7 @@ Changes in this release include the following:
   convert the text to a bytesarray or other buffer protocol compatible object and
   then create the virtual file from that data. (#969)
 
-* Performance update for `wx.lib.agw.customtreectrl` (#1049)
+* Performance update for wx.lib.agw.customtreectrl (#1049)
 
 * Ensure that colours set in wx.lib.agw.customtreectrl.TreeItemAttr are
   instances of wx.Colour. (#1032)
