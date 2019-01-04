@@ -2135,6 +2135,8 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
             self.Image = Bitmap.ConvertToImage()
         elif type(Bitmap) == wx.Image:
             self.Image = Bitmap
+        else:
+            raise ValueError("'Bitmap' must be a wx.Bitmap or wx.Image object not %s" % type(Bitmap))
 
         self.XY = XY
         self.Height = Height
