@@ -2041,7 +2041,7 @@ class HyperTreeList(HTL.HyperTreeList):
                          "itemtype": itemtype, "text": text, "pydata": pydata, "enabled": enabled}
 
         menu = wx.Menu()
-
+        item1 = menu.Append(wx.ID_ANY, "Change Item Text")
         item2 = menu.Append(wx.ID_ANY, "Modify Item Text Colour")
         menu.AppendSeparator()
         if isbold:
@@ -2076,6 +2076,7 @@ class HyperTreeList(HTL.HyperTreeList):
         item11 = menu.Append(wx.ID_ANY, "Prepend An Item")
         item12 = menu.Append(wx.ID_ANY, "Append An Item")
 
+        self.Bind(wx.EVT_MENU, self.OnItemText, item1)
         self.Bind(wx.EVT_MENU, self.OnItemForeground, item2)
         self.Bind(wx.EVT_MENU, self.OnItemBold, item3)
         self.Bind(wx.EVT_MENU, self.OnItemFont, item4)
@@ -2093,6 +2094,23 @@ class HyperTreeList(HTL.HyperTreeList):
         self.PopupMenu(menu)
         menu.Destroy()
         event.Skip()
+
+
+    def OnItemText(self, event):
+
+        col = wx.GetNumberFromUser("Choose column number to change text",
+                                   "Col", "Column To Modify", 0, 0,
+                                   self.GetColumnCount() - 1, self)
+        if col >= 0 and col < self.GetColumnCount():
+            diag = wx.TextEntryDialog(self, "%s Text" % self.GetColumnText(col),
+                                      caption="Input text for column %d" % col,
+                                      value=self.GetItemText(self.current,col),
+                                      style=wx.OK | wx.CANCEL | wx.TE_MULTILINE)
+            reply = diag.ShowModal()
+            text = diag.GetValue()
+            diag.Destroy()
+            if reply in (wx.OK, wx.ID_OK):
+                self.SetItemText(self.current, text, col)
 
 
     def OnItemForeground(self, event):

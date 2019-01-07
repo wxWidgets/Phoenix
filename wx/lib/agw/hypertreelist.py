@@ -4011,9 +4011,16 @@ class TreeListMainWindow(CustomTreeCtrl):
         """
 
         dc = wx.ClientDC(self)
+        oldtext = item.GetText(column)
         item.SetText(column, text)
-        self.CalculateSize(item, dc)
-        self.RefreshLine(item)
+        # Avoid Calculating tree unless number of lines changed (slow).
+        if oldtext.count('\n') != text.count('\n'):
+            self.CalculatePositions()
+            self.Refresh()
+            self.AdjustMyScrollbars()
+        else:
+            self.CalculateSize(item, dc)
+            self.RefreshLine(item)
 
 
     def GetItemText(self, item, column=None):

@@ -3817,9 +3817,16 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             raise Exception("Separator items can not have text")
 
         dc = wx.ClientDC(self)
+        oldtext = item.GetText()
         item.SetText(text)
-        self.CalculateSize(item, dc)
-        self.RefreshLine(item)
+        # Avoid Calculating tree unless number of lines changed (slow).
+        if oldtext.count('\n') != text.count('\n'):
+            self.CalculatePositions()
+            self.Refresh()
+            self.AdjustMyScrollbars()
+        else:
+            self.CalculateSize(item, dc)
+            self.RefreshLine(item)
 
 
     def SetItemImage(self, item, image, which=TreeItemIcon_Normal):

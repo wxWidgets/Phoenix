@@ -1581,7 +1581,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         menu = wx.Menu()
 
-        item1 = menu.Append(wx.ID_ANY, "Change item background colour")
+        item1 = menu.Append(wx.ID_ANY, "Change Item Text")
         item2 = menu.Append(wx.ID_ANY, "Modify item text colour")
         menu.AppendSeparator()
 
@@ -1592,6 +1592,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         item3 = menu.Append(wx.ID_ANY, strs)
         item4 = menu.Append(wx.ID_ANY, "Change item font")
+        item16 = menu.Append(wx.ID_ANY, "Change Item Background Colour")
         menu.AppendSeparator()
 
         if ishtml:
@@ -1638,7 +1639,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         item11 = menu.Append(wx.ID_ANY, "Prepend an item")
         item12 = menu.Append(wx.ID_ANY, "Append an item")
 
-        self.Bind(wx.EVT_MENU, self.OnItemBackground, item1)
+        self.Bind(wx.EVT_MENU, self.OnItemText, item1)
         self.Bind(wx.EVT_MENU, self.OnItemForeground, item2)
         self.Bind(wx.EVT_MENU, self.OnItemBold, item3)
         self.Bind(wx.EVT_MENU, self.OnItemFont, item4)
@@ -1653,9 +1654,22 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         self.Bind(wx.EVT_MENU, self.OnSeparatorInsert, item13)
         self.Bind(wx.EVT_MENU, self.OnHideItem, item14)
         self.Bind(wx.EVT_MENU, self.OnUnhideItems, item15)
+        self.Bind(wx.EVT_MENU, self.OnItemBackground, item16)
 
         self.PopupMenu(menu)
         menu.Destroy()
+
+
+    def OnItemText(self, event):
+
+        diag = wx.TextEntryDialog(self, "Item Text", caption="Input Item Text",
+                                  value=self.GetItemText(self.current),
+                                  style=wx.OK | wx.CANCEL | wx.TE_MULTILINE)
+        reply = diag.ShowModal()
+        text = diag.GetValue()
+        diag.Destroy()
+        if reply in (wx.OK, wx.ID_OK):
+            self.SetItemText(self.current, text)
 
 
     def OnItemBackground(self, event):
