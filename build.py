@@ -1181,7 +1181,12 @@ def cmd_sip(options, args):
 def cmd_touch(options, args):
     cmdTimer = CommandTimer('touch')
     pwd = pushDir(phoenixDir())
-    runcmd('touch etg/*.py')
+    if isWindows:
+        # Windows touch
+        runcmd('cd etg && for %f in (*.py) do copy /B %f +,,')
+    else:
+        # Linux touch
+        runcmd('touch etg/*.py')
 
 
 
