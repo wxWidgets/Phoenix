@@ -2273,32 +2273,10 @@ class TreeListMainWindow(CustomTreeCtrl):
         Returns whether the item is visible or not.
 
         :param `item`: an instance of :class:`TreeListItem`;
+        
+        :note: This method is renamed from :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.IsVisible`
         """
-        # An item is only visible if it's not a descendant of a collapsed item
-        parent = item.GetParent()
-
-        while parent:
-
-            if not parent.IsExpanded():
-                return False
-
-            parent = parent.GetParent()
-
-        startX, startY = self.GetViewStart()
-        clientSize = self.GetClientSize()
-
-        rect = self.GetBoundingRect(item)
-
-        if not rect:
-            return False
-        if rect.GetWidth() == 0 or rect.GetHeight() == 0:
-            return False
-        if rect.GetBottom() < 0 or rect.GetTop() > clientSize.y:
-            return False
-        if rect.GetRight() < 0 or rect.GetLeft() > clientSize.x:
-            return False
-
-        return True
+        return self.IsVisible(item)
 
 
     def GetPrevChild(self, item, cookie):
@@ -2356,7 +2334,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             return None
 
         if not self.HasAGWFlag(TR_HIDE_ROOT):
-            if self.IsVisible(root):
+            if self.IsItemVisible(root):
                 return root
             
         return self.GetNextVisible(root)
