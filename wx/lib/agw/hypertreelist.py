@@ -3636,10 +3636,14 @@ class TreeListMainWindow(CustomTreeCtrl):
                     # BeginDrag captures mouse. GTK cannot capture mouse twice.
                     if self.HasCapture() is True:
                         self.ReleaseMouse()
-                    self._dragImage.BeginDrag(wx.Point(0,0), self)
+                    self._dragImage.BeginDrag(wx.Point(0,0), self, fullScreen=self._dragFullScreen)
                     self._dragImage.Show()
 
                 self._dragImage.Move(p)
+
+                if self._dragFullScreen is True:
+                    # Don't highlight target items if dragging full-screen.
+                    return
 
                 if self._countDrag == 0 and item:
                     self._oldItem = self._current
@@ -3694,6 +3698,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
                 # we're going to drag this item
                 self._isDragging = True
+                self._left_down_selection = True    # Stop DoSelect on drag end.
                 if not self.HasCapture():
                     self.CaptureMouse()
                 self.RefreshSelected()
@@ -4238,8 +4243,8 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "CheckChilds", "CheckSameLevel", "GetItemWindowEnabled", "SetItemWindowEnabled", "GetItemType",
             "IsDescendantOf", "SetItemHyperText", "IsItemHyperText", "SetItemBold", "SetItemDropHighlight", "SetItemItalic",
             "GetEditControl", "ShouldInheritColours", "GetItemWindow", "SetItemWindow", "DeleteItemWindow", "SetItemTextColour",
-            "HideItem", "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection", "SetItemType", "GetCurrentItem",
-            "SetItem3State", "SetItem3StateValue", "GetItem3StateValue", "IsItem3State", "GetPrev",
+            "HideItem", "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection", "SetItemType", "GetDragFullScreen", "SetDragFullScreen",
+            "GetCurrentItem", "SetItem3State", "SetItem3StateValue", "GetItem3StateValue", "IsItem3State", "GetPrev",
             "GetNextShown", "GetPrevShown"]
 
 
@@ -4304,6 +4309,7 @@ class HyperTreeList(wx.Control):
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetCount`                       Returns the global number of items in the tree.
     :meth:`~wx.lib.agw.hypertreelist.TreeListMainWindow.GetCurrentItem`              Returns the current item. Simply calls :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetSelection`.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetDisabledColour`              Returns the colour for items in a disabled state.
+    :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetDragFullScreen`              Returns whether built-in drag/drop will be full screen or not.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetEditControl`                 Returns a reference to the edit :class:`~wx.lib.agw.customtreectrl.TreeTextCtrl` if the item is being edited.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetFirstChild`                  Returns the item's first child and an integer value 'cookie'.
     :meth:`~wx.lib.agw.hypertreelist.TreeListMainWindow.GetFirstExpandedItem`        Returns the first item which is in the expanded state.
@@ -4375,6 +4381,7 @@ class HyperTreeList(wx.Control):
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.SetButtonsImageList`            Sets the buttons image list for :class:`TreeListMainWindow`.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.SetConnectionPen`               Sets the pen used to draw the connecting lines between items.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.SetDisabledColour`              Sets the colour for items in a disabled state.
+    :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.SetDragFullScreen`              Sets whether a drag operation will be performed full screen or not.
     :meth:`~wx.lib.agw.hypertreelist.TreeListMainWindow.SetDragItem`                 Sets the specified item as member of a current drag and drop operation.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.SetFirstGradientColour`         Sets the first gradient colour for gradient-style selections.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.SetGradientStyle`               Sets the gradient style for gradient-style selections.

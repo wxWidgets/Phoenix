@@ -1323,10 +1323,14 @@ class HyperTreeListDemo(wx.Frame):
         self.checkvista = wx.CheckBox(self.leftpanel, -1, "Windows Vista Theme")
         self.checkvista.Bind(wx.EVT_CHECKBOX, self.OnVista)
 
+        self.dragFullScreen = wx.CheckBox(self.leftpanel, -1, "Fullscreen Drag/Drop")
+        self.dragFullScreen.Bind(wx.EVT_CHECKBOX, self.OnDragFullScreen)
+
         themessizer.Add(sizera, 0, wx.EXPAND)
         themessizer.Add(sizerb, 0, wx.EXPAND)
         themessizer.Add((0, 5))
         themessizer.Add(self.checkvista, 0, wx.EXPAND|wx.ALL, 3)
+        themessizer.Add(self.dragFullScreen, 0, wx.EXPAND|wx.ALL, 3)
 
         mainsizer.Add(stylesizer, 0, wx.EXPAND|wx.ALL, 5)
         mainsizer.Add(columnssizer, 0, wx.EXPAND|wx.ALL, 5)
@@ -1677,6 +1681,11 @@ class HyperTreeListDemo(wx.Frame):
         self.tree.EnableSelectionGradient(False)
         self.tree.EnableSelectionVista(True)
 
+        event.Skip()
+
+    def OnDragFullScreen(self, event):
+        
+        self.tree.SetDragFullScreen(event.IsChecked())
         event.Skip()
 
 
@@ -2427,8 +2436,7 @@ class HyperTreeList(HTL.HyperTreeList):
 
         self.item = event.GetItem()
         if self.item:
-            self.log.write("Beginning Drag...\n")
-
+            self.log.write("Beginning Drag... fullscreen=%s\n" % self.GetDragFullScreen())
             event.Allow()
 
 
@@ -2436,16 +2444,19 @@ class HyperTreeList(HTL.HyperTreeList):
 
         self.item = event.GetItem()
         if self.item:
-            self.log.write("Beginning Right Drag...\n")
-
+            self.log.write("Beginning Right Drag... fullscreen=%s\n" % self.GetDragFullScreen())
             event.Allow()
 
 
     def OnEndDrag(self, event):
 
-        self.item = event.GetItem()
-        if self.item:
-            self.log.write("Ending Drag!\n")
+        if self.GetDragFullScreen() is True:
+            wnd = wx.FindWindowAtPoint(self.ClientToScreen(event.GetPoint()))
+            self.log.write("Ending Drag! window=%s\n" % repr(wnd))
+        else:
+            self.item = event.GetItem()
+            name = self.GetItemText(self.item) if self.item else 'None'
+            self.log.write("Ending Drag! item=%s\n" % name)
 
         event.Skip()
 

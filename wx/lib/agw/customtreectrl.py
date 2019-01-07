@@ -2859,6 +2859,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         self._isDragging = False
         self._dropTarget = self._oldSelection = None
         self._dragImage = None
+        self._dragFullScreen = False
         self._underMouse = None
 
         # EditCtrl initial settings for editable items
@@ -4530,6 +4531,36 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         item.SetType(ct_type)
         self.CalculatePositions()
         self.Refresh()
+
+
+    def GetDragFullScreen(self):
+        """
+        Returns whether built-in drag/drop will be full screen or not.
+
+        :return: ``True`` if the drag/drop operation will be full screen, or
+         ``False`` if only within the tree.
+        """
+
+        return self._dragFullScreen
+
+
+    def SetDragFullScreen(self, fullScreen=False):
+        """
+        Sets whether a drag operation will be performed full screen or not.
+
+        A full screen drag allows the user to drag outside of the tree to
+        other controls. When the drag is finished the destination will have
+        to be found manually in the ``EVT_TREE_END_DRAG`` handler with
+        something like:
+
+        example::
+
+            wnd = wx.FindWindowAtPoint(self.ClientToScreen(event.GetPoint()))
+
+        :param bool `fullScreen`: False (default) to drag within tree only.
+        """
+
+        self._dragFullScreen = bool(fullScreen)
 
 
 # -----------------------------------------------------------------------------
@@ -8071,13 +8102,17 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
                 # Create the custom draw image from the icons and the text of the item
                 self._dragImage = DragImage(self, self._current)
-                self._dragImage.BeginDrag(wx.Point(0,0), self)
+                self._dragImage.BeginDrag(wx.Point(0,0), self, fullScreen=self._dragFullScreen)
                 self._dragImage.Show()
                 self._dragImage.Move(self.CalcScrolledPosition(*pt))
 
         elif event.Dragging() and self._isDragging:
 
             self._dragImage.Move(self.CalcScrolledPosition(*pt))
+
+            if self._dragFullScreen is True:
+                # Don't highlight target items if dragging full-screen.
+                return
 
             if self._countDrag == 0 and item:
                 self._oldItem = item
