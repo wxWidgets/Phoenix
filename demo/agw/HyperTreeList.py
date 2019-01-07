@@ -1707,6 +1707,7 @@ class HyperTreeList(HTL.HyperTreeList):
         for evt in ["EVT_TREE_GET_INFO", "EVT_TREE_SET_INFO", "EVT_TREE_ITEM_MIDDLE_CLICK",
                     "EVT_TREE_STATE_IMAGE_CLICK"]:
             events.remove(evt)
+        events.extend(('EVT_LIST_COL_CLICK', 'EVT_LIST_COL_RIGHT_CLICK'))
 
         treestyles = treestyles + [i for i in dir(wx) if i.startswith("TR_")]
         treeset = {}
@@ -1717,6 +1718,8 @@ class HyperTreeList(HTL.HyperTreeList):
         self.events = events
         self.styles = treestyles
         self.item = None
+        self.sortIcon = wx.HDR_SORT_ICON_NONE
+        self.sortColumn = 0
 
         il = wx.ImageList(16, 16)
 
@@ -1847,7 +1850,8 @@ class HyperTreeList(HTL.HyperTreeList):
                           'EVT_TREE_ITEM_EXPANDING': self.OnItemExpanding, 'EVT_TREE_ITEM_GETTOOLTIP': self.OnToolTip,
                           'EVT_TREE_ITEM_MENU': self.OnItemMenu, 'EVT_TREE_ITEM_RIGHT_CLICK': self.OnRightDown,
                           'EVT_TREE_KEY_DOWN': self.OnKey, 'EVT_TREE_SEL_CHANGED': self.OnSelChanged,
-                          'EVT_TREE_SEL_CHANGING': self.OnSelChanging, "EVT_TREE_ITEM_HYPERLINK": self.OnHyperLink}
+                          'EVT_TREE_SEL_CHANGING': self.OnSelChanging, "EVT_TREE_ITEM_HYPERLINK": self.OnHyperLink,
+                          'EVT_LIST_COL_CLICK': self.OnColClick, 'EVT_LIST_COL_RIGHT_CLICK': self.OnColRightClick}
 
         mainframe = wx.GetTopLevelParent(self)
 
@@ -2404,6 +2408,20 @@ class HyperTreeList(HTL.HyperTreeList):
 
         event.Skip()
 
+    def OnColClick(self, event):
+        column = event.GetColumn()
+        self.log.write("OnColClick: Column %d clicked" % column)
+        # Cycle through the sort icons.
+        if column != self.sortColumn:
+            self.sortIcon = wx.HDR_SORT_ICON_NONE
+            self.sortColumn = column
+        self.sortIcon = wx.HDR_SORT_ICON_DOWN if self.sortIcon == wx.HDR_SORT_ICON_UP else wx.HDR_SORT_ICON_UP
+        self.SetColumnSortIcon(column, self.sortIcon)
+
+    def OnColRightClick(self, event):
+        column = event.GetColumn()
+        self.log.write("OnColRightClick: Column %d clicked" % column)
+        self.SetColumnSortIcon(column, wx.HDR_SORT_ICON_NONE)
 
     def OnBeginDrag(self, event):
 

@@ -472,7 +472,8 @@ class TreeListColumnInfo(object):
             self._edit = input._edit
             self._colour = input._colour
             self._font = input._font
-
+        self._sort_icon = wx.HDR_SORT_ICON_NONE
+        self._sort_icon_colour = None
 
     # get/set
     def GetText(self):
@@ -631,6 +632,33 @@ class TreeListColumnInfo(object):
         """ Returns the column text font. """
 
         return self._font
+
+
+    def GetSortIcon(self):
+        """ Returns the column sort icon displayed in the header. """
+
+        return self._sort_icon
+
+
+    def SetSortIcon(self, sortIcon, colour=None):
+        """
+        Sets the column sort icon displayed in the header.
+
+        :param `sortIcon`: the sort icon to display, one of ``wx.HDR_SORT_ICON_NONE``,
+         ``wx.HDR_SORT_ICON_UP``, ``wx.HDR_SORT_ICON_DOWN``.
+        :param `colour`: the colour of the sort icon as a wx.Colour. Optional.
+         Set to ``None`` to restore native colour.
+        """
+    
+        self._sort_icon = sortIcon
+        self._sort_icon_colour = colour
+        return self
+
+
+    def GetSortIconColour(self):
+        """Return the colour of the sort icon (``None`` = Default). """
+
+        return self._sort_icon_colour
 
 
 #-----------------------------------------------------------------------------
@@ -902,6 +930,10 @@ class TreeListHeaderWindow(wx.Window):
 
             params.m_labelText = column.GetText()
             params.m_labelAlignment = column.GetAlignment()
+            sortIcon = column.GetSortIcon()
+            sortIconColour = column.GetSortIconColour()
+            if sortIconColour:
+                params.m_arrowColour = sortIconColour
 
             image = column.GetImage()
             imageList = self._owner.GetImageList()
@@ -913,7 +945,7 @@ class TreeListHeaderWindow(wx.Window):
                self._headerCustomRenderer.DrawHeaderButton(dc, rect, flags, params)
             else:
                 wx.RendererNative.Get().DrawHeaderButton(self, dc, rect, flags,
-                                                         wx.HDR_SORT_ICON_NONE, params)
+                                                         sortIcon, params)
 
         # Fill up any unused space to the right of the columns
         if x < w:
@@ -1296,6 +1328,30 @@ class TreeListHeaderWindow(wx.Window):
             self._owner.AdjustMyScrollbars()
 
         self._owner._dirty = True
+
+
+    def SetSortIcon(self, column, sortIcon, colour=None):
+        """
+        Sets the sort icon to be displayed in the column header.
+
+        The sort icon will be displayed in the specified column number
+        and all other columns will have the sort icon cleared.
+
+        :param `column`: an integer specifying the column index;
+        :param `sortIcon`: the sort icon to display, one of ``wx.HDR_SORT_ICON_NONE``,
+         ``wx.HDR_SORT_ICON_UP``, ``wx.HDR_SORT_ICON_DOWN``.
+        :param `colour`: the colour of the sort icon as a wx.Colour. Optional.
+         Set to ``None`` to restore native colour.
+        """
+        if column < 0 or column >= self.GetColumnCount():
+            raise Exception("Invalid column")
+
+        for num in range(self.GetColumnCount()):
+            if num == column:
+                self.GetColumn(num).SetSortIcon(sortIcon, colour)
+            else:
+                self.GetColumn(num).SetSortIcon(wx.HDR_SORT_ICON_NONE, colour)
+        self.Refresh()
 
 
 # ---------------------------------------------------------------------------
@@ -4938,6 +4994,22 @@ class HyperTreeList(wx.Control):
         """
 
         return self._header_win.GetColumn(column).GetFont()
+
+
+    def SetColumnSortIcon(self, column, sortIcon, colour=None):
+        """
+        Sets the sort icon to be displayed in the column header.
+
+        The sort icon will be displayed in the specified column number
+        and all other columns will have the sort icon cleared.
+
+        :param `column`: an integer specifying the column index;
+        :param `sortIcon`: the sort icon to display, one of ``wx.HDR_SORT_ICON_NONE``,
+         ``wx.HDR_SORT_ICON_UP``, ``wx.HDR_SORT_ICON_DOWN``.
+        :param `colour`: the colour of the sort icon as a wx.Colour. Optional.
+         Set to ``None`` to restore native colour.
+        """
+        return self._header_win.SetSortIcon(column, sortIcon, colour)
 
 
     def Refresh(self, erase=True, rect=None):
