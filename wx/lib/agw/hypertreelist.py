@@ -2620,9 +2620,12 @@ class TreeListMainWindow(CustomTreeCtrl):
 
 
     def GetCurrentItem(self):
-        """ Returns the current item. """
+        """Returns the current item.
 
-        return self._current
+        This is the same as :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetSelection`.
+        """
+
+        return self.GetSelection()
 
 
     def GetColumnCount(self):
@@ -4162,7 +4165,7 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "SetItemHasChildren", "SetItemBackgroundColour", "SetItemFont", "IsItemVisible", "HasChildren",
             "IsExpanded", "IsSelected", "IsBold", "GetCount", "GetChildrenCount", "GetRootItem", "GetSelection", "GetSelections",
             "GetItemParent", "GetFirstChild", "GetNextChild", "GetPrevChild", "GetLastChild", "GetNextSibling",
-            "GetPrevSibling", "GetNext", "GetFirstExpandedItem", "GetNextExpanded", "GetPrevExpanded",
+            "GetPrevSibling", "GetNext", "GetFirstExpandedItem", "GetNextExpanded", "GetPrevExpanded", "GetFocusedItem",
             "GetFirstVisibleItem", "GetNextVisible", "GetPrevVisible", "AddRoot", "PrependItem", "InsertItem",
             "AppendItem", "Delete", "DeleteChildren", "DeleteRoot", "Expand", "ExpandAll", "ExpandAllChildren",
             "Collapse", "CollapseAndReset", "Toggle", "Unselect", "UnselectAll", "SelectItem", "SelectAll",
@@ -4250,6 +4253,7 @@ class HyperTreeList(wx.Control):
     :meth:`~wx.lib.agw.hypertreelist.TreeListMainWindow.GetFirstExpandedItem`        Returns the first item which is in the expanded state.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetFirstGradientColour`         Returns the first gradient colour for gradient-style selections.
     :meth:`~wx.lib.agw.hypertreelist.TreeListMainWindow.GetFirstVisibleItem`         Returns the first visible item.
+    GetFocusedItem                                                                   Another name for :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetSelection`   
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetGradientStyle`               Returns the gradient style for gradient-style selections.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetHilightFocusColour`          Returns the colour used to highlight focused selected items.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.GetHilightNonFocusColour`       Returns the colour used to highlight unfocused selected items.

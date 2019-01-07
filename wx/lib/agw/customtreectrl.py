@@ -3123,6 +3123,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         return self._current
 
+    GetFocusedItem = GetSelection
+
 
     def ToggleItemSelection(self, item):
         """
