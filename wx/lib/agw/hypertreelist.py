@@ -4406,6 +4406,35 @@ class HyperTreeList(wx.Control):
         self._header_win.SetBuffered(buffered)
 
 
+    def Freeze(self):
+        """
+        Freeze :class:`HyperTreeList` to allow rapid changes to the tree.
+        
+        Freezes the HyperTreeList main (tree) and and header windows.
+        This prevents any re-calculation or updates from taking place
+        allowing mass updates to the tree very quickly. :meth:`~Thaw`
+        must be called to reenable updates. Calls to these two
+        functions may be nested.
+        """
+        self._main_win.Freeze()
+        self._header_win.Freeze()
+
+
+    def Thaw(self):
+        """
+        Thaw :class:`HyperTreeList`.
+
+        Reenables updates to the main (tree) and header windows after a
+        previous call to :meth:`~Freeze`. To really thaw the control, it
+        must be called exactly the same number of times as :meth:`~Freeze`.
+        When fully thawed the tree will re-calculate and update itself.
+
+        :raise: `Exception` if :meth:`~Thaw` has been called without an un-matching :meth:`~Freeze`.
+        """
+        self._main_win.Thaw()
+        self._header_win.Thaw()
+
+        
     def CalculateAndSetHeaderHeight(self):
         """ Calculates the best header height and stores it. """
 
