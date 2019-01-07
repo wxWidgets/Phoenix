@@ -4401,6 +4401,7 @@ class HyperTreeList(wx.Control):
 
         self.CalculateAndSetHeaderHeight()
         self.Bind(wx.EVT_SIZE, self.OnSize)
+        self.Bind(wx.EVT_SET_FOCUS, self.OnHTLFocus)
 
         self.SetBuffered(IsBufferingSupported())
         self._main_win.SetAGWWindowStyleFlag(agwStyle)
@@ -4485,6 +4486,16 @@ class HyperTreeList(wx.Control):
         """
 
         self.DoHeaderLayout()
+
+
+    def OnHTLFocus(self, event):
+        """
+        Handles the ``wx.EVT_SET_FOCUS`` event for :class:`HyperTreeList`.
+
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
+        """
+        # Pass focus to TreeListMainWindow so keyboard controls work.
+        self.GetMainWindow().SetFocus()
 
 
     def SetFont(self, font):
