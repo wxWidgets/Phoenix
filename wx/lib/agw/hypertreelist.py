@@ -3123,6 +3123,9 @@ class TreeListMainWindow(CustomTreeCtrl):
         if item.IsHidden():
             return y, x_maincol
 
+        # Save window text color.
+        colText = wx.Colour(*dc.GetTextForeground())
+
         # Handle hide root (only level 0)
         if self.HasAGWFlag(wx.TR_HIDE_ROOT) and level == 0:
             for child in item.GetChildren():
@@ -3250,7 +3253,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         # restore DC objects
         dc.SetBrush(wx.WHITE_BRUSH)
         dc.SetPen(self._dottedPen)
-        dc.SetTextForeground(wx.BLACK)
+        dc.SetTextForeground(colText)
 
         if item.IsExpanded():
 
