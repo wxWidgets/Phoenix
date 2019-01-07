@@ -684,12 +684,16 @@ def ChopText(dc, text, max_size):
     .. versionadded:: 0.9.3
     """
 
-    # first check if the text fits with no problems
+    # first check if the text fits with no problems (converts to Unicode).
     x, y, dummy = dc.GetFullMultiLineTextExtent(text)
 
     if x <= max_size:
         return text
 
+    # We cannot chop text that is UTF-8, as it could produce invalid sequences.
+    if isinstance(text, bytes):
+        # Convert UTF-8 (Phoenix's mandatory encoding) to Unicode.
+        text = text.decode('utf-8')
     textLen = len(text)
     last_good_length = 0
 
