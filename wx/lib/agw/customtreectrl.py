@@ -7400,7 +7400,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         elif keyCode in (wx.WXK_RETURN, wx.WXK_SPACE, wx.WXK_NUMPAD_ENTER):
 
-            if not self.IsItemEnabled(self._current):
+            if not self._current or not self.IsItemEnabled(self._current):
                 event.Skip()
                 return
 
