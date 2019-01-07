@@ -40,8 +40,8 @@
 
 
 """
-:class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl` is a class that mimics the behaviour of :class:`TreeCtrl`, with some more
-enhancements.
+The ``customtreectrl`` module contains the :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl` class
+which mimics the behaviour of :class:`TreeCtrl`, with some more enhancements.
 
 
 Description
@@ -219,6 +219,30 @@ And to hyperlink-type items:
   after the ``EVT_TREE_SEL_CHANGED`` event).
 
 
+Drag and Drop
+=============
+
+A simplified drag and drop is available and can be initiated by calling
+``event.Allow`` on the ``EVT_TREE_BEGIN_DRAG`` or ``EVT_TREE_BEGIN_RDRAG``
+events. When the event handler returns, a ``wx.DragImage`` of the item will be
+generated and the user can drag it to other items within the tree. When the
+user releases the drag button a ``EVT_TREE_END_DRAG`` event will be sent and
+``event.GetItem`` can be called to find out which item the drag ended at.
+This simplified method is best when only a single item at a time needs to
+be dragged (i.e. ``TR_MULTIPLE`` not set) and only for dragging items within
+the tree control.
+
+Alternately, the normal wxPython drag/drop can be invoked in the ``EVT_TREE_BEGIN_DRAG``
+handler in which a :class:`wx.DropSource` must be generated, followed by a call
+to :meth:`~wx.DropSource.DoDragDrop` which will block until the drag is finished.
+This is much more flexible but more complicated to implement.
+
+:note: The class value _DRAG_TIMER_TICKS controls how long the mouse must
+ linger before the drag can start. It defaults to 250 milliseconds which can
+ be far too long for today's quick 'swiping' generation. It can be lowered for
+ a more responsive drag.
+
+
 Supported Platforms
 ===================
 
@@ -231,33 +255,56 @@ Supported Platforms
 Window Styles
 =============
 
-This class supports the following window styles:
+This class takes in a regular wxPython ``style`` and an extended ``agwStyle``.
+The ``style`` can be used with normal wxPython styles such as ``wx.WANTS_CHARS``
+while the ``agwStyle`` specifies the behavior of the tree itself.
+It supports the following ``agwStyle`` flags:
 
-============================== =========== ==================================================
-Window Styles                  Hex Value   Description
-============================== =========== ==================================================
-``TR_NO_BUTTONS``                      0x0 For convenience to document that no buttons are to be drawn.
-``TR_SINGLE``                          0x0 For convenience to document that only one item may be selected at a time. Selecting another item causes the current selection, if any, to be deselected. This is the default.
-``TR_HAS_BUTTONS``                     0x1 Use this style to show + and - buttons to the left of parent items.
-``TR_NO_LINES``                        0x4 Use this style to hide vertical level connectors.
-``TR_LINES_AT_ROOT``                   0x8 Use this style to show lines between root nodes. Only applicable if ``TR_HIDE_ROOT`` is set and ``TR_NO_LINES`` is not set.
-``TR_DEFAULT_STYLE``                   0x9 The set of flags that are closest to the defaults for the native control for a particular toolkit.
-``TR_TWIST_BUTTONS``                  0x10 Use old Mac-twist style buttons.
-``TR_MULTIPLE``                       0x20 Use this style to allow a range of items to be selected. If a second range is selected, the current range, if any, is deselected.
-``TR_EXTENDED``                       0x40 Use this style to allow disjoint items to be selected. (Only partially implemented; may not work in all cases).
-``TR_HAS_VARIABLE_ROW_HEIGHT``        0x80 Use this style to cause row heights to be just big enough to fit the content. If not set, all rows use the largest row height. The default is that this flag is unset.
-``TR_EDIT_LABELS``                   0x200 Use this style if you wish the user to be able to edit labels in the tree control.
-``TR_ROW_LINES``                     0x400 Use this style to draw a contrasting border between displayed rows.
-``TR_HIDE_ROOT``                     0x800 Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes.
-``TR_FULL_ROW_HIGHLIGHT``           0x2000 Use this style to have the background colour and the selection highlight extend  over the entire horizontal row of the tree control window.
-``TR_AUTO_CHECK_CHILD``             0x4000 Only meaningful for checkbox-type items: when a parent item is checked/unchecked its children are checked/unchecked as well.
-``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful for checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
-``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful for checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
-``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
-``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of :class:`CustomTreeCtrl`.
-``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`CustomTreeCtrl` is low.
-``TR_TOOLTIP_ON_LONG_ITEMS``      0x100000 Flag used to show tooltips on long items when the horizontal space for :class:`CustomTreeCtrl` is low.
-============================== =========== ==================================================
+================================= =========== ==================================================
+Window agwStyle Flags             Hex Value   Description
+================================= =========== ==================================================
+**wx.TR_DEFAULT_STYLE**              *varies* The set of flags that are closest to the defaults for the native control for a particular toolkit.  Should always be used.
+``wx.TR_NO_BUTTONS``                      0x0 For convenience to document that no buttons are to be drawn.
+``wx.TR_SINGLE``                          0x0 For convenience to document that only one item may be selected at a time. Selecting another item causes the current selection, if any, to be deselected. This is the default.
+``wx.TR_HAS_BUTTONS``                     0x1 Use this style to show + and - buttons to the left of parent items.
+``wx.TR_NO_LINES``                        0x4 Use this style to hide vertical level connectors.
+``wx.TR_LINES_AT_ROOT``                   0x8 Use this style to show lines between root nodes. Only applicable if ``TR_HIDE_ROOT`` is set and ``TR_NO_LINES`` is not set.
+``wx.TR_TWIST_BUTTONS``                  0x10 Use old Mac-twist style buttons.
+``wx.TR_MULTIPLE``                       0x20 Use this style to allow a range of items to be selected. If a second range is selected, the current range, if any, is deselected.
+``wx.TR_HAS_VARIABLE_ROW_HEIGHT``        0x80 Use this style to cause row heights to be just big enough to fit the content. If not set, all rows use the largest row height. The default is that this flag is unset.
+``wx.TR_EDIT_LABELS``                   0x200 Use this style if you wish the user to be able to edit labels in the tree control.
+``wx.TR_ROW_LINES``                     0x400 Use this style to draw a contrasting border between displayed rows.
+``wx.TR_HIDE_ROOT``                     0x800 Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes.
+``wx.TR_FULL_ROW_HIGHLIGHT``           0x2000 Use this style to have the background colour and the selection highlight extend  over the entire horizontal row of the tree control window.
+**Styles from customtreectrl:**
+``TR_EXTENDED``                          0x40 Use this style to allow disjoint items to be selected. (Only partially implemented; may not work in all cases).
+``TR_AUTO_CHECK_CHILD``                0x4000 Only meaningful for checkbox-type items: when a parent item is checked/unchecked its children are checked/unchecked as well.
+``TR_AUTO_TOGGLE_CHILD``               0x8000 Only meaningful for checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
+``TR_AUTO_CHECK_PARENT``              0x10000 Only meaningful for checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
+``TR_ALIGN_WINDOWS``                  0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
+``TR_ALIGN_WINDOWS_RIGHT``            0x40000 Flag used to align windows (in items with windows) to the rightmost edge of :class:`CustomTreeCtrl`.
+``TR_ELLIPSIZE_LONG_ITEMS``           0x80000 Flag used to ellipsize long items when the horizontal space for :class:`CustomTreeCtrl` is low.
+``TR_TOOLTIP_ON_LONG_ITEMS``         0x100000 Flag used to show tooltips on long items when the horizontal space for :class:`CustomTreeCtrl` is low.
+================================= =========== ==================================================
+
+The ``wx.TR_HAS_VARIABLE_LINE_HEIGHT`` style should be set if item rows might
+not all be the same height. This can happen if certain rows have a larger font
+size, multi-line text, or windows added to them. This style will automatically
+adjust each item's height to be just big enough to show its contents.
+
+When the ``wx.TR_HAS_VARIABLE_LINE_HEIGHT`` is not set, adding a new item with
+multi-line text or with a window specified will throw an exception. However the
+tree won't prevent you from adding multiline text with :meth:`~TreeListMainWindow.SetItemText`
+or assigning a window with :meth:`~TreeListMainWindow.SetItemWindow` to an
+existing item. It's generally a bad idea to do either of these without this
+style as it will result in an ugly tree. By default the ``wx.TR_HAS_VARIABLE_LINE_HEIGHT``
+is not set. This means that all item rows will use the same height. This is the
+height of the largest item in the tree. If an item with a larger height is
+added or revealed, ALL row heights will increase to this larger size. The
+larger row height remains persistent even if the large items are hidden or
+deleted. You must call :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CalculateLineHeight`
+to reset the row height. This somewhat bizarre behavior is why the ``wx.TR_HAS_VARIABLE_LINE_HEIGHT``
+style is almost always used.
 
 
 Events Processing
@@ -1700,10 +1747,11 @@ class GenericTreeItem(object):
 
         :return: A Python list containing instances of :class:`GenericTreeItem`, representing
          this item's children.
+         
         :note: The returned value is a reference to the list of children
-        used internally by the tree. It is advised not to change this list
-        and to make a copy before calling other tree methods as they could
-        change the contents of the list.
+         used internally by the tree. It is advised not to change this list
+         and to make a copy before calling other tree methods as they could
+         change the contents of the list.
         """
 
         return self._children
@@ -1797,7 +1845,8 @@ class GenericTreeItem(object):
         :param integer `which`: the image kind.
 
         :see: :meth:`~GenericTreeItem.GetImage` for a description of the `which` parameter.
-        :note: Call :meth:`~CustomTreeCtrl.SetItemImage` instead to refresh the tree properly.
+        
+        :note: Call :meth:`CustomTreeCtrl.SetItemImage` instead to refresh the tree properly.
         """
 
         self._images[which] = image
@@ -1810,7 +1859,8 @@ class GenericTreeItem(object):
 
         :param integer `image`: an index within the left image list specifying the image to
          use for the item in the leftmost part of the client area.
-        :note: Call :meth:`~CustomTreeCtrl.SetItemLeftImage` instead to refresh the tree properly.
+         
+        :note: Call :meth:`CustomTreeCtrl.SetItemLeftImage` instead to refresh the tree properly.
         """
 
         self._leftimage = image
@@ -1831,7 +1881,8 @@ class GenericTreeItem(object):
         Sets whether an item has the 'plus' button.
 
         :param bool `has`: ``True`` to set the 'plus' button on the item, ``False`` otherwise.
-        :note: Call :meth:`~CustomTreeCtrl.SetItemHasChildren` instead to refresh the tree properly.
+        
+        :note: Call :meth:`CustomTreeCtrl.SetItemHasChildren` instead to refresh the tree properly.
         """
 
         self._hasPlus = has
@@ -1842,7 +1893,8 @@ class GenericTreeItem(object):
         Sets the item font bold.
 
         :parameter bool `bold`: ``True`` to have a bold font item, ``False`` otherwise.
-        :note: Call :meth:`~CustomTreeCtrl.SetItemBold` instead to refresh the tree properly.
+        
+        :note: Call :meth:`CustomTreeCtrl.SetItemBold` instead to refresh the tree properly.
         """
 
         self._isBold = bold
@@ -1853,7 +1905,8 @@ class GenericTreeItem(object):
         Sets the item font italic.
 
         :parameter bool `italic`: ``True`` to have an italic font item, ``False`` otherwise.
-        :note: Call :meth:`~CustomTreeCtrl.SetItemItalic` instead to refresh the tree properly.
+        
+        :note: Call :meth:`CustomTreeCtrl.SetItemItalic` instead to refresh the tree properly.
         """
 
         self._isItalic = italic
@@ -1892,20 +1945,29 @@ class GenericTreeItem(object):
 
 
     def GetHeight(self):
-        """ Returns the height of the item, in pixels. """
+        """ Returns the height of the item, in pixels.
+
+        This will be 0 when the item is first created and always 0 for hidden
+        items. It is updated when the item is calculated.
+        """
 
         return self._height
 
 
     def GetWidth(self):
-        """ Returns the width of the item, in pixels. """
+        """ Returns the width of the item's contents, in pixels.
+
+        This is the width of the item's text plus the widths of the item's
+        image, checkbox, and window (if they exist).
+        A separator's width is the width of the entire client area.
+        """
 
         return self._width
 
 
     def SetHeight(self, h):
         """
-        Sets the item's height.
+        Sets the item's height. Used internally.
 
         :param integer `h`: an integer specifying the item's height, in pixels.
         """
@@ -1915,7 +1977,7 @@ class GenericTreeItem(object):
 
     def SetWidth(self, w):
         """
-        Sets the item's width.
+        Sets the item's width. Used internally.
 
         :param integer `w`: an integer specifying the item's width, in pixels.
         """
@@ -1934,7 +1996,8 @@ class GenericTreeItem(object):
          on the left of text and overlapping the image. New in wxPython 4.0.4.
 
         :raise: `Exception` if the input `item` is a separator and `wnd` is not ``None``.
-        :note: Always use :meth:`~CustomTreeCtrl.SetItemWindow` instead to update the tree properly.
+        
+        :note: Always use :meth:`CustomTreeCtrl.SetItemWindow` instead to update the tree properly.
         """
 
         if self.IsSeparator() and wnd is not None:
@@ -1986,7 +2049,7 @@ class GenericTreeItem(object):
     def DeleteWindow(self):
         """ Deletes the window associated to the item (if any). Internal use only.
 
-        :note: Always use :meth:`~CustomTreeCtrl.DeleteItemWindow` instead to update the tree properly.
+        :note: Always use :meth:`CustomTreeCtrl.DeleteItemWindow` instead to update the tree properly.
         """
 
         if self._wnd:
@@ -2105,7 +2168,8 @@ class GenericTreeItem(object):
            must be unchecked.
          - If a radiobutton node becomes unchecked, then all of its child nodes will become
            inactive.
-        :note: Call :meth:`~CustomTreeCtrl.SetItemType` instead to refresh the tree properly.
+           
+        :note: Call :meth:`CustomTreeCtrl.SetItemType` instead to refresh the tree properly.
         """
 
         self._type = ct_type
@@ -2116,7 +2180,8 @@ class GenericTreeItem(object):
         Sets whether the item is hypertext or not.
 
         :param bool `hyper`: ``True`` to set hypertext behaviour, ``False`` otherwise.
-        :note: Call :meth:`~CustomTreeCtrl.SetItemHyperText` instead to refresh the tree properly.
+        
+        :note: Call :meth:`CustomTreeCtrl.SetItemHyperText` instead to refresh the tree properly.
         """
 
         self._hypertext = hyper
@@ -2127,7 +2192,8 @@ class GenericTreeItem(object):
         Sets whether an hypertext item was visited or not.
 
         :param bool `visited`: ``True`` to set a hypertext item as visited, ``False`` otherwise.
-        :note: Call :meth:`~CustomTreeCtrl.SetItemVisited` instead to refresh the tree properly.
+        
+        :note: Call :meth:`CustomTreeCtrl.SetItemVisited` instead to refresh the tree properly.
         """
 
         self._visited = visited
@@ -2188,7 +2254,7 @@ class GenericTreeItem(object):
     def Expand(self):
         """ Expands the item. Internal use only.
 
-        :note: Always use :meth:`~CustomTreeCtrl.Expand` instead to update the tree properly and send events.
+        :note: Always use :meth:`CustomTreeCtrl.Expand` instead to update the tree properly and send events.
         """
 
         self._isCollapsed = False
@@ -2197,7 +2263,7 @@ class GenericTreeItem(object):
     def Collapse(self):
         """ Collapses the item. Internal use only.
 
-        :note: Always use :meth:`~CustomTreeCtrl.Collapse` instead to update the tree properly and send events.
+        :note: Always use :meth:`CustomTreeCtrl.Collapse` instead to update the tree properly and send events.
         """
 
         self._isCollapsed = True
@@ -2208,7 +2274,8 @@ class GenericTreeItem(object):
         Sets the item focus/unfocus.
 
         :param bool `set`: ``True`` to set the focus to the item, ``False`` otherwise.
-        :note: Call :meth:`~CustomTreeCtrl.SelectItem` instead to update the tree properly and send events.
+        
+        :note: Call :meth:`CustomTreeCtrl.SelectItem` instead to update the tree properly and send events.
         """
 
         self._hasHilight = set
@@ -2351,7 +2418,8 @@ class GenericTreeItem(object):
         :param bool `checked`: ``True`` to check an item, ``False`` to uncheck it.
 
         :note: This is meaningful only for checkbox-like and radiobutton-like items.
-        :note: Always use :meth:`~CustomTreeCtrl.CheckItem` instead to update the tree properly and send events.
+        
+        :note: Always use :meth:`CustomTreeCtrl.CheckItem` instead to update the tree properly and send events.
         """
 
         self._checked = checked
@@ -2392,7 +2460,8 @@ class GenericTreeItem(object):
         Enables/disables the item.
 
         :param bool `enable`: ``True`` to enable the item, ``False`` to disable it.
-        :note: Call :meth:`~CustomTreeCtrl.EnableItem` instead to update the tree properly.
+        
+        :note: Call :meth:`CustomTreeCtrl.EnableItem` instead to update the tree properly.
         """
 
         self._enabled = enable
@@ -2464,7 +2533,8 @@ class GenericTreeItem(object):
         Deletes the item children. Internal use only.
 
         :param `tree`: the main :class:`CustomTreeCtrl` instance.
-        :note: Always use :meth:`~CustomTreeCtrl.DeleteChildren` instead to update the tree properly.
+        
+        :note: Always use :meth:`CustomTreeCtrl.DeleteChildren` instead to update the tree properly.
         """
 
         for child in self._children:
@@ -2497,7 +2567,8 @@ class GenericTreeItem(object):
         :param string `text`: the new item label.
 
         :raise: `Exception` if the item is a separator.
-        :note: Call :meth:`~CustomTreeCtrl.SetItemText` to refresh the tree properly.
+        
+        :note: Call :meth:`CustomTreeCtrl.SetItemText` to refresh the tree properly.
         """
 
         if self.IsSeparator():
@@ -2566,6 +2637,8 @@ class GenericTreeItem(object):
         :param integer `level`: the item's level inside the tree hierarchy.
 
         :see: :meth:`CustomTreeCtrl.HitTest() <customtreectrl.CustomTreeCtrl.HitTest>` method for the flags explanation.
+
+        :return: A 2-tuple of (item, flags). The item may be ``None``.        
         """
         # Hidden items are never evaluated.
         if self.IsHidden():
@@ -2744,35 +2817,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          chosen by either the windowing system or wxPython, depending on platform;
         :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the underlying :class:`ScrolledWindow` style;
-        :param integer `agwStyle`: the AGW-specific window style for :class:`CustomTreeCtrl`. It can be a
-         combination of the following bits:
-
-         ============================== =========== ==================================================
-         Window Styles                  Hex Value   Description
-         ============================== =========== ==================================================
-         ``TR_NO_BUTTONS``                      0x0 For convenience to document that no buttons are to be drawn.
-         ``TR_SINGLE``                          0x0 For convenience to document that only one item may be selected at a time. Selecting another item causes the current selection, if any, to be deselected. This is the default.
-         ``TR_HAS_BUTTONS``                     0x1 Use this style to show + and - buttons to the left of parent items.
-         ``TR_NO_LINES``                        0x4 Use this style to hide vertical level connectors.
-         ``TR_LINES_AT_ROOT``                   0x8 Use this style to show lines between root nodes. Only applicable if ``TR_HIDE_ROOT`` is set and ``TR_NO_LINES`` is not set.
-         ``TR_DEFAULT_STYLE``                   0x9 The set of flags that are closest to the defaults for the native control for a particular toolkit.
-         ``TR_TWIST_BUTTONS``                  0x10 Use old Mac-twist style buttons.
-         ``TR_MULTIPLE``                       0x20 Use this style to allow a range of items to be selected. If a second range is selected, the current range, if any, is deselected.
-         ``TR_EXTENDED``                       0x40 Use this style to allow disjoint items to be selected. (Only partially implemented; may not work in all cases).
-         ``TR_HAS_VARIABLE_ROW_HEIGHT``        0x80 Use this style to cause row heights to be just big enough to fit the content. If not set, all rows use the largest row height. The default is that this flag is unset.
-         ``TR_EDIT_LABELS``                   0x200 Use this style if you wish the user to be able to edit labels in the tree control.
-         ``TR_ROW_LINES``                     0x400 Use this style to draw a contrasting border between displayed rows.
-         ``TR_HIDE_ROOT``                     0x800 Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes.
-         ``TR_FULL_ROW_HIGHLIGHT``           0x2000 Use this style to have the background colour and the selection highlight extend  over the entire horizontal row of the tree control window.
-         ``TR_AUTO_CHECK_CHILD``             0x4000 Only meaningful for checkbox-type items: when a parent item is checked/unchecked its children are checked/unchecked as well.
-         ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful for checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
-         ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful for checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
-         ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
-         ``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of :class:`CustomTreeCtrl`.
-         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`CustomTreeCtrl` is low.
-         ``TR_TOOLTIP_ON_LONG_ITEMS``      0x100000 Flag used to show tooltips on long items when the horizontal space for :class:`CustomTreeCtrl` is low.
-         ============================== =========== ==================================================
-
+        :param integer `agwStyle`: can be a combination of various bits. See
+         :mod:`~wx.lib.agw.customtreectrl` for a full list of flags.
         :param wx.Validator `validator`: window validator;
         :param string `name`: window name.
         """
@@ -3062,14 +3108,13 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
     def GetSelection(self):
         """
-        Returns the current selection.
+        Returns the current selected item (i.e. focused item).
 
         :return: An instance of :class:`GenericTreeItem`.
 
-        :note:
-
-         This method is valid only with the style ``TR_SINGLE`` set. Use
-         :meth:`~CustomTreeCtrl.GetSelections` for multiple-selections trees.
+        :note: Similar to GetFocusedItem of wx.TreeCtrl. Use
+         :meth:`~CustomTreeCtrl.GetSelections` for obtaining all items
+         selected in multiple-selection trees (i.e. TR_MULTIPLE flag set).
         """
 
         return self._current
@@ -6135,7 +6180,13 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
 
     def CalculateLineHeight(self):
-        """ Calculates the height of a line. """
+        """Calculates the base height for all lines in the tree.
+
+        Only used if the TR_HAS_VARIABLE_ROW_HEIGHT style is not used.
+        This base line height gets adjusted to the max line height
+        of all items as they are displayed. All rows use this largest
+        height until this method is called to reset it.
+        """
 
         dc = wx.ClientDC(self)
         self._lineHeight = dc.GetCharHeight()
@@ -7750,6 +7801,13 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :note: The rectangle coordinates are logical, not physical ones. So, for example,
          the `x` coordinate may be negative if the tree has a horizontal scrollbar and its
          position is not ``0``.
+
+        .. warning:: The ``textOnly`` flag is currently ignored and this method
+         always returns the rectangle including the item's image, checkbox,
+         and window (if they exist) along with the item's text. A separator's
+         bounding box stretches the width of the entire client area. The height
+         may be 0 for newly added items until :meth:`CustomTreeCtrl.CalculateSize`
+         is called while the tree is not frozen.
         """
 
         i = item
@@ -7803,7 +7861,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
     def GetEditControl(self):
         """
-        Returns a pointer to the edit :class:`TreeTextCtrl` if the item is being edited or
+        Returns a reference to the edit :class:`TreeTextCtrl` if the item is being edited or
         ``None`` otherwise (it is assumed that no more than one item may be edited
         simultaneously).
         """
