@@ -1622,6 +1622,9 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         item7 = menu.Append(wx.ID_ANY, "Disable item")
 
         menu.AppendSeparator()
+        item14 = menu.Append(wx.ID_ANY, "Hide Item")
+        item15 = menu.Append(wx.ID_ANY, "Unhide All Items")
+        menu.AppendSeparator()
         item8 = menu.Append(wx.ID_ANY, "Change item icons")
         menu.AppendSeparator()
         item9 = menu.Append(wx.ID_ANY, "Get other information for this item")
@@ -1648,6 +1651,8 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         self.Bind(wx.EVT_MENU, self.OnItemPrepend, item11)
         self.Bind(wx.EVT_MENU, self.OnItemAppend, item12)
         self.Bind(wx.EVT_MENU, self.OnSeparatorInsert, item13)
+        self.Bind(wx.EVT_MENU, self.OnHideItem, item14)
+        self.Bind(wx.EVT_MENU, self.OnUnhideItems, item15)
 
         self.PopupMenu(menu)
         menu.Destroy()
@@ -1722,6 +1727,22 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
     def OnDisableItem(self, event):
 
         self.EnableItem(self.current, False)
+
+
+    def OnHideItem(self, event):
+
+        self.HideItem(self.current)
+        event.Skip()
+
+
+    def OnUnhideItems(self, event):
+
+        item = self.GetRootItem()
+        while item:
+            if item.IsHidden():
+                self.HideItem(item, False)
+            item = self.GetNext(item)
+        event.Skip()
 
 
     def OnItemIcons(self, event):

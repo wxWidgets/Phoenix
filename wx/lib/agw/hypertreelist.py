@@ -87,6 +87,7 @@ class supports:
 * Using an image as a :class:`HyperTreeList` background (currently only in "tile" mode);
 * Ellipsization of long items when the horizontal space is low, via the ``TR_ELLIPSIZE_LONG_ITEMS``
   style (`New in version 0.9.3`).
+* Hiding items
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
@@ -1325,7 +1326,6 @@ class TreeListItem(GenericTreeItem):
 
         self._col_images = []
         self._owner = mainWin
-        self._hidden = False
 
         # We don't know the height here yet.
         self._text_x = 0
@@ -1336,23 +1336,6 @@ class TreeListItem(GenericTreeItem):
 
         if wnd:
             self.SetWindow(wnd)
-
-
-    def IsHidden(self):
-        """ Returns whether the item is hidden or not. """
-
-        return self._hidden
-
-
-    def Hide(self, hide):
-        """
-        Hides/shows the :class:`TreeListItem`.
-
-        :param `hide`: ``True`` to hide the item, ``False`` to show it.
-        :note: Always use :meth:`~HyperTreeList.HideItem` instead to update the tree properly.
-        """
-
-        self._hidden = hide
 
 
     def DeleteChildren(self, tree):
@@ -1782,27 +1765,6 @@ class TreeListItem(GenericTreeItem):
 
         return self._wnd[column].GetSize()
 
-
-    def IsExpanded(self):
-        """
-        Returns whether the item is expanded or not.
-
-        :return: ``True`` if the item is expanded, ``False`` if it is collapsed or hidden.
-        """
-        if self.IsHidden():
-            return False
-        return not self._isCollapsed
-
-
-    def IsEnabled(self):
-        """
-        Returns whether the item is enabled or not.
-
-        :return: ``True`` if the item is enabled, ``False`` if it is disabled or hidden.
-        """
-        if self.IsHidden():
-            return False
-        return self._enabled
 
 #-----------------------------------------------------------------------------
 # EditTextCtrl (internal)
@@ -2308,8 +2270,6 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         :param `item`: an instance of :class:`TreeListItem`;
         """
-        if item.IsHidden():
-            return False
         # An item is only visible if it's not a descendant of a collapsed item
         parent = item.GetParent()
 
@@ -2622,6 +2582,18 @@ class TreeListMainWindow(CustomTreeCtrl):
                     wnd = child.GetWindow(column)
                     if wnd and wnd.IsShown():
                         wnd.Hide()
+
+
+    def HideItemWindows(self, item):
+        """Hides all windows belonging to given item and its children."""
+        # Hide windows for this item.
+        for column in range(self.GetColumnCount()):
+            wnd = item.GetWindow(column)
+            if wnd and wnd.IsShown():
+                wnd.Hide()
+        # Hide its child windows.
+        for child in item.GetChildren():
+            self.HideItemWindows(child)
 
 
     def EnableItem(self, item, enable=True, torefresh=True):
@@ -3124,7 +3096,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `y`: the current vertical position in the :class:`ScrolledWindow`;
         :param `x_maincol`: the horizontal position of the main column.
         """
-
+        # Don't paint hidden items.
         if item.IsHidden():
             return y, x_maincol
 
@@ -4149,24 +4121,6 @@ class TreeListMainWindow(CustomTreeCtrl):
             item, cookie = self.GetNextChild(parent, cookie)
 
         return max(10, width) # Prevent zero column width
-
-
-    def HideItem(self, item, hide=True):
-        """
-        Hides/shows an item.
-
-        :param `item`: an instance of :class:`TreeListItem`;
-        :param `hide`: ``True`` to hide the item, ``False`` to show it.
-        """
-
-        item.Hide(hide)
-        # Recalculate positions and hide child windows.
-        self.CalculatePositions()
-        if self._hasWindows:
-            self.HideWindows()
-        # Refresh the tree.
-        self.Refresh()
-        self.AdjustMyScrollbars()
 
 
 #----------------------------------------------------------------------------

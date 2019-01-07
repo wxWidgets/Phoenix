@@ -100,6 +100,7 @@ to the standard :class:`TreeCtrl` behaviour this class supports:
   style (`New in version 0.9.3`);
 * Tooltips on long items when the horizontal space is low, via the ``TR_TOOLTIP_ON_LONG_ITEMS``
   style (`New in version 0.9.3`).
+* Hiding items
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
@@ -1650,6 +1651,7 @@ class GenericTreeItem(object):
         self._enabled = True        # flag to enable/disable an item
         self._hypertext = False     # indicates if the item is hypertext
         self._visited = False       # visited state for an hypertext item
+        self._hidden = False        # hidden items are not painted
 
         if self._type > 0:
             # do not construct the array for normal items
@@ -2143,6 +2145,24 @@ class GenericTreeItem(object):
         return self._hypertext
 
 
+    def IsHidden(self):
+        """ Returns whether the item is hidden or not. """
+
+        return self._hidden
+
+
+    def Hide(self, hide):
+        """
+        Hides/shows the item. Internal use only.
+
+        :param `hide`: ``True`` to hide the item, ``False`` to show it.
+        
+        :note: Always use :meth:`CustomTreeCtrl.HideItem` instead to update the tree properly.
+        """
+
+        self._hidden = hide
+
+
     def GetParent(self):
         """
         Gets the item parent (another instance of :class:`GenericTreeItem` or ``None`` for
@@ -2216,11 +2236,12 @@ class GenericTreeItem(object):
 
     def IsExpanded(self):
         """
-        Returns whether the item is expanded or not.
+        Returns whether the item is expanded or not. Hidden items always return False.
 
         :return: ``True`` if the item is expanded, ``False`` if it is collapsed.
         """
-
+        if self.IsHidden():
+            return False
         return not self._isCollapsed
 
 
@@ -2379,11 +2400,12 @@ class GenericTreeItem(object):
 
     def IsEnabled(self):
         """
-        Returns whether the item is enabled or not.
+        Returns whether the item is enabled or not. Hidden items always return False.
 
         :return: ``True`` if the item is enabled, ``False`` if it is disabled.
         """
-
+        if self.IsHidden():
+            return False
         return self._enabled
 
 
@@ -2545,6 +2567,9 @@ class GenericTreeItem(object):
 
         :see: :meth:`CustomTreeCtrl.HitTest() <customtreectrl.CustomTreeCtrl.HitTest>` method for the flags explanation.
         """
+        # Hidden items are never evaluated.
+        if self.IsHidden():
+            return None, flags
 
         # for a hidden root node, don't evaluate it, but do evaluate children
         if not (level == 0 and theCtrl.HasAGWFlag(TR_HIDE_ROOT)):
@@ -4456,13 +4481,16 @@ class CustomTreeCtrl(wx.ScrolledWindow):
     def IsVisible(self, item):
         """
         Returns whether the item is visible or not (i.e., its hierarchy is expanded
-        enough to show the item).
+        enough to show the item, and it has not been hidden).
 
         :param `item`: an instance of :class:`GenericTreeItem`.
 
         :return: ``True`` if the item is visible, ``False`` if it is hidden.
         """
-
+        # Hidden items are never visible.
+        if item.IsHidden():
+            return False
+        
         # An item is only visible if it's not a descendant of a collapsed item
         parent = item.GetParent()
 
@@ -5581,6 +5609,39 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                 wnd = child.GetWindow()
                 if wnd:
                     wnd.Hide()
+
+
+    def HideItemWindows(self, item):
+        """Hide all windows belonging to the item and its children."""
+        wnd = item.GetWindow()
+        if wnd:
+            wnd.Hide()
+        for child in item.GetChildren():
+            self.HideItemWindows(child)            
+
+
+    def HideItem(self, item, hide=True):
+        """
+        Hides/shows an item.
+
+        :param `item`: an instance of :class:`GenericTreeItem`;
+        :param `hide`: ``True`` to hide the item, ``False`` to show it.
+
+        :note: A hidden item always reports that it is collapsed and disabled.
+        """
+        if hide == item.IsHidden():
+            # Item already in correct state. Don't do anything.
+            return
+        item.Hide(hide)
+
+        if hide is True and self._hasWindows:
+            # Hide all windows for this item and its children.
+            self.HideItemWindows(item)
+
+        # Refresh the tree.
+        self.CalculatePositions()
+        self.Refresh()
+        self.AdjustMyScrollbars()
 
 
     def Unselect(self):
@@ -6865,6 +6926,9 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          =============== =========================================
 
         """
+        # Don't paint hidden items.
+        if item.IsHidden():
+            return y
 
         x = level*self._indent
 
@@ -8222,6 +8286,11 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         """
 
+        if item.IsHidden():
+            # Hidden items have a height of 0.
+            item.SetHeight(0)
+            return
+
         attr = item.GetAttributes()
 
         if attr and attr.HasFont():
@@ -8336,6 +8405,9 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         # set its position
         item.SetX(x+self._spacing)
         item.SetY(y)
+        # hidden items don't get a height (height=0).
+        if item.IsHidden():
+            return y
         height = self.GetLineHeight(item)
 
         wnd = item.GetWindow()
