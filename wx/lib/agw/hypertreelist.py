@@ -3044,11 +3044,6 @@ class TreeListMainWindow(CustomTreeCtrl):
                              item.GetY() + ((total_h > hcheck) and [(total_h-hcheck)//2] or [0])[0]+1,
                              wx.IMAGELIST_DRAW_TRANSPARENT)
 
-            text_w, text_h, dummy = dc.GetFullMultiLineTextExtent(text)
-            text_extraH = (total_h > text_h and [(total_h - text_h)//2] or [0])[0]
-            text_y = item.GetY() + text_extraH
-            textrect = wx.Rect(text_x, text_y, text_w, text_h)
-
             if self.HasAGWFlag(TR_ELLIPSIZE_LONG_ITEMS):
                 if i == self.GetMainColumn():
                     maxsize = col_w - text_x - _MARGIN
@@ -3056,6 +3051,11 @@ class TreeListMainWindow(CustomTreeCtrl):
                     maxsize = col_w - (wcheck + image_w + _MARGIN)
 
                 text = ChopText(dc, text, maxsize)
+
+            text_w, text_h, dummy = dc.GetFullMultiLineTextExtent(text)
+            text_extraH = (total_h > text_h and [(total_h - text_h)//2] or [0])[0]
+            text_y = item.GetY() + text_extraH
+            textrect = wx.Rect(text_x, text_y, text_w, text_h)
 
             if not item.IsEnabled():
                 foreground = dc.GetTextForeground()
