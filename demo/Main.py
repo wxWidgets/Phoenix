@@ -2697,6 +2697,7 @@ def main():
     except:
         pass
     app = MyApp(False)
+    locale = wx.Locale(wx.LANGUAGE_DEFAULT)
     app.MainLoop()
 
 #---------------------------------------------------------------------------
