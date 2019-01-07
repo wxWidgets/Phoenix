@@ -2737,6 +2737,11 @@ class TreeListMainWindow(CustomTreeCtrl):
     def AdjustMyScrollbars(self):
         """ Internal method used to adjust the :class:`ScrolledWindow` scrollbars. """
 
+        if self._freezeCount:
+            # Skip if frozen. Set dirty flag to adjust when thawed.
+            self._dirty = True
+            return
+        
         if self._anchor:
             xUnit, yUnit = self.GetScrollPixelsPerUnit()
             if xUnit == 0:
@@ -3830,6 +3835,10 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `item`: an instance of :class:`TreeListItem`;
         :param `dc`: an instance of :class:`wx.DC`.
         """
+        if self._freezeCount:
+            # Skip calculate if frozen. Set dirty flag to do this when thawed.
+            self._dirty = True
+            return
         if item.IsHidden():
             # Hidden items have a height of 0.
             item.SetHeight(0)
@@ -3970,6 +3979,10 @@ class TreeListMainWindow(CustomTreeCtrl):
         """ Recalculates all the items positions. """
 
         if not self._anchor:
+            return
+        if self._freezeCount:
+            # Skip calculate if frozen. Set dirty flag to do this when thawed.
+            self._dirty = True
             return
 
         dc = wx.ClientDC(self)

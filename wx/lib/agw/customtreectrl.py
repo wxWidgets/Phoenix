@@ -6475,6 +6475,11 @@ class CustomTreeCtrl(wx.ScrolledWindow):
     def AdjustMyScrollbars(self):
         """ Internal method used to adjust the :class:`ScrolledWindow` scrollbars. """
 
+        if self._freezeCount:
+            # Skip if frozen. Set dirty flag to adjust when thawed.
+            self._dirty = True
+            return
+
         if self._anchor:
 
             x, y = self._anchor.GetSize(0, 0, self)
@@ -8344,6 +8349,10 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         """
 
+        if self._freezeCount:
+            # Skip calculate if frozen. Set dirty flag to do this when thawed.
+            self._dirty = True
+            return
         if item.IsHidden():
             # Hidden items have a height of 0.
             item.SetHeight(0)
@@ -8499,6 +8508,10 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         if not self._anchor:
             return
+        if self._freezeCount:
+            # Don't calculate positions if frozen as it is CPU intensive.
+            self._dirty = True
+            return
 
         self.absoluteWindows = {}
 
@@ -8630,7 +8643,9 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          for all controls so it is mostly just a hint to wxWidgets and not a mandatory
          directive.
         """
-
+        ## Note: We manage freezing ourselves because a normal call to
+        ##       Freeze() also freezes all child item windows and for
+        ##       some reason this can cause them to glitch out.
         self._freezeCount = self._freezeCount + 1
 
 
