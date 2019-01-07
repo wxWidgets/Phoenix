@@ -4069,13 +4069,16 @@ class TreeListMainWindow(CustomTreeCtrl):
         # calculate width
         width = w + 2*_MARGIN
         if column == self.GetMainColumn():
-            width += _MARGIN
+            width += 2*_MARGIN
             if self.HasAGWFlag(wx.TR_LINES_AT_ROOT):
                 width += _LINEATROOT
             if self.HasButtons():
                 width += self._btnWidth + _LINEATROOT
             if item.GetCurrentImage() != _NO_IMAGE:
                 width += self._imgWidth
+            if item.GetType() != 0 and self._imageListCheck:
+                wcheck, hcheck = self._imageListCheck.GetSize(item.GetType())
+                width += wcheck
 
             # count indent level
             level = 0
