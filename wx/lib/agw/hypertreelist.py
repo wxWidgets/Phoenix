@@ -1695,6 +1695,8 @@ class TreeListItem(GenericTreeItem):
 
         treectrl = self._owner
         select = treectrl.GetSelection()
+        # Refresh header window since child focus could have moved scrollbars.
+        treectrl.GetParent().GetHeaderWindow().Refresh()
 
         # If the window is associated to an item that currently is selected
         # (has focus) we don't kill the focus. Otherwise we do it.
