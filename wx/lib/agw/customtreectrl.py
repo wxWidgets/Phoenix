@@ -2969,7 +2969,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         self.SetValidator(validator)
 
-        attr = self.GetDefaultAttributes()
+        attr = wx.ListCtrl.GetClassDefaultAttributes()
         self.SetOwnForegroundColour(attr.colFg)
         self.SetOwnBackgroundColour(attr.colBg)
 

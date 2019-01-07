@@ -1052,7 +1052,7 @@ class HyperTreeListDemo(wx.Frame):
         splitter.SplitVertically(self.leftpanel, panel, 300)
 
         splitter.SetMinimumPaneSize(120)
-        self.leftpanel.SetBackgroundColour(wx.WHITE)
+        #self.leftpanel.SetBackgroundColour(wx.WHITE)
         self.leftpanel.SetScrollRate(20, 20)
 
         self.Fit()

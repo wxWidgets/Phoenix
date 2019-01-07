@@ -1293,8 +1293,6 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         CT.CustomTreeCtrl.__init__(self, parent, id, pos, size, style, agwStyle)
 
-        self.SetBackgroundColour(wx.WHITE)
-
         alldata = dir(CT)
 
         treestyles = []
