@@ -2322,14 +2322,16 @@ class HyperTreeList(HTL.HyperTreeList):
     def OnItemExpanded(self, event):
 
         item = event.GetItem()
-        if item:
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
             self.log.write("OnItemExpanded: %s\n" % self.GetItemText(item))
 
 
     def OnItemExpanding(self, event):
 
         item = event.GetItem()
-        if item:
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
             self.log.write("OnItemExpanding: %s\n" % self.GetItemText(item))
 
         event.Skip()
@@ -2338,14 +2340,16 @@ class HyperTreeList(HTL.HyperTreeList):
     def OnItemCollapsed(self, event):
 
         item = event.GetItem()
-        if item:
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
             self.log.write("OnItemCollapsed: %s" % self.GetItemText(item))
 
 
     def OnItemCollapsing(self, event):
 
         item = event.GetItem()
-        if item:
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
             self.log.write("OnItemCollapsing: %s\n" % self.GetItemText(item))
 
         event.Skip()
@@ -2353,8 +2357,11 @@ class HyperTreeList(HTL.HyperTreeList):
 
     def OnSelChanged(self, event):
 
-        self.item = event.GetItem()
-        if self.item:
+        item = event.GetItem()
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
+            # This event was from the HyperTreeList and not the TreeCtrl.
+            self.item = item
             self.log.write("OnSelChanged: %s" % self.GetItemText(self.item))
             if wx.Platform == '__WXMSW__':
                 self.log.write(", BoundingRect: %s\n" % self.GetBoundingRect(self.item, True))
@@ -2367,9 +2374,10 @@ class HyperTreeList(HTL.HyperTreeList):
     def OnSelChanging(self, event):
 
         item = event.GetItem()
-        olditem = event.GetOldItem()
-
-        if item:
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
+            # This event was from the HyperTreeList and not the TreeCtrl.
+            olditem = event.GetOldItem()
             if not olditem:
                 olditemtext = "None"
             else:
