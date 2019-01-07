@@ -1160,6 +1160,9 @@ class TreeListHeaderWindow(wx.Window):
         # window, so why should it get positions relative to it?
         le.m_pointDrag.y -= self.GetSize().y
         le.m_col = self._column
+        # Set point/column with Setters for Phoenix compatibility.
+        le.SetPoint(le.m_pointDrag)
+        le.SetColumn(self._column)
         parent.GetEventHandler().ProcessEvent(le)
 
 
