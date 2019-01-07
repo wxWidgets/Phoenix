@@ -3576,6 +3576,9 @@ class TreeListMainWindow(CustomTreeCtrl):
                 if not self._dragImage:
                     # Create the custom draw image from the icons and the text of the item
                     self._dragImage = DragImage(self, self._current or item)
+                    # BeginDrag captures mouse. GTK cannot capture mouse twice.
+                    if self.HasCapture() is True:
+                        self.ReleaseMouse()
                     self._dragImage.BeginDrag(wx.Point(0,0), self)
                     self._dragImage.Show()
 
