@@ -3073,9 +3073,23 @@ class TreeListMainWindow(CustomTreeCtrl):
             wnd = item.GetWindow(i)
             if wnd:
                 if text_w == 0:
-                    wndx = text_x
+                    # No text. Honor column alignment for window.
+                    if alignment == wx.ALIGN_RIGHT:
+                        # text_x = right edge of window
+                        wndx = text_x - wnd.GetSize().width
+                    elif alignment == wx.ALIGN_CENTER:
+                        # text_x = center of window
+                        wndx = text_x - (wnd.GetSize().width // 2)
+                    else:
+                        # text_x = left of window (default).
+                        wndx = text_x
                 else:
-                    wndx = text_x + text_w + 2*_MARGIN
+                    if alignment == wx.ALIGN_RIGHT:
+                        # Place window left of text with 2*_MARGIN in between.
+                        wndx = text_x - 2*_MARGIN - wnd.GetSize().width
+                    else:
+                        # Place window at end of text plus 2*_MARGIN (default).
+                        wndx = text_x + text_w + 2*_MARGIN
                 xa, ya = self.CalcScrolledPosition(0, item.GetY())
                 wndx += xa
                 if item.GetHeight() > item.GetWindowSize(i)[1]:
