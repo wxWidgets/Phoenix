@@ -62,7 +62,13 @@ def run():
     #-----------------------------------------------------------------
 
     module.addHeaderCode('#include <wx/glcanvas.h>')
-    tools.generateStubs('wxUSE_GLCANVAS', module)
+
+    tools.generateStubs('wxUSE_GLCANVAS', module,
+                        extraHdrCode=('static wxGLAttributes _NullGLAttributes;\n'
+                                      'static wxGLContextAttrs _NULLGLContextAttrs;\n'),
+                        typeValMap={'wxGLAttributes &': '_NullGLAttributes',
+                                    'wxGLContextAttrs &': '_NULLGLContextAttrs',
+                                    })
 
     c = module.find('wxGLContext')
     assert isinstance(c, etgtools.ClassDef)

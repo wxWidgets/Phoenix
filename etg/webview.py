@@ -54,7 +54,8 @@ def run():
     # This tweak is needed only for the stub code
     module.find('wxWebViewHandler.wxWebViewHandler').argsString = '(const wxString& scheme="")'
 
-    tools.generateStubs('wxUSE_WEBVIEW', module)
+    tools.generateStubs('wxUSE_WEBVIEW', module,
+                        typeValMap={'wxWebViewNavigationActionFlags': 'wxWEBVIEW_NAV_ACTION_NONE'})
 
     c = module.find('wxWebView')
     assert isinstance(c, etgtools.ClassDef)
