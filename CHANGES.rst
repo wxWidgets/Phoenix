@@ -50,6 +50,8 @@ Pip:    ``pip install wxPython==4.0.5``
 
 Changes in this release include the following:
 
+* Added missing HtmlWindow.ScrollToAnchor method, and also a couple methods 
+  in HtmlCell too. (#1141)
 
 
 
