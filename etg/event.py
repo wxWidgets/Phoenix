@@ -413,10 +413,27 @@ def run():
     #---------------------------------------
     # wxMouseEvent
     c = module.find('wxMouseEvent')
-    c.addProperty('LinesPerAction GetLinesPerAction')
-    c.addProperty('LogicalPosition GetLogicalPosition')
-    c.addProperty('WheelDelta GetWheelDelta')
-    c.addProperty('WheelRotation GetWheelRotation')
+
+    c.addCppMethod('void', 'SetWheelAxis', '(wxMouseWheelAxis wheelAxis)',
+        body="self->m_wheelAxis = wheelAxis;")
+
+    c.addCppMethod('void', 'SetWheelRotation', '(int wheelRotation)',
+        body="self->m_wheelRotation = wheelRotation;")
+
+    c.addCppMethod('void', 'SetWheelDelta', '(int wheelDelta)',
+        body="self->m_wheelDelta = wheelDelta;")
+
+    c.addCppMethod('void', 'SetLinesPerAction', '(int linesPerAction)',
+        body="self->m_linesPerAction = linesPerAction;")
+
+    c.addCppMethod('void', 'SetColumnsPerAction', '(int columnsPerAction)',
+        body="self->m_columnsPerAction = columnsPerAction;")
+
+    c.addProperty('WheelAxis GetWheelAxis SetWheelAxis')
+    c.addProperty('WheelRotation GetWheelRotation SetWheelRotation')
+    c.addProperty('WheelDelta GetWheelDelta SetWheelDelta')
+    c.addProperty('LinesPerAction GetLinesPerAction SetLinesPerAction')
+    c.addProperty('ColumnsPerAction GetColumnsPerAction SetColumnsPerAction')
 
     #---------------------------------------
     # wxSetCursorEvent

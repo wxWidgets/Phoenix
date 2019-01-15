@@ -20,6 +20,8 @@ Pip:    ``pip install wxPython==4.0.5``
 Changes in this release include the following:
 
 
+* Added missing setters for the wheel-related properties in wx.MouseEvent. 
+  (#1140)
 
 
 
