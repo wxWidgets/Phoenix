@@ -36,8 +36,8 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
 
-    c.addItem(MethodDef(name='GetMaxButtons', type='int', isConst=True))
-    c.addItem(MethodDef(name='GetMaxAxes', type='int', isConst=True))
+    c.addItem(MethodDef(name='GetMaxButtons', type='int', isConst=True, argsString='() const'))
+    c.addItem(MethodDef(name='GetMaxAxes', type='int', isConst=True, argsString='() const'))
 
     tools.generateStubs('wxUSE_JOYSTICK', module)
 
