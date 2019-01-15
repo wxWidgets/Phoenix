@@ -40,6 +40,20 @@ Other changes in this release:
 
 
 
+4.0.5
+-----
+* (not yet released)
+
+PyPI:   https://pypi.org/project/wxPython/4.0.5
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.5``
+
+Changes in this release include the following:
+
+
+
+
+
 4.0.4 "What? It's 2019 already?"
 --------------------------------
 * 5-Jan-2019
