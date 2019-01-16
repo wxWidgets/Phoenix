@@ -22,6 +22,8 @@ Changes in this release include the following:
 * Added missing HtmlWindow.ScrollToAnchor method, and also a couple methods 
   in HtmlCell too. (#1141)
 
+* Added missing setters for the wheel-related properties in wx.MouseEvent. 
+  (#1140)
 
 
 
