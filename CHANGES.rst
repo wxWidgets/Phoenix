@@ -56,6 +56,11 @@ Changes in this release include the following:
 * Added missing setters for the wheel-related properties in wx.MouseEvent. 
   (#1140)
 
+* Updated wxWidgets commit reference, bringing fixes for #1140, #1086 and 
+  #1147.
+
+  
+
 
 
 4.0.4 "What? It's 2019 already?"
