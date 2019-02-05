@@ -55,6 +55,12 @@ shared: &shared
                 python build.py install
                 python -c "import wx; print(wx.version())"
 
+        - run:
+            name: run unittests
+            command: |
+                source venv/bin/activate
+                python build.py test --pytest_timeout=60 --extra_pytest="-k 'not (display_Tests or glcanvas_Tests or mousemanager_Tests or numdlg_Tests or uiaction_MouseTests or uiaction_KeyboardTests or unichar_Tests or valtext_Tests or test_frameRestore or test_grid_pi)'" --verbose || true
+
 
 # We use one job for each version of Python that we want to build with. Each
 # one gets its own copy of the shared config above.
