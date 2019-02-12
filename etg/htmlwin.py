@@ -48,6 +48,8 @@ def run():
     tools.fixHtmlSetFonts(c)
 
     c.find('AddFilter.filter').transfer = True
+    c.find('OnOpeningURL.redirect').out = True
+    c.find('OnOpeningURL.redirect').name = 'redirectTo'
 
     # Turn the virtual flag back on for some methods
     for name in [ 'OnLinkClicked',
