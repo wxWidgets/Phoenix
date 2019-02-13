@@ -28,6 +28,9 @@ Changes in this release include the following:
 * Updated wxWidgets commit reference, bringing fixes for #1140, #1086 and 
   #1147.
 
+* Fix the use of the output parameter in HtmlWindow.OnOpeningURL the same way 
+  it was fixed in HtmlWindowInterface.OnHTMLOpeningURL. (#1068)
+  
   
 
 
