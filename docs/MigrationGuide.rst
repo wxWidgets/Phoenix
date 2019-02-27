@@ -600,7 +600,7 @@ wx.html.HtmlWindow.OnOpeningURL
 -------------------------------
 
 In wxPython Classic the return value of ``wx.html.HtmlWindow.OnOpeningURL`` and
-``wx.html.HtmlWindoInterface.OnHTMLOpeningURL`` could be either a value from the
+``wx.html.HtmlWindowInterface.OnHTMLOpeningURL`` could be either a value from the
 ``wx.html.HtmlOpeningStatus`` enumeration, or a string containing the URL to
 redirect to. 
 
