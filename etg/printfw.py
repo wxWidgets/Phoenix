@@ -61,7 +61,6 @@ def run():
     c.find('CreateCanvas').isVirtual = True
     c.find('CreateControlBar').isVirtual = True
     c.find('Initialize').isVirtual = True
-    c.find('InitializeWithModality').isVirtual = True
 
 
 

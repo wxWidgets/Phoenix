@@ -179,7 +179,7 @@ def run():
     c.find('wxFileConfig').findOverload('wxInputStream').find('conv').ignore()
     ctor = c.find('wxFileConfig').findOverload('wxString').find('conv').ignore()
     #ctor.items.remove(ctor.find('conv'))
-    ctor = c.find('Save').find('conv').ignore()
+    c.find('Save').ignore()
     c.find('GetGlobalFile').ignore()
     c.find('GetLocalFile').ignore()
 
@@ -187,6 +187,14 @@ def run():
     c.find('GetNextGroup').ignore()
     c.find('GetFirstEntry').ignore()
     c.find('GetNextEntry').ignore()
+
+    c.addCppMethod('bool', 'Save', '(wxOutputStream& os)', doc=c.find('Save').briefDoc, body="""\
+        #if wxUSE_STREAMS
+            return self->Save(*os);
+        #else
+            wxPyRaiseNotImplemented();
+        #endif
+        """)
 
 
 
