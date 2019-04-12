@@ -1493,6 +1493,14 @@ class wxPythonDemo(wx.Frame):
                          lambda e: self.filter.SetValue(''))
         self.filter.Bind(wx.EVT_TEXT_ENTER, self.OnSearch)
 
+        if 'gtk3' in wx.PlatformInfo:
+            # Something is wrong with the bestsize of the SearchCtrl, so for now
+            # let's set it based on the size of a TextCtrl.
+            txt = wx.TextCtrl(leftPanel)
+            bs = txt.GetBestSize()
+            txt.DestroyLater()
+            self.filter.SetMinSize((-1, bs.height+4))
+
         searchMenu = wx.Menu()
         item = searchMenu.AppendRadioItem(-1, "Sample Name")
         self.Bind(wx.EVT_MENU, self.OnSearchMenu, item)
