@@ -63,3 +63,6 @@ mydbstub.py*
 ubuntu-xenial-16.04-cloudimg-console.log
 ubuntu-bionic-18.04-cloudimg-console.log
 .pytest_cache
+
+/samples/doodle/build
+/samples/doodle/dist
