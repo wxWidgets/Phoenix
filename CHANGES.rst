@@ -33,8 +33,9 @@ Changes in this release include the following:
 
 * Fixed a crashing bug when using a member of a transient wx.VisualAttributes
   object. Also set the attributes to be read-only to simplify the fix. (#1198).
-
   
+* Updated sip to version 4.19.16.
+
 
 
 
@@ -220,8 +221,6 @@ Changes in this release include the following:
 
 * Fixed issue when sys.prefix is not unicode (Python2) and when its contents 
   are not translatable to utf-8.
-
-* Updated sip to version 4.19.16.
 
 
 
