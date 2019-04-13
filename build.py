@@ -75,12 +75,12 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.19.13'
+sipCurrentVersion = '4.19.16'
 sipMD5 = {
-    'darwin'   : '2d2958a6f4cceebe5e4facb0114f9b0c',
-    'win32'    : '83cad605ae09a42440afdf89358c7f82',
-    'linux32'  : 'd9d2f8d1e897d2f238a5c49532d55933',
-    'linux64'  : '19f59f0bceb60dfd9b41f8e63b002492',
+    'darwin'   : 'ddb27cd807cc5474ce4d557f18b709dc',
+    'win32'    : 'e381c10b799a2bd130fceb330a149626',
+    'linux32'  : '6f5438ecaf38eef35380ff6652747f8b',
+    'linux64'  : 'e8566e05d2122344ec7ce0e289877f74',
 }
 
 wafCurrentVersion = '2.0.8'
@@ -317,7 +317,7 @@ def setDevModeOptions(args):
     myDevModeOptions = [
             #'--build_dir=../bld',
             #'--prefix=/opt/wx/2.9',
-            '--jobs=6', #  % numCPUs(),
+            '--jobs=8', #  % numCPUs(),
 
             # These will be ignored on the other platforms so it is okay to
             # include them unconditionally
