@@ -43,24 +43,28 @@ def run():
     c.find('GetGeneric').mustHaveApp()
     c.find('GetDefault').mustHaveApp()
     c.find('Set').mustHaveApp()
-
-
-    #virtual void DrawTitleBarBitmap(wxWindow *win,
-    #                                wxDC& dc,
-    #                                const wxRect& rect,
-    #                                wxTitleBarButton button,
-    #                                int flags = 0) = 0;
-    c.find('DrawTitleBarBitmap').setCppCode("""\
-    #ifdef wxHAS_DRAW_TITLE_BAR_BITMAP
-        self->DrawTitleBarBitmap(win, *dc, *rect, button, flags);
-    #endif
-    """)
-
+    c.find('DrawTitleBarBitmap').ignore()
+    draw_tb_bmp_doc = c.find('DrawTitleBarBitmap').briefDoc
 
     c = module.find('wxDelegateRendererNative')
     c.mustHaveApp()
     c.addPrivateCopyCtor()
 
+    #virtual void DrawTitleBarBitmap(wxWindow *win,
+    #                                wxDC& dc,
+    #                                const wxRect& rect,
+    #                                wxTitleBarButton button,
+    #                                int flags = 0);
+    c.addCppMethod('void', 'DrawTitleBarBitmap',
+        '(wxWindow* win, wxDC& dc, const wxRect& rect, wxTitleBarButton button, int flags = 0)',
+        doc=draw_tb_bmp_doc,
+        body="""\
+            #ifdef wxHAS_DRAW_TITLE_BAR_BITMAP
+                self->DrawTitleBarBitmap(win, *dc, *rect, button, flags);
+            #else
+                wxPyRaiseNotImplemented();
+            #endif
+        """)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
@@ -70,4 +74,3 @@ def run():
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()
-
