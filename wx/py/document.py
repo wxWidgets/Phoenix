@@ -25,7 +25,7 @@ class Document:
         if self.filepath and os.path.exists(self.filepath):
             f = open(self.filepath, 'rb')
             try:
-                return f.read()
+                return f.read().decode('utf-8')
             finally:
                 f.close()
         else:
@@ -35,6 +35,11 @@ class Document:
         """Write text to file."""
         try:
             f = open(self.filepath, 'wb')
+            try:
+                # Convert from unicode to bytes
+                text = text.encode('utf-8')
+            except AttributeError:
+                pass
             f.write(text)
         finally:
             if f:
