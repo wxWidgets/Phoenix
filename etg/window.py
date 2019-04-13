@@ -35,6 +35,29 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    c = module.find('wxVisualAttributes')
+    assert isinstance(c, etgtools.ClassDef)
+    # Mark the stucture memebers as read-only, and make copies of the values
+    # when fetching them. This is to protect against cases where the
+    # VisualAttributes object is transient and may be GC'd while we still are
+    # using a reference to a C++ member value.
+    c.find('colBg').noSetter = True
+    c.find('colBg').getCode = """\
+        wxColour* clr = new wxColour(sipCpp->colBg);
+        sipPy = wxPyConstructObject((void*)clr, "wxColour", true);
+    """
+    c.find('colFg').noSetter = True
+    c.find('colFg').getCode = """\
+        wxColour* clr = new wxColour(sipCpp->colFg);
+        sipPy = wxPyConstructObject((void*)clr, "wxColour", true);
+    """
+    c.find('font').noSetter = True
+    c.find('font').getCode = """\
+        wxFont* font = new wxFont(sipCpp->font);
+        sipPy = wxPyConstructObject((void*)font, "wxFont", true);
+    """
+
+
     c = module.find('wxWindow')
     assert isinstance(c, etgtools.ClassDef)
     module.addGlobalStr('wxPanelNameStr', c)
