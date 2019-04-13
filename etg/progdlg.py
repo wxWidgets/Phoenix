@@ -46,7 +46,6 @@ def run():
 
 
     c = module.find('wxProgressDialog')
-    tools.fixWindowClass(c)
 
     # Copy methods from the generic to the native class. This is needed
     # because none of the methods are declared in the interface files, and
@@ -59,6 +58,7 @@ def run():
                 not item.isDtor):
             c.addItem(copy.deepcopy(item))
 
+    tools.fixWindowClass(c)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

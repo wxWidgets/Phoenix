@@ -569,7 +569,19 @@ from .%s import *
         if memberVar.ignored:
             return
         stream.write('%s%s %s' % (indent, memberVar.type, memberVar.name))
-        stream.write('%s;\n\n' % self.annotate(memberVar))
+        stream.write(self.annotate(memberVar))
+        if memberVar.getCode or memberVar.setCode:
+            stream.write('\n%s{\n' % (indent,))
+            if memberVar.getCode:
+                stream.write('%s%%GetCode\n' % (indent))
+                stream.write(nci(memberVar.getCode, len(indent)+4))
+                stream.write('%s%%End\n' % (indent))
+            if memberVar.setCode:
+                stream.write('%s%%SetCode\n' % (indent))
+                stream.write(nci(memberVar.setCode, len(indent)+4))
+                stream.write('%s%%End\n' % (indent))
+            stream.write('%s}' % (indent,))
+        stream.write(';\n\n')
 
 
     def generateProperty(self, prop, stream, indent):
@@ -979,6 +991,8 @@ from .%s import *
         if isinstance(item, extractors.VariableDef):
             if item.pyInt:
                 annotations.append('PyInt')
+            if item.noSetter:
+                annotations.append('NoSetter')
 
         if isinstance(item, extractors.TypedefDef):
             if item.noTypeName:
