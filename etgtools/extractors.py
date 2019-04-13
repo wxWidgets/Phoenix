@@ -206,6 +206,7 @@ class VariableDef(BaseDef):
         self.definition = ''
         self.argsString = ''
         self.pyInt = False
+        self.noSetter = False
         self.__dict__.update(**kw)
         if element is not None:
             self.extract(element)
@@ -247,6 +248,8 @@ class MemberVarDef(VariableDef):
         super(MemberVarDef, self).__init__()
         self.isStatic = False
         self.protection = 'public'
+        self.getCode = ''
+        self.setCode = ''
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
