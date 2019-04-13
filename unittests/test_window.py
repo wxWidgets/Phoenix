@@ -152,6 +152,16 @@ class WindowTests(wtc.WidgetTestCase):
         assert isinstance(w.GetClassDefaultAttributes().font, wx.Font)
 
 
+    def test_vizattrs3(self):
+        w = wx.Window(self.frame, -1, (10,10), (50,50))
+        a = w.GetClassDefaultAttributes()
+        with self.assertRaises(AttributeError):
+            a.colBg = wx.Colour('blue')
+        with self.assertRaises(AttributeError):
+            a.colFg = wx.Colour('blue')
+        with self.assertRaises(AttributeError):
+            a.font = wx.NORMAL_FONT
+
 #---------------------------------------------------------------------------
 
 
