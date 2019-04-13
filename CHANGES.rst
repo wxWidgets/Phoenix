@@ -30,7 +30,10 @@ Changes in this release include the following:
 
 * Fix the use of the output parameter in HtmlWindow.OnOpeningURL the same way 
   it was fixed in HtmlWindowInterface.OnHTMLOpeningURL. (#1068)
-  
+
+* Fixed a crashing bug when using a member of a transient wx.VisualAttributes
+  object. Also set the attributes to be read-only to simplify the fix. (#1198).
+
   
 
 
