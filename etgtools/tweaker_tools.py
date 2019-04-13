@@ -261,17 +261,27 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
         removeVirtuals(klass)
         addWindowVirtuals(klass)
 
-    if not klass.findItem('GetClassDefaultAttributes'):
-        klass.addItem(extractors.WigCode("""\
-            static wxVisualAttributes
-            GetClassDefaultAttributes(wxWindowVariant variant = wxWINDOW_VARIANT_NORMAL);
-            """))
-
     if not ignoreProtected:
         for item in klass.allItems():
             if isinstance(item, extractors.MethodDef) and item.protection == 'protected':
                 item.ignore(False)
 
+    fixDefaultAttributesMethods(klass)
+
+
+def fixDefaultAttributesMethods(klass):
+    if not klass.findItem('GetClassDefaultAttributes'):
+        m = extractors.MethodDef(
+            type='wxVisualAttributes', name='GetClassDefaultAttributes',
+            isStatic=True, protection='public',
+            items=[extractors.ParamDef(
+                type='wxWindowVariant', name='variant', default='wxWINDOW_VARIANT_NORMAL')]
+        )
+        klass.addItem(m)
+
+    if klass.findItem('GetDefaultAttributes'):
+        klass.find('GetDefaultAttributes').mustHaveApp()
+    klass.find('GetClassDefaultAttributes').mustHaveApp()
 
 
 def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
@@ -307,6 +317,8 @@ def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
         for item in klass.allItems():
             if isinstance(item, extractors.MethodDef) and item.protection == 'protected':
                 item.ignore(False)
+
+    fixDefaultAttributesMethods(klass)
 
 
 
