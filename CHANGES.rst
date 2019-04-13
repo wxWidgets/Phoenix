@@ -221,6 +221,8 @@ Changes in this release include the following:
 * Fixed issue when sys.prefix is not unicode (Python2) and when its contents 
   are not translatable to utf-8.
 
+* Updated sip to version 4.19.16.
+
 
 
 
