@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x04130d
-#define SIP_VERSION_STR     "4.19.13"
+#define SIP_VERSION         0x041310
+#define SIP_VERSION_STR     "4.19.16"
 
 
 /*
@@ -67,6 +67,10 @@ extern "C" {
  * minor number set * to 0.
  *
  * History:
+ *
+ * 12.6 Added sip_api_long_as_size_t() to the public API.
+ *      Added the '=' format character to sip_api_build_result().
+ *      Added the '=' format character to sip_api_parse_result_ex().
  *
  * 12.5 Replaced the sipConvertFromSliceObject() macro with
  *      sip_api_convert_from_slice_object() in the public API.
@@ -268,7 +272,7 @@ extern "C" {
  * 0.0  Original version.
  */
 #define SIP_API_MAJOR_NR    12
-#define SIP_API_MINOR_NR    5
+#define SIP_API_MINOR_NR    6
 
 
 /*
@@ -279,6 +283,41 @@ extern "C" {
  * that don't include it themselves (i.e. MSVC).
  */
 typedef unsigned int uint;
+
+
+/* Some C++ compatibility stuff. */
+#if defined(__cplusplus)
+
+/*
+ * Cast a PyCFunctionWithKeywords to a PyCFunction in such a way that it
+ * suppresses the GCC -Wcast-function-type warning.
+ */
+#define SIP_MLMETH_CAST(m)  reinterpret_cast<PyCFunction>(reinterpret_cast<void (*)(void)>(m))
+
+#if __cplusplus >= 201103L || defined(_MSVC_LANG)
+
+/* C++11 and later. */
+#define SIP_NULLPTR     nullptr
+#define SIP_OVERRIDE    override
+
+#else
+
+/* Earlier versions of C++. */
+#define SIP_NULLPTR     0
+#define SIP_OVERRIDE
+
+#endif
+
+#else
+
+/* Cast a PyCFunctionWithKeywords to a PyCFunction. */
+#define SIP_MLMETH_CAST(m)  ((PyCFunction)(m))
+
+/* C. */
+#define SIP_NULLPTR     NULL
+#define SIP_OVERRIDE
+
+#endif
 
 
 /* Some Python compatibility stuff. */
@@ -1899,6 +1938,7 @@ typedef struct _sipAPIDef {
     int (*api_convert_from_slice_object)(PyObject *slice, SIP_SSIZE_T length,
             SIP_SSIZE_T *start, SIP_SSIZE_T *stop, SIP_SSIZE_T *step,
             SIP_SSIZE_T *slicelength);
+    size_t (*api_long_as_size_t)(PyObject *o);
 } sipAPIDef;
 
 

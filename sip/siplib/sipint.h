@@ -115,6 +115,7 @@ unsigned long sip_api_long_as_unsigned_long(PyObject *o);
 PY_LONG_LONG sip_api_long_as_long_long(PyObject *o);
 unsigned PY_LONG_LONG sip_api_long_as_unsigned_long_long(PyObject *o);
 #endif
+size_t sip_api_long_as_size_t(PyObject *o);
 
 
 extern sipQtAPI *sipQtSupport;  /* The Qt support API. */

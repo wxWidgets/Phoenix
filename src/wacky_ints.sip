@@ -13,35 +13,6 @@
 //--------------------------------------------------------------------------
 
 
-// size_t will either be equivalent to an unsigned long, or to an
-// unsigned long long. wxWidgets' configure script has already figured out
-// which it is, so we can make it conditional on those results.
-
-%MappedType size_t {
-
-    %TypeHeaderCode
-    #include <wxPython/wxpy_api.h>
-    %End
-
-    %ConvertToTypeCode
-        // Allow conversions from any number type
-        if (!sipIsErr) {
-            if (PyNumber_Check(sipPy))
-                return TRUE;
-            return FALSE;
-        }
-
-        // Do the conversion
-        *sipCppPtr = new size_t(wxPyInt_AsSize_t(sipPy));
-        return sipGetState(sipTransferObj);
-    %End
-
-    %ConvertFromTypeCode
-        return wxPyInt_FromSize_t(*sipCpp);
-    %End
-};
-
-
 // This type is a signed integer value that is large enough to hold a
 // pointer.  Again we'll use the results of wxWidgets configuration.
 %MappedType wxIntPtr {
