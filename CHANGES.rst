@@ -64,8 +64,9 @@ Changes in this release include the following:
 
 * Fixed a crashing bug when using a member of a transient wx.VisualAttributes
   object. Also set the attributes to be read-only to simplify the fix. (#1198).
-
   
+* Updated sip to version 4.19.16.
+
 
 
 
