@@ -22,6 +22,12 @@ platform specific code.
 .. contents:: **Contents**
 
 
+**NEW:** Installation with **pip** 
+----------------------------------
+
+on **osx** and **windows** for version >= 4.0.0 (2019), use: ```pip install -U wxPython```
+
+
 How to build wxPython Phoenix
 -----------------------------
 
