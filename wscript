@@ -92,9 +92,11 @@ def configure(conf):
         conf.env.PYTHON = conf.options.python
     conf.load('python')
     conf.check_python_version(minver=(2,7,0))
-    if isWindows:
+    if isWindows or isDarwin:
         # Search for the Python headers without doing some stuff that could
-        # incorrectly fail on Windows. See my_check_python_headers below.
+        # incorrectly fail on Windows. Seems to help on Darwin too. See
+        # my_check_python_headers below.
+        # TODO: Check if it can/should be used on other platforms too.
         conf.my_check_python_headers()
     else:
         conf.check_python_headers()
