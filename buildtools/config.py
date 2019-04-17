@@ -195,6 +195,12 @@ class Configuration(object):
                             ]
             self.lflags = None
 
+            # These confuse WAF, but since it already reliably picks the correct
+            # MSVC it shouldn't hurt to get rid of them.
+            for name in ['CC', 'CXX']:
+                if os.environ.get(name):
+                    os.environ.pop(name)
+
             # Other MSVC flags...
             # Uncomment these to have debug info for all kinds of builds
             #self.cflags += ['/Od', '/Z7']
