@@ -183,6 +183,9 @@ def configure(conf):
 
 
     else:
+        # TODO: Double-check that this works when using an installed wxWidgets
+        wxConfigDir = cfg.findWxConfigDir(conf.options.wx_config)
+
         # Configuration stuff for non-Windows ports using wx-config
         conf.env.CFLAGS_WX   = list()
         conf.env.CXXFLAGS_WX = list()
@@ -223,8 +226,12 @@ def configure(conf):
                        uselib_store='WXGL', mandatory=True,
                        msg='Finding libs for WXGL')
 
+        if cfg.checkSetup(wxConfigDir, 'wxUSE_WEBVIEW'):
+            wv_libs = '--libs webview,core,net'
+        else:
+            wv_libs = '--libs core,net'
         conf.check_cfg(path=conf.options.wx_config, package='',
-                       args='--cxxflags --libs webview,core,net' + rpath,
+                       args='--cxxflags ' + wv_libs + rpath,
                        uselib_store='WXWEBVIEW', mandatory=True,
                        msg='Finding libs for WXWEBVIEW')
 
