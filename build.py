@@ -27,6 +27,8 @@ import tarfile
 import tempfile
 import datetime
 
+import pathlib2
+
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
@@ -1181,7 +1183,9 @@ def cmd_sip(options, args):
 def cmd_touch(options, args):
     cmdTimer = CommandTimer('touch')
     pwd = pushDir(phoenixDir())
-    runcmd('touch etg/*.py')
+    etg = pathlib2.Path('etg')
+    for item in etg.glob('*.py'):
+        item.touch()
 
 
 
