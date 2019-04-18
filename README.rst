@@ -18,6 +18,13 @@ API, enabling Python applications to have a native GUI on Windows, Macs or
 Unix systems, with a native look and feel and requiring very little (if any)
 platform specific code.
 
+.. note:: 
+    This document is primarily intended for those who will be working on
+    wxPython, or at least building with the source code fetched directly from
+    GitHub. If that's not you then please refer to the instructions at the
+    `wxPython website <https://wxpython.org/pages/downloads/>`_ about how to get
+    the current release of wxPython for your platform and chosen Python
+    environment.
 
 .. contents:: **Contents**
 
