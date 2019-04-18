@@ -283,7 +283,6 @@ def main(wxDir, args):
                             "--with-opengl",
                             "--enable-sound",
                             "--enable-graphics_ctx",
-                            "--enable-mediactrl",
                             "--enable-display",
                             "--enable-geometry",
                             "--enable-debug_flag",
