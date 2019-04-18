@@ -67,6 +67,10 @@ Changes in this release include the following:
   
 * Updated sip to version 4.19.16.
 
+* Added helper functions to check results of wxWidgets configure during the
+  build of wxPython. Currently used to determine if the wx webview library
+  should be added to the link command. (#1138)
+
 
 
 
