@@ -300,14 +300,8 @@ class ListCtrlAutoWidthMixin:
         if self._resizeColMinWidth == None:
             self._resizeColMinWidth = self.GetColumnWidth(resizeCol - 1)
 
-        # We're showing the vertical scrollbar -> allow for scrollbar width
-        # NOTE: on GTK, the scrollbar is included in the client size, but on
-        # Windows it is not included
+        # Get total width
         listWidth = self.GetClientSize().width
-        if wx.Platform != '__WXMSW__':
-            if self.GetItemCount() > self.GetCountPerPage():
-                scrollWidth = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
-                listWidth = listWidth - scrollWidth
 
         totColWidth = 0 # Width of all columns except last one.
         for col in range(numCols):
