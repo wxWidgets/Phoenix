@@ -3715,12 +3715,12 @@ class SlicesShell(editwindow.EditWindow):
 
     def SavePySlicesFile(self,fid):
         addComment=False
-        
+
         def fid_write(s):
             fid.write(s.replace('\r\n', '\n')
                        .replace('\n', os.linesep)
                        .encode('utf-8'))
-        
+
         fid_write(usrBinEnvPythonText)
         fid_write(pyslicesFormatHeaderText[-1])
         for i in range(self.GetLineCount()):
@@ -3734,8 +3734,8 @@ class SlicesShell(editwindow.EditWindow):
                 fid_write(outputStartText)
                 addComment=True
             if addComment:
-                fid.write('#')
-            
+                fid_write(u'#')
+
             fid_write(self.GetLine(i))
 
     # FIX ME!!
