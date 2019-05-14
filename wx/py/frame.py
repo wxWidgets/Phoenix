@@ -920,7 +920,11 @@ class ShellFrameMixin:
 
     def EditStartupScript(self):
         if os.path.exists(self.startupScript):
-            text = open(self.startupScript, 'U').read()
+            import io
+            # Use newline=None to translate \n \r \r\n to \n on read.  The
+            # old-style mode='U' is deprecated.
+            text = io.open(self.startupScript, 'r',
+                           newline=None, encoding='utf-8').read()
         else:
             text = ''
 
@@ -928,8 +932,8 @@ class ShellFrameMixin:
         if dlg.ShowModal() == wx.ID_OK:
             text = dlg.GetText()
             try:
-                f = open(self.startupScript, 'w')
-                f.write(text)
+                f = open(self.startupScript, 'wb')
+                f.write(text.encode('utf-8'))
                 f.close()
             except:
                 d = wx.MessageDialog(self, "Error saving startup file.",
