@@ -89,9 +89,9 @@ Programming Language :: Python :: Implementation :: CPython
 Topic :: Software Development :: User Interfaces
 """
 
-DEPENDENCIES = [ 'six',
-                 'Pillow',
-                 ]
+DEPENDENCIES = [ line.strip()
+                 for line in open('requirements.txt').readlines()
+                 if not line.startswith('#')]
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"

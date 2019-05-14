@@ -280,10 +280,8 @@ def main(wxDir, args):
                 configure_opts.append("--with-gtk=2")
 
         wxpy_configure_opts = [
-                            "--with-opengl",
                             "--enable-sound",
                             "--enable-graphics_ctx",
-                            "--enable-mediactrl",
                             "--enable-display",
                             "--enable-geometry",
                             "--enable-debug_flag",

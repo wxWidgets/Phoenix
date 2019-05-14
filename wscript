@@ -221,8 +221,12 @@ def configure(conf):
                        uselib_store='WXHTML', mandatory=True,
                        msg='Finding libs for WXHTML')
 
+        if cfg.checkSetup(wxConfigDir, 'wxUSE_GLCANVAS'):
+            gl_libs = '--libs gl,core,net'
+        else:
+            gl_libs = '--libs core,net'
         conf.check_cfg(path=conf.options.wx_config, package='',
-                       args='--cxxflags --libs gl,core,net' + rpath,
+                       args='--cxxflags ' + gl_libs + rpath,
                        uselib_store='WXGL', mandatory=True,
                        msg='Finding libs for WXGL')
 
@@ -257,8 +261,12 @@ def configure(conf):
                        uselib_store='WXRICHTEXT', mandatory=True,
                        msg='Finding libs for WXRICHTEXT')
 
+        if cfg.checkSetup(wxConfigDir, 'wxUSE_MEDIACTRL'):
+            mc_libs = '--libs media,core,net'
+        else:
+            mc_libs = '--libs core,net'
         conf.check_cfg(path=conf.options.wx_config, package='',
-                       args='--cxxflags --libs media,core,net' + rpath,
+                       args='--cxxflags ' + mc_libs + rpath,
                        uselib_store='WXMEDIA', mandatory=True,
                        msg='Finding libs for WXMEDIA')
 
