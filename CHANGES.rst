@@ -9,9 +9,9 @@ wxPython Changelog
 ==================
 
 
-4.0.5
------
-* (not yet released)
+4.0.5 "St. Helens Day"
+----------------------
+* 18-May-2019
 
 PyPI:   https://pypi.org/project/wxPython/4.0.5
 Extras: https://extras.wxPython.org/wxPython4/extras/
@@ -34,11 +34,18 @@ Changes in this release include the following:
 * Fixed a crashing bug when using a member of a transient wx.VisualAttributes
   object. Also set the attributes to be read-only to simplify the fix. (#1198).
   
-* Updated sip to version 4.19.16.
+* Updated the sip being used in wxPython builds to version 4.19.16.
 
 * Added helper functions to check results of wxWidgets configure during the
-  build of wxPython. Currently used to determine if the wx webview library
-  should be added to the link command. (#1138)
+  build of wxPython. Currently used to determine if the wx webview, glcanvas,
+  and media libraries should be added to the link command. (#1138)
+
+* Fixed scrollbar issue with ListCtrlAutoWidthMixin (#1215)
+
+* Fixed file access in the wx.py and wx.tools.pywxrc packages to be Python 2 and
+  3 compatible. (#1193, #1156)
+
+* Fixes for building with Python 3.8 on Linux. (#1227)
 
 
 
