@@ -99,7 +99,7 @@ def configure(conf):
         # TODO: Check if it can/should be used on other platforms too.
         conf.my_check_python_headers()
     else:
-        conf.check_python_headers()
+        conf.check_python_headers(features='pyext')
 
     # fetch and save the debug options
     conf.env.debug = conf.options.debug
