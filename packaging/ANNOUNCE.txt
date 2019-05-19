@@ -9,164 +9,43 @@
 
 
 
-Announcing wxPython 4.0.4
+Announcing wxPython 4.0.5
 =========================
 
-PyPI:   https://pypi.org/project/wxPython/4.0.4
+PyPI:   https://pypi.org/project/wxPython/4.0.5
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.0.4``
+Pip:    ``pip install wxPython==4.0.5``
 
 Changes in this release include the following:
 
-* Fixed an issue where wx.lib.intctrl would erroneously attempt to use
-  long on Python3. (#898)
 
-* Include the MSVC runtime DLLs for Python 3.7 builds too.
+* Added missing HtmlWindow.ScrollToAnchor method, and also a couple methods 
+  in HtmlCell too. (#1141)
 
-* Clear LIBPATH_PYEXT and LIB_PYEXT for linux builds too. (#904)
+* Added missing setters for the wheel-related properties in wx.MouseEvent. 
+  (#1140)
 
-* Added a dependency on the Pillow package since it's used in some
-  wx.lib.agw modules. (PR #908)
+* Updated wxWidgets commit reference, bringing fixes for #1140, #1086 and 
+  #1147.
 
-* Add flag to hide page in wx.lib.agw.aui.notebook. (#895)
+* Fix the use of the output parameter in HtmlWindow.OnOpeningURL the same way 
+  it was fixed in HtmlWindowInterface.OnHTMLOpeningURL. (#1068)
 
-* Switch wx.lib.plot to issue deprecation warnings with
-  PlotPendingDeprecation so it doesn't have to enable all warnings to
-  get them to be shown by default.  (#902)
+* Fixed a crashing bug when using a member of a transient wx.VisualAttributes
+  object. Also set the attributes to be read-only to simplify the fix. (#1198).
+  
+* Updated the sip being used in wxPython builds to version 4.19.16.
 
-* Added a Python 3.7 builder on Fedora 28. (#925)
+* Added helper functions to check results of wxWidgets configure during the
+  build of wxPython. Currently used to determine if the wx webview, glcanvas,
+  and media libraries should be added to the link command. (#1138)
 
-* Fix the object ownership transfer for wx.Menu.Insert() (#931)
+* Fixed scrollbar issue with ListCtrlAutoWidthMixin (#1215)
 
-* Added wx.Treebook.GetTreeCtrl, wx.Listbook.GetListView and
-  wx.Choicebook.GetChoiceCtrl. (#918)
+* Fixed file access in the wx.py and wx.tools.pywxrc packages to be Python 2 and
+  3 compatible. (#1193, #1156)
 
-* Removed the wx.BookCtrlBase.RemovePage workaround as it was causing
-  problems and doesn't seem to be necessary any more. The existing
-  wxWidgets assertions are catching the out of range error just fine,
-  however if wxWidgets was built without the debug helpers turned on
-  then it could still cause a crash. (#888)
-
-* Reverted the changes which removed the content of the wx.lib.pubsub
-  package and encouraged users to switch to the real PyPubSub package
-  instead. Removing it caused more issues than were expected so it has
-  been restored and the code updated to PyPubSub v3.3.0. Version 4.0.0
-  is available upstream, but it is not compatible with Python
-  2.7. Now, wx.lib.pubsub is actually deprecated instead of just
-  trying to pass control over to the upstream PyPubSub library. (#932)
-
-* Improve calltip stability in pyshell. (#941)
-
-* Fix TypeError in wx.lib.throbber. (#924)
-
-* Fix missing parameter tool_id in
-  wx.lib.agw.ribbon.toolbar.RibbonToolBar.AddToggleTool. (#947)
-
-* Add a step to wx.Config.ReadInt to attempt converting from long to
-  int under python2. (#384)
-
-* Add virtual behavior for wx.RichTextCtrl and wx.TextCtrl's
-  Copy/Cut/Paste methods and their Can* counterparts. (#954)
-
-* Fix IO type in wx.lib.agw.thumbnailctrl (#959)
-
-* Fix type error that would occur using pycolourchooser. (#957)
-
-* Optimize line drawing in HyperTreeList. (#973)
-
-* Add wrapper for wx.StaticBox.GetBordersForSizer and use it in the
-  demo to do platform-specific layout of the items in the
-  StaticBox. (#974)
-
-* Update wx.Point, wx.RealPoint, and wx.Size to use floating point
-  arithmetic when conducting scalar multiplication (#971)
-
-* Fix load/save bugs in PySlices (PR#978)
-
-* Replace deprecated PIL.Image.tostring (PR#1005)
-
-* Fix rendering and mouse sensitivity in UltimateListCtrl when adding
-  HyperText items. (#1010)
-
-* Added a parameter to lib.agw.CustomTreeCtrl.SetItemWindow(), to
-  allow positioning the Window (a small image) on the left of text in
-  a CustomTreeItem. (#PR886).
-
-* Declared DeleteAllPages in the notebook subclasses, so the proper
-  C++ implementation will be called. (#972)
-
-* Removed wx.lib.floatbar, which has been deprecated forever and
-  probably hasn't been working in nearly as long. (#976)
-
-* Updated SIP to version 4.19.13.
-
-* Fix an issue in wx.lib.agw.aui.AuiManager where the orientation of
-  an AuiToolBar would not be updated when calling
-  LoadPerspective. (#917)
-
-* Fixed a bug in wx.FileSystemHandler.OpenFile where the object
-  ownership was not being transferred correctly, causing a crash after
-  a premature object deletion. (#926)
-
-* Fixed wx.ListCtrl.Append when wx.LC_SORT style is used, so appending
-  items out of order does not lose the data for the remaining
-  columns. (#906)
-
-* Add wx.Accessible, it's Windows-only, will raise a
-  NotImplementedError exception on the other platforms. (#958)
-
-* Added the ability to generate stub classes for use when optional
-  wxWidgets features are not part of the build. So far, stubs are
-  available for wx.Accessible, wx.FileSystemWatcher, wx.glcanvas, 
-  wx.media and wx.html2.
-
-* Moved the wxpy_api.h file into the wx package at wx/include/wxPython
-  so it will be included in the wheel file. (#961)
-
-* Fixed how string data is added to a virtual file-like object in
-  wx.MemoryFSHandler. All strings are now added to the file as utf-8
-  encoded data, in both Python2 and Python3, and will be read from the
-  virtual file the same way. If you need to use some other encoding
-  for some reason you can first convert the text to a bytesarray or
-  other buffer protocol compatible object and then create the virtual
-  file from that data. (#969)
-
-* Performance update for wx.lib.agw.customtreectrl (#1049)
-
-* Ensure that colours set in wx.lib.agw.customtreectrl.TreeItemAttr
-  are instances of wx.Colour. (#1032)
-
-* Fix drawing of ticks in wx.lib.agw.speedmeter when there are
-  negative bounds values. (#1013)
-
-* wxWidgets for Mac includes the wxJoystick class now, also update the
-  demo.  (#997)
-
-* Fix wx.html.HtmlPrintout to not be seen as an abstract class, so it
-  can be instantiated. (#1060)
-
-* Fix wx.aui.AuiNotbook.SetArtProvider to properly transfer ownership
-  of the art object from Python to C++. This possible double-deletion
-  and related crashing problems. (#1061)
-
-* Fixed the wrappers for wx.html.HtmlWindow.OnOpeningURL to properly
-  handle the redirect output parameter. (#1068) This is a
-  backwards-incompatible change, please see the Migration Guide for
-  details.
-
-* TabNavigatorWindow works similarly to other programs now. It's
-  resizable and draggable so if user has tons of files with long names,
-  it isn't an irritation anymore plastered right in the middle of the
-  screen and can't be worked with easily and ESC now cancels the popup
-  with a proper returnId. (#1096)
-
-* Added missing methods in wx.ListBox, SetItemForegroundColour,
-  SetItemBackgroundColour and SetItemFont. (#1095)
-
-* Backported a fix in wxWidgets that avoids crashing in hhctrl.ocx
-  when using context sensitive help in 64-bit builds on
-  Windows. (#1104)
-
+* Fixes for building with Python 3.8 on Linux. (#1227)
 
 
 
