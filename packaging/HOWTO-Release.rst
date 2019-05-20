@@ -50,7 +50,7 @@ HOWTO Release wxPython Phoenix
 13. Upload to PyPI with::
 
         cd ~/release-builds
-        twine upload wxPython-4*
+        twine upload -u robind wxPython-4*
 
     (Twine doesn't know what to do with the docs and other files so they need
     to be excluded by the wildcard.)
