@@ -1,0 +1,12 @@
+# Python packages needed for building and testing wxPython Phoenix
+-r install.txt
+appdirs
+setuptools
+wheel
+twine
+sphinx
+requests
+pytest
+pytest-xdist
+pytest-timeout
+pathlib2
