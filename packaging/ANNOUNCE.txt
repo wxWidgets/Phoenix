@@ -43,6 +43,10 @@ Changes in this release include the following:
 
 
 
+* Reverted the change that loads up install_requires from the contents of
+  requirements.txt. Split the requirements.txt file into one for install and one
+  for development.
+  
 
 
 What is wxPython?
