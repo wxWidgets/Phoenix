@@ -303,7 +303,7 @@ typedef unsigned int uint;
 #else
 
 /* Earlier versions of C++. */
-#define SIP_NULLPTR     0
+#define SIP_NULLPTR     NULL
 #define SIP_OVERRIDE
 
 #endif
