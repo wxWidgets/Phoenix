@@ -89,9 +89,9 @@ Programming Language :: Python :: Implementation :: CPython
 Topic :: Software Development :: User Interfaces
 """
 
-DEPENDENCIES = [ 'six',
-                 'Pillow',
-                 ]
+INSTALL_REQUIRES = [line.strip()
+                    for line in open('requirements/install.txt').readlines()
+                    if not line.startswith('#')]
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
@@ -356,7 +356,7 @@ if __name__ == '__main__':
           platforms        = PLATFORMS,
           classifiers      = [c for c in CLASSIFIERS.split("\n") if c],
           keywords         = KEYWORDS,
-          install_requires = DEPENDENCIES,
+          install_requires = INSTALL_REQUIRES,
           zip_safe         = False,
           use_2to3         = False,
           include_package_data = True,
