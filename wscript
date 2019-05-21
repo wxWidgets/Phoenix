@@ -322,8 +322,8 @@ def configure(conf):
 
         # And if --debug is set turn on more detailed debug info and turn off optimization
         if conf.env.debug:
-            conf.env.CFLAGS_WXPY.extend(['-ggdb', '-O0'])
-            conf.env.CXXFLAGS_WXPY.extend(['-ggdb', '-O0'])
+            for flags in [conf.env.CFLAGS_PYEXT, conf.env.CXXFLAGS_PYEXT]:
+                flags.extend(['-ggdb', '-O0'])
 
         # Remove some compile flags we don't care about, ones that we may be
         # replacing ourselves anyway, or ones which may have duplicates.
