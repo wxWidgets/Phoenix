@@ -21,8 +21,12 @@ This release provides the following fixes:
 * Fixed a probably rare, but fatal bug on OSX when calling certain overloaded
   virtual methods with implementations in Python.
 
+* Fixed char pointers in generated stub code to have a valid pointer value.
+
 * Reverted the change that loads up install_requires from the contents of
-  requirements.txt.
+  requirements.txt. Split the requirements.txt file into one for install and one
+  for development.
+  
   
 
 

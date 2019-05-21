@@ -21,6 +21,10 @@ This is a quick-fix release to take care of the following issue:
 * Fixed a probably rare, but fatal bug on OSX when calling certain 
   overloaded virtual methods with implementations in Python.
 
+* Reverted the change that loads up install_requires from the contents of
+  requirements.txt. Split the requirements.txt file into one for install and one
+  for development.
+  
 
 
 What is wxPython?
