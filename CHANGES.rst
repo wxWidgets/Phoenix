@@ -10,18 +10,20 @@ wxPython Changelog
 
 4.0.6 "Applesauce"
 ------------------
-* 20-May-2019
+* 21-May-2019
 
 PyPI:   https://pypi.org/project/wxPython/4.0.6
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.0.6``
 
-This release provides the following fix:
+This release provides the following fixes:
 
 * Fixed a probably rare, but fatal bug on OSX when calling certain overloaded
   virtual methods with implementations in Python.
 
-
+* Reverted the change that loads up install_requires from the contents of
+  requirements.txt.
+  
 
 
 4.0.5 "St. Helens Day"
