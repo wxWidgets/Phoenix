@@ -1385,7 +1385,10 @@ def _generateDefineStub(code, define, typeValMap):
 
 def _generateGlobalStub(code, glob, typeValMap):
     code.hdr.append('extern {} {};'.format(glob.type, glob.name))
-    code.cpp.append('{} {};'.format(glob.type, glob.name))
+    if glob.type == 'const char*':
+        code.cpp.append('{} {} = "";'.format(glob.type, glob.name))
+    else:
+        code.cpp.append('{} {};'.format(glob.type, glob.name))
 
 
 def _generateEnumStub(code, enum, typeValMap):
