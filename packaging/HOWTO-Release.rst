@@ -62,6 +62,14 @@ HOWTO Release wxPython Phoenix
     TODO: Automate this!
     Go to the site and unpack the new docs into the document root.
 
+        cd domains/docs.wxpython.org/htdocs
+        mkdir {OLD_VERSION}
+        mv .buildinfo [_a-z]* {OLD_VERSION}
+        tar xzvf ../tmp/wxPython-docs-*
+        mv wxPython-docs-*/docs/html/* .
+        mv wxPython-docs-*/docs/html/.buildinfo .
+        rm -r wxPython-docs-*
+
 15. Upload the docs, demos and pdb archive files to extras.wxpython.org/wxPython4/extras/::
 
         VERSION={current release version number}
