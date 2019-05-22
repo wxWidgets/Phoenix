@@ -16,14 +16,17 @@ PyPI:   https://pypi.org/project/wxPython/4.0.6
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.0.6``
 
-This is a quick-fix release to take care of the following issue:
+This is a quick-fix release to take care of the following issues:
 
 * Fixed a probably rare, but fatal bug on OSX when calling certain 
   overloaded virtual methods with implementations in Python.
 
-* Reverted the change that loads up install_requires from the contents of
-  requirements.txt. Split the requirements.txt file into one for install and one
-  for development.
+* Fixed char pointers in generated stub code to have a valid 
+  pointer value.
+
+* Reverted the change that loads up install_requires from the 
+  contents of requirements.txt. Split the requirements.txt file 
+  into one for install and one for development.
   
 
 
