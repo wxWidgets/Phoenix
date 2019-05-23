@@ -1037,7 +1037,7 @@ class Calendar(wx.Control):
                 self.year = newDate.GetYear()
                 self.set_day = newDate.GetDay()
                 self.sel_key = None
-                self.DoDrawing(wx.ClientDC(self))
+                self.Refresh()
 
         event.Skip()
 
@@ -1271,8 +1271,6 @@ class Calendar(wx.Control):
         :param `DC`: the :class:`wx.DC` to draw
 
         """
-        DC = wx.PaintDC(self)
-
         try:
             cal = self.caldraw
         except Exception:
