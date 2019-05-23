@@ -89,11 +89,16 @@ methods and classes.
 import wx
 _ = wx.GetTranslation
 
-from .CDate import *
+import datetime, calendar
 
 CalDays = [6, 0, 1, 2, 3, 4, 5]
 AbrWeekday = {6: _("Sun"), 0: _("Mon"), 1: _("Tue"), 2: _("Wed"), 3: _("Thu"),
               4: _("Fri"), 5: _("Sat")}
+Month = {0: None,
+         1: _('January'), 2: _('February'), 3: _('March'),
+         4: _('April'), 5: _('May'), 6: _('June'),
+         7: _('July'), 8: _('August'), 9: _('September'),
+         10: _('October'), 11: _('November'), 12: _('December')}
 _MIDSIZE = 180
 
 COLOR_GRID_LINES = "grid_lines"
@@ -379,10 +384,10 @@ class CalDraw:
         self.year = year
         self.month = month
 
-        day = 1
-        t = Date(year, month, day)
-        dow = self.dow = t.day_of_week     # start day in month
-        dim = self.dim = t.days_in_month   # number of days in month
+        # first day of week (Mon->0), number of days in month
+        dow, dim = calendar.monthrange(year, month)
+        self.dow = dow
+        self.dim = dim
 
         if self.cal_type == "NORMAL":
             start_pos = dow + 1
@@ -1058,7 +1063,7 @@ class Calendar(wx.Control):
 
     def SetNow(self):
         """Get the current day."""
-        dt = now()
+        dt = datetime.date.today()
         self.month = dt.month
         self.year = dt.year
         self.day = dt.day
@@ -1393,10 +1398,8 @@ class Calendar(wx.Control):
 
         """
         try:
-            t = Date(self.year, self.month, 1)
-
             day = self.cal_days[key]
-            day = int(day) + t.day_of_week
+            day = int(day) + calendar.weekday(self.year, self.month, 1)
 
             if day % 7 == 6 or day % 7 == 0:
                 return True
