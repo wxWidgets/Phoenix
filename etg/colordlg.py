@@ -19,6 +19,7 @@ DOCSTRING = ""
 # this script.
 ITEMS  = [ "wxColourData",
            "wxColourDialog",
+           "wxColourDialogEvent" ,
            ]
 
 #---------------------------------------------------------------------------
@@ -42,6 +43,13 @@ def run():
     c = module.find('wxGetColourFromUser')
     c.mustHaveApp()
 
+
+    c = module.find('wxColourDialogEvent')
+    tools.fixEventClass(c)
+
+    module.addPyCode("""\
+        EVT_COLOUR_CHANGED = PyEventBinder(wxEVT_COLOUR_CHANGED, 1)
+        """)
 
 
     #-----------------------------------------------------------------

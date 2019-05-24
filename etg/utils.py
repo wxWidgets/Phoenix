@@ -63,6 +63,9 @@ def run():
     module.find('wxSetDisplayName').ignore()
     module.find('wxPostDelete').ignore()
 
+    # TODO: Can this be added back? It was removed because of compiler errors.
+    module.find('wxGetDiskSpace').ignore()
+
     # deprecated and removed
     module.find('wxUsleep').ignore()
 

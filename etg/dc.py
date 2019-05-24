@@ -28,6 +28,8 @@ ITEMS  = [ 'wxFontMetrics',
            'wxDCPenChanger',
            'wxDCTextColourChanger',
            'wxDCFontChanger',
+           'wxDCTextBgColourChanger',
+           'wxDCTextBgModeChanger',
            ]
 
 OTHERDEPS = [ 'src/dc_ex.cpp', ]
@@ -499,6 +501,24 @@ def run():
 
     #-----------------------------------------------------------------
     c = module.find('wxDCFontChanger')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
+
+    #-----------------------------------------------------------------
+    c = module.find('wxDCTextBgColourChanger')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
+
+    #-----------------------------------------------------------------
+    c = module.find('wxDCTextBgModeChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     # context manager methods

@@ -12,6 +12,8 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
+from textwrap import dedent
+
 PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "sizer"   # Base name of the file to generate to for this script
@@ -161,6 +163,19 @@ def run():
 
     c.addPyCode('Sizer.__bool__ = Sizer.__nonzero__') # For Python 3
 
+    m = etgtools.MethodDef(type='void', name='RecalcSizes', argsString='()', isVirtual=True,
+        briefDoc="This is a deprecated version of RepositionChildren()",
+        detailedDoc=[dedent("""\
+            This is a deprecated version of RepositionChildren() which doesn't take
+            the minimal size parameter which is not needed for very simple sizers
+            but typically is for anything more complicated, so prefer to override
+            RepositionChildren() in new code.
+
+            If RepositionChildren() is not overridden, this method must be
+            overridden, calling the base class version results in an assertion
+            failure.
+            """)],
+        )
 
     #---------------------------------------------
     c = module.find('wxBoxSizer')

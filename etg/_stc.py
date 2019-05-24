@@ -191,6 +191,8 @@ def run():
             self->RegisterRGBAImage(type, (unsigned char*)pixels->m_ptr);
             """)
 
+    c.find('MarkerDefinePixmap').ignore()
+    c.find('RegisterImage').findOverload('xpmData').ignore()
 
     # TODO:  Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py)
 

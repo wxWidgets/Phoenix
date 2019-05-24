@@ -328,12 +328,11 @@ def fixSizerClass(klass):
     """
     removeVirtuals(klass)
     klass.find('CalcMin').isVirtual = True
-    klass.find('RecalcSizes').isVirtual = True
+    klass.find('RepositionChildren').isVirtual = True
 
-    # in the wxSizer class they are pure-virtual
+    # in the wxSizer class it is pure-virtual
     if klass.name == 'wxSizer':
         klass.find('CalcMin').isPureVirtual = True
-        klass.find('RecalcSizes').isPureVirtual = True
 
 
 def fixBookctrlClass(klass):
