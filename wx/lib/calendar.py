@@ -1006,7 +1006,10 @@ class Calendar(wx.Control):
             self.GetParent().GetEventHandler().ProcessEvent(ne)
             event.Skip()
             return
-
+        
+        self.shiftkey = event.ShiftDown()
+        self.ctrlkey = event.ControlDown()
+        self.click = 'KEY'
         delta = None
 
         if key_code == wx.WXK_UP:
@@ -1029,16 +1032,16 @@ class Calendar(wx.Control):
             newDate = curDate + timeSpan
 
             if curDate.GetMonth() == newDate.GetMonth():
-                self.set_day = newDate.GetDay()
+                self.set_day = self.day = newDate.GetDay()
                 key = self.sel_key + delta
                 self.SelectDay(key)
             else:
                 self.month = newDate.GetMonth() + 1
                 self.year = newDate.GetYear()
-                self.set_day = newDate.GetDay()
+                self.set_day = self.day = newDate.GetDay()
                 self.sel_key = None
                 self.Refresh()
-
+            self._EmitCalendarEvent()
         event.Skip()
 
     def SetSize(self, set_size):
@@ -1184,13 +1187,7 @@ class Calendar(wx.Control):
         if self.day == "":
             return None
         else:
-            # Changed 12/1/03 by jmg (see above) to support 2.5 event binding
-            evt = wx.PyCommandEvent(wxEVT_COMMAND_PYCALENDAR_DAY_CLICKED, self.GetId())
-            evt.click, evt.day, evt.month, evt.year = self.click, self.day, self.month, self.year
-            evt.shiftkey = self.shiftkey
-            evt.ctrlkey = self.ctrlkey
-            self.GetEventHandler().ProcessEvent(evt)
-
+            self._EmitCalendarEvent()
             self.set_day = self.day
             return key
 
@@ -1449,6 +1446,13 @@ class Calendar(wx.Control):
             pass
 
         return (cfont, bgcolor)
+
+    def _EmitCalendarEvent(self):
+        evt = wx.PyCommandEvent(wxEVT_COMMAND_PYCALENDAR_DAY_CLICKED, self.GetId())
+        evt.click, evt.day, evt.month, evt.year = self.click, self.day, self.month, self.year
+        evt.shiftkey = self.shiftkey
+        evt.ctrlkey = self.ctrlkey
+        self.GetEventHandler().ProcessEvent(evt)
 
 
 class CalenDlg(wx.Dialog):
