@@ -1081,6 +1081,13 @@ class ClassDef(BaseDef):
         self.addItem(WigCode(text))
 
 
+    def addDefaultCtor(self, prot='protected'):
+        # add declaration of a copy constructor to this class
+        wig = WigCode("""\
+{PROT}:
+    {CLASS}();""".format(CLASS=self.name, PROT=prot))
+        self.addItem(wig)
+
     def addCopyCtor(self, prot='protected'):
         # add declaration of a copy constructor to this class
         wig = WigCode("""\
@@ -1090,6 +1097,9 @@ class ClassDef(BaseDef):
 
     def addPrivateCopyCtor(self):
         self.addCopyCtor('private')
+
+    def addPrivateDefaultCtor(self):
+        self.addDefaultCtor('private')
 
     def addPrivateAssignOp(self):
         # add declaration of an assignment opperator to this class

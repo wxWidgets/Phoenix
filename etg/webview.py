@@ -51,6 +51,24 @@ def run():
     module.addGlobalStr('wxWebViewNameStr', 0)
     module.addGlobalStr('wxWebViewDefaultURLStr', 0)
 
+    module.addHeaderCode("""\
+        #ifndef wxWebViewIE_H
+        enum wxWebViewIE_EmulationLevel
+        {
+            wxWEBVIEWIE_EMU_DEFAULT =    0,
+            wxWEBVIEWIE_EMU_IE7 =        7000,
+            wxWEBVIEWIE_EMU_IE8 =        8000,
+            wxWEBVIEWIE_EMU_IE8_FORCE =  8888,
+            wxWEBVIEWIE_EMU_IE9 =        9000,
+            wxWEBVIEWIE_EMU_IE9_FORCE =  9999,
+            wxWEBVIEWIE_EMU_IE10 =       10000,
+            wxWEBVIEWIE_EMU_IE10_FORCE = 10001,
+            wxWEBVIEWIE_EMU_IE11 =       11000,
+            wxWEBVIEWIE_EMU_IE11_FORCE = 11001
+        };
+        #endif
+        """)
+
     # This tweak is needed only for the stub code
     module.find('wxWebViewHandler.wxWebViewHandler').argsString = '(const wxString& scheme="")'
 
@@ -124,6 +142,14 @@ def run():
         #endif
         """)
 
+
+    c.find('MSWSetEmulationLevel').setCppCode("""\
+        #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
+            return wxWebViewIE::MSWSetEmulationLevel(level);
+        #else
+            return false;
+        #endif
+        """)
 
 
     c = module.find('wxWebViewEvent')

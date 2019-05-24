@@ -23,6 +23,7 @@ ITEMS  = [ 'wxGridCellCoords',
            'wxGridCellStringRenderer',
            'wxGridCellAutoWrapStringRenderer',
            'wxGridCellBoolRenderer',
+           'wxGridCellDateRenderer',
            'wxGridCellDateTimeRenderer',
            'wxGridCellEnumRenderer',
            'wxGridCellFloatRenderer',
@@ -30,6 +31,7 @@ ITEMS  = [ 'wxGridCellCoords',
 
            'wxGridCellEditor',
            'wxGridCellTextEditor',
+           'wxGridCellDateEditor',
            'wxGridCellAutoWrapStringEditor',
            'wxGridCellBoolEditor',
            'wxGridCellChoiceEditor',
@@ -81,6 +83,7 @@ def run():
         GRID_VALUE_NUMBER =    "long"
         GRID_VALUE_FLOAT =     "double"
         GRID_VALUE_CHOICE =    "choice"
+        GRID_VALUE_DATE =      "date"
         GRID_VALUE_TEXT =      "string"
         GRID_VALUE_LONG =      "long"
         GRID_VALUE_CHOICEINT = "choiceint"

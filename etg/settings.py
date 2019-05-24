@@ -18,6 +18,7 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
 ITEMS  = [ "wxSystemSettings",
+           "wxSystemAppearance",
            ]
 
 #---------------------------------------------------------------------------
@@ -40,6 +41,10 @@ def run():
     c.find('HasFeature').mustHaveApp()
     c.find('GetScreenType').mustHaveApp()
 
+
+    c = module.find('wxSystemAppearance')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateDefaultCtor()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

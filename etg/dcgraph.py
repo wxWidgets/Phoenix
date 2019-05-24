@@ -42,7 +42,7 @@ def run():
     c.find('wxGCDC.printerDC').keepReference = True
 
     c.find('wxGCDC.context').transfer = True
-    c.find('SetGraphicsContext.ctx').transfer = True
+    c.find('SetGraphicsContext.context').transfer = True
 
 
     #-----------------------------------------------------------------

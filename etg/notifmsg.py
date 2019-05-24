@@ -53,6 +53,7 @@ def run():
         #endif
         """)
 
+    # TODO: Also add wxGenericNotificationMessage
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

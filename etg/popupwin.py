@@ -32,6 +32,8 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    module.addCppCode("#include <wx/popupwin.h>")
+
     c = module.find('wxPopupWindow')
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
