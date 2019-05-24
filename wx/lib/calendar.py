@@ -1022,12 +1022,14 @@ class Calendar(wx.Control):
             delta = 1
         elif key_code == wx.WXK_HOME:
             curDate = wx.DateTime.FromDMY(int(self.cal_days[self.sel_key]), self.month - 1, self.year)
-            newDate = wx.DateTime.Now()
+            curDate.SetHour(12) # leave a margin for the occasional DST crossing
+            newDate = wx.DateTime.Today().SetHour(12)
             ts = newDate - curDate
             delta = ts.GetDays()
 
         if delta is not None:
             curDate = wx.DateTime.FromDMY(int(self.cal_days[self.sel_key]), self.month - 1, self.year)
+            curDate.SetHour(12) # leave a margin for the occasional DST crossing
             timeSpan = wx.TimeSpan.Days(delta)
             newDate = curDate + timeSpan
 
