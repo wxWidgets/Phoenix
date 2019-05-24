@@ -301,16 +301,16 @@ def main(wxDir, args):
         # version present on the build machine.
         # TODO: should there be a command line option to set the SDK?
         if sys.platform.startswith("darwin"):
-            wxpy_configure_opts.append("--with-macosx-version-min=10.6")
-            for xcodePath in getXcodePaths():
-                sdks = [ xcodePath+"/SDKs/MacOSX10.{}.sdk".format(n)
-                         for n in range(6, 15) ]
-                # use the lowest available sdk on the build machine
-                for sdk in sdks:
-                    if os.path.exists(sdk):
-                        wxpy_configure_opts.append(
-                            "--with-macosx-sdk=%s" % sdk)
-                        break
+            wxpy_configure_opts.append("--with-macosx-version-min=10.9")
+            # for xcodePath in getXcodePaths():
+            #     sdks = [ xcodePath+"/SDKs/MacOSX10.{}.sdk".format(n)
+            #              for n in range(9, 15) ]
+            #     # use the lowest available sdk on the build machine
+            #     for sdk in sdks:
+            #         if os.path.exists(sdk):
+            #             wxpy_configure_opts.append(
+            #                 "--with-macosx-sdk=%s" % sdk)
+            #             break
 
         if not options.mac_framework:
             if installDir and not prefixDir:
