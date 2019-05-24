@@ -904,7 +904,6 @@ class Calendar(wx.Control):
         self.SetNow()
 
         self.size = None
-        self.set_day = None
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -1067,16 +1066,13 @@ class Calendar(wx.Control):
         self.sel_lst = sel
 
     def SetNow(self):
-        """Get the current day."""
+        """Set the current day."""
         dt = datetime.date.today()
-        self.month = dt.month
-        self.year = dt.year
-        self.day = dt.day
+        self.SetDate(dt.day, dt.month, dt.year)
 
-    def SetCurrentDay(self):
+    def SetCurrentDay(self): # legacy, this is now an alias for SetNow
         """Set the current day to today."""
         self.SetNow()
-        self.set_day = self.day
 
     # get the date, day, month, year set in calendar
 
@@ -1088,6 +1084,23 @@ class Calendar(wx.Control):
 
         """
         return self.day, self.month, self.year
+
+    def SetDate(self, day, month, year):
+        """
+        Set a calendar date. 
+
+        :param int `day`: the day
+        :param int `month`: the month
+        :param int `year`: the year
+        :raises: `ValueError` when setting an invalid date.
+        
+        """
+        datetime.date(year, month, day) # let the possible ValueError propagate
+        self.year = year
+        self.month = month
+        self.set_day = self.day = day
+        self.sel_key = None
+        self.Refresh()
 
     def GetDay(self):
         """
@@ -1121,58 +1134,60 @@ class Calendar(wx.Control):
         Set the day.
 
         :param int `day`: the day
+        :raises: `ValueError` if the resulting date is invalid.
 
         """
-        self.set_day = day
-        self.day = day
+        self.SetDate(day, self.month, self.year)
 
     def SetMonth(self, month):
         """
         Set the Month.
 
         :param int `month`: the month
+        :raises: `ValueError` if the resulting date is invalid.
 
         """
-        if month >= 1 and month <= 12:
-            self.month = month
-        else:
-            self.month = 1
-        self.set_day = None
+        self.SetDate(self.day, month, self.year)
 
     def SetYear(self, year):
         """
         Set the year.
 
         :param int `year`: the year
+        :raises: `ValueError` if the resulting date is invalid.
 
         """
-        self.year = year
+        self.SetDate(self.day, self.month, year)
+
+    def MoveDate(self, months=0, years=0):
+        """
+        Move the current date by a given interval of months/years.
+
+        :param int `months`: months to add (can be negative)
+        :param int `years`: years to add (can be negative)
+        :returns: the new date set.
+
+        """
+        cur_date = wx.DateTime.FromDMY(self.day, self.month-1, self.year)
+        new_date = cur_date + wx.DateSpan(years=years, months=months)
+        self.SetDate(new_date.GetDay(), new_date.GetMonth()+1, new_date.GetYear())
+        return self.GetDate()
 
     def IncYear(self):
         """Increment the year by 1."""
-        self.year = self.year + 1
-        self.set_day = None
+        return self.MoveDate(years=1)
 
     def DecYear(self):
         """Decrement the year by 1."""
-        self.year = self.year - 1
-        self.set_day = None
+        return self.MoveDate(years=-1)
 
     def IncMonth(self):
         """Increment the month by 1."""
-        self.month = self.month + 1
-        if self.month > 12:
-            self.month = 1
-            self.year = self.year + 1
-        self.set_day = None
+        return self.MoveDate(months=1)
 
     def DecMonth(self):
         """Decrement the month by 1."""
-        self.month = self.month - 1
-        if self.month < 1:
-            self.month = 12
-            self.year = self.year - 1
-        self.set_day = None
+        return self.MoveDate(months=-1)
 
     def TestDay(self, key):
         """
