@@ -1092,15 +1092,21 @@ class Calendar(wx.Control):
         :param int `day`: the day
         :param int `month`: the month
         :param int `year`: the year
-        :raises: `ValueError` when setting an invalid date.
+        :raises: `ValueError` when setting an invalid month/year
+        :returns: the new date set.
         
         """
-        datetime.date(year, month, day) # let the possible ValueError propagate
+        datetime.date(year, month, 1) # let the possible ValueError propagate
+        try:
+            datetime.date(year, month, day)
+        except ValueError:
+            day = wx.DateTime().GetLastMonthDay(month-1, year).GetDay()
         self.year = year
         self.month = month
         self.set_day = self.day = day
         self.sel_key = None
         self.Refresh()
+        return self.GetDate()
 
     def GetDay(self):
         """
