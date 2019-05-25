@@ -15,6 +15,7 @@
 #               in a string format, then an error was raised.
 #
 """Date and calendar classes and date utitility methods."""
+from __future__ import division
 import time
 
 # I18N
@@ -43,7 +44,7 @@ def leapdays(y1, y2):
     Return number of leap years in range [y1, y2]
     Assume y1 <= y2 and no funny (non-leap century) years
     """
-    return (y2 + 3) / 4 - (y1 + 3) / 4
+    return (y2 + 3) // 4 - (y1 + 3) // 4
 
 
 def isleap(year):
@@ -75,11 +76,11 @@ def julianDay(year, month, day):
     """
     b = 0
     if month > 12:
-        year = year + month / 12
+        year = year + month // 12
         month = month % 12
     elif month < 1:
         month = -month
-        year = year - month / 12 - 1
+        year = year - month // 12 - 1
         month = 12 - month % 12
     if year > 0:
         yearCorr = 0
@@ -89,8 +90,8 @@ def julianDay(year, month, day):
         year = year - 1
         month = month + 12
     if year * 10000 + month * 100 + day > 15821014:
-        b = 2 - year / 100 + year / 400
-    return (1461 * year - yearCorr) / 4 + 306001 * (month + 1) / 10000 + day + 1720994 + b
+        b = 2 - year // 100 + year // 400
+    return (1461 * year - yearCorr) // 4 + 306001 * (month + 1) // 10000 + day + 1720994 + b
 
 
 def TodayDay():
@@ -122,12 +123,12 @@ def FromJulian(julian):
     if (julian < 2299160):
         b = julian + 1525
     else:
-        alpha = (4 * julian - 7468861) / 146097
-        b = julian + 1526 + alpha - alpha / 4
-    c = (20 * b - 2442) / 7305
-    d = 1461 * c / 4
-    e = 10000 * (b - d) / 306001
-    day = int(b - d - 306001 * e / 10000)
+        alpha = (4 * julian - 7468861) // 146097
+        b = julian + 1526 + alpha - alpha // 4
+    c = (20 * b - 2442) // 7305
+    d = 1461 * c // 4
+    e = 10000 * (b - d) // 306001
+    day = int(b - d - 306001 * e // 10000)
     if e < 14:
         month = int(e - 1)
     else:
