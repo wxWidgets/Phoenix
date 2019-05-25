@@ -1494,41 +1494,42 @@ class CalenDlg(wx.Dialog):
 
         # set the calendar and attributes
         self.calend = Calendar(self, -1, (20, 60), (240, 200))
-
-        if month is None:
-            self.calend.SetCurrentDay()
-            start_month = self.calend.GetMonth()
-            start_year = self.calend.GetYear()
-        else:
-            self.calend.month = start_month = month
-            self.calend.year = start_year = year
-            self.calend.SetDayValue(day)
-
         self.calend.HideTitle()
-        self.ResetDisplay()
+        today = datetime.date.today()
+        d = day or today.day
+        m = month or today.month
+        y = year or today.year
+        try:
+            date = datetime.date(y, m, d)
+        except ValueError:
+            date = today
+        self.calend.SetDate(date.day, date.month, date.year)
 
         # get month list from DateTime
         monthlist = GetMonthList()
 
         # select the month
-        self.date = wx.ComboBox(self, -1, Month[start_month], (20, 20), (90, -1),
-                                monthlist, wx.CB_DROPDOWN)
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, self.date)
+        self.m_date = wx.ComboBox(self, pos=(20, 20), size=(90, -1), 
+                                  style=wx.CB_DROPDOWN|wx.TE_READONLY)
+        for n, month_name in enumerate(monthlist):
+            self.m_date.Append(month_name, n+1)
+        self.m_date.SetSelection(date.month-1)
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, self.m_date)
 
         # alternate spin button to control the month
-        h = self.date.GetSize().height
+        h = self.m_date.GetSize().height
         self.m_spin = wx.SpinButton(self, -1, (115, 20), (h * 1.5, h), wx.SP_VERTICAL)
         self.m_spin.SetRange(1, 12)
-        self.m_spin.SetValue(start_month)
+        self.m_spin.SetValue(date.month)
         self.Bind(wx.EVT_SPIN, self.OnMonthSpin, self.m_spin)
 
         # spin button to control the year
-        self.dtext = wx.TextCtrl(self, -1, str(start_year), (160, 20), (60, -1))
-        h = self.dtext.GetSize().height
+        self.y_date = wx.TextCtrl(self, -1, str(date.year), (160, 20), (60, -1))
+        h = self.y_date.GetSize().height
 
         self.y_spin = wx.SpinButton(self, -1, (225, 20), (h * 1.5, h), wx.SP_VERTICAL)
-        self.y_spin.SetRange(1980, 2010)
-        self.y_spin.SetValue(start_year)
+        self.y_spin.SetRange(date.year-100, date.year+100)
+        self.y_spin.SetValue(date.year)
 
         self.Bind(wx.EVT_SPIN, self.OnYrSpin, self.y_spin)
         self.Bind(EVT_CALENDAR, self.MouseClick, self.calend)
@@ -1543,6 +1544,9 @@ class CalenDlg(wx.Dialog):
         btn = wx.Button(self, wx.ID_CANCEL, ' Close ', (x_pos + 120, y_pos), but_size)
         self.Bind(wx.EVT_BUTTON, self.OnCancel, btn)
 
+        self.current_month = date.month
+        self.current_year = date.year
+
     def OnOk(self, evt):
         """The OK event handler."""
         self.result = ['None', str(self.calend.day), Month[self.calend.month], str(self.calend.year)]
@@ -1554,37 +1558,39 @@ class CalenDlg(wx.Dialog):
 
     def MouseClick(self, evt):
         """The mouse click event handler."""
-        self.month = evt.month
         # result click type and date
         self.result = [evt.click, str(evt.day), Month[evt.month], str(evt.year)]
-
         if evt.click == 'DLEFT':
             self.EndModal(wx.ID_OK)
+        if evt.month != self.current_month or evt.year != self.current_year:
+            self.m_date.SetSelection(evt.month-1)
+            self.m_spin.SetValue(evt.month)
+            self.y_date.SetValue(str(evt.year))
+            self.y_spin.SetValue(evt.year)
+            self.current_month = evt.month
+            self.current_year = evt.year
 
     def OnMonthSpin(self, event):
         """The month spin control event handler."""
-        month = event.GetPosition()
-        self.date.SetValue(Month[month])
+        month = self.m_spin.GetValue()
+        self.m_date.SetSelection(month-1)
         self.calend.SetMonth(month)
-        self.calend.Refresh()
+        self.current_month = month
 
     def OnYrSpin(self, event):
         """The year spin control event handler."""
-        year = event.GetPosition()
-        self.dtext.SetValue(str(year))
+        year = self.y_spin.GetValue()
+        self.y_date.SetValue(str(year))
         self.calend.SetYear(year)
-        self.calend.Refresh()
+        self.current_year = year
 
     def EvtComboBox(self, event):
         """The month combobox event handler."""
-        name = event.GetString()
-        monthval = self.date.FindString(name)
-        self.m_spin.SetValue(monthval + 1)
-
-        self.calend.SetMonth(monthval + 1)
-        self.ResetDisplay()
+        month = event.GetClientData()
+        self.m_spin.SetValue(month)
+        self.calend.SetMonth(month)
+        self.current_month = month
 
     def ResetDisplay(self):
         """Reset the display."""
-        month = self.calend.GetMonth()
         self.calend.Refresh()
