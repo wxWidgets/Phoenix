@@ -89,7 +89,7 @@ methods and classes.
 import wx
 _ = wx.GetTranslation
 
-import datetime, calendar
+import datetime
 
 CalDays = [6, 0, 1, 2, 3, 4, 5]
 AbrWeekday = {6: _("Sun"), 0: _("Mon"), 1: _("Tue"), 2: _("Wed"), 3: _("Thu"),
@@ -385,9 +385,8 @@ class CalDraw:
         self.month = month
 
         # first day of week (Mon->0), number of days in month
-        dow, dim = calendar.monthrange(year, month)
-        self.dow = dow
-        self.dim = dim
+        self.dow = dow = datetime.date(year, month, 1).weekday()
+        self.dim = dim = wx.DateTime().GetLastMonthDay(month-1, year).GetDay()
 
         if self.cal_type == "NORMAL":
             start_pos = dow + 1
@@ -1417,7 +1416,7 @@ class Calendar(wx.Control):
         """
         try:
             day = self.cal_days[key]
-            day = int(day) + calendar.weekday(self.year, self.month, 1)
+            day = int(day) + wx.DateTime.FromDMY(day, self.month-1, self.year).GetWeekDay()
 
             if day % 7 == 6 or day % 7 == 0:
                 return True
