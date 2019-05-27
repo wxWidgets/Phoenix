@@ -234,9 +234,9 @@ def run():
 
     c.find('GetDirect2DRenderer').ignore()
     c.addCppMethod('wxGraphicsRenderer*', 'GetDirect2DRenderer', '()', isStatic=True,
-        doc="Returns Direct2D renderer (MSW only).",
+        doc="Returns Direct2D renderer (MSW and Python3 only).",
         body="""\
-            #ifdef __WXMSW__
+            #ifdef wxUSE_GRAPHICS_DIRECT2D
                 return wxGraphicsRenderer::GetDirect2DRenderer();
             #else
                 return NULL;
