@@ -44,6 +44,10 @@ def run():
     c.abstract = True
     c.find('Set').transferBack = True
     c.find('Set.helpProvider').transfer = True
+    c.find('AddHelp.window').type = 'wxWindowBase *'
+    c.find('RemoveHelp.window').type = 'wxWindowBase *'
+    c.find('ShowHelp.window').type = 'wxWindowBase *'
+    c.find('ShowHelpAtPoint.window').type = 'wxWindowBase *'
     c.mustHaveApp()
 
 
