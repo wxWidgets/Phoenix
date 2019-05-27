@@ -786,7 +786,7 @@ def checkCompiler(quiet=False):
     # we'll need to make this a little smarter about what flag (if any)
     # needs to be used.
     #
-    # NOTE 2: SIP chenged its output such that this doesn't appear to be
+    # NOTE 2: SIP changed its output such that this doesn't appear to be
     # needed anymore, but we'll leave the code in place to make it easy to
     # turn it back on again if/when needed.
     if False and not isWindows and not isDarwin:
