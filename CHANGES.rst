@@ -38,6 +38,9 @@ Other changes in this release:
   with warnings enabled so you can see which class, method or function calls
   you need to change.
 
+* Bug fixes in wx.lib.calendar: key navigation across month boundaries is now 
+  possible; key navigation now sets the date and fires the EVT_CALENDAR event; 
+  setter APIs now set the date correctly (#1230).
 
 
 4.0.5 "St. Helens Day"
