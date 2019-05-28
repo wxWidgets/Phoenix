@@ -9,9 +9,8 @@
 
 import sys
 import os
-import textwrap
 
-from buildtools.config import Config, runcmd, msg
+from buildtools.config import Config, runcmd, msg, indent
 cfg = Config(True)
 
 #-----------------------------------------------------------------------------
@@ -539,7 +538,7 @@ def build(bld):
     if not isWindows:
         cmd = ' '.join(bld.env.CC) + ' --version'
         copmpiler = runcmd(cmd, getOutput=True, echoCmd=False)
-        copmpiler = textwrap.indent(copmpiler, ' '*5)
+        copmpiler = indent(copmpiler, ' '*5)
         msg("**** Compiler: {}\n{}".format(cmd, copmpiler))
 
     # Copy the license files from wxWidgets
