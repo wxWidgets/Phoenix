@@ -1336,19 +1336,16 @@ def cmd_build_wx(options, args):
         traceback.print_exc()
         sys.exit(1)
 
-    if not options.release:
-        print("WARNING: Building message catalogs skipped.")
+    # Build the wx message catalogs, but first check that there is a msgfmt
+    # command available
+    if findCmd('msgfmt'):
+        locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
+        print('Building message catalogs in ' + os.getcwd())
+        runcmd('make allmo')
+        del locale_pwd
     else:
-        # Build the wx message catalogs, but first check that there is a msgfmt
-        # command available
-        if findCmd('msgfmt'):
-            locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
-            print('Building message catalogs in ' + os.getcwd())
-            runcmd('make allmo')
-            del locale_pwd
-        else:
-            print("WARNING: msgfmt command not found, message catalogs not rebulit.\n"
-                  "         Please install gettext and associated tools.")
+        print("WARNING: msgfmt command not found, message catalogs not rebulit.\n"
+                "         Please install gettext and associated tools.")
 
 
 
