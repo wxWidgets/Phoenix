@@ -1416,12 +1416,6 @@ def copyWxDlls(options):
         # for the wxlib's in $ORIGIN, so there is nothing else to do here
 
 
-# just an alias for build_py now
-def cmd_waf_py(options, args):
-    cmdTimer = CommandTimer('waf_py')
-    cmd_build_py(options, args)
-
-
 def cmd_build_py(options, args):
     cmdTimer = CommandTimer('build_py')
     waf = getWafCmd()
