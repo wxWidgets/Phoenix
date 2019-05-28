@@ -21,7 +21,7 @@ master branch for the wxWidgets source code, which wxPython is built upon, and
 which is included in the wxPython source archives. 
 
 
-New and improved stuff in this release:
+New and improved in this release:
 
 * Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
   OSXEnableAutomaticDashSubstitution, and OSXDisableAllSmartSubstitutions
@@ -38,6 +38,7 @@ Other changes in this release:
   been removed. Be sure to test your code in 4.0.2 or a later 4.0.x release
   with warnings enabled so you can see which class, method or function calls
   you need to change.
+
 
 
 
