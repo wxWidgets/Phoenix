@@ -9,9 +9,10 @@
 
 import sys
 import os
+import textwrap
 
-import buildtools.config
-cfg = buildtools.config.Config(True)
+from buildtools.config import Config, runcmd, msg
+cfg = Config(True)
 
 #-----------------------------------------------------------------------------
 # Options and configuration
@@ -534,6 +535,12 @@ def build(bld):
     from buildtools.config   import opj, updateLicenseFiles
 
     cfg.finishSetup(bld.env.wx_config)
+
+    if not isWindows:
+        cmd = ' '.join(bld.env.CC) + ' --version'
+        copmpiler = runcmd(cmd, getOutput=True, echoCmd=False)
+        copmpiler = textwrap.indent(copmpiler, ' '*5)
+        msg("**** Compiler: {}\n{}".format(cmd, copmpiler))
 
     # Copy the license files from wxWidgets
     updateLicenseFiles(cfg)
