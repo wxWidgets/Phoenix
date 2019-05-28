@@ -1805,10 +1805,8 @@ def cmd_sdist(options, args):
         msg("Sorry, I don't know what to do in this source tree, no git workspace found.")
         return
 
-    # make a tree for building up the archive files
+    # Make a place to export everything to
     PDEST = 'build/sdist'
-    WSRC  = 'ext/wxWidgets'
-    WDEST = posixjoin(PDEST, WSRC)
     if not os.path.exists(PDEST):
         os.makedirs(PDEST)
 
@@ -1816,11 +1814,22 @@ def cmd_sdist(options, args):
     if not os.path.exists('dist'):
         os.mkdir('dist')
 
-    # pull out an archive copy of the repo files
-    msg('Exporting Phoenix...')
-    runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
-    msg('Exporting wxWidgets...')
-    runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (WSRC, WDEST), echoCmd=False)
+    # recursivly export a git archive of this repo and submodules
+    def _archive_submodules(root, dest):
+        msg('Exporting {}...'.format(root))
+        if not os.path.exists(dest):
+            os.path.makedirs(dest)
+        pwd = pushDir(root)
+        runcmd('git archive HEAD | tar -x -C %s' % dest, echoCmd=False)
+
+        if os.path.exists('.gitmodules'):
+            for line in open('.gitmodules', 'rt').readlines():
+                line = line.strip()
+                if line.startswith('path = '):
+                    sub = line[7:]
+                    _archive_submodules(sub, opj(dest, sub))
+
+    _archive_submodules('.', os.path.abspath(PDEST))
 
     # copy Phoenix's generated code into the archive tree
     msg('Copying generated files...')
