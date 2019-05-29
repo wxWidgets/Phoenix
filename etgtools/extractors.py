@@ -744,8 +744,12 @@ class ClassDef(BaseDef):
         for node in element.findall('includes'):
             self.includes.append(node.text)
         for node in element.findall('templateparamlist/param'):
-            txt = node.find('type').text
-            txt = txt.replace('class ', '')
+            if node.find('declname') is not None:
+                txt = node.find('declname').text
+            else:
+                txt = node.find('type').text
+                txt = txt.replace('class ', '')
+                txt = txt.replace('typename ', '')
             self.templateParams.append(txt)
 
         for node in element.findall('innerclass'):
