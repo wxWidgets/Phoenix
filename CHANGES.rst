@@ -18,6 +18,10 @@ Pip:    ``pip install wxPython==4.0.7``
 
 This release provides the following fixes:
 
+* Bug fixes in wx.lib.calendar: key navigation across month boundaries is now 
+  possible; key navigation now sets the date and fires the EVT_CALENDAR event; 
+  setter APIs now set the date correctly (#1230).
+
 
 
 
