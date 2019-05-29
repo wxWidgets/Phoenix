@@ -24,7 +24,7 @@ ITEMS  = [ 'wxScrolled' ]
 
 #---------------------------------------------------------------------------
 
-def run():
+def parseAndTweakModule():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
@@ -132,10 +132,13 @@ def run():
     tools.fixWindowClass(klass)
     module.insertItemAfter(td, klass)
 
-
     module.addPyCode("PyScrolledWindow = wx.deprecated(ScrolledWindow, 'Use ScrolledWindow instead.')")
 
-    #-----------------------------------------------------------------
+    return module
+
+#-----------------------------------------------------------------
+def run():
+    module = parseAndTweakModule()
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
 
