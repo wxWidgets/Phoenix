@@ -1,5 +1,4 @@
 #----------------------------------------------------------------------
-#----------------------------------------------------------------------
 # Name:        buildtools.config
 # Purpose:     Code to set and validate platform options and etc. for
 #              the wxPython build.  Moved to their own module and
@@ -438,6 +437,7 @@ class Configuration(object):
             dest = opj(destdir, lang, 'LC_MESSAGES')
             mkpath(dest, verbose=verbose)
             copy_file(src, opj(dest, 'wxstd.mo'), update=1, verbose=verbose)
+            os.unlink(src)
             self.CLEANUP.append(opj(dest, 'wxstd.mo'))
             self.CLEANUP.append(dest)
 
