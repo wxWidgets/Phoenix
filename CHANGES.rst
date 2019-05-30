@@ -43,6 +43,8 @@ Other changes in this release:
   possible; key navigation now sets the date and fires the EVT_CALENDAR event; 
   setter APIs now set the date correctly (#1230).
 
+* Switch to using a wx.Overlay in the Widget Inspection Tool to highlight
+  widgets when running on a GTK3 port.
 
 
 
