@@ -823,7 +823,7 @@ class _InspectionHighlighter(object):
     highlightTime = 3000   # how long to display the highlights
 
                            # how to draw it
-    useOverlay = 'wxMac' in wx.PlatformInfo
+    useOverlay = 'wxMac' in wx.PlatformInfo or 'gtk3' in wx.PlatformInfo
 
 
     def __init__(self):
