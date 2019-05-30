@@ -9,4 +9,4 @@ requests
 pytest
 pytest-xdist
 pytest-timeout
-pathlib2
+pathlib2 ; python_version < "3"
