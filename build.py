@@ -32,6 +32,12 @@ try:
 except ImportError:
     import pathlib2 as pathlib
 
+try:
+    from shutil import which
+except ImportError:
+    from backports.shutil_which import which
+
+
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
