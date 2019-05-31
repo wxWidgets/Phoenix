@@ -268,7 +268,7 @@ def setPythonVersion(args):
             #
             TOOLS = os.environ.get('TOOLS')
             if 'cygdrive' in TOOLS:
-                TOOLS = runcmd(getCygwinPath()+'/bin/cygpath -w '+TOOLS, True, False)
+                TOOLS = bash2dosPath(TOOLS)
             use64flag = '--x64' in args
             if use64flag:
                 args.remove('--x64')
@@ -816,23 +816,65 @@ def getWafBuildBase():
     return base
 
 
-def getCygwinPath():
+def getBashPath():
+    """Check if there is a bash.exe on the PATH"""
+    bash = which('bash.exe')
+    return bash
+
+
+def dos2bashPath(path):
     """
-    Try to locate the path where cygwin is installed.
-
-    If CYGWIN_BASE is set in the environment then use that. Otherwise look in
-    default install locations.
+    Convert an absolute dos-style path to one bash.exe can understand.
     """
-    if os.environ.get('CYGWIN_BASE'):
-        return os.environ.get('CYGWIN_BASE')
+    path = path.replace('\\', '/')
+    cygpath = which('cygpath')
+    wsl = which('wsl')
 
-    for path in ['c:/cygwin', 'c:/cygwin64']:
-        if os.path.isdir(path):
-            return path
+    # If we have cygwin then we can use cygpath to convert the path.
+    # Note that MSYS2 (and Git Bash) now also have cygpath so this should
+    # work there too.
+    if cygpath:
+        path = runcmd('{} -u {}'.format(cygpath, path), getOutput=True, echoCmd=False)
+        return path
+    elif wsl:
+        # Are we using Windows System for Linux? (untested)
+        path = runcmd('{} wslpath -a -u {}'.format(wsl, path), getOutput=True, echoCmd=False)
+        return path
+    else:
+        # Otherwise, do a simple translate and hope for the best?
+        # c:/foo --> /c/foo
+        # TODO: Check this!!
+        drive, rest = os.path.splitdrive(path)
+        path = '/{}/{}'.format(drive[0], rest)
+        return path
 
-    return None
 
+def bash2dosPath(path):
+    """
+    Convert an absolute unix-style path to one Windows can understand.
+    """
+    cygpath = which('cygpath')
+    wsl = which('wsl')
 
+    # If we have cygwin then we can use cygpath to convert the path.
+    # Note that MSYS2 (and Git Bash) now also have cygpath so this should
+    # work there too.
+    if cygpath:
+        path = runcmd('{} -w {}'.format(cygpath, path), getOutput=True, echoCmd=False)
+        return path
+    elif wsl:
+        # Are we using Windows System for Linux? (untested)
+        path = runcmd('{} wslpath -a -w {}'.format(wsl, path), getOutput=True, echoCmd=False)
+        return path
+    else:
+        # Otherwise, do a simple translate and hope for the best?
+        # /c/foo --> c:/foo
+        # There's also paths like /cygdrive/c/foo or /mnt/c/foo, but in those
+        # cases cygpath or wsl should be available.
+        components = path.split('/')
+        assert components[0] == '' and len(components[1]) == 1, "Expecting a path like /c/foo"
+        path = components[1] + ':/' + '/'.join(components[2:])
+        return path
 
 #---------------------------------------------------------------------------
 # Command functions and helpers
@@ -844,14 +886,18 @@ def _doDox(arg):
     doxCmd = os.path.abspath(doxCmd)
 
     if isWindows:
-        cygwin_path = getCygwinPath()
-        doxCmd = doxCmd.replace('\\', '/')
-        doxCmd = runcmd(cygwin_path+'/bin/cygpath -u '+doxCmd, True, False)
+        bash = getBashPath()
+        if not bash:
+            raise RuntimeError("ERROR: Unable to find bash.exe, needed for running regen.sh")
+
+        doxCmd = dos2bashPath(doxCmd)
+        print(doxCmd)
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
+
         d = posixjoin(wxDir(), 'docs/doxygen')
         d = d.replace('\\', '/')
-        cmd = '%s/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (cygwin_path, d, arg)
+        cmd = '{} -l -c "cd {} && ./regen.sh {}"'.format(bash, d, arg)
     else:
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
