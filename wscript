@@ -10,7 +10,12 @@
 import sys
 import os
 
-from buildtools.config import Config, runcmd, msg, indent
+try:
+    from textwrap import indent
+except ImportError:
+    from textwrap3 import indent
+
+from buildtools.config import Config, runcmd, msg
 cfg = Config(True)
 
 #-----------------------------------------------------------------------------
