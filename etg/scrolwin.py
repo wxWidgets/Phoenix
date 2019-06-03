@@ -134,6 +134,10 @@ def parseAndTweakModule():
 
     module.addPyCode("PyScrolledWindow = wx.deprecated(ScrolledWindow, 'Use ScrolledWindow instead.')")
 
+    # TODO: Can/should this be used from Python? If so then fix the declaration
+    # so sip can understand it.
+    module.find('wxCreateScrolled').ignore()
+
     return module
 
 #-----------------------------------------------------------------
