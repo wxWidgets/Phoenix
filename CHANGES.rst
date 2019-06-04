@@ -25,6 +25,8 @@ This release provides the following fixes:
 * Switch to using a wx.Overlay in the Widget Inspection Tool to highlight
   widgets when running on a GTK3 port.
 
+* Fixed issue in wx.lib.agw.customtreectrl where label editor could remain
+  stuck forever (#1235).
 
 
 4.0.6 "Applesauce"
