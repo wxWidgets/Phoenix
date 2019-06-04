@@ -9,6 +9,3 @@ requests
 pytest
 pytest-xdist
 pytest-timeout
-pathlib2 ; python_version < "3"
-backports.shutil_which ; python_version < "3"
-textwrap3 ; python_version < "3"

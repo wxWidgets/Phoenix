@@ -30,12 +30,12 @@ import datetime
 try:
     import pathlib
 except ImportError:
-    import pathlib2 as pathlib
+    import buildtools.backports.pathlib2 as pathlib
 
 try:
     from shutil import which
 except ImportError:
-    from backports.shutil_which import which
+    from buildtools.backports.shutil_which import which
 
 
 from distutils.dep_util import newer, newer_group
