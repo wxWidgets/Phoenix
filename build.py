@@ -43,7 +43,8 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macSetLoaderNames, \
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
-                               getVisCVersion, getToolsPlatformName, updateLicenseFiles
+                               getVisCVersion, getToolsPlatformName, updateLicenseFiles, \
+                               updatePyprojectFile
 
 import buildtools.version as version
 
@@ -180,6 +181,7 @@ def main(args):
         usage()
         sys.exit(1)
 
+    updatePyprojectFile()
     options, commands = parseArgs(args)
 
     cfg = Config(noWxConfig=True)

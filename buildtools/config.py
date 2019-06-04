@@ -19,6 +19,7 @@ import re
 import shutil
 import subprocess
 import platform
+import textwrap
 
 from distutils.file_util import copy_file
 from distutils.dir_util  import mkpath
@@ -968,4 +969,30 @@ def updateLicenseFiles(cfg):
             text += f.read() + '\n\n'
     with open('LICENSE.txt', 'w') as f:
         f.write(text)
+
+
+def updatePyprojectFile():
+    """
+    Create or update  a pyproject.toml file based on the contents of
+    requirements/*.txt files.
+    """
+    assert os.getcwd() == phoenixDir()
+    target = 'pyproject.toml'
+    txt_files = glob.glob('requirements/*.txt')
+    if not os.path.exists(target) or any([newer(src, target) for src in txt_files]):
+        with open(target, "w") as output:
+            output.write(textwrap.dedent("""\
+                # Generated from {}
+
+                [build-system]
+                # Requirements for building and/or testing wxPython Phoenix
+                requires = [
+                """.format(txt_files)))
+            for tf in txt_files:
+                for line in open(tf).readlines():
+                    line = line.strip()
+                    if line[0] not in ['-', '#']:
+                        output.write('    "{}",\n'.format(line))
+            output.write('    ]\n')
+        msg("Updated {}".format(target))
 

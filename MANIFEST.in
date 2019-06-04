@@ -11,6 +11,7 @@ recursive-include   wx/locale **
 recursive-include   wx/include **
 recursive-include   license  *.txt
 include             LICENSE.txt
+include             pyproject.toml
 graft               docs
 prune               docs/sphinx/build
 
