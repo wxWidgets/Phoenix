@@ -992,7 +992,7 @@ def updatePyprojectFile():
                 for line in open(tf).readlines():
                     line = line.strip()
                     if line[0] not in ['-', '#']:
-                        output.write('    "{}",\n'.format(line))
+                        output.write("    '{}',\n".format(line))
             output.write('    ]\n')
         msg("Updated {}".format(target))
 
