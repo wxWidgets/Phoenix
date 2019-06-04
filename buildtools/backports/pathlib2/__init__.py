@@ -43,7 +43,7 @@ else:
 try:
     from os import scandir as os_scandir
 except ImportError:
-    from scandir import scandir as os_scandir
+    from .scandir import scandir as os_scandir
 
 __all__ = [
     "PurePath", "PurePosixPath", "PureWindowsPath",
