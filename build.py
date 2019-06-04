@@ -834,11 +834,11 @@ def dos2bashPath(path):
     # Note that MSYS2 (and Git Bash) now also have cygpath so this should
     # work there too.
     if cygpath:
-        path = runcmd('{} -u {}'.format(cygpath, path), getOutput=True, echoCmd=False)
+        path = runcmd('"{}" -u "{}"'.format(cygpath, path), getOutput=True, echoCmd=False)
         return path
     elif wsl:
         # Are we using Windows System for Linux? (untested)
-        path = runcmd('{} wslpath -a -u {}'.format(wsl, path), getOutput=True, echoCmd=False)
+        path = runcmd('"{}" wslpath -a -u "{}"'.format(wsl, path), getOutput=True, echoCmd=False)
         return path
     else:
         # Otherwise, do a simple translate and hope for the best?
@@ -860,11 +860,11 @@ def bash2dosPath(path):
     # Note that MSYS2 (and Git Bash) now also have cygpath so this should
     # work there too.
     if cygpath:
-        path = runcmd('{} -w {}'.format(cygpath, path), getOutput=True, echoCmd=False)
+        path = runcmd('"{}" -w "{}"'.format(cygpath, path), getOutput=True, echoCmd=False)
         return path
     elif wsl:
         # Are we using Windows System for Linux? (untested)
-        path = runcmd('{} wslpath -a -w {}'.format(wsl, path), getOutput=True, echoCmd=False)
+        path = runcmd('"{}" wslpath -a -w "{}"'.format(wsl, path), getOutput=True, echoCmd=False)
         return path
     else:
         # Otherwise, do a simple translate and hope for the best?
@@ -897,7 +897,7 @@ def _doDox(arg):
 
         d = posixjoin(wxDir(), 'docs/doxygen')
         d = d.replace('\\', '/')
-        cmd = '{} -l -c "cd {} && ./regen.sh {}"'.format(bash, d, arg)
+        cmd = '"{}" -l -c "cd {} && ./regen.sh {}"'.format(bash, d, arg)
     else:
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
@@ -1393,14 +1393,14 @@ def cmd_build_wx(options, args):
 
     # Build the wx message catalogs, but first check that there is a msgfmt
     # command available
-    if findCmd('msgfmt'):
+    if findCmd('msgfmt') and findCmd('make'):
         locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
         print('Building message catalogs in ' + os.getcwd())
         runcmd('make allmo')
         del locale_pwd
     else:
-        print("WARNING: msgfmt command not found, message catalogs not rebulit.\n"
-                "         Please install gettext and associated tools.")
+        print("WARNING: msgfmt and/or make commands not found, message catalogs not \n"
+              "         rebuilt. Please install gettext and associated tools.")
 
 
 
