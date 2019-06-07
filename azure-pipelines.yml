@@ -7,8 +7,8 @@
 name: CI.$(Date:yyyyMMdd).$(Rev:.r)
 
 jobs:
-#- template: .azure/ci-linux-job.yml
-#- template: .azure/ci-macos-job.yml
+- template: .azure/ci-linux-job.yml
+- template: .azure/ci-macos-job.yml
 - template: .azure/ci-windows-job.yml
 
 
