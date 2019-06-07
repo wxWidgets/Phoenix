@@ -6,6 +6,15 @@
 
 name: CI.$(Date:yyyyMMdd).$(Rev:.r)
 
+trigger:
+- master
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - master
+
 jobs:
 - template: .azure/ci-linux-job.yml
 - template: .azure/ci-macos-job.yml
