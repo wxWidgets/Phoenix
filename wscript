@@ -87,6 +87,11 @@ def configure(conf):
             # using VS 2017 everywhere for Python 3.7.
             msvc_version = '14.0'
 
+        # In some cases (Azure DevOps at least) we're getting "14.1" for Python
+        # 3.6 too. Smash it down to '14.0'
+        if msvc_version == "14.1" and sys.version_info[:2] == (3,6):
+            msvc_version = '14.0'
+
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
         conf.load('msvc')
