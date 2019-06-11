@@ -170,6 +170,7 @@ def run():
             wxString programName;
             wxPyBLOCK_THREADS(
                 programName = Py2wxString(PySys_GetObject("executable")));
+            programName = programName.AfterLast('\\');
 
             // Registry key where emulation level for programs are set
             static const wxChar* IE_EMULATION_KEY =
