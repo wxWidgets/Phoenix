@@ -134,20 +134,74 @@ def run():
     ##    "sipCpp->LoadHistoryItem(wxSharedPtr<wxWebViewHistoryItem>(item));")
 
 
-    c.find('MSWSetModernEmulationLevel').setCppCode("""\
+    # The emulation level is set as a per-application value in the Windows
+    # Registry. The way this is implemented in the C++ code we end up with the
+    # name of the _core extransion module in the Reistry instead of the .exe
+    # name which is what is needed.
+    #
+    # So instead of doing simple wrappers with #if checks like normal, replace
+    # these methods with a new implementation that does the RightThing using
+    # sys.executable.
+
+    c.find('MSWSetEmulationLevel').setCppCode("""\
         #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
-            return wxWebViewIE::MSWSetModernEmulationLevel(modernLevel);
+            return _do_MSWSetEmulationLevel(level);
         #else
             return false;
         #endif
         """)
 
-
-    c.find('MSWSetEmulationLevel').setCppCode("""\
+    c.find('MSWSetModernEmulationLevel').setCppCode("""\
         #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
-            return wxWebViewIE::MSWSetEmulationLevel(level);
+            return _do_MSWSetEmulationLevel(modernLevel ? wxWEBVIEWIE_EMU_IE8
+                                                        : wxWEBVIEWIE_EMU_DEFAULT);
         #else
             return false;
+        #endif
+        """)
+
+    c.addCppCode(r"""\
+        #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
+        #include <wx/msw/webview_ie.h>
+        #include <wx/msw/registry.h>
+
+        bool _do_MSWSetEmulationLevel(wxWebViewIE_EmulationLevel level)
+        {
+            wxString programName;
+            wxPyBLOCK_THREADS(
+                programName = Py2wxString(PySys_GetObject("executable")));
+
+            // Registry key where emulation level for programs are set
+            static const wxChar* IE_EMULATION_KEY =
+                wxT("SOFTWARE\\Microsoft\\Internet Explorer\\Main")
+                wxT("\\FeatureControl\\FEATURE_BROWSER_EMULATION");
+
+            wxRegKey key(wxRegKey::HKCU, IE_EMULATION_KEY);
+            if ( !key.Exists() )
+            {
+                wxLogWarning(_("Failed to find web view emulation level in the registry"));
+                return false;
+            }
+
+            if ( level != wxWEBVIEWIE_EMU_DEFAULT )
+            {
+                if ( !key.SetValue(programName, level) )
+                {
+                    wxLogWarning(_("Failed to set web view to modern emulation level"));
+                    return false;
+                }
+            }
+            else
+            {
+                if ( !key.DeleteValue(programName) )
+                {
+                    wxLogWarning(_("Failed to reset web view to standard emulation level"));
+                    return false;
+                }
+            }
+
+            return true;
+        }
         #endif
         """)
 
