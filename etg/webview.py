@@ -160,7 +160,7 @@ def run():
         #endif
         """)
 
-    c.addCppCode(r"""\
+    c.addCppCode(r"""
         #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
         #include <wx/msw/webview_ie.h>
         #include <wx/msw/registry.h>
