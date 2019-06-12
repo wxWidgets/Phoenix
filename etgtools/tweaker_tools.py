@@ -16,6 +16,7 @@ import etgtools as extractors
 from .generators import textfile_open
 import sys, os
 import copy
+import textwrap
 
 
 PY3 = sys.version_info[0] == 3
@@ -654,6 +655,36 @@ def checkForUnitTestModule(module):
     if os.path.exists(pathname) or not module.check4unittest:
         return
     print('WARNING: Unittest module (%s) not found!' % pathname)
+
+
+
+def addEnableSystemTheme(klass, klassName):
+    m = extractors.MethodDef(name='EnableSystemTheme', type='void',
+        items=[extractors.ParamDef(type='bool', name='enable', default='true')])
+    m.briefDoc = "Can be used to disable the system theme of controls using it by default."
+    m.detailedDoc = [textwrap.dedent("""\
+        On Windows there an alternative theme available for the list and list-like
+        controls since Windows Vista. This theme is used by Windows Explorer list
+        and tree view and so is arguably more familiar to the users than the standard
+        appearance of these controls. This class automatically uses the new theme,
+        but if that is not desired then this method can be used to turn it off.
+
+        Please note that this method should be called before the widget is
+        actually created, using the 2-phase create pattern. Something like this::
+
+            # This creates the object, but not the window
+            widget = {}()
+
+            # Disable the system theme
+            widget.EnableSystemTheme(False)
+
+            # Now create the window
+            widget.Create(parent, wx.ID_ANY)
+
+        This method has no effect on other platorms
+        """.format(klassName))]
+
+    klass.addItem(m)
 
 
 #---------------------------------------------------------------------------

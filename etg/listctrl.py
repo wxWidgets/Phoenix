@@ -62,6 +62,7 @@ def run():
         c.find(name).ignore(False)
         c.find(name).isVirtual = True
 
+    tools.addEnableSystemTheme(c, 'wx.ListCtrl')
 
     # Tweaks to allow passing and using a Python callable object for the sort
     # compare function. First provide a sort callback function that can call the
@@ -106,7 +107,6 @@ def run():
     # instead of a wxUIntPtr.
     c.find('GetItemData').type = 'long'
     c.find('SetItemPtrData').ignore()
-
 
 
     # Change the semantics of GetColumn to return the item as the return
