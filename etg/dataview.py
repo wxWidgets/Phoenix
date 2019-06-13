@@ -374,6 +374,8 @@ def run():
     tools.fixWindowClass(c)
     module.addGlobalStr('wxDataViewCtrlNameStr', c)
 
+    tools.addEnableSystemTheme(c, 'wx.dataview.DataViewCtrl')
+
     c.find('AssociateModel.model').transfer = True
     c.find('AssociateModel').pyName = '_AssociateModel'
     c.addPyMethod('AssociateModel', '(self, model)',

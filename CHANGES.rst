@@ -20,7 +20,6 @@ Starting with this release wxPython has switched to tracking the wxWidgets
 master branch for the wxWidgets source code, which wxPython is built upon, and
 which is included in the wxPython source archives. 
 
-
 New and improved in this release:
 
 * Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
@@ -48,6 +47,13 @@ Other changes in this release:
 
 * Fixed issue in wx.lib.agw.customtreectrl where label editor could remain
   stuck forever (#1235).
+
+* Grafted on a EnableSystemTheme method to the classes which support it. This
+  can be used to disable the default system theme on Windows for native widgets
+  like wx.ListCtrl, wx.TreeCtrl and wx.dataview.DataViewCtrl. It has no effect 
+  on the other platforms.
+
+
 
 
 4.0.6 "Applesauce"

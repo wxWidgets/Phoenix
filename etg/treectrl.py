@@ -80,6 +80,7 @@ def run():
     tools.fixWindowClass(c)
     module.addGlobalStr('wxTreeCtrlNameStr', before=c)
 
+    tools.addEnableSystemTheme(c, 'wx.TreeCtrl')
 
     # Set all wxTreeItemData parameters to transfer ownership.  Is this still needed with MappedTypes?
     for item in c.allItems():
