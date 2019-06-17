@@ -372,25 +372,24 @@ def GetCaretPeriod(win = None):
 
     :raises: ValueError if unable to resolve a proper caret blink rate.
     """
+    if '--no-caret-blink' in sys.argv:
+        return 0
+
     try:
         onmsec  = wx.SystemSettings.GetMetric(wx.SYS_CARET_ON_MSEC, win)
         offmsec = wx.SystemSettings.GetMetric(wx.SYS_CARET_OFF_MSEC, win)
 
         # check values aren't -1
         if -1 in (onmsec, offmsec):
-            raise ValueError
+            raise ValueError("Unable to determine caret blink rate.")
 
         # attempt to average.
         # (wx systemsettings allows on and off time, but scintilla just takes a single period.)
-        return (onmsec +offmsec) / 2.0
+        return (onmsec + offmsec) / 2.0
 
-    except (AttributeError, ValueError):
+    except AttributeError:
         # Issue where wx.SYS_CARET_ON/OFF_MSEC is unavailable.
-        # Check
-        if '--no-caret-blink' in sys.argv:
-            return 0
-        else:
-            raise ValueError("Unable to determine caret blink rate.")
+        raise ValueError("Unable to determine caret blink rate.")
 
 #---------------------------------------------------------------------------
 # Set up a thread that will scan the wxWidgets docs for window styles,
