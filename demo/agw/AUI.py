@@ -1169,7 +1169,7 @@ class AuiFrame(wx.Frame):
                              agwStyle=aui.AUI_TB_OVERFLOW | aui.AUI_TB_TEXT | aui.AUI_TB_HORZ_TEXT)
         tb4.SetToolBitmapSize(wx.Size(16, 16))
         tb4_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16, 16))
-        tb4.AddSimpleTool(ID_DropDownToolbarItem, "Item 1", tb4_bmp1)
+        tb4.AddSimpleTool(ID_DropDownToolbarItem, "Item 1", wx.NullBitmap)
         tb4.AddSimpleTool(ID_SampleItem+23, "Item 2", tb4_bmp1)
         tb4.AddSimpleTool(ID_SampleItem+24, "Item 3", tb4_bmp1)
         tb4.AddSimpleTool(ID_SampleItem+25, "Item 4", tb4_bmp1)
