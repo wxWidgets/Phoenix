@@ -87,6 +87,8 @@ def run():
     c.find('PositionToXY.x').out = True
     c.find('PositionToXY.y').out = True
 
+    c.find('FindText.findEnd').out = True
+
     # Split the HitTest overloads into separately named methods since once
     # the output parameters are applied they will have the same function
     # signature.
