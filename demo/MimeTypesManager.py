@@ -171,21 +171,21 @@ class MimeTypesDemoPanel(wx.Panel):
 
         t = wx.StaticText(self, -1, 'Known MIME types')
         t.SetFont(bfont)
-        lrsizer.Add(t, 0, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 4)
+        lrsizer.Add(t, 0, wx.ALL | wx.EXPAND, 4)
 
         self.mimelist = wx.ListBox(self, -1, choices=[], style = wx.LB_SINGLE)# | wx.LB_SORT)
-        lrsizer.Add(self.mimelist, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER | wx.FIXED_MINSIZE, 4)
+        lrsizer.Add(self.mimelist, 1, wx.ALL | wx.EXPAND | wx.FIXED_MINSIZE, 4)
         self.Bind(wx.EVT_LISTBOX, self.OnListbox, self.mimelist)
 
         #----------------------------------------------------------------------------
 
-        lsizer.Add(llsizer, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 4)
-        lsizer.Add(lrsizer, 0, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 4)
+        lsizer.Add(llsizer, 1, wx.ALL | wx.EXPAND, 4)
+        lsizer.Add(lrsizer, 0, wx.ALL | wx.EXPAND, 4)
 
         #----------------------------------------------------------------------------
 
-        tsizer.Add(usizer, 0, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 4)
-        tsizer.Add(lsizer, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 4)
+        tsizer.Add(usizer, 0, wx.ALL | wx.EXPAND, 4)
+        tsizer.Add(lsizer, 1, wx.ALL | wx.EXPAND, 4)
 
         #----------------------------------------------------------------------------
 

@@ -426,8 +426,8 @@ class MultiDirDialog(wx.Dialog):
         mainSizer.Add(self.dirCtrl, 1, wx.EXPAND|wx.ALL, 10)
 
         label = wx.StaticText(self, -1, _("Folder:"))
-        textSizer.Add(label, 0, wx.LEFT|wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 10)
-        textSizer.Add(self.folderText, 1, wx.RIGHT|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10)
+        textSizer.Add(label, 0, wx.LEFT|wx.RIGHT, 10)
+        textSizer.Add(self.folderText, 1, wx.RIGHT|wx.EXPAND, 10)
         mainSizer.Add(textSizer, 0, wx.EXPAND|wx.BOTTOM, 10)
 
         # Add the fancy buttons

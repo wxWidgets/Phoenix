@@ -135,7 +135,7 @@ class BalloonTipDemo(wx.Frame):
         mainsizer.Add(treecontrol, 0, wx.EXPAND, wx.ALL, 10)
         mainsizer.Add(slider, 0, wx.ALL, 10)
         mainsizer.Add(textctrl2, 0, wx.ALL, 10)
-        mainsizer.Add(statictext, 0, wx.EXPAND | wx.ALIGN_CENTER | wx.ALL, 10)
+        mainsizer.Add(statictext, 0, wx.EXPAND | wx.ALL, 10)
         mainsizer.Add(bitmapbutton, 0, wx.ALL, 10)
         mainsizer.Add(button2, 0, wx.ALL, 10)
 

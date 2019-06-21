@@ -1217,7 +1217,7 @@ class HyperTreeListDemo(wx.Frame):
         buttonconnection.Bind(wx.EVT_BUTTON, self.OnButtonConnection)
         sizer1.Add(label, 0, wx.ALL|wx.ALIGN_CENTER, 5)
         sizer1.Add((1,0), 1, wx.EXPAND)
-        sizer1.Add(buttonconnection, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
+        sizer1.Add(buttonconnection, 0, wx.ALL, 5)
 
         sizer2 = wx.BoxSizer(wx.HORIZONTAL)
         label = wx.StaticText(self.leftpanel, -1, "Border Pen")
@@ -1228,7 +1228,7 @@ class HyperTreeListDemo(wx.Frame):
         buttonborder.Bind(wx.EVT_BUTTON, self.OnButtonBorder)
         sizer2.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer2.Add((1,0), 1, wx.EXPAND)
-        sizer2.Add(buttonborder, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
+        sizer2.Add(buttonborder, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer3 = wx.BoxSizer(wx.HORIZONTAL)
         label = wx.StaticText(self.leftpanel, -1, "Tree Buttons")
@@ -1239,7 +1239,7 @@ class HyperTreeListDemo(wx.Frame):
         buttontree.Bind(wx.EVT_BUTTON, self.OnButtonTree)
         sizer3.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer3.Add((1,0), 1, wx.EXPAND)
-        sizer3.Add(buttontree, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
+        sizer3.Add(buttontree, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer4 = wx.BoxSizer(wx.HORIZONTAL)
         label = wx.StaticText(self.leftpanel, -1, "Check/Radio Buttons")
@@ -1250,7 +1250,7 @@ class HyperTreeListDemo(wx.Frame):
         buttoncr.Bind(wx.EVT_BUTTON, self.OnButtonCheckRadio)
         sizer4.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer4.Add((1,0), 1, wx.EXPAND)
-        sizer4.Add(buttoncr, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
+        sizer4.Add(buttoncr, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer5 = wx.BoxSizer(wx.HORIZONTAL)
         radioimage = wx.RadioButton(self.leftpanel, -1, "Image Background", style=wx.RB_GROUP)
@@ -1259,7 +1259,7 @@ class HyperTreeListDemo(wx.Frame):
         self.imagebutton.Bind(wx.EVT_BUTTON, self.OnChooseImage)
         sizer5.Add(radioimage, 0, wx.ALL|wx.ALIGN_CENTER, 5)
         sizer5.Add((1,0), 1, wx.EXPAND)
-        sizer5.Add(self.imagebutton, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
+        sizer5.Add(self.imagebutton, 0, wx.ALL, 5)
 
         sizer6 = wx.BoxSizer(wx.HORIZONTAL)
         radiobackground = wx.RadioButton(self.leftpanel, -1, "Background Colour")
@@ -1291,7 +1291,7 @@ class HyperTreeListDemo(wx.Frame):
         sizera1.Add(self.unfocus, 0)
         sizera.Add(self.checknormal, 0, wx.ALL, 3)
         sizera.Add((1, 0), 1, wx.EXPAND)
-        sizera.Add(sizera1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 3)
+        sizera.Add(sizera1, 0, wx.ALL|wx.EXPAND, 3)
 
         sizerb = wx.BoxSizer(wx.VERTICAL)
         self.checkgradient = wx.CheckBox(self.leftpanel, -1, "Gradient Theme")
@@ -1313,8 +1313,8 @@ class HyperTreeListDemo(wx.Frame):
                                               self.tree.GetSecondGradientColour())
         self.firstcolour.Bind(csel.EVT_COLOURSELECT, self.OnFirstColour)
         self.secondcolour.Bind(csel.EVT_COLOURSELECT, self.OnSecondColour)
-        sizerb3.Add(self.firstcolour, 0, wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL, 3)
-        sizerb3.Add(self.secondcolour, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL, 3)
+        sizerb3.Add(self.firstcolour, 0, wx.TOP|wx.BOTTOM, 3)
+        sizerb3.Add(self.secondcolour, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 3)
         sizerb.Add(self.checkgradient, 0, wx.ALL, 3)
         sizerb.Add(sizerb1, 0)
         sizerb.Add(sizerb2, 0)
