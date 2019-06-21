@@ -825,7 +825,7 @@ def getVcsRev():
     return svnrev
 
 
-def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
+def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True, onError=None):
     """
     Runs a give command-line command, optionally returning the output.
     """
@@ -867,6 +867,8 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
         print("Command '%s' failed with exit code %d." % (cmd, rval))
         if getOutput:
             print(output)
+        if onError is not None:
+            onError()
         if fatal:
             sys.exit(rval)
 
