@@ -447,6 +447,8 @@ def makeOptionParser():
         ("pytest_timeout", ("0",   "Timeout, in seconds, for stopping stuck test cases. (Currently not working as expected, so disabled by default.)")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
         ("vagrant_vms",    ("all", "Comma separated list of VM names to use for the build_vagrant command. Defaults to \"all\"")),
+        ("dump_waf_log",   (False, "If the waf build tool fails then using this option will cause waf's configure log to be printed")),
+        ("regenerate_sysconfig", (False, "Waf uses Python's sysconfig and related tools to configure the build. In some cases that info can be incorrect, so this option regenerates it. Must have write access to Python's lib folder.")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -875,6 +877,40 @@ def bash2dosPath(path):
         assert components[0] == '' and len(components[1]) == 1, "Expecting a path like /c/foo"
         path = components[1] + ':/' + '/'.join(components[2:])
         return path
+
+
+def do_regenerate_sysconfig():
+    """
+    If a Python environment has been relocated to a new folder then it's
+    possible that the sysconfig can still be usign paths for the original
+    location. Since wxPython's build uses WAF, which uses the sysconfig (via
+    python-config, distutils.sysconfig, etc.) then we need to ensure that these
+    paths match the current environment.
+
+    TODO: Can this be done in a way that doesn't require overwriting a file in
+    the environment?
+    """
+    with tempfile.TemporaryDirectory() as td:
+        pwd = pushDir(td)
+
+        # generate a new sysconfig data file
+        cmd = [PYTHON, '-m', 'sysconfig', '--generate-posix-vars']
+        runcmd(cmd)
+
+        # On success the new data module will have been written to a subfolder
+        # of the current folder, which is recorded in ./pybuilddir.tx
+        with open('pybuilddir.txt', 'r', encoding='utf-8') as fp:
+            pybd = fp.read()
+
+        # grab the file in that folder and copy it into the Python lib
+        p = opj(td, pybd, '*')
+        datafile = glob.glob(opj(td, pybd, '*'))[0]
+        cmd = [PYTHON, '-c', 'import sysconfig; print(sysconfig.get_path("stdlib"))']
+        stdlib = runcmd(cmd, getOutput=True)
+        shutil.copy(datafile, stdlib)
+
+        del pwd
+
 
 #---------------------------------------------------------------------------
 # Command functions and helpers
@@ -1533,10 +1569,27 @@ def cmd_build_py(options, args):
         # folder as the wxPython extension modules.
         os.environ['LD_RUN_PATH'] = '$ORIGIN'
 
+    # Regenerate the _sysconfigdata module?
+    if options.regenerate_sysconfig:
+        do_regenerate_sysconfig()
+
     # Run waf to perform the builds
     pwd = pushDir(phoenixDir())
     cmd = '"%s" %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
-    runcmd(cmd)
+
+    def _onWafError():
+        if options.dump_waf_log:
+            logfilename = opj(wafBuildDir, 'config.log')
+            if not os.path.exists(logfilename):
+                msg('WARNING: waf log "{}" not found!'.format(logfilename))
+                return
+
+            msg('*-'*40)
+            msg('WAF config log "{}":'.format(logfilename))
+            with open(logfilename, 'r') as log:
+                msg(log.read())
+            msg('*-'*40)
+    runcmd(cmd, onError=_onWafError)
 
     if isWindows and options.both:
         build_options.remove('--debug')
