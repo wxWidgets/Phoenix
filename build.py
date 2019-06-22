@@ -43,7 +43,8 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macSetLoaderNames, \
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
-                               getVisCVersion, getToolsPlatformName, updateLicenseFiles
+                               getVisCVersion, getToolsPlatformName, updateLicenseFiles, \
+                               TemporaryDirectory
 
 import buildtools.version as version
 
@@ -890,7 +891,7 @@ def do_regenerate_sysconfig():
     TODO: Can this be done in a way that doesn't require overwriting a file in
     the environment?
     """
-    with tempfile.TemporaryDirectory() as td:
+    with TemporaryDirectory() as td:
         pwd = pushDir(td)
 
         # generate a new sysconfig data file
@@ -899,7 +900,7 @@ def do_regenerate_sysconfig():
 
         # On success the new data module will have been written to a subfolder
         # of the current folder, which is recorded in ./pybuilddir.tx
-        with open('pybuilddir.txt', 'r', encoding='utf-8') as fp:
+        with open('pybuilddir.txt', 'r') as fp:
             pybd = fp.read()
 
         # grab the file in that folder and copy it into the Python lib
