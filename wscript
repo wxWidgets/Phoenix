@@ -674,6 +674,15 @@ def copyFileToPkg(task):
     return 0
 
 
+def simpleCopy(task):
+    import shutil
+    src = task.inputs[0].abspath()
+    tgt = task.outputs[0].abspath()
+    print("{} --> {}".format(src, tgt))
+    shutil.copy(src, tgt)
+    return 0
+
+
 # Copy all the items in env with a matching postfix to a similarly
 # named item with the dest postfix.
 def _copyEnvGroup(env, srcPostfix, destPostfix):
@@ -689,7 +698,17 @@ def makeETGRule(bld, etgScript, moduleName, libFlags):
     from buildtools.config   import loadETG, getEtgSipCppFiles
 
     addRelwithdebugFlags(bld, moduleName)
-    rc = ['src/wxc.rc'] if isWindows else []
+
+    rc = []
+    if isWindows:
+        rc_name = moduleName + '.rc'
+        bld(rule=simpleCopy,
+            source='src/wxc.rc',
+            target=rc_name,
+            #before=moduleName+'.res'
+            )
+        rc = [rc_name]
+
     etg = loadETG(etgScript)
     bld(features='c cxx cxxshlib pyext',
         target=makeTargetName(bld, moduleName),
