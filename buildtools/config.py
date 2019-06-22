@@ -970,3 +970,21 @@ def updateLicenseFiles(cfg):
             text += f.read() + '\n\n'
     with open('LICENSE.txt', 'w') as f:
         f.write(text)
+
+try:
+    from tempfile import TemporaryDirectory
+except ImportError:
+    from tempfile import mkdtemp
+
+    class TemporaryDirectory(object):
+        def __init__(self, suffix='', prefix='tmp', dir=None):
+            self.name = mkdtemp(suffix, prefix, dir)
+
+        def __enter__(self):
+            return self.name
+
+        def __exit__(self, exc, value, tb):
+            self.cleanup()
+
+        def cleanup(self):
+            shutil.rmtree(self.name)
