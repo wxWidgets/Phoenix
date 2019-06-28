@@ -1,8 +1,14 @@
 #!/bin/bash
 #--------------------------------------------------------------------------
-# This script is run in the Docker containers performs the actual build of
-# Phoenix.  It expects to find a source tarball in ../../dist, (which is
-# mapped to ~/dist in the container).
+# This script is run inside the Docker containers to perform the actual build
+# of Phoenix.  It expects to find a source tarball in a host folder (such as
+# $PHOENIX_DIR/dist) which is mapped to `/dist` in the container. This can be 
+# accomplished by passing an arg like this to docker when running the build:
+#
+#    docker -v $PWD/../dist:/dist ...
+#
+# The results of the build will be copied to a `linux` subfolder in the same 
+# location.
 #--------------------------------------------------------------------------
 set -o errexit
 
@@ -20,7 +26,7 @@ if [ "$PORT" == "" ]; then
     PORT=all
 fi
 
-TARBALL=$(ls ~/dist/wxPython-*.tar.gz)
+TARBALL=$(ls /dist/wxPython-*.tar.gz)
 if [ "$TARBALL" == "" ]; then
     echo "ERROR: Source tarball not found."
     exit 1
@@ -63,7 +69,7 @@ function do_build {
 
     # copy the results back to the host's shared dist folder
     WXPYVER=$(python -c "import buildtools; buildtools.printVersion()")
-    DEST=~/dist/linux/$TAG/$DIST_NAME
+    DEST=/dist/linux/$TAG/$DIST_NAME
     mkdir -p $DEST
     mv dist/*.whl $DEST
 

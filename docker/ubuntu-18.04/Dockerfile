@@ -1,4 +1,3 @@
-
 # The base image
 FROM ubuntu:18.04
 
@@ -12,7 +11,9 @@ ENV PATH=$HOME/bin:$PATH
 
 # Update and install basic OS packages
 RUN \
+        mkdir -p /dist; \
         adduser --disabled-password --gecos "" ${USER}; \
+        echo "${USER} ALL=(ALL) NOPASSWD:ALL\n" >> /etc/sudoers; \
         apt-get update; \
         apt-get upgrade -y; \
         apt-get install -y \
@@ -56,7 +57,6 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        mkdir -p ${HOME}/dist; \        
         virtualenv --python=python2.7 venvs/Py27; \
         python3.6 -m venv venvs/Py36; \
         python3.7 -m venv venvs/Py37; 
