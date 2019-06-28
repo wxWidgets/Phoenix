@@ -1,4 +1,4 @@
-# The base image
+# The base image  (v18.04 = "bionic")
 FROM ubuntu:18.04
 
 # Set environment variables
@@ -19,7 +19,8 @@ RUN \
         apt-get install -y \
                 apt-utils \
                 build-essential \
-                software-properties-common; \
+                software-properties-common \
+                nano; \
 # Install development packages needed for building wxPython
         apt-get install -y \
                 freeglut3 \
