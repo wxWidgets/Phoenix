@@ -32,6 +32,11 @@ if [ "$TARBALL" == "" ]; then
     exit 1
 fi
 
+if [ $PYENV != all -a ! -d ~/venv/$PYENV ]; then 
+    echo "ERROR: The $PYENV environment not found in the $DIST_NAME image."
+    exit 1
+fi
+
 
 # This function is called to do each build.
 # It is given the Python virtualenv to be used, a tag (gtk2 or gtk3) to be
@@ -41,6 +46,11 @@ function do_build {
     VENV=$1
     TAG=$2
     FLAG=$3
+
+    if [ $TAG = gtk2 -a $GTK2_OK = no ]; then
+        echo "The $DIST_NAME image does not support building for GTK2."
+        return
+    fi
 
     rm -rf ~/wxPython-*
 
@@ -68,7 +78,6 @@ function do_build {
     python build.py $FLAG build_wx build_py bdist_wheel
 
     # copy the results back to the host's shared dist folder
-    WXPYVER=$(python -c "import buildtools; buildtools.printVersion()")
     DEST=/dist/linux/$TAG/$DIST_NAME
     mkdir -p $DEST
     mv dist/*.whl $DEST

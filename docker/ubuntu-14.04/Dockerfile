@@ -8,6 +8,7 @@ ENV USER=wxpy
 ENV HOME=/home/$USER
 ENV PYTHONUNBUFFERED=1
 ENV PATH=$HOME/bin:$PATH
+ENV GTK2_OK=yes
 
 # Update and install basic OS packages
 RUN \
