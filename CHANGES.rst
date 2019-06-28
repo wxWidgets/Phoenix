@@ -17,8 +17,8 @@ Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.1.0``
 
 Starting with this release wxPython has switched to tracking the wxWidgets
-master branch for the wxWidgets source code, which wxPython is built upon, and
-which is included in the wxPython source archives. 
+master branch (version 3.1.x) for the wxWidgets source code, which wxPython is
+built upon, and which is included in the wxPython source archives. 
 
 New and improved in this release:
 
