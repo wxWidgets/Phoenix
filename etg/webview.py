@@ -52,7 +52,7 @@ def run():
     module.addGlobalStr('wxWebViewDefaultURLStr', 0)
 
     module.addHeaderCode("""\
-        #ifndef wxWebViewIE_H
+        #if wxUSE_WEBVIEW && !defined(wxWebViewIE_H)
         enum wxWebViewIE_EmulationLevel
         {
             wxWEBVIEWIE_EMU_DEFAULT =    0,
