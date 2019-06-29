@@ -32,7 +32,7 @@ if [ "$TARBALL" == "" ]; then
     exit 1
 fi
 
-if [ $PYENV != all -a ! -d ~/venv/$PYENV ]; then 
+if [ $PYENV != all -a ! -d ~/venvs/$PYENV ]; then 
     echo "ERROR: The $PYENV environment not found in the $DIST_NAME image."
     exit 1
 fi

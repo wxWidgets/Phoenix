@@ -1,4 +1,4 @@
-# The base image  (v18.04 = "bionic")
+# The base image  (v18.04 == "bionic")
 FROM ubuntu:18.04
 
 # Set environment variables
@@ -14,7 +14,7 @@ ENV GTK2_OK=yes
 RUN \
         mkdir -p /dist; \
         adduser --disabled-password --gecos "" ${USER}; \
-        echo "${USER} ALL=(ALL) NOPASSWD:ALL\n" >> /etc/sudoers; \
+        echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers; \
         apt-get update; \
         apt-get upgrade -y; \
         apt-get install -y \

@@ -1,4 +1,4 @@
-# The base image (v16.04 = "xenial")
+# The base image (v16.04 == "xenial")
 FROM ubuntu:16.04
 
 # Set environment variables
@@ -14,7 +14,7 @@ ENV GTK2_OK=yes
 RUN \
         mkdir -p /dist; \
         adduser --disabled-password --gecos "" ${USER}; \
-        echo "${USER} ALL=(ALL) NOPASSWD:ALL\n" >> /etc/sudoers; \
+        echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers; \
         apt-get update; \
         apt-get upgrade -y; \
         apt-get install -y \

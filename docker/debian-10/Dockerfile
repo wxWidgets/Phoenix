@@ -21,7 +21,7 @@ RUN \
 # Set up a user, and etc.
         mkdir -p /dist; \
         adduser --disabled-password --gecos "" ${USER}; \
-        echo "${USER} ALL=(ALL) NOPASSWD:ALL\n" >> /etc/sudoers; \
+        echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers; \
 # Install development packages needed for building wxPython
         apt-get install -y \
                 freeglut3 \

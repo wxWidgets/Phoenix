@@ -9,3 +9,8 @@ echo ""
 if [ -x /usr/bin/lsb_release ]; then
         /usr/bin/lsb_release -a
 fi
+if [ -e /etc/redhat-release ]; then
+        cat /etc/redhat-release
+fi
+
+echo ""

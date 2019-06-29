@@ -1,4 +1,4 @@
-# The base image (v14.04 = "trusty")
+# The base image (v14.04 == "trusty")
 FROM ubuntu:14.04
 
 # Set environment variables
@@ -14,7 +14,7 @@ ENV GTK2_OK=yes
 RUN \
         mkdir -p /dist; \
         adduser --disabled-password --gecos "" ${USER}; \
-        echo "${USER} ALL=(ALL) NOPASSWD:ALL\n" >> /etc/sudoers; \
+        echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers; \
         apt-get update; \
         apt-get upgrade -y; \
         apt-get install -y \
