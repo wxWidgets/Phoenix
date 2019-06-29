@@ -108,6 +108,7 @@ def run():
     # TODO: these should be removed someday
     module.addPyCode("BG_STYLE_CUSTOM = BG_STYLE_PAINT")
     module.addPyCode("ADJUST_MINSIZE = 0")
+    module.addPyCode("WS_EX_VALIDATE_RECURSIVELY = 0")
 
 
     #-----------------------------------------------------------------

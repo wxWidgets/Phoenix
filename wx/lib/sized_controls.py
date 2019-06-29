@@ -597,8 +597,6 @@ class SizedDialog(wx.Dialog):
 
         wx.Dialog.__init__(self, *args, **kwargs)
 
-        self.SetExtraStyle(wx.WS_EX_VALIDATE_RECURSIVELY)
-
         self.borderLen = 12
         self.mainPanel = SizedPanel(self, -1)
 
