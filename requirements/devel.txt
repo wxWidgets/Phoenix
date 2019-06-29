@@ -8,4 +8,5 @@ sphinx
 requests
 pytest
 pytest-xdist
+pytest-forked
 pytest-timeout
