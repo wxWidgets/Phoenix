@@ -53,6 +53,11 @@ Other changes in this release:
   like wx.ListCtrl, wx.TreeCtrl and wx.dataview.DataViewCtrl. It has no effect 
   on the other platforms.
 
+* The wx.WS_EX_VALIDATE_RECURSIVELY extended style flag is obsolete, as it is
+  now the default (and only) behavior. The style flag has been added back into
+  wxPython for compatibility, but with a zero value. You can just stop using it
+  in your code with no change in behavior. (#1278)
+  
 
 
 
