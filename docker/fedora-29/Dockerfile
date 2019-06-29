@@ -20,18 +20,18 @@ RUN \
         echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers; \
 # Install development packages needed for building wxPython
         dnf install -y \
-                gtk3-devel \
-                webkit2gtk3-devel \
-                libjpeg-turbo-devel \ 
-                libpng-devel \
-                libtiff-devel \
-                SDL-devel \
-                gstreamer-devel \
-                gstreamer-plugins-base-devel \
                 freeglut-devel \
+                gstreamer1-devel \
+                gstreamer1-plugins-base-devel \
+                gtk3-devel \
+                libjpeg-turbo-devel \ 
                 libnotify-devel \ 
+                libpng-devel \
                 libSM-devel \
-                libXtst-devel; \
+                libtiff-devel \
+                libXtst-devel \
+                SDL-devel \
+                webkit2gtk3-devel; \
 # Install all available Python packages and their dev packages
         dnf -y install python2 python2-tools python2-devel python2-virtualenv; \
         dnf -y install python3 python3-tools python3-devel; \
