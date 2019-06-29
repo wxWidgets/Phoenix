@@ -641,6 +641,15 @@ object that can be compared with each other, sorted, used as a dictionary key,
 converted to the actual integer value of the ID, etc.
 
 
+wx.WS_EX_VALIDATE_RECURSIVELY is obsolete
+-----------------------------------------
+
+The wx.WS_EX_VALIDATE_RECURSIVELY extended style flag is obsolete, as it is
+now the default (and only) behavior. The style flag has been added back into
+wxPython for compatibility, but with a zero value. You can just stop using it
+in your code with no change in behavior. 
+
+
 .. toctree::
    :maxdepth: 2
    :hidden:
