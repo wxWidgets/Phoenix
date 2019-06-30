@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 #	Tags: phoenix-port, py3-port
 
+import os
+import sys
+try:
+    gFileDir = os.path.dirname(os.path.abspath(__file__))
+except:
+    gFileDir = os.path.dirname(os.path.abspath(sys.argv[0]))
+gDataDir = gFileDir + os.sep + 'data'
+
 import wx
 
 #----------------------------------------------------------------------
@@ -9,6 +17,11 @@ class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
 
+        # Show how to add a private font to the application at runtime that
+        # doesn't have to be installed on the user's operating system.
+        wx.Font.AddPrivateFont(gDataDir + os.sep + 'SourceCodePro-Regular.ttf')
+
+        # The FontEnumerator handles fonts installed on the user's operating system.
         e = wx.FontEnumerator()
         e.EnumerateFacenames()
         list = e.GetFacenames()
