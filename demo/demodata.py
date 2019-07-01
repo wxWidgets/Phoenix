@@ -43,6 +43,7 @@ _treeList = [
         'DynamicSashWindow',
         'TreeListCtrl',
         'NotificationMessage',
+        'AddPrivateFont',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -268,6 +269,7 @@ _treeList = [
         'DrawXXXList',
         'FileHistory',
         'FontEnumerator',
+        'AddPrivateFont',
         'GetMouseState',
         'GraphicsContext',
         'GraphicsGradient',

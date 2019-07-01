@@ -22,6 +22,8 @@ which is included in the wxPython source archives.
 
 New and improved in this release:
 
+* Add wx.Font.AddPrivateFont example to the demo.
+
 * Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
   OSXEnableAutomaticDashSubstitution, and OSXDisableAllSmartSubstitutions
   methods in wx.TextCtrl.
