@@ -355,6 +355,7 @@ or other unixes.
 * libnotify-dev
 * freeglut3
 * freeglut3-dev
+* libpng
 * libsm-dev
 * libgtk-3-dev
 * libwebkitgtk-3.0-dev  # or libwebkit2gtk-4.0-dev if available
@@ -379,6 +380,10 @@ installed, if they are available. For example:
 
 If You use a custom built python in a non standard location, You need to
 compile python with the --enable-shared option.
+
+If you wish to use OpenGL, then the following Python package is required:
+
+* pyopengl
 
 **Mac OSX**
 
