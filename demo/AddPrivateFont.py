@@ -7,7 +7,7 @@ try:
     gFileDir = os.path.dirname(os.path.abspath(__file__))
 except:
     gFileDir = os.path.dirname(os.path.abspath(sys.argv[0]))
-gDataDir = gFileDir + os.sep + 'data'
+gDataDir = os.path.join(gFileDir, 'data')
 
 import wx
 
@@ -37,7 +37,7 @@ class TestPanel(wx.Panel):
 
         # Show how to add a private font to the application at runtime that
         # doesn't have to be installed on the user's operating system.
-        wx.Font.AddPrivateFont(gDataDir + os.sep + 'SourceCodePro-Regular.ttf')
+        wx.Font.AddPrivateFont(os.path.join(gDataDir, 'SourceCodePro-Regular.ttf'))
 
         text1 = "The font used in the text below was dynamically loaded from {filename}."
         st1 = wx.StaticText(self, -1, text1, (15, 15))
