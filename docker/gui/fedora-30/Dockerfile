@@ -1,4 +1,4 @@
-FROM wxpython/build:fedora-30
+FROM wxpython4/build:fedora-30
 
 RUN sudo dnf -y install tigervnc-server xterm
 RUN mkdir ~/.vnc

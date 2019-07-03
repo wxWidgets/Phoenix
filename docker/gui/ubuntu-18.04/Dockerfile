@@ -1,4 +1,4 @@
-FROM wxpython/build:ubuntu-18.04
+FROM wxpython4/build:ubuntu-18.04
 
 USER root:root
 RUN apt-get install -y \
