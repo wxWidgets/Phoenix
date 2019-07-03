@@ -12,6 +12,7 @@ RUN apt-get install -y \
 #        ubuntu-mate-desktop
 
 RUN apt-get remove -y "*screensaver*"
+RUN apt-get clean
 
 USER ${USER}:${USER}
 RUN touch ~/.Xauthority; \

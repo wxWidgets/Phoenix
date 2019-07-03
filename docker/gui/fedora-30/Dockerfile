@@ -16,6 +16,7 @@ RUN echo "mate-session &"> ~/.vnc/xstartup
 # RUN echo "startlxde &"> ~/.vnc/xstartup
 
 RUN sudo dnf -y remove *screensaver*
+RUN sudo dnf clean all 
 
 RUN chmod u+x ~/.vnc/xstartup
 RUN echo "password" | vncpasswd -f >> ~/.vnc/passwd
