@@ -18,21 +18,20 @@ from invoke import task, run
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
-
 @task(
     aliases=['build_image', 'bi'],
-    help={'upload':'(TODO) Upload the resulting images to docker hub',
-          'image': 'Name of a docker image to build. May be specified more than once. Defaults to all.',
-          'gui':   'Build the gui version of an image instead of just the build image.',
-          },
+    help={
+        'image': 'Name of a docker image to build. May be specified more than once. Defaults to all.',
+        'gui':   'Build the gui version of an image instead of just the build image.',
+        },
     iterable=['image'],
 )
-def build_images(ctx, image, upload=False, gui=False):
+def build_images(ctx, image, gui=False):
     """
     Build docker image(s).
     """
     if image == []:
-        image = _get_all_distros()
+        image = _get_all_distros(gui)
 
     os.chdir(HERE)
     dist=os.path.abspath('../dist')
@@ -48,8 +47,30 @@ def build_images(ctx, image, upload=False, gui=False):
                 'wxpython4/{}:{} hello.sh'.format(dist, img_type, img_name),
                 pty=True, echo=True)
 
-    if upload:
-        print('TODO: Do image upload here...')
+
+@task(
+    help={
+        'image': 'Name of a docker image to push. May be specified more than once. Defaults to all.',
+        'gui':   'Push the gui version of an image instead of just the build image.',
+        },
+    iterable=['image'],
+)
+def push(ctx, image, gui=False):
+    """
+    Push one or more images to docker hub. User should have already run
+    a `docker login` command.
+    """
+    if image == []:
+        image = _get_all_distros(gui)
+
+    os.chdir(HERE)
+    img_type = 'gui' if gui else 'build'
+    for img_name in image:
+        # build it
+        ctx.run(
+            'docker push wxpython4/{type}:{name}'.format(name=img_name, type=img_type),
+            pty=True, echo=True)
+
 
 
 @task(
