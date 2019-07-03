@@ -12,16 +12,21 @@ ENV GTK2_OK=yes
 
 # Update and install basic OS packages
 RUN \
-        mkdir -p /dist; \
-        adduser --disabled-password --gecos "" ${USER}; \
-        echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers; \
         apt-get update; \
         apt-get upgrade -y; \
         apt-get install -y \
                 apt-utils \
                 build-essential \
                 software-properties-common \
-                nano; \
+                sudo nano; \
+# Set up a user, and sudo
+        mkdir -p /dist; \
+        adduser --disabled-password --gecos "" ${USER}; \
+        echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers; \
+# Set a timezone
+        DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata; \
+        ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime; \
+        dpkg-reconfigure -f noninteractive tzdata; \
 # Install development packages needed for building wxPython
         apt-get install -y \
                 freeglut3 \
@@ -49,6 +54,10 @@ RUN \
         apt-get install -y python3.7 python3.7-dev libpython3.7-dev python3.7-venv; \
         apt-get clean;
 
+# Add files from host into the container
+COPY scripts ${HOME}/bin
+RUN chown -R ${USER}:${USER} ${HOME}/bin
+
 # Set the user and group to use for the rest of the commands
 USER ${USER}:${USER}
 
@@ -62,9 +71,6 @@ RUN \
         virtualenv --python=python2.7 venvs/Py27; \
         python3.6 -m venv venvs/Py36; \
         python3.7 -m venv venvs/Py37; 
-
-# Add files from host into the container
-COPY scripts ${HOME}/bin
 
 # Define default command
 CMD ["/bin/bash", "-l"]
