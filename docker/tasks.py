@@ -104,7 +104,8 @@ def run(ctx, image_tag, cmd=None, gui=False, port=5901, keep=False):
         pty=True, echo=True)
 
 
-def _get_all_distros():
+def _get_all_distros(gui):
     os.chdir(HERE)
-    all_matching = glob.glob("*-*")
-    return all_matching
+    wildcard = os.path.join('gui' if gui else 'build', '*-*')
+    all_matching = glob.glob(wildcard)
+    return [os.path.basename(item) for item in all_matching]
