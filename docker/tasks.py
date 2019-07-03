@@ -41,11 +41,11 @@ def build_images(ctx, image, upload=False, gui=False):
         # build it
         ctx.run('docker build --no-cache '
                 '-f {type}/{name}/Dockerfile '
-                '-t wxpython/{type}:{name}  .'.format(name=img_name, type=img_type),
+                '-t wxpython4/{type}:{name}  .'.format(name=img_name, type=img_type),
                 pty=True, echo=True)
         # test it
         ctx.run('docker run -it --rm -v {}:/dist '
-                'wxpython/{}:{} hello.sh'.format(dist, img_type, img_name),
+                'wxpython4/{}:{} hello.sh'.format(dist, img_type, img_name),
                 pty=True, echo=True)
 
     if upload:
@@ -76,7 +76,7 @@ def build_wxpython(ctx, image, venv='all', port='all', upload=False, release=Fal
     dist=os.path.abspath('../dist')
     for img_name in image:
         ctx.run('docker run -it --rm -v {}:/dist '
-                'wxpython/build:{} do-build.sh {} {}'.format(dist, img_name, venv, port),
+                'wxpython4/build:{} do-build.sh {} {}'.format(dist, img_name, venv, port),
                 pty=True, echo=True)
 
 @task(
@@ -99,7 +99,7 @@ def run(ctx, image_tag, cmd=None, gui=False, port=5901, keep=False):
     cmd = '' if cmd is None else cmd
     rm = '' if keep else '--rm'
     ctx.run(
-        'docker run -it {} -v {}:/dist -p {}:5901 wxpython/{}:{} {}'.format(
+        'docker run -it {} -v {}:/dist -p {}:5901 wxpython4/{}:{} {}'.format(
             rm, dist, port, imgtype, image_tag, cmd),
         pty=True, echo=True)
 
