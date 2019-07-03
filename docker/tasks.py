@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #----------------------------------------------------------------------
 # Name:        tasks.py
 # Purpose:     Invoke-based set of commands for dealing with wxPython's
@@ -20,36 +20,40 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 
 
 @task(
-    help={'upload':'Upload the resulting images to docker hub',
-          'image':'Name of a docker image to build. May be specified more than once. Defaults to all.',
+    aliases=['build_image', 'bi'],
+    help={'upload':'(TODO) Upload the resulting images to docker hub',
+          'image': 'Name of a docker image to build. May be specified more than once. Defaults to all.',
+          'gui':   'Build the gui version of an image instead of just the build image.',
           },
     iterable=['image'],
 )
-def build_images(ctx, image, upload=False ):
+def build_images(ctx, image, upload=False, gui=False):
     """
-    Build the docker images.
+    Build docker image(s).
     """
     if image == []:
         image = _get_all_distros()
 
     os.chdir(HERE)
     dist=os.path.abspath('../dist')
+    img_type = 'gui' if gui else 'build'
     for img_name in image:
         # build it
         ctx.run('docker build --no-cache '
-                '-f {name}/Dockerfile '
-                '-t wxpython/build:{name}  .'.format(name=img_name),
+                '-f {type}/{name}/Dockerfile '
+                '-t wxpython/{type}:{name}  .'.format(name=img_name, type=img_type),
                 pty=True, echo=True)
         # test it
         ctx.run('docker run -it --rm -v {}:/dist '
-                'wxpython/build:{} hello.sh'.format(dist, img_name),
+                'wxpython/{}:{} hello.sh'.format(dist, img_type, img_name),
                 pty=True, echo=True)
 
     if upload:
-        print('Do image upload here...')
+        print('TODO: Do image upload here...')
 
 
 @task(
+    aliases=['build_wxp', 'bwxp'],
     help={
         'image':'Name of a docker image to use for building. May be specified more than once. Defaults to all.',
         'port': 'One of gtk2, gtk3 or all. Defaults to all.',
