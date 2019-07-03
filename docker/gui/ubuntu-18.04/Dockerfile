@@ -11,6 +11,8 @@ RUN apt-get install -y \
         lubuntu-desktop
 #        ubuntu-mate-desktop
 
+RUN apt-get remove -y "*screensaver*"
+
 USER ${USER}:${USER}
 RUN touch ~/.Xauthority; \
         mkdir ~/.vnc; \
