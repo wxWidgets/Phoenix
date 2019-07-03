@@ -79,6 +79,30 @@ def build_wxpython(ctx, image, venv='all', port='all', upload=False, release=Fal
                 'wxpython/build:{} do-build.sh {} {}'.format(dist, img_name, venv, port),
                 pty=True, echo=True)
 
+@task(
+    help={
+        'image_tag':"The tag of the image to be run",
+        'cmd': "If given will run this command instead of the image's default command.",
+        'gui': "If given will run the 'gui' image insead of the 'build' image.",
+        'port': "Host port to use for the VNC connection.",
+        'keep': "Keep the container when it exits. Otherwise it will be auto-removed."
+    },
+    positional=['image_tag'],
+)
+def run(ctx, image_tag, cmd=None, gui=False, port=5901, keep=False):
+    """
+    Run a wxpython docker image.
+    """
+    os.chdir(HERE)
+    dist=os.path.abspath('../dist')
+    imgtype = 'gui' if gui else 'build'
+    cmd = '' if cmd is None else cmd
+    rm = '' if keep else '--rm'
+    ctx.run(
+        'docker run -it {} -v {}:/dist -p {}:5901 wxpython/{}:{} {}'.format(
+            rm, dist, port, imgtype, image_tag, cmd),
+        pty=True, echo=True)
+
 
 def _get_all_distros():
     os.chdir(HERE)
