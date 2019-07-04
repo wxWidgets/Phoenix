@@ -58,7 +58,10 @@ Other changes in this release:
   wxPython for compatibility, but with a zero value. You can just stop using it
   in your code with no change in behavior. (#1278)
   
+* Replaced the Vagrant VMs used for building wxPython for various Linux distros
+  with Docker images.
 
+  
 
 
 4.0.6 "Applesauce"
