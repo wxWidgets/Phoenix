@@ -82,7 +82,7 @@ def push(ctx, image, gui=False):
     },
     iterable=['image'],
 )
-def build_wxpython(ctx, image, venv='all', port='all', upload=False, release=False):
+def build_wxpython(ctx, image, venv='all', port='all'):
     """
     Use docker images to build wxPython.
 
