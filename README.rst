@@ -368,16 +368,6 @@ their dependencies:
 * libgtk2.0-dev
 * libwebkitgtk-dev
 
-If your Linux distribution has gstreamer 1.0 available then you can install
-the dev packages for that instead of the 0.10 version. For example:
-
-* libgstreamer-plugins-base1.0-dev
-
-Newer versions of Linux may need some newer versions of dependent packages
-installed, if they are available. For example:
-
-* libwebkit2gtk-4.0-dev
-* libsdl2-dev
 
 If You use a custom built python in a non standard location, You need to
 compile python with the --enable-shared option.
