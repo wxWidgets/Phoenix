@@ -32,7 +32,21 @@ platform specific code.
 How to build wxPython Phoenix
 -----------------------------
 
-First of all, review the section below about prerequisites.
+First of all, this README is intended primarily for those who want to build
+wxPython from a workspace checked out from the wxPython Phoenix repository. If
+you are not making changes to wxPython, or needing to build it for some
+unsupported compiler or some other hardware architecture, then you probably do
+not need to put yourself through the pain for building in this way. It's a
+complicated build, and can sometimes be confusing even for the experts.
+Instead, if the binaries available at PyPI are not what you need then you can
+use pip to build from the released source archives, or from the source archives
+created in the pre-release snapshot builds. See the notes about it at: 
+
+* https://wxpython.org/pages/downloads/
+* https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip
+
+
+Next, review the section below about prerequisites.
 
 All aspects of the wxPython Phoenix build are managed through a series of
 commands provided by the build.py script. There is also a setup.py script
@@ -256,7 +270,7 @@ explanation to help a newbie find their way around.
 
     cd Phoenix
     git submodule init
-    git submodule update
+    git submodule update --recursively
 
 * **sip/gen**: The code (.sip files) produced by the ETG scripts is placed
   in this folder.
