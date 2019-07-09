@@ -121,8 +121,8 @@ class TestPanel(wx.Panel):
 
         buttonBox = wx.BoxSizer(wx.HORIZONTAL)
         buttonBox.AddMany([
-            (startButton, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5),
-            (stopButton, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5),
+            (startButton, 0, wx.ALL, 5),
+            (stopButton, 0, wx.ALL, 5),
             ])
 
         sizer.Add(
@@ -156,18 +156,18 @@ class TestPanel(wx.Panel):
 
         customBox1 = wx.BoxSizer(wx.HORIZONTAL)
         customBox1.AddMany([
-            (nextButton, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5),
-            (prevButton, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5),
-            (incButton, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5),
-            (decButton, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5),
-            (revButton, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5),
+            (nextButton, 0, wx.ALL, 5),
+            (prevButton, 0, wx.ALL, 5),
+            (incButton, 0, wx.ALL, 5),
+            (decButton, 0, wx.ALL, 5),
+            (revButton, 0, wx.ALL, 5),
             ])
 
         customBox2 = wx.BoxSizer(wx.HORIZONTAL)
         customBox2.AddMany([
-            (restButton, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5),
-            (startButton, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5),
-            (stopButton, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5),
+            (restButton, 0, wx.ALL, 5),
+            (startButton, 0, wx.ALL, 5),
+            (stopButton, 0, wx.ALL, 5),
             ])
 
         sizer.Add( customBox1, (len(self.throbbers) + 5, 0), (1, 3), flag = wx.ALIGN_CENTER )

@@ -20,7 +20,7 @@ class TestPanel(wx.Panel):
         sizer.Add(title, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
 
         line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
-        sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        sizer.Add(line, 0, wx.GROW|wx.ALL, 5)
         sizer.Add((20,20))
 
         box = wx.BoxSizer(wx.HORIZONTAL)

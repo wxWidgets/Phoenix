@@ -3006,7 +3006,7 @@ class CubeColourDialog(wx.Dialog):
         customLabel = wx.StaticText(self.mainPanel, -1, _("Custom Colours"))
         customSizer.Add(customLabel, 0, wx.BOTTOM, 3)
         customSizer.Add(self.customColours, 0)
-        customSizer.Add(self.addCustom, 0, wx.TOP|wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
+        customSizer.Add(self.addCustom, 0, wx.TOP|wx.ALIGN_LEFT, 5)
         mainSizer.Add(customSizer, (0, 2), (2, 2), wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5)
 
         rgbSizer.Add(self.rgbBitmap, 0, wx.ALL, 15)

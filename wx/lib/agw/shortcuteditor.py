@@ -2340,7 +2340,7 @@ class ShortcutEditor(wx.Dialog):
         def MenuItemSearch(menu, item):
 
             for menuItem in list(menu.GetMenuItems()):
-                label = menuItem.GetLabel()
+                label = menuItem.GetItemLabel()
 
                 if not label:
                     # It's a separator
