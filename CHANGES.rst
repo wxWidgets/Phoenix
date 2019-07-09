@@ -31,8 +31,6 @@ New and improved in this release:
   etc.
 
 
-Other changes in this release:
-
 * Many of the deprecated items in wxWidgets and wxPython are being or have
   been removed. Be sure to test your code in 4.0.2 or a later 4.0.x release
   with warnings enabled so you can see which class, method or function calls
@@ -57,6 +55,10 @@ Other changes in this release:
   now the default (and only) behavior. The style flag has been added back into
   wxPython for compatibility, but with a zero value. You can just stop using it
   in your code with no change in behavior. (#1278)
+
+* Fix a sometimes crash when using a wx.Overlay by letting the wx.DCOverlay hold
+  a reference to the DC, to ensure that the DCOverlay is destroyed first.
+  (PR#1301)
   
 
 
