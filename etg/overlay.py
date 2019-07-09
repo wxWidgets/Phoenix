@@ -39,6 +39,9 @@ def run():
 
     c = module.find('wxDCOverlay')
     c.addPrivateCopyCtor()
+    for m in c.find('wxDCOverlay').all():
+        m.find('dc').keepReference = True
+
 
 
     #-----------------------------------------------------------------

@@ -874,7 +874,7 @@ class _InspectionHighlighter(object):
         pos = self.FindHighlightPos(tlw, win.ClientToScreen(pos))
         rect.SetPosition(pos)
         if rect.width < 1: rect.width = 1
-        if rect.width < 1: rect.width = 1
+        if rect.height < 1: rect.height = 1
         self.DoHighlight(tlw, rect, self.color1, penWidth)
 
 
