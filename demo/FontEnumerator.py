@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #	Tags: phoenix-port, py3-port
 
+
 import wx
 
 #----------------------------------------------------------------------
@@ -9,6 +10,7 @@ class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
 
+        # The FontEnumerator handles fonts installed on the user's operating system.
         e = wx.FontEnumerator()
         e.EnumerateFacenames()
         list = e.GetFacenames()
