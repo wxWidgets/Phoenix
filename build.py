@@ -447,7 +447,7 @@ def makeOptionParser():
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
         ("pytest_timeout", ("0",   "Timeout, in seconds, for stopping stuck test cases. (Currently not working as expected, so disabled by default.)")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
-        ("vagrant_vms",    ("all", "Comma separated list of VM names to use for the build_vagrant command. Defaults to \"all\"")),
+        ("docker_img",     ("all", "Comma separated list of image tags to use for the build_docker command. Defaults to \"all\"")),
         ("dump_waf_log",   (False, "If the waf build tool fails then using this option will cause waf's configure log to be printed")),
         ("regenerate_sysconfig", (False, "Waf uses Python's sysconfig and related tools to configure the build. In some cases that info can be incorrect, so this option regenerates it. Must have write access to Python's lib folder.")),
         ]
@@ -1613,37 +1613,25 @@ def cmd_build_py(options, args):
     print("")
 
 
-def cmd_build_vagrant(options, args):
-    # Does a build and bdist_wheel for each of the Vagrant based VMs defined
-    # in {phoenixDir}/vagrant. Requires Vagrant and VirtualBox to be installed
-    # and ready for use.  Also requires a source tarball to be present in
-    # {phoenixDir}/dist, such as what is produced with cmd_sdist.
-    cmdTimer = CommandTimer('bdist_vagrant')
+def cmd_build_docker(options, args):
+    # Uses docker images defined by the Dockerfiles under ./docker/build for
+    # building wxPython wheels for a few versions of Linux.
+    #
+    # Requirements: Docker
+    #               Internet connection for downloading docker images, if needed
+    #               One wxPython source archive in ./dist (created with cmd_sdist)
+    cmdTimer = CommandTimer('bdist_docker')
     cfg = Config(noWxConfig=True)
-    if not options.vagrant_vms or options.vagrant_vms == 'all':
-        VMs = [ 'centos-7     all all',
-                'debian-8     all all',
-                'debian-9     all all',
-                'fedora-26    all all',
-                'fedora-27    all gtk3', # no webkitgtk for gtk2
-                'fedora-28    all gtk3', # no webkitgtk for gtk2
-                'ubuntu-14.04 all all',
-                'ubuntu-16.04 all all',
-                'ubuntu-18.04 all all',
-                ]
-    elif options.vagrant_vms == 'none':
-        VMs = [] # to skip building anything and just upload
-    else:
-        VMs = options.vagrant_vms.split(',')
+    cmd = ['inv', 'build-wxpython']
+    if options.docker_img != 'all':
+        for img in options.docker_img.split(','):
+            cmd.append('-i')
+            cmd.append(img)
 
-    for vmName in VMs:
-        vmDir = opj(phoenixDir(), 'vagrant', vmName.split()[0])
-        pwd = pushDir(vmDir)
-        msg('Starting Vagrant VM in {}'.format(vmDir))
-        runcmd('vagrant up')
-        runcmd('vagrant ssh -c "scripts/build.sh %s"' % vmName)
-        runcmd('vagrant halt')
-        del pwd
+    # 'none' can be used to skip building and go straight to uploading
+    if options.docker_img != 'none':
+        pwd = pushDir('docker')
+        runcmd(cmd, echoCmd=True)
 
     if options.upload:
         for tag in ['gtk2', 'gtk3']:
@@ -1859,8 +1847,8 @@ def cmd_clean(options, args):
     cmd_clean_py(options, args)
 
 
-def cmd_clean_vagrant(options, args):
-    cmdTimer = CommandTimer('clean_vagrant')
+def cmd_clean_docker(options, args):
+    cmdTimer = CommandTimer('clean_docker')
     assert os.getcwd() == phoenixDir()
 
     d = opj(phoenixDir(), 'dist', 'linux')
