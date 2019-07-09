@@ -347,17 +347,19 @@ or other unixes.
 
 * dpkg-dev
 * build-essential
-* python2.7-dev         # use appropriate Python version here
-* libjpeg-dev
-* libtiff-dev
-* libsdl1.2-dev
-* libgstreamer-plugins-base0.10-dev
-* libnotify-dev
-* freeglut3
-* freeglut3-dev
-* libsm-dev
-* libgtk-3-dev
-* libwebkitgtk-3.0-dev  # or libwebkit2gtk-4.0-dev if available
+* python3.7-dev and libpython3.7-dev  # use appropriate Python version here
+* freeglut3-dev 
+* libgl1-mesa-dev 
+* libglu1-mesa-dev 
+* libgstreamer-plugins-base1.0-dev 
+* libgtk-3-dev 
+* libjpeg-dev 
+* libnotify-dev 
+* libpng-dev
+* libsdl2-dev 
+* libsm-dev 
+* libtiff-dev 
+* libwebkit2gtk-4.0-dev 
 * libxtst-dev
 
 If you are building for GTK2 then you'll also need these packages and
