@@ -28,6 +28,13 @@ This release provides the following fixes:
 * Fixed issue in wx.lib.agw.customtreectrl where label editor could remain
   stuck forever (#1235).
 
+* Fix a sometimes crash when using a wx.Overlay by letting the wx.DCOverlay hold
+  a reference to the DC, to ensure that the DCOverlay is destroyed first.
+  (PR#1301)
+  
+
+  
+
 
 4.0.6 "Applesauce"
 ------------------
