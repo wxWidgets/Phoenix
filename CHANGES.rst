@@ -32,7 +32,6 @@ New and improved in this release:
   wx.grid.GridCellDateRenderer, wx.grid.GridCellDateEditor, wx.SystemAppearance,
   etc.
 
-
 * Many of the deprecated items in wxWidgets and wxPython are being or have
   been removed. Be sure to test your code in 4.0.2 or a later 4.0.x release
   with warnings enabled so you can see which class, method or function calls
@@ -64,6 +63,8 @@ New and improved in this release:
   
 * Replaced the Vagrant VMs used for building wxPython for various Linux distros
   with Docker images.
+
+* Add some missing methods in wx.adv.BitmapComboBox (#1307)
 
   
 
