@@ -601,6 +601,10 @@ class MethodDef(FunctionDef):
             self.ignore()
 
 
+    def setVirtualCatcherCode(self, code):
+        """
+        """
+        self.virtualCatcherCode = code
 
 
 #---------------------------------------------------------------------------

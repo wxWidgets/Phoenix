@@ -23,7 +23,7 @@ ITEMS  = [ 'wxComboBox' ]
 
 #---------------------------------------------------------------------------
 
-def run():
+def parseAndTweakModule():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
@@ -73,8 +73,12 @@ def run():
     c.addPyCode("ComboBox.GetMark = wx.deprecated(ComboBox.GetTextSelection, 'Use GetTextSelection instead.')")
 
     module.addGlobalStr('wxComboBoxNameStr', c)
+    return module
 
-    #-----------------------------------------------------------------
+#-----------------------------------------------------------------
+
+def run():
+    module = parseAndTweakModule()
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
 
