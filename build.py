@@ -1278,7 +1278,7 @@ def cmd_touch(options, args):
     etg = pathlib.Path('etg')
     for item in etg.glob('*.py'):
         item.touch()
-
+    cmd_touch_others(options, args)
 
 
 def cmd_test(options, args, tests=None):
@@ -1601,6 +1601,7 @@ def cmd_build_py(options, args):
         runcmd(cmd)
 
     copyWxDlls(options)
+    cmd_build_others(options, args)
 
     cfg = Config()
     cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
@@ -1639,6 +1640,36 @@ def cmd_build_docker(options, args):
             if os.path.isdir(src):
                 uploadTree(src, 'linux', options)
 
+
+def cmd_build_others(options, args):
+    # Build other stuff that may have their own seprarate build commands instead
+    # of the (ab)normal etg/tweak/generate/sip/compile sequence that the rest of
+    # wxPython uses. So far, it's just the wx.svg package
+    cmdTimer = CommandTimer('build_others')
+
+    cmd = [PYTHON, 'setup-wxsvg.py', 'build_ext', '--inplace']
+    if options.verbose:
+        cmd.append('--verbose')
+    runcmd(cmd)
+
+
+def cmd_touch_others(options, args):
+    cmdTimer = CommandTimer('touch_others')
+    pwd = pushDir(phoenixDir())
+    cfg = Config(noWxConfig=True)
+    pth = pathlib.Path(opj(cfg.PKGDIR, 'svg'))
+    for item in pth.glob('*.pyx'):
+        item.touch()
+
+
+def cmd_clean_others(options, args):
+    cmdTimer = CommandTimer('clean_others')
+    pwd = pushDir(phoenixDir())
+    cfg = Config(noWxConfig=True)
+    files = []
+    for wc in ['*.pyd', '*.so']:
+        files += glob.glob(opj(cfg.PKGDIR, 'svg', wc))
+    delFiles(files)
 
 
 def cmd_install(options, args):
@@ -1812,6 +1843,8 @@ def cmd_clean_py(options, args):
         options.both = False
         cmd_clean_py(options, args)
         options.both = True
+
+    cmd_clean_others(options, args)
 
 
 def cmd_clean_sphinx(options, args):

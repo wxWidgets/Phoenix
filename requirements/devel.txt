@@ -6,6 +6,7 @@ wheel
 twine
 sphinx
 requests
+cython
 pytest
 pytest-xdist
 pytest-forked
