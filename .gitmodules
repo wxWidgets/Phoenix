@@ -1,3 +1,6 @@
 [submodule "ext/wxWidgets"]
 	path = ext/wxWidgets
 	url = https://github.com/wxWidgets/wxWidgets.git
+[submodule "ext/nanosvg"]
+	path = ext/nanosvg
+	url = https://github.com/memononen/nanosvg
