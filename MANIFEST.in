@@ -1,7 +1,7 @@
 #
 # Although we don't use this template to make source distributions, it is
-# still an easy way to specify what data files (non *.py files) should be
-# included in the package dirs.
+# still an easy way to specify what data files (non *.py files) should be,
+# or should not be included in the package dirs.
 #
 # See cmd_sdist() in build.py for the actual building of the source dist.
 #
@@ -17,3 +17,7 @@ prune               docs/sphinx/build
 recursive-exclude   wx  .git
 recursive-exclude   wx  *.pyc
 recursive-exclude   wx  __pycache__
+
+exclude             wx/svg/*.c 
+exclude             wx/svg/*.pyx 
+exclude             wx/svg/*.pxd
