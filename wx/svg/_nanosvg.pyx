@@ -140,7 +140,9 @@ cdef class SVGimage:
 
 cdef class SVGshape:
     """
-    A collection of SVGshapes is accessible from the `shapes` attribute of SVGimage.
+    SVGshape is a set of attributes describing how to draw one shape in the SVG,
+    including stroke and fill styles, line styles, and paths. A collection of 
+    SVGshapes is accessible from the `shapes` attribute of SVGimage.
     """
     cdef NSVGshape *_ptr
 
