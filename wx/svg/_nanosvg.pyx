@@ -2,7 +2,7 @@
 # Name:        wx.svg._nanosvg.pyx
 # Purpose:     Cython-based wrappers for the nanosvg C code. See
 #              https://github.com/memononen/nanosvg
-# 
+#
 # Author:      Robin Dunn
 #
 # Created:     23-July-2019
@@ -49,16 +49,16 @@ cpdef enum SVGflags:
 
 # SVGimage
 cdef class SVGimage:
-    """ 
+    """
     An SVGimage can be created either from an SVG file or from an in-memory
     buffer containind the SVG XML code. The result is a collection of cubic
-    bezier shapes, with fill, stroke, paths and other information.    
-    """ 
+    bezier shapes, with fill, stroke, paths and other information.
+    """
     cdef NSVGimage *_ptr
 
     def __cinit__(self):
         self._ptr = NULL
-    
+
     def __dealloc__(self):
         if self._ptr != NULL:
             nsvgDelete(self._ptr)
@@ -67,20 +67,22 @@ cdef class SVGimage:
         if self._ptr == NULL:
             raise ValueError("SVG not yet loaded")
 
+
     @staticmethod
     cdef SVGimage from_ptr(NSVGimage *ptr):
         obj = SVGimage()
         obj._ptr = ptr
         return obj
 
+
     @staticmethod
     def from_file(str filename, str units='px', float dpi=96) -> SVGimage:
-        """ 
+        """
         Loads an SVG image from a file.
 
         :param str `filename`: Name of the file to load the SVG image from
-        :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'  
-        :param float `dpi`: controls how the unit conversion is done  
+        :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'
+        :param float `dpi`: controls how the unit conversion is done
 
         :rtype: SVGimage
         """
@@ -90,14 +92,15 @@ cdef class SVGimage:
             raise RuntimeError('Unable to parse SVG file {}'.format(filename))
         return img
 
+
     @staticmethod
     def from_buffer(char[:] buff, str units='px', float dpi=96) -> SVGimage:
-        """ 
+        """
         Loads an SVG image from a buffer object (bytes, bytearray, memoryview, arrary of char, etc.)
 
         :param buffer `buff`: object containing the SVG data
-        :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'  
-        :param float `dpi`: controls how the unit conversion is done  
+        :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'
+        :param float `dpi`: controls how the unit conversion is done
 
         :rtype: SVGimage
         """
@@ -106,7 +109,7 @@ cdef class SVGimage:
         if img._ptr == NULL:
             raise RuntimeError('Unable to parse SVG buffer')
         return img
-        
+
 
     @property
     def width(self) -> float:
@@ -141,14 +144,14 @@ cdef class SVGimage:
 cdef class SVGshape:
     """
     SVGshape is a set of attributes describing how to draw one shape in the SVG,
-    including stroke and fill styles, line styles, and paths. A collection of 
+    including stroke and fill styles, line styles, and paths. A collection of
     SVGshapes is accessible from the `shapes` attribute of SVGimage.
     """
     cdef NSVGshape *_ptr
 
     def __cinit__(self):
         self._ptr = NULL
-    
+
     def _check_ptr(self):
         if self._ptr == NULL:
             raise ValueError("Invalid SVGshape")
@@ -199,7 +202,7 @@ cdef class SVGshape:
     def strokeDashArray(self) -> list:
         """ Stroke dash array (scaled) """
         self._check_ptr()
-        return [self._ptr.strokeDashArray[i] 
+        return [self._ptr.strokeDashArray[i]
                 for i in range(self._ptr.strokeDashCount)]
 
     @property
@@ -242,22 +245,22 @@ cdef class SVGshape:
     def minx(self) -> float:
         self._check_ptr()
         return self._ptr.bounds[0]
-        
+
     @property
     def miny(self) -> float:
         self._check_ptr()
         return self._ptr.bounds[1]
-        
+
     @property
     def maxx(self) -> float:
         self._check_ptr()
         return self._ptr.bounds[2]
-        
+
     @property
     def maxy(self) -> float:
         self._check_ptr()
         return self._ptr.bounds[3]
-        
+
     @property
     def paths(self):
         """
@@ -271,6 +274,67 @@ cdef class SVGshape:
 
 
 #----------------------------------------------------------------------------
+cdef class SVGpath:
+    """
+    An SVGpath is essentially just a collection of bezier curves, defined by a
+    set of floating point coordinates. A collection of SVGpaths is accessible
+    from the `paths` attribute of SVGshape.
+    """
+    cdef NSVGpath *_ptr
+
+    def __cinit__(self):
+        self._ptr = NULL
+
+    @staticmethod
+    cdef SVGpath from_ptr(NSVGpath *ptr):
+        obj = SVGpath()
+        obj._ptr = ptr
+        return obj
+
+    def _check_ptr(self):
+        if self._ptr == NULL:
+            raise ValueError("Invalid SVGpath")
+
+    @property
+    def pts(self) -> list:
+        """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+        self._check_ptr()
+        return [self._ptr.pts[i] for i in range(self._ptr.npts)]
+
+    @property
+    def closed(self) -> bool:
+        """ Flag indicating if shapes should be treated as closed """
+        self._check_ptr()
+        return bool(self._ptr.closed)
+
+    @property
+    def bounds(self) -> list:
+        """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
+        self._check_ptr()
+        return [self._ptr.bounds[i] for i in range(4)]
+
+    @property
+    def minx(self) -> float:
+        self._check_ptr()
+        return self._ptr.bounds[0]
+
+    @property
+    def miny(self) -> float:
+        self._check_ptr()
+        return self._ptr.bounds[1]
+
+    @property
+    def maxx(self) -> float:
+        self._check_ptr()
+        return self._ptr.bounds[2]
+
+    @property
+    def maxy(self) -> float:
+        self._check_ptr()
+        return self._ptr.bounds[3]
+
+
+#----------------------------------------------------------------------------
 cdef class SVGpaint:
     """
     """
@@ -278,7 +342,7 @@ cdef class SVGpaint:
 
     def __cinit__(self):
         self._ptr = NULL
-    
+
     @staticmethod
     cdef SVGpaint from_ptr(NSVGpaint *ptr):
         obj = SVGpaint()
@@ -311,36 +375,6 @@ cdef class SVGpaint:
 
 
 #----------------------------------------------------------------------------
-cdef class SVGgradientStop:
-    """
-    """
-    cdef NSVGgradientStop *_ptr
-
-    def __cinit__(self):
-        self._ptr = NULL
-    
-    @staticmethod
-    cdef SVGgradientStop from_ptr(NSVGgradientStop *ptr):
-        obj = SVGgradientStop()
-        obj._ptr = ptr
-        return obj
-
-    def _check_ptr(self):
-        if self._ptr == NULL:
-            raise ValueError("Invalid SVGgradientStop")
-
-    @property
-    def color(self) -> uint:
-        self._check_ptr()
-        return self._ptr.color
-
-    @property
-    def offset(self) -> float:
-        self._check_ptr()
-        return self._ptr.offset
-
-
-#----------------------------------------------------------------------------
 cdef class SVGgradient:
     """
     """
@@ -348,7 +382,7 @@ cdef class SVGgradient:
 
     def __cinit__(self):
         self._ptr = NULL
-    
+
     @staticmethod
     cdef SVGgradient from_ptr(NSVGgradient *ptr):
         obj = SVGgradient()
@@ -393,62 +427,35 @@ cdef class SVGgradient:
         for i in range(self._ptr.nstops):
             yield self._ptr.stops[i]
 
+
 #----------------------------------------------------------------------------
-cdef class SVGpath:
+cdef class SVGgradientStop:
     """
     """
-    cdef NSVGpath *_ptr
+    cdef NSVGgradientStop *_ptr
 
     def __cinit__(self):
         self._ptr = NULL
-    
+
     @staticmethod
-    cdef SVGpath from_ptr(NSVGpath *ptr):
-        obj = SVGpath()
+    cdef SVGgradientStop from_ptr(NSVGgradientStop *ptr):
+        obj = SVGgradientStop()
         obj._ptr = ptr
         return obj
 
     def _check_ptr(self):
         if self._ptr == NULL:
-            raise ValueError("Invalid SVGpath")
+            raise ValueError("Invalid SVGgradientStop")
 
     @property
-    def pts(self) -> list:
-        """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+    def color(self) -> uint:
         self._check_ptr()
-        return [self._ptr.pts[i] for i in range(self._ptr.npts)]
+        return self._ptr.color
 
     @property
-    def closed(self) -> bool:
-        """ Flag indicating if shapes should be treated as closed """
+    def offset(self) -> float:
         self._check_ptr()
-        return bool(self._ptr.closed)
+        return self._ptr.offset
 
-    @property
-    def bounds(self) -> list:
-        """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
-        self._check_ptr()
-        return [self._ptr.bounds[i] for i in range(4)]
-
-    @property
-    def minx(self) -> float:
-        self._check_ptr()
-        return self._ptr.bounds[0]
-        
-    @property
-    def miny(self) -> float:
-        self._check_ptr()
-        return self._ptr.bounds[1]
-        
-    @property
-    def maxx(self) -> float:
-        self._check_ptr()
-        return self._ptr.bounds[2]
-        
-    @property
-    def maxy(self) -> float:
-        self._check_ptr()
-        return self._ptr.bounds[3]
-        
 
 #----------------------------------------------------------------------------
