@@ -956,10 +956,10 @@ typedef struct {
 /*--- Type declarations ---*/
 struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage;
 struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape;
-struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint;
-struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop;
-struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient;
 struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath;
+struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint;
+struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient;
+struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop;
 struct __pyx_obj_2wx_3svg_8_nanosvg___pyx_scope_struct____get__;
 struct __pyx_obj_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__;
 struct __pyx_obj_2wx_3svg_8_nanosvg___pyx_scope_struct_2___get__;
@@ -1107,12 +1107,12 @@ struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage {
 };
 
 
-/* "wx/svg/_nanosvg.pyx":141
+/* "wx/svg/_nanosvg.pyx":144
  * #----------------------------------------------------------------------------
  * 
  * cdef class SVGshape:             # <<<<<<<<<<<<<<
  *     """
- *     A collection of SVGshapes is accessible from the `shapes` attribute of SVGimage.
+ *     SVGshape is a set of attributes describing how to draw one shape in the SVG,
  */
 struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape {
   PyObject_HEAD
@@ -1121,7 +1121,21 @@ struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape {
 };
 
 
-/* "wx/svg/_nanosvg.pyx":272
+/* "wx/svg/_nanosvg.pyx":277
+ * 
+ * #----------------------------------------------------------------------------
+ * cdef class SVGpath:             # <<<<<<<<<<<<<<
+ *     """
+ *     An SVGpath is essentially just a collection of bezier curves, defined by a
+ */
+struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGpath *__pyx_vtab;
+  NSVGpath *_ptr;
+};
+
+
+/* "wx/svg/_nanosvg.pyx":338
  * 
  * #----------------------------------------------------------------------------
  * cdef class SVGpaint:             # <<<<<<<<<<<<<<
@@ -1135,21 +1149,7 @@ struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint {
 };
 
 
-/* "wx/svg/_nanosvg.pyx":312
- * 
- * #----------------------------------------------------------------------------
- * cdef class SVGgradientStop:             # <<<<<<<<<<<<<<
- *     """
- *     """
- */
-struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop {
-  PyObject_HEAD
-  struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_vtab;
-  NSVGgradientStop *_ptr;
-};
-
-
-/* "wx/svg/_nanosvg.pyx":342
+/* "wx/svg/_nanosvg.pyx":378
  * 
  * #----------------------------------------------------------------------------
  * cdef class SVGgradient:             # <<<<<<<<<<<<<<
@@ -1163,21 +1163,21 @@ struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient {
 };
 
 
-/* "wx/svg/_nanosvg.pyx":395
+/* "wx/svg/_nanosvg.pyx":432
  * 
  * #----------------------------------------------------------------------------
- * cdef class SVGpath:             # <<<<<<<<<<<<<<
+ * cdef class SVGgradientStop:             # <<<<<<<<<<<<<<
  *     """
  *     """
  */
-struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath {
+struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop {
   PyObject_HEAD
-  struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGpath *__pyx_vtab;
-  NSVGpath *_ptr;
+  struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_vtab;
+  NSVGgradientStop *_ptr;
 };
 
 
-/* "wx/svg/_nanosvg.pyx":128
+/* "wx/svg/_nanosvg.pyx":131
  * 
  *     @property
  *     def shapes(self):             # <<<<<<<<<<<<<<
@@ -1191,7 +1191,7 @@ struct __pyx_obj_2wx_3svg_8_nanosvg___pyx_scope_struct____get__ {
 };
 
 
-/* "wx/svg/_nanosvg.pyx":260
+/* "wx/svg/_nanosvg.pyx":265
  * 
  *     @property
  *     def paths(self):             # <<<<<<<<<<<<<<
@@ -1205,7 +1205,7 @@ struct __pyx_obj_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__ {
 };
 
 
-/* "wx/svg/_nanosvg.pyx":386
+/* "wx/svg/_nanosvg.pyx":422
  * 
  *     @property
  *     def stops(self):             # <<<<<<<<<<<<<<
@@ -1326,12 +1326,12 @@ struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGimage {
 static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGimage *__pyx_vtabptr_2wx_3svg_8_nanosvg_SVGimage;
 
 
-/* "wx/svg/_nanosvg.pyx":141
+/* "wx/svg/_nanosvg.pyx":144
  * #----------------------------------------------------------------------------
  * 
  * cdef class SVGshape:             # <<<<<<<<<<<<<<
  *     """
- *     A collection of SVGshapes is accessible from the `shapes` attribute of SVGimage.
+ *     SVGshape is a set of attributes describing how to draw one shape in the SVG,
  */
 
 struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGshape {
@@ -1340,7 +1340,21 @@ struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGshape {
 static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGshape *__pyx_vtabptr_2wx_3svg_8_nanosvg_SVGshape;
 
 
-/* "wx/svg/_nanosvg.pyx":272
+/* "wx/svg/_nanosvg.pyx":277
+ * 
+ * #----------------------------------------------------------------------------
+ * cdef class SVGpath:             # <<<<<<<<<<<<<<
+ *     """
+ *     An SVGpath is essentially just a collection of bezier curves, defined by a
+ */
+
+struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGpath {
+  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *(*from_ptr)(NSVGpath *);
+};
+static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGpath *__pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpath;
+
+
+/* "wx/svg/_nanosvg.pyx":338
  * 
  * #----------------------------------------------------------------------------
  * cdef class SVGpaint:             # <<<<<<<<<<<<<<
@@ -1354,21 +1368,7 @@ struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGpaint {
 static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGpaint *__pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpaint;
 
 
-/* "wx/svg/_nanosvg.pyx":312
- * 
- * #----------------------------------------------------------------------------
- * cdef class SVGgradientStop:             # <<<<<<<<<<<<<<
- *     """
- *     """
- */
-
-struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGgradientStop {
-  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *(*from_ptr)(NSVGgradientStop *);
-};
-static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradientStop;
-
-
-/* "wx/svg/_nanosvg.pyx":342
+/* "wx/svg/_nanosvg.pyx":378
  * 
  * #----------------------------------------------------------------------------
  * cdef class SVGgradient:             # <<<<<<<<<<<<<<
@@ -1382,18 +1382,18 @@ struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGgradient {
 static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGgradient *__pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradient;
 
 
-/* "wx/svg/_nanosvg.pyx":395
+/* "wx/svg/_nanosvg.pyx":432
  * 
  * #----------------------------------------------------------------------------
- * cdef class SVGpath:             # <<<<<<<<<<<<<<
+ * cdef class SVGgradientStop:             # <<<<<<<<<<<<<<
  *     """
  *     """
  */
 
-struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGpath {
-  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *(*from_ptr)(NSVGpath *);
+struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGgradientStop {
+  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *(*from_ptr)(NSVGgradientStop *);
 };
-static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGpath *__pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpath;
+static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradientStop;
 
 
 /* "View.MemoryView":105
@@ -2143,7 +2143,7 @@ static int __Pyx_ValidateAndInit_memviewslice(
                 PyObject *original_obj);
 
 /* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_char(PyObject *, int writable_flag);
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(PyObject *, int writable_flag);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_char(char value);
@@ -2152,13 +2152,13 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_char(char value);
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_char(unsigned char value);
 
 /* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
+
+/* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_enum____pyx_t_2wx_3svg_8_nanosvg_SVGpaintType(enum __pyx_t_2wx_3svg_8_nanosvg_SVGpaintType value);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_int(unsigned int value);
-
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 static PyObject* __pyx_convert__to_py_NSVGgradientStop(NSVGgradientStop s);
 /* MemviewSliceCopyTemplate.proto */
@@ -2284,10 +2284,10 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_f_2wx_3svg_8_nanosvg_8SVGimage_from_ptr(NSVGimage *__pyx_v_ptr); /* proto*/
 static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape *__pyx_f_2wx_3svg_8_nanosvg_8SVGshape_from_ptr(NSVGshape *__pyx_v_ptr); /* proto*/
-static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_f_2wx_3svg_8_nanosvg_8SVGpaint_from_ptr(NSVGpaint *__pyx_v_ptr); /* proto*/
-static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_f_2wx_3svg_8_nanosvg_15SVGgradientStop_from_ptr(NSVGgradientStop *__pyx_v_ptr); /* proto*/
-static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_f_2wx_3svg_8_nanosvg_11SVGgradient_from_ptr(NSVGgradient *__pyx_v_ptr); /* proto*/
 static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_f_2wx_3svg_8_nanosvg_7SVGpath_from_ptr(NSVGpath *__pyx_v_ptr); /* proto*/
+static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_f_2wx_3svg_8_nanosvg_8SVGpaint_from_ptr(NSVGpaint *__pyx_v_ptr); /* proto*/
+static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_f_2wx_3svg_8_nanosvg_11SVGgradient_from_ptr(NSVGgradient *__pyx_v_ptr); /* proto*/
+static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_f_2wx_3svg_8_nanosvg_15SVGgradientStop_from_ptr(NSVGgradientStop *__pyx_v_ptr); /* proto*/
 static PyObject *__pyx_array_get_memview(struct __pyx_array_obj *__pyx_v_self); /* proto*/
 static char *__pyx_memoryview_get_item_pointer(struct __pyx_memoryview_obj *__pyx_v_self, PyObject *__pyx_v_index); /* proto*/
 static PyObject *__pyx_memoryview_is_slice(struct __pyx_memoryview_obj *__pyx_v_self, PyObject *__pyx_v_obj); /* proto*/
@@ -2302,10 +2302,10 @@ static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memo
 /* Module declarations from 'wx.svg._nanosvg' */
 static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage = 0;
 static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg_SVGshape = 0;
-static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg_SVGpaint = 0;
-static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg_SVGgradientStop = 0;
-static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg_SVGgradient = 0;
 static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg_SVGpath = 0;
+static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg_SVGpaint = 0;
+static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg_SVGgradient = 0;
+static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg_SVGgradientStop = 0;
 static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg___pyx_scope_struct____get__ = 0;
 static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__ = 0;
 static PyTypeObject *__pyx_ptype_2wx_3svg_8_nanosvg___pyx_scope_struct_2___get__ = 0;
@@ -2358,7 +2358,7 @@ static void __pyx_memoryview_refcount_objects_in_slice(char *, Py_ssize_t *, Py_
 static void __pyx_memoryview_slice_assign_scalar(__Pyx_memviewslice *, int, size_t, void *, int); /*proto*/
 static void __pyx_memoryview__slice_assign_scalar(char *, Py_ssize_t *, Py_ssize_t *, int, size_t, void *); /*proto*/
 static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, PyObject *); /*proto*/
-static __Pyx_TypeInfo __Pyx_TypeInfo_char = { "char", NULL, sizeof(char), { 0 }, 0, 'H', IS_UNSIGNED(char), 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_unsigned_char__const__ = { "const unsigned char", NULL, sizeof(unsigned char const ), { 0 }, 0, IS_UNSIGNED(unsigned char const ) ? 'U' : 'I', IS_UNSIGNED(unsigned char const ), 0 };
 #define __Pyx_MODULE_NAME "wx.svg._nanosvg"
 extern int __pyx_module_is_main_wx__svg___nanosvg;
 int __pyx_module_is_main_wx__svg___nanosvg = 0;
@@ -2780,28 +2780,6 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4maxy___get__(struct __py
 static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_5paths___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_4type___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_5color___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_8gradient___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_5color___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_5xform___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_6spread___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fx___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fy___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_5stops___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_3pts___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self); /* proto */
@@ -2813,6 +2791,28 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxx___get__(struct __pyx
 static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxy___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static int __pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_4type___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_5color___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_8gradient___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static int __pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_5xform___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_6spread___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fx___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fy___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_5stops___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static int __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_5color___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_8EnumBase_14__Pyx_EnumMeta___init__(struct __pyx_obj___Pyx_EnumMeta *__pyx_v_cls, PyObject *__pyx_v_name, PyObject *__pyx_v_parents, PyObject *__pyx_v_dct); /* proto */
 static PyObject *__pyx_pf_8EnumBase_14__Pyx_EnumMeta_2__iter__(struct __pyx_obj___Pyx_EnumMeta *__pyx_v_cls); /* proto */
 static PyObject *__pyx_pf_8EnumBase_14__Pyx_EnumMeta_4__getitem__(struct __pyx_obj___Pyx_EnumMeta *__pyx_v_cls, PyObject *__pyx_v_name); /* proto */
@@ -2866,10 +2866,10 @@ static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUS
 static PyObject *__pyx_pf_15View_dot_MemoryView___pyx_unpickle_Enum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGimage(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGshape(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGpaint(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGgradientStop(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGgradient(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGpath(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGpaint(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGgradient(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGgradientStop(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg___pyx_scope_struct____get__(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg___pyx_scope_struct_2___get__(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -3105,7 +3105,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_4_check_ptr(struct __pyx_
  *         if self._ptr == NULL:
  *             raise ValueError("SVG not yet loaded")             # <<<<<<<<<<<<<<
  * 
- *     @staticmethod
+ * 
  */
     __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 68, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -3143,7 +3143,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_4_check_ptr(struct __pyx_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":71
+/* "wx/svg/_nanosvg.pyx":72
  * 
  *     @staticmethod
  *     cdef SVGimage from_ptr(NSVGimage *ptr):             # <<<<<<<<<<<<<<
@@ -3158,19 +3158,19 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_f_2wx_3svg_8_nanosvg_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("from_ptr", 0);
 
-  /* "wx/svg/_nanosvg.pyx":72
+  /* "wx/svg/_nanosvg.pyx":73
  *     @staticmethod
  *     cdef SVGimage from_ptr(NSVGimage *ptr):
  *         obj = SVGimage()             # <<<<<<<<<<<<<<
  *         obj._ptr = ptr
  *         return obj
  */
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_obj = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":73
+  /* "wx/svg/_nanosvg.pyx":74
  *     cdef SVGimage from_ptr(NSVGimage *ptr):
  *         obj = SVGimage()
  *         obj._ptr = ptr             # <<<<<<<<<<<<<<
@@ -3179,19 +3179,19 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_f_2wx_3svg_8_nanosvg_
  */
   __pyx_v_obj->_ptr = __pyx_v_ptr;
 
-  /* "wx/svg/_nanosvg.pyx":74
+  /* "wx/svg/_nanosvg.pyx":75
  *         obj = SVGimage()
  *         obj._ptr = ptr
  *         return obj             # <<<<<<<<<<<<<<
  * 
- *     @staticmethod
+ * 
  */
   __Pyx_XDECREF(((PyObject *)__pyx_r));
   __Pyx_INCREF(((PyObject *)__pyx_v_obj));
   __pyx_r = __pyx_v_obj;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":71
+  /* "wx/svg/_nanosvg.pyx":72
  * 
  *     @staticmethod
  *     cdef SVGimage from_ptr(NSVGimage *ptr):             # <<<<<<<<<<<<<<
@@ -3211,7 +3211,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_f_2wx_3svg_8_nanosvg_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":77
+/* "wx/svg/_nanosvg.pyx":79
  * 
  *     @staticmethod
  *     def from_file(str filename, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
@@ -3221,7 +3221,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_f_2wx_3svg_8_nanosvg_
 
 /* Python wrapper */
 static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pw_2wx_3svg_8_nanosvg_8SVGimage_7from_file(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_2wx_3svg_8_nanosvg_8SVGimage_6from_file[] = "SVGimage.from_file(str filename, str units='px', float dpi=96) -> SVGimage\n \n        Loads an SVG image from a file.\n\n        :param str `filename`: Name of the file to load the SVG image from\n        :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'  \n        :param float `dpi`: controls how the unit conversion is done  \n\n        :rtype: SVGimage\n        ";
+static char __pyx_doc_2wx_3svg_8_nanosvg_8SVGimage_6from_file[] = "SVGimage.from_file(str filename, str units='px', float dpi=96) -> SVGimage\n\n        Loads an SVG image from a file.\n\n        :param str `filename`: Name of the file to load the SVG image from\n        :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'\n        :param float `dpi`: controls how the unit conversion is done\n\n        :rtype: SVGimage\n        ";
 static PyMethodDef __pyx_mdef_2wx_3svg_8_nanosvg_8SVGimage_7from_file = {"from_file", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_2wx_3svg_8_nanosvg_8SVGimage_7from_file, METH_VARARGS|METH_KEYWORDS, __pyx_doc_2wx_3svg_8_nanosvg_8SVGimage_6from_file};
 static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pw_2wx_3svg_8_nanosvg_8SVGimage_7from_file(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_filename = 0;
@@ -3266,7 +3266,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pw_2wx_3svg_8_nanosvg
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "from_file") < 0)) __PYX_ERR(0, 77, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "from_file") < 0)) __PYX_ERR(0, 79, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -3282,21 +3282,21 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pw_2wx_3svg_8_nanosvg
     __pyx_v_filename = ((PyObject*)values[0]);
     __pyx_v_units = ((PyObject*)values[1]);
     if (values[2]) {
-      __pyx_v_dpi = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_dpi == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L3_error)
+      __pyx_v_dpi = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_dpi == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L3_error)
     } else {
       __pyx_v_dpi = ((float)96.0);
     }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("from_file", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 77, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("from_file", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 79, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("wx.svg._nanosvg.SVGimage.from_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_filename), (&PyString_Type), 1, "filename", 1))) __PYX_ERR(0, 77, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_units), (&PyString_Type), 1, "units", 1))) __PYX_ERR(0, 77, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_filename), (&PyString_Type), 1, "filename", 1))) __PYX_ERR(0, 79, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_units), (&PyString_Type), 1, "units", 1))) __PYX_ERR(0, 79, __pyx_L1_error)
   __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_6from_file(__pyx_v_filename, __pyx_v_units, __pyx_v_dpi);
 
   /* function exit code */
@@ -3321,16 +3321,16 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   int __pyx_t_6;
   __Pyx_RefNannySetupContext("from_file", 0);
 
-  /* "wx/svg/_nanosvg.pyx":87
+  /* "wx/svg/_nanosvg.pyx":89
  *         :rtype: SVGimage
  *         """
  *         name = filename.encode(sys.getfilesystemencoding())             # <<<<<<<<<<<<<<
  *         img = SVGimage.from_ptr(nsvgParseFromFile(name, bytes(units, 'utf-8'), dpi))
  *         if img._ptr == NULL:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sys); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sys); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 89, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_getfilesystemencoding); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_getfilesystemencoding); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 89, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -3345,24 +3345,24 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 89, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyString_Type_encode, __pyx_v_filename, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyString_Type_encode, __pyx_v_filename, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 89, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_name = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":88
+  /* "wx/svg/_nanosvg.pyx":90
  *         """
  *         name = filename.encode(sys.getfilesystemencoding())
  *         img = SVGimage.from_ptr(nsvgParseFromFile(name, bytes(units, 'utf-8'), dpi))             # <<<<<<<<<<<<<<
  *         if img._ptr == NULL:
  *             raise RuntimeError('Unable to parse SVG file {}'.format(filename))
  */
-  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_v_name); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L1_error)
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 88, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_v_name); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_v_units);
   __Pyx_GIVEREF(__pyx_v_units);
@@ -3370,17 +3370,17 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   __Pyx_INCREF(__pyx_kp_s_utf_8);
   __Pyx_GIVEREF(__pyx_kp_s_utf_8);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_kp_s_utf_8);
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&PyBytes_Type)), __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 88, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&PyBytes_Type)), __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_5 = __Pyx_PyBytes_AsString(__pyx_t_1); if (unlikely((!__pyx_t_5) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L1_error)
-  __pyx_t_3 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_8SVGimage_from_ptr(nsvgParseFromFile(__pyx_t_4, __pyx_t_5, __pyx_v_dpi))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 88, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyBytes_AsString(__pyx_t_1); if (unlikely((!__pyx_t_5) && PyErr_Occurred())) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_t_3 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_8SVGimage_from_ptr(nsvgParseFromFile(__pyx_t_4, __pyx_t_5, __pyx_v_dpi))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_img = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":89
+  /* "wx/svg/_nanosvg.pyx":91
  *         name = filename.encode(sys.getfilesystemencoding())
  *         img = SVGimage.from_ptr(nsvgParseFromFile(name, bytes(units, 'utf-8'), dpi))
  *         if img._ptr == NULL:             # <<<<<<<<<<<<<<
@@ -3390,14 +3390,14 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   __pyx_t_6 = ((__pyx_v_img->_ptr == NULL) != 0);
   if (unlikely(__pyx_t_6)) {
 
-    /* "wx/svg/_nanosvg.pyx":90
+    /* "wx/svg/_nanosvg.pyx":92
  *         img = SVGimage.from_ptr(nsvgParseFromFile(name, bytes(units, 'utf-8'), dpi))
  *         if img._ptr == NULL:
  *             raise RuntimeError('Unable to parse SVG file {}'.format(filename))             # <<<<<<<<<<<<<<
  *         return img
  * 
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_kp_s_Unable_to_parse_SVG_file, __pyx_n_s_format); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 90, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_kp_s_Unable_to_parse_SVG_file, __pyx_n_s_format); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
@@ -3411,17 +3411,17 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
     }
     __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_2, __pyx_v_filename) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_v_filename);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 90, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 92, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_RuntimeError, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 90, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_RuntimeError, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 90, __pyx_L1_error)
+    __PYX_ERR(0, 92, __pyx_L1_error)
 
-    /* "wx/svg/_nanosvg.pyx":89
+    /* "wx/svg/_nanosvg.pyx":91
  *         name = filename.encode(sys.getfilesystemencoding())
  *         img = SVGimage.from_ptr(nsvgParseFromFile(name, bytes(units, 'utf-8'), dpi))
  *         if img._ptr == NULL:             # <<<<<<<<<<<<<<
@@ -3430,19 +3430,19 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
  */
   }
 
-  /* "wx/svg/_nanosvg.pyx":91
+  /* "wx/svg/_nanosvg.pyx":93
  *         if img._ptr == NULL:
  *             raise RuntimeError('Unable to parse SVG file {}'.format(filename))
  *         return img             # <<<<<<<<<<<<<<
  * 
- *     @staticmethod
+ * 
  */
   __Pyx_XDECREF(((PyObject *)__pyx_r));
   __Pyx_INCREF(((PyObject *)__pyx_v_img));
   __pyx_r = __pyx_v_img;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":77
+  /* "wx/svg/_nanosvg.pyx":79
  * 
  *     @staticmethod
  *     def from_file(str filename, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
@@ -3465,17 +3465,17 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":94
+/* "wx/svg/_nanosvg.pyx":97
  * 
  *     @staticmethod
- *     def from_buffer(char[:] buff, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
+ *     def from_buffer(const unsigned char[:] buff, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
  *         """
  *         Loads an SVG image from a buffer object (bytes, bytearray, memoryview, arrary of char, etc.)
  */
 
 /* Python wrapper */
 static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pw_2wx_3svg_8_nanosvg_8SVGimage_9from_buffer(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_2wx_3svg_8_nanosvg_8SVGimage_8from_buffer[] = "SVGimage.from_buffer(char[:] buff, str units='px', float dpi=96) -> SVGimage\n \n        Loads an SVG image from a buffer object (bytes, bytearray, memoryview, arrary of char, etc.)\n\n        :param buffer `buff`: object containing the SVG data\n        :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'  \n        :param float `dpi`: controls how the unit conversion is done  \n\n        :rtype: SVGimage\n        ";
+static char __pyx_doc_2wx_3svg_8_nanosvg_8SVGimage_8from_buffer[] = "SVGimage.from_buffer(const unsigned char[:] buff, str units='px', float dpi=96) -> SVGimage\n\n        Loads an SVG image from a buffer object (bytes, bytearray, memoryview, arrary of char, etc.)\n\n        :param buffer `buff`: object containing the SVG data\n        :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'\n        :param float `dpi`: controls how the unit conversion is done\n\n        :rtype: SVGimage\n        ";
 static PyMethodDef __pyx_mdef_2wx_3svg_8_nanosvg_8SVGimage_9from_buffer = {"from_buffer", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_2wx_3svg_8_nanosvg_8SVGimage_9from_buffer, METH_VARARGS|METH_KEYWORDS, __pyx_doc_2wx_3svg_8_nanosvg_8SVGimage_8from_buffer};
 static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pw_2wx_3svg_8_nanosvg_8SVGimage_9from_buffer(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __Pyx_memviewslice __pyx_v_buff = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -3520,7 +3520,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pw_2wx_3svg_8_nanosvg
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "from_buffer") < 0)) __PYX_ERR(0, 94, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "from_buffer") < 0)) __PYX_ERR(0, 97, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -3533,23 +3533,23 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pw_2wx_3svg_8_nanosvg
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_buff = __Pyx_PyObject_to_MemoryviewSlice_ds_char(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_buff.memview)) __PYX_ERR(0, 94, __pyx_L3_error)
+    __pyx_v_buff = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(values[0], 0); if (unlikely(!__pyx_v_buff.memview)) __PYX_ERR(0, 97, __pyx_L3_error)
     __pyx_v_units = ((PyObject*)values[1]);
     if (values[2]) {
-      __pyx_v_dpi = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_dpi == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 94, __pyx_L3_error)
+      __pyx_v_dpi = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_dpi == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 97, __pyx_L3_error)
     } else {
       __pyx_v_dpi = ((float)96.0);
     }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("from_buffer", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 94, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("from_buffer", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 97, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("wx.svg._nanosvg.SVGimage.from_buffer", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_units), (&PyString_Type), 1, "units", 1))) __PYX_ERR(0, 94, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_units), (&PyString_Type), 1, "units", 1))) __PYX_ERR(0, 97, __pyx_L1_error)
   __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_8from_buffer(__pyx_v_buff, __pyx_v_units, __pyx_v_dpi);
 
   /* function exit code */
@@ -3562,7 +3562,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pw_2wx_3svg_8_nanosvg
 }
 
 static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_8from_buffer(__Pyx_memviewslice __pyx_v_buff, PyObject *__pyx_v_units, float __pyx_v_dpi) {
-  char *__pyx_v_pbuff;
+  unsigned char const *__pyx_v_pbuff;
   struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_v_img = NULL;
   struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -3574,10 +3574,10 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   int __pyx_t_6;
   __Pyx_RefNannySetupContext("from_buffer", 0);
 
-  /* "wx/svg/_nanosvg.pyx":104
+  /* "wx/svg/_nanosvg.pyx":107
  *         :rtype: SVGimage
  *         """
- *         cdef char *pbuff = &buff[0]             # <<<<<<<<<<<<<<
+ *         cdef const unsigned char *pbuff = &buff[0]             # <<<<<<<<<<<<<<
  *         img = SVGimage.from_ptr(nsvgParse(pbuff, bytes(units, 'utf-8'), dpi))
  *         if img._ptr == NULL:
  */
@@ -3589,18 +3589,18 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   } else if (unlikely(__pyx_t_1 >= __pyx_v_buff.shape[0])) __pyx_t_2 = 0;
   if (unlikely(__pyx_t_2 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_2);
-    __PYX_ERR(0, 104, __pyx_L1_error)
+    __PYX_ERR(0, 107, __pyx_L1_error)
   }
-  __pyx_v_pbuff = (&(*((char *) ( /* dim=0 */ (__pyx_v_buff.data + __pyx_t_1 * __pyx_v_buff.strides[0]) ))));
+  __pyx_v_pbuff = (&(*((unsigned char const  *) ( /* dim=0 */ (__pyx_v_buff.data + __pyx_t_1 * __pyx_v_buff.strides[0]) ))));
 
-  /* "wx/svg/_nanosvg.pyx":105
+  /* "wx/svg/_nanosvg.pyx":108
  *         """
- *         cdef char *pbuff = &buff[0]
+ *         cdef const unsigned char *pbuff = &buff[0]
  *         img = SVGimage.from_ptr(nsvgParse(pbuff, bytes(units, 'utf-8'), dpi))             # <<<<<<<<<<<<<<
  *         if img._ptr == NULL:
  *             raise RuntimeError('Unable to parse SVG buffer')
  */
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_v_units);
   __Pyx_GIVEREF(__pyx_v_units);
@@ -3608,18 +3608,18 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   __Pyx_INCREF(__pyx_kp_s_utf_8);
   __Pyx_GIVEREF(__pyx_kp_s_utf_8);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_kp_s_utf_8);
-  __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)(&PyBytes_Type)), __pyx_t_3, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)(&PyBytes_Type)), __pyx_t_3, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 108, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_5 = __Pyx_PyBytes_AsString(__pyx_t_4); if (unlikely((!__pyx_t_5) && PyErr_Occurred())) __PYX_ERR(0, 105, __pyx_L1_error)
-  __pyx_t_3 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_8SVGimage_from_ptr(nsvgParse(__pyx_v_pbuff, __pyx_t_5, __pyx_v_dpi))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyBytes_AsString(__pyx_t_4); if (unlikely((!__pyx_t_5) && PyErr_Occurred())) __PYX_ERR(0, 108, __pyx_L1_error)
+  __pyx_t_3 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_8SVGimage_from_ptr(nsvgParse(__pyx_v_pbuff, __pyx_t_5, __pyx_v_dpi))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_img = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":106
- *         cdef char *pbuff = &buff[0]
+  /* "wx/svg/_nanosvg.pyx":109
+ *         cdef const unsigned char *pbuff = &buff[0]
  *         img = SVGimage.from_ptr(nsvgParse(pbuff, bytes(units, 'utf-8'), dpi))
  *         if img._ptr == NULL:             # <<<<<<<<<<<<<<
  *             raise RuntimeError('Unable to parse SVG buffer')
@@ -3628,21 +3628,21 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   __pyx_t_6 = ((__pyx_v_img->_ptr == NULL) != 0);
   if (unlikely(__pyx_t_6)) {
 
-    /* "wx/svg/_nanosvg.pyx":107
+    /* "wx/svg/_nanosvg.pyx":110
  *         img = SVGimage.from_ptr(nsvgParse(pbuff, bytes(units, 'utf-8'), dpi))
  *         if img._ptr == NULL:
  *             raise RuntimeError('Unable to parse SVG buffer')             # <<<<<<<<<<<<<<
  *         return img
  * 
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 107, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 107, __pyx_L1_error)
+    __PYX_ERR(0, 110, __pyx_L1_error)
 
-    /* "wx/svg/_nanosvg.pyx":106
- *         cdef char *pbuff = &buff[0]
+    /* "wx/svg/_nanosvg.pyx":109
+ *         cdef const unsigned char *pbuff = &buff[0]
  *         img = SVGimage.from_ptr(nsvgParse(pbuff, bytes(units, 'utf-8'), dpi))
  *         if img._ptr == NULL:             # <<<<<<<<<<<<<<
  *             raise RuntimeError('Unable to parse SVG buffer')
@@ -3650,7 +3650,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
  */
   }
 
-  /* "wx/svg/_nanosvg.pyx":108
+  /* "wx/svg/_nanosvg.pyx":111
  *         if img._ptr == NULL:
  *             raise RuntimeError('Unable to parse SVG buffer')
  *         return img             # <<<<<<<<<<<<<<
@@ -3662,10 +3662,10 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   __pyx_r = __pyx_v_img;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":94
+  /* "wx/svg/_nanosvg.pyx":97
  * 
  *     @staticmethod
- *     def from_buffer(char[:] buff, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
+ *     def from_buffer(const unsigned char[:] buff, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
  *         """
  *         Loads an SVG image from a buffer object (bytes, bytearray, memoryview, arrary of char, etc.)
  */
@@ -3684,7 +3684,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGimage *__pyx_pf_2wx_3svg_8_nanosvg
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":112
+/* "wx/svg/_nanosvg.pyx":115
  * 
  *     @property
  *     def width(self) -> float:             # <<<<<<<<<<<<<<
@@ -3713,14 +3713,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_5width___get__(struct __p
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":116
+  /* "wx/svg/_nanosvg.pyx":119
  *         Returns the width of the SVGimage
  *         """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.width
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -3734,12 +3734,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_5width___get__(struct __p
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 116, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":117
+  /* "wx/svg/_nanosvg.pyx":120
  *         """
  *         self._check_ptr()
  *         return self._ptr.width             # <<<<<<<<<<<<<<
@@ -3747,13 +3747,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_5width___get__(struct __p
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 120, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":112
+  /* "wx/svg/_nanosvg.pyx":115
  * 
  *     @property
  *     def width(self) -> float:             # <<<<<<<<<<<<<<
@@ -3774,7 +3774,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_5width___get__(struct __p
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":120
+/* "wx/svg/_nanosvg.pyx":123
  * 
  *     @property
  *     def height(self) -> float:             # <<<<<<<<<<<<<<
@@ -3803,14 +3803,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_6height___get__(struct __
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":124
+  /* "wx/svg/_nanosvg.pyx":127
  *         Returns the height of the SVGimage
  *         """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.height
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -3824,12 +3824,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_6height___get__(struct __
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":125
+  /* "wx/svg/_nanosvg.pyx":128
  *         """
  *         self._check_ptr()
  *         return self._ptr.height             # <<<<<<<<<<<<<<
@@ -3837,13 +3837,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_6height___get__(struct __
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->height); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->height); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":120
+  /* "wx/svg/_nanosvg.pyx":123
  * 
  *     @property
  *     def height(self) -> float:             # <<<<<<<<<<<<<<
@@ -3865,7 +3865,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_6height___get__(struct __
 }
 static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGimage_6shapes_2generator(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
-/* "wx/svg/_nanosvg.pyx":128
+/* "wx/svg/_nanosvg.pyx":131
  * 
  *     @property
  *     def shapes(self):             # <<<<<<<<<<<<<<
@@ -3895,7 +3895,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_6shapes___get__(struct __
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_2wx_3svg_8_nanosvg___pyx_scope_struct____get__ *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 128, __pyx_L1_error)
+    __PYX_ERR(0, 131, __pyx_L1_error)
   } else {
     __Pyx_GOTREF(__pyx_cur_scope);
   }
@@ -3903,7 +3903,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_6shapes___get__(struct __
   __Pyx_INCREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   __Pyx_GIVEREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_2wx_3svg_8_nanosvg_8SVGimage_6shapes_2generator, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_get, __pyx_n_s_SVGimage___get, __pyx_n_s_wx_svg__nanosvg); if (unlikely(!gen)) __PYX_ERR(0, 128, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_2wx_3svg_8_nanosvg_8SVGimage_6shapes_2generator, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_get, __pyx_n_s_SVGimage___get, __pyx_n_s_wx_svg__nanosvg); if (unlikely(!gen)) __PYX_ERR(0, 131, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -3938,16 +3938,16 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGimage_6shapes_2generator(__pyx_
     return NULL;
   }
   __pyx_L3_first_run:;
-  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 128, __pyx_L1_error)
+  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 131, __pyx_L1_error)
 
-  /* "wx/svg/_nanosvg.pyx":132
+  /* "wx/svg/_nanosvg.pyx":135
  *         A generator that iterates over the shapes that comprise the SVGimage
  *         """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         cdef NSVGshape *shape = self._ptr.shapes
  *         while shape != NULL:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -3961,12 +3961,12 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGimage_6shapes_2generator(__pyx_
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":133
+  /* "wx/svg/_nanosvg.pyx":136
  *         """
  *         self._check_ptr()
  *         cdef NSVGshape *shape = self._ptr.shapes             # <<<<<<<<<<<<<<
@@ -3976,7 +3976,7 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGimage_6shapes_2generator(__pyx_
   __pyx_t_4 = __pyx_cur_scope->__pyx_v_self->_ptr->shapes;
   __pyx_cur_scope->__pyx_v_shape = __pyx_t_4;
 
-  /* "wx/svg/_nanosvg.pyx":134
+  /* "wx/svg/_nanosvg.pyx":137
  *         self._check_ptr()
  *         cdef NSVGshape *shape = self._ptr.shapes
  *         while shape != NULL:             # <<<<<<<<<<<<<<
@@ -3987,14 +3987,14 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGimage_6shapes_2generator(__pyx_
     __pyx_t_5 = ((__pyx_cur_scope->__pyx_v_shape != NULL) != 0);
     if (!__pyx_t_5) break;
 
-    /* "wx/svg/_nanosvg.pyx":135
+    /* "wx/svg/_nanosvg.pyx":138
  *         cdef NSVGshape *shape = self._ptr.shapes
  *         while shape != NULL:
  *             yield SVGshape.from_ptr(shape)             # <<<<<<<<<<<<<<
  *             shape = shape.next
  * 
  */
-    __pyx_t_1 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_8SVGshape_from_ptr(__pyx_cur_scope->__pyx_v_shape)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_1 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_8SVGshape_from_ptr(__pyx_cur_scope->__pyx_v_shape)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -4005,9 +4005,9 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGimage_6shapes_2generator(__pyx_
     __pyx_generator->resume_label = 1;
     return __pyx_r;
     __pyx_L6_resume_from_yield:;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 135, __pyx_L1_error)
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 138, __pyx_L1_error)
 
-    /* "wx/svg/_nanosvg.pyx":136
+    /* "wx/svg/_nanosvg.pyx":139
  *         while shape != NULL:
  *             yield SVGshape.from_ptr(shape)
  *             shape = shape.next             # <<<<<<<<<<<<<<
@@ -4019,7 +4019,7 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGimage_6shapes_2generator(__pyx_
   }
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
 
-  /* "wx/svg/_nanosvg.pyx":128
+  /* "wx/svg/_nanosvg.pyx":131
  * 
  *     @property
  *     def shapes(self):             # <<<<<<<<<<<<<<
@@ -4155,7 +4155,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGimage_12__setstate_cython__(CYT
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":147
+/* "wx/svg/_nanosvg.pyx":152
  *     cdef NSVGshape *_ptr
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -4184,7 +4184,7 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_8SVGshape___cinit__(struct __pyx_obj_2wx_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":148
+  /* "wx/svg/_nanosvg.pyx":153
  * 
  *     def __cinit__(self):
  *         self._ptr = NULL             # <<<<<<<<<<<<<<
@@ -4193,7 +4193,7 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_8SVGshape___cinit__(struct __pyx_obj_2wx_
  */
   __pyx_v_self->_ptr = NULL;
 
-  /* "wx/svg/_nanosvg.pyx":147
+  /* "wx/svg/_nanosvg.pyx":152
  *     cdef NSVGshape *_ptr
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -4207,7 +4207,7 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_8SVGshape___cinit__(struct __pyx_obj_2wx_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":150
+/* "wx/svg/_nanosvg.pyx":155
  *         self._ptr = NULL
  * 
  *     def _check_ptr(self):             # <<<<<<<<<<<<<<
@@ -4236,7 +4236,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_2_check_ptr(struct __pyx_
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("_check_ptr", 0);
 
-  /* "wx/svg/_nanosvg.pyx":151
+  /* "wx/svg/_nanosvg.pyx":156
  * 
  *     def _check_ptr(self):
  *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
@@ -4246,20 +4246,20 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_2_check_ptr(struct __pyx_
   __pyx_t_1 = ((__pyx_v_self->_ptr == NULL) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "wx/svg/_nanosvg.pyx":152
+    /* "wx/svg/_nanosvg.pyx":157
  *     def _check_ptr(self):
  *         if self._ptr == NULL:
  *             raise ValueError("Invalid SVGshape")             # <<<<<<<<<<<<<<
  * 
  *     @staticmethod
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 157, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 152, __pyx_L1_error)
+    __PYX_ERR(0, 157, __pyx_L1_error)
 
-    /* "wx/svg/_nanosvg.pyx":151
+    /* "wx/svg/_nanosvg.pyx":156
  * 
  *     def _check_ptr(self):
  *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
@@ -4268,7 +4268,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_2_check_ptr(struct __pyx_
  */
   }
 
-  /* "wx/svg/_nanosvg.pyx":150
+  /* "wx/svg/_nanosvg.pyx":155
  *         self._ptr = NULL
  * 
  *     def _check_ptr(self):             # <<<<<<<<<<<<<<
@@ -4289,7 +4289,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_2_check_ptr(struct __pyx_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":155
+/* "wx/svg/_nanosvg.pyx":160
  * 
  *     @staticmethod
  *     cdef SVGshape from_ptr(NSVGshape *ptr):             # <<<<<<<<<<<<<<
@@ -4304,19 +4304,19 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape *__pyx_f_2wx_3svg_8_nanosvg_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("from_ptr", 0);
 
-  /* "wx/svg/_nanosvg.pyx":156
+  /* "wx/svg/_nanosvg.pyx":161
  *     @staticmethod
  *     cdef SVGshape from_ptr(NSVGshape *ptr):
  *         obj = SVGshape()             # <<<<<<<<<<<<<<
  *         obj._ptr = ptr
  *         return obj
  */
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGshape)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGshape)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_obj = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":157
+  /* "wx/svg/_nanosvg.pyx":162
  *     cdef SVGshape from_ptr(NSVGshape *ptr):
  *         obj = SVGshape()
  *         obj._ptr = ptr             # <<<<<<<<<<<<<<
@@ -4325,7 +4325,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape *__pyx_f_2wx_3svg_8_nanosvg_
  */
   __pyx_v_obj->_ptr = __pyx_v_ptr;
 
-  /* "wx/svg/_nanosvg.pyx":158
+  /* "wx/svg/_nanosvg.pyx":163
  *         obj = SVGshape()
  *         obj._ptr = ptr
  *         return obj             # <<<<<<<<<<<<<<
@@ -4337,7 +4337,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape *__pyx_f_2wx_3svg_8_nanosvg_
   __pyx_r = __pyx_v_obj;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":155
+  /* "wx/svg/_nanosvg.pyx":160
  * 
  *     @staticmethod
  *     cdef SVGshape from_ptr(NSVGshape *ptr):             # <<<<<<<<<<<<<<
@@ -4357,7 +4357,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape *__pyx_f_2wx_3svg_8_nanosvg_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":161
+/* "wx/svg/_nanosvg.pyx":166
  * 
  *     @property
  *     def id(self):             # <<<<<<<<<<<<<<
@@ -4386,14 +4386,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_2id___get__(struct __pyx_
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":163
+  /* "wx/svg/_nanosvg.pyx":168
  *     def id(self):
  *         """ Optional 'id' attr of the shape or its group """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.id
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 163, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 168, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4407,12 +4407,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_2id___get__(struct __pyx_
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 168, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":164
+  /* "wx/svg/_nanosvg.pyx":169
  *         """ Optional 'id' attr of the shape or its group """
  *         self._check_ptr()
  *         return self._ptr.id             # <<<<<<<<<<<<<<
@@ -4420,13 +4420,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_2id___get__(struct __pyx_
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_FromString(__pyx_v_self->_ptr->id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_FromString(__pyx_v_self->_ptr->id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":161
+  /* "wx/svg/_nanosvg.pyx":166
  * 
  *     @property
  *     def id(self):             # <<<<<<<<<<<<<<
@@ -4447,7 +4447,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_2id___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":167
+/* "wx/svg/_nanosvg.pyx":172
  * 
  *     @property
  *     def fill(self) -> SVGpaint:             # <<<<<<<<<<<<<<
@@ -4476,14 +4476,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4fill___get__(struct __py
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":169
+  /* "wx/svg/_nanosvg.pyx":174
  *     def fill(self) -> SVGpaint:
  *         """ Fill paint """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return SVGpaint.from_ptr(&self._ptr.fill)
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 174, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4497,12 +4497,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4fill___get__(struct __py
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 174, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":170
+  /* "wx/svg/_nanosvg.pyx":175
  *         """ Fill paint """
  *         self._check_ptr()
  *         return SVGpaint.from_ptr(&self._ptr.fill)             # <<<<<<<<<<<<<<
@@ -4510,13 +4510,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4fill___get__(struct __py
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_8SVGpaint_from_ptr((&__pyx_v_self->_ptr->fill))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_8SVGpaint_from_ptr((&__pyx_v_self->_ptr->fill))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":167
+  /* "wx/svg/_nanosvg.pyx":172
  * 
  *     @property
  *     def fill(self) -> SVGpaint:             # <<<<<<<<<<<<<<
@@ -4537,7 +4537,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4fill___get__(struct __py
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":173
+/* "wx/svg/_nanosvg.pyx":178
  * 
  *     @property
  *     def stroke(self) -> SVGpaint:             # <<<<<<<<<<<<<<
@@ -4566,14 +4566,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_6stroke___get__(struct __
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":175
+  /* "wx/svg/_nanosvg.pyx":180
  *     def stroke(self) -> SVGpaint:
  *         """ Stroke paint """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return SVGpaint.from_ptr(&self._ptr.stroke)
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 180, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4587,12 +4587,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_6stroke___get__(struct __
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 180, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":176
+  /* "wx/svg/_nanosvg.pyx":181
  *         """ Stroke paint """
  *         self._check_ptr()
  *         return SVGpaint.from_ptr(&self._ptr.stroke)             # <<<<<<<<<<<<<<
@@ -4600,13 +4600,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_6stroke___get__(struct __
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_8SVGpaint_from_ptr((&__pyx_v_self->_ptr->stroke))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_8SVGpaint_from_ptr((&__pyx_v_self->_ptr->stroke))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":173
+  /* "wx/svg/_nanosvg.pyx":178
  * 
  *     @property
  *     def stroke(self) -> SVGpaint:             # <<<<<<<<<<<<<<
@@ -4627,7 +4627,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_6stroke___get__(struct __
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":179
+/* "wx/svg/_nanosvg.pyx":184
  * 
  *     @property
  *     def opacity(self) -> float:             # <<<<<<<<<<<<<<
@@ -4656,14 +4656,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_7opacity___get__(struct _
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":181
+  /* "wx/svg/_nanosvg.pyx":186
  *     def opacity(self) -> float:
  *         """ Opacity of the shape. """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.opacity
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4677,12 +4677,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_7opacity___get__(struct _
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":182
+  /* "wx/svg/_nanosvg.pyx":187
  *         """ Opacity of the shape. """
  *         self._check_ptr()
  *         return self._ptr.opacity             # <<<<<<<<<<<<<<
@@ -4690,13 +4690,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_7opacity___get__(struct _
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->opacity); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->opacity); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 187, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":179
+  /* "wx/svg/_nanosvg.pyx":184
  * 
  *     @property
  *     def opacity(self) -> float:             # <<<<<<<<<<<<<<
@@ -4717,7 +4717,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_7opacity___get__(struct _
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":185
+/* "wx/svg/_nanosvg.pyx":190
  * 
  *     @property
  *     def strokeWidth(self) -> float:             # <<<<<<<<<<<<<<
@@ -4746,14 +4746,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_11strokeWidth___get__(str
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":187
+  /* "wx/svg/_nanosvg.pyx":192
  *     def strokeWidth(self) -> float:
  *         """ Stroke width (scaled) """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.strokeWidth
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4767,12 +4767,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_11strokeWidth___get__(str
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 187, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":188
+  /* "wx/svg/_nanosvg.pyx":193
  *         """ Stroke width (scaled) """
  *         self._check_ptr()
  *         return self._ptr.strokeWidth             # <<<<<<<<<<<<<<
@@ -4780,13 +4780,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_11strokeWidth___get__(str
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->strokeWidth); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->strokeWidth); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":185
+  /* "wx/svg/_nanosvg.pyx":190
  * 
  *     @property
  *     def strokeWidth(self) -> float:             # <<<<<<<<<<<<<<
@@ -4807,7 +4807,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_11strokeWidth___get__(str
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":191
+/* "wx/svg/_nanosvg.pyx":196
  * 
  *     @property
  *     def strokeDashOffset(self) -> float:             # <<<<<<<<<<<<<<
@@ -4836,14 +4836,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_16strokeDashOffset___get_
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":193
+  /* "wx/svg/_nanosvg.pyx":198
  *     def strokeDashOffset(self) -> float:
  *         """ Stroke dash offset (scaled) """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.strokeDashOffset
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 198, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4857,12 +4857,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_16strokeDashOffset___get_
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 198, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":194
+  /* "wx/svg/_nanosvg.pyx":199
  *         """ Stroke dash offset (scaled) """
  *         self._check_ptr()
  *         return self._ptr.strokeDashOffset             # <<<<<<<<<<<<<<
@@ -4870,13 +4870,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_16strokeDashOffset___get_
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->strokeDashOffset); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 194, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->strokeDashOffset); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":191
+  /* "wx/svg/_nanosvg.pyx":196
  * 
  *     @property
  *     def strokeDashOffset(self) -> float:             # <<<<<<<<<<<<<<
@@ -4897,7 +4897,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_16strokeDashOffset___get_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":197
+/* "wx/svg/_nanosvg.pyx":202
  * 
  *     @property
  *     def strokeDashArray(self) -> list:             # <<<<<<<<<<<<<<
@@ -4930,14 +4930,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_15strokeDashArray___get__
   char __pyx_t_6;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":199
+  /* "wx/svg/_nanosvg.pyx":204
  *     def strokeDashArray(self) -> list:
  *         """ Stroke dash array (scaled) """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return [self._ptr.strokeDashArray[i]
  *                 for i in range(self._ptr.strokeDashCount)]
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 199, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 204, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4951,12 +4951,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_15strokeDashArray___get__
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":200
+  /* "wx/svg/_nanosvg.pyx":205
  *         """ Stroke dash array (scaled) """
  *         self._check_ptr()
  *         return [self._ptr.strokeDashArray[i]             # <<<<<<<<<<<<<<
@@ -4964,10 +4964,10 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_15strokeDashArray___get__
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 200, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "wx/svg/_nanosvg.pyx":201
+  /* "wx/svg/_nanosvg.pyx":206
  *         self._check_ptr()
  *         return [self._ptr.strokeDashArray[i]
  *                 for i in range(self._ptr.strokeDashCount)]             # <<<<<<<<<<<<<<
@@ -4979,23 +4979,23 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_15strokeDashArray___get__
   for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
     __pyx_v_i = __pyx_t_6;
 
-    /* "wx/svg/_nanosvg.pyx":200
+    /* "wx/svg/_nanosvg.pyx":205
  *         """ Stroke dash array (scaled) """
  *         self._check_ptr()
  *         return [self._ptr.strokeDashArray[i]             # <<<<<<<<<<<<<<
  *                 for i in range(self._ptr.strokeDashCount)]
  * 
  */
-    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_self->_ptr->strokeDashArray[__pyx_v_i])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 200, __pyx_L1_error)
+    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_self->_ptr->strokeDashArray[__pyx_v_i])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 205, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 200, __pyx_L1_error)
+    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 205, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":197
+  /* "wx/svg/_nanosvg.pyx":202
  * 
  *     @property
  *     def strokeDashArray(self) -> list:             # <<<<<<<<<<<<<<
@@ -5016,7 +5016,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_15strokeDashArray___get__
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":204
+/* "wx/svg/_nanosvg.pyx":209
  * 
  *     @property
  *     def strokeLineJoin(self) -> SVGlineJoin:             # <<<<<<<<<<<<<<
@@ -5046,14 +5046,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_14strokeLineJoin___get__(
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":206
+  /* "wx/svg/_nanosvg.pyx":211
  *     def strokeLineJoin(self) -> SVGlineJoin:
  *         """ Stroke join type """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return SVGlineJoin(self._ptr.strokeLineJoin)
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 211, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5067,12 +5067,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_14strokeLineJoin___get__(
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 206, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 211, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":207
+  /* "wx/svg/_nanosvg.pyx":212
  *         """ Stroke join type """
  *         self._check_ptr()
  *         return SVGlineJoin(self._ptr.strokeLineJoin)             # <<<<<<<<<<<<<<
@@ -5080,9 +5080,9 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_14strokeLineJoin___get__(
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_SVGlineJoin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_SVGlineJoin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_From_char(__pyx_v_self->_ptr->strokeLineJoin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_char(__pyx_v_self->_ptr->strokeLineJoin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -5097,14 +5097,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_14strokeLineJoin___get__(
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":204
+  /* "wx/svg/_nanosvg.pyx":209
  * 
  *     @property
  *     def strokeLineJoin(self) -> SVGlineJoin:             # <<<<<<<<<<<<<<
@@ -5126,7 +5126,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_14strokeLineJoin___get__(
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":210
+/* "wx/svg/_nanosvg.pyx":215
  * 
  *     @property
  *     def strokeLineCap(self) -> SVGlineCap:             # <<<<<<<<<<<<<<
@@ -5156,14 +5156,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_13strokeLineCap___get__(s
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":212
+  /* "wx/svg/_nanosvg.pyx":217
  *     def strokeLineCap(self) -> SVGlineCap:
  *         """ Stroke cap type """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return SVGlineCap(self._ptr.strokeLineCap)
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 212, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5177,12 +5177,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_13strokeLineCap___get__(s
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 212, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":213
+  /* "wx/svg/_nanosvg.pyx":218
  *         """ Stroke cap type """
  *         self._check_ptr()
  *         return SVGlineCap(self._ptr.strokeLineCap)             # <<<<<<<<<<<<<<
@@ -5190,9 +5190,9 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_13strokeLineCap___get__(s
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_SVGlineCap); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_SVGlineCap); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_From_char(__pyx_v_self->_ptr->strokeLineCap); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_char(__pyx_v_self->_ptr->strokeLineCap); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -5207,14 +5207,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_13strokeLineCap___get__(s
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 213, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":210
+  /* "wx/svg/_nanosvg.pyx":215
  * 
  *     @property
  *     def strokeLineCap(self) -> SVGlineCap:             # <<<<<<<<<<<<<<
@@ -5236,7 +5236,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_13strokeLineCap___get__(s
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":216
+/* "wx/svg/_nanosvg.pyx":221
  * 
  *     @property
  *     def fillRule(self) -> SVGfillRule:             # <<<<<<<<<<<<<<
@@ -5266,14 +5266,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_8fillRule___get__(struct 
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":218
+  /* "wx/svg/_nanosvg.pyx":223
  *     def fillRule(self) -> SVGfillRule:
  *         """ Fill rule """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return SVGfillRule(self._ptr.fillRule)
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 218, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 223, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5287,12 +5287,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_8fillRule___get__(struct 
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 218, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 223, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":219
+  /* "wx/svg/_nanosvg.pyx":224
  *         """ Fill rule """
  *         self._check_ptr()
  *         return SVGfillRule(self._ptr.fillRule)             # <<<<<<<<<<<<<<
@@ -5300,9 +5300,9 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_8fillRule___get__(struct 
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_SVGfillRule); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 219, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_SVGfillRule); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_From_char(__pyx_v_self->_ptr->fillRule); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 219, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_char(__pyx_v_self->_ptr->fillRule); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 224, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -5317,14 +5317,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_8fillRule___get__(struct 
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 219, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 224, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":216
+  /* "wx/svg/_nanosvg.pyx":221
  * 
  *     @property
  *     def fillRule(self) -> SVGfillRule:             # <<<<<<<<<<<<<<
@@ -5346,7 +5346,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_8fillRule___get__(struct 
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":222
+/* "wx/svg/_nanosvg.pyx":227
  * 
  *     @property
  *     def miterLimit(self) -> float:             # <<<<<<<<<<<<<<
@@ -5375,14 +5375,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_10miterLimit___get__(stru
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":224
+  /* "wx/svg/_nanosvg.pyx":229
  *     def miterLimit(self) -> float:
  *         """ Miter limit """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.miterLimit
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 229, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5396,12 +5396,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_10miterLimit___get__(stru
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 224, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 229, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":225
+  /* "wx/svg/_nanosvg.pyx":230
  *         """ Miter limit """
  *         self._check_ptr()
  *         return self._ptr.miterLimit             # <<<<<<<<<<<<<<
@@ -5409,13 +5409,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_10miterLimit___get__(stru
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->miterLimit); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 225, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->miterLimit); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 230, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":222
+  /* "wx/svg/_nanosvg.pyx":227
  * 
  *     @property
  *     def miterLimit(self) -> float:             # <<<<<<<<<<<<<<
@@ -5436,7 +5436,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_10miterLimit___get__(stru
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":228
+/* "wx/svg/_nanosvg.pyx":233
  * 
  *     @property
  *     def flags(self) -> int:             # <<<<<<<<<<<<<<
@@ -5465,14 +5465,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_5flags___get__(struct __p
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":230
+  /* "wx/svg/_nanosvg.pyx":235
  *     def flags(self) -> int:
  *         """ Logical OR of SVG_FLAGS_* flags """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return int(self._ptr.flags)
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 235, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5486,12 +5486,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_5flags___get__(struct __p
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 230, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 235, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":231
+  /* "wx/svg/_nanosvg.pyx":236
  *         """ Logical OR of SVG_FLAGS_* flags """
  *         self._check_ptr()
  *         return int(self._ptr.flags)             # <<<<<<<<<<<<<<
@@ -5499,16 +5499,16 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_5flags___get__(struct __p
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_char(__pyx_v_self->_ptr->flags); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 231, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_char(__pyx_v_self->_ptr->flags); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyInt_Type)), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 231, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyInt_Type)), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":228
+  /* "wx/svg/_nanosvg.pyx":233
  * 
  *     @property
  *     def flags(self) -> int:             # <<<<<<<<<<<<<<
@@ -5529,7 +5529,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_5flags___get__(struct __p
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":234
+/* "wx/svg/_nanosvg.pyx":239
  * 
  *     @property
  *     def bounds(self) -> list:             # <<<<<<<<<<<<<<
@@ -5560,14 +5560,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_6bounds___get__(struct __
   long __pyx_t_4;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":236
+  /* "wx/svg/_nanosvg.pyx":241
  *     def bounds(self) -> list:
  *         """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return [self._ptr.bounds[i] for i in range(4)]
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 236, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 241, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5581,12 +5581,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_6bounds___get__(struct __
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 236, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 241, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":237
+  /* "wx/svg/_nanosvg.pyx":242
  *         """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
  *         self._check_ptr()
  *         return [self._ptr.bounds[i] for i in range(4)]             # <<<<<<<<<<<<<<
@@ -5594,20 +5594,20 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_6bounds___get__(struct __
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 237, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   for (__pyx_t_4 = 0; __pyx_t_4 < 4; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
-    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[__pyx_v_i])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 237, __pyx_L1_error)
+    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[__pyx_v_i])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 242, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 237, __pyx_L1_error)
+    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 242, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":234
+  /* "wx/svg/_nanosvg.pyx":239
  * 
  *     @property
  *     def bounds(self) -> list:             # <<<<<<<<<<<<<<
@@ -5628,7 +5628,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_6bounds___get__(struct __
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":240
+/* "wx/svg/_nanosvg.pyx":245
  * 
  *     @property
  *     def minx(self) -> float:             # <<<<<<<<<<<<<<
@@ -5657,14 +5657,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4minx___get__(struct __py
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":241
+  /* "wx/svg/_nanosvg.pyx":246
  *     @property
  *     def minx(self) -> float:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.bounds[0]
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 241, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 246, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5678,12 +5678,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4minx___get__(struct __py
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 241, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":242
+  /* "wx/svg/_nanosvg.pyx":247
  *     def minx(self) -> float:
  *         self._check_ptr()
  *         return self._ptr.bounds[0]             # <<<<<<<<<<<<<<
@@ -5691,13 +5691,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4minx___get__(struct __py
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":240
+  /* "wx/svg/_nanosvg.pyx":245
  * 
  *     @property
  *     def minx(self) -> float:             # <<<<<<<<<<<<<<
@@ -5718,7 +5718,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4minx___get__(struct __py
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":245
+/* "wx/svg/_nanosvg.pyx":250
  * 
  *     @property
  *     def miny(self) -> float:             # <<<<<<<<<<<<<<
@@ -5747,14 +5747,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4miny___get__(struct __py
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":246
+  /* "wx/svg/_nanosvg.pyx":251
  *     @property
  *     def miny(self) -> float:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.bounds[1]
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 251, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5768,12 +5768,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4miny___get__(struct __py
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 251, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":247
+  /* "wx/svg/_nanosvg.pyx":252
  *     def miny(self) -> float:
  *         self._check_ptr()
  *         return self._ptr.bounds[1]             # <<<<<<<<<<<<<<
@@ -5781,13 +5781,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4miny___get__(struct __py
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[1])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[1])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 252, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":245
+  /* "wx/svg/_nanosvg.pyx":250
  * 
  *     @property
  *     def miny(self) -> float:             # <<<<<<<<<<<<<<
@@ -5808,7 +5808,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4miny___get__(struct __py
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":250
+/* "wx/svg/_nanosvg.pyx":255
  * 
  *     @property
  *     def maxx(self) -> float:             # <<<<<<<<<<<<<<
@@ -5837,14 +5837,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4maxx___get__(struct __py
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":251
+  /* "wx/svg/_nanosvg.pyx":256
  *     @property
  *     def maxx(self) -> float:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.bounds[2]
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 251, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 256, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5858,12 +5858,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4maxx___get__(struct __py
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 251, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 256, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":252
+  /* "wx/svg/_nanosvg.pyx":257
  *     def maxx(self) -> float:
  *         self._check_ptr()
  *         return self._ptr.bounds[2]             # <<<<<<<<<<<<<<
@@ -5871,13 +5871,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4maxx___get__(struct __py
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[2])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 252, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[2])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 257, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":250
+  /* "wx/svg/_nanosvg.pyx":255
  * 
  *     @property
  *     def maxx(self) -> float:             # <<<<<<<<<<<<<<
@@ -5898,7 +5898,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4maxx___get__(struct __py
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":255
+/* "wx/svg/_nanosvg.pyx":260
  * 
  *     @property
  *     def maxy(self) -> float:             # <<<<<<<<<<<<<<
@@ -5927,14 +5927,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4maxy___get__(struct __py
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":256
+  /* "wx/svg/_nanosvg.pyx":261
  *     @property
  *     def maxy(self) -> float:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._ptr.bounds[3]
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 256, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 261, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5948,12 +5948,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4maxy___get__(struct __py
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 256, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 261, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":257
+  /* "wx/svg/_nanosvg.pyx":262
  *     def maxy(self) -> float:
  *         self._check_ptr()
  *         return self._ptr.bounds[3]             # <<<<<<<<<<<<<<
@@ -5961,13 +5961,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4maxy___get__(struct __py
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[3])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 257, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[3])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 262, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":255
+  /* "wx/svg/_nanosvg.pyx":260
  * 
  *     @property
  *     def maxy(self) -> float:             # <<<<<<<<<<<<<<
@@ -5989,7 +5989,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_4maxy___get__(struct __py
 }
 static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGshape_5paths_2generator1(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
-/* "wx/svg/_nanosvg.pyx":260
+/* "wx/svg/_nanosvg.pyx":265
  * 
  *     @property
  *     def paths(self):             # <<<<<<<<<<<<<<
@@ -6019,7 +6019,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_5paths___get__(struct __p
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__ *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 260, __pyx_L1_error)
+    __PYX_ERR(0, 265, __pyx_L1_error)
   } else {
     __Pyx_GOTREF(__pyx_cur_scope);
   }
@@ -6027,7 +6027,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_5paths___get__(struct __p
   __Pyx_INCREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   __Pyx_GIVEREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_2wx_3svg_8_nanosvg_8SVGshape_5paths_2generator1, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_get, __pyx_n_s_SVGshape___get, __pyx_n_s_wx_svg__nanosvg); if (unlikely(!gen)) __PYX_ERR(0, 260, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_2wx_3svg_8_nanosvg_8SVGshape_5paths_2generator1, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_get, __pyx_n_s_SVGshape___get, __pyx_n_s_wx_svg__nanosvg); if (unlikely(!gen)) __PYX_ERR(0, 265, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -6062,16 +6062,16 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGshape_5paths_2generator1(__pyx_
     return NULL;
   }
   __pyx_L3_first_run:;
-  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 260, __pyx_L1_error)
+  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 265, __pyx_L1_error)
 
-  /* "wx/svg/_nanosvg.pyx":264
+  /* "wx/svg/_nanosvg.pyx":269
  *         A generator that iterates over the paths contained in the SVGshape
  *         """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         cdef NSVGpath *path = self._ptr.paths
  *         while path != NULL:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 264, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6085,12 +6085,12 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGshape_5paths_2generator1(__pyx_
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 264, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 269, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":265
+  /* "wx/svg/_nanosvg.pyx":270
  *         """
  *         self._check_ptr()
  *         cdef NSVGpath *path = self._ptr.paths             # <<<<<<<<<<<<<<
@@ -6100,7 +6100,7 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGshape_5paths_2generator1(__pyx_
   __pyx_t_4 = __pyx_cur_scope->__pyx_v_self->_ptr->paths;
   __pyx_cur_scope->__pyx_v_path = __pyx_t_4;
 
-  /* "wx/svg/_nanosvg.pyx":266
+  /* "wx/svg/_nanosvg.pyx":271
  *         self._check_ptr()
  *         cdef NSVGpath *path = self._ptr.paths
  *         while path != NULL:             # <<<<<<<<<<<<<<
@@ -6111,14 +6111,14 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGshape_5paths_2generator1(__pyx_
     __pyx_t_5 = ((__pyx_cur_scope->__pyx_v_path != NULL) != 0);
     if (!__pyx_t_5) break;
 
-    /* "wx/svg/_nanosvg.pyx":267
+    /* "wx/svg/_nanosvg.pyx":272
  *         cdef NSVGpath *path = self._ptr.paths
  *         while path != NULL:
  *             yield SVGpath.from_ptr(path)             # <<<<<<<<<<<<<<
  *             path = path.next
  * 
  */
-    __pyx_t_1 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_7SVGpath_from_ptr(__pyx_cur_scope->__pyx_v_path)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 267, __pyx_L1_error)
+    __pyx_t_1 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_7SVGpath_from_ptr(__pyx_cur_scope->__pyx_v_path)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 272, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -6129,9 +6129,9 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGshape_5paths_2generator1(__pyx_
     __pyx_generator->resume_label = 1;
     return __pyx_r;
     __pyx_L6_resume_from_yield:;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 267, __pyx_L1_error)
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 272, __pyx_L1_error)
 
-    /* "wx/svg/_nanosvg.pyx":268
+    /* "wx/svg/_nanosvg.pyx":273
  *         while path != NULL:
  *             yield SVGpath.from_ptr(path)
  *             path = path.next             # <<<<<<<<<<<<<<
@@ -6143,7 +6143,7 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_8SVGshape_5paths_2generator1(__pyx_
   }
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
 
-  /* "wx/svg/_nanosvg.pyx":260
+  /* "wx/svg/_nanosvg.pyx":265
  * 
  *     @property
  *     def paths(self):             # <<<<<<<<<<<<<<
@@ -6279,7 +6279,975 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGshape_6__setstate_cython__(CYTH
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":277
+/* "wx/svg/_nanosvg.pyx":285
+ *     cdef NSVGpath *_ptr
+ * 
+ *     def __cinit__(self):             # <<<<<<<<<<<<<<
+ *         self._ptr = NULL
+ * 
+ */
+
+/* Python wrapper */
+static int __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
+  if (unlikely(PyTuple_GET_SIZE(__pyx_args) > 0)) {
+    __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 0, 0, PyTuple_GET_SIZE(__pyx_args)); return -1;}
+  if (unlikely(__pyx_kwds) && unlikely(PyDict_Size(__pyx_kwds) > 0) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__cinit__", 0))) return -1;
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath___cinit__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__cinit__", 0);
+
+  /* "wx/svg/_nanosvg.pyx":286
+ * 
+ *     def __cinit__(self):
+ *         self._ptr = NULL             # <<<<<<<<<<<<<<
+ * 
+ *     @staticmethod
+ */
+  __pyx_v_self->_ptr = NULL;
+
+  /* "wx/svg/_nanosvg.pyx":285
+ *     cdef NSVGpath *_ptr
+ * 
+ *     def __cinit__(self):             # <<<<<<<<<<<<<<
+ *         self._ptr = NULL
+ * 
+ */
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "wx/svg/_nanosvg.pyx":289
+ * 
+ *     @staticmethod
+ *     cdef SVGpath from_ptr(NSVGpath *ptr):             # <<<<<<<<<<<<<<
+ *         obj = SVGpath()
+ *         obj._ptr = ptr
+ */
+
+static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_f_2wx_3svg_8_nanosvg_7SVGpath_from_ptr(NSVGpath *__pyx_v_ptr) {
+  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_obj = NULL;
+  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("from_ptr", 0);
+
+  /* "wx/svg/_nanosvg.pyx":290
+ *     @staticmethod
+ *     cdef SVGpath from_ptr(NSVGpath *ptr):
+ *         obj = SVGpath()             # <<<<<<<<<<<<<<
+ *         obj._ptr = ptr
+ *         return obj
+ */
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGpath)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 290, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_obj = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "wx/svg/_nanosvg.pyx":291
+ *     cdef SVGpath from_ptr(NSVGpath *ptr):
+ *         obj = SVGpath()
+ *         obj._ptr = ptr             # <<<<<<<<<<<<<<
+ *         return obj
+ * 
+ */
+  __pyx_v_obj->_ptr = __pyx_v_ptr;
+
+  /* "wx/svg/_nanosvg.pyx":292
+ *         obj = SVGpath()
+ *         obj._ptr = ptr
+ *         return obj             # <<<<<<<<<<<<<<
+ * 
+ *     def _check_ptr(self):
+ */
+  __Pyx_XDECREF(((PyObject *)__pyx_r));
+  __Pyx_INCREF(((PyObject *)__pyx_v_obj));
+  __pyx_r = __pyx_v_obj;
+  goto __pyx_L0;
+
+  /* "wx/svg/_nanosvg.pyx":289
+ * 
+ *     @staticmethod
+ *     cdef SVGpath from_ptr(NSVGpath *ptr):             # <<<<<<<<<<<<<<
+ *         obj = SVGpath()
+ *         obj._ptr = ptr
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.from_ptr", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XDECREF((PyObject *)__pyx_v_obj);
+  __Pyx_XGIVEREF((PyObject *)__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "wx/svg/_nanosvg.pyx":294
+ *         return obj
+ * 
+ *     def _check_ptr(self):             # <<<<<<<<<<<<<<
+ *         if self._ptr == NULL:
+ *             raise ValueError("Invalid SVGpath")
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3_check_ptr(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static char __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr[] = "SVGpath._check_ptr(self)";
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3_check_ptr(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_check_ptr (wrapper)", 0);
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  __Pyx_RefNannySetupContext("_check_ptr", 0);
+
+  /* "wx/svg/_nanosvg.pyx":295
+ * 
+ *     def _check_ptr(self):
+ *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Invalid SVGpath")
+ * 
+ */
+  __pyx_t_1 = ((__pyx_v_self->_ptr == NULL) != 0);
+  if (unlikely(__pyx_t_1)) {
+
+    /* "wx/svg/_nanosvg.pyx":296
+ *     def _check_ptr(self):
+ *         if self._ptr == NULL:
+ *             raise ValueError("Invalid SVGpath")             # <<<<<<<<<<<<<<
+ * 
+ *     @property
+ */
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 296, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __PYX_ERR(0, 296, __pyx_L1_error)
+
+    /* "wx/svg/_nanosvg.pyx":295
+ * 
+ *     def _check_ptr(self):
+ *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Invalid SVGpath")
+ * 
+ */
+  }
+
+  /* "wx/svg/_nanosvg.pyx":294
+ *         return obj
+ * 
+ *     def _check_ptr(self):             # <<<<<<<<<<<<<<
+ *         if self._ptr == NULL:
+ *             raise ValueError("Invalid SVGpath")
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath._check_ptr", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "wx/svg/_nanosvg.pyx":299
+ * 
+ *     @property
+ *     def pts(self) -> list:             # <<<<<<<<<<<<<<
+ *         """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+ *         self._check_ptr()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3pts_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3pts_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_3pts___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_3pts___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+  int __pyx_v_i;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
+  int __pyx_t_5;
+  int __pyx_t_6;
+  __Pyx_RefNannySetupContext("__get__", 0);
+
+  /* "wx/svg/_nanosvg.pyx":301
+ *     def pts(self) -> list:
+ *         """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+ *         self._check_ptr()             # <<<<<<<<<<<<<<
+ *         return [self._ptr.pts[i] for i in range(self._ptr.npts)]
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "wx/svg/_nanosvg.pyx":302
+ *         """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+ *         self._check_ptr()
+ *         return [self._ptr.pts[i] for i in range(self._ptr.npts)]             # <<<<<<<<<<<<<<
+ * 
+ *     @property
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 302, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = __pyx_v_self->_ptr->npts;
+  __pyx_t_5 = __pyx_t_4;
+  for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+    __pyx_v_i = __pyx_t_6;
+    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_self->_ptr->pts[__pyx_v_i])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 302, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 302, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  }
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "wx/svg/_nanosvg.pyx":299
+ * 
+ *     @property
+ *     def pts(self) -> list:             # <<<<<<<<<<<<<<
+ *         """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+ *         self._check_ptr()
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.pts.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "wx/svg/_nanosvg.pyx":305
+ * 
+ *     @property
+ *     def closed(self) -> bool:             # <<<<<<<<<<<<<<
+ *         """ Flag indicating if shapes should be treated as closed """
+ *         self._check_ptr()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6closed_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6closed_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6closed___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6closed___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
+  __Pyx_RefNannySetupContext("__get__", 0);
+
+  /* "wx/svg/_nanosvg.pyx":307
+ *     def closed(self) -> bool:
+ *         """ Flag indicating if shapes should be treated as closed """
+ *         self._check_ptr()             # <<<<<<<<<<<<<<
+ *         return bool(self._ptr.closed)
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 307, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "wx/svg/_nanosvg.pyx":308
+ *         """ Flag indicating if shapes should be treated as closed """
+ *         self._check_ptr()
+ *         return bool(self._ptr.closed)             # <<<<<<<<<<<<<<
+ * 
+ *     @property
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_char(__pyx_v_self->_ptr->closed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyBool_FromLong((!(!__pyx_t_4))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "wx/svg/_nanosvg.pyx":305
+ * 
+ *     @property
+ *     def closed(self) -> bool:             # <<<<<<<<<<<<<<
+ *         """ Flag indicating if shapes should be treated as closed """
+ *         self._check_ptr()
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.closed.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "wx/svg/_nanosvg.pyx":311
+ * 
+ *     @property
+ *     def bounds(self) -> list:             # <<<<<<<<<<<<<<
+ *         """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
+ *         self._check_ptr()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6bounds_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6bounds_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6bounds___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6bounds___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+  long __pyx_v_i;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  long __pyx_t_4;
+  __Pyx_RefNannySetupContext("__get__", 0);
+
+  /* "wx/svg/_nanosvg.pyx":313
+ *     def bounds(self) -> list:
+ *         """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
+ *         self._check_ptr()             # <<<<<<<<<<<<<<
+ *         return [self._ptr.bounds[i] for i in range(4)]
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 313, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "wx/svg/_nanosvg.pyx":314
+ *         """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
+ *         self._check_ptr()
+ *         return [self._ptr.bounds[i] for i in range(4)]             # <<<<<<<<<<<<<<
+ * 
+ *     @property
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 314, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  for (__pyx_t_4 = 0; __pyx_t_4 < 4; __pyx_t_4+=1) {
+    __pyx_v_i = __pyx_t_4;
+    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[__pyx_v_i])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 314, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 314, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  }
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "wx/svg/_nanosvg.pyx":311
+ * 
+ *     @property
+ *     def bounds(self) -> list:             # <<<<<<<<<<<<<<
+ *         """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
+ *         self._check_ptr()
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.bounds.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "wx/svg/_nanosvg.pyx":317
+ * 
+ *     @property
+ *     def minx(self) -> float:             # <<<<<<<<<<<<<<
+ *         self._check_ptr()
+ *         return self._ptr.bounds[0]
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4minx_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4minx_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4minx___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4minx___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  __Pyx_RefNannySetupContext("__get__", 0);
+
+  /* "wx/svg/_nanosvg.pyx":318
+ *     @property
+ *     def minx(self) -> float:
+ *         self._check_ptr()             # <<<<<<<<<<<<<<
+ *         return self._ptr.bounds[0]
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "wx/svg/_nanosvg.pyx":319
+ *     def minx(self) -> float:
+ *         self._check_ptr()
+ *         return self._ptr.bounds[0]             # <<<<<<<<<<<<<<
+ * 
+ *     @property
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 319, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "wx/svg/_nanosvg.pyx":317
+ * 
+ *     @property
+ *     def minx(self) -> float:             # <<<<<<<<<<<<<<
+ *         self._check_ptr()
+ *         return self._ptr.bounds[0]
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.minx.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "wx/svg/_nanosvg.pyx":322
+ * 
+ *     @property
+ *     def miny(self) -> float:             # <<<<<<<<<<<<<<
+ *         self._check_ptr()
+ *         return self._ptr.bounds[1]
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4miny_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4miny_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4miny___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4miny___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  __Pyx_RefNannySetupContext("__get__", 0);
+
+  /* "wx/svg/_nanosvg.pyx":323
+ *     @property
+ *     def miny(self) -> float:
+ *         self._check_ptr()             # <<<<<<<<<<<<<<
+ *         return self._ptr.bounds[1]
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "wx/svg/_nanosvg.pyx":324
+ *     def miny(self) -> float:
+ *         self._check_ptr()
+ *         return self._ptr.bounds[1]             # <<<<<<<<<<<<<<
+ * 
+ *     @property
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[1])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "wx/svg/_nanosvg.pyx":322
+ * 
+ *     @property
+ *     def miny(self) -> float:             # <<<<<<<<<<<<<<
+ *         self._check_ptr()
+ *         return self._ptr.bounds[1]
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.miny.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "wx/svg/_nanosvg.pyx":327
+ * 
+ *     @property
+ *     def maxx(self) -> float:             # <<<<<<<<<<<<<<
+ *         self._check_ptr()
+ *         return self._ptr.bounds[2]
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxx_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxx_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxx___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxx___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  __Pyx_RefNannySetupContext("__get__", 0);
+
+  /* "wx/svg/_nanosvg.pyx":328
+ *     @property
+ *     def maxx(self) -> float:
+ *         self._check_ptr()             # <<<<<<<<<<<<<<
+ *         return self._ptr.bounds[2]
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "wx/svg/_nanosvg.pyx":329
+ *     def maxx(self) -> float:
+ *         self._check_ptr()
+ *         return self._ptr.bounds[2]             # <<<<<<<<<<<<<<
+ * 
+ *     @property
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[2])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "wx/svg/_nanosvg.pyx":327
+ * 
+ *     @property
+ *     def maxx(self) -> float:             # <<<<<<<<<<<<<<
+ *         self._check_ptr()
+ *         return self._ptr.bounds[2]
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.maxx.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "wx/svg/_nanosvg.pyx":332
+ * 
+ *     @property
+ *     def maxy(self) -> float:             # <<<<<<<<<<<<<<
+ *         self._check_ptr()
+ *         return self._ptr.bounds[3]
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxy_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxy_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxy___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxy___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  __Pyx_RefNannySetupContext("__get__", 0);
+
+  /* "wx/svg/_nanosvg.pyx":333
+ *     @property
+ *     def maxy(self) -> float:
+ *         self._check_ptr()             # <<<<<<<<<<<<<<
+ *         return self._ptr.bounds[3]
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 333, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 333, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "wx/svg/_nanosvg.pyx":334
+ *     def maxy(self) -> float:
+ *         self._check_ptr()
+ *         return self._ptr.bounds[3]             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[3])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 334, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "wx/svg/_nanosvg.pyx":332
+ * 
+ *     @property
+ *     def maxy(self) -> float:             # <<<<<<<<<<<<<<
+ *         self._check_ptr()
+ *         return self._ptr.bounds[3]
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.maxy.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_5__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static char __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__[] = "SVGpath.__reduce_cython__(self)";
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_5__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("__reduce_cython__", 0);
+
+  /* "(tree fragment)":2
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __PYX_ERR(1, 2, __pyx_L1_error)
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_7__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static char __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_6__setstate_cython__[] = "SVGpath.__setstate_cython__(self, __pyx_state)";
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_7__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6__setstate_cython__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("__setstate_cython__", 0);
+
+  /* "(tree fragment)":4
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ */
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __PYX_ERR(1, 4, __pyx_L1_error)
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "wx/svg/_nanosvg.pyx":343
  *     cdef NSVGpaint *_ptr
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -6308,7 +7276,7 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint___cinit__(struct __pyx_obj_2wx_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":278
+  /* "wx/svg/_nanosvg.pyx":344
  * 
  *     def __cinit__(self):
  *         self._ptr = NULL             # <<<<<<<<<<<<<<
@@ -6317,7 +7285,7 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint___cinit__(struct __pyx_obj_2wx_
  */
   __pyx_v_self->_ptr = NULL;
 
-  /* "wx/svg/_nanosvg.pyx":277
+  /* "wx/svg/_nanosvg.pyx":343
  *     cdef NSVGpaint *_ptr
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -6331,7 +7299,7 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint___cinit__(struct __pyx_obj_2wx_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":281
+/* "wx/svg/_nanosvg.pyx":347
  * 
  *     @staticmethod
  *     cdef SVGpaint from_ptr(NSVGpaint *ptr):             # <<<<<<<<<<<<<<
@@ -6346,19 +7314,19 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_f_2wx_3svg_8_nanosvg_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("from_ptr", 0);
 
-  /* "wx/svg/_nanosvg.pyx":282
+  /* "wx/svg/_nanosvg.pyx":348
  *     @staticmethod
  *     cdef SVGpaint from_ptr(NSVGpaint *ptr):
  *         obj = SVGpaint()             # <<<<<<<<<<<<<<
  *         obj._ptr = ptr
  *         return obj
  */
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGpaint)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 282, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGpaint)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 348, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_obj = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":283
+  /* "wx/svg/_nanosvg.pyx":349
  *     cdef SVGpaint from_ptr(NSVGpaint *ptr):
  *         obj = SVGpaint()
  *         obj._ptr = ptr             # <<<<<<<<<<<<<<
@@ -6367,7 +7335,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_f_2wx_3svg_8_nanosvg_
  */
   __pyx_v_obj->_ptr = __pyx_v_ptr;
 
-  /* "wx/svg/_nanosvg.pyx":284
+  /* "wx/svg/_nanosvg.pyx":350
  *         obj = SVGpaint()
  *         obj._ptr = ptr
  *         return obj             # <<<<<<<<<<<<<<
@@ -6379,7 +7347,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_f_2wx_3svg_8_nanosvg_
   __pyx_r = __pyx_v_obj;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":281
+  /* "wx/svg/_nanosvg.pyx":347
  * 
  *     @staticmethod
  *     cdef SVGpaint from_ptr(NSVGpaint *ptr):             # <<<<<<<<<<<<<<
@@ -6399,7 +7367,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *__pyx_f_2wx_3svg_8_nanosvg_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":286
+/* "wx/svg/_nanosvg.pyx":352
  *         return obj
  * 
  *     def _check_ptr(self):             # <<<<<<<<<<<<<<
@@ -6428,7 +7396,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_2_check_ptr(struct __pyx_
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("_check_ptr", 0);
 
-  /* "wx/svg/_nanosvg.pyx":287
+  /* "wx/svg/_nanosvg.pyx":353
  * 
  *     def _check_ptr(self):
  *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
@@ -6438,20 +7406,20 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_2_check_ptr(struct __pyx_
   __pyx_t_1 = ((__pyx_v_self->_ptr == NULL) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "wx/svg/_nanosvg.pyx":288
+    /* "wx/svg/_nanosvg.pyx":354
  *     def _check_ptr(self):
  *         if self._ptr == NULL:
  *             raise ValueError("Invalid SVGpaint")             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 288, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 354, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 288, __pyx_L1_error)
+    __PYX_ERR(0, 354, __pyx_L1_error)
 
-    /* "wx/svg/_nanosvg.pyx":287
+    /* "wx/svg/_nanosvg.pyx":353
  * 
  *     def _check_ptr(self):
  *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
@@ -6460,7 +7428,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_2_check_ptr(struct __pyx_
  */
   }
 
-  /* "wx/svg/_nanosvg.pyx":286
+  /* "wx/svg/_nanosvg.pyx":352
  *         return obj
  * 
  *     def _check_ptr(self):             # <<<<<<<<<<<<<<
@@ -6481,7 +7449,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_2_check_ptr(struct __pyx_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":291
+/* "wx/svg/_nanosvg.pyx":357
  * 
  *     @property
  *     def type(self) -> SVGpaintType:             # <<<<<<<<<<<<<<
@@ -6511,14 +7479,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_4type___get__(struct __py
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":293
+  /* "wx/svg/_nanosvg.pyx":359
  *     def type(self) -> SVGpaintType:
  *         """ Flag indicating the type of paint info, solid color or type of gradient """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return SVGpaintType(self._ptr.type)
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 359, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6532,12 +7500,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_4type___get__(struct __py
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 293, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 359, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":294
+  /* "wx/svg/_nanosvg.pyx":360
  *         """ Flag indicating the type of paint info, solid color or type of gradient """
  *         self._check_ptr()
  *         return SVGpaintType(self._ptr.type)             # <<<<<<<<<<<<<<
@@ -6545,9 +7513,9 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_4type___get__(struct __py
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_SVGpaintType); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 294, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_SVGpaintType); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 360, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_From_char(__pyx_v_self->_ptr->type); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 294, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_char(__pyx_v_self->_ptr->type); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 360, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -6562,14 +7530,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_4type___get__(struct __py
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 294, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 360, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":291
+  /* "wx/svg/_nanosvg.pyx":357
  * 
  *     @property
  *     def type(self) -> SVGpaintType:             # <<<<<<<<<<<<<<
@@ -6591,7 +7559,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_4type___get__(struct __py
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":297
+/* "wx/svg/_nanosvg.pyx":363
  * 
  *     @property
  *     def color(self) -> uint:             # <<<<<<<<<<<<<<
@@ -6621,14 +7589,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_5color___get__(struct __p
   int __pyx_t_4;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":298
+  /* "wx/svg/_nanosvg.pyx":364
  *     @property
  *     def color(self) -> uint:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         if self.type != SVG_PAINT_COLOR:
  *             raise ValueError("Color not valid in this paint object")
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 364, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6642,43 +7610,43 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_5color___get__(struct __p
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 298, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 364, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":299
+  /* "wx/svg/_nanosvg.pyx":365
  *     def color(self) -> uint:
  *         self._check_ptr()
  *         if self.type != SVG_PAINT_COLOR:             # <<<<<<<<<<<<<<
  *             raise ValueError("Color not valid in this paint object")
  *         return self._ptr.color
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_type); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 299, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_type); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 365, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_From_enum____pyx_t_2wx_3svg_8_nanosvg_SVGpaintType(__pyx_e_2wx_3svg_8_nanosvg_SVG_PAINT_COLOR); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 299, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_enum____pyx_t_2wx_3svg_8_nanosvg_SVGpaintType(__pyx_e_2wx_3svg_8_nanosvg_SVG_PAINT_COLOR); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 365, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_RichCompare(__pyx_t_1, __pyx_t_2, Py_NE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 299, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_t_1, __pyx_t_2, Py_NE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 365, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 299, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 365, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (unlikely(__pyx_t_4)) {
 
-    /* "wx/svg/_nanosvg.pyx":300
+    /* "wx/svg/_nanosvg.pyx":366
  *         self._check_ptr()
  *         if self.type != SVG_PAINT_COLOR:
  *             raise ValueError("Color not valid in this paint object")             # <<<<<<<<<<<<<<
  *         return self._ptr.color
  * 
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 300, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 366, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 300, __pyx_L1_error)
+    __PYX_ERR(0, 366, __pyx_L1_error)
 
-    /* "wx/svg/_nanosvg.pyx":299
+    /* "wx/svg/_nanosvg.pyx":365
  *     def color(self) -> uint:
  *         self._check_ptr()
  *         if self.type != SVG_PAINT_COLOR:             # <<<<<<<<<<<<<<
@@ -6687,7 +7655,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_5color___get__(struct __p
  */
   }
 
-  /* "wx/svg/_nanosvg.pyx":301
+  /* "wx/svg/_nanosvg.pyx":367
  *         if self.type != SVG_PAINT_COLOR:
  *             raise ValueError("Color not valid in this paint object")
  *         return self._ptr.color             # <<<<<<<<<<<<<<
@@ -6695,13 +7663,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_5color___get__(struct __p
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_3 = __Pyx_PyInt_From_unsigned_int(__pyx_v_self->_ptr->color); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_unsigned_int(__pyx_v_self->_ptr->color); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 367, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":297
+  /* "wx/svg/_nanosvg.pyx":363
  * 
  *     @property
  *     def color(self) -> uint:             # <<<<<<<<<<<<<<
@@ -6722,7 +7690,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_5color___get__(struct __p
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":304
+/* "wx/svg/_nanosvg.pyx":370
  * 
  *     @property
  *     def gradient(self) -> SVGgradient:             # <<<<<<<<<<<<<<
@@ -6753,14 +7721,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_8gradient___get__(struct 
   int __pyx_t_5;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":305
+  /* "wx/svg/_nanosvg.pyx":371
  *     @property
  *     def gradient(self) -> SVGgradient:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         if self.type not in [SVG_PAINT_LINEAR_GRADIENT, SVG_PAINT_RADIAL_GRADIENT]:
  *             raise ValueError("Gradient not valid in this paint object")
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 305, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 371, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6774,36 +7742,36 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_8gradient___get__(struct 
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 305, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 371, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":306
+  /* "wx/svg/_nanosvg.pyx":372
  *     def gradient(self) -> SVGgradient:
  *         self._check_ptr()
  *         if self.type not in [SVG_PAINT_LINEAR_GRADIENT, SVG_PAINT_RADIAL_GRADIENT]:             # <<<<<<<<<<<<<<
  *             raise ValueError("Gradient not valid in this paint object")
  *         return SVGgradient.from_ptr(self._ptr.gradient)
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_type); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_type); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_From_enum____pyx_t_2wx_3svg_8_nanosvg_SVGpaintType(__pyx_e_2wx_3svg_8_nanosvg_SVG_PAINT_LINEAR_GRADIENT); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_enum____pyx_t_2wx_3svg_8_nanosvg_SVGpaintType(__pyx_e_2wx_3svg_8_nanosvg_SVG_PAINT_LINEAR_GRADIENT); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_RichCompare(__pyx_t_1, __pyx_t_2, Py_NE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_t_1, __pyx_t_2, Py_NE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_5) {
   } else {
     __pyx_t_4 = __pyx_t_5;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_3 = __Pyx_PyInt_From_enum____pyx_t_2wx_3svg_8_nanosvg_SVGpaintType(__pyx_e_2wx_3svg_8_nanosvg_SVG_PAINT_RADIAL_GRADIENT); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_enum____pyx_t_2wx_3svg_8_nanosvg_SVGpaintType(__pyx_e_2wx_3svg_8_nanosvg_SVG_PAINT_RADIAL_GRADIENT); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyObject_RichCompare(__pyx_t_1, __pyx_t_3, Py_NE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_t_2 = PyObject_RichCompare(__pyx_t_1, __pyx_t_3, Py_NE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4 = __pyx_t_5;
   __pyx_L4_bool_binop_done:;
@@ -6811,20 +7779,20 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_8gradient___get__(struct 
   __pyx_t_5 = (__pyx_t_4 != 0);
   if (unlikely(__pyx_t_5)) {
 
-    /* "wx/svg/_nanosvg.pyx":307
+    /* "wx/svg/_nanosvg.pyx":373
  *         self._check_ptr()
  *         if self.type not in [SVG_PAINT_LINEAR_GRADIENT, SVG_PAINT_RADIAL_GRADIENT]:
  *             raise ValueError("Gradient not valid in this paint object")             # <<<<<<<<<<<<<<
  *         return SVGgradient.from_ptr(self._ptr.gradient)
  * 
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 373, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 307, __pyx_L1_error)
+    __PYX_ERR(0, 373, __pyx_L1_error)
 
-    /* "wx/svg/_nanosvg.pyx":306
+    /* "wx/svg/_nanosvg.pyx":372
  *     def gradient(self) -> SVGgradient:
  *         self._check_ptr()
  *         if self.type not in [SVG_PAINT_LINEAR_GRADIENT, SVG_PAINT_RADIAL_GRADIENT]:             # <<<<<<<<<<<<<<
@@ -6833,7 +7801,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_8gradient___get__(struct 
  */
   }
 
-  /* "wx/svg/_nanosvg.pyx":308
+  /* "wx/svg/_nanosvg.pyx":374
  *         if self.type not in [SVG_PAINT_LINEAR_GRADIENT, SVG_PAINT_RADIAL_GRADIENT]:
  *             raise ValueError("Gradient not valid in this paint object")
  *         return SVGgradient.from_ptr(self._ptr.gradient)             # <<<<<<<<<<<<<<
@@ -6841,13 +7809,13 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_8gradient___get__(struct 
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_11SVGgradient_from_ptr(__pyx_v_self->_ptr->gradient)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_2wx_3svg_8_nanosvg_11SVGgradient_from_ptr(__pyx_v_self->_ptr->gradient)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":304
+  /* "wx/svg/_nanosvg.pyx":370
  * 
  *     @property
  *     def gradient(self) -> SVGgradient:             # <<<<<<<<<<<<<<
@@ -6900,7 +7868,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_4__reduce_cython__(CYTHON
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6954,7 +7922,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_6__setstate_cython__(CYTH
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6977,498 +7945,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_8SVGpaint_6__setstate_cython__(CYTH
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":317
- *     cdef NSVGgradientStop *_ptr
- * 
- *     def __cinit__(self):             # <<<<<<<<<<<<<<
- *         self._ptr = NULL
- * 
- */
-
-/* Python wrapper */
-static int __pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  int __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
-  if (unlikely(PyTuple_GET_SIZE(__pyx_args) > 0)) {
-    __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 0, 0, PyTuple_GET_SIZE(__pyx_args)); return -1;}
-  if (unlikely(__pyx_kwds) && unlikely(PyDict_Size(__pyx_kwds) > 0) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__cinit__", 0))) return -1;
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop___cinit__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static int __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self) {
-  int __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__cinit__", 0);
-
-  /* "wx/svg/_nanosvg.pyx":318
- * 
- *     def __cinit__(self):
- *         self._ptr = NULL             # <<<<<<<<<<<<<<
- * 
- *     @staticmethod
- */
-  __pyx_v_self->_ptr = NULL;
-
-  /* "wx/svg/_nanosvg.pyx":317
- *     cdef NSVGgradientStop *_ptr
- * 
- *     def __cinit__(self):             # <<<<<<<<<<<<<<
- *         self._ptr = NULL
- * 
- */
-
-  /* function exit code */
-  __pyx_r = 0;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "wx/svg/_nanosvg.pyx":321
- * 
- *     @staticmethod
- *     cdef SVGgradientStop from_ptr(NSVGgradientStop *ptr):             # <<<<<<<<<<<<<<
- *         obj = SVGgradientStop()
- *         obj._ptr = ptr
- */
-
-static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_f_2wx_3svg_8_nanosvg_15SVGgradientStop_from_ptr(NSVGgradientStop *__pyx_v_ptr) {
-  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_obj = NULL;
-  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("from_ptr", 0);
-
-  /* "wx/svg/_nanosvg.pyx":322
- *     @staticmethod
- *     cdef SVGgradientStop from_ptr(NSVGgradientStop *ptr):
- *         obj = SVGgradientStop()             # <<<<<<<<<<<<<<
- *         obj._ptr = ptr
- *         return obj
- */
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGgradientStop)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 322, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_v_obj = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "wx/svg/_nanosvg.pyx":323
- *     cdef SVGgradientStop from_ptr(NSVGgradientStop *ptr):
- *         obj = SVGgradientStop()
- *         obj._ptr = ptr             # <<<<<<<<<<<<<<
- *         return obj
- * 
- */
-  __pyx_v_obj->_ptr = __pyx_v_ptr;
-
-  /* "wx/svg/_nanosvg.pyx":324
- *         obj = SVGgradientStop()
- *         obj._ptr = ptr
- *         return obj             # <<<<<<<<<<<<<<
- * 
- *     def _check_ptr(self):
- */
-  __Pyx_XDECREF(((PyObject *)__pyx_r));
-  __Pyx_INCREF(((PyObject *)__pyx_v_obj));
-  __pyx_r = __pyx_v_obj;
-  goto __pyx_L0;
-
-  /* "wx/svg/_nanosvg.pyx":321
- * 
- *     @staticmethod
- *     cdef SVGgradientStop from_ptr(NSVGgradientStop *ptr):             # <<<<<<<<<<<<<<
- *         obj = SVGgradientStop()
- *         obj._ptr = ptr
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop.from_ptr", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XDECREF((PyObject *)__pyx_v_obj);
-  __Pyx_XGIVEREF((PyObject *)__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "wx/svg/_nanosvg.pyx":326
- *         return obj
- * 
- *     def _check_ptr(self):             # <<<<<<<<<<<<<<
- *         if self._ptr == NULL:
- *             raise ValueError("Invalid SVGgradientStop")
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_3_check_ptr(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_2_check_ptr[] = "SVGgradientStop._check_ptr(self)";
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_3_check_ptr(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_check_ptr (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_2_check_ptr(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  __Pyx_RefNannySetupContext("_check_ptr", 0);
-
-  /* "wx/svg/_nanosvg.pyx":327
- * 
- *     def _check_ptr(self):
- *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
- *             raise ValueError("Invalid SVGgradientStop")
- * 
- */
-  __pyx_t_1 = ((__pyx_v_self->_ptr == NULL) != 0);
-  if (unlikely(__pyx_t_1)) {
-
-    /* "wx/svg/_nanosvg.pyx":328
- *     def _check_ptr(self):
- *         if self._ptr == NULL:
- *             raise ValueError("Invalid SVGgradientStop")             # <<<<<<<<<<<<<<
- * 
- *     @property
- */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 328, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_Raise(__pyx_t_2, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 328, __pyx_L1_error)
-
-    /* "wx/svg/_nanosvg.pyx":327
- * 
- *     def _check_ptr(self):
- *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
- *             raise ValueError("Invalid SVGgradientStop")
- * 
- */
-  }
-
-  /* "wx/svg/_nanosvg.pyx":326
- *         return obj
- * 
- *     def _check_ptr(self):             # <<<<<<<<<<<<<<
- *         if self._ptr == NULL:
- *             raise ValueError("Invalid SVGgradientStop")
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop._check_ptr", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "wx/svg/_nanosvg.pyx":331
- * 
- *     @property
- *     def color(self) -> uint:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.color
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5color_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5color_1__get__(PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_5color___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_5color___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  __Pyx_RefNannySetupContext("__get__", 0);
-
-  /* "wx/svg/_nanosvg.pyx":332
- *     @property
- *     def color(self) -> uint:
- *         self._check_ptr()             # <<<<<<<<<<<<<<
- *         return self._ptr.color
- * 
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "wx/svg/_nanosvg.pyx":333
- *     def color(self) -> uint:
- *         self._check_ptr()
- *         return self._ptr.color             # <<<<<<<<<<<<<<
- * 
- *     @property
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_int(__pyx_v_self->_ptr->color); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 333, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "wx/svg/_nanosvg.pyx":331
- * 
- *     @property
- *     def color(self) -> uint:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.color
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop.color.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "wx/svg/_nanosvg.pyx":336
- * 
- *     @property
- *     def offset(self) -> float:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.offset
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset_1__get__(PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  __Pyx_RefNannySetupContext("__get__", 0);
-
-  /* "wx/svg/_nanosvg.pyx":337
- *     @property
- *     def offset(self) -> float:
- *         self._check_ptr()             # <<<<<<<<<<<<<<
- *         return self._ptr.offset
- * 
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 337, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 337, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "wx/svg/_nanosvg.pyx":338
- *     def offset(self) -> float:
- *         self._check_ptr()
- *         return self._ptr.offset             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->offset); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 338, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "wx/svg/_nanosvg.pyx":336
- * 
- *     @property
- *     def offset(self) -> float:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.offset
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop.offset.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "(tree fragment)":1
- * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_4__reduce_cython__[] = "SVGgradientStop.__reduce_cython__(self)";
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_4__reduce_cython__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("__reduce_cython__", 0);
-
-  /* "(tree fragment)":2
- * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
- * def __setstate_cython__(self, __pyx_state):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_Raise(__pyx_t_1, 0, 0, 0);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __PYX_ERR(1, 2, __pyx_L1_error)
-
-  /* "(tree fragment)":1
- * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "(tree fragment)":3
- * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_7__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static char __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_6__setstate_cython__[] = "SVGgradientStop.__setstate_cython__(self, __pyx_state)";
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_7__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6__setstate_cython__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("__setstate_cython__", 0);
-
-  /* "(tree fragment)":4
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
- */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_Raise(__pyx_t_1, 0, 0, 0);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __PYX_ERR(1, 4, __pyx_L1_error)
-
-  /* "(tree fragment)":3
- * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "wx/svg/_nanosvg.pyx":347
+/* "wx/svg/_nanosvg.pyx":383
  *     cdef NSVGgradient *_ptr
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -7497,7 +7974,7 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient___cinit__(struct __pyx_obj_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":348
+  /* "wx/svg/_nanosvg.pyx":384
  * 
  *     def __cinit__(self):
  *         self._ptr = NULL             # <<<<<<<<<<<<<<
@@ -7506,7 +7983,7 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient___cinit__(struct __pyx_obj_
  */
   __pyx_v_self->_ptr = NULL;
 
-  /* "wx/svg/_nanosvg.pyx":347
+  /* "wx/svg/_nanosvg.pyx":383
  *     cdef NSVGgradient *_ptr
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -7520,7 +7997,7 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient___cinit__(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":351
+/* "wx/svg/_nanosvg.pyx":387
  * 
  *     @staticmethod
  *     cdef SVGgradient from_ptr(NSVGgradient *ptr):             # <<<<<<<<<<<<<<
@@ -7535,19 +8012,19 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_f_2wx_3svg_8_nanos
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("from_ptr", 0);
 
-  /* "wx/svg/_nanosvg.pyx":352
+  /* "wx/svg/_nanosvg.pyx":388
  *     @staticmethod
  *     cdef SVGgradient from_ptr(NSVGgradient *ptr):
  *         obj = SVGgradient()             # <<<<<<<<<<<<<<
  *         obj._ptr = ptr
  *         return obj
  */
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGgradient)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGgradient)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 388, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_obj = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":353
+  /* "wx/svg/_nanosvg.pyx":389
  *     cdef SVGgradient from_ptr(NSVGgradient *ptr):
  *         obj = SVGgradient()
  *         obj._ptr = ptr             # <<<<<<<<<<<<<<
@@ -7556,7 +8033,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_f_2wx_3svg_8_nanos
  */
   __pyx_v_obj->_ptr = __pyx_v_ptr;
 
-  /* "wx/svg/_nanosvg.pyx":354
+  /* "wx/svg/_nanosvg.pyx":390
  *         obj = SVGgradient()
  *         obj._ptr = ptr
  *         return obj             # <<<<<<<<<<<<<<
@@ -7568,7 +8045,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_f_2wx_3svg_8_nanos
   __pyx_r = __pyx_v_obj;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":351
+  /* "wx/svg/_nanosvg.pyx":387
  * 
  *     @staticmethod
  *     cdef SVGgradient from_ptr(NSVGgradient *ptr):             # <<<<<<<<<<<<<<
@@ -7588,7 +8065,7 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *__pyx_f_2wx_3svg_8_nanos
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":356
+/* "wx/svg/_nanosvg.pyx":392
  *         return obj
  * 
  *     def _check_ptr(self):             # <<<<<<<<<<<<<<
@@ -7617,7 +8094,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2_check_ptr(struct __
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("_check_ptr", 0);
 
-  /* "wx/svg/_nanosvg.pyx":357
+  /* "wx/svg/_nanosvg.pyx":393
  * 
  *     def _check_ptr(self):
  *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
@@ -7627,20 +8104,20 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2_check_ptr(struct __
   __pyx_t_1 = ((__pyx_v_self->_ptr == NULL) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "wx/svg/_nanosvg.pyx":358
+    /* "wx/svg/_nanosvg.pyx":394
  *     def _check_ptr(self):
  *         if self._ptr == NULL:
  *             raise ValueError("Invalid SVGgradient")             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 358, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 394, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 358, __pyx_L1_error)
+    __PYX_ERR(0, 394, __pyx_L1_error)
 
-    /* "wx/svg/_nanosvg.pyx":357
+    /* "wx/svg/_nanosvg.pyx":393
  * 
  *     def _check_ptr(self):
  *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
@@ -7649,7 +8126,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2_check_ptr(struct __
  */
   }
 
-  /* "wx/svg/_nanosvg.pyx":356
+  /* "wx/svg/_nanosvg.pyx":392
  *         return obj
  * 
  *     def _check_ptr(self):             # <<<<<<<<<<<<<<
@@ -7670,7 +8147,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2_check_ptr(struct __
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":361
+/* "wx/svg/_nanosvg.pyx":397
  * 
  *     @property
  *     def xform(self) -> list:             # <<<<<<<<<<<<<<
@@ -7701,14 +8178,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_5xform___get__(struct
   long __pyx_t_4;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":362
+  /* "wx/svg/_nanosvg.pyx":398
  *     @property
  *     def xform(self) -> list:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return [self._ptr.xform[i] for i in range(6)]
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 362, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 398, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -7722,12 +8199,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_5xform___get__(struct
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 362, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 398, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":363
+  /* "wx/svg/_nanosvg.pyx":399
  *     def xform(self) -> list:
  *         self._check_ptr()
  *         return [self._ptr.xform[i] for i in range(6)]             # <<<<<<<<<<<<<<
@@ -7735,20 +8212,20 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_5xform___get__(struct
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 399, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   for (__pyx_t_4 = 0; __pyx_t_4 < 6; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
-    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_self->_ptr->xform[__pyx_v_i])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 363, __pyx_L1_error)
+    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_self->_ptr->xform[__pyx_v_i])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 399, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 363, __pyx_L1_error)
+    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 399, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":361
+  /* "wx/svg/_nanosvg.pyx":397
  * 
  *     @property
  *     def xform(self) -> list:             # <<<<<<<<<<<<<<
@@ -7769,7 +8246,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_5xform___get__(struct
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":371
+/* "wx/svg/_nanosvg.pyx":407
  * 
  *     @property
  *     def spread(self) -> int:             # <<<<<<<<<<<<<<
@@ -7798,14 +8275,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_6spread___get__(struc
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":372
+  /* "wx/svg/_nanosvg.pyx":408
  *     @property
  *     def spread(self) -> int:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return int(self._pre.spread)
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 372, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 408, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -7819,12 +8296,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_6spread___get__(struc
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 408, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":373
+  /* "wx/svg/_nanosvg.pyx":409
  *     def spread(self) -> int:
  *         self._check_ptr()
  *         return int(self._pre.spread)             # <<<<<<<<<<<<<<
@@ -7832,19 +8309,19 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_6spread___get__(struc
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_pre); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_pre); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 409, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_spread); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_spread); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 409, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 409, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":371
+  /* "wx/svg/_nanosvg.pyx":407
  * 
  *     @property
  *     def spread(self) -> int:             # <<<<<<<<<<<<<<
@@ -7865,7 +8342,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_6spread___get__(struc
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":376
+/* "wx/svg/_nanosvg.pyx":412
  * 
  *     @property
  *     def fx(self) -> float:             # <<<<<<<<<<<<<<
@@ -7894,14 +8371,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fx___get__(struct __
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":377
+  /* "wx/svg/_nanosvg.pyx":413
  *     @property
  *     def fx(self) -> float:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._pre.fx
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -7915,12 +8392,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fx___get__(struct __
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 377, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":378
+  /* "wx/svg/_nanosvg.pyx":414
  *     def fx(self) -> float:
  *         self._check_ptr()
  *         return self._pre.fx             # <<<<<<<<<<<<<<
@@ -7928,16 +8405,16 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fx___get__(struct __
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_pre); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_pre); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 414, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_fx); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_fx); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 414, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":376
+  /* "wx/svg/_nanosvg.pyx":412
  * 
  *     @property
  *     def fx(self) -> float:             # <<<<<<<<<<<<<<
@@ -7958,7 +8435,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fx___get__(struct __
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":381
+/* "wx/svg/_nanosvg.pyx":417
  * 
  *     @property
  *     def fy(self) -> float:             # <<<<<<<<<<<<<<
@@ -7987,14 +8464,14 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fy___get__(struct __
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":382
+  /* "wx/svg/_nanosvg.pyx":418
  *     @property
  *     def fy(self) -> float:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         return self._pre.fy
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 382, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -8008,12 +8485,12 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fy___get__(struct __
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 382, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":383
+  /* "wx/svg/_nanosvg.pyx":419
  *     def fy(self) -> float:
  *         self._check_ptr()
  *         return self._pre.fy             # <<<<<<<<<<<<<<
@@ -8021,16 +8498,16 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fy___get__(struct __
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_pre); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 383, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_pre); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_fy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 383, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_fy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":381
+  /* "wx/svg/_nanosvg.pyx":417
  * 
  *     @property
  *     def fy(self) -> float:             # <<<<<<<<<<<<<<
@@ -8052,7 +8529,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_2fy___get__(struct __
 }
 static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_11SVGgradient_5stops_2generator2(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
-/* "wx/svg/_nanosvg.pyx":386
+/* "wx/svg/_nanosvg.pyx":422
  * 
  *     @property
  *     def stops(self):             # <<<<<<<<<<<<<<
@@ -8082,7 +8559,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_5stops___get__(struct
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_2wx_3svg_8_nanosvg___pyx_scope_struct_2___get__ *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 386, __pyx_L1_error)
+    __PYX_ERR(0, 422, __pyx_L1_error)
   } else {
     __Pyx_GOTREF(__pyx_cur_scope);
   }
@@ -8090,7 +8567,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_5stops___get__(struct
   __Pyx_INCREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   __Pyx_GIVEREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_2wx_3svg_8_nanosvg_11SVGgradient_5stops_2generator2, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_get, __pyx_n_s_SVGgradient___get, __pyx_n_s_wx_svg__nanosvg); if (unlikely(!gen)) __PYX_ERR(0, 386, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_2wx_3svg_8_nanosvg_11SVGgradient_5stops_2generator2, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_get, __pyx_n_s_SVGgradient___get, __pyx_n_s_wx_svg__nanosvg); if (unlikely(!gen)) __PYX_ERR(0, 422, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -8126,16 +8603,16 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_11SVGgradient_5stops_2generator2(__
     return NULL;
   }
   __pyx_L3_first_run:;
-  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 386, __pyx_L1_error)
+  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 422, __pyx_L1_error)
 
-  /* "wx/svg/_nanosvg.pyx":390
+  /* "wx/svg/_nanosvg.pyx":426
  *         A generator that iterates over the SVGgradientStops contained in the SVGgradient
  *         """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         for i in range(self._ptr.nstops):
  *             yield self._ptr.stops[i]
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 390, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 426, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -8149,12 +8626,12 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_11SVGgradient_5stops_2generator2(__
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 390, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 426, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":391
+  /* "wx/svg/_nanosvg.pyx":427
  *         """
  *         self._check_ptr()
  *         for i in range(self._ptr.nstops):             # <<<<<<<<<<<<<<
@@ -8166,14 +8643,14 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_11SVGgradient_5stops_2generator2(__
   for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
     __pyx_cur_scope->__pyx_v_i = __pyx_t_6;
 
-    /* "wx/svg/_nanosvg.pyx":392
+    /* "wx/svg/_nanosvg.pyx":428
  *         self._check_ptr()
  *         for i in range(self._ptr.nstops):
  *             yield self._ptr.stops[i]             # <<<<<<<<<<<<<<
  * 
- * #----------------------------------------------------------------------------
+ * 
  */
-    __pyx_t_1 = __pyx_convert__to_py_NSVGgradientStop((__pyx_cur_scope->__pyx_v_self->_ptr->stops[__pyx_cur_scope->__pyx_v_i])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 392, __pyx_L1_error)
+    __pyx_t_1 = __pyx_convert__to_py_NSVGgradientStop((__pyx_cur_scope->__pyx_v_self->_ptr->stops[__pyx_cur_scope->__pyx_v_i])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 428, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -8190,11 +8667,11 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_11SVGgradient_5stops_2generator2(__
     __pyx_t_4 = __pyx_cur_scope->__pyx_t_0;
     __pyx_t_5 = __pyx_cur_scope->__pyx_t_1;
     __pyx_t_6 = __pyx_cur_scope->__pyx_t_2;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 392, __pyx_L1_error)
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 428, __pyx_L1_error)
   }
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
 
-  /* "wx/svg/_nanosvg.pyx":386
+  /* "wx/svg/_nanosvg.pyx":422
  * 
  *     @property
  *     def stops(self):             # <<<<<<<<<<<<<<
@@ -8330,8 +8807,8 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_6__setstate_cython__(
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":400
- *     cdef NSVGpath *_ptr
+/* "wx/svg/_nanosvg.pyx":437
+ *     cdef NSVGgradientStop *_ptr
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
  *         self._ptr = NULL
@@ -8339,27 +8816,27 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_11SVGgradient_6__setstate_cython__(
  */
 
 /* Python wrapper */
-static int __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static int __pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
   if (unlikely(PyTuple_GET_SIZE(__pyx_args) > 0)) {
     __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 0, 0, PyTuple_GET_SIZE(__pyx_args)); return -1;}
   if (unlikely(__pyx_kwds) && unlikely(PyDict_Size(__pyx_kwds) > 0) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__cinit__", 0))) return -1;
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath___cinit__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop___cinit__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+static int __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop___cinit__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":401
+  /* "wx/svg/_nanosvg.pyx":438
  * 
  *     def __cinit__(self):
  *         self._ptr = NULL             # <<<<<<<<<<<<<<
@@ -8368,8 +8845,8 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath___cinit__(struct __pyx_obj_2wx_3
  */
   __pyx_v_self->_ptr = NULL;
 
-  /* "wx/svg/_nanosvg.pyx":400
- *     cdef NSVGpath *_ptr
+  /* "wx/svg/_nanosvg.pyx":437
+ *     cdef NSVGgradientStop *_ptr
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
  *         self._ptr = NULL
@@ -8382,44 +8859,44 @@ static int __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath___cinit__(struct __pyx_obj_2wx_3
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":404
+/* "wx/svg/_nanosvg.pyx":441
  * 
  *     @staticmethod
- *     cdef SVGpath from_ptr(NSVGpath *ptr):             # <<<<<<<<<<<<<<
- *         obj = SVGpath()
+ *     cdef SVGgradientStop from_ptr(NSVGgradientStop *ptr):             # <<<<<<<<<<<<<<
+ *         obj = SVGgradientStop()
  *         obj._ptr = ptr
  */
 
-static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_f_2wx_3svg_8_nanosvg_7SVGpath_from_ptr(NSVGpath *__pyx_v_ptr) {
-  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_obj = NULL;
-  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_r = NULL;
+static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_f_2wx_3svg_8_nanosvg_15SVGgradientStop_from_ptr(NSVGgradientStop *__pyx_v_ptr) {
+  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_obj = NULL;
+  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("from_ptr", 0);
 
-  /* "wx/svg/_nanosvg.pyx":405
+  /* "wx/svg/_nanosvg.pyx":442
  *     @staticmethod
- *     cdef SVGpath from_ptr(NSVGpath *ptr):
- *         obj = SVGpath()             # <<<<<<<<<<<<<<
+ *     cdef SVGgradientStop from_ptr(NSVGgradientStop *ptr):
+ *         obj = SVGgradientStop()             # <<<<<<<<<<<<<<
  *         obj._ptr = ptr
  *         return obj
  */
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGpath)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 405, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGgradientStop)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 442, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_v_obj = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_t_1);
+  __pyx_v_obj = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":406
- *     cdef SVGpath from_ptr(NSVGpath *ptr):
- *         obj = SVGpath()
+  /* "wx/svg/_nanosvg.pyx":443
+ *     cdef SVGgradientStop from_ptr(NSVGgradientStop *ptr):
+ *         obj = SVGgradientStop()
  *         obj._ptr = ptr             # <<<<<<<<<<<<<<
  *         return obj
  * 
  */
   __pyx_v_obj->_ptr = __pyx_v_ptr;
 
-  /* "wx/svg/_nanosvg.pyx":407
- *         obj = SVGpath()
+  /* "wx/svg/_nanosvg.pyx":444
+ *         obj = SVGgradientStop()
  *         obj._ptr = ptr
  *         return obj             # <<<<<<<<<<<<<<
  * 
@@ -8430,18 +8907,18 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_f_2wx_3svg_8_nanosvg_7
   __pyx_r = __pyx_v_obj;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":404
+  /* "wx/svg/_nanosvg.pyx":441
  * 
  *     @staticmethod
- *     cdef SVGpath from_ptr(NSVGpath *ptr):             # <<<<<<<<<<<<<<
- *         obj = SVGpath()
+ *     cdef SVGgradientStop from_ptr(NSVGgradientStop *ptr):             # <<<<<<<<<<<<<<
+ *         obj = SVGgradientStop()
  *         obj._ptr = ptr
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.from_ptr", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop.from_ptr", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF((PyObject *)__pyx_v_obj);
@@ -8450,73 +8927,73 @@ static struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_f_2wx_3svg_8_nanosvg_7
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":409
+/* "wx/svg/_nanosvg.pyx":446
  *         return obj
  * 
  *     def _check_ptr(self):             # <<<<<<<<<<<<<<
  *         if self._ptr == NULL:
- *             raise ValueError("Invalid SVGpath")
+ *             raise ValueError("Invalid SVGgradientStop")
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3_check_ptr(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr[] = "SVGpath._check_ptr(self)";
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3_check_ptr(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_3_check_ptr(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static char __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_2_check_ptr[] = "SVGgradientStop._check_ptr(self)";
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_3_check_ptr(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_check_ptr (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_2_check_ptr(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_2_check_ptr(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("_check_ptr", 0);
 
-  /* "wx/svg/_nanosvg.pyx":410
+  /* "wx/svg/_nanosvg.pyx":447
  * 
  *     def _check_ptr(self):
  *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
- *             raise ValueError("Invalid SVGpath")
+ *             raise ValueError("Invalid SVGgradientStop")
  * 
  */
   __pyx_t_1 = ((__pyx_v_self->_ptr == NULL) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "wx/svg/_nanosvg.pyx":411
+    /* "wx/svg/_nanosvg.pyx":448
  *     def _check_ptr(self):
  *         if self._ptr == NULL:
- *             raise ValueError("Invalid SVGpath")             # <<<<<<<<<<<<<<
+ *             raise ValueError("Invalid SVGgradientStop")             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__19, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 411, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__19, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 448, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 411, __pyx_L1_error)
+    __PYX_ERR(0, 448, __pyx_L1_error)
 
-    /* "wx/svg/_nanosvg.pyx":410
+    /* "wx/svg/_nanosvg.pyx":447
  * 
  *     def _check_ptr(self):
  *         if self._ptr == NULL:             # <<<<<<<<<<<<<<
- *             raise ValueError("Invalid SVGpath")
+ *             raise ValueError("Invalid SVGgradientStop")
  * 
  */
   }
 
-  /* "wx/svg/_nanosvg.pyx":409
+  /* "wx/svg/_nanosvg.pyx":446
  *         return obj
  * 
  *     def _check_ptr(self):             # <<<<<<<<<<<<<<
  *         if self._ptr == NULL:
- *             raise ValueError("Invalid SVGpath")
+ *             raise ValueError("Invalid SVGgradientStop")
  */
 
   /* function exit code */
@@ -8524,7 +9001,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr(struct __pyx_o
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath._check_ptr", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop._check_ptr", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -8532,47 +9009,43 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr(struct __pyx_o
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":414
+/* "wx/svg/_nanosvg.pyx":451
  * 
  *     @property
- *     def pts(self) -> list:             # <<<<<<<<<<<<<<
- *         """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+ *     def color(self) -> uint:             # <<<<<<<<<<<<<<
  *         self._check_ptr()
+ *         return self._ptr.color
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3pts_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3pts_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5color_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5color_1__get__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_3pts___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_5color___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_3pts___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
-  int __pyx_v_i;
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_5color___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
-  int __pyx_t_4;
-  int __pyx_t_5;
-  int __pyx_t_6;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":416
- *     def pts(self) -> list:
- *         """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+  /* "wx/svg/_nanosvg.pyx":452
+ *     @property
+ *     def color(self) -> uint:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
- *         return [self._ptr.pts[i] for i in range(self._ptr.npts)]
+ *         return self._ptr.color
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 416, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 452, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -8586,40 +9059,31 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_3pts___get__(struct __pyx_
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 416, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 452, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":417
- *         """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+  /* "wx/svg/_nanosvg.pyx":453
+ *     def color(self) -> uint:
  *         self._check_ptr()
- *         return [self._ptr.pts[i] for i in range(self._ptr.npts)]             # <<<<<<<<<<<<<<
+ *         return self._ptr.color             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 417, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_int(__pyx_v_self->_ptr->color); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 453, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __pyx_v_self->_ptr->npts;
-  __pyx_t_5 = __pyx_t_4;
-  for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
-    __pyx_v_i = __pyx_t_6;
-    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_self->_ptr->pts[__pyx_v_i])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 417, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 417, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  }
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":414
+  /* "wx/svg/_nanosvg.pyx":451
  * 
  *     @property
- *     def pts(self) -> list:             # <<<<<<<<<<<<<<
- *         """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+ *     def color(self) -> uint:             # <<<<<<<<<<<<<<
  *         self._check_ptr()
+ *         return self._ptr.color
  */
 
   /* function exit code */
@@ -8627,7 +9091,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_3pts___get__(struct __pyx_
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.pts.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop.color.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -8635,44 +9099,43 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_3pts___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "wx/svg/_nanosvg.pyx":420
+/* "wx/svg/_nanosvg.pyx":456
  * 
  *     @property
- *     def closed(self) -> bool:             # <<<<<<<<<<<<<<
- *         """ Flag indicating if shapes should be treated as closed """
+ *     def offset(self) -> float:             # <<<<<<<<<<<<<<
  *         self._check_ptr()
+ *         return self._ptr.offset
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6closed_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6closed_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset_1__get__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6closed___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6closed___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
-  int __pyx_t_4;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "wx/svg/_nanosvg.pyx":422
- *     def closed(self) -> bool:
- *         """ Flag indicating if shapes should be treated as closed """
+  /* "wx/svg/_nanosvg.pyx":457
+ *     @property
+ *     def offset(self) -> float:
  *         self._check_ptr()             # <<<<<<<<<<<<<<
- *         return bool(self._ptr.closed)
+ *         return self._ptr.offset
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 422, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 457, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -8686,35 +9149,31 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6closed___get__(struct __p
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 422, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 457, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":423
- *         """ Flag indicating if shapes should be treated as closed """
+  /* "wx/svg/_nanosvg.pyx":458
+ *     def offset(self) -> float:
  *         self._check_ptr()
- *         return bool(self._ptr.closed)             # <<<<<<<<<<<<<<
+ *         return self._ptr.offset             # <<<<<<<<<<<<<<
  * 
- *     @property
+ * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_char(__pyx_v_self->_ptr->closed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 423, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 423, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyBool_FromLong((!(!__pyx_t_4))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 423, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_ptr->offset); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 458, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "wx/svg/_nanosvg.pyx":420
+  /* "wx/svg/_nanosvg.pyx":456
  * 
  *     @property
- *     def closed(self) -> bool:             # <<<<<<<<<<<<<<
- *         """ Flag indicating if shapes should be treated as closed """
+ *     def offset(self) -> float:             # <<<<<<<<<<<<<<
  *         self._check_ptr()
+ *         return self._ptr.offset
  */
 
   /* function exit code */
@@ -8722,466 +9181,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6closed___get__(struct __p
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.closed.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "wx/svg/_nanosvg.pyx":426
- * 
- *     @property
- *     def bounds(self) -> list:             # <<<<<<<<<<<<<<
- *         """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
- *         self._check_ptr()
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6bounds_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6bounds_1__get__(PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6bounds___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6bounds___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
-  long __pyx_v_i;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  long __pyx_t_4;
-  __Pyx_RefNannySetupContext("__get__", 0);
-
-  /* "wx/svg/_nanosvg.pyx":428
- *     def bounds(self) -> list:
- *         """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
- *         self._check_ptr()             # <<<<<<<<<<<<<<
- *         return [self._ptr.bounds[i] for i in range(4)]
- * 
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 428, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 428, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "wx/svg/_nanosvg.pyx":429
- *         """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
- *         self._check_ptr()
- *         return [self._ptr.bounds[i] for i in range(4)]             # <<<<<<<<<<<<<<
- * 
- *     @property
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 429, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  for (__pyx_t_4 = 0; __pyx_t_4 < 4; __pyx_t_4+=1) {
-    __pyx_v_i = __pyx_t_4;
-    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[__pyx_v_i])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 429, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 429, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  }
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "wx/svg/_nanosvg.pyx":426
- * 
- *     @property
- *     def bounds(self) -> list:             # <<<<<<<<<<<<<<
- *         """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
- *         self._check_ptr()
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.bounds.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "wx/svg/_nanosvg.pyx":432
- * 
- *     @property
- *     def minx(self) -> float:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.bounds[0]
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4minx_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4minx_1__get__(PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4minx___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4minx___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  __Pyx_RefNannySetupContext("__get__", 0);
-
-  /* "wx/svg/_nanosvg.pyx":433
- *     @property
- *     def minx(self) -> float:
- *         self._check_ptr()             # <<<<<<<<<<<<<<
- *         return self._ptr.bounds[0]
- * 
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 433, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 433, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "wx/svg/_nanosvg.pyx":434
- *     def minx(self) -> float:
- *         self._check_ptr()
- *         return self._ptr.bounds[0]             # <<<<<<<<<<<<<<
- * 
- *     @property
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 434, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "wx/svg/_nanosvg.pyx":432
- * 
- *     @property
- *     def minx(self) -> float:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.bounds[0]
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.minx.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "wx/svg/_nanosvg.pyx":437
- * 
- *     @property
- *     def miny(self) -> float:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.bounds[1]
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4miny_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4miny_1__get__(PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4miny___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4miny___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  __Pyx_RefNannySetupContext("__get__", 0);
-
-  /* "wx/svg/_nanosvg.pyx":438
- *     @property
- *     def miny(self) -> float:
- *         self._check_ptr()             # <<<<<<<<<<<<<<
- *         return self._ptr.bounds[1]
- * 
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 438, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 438, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "wx/svg/_nanosvg.pyx":439
- *     def miny(self) -> float:
- *         self._check_ptr()
- *         return self._ptr.bounds[1]             # <<<<<<<<<<<<<<
- * 
- *     @property
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[1])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 439, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "wx/svg/_nanosvg.pyx":437
- * 
- *     @property
- *     def miny(self) -> float:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.bounds[1]
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.miny.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "wx/svg/_nanosvg.pyx":442
- * 
- *     @property
- *     def maxx(self) -> float:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.bounds[2]
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxx_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxx_1__get__(PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxx___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxx___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  __Pyx_RefNannySetupContext("__get__", 0);
-
-  /* "wx/svg/_nanosvg.pyx":443
- *     @property
- *     def maxx(self) -> float:
- *         self._check_ptr()             # <<<<<<<<<<<<<<
- *         return self._ptr.bounds[2]
- * 
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 443, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 443, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "wx/svg/_nanosvg.pyx":444
- *     def maxx(self) -> float:
- *         self._check_ptr()
- *         return self._ptr.bounds[2]             # <<<<<<<<<<<<<<
- * 
- *     @property
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[2])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 444, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "wx/svg/_nanosvg.pyx":442
- * 
- *     @property
- *     def maxx(self) -> float:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.bounds[2]
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.maxx.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "wx/svg/_nanosvg.pyx":447
- * 
- *     @property
- *     def maxy(self) -> float:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.bounds[3]
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxy_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxy_1__get__(PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxy___get__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxy___get__(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  __Pyx_RefNannySetupContext("__get__", 0);
-
-  /* "wx/svg/_nanosvg.pyx":448
- *     @property
- *     def maxy(self) -> float:
- *         self._check_ptr()             # <<<<<<<<<<<<<<
- *         return self._ptr.bounds[3]
- * 
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_check_ptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 448, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 448, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "wx/svg/_nanosvg.pyx":449
- *     def maxy(self) -> float:
- *         self._check_ptr()
- *         return self._ptr.bounds[3]             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_ptr->bounds[3])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 449, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "wx/svg/_nanosvg.pyx":447
- * 
- *     @property
- *     def maxy(self) -> float:             # <<<<<<<<<<<<<<
- *         self._check_ptr()
- *         return self._ptr.bounds[3]
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.maxy.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop.offset.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -9196,20 +9196,20 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4maxy___get__(struct __pyx
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_5__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__[] = "SVGpath.__reduce_cython__(self)";
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_5__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static char __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_4__reduce_cython__[] = "SVGgradientStop.__reduce_cython__(self)";
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self));
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_4__reduce_cython__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self) {
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -9236,7 +9236,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__(CYTHON_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -9251,20 +9251,20 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__(CYTHON_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_7__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static char __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_6__setstate_cython__[] = "SVGpath.__setstate_cython__(self, __pyx_state)";
-static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_7__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_7__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static char __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_6__setstate_cython__[] = "SVGgradientStop.__setstate_cython__(self, __pyx_state)";
+static PyObject *__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_7__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6__setstate_cython__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6__setstate_cython__(((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_15SVGgradientStop_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -9291,7 +9291,7 @@ static PyObject *__pyx_pf_2wx_3svg_8_nanosvg_7SVGpath_6__setstate_cython__(CYTHO
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("wx.svg._nanosvg.SVGpath.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("wx.svg._nanosvg.SVGgradientStop.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -23682,7 +23682,7 @@ static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGimage = {
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
-  " \n    An SVGimage can be created either from an SVG file or from an in-memory\n    buffer containind the SVG XML code. The result is a collection of cubic\n    bezier shapes, with fill, stroke, paths and other information.    \n    ", /*tp_doc*/
+  "\n    An SVGimage can be created either from an SVG file or from an in-memory\n    buffer containind the SVG XML code. The result is a collection of cubic\n    bezier shapes, with fill, stroke, paths and other information.\n    ", /*tp_doc*/
   0, /*tp_traverse*/
   0, /*tp_clear*/
   0, /*tp_richcompare*/
@@ -23872,7 +23872,7 @@ static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGshape = {
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
-  "\n    A collection of SVGshapes is accessible from the `shapes` attribute of SVGimage.\n    ", /*tp_doc*/
+  "\n    SVGshape is a set of attributes describing how to draw one shape in the SVG,\n    including stroke and fill styles, line styles, and paths. A collection of\n    SVGshapes is accessible from the `shapes` attribute of SVGimage.\n    ", /*tp_doc*/
   0, /*tp_traverse*/
   0, /*tp_clear*/
   0, /*tp_richcompare*/
@@ -23890,6 +23890,141 @@ static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGshape = {
   0, /*tp_init*/
   0, /*tp_alloc*/
   __pyx_tp_new_2wx_3svg_8_nanosvg_SVGshape, /*tp_new*/
+  0, /*tp_free*/
+  0, /*tp_is_gc*/
+  0, /*tp_bases*/
+  0, /*tp_mro*/
+  0, /*tp_cache*/
+  0, /*tp_subclasses*/
+  0, /*tp_weaklist*/
+  0, /*tp_del*/
+  0, /*tp_version_tag*/
+  #if PY_VERSION_HEX >= 0x030400a1
+  0, /*tp_finalize*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b1
+  0, /*tp_vectorcall*/
+  #endif
+};
+static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGpath __pyx_vtable_2wx_3svg_8_nanosvg_SVGpath;
+
+static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGpath(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *p;
+  PyObject *o;
+  if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
+    o = (*t->tp_alloc)(t, 0);
+  } else {
+    o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
+  }
+  if (unlikely(!o)) return 0;
+  p = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)o);
+  p->__pyx_vtab = __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpath;
+  if (unlikely(__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_1__cinit__(o, __pyx_empty_tuple, NULL) < 0)) goto bad;
+  return o;
+  bad:
+  Py_DECREF(o); o = 0;
+  return NULL;
+}
+
+static void __pyx_tp_dealloc_2wx_3svg_8_nanosvg_SVGpath(PyObject *o) {
+  #if CYTHON_USE_TP_FINALIZE
+  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
+    if (PyObject_CallFinalizerFromDealloc(o)) return;
+  }
+  #endif
+  (*Py_TYPE(o)->tp_free)(o);
+}
+
+static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_pts(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3pts_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_closed(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6closed_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_bounds(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6bounds_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_minx(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4minx_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_miny(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4miny_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_maxx(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxx_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_maxy(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxy_1__get__(o);
+}
+
+static PyMethodDef __pyx_methods_2wx_3svg_8_nanosvg_SVGpath[] = {
+  {"_check_ptr", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3_check_ptr, METH_NOARGS, __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_5__reduce_cython__, METH_NOARGS, __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_7__setstate_cython__, METH_O, __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_6__setstate_cython__},
+  {0, 0, 0, 0}
+};
+
+static struct PyGetSetDef __pyx_getsets_2wx_3svg_8_nanosvg_SVGpath[] = {
+  {(char *)"pts", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_pts, 0, (char *)" Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... ", 0},
+  {(char *)"closed", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_closed, 0, (char *)" Flag indicating if shapes should be treated as closed ", 0},
+  {(char *)"bounds", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_bounds, 0, (char *)" Tight bounding box of the shape [minx,miny,maxx,maxy] ", 0},
+  {(char *)"minx", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_minx, 0, (char *)0, 0},
+  {(char *)"miny", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_miny, 0, (char *)0, 0},
+  {(char *)"maxx", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_maxx, 0, (char *)0, 0},
+  {(char *)"maxy", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_maxy, 0, (char *)0, 0},
+  {0, 0, 0, 0, 0}
+};
+
+static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGpath = {
+  PyVarObject_HEAD_INIT(0, 0)
+  "wx.svg._nanosvg.SVGpath", /*tp_name*/
+  sizeof(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath), /*tp_basicsize*/
+  0, /*tp_itemsize*/
+  __pyx_tp_dealloc_2wx_3svg_8_nanosvg_SVGpath, /*tp_dealloc*/
+  0, /*tp_print*/
+  0, /*tp_getattr*/
+  0, /*tp_setattr*/
+  #if PY_MAJOR_VERSION < 3
+  0, /*tp_compare*/
+  #endif
+  #if PY_MAJOR_VERSION >= 3
+  0, /*tp_as_async*/
+  #endif
+  0, /*tp_repr*/
+  0, /*tp_as_number*/
+  0, /*tp_as_sequence*/
+  0, /*tp_as_mapping*/
+  0, /*tp_hash*/
+  0, /*tp_call*/
+  0, /*tp_str*/
+  0, /*tp_getattro*/
+  0, /*tp_setattro*/
+  0, /*tp_as_buffer*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
+  "\n    An SVGpath is essentially just a collection of bezier curves, defined by a\n    set of floating point coordinates. A collection of SVGpaths is accessible\n    from the `paths` attribute of SVGshape.\n    ", /*tp_doc*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
+  0, /*tp_richcompare*/
+  0, /*tp_weaklistoffset*/
+  0, /*tp_iter*/
+  0, /*tp_iternext*/
+  __pyx_methods_2wx_3svg_8_nanosvg_SVGpath, /*tp_methods*/
+  0, /*tp_members*/
+  __pyx_getsets_2wx_3svg_8_nanosvg_SVGpath, /*tp_getset*/
+  0, /*tp_base*/
+  0, /*tp_dict*/
+  0, /*tp_descr_get*/
+  0, /*tp_descr_set*/
+  0, /*tp_dictoffset*/
+  0, /*tp_init*/
+  0, /*tp_alloc*/
+  __pyx_tp_new_2wx_3svg_8_nanosvg_SVGpath, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -24005,116 +24140,6 @@ static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGpaint = {
   0, /*tp_init*/
   0, /*tp_alloc*/
   __pyx_tp_new_2wx_3svg_8_nanosvg_SVGpaint, /*tp_new*/
-  0, /*tp_free*/
-  0, /*tp_is_gc*/
-  0, /*tp_bases*/
-  0, /*tp_mro*/
-  0, /*tp_cache*/
-  0, /*tp_subclasses*/
-  0, /*tp_weaklist*/
-  0, /*tp_del*/
-  0, /*tp_version_tag*/
-  #if PY_VERSION_HEX >= 0x030400a1
-  0, /*tp_finalize*/
-  #endif
-  #if PY_VERSION_HEX >= 0x030800b1
-  0, /*tp_vectorcall*/
-  #endif
-};
-static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGgradientStop __pyx_vtable_2wx_3svg_8_nanosvg_SVGgradientStop;
-
-static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGgradientStop(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
-  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *p;
-  PyObject *o;
-  if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
-    o = (*t->tp_alloc)(t, 0);
-  } else {
-    o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
-  }
-  if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)o);
-  p->__pyx_vtab = __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradientStop;
-  if (unlikely(__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_1__cinit__(o, __pyx_empty_tuple, NULL) < 0)) goto bad;
-  return o;
-  bad:
-  Py_DECREF(o); o = 0;
-  return NULL;
-}
-
-static void __pyx_tp_dealloc_2wx_3svg_8_nanosvg_SVGgradientStop(PyObject *o) {
-  #if CYTHON_USE_TP_FINALIZE
-  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
-    if (PyObject_CallFinalizerFromDealloc(o)) return;
-  }
-  #endif
-  (*Py_TYPE(o)->tp_free)(o);
-}
-
-static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_15SVGgradientStop_color(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5color_1__get__(o);
-}
-
-static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_15SVGgradientStop_offset(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset_1__get__(o);
-}
-
-static PyMethodDef __pyx_methods_2wx_3svg_8_nanosvg_SVGgradientStop[] = {
-  {"_check_ptr", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_3_check_ptr, METH_NOARGS, __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_2_check_ptr},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5__reduce_cython__, METH_NOARGS, __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_4__reduce_cython__},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_7__setstate_cython__, METH_O, __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_6__setstate_cython__},
-  {0, 0, 0, 0}
-};
-
-static struct PyGetSetDef __pyx_getsets_2wx_3svg_8_nanosvg_SVGgradientStop[] = {
-  {(char *)"color", __pyx_getprop_2wx_3svg_8_nanosvg_15SVGgradientStop_color, 0, (char *)0, 0},
-  {(char *)"offset", __pyx_getprop_2wx_3svg_8_nanosvg_15SVGgradientStop_offset, 0, (char *)0, 0},
-  {0, 0, 0, 0, 0}
-};
-
-static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop = {
-  PyVarObject_HEAD_INIT(0, 0)
-  "wx.svg._nanosvg.SVGgradientStop", /*tp_name*/
-  sizeof(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop), /*tp_basicsize*/
-  0, /*tp_itemsize*/
-  __pyx_tp_dealloc_2wx_3svg_8_nanosvg_SVGgradientStop, /*tp_dealloc*/
-  0, /*tp_print*/
-  0, /*tp_getattr*/
-  0, /*tp_setattr*/
-  #if PY_MAJOR_VERSION < 3
-  0, /*tp_compare*/
-  #endif
-  #if PY_MAJOR_VERSION >= 3
-  0, /*tp_as_async*/
-  #endif
-  0, /*tp_repr*/
-  0, /*tp_as_number*/
-  0, /*tp_as_sequence*/
-  0, /*tp_as_mapping*/
-  0, /*tp_hash*/
-  0, /*tp_call*/
-  0, /*tp_str*/
-  0, /*tp_getattro*/
-  0, /*tp_setattro*/
-  0, /*tp_as_buffer*/
-  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
-  "\n    ", /*tp_doc*/
-  0, /*tp_traverse*/
-  0, /*tp_clear*/
-  0, /*tp_richcompare*/
-  0, /*tp_weaklistoffset*/
-  0, /*tp_iter*/
-  0, /*tp_iternext*/
-  __pyx_methods_2wx_3svg_8_nanosvg_SVGgradientStop, /*tp_methods*/
-  0, /*tp_members*/
-  __pyx_getsets_2wx_3svg_8_nanosvg_SVGgradientStop, /*tp_getset*/
-  0, /*tp_base*/
-  0, /*tp_dict*/
-  0, /*tp_descr_get*/
-  0, /*tp_descr_set*/
-  0, /*tp_dictoffset*/
-  0, /*tp_init*/
-  0, /*tp_alloc*/
-  __pyx_tp_new_2wx_3svg_8_nanosvg_SVGgradientStop, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -24256,10 +24281,10 @@ static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGgradient = {
   0, /*tp_vectorcall*/
   #endif
 };
-static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGpath __pyx_vtable_2wx_3svg_8_nanosvg_SVGpath;
+static struct __pyx_vtabstruct_2wx_3svg_8_nanosvg_SVGgradientStop __pyx_vtable_2wx_3svg_8_nanosvg_SVGgradientStop;
 
-static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGpath(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
-  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *p;
+static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGgradientStop(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *p;
   PyObject *o;
   if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
     o = (*t->tp_alloc)(t, 0);
@@ -24267,16 +24292,16 @@ static PyObject *__pyx_tp_new_2wx_3svg_8_nanosvg_SVGpath(PyTypeObject *t, CYTHON
     o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
   }
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *)o);
-  p->__pyx_vtab = __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpath;
-  if (unlikely(__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_1__cinit__(o, __pyx_empty_tuple, NULL) < 0)) goto bad;
+  p = ((struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *)o);
+  p->__pyx_vtab = __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradientStop;
+  if (unlikely(__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_1__cinit__(o, __pyx_empty_tuple, NULL) < 0)) goto bad;
   return o;
   bad:
   Py_DECREF(o); o = 0;
   return NULL;
 }
 
-static void __pyx_tp_dealloc_2wx_3svg_8_nanosvg_SVGpath(PyObject *o) {
+static void __pyx_tp_dealloc_2wx_3svg_8_nanosvg_SVGgradientStop(PyObject *o) {
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -24285,58 +24310,33 @@ static void __pyx_tp_dealloc_2wx_3svg_8_nanosvg_SVGpath(PyObject *o) {
   (*Py_TYPE(o)->tp_free)(o);
 }
 
-static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_pts(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3pts_1__get__(o);
+static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_15SVGgradientStop_color(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5color_1__get__(o);
 }
 
-static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_closed(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6closed_1__get__(o);
+static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_15SVGgradientStop_offset(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_6offset_1__get__(o);
 }
 
-static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_bounds(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_6bounds_1__get__(o);
-}
-
-static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_minx(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4minx_1__get__(o);
-}
-
-static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_miny(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4miny_1__get__(o);
-}
-
-static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_maxx(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxx_1__get__(o);
-}
-
-static PyObject *__pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_maxy(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_4maxy_1__get__(o);
-}
-
-static PyMethodDef __pyx_methods_2wx_3svg_8_nanosvg_SVGpath[] = {
-  {"_check_ptr", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_3_check_ptr, METH_NOARGS, __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_2_check_ptr},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_5__reduce_cython__, METH_NOARGS, __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_4__reduce_cython__},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_7SVGpath_7__setstate_cython__, METH_O, __pyx_doc_2wx_3svg_8_nanosvg_7SVGpath_6__setstate_cython__},
+static PyMethodDef __pyx_methods_2wx_3svg_8_nanosvg_SVGgradientStop[] = {
+  {"_check_ptr", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_3_check_ptr, METH_NOARGS, __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_2_check_ptr},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_5__reduce_cython__, METH_NOARGS, __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_4__reduce_cython__},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_2wx_3svg_8_nanosvg_15SVGgradientStop_7__setstate_cython__, METH_O, __pyx_doc_2wx_3svg_8_nanosvg_15SVGgradientStop_6__setstate_cython__},
   {0, 0, 0, 0}
 };
 
-static struct PyGetSetDef __pyx_getsets_2wx_3svg_8_nanosvg_SVGpath[] = {
-  {(char *)"pts", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_pts, 0, (char *)" Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... ", 0},
-  {(char *)"closed", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_closed, 0, (char *)" Flag indicating if shapes should be treated as closed ", 0},
-  {(char *)"bounds", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_bounds, 0, (char *)" Tight bounding box of the shape [minx,miny,maxx,maxy] ", 0},
-  {(char *)"minx", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_minx, 0, (char *)0, 0},
-  {(char *)"miny", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_miny, 0, (char *)0, 0},
-  {(char *)"maxx", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_maxx, 0, (char *)0, 0},
-  {(char *)"maxy", __pyx_getprop_2wx_3svg_8_nanosvg_7SVGpath_maxy, 0, (char *)0, 0},
+static struct PyGetSetDef __pyx_getsets_2wx_3svg_8_nanosvg_SVGgradientStop[] = {
+  {(char *)"color", __pyx_getprop_2wx_3svg_8_nanosvg_15SVGgradientStop_color, 0, (char *)0, 0},
+  {(char *)"offset", __pyx_getprop_2wx_3svg_8_nanosvg_15SVGgradientStop_offset, 0, (char *)0, 0},
   {0, 0, 0, 0, 0}
 };
 
-static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGpath = {
+static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop = {
   PyVarObject_HEAD_INIT(0, 0)
-  "wx.svg._nanosvg.SVGpath", /*tp_name*/
-  sizeof(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath), /*tp_basicsize*/
+  "wx.svg._nanosvg.SVGgradientStop", /*tp_name*/
+  sizeof(struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_2wx_3svg_8_nanosvg_SVGpath, /*tp_dealloc*/
+  __pyx_tp_dealloc_2wx_3svg_8_nanosvg_SVGgradientStop, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -24364,9 +24364,9 @@ static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGpath = {
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_2wx_3svg_8_nanosvg_SVGpath, /*tp_methods*/
+  __pyx_methods_2wx_3svg_8_nanosvg_SVGgradientStop, /*tp_methods*/
   0, /*tp_members*/
-  __pyx_getsets_2wx_3svg_8_nanosvg_SVGpath, /*tp_getset*/
+  __pyx_getsets_2wx_3svg_8_nanosvg_SVGgradientStop, /*tp_getset*/
   0, /*tp_base*/
   0, /*tp_dict*/
   0, /*tp_descr_get*/
@@ -24374,7 +24374,7 @@ static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGpath = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_2wx_3svg_8_nanosvg_SVGpath, /*tp_new*/
+  __pyx_tp_new_2wx_3svg_8_nanosvg_SVGgradientStop, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -25727,11 +25727,11 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_staticmethod = __Pyx_GetBuiltinName(__pyx_n_s_staticmethod); if (!__pyx_builtin_staticmethod) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_builtin_staticmethod = __Pyx_GetBuiltinName(__pyx_n_s_staticmethod); if (!__pyx_builtin_staticmethod) __PYX_ERR(0, 78, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 68, __pyx_L1_error)
-  __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(0, 92, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 201, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 206, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 148, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(1, 151, __pyx_L1_error)
   __pyx_builtin_Ellipsis = __Pyx_GetBuiltinName(__pyx_n_s_Ellipsis); if (!__pyx_builtin_Ellipsis) __PYX_ERR(1, 400, __pyx_L1_error)
@@ -25751,20 +25751,20 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         if self._ptr == NULL:
  *             raise ValueError("SVG not yet loaded")             # <<<<<<<<<<<<<<
  * 
- *     @staticmethod
+ * 
  */
   __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_s_SVG_not_yet_loaded); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "wx/svg/_nanosvg.pyx":107
+  /* "wx/svg/_nanosvg.pyx":110
  *         img = SVGimage.from_ptr(nsvgParse(pbuff, bytes(units, 'utf-8'), dpi))
  *         if img._ptr == NULL:
  *             raise RuntimeError('Unable to parse SVG buffer')             # <<<<<<<<<<<<<<
  *         return img
  * 
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_Unable_to_parse_SVG_buffer); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 107, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_Unable_to_parse_SVG_buffer); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 110, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
@@ -25787,14 +25787,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
-  /* "wx/svg/_nanosvg.pyx":152
+  /* "wx/svg/_nanosvg.pyx":157
  *     def _check_ptr(self):
  *         if self._ptr == NULL:
  *             raise ValueError("Invalid SVGshape")             # <<<<<<<<<<<<<<
  * 
  *     @staticmethod
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_Invalid_SVGshape); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_Invalid_SVGshape); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 157, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
 
@@ -25817,38 +25817,16 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
-  /* "wx/svg/_nanosvg.pyx":288
+  /* "wx/svg/_nanosvg.pyx":296
  *     def _check_ptr(self):
  *         if self._ptr == NULL:
- *             raise ValueError("Invalid SVGpaint")             # <<<<<<<<<<<<<<
+ *             raise ValueError("Invalid SVGpath")             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_Invalid_SVGpaint); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 288, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_Invalid_SVGpath); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 296, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
-
-  /* "wx/svg/_nanosvg.pyx":300
- *         self._check_ptr()
- *         if self.type != SVG_PAINT_COLOR:
- *             raise ValueError("Color not valid in this paint object")             # <<<<<<<<<<<<<<
- *         return self._ptr.color
- * 
- */
-  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_Color_not_valid_in_this_paint_ob); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 300, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
-
-  /* "wx/svg/_nanosvg.pyx":307
- *         self._check_ptr()
- *         if self.type not in [SVG_PAINT_LINEAR_GRADIENT, SVG_PAINT_RADIAL_GRADIENT]:
- *             raise ValueError("Gradient not valid in this paint object")             # <<<<<<<<<<<<<<
- *         return SVGgradient.from_ptr(self._ptr.gradient)
- * 
- */
-  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_s_Gradient_not_valid_in_this_paint); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 307, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__10);
-  __Pyx_GIVEREF(__pyx_tuple__10);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
@@ -25856,27 +25834,49 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(1, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
+  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__9);
+  __Pyx_GIVEREF(__pyx_tuple__9);
 
   /* "(tree fragment)":4
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__12);
-  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__10);
+  __Pyx_GIVEREF(__pyx_tuple__10);
 
-  /* "wx/svg/_nanosvg.pyx":328
+  /* "wx/svg/_nanosvg.pyx":354
  *     def _check_ptr(self):
  *         if self._ptr == NULL:
- *             raise ValueError("Invalid SVGgradientStop")             # <<<<<<<<<<<<<<
+ *             raise ValueError("Invalid SVGpaint")             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_s_Invalid_SVGgradientStop); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_s_Invalid_SVGpaint); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 354, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__11);
+  __Pyx_GIVEREF(__pyx_tuple__11);
+
+  /* "wx/svg/_nanosvg.pyx":366
+ *         self._check_ptr()
+ *         if self.type != SVG_PAINT_COLOR:
+ *             raise ValueError("Color not valid in this paint object")             # <<<<<<<<<<<<<<
+ *         return self._ptr.color
+ * 
+ */
+  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_s_Color_not_valid_in_this_paint_ob); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 366, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
+
+  /* "wx/svg/_nanosvg.pyx":373
+ *         self._check_ptr()
+ *         if self.type not in [SVG_PAINT_LINEAR_GRADIENT, SVG_PAINT_RADIAL_GRADIENT]:
+ *             raise ValueError("Gradient not valid in this paint object")             # <<<<<<<<<<<<<<
+ *         return SVGgradient.from_ptr(self._ptr.gradient)
+ * 
+ */
+  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_s_Gradient_not_valid_in_this_paint); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 373, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__13);
   __Pyx_GIVEREF(__pyx_tuple__13);
 
@@ -25899,14 +25899,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__15);
   __Pyx_GIVEREF(__pyx_tuple__15);
 
-  /* "wx/svg/_nanosvg.pyx":358
+  /* "wx/svg/_nanosvg.pyx":394
  *     def _check_ptr(self):
  *         if self._ptr == NULL:
  *             raise ValueError("Invalid SVGgradient")             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_s_Invalid_SVGgradient); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(0, 358, __pyx_L1_error)
+  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_s_Invalid_SVGgradient); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(0, 394, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__16);
   __Pyx_GIVEREF(__pyx_tuple__16);
 
@@ -25929,14 +25929,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__18);
   __Pyx_GIVEREF(__pyx_tuple__18);
 
-  /* "wx/svg/_nanosvg.pyx":411
+  /* "wx/svg/_nanosvg.pyx":448
  *     def _check_ptr(self):
  *         if self._ptr == NULL:
- *             raise ValueError("Invalid SVGpath")             # <<<<<<<<<<<<<<
+ *             raise ValueError("Invalid SVGgradientStop")             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_kp_s_Invalid_SVGpath); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_kp_s_Invalid_SVGgradientStop); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 448, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
 
@@ -26151,29 +26151,29 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__39);
   __Pyx_GIVEREF(__pyx_tuple__39);
 
-  /* "wx/svg/_nanosvg.pyx":77
+  /* "wx/svg/_nanosvg.pyx":79
  * 
  *     @staticmethod
  *     def from_file(str filename, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
  *         """
  *         Loads an SVG image from a file.
  */
-  __pyx_tuple__40 = PyTuple_Pack(5, __pyx_n_s_filename, __pyx_n_s_units, __pyx_n_s_dpi, __pyx_n_s_name, __pyx_n_s_img); if (unlikely(!__pyx_tuple__40)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_tuple__40 = PyTuple_Pack(5, __pyx_n_s_filename, __pyx_n_s_units, __pyx_n_s_dpi, __pyx_n_s_name, __pyx_n_s_img); if (unlikely(!__pyx_tuple__40)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__40);
   __Pyx_GIVEREF(__pyx_tuple__40);
-  __pyx_codeobj__41 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__40, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_wx_svg__nanosvg_pyx, __pyx_n_s_from_file, 77, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__41)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_codeobj__41 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__40, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_wx_svg__nanosvg_pyx, __pyx_n_s_from_file, 79, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__41)) __PYX_ERR(0, 79, __pyx_L1_error)
 
-  /* "wx/svg/_nanosvg.pyx":94
+  /* "wx/svg/_nanosvg.pyx":97
  * 
  *     @staticmethod
- *     def from_buffer(char[:] buff, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
+ *     def from_buffer(const unsigned char[:] buff, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
  *         """
  *         Loads an SVG image from a buffer object (bytes, bytearray, memoryview, arrary of char, etc.)
  */
-  __pyx_tuple__42 = PyTuple_Pack(5, __pyx_n_s_buff, __pyx_n_s_units, __pyx_n_s_dpi, __pyx_n_s_pbuff, __pyx_n_s_img); if (unlikely(!__pyx_tuple__42)) __PYX_ERR(0, 94, __pyx_L1_error)
+  __pyx_tuple__42 = PyTuple_Pack(5, __pyx_n_s_buff, __pyx_n_s_units, __pyx_n_s_dpi, __pyx_n_s_pbuff, __pyx_n_s_img); if (unlikely(!__pyx_tuple__42)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__42);
   __Pyx_GIVEREF(__pyx_tuple__42);
-  __pyx_codeobj__43 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__42, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_wx_svg__nanosvg_pyx, __pyx_n_s_from_buffer, 94, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__43)) __PYX_ERR(0, 94, __pyx_L1_error)
+  __pyx_codeobj__43 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__42, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_wx_svg__nanosvg_pyx, __pyx_n_s_from_buffer, 97, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__43)) __PYX_ERR(0, 97, __pyx_L1_error)
 
   /* "EnumBase":28
  * class __Pyx_EnumBase(int):
@@ -26367,70 +26367,70 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_ptype_2wx_3svg_8_nanosvg_SVGimage = &__pyx_type_2wx_3svg_8_nanosvg_SVGimage;
   __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGshape = &__pyx_vtable_2wx_3svg_8_nanosvg_SVGshape;
   __pyx_vtable_2wx_3svg_8_nanosvg_SVGshape.from_ptr = (struct __pyx_obj_2wx_3svg_8_nanosvg_SVGshape *(*)(NSVGshape *))__pyx_f_2wx_3svg_8_nanosvg_8SVGshape_from_ptr;
-  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg_SVGshape) < 0) __PYX_ERR(0, 141, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg_SVGshape) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_2wx_3svg_8_nanosvg_SVGshape.tp_print = 0;
   #endif
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_2wx_3svg_8_nanosvg_SVGshape.tp_dictoffset && __pyx_type_2wx_3svg_8_nanosvg_SVGshape.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_2wx_3svg_8_nanosvg_SVGshape.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (__Pyx_SetVtable(__pyx_type_2wx_3svg_8_nanosvg_SVGshape.tp_dict, __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGshape) < 0) __PYX_ERR(0, 141, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SVGshape, (PyObject *)&__pyx_type_2wx_3svg_8_nanosvg_SVGshape) < 0) __PYX_ERR(0, 141, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2wx_3svg_8_nanosvg_SVGshape) < 0) __PYX_ERR(0, 141, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_2wx_3svg_8_nanosvg_SVGshape.tp_dict, __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGshape) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SVGshape, (PyObject *)&__pyx_type_2wx_3svg_8_nanosvg_SVGshape) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2wx_3svg_8_nanosvg_SVGshape) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
   __pyx_ptype_2wx_3svg_8_nanosvg_SVGshape = &__pyx_type_2wx_3svg_8_nanosvg_SVGshape;
-  __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpaint = &__pyx_vtable_2wx_3svg_8_nanosvg_SVGpaint;
-  __pyx_vtable_2wx_3svg_8_nanosvg_SVGpaint.from_ptr = (struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *(*)(NSVGpaint *))__pyx_f_2wx_3svg_8_nanosvg_8SVGpaint_from_ptr;
-  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg_SVGpaint) < 0) __PYX_ERR(0, 272, __pyx_L1_error)
-  #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_2wx_3svg_8_nanosvg_SVGpaint.tp_print = 0;
-  #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_2wx_3svg_8_nanosvg_SVGpaint.tp_dictoffset && __pyx_type_2wx_3svg_8_nanosvg_SVGpaint.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_2wx_3svg_8_nanosvg_SVGpaint.tp_getattro = __Pyx_PyObject_GenericGetAttr;
-  }
-  if (__Pyx_SetVtable(__pyx_type_2wx_3svg_8_nanosvg_SVGpaint.tp_dict, __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpaint) < 0) __PYX_ERR(0, 272, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SVGpaint, (PyObject *)&__pyx_type_2wx_3svg_8_nanosvg_SVGpaint) < 0) __PYX_ERR(0, 272, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2wx_3svg_8_nanosvg_SVGpaint) < 0) __PYX_ERR(0, 272, __pyx_L1_error)
-  __pyx_ptype_2wx_3svg_8_nanosvg_SVGpaint = &__pyx_type_2wx_3svg_8_nanosvg_SVGpaint;
-  __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradientStop = &__pyx_vtable_2wx_3svg_8_nanosvg_SVGgradientStop;
-  __pyx_vtable_2wx_3svg_8_nanosvg_SVGgradientStop.from_ptr = (struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *(*)(NSVGgradientStop *))__pyx_f_2wx_3svg_8_nanosvg_15SVGgradientStop_from_ptr;
-  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
-  #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop.tp_print = 0;
-  #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop.tp_dictoffset && __pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop.tp_getattro = __Pyx_PyObject_GenericGetAttr;
-  }
-  if (__Pyx_SetVtable(__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop.tp_dict, __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradientStop) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SVGgradientStop, (PyObject *)&__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
-  __pyx_ptype_2wx_3svg_8_nanosvg_SVGgradientStop = &__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop;
-  __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradient = &__pyx_vtable_2wx_3svg_8_nanosvg_SVGgradient;
-  __pyx_vtable_2wx_3svg_8_nanosvg_SVGgradient.from_ptr = (struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *(*)(NSVGgradient *))__pyx_f_2wx_3svg_8_nanosvg_11SVGgradient_from_ptr;
-  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg_SVGgradient) < 0) __PYX_ERR(0, 342, __pyx_L1_error)
-  #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_2wx_3svg_8_nanosvg_SVGgradient.tp_print = 0;
-  #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_2wx_3svg_8_nanosvg_SVGgradient.tp_dictoffset && __pyx_type_2wx_3svg_8_nanosvg_SVGgradient.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_2wx_3svg_8_nanosvg_SVGgradient.tp_getattro = __Pyx_PyObject_GenericGetAttr;
-  }
-  if (__Pyx_SetVtable(__pyx_type_2wx_3svg_8_nanosvg_SVGgradient.tp_dict, __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradient) < 0) __PYX_ERR(0, 342, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SVGgradient, (PyObject *)&__pyx_type_2wx_3svg_8_nanosvg_SVGgradient) < 0) __PYX_ERR(0, 342, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2wx_3svg_8_nanosvg_SVGgradient) < 0) __PYX_ERR(0, 342, __pyx_L1_error)
-  __pyx_ptype_2wx_3svg_8_nanosvg_SVGgradient = &__pyx_type_2wx_3svg_8_nanosvg_SVGgradient;
   __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpath = &__pyx_vtable_2wx_3svg_8_nanosvg_SVGpath;
   __pyx_vtable_2wx_3svg_8_nanosvg_SVGpath.from_ptr = (struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpath *(*)(NSVGpath *))__pyx_f_2wx_3svg_8_nanosvg_7SVGpath_from_ptr;
-  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg_SVGpath) < 0) __PYX_ERR(0, 395, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg_SVGpath) < 0) __PYX_ERR(0, 277, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_2wx_3svg_8_nanosvg_SVGpath.tp_print = 0;
   #endif
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_2wx_3svg_8_nanosvg_SVGpath.tp_dictoffset && __pyx_type_2wx_3svg_8_nanosvg_SVGpath.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_2wx_3svg_8_nanosvg_SVGpath.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (__Pyx_SetVtable(__pyx_type_2wx_3svg_8_nanosvg_SVGpath.tp_dict, __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpath) < 0) __PYX_ERR(0, 395, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SVGpath, (PyObject *)&__pyx_type_2wx_3svg_8_nanosvg_SVGpath) < 0) __PYX_ERR(0, 395, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2wx_3svg_8_nanosvg_SVGpath) < 0) __PYX_ERR(0, 395, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_2wx_3svg_8_nanosvg_SVGpath.tp_dict, __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpath) < 0) __PYX_ERR(0, 277, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SVGpath, (PyObject *)&__pyx_type_2wx_3svg_8_nanosvg_SVGpath) < 0) __PYX_ERR(0, 277, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2wx_3svg_8_nanosvg_SVGpath) < 0) __PYX_ERR(0, 277, __pyx_L1_error)
   __pyx_ptype_2wx_3svg_8_nanosvg_SVGpath = &__pyx_type_2wx_3svg_8_nanosvg_SVGpath;
-  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct____get__) < 0) __PYX_ERR(0, 128, __pyx_L1_error)
+  __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpaint = &__pyx_vtable_2wx_3svg_8_nanosvg_SVGpaint;
+  __pyx_vtable_2wx_3svg_8_nanosvg_SVGpaint.from_ptr = (struct __pyx_obj_2wx_3svg_8_nanosvg_SVGpaint *(*)(NSVGpaint *))__pyx_f_2wx_3svg_8_nanosvg_8SVGpaint_from_ptr;
+  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg_SVGpaint) < 0) __PYX_ERR(0, 338, __pyx_L1_error)
+  #if PY_VERSION_HEX < 0x030800B1
+  __pyx_type_2wx_3svg_8_nanosvg_SVGpaint.tp_print = 0;
+  #endif
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_2wx_3svg_8_nanosvg_SVGpaint.tp_dictoffset && __pyx_type_2wx_3svg_8_nanosvg_SVGpaint.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_2wx_3svg_8_nanosvg_SVGpaint.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  }
+  if (__Pyx_SetVtable(__pyx_type_2wx_3svg_8_nanosvg_SVGpaint.tp_dict, __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGpaint) < 0) __PYX_ERR(0, 338, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SVGpaint, (PyObject *)&__pyx_type_2wx_3svg_8_nanosvg_SVGpaint) < 0) __PYX_ERR(0, 338, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2wx_3svg_8_nanosvg_SVGpaint) < 0) __PYX_ERR(0, 338, __pyx_L1_error)
+  __pyx_ptype_2wx_3svg_8_nanosvg_SVGpaint = &__pyx_type_2wx_3svg_8_nanosvg_SVGpaint;
+  __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradient = &__pyx_vtable_2wx_3svg_8_nanosvg_SVGgradient;
+  __pyx_vtable_2wx_3svg_8_nanosvg_SVGgradient.from_ptr = (struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradient *(*)(NSVGgradient *))__pyx_f_2wx_3svg_8_nanosvg_11SVGgradient_from_ptr;
+  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg_SVGgradient) < 0) __PYX_ERR(0, 378, __pyx_L1_error)
+  #if PY_VERSION_HEX < 0x030800B1
+  __pyx_type_2wx_3svg_8_nanosvg_SVGgradient.tp_print = 0;
+  #endif
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_2wx_3svg_8_nanosvg_SVGgradient.tp_dictoffset && __pyx_type_2wx_3svg_8_nanosvg_SVGgradient.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_2wx_3svg_8_nanosvg_SVGgradient.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  }
+  if (__Pyx_SetVtable(__pyx_type_2wx_3svg_8_nanosvg_SVGgradient.tp_dict, __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradient) < 0) __PYX_ERR(0, 378, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SVGgradient, (PyObject *)&__pyx_type_2wx_3svg_8_nanosvg_SVGgradient) < 0) __PYX_ERR(0, 378, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2wx_3svg_8_nanosvg_SVGgradient) < 0) __PYX_ERR(0, 378, __pyx_L1_error)
+  __pyx_ptype_2wx_3svg_8_nanosvg_SVGgradient = &__pyx_type_2wx_3svg_8_nanosvg_SVGgradient;
+  __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradientStop = &__pyx_vtable_2wx_3svg_8_nanosvg_SVGgradientStop;
+  __pyx_vtable_2wx_3svg_8_nanosvg_SVGgradientStop.from_ptr = (struct __pyx_obj_2wx_3svg_8_nanosvg_SVGgradientStop *(*)(NSVGgradientStop *))__pyx_f_2wx_3svg_8_nanosvg_15SVGgradientStop_from_ptr;
+  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop) < 0) __PYX_ERR(0, 432, __pyx_L1_error)
+  #if PY_VERSION_HEX < 0x030800B1
+  __pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop.tp_print = 0;
+  #endif
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop.tp_dictoffset && __pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  }
+  if (__Pyx_SetVtable(__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop.tp_dict, __pyx_vtabptr_2wx_3svg_8_nanosvg_SVGgradientStop) < 0) __PYX_ERR(0, 432, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SVGgradientStop, (PyObject *)&__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop) < 0) __PYX_ERR(0, 432, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop) < 0) __PYX_ERR(0, 432, __pyx_L1_error)
+  __pyx_ptype_2wx_3svg_8_nanosvg_SVGgradientStop = &__pyx_type_2wx_3svg_8_nanosvg_SVGgradientStop;
+  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct____get__) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct____get__.tp_print = 0;
   #endif
@@ -26438,7 +26438,7 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct____get__.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
   __pyx_ptype_2wx_3svg_8_nanosvg___pyx_scope_struct____get__ = &__pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct____get__;
-  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__) < 0) __PYX_ERR(0, 260, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__) < 0) __PYX_ERR(0, 265, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__.tp_print = 0;
   #endif
@@ -26446,7 +26446,7 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
   __pyx_ptype_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__ = &__pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__;
-  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct_2___get__) < 0) __PYX_ERR(0, 386, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct_2___get__) < 0) __PYX_ERR(0, 422, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_2wx_3svg_8_nanosvg___pyx_scope_struct_2___get__.tp_print = 0;
   #endif
@@ -26761,61 +26761,61 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_sys, __pyx_t_1) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wx/svg/_nanosvg.pyx":77
+  /* "wx/svg/_nanosvg.pyx":79
  * 
  *     @staticmethod
  *     def from_file(str filename, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
  *         """
  *         Loads an SVG image from a file.
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2wx_3svg_8_nanosvg_8SVGimage_7from_file, NULL, __pyx_n_s_wx_svg__nanosvg); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2wx_3svg_8_nanosvg_8SVGimage_7from_file, NULL, __pyx_n_s_wx_svg__nanosvg); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage->tp_dict, __pyx_n_s_from_file, __pyx_t_1) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage->tp_dict, __pyx_n_s_from_file, __pyx_t_1) < 0) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   PyType_Modified(__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage);
 
-  /* "wx/svg/_nanosvg.pyx":76
- *         return obj
+  /* "wx/svg/_nanosvg.pyx":78
+ * 
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
  *     def from_file(str filename, str units='px', float dpi=96) -> SVGimage:
  *         """
  */
-  __Pyx_GetNameInClass(__pyx_t_1, (PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage, __pyx_n_s_from_file); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GetNameInClass(__pyx_t_1, (PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage, __pyx_n_s_from_file); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage->tp_dict, __pyx_n_s_from_file, __pyx_t_2) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage->tp_dict, __pyx_n_s_from_file, __pyx_t_2) < 0) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage);
 
-  /* "wx/svg/_nanosvg.pyx":94
+  /* "wx/svg/_nanosvg.pyx":97
  * 
  *     @staticmethod
- *     def from_buffer(char[:] buff, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
+ *     def from_buffer(const unsigned char[:] buff, str units='px', float dpi=96) -> SVGimage:             # <<<<<<<<<<<<<<
  *         """
  *         Loads an SVG image from a buffer object (bytes, bytearray, memoryview, arrary of char, etc.)
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_2wx_3svg_8_nanosvg_8SVGimage_9from_buffer, NULL, __pyx_n_s_wx_svg__nanosvg); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_2wx_3svg_8_nanosvg_8SVGimage_9from_buffer, NULL, __pyx_n_s_wx_svg__nanosvg); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage->tp_dict, __pyx_n_s_from_buffer, __pyx_t_2) < 0) __PYX_ERR(0, 94, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage->tp_dict, __pyx_n_s_from_buffer, __pyx_t_2) < 0) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage);
 
-  /* "wx/svg/_nanosvg.pyx":93
- *         return img
+  /* "wx/svg/_nanosvg.pyx":96
+ * 
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
- *     def from_buffer(char[:] buff, str units='px', float dpi=96) -> SVGimage:
+ *     def from_buffer(const unsigned char[:] buff, str units='px', float dpi=96) -> SVGimage:
  *         """
  */
-  __Pyx_GetNameInClass(__pyx_t_2, (PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage, __pyx_n_s_from_buffer); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
+  __Pyx_GetNameInClass(__pyx_t_2, (PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage, __pyx_n_s_from_buffer); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage->tp_dict, __pyx_n_s_from_buffer, __pyx_t_1) < 0) __PYX_ERR(0, 94, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage->tp_dict, __pyx_n_s_from_buffer, __pyx_t_1) < 0) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   PyType_Modified(__pyx_ptype_2wx_3svg_8_nanosvg_SVGimage);
 
@@ -32748,7 +32748,7 @@ no_fail:
 }
 
 /* ObjectToMemviewSlice */
-  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_char(PyObject *obj, int writable_flag) {
+  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(PyObject *obj, int writable_flag) {
     __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
     __Pyx_BufFmt_StackElem stack[1];
     int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
@@ -32759,7 +32759,7 @@ no_fail:
     }
     retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
                                                  PyBUF_RECORDS_RO | writable_flag, 1,
-                                                 &__Pyx_TypeInfo_char, stack,
+                                                 &__Pyx_TypeInfo_unsigned_char__const__, stack,
                                                  &result, obj);
     if (unlikely(retcode == -1))
         goto __pyx_fail;
@@ -32855,6 +32855,37 @@ __pyx_fail:
 }
 
 /* CIntToPy */
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+    const int neg_one = (int) ((int) 0 - (int) 1), const_zero = (int) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(int),
+                                     little, !is_unsigned);
+    }
+}
+
+/* CIntToPy */
   static CYTHON_INLINE PyObject* __Pyx_PyInt_From_enum____pyx_t_2wx_3svg_8_nanosvg_SVGpaintType(enum __pyx_t_2wx_3svg_8_nanosvg_SVGpaintType value) {
     const enum __pyx_t_2wx_3svg_8_nanosvg_SVGpaintType neg_one = (enum __pyx_t_2wx_3svg_8_nanosvg_SVGpaintType) ((enum __pyx_t_2wx_3svg_8_nanosvg_SVGpaintType) 0 - (enum __pyx_t_2wx_3svg_8_nanosvg_SVGpaintType) 1), const_zero = (enum __pyx_t_2wx_3svg_8_nanosvg_SVGpaintType) 0;
     const int is_unsigned = neg_one > const_zero;
@@ -32912,37 +32943,6 @@ __pyx_fail:
         int one = 1; int little = (int)*(unsigned char *)&one;
         unsigned char *bytes = (unsigned char *)&value;
         return _PyLong_FromByteArray(bytes, sizeof(unsigned int),
-                                     little, !is_unsigned);
-    }
-}
-
-/* CIntToPy */
-  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
-    const int neg_one = (int) ((int) 0 - (int) 1), const_zero = (int) 0;
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(int) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(int) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(int) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(int),
                                      little, !is_unsigned);
     }
 }

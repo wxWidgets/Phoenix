@@ -94,7 +94,7 @@ cdef class SVGimage:
 
 
     @staticmethod
-    def from_buffer(char[:] buff, str units='px', float dpi=96) -> SVGimage:
+    def from_buffer(const unsigned char[:] buff, str units='px', float dpi=96) -> SVGimage:
         """
         Loads an SVG image from a buffer object (bytes, bytearray, memoryview, arrary of char, etc.)
 
@@ -104,7 +104,7 @@ cdef class SVGimage:
 
         :rtype: SVGimage
         """
-        cdef char *pbuff = &buff[0]
+        cdef const unsigned char *pbuff = &buff[0]
         img = SVGimage.from_ptr(nsvgParse(pbuff, bytes(units, 'utf-8'), dpi))
         if img._ptr == NULL:
             raise RuntimeError('Unable to parse SVG buffer')
