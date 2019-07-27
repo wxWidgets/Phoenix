@@ -94,7 +94,7 @@ cdef extern from 'nanosvg.h':
 
     cdef NSVGimage *nsvgParseFromFile(const char *filename, const char *units, float dpi)
 
-    cdef NSVGimage *nsvgParse(const unsigned char *input, const char *units, float dpi)
+    cdef NSVGimage *nsvgParse(char *input, const char *units, float dpi)
 
     cdef void nsvgDelete(NSVGimage *image)
 
