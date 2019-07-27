@@ -94,22 +94,26 @@ cdef class SVGimage:
 
 
     @staticmethod
-    def from_buffer(const unsigned char[:] buff, str units='px', float dpi=96) -> SVGimage:
+    def from_bytes(bytes buffer, str units='px', float dpi=96) -> SVGimage:
         """
-        Loads an SVG image from a buffer object (bytes, bytearray, memoryview, arrary of char, etc.)
+        Loads an SVG image from a bytes object.
 
-        :param buffer `buff`: object containing the SVG data
+        :param bytes `buffer`: object containing the SVG data
         :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'
         :param float `dpi`: controls how the unit conversion is done
 
         :rtype: SVGimage
         """
-        cdef const unsigned char *pbuff = &buff[0]
-        img = SVGimage.from_ptr(nsvgParse(pbuff, bytes(units, 'utf-8'), dpi))
+        img = SVGimage.from_ptr(nsvgParse(buffer, bytes(units, 'utf-8'), dpi))
         if img._ptr == NULL:
             raise RuntimeError('Unable to parse SVG buffer')
         return img
 
+    def __repr__(self):
+        if self._ptr:
+            return "SVGimage: size ({}, {})".format(self.width, self.height)
+        else:
+            return "SVGimage: <uninitialized>"
 
     @property
     def width(self) -> float:
@@ -161,6 +165,12 @@ cdef class SVGshape:
         obj = SVGshape()
         obj._ptr = ptr
         return obj
+
+    def __repr__(self):
+        if self._ptr:
+            return "SVGshape: id:{} bounds:{}".format(self.id, self.bounds)
+        else:
+            return "SVGshape: <uninitialized>"
 
     @property
     def id(self):
@@ -295,11 +305,36 @@ cdef class SVGpath:
         if self._ptr == NULL:
             raise ValueError("Invalid SVGpath")
 
+    def __repr__(self):
+        if self._ptr:
+            return "SVGpath: bounds:{}".format(self.bounds)
+        else:
+            return "SVGpath: <uninitialized>"
+
     @property
     def pts(self) -> list:
-        """ Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... """
+        """ 
+        Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... 
+        The return value is a list of floats.
+        """
         self._check_ptr()
-        return [self._ptr.pts[i] for i in range(self._ptr.npts)]
+        return [self._ptr.pts[i] for i in range(self._ptr.npts*2)]
+
+    @property
+    def npts(self) -> int:
+        """ Number of points """
+        self._check_ptr()
+        return self._ptr.npts
+
+    @property
+    def points(self) -> list:
+        """ 
+        Cubic bezier points: (x0,y0), [(cpx1,cpx1), (cpx2,cpy2), (x1,y1)], ... 
+        The return value is a list of tuples, each containing an x-y pair.
+        """
+        self._check_ptr()
+        return [(self._ptr.pts[i], self._ptr.pts[i+1])  
+                for i in range(0, self._ptr.npts*2, 2)]
 
     @property
     def closed(self) -> bool:
@@ -365,6 +400,15 @@ cdef class SVGpaint:
         if self.type != SVG_PAINT_COLOR:
             raise ValueError("Color not valid in this paint object")
         return self._ptr.color
+
+    @property
+    def color_rgba(self) -> tuple:
+        """ Returns color as a RGBA tuple """
+        c = self.color
+        return ( c        & 0xff,
+                (c >> 8)  & 0xff,
+                (c >> 16) & 0xff,
+                (c >> 24) & 0xff)
 
     @property
     def gradient(self) -> SVGgradient:
