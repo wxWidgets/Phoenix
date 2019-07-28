@@ -55,13 +55,17 @@ cdef class SVGimage:
     bezier shapes, with fill, stroke, paths and other information.
     """
     cdef NSVGimage *_ptr
+    cdef NSVGrasterizer *_rasterizer
 
     def __cinit__(self):
         self._ptr = NULL
+        self._rasterizer = NULL
 
     def __dealloc__(self):
         if self._ptr != NULL:
             nsvgDelete(self._ptr)
+        if self._rasterizer != NULL:
+            nsvgDeleteRasterizer(self._rasterizer)
 
     def _check_ptr(self):
         if self._ptr == NULL:
@@ -109,11 +113,34 @@ cdef class SVGimage:
             raise RuntimeError('Unable to parse SVG buffer')
         return img
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         if self._ptr:
             return "SVGimage: size ({}, {})".format(self.width, self.height)
         else:
             return "SVGimage: <uninitialized>"
+
+
+    def RasterizeToBytes(self, float tx=0.0, float ty=0.0, float scale=1.0,
+                         int width=-1, int height=-1, int stride=-1) -> bytes:
+        """
+        """
+        self._check_ptr()
+        if self._rasterizer == NULL:
+            self._rasterizer = nsvgCreateRasterizer()
+
+        if width == -1:
+            width = self.width
+        if height == -1:
+            height = self.height
+        if stride == -1:
+            stride = width * 4;
+
+        buffer = bytes(height * stride)
+        nsvgRasterize(self._rasterizer, self._ptr, tx, ty, scale, buffer,
+                      width, height, stride)
+        return buffer
+
+
 
     @property
     def width(self) -> float:
@@ -313,8 +340,8 @@ cdef class SVGpath:
 
     @property
     def pts(self) -> list:
-        """ 
-        Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ... 
+        """
+        Cubic bezier points: x0,y0, [cpx1,cpx1,cpx2,cpy2,x1,y1], ...
         The return value is a list of floats.
         """
         self._check_ptr()
@@ -328,12 +355,12 @@ cdef class SVGpath:
 
     @property
     def points(self) -> list:
-        """ 
-        Cubic bezier points: (x0,y0), [(cpx1,cpx1), (cpx2,cpy2), (x1,y1)], ... 
+        """
+        Cubic bezier points: (x0,y0), [(cpx1,cpx1), (cpx2,cpy2), (x1,y1)], ...
         The return value is a list of tuples, each containing an x-y pair.
         """
         self._check_ptr()
-        return [(self._ptr.pts[i], self._ptr.pts[i+1])  
+        return [(self._ptr.pts[i], self._ptr.pts[i+1])
                 for i in range(0, self._ptr.npts*2, 2)]
 
     @property
@@ -445,22 +472,17 @@ cdef class SVGgradient:
     @property
     def spread(self) -> int:
         self._check_ptr()
-        return int(self._pre.spread)
-
-    @property
-    def spread(self) -> int:
-        self._check_ptr()
-        return int(self._pre.spread)
+        return int(self._ptr.spread)
 
     @property
     def fx(self) -> float:
         self._check_ptr()
-        return self._pre.fx
+        return self._ptr.fx
 
     @property
     def fy(self) -> float:
         self._check_ptr()
-        return self._pre.fy
+        return self._ptr.fy
 
     @property
     def stops(self):
@@ -469,7 +491,7 @@ cdef class SVGgradient:
         """
         self._check_ptr()
         for i in range(self._ptr.nstops):
-            yield self._ptr.stops[i]
+            yield SVGgradientStop.from_ptr(&self._ptr.stops[i])
 
 
 #----------------------------------------------------------------------------
