@@ -80,7 +80,7 @@ cdef class SVGimage:
 
 
     @staticmethod
-    def from_file(str filename, str units='px', float dpi=96) -> SVGimage:
+    def CreateFromFile(str filename, str units='px', float dpi=96) -> SVGimage:
         """
         Loads an SVG image from a file.
 
@@ -98,7 +98,7 @@ cdef class SVGimage:
 
 
     @staticmethod
-    def from_bytes(bytes buffer, str units='px', float dpi=96) -> SVGimage:
+    def CreateFromBytes(bytes buffer, str units='px', float dpi=96) -> SVGimage:
         """
         Loads an SVG image from a bytes object.
 
@@ -493,7 +493,27 @@ cdef class SVGgradient:
         for i in range(self._ptr.nstops):
             yield SVGgradientStop.from_ptr(&self._ptr.stops[i])
 
+    @property
+    def linearPoints(self) -> tuple:
+        """
+        For linear gradients this returns the start and stop points as tuples
+        of the form ((x1,y1), (x2,y2)).
+        """
+        # nanosvg transforms the start and stop points to (0,0) and (0,1) and
+        # provides the transform used to do so. To get back the original x1,y1
+        # and x2,y2 we need to invert the transform.
+        # See https://github.com/memononen/nanosvg/issues/26
 
+        cdef float inv[6]
+        cdef float x1, y1, x2, y2
+        nsvg__xformInverse(inv, self._ptr.xform)
+
+        x1 = inv[4]
+        y1 = inv[5]
+        x2 = inv[2] + inv[4]
+        y2 = inv[3] + inv[5]
+
+        return ((x1,y1), (x2,y2))
 #----------------------------------------------------------------------------
 cdef class SVGgradientStop:
     """

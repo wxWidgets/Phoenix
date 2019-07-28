@@ -100,6 +100,8 @@ cdef extern from 'nanosvg.h':
 
     cdef NSVGpath* nsvgDuplicatePath(NSVGpath* p);
 
+    cdef void nsvg__xformInverse(float* inv, float* t);
+
 
 
 cdef extern from 'nanosvgrast.h':
