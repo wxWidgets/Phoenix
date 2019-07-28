@@ -93,14 +93,13 @@ cdef extern from 'nanosvg.h':
         NSVGshape *shapes
 
     cdef NSVGimage *nsvgParseFromFile(const char *filename, const char *units, float dpi)
-
     cdef NSVGimage *nsvgParse(char *input, const char *units, float dpi)
-
     cdef void nsvgDelete(NSVGimage *image)
 
     cdef NSVGpath* nsvgDuplicatePath(NSVGpath* p);
 
     cdef void nsvg__xformInverse(float* inv, float* t);
+    cdef void nsvg__xformPoint(float* dx, float* dy, float x, float y, float* t)
 
 
 
@@ -108,10 +107,10 @@ cdef extern from 'nanosvgrast.h':
     ctypedef struct NSVGrasterizer
 
     cdef NSVGrasterizer* nsvgCreateRasterizer()
-
-    cdef void nsvgRasterize(NSVGrasterizer* r,
-                   NSVGimage* image, float tx, float ty, float scale,
-                   unsigned char* dst, int w, int h, int stride)
-
     cdef void nsvgDeleteRasterizer(NSVGrasterizer*)
+
+    cdef void nsvgRasterize(
+            NSVGrasterizer* r,
+            NSVGimage* image, float tx, float ty, float scale,
+            unsigned char* dst, int w, int h, int stride)
     
