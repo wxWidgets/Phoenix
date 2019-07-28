@@ -519,6 +519,15 @@ cdef class SVGgradientStop:
         return self._ptr.color
 
     @property
+    def color_rgba(self) -> tuple:
+        """ Returns color as a RGBA tuple """
+        c = self.color
+        return ( c        & 0xff,
+                (c >> 8)  & 0xff,
+                (c >> 16) & 0xff,
+                (c >> 24) & 0xff)
+
+    @property
     def offset(self) -> float:
         self._check_ptr()
         return self._ptr.offset
