@@ -516,15 +516,17 @@ cdef class SVGgradient:
     @property
     def radialPoint(self):
         cdef float inverse[6]
-        cdef float xo, yo, xc, yc, radius
+        cdef float cx, cy, radius
+        cdef float r1, r2
 
         nsvg__xformInverse(inverse, self._ptr.xform)
 
-        nsvg__xformPoint(&xc, &yc, 0, 0, inverse)
-        nsvg__xformPoint(&xo, &yo, 0, 1, inverse)
-        radius = yo - yc;
+        nsvg__xformPoint(&cx, &cy, 0, 0, inverse)
+        nsvg__xformPoint(&r1, &r2, 0, 1, inverse)
+        radius = r2 - cy
 
-        return (xo, yo, xc, yc, radius)
+        return (cx, cy, radius)
+
 
 
 #----------------------------------------------------------------------------
