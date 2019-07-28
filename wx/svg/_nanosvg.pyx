@@ -514,18 +514,21 @@ cdef class SVGgradient:
         return ((x1,y1), (x2,y2))
 
     @property
-    def radialPoint(self):
+    def radialPointRadius(self) -> tuple:
+        """
+        For radial gradients this returns the center point and the radius as a
+        tuple of the form ((cx, cy), radius).
+        """
         cdef float inverse[6]
         cdef float cx, cy, radius
         cdef float r1, r2
-
         nsvg__xformInverse(inverse, self._ptr.xform)
 
         nsvg__xformPoint(&cx, &cy, 0, 0, inverse)
         nsvg__xformPoint(&r1, &r2, 0, 1, inverse)
-        radius = r2 - cy
+        radius = r2 - r1
 
-        return (cx, cy, radius)
+        return ((cx, cy), radius)
 
 
 
