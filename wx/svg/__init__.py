@@ -15,3 +15,8 @@
 from ._version import __version__
 from ._nanosvg import *
 
+
+class SVGimage(SVGimageBase):
+    """
+    """
+    pass

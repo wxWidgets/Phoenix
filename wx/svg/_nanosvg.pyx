@@ -9,6 +9,34 @@
 # Copyright:   (c) 2019 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
+"""
+NanoSVG is a "simple stupid single-header-file SVG parser" from
+https://github.com/memononen/nanosvg. The output of the parser is a list of
+cubic bezier shapes.
+
+The library is well suited for anything from rendering scalable icons in your
+editor application to prototyping a game.
+
+NanoSVG supports a wide range of SVG features, but something may be missing,
+feel free to create a pull request!
+
+The shapes in the SVG images are transformed by the viewBox and converted to
+specified units. That is, you should get the same looking data as your designed
+in your favorite app.
+
+NanoSVG can return the paths in few different units. For example if you want to
+render an image, you may choose to get the paths in pixels, or if you are
+feeding the data into a CNC-cutter, you may want to use millimeters.
+
+The units passed to NanoSVG should be one of: 'px', 'pt', 'pc' 'mm', 'cm', or
+'in'. DPI (dots-per-inch) controls how the unit conversion is done.
+
+If you don't know or care about the units stuff, "px" and 96 should get you
+going.
+
+This module implements a Cython-based wrapper for the nanosvg code, providing
+access to the parsed SVG data as a nested collection of objects and properties.
+"""
 
 import sys
 
@@ -48,11 +76,16 @@ cpdef enum SVGflags:
 # Cython classes for wrapping the nanosvg structs
 
 # SVGimage
-cdef class SVGimage:
+cdef class SVGimageBase:
     """
-    An SVGimage can be created either from an SVG file or from an in-memory
-    buffer containind the SVG XML code. The result is a collection of cubic
-    bezier shapes, with fill, stroke, paths and other information.
+    An SVGimageBase can be created either from an SVG file or from an in-memory
+    buffer containing the SVG XML code. The result is a collection of cubic
+    bezier shapes, with fill, stroke, gradients, paths and other information.
+
+    This class is a Cython-based wrapper around the nanosvg NSVGimage structure,
+    providing just the basic wrapped functionality from nanosvg. Please see the
+    :class:`wx.svg.SFGimage` class for a derived implementation that adds
+    functionality for integrating with wxPython.
     """
     cdef NSVGimage *_ptr
     cdef NSVGrasterizer *_rasterizer
@@ -67,20 +100,30 @@ cdef class SVGimage:
         if self._rasterizer != NULL:
             nsvgDeleteRasterizer(self._rasterizer)
 
-    def _check_ptr(self):
+    cdef _check_ptr(self):
         if self._ptr == NULL:
             raise ValueError("SVG not yet loaded")
 
+    cdef _set_ptr(self, NSVGimage *ptr, str errmsg='Unable to parse SVG'):
+        if self._ptr != NULL:
+            nsvgDelete(self._ptr)
+        if self._rasterizer != NULL:
+            nsvgDeleteRasterizer(self._rasterizer)
+            self._rasterizer = NULL
+        if ptr == NULL:
+            raise ValueError(errmsg)
+        self._ptr = ptr
+
 
     @staticmethod
-    cdef SVGimage from_ptr(NSVGimage *ptr):
-        obj = SVGimage()
+    cdef SVGimageBase from_ptr(NSVGimage *ptr):
+        obj = SVGimageBase()
         obj._ptr = ptr
         return obj
 
 
-    @staticmethod
-    def CreateFromFile(str filename, str units='px', float dpi=96) -> SVGimage:
+    @classmethod
+    def CreateFromFile(cls, str filename, str units='px', float dpi=96):
         """
         Loads an SVG image from a file.
 
@@ -91,14 +134,14 @@ cdef class SVGimage:
         :rtype: SVGimage
         """
         name = filename.encode(sys.getfilesystemencoding())
-        img = SVGimage.from_ptr(nsvgParseFromFile(name, bytes(units, 'utf-8'), dpi))
-        if img._ptr == NULL:
-            raise RuntimeError('Unable to parse SVG file {}'.format(filename))
+        cdef SVGimageBase img = cls()
+        img._set_ptr(nsvgParseFromFile(name, bytes(units, 'utf-8'), dpi),
+                     'Unable to parse SVG file {}'.format(filename))
         return img
 
 
-    @staticmethod
-    def CreateFromBytes(bytes buffer, str units='px', float dpi=96) -> SVGimage:
+    @classmethod
+    def CreateFromBytes(cls, bytes buffer, str units='px', float dpi=96):
         """
         Loads an SVG image from a bytes object.
 
@@ -108,10 +151,11 @@ cdef class SVGimage:
 
         :rtype: SVGimage
         """
-        img = SVGimage.from_ptr(nsvgParse(buffer, bytes(units, 'utf-8'), dpi))
-        if img._ptr == NULL:
-            raise RuntimeError('Unable to parse SVG buffer')
+        cdef SVGimageBase img = cls()
+        img._set_ptr(nsvgParse(buffer, bytes(units, 'utf-8'), dpi),
+                     'Unable to parse SVG buffer')
         return img
+
 
     def __repr__(self) -> str:
         if self._ptr:
@@ -139,7 +183,6 @@ cdef class SVGimage:
         nsvgRasterize(self._rasterizer, self._ptr, tx, ty, scale, buffer,
                       width, height, stride)
         return buffer
-
 
 
     @property
@@ -195,7 +238,7 @@ cdef class SVGshape:
 
     def __repr__(self):
         if self._ptr:
-            return "SVGshape: id:{} bounds:{}".format(self.id, self.bounds)
+            return "SVGshape: id:{} bounds:{}".format(self.id.decode('utf-8'), self.bounds)
         else:
             return "SVGshape: <uninitialized>"
 
