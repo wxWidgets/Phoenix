@@ -566,10 +566,10 @@ cdef class SVGgradient:
         cdef float cx, cy, radius
         cdef float r1, r2
         nsvg__xformInverse(inverse, self._ptr.xform)
-
         nsvg__xformPoint(&cx, &cy, 0, 0, inverse)
         nsvg__xformPoint(&r1, &r2, 0, 1, inverse)
-        radius = r2 - r1
+        #radius = r2 - r1
+        radius = r2 - cy
 
         return ((cx, cy), radius)
 
