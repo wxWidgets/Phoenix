@@ -21,7 +21,7 @@ NanoSVG supports a wide range of SVG features, but something may be missing,
 feel free to create a pull request!
 
 The shapes in the SVG images are transformed by the viewBox and converted to
-specified units. That is, you should get the same looking data as your designed
+specified units. That is, you should get the same looking data as you designed
 in your favorite app.
 
 NanoSVG can return the paths in few different units. For example if you want to
@@ -78,7 +78,7 @@ cpdef enum SVGflags:
 # SVGimage
 cdef class SVGimageBase:
     """
-    An SVGimageBase can be created either from an SVG file or from an in-memory
+    A SVGimageBase can be created either from an SVG file or from an in-memory
     buffer containing the SVG XML code. The result is a collection of cubic
     bezier shapes, with fill, stroke, gradients, paths and other information.
 
@@ -159,9 +159,9 @@ cdef class SVGimageBase:
 
     def __repr__(self) -> str:
         if self._ptr:
-            return "SVGimage: size ({}, {})".format(self.width, self.height)
+            return "SVGimageBase: size ({}, {})".format(self.width, self.height)
         else:
-            return "SVGimage: <uninitialized>"
+            return "SVGimageBase: <uninitialized>"
 
 
     def RasterizeToBytes(self, float tx=0.0, float ty=0.0, float scale=1.0,
