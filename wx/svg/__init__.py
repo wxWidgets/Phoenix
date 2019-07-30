@@ -22,8 +22,18 @@ class SVGimage(SVGimageBase):
     """
     """
 
+    def RasterizeToBitmap(self, tx=0.0, ty=0.0, scale=1.0,
+                          width=-1, height=-1, stride=-1):
+        """
+        """
+        buff = self.RasterizeToBytes(tx, ty, scale, width, height, stride)
+        bmp = wx.Bitmap.FromBufferRGBA(width, height, buff)
+        return bmp
+
 
     def RenderToGC(self, ctx, scale=None, size=None, translate=(0.0, 0.0)):
+        """
+        """
         ctx.PushState()
         # set scale either from the parameter or as ratio of sizes
         if scale is not None:
@@ -144,6 +154,7 @@ class SVGimage(SVGimageBase):
 
 
     def _makePen(self, ctx, shape):
+        # set up a brush from the shape.stroke (SVGpaint)
         width = shape.strokeWidth
         join = { SVG_JOIN_MITER : wx.JOIN_MITER,
                     SVG_JOIN_ROUND : wx.JOIN_ROUND,
@@ -153,7 +164,6 @@ class SVGimage(SVGimageBase):
                 SVG_CAP_SQUARE : wx.CAP_PROJECTING}.get(shape.strokeLineCap, 0)
         # TODO: handle dashes
 
-        # set up a brush from the shape.stroke (SVGpaint)
         if shape.stroke.type == SVG_PAINT_NONE:
             pen = wx.NullGraphicsPen
 
