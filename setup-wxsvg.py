@@ -34,10 +34,10 @@ PACKAGE = 'wx.svg'
 PACKAGEDIR = 'wx/svg'
 
 with open(os.path.join(HERE, PACKAGEDIR, '_version.py'), 'w') as f:
-    f.write(textwrap.dedent(f"""\
-        # Generated from {__file__}
-        __version__ = '{VERSION}'
-        """))
+    f.write(textwrap.dedent("""\
+        # Generated from {}
+        __version__ = '{}'
+        """.format(__file__, VERSION)))
 
 if have_cython:
     SOURCE = os.path.join(PACKAGEDIR, '_nanosvg.pyx')
