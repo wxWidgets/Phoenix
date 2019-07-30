@@ -3,4 +3,4 @@
 	url = https://github.com/wxWidgets/wxWidgets.git
 [submodule "ext/nanosvg"]
 	path = ext/nanosvg
-	url = https://github.com/memononen/nanosvg
+	url = https://github.com/wxWidgets/nanosvg.git
