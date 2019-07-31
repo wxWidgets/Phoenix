@@ -281,6 +281,10 @@ def run():
     # GraphicsPenInfo is transitory we can't save the reference in it to the
     # holder, and the pen will not have been created yet...
     c.find('Dashes').ignore()
+    c.find('GetDashes').ignore()
+    c.find('GetDashCount').ignore()
+    c.find('GetDash').ignore()
+
 
 
     #---------------------------------------------
