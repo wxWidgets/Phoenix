@@ -64,17 +64,8 @@ class SVGimage(SVGimageBase):
                 subpath = self._makeSubPath(ctx, svg_path)
                 path.AddPath(subpath)
 
-            # Draw the combined set of paths.
-            # If the fill is a radial gradient then first draw the fill with the
-            # outer color, to ensure that the total area of the shape is filled.
-            # NOTE: if there are transparencies infolved here then this solution
-            # is probably wrong.
-            if shape.fill.type == SVG_PAINT_RADIAL_GRADIENT:
-                color = wx.Colour(*self._getGradientColors(shape.fill.gradient)[-1])
-                ctx.SetBrush(wx.Brush(color))
-                ctx.FillPath(path, rule)
-
-            # Now fill and stroke the shape with the given pen and brush
+            # Draw the combined set of paths, using the given pen and brush to
+            # fill and stroke the shape.
             ctx.SetBrush(brush)
             ctx.SetPen(pen)
             ctx.DrawPath(path, rule)
@@ -99,8 +90,12 @@ class SVGimage(SVGimageBase):
 
 
     def _makeGradientStops(self, gradient, prnt=False):
-        gcstops = wx.GraphicsGradientStops()
-        for stop in gradient.stops:
+        stops = [stop for stop in gradient.stops]
+        first = stops[0]
+        last = stops[-1]
+        gcstops = wx.GraphicsGradientStops(wx.Colour(*first.color_rgba),
+                                           wx.Colour(*last.color_rgba))
+        for stop in stops:
             if prnt:
                 print('stop:   ', stop.offset, stop.color_rgba)
             color = wx.Colour(*stop.color_rgba)
