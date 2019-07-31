@@ -39,6 +39,8 @@ def parseAndTweakModule():
     assert isinstance(c, etgtools.ClassDef)
     c.find('operator=').ignore()
     c.find('SetFont').pyArgsString = '(font, flags=TEXT_ATTR_FONT & ~TEXT_ATTR_FONT_PIXEL_SIZE)'
+    c.find('SetFontUnderlined').renameOverload('wxTextAttrUnderlineType',
+                                               'SetFontUnderlineType')
 
 
     c = module.find('wxTextCtrl')

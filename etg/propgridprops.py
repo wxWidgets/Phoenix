@@ -19,6 +19,7 @@ DOCSTRING = ""
 # this script.
 ITEMS  = [ 'wxPGInDialogValidator',
            'wxStringProperty',
+           'wxNumericProperty',
            'wxNumericPropertyValidator',
            'wxIntProperty',
            'wxUIntProperty',
@@ -27,9 +28,8 @@ ITEMS  = [ 'wxPGInDialogValidator',
            'wxEnumProperty',
            'wxEditEnumProperty',
            'wxFlagsProperty',
-           'wxPGFileDialogAdapter',
+           'wxEditorDialogProperty',
            'wxFileProperty',
-           'wxPGLongStringDialogAdapter',
            'wxLongStringProperty',
            'wxDirProperty',
            'wxArrayStringProperty',
@@ -53,6 +53,14 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.bases = ['wxValidator']
 
+    c = module.find('wxNumericProperty')
+    c.find('wxNumericProperty').ignore(False)
+    c.addPrivateDefaultCtor()
+
+    c = module.find('wxEditorDialogProperty')
+    c.find('wxEditorDialogProperty').ignore(False)
+    c.find('DisplayEditorDialog').ignore(False)
+    c.addPrivateDefaultCtor()
 
     for name in ['wxEnumProperty', 'wxEditEnumProperty']:
         c = module.find(name)
@@ -78,11 +86,9 @@ def run():
     c.detailedDoc = []
 
     c = module.find('wxLongStringProperty')
-    c.find('OnButtonClick.value').inOut = True
     c.find('DisplayEditorDialog.value').inOut = True
 
     c = module.find('wxDirProperty')
-    c.find('OnButtonClick.value').inOut = True
 
     c = module.find('wxArrayStringProperty')
     c.find('GenerateValueAsString').ignore(False)
@@ -106,7 +112,7 @@ def run():
     for item in module.allItems():
         if (item.name in ['StringToValue', 'IntToValue'] and item.findItem('variant')):
             item.find('variant').out = True
-            
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

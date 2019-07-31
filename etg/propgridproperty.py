@@ -69,6 +69,10 @@ def run():
     c = module.find('wxPGProperty')
     tools.ignoreConstOverloads(c)
 
+    # The ctors are protected, so unignore them
+    for ctor in c.find('wxPGProperty').all():
+        ctor.ignore(False)
+
     c.find('StringToValue.variant').out = True
     c.find('IntToValue.variant').out = True
 

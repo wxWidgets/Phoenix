@@ -63,6 +63,8 @@ def parseAndTweakModule():
     scrolled.find('GetSizeAvailableForScrollTarget').isVirtual = True
     scrolled.find('GetSizeAvailableForScrollTarget').ignore(False)
     scrolled.find('SendAutoScrollEvents').isVirtual = True
+    scrolled.find('ShouldScrollToChildOnFocus').ignore(False)
+    scrolled.find('ShouldScrollToChildOnFocus').isVirtual = True
 
     # The wxScrolledCanvas typedef will be output normally and SIP will treat
     # it like a class that has a wxScrolled mix-in as one of the base classes.

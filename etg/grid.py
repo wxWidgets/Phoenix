@@ -90,6 +90,8 @@ def run():
         GRID_VALUE_DATETIME =  "datetime"
         """)
 
+    module.insertItem(0, etgtools.TypedefDef(type='wxWindow', name='wxGridWindow'))
+
     #-----------------------------------------------------------------
     c = module.find('wxGridCellCoords')
     assert isinstance(c, etgtools.ClassDef)
@@ -479,6 +481,8 @@ def run():
 
     c.find('SetCellAlignment').findOverload('align').ignore()
     c.find('SetCellTextColour').overloads = []
+
+    c.find('GetGridWindowOffset').findOverload('int &x').ignore()
 
     #-----------------------------------------------------------------
     c = module.find('wxGridUpdateLocker')

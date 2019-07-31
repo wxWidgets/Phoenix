@@ -33,7 +33,9 @@ check if libcairo and either cairocffi or pycairo packages are installed.
 On Mac you can get Cairo from MacPorts or similar tools.  Make sure that
 the quartz option is turned on so those Mac-specific APIs will be included in
 the Cairo library when it is built.  You can then use ``pip install cairocffi``
-to get the Python wrappers.
+to get the Python wrappers. If your cairo shared library is in a non-standard
+location, then you can help it be found by setting DYLD_FALLBACK_LIBRARY_PATH
+in the environment.
 
 On Windows a copy of the Cairo and related DLLs are included with wxPython
 inside the wx package folder.  These files were extracted from the GTK runtime
