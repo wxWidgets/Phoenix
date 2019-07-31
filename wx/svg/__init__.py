@@ -89,15 +89,13 @@ class SVGimage(SVGimageBase):
         return path
 
 
-    def _makeGradientStops(self, gradient, prnt=False):
+    def _makeGradientStops(self, gradient):
         stops = [stop for stop in gradient.stops]
         first = stops[0]
         last = stops[-1]
         gcstops = wx.GraphicsGradientStops(wx.Colour(*first.color_rgba),
                                            wx.Colour(*last.color_rgba))
         for stop in stops:
-            if prnt:
-                print('stop:   ', stop.offset, stop.color_rgba)
             color = wx.Colour(*stop.color_rgba)
             gcstop = wx.GraphicsGradientStop(color, stop.offset)
             gcstops.Add(gcstop)
@@ -125,9 +123,7 @@ class SVGimage(SVGimageBase):
         elif shape.fill.type == SVG_PAINT_LINEAR_GRADIENT:
             gradient = shape.fill.gradient
             (x1, y1), (x2, y2) = gradient.linearPoints
-            print('shape:  ', shape.bounds)
-            print('lingrad:', (x1, y1), (x2, y2))
-            stops = self._makeGradientStops(gradient, True)
+            stops = self._makeGradientStops(gradient)
             brush = ctx.CreateLinearGradientBrush(x1, y1, x2, y2, stops)
 
         # brush with a radial gradient
@@ -159,31 +155,48 @@ class SVGimage(SVGimageBase):
                 SVG_CAP_SQUARE : wx.CAP_PROJECTING}.get(shape.strokeLineCap, 0)
         # TODO: handle dashes
 
+        info = wx.GraphicsPenInfo(wx.BLACK).Width(width).Join(join).Cap(cap)
+
         if shape.stroke.type == SVG_PAINT_NONE:
             pen = wx.NullGraphicsPen
 
         elif shape.stroke.type == SVG_PAINT_COLOR:
-            r,g,b,a = shape.stroke.color_rgba
-            pen = ctx.CreatePen(
-                wx.GraphicsPenInfo(wx.Colour(r,g,b,a)).Width(width).Join(join).Cap(cap))
+            info.Colour(shape.stroke.color_rgba)
+            pen = ctx.CreatePen(info)
 
         elif shape.stroke.type == SVG_PAINT_LINEAR_GRADIENT:
-            # print("TODO: linear GradientPen")
-            # TODO: wxWidgets can't do gradient pens (yet?)
-            # Just average the stops to use as an approximation
-            colors = self._getGradientColors(shape.stroke.gradient)
-            ave = [round(sum(x)/len(x)) for x in zip(*colors)]
-            pen = ctx.CreatePen(
-                wx.GraphicsPenInfo(wx.Colour(*ave)).Width(width).Join(join).Cap(cap))
+            # # print("TODO: linear GradientPen")
+            # # TODO: wxWidgets can't do gradient pens (yet?)
+            # # Just average the stops to use as an approximation
+            # colors = self._getGradientColors(shape.stroke.gradient)
+            # ave = [round(sum(x)/len(x)) for x in zip(*colors)]
+            # pen = ctx.CreatePen(
+            #     wx.GraphicsPenInfo(wx.Colour(*ave)).Width(width).Join(join).Cap(cap))
+            gradient = shape.stroke.gradient
+            (x1, y1), (x2, y2) = gradient.linearPoints
+            stops = self._makeGradientStops(gradient)
+            info.LinearGradient(x1, y1, x2, y2, stops)
+            pen = ctx.CreatePen(info)
 
         elif shape.stroke.type == SVG_PAINT_RADIAL_GRADIENT:
-            # print("TODO: radial GradientPen")
-            # TODO: wxWidgets can't do gradient pens (yet?)
-            # Just average the stops to use as an approximation
-            colors = self._getGradientColors(shape.stroke.gradient)
-            ave = [round(sum(x)/len(x)) for x in zip(*colors)]
-            pen = ctx.CreatePen(
-                wx.GraphicsPenInfo(wx.Colour(*ave)).Width(width).Join(join).Cap(cap))
+            # # print("TODO: radial GradientPen")
+            # # TODO: wxWidgets can't do gradient pens (yet?)
+            # # Just average the stops to use as an approximation
+            # colors = self._getGradientColors(shape.stroke.gradient)
+            # ave = [round(sum(x)/len(x)) for x in zip(*colors)]
+            # pen = ctx.CreatePen(
+            #     wx.GraphicsPenInfo(wx.Colour(*ave)).Width(width).Join(join).Cap(cap))
+            # pass
+            gradient = shape.stroke.gradient
+            (cx, cy), radius = gradient.radialPointRadius
+            #print('1: (cx, cy, radius) (fx, fy):', (cx, cy, radius, gradient.fx, gradient.fy))
+            stops = self._makeGradientStops(gradient)
+
+            # FIXME: *2 seems to be close for this test case, but it is surely
+            # wrong generally... figure out what needs to be done in
+            # gradient.radialPointRadius to get the correct value.
+            info.RadialGradient(cx, cy, cx, cy, radius*3, stops)
+            pen = ctx.CreatePen(info)
 
         else:
             raise ValueError("Unknown stroke type")
