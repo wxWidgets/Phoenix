@@ -220,6 +220,11 @@ def run():
     # TODO: support this?
     c.find('CreateContextFromNativeHDC').ignore()
 
+    c.addPyMethod('GetType', '(self)',
+        doc="Returns the name of the GraphicsRenderer class.",
+        body="return self.GetClassInfo().GetClassName()")
+
+
 
     c.find('GetGDIPlusRenderer').ignore()
     c.addCppMethod('wxGraphicsRenderer*', 'GetGDIPlusRenderer', '()', isStatic=True,
