@@ -107,7 +107,7 @@ class SVGimage(SVGimageBase):
 
 
     def _makeBrush(self, ctx, shape):
-        # set up a brush from the shape.fill (SVGpaint)
+        # set up a brush from the shape.fill (SVGpaint) object
 
         # no brush
         if shape.fill.type == SVG_PAINT_NONE:
@@ -115,29 +115,29 @@ class SVGimage(SVGimageBase):
 
         # brush with a solid color
         elif shape.fill.type == SVG_PAINT_COLOR:
-            #print(shape.fill.color, shape.fill.color_rgba)
             r,g,b,a = shape.fill.color_rgba
             brush = ctx.CreateBrush(wx.Brush(wx.Colour(r,g,b,a)))
 
         # brush with a linear gradient
         elif shape.fill.type == SVG_PAINT_LINEAR_GRADIENT:
+            # NanoSVG gives gradients their own transform which normalizes the
+            # linear gradiants to go from (0, 0) to (0,1) in the transformed
+            # space. Son once we have the transform set we can use those points
+            # too.
             gradient = shape.fill.gradient
-            (x1, y1), (x2, y2) = gradient.linearPoints
             stops = self._makeGradientStops(gradient)
-            brush = ctx.CreateLinearGradientBrush(x1, y1, x2, y2, stops)
+            matrix = ctx.CreateMatrix(*gradient.xform)
+            brush = ctx.CreateLinearGradientBrush(0,0, 0,1, stops, matrix)
 
         # brush with a radial gradient
         elif shape.fill.type == SVG_PAINT_RADIAL_GRADIENT:
+            # Likewise, NanoSVG normalizes radial gradients with a a transform
+            # that puts the center (cx, cy) at (0,0) and the radius has a length
+            # of 1.
             gradient = shape.fill.gradient
-            # print('(fx,fy):', (gradient.fx, gradient.fy))
-            (cx, cy), radius = gradient.radialPointRadius
-            #print('1: (cx, cy, radius) (fx, fy):', (cx, cy, radius, gradient.fx, gradient.fy))
             stops = self._makeGradientStops(gradient)
-
-            # FIXME: *2 seems to be close for this test case, but it is surely
-            # wrong generally... figure out what needs to be done in
-            # gradient.radialPointRadius to get the correct value.
-            brush = ctx.CreateRadialGradientBrush(cx, cy, cx, cy, radius*2, stops)
+            matrix = ctx.CreateMatrix(*gradient.xform)
+            brush = ctx.CreateRadialGradientBrush(0,0, 0,0, 1, stops, matrix)
 
         else:
             raise ValueError("Unknown fill type")
@@ -145,7 +145,7 @@ class SVGimage(SVGimageBase):
 
 
     def _makePen(self, ctx, shape):
-        # set up a brush from the shape.stroke (SVGpaint)
+        # set up a pen from the shape.stroke (SVGpaint) object
         width = shape.strokeWidth
         join = { SVG_JOIN_MITER : wx.JOIN_MITER,
                     SVG_JOIN_ROUND : wx.JOIN_ROUND,
@@ -165,37 +165,17 @@ class SVGimage(SVGimageBase):
             pen = ctx.CreatePen(info)
 
         elif shape.stroke.type == SVG_PAINT_LINEAR_GRADIENT:
-            # # print("TODO: linear GradientPen")
-            # # TODO: wxWidgets can't do gradient pens (yet?)
-            # # Just average the stops to use as an approximation
-            # colors = self._getGradientColors(shape.stroke.gradient)
-            # ave = [round(sum(x)/len(x)) for x in zip(*colors)]
-            # pen = ctx.CreatePen(
-            #     wx.GraphicsPenInfo(wx.Colour(*ave)).Width(width).Join(join).Cap(cap))
             gradient = shape.stroke.gradient
-            (x1, y1), (x2, y2) = gradient.linearPoints
             stops = self._makeGradientStops(gradient)
-            info.LinearGradient(x1, y1, x2, y2, stops)
+            matrix = ctx.CreateMatrix(*gradient.xform)
+            info.LinearGradient(0,0, 0,1, stops, matrix)
             pen = ctx.CreatePen(info)
 
         elif shape.stroke.type == SVG_PAINT_RADIAL_GRADIENT:
-            # # print("TODO: radial GradientPen")
-            # # TODO: wxWidgets can't do gradient pens (yet?)
-            # # Just average the stops to use as an approximation
-            # colors = self._getGradientColors(shape.stroke.gradient)
-            # ave = [round(sum(x)/len(x)) for x in zip(*colors)]
-            # pen = ctx.CreatePen(
-            #     wx.GraphicsPenInfo(wx.Colour(*ave)).Width(width).Join(join).Cap(cap))
-            # pass
             gradient = shape.stroke.gradient
-            (cx, cy), radius = gradient.radialPointRadius
-            #print('1: (cx, cy, radius) (fx, fy):', (cx, cy, radius, gradient.fx, gradient.fy))
             stops = self._makeGradientStops(gradient)
-
-            # FIXME: *2 seems to be close for this test case, but it is surely
-            # wrong generally... figure out what needs to be done in
-            # gradient.radialPointRadius to get the correct value.
-            info.RadialGradient(cx, cy, cx, cy, radius*3, stops)
+            matrix = ctx.CreateMatrix(*gradient.xform)
+            info.RadialGradient(0,0, 0,0, 1, stops, matrix)
             pen = ctx.CreatePen(info)
 
         else:
