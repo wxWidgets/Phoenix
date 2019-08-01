@@ -124,20 +124,47 @@ class SVGimage(SVGimageBase):
             # linear gradiants to go from (0, 0) to (0,1) in the transformed
             # space. So once we have the transform set we can use those points
             # too.
+            x1, y1, = (0.0, 0.0)
+            x2, y2, = (0.0, 1.0)
             gradient = shape.fill.gradient
-            stops = self._makeGradientStops(gradient)
             matrix = ctx.CreateMatrix(*gradient.xform)
-            brush = ctx.CreateLinearGradientBrush(0,0, 0,1, stops, matrix)
+
+            # Except for GDI+, which doesn't support applying a transform to a
+            # gradient, so we'll translate the points back to real space
+            # ourselves. This is only an approximation of the desired outcome
+            # however, as things like scale and shear in the transform will not
+            # be applied to the rest of the fill.
+            if ctx.Renderer.Type == 'wxGDIPlusRenderer':
+                matrix.Invert()
+                x1, y1 = matrix.TransformPoint(x1, y1)
+                x2, y2 = matrix.TransformPoint(x2, y2)
+                #print('(x1,y1), (x2,y2):', (x1,y1), (x2,y2))
+                matrix = wx.NullGraphicsMatrix
+
+            stops = self._makeGradientStops(gradient)
+            brush = ctx.CreateLinearGradientBrush(x1,y1, x2,y2, stops, matrix)
 
         # brush with a radial gradient
         elif shape.fill.type == SVG_PAINT_RADIAL_GRADIENT:
             # Likewise, NanoSVG normalizes radial gradients with a a transform
             # that puts the center (cx, cy) at (0,0) and the radius has a length
             # of 1.
+            cx, cy = (0.0, 0.0)
+            radius = 1
             gradient = shape.fill.gradient
-            stops = self._makeGradientStops(gradient)
             matrix = ctx.CreateMatrix(*gradient.xform)
-            brush = ctx.CreateRadialGradientBrush(0,0, 0,0, 1, stops, matrix)
+
+            # Except for GDI+...  See note above
+            if ctx.Renderer.Type == 'wxGDIPlusRenderer':
+                matrix.Invert()
+                cx, cy = matrix.TransformPoint(cx, cy)
+                r1, r2 = matrix.TransformPoint(0, 1)
+                radius = r2 - cy
+                #print("(cx, cy) radius:",(cx, cy), radius)
+                matrix = wx.NullGraphicsMatrix
+
+            stops = self._makeGradientStops(gradient)
+            brush = ctx.CreateRadialGradientBrush(cx,cy, cx,cy, radius, stops, matrix)
 
         else:
             raise ValueError("Unknown fill type")
@@ -148,11 +175,11 @@ class SVGimage(SVGimageBase):
         # set up a pen from the shape.stroke (SVGpaint) object
         width = shape.strokeWidth
         join = { SVG_JOIN_MITER : wx.JOIN_MITER,
-                    SVG_JOIN_ROUND : wx.JOIN_ROUND,
-                    SVG_JOIN_BEVEL : wx.JOIN_BEVEL}.get(shape.strokeLineJoin, 0)
-        cap = { SVG_CAP_BUTT : wx.CAP_BUTT,
-                SVG_CAP_ROUND : wx.CAP_ROUND,
-                SVG_CAP_SQUARE : wx.CAP_PROJECTING}.get(shape.strokeLineCap, 0)
+                 SVG_JOIN_ROUND : wx.JOIN_ROUND,
+                 SVG_JOIN_BEVEL : wx.JOIN_BEVEL}.get(shape.strokeLineJoin, 0)
+        cap =  { SVG_CAP_BUTT : wx.CAP_BUTT,
+                 SVG_CAP_ROUND : wx.CAP_ROUND,
+                 SVG_CAP_SQUARE : wx.CAP_PROJECTING}.get(shape.strokeLineCap, 0)
         # TODO: handle dashes
 
         info = wx.GraphicsPenInfo(wx.BLACK).Width(width).Join(join).Cap(cap)
@@ -165,16 +192,39 @@ class SVGimage(SVGimageBase):
             pen = ctx.CreatePen(info)
 
         elif shape.stroke.type == SVG_PAINT_LINEAR_GRADIENT:
+            x1, y1, = (0.0, 0.0)
+            x2, y2, = (0.0, 1.0)
             gradient = shape.stroke.gradient
-            stops = self._makeGradientStops(gradient)
             matrix = ctx.CreateMatrix(*gradient.xform)
-            info.LinearGradient(0,0, 0,1, stops, matrix)
+
+            # Except for GDI+...  See note above
+            if ctx.Renderer.Type == 'wxGDIPlusRenderer':
+                matrix.Invert()
+                x1, y1 = matrix.TransformPoint(x1, y1)
+                x2, y2 = matrix.TransformPoint(x2, y2)
+                #print('(x1,y1), (x2,y2):', (x1,y1), (x2,y2))
+                matrix = wx.NullGraphicsMatrix
+
+            stops = self._makeGradientStops(gradient)
+            info.LinearGradient(x1,y1, x2,y2, stops, matrix)
             pen = ctx.CreatePen(info)
 
         elif shape.stroke.type == SVG_PAINT_RADIAL_GRADIENT:
+            cx, cy = (0.0, 0.0)
+            radius = 1
             gradient = shape.stroke.gradient
-            stops = self._makeGradientStops(gradient)
             matrix = ctx.CreateMatrix(*gradient.xform)
+
+            # Except for GDI+...  See note above
+            if ctx.Renderer.Type == 'wxGDIPlusRenderer':
+                matrix.Invert()
+                cx, cy = matrix.TransformPoint(cx, cy)
+                r1, r2 = matrix.TransformPoint(0, 1)
+                radius = r2 - cy
+                #print("(cx, cy) radius:",(cx, cy), radius)
+                matrix = wx.NullGraphicsMatrix
+
+            stops = self._makeGradientStops(gradient)
             info.RadialGradient(0,0, 0,0, 1, stops, matrix)
             pen = ctx.CreatePen(info)
 
