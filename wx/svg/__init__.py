@@ -122,7 +122,7 @@ class SVGimage(SVGimageBase):
         elif shape.fill.type == SVG_PAINT_LINEAR_GRADIENT:
             # NanoSVG gives gradients their own transform which normalizes the
             # linear gradiants to go from (0, 0) to (0,1) in the transformed
-            # space. Son once we have the transform set we can use those points
+            # space. So once we have the transform set we can use those points
             # too.
             gradient = shape.fill.gradient
             stops = self._makeGradientStops(gradient)
