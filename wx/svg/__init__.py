@@ -17,6 +17,7 @@ from six.moves import zip_longest
 from ._version import __version__
 from ._nanosvg import *
 
+_RenderersWithoutGradientTransforms = ['wxGDIPlusRenderer', 'wxD2DRenderer']
 
 class SVGimage(SVGimageBase):
     """
@@ -134,7 +135,7 @@ class SVGimage(SVGimageBase):
             # ourselves. This is only an approximation of the desired outcome
             # however, as things like scale and shear in the transform will not
             # be applied to the rest of the fill.
-            if ctx.Renderer.Type == 'wxGDIPlusRenderer':
+            if ctx.Renderer.Type in _RenderersWithoutGradientTransforms:
                 matrix.Invert()
                 x1, y1 = matrix.TransformPoint(x1, y1)
                 x2, y2 = matrix.TransformPoint(x2, y2)
@@ -155,7 +156,7 @@ class SVGimage(SVGimageBase):
             matrix = ctx.CreateMatrix(*gradient.xform)
 
             # Except for GDI+...  See note above
-            if ctx.Renderer.Type == 'wxGDIPlusRenderer':
+            if ctx.Renderer.Type in _RenderersWithoutGradientTransforms:
                 matrix.Invert()
                 cx, cy = matrix.TransformPoint(cx, cy)
                 r1, r2 = matrix.TransformPoint(0, 1)
@@ -198,7 +199,7 @@ class SVGimage(SVGimageBase):
             matrix = ctx.CreateMatrix(*gradient.xform)
 
             # Except for GDI+...  See note above
-            if ctx.Renderer.Type == 'wxGDIPlusRenderer':
+            if ctx.Renderer.Type in _RenderersWithoutGradientTransforms:
                 matrix.Invert()
                 x1, y1 = matrix.TransformPoint(x1, y1)
                 x2, y2 = matrix.TransformPoint(x2, y2)
@@ -216,7 +217,7 @@ class SVGimage(SVGimageBase):
             matrix = ctx.CreateMatrix(*gradient.xform)
 
             # Except for GDI+...  See note above
-            if ctx.Renderer.Type == 'wxGDIPlusRenderer':
+            if ctx.Renderer.Type in _RenderersWithoutGradientTransforms:
                 matrix.Invert()
                 cx, cy = matrix.TransformPoint(cx, cy)
                 r1, r2 = matrix.TransformPoint(0, 1)
