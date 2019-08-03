@@ -76,7 +76,6 @@ def run():
         PyEditor = wx.deprecated(PGEditor, "Use PGEditor instead.")
         PyEditorDialogAdapter = wx.deprecated(PGEditorDialogAdapter, "Use PGEditorDialogAdapter instead.")
         PyEnumProperty = wx.deprecated(EnumProperty, "Use EnumProperty instead.")
-        PyFileDialogAdapter = wx.deprecated(PGFileDialogAdapter, "Use PGFileDialogAdapter instead.")
         PyFileProperty = wx.deprecated(FileProperty, "Use FileProperty instead.")
         PyFlagsProperty = wx.deprecated(FlagsProperty, "Use FlagsProperty instead.")
         PyFloatProperty = wx.deprecated(FloatProperty, "Use FloatProperty instead.")
