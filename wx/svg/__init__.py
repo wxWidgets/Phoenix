@@ -17,7 +17,8 @@ from six.moves import zip_longest
 from ._version import __version__
 from ._nanosvg import *
 
-_RenderersWithoutGradientTransforms = ['wxGDIPlusRenderer', 'wxD2DRenderer']
+_RenderersWithoutGradientTransforms = [ #'wxGDIPlusRenderer',
+    ]
 
 class SVGimage(SVGimageBase):
     """
