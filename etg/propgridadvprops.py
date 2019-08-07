@@ -81,7 +81,6 @@ def run():
         PyFloatProperty = wx.deprecated(FloatProperty, "Use FloatProperty instead.")
         PyFontProperty = wx.deprecated(FontProperty, "Use FontProperty instead.")
         PyIntProperty = wx.deprecated(IntProperty, "Use IntProperty instead.")
-        PyLongStringDialogAdapter = wx.deprecated(PGLongStringDialogAdapter, "Use PGLongStringDialogAdapter instead.")
         PyLongStringProperty = wx.deprecated(LongStringProperty, "Use LongStringProperty instead.")
         PyProperty = wx.deprecated(PGProperty, "Use PGProperty instead.")
         PyStringProperty = wx.deprecated(StringProperty, "Use StringProperty instead.")
