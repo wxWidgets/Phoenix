@@ -17,8 +17,9 @@ from six.moves import zip_longest
 from ._version import __version__
 from ._nanosvg import *
 
-_RenderersWithoutGradientTransforms = [ #'wxGDIPlusRenderer',
-    ]
+# All the supported renderers now support gradient transforms, more or less, but
+# let's leave this in place in case it's needed again in the future.
+_RenderersWithoutGradientTransforms = []
 
 class SVGimage(SVGimageBase):
     """
@@ -84,7 +85,7 @@ class SVGimage(SVGimageBase):
         path = ctx.CreatePath()
         x, y = points[0]
         path.MoveToPoint(x,y)
-        for (cx1, cy1), (cx2, cy2), (x,y) in _grouper(points[1:], 3, (0,0)):
+        for (cx1, cy1), (cx2, cy2), (x,y) in _chunker(points[1:], 3, (0,0)):
             path.AddCurveToPoint(cx1, cy1, cx2, cy2, x,y)
         if svg_path.closed:
             path.CloseSubpath()
@@ -204,7 +205,6 @@ class SVGimage(SVGimageBase):
                 matrix.Invert()
                 x1, y1 = matrix.TransformPoint(x1, y1)
                 x2, y2 = matrix.TransformPoint(x2, y2)
-                #print('(x1,y1), (x2,y2):', (x1,y1), (x2,y2))
                 matrix = wx.NullGraphicsMatrix
 
             stops = self._makeGradientStops(gradient)
@@ -223,7 +223,6 @@ class SVGimage(SVGimageBase):
                 cx, cy = matrix.TransformPoint(cx, cy)
                 r1, r2 = matrix.TransformPoint(0, 1)
                 radius = r2 - cy
-                #print("(cx, cy) radius:",(cx, cy), radius)
                 matrix = wx.NullGraphicsMatrix
 
             stops = self._makeGradientStops(gradient)
@@ -235,7 +234,7 @@ class SVGimage(SVGimageBase):
         return pen
 
 
-def _grouper(iterable, n, fillvalue=None):
+def _chunker(iterable, n, fillvalue=None):
     "Collect items from an interable into fixed-length chunks or blocks"
     args = [iter(iterable)] * n
     return zip_longest(fillvalue=fillvalue, *args)
