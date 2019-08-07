@@ -536,44 +536,6 @@ cdef class SVGgradient:
         for i in range(self._ptr.nstops):
             yield SVGgradientStop.from_ptr(&self._ptr.stops[i])
 
-    @property
-    def linearPoints(self) -> tuple:
-        """
-        For linear gradients this returns the start and stop points as tuples
-        of the form ((x1,y1), (x2,y2)).
-        """
-        # nanosvg normalizes the start and stop points to (0,0) and (0,1) and
-        # provides the transform used to do so. To get back the original x1,y1
-        # and x2,y2 we need to invert the transform.
-        # See https://github.com/memononen/nanosvg/issues/26
-
-        cdef float inverse[6]
-        cdef float x1, y1, x2, y2
-        nsvg__xformInverse(inverse, self._ptr.xform)
-
-        nsvg__xformPoint(&x1, &y1, 0, 0, inverse)
-        nsvg__xformPoint(&x2, &y2, 0, 1, inverse)
-
-        return ((x1,y1), (x2,y2))
-
-    @property
-    def radialPointRadius(self) -> tuple:
-        """
-        For radial gradients this returns the center point and the radius as a
-        tuple of the form ((cx, cy), radius).
-        """
-        cdef float inverse[6]
-        cdef float cx, cy, radius
-        cdef float r1, r2
-        nsvg__xformInverse(inverse, self._ptr.xform)
-        nsvg__xformPoint(&cx, &cy, 0, 0, inverse)
-        nsvg__xformPoint(&r1, &r2, 0, 1, inverse)
-        #radius = r2 - r1
-        radius = r2 - cy
-
-        return ((cx, cy), radius)
-
-
 
 #----------------------------------------------------------------------------
 cdef class SVGgradientStop:
