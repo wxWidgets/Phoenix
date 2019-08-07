@@ -42,6 +42,11 @@ for manipulating the SVG shape info in memory.
 
 import sys
 
+cimport cython.object
+from cpython.buffer cimport (
+    Py_buffer, PyObject_CheckBuffer, PyObject_GetBuffer, PyBUF_SIMPLE,
+    PyBuffer_Release)
+
 #----------------------------------------------------------------------------
 # Replicate the C enums and values for Python, dropping the leading 'N'
 
@@ -163,6 +168,49 @@ cdef class SVGimageBase:
             return "SVGimageBase: size ({}, {})".format(self.width, self.height)
         else:
             return "SVGimageBase: <uninitialized>"
+
+
+    def RasterizeToBuffer(self, object buf, float tx=0.0, float ty=0.0, float scale=1.0,
+                         int width=-1, int height=-1, int stride=-1) -> bytes:
+        """
+        Renders the SVG image to an existing buffer as a series of RGBA values.
+
+        The buffer object must support the Python buffer-protocol, be writable,
+        and be at least ``width * height * 4`` bytes long. Possibilities include
+        bytearrays, memoryviews, numpy arrays, etc.
+
+        :param buffer `buf`: An object where the RGBA bytes will be written
+        :param float `tx`: Image horizontal offset (applied after scaling)
+        :param float `ty`: Image vertical offset (applied after scaling)
+        :param float `scale`: Image scale
+        :param int `width`: width of the image to render, defaults to width from the SVG file
+        :param int `height`: height of the image to render, defaults to height from the SVG file
+        :param int `stride`: number of bytes per scan line in the destination buffer, typically ``width * 4``
+        """
+        self._check_ptr()
+        if self._rasterizer == NULL:
+            self._rasterizer = nsvgCreateRasterizer()
+
+        if width == -1:
+            width = self.width
+        if height == -1:
+            height = self.height
+        if stride == -1:
+            stride = width * 4;
+
+        if not PyObject_CheckBuffer(buf):
+            raise ValueError("Object does not support the python buffer protocol")
+
+        cdef Py_buffer view
+        if PyObject_GetBuffer(buf, &view, PyBUF_SIMPLE) != 0:
+            raise ValueError("PyObject_GetBuffer failed")
+        if view.len < height * stride:
+            PyBuffer_Release(&view)
+            raise ValueError("Buffer object is smaller than height * stride")
+
+        nsvgRasterize(self._rasterizer, self._ptr, tx, ty, scale, <unsigned char*>view.buf,
+                      width, height, stride)
+        PyBuffer_Release(&view)
 
 
     def RasterizeToBytes(self, float tx=0.0, float ty=0.0, float scale=1.0,
