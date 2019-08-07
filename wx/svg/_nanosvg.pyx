@@ -11,14 +11,14 @@
 #----------------------------------------------------------------------
 """
 NanoSVG is a "simple stupid single-header-file SVG parser" from
-https://github.com/memononen/nanosvg. The output of the parser is a list of
-cubic bezier shapes.
+https://github.com/memononen/nanosvg. The output of the parser is a collection
+of data structures representing cubic bezier shapes.
 
-The library is well suited for anything from rendering scalable icons in your
-editor application to prototyping a game.
-
-NanoSVG supports a wide range of SVG features, but something may be missing,
-feel free to create a pull request!
+NanoSVG supports a wide range of SVG features. The library is well suited for
+anything from rendering scalable icons in your editor application to prototyping
+a game. There is not a full coverage of the SVG specification, however the
+features needed for typical icons or even more advanced vector images are
+present.
 
 The shapes in the SVG images are transformed by the viewBox and converted to
 specified units. That is, you should get the same looking data as you designed
@@ -34,8 +34,10 @@ The units passed to NanoSVG should be one of: 'px', 'pt', 'pc' 'mm', 'cm', or
 If you don't know or care about the units stuff, "px" and 96 should get you
 going.
 
-This module implements a Cython-based wrapper for the nanosvg code, providing
+This module implements a Cython-based wrapper for the NanoSVG code, providing
 access to the parsed SVG data as a nested collection of objects and properties.
+Note that these classes are essentially read-only. There is no support (yet?)
+for manipulating the SVG shape info in memory.
 """
 
 import sys
@@ -75,7 +77,6 @@ cpdef enum SVGflags:
 #----------------------------------------------------------------------------
 # Cython classes for wrapping the nanosvg structs
 
-# SVGimage
 cdef class SVGimageBase:
     """
     A SVGimageBase can be created either from an SVG file or from an in-memory
@@ -167,6 +168,16 @@ cdef class SVGimageBase:
     def RasterizeToBytes(self, float tx=0.0, float ty=0.0, float scale=1.0,
                          int width=-1, int height=-1, int stride=-1) -> bytes:
         """
+        Renders the SVG image to a ``bytes`` object as a series of RGBA values.
+
+        :param float `tx`: Image horizontal offset (applied after scaling)
+        :param float `ty`: Image vertical offset (applied after scaling)
+        :param float `scale`: Image scale
+        :param int `width`: width of the image to render, defaults to width from the SVG file
+        :param int `height`: height of the image to render, defaults to height from the SVG file
+        :param int `stride`: number of bytes per scan line in the destination buffer, typically ``width * 4``
+
+        :returns: A bytes object containing the raw RGBA pixel color values
         """
         self._check_ptr()
         if self._rasterizer == NULL:
@@ -179,11 +190,10 @@ cdef class SVGimageBase:
         if stride == -1:
             stride = width * 4;
 
-        buffer = bytes(height * stride)
-        nsvgRasterize(self._rasterizer, self._ptr, tx, ty, scale, buffer,
+        buf = bytes(height * stride)
+        nsvgRasterize(self._rasterizer, self._ptr, tx, ty, scale, buf,
                       width, height, stride)
-        return buffer
-
+        return buf
 
     @property
     def width(self) -> float:
@@ -442,6 +452,9 @@ cdef class SVGpath:
 #----------------------------------------------------------------------------
 cdef class SVGpaint:
     """
+    This class defines how to fill or stroke a shape when rendering the SVG
+    image. In other words, how to create the pen or brush. It can be a solid
+    color, linear or radial gradients, etc.
     """
     cdef NSVGpaint *_ptr
 
@@ -491,6 +504,8 @@ cdef class SVGpaint:
 #----------------------------------------------------------------------------
 cdef class SVGgradient:
     """
+    A gradient is a method used to fade from one color to another, either
+    linearly or radially.
     """
     cdef NSVGgradient *_ptr
 
@@ -540,6 +555,7 @@ cdef class SVGgradient:
 #----------------------------------------------------------------------------
 cdef class SVGgradientStop:
     """
+    A Gradient stop is an offset and a color, which is used when drawing gradients.
     """
     cdef NSVGgradientStop *_ptr
 
