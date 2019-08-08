@@ -74,6 +74,8 @@ and launch the wxPython demo for you.
          <p class="mybiglink"><a class="mybiglink" href="wx.aui.1moduleindex.html">wx.aui</a><br/>
             <span class="linkdescr">Docking/floating window panes, draggable notebook tabs, etc.</span></p>
 
+         <p class="mybiglink"><a class="mybiglink" href="wx.svg.html">wx.svg</a><br/>
+            <span class="linkdescr">Classes to parse and render Scalable Vector Graphics files.</span></p>
 
        </td>
        <td valign="top" width="50%" style="margin-left: 5px">
@@ -149,3 +151,10 @@ and launch the wxPython demo for you.
    wx.lib
    wx.py
    wx.tools
+   wx.svg
+
+.. automodule:: wx.svg._nanosvg
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   

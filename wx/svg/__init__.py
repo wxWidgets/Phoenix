@@ -10,7 +10,9 @@
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 """
+wx.svg docstring (TBW)
 """
+
 import wx
 from six.moves import zip_longest
 
@@ -21,21 +23,28 @@ from ._nanosvg import *
 # let's leave this in place in case it's needed again in the future.
 _RenderersWithoutGradientTransforms = []
 
+
 class SVGimage(SVGimageBase):
     """
+    SVGimage docstring (TBW)
     """
 
     def RasterizeToBitmap(self, tx=0.0, ty=0.0, scale=1.0,
                           width=-1, height=-1, stride=-1):
         """
+        SVGimage.RasterizeToBitmap docstring (TBW)
         """
-        buff = self.RasterizeToBytes(tx, ty, scale, width, height, stride)
-        bmp = wx.Bitmap.FromBufferRGBA(width, height, buff)
+        buf = self.RasterizeToBytes(tx, ty, scale, width, height, stride)
+        # import numpy as np
+        # buf = np.zeros((width, height, 4), np.uint8)
+        # self.RasterizeToBuffer(buf, tx, ty, scale, width, height, stride)
+        bmp = wx.Bitmap.FromBufferRGBA(width, height, buf)
         return bmp
 
 
     def RenderToGC(self, ctx, scale=None, size=None, translate=(0.0, 0.0)):
         """
+        SVGimage.RenderToGC docstring (TBW)
         """
         ctx.PushState()
         # set scale either from the parameter or as ratio of sizes
