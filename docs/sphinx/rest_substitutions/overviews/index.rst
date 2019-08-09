@@ -152,9 +152,3 @@ and launch the wxPython demo for you.
    wx.py
    wx.tools
    wx.svg
-
-.. automodule:: wx.svg._nanosvg
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   
