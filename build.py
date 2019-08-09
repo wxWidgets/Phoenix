@@ -1092,7 +1092,7 @@ def cmd_sphinx(options, args):
 def cmd_wxlib(options, args):
     from sphinxtools.modulehunter import ModuleHunter
 
-    cmdTimer = CommandTimer('wx.lib')
+    cmdTimer = CommandTimer('wxlib')
     pwd = pushDir(phoenixDir())
 
     for wx_pkg in ['lib', 'py', 'svg', 'tools']:
