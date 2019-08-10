@@ -88,9 +88,9 @@ cdef class SVGimageBase:
     buffer containing the SVG XML code. The result is a collection of cubic
     bezier shapes, with fill, stroke, gradients, paths and other information.
 
-    This class is a Cython-based wrapper around the nanosvg NSVGimage structure,
+    This class is a Cython-based wrapper around the nanosvg ``NSVGimage`` structure,
     providing just the basic wrapped functionality from nanosvg. Please see the
-    :class:`wx.svg.SFGimage` class for a derived implementation that adds
+    :class:`wx.svg.SVGimage` class for a derived implementation that adds
     functionality for integrating with wxPython.
     """
     cdef NSVGimage *_ptr
@@ -137,7 +137,7 @@ cdef class SVGimageBase:
         :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'
         :param float `dpi`: controls how the unit conversion is done
 
-        :rtype: SVGimage
+        :rtype: An instance of ``cls`` (usually a :class:`SVGimage`)
         """
         name = filename.encode(sys.getfilesystemencoding())
         cdef SVGimageBase img = cls()
@@ -155,7 +155,7 @@ cdef class SVGimageBase:
         :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'
         :param float `dpi`: controls how the unit conversion is done
 
-        :rtype: SVGimage
+        :rtype: An instance of ``cls`` (usually a :class:`SVGimage`)
         """
         cdef SVGimageBase img = cls()
         img._set_ptr(nsvgParse(buffer, bytes(units, 'utf-8'), dpi),
@@ -179,7 +179,7 @@ cdef class SVGimageBase:
         and be at least ``width * height * 4`` bytes long. Possibilities include
         bytearrays, memoryviews, numpy arrays, etc.
 
-        :param buffer `buf`: An object where the RGBA bytes will be written
+        :param `buf`: An object supporting the buffer protocol where the RGBA bytes will be written
         :param float `tx`: Image horizontal offset (applied after scaling)
         :param float `ty`: Image vertical offset (applied after scaling)
         :param float `scale`: Image scale
@@ -213,8 +213,8 @@ cdef class SVGimageBase:
         PyBuffer_Release(&view)
 
 
-    def RasterizeToBytes(self, float tx=0.0, float ty=0.0, float scale=1.0,
-                         int width=-1, int height=-1, int stride=-1) -> bytes:
+    def Rasterize(self, float tx=0.0, float ty=0.0, float scale=1.0,
+                  int width=-1, int height=-1, int stride=-1) -> bytes:
         """
         Renders the SVG image to a ``bytes`` object as a series of RGBA values.
 
@@ -246,7 +246,7 @@ cdef class SVGimageBase:
     @property
     def width(self) -> float:
         """
-        Returns the width of the SVGimage
+        Returns the width of the SVG image
         """
         self._check_ptr()
         return self._ptr.width
@@ -254,7 +254,7 @@ cdef class SVGimageBase:
     @property
     def height(self) -> float:
         """
-        Returns the height of the SVGimage
+        Returns the height of the SVG image
         """
         self._check_ptr()
         return self._ptr.height
@@ -262,7 +262,7 @@ cdef class SVGimageBase:
     @property
     def shapes(self):
         """
-        A generator that iterates over the shapes that comprise the SVGimage
+        A generator that iterates over the :class:`SVGshape` objects that comprise the SVG image
         """
         self._check_ptr()
         cdef NSVGshape *shape = self._ptr.shapes
@@ -277,7 +277,7 @@ cdef class SVGshape:
     """
     SVGshape is a set of attributes describing how to draw one shape in the SVG,
     including stroke and fill styles, line styles, and paths. A collection of
-    SVGshapes is accessible from the `shapes` attribute of SVGimage.
+    SVGshapes is accessible from the ``shapes`` attribute of :class:`SVGimage`.
     """
     cdef NSVGshape *_ptr
 
@@ -302,80 +302,80 @@ cdef class SVGshape:
 
     @property
     def id(self):
-        """ Optional 'id' attr of the shape or its group """
+        """Optional 'id' attr of the shape or its group"""
         self._check_ptr()
         return self._ptr.id
 
     @property
     def fill(self) -> SVGpaint:
-        """ Fill paint """
+        """:class:`SVGpaint` for the fill"""
         self._check_ptr()
         return SVGpaint.from_ptr(&self._ptr.fill)
 
     @property
     def stroke(self) -> SVGpaint:
-        """ Stroke paint """
+        """:class:`SVGpaint` for the stroke"""
         self._check_ptr()
         return SVGpaint.from_ptr(&self._ptr.stroke)
 
     @property
     def opacity(self) -> float:
-        """ Opacity of the shape. """
+        """Opacity of the shape"""
         self._check_ptr()
         return self._ptr.opacity
 
     @property
     def strokeWidth(self) -> float:
-        """ Stroke width (scaled) """
+        """Stroke width (scaled)"""
         self._check_ptr()
         return self._ptr.strokeWidth
 
     @property
     def strokeDashOffset(self) -> float:
-        """ Stroke dash offset (scaled) """
+        """Stroke dash offset (scaled)"""
         self._check_ptr()
         return self._ptr.strokeDashOffset
 
     @property
     def strokeDashArray(self) -> list:
-        """ Stroke dash array (scaled) """
+        """Stroke dash array (scaled)"""
         self._check_ptr()
         return [self._ptr.strokeDashArray[i]
                 for i in range(self._ptr.strokeDashCount)]
 
     @property
     def strokeLineJoin(self) -> SVGlineJoin:
-        """ Stroke join type """
+        """Stroke join type"""
         self._check_ptr()
         return SVGlineJoin(self._ptr.strokeLineJoin)
 
     @property
     def strokeLineCap(self) -> SVGlineCap:
-        """ Stroke cap type """
+        """Stroke cap type"""
         self._check_ptr()
         return SVGlineCap(self._ptr.strokeLineCap)
 
     @property
     def fillRule(self) -> SVGfillRule:
-        """ Fill rule """
+        """Fill rule"""
         self._check_ptr()
         return SVGfillRule(self._ptr.fillRule)
 
     @property
     def miterLimit(self) -> float:
-        """ Miter limit """
+        """Miter limit"""
         self._check_ptr()
         return self._ptr.miterLimit
 
     @property
     def flags(self) -> int:
-        """ Logical OR of SVG_FLAGS_* flags """
+        """Logical OR of SVG_FLAGS_* flags"""
         self._check_ptr()
         return int(self._ptr.flags)
 
     @property
     def bounds(self) -> list:
-        """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
+        """Tight bounding box of the shape [minx,miny,maxx,maxy]"""
         self._check_ptr()
         return [self._ptr.bounds[i] for i in range(4)]
 
@@ -402,7 +402,7 @@ cdef class SVGshape:
     @property
     def paths(self):
         """
-        A generator that iterates over the paths contained in the SVGshape
+        A generator that iterates over the :class:`SVGpath` objects contained in the SVGshape
         """
         self._check_ptr()
         cdef NSVGpath *path = self._ptr.paths
@@ -450,7 +450,7 @@ cdef class SVGpath:
 
     @property
     def npts(self) -> int:
-        """ Number of points """
+        """Number of points"""
         self._check_ptr()
         return self._ptr.npts
 
@@ -466,13 +466,13 @@ cdef class SVGpath:
 
     @property
     def closed(self) -> bool:
-        """ Flag indicating if shapes should be treated as closed """
+        """Flag indicating if shapes should be treated as closed"""
         self._check_ptr()
         return bool(self._ptr.closed)
 
     @property
     def bounds(self) -> list:
-        """ Tight bounding box of the shape [minx,miny,maxx,maxy] """
+        """Tight bounding box of the shape [minx,miny,maxx,maxy]"""
         self._check_ptr()
         return [self._ptr.bounds[i] for i in range(4)]
 
@@ -521,7 +521,7 @@ cdef class SVGpaint:
 
     @property
     def type(self) -> SVGpaintType:
-        """ Flag indicating the type of paint info, solid color or type of gradient """
+        """Flag indicating the type of paint info, solid color or type of gradient"""
         self._check_ptr()
         return SVGpaintType(self._ptr.type)
 
@@ -534,7 +534,7 @@ cdef class SVGpaint:
 
     @property
     def color_rgba(self) -> tuple:
-        """ Returns color as a RGBA tuple """
+        """Returns color as a RGBA tuple"""
         c = self.color
         return ( c        & 0xff,
                 (c >> 8)  & 0xff,
@@ -572,6 +572,7 @@ cdef class SVGgradient:
 
     @property
     def xform(self) -> list:
+        """The gradient's transform"""
         self._check_ptr()
         return [self._ptr.xform[i] for i in range(6)]
 
@@ -593,7 +594,7 @@ cdef class SVGgradient:
     @property
     def stops(self):
         """
-        A generator that iterates over the SVGgradientStops contained in the SVGgradient
+        A generator that iterates over the :classL`SVGgradientStop` objects contained in the SVGgradient
         """
         self._check_ptr()
         for i in range(self._ptr.nstops):

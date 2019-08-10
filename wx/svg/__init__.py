@@ -10,7 +10,74 @@
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 """
-wx.svg docstring (TBW)
+The classes in this package facilitate the parsing, normalizing, drawing and
+rasterizing of Scalable Vector Graphics (SVG) images. The primary interface to
+this functionality is via the :class:`wx.svg.SVGimage` class, which provides
+various integrations with wxPython. It, in turn, uses a set of wrappers around
+the NanoSVG library (https://github.com/memononen/nanosvg) to do the low-level
+work. There are a few features defined in the SVG spec that are not supported,
+but all the commonly used ones seem to be there.
+
+Example 1
+---------
+Drawing an SVG image to a window, scaled to fit the size of the window and using
+a :class:`wx.GraphicsContext` can be done like this::
+
+    def __init__(self, ...):
+        ...
+        self.img = wx.svg.SVGimage.CreateFromFile(svg_filename)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+
+    def OnPaint(self, event):
+        dc = wx.PaintDC(self)
+        dc.SetBackground(wx.Brush('white'))
+        dc.Clear()
+
+        dcdim = min(self.Size.width, self.Size.height)
+        imgdim = min(self.img.width, self.img.height)
+        scale = dcdim / imgdim
+        width = int(self.img.width * scale)
+        height = int(self.img.height * scale)
+
+        ctx = wx.GraphicsContext.Create(dc)
+        self.img.RenderToGC(ctx, scale)
+
+Since it is drawing the SVG shapes and paths using the equivalent GC primitives
+then any existing transformations that may be active on the context will be
+applied automatically to the SVG shapes.
+
+Note that not all GraphicsContext back-ends are created equal. Specifically, the
+GDI+ backend (the default on Windows) simply can not support some features that
+are commonly used in SVG images, such as applying transforms to gradients. The
+Direct2D backend on Windows does much better.
+
+Example 2
+---------
+If you're not already using a ``wx.GraphicsContext`` then a :class:`wx.Bitmap`
+can easily be created instead. For example, the last 2 lines in the code above
+could be replaced by the following, and accomplish basically the same thing::
+
+    bmp = self.img.ConvertToBitmap(scale=scale, width=width, height=height)
+    dc.DrawBitmap(bmp, 0, 0)
+
+Example 3
+---------
+The ``ConvertToBitmap`` shown above gives a lot of control around scaling,
+translating and sizing the SVG image into a bitmap, but most of the time you
+probably just want to get a bitmap of a certain size to use as an icon or
+similar. The ``ConvertToScaledBitmap`` provides an easier API to do just that
+for you. It automatically scales the SVG image into the requested size in
+pixels.::
+
+    bmp = img.ConvertToScaledBitmap(wx.Size(24,24))
+
+Optionally, it can accept a window parameter that will automatically adjust the
+size according to the Content Scale Factor of that window, if supported by the
+platform and if the window is located on a HiDPI display the the bitmap's size
+will be adjusted accordingly.::
+
+    bmp = img.ConvertToScaledBitmap(wx.Size(24,24), self)
+
 """
 
 import wx
@@ -26,67 +93,115 @@ _RenderersWithoutGradientTransforms = []
 
 class SVGimage(SVGimageBase):
     """
-    SVGimage docstring (TBW)
+    The SVGimage class provides various ways to load and use SVG images
+    in wxPython applications.
     """
 
-    def RasterizeToBitmap(self, tx=0.0, ty=0.0, scale=1.0,
-                          width=-1, height=-1, stride=-1):
+    def ConvertToBitmap(self, tx=0.0, ty=0.0, scale=1.0,
+                        width=-1, height=-1, stride=-1):
         """
-        SVGimage.RasterizeToBitmap docstring (TBW)
+        Creates a :class:`wx.Bitmap` containing a rasterized version of the SVG image.
+
+        :param float `tx`: Image horizontal offset (applied after scaling)
+        :param float `ty`: Image vertical offset (applied after scaling)
+        :param float `scale`: Image scale
+        :param int `width`: width of the image to render, defaults to width from the SVG file
+        :param int `height`: height of the image to render, defaults to height from the SVG file
+        :param int `stride`: number of bytes per scan line in the destination buffer, typically ``width * 4``
+
+        :returns: :class:`wx.Bitmap`
         """
-        buf = self.RasterizeToBytes(tx, ty, scale, width, height, stride)
-        # import numpy as np
-        # buf = np.zeros((width, height, 4), np.uint8)
-        # self.RasterizeToBuffer(buf, tx, ty, scale, width, height, stride)
+        buf = self.Rasterize(tx, ty, scale, width, height, stride)
         bmp = wx.Bitmap.FromBufferRGBA(width, height, buf)
         return bmp
 
 
-    def RenderToGC(self, ctx, scale=None, size=None, translate=(0.0, 0.0)):
+    def ConvertToScaledBitmap(self, size, window=None):
         """
-        SVGimage.RenderToGC docstring (TBW)
+        Automatically scales the SVG image so it will fit in the given size,
+        and creates a :class:`wx.Bitmap` of that size, containing a rasterized
+        version of the SVG image. If a window is passed then the size of the
+        bitmap will automatically be adjusted to the content scale factor of
+        that window. For example, if a (32,32) pixel bitmap is requested for a
+        window on a Retina display, then a (64,64) pixel bitmap will be created.
+
+        :param wx.Bitmap `size`: Size of the bitmap to create, in pixels
+        :param wx.Window `window`: Adjust the size by this window's content scale factor, if supported on the platform
+
+        :returns: :class:`wx.Bitmap`
+        """
+        size = wx.Size(*size)
+        if window:
+            size.width *= window.GetContentScaleFactor()
+            size.height *= window.GetContentScaleFactor()
+
+        # We can only have one overall scale factor for both dimensions with
+        # this rasterization method, so chose either the minimum of width or
+        # height to help ensure it fits both ways within the specified size.
+        sx = size.width / self.width
+        sy = size.height / self.height
+        scale = min(sx, sy)
+        return self.ConvertToBitmap(scale=scale, width=size.width, height=size.height)
+
+
+    def RenderToGC(self, ctx, scale=None, size=None):
+        """
+        Draw the collection of shapes and paths in the SVG image
+        onto the given :class:`wx.GraphicsContext` using the drawing primitives
+        provided by the context. The Context's state is saved and restored so
+        any transformations done while rendering the SVG will be undone.
+
+        :param wx.GraphicsContext `ctx`: The context to draw upon
+        :param float `scale`: If given, apply to the context's scale.
+        :param (float, float) `size`: If given, scale the image's width and height
+            to that provided in this parameter. Ignored if ``scale`` is also specified.
+
+        .. note::
+            Some GraphicsContext backends perform better than others.
+            The default GDI+ backend on Windows is the most glitchy, but the
+            Direct2D backend works well.
         """
         ctx.PushState()
-        # set scale either from the parameter or as ratio of sizes
-        if scale is not None:
-            ctx.Scale(scale, scale)
-        elif size is not None:
-            # scale the context to the given size
-            size = wx.Size(*size)
-            sx = size.width / self.width
-            sy = size.height / self.height
-            ctx.Scale(sx, sy)
-        ctx.Translate(*translate)
+        try:
+            # set scale either from the scale parameter or as ratio of the sizes
+            if scale is not None:
+                ctx.Scale(scale, scale)
+            elif size is not None:
+                # scale the context to the given size
+                size = wx.Size(*size)
+                sx = size.width / self.width
+                sy = size.height / self.height
+                ctx.Scale(sx, sy)
 
-        for shape in self.shapes:
-            if not shape.flags & SVG_FLAGS_VISIBLE:
-                continue
-            if shape.opacity != 1.0:
-                ctx.BeginLayer(shape.opacity)
-            brush = self._makeBrush(ctx, shape)
-            pen = self._makePen(ctx, shape)
+            for shape in self.shapes:
+                if not shape.flags & SVG_FLAGS_VISIBLE:
+                    continue
+                if shape.opacity != 1.0:
+                    ctx.BeginLayer(shape.opacity)
+                brush = self._makeBrush(ctx, shape)
+                pen = self._makePen(ctx, shape)
 
-            rule = { SVG_FILLRULE_NONZERO : wx.WINDING_RULE,
-                     SVG_FILLRULE_EVENODD : wx.ODDEVEN_RULE }.get(shape.fillRule, 0)
+                rule = { SVG_FILLRULE_NONZERO : wx.WINDING_RULE,
+                        SVG_FILLRULE_EVENODD : wx.ODDEVEN_RULE }.get(shape.fillRule, 0)
 
-            # The shape's path is comprised of one or more subpaths, collect
-            # and accumulate them in a new GraphicsPath
-            path = ctx.CreatePath()
-            for svg_path in shape.paths:
-                subpath = self._makeSubPath(ctx, svg_path)
-                path.AddPath(subpath)
+                # The shape's path is comprised of one or more subpaths, collect
+                # and accumulate them in a new GraphicsPath
+                path = ctx.CreatePath()
+                for svg_path in shape.paths:
+                    subpath = self._makeSubPath(ctx, svg_path)
+                    path.AddPath(subpath)
 
-            # Draw the combined set of paths, using the given pen and brush to
-            # fill and stroke the shape.
-            ctx.SetBrush(brush)
-            ctx.SetPen(pen)
-            ctx.DrawPath(path, rule)
+                # Draw the combined set of paths, using the given pen and brush to
+                # fill and stroke the shape.
+                ctx.SetBrush(brush)
+                ctx.SetPen(pen)
+                ctx.DrawPath(path, rule)
 
-            if shape.opacity != 1.0:
-                ctx.EndLayer()
-
-        ctx.Flush()
-        ctx.PopState()
+                if shape.opacity != 1.0:
+                    ctx.EndLayer()
+        finally:
+            ctx.Flush()
+            ctx.PopState()
 
 
     def _makeSubPath(self, ctx, svg_path):
