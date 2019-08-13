@@ -125,7 +125,7 @@ class SVGimage(SVGimageBase):
         that window. For example, if a (32,32) pixel bitmap is requested for a
         window on a Retina display, then a (64,64) pixel bitmap will be created.
 
-        :param wx.Bitmap `size`: Size of the bitmap to create, in pixels
+        :param wx.Size `size`: Size of the bitmap to create, in pixels
         :param wx.Window `window`: Adjust the size by this window's content scale factor, if supported on the platform
 
         :returns: :class:`wx.Bitmap`
