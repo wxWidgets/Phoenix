@@ -75,6 +75,9 @@ def run():
     c = module.find('wxLog')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
+    c.addDefaultCtor('public')
+    c.addDtor('public', isVirtual=True)
+
 
     c.find('SetActiveTarget').transferBack = True
     c.find('SetActiveTarget.logtarget').transfer = True

@@ -1090,7 +1090,7 @@ class ClassDef(BaseDef):
 
 
     def addDefaultCtor(self, prot='protected'):
-        # add declaration of a copy constructor to this class
+        # add declaration of a default constructor to this class
         wig = WigCode("""\
 {PROT}:
     {CLASS}();""".format(CLASS=self.name, PROT=prot))
