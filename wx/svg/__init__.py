@@ -46,10 +46,11 @@ Since it is drawing the SVG shapes and paths using the equivalent GC primitives
 then any existing transformations that may be active on the context will be
 applied automatically to the SVG shapes.
 
-Note that not all GraphicsContext back-ends are created equal. Specifically, the
+Note that not all GraphicsContext backends are created equal. Specifically, the
 GDI+ backend (the default on Windows) simply can not support some features that
 are commonly used in SVG images, such as applying transforms to gradients. The
-Direct2D backend on Windows does much better.
+Direct2D backend on Windows does much better, and the Cairo backend is very
+good.
 
 Example 2
 ---------
@@ -359,7 +360,7 @@ class SVGimage(SVGimageBase):
 
 
 def _chunker(iterable, n, fillvalue=None):
-    "Collect items from an interable into fixed-length chunks or blocks"
+    "Collect items from an iterable into fixed-length chunks or blocks"
     args = [iter(iterable)] * n
     return zip_longest(fillvalue=fillvalue, *args)
 
