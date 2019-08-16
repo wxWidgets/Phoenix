@@ -1911,7 +1911,7 @@ def cmd_sdist(options, args):
     if not os.path.exists('dist'):
         os.mkdir('dist')
 
-    # recursivly export a git archive of this repo and submodules
+    # recursively export a git archive of this repo and submodules
     def _archive_submodules(root, dest):
         msg('Exporting {}...'.format(root))
         if not os.path.exists(dest):
