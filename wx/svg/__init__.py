@@ -249,7 +249,7 @@ class SVGimage(SVGimageBase):
         # brush with a linear gradient
         elif shape.fill.type == SVG_PAINT_LINEAR_GRADIENT:
             # NanoSVG gives gradients their own transform which normalizes the
-            # linear gradiants to go from (0, 0) to (0,1) in the transformed
+            # linear gradients to go from (0, 0) to (0,1) in the transformed
             # space. So once we have the transform set we can use those points
             # too.
             x1, y1, = (0.0, 0.0)
@@ -266,7 +266,6 @@ class SVGimage(SVGimageBase):
                 matrix.Invert()
                 x1, y1 = matrix.TransformPoint(x1, y1)
                 x2, y2 = matrix.TransformPoint(x2, y2)
-                #print('(x1,y1), (x2,y2):', (x1,y1), (x2,y2))
                 matrix = wx.NullGraphicsMatrix
 
             stops = self._makeGradientStops(gradient)
@@ -274,7 +273,7 @@ class SVGimage(SVGimageBase):
 
         # brush with a radial gradient
         elif shape.fill.type == SVG_PAINT_RADIAL_GRADIENT:
-            # Likewise, NanoSVG normalizes radial gradients with a a transform
+            # Likewise, NanoSVG normalizes radial gradients with a transform
             # that puts the center (cx, cy) at (0,0) and the radius has a length
             # of 1.
             cx, cy = (0.0, 0.0)
@@ -288,7 +287,6 @@ class SVGimage(SVGimageBase):
                 cx, cy = matrix.TransformPoint(cx, cy)
                 r1, r2 = matrix.TransformPoint(0, 1)
                 radius = r2 - cy
-                #print("(cx, cy) radius:",(cx, cy), radius)
                 matrix = wx.NullGraphicsMatrix
 
             stops = self._makeGradientStops(gradient)

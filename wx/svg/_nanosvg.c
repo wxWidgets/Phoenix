@@ -12196,7 +12196,7 @@ static PyTypeObject __pyx_type_2wx_3svg_8_nanosvg_SVGimageBase = {
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
-  "\n    A SVGimageBase can be created either from an SVG file or from an in-memory\n    buffer containing the SVG XML code. The result is a collection of cubic\n    bezier shapes, with fill, stroke, gradients, paths and other information.\n\n    This class is a Cython-based wrapper around the nanosvg NSVGimage structure,\n    providing just the basic wrapped functionality from nanosvg. Please see the\n    :class:`wx.svg.SVGimage` class for a derived implementation that adds\n    functionality for integrating with wxPython.\n    ", /*tp_doc*/
+  "\n    A SVGimageBase can be created either from an SVG file or from an in-memory\n    buffer containing the SVG XML code. The result is a collection of cubic\n    bezier shapes, with fill, stroke, gradients, paths and other information.\n\n    This class is a Cython-based wrapper around the nanosvg ``NSVGimage`` structure,\n    providing just the basic wrapped functionality from nanosvg. Please see the\n    :class:`wx.svg.SVGimage` class for a derived implementation that adds\n    functionality for integrating with wxPython.\n    ", /*tp_doc*/
   0, /*tp_traverse*/
   0, /*tp_clear*/
   0, /*tp_richcompare*/
