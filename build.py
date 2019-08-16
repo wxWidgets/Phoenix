@@ -1876,7 +1876,7 @@ def cmd_cleanall(options, args):
         files += glob.glob(wc)
     delFiles(files)
 
-    cmd_clean_vagrant(options, args)
+    cmd_clean_docker(options, args)
 
 
 def cmd_buildall(options, args):
