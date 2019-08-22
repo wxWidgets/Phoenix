@@ -589,6 +589,10 @@ class Configuration(object):
             return None
 
         setup = _find_setup()
+        if setup is None:
+            msg("WARNING: Unable to find setup.h in {}, assuming {} is not available.".format(build_dir, flag))
+            return False
+
         with open(setup, 'rt') as f:
             for line in f:
                 if flag in line:
