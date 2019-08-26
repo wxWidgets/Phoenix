@@ -44,6 +44,7 @@ _treeList = [
         'TreeListCtrl',
         'NotificationMessage',
         'AddPrivateFont',
+        'SVGImage',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -254,6 +255,7 @@ _treeList = [
         'Img2PyArtProvider',
         'Mask',
         'RawBitmapAccess',
+        'SVGImage',
         'Throbber',
     ]),
 
@@ -288,6 +290,7 @@ _treeList = [
         'ShapedWindow',
         'Sound',
         'StandardPaths',
+        'SVGImage',
         'SystemSettings',
         'ToolTip',
         'UIActionSimulator',
