@@ -37,9 +37,10 @@ class TestPanel(wx.Panel):
 
         # Show how to add a private font to the application at runtime that
         # doesn't have to be installed on the user's operating system.
-        wx.Font.AddPrivateFont(os.path.join(gDataDir, 'SourceCodePro-Regular.ttf'))
+        filename = os.path.join(gDataDir, 'SourceCodePro-Regular.ttf')
+        wx.Font.AddPrivateFont(filename)
 
-        text1 = "The font used in the text below was dynamically loaded from {filename}."
+        text1 = "The font used in the text below was dynamically loaded from\n{}.".format(filename)
         st1 = wx.StaticText(self, -1, text1, (15, 15))
 
         st2 = wx.StaticText(self, -1, SAMPLETEXT, (15, 42))
