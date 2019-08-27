@@ -49,8 +49,8 @@ applied automatically to the SVG shapes.
 Note that not all GraphicsContext backends are created equal. Specifically, the
 GDI+ backend (the default on Windows) simply can not support some features that
 are commonly used in SVG images, such as applying transforms to gradients. The
-Direct2D backend on Windows does much better, and the Cairo backend is very
-good.
+Direct2D backend on Windows does much better, and the Cairo backend on Windows
+is also very good. The default backends on OSX and Linux do very good as well.
 
 Example 2
 ---------
