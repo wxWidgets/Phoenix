@@ -33,6 +33,7 @@ ITEMS  = [
     'wxCloseEvent',
     'wxContextMenuEvent',
     'wxDisplayChangedEvent',
+    'wxDPIChangedEvent',
     'wxDropFilesEvent',
     'wxEraseEvent',
     'wxFocusEvent',

@@ -143,6 +143,10 @@ def run():
 
     c.find('DoCreateResource').factory = True
 
+    # TODO: It looks like there may be a bug in wx here.
+    # Just ignore it for now.
+    c.find('GetFilePath').ignore()
+
 
     #-----------------------------------------------------------------
     module.addPyFunction('EmptyXmlResource', '(flags=XRC_USE_LOCALE, domain="")',
