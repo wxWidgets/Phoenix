@@ -10,7 +10,8 @@
 #
 
 PYVER = 3.7
-WX_CFG = ../../build/wxbld/wx-config
+# WX_CFG = ../../build/wxbld/wx-config
+WX_CFG = ../../build/wxbld/gtk3/wx-config
 
 PROGRAM = embedded
 OBJECTS = $(PROGRAM).o
