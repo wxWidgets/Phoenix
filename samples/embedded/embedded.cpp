@@ -261,8 +261,17 @@ PyObject*  wxPyMake_wxObject(wxObject* source, bool setThisOwn) {
             // python module.
             const wxClassInfo* info   = source->GetClassInfo();
             wxString           name   = info->GetClassName();
+	    wxString           childname = name.Clone();
             if (info) {
                 target = wxPyConstructObject((void*)source, name.c_str(), setThisOwn);
+		while (target == NULL) {
+		    info = info->GetBaseClass1();
+		    name = info->GetClassName();
+		    if (name == childname)
+                        break;
+		    childname = name.Clone();
+		    target = wxPyConstructObject((void*)source, name.c_str(), setThisOwn);
+		}
                 if (target && isEvtHandler)
                     ((wxEvtHandler*)source)->SetClientObject(new wxPyClientData(target));
                 if (target && isSizer)
