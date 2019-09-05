@@ -219,7 +219,8 @@ def run():
             @wraps(f)
             def wrapper(self, obj):
                 ctx = f(self, obj)
-                ctx._obj = obj
+                if ctx is not None:
+                    ctx._obj = obj
                 return ctx
             return wrapper
         GraphicsRenderer.CreateContext = _ctx_hold_ref(GraphicsRenderer.CreateContext)
