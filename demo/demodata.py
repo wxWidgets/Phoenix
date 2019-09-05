@@ -24,10 +24,10 @@ _demoPngs = ["overview", "recent", "frame", "dialog", "moredialog", "core",
 #
 # _treeList
 #
-# These are the Demo Catagory Headers
+# These are the Demo Category Headers
 # and Demo Module Names(Ex: Frame.py without ext)
 #
-# ('Demo Catagory Name String', [
+# ('Demo Category Name String', [
 #       'DemoModuleName1',
 #       'DemoModuleName2',
 #       'Etc',
@@ -44,7 +44,8 @@ _treeList = [
         'TreeListCtrl',
         'NotificationMessage',
         'AddPrivateFont',
-        'SVGImage',
+        'SVGImage_Bitmap',
+        'SVGImage_Render',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -255,7 +256,8 @@ _treeList = [
         'Img2PyArtProvider',
         'Mask',
         'RawBitmapAccess',
-        'SVGImage',
+        'SVGImage_Bitmap',
+        'SVGImage_Render',
         'Throbber',
     ]),
 
@@ -266,7 +268,6 @@ _treeList = [
         'Cairo',
         'Cairo_Snippets',
         'ColourDB',
-        ##'DialogUnits',   # needs more explanations
         'DragScroller',
         'DrawXXXList',
         'FileHistory',
@@ -290,7 +291,8 @@ _treeList = [
         'ShapedWindow',
         'Sound',
         'StandardPaths',
-        'SVGImage',
+        'SVGImage_Bitmap',
+        'SVGImage_Render',
         'SystemSettings',
         'ToolTip',
         'UIActionSimulator',

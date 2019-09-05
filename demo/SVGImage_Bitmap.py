@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 import os
 import glob
@@ -92,6 +91,9 @@ overview = """<html><body>
 The wx.svg.SVGimage class provides the ability to load, parse and render
 Scalable Vector Graphics (SVG) files. The advantage of SVG files is that
 they can be used to create bitmaps of any size without loss of quality.
+
+This sample demonstrates rasterizing an SVG image to wx.Bitmaps of various
+sizes.
 
 </body></html>
 """
