@@ -66,6 +66,12 @@ New and improved in this release:
 
 * Add some missing methods in wx.adv.BitmapComboBox (#1307)
 
+* Added the wx.svg package which contains code for parsing SVG (Scalable Vector 
+  Graphics) files, and also code for integrating with wxPython. It can rasterize
+  the SVG to a wx.Bitmap of any size with no loss of quality, and it can also
+  render the SVG directly to a wx.GraphicsContext using the GC's drawing
+  primitives. (PR #1323)
+
   
 
 
