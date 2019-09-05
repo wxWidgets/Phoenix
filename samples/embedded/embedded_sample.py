@@ -1,4 +1,5 @@
 import wx
+wx.CallAfter = lambda x, y : (x, y)
 from wx.py import shell, version
 
 class MyPanel(wx.Panel):
@@ -6,7 +7,7 @@ class MyPanel(wx.Panel):
     def __init__(self, parent):
         # super makes the same as wx.Panel.__init__(self, parent, etc..)
         # but prepares for Python 3.0 among other things...
-        super(MyPanel, self).__init__(parent, -1, \
+        super(MyPanel, self).__init__(parent, -1, 
             style = wx.BORDER_NONE | wx.MAXIMIZE)
 
         text = wx.StaticText(self, -1,
@@ -17,7 +18,6 @@ class MyPanel(wx.Panel):
         # the Pycrust shell object
         # Ugly hack to overwrite wx.CallAfter, as it requires wx.GetApp()
         # to return != None
-        wx.CallAfter = lambda x, y : (x, y)
         pycrust = shell.Shell(self,-1, introText = intro)
         # pycrust = wx.TextCtrl(self, -1, intro)
 
