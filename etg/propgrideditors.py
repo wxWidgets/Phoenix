@@ -57,7 +57,12 @@ def run():
         PyObject *sipResObj = sipCallMethod(&sipIsErr, sipMethod, "DD",
                                             property, sipType_wxPGProperty, NULL,
                                             ctrl, sipType_wxWindow, NULL);
-        if (sipResObj == Py_None) {
+        if (sipResObj == NULL) {
+            if (PyErr_Occurred())
+                PyErr_Print();
+            sipRes = false;
+        }
+        else if (sipResObj == Py_None) {
             sipRes = false;
         } else if (sipResObj && !sipIsErr) {
             sipParseResult(&sipIsErr, sipMethod, sipResObj, "(bH5)", &sipRes, sipType_wxPGVariant, &variant);
