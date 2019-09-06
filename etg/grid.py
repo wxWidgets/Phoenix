@@ -238,14 +238,19 @@ def run():
                 result = sipCallMethod(0, sipMethod, "iiDN", row, col,
                                        const_cast<wxGrid *>(grid),sipType_wxGrid,NULL,
                                        new wxString(oldval),sipType_wxString,NULL);
-                if (result == Py_None) {
+                if (result == NULL) {
+                    if (PyErr_Occurred())
+                        PyErr_Print();
+                    sipRes = false;
+                }
+                else if (result == Py_None) {
                     sipRes = false;
                 }
                 else {
                     sipRes = true;
                     *newval = Py2wxString(result);
                 }
-                Py_DECREF(result);
+                Py_XDECREF(result);
                 """  if pureVirtual else "",  # only used with the base class
             )
 
@@ -332,7 +337,12 @@ def run():
     m.virtualCatcherCode = """\
         // virtualCatcherCode for GridTableBase.GetValue
         PyObject *result = sipCallMethod(&sipIsErr, sipMethod, "ii", row, col);
-        if (result == Py_None) {
+        if (result == NULL) {
+            if (PyErr_Occurred())
+                PyErr_Print();
+            sipRes = "";
+        }
+        else if (result == Py_None) {
             sipRes = "";
         }
         else {
