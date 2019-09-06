@@ -48,7 +48,10 @@ import sys
 mac = sys.platform.startswith("darwin")
 
 import numpy as N
-from time import clock
+try:
+    from time import process_time as clock
+except ImportError:
+    from time import clock
 import wx
 import six
 
