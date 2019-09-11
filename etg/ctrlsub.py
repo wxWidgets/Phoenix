@@ -59,7 +59,7 @@ def run():
 
 
     # The [G|S]etClientData methods deal with untyped void* values, which we
-    # don't support. The [G|S]etClientObject methods use wxClientData instaces
+    # don't support. The [G|S]etClientObject methods use wxClientData instances
     # which we have a MappedType for, so make the ClientData methods just be
     # aliases for ClientObjects. From the Python programmer's perspective they
     # would be virtually the same anyway.
@@ -76,7 +76,7 @@ def run():
         body="self.SetClientData(n, data)")
 
 
-    # Deal with transfering ownership of wxClientData objects
+    # Deal with transferring ownership of wxClientData objects
     c.find('DetachClientObject').transfer = True
     c.find('SetClientObject.data').transfer = True
     c.find('Append').findOverload('clientData').find('clientData').transfer = True

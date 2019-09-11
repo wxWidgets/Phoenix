@@ -85,7 +85,7 @@ class Frame(wx.Frame):
 
     def OnIconize(self, event):
         """Event handler for Iconize."""
-        self.iconized = event.Iconized()
+        self.iconized = event.IsIconized()
 
 
     def OnClose(self, event):

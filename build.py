@@ -1201,10 +1201,14 @@ def cmd_sip(options, args):
         if not newer_group(sipFiles, sbf) and os.path.exists(pycode):
             continue
 
+        # leave this turned off for now...
+        # typehint = '-y {}'.format(posixjoin(cfg.PKGDIR, base[1:]) + '.pyi')
+        typehint = ''
+
         pycode = '-X pycode'+base+':'+pycode
         sip = getSipCmd()
-        cmd = '%s %s -c %s -b %s %s %s'  % \
-            (sip, cfg.SIPOPTS, tmpdir, sbf, pycode, src_name)
+        cmd = '%s %s -c %s -b %s %s %s %s'  % \
+            (sip, cfg.SIPOPTS, tmpdir, sbf, pycode, typehint, src_name)
         runcmd(cmd)
 
         classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }

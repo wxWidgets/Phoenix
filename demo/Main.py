@@ -2593,7 +2593,7 @@ class wxPythonDemo(wx.Frame):
 
     #---------------------------------------------
     def OnIconfiy(self, evt):
-        wx.LogMessage("OnIconfiy: %s" % evt.Iconized())
+        wx.LogMessage("OnIconfiy: %s" % evt.IsIconized())
         evt.Skip()
 
     #---------------------------------------------
