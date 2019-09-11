@@ -48,6 +48,7 @@ class SVGRenderPanel(wx.Panel):
 
 
 #----------------------------------------------------------------------
+ADD_NEW = '[Double-click to Add New File]'
 
 class TestPanel(wx.Panel):
     def __init__(self, parent, log):
@@ -55,7 +56,8 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
 
         self.listbox = wx.ListBox(self, style=wx.LB_SINGLE, size=(250, -1))
-        self.listbox.AppendItems(glob.glob(os.path.join('data', '*.svg')))
+        self.listbox.Append(ADD_NEW)
+        self.listbox.Append(glob.glob(os.path.join('data', '*.svg')))
 
         self.renderPanel = SVGRenderPanel(self)
         rightSizer = wx.BoxSizer(wx.VERTICAL)
@@ -66,7 +68,9 @@ class TestPanel(wx.Panel):
         self.Sizer.Add(rightSizer, wx.SizerFlags(2).Border(wx.RIGHT|wx.BOTTOM|wx.TOP, 10).Expand())
 
         self.Bind(wx.EVT_LISTBOX, self.OnSelectItem)
-        self.listbox.SetSelection(0)
+        self.Bind(wx.EVT_LISTBOX_DCLICK, self.OnDClickItem)
+
+        self.listbox.SetSelection(1)
 
         # TODO: Add ability for the user to select the renderer
         if 'wxMSW' in wx.PlatformInfo:
@@ -77,12 +81,24 @@ class TestPanel(wx.Panel):
         self.renderPanel.SetRenderer(renderer)
 
         # Load the first SVG in the list into the static bitmaps
-        self.renderPanel.SetSVGFile(self.listbox.GetString(0))
+        self.renderPanel.SetSVGFile(self.listbox.GetString(1))
 
 
     def OnSelectItem(self, evt):
         filename = self.listbox.GetStringSelection()
-        self.renderPanel.SetSVGFile(filename)
+        if filename != ADD_NEW:
+            self.renderPanel.SetSVGFile(filename)
+
+
+    def OnDClickItem(self, evt):
+        if self.listbox.GetSelection() == 0:
+            with wx.FileDialog(self, "Select SVG file", "data",
+                               wildcard="SVG files (*.svg)|*.svg",
+                               style=wx.FD_OPEN) as dlg:
+                if dlg.ShowModal() == wx.ID_OK:
+                    self.listbox.Insert(dlg.GetPath(), 1)
+                    self.listbox.SetSelection(1)
+                    self.renderPanel.SetSVGFile(self.listbox.GetString(1))
 
 
 #----------------------------------------------------------------------
