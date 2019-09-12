@@ -117,9 +117,9 @@ overview = """<html><body>
 The wx.svg.SVGimage class provides the ability to load, parse and render
 Scalable Vector Graphics (SVG) files. The advantage of SVG files is that
 they can be used to create bitmaps of any size without loss of quality.
-
+<p>
 This sample demonstrates rendering an SVG image directly on to a
-wx.GraphicsContext using the GC's daring capabilities.
+wx.GraphicsContext using the GC's drawing capabilities.
 
 </body></html>
 """
