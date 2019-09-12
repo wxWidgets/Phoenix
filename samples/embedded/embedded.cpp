@@ -226,68 +226,6 @@ def makeWindow(parent):\n\
     return win\n\
 ";
 
-PyObject*  wxPyMake_wxObject(wxObject* source, bool setThisOwn) {
-    bool checkEvtHandler = true;
-    PyObject* target = NULL;
-    bool      isEvtHandler = false;
-    bool      isSizer = false;
-
-    if (source) {
-        // If it's derived from wxEvtHandler then there may
-        // already be a pointer to a Python object that we can use
-        // in the OOR data.
-        if (checkEvtHandler && wxIsKindOf(source, wxEvtHandler)) {
-            isEvtHandler = true;
-            wxEvtHandler* eh = (wxEvtHandler*)source;
-            wxPyClientData* data = (wxPyClientData*)eh->GetClientObject();
-            if (data) {
-                target = data->GetData();
-            }
-        }
-
-        // Also check for wxSizer
-        if (!target && wxIsKindOf(source, wxSizer)) {
-            isSizer = true;
-            wxSizer* sz = (wxSizer*)source;
-            wxPyClientData* data = (wxPyClientData*)sz->GetClientObject();
-            if (data) {
-                target = data->GetData();
-            }
-        }
-        if (! target) {
-            // Otherwise make it the old fashioned way by making a new shadow
-            // object and putting this pointer in it.  Look up the class
-            // heirarchy until we find a class name that is located in the
-            // python module.
-            const wxClassInfo* info   = source->GetClassInfo();
-            wxString           name   = info->GetClassName();
-	    wxString           childname = name.Clone();
-            if (info) {
-                target = wxPyConstructObject((void*)source, name.c_str(), setThisOwn);
-		while (target == NULL) {
-		    info = info->GetBaseClass1();
-		    name = info->GetClassName();
-		    if (name == childname)
-                        break;
-		    childname = name.Clone();
-		    target = wxPyConstructObject((void*)source, name.c_str(), setThisOwn);
-		}
-                if (target && isEvtHandler)
-                    ((wxEvtHandler*)source)->SetClientObject(new wxPyClientData(target));
-                if (target && isSizer)
-                    ((wxSizer*)source)->SetClientObject(new wxPyClientData(target));
-            } else {
-                wxString msg(wxT("wxPython class not found for "));
-                msg += source->GetClassInfo()->GetClassName();
-                PyErr_SetString(PyExc_NameError, msg.mbc_str());
-                target = NULL;
-            }
-        }
-    } else {  // source was NULL so return None.
-        Py_INCREF(Py_None); target = Py_None;
-    }
-    return target;
-}
 
 wxWindow* MyFrame::DoPythonStuff(wxWindow* parent)
 {
@@ -334,7 +272,7 @@ wxWindow* MyFrame::DoPythonStuff(wxWindow* parent)
     // Now build an argument tuple and call the Python function.  Notice the
     // use of another wxPython API to take a wxWindows object and build a
     // wxPython object that wraps it.
-    PyObject* arg = wxPyMake_wxObject(parent, false);
+    PyObject* arg = wxPyConstructObject((void*)parent, "wxWindow", false);
     wxASSERT(arg != NULL);
     PyObject* tuple = PyTuple_New(1);
     PyTuple_SET_ITEM(tuple, 0, arg);
