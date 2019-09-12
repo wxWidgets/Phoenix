@@ -24,7 +24,7 @@
 
     %ConvertToTypeCode
         #if wxUSE_UNICODE_WCHAR == 0
-        #error wxString converison can only handle WCHAR wxStrings currently
+        #error wxString conversion can only handle WCHAR wxStrings currently
         #endif
 
         // Code to test a PyObject for compatibility with wxString
