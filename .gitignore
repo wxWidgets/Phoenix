@@ -58,6 +58,10 @@ mydbstub.py*
 /wx/locale
 /wx/*.dll
 
+/wx/svg/*.so
+/wx/svg/*.pyd
+wx/svg/_version.py
+
 /unittests/lib_pubsub_provider_actual.py
 
 ubuntu-xenial-16.04-cloudimg-console.log

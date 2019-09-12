@@ -650,6 +650,30 @@ wxPython for compatibility, but with a zero value. You can just stop using it
 in your code with no change in behavior. 
 
 
+Parameter name changes in radial gradient methods
+-------------------------------------------------
+
+The parameter names for the ``wx.GraphicsContext`` methods for creating radial
+gradients have changed in wxPython 4.1 to be a little more understandable. If
+you are passing these values via their keyword names then you will need to
+change your code. The prior C++ method signatures looked like this::
+
+    virtual wxGraphicsBrush
+    CreateRadialGradientBrush(wxDouble xo, wxDouble yo,
+                              wxDouble xc, wxDouble yc,
+                              wxDouble radius,
+                              const wxGraphicsGradientStops& stops);
+
+And they now look like this::
+
+    virtual wxGraphicsBrush
+    CreateRadialGradientBrush(wxDouble startX, wxDouble startY,
+                              wxDouble endX, wxDouble endY,
+                              wxDouble radius,
+                              const wxGraphicsGradientStops& stops,
+                              const wxGraphicsMatrix& matrix = wxNullGraphicsMatrix);
+
+
 .. toctree::
    :maxdepth: 2
    :hidden:

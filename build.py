@@ -338,6 +338,7 @@ def setDevModeOptions(args):
             #'--osx_carbon',
             #'--mac_arch=i386',
             #'--mac_arch=i386,x86_64',
+            '--no_allmo',
             ]
     if not isWindows:
         myDevModeOptions.append('--debug')
@@ -450,6 +451,7 @@ def makeOptionParser():
         ("docker_img",     ("all", "Comma separated list of image tags to use for the build_docker command. Defaults to \"all\"")),
         ("dump_waf_log",   (False, "If the waf build tool fails then using this option will cause waf's configure log to be printed")),
         ("regenerate_sysconfig", (False, "Waf uses Python's sysconfig and related tools to configure the build. In some cases that info can be incorrect, so this option regenerates it. Must have write access to Python's lib folder.")),
+        ("no_allmo",       (False, "Skip regenerating the wxWidgets message catalogs")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -1090,10 +1092,10 @@ def cmd_sphinx(options, args):
 def cmd_wxlib(options, args):
     from sphinxtools.modulehunter import ModuleHunter
 
-    cmdTimer = CommandTimer('wx.lib')
+    cmdTimer = CommandTimer('wxlib')
     pwd = pushDir(phoenixDir())
 
-    for wx_pkg in ['lib', 'py', 'tools']:
+    for wx_pkg in ['lib', 'py', 'svg', 'tools']:
         libDir = os.path.join(phoenixDir(), 'wx', wx_pkg)
 
         if not os.path.isdir(libDir):
@@ -1282,7 +1284,7 @@ def cmd_touch(options, args):
     etg = pathlib.Path('etg')
     for item in etg.glob('*.py'):
         item.touch()
-
+    cmd_touch_others(options, args)
 
 
 def cmd_test(options, args, tests=None):
@@ -1432,16 +1434,17 @@ def cmd_build_wx(options, args):
         traceback.print_exc()
         sys.exit(1)
 
-    # Build the wx message catalogs, but first check that there is a msgfmt
-    # command available
-    if findCmd('msgfmt') and findCmd('make'):
-        locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
-        print('Building message catalogs in ' + os.getcwd())
-        runcmd('make allmo')
-        del locale_pwd
-    else:
-        print("WARNING: msgfmt and/or make commands not found, message catalogs not \n"
-              "         rebuilt. Please install gettext and associated tools.")
+    if not options.no_allmo:
+        # Build the wx message catalogs, but first check that there is a msgfmt
+        # command available
+        if findCmd('msgfmt') and findCmd('make'):
+            locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
+            print('Building message catalogs in ' + os.getcwd())
+            runcmd('make allmo')
+            del locale_pwd
+        else:
+            print("WARNING: msgfmt and/or make commands not found, message catalogs not \n"
+                "         rebuilt. Please install gettext and associated tools.")
 
 
 
@@ -1605,6 +1608,7 @@ def cmd_build_py(options, args):
         runcmd(cmd)
 
     copyWxDlls(options)
+    cmd_build_others(options, args)
 
     cfg = Config()
     cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
@@ -1643,6 +1647,36 @@ def cmd_build_docker(options, args):
             if os.path.isdir(src):
                 uploadTree(src, 'linux', options)
 
+
+def cmd_build_others(options, args):
+    # Build other stuff that may have their own seprarate build commands instead
+    # of the (ab)normal etg/tweak/generate/sip/compile sequence that the rest of
+    # wxPython uses. So far, it's just the wx.svg package
+    cmdTimer = CommandTimer('build_others')
+
+    cmd = [PYTHON, 'setup-wxsvg.py', 'build_ext', '--inplace']
+    if options.verbose:
+        cmd.append('--verbose')
+    runcmd(cmd)
+
+
+def cmd_touch_others(options, args):
+    cmdTimer = CommandTimer('touch_others')
+    pwd = pushDir(phoenixDir())
+    cfg = Config(noWxConfig=True)
+    pth = pathlib.Path(opj(cfg.PKGDIR, 'svg'))
+    for item in pth.glob('*.pyx'):
+        item.touch()
+
+
+def cmd_clean_others(options, args):
+    cmdTimer = CommandTimer('clean_others')
+    pwd = pushDir(phoenixDir())
+    cfg = Config(noWxConfig=True)
+    files = []
+    for wc in ['*.pyd', '*.so']:
+        files += glob.glob(opj(cfg.PKGDIR, 'svg', wc))
+    delFiles(files)
 
 
 def cmd_install(options, args):
@@ -1816,6 +1850,8 @@ def cmd_clean_py(options, args):
         options.both = False
         cmd_clean_py(options, args)
         options.both = True
+
+    cmd_clean_others(options, args)
 
 
 def cmd_clean_sphinx(options, args):

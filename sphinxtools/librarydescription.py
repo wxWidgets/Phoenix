@@ -43,23 +43,33 @@ def generic_summary(libraryItem, stream):
     if libraryItem.kind in [object_types.LIBRARY, object_types.PACKAGE]:
         list1 = libraryItem.GetItemByKind(object_types.PACKAGE)
         list2 = libraryItem.GetItemByKind(object_types.PY_MODULE, object_types.PYW_MODULE)
+        list3 = libraryItem.GetItemByKind(object_types.FUNCTION)
+        list4 = libraryItem.GetItemByKind(object_types.KLASS, recurse=True)
 
-        templ = [templates.TEMPLATE_PACKAGE_SUMMARY, templates.TEMPLATE_MODULE_SUMMARY]
-        refs = ['mod', 'mod']
+        all_lists = [list1, list2, list3, list4]
+        templ = [ templates.TEMPLATE_PACKAGE_SUMMARY,
+                  templates.TEMPLATE_MODULE_SUMMARY,
+                  templates.TEMPLATE_STD_FUNCTION_SUMMARY,
+                  templates.TEMPLATE_STD_CLASS_SUMMARY
+                  ]
+        refs = ['mod', 'mod', 'func', 'ref']
+        add_tilde = [True, True, True, True]
 
     elif libraryItem.kind in range(object_types.PY_MODULE, object_types.PYW_MODULE+1):
         list1 = libraryItem.GetItemByKind(object_types.FUNCTION)
         list2 = libraryItem.GetItemByKind(object_types.KLASS, recurse=True)
 
+        all_lists = [list1, list2]
         templ = [templates.TEMPLATE_STD_FUNCTION_SUMMARY, templates.TEMPLATE_STD_CLASS_SUMMARY]
         refs = ['func', 'ref']
         add_tilde = [True, True]
 
     elif libraryItem.kind == object_types.KLASS:
         write_toc = False
-        list1 = libraryItem.GetItemByKind(object_types.METHOD, object_types.INSTANCE_METHOD)
+        list1 = libraryItem.GetItemByKind(object_types.METHOD, object_types.BUILTIN_FUNCTION)
         list2 = libraryItem.GetItemByKind(object_types.PROPERTY)
 
+        all_lists = [list1, list2]
         templ = [templates.TEMPLATE_METHOD_SUMMARY, templates.TEMPLATE_PROPERTY_SUMMARY]
         refs = ['meth', 'attr']
         add_tilde = [True, True]
@@ -69,7 +79,7 @@ def generic_summary(libraryItem, stream):
 
     toctree = ''
 
-    for index, sub_list in enumerate([list1, list2]):
+    for index, sub_list in enumerate(all_lists):
         table = []
         for item in sub_list:
 
@@ -739,7 +749,7 @@ class Class(ParentBase):
 
         stream.write(docs + '\n\n')
 
-        methods = self.GetItemByKind(object_types.METHOD, object_types.INSTANCE_METHOD)
+        methods = self.GetItemByKind(object_types.METHOD, object_types.BUILTIN_FUNCTION)
         properties = self.GetItemByKind(object_types.PROPERTY)
 
         for meth in methods:
@@ -776,8 +786,8 @@ class Class(ParentBase):
 
         self.signature = self.signature.strip()
 
-        if len(self.signature) < 2:
-            self.is_redundant = True
+        # if len(self.signature) < 2: # ???
+        #     self.is_redundant = True
 
         if self.GetShortName().startswith('__test') or '.extern.' in self.name:
             self.is_redundant = True
@@ -785,7 +795,7 @@ class Class(ParentBase):
         if self.is_redundant:
             return
 
-        methods = self.GetItemByKind(object_types.METHOD, object_types.INSTANCE_METHOD)
+        methods = self.GetItemByKind(object_types.METHOD, object_types.BUILTIN_FUNCTION)
         method_list = []
 
         for meth in methods:
@@ -901,7 +911,18 @@ class Method(ChildrenBase):
             self.signature = self.signature.replace('*', r'\*')
 
         if not self.signature.strip():
-            self.is_redundant = True
+            # if there is no signature, then check if the first line of
+            # docstring looks like it might be it
+            lines = self.docs.split('\n')
+            first = lines[0]
+            rest = '\n'.join(lines[1:]) if len(lines) > 1 else ''
+            sig_start = self.GetShortName() + '('
+            if sig_start in first:
+                self.signature = first[first.find(sig_start):]
+                self.docs = rest.strip()
+
+        # if not self.signature.strip():      # ???
+        #     self.is_redundant = True
 
 
     def Write(self, stream):
@@ -944,21 +965,23 @@ class Property(ChildrenBase):
 
         self.getter = self.setter = self.deleter = ''
 
-        try:
-            if item.fget:
-                self.getter = item.fget.__name__
-            if item.fset:
-                self.setter = item.fset.__name__
-            if item.fdel:
-                self.deleter = item.fdel.__name__
-        except AttributeError:
-            # Thank you for screwing it up, Cython...
-            if item.fget:
-                self.getter = item.fget.__class__.__name__
-            if item.fset:
-                self.setter = item.fset.__class__.__name__
-            if item.fdel:
-                self.deleter = item.fdel.__class__.__name__
+        # is it a real property?
+        if isinstance(item, property):
+            try:
+                if item.fget:
+                    self.getter = item.fget.__name__
+                if item.fset:
+                    self.setter = item.fset.__name__
+                if item.fdel:
+                    self.deleter = item.fdel.__name__
+            except AttributeError:
+                # Thank you for screwing it up, Cython...
+                if item.fget:
+                    self.getter = item.fget.__class__.__name__
+                if item.fset:
+                    self.setter = item.fset.__class__.__name__
+                if item.fdel:
+                    self.deleter = item.fdel.__class__.__name__
 
         self.docs = getdoc(item)
         self.comments = getcomments(item)

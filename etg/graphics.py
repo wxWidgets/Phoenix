@@ -208,17 +208,36 @@ def run():
     markCreateFactories(c)
     c.abstract = True
 
-    for m in c.find('CreateContext').all():
-        for p in m.items:
-            if 'DC' in p.name or p.name == 'image':
-                p.keepReference = True
-    c.find('CreateContextFromImage.image').keepReference = True
+
+    # The KeepReference annotation doesn't work for us in this case, as it will
+    # hold the reference in the renderer object, but it is better to hold the
+    # reference in the returned context object instead. Otherwise there is still
+    # some possibility that the held DC will be destroyed before the context.
+    c.addPyCode("""\
+        def _ctx_hold_ref(f):
+            from functools import wraps
+            @wraps(f)
+            def wrapper(self, obj):
+                ctx = f(self, obj)
+                if ctx is not None:
+                    ctx._obj = obj
+                return ctx
+            return wrapper
+        GraphicsRenderer.CreateContext = _ctx_hold_ref(GraphicsRenderer.CreateContext)
+        GraphicsRenderer.CreateContextFromImage = _ctx_hold_ref(GraphicsRenderer.CreateContextFromImage)
+        GraphicsRenderer.CreateContextFromUnknownDC = _ctx_hold_ref(GraphicsRenderer.CreateContextFromUnknownDC)
+        """)
 
     # TODO: support this?
     c.find('CreateContext').findOverload('wxEnhMetaFileDC').ignore()
 
     # TODO: support this?
     c.find('CreateContextFromNativeHDC').ignore()
+
+    c.addPyMethod('GetType', '(self)',
+        doc="Returns the name of the GraphicsRenderer class.",
+        body="return self.GetClassInfo().GetClassName()")
+
 
 
     c.find('GetGDIPlusRenderer').ignore()
@@ -281,6 +300,10 @@ def run():
     # GraphicsPenInfo is transitory we can't save the reference in it to the
     # holder, and the pen will not have been created yet...
     c.find('Dashes').ignore()
+    c.find('GetDashes').ignore()
+    c.find('GetDashCount').ignore()
+    c.find('GetDash').ignore()
+
 
 
     #---------------------------------------------
