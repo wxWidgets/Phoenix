@@ -47,6 +47,8 @@ from cpython.buffer cimport (
     Py_buffer, PyObject_CheckBuffer, PyObject_GetBuffer, PyBUF_SIMPLE,
     PyBuffer_Release)
 
+PY2 = sys.version_info[0] == 2
+
 #----------------------------------------------------------------------------
 # Replicate the C enums and values for Python, dropping the leading 'N'
 
@@ -140,8 +142,9 @@ cdef class SVGimageBase:
         :rtype: An instance of ``cls`` (usually a :class:`SVGimage`)
         """
         name = filename.encode(sys.getfilesystemencoding())
+        units_b = units.encode('utf-8')
         cdef SVGimageBase img = cls()
-        img._set_ptr(nsvgParseFromFile(name, bytes(units, 'utf-8'), dpi),
+        img._set_ptr(nsvgParseFromFile(name, units_b, dpi),
                      'Unable to parse SVG file {}'.format(filename))
         return img
 
@@ -157,8 +160,9 @@ cdef class SVGimageBase:
 
         :rtype: An instance of ``cls`` (usually a :class:`SVGimage`)
         """
+        units_b = units.encode('utf-8')
         cdef SVGimageBase img = cls()
-        img._set_ptr(nsvgParse(buffer, bytes(units, 'utf-8'), dpi),
+        img._set_ptr(nsvgParse(buffer, units_b, dpi),
                      'Unable to parse SVG buffer')
         return img
 
@@ -225,7 +229,7 @@ cdef class SVGimageBase:
         :param int `height`: height of the image to render, defaults to height from the SVG file
         :param int `stride`: number of bytes per scan line in the destination buffer, typically ``width * 4``
 
-        :returns: A bytes object containing the raw RGBA pixel color values
+        :returns: A bytearray object containing the raw RGBA pixel color values
         """
         self._check_ptr()
         if self._rasterizer == NULL:
@@ -238,7 +242,7 @@ cdef class SVGimageBase:
         if stride == -1:
             stride = width * 4;
 
-        buf = bytes(height * stride)
+        buf = bytes(bytearray(height * stride))
         nsvgRasterize(self._rasterizer, self._ptr, tx, ty, scale, buf,
                       width, height, stride)
         return buf
