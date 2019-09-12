@@ -312,14 +312,6 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.Grid.SetCellHighlightPenWidth  # Does it exist
 
 
-    def test_grid42(self):
-        # old names
-        wx.grid.Grid.wxGridSelectCells
-        wx.grid.Grid.wxGridSelectRows
-        wx.grid.Grid.wxGridSelectColumns
-        wx.grid.Grid.wxGridSelectRowsOrColumns
-
-
     def test_grid43(self):
         # new names
         wx.grid.Grid.SelectCells
