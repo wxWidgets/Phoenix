@@ -31,7 +31,7 @@
 #endif
 
 // Import Python and wxPython headers
-#include <sip.h>
+#include <wxPython/sip.h>
 #include <wxPython/wxpy_api.h>
 
 
