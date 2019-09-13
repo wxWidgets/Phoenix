@@ -254,7 +254,7 @@ def configure(conf):
                        uselib_store='WXXRC', mandatory=True,
                        msg='Finding libs for WXXRC')
 
-        libname = '' if cfg.MONOLITHIC else 'richtext,' # workaround bug in wx-config
+        libname = '' if cfg.MONOLITHIC else 'richtext,adv,' # workaround bug in wx-config
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs %score,net' % libname + rpath,
                        uselib_store='WXRICHTEXT', mandatory=True,
