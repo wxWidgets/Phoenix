@@ -32,7 +32,12 @@ This release provides the following fixes:
   a reference to the DC, to ensure that the DCOverlay is destroyed first.
   (PR#1301)
   
+* Ported the embedding sample from Classic, which shows how to use wxPython from
+  a C++ wxWidgets application that embeds Python. (PR #1353)
 
+* Fixed wx.GetApp() to use wxWidgets' global wxApp instance instead of 
+  maintaining its own pointer. This way, if the wxApp is created by C++ code
+  wxPython will still be able to get access to it. (#1126)
   
 
 
