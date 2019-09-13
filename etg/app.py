@@ -43,7 +43,7 @@ def run():
 
     etgtools.prependText(c.detailedDoc,
          "Note that it is not intended for this class to be used directly from "
-         "Python. It is wrapped just for inheriting its methods from :class:`App`.")
+         "Python. It is wrapped just for inheriting its methods in :class:`App`.")
 
     # There's no need for the command line stuff as Python has its own ways to
     # deal with that
@@ -236,12 +236,11 @@ def run():
     module.insertItemBefore(c, enum)
 
     module.addHeaderCode("""\
-        class wxPyApp;
-        wxPyApp* wxGetApp();
+        wxAppConsole* wxGetApp();
         """)
     module.find('wxTheApp').ignore()
     f = module.find('wxGetApp')
-    f.type = 'wxPyApp*'
+    f.type = 'wxAppConsole*'
     f.briefDoc = "Returns the current application object."
     f.detailedDoc = []
 
