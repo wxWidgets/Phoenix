@@ -347,11 +347,6 @@ ULC_STATE_DROPHILITED =   wx.LIST_STATE_DROPHILITED      # MSW only
 ULC_STATE_FOCUSED     =   wx.LIST_STATE_FOCUSED
 ULC_STATE_SELECTED    =   wx.LIST_STATE_SELECTED
 ULC_STATE_CUT         =   wx.LIST_STATE_CUT              # MSW only
-ULC_STATE_DISABLED    =   wx.LIST_STATE_DISABLED         # OS2 only
-ULC_STATE_FILTERED    =   wx.LIST_STATE_FILTERED         # OS2 only
-ULC_STATE_INUSE       =   wx.LIST_STATE_INUSE            # OS2 only
-ULC_STATE_PICKED      =   wx.LIST_STATE_PICKED           # OS2 only
-ULC_STATE_SOURCE      =   wx.LIST_STATE_SOURCE           # OS2 only
 
 # Hit test flags, used in HitTest
 ULC_HITTEST_ABOVE           = wx.LIST_HITTEST_ABOVE            # Above the client area.
@@ -359,7 +354,6 @@ ULC_HITTEST_BELOW           = wx.LIST_HITTEST_BELOW            # Below the clien
 ULC_HITTEST_NOWHERE         = wx.LIST_HITTEST_NOWHERE          # In the client area but below the last item.
 ULC_HITTEST_ONITEMICON      = wx.LIST_HITTEST_ONITEMICON       # On the bitmap associated with an item.
 ULC_HITTEST_ONITEMLABEL     = wx.LIST_HITTEST_ONITEMLABEL      # On the label (string) associated with an item.
-ULC_HITTEST_ONITEMRIGHT     = wx.LIST_HITTEST_ONITEMRIGHT      # In the area to the right of an item.
 ULC_HITTEST_ONITEMSTATEICON = wx.LIST_HITTEST_ONITEMSTATEICON  # On the state icon for a tree view item that is in a user-defined state.
 ULC_HITTEST_TOLEFT          = wx.LIST_HITTEST_TOLEFT           # To the left of the client area.
 ULC_HITTEST_TORIGHT         = wx.LIST_HITTEST_TORIGHT          # To the right of the client area.
@@ -6785,7 +6779,6 @@ class UltimateListMainWindow(wx.ScrolledWindow):
          ``ULC_HITTEST_ONITEM``              0x2a0 Anywhere on the item (text, icon, checkbox image)
          ``ULC_HITTEST_ONITEMICON``           0x20 On the bitmap associated with an item
          ``ULC_HITTEST_ONITEMLABEL``          0x80 On the label (string) associated with an item
-         ``ULC_HITTEST_ONITEMRIGHT``         0x100 In the area to the right of an item
          ``ULC_HITTEST_ONITEMSTATEICON``     0x200 On the state icon for a list view item that is in a user-defined state
          ``ULC_HITTEST_TOLEFT``              0x400 To the left of the client area
          ``ULC_HITTEST_TORIGHT``             0x800 To the right of the client area
