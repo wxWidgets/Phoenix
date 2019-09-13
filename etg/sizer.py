@@ -158,7 +158,7 @@ def run():
         """)
 
     c.addPyMethod('__iter__', '(self)',
-        doc = "A Py convenience method that allows Sizers to act as iterables that will yield their wx.SizerItems.",
+        doc = "A Python convenience method that allows Sizers to act as iterables that will yield their wx.SizerItems.",
         body = "for item in self.GetChildren(): yield item")
 
     c.addPyCode('Sizer.__bool__ = Sizer.__nonzero__') # For Python 3
@@ -176,6 +176,8 @@ def run():
             failure.
             """)],
         )
+    c.insertItemAfter(c.find('RepositionChildren'), m)
+
 
     #---------------------------------------------
     c = module.find('wxBoxSizer')
