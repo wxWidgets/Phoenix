@@ -8,6 +8,19 @@
 wxPython Changelog
 ==================
 
+4.0.7 ""
+------------------
+* [not yet released]
+
+PyPI:   https://pypi.org/project/wxPython/4.0.7
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.7``
+
+This release provides the following fixes:
+
+
+
+
 4.0.6 "Applesauce"
 ------------------
 * 21-May-2019
