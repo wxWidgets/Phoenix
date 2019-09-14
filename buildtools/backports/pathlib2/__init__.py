@@ -10,7 +10,12 @@ import ntpath
 import os
 import posixpath
 import re
-import six
+
+try:
+    import six
+except ImportError:
+    import buildtools.backports.six as six
+
 import sys
 from collections import Sequence
 from errno import EINVAL, ENOENT, ENOTDIR, EEXIST, EPERM, EACCES
