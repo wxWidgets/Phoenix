@@ -338,6 +338,7 @@ def setDevModeOptions(args):
             #'--osx_carbon',
             #'--mac_arch=i386',
             #'--mac_arch=i386,x86_64',
+            '--no_allmo',
             ]
     if not isWindows:
         myDevModeOptions.append('--debug')
@@ -450,6 +451,7 @@ def makeOptionParser():
         ("vagrant_vms",    ("all", "Comma separated list of VM names to use for the build_vagrant command. Defaults to \"all\"")),
         ("dump_waf_log",   (False, "If the waf build tool fails then using this option will cause waf's configure log to be printed")),
         ("regenerate_sysconfig", (False, "Waf uses Python's sysconfig and related tools to configure the build. In some cases that info can be incorrect, so this option regenerates it. Must have write access to Python's lib folder.")),
+        ("no_allmo",       (False, "Skip regenerating the wxWidgets message catalogs")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -798,7 +800,7 @@ def checkCompiler(quiet=False):
     # we'll need to make this a little smarter about what flag (if any)
     # needs to be used.
     #
-    # NOTE 2: SIP chenged its output such that this doesn't appear to be
+    # NOTE 2: SIP changed its output such that this doesn't appear to be
     # needed anymore, but we'll leave the code in place to make it easy to
     # turn it back on again if/when needed.
     if False and not isWindows and not isDarwin:
@@ -837,11 +839,11 @@ def dos2bashPath(path):
     # Note that MSYS2 (and Git Bash) now also have cygpath so this should
     # work there too.
     if cygpath:
-        path = runcmd('{} -u {}'.format(cygpath, path), getOutput=True, echoCmd=False)
+        path = runcmd('"{}" -u "{}"'.format(cygpath, path), getOutput=True, echoCmd=False)
         return path
     elif wsl:
         # Are we using Windows System for Linux? (untested)
-        path = runcmd('{} wslpath -a -u {}'.format(wsl, path), getOutput=True, echoCmd=False)
+        path = runcmd('"{}" wslpath -a -u "{}"'.format(wsl, path), getOutput=True, echoCmd=False)
         return path
     else:
         # Otherwise, do a simple translate and hope for the best?
@@ -863,11 +865,11 @@ def bash2dosPath(path):
     # Note that MSYS2 (and Git Bash) now also have cygpath so this should
     # work there too.
     if cygpath:
-        path = runcmd('{} -w {}'.format(cygpath, path), getOutput=True, echoCmd=False)
+        path = runcmd('"{}" -w "{}"'.format(cygpath, path), getOutput=True, echoCmd=False)
         return path
     elif wsl:
         # Are we using Windows System for Linux? (untested)
-        path = runcmd('{} wslpath -a -w {}'.format(wsl, path), getOutput=True, echoCmd=False)
+        path = runcmd('"{}" wslpath -a -w "{}"'.format(wsl, path), getOutput=True, echoCmd=False)
         return path
     else:
         # Otherwise, do a simple translate and hope for the best?
@@ -933,7 +935,7 @@ def _doDox(arg):
 
         d = posixjoin(wxDir(), 'docs/doxygen')
         d = d.replace('\\', '/')
-        cmd = '{} -l -c "cd {} && ./regen.sh {}"'.format(bash, d, arg)
+        cmd = '"{}" -l -c "cd {} && ./regen.sh {}"'.format(bash, d, arg)
     else:
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
@@ -1089,7 +1091,7 @@ def cmd_sphinx(options, args):
 def cmd_wxlib(options, args):
     from sphinxtools.modulehunter import ModuleHunter
 
-    cmdTimer = CommandTimer('wx.lib')
+    cmdTimer = CommandTimer('wxlib')
     pwd = pushDir(phoenixDir())
 
     for wx_pkg in ['lib', 'py', 'tools']:
@@ -1427,16 +1429,17 @@ def cmd_build_wx(options, args):
         traceback.print_exc()
         sys.exit(1)
 
-    # Build the wx message catalogs, but first check that there is a msgfmt
-    # command available
-    if findCmd('msgfmt'):
-        locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
-        print('Building message catalogs in ' + os.getcwd())
-        runcmd('make allmo')
-        del locale_pwd
-    else:
-        print("WARNING: msgfmt command not found, message catalogs not rebulit.\n"
-              "         Please install gettext and associated tools.")
+    if not options.no_allmo:
+        # Build the wx message catalogs, but first check that there is a msgfmt
+        # command available
+        if findCmd('msgfmt') and findCmd('make'):
+            locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
+            print('Building message catalogs in ' + os.getcwd())
+            runcmd('make allmo')
+            del locale_pwd
+        else:
+            print("WARNING: msgfmt and/or make commands not found, message catalogs not \n"
+                "         rebuilt. Please install gettext and associated tools.")
 
 
 
