@@ -2160,6 +2160,14 @@ def cmd_setrev(options, args):
     msg('cfg.VERSION: %s' % cfg.VERSION)
 
 
+def cmd_setpythonpath(options, args):
+    cmdTimer = CommandTimer('setpythonpath')
+    assert os.getcwd() == phoenixDir()
+
+    sys.path.insert(0, phoenixDir())
+    os.environ['PYTHONPATH'] = phoenixDir()
+
+
 
 #---------------------------------------------------------------------------
 
