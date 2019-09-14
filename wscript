@@ -13,7 +13,7 @@ import os
 try:
     from textwrap import indent
 except ImportError:
-    from textwrap3 import indent
+    from buildtools.backports.textwrap3 import indent
 
 from buildtools.config import Config, runcmd, msg
 cfg = Config(True)
