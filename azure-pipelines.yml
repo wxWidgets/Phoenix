@@ -8,12 +8,14 @@ name: CI.$(Date:yyyyMMdd).$(Rev:.r)
 
 trigger:
 - master
+- wxPy-4.0.x
 
 pr:
   autoCancel: true
   branches:
     include:
     - master
+    - wxPy-4.0.x
 
 jobs:
 - template: .azure/ci-linux-job.yml
