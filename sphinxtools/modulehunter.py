@@ -30,6 +30,11 @@ if sys.version_info < (3,):
     reload(sys)
     sys.setdefaultencoding('utf-8')
 
+if isPython3():
+    MethodTypes = (classmethod, types.MethodType, types.ClassMethodDescriptorType)
+else:
+    MethodTypes = (classmethod, types.MethodType)
+
 try:
     import wx
 except ImportError:
@@ -223,9 +228,7 @@ def is_classmethod(instancemethod):
     #     return getattr(instancemethod, attribute) is not None
     # return False
 
-    return isinstance(
-        instancemethod,
-        (classmethod, types.MethodType, types.ClassMethodDescriptorType))
+    return isinstance(instancemethod, MethodTypes)
 
 
 def describe_func(obj, parent_class, module_name):
@@ -359,7 +362,7 @@ def describe_class(obj, module_class, module_name, constants):
         if isbuiltin(item):
             count += 1
         elif ismethod(item) or isfunction(item) or ismethoddescriptor(item) or \
-             isinstance(item, (classmethod, types.MethodType, types.ClassMethodDescriptorType)):
+             isinstance(item, MethodTypes):
             count += 1
             describe_func(item, klass, module_name)
         elif isclass(item):
