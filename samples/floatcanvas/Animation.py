@@ -7,7 +7,10 @@ this is very old-style code: don't imitate it!
 
 """
 
-from time import clock
+try:
+    from time import process_time as clock
+except ImportError:
+    from time import clock
 import wx
 print(wx.VERSION_STRING)
 from numpy import *
