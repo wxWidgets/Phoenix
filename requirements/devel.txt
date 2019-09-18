@@ -6,6 +6,7 @@ wheel
 twine
 sphinx
 requests
+requests[security]
 cython
 pytest
 pytest-xdist
