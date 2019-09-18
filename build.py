@@ -702,8 +702,8 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=75):
     cmd = 'scp {} {}:{}'.format(fileName, host, uploadDir)
     runcmd(cmd)
 
-    # Make sure it is readable by all
-    cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, uploadDir, os.path.basename(fileName))
+    # Make sure it is readable by all, and writable by rbot
+    cmd = 'ssh {} "cd {}; chmod 644 {}"'.format(host, uploadDir, os.path.basename(fileName))
     runcmd(cmd)
 
     if not options.release:
