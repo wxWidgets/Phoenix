@@ -683,7 +683,7 @@ def postProcess(folder, options):
 
         methods_done = properties_done = False
 
-        fid = open(files, "rt")
+        fid = textfile_open(files, "rt")
         orig_text = text = fid.read()
         fid.close()
 
@@ -738,7 +738,7 @@ def postProcess(folder, options):
         newtext = addJavaScript(newtext)
 
         if orig_text != newtext:
-            fid = open(files, "wt")
+            fid = textfile_open(files, "wt")
             fid.write(newtext)
             fid.close()
 
