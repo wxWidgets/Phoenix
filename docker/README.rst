@@ -12,7 +12,7 @@ Typically they would be used for deploying "containerized applications", but a
 docker image can easily be created with all that's needed for building software
 too.
 
-The file and folders in this subtree provide the Dockerfiles and scripts needed
+The files and folders in this subtree provide the Dockerfiles and scripts needed
 to build the Docker images, as well as for using those images to build wxPython
 wheels for various Linux distributions. A current set of images are available on
 Docker Hub at https://hub.docker.com/r/wxpython4/build. There is an image there
@@ -61,7 +61,7 @@ like this (see the paragraph about ``invoke`` above)::
 
     inv build-wxpython -i ubuntu-18.04
 
-That will do build for all Pythons that are set up in the image, and both gtk2
+That will do a build for all Pythons that are set up in the image, and both gtk2
 and gtk3 if the image supports gtk2 (some don't.) To narrow the build down to
 just one Python and one port, a command like this can be used::
 
