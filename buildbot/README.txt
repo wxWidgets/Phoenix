@@ -13,6 +13,6 @@ Buildbot.
 Developers with the proper SSH keys can copy the file and reconfigure the
 server with these commands:
 
-    scp buildbot/master.cfg  wxpybb@buildbot.wxpython.org:/home/wxpybb/bb2
-    ssh wxpybb@buildbot.wxpython.org "cd /home/wxpybb/bb2 && ./reconfig"
+scp buildbot/master.cfg  wxpybb@buildbot.wxpython.org:/home/wxpybb/bb2
+ssh wxpybb@buildbot.wxpython.org "cd /home/wxpybb/bb2 && ./reconfig"
 
