@@ -915,6 +915,17 @@ def do_regenerate_sysconfig():
         del pwd
 
 
+def _setTarItemPerms(tarinfo):
+    """
+    Used to set permissions of the files and fodlers in the source tarball
+    """
+    if tarinfo.isdir():
+        tarinfo.mode = 0o755
+    else:
+        tarinfo.mode = 0o644
+    return tarinfo
+
+
 #---------------------------------------------------------------------------
 # Command functions and helpers
 #---------------------------------------------------------------------------
@@ -2018,7 +2029,7 @@ def cmd_sdist(options, args):
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
     pwd = pushDir(PDEST)
     for name in glob.glob('*'):
-        tarball.add(name, os.path.join(rootname, name))
+        tarball.add(name, os.path.join(rootname, name), filter=_setTarItemPerms)
     tarball.close()
     msg('Cleaning up...')
     del pwd
