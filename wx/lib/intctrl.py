@@ -473,7 +473,6 @@ class IntCtrl(wx.TextCtrl):
             self.__allow_long = 0
         else:
             self.__allow_long = 1
-        self.__oldvalue = None
 
         if validator == wx.DefaultValidator:
             validator = IntValidator()
@@ -495,9 +494,7 @@ class IntCtrl(wx.TextCtrl):
             self.SetLongAllowed(allow_long)
         else:
             self.SetLongAllowed(1)
-        self.SetValue(value)
-        self.__oldvalue = 0
-
+        self.ChangeValue(value)
 
     def OnText( self, event ):
         """
