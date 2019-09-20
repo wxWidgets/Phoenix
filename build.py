@@ -1856,6 +1856,14 @@ def cmd_clean_py(options, args):
             files += glob.glob(opj(cfg.PKGDIR, wc))
     delFiles(files)
 
+    # Also remove any remaining DLLs just to make sure. This includes the C++
+    # runtime DLLs, Cairo, etc.
+    # TODO: Check for specific files, not just *.dll
+    if isWindows:
+        files = glob.glob(opj(cfg.PKGDIR, '*.dll'))
+        delFiles(files)
+
+
     if options.both:
         options.debug = False
         options.both = False
