@@ -1093,7 +1093,7 @@ def cmd_sphinx(options, args):
     pwd2 = pushDir(sphinxDir)
     buildDir = os.path.join(sphinxDir, 'build')
     htmlDir = os.path.join(phoenixDir(), 'docs', 'html')
-    runcmd('sphinx-build -b html -d %s/doctrees . %s' % (buildDir, htmlDir))
+    runcmd('{} -m sphinx -b html -d {}/doctrees . {}'.format(PYTHON, buildDir, htmlDir))
     del pwd2
 
     msg('Postprocessing sphinx output...')
