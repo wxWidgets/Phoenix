@@ -922,7 +922,7 @@ def _setTarItemPerms(tarinfo):
     if tarinfo.isdir():
         tarinfo.mode = 0o755
     else:
-        tarinfo.mode = 0o644
+        tarinfo.mode |= 0o644
     return tarinfo
 
 
