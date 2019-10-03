@@ -29,6 +29,11 @@ td.field-body > blockquote {
     margin-bottom: 0.5em;
 }
 
+table.docutils.align-default tbody tr td p {
+	margin: 0;
+	padding: 5px 0 05px;
+}
+
 /* spacing around example code */
 div.highlight > pre {
     padding: 2px 5px 2px 5px;
@@ -744,3 +749,11 @@ table.contentstable p.mybiglink {
     line-height: 150%;
 }
 
+hr.overloadsep {
+    color: #0000FF;
+    background-color: #0000FF;
+    height: 1px;
+    border: none;
+    width: 50%;
+    float: left;
+}
