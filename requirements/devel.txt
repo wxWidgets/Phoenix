@@ -4,7 +4,7 @@ appdirs
 setuptools
 wheel
 twine
-sphinx==1.4.5
+sphinx==2.2.0
 requests
 requests[security]
 cython
