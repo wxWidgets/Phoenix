@@ -25,6 +25,9 @@ from .constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
 from .constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
 from .constants import DOCSTRING_KEY
 
+PY2 = sys.version_info[0] == 2
+PY3 = sys.version_info[0] == 3
+
 # ----------------------------------------------------------------------- #
 
 
@@ -765,7 +768,7 @@ def removeHeaderImage(text, options):
     tag = soup.find('div', 'headerimage')
     if tag:
         tag.extract()
-        text = unicode(soup) if sys.version_info < (3,) else str(soup)
+        text = unicode(soup) if PY2 else str(soup)
     #text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
     return text
 

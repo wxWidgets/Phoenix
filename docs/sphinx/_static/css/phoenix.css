@@ -114,6 +114,14 @@ div.document {
   top: 30px;
 }
 
+div.document-no-sidebar {
+  background-color: rgb(230,230,230);
+  position: relative;
+  margin-left: 0px;
+  z-index: 0;
+  top: 30px;
+}
+
 div.sphinxsidebar {
     background-color: rgb(230,230,230);
     margin-left: 0;

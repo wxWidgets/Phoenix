@@ -989,12 +989,13 @@ def cmd_docset_wx(options, args):
 
 def cmd_docset_py(options, args):
     cmdTimer = CommandTimer('docset_py')
+    cfg = Config(noWxConfig=True)
     if not os.path.isdir('docs/html'):
-        msg('ERROR: No docs/html, has the sphinx build command been run?')
+        msg('ERROR: No docs/html dir found, has the sphinx build command been run?')
         sys.exit(1)
 
     # clear out any old docset build
-    name = 'wxPython-{}'.format(version3)
+    name = 'wxPython-{}'.format(cfg.VERSION)
     docset = posixjoin('dist', '{}.docset'.format(name))
     if os.path.isdir(docset):
         shutil.rmtree(docset)
@@ -1009,6 +1010,31 @@ def cmd_docset_py(options, args):
            '--online-redirect-url', URL,
            '--destination dist docs/html']
     runcmd(' '.join(cmd))
+
+    # Remove the sidebar from the pages in the docset
+    msg('Removing sidebar from docset pages...')
+    _removeSidebar(opj('dist', name+'.docset', 'Contents', 'Resources', 'Documents'))
+
+
+def _removeSidebar(path):
+    """
+    Remove the sidebar <div> from the pages going into the docset
+    """
+    from bs4 import BeautifulSoup
+    for filename in glob.glob(opj(path, '*.html')):
+        with textfile_open(filename, 'rt') as f:
+            text = f.read()
+        text = text.replace('<script src="_static/javascript/sidebar.js" type="text/javascript"></script>', '')
+        soup = BeautifulSoup(text, 'html.parser')
+        tag = soup.find('div', 'sphinxsidebar')
+        if tag:
+            tag.extract()
+        tag = soup.find('div', 'document')
+        if tag:
+            tag.attrs['class'] = ['document-no-sidebar']
+        text = unicode(soup) if PY2 else str(soup)
+        with textfile_open(filename, 'wt') as f:
+            f.write(text)
 
 
 def cmd_docset(options, args):
