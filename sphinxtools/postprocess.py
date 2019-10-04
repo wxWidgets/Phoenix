@@ -9,6 +9,7 @@
 #---------------------------------------------------------------------------
 
 # Standard library imports
+import sys
 import os
 import re
 import glob
@@ -663,7 +664,6 @@ def addJavaScript(text):
 # ----------------------------------------------------------------------- #
 
 def postProcess(folder, options):
-
     fileNames = glob.glob(folder + "/*.html")
 
     enum_files = glob.glob(folder + '/*.enumeration.html')
@@ -680,24 +680,15 @@ def postProcess(folder, options):
         new = '(<a class="reference internal" href="%s" title="%s"><em>%s</em></a>)'%(html_file, base, base)
         enum_dict['(<em>%s</em>)'%enum] = new
 
-    for files in fileNames:
-        if "genindex" in files or "modindex" in files:
+    for filename in fileNames:
+        if "genindex" in filename or "modindex" in filename:
             continue
 
         methods_done = properties_done = False
 
-        fid = textfile_open(files, "rt")
-        orig_text = text = fid.read()
-        fid.close()
+        with textfile_open(filename, "rt") as fid:
+            orig_text = text = fid.read()
 
-        split = os.path.split(files)[1]
-
-        if split == 'index.html':
-            text = changeWelcomeText(text, options)
-        else:
-            text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
-
-        text = text.replace('– <p>', '– ')
         text = text.replace('Overloaded Implementations:', '<strong>Overloaded Implementations:</strong>')
         for item in HTML_REPLACE:
             if item != 'class':
@@ -709,6 +700,10 @@ def postProcess(folder, options):
 
         for index, line in enumerate(splitted_text):
             if index < len_split - 1:
+                if '– <p>' in line and '</p>' in line:
+                    line = line.replace('– <p>', '– ')
+                    line = line.replace('</p>', '')
+
                 if line.strip() == '<br><hr />' or line.strip() == '<dd><br><hr />':
                     next_line = splitted_text[index+1]
                     stripline = next_line.strip()
@@ -730,10 +725,15 @@ def postProcess(folder, options):
 
         newtext = addJavaScript(newtext)
 
+        basename = os.path.split(filename)[1]
+        if basename == 'index.html':
+            newtext = changeWelcomeText(newtext, options)
+        else:
+            newtext = removeHeaderImage(newtext, options)
+
         if orig_text != newtext:
-            fid = textfile_open(files, "wt")
-            fid.write(newtext)
-            fid.close()
+            with textfile_open(filename, "wt") as fid:
+                fid.write(newtext)
 
 
 # ----------------------------------------------------------------------- #
@@ -759,6 +759,15 @@ def changeWelcomeText(text, options):
     return text
 
 
+def removeHeaderImage(text, options):
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(text, 'html.parser')
+    tag = soup.find('div', 'headerimage')
+    if tag:
+        tag.extract()
+        text = unicode(soup) if sys.version_info < (3,) else str(soup)
+    #text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
+    return text
 
 
 def tooltipsOnInheritance(text, class_summary):
