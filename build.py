@@ -1015,6 +1015,22 @@ def cmd_docset_py(options, args):
     msg('Removing sidebar from docset pages...')
     _removeSidebar(opj('dist', name+'.docset', 'Contents', 'Resources', 'Documents'))
 
+    # build the tarball
+    msg('Archiving Phoenix docset...')
+    rootname = "wxPython-docset-{}".format(cfg.VERSION)
+    tarfilename = "dist/{}.tar.gz".format(rootname)
+    if os.path.exists(tarfilename):
+        os.remove(tarfilename)
+    tarball = tarfile.open(name=tarfilename, mode="w:gz")
+    tarball.add(opj('dist', name+'.docset'), name+'.docset', filter=_setTarItemPerms)
+    tarball.close()
+
+    if options.upload:
+        uploadPackage(tarfilename, options)
+
+    msg("Docset file built at %s" % tarfilename)
+
+
 
 def _removeSidebar(path):
     """
