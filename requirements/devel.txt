@@ -6,6 +6,7 @@ wheel
 twine
 sphinx==2.2.0
 beautifulsoup4
+doc2dash
 requests
 requests[security]
 cython

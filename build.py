@@ -82,8 +82,8 @@ baseName = version.PROJECT_NAME
 eggInfoName = baseName + '.egg-info'
 defaultMask='%s-%s*' % (baseName, version.VER_MAJOR)
 
-pyICON = 'docs/sphinx/_static/images/sphinxdocs/phoenix_title.png'
-wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
+pyICON = 'packaging/docset/Vippi-blocks-icon-32.png'
+wxICON = 'packaging/docset/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
@@ -967,8 +967,6 @@ def cmd_doxhtml(options, args):
     _doDox('chm')
 
 
-# NOTE: Because of the use of defaults and plutil the following docset
-# commands will only work correctly on OSX.
 def cmd_docset_wx(options, args):
     cmdTimer = CommandTimer('docset_wx')
     cfg = Config()
@@ -987,7 +985,6 @@ def cmd_docset_wx(options, args):
         shutil.rmtree(destname)
     shutil.move(srcname, destname)
     shutil.copyfile(wxICON, posixjoin(destname, 'icon.png'))
-    runcmd('plutil -convert xml1 {}/Contents/Info.plist'.format(destname))
 
 
 def cmd_docset_py(options, args):
@@ -1004,15 +1001,14 @@ def cmd_docset_py(options, args):
 
     # run the docset generator
     VERBOSE = '--verbose' if options.verbose else ''
-    runcmd('doc2dash {} --name "{}" --icon {} --destination dist docs/html'
-           .format(VERBOSE, name, pyICON))
+    URL = 'https://docs.wxpython.org/' if options.release else 'https://wxpython.org/Phoenix/docs/html/'
 
-    # update its Info.plist file
-    docset = os.path.abspath(docset)
-    runcmd('defaults write {}/Contents/Info isJavaScriptEnabled true'.format(docset))
-    runcmd('defaults write {}/Contents/Info dashIndexFilePath index.html'.format(docset))
-    runcmd('defaults write {}/Contents/Info DocSetPlatformFamily wxpy'.format(docset))
-    runcmd('plutil -convert xml1 {}/Contents/Info.plist'.format(docset))
+    cmd = [PYTHON, '-m doc2dash', VERBOSE,
+           '--name', name, '--icon', pyICON,
+           '--index-page index.html', '--enable-js',
+           '--online-redirect-url', URL,
+           '--destination dist docs/html']
+    runcmd(' '.join(cmd))
 
 
 def cmd_docset(options, args):
