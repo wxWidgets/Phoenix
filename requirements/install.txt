@@ -1,4 +1,5 @@
 # Runtime dependencies needed when using wxPython Phoenix
-numpy
+numpy==1.16.1 ; python_version <= '2.7'
+numpy ; python_version >= '3.0'
 pillow
 six
