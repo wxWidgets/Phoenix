@@ -320,7 +320,9 @@ class ToolTipWindowBase(object):
             maxWidth = max(bmpWidth+(textWidth+self._spacing*3), maxWidth)
         # Calculate the header height
         height = max(textHeight, bmpHeight)
+        normalText = classParent.GetTextColour()
         if header:
+            dc.SetTextForeground(normalText)
             dc.DrawText(header, bmpXPos+bmpWidth+self._spacing, (height-textHeight+self._spacing)/2)
         if headerBmp and headerBmp.IsOk():
             dc.DrawBitmap(headerBmp, bmpXPos, (height-bmpHeight+self._spacing)/2, True)
@@ -345,7 +347,6 @@ class ToolTipWindowBase(object):
         lines = classParent.GetMessage().split("\n")
         yText = yPos
         embImgPos = yPos
-        normalText = wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENUTEXT)
         hyperLinkText = wx.BLUE
         messagePos = self._getTextExtent(dc, lines[0] if lines else "")[1] // 2 + self._spacing
         for line in lines:
