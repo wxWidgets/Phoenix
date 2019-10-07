@@ -1046,7 +1046,7 @@ class HyperTreeListDemo(wx.Frame):
         panel.SetSizer(sizer)
         sizer.Layout()
 
-        self.columnBackgroundColours = [None for i in range(self.tree.GetColumnCount())]
+        self.columnBackgroundColours = [wx.LIGHT_GREY for i in range(self.tree.GetColumnCount())]
 
 
         self.leftpanel = wx.ScrolledWindow(splitter, -1, style=wx.SUNKEN_BORDER)
@@ -1169,7 +1169,7 @@ class HyperTreeListDemo(wx.Frame):
         self.columnchoice = wx.Choice(self.leftpanel, -1, choices = ["1","2","3"])
         self.columnchoice.SetSelection(0)
         self.columnchoice.Bind(wx.EVT_CHOICE, self.OnColumnChoiceChanged)
-        self.columnbackgroundcolour = csel.ColourSelect(self.leftpanel, -1, "Choose...", wx.BLACK)
+        self.columnbackgroundcolour = csel.ColourSelect(self.leftpanel, -1, "Choose...", wx.LIGHT_GREY)
         self.columnbackgroundcolour.Bind(csel.EVT_COLOURSELECT, self.OnColumnBackgroundColour)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         hSizer = wx.BoxSizer(wx.HORIZONTAL)
