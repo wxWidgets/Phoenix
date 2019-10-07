@@ -1408,7 +1408,7 @@ class TreeListItem(GenericTreeItem):
         # Hidden items are never evaluated.
         if self.IsHidden():
             return None, flags, wx.NOT_FOUND
-        
+
         # for a hidden root node, don't evaluate it, but do evaluate children
         if not theCtrl.HasAGWFlag(wx.TR_HIDE_ROOT) or level > 0:
 
@@ -2353,7 +2353,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `colour`: a valid :class:`wx.Colour` instance.
         :param integer `column`
         """
-        
+
         item.SetBackgroundColour(colour, column)
 
         if column == 0:
@@ -2457,7 +2457,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         if not self.HasAGWFlag(TR_HIDE_ROOT):
             if self.IsVisible(root):
                 return root
-            
+
         return self.GetNextVisible(root)
 
 
@@ -3089,23 +3089,25 @@ class TreeListMainWindow(CustomTreeCtrl):
                         else:
                             itemrect = wx.Rect(text_x-2, item.GetY() + off_h, text_w+2*_MARGIN, total_h - off_h)
                         dc.SetBrush(wx.Brush(colBg))
+                        dc.SetPen(wx.TRANSPARENT_PEN)
                         dc.DrawRectangle(itemrect)
 
                     else:
                         dc.SetTextForeground(colText)
 
                 else:
-                    
+
                     if self.HasAGWFlag(TR_FILL_WHOLE_COLUMN_BACKGROUND):
                         itemrect = wx.Rect(text_x-2, item.GetY() + off_h, col_w-2*_MARGIN, total_h - off_h)
                     else:
-                        itemrect = wx.Rect(text_x-2, item.GetY() + off_h, text_w+2*_MARGIN, total_h - off_h)    
+                        itemrect = wx.Rect(text_x-2, item.GetY() + off_h, text_w+2*_MARGIN, total_h - off_h)
                     colBgX = item.GetBackgroundColour(i)
 
                     if colBgX != None and i != 0:
                         dc.SetBrush(wx.Brush(colBgX, wx.SOLID))
+                        dc.SetPen(wx.TRANSPARENT_PEN)
                         dc.DrawRectangle(itemrect)
-                    
+
                     dc.SetTextForeground(colText)
 
             if self.HasAGWFlag(TR_COLUMN_LINES):  # vertical lines between columns
@@ -3265,6 +3267,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                     itemrect = wx.Rect(x_maincol, y-h-1, width, h+1)
 
                     dc.SetBrush(wx.Brush(colBg, wx.SOLID))
+                    dc.SetPen(wx.TRANSPARENT_PEN)
                     dc.DrawRectangle(itemrect)
 
             # draw item
@@ -3951,7 +3954,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             # Hidden items have a height of 0.
             item.SetHeight(0)
             return
-        
+
         attr = item.GetAttributes()
 
         if attr and attr.HasFont():
