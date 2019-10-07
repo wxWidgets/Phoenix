@@ -3247,16 +3247,6 @@ class TreeListMainWindow(CustomTreeCtrl):
         draw_row_lines = self.HasAGWFlag(TR_ROW_LINES)
 
         if self.IsExposed(exposed_x, exposed_y, _MAX_WIDTH, h + int(draw_row_lines)):
-            if draw_row_lines:
-                total_width = self._owner.GetHeaderWindow().GetWidth()
-                # if the background colour is white, choose a
-                # contrasting colour for the lines
-                pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.PENSTYLE_SOLID)
-                dc.SetPen((self.GetBackgroundColour() == wx.WHITE and [pen] or [wx.WHITE_PEN])[0])
-                dc.DrawLine(0, y_top, total_width, y_top)
-                dc.DrawLine(0, y_top+h, total_width, y_top+h)
-
-
             # fill background below twist buttons
             if self.HasAGWFlag(TR_FILL_WHOLE_COLUMN_BACKGROUND):
                 attr = item.GetAttributes()
@@ -3344,6 +3334,17 @@ class TreeListMainWindow(CustomTreeCtrl):
                     rect = wx.Rect(x-self._btnWidth2, y_mid-self._btnHeight2, self._btnWidth, self._btnHeight)
                     flag = (item.IsExpanded() and [wx.CONTROL_EXPANDED] or [0])[0]
                     wx.RendererNative.GetDefault().DrawTreeItemButton(self, dc, rect, flag)
+
+            if draw_row_lines:
+                total_width = self._owner.GetHeaderWindow().GetWidth()
+                # if the background colour is white, choose a
+                # contrasting colour for the lines
+                pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.PENSTYLE_SOLID)
+                dc.SetPen((self.GetBackgroundColour() == wx.WHITE and [pen] or [wx.WHITE_PEN])[0])
+                dc.DrawLine(0, y_top, total_width, y_top)
+                dc.DrawLine(0, y_top+h, total_width, y_top+h)
+
+
 
         # restore DC objects
         dc.SetBrush(wx.WHITE_BRUSH)
