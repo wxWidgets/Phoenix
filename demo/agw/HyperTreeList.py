@@ -1449,13 +1449,13 @@ class HyperTreeListDemo(wx.Frame):
             while next != None:
 
                 self.tree.SetItemBackgroundColour(next, colour, col)
-                
-                cockie=0
-                child, cockie = self.tree.GetNextChild(next, cockie)
+
+                cookie=0
+                child, cockie = self.tree.GetNextChild(next, cookie)
 
                 while child != None:
                     ColourItems(child, colour, col)
-                    child, cockie = self.tree.GetNextChild(next, cockie)
+                    child, cookie = self.tree.GetNextChild(next, cookie)
 
                 next = self.tree.GetNextSibling(next)
 
