@@ -1171,7 +1171,6 @@ class HyperTreeListDemo(wx.Frame):
         self.columnchoice.Bind(wx.EVT_CHOICE, self.OnColumnChoiceChanged)
         self.columnbackgroundcolour = csel.ColourSelect(self.leftpanel, -1, "Choose...", wx.BLACK)
         self.columnbackgroundcolour.Bind(csel.EVT_COLOURSELECT, self.OnColumnBackgroundColour)
-        self.columnbackgroundcolour.SetColour(wx.Colour(255,255,255,0))
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         hSizer = wx.BoxSizer(wx.HORIZONTAL)
         hSizer.Add(self.columnchoice, 0)
