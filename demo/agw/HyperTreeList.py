@@ -1046,6 +1046,9 @@ class HyperTreeListDemo(wx.Frame):
         panel.SetSizer(sizer)
         sizer.Layout()
 
+        self.columnBackgroundColours = [wx.LIGHT_GREY for i in range(self.tree.GetColumnCount())]
+
+
         self.leftpanel = wx.ScrolledWindow(splitter, -1, style=wx.SUNKEN_BORDER)
         self.PopulateLeftPanel(self.tree.styles, self.tree.events)
 
@@ -1160,6 +1163,19 @@ class HyperTreeListDemo(wx.Frame):
         self.columncolour.Bind(csel.EVT_COLOURSELECT, self.OnColumnColour)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add(self.columncolour, 0)
+
+        label = wx.StaticText(self.leftpanel, -1, "Column Background Colour")
+        label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
+        self.columnchoice = wx.Choice(self.leftpanel, -1, choices = ["1","2","3"])
+        self.columnchoice.SetSelection(0)
+        self.columnchoice.Bind(wx.EVT_CHOICE, self.OnColumnChoiceChanged)
+        self.columnbackgroundcolour = csel.ColourSelect(self.leftpanel, -1, "Choose...", wx.LIGHT_GREY)
+        self.columnbackgroundcolour.Bind(csel.EVT_COLOURSELECT, self.OnColumnBackgroundColour)
+        flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
+        hSizer = wx.BoxSizer(wx.HORIZONTAL)
+        hSizer.Add(self.columnchoice, 0, wx.RIGHT, 5)
+        hSizer.Add(self.columnbackgroundcolour)
+        flexgridcolumn.Add(hSizer)
 
         label = wx.StaticText(self.leftpanel, -1, "Alignment")
         label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
@@ -1359,6 +1375,10 @@ class HyperTreeListDemo(wx.Frame):
         panelsizer.Add(self.tree, 1, wx.EXPAND)
         panelsizer.Layout()
 
+        for col in range(self.tree.GetColumnCount()):
+            colColour = self.columnBackgroundColours[col]
+            self.ColourColumnItems(colColour, col)
+
         panelparent.Thaw()
 
 
@@ -1411,6 +1431,45 @@ class HyperTreeListDemo(wx.Frame):
 
         event.Skip()
 
+    def OnColumnChoiceChanged(self, event):
+
+        selectedColumn = self.columnchoice.GetCurrentSelection()
+
+        if  selectedColumn in range(3):
+            colour = self.columnBackgroundColours[selectedColumn]
+            self.columnbackgroundcolour.SetValue(colour)
+
+    def ColourColumnItems(self, colour, col):
+
+        def ColourItems(item,colour,col):
+
+            next = item
+
+            while next != None:
+
+                self.tree.SetItemBackgroundColour(next, colour, col)
+
+                cookie=0
+                child, cockie = self.tree.GetNextChild(next, cookie)
+
+                while child != None:
+                    ColourItems(child, colour, col)
+                    child, cookie = self.tree.GetNextChild(next, cookie)
+
+                next = self.tree.GetNextSibling(next)
+
+        root = self.tree.GetRootItem()
+        ColourItems(root, colour, col)
+
+    def OnColumnBackgroundColour(self, event):
+
+        columnBackgroundColour = event.GetValue()
+        selectedColumn = self.columnchoice.GetCurrentSelection()
+        self.columnBackgroundColours[selectedColumn] = columnBackgroundColour
+        
+        self.ColourColumnItems(columnBackgroundColour, selectedColumn)
+
+        event.Skip()
 
     def OnColumnAlignment(self, event):
 
