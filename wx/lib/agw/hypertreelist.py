@@ -2974,10 +2974,9 @@ class TreeListMainWindow(CustomTreeCtrl):
             # except for custom item backgrounds, works for both kinds of theme.
             elif drawItemBackground:
 
-                itemrect = wx.Rect(0, item.GetY() + off_h, total_w-1, total_h - off_h)
-                dc.SetBrush(wx.Brush(colBg))
-                dc.DrawRectangle(itemrect)
-                dc.SetTextForeground(colText)
+                pass
+                # We have to colour the item background for each column separately
+                # So it is better to move this functionality in the subsequent for loop.
 
             else:
                 dc.SetTextForeground(colText)
@@ -3109,6 +3108,22 @@ class TreeListMainWindow(CustomTreeCtrl):
                         dc.DrawRectangle(itemrect)
 
                     dc.SetTextForeground(colText)
+
+            else:
+
+                if not item.IsSelected():
+            
+                    if self.HasAGWFlag(TR_FILL_WHOLE_COLUMN_BACKGROUND):
+                        itemrect = wx.Rect(text_x-2, item.GetY() + off_h, col_w-2*_MARGIN, total_h - off_h)
+                    else:
+                        itemrect = wx.Rect(text_x-2, item.GetY() + off_h, text_w+2*_MARGIN, total_h - off_h)
+                    colBgX = item.GetBackgroundColour(i)
+
+                    if colBgX != None:
+                        dc.SetBrush(wx.Brush(colBgX, wx.SOLID))
+                        dc.SetPen(wx.TRANSPARENT_PEN)
+                        dc.DrawRectangle(itemrect)
+
 
             if self.HasAGWFlag(TR_COLUMN_LINES):  # vertical lines between columns
                 pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.PENSTYLE_SOLID)
