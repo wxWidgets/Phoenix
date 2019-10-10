@@ -2974,12 +2974,9 @@ class TreeListMainWindow(CustomTreeCtrl):
             # except for custom item backgrounds, works for both kinds of theme.
             elif drawItemBackground:
 
-                """
-                itemrect = wx.Rect(0, item.GetY() + off_h, total_w-1, total_h - off_h)
-                dc.SetBrush(wx.Brush(colBg))
-                dc.DrawRectangle(itemrect)
-                dc.SetTextForeground(colText)
-                """
+                pass
+                # We have to colour the item background for each column separately
+                # So it is better to move this functionality in the subsequent for loop.
 
             else:
                 dc.SetTextForeground(colText)
