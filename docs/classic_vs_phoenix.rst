@@ -745,7 +745,7 @@ wx.animate.Animation                                         :mod:`wx.adv.Animat
 wx.animate.AnimationCtrl                                     :mod:`wx.adv.AnimationCtrl`
 wx.combo.OwnerDrawnComboBox                                  :mod:`wx.adv.OwnerDrawnComboBox`
 wx.gizmos.EditableListBox                                    :mod:`wx.adv.EditableListBox`
-wx.gizmos.TreeListCtrl                                       :mod:`wx.dataview.TreeListCtrl`
+wx.gizmos.TreeListCtrl                                       :mod:`wx.lib.gizmos.TreeListCtrl`
 wx.AboutBox                                                  :meth:`wx.adv.AboutBox`
 wx.AboutDialogInfo                                           :mod:`wx.adv.AboutDialogInfo`
 wx.DatePickerCtrl                                            :mod:`wx.adv.DatePickerCtrl`
