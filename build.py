@@ -82,8 +82,8 @@ baseName = version.PROJECT_NAME
 eggInfoName = baseName + '.egg-info'
 defaultMask='%s-%s*' % (baseName, version.VER_MAJOR)
 
-pyICON = 'docs/sphinx/_static/images/sphinxdocs/phoenix_title.png'
-wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
+pyICON = 'packaging/docset/Vippi-blocks-icon-32.png'
+wxICON = 'packaging/docset/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
@@ -967,8 +967,6 @@ def cmd_doxhtml(options, args):
     _doDox('chm')
 
 
-# NOTE: Because of the use of defaults and plutil the following docset
-# commands will only work correctly on OSX.
 def cmd_docset_wx(options, args):
     cmdTimer = CommandTimer('docset_wx')
     cfg = Config()
@@ -987,32 +985,72 @@ def cmd_docset_wx(options, args):
         shutil.rmtree(destname)
     shutil.move(srcname, destname)
     shutil.copyfile(wxICON, posixjoin(destname, 'icon.png'))
-    runcmd('plutil -convert xml1 {}/Contents/Info.plist'.format(destname))
 
 
 def cmd_docset_py(options, args):
     cmdTimer = CommandTimer('docset_py')
+    cfg = Config(noWxConfig=True)
     if not os.path.isdir('docs/html'):
-        msg('ERROR: No docs/html, has the sphinx build command been run?')
+        msg('ERROR: No docs/html dir found, has the sphinx build command been run?')
         sys.exit(1)
 
     # clear out any old docset build
-    name = 'wxPython-{}'.format(version3)
+    name = 'wxPython-{}'.format(cfg.VERSION)
     docset = posixjoin('dist', '{}.docset'.format(name))
     if os.path.isdir(docset):
         shutil.rmtree(docset)
 
     # run the docset generator
     VERBOSE = '--verbose' if options.verbose else ''
-    runcmd('doc2dash {} --name "{}" --icon {} --destination dist docs/html'
-           .format(VERBOSE, name, pyICON))
+    URL = 'https://docs.wxpython.org/' if options.release else 'https://wxpython.org/Phoenix/docs/html/'
 
-    # update its Info.plist file
-    docset = os.path.abspath(docset)
-    runcmd('defaults write {}/Contents/Info isJavaScriptEnabled true'.format(docset))
-    runcmd('defaults write {}/Contents/Info dashIndexFilePath index.html'.format(docset))
-    runcmd('defaults write {}/Contents/Info DocSetPlatformFamily wxpy'.format(docset))
-    runcmd('plutil -convert xml1 {}/Contents/Info.plist'.format(docset))
+    cmd = [PYTHON, '-m doc2dash', VERBOSE,
+           '--name', name, '--icon', pyICON,
+           '--index-page index.html', '--enable-js',
+           '--online-redirect-url', URL,
+           '--destination dist docs/html']
+    runcmd(' '.join(cmd))
+
+    # Remove the sidebar from the pages in the docset
+    msg('Removing sidebar from docset pages...')
+    _removeSidebar(opj('dist', name+'.docset', 'Contents', 'Resources', 'Documents'))
+
+    # build the tarball
+    msg('Archiving Phoenix docset...')
+    rootname = "wxPython-docset-{}".format(cfg.VERSION)
+    tarfilename = "dist/{}.tar.gz".format(rootname)
+    if os.path.exists(tarfilename):
+        os.remove(tarfilename)
+    tarball = tarfile.open(name=tarfilename, mode="w:gz")
+    tarball.add(opj('dist', name+'.docset'), name+'.docset', filter=_setTarItemPerms)
+    tarball.close()
+
+    if options.upload:
+        uploadPackage(tarfilename, options)
+
+    msg("Docset file built at %s" % tarfilename)
+
+
+
+def _removeSidebar(path):
+    """
+    Remove the sidebar <div> from the pages going into the docset
+    """
+    from bs4 import BeautifulSoup
+    for filename in glob.glob(opj(path, '*.html')):
+        with textfile_open(filename, 'rt') as f:
+            text = f.read()
+        text = text.replace('<script src="_static/javascript/sidebar.js" type="text/javascript"></script>', '')
+        soup = BeautifulSoup(text, 'html.parser')
+        tag = soup.find('div', 'sphinxsidebar')
+        if tag:
+            tag.extract()
+        tag = soup.find('div', 'document')
+        if tag:
+            tag.attrs['class'] = ['document-no-sidebar']
+        text = unicode(soup) if PY2 else str(soup)
+        with textfile_open(filename, 'wt') as f:
+            f.write(text)
 
 
 def cmd_docset(options, args):

@@ -4,7 +4,6 @@ appdirs
 setuptools
 wheel
 twine
-sphinx==1.4.5
 requests
 requests[security]
 cython
@@ -12,3 +11,8 @@ pytest
 pytest-xdist
 pytest-forked
 pytest-timeout
+
+sphinx==2.2.0 ; python_version >= '3.0'
+sphinx==1.8.5 ; python_version < '3.0'
+doc2dash==2.3.0
+beautifulsoup4
