@@ -9,6 +9,7 @@
 #---------------------------------------------------------------------------
 
 # Standard library imports
+import sys
 import os
 import re
 import glob
@@ -23,6 +24,9 @@ from .utilities import wx2Sphinx, PickleFile
 from .constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
 from .constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
 from .constants import DOCSTRING_KEY
+
+PY2 = sys.version_info[0] == 2
+PY3 = sys.version_info[0] == 3
 
 # ----------------------------------------------------------------------- #
 
@@ -56,6 +60,9 @@ def makeHeadings():
         rel_path = os.path.normpath(rel_path).replace('\\', '/')
         text += templates.TEMPLATE_HEADINGS % (name, rel_path, width)
 
+    # Add custom roles
+    text += "\n.. role:: html(raw)\n    :format: html\n\n"
+
     writeIfChanged(heading_file, text)
 
 # ----------------------------------------------------------------------- #
@@ -68,7 +75,7 @@ def genIndexes(sphinxDir):
     main class index and some clean-up/maintenance of the generated ReST
     files.
     """
-
+    print("Generating indexes...")
     pklfiles = glob.glob(sphinxDir + '/*.pkl')
 
     for file in pklfiles:
@@ -519,6 +526,7 @@ def makeModuleIndex(sphinxDir, file):
 # ----------------------------------------------------------------------- #
 
 def genGallery():
+    print("Generating gallery...")
 
     link = '<div class="gallery_class">'
 
@@ -659,7 +667,6 @@ def addJavaScript(text):
 # ----------------------------------------------------------------------- #
 
 def postProcess(folder, options):
-
     fileNames = glob.glob(folder + "/*.html")
 
     enum_files = glob.glob(folder + '/*.enumeration.html')
@@ -676,59 +683,43 @@ def postProcess(folder, options):
         new = '(<a class="reference internal" href="%s" title="%s"><em>%s</em></a>)'%(html_file, base, base)
         enum_dict['(<em>%s</em>)'%enum] = new
 
-    for files in fileNames:
-
-        if "genindex" in files or "modindex" in files:
+    for filename in fileNames:
+        if "genindex" in filename or "modindex" in filename:
             continue
 
         methods_done = properties_done = False
 
-        fid = open(files, "rt")
-        orig_text = text = fid.read()
-        fid.close()
+        with textfile_open(filename, "rt") as fid:
+            orig_text = text = fid.read()
 
-        split = os.path.split(files)[1]
-
-        if split == 'index.html':
-            text = changeWelcomeText(text, options)
-        else:
-            text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
-
-        text = text.replace('&#8211; <p>', '&#8211; ')
-        text = text.replace('<p><img alt="overload"', '<br><p><img alt="overload"')
-        text = text.replace('<strong>Overloaded Implementations</strong>', '<em><strong>Overloaded Implementations</strong></em>')
-        text = text.replace('<strong>~~~</strong></p>', '<hr style="color:#0000FF;background-color:#0000FF;height:1px;border:none;width:50%;float:left" /></p><br>')
-
-        text = text.replace('<p><img alt="contributed"', '<br><p><img alt="contributed"')
-
+        text = text.replace('Overloaded Implementations:', '<strong>Overloaded Implementations:</strong>')
         for item in HTML_REPLACE:
-            text = text.replace('<dl class="%s">'%item, '<br><hr />\n<dl class="%s">'%item)
+            if item != 'class':
+                text = text.replace('<dl class="%s">'%item, '\n<br><hr />\n<dl class="%s">'%item)
 
         newtext = ''
         splitted_text = text.splitlines()
         len_split = len(splitted_text)
 
         for index, line in enumerate(splitted_text):
-            if '<div class="admonition-availability admonition' in line:
-                line = '<div class="admonition-availability admonition availability">'
-
             if index < len_split - 1:
+                if '– <p>' in line and '</p>' in line:
+                    line = line.replace('– <p>', '– ')
+                    line = line.replace('</p>', '')
 
                 if line.strip() == '<br><hr />' or line.strip() == '<dd><br><hr />':
                     next_line = splitted_text[index+1]
                     stripline = next_line.strip()
 
+                    # repalce the <hr> with a new headline for the first method or first property
                     if (stripline == '<dl class="staticmethod">' or stripline == '<dl class="method">' \
                        or stripline == '<dl class="classmethod">') and not methods_done:
-                        line = '<br><h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>' + '\n' + line
+                        line = '\n<br><h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>\n'
                         methods_done = True
 
                     elif stripline == '<dl class="attribute">' and not properties_done:
-                        line = '<br><h3>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>' + '\n' + line
+                        line = '\n<br><h3>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>\n'
                         properties_done = True
-
-            if '<em>  ' in line and '&#8211;' in line:
-                line = line.replace('<em>  ', '<em>')
 
             newtext += line + '\n'
 
@@ -737,10 +728,15 @@ def postProcess(folder, options):
 
         newtext = addJavaScript(newtext)
 
+        basename = os.path.split(filename)[1]
+        if basename == 'index.html':
+            newtext = changeWelcomeText(newtext, options)
+        else:
+            newtext = removeHeaderImage(newtext, options)
+
         if orig_text != newtext:
-            fid = open(files, "wt")
-            fid.write(newtext)
-            fid.close()
+            with textfile_open(filename, "wt") as fid:
+                fid.write(newtext)
 
 
 # ----------------------------------------------------------------------- #
@@ -766,6 +762,15 @@ def changeWelcomeText(text, options):
     return text
 
 
+def removeHeaderImage(text, options):
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(text, 'html.parser')
+    tag = soup.find('div', 'headerimage')
+    if tag:
+        tag.extract()
+        text = unicode(soup) if PY2 else str(soup)
+    #text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
+    return text
 
 
 def tooltipsOnInheritance(text, class_summary):

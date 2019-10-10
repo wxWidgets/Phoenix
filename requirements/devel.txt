@@ -4,8 +4,12 @@ appdirs
 setuptools
 wheel
 twine
-sphinx
 requests
 pytest
 pytest-xdist
 pytest-timeout
+
+sphinx==2.2.0 ; python_version >= '3.0'
+sphinx==1.8.5 ; python_version < '3.0'
+doc2dash==2.3.0
+beautifulsoup4
