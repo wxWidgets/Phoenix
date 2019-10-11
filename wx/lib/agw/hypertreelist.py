@@ -2894,10 +2894,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         colText = wx.Colour(*dc.GetTextForeground())
 
         if item.IsSelected():
-            if (wx.Platform == "__WXMAC__" and self._hasFocus):
-                colTextHilight = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
-            else:
-                colTextHilight = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
+            colTextHilight = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
 
         else:
             attr = item.GetAttributes()
@@ -3112,7 +3109,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             else:
 
                 if not item.IsSelected():
-            
+
                     if self.HasAGWFlag(TR_FILL_WHOLE_COLUMN_BACKGROUND):
                         itemrect = wx.Rect(text_x-2, item.GetY() + off_h, col_w-2*_MARGIN, total_h - off_h)
                     else:
@@ -3179,7 +3176,10 @@ class TreeListMainWindow(CustomTreeCtrl):
                 _paintText(text, textrect, alignment)
                 dc.SetTextForeground(foreground)
             else:
-                if wx.Platform == "__WXMAC__" and item.IsSelected() and self._hasFocus:
+                if ( wx.Platform == "__WXMAC__" and item.IsSelected() and
+                     self._hasFocus and i == self.GetMainColumn()) :
+                    # Use white on Macs, but only on the primary column if
+                    # TR_FULL_ROW_HIGHLIGHT is NOT turned on.
                     dc.SetTextForeground(wx.WHITE)
                 _paintText(text, textrect, alignment)
 
