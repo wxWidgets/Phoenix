@@ -438,7 +438,10 @@ def run():
                     called.  This can be overridden in derived classes, but be sure to call
                     this method from there.
                     """,
-                body="wx.StockGDI._initStockObjects()"),
+                body="""\
+                    wx.StockGDI._initStockObjects()
+                    self.InitLocale()
+                    """),
 
             PyFunctionDef('__del__', '(self)',
                 doc="",
@@ -500,6 +503,23 @@ def run():
                             self.stdioWin.pos = pos
                         if size is not None:
                             self.stdioWin.size = size
+                    """),
+
+            PyFunctionDef('InitLocale', '(self)',
+                doc="""\
+                    Try to ensure that the C and Python locale is in sync with wxWidgets locale.
+                    """,
+                body="""\
+                    import locale
+                    self._initial_locale = None
+                    loc, enc = locale.getlocale()
+                    # Try to set it to the same language as what is already set in the C locale
+                    info = wx.Locale.FindLanguageInfo(loc) if loc is not None else None
+                    if info:
+                        self._initial_locale = wx.Locale(info.Language)
+                    else:
+                        # fallback to the system default
+                        self._initial_locale = wx.Locale(wx.LANGUAGE_DEFAULT)
                     """),
 
             PyFunctionDef('Get', '()', isStatic=True,
