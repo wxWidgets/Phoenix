@@ -514,11 +514,11 @@ def run():
                     self._initial_locale = None
                     loc, enc = locale.getlocale()
                     # Try to set it to the same language as what is already set in the C locale
-                    info = wx.Locale.FindLanguageInfo(loc) if loc is not None else None
+                    info = wx.Locale.FindLanguageInfo(loc) if loc else None
                     if info:
                         self._initial_locale = wx.Locale(info.Language)
                     else:
-                        # fallback to the system default
+                        # otherwise fall back to the system default
                         self._initial_locale = wx.Locale(wx.LANGUAGE_DEFAULT)
                     """),
 
