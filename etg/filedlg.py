@@ -38,15 +38,17 @@ def run():
     module.find('wxFileSelectorDefaultWildcardStr').ignore()
 
     c.find('ExtraControlCreatorFunction').ignore()
-    c.find('SetExtraControlCreator').ignore()
 
-    c.addHeaderCode("""\
-        wxWindow* _callPythonExtraControlCreator(wxWindow* w)
+    c.addCppCode("""\
+        #define ECCF_ATTR_NAME "_wxExtraControlCreatorFunction"
+        static
+        wxWindow* wxFileDialog_CallPythonExtraControlCreator(wxWindow* w)
         {
             wxPyThreadBlocker blocker;
             wxWindow* cw = NULL;
             PyObject* pyw = sipGetPyObject(w, sipType_wxWindow);
-            PyObject* ccf = PyObject_GetAttrString(pyw, "_wxExtraControlCreatorFunction");
+
+            PyObject* ccf = PyObject_GetAttrString(pyw, ECCF_ATTR_NAME);
             if (ccf == NULL)
                 PyErr_SetString(PyExc_RuntimeError,
                                 "extra control creator function disappeared");
@@ -73,27 +75,31 @@ def run():
         }
         """)
 
-    c.addCppMethod('bool', 'SetExtraControlCreator', '(PyObject* ccf)',
-        doc="""\
-        Set extra control creator function to be called during dialog creation""",
-        body="""\
-        bool status = true;
-        {
-            wxPyThreadBlocker blocker;
-            PyObject* pySelf = sipGetPyObject(self, sipType_wxWindow);
-            if (pySelf == NULL) {
-                PyErr_SetString(PyExc_ValueError, "expecting wxWindow object");
-                status = false;
-            }
-            else if (!PyCallable_Check(ccf)) {
-                PyErr_SetString(PyExc_ValueError, "expecting function or callable object");
-                status = false;
-            }
-            else if (PyObject_SetAttrString(pySelf, "_wxExtraControlCreatorFunction", ccf) < 0)
-                status = false;
-            else
-                self->SetExtraControlCreator(_callPythonExtraControlCreator);
+# NOTE: The creator function may be called with a window other than this dialog
+# (at least on Windows) So we will need a new way to store and find the PyObject
+# for the creator function.
+
+    secc = c.find('SetExtraControlCreator')
+    secc.find('creator').type = 'PyObject*'
+    secc.argsString = '(PyObject* creator)'
+    secc.setCppCode("""\
+        bool status;
+        wxPyThreadBlocker blocker;
+        PyObject* pySelf = sipGetPyObject(self, sipType_wxFileDialog);
+
+        if (pySelf == NULL) {
+            // This should not ever happen, but just in case...
+            PyErr_SetString(PyExc_ValueError, "expecting wxFileDialog object");
+            status = false;
         }
+        else if (!PyCallable_Check(creator)) {
+            PyErr_SetString(PyExc_ValueError, "expecting function or callable object");
+            status = false;
+        }
+        else if (PyObject_SetAttrString(pySelf, ECCF_ATTR_NAME, creator) != 0)
+            status = false;
+        else
+            status = self->SetExtraControlCreator(wxFileDialog_CallPythonExtraControlCreator);
         return status;
         """)
 
