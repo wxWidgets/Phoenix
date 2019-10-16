@@ -510,8 +510,8 @@ def run():
                     Try to ensure that the C and Python locale is in sync with wxWidgets locale.
                     """,
                 body="""\
+                    self.ResetLocale()
                     import locale
-                    self._initial_locale = None
                     loc, enc = locale.getlocale()
                     # Try to set it to the same language as what is already set in the C locale
                     info = wx.Locale.FindLanguageInfo(loc) if loc else None
@@ -522,6 +522,15 @@ def run():
                         self._initial_locale = wx.Locale(wx.LANGUAGE_DEFAULT)
                     """),
 
+            PyFunctionDef('ResetLocale', '(self)',
+                doc="""\
+                    Release the wx.Locale object created in :meth:`InitLocale`.
+                    This will reset the application's locale to the previous settings.
+                    """,
+                body="""\
+                    self._initial_locale = None
+                    """),
+
             PyFunctionDef('Get', '()', isStatic=True,
                 doc="""\
                     A staticmethod returning the currently active application object.
@@ -529,7 +538,6 @@ def run():
                 body="return GetApp()"
                 )
             ])
-
 
 
 
