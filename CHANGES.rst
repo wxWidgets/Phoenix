@@ -39,6 +39,10 @@ This release provides the following fixes:
   maintaining its own pointer. This way, if the wxApp is created by C++ code
   wxPython will still be able to get access to it. (#1126)
   
+* Several other PRs have been backported from the master branch (which will 
+  become wxPython 4.1.0), the full list can be seen here: 
+  https://github.com/wxWidgets/Phoenix/pull/1357
+
 
 
 4.0.6 "Applesauce"
