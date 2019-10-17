@@ -4655,7 +4655,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         if item not in siblings:
             # Item is unlinked from tree
             return None
-        
+
         index = siblings.index(item)
         n = index + 1
         return (n == len(siblings) and [None] or [siblings[n]])[0]
@@ -7354,7 +7354,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             top = self.GetRootItem()
             if self.HasAGWFlag(TR_HIDE_ROOT):
                 top, cookie = self.GetFirstChild(top)
-                
+
             lastEnabled = None
             while top:
                 # Keep track of last enabled item encountered.
@@ -7372,11 +7372,11 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             top = self.GetRootItem()
             if self.HasAGWFlag(TR_HIDE_ROOT):
                 top, cookie = self.GetFirstChild(top)
-                
+
             # Scan for first enabled and displayed item.
             while top and self.IsItemEnabled(top) is False:
                 top = self.GetNextShown(top)
-                
+
             if top:
                 self.DoSelectItem(top, unselect_others, extended_select, from_key=True)
 
@@ -7411,7 +7411,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                     else:
                         if visCount > 1 and targetItem != currentItem:
                             # Move to top visible item in page.
-                            break   
+                            break
                         visCount = 0
                 # Move up to previous item, set as target if it is enabled.
                 if prevItem.IsEnabled():
@@ -7420,7 +7420,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                 # Break loop if we moved up a page size and have a new target.
                 if amount > pageSize and targetItem != currentItem:
                     break
-                prevItem = self.GetPrevShown(prevItem)                
+                prevItem = self.GetPrevShown(prevItem)
             # If we found a valid target, select it.
             if targetItem != currentItem:
                 self.DoSelectItem(targetItem, unselect_others=True,
@@ -7460,7 +7460,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                     else:
                         if visCount > 1 and targetItem != currentItem:
                             # Move to last visible item in page.
-                            break   
+                            break
                         visCount = 0
                 # Move down to next item, set as target if it is enabled.
                 if nextItem.IsEnabled():
@@ -7508,13 +7508,13 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             else:
 
                 event.Skip()
-                
+
 
     def GetPrevShown(self, item):
         """
         Returns the previous displayed item in the tree. This is either the
         last displayed child of its previous sibling, or its parent item.
-        
+
         :param `item`: an instance of :class:`GenericTreeItem`;
 
         :return: An instance of :class:`GenericTreeItem` or ``None`` if no previous item found (root).
@@ -7534,7 +7534,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         if prev == self.GetRootItem() and self.HasAGWFlag(TR_HIDE_ROOT):
             return None
         return prev
-    
+
 
     def GetNextShown(self, item):
         """
@@ -7565,7 +7565,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         # Return the next item.
         return next
 
-    
+
     def GetNextActiveItem(self, item, down=True):
         """
         Returns the next active item. Used Internally at present.
@@ -8349,7 +8349,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             wndx, wndy = wnd.GetPosition()
             if wndy != ya:
                 wnd.Move(wndx, ya, flags=wx.SIZE_ALLOW_MINUS_ONE)
-        
+
         y += height
 
         if not item.IsExpanded():

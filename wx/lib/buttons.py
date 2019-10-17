@@ -172,7 +172,11 @@ class GenButton(wx.Control):
         self.SetLabel(label)
         self.InheritAttributes()
         self.SetInitialSize(size)
-        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE))
+        face = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE)
+        if 'wxMac' in wx.PlatformInfo and face.alpha == 0:
+            face = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT)
+            assert face.alpha != 0, "a different default system colour is needed!"
+        self.SetBackgroundColour(face)
 
         self.Bind(wx.EVT_LEFT_DOWN,          self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP,            self.OnLeftUp)

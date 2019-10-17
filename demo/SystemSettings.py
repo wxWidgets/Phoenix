@@ -147,6 +147,9 @@ class SysColorPanel(SysPanelBase):
             nextx += self._maxw + 8
             dc.DrawRectangle(nextx, nexty, self._box[0], self._box[1])
 
+            nextx += self._box[0] + 12
+            dc.DrawText('{}'.format(syscolor.Get()), nextx, nexty)
+
             nextx = 10
             nexty += 20
 
