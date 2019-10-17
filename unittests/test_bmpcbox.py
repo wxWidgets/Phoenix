@@ -14,6 +14,7 @@ imgFiles = [os.path.join(os.path.dirname(__file__), 'LB01.png'),
 
 class bmpcbox_Tests(wtc.WidgetTestCase):
 
+    @unittest.skipIf('wxMac' in wx.PlatformInfo, 'Needs a real MainLoop on wxMac')
     def test_bmpcbox1(self):
         pnl = wx.Panel(self.frame)
 
@@ -34,6 +35,7 @@ class bmpcbox_Tests(wtc.WidgetTestCase):
         self.waitFor(300)
 
 
+    @unittest.skipIf('wxMac' in wx.PlatformInfo, 'Needs a real MainLoop on wxMac')
     def test_bmpcbox2(self):
         pnl = wx.Panel(self.frame)
 

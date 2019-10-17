@@ -112,6 +112,7 @@ class BitmapTests(wtc.WidgetTestCase):
         wx.BitmapBufferFormat_RGB32
         wx.BitmapBufferFormat_ARGB32
 
+    @unittest.skipIf('wxMac' in wx.PlatformInfo, 'Changing exiting bitmap size not allowed on wxMac')
     def test_bitmapSetSize(self):
         b1 = wx.Bitmap(1,1)
         b1.SetSize((20,30))
