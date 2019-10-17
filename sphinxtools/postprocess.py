@@ -261,13 +261,6 @@ def findInherited(input, class_summary, enum_base, text):
             text = text.replace(regs, newtext, 1)
             continue
 
-
-##        elif meth_name in enum_base:
-##            newtext = ':ref:`%s`'%meth_name
-##            text = text.replace(regs, newtext, 1)
-##            continue
-
-
         if meth_name in CONSTANT_INSTANCES:
             text = text.replace(regs, '``%s``'%meth_name, 1)
             continue
@@ -733,6 +726,8 @@ def postProcess(folder, options):
             newtext = changeWelcomeText(newtext, options)
         else:
             newtext = removeHeaderImage(newtext, options)
+        if '1moduleindex' in basename:
+            newtext = tweakModuleIndex(newtext)
 
         if orig_text != newtext:
             with textfile_open(filename, "wt") as fid:
@@ -769,8 +764,18 @@ def removeHeaderImage(text, options):
     if tag:
         tag.extract()
         text = unicode(soup) if PY2 else str(soup)
-    #text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
     return text
+
+
+def tweakModuleIndex(text):
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(text, 'html.parser')
+    for tag in soup.findAll('a'):
+        # Chop off the #anchor if it is identical to the basname of the doc
+        href = tag['href'].split('.html#')
+        if len(href) == 2 and href[0] == href[1]:
+            tag['href'] = href[0] + '.html'
+    return unicode(soup) if PY2 else str(soup)
 
 
 def tooltipsOnInheritance(text, class_summary):
