@@ -932,7 +932,8 @@ def SearchDemo(name, keyword):
     fullText = fid.read()
     fid.close()
 
-    fullText = fullText.decode("iso-8859-1")
+    if six.PY2:
+        fullText = fullText.decode("iso-8859-1")
 
     if fullText.find(keyword) >= 0:
         return True
