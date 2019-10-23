@@ -55,7 +55,6 @@ def run():
     c.find('OnInitCmdLine').ignore()
 
     c.find('HandleEvent').ignore()
-    c.find('UsesEventLoop').ignore()
 
     # We will use OnAssertFailure, but I don't think we should let it be
     # overridden in Python.
