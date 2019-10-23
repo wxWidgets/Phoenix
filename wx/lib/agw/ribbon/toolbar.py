@@ -110,31 +110,7 @@ class RibbonToolBarEvent(wx.PyCommandEvent):
          the window.
         """
 
-        pos = wx.Point()
-
-        if self._bar._active_tool:
-            # Find the group which contains the tool
-            group_count = len(self._bar._groups)
-            tobreak = False
-
-            for g in range(group_count):
-                group = self._bar._groups[g]
-                tool_count = len(group.tools)
-
-                for t in range(tool_count):
-                    tool = group.tools[t]
-                    if tool == self._bar._active_tool:
-                        pos = wx.Point(*group.position)
-                        pos += tool.position
-                        pos.y += tool.size.GetHeight()
-                        g = group_count
-                        tobreak = True
-                        break
-
-                if tobreak:
-                    break
-
-        return self._bar.PopupMenu(menu, pos)
+        return self._bar.PopupMenu(menu)
 
 
 class RibbonToolBarToolBase(object):
