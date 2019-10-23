@@ -71,12 +71,12 @@ class WebViewPanel(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.OnOpenButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
 
-        btn = wx.Button(self, -1, "⬅︎", style=wx.BU_EXACTFIT)
+        btn = wx.Button(self, -1, "◀︎", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnPrevPageButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
         self.Bind(wx.EVT_UPDATE_UI, self.OnCheckCanGoBack, btn)
 
-        btn = wx.Button(self, -1, "➡︎", style=wx.BU_EXACTFIT)
+        btn = wx.Button(self, -1, "▶︎", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnNextPageButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
         self.Bind(wx.EVT_UPDATE_UI, self.OnCheckCanGoForward, btn)
