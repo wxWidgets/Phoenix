@@ -974,27 +974,9 @@ class AuiDefaultTabArt(object):
 
             menuPopup.Check(1000+active_idx, True)
 
-        # find out the screen coordinate at the bottom of the tab ctrl
-        cli_rect = wnd.GetClientRect()
-
-        # Calculate the approximate size of the popupmenu for setting the
-        # position of the menu when its shown.
-        # Account for extra padding on left/right of text on mac menus
-        if wx.Platform in ['__WXMAC__', '__WXMSW__']:
-            longest += 32
-
-        # Bitmap/Checkmark width + padding
-        longest += 20
-
-        if self.GetAGWFlags() & AUI_NB_CLOSE_BUTTON:
-            longest += 16
-
-        pt = wx.Point(cli_rect.x + cli_rect.GetWidth() - longest,
-                     cli_rect.y + cli_rect.height)
-
         cc = AuiCommandCapture()
         wnd.PushEventHandler(cc)
-        wnd.PopupMenu(menuPopup, pt)
+        wnd.PopupMenu(menuPopup)
         command = cc.GetCommandId()
         wnd.PopEventHandler(True)
 
@@ -1507,24 +1489,9 @@ class AuiSimpleTabArt(object):
         if active_idx != -1 and not useImages:
             menuPopup.Check(1000+active_idx, True)
 
-        # find out where to put the popup menu of window
-        # items.  Subtract 100 for now to center the menu
-        # a bit, until a better mechanism can be implemented
-        pt = wx.GetMousePosition()
-        pt = wnd.ScreenToClient(pt)
-
-        if pt.x < 100:
-            pt.x = 0
-        else:
-            pt.x -= 100
-
-        # find out the screen coordinate at the bottom of the tab ctrl
-        cli_rect = wnd.GetClientRect()
-        pt.y = cli_rect.y + cli_rect.height
-
         cc = AuiCommandCapture()
         wnd.PushEventHandler(cc)
-        wnd.PopupMenu(menuPopup, pt)
+        wnd.PopupMenu(menuPopup)
         command = cc.GetCommandId()
         wnd.PopEventHandler(True)
 
