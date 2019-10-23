@@ -158,8 +158,7 @@ class DoodleWindow(wx.Window):
 
     def OnRightUp(self, event):
         """called when the right mouse button is released, will popup the menu"""
-        pt = event.GetPosition()
-        self.PopupMenu(self.menu, pt)
+        self.PopupMenu(self.menu)
 
 
 
