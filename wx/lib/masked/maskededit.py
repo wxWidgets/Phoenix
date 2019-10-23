@@ -6338,7 +6338,7 @@ class MaskedEditMixin:
         wx.EVT_UPDATE_UI(self, wx.ID_UNDO, self._UndoUpdateUI)
         self._contextMenu = menu
 
-        self.PopupMenu(menu, event.GetPosition())
+        self.PopupMenu(menu)
         menu.Destroy()
         self._contextMenu = None
 ##        dbg(indent=0)
