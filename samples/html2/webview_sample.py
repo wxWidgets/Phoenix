@@ -47,6 +47,12 @@ class WebViewPanel(wx.Panel):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         btnSizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        # Ensure that a newer version of the IE/Edge control will be used
+        #  on Windows
+        webview.WebView.MSWSetEmulationLevel()
+
+        # Create the webView control
         self.wv = webview.WebView.New(self)
 
         # Register a handler for the memory: file system
