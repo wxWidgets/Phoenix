@@ -96,7 +96,6 @@ protected:
                 o = bufsize;
             memcpy((char*)buffer, PyBytes_AsString(result), o);  // strings only, not unicode...
             Py_DECREF(result);
-
         }
         else
             m_lasterror = wxSTREAM_READ_ERROR;
