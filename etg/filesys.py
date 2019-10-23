@@ -68,8 +68,6 @@ def run():
     c = module.find('wxFSFile')
     c.addPrivateCopyCtor()
     c.find('wxFSFile.stream').keepReference = True
-    #c.find('wxFSFile.stream').transfer = True
-    #c.find('DetachStream').transferBack = True
 
     c = module.find('wxFilterFSHandler')
     _fixHandlerClass(c)
