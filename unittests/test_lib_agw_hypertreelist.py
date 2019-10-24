@@ -71,12 +71,53 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
         HTL.TR_TWIST_BUTTONS
         HTL.TR_VIRTUAL
         HTL.TREE_HITTEST_ONITEMCHECKICON
+        HTL.TR_FILL_WHOLE_COLUMN_BACKGROUND
 
     def test_lib_agw_hypertreelistEvents(self):
         HTL.EVT_TREE_ITEM_CHECKED
         HTL.EVT_TREE_ITEM_CHECKING
         HTL.EVT_TREE_ITEM_HYPERLINK
 
+    def test_lib_agw_hypertreelistSetItemColour(self):
+        tree = HTL.HyperTreeList(self.frame)
+        tree.AddColumn("First column")
+        root = tree.AddRoot('root item')
+        child = tree.AppendItem(root, 'child item')
+        
+        self.assertEqual(None, tree.GetItemBackgroundColour(root))
+        
+        colour = wx.RED
+        tree.SetItemBackgroundColour(child, colour)
+        self.assertEqual(colour, tree.GetItemBackgroundColour(child))
+
+    def test_lib_agw_hypertreelistSetItemColourOfColumns(self):
+        tree = HTL.HyperTreeList(self.frame)
+        tree.AddColumn("First column")
+        tree.AddColumn("Second column")
+        tree.AddColumn("Third column")
+        root = tree.AddRoot('root item')
+        child = tree.AppendItem(root, 'child item')
+
+        colColour0 = wx.GREEN
+        colColour2 = wx.RED
+        tree.SetItemBackgroundColour(child, colColour0)
+        tree.SetItemBackgroundColour(child, colColour2, column=2)
+
+        self.assertEqual(colColour2, tree.GetItemBackgroundColour(child, column=2))
+        self.assertNotEqual(tree.GetItemBackgroundColour(child),
+                         tree.GetItemBackgroundColour(child,column=2))
+        self.assertEqual(None, tree.GetItemBackgroundColour(child, column=1))
+
+    def test_lib_agw_hypertreelistColourWholeItemColumns(self):
+
+        tree = HTL.HyperTreeList(self.frame, agwStyle=HTL.TR_DEFAULT_STYLE|
+                                                      HTL.TR_FILL_WHOLE_COLUMN_BACKGROUND)
+        tree.AddColumn("First column")
+        tree.AddColumn("Second column")
+        root = tree.AddRoot('root item')
+            
+        tree.SetItemBackgroundColour(root, wx.RED)
+        tree.SetItemBackgroundColour(root, wx.GREEN, column=1)
 
 #---------------------------------------------------------------------------
 

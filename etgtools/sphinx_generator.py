@@ -1985,7 +1985,7 @@ class XMLDocString(object):
         if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, string_base):
             element = et.Element('deprecated', kind='deprecated')
             element.text = xml_item.deprecated
-            
+
             deprecated_section = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
             self.root.AddSection(deprecated_section)
 
@@ -2869,15 +2869,13 @@ class XMLDocString(object):
                 pickleItem(desc, self.current_module, self.class_name, 'class')
 
         if self.overloads:
-
             docstrings += '\n\n%s|overload| Overloaded Implementations:\n\n'%spacer
-            docstrings += '%s**~~~**\n\n'%spacer
+            docstrings += '%s:html:`<hr class="overloadsep" /><br />`\n\n'%spacer
 
             for index, over in enumerate(self.overloads):
                 for line in over.splitlines():
                     docstrings += spacer + line + '\n'
-
-                docstrings += '%s**~~~**\n\n'%spacer
+                docstrings += '%s:html:`<hr class="overloadsep" /><br />`\n\n'%spacer
 
         if '**Perl Note:**' in docstrings:
             index = docstrings.index('**Perl Note:**')

@@ -1,0 +1,40 @@
+#
+# Makefile for Unix
+#
+# This makefile requires a Unix version of wxWindows
+# to be installed on your system. This is most often
+# done typing "make install" when using the complete
+# sources of wxWindows or by installing the two
+# RPM packages wxGTK.XXX.rpm and wxGTK-devel.XXX.rpm
+# under Linux.
+#
+
+PYVER = 3.7
+# WX_CFG = ../../build/wxbld/wx-config
+WX_CFG = ../../build/wxbld/gtk3/wx-config
+
+PROGRAM = embedded
+OBJECTS = $(PROGRAM).o
+
+PYINC = $(shell python$(PYVER)-config --includes)
+WXINC = $(shell $(WX_CFG) --cppflags) $(shell $(WX_CFG) --cxxflags)
+EXTRAINC = -I../../src -I../../wx/include $(WXINC) $(PYINC)
+PYLD = $(shell python$(PYVER)-config --ldflags)
+WXLD = $(shell $(WX_CFG) --libs)
+EXTRALD = $(WXLD) $(PYLD)
+CXX = $(shell $(WX_CFG) --cxx)
+LD = $(shell $(WX_CFG) --ld)
+
+
+.SUFFIXES:	.o .cpp
+
+.cpp.o :
+	$(CXX) -c -g $(EXTRAINC) -o $@ $<
+
+all:    $(PROGRAM)
+
+$(PROGRAM):	$(OBJECTS)
+	$(LD) -g -o $(PROGRAM) $(OBJECTS) $(EXTRALD)
+
+clean:
+	rm -f *.o $(PROGRAM)

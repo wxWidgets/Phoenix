@@ -10,8 +10,13 @@
 import sys
 import os
 
-import buildtools.config
-cfg = buildtools.config.Config(True)
+try:
+    from textwrap import indent
+except ImportError:
+    from buildtools.backports.textwrap3 import indent
+
+from buildtools.config import Config, runcmd, msg
+cfg = Config(True)
 
 #-----------------------------------------------------------------------------
 # Options and configuration
@@ -79,7 +84,12 @@ def configure(conf):
             # On the other hand, microsoft says that v141 and v140 (Visual
             # Studio 2015) are binary compatible, so for now let's just drop
             # it back to "14.0" until I get all the details worked out for
-            # using VS 2017 everywhere for Python 3.7.
+            # using VS 2017 everywhere for Python 3.7+.
+            msvc_version = '14.0'
+
+        # In some cases (Azure DevOps at least) we're getting "14.1" for Python
+        # 3.6 too. Smash it down to '14.0'
+        if msvc_version == "14.1" and sys.version_info[:2] == (3,6):
             msvc_version = '14.0'
 
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
@@ -534,6 +544,12 @@ def build(bld):
 
     cfg.finishSetup(bld.env.wx_config)
 
+    if not isWindows:
+        cmd = ' '.join(bld.env.CC) + ' --version'
+        copmpiler = runcmd(cmd, getOutput=True, echoCmd=False)
+        copmpiler = indent(copmpiler, ' '*5)
+        msg("**** Compiler: {}\n{}".format(cmd, copmpiler))
+
     # Copy the license files from wxWidgets
     updateLicenseFiles(cfg)
 
@@ -561,6 +577,8 @@ def build(bld):
     for name in ['src/__init__.py', 'src/gizmos.py',]:
         copy_file(name, cfg.PKGDIR, update=1, verbose=1)
 
+    # Copy sip's sip.h for distribution with wxPython's header
+    copy_file('sip/siplib/sip.h', 'wx/include/wxPython', update=1, verbose=1)
 
     # Create the build tasks for each of our extension modules.
     addRelwithdebugFlags(bld, 'siplib')

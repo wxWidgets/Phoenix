@@ -89,11 +89,16 @@ methods and classes.
 import wx
 _ = wx.GetTranslation
 
-from .CDate import *
+import datetime
 
 CalDays = [6, 0, 1, 2, 3, 4, 5]
 AbrWeekday = {6: _("Sun"), 0: _("Mon"), 1: _("Tue"), 2: _("Wed"), 3: _("Thu"),
               4: _("Fri"), 5: _("Sat")}
+Month = {0: None,
+         1: _('January'), 2: _('February'), 3: _('March'),
+         4: _('April'), 5: _('May'), 6: _('June'),
+         7: _('July'), 8: _('August'), 9: _('September'),
+         10: _('October'), 11: _('November'), 12: _('December')}
 _MIDSIZE = 180
 
 COLOR_GRID_LINES = "grid_lines"
@@ -379,10 +384,9 @@ class CalDraw:
         self.year = year
         self.month = month
 
-        day = 1
-        t = Date(year, month, day)
-        dow = self.dow = t.day_of_week     # start day in month
-        dim = self.dim = t.days_in_month   # number of days in month
+        # first day of week (Mon->0), number of days in month
+        self.dow = dow = datetime.date(year, month, 1).weekday()
+        self.dim = dim = wx.DateTime().GetLastMonthDay(month-1, year).GetDay()
 
         if self.cal_type == "NORMAL":
             start_pos = dow + 1
@@ -899,7 +903,6 @@ class Calendar(wx.Control):
         self.SetNow()
 
         self.size = None
-        self.set_day = None
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -1001,7 +1004,10 @@ class Calendar(wx.Control):
             self.GetParent().GetEventHandler().ProcessEvent(ne)
             event.Skip()
             return
-
+        
+        self.shiftkey = event.ShiftDown()
+        self.ctrlkey = event.ControlDown()
+        self.click = 'KEY'
         delta = None
 
         if key_code == wx.WXK_UP:
@@ -1014,26 +1020,28 @@ class Calendar(wx.Control):
             delta = 1
         elif key_code == wx.WXK_HOME:
             curDate = wx.DateTime.FromDMY(int(self.cal_days[self.sel_key]), self.month - 1, self.year)
-            newDate = wx.DateTime.Now()
+            curDate.SetHour(12) # leave a margin for the occasional DST crossing
+            newDate = wx.DateTime.Today().SetHour(12)
             ts = newDate - curDate
             delta = ts.GetDays()
 
         if delta is not None:
             curDate = wx.DateTime.FromDMY(int(self.cal_days[self.sel_key]), self.month - 1, self.year)
+            curDate.SetHour(12) # leave a margin for the occasional DST crossing
             timeSpan = wx.TimeSpan.Days(delta)
             newDate = curDate + timeSpan
 
             if curDate.GetMonth() == newDate.GetMonth():
-                self.set_day = newDate.GetDay()
+                self.set_day = self.day = newDate.GetDay()
                 key = self.sel_key + delta
                 self.SelectDay(key)
             else:
                 self.month = newDate.GetMonth() + 1
                 self.year = newDate.GetYear()
-                self.set_day = newDate.GetDay()
+                self.set_day = self.day = newDate.GetDay()
                 self.sel_key = None
-                self.DoDrawing(wx.ClientDC(self))
-
+                self.Refresh()
+            self._EmitCalendarEvent()
         event.Skip()
 
     def SetSize(self, set_size):
@@ -1057,16 +1065,13 @@ class Calendar(wx.Control):
         self.sel_lst = sel
 
     def SetNow(self):
-        """Get the current day."""
-        dt = now()
-        self.month = dt.month
-        self.year = dt.year
-        self.day = dt.day
+        """Set the current day."""
+        dt = datetime.date.today()
+        self.SetDate(dt.day, dt.month, dt.year)
 
-    def SetCurrentDay(self):
+    def SetCurrentDay(self): # legacy, this is now an alias for SetNow
         """Set the current day to today."""
         self.SetNow()
-        self.set_day = self.day
 
     # get the date, day, month, year set in calendar
 
@@ -1078,6 +1083,29 @@ class Calendar(wx.Control):
 
         """
         return self.day, self.month, self.year
+
+    def SetDate(self, day, month, year):
+        """
+        Set a calendar date. 
+
+        :param int `day`: the day
+        :param int `month`: the month
+        :param int `year`: the year
+        :raises: `ValueError` when setting an invalid month/year
+        :returns: the new date set.
+        
+        """
+        datetime.date(year, month, 1) # let the possible ValueError propagate
+        try:
+            datetime.date(year, month, day)
+        except ValueError:
+            day = wx.DateTime().GetLastMonthDay(month-1, year).GetDay()
+        self.year = year
+        self.month = month
+        self.set_day = self.day = day
+        self.sel_key = None
+        self.Refresh()
+        return self.GetDate()
 
     def GetDay(self):
         """
@@ -1111,58 +1139,60 @@ class Calendar(wx.Control):
         Set the day.
 
         :param int `day`: the day
+        :raises: `ValueError` if the resulting date is invalid.
 
         """
-        self.set_day = day
-        self.day = day
+        self.SetDate(day, self.month, self.year)
 
     def SetMonth(self, month):
         """
         Set the Month.
 
         :param int `month`: the month
+        :raises: `ValueError` if the resulting date is invalid.
 
         """
-        if month >= 1 and month <= 12:
-            self.month = month
-        else:
-            self.month = 1
-        self.set_day = None
+        self.SetDate(self.day, month, self.year)
 
     def SetYear(self, year):
         """
         Set the year.
 
         :param int `year`: the year
+        :raises: `ValueError` if the resulting date is invalid.
 
         """
-        self.year = year
+        self.SetDate(self.day, self.month, year)
+
+    def MoveDate(self, months=0, years=0):
+        """
+        Move the current date by a given interval of months/years.
+
+        :param int `months`: months to add (can be negative)
+        :param int `years`: years to add (can be negative)
+        :returns: the new date set.
+
+        """
+        cur_date = wx.DateTime.FromDMY(self.day, self.month-1, self.year)
+        new_date = cur_date + wx.DateSpan(years=years, months=months)
+        self.SetDate(new_date.GetDay(), new_date.GetMonth()+1, new_date.GetYear())
+        return self.GetDate()
 
     def IncYear(self):
         """Increment the year by 1."""
-        self.year = self.year + 1
-        self.set_day = None
+        return self.MoveDate(years=1)
 
     def DecYear(self):
         """Decrement the year by 1."""
-        self.year = self.year - 1
-        self.set_day = None
+        return self.MoveDate(years=-1)
 
     def IncMonth(self):
         """Increment the month by 1."""
-        self.month = self.month + 1
-        if self.month > 12:
-            self.month = 1
-            self.year = self.year + 1
-        self.set_day = None
+        return self.MoveDate(months=1)
 
     def DecMonth(self):
         """Decrement the month by 1."""
-        self.month = self.month - 1
-        if self.month < 1:
-            self.month = 12
-            self.year = self.year - 1
-        self.set_day = None
+        return self.MoveDate(months=-1)
 
     def TestDay(self, key):
         """
@@ -1179,13 +1209,7 @@ class Calendar(wx.Control):
         if self.day == "":
             return None
         else:
-            # Changed 12/1/03 by jmg (see above) to support 2.5 event binding
-            evt = wx.PyCommandEvent(wxEVT_COMMAND_PYCALENDAR_DAY_CLICKED, self.GetId())
-            evt.click, evt.day, evt.month, evt.year = self.click, self.day, self.month, self.year
-            evt.shiftkey = self.shiftkey
-            evt.ctrlkey = self.ctrlkey
-            self.GetEventHandler().ProcessEvent(evt)
-
+            self._EmitCalendarEvent()
             self.set_day = self.day
             return key
 
@@ -1266,8 +1290,6 @@ class Calendar(wx.Control):
         :param `DC`: the :class:`wx.DC` to draw
 
         """
-        DC = wx.PaintDC(self)
-
         try:
             cal = self.caldraw
         except Exception:
@@ -1393,10 +1415,8 @@ class Calendar(wx.Control):
 
         """
         try:
-            t = Date(self.year, self.month, 1)
-
             day = self.cal_days[key]
-            day = int(day) + t.day_of_week
+            day = int(day) + wx.DateTime.FromDMY(day, self.month-1, self.year).GetWeekDay()
 
             if day % 7 == 6 or day % 7 == 0:
                 return True
@@ -1449,6 +1469,13 @@ class Calendar(wx.Control):
 
         return (cfont, bgcolor)
 
+    def _EmitCalendarEvent(self):
+        evt = wx.PyCommandEvent(wxEVT_COMMAND_PYCALENDAR_DAY_CLICKED, self.GetId())
+        evt.click, evt.day, evt.month, evt.year = self.click, self.day, self.month, self.year
+        evt.shiftkey = self.shiftkey
+        evt.ctrlkey = self.ctrlkey
+        self.GetEventHandler().ProcessEvent(evt)
+
 
 class CalenDlg(wx.Dialog):
     """A dialog with a calendar control."""
@@ -1467,41 +1494,42 @@ class CalenDlg(wx.Dialog):
 
         # set the calendar and attributes
         self.calend = Calendar(self, -1, (20, 60), (240, 200))
-
-        if month is None:
-            self.calend.SetCurrentDay()
-            start_month = self.calend.GetMonth()
-            start_year = self.calend.GetYear()
-        else:
-            self.calend.month = start_month = month
-            self.calend.year = start_year = year
-            self.calend.SetDayValue(day)
-
         self.calend.HideTitle()
-        self.ResetDisplay()
+        today = datetime.date.today()
+        d = day or today.day
+        m = month or today.month
+        y = year or today.year
+        try:
+            date = datetime.date(y, m, d)
+        except ValueError:
+            date = today
+        self.calend.SetDate(date.day, date.month, date.year)
 
         # get month list from DateTime
         monthlist = GetMonthList()
 
         # select the month
-        self.date = wx.ComboBox(self, -1, Month[start_month], (20, 20), (90, -1),
-                                monthlist, wx.CB_DROPDOWN)
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, self.date)
+        self.m_date = wx.ComboBox(self, pos=(20, 20), size=(90, -1), 
+                                  style=wx.CB_DROPDOWN|wx.TE_READONLY)
+        for n, month_name in enumerate(monthlist):
+            self.m_date.Append(month_name, n+1)
+        self.m_date.SetSelection(date.month-1)
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, self.m_date)
 
         # alternate spin button to control the month
-        h = self.date.GetSize().height
+        h = self.m_date.GetSize().height
         self.m_spin = wx.SpinButton(self, -1, (115, 20), (h * 1.5, h), wx.SP_VERTICAL)
         self.m_spin.SetRange(1, 12)
-        self.m_spin.SetValue(start_month)
+        self.m_spin.SetValue(date.month)
         self.Bind(wx.EVT_SPIN, self.OnMonthSpin, self.m_spin)
 
         # spin button to control the year
-        self.dtext = wx.TextCtrl(self, -1, str(start_year), (160, 20), (60, -1))
-        h = self.dtext.GetSize().height
+        self.y_date = wx.TextCtrl(self, -1, str(date.year), (160, 20), (60, -1))
+        h = self.y_date.GetSize().height
 
         self.y_spin = wx.SpinButton(self, -1, (225, 20), (h * 1.5, h), wx.SP_VERTICAL)
-        self.y_spin.SetRange(1980, 2010)
-        self.y_spin.SetValue(start_year)
+        self.y_spin.SetRange(date.year-100, date.year+100)
+        self.y_spin.SetValue(date.year)
 
         self.Bind(wx.EVT_SPIN, self.OnYrSpin, self.y_spin)
         self.Bind(EVT_CALENDAR, self.MouseClick, self.calend)
@@ -1516,6 +1544,9 @@ class CalenDlg(wx.Dialog):
         btn = wx.Button(self, wx.ID_CANCEL, ' Close ', (x_pos + 120, y_pos), but_size)
         self.Bind(wx.EVT_BUTTON, self.OnCancel, btn)
 
+        self.current_month = date.month
+        self.current_year = date.year
+
     def OnOk(self, evt):
         """The OK event handler."""
         self.result = ['None', str(self.calend.day), Month[self.calend.month], str(self.calend.year)]
@@ -1527,37 +1558,39 @@ class CalenDlg(wx.Dialog):
 
     def MouseClick(self, evt):
         """The mouse click event handler."""
-        self.month = evt.month
         # result click type and date
         self.result = [evt.click, str(evt.day), Month[evt.month], str(evt.year)]
-
         if evt.click == 'DLEFT':
             self.EndModal(wx.ID_OK)
+        if evt.month != self.current_month or evt.year != self.current_year:
+            self.m_date.SetSelection(evt.month-1)
+            self.m_spin.SetValue(evt.month)
+            self.y_date.SetValue(str(evt.year))
+            self.y_spin.SetValue(evt.year)
+            self.current_month = evt.month
+            self.current_year = evt.year
 
     def OnMonthSpin(self, event):
         """The month spin control event handler."""
-        month = event.GetPosition()
-        self.date.SetValue(Month[month])
+        month = self.m_spin.GetValue()
+        self.m_date.SetSelection(month-1)
         self.calend.SetMonth(month)
-        self.calend.Refresh()
+        self.current_month = month
 
     def OnYrSpin(self, event):
         """The year spin control event handler."""
-        year = event.GetPosition()
-        self.dtext.SetValue(str(year))
+        year = self.y_spin.GetValue()
+        self.y_date.SetValue(str(year))
         self.calend.SetYear(year)
-        self.calend.Refresh()
+        self.current_year = year
 
     def EvtComboBox(self, event):
         """The month combobox event handler."""
-        name = event.GetString()
-        monthval = self.date.FindString(name)
-        self.m_spin.SetValue(monthval + 1)
-
-        self.calend.SetMonth(monthval + 1)
-        self.ResetDisplay()
+        month = event.GetClientData()
+        self.m_spin.SetValue(month)
+        self.calend.SetMonth(month)
+        self.current_month = month
 
     def ResetDisplay(self):
         """Reset the display."""
-        month = self.calend.GetMonth()
         self.calend.Refresh()

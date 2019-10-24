@@ -589,6 +589,10 @@ class Configuration(object):
             return None
 
         setup = _find_setup()
+        if setup is None:
+            msg("WARNING: Unable to find setup.h in {}, assuming {} is not available.".format(build_dir, flag))
+            return False
+
         with open(setup, 'rt') as f:
             for line in f:
                 if flag in line:
@@ -961,11 +965,16 @@ def updateLicenseFiles(cfg):
     # Copy the license files from wxWidgets
     mkpath('license')
     for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt', 'gpl.txt']:
-        copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename), update=1, verbose=1)
+        copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename),
+                      update=1, verbose=1)
+
+    # Get the sip license too
+    copy_file(opj('sip', 'siplib', 'LICENSE'), opj('license', 'sip-license.txt'),
+              update=1, verbose=1)
 
     # Combine the relevant files into a single LICENSE.txt file
     text = ''
-    for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt']:
+    for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt', 'sip-license.txt']:
         with open(opj('license', filename), 'r') as f:
             text += f.read() + '\n\n'
     with open('LICENSE.txt', 'w') as f:

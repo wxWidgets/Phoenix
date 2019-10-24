@@ -54,7 +54,7 @@ def run():
 
     c = module.find('wxFindReplaceDialog')
     tools.fixTopLevelWindowClass(c)
-
+    c.find('wxFindReplaceDialog.data').keepReference = True
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

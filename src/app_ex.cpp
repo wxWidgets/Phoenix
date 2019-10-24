@@ -52,11 +52,10 @@ public:
         m_assertMode = wxAPP_ASSERT_EXCEPTION;
         m_startupComplete = false;
         //m_callFilterEvent = false;
-        ms_appInstance = this;
+        wxApp::SetInstance(this);
     }
 
     ~wxPyApp() {
-        ms_appInstance = NULL;
         wxApp::SetInstance(NULL);
     }
 
@@ -118,7 +117,6 @@ public:
 
     // implementation only
     void SetStartupComplete(bool val) { m_startupComplete = val; }
-    static wxPyApp* ms_appInstance;
 
 private:
     wxAppAssertMode m_assertMode;
@@ -128,7 +126,6 @@ private:
 
 IMPLEMENT_ABSTRACT_CLASS(wxPyApp, wxApp);
 
-wxPyApp* wxPyApp::ms_appInstance = NULL;
 extern PyObject* wxAssertionError;         // Exception object raised for wxASSERT failures
 
 
@@ -349,7 +346,7 @@ bool wxPyApp::IsDisplayAvailable()
 
 
 
-wxPyApp* wxGetApp()
+wxAppConsole* wxGetApp()
 {
-    return wxPyApp::ms_appInstance;
+    return wxApp::GetInstance();
 }

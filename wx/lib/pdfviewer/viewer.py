@@ -145,6 +145,7 @@ class pdfViewer(wx.ScrolledWindow):
         Redraw on resize.
         """
         if self.resizing:
+            self.page_buffer_valid = False
             self.Render()
             self.resizing = False
         event.Skip()

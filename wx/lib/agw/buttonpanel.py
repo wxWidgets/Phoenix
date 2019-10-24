@@ -1931,7 +1931,7 @@ class ButtonPanel(wx.Panel):
         """
 
         lenChildren = len(self._mainsizer.GetChildren())
-        self._mainsizer.Insert(lenChildren-1, btnInfo, 0, wx.ALIGN_CENTER|wx.EXPAND, userData=btnInfo)
+        self._mainsizer.Insert(lenChildren-1, btnInfo, 0, wx.ALIGN_CENTER, userData=btnInfo)
 
         self._vButtons.append(btnInfo)
 

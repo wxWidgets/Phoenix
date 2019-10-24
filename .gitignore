@@ -27,7 +27,7 @@ mydbstub.py*
 /bin/waf3-*
 /bin/doxygen-*
 
-/docs/html
+/docs/html*
 /docs/sphinx/*.txt
 /docs/sphinx/*.rst
 /docs/sphinx/*.pkl
@@ -66,3 +66,5 @@ ubuntu-bionic-18.04-cloudimg-console.log
 
 /samples/doodle/build
 /samples/doodle/dist
+samples/embedded/embedded
+samples/embedded/embedded.o

@@ -43,7 +43,7 @@ def run():
 
     etgtools.prependText(c.detailedDoc,
          "Note that it is not intended for this class to be used directly from "
-         "Python. It is wrapped just for inheriting its methods from :class:`App`.")
+         "Python. It is wrapped just for inheriting its methods in :class:`App`.")
 
     # There's no need for the command line stuff as Python has its own ways to
     # deal with that
@@ -55,7 +55,6 @@ def run():
     c.find('OnInitCmdLine').ignore()
 
     c.find('HandleEvent').ignore()
-    c.find('UsesEventLoop').ignore()
 
     # We will use OnAssertFailure, but I don't think we should let it be
     # overridden in Python.
@@ -236,12 +235,11 @@ def run():
     module.insertItemBefore(c, enum)
 
     module.addHeaderCode("""\
-        class wxPyApp;
-        wxPyApp* wxGetApp();
+        wxAppConsole* wxGetApp();
         """)
     module.find('wxTheApp').ignore()
     f = module.find('wxGetApp')
-    f.type = 'wxPyApp*'
+    f.type = 'wxAppConsole*'
     f.briefDoc = "Returns the current application object."
     f.detailedDoc = []
 
@@ -450,7 +448,10 @@ def run():
                     called.  This can be overridden in derived classes, but be sure to call
                     this method from there.
                     """,
-                body="wx.StockGDI._initStockObjects()"),
+                body="""\
+                    wx.StockGDI._initStockObjects()
+                    self.InitLocale()
+                    """),
 
             PyFunctionDef('__del__', '(self)',
                 doc="",
@@ -514,6 +515,35 @@ def run():
                             self.stdioWin.size = size
                     """),
 
+            PyFunctionDef('InitLocale', '(self)',
+                doc="""\
+                    Try to ensure that the C and Python locale is in sync with wxWidgets locale.
+                    """,
+                body="""\
+                    self.ResetLocale()
+                    import locale
+                    try:
+                        loc, enc = locale.getlocale()
+                    except ValueError:
+                        loc = enc = None
+                    # Try to set it to the same language as what is already set in the C locale
+                    info = wx.Locale.FindLanguageInfo(loc) if loc else None
+                    if info:
+                        self._initial_locale = wx.Locale(info.Language)
+                    else:
+                        # otherwise fall back to the system default
+                        self._initial_locale = wx.Locale(wx.LANGUAGE_DEFAULT)
+                    """),
+
+            PyFunctionDef('ResetLocale', '(self)',
+                doc="""\
+                    Release the wx.Locale object created in :meth:`InitLocale`.
+                    This will reset the application's locale to the previous settings.
+                    """,
+                body="""\
+                    self._initial_locale = None
+                    """),
+
             PyFunctionDef('Get', '()', isStatic=True,
                 doc="""\
                     A staticmethod returning the currently active application object.
@@ -521,7 +551,6 @@ def run():
                 body="return GetApp()"
                 )
             ])
-
 
 
 

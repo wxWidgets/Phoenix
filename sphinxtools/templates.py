@@ -42,10 +42,10 @@ TEMPLATE_INHERITANCE = '''
    <div id="toggleBlock-content" style="display:none;">
    <p class="graphviz">
    <center><img src="_static/images/inheritance/%s" alt="Inheritance diagram of %s" usemap="#dummy" class="inheritance"/></center>
-   </div>
    <script type="text/javascript">toggleVisibilityOnLoad(document.getElementById('toggleBlock'))</script>
    %s
    </p>
+   </div>
 
 |
 

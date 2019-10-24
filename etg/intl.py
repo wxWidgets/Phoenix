@@ -48,6 +48,10 @@ def run():
     c.find('WinSublang').ignore()
     c.find('GetLCID').ignore()
 
+    module.addItem(etgtools.WigCode("""\
+        char* wxSetlocale(int category, const char *locale);
+        """))
+
 
     module.addPyCode("""\
     #----------------------------------------------------------------------------

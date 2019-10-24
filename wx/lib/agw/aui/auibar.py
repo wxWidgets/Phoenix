@@ -12,13 +12,15 @@
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
-`auibar.py` contains an implementation of :class:`~wx.lib.agw.aui.auibar.AuiToolBar`, which is a completely owner-drawn
-toolbar perfectly integrated with the AUI layout system. This allows drag and drop of
-toolbars, docking/floating behaviour and the possibility to define "overflow" items
-in the toolbar itself.
+`auibar.py` contains an implementation of
+:class:`~wx.lib.agw.aui.auibar.AuiToolBar`, which is a completely owner-drawn
+toolbar perfectly integrated with the AUI layout system. This allows drag and
+drop of toolbars, docking/floating behaviour and the possibility to define
+"overflow" items in the toolbar itself.
 
 The default theme that is used is :class:`AuiToolBar`, which provides a modern,
-glossy look and feel. The theme can be changed by calling :meth:`AuiToolBar.SetArtProvider`.
+glossy look and feel. The theme can be changed by calling
+:meth:`AuiToolBar.SetArtProvider`.
 """
 
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
@@ -1451,23 +1453,10 @@ class AuiDefaultToolBarArt(object):
                 if items_added > 0 and item.GetKind() == ITEM_SEPARATOR:
                     menuPopup.AppendSeparator()
 
-        # find out where to put the popup menu of window items
-        pt = wx.GetMousePosition()
-        pt = wnd.ScreenToClient(pt)
-
-        # find out the screen coordinate at the bottom of the tab ctrl
-        cli_rect = wnd.GetClientRect()
-        pt.y = cli_rect.y + cli_rect.height
-
         cc = ToolbarCommandCapture()
         wnd.PushEventHandler(cc)
 
-        # Adjustments to get slightly better menu placement
-        if wx.Platform == "__WXMAC__":
-            pt.y += 5
-            pt.x -= 5
-
-        wnd.PopupMenu(menuPopup, pt)
+        wnd.PopupMenu(menuPopup)
         command = cc.GetCommandId()
         wnd.PopEventHandler(True)
 
@@ -1737,7 +1726,7 @@ class AuiToolBar(wx.Control):
     def AddSimpleTool(self, tool_id, label, bitmap, short_help_string="", kind=ITEM_NORMAL, target=None):
         """
         Adds a tool to the toolbar. This is the simplest method you can use to
-        ass an item to the :class:`AuiToolBar`.
+        add an item to the :class:`AuiToolBar`.
 
         :param integer `tool_id`: an integer by which the tool may be identified in subsequent operations;
         :param string `label`: the toolbar tool label;

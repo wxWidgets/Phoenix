@@ -6101,13 +6101,13 @@ void sip_api_instance_destroyed(sipSimpleWrapper *sw)
  */
 static void sip_api_instance_destroyed_ex(sipSimpleWrapper **sipSelfp)
 {
-    SIP_BLOCK_THREADS
-
     sipSimpleWrapper *sipSelf = *sipSelfp;
 
     if (sipSelf != NULL && sipInterpreter != NULL)
     {
         PyObject *xtype, *xvalue, *xtb;
+
+        SIP_BLOCK_THREADS
 
         /* We may be tidying up after an exception so preserve it. */
         PyErr_Fetch(&xtype, &xvalue, &xtb);
@@ -6136,6 +6136,8 @@ static void sip_api_instance_destroyed_ex(sipSimpleWrapper **sipSelfp)
         {
             removeFromParent((sipWrapper *)sipSelf);
         }
+
+        SIP_UNBLOCK_THREADS
     }
 
     /*
@@ -6145,8 +6147,6 @@ static void sip_api_instance_destroyed_ex(sipSimpleWrapper **sipSelfp)
      * reimplemented virtuals.
      */
     *sipSelfp = NULL;
-
-    SIP_UNBLOCK_THREADS
 }
 
 

@@ -7733,8 +7733,9 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         if self._editCtrl != None and item != self._editCtrl.item():
             self._editCtrl.StopEditing()
 
-        self._editCtrl = TreeTextCtrl(self, item=item)
-        self._editCtrl.SetFocus()
+        if self._editCtrl is None:
+            self._editCtrl = TreeTextCtrl(self, item=item)
+            self._editCtrl.SetFocus()
 
 
     def GetEditControl(self):
