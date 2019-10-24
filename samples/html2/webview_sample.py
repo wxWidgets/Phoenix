@@ -10,7 +10,9 @@ BASE = 'file://{}/'.format(HERE.replace('\\', '/'))
 URL = BASE + 'webview_sample.html'
 LOGO = os.path.join(HERE, 'logo.png')
 
-#print(wx.version())
+# We need to be in the HERE folder for the archive link to work since the sample
+# page does not use a full path
+os.chdir(HERE)
 
 #--------------------------------------------------------------------------
 
@@ -58,7 +60,10 @@ class WebViewPanel(wx.Panel):
         # Register a handler for the memory: file system
         self.wv.RegisterHandler(webview.WebViewFSHandler("memory"))
 
-        # And also one for the custom: file system implemented by the
+        # This handler takes care of links that are in zip files
+        self.wv.RegisterHandler(webview.WebViewArchiveHandler("wxzip"))
+
+        # And this one is for the custom: file system implemented by the
         # CustomWebViewHandler class below
         self.wv.RegisterHandler(CustomWebViewHandler())
 
@@ -191,20 +196,21 @@ def SetupMemoryFiles():
     # loaded into the webview just like network or local file sources.
     # These "files" can be access using a protocol specifier of "memory:"
     wx.FileSystem.AddHandler(wx.MemoryFSHandler())
+    wx.FileSystem.AddHandler(wx.ArchiveFSHandler())
     wx.MemoryFSHandler.AddFile(
-        "page1.htm",
+        "page1.html",
         "<html><head><title>File System Example</title>"
         "<link rel='stylesheet' type='text/css' href='memory:test.css'>"
         "</head><body><h1>Page 1</h1>"
         "<p><img src='memory:logo.png'></p>"
         "<p>This file was loaded directly from a virtual in-memory filesystem.</p>"
-        "<p>Here's another page: <a href='memory:page2.htm'>Page 2</a>.</p></body>")
+        "<p>Here's another page: <a href='memory:page2.html'>Page 2</a>.</p></body>")
     wx.MemoryFSHandler.AddFile(
-        "page2.htm",
+        "page2.html",
         "<html><head><title>File System Example</title>"
         "<link rel='stylesheet' type='text/css' href='memory:test.css'>"
         "</head><body><h1>Page 2</h1>"
-        "<p><a href='memory:page1.htm'>Page 1</a> was better.</p></body>")
+        "<p><a href='memory:page1.html'>Page 1</a> was better.</p></body>")
     wx.MemoryFSHandler.AddFile(
         "test.css",
         "h1 {color: red;}")
