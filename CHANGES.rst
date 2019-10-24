@@ -81,6 +81,50 @@ New and improved in this release:
   
 
 
+4.0.7 "one more, for the road"
+------------------------------
+* 25-Oct-2019
+
+PyPI:   https://pypi.org/project/wxPython/4.0.7
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.7``
+
+This release is comprised mostly of fixes and minor features which have been
+back-ported from the master branch. This release is likely the last release of
+the 4.0.x release series, and is certainly the last 4.0.x release that will
+support Python 2.7. It may still continue to build for Python 2.7 for some time, 
+but no extra effort will be expended to keep it compatible.
+
+This release provides the following changes:
+
+* Bug fixes in wx.lib.calendar: key navigation across month boundaries is now 
+  possible; key navigation now sets the date and fires the EVT_CALENDAR event; 
+  setter APIs now set the date correctly (#1230).
+
+* Switch to using a wx.Overlay in the Widget Inspection Tool to highlight
+  widgets when running on a GTK3 port.
+
+* Fixed issue in wx.lib.agw.customtreectrl where label editor could remain
+  stuck forever (#1235).
+
+* Fix a sometimes crash when using a wx.Overlay by letting the wx.DCOverlay hold
+  a reference to the DC, to ensure that the DCOverlay is destroyed first.
+  (PR#1301)
+  
+* Ported the embedding sample from Classic, which shows how to use wxPython from
+  a C++ wxWidgets application that embeds Python. (PR #1353)
+
+* Fixed wx.GetApp() to use wxWidgets' global wxApp instance instead of 
+  maintaining its own pointer. This way, if the wxApp is created by C++ code
+  wxPython will still be able to get access to it. (#1126)
+  
+* Several other PRs have been backported from the master branch (which will 
+  become wxPython 4.1.0), the full list can be seen here: 
+  https://github.com/wxWidgets/Phoenix/pull/1357
+
+
+
+
 4.0.6 "Applesauce"
 ------------------
 * 21-May-2019

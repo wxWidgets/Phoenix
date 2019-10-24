@@ -1,52 +1,57 @@
 
 [[ send to:
-   wxpython-users@googlegroups.com,
-   wxpython-dev@googlegroups.com,
-   wx-users@googlegroups.com,
-   wx-announce@googlegroups.com,
+   wxpython-users@googlegroups.com
+   wxpython-dev@googlegroups.com
+   wx-users@googlegroups.com
+   wx-announce@googlegroups.com
    Python-Announce-List@Python.Org
    ]]
 
 
-Announcing wxPython 4.0.3
+
+Announcing wxPython 4.0.7
 =========================
 
-PyPI:   https://pypi.org/project/wxPython/4.0.3
+PyPI:   https://pypi.org/project/wxPython/4.0.7
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.0.3``
+Pip:    ``pip install wxPython==4.0.7``
 
-Changes in this release include the following:
+This release is comprised mostly of fixes and minor features which have been
+back-ported from the master branch. This release is likely the last release of
+the 4.0.x release series, and is certainly the last 4.0.x release that will
+support Python 2.7. It may still continue to build for Python 2.7 for some time, 
+but no extra effort will be expended to keep it compatible.
 
-* Fixed a linking problem on macOS. The new waf added an explicit link
-  to the Python shared library which meant that it would try to load
-  it at runtime, even if a different Python (such as Anaconda, EDM or
-  Homebrew) was used to import wxPython. This, of course, caused
-  runtime errors. (#892)
+Support for building for Python 3.8 has been added, as well as 3.8 binaries on
+PyPI for Windows and MacOS.
 
-* Sort pages by dock_pos when added to automatic (agw.aui)
-  notebook. (#882)
+This release provides the following changes:
 
-* Fix a bug in py.introspect.getTokens. (#889)
+* Bug fixes in wx.lib.calendar: key navigation across month boundaries is now 
+  possible; key navigation now sets the date and fires the EVT_CALENDAR event; 
+  setter APIs now set the date correctly (#1230).
 
-* Added Vagrant configuration for Fedora-28. Removed Fedora-23 (#884)
+* Switch to using a wx.Overlay in the Widget Inspection Tool to highlight
+  widgets when running on a GTK3 port.
 
-* Added wrappers for the wx.WindowIDRef class and added the
-  wx.NewIdRef function. These will make it possible to create reserved
-  Window IDs using the same mechanism which is used when passing
-  wx.ID_ANY to a widget constructor.  The object returned by
-  wx.NewIdRef will automatically convert to an int when passing it to
-  a window constructor, and can also be used as the source in a
-  Bind(). (#896)
+* Fixed issue in wx.lib.agw.customtreectrl where label editor could remain
+  stuck forever (#1235).
 
-* Fixed issue when sys.prefix is not unicode (Python2) and when its
-  contents are not translatable to utf-8.
-
-
-
-* Reverted the change that loads up install_requires from the contents of
-  requirements.txt. Split the requirements.txt file into one for install and one
-  for development.
+* Fix a sometimes crash when using a wx.Overlay by letting the wx.DCOverlay hold
+  a reference to the DC, to ensure that the DCOverlay is destroyed first.
+  (PR#1301)
   
+* Ported the embedding sample from Classic, which shows how to use wxPython from
+  a C++ wxWidgets application that embeds Python. (PR #1353)
+
+* Fixed wx.GetApp() to use wxWidgets' global wxApp instance instead of 
+  maintaining its own pointer. This way, if the wxApp is created by C++ code
+  wxPython will still be able to get access to it. (#1126)
+  
+* Several other PRs have been backported from the master branch (which will 
+  become wxPython 4.1.0), the full list can be seen here: 
+  https://github.com/wxWidgets/Phoenix/pull/1357
+
 
 
 What is wxPython?
