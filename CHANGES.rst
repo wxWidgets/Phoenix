@@ -8,15 +8,21 @@
 wxPython Changelog
 ==================
 
-4.0.7 ""
-------------------
-* [not yet released]
+4.0.7 "one more, for the road"
+------------------------------
+* 25-Oct-2019
 
 PyPI:   https://pypi.org/project/wxPython/4.0.7
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.0.7``
 
-This release provides the following fixes:
+This release is comprised mostly of fixes and minor features which have been
+back-ported from the master branch. This release is likely the last release of
+the 4.0.x release series, and is certainly the last 4.0.x release that will
+support Python 2.7. It may still continue to build for Python 2.7 for some time, 
+but no extra effort will be expended to keep it compatible.
+
+This release provides the following changes:
 
 * Bug fixes in wx.lib.calendar: key navigation across month boundaries is now 
   possible; key navigation now sets the date and fires the EVT_CALENDAR event; 
