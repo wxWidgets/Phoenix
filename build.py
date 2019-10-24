@@ -1182,7 +1182,7 @@ def cmd_bdist_docs(options, args):
 
     with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
         tarball.add('docs/html', os.path.join(rootname, 'docs/html'),
-                    filter=lambda info: None if '.svn' in info.name else info)
+                    filter=_setTarItemPerms)
 
     if options.upload:
         uploadPackage(tarfilename, options, keep=5,
@@ -2096,7 +2096,7 @@ def cmd_sdist_demo(options, args):
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
     pwd = pushDir(PDEST)
     for name in glob.glob('*'):
-        tarball.add(name, os.path.join(rootname, name))
+        tarball.add(name, os.path.join(rootname, name), filter=_setTarItemPerms)
     tarball.close()
     msg('Cleaning up...')
     del pwd
