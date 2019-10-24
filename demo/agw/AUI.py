@@ -2355,12 +2355,7 @@ class AuiFrame(wx.Frame):
             m4.SetBitmap(bmp)
             menuPopup.Append(m4)
 
-            # line up our menu with the button
-            rect = tb.GetToolRect(event.GetId())
-            pt = tb.ClientToScreen(rect.GetBottomLeft())
-            pt = self.ScreenToClient(pt)
-
-            self.PopupMenu(menuPopup, pt)
+            self.PopupMenu(menuPopup)
 
             # make sure the button is "un-stuck"
             tb.SetToolSticky(event.GetId(), False)
