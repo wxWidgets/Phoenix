@@ -18,6 +18,7 @@ import wx
 import wx.html
 from wx.lib import buttons # for generic button classes
 from doodle import DoodleWindow
+import version
 
 from wx.lib.mixins.inspection import InspectionMixin
 
@@ -349,7 +350,7 @@ class DoodleAbout(wx.Dialog):
 
     text = '''
 <html>
-<body bgcolor="#ACAA60">
+<body bgcolor="#60acac">
 <center><table bgcolor="#455481" width="100%%" cellspacing="0"
 cellpadding="0" border="1">
 <tr>
@@ -369,7 +370,7 @@ instructions: </p>
 
 <p><b>SuperDoodle</b> and <b>wxPython</b> are brought to you by
 <b>Robin Dunn</b> and <b>Total Control Software</b>, Copyright
-&copy; 1997-2011.</p>
+&copy; 1997-2019.</p>
 </body>
 </html>
 '''
@@ -379,29 +380,18 @@ instructions: </p>
                           size=(420, 380) )
 
         html = wx.html.HtmlWindow(self, -1)
-        import version
         html.SetPage(self.text % version.VERSION)
         button = wx.Button(self, wx.ID_OK, "Okay")
 
-        # constraints for the html window
-        lc = wx.LayoutConstraints()
-        lc.top.SameAs(self, wx.Top, 5)
-        lc.left.SameAs(self, wx.Left, 5)
-        lc.bottom.SameAs(button, wx.Top, 5)
-        lc.right.SameAs(self, wx.Right, 5)
-        html.SetConstraints(lc)
-
-        # constraints for the button
-        lc = wx.LayoutConstraints()
-        lc.bottom.SameAs(self, wx.Bottom, 5)
-        lc.centreX.SameAs(self, wx.CentreX)
-        lc.width.AsIs()
-        lc.height.AsIs()
-        button.SetConstraints(lc)
-
-        self.SetAutoLayout(True)
+        # Set up the layout with a Sizer
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(html, wx.SizerFlags(1).Expand().Border(wx.ALL, 5))
+        sizer.Add(button, wx.SizerFlags(0).Align(wx.ALIGN_CENTER).Border(wx.BOTTOM, 5))
+        self.SetSizer(sizer)
         self.Layout()
+
         self.CentreOnParent(wx.BOTH)
+        wx.CallAfter(button.SetFocus)
 
 
 #----------------------------------------------------------------------
