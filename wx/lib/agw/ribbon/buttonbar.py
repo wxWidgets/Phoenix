@@ -210,17 +210,7 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
         :param `menu`: an instance of :class:`wx.Menu`.
         """
 
-        pos = wx.Point()
-
-        if self._bar._active_button:
-            size = self._bar._active_button.base.sizes[self._bar._active_button.size]
-            btn_rect = wx.Rect()
-            btn_rect.SetTopLeft(self._bar._layout_offset + self._bar._active_button.position)
-            btn_rect.SetSize(wx.Size(*size.size))
-            pos = btn_rect.GetBottomLeft()
-            pos.y += 1
-
-        return self._bar.PopupMenu(menu, pos)
+        return self._bar.PopupMenu(menu)
 
 
 class RibbonButtonBar(RibbonControl):

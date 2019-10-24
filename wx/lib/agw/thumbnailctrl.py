@@ -2279,11 +2279,11 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         # Popup menu
         if event.RightUp():
             if self._selected >= 0 and self._pmenu:
-                self.PopupMenu(self._pmenu, event.GetPosition())
+                self.PopupMenu(self._pmenu)
             elif self._selected >= 0 and not self._pmenu and self._gpmenu:
-                self.PopupMenu(self._gpmenu, event.GetPosition())
+                self.PopupMenu(self._gpmenu)
             elif self._selected == -1 and self._gpmenu:
-                self.PopupMenu(self._gpmenu, event.GetPosition())
+                self.PopupMenu(self._gpmenu)
 
         if event.ShiftDown():
             self._selected = lastselected

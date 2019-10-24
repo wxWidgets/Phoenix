@@ -784,14 +784,6 @@ class PlateButton(wx.Control):
     def ShowMenu(self):
         """Show the dropdown menu if one is associated with this control"""
         if self._menu is not None:
-            size = self.GetSize()
-            adj = wx.Platform == '__WXMAC__' and 3 or 0
-
-            if self._style & PB_STYLE_SQUARE:
-                xpos = 1
-            else:
-                xpos = size[1] / 2
-
-            self.PopupMenu(self._menu, (xpos, size[1] + adj))
+            self.PopupMenu(self._menu)
 
     #---- End Public Member Functions ----#

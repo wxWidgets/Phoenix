@@ -1453,23 +1453,10 @@ class AuiDefaultToolBarArt(object):
                 if items_added > 0 and item.GetKind() == ITEM_SEPARATOR:
                     menuPopup.AppendSeparator()
 
-        # find out where to put the popup menu of window items
-        pt = wx.GetMousePosition()
-        pt = wnd.ScreenToClient(pt)
-
-        # find out the screen coordinate at the bottom of the tab ctrl
-        cli_rect = wnd.GetClientRect()
-        pt.y = cli_rect.y + cli_rect.height
-
         cc = ToolbarCommandCapture()
         wnd.PushEventHandler(cc)
 
-        # Adjustments to get slightly better menu placement
-        if wx.Platform == "__WXMAC__":
-            pt.y += 5
-            pt.x -= 5
-
-        wnd.PopupMenu(menuPopup, pt)
+        wnd.PopupMenu(menuPopup)
         command = cc.GetCommandId()
         wnd.PopEventHandler(True)
 
