@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 
 # Set environment variables
 ENV DIST_NAME=ubuntu-18.04
-ENV USE_DEADSNAKES=no
+ENV USE_DEADSNAKES=yes
 ENV USER=wxpy
 ENV HOME=/home/$USER
 ENV PYTHONUNBUFFERED=1
@@ -52,6 +52,7 @@ RUN \
         apt-get install -y python2.7 python2.7-dev libpython2.7-dev python-virtualenv; \
         apt-get install -y python3.6 python3.6-dev libpython3.6-dev python3.6-venv; \
         apt-get install -y python3.7 python3.7-dev libpython3.7-dev python3.7-venv; \
+        apt-get install -y python3.8 python3.8-dev libpython3.8-dev python3.8-venv; \
         apt-get clean;
 
 # Add files from host into the container
@@ -70,7 +71,8 @@ RUN \
         mkdir -p ${HOME}/venvs; \
         virtualenv --python=python2.7 venvs/Py27; \
         python3.6 -m venv venvs/Py36; \
-        python3.7 -m venv venvs/Py37; 
+        python3.7 -m venv venvs/Py37; \
+        python3.8 -m venv venvs/Py38;
 
 # Define default command
 CMD ["/bin/bash", "-l"]
