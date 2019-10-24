@@ -522,7 +522,10 @@ def run():
                 body="""\
                     self.ResetLocale()
                     import locale
-                    loc, enc = locale.getlocale()
+                    try:
+                        loc, enc = locale.getlocale()
+                    except ValueError:
+                        loc = enc = None
                     # Try to set it to the same language as what is already set in the C locale
                     info = wx.Locale.FindLanguageInfo(loc) if loc else None
                     if info:
