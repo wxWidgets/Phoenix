@@ -57,6 +57,7 @@ class WidgetTestCase(unittest.TestCase):
         if 'wxOSX' in wx.PlatformInfo:
             wx.MilliSleep(40)  # a little more than 1/30, just in case
         window.Update()
+        self.myYield()
 
 
     def closeDialogs(self):
