@@ -18,7 +18,6 @@ yum -y install gtk2 gtk2-devel gtk3 gtk3-devel \
 
 # Install all available Python packages and their dev packages
 yum -y install python python-tools python-devel python-virtualenv
-yum -y install python34u python34u-tools python34u-devel
 yum -y install python35u python35u-tools python35u-devel
 yum -y install python36u python36u-tools python36u-devel
 
@@ -27,7 +26,6 @@ yum -y install python36u python36u-tools python36u-devel
 # done. Set them to the vagrant user so the venvs can be updated by pip later.
 mkdir venvs
 virtualenv --python=python2.7 venvs/Py27
-pyvenv-3.4 venvs/Py34
 pyvenv-3.5 venvs/Py35
 python3.6 -m venv venvs/Py36
 chown -R vagrant:vagrant venvs
