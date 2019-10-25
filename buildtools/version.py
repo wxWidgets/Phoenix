@@ -24,7 +24,7 @@ PROJECT_NAME     = 'wxPython'
 # version numbers.
 VER_MAJOR        = 4
 VER_MINOR        = 0
-VER_RELEASE      = 7
+VER_RELEASE      = 8
 
 VER_FLAGS        = "a1"     # wxPython release flags
 

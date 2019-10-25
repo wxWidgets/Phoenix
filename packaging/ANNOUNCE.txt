@@ -9,25 +9,49 @@
 
 
 
-Announcing wxPython 4.0.6
+Announcing wxPython 4.0.7
 =========================
 
-PyPI:   https://pypi.org/project/wxPython/4.0.6
+PyPI:   https://pypi.org/project/wxPython/4.0.7
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.0.6``
+Pip:    ``pip install wxPython==4.0.7``
 
-This is a quick-fix release to take care of the following issues:
+This release is comprised mostly of fixes and minor features which have been
+back-ported from the master branch. This release is likely the last release of
+the 4.0.x release series, and is certainly the last 4.0.x release that will
+support Python 2.7. It may still continue to build for Python 2.7 for some time, 
+but no extra effort will be expended to keep it compatible.
 
-* Fixed a probably rare, but fatal bug on OSX when calling certain 
-  overloaded virtual methods with implementations in Python.
+Support for building for Python 3.8 has been added, as well as 3.8 binaries on
+PyPI for Windows and MacOS.
 
-* Fixed char pointers in generated stub code to have a valid 
-  pointer value.
+This release provides the following changes:
 
-* Reverted the change that loads up install_requires from the 
-  contents of requirements.txt. Split the requirements.txt file 
-  into one for install and one for development.
+* Bug fixes in wx.lib.calendar: key navigation across month boundaries is now 
+  possible; key navigation now sets the date and fires the EVT_CALENDAR event; 
+  setter APIs now set the date correctly (#1230).
+
+* Switch to using a wx.Overlay in the Widget Inspection Tool to highlight
+  widgets when running on a GTK3 port.
+
+* Fixed issue in wx.lib.agw.customtreectrl where label editor could remain
+  stuck forever (#1235).
+
+* Fix a sometimes crash when using a wx.Overlay by letting the wx.DCOverlay hold
+  a reference to the DC, to ensure that the DCOverlay is destroyed first.
+  (PR#1301)
   
+* Ported the embedding sample from Classic, which shows how to use wxPython from
+  a C++ wxWidgets application that embeds Python. (PR #1353)
+
+* Fixed wx.GetApp() to use wxWidgets' global wxApp instance instead of 
+  maintaining its own pointer. This way, if the wxApp is created by C++ code
+  wxPython will still be able to get access to it. (#1126)
+  
+* Several other PRs have been backported from the master branch (which will 
+  become wxPython 4.1.0), the full list can be seen here: 
+  https://github.com/wxWidgets/Phoenix/pull/1357
+
 
 
 What is wxPython?

@@ -20,6 +20,10 @@ class dialog_Tests(wtc.WidgetTestCase):
             dlg.Destroy()
             self.assertTrue(val == wx.ID_OK)
             self.myYield()
+        else:
+            dlg.Show()
+            dlg.Destroy()
+            self.myYield()
 
 
     def test_dialogDefaultCtor(self):
