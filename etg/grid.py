@@ -424,7 +424,7 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxGrid')
     tools.fixWindowClass(c, ignoreProtected=False)
-    c.bases = ['wxScrolledWindow']
+    c.bases = ['wxScrolledCanvas']
 
     c.find('GetColLabelAlignment.horiz').out = True
     c.find('GetColLabelAlignment.vert').out = True
