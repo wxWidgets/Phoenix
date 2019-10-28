@@ -81,6 +81,19 @@ New and improved in this release:
   
 
 
+4.0.7.post1 "Isn't it time for Python3?"
+----------------------------------------
+* 28-Oct-2019
+
+PyPI:   https://pypi.org/project/wxPython/4.0.7.post1
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.7.post1``
+
+This post-release just fixes a problem with the numpy dependency constraint for
+Python 2.7. (#1415)
+
+
+
 4.0.7 "one more, for the road"
 ------------------------------
 * 25-Oct-2019
