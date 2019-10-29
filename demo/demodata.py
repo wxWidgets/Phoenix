@@ -46,6 +46,7 @@ _treeList = [
         'AddPrivateFont',
         'SVGImage_Bitmap',
         'SVGImage_Render',
+        'ActivityIndicator',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -86,6 +87,7 @@ _treeList = [
 
     # core controls
     ('Core Windows/Controls', [
+        'ActivityIndicator',
         'BitmapButton',
         'Button',
         'CheckBox',

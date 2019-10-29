@@ -293,6 +293,7 @@
 "AcceleratorTable":"wx.",
 "Accessible":"wx.",
 "ActivateEvent":"wx.",
+"ActivityIndicator":"wx.",
 "AffineMatrix2D":"wx.",
 "AffineMatrix2DBase":"wx.",
 "Alignment":"wx.",
