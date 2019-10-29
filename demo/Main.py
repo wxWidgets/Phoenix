@@ -1695,8 +1695,7 @@ class wxPythonDemo(wx.Frame):
                            wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnToggleRedirect, item)
 
-        wx.App.SetMacExitMenuItemId(9123)
-        exitItem = wx.MenuItem(menu, 9123, 'E&xit\tCtrl-Q', 'Get the heck outta here!')
+        exitItem = wx.MenuItem(menu, wx.ID_EXIT, 'E&xit\tCtrl-Q', 'Get the heck outta here!')
         exitItem.SetBitmap(images.catalog['exit'].GetBitmap())
         menu.Append(exitItem)
         self.Bind(wx.EVT_MENU, self.OnFileExit, exitItem)
@@ -2622,7 +2621,7 @@ class MySplashScreen(SplashScreen):
                                  wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
                                  5000, None, -1)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        self.fc = wx.CallLater(2000, self.ShowMain)
+        self.fc = wx.CallLater(1000, self.ShowMain)
 
 
     def OnClose(self, evt):
