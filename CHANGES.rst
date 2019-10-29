@@ -79,6 +79,9 @@ New and improved in this release:
   maintaining its own pointer. This way, if the wxApp is created by C++ code
   wxPython will still be able to get access to it. (#1126)
   
+* Added wrappers for the wx.ActivityIndicator class.
+
+
 
 
 4.0.7.post1 "Isn't it time for Python3?"
