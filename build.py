@@ -702,8 +702,8 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=75):
     cmd = 'scp {} {}:{}'.format(fileName, host, uploadDir)
     runcmd(cmd)
 
-    # Make sure it is readable by all
-    cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, uploadDir, os.path.basename(fileName))
+    # Make sure it is readable by all, and writable by rbot
+    cmd = 'ssh {} "cd {}; chmod 644 {}"'.format(host, uploadDir, os.path.basename(fileName))
     runcmd(cmd)
 
     if not options.release:
@@ -1131,7 +1131,7 @@ def cmd_sphinx(options, args):
     pwd2 = pushDir(sphinxDir)
     buildDir = os.path.join(sphinxDir, 'build')
     htmlDir = os.path.join(phoenixDir(), 'docs', 'html')
-    runcmd('sphinx-build -b html -d %s/doctrees . %s' % (buildDir, htmlDir))
+    runcmd('{} -m sphinx -b html -d {}/doctrees . {}'.format(PYTHON, buildDir, htmlDir))
     del pwd2
 
     msg('Postprocessing sphinx output...')
