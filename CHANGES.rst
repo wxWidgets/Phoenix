@@ -81,6 +81,8 @@ New and improved in this release:
   
 * Added wrappers for the wx.ActivityIndicator class.
 
+* Added wrappers for the wx.CollapsibleHeaderCtrl class.
+
 
 
 
