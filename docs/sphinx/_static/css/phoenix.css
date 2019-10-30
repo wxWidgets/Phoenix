@@ -121,7 +121,7 @@ div.document-no-sidebar {
   position: relative;
   margin-left: 0px;
   z-index: 0;
-  top: 30px;
+  top: 0px;
 }
 
 div.sphinxsidebar {
