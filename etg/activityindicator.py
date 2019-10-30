@@ -31,8 +31,6 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    #module.addHeaderCode('#include <wx/some_header_file.h>')
-
     c = module.find('wxActivityIndicator')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
