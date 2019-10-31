@@ -885,7 +885,7 @@ def bash2dosPath(path):
 def do_regenerate_sysconfig():
     """
     If a Python environment has been relocated to a new folder then it's
-    possible that the sysconfig can still be usign paths for the original
+    possible that the sysconfig can still be using paths for the original
     location. Since wxPython's build uses WAF, which uses the sysconfig (via
     python-config, distutils.sysconfig, etc.) then we need to ensure that these
     paths match the current environment.
@@ -901,7 +901,7 @@ def do_regenerate_sysconfig():
         runcmd(cmd)
 
         # On success the new data module will have been written to a subfolder
-        # of the current folder, which is recorded in ./pybuilddir.tx
+        # of the current folder, which is recorded in ./pybuilddir.txt
         with open('pybuilddir.txt', 'r') as fp:
             pybd = fp.read()
 

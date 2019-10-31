@@ -598,7 +598,7 @@ cdef class SVGgradient:
     @property
     def stops(self):
         """
-        A generator that iterates over the :classL`SVGgradientStop` objects contained in the SVGgradient
+        A generator that iterates over the :class:`SVGgradientStop` objects contained in the SVGgradient
         """
         self._check_ptr()
         for i in range(self._ptr.nstops):
