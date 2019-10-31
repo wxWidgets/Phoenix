@@ -763,7 +763,7 @@ def checkCompiler(quiet=False):
         # Make sure that the compiler that Python wants to use can be found.
         # It will terminate if the compiler is not found or other exceptions
         # are raised.
-        cmd = "import distutils.msvc9compiler as msvc; " \
+        cmd = "import setuptools, distutils.msvc9compiler as msvc; " \
               "mc = msvc.MSVCCompiler(); " \
               "mc.initialize(); " \
               "print(mc.cc)"
@@ -774,7 +774,7 @@ def checkCompiler(quiet=False):
         # Now get the environment variables which that compiler needs from
         # its vcvarsall.bat command and load them into this process's
         # environment.
-        cmd = "import distutils.msvc9compiler as msvc; " \
+        cmd = "import setuptools, distutils.msvc9compiler as msvc; " \
               "arch = msvc.PLAT_TO_VCVARS[msvc.get_platform()]; " \
               "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
               "print(env)"
