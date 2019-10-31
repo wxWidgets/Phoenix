@@ -1917,6 +1917,27 @@ class ULink(Node):
 
 # ----------------------------------------------------------------------- #
 
+class DashBase(Node):
+    dash_text = '-'
+
+    def Join(self, with_tail=True):
+        text = self.dash_text
+        if self.element.text:
+            text += self.element.text
+        if with_tail and self.element.tail:
+            text += convertToPython(self.element.tail)
+        return text
+
+
+class EnDash(DashBase):
+    dash_text = u'\u2013'
+
+class EmDash(DashBase):
+    dash_text = u'\u2014'
+
+
+# ----------------------------------------------------------------------- #
+
 class XMLDocString(object):
     """
     This is the main class of this script, and it uses heavily the :class:`Node`
@@ -2216,6 +2237,11 @@ class XMLDocString(object):
 
             self.root.AddSection(section)
             rest_class = parent
+
+        elif tag == 'ndash':
+            rest_class = EnDash(element, parent)
+        elif tag == 'mdash':
+            rest_class = EmDash(element, parent)
 
         else:
             rest_class = Node('', parent)
