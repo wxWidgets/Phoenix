@@ -9,6 +9,7 @@
 
 import sys
 import os
+import setuptools
 
 try:
     from textwrap import indent
