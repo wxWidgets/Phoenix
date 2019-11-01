@@ -1107,7 +1107,7 @@ struct __pyx_obj_2wx_3svg_8_nanosvg___pyx_scope_struct_1___get__ {
  *     @property
  *     def stops(self):             # <<<<<<<<<<<<<<
  *         """
- *         A generator that iterates over the :classL`SVGgradientStop` objects contained in the SVGgradient
+ *         A generator that iterates over the :class:`SVGgradientStop` objects contained in the SVGgradient
  */
 struct __pyx_obj_2wx_3svg_8_nanosvg___pyx_scope_struct_2___get__ {
   PyObject_HEAD
@@ -9688,7 +9688,7 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_11SVGgradient_5stops_2generator2(__
  *     @property
  *     def stops(self):             # <<<<<<<<<<<<<<
  *         """
- *         A generator that iterates over the :classL`SVGgradientStop` objects contained in the SVGgradient
+ *         A generator that iterates over the :class:`SVGgradientStop` objects contained in the SVGgradient
  */
 
 /* Python wrapper */
@@ -9760,7 +9760,7 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_11SVGgradient_5stops_2generator2(__
   if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 599, __pyx_L1_error)
 
   /* "wx/svg/_nanosvg.pyx":603
- *         A generator that iterates over the :classL`SVGgradientStop` objects contained in the SVGgradient
+ *         A generator that iterates over the :class:`SVGgradientStop` objects contained in the SVGgradient
  *         """
  *         self._check_ptr()             # <<<<<<<<<<<<<<
  *         for i in range(self._ptr.nstops):
@@ -9830,7 +9830,7 @@ static PyObject *__pyx_gb_2wx_3svg_8_nanosvg_11SVGgradient_5stops_2generator2(__
  *     @property
  *     def stops(self):             # <<<<<<<<<<<<<<
  *         """
- *         A generator that iterates over the :classL`SVGgradientStop` objects contained in the SVGgradient
+ *         A generator that iterates over the :class:`SVGgradientStop` objects contained in the SVGgradient
  */
 
   /* function exit code */
@@ -12756,7 +12756,7 @@ static struct PyGetSetDef __pyx_getsets_2wx_3svg_8_nanosvg_SVGgradient[] = {
   {(char *)"spread", __pyx_getprop_2wx_3svg_8_nanosvg_11SVGgradient_spread, 0, (char *)0, 0},
   {(char *)"fx", __pyx_getprop_2wx_3svg_8_nanosvg_11SVGgradient_fx, 0, (char *)0, 0},
   {(char *)"fy", __pyx_getprop_2wx_3svg_8_nanosvg_11SVGgradient_fy, 0, (char *)0, 0},
-  {(char *)"stops", __pyx_getprop_2wx_3svg_8_nanosvg_11SVGgradient_stops, 0, (char *)"\n        A generator that iterates over the :classL`SVGgradientStop` objects contained in the SVGgradient\n        ", 0},
+  {(char *)"stops", __pyx_getprop_2wx_3svg_8_nanosvg_11SVGgradient_stops, 0, (char *)"\n        A generator that iterates over the :class:`SVGgradientStop` objects contained in the SVGgradient\n        ", 0},
   {0, 0, 0, 0, 0}
 };
 

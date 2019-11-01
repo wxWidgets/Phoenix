@@ -84,7 +84,6 @@ will be adjusted accordingly.::
 import wx
 from six.moves import zip_longest
 
-from ._version import __version__
 from ._nanosvg import *
 
 # All the supported renderers now support gradient transforms, more or less, but

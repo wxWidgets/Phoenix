@@ -19,7 +19,10 @@ try:
 except ImportError:
     have_cython = False
 
-VERSION          = "0.1.0"
+# Create a buildtools.config.Configuration object, to get the VERSION
+from buildtools.config import Config
+cfg = Config(noWxConfig=True)
+
 DESCRIPTION      = 'Wrapper for nanosvg library, plus code for integrating with wxPython'
 LONG_DESCRIPTION = ''
 AUTHOR           = 'Robin Dunn'
@@ -32,12 +35,7 @@ PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 HERE = os.path.abspath(os.path.dirname(__file__))
 PACKAGE = 'wx.svg'
 PACKAGEDIR = 'wx/svg'
-
-with open(os.path.join(HERE, PACKAGEDIR, '_version.py'), 'w') as f:
-    f.write(textwrap.dedent("""\
-        # Generated from {}
-        __version__ = '{}'
-        """.format(__file__, VERSION)))
+BUILD_OPTIONS = { 'build_base' : 'build/wxsvg' }
 
 if have_cython:
     SOURCE = os.path.join(PACKAGEDIR, '_nanosvg.pyx')
@@ -61,8 +59,8 @@ else:
     modules = [module]
 
 
-setup(name             = 'nanosvg',
-      version          = VERSION,
+setup(name             = 'wx.svg',
+      version          = cfg.VERSION,
       description      = DESCRIPTION,
       long_description = LONG_DESCRIPTION,
       author           = AUTHOR,
@@ -70,6 +68,7 @@ setup(name             = 'nanosvg',
       url              = URL,
       download_url     = DOWNLOAD_URL,
       license          = LICENSE,
-      packages         = [PACKAGE],
+      #packages         = [PACKAGE],
       ext_modules      = modules,
+      options          = { 'build' : BUILD_OPTIONS,  },
 )
