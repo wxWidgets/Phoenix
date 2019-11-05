@@ -35,6 +35,27 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    # DrawTitleBarBitmap is not implemented on wxGTK (not even an
+    # empty stub) so we need to graft it into the classes in a way
+    # that is compilable on all platforms.
+    def _addDrawTitleBarBitmap(c, isPureVirtual, doc):
+        method = c.findItem('DrawTitleBarBitmap')
+        if method:
+            method.ignore()
+        c.addCppMethod('void', 'DrawTitleBarBitmap',
+            '(wxWindow* win, wxDC& dc, const wxRect& rect, wxTitleBarButton button, int flags = 0)',
+            doc=draw_tb_bmp_doc,
+            isVirtual=True,
+            isPureVirtual=isPureVirtual,                     
+            body="""\
+                #ifdef wxHAS_DRAW_TITLE_BAR_BITMAP
+                    self->DrawTitleBarBitmap(win, *dc, *rect, button, flags);
+                #else
+                    wxPyRaiseNotImplemented();
+                #endif
+                """)
+
+
     c = module.find('wxRendererNative')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
@@ -43,28 +64,15 @@ def run():
     c.find('GetGeneric').mustHaveApp()
     c.find('GetDefault').mustHaveApp()
     c.find('Set').mustHaveApp()
-    c.find('DrawTitleBarBitmap').ignore()
+
     draw_tb_bmp_doc = c.find('DrawTitleBarBitmap').briefDoc
+    _addDrawTitleBarBitmap(c, True, draw_tb_bmp_doc)
+        
 
     c = module.find('wxDelegateRendererNative')
     c.mustHaveApp()
     c.addPrivateCopyCtor()
-
-    #virtual void DrawTitleBarBitmap(wxWindow *win,
-    #                                wxDC& dc,
-    #                                const wxRect& rect,
-    #                                wxTitleBarButton button,
-    #                                int flags = 0);
-    c.addCppMethod('void', 'DrawTitleBarBitmap',
-        '(wxWindow* win, wxDC& dc, const wxRect& rect, wxTitleBarButton button, int flags = 0)',
-        doc=draw_tb_bmp_doc,
-        body="""\
-            #ifdef wxHAS_DRAW_TITLE_BAR_BITMAP
-                self->DrawTitleBarBitmap(win, *dc, *rect, button, flags);
-            #else
-                wxPyRaiseNotImplemented();
-            #endif
-        """)
+    _addDrawTitleBarBitmap(c, False, draw_tb_bmp_doc)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
