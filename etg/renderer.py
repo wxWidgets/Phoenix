@@ -44,9 +44,9 @@ def run():
             method.ignore()
         c.addCppMethod('void', 'DrawTitleBarBitmap',
             '(wxWindow* win, wxDC& dc, const wxRect& rect, wxTitleBarButton button, int flags = 0)',
-            doc=draw_tb_bmp_doc,
+            doc=doc,
             isVirtual=True,
-            isPureVirtual=isPureVirtual,                     
+            isPureVirtual=isPureVirtual,
             body="""\
                 #ifdef wxHAS_DRAW_TITLE_BAR_BITMAP
                     self->DrawTitleBarBitmap(win, *dc, *rect, button, flags);
@@ -67,7 +67,7 @@ def run():
 
     draw_tb_bmp_doc = c.find('DrawTitleBarBitmap').briefDoc
     _addDrawTitleBarBitmap(c, True, draw_tb_bmp_doc)
-        
+
 
     c = module.find('wxDelegateRendererNative')
     c.mustHaveApp()
