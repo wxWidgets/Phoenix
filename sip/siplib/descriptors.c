@@ -1,7 +1,7 @@
 /*
  * The implementation of the different descriptors.
  *
- * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -107,6 +107,9 @@ PyTypeObject sipMethodDescr_Type = {
 #endif
 #if PY_VERSION_HEX >= 0x03040000
     0,                      /* tp_finalize */
+#endif
+#if PY_VERSION_HEX >= 0x03080000
+    0,                      /* tp_vectorcall */
 #endif
 };
 
@@ -316,6 +319,9 @@ PyTypeObject sipVariableDescr_Type = {
 #endif
 #if PY_VERSION_HEX >= 0x03040000
     0,                      /* tp_finalize */
+#endif
+#if PY_VERSION_HEX >= 0x03080000
+    0,                      /* tp_vectorcall */
 #endif
 };
 
