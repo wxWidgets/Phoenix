@@ -19,23 +19,9 @@ cd $PROJECTS/sip/sip
 SIPVER=`$PYTHON configure.py --version | grep -v "This is SIP"`
 
 if [ "$PLATFORM" = "darwin" ]; then
-    # try to ensure compatibility back to 10.6 if we can
-    xcode=$(xcode-select -print-path)
-    for v in 7 8 9 10 11 12 13 14 15; do
-        if [ -d $xcode/SDKs/MacOSX10.$v.sdk ]; then
-            SDK=$xcode/SDKs/MacOSX10.$v.sdk
-            break
-        elif [ -d $xcode/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.$v.sdk ]; then
-            SDK=$xcode/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.$v.sdk
-            break
-        fi
-    done
-
     $PYTHON configure.py \
-	--deployment-target=10.7 \
-	--sdk=$SDK \
-	--arch=i386 \
-	--universal \
+	--deployment-target=10.9 \
+	--arch=x86_64 \
 	--sip-module wx.siplib \
 	$*
 
