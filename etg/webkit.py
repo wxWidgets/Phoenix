@@ -36,6 +36,11 @@ def run():
 
     module.addHeaderCode('#include <wx/html/webkit.h>')
 
+    tools.generateStubs('wxUSE_WEBKIT', module,
+                        extraHdrCode='extern const char* wxWebKitCtrlNameStr;\n',
+                        extraCppCode='const char* wxWebKitCtrlNameStr = "";\n')
+
+
     c = module.find('wxWebKitCtrl')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
