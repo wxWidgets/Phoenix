@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041310
-#define SIP_VERSION_STR     "4.19.16"
+#define SIP_VERSION         0x041313
+#define SIP_VERSION_STR     "4.19.19"
 
 
 /*
@@ -67,6 +67,10 @@ extern "C" {
  * minor number set * to 0.
  *
  * History:
+ *
+ * 12.7 Added sip_api_visit_wrappers() to the public API.
+ *      Added sip_api_register_exit_notifier() to the public API.
+ *      sip_api_is_owned_by_python() is now part of the public API.
  *
  * 12.6 Added sip_api_long_as_size_t() to the public API.
  *      Added the '=' format character to sip_api_build_result().
@@ -272,7 +276,7 @@ extern "C" {
  * 0.0  Original version.
  */
 #define SIP_API_MAJOR_NR    12
-#define SIP_API_MINOR_NR    6
+#define SIP_API_MINOR_NR    7
 
 
 /*
@@ -537,6 +541,7 @@ typedef PyObject *(*sipVariableGetterFunc)(void *, PyObject *, PyObject *);
 typedef int (*sipVariableSetterFunc)(void *, PyObject *, PyObject *);
 typedef void *(*sipProxyResolverFunc)(void *);
 typedef int (*sipNewUserTypeFunc)(sipWrapperType *);
+typedef void (*sipWrapperVisitorFunc)(sipSimpleWrapper *, void *);
 
 
 #if !defined(Py_LIMITED_API) || PY_VERSION_HEX < 0x03020000
@@ -1871,7 +1876,15 @@ typedef struct _sipAPIDef {
     int (*api_init_mixin)(PyObject *self, PyObject *args, PyObject *kwds,
             const sipClassTypeDef *ctd);
     PyObject *(*api_get_reference)(PyObject *self, int key);
+
+    /*
+     * The following are part of the public API.
+     */
     int (*api_is_owned_by_python)(sipSimpleWrapper *);
+
+    /*
+     * The following are not part of the public API.
+     */
     int (*api_is_derived_class)(sipSimpleWrapper *);
 
     /*
@@ -1939,6 +1952,8 @@ typedef struct _sipAPIDef {
             SIP_SSIZE_T *start, SIP_SSIZE_T *stop, SIP_SSIZE_T *step,
             SIP_SSIZE_T *slicelength);
     size_t (*api_long_as_size_t)(PyObject *o);
+    void (*api_visit_wrappers)(sipWrapperVisitorFunc visitor, void *closure);
+    int (*api_register_exit_notifier)(PyMethodDef *md);
 } sipAPIDef;
 
 

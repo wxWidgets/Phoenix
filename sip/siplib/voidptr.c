@@ -1,7 +1,7 @@
 /*
  * SIP library code.
  *
- * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -801,6 +801,9 @@ PyTypeObject sipVoidPtr_Type = {
 #endif
 #if PY_VERSION_HEX >= 0x03040000
     0,                      /* tp_finalize */
+#endif
+#if PY_VERSION_HEX >= 0x03080000
+    0,                      /* tp_vectorcall */
 #endif
 };
 

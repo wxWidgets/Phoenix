@@ -87,12 +87,12 @@ wxICON = 'packaging/docset/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.19.16'
+sipCurrentVersion = '4.19.19'
 sipMD5 = {
-    'darwin'   : 'ddb27cd807cc5474ce4d557f18b709dc',
-    'win32'    : 'e381c10b799a2bd130fceb330a149626',
-    'linux32'  : '6f5438ecaf38eef35380ff6652747f8b',
-    'linux64'  : 'e8566e05d2122344ec7ce0e289877f74',
+    'darwin'   : '3309e69f2341f11bac263d7faea19616',
+    'win32'    : 'fd8be5c5fa369a848e907acad6879846',
+    'linux32'  : 'd0271b47695e74483f0c0d54f24819d5',
+    'linux64'  : '355410a19846768cdeb53efe249aabdb',
 }
 
 wafCurrentVersion = '2.0.17'
@@ -129,8 +129,6 @@ Usage: ./build.py [command(s)] [options]
       sip           Run sip to generate the C++ wrapper source
 
       wxlib         Build the Sphinx input files for wx.lib
-      wxpy          Build the Sphinx input files for wx.py
-      wxtools       Build the Sphinx input files for wx.tools
       sphinx        Run the documentation building process using Sphinx
 
       docset        Build Dash or Zeal compatible docsets
