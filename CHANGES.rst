@@ -8,6 +8,21 @@
 wxPython Changelog
 ==================
 
+4.0.7.post2 "To QTKit, or not to QtKit..."
+------------------------------------------
+* 12-Nov-2019
+
+PyPI:   https://pypi.org/project/wxPython/4.0.7.post2
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.7.post2``
+
+This post-release changes a wxWidgets configure option on macOS so the build
+will be forced to use AVFoundation instead of QTKit. This ensures that
+wxMediaCtrl will work on macOS 10.15+, where all support for QTKit has been
+removed.
+
+
+
 4.0.7.post1 "Isn't it time for Python3?"
 ----------------------------------------
 * 28-Oct-2019
