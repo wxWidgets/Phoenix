@@ -356,8 +356,8 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnFilePrint, id=202)
         menu.Append(203, 'Save Plot...', 'Save current plot')
         self.Bind(wx.EVT_MENU, self.OnSaveFile, id=203)
-        menu.Append(205, 'E&xit', 'Enough of this already!')
-        self.Bind(wx.EVT_MENU, self.OnFileExit, id=205)
+        menu.Append(wx.ID_EXIT, 'E&xit', 'Enough of this already!')
+        self.Bind(wx.EVT_MENU, self.OnFileExit, id=wx.ID_EXIT)
         self.mainmenu.Append(menu, '&File')
 
     def _init_plot_menu(self):
@@ -580,8 +580,8 @@ class PlotDemoMainFrame(wx.Frame):
     def _init_help_menu(self):
         """ Create the "Help" menu items. """
         menu = wx.Menu()
-        menu.Append(300, '&About', 'About this thing...')
-        self.Bind(wx.EVT_MENU, self.OnHelpAbout, id=300)
+        menu.Append(wx.ID_ABOUT, '&About', 'About this thing...')
+        self.Bind(wx.EVT_MENU, self.OnHelpAbout, id=wx.ID_ABOUT)
         self.mainmenu.Append(menu, '&Help')
 
     # -----------------------------------------------------------------------
