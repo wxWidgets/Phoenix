@@ -8,7 +8,7 @@
 wxPython Changelog
 ==================
 
-4.0.7.post2 "To QTKit, or not to QtKit..."
+4.0.7.post2 "To QTKit, or not to QTKit..."
 ------------------------------------------
 * 12-Nov-2019
 
