@@ -1291,8 +1291,8 @@ class FixedPoint(object):
     negative, `str(x)[0] == "-"`.
 
     The :class:`FixedPoint` constructor can be passed an int, long, string, float,
-    :class:`FixedPoint`, or any object convertible to a float via `float()` or to a
-    long via `long()`. Passing a precision is optional; if specified, the
+    :class:`FixedPoint`, or any object convertible to a float via `float()` or to an
+    integer via `inf()`. Passing a precision is optional; if specified, the
     precision must be a non-negative int. There is no inherent limit on
     the size of the precision, but if very very large you'll probably run
     out of memory.
@@ -1338,7 +1338,7 @@ class FixedPoint(object):
             return
 
         if isinstance(value, six.integer_types):
-            self.n = long(value) * _tento(p)
+            self.n = int(value) * _tento(p)
             return
 
         if isinstance(value, FixedPoint):
@@ -1399,7 +1399,7 @@ class FixedPoint(object):
         # similarly for long
         yes = 1
         try:
-            aslong = long(value)
+            aslong = int(value)
         except:
             yes = 0
         if yes:
@@ -1581,7 +1581,7 @@ class FixedPoint(object):
         return float(n) / float(_tento(p))
 
     # XXX should this round instead?
-    # XXX note e.g. long(-1.9) == -1L and long(1.9) == 1L in Python
+    # XXX note e.g. int(-1.9) == -1L and int(1.9) == 1L in Python
     # XXX note that __int__ inherits whatever __long__ does,
     # XXX and .frac() is affected too
     def __long__(self):
@@ -1613,11 +1613,11 @@ class FixedPoint(object):
 
          this equality holds true::
 
-                x = x.frac() + long(x)
+                x = x.frac() + int(x)
 
 
         """
-        return self - long(self)
+        return self - int(self)
 
     # return n, p s.t. self == n/10**p and n % 10 != 0
     def __reduce(self):
@@ -1736,7 +1736,7 @@ def _string2exact(s):
     assert intpart
     assert fracpart
 
-    i, f = long(intpart), long(fracpart)
+    i, f = int(intpart), int(fracpart)
     nfrac = len(fracpart)
     i = i * _tento(nfrac) + f
     exp = exp - nfrac
