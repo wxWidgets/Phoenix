@@ -83,6 +83,8 @@ New and improved in this release:
 
 * Added wrappers for the wx.CollapsibleHeaderCtrl class.
 
+* Fixed issues in PlotCanvas around displaying and using scrollbars. (#1428)
+
 
 
 
