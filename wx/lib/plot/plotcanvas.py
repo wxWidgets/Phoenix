@@ -1852,12 +1852,12 @@ class PlotCanvas(wx.Panel):
         # Get ticks and textExtents for axis if required
         xticks = yticks = None
         xTextExtent = yTextExtent = (0, 0)  # No text for ticks
-        if self._xSpec is not 'none':
+        if self._xSpec != 'none':
             xticks = self._xticks(xAxis[0], xAxis[1])
             # w h of x axis text last number on axis
             xTextExtent = dc.GetTextExtent(xticks[-1][1])
 
-        if self._ySpec is not 'none':
+        if self._ySpec != 'none':
             yticks = self._yticks(yAxis[0], yAxis[1])
             if self.logScale[1]:
                 # make sure we have enough room to display SI notation.
