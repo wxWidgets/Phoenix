@@ -339,6 +339,8 @@ class PlotDemoMainFrame(wx.Frame):
         # Show closest point when enabled
         self.client.canvas.Bind(wx.EVT_MOTION, self.OnMotion)
 
+        self.OnPlotDraw1(None)
+
         wx.CallAfter(wx.MessageBox,
                      "Various plot types can be shown using the Plot menu. " +
                      "Check out the Options menu too.",
@@ -427,6 +429,10 @@ class PlotDemoMainFrame(wx.Frame):
                     'Activates dragging mode', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableDrag, id=217)
 
+        item = menu.Append(-1, 'Enable &Scrollbars (if needed)',
+                    'Enable Scrollbars (if needed)', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableScrollbars, item)
+
         menu.Append(222, 'Enable &Point Label',
                     'Show Closest Point', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnablePointLabel, id=222)
@@ -468,7 +474,7 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableGridY, id=2152)
         self.Bind(wx.EVT_MENU, self.OnEnableGridAll, id=2153)
 
-        menu.Append(215, 'Enable Grid', submenu, 'Turn on Grid')
+        menu.AppendSubMenu(submenu, 'Enable Grid', 'Turn on Grid')
 
         ### SubMenu for Axes
         submenu = wx.Menu()
@@ -486,8 +492,7 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableAxesBottomLeft, id=2405)
         self.Bind(wx.EVT_MENU, self.OnEnableAxesAll, id=2406)
 
-        menu.Append(240, 'Enable Axes', submenu,
-                    'Enables the display of the Axes')
+        menu.AppendSubMenu(submenu, 'Enable Axes', 'Enables the display of the Axes')
 
         submenu = wx.Menu()
         submenu_items = ("Bottom", "Left", "Top", "Right")
@@ -506,8 +511,7 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableAxesValuesTop, id=2453)
         self.Bind(wx.EVT_MENU, self.OnEnableAxesValuesRight, id=2454)
 
-        menu.Append(245, 'Enable Axes Values', submenu,
-                    'Enables the display of the axes values')
+        menu.AppendSubMenu(submenu, 'Enable Axes Values', 'Enables the display of the axes values')
 
         submenu = wx.Menu()
         submenu_items = ("Bottom", "Left", "Top", "Right",
@@ -529,8 +533,7 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableTicksBottomLeft, id=2505)
         self.Bind(wx.EVT_MENU, self.OnEnableTicksAll, id=2506)
 
-        menu.Append(250, 'Enable Ticks', submenu,
-                    'Enables the display of the ticks')
+        menu.AppendSubMenu(submenu, 'Enable Ticks','Enables the display of the ticks')
 
         menu.Append(255, 'Enable Plot Title',
                     'Enables the plot title', kind=wx.ITEM_CHECK)
@@ -906,6 +909,9 @@ class PlotDemoMainFrame(wx.Frame):
         self.client.enableDrag = event.IsChecked()
         if self.mainmenu.IsChecked(214):
             self.mainmenu.Check(214, False)
+
+    def OnEnableScrollbars(self, event):
+        self.client.showScrollbars = event.IsChecked()
 
     def OnEnableLegend(self, event):
         self.client.enableLegend = event.IsChecked()
