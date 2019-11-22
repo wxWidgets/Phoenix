@@ -1646,7 +1646,7 @@ class GenericTreeItem(object):
         self._ownsAttr = False      # delete attribute when done
         self._type = ct_type        # item type: 0=normal, 1=check, 2=radio
         self._is3State = False      # true for 3-state checkbox items
-        self._checked = 0           # only meaningful for check and radio items
+        self._checked = False       # only meaningful for check and radio items
         self._enabled = True        # flag to enable/disable an item
         self._hypertext = False     # indicates if the item is hypertext
         self._visited = False       # visited state for an hypertext item
@@ -2286,7 +2286,7 @@ class GenericTreeItem(object):
 
         :note: This method is meaningful only for checkbox-like items.
         """
-
+        assert state in [wx.CHK_UNCHECKED, wx.CHK_CHECKED, wx.CHK_UNDETERMINED]
         if not self._is3State and state == wx.CHK_UNDETERMINED:
             raise Exception("Set3StateValue can only be used with 3-state checkbox items.")
 
@@ -2332,7 +2332,7 @@ class GenericTreeItem(object):
         :note: This is meaningful only for checkbox-like and radiobutton-like items.
         :note: Always use :meth:`~CustomTreeCtrl.CheckItem` instead to update the tree properly and send events.
         """
-
+        assert checked in [True, False]
         self._checked = checked
 
 
@@ -2676,8 +2676,7 @@ class GenericTreeItem(object):
             return None
 
         checked = self.IsChecked()
-
-        if checked > 0:
+        if checked:
             if self._type == 1:     # Checkbox
                 if checked == wx.CHK_CHECKED:
                     return self._checkedimages[TreeItemIcon_Checked]
