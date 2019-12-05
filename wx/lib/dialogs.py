@@ -442,7 +442,7 @@ class MultiMessageDialog(wx.Dialog):
                      ))
         self.Bind(wx.EVT_BUTTON, self.OnButton)
         if btnLabels:
-            for sid, label in btnLabels.iteritems():
+            for sid, label in btnLabels.items():
                 btn = self.FindWindow(sid)
                 if btn:
                     btn.SetLabel(label)
