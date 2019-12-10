@@ -53,6 +53,14 @@ def run():
     c.find('GetDefaultEncoding').mustHaveApp()
     c.find('SetDefaultEncoding').mustHaveApp()
 
+    # Tweak the documentation in this constructor a little, replacing the
+    # link to another constructor with a simpler version of the text.
+    ctor = c.find('wxFont').findOverload('int pointSize')
+    # TODO: should implement an easier way to findDocNode() the node containing what we're looking for...
+    ref = list(ctor.detailedDoc[0])[0]
+    assert ref.text.startswith('wxFont(')
+    ref.tag = 'para'
+    ref.text = 'the constructor accepting a :ref:`wx.FontInfo`'
 
     # FFont factory function for backwards compatibility
     module.addCppFunction('wxFont*', 'FFont',
