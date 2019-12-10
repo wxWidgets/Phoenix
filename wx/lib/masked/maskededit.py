@@ -2645,7 +2645,7 @@ class MaskedEditMixin:
                         raise ve
                     elif replace_to > end:
 ####                        dbg(indent=0)
-                        ve = ValueError('"%s" will not fit into field %d of control "%s"' (choice, index, self.name))
+                        ve = ValueError('"%s" will not fit into field %d of control "%s"' % (choice, index, self.name))
                         ve.value = choice
                         ve.index = index
                         raise ve
