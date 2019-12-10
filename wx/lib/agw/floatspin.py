@@ -1292,7 +1292,7 @@ class FixedPoint(object):
 
     The :class:`FixedPoint` constructor can be passed an int, long, string, float,
     :class:`FixedPoint`, or any object convertible to a float via `float()` or to an
-    integer via `inf()`. Passing a precision is optional; if specified, the
+    integer via `int()`. Passing a precision is optional; if specified, the
     precision must be a non-negative int. There is no inherent limit on
     the size of the precision, but if very very large you'll probably run
     out of memory.
