@@ -329,6 +329,11 @@ bool wxPyApp::IsDisplayAvailable()
 #endif
     {
         // Also foreground the application on the first call as a side-effect.
+        // 
+        // TODO: These APIs are deprecated, and will likely be gone in the 10.15 SDK
+        //
+        // [NSRunningApplication activateIgnoringOtherApps: YES]  ??
+        // 
         if (GetCurrentProcess(&psn) < 0 || SetFrontProcess(&psn) < 0) {
             rv = false;
         } else {
