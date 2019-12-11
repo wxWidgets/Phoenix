@@ -120,12 +120,20 @@ def run():
     c.addPyMethod('SetClientRect', '(self, rect)', 'return self.SetClientSize(rect)')
     c.addPyProperty('ClientRect GetClientRect SetClientRect')
 
-    m = c.find('GetTextExtent').findOverload('int *')
-    m.pyName = 'GetFullTextExtent'
-    m.find('w').out = True
-    m.find('h').out = True
-    m.find('descent').out = True
-    m.find('externalLeading').out = True
+    # Split the overloaded GetTextExtent into two distinct methods, because the
+    # resulting method signatures are not different enough from the Python
+    # perspective.
+    m1 = c.find('GetTextExtent') #.findOverload('int *')
+    assert len(m1.overloads) == 1
+    m2 = m1.overloads.pop()
+    c.insertItemAfter(m1, m2)
+
+    # Now do the needed tweaks for the full GetFullTextExtent
+    m1.pyName = 'GetFullTextExtent'
+    m1.find('w').out = True
+    m1.find('h').out = True
+    m1.find('descent').out = True
+    m1.find('externalLeading').out = True
 
     c.find('GetHandle').type = 'wxUIntPtr*'
     c.find('GetHandle').setCppCode("return new wxUIntPtr(wxPyGetWinHandle(self));")
