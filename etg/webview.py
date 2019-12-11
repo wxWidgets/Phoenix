@@ -24,6 +24,7 @@ ITEMS  = [ 'wxWebViewHistoryItem',
            'wxWebView',
            'wxWebViewEvent',
            'wxWebViewFactory',
+           'wxWebViewIE',
            ]
 
 #---------------------------------------------------------------------------
@@ -68,6 +69,10 @@ def run():
         };
         #endif
         """)
+
+    # Pull out the obj for wxWebViewIE so we can use it later, but not include it in the stubs
+    wvie = module.find('wxWebViewIE')
+    module.items.remove(wvie)
 
     # This tweak is needed only for the stub code
     module.find('wxWebViewHandler.wxWebViewHandler').argsString = '(const wxString& scheme="")'
@@ -134,15 +139,11 @@ def run():
     ##    "sipCpp->LoadHistoryItem(wxSharedPtr<wxWebViewHistoryItem>(item));")
 
 
-    # The emulation level is set as a per-application value in the Windows
-    # Registry. The way this is implemented in the C++ code we end up with the
-    # name of the _core extransion module in the Reistry instead of the .exe
-    # name which is what is needed.
-    #
-    # So instead of doing simple wrappers with #if checks like normal, replace
-    # these methods with a new implementation that does the RightThing using
-    # sys.executable.
+    # Add the MSW methods in wxWebViewIE into the main WebView class like they were before.
+    c.addItem(wvie.find('MSWSetEmulationLevel'))
+    c.addItem(wvie.find('MSWSetModernEmulationLevel'))
 
+    # Give them an implementation that doesn't matter which class they are actually located in.
     c.find('MSWSetEmulationLevel').setCppCode("""\
         #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
             return _do_MSWSetEmulationLevel(level);
@@ -160,6 +161,14 @@ def run():
         #endif
         """)
 
+    # The emulation level is set as a per-application value in the Windows
+    # Registry. The way this is implemented in the C++ code we end up with the
+    # name of the _core extransion module in the Reistry instead of the .exe
+    # name, which is what is really needed.
+    #
+    # So instead of doing simple wrappers with #if checks like normal, replace
+    # these methods with a new implementation that does the RightThing using
+    # sys.executable.
     c.addCppCode(r"""
         #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
         #include <wx/msw/webview_ie.h>
@@ -183,7 +192,6 @@ def run():
                 wxLogWarning(_("Failed to find web view emulation level in the registry"));
                 return false;
             }
-
             if ( level != wxWEBVIEWIE_EMU_DEFAULT )
             {
                 if ( !key.SetValue(programName, level) )
@@ -200,7 +208,6 @@ def run():
                     return false;
                 }
             }
-
             return true;
         }
         #endif
