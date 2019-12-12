@@ -26,9 +26,9 @@ New and improved in this release:
 
 * Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
   OSXEnableAutomaticDashSubstitution, and OSXDisableAllSmartSubstitutions
-  methods in wx.TextCtrl.
+  methods in wx.TextCtrl. Also added OSXEnableAutomaticTabbing in wx.App.
 
-* Added wx.ColourDialogEvent, wxDCTextBgColourChanger, wxDCTextBgModeChanger,
+* Added wx.ColourDialogEvent, wx.DCTextBgColourChanger, wx.DCTextBgModeChanger,
   wx.grid.GridCellDateRenderer, wx.grid.GridCellDateEditor, wx.SystemAppearance,
   etc.
 
