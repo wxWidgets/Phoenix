@@ -68,6 +68,7 @@ public:
     virtual void MacPrintFile(const wxString &) {}
     virtual void MacReopenApp() {}
     virtual bool OSXIsGUIApplication() { return true; }
+    void OSXEnableAutomaticTabbing(bool) {}
 #endif
 
 #ifdef __WXMAC__
