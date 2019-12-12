@@ -226,6 +226,7 @@ def main(wxDir, args):
         "features"      : ("", "A comma-separated list of wxUSE_XYZ defines on Win, or a list of configure flags on unix."),
         "verbose"       : (False, "Print commands as they are run, (to aid with debugging this script)"),
         "jom"           : (False, "Use jom.exe instead of nmake for MSW builds."),
+        "no_dpi_aware"  : (False, "Don't use the DPI_AWARE_MANIFEST."),
     }
 
     parser = optparse.OptionParser(usage="usage: %prog [options]", version="%prog 1.0")
@@ -467,6 +468,10 @@ def main(wxDir, args):
 
             if options.jom:
                 nmakeCommand = 'jom.exe'
+
+            if options.no_dpi_aware:
+                args.append("USE_DPI_AWARE_MANIFEST=0")
+
 
             wxBuilder = builder.MSVCBuilder(commandName=nmakeCommand)
 

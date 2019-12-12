@@ -1394,6 +1394,9 @@ def cmd_build_wx(options, args):
         if options.jom:
             build_options.append('--jom')
 
+        if version2 == '2.7':
+            build_options.append('--no_dpi_aware')
+
     else:
         # Platform is something other than MSW
         if options.osx_carbon:
