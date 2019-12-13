@@ -1394,7 +1394,7 @@ def cmd_build_wx(options, args):
         if options.jom:
             build_options.append('--jom')
 
-        if version2 == '2.7':
+        if PY2:
             build_options.append('--no_dpi_aware')
 
     else:
