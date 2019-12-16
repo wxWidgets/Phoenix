@@ -150,7 +150,9 @@ class Builder:
 # Concrete subclasses of abstract Builder interface
 
 class GNUMakeBuilder(Builder):
-    def __init__(self, commandName="make", formatName="GNUMake"):
+    def __init__(self, commandName=None, formatName="GNUMake"):
+        if commandName is None:
+            commandName = os.environ.get("MAKE", "make")
         Builder.__init__(self, commandName=commandName, formatName=formatName)
 
 
