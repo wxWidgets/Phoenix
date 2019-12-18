@@ -397,13 +397,25 @@ def run():
     c.find('GetPosition').findOverload('wxCoord').ignore()
     c.find('GetUnicodeKey').type = 'int'
 
+    c.addCppMethod('void', 'SetKeyCode', '(int keyCode)',
+        body="self->m_keyCode = keyCode;")
+
+    c.addCppMethod('void', 'SetRawKeyCode', '(int rawKeyCode)',
+        body="self->m_rawCode = rawKeyCode;")
+
+    c.addCppMethod('void', 'SetRawKeyFlags', '(int rawFlags)',
+        body="self->m_rawFlags = rawFlags;")
+
+    c.addCppMethod('void', 'SetUnicodeKey', '(int uniChar)',
+        body="self->m_uniChar = uniChar;")
+
     c.addProperty('X GetX')
     c.addProperty('Y GetY')
-    c.addProperty('KeyCode GetKeyCode')
+    c.addProperty('KeyCode GetKeyCode SetKeyCode')
     c.addProperty('Position GetPosition')
-    c.addProperty('RawKeyCode GetRawKeyCode')
-    c.addProperty('RawKeyFlags GetRawKeyFlags')
-    c.addProperty('UnicodeKey GetUnicodeKey')
+    c.addProperty('RawKeyCode GetRawKeyCode SetRawKeyCode')
+    c.addProperty('RawKeyFlags GetRawKeyFlags SetRawKeyFlags')
+    c.addProperty('UnicodeKey GetUnicodeKey SetUnicodeKey')
 
     #---------------------------------------
     # wxScrollEvent
