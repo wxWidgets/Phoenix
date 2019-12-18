@@ -171,6 +171,9 @@ class Configuration(object):
                              ('SIP_MODULE_NAME', 'wx.siplib'),
                              ('SIP_MODULE_BASENAME', 'siplib'),
                              ]
+            if int(getVisCVersion()) > 100:
+                self.defines += [ ('wxUSE_RC_MANIFEST', '1'),
+                                  ('wxUSE_DPI_AWARE_MANIFEST', '2') ]
 
             self.libs = []
             self.libdirs = [ opj(self.WXDIR, 'lib', self.VCDLL) ]
