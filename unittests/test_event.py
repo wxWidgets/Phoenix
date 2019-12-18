@@ -68,6 +68,30 @@ class Events(wtc.WidgetTestCase):
         unikey = evt.GetUnicodeKey()
         self.assertTrue(isinstance(unikey, int))
 
+    def test_KeyEvent_SetUnicodeKey(self):
+        evt = wx.KeyEvent()
+        value = 666
+        evt.SetUnicodeKey(value)
+        self.assertTrue(evt.GetUnicodeKey() == value)
+
+    def test_KeyEvent_SetKeyCode(self):
+        evt = wx.KeyEvent()
+        value = wx.WXK_ADD
+        evt.SetKeyCode(value)
+        self.assertTrue(evt.GetKeyCode() == value)
+
+    def test_KeyEvent_SetRawKeyCode(self):
+        evt = wx.KeyEvent()
+        value = wx.WXK_ADD
+        evt.SetRawKeyCode(value)
+        self.assertTrue(evt.GetRawKeyCode() == value)
+
+    def test_KeyEvent_SetRawKeyFlags(self):
+        evt = wx.KeyEvent()
+        value = 3
+        evt.SetRawKeyFlags(value)
+        self.assertTrue(evt.GetRawKeyFlags() == value)
+
     def test_MaximizeEvent_ctor(self):
         evt = wx.MaximizeEvent()
 
