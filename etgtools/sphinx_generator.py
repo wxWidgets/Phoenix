@@ -1042,7 +1042,7 @@ class Section(Node):
         text = Node.Join(self, with_tail=False)
 
         if not text.strip() or len(text.strip()) < 3:
-            # Empy text or just trailing commas
+            # Empty text or just trailing commas
             return ''
 
         if self.is_overload and self.share_docstrings:
@@ -1064,6 +1064,12 @@ class Section(Node):
                     if version.endswith('.'):
                         version = version[0:-1]
                     text = '%s\n%s%s'%(version, sub_spacer, text)
+
+                # Show both the wxPython and the wxWidgets version numbers for
+                # versions >= 3. That's not entirely accurate, but close enough.
+                if text.startswith('3.'):
+                    wx_ver = text[:5]
+                    text = '4.{}/wxWidgets-{} {}'.format(wx_ver[2], wx_ver, text[5:])
 
         elif section_type == 'deprecated':
             # Special treatment for deprecated, wxWidgets devs do not put the version number
