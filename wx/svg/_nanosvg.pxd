@@ -1,9 +1,9 @@
 #----------------------------------------------------------------------
 # Name:        _nanosvg.pdx
-# Purpose:     Cython decarlations for the items in the nanosvg code 
+# Purpose:     Cython decarlations for the items in the nanosvg code
 #              we're wrapping. See https://github.com/memononen/nanosvg and
 #              {Phoenix}/ext/nanosvg/src
-# 
+#
 # Author:      Robin Dunn
 #
 # Created:     23-July-2019
@@ -60,7 +60,7 @@ cdef extern from 'nanosvg.h':
         char type
         unsigned int color
         NSVGgradient* gradient
-	    
+
 
     ctypedef struct NSVGpath:
         float *pts
@@ -113,4 +113,3 @@ cdef extern from 'nanosvgrast.h':
             NSVGrasterizer* r,
             NSVGimage* image, float tx, float ty, float scale,
             unsigned char* dst, int w, int h, int stride)
-    
