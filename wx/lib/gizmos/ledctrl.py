@@ -146,7 +146,7 @@ class LEDNumberCtrl(wx.Control):
         """
         if alignment != self.m_alignment:
             self.m_alignment = alignment
-            self._recalcInternals(self.GetClientSize())
+            self._recalcInternals()
 
             if redraw:
                 self.Refresh(False)
@@ -173,7 +173,7 @@ class LEDNumberCtrl(wx.Control):
                 assert ch in '0123456789-.: ', "LEDNumberCtrl can only display numeric string values."
 
             self.m_value = value
-            self._recalcInternals(self.GetClientSize())
+            self._recalcInternals()
 
             if redraw:
                 self.Refresh(False)
@@ -185,7 +185,7 @@ class LEDNumberCtrl(wx.Control):
 
 
     def OnSize(self, evt):
-        self._recalcInternals(evt.GetSize())
+        wx.CallAfter(self._recalcInternals)
         evt.Skip()
 
 
@@ -203,7 +203,7 @@ class LEDNumberCtrl(wx.Control):
             i -= offset
             # Draw faded lines if wanted.
             if self.m_drawFaded and ch != '.':
-                self._drawDigit(dc, c.DIGITALL, i);
+                self._drawDigit(dc, c.DIGITALL, i)
 
             if ch == '.':
                 # draw the decimal point in the previous segment
@@ -216,36 +216,28 @@ class LEDNumberCtrl(wx.Control):
                 self._drawDigit(dc, c.DIGITS[ch], i)
 
 
-    def _recalcInternals(self, size):
-        height = size.Height
+    def _recalcInternals(self):
+        clientWidth, height = self.GetClientSize()
 
-        if (height * 0.075) < 1:
-            self.m_lineMargin = 1
-        else:
-            self.m_lineMargin = int(height * 0.075)
-
-        if (height * 0.275) < 1:
-            self.m_lineLength = 1
-        else:
-            self.m_lineLength = int(height * 0.275)
+        self.m_lineMargin = max(1, int(height * 0.075))
+        self.m_lineLength = max(1, int(height * 0.275))
 
         self.m_lineWidth = self.m_lineMargin
         self.m_digitMargin = self.m_lineMargin * 4
 
         # Count the number of characters in the string; '.' characters are not
         # included because they do not take up space in the display
-        count = 0;
+        count = 0
         for ch in self.m_value:
             if ch != '.':
                 count += 1
 
         valueWidth = (self.m_lineLength + self.m_digitMargin) * count
-        clientWidth = size.Width
 
         if self.m_alignment == LED_ALIGN_LEFT:
-            self.m_leftStartPos = self.m_lineMargin
+            self.m_leftStartPos = (self.m_lineMargin * 3)
         elif self.m_alignment == LED_ALIGN_RIGHT:
-            self.m_leftStartPos = clientWidth - valueWidth - self.m_lineMargin
+            self.m_leftStartPos = clientWidth - valueWidth - (self.m_lineMargin * 3)
         elif self.m_alignment == LED_ALIGN_CENTER:
             self.m_leftStartPos = int((clientWidth - valueWidth) / 2)
         else:
@@ -268,40 +260,40 @@ class LEDNumberCtrl(wx.Control):
         dc.SetPen(wx.Pen(lineColor, self.m_lineWidth))
 
         if digit & c.LINE1:
-            dc.DrawLine(XPos + self.m_lineMargin * 2, self.m_lineMargin,
-                        XPos + self.m_lineLength + self.m_lineMargin * 2, self.m_lineMargin)
+            dc.DrawLine(XPos + self.m_lineMargin * 2, self.m_lineMargin * 2,
+                        XPos + self.m_lineLength + self.m_lineMargin * 2, self.m_lineMargin * 2)
 
         if digit & c.LINE2:
-            dc.DrawLine(XPos + self.m_lineLength + self.m_lineMargin * 3, self.m_lineMargin * 2,
-                        XPos + self.m_lineLength + self.m_lineMargin * 3, self.m_lineLength + (self.m_lineMargin * 2))
+            dc.DrawLine(XPos + self.m_lineLength + self.m_lineMargin * 3, self.m_lineMargin * 3,
+                        XPos + self.m_lineLength + self.m_lineMargin * 3, self.m_lineLength + (self.m_lineMargin * 3))
 
         if digit & c.LINE3:
-            dc.DrawLine(XPos + self.m_lineLength + self.m_lineMargin * 3, self.m_lineLength + (self.m_lineMargin * 4),
-                        XPos + self.m_lineLength + self.m_lineMargin * 3, self.m_lineLength * 2 + (self.m_lineMargin * 4))
+            dc.DrawLine(XPos + self.m_lineLength + self.m_lineMargin * 3, self.m_lineLength + (self.m_lineMargin * 5),
+                        XPos + self.m_lineLength + self.m_lineMargin * 3, self.m_lineLength * 2 + (self.m_lineMargin * 5))
 
         if digit & c.LINE4:
-            dc.DrawLine(XPos + self.m_lineMargin * 2, self.m_lineLength * 2 + (self.m_lineMargin * 5),
-                        XPos + self.m_lineLength + self.m_lineMargin * 2, self.m_lineLength * 2 + (self.m_lineMargin * 5))
+            dc.DrawLine(XPos + self.m_lineMargin * 2, self.m_lineLength * 2 + (self.m_lineMargin * 6),
+                        XPos + self.m_lineLength + self.m_lineMargin * 2, self.m_lineLength * 2 + (self.m_lineMargin * 6))
 
         if digit & c.LINE5:
-            dc.DrawLine(XPos + self.m_lineMargin, self.m_lineLength + (self.m_lineMargin * 4),
-                        XPos + self.m_lineMargin, self.m_lineLength * 2 + (self.m_lineMargin * 4))
+            dc.DrawLine(XPos + self.m_lineMargin, self.m_lineLength + (self.m_lineMargin * 5),
+                        XPos + self.m_lineMargin, self.m_lineLength * 2 + (self.m_lineMargin * 5))
 
         if digit & c.LINE6:
-            dc.DrawLine(XPos + self.m_lineMargin, self.m_lineMargin * 2,
-                        XPos + self.m_lineMargin, self.m_lineLength + (self.m_lineMargin * 2))
+            dc.DrawLine(XPos + self.m_lineMargin, self.m_lineMargin * 3,
+                        XPos + self.m_lineMargin, self.m_lineLength + (self.m_lineMargin * 3))
 
         if digit & c.LINE7:
-            dc.DrawLine(XPos + self.m_lineMargin * 2, self.m_lineLength + (self.m_lineMargin * 3),
-                        XPos + self.m_lineMargin * 2 + self.m_lineLength, self.m_lineLength + (self.m_lineMargin * 3))
+            dc.DrawLine(XPos + self.m_lineMargin * 2, self.m_lineLength + (self.m_lineMargin * 4),
+                        XPos + self.m_lineMargin * 2 + self.m_lineLength, self.m_lineLength + (self.m_lineMargin * 4))
 
         if digit & c.DECIMALSIGN:
-            dc.DrawLine(XPos + self.m_lineLength + self.m_lineMargin * 4, self.m_lineLength * 2 + (self.m_lineMargin * 5),
-                        XPos + self.m_lineLength + self.m_lineMargin * 4, self.m_lineLength * 2 + (self.m_lineMargin * 5))
+            dc.DrawLine(XPos + self.m_lineLength + self.m_lineMargin * 4, self.m_lineLength * 2 + (self.m_lineMargin * 6),
+                        XPos + self.m_lineLength + self.m_lineMargin * 4, self.m_lineLength * 2 + (self.m_lineMargin * 6))
 
         if digit & c.COLON:
             dc.SetBrush(wx.Brush(lineColor))
             centerX = XPos + (self.m_lineLength + self.m_digitMargin) / 2
             radius = self.m_lineWidth / 2
-            dc.DrawCircle(centerX, (self.m_lineLength + (self.m_lineMargin * 3)) / 2, radius)
-            dc.DrawCircle(centerX, (self.m_lineLength * 2 + (self.m_lineMargin * 5)) * 3 / 4, radius)
+            dc.DrawCircle(centerX, (self.m_lineLength + (self.m_lineMargin * 4)) / 2, radius)
+            dc.DrawCircle(centerX, (self.m_lineLength * 2 + (self.m_lineMargin * 6)) * 3 / 4, radius)
