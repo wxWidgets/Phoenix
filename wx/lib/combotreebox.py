@@ -165,7 +165,7 @@ class IterableTreeCtrl(wx.TreeCtrl):
 
         """
         if item == self.GetRootItem():
-            return wx.TreeItemId() # Return an invalid TreeItemId
+            return wx.TreeItemId()  # Return an invalid TreeItemId
         nextSibling = self.GetNextSibling(item)
         if nextSibling:
             return nextSibling
@@ -181,7 +181,7 @@ class IterableTreeCtrl(wx.TreeCtrl):
         selection = super(IterableTreeCtrl, self).GetSelection()
         if selection == self.GetRootItem() and \
             (self.GetWindowStyle() & wx.TR_HIDE_ROOT):
-            return wx.TreeItemId() # Return an invalid TreeItemId
+            return wx.TreeItemId()  # Return an invalid TreeItemId
         else:
             return selection
 
@@ -207,13 +207,13 @@ class BasePopupFrame(wx.Frame):
 
     def _createInterior(self):
         self._tree = IterableTreeCtrl(self,
-            style=wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT|wx.TR_HAS_BUTTONS)
+            style=wx.TR_HIDE_ROOT | wx.TR_LINES_AT_ROOT | wx.TR_HAS_BUTTONS)
         self._tree.AddRoot('Hidden root node')
 
     def _layoutInterior(self):
         frameSizer = wx.BoxSizer(wx.HORIZONTAL)
         frameSizer.Add(self._tree, flag=wx.EXPAND, proportion=1)
-        self.SetSizerAndFit(frameSizer) #****
+        self.SetSizerAndFit(frameSizer)
 
     def _bindEventHandlers(self):
         self._tree.Bind(wx.EVT_CHAR, self.OnChar)
@@ -540,8 +540,7 @@ class BaseComboTreeBox(object):
         """
         if parent is None:
             parent = self._tree.GetRootItem()
-        item = self._tree.AppendItem(parent, itemText,
-                                     data=clientData)
+        item = self._tree.AppendItem(parent, itemText, data=clientData)
         if self._sort:
             self._tree.SortChildren(parent)
         return item
