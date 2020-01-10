@@ -338,7 +338,6 @@ def BuildLanguageCountryMapping():
     """
     res = {}
     for name in _wxLangIds:
-        n = 'wx.'+name
         wn = getattr(wx, name)
 
         li = wx.Locale.GetLanguageInfo(wn)
