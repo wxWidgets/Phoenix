@@ -32,10 +32,10 @@ import wx
 class Ticker(wx.Control):
     def __init__(self,
             parent,
-            id=-1,
+            id=wx.ID_ANY,
             text=wx.EmptyString,
-            fgcolor = wx.BLACK,
-            bgcolor = wx.WHITE,
+            fgcolor=wx.BLACK,
+            bgcolor=wx.WHITE,
             start=True,
             ppf=2,
             fps=20,
@@ -60,12 +60,12 @@ class Ticker(wx.Control):
         :param `name`: the control name
 
         """
-        wx.Control.__init__(self, parent, id=id, pos=pos, size=size, style=style, name=name)
+        wx.Control.__init__(self, parent, id, pos=pos, size=size, style=style, name=name)
         self.timer = wx.Timer(owner=self)
-        self._extent = (-1, -1)  #cache value for the GetTextExtent call
+        self._extent = (-1, -1)  # Cache value for the GetTextExtent call.
         self._offset = 0
-        self._fps = fps  #frames per second
-        self._ppf = ppf  #pixels per frame
+        self._fps = fps  # Frames per second.
+        self._ppf = ppf  # Pixels per frame.
         self.SetDirection(direction)
         self.SetText(text)
         self.SetInitialSize(size)
@@ -150,7 +150,7 @@ class Ticker(wx.Control):
         """
         if dir == "ltr" or dir == "rtl":
             if self._offset != 0:
-                #Change the offset so it's correct for the new direction
+                # Change the offset so it's correct for the new direction.
                 self._offset = self._extent[0] + self.GetSize()[0] - self._offset
             self._dir = dir
         else:
@@ -172,7 +172,7 @@ class Ticker(wx.Control):
         self._text = text
         self._extent = (-1, -1)
         if not self._text:
-            self.Refresh() #Refresh here to clear away the old text.
+            self.Refresh()  # Refresh here to clear away the old text.
 
 
     def GetText(self):
@@ -208,7 +208,7 @@ class Ticker(wx.Control):
             offx = self._offset - self._extent[0]
         else:
             offx = self.GetSize()[0] - self._offset
-        offy = (self.GetSize()[1] - self._extent[1]) / 2 #centered vertically
+        offy = (self.GetSize()[1] - self._extent[1]) / 2  # Centered vertically.
         dc.DrawText(self._text, offx, offy)
 
 
@@ -222,7 +222,7 @@ class Ticker(wx.Control):
         self._offset += self._ppf
         w1 = self.GetSize()[0]
         w2 = self._extent[0]
-        if self._offset >= w1+w2:
+        if self._offset >= w1 + w2:
             self._offset = 0
         self.Refresh()
 
@@ -270,7 +270,7 @@ class Ticker(wx.Control):
                 h = self.GetTextExtent(self.GetText())[1]
         else:
             h = self._extent[1]
-        return (100, h+5)
+        return (100, h + 5)
 
 
     def ShouldInheritColours(self):
