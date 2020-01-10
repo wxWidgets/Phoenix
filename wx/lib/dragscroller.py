@@ -27,16 +27,19 @@ class DragScroller:
 
     def GetScrollWindow(self):
         return self.scrollwin
+
     def SetScrollWindow(self, scrollwin):
         self.scrollwin = scrollwin
 
     def GetUpdateRate(self):
         return self.rate
+
     def SetUpdateRate(self, rate):
         self.rate = rate
 
     def GetSensitivity(self):
         return self.sensitivity
+
     def SetSensitivity(self, sensitivity):
         self.sensitivity = sensitivity
 
@@ -71,9 +74,9 @@ class DragScroller:
             return
 
         new = self.scrollwin.ScreenToClient(wx.GetMousePosition())
-        dx = int((new.x-self.pos.x)*self.sensitivity)
-        dy = int((new.y-self.pos.y)*self.sensitivity)
+        dx = int((new.x - self.pos.x) * self.sensitivity)
+        dy = int((new.y - self.pos.y) * self.sensitivity)
         spx = self.scrollwin.GetScrollPos(wx.HORIZONTAL)
         spy = self.scrollwin.GetScrollPos(wx.VERTICAL)
 
-        self.scrollwin.Scroll(spx+dx, spy+dy)
+        self.scrollwin.Scroll(spx + dx, spy + dy)
