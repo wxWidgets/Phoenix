@@ -37,16 +37,16 @@
 #
 
 import sys
-import  string
-import  types
+import string
+import types
 
-import  wx
+import wx
 import six
 
 #----------------------------------------------------------------------------
 
 MAXSIZE = six.MAXSIZE     # (constants should be in upper case)
-MINSIZE = -six.MAXSIZE-1
+MINSIZE = -six.MAXSIZE - 1
 
 if six.PY2:
     LONGTYPE = long
@@ -68,13 +68,13 @@ EVT_INT = wx.PyEventBinder(wxEVT_COMMAND_INT_UPDATED, 1)
 # Ctrl-B, etc. However, there are no wxPython or wxWindows
 # symbols for them, so I'm defining codes for Ctrl-X (cut) and
 # Ctrl-V (paste) here for readability:
-WXK_CTRL_X = (ord('X')+1) - ord('A')
-WXK_CTRL_V = (ord('V')+1) - ord('A')
+WXK_CTRL_X = (ord('X') + 1) - ord('A')
+WXK_CTRL_V = (ord('V') + 1) - ord('A')
 
 class IntUpdatedEvent(wx.PyCommandEvent):
     """Event sent from the :class:`~lib.intctrl.IntCtrl` when control is updated."""
 
-    def __init__(self, id, value = 0, object=None):
+    def __init__(self, id, value=0, object=None):
         """
         Default class constructor.
 
@@ -107,7 +107,7 @@ class IntValidator(wx.Validator):
         wx.Validator.__init__(self)
         self.Bind(wx.EVT_CHAR, self.OnChar)
 
-    def Clone (self):
+    def Clone(self):
         """
         Standard cloner
 
@@ -117,7 +117,7 @@ class IntValidator(wx.Validator):
         """
         return self.__class__()
 
-    def Validate(self, window):     # window here is the *parent* of the ctrl
+    def Validate(self, window):  # Window here is the *parent* of the ctrl.
         """
         Because each operation on the control is vetted as it's made,
         the value of the control is always valid.
@@ -238,7 +238,7 @@ class IntValidator(wx.Validator):
 
 
         elif key < wx.WXK_SPACE or key > 255:
-            pass    # event ok
+            pass  # event ok
 
 
         elif chr(key) == '-':
@@ -392,13 +392,13 @@ class IntCtrl(wx.TextCtrl):
     """
 
     def __init__ (
-                self, parent, id=-1, value = 0,
-                pos = wx.DefaultPosition, size = wx.DefaultSize,
-                style = 0, validator = wx.DefaultValidator,
-                name = "integer",
+                self, parent, id=wx.ID_ANY, value=0,
+                pos=wx.DefaultPosition, size=wx.DefaultSize,
+                style=0, validator=wx.DefaultValidator,
+                name="integer",
                 min=None, max=None,
-                limited = 0, allow_none = 0, allow_long = 0,
-                default_color = wx.BLACK, oob_color = wx.RED,
+                limited=0, allow_none=0, allow_long=0,
+                default_color=wx.BLACK, oob_color=wx.RED,
         ):
         """
         Default constructor
@@ -479,10 +479,10 @@ class IntCtrl(wx.TextCtrl):
 
         wx.TextCtrl.__init__(
                 self, parent, id, self._toGUI(0),
-                pos, size, style, validator, name )
+                pos, size, style, validator, name)
 
         # The following lets us set out our "integer update" events:
-        self.Bind(wx.EVT_TEXT, self.OnText )
+        self.Bind(wx.EVT_TEXT, self.OnText)
 
         # Establish parameters, with appropriate error checking
 
@@ -496,7 +496,7 @@ class IntCtrl(wx.TextCtrl):
             self.SetLongAllowed(1)
         self.ChangeValue(value)
 
-    def OnText( self, event ):
+    def OnText(self, event):
         """
         Handles an event indicating that the text control's value
         has changed, and issue EVT_INT event.
@@ -509,7 +509,7 @@ class IntCtrl(wx.TextCtrl):
         if value != self.__oldvalue:
             try:
                 self.GetEventHandler().ProcessEvent(
-                    IntUpdatedEvent( self.GetId(), self.GetValue(), self ) )
+                    IntUpdatedEvent(self.GetId(), self.GetValue(), self))
             except ValueError:
                 return
             # let normal processing of the text continue
@@ -521,7 +521,7 @@ class IntCtrl(wx.TextCtrl):
         """
         Returns the current integer (long) value of the control.
         """
-        return self._fromGUI( wx.TextCtrl.GetValue(self) )
+        return self._fromGUI(wx.TextCtrl.GetValue(self))
 
     def SetValue(self, value):
         """
@@ -535,7 +535,7 @@ class IntCtrl(wx.TextCtrl):
         :param int `value`: The value to be set
 
         """
-        wx.TextCtrl.SetValue( self, self._toGUI(value) )
+        wx.TextCtrl.SetValue(self, self._toGUI(value))
         self._colorValue()
 
 
@@ -547,7 +547,7 @@ class IntCtrl(wx.TextCtrl):
 
         """
         wx.TextCtrl.ChangeValue(self, self._toGUI(value))
-        self.__oldvalue = self.GetValue() # record for next event
+        self.__oldvalue = self.GetValue()  # record for next event
         self._colorValue()
 
 
@@ -570,9 +570,9 @@ class IntCtrl(wx.TextCtrl):
         :param int `min`: The value to be set as minimum
 
         """
-        if( self.__max is None
+        if (self.__max is None
             or min is None
-            or (self.__max is not None and self.__max >= min) ):
+            or (self.__max is not None and self.__max >= min)):
             self.__min = min
 
             if self.IsLimited() and min is not None and self.GetValue() < min:
@@ -610,9 +610,9 @@ class IntCtrl(wx.TextCtrl):
 
         :param int `max`: The value to be set as maximum
         """
-        if( self.__min is None
+        if (self.__min is None
             or max is None
-            or (self.__min is not None and self.__min <= max) ):
+            or (self.__min is not None and self.__min <= max)):
             self.__max = max
 
             if self.IsLimited() and max is not None and self.GetValue() > max:
@@ -706,10 +706,10 @@ class IntCtrl(wx.TextCtrl):
         if value is None:
             value = self.GetValue()
 
-        if( not (value is None and self.IsNoneAllowed())
-            and type(value) not in six.integer_types ):
-            raise ValueError (
-                'IntCtrl requires integer values, passed %s'% repr(value) )
+        if (not (value is None and self.IsNoneAllowed())
+            and type(value) not in six.integer_types):
+            raise ValueError(
+                'IntCtrl requires integer values, passed %s' % repr(value))
 
         min = self.GetMin()
         max = self.GetMax()
@@ -808,7 +808,7 @@ class IntCtrl(wx.TextCtrl):
         self.Refresh()
 
 
-    def _toGUI( self, value ):
+    def _toGUI(self, value):
         """
         Conversion function used to set the value of the control; does
         type and bounds checking and raises ValueError if argument is
@@ -817,26 +817,26 @@ class IntCtrl(wx.TextCtrl):
         if value is None and self.IsNoneAllowed():
             return ''
         elif type(value) == LONGTYPE and not self.IsLongAllowed():
-            raise ValueError (
-                'IntCtrl requires integer value, passed long' )
+            raise ValueError(
+                'IntCtrl requires integer value, passed long')
         elif type(value) not in six.integer_types:
-            raise ValueError (
-                'IntCtrl requires integer value, passed %s'% repr(value) )
+            raise ValueError(
+                'IntCtrl requires integer value, passed %s' % repr(value))
 
         elif self.IsLimited():
             min = self.GetMin()
             max = self.GetMax()
             if not min is None and value < min:
-                raise ValueError (
-                    'value is below minimum value of control %d'% value )
+                raise ValueError(
+                    'value is below minimum value of control %d' % value)
             if not max is None and value > max:
-                raise ValueError (
-                    'value exceeds value of control %d'% value )
+                raise ValueError(
+                    'value exceeds value of control %d' % value)
 
         return str(value)
 
 
-    def _fromGUI( self, value ):
+    def _fromGUI(self, value):
         """
         Conversion function used in getting the value of the control.
         """
@@ -854,15 +854,15 @@ class IntCtrl(wx.TextCtrl):
                 return None
         else:
             try:
-                return int( value )
+                return int(value)
             except ValueError:
                 if self.IsLongAllowed() and (LONGTYPE is not int):
-                    return LONGTYPE( value )
+                    return LONGTYPE(value)
                 else:
                     raise
 
 
-    def Cut( self ):
+    def Cut(self):
         """
         Override the :func:`TextCtrl.Cut` function, with our own
         that does validation.  Will result in a value of 0
@@ -881,7 +881,7 @@ class IntCtrl(wx.TextCtrl):
             if not self.IsNoneAllowed():
                 self.SetValue(0)
                 self.SetInsertionPoint(0)
-                self.SetSelection(0,1)
+                self.SetSelection(0, 1)
             else:
                 self.SetValue(None)
         else:
@@ -889,7 +889,7 @@ class IntCtrl(wx.TextCtrl):
             self.SetValue(new_value)
 
 
-    def _getClipboardContents( self ):
+    def _getClipboardContents(self):
         """
         Subroutine for getting the current contents of the clipboard.
         """
@@ -905,7 +905,7 @@ class IntCtrl(wx.TextCtrl):
             return do.GetText().strip()
 
 
-    def Paste( self ):
+    def Paste(self):
         """
         Override the :func:`TextCtrl.Paste` function, with our own
         that does validation.  Will raise ValueError if not a
@@ -915,7 +915,7 @@ class IntCtrl(wx.TextCtrl):
         if paste_text:
             # (conversion will raise ValueError if paste isn't legal)
             sel_start, sel_to = self.GetSelection()
-            text = wx.TextCtrl.GetValue( self )
+            text = wx.TextCtrl.GetValue(self)
             new_text = text[:sel_start] + paste_text + text[sel_to:]
             if new_text == '' and self.IsNoneAllowed():
                 self.SetValue(None)
@@ -935,25 +935,25 @@ if __name__ == '__main__':
 
     class myDialog(wx.Dialog):
         def __init__(self, parent, id, title,
-            pos = wx.DefaultPosition, size = wx.DefaultSize,
-            style = wx.DEFAULT_DIALOG_STYLE ):
+                     pos=wx.DefaultPosition, size=wx.DefaultSize,
+                     style=wx.DEFAULT_DIALOG_STYLE):
             wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
-            self.int_ctrl = IntCtrl(self, wx.ID_ANY, size=(55,20))
-            self.OK = wx.Button( self, wx.ID_OK, "OK")
-            self.Cancel = wx.Button( self, wx.ID_CANCEL, "Cancel")
+            self.int_ctrl = IntCtrl(self, wx.ID_ANY, size=(55, 20))
+            self.OK = wx.Button(self, wx.ID_OK, "OK")
+            self.Cancel = wx.Button(self, wx.ID_CANCEL, "Cancel")
 
-            vs = wx.BoxSizer( wx.VERTICAL )
-            vs.Add( self.int_ctrl, 0, wx.ALIGN_CENTRE|wx.ALL, 5 )
-            hs = wx.BoxSizer( wx.HORIZONTAL )
-            hs.Add( self.OK, 0, wx.ALIGN_CENTRE|wx.ALL, 5 )
-            hs.Add( self.Cancel, 0, wx.ALIGN_CENTRE|wx.ALL, 5 )
-            vs.Add(hs, 0, wx.ALIGN_CENTRE|wx.ALL, 5 )
+            vs = wx.BoxSizer(wx.VERTICAL)
+            vs.Add(self.int_ctrl, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
+            hs = wx.BoxSizer(wx.HORIZONTAL)
+            hs.Add(self.OK, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
+            hs.Add(self.Cancel, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
+            vs.Add(hs, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
 
-            self.SetAutoLayout( True )
-            self.SetSizer( vs )
-            vs.Fit( self )
-            vs.SetSizeHints( self )
+            self.SetAutoLayout(True)
+            self.SetSizer(vs)
+            vs.Fit(self)
+            vs.SetSizeHints(self)
             self.Bind(EVT_INT, self.OnInt, self.int_ctrl)
 
         def OnInt(self, event):
@@ -962,8 +962,8 @@ if __name__ == '__main__':
     class TestApp(wx.App):
         def OnInit(self):
             try:
-                self.frame = wx.Frame(None, -1, "Test", (20,20), (120,100)  )
-                self.panel = wx.Panel(self.frame, -1)
+                self.frame = wx.Frame(None, wx.ID_ANY, "Test", (20,20), (120,100))
+                self.panel = wx.Panel(self.frame, wx.ID_ANY)
                 button = wx.Button(self.panel, 10, "Push Me", (20, 20))
                 self.Bind(wx.EVT_BUTTON, self.OnClick, button)
             except:
@@ -972,10 +972,10 @@ if __name__ == '__main__':
             return True
 
         def OnClick(self, event):
-            dlg = myDialog(self.panel, -1, "test IntCtrl")
+            dlg = myDialog(self.panel, wx.ID_ANY, "test IntCtrl")
             dlg.int_ctrl.SetValue(501)
             dlg.int_ctrl.SetInsertionPoint(1)
-            dlg.int_ctrl.SetSelection(1,2)
+            dlg.int_ctrl.SetSelection(1, 2)
             rc = dlg.ShowModal()
             print('final value', dlg.int_ctrl.GetValue())
             del dlg
