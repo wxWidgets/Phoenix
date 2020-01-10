@@ -36,7 +36,7 @@ class PyColourBox(wx.Panel):
         content."""
         wx.Panel.__init__(self, parent, id, size=size, style=wx.NO_BORDER)
 
-        self.colour_box = wx.Window(self, -1, style=wx.SIMPLE_BORDER)
+        self.colour_box = wx.Window(self, wx.ID_ANY, style=wx.SIMPLE_BORDER)
 
         sizer = wx.GridSizer(rows=1, cols=1, vgap=0, hgap=0)
         sizer.Add(self.colour_box, 0, wx.FIXED_MINSIZE | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL)
@@ -78,10 +78,10 @@ class PyColourBox(wx.Panel):
         # XXX This code has been disabled for now until I can figure out
         # how to get this to work reliably across all platforms.
         if val:
-            #A wxColourPtr is returned in windows, making this difficult
-            red =(self.real_bg.Red() - 45) % 255
-            green =(self.real_bg.Green() - 45) % 255
-            blue =(self.real_bg.Blue() - 45) % 255
+            # A wxColourPtr is returned in windows, making this difficult
+            red = (self.real_bg.Red() - 45) % 255
+            green = (self.real_bg.Green() - 45) % 255
+            blue = (self.real_bg.Blue() - 45) % 255
             new_colour = wx.Colour(red, green, blue)
             self.SetBackgroundColour(new_colour)
         else:
