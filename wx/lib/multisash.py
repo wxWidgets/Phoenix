@@ -35,13 +35,13 @@ class MultiSash(wx.Window):
         wx.Window.__init__(self, *_args, **_kwargs)
         self._defChild = EmptyChild
         self.child = MultiSplit(self,self,(0,0),self.GetSize())
-        self.Bind(wx.EVT_SIZE,self.OnMultiSize)
+        self.Bind(wx.EVT_SIZE, self.OnMultiSize)
 
     def SetDefaultChildClass(self,childCls):
         self._defChild = childCls
         self.child.DefaultChildChanged()
 
-    def OnMultiSize(self,evt):
+    def OnMultiSize(self, event):
         self.child.SetSize(self.GetSize())
 
     def UnSelect(self):
@@ -91,7 +91,7 @@ class MultiSplit(wx.Window):
                                          (0,0),self.GetSize())
         self.direction = None
 
-        self.Bind(wx.EVT_SIZE,self.OnSize)
+        self.Bind(wx.EVT_SIZE, self.OnSize)
 
     def GetSaveData(self):
         saveData = {}
@@ -252,7 +252,7 @@ class MultiSplit(wx.Window):
             self.view1.SetSize(0,0,w,pos)
             self.view2.SetSize(0,pos,w,h-pos)
 
-    def OnSize(self,evt):
+    def OnSize(self, event):
         if not self.view2:
             self.view1.SetSize(self.GetSize())
             self.view1.OnSize(None)
@@ -301,7 +301,7 @@ class MultiViewLeaf(wx.Window):
         self.detail = MultiClient(self,multiView._defChild)
         self.closer = MultiCloser(self)
 
-        self.Bind(wx.EVT_SIZE,self.OnSize)
+        self.Bind(wx.EVT_SIZE, self.OnSize)
 
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
 
@@ -365,15 +365,15 @@ class MultiViewLeaf(wx.Window):
     def CanSize(self,side):
         return self.GetParent().CanSize(side,self)
 
-    def OnSize(self,evt):
+    def OnSize(self, event):
         def doresize():
             try:
-                self.sizerHor.OnSize(evt)
-                self.sizerVer.OnSize(evt)
-                self.creatorHor.OnSize(evt)
-                self.creatorVer.OnSize(evt)
-                self.detail.OnSize(evt)
-                self.closer.OnSize(evt)
+                self.sizerHor.OnSize(event)
+                self.sizerVer.OnSize(event)
+                self.creatorHor.OnSize(event)
+                self.creatorVer.OnSize(event)
+                self.detail.OnSize(event)
+                self.closer.OnSize(event)
             except:
                 pass
         wx.CallAfter(doresize)
@@ -414,7 +414,7 @@ class MultiClient(wx.Window):
         h -= SH_SIZE
         return (w,h)
 
-    def OnSize(self,evt):
+    def OnSize(self, event):
         w,h = self.CalcSize(self.GetParent())
         self.SetSize(0,0,w,h)
         w,h = self.GetClientSize()
@@ -427,11 +427,11 @@ class MultiClient(wx.Window):
         self.child = childCls(self)
         self.child.Move(2,2)
 
-    def OnSetFocus(self,evt):
+    def OnSetFocus(self, event):
         self.Select()
 
-    def OnChildFocus(self,evt):
-        self.OnSetFocus(evt)
+    def OnChildFocus(self, event):
+        self.OnSetFocus(event)
 ##        from Funcs import FindFocusedChild
 ##        child = FindFocusedChild(self)
 ##        child.Bind(wx.EVT_KILL_FOCUS,self.OnChildKillFocus)
@@ -477,14 +477,14 @@ class MultiSizer(wx.Window):
             h = ph - CR_SIZE - SH_SIZE - 4 - SH_SIZE # For Closer
         return (x,y,w,h)
 
-    def OnSize(self,evt):
+    def OnSize(self, event):
         x,y,w,h = self.CalcSizePos(self.GetParent())
         self.SetSize(x,y,w,h)
 
-    def OnLeave(self,evt):
+    def OnLeave(self, event):
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
-    def OnEnter(self,evt):
+    def OnEnter(self, event):
         if not self.GetParent().CanSize(not self.side):
             return
         if self.side == MV_HOR:
@@ -492,27 +492,27 @@ class MultiSizer(wx.Window):
         else:
             self.SetCursor(wx.Cursor(wx.CURSOR_SIZEWE))
 
-    def OnMouseMove(self,evt):
+    def OnMouseMove(self, event):
         if self.isDrag:
             DrawSash(self.dragTarget,self.px,self.py,self.side)
-            self.px,self.py = self.ClientToScreen((evt.x, evt.y))
+            self.px,self.py = self.ClientToScreen((event.x, event.y))
             self.px,self.py = self.dragTarget.ScreenToClient((self.px,self.py))
             DrawSash(self.dragTarget,self.px,self.py,self.side)
         else:
-            evt.Skip()
+            event.Skip()
 
-    def OnPress(self,evt):
+    def OnPress(self, event):
         self.dragTarget = self.GetParent().SizeTarget(not self.side)
         if self.dragTarget:
             self.isDrag = True
-            self.px,self.py = self.ClientToScreen((evt.x, evt.y))
+            self.px,self.py = self.ClientToScreen((event.x, event.y))
             self.px,self.py = self.dragTarget.ScreenToClient((self.px,self.py))
             DrawSash(self.dragTarget,self.px,self.py,self.side)
             self.CaptureMouse()
         else:
-            evt.Skip()
+            event.Skip()
 
-    def OnRelease(self,evt):
+    def OnRelease(self, event):
         if self.isDrag:
             DrawSash(self.dragTarget,self.px,self.py,self.side)
             self.ReleaseMouse()
@@ -525,7 +525,7 @@ class MultiSizer(wx.Window):
                                          self.px,not self.side)
             self.dragTarget = None
         else:
-            evt.Skip()
+            event.Skip()
 
 #----------------------------------------------------------------------
 
@@ -564,38 +564,38 @@ class MultiCreator(wx.Window):
             h = CR_SIZE
         return (x,y,w,h)
 
-    def OnSize(self,evt):
+    def OnSize(self, event):
         x,y,w,h = self.CalcSizePos(self.GetParent())
         self.SetSize(x,y,w,h)
 
-    def OnLeave(self,evt):
+    def OnLeave(self, event):
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
-    def OnEnter(self,evt):
+    def OnEnter(self, event):
         if self.side == MV_HOR:
             self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
         else:
             self.SetCursor(wx.Cursor(wx.CURSOR_POINT_LEFT))
 
-    def OnMouseMove(self,evt):
+    def OnMouseMove(self, event):
         if self.isDrag:
             parent = self.GetParent()
             DrawSash(parent,self.px,self.py,self.side)
-            self.px,self.py = self.ClientToScreen((evt.x, evt.y))
+            self.px,self.py = self.ClientToScreen((event.x, event.y))
             self.px,self.py = parent.ScreenToClient((self.px,self.py))
             DrawSash(parent,self.px,self.py,self.side)
         else:
-            evt.Skip()
+            event.Skip()
 
-    def OnPress(self,evt):
+    def OnPress(self, event):
         self.isDrag = True
         parent = self.GetParent()
-        self.px,self.py = self.ClientToScreen((evt.x, evt.y))
+        self.px,self.py = self.ClientToScreen((event.x, event.y))
         self.px,self.py = parent.ScreenToClient((self.px,self.py))
         DrawSash(parent,self.px,self.py,self.side)
         self.CaptureMouse()
 
-    def OnRelease(self,evt):
+    def OnRelease(self, event):
         if self.isDrag:
             parent = self.GetParent()
             DrawSash(parent,self.px,self.py,self.side)
@@ -607,9 +607,9 @@ class MultiCreator(wx.Window):
             else:
                 parent.AddLeaf(MV_HOR,self.px)
         else:
-            evt.Skip()
+            event.Skip()
 
-    def OnPaint(self,evt):
+    def OnPaint(self, event):
         dc = wx.PaintDC(self)
         dc.SetBackground(wx.Brush(self.GetBackgroundColour(),wx.BRUSHSTYLE_SOLID))
         dc.Clear()
@@ -651,26 +651,26 @@ class MultiCloser(wx.Window):
         self.Bind(wx.EVT_LEAVE_WINDOW,self.OnLeave)
         self.Bind(wx.EVT_ENTER_WINDOW,self.OnEnter)
 
-    def OnLeave(self,evt):
+    def OnLeave(self, event):
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
         self.entered = False
 
-    def OnEnter(self,evt):
+    def OnEnter(self, event):
         self.SetCursor(wx.Cursor(wx.CURSOR_BULLSEYE))
         self.entered = True
 
-    def OnPress(self,evt):
+    def OnPress(self, event):
         self.down = True
-        evt.Skip()
+        event.Skip()
 
-    def OnRelease(self,evt):
+    def OnRelease(self, event):
         if self.down and self.entered:
             self.GetParent().DestroyLeaf()
         else:
-            evt.Skip()
+            event.Skip()
         self.down = False
 
-    def OnPaint(self,evt):
+    def OnPaint(self, event):
         dc = wx.PaintDC(self)
         dc.SetBackground(wx.Brush(wx.RED,wx.BRUSHSTYLE_SOLID))
         dc.Clear()
@@ -683,7 +683,7 @@ class MultiCloser(wx.Window):
         y = 1
         return (x,y,w,h)
 
-    def OnSize(self,evt):
+    def OnSize(self, event):
         x,y,w,h = self.CalcSizePos(self.GetParent())
         self.SetSize(x,y,w,h)
 

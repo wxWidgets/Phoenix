@@ -96,7 +96,7 @@ class %(subclass)s(wx.%(windowClass)s):
         pass
 #!XRCED:end-block:%(subclass)s._PostInit
 
-    def OnCreate(self, evt):
+    def OnCreate(self, event):
         self.Unbind(wx.EVT_WINDOW_CREATE)
         self._PostInit()
 """

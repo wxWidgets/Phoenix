@@ -154,23 +154,23 @@ class PlateButton(wx.Control):
         self.SetInitialSize(size)
 
         # Event Handlers
-        self.Bind(wx.EVT_PAINT, lambda evt: self.__DrawButton())
+        self.Bind(wx.EVT_PAINT, lambda event: self.__DrawButton())
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnErase)
         self.Bind(wx.EVT_SET_FOCUS, self.OnFocus)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
 
         # Mouse Events
-        self.Bind(wx.EVT_LEFT_DCLICK, lambda evt: self._ToggleState())
+        self.Bind(wx.EVT_LEFT_DCLICK, lambda event: self._ToggleState())
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
         self.Bind(wx.EVT_ENTER_WINDOW,
-                  lambda evt: self._SetState(PLATE_HIGHLIGHT))
+                  lambda event: self._SetState(PLATE_HIGHLIGHT))
         self.Bind(wx.EVT_LEAVE_WINDOW,
-                  lambda evt: wx.CallLater(80, self.__LeaveWindow))
+                  lambda event: wx.CallLater(80, self.__LeaveWindow))
 
         # Other events
         self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
-        self.Bind(wx.EVT_CONTEXT_MENU, lambda evt: self.ShowMenu())
+        self.Bind(wx.EVT_CONTEXT_MENU, lambda event: self.ShowMenu())
 
 
     def __DrawBitmap(self, gc):
@@ -537,38 +537,38 @@ class PlateButton(wx.Control):
 
     #---- Event Handlers ----#
 
-    def OnErase(self, evt):
+    def OnErase(self, event):
         """Trap the erase event to keep the background transparent
         on windows.
 
-        :param `evt`: wx.EVT_ERASE_BACKGROUND
+        :param `event`: wx.EVT_ERASE_BACKGROUND
 
         """
         pass
 
 
-    def OnFocus(self, evt):
+    def OnFocus(self, event):
         """Set the visual focus state if need be"""
         if self._state['cur'] == PLATE_NORMAL:
             self._SetState(PLATE_HIGHLIGHT)
 
 
-    def OnKeyUp(self, evt):
+    def OnKeyUp(self, event):
         """Execute a single button press action when the Return key is pressed
         and this control has the focus.
 
-        :param `evt`: wx.EVT_KEY_UP
+        :param `event`: wx.EVT_KEY_UP
 
         """
-        if evt.GetKeyCode() == wx.WXK_SPACE:
+        if event.GetKeyCode() == wx.WXK_SPACE:
             self._SetState(PLATE_PRESSED)
             self.__PostEvent()
             wx.CallLater(100, self._SetState, PLATE_HIGHLIGHT)
         else:
-            evt.Skip()
+            event.Skip()
 
 
-    def OnKillFocus(self, evt):
+    def OnKillFocus(self, event):
         """Set the visual state back to normal when focus is lost
         unless the control is currently in a pressed state.
 
@@ -580,7 +580,7 @@ class PlateButton(wx.Control):
             self._SetState(PLATE_NORMAL)
 
 
-    def OnLeftDown(self, evt):
+    def OnLeftDown(self, event):
         """Sets the pressed state and depending on the click position will
         show the popup menu if one has been set.
 
@@ -588,7 +588,7 @@ class PlateButton(wx.Control):
         if (self._style & PB_STYLE_TOGGLE):
             self._pressed = not self._pressed
 
-        pos = evt.GetPosition()
+        pos = event.GetPosition()
         self._SetState(PLATE_PRESSED)
         size = self.GetSize()
         if pos[0] >= size[0] - 16:
@@ -602,15 +602,15 @@ class PlateButton(wx.Control):
         self.SetFocus()
 
 
-    def OnLeftUp(self, evt):
+    def OnLeftUp(self, event):
         """Post a button event if the control was previously in a
         pressed state.
 
-        :param `evt`: :class:`wx.MouseEvent`
+        :param `event`: :class:`wx.MouseEvent`
 
         """
         if self._state['cur'] == PLATE_PRESSED:
-            pos = evt.GetPosition()
+            pos = event.GetPosition()
             size = self.GetSize()
             if not (self._style & PB_STYLE_DROPARROW and pos[0] >= size[0] - 16):
                 self.__PostEvent()
@@ -621,11 +621,11 @@ class PlateButton(wx.Control):
             self._SetState(PLATE_HIGHLIGHT)
 
 
-    def OnMenuClose(self, evt):
+    def OnMenuClose(self, event):
         """Refresh the control to a proper state after the menu has been
         dismissed.
 
-        :param `evt`: wx.EVT_MENU_CLOSE
+        :param `event`: wx.EVT_MENU_CLOSE
 
         """
         mpos = wx.GetMousePosition()
@@ -633,7 +633,7 @@ class PlateButton(wx.Control):
             self._SetState(PLATE_HIGHLIGHT)
         else:
             self._SetState(PLATE_NORMAL)
-        evt.Skip()
+        event.Skip()
 
     #---- End Event Handlers ----#
 

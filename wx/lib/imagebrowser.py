@@ -259,11 +259,11 @@ class ImageView(wx.Window):
         dc = wx.PaintDC(self)
         self.DrawImage(dc)
 
-    def OnEraseBackground(self, evt):
+    def OnEraseBackground(self, event):
         if self.bg_mode != ID_CHECK_BG:
-            evt.Skip()
+            event.Skip()
             return
-        dc = evt.GetDC()
+        dc = event.GetDC()
         if dc:
             self.PaintBackground(dc, self.dark_bg)
 

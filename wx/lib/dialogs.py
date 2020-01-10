@@ -463,9 +463,9 @@ class MultiMessageDialog(wx.Dialog):
                 break
 
 
-    def OnButton(self, evt):
+    def OnButton(self, event):
         if self.IsModal():
-            self.EndModal(evt.EventObject.Id)
+            self.EndModal(event.EventObject.Id)
         else:
             self.Close()
 

@@ -2179,7 +2179,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
         self.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
-        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda evt: None)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda event: None)
 
         # Sets the focus to ourselves: this is useful if you have items
         # with associated widgets.

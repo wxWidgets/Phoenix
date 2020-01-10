@@ -334,7 +334,7 @@ class BufferedWindow(wx.Window):
             self.doSetWindowCreated(None)
 
 
-    def doSetWindowCreated(self, evt):
+    def doSetWindowCreated(self, event):
         """
         Method to call OnSize on GTK when window is created.
         """

@@ -124,7 +124,7 @@ class NavCanvas(wx.Panel):
             self.Bind(wx.EVT_TOOL, self.SetMode, tool)
             self.ModesDict[tool.GetId()]=Mode[1]
         #self.ZoomOutTool = tb.AddRadioTool(wx.ID_ANY, bitmap=Resources.getMagMinusBitmap(), shortHelp = "Zoom Out")
-        #self.Bind(wx.EVT_TOOL, lambda evt : self.SetMode(Mode=self.GUIZoomOut), self.ZoomOutTool)
+        #self.Bind(wx.EVT_TOOL, lambda event : self.SetMode(Mode=self.GUIZoomOut), self.ZoomOutTool)
 
     def AddToolbarZoomButton(self, tb):
         """

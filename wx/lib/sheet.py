@@ -22,9 +22,9 @@ class CTextCellEditor(wx.TextCtrl):
         self._grid = grid                           # Save grid reference
         self.Bind(wx.EVT_CHAR, self.OnChar)
 
-    def OnChar(self, evt):                          # Hook OnChar for custom behavior
+    def OnChar(self, event):                        # Hook OnChar for custom behavior
         """Customizes char events """
-        key = evt.GetKeyCode()
+        key = event.GetKeyCode()
         if   key == wx.WXK_DOWN:
             self._grid.DisableCellEditControl()     # Commit the edit
             self._grid.MoveCursorDown(False)        # Change the current cell
@@ -38,7 +38,7 @@ class CTextCellEditor(wx.TextCtrl):
             self._grid.DisableCellEditControl()     # Commit the edit
             self._grid.MoveCursorRight(False)       # Change the current cell
 
-        evt.Skip()                                  # Continue event
+        event.Skip()                                # Continue event
 
 #---------------------------------------------------------------------------
 class CCellEditor(wx.grid.PyGridCellEditor):
@@ -113,19 +113,19 @@ class CCellEditor(wx.grid.PyGridCellEditor):
         self._tc.SetValue(self._startValue)
         self._tc.SetInsertionPointEnd()
 
-    def IsAcceptedKey(self, evt):
+    def IsAcceptedKey(self, event):
         """ Return True to allow the given key to start editing.  The base class
             version only checks that the event has no modifiers.  F2 is special
             and will always start the editor.
         """
-        return (not (evt.ControlDown() or evt.AltDown())
-                and  evt.GetKeyCode() != wx.WXK_SHIFT)
+        return (not (event.ControlDown() or event.AltDown())
+                and  event.GetKeyCode() != wx.WXK_SHIFT)
 
-    def StartingKey(self, evt):
+    def StartingKey(self, event):
         """ If the editor is enabled by pressing keys on the grid, this will be
             called to let the editor react to that first key.
         """
-        key = evt.GetKeyCode()              # Get the key code
+        key = event.GetKeyCode()              # Get the key code
         ch = None                           # Handle num pad keys
         if key in [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3,
                     wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7,
@@ -137,14 +137,14 @@ class CCellEditor(wx.grid.PyGridCellEditor):
                                             # Handle normal keys
         elif key < 256 and key >= 0 and chr(key) in string.printable:
             ch = chr(key)
-            if not evt.ShiftDown():
+            if not event.ShiftDown():
                 ch = ch.lower()
 
         if ch is not None:                  # If are at this point with a key,
             self._tc.SetValue(ch)           # replace the contents of the text control.
             self._tc.SetInsertionPointEnd() # Move to the end so that subsequent keys are appended
         else:
-            evt.Skip()
+            event.Skip()
 
     def StartingClick(self):
         """ If the editor is enabled by clicking on the cell, this method will be

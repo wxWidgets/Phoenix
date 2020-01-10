@@ -271,8 +271,8 @@ class InspectionFrame(wx.Frame):
         self.started = True
 
 
-    def OnClose(self, evt):
-        evt.Skip()
+    def OnClose(self, event):
+        event.Skip()
         if not self:
             return
         self.SaveSettings(self.config)
@@ -313,56 +313,56 @@ class InspectionFrame(wx.Frame):
         self.tree.BuildTree(self.obj, includeSizers=self.includeSizers)
 
 
-    def OnRefreshTree(self, evt):
+    def OnRefreshTree(self, event):
         self.RefreshTree()
         self.UpdateInfo()
 
 
-    def OnFindWidget(self, evt):
+    def OnFindWidget(self, event):
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.OnCaptureLost)
         self.CaptureMouse()
         self.finding = wx.BusyInfo("Click on any widget in the app...")
 
 
-    def OnCaptureLost(self, evt):
+    def OnCaptureLost(self, event):
         self.Unbind(wx.EVT_LEFT_DOWN)
         self.Unbind(wx.EVT_MOUSE_CAPTURE_LOST)
         del self.finding
 
-    def OnLeftDown(self, evt):
+    def OnLeftDown(self, event):
         self.ReleaseMouse()
         wnd, pt = wx.FindWindowAtPointer()
         if wnd is not None:
             self.SetObj(wnd)
         else:
             wx.Bell()
-        self.OnCaptureLost(evt)
+        self.OnCaptureLost(event)
 
 
-    def OnShowSizers(self, evt):
+    def OnShowSizers(self, event):
         self.includeSizers = not self.includeSizers
         self.RefreshTree()
 
 
-    def OnExpandTree(self, evt):
+    def OnExpandTree(self, event):
         current = self.tree.GetSelection()
         self.tree.ExpandAll()
         self.tree.EnsureVisible(current)
 
 
-    def OnCollapseTree(self, evt):
+    def OnCollapseTree(self, event):
         current = self.tree.GetSelection()
         self.tree.CollapseAll()
         self.tree.EnsureVisible(current)
         self.tree.SelectItem(current)
 
 
-    def OnHighlightItem(self, evt):
+    def OnHighlightItem(self, event):
         self.HighlightCurrentItem()
 
 
-    def OnWatchEvents(self, evt):
+    def OnWatchEvents(self, event):
         item = self.tree.GetSelection()
         obj = self.tree.GetItemData(item)
         if isinstance(obj, wx.Window):
@@ -371,24 +371,24 @@ class InspectionFrame(wx.Frame):
             watcher.watch(obj)
             watcher.Show()
 
-    def OnWatchEventsUI(self, evt):
+    def OnWatchEventsUI(self, event):
         item = self.tree.GetSelection()
         if item:
             obj = self.tree.GetItemData(item)
-            evt.Enable(isinstance(obj, wx.Window))
+            event.Enable(isinstance(obj, wx.Window))
 
 
-    def OnToggleFilling(self, evt):
+    def OnToggleFilling(self, event):
         self.crust.ToggleTools()
 
 
-    def OnShowSizersUI(self, evt):
-        evt.Check(self.includeSizers)
+    def OnShowSizersUI(self, event):
+        event.Check(self.includeSizers)
 
 
-    def OnToggleFillingUI(self, evt):
+    def OnToggleFillingUI(self, event):
         if self.started:
-            evt.Check(self.crust.ToolsShown())
+            event.Check(self.crust.ToolsShown())
 
 
     def LoadSettings(self, config):
@@ -577,8 +577,8 @@ class InspectionTree(TreeBaseClass):
             self.SelectItem(item)
 
 
-    def OnSelectionChanged(self, evt):
-        item = evt.GetItem()
+    def OnSelectionChanged(self, event):
+        item = event.GetItem()
         if item:
             obj = self.GetItemData(item)
             self.toolFrame.SetObj(obj)

@@ -445,7 +445,7 @@ class PreMaskedTextCtrl( BaseMaskedTextCtrl, MaskedEditAccessorsMixin ):
         self.Bind(self._firstEventType, self.OnCreate)
 
 
-    def OnCreate(self, evt):
+    def OnCreate(self, event):
         self.Unbind(self._firstEventType)
         self._PostInit()
 

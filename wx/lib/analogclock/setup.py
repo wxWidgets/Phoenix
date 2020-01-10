@@ -49,13 +49,13 @@ class _GroupBase(wx.Panel):
         self.customcolours = customcolours
 
 
-    def OnSelectFont(self, evt):
-        self.clock.SetTickFont(evt.val, self.target)
+    def OnSelectFont(self, event):
+        self.clock.SetTickFont(event.val, self.target)
 
 
-    def OnSelectColour(self, evt):
-        obj = evt.GetEventObject()
-        val = evt.GetValue()
+    def OnSelectColour(self, event):
+        obj = event.GetEventObject()
+        val = event.GetValue()
 
         self.customcolours.Colours = obj.GetCustomColours()
 
@@ -86,9 +86,9 @@ class _GroupBase(wx.Panel):
             self.parent.GetGrandParent().UpdateControls()
 
 
-    def OnSpin(self, evt):
-        obj = evt.GetEventObject()
-        val = evt.GetInt()
+    def OnSpin(self, event):
+        obj = event.GetEventObject()
+        val = event.GetInt()
 
         if hasattr(self, "bw") and obj == self.bw:
             if self.group == "Hands":
@@ -108,8 +108,8 @@ class _GroupBase(wx.Panel):
             self.clock.SetTickOffset(val, self.target)
 
 
-    def OnChoice(self, evt):
-        self.clock.SetWindowStyle(eval(evt.GetString()))
+    def OnChoice(self, event):
+        self.clock.SetWindowStyle(eval(event.GetString()))
 
 
     def UpdateControls(self):
@@ -332,7 +332,7 @@ class StylesPanel(bt.ButtonTreeCtrlPanel):
         self.Bind(bt.EVT_CHANGED, self.OnChanged)
 
 
-    def OnChanged(self, evt):
+    def OnChanged(self, event):
         clockStyle, hourStyle, minuteStyle = \
           [functools.reduce(lambda x, y: x | y,
            [getattr(styles, item) \
@@ -432,14 +432,14 @@ class Setup(wx.Dialog):
         wx.CallAfter(self.UpdateControls)
 
 
-    def OnClose(self, evt):
+    def OnClose(self, event):
         self.Hide()
 
 
-    def OnButton(self, evt):
-        if evt.GetEventObject().GetLabel() == "Reset":
+    def OnButton(self, event):
+        if event.GetEventObject().GetLabel() == "Reset":
             self.ResetClock()
-        evt.Skip()
+        event.Skip()
 
 
     def UpdateControls(self):

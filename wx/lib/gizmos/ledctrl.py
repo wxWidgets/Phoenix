@@ -118,7 +118,7 @@ class LEDNumberCtrl(wx.Control):
             self.SetAlignment(style & LED_ALIGN_MASK)
 
         # event bindings
-        self.Bind(wx.EVT_ERASE_BACKGROUND, lambda evt: None)
+        self.Bind(wx.EVT_ERASE_BACKGROUND, lambda event: None)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
@@ -184,12 +184,12 @@ class LEDNumberCtrl(wx.Control):
     Value = property(GetValue, SetValue)
 
 
-    def OnSize(self, evt):
+    def OnSize(self, event):
         wx.CallAfter(self._recalcInternals)
-        evt.Skip()
+        event.Skip()
 
 
-    def OnPaint(self, evt):
+    def OnPaint(self, event):
         c = self.const
         dc = wx.AutoBufferedPaintDC(self)
 

@@ -257,7 +257,7 @@ class ToasterBox(wx.Timer):
                                      wx.GetDisplaySize().GetHeight())
 
         if parent is not None:
-            parent.Bind(wx.EVT_ICONIZE, lambda evt: [w.Hide() for w in winlist])
+            parent.Bind(wx.EVT_ICONIZE, lambda event: [w.Hide() for w in winlist])
             self._moveTimer = wx.Timer(parent, -1)
             parent.Bind(wx.EVT_TIMER, self.OnMoveTimer, self._moveTimer)
 

@@ -81,7 +81,7 @@ Sample usage::
             self.Fit()
 
 
-        def OnRefit(self, evt):
+        def OnRefit(self, event):
             # The Expando control will redo the layout of the
             # sizer it belongs to, but sometimes this may not be
             # enough, so it will send us this event so we can do any
@@ -90,12 +90,12 @@ Sample usage::
             self.Fit()
 
 
-        def OnWriteText(self, evt):
+        def OnWriteText(self, event):
             self.eom.WriteText("This is a test...  Only a test.  If this had "
                                "been a real emergency you would have seen the "
                                "quick brown fox jump over the lazy dog.")
 
-        def OnAppendText(self, evt):
+        def OnAppendText(self, event):
             self.eom.AppendText("Appended text.")
 
     app = wx.App(0)
@@ -264,7 +264,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
         self.SetInsertionPointEnd()
 
 
-    def OnTextChanged(self, evt):
+    def OnTextChanged(self, event):
         """
         Handles the ``wx.EVT_TEXT`` event for :class:`ExpandoTextCtrl`.
 
@@ -273,10 +273,10 @@ class ExpandoTextCtrl(wx.TextCtrl):
 
         # check if any adjustments are needed on every text update
         self._adjustCtrl()
-        evt.Skip()
+        event.Skip()
 
 
-    def OnSize(self, evt):
+    def OnSize(self, event):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`ExpandoTextCtrl`.
 
@@ -285,7 +285,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
 
         # The number of lines needed can change when the ctrl is resized too.
         self._adjustCtrl()
-        evt.Skip()
+        event.Skip()
 
 
     def _adjustCtrl(self):

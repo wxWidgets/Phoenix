@@ -64,11 +64,11 @@ if __name__ == '__main__':
             self.Bind(wx.EVT_SIZE, self.OnSize)
 
 
-        def OnSize(self, evt):
+        def OnSize(self, event):
             wx.CallAfter(self.OnDoUpdate, None)
 
 
-        def OnDoUpdate(self, evt):
+        def OnDoUpdate(self, event):
             WIDTH = self.GetSize().width - 220
             HEIGHT = 200
             bmp = wx.Bitmap(WIDTH, HEIGHT)

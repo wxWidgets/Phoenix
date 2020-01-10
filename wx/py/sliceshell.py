@@ -822,15 +822,15 @@ class SlicesShell(editwindow.EditWindow):
             self.ID_REDO = wx.NewIdRef()
 
         # Assign handlers for edit events
-        self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=self.ID_CUT)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Copy(), id=self.ID_COPY)
-        self.Bind(wx.EVT_MENU, lambda evt: self.CopyWithPrompts(), id=frame.ID_COPY_PLUS)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Paste(), id=self.ID_PASTE)
-        self.Bind(wx.EVT_MENU, lambda evt: self.PasteAndRun(), id=frame.ID_PASTE_PLUS)
-        self.Bind(wx.EVT_MENU, lambda evt: self.SelectAll(), id=self.ID_SELECTALL)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Clear(), id=self.ID_CLEAR)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Undo(), id=self.ID_UNDO)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Redo(), id=self.ID_REDO)
+        self.Bind(wx.EVT_MENU, lambda event: self.Cut(), id=self.ID_CUT)
+        self.Bind(wx.EVT_MENU, lambda event: self.Copy(), id=self.ID_COPY)
+        self.Bind(wx.EVT_MENU, lambda event: self.CopyWithPrompts(), id=frame.ID_COPY_PLUS)
+        self.Bind(wx.EVT_MENU, lambda event: self.Paste(), id=self.ID_PASTE)
+        self.Bind(wx.EVT_MENU, lambda event: self.PasteAndRun(), id=frame.ID_PASTE_PLUS)
+        self.Bind(wx.EVT_MENU, lambda event: self.SelectAll(), id=self.ID_SELECTALL)
+        self.Bind(wx.EVT_MENU, lambda event: self.Clear(), id=self.ID_CLEAR)
+        self.Bind(wx.EVT_MENU, lambda event: self.Undo(), id=self.ID_UNDO)
+        self.Bind(wx.EVT_MENU, lambda event: self.Redo(), id=self.ID_REDO)
 
         # Assign handler for idle time.
         self.waiting = False
@@ -2131,12 +2131,12 @@ class SlicesShell(editwindow.EditWindow):
             else:
                 self.SliceSelection=True
 
-    def OnMarginClick(self, evt):
+    def OnMarginClick(self, event):
 
         # fold and unfold as neededNAVKEYS
-        lineClicked = self.LineFromPosition(evt.GetPosition())
-        self.DoMarginClick(lineClicked,evt.GetMargin(),evt.GetShift(),evt.GetControl())
-        evt.Skip()
+        lineClicked = self.LineFromPosition(event.GetPosition())
+        self.DoMarginClick(lineClicked, event.GetMargin(), event.GetShift(), event.GetControl())
+        event.Skip()
 
     def OnShowCompHistory(self):
         """Show possible autocompletion Words from already typed words."""
@@ -3578,22 +3578,22 @@ class SlicesShell(editwindow.EditWindow):
         menu.Append(self.ID_SELECTALL, "Select All")
         return menu
 
-    def OnContextMenu(self, evt):
+    def OnContextMenu(self, event):
         menu = self.GetContextMenu()
         self.PopupMenu(menu)
 
-    def OnUpdateUI(self, evt):
-        id = evt.Id
+    def OnUpdateUI(self, event):
+        id = event.Id
         if id in (self.ID_CUT, self.ID_CLEAR):
-            evt.Enable(self.CanCut())
+            event.Enable(self.CanCut())
         elif id in (self.ID_COPY, frame.ID_COPY_PLUS):
-            evt.Enable(self.CanCopy())
+            event.Enable(self.CanCopy())
         elif id in (self.ID_PASTE, frame.ID_PASTE_PLUS):
-            evt.Enable(self.CanPaste())
+            event.Enable(self.CanPaste())
         elif id == self.ID_UNDO:
-            evt.Enable(self.CanUndo())
+            event.Enable(self.CanUndo())
         elif id == self.ID_REDO:
-            evt.Enable(self.CanRedo())
+            event.Enable(self.CanRedo())
 
     def LoadPySlicesFile(self,fid):
         invalidFileString = 'Not a valid input format'

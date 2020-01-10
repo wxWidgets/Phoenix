@@ -378,13 +378,13 @@ class PyCollapsiblePane(wx.Panel):
                 # the button is refreshed after every time that the box is drawn.
                 # This adds a little flicker but it is not too bad compared to
                 # others.
-                def paint(evt):
+                def paint(event):
                     def updateBtn():
                         if self and self._pButton:
                             self._pButton.Refresh()
                             self._pButton.Update()
                     wx.CallAfter(updateBtn)
-                    evt.Skip()
+                    event.Skip()
                 self._pStaticBox.Bind(wx.EVT_PAINT, paint)
 
         elif self.HasAGWFlag(CP_GTK_EXPANDER):

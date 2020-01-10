@@ -127,7 +127,7 @@ class ProgressIndicator(wx.Panel):
         self.gauge.SetRange(maxval)
 
 
-    def onTimer(self, evt):
+    def onTimer(self, event):
         self.gauge.Pulse()
 
 

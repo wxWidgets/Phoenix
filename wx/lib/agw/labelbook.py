@@ -2224,7 +2224,7 @@ class FlatBookBase(wx.Panel):
         self._bInitializing = False
 
         self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)
-        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda evt: True)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda event: True)
 
 
     def SetAGWWindowStyleFlag(self, agwStyle):

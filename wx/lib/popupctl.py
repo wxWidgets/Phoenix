@@ -169,13 +169,13 @@ class PopupControl(wx.Control):
         self.SendSizeEvent()
 
 
-    def OnFocus(self,evt):
+    def OnFocus(self, event):
         # embedded control should get focus on TAB keypress
         self.textCtrl.SetFocus()
-        evt.Skip()
+        event.Skip()
 
 
-    def OnSize(self, evt):
+    def OnSize(self, event):
         # layout the child widgets
         w,h = self.GetClientSize()
         self.textCtrl.SetSize(0, 0, w - self.marginWidth - self.buttonWidth, h)
@@ -189,7 +189,7 @@ class PopupControl(wx.Control):
                        tbs.height)
 
 
-    def OnButton(self, evt):
+    def OnButton(self, event):
         if not self.pop:
             if self.content:
                 self.pop = PopupDialog(self,self.content)

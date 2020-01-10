@@ -121,14 +121,14 @@ class ColumnSorterMixin:
         return (key1, key2)
 
 
-    def __OnColClick(self, evt):
+    def __OnColClick(self, event):
         oldCol = self._col
-        self._col = col = evt.GetColumn()
+        self._col = col = event.GetColumn()
         self._colSortFlag[col] = int(not self._colSortFlag[col])
         self.GetListCtrl().SortItems(self.GetColumnSorter())
         if wx.Platform != "__WXMAC__" or wx.SystemOptions.GetOptionInt("mac.listctrl.always_use_generic") == 1:
             self.__updateImages(oldCol)
-        evt.Skip()
+        event.Skip()
         self.OnSortOrderChanged()
 
 
@@ -484,9 +484,9 @@ class TextEditMixin:
         self.editor.Bind(wx.EVT_KILL_FOCUS, self.CloseEditor)
 
 
-    def OnItemSelected(self, evt):
-        self.curRow = evt.GetIndex()
-        evt.Skip()
+    def OnItemSelected(self, event):
+        self.curRow = event.GetIndex()
+        event.Skip()
 
 
     def OnChar(self, event):
@@ -523,7 +523,7 @@ class TextEditMixin:
             event.Skip()
 
 
-    def OnLeftDown(self, evt=None):
+    def OnLeftDown(self, event=None):
         ''' Examine the click and double
         click events to see if a row has been click on twice. If so,
         determine the current row and columnn and open the editor.'''
@@ -531,11 +531,11 @@ class TextEditMixin:
         if self.editor.IsShown():
             self.CloseEditor()
 
-        x,y = evt.GetPosition()
+        x,y = event.GetPosition()
         row,flags = self.HitTest((x,y))
 
         if row != self.curRow: # self.curRow keeps track of the current row
-            evt.Skip()
+            event.Skip()
             return
 
         # the following should really be done in the mixin's init but
@@ -758,8 +758,8 @@ class CheckListCtrlMixin(object):
         return bmp
 
 
-    def __OnLeftDown_(self, evt):
-        (index, flags) = self.HitTest(evt.GetPosition())
+    def __OnLeftDown_(self, event):
+        (index, flags) = self.HitTest(event.GetPosition())
         if flags == wx.LIST_HITTEST_ONITEMICON:
             img_idx = self.GetItem(index).GetImage()
             flag_check = img_idx == 0
@@ -786,7 +786,7 @@ class CheckListCtrlMixin(object):
                 begin_index += 1
             self.__last_check_ = (index, flag_check)
         else:
-            evt.Skip()
+            event.Skip()
 
     def OnCheckItem(self, index, flag):
         pass
@@ -835,8 +835,8 @@ class ListRowHighlighter:
         self._mode = mode
 
         # Event Handlers
-        self.Bind(wx.EVT_LIST_INSERT_ITEM, lambda evt: self.RefreshRows())
-        self.Bind(wx.EVT_LIST_DELETE_ITEM, lambda evt: self.RefreshRows())
+        self.Bind(wx.EVT_LIST_INSERT_ITEM, lambda event: self.RefreshRows())
+        self.Bind(wx.EVT_LIST_DELETE_ITEM, lambda event: self.RefreshRows())
 
     def RefreshRows(self):
         """Re-color all the rows"""

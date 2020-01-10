@@ -142,19 +142,19 @@ class InspectionMixin(object):
         self._keyCode = keyCode
         InspectionTool().Init(pos, size, config, locals, self)
 
-    def _OnKeyPress(self, evt):
+    def _OnKeyPress(self, event):
         """
         Event handler, check for our hot-key.  Normally it is
         Ctrl-Alt-I but that can be changed by what is passed to the
         Init method.
         """
-        if evt.AltDown() == self._alt  and \
-               evt.CmdDown() == self._cmd and \
-               evt.ShiftDown() == self._shift and \
-               evt.GetKeyCode() == self._keyCode:
+        if event.AltDown() == self._alt  and \
+               event.CmdDown() == self._cmd and \
+               event.ShiftDown() == self._shift and \
+               event.GetKeyCode() == self._keyCode:
             self.ShowInspectionTool()
         else:
-            evt.Skip()
+            event.Skip()
 
     Init = InitInspection  # compatibility alias
 

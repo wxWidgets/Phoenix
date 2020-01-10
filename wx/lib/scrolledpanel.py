@@ -159,18 +159,18 @@ class ScrolledPanel(wx.ScrolledWindow):
             self.Scroll(0,0)
 
 
-    def OnChildFocus(self, evt):
+    def OnChildFocus(self, event):
         """
         If the child window that gets the focus is not fully visible,
         this handler will try to scroll enough to see it.
 
-        :param `evt`: a :class:`ChildFocusEvent` event to be processed.
+        :param `event`: a :class:`ChildFocusEvent` event to be processed.
         """
 
-        child = evt.GetWindow()
+        child = event.GetWindow()
         if self.scrollIntoView:
             self.ScrollChildIntoView(child)
-            evt.Skip()
+            event.Skip()
 
 
     def ScrollChildIntoView(self, child):
@@ -179,7 +179,7 @@ class ScrolledPanel(wx.ScrolledWindow):
 
         :param wx.Window `child`: any :class:`wx.Window` - derived control.
 
-        .. note:: This method looks redundant if `evt.Skip()` is
+        .. note:: This method looks redundant if `event.Skip()` is
            called as well - the base :class:`ScrolledWindow` widget now seems
            to be doing the same thing anyway.
 

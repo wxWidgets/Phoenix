@@ -637,7 +637,7 @@ class RulerCtrl(wx.Panel):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseEvents)
-        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda evt: True)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda event: True)
 
 
     def OnMouseEvents(self, event):

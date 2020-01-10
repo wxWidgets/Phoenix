@@ -135,9 +135,9 @@ class FileBrowseButton(wx.Panel):
             textControl.Bind(wx.EVT_COMBOBOX, self.OnChanged)
         return textControl
 
-    def OnChanged(self, evt):
+    def OnChanged(self, event):
         if self.callCallback and self.changeCallback:
-            self.changeCallback(evt)
+            self.changeCallback(event)
 
     def createBrowseButton( self):
         """Create the browse-button control"""

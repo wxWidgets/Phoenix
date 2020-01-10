@@ -192,7 +192,7 @@ class Editor(wx.ScrolledWindow):
         wx.CallAfter(self.AdjustScrollbars)
         self.isDrawing = False
 
-    def OnEraseBackground(self, evt):
+    def OnEraseBackground(self, event):
         pass
 
 ##-------------------- Drawing code

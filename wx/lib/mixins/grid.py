@@ -41,7 +41,7 @@ class GridAutoEditMixin:
             self.EnableCellEditControl()
 
 
-    def __OnSelectCell(self, evt):
+    def __OnSelectCell(self, event):
         wx.CallAfter(self.__DoEnableEdit)
-        evt.Skip()
+        event.Skip()
 

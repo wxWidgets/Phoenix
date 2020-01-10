@@ -114,7 +114,7 @@ class AnalogClock(wx.Window):
         return size
 
 
-    def _OnSize(self, evt):
+    def _OnSize(self, event):
         size = self.GetClientSize()
         if size.x < 1 or size.y < 1:
             return
@@ -123,33 +123,33 @@ class AnalogClock(wx.Window):
         self.DrawBox()
 
 
-    def _OnPaint(self, evt):
+    def _OnPaint(self, event):
         dc = wx.GCDC(wx.BufferedPaintDC(self))
         self.DrawHands(dc)
 
 
-    def _OnTimer(self, evt):
+    def _OnTimer(self, event):
         self.Refresh(False)
         self.Update()
 
 
-    def _OnDestroyWindow(self, evt):
+    def _OnDestroyWindow(self, event):
         self.timer.Stop()
         del self.timer
 
 
-    def _OnContextMenu(self, evt):
+    def _OnContextMenu(self, event):
         self.PopupMenu(self.cm)
 
 
-    def _OnShowSetup(self, evt):
+    def _OnShowSetup(self, event):
         if self.Setup is None:
             self.Setup = Setup(self)
         self.Setup.Show()
         self.Setup.Raise()
 
 
-    def _OnShowAbout(self, evt):
+    def _OnShowAbout(self, event):
         msg = "AnalogClock\n\n" \
               "by Several folks on wxPython-users\n" \
               "with enhancements from E. A. Tacao."

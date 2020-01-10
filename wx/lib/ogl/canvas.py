@@ -100,7 +100,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         if self.GetDiagram():
             self.GetDiagram().Redraw(dc)
 
-    def OnSize(self, evt):
+    def OnSize(self, event):
         """
         The size handler, it initializes the buffer to the size of the window.
         """
@@ -126,7 +126,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         """Get the diagram associated with this canvas."""
         return self._shapeDiagram
 
-    def OnPaint(self, evt):
+    def OnPaint(self, event):
         """
         The paint handler, uses :class:`BufferedPaintDC` to draw the
         buffer to the screen.
@@ -135,16 +135,16 @@ class ShapeCanvas(wx.ScrolledWindow):
         self.PrepareDC(dc)
         dc.DrawBitmap(self._buffer, 0, 0)
 
-    def OnMouseEvent(self, evt):
+    def OnMouseEvent(self, event):
         """The mouse event handler."""
-        x, y = self.CalcUnscrolledPosition(evt.GetPosition())
+        x, y = self.CalcUnscrolledPosition(event.GetPosition())
         keys = 0
-        if evt.ShiftDown():
+        if event.ShiftDown():
             keys |= KEY_SHIFT
-        if evt.ControlDown():
+        if event.ControlDown():
             keys |= KEY_CTRL
 
-        dragging = evt.Dragging()
+        dragging = event.Dragging()
 
         # Check if we're within the tolerance for mouse movements.
         # If we're very close to the position we started dragging
@@ -183,7 +183,7 @@ class ShapeCanvas(wx.ScrolledWindow):
             self._draggedShape.GetEventHandler().OnDragLeft(True, x, y, keys, self._draggedAttachment)
             self._oldDragX, self._oldDragY = x, y
 
-        elif evt.LeftUp() and self._draggedShape and self._dragState == ContinueDraggingLeft:
+        elif event.LeftUp() and self._draggedShape and self._dragState == ContinueDraggingLeft:
             self._dragState = NoDragging
             self._checkTolerance = True
 
@@ -206,7 +206,7 @@ class ShapeCanvas(wx.ScrolledWindow):
             self._draggedShape.GetEventHandler().OnDragRight(True, x, y, keys, self._draggedAttachment)
             self._oldDragX, self._oldDragY = x, y
 
-        elif evt.RightUp() and self._draggedShape and self._dragState == ContinueDraggingRight:
+        elif event.RightUp() and self._draggedShape and self._dragState == ContinueDraggingRight:
             self._dragState = NoDragging
             self._checkTolerance = True
 
@@ -226,7 +226,7 @@ class ShapeCanvas(wx.ScrolledWindow):
             self.OnDragLeft(True, x, y, keys)
             self._oldDragX, self._oldDragY = x, y
 
-        elif evt.LeftUp() and not self._draggedShape and self._dragState == ContinueDraggingLeft:
+        elif event.LeftUp() and not self._draggedShape and self._dragState == ContinueDraggingLeft:
             self._dragState = NoDragging
             self._checkTolerance = True
 
@@ -245,7 +245,7 @@ class ShapeCanvas(wx.ScrolledWindow):
             self.OnDragRight(True, x, y, keys)
             self._oldDragX, self._oldDragY = x, y
 
-        elif evt.RightUp() and not self._draggedShape and self._dragState == ContinueDraggingRight:
+        elif event.RightUp() and not self._draggedShape and self._dragState == ContinueDraggingRight:
             self._dragState = NoDragging
             self._checkTolerance = True
 
@@ -254,7 +254,7 @@ class ShapeCanvas(wx.ScrolledWindow):
             self._draggedShape = None
 
         # Non-dragging events
-        elif evt.IsButton():
+        elif event.IsButton():
             self._checkTolerance = True
 
             # Find the nearest object
@@ -262,14 +262,14 @@ class ShapeCanvas(wx.ScrolledWindow):
 
             nearest_object, attachment = self.FindShape(x, y)
             if nearest_object: # Object event
-                if evt.LeftDown():
+                if event.LeftDown():
                     self._draggedShape = nearest_object
                     self._draggedAttachment = attachment
                     self._dragState = StartDraggingLeft
                     self._firstDragX = x
                     self._firstDragY = y
 
-                elif evt.LeftUp():
+                elif event.LeftUp():
                     # N.B. Only register a click if the same object was
                     # identified for down *and* up.
                     if nearest_object == self._draggedShape:
@@ -277,43 +277,43 @@ class ShapeCanvas(wx.ScrolledWindow):
                     self._draggedShape = None
                     self._dragState = NoDragging
 
-                elif evt.LeftDClick():
+                elif event.LeftDClick():
                     nearest_object.GetEventHandler().OnLeftDoubleClick(x, y, keys, attachment)
                     self._draggedShape = None
                     self._dragState = NoDragging
 
-                elif evt.RightDown():
+                elif event.RightDown():
                     self._draggedShape = nearest_object
                     self._draggedAttachment = attachment
                     self._dragState = StartDraggingRight
                     self._firstDragX = x
                     self._firstDragY = y
 
-                elif evt.RightUp():
+                elif event.RightUp():
                     if nearest_object == self._draggedShape:
                         nearest_object.GetEventHandler().OnRightClick(x, y, keys, attachment)
                     self._draggedShape = None
                     self._dragState = NoDragging
 
             else: # Canvas event
-                if evt.LeftDown():
+                if event.LeftDown():
                     self._draggedShape = None
                     self._dragState = StartDraggingLeft
                     self._firstDragX = x
                     self._firstDragY = y
 
-                elif evt.LeftUp():
+                elif event.LeftUp():
                     self.OnLeftClick(x, y, keys)
                     self._draggedShape = None
                     self._dragState = NoDragging
 
-                elif evt.RightDown():
+                elif event.RightDown():
                     self._draggedShape = None
                     self._dragState = StartDraggingRight
                     self._firstDragX = x
                     self._firstDragY = y
 
-                elif evt.RightUp():
+                elif event.RightUp():
                     self.OnRightClick(x, y, keys)
                     self._draggedShape = None
                     self._dragState = NoDragging

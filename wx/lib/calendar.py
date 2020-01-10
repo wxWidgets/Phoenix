@@ -1273,10 +1273,10 @@ class Calendar(wx.Control):
         """Set the calendar type to 'BUS'."""
         self.cal_type = "BUS"
 
-    def OnSize(self, evt):
+    def OnSize(self, event):
         """The on size event handler."""
         self.Refresh(False)
-        evt.Skip()
+        event.Skip()
 
     def OnPaint(self, event):
         """The on paint event handler."""
@@ -1547,7 +1547,7 @@ class CalenDlg(wx.Dialog):
         self.current_month = date.month
         self.current_year = date.year
 
-    def OnOk(self, evt):
+    def OnOk(self, event):
         """The OK event handler."""
         self.result = ['None', str(self.calend.day), Month[self.calend.month], str(self.calend.year)]
         self.EndModal(wx.ID_OK)
@@ -1556,19 +1556,19 @@ class CalenDlg(wx.Dialog):
         """The Cancel event handler."""
         self.EndModal(wx.ID_CANCEL)
 
-    def MouseClick(self, evt):
+    def MouseClick(self, event):
         """The mouse click event handler."""
         # result click type and date
-        self.result = [evt.click, str(evt.day), Month[evt.month], str(evt.year)]
-        if evt.click == 'DLEFT':
+        self.result = [event.click, str(event.day), Month[event.month], str(event.year)]
+        if event.click == 'DLEFT':
             self.EndModal(wx.ID_OK)
-        if evt.month != self.current_month or evt.year != self.current_year:
-            self.m_date.SetSelection(evt.month-1)
-            self.m_spin.SetValue(evt.month)
-            self.y_date.SetValue(str(evt.year))
-            self.y_spin.SetValue(evt.year)
-            self.current_month = evt.month
-            self.current_year = evt.year
+        if event.month != self.current_month or event.year != self.current_year:
+            self.m_date.SetSelection(event.month-1)
+            self.m_spin.SetValue(event.month)
+            self.y_date.SetValue(str(event.year))
+            self.y_spin.SetValue(event.year)
+            self.current_month = event.month
+            self.current_year = event.year
 
     def OnMonthSpin(self, event):
         """The month spin control event handler."""

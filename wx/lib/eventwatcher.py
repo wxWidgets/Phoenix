@@ -167,11 +167,11 @@ class EventLog(wx.ListCtrl):
     def OnGetItemAttr(self, item):  return None
     def OnGetItemImage(self, item): return -1
 
-    def onItemSelected(self, evt):
-        self.currItem = evt.GetIndex()
+    def onItemSelected(self, event):
+        self.currItem = event.GetIndex()
 
-    def onItemActivated(self, evt):
-        idx = evt.GetIndex()
+    def onItemActivated(self, event):
+        idx = event.GetIndex()
         text = self.data[idx][2]
         wx.CallAfter(wx.TipWindow, self, text, OTHER_WIDTH)
 
@@ -259,17 +259,17 @@ class EventChooser(wx.Panel):
             self.updateCallback()
 
 
-    def onItemActivated(self, evt):
-        self.lc.ToggleItem(evt.GetIndex())
+    def onItemActivated(self, event):
+        self.lc.ToggleItem(event.GetIndex())
 
-    def onCheckAll(self, evt):
+    def onCheckAll(self, event):
         self.doUpdate = False
         for idx in range(self.lc.GetItemCount()):
             self.lc.CheckItem(idx, True)
         self.doUpdate = True
         self.updateCallback()
 
-    def onUncheckAll(self, evt):
+    def onUncheckAll(self, event):
         self.doUpdate = False
         for idx in range(self.lc.GetItemCount()):
             self.lc.CheckItem(idx, False)
@@ -283,7 +283,7 @@ class EventChooser(wx.Panel):
         text2 = _eventIdMap.get(item2.typeId)
         return cmp(text1, text2)
 
-    def _ClearEventFilter(self, evt):
+    def _ClearEventFilter(self, event):
         self._event_name_filter.SetValue("")
 
 #----------------------------------------------------------------------------
@@ -367,10 +367,10 @@ class EventWatcher(wx.Frame):
             self.watch(widget)
 
 
-    def onWatchedEvent(self, evt):
+    def onWatchedEvent(self, event):
         if self:
-            self.log.append(evt)
-        evt.Skip()
+            self.log.append(event)
+        event.Skip()
 
     def buildWatchList(self, exclusions):
         # This is a list of (PyEventBinder, flag) tuples where the flag indicates
@@ -380,14 +380,14 @@ class EventWatcher(wx.Frame):
         for item in _eventBinders:
             self._watchedEvents.append( (item, item not in exclusions) )
 
-    def onCloseWindow(self, evt):
+    def onCloseWindow(self, event):
         self.unwatch()
-        evt.Skip()
+        event.Skip()
 
-    def onClear(self, evt):
+    def onClear(self, event):
         self.log.clear()
 
-    def onAddModule(self, evt):
+    def onAddModule(self, event):
         try:
             dlg = wx.TextEntryDialog(
                 self,
@@ -413,8 +413,8 @@ class EventWatcher(wx.Frame):
             dlg.Destroy()
 
 
-    def onToggleWatch(self, evt):
-        if evt.IsChecked():
+    def onToggleWatch(self, event):
+        if event.IsChecked():
             self.watch(self._unwatchedWidget)
             self._unwatchedWidget = None
         else:
@@ -422,8 +422,8 @@ class EventWatcher(wx.Frame):
             self.unwatch()
 
 
-    def onToggleSelectEvents(self, evt):
-        if evt.IsChecked():
+    def onToggleSelectEvents(self, event):
+        if event.IsChecked():
             self.selectBtn.SetLabel("<<<")
             self._selectList = EventChooser(self.splitter)
             self._selectList.setUpdateCallback(self.updateBindings)

@@ -92,8 +92,8 @@ class GridWithLabelRenderersMixin(object):
 
     #----------------------------------------------------------------
 
-    def _onPaintRowLabels(self, evt):
-        window = evt.GetEventObject()
+    def _onPaintRowLabels(self, event):
+        window = event.GetEventObject()
         dc = wx.PaintDC(window)
 
         rows = self.CalcRowLabelsExposed(window.GetUpdateRegion())
@@ -116,8 +116,8 @@ class GridWithLabelRenderersMixin(object):
             renderer.Draw(self, dc, rect, row)
 
 
-    def _onPaintColLabels(self, evt):
-        window = evt.GetEventObject()
+    def _onPaintColLabels(self, event):
+        window = event.GetEventObject()
         dc = wx.PaintDC(window)
 
         cols = self.CalcColLabelsExposed(window.GetUpdateRegion())
@@ -140,8 +140,8 @@ class GridWithLabelRenderersMixin(object):
             renderer.Draw(self, dc, rect, col)
 
 
-    def _onPaintCornerLabel(self, evt):
-        window = evt.GetEventObject()
+    def _onPaintCornerLabel(self, event):
+        window = event.GetEventObject()
         dc = wx.PaintDC(window)
         w, h = window.GetSize()
         rect = wx.Rect(0, 0, w, h)

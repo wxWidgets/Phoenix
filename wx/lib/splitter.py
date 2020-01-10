@@ -317,21 +317,21 @@ class MultiSplitterWindow(wx.Panel):
     # -------------------------------------
     # Event handlers
 
-    def _OnPaint(self, evt):
+    def _OnPaint(self, event):
         dc = wx.PaintDC(self)
         self._DrawSash(dc)
 
 
-    def _OnSize(self, evt):
+    def _OnSize(self, event):
         parent = wx.GetTopLevelParent(self)
         if parent.IsIconized():
-            evt.Skip()
+            event.Skip()
             return
         self._SizeWindows()
 
 
-    def _OnIdle(self, evt):
-        evt.Skip()
+    def _OnIdle(self, event):
+        event.Skip()
         # if this is the first idle time after a sash position has
         # potentially been set, allow _SizeWindows to check for a
         # requested size.
@@ -344,16 +344,16 @@ class MultiSplitterWindow(wx.Panel):
 
 
 
-    def _OnMouse(self, evt):
+    def _OnMouse(self, event):
         if self.HasFlag(wx.SP_NOSASH):
             return
 
-        x, y = evt.GetPosition()
+        x, y = event.GetPosition()
         isLive = self.HasFlag(wx.SP_LIVE_UPDATE)
-        adjustNeighbor = evt.ShiftDown()
+        adjustNeighbor = event.ShiftDown()
 
         # LeftDown: set things up for dragging the sash
-        if evt.LeftDown() and self._SashHitTest(x, y) != -1:
+        if event.LeftDown() and self._SashHitTest(x, y) != -1:
             self._activeSash = self._SashHitTest(x, y)
             self._dragMode = wx.SPLIT_DRAG_DRAGGING
 
@@ -370,7 +370,7 @@ class MultiSplitterWindow(wx.Panel):
             return
 
         # LeftUp: Finsish the drag
-        elif evt.LeftUp() and self._dragMode == wx.SPLIT_DRAG_DRAGGING:
+        elif event.LeftUp() and self._dragMode == wx.SPLIT_DRAG_DRAGGING:
             self._dragMode = wx.SPLIT_DRAG_NONE
             self.ReleaseMouse()
             self.SetCursor(wx.STANDARD_CURSOR)
@@ -403,14 +403,14 @@ class MultiSplitterWindow(wx.Panel):
             self._SizeWindows()
 
         # Entering or Leaving a sash: Change the cursor
-        elif (evt.Moving() or evt.Leaving() or evt.Entering()) and self._dragMode == wx.SPLIT_DRAG_NONE:
-            if evt.Leaving() or self._SashHitTest(x, y) == -1:
+        elif (event.Moving() or event.Leaving() or event.Entering()) and self._dragMode == wx.SPLIT_DRAG_NONE:
+            if event.Leaving() or self._SashHitTest(x, y) == -1:
                 self._OnLeaveSash()
             else:
                 self._OnEnterSash()
 
         # Dragging the sash
-        elif evt.Dragging() and self._dragMode == wx.SPLIT_DRAG_DRAGGING:
+        elif event.Dragging() and self._dragMode == wx.SPLIT_DRAG_DRAGGING:
             diff = self._GetMotionDiff(x, y)
             if not diff:
                 return  # mouse didn't move far enough
@@ -790,8 +790,8 @@ class MultiSplitterWindow(wx.Panel):
         self._needUpdating = False
 
 
-    def _DoSendEvent(self, evt):
-        return not self.GetEventHandler().ProcessEvent(evt) or evt.IsAllowed()
+    def _DoSendEvent(self, event):
+        return not self.GetEventHandler().ProcessEvent(event) or event.IsAllowed()
 
 #----------------------------------------------------------------------
 

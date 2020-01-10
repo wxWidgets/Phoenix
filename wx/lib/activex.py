@@ -159,13 +159,13 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
 
 
     # TBD: Are the focus handlers needed?
-    def OnSetFocus(self, evt):
+    def OnSetFocus(self, event):
         self.ipao.OnFrameWindowActivate(True)
 
-    def OnKillFocus(self, evt):
+    def OnKillFocus(self, event):
         self.ipao.OnFrameWindowActivate(False)
 
-    def OnDestroyWindow(self, evt):
+    def OnDestroyWindow(self, event):
         # release our event sinks while the window still exists
         self._evt_connections = None
 

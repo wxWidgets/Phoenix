@@ -156,7 +156,7 @@ class ColDragWindow(wx.Window):
     def GetInsertionPos(self):
         return self._GetInsertionInfo()[0]
 
-    def OnPaint(self,evt):
+    def OnPaint(self, event):
         dc = wx.PaintDC(self)
         w,h = self.GetSize()
         dc.DrawBitmap(self.image, 0,0)
@@ -219,7 +219,7 @@ class RowDragWindow(wx.Window):
     def GetInsertionPos(self):
         return self._GetInsertionInfo()[0]
 
-    def OnPaint(self,evt):
+    def OnPaint(self, event):
         dc = wx.PaintDC(self)
         w,h = self.GetSize()
         dc.DrawBitmap(self.image, 0,0)
@@ -251,28 +251,28 @@ class GridColMover(wx.EvtHandler):
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
 
 
-    def OnDestroy(self, evt):
+    def OnDestroy(self, event):
         assert self.lwin.GetEventHandler() is self
         self.lwin.PopEventHandler(True)
 
 
-    def OnMouseMove(self,evt):
+    def OnMouseMove(self, event):
         if not self.isDragging:
-            evt.Skip()
+            event.Skip()
         else:
             _rlSize = self.grid.GetRowLabelSize()
-            if abs(self.startX - evt.X) >= 3 \
-                   and abs(evt.X - self.lastX) >= 3:
-                self.lastX = evt.X
+            if abs(self.startX - event.X) >= 3 \
+                   and abs(event.X - self.lastX) >= 3:
+                self.lastX = event.X
                 self.didMove = True
                 sx,y = self.grid.GetViewStart()
                 w,h = self.lwin.GetClientSize()
                 x = sx * self.ux
 
-                if (evt.X + x) < x:
-                    x = evt.X + x
-                elif evt.X > w:
-                    x += evt.X - w
+                if (event.X + x) < x:
+                    x = event.X + x
+                elif event.X > w:
+                    x += event.X - w
 
                 if x < 1: x = 0
                 else: x /= self.ux
@@ -283,7 +283,7 @@ class GridColMover(wx.EvtHandler):
 
                     self.grid.Scroll(x,y)
 
-                x,y = self.lwin.ClientToScreen(evt.X,0)
+                x,y = self.lwin.ClientToScreen(event.X,0)
                 x,y = self.grid.ScreenToClient(x,y)
 
                 if not self.colWin.IsShown():
@@ -300,16 +300,16 @@ class GridColMover(wx.EvtHandler):
                 return
 
 
-    def OnPress(self,evt):
-        self.startX = self.lastX = evt.X
+    def OnPress(self, event):
+        self.startX = self.lastX = event.X
         _rlSize = self.grid.GetRowLabelSize()
         sx = self.grid.GetViewStart()[0] * self.ux
         sx -= _rlSize
-        px,py = self.lwin.ClientToScreen(evt.X,evt.Y)
+        px,py = self.lwin.ClientToScreen(event.X, event.Y)
         px,py = self.grid.ScreenToClient(px,py)
 
         if self.grid.XToEdgeOfCol(px + sx) != wx.NOT_FOUND:
-            evt.Skip()
+            event.Skip()
             return
 
         self.isDragging = True
@@ -325,9 +325,9 @@ class GridColMover(wx.EvtHandler):
         self.colWin = ColDragWindow(self.grid,colImg,col)
         self.colWin.Show(False)
         self.lwin.CaptureMouse()
-        evt.Skip()
+        event.Skip()
 
-    def OnRelease(self,evt):
+    def OnRelease(self, event):
         if self.isDragging:
             self.lwin.ReleaseMouse()
             self.colWin.Show(False)
@@ -341,7 +341,7 @@ class GridColMover(wx.EvtHandler):
                 col = self.grid.XToCol(px+sx)
 
                 if col != wx.NOT_FOUND:
-                    self.grid.SelectCol(col,evt.ControlDown())
+                    self.grid.SelectCol(col, event.ControlDown())
 
                 return
             else:
@@ -351,7 +351,7 @@ class GridColMover(wx.EvtHandler):
                              GridColMoveEvent(self.grid.GetId(), dCol, bCol))
 
             self.colWin.Destroy()
-        evt.Skip()
+        event.Skip()
 
     def _CaptureImage(self,rect):
         bmp = wx.Bitmap(rect.width,rect.height)
@@ -383,28 +383,28 @@ class GridRowMover(wx.EvtHandler):
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
 
 
-    def OnDestroy(self, evt):
+    def OnDestroy(self, event):
         assert self.lwin.GetEventHandler() is self
         self.lwin.PopEventHandler(True)
 
 
-    def OnMouseMove(self,evt):
+    def OnMouseMove(self, event):
         if not self.isDragging:
-            evt.Skip()
+            event.Skip()
         else:
             _clSize = self.grid.GetColLabelSize()
-            if abs(self.startY - evt.Y) >= 3 \
-                   and abs(evt.Y - self.lastY) >= 3:
-                self.lastY = evt.Y
+            if abs(self.startY - event.Y) >= 3 \
+                   and abs(event.Y - self.lastY) >= 3:
+                self.lastY = event.Y
                 self.didMove = True
                 x,sy = self.grid.GetViewStart()
                 w,h = self.lwin.GetClientSize()
                 y = sy * self.uy
 
-                if (evt.Y + y) < y:
-                    y = evt.Y + y
-                elif evt.Y > h:
-                    y += evt.Y - h
+                if (event.Y + y) < y:
+                    y = event.Y + y
+                elif event.Y > h:
+                    y += event.Y - h
 
                 if y < 1:
                     y = 0
@@ -417,7 +417,7 @@ class GridRowMover(wx.EvtHandler):
 
                     self.grid.Scroll(x,y)
 
-                x,y = self.lwin.ClientToScreen(0,evt.Y)
+                x,y = self.lwin.ClientToScreen(0, event.Y)
                 x,y = self.grid.ScreenToClient(x,y)
 
                 if not self.rowWin.IsShown():
@@ -435,22 +435,22 @@ class GridRowMover(wx.EvtHandler):
                 return
 
 
-    def OnPress(self,evt):
-        self.startY = self.lastY = evt.Y
+    def OnPress(self, event):
+        self.startY = self.lastY = event.Y
         _clSize = self.grid.GetColLabelSize()
         sy = self.grid.GetViewStart()[1] * self.uy
         sy -= _clSize
-        px,py = self.lwin.ClientToScreen(evt.X,evt.Y)
+        px,py = self.lwin.ClientToScreen(event.X, event.Y)
         px,py = self.grid.ScreenToClient(px,py)
 
         if self.grid.YToEdgeOfRow(py + sy) != wx.NOT_FOUND:
-            evt.Skip()
+            event.Skip()
             return
 
         row = self.grid.YToRow(py + sy)
 
         if row == wx.NOT_FOUND:
-            evt.Skip()
+            event.Skip()
             return
 
         self.isDragging = True
@@ -466,9 +466,9 @@ class GridRowMover(wx.EvtHandler):
         self.rowWin = RowDragWindow(self.grid,rowImg,row)
         self.rowWin.Show(False)
         self.lwin.CaptureMouse()
-        evt.Skip()
+        event.Skip()
 
-    def OnRelease(self,evt):
+    def OnRelease(self, event):
         if self.isDragging:
             self.lwin.ReleaseMouse()
             self.rowWin.Show(False)
@@ -482,7 +482,7 @@ class GridRowMover(wx.EvtHandler):
                 row = self.grid.YToRow(py + sy)
 
                 if row != wx.NOT_FOUND:
-                    self.grid.SelectRow(row,evt.ControlDown())
+                    self.grid.SelectRow(row, event.ControlDown())
                 return
             else:
                 bRow = self.rowWin.GetInsertionRow()
@@ -492,7 +492,7 @@ class GridRowMover(wx.EvtHandler):
                              GridRowMoveEvent(self.grid.GetId(), dRow, bRow))
 
             self.rowWin.Destroy()
-        evt.Skip()
+        event.Skip()
 
     def _CaptureImage(self,rect):
         bmp = wx.Bitmap(rect.width,rect.height)
