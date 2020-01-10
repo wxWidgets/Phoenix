@@ -91,7 +91,7 @@ class ScrolledPanel(wx.ScrolledWindow):
     behavior and the tab traversal management that :class:`ScrolledWindow` lacks.
     """
 
-    def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.TAB_TRAVERSAL,
                  name="scrolledpanel"):
         """
@@ -109,9 +109,7 @@ class ScrolledPanel(wx.ScrolledWindow):
         :param string `name`: the scrolled panel name.
         """
 
-        wx.ScrolledWindow.__init__(self, parent, id,
-                                     pos=pos, size=size,
-                                     style=style, name=name)
+        wx.ScrolledWindow.__init__(self, parent, id, pos, size, style, name)
         self.scrollIntoView = True
         self.SetInitialSize(size)
         self.Bind(wx.EVT_CHILD_FOCUS, self.OnChildFocus)
@@ -148,7 +146,7 @@ class ScrolledPanel(wx.ScrolledWindow):
                 w += rate_x - (w % rate_x)
             if rate_y:
                 h += rate_y - (h % rate_y)
-            self.SetVirtualSize( (w, h) )
+            self.SetVirtualSize((w, h))
         self.SetScrollRate(rate_x, rate_y)
         wx.CallAfter(self._SetupAfter, scrollToTop) # scroll back to top after initial events
 
@@ -156,7 +154,7 @@ class ScrolledPanel(wx.ScrolledWindow):
     def _SetupAfter(self, scrollToTop):
         self.SetVirtualSize(self.GetBestVirtualSize())
         if scrollToTop:
-            self.Scroll(0,0)
+            self.Scroll(0, 0)
 
 
     def OnChildFocus(self, event):
