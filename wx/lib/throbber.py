@@ -50,20 +50,20 @@ class Throbber(wx.Panel):
     """
     def __init__(self, parent, id,
                  bitmap,
-                 pos = wx.DefaultPosition,
-                 size = wx.DefaultSize,
-                 frameDelay = 0.1,
-                 frames = 0,
-                 frameWidth = 0,
-                 label = None,
-                 overlay = None,
-                 reverse = 0,
-                 style = 0,
-                 name = "throbber",
-                 rest = 0,
-                 current = 0,
-                 direction = 1,
-                 sequence = None
+                 pos=wx.DefaultPosition,
+                 size=wx.DefaultSize,
+                 frameDelay=0.1,
+                 frames=0,
+                 frameWidth=0,
+                 label=None,
+                 overlay=None,
+                 reverse=0,
+                 style=0,
+                 name="throbber",
+                 rest=0,
+                 current=0,
+                 direction=1,
+                 sequence=None
                  ):
         """
         Default class constructor.
@@ -313,7 +313,7 @@ class Throbber(wx.Panel):
         self.rest = rest
 
 
-    def SetSequence(self, sequence = None):
+    def SetSequence(self, sequence=None):
         """
         Order to display images in.
 
@@ -363,7 +363,7 @@ class Throbber(wx.Panel):
         self.Wrap()
 
 
-    def SetFrameDelay(self, frameDelay = 0.05):
+    def SetFrameDelay(self, frameDelay=0.05):
         """
         Delay between each frame.
 
@@ -376,7 +376,7 @@ class Throbber(wx.Panel):
             self.Start()
 
 
-    def ToggleOverlay(self, state = None):
+    def ToggleOverlay(self, state=None):
         """
         Toggle the overlay image.
 
@@ -390,7 +390,7 @@ class Throbber(wx.Panel):
         self.Draw(wx.ClientDC(self))
 
 
-    def ToggleLabel(self, state = None):
+    def ToggleLabel(self, state=None):
         """
         Toggle the label.
 
@@ -417,8 +417,3 @@ class Throbber(wx.Panel):
             self.labelX = (self.width - extentX)/2
             self.labelY = (self.height - extentY)/2
         self.Draw(wx.ClientDC(self))
-
-
-
-# ------------------------------------------------------------------------------
-
