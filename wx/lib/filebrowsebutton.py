@@ -21,30 +21,29 @@ import types
 
 import wx
 
-#----------------------------------------------------------------------
 
 class FileBrowseButton(wx.Panel):
     """
     A control to allow the user to type in a filename or browse with
     the standard file dialog to select file
     """
-    def __init__ (self, parent, id= -1,
-                  pos = wx.DefaultPosition,
-                  size = wx.DefaultSize,
-                  style = wx.TAB_TRAVERSAL,
-                  labelText= "File Entry:",
-                  buttonText= "Browse",
-                  toolTip= "Type filename or click browse to choose file",
+    def __init__ (self, parent, id=wx.ID_ANY,
+                  pos=wx.DefaultPosition,
+                  size=wx.DefaultSize,
+                  style=wx.TAB_TRAVERSAL,
+                  labelText="File Entry:",
+                  buttonText="Browse",
+                  toolTip="Type filename or click browse to choose file",
                   # following are the values for a file dialog box
-                  dialogTitle = "Choose a file",
-                  startDirectory = ".",
-                  initialValue = "",
-                  fileMask = "*.*",
-                  fileMode = wx.FD_OPEN,
+                  dialogTitle="Choose a file",
+                  startDirectory=".",
+                  initialValue="",
+                  fileMask="*.*",
+                  fileMode=wx.FD_OPEN,
                   # callback for when value changes (optional)
-                  changeCallback= lambda x:x,
-                  labelWidth = 0,
-                  name = 'fileBrowseButton',
+                  changeCallback=lambda x:x,
+                  labelWidth=0,
+                  name='fileBrowseButton',
         ):
         """
         :param labelText:      Text for label to left of text field
@@ -72,37 +71,36 @@ class FileBrowseButton(wx.Panel):
         self.labelWidth = labelWidth
 
         # create the dialog
-        self.createDialog(parent, id, pos, size, style, name )
+        self.createDialog(parent, id, pos, size, style, name)
         # Setting a value causes the changeCallback to be called.
-        # In this case that would be before the return of the
-        # constructor. Not good. So a default value on
-        # SetValue is used to disable the callback
-        self.SetValue( initialValue, 0)
+        # In this case that would be before the return of the constructor.
+        # Not good. So a default value on SetValue is used to disable the callback.
+        self.SetValue(initialValue, 0)
 
 
-    def createDialog( self, parent, id, pos, size, style, name ):
+    def createDialog(self, parent, id, pos, size, style, name):
         """Setup the graphic representation of the dialog"""
         wx.Panel.__init__ (self, parent, id, pos, size, style, name)
-        self.SetMinSize(size) # play nice with sizers
+        self.SetMinSize(size)  # Play nice with sizers.
 
         box = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.label = self.createLabel( )
-        box.Add( self.label, 0, wx.CENTER )
+        self.label = self.createLabel()
+        box.Add(self.label, 0, wx.CENTER)
 
         self.textControl = self.createTextControl()
-        box.Add( self.textControl, 1, wx.LEFT|wx.CENTER, 5)
+        box.Add(self.textControl, 1, wx.LEFT | wx.CENTER, 5)
 
         self.browseButton = self.createBrowseButton()
-        box.Add( self.browseButton, 0, wx.LEFT|wx.CENTER, 5)
+        box.Add(self.browseButton, 0, wx.LEFT | wx.CENTER, 5)
 
-        # add a border around the whole thing and resize the panel to fit
+        # Add a border around the whole thing and resize the panel to fit.
         outsidebox = wx.BoxSizer(wx.VERTICAL)
-        outsidebox.Add(box, 1, wx.EXPAND|wx.ALL, 3)
+        outsidebox.Add(box, 1, wx.EXPAND | wx.ALL, 3)
         outsidebox.Fit(self)
 
         self.SetAutoLayout(True)
-        self.SetSizer( outsidebox )
+        self.SetSizer(outsidebox)
         self.Layout()
         if type(size) == tuple:
             size = wx.Size(size)
@@ -111,25 +109,25 @@ class FileBrowseButton(wx.Panel):
 #        if size.width != -1 or size.height != -1:
 #            self.SetSize(size)
 
-    def SetBackgroundColour(self,color):
-        wx.Panel.SetBackgroundColour(self,color)
+    def SetBackgroundColour(self, color):
+        wx.Panel.SetBackgroundColour(self, color)
         self.label.SetBackgroundColour(color)
 
     def createLabel( self ):
         """Create the label/caption"""
-        label = wx.StaticText(self, -1, self.labelText, style =wx.ALIGN_RIGHT )
+        label = wx.StaticText(self, wx.ID_ANY, self.labelText, style=wx.ALIGN_RIGHT)
         font = label.GetFont()
         w, h, d, e = self.GetFullTextExtent(self.labelText, font)
         if self.labelWidth > 0:
             label.SetSize((self.labelWidth+5, h))
         else:
-            label.SetSize((w+5, h))
+            label.SetSize((w + 5, h))
         return label
 
-    def createTextControl( self):
+    def createTextControl(self):
         """Create the text control"""
-        textControl = wx.TextCtrl(self, -1)
-        textControl.SetToolTip( self.toolTip )
+        textControl = wx.TextCtrl(self, wx.ID_ANY)
+        textControl.SetToolTip(self.toolTip)
         if self.changeCallback:
             textControl.Bind(wx.EVT_TEXT, self.OnChanged)
             textControl.Bind(wx.EVT_COMBOBOX, self.OnChanged)
@@ -139,22 +137,21 @@ class FileBrowseButton(wx.Panel):
         if self.callCallback and self.changeCallback:
             self.changeCallback(event)
 
-    def createBrowseButton( self):
+    def createBrowseButton(self):
         """Create the browse-button control"""
-        button =wx.Button(self, -1, self.buttonText)
-        button.SetToolTip( self.toolTip )
+        button = wx.Button(self, wx.ID_ANY, self.buttonText)
+        button.SetToolTip(self.toolTip)
         button.Bind(wx.EVT_BUTTON, self.OnBrowse)
         return button
 
-
-    def OnBrowse (self, event = None):
+    def OnBrowse(self, event=None):
         """ Going to browse for file... """
         current = self.GetValue()
         directory = os.path.split(current)
-        if os.path.isdir( current):
+        if os.path.isdir(current):
             directory = current
             current = ''
-        elif directory and os.path.isdir( directory[0] ):
+        elif directory and os.path.isdir(directory[0]):
             current = directory[1]
             directory = directory [0]
         else:
@@ -167,35 +164,31 @@ class FileBrowseButton(wx.Panel):
             self.SetValue(dlg.GetPath())
         dlg.Destroy()
 
-
-    def GetValue (self):
+    def GetValue(self):
         """
         retrieve current value of text control
         """
         return self.textControl.GetValue()
 
-    def SetValue (self, value, callBack=1):
+    def SetValue(self, value, callBack=1):
         """set current value of text control"""
         save = self.callCallback
         self.callCallback = callBack
         self.textControl.SetValue(value)
-        self.callCallback =  save
+        self.callCallback = save
 
-
-    def GetLabel( self ):
+    def GetLabel(self):
         """ Retrieve the label's current text """
         return self.label.GetLabel()
 
-    def SetLabel( self, value ):
+    def SetLabel(self, value):
         """ Set the label's current text """
-        rvalue = self.label.SetLabel( value )
-        self.Refresh( True )
+        rvalue = self.label.SetLabel(value)
+        self.Refresh(True)
         return rvalue
 
 
-
-
-class FileBrowseButtonWithHistory( FileBrowseButton ):
+class FileBrowseButtonWithHistory(FileBrowseButton):
     """
     with following additions:
         __init__(..., history=None)
@@ -225,36 +218,35 @@ class FileBrowseButtonWithHistory( FileBrowseButton ):
             Set current history list, if selectionIndex is not None, select that index
 
         """
-    def __init__( self, *arguments, **namedarguments):
-        self.history = namedarguments.get( "history" )
+    def __init__(self, *arguments, **namedarguments):
+        self.history = namedarguments.get("history")
         if self.history:
             del namedarguments["history"]
 
-        self.historyCallBack=None
+        self.historyCallBack = None
         if callable(self.history):
-            self.historyCallBack=self.history
-            self.history=None
+            self.historyCallBack = self.history
+            self.history = None
         name = namedarguments.get('name', 'fileBrowseButtonWithHistory')
         namedarguments['name'] = name
         FileBrowseButton.__init__(self, *arguments, **namedarguments)
 
 
-    def createTextControl( self):
+    def createTextControl(self):
         """Create the text control"""
-        textControl = wx.ComboBox(self, -1, style = wx.CB_DROPDOWN )
-        textControl.SetToolTip( self.toolTip )
+        textControl = wx.ComboBox(self, -1, style=wx.CB_DROPDOWN)
+        textControl.SetToolTip(self.toolTip)
         textControl.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
         if self.changeCallback:
             textControl.Bind(wx.EVT_TEXT, self.OnChanged)
             textControl.Bind(wx.EVT_COMBOBOX, self.OnChanged)
         if self.history:
-            history=self.history
-            self.history=None
-            self.SetHistory( history, control=textControl)
+            history = self.history
+            self.history = None
+            self.SetHistory(history, control=textControl)
         return textControl
 
-
-    def GetHistoryControl( self ):
+    def GetHistoryControl(self):
         """
         Return a pointer to the control which provides (at least)
         the following methods for manipulating the history list:
@@ -268,8 +260,7 @@ class FileBrowseButtonWithHistory( FileBrowseButton ):
         """
         return self.textControl
 
-
-    def SetHistory( self, value=(), selectionIndex = None, control=None ):
+    def SetHistory(self, value=(), selectionIndex=None, control=None):
         """Set the current history list"""
         if control is None:
             control = self.GetHistoryControl()
@@ -277,49 +268,48 @@ class FileBrowseButtonWithHistory( FileBrowseButton ):
             return
         self.history = value
         # Clear history values not the selected one.
-        tempValue=control.GetValue()
+        tempValue = control.GetValue()
         # clear previous values
         control.Clear()
         control.SetValue(tempValue)
         # walk through, appending new values
         for path in value:
-            control.Append( path )
+            control.Append(path)
         if selectionIndex is not None:
-            control.SetSelection( selectionIndex )
+            control.SetSelection(selectionIndex)
 
-
-    def GetHistory( self ):
+    def GetHistory(self):
         """Return the current history list"""
         if self.historyCallBack != None:
             return self.historyCallBack()
         elif self.history:
-            return list( self.history )
+            return list(self.history)
         else:
             return []
-
 
     def OnSetFocus(self, event):
         """When the history scroll is selected, update the history"""
         if self.historyCallBack != None:
-            self.SetHistory( self.historyCallBack(), control=self.textControl)
+            self.SetHistory(self.historyCallBack(), control=self.textControl)
         event.Skip()
 
-
     if wx.Platform == "__WXMSW__":
-        def SetValue (self, value, callBack=1):
+        def SetValue(self, value, callBack=1):
             """ Convenient setting of text control value, works
                 around limitation of wx.ComboBox """
             save = self.callCallback
             self.callCallback = callBack
             self.textControl.SetValue(value)
-            self.callCallback =  save
+            self.callCallback = save
 
             # Hack to call an event handler
             class LocalEvent:
                 def __init__(self, string):
-                    self._string=string
+                    self._string = string
+
                 def GetString(self):
                     return self._string
+
             if callBack==1:
                 # The callback wasn't being called when SetValue was used ??
                 # So added this explicit call to it
@@ -327,117 +317,121 @@ class FileBrowseButtonWithHistory( FileBrowseButton ):
 
 
 class DirBrowseButton(FileBrowseButton):
-    def __init__(self, parent, id = -1,
-                 pos = wx.DefaultPosition, size = wx.DefaultSize,
-                 style = wx.TAB_TRAVERSAL,
-                 labelText = 'Select a directory:',
-                 buttonText = 'Browse',
-                 toolTip = 'Type directory name or browse to select',
-                 dialogTitle = '',
-                 startDirectory = '.',
-                 changeCallback = None,
-                 dialogClass = wx.DirDialog,
-                 newDirectory = False,
-                 name = 'dirBrowseButton'):
+    def __init__(self, parent, id=wx.ID_ANY,
+                 pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=wx.TAB_TRAVERSAL,
+                 labelText='Select a directory:',
+                 buttonText='Browse',
+                 toolTip='Type directory name or browse to select',
+                 dialogTitle='',
+                 startDirectory='.',
+                 changeCallback=None,
+                 dialogClass=wx.DirDialog,
+                 newDirectory=False,
+                 name='dirBrowseButton'):
         FileBrowseButton.__init__(self, parent, id, pos, size, style,
                                   labelText, buttonText, toolTip,
                                   dialogTitle, startDirectory,
-                                  changeCallback = changeCallback,
-                                  name = name)
+                                  changeCallback=changeCallback,
+                                  name=name)
         self.dialogClass = dialogClass
         self.newDirectory = newDirectory
-    #
 
-    def OnBrowse(self, ev = None):
+
+    def OnBrowse(self, event=None):
         style=0
 
         if not self.newDirectory:
           style |= wx.DD_DIR_MUST_EXIST
 
         dialog = self.dialogClass(self,
-                                  message = self.dialogTitle,
-                                  defaultPath = self.startDirectory,
-                                  style = style)
+                                  message=self.dialogTitle,
+                                  defaultPath=self.startDirectory,
+                                  style=style)
 
         if dialog.ShowModal() == wx.ID_OK:
             self.SetValue(dialog.GetPath())
         dialog.Destroy()
-    #
 
 
 #----------------------------------------------------------------------
 
 
 if __name__ == "__main__":
-    #from skeletonbuilder import rulesfile
+
     class SimpleCallback:
-        def __init__( self, tag ):
+        def __init__(self, tag):
             self.tag = tag
-        def __call__( self, event ):
+
+        def __call__(self, event):
             print(self.tag, event.GetString())
-    class DemoFrame( wx.Frame ):
+
+
+    class DemoFrame(wx.Frame):
         def __init__(self, parent):
-            wx.Frame.__init__(self, parent, -1, "File entry with browse", size=(500,260))
+            wx.Frame.__init__(self, parent, wx.ID_ANY, "File entry with browse", size=(500, 260))
             self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
-            panel = wx.Panel (self,-1)
+            panel = wx.Panel(self, wx.ID_ANY)
             innerbox = wx.BoxSizer(wx.VERTICAL)
             control = FileBrowseButton(
                 panel,
-                initialValue = "z:\\temp",
+                initialValue="z:\\temp",
             )
-            innerbox.Add(  control, 0, wx.EXPAND )
+            innerbox.Add(control, 0, wx.EXPAND)
             middlecontrol = FileBrowseButtonWithHistory(
                 panel,
-                labelText = "With History",
-                initialValue = "d:\\temp",
-                history = ["c:\\temp", "c:\\tmp", "r:\\temp","z:\\temp"],
-                changeCallback= SimpleCallback( "With History" ),
+                labelText="With History",
+                initialValue="d:\\temp",
+                history=["c:\\temp", "c:\\tmp", "r:\\temp","z:\\temp"],
+                changeCallback=SimpleCallback("With History"),
             )
-            innerbox.Add( middlecontrol, 0, wx.EXPAND )
+            innerbox.Add(middlecontrol, 0, wx.EXPAND)
             middlecontrol = FileBrowseButtonWithHistory(
                 panel,
-                labelText = "History callback",
-                initialValue = "d:\\temp",
-                history = self.historyCallBack,
-                changeCallback= SimpleCallback( "History callback" ),
+                labelText="History callback",
+                initialValue="d:\\temp",
+                history=self.historyCallBack,
+                changeCallback=SimpleCallback("History callback"),
             )
-            innerbox.Add( middlecontrol, 0, wx.EXPAND )
+            innerbox.Add(middlecontrol, 0, wx.EXPAND)
             self.bottomcontrol = control = FileBrowseButton(
                 panel,
-                labelText = "With Callback",
-                style = wx.SUNKEN_BORDER|wx.CLIP_CHILDREN ,
-                changeCallback= SimpleCallback( "With Callback" ),
+                labelText="With Callback",
+                style=wx.SUNKEN_BORDER | wx.CLIP_CHILDREN ,
+                changeCallback=SimpleCallback("With Callback"),
             )
-            innerbox.Add(  control, 0, wx.EXPAND)
+            innerbox.Add(control, 0, wx.EXPAND)
             self.bottommostcontrol = control = DirBrowseButton(
                 panel,
-                labelText = "Simple dir browse button",
-                style = wx.SUNKEN_BORDER|wx.CLIP_CHILDREN)
-            innerbox.Add(  control, 0, wx.EXPAND)
+                labelText="Simple dir browse button",
+                style=wx.SUNKEN_BORDER | wx.CLIP_CHILDREN)
+            innerbox.Add(control, 0, wx.EXPAND)
             ID = wx.NewIdRef()
-            innerbox.Add( wx.Button( panel, ID,"Change Label",  ), 1, wx.EXPAND)
-            self.Bind(wx.EVT_BUTTON, self.OnChangeLabel , id=ID)
+            innerbox.Add(wx.Button(panel, ID, "Change Label"), 1, wx.EXPAND)
+            self.Bind(wx.EVT_BUTTON, self.OnChangeLabel, id=ID)
             ID = wx.NewIdRef()
-            innerbox.Add( wx.Button( panel, ID,"Change Value",  ), 1, wx.EXPAND)
-            self.Bind(wx.EVT_BUTTON, self.OnChangeValue, id=ID )
+            innerbox.Add(wx.Button(panel, ID, "Change Value"), 1, wx.EXPAND)
+            self.Bind(wx.EVT_BUTTON, self.OnChangeValue, id=ID)
             panel.SetAutoLayout(True)
-            panel.SetSizer( innerbox )
-            self.history={"c:\\temp":1, "c:\\tmp":1, "r:\\temp":1,"z:\\temp":1}
+            panel.SetSizer(innerbox)
+            self.history = {"c:\\temp": 1, "c:\\tmp": 1, "r:\\temp": 1,"z:\\temp": 1}
 
         def historyCallBack(self):
-            keys=self.history.keys()
+            keys = self.history.keys()
             keys.sort()
             return keys
 
-        def OnFileNameChangedHistory (self, event):
-            self.history[event.GetString ()]=1
+        def OnFileNameChangedHistory(self, event):
+            self.history[event.GetString()] = 1
 
         def OnCloseMe(self, event):
             self.Close(True)
-        def OnChangeLabel( self, event ):
-            self.bottomcontrol.SetLabel( "Label Updated" )
-        def OnChangeValue( self, event ):
-            self.bottomcontrol.SetValue( "r:\\somewhere\\over\\the\\rainbow.htm" )
+
+        def OnChangeLabel(self, event):
+            self.bottomcontrol.SetLabel("Label Updated")
+
+        def OnChangeValue(self, event):
+            self.bottomcontrol.SetValue("r:\\somewhere\\over\\the\\rainbow.htm")
 
         def OnCloseWindow(self, event):
             self.Destroy()
@@ -450,11 +444,8 @@ if __name__ == "__main__":
             self.SetTopWindow(frame)
             return True
 
-    def test( ):
+    def test():
         app = DemoApp(0)
         app.MainLoop()
     print('Creating dialog')
-    test( )
-
-
-
+    test()
