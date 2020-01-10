@@ -159,7 +159,7 @@ class Layoutf(wx.LayoutConstraints):
             attr = getattr(self, self.attr_d[g[0]])
             func = getattr(attr, self.op_d[g[1]])
             if g[3]: g[3] = int(g[3])
-            else: g[3] = None;
+            else: g[3] = None
             g[4] = int(g[4]) - 1
             if g[1] in '<>^_':
                 if g[3]: func(winlist[g[4]], g[3])
@@ -188,7 +188,7 @@ class Layoutf(wx.LayoutConstraints):
             if not m: raise ValueError
             g = list(m.groups())
             if g[3]: g[3] = int(g[3])
-            else: g[3] = 0;
+            else: g[3] = 0
             g[4] = int(g[4]) - 1
             if g[1] in '<>^_':
                 if g[3]: print("%s.%s.%s(%s,%d)" %

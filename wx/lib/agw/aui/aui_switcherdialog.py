@@ -150,7 +150,7 @@ Event handler::
 
             else:
                 nb = item.GetWindow().GetParent()
-                win = item.GetWindow();
+                win = item.GetWindow()
                 if isinstance(nb, aui.AuiNotebook):
                     nb.SetSelection(item.GetId())
                     win.SetFocus()

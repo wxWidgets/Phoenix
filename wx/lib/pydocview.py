@@ -104,7 +104,7 @@ class DocFrameMixIn:
             fileMenu.Append(wx.ID_EXIT, _("E&xit"), _("Closes this program"))
         self._docManager.FileHistoryUseMenu(fileMenu)
         self._docManager.FileHistoryAddFilesToMenu()
-        menuBar.Append(fileMenu, _("&File"));
+        menuBar.Append(fileMenu, _("&File"))
 
         editMenu = wx.Menu()
         editMenu.Append(wx.ID_UNDO, _("&Undo\tCtrl+Z"), _("Reverses the last action"))
@@ -2715,7 +2715,7 @@ class FilePropertiesDialog(wx.Dialog):
 
         # add a border around the inside of the tab
         spacerGrid = wx.BoxSizer(wx.VERTICAL)
-        spacerGrid.Add(gridSizer, 0, wx.ALL, SPACE);
+        spacerGrid.Add(gridSizer, 0, wx.ALL, SPACE)
         tab.SetSizer(spacerGrid)
         notebook.AddPage(tab, _("General"))
 

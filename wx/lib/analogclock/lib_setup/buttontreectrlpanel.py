@@ -185,7 +185,8 @@ class ButtonTreeCtrlPanel(wx.Panel):
         r = None
         for item in self._getItems(parent):
             if self.tree.GetItemText(item) == label:
-                r = item; break
+                r = item
+                break
         return r
 
 

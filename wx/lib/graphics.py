@@ -953,7 +953,7 @@ class GraphicsPath(GraphicsObject):
         c = wx.Point2D(cx, cy)
         c1 = start * (1/3.0) + c * (2/3.0)
         c2 = c * (2/3.0) + end * (1/3.0)
-        self.AddCurveToPoint(c1.x, c1.y, c2.x, c2.y, x, y);
+        self.AddCurveToPoint(c1.x, c1.y, c2.x, c2.y, x, y)
         return self
 
 
@@ -1908,7 +1908,7 @@ class _OffsetHelper(object):
             penwidth = ctx._pen.Width
             if penwidth == 0:
                 penwidth = 1
-            self.offset = (penwidth % 2) == 1;
+            self.offset = (penwidth % 2) == 1
         if self.offset:
             ctx.Translate(0.5, 0.5)
 

@@ -3062,7 +3062,7 @@ class AuiToolBar(wx.Control):
             elif kind == ITEM_CONTROL:
                 if item.window and item.window.GetContainingSizer():
                     # Make sure that there is only one sizer to this control
-                    item.window.GetContainingSizer().Detach(item.window);
+                    item.window.GetContainingSizer().Detach(item.window)
 
                 if item.window and not item.window.IsShown():
                     item.window.Show(True)

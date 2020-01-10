@@ -40,7 +40,8 @@ class FontSelect(GenButton):
     def OnClick(self, event):
         data = wx.FontData()
         data.EnableEffects(False)
-        font = self.value; font.SetPointSize(10)
+        font = self.value
+        font.SetPointSize(10)
         data.SetInitialFont(font)
 
         dlg = wx.FontDialog(self, data)

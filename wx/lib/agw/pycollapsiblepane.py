@@ -79,16 +79,16 @@ Usage example::
             ''' Just makes a few controls to put on `PyCollapsiblePane`. '''
 
             nameLbl = wx.StaticText(pane, -1, "Name:")
-            name = wx.TextCtrl(pane, -1, "");
+            name = wx.TextCtrl(pane, -1, "")
 
             addrLbl = wx.StaticText(pane, -1, "Address:")
-            addr1 = wx.TextCtrl(pane, -1, "");
-            addr2 = wx.TextCtrl(pane, -1, "");
+            addr1 = wx.TextCtrl(pane, -1, "")
+            addr2 = wx.TextCtrl(pane, -1, "")
 
             cstLbl = wx.StaticText(pane, -1, "City, State, Zip:")
-            city  = wx.TextCtrl(pane, -1, "", size=(150,-1));
-            state = wx.TextCtrl(pane, -1, "", size=(50,-1));
-            zip   = wx.TextCtrl(pane, -1, "", size=(70,-1));
+            city  = wx.TextCtrl(pane, -1, "", size=(150,-1))
+            state = wx.TextCtrl(pane, -1, "", size=(50,-1))
+            zip   = wx.TextCtrl(pane, -1, "", size=(70,-1))
 
             addrSizer = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
             addrSizer.AddGrowableCol(1)
@@ -896,13 +896,13 @@ if __name__ == '__main__':
             name = wx.TextCtrl(pane, -1, "");
 
             addrLbl = wx.StaticText(pane, -1, "Address:")
-            addr1 = wx.TextCtrl(pane, -1, "");
-            addr2 = wx.TextCtrl(pane, -1, "");
+            addr1 = wx.TextCtrl(pane, -1, "")
+            addr2 = wx.TextCtrl(pane, -1, "")
 
             cstLbl = wx.StaticText(pane, -1, "City, State, Zip:")
-            city  = wx.TextCtrl(pane, -1, "", size=(150,-1));
-            state = wx.TextCtrl(pane, -1, "", size=(50,-1));
-            zip   = wx.TextCtrl(pane, -1, "", size=(70,-1));
+            city  = wx.TextCtrl(pane, -1, "", size=(150,-1))
+            state = wx.TextCtrl(pane, -1, "", size=(50,-1))
+            zip   = wx.TextCtrl(pane, -1, "", size=(70,-1))
 
             addrSizer = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
             addrSizer.AddGrowableCol(1)

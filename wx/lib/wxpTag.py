@@ -242,7 +242,10 @@ def _my_import(name):
 # Function to parse a param string (of the form 'item=value item2="value etc"'
 # and creates a dictionary
 def _param2dict(param):
-    i = 0; j = 0; s = len(param); d = {}
+    i = 0
+    j = 0
+    s = len(param)
+    d = {}
     while 1:
         while i<s and param[i] == " " : i = i+1
         if i>=s: break

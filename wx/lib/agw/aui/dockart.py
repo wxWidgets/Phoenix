@@ -175,7 +175,7 @@ class AuiDefaultDockArt(object):
             # How do I translate this?!? Not sure of the below implementation...
             # SInt32 height;
             # GetThemeMetric( kThemeMetricSmallPaneSplitterHeight , &height );
-            # self._sash_size = height;
+            # self._sash_size = height
 
             self._sash_size = 8 # Carbon.Appearance.kThemeMetricPaneSplitterHeight
 

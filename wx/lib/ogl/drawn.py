@@ -211,7 +211,7 @@ class OpDraw(DrawOp):
 
         if self._op == DRAWOP_DRAW_LINE:
             newX2 = self._x2 * cosTheta - self._y2 * sinTheta + x * (1 - cosTheta) + y * sinTheta
-            newY2 = self._x2 * sinTheta + self._y2 * cosTheta + y * (1 - cosTheta) + x * sinTheta;
+            newY2 = self._x2 * sinTheta + self._y2 * cosTheta + y * (1 - cosTheta) + x * sinTheta
 
             self._x1 = newX1
             self._y1 = newY1

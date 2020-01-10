@@ -697,7 +697,7 @@ class XmlResourceCompiler:
         if node is None: return
         if node.nodeType != minidom.Document.ELEMENT_NODE: return
 
-        containsFilename = self.NodeContainsFilename(node);
+        containsFilename = self.NodeContainsFilename(node)
 
         for n in node.childNodes:
 
@@ -714,7 +714,7 @@ class XmlResourceCompiler:
 
             # Recurse into children
             if n.nodeType == minidom.Document.ELEMENT_NODE:
-                self.ReplaceFilenamesInXRC(n, files, resourcePath);
+                self.ReplaceFilenamesInXRC(n, files, resourcePath)
 
     #-------------------------------------------------------------------
 
@@ -728,7 +728,7 @@ class XmlResourceCompiler:
 
         strings = []
         if parent is None:
-            return strings;
+            return strings
 
         for child in parent.childNodes:
             if ((parent.nodeType == parent.ELEMENT_NODE) and

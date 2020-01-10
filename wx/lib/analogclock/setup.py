@@ -54,7 +54,8 @@ class _GroupBase(wx.Panel):
 
 
     def OnSelectColour(self, evt):
-        obj = evt.GetEventObject(); val = evt.GetValue()
+        obj = evt.GetEventObject()
+        val = evt.GetValue()
 
         self.customcolours.Colours = obj.GetCustomColours()
 
@@ -86,7 +87,8 @@ class _GroupBase(wx.Panel):
 
 
     def OnSpin(self, evt):
-        obj = evt.GetEventObject(); val = evt.GetInt()
+        obj = evt.GetEventObject()
+        val = evt.GetInt()
 
         if hasattr(self, "bw") and obj == self.bw:
             if self.group == "Hands":

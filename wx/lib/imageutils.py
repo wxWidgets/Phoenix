@@ -153,7 +153,7 @@ def stepColour(c, step):
     else:
         # blend with black
         bg = 0.0
-        dstep = 1.0 + dstep;  # 0 = transparent fg; 1 = opaque fg
+        dstep = 1.0 + dstep  # 0 = transparent fg; 1 = opaque fg
 
     r = _blendColour(r, bg, dstep)
     g = _blendColour(g, bg, dstep)

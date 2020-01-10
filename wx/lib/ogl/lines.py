@@ -812,7 +812,7 @@ class LineShape(Shape):
             # will be on the line.
             realOffset = XOffset
             if proportionalOffset:
-                totalLength = math.sqrt((second_last_line_point[0] - last_line_point[0]) * (second_last_line_point[0] - last_line_point[0]) + (second_last_line_point[1] - last_line_point[1]) * (second_last_line_point[1] - last_line_point[1]));
+                totalLength = math.sqrt((second_last_line_point[0] - last_line_point[0]) * (second_last_line_point[0] - last_line_point[0]) + (second_last_line_point[1] - last_line_point[1]) * (second_last_line_point[1] - last_line_point[1]))
                 realOffset = XOffset * totalLength
 
             positionOnLineX, positionOnLineY = GetPointOnLine(second_last_line_point[0], second_last_line_point[1], last_line_point[0], last_line_point[1], realOffset)
@@ -828,7 +828,7 @@ class LineShape(Shape):
             # will be on the line.
             realOffset = XOffset
             if proportionalOffset:
-                totalLength = math.sqrt((second_last_line_point[0] - x) * (second_last_line_point[0] - x) + (second_last_line_point[1] - y) * (second_last_line_point[1] - y));
+                totalLength = math.sqrt((second_last_line_point[0] - x) * (second_last_line_point[0] - x) + (second_last_line_point[1] - y) * (second_last_line_point[1] - y))
                 realOffset = XOffset * totalLength
 
             positionOnLineX, positionOnLineY = GetPointOnLine(second_last_line_point[0], second_last_line_point[1], x, y, realOffset)
