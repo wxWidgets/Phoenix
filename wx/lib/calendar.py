@@ -283,10 +283,10 @@ class CalDraw:
         self.sizew = int(self.set_sizew * self.pwidth)
         self.sizeh = int(self.set_sizeh * self.pheight)
 
-        self.cx_st = int(self.set_cx_st * self.pwidth)       # draw start position
+        self.cx_st = int(self.set_cx_st * self.pwidth)  # draw start position
         self.cy_st = int(self.set_cy_st * self.pheight)
 
-        self.x_mrg = int(self.set_x_mrg * self.pwidth)         # calendar draw margins
+        self.x_mrg = int(self.set_x_mrg * self.pwidth)  # calendar draw margins
         self.y_mrg = int(self.set_y_mrg * self.pheight)
         self.y_end = int(self.set_y_end * self.pheight)
 
@@ -308,12 +308,12 @@ class CalDraw:
 
         self.DrawGrid(DC)
         self.GetRect()
-        if self.show_weekend is True:       # highlight weekend dates
+        if self.show_weekend is True:  # highlight weekend dates
             self.SetWeekEnd()
 
-        self.AddSelect(sel_lst)     # overrides the weekend highlight
+        self.AddSelect(sel_lst)  # overrides the weekend highlight
 
-        self.DrawSel(DC)      # highlighted days
+        self.DrawSel(DC)  # highlighted days
         self.DrawWeek(DC)
         self.DrawNum(DC)
 
@@ -327,9 +327,9 @@ class CalDraw:
 
         """
         if cfont is None:
-            cfont = self.colors[COLOR_SELECTION_FONT]      # font digit color
+            cfont = self.colors[COLOR_SELECTION_FONT]  # font digit color
         if cbackgrd is None:
-            cbackgrd = self.colors[COLOR_SELECTION_BACKGROUND]     # select background color
+            cbackgrd = self.colors[COLOR_SELECTION_BACKGROUND]  # select background color
 
         for val in list:
             self.cal_sel[val] = (cfont, cbackgrd)
@@ -379,14 +379,14 @@ class CalDraw:
         :param int `month`: the month to calculate.
 
         """
-        self.InitValues()       # reset initial values
+        self.InitValues()  # reset initial values
 
         self.year = year
         self.month = month
 
         # first day of week (Mon->0), number of days in month
         self.dow = dow = datetime.date(year, month, 1).weekday()
-        self.dim = dim = wx.DateTime().GetLastMonthDay(month-1, year).GetDay()
+        self.dim = dim = wx.DateTime().GetLastMonthDay(month - 1, year).GetDay()
 
         if self.cal_type == "NORMAL":
             start_pos = dow + 1
@@ -424,8 +424,8 @@ class CalDraw:
         if backgrd is not None:
             self.SetColor(COLOR_WEEKEND_BACKGROUND, MakeColor(backgrd))
 
-        date = 6 - int(self.dow)     # start day of first saturday
-        if date == 0:                # ...unless we start on Sunday
+        date = 6 - int(self.dow)  # start day of first saturday
+        if date == 0:  # ...unless we start on Sunday
             self.cal_sel[1] = (self.GetColor(COLOR_WEEKEND_FONT), self.GetColor(COLOR_WEEKEND_BACKGROUND))
             date = 7
 
@@ -434,7 +434,7 @@ class CalDraw:
             date = date + 1
 
             if date <= self.dim:
-                self.cal_sel[date] = (self.GetColor(COLOR_WEEKEND_FONT), self.GetColor(COLOR_WEEKEND_BACKGROUND))      # Sunday
+                self.cal_sel[date] = (self.GetColor(COLOR_WEEKEND_FONT), self.GetColor(COLOR_WEEKEND_BACKGROUND))  # Sunday
                 date = date + 6
             else:
                 date = date + 7
@@ -518,7 +518,7 @@ class CalDraw:
         f = wx.Font(10, self.fontfamily, self.fontstyle, self.fontweight)  # initial font setting
 
         if self.week_auto is True:
-            test_size = self.max_week_size      # max size
+            test_size = self.max_week_size  # max size
             test_day = ' Sun '
             while test_size > 2:
                 f.SetPointSize(test_size)
@@ -530,7 +530,7 @@ class CalDraw:
 
                 test_size = test_size - 1
         else:
-            f.SetPointSize(self.week_size)   # set fixed size
+            f.SetPointSize(self.week_size)  # set fixed size
             DC.SetFont(f)
 
         DC.SetTextForeground(MakeColor(self.colors[COLOR_HEADER_FONT]))
@@ -608,7 +608,7 @@ class CalDraw:
 
     def _CalcFontSize(self, DC, f):
         if self.num_auto is True:
-            test_size = self.max_num_size      # max size
+            test_size = self.max_num_size  # max size
             test_day = ' 99 '
 
             while test_size > 2:
@@ -621,7 +621,7 @@ class CalDraw:
                     break
                 test_size = test_size - 1
         else:
-            f.SetPointSize(self.num_size)   # set fixed size
+            f.SetPointSize(self.num_size)  # set fixed size
             DC.SetFont(f)
 
     def DrawNum(self, DC):
@@ -666,7 +666,7 @@ class CalDraw:
         elif self.num_align_horz == wx.ALIGN_RIGHT:
             adj_h = self.cellW - tw
         else:
-            adj_h = 0   # left alignment
+            adj_h = 0  # left alignment
 
         adj_h = adj_h + self.num_indent_horz
 
@@ -675,7 +675,7 @@ class CalDraw:
         elif self.num_align_vert == wx.ALIGN_BOTTOM:
             adj_v = self.cellH - th
         else:
-            adj_v = 0   # left alignment
+            adj_v = 0  # left alignment
 
         adj_v = adj_v + self.num_indent_vert
 
@@ -847,7 +847,7 @@ class PrtCalDraw(CalDraw):
 
 class Calendar(wx.Control):
     """A calendar control class."""
-    def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.Size(200, 200), style=0, validator=wx.DefaultValidator,
                  name="calendar"):
         """
@@ -896,8 +896,8 @@ class Calendar(wx.Control):
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
 
-        self.sel_key = None      # last used by
-        self.sel_lst = []        # highlighted selected days
+        self.sel_key = None  # last used by
+        self.sel_lst = []  # highlighted selected days
 
         # default calendar for current month
         self.SetNow()
@@ -1004,7 +1004,7 @@ class Calendar(wx.Control):
             self.GetParent().GetEventHandler().ProcessEvent(ne)
             event.Skip()
             return
-        
+
         self.shiftkey = event.ShiftDown()
         self.ctrlkey = event.ControlDown()
         self.click = 'KEY'
@@ -1020,14 +1020,14 @@ class Calendar(wx.Control):
             delta = 1
         elif key_code == wx.WXK_HOME:
             curDate = wx.DateTime.FromDMY(int(self.cal_days[self.sel_key]), self.month - 1, self.year)
-            curDate.SetHour(12) # leave a margin for the occasional DST crossing
+            curDate.SetHour(12)  # leave a margin for the occasional DST crossing
             newDate = wx.DateTime.Today().SetHour(12)
             ts = newDate - curDate
             delta = ts.GetDays()
 
         if delta is not None:
             curDate = wx.DateTime.FromDMY(int(self.cal_days[self.sel_key]), self.month - 1, self.year)
-            curDate.SetHour(12) # leave a margin for the occasional DST crossing
+            curDate.SetHour(12)  # leave a margin for the occasional DST crossing
             timeSpan = wx.TimeSpan.Days(delta)
             newDate = curDate + timeSpan
 
@@ -1069,7 +1069,7 @@ class Calendar(wx.Control):
         dt = datetime.date.today()
         self.SetDate(dt.day, dt.month, dt.year)
 
-    def SetCurrentDay(self): # legacy, this is now an alias for SetNow
+    def SetCurrentDay(self):  # legacy, this is now an alias for SetNow
         """Set the current day to today."""
         self.SetNow()
 
@@ -1086,20 +1086,20 @@ class Calendar(wx.Control):
 
     def SetDate(self, day, month, year):
         """
-        Set a calendar date. 
+        Set a calendar date.
 
         :param int `day`: the day
         :param int `month`: the month
         :param int `year`: the year
         :raises: `ValueError` when setting an invalid month/year
         :returns: the new date set.
-        
+
         """
-        datetime.date(year, month, 1) # let the possible ValueError propagate
+        datetime.date(year, month, 1)  # let the possible ValueError propagate
         try:
             datetime.date(year, month, day)
         except ValueError:
-            day = wx.DateTime().GetLastMonthDay(month-1, year).GetDay()
+            day = wx.DateTime().GetLastMonthDay(month - 1, year).GetDay()
         self.year = year
         self.month = month
         self.set_day = self.day = day
@@ -1173,9 +1173,9 @@ class Calendar(wx.Control):
         :returns: the new date set.
 
         """
-        cur_date = wx.DateTime.FromDMY(self.day, self.month-1, self.year)
+        cur_date = wx.DateTime.FromDMY(self.day, self.month - 1, self.year)
         new_date = cur_date + wx.DateSpan(years=years, months=months)
-        self.SetDate(new_date.GetDay(), new_date.GetMonth()+1, new_date.GetYear())
+        self.SetDate(new_date.GetDay(), new_date.GetMonth() + 1, new_date.GetYear())
         return self.GetDate()
 
     def IncYear(self):
@@ -1489,11 +1489,11 @@ class CalenDlg(wx.Dialog):
         :param integer `year`: the year
 
         """
-        wx.Dialog.__init__(self, parent, -1, "Event Calendar", wx.DefaultPosition, (280, 360))
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, "Event Calendar", wx.DefaultPosition, (280, 360))
         self.result = None
 
         # set the calendar and attributes
-        self.calend = Calendar(self, -1, (20, 60), (240, 200))
+        self.calend = Calendar(self, wx.ID_ANY, (20, 60), (240, 200))
         self.calend.HideTitle()
         today = datetime.date.today()
         d = day or today.day
@@ -1509,26 +1509,26 @@ class CalenDlg(wx.Dialog):
         monthlist = GetMonthList()
 
         # select the month
-        self.m_date = wx.ComboBox(self, pos=(20, 20), size=(90, -1), 
-                                  style=wx.CB_DROPDOWN|wx.TE_READONLY)
+        self.m_date = wx.ComboBox(self, pos=(20, 20), size=(90, -1),
+                                  style=wx.CB_DROPDOWN | wx.TE_READONLY)
         for n, month_name in enumerate(monthlist):
-            self.m_date.Append(month_name, n+1)
+            self.m_date.Append(month_name, n + 1)
         self.m_date.SetSelection(date.month-1)
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, self.m_date)
 
         # alternate spin button to control the month
         h = self.m_date.GetSize().height
-        self.m_spin = wx.SpinButton(self, -1, (115, 20), (h * 1.5, h), wx.SP_VERTICAL)
+        self.m_spin = wx.SpinButton(self, wx.ID_ANY, (115, 20), (h * 1.5, h), wx.SP_VERTICAL)
         self.m_spin.SetRange(1, 12)
         self.m_spin.SetValue(date.month)
         self.Bind(wx.EVT_SPIN, self.OnMonthSpin, self.m_spin)
 
         # spin button to control the year
-        self.y_date = wx.TextCtrl(self, -1, str(date.year), (160, 20), (60, -1))
+        self.y_date = wx.TextCtrl(self, wx.ID_ANY, str(date.year), (160, 20), (60, -1))
         h = self.y_date.GetSize().height
 
-        self.y_spin = wx.SpinButton(self, -1, (225, 20), (h * 1.5, h), wx.SP_VERTICAL)
-        self.y_spin.SetRange(date.year-100, date.year+100)
+        self.y_spin = wx.SpinButton(self, wx.ID_ANY, (225, 20), (h * 1.5, h), wx.SP_VERTICAL)
+        self.y_spin.SetRange(date.year - 100, date.year + 100)
         self.y_spin.SetValue(date.year)
 
         self.Bind(wx.EVT_SPIN, self.OnYrSpin, self.y_spin)
