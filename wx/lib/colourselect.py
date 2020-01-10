@@ -100,7 +100,7 @@ class ColourSelectEvent(wx.PyCommandEvent):
         :param wx.Colour `value`: the colour currently selected.
         """
 
-        wx.PyCommandEvent.__init__(self, id = id)
+        wx.PyCommandEvent.__init__(self, id=id)
         self.SetEventType(wxEVT_COMMAND_COLOURSELECT)
         self.value = value
 
@@ -178,7 +178,7 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
 
         size = wx.Size(*size)
         if label:
-            mdc = wx.MemoryDC(wx.Bitmap(1,1))
+            mdc = wx.MemoryDC(wx.Bitmap(1, 1))
             w, h = mdc.GetTextExtent(label)
             w += 8
             h += 8
@@ -187,11 +187,11 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
 
         size.width = size.width if size.width != -1 else w
         size.height = size.height if size.height != -1 else h
-        super(ColourSelect, self).__init__(parent, id, wx.Bitmap(w,h),
-                                 pos=pos, size=size, style=style,
-                                 name='ColourSelect')
+        super(ColourSelect, self).__init__(parent, id, wx.Bitmap(w, h),
+                                           pos=pos, size=size, style=style,
+                                           name='ColourSelect')
 
-        if type(colour) == type( () ):
+        if type(colour) == type(()):
             colour = wx.Colour(*colour)
 
         self.colour = colour
@@ -310,7 +310,7 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
         if "wxMac" in wx.PlatformInfo and width == height:
             height -= 1
 
-        bmp = wx.Bitmap(width-bdr, height-bdr)
+        bmp = wx.Bitmap(width - bdr, height - bdr)
         dc = wx.MemoryDC()
         dc.SelectObject(bmp)
         dc.SetFont(self.GetFont())
@@ -324,8 +324,7 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
             avg = functools.reduce(lambda a, b: a + b, self.colour.Get()) / 3
             fcolour = avg > 128 and wx.BLACK or wx.WHITE
             dc.SetTextForeground(fcolour)
-            dc.DrawLabel(label, (0,0, width-bdr, height-bdr),
-                         wx.ALIGN_CENTER)
+            dc.DrawLabel(label, (0, 0, width-bdr, height-bdr), wx.ALIGN_CENTER)
 
         dc.SelectObject(wx.NullBitmap)
         return bmp
@@ -374,8 +373,7 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
             data = dlg.GetColourData()
             self.SetColour(data.GetColour())
             if self.customColours:
-                self.customColours.Colours = \
-                    [data.GetCustomColour(idx) for idx in range(0, 16)]
+                self.customColours.Colours = [data.GetCustomColour(idx) for idx in range(0, 16)]
 
         dlg.Destroy()
 
