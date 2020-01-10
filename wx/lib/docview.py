@@ -389,7 +389,7 @@ class Document(wx.EvtHandler):
                 return True
             elif res == wx.YES:
                 pass
-            else: # elif res == wx.CANCEL:
+            else:  # elif res == wx.CANCEL:
                 return False
 
         if not self._documentFile or not self._savedYet:
@@ -410,9 +410,9 @@ class Document(wx.EvtHandler):
                                    docTemplate.GetDirectory(),
                                    FileNameFromPath(self.GetFilename()),
                                    docTemplate.GetDefaultExtension(),
-                                   wildcard = descr,
-                                   flags = wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
-                                   parent = self.GetDocumentWindow())
+                                   wildcard=descr,
+                                   flags=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+                                   parent=self.GetDocumentWindow())
         if filename == "":
             return False
 
@@ -657,7 +657,7 @@ class Document(wx.EvtHandler):
             return True
         elif res == wx.YES:
             return self.Save()
-        else: # elif res == wx.CANCEL:
+        else:  # elif res == wx.CANCEL:
             return False
 
 
@@ -709,10 +709,10 @@ class Document(wx.EvtHandler):
         """
         if len(self._documentViews) == 0:
             if self.OnSaveModified():
-                pass # C version does a delete but Python will garbage collect
+                pass  # C version does a delete but Python will garbage collect
 
 
-    def UpdateAllViews(self, sender = None, hint = None):
+    def UpdateAllViews(self, sender=None, hint=None):
         """
         Updates all views. If sender is non-NULL, does not update this view.
         hint represents optional information to allow a view to optimize its
@@ -731,7 +731,7 @@ class Document(wx.EvtHandler):
             view.OnClosingDocument()
 
 
-    def SetFilename(self, filename, notifyViews = False):
+    def SetFilename(self, filename, notifyViews=False):
         """
         Sets the filename for this document. Usually called by the framework.
         If notifyViews is true, :meth:`View.OnChangeFilename` is called for all
@@ -918,7 +918,7 @@ class View(wx.EvtHandler):
         Closes the view by calling :meth:`OnClose`. If deleteWindow is true, this
         function should delete the window associated with the view.
         """
-        if self.OnClose(deleteWindow = deleteWindow):
+        if self.OnClose(deleteWindow=deleteWindow):
             return True
         else:
             return False
@@ -1275,7 +1275,7 @@ class DocTemplate(wx.Object):
         ext = FindExtension(path)
         if not ext: return False
 
-        extList = self.GetFileFilter().replace('*','').split(';')
+        extList = self.GetFileFilter().replace('*', '').split(';')
         return ext in extList
 
 
@@ -1912,7 +1912,7 @@ class DocManager(wx.EvtHandler):
                     frame = newDoc.GetFirstView().GetFrame()
                     newDoc.DeleteAllViews()  # Implicitly deleted by DeleteAllViews
                     if frame:
-                        frame.Destroy() # DeleteAllViews doesn't get rid of the frame, so we'll explicitly destroy it.
+                        frame.Destroy()  # DeleteAllViews doesn't get rid of the frame, so we'll explicitly destroy it.
                     return None
                 self.AddFileToHistory(path)
             return newDoc
@@ -2165,7 +2165,7 @@ class DocManager(wx.EvtHandler):
         dlg = wx.FileDialog(self.FindSuitableParent(),
                                _("Select a File"),
                                wildcard=descr,
-                               style=wx.FD_OPEN|wx.FD_FILE_MUST_EXIST|wx.FD_CHANGE_DIR)
+                               style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST | wx.FD_CHANGE_DIR)
         # dlg.CenterOnParent()  # wxBug: caused crash with wx.FileDialog
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
@@ -2939,7 +2939,7 @@ class Command(wx.Object):
     """
 
 
-    def __init__(self, canUndo = False, name = None):
+    def __init__(self, canUndo=False, name=None):
         """
         Constructor. :class:`Command` is an abstract class, so you will need to
         derive a new class and call this constructor from your own constructor.
