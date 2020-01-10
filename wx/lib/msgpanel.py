@@ -37,36 +37,36 @@ class MessagePanel(wx.Panel):
                 artid = wx.ART_INFORMATION
 
             if artid is not None:
-                bmp = wx.ArtProvider.GetBitmap(artid, wx.ART_MESSAGE_BOX, (32,32))
-                icon = wx.StaticBitmap(self, -1, bmp)
+                bmp = wx.ArtProvider.GetBitmap(artid, wx.ART_MESSAGE_BOX, (32, 32))
+                icon = wx.StaticBitmap(self, wx.ID_ANY, bmp)
 
         if not icon:
-            icon = (32,32) # make a spacer instead
+            icon = (32, 32)  # Make a spacer instead.
 
         if caption:
-            caption = wx.StaticText(self, -1, caption)
+            caption = wx.StaticText(self, wx.ID_ANY, caption)
             caption.SetFont(wx.Font(24, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
-        message = wx.StaticText(self, -1, message)
+        message = wx.StaticText(self, wx.ID_ANY, message)
 
         # add to sizers for layout
         tbox = wx.BoxSizer(wx.VERTICAL)
         if caption:
             tbox.Add(caption)
-            tbox.Add((10,10))
+            tbox.Add((10, 10))
         tbox.Add(message)
 
         hbox = wx.BoxSizer(wx.HORIZONTAL)
-        hbox.Add((10,10), 1)
+        hbox.Add((10, 10), 1)
         hbox.Add(icon)
-        hbox.Add((10,10))
+        hbox.Add((10, 10))
         hbox.Add(tbox)
-        hbox.Add((10,10), 1)
+        hbox.Add((10, 10), 1)
 
         box = wx.BoxSizer(wx.VERTICAL)
-        box.Add((10,10), 1)
+        box.Add((10, 10), 1)
         box.Add(hbox, 0, wx.EXPAND)
-        box.Add((10,10), 2)
+        box.Add((10, 10), 2)
 
         self.SetSizer(box)
         self.Fit()
@@ -92,4 +92,3 @@ This is only a test...""")
     frm.Fit()
     frm.Show()
     app.MainLoop()
-
