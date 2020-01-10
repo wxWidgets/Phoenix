@@ -129,9 +129,9 @@ class GenButton(wx.Control):
     labelDelta = 1
 
     def __init__(self, parent, id=-1, label='',
-                 pos = wx.DefaultPosition, size = wx.DefaultSize,
-                 style = 0, validator = wx.DefaultValidator,
-                 name = "genbutton"):
+                 pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=0, validator=wx.DefaultValidator,
+                 name="genbutton"):
         """
         Default class constructor.
 
@@ -346,12 +346,12 @@ class GenButton(wx.Control):
 
         faceClr = self.GetBackgroundColour()
         r, g, b, a = faceClr
-        fr, fg, fb = min(255,r+32), min(255,g+32), min(255,b+32)
+        fr, fg, fb = min(255, r+32), min(255, g+32), min(255, b+32)
         self.faceDnClr = wx.Colour(fr, fg, fb)
-        sr, sg, sb = max(0,r-32), max(0,g-32), max(0,b-32)
+        sr, sg, sb = max(0, r-32), max(0, g-32), max(0, b-32)
         self.shadowPenClr = wx.Colour(sr,sg,sb)
-        hr, hg, hb = min(255,r+64), min(255,g+64), min(255,b+64)
-        self.highlightPenClr = wx.Colour(hr,hg,hb)
+        hr, hg, hb = min(255, r+64), min(255, g+64), min(255, b+64)
+        self.highlightPenClr = wx.Colour(hr, hg, hb)
         self.focusClr = wx.Colour(hr, hg, hb)
 
 
@@ -460,7 +460,7 @@ class GenButton(wx.Control):
         bw = self.bezelWidth
         textClr = self.GetForegroundColour()
         focusIndPen  = wx.Pen(textClr, 1, wx.PENSTYLE_USER_DASH)
-        focusIndPen.SetDashes([1,1])
+        focusIndPen.SetDashes([1, 1])
         focusIndPen.SetCap(wx.CAP_BUTT)
 
         if wx.Platform == "__WXMAC__":
@@ -470,7 +470,7 @@ class GenButton(wx.Control):
             dc.SetLogicalFunction(wx.INVERT)
         dc.SetPen(focusIndPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.DrawRectangle(bw+2,bw+2,  w-bw*2-4, h-bw*2-4)
+        dc.DrawRectangle(bw + 2, bw + 2, w - bw * 2 - 4, h - bw * 2 - 4)
         dc.SetLogicalFunction(wx.COPY)
 
 
@@ -526,7 +526,7 @@ class GenButton(wx.Control):
                 parDef = self.GetParent().GetBackgroundColour() == parAttr.colBg
                 if myDef and parDef:
                     if wx.Platform == "__WXMAC__":
-                        c = wx.MacThemeColour(1) # 1 == kThemeBrushDialogBackgroundActive
+                        c = wx.MacThemeColour(1)  # 1 == kThemeBrushDialogBackgroundActive
                         brush = wx.Brush(c)
                     elif wx.Platform == "__WXMSW__":
                         if hasattr(self, 'DoEraseBackground') and self.DoEraseBackground(dc):
@@ -570,10 +570,10 @@ class GenButton(wx.Control):
 
         if self.HasCapture():
             self.ReleaseMouse()
-            if not self.up:    # if the button was down when the mouse was released...
+            if not self.up:  # if the button was down when the mouse was released...
                 self.Notify()
             self.up = True
-            if self:           # in case the button was destroyed in the eventhandler
+            if self:  # in case the button was destroyed in the eventhandler
                 self.Refresh()
                 event.Skip()
 
@@ -589,15 +589,15 @@ class GenButton(wx.Control):
             return
 
         if event.LeftIsDown() and self.HasCapture():
-            x,y = event.GetPosition()
-            w,h = self.GetClientSize()
+            x, y = event.GetPosition()
+            w, h = self.GetClientSize()
 
             if self.up and x<w and x>=0 and y<h and y>=0:
                 self.up = False
                 self.Refresh()
                 return
 
-            if not self.up and (x<0 or y<0 or x>=w or y>=h):
+            if not self.up and (x < 0 or y < 0 or x >= w or y >= h):
                 self.up = True
                 self.Refresh()
                 return
@@ -675,10 +675,10 @@ class GenButton(wx.Control):
 class GenBitmapButton(GenButton):
     """ A generic bitmap button. """
 
-    def __init__(self, parent, id=-1, bitmap=wx.NullBitmap,
-                 pos = wx.DefaultPosition, size = wx.DefaultSize,
-                 style = 0, validator = wx.DefaultValidator,
-                 name = "genbutton"):
+    def __init__(self, parent, id=wx.ID_ANY, bitmap=wx.NullBitmap,
+                 pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=0, validator=wx.DefaultValidator,
+                 name="genbutton"):
         """
         Default class constructor.
 
@@ -829,7 +829,7 @@ class GenBitmapButton(GenButton):
         if not self.bmpLabel:
             return -1, -1, False
 
-        return self.bmpLabel.GetWidth()+2, self.bmpLabel.GetHeight()+2, False
+        return self.bmpLabel.GetWidth() + 2, self.bmpLabel.GetHeight() + 2, False
 
 
     def DrawLabel(self, dc, width, height, dx=0, dy=0):
@@ -853,10 +853,10 @@ class GenBitmapButton(GenButton):
 class GenBitmapTextButton(GenBitmapButton):
     """ A generic bitmapped button with text label. """
 
-    def __init__(self, parent, id=-1, bitmap=wx.NullBitmap, label='',
-                 pos = wx.DefaultPosition, size = wx.DefaultSize,
-                 style = 0, validator = wx.DefaultValidator,
-                 name = "genbutton"):
+    def __init__(self, parent, id=wx.ID_ANY, bitmap=wx.NullBitmap, label='',
+                 pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=0, validator=wx.DefaultValidator,
+                 name="genbutton"):
         """
         Default class constructor.
 
@@ -888,8 +888,8 @@ class GenBitmapTextButton(GenBitmapButton):
         if not self.bmpLabel:
             return w, h, True       # if there isn't a bitmap use the size of the text
 
-        w_bmp = self.bmpLabel.GetWidth()+2
-        h_bmp = self.bmpLabel.GetHeight()+2
+        w_bmp = self.bmpLabel.GetWidth() + 2
+        h_bmp = self.bmpLabel.GetHeight() + 2
         width = w + w_bmp
         if h_bmp > h:
             height = h_bmp
@@ -900,7 +900,7 @@ class GenBitmapTextButton(GenBitmapButton):
 
     def DrawLabel(self, dc, width, height, dx=0, dy=0):
         bmp = self.bmpLabel
-        if bmp is not None:     # if the bitmap is used
+        if bmp is not None:  # if the bitmap is used
             if self.bmpDisabled and not self.IsEnabled():
                 bmp = self.bmpDisabled
             if self.bmpFocus and self.hasFocus:
@@ -912,7 +912,7 @@ class GenBitmapTextButton(GenBitmapButton):
                 dx = dy = self.labelDelta
             hasMask = bmp.GetMask() is not None
         else:
-            bw = bh = 0     # no bitmap -> size is zero
+            bw = bh = 0  # no bitmap -> size is zero
             hasMask = False
 
         dc.SetFont(self.GetFont())
@@ -922,16 +922,16 @@ class GenBitmapTextButton(GenBitmapButton):
             dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
 
         label = self.GetLabel()
-        tw, th = dc.GetTextExtent(label)        # size of text
+        tw, th = dc.GetTextExtent(label)  # size of text
         if not self.up:
             dx = dy = self.labelDelta
 
-        pos_x = (width-bw-tw)/2+dx      # adjust for bitmap and text to centre
+        pos_x = (width-bw-tw)/2+dx  # adjust for bitmap and text to centre
         if bmp is not None:
             dc.DrawBitmap(bmp, pos_x, (height-bh)/2+dy, hasMask) # draw bitmap if available
-            pos_x = pos_x + 2   # extra spacing from bitmap
+            pos_x = pos_x + 2  # extra spacing from bitmap
 
-        dc.DrawText(label, pos_x + dx+bw, (height-th)/2+dy)      # draw the text
+        dc.DrawText(label, pos_x + dx + bw, (height - th) / 2 + dy)  # draw the text
 
 
 #----------------------------------------------------------------------
@@ -1026,15 +1026,15 @@ class __ToggleMixin(object):
             return
 
         if event.LeftIsDown() and self.HasCapture():
-            x,y = event.GetPosition()
-            w,h = self.GetClientSize()
+            x, y = event.GetPosition()
+            w, h = self.GetClientSize()
 
-            if x<w and x>=0 and y<h and y>=0:
+            if x < w and x >= 0 and y < h and y >= 0:
                 self.up = not self.saveUp
                 self.Refresh()
                 return
 
-            if (x<0 or y<0 or x>=w or y>=h):
+            if (x < 0 or y < 0 or x >= w or y >= h):
                 self.up = self.saveUp
                 self.Refresh()
                 return
@@ -1056,19 +1056,20 @@ class __ToggleMixin(object):
         event.Skip()
 
 
-
-
 class GenToggleButton(__ToggleMixin, GenButton):
     """ A generic toggle button. """
     pass
+
 
 class GenBitmapToggleButton(__ToggleMixin, GenBitmapButton):
     """ A generic toggle bitmap button. """
     pass
 
+
 class GenBitmapTextToggleButton(__ToggleMixin, GenBitmapTextButton):
     """ A generic toggle bitmap button with text label. """
     pass
+
 
 #----------------------------------------------------------------------
 
@@ -1111,30 +1112,31 @@ class __ThemedMixin(object):
         wx.RendererNative.Get().DrawPushButton(self, dc, rect, state)
 
 
-
 class ThemedGenButton(__ThemedMixin, GenButton):
     """ A themed generic button. """
     pass
+
 
 class ThemedGenBitmapButton(__ThemedMixin, GenBitmapButton):
     """ A themed generic bitmap button. """
     pass
 
+
 class ThemedGenBitmapTextButton(__ThemedMixin, GenBitmapTextButton):
     """ A themed generic bitmapped button with text label. """
     pass
+
 
 class ThemedGenToggleButton(__ThemedMixin, GenToggleButton):
     """ A themed generic toggle button. """
     pass
 
+
 class ThemedGenBitmapToggleButton(__ThemedMixin, GenBitmapToggleButton):
     """ A themed generic toggle bitmap button. """
     pass
 
+
 class ThemedGenBitmapTextToggleButton(__ThemedMixin, GenBitmapTextToggleButton):
     """ A themed generic toggle bitmap button with text label. """
     pass
-
-
-#----------------------------------------------------------------------
