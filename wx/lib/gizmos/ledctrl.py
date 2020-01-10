@@ -15,10 +15,10 @@ Widget to display a series of digits, spaces, dashes or colons in a segmented st
 
 import wx
 
-LED_ALIGN_LEFT   = 0x01
-LED_ALIGN_RIGHT  = 0x02
+LED_ALIGN_LEFT = 0x01
+LED_ALIGN_RIGHT = 0x02
 LED_ALIGN_CENTER = 0x04
-LED_ALIGN_MASK   = 0x07
+LED_ALIGN_MASK = 0x07
 
 LED_DRAW_FADED = 0x08
 
@@ -57,8 +57,6 @@ class LEDNumberCtrl(wx.Control):
             ':': COLON,
         }
         DIGITALL = 0xFFFF
-
-
 
     def __init__(self, *args, **kw):
         """
@@ -207,7 +205,7 @@ class LEDNumberCtrl(wx.Control):
 
             if ch == '.':
                 # draw the decimal point in the previous segment
-                self._drawDigit(dc, c.DECIMALSIGN, i-1)
+                self._drawDigit(dc, c.DECIMALSIGN, i - 1)
                 offset += 1
             elif ch == ' ':
                 # skip spaces
