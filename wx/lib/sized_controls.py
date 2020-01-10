@@ -65,33 +65,34 @@ import wx.lib.scrolledpanel as sp
 
 # useful defines for sizer prop values
 
-halign = {  "left": wx.ALIGN_LEFT,
-            "center": wx.ALIGN_CENTER_HORIZONTAL,
-            "centre": wx.ALIGN_CENTRE_HORIZONTAL,
-            "right": wx.ALIGN_RIGHT,
+halign = {"left": wx.ALIGN_LEFT,
+          "center": wx.ALIGN_CENTER_HORIZONTAL,
+          "centre": wx.ALIGN_CENTRE_HORIZONTAL,
+          "right": wx.ALIGN_RIGHT,
          }
 
-valign = {  "top": wx.ALIGN_TOP,
-            "bottom": wx.ALIGN_BOTTOM,
-            "center": wx.ALIGN_CENTER_VERTICAL,
-            "centre": wx.ALIGN_CENTRE_VERTICAL,
+valign = {"top": wx.ALIGN_TOP,
+          "bottom": wx.ALIGN_BOTTOM,
+          "center": wx.ALIGN_CENTER_VERTICAL,
+          "centre": wx.ALIGN_CENTRE_VERTICAL,
          }
 
-align = {   "center": wx.ALIGN_CENTER,
-            "centre": wx.ALIGN_CENTRE,
+align = {"center": wx.ALIGN_CENTER,
+         "centre": wx.ALIGN_CENTRE,
         }
 
-border = {  "left": wx.LEFT,
-            "right": wx.RIGHT,
-            "top": wx.TOP,
-            "bottom": wx.BOTTOM,
-            "all": wx.ALL,
+border = {"left": wx.LEFT,
+          "right": wx.RIGHT,
+          "top": wx.TOP,
+          "bottom": wx.BOTTOM,
+          "all": wx.ALL,
          }
 
-minsize = {   "fixed":    wx.FIXED_MINSIZE,
+minsize = {"fixed": wx.FIXED_MINSIZE,
           }
 
-misc_flags = {   "expand": wx.EXPAND, }
+misc_flags = {"expand": wx.EXPAND,
+             }
 
 
 def GetDefaultBorder(self):
@@ -231,9 +232,9 @@ def SetSizerProp(self, prop, value):
         col = 0
         row = 0
         if cols == 0:
-            col, row = divmod( itemnum, rows )
+            col, row = divmod(itemnum, rows)
         else:
-            row, col = divmod( itemnum, cols )
+            row, col = divmod(itemnum, cols)
 
         if lprop == "expand" and not sizer.IsColGrowable(col):
             sizer.AddGrowableCol(col)
