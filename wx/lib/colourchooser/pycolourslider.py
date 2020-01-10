@@ -28,10 +28,10 @@ from __future__ import absolute_import
 # o wxPyColourChooser -> PyColourChooser
 #
 
-import  wx
+import wx
 
-from . import  canvas
-import  colorsys
+from . import canvas
+import colorsys
 
 class PyColourSlider(canvas.Canvas):
     """A Pure-Python Colour Slider
@@ -72,9 +72,9 @@ class PyColourSlider(canvas.Canvas):
         """
         _, height = self.GetClientSize()
         if pos < 0:
-            return 1             # Snap to max
+            return 1  # Snap to max
         if pos >= height - 1:
-            return 0             # Snap to 0
+            return 0  # Snap to 0
 
         return 1 - (pos / self.HEIGHT)
 
@@ -88,12 +88,12 @@ class PyColourSlider(canvas.Canvas):
         target_green = self.base_colour.Green()
         target_blue = self.base_colour.Blue()
 
-        h,s,v = colorsys.rgb_to_hsv(target_red / 255.0, target_green / 255.0,
-                                    target_blue / 255.0)
+        h, s, v = colorsys.rgb_to_hsv(target_red / 255.0, target_green / 255.0,
+                                      target_blue / 255.0)
         v = 1.0
         vstep = 1.0 / self.HEIGHT
         for y_pos in range(0, self.HEIGHT):
-            r,g,b = [c * 255.0 for c in colorsys.hsv_to_rgb(h,s,v)]
+            r, g, b = [c * 255.0 for c in colorsys.hsv_to_rgb(h,s,v)]
             colour = wx.Colour(int(r), int(g), int(b))
             self.buffer.SetPen(wx.Pen(colour, 1, wx.PENSTYLE_SOLID))
             self.buffer.DrawRectangle(0, y_pos, 15, 1)
