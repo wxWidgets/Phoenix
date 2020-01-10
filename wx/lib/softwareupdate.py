@@ -173,7 +173,7 @@ class SoftwareUpdate(object):
                     MultiMessageBox(
                         self._networkFailureMsg % self._updatesURL,
                         self._caption, parent=parentWindow, icon=self._icon,
-                        style=wx.OK|SOT)
+                        style=wx.OK | SOT)
                 return
 
             active = self._esky.active_version
@@ -192,7 +192,7 @@ class SoftwareUpdate(object):
                     MultiMessageBox("You are already running the newest verison of %s." %
                                     self.GetAppDisplayName(),
                                     self._caption, parent=parentWindow, icon=self._icon,
-                                    style=wx.OK|SOT)
+                                    style=wx.OK | SOT)
                 return
             self._parentWindow = parentWindow
 
@@ -200,7 +200,7 @@ class SoftwareUpdate(object):
                    "You are currently running verison %s; version %s is now "
                    "available for download.  Do you wish to install it now?"
                    % (self.GetAppDisplayName(), active, newest),
-                   self._caption, msg2=chLogTxt, style=wx.YES_NO|SOT,
+                   self._caption, msg2=chLogTxt, style=wx.YES_NO | SOT,
                    parent=parentWindow, icon=self._icon,
                    btnLabels={wx.ID_YES:"Yes, install now",
                               wx.ID_NO:"No, maybe later"})
@@ -236,7 +236,7 @@ class SoftwareUpdate(object):
             except UpdateAbortedError:
                 MultiMessageBox("Update canceled.", self._caption,
                                 parent=parentWindow, icon=self._icon,
-                                style=wx.OK|SOT)
+                                style=wx.OK | SOT)
                 if self._pd:
                     self._pd.Destroy()
 
@@ -248,10 +248,10 @@ class SoftwareUpdate(object):
                                    "need to be restarted to begin using the new release.\n\n"
                                    "Restart %s now?"
                                    % (self.GetAppDisplayName(), newest, self.GetAppDisplayName()),
-                                   self._caption, style=wx.YES_NO|SOT,
+                                   self._caption, style=wx.YES_NO | SOT,
                                    parent=parentWindow, icon=self._icon,
-                                   btnLabels={wx.ID_YES:"Yes, restart now",
-                                              wx.ID_NO:"No, I'll restart later"})
+                                   btnLabels={wx.ID_YES: "Yes, restart now",
+                                              wx.ID_NO: "No, I'll restart later"})
 
             if resp == wx.YES:
                 # Close all windows in this application...
@@ -293,19 +293,19 @@ class SoftwareUpdate(object):
         # Show progress of the download and install. This function is passed to Esky
         # functions to use as a callback.
         if self._pd is None and status.get('status') != 'done':
-            self._pd = wx.ProgressDialog('Software Update', ' '*40,
-                                          style=wx.PD_CAN_ABORT|wx.PD_APP_MODAL,
-                                          parent=self._parentWindow)
+            self._pd = wx.ProgressDialog('Software Update', ' ' * 40,
+                                         style=wx.PD_CAN_ABORT | wx.PD_APP_MODAL,
+                                         parent=self._parentWindow)
             self._pd.Update(0, '')
 
             if self._parentWindow:
                 self._pd.CenterOnParent()
 
-        simpleMsgMap = { 'searching'   : 'Searching...',
-                         'retrying'    : 'Retrying...',
-                         'ready'       : 'Download complete...',
-                         'installing'  : 'Installing...',
-                         'cleaning up' : 'Cleaning up...',}
+        simpleMsgMap = {'searching': 'Searching...',
+                        'retrying': 'Retrying...',
+                        'ready': 'Download complete...',
+                        'installing': 'Installing...',
+                        'cleaning up': 'Cleaning up...',}
 
         if status.get('status') in simpleMsgMap:
             self._doUpdateProgress(True, simpleMsgMap[status.get('status')])
@@ -335,7 +335,7 @@ class SoftwareUpdate(object):
             keepGoing, skip = self._pd.Pulse(message)
         else:
             keepGoing, skip = self._pd.Update(value, message)
-        if not keepGoing: # user pressed the cancel button
+        if not keepGoing:  # User pressed the cancel button.
             self._pd.Destroy()
             self._pd = None
             raise UpdateAbortedError()
@@ -351,12 +351,8 @@ class SoftwareUpdate(object):
         if sys.platform == "darwin" and hasattr(sys, 'frozen') \
            and sys.frozen == 'macosx_app' and sys.executable.endswith('MacOS/python'):
                 names = os.listdir(os.path.dirname(sys.executable))
-                assert len(names) == 2  # there should be only 2
+                assert len(names) == 2  # There should be only 2.
                 for name in names:
                     if name != 'python':
                         sys.executable = os.path.join(os.path.dirname(sys.executable), name)
                         break
-
-#----------------------------------------------------------------------
-
-
