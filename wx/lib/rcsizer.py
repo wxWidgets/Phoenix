@@ -96,7 +96,7 @@ class RowColSizer(wx.Sizer):
         #    flag = flag | wx.EXPAND
 
         return wx.Sizer.Add(self, item, option, flag, border,
-                              userData=(row, col, row+rowspan, col+colspan))
+                            userData=(row, col, row + rowspan, col + colspan))
 
     #AddWindow = Add
     #AddSizer  = Add
@@ -115,31 +115,31 @@ class RowColSizer(wx.Sizer):
         assert col != -1, "Column must be specified"
 
         return wx.Sizer.Add(self, (width, height), option, flag, border,
-                              userData=(row, col, row+rowspan, col+colspan))
+                            userData=(row, col, row + rowspan, col + colspan))
 
     #--------------------------------------------------
-    def _add( self, size, dim ):
-        r, c, r2, c2 = dim   # unpack coords and spanning
+    def _add(self, size, dim):
+        r, c, r2, c2 = dim  # unpack coords and spanning
 
         # are the widths and heights lists long enough?
         if r2 > len(self.rowHeights):
-            x = [self.row_h] * (r2-len(self.rowHeights))
-            self.rowHeights.extend( x )
+            x = [self.row_h] * (r2 - len(self.rowHeights))
+            self.rowHeights.extend(x)
         if c2 > len(self.colWidths):
-            x = [self.col_w] * (c2-len(self.colWidths))
-            self.colWidths.extend( x )
+            x = [self.col_w] * (c2 - len(self.colWidths))
+            self.colWidths.extend(x)
 
         # set the widths and heights lists for this item
         scale = (r2 - r)
         for i in range(r, r2):
-            self.rowHeights[i] = max( self.rowHeights[i], size.height / scale )
+            self.rowHeights[i] = max(self.rowHeights[i], size.height / scale)
         scale = (c2 - c)
         for i in range(c, c2):
-            self.colWidths[i] = max( self.colWidths[i], size.width / scale )
+            self.colWidths[i] = max(self.colWidths[i], size.width / scale)
 
 
     #--------------------------------------------------
-    def CalcMin( self ):
+    def CalcMin(self):
         self.rowHeights = []
         self.colWidths = []
 
@@ -148,10 +148,10 @@ class RowColSizer(wx.Sizer):
             return wx.Size(10, 10)
 
         for item in items:
-            self._add( item.CalcMin(), item.GetUserData() )
+            self._add(item.CalcMin(), item.GetUserData())
 
-        size = wx.Size( reduce( operator.add, self.colWidths),
-                        reduce( operator.add, self.rowHeights) )
+        size = wx.Size(reduce(operator.add, self.colWidths),
+                       reduce(operator.add, self.rowHeights))
         return size
 
 
@@ -193,9 +193,9 @@ class RowColSizer(wx.Sizer):
         # iterate children and set dimensions...
         for item in self.GetChildren():
             r, c, r2, c2 = item.GetUserData()
-            width = reduce( operator.add, self.colWidths[c:c2] )
-            height = reduce( operator.add, self.rowHeights[r:r2] )
-            self.SetItemBounds( item, cpos[c], rpos[r], width, height )
+            width = reduce(operator.add, self.colWidths[c:c2])
+            height = reduce(operator.add, self.rowHeights[r:r2])
+            self.SetItemBounds(item, cpos[c], rpos[r], width, height)
 
 
     #--------------------------------------------------
@@ -220,10 +220,3 @@ class RowColSizer(wx.Sizer):
                 ipt.y = y + (h - isz.height)
 
         item.SetDimension(ipt, isz)
-
-
-#----------------------------------------------------------------------
-#----------------------------------------------------------------------
-
-
-
