@@ -102,12 +102,12 @@ class InspectionTool:
         if not selectObj:
             selectObj = parent
         if not self._frame:
-            self._frame = InspectionFrame( parent=parent,
-                                           pos=self._pos,
-                                           size=self._size,
-                                           config=self._config,
-                                           locals=self._locals,
-                                           app=self._app)
+            self._frame = InspectionFrame(parent=parent,
+                                          pos=self._pos,
+                                          size=self._size,
+                                          config=self._config,
+                                          locals=self._locals,
+                                          app=self._app)
         if selectObj:
             self._frame.SetObj(selectObj)
         if refreshTree:
@@ -206,7 +206,7 @@ class InspectionFrame(wx.Frame):
 
     def MakeToolBar(self):
         tbar = self.CreateToolBar(wx.TB_HORIZONTAL | wx.TB_FLAT | wx.TB_TEXT | wx.NO_BORDER )
-        tbar.SetToolBitmapSize((24,24))
+        tbar.SetToolBitmapSize((24, 24))
 
         refreshBmp = Refresh.GetBitmap()
         findWidgetBmp = Find.GetBitmap()
@@ -816,13 +816,13 @@ class _InspectionHighlighter(object):
     # should non TLWs be flashed too?  Otherwise use a highlight rectangle
     flashAll = False
 
-    color1 = 'red'         # for widgets and sizers
-    color2 = 'red'         # for item boundaries in sizers
-    color3 = '#00008B'     # for items in sizers
+    color1 = 'red'  # for widgets and sizers
+    color2 = 'red'  # for item boundaries in sizers
+    color3 = '#00008B'  # for items in sizers
 
-    highlightTime = 3000   # how long to display the highlights
+    highlightTime = 3000  # how long to display the highlights
 
-                           # how to draw it
+    # how to draw it
     useOverlay = 'wxMac' in wx.PlatformInfo or 'gtk3' in wx.PlatformInfo
 
 
@@ -845,7 +845,7 @@ class _InspectionHighlighter(object):
         elif isinstance(obj, wx.Sizer):
             self.HighlightSizer(obj)
 
-        elif isinstance(obj, wx.SizerItem):   # Spacer
+        elif isinstance(obj, wx.SizerItem):  # Spacer
             pItem = tree.GetItemParent(item)
             sizer = tree.GetItemData(pItem)
             self.HighlightSizerItem(obj, sizer)
@@ -861,7 +861,7 @@ class _InspectionHighlighter(object):
             self.FlickerTLW(win)
             return
         else:
-            pos = self.FindHighlightPos(tlw, win.ClientToScreen((0,0)))
+            pos = self.FindHighlightPos(tlw, win.ClientToScreen((0, 0)))
             rect.SetPosition(pos)
             self.DoHighlight(tlw, rect, self.color1)
 
@@ -899,7 +899,7 @@ class _InspectionHighlighter(object):
                 elif item.IsSizer():
                     p = item.GetSizer().GetPosition()
                     s = item.GetSizer().GetSize()
-                    r = wx.Rect(p,s)
+                    r = wx.Rect(p, s)
                 else:
                     continue
                 r = self.AdjustRect(tlw, win, r)
@@ -953,15 +953,15 @@ class _InspectionHighlighter(object):
             y = rect.y
             for rh in sizer.RowHeights[:-1]:
                 y += rh
-                dc.DrawLine(rect.x, y, rect.x+rect.width, y)
+                dc.DrawLine(rect.x, y, rect.x + rect.width, y)
                 y+= sizer.VGap
-                dc.DrawLine(rect.x, y, rect.x+rect.width, y)
+                dc.DrawLine(rect.x, y, rect.x + rect.width, y)
             x = rect.x
             for cw in sizer.ColWidths[:-1]:
                 x += cw
-                dc.DrawLine(x, rect.y, x, rect.y+rect.height)
+                dc.DrawLine(x, rect.y, x, rect.y + rect.height)
                 x+= sizer.HGap
-                dc.DrawLine(x, rect.y, x, rect.y+rect.height)
+                dc.DrawLine(x, rect.y, x, rect.y + rect.height)
 
         # wx.GridSizer
         elif isinstance(sizer, wx.GridSizer):
@@ -972,20 +972,20 @@ class _InspectionHighlighter(object):
             #for item in sizer.GetChildren():
             #    rh = max(rh, item.Size.height)
             #    cw = max(cw, item.Size.width)
-            cw = (rect.width - sizer.HGap*(sizer.Cols-1)) / sizer.Cols
-            rh = (rect.height - sizer.VGap*(sizer.Rows-1)) / sizer.Rows
+            cw = (rect.width - sizer.HGap * (sizer.Cols - 1)) / sizer.Cols
+            rh = (rect.height - sizer.VGap * (sizer.Rows - 1)) / sizer.Rows
             y = rect.y
-            for i in range(sizer.Rows-1):
+            for i in range(sizer.Rows - 1):
                 y += rh
-                dc.DrawLine(rect.x, y, rect.x+rect.width, y)
+                dc.DrawLine(rect.x, y, rect.x + rect.width, y)
                 y+= sizer.VGap
-                dc.DrawLine(rect.x, y, rect.x+rect.width, y)
+                dc.DrawLine(rect.x, y, rect.x + rect.width, y)
             x = rect.x
             for i in range(sizer.Cols-1):
                 x += cw
-                dc.DrawLine(x, rect.y, x, rect.y+rect.height)
+                dc.DrawLine(x, rect.y, x, rect.y + rect.height)
                 x+= sizer.HGap
-                dc.DrawLine(x, rect.y, x, rect.y+rect.height)
+                dc.DrawLine(x, rect.y, x, rect.y + rect.height)
 
         # Anything else is probably a custom sizer, just highlight the items
         else:
@@ -1002,7 +1002,7 @@ class _InspectionHighlighter(object):
         return pos
 
 
-    def AdjustRect(self, tlw, win,  rect):
+    def AdjustRect(self, tlw, win, rect):
         pos = self.FindHighlightPos(tlw, win.ClientToScreen(rect.Position))
         rect.Position = pos
         return wx.Rect(pos, rect.Size)
@@ -1026,7 +1026,7 @@ class _InspectionHighlighter(object):
         drawRect = wx.Rect(*rect)
         dc.DrawRectangle(drawRect)
 
-        drawRect.Inflate(2,2)
+        drawRect.Inflate(2, 2)
         if not self.useOverlay:
             pos = tlw.ScreenToClient(drawRect.GetPosition())
             drawRect.SetPosition(pos)
