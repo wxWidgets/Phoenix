@@ -28,8 +28,8 @@ RW_THICKNESS = 4
 RW_LENGTH = 12
 
 # default colors for the handle
-RW_PEN   = 'black'
-RW_FILL  = '#A0A0A0'
+RW_PEN = 'black'
+RW_FILL = '#A0A0A0'
 RW_FILL2 = '#E0E0E0'
 
 # An event and event binder that will notify the containers that they should
@@ -63,7 +63,7 @@ class ResizeWidget(wx.Panel):
 
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
-        self.Bind(wx.EVT_MOTION,  self.OnMouseMove)
+        self.Bind(wx.EVT_MOTION, self.OnMouseMove)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnMouseLeave)
 
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -102,8 +102,8 @@ class ResizeWidget(wx.Panel):
         :param `fill2`: the secondary fill color
 
         """
-        self.RW_PEN   = pen
-        self.RW_FILL  = fill
+        self.RW_PEN = pen
+        self.RW_FILL = fill
         self.RW_FILL2 = fill2
 
     def SetManagedChild(self, child):
@@ -300,11 +300,11 @@ class ResizeWidget(wx.Panel):
     def _hitTest(self, pos):
         # is the position in the area to be used for the resize handle?
         w, h = self.GetSize()
-        if ( w - self.RW_THICKNESS <= pos.x <= w
-             and h - self.RW_LENGTH <= pos.y <= h ):
+        if (w - self.RW_THICKNESS <= pos.x <= w
+            and h - self.RW_LENGTH <= pos.y <= h):
             return True
-        if ( w - self.RW_LENGTH <= pos.x <= w
-             and h - self.RW_THICKNESS <= pos.y <= h ):
+        if (w - self.RW_LENGTH <= pos.x <= w
+            and h - self.RW_THICKNESS <= pos.y <= h):
             return True
         return False
 
@@ -352,6 +352,3 @@ class ResizeWidget(wx.Panel):
     def DoGetBestSize(self):
         """Return the best size."""
         return self._bestSize
-
-
-#-----------------------------------------------------------------------------
