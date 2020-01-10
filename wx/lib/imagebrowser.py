@@ -150,15 +150,15 @@ def GetCheckeredBitmap(blocksize=8, ntiles=4, rgb0=b'\xFF', rgb1=b'\xCC'):
     assert isinstance(rgb0, bytes)
     assert isinstance(rgb1, bytes)
 
-    size = blocksize*ntiles*2
+    size = blocksize * ntiles * 2
 
     if len(rgb0)==1:
         rgb0 = rgb0 * 3
     if len(rgb1)==1:
         rgb1 = rgb1 * 3
 
-    strip0 = (rgb0*blocksize + rgb1*blocksize)*(ntiles*blocksize)
-    strip1 = (rgb1*blocksize + rgb0*blocksize)*(ntiles*blocksize)
+    strip0 = (rgb0 * blocksize + rgb1 * blocksize) * (ntiles * blocksize)
+    strip1 = (rgb1 * blocksize + rgb0 * blocksize) * (ntiles * blocksize)
     band = strip0 + strip1
     data = band * ntiles
     return wx.Bitmap.FromBuffer(size, size, data)
@@ -168,10 +168,10 @@ def GetNamedBitmap(name):
 
 
 class ImageView(wx.Window):
-    def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize,
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=wx.BORDER_SUNKEN
                  ):
-        wx.Window.__init__(self, parent, id, pos, size, style=style)
+        wx.Window.__init__(self, parent, id, pos, size, style)
 
         self.image = None
 
@@ -184,8 +184,8 @@ class ImageView(wx.Window):
         self.lite_bg = None
 
         self.border_mode = ID_CROP_FRAME
-        self.SetBackgroundMode( ID_WHITE_BG )
-        self.SetBorderMode( ID_NO_FRAME )
+        self.SetBackgroundMode(ID_WHITE_BG)
+        self.SetBorderMode(ID_NO_FRAME)
 
         # Changed API of wx uses tuples for size and pos now.
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -193,7 +193,7 @@ class ImageView(wx.Window):
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
 
-    def SetValue(self, file_nm):    # display the selected file in the panel
+    def SetValue(self, file_nm):  # Display the selected file in the panel.
         image = ConvertBMP(file_nm)
         self.image = image
         self.Refresh()
@@ -277,24 +277,23 @@ class ImageView(wx.Window):
             pos = rect.Position
             sz = rect.Size
 
-        if type(painter)==wx.Brush:
+        if type(painter) == wx.Brush:
             dc.SetPen(wx.TRANSPARENT_PEN)
             dc.SetBrush(painter)
-            dc.DrawRectangle(pos.x,pos.y,sz.width,sz.height)
-        elif type(painter)==wx.Pen:
+            dc.DrawRectangle(pos.x, pos.y, sz.width, sz.height)
+        elif type(painter) == wx.Pen:
             dc.SetPen(painter)
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.DrawRectangle(pos.x-1,pos.y-1,sz.width+2,sz.height+2)
+            dc.DrawRectangle(pos.x - 1, pos.y - 1, sz.width + 2, sz.height + 2)
         else:
-            self.TileBackground(dc, painter, pos.x,pos.y,sz.width,sz.height)
+            self.TileBackground(dc, painter, pos.x, pos.y, sz.width, sz.height)
 
-
-    def TileBackground(self, dc, bmp, x,y,w,h):
+    def TileBackground(self, dc, bmp, x, y, w, h):
         """Tile bmp into the specified rectangle"""
         bw = bmp.GetWidth()
         bh = bmp.GetHeight()
 
-        dc.SetClippingRegion(x,y,w,h)
+        dc.SetClippingRegion(x, y, w, h)
 
         # adjust so 0,0 so we always match with a tiling starting at 0,0
         dx = x % bw
@@ -306,8 +305,8 @@ class ImageView(wx.Window):
         h = h + dy
 
         tx = x
-        x2 = x+w
-        y2 = y+h
+        x2 = x + w
+        y2 = y + h
 
         while tx < x2:
             ty = y
@@ -318,17 +317,17 @@ class ImageView(wx.Window):
 
     def DrawImage(self, dc):
 
-        if not hasattr(self,'image') or self.image is None:
+        if not hasattr(self, 'image') or self.image is None:
             return
 
-        wwidth,wheight = self.GetSize()
+        wwidth, wheight = self.GetSize()
         image = self.image
         bmp = None
         if image != BAD_IMAGE and image.IsOk():
             iwidth = image.GetWidth()   # dimensions of image file
             iheight = image.GetHeight()
         else:
-            bmp = wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE, wx.ART_MESSAGE_BOX, (64,64))
+            bmp = wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE, wx.ART_MESSAGE_BOX, (64, 64))
             iwidth = bmp.GetWidth()
             iheight = bmp.GetHeight()
 
@@ -344,64 +343,63 @@ class ImageView(wx.Window):
         else:
             scale = 1.0
 
-        owidth = int(scale*iwidth)
-        oheight = int(scale*iheight)
+        owidth = int(scale * iwidth)
+        oheight = int(scale * iheight)
 
-        diffx = (wwidth - owidth)/2   # center calc
-        diffy = (wheight - oheight)/2   # center calc
+        diffx = (wwidth - owidth) / 2  # center calc
+        diffy = (wheight - oheight) / 2  # center calc
 
         if not bmp:
-            if owidth!=iwidth or oheight!=iheight:
-                sc_image = sc_image = image.Scale(owidth,oheight)
+            if owidth != iwidth or oheight != iheight:
+                sc_image = sc_image = image.Scale(owidth, oheight)
             else:
                 sc_image = image
             bmp = sc_image.ConvertToBitmap()
 
         if image != BAD_IMAGE and image.IsOk():
-            self.PaintBackground(dc, self.lite_bg, wx.Rect(diffx,diffy,owidth,oheight))
+            self.PaintBackground(dc, self.lite_bg, wx.Rect(diffx, diffy, owidth, oheight))
 
-        dc.DrawBitmap(bmp, diffx, diffy, useMask=True)        # draw the image to window
+        dc.DrawBitmap(bmp, diffx, diffy, useMask=True)  # Draw the image to window.
 
 
 class ImagePanel(wx.Panel):
-    def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize,
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=wx.NO_BORDER
                  ):
-        wx.Panel.__init__(self, parent, id, pos, size, style=style)
+        wx.Panel.__init__(self, parent, id, pos, size, style)
 
         vbox = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(vbox)
 
         self.view = ImageView(self)
-        vbox.Add(self.view, 1, wx.GROW|wx.ALL, 0)
+        vbox.Add(self.view, 1, wx.GROW | wx.ALL, 0)
 
         hbox_ctrls = wx.BoxSizer(wx.HORIZONTAL)
-        vbox.Add(hbox_ctrls, 0, wx.ALIGN_RIGHT|wx.TOP, 4)
+        vbox.Add(hbox_ctrls, 0, wx.ALIGN_RIGHT | wx.TOP, 4)
 
         bmp = GetNamedBitmap('White')
         btn = BitmapButton(self, ID_WHITE_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to white"))
-        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
+        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT | wx.LEFT, 4)
 
         bmp = GetNamedBitmap('Grey')
         btn = BitmapButton(self, ID_GREY_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to grey"))
-        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
+        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT | wx.LEFT, 4)
 
         bmp = GetNamedBitmap('Black')
         btn = BitmapButton(self, ID_BLACK_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to black"))
-        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
+        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT | wx.LEFT, 4)
 
         bmp = GetNamedBitmap('Checked')
         btn = BitmapButton(self, ID_CHECK_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to checkered pattern"))
-        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
-
+        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT | wx.LEFT, 4)
 
         hbox_ctrls.AddSpacer(7)
 
@@ -409,22 +407,22 @@ class ImagePanel(wx.Panel):
         btn = BitmapButton(self, ID_NO_FRAME, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
         btn.SetToolTip(_("No framing around image"))
-        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
+        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT | wx.LEFT, 4)
 
         bmp = GetNamedBitmap('BoxFrame')
         btn = BitmapButton(self, ID_BOX_FRAME, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
         btn.SetToolTip(_("Frame image with a box"))
-        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
+        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT | wx.LEFT, 4)
 
         bmp = GetNamedBitmap('CropFrame')
         btn = BitmapButton(self, ID_CROP_FRAME, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
         btn.SetToolTip(_("Frame image with a dimmed background"))
-        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
+        hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT | wx.LEFT, 4)
 
 
-    def SetValue(self, file_nm):    # display the selected file in the panel
+    def SetValue(self, file_nm):  # Display the selected file in the panel.
         self.view.SetValue(file_nm)
 
     def SetBackgroundMode(self, mode):
@@ -442,13 +440,12 @@ class ImagePanel(wx.Panel):
         self.SetBorderMode(mode)
 
 
-
 class ImageDialog(wx.Dialog):
     """
     :class:`wx.ImageDialog` derived from :class:`Dialog` allows the user
     to display images and to select an image.
     """
-    def __init__(self, parent, set_dir = None):
+    def __init__(self, parent, set_dir=None):
         """
         Default class constructor.
 
@@ -456,53 +453,52 @@ class ImageDialog(wx.Dialog):
         :param string `set_dir`: path to set as working directory
 
         """
-        wx.Dialog.__init__(self, parent, -1, _("Image Browser"),
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, _("Image Browser"),
                            wx.DefaultPosition, (400, 400),
-                           style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
+                           style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
         self.set_dir = os.getcwd()
         self.set_file = None
 
         if set_dir != None:
-            if os.path.exists(set_dir):     # set to working directory if nothing set
+            if os.path.exists(set_dir):  # Set to working directory if nothing set.
                 self.set_dir = set_dir
 
         vbox_top = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(vbox_top)
 
         hbox_loc = wx.BoxSizer(wx.HORIZONTAL)
-        vbox_top.Add(hbox_loc, 0, wx.GROW|wx.ALIGN_LEFT|wx.ALL, 0)
+        vbox_top.Add(hbox_loc, 0, wx.GROW | wx.ALIGN_LEFT | wx.ALL, 0)
 
-        loc_label = wx.StaticText( self, -1, "Folder:")
-        hbox_loc.Add(loc_label, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.ADJUST_MINSIZE, 5)
+        loc_label = wx.StaticText(self, wx.ID_ANY, "Folder:")
+        hbox_loc.Add(loc_label, 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL | wx.ALL | wx.ADJUST_MINSIZE, 5)
 
-        self.dir = wx.TextCtrl( self, -1, self.set_dir, style=wx.TE_RICH|wx.TE_PROCESS_ENTER)
+        self.dir = wx.TextCtrl(self, wx.ID_ANY, self.set_dir, style=wx.TE_RICH | wx.TE_PROCESS_ENTER)
         self.Bind(wx.EVT_TEXT_ENTER, self.OnDirectoryTextSet, self.dir)
-        hbox_loc.Add(self.dir, 1, wx.GROW|wx.ALIGN_LEFT|wx.ALL, 5)
+        hbox_loc.Add(self.dir, 1, wx.GROW | wx.ALIGN_LEFT | wx.ALL, 5)
 
-        up_bmp = wx.ArtProvider.GetBitmap(wx.ART_GO_DIR_UP, wx.ART_BUTTON, (16,16))
-        btn = BitmapButton(self, -1, up_bmp, style=wx.BU_EXACTFIT)
+        up_bmp = wx.ArtProvider.GetBitmap(wx.ART_GO_DIR_UP, wx.ART_BUTTON, (16, 16))
+        btn = BitmapButton(self, wx.ID_ANY, up_bmp, style=wx.BU_EXACTFIT)
         btn.SetHelpText(_("Up one level"))
         btn.SetToolTip(_("Up one level"))
         self.Bind(wx.EVT_BUTTON, self.OnUpDirectory, btn)
-        hbox_loc.Add(btn, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 2)
+        hbox_loc.Add(btn, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 2)
 
-        folder_bmp = wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN, wx.ART_BUTTON, (16,16))
-        btn = BitmapButton(self, -1, folder_bmp, style=wx.BU_EXACTFIT)
+        folder_bmp = wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN, wx.ART_BUTTON, (16, 16))
+        btn = BitmapButton(self, wx.ID_ANY, folder_bmp, style=wx.BU_EXACTFIT)
         btn.SetHelpText(_("Browse for a &folder..."))
         btn.SetToolTip(_("Browse for a folder..."))
         self.Bind(wx.EVT_BUTTON, self.OnChooseDirectory, btn)
-        hbox_loc.Add(btn, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5)
+        hbox_loc.Add(btn, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
 
         hbox_nav = wx.BoxSizer(wx.HORIZONTAL)
-        vbox_top.Add(hbox_nav, 0, wx.ALIGN_LEFT|wx.ALL, 0)
+        vbox_top.Add(hbox_nav, 0, wx.ALIGN_LEFT | wx.ALL, 0)
 
+        label = wx.StaticText(self, wx.ID_ANY, "Files of type:")
+        hbox_nav.Add(label, 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 5)
 
-        label = wx.StaticText( self, -1, "Files of type:")
-        hbox_nav.Add(label, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5)
-
-        self.fl_ext = '*.bmp'   # initial setting for file filtering
-        self.GetFiles()     # get the file list
+        self.fl_ext = '*.bmp'  # Initial setting for file filtering.
+        self.GetFiles()  # Get the file list.
 
         self.fl_ext_types = (
             # display, filter
@@ -517,56 +513,56 @@ class ImageDialog(wx.Dialog):
             ("TIFF (*.tif)", "*.tif"),
             ("All Files", "*.*"),
             )
-        self.set_type,self.fl_ext = self.fl_ext_types[0]  # initial file filter setting
-        self.fl_types = [ x[0] for x in self.fl_ext_types ]
-        self.sel_type = wx.ComboBox( self, -1, self.set_type,
-                                     wx.DefaultPosition, wx.DefaultSize, self.fl_types,
-                                     wx.CB_DROPDOWN )
+        self.set_type,self.fl_ext = self.fl_ext_types[0]  # Initial file filter setting.
+        self.fl_types = [x[0] for x in self.fl_ext_types]
+        self.sel_type = wx.ComboBox(self, wx.ID_ANY, self.set_type,
+                                    wx.DefaultPosition, wx.DefaultSize, self.fl_types,
+                                    wx.CB_DROPDOWN)
         # after this we don't care about the order any more
         self.fl_ext_types = dict(self.fl_ext_types)
 
         self.Bind(wx.EVT_COMBOBOX, self.OnSetType, self.sel_type)
-        hbox_nav.Add(self.sel_type, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        hbox_nav.Add(self.sel_type, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
 
-        splitter = wx.SplitterWindow( self, -1, wx.DefaultPosition, wx.Size(100, 100), 0 )
+        splitter = wx.SplitterWindow(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(100, 100), 0)
         splitter.SetMinimumPaneSize(100)
 
-        split_left = wx.Panel( splitter, -1, wx.DefaultPosition, wx.DefaultSize,
-                               wx.NO_BORDER|wx.TAB_TRAVERSAL )
+        split_left = wx.Panel(splitter, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+                              wx.NO_BORDER | wx.TAB_TRAVERSAL )
         vbox_left = wx.BoxSizer(wx.VERTICAL)
         split_left.SetSizer(vbox_left)
 
 
-        self.tb = tb = wx.ListBox( split_left, -1, wx.DefaultPosition, wx.DefaultSize,
-                                   self.fl_list, wx.LB_SINGLE )
+        self.tb = tb = wx.ListBox(split_left, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+                                  self.fl_list, wx.LB_SINGLE)
         self.Bind(wx.EVT_LISTBOX, self.OnListClick, tb)
         self.Bind(wx.EVT_LISTBOX_DCLICK, self.OnListDClick, tb)
-        vbox_left.Add(self.tb, 1, wx.GROW|wx.ALL, 0)
+        vbox_left.Add(self.tb, 1, wx.GROW | wx.ALL, 0)
 
         width, height = self.tb.GetSize()
 
-        split_right = wx.Panel( splitter, -1, wx.DefaultPosition, wx.DefaultSize,
-                                wx.NO_BORDER|wx.TAB_TRAVERSAL )
+        split_right = wx.Panel(splitter, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+                               wx.NO_BORDER | wx.TAB_TRAVERSAL)
         vbox_right = wx.BoxSizer(wx.VERTICAL)
         split_right.SetSizer(vbox_right)
 
-        self.image_view = ImagePanel( split_right )
-        vbox_right.Add(self.image_view, 1, wx.GROW|wx.ALL, 0)
+        self.image_view = ImagePanel(split_right)
+        vbox_right.Add(self.image_view, 1, wx.GROW | wx.ALL, 0)
 
         splitter.SplitVertically(split_left, split_right, 150)
-        vbox_top.Add(splitter, 1, wx.GROW|wx.ALL, 5)
+        vbox_top.Add(splitter, 1, wx.GROW | wx.ALL, 5)
 
         hbox_btns = wx.BoxSizer(wx.HORIZONTAL)
-        vbox_top.Add(hbox_btns, 0, wx.ALIGN_RIGHT|wx.ALL, 5)
+        vbox_top.Add(hbox_btns, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
 
-        ok_btn = wx.Button( self, wx.ID_OPEN, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+        ok_btn = wx.Button(self, wx.ID_OPEN, "", wx.DefaultPosition, wx.DefaultSize, 0)
         self.Bind(wx.EVT_BUTTON, self.OnOk, ok_btn)
         #ok_btn.SetDefault()
-        hbox_btns.Add(ok_btn, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        hbox_btns.Add(ok_btn, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
 
-        cancel_btn = wx.Button( self, wx.ID_CANCEL, "",
-                                wx.DefaultPosition, wx.DefaultSize, 0 )
-        hbox_btns.Add(cancel_btn, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        cancel_btn = wx.Button(self, wx.ID_CANCEL, "",
+                               wx.DefaultPosition, wx.DefaultSize, 0)
+        hbox_btns.Add(cancel_btn, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
 
         self.ResetFiles()
 
@@ -610,8 +606,7 @@ class ImageDialog(wx.Dialog):
             self.fl_val = FindFiles(self, self.set_dir, self.fl_ext)
             self.fl_list = self.fl_val.files
 
-
-        self.fl_list.sort()     # sort the file list
+        self.fl_list.sort()  # Sort the file list.
         # prepend the directories
         self.fl_ndirs = len(self.fl_val.dirs)
         self.fl_list = sorted(self.fl_val.dirs) + self.fl_list
@@ -624,7 +619,7 @@ class ImageDialog(wx.Dialog):
             self.dir.SetInsertionPoint(ipt)
 
     def OnSetType(self, event):
-        val = event.GetString()      # get file type value
+        val = event.GetString()  # Get file type value.
         self.fl_ext = self.fl_ext_types[val]
         self.ResetFiles()
 
@@ -643,7 +638,7 @@ class ImageDialog(wx.Dialog):
         else:
             self.image_view.SetValue(None)
 
-    def OnDirectoryTextSet(self,event):
+    def OnDirectoryTextSet(self, event):
         event.Skip()
         path = event.GetString()
         if os.path.isdir(path):
@@ -710,7 +705,7 @@ class ImageDialog(wx.Dialog):
                 d = self.fl_list[idir]
                 # mark directories as 'True' with client data
                 self.tb.SetClientData(idir, True)
-                self.tb.SetString(idir,'['+d+']')
+                self.tb.SetString(idir, '[' + d + ']')
 
             try:
                 self.tb.SetSelection(0)
@@ -746,7 +741,7 @@ class ImageDialog(wx.Dialog):
             sdir = os.path.split(self.set_file)
 
             #os.path.normapth?
-            if sdir and sdir[-1]=='..':
+            if sdir and sdir[-1] == '..':
                 sdir = os.path.split(sdir[0])[0]
                 sdir = os.path.split(sdir)
             self.set_dir = os.path.join(*sdir)
@@ -755,7 +750,6 @@ class ImageDialog(wx.Dialog):
         elif event != 'dclick':
             self.result = self.set_file
             self.EndModal(wx.ID_OK)
-
 
 
 class FindFiles:
@@ -782,7 +776,6 @@ class FindFiles:
 
             if pattern.match(value) != None:
                 filelist.append(i)
-
 
         self.files = filelist
         if with_dirs:
