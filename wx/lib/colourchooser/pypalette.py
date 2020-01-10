@@ -30,15 +30,16 @@ from __future__ import absolute_import
 #   point for explanation
 #
 
-import  wx
+import colorsys
 
-from . import  canvas
-import  colorsys
+import wx
+
+from . import canvas
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 # Size of Image
-IMAGE_SIZE = (200,192)
+IMAGE_SIZE = (200, 192)
 
 Image = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAAMgAAADACAYAAABBCyzzAAAABHNCSVQICAgIfAhkiAAACwNJ"
@@ -114,7 +115,7 @@ class PyPalette(canvas.Canvas):
     """
 
     HORIZONTAL_STEP = 2
-    VERTICAL_STEP   = 4
+    VERTICAL_STEP = 4
 
     def __init__(self, parent, id):
         """Creates a palette object."""
@@ -128,7 +129,7 @@ class PyPalette(canvas.Canvas):
         self.palette = Image.GetBitmap()
         self.point = None
 
-        canvas.Canvas.__init__ (self, parent, id, forceClientSize=IMAGE_SIZE)
+        canvas.Canvas.__init__(self, parent, id, forceClientSize=IMAGE_SIZE)
 
     def DoGetBestClientSize(self):
         """Overridden to create a client window that exactly fits our bitmap"""
@@ -190,7 +191,7 @@ class PyPalette(canvas.Canvas):
         blocks bigger. This method was used to generate the embedded
         XPM data."""
         self.vertical_step = self.VERTICAL_STEP * granularity
-        width, height = self.GetSize ()
+        width, height = self.GetSize()
 
         # simply iterate over hue (horizontal) and saturation (vertical)
         value = 1.0
@@ -198,14 +199,17 @@ class PyPalette(canvas.Canvas):
             saturation = 1.0 - float(y) / float(height)
             for x in range(0, width, self.HORIZONTAL_STEP):
                 hue = float(x) / float(width)
-                r,g,b = colorsys.hsv_to_rgb(hue, saturation, value)
-                colour = wx.Colour(int(r * 255.0), int(g * 255.0), int(b * 255.0))
+                r, g, b = colorsys.hsv_to_rgb(hue, saturation, value)
+                colour = wx.Colour(int(r * 255.0),
+                                   int(g * 255.0),
+                                   int(b * 255.0))
                 self.buffer.SetPen(wx.Pen(colour, 1, wx.PENSTYLE_SOLID))
                 self.buffer.SetBrush(wx.Brush(colour, wx.BRUSHSTYLE_SOLID))
                 self.buffer.DrawRectangle(x, y,
-                                          self.HORIZONTAL_STEP, self.vertical_step)
+                                          self.HORIZONTAL_STEP,
+                                          self.vertical_step)
 
         # this code is now simpler (and works)
         bitmap = self.buffer.GetBitmap()
         image = wx.ImageFromBitmap(bitmap)
-        image.SaveFile (file_name, wx.BITMAP_TYPE_XPM)
+        image.SaveFile(file_name, wx.BITMAP_TYPE_XPM)
