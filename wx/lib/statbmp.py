@@ -57,22 +57,21 @@ Sample usage::
 
 import wx
 
-#----------------------------------------------------------------------
 
 class GenStaticBitmap(wx.Control):
     """ :class:`GenStaticBitmap` is a generic implementation of :class:`wx.StaticBitmap`. """
 
     labelDelta = 1
 
-    def __init__(self, parent, ID, bitmap,
-                 pos = wx.DefaultPosition, size = wx.DefaultSize,
-                 style = 0,
-                 name = "genstatbmp"):
+    def __init__(self, parent, id, bitmap,
+                 pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=0,
+                 name="genstatbmp"):
         """
         Default class constructor.
 
         :param `parent`: parent window, must not be ``None``;
-        :param integer `ID`: window identifier. A value of -1 indicates a default value;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param wx.Bitmap `bitmap`: the static bitmap used in the control;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -89,14 +88,14 @@ class GenStaticBitmap(wx.Control):
         if not style & wx.BORDER_MASK:
             style = style | wx.BORDER_NONE
 
-        wx.Control.__init__(self, parent, ID, pos, size, style,
+        wx.Control.__init__(self, parent, id, pos, size, style,
                              wx.DefaultValidator, name)
         self._bitmap = bitmap
         self.InheritAttributes()
         self.SetInitialSize(size)
 
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
-        self.Bind(wx.EVT_PAINT,            self.OnPaint)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
 
 
     def SetBitmap(self, bitmap):
@@ -109,7 +108,7 @@ class GenStaticBitmap(wx.Control):
         """
 
         self._bitmap = bitmap
-        self.SetInitialSize( (bitmap.GetWidth(), bitmap.GetHeight()) )
+        self.SetInitialSize((bitmap.GetWidth(), bitmap.GetHeight()))
         self.Refresh()
 
 
@@ -190,10 +189,3 @@ class GenStaticBitmap(wx.Control):
         """
 
         pass
-
-
-
-
-#----------------------------------------------------------------------
-
-
