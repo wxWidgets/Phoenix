@@ -48,9 +48,9 @@ class ScrolledMessageDialog(wx.Dialog):
 
 
 class MultipleChoiceDialog(wx.Dialog):
-    def __init__(self, parent, msg, title, lst, pos = wx.DefaultPosition,
-                 size = (200,200), style = wx.DEFAULT_DIALOG_STYLE):
-        wx.Dialog.__init__(self, parent, -1, title, pos, size, style)
+    def __init__(self, parent, msg, title, lst, pos=wx.DefaultPosition,
+                 size=(200, 200), style=wx.DEFAULT_DIALOG_STYLE):
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, title, pos, size, style)
 
         x, y = pos
         if x == -1 and y == -1:
@@ -85,7 +85,7 @@ class MultipleChoiceDialog(wx.Dialog):
 
     def GetValueString(self):
         sel = self.lbox.GetSelections()
-        val = [ self.lst[i] for i in sel ]
+        val = [self.lst[i] for i in sel]
         return tuple(val)
 
 
@@ -146,19 +146,19 @@ def returnedString(ret):
 def findDialog(parent=None, searchText='', wholeWordsOnly=0, caseSensitive=0):
     dlg = wx.Dialog(parent, -1, "Find", wx.DefaultPosition, (380, 120))
 
-    wx.StaticText(dlg, -1, 'Find what:', (7, 10))
-    wSearchText = wx.TextCtrl(dlg, -1, searchText, (80, 7), (195, -1))
+    wx.StaticText(dlg, wx.ID_ANY, 'Find what:', (7, 10))
+    wSearchText = wx.TextCtrl(dlg, wx.ID_ANY, searchText, (80, 7), (195, -1))
     wSearchText.SetValue(searchText)
     wx.Button(dlg, wx.ID_OK, "Find Next", (285, 5), wx.DefaultSize).SetDefault()
     wx.Button(dlg, wx.ID_CANCEL, "Cancel", (285, 35), wx.DefaultSize)
 
-    wWholeWord = wx.CheckBox(dlg, -1, 'Match whole word only',
+    wWholeWord = wx.CheckBox(dlg, wx.ID_ANY, 'Match whole word only',
                             (7, 35), wx.DefaultSize, wx.NO_BORDER)
 
     if wholeWordsOnly:
         wWholeWord.SetValue(1)
 
-    wCase = wx.CheckBox(dlg, -1, 'Match case', (7, 55), wx.DefaultSize, wx.NO_BORDER)
+    wCase = wx.CheckBox(dlg, wx.ID_ANY, 'Match case', (7, 55), wx.DefaultSize, wx.NO_BORDER)
 
     if caseSensitive:
         wCase.SetValue(1)
@@ -357,19 +357,19 @@ class MultiMessageDialog(wx.Dialog):
     CONTENT_MAX_W = 550
     CONTENT_MAX_H = 350
 
-    def __init__(self, parent, message, caption = "Message Box", msg2="",
-                 style = wx.OK | wx.CANCEL, pos = wx.DefaultPosition, icon=None,
+    def __init__(self, parent, message, caption="Message Box", msg2="",
+                 style=wx.OK | wx.CANCEL, pos=wx.DefaultPosition, icon=None,
                  btnLabels=None):
         if 'wxMac' not in wx.PlatformInfo:
             title = caption  # the caption will be displayed inside the dialog on Macs
         else:
             title = ""
 
-        wx.Dialog.__init__(self, parent, -1, title, pos,
-                           style = wx.DEFAULT_DIALOG_STYLE | style & (wx.STAY_ON_TOP | wx.DIALOG_NO_PARENT))
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, title, pos,
+                           style=wx.DEFAULT_DIALOG_STYLE | style & (wx.STAY_ON_TOP | wx.DIALOG_NO_PARENT))
 
         bitmap = None
-        isize = (32,32)
+        isize = (32, 32)
 
         # was an icon passed to us?
         if icon is not None:
@@ -398,41 +398,41 @@ class MultiMessageDialog(wx.Dialog):
                 bitmap = wx.ArtProvider.GetBitmap(artid, wx.ART_MESSAGE_BOX, isize)
 
         if bitmap:
-            bitmap = wx.StaticBitmap(self, -1, bitmap)
+            bitmap = wx.StaticBitmap(self, wx.ID_ANY, bitmap)
         else:
             bitmap = isize # will be a spacer when added to the sizer
 
         # Sizer to contain the icon, text area and buttons
         sizer = wx.BoxSizer(wx.HORIZONTAL)
-        sizer.Add(bitmap, 0, wx.TOP|wx.LEFT, 12)
-        sizer.Add((10,10))
+        sizer.Add(bitmap, 0, wx.TOP | wx.LEFT, 12)
+        sizer.Add((10, 10))
 
         # Make the text area
         messageSizer = wx.BoxSizer(wx.VERTICAL)
         if 'wxMac' in wx.PlatformInfo and caption:
-            caption = wx.StaticText(self, -1, caption)
+            caption = wx.StaticText(self, wx.ID_ANY, caption)
             caption.SetFont(wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
             messageSizer.Add(caption)
-            messageSizer.Add((10,10))
+            messageSizer.Add((10, 10))
 
-        stext = wx.StaticText(self, -1, message)
+        stext = wx.StaticText(self, wx.ID_ANY, message)
         #stext.SetLabelMarkup(message)  Wrap() causes all markup to be lost, so don't try to use it yet...
         stext.Wrap(self.CONTENT_MAX_W)
         messageSizer.Add(stext)
 
         if msg2:
-            messageSizer.Add((15,15))
-            t = wx.TextCtrl(self, style=wx.TE_MULTILINE|wx.TE_READONLY|wx.TE_RICH|wx.TE_DONTWRAP)
+            messageSizer.Add((15, 15))
+            t = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_RICH | wx.TE_DONTWRAP)
             t.SetValue(msg2)
 
             # Set size to be used by the sizer based on the message content,
             # with good maximums
             dc = wx.ClientDC(t)
             dc.SetFont(t.GetFont())
-            w,h,_ = dc.GetFullMultiLineTextExtent(msg2)
+            w, h, _ = dc.GetFullMultiLineTextExtent(msg2)
             w = min(self.CONTENT_MAX_W, 10 + w + wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X))
             h = min(self.CONTENT_MAX_H, 10 + h)
-            t.SetMinSize((w,h))
+            t.SetMinSize((w, h))
             messageSizer.Add(t, 0, wx.EXPAND)
 
         # Make the buttons
@@ -468,8 +468,6 @@ class MultiMessageDialog(wx.Dialog):
             self.EndModal(event.EventObject.Id)
         else:
             self.Close()
-
-
 
 
 def MultiMessageBox(message, caption, msg2="", style=wx.OK, parent=None,
