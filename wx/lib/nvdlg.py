@@ -29,7 +29,7 @@ MARGIN = 4
 
 
 class SimpleNameValueDialog(wx.Dialog):
-    def __init__(self, parent, id=-1, title="", pos=wx.DefaultPosition,
+    def __init__(self, parent, id=wx.ID_ANY, title="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE,
                  fields=[], initialValues=None,
                  captionTitle="", captionDescr=""):
@@ -41,27 +41,27 @@ class SimpleNameValueDialog(wx.Dialog):
         self._contentSizer.AddGrowableCol(1)
 
         if captionTitle:
-            titleTxt = wx.StaticText(self, -1, captionTitle)
+            titleTxt = wx.StaticText(self, wx.ID_ANY, captionTitle)
             titleTxt.SetFont(wx.FFont(18, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
             self.Sizer.Add(titleTxt, 0, wx.ALL, MARGIN)
         if captionDescr:
-            descTxt = wx.StaticText(self, -1, captionDescr)
-            self.Sizer.Add(descTxt, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, MARGIN)
+            descTxt = wx.StaticText(self, wx.ID_ANY, captionDescr)
+            self.Sizer.Add(descTxt, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, MARGIN)
         if captionTitle or captionDescr:
-            self.Sizer.Add(wx.StaticLine(self), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, MARGIN)
+            self.Sizer.Add(wx.StaticLine(self), 0, wx.EXPAND | wx.TOP | wx.BOTTOM, MARGIN)
 
         self.createFields(fields)
         self.loadValues(initialValues)
 
-        self.Sizer.Add(self._contentSizer, 1, wx.EXPAND|wx.ALL, MARGIN)
-        self.Sizer.Add(wx.StaticLine(self), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, MARGIN)
+        self.Sizer.Add(self._contentSizer, 1, wx.EXPAND | wx.ALL, MARGIN)
+        self.Sizer.Add(wx.StaticLine(self), 0, wx.EXPAND | wx.TOP | wx.BOTTOM, MARGIN)
 
         # TODO: add ability to specify which stock or custom buttons are used
         btnSizer = wx.StdDialogButtonSizer()
         btnSizer.AddButton(wx.Button(self, wx.ID_OK))
         btnSizer.AddButton(wx.Button(self, wx.ID_CANCEL))
         btnSizer.Realize()
-        self.Sizer.Add(btnSizer, 0, wx.EXPAND|wx.ALL, MARGIN)
+        self.Sizer.Add(btnSizer, 0, wx.EXPAND | wx.ALL, MARGIN)
         self.FindWindow(wx.ID_OK).SetDefault()
 
         self.Fit()
@@ -73,10 +73,10 @@ class SimpleNameValueDialog(wx.Dialog):
             kwargs = dict(validator=_TransferValidator(name))
             if args:
                 kwargs.update(args)
-            stxt = wx.StaticText(self, -1, label)
+            stxt = wx.StaticText(self, wx.ID_ANY, label)
             txt = wx.TextCtrl(self, **kwargs)
 
-            self._contentSizer.Add(stxt, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT)
+            self._contentSizer.Add(stxt, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)
             self._contentSizer.Add(txt, 0, wx.EXPAND)
 
             self.__dict__[name] = ""
@@ -139,9 +139,9 @@ if __name__ == '__main__':
     app = InspectableApp(redirect=False)
     #app = wx.App(redirect=False)
 
-    fields = [ ('username', 'Login ID:', None),
-               ('passwd',   'Password:', dict(size=(150,-1), style=wx.TE_PASSWORD)),
-               ]
+    fields = [('username', 'Login ID:', None),
+              ('passwd',   'Password:', dict(size=(150,-1), style=wx.TE_PASSWORD)),
+              ]
 
     dlg = SimpleNameValueDialog(None, title="This is the title",
                                 fields=fields,
@@ -152,5 +152,3 @@ if __name__ == '__main__':
         print(dlg.username, dlg.passwd)
     dlg.Destroy()
     app.MainLoop()
-
-
