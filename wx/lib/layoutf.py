@@ -122,23 +122,23 @@ class Layoutf(wx.LayoutConstraints):
 
 """
 
-    attr_d = { 't': 'top', 'l': 'left', 'b': 'bottom',
-             'r': 'right', 'h': 'height', 'w': 'width',
-             'x': 'centreX', 'y': 'centreY' }
-    op_d = { '=': 'SameAs', '%': 'PercentOf', '<': 'LeftOf',
-              '>': 'RightOf', '^': 'Above', '_': 'Below',
-               '!': 'Absolute', '?': 'Unconstrained', '*': 'AsIs' }
-    cmp_d = { 't': 'wx.Top', 'l': 'wx.Left', 'b': 'wx.Bottom',
+    attr_d = {'t': 'top', 'l': 'left', 'b': 'bottom',
+              'r': 'right', 'h': 'height', 'w': 'width',
+              'x': 'centreX', 'y': 'centreY'}
+    op_d = {'=': 'SameAs', '%': 'PercentOf', '<': 'LeftOf',
+            '>': 'RightOf', '^': 'Above', '_': 'Below',
+            '!': 'Absolute', '?': 'Unconstrained', '*': 'AsIs'}
+    cmp_d = {'t': 'wx.Top', 'l': 'wx.Left', 'b': 'wx.Bottom',
              'r': 'wx.Right', 'h': 'wx.Height', 'w': 'wx.Width',
-             'x': 'wx.CentreX', 'y': 'wx.CentreY' }
+             'x': 'wx.CentreX', 'y': 'wx.CentreY'}
 
     rexp1 = re.compile('^\s*([tlrbhwxy])\s*([!\?\*])\s*(\d*)\s*$')
     rexp2 = re.compile('^\s*([tlrbhwxy])\s*([=%<>^_])\s*([tlrbhwxy]?)\s*(\d*)\s*#(\d+)\s*$')
 
-    def __init__(self,pstr=None,winlist=None):
+    def __init__(self, pstr=None, winlist=None):
         wx.LayoutConstraints.__init__(self)
         if pstr:
-            self.pack(pstr,winlist)
+            self.pack(pstr, winlist)
 
     def pack(self, pstr, winlist):
         pstr = pstr.lower()
@@ -179,10 +179,10 @@ class Layoutf(wx.LayoutConstraints):
                 func = getattr(attr, self.op_d[g[1]])
                 if g[1] == '!':
                     print("%s.%s.%s(%s)" %
-                     ('self',self.attr_d[g[0]],self.op_d[g[1]],g[2]))
+                     ('self', self.attr_d[g[0]], self.op_d[g[1]],g[2]))
                 else:
                     print("%s.%s.%s()" %
-                     ('self',self.attr_d[g[0]],self.op_d[g[1]]))
+                     ('self', self.attr_d[g[0]], self.op_d[g[1]]))
                 continue
             m = self.rexp2.match(item)
             if not m: raise ValueError
@@ -192,56 +192,56 @@ class Layoutf(wx.LayoutConstraints):
             g[4] = int(g[4]) - 1
             if g[1] in '<>^_':
                 if g[3]: print("%s.%s.%s(%s,%d)" %
-                 ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]],
+                 ('self', self.attr_d[g[0]], self.op_d[g[1]],winlist[g[4]],
                   g[3]))
                 else: print("%s.%s.%s(%s)" % \
-                 ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]]))
+                 ('self', self.attr_d[g[0]], self.op_d[g[1]],winlist[g[4]]))
             else:
                 if g[3]: print("%s.%s.%s(%s,%s,%d)" %
-                 ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]],
+                 ('self', self.attr_d[g[0]], self.op_d[g[1]],winlist[g[4]],
                   self.cmp_d[g[2]],g[3]))
                 else: print("%s.%s.%s(%s,%s)" % \
-                 ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]],
+                 ('self', self.attr_d[g[0]], self.op_d[g[1]],winlist[g[4]],
                   self.cmp_d[g[2]]))
 
 if __name__=='__main__':
 
     class TestLayoutf(wx.Frame):
         def __init__(self, parent):
-            wx.Frame.__init__(self, parent, -1, 'Test Layout Constraints',
+            wx.Frame.__init__(self, parent, wx.ID_ANY, 'Test Layout Constraints',
                               wx.DefaultPosition, (500, 300))
             self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
             self.SetAutoLayout(True)
 
-            self.panelA = wx.Window(self, -1, style=wx.SIMPLE_BORDER)
+            self.panelA = wx.Window(self, wx.ID_ANY, style=wx.SIMPLE_BORDER)
             self.panelA.SetBackgroundColour(wx.BLUE)
             self.panelA.SetConstraints(Layoutf('t=t10#1;l=l10#1;b=b10#1;r%r50#1',(self,)))
 
-            self.panelB = wx.Window(self, -1, style=wx.SIMPLE_BORDER)
+            self.panelB = wx.Window(self, wx.ID_ANY, style=wx.SIMPLE_BORDER)
             self.panelB.SetBackgroundColour(wx.RED)
-            self.panelB.SetConstraints(Layoutf('t=t10#1;r=r10#1;b%b30#1;l>10#2', (self,self.panelA)))
+            self.panelB.SetConstraints(Layoutf('t=t10#1;r=r10#1;b%b30#1;l>10#2', (self, self.panelA)))
 
-            self.panelC = wx.Window(self, -1, style=wx.SIMPLE_BORDER)
+            self.panelC = wx.Window(self, wx.ID_ANY, style=wx.SIMPLE_BORDER)
             self.panelC.SetBackgroundColour(wx.WHITE)
-            self.panelC.SetConstraints(Layoutf('t_10#3;r=r10#1;b=b10#1;l>10#2', (self,self.panelA,self.panelB)))
+            self.panelC.SetConstraints(Layoutf('t_10#3;r=r10#1;b=b10#1;l>10#2', (self, self.panelA, self.panelB)))
 
-            b = wx.Button(self.panelA, -1, ' About: ')
+            b = wx.Button(self.panelA, wx.ID_ANY, ' About: ')
             b.SetConstraints(Layoutf('X=X#1;Y=Y#1;h*;w%w50#1', (self.panelA,)))
             self.Bind(wx.EVT_BUTTON, self.OnAbout, b)
 
             b = wx.Button(self.panelB, 100, ' Panel B ')
             b.SetConstraints(Layoutf('t=t2#1;r=r4#1;h*;w*', (self.panelB,)))
 
-            self.panelD = wx.Window(self.panelC, -1, style=wx.SIMPLE_BORDER)
+            self.panelD = wx.Window(self.panelC, wx.ID_ANY, style=wx.SIMPLE_BORDER)
             self.panelD.SetBackgroundColour(wx.GREEN)
             self.panelD.SetConstraints(Layoutf('b%h50#1;r%w50#1;h=h#2;w=w#2', (self.panelC, b)))
 
-            b = wx.Button(self.panelC, -1, ' Panel C ')
+            b = wx.Button(self.panelC, wx.ID_ANY, ' Panel C ')
             b.SetConstraints(Layoutf('t_#1;l>#1;h*;w*', (self.panelD,)))
             self.Bind(wx.EVT_BUTTON, self.OnButton, b)
 
-            wx.StaticText(self.panelD, -1, "Panel D", (4, 4)).SetBackgroundColour(wx.GREEN)
+            wx.StaticText(self.panelD, wx.ID_ANY, "Panel D", (4, 4)).SetBackgroundColour(wx.GREEN)
 
         def OnButton(self, event):
             self.Close(True)
@@ -264,8 +264,3 @@ if __name__=='__main__':
 
     app = TestApp(0)
     app.MainLoop()
-
-
-
-
-
