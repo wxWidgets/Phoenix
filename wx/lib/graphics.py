@@ -344,7 +344,7 @@ class GraphicsPen(GraphicsObject):
         ctx.set_dash([])
 
         if self._style == wx.SOLID:
-            ctx.set_source_rgba( *_colourToValues(self._colour) )
+            ctx.set_source_rgba(*_colourToValues(self._colour))
 
         elif self._style == wx.STIPPLE:
             if not self._pattern and self._stipple:
@@ -355,12 +355,12 @@ class GraphicsPen(GraphicsObject):
             ctx.set_source(self._pattern)
 
         elif self._style == wx.USER_DASH:
-            ctx.set_source_rgba( *_colourToValues(self._colour) )
+            ctx.set_source_rgba(*_colourToValues(self._colour))
             ctx.set_dash(self._dashes)
 
         elif self._style in [wx.DOT, wx.DOT_DASH, wx.LONG_DASH, wx.SHORT_DASH]:
-            ctx.set_source_rgba( *_colourToValues(self._colour) )
-            ctx.set_dash( _stdDashes(self._style, self._width) )
+            ctx.set_source_rgba(*_colourToValues(self._colour))
+            ctx.set_dash(_stdDashes(self._style, self._width))
 
         elif self._style in [wx.BDIAGONAL_HATCH, wx.CROSSDIAG_HATCH, wx.FDIAGONAL_HATCH,
                              wx.CROSS_HATCH, wx.HORIZONTAL_HATCH, wx.VERTICAL_HATCH]:
@@ -481,7 +481,7 @@ class GraphicsBrush(GraphicsObject):
         ctx = ctx.GetNativeContext()
 
         if self._style == wx.BRUSHSTYLE_SOLID:
-            ctx.set_source_rgba( *_colourToValues(self._colour) )
+            ctx.set_source_rgba(*_colourToValues(self._colour))
 
         elif self._style == wx.STIPPLE:
             if not self._pattern and self._stipple:
@@ -849,7 +849,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def AddArcToPoint(self, x1, y1 , x2, y2, radius ):
+    def AddArcToPoint(self, x1, y1 , x2, y2, radius):
         """
         Adds a an arc to two tangents connecting (current) to (x1,y1)
         and (x1,y1) to (x2,y2), also a straight line from (current) to
@@ -893,7 +893,7 @@ class GraphicsPath(GraphicsObject):
         Appends a new closed sub-path as a circle around (x,y).
         """
         self.MoveToPoint(x + radius, y)
-        self.AddArc( x, y, radius, 0, 2*math.pi, False)
+        self.AddArc(x, y, radius, 0, 2*math.pi, False)
         self.CloseSubpath()
         return self
 
@@ -970,9 +970,9 @@ class GraphicsPath(GraphicsObject):
         Adds a new rounded rectangle as a closed sub-path.
         """
         if radius == 0:
-            self.AddRectangle(x,y,w,h)
+            self.AddRectangle(x, y, w, h)
         else:
-            self.MoveToPoint( x + w, y + h / 2.0)
+            self.MoveToPoint(x + w, y + h / 2.0)
             self.AddArcToPoint(x + w, y + h, x + w / 2.0, y + h, radius)
             self.AddArcToPoint(x, y + h, x, y + h / 2.0, radius)
             self.AddArcToPoint(x, y , x + w / 2.0, y, radius)
@@ -994,11 +994,11 @@ class GraphicsPath(GraphicsObject):
         """
         Returns True if the point lies within the path.
         """
-        d = { wx.WINDING_RULE : cairo.FILL_RULE_WINDING,
-              wx.ODDEVEN_RULE : cairo.FILL_RULE_EVEN_ODD }
+        d = {wx.WINDING_RULE: cairo.FILL_RULE_WINDING,
+             wx.ODDEVEN_RULE: cairo.FILL_RULE_EVEN_ODD}
         rule = d[fillStyle]
         self._pathContext.set_fill_rule(rule)
-        return self._pathContext.in_stroke(x,y) or self._pathContext.in_fill(x,y)
+        return self._pathContext.in_stroke(x, y) or self._pathContext.in_fill(x, y)
 
 
     def GetCurrentPoint(self):
@@ -1050,7 +1050,7 @@ class GraphicsPath(GraphicsObject):
         """
         Return the bounding box enclosing all points on this path.
         """
-        x1,y1,x2,y2 = self._pathContext.stroke_extents()
+        x1, y1, x2, y2 = self._pathContext.stroke_extents()
         if x2 < x1:
             x = x2
             w = x1 - x2
@@ -1375,7 +1375,7 @@ class GraphicsContext(GraphicsObject):
         ri = wx.RegionIterator(region)
         while ri:
             rect = ri.GetRect()
-            p.AddRectangle( *rect )
+            p.AddRectangle(*rect)
             ri.Next()
         self._context.append_path(p.GetNativePath())
         self._context.clip()
@@ -1450,7 +1450,7 @@ class GraphicsContext(GraphicsObject):
         Returns the context's current transformation matrix.
         """
         gm = GraphicsMatrix()
-        gm.Set( *tuple(self._context.get_matrix()) )
+        gm.Set(*tuple(self._context.get_matrix()))
         return gm
     Transform = property(GetTransform, SetTransform)
 
@@ -1530,8 +1530,8 @@ class GraphicsContext(GraphicsObject):
             offset = _OffsetHelper(self)
             self._context.append_path(path.GetNativePath())
             self._brush.Apply(self)
-            d = { wx.WINDING_RULE : cairo.FILL_RULE_WINDING,
-                  wx.ODDEVEN_RULE : cairo.FILL_RULE_EVEN_ODD }
+            d = {wx.WINDING_RULE: cairo.FILL_RULE_WINDING,
+                 wx.ODDEVEN_RULE: cairo.FILL_RULE_EVEN_ODD}
             rule = d[fillStyle]
             self._context.set_fill_rule(rule)
             self._context.fill()
@@ -1583,7 +1583,7 @@ class GraphicsContext(GraphicsObject):
         # the position we move to by the ascent.
         fe = self._context.font_extents()
         ascent = fe[0]
-        self._context.move_to( x, y + ascent )
+        self._context.move_to(x, y + ascent)
         self._context.show_text(text)
 
         if angle is not None:
@@ -1623,7 +1623,7 @@ class GraphicsContext(GraphicsObject):
         text using the current font.
         """
         if not text:
-            return (0,0,0,0)
+            return (0, 0, 0, 0)
 
         self._font.Apply(self, self._fontColour)
 
@@ -1772,7 +1772,6 @@ class GraphicsContext(GraphicsObject):
         self.DrawPath(path)
 
 
-
     def GetCompositingOperator(self):
         """
         Returns the current compositing operator for the context.
@@ -1896,7 +1895,7 @@ def _colourToValues(c):
     """
     Helper which converts wx.Colour components to a set of values between 0 and 1
     """
-    return tuple( [x/255.0 for x in c.Get(True)] )
+    return tuple([x/255.0 for x in c.Get(True)])
 
 
 class _OffsetHelper(object):
@@ -1925,15 +1924,12 @@ def _stdDashes(style, width):
         width = 1.0
 
     if style == wx.DOT:
-        dashes = [ width, width + 2.0]
+        dashes = [width, width + 2.0]
     elif style == wx.DOT_DASH:
-        dashes = [ 9.0, 6.0, 3.0, 3.0 ]
+        dashes = [9.0, 6.0, 3.0, 3.0]
     elif style ==  wx.LONG_DASH:
-        dashes = [ 19.0, 9.0 ]
+        dashes = [19.0, 9.0]
     elif style == wx.SHORT_DASH:
-        dashes = [ 9.0, 6.0 ]
+        dashes = [9.0, 6.0]
 
     return dashes
-
-
-#---------------------------------------------------------------------------
