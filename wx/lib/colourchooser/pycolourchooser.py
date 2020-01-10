@@ -134,8 +134,8 @@ class PyColourChooser(wx.Panel):
         resizeable."""
         wx.Panel.__init__(self, parent, id)
 
-        self.basic_label = wx.StaticText(self, -1, _("Basic Colours:"))
-        self.custom_label = wx.StaticText(self, -1, _("Custom Colours:"))
+        self.basic_label = wx.StaticText(self, wx.ID_ANY, _("Basic Colours:"))
+        self.custom_label = wx.StaticText(self, wx.ID_ANY, _("Custom Colours:"))
         self.add_button = wx.Button(self, self.idADD_CUSTOM, _("Add to Custom Colours"))
 
         self.Bind(wx.EVT_BUTTON, self.onAddCustom, self.add_button)
@@ -210,13 +210,13 @@ class PyColourChooser(wx.Panel):
         ssizer.Add((1, 2))
         ssizer.Add(slabel, 0, wx.ALIGN_CENTER_HORIZONTAL)
 
-        hlabel = wx.StaticText(self, -1, _("H:"))
+        hlabel = wx.StaticText(self, wx.ID_ANY, _("H:"))
         self.hentry = wx.TextCtrl(self, -1)
         self.hentry.SetSize((40, -1))
-        slabel = wx.StaticText(self, -1, _("S:"))
+        slabel = wx.StaticText(self, wx.ID_ANY, _("S:"))
         self.sentry = wx.TextCtrl(self, -1)
         self.sentry.SetSize((40, -1))
-        vlabel = wx.StaticText(self, -1, _("V:"))
+        vlabel = wx.StaticText(self, wx.ID_ANY, _("V:"))
         self.ventry = wx.TextCtrl(self, -1)
         self.ventry.SetSize((40, -1))
         hsvgrid = wx.FlexGridSizer(rows=1, cols=6, vgap=2, hgap=2)
@@ -230,13 +230,13 @@ class PyColourChooser(wx.Panel):
         self.sentry.Bind(wx.EVT_KILL_FOCUS, self.onHSVKillFocus)
         self.ventry.Bind(wx.EVT_KILL_FOCUS, self.onHSVKillFocus)
 
-        rlabel = wx.StaticText(self, -1, _("R:"))
+        rlabel = wx.StaticText(self, wx.ID_ANY, _("R:"))
         self.rentry = wx.TextCtrl(self, -1)
         self.rentry.SetSize((40, -1))
-        glabel = wx.StaticText(self, -1, _("G:"))
+        glabel = wx.StaticText(self, wx.ID_ANY, _("G:"))
         self.gentry = wx.TextCtrl(self, -1)
         self.gentry.SetSize((40, -1))
-        blabel = wx.StaticText(self, -1, _("B:"))
+        blabel = wx.StaticText(self, wx.ID_ANY, _("B:"))
         self.bentry = wx.TextCtrl(self, -1)
         self.bentry.SetSize((40, -1))
         lgrid = wx.FlexGridSizer(rows=1, cols=6, vgap=2, hgap=2)
@@ -380,7 +380,7 @@ class PyColourChooser(wx.Panel):
         baseColour = self.colour_slider.GetBaseColour()
         h,s,v = self.colourToHSV(baseColour)
         v = self.getVFromSlider()
-        if s < 0.04:                       # Allow pure white
+        if s < 0.04:  # Allow pure white.
             s = 0
 
         return self.hsvToColour((h, s, v))
@@ -437,7 +437,7 @@ class PyColourChooser(wx.Panel):
         # Now with the slider updated, update all controls
         colour = self.getColourFromControls()
 
-        self.updateDisplayColour(colour)   # Update display
+        self.updateDisplayColour(colour)  # Update display.
         self.UpdateEntries(colour)
 
         # We don't move on the palette...
