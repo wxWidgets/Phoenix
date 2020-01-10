@@ -66,10 +66,10 @@ class BusyInfo(object):
             self.frame.Close()
             self.frame = None
 
-
     # Magic methods for using this class as a Context Manager
     def __enter__(self):
         return self
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.Close()
         return False
@@ -79,7 +79,7 @@ class BusyInfo(object):
 
 class _InfoFrame(wx.Frame):
     def __init__(self, parent, msg, bgColour=None, fgColour=None):
-        wx.Frame.__init__(self, parent, style=wx.BORDER_SIMPLE|wx.FRAME_TOOL_WINDOW|wx.STAY_ON_TOP)
+        wx.Frame.__init__(self, parent, style=wx.BORDER_SIMPLE | wx.FRAME_TOOL_WINDOW | wx.STAY_ON_TOP)
 
         bgColour = bgColour if bgColour is not None else wx.Colour(253, 255, 225)
         fgColour = fgColour if fgColour is not None else wx.BLACK
