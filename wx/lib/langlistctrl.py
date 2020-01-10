@@ -457,20 +457,20 @@ if __name__ == '__main__':
 
     print(GetLanguageFlag(wx.LANGUAGE_AFRIKAANS))
 
-    f=wx.Frame(None, -1)
-    f.p=wx.Panel(f, -1)
-    s=wx.BoxSizer(wx.VERTICAL)
+    f = wx.Frame(None, wx.ID_ANY)
+    f.p = wx.Panel(f, wx.ID_ANY)
+    s = wx.BoxSizer(wx.VERTICAL)
     f.p.SetSizer(s)
     try:
-        f.lc=LanguageChoice(f.p, pos = (220, 10), size = (200, 25))
+        f.lc = LanguageChoice(f.p, pos=(220, 10), size=(200, 25))
         s.Add(f.lc, 0, wx.GROW)
     except:
         pass
-    f.llc=LanguageListCtrl(f.p, pos = (10, 10), size = (200, 200),
+    f.llc = LanguageListCtrl(f.p, pos=(10, 10), size=(200, 200),
           filter=LC_ONLY,
           only=(wx.LANGUAGE_AFRIKAANS, wx.LANGUAGE_ENGLISH,
-            wx.LANGUAGE_FRENCH, wx.LANGUAGE_GERMAN, wx.LANGUAGE_ITALIAN,
-            wx.LANGUAGE_PORTUGUESE_BRAZILIAN, wx.LANGUAGE_SPANISH),
+                wx.LANGUAGE_FRENCH, wx.LANGUAGE_GERMAN, wx.LANGUAGE_ITALIAN,
+                wx.LANGUAGE_PORTUGUESE_BRAZILIAN, wx.LANGUAGE_SPANISH),
           select=wx.LANGUAGE_ENGLISH)
 ##            filter=LC_ALL)
     s.Add(f.llc, 1, wx.GROW)
