@@ -926,11 +926,11 @@ class ModernDockArt(AuiDefaultDockArt):
     """
     ModernDockArt is a custom `AuiDockArt` class, that implements a look similar to Firefox and other recents applications.
 
-    Is uses the `winxptheme <http://sourceforge.net/projects/pywin32/>`_ module and
+    Is uses the `winxptheme <https://sourceforge.net/projects/pywin32/>`_ module and
     XP themes whenever possible, so it should look good even if the user has a custom theme.
 
     :note: This dock art is Windows only and will only work if you have installed
-     Mark Hammond's `pywin32` module (http://sourceforge.net/projects/pywin32/).
+     Mark Hammond's `pywin32` module (https://sourceforge.net/projects/pywin32/).
     """
 
     def __init__(self, win):
