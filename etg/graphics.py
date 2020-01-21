@@ -165,7 +165,7 @@ def run():
     m = c.find('StrokeLines').findOverload('points').ignore()
     c.addCppMethod('void', 'StrokeLines', '(PyObject* points)',
         pyArgsString="(point2Ds)",
-        doc="Stroke lines conencting all the points.",
+        doc="Stroke lines connecting all the points.",
         body="""\
         size_t count;
         wxPoint2D* ptsArray = wxPoint2D_array_helper(points, &count);
