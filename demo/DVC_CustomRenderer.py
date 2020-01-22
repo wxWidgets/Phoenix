@@ -201,9 +201,10 @@ def runTest(frame, nb, log):
 
 
 overview = """<html><body>
-<h2><center>DemoName</center></h2>
+<h2><center>DataViewCustomRenderer</center></h2>
 
-Say something nice here
+This sample shows how to implement a renderer for drawing the cells in a
+DataViewControl in a custom manner.
 
 </body></html>
 """
