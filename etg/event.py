@@ -354,6 +354,8 @@ def run():
     c.abstract = True
     c.find('Clone').factory = True
 
+    c.find('GetEventUserData').ignore()
+
     c.addProperty('EventObject GetEventObject SetEventObject')
     c.addProperty('EventType GetEventType SetEventType')
     c.addProperty('Id GetId SetId')
