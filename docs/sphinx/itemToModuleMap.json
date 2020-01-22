@@ -1446,6 +1446,7 @@
 "GridDirection":"wx.grid.",
 "GridEditorCreatedEvent":"wx.grid.",
 "GridEvent":"wx.grid.",
+"GridFitMode":"wx.grid.",
 "GridHeaderLabelsRenderer":"wx.grid.",
 "GridNameStr":"wx.grid.",
 "GridRangeSelectEvent":"wx.grid.",
