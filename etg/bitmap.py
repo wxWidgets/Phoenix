@@ -89,7 +89,9 @@ def run():
 
     c.find('SetMask.mask').transfer = True
 
-    c.addCppMethod('void', 'SetMaskColour', '(const wxColour& colour)', """\
+    c.addCppMethod('void', 'SetMaskColour', '(const wxColour& colour)',
+        doc="Create a mask for this bitmap based on the pixels with the given colour.",
+        body="""\
         wxMask* mask = new wxMask(*self, *colour);
         self->SetMask(mask);
         """)
