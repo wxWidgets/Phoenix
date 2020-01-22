@@ -1,7 +1,9 @@
 # Python packages needed for building and testing wxPython Phoenix
 -r install.txt
 appdirs
-setuptools
+setuptools < 45 ; python_version < '3.0'
+setuptools ; python_version >= '3.0'
+
 wheel
 twine
 requests
