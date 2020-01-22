@@ -83,7 +83,7 @@ class RunDemoApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         # its own top-level window
         if win:
             # so set the frame to a good size for showing stuff
-            frame.SetSize((640, 480))
+            frame.SetSize((800, 600))
             win.SetFocus()
             self.window = win
             ns['win'] = win
