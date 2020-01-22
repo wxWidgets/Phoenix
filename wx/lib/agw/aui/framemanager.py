@@ -4648,7 +4648,7 @@ class AuiManager(wx.EvtHandler):
     def CanUseModernDockArt(self):
         """
         Returns whether :class:`dockart` can be used (Windows XP / Vista / 7 only,
-        requires Mark Hammonds's `pywin32 <http://sourceforge.net/projects/pywin32/>`_ package).
+        requires Mark Hammonds's `pywin32 <https://sourceforge.net/projects/pywin32/>`_ package).
         """
 
         if not _winxptheme:
