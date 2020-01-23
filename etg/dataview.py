@@ -109,7 +109,7 @@ def run():
     # Change the GetValue method to return the value instead of passing it
     # through a parameter for modification.
     c.find('GetValue.variant').out = True
-
+    c.find('GetValue').cppSignature = 'void (wxVariant& variant, const wxDataViewItem& item, unsigned int col)'
 
     # The DataViewItemObjectMapper class helps map from data items to Python
     # objects, and is used as a base class of PyDataViewModel as a
@@ -195,6 +195,7 @@ def run():
     # Change the GetValueByRow method to return the value instead of passing
     # it through a parameter for modification.
     c.find('GetValueByRow.variant').out = True
+    c.find('GetValueByRow').cppSignature = 'void (wxVariant& variant, unsigned int row, unsigned int col)'
 
     # declare implementations for base class virtuals
     c.addItem(etgtools.WigCode("""\
@@ -539,6 +540,8 @@ def run():
     c.find('PrependItem.values').type = 'const wxVariantVector&'
     c.find('InsertItem.values').type = 'const wxVariantVector&'
     c.find('GetValueByRow.value').out = True
+    c.find('GetValueByRow').cppSignature = 'void (wxVariant& value, unsigned int row, unsigned int col)'
+
     c.addAutoProperties()
 
 
