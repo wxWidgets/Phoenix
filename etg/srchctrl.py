@@ -42,21 +42,21 @@ def run():
 
     c.addCppMethod('void', 'SetSearchBitmap', '(const wxBitmap* bmp)',
             """\
-            #ifdef __WXMAC__
+            #if wxUSE_NATIVE_SEARCH_CONTROL
             #else
                 self->SetSearchBitmap(*bmp);
             #endif
             """)
     c.addCppMethod('void', 'SetSearchMenuBitmap', '(const wxBitmap* bmp)',
             """\
-            #ifdef __WXMAC__
+            #if wxUSE_NATIVE_SEARCH_CONTROL
             #else
                 self->SetSearchMenuBitmap(*bmp);
             #endif
             """)
     c.addCppMethod('void', 'SetCancelBitmap', '(const wxBitmap* bmp)',
             """\
-            #ifdef __WXMAC__
+            #if wxUSE_NATIVE_SEARCH_CONTROL
             #else
                 self->SetCancelBitmap(*bmp);
             #endif
@@ -84,25 +84,6 @@ def run():
     mod = textentry.parseAndTweakModule()
     klass = mod.find('wxTextEntry')
     searchCtrl.items.extend(klass.items)
-
-    # Do the same with wxTextCtrl, but also remove things like the
-    # Constructors and Create methods first.
-    import textctrl
-    mod = textctrl.parseAndTweakModule()
-    klass = mod.find('wxTextCtrl')
-    # get just the methods that are not ctors, dtor or Create
-    items = [item for item in klass.items if isinstance(item, etgtools.MethodDef) and
-                                             not item.isCtor and
-                                             not item.isDtor and
-                                             item.name != 'Create']
-    searchCtrl.items.extend(items)
-
-
-    searchCtrl.find('LoadFile').ignore()
-    searchCtrl.find('SaveFile').ignore()
-    searchCtrl.find('MacCheckSpelling').ignore()
-    searchCtrl.find('ShowNativeCaret').ignore()
-    searchCtrl.find('HideNativeCaret').ignore()
 
 
     # Add some properties that autoProperties would not see because they are

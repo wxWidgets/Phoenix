@@ -36,7 +36,7 @@ check the source for this sample to see how to implement them.
             item.SetFont(wx.Font(wx.FontInfo(10).Bold()))
             menu1.Append(item)
         else:
-            # But we'lkl just do it the normal way for this sample
+            # But we'll just do it the normal way for this sample
             menu1.Append(103, "&Earth", "You may select Earth too")
         menu1.AppendSeparator()
         menu1.Append(104, "&Close", "Close this frame")

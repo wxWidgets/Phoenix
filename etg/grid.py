@@ -39,6 +39,7 @@ ITEMS  = [ 'wxGridCellCoords',
            'wxGridCellFloatEditor',
            'wxGridCellNumberEditor',
 
+           'wxGridFitMode',
            'wxGridCellAttr',
 
            'wxGridCornerHeaderRenderer',

@@ -201,6 +201,11 @@ def run():
     c.find('GetCurrentPoint').findOverload('wxDouble *x, wxDouble *y').ignore()
     c.mustHaveApp()
 
+    c.find('GetNativePath').setCppCode("""\
+        if (self->IsNull())
+            return (void*)0;
+        return self->GetNativePath();
+        """)
 
     #---------------------------------------------
     c = module.find('wxGraphicsRenderer')
@@ -283,6 +288,12 @@ def run():
     c.find('TransformPoint.x').inOut = True
     c.find('TransformPoint.y').inOut = True
 
+    c.find('GetNativeMatrix').setCppCode("""\
+        if (self->IsNull())
+            return (void*)0;
+        return self->GetNativeMatrix();
+        """)
+
 
     #---------------------------------------------
     c = module.find('wxGraphicsGradientStops')
@@ -291,6 +302,16 @@ def run():
                    pyArgsString='(n)',
                    body="return new wxGraphicsGradientStop(self->Item(n));",
                    factory=True)
+
+
+
+    #---------------------------------------------
+    c = module.find('wxGraphicsBitmap')
+    c.find('GetNativeBitmap').setCppCode("""\
+        if (self->IsNull())
+            return (void*)0;
+        return self->GetNativeBitmap();
+        """)
 
 
     #---------------------------------------------
