@@ -102,7 +102,7 @@ class MyCanvasBase(glcanvas.GLCanvas):
 
 
     def DoSetViewport(self):
-        size = self.size = self.GetClientSize()
+        size = self.size = self.GetClientSize() * self.GetContentScaleFactor()
         self.SetCurrent(self.context)
         glViewport(0, 0, size.width, size.height)
 
