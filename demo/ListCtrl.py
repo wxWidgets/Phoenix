@@ -122,7 +122,8 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         self.list.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
         sizer.Add(self.list, 1, wx.EXPAND)
-        self.list.EnableCheckBoxes(enable=True)
+        if wx.VERSION >= (4, 1):
+            self.list.EnableCheckBoxes(enable=True)
 
         self.PopulateList()
 
@@ -326,9 +327,10 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
             self.popupID4 = wx.NewIdRef()
             self.popupID5 = wx.NewIdRef()
             self.popupID6 = wx.NewIdRef()
-            self.popupID7 = wx.NewIdRef()
-            self.popupID8 = wx.NewIdRef()
-            self.popupID9 = wx.NewIdRef()
+            if wx.VERSION >= (4, 1):
+                self.popupID7 = wx.NewIdRef()
+                self.popupID8 = wx.NewIdRef()
+                self.popupID9 = wx.NewIdRef()
 
             self.Bind(wx.EVT_MENU, self.OnPopupOne, id=self.popupID1)
             self.Bind(wx.EVT_MENU, self.OnPopupTwo, id=self.popupID2)
@@ -336,9 +338,10 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
             self.Bind(wx.EVT_MENU, self.OnPopupFour, id=self.popupID4)
             self.Bind(wx.EVT_MENU, self.OnPopupFive, id=self.popupID5)
             self.Bind(wx.EVT_MENU, self.OnPopupSix, id=self.popupID6)
-            self.Bind(wx.EVT_MENU, self.OnCheckAllBoxes, id=self.popupID7)
-            self.Bind(wx.EVT_MENU, self.OnUnCheckAllBoxes, id=self.popupID8)
-            self.Bind(wx.EVT_MENU, self.OnGetItemsChecked, id=self.popupID9)
+            if wx.VERSION >= (4, 1):
+                self.Bind(wx.EVT_MENU, self.OnCheckAllBoxes, id=self.popupID7)
+                self.Bind(wx.EVT_MENU, self.OnUnCheckAllBoxes, id=self.popupID8)
+                self.Bind(wx.EVT_MENU, self.OnGetItemsChecked, id=self.popupID9)
 
         # make a menu
         menu = wx.Menu()
@@ -349,9 +352,10 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         menu.Append(self.popupID4, "DeleteAllItems")
         menu.Append(self.popupID5, "GetItem")
         menu.Append(self.popupID6, "Edit")
-        menu.Append(self.popupID7, "Check All Boxes")
-        menu.Append(self.popupID8, "UnCheck All Boxes")
-        menu.Append(self.popupID9, "Get Checked Items")
+        if wx.VERSION >= (4, 1):
+            menu.Append(self.popupID7, "Check All Boxes")
+            menu.Append(self.popupID8, "UnCheck All Boxes")
+            menu.Append(self.popupID9, "Get Checked Items")
 
         # Popup the menu.  If an item is selected then its handler
         # will be called before PopupMenu returns.
