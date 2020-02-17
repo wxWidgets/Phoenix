@@ -336,8 +336,6 @@ class pdfViewer(wx.ScrolledWindow):
                 self.font_scale_size = 1.0 / device_scale
 
         self.winwidth, self.winheight = self.GetClientSize()
-        if self.winheight < 100:
-            return
         self.Ypage = self.pageheight + self.nom_page_gap
         if self.zoomscale > 0.0:
             self.scale = self.zoomscale * device_scale
@@ -346,6 +344,8 @@ class pdfViewer(wx.ScrolledWindow):
                 self.scale = self.winwidth / self.pagewidth
             else:                           # fit page
                 self.scale = self.winheight / self.pageheight
+        if self.scale == 0.0: # this could happen if the window was not yet initialized
+            self.scale = 1.0
         self.Xpagepixels = int(round(self.pagewidth*self.scale))
         self.Ypagepixels = int(round(self.Ypage*self.scale))
 
