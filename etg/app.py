@@ -339,7 +339,7 @@ def run():
 
             Normally you would derive from this class and implement an ``OnInit``
             method that creates a frame and then calls ``self.SetTopWindow(frame)``,
-            however ``wx.App`` is also usable on it's own without derivation.
+            however ``wx.App`` is also usable on its own without derivation.
             """,
 
         items=[
