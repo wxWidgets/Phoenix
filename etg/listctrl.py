@@ -360,6 +360,8 @@ def run():
         EVT_LIST_COL_DRAGGING      = PyEventBinder(wxEVT_LIST_COL_DRAGGING     , 1)
         EVT_LIST_COL_END_DRAG      = PyEventBinder(wxEVT_LIST_COL_END_DRAG     , 1)
         EVT_LIST_ITEM_FOCUSED      = PyEventBinder(wxEVT_LIST_ITEM_FOCUSED     , 1)
+        EVT_LIST_ITEM_CHECKED      = PyEventBinder(wxEVT_LIST_ITEM_CHECKED     , 1)
+        EVT_LIST_ITEM_UNCHECKED    = PyEventBinder(wxEVT_LIST_ITEM_UNCHECKED   , 1)
 
         # deprecated wxEVT aliases
         wxEVT_COMMAND_LIST_BEGIN_DRAG         = wxEVT_LIST_BEGIN_DRAG
@@ -392,4 +394,3 @@ def run():
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()
-
