@@ -473,6 +473,7 @@ class IntCtrl(wx.TextCtrl):
             self.__allow_long = 0
         else:
             self.__allow_long = 1
+        self.__oldvalue = None
 
         if validator == wx.DefaultValidator:
             validator = IntValidator()
@@ -506,7 +507,7 @@ class IntCtrl(wx.TextCtrl):
         before passing the events on.
         """
         value = self.GetValue()
-        if value != self.__oldvalue:
+        if self.__oldvalue is None or value != self.__oldvalue:
             try:
                 self.GetEventHandler().ProcessEvent(
                     IntUpdatedEvent( self.GetId(), self.GetValue(), self ) )
