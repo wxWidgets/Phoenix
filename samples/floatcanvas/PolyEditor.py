@@ -153,7 +153,7 @@ class DrawFrame(wx.Frame):
         Range = (-10,10)
 
         # Create a couple of random Polygons
-        for i, color in enumerate(("LightBlue", "Green", "Purple","Yellow")):
+        for i, color in enumerate(("Light Blue", "Green", "Purple","Yellow")):
             points = RandomArray.uniform(Range[0],Range[1],(6,2))
             Poly = self.Canvas.AddPolygon(points,
                                      LineWidth = 2,
