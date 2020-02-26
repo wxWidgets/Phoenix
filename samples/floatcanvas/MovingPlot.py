@@ -220,7 +220,6 @@ class DemoApp(wx.App):
     """
 
     def OnInit(self):
-        wx.InitAllImageHandlers()
         frame = DrawFrame(None, wx.ID_ANY,
                           title = "Plotting Test",
                           size = (700,400) )

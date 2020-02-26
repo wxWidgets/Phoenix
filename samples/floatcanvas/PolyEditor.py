@@ -210,7 +210,6 @@ class PolyEditor(wx.App):
     """
 
     def OnInit(self):
-        wx.InitAllImageHandlers()
         frame = DrawFrame(None,
                           -1,
                           "FloatCanvas Demo App",
@@ -224,7 +223,7 @@ class PolyEditor(wx.App):
         frame.Setup()
         return True
 
-PolyEditor(0).MainLoop()# put in True if you want output to go to it's own window.
+PolyEditor().MainLoop()
 
 
 
