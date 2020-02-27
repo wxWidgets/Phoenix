@@ -219,7 +219,7 @@ class DrawFrame(wx.Frame):
 
         self.MovingRects = []
         x += dx
-        color = "LightBlue"
+        color = "Light Blue"
         R = Canvas.AddRectangle((x,y), (w/2, h/2),
                                 LineWidth = 2,
                                 FillColor = color)
