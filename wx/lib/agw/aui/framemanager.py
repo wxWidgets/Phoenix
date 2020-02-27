@@ -98,10 +98,11 @@ __date__ = "31 March 2009"
 
 import wx
 # just for isinstance
+from time import time
 try:
-    from time import time, process_time as clock
-except ImportError:
-    from time import time, clock
+    from time import perf_counter
+except ImportError:  # clock is removed in py3.8
+    from time import clock as perf_counter
 import warnings
 
 import six
@@ -4755,7 +4756,7 @@ class AuiManager(wx.EvtHandler):
         # if the pane's name identifier is blank, create a random string
         if pinfo.name == "" or already_exists:
             pinfo.name = ("%s%08x%08x%08x") % (pinfo.window.GetName(), int(time()),
-                                               int(clock()), len(self._panes))
+                                               int(perf_counter()), len(self._panes))
 
         # set initial proportion (if not already set)
         if pinfo.dock_proportion == 0:
