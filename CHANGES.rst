@@ -85,6 +85,9 @@ New and improved in this release:
 
 * Fixed issues in PlotCanvas around displaying and using scrollbars. (#1428)
 
+* Added wx.msw.CHMHelpController, and also a wx.HelpController factory function
+  that creates an instance of the best Help Controller for the platform. (#1536)
+
 
 
 
