@@ -59,11 +59,11 @@ def run():
         body="""\
             try:
                 if 'wxMSW' in wx.PlatformInfo:
-                    import wx.msw.wxCHMHelpController as ControllerClass
+                    from .msw import CHMHelpController as ControllerClass
                 else:
-                    import wx.html.HtmlHelpController as ControllerClass
+                    from .html import HtmlHelpController as ControllerClass
             except ImportError:
-                ControllerClass = wx.ExtHelpController
+                from .adv import ExtHelpController as ControllerClass
 
             return ControllerClass(parentWindow)
             """)
