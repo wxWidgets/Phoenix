@@ -31,6 +31,7 @@ ITEMS = []
 
 INCLUDES = [
             'axbase',
+            'helpchm',
             ]
 
 # Separate the list into those that are generated from ETG scripts and the

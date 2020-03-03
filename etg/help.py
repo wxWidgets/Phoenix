@@ -44,24 +44,29 @@ def run():
     # NOTE: Since wxHelpController is an alias for wxHtmlHelpController on
     # Mac and GTK, and since we don't want to force the wx.core extension
     # module to link to the wxHTML library, then we won't provide a wrapper
-    # for the wxHelpController 'class'. Later on when we've got all the help
-    # controller classes that we'll want then we can add a wxHelpController
-    # or factory of our own in Python code.
+    # for the wxHelpController 'class' here.
+    #
+    # Instead we'll add a Python factory function that accomplishes the same
+    # thing. Basically it just provides a help controller instance that is the
+    # best for the platform.
 
+    module.addPyFunction('HelpController', '(parentWindow=None)',
+        doc="""\
+            Rather than being an alias for some class, the Python version of
+            ``HelpController`` is a factory function that creates and returns an
+            instance of the best Help Controller for the platform.
+            """,
+        body="""\
+            try:
+                if 'wxMSW' in wx.PlatformInfo:
+                    from .msw import CHMHelpController as ControllerClass
+                else:
+                    from .html import HtmlHelpController as ControllerClass
+            except ImportError:
+                from .adv import ExtHelpController as ControllerClass
 
-    #c = module.find('wxHelpController')
-    #c.mustHaveApp()
-    #c.addPrivateCopyCtor()
-    ## Add pure virtuals with implemenations here
-    #c.addItem(etgtools.WigCode("""\
-    #virtual bool DisplayBlock(long blockNo);
-    #virtual bool DisplayContents();
-    #virtual bool DisplaySection(int sectionNo);
-    #virtual bool KeywordSearch(const wxString& keyWord,
-    #                           wxHelpSearchMode mode = wxHELP_SEARCH_ALL);
-    #virtual bool LoadFile(const wxString& file = wxEmptyString);
-    #virtual bool Quit();
-    #"""))
+            return ControllerClass(parentWindow)
+            """)
 
 
 
