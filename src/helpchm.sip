@@ -10,6 +10,11 @@
 //--------------------------------------------------------------------------
 
 
+// NOTE: This class is defined here instead of an etg file because it is not
+// documented in the wxWidgets interface files. However since it implements the
+// same API as all the other help controller classes then I think it's an okay
+// workaround for now.
+
 
 class wxCHMHelpController : public wxHelpControllerBase
 {
@@ -38,5 +43,4 @@ public:
     static bool ShowContextHelpPopup(const wxString& text,
                                      const wxPoint& pos,
                                      wxWindow *window);
-
 };
