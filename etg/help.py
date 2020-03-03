@@ -54,7 +54,7 @@ def run():
         doc="""\
             Rather than being an alias for some class, the Python version of
             ``HelpController`` is a factory function that creates and returns an
-            instance of the best Help Controller is returned to the caller.
+            instance of the best Help Controller for the platform.
             """,
         body="""\
             try:
