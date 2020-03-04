@@ -384,6 +384,14 @@ def run():
 
 
     #---------------------------------------
+    # wxPaintEvent
+    c = module.find('wxPaintEvent')
+    # Although the default ctor is listed as public in the interface, it is
+    # magically made private for the users of fthe library as it can only be
+    # created within wxWidgets.
+    c.find('wxPaintEvent').protection = 'private'
+
+    #---------------------------------------
     # wxKeyEvent
     c = module.find('wxKeyEvent')
 
@@ -600,7 +608,6 @@ def run():
     #---------------------------------------
     # wxIconizeEvent
     c = module.find('wxIconizeEvent')
-
     # deprecated and removed
     c.find('Iconized').ignore()
 

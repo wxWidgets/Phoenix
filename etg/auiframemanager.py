@@ -22,7 +22,6 @@ ITEMS  = [ 'wxAuiManager',
            'wxAuiManagerEvent',
            'wxAuiDockInfo',
            'wxAuiDockUIPart',
-           'wxAuiPaneButton',
            'wxAuiFloatingFrame'
            ]
 
@@ -67,9 +66,6 @@ def run():
 
     module.addItem(tools.wxArrayWrapperTemplate(
             'wxAuiDockUIPartArray', 'wxAuiDockUIPart', module))
-
-    module.addItem(tools.wxArrayWrapperTemplate(
-            'wxAuiPaneButtonArray', 'wxAuiPaneButton', module))
 
     module.addItem(tools.wxArrayWrapperTemplate(
             'wxAuiPaneInfoPtrArray', 'wxAuiPaneInfo', module, itemIsPtr=True))

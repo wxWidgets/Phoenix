@@ -293,6 +293,13 @@ def run():
     c.find('SetEditor.editor').transfer = True  # these are probably redundant now...
     c.find('SetRenderer.renderer').transfer = True
 
+    #-----------------------------------------------------------------
+    module.find('wxGridCellRendererPtr').piIgnored = True
+    module.find('wxGridCellEditorPtr').piIgnored = True
+    module.find('wxGridCellAttrPtr').piIgnored = True
+
+    module.addHeaderCode('#define sipName_ptr "ptr"')
+    module.addHeaderCode('#define sipName_tocopy "tocopy"')
 
     #-----------------------------------------------------------------
     # The instanceCode attribute is code that is used to make a default
