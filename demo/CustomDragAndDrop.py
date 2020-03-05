@@ -76,7 +76,7 @@ class DoodlePad(wx.Window):
 
         # create our own data format and use it in a
         # custom data object
-        ldata = wx.CustomDataObject("DoodleLines")
+        ldata = wx.CustomDataObject("application.DoodleLines")
         ldata.SetData(linesdata)
 
         # Also create a Bitmap version of the drawing
@@ -119,7 +119,7 @@ class DoodleDropTarget(wx.DropTarget):
         self.dv = window
 
         # specify the type of data we will accept
-        self.data = wx.CustomDataObject("DoodleLines")
+        self.data = wx.CustomDataObject("application.DoodleLines")
         self.SetDataObject(self.data)
 
 
@@ -199,8 +199,6 @@ class DoodleViewer(wx.Window):
 class CustomDnDPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
-
-        self.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
 
         # Make the controls
         text1 = wx.StaticText(self, -1,
