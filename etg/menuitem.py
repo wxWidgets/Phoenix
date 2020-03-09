@@ -47,7 +47,7 @@ def run():
 
 
     # These are MSW only. Make them be empty stubs for the other ports
-    c.find('GetBackgroundColour').type = 'wxColour*'
+    c.find('GetBackgroundColour').type = 'const wxColour*'
     c.find('GetBackgroundColour').setCppCode("""\
         #ifdef __WXMSW__
             return &self->GetBackgroundColour();
@@ -62,7 +62,7 @@ def run():
         #endif
         """)
 
-    c.find('GetFont').type = 'wxFont*'
+    c.find('GetFont').type = 'const wxFont*'
     c.find('GetFont').setCppCode("""\
         #ifdef __WXMSW__
             return &self->GetFont();
@@ -91,7 +91,7 @@ def run():
         #endif
         """)
 
-    c.find('GetTextColour').type = 'wxColour*'
+    c.find('GetTextColour').type = 'const wxColour*'
     c.find('GetTextColour').setCppCode("""\
         #ifdef __WXMSW__
             return &self->GetTextColour();
