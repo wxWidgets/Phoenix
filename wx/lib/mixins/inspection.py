@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     21-Nov-2006
-# Copyright:   (c) 2006-2018 by Total Control Software
+# Copyright:   (c) 2006-2020 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags: phoenix-port, documented, unittest

@@ -5,7 +5,7 @@
 #
 # Created:     08-Sept-2011
 # Copyright:   (c) 2013 by Wide Open Technologies
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

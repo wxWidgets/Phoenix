@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-July-2016
-# Copyright:   (c) 2016-2018 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags:        phoenix-port, py3-port

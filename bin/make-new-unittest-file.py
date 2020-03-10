@@ -4,7 +4,7 @@
 # Author:      Robin Dunn
 #
 # Created:     12-July-2012
-# Copyright:   (c) 2013-2018 by Robin Dunn
+# Copyright:   (c) 2013-2020 by Robin Dunn
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

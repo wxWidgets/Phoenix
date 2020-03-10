@@ -4,8 +4,8 @@
 //
 // Author:      Robin Dunn
 //
-// Created:     24-Feb-2018
-// Copyright:   (c) 2017-2018 by Total Control Software
+// Created:     24-Feb-2017
+// Copyright:   (c) 2017-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 

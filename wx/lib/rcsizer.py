@@ -5,7 +5,7 @@
 # Author:      Robin Dunn, adapted from code by Niki Spahiev
 #
 # Created:     26-Feb-2002
-# Copyright:   (c) 2002-2018 by Total Control Software
+# Copyright:   (c) 2002-2020 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 # 12/10/2003 - Jeff Grimmett (grimmtooth@softhome.net)

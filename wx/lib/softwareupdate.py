@@ -7,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     1-Aug-2011
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags:        py3-port??

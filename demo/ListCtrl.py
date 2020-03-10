@@ -7,7 +7,7 @@
 # Author:       Robin Dunn & Gary Dumer
 #
 # Created:
-# Copyright:    (c) 1998-2018 by Total Control Software
+# Copyright:    (c) 1998-2020 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
 

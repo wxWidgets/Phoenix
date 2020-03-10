@@ -4,7 +4,7 @@
 # Author:      Kevin Ollivier
 #
 # Created:     24-Sept-2011
-# Copyright:   (c) 2015-2018 by Kevin Ollivier, Robin Dunn
+# Copyright:   (c) 2015-2020 by Kevin Ollivier, Robin Dunn
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

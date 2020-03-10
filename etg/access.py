@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     08-Oct-2018
-# Copyright:   (c) 2018 by Total Control Software
+# Copyright:   (c) 2018-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

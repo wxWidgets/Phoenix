@@ -6,7 +6,7 @@
 # Author:       Robin Dunn
 #
 # Created:      A long time ago, in a galaxy far, far away...
-# Copyright:    (c) 1999-2018 by Total Control Software
+# Copyright:    (c) 1999-2020 by Total Control Software
 # Licence:      wxWindows license
 # Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
