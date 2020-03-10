@@ -11,7 +11,7 @@
 #
 #              Editable blocks by Roman Rolinsky
 #
-# Copyright:   (c) 2004-2018 by Total Control Software, 2000 Vaclav Slavik
+# Copyright:   (c) 2004-2020 by Total Control Software, 2000 Vaclav Slavik
 # Licence:     wxWindows license
 # Tags:        phoenix-port
 #----------------------------------------------------------------------

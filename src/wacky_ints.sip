@@ -8,7 +8,7 @@
 // Author:      Robin Dunn
 //
 // Created:     4-March-2016
-// Copyright:   (c) 2016-2018 by Total Control Software
+// Copyright:   (c) 2016-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 

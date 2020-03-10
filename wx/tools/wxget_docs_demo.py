@@ -7,7 +7,7 @@
 # Author:      Steve Barnes
 #
 # Created:     06-Aug-2017
-# Copyright:   (c) 2017-2018 by Steve Barnes
+# Copyright:   (c) 2017-2020 by Steve Barnes
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
 #
