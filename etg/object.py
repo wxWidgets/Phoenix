@@ -102,6 +102,11 @@ def run():
     dtor = c.find('~wxObjectDataPtr')
     dtor.isDtor = True
 
+    # more name hacks/fixes
+    c.nodeBases = ({'wxObjectDataPtr': ('wxObjectDataPtr', [])},
+                   ['wxObjectDataPtr'])
+
+    # ignore the smart pointer methods, for now
     c.find('operator->').ignore()
     c.find('operator*').ignore()
     c.find('operator unspecified_bool_type').ignore()
