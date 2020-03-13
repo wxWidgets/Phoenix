@@ -69,12 +69,33 @@ if sys.platform == "win32":
 else:
     _greekEncoding = str(wx.FONTENCODING_ISO8859_7)
 
-_families = {"fixed" : wx.FONTFAMILY_TELETYPE, "default" : wx.FONTFAMILY_DEFAULT,
-             "decorative" : wx.FONTFAMILY_DECORATIVE, "roman" : wx.FONTFAMILY_ROMAN,
-             "script" : wx.FONTFAMILY_SCRIPT, "swiss" : wx.FONTFAMILY_SWISS,
-             "modern" : wx.FONTFAMILY_MODERN}
-_styles = {"normal" : wx.FONTSTYLE_NORMAL, "slant" : wx.FONTSTYLE_SLANT, "italic" : wx.FONTSTYLE_ITALIC}
-_weights = {"normal" : wx.FONTWEIGHT_NORMAL, "light" : wx.FONTWEIGHT_LIGHT, "bold" : wx.FONTWEIGHT_BOLD}
+_families = { "fixed"      : wx.FONTFAMILY_TELETYPE,
+              "default"    : wx.FONTFAMILY_DEFAULT,
+              "decorative" : wx.FONTFAMILY_DECORATIVE,
+              "roman"      : wx.FONTFAMILY_ROMAN,
+              "script"     : wx.FONTFAMILY_SCRIPT,
+              "swiss"      : wx.FONTFAMILY_SWISS,
+              "modern"     : wx.FONTFAMILY_MODERN,
+              "teletype"   : wx.FONTFAMILY_TELETYPE,
+              "unknown"    : wx.FONTFAMILY_UNKNOWN }
+
+_styles = { "normal" : wx.FONTSTYLE_NORMAL,
+            "slant"  : wx.FONTSTYLE_SLANT,
+            "italic" : wx.FONTSTYLE_ITALIC }
+
+_weights = {"normal"      : wx.FONTWEIGHT_NORMAL,
+            "light"       : wx.FONTWEIGHT_LIGHT,
+            "bold"        : wx.FONTWEIGHT_BOLD,
+            "invalid"     : wx.FONTWEIGHT_INVALID,
+            "thin"        : wx.FONTWEIGHT_THIN,
+            "extra-light" : wx.FONTWEIGHT_EXTRALIGHT,
+            "medium"      : wx.FONTWEIGHT_MEDIUM,
+            "semi-bold"   : wx.FONTWEIGHT_SEMIBOLD,
+            "extra-bold"  : wx.FONTWEIGHT_EXTRABOLD,
+            "heavy"       : wx.FONTWEIGHT_HEAVY,
+            "extra-heavy" : wx.FONTWEIGHT_EXTRAHEAVY,
+            }
+
 
 # The next three classes: Renderer, SizeRenderer and DCRenderer are
 # what you will need to override to extend the XML language. All of

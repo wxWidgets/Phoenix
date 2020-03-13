@@ -25,6 +25,13 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 # Beginning Of SPEEDMETER Demo wxPython Code
 #----------------------------------------------------------------------
 
+def _getAndScaleIcon(filename, width, height):
+    img = wx.Image(filename, wx.BITMAP_TYPE_ICO)
+    img.Rescale(width, height)
+    icon = wx.Icon(img.ConvertToBitmap())
+    return icon
+
+
 class SpeedMeterDemo(wx.Panel):
 
     def __init__(self, parent, log):
@@ -183,9 +190,8 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow3.SetHandColour(wx.Colour(255, 255, 0))
 
         # Define The Icon We Want
-        icon = wx.Icon(os.path.normpath(os.path.join(bitmapDir, "smfuel.ico")), wx.BITMAP_TYPE_ICO)
-        icon.SetWidth(24)
-        icon.SetHeight(24)
+        icon = _getAndScaleIcon(
+            os.path.normpath(os.path.join(bitmapDir, "smfuel.ico")), 24, 24)
 
         # Draw The Icon In The Center Of SpeedMeter
         self.SpeedWindow3.SetMiddleIcon(icon)
@@ -245,9 +251,8 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow4.SetHandStyle("Arrow")
 
         # Define The Icon We Want
-        icon = wx.Icon(os.path.normpath(os.path.join(bitmapDir, "smtemp.ico")), wx.BITMAP_TYPE_ICO)
-        icon.SetWidth(16)
-        icon.SetHeight(16)
+        icon = _getAndScaleIcon(
+            os.path.normpath(os.path.join(bitmapDir, "smtemp.ico")), 16, 16)
 
         # Draw The Icon In The Center Of SpeedMeter
         self.SpeedWindow4.SetMiddleIcon(icon)
@@ -355,9 +360,8 @@ class SpeedMeterDemo(wx.Panel):
         # Set The Second Gradient Colour, Which Is The Colour Near The Center Of The SpeedMeter
         self.SpeedWindow6.SetSecondGradientColour(wx.WHITE)
 
-        icon = wx.Icon(os.path.normpath(os.path.join(bitmapDir, "smpi.ico")), wx.BITMAP_TYPE_ICO)
-        icon.SetHeight(12)
-        icon.SetWidth(12)
+        icon = _getAndScaleIcon(
+            os.path.normpath(os.path.join(bitmapDir, "smpi.ico")), 12, 12)
         self.SpeedWindow6.SetMiddleIcon(icon)
 
         self.SpeedWindow6.SetSpeedValue(pi/3)
