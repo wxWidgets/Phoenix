@@ -476,6 +476,7 @@ class SpeedMeter(BufferedWindow):
         self._agwStyle = agwStyle
         self._bufferedstyle = bufferedstyle
         self._mousestyle = mousestyle
+        self._middleicon = None
 
         if self._agwStyle & SM_DRAW_SECTORS and self._agwStyle & SM_DRAW_GRADIENT:
             errstr = "\nERROR: Incompatible Options: SM_DRAW_SECTORS Can Not Be Used In "
@@ -1040,7 +1041,7 @@ class SpeedMeter(BufferedWindow):
 
         # Here We Draw The Icon In The Middle, Near The Start Of The Arrow (If Present)
         # This Is Like The "Fuel" Icon In The Cars
-        if self._agwStyle & SM_DRAW_MIDDLE_ICON:
+        if self._agwStyle & SM_DRAW_MIDDLE_ICON and self.GetMiddleIcon():
 
             middleicon = self.GetMiddleIcon()
             middlewidth, middleheight = self.GetMiddleIconDimens()
