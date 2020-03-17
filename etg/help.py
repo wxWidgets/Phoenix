@@ -34,7 +34,6 @@ def run():
 
     c = module.find('wxHelpControllerBase')
     assert isinstance(c, etgtools.ClassDef)
-    c.abstract = True
 
     c.find('GetFrameParameters.size').out = True
     c.find('GetFrameParameters.pos').out = True
