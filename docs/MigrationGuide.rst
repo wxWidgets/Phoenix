@@ -76,10 +76,6 @@ wxPython I'll add some aliases that will issue a ``DeprecationWarning`` for
 the first release or two after we switch over to the Phoenix version of the
 code, and then remove them in a later release.
 
-For a (relatively comprehensive) list of classes, functions and methods which
-need modification while porting your code from Classic to Phoenix, please see
-the :ref:`Classic vs. Phoenix <classic vs phoenix>` document.
-
 
 FindWindow Methods
 ------------------
@@ -273,9 +269,7 @@ longer there. They will have to be used by importing a wx submodule. Most of
 them will be in the ``wx.adv`` module. One nice advantage of doing this is that
 if your application is not using any of these lesser used classes then you
 will not have to bundle the new modules (nor the associated wx DLLs) with
-your application when you use py2exe or other executable builder. See
-the :ref:`Classic vs. Phoenix <classic vs phoenix>` document for details.
-
+your application when you use py2exe or other executable builder. 
 
 
 wx.ListCtrl
@@ -678,5 +672,4 @@ And they now look like this::
    :maxdepth: 2
    :hidden:
 
-   classic_vs_phoenix
 
