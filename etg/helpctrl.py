@@ -51,6 +51,7 @@ def run():
         virtual bool DisplaySection(const wxString& section);
         virtual bool DisplayBlock(long blockNo);
         virtual bool DisplayTextPopup(const wxString& text, const wxPoint& pos);
+        virtual bool DisplayContextPopup(int contextId);
         virtual bool Quit();
         virtual void OnQuit();
 

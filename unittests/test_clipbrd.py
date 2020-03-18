@@ -6,6 +6,11 @@ import wx
 
 class clipbrd_Tests(wtc.WidgetTestCase):
 
+    def test_clipbrd0(self):
+        wx.wxEVT_CLIPBOARD_CHANGED
+        wx.EVT_CLIPBOARD_CHANGED
+
+
     def test_clipbrd1(self):
         # copy
         data1 = wx.TextDataObject('This is some data.')

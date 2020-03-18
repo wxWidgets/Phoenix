@@ -217,6 +217,8 @@ EVT_TWO_FINGER_TAP = wx.PyEventBinder( wxEVT_TWO_FINGER_TAP )
 EVT_LONG_PRESS = wx.PyEventBinder( wxEVT_LONG_PRESS )
 EVT_PRESS_AND_TAP = wx.PyEventBinder( wxEVT_PRESS_AND_TAP )
 
+EVT_CLIPBOARD_CHANGED = PyEventBinder(wxEVT_CLIPBOARD_CHANGED, 1)
+
 
 # deprecated wxEVT aliases
 wxEVT_COMMAND_BUTTON_CLICKED         = wxEVT_BUTTON

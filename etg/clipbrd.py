@@ -77,6 +77,11 @@ def run():
         TheClipboard = _wxPyDelayedInitWrapper(Clipboard.Get)
         """)
 
+    # Add the missing event type for the clipboard event
+    module.addItem(etgtools.WigCode(
+        "wxEventType wxEVT_CLIPBOARD_CHANGED /PyName=wxEVT_CLIPBOARD_CHANGED/;"))
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
