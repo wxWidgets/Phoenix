@@ -1302,7 +1302,7 @@ def guessTypeFloat(v):
 def guessTypeStr(v):
     if hasattr(v, 'value') and '"' in v.value:
         return True
-    for t in ['wxString', 'wxChar', 'char*', 'char *']:
+    for t in ['wxString', 'wxChar', 'char*', 'char *', 'wchar_t*', 'wchar_t *']:
         if t in v.type:
             return True
     return False

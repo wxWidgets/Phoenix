@@ -6492,6 +6492,7 @@
 "TheMimeTypesManager":"wx.",
 "ThePenList":"wx.",
 "TimePickerCtrl":"wx.adv.",
+"TimePickerCtrlNameStr":"wx.adv.",
 "TimeSpan":"wx.",
 "TimeZone":"wx.DateTime.",
 "Timer":"wx.",

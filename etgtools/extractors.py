@@ -1596,10 +1596,13 @@ class ModuleDef(BaseDef):
         return pc
 
 
-    def addGlobalStr(self, name, before=None):
+    def addGlobalStr(self, name, before=None, wide=False):
         if self.findItem(name):
             self.findItem(name).ignore()
-        gv = GlobalVarDef(type='const char*', name=name)
+        if wide:
+            gv = GlobalVarDef(type='const wchar_t*', name=name)
+        else:
+            gv = GlobalVarDef(type='const char*', name=name)
         if before is None:
             self.addItem(gv)
         elif isinstance(before, int):
