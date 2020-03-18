@@ -36,6 +36,7 @@ def run():
     c = module.find('wxTimePickerCtrl')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
+    module.addGlobalStr('wxTimePickerCtrlNameStr', c, wide=True)
 
 
     # ignore the return value and set the parameters to be outputs
