@@ -45,10 +45,7 @@ else:
     from urllib import pathname2url
 
 import wx
-try:
-    import wxget
-except ImportError:
-    from . import wxget
+from wx.tools import wxget
 
 print(sys.version_info, sys.version, sys.argv)
 APP = None
