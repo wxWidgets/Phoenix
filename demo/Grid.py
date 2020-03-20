@@ -23,9 +23,8 @@ class ButtonPanel(wx.Panel):
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add((20, 20))
-        keys = sorted(buttonDefs.keys())
 
-        for k in keys:
+        for k in sorted(buttonDefs):
             text = buttonDefs[k][1]
             btn = wx.Button(self, k, text)
             box.Add(btn, 0, wx.ALIGN_CENTER|wx.ALL, 10)

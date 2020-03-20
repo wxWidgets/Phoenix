@@ -425,8 +425,7 @@ if __name__ == "__main__":
             self.history={"c:\\temp":1, "c:\\tmp":1, "r:\\temp":1,"z:\\temp":1}
 
         def historyCallBack(self):
-            keys=self.history.keys()
-            keys.sort()
+            keys=sorted(self.history)
             return keys
 
         def OnFileNameChangedHistory (self, event):

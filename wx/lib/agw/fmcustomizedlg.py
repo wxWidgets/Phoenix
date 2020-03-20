@@ -82,7 +82,7 @@ class OrderedDict(UserDict):
 
     def update(self, dict):
         UserDict.update(self, dict)
-        for key in list(dict.keys()):
+        for key in dict:
             if key not in self._keys: self._keys.append(key)
 
     def values(self):
@@ -271,7 +271,7 @@ class FMCustomizeDlg(wx.Dialog):
 
         # Add all hidden menus to the menu bar
 
-        for key in list(self._hiddenMenus.keys()):
+        for key in self._hiddenMenus:
             choices.append(key)
 
         if self.created:

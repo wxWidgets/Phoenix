@@ -24,11 +24,10 @@ from images import catalog
 
 def GetValidImages():
 
-    keys = catalog.keys()
     valid_images = []
     counter = 0
 
-    for key in keys:
+    for key in catalog:
         bmp = catalog[key].GetBitmap()
         if bmp.GetWidth() == 16 and bmp.GetHeight() == 16:
             valid_images.append(bmp)

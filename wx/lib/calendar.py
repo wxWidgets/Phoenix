@@ -731,7 +731,7 @@ class CalDraw:
         :param `DC`: the :class:`wx.DC` to use
 
         """
-        for key in self.cal_sel.keys():
+        for key in self.cal_sel:
             sel_color = self.cal_sel[key][1]
             brush = wx.Brush(MakeColor(sel_color), wx.BRUSHSTYLE_SOLID)
             DC.SetBrush(brush)
@@ -1004,7 +1004,7 @@ class Calendar(wx.Control):
             self.GetParent().GetEventHandler().ProcessEvent(ne)
             event.Skip()
             return
-        
+
         self.shiftkey = event.ShiftDown()
         self.ctrlkey = event.ControlDown()
         self.click = 'KEY'
@@ -1086,14 +1086,14 @@ class Calendar(wx.Control):
 
     def SetDate(self, day, month, year):
         """
-        Set a calendar date. 
+        Set a calendar date.
 
         :param int `day`: the day
         :param int `month`: the month
         :param int `year`: the year
         :raises: `ValueError` when setting an invalid month/year
         :returns: the new date set.
-        
+
         """
         datetime.date(year, month, 1) # let the possible ValueError propagate
         try:
@@ -1221,7 +1221,7 @@ class Calendar(wx.Control):
         :param `my`: the y positon
 
         """
-        for key in self.rg.keys():
+        for key in self.rg:
             val = self.rg[key]
             ms_rect = wx.Rect(mx, my, 1, 1)
             if wx.IntersectRect(ms_rect, val) is not None:
@@ -1509,7 +1509,7 @@ class CalenDlg(wx.Dialog):
         monthlist = GetMonthList()
 
         # select the month
-        self.m_date = wx.ComboBox(self, pos=(20, 20), size=(90, -1), 
+        self.m_date = wx.ComboBox(self, pos=(20, 20), size=(90, -1),
                                   style=wx.CB_DROPDOWN|wx.TE_READONLY)
         for n, month_name in enumerate(monthlist):
             self.m_date.Append(month_name, n+1)

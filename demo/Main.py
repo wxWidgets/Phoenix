@@ -171,8 +171,7 @@ def RemoveHTMLTags(data):
 
 def FormatDocs(keyword, values, num):
 
-    names = list(values.keys())
-    names.sort()
+    names = sorted(values)
 
     headers = (num == 2 and [_eventHeaders] or [_styleHeaders])[0]
     table = (num == 2 and [_eventTable] or [_styleTable])[0]
@@ -1014,10 +1013,7 @@ def HuntExternalDemos():
 
     # Sort and reverse the external demos keys so that they
     # come back in alphabetical order
-    keys = list(externalDemos.keys())
-    keys.sort()
-    keys.reverse()
-
+    keys = sorted(externalDemos, reverse=True)
     # Loop over all external packages
     for extern in keys:
         package = externalDemos[extern]
@@ -1733,8 +1729,7 @@ class wxPythonDemo(wx.Frame):
         item.Check(self.allowAuiFloating)
         self.Bind(wx.EVT_MENU, self.OnAllowAuiFloating, item)
 
-        auiPerspectives = list(self.auiConfigurations.keys())
-        auiPerspectives.sort()
+        auiPerspectives = sorted(self.auiConfigurations)
         perspectivesMenu = wx.Menu()
         item = wx.MenuItem(perspectivesMenu, -1, DEFAULT_PERSPECTIVE, "Load startup default perspective", wx.ITEM_RADIO)
         self.Bind(wx.EVT_MENU, self.OnAUIPerspectives, item)

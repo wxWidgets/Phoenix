@@ -77,7 +77,7 @@ class DrawFrame(wx.Frame):
         wx.lib.colourdb.updateColourDB()
         self.colors = wx.lib.colourdb.getColourList()
 
-        self.LineStyles = FloatCanvas.DrawObject.LineStyleList.keys()
+        self.LineStyles = list(FloatCanvas.DrawObject.LineStyleList)
 
         return None
 

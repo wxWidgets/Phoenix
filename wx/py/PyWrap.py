@@ -36,7 +36,7 @@ def main(modulename=None):
     # Find the App class.
     App = None
     d = module.__dict__
-    for item in d.keys():
+    for item in d:
         try:
             if issubclass(d[item], wx.App):
                 App = d[item]

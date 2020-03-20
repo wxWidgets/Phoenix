@@ -144,7 +144,7 @@ class Logger:
         optional debugging output that can be displayed at an
         arbitrary level of indentation.
         """
-        if not self._dbg and not 'enable' in kwargs.keys():
+        if not self._dbg and not 'enable' in kwargs:
             return
 
         if self._dbg and len(args) and not self._suspend:

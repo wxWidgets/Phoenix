@@ -94,11 +94,11 @@ class SimpleNameValueDialog(wx.Dialog):
         self.clearValues()
         if values:
             for name, value in values.items():
-                if name in self._fields.keys():
+                if name in self._fields:
                     setattr(self, name, value)
 
     def clearValues(self):
-        for name in self._fields.keys():
+        for name in self._fields:
             setattr(self, name, "")
 
 

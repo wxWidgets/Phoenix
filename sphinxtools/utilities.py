@@ -92,7 +92,7 @@ class ODict(UserDict):
 
     def update(self, dict):
         UserDict.update(self, dict)
-        for key in list(dict.keys()):
+        for key in dict:
             if key not in self._keys: self._keys.append(key)
 
     def values(self):

@@ -106,9 +106,7 @@ class DoodleWindow(wx.Window):
     def MakeMenu(self):
         """Make a menu that can be popped up later"""
         menu = wx.Menu()
-        keys = list(self.menuColours.keys())
-        keys.sort()
-        for k in keys:
+        for k in sorted(self.menuColours):
             text = self.menuColours[k]
             menu.Append(k, text, kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU_RANGE, self.OnMenuSetColour, id=100, id2=200)

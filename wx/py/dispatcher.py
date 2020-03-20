@@ -169,8 +169,8 @@ def _call(receiver, **kwds):
     if not (fc.co_flags & 8):
         # fc does not have a **kwds type parameter, therefore
         # remove unacceptable arguments.
-        keys = list(kwds.keys())
-        for arg in keys:
+
+        for arg in list(kwds):
             if arg not in acceptable:
                 del kwds[arg]
     return receiver(**kwds)
@@ -226,10 +226,10 @@ class BoundMethodWeakref:
 
 def _removeReceiver(receiver):
     """Remove receiver from connections."""
-    list_keys = []
-    for senderkey in connections.keys():
-        for signal in connections[senderkey].keys():
-            list_keys.append((senderkey, signal))
+    list_keys = [(senderkey, signal)
+                 for senderkey in connections
+                 for signal in connections[senderkey]]
+
     for senderkey, signal in list_keys:
         try:
             connections[senderkey][signal].remove(receiver)

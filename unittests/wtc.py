@@ -143,7 +143,7 @@ class PubsubTestCase(unittest.TestCase):
             pass
         del self.pub
 
-        if 'wx.lib.pubsub.pub' in sys.modules.keys():
+        if 'wx.lib.pubsub.pub' in sys.modules:
             del sys.modules['wx.lib.pubsub.pub']
 
         #skeys = sys.modules.keys()
