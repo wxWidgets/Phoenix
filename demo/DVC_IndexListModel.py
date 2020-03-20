@@ -80,9 +80,8 @@ class TestModel(dv.DataViewIndexListModel):
 
     def DeleteRows(self, rows):
         # make a copy since we'll be sorting(mutating) the list
-        rows = list(rows)
         # use reverse order so the indexes don't change as we remove items
-        rows.sort(reverse=True)
+        rows = sorted(rows, reverse=True)
 
         for row in rows:
             # remove it from our data structure

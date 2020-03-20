@@ -79,8 +79,7 @@ class IdManagerTest(wtc.WidgetTestCase):
     def test_WindowIDRef02(self):
         d = {wx.NewIdRef(): 'one',
              wx.NewIdRef(): 'two'}
-        keys = sorted(d.keys())
-        for k in keys:
+        for k in sorted(d):
             val = d[k]
 
 

@@ -231,8 +231,7 @@ def main(wxDir, args):
 
     parser = optparse.OptionParser(usage="usage: %prog [options]", version="%prog 1.0")
 
-    keys = option_dict.keys()
-    for opt in sorted(keys):
+    for opt in sorted(option_dict):
         default = option_dict[opt][0]
         action = "store"
         if type(default) == bool:

@@ -539,6 +539,6 @@ ctrl_buttons = {}               # Button widgets for command (NE) panel
 app = wx.App(False)
 MyFrame()
 if verbose:
-    print_('spin_panels', spin_panels.keys())
-    print_('ctrl_buttons', ctrl_buttons.keys())
+    print_('spin_panels', list(spin_panels))
+    print_('ctrl_buttons', list(ctrl_buttons))
 app.MainLoop()

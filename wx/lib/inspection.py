@@ -762,7 +762,7 @@ class FlagsFormatter(object):
 
     def __str__(self):
         st = []
-        for k in self.d.keys():
+        for k in self.d:
             if self.val & k:
                 st.append(self.d[k])
         if st:

@@ -180,7 +180,7 @@ class TestPanel(wx.Panel):
         sizer.SetSizeHints(self)
         sizer.Fit(self)
 
-        for t in self.throbbers.keys():
+        for t in self.throbbers:
             self.throbbers[t]['throbber'].Start()
 
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
@@ -190,11 +190,11 @@ class TestPanel(wx.Panel):
         event.Skip()
 
     def OnStartAnimation(self, event):
-        for t in self.throbbers.keys():
+        for t in self.throbbers:
             self.throbbers[t]['throbber'].Start()
 
     def OnStopAnimation(self, event):
-        for t in self.throbbers.keys():
+        for t in self.throbbers:
             self.throbbers[t]['throbber'].Rest()
 
     def OnNext(self, event):
@@ -222,7 +222,7 @@ class TestPanel(wx.Panel):
         self.customThrobber.Stop()
 
     def ShutdownDemo(self):
-        for t in self.throbbers.keys():
+        for t in self.throbbers:
             self.throbbers[t]['throbber'].Rest()
 
 

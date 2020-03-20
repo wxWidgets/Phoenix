@@ -1612,8 +1612,8 @@ class Shortcut(object):
         split = accelerator.split('+')
         modifiers, keyCode = split[0:-1], split[-1]
 
-        inv_Accel = dict(list(zip(list(ACCELERATORS.values()), list(ACCELERATORS.keys()))))
-        inv_KeyMap = dict(list(zip(list(KEYMAP.values()), list(KEYMAP.keys()))))
+        inv_Accel = dict(zip(ACCELERATORS.values(), ACCELERATORS.keys()))
+        inv_KeyMap = dict(zip(KEYMAP.values(), KEYMAP.keys()))
 
         base = wx.ACCEL_NORMAL
 

@@ -207,8 +207,6 @@ def buildEnumsAndMethods(sphinxDir):
            'the text file "unreferenced_classes.inc" together with the ReST file names where they\n' \
            'appear.\n\n'
 
-    keys = list(unreferenced_classes.keys())
-    keys.sort()
 
     fid = textfile_open(os.path.join(SPHINXROOT, 'unreferenced_classes.inc'), 'wt')
     fid.write('\n')
@@ -216,13 +214,13 @@ def buildEnumsAndMethods(sphinxDir):
     fid.write('%-50s %-50s\n'%('Reference', 'File Name(s)'))
     fid.write('='*50 + ' ' + '='*50 + '\n')
 
-    for key in keys:
+    for key in sorted(unreferenced_classes):
         fid.write('%-50s %-50s\n'%(key, ', '.join(unreferenced_classes[key])))
 
     fid.write('='*50 + ' ' + '='*50 + '\n')
     fid.close()
 
-    print((warn%(len(keys))))
+    print((warn%(len(unreferenced_classes))))
 
 
 # ----------------------------------------------------------------------- #
@@ -372,9 +370,7 @@ def reformatFunctions(file):
     else:
         label = '.'.join(local_file.split('.')[0:2])
 
-    names = list(functions.keys())
-    names = [name.lower() for name in names]
-    names.sort()
+    names = sorted([name.lower() for name in functions])
 
     text = templates.TEMPLATE_FUNCTION_SUMMARY % (label, label)
 
@@ -387,8 +383,7 @@ def reformatFunctions(file):
     text += '  |  '.join([':ref:`%s <%s %s>`'%(letter, label, letter) for letter in letters])
     text += '\n\n\n'
 
-    names = list(functions.keys())
-    names = sorted(names, key=str.lower)
+    names = sorted(functions, key=str.lower)
     imm = ItemModuleMap()
 
     for letter in letters:
@@ -443,13 +438,10 @@ def makeModuleIndex(sphinxDir, file):
     enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
 
     imm = ItemModuleMap()
-    names = list(classes.keys())
-    names.sort(key=lambda n: imm.get_fullname(n))
+    names = sorted(classes, key=lambda n: imm.get_fullname(n))
 
     # Workaround to sort names in a case-insensitive way
-    lower_to_name = {}
-    for name in names:
-        lower_to_name[name.lower()] = name
+    lower_to_name = {name.lower(): name for name in names}
 
     text = ''
     if module:
@@ -461,8 +453,7 @@ def makeModuleIndex(sphinxDir, file):
     text += '%-80s **Short Description**\n' % '**Class**'
     text += 80*'=' + ' ' + 80*'=' + '\n'
 
-    lower_names = list(lower_to_name.keys())
-    lower_names.sort()
+    lower_names = sorted(lower_to_name)
 
     for lower in lower_names:
         cls = lower_to_name[lower]
@@ -488,8 +479,7 @@ def makeModuleIndex(sphinxDir, file):
     functionsFile = os.path.join(sphinxDir, module + '.functions.pkl')
     if os.path.exists(functionsFile):
         pf = PickleFile(functionsFile)
-        functions = list(pf.read().keys())
-        functions.sort(key=lambda n: imm.get_fullname(n))
+        functions = sorted(pf.read(), key=lambda n: imm.get_fullname(n))
 
         pf = PickleFile(os.path.join(SPHINXROOT, 'function_summary.pkl'))
         function_summaries = pf.read()
@@ -555,8 +545,7 @@ def genGallery():
         possible = simple.lower()
         html_files[possible + '.png'] = simple + '.html'
 
-    keys = list(html_files.keys())
-    keys.sort()
+    keys = sorted(html_files)
 
     text = ''
 

@@ -216,8 +216,7 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
 
         # Create a list of choices from the dictionary above.
-        choices = cursors.keys()
-        choices = sorted(choices)
+        choices = sorted(cursors)
 
         # Create the controls.
         self.cb = wx.ComboBox(self, -1, "wx.CURSOR_DEFAULT", choices=choices,

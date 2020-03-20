@@ -202,8 +202,7 @@ _colourSchemes = {"Beige": (wx.Colour(255,255,255), wx.Colour(242,242,223), wx.C
 def GetStyleKeys():
     """ Returns the predefined styles keywords. """
 
-    schemes = list(_colourSchemes.keys())
-    schemes.sort()
+    schemes = sorted(_colourSchemes)
     return schemes
 
 

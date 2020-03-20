@@ -549,7 +549,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##        dbg('kwargs:', kwargs)
         for key, param_value in kwargs.items():
             key = key.replace('Color', 'Colour')
-            if key not in NumCtrl.valid_ctrl_params.keys():
+            if key not in NumCtrl.valid_ctrl_params:
                 raise AttributeError('invalid keyword argument "%s"' % key)
             else:
                 init_args[key] = param_value
@@ -739,9 +739,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         # for all other parameters, assign keyword args as appropriate:
         for key, param_value in kwargs.items():
             key = key.replace('Color', 'Colour')
-            if key not in NumCtrl.valid_ctrl_params.keys():
+            if key not in NumCtrl.valid_ctrl_params:
                 raise AttributeError('invalid keyword argument "%s"' % key)
-            elif key not in MaskedEditMixin.valid_ctrl_params.keys():
+            elif key not in MaskedEditMixin.valid_ctrl_params:
                 setattr(self, '_' + key, param_value)
             elif key in ('mask', 'autoformat'): # disallow explicit setting of mask
                 raise AttributeError('invalid keyword argument "%s"' % key)
@@ -809,7 +809,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 maskededit_kwargs['stopFieldChangeIfInvalid'] = False
 
 ##        dbg('maskededit_kwargs:', maskededit_kwargs)
-        if maskededit_kwargs.keys():
+        if maskededit_kwargs:
             self.SetCtrlParameters(**maskededit_kwargs)
 
         # Go ensure all the format codes necessary are present:

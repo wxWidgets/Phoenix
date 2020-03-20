@@ -1514,11 +1514,11 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                 Object.SetFillColor(colors[random.randint(0,len(colors)-1)])
                 Object.SetLineColor(colors[random.randint(0,len(colors)-1)])
                 Object.SetLineWidth(random.randint(1,7))
-                Object.SetLineStyle(list(FloatCanvas.DrawObject.LineStyleList.keys())[random.randint(0,5)])
+                Object.SetLineStyle(list(FloatCanvas.DrawObject.LineStyleList)[random.randint(0,5)])
             for Object in self.ColorObjectsLine:
                 Object.SetLineColor(colors[random.randint(0,len(colors)-1)])
                 Object.SetLineWidth(random.randint(1,7))
-                Object.SetLineStyle(list(FloatCanvas.DrawObject.LineStyleList.keys())[random.randint(0,5)])
+                Object.SetLineStyle(list(FloatCanvas.DrawObject.LineStyleList)[random.randint(0,5)])
             for Object in self.ColorObjectsColor:
                 Object.SetColor(colors[random.randint(0,len(colors)-1)])
             for Object in self.ColorObjectsText:

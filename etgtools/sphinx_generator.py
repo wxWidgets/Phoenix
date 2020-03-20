@@ -382,7 +382,7 @@ class Root(Node):
         text = Node.Join(self, with_tail)
 
         # Health check
-        existing_sections = list(self.sections.keys())
+        existing_sections = list(self.sections)
 
         for section_name, dummy in SECTIONS:
             if section_name not in self.sections:

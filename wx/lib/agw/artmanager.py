@@ -2076,7 +2076,7 @@ class ArtManager(wx.EvtHandler):
         :return: A list of strings representing the available colour schemes.
         """
 
-        return list(self._colourSchemeMap.keys())
+        return list(self._colourSchemeMap)
 
 
     def CreateGreyBitmap(self, bmp):

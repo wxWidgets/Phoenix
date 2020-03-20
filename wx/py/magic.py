@@ -47,7 +47,7 @@ def magicSingle(command):
             n,v = c[0],' '.join(c[1:])
             aliasDict[n]=v
             command = ''
-    elif command.split(' ')[0] in aliasDict.keys():
+    elif command.split(' ')[0] in aliasDict:
         c = command.split(' ')
         if len(c)<2:
             command = 'sx("'+aliasDict[c[0]]+'")'

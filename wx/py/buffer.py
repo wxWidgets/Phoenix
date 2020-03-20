@@ -23,7 +23,7 @@ class Buffer:
         self.name = ''
         self.editors = {}
         self.editor = None
-        self.modules = sys.modules.keys()
+        self.modules = list(sys.modules)
         self.syspath = sys.path[:]
         while True:
             try:
@@ -131,6 +131,6 @@ class Buffer:
                 return True
         finally:
             sys.path = syspath
-            for m in sys.modules.keys():
+            for m in sys.modules:
                 if m not in self.modules:
                     del sys.modules[m]

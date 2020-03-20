@@ -71,7 +71,7 @@ class DrawFrame(wx.Frame):
         tb = NC.ToolBar
 #        tb.AddSeparator()
 
-        for Group in self.Groups.keys():
+        for Group in self.Groups:
             Button = wx.Button(tb, wx.ID_ANY, "Hide/Show%s"%Group)
             tb.AddControl(Button)
             print(Group)
