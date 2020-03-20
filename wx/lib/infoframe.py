@@ -303,8 +303,15 @@ class PyInformationalMessagesFrame(object):
                         "new file...\n\n")
                 else:
                     tempfile.tempdir = self.dir
-                    filename = os.path.abspath(tempfile.mktemp ())
+                    filename = ''
+                    try:
+                        self.f = tempfile.NamedTemporaryFile(mode='w', delete=False)
+                        filename = os.path.abspath(self.f.name)
 
+                        self.frame.sb.SetStatusText("File '%s' opened..." % filename, 0)
+                    except EnvironmentError:
+                        self.frame.sb.SetStatusText("File creation failed "
+                                                    "(filename '%s')..." % filename, 0)
                     self.text.AppendText(
                         "Please close this window (or select the "
                         "'Dismiss' button below) when desired.  By "
@@ -314,16 +321,7 @@ class PyInformationalMessagesFrame(object):
                         "File' below, whereupon this button will be "
                         "replaced with one allowing you to select a "
                         "new file...\n\n" % filename)
-                    try:
-                        self.f = open(filename, 'w')
-                        self.frame.sb.SetStatusText("File '%s' opened..."
-                                                    % filename,
-                                                    0)
-                    except EnvironmentError:
-                        self.frame.sb.SetStatusText("File creation failed "
-                                                    "(filename '%s')..."
-                                                    % filename,
-                                                    0)
+
             self.text.AppendText(string)
 
             if move:
