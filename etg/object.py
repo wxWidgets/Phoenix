@@ -95,6 +95,7 @@ def run():
     c = module.find('wxObjectDataPtr< T >')
     c.name = 'wxObjectDataPtr'
     c.piIgnored = True
+    c.docsIgnored = True
 
     # fix up the ctor/dtor due to name change above
     ctor = c.find('wxObjectDataPtr')
