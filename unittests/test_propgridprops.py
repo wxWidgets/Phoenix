@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittests import wtc
 import wx.propgrid as pg
@@ -86,7 +87,7 @@ class propgridprops_Tests(wtc.WidgetTestCase):
         p2 = pg.FileProperty('label', 'name', value)
 
         fn = p2.GetFileName()
-        assert fn == value
+        assert fn.replace(os.path.sep, '/') == value
 
 
     def test_propgridprops13(self):
