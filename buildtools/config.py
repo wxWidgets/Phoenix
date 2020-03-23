@@ -400,10 +400,7 @@ class Configuration(object):
         """
         # if WX_CONFIG hasn't been set to an explicit value then construct one.
         if self.WX_CONFIG is None:
-            if 'WX_CONFIG' in os.environ:
-                self.WX_CONFIG = os.environ['WX_CONFIG']
-            else:
-                self.WX_CONFIG='wx-config'
+            self.WX_CONFIG = os.environ.get('WX_CONFIG', 'wx-config')
             port = self.WXPORT
             if port == "x11":
                 port = "x11univ"
