@@ -2412,7 +2412,7 @@ class wxPythonDemo(wx.Frame):
         about.Destroy()
 
     def OnHelpFind(self, event):
-        if self.finddlg != None:
+        if self.finddlg is not None:
             return
 
         self.nb.SetSelection(1)
@@ -2422,7 +2422,7 @@ class wxPythonDemo(wx.Frame):
 
 
     def OnUpdateFindItems(self, evt):
-        evt.Enable(self.finddlg == None)
+        evt.Enable(self.finddlg is None)
 
 
     def OnFind(self, event):

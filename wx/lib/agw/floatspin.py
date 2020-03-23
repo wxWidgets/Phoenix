@@ -842,11 +842,11 @@ class FloatSpin(wx.Control):
         :note: This method doesn't modify the current value.
         """
 
-        if (min_val != None):
+        if (min_val is not None):
             self._min = FixedPoint(str(min_val), 20)
         else:
             self._min = None
-        if (max_val != None):
+        if (max_val is not None):
             self._max = FixedPoint(str(max_val), 20)
         else:
             self._max = None
@@ -893,12 +893,12 @@ class FloatSpin(wx.Control):
         :return: A clamped copy of `var`.
         """
 
-        if (self._min != None):
+        if (self._min is not None):
             if (var < self._min):
                 var = self._min
                 return var
 
-        if (self._max != None):
+        if (self._max is not None):
             if (var > self._max):
                 var = self._max
 
@@ -1160,7 +1160,7 @@ class FloatSpin(wx.Control):
     def HasRange(self):
         """ Returns whether :class:`FloatSpin` range has been set or not. """
 
-        return (self._min != None) or (self._max != None)
+        return (self._min is not None) or (self._max is not None)
 
 
     def InRange(self, value):
@@ -1172,10 +1172,10 @@ class FloatSpin(wx.Control):
 
         if (not self.HasRange()):
             return True
-        if (self._min != None):
+        if (self._min is not None):
             if (value < self._min):
                 return False
-        if (self._max != None):
+        if (self._max is not None):
             if (value > self._max):
                 return False
         return True
@@ -1473,7 +1473,7 @@ class FixedPoint(object):
     __copy__ = __deepcopy__ = copy
 
     def __eq__(self, other):
-        if (other == None):
+        if other is None:
             return False
         xn, yn, p = _norm(self, other)
         return not _cmp(xn, yn)

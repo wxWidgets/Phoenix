@@ -1793,7 +1793,7 @@ class UltimateListItem(wx.Object):
     def HasAttributes(self):
         """ Returns ``True`` if the item has attributes associated with it. """
 
-        return self._attr != None
+        return self._attr is not None
 
 
     def GetTextColour(self):
@@ -2638,7 +2638,7 @@ class UltimateListItemData(object):
         :param `colour`: an instance of :class:`wx.Colour`.
         """
 
-        if colour == wx.NullColour or colour == None:
+        if colour == wx.NullColour or colour is None:
             if self._hasColour:
                 self._hasColour = False
                 del self._colour
@@ -5193,7 +5193,7 @@ class UltimateListHeaderWindow(wx.Control):
             # inside the column rect
             header_rect = wx.Rect(x-1, HEADER_OFFSET_Y-1, cw-1, ch)
 
-            if self._headerCustomRenderer != None:
+            if self._headerCustomRenderer is not None:
                self._headerCustomRenderer.DrawHeaderButton(dc, header_rect, flags)
 
                # The custom renderer will specify the color to draw the header text and buttons
@@ -5288,7 +5288,7 @@ class UltimateListHeaderWindow(wx.Control):
         # leave an unpainted area when columns are removed (and it looks better)
         if x < w:
             header_rect = wx.Rect(x, HEADER_OFFSET_Y, w - x, h)
-            if self._headerCustomRenderer != None:
+            if self._headerCustomRenderer is not None:
                 # Why does the custom renderer need this adjustment??
                 header_rect.x = header_rect.x - 1
                 header_rect.y = header_rect.y - 1
@@ -6467,7 +6467,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         resizeCol = self._resizeColumn
 
-        if self._resizeColMinWidth == None:
+        if self._resizeColMinWidth is None:
             self._resizeColMinWidth = self.GetColumnWidth(resizeCol)
 
         # We're showing the vertical scrollbar -> allow for scrollbar width

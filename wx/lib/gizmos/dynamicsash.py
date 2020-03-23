@@ -803,7 +803,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
 
             if ((self.m_dragging == _DSR_HORIZONTAL_TAB and py >= 10 and py <= 90)
                         or (self.m_dragging == _DSR_VERTICAL_TAB and px >= 10 and px <= 90)):
-                if self.m_child[0] == None:
+                if self.m_child[0] is None:
                     self.Split(px, py)
                 else:
                     # It would be nice if moving *this* sash didn't implicitly move
@@ -815,7 +815,7 @@ class _DynamicSashWindowImpl(wx.EvtHandler):
                         layout.width.PercentOf(self.m_container, wx.Width, px)
                     self.m_container.Layout()
             else:
-                if self.m_child[0] != None:
+                if self.m_child[0] is not None:
                     if ((self.m_dragging == _DSR_HORIZONTAL_TAB and py <= 10)
                             or (self.m_dragging == _DSR_VERTICAL_TAB and px <= 10)):
                         self.Unify(1)

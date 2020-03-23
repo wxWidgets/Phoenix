@@ -4858,10 +4858,10 @@ class AuiNotebook(wx.Panel):
             self._textCtrl.StopEditing()
 
         ctrl = event.GetEventObject()
-        assert ctrl != None
+        assert ctrl is not None
 
         wnd = ctrl.GetWindowFromIdx(event.GetSelection())
-        assert wnd != None
+        assert wnd is not None
 
         self.SetSelectionToWindow(wnd)
 

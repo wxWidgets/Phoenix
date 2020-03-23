@@ -290,7 +290,7 @@ class FileBrowseButtonWithHistory( FileBrowseButton ):
 
     def GetHistory( self ):
         """Return the current history list"""
-        if self.historyCallBack != None:
+        if self.historyCallBack is not None:
             return self.historyCallBack()
         elif self.history:
             return list( self.history )
@@ -300,7 +300,7 @@ class FileBrowseButtonWithHistory( FileBrowseButton ):
 
     def OnSetFocus(self, event):
         """When the history scroll is selected, update the history"""
-        if self.historyCallBack != None:
+        if self.historyCallBack is not None:
             self.SetHistory( self.historyCallBack(), control=self.textControl)
         event.Skip()
 

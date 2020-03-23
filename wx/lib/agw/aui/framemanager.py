@@ -604,7 +604,7 @@ class AuiPaneInfo(object):
         :note: A pane structure is valid if it has an associated window.
         """
 
-        return self.window != None
+        return self.window is not None
 
 
     def IsMaximized(self):

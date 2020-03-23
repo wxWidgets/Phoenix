@@ -990,7 +990,7 @@ class RibbonButtonBar(RibbonControl):
 
     def MakeLayouts(self):
 
-        if self._layouts_valid or self._art == None:
+        if self._layouts_valid or self._art is None:
             return
 
         # Clear existing layouts
@@ -1075,7 +1075,7 @@ class RibbonButtonBar(RibbonControl):
         if count >= first_btn or used_width >= available_width:
             return False, count
 
-        if last_button != None:
+        if last_button is not None:
             last_button = count
 
         layout = RibbonButtonBarLayout()
@@ -1158,17 +1158,17 @@ class RibbonButtonBar(RibbonControl):
 
                 break
 
-        if new_hovered == None and self.GetToolTip():
+        if new_hovered is None and self.GetToolTip():
             self.SetToolTip("")
 
-        if new_hovered != self._hovered_button or (self._hovered_button != None and \
+        if new_hovered != self._hovered_button or (self._hovered_button is not None and \
                                                    new_hovered_state != self._hovered_button.base.state):
 
-            if self._hovered_button != None:
+            if self._hovered_button is not None:
                 self._hovered_button.base.state &= ~RIBBON_BUTTONBAR_BUTTON_HOVER_MASK
 
             self._hovered_button = new_hovered
-            if self._hovered_button != None:
+            if self._hovered_button is not None:
                 self._hovered_button.base.state = new_hovered_state
                 self.SetToolTip(self._hovered_button.base.help_string)
 
@@ -1298,12 +1298,12 @@ class RibbonButtonBar(RibbonControl):
         """
 
         repaint = False
-        if self._hovered_button != None:
+        if self._hovered_button is not None:
             self._hovered_button.base.state &= ~RIBBON_BUTTONBAR_BUTTON_HOVER_MASK
             self._hovered_button = None
             repaint = True
 
-        if self._active_button != None and not self._lock_active_state:
+        if self._active_button is not None and not self._lock_active_state:
             self._active_button.base.state &= ~RIBBON_BUTTONBAR_BUTTON_ACTIVE_MASK
             repaint = True
 

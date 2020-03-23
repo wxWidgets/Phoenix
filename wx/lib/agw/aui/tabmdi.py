@@ -116,11 +116,11 @@ class AuiMDIParentFrame(wx.Frame):
 
         else:
 
-            if pChild.GetMenuBar() == None:
+            if pChild.GetMenuBar() is None:
                 return
 
             # Do we need to save the current bar?
-            if self._pMyMenuBar == None:
+            if self._pMyMenuBar is None:
                 self._pMyMenuBar = self.GetMenuBar()
 
             self.SetMenuBar(pChild.GetMenuBar())

@@ -53,7 +53,7 @@ __res = None
 def get_resources():
     \"\"\" This function provides access to the XML resources in this module.\"\"\"
     global __res
-    if __res == None:
+    if __res is None:
         __init_resources()
     return __res
 

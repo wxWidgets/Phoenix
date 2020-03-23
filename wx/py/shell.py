@@ -250,7 +250,7 @@ class Shell(editwindow.EditWindow):
         self.stderr = sys.stderr
 
         # Import a default interpreter class if one isn't provided.
-        if InterpClass == None:
+        if InterpClass is None:
             from .interpreter import Interpreter
         else:
             Interpreter = InterpClass

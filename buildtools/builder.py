@@ -224,7 +224,7 @@ class MSVCProjectBuilder(Builder):
             if os.environ.has_key(key):
                 self.programDir = os.path.join(os.environ[key], "..", "IDE")
 
-        if self.programDir == None:
+        if self.programDir is None:
             for version in ["9.0", "8", ".NET 2003"]:
                 msvcDir = "C:\\Program Files\\Microsoft Visual Studio %s\\Common7\\IDE" % version
                 if os.path.exists(msvcDir):

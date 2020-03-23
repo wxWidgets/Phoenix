@@ -980,7 +980,7 @@ class RibbonToolBar(RibbonControl):
         :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
-        if self._art == None:
+        if self._art is None:
             return False
 
         # Calculate the size of each group and the position/size of each tool
@@ -1099,7 +1099,7 @@ class RibbonToolBar(RibbonControl):
         :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
-        if self._art == None:
+        if self._art is None:
             return
 
         # Choose row count with largest possible area
@@ -1226,7 +1226,7 @@ class RibbonToolBar(RibbonControl):
 
         dc = wx.AutoBufferedPaintDC(self)
 
-        if self._art == None:
+        if self._art is None:
             return
 
         self._art.DrawToolBarBackground(dc, self, wx.Rect(0, 0, *self.GetSize()))

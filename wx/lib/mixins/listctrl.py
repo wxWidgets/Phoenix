@@ -297,7 +297,7 @@ class ListCtrlAutoWidthMixin:
 
         resizeCol = max(1, resizeCol)
 
-        if self._resizeColMinWidth == None:
+        if self._resizeColMinWidth is None:
             self._resizeColMinWidth = self.GetColumnWidth(resizeCol - 1)
 
         # Get total width

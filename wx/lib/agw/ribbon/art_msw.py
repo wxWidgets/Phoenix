@@ -138,11 +138,11 @@ class RibbonMSWArtProvider(object):
 
         """
 
-        if primary != None:
+        if primary is not None:
             primary = self._primary_scheme_colour
-        if secondary != None:
+        if secondary is not None:
             secondary = self._secondary_scheme_colour
-        if tertiary != None:
+        if tertiary is not None:
             tertiary = self._tertiary_scheme_colour
 
         return primary, secondary, tertiary
@@ -1755,7 +1755,7 @@ class RibbonMSWArtProvider(object):
         true_rect = wx.Rect(*rect)
         true_rect = self.RemovePanelPadding(true_rect)
 
-        if wnd.GetExpandedPanel() != None:
+        if wnd.GetExpandedPanel() is not None:
             client_rect = wx.Rect(*true_rect)
             client_rect.x += 1
             client_rect.width -= 2
@@ -1896,7 +1896,7 @@ class RibbonMSWArtProvider(object):
         if isinstance(wnd, PANEL.RibbonPanel):
             panel = wnd
             hovered = allow_hovered and panel.IsHovered()
-            if panel.GetExpandedDummy() != None:
+            if panel.GetExpandedDummy() is not None:
                 offset = panel.GetExpandedDummy().GetPosition()
                 parent = panel.GetExpandedDummy().GetParent()
 
@@ -1906,7 +1906,7 @@ class RibbonMSWArtProvider(object):
                 panel = parent
                 if isinstance(panel, PANEL.RibbonPanel):
                     hovered = allow_hovered and panel.IsHovered()
-                    if panel.GetExpandedDummy() != None:
+                    if panel.GetExpandedDummy() is not None:
                         parent = panel.GetExpandedDummy()
 
             page = parent
@@ -1918,7 +1918,7 @@ class RibbonMSWArtProvider(object):
             if parent is None:
                 break
 
-        if page != None:
+        if page is not None:
             self.DrawPartialPageBackground(dc, wnd, rect, page, offset, hovered)
             return
 
@@ -2369,7 +2369,7 @@ class RibbonMSWArtProvider(object):
         else:
             client_size.IncBy(6, 6)
 
-        if client_offset != None:
+        if client_offset is not None:
             if self._flags & RIBBON_BAR_FLOW_VERTICAL:
                 client_offset = wx.Point(2, 3)
             else:
@@ -2404,7 +2404,7 @@ class RibbonMSWArtProvider(object):
         else:
             size.DecBy(6, 6)
 
-        if client_offset != None:
+        if client_offset is not None:
             if self._flags & RIBBON_BAR_FLOW_VERTICAL:
                 client_offset = wx.Point(2, 3)
             else:
@@ -2673,10 +2673,10 @@ class RibbonMSWArtProvider(object):
 
         """
 
-        if desired_bitmap_size != None:
+        if desired_bitmap_size is not None:
             desired_bitmap_size = wx.Size(16, 16)
 
-        if expanded_panel_direction != None:
+        if expanded_panel_direction is not None:
             if self._flags & RIBBON_BAR_FLOW_VERTICAL:
                 expanded_panel_direction = wx.EAST
             else:

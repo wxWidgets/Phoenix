@@ -843,7 +843,7 @@ class GenBitmapButton(GenButton):
         bw,bh = bmp.GetWidth(), bmp.GetHeight()
         if not self.up:
             dx = dy = self.labelDelta
-        hasMask = bmp.GetMask() != None
+        hasMask = bmp.GetMask() is not None
         dc.DrawBitmap(bmp, (width-bw)/2+dx, (height-bh)/2+dy, hasMask)
 
 

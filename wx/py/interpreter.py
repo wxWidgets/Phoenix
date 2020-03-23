@@ -73,7 +73,7 @@ class Interpreter(InteractiveInterpreter):
 
         # If an ast code module is passed, pass it to runModule instead
         more=False
-        if astMod != None:
+        if astMod is not None:
             self.runModule(astMod)
             self.more=False
         else:

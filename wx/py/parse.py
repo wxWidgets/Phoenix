@@ -80,7 +80,7 @@ def testForContinuations(codeBlock,ignoreErrors=False):
         for r in result:
             j = r.group()
 
-            if stringMark == None:
+            if stringMark is None:
                 if j=='#': # If it is a legitimate comment, ignore everything after
                     commented=True
                     # get length up to last non-comment character

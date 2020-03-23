@@ -625,7 +625,7 @@ class SlicesShell(editwindow.EditWindow):
         self.stderr = sys.stderr
 
         # Import a default interpreter class if one isn't provided.
-        if InterpClass == None:
+        if InterpClass is None:
             from .interpreter import Interpreter
         else:
             Interpreter = InterpClass
@@ -2462,7 +2462,7 @@ class SlicesShell(editwindow.EditWindow):
         self.hasSyntaxError=False
         if useMultiCommand:
             result = self.BreakTextIntoCommands(command)
-            if result[0] == None:
+            if result[0] is None:
                 commands=[command]
                 self.hasSyntaxError=True
                 syntaxErrorLine=result[1]+1
@@ -3490,7 +3490,7 @@ class SlicesShell(editwindow.EditWindow):
 
         hasSyntaxError=False
         result = self.BreakTextIntoCommands(command)
-        if result[0] == None:
+        if result[0] is None:
             commands=[command]
             hasSyntaxError=True
         else:

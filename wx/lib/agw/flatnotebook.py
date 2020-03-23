@@ -2169,7 +2169,7 @@ class FNBRenderer(object):
             # Default style
             tabWidth += 2*shapePoints
 
-        hasImage = pc._ImageList != None and pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
+        hasImage = pc._ImageList is not None and pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
 
         # For VC71 style, we only add the icon size (16 pixels)
         if hasImage:
@@ -3657,7 +3657,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
             # Default style
             tabWidth += 2*shapePoints
 
-        hasImage = pc._ImageList != None and pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
+        hasImage = pc._ImageList is not None and pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
 
         # For VC71 style, we only add the icon size (16 pixels)
         if hasImage:
@@ -5631,7 +5631,7 @@ class PageContainer(wx.Panel):
             #! fix for tabfocus
             da_page = self._pParent.GetPage(page)
 
-            if da_page != None:
+            if da_page is not None:
                 da_page.SetFocus()
 
         if not self.IsTabVisible(page):

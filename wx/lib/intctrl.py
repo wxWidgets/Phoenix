@@ -718,7 +718,7 @@ class IntCtrl(wx.TextCtrl):
         if max is None: max = value
 
         # if bounds set, and value is None, return False
-        if value == None and (min is not None or max is not None):
+        if value is None and (min is not None or max is not None):
             return 0
         else:
             return min <= value <= max
