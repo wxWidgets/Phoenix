@@ -42,19 +42,16 @@ class TablePanel(wx.Panel):
 
     def ReadData(self):
         test_file = "./data/testtable.txt"
-        file = open(test_file,'r',1)
-        i = 0
 
-        data = []
-        while 1:
-            text = file.readline()
-            text = text.strip()
-            if not text:
-                break
+        with open(test_file,'r', 1) as file_:
+            data = []
+            for text in file_:
+                text = text.strip()
+                if not text:
+                    break
 
-            list_val = text.split('\t')
-            data.append(list_val)
-        file.close()
+                list_val = text.split('\t')
+                data.append(list_val)
 
         self.header = data[0]
         self.data = data[1:]

@@ -1416,9 +1416,8 @@ class Snippet(Node):
         if not os.path.exists(os.path.dirname(self.cpp_file)):
             os.makedirs(os.path.dirname(self.cpp_file))
 
-        fid = open(self.cpp_file, 'wt')
-        fid.write(self.snippet)
-        fid.close()
+        with open(self.cpp_file, 'wt') as fid:
+            fid.write(self.snippet)
 
         if not os.path.isfile(self.converted_py):
 
@@ -1443,10 +1442,8 @@ class Snippet(Node):
             for code in py_code.splitlines():
                 new_py_code += spacer + code + '\n'
 
-            fid = open(self.python_file, 'wt')
-            fid.write(new_py_code)
-            fid.close()
-
+            with open(self.python_file, 'wt') as fid:
+                fid.write(new_py_code)
         else:
 
             fid = open(self.converted_py, 'rt')

@@ -117,7 +117,9 @@ def convert(fileName, maskClr, outputDir, outputName, outType, outExt):
         else:
             newname = os.path.join(outputDir,
                                    os.path.basename(os.path.splitext(fileName)[0]) + outExt)
-        open(newname, "wb").write(open(fileName, "rb").read())
+        with open(newname, "wb") as f_out:
+            with open(fileName, "rb") as f_in:
+                f_out.write(f_in.read())
         return 1, "ok"
 
     else:
@@ -158,7 +160,8 @@ def img2py(image_file, python_file,
             return
 
         lines = []
-        data = b64encode(open(tfname, "rb").read())
+        with open(tfname, "rb") as fid:
+            data = b64encode(fid.read())
         while data:
             part = data[:72]
             data = data[72:]
@@ -182,27 +185,27 @@ def img2py(image_file, python_file,
 
         append_catalog = True
 
-        sourcePy = open(python_file, "r")
-        try:
-            for line in sourcePy:
+        with open(python_file, "r") as sourcePy:
+            try:
+                for line in sourcePy:
 
-                if line == "catalog = {}\n":
-                    append_catalog = False
-                else:
-                    lineMatcher = indexPattern.match(line)
-                    if lineMatcher:
-                        old_index.append(lineMatcher.groups()[0])
-        finally:
-            sourcePy.close()
+                    if line == "catalog = {}\n":
+                        append_catalog = False
+                    else:
+                        lineMatcher = indexPattern.match(line)
+                        if lineMatcher:
+                            old_index.append(lineMatcher.groups()[0])
+            finally:
+                pass
 
         if append_catalog:
-            out = open(python_file, "a")
-            try:
-                out.write("\n# ***************** Catalog starts here *******************")
-                out.write("\n\ncatalog = {}\n")
-                out.write("index = []\n\n")
-            finally:
-                out.close()
+            with open(python_file, "a") as out:
+                try:
+                    out.write("\n# ***************** Catalog starts here *******************")
+                    out.write("\n\ncatalog = {}\n")
+                    out.write("index = []\n\n")
+                finally:
+                    pass
 
     if python_file == '-':
         out = sys.stdout

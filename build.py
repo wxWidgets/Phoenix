@@ -576,7 +576,8 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
             # now check the MD5 if not in dev mode and it's set to None
             if not (devMode and md5 is None):
                 m = hashlib.md5()
-                m.update(open(cmd, 'rb').read())
+                with open(cmd, 'rb') as fid:
+                    m.update(fid.read())
                 if m.hexdigest() != md5:
                     _error_msg('MD5 mismatch, got "%s"\n       '
                                'expected          "%s"' % (m.hexdigest(), md5))
@@ -1019,9 +1020,8 @@ def cmd_docset_py(options, args):
     tarfilename = "dist/{}.tar.gz".format(rootname)
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
-    tarball = tarfile.open(name=tarfilename, mode="w:gz")
-    tarball.add(opj('dist', name+'.docset'), name+'.docset', filter=_setTarItemPerms)
-    tarball.close()
+    with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
+        tarball.add(opj('dist', name+'.docset'), name+'.docset', filter=_setTarItemPerms)
 
     if options.upload:
         uploadPackage(tarfilename, options)
@@ -1303,9 +1303,8 @@ def cmd_sip(options, args):
             if not os.path.exists(dest):
                 msg('%s is a new file, copying...' % os.path.basename(src))
                 srcTxt = processSrc(src, options.keep_hash_lines)
-                f = textfile_open(dest, 'wt')
-                f.write(srcTxt)
-                f.close()
+                with textfile_open(dest, 'wt') as f:
+                    f.write(srcTxt)
                 continue
 
             srcTxt = processSrc(src, options.keep_hash_lines)
@@ -1316,13 +1315,11 @@ def cmd_sip(options, args):
                 pass
             else:
                 msg('%s is changed, copying...' % os.path.basename(src))
-                f = textfile_open(dest, 'wt')
-                f.write(srcTxt)
-                f.close()
+                with textfile_open(dest, 'wt') as f:
+                    f.write(srcTxt)
 
         # Remove tmpdir and its contents
         shutil.rmtree(tmpdir)
-
 
 
 def cmd_touch(options, args):
@@ -2018,11 +2015,12 @@ def cmd_sdist(options, args):
         runcmd('git archive HEAD | tar -x -C %s' % dest, echoCmd=False)
 
         if os.path.exists('.gitmodules'):
-            for line in open('.gitmodules', 'rt').readlines():
-                line = line.strip()
-                if line.startswith('path = '):
-                    sub = line[7:]
-                    _archive_submodules(sub, opj(dest, sub))
+            with open('.gitmodules', 'rt') as fid:
+                for line in fid:
+                    line = line.strip()
+                    if line.startswith('path = '):
+                        sub = line[7:]
+                        _archive_submodules(sub, opj(dest, sub))
 
     _archive_submodules('.', os.path.abspath(PDEST))
 
@@ -2073,11 +2071,11 @@ def cmd_sdist(options, args):
     tarfilename = "dist/%s.tar.gz" % rootname
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
-    tarball = tarfile.open(name=tarfilename, mode="w:gz")
     pwd = pushDir(PDEST)
-    for name in glob.glob('*'):
-        tarball.add(name, os.path.join(rootname, name), filter=_setTarItemPerms)
-    tarball.close()
+    with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
+        for name in glob.glob('*'):
+            tarball.add(name, os.path.join(rootname, name), filter=_setTarItemPerms)
+
     msg('Cleaning up...')
     del pwd
     shutil.rmtree(PDEST)
@@ -2125,11 +2123,11 @@ def cmd_sdist_demo(options, args):
     tarfilename = "dist/%s.tar.gz" % rootname
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
-    tarball = tarfile.open(name=tarfilename, mode="w:gz")
     pwd = pushDir(PDEST)
-    for name in glob.glob('*'):
-        tarball.add(name, os.path.join(rootname, name), filter=_setTarItemPerms)
-    tarball.close()
+    with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
+        for name in glob.glob('*'):
+            tarball.add(name, os.path.join(rootname, name), filter=_setTarItemPerms)
+
     msg('Cleaning up...')
     del pwd
     shutil.rmtree(PDEST)
@@ -2168,23 +2166,23 @@ def cmd_bdist(options, args):
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
     msg("Archiving Phoenix binaries to %s..." % tarfilename)
-    tarball = tarfile.open(name=tarfilename, mode="w:gz")
-    tarball.add('wx', opj(rootname, 'wx'),
-                filter=lambda info: None if '.svn' in info.name \
-                                            or info.name.endswith('.pyc') \
-                                            or '__pycache__' in info.name else info)
-    tarball.add(eggInfoName, opj(rootname, eggInfoName))
+    with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
+        tarball.add('wx', opj(rootname, 'wx'),
+                    filter=lambda info: None if '.svn' in info.name \
+                                                or info.name.endswith('.pyc') \
+                                                or '__pycache__' in info.name else info)
+        tarball.add(eggInfoName, opj(rootname, eggInfoName))
 
-    if not isDarwin and not isWindows and not options.no_magic and not options.use_syswx:
-        # If the DLLs are not already in the wx package folder then go fetch
-        # them now.
-        msg("Archiving wxWidgets shared libraries...")
-        dlls = glob.glob(os.path.join(wxlibdir, "*%s" % dllext))
-        for dll in dlls:
-            tarball.add(dll, os.path.join(rootname, 'wx', os.path.basename(dll)))
+        if not isDarwin and not isWindows and not options.no_magic and not options.use_syswx:
+            # If the DLLs are not already in the wx package folder then go fetch
+            # them now.
+            msg("Archiving wxWidgets shared libraries...")
+            dlls = glob.glob(os.path.join(wxlibdir, "*%s" % dllext))
+            for dll in dlls:
+                tarball.add(dll, os.path.join(rootname, 'wx', os.path.basename(dll)))
 
-    tarball.add('packaging/README-bdist.txt', os.path.join(rootname, 'README.txt'))
-    tarball.close()
+        tarball.add('packaging/README-bdist.txt', os.path.join(rootname, 'README.txt'))
+
 
     if options.upload:
         uploadPackage(tarfilename, options)
@@ -2207,10 +2205,9 @@ def cmd_setrev(options, args):
 
     else:
         svnrev = getVcsRev()
-        f = open('REV.txt', 'w')
-        svnrev = '.dev'+svnrev
-        f.write(svnrev)
-        f.close()
+        with open('REV.txt', 'w') as f:
+            svnrev = '.dev'+svnrev
+            f.write(svnrev)
         msg('REV.txt set to "%s"' % svnrev)
 
     cfg = Config()

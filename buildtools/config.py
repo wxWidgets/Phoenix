@@ -349,10 +349,9 @@ class Configuration(object):
         # then the version number is built without a revision number. IOW, it
         # is a release build.  (In theory)
         if os.path.exists('REV.txt'):
-            f = open('REV.txt')
-            self.VER_FLAGS += f.read().strip()
+            with open('REV.txt') as f:
+                self.VER_FLAGS += f.read().strip()
             self.BUILD_TYPE = 'snapshot'
-            f.close()
         elif os.environ.get('WXPYTHON_RELEASE') == 'yes':
             self.BUILD_TYPE = 'release'
         else:
@@ -676,10 +675,11 @@ def _getSbfValue(etg, keyName):
     cfg = Config()
     sbf = opj(cfg.SIPOUT, etg.NAME + '.sbf')
     out = list()
-    for line in open(sbf):
-        key, value = line.split('=')
-        if key.strip() == keyName:
-            return sorted([opj(cfg.SIPOUT, v) for v in value.strip().split()])
+    with open(sbf) as fid:
+        for line in fid:
+            key, value = line.split('=')
+            if key.strip() == keyName:
+                return sorted([opj(cfg.SIPOUT, v) for v in value.strip().split()])
     return None
 
 def getEtgSipCppFiles(etg):
@@ -748,16 +748,14 @@ def writeIfChanged(filename, text):
     """
 
     if os.path.exists(filename):
-        f = textfile_open(filename, 'rt')
-        current = f.read()
-        f.close()
+        with textfile_open(filename, 'rt') as f:
+            current = f.read()
 
         if current == text:
             return
 
-    f = textfile_open(filename, 'wt')
-    f.write(text)
-    f.close()
+    with textfile_open(filename, 'wt') as f:
+        f.write(text)
 
 
 # TODO: we might be able to get rid of this when the install code is updated...

@@ -105,11 +105,10 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         def _checkAndWriteHeader(destFile, header, docstring):
             if not os.path.exists(destFile):
                 # create the file and write the header
-                f = textfile_open(destFile, 'wt')
-                f.write(header)
-                if docstring:
-                    f.write('\n"""\n%s"""\n' % docstring)
-                f.close()
+                with textfile_open(destFile, 'wt') as f:
+                    f.write(header)
+                    if docstring:
+                        f.write('\n"""\n%s"""\n' % docstring)
 
         if not SKIP_PI_FILE:
             _checkAndWriteHeader(destFile_pi, header_pi, module.docstring)

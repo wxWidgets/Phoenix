@@ -423,6 +423,7 @@ class InternetThread(Thread):
                 originalText = fid.read()
             else:
                 originalText = fid.read().decode("utf-8")
+
             text = RemoveHTMLTags(originalText).split("\n")
             data = FindWindowStyles(text, originalText, self.selectedClass)
 

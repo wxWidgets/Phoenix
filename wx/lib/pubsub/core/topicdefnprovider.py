@@ -277,9 +277,8 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
             import os, tempfile
             creationDir = os.getcwd()
             fileID, path = tempfile.mkstemp('.py', moduleNamePre, dir=creationDir)
-            stringFile = os.fdopen(fileID, 'w')
-            stringFile.write( dedent(source) )
-            stringFile.close()
+            with os.fdopen(fileID, 'w') as stringFile:
+                stringFile.write( dedent(source) )
             return path, [creationDir]
 
         self.__filename, searchPath = createTmpModule()
@@ -443,11 +442,11 @@ def exportTopicTreeSpec(moduleName = None, rootTopic=None, bak='bak', moduleDoc=
         filename = '%s.py' % moduleName
         if bak:
             _backupIfExists(filename, bak)
-        moduleFile = open(filename, 'w')
-        try:
-            TopicTreeSpecPrinter(rootTopic, fileObj=moduleFile, treeDoc=moduleDoc)
-        finally:
-            moduleFile.close()
+        with open(filename, 'w') as moduleFile:
+            try:
+                TopicTreeSpecPrinter(rootTopic, fileObj=moduleFile, treeDoc=moduleDoc)
+            finally:
+                pass
 
 ##############################################################
 

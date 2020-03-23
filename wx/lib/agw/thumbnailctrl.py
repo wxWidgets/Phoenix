@@ -2455,9 +2455,10 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             if TN_USE_PIL:
                 newangle = thumb.GetRotation()*180/pi + angle
                 fil = opj(thumb.GetFullFileName())
-                pil = Image.open(fil).rotate(newangle)
-                img = wx.Image(pil.size[0], pil.size[1])
-                img.SetData(pil.convert('RGB').tobytes())
+                with Image.open(fil) as fid:
+                    pil = fid.rotate(newangle)
+                    img = wx.Image(pil.size[0], pil.size[1])
+                    img.SetData(pil.convert('RGB').tobytes())
                 thumb.SetRotation(newangle*pi/180)
             else:
                 img = thumb._threadedimage

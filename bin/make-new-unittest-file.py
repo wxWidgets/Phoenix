@@ -52,9 +52,9 @@ def writeFile(filename, stub, values):
     if os.path.exists(filename):
         print("'%s' already exists. Exiting." % filename)
         sys.exit(1)
-    output = open(filename, 'w')
-    output.write(stub % values)
-    output.close()
+    with open(filename, 'w') as output:
+        output.write(stub % values)
+
     print("Wrote %s" % filename)
 
 

@@ -122,9 +122,8 @@ def buildEnumsAndMethods(sphinxDir):
 
     for input in textfiles:
 
-        fid = textfile_open(input, 'rt')
-        orig_text = text = fid.read()
-        fid.close()
+        with textfile_open(input, 'rt') as fid:
+            orig_text = text = fid.read()
 
         for old, new in list(enum_dict.items()):
             text = text.replace(old, new)
@@ -191,9 +190,8 @@ def buildEnumsAndMethods(sphinxDir):
         text = addSpacesToLinks(text)
 
         if text != orig_text:
-            fid = textfile_open(input, 'wt')
-            fid.write(text)
-            fid.close()
+            with textfile_open(input, 'wt') as fid:
+                fid.write(text)
 
     if not unreferenced_classes:
         return
@@ -208,17 +206,17 @@ def buildEnumsAndMethods(sphinxDir):
            'appear.\n\n'
 
 
-    fid = textfile_open(os.path.join(SPHINXROOT, 'unreferenced_classes.inc'), 'wt')
-    fid.write('\n')
-    fid.write('='*50 + ' ' + '='*50 + '\n')
-    fid.write('%-50s %-50s\n'%('Reference', 'File Name(s)'))
-    fid.write('='*50 + ' ' + '='*50 + '\n')
+    with textfile_open(os.path.join(SPHINXROOT, 'unreferenced_classes.inc'), 'wt') as fid:
+        fid.write('\n')
+        fid.write('='*50 + ' ' + '='*50 + '\n')
+        fid.write('%-50s %-50s\n'%('Reference', 'File Name(s)'))
+        fid.write('='*50 + ' ' + '='*50 + '\n')
 
-    for key in sorted(unreferenced_classes):
-        fid.write('%-50s %-50s\n'%(key, ', '.join(unreferenced_classes[key])))
+        for key in sorted(unreferenced_classes):
+            fid.write('%-50s %-50s\n'%(key, ', '.join(unreferenced_classes[key])))
 
-    fid.write('='*50 + ' ' + '='*50 + '\n')
-    fid.close()
+        fid.write('='*50 + ' ' + '='*50 + '\n')
+
 
     print((warn%(len(unreferenced_classes))))
 

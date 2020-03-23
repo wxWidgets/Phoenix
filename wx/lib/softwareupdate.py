@@ -156,9 +156,8 @@ class SoftwareUpdate(object):
                 newest = self._esky.find_update()
                 chLogTxt = ''
                 if newest is not None and self._changelogURL:
-                    req = urlopen(self._changelogURL, timeout=4)
-                    chLogTxt = req.read()
-                    req.close()
+                    with urlopen(self._changelogURL, timeout=4) as req:
+                        chLogTxt = req.read()
                 return (newest, chLogTxt)
 
             except URLError:

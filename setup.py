@@ -89,9 +89,10 @@ Programming Language :: Python :: Implementation :: CPython
 Topic :: Software Development :: User Interfaces
 """
 
-INSTALL_REQUIRES = [line.strip()
-                    for line in open('requirements/install.txt').readlines()
-                    if not line.startswith('#')]
+with open('requirements/install.txt') as fid:
+    INSTALL_REQUIRES = [line.strip()
+                        for line in fid.readlines()
+                        if not line.startswith('#')]
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"

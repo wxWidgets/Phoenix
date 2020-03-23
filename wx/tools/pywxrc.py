@@ -626,12 +626,12 @@ class XmlResourceCompiler:
 
     def FileToString(self, filename):
         outputList = []
-
-        buffer = open(filename, "rb").read()
+        with open(filename, "rb") as fid:
+            buffer = fid.read()
         fileLen = len(buffer)
 
         linelng = 0
-        for i in range(len(buffer)):
+        for i in range(fileLen):
             s = buffer[i:i+1]
             c = byte2int(s)
             if s == b'\n':
