@@ -3871,7 +3871,7 @@ class AuiToolBar(wx.Control):
         """
 
         # start a drag event
-        if not self._dragging and self._action_item != None and self._action_pos != wx.Point(-1, -1) and \
+        if not self._dragging and self._action_item is not None and self._action_pos != wx.Point(-1, -1) and \
            abs(event.GetX() - self._action_pos.x) + abs(event.GetY() - self._action_pos.y) > 5:
 
             self.SetToolTip("")

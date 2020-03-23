@@ -324,7 +324,7 @@ class RibbonFrame(wx.Frame):
     def GetGalleryColour(self, gallery, item, name=None):
         data = gallery.GetItemClientData(item)
 
-        if name != None:
+        if name is not None:
             name = data.GetName()
 
         return data.GetColour(), name
@@ -337,7 +337,7 @@ class RibbonFrame(wx.Frame):
         gallery = event.GetGallery()
         provider = gallery.GetArtProvider()
 
-        if event.GetGalleryItem() != None:
+        if event.GetGalleryItem() is not None:
             if provider == self._ribbon.GetArtProvider():
                 gallery.SetArtProvider(provider)
 
@@ -607,7 +607,7 @@ class RibbonFrame(wx.Frame):
                     item = None
 
             # Colour not in gallery - add it
-            if item == None:
+            if item is None:
                 item = self.AddColourToGallery(gallery,
                                                clr.GetAsString(wx.C2S_HTML_SYNTAX),
                                                self._bitmap_creation_dc,

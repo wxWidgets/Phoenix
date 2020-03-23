@@ -1028,7 +1028,7 @@ class RibbonBar(RibbonControl):
                 notification.SetEventObject(self)
                 self.GetEventHandler().ProcessEvent(notification)
 
-        elif tab == None:
+        elif tab is None:
             if self._tab_scroll_left_button_rect.Contains(event.GetPosition()):
                 self._tab_scroll_left_button_state |= RIBBON_SCROLL_BTN_ACTIVE | RIBBON_SCROLL_BTN_HOVERED
                 self.RefreshTabBar()

@@ -1595,21 +1595,21 @@ class DocManager(wx.EvtHandler):
         """
         Updates the user interface for the File Close command.
         """
-        event.Enable(self.GetCurrentDocument() != None)
+        event.Enable(self.GetCurrentDocument() is not None)
 
 
     def OnUpdateFileCloseAll(self, event):
         """
         Updates the user interface for the File Close All command.
         """
-        event.Enable(self.GetCurrentDocument() != None)
+        event.Enable(self.GetCurrentDocument() is not None)
 
 
     def OnUpdateFileRevert(self, event):
         """
         Updates the user interface for the File Revert command.
         """
-        event.Enable(self.GetCurrentDocument() != None)
+        event.Enable(self.GetCurrentDocument() is not None)
 
 
     def OnUpdateFileNew(self, event):
@@ -1624,14 +1624,14 @@ class DocManager(wx.EvtHandler):
         Updates the user interface for the File Save command.
         """
         doc = self.GetCurrentDocument()
-        event.Enable(doc != None and doc.IsModified())
+        event.Enable(doc is not None and doc.IsModified())
 
 
     def OnUpdateFileSaveAs(self, event):
         """
         Updates the user interface for the File Save As command.
         """
-        event.Enable(self.GetCurrentDocument() != None and self.GetCurrentDocument().GetWriteable())
+        event.Enable(self.GetCurrentDocument() is not None and self.GetCurrentDocument().GetWriteable())
 
 
     def OnUpdateUndo(self, event):
@@ -1639,7 +1639,7 @@ class DocManager(wx.EvtHandler):
         Updates the user interface for the Undo command.
         """
         doc = self.GetCurrentDocument()
-        event.Enable(doc != None and doc.GetCommandProcessor() != None and doc.GetCommandProcessor().CanUndo())
+        event.Enable(doc is not None and doc.GetCommandProcessor() is not None and doc.GetCommandProcessor().CanUndo())
         if doc and doc.GetCommandProcessor():
             doc.GetCommandProcessor().SetMenuStrings()
         else:
@@ -1651,7 +1651,7 @@ class DocManager(wx.EvtHandler):
         Updates the user interface for the Redo command.
         """
         doc = self.GetCurrentDocument()
-        event.Enable(doc != None and doc.GetCommandProcessor() != None and doc.GetCommandProcessor().CanRedo())
+        event.Enable(doc is not None and doc.GetCommandProcessor() is not None and doc.GetCommandProcessor().CanRedo())
         if doc and doc.GetCommandProcessor():
             doc.GetCommandProcessor().SetMenuStrings()
         else:
@@ -1662,7 +1662,7 @@ class DocManager(wx.EvtHandler):
         """
         Updates the user interface for the Print command.
         """
-        event.Enable(self.GetCurrentDocument() != None)
+        event.Enable(self.GetCurrentDocument() is not None)
 
 
     def OnUpdatePrintSetup(self, event):
@@ -1676,7 +1676,7 @@ class DocManager(wx.EvtHandler):
         """
         Updates the user interface for the Print Preview command.
         """
-        event.Enable(self.GetCurrentDocument() != None)
+        event.Enable(self.GetCurrentDocument() is not None)
 
 
     def GetCurrentView(self):
@@ -3116,7 +3116,7 @@ class CommandProcessor(wx.Object):
         Sets the menu labels according to the currently set menu and the
         current command state.
         """
-        if self.GetEditMenu() != None:
+        if self.GetEditMenu() is not None:
             undoCommand = self._GetCurrentCommand()
             redoCommand = self._GetCurrentRedoCommand()
             undoItem = self.GetEditMenu().FindItemById(wx.ID_UNDO)
@@ -3146,7 +3146,7 @@ class CommandProcessor(wx.Object):
         Returns ``True`` if the currently-active command can be undone,
         ``False`` otherwise.
         """
-        if self._GetCurrentCommand() == None:
+        if self._GetCurrentCommand() is None:
             return False
         return self._GetCurrentCommand().CanUndo()
 
@@ -3156,7 +3156,7 @@ class CommandProcessor(wx.Object):
         Returns ``True`` if the currently-active command can be redone,
         ``False`` otherwise.
         """
-        return self._GetCurrentRedoCommand() != None
+        return self._GetCurrentRedoCommand() is not None
 
 
     def Submit(self, command, storeIt=True):

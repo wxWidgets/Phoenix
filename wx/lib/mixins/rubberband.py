@@ -182,13 +182,13 @@ class RubberBand:
         x, y = event.GetPosition()
 
         # First make sure we have started a box.
-        if self.currentBox == None and not event.LeftDown():
+        if self.currentBox is None and not event.LeftDown():
             # No box started yet.  Set cursor to the initial kind.
             self.__setCursor(wx.CURSOR_CROSS)
             return
 
         if event.LeftDown():
-            if self.currentBox == None:
+            if self.currentBox is None:
                 # No RB Box, so start a new one.
                 self.currentBox = (x, y, 0, 0)
                 self.hasLetUp   = 0
@@ -242,13 +242,13 @@ class RubberBand:
 
         x0,y0,w0,h0 = self.currentBox
         currentExtent = boxToExtent(self.currentBox)
-        if x == None:
+        if x is None:
             if w0 < 1:
                 w0 += 1
             else:
                 w0 -= 1
             x = x0 + w0
-        if y == None:
+        if y is None:
             if h0 < 1:
                 h0 += 1
             else:

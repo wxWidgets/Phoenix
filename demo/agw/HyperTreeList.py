@@ -929,7 +929,7 @@ class HyperTreeHeaderRenderer(object):
 
     def DrawHeaderButton(self, dc, rect, flags=0, params=None):
 
-        if params != None:
+        if params is not None:
             text_align = params.m_labelAlignment
             bitmap     = params.m_labelBitmap
             text_color = params.m_labelColour
@@ -965,7 +965,7 @@ class HyperTreeHeaderRenderer(object):
 
         dc.SetBackgroundMode(wx.TRANSPARENT)
 
-        if params == None:
+        if params is None:
             return
 
         # We need to draw the text and/or icon bitmap
@@ -1445,14 +1445,14 @@ class HyperTreeListDemo(wx.Frame):
 
             next = item
 
-            while next != None:
+            while next is not None:
 
                 self.tree.SetItemBackgroundColour(next, colour, col)
 
                 cookie=0
                 child, cockie = self.tree.GetNextChild(next, cookie)
 
-                while child != None:
+                while child is not None:
                     ColourItems(child, colour, col)
                     child, cookie = self.tree.GetNextChild(next, cookie)
 
@@ -1466,7 +1466,7 @@ class HyperTreeListDemo(wx.Frame):
         columnBackgroundColour = event.GetValue()
         selectedColumn = self.columnchoice.GetCurrentSelection()
         self.columnBackgroundColours[selectedColumn] = columnBackgroundColour
-        
+
         self.ColourColumnItems(columnBackgroundColour, selectedColumn)
 
         event.Skip()

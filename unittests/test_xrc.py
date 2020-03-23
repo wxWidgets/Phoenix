@@ -23,7 +23,7 @@ class xrc_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(id, int))
 
         ctrl = xrc.XRCCTRL(f, 'TitleText')
-        self.assertTrue(ctrl != None)
+        self.assertTrue(ctrl is not None)
         self.assertTrue(isinstance(ctrl, wx.StaticText))
 
 

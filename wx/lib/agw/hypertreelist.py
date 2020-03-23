@@ -893,7 +893,7 @@ class TreeListHeaderWindow(wx.Window):
             if image != -1 and imageList:
                 params.m_labelBitmap = imageList.GetBitmap(image)
 
-            if self._headerCustomRenderer != None:
+            if self._headerCustomRenderer is not None:
                self._headerCustomRenderer.DrawHeaderButton(dc, rect, flags, params)
             else:
                 wx.RendererNative.Get().DrawHeaderButton(self, dc, rect, flags,
@@ -902,7 +902,7 @@ class TreeListHeaderWindow(wx.Window):
         # Fill up any unused space to the right of the columns
         if x < w:
             rect = wx.Rect(x, 0, w-x, h)
-            if self._headerCustomRenderer != None:
+            if self._headerCustomRenderer is not None:
                self._headerCustomRenderer.DrawHeaderButton(dc, rect)
             else:
                 wx.RendererNative.Get().DrawHeaderButton(self, dc, rect)
@@ -2591,7 +2591,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         self._dirty = True     # do this first so stuff below doesn't cause flicker
 
-        if self._editCtrl != None and self.IsDescendantOf(item, self._editCtrl.item()):
+        if self._editCtrl is not None and self.IsDescendantOf(item, self._editCtrl.item()):
             # can't delete the item being edited, cancel editing it first
             self._editCtrl.StopEditing()
 
@@ -2639,7 +2639,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `item`: an instance of :class:`TreeListItem`.
         """
 
-        if self._editCtrl != None and item != self._editCtrl.item() and self.IsDescendantOf(item, self._editCtrl.item()):
+        if self._editCtrl is not None and item != self._editCtrl.item() and self.IsDescendantOf(item, self._editCtrl.item()):
             self._editCtrl.StopEditing()
 
         if self.IsDescendantOf(item, self._selectItem):
@@ -3099,7 +3099,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                         itemrect = wx.Rect(text_x-2, item.GetY() + off_h, text_w+2*_MARGIN, total_h - off_h)
                     colBgX = item.GetBackgroundColour(i)
 
-                    if colBgX != None and i != 0:
+                    if colBgX is not None and i != 0:
                         dc.SetBrush(wx.Brush(colBgX, wx.SOLID))
                         dc.SetPen(wx.TRANSPARENT_PEN)
                         dc.DrawRectangle(itemrect)
@@ -3116,7 +3116,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                         itemrect = wx.Rect(text_x-2, item.GetY() + off_h, text_w+2*_MARGIN, total_h - off_h)
                     colBgX = item.GetBackgroundColour(i)
 
-                    if colBgX != None:
+                    if colBgX is not None:
                         dc.SetBrush(wx.Brush(colBgX, wx.SOLID))
                         dc.SetPen(wx.TRANSPARENT_PEN)
                         dc.DrawRectangle(itemrect)
@@ -3570,7 +3570,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         if self._dirty:
             self.CalculatePositions()
 
-        if self._editCtrl != None and (item != self._editCtrl.item() or column != self._editCtrl.column()):
+        if self._editCtrl is not None and (item != self._editCtrl.item() or column != self._editCtrl.column()):
             self._editCtrl.StopEditing()
 
         self._editCtrl = self._owner.CreateEditCtrl(item, column)
@@ -3677,7 +3677,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         if (event.LeftDown() or event.LeftUp() or event.RightDown() or \
             event.RightUp() or event.LeftDClick() or event.Dragging()):
-            if self._editCtrl != None and (item != self._editCtrl.item() or column != self._editCtrl.column()):
+            if self._editCtrl is not None and (item != self._editCtrl.item() or column != self._editCtrl.column()):
                 self._editCtrl.StopEditing()
 
         # We do not want a tooltip if we are dragging, or if the edit timer is running
@@ -3737,7 +3737,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
                 return # nothing to do, already done
 
-            if item == None:
+            if item is None:
                 return # we need an item to dragging
 
             # determine drag start
@@ -3823,7 +3823,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             self._dragCount = 0
 
         # we process only the messages which happen on tree items
-        if (item == None or not self.IsItemEnabled(item)) and not event.GetWheelRotation():
+        if (item is None or not self.IsItemEnabled(item)) and not event.GetWheelRotation():
             self._owner.GetEventHandler().ProcessEvent(event)
             return
 
@@ -3850,7 +3850,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 if item == self._current and self._curColumn != -1 and \
                    self._owner.GetHeaderWindow().IsColumnEditable(self._curColumn) and \
                    flags & (wx.TREE_HITTEST_ONITEMLABEL | TREE_HITTEST_ONITEMCOLUMN) and \
-                   ((self._editCtrl != None and column != self._editCtrl.column()) or self._editCtrl is None):
+                   ((self._editCtrl is not None and column != self._editCtrl.column()) or self._editCtrl is None):
                     self._editTimer.Start(_EDIT_TIMER_TICKS, wx.TIMER_ONE_SHOT)
 
                 self._lastOnSame = False

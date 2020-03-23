@@ -188,7 +188,7 @@ class PlateButton(wx.Control):
         if bmp is not None and bmp.IsOk():
             bw, bh = bmp.GetSize()
             ypos = (self.GetSize()[1] - bh) // 2
-            gc.DrawBitmap(bmp, 6, ypos, bmp.GetMask() != None)
+            gc.DrawBitmap(bmp, 6, ypos, bmp.GetMask() is not None)
             return bw + 6
         else:
             return 6

@@ -2623,7 +2623,7 @@ class GenericTreeItem(object):
         # evaluate children
         for child in self._children:
             res, flags = child.HitTest(point, theCtrl, flags, level + 1)
-            if res != None:
+            if res is not None:
                 return res, flags
 
         return None, 0
@@ -3417,7 +3417,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          ``EVT_TREE_ITEM_CHECKED`` events.
         """
 
-        if checked == None:
+        if checked is None:
             self.AutoToggleChild(item)
         else:
             self.AutoCheckChild(item, checked)
@@ -4646,7 +4646,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         parent = item.GetParent()
 
-        if parent == None:
+        if parent is None:
             # root item doesn't have any siblings
             return None
 
@@ -4674,7 +4674,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         parent = item.GetParent()
 
-        if parent == None:
+        if parent is None:
             # root item doesn't have any siblings
             return None
 
@@ -5314,7 +5314,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param `item`: an instance of :class:`GenericTreeItem`.
         """
 
-        if self._editCtrl != None and item != self._editCtrl.item() and self.IsDescendantOf(item, self._editCtrl.item()):
+        if self._editCtrl is not None and item != self._editCtrl.item() and self.IsDescendantOf(item, self._editCtrl.item()):
             self._editCtrl.StopEditing()
 
         if item != self._key_current and self.IsDescendantOf(item, self._key_current):
@@ -5353,7 +5353,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         self._dirty = True     # do this first so stuff below doesn't cause flicker
 
-        if self._editCtrl != None and self.IsDescendantOf(item, self._editCtrl.item()):
+        if self._editCtrl is not None and self.IsDescendantOf(item, self._editCtrl.item()):
             # can't delete the item being edited, cancel editing it first
             self._editCtrl.StopEditing()
 
@@ -5677,7 +5677,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         parent = crt_item.GetParent()
 
-        if parent == None: # This is root item
+        if parent is None: # This is root item
             return self.TagAllChildrenUntilLast(crt_item, last_item, select)
 
         children = parent.GetChildren()
@@ -7655,14 +7655,14 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         if flags:
             return None, flags
 
-        if self._anchor == None:
+        if self._anchor is None:
             flags = TREE_HITTEST_NOWHERE
             return None, flags
 
         point = self.CalcUnscrolledPosition(*point)
         hit, flags = self._anchor.HitTest(point, self, flags, 0)
 
-        if hit == None:
+        if hit is None:
             flags = TREE_HITTEST_NOWHERE
             return None, flags
 
@@ -7729,7 +7729,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             else:
                 wx.YieldIfNeeded()
 
-        if self._editCtrl != None and item != self._editCtrl.item():
+        if self._editCtrl is not None and item != self._editCtrl.item():
             self._editCtrl.StopEditing()
 
         if self._editCtrl is None:
@@ -8010,14 +8010,14 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
             self._dragCount = 0
 
-            if item == None:
-                if self._editCtrl != None and item != self._editCtrl.item():
+            if item is None:
+                if self._editCtrl is not None and item != self._editCtrl.item():
                     self._editCtrl.StopEditing()
                 return  # we hit the blank area
 
             if event.RightDown():
 
-                if self._editCtrl != None and item != self._editCtrl.item():
+                if self._editCtrl is not None and item != self._editCtrl.item():
                     self._editCtrl.StopEditing()
 
                 self._hasFocus = True
@@ -8077,11 +8077,11 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             else: # !RightDown() && !LeftUp() ==> LeftDown() || LeftDClick()
 
                 if not item or not item.IsEnabled():
-                    if self._editCtrl != None and item != self._editCtrl.item():
+                    if self._editCtrl is not None and item != self._editCtrl.item():
                         self._editCtrl.StopEditing()
                     return
 
-                if self._editCtrl != None and item != self._editCtrl.item():
+                if self._editCtrl is not None and item != self._editCtrl.item():
                     self._editCtrl.StopEditing()
 
                 self._hasFocus = True

@@ -130,7 +130,7 @@ class Renderer:
     defaultColor = "black"
 
     def __init__(self, dc=None, x=0, y=None):
-        if dc == None:
+        if dc is None:
             dc = wx.MemoryDC()
         self.dc = dc
         self.offsets = [0]

@@ -662,7 +662,7 @@ class ToolTipWindowBase(object):
         pSetLayeredWindowAttributes = win32api.GetProcAddress(self._winlib,
                                                               "SetLayeredWindowAttributes")
 
-        if pSetLayeredWindowAttributes == None:
+        if pSetLayeredWindowAttributes is None:
             return
 
         exstyle = win32api.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)

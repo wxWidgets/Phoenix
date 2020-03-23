@@ -1050,7 +1050,7 @@ class FMRenderer(object):
 
         # switch according to the status
         if state == ControlFocus:
-            if colour == None:
+            if colour is None:
                 penColour   = self.buttonFocusBorderColour
                 brushColour = self.buttonFocusFaceColour
             else:
@@ -1058,14 +1058,14 @@ class FMRenderer(object):
                 brushColour = ArtManager.Get().LightColour(colour, 75)
 
         elif state == ControlPressed:
-            if colour == None:
+            if colour is None:
                 penColour   = self.buttonPressedBorderColour
                 brushColour = self.buttonPressedFaceColour
             else:
                 penColour   = colour
                 brushColour = ArtManager.Get().LightColour(colour, 60)
         else:
-            if colour == None:
+            if colour is None:
                 penColour   = self.buttonBorderColour
                 brushColour = self.buttonFaceColour
             else:
@@ -5026,7 +5026,7 @@ class FlatMenuItem(object):
     def IsSubMenu(self):
         """ Returns whether an item is a sub-menu or not. """
 
-        return self._subMenu != None
+        return self._subMenu is not None
 
 
     def SetNormalBitmap(self, bmp):
@@ -7089,7 +7089,7 @@ class FlatMenu(FlatMenuBase):
          ``wx.NOT_FOUND`` if one was not found.
         """
 
-        if item == None or len(self._itemsArr) == 0:
+        if item is None or len(self._itemsArr) == 0:
             return wx.NOT_FOUND
 
         for i in range(len(self._itemsArr)):

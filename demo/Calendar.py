@@ -59,7 +59,7 @@ def GetMonthList():
     for i in range(13):
         name = wx.lib.calendar.Month[i]
 
-        if name != None:
+        if name is not None:
             monthlist.append(name)
 
     return monthlist

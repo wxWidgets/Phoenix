@@ -249,7 +249,7 @@ class CSheet(wx.grid.Grid):
     def Copy(self):
         """ Copy the currently selected cells to the clipboard """
         # TODO: raise an error when there are no cells selected?
-        if self._selected == None: return
+        if self._selected is None: return
         ((r1, c1), (r2, c2)) = self._selected
 
         # Build a string to put on the clipboard
@@ -289,7 +289,7 @@ class CSheet(wx.grid.Grid):
                 rows[i] = rows[i].split(tab)
 
             # Get the starting and ending cell range to paste into
-            if self._selected == None:          # If no cells selected...
+            if self._selected is None:          # If no cells selected...
                 r1 = self.GetGridCursorRow()    # Start the paste at the current location
                 c1 = self.GetGridCursorCol()
                 r2 = self.GetNumberRows()-1     # Go to maximum row and col extents
@@ -311,7 +311,7 @@ class CSheet(wx.grid.Grid):
 
     def Clear(self):
         """ Clear the currently selected cells """
-        if self._selected == None:              # If no selection...
+        if self._selected is None:              # If no selection...
             r = self.GetGridCursorRow()         # clear only current cell
             c = self.GetGridCursorCol()
             self.SetCellValue(r, c, "")

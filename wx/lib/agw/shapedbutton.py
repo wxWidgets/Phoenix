@@ -1124,7 +1124,7 @@ class SBitmapButton(SButton):
         if not self._isup:
             dw = dh = self._labeldelta
 
-        hasMask = bmp.GetMask() != None
+        hasMask = bmp.GetMask() is not None
         dc.DrawBitmap(bmp, (width - bw)//2 + dw, (height - bh)//2 + dh, hasMask)
 
 
@@ -1193,7 +1193,7 @@ class SBitmapTextButton(SBitmapButton):
 
         bmp = self._bmplabel
 
-        if bmp != None:     # if the bitmap is used
+        if bmp is not None:     # if the bitmap is used
 
             if self._bmpdisabled and not self.IsEnabled():
                 bmp = self._bmpdisabled
@@ -1209,7 +1209,7 @@ class SBitmapTextButton(SBitmapButton):
             if not self._isup:
                 dw = dh = self._labeldelta
 
-            hasMask = bmp.GetMask() != None
+            hasMask = bmp.GetMask() is not None
 
         else:
 
@@ -1234,7 +1234,7 @@ class SBitmapTextButton(SBitmapButton):
 
         rotangle = self.GetAngleOfRotation()*pi/180.0
 
-        if bmp != None:
+        if bmp is not None:
             if rotangle < 1.0/180.0:
                 dc.DrawBitmap(bmp, pos_x, (height - bh)//2 + dh, hasMask) # draw bitmap if available
                 pos_x = pos_x + 4   # extra spacing from bitmap

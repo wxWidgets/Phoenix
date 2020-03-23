@@ -182,7 +182,7 @@ class SimpleGrid(gridlib.Grid): ##, mixins.GridAutoEditMixin):
 
 
     def OnIdle(self, evt):
-        if self.moveTo != None:
+        if self.moveTo is not None:
             self.SetGridCursor(self.moveTo[0], self.moveTo[1])
             self.moveTo = None
 

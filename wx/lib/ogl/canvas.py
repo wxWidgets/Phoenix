@@ -349,7 +349,7 @@ class ShapeCanvas(wx.ScrolledWindow):
             if object.IsShown() and \
                isinstance(object, LineShape) and \
                object.HitTest(x, y) and \
-               ((info == None) or isinstance(object, info)) and \
+               ((info is None) or isinstance(object, info)) and \
                (not notObject or not notObject.HasDescendant(object)):
                 temp_attachment, dist = object.HitTest(x, y)
                 # A line is trickier to spot than a normal object.
@@ -372,7 +372,7 @@ class ShapeCanvas(wx.ScrolledWindow):
                    (isinstance(object, DivisionShape) or
                     not isinstance(object, CompositeShape)) and
                     object.HitTest(x, y) and
-                    (info == None or isinstance(object, info)) and
+                    (info is None or isinstance(object, info)) and
                     (not notObject or not notObject.HasDescendant(object))):
                 temp_attachment, dist = object.HitTest(x, y)
                 if not isinstance(object, LineShape):

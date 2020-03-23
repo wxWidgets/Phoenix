@@ -248,17 +248,17 @@ class RichTextFrame(wx.Frame):
             self.textAttr.SetFontFaceName(fontFace)
         if fontSize:
             self.textAttr.SetFontSize(fontSize)
-        if fontBold != None:
+        if fontBold is not None:
             if fontBold:
                 self.textAttr.SetFontWeight(wx.FONTWEIGHT_BOLD)
             else:
                 self.textAttr.SetFontWeight(wx.FONTWEIGHT_NORMAL)
-        if fontItalic != None:
+        if fontItalic is not None:
             if fontItalic:
                 self.textAttr.SetFontStyle(wx.FONTSTYLE_ITALIC)
             else:
                 self.textAttr.SetFontStyle(wx.FONTSTYLE_NORMAL)
-        if fontUnderline != None:
+        if fontUnderline is not None:
             if fontUnderline:
                 self.textAttr.SetFontUnderlined(True)
             else:
