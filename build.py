@@ -594,7 +594,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
 
             try:
                 p = subprocess.Popen([cmd, '--help'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=os.environ)
-                p.wait()
+                p.communicate()
             except OSError as e:
                 _error_msg('Could not execute %s, got "%s"' % (cmd, e))
                 sys.exit(1)
