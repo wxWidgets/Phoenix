@@ -1573,13 +1573,15 @@ def cmd_build_py(options, args):
         os.environ['WXPYTHON_RELEASE'] = 'yes'
 
     if not isWindows:
-        WX_CONFIG = posixjoin(BUILD_DIR, 'wx-config')
-        if options.use_syswx:
-            wxcfg = posixjoin(options.prefix, 'bin', 'wx-config')
-            if options.prefix and os.path.exists(wxcfg):
-                WX_CONFIG = wxcfg
-            else:
-                WX_CONFIG = 'wx-config' # hope it is on the PATH
+        WX_CONFIG = os.environ.get('WX_CONFIG', None)
+        if WX_CONFIG is None:
+            WX_CONFIG = posixjoin(BUILD_DIR, 'wx-config')
+            if options.use_syswx:
+                wxcfg = posixjoin(options.prefix, 'bin', 'wx-config')
+                if options.prefix and os.path.exists(wxcfg):
+                    WX_CONFIG = wxcfg
+                else:
+                    WX_CONFIG = 'wx-config' # hope it is on the PATH
 
 
     wafBuildBase = wafBuildDir = getWafBuildBase()
