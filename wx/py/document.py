@@ -23,24 +23,20 @@ class Document:
     def read(self):
         """Return contents of file."""
         if self.filepath and os.path.exists(self.filepath):
-            f = open(self.filepath, 'rb')
-            try:
-                return f.read().decode('utf-8')
-            finally:
-                f.close()
+            with open(self.filepath, 'rb') as f:
+                try:
+                    return f.read().decode('utf-8')
+                finally:
+                    pass
         else:
             return ''
 
     def write(self, text):
         """Write text to file."""
-        try:
-            f = open(self.filepath, 'wb')
+        with open(self.filepath, 'wb') as f:
             try:
                 # Convert from unicode to bytes
                 text = text.encode('utf-8')
+                f.write(text)
             except AttributeError:
                 pass
-            f.write(text)
-        finally:
-            if f:
-                f.close()

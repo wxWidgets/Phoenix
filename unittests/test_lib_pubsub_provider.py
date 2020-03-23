@@ -89,9 +89,8 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
                             pass
             """
 
-        myTopicTree = open('myTopicTree.py', 'w')
-        myTopicTree.write(dedent(provFile))
-        myTopicTree.close()
+        with open('myTopicTree.py', 'w') as myTopicTree:
+            myTopicTree.write(dedent(provFile))
         self.pub.addTopicDefnProvider('myTopicTree',
                                       format=self.pub.TOPIC_TREE_FROM_MODULE)
         import os

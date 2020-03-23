@@ -387,8 +387,8 @@ def runTest(frame, nb, log):
 
 #----------------------------------------------------------------------
 
-
-overview = open(HTML_HELP, 'rt').read()
+with open(HTML_HELP, 'rt') as fid:
+    overview = fid.read()
 
 
 if __name__ == '__main__':

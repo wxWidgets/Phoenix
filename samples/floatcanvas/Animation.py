@@ -258,9 +258,8 @@ def Read_MapGen(filename,stats = False):
 
     """
     from numpy import array
-    file = open(filename,'rt')
-    data = file.readlines()
-    data = [s.strip() for s in data]
+    with open(filename,'rt') as file_:
+        data = [s.strip() for s in file_.readlines()]
 
     Shorelines = []
     segment = []
@@ -279,21 +278,11 @@ def Read_MapGen(filename,stats = False):
             NumPoints = NumPoints + len(segment)
         AvgPoints = NumPoints / NumSegments
         print("Number of Segments: ", NumSegments)
-        print("Average Number of Points per segment: ",AvgPoints)
+        print("Average Number of Points per segment: ", AvgPoints)
 
     return Shorelines
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     app = DemoApp(0)
     app.MainLoop()
-
-
-
-
-
-
-
-
-
-

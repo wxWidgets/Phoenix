@@ -91,8 +91,8 @@ def getWxRelease(wxRoot=None):
     if not wxRoot:
         global wxRootDir
         wxRoot = wxRootDir
-
-    configureText = open(os.path.join(wxRoot, "configure.in"), "r").read()
+    with open(os.path.join(wxRoot, "configure.in"), "r") as fid:
+        configureText = fid.read()
     majorVersion = re.search("wx_major_version_number=(\d+)", configureText).group(1)
     minorVersion = re.search("wx_minor_version_number=(\d+)", configureText).group(1)
 
@@ -592,9 +592,8 @@ def main(wxDir, args):
         for include in glob.glob(header_dir + "/*.h"):
             headers += "#include <wx/" + os.path.basename(include) + ">\n"
 
-        framework_header = open("%s.h" % fwname, "w")
-        framework_header.write(header_template % headers)
-        framework_header.close()
+        with open("%s.h" % fwname, "w") as framework_header:
+            framework_header.write(header_template % headers)
 
         run("ln -s -f %s wx" % header_dir)
         os.chdir("wx-%s/wx" % version)

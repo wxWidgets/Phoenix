@@ -83,8 +83,8 @@ def get_paths_dict():
 def unpack_cached(cached, dest_dir):
     """ Unpack from the cache."""
     print('Unpack', cached, 'to', dest_dir)
-    tf = tarfile.open(cached, "r:*")
-    tf.extractall(dest_dir)
+    with tarfile.open(cached, "r:*") as tf:
+        tf.extractall(dest_dir)
     dest_dir = os.listdir(dest_dir)[0]
     return dest_dir
 

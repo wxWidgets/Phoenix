@@ -76,21 +76,17 @@ class DoodleFrame(wx.Frame):
         # size events using this sizer.
         self.SetSizer(box)
 
-
     def SaveFile(self):
         if self.filename:
             data = self.doodle.GetLinesData()
-            f = open(self.filename, 'wb')
-            pickle.dump(data, f)
-            f.close()
-
+            with open(self.filename, 'wb') as f:
+                pickle.dump(data, f)
 
     def ReadFile(self):
         if self.filename:
             try:
-                f = open(self.filename, 'rb')
-                data = pickle.load(f)
-                f.close()
+                with open(self.filename, 'rb') as f:
+                    data = pickle.load(f)
                 self.doodle.SetLinesData(data)
             except pickle.UnpicklingError:
                 wx.MessageBox("%s is not a doodle file." % self.filename,

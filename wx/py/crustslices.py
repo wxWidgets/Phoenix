@@ -287,9 +287,8 @@ class CrustSlicesFrame(crust.CrustFrame):
                                  wildcard='*.pyslices',
                                  default_path=self.currentDirectory)
         if file!=None and file!=u'':
-            fid=open(file,'r')
-            self.sliceshell.LoadPySlicesFile(fid)
-            fid.close()
+            with open(file,'r') as fid:
+                self.sliceshell.LoadPySlicesFile(fid)
             self.currentDirectory = os.path.split(file)[0]
             self.SetTitle( os.path.split(file)[1] + ' - PySlices')
             self.sliceshell.NeedsCheckForSave=False
@@ -320,11 +319,10 @@ class CrustSlicesFrame(crust.CrustFrame):
             self.buffer.confirmed = self.buffer.overwriteConfirm(filepath)
         if self.buffer.confirmed:
             try:
-                fid = open(filepath, 'wb')
-                self.sliceshell.SavePySlicesFile(fid)
+                with open(filepath, 'wb') as fid:
+                    self.sliceshell.SavePySlicesFile(fid)
             finally:
-                if fid:
-                    fid.close()
+                pass
             self.sliceshell.SetSavePoint()
             self.SetTitle( os.path.split(filepath)[1] + ' - PySlices')
             self.sliceshell.NeedsCheckForSave=False
@@ -377,11 +375,10 @@ class CrustSlicesFrame(crust.CrustFrame):
 
             # if not os.path.exists(result.path):
             try: # Allow overwrite...
-                fid = open(result.path, 'wb')
-                self.sliceshell.SavePySlicesFile(fid)
+                with open(result.path, 'wb') as fid:
+                    self.sliceshell.SavePySlicesFile(fid)
             finally:
-                if fid:
-                    fid.close()
+                pass
 
             cancel = False
         else:

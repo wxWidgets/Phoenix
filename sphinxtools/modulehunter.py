@@ -621,7 +621,8 @@ def ModuleHunter(init_name, import_name, version):
     print('Message: %s' % message)
 
     module_name = os.path.splitext(getfile(mainmod))[0] + '.py'
-    contents = open(module_name, 'rt').read()
+    with open(module_name, 'rt') as fid:
+        contents = fid.read()
     constants = CONSTANT_RE.findall(contents)
 
     library_class, count = describe_module(mainmod, kind=object_types.LIBRARY, constants=constants)

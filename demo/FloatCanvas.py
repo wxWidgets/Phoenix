@@ -1720,9 +1720,8 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             shorelines of the whole world, in MapGen format.
 
             """
-            file = open(filename,'rt')
-            data = file.readlines()
-            data = [s.strip() for s in data]
+            with open(filename,'rt') as file_:
+                data = [s.strip() for s in file_]
 
             Shorelines = []
             segment = []

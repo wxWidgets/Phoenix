@@ -157,12 +157,12 @@ class RulerCtrlDemo(wx.Frame):
 
         self.stc = PythonSTC(self.panel, -1)
         try:
-            fid = open("RulerCtrl.py", "rt")
+            with open("RulerCtrl.py", "rt") as fid:
+                text = fid.read()
         except:
-            fid = open("agw/RulerCtrl.py", "rt")
+            with open("agw/RulerCtrl.py", "rt") as fid:
+                text = fid.read()
 
-        text = fid.read()
-        fid.close()
         self.stc.SetValue(text)
 
         self.ruler1 = RC.RulerCtrl(self.panel, -1, orient=wx.HORIZONTAL, style=wx.SUNKEN_BORDER)
