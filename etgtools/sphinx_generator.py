@@ -651,9 +651,8 @@ class ParameterList(Node):
 ##                    class_name = wx2Sphinx(xml_item.className)[1] + '.'
 ##
 ##                print '\n      |||  %s;%s;%s  |||\n'%(class_name[0:-1], signature, param)
-##                fid = open('mismatched.txt', 'a')
-##                fid.write('%s;%s;%s\n'%(class_name[0:-1], signature, param))
-##                fid.close()
+##                with open('mismatched.txt', 'a') as fid:
+##                    fid.write('%s;%s;%s\n'%(class_name[0:-1], signature, param))
 
 
     # -----------------------------------------------------------------------
@@ -1446,27 +1445,25 @@ class Snippet(Node):
                 fid.write(new_py_code)
         else:
 
-            fid = open(self.converted_py, 'rt')
             highlight = None
 
-            while 1:
-                tline = fid.readline()
+            with open(self.converted_py, 'rt') as fid:
+                while True:
+                    tline = fid.readline()
 
-                if not tline:  # end of file
-                    code = ""
-                    fid.close()
+                    if not tline:  # end of file
+                        code = ""
+                        break
+
+                    if 'code-block::' in tline:
+                        highlight = tline.replace('#', '').strip()
+                        continue
+
+                    if not tline.strip():
+                        continue
+
+                    code = tline + fid.read()
                     break
-
-                if 'code-block::' in tline:
-                    highlight = tline.replace('#', '').strip()
-                    continue
-
-                if not tline.strip():
-                    continue
-
-                code = tline + fid.read()
-                fid.close()
-                break
 
             if highlight:
                 docstrings += '\n\n%s\n\n'%highlight

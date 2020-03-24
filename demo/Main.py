@@ -346,8 +346,8 @@ def FindImages(text, widgetName):
         if "src=" in items:
             possibleImage = items.replace("src=", "").strip()
             possibleImage = possibleImage.replace('"', "")
-            f = urllib.request.urlopen(_trunkURL + possibleImage)
-            stream = f.read()
+            with urllib.request.urlopen(_trunkURL + possibleImage) as f:
+                stream = f.read()
         elif "alt=" in items:
             plat = items.replace("alt=", "").replace("'", "").strip()
             path = os.path.join(imagesDir, plat, widgetName + ".png")
@@ -417,12 +417,11 @@ class InternetThread(Thread):
 
         try:
             url = _docsURL % ReplaceCapitals(self.selectedClass)
-            fid = urllib.request.urlopen(url)
-
-            if six.PY2:
-                originalText = fid.read()
-            else:
-                originalText = fid.read().decode("utf-8")
+            with urllib.request.urlopen(url) as fid:
+                if six.PY2:
+                    originalText = fid.read()
+                else:
+                    originalText = fid.read().decode("utf-8")
 
             text = RemoveHTMLTags(originalText).split("\n")
             data = FindWindowStyles(text, originalText, self.selectedClass)
@@ -833,12 +832,9 @@ class DemoCodePanel(wx.Panel):
                 wx.LogMessage("Created directory for modified demos: %s" % GetModifiedDirectory())
 
         # Save
-        f = open(modifiedFilename, "wt")
         source = self.editor.GetText()
-        try:
+        with open(modifiedFilename, "wt") as f:
             f.write(source)
-        finally:
-            f.close()
 
         busy = wx.BusyInfo("Reloading demo module...")
         self.demoModules.LoadFromFile(modModified, modifiedFilename)
@@ -964,9 +960,8 @@ def GetDocImagesDir():
 
 def SearchDemo(name, keyword):
     """ Returns whether a demo contains the search keyword or not. """
-    fid = open(GetOriginalFilename(name), "rt")
-    fullText = fid.read()
-    fid.close()
+    with open(GetOriginalFilename(name), "rt") as fid:
+        fullText = fid.read()
 
     if six.PY2:
         fullText = fullText.decode("iso-8859-1")
@@ -1097,15 +1092,12 @@ class DemoModules(object):
 
     def LoadFromFile(self, modID, filename):
         self.modules[modID][2] = filename
-        file = open(filename, "rt")
-        self.LoadFromSource(modID, file.read())
-        file.close()
-
+        with open(filename, "rt") as file_:
+            self.LoadFromSource(modID, file_.read())
 
     def LoadFromSource(self, modID, source):
         self.modules[modID][1] = source
         self.LoadDict(modID)
-
 
     def LoadDict(self, modID):
         if self.name != __name__:
@@ -1173,13 +1165,8 @@ class DemoModules(object):
 
         source = self.modules[modID][1]
         filename = self.modules[modID][2]
-
-        try:
-            file = open(filename, "wt")
-            file.write(source)
-        finally:
-            file.close()
-
+        with open(filename, "wt") as file_:
+            file_.write(source)
 
     def Delete(self, modID):
         if self.modActive == modID:
@@ -1673,14 +1660,11 @@ class wxPythonDemo(wx.Frame):
             self.pickledData = {}
             return
 
-        fid = open(pickledFile, "rb")
-        try:
-            self.pickledData = cPickle.load(fid)
-        except:
-            self.pickledData = {}
-
-        fid.close()
-
+        with open(pickledFile, "rb") as fid:
+            try:
+                self.pickledData = cPickle.load(fid)
+            except:
+                self.pickledData = {}
 
     def BuildMenuBar(self):
 
@@ -2531,9 +2515,8 @@ class wxPythonDemo(wx.Frame):
 
         MakeDocDirs()
         pickledFile = GetDocFile()
-        fid = open(pickledFile, "wb")
-        cPickle.dump(self.pickledData, fid, cPickle.HIGHEST_PROTOCOL)
-        fid.close()
+        with open(pickledFile, "wb") as fid:
+            cPickle.dump(self.pickledData, fid, cPickle.HIGHEST_PROTOCOL)
 
         self.Destroy()
 

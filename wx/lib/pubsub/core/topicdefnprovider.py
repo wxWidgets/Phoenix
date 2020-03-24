@@ -443,10 +443,7 @@ def exportTopicTreeSpec(moduleName = None, rootTopic=None, bak='bak', moduleDoc=
         if bak:
             _backupIfExists(filename, bak)
         with open(filename, 'w') as moduleFile:
-            try:
-                TopicTreeSpecPrinter(rootTopic, fileObj=moduleFile, treeDoc=moduleDoc)
-            finally:
-                pass
+            TopicTreeSpecPrinter(rootTopic, fileObj=moduleFile, treeDoc=moduleDoc)
 
 ##############################################################
 

@@ -354,9 +354,9 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
                                  wildcard='*.pyslices',
                                  default_path=self.currentDirectory)
         if file!=None and file!=u'':
-            fid=open(file,'r')
-            self.sliceshell.LoadPySlicesFile(fid)
-            fid.close()
+            with open(file,'r') as fid:
+                self.sliceshell.LoadPySlicesFile(fid)
+
             self.currentDirectory = os.path.split(file)[0]
             self.SetTitle( os.path.split(file)[1] + ' - PySlices')
             self.sliceshell.NeedsCheckForSave=False
@@ -386,12 +386,9 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
         if not self.buffer.confirmed:
             self.buffer.confirmed = self.buffer.overwriteConfirm(filepath)
         if self.buffer.confirmed:
-            try:
-                fid = open(filepath, 'wb')
+            with open(filepath, 'wb') as fid:
                 self.sliceshell.SavePySlicesFile(fid)
-            finally:
-                if fid:
-                    fid.close()
+
             self.sliceshell.SetSavePoint()
             self.SetTitle( os.path.split(filepath)[1] + ' - PySlices')
             self.sliceshell.NeedsCheckForSave=False
@@ -443,12 +440,9 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
                 result.path+=".pyslices"
 
             # if not os.path.exists(result.path):
-            try: # Allow overwrite...
-                fid = open(result.path, 'wb')
+            # Allow overwrite...
+            with open(result.path, 'wb') as fid:
                 self.sliceshell.SavePySlicesFile(fid)
-            finally:
-                if fid:
-                    fid.close()
 
             cancel = False
         else:
@@ -1942,11 +1936,10 @@ class SlicesShell(editwindow.EditWindow):
         #Open and Save now work when using CrustSlicesFrames
         elif controlDown and key in (ord('L'), ord('l')):
             #print('Load it')
-            file=wx.FileSelector("Load File As New Slice")
-            if file!=u'':
-                fid=open(file,'r')
-                self.LoadPyFileAsSlice(fid)
-                fid.close()
+            file = wx.FileSelector("Load File As New Slice")
+            if file != u'':
+                with open(file,'r') as fid:
+                    self.LoadPyFileAsSlice(fid)
 
         elif controlDown and key in (ord('D'), ord('d')):
             #Disallow line duplication in favor of divide slices
@@ -3068,17 +3061,14 @@ class SlicesShell(editwindow.EditWindow):
     # TODO : Will have to fix this to handle other kinds of errors mentioned before...
     def runfile(self, filename):
         """Execute all commands in file as if they were typed into the shell."""
-        file = open(filename)
-        try:
-            self.prompt()
-            for command in file.readlines():
+        self.prompt()
+        with open(filename) as file_:
+            for command in file_:
                 if command[:6] == 'shell.':
                     # Run shell methods silently.
                     self.run(command, prompt=False, verbose=False)
                 else:
                     self.run(command, prompt=False, verbose=True)
-        finally:
-            file.close()
 
     def autoCompleteShow(self, command, offset = 0):
         """Display auto-completion popup list."""

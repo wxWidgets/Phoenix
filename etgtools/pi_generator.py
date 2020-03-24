@@ -130,7 +130,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         sectionBeginMarker = '#-- begin-%s --#' % sectionName
         sectionEndMarker = '#-- end-%s --#' % sectionName
 
-        lines = textfile_open(destFile, 'rt').readlines()
+        with textfile_open(destFile, 'rt') as fid:
+            lines = fid.readlines()
         for idx, line in enumerate(lines):
             if line.startswith(sectionBeginMarker):
                 sectionBeginLine = idx
@@ -146,11 +147,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             # replace the existing lines
             lines[sectionBeginLine+1:sectionEndLine] = [sectionText]
 
-        f = textfile_open(destFile, 'wt')
-        f.writelines(lines)
-        f.close()
-
-
+        with textfile_open(destFile, 'wt') as f:
+            f.writelines(lines)
 
     #-----------------------------------------------------------------------
     def generateModule(self, module, stream):
