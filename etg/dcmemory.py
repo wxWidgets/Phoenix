@@ -35,6 +35,9 @@ def run():
     c.addPrivateCopyCtor()
     c.mustHaveApp()
 
+    # remove the const overload of GetSelectedBitmap
+    c.find('GetSelectedBitmap').findOverload('', isConst=True).ignore()
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
