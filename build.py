@@ -1017,7 +1017,7 @@ def cmd_docset_py(options, args):
     # build the tarball
     msg('Archiving Phoenix docset...')
     rootname = "wxPython-docset-{}".format(cfg.VERSION)
-    tarfilename = "dist/{}.tar.gz".format(rootname)
+    tarfilename = os.path.join(phoenixDir(), 'dist', '{}.tar.gz'.format(rootname))
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
     with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
@@ -1171,7 +1171,7 @@ def cmd_bdist_docs(options, args):
 
     msg("Archiving wxPython Phoenix documentation...")
     rootname = "%s-docs-%s" % (baseName, cfg.VERSION)
-    tarfilename = "dist/%s.tar.gz" % rootname
+    tarfilename = os.path.join(phoenixDir(), 'dist', '%s.tar.gz' % rootname)
 
     if not os.path.exists('dist'):
         os.makedirs('dist')
@@ -2070,7 +2070,7 @@ def cmd_sdist(options, args):
     # build the tarball
     msg('Archiving Phoenix source...')
     rootname = "%s-%s" % (baseName, cfg.VERSION)
-    tarfilename = "dist/%s.tar.gz" % rootname
+    tarfilename = os.path.join(phoenixDir(), 'dist', '%s.tar.gz' % rootname)
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
     pwd = pushDir(PDEST)
@@ -2122,7 +2122,7 @@ def cmd_sdist_demo(options, args):
     # build the tarball
     msg('Archiving Phoenix demo and samples...')
     rootname = "%s-demo-%s" % (baseName, cfg.VERSION)
-    tarfilename = "dist/%s.tar.gz" % rootname
+    tarfilename = os.path.join(phoenixDir(), 'dist', '%s.tar.gz' % rootname)
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
     pwd = pushDir(PDEST)
@@ -2160,7 +2160,7 @@ def cmd_bdist(options, args):
     if isWindows and PYTHON_ARCH == '64bit':
         platform = 'win64'
     rootname = "%s-%s-%s-py%s" % (baseName, cfg.VERSION, platform, PYVER)
-    tarfilename = "dist/%s.tar.gz" % rootname
+    tarfilename = os.path.join(phoenixDir(), 'dist', '%s.tar.gz' % rootname)
 
     if not os.path.exists('dist'):
         os.makedirs('dist')
