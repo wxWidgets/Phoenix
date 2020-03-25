@@ -19,6 +19,9 @@ DOCSTRING = ""
 # this script.
 ITEMS  = [ "wxAnimation",
            "wxAnimationCtrl",
+           "wxAnimationDecoder",
+           "wxANIDecoder",
+           "wxGIFDecoder",
            ]
 
 #---------------------------------------------------------------------------
@@ -45,8 +48,18 @@ def run():
     module.insertItemBefore(c, item)
 
 
-    # TODO: It would be nice to be able to use the generic verison on all
-    # platforms since the native GTK version has some limitations...
+    #-----------------------------------------------------------------
+    c = module.find('wxAnimationDecoder')
+    c.find('DoCanRead').ignore(False)
+
+    c = module.find('wxANIDecoder')
+    c.find('DoCanRead').ignore(False)
+
+    c = module.find('wxGIFDecoder')
+    c.find('DoCanRead').ignore(False)
+
+    module.addItem(tools.wxListWrapperTemplate('wxAnimationDecoderList', 'wxAnimationDecoder', module,
+                                               header_extra='#include <wx/animate.h>'))
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
