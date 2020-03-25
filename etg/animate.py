@@ -53,9 +53,14 @@ def run():
     module.addItem(tools.wxListWrapperTemplate('wxAnimationDecoderList', 'wxAnimationDecoder', module,
                                                header_extra='#include <wx/animate.h>'))
 
+
     c = module.find('wxAnimationCtrl')
     tools.fixWindowClass(c)
     module.addGlobalStr('wxAnimationCtrlNameStr', c)
+
+    # Add the generic class too
+    gen = tools.copyClassDef(c, 'wxGenericAnimationCtrl')
+    module.insertItemAfter(c, gen)
 
     # move this before wxAnimationCtrl so it can be used for default arg values
     item = module.find('wxNullAnimation')
