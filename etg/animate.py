@@ -35,17 +35,6 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    # TODO: We'll need a different way to handle things when the native version
-    # is configured. The stubs generator expects that it is an all or nothing
-    # situaton, but that is not the case for wxAnimation and wxAnimationCtrl...
-
-    # module.addHeaderCode('#include <wx/animate.h>')
-    # tools.generateStubs('wxUSE_GENERIC_ANIMATIONCTRL', module,
-    #                      typeValMap={'wxAnimation': 'wxNullAnimation',
-    #                                  'wxAnimationDisposal': 'wxANIM_UNSPECIFIED',
-    #                                  'wxAnimationType': 'wxANIMATION_TYPE_INVALID',
-    #                       },)
-
     c = module.find('wxAnimation')
     assert isinstance(c, etgtools.ClassDef)
 
