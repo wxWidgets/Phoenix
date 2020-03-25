@@ -289,6 +289,7 @@ def main(wxDir, args):
                             "--disable-debugreport",
                             "--enable-uiactionsim",
                             "--enable-autoidman",
+                            "--disable-nativeanimation",
                             ]
 
         if sys.platform.startswith("darwin"):
@@ -405,6 +406,7 @@ def main(wxDir, args):
             flags["wxUSE_IFF"] = "1"
             flags["wxUSE_ACCESSIBILITY"] = "1"
             flags["wxUSE_WINRT"] = "0"
+            flags["wxUSE_NATIVE_ANIMATIONCTRL"] = "0"
 
             # Remove this when Windows XP finally dies, or when there is a
             # solution for ticket #13116...
