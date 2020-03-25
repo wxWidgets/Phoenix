@@ -865,7 +865,8 @@ def convertFourDoublesTemplate(CLASS):
 
 
 def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None,
-                          includeConvertToType=False, fakeListClassName=None):
+                          includeConvertToType=False, fakeListClassName=None,
+                          header_extra=''):
     if RealItemClass is None:
         RealItemClass = ItemClass
 
@@ -887,6 +888,7 @@ class {ListClass}_iterator /Abstract/
 {{
     // the C++ implementation of this class
     %TypeHeaderCode
+        {header_extra}
         {TypeDef}
         class {ListClass}_iterator {{
         public:
@@ -920,6 +922,7 @@ public:
 class {ListClass}
 {{
     %TypeHeaderCode
+        {header_extra}
         {TypeDef}
     %End
 public:
