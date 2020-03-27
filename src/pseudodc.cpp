@@ -141,11 +141,12 @@ pdcDrawPolyPolygonOp::pdcDrawPolyPolygonOp(int n, int count[], wxPoint points[],
 
 pdcDrawPolyPolygonOp::~pdcDrawPolyPolygonOp()
 {
-    if (m_points) delete m_points;
-    if (m_count) delete m_count;
+    if (m_points) delete[] m_points;
+    if (m_count) delete[] m_count;
     m_points=NULL;
     m_count=NULL;
 }
+
 
 // ----------------------------------------------------------------------------
 // pdcDrawLinesOp
