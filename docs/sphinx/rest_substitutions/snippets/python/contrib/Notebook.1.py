@@ -53,9 +53,8 @@ class NotebookFrame(wx.Frame):
             path = dlg.GetPath()
 
             # Open the file as read-only and slurp its content
-            fid = open(path, 'rt')
-            text = fid.read()
-            fid.close()
+            with open(path, 'rt') as fid:
+                text = fid.read()
 
             # Create the notebook page as a wx.TextCtrl and
             # add it as a page of the wx.Notebook

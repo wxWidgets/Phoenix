@@ -194,8 +194,8 @@ class pdfViewer(wx.ScrolledWindow):
             Create and return a file object with the contents of filename,
             only used for testing.
             """
-            f = open(filename, 'rb')
-            stream = f.read()
+            with open(filename, 'rb') as f:
+                stream = f.read()
             return BytesIO(stream)
 
         self.pdfpathname = ''

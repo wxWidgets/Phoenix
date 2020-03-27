@@ -816,7 +816,8 @@ class ClassDef(BaseDef):
 
 
     def includeCppCode(self, filename):
-        self.addCppCode(textfile_open(filename).read())
+        with textfile_open(filename) as fid:
+            self.addCppCode(fid.read())
 
 
     def addAutoProperties(self):
@@ -1470,7 +1471,8 @@ class ModuleDef(BaseDef):
             self.cppCode.append(code)
 
     def includeCppCode(self, filename):
-        self.addCppCode(textfile_open(filename).read())
+        with textfile_open(filename) as fid:
+            self.addCppCode(fid.read())
 
     def addInitializerCode(self, code):
         if isinstance(code, list):
@@ -1616,7 +1618,8 @@ class ModuleDef(BaseDef):
         """
         Add a snippet of Python code from a file to the wrapper module.
         """
-        text = textfile_open(filename).read()
+        with textfile_open(filename) as fid:
+            text = fid.read()
         return self.addPyCode(
             "#" + '-=' * 38 + '\n' +
             ("# This code block was included from %s\n%s\n" % (filename, text)) +

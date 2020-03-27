@@ -150,12 +150,8 @@ class TablePanel(wx.Panel):
     def PreviewText(self):
         prt = printout.PrintTable(self.frame)
         prt.SetHeader("PROCLAMATION")
-        file = open('data/proclamation.txt')
-        data = []
-        for txt in file:
-            data.append(txt.strip())
-        file.close()
-        prt.data = data
+        with open('data/proclamation.txt') as file_:
+            prt.data = [txt.strip() for txt in file_]
         prt.Preview()
 
     def PrintWide(self):

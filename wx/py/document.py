@@ -24,18 +24,13 @@ class Document:
         """Return contents of file."""
         if self.filepath and os.path.exists(self.filepath):
             with open(self.filepath, 'rb') as f:
-                try:
-                    return f.read().decode('utf-8')
-                finally:
-                    pass
-        else:
-            return ''
+                return f.read().decode('utf-8')
+        return ''
 
     def write(self, text):
         """Write text to file."""
         with open(self.filepath, 'wb') as f:
-            try:
-                # Convert from unicode to bytes
+            try:  # Convert from unicode to bytes
                 text = text.encode('utf-8')
                 f.write(text)
             except AttributeError:

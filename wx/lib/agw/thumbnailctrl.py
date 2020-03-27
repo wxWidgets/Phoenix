@@ -478,18 +478,18 @@ class PILImageHandler(object):
 
         import PIL.Image as Image
 
-        pil = Image.open(filename)
-        originalsize = pil.size
+        with Image.open(filename) as pil:
+            originalsize = pil.size
 
-        pil.thumbnail(thumbnailsize)
-        img = wx.Image(pil.size[0], pil.size[1])
+            pil.thumbnail(thumbnailsize)
+            img = wx.Image(pil.size[0], pil.size[1])
 
-        img.SetData(pil.convert("RGB").tobytes())
+            img.SetData(pil.convert("RGB").tobytes())
 
-        alpha = False
-        if "A" in pil.getbands():
-            img.SetAlpha(pil.convert("RGBA").tobytes()[3::4])
-            alpha = True
+            alpha = False
+            if "A" in pil.getbands():
+                img.SetAlpha(pil.convert("RGBA").tobytes()[3::4])
+                alpha = True
 
         return img, originalsize, alpha
 
