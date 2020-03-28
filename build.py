@@ -167,7 +167,7 @@ def main(args):
     setPythonVersion(args)
     setDevModeOptions(args)
 
-    os.environ['PYTHONPATH'] = phoenixDir()
+    os.environ['PYTHONPATH'] = os.environ['PYTHONPATH'] + ':' + phoenixDir()
     os.environ['PYTHONUNBUFFERED'] = 'yes'
     os.environ['WXWIN'] = wxDir()
 
@@ -2223,7 +2223,7 @@ def cmd_setpythonpath(options, args):
     assert os.getcwd() == phoenixDir()
 
     sys.path.insert(0, phoenixDir())
-    os.environ['PYTHONPATH'] = phoenixDir()
+    os.environ['PYTHONPATH'] = os.environ['PYTHONPATH'] + ':' + phoenixDir()
 
 
 
