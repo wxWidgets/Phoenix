@@ -1,7 +1,15 @@
 #!/usr/bin/env python
 
 import wx
-from wx.adv import Animation, AnimationCtrl
+
+if True:
+    # use the native classes, if the platform has a native widget
+    from wx.adv import Animation, AnimationCtrl
+else:
+    # Otherwise, force use of the generic widgets on all platforms
+    from wx.adv import GenericAnimation as Animation
+    from wx.adv import GenericAnimationCtrl as AnimationCtrl
+
 from Main import opj
 
 GIFNames = [
