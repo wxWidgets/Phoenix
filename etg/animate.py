@@ -17,7 +17,10 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ "wxAnimation",
+ITEMS  = [ "wxAnimationBase",
+           "wxGenericAnimation",
+           "wxGenericAnimationCtrl",
+           "wxAnimation",
            "wxAnimationCtrl",
            "wxAnimationDecoder",
            "wxANIDecoder",
@@ -35,29 +38,29 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxAnimation')
-    assert isinstance(c, etgtools.ClassDef)
-
-    #c.find('GetHandlers').ignore()
-    module.addItem(tools.wxListWrapperTemplate('wxAnimationDecoderList', 'wxAnimationDecoder', module,
-                                               header_extra='#include <wx/animate.h>'))
-
+    c = module.find('wxGenericAnimationCtrl')
+    tools.fixWindowClass(c)
 
     c = module.find('wxAnimationCtrl')
     tools.fixWindowClass(c)
+
     module.addGlobalStr('wxAnimationCtrlNameStr', c)
 
-    # Add the generic class too
-    gen = tools.copyClassDef(c, 'wxGenericAnimationCtrl')
-    module.insertItemAfter(c, gen)
 
     # move this before wxAnimationCtrl so it can be used for default arg values
     item = module.find('wxNullAnimation')
     module.items.remove(item)
     module.insertItemBefore(c, item)
 
+    item = module.find('wxNullGenericAnimation')
+    module.items.remove(item)
+    module.insertItemBefore(c, item)
+
 
     #-----------------------------------------------------------------
+    module.addItem(tools.wxListWrapperTemplate('wxAnimationDecoderList', 'wxAnimationDecoder', module,
+                                               header_extra='#include <wx/animate.h>'))
+
     c = module.find('wxAnimationDecoder')
     c.find('DoCanRead').ignore(False)
 
