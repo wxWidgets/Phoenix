@@ -88,6 +88,10 @@ New and improved in this release:
 * Added wx.msw.CHMHelpController, and also a wx.HelpController factory function
   that creates an instance of the best Help Controller for the platform. (#1536)
 
+* Added wx.GenericAnimation and wx.GenericAnimationCtrl so the generic version
+  of the animation classes can be used even on the platforms that have a native
+  version. (#1579)
+  
 
 
 

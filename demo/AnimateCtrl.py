@@ -2,9 +2,10 @@
 
 import wx
 
-if True:
+if False:
     # use the native classes, if the platform has a native widget
-    from wx.adv import Animation, AnimationCtrl
+    from wx.adv import Animation
+    from wx.adv import AnimationCtrl
 else:
     # Otherwise, force use of the generic widgets on all platforms
     from wx.adv import GenericAnimation as Animation
