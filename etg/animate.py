@@ -17,10 +17,10 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ "wxAnimationBase",
-           "wxGenericAnimation",
-           "wxGenericAnimationCtrl",
+ITEMS  = [ "wxAnimationImpl",
+           "wxAnimationGenericImpl",
            "wxAnimation",
+           "wxGenericAnimationCtrl",
            "wxAnimationCtrl",
            "wxAnimationDecoder",
            "wxANIDecoder",
@@ -47,12 +47,11 @@ def run():
     module.addGlobalStr('wxAnimationCtrlNameStr', c)
 
 
+    c = module.find('wxAnimationImpl')
+    c.addPrivateCopyCtor()
+
     # move this before wxAnimationCtrl so it can be used for default arg values
     item = module.find('wxNullAnimation')
-    module.items.remove(item)
-    module.insertItemBefore(c, item)
-
-    item = module.find('wxNullGenericAnimation')
     module.items.remove(item)
     module.insertItemBefore(c, item)
 
