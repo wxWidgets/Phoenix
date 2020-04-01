@@ -34,7 +34,6 @@
 #
 
 
-
 """
 img2py.py  --  Convert an image to PNG format and embed it in a Python
                module with appropriate code so it can be loaded into
@@ -81,7 +80,6 @@ function. See its docstring for more info.
 
 import base64
 import getopt
-import glob
 import os
 import re
 import sys
@@ -120,10 +118,8 @@ def convert(fileName, maskClr, outputDir, outputName, outType, outExt):
         with open(newname, "wb") as f_out:
             with open(fileName, "rb") as f_in:
                 f_out.write(f_in.read())
-        return 1, "ok"
-
-    else:
-        return img2img.convert(fileName, maskClr, outputDir, outputName, outType, outExt)
+        return True, "ok"
+    return img2img.convert(fileName, maskClr, outputDir, outputName, outType, outExt)
 
 
 def _replace_non_alphanumeric_with_underscore(imgName):
@@ -187,7 +183,9 @@ def img2py(image_file, python_file,
         app = wx.App(0)
 
     # convert the image file to a temporary file
-    tfname = tempfile.mktemp()
+    with tempfile.NamedTemporaryFile(delete=False) as fid:
+        tfname = fid.name
+
     try:
         ok, msg = convert(image_file, maskClr, None, tfname, wx.BITMAP_TYPE_PNG, ".png")
         if not ok:
@@ -259,7 +257,6 @@ def img2py(image_file, python_file,
         m_msg = ""
 
     print("Embedded %s%s into %s%s" % (image_file, n_msg, python_file, m_msg))
-
 
 def main(args=None):
     if not args:
