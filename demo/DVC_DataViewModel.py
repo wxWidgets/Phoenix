@@ -263,12 +263,14 @@ class TestPanel(wx.Panel):
             tr = dv.DataViewTextRenderer()
             c0 = dv.DataViewColumn("Genre",   # title
                                    tr,        # renderer
-                                   0,         # data model column
-                                   width=80)
+                                   0)         # data model column
             self.dvc.AppendColumn(c0)
         else:
             # otherwise there are convenience methods for the simple cases
-            self.dvc.AppendTextColumn("Genre",   0, width=80)
+            c0 = self.dvc.AppendTextColumn("Genre",   0)
+
+        c0.SetMinWidth(80)
+        c0.SetAlignment(wx.ALIGN_LEFT)
 
         c1 = self.dvc.AppendTextColumn("Artist",   1, width=170, mode=dv.DATAVIEW_CELL_EDITABLE)
         c2 = self.dvc.AppendTextColumn("Title",    2, width=260, mode=dv.DATAVIEW_CELL_EDITABLE)
@@ -295,6 +297,7 @@ class TestPanel(wx.Panel):
 
         self.Sizer.Add(b1, 0, wx.ALL, 5)
 
+        wx.CallAfter(c0.SetMinWidth, 80)
 
     def OnNewView(self, evt):
         f = wx.Frame(None, title="New view, shared model", size=(600,400))
@@ -328,7 +331,7 @@ def runTest(frame, nb, log):
             genre = Genre(song.genre)
             data[song.genre] = genre
         genre.songs.append(song)
-    data = data.values()
+    data = list(data.values())
 
     # Finally create the test window
     win = TestPanel(nb, log, data=data)
