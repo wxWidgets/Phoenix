@@ -39,6 +39,7 @@ def run():
     c = module.find('wxAnimationCtrl')
     tools.fixWindowClass(c)
     play = c.find('Play')
+    play.isVirtual = True
     others = [
         c.find('Stop'),
         c.find('IsPlaying'),
@@ -66,6 +67,7 @@ def run():
     # methods it will be inheriting from the real base class, which is not
     # public.
     for m in others:
+        m.isVirtual = True
         c.addItem(m)
 
     module.addGlobalStr('wxAnimationCtrlNameStr', c)
