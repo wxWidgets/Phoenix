@@ -88,8 +88,11 @@ New and improved in this release:
 * Added wx.msw.CHMHelpController, and also a wx.HelpController factory function
   that creates an instance of the best Help Controller for the platform. (#1536)
 
-* Added wx.GenericAnimationCtrl so the generic version of the animation classes
-  can be used even on the platforms that have a native version. (#1579)
+* Added wx.adv.GenericAnimationCtrl so the generic version of the animation classes
+  can be used even on the platforms that have a native version. Note that due to
+  internal changes to support both types of animations, some API changes in how
+  the Animation objects are created. See the AnimationCtrl.py sample in the demo
+  for the various usage patterns (#1579)
 
 
 
