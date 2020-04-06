@@ -42,7 +42,6 @@ def run():
     # Grab some MethodDefs that need to be copied to wxGenericAnimationCtrl
     play = c.find('Play')
     play.isVirtual = True
-    cca = c.find('CreateCompatibleAnimation')
     others = [
         c.find('Stop'),
         c.find('IsPlaying'),
@@ -53,7 +52,12 @@ def run():
         c.find('SetInactiveBitmap'),
         c.find('GetInactiveBitmap'),
         c.find('CreateAnimation'),
+        c.find('CreateCompatibleAnimation'),
     ]
+    nonvirtual = [ 'GetAnimation', 'GetInactiveBitmap', 'CreateAnimation',
+                   'CreateCompatibleAnimation',
+                   ]
+
 
     c = module.find('wxGenericAnimationCtrl')
     c.bases = ['wxControl']
@@ -70,11 +74,10 @@ def run():
     # methods it will be inheriting from the real base class, which is not
     # public.
     for m in others:
-        m.isVirtual = True
+        if m.name not in nonvirtual:
+            m.isVirtual = True
         c.addItem(m)
 
-    # This one is static, and not virtual, so we'll do it separately
-    c.addItem(cca)
 
 
     module.addGlobalStr('wxAnimationCtrlNameStr', c)
