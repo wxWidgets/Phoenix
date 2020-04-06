@@ -32,8 +32,8 @@ class TestPanel(wx.Panel):
 
         sizer = wx.FlexGridSizer(cols=3, hgap=5, vgap=5)
         for name in GIFNames:
-            ani = Animation(opj(name))
-            ctrl = AnimationCtrl(self, -1, ani)
+            ctrl = AnimationCtrl(self)
+            ctrl.LoadFile(opj(name))
             ctrl.SetBackgroundColour(self.GetBackgroundColour())
             ctrl.Play()
             sizer.Add(ctrl, 0, wx.ALL, 10)
