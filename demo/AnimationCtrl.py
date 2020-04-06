@@ -36,7 +36,7 @@ class TestPanel(wx.Panel):
             # animation object. They're more-or-less equivalent, but if you have
             # non-standard needs in your application then one pattern may make
             # more sense for you to use.
-            if True:
+            if False:
                 # If you need a separate animation object then you can have the
                 # control create one for you.
                 ctrl = AnimationCtrl(self)
