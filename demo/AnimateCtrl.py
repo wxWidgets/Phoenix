@@ -8,11 +8,9 @@ if UseNative:
     # Use the native classes, if the platform has a native widget. It will fall
     # back to the generic version if there isn't a native one available.
     from wx.adv import AnimationCtrl
-    implType = wx.adv.ANIMATION_IMPL_TYPE_NATIVE
 else:
     # Or we can force use of the generic widget on all platforms
     from wx.adv import GenericAnimationCtrl as AnimationCtrl
-    implType = wx.adv.ANIMATION_IMPL_TYPE_GENERIC
 
 from Main import opj
 
@@ -34,7 +32,7 @@ class TestPanel(wx.Panel):
 
         sizer = wx.FlexGridSizer(cols=3, hgap=5, vgap=5)
         for name in GIFNames:
-            ani = Animation(opj(name), implType=implType)
+            ani = Animation(opj(name))
             ctrl = AnimationCtrl(self, -1, ani)
             ctrl.SetBackgroundColour(self.GetBackgroundColour())
             ctrl.Play()

@@ -17,10 +17,9 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ "wxAnimationImpl",
-           "wxAnimation",
-           "wxGenericAnimationCtrl",
+ITEMS  = [ "wxAnimation",
            "wxAnimationCtrl",
+           "wxGenericAnimationCtrl",
            "wxAnimationDecoder",
            "wxANIDecoder",
            "wxGIFDecoder",
@@ -37,17 +36,18 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxGenericAnimationCtrl')
-    tools.fixWindowClass(c)
-
     c = module.find('wxAnimationCtrl')
     tools.fixWindowClass(c)
+    play = c.find('Play')
+
+    c = module.find('wxGenericAnimationCtrl')
+    tools.fixWindowClass(c)
+    # Insert a copy of the base class Play into this class. It's not in the
+    # inteface docs, but sip needs to see it there.
+    c.find('Play').overloads.append(play)
 
     module.addGlobalStr('wxAnimationCtrlNameStr', c)
 
-
-    c = module.find('wxAnimationImpl')
-    c.addPrivateCopyCtor()
 
     # move this before wxAnimationCtrl so it can be used for default arg values
     item = module.find('wxNullAnimation')
