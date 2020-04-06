@@ -29,15 +29,29 @@ class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
-
         sizer = wx.FlexGridSizer(cols=3, hgap=5, vgap=5)
+
         for name in GIFNames:
-            if False:
+            # There are a few usage pattens for creating the control and the
+            # animation object. They're more-or-less equivalent, but if you have
+            # non-standard needs in your application then one pattern may make
+            # more sense for you to use.
+            if True:
+                # If you need a separate animation object then you can have the
+                # control create one for you.
                 ctrl = AnimationCtrl(self)
                 ani = ctrl.CreateAnimation()
                 ani.LoadFile(opj(name))
                 ctrl.SetAnimation(ani)
+            elif False:
+                # if you need to have the animation object before the control is
+                # created, then you can do it like this:
+                ani = AnimationCtrl.CreateCompatibleAnimation()
+                ani.LoadFile(opj(name))
+                ctrl = AnimationCtrl(self, -1, ani)
             else:
+                # Or you can keep it simple and just have the control make and
+                # use its own animation object internally.
                 ctrl = AnimationCtrl(self)
                 ctrl.LoadFile(opj(name))
 
@@ -46,6 +60,7 @@ class TestPanel(wx.Panel):
             sizer.Add(ctrl, 0, wx.ALL, 10)
 
         if UseNative and 'wxGTK' in wx.PlatformInfo:
+            # See comment in updateBestSizes below
             wx.CallAfter(self.updateBestSizes)
 
         border = wx.BoxSizer()

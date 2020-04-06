@@ -38,8 +38,11 @@ def run():
 
     c = module.find('wxAnimationCtrl')
     tools.fixWindowClass(c)
+
+    # Grab some MethodDefs that need to be copied to wxGenericAnimationCtrl
     play = c.find('Play')
     play.isVirtual = True
+    cca = c.find('CreateCompatibleAnimation')
     others = [
         c.find('Stop'),
         c.find('IsPlaying'),
@@ -69,6 +72,10 @@ def run():
     for m in others:
         m.isVirtual = True
         c.addItem(m)
+
+    # This one is static, and not virtual, so we'll do it separately
+    c.addItem(cca)
+
 
     module.addGlobalStr('wxAnimationCtrlNameStr', c)
 
