@@ -39,12 +39,34 @@ def run():
     c = module.find('wxAnimationCtrl')
     tools.fixWindowClass(c)
     play = c.find('Play')
+    others = [
+        c.find('Stop'),
+        c.find('IsPlaying'),
+        c.find('Load'),
+        c.find('LoadFile'),
+        c.find('GetAnimation'),
+        c.find('SetAnimation'),
+        c.find('SetInactiveBitmap'),
+        c.find('GetInactiveBitmap'),
+        c.find('CreateAnimation'),
+    ]
 
     c = module.find('wxGenericAnimationCtrl')
+    c.bases = ['wxControl']
+    c.addHeaderCode('#include <wx/generic/animate.h>')
     tools.fixWindowClass(c)
+
     # Insert a copy of the base class Play into this class. It's not in the
-    # inteface docs, but sip needs to see it there.
+    # inteface docs, but sip needs to see it there, since the one that is there
+    # has a different signature.
     c.find('Play').overloads.append(play)
+
+    # Since we pretend that the base class is wxControl (because there are
+    # different parents in different builds) then we need to copy in some
+    # methods it will be inheriting from the real base class, which is not
+    # public.
+    for m in others:
+        c.addItem(m)
 
     module.addGlobalStr('wxAnimationCtrlNameStr', c)
 
