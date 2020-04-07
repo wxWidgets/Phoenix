@@ -865,7 +865,8 @@ def convertFourDoublesTemplate(CLASS):
 
 
 def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None,
-                          includeConvertToType=False, fakeListClassName=None):
+                          includeConvertToType=False, fakeListClassName=None,
+                          header_extra=''):
     if RealItemClass is None:
         RealItemClass = ItemClass
 
@@ -887,6 +888,7 @@ class {ListClass}_iterator /Abstract/
 {{
     // the C++ implementation of this class
     %TypeHeaderCode
+        {header_extra}
         {TypeDef}
         class {ListClass}_iterator {{
         public:
@@ -920,6 +922,7 @@ public:
 class {ListClass}
 {{
     %TypeHeaderCode
+        {header_extra}
         {TypeDef}
     %End
 public:
@@ -1331,6 +1334,8 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={},
     typeValMap = copy.copy(typeValMap)
     typeValMap.update({
         'int': '0',
+        'long': '0',
+        'unsigned int': '0',
         'bool': 'false',
         'double': '0.0',
         'wxString': 'wxEmptyString',
@@ -1339,6 +1344,11 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={},
         'wxSize': 'wxDefaultSize',
         'wxPoint': 'wxDefaultPosition',
         'wxFileOffset': '0',
+        'wxColour': 'wxNullColour',
+        'wxBitmap': 'wxNullBitmap',
+        'wxBitmap &': 'wxNullBitmap',
+        'wxImage': 'wxNullImage',
+        'wxVisualAttributes': 'wxVisualAttributes()',
         })
 
     code = _StubCodeHolder(cppFlag)
@@ -1440,6 +1450,7 @@ def _generateClassStub(code, klass, typeValMap):
     for item in klass:
         dispatchMap = {
             extractors.MethodDef : _generateMethodStub,
+            extractors.WigCode   : lambda c, i, t: None,  # ignore this type
             }
         func = dispatchMap.get(type(item), None)
         if func is None:
@@ -1453,6 +1464,8 @@ def _generateClassStub(code, klass, typeValMap):
 
 def _generateMethodStub(code, method, typeValMap):
     assert isinstance(method, extractors.MethodDef)
+    if method.ignored:
+        return
     decl = '    '
     if method.isVirtual:
         decl += 'virtual '

@@ -18,7 +18,7 @@ Pip:    ``pip install wxPython==4.1.0``
 
 Starting with this release wxPython has switched to tracking the wxWidgets
 master branch (version 3.1.x) for the wxWidgets source code, which wxPython is
-built upon, and which is included in the wxPython source archives. 
+built upon, and which is included in the wxPython source archives.
 
 New and improved in this release:
 
@@ -37,8 +37,8 @@ New and improved in this release:
   with warnings enabled so you can see which class, method or function calls
   you need to change.
 
-* Bug fixes in wx.lib.calendar: key navigation across month boundaries is now 
-  possible; key navigation now sets the date and fires the EVT_CALENDAR event; 
+* Bug fixes in wx.lib.calendar: key navigation across month boundaries is now
+  possible; key navigation now sets the date and fires the EVT_CALENDAR event;
   setter APIs now set the date correctly (#1230).
 
 * Switch to using a wx.Overlay in the Widget Inspection Tool to highlight
@@ -49,7 +49,7 @@ New and improved in this release:
 
 * Grafted on a EnableSystemTheme method to the classes which support it. This
   can be used to disable the default system theme on Windows for native widgets
-  like wx.ListCtrl, wx.TreeCtrl and wx.dataview.DataViewCtrl. It has no effect 
+  like wx.ListCtrl, wx.TreeCtrl and wx.dataview.DataViewCtrl. It has no effect
   on the other platforms.
 
 * The wx.WS_EX_VALIDATE_RECURSIVELY extended style flag is obsolete, as it is
@@ -60,13 +60,13 @@ New and improved in this release:
 * Fix a sometimes crash when using a wx.Overlay by letting the wx.DCOverlay hold
   a reference to the DC, to ensure that the DCOverlay is destroyed first.
   (PR#1301)
-  
+
 * Replaced the Vagrant VMs used for building wxPython for various Linux distros
   with Docker images.
 
 * Add some missing methods in wx.adv.BitmapComboBox (#1307)
 
-* Added the wx.svg package which contains code for parsing SVG (Scalable Vector 
+* Added the wx.svg package which contains code for parsing SVG (Scalable Vector
   Graphics) files, and also code for integrating with wxPython. It can rasterize
   the SVG to a wx.Bitmap of any size with no loss of quality, and it can also
   render the SVG directly to a wx.GraphicsContext using the GC's drawing
@@ -75,10 +75,10 @@ New and improved in this release:
 * Ported the embedding sample from Classic, which shows how to use wxPython from
   a C++ wxWidgets application that embeds Python. (PR #1353)
 
-* Fixed wx.GetApp() to use wxWidgets' global wxApp instance instead of 
+* Fixed wx.GetApp() to use wxWidgets' global wxApp instance instead of
   maintaining its own pointer. This way, if the wxApp is created by C++ code
   wxPython will still be able to get access to it. (#1126)
-  
+
 * Added wrappers for the wx.ActivityIndicator class.
 
 * Added wrappers for the wx.CollapsibleHeaderCtrl class.
@@ -87,6 +87,12 @@ New and improved in this release:
 
 * Added wx.msw.CHMHelpController, and also a wx.HelpController factory function
   that creates an instance of the best Help Controller for the platform. (#1536)
+
+* Added wx.adv.GenericAnimationCtrl so the generic version of the animation classes
+  can be used even on the platforms that have a native version. Note that due to
+  internal changes to support both types of animations, some API changes in how
+  the Animation objects are created. See the AnimationCtrl.py sample in the demo
+  for the various usage patterns (#1579)
 
 
 
@@ -130,13 +136,13 @@ Pip:    ``pip install wxPython==4.0.7``
 This release is comprised mostly of fixes and minor features which have been
 back-ported from the master branch. This release is likely the last release of
 the 4.0.x release series, and is certainly the last 4.0.x release that will
-support Python 2.7. It may still continue to build for Python 2.7 for some time, 
+support Python 2.7. It may still continue to build for Python 2.7 for some time,
 but no extra effort will be expended to keep it compatible.
 
 This release provides the following changes:
 
-* Bug fixes in wx.lib.calendar: key navigation across month boundaries is now 
-  possible; key navigation now sets the date and fires the EVT_CALENDAR event; 
+* Bug fixes in wx.lib.calendar: key navigation across month boundaries is now
+  possible; key navigation now sets the date and fires the EVT_CALENDAR event;
   setter APIs now set the date correctly (#1230).
 
 * Switch to using a wx.Overlay in the Widget Inspection Tool to highlight
@@ -148,16 +154,16 @@ This release provides the following changes:
 * Fix a sometimes crash when using a wx.Overlay by letting the wx.DCOverlay hold
   a reference to the DC, to ensure that the DCOverlay is destroyed first.
   (PR#1301)
-  
+
 * Ported the embedding sample from Classic, which shows how to use wxPython from
   a C++ wxWidgets application that embeds Python. (PR #1353)
 
-* Fixed wx.GetApp() to use wxWidgets' global wxApp instance instead of 
+* Fixed wx.GetApp() to use wxWidgets' global wxApp instance instead of
   maintaining its own pointer. This way, if the wxApp is created by C++ code
   wxPython will still be able to get access to it. (#1126)
-  
-* Several other PRs have been backported from the master branch (which will 
-  become wxPython 4.1.0), the full list can be seen here: 
+
+* Several other PRs have been backported from the master branch (which will
+  become wxPython 4.1.0), the full list can be seen here:
   https://github.com/wxWidgets/Phoenix/pull/1357
 
 
@@ -181,8 +187,8 @@ This release provides the following fixes:
 * Reverted the change that loads up install_requires from the contents of
   requirements.txt. Split the requirements.txt file into one for install and one
   for development.
-  
-  
+
+
 
 
 4.0.5 "St. Helens Day"
@@ -195,21 +201,21 @@ Pip:    ``pip install wxPython==4.0.5``
 
 Changes in this release include the following:
 
-* Added missing HtmlWindow.ScrollToAnchor method, and also a couple methods 
+* Added missing HtmlWindow.ScrollToAnchor method, and also a couple methods
   in HtmlCell too. (#1141)
 
-* Added missing setters for the wheel-related properties in wx.MouseEvent. 
+* Added missing setters for the wheel-related properties in wx.MouseEvent.
   (#1140)
 
-* Updated wxWidgets commit reference, bringing fixes for #1140, #1086 and 
+* Updated wxWidgets commit reference, bringing fixes for #1140, #1086 and
   #1147.
 
-* Fix the use of the output parameter in HtmlWindow.OnOpeningURL the same way 
+* Fix the use of the output parameter in HtmlWindow.OnOpeningURL the same way
   it was fixed in HtmlWindowInterface.OnHTMLOpeningURL. (#1068)
 
 * Fixed a crashing bug when using a member of a transient wx.VisualAttributes
   object. Also set the attributes to be read-only to simplify the fix. (#1198).
-  
+
 * Updated the sip being used in wxPython builds to version 4.19.16.
 
 * Added helper functions to check results of wxWidgets configure during the
