@@ -172,7 +172,7 @@ _cancel = PyEmbeddedImage(
     "7Ow/uVTq81c1FYTo76HQo5k9expXnc6xt9X5OsuOPIhGtZndu//9DYgBwEt1gHq0YITgmAAA"
     "AABJRU5ErkJggg==")
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 _error = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAACY9J"
     "REFUWIWVl1tsXMd9xn8zc87ZXe4ud5dc0qRIWRIp0pJtVRFr15ZFA7kURJsADWwgQJvYSRAg"
@@ -222,7 +222,7 @@ _error = PyEmbeddedImage(
     "iiXxYqN+8rWVlb+fe/vt6Y8a/2MFOOfE5yYm9lbm50eDOKZHKTqVIqcUGVouNEBsDDVg3Rhk"
     "Pu+yfX0z//Hcc2c+bvz/BZALwYu3Z1YVAAAAAElFTkSuQmCC")
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 _help = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAtxJ"
     "REFUOI2lk81LFHEYx5+ZndnWnV0bt8z2TYKpxYsdwpBWA62w2rxIdOgmdPAvCOnqMSiig2SB"
@@ -240,7 +240,7 @@ _help = PyEmbeddedImage(
     "j8cTqKmp+WCxWG6NjIy8LfVMjNvtLlMUxWGapgMRbYhoRUT+79AJAHA8z6e8Xu8mVwKAjY2N"
     "RiwWo6qqaqZpcoQQy65clmUJx3Gmy+Uykslk4TdmSW8/+y1ZpAAAAABJRU5ErkJggg==")
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 _information = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAACINJ"
     "REFUWIWll1uMXVUZgL+19u1c9rnPzJmZzkzb6YVSgdK7gEorWCoID0QeNWJ8gxf0RaKJMcbE"
@@ -285,7 +285,7 @@ _information = PyEmbeddedImage(
     "iglTSwL0/NBZ6nZrS83muaV67XjtyuxbzQ9m3+fkT7uf5foW/44H5K4fpLltsmTkckVlmDmA"
     "oNdr0G7V+XBmkfd+2fk87v4LLAgo84Gt5eYAAAAASUVORK5CYII=")
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 _no = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAelJ"
     "REFUOI21ksFL03EYxj/fX1tuWEtxW0ZulbbpKYutIYM6CIFEimh2CUFIKKhLpxCKSPwDunSI"
@@ -299,7 +299,7 @@ _no = PyEmbeddedImage(
     "tFsSetnNIuB2GbDtQcWMexWMwRgLpM3dHNKOU6FykASq1OvfSQNes3mL31vdv5tiJdl8FZqd"
     "8QO3F9ZRFEVpTAAAAABJRU5ErkJggg==")
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 _ok = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAjdJ"
     "REFUOI2tksFLk3Ecxp+97975vmuve1dWuiUTNIy1JlsLpkZG0aXLbv0B0aVDUMfVQTp0jJpF"
@@ -314,7 +314,7 @@ _ok = PyEmbeddedImage(
     "LZuVGYHGZi8t/gbvCABgDFS7vpVEgSgS29bv5CR7XtmQjxxyxt77En+Edwt+Svpua3MbRT5T"
     "a9QXPGL7gxc9L/eE98wwHWaG6JD1783/kB9qTvueLt8LjwAAAABJRU5ErkJggg==")
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 _question = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAB/pJ"
     "REFUWIXFl3tsVuUdxz/PubyXvu3b2hugKAobaYHJpYZLghMdEzsnbKhxGidzuMVkExedG9ni"
@@ -357,7 +357,7 @@ _question = PyEmbeddedImage(
     "SH39m0cqKiqGXW2/a7YcPXrso7W1tfd7HsHatQ0rN29u+gtgrrXf/y3/A9AbS5RB5/OZAAAA"
     "AElFTkSuQmCC")
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 _reassign = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABHNCSVQICAgIfAhkiAAAAcRJ"
     "REFUKJGdj01Ik3Ecxz///565KcvkcUwedtiWRFRUprTAxxZLq0MRzBy5IIoShF5cp6BLBF16"
@@ -370,7 +370,7 @@ _reassign = PyEmbeddedImage(
     "OML8/A9EBBERAMO27YexWIzohnY8dS7GX/TRuilFfEsP1WoFr7cen8+H/vcIUAmFQmKappim"
     "Kc3NfvH7FxcIBASQfD4f5X/4CVPZn52VDH4mAAAAAElFTkSuQmCC")
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 _warning = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAABohJ"
     "REFUWIXVlktsHVcZx3/nzJyZ+7RvYjs3Jtj12773xokfcV4VCgopArUisEhb8ahIg9ImAYnn"
@@ -406,7 +406,7 @@ _warning = PyEmbeddedImage(
     "4eYbznxw6fJbbywtii0WN6za93huZ4izszhHckmyZwPESjei+iai/neC79/DP+MDH/8FsY6a"
     "7HCEfEAAAAAASUVORK5CYII=")
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 _yes = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAjdJ"
     "REFUOI2tksFLk3Ecxp+97975vmuve1dWuiUTNIy1JlsLpkZG0aXLbv0B0aVDUMfVQTp0jJpF"
@@ -436,7 +436,6 @@ class StdDialogButtonSizer(wx.BoxSizer):
         self._buttonCancel = None
         self._buttonHelp = None
 
-
     def AddButton(self, mybutton):
         """
         Add a button to the sizer.
@@ -458,7 +457,6 @@ class StdDialogButtonSizer(wx.BoxSizer):
         elif buttonId in [wx.ID_HELP, wx.ID_CONTEXT_HELP]:
             self._buttonHelp = mybutton
 
-
     def SetAffirmativeButton(self, button):
         """
         Sets the affirmative button.
@@ -467,7 +465,6 @@ class StdDialogButtonSizer(wx.BoxSizer):
         """
 
         self._buttonAffirmative = button
-
 
     def SetNegativeButton(self, button):
         """
@@ -478,7 +475,6 @@ class StdDialogButtonSizer(wx.BoxSizer):
 
         self._buttonNegative = button
 
-
     def SetCancelButton(self, button):
         """
         Sets the cancel button.
@@ -487,7 +483,6 @@ class StdDialogButtonSizer(wx.BoxSizer):
         """
 
         self._buttonCancel = button
-
 
     def Realize(self):
         """ Realizes the sizer depending on the platform. """
@@ -558,19 +553,24 @@ class StdDialogButtonSizer(wx.BoxSizer):
             self.Add((0, 0), 1, wx.EXPAND, 0)
 
             if self._buttonAffirmative:
-                self.Add(self._buttonAffirmative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonAffirmative.ConvertDialogToPixels(wx.Size(2, 0)).x)
+                self.Add(self._buttonAffirmative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT,
+                         self._buttonAffirmative.ConvertDialogToPixels(wx.Size(2, 0)).x)
 
             if self._buttonNegative:
-                self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonNegative.ConvertDialogToPixels(wx.Size(2, 0)).x)
+                self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT,
+                         self._buttonNegative.ConvertDialogToPixels(wx.Size(2, 0)).x)
 
             if self._buttonCancel:
-                self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonCancel.ConvertDialogToPixels(wx.Size(2, 0)).x)
+                self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT,
+                         self._buttonCancel.ConvertDialogToPixels(wx.Size(2, 0)).x)
 
             if self._buttonApply:
-                self.Add(self._buttonApply, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonApply.ConvertDialogToPixels(wx.Size(2, 0)).x)
+                self.Add(self._buttonApply, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT,
+                         self._buttonApply.ConvertDialogToPixels(wx.Size(2, 0)).x)
 
             if self._buttonHelp:
-                self.Add(self._buttonHelp, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonHelp.ConvertDialogToPixels(wx.Size(2, 0)).x)
+                self.Add(self._buttonHelp, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT,
+                         self._buttonHelp.ConvertDialogToPixels(wx.Size(2, 0)).x)
 
             self.Add((0, 0), 1, wx.EXPAND, 0)
 
@@ -578,22 +578,27 @@ class StdDialogButtonSizer(wx.BoxSizer):
             # GTK+1 and any other platform
 
             if self._buttonHelp:
-                self.Add(self._buttonHelp, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonHelp.ConvertDialogToPixels(wx.Size(4, 0)).x)
+                self.Add(self._buttonHelp, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT,
+                         self._buttonHelp.ConvertDialogToPixels(wx.Size(4, 0)).x)
 
             # extra whitespace between help and cancel/ok buttons
             self.Add((0, 0), 1, wx.EXPAND, 0)
 
             if self._buttonApply:
-                self.Add(self._buttonApply, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonApply.ConvertDialogToPixels(wx.Size(4, 0)).x)
+                self.Add(self._buttonApply, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT,
+                         self._buttonApply.ConvertDialogToPixels(wx.Size(4, 0)).x)
 
             if self._buttonAffirmative:
-                self.Add(self._buttonAffirmative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonAffirmative.ConvertDialogToPixels(wx.Size(4, 0)).x)
+                self.Add(self._buttonAffirmative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT,
+                         self._buttonAffirmative.ConvertDialogToPixels(wx.Size(4, 0)).x)
 
             if self._buttonNegative:
-                self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonNegative.ConvertDialogToPixels(wx.Size(4, 0)).x)
+                self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT,
+                         self._buttonNegative.ConvertDialogToPixels(wx.Size(4, 0)).x)
 
             if self._buttonCancel:
-                self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonCancel.ConvertDialogToPixels(wx.Size(4, 0)).x)
+                self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT,
+                         self._buttonCancel.ConvertDialogToPixels(wx.Size(4, 0)).x)
                 # Cancel or help should be default
                 # self._buttonCancel.SetDefaultButton()
 
@@ -606,7 +611,7 @@ class GenericMessageDialog(wx.Dialog):
 
     def __init__(self, parent, message, caption, agwStyle,
                  pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=wx.DEFAULT_DIALOG_STYLE|wx.WANTS_CHARS,
+                 style=wx.DEFAULT_DIALOG_STYLE | wx.WANTS_CHARS,
                  wrap=-1):
         """
         Default class constructor. Use :meth:`~GenericMessageDialog.ShowModal` to show the dialog.
@@ -673,7 +678,6 @@ class GenericMessageDialog(wx.Dialog):
 
         self._created = False
 
-
     def CreateMessageDialog(self):
         """ Actually creates the :class:`GenericMessageDialog`, just before showing it on screen. """
 
@@ -695,6 +699,9 @@ class GenericMessageDialog(wx.Dialog):
 
         elif case == wx.ICON_QUESTION:
             bitmap = _question
+        else:
+            raise ValueError("unknown icon style given, must be either wx.ICON_ERROR, "
+                             "wx.ICON_INFORMATION, wx.ICON_WARNING, or wx.ICON_QUESTION")
 
         # Populate the sizers...
         icon = wx.StaticBitmap(self, -1, bitmap.GetBitmap())
@@ -719,7 +726,7 @@ class GenericMessageDialog(wx.Dialog):
             textsizer.Add(msgSizer, wx.SizerFlags().Border(wx.BOTTOM, 20))
             lowerMessage = self.GetExtendedMessage()
 
-        else: # no extended message
+        else:  # no extended message
 
             lowerMessage = message
 
@@ -746,8 +753,8 @@ class GenericMessageDialog(wx.Dialog):
         topsizer.Fit(self)
         size = self.GetSize()
 
-        if size.x < size.y*3//2:
-            size.x = size.y*3//2
+        if size.x < size.y * 3 // 2:
+            size.x = size.y * 3 // 2
             self.SetSize(size)
 
         self.Layout()
@@ -760,16 +767,15 @@ class GenericMessageDialog(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.OnHelp, id=wx.ID_HELP)
 
         for child in self.GetChildren():
-            if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton) or \
-               isinstance(child, AB.AquaButton) or isinstance(child, GB.GradientButton):
+            if isinstance(child, buttons.ThemedGenBitmapTextButton) or \
+                    isinstance(child, AB.AquaButton) or isinstance(child, GB.GradientButton):
                 # Handles the key down for the buttons...
                 child.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-                if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton):
+                if isinstance(child, buttons.ThemedGenBitmapTextButton):
                     child.SetUseFocusIndicator(False)
 
         self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigation)
         self.SwitchFocus()
-
 
     def EndDialog(self, rc):
         """
@@ -786,24 +792,20 @@ class GenericMessageDialog(wx.Dialog):
         else:
             self.Hide()
 
-
     def OnYes(self, event):
         """ :class:`GenericMessageDialog` had received a ``wx.ID_YES`` answer. """
 
         self.EndDialog(wx.ID_YES)
-
 
     def OnOk(self, event):
         """ :class:`GenericMessageDialog` had received a ``wx.ID_OK`` answer. """
 
         self.EndDialog(wx.ID_OK)
 
-
     def OnNo(self, event):
         """ :class:`GenericMessageDialog` had received a ``wx.ID_NO`` answer. """
 
         self.EndDialog(wx.ID_NO)
-
 
     def OnCancel(self, event):
         """ :class:`GenericMessageDialog` had received a ``wx.ID_CANCEL`` answer. """
@@ -814,12 +816,10 @@ class GenericMessageDialog(wx.Dialog):
         if self._agwStyle & wx.YES_NO != wx.YES_NO or self._agwStyle & wx.CANCEL:
             self.EndDialog(wx.ID_CANCEL)
 
-
     def OnHelp(self, event):
         """ :class:`GenericMessageDialog` had received a ``wx.ID_HELP`` answer. """
 
         self.EndDialog(wx.ID_HELP)
-
 
     def OnKeyDown(self, event):
         """
@@ -835,7 +835,7 @@ class GenericMessageDialog(wx.Dialog):
         ids = []
         for child in self.GetChildren():
             if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton) or \
-               isinstance(child, AB.AquaButton) or isinstance(child, GB.GradientButton):
+                    isinstance(child, AB.AquaButton) or isinstance(child, GB.GradientButton):
                 ids.append(child.GetId())
 
         if key in [ord("y"), ord("Y")] and wx.ID_YES in ids:
@@ -851,7 +851,6 @@ class GenericMessageDialog(wx.Dialog):
 
         event.Skip()
 
-
     def OnNavigation(self, event):
         """
         Handles the ``wx.EVT_NAVIGATION_KEY`` event for :class:`GenericMessageDialog`.
@@ -861,10 +860,10 @@ class GenericMessageDialog(wx.Dialog):
 
         # Switch the focus between buttons...
         if wx.GetKeyState(wx.WXK_LEFT) or wx.GetKeyState(wx.WXK_RIGHT) or \
-           wx.GetKeyState(wx.WXK_DOWN) or wx.GetKeyState(wx.WXK_UP) or \
-           wx.GetKeyState(wx.WXK_NUMPAD_LEFT) or wx.GetKeyState(wx.WXK_NUMPAD_RIGHT) or \
-           wx.GetKeyState(wx.WXK_NUMPAD_DOWN) or wx.GetKeyState(wx.WXK_NUMPAD_UP) or \
-           event.IsFromTab():
+                wx.GetKeyState(wx.WXK_DOWN) or wx.GetKeyState(wx.WXK_UP) or \
+                wx.GetKeyState(wx.WXK_NUMPAD_LEFT) or wx.GetKeyState(wx.WXK_NUMPAD_RIGHT) or \
+                wx.GetKeyState(wx.WXK_NUMPAD_DOWN) or wx.GetKeyState(wx.WXK_NUMPAD_UP) or \
+                event.IsFromTab():
             event.Skip()
             wx.CallAfter(self.SwitchFocus)
             return
@@ -872,7 +871,6 @@ class GenericMessageDialog(wx.Dialog):
         button = wx.Window.FindFocus()
         buttonId = button.GetId()
         self.EndDialog(buttonId)
-
 
     def SwitchFocus(self):
         """ Switch focus between buttons. """
@@ -884,7 +882,7 @@ class GenericMessageDialog(wx.Dialog):
 
         for child in self.GetChildren():
             if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton) or \
-               isinstance(child, AB.AquaButton) or isinstance(child, GB.GradientButton):
+                    isinstance(child, AB.AquaButton) or isinstance(child, GB.GradientButton):
                 if child == current:
                     # Set a bold font for the current focused button
                     child.SetFont(boldFont)
@@ -892,7 +890,6 @@ class GenericMessageDialog(wx.Dialog):
                     # Restore the other buttons...
                     child.SetFont(font)
                 child.Refresh()
-
 
     def CreateButtonSizer(self, flags):
         """
@@ -918,7 +915,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return sizer
 
-
     def CreateSeparatedButtonSizer(self, flags):
         """
         Creates a sizer with standard buttons using :meth:`~GenericMessageDialog.CreateButtonSizer` separated
@@ -940,7 +936,6 @@ class GenericMessageDialog(wx.Dialog):
             sizer = topsizer
 
         return sizer
-
 
     def CreateStdDialogButtonSizer(self, flags):
         """
@@ -1007,7 +1002,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return sizer
 
-
     def GetDefaultYesLabel(self):
         """
         Returns the default label for the ``Yes`` button.
@@ -1019,7 +1013,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return _("Yes")
-
 
     def GetDefaultNoLabel(self):
         """
@@ -1033,7 +1026,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return _("No")
 
-
     def GetDefaultOKLabel(self):
         """
         Returns the default label for the ``OK`` button.
@@ -1045,7 +1037,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return _("OK")
-
 
     def GetDefaultCancelLabel(self):
         """
@@ -1059,7 +1050,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return _("Cancel")
 
-
     def GetDefaultHelpLabel(self):
         """
         Returns the default label for the ``Help`` button.
@@ -1072,7 +1062,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return _("Help")
 
-
     def GetCustomOKLabel(self):
         """
         If a custom label has been used for the ``OK`` button, this method will return
@@ -1083,7 +1072,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return (self._ok and [self._ok] or [self.GetDefaultOKLabel()])[0]
-
 
     def GetCustomYesLabel(self):
         """
@@ -1096,7 +1084,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return (self._yes and [self._yes] or [self.GetDefaultYesLabel()])[0]
 
-
     def GetCustomNoLabel(self):
         """
         If a custom label has been used for the ``No`` button, this method will return
@@ -1107,7 +1094,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return (self._no and [self._no] or [self.GetDefaultNoLabel()])[0]
-
 
     def GetCustomCancelLabel(self):
         """
@@ -1120,7 +1106,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return (self._cancel and [self._cancel] or [self.GetDefaultCancelLabel()])[0]
 
-
     def GetCustomHelpLabel(self):
         """
         If a custom label has been used for the ``Help`` button, this method will return
@@ -1131,7 +1116,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return (self._help and [self._help] or [self.GetDefaultHelpLabel()])[0]
-
 
     # Customization of the message box buttons
     def SetYesNoLabels(self, yes, no):
@@ -1161,7 +1145,6 @@ class GenericMessageDialog(wx.Dialog):
         self._yes, self._no = yes, no
         return True
 
-
     def SetYesNoCancelLabels(self, yes, no, cancel):
         """
         Overrides the default labels of the ``Yes`` and ``No`` buttons.
@@ -1178,7 +1161,6 @@ class GenericMessageDialog(wx.Dialog):
         self._yes, self._no, self._cancel = yes, no, cancel
         return True
 
-
     def SetOKLabel(self, ok):
         """
         Overrides the default label of the ``OK`` button.
@@ -1192,7 +1174,6 @@ class GenericMessageDialog(wx.Dialog):
 
         self._ok = ok
         return True
-
 
     def SetOKCancelLabels(self, ok, cancel):
         """
@@ -1209,7 +1190,6 @@ class GenericMessageDialog(wx.Dialog):
         self._ok, self._cancel = ok, cancel
         return True
 
-
     def SetHelpLabel(self, help):
         """
         Overrides the default label of the ``Help`` button.
@@ -1223,7 +1203,6 @@ class GenericMessageDialog(wx.Dialog):
 
         self._help = help
         return True
-
 
     # Test if any custom labels were set
     def HasCustomLabels(self):
@@ -1239,7 +1218,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return False
 
-
     def GetDefaultYesBitmap(self):
         """
         Returns the default icon for the ``Yes`` button.
@@ -1251,7 +1229,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return _yes.GetBitmap()
-
 
     def GetDefaultNoBitmap(self):
         """
@@ -1265,7 +1242,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return _no.GetBitmap()
 
-
     def GetDefaultOKBitmap(self):
         """
         Returns the default icon for the ``OK`` button.
@@ -1277,7 +1253,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return _ok.GetBitmap()
-
 
     def GetDefaultCancelBitmap(self):
         """
@@ -1291,7 +1266,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return _cancel.GetBitmap()
 
-
     def GetDefaultHelpBitmap(self):
         """
         Returns the default icon for the ``Help`` button.
@@ -1304,7 +1278,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return _help.GetBitmap()
 
-
     def GetCustomOKBitmap(self):
         """
         If a custom icon has been used for the ``OK`` button, this method will return
@@ -1315,7 +1288,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return (self._okBitmap and [self._okBitmap] or [self.GetDefaultOKBitmap()])[0]
-
 
     def GetCustomYesBitmap(self):
         """
@@ -1328,7 +1300,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return (self._yesBitmap and [self._yesBitmap] or [self.GetDefaultYesBitmap()])[0]
 
-
     def GetCustomNoBitmap(self):
         """
         If a custom icon has been used for the ``No`` button, this method will return
@@ -1339,7 +1310,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return (self._noBitmap and [self._noBitmap] or [self.GetDefaultNoBitmap()])[0]
-
 
     def GetCustomCancelBitmap(self):
         """
@@ -1352,7 +1322,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return (self._cancelBitmap and [self._cancelBitmap] or [self.GetDefaultCancelBitmap()])[0]
 
-
     def GetCustomHelpBitmap(self):
         """
         If a custom icon has been used for the ``Help`` button, this method will return
@@ -1363,7 +1332,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return (self._helpBitmap and [self._helpBitmap] or [self.GetDefaultHelpBitmap()])[0]
-
 
     # Customization of the message box buttons icons
     def SetYesNoBitmaps(self, yesBitmap, noBitmap):
@@ -1379,7 +1347,6 @@ class GenericMessageDialog(wx.Dialog):
         self._yesBitmap, self._noBitmap = yesBitmap, noBitmap
         return True
 
-
     def SetYesNoCancelBitmaps(self, yesBitmap, noBitmap, cancelBitmap):
         """
         Overrides the default icons of the ``Yes`` and ``No`` buttons.
@@ -1394,7 +1361,6 @@ class GenericMessageDialog(wx.Dialog):
         self._yesBitmap, self._noBitmap, self._cancelBitmap = yesBitmap, noBitmap, cancelBitmap
         return True
 
-
     def SetOKBitmap(self, okBitmap):
         """
         Overrides the default icon of the ``OK`` button.
@@ -1406,7 +1372,6 @@ class GenericMessageDialog(wx.Dialog):
 
         self._okBitmap = okBitmap
         return True
-
 
     def SetOKCancelBitmaps(self, okBitmap, cancelBitmap):
         """
@@ -1421,7 +1386,6 @@ class GenericMessageDialog(wx.Dialog):
         self._okBitmap, self._cancelBitmap = okBitmap, cancelBitmap
         return True
 
-
     def SetHelpBitmap(self, helpBitmap):
         """
         Overrides the default icon of the ``Help`` button.
@@ -1433,7 +1397,6 @@ class GenericMessageDialog(wx.Dialog):
 
         self._helpBitmap = helpBitmap
         return True
-
 
     # Test if any custom icons were set
     def HasCustomBitmaps(self):
@@ -1449,7 +1412,6 @@ class GenericMessageDialog(wx.Dialog):
                 return True
 
         return False
-
 
     def WrapMessage(self, message, wrap, font=None):
         """
@@ -1479,7 +1441,6 @@ class GenericMessageDialog(wx.Dialog):
         newMessage = wordwrap.wordwrap(message, wrap, dc, False)
         return newMessage
 
-
     def ShowModal(self):
         """
         Shows the dialog, returning one of ``wx.ID_OK``, ``wx.ID_CANCEL``, ``wx.ID_YES``,
@@ -1492,12 +1453,10 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         if not self._created:
-
             self._created = True
             self.CreateMessageDialog()
 
         return wx.Dialog.ShowModal(self)
-
 
     def GetCaption(self):
         """
@@ -1507,7 +1466,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return self.GetTitle()
-
 
     def SetMessage(self, message):
         """
@@ -1520,7 +1478,6 @@ class GenericMessageDialog(wx.Dialog):
 
         self._message = message
 
-
     def GetMessage(self):
         """
         Returns a string representing the main :class:`GenericMessageDialog` message.
@@ -1529,7 +1486,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return self._message
-
 
     def SetExtendedMessage(self, extendedMessage):
         """
@@ -1546,7 +1502,6 @@ class GenericMessageDialog(wx.Dialog):
 
         self._extendedMessage = extendedMessage
 
-
     def GetExtendedMessage(self):
         """
         Returns a string representing the extended :class:`GenericMessageDialog` message.
@@ -1556,7 +1511,6 @@ class GenericMessageDialog(wx.Dialog):
 
         return self._extendedMessage
 
-
     def GetMessageDialogStyle(self):
         """
         Returns the AGW-specific window style for :class:`GenericMessageDialog`.
@@ -1565,7 +1519,6 @@ class GenericMessageDialog(wx.Dialog):
         """
 
         return self._agwStyle
-
 
     # To combine the separate main and extended messages in a single string
     def GetFullMessage(self):
@@ -1583,9 +1536,7 @@ class GenericMessageDialog(wx.Dialog):
         return msg
 
 
-
 if __name__ == '__main__':
-
     import wx
 
     # Our normal wxApp-derived class, as usual
@@ -1594,10 +1545,9 @@ if __name__ == '__main__':
     main_message = "Hello world! I am the main message."
 
     dlg = GenericMessageDialog(None, main_message, "A Nice Message Box",
-                               agwStyle=wx.ICON_INFORMATION|wx.OK)
+                               agwStyle=wx.ICON_INFORMATION | wx.OK)
 
     dlg.ShowModal()
     dlg.Destroy()
 
     app.MainLoop()
-
