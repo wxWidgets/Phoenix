@@ -705,7 +705,7 @@ class GenericMessageDialog(wx.Dialog):
 
         # Populate the sizers...
         icon = wx.StaticBitmap(self, -1, bitmap.GetBitmap())
-        icon_text.Add(icon, 0, wx.ALIGN_CENTER_HORIZONTAL)
+        icon_text.Add(icon, 0)
 
         textsizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -738,13 +738,9 @@ class GenericMessageDialog(wx.Dialog):
         icon_text.Add(textsizer, 1, wx.ALIGN_CENTER | wx.LEFT, 10)
         topsizer.Add(icon_text, 1, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 10)
 
-        center_flag = wx.EXPAND
-        if self._agwStyle & wx.YES_NO:
-            center_flag |= wx.ALIGN_CENTRE
-
         sizerBtn = self.CreateSeparatedButtonSizer(self._agwStyle & BUTTON_SIZER_FLAGS)
         if sizerBtn:
-            topsizer.Add(sizerBtn, 0, center_flag | wx.ALL, 10)
+            topsizer.Add(sizerBtn, 0, wx.EXPAND | wx.ALL, 10)
 
         self.SetAutoLayout(True)
         self.SetSizer(topsizer)
