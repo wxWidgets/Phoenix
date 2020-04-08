@@ -23,22 +23,8 @@
         // Code to test a PyObject for compatibility
         // Verify that the object is a sequence, but not bytes or unicode
         if (!sipIsErr) {
-            if (PySequence_Check(sipPy) &&
-                    !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))) {
-
-                Py_ssize_t i, len = PySequence_Length(sipPy);
-                bool failed;
-                for (i=0; i<len; i++) {
-                    PyObject* item = PySequence_GetItem(sipPy, i);
-                    failed = !PyBytes_Check(item) && !PyUnicode_Check(item);
-                    Py_DECREF(item);
-                    if (failed)
-                        return FALSE;
-                }
-                return TRUE;
-            }
-            return FALSE;
-
+            return (PySequence_Check(sipPy) &&
+                    !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)));
         }
 
 
@@ -123,21 +109,8 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
-            if (PySequence_Check(sipPy) &&
-                    !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))) {
-
-                Py_ssize_t i, len = PySequence_Length(sipPy);
-                bool failed;
-                for (i=0; i<len; i++) {
-                    PyObject* item = PySequence_GetItem(sipPy, i);
-                    failed = !PyNumber_Check(item);
-                    Py_DECREF(item);
-                    if (failed)
-                        return FALSE;
-                }
-                return TRUE;
-            }
-            return FALSE;
+            return (PySequence_Check(sipPy) &&
+                    !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)));
         }
 
         // Code to create a new wxArrayInt and convert a compatible PyObject
@@ -209,21 +182,8 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
-            if (PySequence_Check(sipPy) &&
-                    !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))) {
-
-                Py_ssize_t i, len = PySequence_Length(sipPy);
-                bool failed;
-                for (i=0; i<len; i++) {
-                    PyObject* item = PySequence_GetItem(sipPy, i);
-                    failed = !PyNumber_Check(item);
-                    Py_DECREF(item);
-                    if (failed)
-                        return FALSE;
-                }
-                return TRUE;
-            }
-            return FALSE;
+            return (PySequence_Check(sipPy) &&
+                    !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)));
         }
 
         // Code to create a new wxArrayDouble and convert a compatible PyObject
