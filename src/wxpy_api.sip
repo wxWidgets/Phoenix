@@ -339,7 +339,7 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
         value << *ptr;
     }
 
-    else if (sipCanConvertToType(obj, sipType_wxArrayString, 0)) {
+    else if (wxPyCheckStringSequence(obj)) {
         wxArrayString* ptr;
         int state = 0;
         int isErr = 0;
@@ -486,6 +486,9 @@ bool i_wxPyNumberSequenceCheck(PyObject* obj, int reqLength=-1) {
     // to a wx type, like wxPoint, wxSize, wxColour, etc. Returns true if the
     // object is a Tuple, List or numpy Array of the proper length.
 
+    // See also i_wxPyCheckNumberSequence below which can be used in more
+    // general purpose situations and for sequences of any length.
+
     // tuples or lists are easy
     bool isFast = (PyTuple_Check(obj) || PyList_Check(obj));
 
@@ -596,7 +599,45 @@ wxDateTime* i_wxPyDate_ToWxDateTime(PyObject *obj) {
                           PyDateTime_GET_YEAR(obj));
 }
 
+//--------------------------------------------------------------------------
 
+bool i_wxPyCheckNumberSequence(PyObject *obj)
+{
+    if (PySequence_Check(obj) &&
+            !(PyBytes_Check(obj) || PyUnicode_Check(obj))) {
+
+        Py_ssize_t i, len = PySequence_Length(obj);
+        bool failed;
+        for (i=0; i<len; i++) {
+            PyObject* item = PySequence_GetItem(obj, i);
+            failed = !PyNumber_Check(item);
+            Py_DECREF(item);
+            if (failed)
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+bool i_wxPyCheckStringSequence(PyObject *obj)
+{
+    if (PySequence_Check(obj) &&
+            !(PyBytes_Check(obj) || PyUnicode_Check(obj))) {
+
+        Py_ssize_t i, len = PySequence_Length(obj);
+        bool failed;
+        for (i=0; i<len; i++) {
+            PyObject* item = PySequence_GetItem(obj, i);
+            failed = !PyBytes_Check(item) && !PyUnicode_Check(item);
+            Py_DECREF(item);
+            if (failed)
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
 
 //--------------------------------------------------------------------------
 // An instance of the API structure
@@ -621,7 +662,9 @@ static wxPyAPI  API = {
     i_wxPyDateTime_Check,
     i_wxPyDate_Check,
     i_wxPyDateTime_ToWxDateTime,
-    i_wxPyDate_ToWxDateTime
+    i_wxPyDate_ToWxDateTime,
+    i_wxPyCheckNumberSequence,
+    i_wxPyCheckStringSequence
 };
 %End
 
