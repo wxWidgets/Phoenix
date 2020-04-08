@@ -58,7 +58,7 @@ wxVariant wxPGVariant_in_helper(PyObject* obj)
         value << *ptr;
     }
 
-    else if (sipCanConvertToType(obj, sipType_wxArrayInt, 0)) {
+    else if (wxPyCheckNumberSequence(obj)) {
         wxArrayInt* ptr;
         ptr = (wxArrayInt*)sipConvertToType(obj, sipType_wxArrayInt, NULL, 0, &state, &isErr);
         if (!isErr) {

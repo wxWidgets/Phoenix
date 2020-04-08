@@ -23,7 +23,7 @@
         // Code to test a PyObject for compatibility
         // Verify that the object is a sequence, but not bytes or unicode
         if (!sipIsErr) {
-            return (PySequence_Check(sipPy) && 
+            return (PySequence_Check(sipPy) &&
                     !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)));
         }
 
@@ -37,13 +37,13 @@
             // Ensure each item is a bytes or string/unicode object
             if ( !PyBytes_Check(item) && !PyUnicode_Check(item) ) {
                 // raise a TypeError if not
-                PyErr_Format(PyExc_TypeError, 
+                PyErr_Format(PyExc_TypeError,
                              "Item at index %zd has type '%s' but a sequence of bytes or strings is expected",
                              i, sipPyTypeName(Py_TYPE(item)));
                 delete array;
                 Py_DECREF(item);
                 *sipIsErr = 1;
-                return 0;                
+                return 0;
             }
 
             // if it's a string object convert it to unicode first, assuming utf-8
@@ -109,7 +109,7 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
-            return (PySequence_Check(sipPy) && 
+            return (PySequence_Check(sipPy) &&
                     !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)));
         }
 
@@ -122,13 +122,13 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
             // Ensure each item is a number object
             if ( !PyNumber_Check(item) ) {
                 // raise a TypeError if not
-                PyErr_Format(PyExc_TypeError, 
+                PyErr_Format(PyExc_TypeError,
                              "Item at index %zd has type '%s' but a sequence of numbers is expected",
                              i, sipPyTypeName(Py_TYPE(item)));
                 delete array;
                 Py_DECREF(item);
                 *sipIsErr = 1;
-                return 0;                
+                return 0;
             }
 
             // Convert to Integer
@@ -182,7 +182,7 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
-            return (PySequence_Check(sipPy) && 
+            return (PySequence_Check(sipPy) &&
                     !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)));
         }
 
@@ -195,13 +195,13 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
             // Ensure each item is a number object
             if ( !PyNumber_Check(item) ) {
                 // raise a TypeError if not
-                PyErr_Format(PyExc_TypeError, 
+                PyErr_Format(PyExc_TypeError,
                              "Item at index %zd has type '%s' but a sequence of numbers is expected",
                              i, sipPyTypeName(Py_TYPE(item)));
                 delete array;
                 Py_DECREF(item);
                 *sipIsErr = 1;
-                return 0;                
+                return 0;
             }
 
             // Convert to a Float
