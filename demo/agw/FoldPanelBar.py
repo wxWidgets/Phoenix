@@ -208,7 +208,7 @@ class Extended(wx.Frame):
 
     def OnFoldPanelBarDrag(self, event):
 
-        if event.GetDragStatus() == wx.SASH_STATUS_OUT_OF_RANGE:
+        if event.GetDragStatus() == wx.adv.SASH_STATUS_OUT_OF_RANGE:
             return
 
         if event.GetId() == self.ID_WINDOW_LEFT1:
