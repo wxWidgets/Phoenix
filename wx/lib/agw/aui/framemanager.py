@@ -3116,6 +3116,9 @@ class AuiFloatingFrame(wx.MiniFrame):
             if self._owner_mgr and self._owner_mgr._action_window == self:
                 self._owner_mgr._action_window = None
 
+            self._fly_timer.Stop()
+            self._check_fly_timer.Stop()
+
             self._mgr.UnInit()
             self.Destroy()
 
