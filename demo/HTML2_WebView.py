@@ -18,13 +18,13 @@ class TestPanel(wx.Panel):
         sizer = wx.BoxSizer(wx.VERTICAL)
         btnSizer = wx.BoxSizer(wx.HORIZONTAL)
 
+        # The emulation level is a persistent per-user per-application value.
         webview.WebView.MSWSetEmulationLevel(webview.WEBVIEWIE_EMU_IE11)
         self.wv = webview.WebView.New(self)
 
-        # The emulation level is a persistent per-user per-application value. If
-        # you would like to reset it back to the default (no-emulation) then
+        # If you would like to reset it back to the default (no-emulation) then
         # it can be done by calling this:
-        webview.WebView.MSWSetEmulationLevel(webview.WEBVIEWIE_EMU_DEFAULT)
+        # webview.WebView.MSWSetEmulationLevel(webview.WEBVIEWIE_EMU_DEFAULT)
 
         self.Bind(webview.EVT_WEBVIEW_NAVIGATING, self.OnWebViewNavigating, self.wv)
         self.Bind(webview.EVT_WEBVIEW_LOADED, self.OnWebViewLoaded, self.wv)
