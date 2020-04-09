@@ -11,29 +11,28 @@ HOWTO Release wxPython Phoenix
 1. Ensure the buildbot master and slaves are running, and that
    ~/release-builds on Havok is empty
 
-2. Ensure that the branch to be built has been pushed to github.com/RobinD42/Phoenix
+2. Ensure that the branch to be built has been pushed to
+   github.com/wxWidgets/Phoenix
 
 3. Log in to buildbot master
 
-4. On the "Builders" page check all of the dist-* builders in the Force Selected
-   Builds section
+4. On the "Builders" page click the "trigger-all-dist" builder at the bottom of
+   the list. Next, click the force-build button.
 
-5. Set a name/value pair to buildargs/--release
+5. Add the name of the branch to the appropriate field, and click the "Do a
+   release build?" checkbox.
 
-6. If a branch other than master should be used (for testing, etc.) then enter
-   that branch name in the Branch field
+6. Click the force-build button
 
-7. Click the Force Build button
-
-8. Building wheel files for selected linux distros can be done while the other
+7. Building wheel files for selected linux distros can be done while the other
    builds are still running. Fetch the source tarball when it is finished and put
    it in Phoenix/dist. Run the following::
 
         python build.py build_vagrant --release --upload
 
-9. Go do something else for a couple hours...
+8. Go do something else for a couple hours...
 
-10. ...it's still not done, come back later. Or maybe tomorrow...
+9. ...it's still not done, come back later. Or maybe tomorrow...
 
 
 
@@ -46,7 +45,7 @@ HOWTO Release wxPython Phoenix
         cd ~/release-builds
         for f in wxPython-4*; do gpg --detach-sign -a $f; done
         for f in $(find linux -name "*.whl"); do echo $f; gpg --detach-sign -a $f; done
-        
+
 13. Upload to PyPI with::
 
         cd ~/release-builds
