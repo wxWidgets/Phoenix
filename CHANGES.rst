@@ -8,9 +8,9 @@
 wxPython Changelog
 ==================
 
-4.1.0
------
-* (not yet released)
+4.1.0 "Escaping the Quarantine Blues"
+-------------------------------------
+* 10-April-2020
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.1.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
@@ -33,9 +33,9 @@ New and improved in this release:
   etc.
 
 * Many of the deprecated items in wxWidgets and wxPython are being or have
-  been removed. Be sure to test your code in 4.0.2 or a later 4.0.x release
-  with warnings enabled so you can see which class, method or function calls
-  you need to change.
+  been removed. Be sure to test your code in a recent 4.0.x release with
+  warnings enabled so you can see which class, method or function calls you need
+  to change.
 
 * Bug fixes in wx.lib.calendar: key navigation across month boundaries is now
   possible; key navigation now sets the date and fires the EVT_CALENDAR event;
