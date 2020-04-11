@@ -28,7 +28,7 @@ HOWTO Release wxPython Phoenix
    builds are still running. Fetch the source tarball when it is finished and put
    it in Phoenix/dist. Run the following::
 
-        python build.py build_vagrant --release --upload
+        python build.py build_docker --release --upload
 
 8. Go do something else for a couple hours...
 

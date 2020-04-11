@@ -125,7 +125,7 @@ def run(ctx, image_tag, cmd=None, gui=False, port=5901, keep=False):
         pty=True, echo=True)
 
 
-def _get_all_distros(gui):
+def _get_all_distros(gui=False):
     os.chdir(HERE)
     wildcard = os.path.join('gui' if gui else 'build', '*-*')
     all_matching = glob.glob(wildcard)
