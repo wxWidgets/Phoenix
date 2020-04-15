@@ -28,7 +28,10 @@ wxVariant wxDVCVariant_in_helper(PyObject* source)
 {
     wxVariant ret;
 
-    if (wxPyWrappedPtr_TypeCheck(source, wxT("wxDataViewIconText"))) {
+    if (source == Py_None) {
+        ret.MakeNull();
+    }
+    else if (wxPyWrappedPtr_TypeCheck(source, wxT("wxDataViewIconText"))) {
         wxDataViewIconText* ptr;
         wxPyConvertWrappedPtr(source, (void**)&ptr, wxT("wxDataViewIconText"));
         ret << *ptr;
@@ -57,7 +60,7 @@ PyObject* wxDVCVariant_out_helper(const wxVariant& value)
 
 
 
-%MappedType wxDVCVariant
+%MappedType wxDVCVariant /AllowNone/
 {
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility.
