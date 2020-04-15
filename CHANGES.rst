@@ -141,7 +141,13 @@ New and improved in this release:
   can be used even on the platforms that have a native version. Note that due to
   internal changes to support both types of animations, some API changes in how
   the Animation objects are created. See the AnimationCtrl.py sample in the demo
-  for the various usage patterns (#1579)
+  for the various usage patterns. (#1579)
+
+* DataViewModel.HasValue can be overridden and will inform the DataViewCtrl
+  whether or not an item and column has data. If HasValue returns False, then
+  GetValue for that item/col will not be called. This allows a distinction
+  between a truely empty cell, and one that has a value even if it is an empty
+  string. (#1600)
 
 * Added wrappers for the wx.grid.GridBlockCoords, wx.grid.GridBlocks, and
   wx.grid.GridBlockDiffResult classes, as well as associated new methods in the
