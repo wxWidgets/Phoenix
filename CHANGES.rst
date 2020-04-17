@@ -94,6 +94,13 @@ New and improved in this release:
   the Animation objects are created. See the AnimationCtrl.py sample in the demo
   for the various usage patterns (#1579)
 
+* Added wrappers for the wx.grid.GridBlockCoords, wx.grid.GridBlocks, and
+  wx.grid.GridBlockDiffResult classes, as well as associated new methods in the
+  wx.grid.Grid class. These provide a new way to interact with blocks of
+  selected cells, including an iterator interface in wx.grid.GridBlocks which
+  should be a more efficient (time and memory) way to process large groups of
+  selections.
+
 
 
 
