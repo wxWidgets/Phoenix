@@ -19,6 +19,10 @@ DOCSTRING = ""
 # this script.
 ITEMS  = [ 'wxGridCellCoords',
 
+           'wxGridBlockCoords',
+           'wxGridBlockDiffResult',
+           'wxGridBlocks',
+
            'wxGridCellRenderer',
            'wxGridCellStringRenderer',
            'wxGridCellAutoWrapStringRenderer',
@@ -131,6 +135,101 @@ def run():
     module.addItem(
         tools.wxArrayWrapperTemplate('wxGridCellCoordsArray', 'wxGridCellCoords', module,
                                      getItemCopy=True))
+
+
+    #-----------------------------------------------------------------
+    c = module.find('wxGridBlockCoords')
+    tools.addAutoProperties(c)
+
+    c.find('operator!').ignore()
+    c.addCppMethod('int', '__bool__', '()', "return self->operator!();")
+
+    c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
+        return sipBuildResult(0, "(iiii)", self->GetTopRow(), self->GetLeftCol(), self->GetBottomRow(), self->GetRightCol());
+        """,
+        pyArgsString="() -> (topRow, leftCol, bottomRow, rightCol)",
+        briefDoc="Return the block coordinants as a tuple.")
+
+    c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
+    c.addPyMethod('__repr__', '(self)',            'return "GridBlockCoords"+str(self.Get())')
+
+    #-----------------------------------------------------------------
+    c = module.find('wxGridBlockDiffResult')
+    c.find('m_parts').ignore()
+
+    c.addCppMethod('PyObject*', '_getParts', '()',
+        """\
+        wxPyThreadBlocker blocker;
+        PyObject* ret = PyTuple_New(4);
+        if (ret) {
+            PyTuple_SET_ITEM(ret, 0, wxPyConstructObject(&self->m_parts[0], "wxGridBlockCoords", false));
+            PyTuple_SET_ITEM(ret, 1, wxPyConstructObject(&self->m_parts[1], "wxGridBlockCoords", false));
+            PyTuple_SET_ITEM(ret, 2, wxPyConstructObject(&self->m_parts[2], "wxGridBlockCoords", false));
+            PyTuple_SET_ITEM(ret, 3, wxPyConstructObject(&self->m_parts[3], "wxGridBlockCoords", false));
+        }
+        return ret;
+        """)
+    c.addProperty('m_parts', '_getParts')
+
+
+    #-----------------------------------------------------------------
+    c = module.find('wxGridBlocks')
+    c.addPrivateDefaultCtor()
+
+    c.addPyMethod('__iter__', '(self)',
+                  'return PyGridBlocksIterator(self)',
+                  "Returns a Python iterator for acessing the collection of grid blocks.")
+
+    # This class is the Python iterator that knows how to fetch blocks from the
+    # wxGridBlocks object
+    c.addPyCode("""\
+        class PyGridBlocksIterator(object):
+            "A Python iterator for GridBlocks objects"
+            def __init__(self, blocks):
+                self._blocks = blocks
+                self._iterator = self._blocks.begin()
+
+            def __next__(self):
+                if self._iterator == self._blocks.end():
+                    raise StopIteration
+                obj = self._iterator._get()
+                self._iterator = self._iterator._next()
+                return obj
+        """)
+
+
+    # c.find('iterator').addCppMethod('wxGridBlocks::iterator', '_next', '()',
+    #                                 "return self->operator++();")
+    # c.find('iterator').addCppMethod('const wxGridBlockCoords&', '_get', '()',
+    #                                 "return self->operator*();")
+
+    # TODO: Doing these the normal way (above) breaks because it tries to use just
+    # "iterator" for the self param type, instead of wxGridBlocks::iterator.
+    # That should be fixable, but until then just add these methods the manual
+    # sip way.
+    c.find('iterator').addItem(etgtools.WigCode("""\
+        iterator& _next();
+        %MethodCode
+            PyErr_Clear();
+            Py_BEGIN_ALLOW_THREADS
+            sipRes = &sipCpp->operator++();
+            Py_END_ALLOW_THREADS
+            if (PyErr_Occurred()) return 0;
+        %End
+
+        const wxGridBlockCoords& _get() const;
+        %MethodCode
+            PyErr_Clear();
+            Py_BEGIN_ALLOW_THREADS
+            sipRes =  new ::wxGridBlockCoords(sipCpp->operator*());
+            Py_END_ALLOW_THREADS
+            if (PyErr_Occurred()) return 0;
+        %End
+
+        bool __eq__(const iterator& it) const;
+        bool __ne__(const iterator& it) const;
+        """))
 
 
     #-----------------------------------------------------------------
