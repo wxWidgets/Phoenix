@@ -58,7 +58,9 @@ def run():
                   #'OnGetItemColumnAttr',  # MSW only?
                   'OnGetItemColumnImage',
                   'OnGetItemImage',
-                  'OnGetItemText']:
+                  'OnGetItemText',
+                  'OnGetItemIsChecked',
+                  ]:
         c.find(name).ignore(False)
         c.find(name).isVirtual = True
 
