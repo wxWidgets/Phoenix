@@ -95,6 +95,13 @@ def run():
         GRID_VALUE_DATETIME =  "datetime"
         """)
 
+    # Add compatibility constants for these since they've been removed from wxWidgets
+    # TODO: Remove these in a future release.
+    module.addPyCode("""\
+        GRIDTABLE_REQUEST_VIEW_GET_VALUES = 2000
+        GRIDTABLE_REQUEST_VIEW_SEND_VALUES = 2001
+        """)
+
     module.insertItem(0, etgtools.TypedefDef(type='wxWindow', name='wxGridWindow'))
 
     #-----------------------------------------------------------------

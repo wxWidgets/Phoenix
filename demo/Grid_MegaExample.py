@@ -67,7 +67,6 @@ class MegaTable(Grid.GridTableBase):
             elif new > current:
                 msg = Grid.GridTableMessage(self,addmsg,new-current)
                 grid.ProcessTableMessage(msg)
-                self.UpdateValues(grid)
 
         grid.EndBatch()
 
@@ -79,13 +78,6 @@ class MegaTable(Grid.GridTableBase):
         # update the scrollbars and the displayed part of the grid
         grid.AdjustScrollbars()
         grid.ForceRefresh()
-
-
-    def UpdateValues(self, grid):
-        """Update all displayed values"""
-        # This sends an event to the grid table to update all of the values
-        msg = Grid.GridTableMessage(self, Grid.GRIDTABLE_REQUEST_VIEW_GET_VALUES)
-        grid.ProcessTableMessage(msg)
 
     def _updateColAttrs(self, grid):
         """
