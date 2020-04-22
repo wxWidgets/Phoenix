@@ -8,9 +8,9 @@
 wxPython Changelog
 ==================
 
-4.1.0 "Escaping the Quarantine Blues"
--------------------------------------
-* 10-April-2020
+4.1.0 "Escaping the Quarantine"
+-------------------------------
+* 24-April-2020
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.1.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
@@ -22,7 +22,7 @@ built upon, and which is included in the wxPython source archives.
 
 New and improved in this release:
 
-* Add wx.Font.AddPrivateFont example to the demo.
+* Add a sample for wx.Font.AddPrivateFont to the demo.
 
 * Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
   OSXEnableAutomaticDashSubstitution, and OSXDisableAllSmartSubstitutions
@@ -44,7 +44,7 @@ New and improved in this release:
 * Switch to using a wx.Overlay in the Widget Inspection Tool to highlight
   widgets when running on a GTK3 port.
 
-* Fixed issue in wx.lib.agw.customtreectrl where label editor could remain
+* Fixed issue in wx.lib.agw.customtreectrl where the label editor could remain
   stuck forever (#1235).
 
 * Grafted on a EnableSystemTheme method to the classes which support it. This
