@@ -16,83 +16,102 @@ PyPI:   https://pypi.org/project/wxPython/4.1.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.1.0``
 
-Starting with this release wxPython has switched to tracking the wxWidgets
-master branch (version 3.1.x) for the wxWidgets source code, which wxPython is
-built upon, and which is included in the wxPython source archives.
+Starting with this release wxPython has switched to tracking the
+wxWidgets master branch (version 3.1.x) for the wxWidgets source code,
+which wxPython is built upon, and which is included in the wxPython
+source archives.
+
+This will be the last release to include binaries for Python 2.7. The
+code will likely still compile and be compatible with Python 2.7 for
+some time, but no effort will be put into keeping it that way.
+
 
 New and improved in this release:
 
-* Add wx.Font.AddPrivateFont example to the demo.
+* Add a sample for wx.Font.AddPrivateFont to the demo.
 
 * Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
-  OSXEnableAutomaticDashSubstitution, and OSXDisableAllSmartSubstitutions
-  methods in wx.TextCtrl. Also added OSXEnableAutomaticTabbing in wx.App.
+  OSXEnableAutomaticDashSubstitution, and
+  OSXDisableAllSmartSubstitutions methods in wx.TextCtrl. Also added
+  OSXEnableAutomaticTabbing in wx.App.
 
-* Added wx.ColourDialogEvent, wx.DCTextBgColourChanger, wx.DCTextBgModeChanger,
-  wx.grid.GridCellDateRenderer, wx.grid.GridCellDateEditor, wx.SystemAppearance,
-  etc.
+* Added wx.ColourDialogEvent, wx.DCTextBgColourChanger,
+  wx.DCTextBgModeChanger, wx.grid.GridCellDateRenderer,
+  wx.grid.GridCellDateEditor, wx.SystemAppearance, etc.
 
-* Many of the deprecated items in wxWidgets and wxPython are being or have
-  been removed. Be sure to test your code in a recent 4.0.x release with
-  warnings enabled so you can see which class, method or function calls you need
-  to change.
+* Many of the deprecated items in wxWidgets and wxPython are being or
+  have been removed. Be sure to test your code in a recent 4.0.x
+  release with warnings enabled so you can see which class, method or
+  function calls you need to change.
 
-* Bug fixes in wx.lib.calendar: key navigation across month boundaries is now
-  possible; key navigation now sets the date and fires the EVT_CALENDAR event;
-  setter APIs now set the date correctly (#1230).
+* Bug fixes in wx.lib.calendar: key navigation across month boundaries
+  is now possible; key navigation now sets the date and fires the
+  EVT_CALENDAR event; setter APIs now set the date correctly (#1230).
 
-* Switch to using a wx.Overlay in the Widget Inspection Tool to highlight
-  widgets when running on a GTK3 port.
+* Switch to using a wx.Overlay in the Widget Inspection Tool to
+  highlight widgets when running on a GTK3 port.
 
-* Fixed issue in wx.lib.agw.customtreectrl where label editor could remain
-  stuck forever (#1235).
+* Fixed issue in wx.lib.agw.customtreectrl where the label editor
+  could remain stuck forever (#1235).
 
-* Grafted on a EnableSystemTheme method to the classes which support it. This
-  can be used to disable the default system theme on Windows for native widgets
-  like wx.ListCtrl, wx.TreeCtrl and wx.dataview.DataViewCtrl. It has no effect
-  on the other platforms.
+* Grafted on a EnableSystemTheme method to the classes which support
+  it. This can be used to disable the default system theme on Windows
+  for native widgets like wx.ListCtrl, wx.TreeCtrl and
+  wx.dataview.DataViewCtrl. It has no effect on the other platforms.
 
-* The wx.WS_EX_VALIDATE_RECURSIVELY extended style flag is obsolete, as it is
-  now the default (and only) behavior. The style flag has been added back into
-  wxPython for compatibility, but with a zero value. You can just stop using it
-  in your code with no change in behavior. (#1278)
+* The wx.WS_EX_VALIDATE_RECURSIVELY extended style flag is obsolete,
+  as it is now the default (and only) behavior. The style flag has
+  been added back into wxPython for compatibility, but with a zero
+  value. You can just stop using it in your code with no change in
+  behavior. (#1278)
 
-* Fix a sometimes crash when using a wx.Overlay by letting the wx.DCOverlay hold
-  a reference to the DC, to ensure that the DCOverlay is destroyed first.
-  (PR#1301)
+* Fix a sometimes crash when using a wx.Overlay by letting the
+  wx.DCOverlay hold a reference to the DC, to ensure that the
+  DCOverlay is destroyed first.  (PR#1301)
 
-* Replaced the Vagrant VMs used for building wxPython for various Linux distros
-  with Docker images.
+* Replaced the Vagrant VMs used for building wxPython for various
+  Linux distros with Docker images.
 
 * Add some missing methods in wx.adv.BitmapComboBox (#1307)
 
-* Added the wx.svg package which contains code for parsing SVG (Scalable Vector
-  Graphics) files, and also code for integrating with wxPython. It can rasterize
-  the SVG to a wx.Bitmap of any size with no loss of quality, and it can also
-  render the SVG directly to a wx.GraphicsContext using the GC's drawing
-  primitives. (PR #1323)
+* Added the wx.svg package which contains code for parsing SVG
+  (Scalable Vector Graphics) files, and also code for integrating with
+  wxPython. It can rasterize the SVG to a wx.Bitmap of any size with
+  no loss of quality, and it can also render the SVG directly to a
+  wx.GraphicsContext using the GC's drawing primitives. (PR #1323)
 
-* Ported the embedding sample from Classic, which shows how to use wxPython from
-  a C++ wxWidgets application that embeds Python. (PR #1353)
+* Ported the embedding sample from Classic, which shows how to use
+  wxPython from a C++ wxWidgets application that embeds Python. (PR
+  #1353)
 
 * Fixed wx.GetApp() to use wxWidgets' global wxApp instance instead of
-  maintaining its own pointer. This way, if the wxApp is created by C++ code
-  wxPython will still be able to get access to it. (#1126)
+  maintaining its own pointer. This way, if the wxApp is created by
+  C++ code wxPython will still be able to get access to it. (#1126)
 
 * Added wrappers for the wx.ActivityIndicator class.
 
 * Added wrappers for the wx.CollapsibleHeaderCtrl class.
 
-* Fixed issues in PlotCanvas around displaying and using scrollbars. (#1428)
+* Fixed issues in PlotCanvas around displaying and using
+  scrollbars. (#1428)
 
-* Added wx.msw.CHMHelpController, and also a wx.HelpController factory function
-  that creates an instance of the best Help Controller for the platform. (#1536)
+* Added wx.msw.CHMHelpController, and also a wx.HelpController factory
+  function that creates an instance of the best Help Controller for
+  the platform. (#1536)
 
-* Added wx.adv.GenericAnimationCtrl so the generic version of the animation classes
-  can be used even on the platforms that have a native version. Note that due to
-  internal changes to support both types of animations, some API changes in how
-  the Animation objects are created. See the AnimationCtrl.py sample in the demo
-  for the various usage patterns (#1579)
+* Added wx.adv.GenericAnimationCtrl so the generic version of the
+  animation classes can be used even on the platforms that have a
+  native version. Note that due to internal changes to support both
+  types of animations, some API changes in how the Animation objects
+  are created. See the AnimationCtrl.py sample in the demo for the
+  various usage patterns (#1579)
+
+* Added wrappers for the wx.grid.GridBlockCoords, wx.grid.GridBlocks,
+  and wx.grid.GridBlockDiffResult classes, as well as associated new
+  methods in the wx.grid.Grid class. These provide a new way to
+  interact with blocks of selected cells, including an iterator
+  interface in wx.grid.GridBlocks which should be a more efficient
+  (time and memory) way to process large groups of selections.
 
 
 
