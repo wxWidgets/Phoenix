@@ -20,6 +20,11 @@ Starting with this release wxPython has switched to tracking the wxWidgets
 master branch (version 3.1.x) for the wxWidgets source code, which wxPython is
 built upon, and which is included in the wxPython source archives.
 
+This will be the last release to include binaries for Python 2.7. The code will
+likely still compile and be compatible with Python 2.7 for some time, but no
+effort will be put into keeping it that way.
+
+
 New and improved in this release:
 
 * Add a sample for wx.Font.AddPrivateFont to the demo.
