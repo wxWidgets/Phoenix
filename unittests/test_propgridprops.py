@@ -77,7 +77,7 @@ class propgridprops_Tests(wtc.WidgetTestCase):
 
     @unittest.skip('class was removed?')
     def test_propgridprops11(self):
-        da = pg.FileDialogAdapter()
+        da = pg.PGFileDialogAdapter()
 
 
     def test_propgridprops12(self):
