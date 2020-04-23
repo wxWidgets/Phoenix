@@ -408,6 +408,17 @@ def fixTextClipboardMethods(klass):
             except extractors.ExtractorError:
                 pass
 
+
+def fixDialogProperty(klass):
+    """
+    Fix classes derived from EditorDialogProperty to ensure that their
+    DisplayEditorDialog method is visible.
+    """
+    m = klass.find('DisplayEditorDialog')
+    m.ignore(False)
+    m.find('value').inOut = True
+
+
 def removeVirtuals(klass):
     """
     Sometimes methods are marked as virtual but probably don't ever need to be

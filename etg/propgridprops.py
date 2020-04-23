@@ -39,11 +39,6 @@ ITEMS  = [ 'wxPGInDialogValidator',
 
 #---------------------------------------------------------------------------
 
-def _fixDialogProperty(klass):
-    m = klass.find('DisplayEditorDialog')
-    m.ignore(False)
-    m.find('value').inOut = True
-
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
@@ -92,16 +87,16 @@ def run():
     c.detailedDoc = []
 
     c = module.find('wxLongStringProperty')
-    _fixDialogProperty(c)
+    tools.fixDialogProperty(c)
 
     c = module.find('wxDirProperty')
-    _fixDialogProperty(c)
+    tools.fixDialogProperty(c)
 
     c = module.find('wxFileProperty')
-    _fixDialogProperty(c)
+    tools.fixDialogProperty(c)
 
     c = module.find('wxArrayStringProperty')
-    _fixDialogProperty(c)
+    tools.fixDialogProperty(c)
     c.find('GenerateValueAsString').ignore(False)
 
     c = module.find('wxPGArrayEditorDialog')

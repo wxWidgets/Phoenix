@@ -40,8 +40,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxMultiChoiceProperty')
+    c = module.find('wxFontProperty')
     assert isinstance(c, etgtools.ClassDef)
+    tools.fixDialogProperty(c)
+
+    c = module.find('wxMultiChoiceProperty')
+    tools.fixDialogProperty(c)
 
     # Fix up the ctor taking a wxArrayString to be the one with the easier and
     # expected API
