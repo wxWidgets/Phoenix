@@ -1678,7 +1678,7 @@ def cmd_build_docker(options, args):
     # Requirements: Docker
     #               Internet connection for downloading docker images, if needed
     #               One wxPython source archive in ./dist (created with cmd_sdist)
-    cmdTimer = CommandTimer('bdist_docker')
+    cmdTimer = CommandTimer('build_docker')
     cfg = Config(noWxConfig=True)
     cmd = ['inv', 'build-wxpython']
     if options.docker_img != 'all':

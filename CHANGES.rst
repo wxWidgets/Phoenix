@@ -8,9 +8,9 @@
 wxPython Changelog
 ==================
 
-4.1.0
------
-* (not yet released)
+4.1.0 "Escaping the Quarantine"
+-------------------------------
+* 24-April-2020
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.1.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
@@ -20,9 +20,14 @@ Starting with this release wxPython has switched to tracking the wxWidgets
 master branch (version 3.1.x) for the wxWidgets source code, which wxPython is
 built upon, and which is included in the wxPython source archives.
 
+This will be the last release to include binaries for Python 2.7. The code will
+likely still compile and be compatible with Python 2.7 for some time, but no
+effort will be put into keeping it that way.
+
+
 New and improved in this release:
 
-* Add wx.Font.AddPrivateFont example to the demo.
+* Add a sample for wx.Font.AddPrivateFont to the demo.
 
 * Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
   OSXEnableAutomaticDashSubstitution, and OSXDisableAllSmartSubstitutions
@@ -33,9 +38,9 @@ New and improved in this release:
   etc.
 
 * Many of the deprecated items in wxWidgets and wxPython are being or have
-  been removed. Be sure to test your code in 4.0.2 or a later 4.0.x release
-  with warnings enabled so you can see which class, method or function calls
-  you need to change.
+  been removed. Be sure to test your code in a recent 4.0.x release with
+  warnings enabled so you can see which class, method or function calls you need
+  to change.
 
 * Bug fixes in wx.lib.calendar: key navigation across month boundaries is now
   possible; key navigation now sets the date and fires the EVT_CALENDAR event;
@@ -44,7 +49,7 @@ New and improved in this release:
 * Switch to using a wx.Overlay in the Widget Inspection Tool to highlight
   widgets when running on a GTK3 port.
 
-* Fixed issue in wx.lib.agw.customtreectrl where label editor could remain
+* Fixed issue in wx.lib.agw.customtreectrl where the label editor could remain
   stuck forever (#1235).
 
 * Grafted on a EnableSystemTheme method to the classes which support it. This

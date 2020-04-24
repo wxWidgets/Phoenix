@@ -11,6 +11,7 @@
 
 import sys, os
 import glob
+import stat
 
 from setuptools                     import setup, find_packages
 from distutils.command.build        import build as orig_build
@@ -307,6 +308,16 @@ import distutils.dir_util
 orig_copy_tree = distutils.dir_util.copy_tree
 distutils.dir_util.copy_tree = wx_copy_tree
 
+
+# Monkey-patch make_writeable too. Sometimes the link is copied before the
+# target, and the original make_writable will fail on a link to a missing
+# target.
+def wx_make_writable(target):
+    if not os.path.islink(target):
+        os.chmod(target, os.stat(target).st_mode | stat.S_IWRITE)
+
+import setuptools.command.build_py
+setuptools.command.build_py.make_writable = wx_make_writable
 
 
 #----------------------------------------------------------------------
