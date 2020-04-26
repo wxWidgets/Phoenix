@@ -239,6 +239,7 @@ def run():
         EVT_STC_CLIPBOARD_PASTE = wx.PyEventBinder( wxEVT_STC_CLIPBOARD_PASTE, 1)
         EVT_STC_AUTOCOMP_COMPLETED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_COMPLETED, 1)
         EVT_STC_MARGIN_RIGHT_CLICK = wx.PyEventBinder( wxEVT_STC_MARGIN_RIGHT_CLICK, 1)
+        EVT_STC_MARGIN_RIGHT_CLICK = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_SELECTION_CHANGE, 1)
         """)
 
     #-----------------------------------------------------------------
