@@ -8,6 +8,28 @@
 wxPython Changelog
 ==================
 
+4.1.1
+-----
+* (unreleased)
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.1.0
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.1.0``
+
+New and improved in this release:
+
+* This should have been mentioned in the notes for the last release, but alas,
+  it wandered away and got lost. wxWidgets is now validating the flags passed
+  when adding items to a sizer, to ensure that they are the correct flags for
+  the type of the sizer. If the given flags do not make sense, for example using
+  horizontal alignment flags in a horizontal box sizer, then e wxAssertionError
+  error is raised.
+
+* Fixed missing binder for wxEVT_STC_AUTOCOMP_SELECTION_CHANGE. (#1613)
+
+
+
+
 4.1.0 "Escaping the Quarantine"
 -------------------------------
 * 24-April-2020
