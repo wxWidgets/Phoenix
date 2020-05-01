@@ -169,6 +169,7 @@ Window Styles                    Hex Value   Description
 ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
 ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
 ``ULC_USER_ROW_HEIGHT``          0x100000000 Allows to set a custom row height (one value for all the items, only in report mode).
+``ULC_NO_ITEM_DRAG``             0x200000000 Disable item dragging
 ===============================  =========== ====================================================================================================
 
 
@@ -295,6 +296,7 @@ ULC_HEADER_IN_ALL_VIEWS = 0x20000000   # Show column headers in all view modes
 ULC_NO_FULL_ROW_SELECT  = 0x40000000   # When an item is selected, the only the item in the first column is highlighted
 ULC_FOOTER              = 0x80000000   # Show a footer too (only when header is present)
 ULC_USER_ROW_HEIGHT     = 0x100000000  # Allows to set a custom row height (one value for all the items, only in report mode).
+ULC_NO_ITEM_DRAG        = 0x200000000  # Disable item dragging
 
 ULC_MASK_TYPE  = ULC_ICON | ULC_SMALL_ICON | ULC_LIST | ULC_REPORT | ULC_TILE
 ULC_MASK_ALIGN = ULC_ALIGN_TOP | ULC_ALIGN_LEFT
@@ -5995,6 +5997,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
          ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
          ``ULC_USER_ROW_HEIGHT``          0x100000000 Allows to set a custom row height (one value for all the items, only in report mode).
+         ``ULC_NO_ITEM_DRAG``             0x200000000 Disable item dragging
          ===============================  =========== ====================================================================================================
 
         :param `name`: the window name.
@@ -7569,6 +7572,9 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             return
 
         if event.Dragging():
+
+            if self.HasAGWFlag(ULC_NO_ITEM_DRAG):
+                return
 
             if not self._isDragging:
 
