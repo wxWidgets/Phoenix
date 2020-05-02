@@ -6924,9 +6924,16 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             changed = ld.Highlight(highlight)
 
         dontNotify = self.HasAGWFlag(ULC_STICKY_HIGHLIGHT) and self.HasAGWFlag(ULC_STICKY_NOSELEVENT)
+        command = (highlight and [wxEVT_COMMAND_LIST_ITEM_SELECTED] or [wxEVT_COMMAND_LIST_ITEM_DESELECTED])[0]
 
         if changed and not dontNotify:
-            self.SendNotify(line, (highlight and [wxEVT_COMMAND_LIST_ITEM_SELECTED] or [wxEVT_COMMAND_LIST_ITEM_DESELECTED])[0])
+            col = -1
+            if command==wxEVT_COMMAND_LIST_ITEM_SELECTED and wx.GetTopLevelParent(self).IsShown():
+                x, y = self.ScreenToClient(wx.GetMousePosition())
+                newItem, hitResult = self.HitTestLine(line, x, y)
+                col=newItem._col if newItem else -1
+
+            self.SendNotify(line, command, col=col)
 
         return changed
 
@@ -7295,19 +7302,21 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         pass
 
 
-    def SendNotify(self, line, command, point=wx.DefaultPosition):
+    def SendNotify(self, line, command, point=wx.DefaultPosition, col=0):
         """
         Actually sends a :class:`UltimateListEvent`.
 
         :param `line`: an instance of :class:`UltimateListLineData`;
         :param `command`: the event type to send;
         :param `point`: an instance of :class:`wx.Point`.
+        :param `col`: an integer specifying the column index.
         """
 
         bRet = True
         le = UltimateListEvent(command, self.GetParent().GetId())
         le.SetEventObject(self.GetParent())
         le.m_itemIndex = line
+        le.m_col = col
 
         # set only for events which have position
         if point != wx.DefaultPosition:
@@ -7320,7 +7329,9 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         if not self.IsVirtual():
 
             if line != -1:
-                self.GetLine(line).GetItem(0, le.m_item)
+                self.GetLine(line).GetItem(col, le.m_item)
+                le.m_item.SetId(line)
+                le.m_item.SetColumn(col)
 
             #else: this happens for wxEVT_COMMAND_LIST_ITEM_FOCUSED event
 
@@ -7468,7 +7479,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if self.IsEmpty():
             if event.RightDown():
-                self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition())
+                self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition(), -1)
 
                 evtCtx = wx.ContextMenuEvent(wx.wxEVT_CONTEXT_MENU, self.GetParent().GetId(),
                                              self.ClientToScreen(event.GetPosition()))
@@ -7640,7 +7651,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         if not hitResult:
             # outside of any item
             if event.RightDown():
-                self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition())
+                self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition(), -1)
                 evtCtx = wx.ContextMenuEvent(wx.wxEVT_CONTEXT_MENU, self.GetParent().GetId(),
                                              self.ClientToScreen(event.GetPosition()))
                 evtCtx.SetEventObject(self.GetParent())
@@ -7659,7 +7670,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             self._lastOnSame = False
 
             if current == self._lineLastClicked:
-                self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_ACTIVATED)
+                self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_ACTIVATED, col=newItem._col)
 
                 if newItem and newItem.GetKind() in [1, 2] and (hitResult & ULC_HITTEST_ONITEMCHECK):
                     self.CheckItem(newItem, not self.IsItemChecked(newItem))
@@ -7707,7 +7718,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if event.RightDown():
 
-            if self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition()):
+            if self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition(), newItem._col):
                 self._lineBeforeLastClicked = self._lineLastClicked
                 self._lineLastClicked = current
                 # If the item is already selected, do not update the selection.
@@ -7722,7 +7733,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                 event.Skip()
 
         elif event.MiddleDown():
-            self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_MIDDLE_CLICK)
+            self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_MIDDLE_CLICK, col=newItem._col)
 
         elif event.LeftDown() or forceClick:
             self._lineBeforeLastClicked = self._lineLastClicked
@@ -7787,7 +7798,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             self._lastOnSame = not forceClick and (self._current == oldCurrent) and oldWasSelected
 
             if self.HasAGWFlag(ULC_STICKY_HIGHLIGHT) and self.HasAGWFlag(ULC_STICKY_NOSELEVENT) and self.HasAGWFlag(ULC_SEND_LEFTCLICK):
-                self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_LEFT_CLICK, event.GetPosition())
+                self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_LEFT_CLICK, event.GetPosition(), newItem._col)
 
 
     def DrawDnDArrow(self):
