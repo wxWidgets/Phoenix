@@ -9881,7 +9881,7 @@ class AuiManager(wx.EvtHandler):
         # is the pane dockable?
         if self.CanDockPanel(pane):
             # do the drop calculation
-            ret, pane = self.DoDrop(self._docks, self._panes, pane, clientPt, self._action_offset)
+            ret, pane = self.DoDrop(self._docks, self._panes, pane, clientPt, self._toolbar_action_offset)
 
         # update floating position
         if pane.IsFloating():
@@ -10751,5 +10751,3 @@ class AuiManager_DCP(AuiManager):
             # if we get here, there's no center pane, create our dummy
             if not self.hasDummyPane:
                 self._createDummyPane()
-
-
