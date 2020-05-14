@@ -27,6 +27,12 @@ New and improved in this release:
 
 * Fixed missing binder for wxEVT_STC_AUTOCOMP_SELECTION_CHANGE. (#1613)
 
+* DataViewModel.HasValue can be overridden and will inform the DataViewCtrl
+  whether or not an item and column has data. If HasValue returns False, then
+  GetValue for that item/col will not be called. This allows a distinction
+  between a truely empty cell, and one that has a value even if it is an empty
+  string. (#1600)
+
 
 
 
