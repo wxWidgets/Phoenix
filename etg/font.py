@@ -35,8 +35,6 @@ def run():
 
     c = module.find('wxFontInfo')
     assert isinstance(c, etgtools.ClassDef)
-    ctor = c.find('wxFontInfo').findOverload('T pointSize')
-    ctor.find('pointSize').type = 'float'
 
     c = module.find('wxFont')
     assert isinstance(c, etgtools.ClassDef)
