@@ -23,9 +23,9 @@ class TestPanel(wx.Panel):
         # Give it some columns.
         # The ID col we'll customize a bit:
         dvlc.AppendTextColumn('id', width=40)
-        dvlc.AppendTextColumn('artist', width=170)
-        dvlc.AppendTextColumn('title', width=260)
-        dvlc.AppendTextColumn('genre', width=80)
+        dvlc.AppendTextColumn('artist', width=170, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc.AppendTextColumn('title', width=260, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc.AppendTextColumn('genre', width=80, mode=dv.DATAVIEW_CELL_EDITABLE)
 
         # Load the data. Each item (row) is added as a sequence of values
         # whose order matches the columns
