@@ -151,11 +151,13 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
         # accelerators can be dealt with the way that the AXControl
         # wants them to be done. MSWTranslateMessage is called before
         # wxWidgets handles and eats the navigation keys itself.
-        res = self.ipao.TranslateAccelerator(msg)
-        if res == hr.S_OK:
-            return True
-        else:
-            return super(ActiveXCtrl, self).MSWTranslateMessage(msg)
+        try:
+            res = self.ipao.TranslateAccelerator(msg)
+            if res == hr.S_OK:
+                return True
+        except OSError:
+            pass
+        return super(ActiveXCtrl, self).MSWTranslateMessage(msg)
 
 
     # TBD: Are the focus handlers needed?
