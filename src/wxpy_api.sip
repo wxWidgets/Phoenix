@@ -452,7 +452,7 @@ bool i_wxPyCheckForApp(bool raiseException) {
 // Make a memory view object from a C buffer and size.
 
 PyObject* i_wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) {
-    // GIL should already be held
+    wxPyThreadBlocker blocker;
     if (ptr && len) {
         Py_buffer view;
         int flags = PyBUF_FORMAT|PyBUF_ND;
