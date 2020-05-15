@@ -27,6 +27,8 @@ mydbstub.py*
 /bin/waf3-*
 /bin/doxygen-*
 
+/demo/version.py
+
 /docs/html*
 /docs/sphinx/*.txt
 /docs/sphinx/*.rst
