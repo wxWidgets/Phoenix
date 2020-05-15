@@ -22,7 +22,7 @@ New and improved in this release:
   it wandered away and got lost. wxWidgets is now validating the flags passed
   when adding items to a sizer, to ensure that they are the correct flags for
   the type of the sizer. If the given flags do not make sense, for example using
-  horizontal alignment flags in a horizontal box sizer, then e wxAssertionError
+  horizontal alignment flags in a horizontal box sizer, then a wxAssertionError
   error is raised.
 
 * Fixed missing binder for wxEVT_STC_AUTOCOMP_SELECTION_CHANGE. (#1613)
