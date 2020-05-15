@@ -90,6 +90,17 @@ def run():
             #endif
             """)
 
+    c.find('MSWSetTabStops').ignore()
+    c.addCppMethod('void', 'MSWSetTabStops', '(const wxArrayInt& tabStops)',
+        doc="""\
+            """,
+        body="""\
+            #ifdef __WXMSW__
+                // TODO:
+                //self->MSWSetTabStops(*tabStops);
+            #endif
+            """)
+
 
     tools.fixWindowClass(c)
     module.addGlobalStr('wxListBoxNameStr', c)
