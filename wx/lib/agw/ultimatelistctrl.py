@@ -9412,6 +9412,19 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 # item count
 # ----------------------------------------------------------------------------
 
+    def GetCheckedItemCount(self, col=0):
+        """
+        Returns the number of checked items in the given column.
+
+        :param col: an integer specifying the column index.
+        :returns: the number of checked items.
+        :rtype: int
+        """
+
+        GetLine = self.GetLine  # local optimization
+        return len([line for line in range(self.GetItemCount()) if GetLine(line).IsChecked(col)])
+
+
     def GetItemCount(self):
         """ Returns the number of items in the :class:`UltimateListCtrl`. """
 
@@ -11162,6 +11175,18 @@ class UltimateListCtrl(wx.Control):
 
         if self._mainWin:
             return self._mainWin.GetUserLineHeight()
+
+
+    def GetCheckedItemCount(self, col=0):
+        """
+        Returns the number of checked items in the given column.
+
+        :param 'col': an integer specifying the column index.
+        :returns: the number of checked items.
+        :rtype: int
+        """
+
+        return self._mainWin.GetCheckedItemCount(col)
 
 
     def GetColumn(self, col):
