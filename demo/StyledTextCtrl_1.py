@@ -64,7 +64,8 @@ class MySTC(stc.StyledTextCtrl):
     def OnDestroy(self, evt):
         # This is how the clipboard contents can be preserved after
         # the app has exited.
-        wx.TheClipboard.Flush()
+        if 'wxMac' not in wx.PlatformInfo:
+            wx.TheClipboard.Flush()
         evt.Skip()
 
 
