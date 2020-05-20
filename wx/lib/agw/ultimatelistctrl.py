@@ -6699,7 +6699,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         image_width = 0
 
         for c in range(col):
-            image_x += self.GetColumnWidth(c)
+            if self.IsColumnShown(c):
+                image_x += self.GetColumnWidth(c)
 
         item = self.GetLine(line)
         if item.HasImage(col):
