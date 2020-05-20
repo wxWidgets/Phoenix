@@ -33,6 +33,9 @@ New and improved in this release:
   between a truely empty cell, and one that has a value even if it is an empty
   string. (#1600)
 
+* Added flag that allows blocking of item dragging in the UltimateListControl
+  class. (PR#1620)
+
 
 
 
