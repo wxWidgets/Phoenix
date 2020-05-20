@@ -38,6 +38,8 @@ New and improved in this release:
 
 * Add the column index to notification events in UltimateListControl (PR#1630)
 
+* Added orientation parameter to UltimateListControl.GetScrollPos. (PR#1632)
+
 
 
 
