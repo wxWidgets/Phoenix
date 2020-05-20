@@ -13529,15 +13529,17 @@ class UltimateListCtrl(wx.Control):
         return self._mainWin.IsVirtual()
 
 
-    def GetScrollPos(self):
+    def GetScrollPos(self, orientation):
         """
         Returns the scrollbar position.
 
         :note: This method is forwarded to :class:`UltimateListMainWindow`.
+
+        :param `orientation`: May be wx.HORIZONTAL or wx.VERTICAL.
         """
 
         if self._mainWin:
-            return self._mainWin.GetScrollPos()
+            return self._mainWin.GetScrollPos(orientation)
 
         return 0
 
