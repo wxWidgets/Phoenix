@@ -36,6 +36,8 @@ New and improved in this release:
 * Added flag that allows blocking of item dragging in the UltimateListControl
   class. (PR#1620)
 
+* Add the column index to notification events in UltimateListControl (PR#1630)
+
 
 
 
