@@ -5086,7 +5086,6 @@ class AuiManager(wx.EvtHandler):
         # Now inform the app that we closed a pane.
         self.FireEvent(wxEVT_AUI_PANE_CLOSED, pane_info)
 
-
     def MaximizePane(self, pane_info, savesizes=True):
         """
         Maximizes the input pane.
