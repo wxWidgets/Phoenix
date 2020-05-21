@@ -5084,11 +5084,7 @@ class AuiManager(wx.EvtHandler):
             to_destroy.Destroy()
 
         # Now inform the app that we closed a pane.
-        e = AuiManagerEvent(wxEVT_AUI_PANE_CLOSED)
-        e.SetPane(pane_info)
-        e.SetCanVeto(False)
-        e.SetId(wxEVT_AUI_PANE_CLOSED)
-        wx.CallAfter(self.ProcessMgrEvent, e)
+        self.FireEvent(wxEVT_AUI_PANE_CLOSED, pane_info)
 
 
     def MaximizePane(self, pane_info, savesizes=True):
