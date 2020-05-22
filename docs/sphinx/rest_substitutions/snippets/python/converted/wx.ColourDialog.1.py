@@ -20,7 +20,7 @@
 
         # This call is unnecessary under platforms generating
         # wx.EVT_COLOUR_CHANGED if the dialog was accepted and unnecessary
-        # under the platforms not generating self event if it was cancelled,
+        # under the platforms not generating this event if it was cancelled,
         # so we could check for the different cases explicitly to avoid it,
         # but it's simpler to just always call it.
         Redraw(data.GetColour())
