@@ -36,6 +36,7 @@ def run():
     c.addPrivateCopyCtor()
     tools.removeVirtuals(c)
 
+    c.find('wxMenuItem.subMenu').transfer = True
     c.find('SetSubMenu.menu').transfer = True
 
     # deprecated and removed
