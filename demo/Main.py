@@ -2258,7 +2258,7 @@ class wxPythonDemo(wx.Frame):
 
     def OnToggleRedirect(self, event):
         app = wx.GetApp()
-        if event.Checked():
+        if event.IsChecked():
             app.RedirectStdio()
             print("Print statements and other standard output will now be directed to this window.")
         else:
@@ -2304,7 +2304,7 @@ class wxPythonDemo(wx.Frame):
 
     def OnAllowAuiFloating(self, event):
 
-        self.allowAuiFloating = event.Checked()
+        self.allowAuiFloating = event.IsChecked()
         for pane in self.mgr.GetAllPanes():
             if pane.name != "Notebook":
                 pane.Floatable(self.allowAuiFloating)
