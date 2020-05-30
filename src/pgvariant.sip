@@ -182,7 +182,7 @@ PyObject* wxPGVariant_out_helper(const wxVariant& value)
             size_t idx = 0;
             PyObject* value = PyList_New(0);
             for (idx=0; idx < sipCpp->GetCount(); idx++) {
-                PyObject* item = wxPGVariant_out_helper(sipCpp->Item(idx));
+                PyObject* item = wxPGVariant_out_helper(sipCpp->Item(idx)->GetData());
                 PyList_Append(value, item);
             }
             return value;
