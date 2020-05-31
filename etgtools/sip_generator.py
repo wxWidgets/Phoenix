@@ -908,16 +908,30 @@ from .%s import *
         assert isinstance(method, extractors.CppMethodDef_sip)
         if method.ignored:
             return
+        _needDocstring = getattr(method, '_needDocstring', True)
         cppSig = " [ %s ]" % method.cppSignature if method.cppSignature else ""
         if method.isCtor:
             stream.write('%s%s%s%s%s;\n' %
                          (indent, method.name, method.argsString, self.annotate(method), cppSig))
         else:
-            stream.write('%s%s %s%s%s%s;\n' %
-                         (indent, method.type, method.name, method.argsString,
+            virtual = "virtual " if method.isVirtual else ""
+            stream.write('%s%s%s %s%s%s%s;\n' %
+                         (indent, virtual, method.type, method.name, method.argsString,
                           self.annotate(method), cppSig))
+        # write the docstring
+        if  _needDocstring and not (method.isCtor or method.isDtor):
+            self.generateDocstring(method, stream, indent)
+            # We only write a docstring for the first overload, otherwise
+            # SIP appends them all together.
+            _needDocstring = False
         stream.write('%s%%MethodCode\n' % indent)
+        if not (method.isCtor and method.isDtor):
+            stream.write('%sPyErr_Clear();\n' % (indent+' '*4))
+            stream.write('%sPy_BEGIN_ALLOW_THREADS\n' % (indent+' '*4))
         stream.write(nci(method.body, len(indent)+4))
+        if not (method.isCtor and method.isDtor):
+            stream.write('%sPy_END_ALLOW_THREADS\n' % (indent+' '*4))
+            stream.write('%sif (PyErr_Occurred()) sipIsErr = 1;\n' % (indent+' '*4))
         stream.write('%s%%End\n\n' % indent)
 
 
