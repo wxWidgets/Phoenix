@@ -95,7 +95,7 @@ class IntProperty2(wxpg.PGProperty):
         except (ValueError, TypeError):
             if flags & wxpg.PG_REPORT_ERROR:
                 wx.MessageBox("Cannot convert '%s' into a number."%s, "Error")
-        return False
+        return (False, None)
 
     def IntToValue(self, v, flags):
         """
@@ -116,10 +116,10 @@ class IntProperty2(wxpg.PGProperty):
         # Mark the cell if validation failed
         validationInfo.SetFailureBehavior(wxpg.PG_VFB_MARK_CELL)
 
-        if value < -10000 or value > 10000:
+        if value is None or value < -10000 or value > 10000:
             return False
 
-        return (True, value)
+        return True
 
 
 class SizeProperty(wxpg.PGProperty):
@@ -331,7 +331,7 @@ class SampleMultiButtonEditor(wxpg.PGTextCtrlEditor):
                                    property,
                                    pos,
                                    buttons.GetPrimarySize())
-        wnd = wnd.m_primary
+        wnd = wnd.GetPrimary()
 
         # Finally, move buttons-subwindow to correct position and make sure
         # returned wxPGWindowList contains our custom button list.
@@ -435,10 +435,10 @@ class TrivialPropertyEditor(wxpg.PGEditor):
 
             s = property.GetDisplayedString();
 
-            tc = wx.TextCtrl(propgrid.GetPanel(), wxpg.PG_SUBID1, s,
+            tc = wx.TextCtrl(propgrid.GetPanel(), wx.ID_ANY, s,
                              (x,y), (w,h),
                              wx.TE_PROCESS_ENTER)
-            btn = wx.Button(propgrid.GetPanel(), wxpg.PG_SUBID2, '...',
+            btn = wx.Button(propgrid.GetPanel(), wx.ID_ANY, '...',
                             (x+w, y),
                             (bw, h), wx.WANTS_CHARS)
             return wxpg.PGWindowList(tc, btn)
@@ -533,7 +533,7 @@ class LargeImageEditor(wxpg.PGEditor):
             self.tc = wx.TextCtrl(propgrid.GetPanel(), -1,  "",
                                   (x+h,y), (2048,h), wx.BORDER_NONE)
 
-            btn = wx.Button(propgrid.GetPanel(), wxpg.PG_SUBID2, '...',
+            btn = wx.Button(propgrid.GetPanel(), wx.ID_ANY, '...',
                             (x+w, y),
                             (bw, h), wx.WANTS_CHARS)
 
@@ -1005,9 +1005,9 @@ class MemoDialog(wx.Dialog):
         topsizer.Add(tc,1,wx.EXPAND|wx.ALL,8)
 
         rowsizer = wx.BoxSizer( wx.HORIZONTAL )
-        rowsizer.Add(wx.Button(self,wx.ID_OK,'Ok'),0,wx.ALIGN_RIGHT|wx.ALIGN_CENTRE_VERTICAL,8)
-        rowsizer.Add((0,0),1,wx.ALIGN_RIGHT|wx.ALIGN_CENTRE_VERTICAL,8)
-        rowsizer.Add(wx.Button(self,wx.ID_CANCEL,'Cancel'),0,wx.ALIGN_RIGHT|wx.ALIGN_CENTRE_VERTICAL,8)
+        rowsizer.Add(wx.Button(self,wx.ID_OK,'Ok'),0,wx.ALIGN_CENTRE_VERTICAL,8)
+        rowsizer.Add((0,0),1,wx.ALIGN_CENTRE_VERTICAL,8)
+        rowsizer.Add(wx.Button(self,wx.ID_CANCEL,'Cancel'),0,wx.ALIGN_CENTRE_VERTICAL,8)
         topsizer.Add(rowsizer,0,wx.EXPAND|wx.ALL,8)
 
         self.SetSizer( topsizer )
