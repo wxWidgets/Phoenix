@@ -66,6 +66,12 @@ def run():
             #endif
         """)
 
+    c = module.find('wxSplitterRenderParams')
+    c.addPrivateAssignOp()
+
+    c = module.find('wxRendererVersion')
+    c.addPrivateAssignOp()
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
