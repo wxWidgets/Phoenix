@@ -40,6 +40,7 @@ def run():
     c = module.find('wxFileSystem')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
     c.find('AddHandler.handler').transfer = True
     c.find('RemoveHandler').transferBack = True
 

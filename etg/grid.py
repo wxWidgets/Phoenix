@@ -183,6 +183,7 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxGridBlocks')
     c.addPrivateDefaultCtor()
+    c.addPrivateAssignOp()
 
     c.addPyMethod('__iter__', '(self)',
                   'return PyGridBlocksIterator(self)',

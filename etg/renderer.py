@@ -74,6 +74,12 @@ def run():
     c.addPrivateCopyCtor()
     _addDrawTitleBarBitmap(c, False, draw_tb_bmp_doc)
 
+    c = module.find('wxSplitterRenderParams')
+    c.addPrivateAssignOp()
+
+    c = module.find('wxRendererVersion')
+    c.addPrivateAssignOp()
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
