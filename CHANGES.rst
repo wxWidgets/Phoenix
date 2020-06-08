@@ -40,7 +40,8 @@ New and improved in this release:
 
 * Added orientation parameter to UltimateListControl.GetScrollPos. (PR#1632)
 
-
+* wx.AuiNotebook RemovePage() now hides the removed page, so it needs to be
+  shown again if it is reused in another place. (PR#1668)
 
 
 4.1.0 "Escaping the Quarantine"

@@ -3714,6 +3714,8 @@ class AuiNotebook(wx.Panel):
         if not wnd:
             return False
 
+        wnd.Show(show=False)
+
         # find out which onscreen tab ctrl owns this tab
         ctrl, ctrl_idx = self.FindTab(wnd)
         if not ctrl:
