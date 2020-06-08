@@ -3482,6 +3482,9 @@ class AuiToolBar(wx.Control):
             last_extent -= dropdown_size
 
         # paint each individual tool
+        # local opts
+        _art = self._art
+        DrawSeparator, DrawLabel, DrawButton, DrawDropDownButton, DrawControlLabel = _art.DrawSeparator, _art.DrawLabel, _art.DrawButton, _art.DrawDropDownButton, _art.DrawControlLabel
         for item in self._items:
 
             if not item.sizer_item:
@@ -3494,35 +3497,36 @@ class AuiToolBar(wx.Control):
 
                 break
 
-            if item.kind == ITEM_SEPARATOR:
+            item_kind = item.kind
+            if item_kind == ITEM_SEPARATOR:
                 # draw a separator
-                self._art.DrawSeparator(dc, self, item_rect)
+                DrawSeparator(dc, self, item_rect)
 
-            elif item.kind == ITEM_LABEL:
+            elif item_kind == ITEM_LABEL:
                 # draw a text label only
-                self._art.DrawLabel(dc, self, item, item_rect)
+                DrawLabel(dc, self, item, item_rect)
 
-            elif item.kind == ITEM_NORMAL:
+            elif item_kind == ITEM_NORMAL:
                 # draw a regular button or dropdown button
                 if not item.dropdown:
-                    self._art.DrawButton(dc, self, item, item_rect)
+                    DrawButton(dc, self, item, item_rect)
                 else:
-                    self._art.DrawDropDownButton(dc, self, item, item_rect)
+                    DrawDropDownButton(dc, self, item, item_rect)
 
-            elif item.kind == ITEM_CHECK:
+            elif item_kind == ITEM_CHECK:
                 # draw a regular toggle button or a dropdown one
                 if not item.dropdown:
-                    self._art.DrawButton(dc, self, item, item_rect)
+                    DrawButton(dc, self, item, item_rect)
                 else:
-                    self._art.DrawDropDownButton(dc, self, item, item_rect)
+                    DrawDropDownButton(dc, self, item, item_rect)
 
-            elif item.kind == ITEM_RADIO:
+            elif item_kind == ITEM_RADIO:
                 # draw a toggle button
-                self._art.DrawButton(dc, self, item, item_rect)
+                DrawButton(dc, self, item, item_rect)
 
-            elif item.kind == ITEM_CONTROL:
+            elif item_kind == ITEM_CONTROL:
                 # draw the control's label
-                self._art.DrawControlLabel(dc, self, item, item_rect)
+                DrawControlLabel(dc, self, item, item_rect)
 
             # fire a signal to see if the item wants to be custom-rendered
             self.OnCustomRender(dc, item, item_rect)
@@ -3530,7 +3534,7 @@ class AuiToolBar(wx.Control):
         # paint the overflow button
         if dropdown_size > 0 and self.GetOverflowVisible():
             dropdown_rect = self.GetOverflowRect()
-            self._art.DrawOverflowButton(dc, self, dropdown_rect, self._overflow_state)
+            _art.DrawOverflowButton(dc, self, dropdown_rect, self._overflow_state)
 
 
     def OnEraseBackground(self, event):
