@@ -2993,6 +2993,8 @@ class AuiToolBar(wx.Control):
 
         # create the new sizer to add toolbar elements to
         sizer = wx.BoxSizer((horizontal and [wx.HORIZONTAL] or [wx.VERTICAL])[0])
+        # local opts
+        sizer_Add, sizer_AddSpacer, sizer_AddStretchSpacer, sizer_SetItemMinSize = sizer.Add, sizer.AddSpacer, sizer.AddStretchSpacer, sizer.SetItemMinSize
 
         # add gripper area
         separator_size = self._art.GetElementSize(AUI_TBART_SEPARATOR_SIZE)
@@ -3000,18 +3002,18 @@ class AuiToolBar(wx.Control):
 
         if gripper_size > 0 and self._gripper_visible:
             if horizontal:
-                self._gripper_sizer_item = sizer.Add((gripper_size, 1), 0, wx.EXPAND)
+                self._gripper_sizer_item = sizer_Add((gripper_size, 1), 0, wx.EXPAND)
             else:
-                self._gripper_sizer_item = sizer.Add((1, gripper_size), 0, wx.EXPAND)
+                self._gripper_sizer_item = sizer_Add((1, gripper_size), 0, wx.EXPAND)
         else:
             self._gripper_sizer_item = None
 
         # add "left" padding
         if self._left_padding > 0:
             if horizontal:
-                sizer.Add((self._left_padding, 1))
+                sizer_Add((self._left_padding, 1))
             else:
-                sizer.Add((1, self._left_padding))
+                sizer_Add((1, self._left_padding))
 
         count = len(self._items)
         for i, item in enumerate(self._items):
@@ -3022,42 +3024,41 @@ class AuiToolBar(wx.Control):
             if kind == ITEM_LABEL:
 
                 size = self._art.GetLabelSize(dc, self, item)
-                sizer_item = sizer.Add((size.x + (self._tool_border_padding*2),
+                sizer_item = sizer_Add((size.x + (self._tool_border_padding*2),
                                         size.y + (self._tool_border_padding*2)),
                                        item.proportion,
                                        item.alignment)
                 if i+1 < count:
-                    sizer.AddSpacer(self._tool_packing)
-
+                    sizer_AddSpacer(self._tool_packing)
 
             elif kind in [ITEM_CHECK, ITEM_NORMAL, ITEM_RADIO]:
 
                 size = self._art.GetToolSize(dc, self, item)
-                sizer_item = sizer.Add((size.x + (self._tool_border_padding*2),
+                sizer_item = sizer_Add((size.x + (self._tool_border_padding*2),
                                         size.y + (self._tool_border_padding*2)),
                                        0,
                                        item.alignment)
                 # add tool packing
                 if i+1 < count:
-                    sizer.AddSpacer(self._tool_packing)
+                    sizer_AddSpacer(self._tool_packing)
 
             elif kind == ITEM_SEPARATOR:
 
                 if horizontal:
-                    sizer_item = sizer.Add((separator_size, 1), 0, wx.EXPAND)
+                    sizer_item = sizer_Add((separator_size, 1), 0, wx.EXPAND)
                 else:
-                    sizer_item = sizer.Add((1, separator_size), 0, wx.EXPAND)
+                    sizer_item = sizer_Add((1, separator_size), 0, wx.EXPAND)
 
                 # add tool packing
                 if i+1 < count:
-                    sizer.AddSpacer(self._tool_packing)
+                    sizer_AddSpacer(self._tool_packing)
 
             elif kind == ITEM_SPACER:
 
                 if item.proportion > 0:
-                    sizer_item = sizer.AddStretchSpacer(item.proportion)
+                    sizer_item = sizer_AddStretchSpacer(item.proportion)
                 else:
-                    sizer_item = sizer.Add((item.spacer_pixels, 1))
+                    sizer_item = sizer_Add((item.spacer_pixels, 1))
 
             elif kind == ITEM_CONTROL:
                 if item.window and item.window.GetContainingSizer():
@@ -3079,7 +3080,7 @@ class AuiToolBar(wx.Control):
                     s = self.GetLabelSize(item.GetLabel())
                     vert_sizer.Add((1, s.y))
 
-                sizer_item = sizer.Add(vert_sizer, item.proportion, wx.EXPAND)
+                sizer_item = sizer_Add(vert_sizer, item.proportion, wx.EXPAND)
                 min_size = item.min_size
 
                 # proportional items will disappear from the toolbar if
@@ -3088,12 +3089,12 @@ class AuiToolBar(wx.Control):
                     min_size.x = 1
 
                 if min_size.IsFullySpecified():
-                    sizer.SetItemMinSize(vert_sizer, min_size)
+                    sizer_SetItemMinSize(vert_sizer, min_size)
                     vert_sizer.SetItemMinSize(item.window, min_size)
 
                 # add tool packing
                 if i+1 < count:
-                    sizer.AddSpacer(self._tool_packing)
+                    sizer_AddSpacer(self._tool_packing)
 
             item.sizer_item = sizer_item
 
@@ -3101,9 +3102,9 @@ class AuiToolBar(wx.Control):
         # add "right" padding
         if self._right_padding > 0:
             if horizontal:
-                sizer.Add((self._right_padding, 1))
+                sizer_Add((self._right_padding, 1))
             else:
-                sizer.Add((1, self._right_padding))
+                sizer_Add((1, self._right_padding))
 
         # add drop down area
         self._overflow_sizer_item = None
@@ -3118,9 +3119,9 @@ class AuiToolBar(wx.Control):
                 # min size.
 
                 if horizontal:
-                    self._overflow_sizer_item = sizer.Add((overflow_size, 1), 0, wx.EXPAND)
+                    self._overflow_sizer_item = sizer_Add((overflow_size, 1), 0, wx.EXPAND)
                 else:
-                    self._overflow_sizer_item = sizer.Add((1, overflow_size), 0, wx.EXPAND)
+                    self._overflow_sizer_item = sizer_Add((1, overflow_size), 0, wx.EXPAND)
 
             else:
 
