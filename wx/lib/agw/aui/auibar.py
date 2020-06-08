@@ -1127,9 +1127,8 @@ class AuiDefaultToolBarArt(object):
             dropbmp = self._button_dropdown_bmp
 
         if not bmp.IsOk():
-            return
+            dc.DrawBitmap(bmp, bmp_rect.x, bmp_rect.y, True)
 
-        dc.DrawBitmap(bmp, bmp_rect.x, bmp_rect.y, True)
         if horizontal:
             dc.DrawBitmap(dropbmp, dropbmp_x, dropbmp_y, True)
         else:
