@@ -1093,21 +1093,22 @@ class AuiDefaultToolBarArt(object):
 
         bmp_rect, text_rect = self.GetToolsPosition(dc, item, button_rect)
 
-        if item.GetState() & AUI_BUTTON_STATE_PRESSED:
+        item_state = item.GetState()
+        if item_state & AUI_BUTTON_STATE_PRESSED:
 
             dc.SetPen(wx.Pen(self._highlight_colour))
             dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 140)))
             dc.DrawRectangle(button_rect)
             dc.DrawRectangle(dropdown_rect)
 
-        elif item.GetState() & AUI_BUTTON_STATE_HOVER or item.IsSticky():
+        elif item_state & AUI_BUTTON_STATE_HOVER or item.IsSticky():
 
             dc.SetPen(wx.Pen(self._highlight_colour))
             dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 170)))
             dc.DrawRectangle(button_rect)
             dc.DrawRectangle(dropdown_rect)
 
-        elif item.GetState() & AUI_BUTTON_STATE_CHECKED:
+        elif item_state & AUI_BUTTON_STATE_CHECKED:
             # it's important to put this code in an else statment after the
             # hover, otherwise hovers won't draw properly for checked items
             dc.SetPen(wx.Pen(self._highlight_colour))
@@ -1115,7 +1116,7 @@ class AuiDefaultToolBarArt(object):
             dc.DrawRectangle(button_rect)
             dc.DrawRectangle(dropdown_rect)
 
-        if item.GetState() & AUI_BUTTON_STATE_DISABLED:
+        if item_state & AUI_BUTTON_STATE_DISABLED:
 
             bmp = item.GetDisabledBitmap()
             dropbmp = self._disabled_button_dropdown_bmp
@@ -1125,8 +1126,10 @@ class AuiDefaultToolBarArt(object):
             bmp = item.GetBitmap()
             dropbmp = self._button_dropdown_bmp
 
-        if bmp.IsOk():
-            dc.DrawBitmap(bmp, bmp_rect.x, bmp_rect.y, True)
+        if not bmp.IsOk():
+            return
+
+        dc.DrawBitmap(bmp, bmp_rect.x, bmp_rect.y, True)
         if horizontal:
             dc.DrawBitmap(dropbmp, dropbmp_x, dropbmp_y, True)
         else:
@@ -1135,7 +1138,7 @@ class AuiDefaultToolBarArt(object):
 
         # set the item's text colour based on if it is disabled
         dc.SetTextForeground(wx.BLACK)
-        if item.GetState() & AUI_BUTTON_STATE_DISABLED:
+        if item_state & AUI_BUTTON_STATE_DISABLED:
             dc.SetTextForeground(DISABLED_TEXT_COLOUR)
 
         if self._agwFlags & AUI_TB_TEXT and item.GetLabel() != "":
