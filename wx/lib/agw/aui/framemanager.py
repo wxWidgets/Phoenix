@@ -5603,15 +5603,12 @@ class AuiManager(wx.EvtHandler):
         if action_pane == -1:
             return positions, sizes
 
-        offset = 0
         for pane_i in range(action_pane-1, -1, -1):
             amount = positions[pane_i+1] - (positions[pane_i] + sizes[pane_i])
             if amount >= 0:
-                offset += amount
+                pass
             else:
                 positions[pane_i] -= -amount
-
-            offset += sizes[pane_i]
 
         # if the dock mode is fixed, make sure none of the panes
         # overlap we will bump panes that overlap

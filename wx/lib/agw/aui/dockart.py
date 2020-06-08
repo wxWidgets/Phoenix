@@ -741,9 +741,7 @@ class AuiDefaultDockArt(object):
             rect.x = rect.x + (rect.width//2) - (bmp.GetWidth()//2)
             rect.width = old_x + rect.width - rect.x - 1
         else:
-            old_y = rect.y
             rect.y = rect.y + (rect.height//2) - (bmp.GetHeight()//2)
-            rect.height = old_y + rect.height - rect.y - 1
 
         if button_state == AUI_BUTTON_STATE_PRESSED:
             rect.x += 1
