@@ -123,9 +123,13 @@ def run():
 
     spv = c.find('SetPropertyValue')
     spv.findOverload('int value').ignore()
+    spv.findOverload('wxLongLong value').ignore()
     spv.findOverload('wxLongLong_t value').ignore()
+    spv.findOverload('wxULongLong value').ignore()
     spv.findOverload('wxULongLong_t value').ignore()
     spv.findOverload('wxObject *value').ignore()
+    spv.findOverload('wchar_t *value').ignore()
+    spv.findOverload('char *value').ignore()
 
     # Reorder SetPropertyValue overloads so the one taking a long int is not
     # first. Mark others that could be auto-converted from int as
