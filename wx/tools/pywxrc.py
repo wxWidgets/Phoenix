@@ -216,7 +216,7 @@ def __init_resources():
     __res.Load('%(resourceFilename)s')"""
 
     FILE_AS_STRING = """\
-    %(filename)s = '''\\
+    %(filename)s = b'''\\
 %(fileData)s'''
 
 """
@@ -226,7 +226,7 @@ def __init_resources():
 """
 
     ADD_FILE_TO_MEMFS = """\
-    wx.MemoryFSHandler.AddFile('XRC/%(memoryPath)s/%(filename)s', %(filename)s)
+    wx.MemoryFSHandler.AddFile('XRC/%(memoryPath)s/%(filename)s', memoryview(%(filename)s))
 """
 
     LOAD_RES_MEMFS = """\
