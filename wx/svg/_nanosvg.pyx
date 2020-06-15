@@ -150,7 +150,7 @@ cdef class SVGimageBase:
 
 
     @classmethod
-    def CreateFromBytes(cls, bytes buffer, str units='px', float dpi=96, bool do_copy=True):
+    def CreateFromBytes(cls, bytes buffer, str units='px', float dpi=96, bint do_copy=True):
         """
         Loads an SVG image from a bytes object.
 
@@ -165,7 +165,7 @@ cdef class SVGimageBase:
 
         :rtype: An instance of ``cls`` (usually a :class:`SVGimage`)
         """
-        
+
         if do_copy:
             # `nsvgParse` will end up modifying the char-array passed to it in-place
             # which will violate the immutability of python `bytes` objects.
@@ -176,7 +176,7 @@ cdef class SVGimageBase:
             # get a different byte string we'll copy it via converting to a bytearray
             # and back:
             buffer = bytes(bytearray(buffer))
-        
+
         units_b = units.encode('utf-8')
         cdef SVGimageBase img = cls()
         img._set_ptr(nsvgParse(buffer, units_b, dpi),
