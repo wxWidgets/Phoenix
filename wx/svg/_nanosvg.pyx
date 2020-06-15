@@ -150,16 +150,33 @@ cdef class SVGimageBase:
 
 
     @classmethod
-    def CreateFromBytes(cls, bytes buffer, str units='px', float dpi=96):
+    def CreateFromBytes(cls, bytes buffer, str units='px', float dpi=96, bool do_copy=True):
         """
         Loads an SVG image from a bytes object.
 
         :param bytes `buffer`: object containing the SVG data
         :param str `units`: One of: 'px', 'pt', 'pc' 'mm', 'cm', or 'in'
         :param float `dpi`: controls how the unit conversion is done
+        :param bool `do_copy`: indicates if the given bytes object should be
+            copied to avoid in-place modification. This should be set to True
+            if the given `buffer` object may ever be reused in any capacity.
+            If the given `buffer` will only be used once, and the cost of copying
+            it is problematic, then `do_copy` can be set to False.
 
         :rtype: An instance of ``cls`` (usually a :class:`SVGimage`)
         """
+        
+        if do_copy:
+            # `nsvgParse` will end up modifying the char-array passed to it in-place
+            # which will violate the immutability of python `bytes` objects.
+            # To avoid this we're going to copy the given `buffer` object into
+            # an entirely separate portion of memory. Unfortunately, python is a
+            # step ahead of the game and optimizes copying byte strings into just
+            # returning the same object (because they're immutable!), so to truly
+            # get a different byte string we'll copy it via converting to a bytearray
+            # and back:
+            buffer = bytes(bytearray(buffer))
+        
         units_b = units.encode('utf-8')
         cdef SVGimageBase img = cls()
         img._set_ptr(nsvgParse(buffer, units_b, dpi),
