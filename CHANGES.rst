@@ -40,7 +40,7 @@ New and improved in this release:
 
 * Added orientation parameter to UltimateListControl.GetScrollPos. (PR#1632)
 
-
+* Fixed issue that could modify `bytes` objects under Python. (PR#1680)
 
 
 4.1.0 "Escaping the Quarantine"
