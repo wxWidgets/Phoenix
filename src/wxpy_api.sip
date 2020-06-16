@@ -379,6 +379,12 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
     else if (value.IsType("long"))
         obj = PyLong_FromLong(value.GetLong());
 
+    else if (value.IsType("longlong"))
+        obj = PyLong_FromLongLong(value.GetLongLong().GetValue());
+
+    else if (value.IsType("ulonglong"))
+        obj = PyLong_FromUnsignedLongLong(value.GetULongLong().GetValue());
+
     else if (value.IsType("double"))
         obj = PyFloat_FromDouble(value.GetDouble());
 
