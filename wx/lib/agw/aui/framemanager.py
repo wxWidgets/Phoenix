@@ -132,6 +132,7 @@ if wx.Platform == "__WXMSW__":
 # AUI Events
 wxEVT_AUI_PANE_BUTTON = wx.NewEventType()
 wxEVT_AUI_PANE_CLOSE = wx.NewEventType()
+wxEVT_AUI_PANE_CLOSED = wx.NewEventType()
 wxEVT_AUI_PANE_MAXIMIZE = wx.NewEventType()
 wxEVT_AUI_PANE_RESTORE = wx.NewEventType()
 wxEVT_AUI_RENDER = wx.NewEventType()
@@ -148,6 +149,8 @@ wxEVT_AUI_PERSPECTIVE_CHANGED = wx.NewEventType()
 EVT_AUI_PANE_BUTTON = wx.PyEventBinder(wxEVT_AUI_PANE_BUTTON, 0)
 """ Fires an event when the user left-clicks on a pane button. """
 EVT_AUI_PANE_CLOSE = wx.PyEventBinder(wxEVT_AUI_PANE_CLOSE, 0)
+""" A pane in `AuiManager` is about to be closed. """
+EVT_AUI_PANE_CLOSED = wx.PyEventBinder(wxEVT_AUI_PANE_CLOSED, 0)
 """ A pane in `AuiManager` has been closed. """
 EVT_AUI_PANE_MAXIMIZE = wx.PyEventBinder(wxEVT_AUI_PANE_MAXIMIZE, 0)
 """ A pane in `AuiManager` has been maximized. """
@@ -5080,6 +5083,8 @@ class AuiManager(wx.EvtHandler):
         if to_destroy:
             to_destroy.Destroy()
 
+        # Now inform the app that we closed a pane.
+        self.FireEvent(wxEVT_AUI_PANE_CLOSED, pane_info)
 
     def MaximizePane(self, pane_info, savesizes=True):
         """
