@@ -3417,6 +3417,9 @@ class AuiNotebook(wx.Panel):
                 tabctrl.SetArtProvider(art.Clone())
                 tab_frame.DoSizing()
 
+            return True
+
+        return False
 
     def UpdateHintWindowSize(self):
         """ Updates the :class:`~wx.lib.agw.aui.framemanager.AuiManager` hint window size. """
@@ -3638,8 +3641,10 @@ class AuiNotebook(wx.Panel):
             control.Reparent(active_tabctrl)
             control.Show()
 
-        self.UpdateTabCtrlHeight(force=force)
-        self.DoSizing()
+        # Note that we don't need to call DoSizing() if the height has changed, as
+        # it's already called from UpdateTabCtrlHeight() itself in this case.
+        if not self.UpdateTabCtrlHeight(force=force):
+            self.DoSizing()
         active_tabctrl.DoShowHide()
 
         # adjust selected index
