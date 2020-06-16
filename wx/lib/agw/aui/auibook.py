@@ -1794,8 +1794,6 @@ class AuiTabContainer(object):
             offset += self._art.GetIndentSize()
 
         rect = wx.Rect(*self._rect)
-        rect.y = 0
-        rect.height = self._rect.height
 
         # See if the given page is visible at the given tab offset (effectively scroll position)
         for i in range(tabOffset, page_count):
@@ -1807,7 +1805,6 @@ class AuiTabContainer(object):
 
             tab_button = self._tab_close_buttons[i]
 
-            rect.x = offset
             rect.width = self._rect.width - right_buttons_width - offset - 2
 
             if rect.width <= 0:
