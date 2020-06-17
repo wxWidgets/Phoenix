@@ -3342,20 +3342,22 @@ class AuiToolBar(wx.Control):
                     self.SetOverflowVisible(True)
 
             # hide all flexible items and items that do not fit into toolbar
+            self_GetToolFitsByIndex = self.GetToolFitsByIndex
             for i, item in enumerate(self._items):
-                if not item.sizer_item:
+                sizer_item = item.sizer_item
+                if not sizer_item:
                     continue
 
                 if item.proportion > 0:
-                    if item.sizer_item.IsShown():
-                        item.sizer_item.Show(False)
-                        item.sizer_item.SetProportion(0)
-                elif self.GetToolFitsByIndex(i):
-                    if not item.sizer_item.IsShown():
-                        item.sizer_item.Show(True)
+                    if sizer_item.IsShown():
+                        sizer_item.Show(False)
+                        sizer_item.SetProportion(0)
+                elif self_GetToolFitsByIndex(i):
+                    if not sizer_item.IsShown():
+                        sizer_item.Show(True)
                 else:
-                    if item.sizer_item.IsShown():
-                        item.sizer_item.Show(False)
+                    if sizer_item.IsShown():
+                        sizer_item.Show(False)
 
         else:
 
@@ -3366,13 +3368,14 @@ class AuiToolBar(wx.Control):
 
             # show all items
             for item in self._items:
-                if not item.sizer_item:
+                sizer_item = item.sizer_item
+                if not sizer_item:
                     continue
 
-                if not item.sizer_item.IsShown():
-                    item.sizer_item.Show(True)
+                if not sizer_item.IsShown():
+                    sizer_item.Show(True)
                     if item.proportion > 0:
-                        item.sizer_item.SetProportion(item.proportion)
+                        sizer_item.SetProportion(item.proportion)
 
         self._sizer.SetDimension(0, 0, x, y)
 
