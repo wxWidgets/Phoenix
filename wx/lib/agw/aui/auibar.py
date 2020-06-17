@@ -1293,33 +1293,39 @@ class AuiDefaultToolBarArt(object):
         :param `wnd`: a :class:`wx.Window` derived window;
         :param wx.Rect `rect`: the :class:`AuiToolBarItem` rectangle.
         """
+        # local opts
+        dc_DrawPoint = dc.DrawPoint
+        dc_SetPen = dc.SetPen
+        _gripper_pen1, _gripper_pen2, _gripper_pen3 = self._gripper_pen1, self._gripper_pen2, self._gripper_pen3
+        toolbar_is_vertical = self._agwFlags & AUI_TB_VERTICAL
+        rect_x, rect_y, rect_width, rect_height = rect.x, rect.y, rect.GetWidth(), rect.GetHeight()
 
         i = 0
         while 1:
 
-            if self._agwFlags & AUI_TB_VERTICAL:
+            if toolbar_is_vertical:
 
-                x = rect.x + (i*4) + 4
-                y = rect.y + 3
-                if x > rect.GetWidth() - 4:
+                x = rect_x + (i*4) + 4
+                y = rect_y + 3
+                if x > rect_width - 4:
                     break
 
             else:
 
-                x = rect.x + 3
-                y = rect.y + (i*4) + 4
-                if y > rect.GetHeight() - 4:
+                x = rect_x + 3
+                y = rect_y + (i*4) + 4
+                if y > rect_height - 4:
                     break
 
-            dc.SetPen(self._gripper_pen1)
-            dc.DrawPoint(x, y)
-            dc.SetPen(self._gripper_pen2)
-            dc.DrawPoint(x, y+1)
-            dc.DrawPoint(x+1, y)
-            dc.SetPen(self._gripper_pen3)
-            dc.DrawPoint(x+2, y+1)
-            dc.DrawPoint(x+2, y+2)
-            dc.DrawPoint(x+1, y+2)
+            dc_SetPen(_gripper_pen1)
+            dc_DrawPoint(x, y)
+            dc_SetPen(_gripper_pen2)
+            dc_DrawPoint(x, y+1)
+            dc_DrawPoint(x+1, y)
+            dc_SetPen(_gripper_pen3)
+            dc_DrawPoint(x+2, y+1)
+            dc_DrawPoint(x+2, y+2)
+            dc_DrawPoint(x+1, y+2)
 
             i += 1
 
