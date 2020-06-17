@@ -840,7 +840,7 @@ class ShellFrameMixin:
         if self.dataDir:
             try:
                 enc = 'utf-8'
-                hist = b'\x00\n'.join([h.encode(enc) 
+                hist = b'\x00\n'.join([h.encode(enc)
                                        for h in self.shell.history])
                 name = os.path.join(self.dataDir, 'history')
                 with open(name, 'wb') as f:

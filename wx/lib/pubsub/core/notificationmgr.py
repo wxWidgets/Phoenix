@@ -6,23 +6,23 @@ import sys
 
 class NotificationMgr:
     """
-    Manages notifications for tracing pubsub activity. When pubsub takes a 
-    certain action such as sending a message or creating a topic, and 
+    Manages notifications for tracing pubsub activity. When pubsub takes a
+    certain action such as sending a message or creating a topic, and
     the notification flag for that activity is True, all registered
     notification handlers get corresponding method called with information
-    about the activity, such as which listener subscribed to which topic. 
+    about the activity, such as which listener subscribed to which topic.
     See INotificationHandler for which method gets called for each activity.
-    
-    If more than one notification handler has been registered, the order in 
+
+    If more than one notification handler has been registered, the order in
     which they are notified is unspecified (do not rely on it).
 
     Note that this manager automatically unregisters all handlers when
     the Python interpreter exits, to help avoid NoneType exceptions during
     shutdown. This "shutdown" starts when the last line of app "main" has
-    executed; the Python interpreter then starts cleaning up, garbage 
+    executed; the Python interpreter then starts cleaning up, garbage
     collecting everything, which could lead to various pubsub notifications
     -- by then they should be of no interest -- such as dead
-    listeners, etc. 
+    listeners, etc.
     """
 
     def __init__(self, notificationHandler = None):
@@ -91,7 +91,7 @@ class NotificationMgr:
             newTopic     = self.__notifyOnNewTopic,
             delTopic     = self.__notifyOnDelTopic,
             )
-    
+
     def setFlagStates(self, subscribe=None, unsubscribe=None,
         deadListener=None, sendMessage=None, newTopic=None,
         delTopic=None, all=None):
@@ -133,50 +133,50 @@ class NotificationMgr:
 
 class INotificationHandler:
     """
-    Defines the interface expected by pubsub for pubsub activity 
-    notifications. Any instance that supports the same methods, or 
+    Defines the interface expected by pubsub for pubsub activity
+    notifications. Any instance that supports the same methods, or
     derives from this class, will work as a notification handler
     for pubsub events (see pub.addNotificationHandler).
     """
-    
+
     def notifySubscribe(self, pubListener, topicObj, newSub):
         """Called when a listener is subscribed to a topic.
         :param pubListener: the pubsub.core.Listener that wraps subscribed listener.
         :param topicObj: the pubsub.core.Topic object subscribed to.
         :param newSub: false if pubListener was already subscribed. """
         raise NotImplementedError
-        
+
     def notifyUnsubscribe(self, pubListener, topicObj):
         """Called when a listener is unsubscribed from given topic.
         :param pubListener: the pubsub.core.Listener that wraps unsubscribed listener.
         :param topicObj: the pubsub.core.Topic object unsubscribed from."""
         raise NotImplementedError
-        
+
     def notifyDeadListener(self, pubListener, topicObj):
         """Called when a listener has been garbage collected.
         :param pubListener: the pubsub.core.Listener that wraps GC'd listener.
         :param topicObj: the pubsub.core.Topic object it was subscribed to."""
         raise NotImplementedError
-        
+
     def notifySend(self, stage, topicObj, pubListener=None):
         """Called multiple times during a sendMessage: once before message
-        sending has started (pre), once for each listener about to be sent the 
+        sending has started (pre), once for each listener about to be sent the
         message, and once after all listeners have received the message (post).
         :param stage: 'pre', 'post', or 'loop'.
         :param topicObj: the Topic object for the message.
         :param pubListener: None for pre and post stages; for loop, the listener
             that is about to be sent the message."""
         raise NotImplementedError
-    
+
     def notifyNewTopic(self, topicObj, description, required, argsDocs):
         """Called whenever a new topic is added to the topic tree.
         :param topicObj: the Topic object for the message.
         :param description: docstring for the topic.
         :param required: list of message data names (keys in argsDocs) that are required.
-        :param argsDocs: dictionary of all message data names, with the 
+        :param argsDocs: dictionary of all message data names, with the
         corresponding docstring. """
         raise NotImplementedError
-        
+
     def notifyDelTopic(self, topicName):
         """Called whenever a topic is removed from topic tree.
         :param topicName: name of topic removed."""

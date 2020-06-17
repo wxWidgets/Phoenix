@@ -1,5 +1,5 @@
 """
-The _resolve_name and _import_module were taken from the backport of 
+The _resolve_name and _import_module were taken from the backport of
 importlib.import_module from 3.x to 2.7. Thanks to the Python developers
 for making this available as a standalone module. This makes it possible
 to have an import module that mimics the "import" statement more
@@ -42,22 +42,22 @@ def _import_module(name, package=None):
     __import__(name)
     return sys.modules[name]
 
-    
+
 def load_module(moduleName, searchPath):
     """Try to import moduleName. If this doesn't work, use the "imp" module
     that is part of Python. """
-    try: 
-        module = _import_module(moduleName) 
-        
+    try:
+        module = _import_module(moduleName)
+
     except:
         import imp
         fp, pathname, description = imp.find_module(moduleName, searchPath)
         try:
             module = imp.load_module(moduleName, fp, pathname, description)
-            
+
         finally:
             # Since we may exit via an exception, close fp explicitly.
             if fp:
                 fp.close()
-                
+
     return module

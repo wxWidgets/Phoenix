@@ -1,4 +1,4 @@
-    
+
     cxtAttrs = wx.glcanvas.GLContextAttrs()
     # Some values
     cxtAttrs.CoreProfile().OGLVersion(5, 0) # OGL 5.0, whenever available

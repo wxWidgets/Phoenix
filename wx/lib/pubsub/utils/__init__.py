@@ -1,6 +1,6 @@
 """
-Provides utility functions and classes that are not required for using 
-pubsub but are likely to be very useful. 
+Provides utility functions and classes that are not required for using
+pubsub but are likely to be very useful.
 """
 
 """
@@ -11,17 +11,17 @@ pubsub but are likely to be very useful.
 from .topictreeprinter import printTreeDocs
 
 from .notification import (
-    useNotifyByPubsubMessage, 
-    useNotifyByWriteFile, 
+    useNotifyByPubsubMessage,
+    useNotifyByWriteFile,
     IgnoreNotificationsMixin,
 )
 
 from .exchandling import ExcPublisher
 
 __all__ = [
-    'printTreeDocs', 
-    'useNotifyByPubsubMessage', 
-    'useNotifyByWriteFile', 
+    'printTreeDocs',
+    'useNotifyByPubsubMessage',
+    'useNotifyByWriteFile',
     'IgnoreNotificationsMixin',
     'ExcPublisher'
     ]

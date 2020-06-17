@@ -1,4 +1,4 @@
-    
+
     dc = wx.MetafileDC()
     if dc.IsOk():
         self.Draw(dc)

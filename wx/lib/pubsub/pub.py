@@ -1,25 +1,25 @@
 """
-This is the main entry-point to pubsub's core functionality. The :mod:`~pubsub.pub` 
+This is the main entry-point to pubsub's core functionality. The :mod:`~pubsub.pub`
 module supports:
 
 * messaging: publishing and receiving messages of a given topic
 * tracing: tracing pubsub activity in an application
 * trapping exceptions: dealing with "badly behaved" listeners (ie that leak exceptions)
-* specificatio of topic tree: defining (or just documenting) the topic tree of an 
+* specificatio of topic tree: defining (or just documenting) the topic tree of an
   application; message data specification (MDS)
 
 The recommended usage is ::
 
     from pubsub import pub
-    
+
     // use pub functions:
     pub.sendMessage(...)
-    
-Note that this module creates a "default" instance of 
+
+Note that this module creates a "default" instance of
 pubsub.core.Publisher and binds several local functions to some of its methods
 and those of the pubsub.core.TopicManager instance that it contains. However, an
 application may create as many independent instances of Publisher as
-required (for instance, one in each thread; with a custom queue to mediate 
+required (for instance, one in each thread; with a custom queue to mediate
 message transfer between threads).
 """
 
@@ -38,85 +38,85 @@ from .core import (
     AUTO_TOPIC,
 
     ListenerMismatchError,
-    TopicDefnError, 
+    TopicDefnError,
 
     IListenerExcHandler,
     ExcHandlerError,
 
-    SenderMissingReqdMsgDataError, 
-    SenderUnknownMsgDataError, 
-    
+    SenderMissingReqdMsgDataError,
+    SenderUnknownMsgDataError,
+
     TopicDefnError,
     TopicNameError,
     UnrecognizedSourceFormatError,
-    
+
     ALL_TOPICS,
-    
-    MessageDataSpecError, 
+
+    MessageDataSpecError,
     exportTopicTreeSpec,
     TOPIC_TREE_FROM_MODULE,
     TOPIC_TREE_FROM_STRING,
-    TOPIC_TREE_FROM_CLASS, 
+    TOPIC_TREE_FROM_CLASS,
 
     TopicTreeTraverser,
-    
+
     INotificationHandler,
 )
 
 __all__ = [
     # listener stuff:
-    'subscribe', 
-    'unsubscribe', 
+    'subscribe',
+    'unsubscribe',
     'unsubAll',
-    'isSubscribed', 
+    'isSubscribed',
 
-    'isValid', 
+    'isValid',
     'validate',
     'ListenerMismatchError',
     'AUTO_TOPIC',
 
     'IListenerExcHandler',
-    'getListenerExcHandler', 
+    'getListenerExcHandler',
     'setListenerExcHandler',
     'ExcHandlerError',
-    
+
     # topic stuff:
-    
-    'ALL_TOPICS', 
-    'topicTreeRoot', 
-    'topicsMap', 
-    
-    'getDefaultTopicMgr', 
+
+    'ALL_TOPICS',
+    'topicTreeRoot',
+    'topicsMap',
+
+    'getDefaultTopicMgr',
 
     # topioc defn provider stuff
-    
-    'addTopicDefnProvider', 
+
+    'addTopicDefnProvider',
     'clearTopicDefnProviders',
     'getNumTopicDefnProviders',
     'TOPIC_TREE_FROM_MODULE',
-    'TOPIC_TREE_FROM_CLASS', 
+    'TOPIC_TREE_FROM_CLASS',
     'TOPIC_TREE_FROM_STRING',
-    'exportTopicTreeSpec', 
+    'exportTopicTreeSpec',
     'instantiateAllDefinedTopics'
 
-    'TopicDefnError', 
-    'TopicNameError', 
-    
+    'TopicDefnError',
+    'TopicNameError',
+
     'setTopicUnspecifiedFatal',
 
     # publisher stuff:
 
-    'sendMessage', 
-    'SenderMissingReqdMsgDataError', 
+    'sendMessage',
+    'SenderMissingReqdMsgDataError',
     'SenderUnknownMsgDataError',
 
     # misc:
-    
-    'addNotificationHandler', 
-    'setNotificationFlags', 
+
+    'addNotificationHandler',
+    'setNotificationFlags',
     'getNotificationFlags',
     'clearNotificationHandlers',
-    
+
     'TopicTreeTraverser',
 
 ]
@@ -153,8 +153,8 @@ def getDefaultPublisher():
 
 _topicMgr = _publisher.getTopicMgr()
 
-topicTreeRoot = _topicMgr.getRootAllTopics() 
-topicsMap     = _topicMgr._topicsMap 
+topicTreeRoot = _topicMgr.getRootAllTopics()
+topicsMap     = _topicMgr._topicsMap
 
 
 def isValid(listener, topicName):
@@ -177,8 +177,8 @@ def isSubscribed(listener, topicName):
 
 
 def getDefaultTopicMgr():
-    """Get the TopicManager instance created by default when this 
-    module is imported. This function is a shortcut for 
+    """Get the TopicManager instance created by default when this
+    module is imported. This function is a shortcut for
     ``pub.getDefaultPublisher().getTopicMgr()``."""
     return _topicMgr
 
@@ -188,12 +188,12 @@ clearTopicDefnProviders  = _topicMgr.clearDefnProviders
 getNumTopicDefnProviders = _topicMgr.getNumDefnProviders
 
 def instantiateAllDefinedTopics(provider):
-    """Loop over all topics of given provider and "instantiate" each topic, thus 
-    forcing a parse of the topics documentation, message data specification (MDS), 
-    comparison with parent MDS, and MDS documentation. Without this function call, 
-    an error among any of those characteristics will manifest only if the a 
+    """Loop over all topics of given provider and "instantiate" each topic, thus
+    forcing a parse of the topics documentation, message data specification (MDS),
+    comparison with parent MDS, and MDS documentation. Without this function call,
+    an error among any of those characteristics will manifest only if the a
     listener is registered on it. """
     for topicName in provider:
         _topicMgr.getOrCreateTopic(topicName)
-        
+
 #---------------------------------------------------------------------------

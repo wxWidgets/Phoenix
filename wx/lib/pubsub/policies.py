@@ -1,5 +1,5 @@
 """
-Aggregates policies for pubsub. Mainly, related to messaging protocol. 
+Aggregates policies for pubsub. Mainly, related to messaging protocol.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.

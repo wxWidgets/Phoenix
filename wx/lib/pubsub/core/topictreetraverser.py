@@ -7,12 +7,12 @@
 
 class TopicTreeTraverser:
     """
-    Supports taking action on every topic in the topic tree. The traverse() method 
-    traverses a topic tree and calls visitor._onTopic() for each topic in the tree 
-    that satisfies visitor._accept(). Additionally it calls visitor._startChildren() 
-    whenever it starts traversing the subtopics of a topic, and 
-    visitor._endChildren() when it is done with the subtopics. Finally, it calls 
-    visitor._doneTraversal() when traversal has been completed. The visitor must 
+    Supports taking action on every topic in the topic tree. The traverse() method
+    traverses a topic tree and calls visitor._onTopic() for each topic in the tree
+    that satisfies visitor._accept(). Additionally it calls visitor._startChildren()
+    whenever it starts traversing the subtopics of a topic, and
+    visitor._endChildren() when it is done with the subtopics. Finally, it calls
+    visitor._doneTraversal() when traversal has been completed. The visitor must
     therefore adhere to the ITopicTreeVisitor interface.
     """
     DEPTH   = 'Depth first through topic tree'
@@ -44,7 +44,7 @@ class TopicTreeTraverser:
 
         if how == self.BREADTH:
             self.__traverseBreadth(topicObj, onlyFiltered)
-        else: 
+        else:
             assert how == self.DEPTH
             self.__traverseDepth(topicObj, onlyFiltered)
 
@@ -106,7 +106,7 @@ class TopicTreeTraverser:
 class ITopicTreeVisitor:
     """
     Derive from ITopicTreeVisitor and override one or more of the
-    self._*() methods. Give an instance to an instance of 
+    self._*() methods. Give an instance to an instance of
     TopicTreeTraverser.
     """
 

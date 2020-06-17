@@ -25,7 +25,7 @@ class lib_cdate_Tests(wtc.WidgetTestCase):
             for d in range(10, 20):
                 j = cdate.julianDay(2020, m, d)
                 jy, jm, jd = cdate.FromJulian(j)
-                self.assertEqual((2020, m, d), (jy, jm, jd), 
+                self.assertEqual((2020, m, d), (jy, jm, jd),
                     msg='Julian/Gregorian round-trip failed for 2020-%i-%i' % (m, d))
 
     def test_lib_cdate_Dayofweek(self):
@@ -34,7 +34,7 @@ class lib_cdate_Tests(wtc.WidgetTestCase):
             for d in range(10, 20):
                 realwd = datetime.date(2020, m, d).weekday()
                 testwd = cdate.Date(2020, m, d).day_of_week
-                self.assertEqual(realwd, testwd, 
+                self.assertEqual(realwd, testwd,
                     msg="Expected weekday to be %i for date 2020-%i-%i, got %i" % (realwd, m, d, testwd))
 
 #---------------------------------------------------------------------------

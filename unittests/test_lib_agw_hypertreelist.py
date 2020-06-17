@@ -83,9 +83,9 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
         tree.AddColumn("First column")
         root = tree.AddRoot('root item')
         child = tree.AppendItem(root, 'child item')
-        
+
         self.assertEqual(None, tree.GetItemBackgroundColour(root))
-        
+
         colour = wx.RED
         tree.SetItemBackgroundColour(child, colour)
         self.assertEqual(colour, tree.GetItemBackgroundColour(child))
@@ -115,7 +115,7 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
         tree.AddColumn("First column")
         tree.AddColumn("Second column")
         root = tree.AddRoot('root item')
-            
+
         tree.SetItemBackgroundColour(root, wx.RED)
         tree.SetItemBackgroundColour(root, wx.GREEN, column=1)
 

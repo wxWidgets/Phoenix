@@ -42,7 +42,7 @@ class ArgsInfo:
 
     def __init__(self, topicNameTuple, specGiven, parentArgsInfo):
         self.__argsDocs = specGiven.argsDocs or {'data':'message data'}
-        
+
         self.argsSpecType = self.SPEC_COMPLETE
         self.allOptional = ()        # list of topic message optional argument names
         self.allRequired = ('data',) # list of topic message required argument names

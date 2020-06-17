@@ -58,7 +58,7 @@ for tLang in supportedLang:
     langDir = os.path.join(appFolder, ('locale\%s\LC_MESSAGES' % tLang))
     poFile = os.path.join(langDir, appC.langDomain + '.po')
     tCmd = pyExe + ' ' + pyMsgfmt + ' ' + poFile
-    
+
     print ("Generating the .mo file")
     print ("cmd: %s" % tCmd)
     rCode = subprocess.call(tCmd)

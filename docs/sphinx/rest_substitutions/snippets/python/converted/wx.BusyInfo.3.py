@@ -1,4 +1,4 @@
-    
+
     with wx.WindowDisabler():
         wait = wx.BusyInfo("Please wait, working...")
 

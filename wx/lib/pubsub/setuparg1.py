@@ -31,8 +31,8 @@ sys.stdout.write("""
           ***    ATTENTION   ***
 This messaging protocol is deprecated. This module, and hence arg1
 messaging protocol, will be removed in v3.4 of PyPubSub. Please make
-the necessary changes to your code so that it no longer requires this 
-module. The pypubsub documentation provides steps that may be useful 
+the necessary changes to your code so that it no longer requires this
+module. The pypubsub documentation provides steps that may be useful
 to minimize the chance of introducing bugs in your application.
 ======================================================================
 

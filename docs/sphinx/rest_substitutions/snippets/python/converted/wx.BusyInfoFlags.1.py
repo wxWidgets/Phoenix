@@ -1,4 +1,4 @@
-    
+
     info = wx.BusyInfo(
             wx.BusyInfoFlags()
                 .Parent(window)
