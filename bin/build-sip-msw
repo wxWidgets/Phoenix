@@ -19,6 +19,16 @@ fi
 
 MYBINDIR=$(dirname $(readlink -f $0))
 
+# This is specific to my machine. If you need to build your own sip then adjust accordingly
+export INCLUDE="c:\TOOLS\VisStudio9\VC\ATLMFC\INCLUDE;c:\TOOLS\VisStudio9\VC\INCLUDE;C:\Program Files\Microsoft SDKs\Windows\v6.0A\include;"
+export LIB="c:\TOOLS\VisStudio9\VC\ATLMFC\LIB;c:\TOOLS\VisStudio9\VC\LIB;C:\Program Files\Microsoft SDKs\Windows\v6.0A\lib;"
+export SDK_DIR="C:\Program Files\Microsoft SDKs\Windows\v7.1"
+export PATH="/c/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Bin:$PATH"
+
+echo "INCLUDE: $INCLUDE"
+echo "LIB:     $LIB"
+
+
 cd /c/projects/sip/sip
 SIPVER=$($PYTHON -c "import sys,configure; sys.stdout.write(configure.sip_version_str);")
 
