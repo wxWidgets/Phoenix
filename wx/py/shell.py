@@ -1436,10 +1436,7 @@ class Shell(editwindow.EditWindow):
 
     def wrap(self, wrap=True):
         """Sets whether text is word wrapped."""
-        try:
-            self.SetWrapMode(wrap)
-        except AttributeError:
-            return 'Wrapping is not available in this version.'
+        self.SetWrapMode(wrap)
 
     def zoom(self, points=0):
         """Set the zoom level.
