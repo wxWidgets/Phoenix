@@ -313,8 +313,8 @@ def run():
         wxTimeSpan operator-(const wxDateTime& dt2) const;
         """))
 
-    # Add some code to automatically convert from a Python datetime.date or a
-    # datetime.datetime object
+    # Add some code (like MappedTypes) to automatically convert from a Python
+    # datetime.date or a datetime.datetime object
     c.convertFromPyObject = """\
         // Code to test a PyObject for compatibility with wxDateTime
         if (!sipIsErr) {

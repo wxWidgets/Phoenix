@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------
-// Name:        datetime.sip
+// Name:        longlong.sip
 // Purpose:     Implements a %MappedType for wxLongLong
 //
 // Author:      Robin Dunn
