@@ -3484,7 +3484,9 @@ class AuiToolBar(wx.Control):
         # paint each individual tool
         # local opts
         _art = self._art
-        DrawSeparator, DrawLabel, DrawButton, DrawDropDownButton, DrawControlLabel = _art.DrawSeparator, _art.DrawLabel, _art.DrawButton, _art.DrawDropDownButton, _art.DrawControlLabel
+        DrawSeparator, DrawLabel, DrawButton, DrawDropDownButton, DrawControlLabel = (
+            _art.DrawSeparator, _art.DrawLabel, _art.DrawButton,
+            _art.DrawDropDownButton, _art.DrawControlLabel)
         for item in self._items:
 
             if not item.sizer_item:
