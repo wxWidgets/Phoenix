@@ -50,6 +50,7 @@ def run():
 
     module.addItem(etgtools.WigCode("""\
         char* wxSetlocale(int category, const char *locale);
+        char* wxSetlocale(int category, const wxString& locale);
         """))
 
 
