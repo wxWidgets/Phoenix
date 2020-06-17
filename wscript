@@ -79,7 +79,7 @@ def configure(conf):
         # Visual Studio 2017. However, waf is using "msvc 15.0" to designate
         # that version rather than "14.1" so we'll need to catch that case and
         # fix up the msvc_version accordingly.
-        if msvc_version == "14.1" and sys.version_info >= (3,7):
+        if msvc_version in ["14.1", "14.2"] and sys.version_info >= (3,7):
             ##msvc_version = '15.0'
 
             # On the other hand, microsoft says that v141 and v140 (Visual

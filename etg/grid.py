@@ -405,9 +405,6 @@ def run():
     module.find('wxGridCellEditorPtr').piIgnored = True
     module.find('wxGridCellAttrPtr').piIgnored = True
 
-    module.addHeaderCode('#define sipName_ptr "ptr"')
-    module.addHeaderCode('#define sipName_tocopy "tocopy"')
-
     #-----------------------------------------------------------------
     # The instanceCode attribute is code that is used to make a default
     # instance of the class. We can't create them using the same class in
