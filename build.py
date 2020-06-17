@@ -90,7 +90,7 @@ wxICON = 'packaging/docset/mondrian.png'
 sipCurrentVersion = '4.19.23'
 sipMD5 = {
     'darwin'   : 'cbd84be2a54eee9a85d53b2b464c9e62',
-    'win32'    : 'fd8be5c5fa369a848e907acad6879846',
+    'win32'    : 'e9082463286f5233544f801de6d00642',
     'linux32'  : 'd0271b47695e74483f0c0d54f24819d5',
     'linux64'  : '355410a19846768cdeb53efe249aabdb',
 }
