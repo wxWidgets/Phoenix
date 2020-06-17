@@ -87,9 +87,9 @@ wxICON = 'packaging/docset/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.19.19'
+sipCurrentVersion = '4.19.23'
 sipMD5 = {
-    'darwin'   : '3309e69f2341f11bac263d7faea19616',
+    'darwin'   : 'cbd84be2a54eee9a85d53b2b464c9e62',
     'win32'    : 'fd8be5c5fa369a848e907acad6879846',
     'linux32'  : 'd0271b47695e74483f0c0d54f24819d5',
     'linux64'  : '355410a19846768cdeb53efe249aabdb',
