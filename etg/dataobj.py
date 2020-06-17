@@ -340,11 +340,11 @@ def run():
         body="return wxPyMakeBuffer(self->GetData(), self->GetSize());")
 
     c.find('SetData').ignore()
-    c.addCppMethod('bool', 'SetData', '(wxPyBuffer* buf)',
+    c.addCppMethod_sip('bool', 'SetData', '(wxPyBuffer* buf)',
         cppSignature='bool (size_t len, const void* buf)',
         isVirtual=True,
         doc="Copies data from the provided buffer to this data object's buffer",
-        body="return self->SetData(buf->m_len, buf->m_ptr);")
+        body="sipRes = (sipSelfWasArg ? sipCpp-> ::wxCustomDataObject::SetData(buf->m_len, buf->m_ptr) : sipCpp->SetData(buf->m_len, buf->m_ptr));")
 
     addGetAllFormats(c)
     addBaseVirtuals(c)

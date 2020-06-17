@@ -515,11 +515,8 @@ class mupdfProcessor(object):
         page = self.pdfdoc.loadPage(pageno)
         matrix = fitz.Matrix(scale, scale)
         try:
-            pix = page.getPixmap(matrix=matrix)   # MUST be keyword arg(s)
-            if [int(v) for v in fitz.version[1].split('.')] >= [1,15,0]:
-                bmp = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
-            else:
-                bmp = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
+            pix = page.getPixmap(matrix=matrix, alpha=False)   # MUST be keyword arg(s)
+            bmp = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
             gc.DrawBitmap(bmp, 0, 0, pix.width, pix.height)
             self.zoom_error = False
         except (RuntimeError, MemoryError):

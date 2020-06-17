@@ -40,8 +40,12 @@ New and improved in this release:
 
 * Added orientation parameter to UltimateListControl.GetScrollPos. (PR#1632)
 
-* wx.AuiNotebook RemovePage() now hides the removed page, so it needs to be
-  shown again if it is reused in another place. (PR#1668)
+* wx.lib.agw.aui..AuiNotebook RemovePage() now hides the removed page, so it 
+  needs to be shown again if it is reused in another place. (PR#1668)
+
+* Fixed issue that could modify `bytes` objects under Python. (PR#1680)
+
+
 
 
 4.1.0 "Escaping the Quarantine"
