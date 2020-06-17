@@ -45,6 +45,10 @@ New and improved in this release:
 
 * Fixed issue that could modify `bytes` objects under Python. (PR#1680)
 
+* Added wx.lib.agw.aui.EVT_AUI_PANE_CLOSE event which is sent when a AUI (the
+  agw version) Pane has been closed (after it has been closed, not when it is
+  about to be closed, which is when EVT_AUI_PANE_CLOSE is sent.) (PR#1628)
+
 
 
 
