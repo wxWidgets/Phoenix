@@ -269,7 +269,7 @@ longer there. They will have to be used by importing a wx submodule. Most of
 them will be in the ``wx.adv`` module. One nice advantage of doing this is that
 if your application is not using any of these lesser used classes then you
 will not have to bundle the new modules (nor the associated wx DLLs) with
-your application when you use py2exe or other executable builder. 
+your application when you use py2exe or other executable builder.
 
 
 wx.ListCtrl
@@ -578,7 +578,7 @@ original, called PyPubSub. It's all the same code, but with just a different
 access path. However, now that Python 2.7 support in PyPubSub is no longer being
 maintained in the latest versions, it is now time for wxPython to disconnect
 itself in order to not have to remain on the older version. This means that
-``wx.lib.pubsub`` is now deprecated. 
+``wx.lib.pubsub`` is now deprecated.
 
 Switching to the official PyPubSub is simple however, just install the package::
 
@@ -596,7 +596,7 @@ wx.html.HtmlWindow.OnOpeningURL
 In wxPython Classic the return value of ``wx.html.HtmlWindow.OnOpeningURL`` and
 ``wx.html.HtmlWindowInterface.OnHTMLOpeningURL`` could be either a value from the
 ``wx.html.HtmlOpeningStatus`` enumeration, or a string containing the URL to
-redirect to. 
+redirect to.
 
 In Phoenix this has been changed to a simpler wrapper implementation which
 requires that both an enum value and a string be returned as a tuple. For
@@ -641,7 +641,7 @@ wx.WS_EX_VALIDATE_RECURSIVELY is obsolete
 The wx.WS_EX_VALIDATE_RECURSIVELY extended style flag is obsolete, as it is
 now the default (and only) behavior. The style flag has been added back into
 wxPython for compatibility, but with a zero value. You can just stop using it
-in your code with no change in behavior. 
+in your code with no change in behavior.
 
 
 Parameter name changes in radial gradient methods
@@ -666,6 +666,49 @@ And they now look like this::
                               wxDouble radius,
                               const wxGraphicsGradientStops& stops,
                               const wxGraphicsMatrix& matrix = wxNullGraphicsMatrix);
+
+
+
+Possible Locale Mismatch on Windows
+-----------------------------------
+
+On the Windows platform, prior to Python 3.8, it appears that Python did not do
+any initialization of the process locale settings, at least for the "en_US"
+based locales. For example, in Python 3.7::
+
+    >>> import locale
+    >>> locale.getdefaultlocale()
+    ('en_US', 'cp1252')
+    >>> locale.getlocale()
+    (None, None)
+
+And in Python 3.8::
+
+    >>> import locale
+    >>> locale.getdefaultlocale()
+    ('en_US', 'cp1252')
+    >>> locale.getlocale()
+    ('English_United States', '1252')
+
+Now, when you add in the wxWidgets class wxLocale, then it can get even more
+confusing on Windows. It seems that this boils down to wxWidgets setting the
+locale using a Windows-specific name like "en-US" (with a hyphen instead of an
+underscore). Since Python's locale module does not recognize this as a
+legitimate locale alias, then calling `locale.getlocale()` after a `wx.Locale`
+has been created will result in a `ValueError` exception.
+
+So wxPython has added code in the `wx.App` class to try and set up the locale so
+both Python and wxWidgets are set to equivalent settings. This is still somewhat
+experimental however, and the implementation in wxPython 4.1.0 is still
+problematic in some cases. If you have problems with it then you can disable or
+change this code by overriding the `wx.App.InitLocale` method in a derived
+class. It can either just do nothing, or you can implement some alternative
+locale setup code there.
+
+There will be a new implementation of `InitLocale` in 4.1.1 which should be
+simpler and less likely to still have problems. But you'll still be able to
+override `InitLocale` if needed.
+
 
 
 .. toctree::
