@@ -72,8 +72,6 @@ from six import exec_, BytesIO
 from six.moves import cPickle
 from six.moves import urllib
 
-import version
-
 # We won't import the images module yet, but we'll assign it to this
 # global when we do.
 images = None
@@ -2674,13 +2672,6 @@ class wxPythonDemoTree(ExpansionState, TreeBaseClass):
 
 class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
     def OnInit(self):
-
-        # Check runtime version
-        if LooseVersion(version.VERSION_STRING) != LooseVersion(wx.VERSION_STRING):
-            wx.MessageBox(caption="Warning",
-                          message="You're using version %s of wxPython, but this copy of the demo was written for version %s.\n"
-                          "There may be some version incompatibilities..."
-                          % (wx.VERSION_STRING, version.VERSION_STRING))
 
         self.InitInspection()  # for the InspectionMixin base class
 
