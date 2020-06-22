@@ -78,7 +78,7 @@ def GetNotCheckedBitmap(self):
     cbX, cbY = render.GetCheckBoxSize(self)
     bmp = wx.Bitmap(cbX, cbY)
     dc = wx.MemoryDC(bmp)
-    render.DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_ISDEFAULT | wx.CONTROL_DISABLED)
+    render.DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_ISDEFAULT)
     native_checkbox_unchecked_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
     return native_checkbox_unchecked_bmp
 
