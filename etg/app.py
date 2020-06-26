@@ -506,8 +506,10 @@ def run():
 
             PyFunctionDef('InitLocale', '(self)',
                 doc="""\
-                    Try to ensure that the C and Python locale is in sync with
-                    the wxWidgets locale on Windows.
+                    Try to ensure that the C and Python locale is in sync with the wxWidgets
+                    locale on Windows. If you have troubles from the default behavior of this
+                    method you can override it in a derived class to behave differently.
+                    Please report the problem you encountered.
                     """,
                 body="""\
                     self.ResetLocale()
@@ -517,8 +519,11 @@ def run():
                             lang, enc = locale.getdefaultlocale()
                             self._initial_locale = wx.Locale(lang, lang[:2], lang)
                             locale.setlocale(locale.LC_ALL, lang)
-                        except ValueError:
-                            wx.LogError("Unable to set default locale.")
+                        except ValueError as ex:
+                            target = wx.LogStderr()
+                            orig = wx.Log.SetActiveTarget(target)
+                            wx.LogError(f"Unable to set default locale: '{ex}'")
+                            wx.Log.SetActiveTarget(orig)
                     """),
 
             PyFunctionDef('ResetLocale', '(self)',
