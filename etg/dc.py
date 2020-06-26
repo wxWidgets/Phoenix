@@ -464,6 +464,20 @@ def run():
             return  self._DrawTextList(textList, coords, foregrounds, backgrounds)
             """)
 
+    c.addCppMethod('wxGraphicsContext*', 'GetGraphicsContext', '()', """\
+        #if wxUSE_GRAPHICS_CONTEXT
+            return self->GetGraphicsContext();
+        #else
+            wxPyRaiseNotImplemented();
+            return NULL;
+        #endif""")
+    c.addCppMethod('void', 'SetGraphicsContext', '(wxGraphicsContext* ctx)', """\
+        #if wxUSE_GRAPHICS_CONTEXT
+            self->SetGraphicsContext(ctx);
+        #else
+            wxPyRaiseNotImplemented();
+        #endif""")
+
 
 
 
