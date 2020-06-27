@@ -522,7 +522,7 @@ def run():
                         except ValueError as ex:
                             target = wx.LogStderr()
                             orig = wx.Log.SetActiveTarget(target)
-                            wx.LogError(f"Unable to set default locale: '{ex}'")
+                            wx.LogError("Unable to set default locale: '{}'".format(ex))
                             wx.Log.SetActiveTarget(orig)
                     """),
 
