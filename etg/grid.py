@@ -606,6 +606,31 @@ def run():
 
     c.find('GetGridWindowOffset').findOverload('int &x').ignore()
 
+
+    # Custom code to deal with the wxGridBlockCoordsVector return type of these
+    # methods. It's a wxVector, which we'll just convert to a list.
+    # TODO: There are starting to be enough of these that we ought to either
+    #       wrap wxVector, or add something in tweaker_tools to make adding code
+    #       like this easier and more automated.
+    code = """\
+        wxPyThreadBlocker blocker;
+        PyObject* result = PyList_New(0);
+        wxGridBlockCoordsVector vector = self->{method}();
+        for (size_t idx=0; idx < vector.size(); idx++) {{
+            PyObject* obj;
+            wxGridBlockCoords* item = new wxGridBlockCoords(vector[idx]);
+            obj = wxPyConstructObject((void*)item, "wxGridBlockCoords", true);
+            PyList_Append(result, obj);
+            Py_DECREF(obj);
+        }}
+        return result;
+        """
+    c.find('GetSelectedRowBlocks').type = 'PyObject*'
+    c.find('GetSelectedRowBlocks').setCppCode(code.format(method='GetSelectedRowBlocks'))
+    c.find('GetSelectedColBlocks').type = 'PyObject*'
+    c.find('GetSelectedColBlocks').setCppCode(code.format(method='GetSelectedColBlocks'))
+
+
     #-----------------------------------------------------------------
     c = module.find('wxGridUpdateLocker')
     c.addPrivateCopyCtor()
