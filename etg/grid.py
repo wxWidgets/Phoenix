@@ -609,9 +609,10 @@ def run():
 
     # Custom code to deal with the wxGridBlockCoordsVector return type of these
     # methods. It's a wxVector, which we'll just convert to a list.
-    # TODO: There are starting to be enough of these that we ought to either
-    #       wrap wxVector, or add something in tweaker_tools to make adding code
-    #       like this easier and more automated.
+
+    # TODO: There are a few of these now to we ought to either wrap wxVector, or add
+    #       something in tweaker_tools to make adding code like this easier and more
+    #       automated.
     code = """\
         wxPyThreadBlocker blocker;
         PyObject* result = PyList_New(0);
