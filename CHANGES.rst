@@ -49,6 +49,15 @@ New and improved in this release:
   agw version) Pane has been closed (after it has been closed, not when it is
   about to be closed, which is when EVT_AUI_PANE_CLOSE is sent.) (PR#1628)
 
+* Exposed the wx.DC methods GetGraphicsContext and SetGraphicsContext. Depending
+  on the platform and the type of the DC, there may be a wx.GraphicsContext used
+  for the implementation of the DC. If so, the GetGraphicsContext method enables
+  access to it. Be sure to check that the return value is not None before trying
+  to use it.
+
+* Simplified the implementation of the wx.App.InitLocale method. See the
+  MigrationGuide for more information.
+
 
 
 

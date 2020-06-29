@@ -65,6 +65,7 @@ def run():
         wxXmlResource::Get()->InitAllHandlers();
         """)
 
+    module.addHeaderCode('#include <wx/animate.h>')
     module.addHeaderCode('#include <wx/xrc/xmlres.h>')
     module.addHeaderCode('#include <wx/fs_mem.h>')
     module.addHeaderCode('#include "wxpybuffer.h"')
@@ -72,6 +73,7 @@ def run():
     module.insertItem(0, etgtools.WigCode("""\
         // forward declarations
         class wxAnimation;
+        class wxAnimationCtrl;
         """))
 
     #-----------------------------------------------------------------
@@ -147,6 +149,7 @@ def run():
     # Just ignore it for now.
     c.find('GetFilePath').ignore()
 
+    c.find('GetAnimation.ctrl').type = 'wxAnimationCtrl *'
 
     #-----------------------------------------------------------------
     module.addPyFunction('EmptyXmlResource', '(flags=XRC_USE_LOCALE, domain="")',
