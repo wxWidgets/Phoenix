@@ -506,28 +506,30 @@ def run():
 
             PyFunctionDef('InitLocale', '(self)',
                 doc="""\
-                    Try to ensure that the C and Python locale is in sync with wxWidgets locale.
+                    Try to ensure that the C and Python locale is in sync with the wxWidgets
+                    locale on Windows. If you have troubles from the default behavior of this
+                    method you can override it in a derived class to behave differently.
+                    Please report the problem you encountered.
                     """,
                 body="""\
                     self.ResetLocale()
-                    import locale
-                    try:
-                        loc, enc = locale.getlocale()
-                    except ValueError:
-                        loc = enc = None
-                    # Try to set it to the same language as what is already set in the C locale
-                    info = wx.Locale.FindLanguageInfo(loc) if loc else None
-                    if info:
-                        self._initial_locale = wx.Locale(info.Language)
-                    else:
-                        # otherwise fall back to the system default
-                        self._initial_locale = wx.Locale(wx.LANGUAGE_DEFAULT)
+                    if 'wxMSW' in PlatformInfo:
+                        import locale
+                        try:
+                            lang, enc = locale.getdefaultlocale()
+                            self._initial_locale = wx.Locale(lang, lang[:2], lang)
+                            locale.setlocale(locale.LC_ALL, lang)
+                        except ValueError as ex:
+                            target = wx.LogStderr()
+                            orig = wx.Log.SetActiveTarget(target)
+                            wx.LogError("Unable to set default locale: '{}'".format(ex))
+                            wx.Log.SetActiveTarget(orig)
                     """),
 
             PyFunctionDef('ResetLocale', '(self)',
                 doc="""\
                     Release the wx.Locale object created in :meth:`InitLocale`.
-                    This will reset the application's locale to the previous settings.
+                    This should reset the application's locale to the previous settings.
                     """,
                 body="""\
                     self._initial_locale = None
