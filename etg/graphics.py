@@ -201,11 +201,6 @@ def run():
     c.find('GetCurrentPoint').findOverload('wxDouble *x, wxDouble *y').ignore()
     c.mustHaveApp()
 
-    c.find('GetNativePath').setCppCode("""\
-        if (self->IsNull())
-            return (void*)0;
-        return self->GetNativePath();
-        """)
 
     #---------------------------------------------
     c = module.find('wxGraphicsRenderer')
@@ -288,12 +283,6 @@ def run():
     c.find('TransformPoint.x').inOut = True
     c.find('TransformPoint.y').inOut = True
 
-    c.find('GetNativeMatrix').setCppCode("""\
-        if (self->IsNull())
-            return (void*)0;
-        return self->GetNativeMatrix();
-        """)
-
 
     #---------------------------------------------
     c = module.find('wxGraphicsGradientStops')
@@ -307,11 +296,6 @@ def run():
 
     #---------------------------------------------
     c = module.find('wxGraphicsBitmap')
-    c.find('GetNativeBitmap').setCppCode("""\
-        if (self->IsNull())
-            return (void*)0;
-        return self->GetNativeBitmap();
-        """)
 
 
     #---------------------------------------------
@@ -336,6 +320,35 @@ def run():
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+
+    # Add some code to check obj.IsNull() to all methods that are used as getters for a
+    # PropertyDef. This is needed because it seems that most methods in GraphicsOpbects
+    # assume that the dev has already checked that the object is valid and so don't check
+    # it themselves. But when turned into a Python property they will automatically be called
+    # when introspecting the property values in things like wxNullGraphicsFOO. This cas
+    # easily result in a fatal crash. The tweak below will raise a ValueError exception in
+    # these cases before it gets to the crashy parts.
+    checkIsNull = """\
+        if (sipCpp->IsNull()) {{
+            wxPyErr_SetString(PyExc_ValueError, "The {} is not valid (likely an uninitialized or null instance)");
+            return NULL;
+        }}
+        """
+    for module_item in module.items:
+        if isinstance(module_item, etgtools.ClassDef):
+            klass = module_item
+            if 'wxGraphicsObject' in [klass.name] + klass.bases:
+                for item in klass.items:
+                    if isinstance(item, etgtools.PropertyDef):
+                        method = klass.find(item.getter)
+                        method.preMethodCode = checkIsNull.format(klass.pyName)
+                        if item.setter:
+                            method = klass.find(item.setter)
+                            method.preMethodCode = checkIsNull.format(klass.pyName)
+
+
+
+    #-----------------------------------------------------------------
     tools.runGenerators(module)
 
 
