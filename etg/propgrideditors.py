@@ -89,6 +89,13 @@ def run():
         if hasattr(item, 'type') and 'wxVariant' in item.type:
             item.type = item.type.replace('wxVariant', 'wxPGVariant')
 
+    # wxPGWindowList doesn't expect to own these, but wxPropertyGrid does,
+    # so flag them as transferred to the C++ side.
+    c = module.find('wxPGWindowList')
+    c.find('wxPGWindowList.primary').transfer = True
+    c.find('wxPGWindowList.secondary').transfer = True
+    c.find('SetSecondary.secondary').transfer = True
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
