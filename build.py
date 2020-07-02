@@ -2037,6 +2037,7 @@ def cmd_sdist(options, args):
         destdir = posixjoin(PDEST, cfg.PKGDIR)
         for name in glob.glob(posixjoin(cfg.PKGDIR, wc)):
             copyFile(name, destdir)
+    copyFile('demo/version.py', posixjoin(PDEST, 'demo'))
 
     # Copy the license files from wxWidgets
     msg('Copying license files...')
@@ -2119,6 +2120,7 @@ def cmd_sdist_demo(options, args):
 
     # Add in the README file
     copyFile('packaging/README-sdist_demo.txt', posixjoin(PDEST, 'README.txt'))
+    copyFile('demo/version.py', posixjoin(PDEST, 'demo'))
 
     # build the tarball
     msg('Archiving Phoenix demo and samples...')
