@@ -194,9 +194,9 @@ from .%s import *
                 # SIP appends them all together.
                 _needDocstring = False
 
-            if function.mustHaveAppFlag:
+            if function.preMethodCode:
                 stream.write('%PreMethodCode\n')
-                stream.write(nci("if (!wxPyCheckForApp()) return NULL;\n", 4))
+                stream.write(nci(function.preMethodCode, 4))
                 stream.write('%End\n')
 
             if function.cppCode:
@@ -426,11 +426,11 @@ from .%s import *
         if klass.ignored:
             return
 
-        # Propagate mustHaveApp setting to the ctors
-        if klass.mustHaveAppFlag:
+        # Propagate preMethodCode setting to the ctors
+        if klass.preMethodCode:
             for item in klass.allItems():
                 if isinstance(item, extractors.MethodDef) and item.isCtor:
-                    item.mustHaveApp(True)
+                    item.preMethodCode = klass.preMethodCode
 
         # write the class header
         if klass.templateParams:
@@ -680,9 +680,9 @@ from .%s import *
                 # SIP appends them all together.
                 _needDocstring = False
 
-            if method.mustHaveAppFlag:
+            if method.preMethodCode:
                 stream.write('%s%%PreMethodCode\n' % indent)
-                stream.write(nci("if (!wxPyCheckForApp()) return NULL;\n", len(indent)+4))
+                stream.write(nci(method.preMethodCode, len(indent)+4))
                 stream.write('%s%%End\n' % indent)
 
             if method.cppCode:
