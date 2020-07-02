@@ -519,7 +519,7 @@ def run():
                             lang, enc = locale.getdefaultlocale()
                             self._initial_locale = wx.Locale(lang, lang[:2], lang)
                             locale.setlocale(locale.LC_ALL, lang)
-                        except ValueError as ex:
+                        except (ValueError, locale.Error) as ex:
                             target = wx.LogStderr()
                             orig = wx.Log.SetActiveTarget(target)
                             wx.LogError("Unable to set default locale: '{}'".format(ex))
