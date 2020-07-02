@@ -198,7 +198,17 @@ def run():
     # compatibility.
     c.find('GetPixel').ignore()
     c.addCppMethod('wxColour*', 'GetPixel', '(wxCoord x, wxCoord y)',
-        doc="Gets the colour at the specified location on the DC.",
+        doc="""\
+            Gets the colour at the specified location on the DC.
+
+            This method isn't available for ``wx.PostScriptDC`` or ``wx.MetafileDC`` nor
+            for any DC in wxOSX port, and simply returns ``wx.NullColour`` there.
+
+            .. note:: Setting a pixel can be done using DrawPoint().
+
+            .. note:: This method shouldn't be used with ``wx.PaintDC`` as accessing the
+                      DC while drawing can result in unexpected results, notably in wxGTK.
+            """,
         body="""\
             wxColour* col = new wxColour;
             self->GetPixel(x, y, col);
