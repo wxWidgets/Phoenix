@@ -325,7 +325,7 @@ def run():
     # PropertyDef. This is needed because it seems that most methods in GraphicsOpbects
     # assume that the dev has already checked that the object is valid and so don't check
     # it themselves. But when turned into a Python property they will automatically be called
-    # when introspecting the property values in things like wxNullGraphicsFOO. This cas
+    # when introspecting the property values in things like wxNullGraphicsFOO. This can
     # easily result in a fatal crash. The tweak below will raise a ValueError exception in
     # these cases before it gets to the crashy parts.
     checkIsNull = """\
