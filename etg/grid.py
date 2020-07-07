@@ -373,6 +373,8 @@ def run():
     c.find('~wxGridCellEditor').ignore(False)
     c.find('Clone').factory = True
     tools.fixRefCountedClass(c)
+    c.find('TryActivate').ignore() # FIXME: remove this when the compilations issues with wxGridActivationResult is fixed
+
 
     c = module.find('wxGridCellChoiceEditor')
     c.find('wxGridCellChoiceEditor').findOverload('count').ignore()
