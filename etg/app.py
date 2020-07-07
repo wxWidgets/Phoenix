@@ -340,6 +340,11 @@ def run():
             Normally you would derive from this class and implement an ``OnInit``
             method that creates a frame and then calls ``self.SetTopWindow(frame)``,
             however ``wx.App`` is also usable on its own without derivation.
+
+            :note: In Python the wrapper for the C++ class ``wxApp`` has been renamed tp
+                :class:`wx.PyApp`. This ``wx.App`` class derives from ``wx.PyApp``, and is
+                responsible for handling the Python-specific needs for bootstrapping the
+                wxWidgets library and other Python integration related requirements.
             """,
 
         items=[
