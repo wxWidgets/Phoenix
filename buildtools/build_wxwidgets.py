@@ -297,11 +297,10 @@ def main(wxDir, args):
         else:
             wxpy_configure_opts.append("--with-sdl")
 
-        # Set the minimum supported OSX version, and find the oldest SDK
-        # version present on the build machine.
-        # TODO: should there be a command line option to set the SDK?
+        # Set the minimum supported OSX version.
+        # TODO: Add a CLI option to set this.
         if sys.platform.startswith("darwin"):
-            wxpy_configure_opts.append("--with-macosx-version-min=10.9")
+            wxpy_configure_opts.append("--with-macosx-version-min=10.10")
             # for xcodePath in getXcodePaths():
             #     sdks = [ xcodePath+"/SDKs/MacOSX10.{}.sdk".format(n)
             #              for n in range(9, 15) ]
