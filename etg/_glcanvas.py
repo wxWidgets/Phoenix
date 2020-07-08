@@ -64,10 +64,9 @@ def run():
     module.addHeaderCode('#include <wx/glcanvas.h>')
 
     tools.generateStubs('wxUSE_GLCANVAS', module,
-                        extraHdrCode=('static wxGLAttributes _NullGLAttributes;\n'
-                                      'static wxGLContextAttrs _NULLGLContextAttrs;\n'),
-                        typeValMap={'wxGLAttributes &': '_NullGLAttributes',
-                                    'wxGLContextAttrs &': '_NULLGLContextAttrs',
+                        extraHdrCode='#define wxGLCanvasName wxT("GLCanvas")\n',
+                        typeValMap={'wxGLAttributes &': '*this',
+                                    'wxGLContextAttrs &': '*this',
                                     })
 
     c = module.find('wxGLContext')
