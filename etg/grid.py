@@ -33,7 +33,11 @@ ITEMS  = [ 'wxGridCellCoords',
            'wxGridCellFloatRenderer',
            'wxGridCellNumberRenderer',
 
+           'wxGridActivationResult',
+           'wxGridActivationSource',
+
            'wxGridCellEditor',
+           'wxGridCellActivatableEditor',
            'wxGridCellTextEditor',
            'wxGridCellDateEditor',
            'wxGridCellAutoWrapStringEditor',
@@ -278,6 +282,20 @@ def run():
 
 
     #-----------------------------------------------------------------
+
+    c = module.find('wxGridActivationResult')
+    c.ignore() # FIXME
+    c.addPrivateAssignOp()
+    c.instanceCode = 'sipCpp = new wxGridActivationResult::DoNothing();'
+
+
+    c = module.find('wxGridActivationSource')
+    c.ignore() # FIXME
+    c.noDefCtor = True
+    c.addPrivateAssignOp()
+
+
+    #-----------------------------------------------------------------
     def fixEditorClass(name):
         klass = module.find(name)
         assert isinstance(klass, etgtools.ClassDef)
@@ -373,14 +391,18 @@ def run():
     c.find('~wxGridCellEditor').ignore(False)
     c.find('Clone').factory = True
     tools.fixRefCountedClass(c)
-    c.find('TryActivate').ignore() # FIXME: remove this when the compilations issues with wxGridActivationResult is fixed
+    c.find('TryActivate').ignore() # FIXME: remove this when the compilation issues with wxGridActivationResult is fixed
+
+
+    c = module.find('wxGridCellActivatableEditor')
+    c.ignore() # FIXME: see above
 
 
     c = module.find('wxGridCellChoiceEditor')
     c.find('wxGridCellChoiceEditor').findOverload('count').ignore()
 
     for name in ITEMS:
-        if 'Cell' in name and 'Editor' in name:
+        if 'Cell' in name and 'Editor' in name and name != 'wxGridCellActivatableEditor':
             fixEditorClass(name)
 
     module.addPyCode("PyGridCellEditor = wx.deprecated(GridCellEditor, 'Use GridCellEditor instead.')")
