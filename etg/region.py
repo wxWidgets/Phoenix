@@ -64,7 +64,7 @@ def run():
     # Iterator stuff
     c.addPyMethod('__iter__', '(self)', 'return PyRegionIterator(self)',
                   """\
-                  Returns a rectangle interator conforming to the Python iterator
+                  Returns a rectangle iterator conforming to the Python iterator
                   protocol.""")
     c.addPyCode("""\
         class PyRegionIterator(object):

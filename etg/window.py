@@ -37,7 +37,7 @@ def run():
 
     c = module.find('wxVisualAttributes')
     assert isinstance(c, etgtools.ClassDef)
-    # Mark the stucture memebers as read-only, and make copies of the values
+    # Mark the structure members as read-only, and make copies of the values
     # when fetching them. This is to protect against cases where the
     # VisualAttributes object is transient and may be GC'd while we still are
     # using a reference to a C++ member value.

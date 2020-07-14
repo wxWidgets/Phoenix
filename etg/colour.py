@@ -47,7 +47,7 @@ def run():
     """, factory=True)
 
 
-    # Change this macro into a value so we wont have problems when SIP takes its
+    # Change this macro into a value so we won't have problems when SIP takes its
     # address
     module.addCppCode("""\
     #undef wxTransparentColour

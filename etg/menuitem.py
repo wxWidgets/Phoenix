@@ -153,7 +153,7 @@ def run():
     c.addItem(etgtools.PropertyDef('Enabled', 'IsEnabled', 'Enable'))
 
     c.find('GetAccel').factory = True
-    c.find('GetAccelFromString').ignore()  # Not implemented anywere?
+    c.find('GetAccelFromString').ignore()  # Not implemented anywhere?
 
     module.addItem(tools.wxListWrapperTemplate('wxMenuItemList', 'wxMenuItem', module))
 

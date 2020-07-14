@@ -6,7 +6,7 @@ intelligent Frame.  This one has a menu and a statusbar, is able to
 save and reload doodles, clear the workspace, and has a simple control
 panel for setting color and line thickness in addition to the popup
 menu that DoodleWindow provides.  There is also a nice About dialog
-implmented using an wx.html.HtmlWindow.
+implemented using an wx.html.HtmlWindow.
 """
 
 import sys

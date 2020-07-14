@@ -1446,7 +1446,7 @@ def cmd_build_wx(options, args):
                 build_options.append('--gtk3')
 
         # Change to what will be the wxWidgets build folder
-        # (Note, this needs to be after any testing for file/path existance, etc.
+        # (Note, this needs to be after any testing for file/path existence, etc.
         # because they may be specified as relative paths.)
         pwd = pushDir(BUILD_DIR)
 
@@ -1699,7 +1699,7 @@ def cmd_build_docker(options, args):
 
 
 def cmd_build_others(options, args):
-    # Build other stuff that may have their own seprarate build commands instead
+    # Build other stuff that may have their own separate build commands instead
     # of the (ab)normal etg/tweak/generate/sip/compile sequence that the rest of
     # wxPython uses. So far, it's just the wx.svg package
     cmdTimer = CommandTimer('build_others')

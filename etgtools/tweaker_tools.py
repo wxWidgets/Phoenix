@@ -1403,7 +1403,7 @@ def generateStubs(cppFlag, module, excludes=[], typeValMap={},
 
 
 # A simple class for holding lists of code snippets for the header and
-# possibily the C++ file.
+# possibly the C++ file.
 class _StubCodeHolder:
     def __init__(self, flag):
         self.flag = flag

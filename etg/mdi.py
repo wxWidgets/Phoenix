@@ -34,7 +34,7 @@ def run():
     # customizing the generated code and docstrings.
 
     # Let the generator know about these intermediate classes even though they
-    # are undocumented. wxTDIChildFrame is used elsewhere in the class hiearchy
+    # are undocumented. wxTDIChildFrame is used elsewhere in the class hierarchy
     # so it needs to be available.
     module.insertItemBefore(module.find('wxMDIClientWindow'), etgtools.WigCode("""\
 class wxMDIChildFrameBase : wxFrame

@@ -30,7 +30,7 @@ New and improved in this release:
 * DataViewModel.HasValue can be overridden and will inform the DataViewCtrl
   whether or not an item and column has data. If HasValue returns False, then
   GetValue for that item/col will not be called. This allows a distinction
-  between a truely empty cell, and one that has a value even if it is an empty
+  between a truly empty cell, and one that has a value even if it is an empty
   string. (#1600)
 
 * Added flag that allows blocking of item dragging in the UltimateListControl
@@ -155,7 +155,7 @@ New and improved in this release:
 * DataViewModel.HasValue can be overridden and will inform the DataViewCtrl
   whether or not an item and column has data. If HasValue returns False, then
   GetValue for that item/col will not be called. This allows a distinction
-  between a truely empty cell, and one that has a value even if it is an empty
+  between a truly empty cell, and one that has a value even if it is an empty
   string. (#1600)
 
 * Added wrappers for the wx.grid.GridBlockCoords, wx.grid.GridBlocks, and
@@ -1049,7 +1049,7 @@ methods related to handling App Events, like open-files or reopen-app,
 from being handled correctly.
 
 NOTE: It appears that wxPython applications on OSX will now always be
-getting an initial Apple Event(s) sent to `MacOpenFiles` coresponding to
+getting an initial Apple Event(s) sent to `MacOpenFiles` corresponding to
 the name of the script and args on the python command-line.
 
 Added patch #15142 which adds support for building with and using GTK3
@@ -1089,7 +1089,7 @@ Fixed "wxPyHtmlWinTagHandler, no destructor found." error.
 * 6-Sept-2014
 
 Turned on a workaround for a bug that caused crashes on Windows XP.
-This was due to a Micorsoft bug in optimizing access to TLS when a
+This was due to a Microsoft bug in optimizing access to TLS when a
 DLL is dynamically loaded at runtime with LoadLibrary, such as how
 Python extension modules are loaded.  See
 http://trac.wxwidgets.org/ticket/13116
@@ -1130,7 +1130,7 @@ Printing triggered from a Javascript window.print() statement will now
 work on OSX when using the old wx.webkit or the new wx.html2 browser
 controls.
 
-Updated Scintilla code to verison 3.21
+Updated Scintilla code to version 3.21
 
 Lots of fixes and improvements in the wxWidgets code.
 
@@ -1212,7 +1212,7 @@ Fixed several other minor bugs discovered in the last release.
 * 26-Dec-2011
 
 wx.ListCtrl:  Added a static method named HasColumnOrderSupport which
-returns a boolen value indicating if the column ordering APIs (see
+returns a boolean value indicating if the column ordering APIs (see
 next item) are implemented for the current platform.
 
 Added methods for querying and manipulating the ordering of the
@@ -1234,10 +1234,10 @@ implementations.  The GTK version requires at least version 1.3.1 of
 libwebkitgtk-dev, which is the default on most of the recent Linux
 distributions.  Please note that although these new classes and
 libraries are using names based on "WebView" I have put the wxPython
-verison of them in the wx.html2 module because the wxWebKit project
+version of them in the wx.html2 module because the wxWebKit project
 already produces a wx.webview module for wxPython.
 
-The wx.lib.pubsub package has been updated to the latest verison and
+The wx.lib.pubsub package has been updated to the latest version and
 several examples have been added to the samples folder.
 
 
@@ -1296,7 +1296,7 @@ will be returned, so be sure to check the return values.  Using Cairo
 on Windows is usually faster and seems to be of better quality than
 using the GDI+ backend.
 
-The wx.GCDC class can now be constructed with an already exisiting
+The wx.GCDC class can now be constructed with an already existing
 wx.GraphicsContext.
 
 The wx.lib.softwareupdate module has been added.  It implements a
@@ -1345,7 +1345,7 @@ other platforms it is a generic implementation using wx.Button.
 Added wx.lib.itemspicker.  This class allows items to be selected from
 a list by moving them to another list.
 
-Added wx.UIActionSimulator, which is able to programatically generate
+Added wx.UIActionSimulator, which is able to programmatically generate
 platform specific keyboard and mouse events, (with varying degrees of
 success depending on the platform.)
 
@@ -1373,7 +1373,7 @@ wx.ToggleButtons are now part of the new common button class hierarchy
 and so they can now have bitmaps instead of or in addition to their
 text labels.
 
-Udpates from the AGW and Editra projects.
+Updates from the AGW and Editra projects.
 
 
 
@@ -1404,7 +1404,7 @@ the other.)  wx.BitmapButton is pretty much redundant and will likely
 be phased out sometime in the future.  (The OSX Carbon build does not
 support this new feature, but the Cocoa build does.)
 
-wx.ComboBox:  Added Popup and Dismiss methods for programatically
+wx.ComboBox:  Added Popup and Dismiss methods for programmatically
 showing and hiding the popup, although they are not implemented for
 all platforms yet.
 
@@ -1427,7 +1427,7 @@ wx.wizard.Wizard:  Add a new EVT_WIZARD_PAGE_SHOWN event.
 
 Added wx.InfoBar, which is similar to the message bar used in some web
 browser windows that is shown above or below the content window to
-display messages and/or buttons in a way that doesn't interupt the
+display messages and/or buttons in a way that doesn't interrupt the
 user's workflow like a modal message dialog does, but is much more
 noticeble than simply putting some text in the status bar.
 
@@ -1440,7 +1440,7 @@ wx.lib.graphics to help maintain compatibility between the two.
 
 Added the wx.lib.pdfviewer package which is a contribution from David
 Hughes.  It implements a simple cross-platform PDF viewer widget using
-the 3rd party pyPdf package for parseing the PDF file.  It's not super
+the 3rd party pyPdf package for parsing the PDF file.  It's not super
 fast nor is it feature complete, but for simple and small PDF files
 (such as those produced by ReportLab) it works well.
 
@@ -1558,7 +1558,7 @@ the items proportions to return to the old behaviour.
 
 Added support for toolbar buttons with dropdown menus.
 
-Added support for mouse events from two auxillary mouse buttons.
+Added support for mouse events from two auxiliary mouse buttons.
 
 The methods that wx.TextCtrl and wx.ComboBox have in common have been
 factored out into a new base class that they share, wx.TextEntry.
@@ -1635,7 +1635,7 @@ Added wx.lib.msgpanel, which provides a class derived from wx.Panel
 that can look and feel much like a wx.MessageDialog.
 
 Added wx.lib.progressindicator which is a simple class with a label
-and a guage that can be used to show either specific or indeterminate
+and a gauge that can be used to show either specific or indeterminate
 (pulsed) progress of some sort.  It works well in status bars, and can
 be set to hide itself when not active.
 
@@ -1717,7 +1717,7 @@ wx.FrozenWindow.  It will freeze the window passed to it upon entry to
 the context, and will thaw the window upon exit from the context.
 
 Applied the final version of patch #10959 to the PyCrust code.  It
-adds many enhancements to the Py suite, inlcuding the ability to edit
+adds many enhancements to the Py suite, including the ability to edit
 blocks of code (called slices) as a whole before executing them, and
 also the ability to execute some simple shell commands.
 
@@ -1733,7 +1733,7 @@ Added Python 2.7 builds for Windows and Mac.
 
 Added Debian package builds for Ubuntu 9.10 and 10.4.
 
-Many fixes and enhancements for the wx.lib.agw pacakge, including the
+Many fixes and enhancements for the wx.lib.agw package, including the
 addition of pybusyinfo, ribbon, ultimatelistctrl and zoombar.
 
 
@@ -1753,7 +1753,7 @@ of label renderers for Grids that work like the cell renderers do.  See
 the demo for a simple sample.
 
 Solved the manifests problem with Python 2.6 on Windows.  wxPython now
-programatically creates its own activation context and loads a
+programmatically creates its own activation context and loads a
 manifest in that context that specifies the use of the themable common
 controls on Windows XP and beyond.  This also means that the external
 manifest files are no longer needed for the other versions of Python.
@@ -1777,7 +1777,7 @@ http://wxpython.org/cairo/
 -------
 * 16-Feb-2009
 
-Added the wx.lib.agw package, which contiains most of the widgets from
+Added the wx.lib.agw package, which contains most of the widgets from
 http://xoomer.alice.it/infinity77/main/freeware.html written by Andrea
 Gavana.  Andrea's widgets that were already in wx.lib were also moved
 to the wx.lib.agw package, with a small stub module left in wx.lib.
@@ -1791,7 +1791,7 @@ uses a wx.BitmapButton instead of a normal wx.Button.  This makes the
 color picker look and behave lots better on Mac than before.
 
 You can now pass the handler function to the Unbind method.  If it is
-given then Unbind will only disconenct the event handler that uses the
+given then Unbind will only disconnect the event handler that uses the
 same handler function, so if there are multiple bindings for the same
 event type you'll now be able to selectively unbind specific
 instances.
@@ -1878,7 +1878,7 @@ Make it easier to replace the check box images used in the
 CheckListCtrlMixin class.
 
 Fixed bug in wx.ScrolledWindow when child focus events caused
-unneccessary or incorrect scrolling.
+unnecessary or incorrect scrolling.
 
 Fixed a bug in wx.GridBagSizer where hidden items were not ignored in
 part of the layout algorithm.
@@ -2021,7 +2021,7 @@ Leopard.
 wxMac: Fixed assertion errors dealing with toolbars on Leopard.
 
 wxMac: Multiline textcontrols now support attributes for margins and
-alignement; only a single tab distance can be set though.
+alignment; only a single tab distance can be set though.
 
 Added the wx.Image.AdjustChannels method.  This function muliplies all
 4 channels (red, green, blue, alpha) with a factor (around
@@ -2075,7 +2075,7 @@ wxGTK:  Add wx.Window.GetGtkWidget.
 
 All: Undprecated wx.ListCtrl.[G|S]etItemSpacing
 
-All: Fixed wx.Palette constructor wrapper.  It takes three seqences of
+All: Fixed wx.Palette constructor wrapper.  It takes three sequences of
 integers to specify the R, G, and B values for each color in the
 palette, which must all be the same length and which must contain
 integer values in the range of 0..255 inclusive.
@@ -2228,7 +2228,7 @@ existed.
 wx.aui.PyAuiDocArt and wx.aui.PyAuiTabArt can now be derived from in
 wxPython and plugged in to wx.AUI.
 
-XRCed has a new experimental feature to add controls by draging icons
+XRCed has a new experimental feature to add controls by dragging icons
 from the tool palette to the test window. Mouse position is tracked
 to highlight the future parent of the new item.
 
@@ -2283,7 +2283,7 @@ Add wx.lib.mixins.treemixin from Frank Niessink.
 
 Added the wx.SizerFlags class, and also added AddF, InsertF and
 PrependF methods to wx.Sizer.  The wxSizerFlags class provides a
-convienient and easier to read way to add items to a sizer.  It was
+convenient and easier to read way to add items to a sizer.  It was
 added as a new set of methods of the wx.Sizer class so as to not
 disturb existing code.  For example, instead of writing::
 
@@ -2337,7 +2337,7 @@ Lots of changes to XRCed from Roman Rolinsky:
    is a special comment starting with '%' character, followed by a line
    of python code. It is executed using 'exec' when the resource file is
    opened. This is useful to import plugin modules containing custom
-   handlers which are specific to the resource file, hovewer this is of
+   handlers which are specific to the resource file, however this is of
    course a security hole if you use foreign XRC files. A warning is
    displayed if the preference option 'ask' is selected (by default).
 
@@ -2376,7 +2376,7 @@ use, for example, wx.EVT_BUTTON.typeId instead of
 wx.wxEVT_COMMAND_BUTTON_CLICKED.   Note that there are a few composite
 events, such as EVT_MOUSE and EVT_SCROLL, that will actually bind
 multiple event types at once, and in these cases the typeId property
-may not give you what you want.  You should use te component events in
+may not give you what you want.  You should use the component events in
 these cases.
 
 PyCrust now has an option for showing/hiding the notebook.
@@ -2451,7 +2451,7 @@ classes.  These classes allow you to implement a wx.ComboBox-like
 widget where the popup can be nearly any kind of widget, and where you
 have a lot of control over other aspects of the combo widget as well.
 It works very well on GTK and MSW, using native renderers for drawing
-the combo button, but is unfortunatly still a bit klunky on OSX...
+the combo button, but is unfortunately still a bit klunky on OSX...
 
 Use system default paper size for printing instead of A4 by default.
 
@@ -2565,8 +2565,8 @@ Fixed name errors in the old wxPython package namespace.  As a
 reminder, use of this package is deprecated and you are encouraged to
 switch your programs over to the wx package.
 
-Fixed wx.glcanvas.GLCanvas.SetCurrent to be compatible with prevoius
-versons.
+Fixed wx.glcanvas.GLCanvas.SetCurrent to be compatible with previous
+versions.
 
 Added wx.StandardPaths.GetTmpDir.
 
@@ -2730,7 +2730,7 @@ Added GetResourcesDir and GetLocalizedResourcesDir to
 wx.StandardPaths.
 
 Added a GetReceivedFormat method to wx.DataObjectComposite.  You can
-use this to find out what format of data object was recieved from the
+use this to find out what format of data object was received from the
 source of the clipboard or DnD operation, and then you'll know which
 of the component data objects to use to access the data.
 
@@ -2845,7 +2845,7 @@ what-not will still use the emulated toolbar because of platform
 restrictions in how/where the native toolbar can be used.
 
 Added Python properties for many of the getter/setter methods of wx
-classes.  In order for the names to be predicatble for somebody
+classes.  In order for the names to be predictable for somebody
 already familiar with wxPython the property names are simply the name
 of the getter with the "Get" dropped.  For example, wx.Window has a
 property named "Size" that maps to GetSize and SetSize.  So far there
@@ -2922,7 +2922,7 @@ The first parts of a new 2D drawing API has been added with the
 wx.GraphicsPath and wx.GraphicsContext classes.  They wrap GDI+ on
 Windows, Cairo on wxGTK and CoreGraphics on OS X.  They allow path-based
 drawing with alpha-blending and anti-aliasing, and use a floating
-point cooridnate system.  Currently they can only target drawing to
+point coordinate system.  Currently they can only target drawing to
 windows, but other wx.DC backends are forthcoming.  The APIs may
 evolve a bit more before they are finalaized with the 2.8 release, but
 there is enough there now to get a good feel for how things will work.
@@ -3078,7 +3078,7 @@ wxGTK: Fix RequestMore for idle events.
 wxGTK: Implement user dashes for PS and GNOME printing.
 
 wxGTK: Correct update region code. Don't always invalidate the whole
-window upon resize. Reenable support for thewx.NO_FULL_REPAINT_ON_RESIZE
+window upon resize. Re-enable support for thewx.NO_FULL_REPAINT_ON_RESIZE
 flag.  Also disable refreshing custom controls when focusing in and out.
 
 wx.lib.pubsub: Publisher is now able to parse a dotted notation string
@@ -3222,7 +3222,7 @@ workaround a bug in MSLU!
 wxMSW: wx.lib.iewin.IEHtmlWindow now properly handles tabbing, return
 and other special keys properly.
 
-Lots of PyCrust enhancments started by Franz Steinaeusler, Adi Sieker,
+Lots of PyCrust enhancements started by Franz Steinaeusler, Adi Sieker,
 and Sebastian Haase, and which in turn were further enhanced, fixed
 tweaked and finished up by me.  The changes include the following:
 
@@ -3710,7 +3710,7 @@ Some XRC changes:
 wxMSW: fix for [ 1052989 ] TextCtrl.SetBackgroundColour(wx.NullColour)
 bug.
 
-Added wx.PasswordEntryDialog analagous to wx.TextEntryDialog, allows
+Added wx.PasswordEntryDialog analogous to wx.TextEntryDialog, allows
 detecting entering an empty string vs. cancel unlike the
 wx.GetPasswordFromUser dialog function.
 
@@ -3734,7 +3734,7 @@ OGL patch from Shane Holloway:
     Causes many problems when it's not.  ;)
 
 Fixed GetSaveData and SetSaveData in wx.lib.multisash to not depend on
-the default way that class objectss are converted to strings.
+the default way that class objects are converted to strings.
 
 Fixed problem in StyledTextCtrl.Set[HV]ScrollBar that could leave the
 internal scrollbar visible.
@@ -3790,7 +3790,7 @@ reference to the timer and then del the reference when you are
 finished with the timer.
 
 Updated to 1.3.24 of SWIG.  All of my big patches have been applied to
-the main SWIG source tree, but unfortunatly there were also some bugs
+the main SWIG source tree, but unfortunately there were also some bugs
 added that affected the wxPython build and a few details in my
 original patch were changed/removed, so we are still not free of
 patches.  A new patch for SWIG is located in the wxPython/SWIG
@@ -3845,7 +3845,7 @@ lots of surplus events)
 wxGTK: Applied patch for proper menu highlight colour detection in
 wx.SystemSettings.
 
-wxGTK: Commited scrollbar patch #1093339 which sends lineup, linedown
+wxGTK: Committed scrollbar patch #1093339 which sends lineup, linedown
 events based on intercepting the mouse down events.
 
 wxGTK: Applied patch #1102789 which solved conflicts between wxWidgets
@@ -4018,7 +4018,7 @@ in the source tree if you need to use SWIG when building your own copy
 of wxPython, or other extension modules that need to integrate with
 the wxPython modules.
 
-Added wx.Frame.RequestUserAttention which, if the platform suports it,
+Added wx.Frame.RequestUserAttention which, if the platform supports it,
 will do something (such as flash the task bar item) to suggest to the
 user that they should look at that window.
 
@@ -4044,7 +4044,7 @@ wxMSW: added AssociateHandle and DissociateHandle to wx.Window
 wxMac: fix for toolbar tooltips
 
 wx.Sizer.Show (and Hide) now take an optional parameter specifying if
-the item to be shown should be searched for recursivly in subsizers,
+the item to be shown should be searched for recursively in subsizers,
 and return a boolean value indicating if the item was found.
 
 wxMSW: fixed MaximizeEvent generation in wx.Frame
@@ -4093,7 +4093,7 @@ merged with the normal dock popup menu.  See the MigrationGuide for
 more details and a warning.
 
 Added wx.TopLevelWindow.IsActive() which tells you if the frame or
-dialog is or containts the active window with the keyboard focus.
+dialog is or contains the active window with the keyboard focus.
 
 Added ability to create a font based on pixel size rather than point
 size via the FontFromPixelSize constructor.
@@ -4223,7 +4223,7 @@ now locaed in their own sub-package, wx.lib.masked.  Demos updated.
 
 The changes that implemented the incompatible wx.DC methods in 2.5.1.5
 have been reverted.  The wx.DC methods are now compatible with the 2.4
-implemetation.  In addition a set of renamed methods have been added
+implementation.  In addition a set of renamed methods have been added
 that take wx.Point and/or wx.Size objects instead of individual
 parameters.
 
@@ -4247,7 +4247,7 @@ wx.InitAllImageHandlers is now an empty function that does nothing but
 exist for backwards compatibility.  The C++ version is now called
 automatically when wxPython is initialized.  Since all the handlers
 are included in the wxWidgets shared library anyway, this imposes only
-a very small amount of overhead and removes several unneccessary
+a very small amount of overhead and removes several unnecessary
 problems.
 
 Replaced wx/lib/pubsub.py with a version that uses weak references to
@@ -4359,9 +4359,9 @@ from wxBookCtrl.
 Added Gordon Williams' PyPlot module to the library, available as the
 wx.lib.plot module.
 
-I made a small but important change in the code that aquires the
+I made a small but important change in the code that acquires the
 Python Global Interpreter Lock to try and prevent deadlocks that can
-happen when there are nested attempts to aquire the GIL.
+happen when there are nested attempts to acquire the GIL.
 
 The RPMs will now install menu items on Mandrake Linux in
 Applications/Development/Tools for PyCrust, XRCed, etc.  The RPMs are
@@ -4442,7 +4442,7 @@ Floats are allowed again as function parameters where ints are expected.
 -------
 * 1-Oct-2003
 
-Use wxSTC in the demo for displaying the soucre code of the samples.
+Use wxSTC in the demo for displaying the source code of the samples.
 
 Lots of bug fixes and such from the wxWindows folks.
 
@@ -4487,7 +4487,7 @@ worked out how to do proper clipping of child windows on wxGTK.
 
 Patrick O'Brien's PyCrust package has been renamed to Py and now
 includes several new tools.  As part of the change the location of the
-pacakge has changed as well, it is now accessible as "from wxPython
+package has changed as well, it is now accessible as "from wxPython
 import py" (or "from wx import py" using the new namespace.)  There
 are still some transition modules in the wxPython.lib.PyCrust package
 that will issue a warning and then import what is needed from the new
@@ -4731,7 +4731,7 @@ You can now overload OnInitGui, OnExit and OnAssert in your classes
 derived from wxApp.
 
 Added GetSelectedCells, GetSelectionBlockTopLeft,
-GetSelectionBlockBottomRight, GetSelectedRows, GetSelectedCols nethods
+GetSelectionBlockBottomRight, GetSelectedRows, GetSelectedCols methods
 to wxGrid.
 
 Added Python == and != operators for some basic classes
@@ -4753,7 +4753,7 @@ Added wxPython.lib.evtmgr by Robb Shecter, which is an easier, more
 events using the Publish/Subscribe pattern.
 
 Added wxPython.lib.popupctl by Gerrit van Dyk which is a combobox-like
-gizmo for poping up arbitrary controls.  It is currently using
+gizmo for popping up arbitrary controls.  It is currently using
 wxDialog because of some issues with wxPopupWindow...
 
 Added wxPython.lib.gridmovers by Gerrit van Dyk which facilitates the
@@ -5326,7 +5326,7 @@ Added wxInputStream and the wxFileSystem family of classes,
 contributed by Joerg Baumann.
 
 Added wxProcess and support for it to wxExecute.  wxProcess lets you
-get notified when an asyncronous child process terminates, and also to
+get notified when an asynchronous child process terminates, and also to
 get input/output streams for the child process's stdout, stderr and
 stdin.
 
@@ -5450,7 +5450,7 @@ on the fly that derives from wxWindow, the COM CoClass and others
 needed to make it all work.  The resulting class can be instantiated
 just like wxWindow, used in sizers, etc.  It also responds to all COM
 method calls, properties, etc., and if the class or a mix-in has
-matching method names, then the COM events will be propogated back to
+matching method names, then the COM events will be propagated back to
 them.
 
 Created a typemap that allows a string to be used for parameters
@@ -5463,7 +5463,7 @@ wxStyledTextCtrl is finally in wxPython!!  (And the crowd goes
 wild...)   There's no documentaTion yet (the crowd boos and hisses...)
 but I've included a very readable source file in the
 wxPython/demo/data directory, a couple fairly good examples, and you
-can also refer to the Scintilla documentaion at
+can also refer to the Scintilla documentation at
 http://www.scintilla.org/ScintillaDoc.html to help fill in the gaps
 until the docs are done.  (The croud murmers contentedly as the tool
 provider smiles convincingly and removes his flame-proof suit.)
@@ -5563,7 +5563,7 @@ What's new in 2.1.11
 * 13-Nov-1999
 
 Skipped a few version numbers so wxMSW, wxGTK and wxPython are all
-syncronized.
+synchronized.
 
 wxImage.SetData now makes a copy of the image data before giving it to
 wxImage.  I mistakenly thought that wxImage would copy the data
@@ -5627,7 +5627,7 @@ What's new in 2.1.4
 -------------------
 * 7-Oct-1999
 
-This release is NOT syncronized with a snapshot release of wxGTK or
+This release is NOT synchronized with a snapshot release of wxGTK or
 wxMSW.  For MSW this isn't much of a problem since you can get the
 binaries from the web site.  For other platforms you'll have to build
 wxGTK from CVS.  (See http://web.ukonline.co.uk/julian.smart/wxwin/cvs.htm)
@@ -5686,7 +5686,7 @@ Added wxPyEvent and wxPyCommandEvent classes, derived from wxEvent and
 wxCommandEvent.  Each of them has SetPyData and GetPyData methods that
 accept or return a single Python object.  You can use these classes
 directly or derive from them to create your own types of event objects
-that can pass through the wxWindows event system without loosing their
+that can pass through the wxWindows event system without losing their
 Python parts (as long as they are stored with SetPyData.)  Stay tuned
 for more info and examples in future releases.
 
@@ -5744,7 +5744,7 @@ Added wxCaret.  Unfortunately it's author has still not documented it
 in the wxWindows docs...
 
 Some new 3rd party contributions in wxPython.lib.  PyShell, in
-shell.py is an interesting implementaion of an interactive Python
+shell.py is an interesting implementation of an interactive Python
 shell in wxWindows.  floatbar.py has a class derived from wxToolBar
 that can sense mouse drags and then reparent itself into another
 frame. Moving the new frame close to where it came from puts the tool
@@ -5759,7 +5759,7 @@ What's new in 2.1b3
 --------------------
 * 1-Sep-1999
 
-This release is syncronized with release 2.1 snapshot 9 of wxWindows.
+This release is synchronized with release 2.1 snapshot 9 of wxWindows.
 
 Switched to using SWIG from CVS (see http://swig.cs.uchicago.edu/cvs.html)
 for some of the new features and such.  Also they have encorporated my
@@ -5819,7 +5819,7 @@ wxWindow.PopupMenuXY to be consistent with some other methods.
 Added wxGrid.SetEditInPlace and wxGrid.GetEditInPlace.
 
 You can now provide your own app.MainLoop method.  See
-wxPython/demo/demoMainLoop.py for an example and some explaination.
+wxPython/demo/demoMainLoop.py for an example and some explanation.
 
 Got the in-place-edit for the wxTreeCtrl fixed and added some demo
 code to show how to use it.
@@ -5880,7 +5880,7 @@ Fixed a bug with attaching objects to tree items.  Actually was a
 symptom of a larger problem with not obtaining the interpreter lock
 when doing any Py_DECREFs.
 
-wxSizer and friends.  Sizers are layout tools that manage a colection
+wxSizer and friends.  Sizers are layout tools that manage a collection
 of windows and sizers.  Different types of sizers apply different
 types of layout algorithms.  You saw it here first!  These classes are
 not even in the wxWindows C++ library yet!
@@ -5893,7 +5893,7 @@ What's new in 2.0b9
 
 Bug fix for ListCtrl in test4.py (Was a missing file...  DSM!)
 
-Bug fix for occassional GPF on Win32 systems upon termination of a
+Bug fix for occasional GPF on Win32 systems upon termination of a
 wxPython application.
 
 Added wxListBox.GetSelections returning selections as a Tuple.
@@ -5940,7 +5940,7 @@ What's new in 2.0b7
 -------------------
 * 15-Mar-1999
 
-Added DLG_PNT and DLG_SZE convienience methods to wxWindow class.
+Added DLG_PNT and DLG_SZE convenience methods to wxWindow class.
 
 Added missing constructor and other methods for wxMenuItem.
 

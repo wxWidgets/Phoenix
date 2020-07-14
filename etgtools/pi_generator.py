@@ -269,7 +269,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
         # Now write the Python equivalent class for the typedef
         if not bases:
-            bases = ['object']  # this should not happpen, but just in case...
+            bases = ['object']  # this should not happen, but just in case...
         stream.write('%sclass %s(%s):\n' % (indent, name, ', '.join(bases)))
         indent2 = indent + ' '*4
         if typedef.briefDoc:

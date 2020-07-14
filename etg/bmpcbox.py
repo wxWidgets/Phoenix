@@ -57,7 +57,7 @@ def run():
     #print([i.name for i in items])
     c.find('GetCurrentSelection').ignore()
 
-    # Ignore the old C array verison of the ctor and Create methods, and
+    # Ignore the old C array version of the ctor and Create methods, and
     # fixup the remaining ctor and Create with the typical default values for
     # the args
     c.find('wxBitmapComboBox').findOverload('wxString choices').ignore()

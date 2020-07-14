@@ -19,7 +19,7 @@ RUN touch ~/.Xauthority; \
         mkdir ~/.vnc; \
         echo "password" | vncpasswd -f >> ~/.vnc/passwd; \
         chmod 600 ~/.vnc/passwd; \
-# And a coresponding one of these:
+# And a corresponding one of these:
 #        echo "exec /usr/bin/startlxde" > ~/.vnc/xstartup;
         echo "exec lxsession -e LXDE -s Lubuntu" > ~/.vnc/xstartup;
 #        echo "exec mate-session" > ~/.vnc/xstartup;

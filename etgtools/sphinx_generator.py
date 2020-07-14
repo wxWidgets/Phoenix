@@ -205,7 +205,7 @@ class Node(object):
         This method returns ``True`` if this node contains a specific class into its
         descendants.
 
-        :param `klass`: can be any of the classes definied in this script except :class:`XMLDocString`.
+        :param `klass`: can be any of the classes defined in this script except :class:`XMLDocString`.
         :param `node`: another `Node` instance or ``None`` if this is the first invocation of
          this function.
 
