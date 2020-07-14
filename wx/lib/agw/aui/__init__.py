@@ -127,7 +127,7 @@ missing features (the list is not exhaustive):
 - wxAuiManager & wxToolBar - ToolBar Of Size Zero: http://trac.wxwidgets.org/ticket/9724
 - wxAuiNotebook doesn't behave properly like a container as far as...: http://trac.wxwidgets.org/ticket/9911
 - Serious layout bugs in wxAUI: http://trac.wxwidgets.org/ticket/10620
-- wAuiDefaultTabArt::Clone() should just use copy contructor: http://trac.wxwidgets.org/ticket/11388
+- wAuiDefaultTabArt::Clone() should just use copy constructor: http://trac.wxwidgets.org/ticket/11388
 - Drop down button for check tool on wxAuiToolbar: http://trac.wxwidgets.org/ticket/11139
 
 Plus the following features:
@@ -201,7 +201,7 @@ Plus the following features:
       enough outside of the notebook to become floating pages;
   (k) Implementation of the style ``AUI_NB_DRAW_DND_TAB`` (on by default), which draws an image
       representation of a tab while dragging;
-  (l) Implementation of the `AuiNotebook` unsplit functionality, which unsplit a splitted AuiNotebook
+  (l) Implementation of the `AuiNotebook` unsplit functionality, which unsplit a split AuiNotebook
       when double-clicking on a sash;
   (m) Possibility to hide all the tabs by calling `HideAllTAbs`;
   (n) wxPython controls can now be added inside page tabs by calling `AddControlToPage`, and they can be

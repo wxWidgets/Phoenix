@@ -1065,7 +1065,7 @@ class TreeListHeaderWindow(wx.Window):
             # end of the current column
             xpos = 0
 
-            # find the column where this event occured
+            # find the column where this event occurred
             countCol = self.GetColumnCount()
 
             for column in range(countCol):
@@ -3953,7 +3953,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             header.Update()
 
         # Update the header window after this scroll event has fully finished
-        # processing, and the scoll action is complete.
+        # processing, and the scroll action is complete.
         if event.GetOrientation() == wx.HORIZONTAL:
             wx.CallAfter(_updateHeaderWindow, self._owner.GetHeaderWindow())
         event.Skip()
@@ -4323,7 +4323,7 @@ class HyperTreeList(wx.Control):
         :class:`TreeListHeaderWindow`
         :class:`TreeListMainWindow` based off :class:`CustomTreeCtrl`
     These widgets can be obtained by the :meth:`~HyperTreeList.GetHeaderWindow`
-    and :meth:`~HyperTreeList.GetMainWindow` methods respectively althought this
+    and :meth:`~HyperTreeList.GetMainWindow` methods respectively although this
     shouldn't be needed in normal usage.
 
     Please note that although the methods are not explicitly defined or

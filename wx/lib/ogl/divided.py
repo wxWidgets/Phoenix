@@ -107,7 +107,7 @@ class DividedShapeControlPoint(ControlPoint):
         # Find the old top and bottom of this region,
         # and calculate the new proportion for this region
         # if legal.
-        currentY = dividedObject.GetY() - dividedObject.GetHeight() / 2.0
+        currently = dividedObject.GetY() - dividedObject.GetHeight() / 2.0
         maxY = dividedObject.GetY() + dividedObject.GetHeight() / 2.0
 
         # Save values
@@ -117,18 +117,18 @@ class DividedShapeControlPoint(ControlPoint):
         for i in range(len(dividedObject.GetRegions())):
             region = dividedObject.GetRegions()[i]
             proportion = region._regionProportionY
-            yy = currentY + dividedObject.GetHeight() * proportion
-            actualY = min(maxY, yy)
+            yy = currently + dividedObject.GetHeight() * proportion
+            actually = min(maxY, yy)
 
             if region == thisRegion:
-                thisRegionTop = currentY
+                thisRegionTop = currently
 
                 if i + 1 < len(dividedObject.GetRegions()):
                     nextRegion = dividedObject.GetRegions()[i + 1]
             if region == nextRegion:
-                nextRegionBottom = actualY
+                nextRegionBottom = actually
 
-            currentY = actualY
+            currently = actually
 
         if not nextRegion:
             return
@@ -170,7 +170,7 @@ class DividedShape(RectangleShape):
         Default class constructor.
 
         :param `w`: width of rectangle
-        :param `h`: heigth of rectangle
+        :param `h`: height of rectangle
 
         """
         RectangleShape.__init__(self, w, h)
@@ -186,7 +186,7 @@ class DividedShape(RectangleShape):
             defaultProportion = 1.0 / len(self.GetRegions())
         else:
             defaultProportion = 0.0
-        currentY = self._ypos - self._height / 2.0
+        currently = self._ypos - self._height / 2.0
         maxY = self._ypos + self._height / 2.0
 
         leftX = self._xpos - self._width / 2.0
@@ -219,13 +219,13 @@ class DividedShape(RectangleShape):
             else:
                 proportion = region._regionProportionY
 
-            y = currentY + self._height * proportion
-            actualY = min(maxY, y)
+            y = currently + self._height * proportion
+            actually = min(maxY, y)
 
             centreX = self._xpos
-            centreY = currentY + (actualY - currentY) / 2.0
+            centreY = currently + (actually - currently) / 2.0
 
-            DrawFormattedText(dc, region._formattedText, centreX, centreY, self._width - 2 * xMargin, actualY - currentY - 2 * yMargin, region._formatMode)
+            DrawFormattedText(dc, region._formattedText, centreX, centreY, self._width - 2 * xMargin, actually - currently - 2 * yMargin, region._formatMode)
 
             if y <= maxY and region != self.GetRegions()[-1]:
                 regionPen = region.GetActualPen()
@@ -233,14 +233,14 @@ class DividedShape(RectangleShape):
                     dc.SetPen(regionPen)
                     dc.DrawLine(leftX, y, rightX, y)
 
-            currentY = actualY
+            currently = actually
 
     def SetSize(self, w, h, recursive = True):
         """
         Set the size.
 
         :param `w`: width of rectangle
-        :param `h`: heigth of rectangle
+        :param `h`: height of rectangle
         :param `recursive`: not implemented
 
         """
@@ -261,7 +261,7 @@ class DividedShape(RectangleShape):
             defaultProportion = 1.0 / len(self.GetRegions())
         else:
             defaultProportion = 0.0
-        currentY = self._ypos - self._height / 2.0
+        currently = self._ypos - self._height / 2.0
         maxY = self._ypos + self._height / 2.0
 
         for region in self.GetRegions():
@@ -271,15 +271,15 @@ class DividedShape(RectangleShape):
                 proportion = region._regionProportionY
 
             sizeY = proportion * self._height
-            y = currentY + sizeY
-            actualY = min(maxY, y)
+            y = currently + sizeY
+            actually = min(maxY, y)
 
-            centreY = currentY + (actualY - currentY) / 2.0
+            centreY = currently + (actually - currently) / 2.0
 
             region.SetSize(self._width, sizeY)
             region.SetPosition(0, centreY - self._ypos)
 
-            currentY = actualY
+            currently = actually
 
     def GetAttachmentPosition(self, attachment, nth = 0, no_arcs = 1, line = None):
         """
@@ -416,21 +416,21 @@ class DividedShape(RectangleShape):
         """
         Make the mandatory control points.
         """
-        currentY = self.GetY() - self._height / 2.0
+        currently = self.GetY() - self._height / 2.0
         maxY = self.GetY() + self._height / 2.0
 
         for i, region in enumerate(self.GetRegions()):
             proportion = region._regionProportionY
 
-            y = currentY + self._height * proportion
-            actualY = min(maxY, y)
+            y = currently + self._height * proportion
+            actually = min(maxY, y)
 
             if region != self.GetRegions()[-1]:
-                controlPoint = DividedShapeControlPoint(self._canvas, self, i, CONTROL_POINT_SIZE, 0, actualY - self.GetY(), 0)
+                controlPoint = DividedShapeControlPoint(self._canvas, self, i, CONTROL_POINT_SIZE, 0, actually - self.GetY(), 0)
                 self._canvas.AddShape(controlPoint)
                 self._controlPoints.append(controlPoint)
 
-            currentY = actualY
+            currently = actually
 
     def ResetControlPoints(self):
         """
@@ -449,7 +449,7 @@ class DividedShape(RectangleShape):
         """
         Reset the mandatory control points.
         """
-        currentY = self.GetY() - self._height / 2.0
+        currently = self.GetY() - self._height / 2.0
         maxY = self.GetY() + self._height / 2.0
 
         i = 0
@@ -458,13 +458,13 @@ class DividedShape(RectangleShape):
                 region = self.GetRegions()[i]
                 proportion = region._regionProportionY
 
-                y = currentY + self._height * proportion
-                actualY = min(maxY, y)
+                y = currently + self._height * proportion
+                actually = min(maxY, y)
 
                 controlPoint._xoffset = 0
-                controlPoint._yoffset = actualY - self.GetY()
+                controlPoint._yoffset = actually - self.GetY()
 
-                currentY = actualY
+                currently = actually
 
                 i += 1
 

@@ -238,7 +238,7 @@ class ControlPanel(wx.Panel):
             self.thknsBtns[x] = b
         self.thknsBtns[1].SetToggle(True)
 
-        # Make a colour indicator window, it is registerd as a listener
+        # Make a colour indicator window, it is registered as a listener
         # with the doodle window so it will be notified when the settings
         # change
         ci = ColourIndicator(self)

@@ -535,7 +535,7 @@ class GenButton(wx.Control):
                     colBg = self.GetParent().GetBackgroundColour()
                     brush = wx.Brush(colBg)
         else:
-            # this line assumes that a pressed button should be hilighted with
+            # this line assumes that a pressed button should be highlighted with
             # a solid colour even if the background is supposed to be transparent
             brush = wx.Brush(self.faceDnClr)
         return brush

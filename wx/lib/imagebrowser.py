@@ -595,7 +595,7 @@ class ImageDialog(wx.Dialog):
         if self.fl_ext == "All":
             all_files = []
 
-            if self.fl_types[-1] == 'All Files':
+            if self.fl_types[-1] == "All Files":
                 allTypes = self.fl_types[-1:]
             else:
                 allTypes = self.fl_types[1:]

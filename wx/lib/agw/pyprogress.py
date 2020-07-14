@@ -613,7 +613,7 @@ class PyProgress(wx.Dialog):
                 return False
 
             else:
-                # reenable other windows before hiding this one because otherwise
+                # re-enable other windows before hiding this one because otherwise
                 # Windows wouldn't give the focus back to the window which had
                 # been previously focused because it would still be disabled
                 self.ReenableOtherWindows()
@@ -724,7 +724,7 @@ class PyProgress(wx.Dialog):
          ``False`` otherwise.
         """
 
-        # reenable other windows before hiding this one because otherwise
+        # re-enable other windows before hiding this one because otherwise
         # Windows wouldn't give the focus back to the window which had
         # been previously focused because it would still be disabled
         if not show:

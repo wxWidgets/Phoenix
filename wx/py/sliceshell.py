@@ -1237,7 +1237,7 @@ class SlicesShell(editwindow.EditWindow):
             #print('You can only run "DeleteOutputSlicesAfter" from an Input slice!')
             return
 
-        startIn,endIn=self.GetIOSlice(line_num)
+        starting,endIn=self.GetIOSlice(line_num)
         startGrouping,endGrouping=self.GetGroupingSlice(line_num)
 
         if endIn<endGrouping:
@@ -3795,7 +3795,7 @@ class SlicesShell(editwindow.EditWindow):
 ##         self.GetData()
 ##         if self.textdo.GetTextLength() > 1:
 ##             text = self.textdo.GetText()
-##             # *** Do somethign with the dragged text here...
+##             # *** Do something with the dragged text here...
 ##             self.textdo.SetText('')
 ##         else:
 ##             filenames = str(self.filename.GetFilenames())
