@@ -32,7 +32,7 @@ class TestPanel(wx.Panel):
         sizer = wx.FlexGridSizer(cols=3, hgap=5, vgap=5)
 
         for name in GIFNames:
-            # There are a few usage pattens for creating the control and the
+            # There are a few usage patterns for creating the control and the
             # animation object. They're more-or-less equivalent, but if you have
             # non-standard needs in your application then one pattern may make
             # more sense for you to use.

@@ -110,7 +110,7 @@ def runTest(frame, nb, log):
 overview = """<html><body>
 <h2><center>wx.CollapsiblePane</center></h2>
 
-A collapsable panel is a container with an embedded button-like
+A collapsible panel is a container with an embedded button-like
 control which can be used by the user to collapse or expand the pane's
 contents.
 

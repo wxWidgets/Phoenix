@@ -102,7 +102,7 @@ class MyTreeListModel(dv.PyDataViewModel):
         # item(s) should be reported as children of this node. A List view
         # simply provides all items as children of this hidden root. A Tree
         # view adds additional items as children of the other items, as needed,
-        # to provide the tree hierachy.
+        # to provide the tree hierarchy.
         ##self.log.write("GetChildren\n")
 
         # If the parent item is invalid then it represents the hidden root

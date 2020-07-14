@@ -25,9 +25,9 @@ class TestPanel(wx.Panel):
             'label':        { 'throbber': None,
                               'text':     "With a label." },
             'overlay':      { 'throbber': None,
-                              'text':     "With an overlayed image." },
+                              'text':     "With an overlaid image." },
             'overlay+text': { 'throbber': None,
-                              'text':     "With a label and an overlayed image." },
+                              'text':     "With a label and an overlaid image." },
             }
 
         images = [throbImages.catalog[i].GetBitmap()
@@ -129,7 +129,7 @@ class TestPanel(wx.Panel):
             buttonBox, (len(self.throbbers) + 2, 0), (1, 3), flag = wx.ALIGN_CENTER
             )
 
-        # Buttoms for the custom throbber.
+        # Buttons for the custom throbber.
         nextButton = wx.Button(self, -1, "Next")
         self.Bind(wx.EVT_BUTTON, self.OnNext, nextButton)
 

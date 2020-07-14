@@ -420,7 +420,7 @@ This example demonstrates how to use mixins. The following mixins are available.
 <p>A mixin class that handles sorting of a wxListCtrl in REPORT mode when the column
 header is clicked on.
 
-<p>There are a few requirments needed in order for this to work genericly:
+<p>There are a few requirements needed in order for this to work genericly:
 <p><ol>
     <li>The combined class must have a <code>GetListCtrl</code> method that returns
     the ListCtrl to be sorted, and the list control must exist at the time the

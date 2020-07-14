@@ -194,7 +194,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         msg = "This Is The About Dialog Of The ThumbnailCtrl Demo.\n\n" + \
               "Author: Andrea Gavana @ 10 Dec 2005\n\n" + \
               "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Adresses:\n\n" + \
+              "To Me At The Following Addresses:\n\n" + \
               "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 

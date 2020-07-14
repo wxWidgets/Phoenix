@@ -246,7 +246,7 @@ NOTE: not all stock cursors have a specific representation on all platforms.
 
         self.SetSizer(vbSizer)
 
-        wx.CallAfter(self.cb.SetFocus) # Convienience start for mousewheel switching.
+        wx.CallAfter(self.cb.SetFocus) # Convenience start for mousewheel switching.
 
     def OnChooseCursor(self, evt):
         # Clear the dots.

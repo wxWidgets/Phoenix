@@ -1093,7 +1093,7 @@ class HyperTreeListDemo(wx.Frame):
         msg = "This Is The About Dialog Of The HyperTreeList Demo.\n\n" + \
               "Author: Andrea Gavana @ 08 May 2007\n\n" + \
               "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Adresses:\n\n" + \
+              "To Me At The Following AdresAddresseses:\n\n" + \
               "andrea.gavana@maerskoil.com\n" + "andrea.gavana@gmail.com\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 
@@ -2479,7 +2479,7 @@ class HyperTreeList(HTL.HyperTreeList):
     def OnItemCheck(self, event):
 
         item = event.GetItem()
-        self.log.write("Item " + self.GetItemText(item) + " Has Been Cheched!\n")
+        self.log.write("Item " + self.GetItemText(item) + " Has Been Checked!\n")
         event.Skip()
 
 

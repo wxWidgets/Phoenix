@@ -166,7 +166,7 @@ def runTest(frame, nb, log):
 overview = """<html><body>
 <h2><center>wx.MediaCtrl</center></h2>
 
-wx.MediaCtrl is a class that allows a way to convieniently display
+wx.MediaCtrl is a class that allows a way to conveniently display
 various types of media, such as videos, audio files, natively through
 native codecs.  Several different formats of audio and video files are
 supported, but some formats may not be playable on all platforms or

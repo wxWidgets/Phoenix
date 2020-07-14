@@ -2507,7 +2507,7 @@ class AuiFrame(wx.Frame):
         msg = "This Is The About Dialog Of The Pure Python Version Of AUI.\n\n" + \
               "Author: Andrea Gavana @ 23 Dec 2005\n\n" + \
               "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Adresses:\n\n" + \
+              "To Me At The Following Addresses:\n\n" + \
               "andrea.gavana@maerskoil.com\n" + "andrea.gavana@gmail.com\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 
@@ -2809,7 +2809,7 @@ def GetIntroText():
     "http://trac.wxwidgets.org/ticket/9911</a></li>" \
     "<li>Serious layout bugs in wxAUI: <a href='http://trac.wxwidgets.org/ticket/10620'>" \
     "http://trac.wxwidgets.org/ticket/10620</a></li>" \
-    "<li>wAuiDefaultTabArt::Clone() should just use copy contructor: <a href='http://trac.wxwidgets.org/ticket/11388'>" \
+    "<li>wAuiDefaultTabArt::Clone() should just use copy constructor: <a href='http://trac.wxwidgets.org/ticket/11388'>" \
     "http://trac.wxwidgets.org/ticket/11388</a></li>" \
     "<li>Drop down button for check tool on wxAuiToolbar: <a href='http://trac.wxwidgets.org/ticket/11139'>" \
     "http://trac.wxwidgets.org/ticket/11139</a></li>" \

@@ -43,7 +43,7 @@ class TestPanel(wx.Panel):
 
             self.log.write("before Play...\n")
             sound.Play(wx.adv.SOUND_ASYNC)
-            self.sound = sound  # save a reference (This shoudln't be needed, but there seems to be a bug...)
+            self.sound = sound  # save a reference (This shouldn't be needed, but there seems to be a bug...)
             # wx.YieldIfNeeded()
             self.log.write("...after Play\n")
         except NotImplementedError as v:

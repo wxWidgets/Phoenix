@@ -571,7 +571,7 @@ class FlatMenuDemo(wx.Frame):
         # Create the popup menu
         self.CreateLongPopupMenu()
 
-        # Postion the menu:
+        # Position the menu:
         # The menu should be positioned at the bottom left corner of the button.
         btnSize = btn.GetSize()
 

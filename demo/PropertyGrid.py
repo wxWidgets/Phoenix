@@ -593,7 +593,7 @@ class LargeImageEditor(wxpg.PGEditor):
 
     def GetValueFromControl(self, property, ctrl):
         """ Return tuple (wasSuccess, newValue), where wasSuccess is True if
-            different value was acquired succesfully.
+            different value was acquired successfully.
         """
         textVal = self.tc.GetValue()
 
