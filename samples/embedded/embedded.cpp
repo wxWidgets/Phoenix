@@ -185,7 +185,7 @@ void MyFrame::OnPyFrame(wxCommandEvent& event)
 
 
     // First, whenever you do anything with Python objects or code, you
-    // *MUST* aquire the Global Interpreter Lock and block other
+    // *MUST* acquire the Global Interpreter Lock and block other
     // Python threads from running.
     wxPyBlock_t blocked = wxPyBeginBlockThreads();
 

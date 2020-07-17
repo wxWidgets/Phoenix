@@ -226,7 +226,7 @@ class DemoApp(wx.App):
 
     I'd like the cursor to change as you change tools, but the stock
     wx.Cursors didn't include anything I liked, so I stuck with the
-    pointer. Pleae let me know if you have any nice cursor images for me to
+    pointer. Please let me know if you have any nice cursor images for me to
     use.
 
 
@@ -254,7 +254,7 @@ def Read_MapGen(filename,stats = False):
     Each NumPy array in the list is an NX2 array of Python Floats.
 
     The demo should have come with a file, "world.dat" that is the
-    shorelines of the whole worls, in MapGen format.
+    shorelines of the whole world, in MapGen format.
 
     """
     from numpy import array
@@ -264,7 +264,7 @@ def Read_MapGen(filename,stats = False):
     Shorelines = []
     segment = []
     for line in data:
-        if line == "# -b": #New segment begining
+        if line == "# -b": #New segment beginning
             if segment: Shorelines.append(array(segment))
             segment = []
         else:

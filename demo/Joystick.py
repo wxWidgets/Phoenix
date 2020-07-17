@@ -77,7 +77,7 @@ class JoyGauge(wx.Panel):
         dc = wx.BufferedPaintDC(self, self.buffer)
 
     def DrawJoystick(self, dc):
-        # draw the guage as a maxed square in the center of this window.
+        # draw the gauge as a maxed square in the center of this window.
         w, h = self.GetClientSize()
         edgeSize = min(w, h)
 
@@ -176,7 +176,7 @@ class JoyPanel(wx.Panel):
 
 class POVGauge(wx.Panel):
     #
-    # Display the current postion of the POV control
+    # Display the current position of the POV control
     #
     def __init__(self, parent, stick):
 
@@ -219,7 +219,7 @@ class POVGauge(wx.Panel):
         dc = wx.BufferedPaintDC(self, self.buffer)
 
     def DrawPOV(self, dc):
-        # draw the guage as a maxed circle in the center of this window.
+        # draw the gauge as a maxed circle in the center of this window.
         w, h = self.GetClientSize()
         diameter = min(w, h)
 
@@ -608,7 +608,7 @@ class InfoPanel(wx.Panel):
 class AxisBar(wx.Gauge):
     #
     # This class allows us to use a wx.Gauge to display the axis value
-    # with a fancy label overlayed onto the guage itself. Two values are
+    # with a fancy label overlaid onto the gauge itself. Two values are
     # used to do things: first of all, since the gauge is limited to
     # positive numbers, the scale is fixed at 0 to 1000. We will receive
     # an adjusted value to use to render the gauge itself. The other value
@@ -837,7 +837,7 @@ class AxisPanel(wx.Panel):
         self.stick = stick
 
         # Defines labels and 'tokens' to identify each
-        # supporte axis.
+        # supported axis.
         axesList = [
             ('X Axis ', 'X'),   ('Y Axis ', 'Y'),
             ('Z Axis ', 'Z'),   ('Rudder ', 'Rudder'),
@@ -997,7 +997,7 @@ you <b>can</b> get from the wx.adv.Joystick control.
 </ul>
 
 <p>Getting data from the joystick can be event-driven thanks to four event types associated
-with wx.JoystickEvent, or the joystick can be polled programatically to get data on
+with wx.JoystickEvent, or the joystick can be polled programmatically to get data on
 a regular basis.
 
 <h2>Data types</h2>
@@ -1055,7 +1055,7 @@ versus a four-way hat.
 The wx.adv.Joystick control is in many ways incomplete at the C++ library level, but it is
 not insurmountable.  In short, while the joystick interface <i>can</i> be event-driven,
 the wx.JoystickEvent class lacks event binders for all event types. Thus, you cannot
-rely on wx.JoystickEvents to tell you when something has changed, necessarilly.
+rely on wx.JoystickEvents to tell you when something has changed, necessarily.
 
 <ul>
 <li>There are no events associated with the POV control.

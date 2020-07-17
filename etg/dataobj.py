@@ -67,7 +67,7 @@ def addGetAllFormats(klass, pureVirtual=False):
             """,
 
         # This code will be used in the function that calls a Python implementation
-        # of this method. So we need to translate between the real C++ siganture
+        # of this method. So we need to translate between the real C++ signature
         # and the Python signature.
         virtualCatcherCode="""\
             // VirtualCatcherCode for wx.DataObject.GetAllFormats

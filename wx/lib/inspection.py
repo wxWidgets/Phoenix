@@ -88,7 +88,7 @@ class InspectionTool:
     def Show(self, selectObj=None, refreshTree=False):
         """
         Creates the inspection frame if it hasn't been already, and
-        raises it if neccessary.
+        raises it if necessary.
 
         :param `selectObj`: Pass a widget or sizer to have that object be
                      preselected in widget tree.
@@ -1052,7 +1052,7 @@ class _InspectionHighlighter(object):
 
     def FlickerTLW(self, tlw):
         """
-        Use a timer to alternate a TLW between shown and hidded state a
+        Use a timer to alternate a TLW between shown and hidden state a
         few times.  Use to highlight a TLW since drawing and clearing an
         outline is trickier.
         """

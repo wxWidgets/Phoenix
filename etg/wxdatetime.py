@@ -71,7 +71,7 @@ def run():
     tools.ignoreAllOperators(c)
 
     # Ignore ctors with unknown types or that have overload conflicts that
-    # can't be distingished in Python
+    # can't be distinguished in Python
     ctor = c.find('wxDateTime')
     ctor.findOverload('time_t').ignore()
     ctor.findOverload('struct tm').ignore()

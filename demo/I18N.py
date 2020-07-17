@@ -10,7 +10,7 @@ from Main import opj
 
 # Normally you would just set _ to be a reference to the
 # wx.GetTranslation function, and then wrap all you literal strings in
-# _() function calls.  Then everytime you use one of your literals, it
+# _() function calls.  Then every time you use one of your literals, it
 # would first pass through the translation function and try to load a
 # translated version of the string from the current message catalogs.
 # For this example, since we are changinb language on the fly, and

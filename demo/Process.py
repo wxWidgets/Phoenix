@@ -144,14 +144,14 @@ overview = """\
 <html><body>
 <h2>wx.Process</h2>
 
-wx.Process lets you get notified when an asyncronous child process
+wx.Process lets you get notified when an asynchronous child process
 started by wxExecute terminates, and also to get input/output streams
 for the child process's stdout, stderr and stdin.
 
 <p>
 This demo launches a simple python script that echos back on stdout
 lines that it reads from stdin.  You can send text to the echo
-process' stdin by typing in the lower textctrl and clicking Send.
+process's stdin by typing in the lower textctrl and clicking Send.
 
 <p>
 Clicking the Close Stream button will close the demo's end of the

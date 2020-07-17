@@ -208,7 +208,7 @@ def run():
     c.addPyCode('ListCtrl.SetStringItem = wx.deprecated(ListCtrl.SetItem, "Use SetItem instead.")')
 
 
-    # Provide a way to determine if column ordering is possble
+    # Provide a way to determine if column ordering is possible
     c.addCppMethod('bool', 'HasColumnOrderSupport', '()',
         """\
         #ifdef wxHAS_LISTCTRL_COLUMN_ORDER

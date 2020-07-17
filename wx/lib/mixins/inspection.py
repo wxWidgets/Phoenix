@@ -160,7 +160,7 @@ class InspectionMixin(object):
 
     def ShowInspectionTool(self):
         """
-        Show the Inspection tool, creating it if neccesary, setting it
+        Show the Inspection tool, creating it if necessary, setting it
         to display the widget under the cursor.
         """
         # get the current widget under the mouse

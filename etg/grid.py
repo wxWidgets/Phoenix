@@ -191,7 +191,7 @@ def run():
 
     c.addPyMethod('__iter__', '(self)',
                   'return PyGridBlocksIterator(self)',
-                  "Returns a Python iterator for acessing the collection of grid blocks.")
+                  "Returns a Python iterator for accessing the collection of grid blocks.")
 
     # This class is the Python iterator that knows how to fetch blocks from the
     # wxGridBlocks object

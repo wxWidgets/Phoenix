@@ -901,13 +901,13 @@ class RibbonPanel(RibbonControl):
         Show the panel externally expanded.
 
         When a panel is minimised, it can be shown full-size in a pop-out window, which
-        is refered to as being (externally) expanded.
+        is referred to as being (externally) expanded.
 
         :returns: ``True`` if the panel was expanded, ``False`` if it was not (possibly
          due to it not being minimised, or already being expanded).
 
         :note: When a panel is expanded, there exist two panels - the original panel
-         (which is refered to as the dummy panel) and the expanded panel. The original
+         (which is referred to as the dummy panel) and the expanded panel. The original
          is termed a dummy as it sits in the ribbon bar doing nothing, while the expanded
          panel holds the panel children.
 
@@ -1020,7 +1020,7 @@ class RibbonPanel(RibbonControl):
             self.HideExpanded()
             # Do not skip event, as the panel has been de-expanded, causing the
             # child with focus to be reparented (and hidden). If the event
-            # continues propogation then bad things happen.
+            # continues propagation then bad things happen.
 
         else:
             event.Skip()

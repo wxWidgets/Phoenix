@@ -211,7 +211,7 @@ class SpeedMeterDemo(wx.Panel):
         # SM_DRAW_MIDDLE_ICON: We Draw An Icon In The Center Of SpeedMeter
         #
         # NOTE: We Use The Mouse Style mousestyle=SM_MOUSE_TRACK. In This Way, Mouse
-        # Events Are Catched (Mainly Left Clicks/Drags) And You Can Change The Speed
+        # Events Are Caught (Mainly Left Clicks/Drags) And You Can Change The Speed
         # Value Using The Mouse
 
         self.SpeedWindow4 = SM.SpeedMeter(panel4,

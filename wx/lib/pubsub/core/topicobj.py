@@ -172,7 +172,7 @@ class Topic(PublisherMixin):
         return self.__validator is not None
 
     def filterMsgArgs(self, msgKwargs, check=False):
-        """Get the MDS docstrings for each of the spedified kwargs."""
+        """Get the MDS docstrings for each of the specified kwargs."""
         filteredArgs = self.__msgArgs.filterArgs(msgKwargs)
         # if no check of args yet, do it now:
         if check:
@@ -356,7 +356,7 @@ class Topic(PublisherMixin):
 
     #############################################################
     #
-    # Impementation
+    # Implementation
     #
     #############################################################
 

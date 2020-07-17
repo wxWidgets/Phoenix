@@ -2,7 +2,7 @@
 
 # 11/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o presense of spin control causing probs (see spin ctrl demo for details)
+# o presence of spin control causing probs (see spin ctrl demo for details)
 
 
 import wx

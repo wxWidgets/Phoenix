@@ -57,7 +57,7 @@ def run():
     module.addPyCode("""\
     #----------------------------------------------------------------------------
     # Add the directory where the wxWidgets catalogs were installed
-    # to the default catalog path, if they were put in the pacakge dir.
+    # to the default catalog path, if they were put in the package dir.
     import os
     _localedir = os.path.join(os.path.dirname(__file__), "locale")
     if os.path.exists(_localedir):

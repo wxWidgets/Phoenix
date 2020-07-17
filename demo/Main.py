@@ -526,7 +526,7 @@ try:
         def SetUpEditor(self):
             """
             This method carries out the work of setting up the demo editor.
-            It's seperate so as not to clutter up the init code.
+            It's separate so as not to clutter up the init code.
             """
             import keyword
 
@@ -1374,7 +1374,7 @@ class DemoTaskBarIcon(TaskBarIcon):
             img = img.Scale(16, 16)
         elif "wxGTK" in wx.PlatformInfo:
             img = img.Scale(22, 22)
-        # wxMac can be any size upto 128x128, so leave the source img alone....
+        # wxMac can be any size up to 128x128, so leave the source img alone....
         icon = wx.Icon(img.ConvertToBitmap())
         return icon
 
@@ -2684,7 +2684,7 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
 
         self.InitInspection()  # for the InspectionMixin base class
 
-        # Now that we've warned the user about possibile problems,
+        # Now that we've warned the user about possible problems,
         # lets import images
         import images as i
         global images

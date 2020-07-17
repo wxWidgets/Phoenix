@@ -22,7 +22,7 @@ class TestPanel(wx.Panel):
         sizer.Add(setBtn, wx.SizerFlags().Border(wx.LEFT, 40))
         sizer.Add(unsetBtn, wx.SizerFlags().Border(wx.LEFT, 10))
 
-        # Put it all in an outter box with a border
+        # Put it all in an outer box with a border
         box = wx.BoxSizer()
         box.Add(sizer, wx.SizerFlags(1).Border(wx.ALL, 30))
         self.SetSizer(box)

@@ -142,7 +142,7 @@ overview = """<html><body>
 <h2><center>wx.RendererNative</center></h2>
 <p>wx.RendererNative is a class which virtualizes drawing. It abstracts the
 operations of drawing controls and allows you to draw say, a button, without
-caring about exactly how it is done, in a native and platform independant way.
+caring about exactly how it is done, in a native and platform independent way.
 </p>
 
 <p>All drawing functions take some standard parameters:<p>

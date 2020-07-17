@@ -38,7 +38,7 @@ class TestPanel(wx.Panel):
         b.Enable(False)
         sizer.Add(b)
 
-        # This time, we let the botton be as big as it can be.
+        # This time, we let the button be as big as it can be.
         # Also, this one is fancier, with custom colors and bezel size.
         b = buttons.GenButton(self, -1, 'bigger')
         self.Bind(wx.EVT_BUTTON, self.OnBiggerButton, b)
@@ -65,7 +65,7 @@ class TestPanel(wx.Panel):
         b.Enable(False)
 
         # An image button, using a mask to get rid of the
-        # undesireable part of the image
+        # undesirable part of the image
         b = buttons.GenBitmapButton(self, -1, None)
         self.Bind(wx.EVT_BUTTON, self.OnButton, b)
         bmp = images.Bulb1.GetBitmap()

@@ -288,7 +288,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.pyInt = False            # treat char types as integers
         self.transfer = False         # transfer ownership of return value to C++?
         self.transferBack = False     # transfer ownership of return value from C++ to Python?
-        self.transferThis = False     # ownership of 'this' pointer transfered to C++
+        self.transferThis = False     # ownership of 'this' pointer transferred to C++
         self.cppCode = None           # Use this code instead of the default wrapper
         self.noArgParser = False      # set the NoargParser annotation
         self.preMethodCode = None
@@ -486,7 +486,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                         'wxArrayInt()' : '[]',
                         }
         if isinstance(self, CppMethodDef):
-            # rip appart the argsString instead of using the (empty) list of parameters
+            # rip apart the argsString instead of using the (empty) list of parameters
             lastP = self.argsString.rfind(')')
             args = self.argsString[:lastP].strip('()').split(',')
             for arg in args:
@@ -672,7 +672,7 @@ class ClassDef(BaseDef):
         self.abstract = False       # is it an abstract base class?
         self.external = False       # class is in another module
         self.noDefCtor = False      # do not generate a default constructor
-        self.singlton = False       # class is a singleton so don't call the dtor until the interpreter exits
+        self.singleton = False       # class is a singleton so don't call the dtor until the interpreter exits
         self.allowAutoProperties = True
         self.headerCode = []
         self.cppCode = []

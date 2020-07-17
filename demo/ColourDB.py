@@ -29,7 +29,7 @@ class TestWindow(wx.ScrolledWindow):
 
         # Using GetFullTextExtent(), we calculate a basic 'building block'
         # that will be used to draw a depiction of the color list. We're
-        # using 'Wy' as the model becuase 'W' is a wide character and 'y'
+        # using 'Wy' as the model because 'W' is a wide character and 'y'
         # has a descender. This constitutes a 'worst case' scenario, which means
         # that no matter what we draw later, text-wise, we'll have room for it
         w,h,d,e = dc.GetFullTextExtent("Wy")

@@ -65,7 +65,7 @@ def run():
     tools.fixWindowClass(c)
 
     # Insert a copy of the base class Play into this class. It's not in the
-    # inteface docs, but sip needs to see it there, since the one that is there
+    # interface docs, but sip needs to see it there, since the one that is there
     # has a different signature.
     c.find('Play').overloads.append(play)
 

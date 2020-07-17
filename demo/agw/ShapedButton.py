@@ -368,7 +368,7 @@ class ShapedButtonDemo(wx.Frame):
         msg = "This Is The About Dialog Of The ShapedButton Demo.\n\n" + \
               "Author: Andrea Gavana @ 18 Oct 2005\n\n" + \
               "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Adresses:\n\n" + \
+              "To Me At The Following Addresses:\n\n" + \
               "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 

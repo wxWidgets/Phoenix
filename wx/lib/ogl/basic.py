@@ -305,7 +305,7 @@ class Shape(ShapeEvtHandler):
 
     The :class:`Shape` is the top-level, abstract object that all other objects
     are derived from. All common functionality is represented by :class:`Shape`
-    members, and overriden members that appear in derived classes and have
+    members, and overridden members that appear in derived classes and have
     behaviour as documented for :class:`Shape`, are not documented separately.
     """
     GraphicsInSizeToContents = False
@@ -703,7 +703,7 @@ class Shape(ShapeEvtHandler):
         actualW = w
         actualH = h
         # Don't try to resize an object with more than one image (this
-        # case should be dealt with by overriden handlers)
+        # case should be dealt with by overridden handlers)
         if (region.GetFormatMode() & FORMAT_SIZE_TO_CONTENTS) and \
            len(region.GetFormattedText()) and \
            len(self._regions) == 1 and \
@@ -1901,7 +1901,7 @@ class Shape(ShapeEvtHandler):
         Assuming the attachment lies along a vertical or horizontal line,
         calculate the position on that point.
 
-        :param `pt1`: The first point of the line repesenting the edge of
+        :param `pt1`: The first point of the line representing the edge of
          the shape
         :param `pt2`: The second point of the line representing the edge of
          the shape
@@ -2839,9 +2839,9 @@ class RectangleShape(Shape):
 
     def SetHeight(self, h):
         """
-        Set the heigth.
+        Set the height.
 
-        :param `h`: heigth to be set
+        :param `h`: height to be set
 
         """
         self._height = h
@@ -3645,7 +3645,7 @@ class ShapeRegion(object):
 
     def SetMinSize(self, w, h):
         """
-        Set the minumum size.
+        Set the minimum size.
 
         :param `w`: the minimum width
         :Param `h`: the minimum height
@@ -3986,4 +3986,4 @@ class PolygonControlPoint(ControlPoint):
 
 from .canvas import *
 from .lines import *
-from .composit import *
+from .composite import *

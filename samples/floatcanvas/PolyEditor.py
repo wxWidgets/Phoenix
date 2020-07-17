@@ -145,7 +145,7 @@ class DrawFrame(wx.Frame):
         self.Canvas.Draw()
 
     def Setup(self, event = None):
-        "Seting up with some random polygons"
+        "Setting up with some random polygons"
         wx.GetApp().Yield()
         self.ResetSelections()
         self.Canvas.ClearAll()

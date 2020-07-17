@@ -160,7 +160,7 @@ class DrawFrame(wx.Frame):
             if self.MoveTri is not None:
                 dxy = event.GetPosition() - self.StartPoint
                 dxy = self.Canvas.ScalePixelToWorld(dxy)
-                self.MovingTri.Move(dxy) ## The Move function has jsut been added
+                self.MovingTri.Move(dxy) ## The Move function has just been added
                                     ## to the FloatCanvas PointsObject
                                     ## It does the next three lines for you.
                 #self.Tri.Points += dxy

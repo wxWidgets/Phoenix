@@ -129,7 +129,7 @@ class TestPanel(scrolled.ScrolledPanel):
                 #       set when the background is not a solid color. On wxMac
                 #       it is a no-op as this type of transparency is achieved
                 #       without any help needed. On wxGtk it doesn't hurt to
-                #       set but also unfortunatly doesn't help at all.
+                #       set but also unfortunately doesn't help at all.
                 bstyle = btn[2] | platebtn.PB_STYLE_NOBG
             else:
                 bstyle = btn[2]

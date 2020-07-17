@@ -65,7 +65,7 @@ def run():
     searchCtrl = c
 
 
-    # The safest way to reconcile the differences in the class hierachy
+    # The safest way to reconcile the differences in the class hierarchy
     # between the native wxSearchCtrl on Mac and the generic one on the other
     # platforms is to just say that this class derives directly from
     # wxControl (the first common ancestor) instead of wxTextCtrl, and then

@@ -41,7 +41,7 @@ def run():
     # allows them to be reused and be also be protected from conflicts from
     # other auto allocated IDs.
 
-    # First, add defintions of the existing C++ class and its elements
+    # First, add definitions of the existing C++ class and its elements
     klass = ClassDef(name='wxWindowIDRef', bases = [],
         briefDoc="""\
             A wxWindowIDRef object wraps an ID value and marks it as being in-use until all references to that ID are gone.

@@ -63,9 +63,9 @@ def run():
             m.find('userData').transfer = True
             m.find('userData').type = 'wxPyUserData*'
 
-    gud = c.find('GetUserData')
-    gud.type = 'wxPyUserData*'
-    gud.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetUserData());')
+    good = c.find('GetUserData')
+    good.type = 'wxPyUserData*'
+    good.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetUserData());')
 
     # these have been deprecated for a while so go ahead and get rid of them
     c.find('SetWindow').ignore()

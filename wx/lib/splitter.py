@@ -31,7 +31,7 @@ class MultiSplitterWindow(wx.Panel):
     that deal with the child windows managed by the splitter, and also
     those that deal with the sash positions.  In most cases you will
     need to pass an index value to tell the class which window or sash
-    you are refering to.
+    you are referring to.
 
     The concept of the sash position is also different than in
     wx.SplitterWindow.  Since the wx.Splitterwindow has only one sash

@@ -1041,7 +1041,7 @@ from .%s import *
                 annotations.append('External')
             if item.noDefCtor:
                 annotations.append('NoDefaultCtors')
-            if item.singlton:
+            if item.singleton:
                 annotations.append('DelayDtor')
 
         if annotations:

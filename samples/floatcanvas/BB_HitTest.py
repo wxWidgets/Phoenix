@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Test of an alternaive hit test methoid that used the bounding boxes of teh objects instead.
+Test of an alternative hit test methoid that used the bounding boxes of the objects instead.
 
 Poorly tested!
 

@@ -283,7 +283,7 @@ class HyperLinkCtrl(StaticText):
 
         :param `URL`: the url link we wish to navigate;
         :param `ReportErrors`: Use ``True`` to display error dialog if an error
-         occurrs navigating to the URL;
+         occurs navigating to the URL;
         :param `NotSameWinIfPossible`: Use ``True`` to attempt to open the URL
          in new browser window.
         """
@@ -435,7 +435,7 @@ class HyperLinkCtrl(StaticText):
         :class:`MessageBox`.
 
         :param `ErrorMessage`: a string representing the error to display;
-        :param `ReportErrors`: ``True`` to display error dialog if an error occurrs
+        :param `ReportErrors`: ``True`` to display error dialog if an error occurs
          navigating to the URL.
         """
 
@@ -592,7 +592,7 @@ class HyperLinkCtrl(StaticText):
         Set whether to report browser errors or not.
 
         :param `ReportErrors`: Use ``True`` to display error dialog if an error
-         occurrs navigating to the URL;
+         occurs navigating to the URL;
         """
 
         self._ReportErrors = ReportErrors

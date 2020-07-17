@@ -222,7 +222,7 @@ Toolbar creation is a two-step process. First, the toolbar is defined using the
 various Add* methods of wx.ToolBar. Once all is set up, then wx.Toolbar.Realize()
 must be called to render it.
 
-wx.Toolbar events are also propogated as Menu events; this is especially handy when
+wx.Toolbar events are also propagated as Menu events; this is especially handy when
 you have a menu bar that contains items that carry out the same function. For example,
 it is not uncommon to have a little 'floppy' toolbar icon to 'save' the current file
 (whatever it is) as well as a FILE/SAVE menu item that does the same thing. In this

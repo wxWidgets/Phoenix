@@ -125,7 +125,7 @@ def run():
 
             By default a regular dictionary is used to implement the ID to object
             mapping. Optionally a WeakValueDictionary can be useful when there will be
-            a high turnover of objects and mantaining an extra reference to the
+            a high turnover of objects and maintaining an extra reference to the
             objects would be unwise.  If weak references are used then the objects
             associated with data items must be weak-referenceable.  (Things like
             stock lists and dictionaries are not.)  See :meth:`UseWeakRefs`.

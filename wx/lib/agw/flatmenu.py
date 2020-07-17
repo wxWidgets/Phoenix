@@ -305,7 +305,7 @@ def GetAccelIndex(label):
     Returns the mnemonic index of the label and the label stripped of the ampersand mnemonic
     (e.g. 'lab&el' ==> will result in 3 and labelOnly = label).
 
-    :param string `label`: a string possibly containining an ampersand.
+    :param string `label`: a string possibly containing an ampersand.
     """
 
     indexAccel = 0
@@ -760,7 +760,7 @@ class FMRenderer(object):
          the menu border;
         :param integer `textX`: the menu item label x position;
         :param integer `rightMarginX`: the right margin between the text and the menu border;
-        :param bool `selected`: ``True`` if this menu item is currentl hovered by the mouse,
+        :param bool `selected`: ``True`` if this menu item is currently hovered by the mouse,
          ``False`` otherwise.
         :param `backgroundImage`: if not ``None``, an instance of :class:`wx.Bitmap` which will
          become the background image for this :class:`FlatMenu`.
@@ -812,7 +812,7 @@ class FMRenderer(object):
 
         if bmp.IsOk():
 
-            # Calculate the postion to place the image
+            # Calculate the position to place the image
             imgHeight = bmp.GetHeight()
             imgWidth  = bmp.GetWidth()
 
@@ -3649,7 +3649,7 @@ class FlatMenuBar(wx.Panel):
         if not self._dlg:
             self._dlg = FMCustomizeDlg(self)
         else:
-            # intialize the dialog
+            # initialize the dialog
             self._dlg.Initialise()
 
         if self._dlg.ShowModal() == wx.ID_OK:
@@ -3907,7 +3907,7 @@ class ShadowPopupWindow(wx.PopupWindow):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`ShadowPopupWindow` parent (tipically your main frame).
+        :param `parent`: the :class:`ShadowPopupWindow` parent (typically your main frame).
         """
 
         if not parent:
@@ -4422,7 +4422,7 @@ class FlatMenuBase(ShadowPopupWindow):
          owner menu, ``False`` otherwise.
         """
 
-        # Check if child menu is poped, if so, dismiss it
+        # Check if child menu is popped, if so, dismiss it
         if self._openedSubMenu:
             self._openedSubMenu.Dismiss(False, resetOwner)
 
@@ -5620,7 +5620,7 @@ class FlatMenu(FlatMenuBase):
 
         dc.SetFont(font)
 
-        accelFiller = "XXXX"     # 4 spaces betweem text and accel column
+        accelFiller = "XXXX"     # 4 spaces between text and accel column
 
         # Calc text length/height
         dummy, itemHeight = dc.GetTextExtent("Tp")
@@ -5836,7 +5836,7 @@ class FlatMenu(FlatMenuBase):
         from this.
         """
 
-        # Draw all childs menus of self menu as well
+        # Draw all child menus of self menu as well
         child = self._openedSubMenu
         while child:
             dc = wx.ClientDC(child)
@@ -5958,7 +5958,7 @@ class FlatMenu(FlatMenuBase):
 
                             itemIdx = i
                             # We keep the index of only
-                            # the first occurence
+                            # the first occurrence
 
                         occur += 1
 
@@ -6735,7 +6735,7 @@ class FlatMenu(FlatMenuBase):
 
         if item.IsRadioItem():
 
-            # Udpate radio groups in case this item is a radio item
+            # Update radio groups in case this item is a radio item
             sibling = self.GetSiblingGroupItem(item)
             if sibling:
 
@@ -7256,7 +7256,7 @@ class MenuKbdRedirector(wx.EvtHandler):
 
     def ProcessEvent(self, event):
         """
-        Processes the inout event.
+        Processes the input event.
 
         :param `event`: any kind of keyboard-generated events.
         """
