@@ -855,6 +855,9 @@ class IntCtrl(wx.TextCtrl):
                 wx.CallAfter(self.SetInsertionPoint, new_pos)
 
 
+    Value = property(GetValue, SetValue)
+
+
 
 #===========================================================================
 
@@ -902,7 +905,7 @@ if __name__ == '__main__':
 
         def OnClick(self, event):
             dlg = myDialog(self.panel, -1, "test IntCtrl")
-            dlg.int_ctrl.SetValue(501)
+            dlg.int_ctrl.Value = 501
             dlg.int_ctrl.SetInsertionPoint(1)
             dlg.int_ctrl.SetSelection(1,2)
             rc = dlg.ShowModal()

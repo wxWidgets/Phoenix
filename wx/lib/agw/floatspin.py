@@ -1204,6 +1204,9 @@ class FloatSpin(wx.Control):
         return finite, snap_value
 
 
+    Value = property(GetValue, SetValue)
+
+
 
 # Class FixedPoint, version 0.0.4.
 # Released to the public domain 28-Mar-2001,
@@ -1763,6 +1766,7 @@ if __name__ == '__main__':
                                   increment=0.01, value=0.1, agwStyle=FS_LEFT)
             floatspin.SetFormat("%f")
             floatspin.SetDigits(2)
+            floatspin.Value = 0.2
 
 
     # our normal wxApp-derived class, as usual
