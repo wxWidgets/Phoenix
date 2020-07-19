@@ -436,11 +436,11 @@ class SizedParent:
 
             if 'growable_row' in options:
                 row, proportion = options['growable_row']
-                sizer.SetGrowableRow(row, proportion)
+                sizer.AddGrowableRow(row, proportion)
 
             if 'growable_col' in options:
                 col, proportion = options['growable_col']
-                sizer.SetGrowableCol(col, proportion)
+                sizer.AddGrowableCol(col, proportion)
 
             if 'hgap' in options:
                 sizer.SetHGap(options['hgap'])
