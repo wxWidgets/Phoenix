@@ -329,9 +329,9 @@ class PeakMeterCtrl(wx.Control):
     def InitData(self):
         """ Initializes the control. """
 
-        colLime = wx.Colour(0, 255, 0)
-        colRed = wx.Colour(255, 0, 0)
-        colYellow = wx.Colour(255, 255, 0)
+        colLime = wx.GREEN
+        colRed = wx.RED
+        colYellow = wx.YELLOW
 
         self._showGrid = False
         self._showFalloff = True

@@ -84,7 +84,7 @@ def CreateBackgroundBitmap():
     mem_dc.Clear()
 
     # colour the menu face with background colour
-    top = wx.Colour("blue")
+    top = wx.BLUE
     bottom = wx.Colour("light blue")
     filRect = wx.Rect(0, 0, 200, 300)
     mem_dc.GradientFillConcentric(filRect, top, bottom, wx.Point(100, 150))

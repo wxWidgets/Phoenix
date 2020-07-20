@@ -187,7 +187,7 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow3.SetTicks(ticks)
         self.SpeedWindow3.SetTicksColour(wx.WHITE)
 
-        self.SpeedWindow3.SetHandColour(wx.Colour(255, 255, 0))
+        self.SpeedWindow3.SetHandColour(wx.YELLOW)
 
         # Define The Icon We Want
         icon = _getAndScaleIcon(
@@ -229,7 +229,7 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow4.SetIntervals(intervals)
 
         colours = [wx.BLUE]*5
-        colours.extend([wx.Colour(255, 255, 0)]*2)
+        colours.extend([wx.YELLOW]*2)
         colours.append(wx.RED)
         self.SpeedWindow4.SetIntervalColours(colours)
 
@@ -238,7 +238,7 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow4.SetTicksColour(wx.BLACK)
         self.SpeedWindow4.SetTicksFont(wx.Font(7, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
-        self.SpeedWindow4.SetHandColour(wx.Colour(0, 0, 255))
+        self.SpeedWindow4.SetHandColour(wx.BLUE)
 
         self.SpeedWindow4.SetSpeedBackground(wx.SystemSettings.GetColour(0))
 
@@ -285,7 +285,7 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow5.SetIntervals(intervals)
 
         colours = [wx.BLACK]*6
-        colours.append(wx.Colour(255, 255, 0))
+        colours.append(wx.YELLOW)
         colours.append(wx.RED)
         self.SpeedWindow5.SetIntervalColours(colours)
 

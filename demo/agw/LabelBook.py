@@ -36,7 +36,7 @@ class SamplePane(wx.Panel):
     def __init__(self, parent, colour, label):
 
         wx.Panel.__init__(self, parent, style=0)#wx.BORDER_SUNKEN)
-        self.SetBackgroundColour(wx.Colour(255,255,255))
+        self.SetBackgroundColour(wx.WHITE)
 
         label = label + "\nEnjoy the LabelBook && FlatImageBook demo!"
         static = wx.StaticText(self, -1, label, pos=(10, 10))
@@ -87,7 +87,7 @@ class LabelBookDemo(wx.Frame):
         self.background = csel.ColourSelect(self.leftpanel, -1, "Choose...",
                                             wx.Colour(132, 164, 213), size=(-1, 20))
         self.activetab = csel.ColourSelect(self.leftpanel, -1, "Choose...",
-                                           wx.Colour(255, 255, 255), size=(-1, 20))
+                                           wx.WHITE, size=(-1, 20))
         self.tabsborder = csel.ColourSelect(self.leftpanel, -1, "Choose...",
                                             wx.Colour(0, 0, 204), size=(-1, 20))
         self.textcolour = csel.ColourSelect(self.leftpanel, -1, "Choose...",

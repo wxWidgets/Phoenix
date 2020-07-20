@@ -93,7 +93,7 @@ class LanguageSelectPanel(wx.Panel):
 
         self.langCtrlContainer = wx.Panel(id=wxID_LANGUAGESELECTPANELLANGCTRLCONTAINER,
               name='langCtrlContainer', parent=self, style=wx.TAB_TRAVERSAL)
-        self.langCtrlContainer.SetBackgroundColour(wx.Colour(255, 255, 255))
+        self.langCtrlContainer.SetBackgroundColour(wx.WHITE)
         self.langCtrlContainer.Bind(wx.EVT_SIZE, self.OnLangCtrlContainerSize)
 
         self.langFilterRB = wx.RadioBox(choices=['Translated example languages',

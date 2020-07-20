@@ -95,7 +95,7 @@ class RibbonMSWArtProvider(object):
         self._panel_extension_bitmap = [wx.NullBitmap for i in range(2)]
 
         if set_colour_scheme:
-            self.SetColourScheme(wx.Colour(194, 216, 241), wx.Colour(255, 223, 114), wx.Colour(0, 0, 0))
+            self.SetColourScheme(wx.Colour(194, 216, 241), wx.Colour(255, 223, 114), wx.BLACK)
 
         self._cached_tab_separator_visibility = -10.0 # valid visibilities are in range [0, 1]
         self._tab_separation_size = 3
@@ -650,7 +650,7 @@ class RibbonMSWArtProvider(object):
         elif id == RIBBON_ART_TAB_SEPARATOR_GRADIENT_COLOUR:
             return self._tab_separator_gradient_colour
         elif id in [RIBBON_ART_TAB_ACTIVE_BACKGROUND_TOP_COLOUR, RIBBON_ART_TAB_ACTIVE_BACKGROUND_TOP_GRADIENT_COLOUR]:
-            return wx.Colour(0, 0, 0)
+            return wx.BLACK
         elif id == RIBBON_ART_TAB_ACTIVE_BACKGROUND_COLOUR:
             return self._tab_active_background_colour
         elif id == RIBBON_ART_TAB_ACTIVE_BACKGROUND_GRADIENT_COLOUR:

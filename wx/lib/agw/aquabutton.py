@@ -322,7 +322,7 @@ class AquaButton(wx.Control):
         path3 = self.GetPath(gc, rc3, 10)
 
         br3 = gc.CreateLinearGradientBrush(rc3.x, rc3.y, rc3.x, rc3.y+rc3.height,
-                                           wx.Colour(255, 255, 255, 255), wx.Colour(255, 255, 255, 0))
+                                           wx.WHITE, wx.TransparentColour)
 
         # draw shapes
         gc.SetBrush(br2)
@@ -1067,7 +1067,7 @@ class __ToggleMixin(object):
         path3 = self.GetPath(gc, rc3, 10)
 
         br3 = gc.CreateLinearGradientBrush(rc3.x, rc3.y, rc3.x, rc3.y+rc3.height,
-                                           wx.Colour(255, 255, 255, 255), wx.Colour(255, 255, 255, 0))
+                                           wx.WHITE, wx.TransparentColour)
 
         # draw shapes
         gc.SetBrush(br2)

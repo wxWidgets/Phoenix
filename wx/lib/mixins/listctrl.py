@@ -443,7 +443,7 @@ class TextEditMixin:
     """
 
     editorBgColour = wx.Colour(255,255,175) # Yellow
-    editorFgColour = wx.Colour(0,0,0)       # black
+    editorFgColour = wx.BLACK
 
     def __init__(self):
         #editor = wx.TextCtrl(self, -1, pos=(-1,-1), size=(-1,-1),

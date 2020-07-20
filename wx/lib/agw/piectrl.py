@@ -88,7 +88,7 @@ Usage example::
                                           wx.Size(180, 200), wx.SIMPLE_BORDER)
 
             progress_pie.SetBackColour(wx.Colour(150, 200, 255))
-            progress_pie.SetFilledColour(wx.Colour(255, 0, 0))
+            progress_pie.SetFilledColour(wx.RED)
             progress_pie.SetUnfilledColour(wx.WHITE)
             progress_pie.SetHeight(20)
 
@@ -193,7 +193,7 @@ class PieCtrlLegend(wx.Window):
         self._titlecolour = wx.Colour(0, 0, 127)
         self._labelcolour = wx.BLACK
         self._labelfont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._backcolour = wx.Colour(255, 255, 0)
+        self._backcolour = wx.YELLOW
         self._backgroundDC = wx.MemoryDC()
         self._parent = parent
 
@@ -1028,7 +1028,7 @@ if __name__ == '__main__':
                                        wx.Size(180, 200), wx.SIMPLE_BORDER)
 
             progress_pie.SetBackColour(wx.Colour(150, 200, 255))
-            progress_pie.SetFilledColour(wx.Colour(255, 0, 0))
+            progress_pie.SetFilledColour(wx.RED)
             progress_pie.SetUnfilledColour(wx.WHITE)
             progress_pie.SetHeight(20)
 

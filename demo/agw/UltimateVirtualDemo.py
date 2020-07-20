@@ -70,7 +70,7 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
         self.SetItemCount(1000000)
 
         self.attr1 = ULC.UltimateListItemAttr()
-        self.attr1.SetBackgroundColour(wx.Colour("yellow"))
+        self.attr1.SetBackgroundColour(wx.YELLOW)
 
         self.attr2 = ULC.UltimateListItemAttr()
         self.attr2.SetBackgroundColour(wx.Colour("light blue"))
@@ -120,11 +120,11 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
 
     def OnGetItemTextColour(self, item, col):
         if item == 0 and col == 0:
-            return wx.Colour(255,0,0)
+            return wx.RED
         elif item == 0 and col == 1:
-            return wx.Colour(0,255,0)
+            return wx.GREEN
         elif item == 0 and col == 2:
-            return wx.Colour(0,0,255)
+            return wx.BLUE
         else:
             return None
 

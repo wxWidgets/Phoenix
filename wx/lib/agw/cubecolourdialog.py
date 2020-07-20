@@ -1641,7 +1641,7 @@ class BasePyControl(wx.Control):
             self.SetDoubleBuffered(True)
 
         self._bitmap = bitmap
-        mask = wx.Mask(self._bitmap, wx.Colour(192, 192, 192))
+        mask = wx.Mask(self._bitmap, wx.LIGHT_GREY)
         self._bitmap.SetMask(mask)
 
         self._mainDialog = wx.GetTopLevelParent(self)
@@ -2672,7 +2672,7 @@ class CustomPanel(wx.Control):
             if c.IsOk():
                 self._customColours[i] = self._colourData.GetCustomColour(i)
             else:
-                self._customColours[i] = wx.Colour(255, 255, 255)
+                self._customColours[i] = wx.WHITE
 
             if c == curr:
                 self._colourSelection = i

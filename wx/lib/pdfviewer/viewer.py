@@ -1003,8 +1003,8 @@ class pdfState(object):
         self.lineDashArray = []
         self.lineDashPhase = 0
         self.miterLimit = None
-        self.strokeRGB = wx.Colour(0, 0, 0)
-        self.fillRGB = wx.Colour(0, 0, 0)       # used for both shapes & text
+        self.strokeRGB = wx.BLACK
+        self.fillRGB = wx.BLACK  # used for both shapes & text
         self.fillMode = None
 
         self.textMatrix = [1, 0, 0, 1, 0, 0]

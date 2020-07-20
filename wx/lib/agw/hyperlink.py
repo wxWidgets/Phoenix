@@ -443,8 +443,8 @@ class HyperLinkCtrl(StaticText):
             wx.MessageBox(ErrorMessage, "HyperLinks Error", wx.OK | wx.CENTRE | wx.ICON_ERROR)
 
 
-    def SetColours(self, link=wx.Colour(0, 0, 255), visited=wx.Colour(79, 47, 79),
-                   rollover=wx.Colour(0, 0, 255)):
+    def SetColours(self, link=wx.BLUE, visited=wx.Colour(79, 47, 79),
+                   rollover=wx.BLUE):
         """
         Sets the colours for the link, the visited link and the mouse rollover.
 
