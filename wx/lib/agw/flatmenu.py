@@ -1192,8 +1192,8 @@ class FMRenderer(object):
                         memDc.SetTextForeground(textColour)
 
                     # Fill the bitmap with the masking colour
-                    memDc.SetPen(wx.Pen(wx.Colour(255, 0, 0)) )
-                    memDc.SetBrush(wx.Brush(wx.Colour(255, 0, 0)) )
+                    memDc.SetPen(wx.RED_PEN)
+                    memDc.SetBrush(wx.RED_BRUSH)
                     memDc.DrawRectangle(0, 0, rect.width, rect.height)
                     memDc.SetFont(fnt)
 
@@ -1250,7 +1250,7 @@ class FMRenderer(object):
                     if not menubar._isLCD:
                         memDc.SelectObject(wx.NullBitmap)
                         # Set masking colour to the bitmap
-                        bmp.SetMask(wx.Mask(bmp, wx.Colour(255, 0, 0)))
+                        bmp.SetMask(wx.Mask(bmp, wx.RED))
                         if selected:
                             item.SetSelectedTextBitmap(bmp)
                         else:

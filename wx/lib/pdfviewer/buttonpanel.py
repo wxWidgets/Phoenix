@@ -122,7 +122,7 @@ class pdfButtonPanel(bp.ButtonPanel):
         bpArt.SetColor(bp.BP_GRADIENT_COLOUR_FROM, wx.Colour(119, 136, 153)) #light slate
         bpArt.SetColor(bp.BP_GRADIENT_COLOUR_TO, wx.Colour(245, 245, 245))   # white smoke
         bpArt.SetColor(bp.BP_BORDER_COLOUR, wx.Colour(119, 136, 153))
-        bpArt.SetColor(bp.BP_BUTTONTEXT_COLOUR, wx.Colour(0,0,0))            # not used
+        bpArt.SetColor(bp.BP_BUTTONTEXT_COLOUR, wx.BLACK)  # not used
         bpArt.SetColor(bp.BP_SEPARATOR_COLOUR,
                        bp.BrightenColour(wx.Colour(60, 11, 112), 0.85))
         bpArt.SetColor(bp.BP_SELECTION_BRUSH_COLOUR, wx.Colour(225, 225, 255))    # used?

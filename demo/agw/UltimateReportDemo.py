@@ -659,7 +659,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         fontMask = ULC.ULC_MASK_FONTCOLOUR|ULC.ULC_MASK_FONT
         fullMask = fontMask|ULC.ULC_MASK_BACKCOLOUR
 
-        customRow, customCol, colours = [0, 3], [2, 1], [wx.RED, wx.Colour("Yellow")]
+        customRow, customCol, colours = [0, 3], [2, 1], [wx.RED, wx.YELLOW]
 
         for row, col, colour in zip(customRow, customCol, colours):
             item = self.list.GetItem(row, col)

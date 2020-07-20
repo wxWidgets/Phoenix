@@ -38,8 +38,8 @@ then these squares should be transparent.
             dc.DrawRoundedRectangle(rect, 8)
 
         # some additional testing stuff
-        #dc.SetPen(wx.Pen(wx.Colour(0,0,255, 196)))
-        #dc.SetBrush(wx.Brush(wx.Colour(0,0,255, 64)))
+        #dc.SetPen(wx.Pen(wx.Colour(0, 0, 255, 196)))
+        #dc.SetBrush(wx.Brush(wx.Colour(0, 0, 255, 64)))
         #dc.DrawCircle(50, 275, 25)
         #dc.DrawEllipse(100, 275, 75, 50)
 

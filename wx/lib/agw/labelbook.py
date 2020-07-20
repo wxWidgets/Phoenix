@@ -1044,7 +1044,7 @@ class ImageContainerBase(wx.Panel):
         elif self._nPinButtonStatus == INB_PIN_PRESSED:
 
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.SetPen(wx.Pen(wx.Colour("LIGHT GREY")))
+            dc.SetPen(wx.LIGHT_GREY_PEN)
             dc.DrawRectangle(xx, rect.y, 16, 16)
 
             # Draw upper and left border with grey colour

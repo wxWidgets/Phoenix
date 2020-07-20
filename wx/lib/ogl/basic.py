@@ -1279,7 +1279,7 @@ class Shape(ShapeEvtHandler):
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
 
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -1316,7 +1316,7 @@ class Shape(ShapeEvtHandler):
         yy = y + DragOffsetY
         xx, yy = self._canvas.Snap(xx, yy)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -2512,7 +2512,7 @@ class Shape(ShapeEvtHandler):
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -2618,7 +2618,7 @@ class Shape(ShapeEvtHandler):
         pt._controlPointDragStartWidth = bound_x
         pt._controlPointDragStartHeight = bound_y
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -3298,7 +3298,7 @@ class PolygonShape(Shape):
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -3328,7 +3328,7 @@ class PolygonShape(Shape):
         if pt._originalDistance == 0:
             pt._originalDistance = 0.0001
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 

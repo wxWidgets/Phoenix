@@ -2085,7 +2085,7 @@ class UltimateListItem(wx.Object):
         self._format = ULC_FORMAT_CENTRE
         self._width = 0
 
-        self._colour = wx.Colour(0, 0, 0)
+        self._colour = wx.BLACK
         self._font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
 
         self._kind = 0
@@ -2950,7 +2950,7 @@ class UltimateListItemData(object):
         # user data associated with the item
         self._data = 0
         self._pyData = None
-        self._colour = wx.Colour(0, 0, 0)
+        self._colour = wx.BLACK
         self._hasColour = False
         self._hasFont = False
         self._hasBackColour = False

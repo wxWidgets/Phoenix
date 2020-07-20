@@ -49,7 +49,7 @@ class TestPanel(wx.Panel):
                                            ac.SHOW_HOURS_HAND| \
                                            ac.SHOW_MINUTES_HAND| \
                                            ac.SHOW_SHADOWS)
-            colour = wx.Colour(0, 255, 255)
+            colour = wx.CYAN
             c4.SetForegroundColour(colour)
             colour = wx.Colour(0, 132, 132)
             c4.SetShadowColour(colour)

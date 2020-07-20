@@ -70,7 +70,7 @@ class AnchorsDemoFrame(wx.Frame):
                                 pos = (8, 40)
                                 )
 
-        self.backgroundPanel.SetBackgroundColour(wx.Colour(255, 255, 255))
+        self.backgroundPanel.SetBackgroundColour(wx.WHITE)
         self.backgroundPanel.SetConstraints(
             anchors.LayoutAnchors(self.backgroundPanel, True, True, True, True)
             )

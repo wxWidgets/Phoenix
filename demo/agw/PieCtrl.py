@@ -108,7 +108,7 @@ class PieCtrlDemo(wx.Panel):
                                         wx.Size(180, 200), wx.SIMPLE_BORDER)
 
         self._progresspie.SetBackColour(wx.Colour(150, 200, 255))
-        self._progresspie.SetFilledColour(wx.Colour(255, 0, 0))
+        self._progresspie.SetFilledColour(wx.RED)
         self._progresspie.SetUnfilledColour(wx.WHITE)
         self._progresspie.SetHeight(20)
 

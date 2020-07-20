@@ -210,7 +210,7 @@ class RichTextFrame(wx.Frame):
 
         # Create and initialize text attributes
         self.textAttr = rt.RichTextAttr()
-        self.SetFontStyle(fontColor=wx.Colour(0, 0, 0), fontBgColor=wx.Colour(255, 255, 255), fontFace='Times New Roman', fontSize=10, fontBold=False, fontItalic=False, fontUnderline=False)
+        self.SetFontStyle(fontColor=wx.BLACK, fontBgColor=wx.WHITE, fontFace='Times New Roman', fontSize=10, fontBold=False, fontItalic=False, fontUnderline=False)
         self.rtc.WriteText('Start with plain text. ')
         self.SetFontStyle(fontBold=True)
         self.rtc.WriteText('Bold. ')
