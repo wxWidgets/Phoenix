@@ -270,7 +270,7 @@ explanation to help a newbie find their way around.
 
     cd Phoenix
     git submodule init
-    git submodule update --recursively
+    git submodule update --recursive
 
 * **sip/gen**: The code (.sip files) produced by the ETG scripts is placed
   in this folder.
