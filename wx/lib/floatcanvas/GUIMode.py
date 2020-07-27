@@ -127,9 +127,9 @@ class ZoomWithMouseWheel():
     def OnWheel(self, event):
         point = event.Position
         if event.GetWheelRotation() < 0:
-            self.Canvas.Zoom(0.9, point, centerCoords = "pixel", keepPointInPlace=True)
+            self.Canvas.Zoom(0.9, point, centerCoords = "Pixel", keepPointInPlace=True)
         else:
-            self.Canvas.Zoom(1.1, point, centerCoords = "pixel", keepPointInPlace=True)
+            self.Canvas.Zoom(1.1, point, centerCoords = "Pixel", keepPointInPlace=True)
 
 
 class GUIMouse(GUIBase):
