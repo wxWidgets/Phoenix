@@ -25,7 +25,6 @@ class toolbar_Tests(wtc.WidgetTestCase):
         wx.TB_BOTTOM
         wx.TB_RIGHT
 
-        wx.TB_3DBUTTONS
         wx.TB_FLAT
         wx.TB_DOCKABLE
         wx.TB_NOICONS
