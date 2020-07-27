@@ -48,11 +48,7 @@ class srchctrl_Tests(wtc.WidgetTestCase):
         t = wx.SearchCtrl(self.frame)
         t.Cut
         t.CanCut
-        t.DiscardEdits
-        t.GetDefaultStyle
-        t.GetNumberOfLines
-        t.GetStyle
-        t.IsModified
+        t.IsEditable
         t.HitTest
         t.AppendText
         t.WriteText
