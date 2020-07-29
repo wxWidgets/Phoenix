@@ -1062,6 +1062,15 @@ class ThumbnailCtrl(wx.Panel):
         self.Thaw()
 
 
+    def SetBackgroundColour(self, colour):
+        """
+        Set the background color of the widget.
+
+        :param `colour`: the color to which the background is set.
+        """
+        return self.thumbnail_ctrl._scrolled.SetBackgroundColour(colour)
+
+
 # ---------------------------------------------------------------------------- #
 # Class ScrolledThumbnail
 # This Is The Main Class Implementation
