@@ -704,11 +704,11 @@ class FloatCanvas(wx.Panel):
 
         """
         shift = N.asarray(shift,N.float)
-        if CoordType == 'Panel':# convert from panel coordinates
+        if CoordType.lower() == 'panel':# convert from panel coordinates
             shift = shift * N.array((-1,1),N.float) *self.PanelSize/self.TransformVector
-        elif CoordType == 'Pixel': # convert from pixel coordinates
+        elif CoordType.lower() == 'pixel': # convert from pixel coordinates
             shift = shift/self.TransformVector
-        elif CoordType == 'World': # No conversion
+        elif CoordType.lower() == 'world': # No conversion
             pass
         else:
             raise FloatCanvasError('CoordType must be either "Panel", "Pixel", or "World"')
@@ -732,7 +732,7 @@ class FloatCanvas(wx.Panel):
                        after zooming. If center is not given, the center will stay the same.
 
         :param centerCoords: flag indicating whether the center given is in pixel or world
-                             coords. Options are: "world" or "pixel"
+                             coords. Options are: "World" or "Pixel"
         :param keepPointInPlace: boolean flag. If False, the center point is what's given.
                                  If True, the image is shifted so that the given center point
                                  is kept in the same pixel space. This facilitates keeping the
@@ -742,16 +742,18 @@ class FloatCanvas(wx.Panel):
             center = self.ViewPortCenter
             centerCoords = 'World' #override input if they don't give a center point.
 
-        if centerCoords == "Pixel":
+        if centerCoords.lower() == "pixel":
             oldpoint = self.PixelToWorld( center )
-        else:
+        elif centerCoords.lower() == 'world':
             oldpoint = N.array(center, N.float)
+        else:
+            raise FloatCanvasError('centerCoords must be either "World" or "Pixel"')
 
         self.Scale = self.Scale*factor
         if keepPointInPlace:
             self.SetToNewScale(False)
 
-            if centerCoords == "Pixel":
+            if centerCoords.lower() == "pixel":
                 newpoint = self.PixelToWorld( center )
             else:
                 newpoint = N.array(center, N.float)
