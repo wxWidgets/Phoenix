@@ -33,10 +33,9 @@ RUN \
                 SDL-devel \
                 webkit2gtk3-devel; \
 # Install all available Python packages and their dev packages
-        dnf -y install python2 python2-tools python2-devel python2-virtualenv; \
         dnf -y install python3 python3-tools python3-devel; \
         dnf -y install python36; \
-# CLean up dnf caches
+# Clean up dnf caches
         dnf clean all;
 
 
@@ -50,9 +49,8 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        python2.7 -m virtualenv --python=python2.7 venvs/Py27; \
         python3.6 -m venv venvs/Py36; \
-        python3.7 -m venv venvs/Py37; 
+        python3.7 -m venv venvs/Py37;
 
 # Add files from host into the container
 COPY scripts ${HOME}/bin

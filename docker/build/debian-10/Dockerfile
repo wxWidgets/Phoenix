@@ -37,11 +37,10 @@ RUN \
                 libtiff-dev \
                 libwebkit2gtk-4.0-dev \
                 libxtst-dev; \
-        apt-get clean; 
+        apt-get clean;
 
 # Install all available Python packages and their dev packages
 RUN \
-        apt-get install -y python2.7 python2.7-dev libpython2.7-dev python-virtualenv; \
         apt-get install -y python3.7 python3.7-dev libpython3.7-dev python3.7-venv; \
         apt-get clean;
 
@@ -56,8 +55,7 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        virtualenv --python=python2.7 venvs/Py27; \
-        python3.7 -m venv venvs/Py37; 
+        python3.7 -m venv venvs/Py37;
 
 # Add files from host into the container
 COPY scripts ${HOME}/bin

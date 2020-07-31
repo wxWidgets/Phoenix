@@ -43,6 +43,29 @@ def build_images(ctx, image, gui=False):
                 '-t wxpython4/{type}:{name}  .'.format(name=img_name, type=img_type),
                 pty=True, echo=True)
         # test it
+        test_images(ctx, [img_name], gui)
+
+
+@task(
+    aliases=['test_image', 'ti'],
+    help={
+        'image': 'Name of a docker image to test. May be specified more than once. Defaults to all.',
+        'gui':   'Test the gui version of an image instead of just the build image.',
+        },
+    iterable=['image'],
+)
+def test_images(ctx, image, gui=False):
+    """
+    Build docker image(s).
+    """
+    if image == []:
+        image = _get_all_distros(gui)
+
+    os.chdir(HERE)
+    dist=os.path.abspath('../dist')
+    img_type = 'gui' if gui else 'build'
+    for img_name in image:
+        # test it
         ctx.run('docker run -it --rm -v {}:/dist '
                 'wxpython4/{}:{} hello.sh'.format(dist, img_type, img_name),
                 pty=True, echo=True)
@@ -72,17 +95,16 @@ def push(ctx, image, gui=False):
             pty=True, echo=True)
 
 
-
 @task(
     aliases=['build_wxp', 'bwxp'],
     help={
         'image':'Name of a docker image to use for building. May be specified more than once. Defaults to all.',
-        'port': 'One of gtk2, gtk3 or all. Defaults to all.',
+        'port': 'One of "gtk2", "gtk3" or "all". Defaults to "gtk3".',
         'venv': 'The name of a Python virtual environment to use for the build, like Py27, Py36, etc. Defaults to all.'
     },
     iterable=['image'],
 )
-def build_wxpython(ctx, image, venv='all', port='all'):
+def build_wxpython(ctx, image, venv='all', port='gtk3'):
     """
     Use docker images to build wxPython.
 
@@ -99,6 +121,7 @@ def build_wxpython(ctx, image, venv='all', port='all'):
         ctx.run('docker run -it --rm -v {}:/dist '
                 'wxpython4/build:{} do-build.sh {} {}'.format(dist, img_name, venv, port),
                 pty=True, echo=True)
+
 
 @task(
     help={
@@ -128,5 +151,12 @@ def run(ctx, image_tag, cmd=None, gui=False, port=5901, keep=False):
 def _get_all_distros(gui=False):
     os.chdir(HERE)
     wildcard = os.path.join('gui' if gui else 'build', '*-*')
-    all_matching = glob.glob(wildcard)
+    all_matching = sorted(glob.glob(wildcard))
     return [os.path.basename(item) for item in all_matching]
+
+
+@task()
+def showall(ctx, gui=False):
+    images = _get_all_distros(gui)
+    for img in images:
+        print(img)

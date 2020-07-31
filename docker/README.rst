@@ -24,9 +24,11 @@ this writing you can pull images with these names and tags:
     wxpython4/build:debian-10
     wxpython4/build:fedora-29
     wxpython4/build:fedora-30
+    wxpython4/build:fedora-31
     wxpython4/build:ubuntu-14.04
     wxpython4/build:ubuntu-16.04
     wxpython4/build:ubuntu-18.04
+    wxpython4/build:ubuntu-20.04
 
 
 Building Images
@@ -36,7 +38,7 @@ Since images are available on DockerHub there shouldn't be much need for
 building them yourself, but just in case, here is how to do it. All images
 can be built with a simple command like this::
 
-    inv build-images 
+    inv build-images
 
 And one or more specific images can be built like this::
 
