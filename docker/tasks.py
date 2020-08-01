@@ -18,20 +18,27 @@ from invoke import task, run
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
+# Distros that have been promoted to Emeritus status. They can still be selected
+# manually, but will be excluded by default when selecting all images.
+OLD = [ 'ubuntu-14.04' ]
+
+
+
 @task(
     aliases=['build_image', 'bi'],
     help={
         'image': 'Name of a docker image to build. May be specified more than once. Defaults to all.',
         'gui':   'Build the gui version of an image instead of just the build image.',
+        'include_old': 'Include the "OLD" distros when selecting all.'
         },
     iterable=['image'],
 )
-def build_images(ctx, image, gui=False):
+def build_images(ctx, image, gui=False, include_old=False):
     """
     Build docker image(s).
     """
     if image == []:
-        image = _get_all_distros(gui)
+        image = _get_all_distros(gui, include_old)
 
     os.chdir(HERE)
     dist=os.path.abspath('../dist')
@@ -43,6 +50,30 @@ def build_images(ctx, image, gui=False):
                 '-t wxpython4/{type}:{name}  .'.format(name=img_name, type=img_type),
                 pty=True, echo=True)
         # test it
+        test_images(ctx, [img_name], gui)
+
+
+@task(
+    aliases=['test_image', 'ti'],
+    help={
+        'image': 'Name of a docker image to test. May be specified more than once. Defaults to all.',
+        'gui':   'Test the gui version of an image instead of just the build image.',
+        'include_old': 'Include the "OLD" distros when selecting all.'
+        },
+    iterable=['image'],
+)
+def test_images(ctx, image, gui=False, include_old=False):
+    """
+    Build docker image(s).
+    """
+    if image == []:
+        image = _get_all_distros(gui, include_old)
+
+    os.chdir(HERE)
+    dist=os.path.abspath('../dist')
+    img_type = 'gui' if gui else 'build'
+    for img_name in image:
+        # test it
         ctx.run('docker run -it --rm -v {}:/dist '
                 'wxpython4/{}:{} hello.sh'.format(dist, img_type, img_name),
                 pty=True, echo=True)
@@ -52,16 +83,17 @@ def build_images(ctx, image, gui=False):
     help={
         'image': 'Name of a docker image to push. May be specified more than once. Defaults to all.',
         'gui':   'Push the gui version of an image instead of just the build image.',
+        'include_old': 'Include the "OLD" distros when selecting all.'
         },
     iterable=['image'],
 )
-def push(ctx, image, gui=False):
+def push(ctx, image, gui=False, include_old=False):
     """
     Push one or more images to docker hub. User should have already run
     a `docker login` command.
     """
     if image == []:
-        image = _get_all_distros(gui)
+        image = _get_all_distros(gui, include_old)
 
     os.chdir(HERE)
     img_type = 'gui' if gui else 'build'
@@ -72,17 +104,17 @@ def push(ctx, image, gui=False):
             pty=True, echo=True)
 
 
-
 @task(
     aliases=['build_wxp', 'bwxp'],
     help={
         'image':'Name of a docker image to use for building. May be specified more than once. Defaults to all.',
-        'port': 'One of gtk2, gtk3 or all. Defaults to all.',
-        'venv': 'The name of a Python virtual environment to use for the build, like Py27, Py36, etc. Defaults to all.'
+        'port': 'One of "gtk2", "gtk3" or "all". Defaults to "gtk3".',
+        'venv': 'The name of a Python virtual environment to use for the build, like Py27, Py36, etc. Defaults to all.',
+        'include_old': 'Include the "OLD" distros when selecting all.'
     },
     iterable=['image'],
 )
-def build_wxpython(ctx, image, venv='all', port='all'):
+def build_wxpython(ctx, image, venv='all', port='gtk3', include_old=False):
     """
     Use docker images to build wxPython.
 
@@ -91,7 +123,7 @@ def build_wxpython(ctx, image, venv='all', port='all'):
     release or snapshot build of wxPython.
     """
     if image == []:
-        image = _get_all_distros()
+        image = _get_all_distros(False, include_old)
 
     os.chdir(HERE)
     dist=os.path.abspath('../dist')
@@ -99,6 +131,7 @@ def build_wxpython(ctx, image, venv='all', port='all'):
         ctx.run('docker run -it --rm -v {}:/dist '
                 'wxpython4/build:{} do-build.sh {} {}'.format(dist, img_name, venv, port),
                 pty=True, echo=True)
+
 
 @task(
     help={
@@ -125,8 +158,21 @@ def run(ctx, image_tag, cmd=None, gui=False, port=5901, keep=False):
         pty=True, echo=True)
 
 
-def _get_all_distros(gui=False):
+def _get_all_distros(gui=False, include_old=False):
     os.chdir(HERE)
     wildcard = os.path.join('gui' if gui else 'build', '*-*')
-    all_matching = glob.glob(wildcard)
-    return [os.path.basename(item) for item in all_matching]
+    all_matching = sorted(glob.glob(wildcard))
+    all_matching = [os.path.basename(item) for item in all_matching]
+    if not include_old:
+        all_matching = [name for name in all_matching if name not in OLD]
+    return all_matching
+
+
+@task()
+def showall(ctx, gui=False, include_old=False):
+    """
+    Just for easy testing of _get_all_distros()
+    """
+    images = _get_all_distros(gui, include_old)
+    for img in images:
+        print(img)

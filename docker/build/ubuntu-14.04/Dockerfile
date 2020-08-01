@@ -41,13 +41,12 @@ RUN \
                 libwebkitgtk-3.0-dev \
                 libwebkitgtk-dev \
                 libxtst-dev; \
-        apt-get clean; 
+        apt-get clean;
 
 
 # Install all available Python packages and their dev packages
 RUN \
         if [ ${USE_DEADSNAKES} = yes ]; then add-apt-repository ppa:deadsnakes/ppa; apt-get update; fi; \
-        apt-get install -y python2.7 python2.7-dev libpython2.7-dev python-virtualenv; \
         apt-get install -y python3.5 python3.5-dev libpython3.5-dev python3.5-venv; \
         apt-get install -y python3.6 python3.6-dev libpython3.6-dev python3.6-venv; \
         apt-get clean;
@@ -62,9 +61,8 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        virtualenv --python=python2.7 venvs/Py27; \
         python3.5 -m venv venvs/Py35; \
-        python3.6 -m venv venvs/Py36; 
+        python3.6 -m venv venvs/Py36;
 
 # Add files from host into the container
 COPY scripts ${HOME}/bin

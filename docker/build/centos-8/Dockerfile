@@ -41,7 +41,8 @@ RUN \
                 webkit2gtk3-devel; \
 # Install all available Python packages and their dev packages
         yum -y install python3 python3-tools python3-devel; \
-# CLean up the yum caches
+        yum -y install python38  python38-devel; \
+# Clean up the yum caches
         yum clean all;
 
 # Set the user and group to use for the rest of the commands
@@ -54,7 +55,8 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        python3.6 -m venv venvs/Py36;
+        python3.6 -m venv venvs/Py36; \
+        python3.8 -m venv venvs/Py38;
 
 # Add files from host into the container
 COPY scripts ${HOME}/bin

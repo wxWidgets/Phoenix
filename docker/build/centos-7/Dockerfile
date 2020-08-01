@@ -12,7 +12,8 @@ ENV GTK2_OK=yes
 
 # Update and install basic OS packages
 RUN \
-        yum -y install https://centos7.iuscommunity.org/ius-release.rpm; \
+        yum -y install https://repo.ius.io/ius-release-el7.rpm \
+                https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm; \
         yum -y update; \
         yum -y group install development; \
         yum -y install sudo nano which; \
@@ -41,7 +42,7 @@ RUN \
 # Install all available Python packages and their dev packages
         yum -y install python python-tools python-devel python-virtualenv; \
         yum -y install python36u python36u-tools python36u-devel; \
-# CLean up the yum caches
+# Clean up the yum caches
         yum clean all;
 
 # Set the user and group to use for the rest of the commands
@@ -54,7 +55,6 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        python2.7 -m virtualenv --python=python2.7 venvs/Py27; \
         python3.6 -m venv venvs/Py36;
 
 # Add files from host into the container

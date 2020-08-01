@@ -35,7 +35,7 @@ RUN \
 # Install all available Python packages and their dev packages
         dnf -y install python3 python3-tools python3-devel; \
         dnf -y install python38; \
-# CLean up dnf caches
+# Clean up dnf caches
         dnf clean all;
 
 
