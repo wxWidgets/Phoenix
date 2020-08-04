@@ -58,6 +58,9 @@ New and improved in this release:
 * Simplified the implementation of the wx.App.InitLocale method. See the
   MigrationGuide for more information.
 
+* Added wx.lib.agw.aui.AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR constant
+  so the hint window border color can be themed as well.
+
 
 
 
