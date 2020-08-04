@@ -2728,6 +2728,8 @@ class AuiDockingHintWindow(wx.Frame):
         self._art = parent.GetEventHandler().GetArtProvider()
         background = self._art.GetColour(AUI_DOCKART_HINT_WINDOW_COLOUR)
         self.SetBackgroundColour(background)
+        border = self._art.GetColour(AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR)
+        self._border_pen = wx.Pen(border, 5)
 
         # Can't set background colour on a frame on wxMac
         # so add a panel to set the colour on.
@@ -2750,17 +2752,22 @@ class AuiDockingHintWindow(wx.Frame):
         """
 
         amount = 128
-        size = self.GetClientSize()
-        region = wx.Region(0, 0, size.x, 1)
+        size_x, size_y = self.GetClientSize()
+        region = wx.Region(0, 0, size_x, 1)
 
-        for y in range(size.y):
-
-            # Reverse the order of the bottom 4 bits
-            j = (y & 8 and [1] or [0])[0] | (y & 4 and [2] or [0])[0] | \
-                (y & 2 and [4] or [0])[0] | (y & 1 and [8] or [0])[0]
-
-            if 16*j+8 < amount:
-                region.Union(0, y, size.x, 1)
+        ## for y in range(size_y):
+        ##
+        ##     # Reverse the order of the bottom 4 bits
+        ##     j = (y & 8 and [1] or [0])[0] | (y & 4 and [2] or [0])[0] | \
+        ##         (y & 2 and [4] or [0])[0] | (y & 1 and [8] or [0])[0]
+        ##
+        ##     if 16*j+8 < amount:
+        ##         region.Union(0, y, size_x, 1)
+        region_Union = region.Union  # local opt
+        [region_Union(0, y, size_x, 1) for y in range(size_y)
+            if 16 * ((y & 8 and [1] or [0])[0] | (y & 4 and [2] or [0])[0] |
+                     (y & 2 and [4] or [0])[0] | (y & 1 and [8] or [0])[0])
+                     + 8 < amount]
 
         self.SetShape(region)
 
@@ -2814,6 +2821,8 @@ class AuiDockingHintWindow(wx.Frame):
         """
 
         background = self._art.GetColour(AUI_DOCKART_HINT_WINDOW_COLOUR)
+        border = self._art.GetColour(AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR)
+        self._border_pen = wx.Pen(border, 5)
 
         if wx.Platform == '__WXMAC__':
             self.panel.SetBackgroundColour(background)
@@ -2848,13 +2857,13 @@ class AuiDockingHintWindow(wx.Frame):
         :param `event`: an instance of :class:`PaintEvent` to be processed.
         """
 
-        rect = wx.Rect(wx.Point(0, 0), self.GetSize())
+        rect = wx.Rect((0, 0), self.GetSize())
 
         dc = wx.PaintDC(self)
         event.Skip()
 
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.SetPen(wx.Pen(wx.Colour(60, 60, 60), 5))
+        dc.SetPen(self._border_pen)
         rect.Deflate(1, 1)
         dc.DrawRectangle(rect)
 
