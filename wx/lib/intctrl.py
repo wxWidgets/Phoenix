@@ -927,7 +927,12 @@ class IntCtrl(wx.TextCtrl):
                 wx.CallAfter(self.SetInsertionPoint, new_pos)
 
 
-    Value = property(GetValue, SetValue)
+    Limited     = property(IsLimited,     SetLimited)
+    LongAllowed = property(IsLongAllowed, SetLongAllowed)
+    Min         = property(GetMin,        SetMin)
+    Max         = property(GetMax,        SetMax)
+    NoneAllowed = property(IsNoneAllowed, SetNoneAllowed)
+    Value       = property(GetValue,      SetValue)
 
 
 
@@ -981,7 +986,7 @@ if __name__ == '__main__':
             dlg.int_ctrl.SetInsertionPoint(1)
             dlg.int_ctrl.SetSelection(1,2)
             rc = dlg.ShowModal()
-            print('final value', dlg.int_ctrl.GetValue())
+            print('final value %r' % dlg.int_ctrl.Value)
             del dlg
             self.frame.Destroy()
 
