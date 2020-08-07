@@ -284,13 +284,17 @@ def run():
     #-----------------------------------------------------------------
 
     c = module.find('wxGridActivationResult')
-    c.ignore() # FIXME
+    c.ignore() # FIXME: Remove this after switching to sip 4.19.24
     c.addPrivateAssignOp()
-    c.instanceCode = 'sipCpp = new wxGridActivationResult::DoNothing();'
+    c.addPrivateDefaultCtor()
+    c.instanceCode = """\
+        wxGridActivationResult result = wxGridActivationResult::DoNothing();
+        sipCpp = &result;
+        """
 
 
     c = module.find('wxGridActivationSource')
-    c.ignore() # FIXME
+    c.ignore() # FIXME: Remove this after switching to sip 4.19.24
     c.noDefCtor = True
     c.addPrivateAssignOp()
 
@@ -391,11 +395,11 @@ def run():
     c.find('~wxGridCellEditor').ignore(False)
     c.find('Clone').factory = True
     tools.fixRefCountedClass(c)
-    c.find('TryActivate').ignore() # FIXME: remove this when the compilation issues with wxGridActivationResult is fixed
+    c.find('TryActivate').ignore() # FIXME: Remove this after switching to sip 4.19.24
 
 
     c = module.find('wxGridCellActivatableEditor')
-    c.ignore() # FIXME: see above
+    c.ignore() # FIXME: Remove this after switching to sip 4.19.24
 
 
     c = module.find('wxGridCellChoiceEditor')
