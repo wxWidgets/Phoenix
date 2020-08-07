@@ -711,6 +711,17 @@ override `InitLocale` if needed.
 
 
 
+Sizer item flags validation
+---------------------------
+
+Starting with wxPython 4.1, wxWidgets is now validating the flags passed
+when adding items to a sizer, to ensure that they are the correct flags for
+the type of the sizer. If the given flags do not make sense, for example using
+horizontal alignment flags in a horizontal box sizer, then a wxAssertionError
+error is raised.
+
+
+
 .. toctree::
    :maxdepth: 2
    :hidden:
