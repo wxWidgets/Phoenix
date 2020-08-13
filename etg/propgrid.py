@@ -42,7 +42,7 @@ def run():
     c = module.find('wxPropertyGrid')
     assert isinstance(c, etgtools.ClassDef)
     c.bases[0] = 'wxControl'  # sip can't handle wxScrolled<wxControl>. See also below.
-    tools.fixWindowClass(c)
+    tools.fixWindowClass(c, False)
     module.addGlobalStr('wxPropertyGridNameStr', c)
 
     for name in ['RegisterEditorClass', 'DoRegisterEditorClass']:
