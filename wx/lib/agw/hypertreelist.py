@@ -1065,7 +1065,7 @@ class TreeListHeaderWindow(wx.Window):
             # end of the current column
             xpos = 0
 
-            # find the column where this event occurred
+            # find the column where this event occured
             countCol = self.GetColumnCount()
 
             for column in range(countCol):
@@ -3953,7 +3953,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             header.Update()
 
         # Update the header window after this scroll event has fully finished
-        # processing, and the scroll action is complete.
+        # processing, and the scoll action is complete.
         if event.GetOrientation() == wx.HORIZONTAL:
             wx.CallAfter(_updateHeaderWindow, self._owner.GetHeaderWindow())
         event.Skip()
@@ -4323,7 +4323,7 @@ class HyperTreeList(wx.Control):
         :class:`TreeListHeaderWindow`
         :class:`TreeListMainWindow` based off :class:`CustomTreeCtrl`
     These widgets can be obtained by the :meth:`~HyperTreeList.GetHeaderWindow`
-    and :meth:`~HyperTreeList.GetMainWindow` methods respectively although this
+    and :meth:`~HyperTreeList.GetMainWindow` methods respectively althought this
     shouldn't be needed in normal usage.
 
     Please note that although the methods are not explicitly defined or
@@ -4629,7 +4629,7 @@ class HyperTreeList(wx.Control):
 
             font = self._header_win.GetFont()
             dc = wx.ClientDC(self._header_win)
-            width, dummy, dummy = dc.GetFullMultiLineTextExtent(self._header_win.GetColumnText(column))
+            width, dummy = dc.GetMultiLineTextExtent(self._header_win.GetColumnText(column))
             # Search TreeListHeaderWindow.OnPaint to understand this:
             width += 2*_EXTRA_WIDTH + _MARGIN
 
@@ -4642,7 +4642,7 @@ class HyperTreeList(wx.Control):
             width1 = self._main_win.GetBestColumnWidth(column)
             font = self._header_win.GetFont()
             dc = wx.ClientDC(self._header_win)
-            width2, dummy, dummy = dc.GetMultiLineTextExtent(self._header_win.GetColumnText(column))
+            width2, dummy = dc.GetMultiLineTextExtent(self._header_win.GetColumnText(column))
 
             width2 += 2*_EXTRA_WIDTH + _MARGIN
             width = max(width1, width2)
