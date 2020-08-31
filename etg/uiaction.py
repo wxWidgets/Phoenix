@@ -31,6 +31,11 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    tools.generateStubs('wxUSE_UIACTIONSIMULATOR', module,
+                        # extraHdrCode='',
+                        # typeValMap={}
+                        )
+
     c = module.find('wxUIActionSimulator')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()

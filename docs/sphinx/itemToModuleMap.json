@@ -6593,6 +6593,7 @@
 "USE_GLCANVAS":"wx.glcanvas.",
 "USE_JOYSTICK":"wx.adv.",
 "USE_MEDIACTRL":"wx.media.",
+"USE_UIACTIONSIMULATOR":"wx.",
 "USE_WEBKIT":"wx.webkit.",
 "USE_WEBVIEW":"wx.html2.",
 "Uint16":"wx.",
