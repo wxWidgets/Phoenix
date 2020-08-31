@@ -342,6 +342,7 @@ class EventWatcher(wx.Frame):
     def updateBindings(self):
         widget = self._watchedWidget
         self.unwatch()
+        self.buildWatchList(_noWatchList)
         if widget:
             self.watch(widget)
 
