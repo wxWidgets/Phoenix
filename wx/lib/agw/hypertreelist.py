@@ -4629,7 +4629,7 @@ class HyperTreeList(wx.Control):
 
             font = self._header_win.GetFont()
             dc = wx.ClientDC(self._header_win)
-            width, dummy, dummy = dc.GetFullMultiLineTextExtent(self._header_win.GetColumnText(column))
+            width, dummy = dc.GetMultiLineTextExtent(self._header_win.GetColumnText(column))
             # Search TreeListHeaderWindow.OnPaint to understand this:
             width += 2*_EXTRA_WIDTH + _MARGIN
 
@@ -4642,7 +4642,7 @@ class HyperTreeList(wx.Control):
             width1 = self._main_win.GetBestColumnWidth(column)
             font = self._header_win.GetFont()
             dc = wx.ClientDC(self._header_win)
-            width2, dummy, dummy = dc.GetMultiLineTextExtent(self._header_win.GetColumnText(column))
+            width2, dummy = dc.GetMultiLineTextExtent(self._header_win.GetColumnText(column))
 
             width2 += 2*_EXTRA_WIDTH + _MARGIN
             width = max(width1, width2)
@@ -5146,4 +5146,3 @@ if __name__ == '__main__':
     frame.Show()
 
     app.MainLoop()
-
