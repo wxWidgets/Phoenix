@@ -19,7 +19,6 @@ A widget and supporting classes for watching the events sent to some other widge
 import importlib
 
 import wx
-from wx.lib.mixins.listctrl import CheckListCtrlMixin
 
 #----------------------------------------------------------------------------
 # Helpers for building the data structures used for tracking the
@@ -182,22 +181,8 @@ class EventLog(wx.ListCtrl):
 
 class EventChooser(wx.Panel):
     """
-    Panel with CheckListCtrl for selecting which events will be watched.
+    Panel with CheckListBox for selecting which events will be watched.
     """
-
-    class EventChooserLC(wx.ListCtrl, CheckListCtrlMixin):
-        def __init__(self, parent):
-            wx.ListCtrl.__init__(self, parent,
-                                 style=wx.LC_REPORT|wx.LC_SINGLE_SEL|wx.LC_HRULES|wx.LC_VRULES)
-            CheckListCtrlMixin.__init__(self)
-            if 'wxMac' in wx.PlatformInfo:
-                self.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)
-
-        # this is called by the base class when an item is checked/unchecked
-        def OnCheckItem(self, index, flag):
-            self.Parent.OnCheckItem(index, flag)
-
-
     def __init__(self, *args, **kw):
         wx.Panel.__init__(self, *args, **kw)
         self.updateCallback = lambda: None
@@ -206,7 +191,9 @@ class EventChooser(wx.Panel):
         self._event_name_filter.ShowCancelButton(True)
         self._event_name_filter.Bind(wx.EVT_TEXT, lambda evt: self.setWatchList(self.watchList))
         self._event_name_filter.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self._ClearEventFilter)
-        self.lc = EventChooser.EventChooserLC(self)
+        self.lb = wx.CheckListBox(self, style=wx.LB_MULTIPLE)
+        if 'wxMac' in wx.PlatformInfo:
+            self.lb(wx.WINDOW_VARIANT_SMALL)
         btn1 = wx.Button(self, -1, "All")
         btn2 = wx.Button(self, -1, "None")
         btn1.SetToolTip("Check all events")
@@ -215,8 +202,7 @@ class EventChooser(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.onCheckAll, btn1)
         self.Bind(wx.EVT_BUTTON, self.onUncheckAll, btn2)
 
-        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onItemActivated, self.lc)
-        self.lc.InsertColumn(0, "Binder", width=OTHER_WIDTH)
+        self.lb.Bind(wx.EVT_CHECKLISTBOX, self.onItemActivated)
 
         btnSizer = wx.BoxSizer(wx.HORIZONTAL)
         btnSizer.Add(btn1, 0, wx.ALL, 5)
@@ -224,7 +210,7 @@ class EventChooser(wx.Panel):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self._event_name_filter, 0, wx.EXPAND|wx.ALL, 5)
-        sizer.Add(self.lc, 1, wx.EXPAND)
+        sizer.Add(self.lb, 1, wx.EXPAND)
         sizer.Add(btnSizer)
         self.SetSizer(sizer)
 
@@ -236,54 +222,45 @@ class EventChooser(wx.Panel):
         self.doUpdate = False
         searched = self._event_name_filter.GetValue().lower()
         self.watchList = watchList
-        self.lc.DeleteAllItems()
-        count = 0
-        for index, (item, flag) in enumerate(watchList):
-            typeId = item.typeId
-            text = _eventIdMap.get(typeId, "[Unknown]")
-            if text.lower().find(searched) == -1:
-                continue
-            self.lc.InsertItem(count, text)
-            self.lc.SetItemData(count, index)
-            if flag:
-                self.lc.CheckItem(count)
-            count += 1
-        self.lc.SortItems(self.sortCompare)
+
+        items = []
+        for index, (item, flag) in enumerate(self.watchList):
+            text = _eventIdMap.get(item.typeId, "[Unknown]")
+            if text.lower().find(searched) != -1:
+                items.append((item, text, index, flag))
+        items.sort(key=lambda k: _eventIdMap[k[0].typeId])
+
+        self.lb.Clear()
+        for position, (item, text, index, flag) in enumerate(items):
+            self.lb.Insert(text, position, index)
+            self.lb.Check(position, flag)
         self.doUpdate = True
         self.updateCallback()
-
-
-    def OnCheckItem(self, index, flag):
-        index = self.lc.GetItemData(index)
-        item, f = self.watchList[index]
-        self.watchList[index] = (item, flag)
-        if self.doUpdate:
-            self.updateCallback()
 
 
     def onItemActivated(self, evt):
-        self.lc.ToggleItem(evt.GetIndex())
+        position = evt.GetInt()
+        is_checked = self.lb.IsChecked(position)
+        index = self.lb.GetClientData(position)
+        self.watchList[index] = (self.watchList[index][0], is_checked)
+        if self.doUpdate:
+            self.updateCallback()
+
+    def checkAll(self, check):
+        self.doUpdate = False
+        for position in range(self.lb.GetCount()):
+            self.lb.Check(position, True)
+            index = self.lb.GetCliendData(position)
+            self.watchList[index] = (self.watchList[index][0], check)
+        self.lb.Refresh()
+        self.doUpdate = True
+        self.updateCallback()
 
     def onCheckAll(self, evt):
-        self.doUpdate = False
-        for idx in range(self.lc.GetItemCount()):
-            self.lc.CheckItem(idx, True)
-        self.doUpdate = True
-        self.updateCallback()
+        self.checkAll(True)
 
     def onUncheckAll(self, evt):
-        self.doUpdate = False
-        for idx in range(self.lc.GetItemCount()):
-            self.lc.CheckItem(idx, False)
-        self.doUpdate = True
-        self.updateCallback()
-
-    def sortCompare(self, data1, data2):
-        item1 = self.watchList[data1][0]
-        item2 = self.watchList[data2][0]
-        text1 = _eventIdMap.get(item1.typeId)
-        text2 = _eventIdMap.get(item2.typeId)
-        return cmp(text1, text2)
+        self.checkAll(False)
 
     def _ClearEventFilter(self, evt):
         self._event_name_filter.SetValue("")
