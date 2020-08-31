@@ -533,8 +533,8 @@ class PieCtrl(wx.Window):
     def RecreateCanvas(self):
         """ Recreates the :class:`PieCtrl` container (canvas). """
 
-        self._canvasbitmap = wx.Bitmap(self.GetSize().GetWidth() or 1,
-                                       self.GetSize().GetHeight() or 1)
+        self._canvasbitmap = wx.Bitmap(max(1, self.GetSize().GetWidth()),
+                                       max(1, self.GetSize().GetHeight()))
         self._canvasDC.SelectObject(self._canvasbitmap)
 
 
