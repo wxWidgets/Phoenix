@@ -1148,6 +1148,22 @@ class FloatSpin(wx.Control):
         return self._min
 
 
+    def SetMin(self, min_val):
+        """
+        Sets the minimum value for :class:`FloatSpin`.
+
+        :param `min_val`: the minimum value for :class:`FloatSpin`. If it is ``None`` it is
+         ignored.
+
+        :note: This method doesn't modify the current value.
+        """
+
+        if (min_val is not None):
+            self._min = FixedPoint(str(min_val), 20)
+        else:
+            self._min = None
+
+
     def GetMax(self):
         """
         Returns the maximum value for :class:`FloatSpin`. It can be a
@@ -1155,6 +1171,22 @@ class FloatSpin(wx.Control):
         """
 
         return self._max
+
+
+    def SetMax(self, max_val):
+        """
+        Sets the maximum value for :class:`FloatSpin`.
+
+        :param `max_val`: the maximum value for :class:`FloatSpin`. If it is ``None`` it is
+         ignored.
+
+        :note: This method doesn't modify the current value.
+        """
+
+        if (max_val is not None):
+            self._max = FixedPoint(str(max_val), 20)
+        else:
+            self._max = None
 
 
     def HasRange(self):
@@ -1204,7 +1236,14 @@ class FloatSpin(wx.Control):
         return finite, snap_value
 
 
-    Value = property(GetValue, SetValue)
+    DefaultValue = property(GetDefaultValue, SetDefaultValue)
+    Digits       = property(GetDigits,       SetDigits)
+    Font         = property(GetFont,         SetFont)
+    Format       = property(GetFormat,       SetFormat)
+    Increment    = property(GetIncrement,    SetIncrement)
+    Min          = property(GetMin,          SetMin)
+    Max          = property(GetMax,          SetMax)
+    Value        = property(GetValue,        SetValue)
 
 
 
@@ -1764,8 +1803,11 @@ if __name__ == '__main__':
 
             floatspin = FloatSpin(panel, -1, pos=(50, 50), min_val=0, max_val=1,
                                   increment=0.01, value=0.1, agwStyle=FS_LEFT)
-            floatspin.SetFormat("%f")
-            floatspin.SetDigits(2)
+            floatspin.Format = "%f"
+            floatspin.Digits = 2
+            floatspin.Min = -1
+            floatspin.Max = 10
+            floatspin.Increment = 0.02
             floatspin.Value = 0.2
 
 
