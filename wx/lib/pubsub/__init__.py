@@ -20,6 +20,6 @@ __all__ = [
 
 import wx
 import warnings
-warnings.warn('wx.lib.pubsub has been deprecated, please migrate your '
+warnings.warn('wx.lib.pubsub has been deprecated, plese migrate your '
               'code to use pypubsub, available on PyPI.',
               wx.wxPyDeprecationWarning)

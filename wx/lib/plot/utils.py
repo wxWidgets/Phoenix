@@ -32,7 +32,7 @@ class DisplaySide(object):
     Used for fine-tuning the axis, ticks, and values of a graph.
 
     This class somewhat mimics a collections.namedtuple factory function in
-    that it is an iterable and can have individual elements accessible by name.
+    that it is an iterable and can have indiviual elements accessible by name.
     It differs from a namedtuple in a few ways:
 
     - it's mutable

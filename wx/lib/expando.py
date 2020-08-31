@@ -22,7 +22,7 @@ Description
 ===========
 
 The :class:`ExpandoTextCtrl` is a multi-line :class:`TextCtrl` that will
-adjust its height on the fly as needed to accommodate the number of
+adjust its height on the fly as needed to accomodate the number of
 lines needed to display the current content of the control.  It is
 assumed that the width of the control will be a fixed value and
 that only the height will be adjusted automatically.  If the
@@ -121,7 +121,7 @@ EVT_ETC_LAYOUT_NEEDED = wx.PyEventBinder(wxEVT_ETC_LAYOUT_NEEDED, 1)
 class ExpandoTextCtrl(wx.TextCtrl):
     """
     The ExpandoTextCtrl is a multi-line wx.TextCtrl that will
-    adjust its height on the fly as needed to accommodate the number of
+    adjust its height on the fly as needed to accomodate the number of
     lines needed to display the current content of the control.  It is
     assumed that the width of the control will be a fixed value and
     that only the height will be adjusted automatically.  If the

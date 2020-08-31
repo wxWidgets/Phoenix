@@ -43,8 +43,8 @@ windows, although it is a custom-drawn widget.
 This class supports:
 
 * Blended triple-gradient for the tooltip background;
-* Header text and header image, with possibility to set the header font independently;
-* Footer text and footer image, with possibility to set the footer font independently;
+* Header text and header image, with possibility to set the header font indipendently;
+* Footer text and footer image, with possibility to set the footer font indipendently;
 * Multiline text message in the tooltip body, plus an optional image as "body image";
 * Bold lines and hyperlink lines in the tooltip body;
 * A wide set of predefined drawing styles for the tooltip background;
@@ -1260,7 +1260,7 @@ class SuperToolTip(object):
 
 
     def InitFont(self):
-        """ Initializes the fonts for :class:`SuperToolTip`. """
+        """ Initalizes the fonts for :class:`SuperToolTip`. """
 
         self._messageFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._headerFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)

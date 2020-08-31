@@ -271,7 +271,7 @@ class EditWindow(stc.StyledTextCtrl):
             start = self.GetSelection()[1]
             loc = textstring.find(findstring, start)
 
-        # if it wasn't found then restart at beginning
+        # if it wasn't found then restart at begining
         if loc == -1 and start != 0:
             if backward:
                 start = end

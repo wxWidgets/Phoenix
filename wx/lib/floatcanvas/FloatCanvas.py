@@ -280,7 +280,7 @@ class FloatCanvas(wx.Panel):
         self.SetCursor(self.GUIMode.Cursor)
 
     def MakeHitDict(self):
-        """Initialize the Hit dictionary."""
+        """Initialize the Hit dictonary."""
         ##fixme: Should this just be None if nothing has been bound?
         self.HitDict = {EVT_FC_LEFT_DOWN: {},
                         EVT_FC_LEFT_UP: {},
@@ -531,9 +531,9 @@ class FloatCanvas(wx.Panel):
                                         depth=self.HitTestBitmapDepth)
 
     def MakeNewForegroundHTBitmap(self):
-        ## Note: the foreground and background HT bitmaps are in separate functions
+        ## Note: the foreground and backround HT bitmaps are in separate functions
         ##       so that they can be created separate --i.e. when a foreground is
-        ##       added after the background is drawn
+        ##       added after the backgound is drawn
         """
         Off screen Bitmap used for Hit tests on foreground objects
 
@@ -553,7 +553,7 @@ class FloatCanvas(wx.Panel):
         self.Draw()
 
     def InitializePanel(self):
-        """Initialize the panel."""
+        """Intialize the panel."""
         PanelSize  = N.array(self.GetClientSize(),  N.int32)
         self.PanelSize  = N.maximum(PanelSize, (2,2)) ## OS-X sometimes gives a Size event when the panel is size (0,0)
         self.HalfPanelSize = self.PanelSize / 2 # lrk: added for speed in WorldToPixel

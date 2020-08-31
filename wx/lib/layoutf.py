@@ -14,7 +14,7 @@ import  wx
 class Layoutf(wx.LayoutConstraints):
     """
     The class Layoutf(wxLayoutConstraints) presents a simplification
-    of the wxLayoutConstraints syntax. The name Layoutf is chosen
+    of the wxLayoutConstraints syntax. The name Layoutf is choosen
     because of the similarity with C's printf function.
 
     Quick Example::
@@ -105,7 +105,7 @@ class Layoutf(wx.LayoutConstraints):
 
     Note that these are the same letters as used for <own attribute>,
     so you'll only need to remember one set. Finally, the object
-    whose attribute is referred to, is specified by #<compare object
+    whose attribute is refered to, is specified by #<compare object
     nr>, where <compare object nr> is the 1-based (stupid, I know,
     but I've gotten used to it) index of the object in the
     objects_tuple argument.

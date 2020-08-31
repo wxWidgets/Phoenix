@@ -39,7 +39,7 @@ _RWLayoutNeededEvent, EVT_RW_LAYOUT_NEEDED = wx.lib.newevent.NewCommandEvent()
 
 # TODO: Add a style flag that indicates that the ResizeWidget should
 # try to adjust the layout itself by looking up the sizer and
-# containment hierarchy.  Maybe also a style that says that it is okay
+# containment hierachy.  Maybe also a style that says that it is okay
 # to adjust the size of top-level windows too.
 
 #-----------------------------------------------------------------------------
@@ -309,7 +309,7 @@ class ResizeWidget(wx.Panel):
         return False
 
 
-    #=== Overridden virtuals from the base class ===
+    #=== Overriden virtuals from the base class ===
     def AddChild(self, child):
         """
         Add the child to manage.

@@ -155,7 +155,7 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
         if not event.ShiftDown():
             if pos > edit_start and pos < edit_end:
                 # clip data in field to the right of pos, if adjusting fields
-                # when not at delimiter; (assumption == they hit '.')
+                # when not at delimeter; (assumption == they hit '.')
                 newvalue = oldvalue[:pos] + ' ' * (edit_end - pos) + oldvalue[edit_end:]
                 self._SetValue(newvalue)
                 self._SetInsertionPoint(pos)

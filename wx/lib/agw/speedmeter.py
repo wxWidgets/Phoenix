@@ -161,7 +161,7 @@ This class supports the following window styles:
 Window Styles               Hex Value   Description
 =========================== =========== ==================================================
 ``SM_ROTATE_TEXT``                  0x1 Draws the ticks rotated: the ticks are rotated accordingly to the tick marks positions.
-``SM_DRAW_SECTORS``                 0x2 Different intervals are painted in different colours (every sector of the circle has its own colour).
+``SM_DRAW_SECTORS``                 0x2 Different intervals are painted in differend colours (every sector of the circle has its own colour).
 ``SM_DRAW_PARTIAL_SECTORS``         0x4 Every interval has its own colour, but only a circle corona is painted near the ticks.
 ``SM_DRAW_HAND``                    0x8 The hand (arrow indicator) is drawn.
 ``SM_DRAW_SHADOW``                 0x10 A shadow for the hand is drawn.
@@ -217,7 +217,7 @@ SM_BUFFERED_DC = 1
 #----------------------------------------------------------------------
 # SM_ROTATE_TEXT: Draws The Ticks Rotated: The Ticks Are Rotated
 #                 Accordingly To The Tick Marks Positions
-# SM_DRAW_SECTORS: Different Intervals Are Painted In Different Colours
+# SM_DRAW_SECTORS: Different Intervals Are Painted In Differend Colours
 #                  (Every Sector Of The Circle Has Its Own Colour)
 # SM_DRAW_PARTIAL_SECTORS: Every Interval Has Its Own Colour, But Only
 #                          A Circle Corona Is Painted Near The Ticks
@@ -239,7 +239,7 @@ SM_BUFFERED_DC = 1
 SM_ROTATE_TEXT = 1
 """ Draws the ticks rotated: the ticks are rotated accordingly to the tick marks positions. """
 SM_DRAW_SECTORS = 2
-""" Different intervals are painted in different colours (every sector of the circle has its own colour). """
+""" Different intervals are painted in differend colours (every sector of the circle has its own colour). """
 SM_DRAW_PARTIAL_SECTORS = 4
 """ Every interval has its own colour, but only a circle corona is painted near the ticks. """
 SM_DRAW_HAND = 8
@@ -455,7 +455,7 @@ class SpeedMeter(BufferedWindow):
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
          ``SM_ROTATE_TEXT``                  0x1 Draws the ticks rotated: the ticks are rotated accordingly to the tick marks positions.
-         ``SM_DRAW_SECTORS``                 0x2 Different intervals are painted in different colours (every sector of the circle has its own colour).
+         ``SM_DRAW_SECTORS``                 0x2 Different intervals are painted in differend colours (every sector of the circle has its own colour).
          ``SM_DRAW_PARTIAL_SECTORS``         0x4 Every interval has its own colour, but only a circle corona is painted near the ticks.
          ``SM_DRAW_HAND``                    0x8 The hand (arrow indicator) is drawn.
          ``SM_DRAW_SHADOW``                 0x10 A shadow for the hand is drawn.
@@ -592,7 +592,7 @@ class SpeedMeter(BufferedWindow):
         self.Radius = radius
         self.Radius = radius
 
-        # Get The Angle Of Existence Of The Sector
+        # Get The Angle Of Existance Of The Sector
         anglerange = self.GetAngleRange()
         startangle = anglerange[1]
         endangle = anglerange[0]
@@ -1689,7 +1689,7 @@ class SpeedMeter(BufferedWindow):
 
     def DrawExternalArc(self, draw=True):
         """
-        Specify whether or not you wish to draw the external (thicker) arc.
+        Specify wheter or not you wish to draw the external (thicker) arc.
 
         :param `draw`: ``True`` to draw the external arc, ``False`` otherwise.
         """

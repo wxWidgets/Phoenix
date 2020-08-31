@@ -42,6 +42,6 @@ to minimize the chance of introducing bugs in your application.
 def enforceArgName(commonName):
     """This will configure pubsub to require that all listeners use
     the same argument name (*commonName*) as first parameter. This
-    is a useful first step in migrating an application that has been
+    is a ueful first step in migrating an application that has been
     using *arg1* protocol to the more powerful *kwargs* protocol. """
     policies.setMsgDataArgName(1, commonName)

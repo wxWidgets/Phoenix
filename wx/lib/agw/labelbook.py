@@ -875,7 +875,7 @@ class ImageContainerBase(wx.Panel):
                 self.DrawPin(dc, self._pinBtnRect, not self._bCollapsed)
                 return
 
-        # In case panel is collapsed, there is nothing
+        # Incase panel is collapsed, there is nothing
         # to check
         if self._bCollapsed:
             return
@@ -902,7 +902,7 @@ class ImageContainerBase(wx.Panel):
         self._nHoveredImgIdx = -1
 
         # Make sure the pin button status is NONE
-        # in case we were in pin button style
+        # incase we were in pin button style
         style = self.GetParent().GetAGWWindowStyleFlag()
 
         if style & INB_USE_PIN_BUTTON:
@@ -1247,7 +1247,7 @@ class ImageContainer(ImageContainerBase):
         # We reserver 20 pixels for the 'pin' button
 
         # The drawing of the images start position. This is
-        # dependent on the style, especially when Pin button
+        # depenedent of the style, especially when Pin button
         # style is requested
 
         if bUsePin:
@@ -1270,9 +1270,9 @@ class ImageContainer(ImageContainerBase):
 
             count = count + 1
 
-            # in case the 'fit button' style is applied, we set the rectangle width to the
+            # incase the 'fit button' style is applied, we set the rectangle width to the
             # text width plus padding
-            # In case the style IS applied, but the style is either LEFT or RIGHT
+            # Incase the style IS applied, but the style is either LEFT or RIGHT
             # we ignore it
             dc.SetFont(normalFont)
 
@@ -1300,7 +1300,7 @@ class ImageContainer(ImageContainerBase):
                     rectWidth += 1
 
             # Check that we have enough space to draw the button
-            # If Pin button is used, consider its space as well (applicable for top/bottom style)
+            # If Pin button is used, consider its space as well (applicable for top/botton style)
             # since in the left/right, its size is already considered in 'pos'
             pinBtnSize = (bUsePin and [20] or [0])[0]
 
@@ -1360,7 +1360,7 @@ class ImageContainer(ImageContainerBase):
             else:
                 rect = wx.Rect(pos, 0, rectWidth, rectWidth)
 
-            # In case user set both flags:
+            # Incase user set both flags:
             # INB_SHOW_ONLY_TEXT and INB_SHOW_ONLY_IMAGES
             # We override them to display both
 

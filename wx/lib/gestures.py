@@ -28,7 +28,7 @@ and set the pop up as the parent).
 Start() starts recording mouse movement.
 End() stops the recording, compiles all the gestures into a list,
 and looks through the registered gestures to find a match.
-The first matches associated    action is then run.
+The first matchs associated    action is then run.
 
 The marginoferror is how much to forgive when calculating movement:
 If the margin is 25, then movement less than 25 pixels will not be detected.
@@ -148,7 +148,7 @@ class MouseGestures:
         and creates the mouse gesture, returns the result as a string.'''
         self.recording = False
 
-        #Figure out the gestures (Look for occurrences of 5 in a row or more):
+        #Figure out the gestures (Look for occurances of 5 in a row or more):
 
         tempstring = '0'
         possiblechange = '0'

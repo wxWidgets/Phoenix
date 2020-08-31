@@ -272,7 +272,7 @@ class PolyPoints(object):
 
     def boundingBox(self):
         """
-        Returns the bounding box for the entire dataset as a tuple with this
+        Returns the bouding box for the entire dataset as a tuple with this
         format::
 
             ((minX, minY), (maxX, maxY))
@@ -305,7 +305,7 @@ class PolyPoints(object):
             # no curves to draw
             return
 
-        # TODO: Can we remove the if statement altogether? Does
+        # TODO: Can we remove the if statement alltogether? Does
         #       scaleAndShift ever get called when the current value equals
         #       the new value?
 
@@ -679,7 +679,7 @@ class PolyBarsBase(PolyPoints):
         PolyPoints.__init__(self, points, attr)
 
     def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
-        """same as override method, but returns a value."""
+        """same as override method, but retuns a value."""
         scaled = scale * data + shift
         return scaled
 
@@ -975,7 +975,7 @@ class PolyBoxPlot(PolyPoints):
             p = self._points
             pxy = np.array(pntXY)
 
-        # determine distance for each point
+        # determine distnace for each point
         d = np.sqrt(np.add.reduce((p - pxy) ** 2, 1))  # sqrt(dx^2+dy^2)
         pntIndex = np.argmin(d)
         dist = d[pntIndex]
@@ -1050,7 +1050,7 @@ class PolyBoxPlot(PolyPoints):
         return outliers
 
     def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
-        """same as override method, but returns a value."""
+        """same as override method, but retuns a value."""
         scaled = scale * data + shift
         return scaled
 
@@ -1070,7 +1070,7 @@ class PolyBoxPlot(PolyPoints):
         This is because
 
         + The whiskers are drawn as single line rather than two lines
-        + The median line must be visible over the box if the box has a fill.
+        + The median line must be visable over the box if the box has a fill.
 
         Other than that, the draw order can be changed.
         """
@@ -1460,7 +1460,7 @@ class PlotPrintout(wx.Printout):
 #        print("DC GetSize", dc.GetSize())
 #        print("GetPageSizePixels", self.GetPageSizePixels())
         # Note PPIScreen does not give the correct number
-        # Calculate everything for printer and then scale for preview
+        # Calulate everything for printer and then scale for preview
         PPIPrinter = self.GetPPIPrinter()        # printer dots/inch (w,h)
         # PPIScreen= self.GetPPIScreen()          # screen dots/inch (w,h)
         dcSize = dc.GetSize()                    # DC size

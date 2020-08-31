@@ -320,7 +320,7 @@ class Document(wx.EvtHandler):
         Calls :meth:`View.Close` and deletes each view. Deleting the final view will
         implicitly delete the document itself, because the wxView destructor
         calls RemoveView. This in turn calls :meth:`Document.OnChangedViewList`,
-        whose default implementation is to save and delete the document if no
+        whose default implemention is to save and delete the document if no
         views exist.
         """
         manager = self.GetDocumentManager()
@@ -2112,7 +2112,7 @@ class DocManager(wx.EvtHandler):
         only an approximate method of finding a template for creating a
         document.
 
-        Note this wxPython version looks for and returns a default template
+        Note this wxPython verson looks for and returns a default template
         if no specific template is found.
         """
         default = None

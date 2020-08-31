@@ -24,6 +24,6 @@ def transitionFromArg1(commonName):
     """Utility function to assist migrating an application from using 
     the arg1 messaging protocol to using the kwargs protocol. Call this 
     after having run and debugged your application with ``setuparg1.enforceArgName(commonName)``. See the migration docs
-    for more details. 
+    for more detais. 
     """
     policies.setMsgDataArgName(2, commonName)

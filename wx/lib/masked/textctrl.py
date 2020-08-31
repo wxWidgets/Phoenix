@@ -212,7 +212,7 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
 
     def ChangeValue(self, value):
         """
-        Provided to accommodate similar functionality added to base
+        Provided to accomodate similar functionality added to base
         control in wxPython 2.7.1.1.
 
         :param string `value`: new value for control, this will not fire an event
@@ -298,7 +298,7 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
         """
         Set the font, then recalculate control size, if appropriate.
 
-        see :meth:`TextCtrl.SetFont` for valid arguments
+        see :meth:`TextCtrl.SetFont` for valid arguements
         """
         wx.TextCtrl.SetFont(self, *args, **kwargs)
         if self._autofit:

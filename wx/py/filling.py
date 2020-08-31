@@ -207,7 +207,7 @@ class FillingTree(wx.TreeCtrl):
             parent = self.GetItemParent(item)
             obj = self.GetItemData(parent)
         # Apply dictionary syntax to dictionary items, except the root
-        # and first level children of a namespace.
+        # and first level children of a namepace.
         if ((isinstance(obj, dict)
             or 'BTrees' in six.text_type(type(obj))
             and hasattr(obj, 'keys'))

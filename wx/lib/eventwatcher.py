@@ -375,7 +375,7 @@ class EventWatcher(wx.Frame):
     def buildWatchList(self, exclusions):
         # This is a list of (PyEventBinder, flag) tuples where the flag indicates
         # whether to bind that event or not. By default all execpt those in
-        # the _noWatchList will be set to be watched.
+        # the _noWatchList wil be set to be watched.
         self._watchedEvents = list()
         for item in _eventBinders:
             self._watchedEvents.append( (item, item not in exclusions) )

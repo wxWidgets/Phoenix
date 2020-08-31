@@ -15,7 +15,7 @@ The :class:`~lib.ogl.canvas.ShapeCanvas` class.
 """
 import wx
 from .lines import LineShape
-from .composite import *
+from .composit import *
 from .oglmisc import *
 
 NoDragging, StartDraggingLeft, ContinueDraggingLeft, StartDraggingRight, ContinueDraggingRight = 0, 1, 2, 3, 4

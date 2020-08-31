@@ -237,7 +237,7 @@ class TopicManager:
         return self.getTopic(name, okIfNone=True) is not None
         
     def hasTopicDefinition(self, name):
-        """Determine if there is a definition available for topic 'name'. Return
+        """Determine if there is a definition avaiable for topic 'name'. Return
         true if there is, false otherwise. Note: a topic may have a
         definition without being in use, and vice versa."""
         # in already existing Topic object:

@@ -461,7 +461,7 @@ class ColorOnlyMixin:
         self.SetPen(Color,"Solid",1)
         self.SetBrush(Color,"Solid")
 
-    SetFillColor = SetColor # Just to provide a consistent interface
+    SetFillColor = SetColor # Just to provide a consistant interface
 
 
 class LineOnlyMixin:
@@ -847,7 +847,7 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
 
     def SetLengthDirection(self, Length, Direction):
         """
-        Set the length and direction
+        Set the lenght and direction
 
         :param integer `Length`: length of arrow in pixels
         :param integer `Direction`: angle of arrow in degrees, zero is straight
@@ -996,7 +996,7 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
     Each point will be drawn the same color and Diameter. The Diameter
     is in screen pixels, not world coordinates.
 
-    The hit-test code does not distinguish between the points, you will
+    The hit-test code does not distingish between the points, you will
     only know that one of the points got hit, not which one. You can use
     PointSet.FindClosestPoint(WorldPoint) to find out which one
 
@@ -1559,11 +1559,11 @@ class Text(TextObjectMixin, DrawObject):
 
 class ScaledText(TextObjectMixin, DrawObject):
     """
-    ##fixme: this can be deprecated and just use ScaledTextBox with different defaults.
+    ##fixme: this can be depricated and jsut use ScaledTextBox with different defaults.
 
     This class creates a text object that is scaled when zoomed.  It is
     placed at the coordinates, x,y. the "Position" argument is a two
-    character string, indicating where in relation to the coordinates
+    charactor string, indicating where in relation to the coordinates
     the string should be oriented.
 
     The first letter is: t, c, or b, for top, center and bottom The
@@ -1600,7 +1600,7 @@ class ScaledText(TextObjectMixin, DrawObject):
     Bugs/Limitations:
 
     As fonts are scaled, the do end up a little different, so you don't
-    get exactly the same picture as you scale up and down, but it's
+    get exactly the same picture as you scale up and doen, but it's
     pretty darn close.
 
     On wxGTK1 on my Linux system, at least, using a font of over about
@@ -1710,7 +1710,7 @@ class ScaledText(TextObjectMixin, DrawObject):
             else:
                 dc.SetBackgroundMode(wx.TRANSPARENT)
             (w,h) = dc.GetTextExtent(self.String)
-            # compute the shift, and adjust the coordinates, if necessary
+            # compute the shift, and adjust the coordinates, if neccesary
             # This had to be put in here, because it changes with Zoom, as
             # fonts don't scale exactly.
             xy = self.ShiftFun(X, Y, w, h)
@@ -2589,7 +2589,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
         Default class constructor.
 
         :param `XY`: The (x,y) coords of the center of the chart
-        :param `Diameter`: The diamter of the chart in world coords, unless you
+        :param `Diameter`: The diamter of the chart in worls coords, unless you
                  set "Scaled" to False, in which case it's in pixel coords.
         :param `Values`: sequence of values you want to make the chart of.
         :param `FillColors`: sequence of colors you want the slices. If

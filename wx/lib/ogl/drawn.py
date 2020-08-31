@@ -807,7 +807,7 @@ class DrawnShape(RectangleShape):
         if flags and METAFLAGS_ATTACHMENTS:
             self.ClearAttachments()
             for i in range(len(pts)):
-                # TODO: AttachmentPoint does not exist as per PyLint, what should it be???
+                # TODO: AttachmentPoint does not excist as per PyLint, what should it be???
                 self._attachmentPoints.append(AttachmentPoint(i,pts[i][0],pts[i][1]))
         self._metafiles[self._currentAngle].DrawPolygon(pts, flags)
 

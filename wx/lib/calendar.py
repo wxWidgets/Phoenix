@@ -44,7 +44,7 @@
 # 06/02/2004 - Joerg "Adi" Sieker adi@sieker.info
 #
 # o Changed color handling, use dictionary instead of members.
-#   This causes all color changes to be ignored if they manipulate the members directly.
+#   This causes all color changes to be ignored if they manipluate the members directly.
 #   SetWeekColor and other method color methods were adapted to use the new dictionary.
 # o Added COLOR_* constants
 # o Added SetColor method for Calendar class
@@ -440,7 +440,7 @@ class CalDraw:
                 date = date + 7
 
     def GetRect(self):
-        """Get the display rectangle list of the day grid."""
+        """Get the display rectange list of the day grid."""
         cnt = 0
         h = 0
         w = 0
@@ -575,12 +575,12 @@ class CalDraw:
 
             pen = wx.Pen(MakeColor(self.colors[COLOR_3D_LIGHT]), 1, wx.PENSTYLE_SOLID)
             DC.SetPen(pen)
-            # draw the horizontal highlight
+            # draw the horizontal hilight
             startPoint = wx.Point(x + 1, y + 1)
             endPoint = wx.Point(x + width - 1, y + 1)
             DC.DrawLine(startPoint, endPoint)
 
-            # draw the vertical highlight
+            # draw the vertical hilight
             startPoint = wx.Point(x + 1, y + 1)
             endPoint = wx.Point(x + 1, y + height - 2)
             DC.DrawLine(startPoint, endPoint)
@@ -759,7 +759,7 @@ class CalDraw:
         self.gridy = []
 
         self.x_st = self.cx_st + self.x_mrg
-        # start position of draw
+        # start postion of draw
         self.y_st = self.cy_st + self.y_mrg + self.title_offset
 
         x1 = self.x_st
@@ -1218,7 +1218,7 @@ class Calendar(wx.Control):
         Find the clicked area rectangle.
 
         :param `mx`: the x position
-        :param `my`: the y position
+        :param `my`: the y positon
 
         """
         for key in self.rg:
@@ -1244,10 +1244,10 @@ class Calendar(wx.Control):
 
     def SetTextAlign(self, vert, horz):
         """
-        Set the text alignment.
+        Set the text allignment.
 
-        :param `vert`: the vertical alignment
-        :param `horz`: the horizontal alignment
+        :param `vert`: the vertical allignment
+        :param `horz`: the horizontal allignment
 
         """
         self.num_align_horz = horz

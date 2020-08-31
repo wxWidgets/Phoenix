@@ -939,7 +939,7 @@ class AuiTabContainer(object):
     def SetArtProvider(self, art):
         """
         Instructs :class:`AuiTabContainer` to use art provider specified by parameter `art`
-        for all drawing calls. This allows pluggable look-and-feel features.
+        for all drawing calls. This allows plugable look-and-feel features.
 
         :param `art`: an art provider.
 
@@ -2490,7 +2490,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
     def OnEnterWindow(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event of :class:`AuiTabCtrl`.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event fof :class:`AuiTabCtrl`.
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
@@ -3390,7 +3390,7 @@ class AuiNotebook(wx.Panel):
     def UpdateTabCtrlHeight(self, force=False):
         """
         :meth:`UpdateTabCtrlHeight` does the actual tab resizing. It's meant
-        to be used internally.
+        to be used interally.
 
         :param bool `force`: ``True`` to force the tab art to repaint.
         """
@@ -3843,7 +3843,7 @@ class AuiNotebook(wx.Panel):
 
     def SetSashDClickUnsplit(self, unsplit=True):
         """
-        Sets whether to unsplit a split :class:`AuiNotebook` when double-clicking on a sash.
+        Sets whether to unsplit a splitted :class:`AuiNotebook` when double-clicking on a sash.
 
         :param bool `unsplit`: ``True`` to unsplit on sash double-clicking, ``False`` otherwise.
         """
@@ -3853,7 +3853,7 @@ class AuiNotebook(wx.Panel):
 
     def GetSashDClickUnsplit(self):
         """
-        Returns whether a split :class:`AuiNotebook` can be unsplitted by double-clicking
+        Returns whether a splitted :class:`AuiNotebook` can be unsplitted by double-clicking
         on the splitter sash.
         """
 
@@ -4716,7 +4716,7 @@ class AuiNotebook(wx.Panel):
             self.RemovePage(idx)
             # re-add in the same position so it will tab
             self.InsertPage(idx, win, title, False, bmp)
-        # restore original selected tab
+        # restore orignial selected tab
         self.SetSelection(nowSelected)
 
         self.Thaw()

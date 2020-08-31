@@ -320,7 +320,7 @@ class AuiMDIChildFrame(wx.Panel):
         # before Create() (as is customary on some ports with wxFrame-type
         # windows), or wx.MINIMIZE can be passed in the style flags.  Note that
         # AuiMDIChildFrame is not really derived from wxFrame, as MDIChildFrame
-        # is, but those are the expected semantics.  No style flag is passed
+        # is, but those are the expected symantics.  No style flag is passed
         # onto the panel underneath.
 
         self._activate_on_create = True

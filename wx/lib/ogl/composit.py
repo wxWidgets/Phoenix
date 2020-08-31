@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #----------------------------------------------------------------------------
-# Name:         composite.py
+# Name:         composit.py
 # Purpose:      Composite class
 #
 # Author:       Pierre Hjälm (from C++ original by Julian Smart)
@@ -11,7 +11,7 @@
 # Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
 """
-The :class:`~lib.ogl.composite.CompositeShape` class.
+The :class:`~lib.ogl.composit.CompositeShape` class.
 """
 import sys
 import wx
@@ -48,7 +48,7 @@ class ConstraintType(object):
         """
         Default class constructor.
 
-        :param `theType`: one of the following
+        :param `theType`: one of the folowing
          ====================================== ================================
          Constraint type                        Description
          ====================================== ================================
@@ -542,7 +542,7 @@ class CompositeShape(RectangleShape):
         Set the size.
 
         :param `w`: the width
-        :param `h`: the height
+        :param `h`: the heigth
         :param `recursive`: size the children recursively
 
         """
@@ -689,7 +689,7 @@ class CompositeShape(RectangleShape):
 
         :returns: None or a tuple of the constraint and the actual composite the
          constraint was in, in case that composite was a descendant of
-         this composite.
+         this composit.
 
         """
         for constraint in self._constraints:
@@ -765,7 +765,7 @@ class CompositeShape(RectangleShape):
         """
         Constrain the children.
 
-        :returns: True if constrained otherwise False
+        :returns: True if constained otherwise False
 
         """
         self.CalculateSize()
@@ -820,7 +820,7 @@ class CompositeShape(RectangleShape):
         """
         Check if division is descendant.
 
-        :param `division`: division to check
+        :param `division`: divison to check
         :returns: `True` if division is a descendant of this container.
 
         """
@@ -849,7 +849,7 @@ DIVISION_SIDE_RIGHT     =3
 DIVISION_SIDE_BOTTOM    =4
 
 originalX = 0.0
-originally = 0.0
+originalY = 0.0
 originalW = 0.0
 originalH = 0.0
 
@@ -865,10 +865,10 @@ class DivisionControlPoint(ControlPoint):
         ControlPoint.OnDragLeft(self, draw, x, y, keys, attachment)
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
-        global originalX, originally, originalW, originalH
+        global originalX, originalY, originalW, originalH
 
         originalX = self._shape.GetX()
-        originally = self._shape.GetY()
+        originalY = self._shape.GetY()
         originalW = self._shape.GetWidth()
         originalH = self._shape.GetHeight()
 
@@ -930,7 +930,7 @@ class DivisionControlPoint(ControlPoint):
 
         if not success:
             division.SetSize(originalW, originalH)
-            division.Move(dc, originalX, originally)
+            division.Move(dc, originalX, originalY)
 
         divisionParent.Draw(dc)
         division.GetEventHandler().OnDrawControlPoints(dc)
@@ -1143,7 +1143,7 @@ class DivisionShape(CompositeShape):
         #dc.DrawRectangle(x1, y1, self.GetWidth(), self.GetHeight())
 
     def OnDrawContents(self, dc):
-        """The draw contents handler."""
+        """The draw contens handler."""
         CompositeShape.OnDrawContents(self, dc)
 
     def OnMovePre(self, dc, x, y, oldx, oldy, display = True):
@@ -1210,7 +1210,7 @@ class DivisionShape(CompositeShape):
         Set the size.
 
         :param `w`: the width
-        :param `h`: the height
+        :param `h`: the heigth
         :param `recursive`: `True` recurse all children
 
         """

@@ -929,7 +929,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
     def _GetNumValue(self, value):
         """
         This function attempts to "clean up" a text value, providing a regularized
-        convertible string, via atol() or atof(), for any well-formed numeric text value.
+        convertable string, via atol() or atof(), for any well-formed numeric text value.
         """
         return value.replace(self._groupChar, '').replace(self._decimalChar, '.').replace('(', '-').replace(')','').strip()
 
@@ -1012,7 +1012,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
     def _SetValue(self, value):
         """
         This routine supersedes the base masked control _SetValue().  It is
-        needed to ensure that the value of the control is always representable/convertible
+        needed to ensure that the value of the control is always representable/convertable
         to a numeric return value (via GetValue().)  This routine also handles
         automatic adjustment and grouping of the value without explicit intervention
         by the user.
@@ -1369,7 +1369,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         If min > the max value allowed by the width of the control,
         the function will return False, and the min will not be set.
 
-        :param `min`: Minimum value for the control
+        :param `min`: Minium value for the control
         :type `min`: integer or None
 
         """
@@ -1410,7 +1410,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         If max > the max value allowed by the width of the control,
         the function will return False, and the max will not be set.
 
-        :param `max`: Minimum value for the control
+        :param `max`: Minium value for the control
         :type `max`: integer or None
 
         """
@@ -1443,9 +1443,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
         .. note:: leaving out an argument will remove the corresponding bound.
 
-        :param `min`: Minimum value for the control
+        :param `min`: Minium value for the control
         :type `min`: integer or None
-        :param `max`: Minimum value for the control
+        :param `max`: Minium value for the control
         :type `max`: integer or None
 
         """

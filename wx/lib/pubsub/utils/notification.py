@@ -288,7 +288,7 @@ def useNotifyByPubsubMessage(publisher=None, all=True, **kwargs):
     
     The publisher is rarely needed:
 
-    * The publisher must be specified if pubsub is not installed
+    * The publisher must be specfied if pubsub is not installed
       on the system search path (ie from pubsub import ... would fail or
       import wrong pubsub -- such as if pubsub is within wxPython's
       wx.lib package). Then pbuModule is the pub module to use::

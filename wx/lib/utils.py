@@ -1,6 +1,6 @@
 #----------------------------------------------------------------------
 # Name:        wx.lib.utils
-# Purpose:     Miscellaneous utility functions
+# Purpose:     Miscelaneous utility functions
 #
 # Author:      Robin Dunn
 #

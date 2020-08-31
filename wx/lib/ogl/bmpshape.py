@@ -39,7 +39,7 @@ class BitmapShape(RectangleShape):
         Set the size.
 
         :param `w`: the width
-        :param `h`: the height
+        :param `h`: the heigth
         :param `recursive`: not used
 
         """

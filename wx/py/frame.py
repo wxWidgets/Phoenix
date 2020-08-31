@@ -178,9 +178,9 @@ class Frame(wx.Frame):
                  'Include attributes visible to __getattr__ and __setattr__',
                  wx.ITEM_CHECK)
         m.Append(ID_AUTOCOMP_SINGLE, 'Include Single &Underscores\tCtrl+Shift+U',
-                 'Include attributes prefixed by a single underscore', wx.ITEM_CHECK)
+                 'Include attibutes prefixed by a single underscore', wx.ITEM_CHECK)
         m.Append(ID_AUTOCOMP_DOUBLE, 'Include &Double Underscores\tCtrl+Shift+D',
-                 'Include attributes prefixed by a double underscore', wx.ITEM_CHECK)
+                 'Include attibutes prefixed by a double underscore', wx.ITEM_CHECK)
         m = self.calltipsMenu = wx.Menu()
         m.Append(ID_CALLTIPS_SHOW, 'Show Call &Tips\tCtrl+Shift+T',
                  'Show call tips with argument signature and docstring', wx.ITEM_CHECK)

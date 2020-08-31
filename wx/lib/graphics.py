@@ -1326,7 +1326,7 @@ class GraphicsContext(GraphicsObject):
 
     def CreatePath(self):
         """
-        Create a new path object.
+        Create a new path obejct.
         """
         return GraphicsPath()
 
@@ -1754,7 +1754,7 @@ class GraphicsContext(GraphicsObject):
 
     def DrawEllipse(self, x, y, w, h):
         """
-        Stroke and fill an ellipse that fits in the given rectangle,
+        Stroke and fill an elipse that fits in the given rectangle,
         using the current pen and current brush.
         """
         path = GraphicsPath()

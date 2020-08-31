@@ -9,5 +9,5 @@ from .canvas import *
 from .lines import *
 from .bmpshape import *
 from .divided import *
-from .composite import *
+from .composit import *
 from .drawn import *

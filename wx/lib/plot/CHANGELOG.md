@@ -80,7 +80,7 @@ on 2016-07-05 and finished on [insert date here].
   <number> tick marks)
 + Added support for background and foreground colours (enabled via
   SetBackgroundColour/SetForegroundColour on a PlotCanvas instance)
-+ Changed PlotCanvas printing initialization from occurring in __init__ to
++ Changed PlotCanvas printing initialization from occuring in __init__ to
   occur on access. This will postpone any IPP and / or CUPS warnings
   which appear on stderr on some Linux systems until printing
   functionality is actually used.
@@ -108,7 +108,7 @@ on 2016-07-05 and finished on [insert date here].
 
 
 ## 2003-12-15 - Jeff Grimmett (grimmtooth@softhome.net)
-+ 2.5 compatibility update.
++ 2.5 compatability update.
 + Renamed to plot.py in the wx.lib directory.
 + Reworked test frame to work with wx demo framework. This saves a bit
   of tedious cut and paste, and the test app is excellent.

@@ -463,7 +463,7 @@ class SButton(wx.Window):
 
 
     def IsEnabled(self):
-        """ Returns whether the button is enabled or not. """
+        """ Returns wheter the button is enabled or not. """
 
         return self._enabled
 

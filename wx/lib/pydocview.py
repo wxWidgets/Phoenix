@@ -557,7 +557,7 @@ class DocMDIParentFrameMixIn:
                         window.SetDefaultSize((window._sizeBeforeHidden[0], window._sizeBeforeHidden[0] - self.GetEmbeddedWindow(EMBEDDED_WINDOW_BOTTOMRIGHT).GetSize()[1]))
                 else:
                     window.SetDefaultSize(window._sizeBeforeHidden)
-                    # If it is not the size of the full parent sashwindow set the other window's size so that if it gets shown it will have a corresponding size
+                    # If it is not the size of the full parent sashwindow set the other window's size so that if it gets shown it will have a cooresponding size
                     if window._sizeBeforeHidden[1] < parentSashWindow.GetClientSize()[1]:
                         otherWindowSize = (-1, parentSashWindow.GetClientSize()[1] - window._sizeBeforeHidden[1])
                         if window == self.GetEmbeddedWindow(EMBEDDED_WINDOW_BOTTOMLEFT):
@@ -1863,7 +1863,7 @@ class DocApp(wx.App):
         """
         Returns the instance of a particular type of service that has been installed
         into the DocApp.  For example, "wx.GetApp().GetService(pydocview.OptionsService)"
-        returns the instance of the OptionsService that is running within the DocApp.
+        returns the isntance of the OptionsService that is running within the DocApp.
         """
         for service in self._services:
             if isinstance(service, type):

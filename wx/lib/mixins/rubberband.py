@@ -27,12 +27,12 @@ import  wx
 # Some miscellaneous mathematical and geometrical functions
 #
 
-def isNegative(a number):
+def isNegative(aNumber):
     """
     x < 0:   1
     else:    0
     """
-    return a number < 0
+    return aNumber < 0
 
 
 def normalizeBox(box):
@@ -53,7 +53,7 @@ def normalizeBox(box):
 def boxToExtent(box):
     """
     Convert a box specification to an extent specification.
-    I put this into a separate function after I realized that
+    I put this into a seperate function after I realized that
     I had been implementing it wrong in several places.
     """
     b = normalizeBox(box)
@@ -74,7 +74,7 @@ def pointOnBox(x, y, box, thickness=1):
     of the box.  The thickness defines how thick the
     edge should be.  This is necessary for HCI reasons:
     For example, it's normally very difficult for a user
-    to maneuver the mouse onto a one pixel border.
+    to manuever the mouse onto a one pixel border.
     """
     outerBox = box
     innerBox = (box[0]+thickness, box[1]+thickness, box[2]-(thickness*2), box[3]-(thickness*2))

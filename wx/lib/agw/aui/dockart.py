@@ -13,7 +13,7 @@
 #----------------------------------------------------------------------------
 """
 Dock art provider code - a dock provider provides all drawing functionality to
-the AUI dock manager. This allows the dock manager to have a pluggable look-and-feel.
+the AUI dock manager. This allows the dock manager to have a plugable look-and-feel.
 
 By default, a :class:`~wx.lib.agw.aui.framemanager` uses an instance of this class called :mod:`~wx.lib.agw.aui.dockart`
 which provides bitmap art and a colour scheme that is adapted to the major platforms'
@@ -52,7 +52,7 @@ if wx.Platform == "__WXMSW__":
 class AuiDefaultDockArt(object):
     """
     Dock art provider code - a dock provider provides all drawing functionality to the AUI dock manager.
-    This allows the dock manager to have a pluggable look-and-feel.
+    This allows the dock manager to have a plugable look-and-feel.
 
     By default, a :class:`~wx.lib.agw.aui.framemanager.AuiManager` uses an instance of this class called
     :class:`AuiDefaultDockArt` which provides bitmap art and a colour scheme that is adapted to the major

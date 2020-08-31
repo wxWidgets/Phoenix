@@ -954,7 +954,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         """
         Draw the background and chrome for a :class:`~wx.lib.agw.ribbon.gallery.RibbonGallery` control.
 
-        This should draw the border, background, scroll buttons, extension button, and
+        This should draw the border, brackground, scroll buttons, extension button, and
         any other UI elements which are not attached to a specific gallery item.
 
         :param `dc`: The device context to draw onto;

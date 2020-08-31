@@ -91,7 +91,7 @@ class Canvas(wx.Window):
             self.SetMaxClientSize(forceClientSize)
             self.SetMinClientSize(forceClientSize)
 
-        # Perform an initial sizing
+        # Perform an intial sizing
         self.ReDraw()
 
         # Register event handlers
@@ -132,7 +132,7 @@ class Canvas(wx.Window):
         dc.Blit(0, 0, width, height, self.buffer, 0, 0)
 
     def GetBoundingRect(self):
-        """Returns a tuple that contains the coordinates of the
+        """Returns a tuple that contains the co-ordinates of the
         top-left and bottom-right corners of the canvas."""
         x, y = self.GetPosition()
         w, h = self.GetSize()

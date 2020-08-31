@@ -344,7 +344,7 @@ class RulerCtrlEvent(wx.CommandEvent):
 
 class Label(object):
     """
-    Auxiliary class. Just holds information about a label in :class:`RulerCtrl`.
+    Auxilary class. Just holds information about a label in :class:`RulerCtrl`.
     """
 
     def __init__(self, pos=-1, lx=-1, ly=-1, text=""):

@@ -53,7 +53,7 @@ Bugs and Limitations: Lots: patches, fixes welcome
 For Map drawing: It ignores the fact that the world is, in fact, a
 sphere, so it will do strange things if you are looking at stuff near
 the poles or the date line. so far I don't have a need to do that, so I
-haven't bothered to add any checks for that yet.
+havn't bothered to add any checks for that yet.
 
 Zooming: I have set no zoom limits. What this means is that if you zoom
 in really far, you can get integer overflows, and get weird results. It

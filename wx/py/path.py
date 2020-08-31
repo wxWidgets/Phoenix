@@ -26,7 +26,7 @@ def ls(str='*',fullpath=False):
 
 # This prints the results of running a command in the GUI shell but be warned!
 # This is a blocking call, and if you open any kind of interactive
-# command-line program like python or bash, the shell will permanently
+# command-line program like python or bash, the shell will permanantly
 # freeze!
 # If you want this kind of behavior to be available, please use ipython
 # This is NOT a feature or goal of the Py project!

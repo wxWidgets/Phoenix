@@ -1370,7 +1370,7 @@ class Shortcut(object):
          the `filter` string to look for a match.
 
         :return: An instance of :class:`Shortcut` if the `filter` string is contained in
-         the `item` label, ``None`` otherwise.
+         the `item` lable, ``None`` otherwise.
 
         :note: The string-matching is case-insensitive.
         """
@@ -1391,7 +1391,7 @@ class Shortcut(object):
 
     def ShowHierarchy(self, item):
         """
-        Set the status of this :class:`Shortcut` and its parent as `shown` in the
+        Set the status of this :class:`Shortcut` ans its parent as `shown` in the
         :class:`ListShortcut` tree hierarchy.
 
         :param `item`: an instance of :class:`Shortcut`.
@@ -1951,7 +1951,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         keyCode = event.GetKeyCode()
         modifiers = event.GetModifiers()
 
-        # If we press backspace with no modifiers down, *and* the current text is
+        # If we press backspace with no modifers down, *and* the current text is
         # "New accelerator..." then we reset the accelerator to "Disabled"
         if keyCode == wx.WXK_BACK and modifiers == 0 and currentText in [NEW_ACCEL_STRING, DISABLED_STRING]:
 

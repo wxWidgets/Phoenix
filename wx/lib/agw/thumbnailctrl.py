@@ -2524,7 +2524,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
                 strs = strs + "\n"
                 strs = strs + "Please check your privileges and file permissions."
                 dlg = wx.MessageDialog(self, strs,
-                                       "Error in removing files",
+                                       'Error in removing files',
                                        wx.OK | wx.ICON_ERROR)
                 dlg.ShowModal()
                 dlg.Destroy()

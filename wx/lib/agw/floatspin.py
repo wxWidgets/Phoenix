@@ -1327,7 +1327,7 @@ class FixedPoint(object):
         >>>
 
 
-    The string produced by `str(x)` (implicitly invoked by `print`) always
+    The string produced by `str(x)` (implictly invoked by `print`) always
     contains at least one digit before the decimal point, followed by a
     decimal point, followed by exactly `x.get_precision()` digits.  If `x` is
     negative, `str(x)[0] == "-"`.
@@ -1476,7 +1476,7 @@ class FixedPoint(object):
         try:
             p = int(precision)
         except:
-            raise TypeError("precision not convertible to int: " +
+            raise TypeError("precision not convertable to int: " +
                             repr(precision))
         if p < 0:
             raise ValueError("precision must be >= 0: " + repr(precision))

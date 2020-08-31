@@ -484,7 +484,7 @@ class PyCollapsiblePane(wx.Panel):
         self.SetSize(sz)
 
         if self.HasAGWFlag(wx.CP_NO_TLW_RESIZE):
-            # the user asked to explicitly handle the resizing itself...
+            # the user asked to explicitely handle the resizing itself...
             return
 
         # NB: the following block of code has been accurately designed to
