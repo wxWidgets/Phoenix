@@ -16,6 +16,8 @@
 A widget and supporting classes for watching the events sent to some other widget.
 """
 
+import importlib
+
 import wx
 from wx.lib.mixins.listctrl import CheckListCtrlMixin
 
@@ -396,9 +398,7 @@ class EventWatcher(wx.Frame):
             if dlg.ShowModal() == wx.ID_OK:
                 modname = dlg.GetValue()
                 try:
-                    # Passing a non-empty fromlist will cause __import__ to
-                    # return the imported submodule if a dotted name is passed.
-                    module = __import__(modname, fromlist=[0])
+                    module = importlib.import_module(modname)
                 except ImportError:
                     wx.MessageBox("Unable to import \"%s\"" % modname,
                                   "Error")
