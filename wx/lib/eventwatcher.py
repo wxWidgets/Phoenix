@@ -193,7 +193,7 @@ class EventChooser(wx.Panel):
         self._event_name_filter.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self._ClearEventFilter)
         self.lb = wx.CheckListBox(self, style=wx.LB_MULTIPLE)
         if 'wxMac' in wx.PlatformInfo:
-            self.lb(wx.WINDOW_VARIANT_SMALL)
+            self.lb.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)
         btn1 = wx.Button(self, -1, "All")
         btn2 = wx.Button(self, -1, "None")
         btn1.SetToolTip("Check all events")
