@@ -566,7 +566,6 @@ class PieCtrl(wx.Window):
 
         :param `angle`: the orientation angle for :class:`PieCtrl`, in radians.
         """
-
         if angle < 0:
             angle = 0
         if angle > pi/2:
@@ -687,26 +686,26 @@ class PieCtrl(wx.Window):
             dc_SetPen(wx.BLACK_PEN)
 
         for ii in range(len(angles)):
-
             if ii > 0:
-
                 if not self._showedges:
                     dc_SetPen(wxPen(self._series[ii-1].GetColour()))
 
                 dc_SetBrush(wxBrush(self._series[ii-1].GetColour()))
 
                 if angles[ii-1] != angles[ii]:
-                    dc_DrawEllipticArc(0, int((1-sin(_angle))*(h//2)+cy), w,
-                                       int(h*sin(_angle)),
-                                       angles[ii-1]+_rotationangle/pi*180,
-                                       angles[ii]+_rotationangle/pi*180)
-
+                    height = int(h*sin(_angle))
+                    if height > 0:
+                        dc_DrawEllipticArc(0, int((1-sin(_angle))*(h//2)+cy),
+                                        w, height,
+                                        angles[ii-1]+_rotationangle/pi*180,
+                                        angles[ii]+_rotationangle/pi*180)
 
         if len(self._series) == 1:
-
-            dc_SetBrush(wxBrush(self._series[0].GetColour()))
-            dc_DrawEllipticArc(0, int((1-sin(_angle))*(h//2)+cy), w,
-                               int(h*sin(_angle)), 0, 360)
+            height = int(h*sin(_angle))
+            if height > 0:
+                dc_SetBrush(wxBrush(self._series[0].GetColour()))
+                dc_DrawEllipticArc(0, int((1-sin(_angle))*(h//2)+cy),
+                                w, height, 0, 360)
 
         dc_SetPen(oldpen)
 
