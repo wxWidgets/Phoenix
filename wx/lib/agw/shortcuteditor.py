@@ -946,7 +946,7 @@ class HTMLHelpWindow(wx.Frame):
 
         self.htmlFile = htmlFile
 
-        toolbar = self.CreateToolBar(wx.TB_HORIZONTAL|wx.TB_FLAT|wx.TB_TEXT|wx.TB_3DBUTTONS)
+        toolbar = self.CreateToolBar(wx.TB_HORIZONTAL|wx.TB_FLAT|wx.TB_TEXT)
         self.BuildToolBar(toolbar)
 
         self.html = wx.html.HtmlWindow(self, style=wx.SUNKEN_BORDER)
