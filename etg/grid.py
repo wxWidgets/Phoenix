@@ -691,7 +691,8 @@ def run():
         EVT_GRID_LABEL_RIGHT_DCLICK = wx.PyEventBinder( wxEVT_GRID_LABEL_RIGHT_DCLICK )
         EVT_GRID_ROW_SIZE = wx.PyEventBinder( wxEVT_GRID_ROW_SIZE )
         EVT_GRID_COL_SIZE = wx.PyEventBinder( wxEVT_GRID_COL_SIZE )
-        EVT_GRID_RANGE_SELECT = wx.PyEventBinder( wxEVT_GRID_RANGE_SELECT )
+        EVT_GRID_RANGE_SELECTING = wx.PyEventBinder( wxEVT_GRID_RANGE_SELECTING )
+        EVT_GRID_RANGE_SELECTED = wx.PyEventBinder( wxEVT_GRID_RANGE_SELECTED )
         EVT_GRID_CELL_CHANGING = wx.PyEventBinder( wxEVT_GRID_CELL_CHANGING )
         EVT_GRID_CELL_CHANGED = wx.PyEventBinder( wxEVT_GRID_CELL_CHANGED )
         EVT_GRID_SELECT_CELL = wx.PyEventBinder( wxEVT_GRID_SELECT_CELL )
@@ -714,7 +715,8 @@ def run():
         EVT_GRID_CMD_LABEL_RIGHT_DCLICK =  wx.PyEventBinder( wxEVT_GRID_LABEL_RIGHT_DCLICK, 1 )
         EVT_GRID_CMD_ROW_SIZE =            wx.PyEventBinder( wxEVT_GRID_ROW_SIZE,           1 )
         EVT_GRID_CMD_COL_SIZE =            wx.PyEventBinder( wxEVT_GRID_COL_SIZE,           1 )
-        EVT_GRID_CMD_RANGE_SELECT =        wx.PyEventBinder( wxEVT_GRID_RANGE_SELECT,       1 )
+        EVT_GRID_CMD_RANGE_SELECTING =     wx.PyEventBinder( wxEVT_GRID_RANGE_SELECTING,    1 )
+        EVT_GRID_CMD_RANGE_SELECTED =      wx.PyEventBinder( wxEVT_GRID_RANGE_SELECTED,     1 )
         EVT_GRID_CMD_CELL_CHANGING =       wx.PyEventBinder( wxEVT_GRID_CELL_CHANGING,      1 )
         EVT_GRID_CMD_CELL_CHANGED =        wx.PyEventBinder( wxEVT_GRID_CELL_CHANGED,       1 )
         EVT_GRID_CMD_SELECT_CELL =         wx.PyEventBinder( wxEVT_GRID_SELECT_CELL,        1 )
@@ -725,6 +727,11 @@ def run():
         EVT_GRID_CMD_COL_MOVE =            wx.PyEventBinder( wxEVT_GRID_COL_MOVE,           1 )
         EVT_GRID_CMD_COL_SORT =            wx.PyEventBinder( wxEVT_GRID_COL_SORT,           1 )
         EVT_GRID_CMD_TABBING =             wx.PyEventBinder( wxEVT_GRID_TABBING,            1 )
+
+        # Just for compatibility, remove them in a future release
+        EVT_GRID_RANGE_SELECT =            EVT_GRID_RANGE_SELECTED
+        EVT_GRID_CMD_RANGE_SELECT =        EVT_GRID_CMD_RANGE_SELECTED
+
         """)
 
     #-----------------------------------------------------------------
