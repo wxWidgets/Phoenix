@@ -7168,6 +7168,8 @@
 "wxEVT_GRID_LABEL_RIGHT_CLICK":"wx.grid.",
 "wxEVT_GRID_LABEL_RIGHT_DCLICK":"wx.grid.",
 "wxEVT_GRID_RANGE_SELECT":"wx.grid.",
+"wxEVT_GRID_RANGE_SELECTED":"wx.grid.",
+"wxEVT_GRID_RANGE_SELECTING":"wx.grid.",
 "wxEVT_GRID_ROW_SIZE":"wx.grid.",
 "wxEVT_GRID_SELECT_CELL":"wx.grid.",
 "wxEVT_GRID_TABBING":"wx.grid.",
