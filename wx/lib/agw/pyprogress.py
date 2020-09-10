@@ -497,7 +497,6 @@ class PyProgress(wx.Dialog):
             if not sizeDlgModified:
                 sizeDlg.y += 2*LAYOUT_MARGIN + wx.Button.GetDefaultSize().y
 
-        if self._hasAbortButton:
             sizer.Add(buttonSizer, 0, sizerFlags, LAYOUT_MARGIN )
 
         self.Bind(wx.EVT_CLOSE, self.OnClose)
