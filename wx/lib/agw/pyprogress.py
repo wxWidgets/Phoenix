@@ -483,7 +483,7 @@ class PyProgress(wx.Dialog):
         if wx.Platform == "__WXMSW__":
             sizerFlags = wx.ALIGN_RIGHT|wx.ALL
         else:
-            sizerFlags = wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM|wx.TOP
+            sizerFlags = wx.ALIGN_CENTER|wx.BOTTOM|wx.TOP
 
         if self._hasAbortButton:
             buttonSizer = wx.BoxSizer(wx.HORIZONTAL)
