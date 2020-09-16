@@ -91,8 +91,8 @@ sipCurrentVersion = '4.19.24'
 sipMD5 = {
     'darwin'   : '2a22cb7a35eb14384b0829593a366c29',
     'win32'    : '49e0aa36397d7629fea95418452961fb',
-    'linux32'  : '0147794b52af30d356eed07517da1d48',
-    'linux64'  : '4f8c41f5157a48020b87683538842124',
+    'linux32'  : 'ea773f6fd92d5f23530730428a86df2f',
+    'linux64'  : 'b44a45191f5f84db10e2ba1c4cecd8ff',
 }
 
 wafCurrentVersion = '2.0.19'
