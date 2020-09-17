@@ -284,7 +284,6 @@ def run():
     #-----------------------------------------------------------------
 
     c = module.find('wxGridActivationResult')
-    c.ignore() # FIXME: Remove this after switching to sip 4.19.24
     c.addPrivateAssignOp()
     c.addPrivateDefaultCtor()
     c.instanceCode = """\
@@ -294,7 +293,6 @@ def run():
 
 
     c = module.find('wxGridActivationSource')
-    c.ignore() # FIXME: Remove this after switching to sip 4.19.24
     c.noDefCtor = True
     c.addPrivateAssignOp()
 
@@ -395,11 +393,9 @@ def run():
     c.find('~wxGridCellEditor').ignore(False)
     c.find('Clone').factory = True
     tools.fixRefCountedClass(c)
-    c.find('TryActivate').ignore() # FIXME: Remove this after switching to sip 4.19.24
 
 
     c = module.find('wxGridCellActivatableEditor')
-    c.ignore() # FIXME: Remove this after switching to sip 4.19.24
 
 
     c = module.find('wxGridCellChoiceEditor')
