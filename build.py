@@ -1386,7 +1386,7 @@ def cmd_build_wx(options, args):
         # Windows-specific pre build stuff
         if options.cairo:
             build_options.append('--cairo')
-            cairo_root = os.path.join(phoenixDir(), 'packaging', 'cairo-msw')
+            cairo_root = os.path.join(phoenixDir(), 'packaging', 'msw-cairo')
             os.environ['CAIRO_ROOT'] = cairo_root
 
         if options.jom:
@@ -1518,7 +1518,7 @@ def copyWxDlls(options):
 
         # Also copy the cairo DLLs if needed
         if options.cairo:
-            cairo_root = os.path.join(phoenixDir(), 'packaging', 'cairo-msw')
+            cairo_root = os.path.join(phoenixDir(), 'packaging', 'msw-cairo')
             dlls += glob.glob(os.path.join(cairo_root, arch, 'bin', '*.dll'))
 
         # For Python 3.5 and 3.6 builds we also need to copy some VC14 redist DLLs.
@@ -1526,7 +1526,7 @@ def copyWxDlls(options):
         # this may need to change. See notes in wscript about it.
         if PYVER in ['3.5', '3.6', '3.7', '3.8', '3.9']:
             redist_dir = os.path.join(
-                phoenixDir(), 'packaging', 'Py3.5', 'vcredist',
+                phoenixDir(), 'packaging', 'msw-vcredist',
                 arch, 'Microsoft.VC140.CRT', '*.dll')
             dlls += glob.glob(redist_dir)
 
