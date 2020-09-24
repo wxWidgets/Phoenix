@@ -1,10 +1,62 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------
+# Name:        wx.lib.checkbox
+# Purpose:     Various kinds of generic checkbox stuff, (not native controls
+#              but self-drawn.)
+#
+# Author:      wxPython Team and wxPyWiki Contributers
+#
+# Created:     22-June-2020
+# Copyright:   (c) 2020 by Total Control Software
+# Licence:     wxWindows license
+# Tags:        phoenix-port, py3-port, documented
+#----------------------------------------------------------------------
+
 
 """
-Pure-Python CheckBox Implementation
+This module implements various forms of generic checkboxes, meaning that
+they are not built on native controls but are self-drawn.
 
-Authors: wxPython Team, wxPyWiki Contributers
+
+Description
+===========
+
+This module implements various forms of generic checkboxes, meaning that
+they are not built on native controls but are self-drawn.
+They should act like normal checkboxes but you are able to better control how they look, etc...
+
+
+Usage
+=====
+
+Sample usage::
+
+    app = wx.App(redirect=False)
+    class MyFrame(wx.Frame, DefineNativeCheckBoxBitmapsMixin):
+        def __init__(self, parent, id=wx.ID_ANY, title=wx.EmptyString,
+                     pos=wx.DefaultPosition, size=wx.DefaultSize,
+                     style=wx.DEFAULT_FRAME_STYLE, name='frame'):
+            wx.Frame.__init__(self, parent, id, title, pos, size, style, name)
+            ## self.DefineNativeCheckBoxBitmaps()
+            ## self.checkbox_bitmaps = self.GetNativeCheckBoxBitmaps()
+            cb1 = GenCheckBox(self, label="PurePython Checkbox1", pos=(10, 10))
+            cb2 = GenCheckBox(self, label="PurePython Checkbox2", pos=(10, 50))
+            cb1.Bind(wx.EVT_CHECKBOX, self.OnCheckBox)
+            cb2.Bind(wx.EVT_CHECKBOX, self.OnCheckBox)
+            cb2.SetForegroundColour(wx.GREEN)
+            cb2.SetBackgroundColour(wx.BLACK)
+            sizer = wx.BoxSizer()
+            sizer.Add(cb1, 0, wx.ALL, 5)
+            sizer.Add(cb2, 0, wx.ALL, 5)
+            self.SetSizer(sizer)
+
+        def OnCheckBox(self, event):
+            evtObj = event.GetEventObject()
+            print(evtObj.GetLabel(), evtObj.IsChecked())
+
+    frame = MyFrame(None, wx.ID_ANY, "Test Pure-Py Checkbox")
+    frame.Show()
+    app.MainLoop()
+
 """
 
 # Imports.---------------------------------------------------------------------
@@ -13,149 +65,42 @@ Authors: wxPython Team, wxPyWiki Contributers
 import wx
 
 
-
-class DefineNativeCheckBoxBitmapsMixin():
+class GenCheckBox(wx.Control):
     """
-    Inherit in your wx.Window based class and call
-    ``self.DefineNativeCheckBoxBitmaps()`` in your __init__ def to define
-    the native CheckBox Bitmaps as attributes.
-    """
-    def DefineNativeCheckBoxBitmaps(self):
-        render = wx.RendererNative.Get()
-        cbX, cbY = render.GetCheckBoxSize(self)
-        bmp = wx.Bitmap(cbX, cbY)
-        dc = wx.MemoryDC(bmp)
-        DrawCheckBox = render.DrawCheckBox
-        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_ISDEFAULT)
-        self.native_checkbox_unchecked_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
-        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_ISDEFAULT | wx.CONTROL_DISABLED)
-        self.native_checkbox_unchecked_disabled_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
-        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKED)
-        self.native_checkbox_checked_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
-        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKED | wx.CONTROL_DISABLED)
-        self.native_checkbox_checked_disabled_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
-        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKABLE)
-        self.native_checkbox_3state_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
-        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKABLE | wx.CONTROL_DISABLED)
-        self.native_checkbox_3state_disabled_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
-        if (self.native_checkbox_unchecked_bmp.IsOk() and
-            self.native_checkbox_unchecked_disabled_bmp.IsOk() and
-            self.native_checkbox_checked_bmp.IsOk() and
-            self.native_checkbox_checked_disabled_bmp.IsOk() and
-            self.native_checkbox_3state_bmp.IsOk() and
-            self.native_checkbox_3state_disabled_bmp.IsOk()
-            ):
-            return True
-        return False
-
-    def GetNativeCheckBoxBitmaps(self):
-        return (self.native_checkbox_unchecked_bmp,
-                self.native_checkbox_unchecked_disabled_bmp,
-                self.native_checkbox_checked_bmp,
-                self.native_checkbox_checked_disabled_bmp,
-                self.native_checkbox_3state_bmp,
-                self.native_checkbox_3state_disabled_bmp,
-                )
-
-
-# -----------------------------------------------------------------------------
-
-
-def GetCheckedBitmap(self):
-    render = wx.RendererNative.Get()
-    cbX, cbY = render.GetCheckBoxSize(self)
-    bmp = wx.Bitmap(cbX, cbY)
-    dc = wx.MemoryDC(bmp)
-    render.DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKED)
-    native_checkbox_checked_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
-    return native_checkbox_checked_bmp
-
-def GetCheckedImage(self):
-    return GetCheckedBitmap(self).ConvertToImage()
-
-def GetNotCheckedBitmap(self):
-    render = wx.RendererNative.Get()
-    cbX, cbY = render.GetCheckBoxSize(self)
-    bmp = wx.Bitmap(cbX, cbY)
-    dc = wx.MemoryDC(bmp)
-    render.DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_ISDEFAULT)
-    native_checkbox_unchecked_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
-    return native_checkbox_unchecked_bmp
-
-def GetNotCheckedImage(self):
-    return GetNotCheckedBitmap(self).ConvertToImage()
-
-
-# -----------------------------------------------------------------------------
-
-
-def GrayOut(anImage):
-    """
-    Convert the given image (in place) to a grayed-out version,
-    appropriate for a 'disabled' appearance.
-    """
-
-    factor = 0.7  # 0 < f < 1.  Higher Is Grayer
-
-    if anImage.HasMask():
-        maskColor = (anImage.GetMaskRed(), anImage.GetMaskGreen(), anImage.GetMaskBlue())
-    else:
-        maskColor = None
-
-    data = map(ord, list(anImage.GetData()))
-
-    for i in range(0, len(data), 3):
-        pixel = (data[i], data[i + 1], data[i + 2])
-        pixel = MakeGray(pixel, factor, maskColor)
-
-        for x in range(3):
-            data[i + x] = pixel[x]
-
-    anImage.SetData(''.join(map(chr, data)))
-
-    return anImage.ConvertToBitmap()
-
-
-def MakeGray(rgbTuple, factor, maskColor):
-    """
-    Make a pixel grayed-out. If the pixel matches the maskcolor, it won't be
-    changed.
-    """
-    r, g, b = rgbTuple
-    if (r, g, b) != maskColor:
-        return map(lambda x: int((230 - x) * factor) + x, (r, g, b))
-    else:
-        return (r, g, b)
-
-
-class CustomCheckBox(wx.Control):
-    """
-    A custom class that replicates some of the functionalities of wx.CheckBox,
+    A generic class that replicates some of the functionalities of :class:`wx.Checkbox`,
     while being completely owner-drawn with a nice check bitmaps.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, label="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.NO_BORDER, validator=wx.DefaultValidator,
-                 name="CustomCheckBox"):
+                 name="GenCheckBox"):
         """
         Default class constructor.
 
-        @param parent: Parent window. Must not be None.
-        @param id: CustomCheckBox identifier. A value of -1 indicates a default value.
-        @param label: Text to be displayed next to the checkbox.
-        @param pos: CustomCheckBox position. If the position (-1, -1) is specified
-                    then a default position is chosen.
-        @param size: CustomCheckBox size. If the default size (-1, -1) is specified
-                     then a default size is chosen.
-        @param style: not used in this demo, CustomCheckBox has only 2 state
-        @param validator: Window validator.
-        @param name: Window name.
+        :param `parent`: Pointer to a parent window. Must not be ``None``.
+        :type `parent`: `wx.Window`
+        :param `id`: Window identifier. ``wx.ID_ANY`` indicates a default value.
+        :type `id`: int
+        :param `label`: Text to be displayed next to the checkbox.
+        :type `label`: str
+        :param `pos`: Window position. The value ``wx.DefaultPosition`` indicates
+         a default position, chosen by either the windowing system or wxWidgets, depending on platform.
+        :type `pos`: `wx.Point`
+        :param `size`: Window size. The value ``wx.DefaultSize`` indicates a default size,
+         chosen by either the windowing system or wxWidgets, depending on platform.
+        :type `size`: `wx.Size`
+        :param `style`: Window style. Not used in this widget, GenCheckBox has only 2 state.
+        :type `style`: long
+        :param `validator`: Window validator.
+        :type `validator`: `wx.Validator`
+        :param `name`: Window name.
+        :type `name`: str
         """
 
         # Ok, let's see why we have used wx.PyControl instead of wx.Control.
         # Basically, wx.PyControl is just like its wxWidgets counterparts
         # except that it allows some of the more common C++ virtual method
-        # to be overridden in Python derived class. For CustomCheckBox, we
+        # to be overridden in Python derived class. For GenCheckBox, we
         # basically need to override DoGetBestSize and AcceptsFocusFromKeyboard.
 
         wx.Control.__init__(self, parent, id, pos, size, style, validator, name)
@@ -210,15 +155,15 @@ class CustomCheckBox(wx.Control):
     def InitializeBitmaps(self):
         """ Initializes the check bitmaps. """
 
-        # We keep 4 bitmaps for CustomCheckBox, depending on the
+        # We keep 4 bitmaps for GenCheckBox, depending on the
         # checking state (Checked/UnChecked) and the control
         # state (Enabled/Disabled).
 
         self._bitmaps = {
-            "CheckedEnable": GetCheckedBitmap(self),
-            "UnCheckedEnable": GetNotCheckedBitmap(self),
-            "CheckedDisable": GetCheckedImage(self).ConvertToDisabled().ConvertToBitmap(),
-            "UnCheckedDisable": GetNotCheckedImage(self).ConvertToDisabled().ConvertToBitmap()}
+            "CheckedEnable": _GetCheckedBitmap(self),
+            "UnCheckedEnable": _GetNotCheckedBitmap(self),
+            "CheckedDisable": _GetCheckedImage(self).ConvertToDisabled().ConvertToBitmap(),
+            "UnCheckedDisable": _GetNotCheckedImage(self).ConvertToDisabled().ConvertToBitmap()}
 
     def InitializeColours(self):
         """ Initializes the focus indicator pen. """
@@ -247,7 +192,7 @@ class CustomCheckBox(wx.Control):
                 # We are UnChecked.
                 return self._bitmaps["UnCheckedEnable"]
         else:
-            # Poor CustomCheckBox, Disabled and ignored!
+            # Poor GenCheckBox, Disabled and ignored!
             if self.IsChecked():
                 return self._bitmaps["CheckedDisable"]
             else:
@@ -255,8 +200,11 @@ class CustomCheckBox(wx.Control):
 
     def SetLabel(self, label):
         """
-        Sets the CustomCheckBox text label and updates the control's size to
-        exactly fit the label plus the bitmap.
+        Sets the :class:`GenCheckBox` text label and updates the control's
+        size to exactly fit the label plus the bitmap.
+
+        :param `label`: Text to be displayed next to the checkbox.
+        :type `label`: str
         """
 
         wx.Control.SetLabel(self, label)
@@ -268,8 +216,11 @@ class CustomCheckBox(wx.Control):
 
     def SetFont(self, font):
         """
-        Sets the CustomCheckBox text font and updates the control's size to
-        exactly fit the label plus the bitmap.
+        Sets the :class:`GenCheckBox` text font and updates the control's
+        size to exactly fit the label plus the bitmap.
+
+        :param `font`: Font to be used to render the checkboxs label.
+        :type `font`: `wx.Font`
         """
 
         wx.Control.SetFont(self, font)
@@ -326,7 +277,7 @@ class CustomCheckBox(wx.Control):
         return best
 
     def AcceptsFocusFromKeyboard(self):
-        """Overridden base class virtual."""
+        """ Overridden base class virtual. """
 
         # We can accept focus from keyboard, obviously.
         return True
@@ -346,7 +297,12 @@ class CustomCheckBox(wx.Control):
         return self._hasFocus
 
     def SetForegroundColour(self, colour):
-        """ Overridden base class virtual. """
+        """
+        Overridden base class virtual.
+
+        :param `colour`: Set the foreground colour of the checkboxs label.
+        :type `colour`: `wx.Colour`
+        """
 
         wx.Control.SetForegroundColour(self, colour)
 
@@ -356,7 +312,12 @@ class CustomCheckBox(wx.Control):
         self.Refresh()
 
     def SetBackgroundColour(self, colour):
-        """ Overridden base class virtual. """
+        """
+        Overridden base class virtual.
+
+        :param `colour`: Set the background colour of the checkbox.
+        :type `colour`: `wx.Colour`
+        """
 
         wx.Control.SetBackgroundColour(self, colour)
 
@@ -364,7 +325,12 @@ class CustomCheckBox(wx.Control):
         self.Refresh()
 
     def Enable(self, enable=True):
-        """ Enables/Disables CustomCheckBox. """
+        """
+        Enables/Disables :class:`GenCheckBox`.
+
+        :param `enable`: Set the enabled state of the checkbox.
+        :type `enable`: bool
+        """
 
         wx.Control.Enable(self, enable)
 
@@ -388,7 +354,12 @@ class CustomCheckBox(wx.Control):
         return True
 
     def SetSpacing(self, spacing):
-        """ Sets a new spacing between the check bitmap and the text. """
+        """
+        Sets a new spacing between the check bitmap and the text.
+
+        :param `spacing`: Set the amount of space between the checkboxs bitmap and text.
+        :type `spacing`: int
+        """
 
         self._spacing = spacing
 
@@ -404,7 +375,7 @@ class CustomCheckBox(wx.Control):
 
     def GetValue(self):
         """
-        Returns the state of CustomCheckBox, True if checked, False
+        Returns the state of :class:`GenCheckBox`, True if checked, False
         otherwise.
         """
 
@@ -413,7 +384,7 @@ class CustomCheckBox(wx.Control):
     def IsChecked(self):
         """
         This is just a maybe more readable synonym for GetValue: just as the
-        latter, it returns True if the CustomCheckBox is checked and False
+        latter, it returns True if the :class:`GenCheckBox` is checked and False
         otherwise.
         """
 
@@ -421,8 +392,11 @@ class CustomCheckBox(wx.Control):
 
     def SetValue(self, state):
         """
-        Sets the CustomCheckBox to the given state. This does not cause a
-        wx.wxEVT_COMMAND_CHECKBOX_CLICKED event to get emitted.
+        Sets the :class:`GenCheckBox` to the given state. This does not cause a
+        ``wx.wxEVT_COMMAND_CHECKBOX_CLICKED`` event to get emitted.
+
+        :param `state`: Set the value of the checkbox. True or False.
+        :type `state`: bool
         """
 
         self._checked = state
@@ -431,7 +405,12 @@ class CustomCheckBox(wx.Control):
         self.Refresh()
 
     def OnKeyUp(self, event):
-        """ Handles the wx.EVT_KEY_UP event for CustomCheckBox. """
+        """
+        Handles the ``wx.EVT_KEY_UP`` event for :class:`GenCheckBox`.
+
+        :param `event`: A `wx.KeyEvent` to be processed.
+        :type `event`: `wx.KeyEvent`
+        """
 
         if event.GetKeyCode() == wx.WXK_SPACE:
             # The spacebar has been pressed: toggle our state.
@@ -442,7 +421,12 @@ class CustomCheckBox(wx.Control):
         event.Skip()
 
     def OnSetFocus(self, event):
-        """ Handles the wx.EVT_SET_FOCUS event for CustomCheckBox. """
+        """
+        Handles the ``wx.EVT_SET_FOCUS`` event for :class:`GenCheckBox`.
+
+        :param `event`: A `wx.FocusEvent` to be processed.
+        :type `event`: `wx.FocusEvent`
+        """
 
         self._hasFocus = True
 
@@ -451,7 +435,12 @@ class CustomCheckBox(wx.Control):
         self.Refresh()
 
     def OnKillFocus(self, event):
-        """ Handles the wx.EVT_KILL_FOCUS event for CustomCheckBox. """
+        """
+        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`GenCheckBox`.
+
+        :param `event`: A `wx.FocusEvent` to be processed.
+        :type `event`: `wx.FocusEvent`
+        """
 
         self._hasFocus = False
 
@@ -460,7 +449,12 @@ class CustomCheckBox(wx.Control):
         self.Refresh()
 
     def OnPaint(self, event):
-        """ Handles the wx.EVT_PAINT event for CustomCheckBox. """
+        """
+        Handles the ``wx.EVT_PAINT`` event for :class:`GenCheckBox`.
+
+        :param `event`: A `wx.PaintEvent` to be processed.
+        :type `event`: `wx.PaintEvent`
+        """
 
         # If you want to reduce flicker, a good starting point is to
         # use wx.BufferedPaintDC .
@@ -476,6 +470,9 @@ class CustomCheckBox(wx.Control):
         """
         Actually performs the drawing operations, for the bitmap and
         for the text, positioning them centered vertically.
+
+        :param `dc`: device context to use.
+        :type `dc`: `wx.DC`
         """
 
         # Get the actual client size of ourselves.
@@ -537,7 +534,12 @@ class CustomCheckBox(wx.Control):
             dc.DrawRectangle(textXpos, textYpos, textWidth, textHeight)
 
     def OnEraseBackground(self, event):
-        """ Handles the wx.EVT_ERASE_BACKGROUND event for CustomCheckBox. """
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`GenCheckBox`.
+
+        :param `event`: A `wx.EraseEvent` to be processed.
+        :type `event`: `wx.EraseEvent`
+        """
 
         # This is intentionally empty, because we are using the combination
         # of wx.BufferedPaintDC + an empty OnEraseBackground event to
@@ -545,7 +547,12 @@ class CustomCheckBox(wx.Control):
         pass
 
     def OnMouseClick(self, event):
-        """ Handles the wx.EVT_LEFT_DOWN event for CustomCheckBox. """
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`GenCheckBox`.
+
+        :param `event`: A `wx.MouseEvent` to be processed.
+        :type `event`: `wx.MouseEvent`
+        """
 
         if not self.IsEnabled():
             # Nothing to do, we are disabled.
@@ -603,18 +610,184 @@ class CustomCheckBox(wx.Control):
         self.Refresh()
 
 
+# -----------------------------------------------------------------------------
+
+
+class DefineNativeCheckBoxBitmapsMixin():
+    """
+    Inherit in your :class:`wx.Window` based subclass and call
+    ``self.DefineNativeCheckBoxBitmaps()`` in your __init__ def or startup routine
+    to define the native CheckBox Bitmaps as attributes the user can customize other
+    widgets appearance with.
+    """
+    def DefineNativeCheckBoxBitmaps(self):
+        """
+        Define native checkbox bitmaps as attributes. Returns True if all bitmaps
+         was defined Ok.
+
+        bitmaps defined::
+
+            self.native_checkbox_unchecked_bmp
+            self.native_checkbox_unchecked_disabled_bmp
+            self.native_checkbox_checked_bmp
+            self.native_checkbox_checked_disabled_bmp
+            self.native_checkbox_3state_bmp
+            self.native_checkbox_3state_disabled_bmp
+
+        :rtype: bool
+        """
+        render = wx.RendererNative.Get()
+        cbX, cbY = render.GetCheckBoxSize(self)
+        bmp = wx.Bitmap(cbX, cbY)
+        dc = wx.MemoryDC(bmp)
+        DrawCheckBox = render.DrawCheckBox
+        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_ISDEFAULT)
+        self.native_checkbox_unchecked_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
+        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_ISDEFAULT | wx.CONTROL_DISABLED)
+        self.native_checkbox_unchecked_disabled_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
+        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKED)
+        self.native_checkbox_checked_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
+        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKED | wx.CONTROL_DISABLED)
+        self.native_checkbox_checked_disabled_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
+        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKABLE)
+        self.native_checkbox_3state_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
+        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKABLE | wx.CONTROL_DISABLED)
+        self.native_checkbox_3state_disabled_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
+        if (self.native_checkbox_unchecked_bmp.IsOk() and
+            self.native_checkbox_unchecked_disabled_bmp.IsOk() and
+            self.native_checkbox_checked_bmp.IsOk() and
+            self.native_checkbox_checked_disabled_bmp.IsOk() and
+            self.native_checkbox_3state_bmp.IsOk() and
+            self.native_checkbox_3state_disabled_bmp.IsOk()
+            ):
+            return True
+        return False
+
+    def GetNativeCheckBoxBitmaps(self):
+        """
+        Get a tuple of the defined checkbox bitmaps.
+
+        :rtype: tuple
+        """
+        return (self.native_checkbox_unchecked_bmp,
+                self.native_checkbox_unchecked_disabled_bmp,
+                self.native_checkbox_checked_bmp,
+                self.native_checkbox_checked_disabled_bmp,
+                self.native_checkbox_3state_bmp,
+                self.native_checkbox_3state_disabled_bmp,
+                )
+
+
+# -----------------------------------------------------------------------------
+
+
+def _GetCheckedBitmap(self):
+    """
+    Get a native checkbox(Checked) bitmap.
+
+    :rtype: `wx.Bitmap`
+    """
+    render = wx.RendererNative.Get()
+    cbX, cbY = render.GetCheckBoxSize(self)
+    bmp = wx.Bitmap(cbX, cbY)
+    dc = wx.MemoryDC(bmp)
+    render.DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKED)
+    native_checkbox_checked_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
+    return native_checkbox_checked_bmp
+
+def _GetCheckedImage(self):
+    """
+    Get a native checkbox(Checked) image.
+
+    :rtype: `wx.Image`
+    """
+    return _GetCheckedBitmap(self).ConvertToImage()
+
+def _GetNotCheckedBitmap(self):
+    """
+    Get a native checkbox(Unchecked) bitmap.
+
+    :rtype: `wx.Bitmap`
+    """
+    render = wx.RendererNative.Get()
+    cbX, cbY = render.GetCheckBoxSize(self)
+    bmp = wx.Bitmap(cbX, cbY)
+    dc = wx.MemoryDC(bmp)
+    render.DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_ISDEFAULT)
+    native_checkbox_unchecked_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
+    return native_checkbox_unchecked_bmp
+
+def _GetNotCheckedImage(self):
+    """
+    Get a native checkbox(Unchecked) image.
+
+    :rtype: `wx.Image`
+    """
+    return _GetNotCheckedBitmap(self).ConvertToImage()
+
+
+# -----------------------------------------------------------------------------
+
+
+def _GrayOut(anImage):
+    """
+    Convert the given image (in place) to a grayed-out version,
+    appropriate for a 'disabled' appearance.
+
+    :param `anImage`: A `wx.Image` to gray out.
+    :type `anImage`: `wx.Image`
+    :rtype: `wx.Bitmap`
+    """
+
+    factor = 0.7  # 0 < f < 1.  Higher Is Grayer
+
+    if anImage.HasMask():
+        maskColor = (anImage.GetMaskRed(), anImage.GetMaskGreen(), anImage.GetMaskBlue())
+    else:
+        maskColor = None
+
+    data = map(ord, list(anImage.GetData()))
+
+    for i in range(0, len(data), 3):
+        pixel = (data[i], data[i + 1], data[i + 2])
+        pixel = _MakeGray(pixel, factor, maskColor)
+
+        for x in range(3):
+            data[i + x] = pixel[x]
+
+    anImage.SetData(''.join(map(chr, data)))
+
+    return anImage.ConvertToBitmap()
+
+
+def _MakeGray(rgbTuple, factor, maskColor):
+    """
+    Make a pixel grayed-out. If the pixel matches the maskcolor, it won't be
+    changed.
+
+    :type `rgbTuple`: red, green, blue 3-tuple
+    :type `factor`: float
+    :type `maskColor`: red, green, blue 3-tuple
+    """
+    r, g, b = rgbTuple
+    if (r, g, b) != maskColor:
+        return map(lambda x: int((230 - x) * factor) + x, (r, g, b))
+    else:
+        return (r, g, b)
+
+
 if __name__ == '__main__':
+    # Small sample program to test.
     app = wx.App(redirect=False)
     class MyFrame(wx.Frame, DefineNativeCheckBoxBitmapsMixin):
         def __init__(self, parent, id=wx.ID_ANY, title=wx.EmptyString,
                      pos=wx.DefaultPosition, size=wx.DefaultSize,
                      style=wx.DEFAULT_FRAME_STYLE, name='frame'):
-            """"""
             wx.Frame.__init__(self, parent, id, title, pos, size, style, name)
             ## self.DefineNativeCheckBoxBitmaps()
             ## self.checkbox_bitmaps = self.GetNativeCheckBoxBitmaps()
-            cb1 = CustomCheckBox(self, label="PurePython Checkbox1", pos=(10, 10))
-            cb2 = CustomCheckBox(self, label="PurePython Checkbox2", pos=(10, 50))
+            cb1 = GenCheckBox(self, label="PurePython Checkbox1", pos=(10, 10))
+            cb2 = GenCheckBox(self, label="PurePython Checkbox2", pos=(10, 50))
             cb1.Bind(wx.EVT_CHECKBOX, self.OnCheckBox)
             cb2.Bind(wx.EVT_CHECKBOX, self.OnCheckBox)
             cb2.SetForegroundColour(wx.GREEN)
