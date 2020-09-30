@@ -98,10 +98,6 @@ class auiframemanager_Tests(wtc.WidgetTestCase):
         obj = wx.aui.AuiDockUIPart()
 
 
-    def test_auiframemanager10(self):
-        obj = wx.aui.AuiPaneButton()
-
-
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
