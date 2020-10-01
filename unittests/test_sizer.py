@@ -56,7 +56,7 @@ class sizer_Tests(wtc.WidgetTestCase):
     def test_sizerFlags(self):
         bs = wx.BoxSizer()
         bs.Add(wx.Panel(self.frame),
-               wx.SizerFlags(2).Border(wx.ALL, 5).Align(wx.ALIGN_RIGHT))
+               wx.SizerFlags(2).Border(wx.ALL, 5).Align(wx.ALIGN_TOP))
 
     def test_sizerAddMany(self):
         bs = wx.BoxSizer()
