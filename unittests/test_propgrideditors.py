@@ -9,12 +9,13 @@ class propgrideditors_Tests(wtc.WidgetTestCase):
 
 
     def test_propgrideditors01(self):
-        wl = pg.PGWindowList()
-        assert wl.m_primary is None
-        assert wl.m_secondary is None
-
         wl = pg.PGWindowList(self.frame)
-        assert wl.m_primary is self.frame
+        assert wl.GetPrimary() is self.frame
+        assert wl.GetSecondary() is None
+
+        wl = pg.PGWindowList(self.frame, None)
+        assert wl.GetPrimary() is self.frame
+        assert wl.GetSecondary() is None
 
 
     def test_propgrideditors02(self):
