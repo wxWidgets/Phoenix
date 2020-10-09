@@ -96,13 +96,6 @@ class GenCheckBox(wx.Control):
         :param `name`: Window name.
         :type `name`: str
         """
-
-        # Ok, let's see why we have used wx.PyControl instead of wx.Control.
-        # Basically, wx.PyControl is just like its wxWidgets counterparts
-        # except that it allows some of the more common C++ virtual method
-        # to be overridden in Python derived class. For GenCheckBox, we
-        # basically need to override DoGetBestSize and AcceptsFocusFromKeyboard.
-
         wx.Control.__init__(self, parent, id, pos, size, style, validator, name)
 
         self.SYS_DEFAULT_GUI_FONT = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -132,7 +125,12 @@ class GenCheckBox(wx.Control):
         # combination of wx.BufferedPaintDC and an empty handler for
         # wx.EVT_ERASE_BACKGROUND (see later) to reduce flicker.
         self.Bind(wx.EVT_PAINT, self.OnPaint)
-        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
+        # Since the paint event draws the whole widget, we will use
+        # SetBackgroundStyle(wx.BG_STYLE_PAINT) and then
+        # implementing an erase-background handler is not neccessary.
+        self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
+        # Add a size handler to refresh so the paint wont smear when resizing.
+        self.Bind(wx.EVT_SIZE, self.OnSize)
 
         # Then we want to monitor user clicks, so that we can switch our
         # state between checked and unchecked.
@@ -169,12 +167,9 @@ class GenCheckBox(wx.Control):
         """ Initializes the focus indicator pen. """
 
         textClr = self.GetForegroundColour()
-        if wx.Platform == "__WXMAC__":
-            self._focusIndPen = wx.Pen(textClr, 1, wx.PENSTYLE_SOLID)
-        else:
-            self._focusIndPen  = wx.Pen(textClr, 1, wx.USER_DASH)
-            self._focusIndPen.SetDashes([1, 1])
-            self._focusIndPen.SetCap(wx.CAP_BUTT)
+        self._focusIndPen = wx.Pen(textClr, 1, wx.USER_DASH)
+        self._focusIndPen.SetDashes([1, 1])
+        self._focusIndPen.SetCap(wx.CAP_BUTT)
         self.SYS_COLOUR_GRAYTEXT = wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
 
     def GetBitmap(self):
@@ -243,7 +238,7 @@ class GenCheckBox(wx.Control):
         bitmap = self.GetBitmap()
 
         if not font:
-            # No font defined? So use the default GUI font provided by the system
+            # No font defined? So use the default GUI font provided by the system.
             font = self.SYS_DEFAULT_GUI_FONT
 
         # Set up a wx.ClientDC. When you don't have a dc available (almost
@@ -285,9 +280,10 @@ class GenCheckBox(wx.Control):
     def AcceptsFocus(self):
         """ Overridden base class virtual. """
 
-        # It seems to me that wx.CheckBox does not accept focus with mouse
-        # but please correct me if I am wrong!
-        return False
+        # If it seems that wx.CheckBox does not accept focus with mouse, It does.
+        # You just can't see the focus rectangle until there's
+        # another keypress or navigation event (at least on some platforms.)
+        return True  # This will draw focus rectangle always on mouse click.
 
     def HasFocus(self):
         """ Returns whether or not we have the focus. """
@@ -448,6 +444,15 @@ class GenCheckBox(wx.Control):
         # around the checkbox label, so we refresh ourselves.
         self.Refresh()
 
+    def OnSize(self, event):
+        """
+        Handles the ``wx.EVT_SIZE`` event for :class:`GenCheckBox`.
+
+        :param `event`: A `wx.SizeEvent` to be processed.
+        :type `event`: `wx.SizeEvent`
+        """
+        self.Refresh()
+
     def OnPaint(self, event):
         """
         Handles the ``wx.EVT_PAINT`` event for :class:`GenCheckBox`.
@@ -458,12 +463,13 @@ class GenCheckBox(wx.Control):
 
         # If you want to reduce flicker, a good starting point is to
         # use wx.BufferedPaintDC .
-        dc = wx.BufferedPaintDC(self)
+        # wx.AutoBufferedPaintDC would be marginally better.
+        dc = wx.AutoBufferedPaintDC(self)
 
         # Is is advisable that you don't overcrowd the OnPaint event
         # (or any other event) with a lot of code, so let's do the
         # actual drawing in the Draw() method, passing the newly
-        # initialized wx.BufferedPaintDC .
+        # initialized wx.AutoBufferedPaintDC .
         self.Draw(dc)
 
     def Draw(self, dc):
@@ -532,19 +538,6 @@ class GenCheckBox(wx.Control):
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.SetPen(self._focusIndPen)
             dc.DrawRectangle(textXpos, textYpos, textWidth, textHeight)
-
-    def OnEraseBackground(self, event):
-        """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`GenCheckBox`.
-
-        :param `event`: A `wx.EraseEvent` to be processed.
-        :type `event`: `wx.EraseEvent`
-        """
-
-        # This is intentionally empty, because we are using the combination
-        # of wx.BufferedPaintDC + an empty OnEraseBackground event to
-        # reduce flicker.
-        pass
 
     def OnMouseClick(self, event):
         """
@@ -615,15 +608,39 @@ class GenCheckBox(wx.Control):
 
 class DefineNativeCheckBoxBitmapsMixin():
     """
-    Inherit in your :class:`wx.Window` based subclass and call
-    ``self.DefineNativeCheckBoxBitmaps()`` in your __init__ def or startup routine
-    to define the native CheckBox Bitmaps as attributes the user can customize other
-    widgets appearance with.
+    Inherit this mixin in your :class:`wx.Window` based subclass to easily
+    define the native CheckBox Bitmaps as attributes which can then be used
+    to customize a widgets appearance/functionality with.
+
+    Sample example usage::
+
+        class MyCheckListBoxSTC(wx.stc.StyledTextCtrl, DefineNativeCheckBoxBitmapsMixin):
+            '''Customized StyledTextCtrl Setup like a CheckListBox.'''
+            def __init__(self, parent, id=wx.ID_ANY,
+                         pos=wx.DefaultPosition, size=wx.DefaultSize,
+                         style=0, name='styledtextctrl'):
+                wx.stc.StyledTextCtrl.__init__(self, parent, id, pos, size, style, name)
+
+                # Define the checkbox bitmaps as attributes.
+                self.DefineNativeCheckBoxBitmaps()
+                # After the bitmaps have become attributes you can easily snag
+                # them all later on from inside a method with this inherited method.
+                ## self.checkbox_bitmaps = self.GetNativeCheckBoxBitmaps()
+
+                # Setup a margin to hold bookmarks.
+                self.SetMarginType(1, stc.STC_MARGIN_SYMBOL)
+                self.SetMarginSensitive(1, True)
+                self.SetMarginWidth(1, 16)
+                # Define the bookmark images.
+                self.MarkerDefineBitmap(0, self.native_checkbox_unchecked_bmp)
+                self.MarkerDefineBitmap(1, self.native_checkbox_checked_bmp)
+
+                # ... do something with the bitmaps when you click the margin event.
+
     """
     def DefineNativeCheckBoxBitmaps(self):
         """
-        Define native checkbox bitmaps as attributes. Returns True if all bitmaps
-         was defined Ok.
+        Define native checkbox bitmaps as attributes. Returns True if all bitmaps was defined Ok.
 
         bitmaps defined::
 
@@ -633,6 +650,8 @@ class DefineNativeCheckBoxBitmapsMixin():
             self.native_checkbox_checked_disabled_bmp
             self.native_checkbox_3state_bmp
             self.native_checkbox_3state_disabled_bmp
+            self.native_checkbox_current_bmp
+            self.native_checkbox_pressed_bmp
 
         :rtype: bool
         """
@@ -653,12 +672,18 @@ class DefineNativeCheckBoxBitmapsMixin():
         self.native_checkbox_3state_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
         DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CHECKABLE | wx.CONTROL_DISABLED)
         self.native_checkbox_3state_disabled_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
+        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_CURRENT)
+        self.native_checkbox_current_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
+        DrawCheckBox(self, dc, (0, 0, cbX, cbY), wx.CONTROL_PRESSED)
+        self.native_checkbox_pressed_bmp = dc.GetAsBitmap((0, 0, cbX, cbY))
         if (self.native_checkbox_unchecked_bmp.IsOk() and
             self.native_checkbox_unchecked_disabled_bmp.IsOk() and
             self.native_checkbox_checked_bmp.IsOk() and
             self.native_checkbox_checked_disabled_bmp.IsOk() and
             self.native_checkbox_3state_bmp.IsOk() and
-            self.native_checkbox_3state_disabled_bmp.IsOk()
+            self.native_checkbox_3state_disabled_bmp.IsOk() and
+            self.native_checkbox_current_bmp.IsOk() and
+            self.native_checkbox_pressed_bmp.IsOk()
             ):
             return True
         return False
@@ -675,6 +700,8 @@ class DefineNativeCheckBoxBitmapsMixin():
                 self.native_checkbox_checked_disabled_bmp,
                 self.native_checkbox_3state_bmp,
                 self.native_checkbox_3state_disabled_bmp,
+                self.native_checkbox_current_bmp,
+                self.native_checkbox_pressed_bmp,
                 )
 
 
