@@ -17,16 +17,11 @@ try:
     # http://PyOpenGL.sourceforge.net/
     from OpenGL.GL import *
     from OpenGL.GLU import *
-    #### OpenGL.GLUT  Very old, DO NOT USE!
     haveOpenGL = True
 except ImportError:
     haveOpenGL = False
 
-## try:
-##     from PIL import Image
-##     havePIL = True
-## except ImportError:
-##     havePIL = False
+
 #----------------------------------------------------------------------
 
 
@@ -70,8 +65,8 @@ class ButtonPanel(wx.Panel):
         elif not haveOpenGL:
             dlg = wx.MessageDialog(self,
                                    'The OpenGL package was not found.  You can get it at\n'
-                                   'http://PyOpenGL.sourceforge.net/',
-                                   '/nor $ pip install PyOpenGL PyOpenGL_accelerate',
+                                   'http://PyOpenGL.sourceforge.net/ \n'
+                                   'or $ pip install PyOpenGL PyOpenGL_accelerate',
                                    'Sorry', wx.OK | wx.ICON_WARNING)
             dlg.ShowModal()
             dlg.Destroy()
