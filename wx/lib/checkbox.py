@@ -628,7 +628,7 @@ class DefineNativeCheckBoxBitmapsMixin():
                 ## self.checkbox_bitmaps = self.GetNativeCheckBoxBitmaps()
 
                 # Setup a margin to hold bookmarks.
-                self.SetMarginType(1, stc.STC_MARGIN_SYMBOL)
+                self.SetMarginType(1, wx.stc.STC_MARGIN_SYMBOL)
                 self.SetMarginSensitive(1, True)
                 self.SetMarginWidth(1, 16)
                 # Define the bookmark images.
