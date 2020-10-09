@@ -219,7 +219,7 @@ class FMCustomizeDlg(wx.Dialog):
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # add a separator between the book & the buttons area
-        hsizer.Add(wx.Button(self, wx.ID_OK, _("&Close")), 0, wx.EXPAND | wx.ALIGN_RIGHT)
+        hsizer.Add(wx.Button(self, wx.ID_OK, _("&Close")), 0, wx.EXPAND)
         sz.Add(wx.StaticLine(self), 0, wx.EXPAND | wx.TOP | wx.BOTTOM, 3)
         sz.Add(hsizer, 0, wx.ALIGN_RIGHT | wx.ALL, 2)
 

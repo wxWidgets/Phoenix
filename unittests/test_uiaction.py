@@ -186,7 +186,7 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
     @unittest.skipIf(sys.platform == 'darwin', 'wx.UIActionSimulator.Text needs work...')
     def test_uiactionKeyboardText(self):
         uia = wx.UIActionSimulator()
-        uia.Text("This is a test")
+        uia.Text(b"This is a test")
         self.waitFor(WAIT*2)
 
         self.assertEqual(self.tc.GetValue(), "This is a test")

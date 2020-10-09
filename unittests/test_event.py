@@ -116,9 +116,6 @@ class Events(wtc.WidgetTestCase):
     def test_NotifyEvent_ctor(self):
         evt = wx.NotifyEvent()
 
-    def test_PaintEvent_ctor(self):
-        evt = wx.PaintEvent()
-
     def test_PaletteChangedEvent_ctor(self):
         evt = wx.PaletteChangedEvent()
 
