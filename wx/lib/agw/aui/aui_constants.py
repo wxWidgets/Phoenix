@@ -345,6 +345,8 @@ AUI_DOCKART_DRAW_SASH_GRIP = 18
 """ Draw a sash grip on the sash. """
 AUI_DOCKART_HINT_WINDOW_COLOUR = 19
 """ Customizes the hint window background colour (currently light blue). """
+AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR = 20
+""" Customizes the hint window border background colour (currently grey). """
 
 # Caption Gradient Type
 AUI_GRADIENT_NONE = 0
@@ -2576,6 +2578,7 @@ colourIconDockingPart2 = wx.Colour(180, 201, 225)
 colourIconShadow = wx.Colour(198, 198, 198)
 colourIconArrow = wx.Colour(77, 79, 170)
 colourHintBackground = wx.Colour(0, 64, 255)
+colourHintBorder = wx.Colour(60, 60, 60)
 guideSizeX, guideSizeY = 29, 32
 aeroguideSizeX, aeroguideSizeY = 31, 32
 whidbeySizeX, whidbeySizeY = 43, 30
