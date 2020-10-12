@@ -48,10 +48,11 @@ RUN \
 
 # Install all available Python packages and their dev packages
 RUN \
-        if [ ${USE_DEADSNAKES} = yes ]; then add-apt-repository ppa:deadsnakes/ppa; apt-get update; fi; \
+        if [ ${USE_DEADSNAKES} = yes ]; then add-apt-repository -y ppa:deadsnakes/ppa; apt-get update; fi; \
         apt-get install -y python3.6 python3.6-dev libpython3.6-dev python3.6-venv; \
         apt-get install -y python3.7 python3.7-dev libpython3.7-dev python3.7-venv; \
         apt-get install -y python3.8 python3.8-dev libpython3.8-dev python3.8-venv; \
+        apt-get install -y python3.9 python3.9-dev libpython3.9-dev python3.9-venv; \
         apt-get clean;
 
 # Add files from host into the container
@@ -70,7 +71,8 @@ RUN \
         mkdir -p ${HOME}/venvs; \
         python3.6 -m venv venvs/Py36; \
         python3.7 -m venv venvs/Py37; \
-        python3.8 -m venv venvs/Py38;
+        python3.8 -m venv venvs/Py38; \
+        python3.9 -m venv venvs/Py39;
 
 # Define default command
 CMD ["/bin/bash", "-l"]
