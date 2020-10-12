@@ -139,9 +139,13 @@ class GenCheckBox(wx.Control):
             # MSW Sometimes does strange things...
             self.Bind(wx.EVT_LEFT_DCLICK,  self.OnMouseClick)
 
-        # We want also to react to keyboard keys, namely the
-        # space bar that can toggle our checked state.
-        self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
+        # We want also to react to keyboard keys, namely the space bar that can
+        # toggle our checked state. Whether key-up or key-down is used is based
+        # on platform.
+        if 'wxMSW' in wx.PlatformInfo:
+            self.Bind(wx.EVT_KEY_UP, self.OnKeyEvent)
+        else:
+            self.Bind(wx.EVT_KEY_DOWN, self.OnKeyEvent)
 
         # Then, we react to focus event, because we want to draw a small
         # dotted rectangle around the text if we have focus.
@@ -400,9 +404,10 @@ class GenCheckBox(wx.Control):
         # Refresh ourselves: the bitmap has changed.
         self.Refresh()
 
-    def OnKeyUp(self, event):
+    def OnKeyEvent(self, event):
         """
-        Handles the ``wx.EVT_KEY_UP`` event for :class:`GenCheckBox`.
+        Handles the ``wx.EVT_KEY_UP`` or ``wx.EVT_KEY_UP`` event (depending on
+        platform) for :class:`GenCheckBox`.
 
         :param `event`: A `wx.KeyEvent` to be processed.
         :type `event`: `wx.KeyEvent`
@@ -411,10 +416,8 @@ class GenCheckBox(wx.Control):
         if event.GetKeyCode() == wx.WXK_SPACE:
             # The spacebar has been pressed: toggle our state.
             self.SendCheckBoxEvent()
+        else:
             event.Skip()
-            return
-
-        event.Skip()
 
     def OnSetFocus(self, event):
         """
