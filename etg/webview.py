@@ -42,12 +42,14 @@ def run():
         #include <wx/webview.h>
         #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
             #include <wx/msw/webview_ie.h>
+            #include <wx/msw/webview_edge.h>
         #endif
         """)
     module.addHeaderCode('#include <wx/filesys.h>')
 
     module.addGlobalStr('wxWebViewBackendDefault', 0)
     module.addGlobalStr('wxWebViewBackendIE', 0)
+    module.addGlobalStr('wxWebViewBackendEdge', 0)
     module.addGlobalStr('wxWebViewBackendWebKit', 0)
     module.addGlobalStr('wxWebViewNameStr', 0)
     module.addGlobalStr('wxWebViewDefaultURLStr', 0)
