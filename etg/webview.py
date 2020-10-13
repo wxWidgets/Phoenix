@@ -72,6 +72,18 @@ def run():
         #endif
         """)
 
+    module.addPyCode(order=15, code="""\
+        # On Windows we need to ensure that the wx pacakge folder is on on the
+        # PATH, so the MS Edge Loader DLLs can be found when they are dynamically
+        # loaded.
+        import os
+        if os.name == 'nt':
+            _path = os.environ.get('PATH')
+            _pkg_path = os.path.abspath(os.path.dirname(wx.__file__))
+            if _pkg_path.lower() not in _path.lower():
+                os.environ['PATH'] = _path + os.pathsep + _pkg_path
+        """)
+
     # Pull out the obj for wxWebViewIE so we can use it later, but not include it in the stubs
     wvie = module.find('wxWebViewIE')
     module.items.remove(wvie)
