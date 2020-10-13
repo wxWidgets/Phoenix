@@ -48,6 +48,7 @@ _treeList = [
         'SVGImage_Render',
         'ActivityIndicator',
         'GenericCheckBox',
+        'CheckListCtrl',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -171,7 +172,7 @@ _treeList = [
         'BitmapComboBox',
         'Calendar',
         'CalendarCtrl',
-        'CheckListCtrlMixin',
+        'CheckListCtrl',
         'CollapsiblePane',
         'ComboCtrl',
         'ContextHelp',

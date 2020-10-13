@@ -2,32 +2,33 @@
 
 import sys
 import wx
-from wx.lib.mixins.listctrl import CheckListCtrlMixin
 
 from ListCtrl import musicdata
 
 #----------------------------------------------------------------------
 
-class CheckListCtrl(wx.ListCtrl, CheckListCtrlMixin):
+class CheckListCtrl(wx.ListCtrl):
     def __init__(self, parent, log):
         wx.ListCtrl.__init__(self, parent, -1, style=wx.LC_REPORT)
-        CheckListCtrlMixin.__init__(self)
         self.log = log
-        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated)
 
+        self.EnableCheckBoxes()
+        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated)
+        self.Bind(wx.EVT_LIST_ITEM_CHECKED, self.OnItemCheckChanged)
+        self.Bind(wx.EVT_LIST_ITEM_UNCHECKED, self.OnItemCheckChanged)
+
+    def ToggleItem(self, index):
+        toggle = not self.IsItemChecked(index)
+        self.CheckItem(index, toggle)
 
     def OnItemActivated(self, evt):
         self.ToggleItem(evt.Index)
 
-
-    # this is called by the base class when an item is checked/unchecked
-    def OnCheckItem(self, index, flag):
+    def OnItemCheckChanged(self, evt):
+        index = evt.Index
         data = self.GetItemData(index)
         title = musicdata[data][1]
-        if flag:
-            what = "checked"
-        else:
-            what = "unchecked"
+        what = "checked" if self.IsItemChecked(index) else "unchecked"
         self.log.write('item "%s", at index %d was %s\n' % (title, index, what))
 
 
@@ -56,8 +57,8 @@ class TestPanel(wx.Panel):
         self.list.SetColumnWidth(1, wx.LIST_AUTOSIZE)
         self.list.SetColumnWidth(2, 100)
 
-        self.list.CheckItem(4)
-        self.list.CheckItem(7)
+        self.list.CheckItem(4, True)
+        self.list.CheckItem(7, True)
 
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected, self.list)
         self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnItemDeselected, self.list)
@@ -81,10 +82,10 @@ def runTest(frame, nb, log):
 
 
 overview = """<html><body>
-<h2><centerCheckListCtrlMixin></center></h2>
+<h2><center>CheckListCtrl</center></h2>
 
-CheckListCtrlMixin is a simple mixin class that can add a checkbox to
-the first column of a wx.ListCtrl.
+Starting with the wxPython 4.1 series the wx.ListCtrl is able to support checkboxes on the
+items, and adds events to notify when the items are checked or unchecked.
 
 </body></html>
 """
