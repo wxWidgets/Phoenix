@@ -197,6 +197,7 @@ def run():
             return rv;
             """)
 
+    c.find('CheckItem.check').default = 'true'
 
 
     # Some deprecated aliases for Classic renames
