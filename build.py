@@ -109,6 +109,10 @@ doxygenMD5 = {
 toolsURL = 'https://wxpython.org/Phoenix/tools'
 
 
+# MS Edge code and DLLs needed for the wxWEBVIEW_BACKEND_EDGE backend
+MS_edge_version = '0.9.622.11'
+MS_edge_url = 'https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/{}'.format(MS_edge_version)
+
 #---------------------------------------------------------------------------
 
 def usage():
@@ -450,6 +454,7 @@ def makeOptionParser():
         ("dump_waf_log",   (False, "If the waf build tool fails then using this option will cause waf's configure log to be printed")),
         ("regenerate_sysconfig", (False, "Waf uses Python's sysconfig and related tools to configure the build. In some cases that info can be incorrect, so this option regenerates it. Must have write access to Python's lib folder.")),
         ("no_allmo",       (False, "Skip regenerating the wxWidgets message catalogs")),
+        ("no_msedge",      (False, "Do not include the MS Edge backend for wx.html2.WebView. (Windows only)")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -658,6 +663,35 @@ def getDoxCmd():
     return _doxCmd
 
 
+def getMSWebView2():
+    fname = '{}.zip'.format(MS_edge_version)
+    dest = opj(wxDir(), '3rdparty', 'webview2')
+    if not os.path.exists(dest) or not os.path.exists(opj(dest, fname)):
+        if os.path.exists(dest):
+            shutil.rmtree(dest)
+        os.makedirs(dest)
+
+        msg('Downloading microsoft.web.webview2 {}...'.format(MS_edge_version))
+        try:
+            import requests
+            resp = requests.get(MS_edge_url)
+            resp.raise_for_status()
+            msg('Connection successful...')
+            data = resp.content
+            msg('Data downloaded...')
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
+
+        # Write the downloaded data to a local file
+        with open(opj(dest, fname), 'wb') as f:
+            f.write(data)
+
+        # Unzip it
+        from zipfile import ZipFile
+        with ZipFile(opj(dest, fname)) as zip:
+            zip.extractall(dest)
 
 
 class CommandTimer(object):
@@ -1384,6 +1418,11 @@ def cmd_build_wx(options, args):
 
     if isWindows:
         # Windows-specific pre build stuff
+        if not options.no_msedge:
+            getMSWebView2()
+        else:
+            build_options.append('--no_msedge')
+
         if options.cairo:
             build_options.append('--cairo')
             cairo_root = os.path.join(phoenixDir(), 'packaging', 'msw-cairo')

@@ -227,6 +227,7 @@ def main(wxDir, args):
         "verbose"       : (False, "Print commands as they are run, (to aid with debugging this script)"),
         "jom"           : (False, "Use jom.exe instead of nmake for MSW builds."),
         "no_dpi_aware"  : (False, "Don't use the DPI_AWARE_MANIFEST."),
+        "no_msedge"     : (False, "Do not include the MS Edge backend for wx.html2.WebView. (Windows only)"),
     }
 
     parser = optparse.OptionParser(usage="usage: %prog [options]", version="%prog 1.0")
@@ -404,16 +405,9 @@ def main(wxDir, args):
             flags["wxUSE_IFF"] = "1"
             flags["wxUSE_ACCESSIBILITY"] = "1"
             flags["wxUSE_WINRT"] = "0"
-
-            # Remove this when Windows XP finally dies, or when there is a
-            # solution for ticket #13116...
-            flags["wxUSE_COMPILER_TLS"] = "0"
-
-            if VERSION < (2,9):
-                flags["wxUSE_DIB_FOR_BITMAP"] = "1"
-
-            if VERSION >= (2,9):
-                flags["wxUSE_UIACTIONSIMULATOR"] = "1"
+            flags["wxUSE_UIACTIONSIMULATOR"] = "1"
+            if not options.no_msedge:
+                flags["wxUSE_WEBVIEW_EDGE"] = "1"
 
 
         mswIncludeDir = os.path.join(wxRootDir, "include", "wx", "msw")
