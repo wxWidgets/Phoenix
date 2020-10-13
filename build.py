@@ -1521,6 +1521,10 @@ def copyWxDlls(options):
             cairo_root = os.path.join(phoenixDir(), 'packaging', 'msw-cairo')
             dlls += glob.glob(os.path.join(cairo_root, arch, 'bin', '*.dll'))
 
+        # And the webview2 (MS EDGE) DLL
+        wv2_root = os.path.join(phoenixDir(), 'packaging', 'msw-webview2')
+        dlls += glob.glob(os.path.join(wv2_root, arch, '*.dll'))
+
         # For Python 3.5 and 3.6 builds we also need to copy some VC14 redist DLLs.
         # NOTE: Do it for 3.7+ too for now. But when we fully switch over to VS 2017
         # this may need to change. See notes in wscript about it.
