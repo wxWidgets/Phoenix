@@ -61,6 +61,13 @@ New and improved in this release:
 * Added wx.lib.agw.aui.AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR constant
   so the hint window border color can be themed as well.
 
+* The wx.lib.mixins.listCtrl.CheckListCtrlMixin is now obsolete because
+  wx.ListCtrl has new functionality which does pretty much the same thing. In
+  fact there is some overlap in method names which may trip up some use cases.
+  It is advised to drop the use of CheckListCtrlMixin and just use the
+  wx.ListBox functionality. You will need to call EnableCheckBoxes to turn it on,
+  and you may need to change some event handlers or overloaded methods.
+
 
 
 
