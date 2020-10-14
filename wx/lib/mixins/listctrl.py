@@ -692,6 +692,11 @@ HISTORY:
 1.1     - Initial version
 """
 
+_warning = (
+"The CheckListCtrlMixin class has been made redundant by new checkbox features in the "
+"wx.ListCtrl class. It is advised to switch your code to use that instead of this mixin.")
+
+
 class CheckListCtrlMixin(object):
     """
     This is a mixin for ListCtrl which add a checkbox in the first
@@ -709,8 +714,14 @@ class CheckListCtrlMixin(object):
           CheckItem().
 
     You should not set a imagelist for the ListCtrl once this mixin is used.
+
+    WARNING: This class is obsolete as wx.ListCtrl now includes nearly the same
+    functionality.
     """
     def __init__(self, check_image=None, uncheck_image=None, imgsz=(16,16)):
+        import warnings
+        warnings.warn(_warning)
+
         if check_image is not None:
             imgsz = check_image.GetSize()
         elif uncheck_image is not None:
