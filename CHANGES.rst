@@ -68,6 +68,12 @@ New and improved in this release:
   wx.ListBox functionality. You will need to call EnableCheckBoxes to turn it on,
   and you may need to change some event handlers or overloaded methods.
 
+* wx.html2.WebView is now able to use Microsoft's Edge browser component as its
+  backend renderer. This should improve the capabilities of the WebView widget
+  on Windows, and be more consistent with the WebViews on the other platforms,
+  compared to the original IE 11 backend. Using this backed requires that a
+  new-ish version of the Edge browser is installed on the end user's computer.
+
 
 
 
