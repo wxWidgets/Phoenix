@@ -722,6 +722,18 @@ error is raised.
 
 
 
+CheckListCtrlMixin Redundancy
+-----------------------------
+
+The wx.lib.mixins.listCtrl.CheckListCtrlMixin is now obsolete because
+wx.ListCtrl has new functionality which does pretty much the same thing. In
+fact there is some overlap in method names which may trip up some use cases.
+It is advised to drop the use of CheckListCtrlMixin and just use the
+wx.ListBox functionality. You will need to call EnableCheckBoxes to turn it on,
+and you may need to change some event handlers or overloaded methods.
+
+
+
 .. toctree::
    :maxdepth: 2
    :hidden:
