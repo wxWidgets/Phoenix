@@ -74,6 +74,11 @@ New and improved in this release:
   compared to the original IE 11 backend. Using this backed requires that a
   new-ish version of the Edge browser is installed on the end user's computer.
 
+* Added the wx.Image.ConvertToRegion method. This lets you create a wx.Image
+  from an image and a specified color or the mask if the image has one. This
+  was done to workaround a bug in wxMac, but it seems worthwhile enough to keep
+  it around.
+
 
 
 
