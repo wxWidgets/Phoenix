@@ -29,7 +29,7 @@ if os.name == 'nt':
     _cairo_path = os.environ.get('CAIRO')
     if not _cairo_path:
         _cairo_path = op.abspath(op.dirname(wx.__file__))
-        os.environ['PATH'] = _cairo_path + os.pathsep + _save_path
+    os.environ['PATH'] = _cairo_path + os.pathsep + _save_path
 
 import cairocffi
 from cairocffi import cairo as cairo_c

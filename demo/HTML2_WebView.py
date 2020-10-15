@@ -1,7 +1,16 @@
 #!/usr/bin/env python
+import os
 
 import wx
 import wx.html2 as webview
+
+# WebView Backends
+backends = [
+    (webview.WebViewBackendEdge, 'WebViewBackendEdge'),
+    (webview.WebViewBackendIE, 'WebViewBackendIE'),
+    (webview.WebViewBackendWebKit, 'WebViewBackendWebKit'),
+    (webview.WebViewBackendDefault, 'WebViewBackendDefault'),
+]
 
 #----------------------------------------------------------------------
 
@@ -18,17 +27,28 @@ class TestPanel(wx.Panel):
         sizer = wx.BoxSizer(wx.VERTICAL)
         btnSizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        # The emulation level is a persistent per-user per-application value.
+        # The Internet Explorer emulation level is a persistent per-user and
+        # per-application value.
         webview.WebView.MSWSetEmulationLevel(webview.WEBVIEWIE_EMU_IE11)
-        self.wv = webview.WebView.New(self)
 
         # If you would like to reset it back to the default (no-emulation) then
         # it can be done by calling this:
         # webview.WebView.MSWSetEmulationLevel(webview.WEBVIEWIE_EMU_DEFAULT)
 
+        # Find an available backend
+        backend = None
+        for id, name in backends:
+            available = webview.WebView.IsBackendAvailable(id)
+            log.write("Backend 'wx.html2.{}' availability: {}\n".format(name, available))
+            if available and backend is None:
+                backend = id
+        log.write("Using backend: '{}'\n".format(str(backend, 'ascii')))
+
+        # Create the WebView
+        self.wv = webview.WebView.New(self, backend=backend)
+
         self.Bind(webview.EVT_WEBVIEW_NAVIGATING, self.OnWebViewNavigating, self.wv)
         self.Bind(webview.EVT_WEBVIEW_LOADED, self.OnWebViewLoaded, self.wv)
-
 
         btn = wx.Button(self, -1, "Open", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnOpenButton, btn)

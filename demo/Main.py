@@ -384,7 +384,7 @@ def GetCaretPeriod(win = None):
 
         # attempt to average.
         # (wx systemsettings allows on and off time, but scintilla just takes a single period.)
-        return (onmsec + offmsec) / 2.0
+        return int((onmsec + offmsec) / 2.0)
 
     except AttributeError:
         # Issue where wx.SYS_CARET_ON/OFF_MSEC is unavailable.
@@ -1726,7 +1726,7 @@ class wxPythonDemo(wx.Frame):
             perspectivesMenu.Append(item)
             self.Bind(wx.EVT_MENU, self.OnAUIPerspectives, item)
 
-        menu.Append(wx.ID_ANY, "&AUI Perspectives", perspectivesMenu)
+        menu.AppendSubMenu(perspectivesMenu, "&AUI Perspectives")
         self.perspectives_menu = perspectivesMenu
 
         item = wx.MenuItem(menu, -1, 'Save Perspective', 'Save AUI perspective')

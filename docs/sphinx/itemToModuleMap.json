@@ -6928,6 +6928,7 @@
 "WebView":"wx.html2.",
 "WebViewArchiveHandler":"wx.html2.",
 "WebViewBackendDefault":"wx.html2.",
+"WebViewBackendEdge":"wx.html2.",
 "WebViewBackendIE":"wx.html2.",
 "WebViewBackendWebKit":"wx.html2.",
 "WebViewDefaultURLStr":"wx.html2.",

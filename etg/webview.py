@@ -42,12 +42,14 @@ def run():
         #include <wx/webview.h>
         #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
             #include <wx/msw/webview_ie.h>
+            #include <wx/msw/webview_edge.h>
         #endif
         """)
     module.addHeaderCode('#include <wx/filesys.h>')
 
     module.addGlobalStr('wxWebViewBackendDefault', 0)
     module.addGlobalStr('wxWebViewBackendIE', 0)
+    module.addGlobalStr('wxWebViewBackendEdge', 0)
     module.addGlobalStr('wxWebViewBackendWebKit', 0)
     module.addGlobalStr('wxWebViewNameStr', 0)
     module.addGlobalStr('wxWebViewDefaultURLStr', 0)
@@ -68,6 +70,18 @@ def run():
             wxWEBVIEWIE_EMU_IE11_FORCE = 11001
         };
         #endif
+        """)
+
+    module.addPyCode(order=15, code="""\
+        # On Windows we need to ensure that the wx pacakge folder is on on the
+        # PATH, so the MS Edge Loader DLLs can be found when they are dynamically
+        # loaded.
+        import os
+        if os.name == 'nt':
+            _path = os.environ.get('PATH')
+            _pkg_path = os.path.abspath(os.path.dirname(wx.__file__))
+            if _pkg_path.lower() not in _path.lower():
+                os.environ['PATH'] = _path + os.pathsep + _pkg_path
         """)
 
     # Pull out the obj for wxWebViewIE so we can use it later, but not include it in the stubs
