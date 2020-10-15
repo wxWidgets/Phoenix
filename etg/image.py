@@ -11,6 +11,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from buildtools.backports.textwrap3 import dedent
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -498,17 +499,15 @@ def run():
 
     c.addCppMethod('wxRegion*', 'ConvertToRegion',
         '(int R=-1, int G=-1, int B=-1, int tolerance=0)',
-        doc="""\
-            Create a :class:`wx.Region` where the transparent areas match the given RGB values.
+        briefDoc="Create a :class:`wx.Region` where the transparent areas match the given RGB values.",
+        detailedDoc=[dedent("""\
+            If the RGB values are not given, then the image's mask colour components will
+            be used instead. If a non-zero tolerance is given then the pixels that fall
+            into the range of (R,G,B) to (R+tolerance, G+tolerance, B+tolerance) will be
+            considered to be transparent.
 
-            If the RGB values are not given, then the image's mask colour
-            components will be used instead. If a non-zero tolerance is given
-            then the pixels that fall into the range of (R,G,B) to
-            (R+tolerance, G+tolerance, B+tolerance) will be considered to be
-            transparent.
-
-            If there are no pixels matching the transparent colours then the
-            region returned will match the image's full dimensions.
+            If there are no pixels matching the transparent colours then the region
+            returned will match the image's full dimensions.
 
             :param int `R`: The red component of the transparent colour.
             :param int `G`: The red component of the transparent colour.
@@ -516,7 +515,7 @@ def run():
             :param int `tolerance`: Broadens the range of colours that will
                 be considered transparent.
             :returns: a :class:`wx.Region` object.
-            """,
+            """)],
         body="""\
             wxRegion* region = new wxRegion();
             unsigned char hiR, hiG, hiB;
