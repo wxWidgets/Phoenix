@@ -26,14 +26,17 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_RIGHT_UP,    self.OnExit)
         self.Bind(wx.EVT_PAINT,       self.OnPaint)
 
-        self.bmp = images.Vippi.GetBitmap()
+        img = images.Vippi.GetImage()
+        if img.HasAlpha():
+            img.ConvertAlphaToMask()
+        self.img = img
+        self.bmp = wx.Bitmap(img)
+
         w, h = self.bmp.GetWidth(), self.bmp.GetHeight()
         self.SetClientSize( (w, h) )
 
-        if wx.Platform != "__WXMAC__":
-            # wxMac clips the tooltip to the window shape, YUCK!!!
-            self.SetToolTip("Right-click to close the window\n"
-                            "Double-click the image to set/unset the window shape")
+        self.SetToolTip("Right-click to close the window\n"
+                        "Double-click the image to set/unset the window shape")
 
         if wx.Platform == "__WXGTK__":
             # wxGTK requires that the window be created before you can
@@ -50,8 +53,10 @@ class TestFrame(wx.Frame):
 
     def SetWindowShape(self, *evt):
         # Use the bitmap's mask to determine the region
-        r = wx.Region(self.bmp)
+        #r = wx.Region(self.bmp)
+        r = self.img.ConvertToRegion()
         self.hasShape = self.SetShape(r)
+
 
     def OnDoubleClick(self, evt):
         if self.hasShape:
