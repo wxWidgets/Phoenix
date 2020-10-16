@@ -12,12 +12,12 @@ except:
 
 sys.path.append(os.path.split(dirName)[0])
 
-try:
-    from agw import thumbnailctrl as TC
-except ImportError: # if it's not there locally, try the wxPython lib.
-    import wx.lib.agw.thumbnailctrl as TC
+import wx.lib.agw.thumbnailctrl as TC
 
 import images
+
+from wx.lib.agw.scrolledthumbnail import EVT_THUMBNAILS_SEL_CHANGED, EVT_THUMBNAILS_POINTED, \
+EVT_THUMBNAILS_DCLICK
 
 
 class ThumbnailCtrlDemo(wx.Frame):
@@ -32,7 +32,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.statusbar = self.CreateStatusBar(2)
         self.statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
-        statusbar_fields = [("ThumbnailCtrl Demo, Andrea Gavana @ 10 Dec 2005"),
+        statusbar_fields = [("ThumbnailCtrl Demo, Michael Eager @ 15 Oct 2020"),
                             ("Welcome To wxPython!")]
 
         for i in range(len(statusbar_fields)):
@@ -46,6 +46,7 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         scroll = TC.ThumbnailCtrl(splitter, -1, imagehandler=TC.NativeImageHandler)
+        #scroll = TC.ThumbnailCtrl(splitter, -1, imagehandler=TC.PILImageHandler)
 
         scroll.ShowFileNames()
         if os.path.isdir("../bitmaps"):
@@ -74,6 +75,9 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.enabletooltip = wx.CheckBox(self.panel, -1, "Enable thumb tooltips")
         self.textzoom = wx.TextCtrl(self.panel, -1, "1.4")
         self.zoombutton = wx.Button(self.panel, -1, "Set zoom factor")
+        self.textthumbwidth = wx.TextCtrl(self.panel, -1, "96")
+        self.textthumbheight = wx.TextCtrl(self.panel, -1, "80")
+        self.thumbsizebutton = wx.Button(self.panel, -1, "Set thumbnail size (WxH)")
         self.fontbutton = wx.Button(self.panel, -1, "Set caption font")
         self.colourbutton = wx.Button(self.panel, -1, "Set selection colour")
 
@@ -100,18 +104,19 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.Bind(wx.EVT_CHECKBOX, self.OnShowComboBox, self.showcombo)
         self.Bind(wx.EVT_CHECKBOX, self.OnEnableToolTips, self.enabletooltip)
         self.Bind(wx.EVT_BUTTON, self.OnSetZoom, self.zoombutton)
+        self.Bind(wx.EVT_BUTTON, self.OnSetThumbSize, self.thumbsizebutton)
         self.Bind(wx.EVT_BUTTON, self.OnSetFont, self.fontbutton)
         self.Bind(wx.EVT_BUTTON, self.OnSetColour, self.colourbutton)
         self.Bind(wx.EVT_BUTTON, self.OnSetDirectory, self.dirbutton)
 
-        self.TC.Bind(TC.EVT_THUMBNAILS_SEL_CHANGED, self.OnSelChanged)
-        self.TC.Bind(TC.EVT_THUMBNAILS_POINTED, self.OnPointed)
-        self.TC.Bind(TC.EVT_THUMBNAILS_DCLICK, self.OnDClick)
+        self.TC.Bind(EVT_THUMBNAILS_SEL_CHANGED, self.OnSelChanged)
+        self.TC.Bind(EVT_THUMBNAILS_POINTED, self.OnPointed)
+        self.TC.Bind(EVT_THUMBNAILS_DCLICK, self.OnDClick)
 
-        splitter.SplitVertically(scroll, self.panel, 180)
+        splitter.SplitVertically(scroll, self.panel, 400)
 
         splitter.SetMinimumPaneSize(140)
-        self.SetMinSize((700, 590))
+        self.SetMinSize((1000, 1000))
         self.CenterOnScreen()
 
 
@@ -131,6 +136,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         splitsizer = wx.BoxSizer(wx.VERTICAL)
         optionsizer = wx.StaticBoxSizer(self.optionsizer_staticbox, wx.VERTICAL)
         zoomsizer = wx.BoxSizer(wx.HORIZONTAL)
+        thumbsizesizer = wx.BoxSizer(wx.HORIZONTAL)
         customsizer = wx.StaticBoxSizer(self.customsizer_staticbox, wx.VERTICAL)
         thumbsizer = wx.StaticBoxSizer(self.thumbsizer_staticbox, wx.VERTICAL)
         radiosizer = wx.BoxSizer(wx.VERTICAL)
@@ -153,7 +159,11 @@ class ThumbnailCtrlDemo(wx.Frame):
         splitsizer.Add(customsizer, 0, wx.TOP|wx.EXPAND|wx.LEFT, 5)
         zoomsizer.Add(self.textzoom, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
         zoomsizer.Add(self.zoombutton, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
+        thumbsizesizer.Add(self.textthumbwidth, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
+        thumbsizesizer.Add(self.textthumbheight, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
+        thumbsizesizer.Add(self.thumbsizebutton, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
         optionsizer.Add(zoomsizer, 1, wx.EXPAND, 0)
+        optionsizer.Add(thumbsizesizer, 1, wx.EXPAND, 0)
         optionsizer.Add(self.fontbutton, 0, wx.ALL|wx.ADJUST_MINSIZE, 3)
         optionsizer.Add(self.colourbutton, 0, wx.TOP|wx.LEFT|wx.ADJUST_MINSIZE, 3)
         splitsizer.Add(optionsizer, 0, wx.EXPAND | wx.TOP|wx.LEFT, 5)
@@ -193,9 +203,10 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         msg = "This Is The About Dialog Of The ThumbnailCtrl Demo.\n\n" + \
               "Author: Andrea Gavana @ 10 Dec 2005\n\n" + \
+              "Modified: Michael Eager @ 15 Oct 2020\n\n" + \
               "Please Report Any Bug/Requests Of Improvements\n" + \
               "To Me At The Following Addresses:\n\n" + \
-              "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
+              "eager@eagercon.com\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 
         dlg = wx.MessageDialog(self, msg, "ThumbnailCtrl Demo",
@@ -362,6 +373,24 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         event.Skip()
 
+    def OnSetThumbSize(self, event):
+        try:
+            width = int(self.textthumbwidth.GetValue().strip())
+            height = int(self.textthumbheight.GetValue().strip())
+        except:
+            errstr = "Error: thumb size must be integers (min 50x50)."
+            dlg = wx.MessageDialog(self, errstr, "ThumbnailCtrlDemo Error",
+                                   wx.OK | wx.ICON_ERROR)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
+
+        width = max(width, 50)
+        height = max(height, 50)
+        self.log.write("OnSetThumbSize: (%s, %s)\n" % (width, height))
+        self.TC.SetThumbSize (width, height)
+
+        event.Skip()
 
     def OnSelChanged(self, event):
 
