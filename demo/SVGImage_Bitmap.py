@@ -21,6 +21,8 @@ class SVGBitmapDisplay(wx.Panel):
         sbox = wx.StaticBoxSizer(wx.VERTICAL, self, label)
         sbox.Add(self.statbmp)
         self.SetSizer(sbox)
+        if not self.IsDoubleBuffered():
+            self.SetDoubleBuffered(True)  # Reduce flicker on size event.
 
 
     def UpdateSVG(self, svg_filename):
