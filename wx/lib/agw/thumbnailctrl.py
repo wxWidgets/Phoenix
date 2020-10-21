@@ -153,8 +153,8 @@ import wx
 import os
 import time
 
-from wx.lib.agw.scrolledthumbnail import ScrolledThumbnail, EVT_THUMBNAILS_CHAR, \
-PILImageHandler, NativeImageHandler, Thumb
+from wx.lib.agw.scrolledthumbnail import (ScrolledThumbnail, EVT_THUMBNAILS_CHAR,
+PILImageHandler, NativeImageHandler, Thumb)
 
 # Image File Name Extensions: Am I Missing Some Extensions Here?
 extensions = [".jpeg", ".jpg", ".bmp", ".png", ".ico", ".tiff", ".ani", ".cur", ".gif",

@@ -1984,9 +1984,9 @@ class ScrolledThumbnail(wx.ScrolledWindow):
          (1) ``d`` key rotates 90 degrees clockwise the selected thumbnails;
          (2) ``s`` key rotates 90 degrees counter-clockwise the selected thumbnails;
          (3) ``a`` key rotates 180 degrees the selected thumbnails;
-         (4) ``Del`` key deletes the selected thumbnails;
-         (5) ``+`` key zooms in;
-         (6) ``-`` key zooms out.
+         (4) ``+`` key zooms in;
+         (5) ``-`` key zooms out.
+         All other keys cause an EVT_THUMBNAILS_CHAR event to be thrown.
         """
 
         if event.KeyCode == ord("s"):
