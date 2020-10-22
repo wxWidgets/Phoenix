@@ -26,10 +26,12 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_RIGHT_UP,    self.OnExit)
         self.Bind(wx.EVT_PAINT,       self.OnPaint)
 
+        # Load the image and ensure it has a Mask, (rather than an alpha channel)
         img = images.Vippi.GetImage()
         if img.HasAlpha():
             img.ConvertAlphaToMask()
-        self.img = img
+        # Convert it to a wx.Bitmap, which will be used in SetWindowShape, and
+        # in OnPaint below.
         self.bmp = wx.Bitmap(img)
 
         w, h = self.bmp.GetWidth(), self.bmp.GetHeight()
@@ -52,9 +54,15 @@ class TestFrame(wx.Frame):
 
 
     def SetWindowShape(self, *evt):
-        # Use the bitmap's mask to determine the region
-        #r = wx.Region(self.bmp)
-        r = self.img.ConvertToRegion()
+        # Use the bitmap's mask to create a wx.Region
+        r = wx.Region(self.bmp)
+
+        # NOTE: Starting in 4.1 you can also get a wx.Region directly from
+        # a wx.Image, so you can save a step if you don't need it as a wx.Bitmap
+        # for anything else.
+        #r = self.img.ConvertToRegion()
+
+        # Use the region to set the frame's shape
         self.hasShape = self.SetShape(r)
 
 
