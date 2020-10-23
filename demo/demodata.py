@@ -44,6 +44,7 @@ _treeList = [
         'TreeListCtrl',
         'NotificationMessage',
         'AddPrivateFont',
+        'ScrolledThumbnail',
         'SVGImage_Bitmap',
         'SVGImage_Render',
         'ActivityIndicator',

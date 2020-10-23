@@ -1,10 +1,19 @@
 #!/usr/bin/env python
 
+# ScrolledThumbnail Demo  Michael Eager @ 2020 Oct 23
+# Adapted from ThumbnailCtrl Demo Andrea Gavana @ 10 Dec 2005
+
 import wx
 import os
-
 import sys
-
+import time
+import images
+from wx.lib.agw.scrolledthumbnail import (ScrolledThumbnail,
+                                          Thumb,
+                                          NativeImageHandler,
+                                          EVT_THUMBNAILS_SEL_CHANGED,
+                                          EVT_THUMBNAILS_POINTED,
+                                          EVT_THUMBNAILS_DCLICK)
 try:
     dirName = os.path.dirname(os.path.abspath(__file__))
 except:
@@ -12,27 +21,19 @@ except:
 
 sys.path.append(os.path.split(dirName)[0])
 
-import wx.lib.agw.thumbnailctrl as TC
-
-import images
-
-from wx.lib.agw.scrolledthumbnail import (EVT_THUMBNAILS_SEL_CHANGED, EVT_THUMBNAILS_POINTED,
-                                          EVT_THUMBNAILS_DCLICK)
-
-
-class ThumbnailCtrlDemo(wx.Frame):
+class ScrolledThumbnailDemo(wx.Frame):
 
     def __init__(self, parent, log):
 
         wx.Frame.__init__(self, parent)
 
         self.SetIcon(images.Mondrian.GetIcon())
-        self.SetTitle("ThumbnailCtrl wxPython Demo ;-)")
+        self.SetTitle("ScrolledThumbnail wxPython Demo ;-)")
 
         self.statusbar = self.CreateStatusBar(2)
         self.statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
-        statusbar_fields = [("ThumbnailCtrl Demo, Michael Eager @ 15 Oct 2020"),
+        statusbar_fields = [("ScrolledThumbnail Demo, Michael Eager @ 23 Oct 2020"),
                             ("Welcome To wxPython!")]
 
         for i in range(len(statusbar_fields)):
@@ -45,16 +46,9 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.panel = wx.Panel(splitter, -1)
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
-        scroll = TC.ThumbnailCtrl(splitter, -1, imagehandler=TC.NativeImageHandler)
-        #scroll = TC.ThumbnailCtrl(splitter, -1, imagehandler=TC.PILImageHandler)
 
-        scroll.ShowFileNames()
-        if os.path.isdir("../bitmaps"):
-            scroll.ShowDir(os.path.normpath(os.getcwd() + "/../bitmaps"))
-        else:
-            scroll.ShowDir(os.getcwd())
+        self.scroll = ScrolledThumbnail(splitter, -1, size=(400,300))
 
-        self.TC = scroll
         self.log = log
 
         self.thumbsizer_staticbox = wx.StaticBox(self.panel, -1, "Thumb Style")
@@ -71,7 +65,6 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.enabledragging = wx.CheckBox(self.panel, -1, "Enable drag and drop")
         self.setpopup = wx.CheckBox(self.panel, -1, "Set popup menu on thumbs")
         self.setgpopup = wx.CheckBox(self.panel, -1, "Set global popup menu")
-        self.showcombo = wx.CheckBox(self.panel, -1, "Show folder combobox")
         self.enabletooltip = wx.CheckBox(self.panel, -1, "Enable thumb tooltips")
         self.textzoom = wx.TextCtrl(self.panel, -1, "1.4")
         self.zoombutton = wx.Button(self.panel, -1, "Set zoom factor")
@@ -101,7 +94,6 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.Bind(wx.EVT_CHECKBOX, self.OnEnableDragging, self.enabledragging)
         self.Bind(wx.EVT_CHECKBOX, self.OnSetPopup, self.setpopup)
         self.Bind(wx.EVT_CHECKBOX, self.OnSetGlobalPopup, self.setgpopup)
-        self.Bind(wx.EVT_CHECKBOX, self.OnShowComboBox, self.showcombo)
         self.Bind(wx.EVT_CHECKBOX, self.OnEnableToolTips, self.enabletooltip)
         self.Bind(wx.EVT_BUTTON, self.OnSetZoom, self.zoombutton)
         self.Bind(wx.EVT_BUTTON, self.OnSetThumbSize, self.thumbsizebutton)
@@ -109,16 +101,15 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.OnSetColour, self.colourbutton)
         self.Bind(wx.EVT_BUTTON, self.OnSetDirectory, self.dirbutton)
 
-        self.TC.Bind(EVT_THUMBNAILS_SEL_CHANGED, self.OnSelChanged)
-        self.TC.Bind(EVT_THUMBNAILS_POINTED, self.OnPointed)
-        self.TC.Bind(EVT_THUMBNAILS_DCLICK, self.OnDClick)
+        self.scroll.Bind(EVT_THUMBNAILS_SEL_CHANGED, self.OnSelChanged)
+        self.scroll.Bind(EVT_THUMBNAILS_POINTED, self.OnPointed)
+        self.scroll.Bind(EVT_THUMBNAILS_DCLICK, self.OnDClick)
 
-        splitter.SplitVertically(scroll, self.panel, 400)
+        splitter.SplitVertically(self.scroll, self.panel, 400)
 
         splitter.SetMinimumPaneSize(140)
         self.SetMinSize((1000, 1000))
         self.CenterOnScreen()
-
 
     def SetProperties(self):
 
@@ -154,7 +145,6 @@ class ThumbnailCtrlDemo(wx.Frame):
         customsizer.Add(self.enabledragging, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         customsizer.Add(self.setpopup, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         customsizer.Add(self.setgpopup, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
-        customsizer.Add(self.showcombo, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         customsizer.Add(self.enabletooltip, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         splitsizer.Add(customsizer, 0, wx.TOP|wx.EXPAND|wx.LEFT, 5)
         zoomsizer.Add(self.textzoom, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
@@ -201,15 +191,16 @@ class ThumbnailCtrlDemo(wx.Frame):
 
     def OnAbout(self, event):
 
-        msg = "This Is The About Dialog Of The ThumbnailCtrl Demo.\n\n" + \
-              "Author: Andrea Gavana @ 10 Dec 2005\n\n" + \
-              "Modified: Michael Eager @ 15 Oct 2020\n\n" + \
+        msg = "This Is The About Dialog Of The ScrollThumbnail Demo.\n\n" + \
+              "Author: Michael Eager @ 23 Oct 2020\n\n" + \
+              "Adapted from the ThumbnailCtrl Demo\n" + \
+              "By Andrea Gavana @ 10 Dec 2005\n\n" + \
               "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Addresses:\n\n" + \
+              "To Me At The Following Addresses:\n" + \
               "eager@eagercon.com\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 
-        dlg = wx.MessageDialog(self, msg, "ThumbnailCtrl Demo",
+        dlg = wx.MessageDialog(self, msg, "ScrolledThumbnail Demo",
                                wx.OK | wx.ICON_INFORMATION)
 
         dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False))
@@ -227,11 +218,26 @@ class ThumbnailCtrlDemo(wx.Frame):
         # This is done by getting the path data from the dialog - BEFORE
         # we destroy it.
         if dlg.ShowModal() == wx.ID_OK:
-            self.TC.ShowDir(dlg.GetPath())
+            self.ShowDir(dlg.GetPath())
             self.log.write("OnSetDirectory: directory changed to: %s\n"%dlg.GetPath())
 
         # Only destroy a dialog after you're done with it.
         dlg.Destroy()
+
+
+    def ShowDir(self, dir):
+        files = os.listdir(dir)
+        thumbs = []
+        for f in files:
+            if os.path.splitext(f)[1] in [".jpg", ".gif", ".png"]:
+                statinfo = os.stat(os.path.join(dir, f))
+                size = statinfo.st_size
+                modtime = statinfo.st_mtime
+                TIME_FMT = '%d %b %Y, %H:%M:%S'
+                lastmod = time.strftime(TIME_FMT, time.localtime(modtime))
+                thumbs.append(Thumb(dir, f, caption=f, size=size, lastmod=lastmod,
+                                    imagehandler=NativeImageHandler))
+        self.scroll.ShowThumbs(thumbs)
 
 
     def OnChangeOutline(self, event): # wxGlade: MyFrame.<event_handler>
@@ -240,15 +246,15 @@ class ThumbnailCtrlDemo(wx.Frame):
         pos = self.radios.index(radio)
 
         if pos == 0:
-            self.TC.SetThumbOutline(TC.THUMB_OUTLINE_NONE)
+            self.scroll.SetThumbOutline(self.scroll.THUMB_OUTLINE_NONE)
         elif pos == 1:
-            self.TC.SetThumbOutline(TC.THUMB_OUTLINE_FULL)
+            self.scroll.SetThumbOutline(self.scroll.THUMB_OUTLINE_FULL)
         elif pos == 2:
-            self.TC.SetThumbOutline(TC.THUMB_OUTLINE_RECT)
+            self.scroll.SetThumbOutline(self.scroll.THUMB_OUTLINE_RECT)
         elif pos == 3:
-            self.TC.SetThumbOutline(TC.THUMB_OUTLINE_IMAGE)
+            self.scroll.SetThumbOutline(self.scroll.THUMB_OUTLINE_IMAGE)
 
-        self.TC.Refresh()
+        self.scroll.Refresh()
 
         self.log.write("OnChangeOutline: Outline changed to: %s\n"%self.thumbstyles[pos])
         event.Skip()
@@ -257,10 +263,10 @@ class ThumbnailCtrlDemo(wx.Frame):
     def OnHighlight(self, event): # wxGlade: MyFrame.<event_handler>
 
         if self.highlight.GetValue() == 1:
-            self.TC.SetHighlightPointed(True)
+            self.scroll.SetHighlightPointed(True)
             self.log.write("OnHighlight: Highlight thumbs on pointing\n")
         else:
-            self.TC.SetHighlightPointed(False)
+            self.scroll.SetHighlightPointed(False)
             self.log.write("OnHighlight: Don't Highlight thumbs on pointing\n")
 
         event.Skip()
@@ -269,13 +275,13 @@ class ThumbnailCtrlDemo(wx.Frame):
     def OnShowFiles(self, event): # wxGlade: MyFrame.<event_handler>
 
         if self.showfiles.GetValue() == 1:
-            self.TC.ShowFileNames(True)
+            self.scroll.ShowFileNames(True)
             self.log.write("OnShowFiles: Thumbs file names shown\n")
         else:
-            self.TC.ShowFileNames(False)
+            self.scroll.ShowFileNames(False)
             self.log.write("OnShowFiles: Thumbs file names not shown\n")
 
-        self.TC.Refresh()
+        self.scroll.Refresh()
 
         event.Skip()
 
@@ -283,13 +289,13 @@ class ThumbnailCtrlDemo(wx.Frame):
     def OnEnableDragging(self, event):
 
         if self.enabledragging.GetValue() == 1:
-            self.TC.EnableDragging(True)
+            self.scroll.EnableDragging(True)
             self.log.write("OnEnableDragging: Thumbs drag and drop enabled\n")
         else:
-            self.TC.EnableDragging(False)
+            self.scroll.EnableDragging(False)
             self.log.write("OnEnableDragging: Thumbs drag and drop disabled\n")
 
-        self.TC.Refresh()
+        self.scroll.Refresh()
 
         event.Skip()
 
@@ -298,10 +304,10 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         if self.setpopup.GetValue() == 1:
             menu = self.CreatePopups()
-            self.TC.SetPopupMenu(menu)
+            self.scroll.SetPopupMenu(menu)
             self.log.write("OnSetPopup: Popups enabled on thumbs\n")
         else:
-            self.TC.SetPopupMenu(None)
+            self.scroll.SetPopupMenu(None)
             self.log.write("OnSetPopup: Popups disabled on thumbs\n")
 
         event.Skip()
@@ -311,23 +317,11 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         if self.setgpopup.GetValue() == 1:
             menu = self.CreateGlobalPopups()
-            self.TC.SetGlobalPopupMenu(menu)
+            self.scroll.SetGlobalPopupMenu(menu)
             self.log.write("OnSetGlobalPopup: Popups enabled globally (no selection needed)\n")
         else:
-            self.TC.SetGlobalPopupMenu(None)
+            self.scroll.SetGlobalPopupMenu(None)
             self.log.write("OnSetGlobalPopup: Popups disabled globally (no selection needed)\n")
-
-        event.Skip()
-
-
-    def OnShowComboBox(self, event):
-
-        if self.showcombo.GetValue() == 1:
-            self.log.write("OnShowComboBox: Directory comboBox shown\n")
-            self.TC.ShowComboBox(True)
-        else:
-            self.log.write("OnShowComboBox: Directory comboBox hidden\n")
-            self.TC.ShowComboBox(False)
 
         event.Skip()
 
@@ -336,10 +330,10 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         if self.enabletooltip.GetValue() == 1:
             self.log.write("OnEnableToolTips: File information on tooltips enabled\n")
-            self.TC.EnableToolTips(True)
+            self.scroll.EnableToolTips(True)
         else:
             self.log.write("OnEnableToolTips: File information on tooltips disabled\n")
-            self.TC.EnableToolTips(False)
+            self.scroll.EnableToolTips(False)
 
         event.Skip()
 
@@ -352,7 +346,7 @@ class ThumbnailCtrlDemo(wx.Frame):
             val = float(val)
         except:
             errstr = "Error: a float value is required."
-            dlg = wx.MessageDialog(self, errstr, "ThumbnailCtrlDemo Error",
+            dlg = wx.MessageDialog(self, errstr, "ScrolledThumbnailDemo Error",
                                    wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
@@ -362,14 +356,14 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         if val < 1.0:
             errstr = "Error: zoom factor must be grater than 1.0."
-            dlg = wx.MessageDialog(self, errstr, "ThumbnailCtrlDemo Error",
+            dlg = wx.MessageDialog(self, errstr, "ScrolledThumbnailDemo Error",
                                    wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
             self.textzoom.SetValue("1.4")
             return
 
-        self.TC.SetZoomFactor(val)
+        self.scroll.SetZoomFactor(val)
 
         event.Skip()
 
@@ -379,7 +373,7 @@ class ThumbnailCtrlDemo(wx.Frame):
             height = int(self.textthumbheight.GetValue().strip())
         except:
             errstr = "Error: thumb size must be integers (min 50x50)."
-            dlg = wx.MessageDialog(self, errstr, "ThumbnailCtrlDemo Error",
+            dlg = wx.MessageDialog(self, errstr, "ScrolledThumbnailDemo Error",
                                    wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
@@ -388,25 +382,25 @@ class ThumbnailCtrlDemo(wx.Frame):
         width = max(width, 50)
         height = max(height, 50)
         self.log.write("OnSetThumbSize: (%s, %s)\n" % (width, height))
-        self.TC.SetThumbSize (width, height)
+        self.scroll.SetThumbSize (width, height)
 
         event.Skip()
 
     def OnSelChanged(self, event):
 
-        self.log.write("OnSelChanged: Thumb selected: %s\n"%str(self.TC.GetSelection()))
+        self.log.write("OnSelChanged: Thumb selected: %s\n"%str(self.scroll.GetSelection()))
         event.Skip()
 
 
     def OnPointed(self, event):
 
-        self.log.write("OnPointed: Thumb pointed: %s\n"%self.TC.GetPointed())
+        self.log.write("OnPointed: Thumb pointed: %s\n"%self.scroll.GetPointed())
         event.Skip()
 
 
     def OnDClick(self, event):
 
-        self.log.write("OnDClick: Thumb double-clicked: %s\n"%self.TC.GetSelection())
+        self.log.write("OnDClick: Thumb double-clicked: %s\n"%self.scroll.GetSelection())
         event.Skip()
 
 
@@ -414,15 +408,15 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         data = wx.FontData()
         data.EnableEffects(True)
-        data.SetInitialFont(self.TC.GetCaptionFont())
+        data.SetInitialFont(self.scroll.GetCaptionFont())
 
         dlg = wx.FontDialog(self, data)
 
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetFontData()
             font = data.GetChosenFont()
-            self.TC.SetCaptionFont(font)
-            self.TC.Refresh()
+            self.scroll.SetCaptionFont(font)
+            self.scroll.Refresh()
             self.log.write("OnSetFont: Caption font changed\n")
 
         # Don't destroy the dialog until you get everything you need from the
@@ -449,8 +443,8 @@ class ThumbnailCtrlDemo(wx.Frame):
             # returned as a three-tuple (r, g, b) in this particular case.
             colour = data.GetColour().Get()
             colour = wx.Colour(colour[0], colour[1], colour[2])
-            self.TC.SetSelectionColour(colour)
-            self.TC.Refresh()
+            self.scroll.SetSelectionColour(colour)
+            self.scroll.Refresh()
 
         # Once the dialog is destroyed, Mr. wx.ColourData is no longer your
         # friend. Don't use it again!
@@ -573,11 +567,11 @@ class ThumbnailCtrlDemo(wx.Frame):
 
     def OnPopupTen(self, event):
 
-        items = self.TC.GetItemCount()
+        items = self.scroll.GetItemCount()
         self.log.write("Items", items, type(items))
 
         for ii in range(items):
-            self.TC.SetSelection(ii)
+            self.scroll.SetSelection(ii)
 
         self.log.write("OnGlobalPopupMenu: all thumbs selected\n")
 
@@ -589,7 +583,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.log.write("OnGlobalPopupMenu: say hello message...\n")
 
         msgstr = "Info: let's say hello to wxPython! "
-        dlg = wx.MessageDialog(self, msgstr, "ThumbnailCtrlDemo Info",
+        dlg = wx.MessageDialog(self, msgstr, "ScrolledThumbnailDemo Info",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
@@ -599,17 +593,16 @@ class ThumbnailCtrlDemo(wx.Frame):
 
     def OnPopupTwelve(self, event):
 
-        items = self.TC.GetItemCount()
+        items = self.scroll.GetItemCount()
         self.log.write("OnGlobalPopupMenu: number of thumbs: %d\n"%items)
 
         msgstr = "Info: number of thumbs: %d"%items
-        dlg = wx.MessageDialog(self, msgstr, "ThumbnailCtrlDemo Info",
+        dlg = wx.MessageDialog(self, msgstr, "ScrolledThumbnailDemo Info",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
 
         event.Skip()
-
 
 
 #---------------------------------------------------------------------------
@@ -620,39 +613,28 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 
-        b = wx.Button(self, -1, " Test ThumbnailCtrl ", (50,50))
+        b = wx.Button(self, -1, " Test ScrolledThumbnail", (50,50))
         self.Bind(wx.EVT_BUTTON, self.OnButton, b)
 
 
     def OnButton(self, evt):
-        self.win = ThumbnailCtrlDemo(self, self.log)
+        self.win = ScrolledThumbnailDemo(self, self.log)
         self.win.Show(True)
 
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
 
-    try:
-        import PIL.Image
-        win = TestPanel(nb, log)
-        return win
-
-    except ImportError:
-
-        from Main import MessagePanel
-        win = MessagePanel(nb, 'This demo requires PIL (Python Imaging Library).',
-                           'Sorry', wx.ICON_WARNING)
-        return win
+    win = TestPanel(nb, log)
+    return win
 
 #----------------------------------------------------------------------
 
 
-overview = TC.__doc__
+overview = wx.lib.agw.scrolledthumbnail.__doc__
 
 
 if __name__ == '__main__':
     import sys,os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])
-
-
