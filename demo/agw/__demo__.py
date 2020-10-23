@@ -97,7 +97,8 @@ def GetDemos():
                 'AGWInfoBar', 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                 'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
                 'PyCollapsiblePane', 'PyGauge', 'PyProgress', 'RibbonBar',
-                'RulerCtrl', 'ShapedButton', 'ShortcutEditor', 'SpeedMeter',
+                'RulerCtrl', 'ScrolledThumbnail', 'ShapedButton', 
+                'ShortcutEditor', 'SpeedMeter',
                 'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
                 'UltimateListCtrl', 'XLSGrid', 'ZoomBar']
 
