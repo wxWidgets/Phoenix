@@ -58,6 +58,8 @@ New and improved in this release:
 * Simplified the implementation of the wx.App.InitLocale method. See the
   MigrationGuide for more information.
 
+* Refactored ScrolledThumbnail out of agw.ThumbnailCtrl so as to be usable 
+  outside of ThumbnailCtrl. #1828
 
 
 
