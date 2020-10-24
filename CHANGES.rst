@@ -58,6 +58,27 @@ New and improved in this release:
 * Simplified the implementation of the wx.App.InitLocale method. See the
   MigrationGuide for more information.
 
+* Added wx.lib.agw.aui.AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR constant
+  so the hint window border color can be themed as well.
+
+* The wx.lib.mixins.listCtrl.CheckListCtrlMixin is now obsolete because
+  wx.ListCtrl has new functionality which does pretty much the same thing. In
+  fact there is some overlap in method names which may trip up some use cases.
+  It is advised to drop the use of CheckListCtrlMixin and just use the
+  wx.ListBox functionality. You will need to call EnableCheckBoxes to turn it on,
+  and you may need to change some event handlers or overloaded methods.
+
+* wx.html2.WebView is now able to use Microsoft's Edge browser component as its
+  backend renderer. This should improve the capabilities of the WebView widget
+  on Windows, and be more consistent with the WebViews on the other platforms,
+  compared to the original IE 11 backend. Using this backed requires that a
+  new-ish version of the Edge browser is installed on the end user's computer.
+
+* Added the wx.Image.ConvertToRegion method. This lets you create a wx.Region
+  from an image and a specified color or the mask if the image has one. This
+  was done to workaround a bug in wxMac, but it seems worthwhile enough to keep
+  it around even after the bug was fixed.
+
 * Refactored ScrolledThumbnail out of agw.ThumbnailCtrl so as to be usable 
   outside of ThumbnailCtrl. #1828
 
