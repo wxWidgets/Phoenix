@@ -17,7 +17,7 @@ class htmlprint_Tests(wtc.WidgetTestCase):
         obj.SetSize(*size)
         obj.SetHtmlText('<body><h1>Hello World</h1></body>')
 
-        obj.Render(0,0, [])
+        obj.Render(0,0)
 
 
     def test_htmlprint2(self):

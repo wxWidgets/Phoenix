@@ -49,6 +49,7 @@ def removeWxPrefixes(node):
            and item.name.startswith('wx') \
            and not item.name.startswith('wxEVT_') \
            and not isinstance(item, (extractors.TypedefDef,
+                                     extractors.ParamDef,
                                      extractors.MethodDef )):  # TODO: Any others?
                 item.pyName = item.name[2:]
                 item.wxDropped = True
@@ -457,6 +458,7 @@ def addWindowVirtuals(klass):
         ('Destroy',                  'bool Destroy()'),
         ('SetValidator',             'void SetValidator( const wxValidator &validator )'),
         ('GetValidator',             'wxValidator* GetValidator()'),
+        ('EnableVisibleFocus',       'void EnableVisibleFocus(bool enabled)'),
 
         ## What about these?
         #bool HasMultiplePages() const

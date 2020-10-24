@@ -11,6 +11,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from buildtools.backports.textwrap3 import dedent
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -494,6 +495,83 @@ def run():
     c.addProperty('MaskGreen GetMaskGreen')
     c.addProperty('MaskRed GetMaskRed')
     c.addProperty('Type GetType SetType')
+
+
+    c.addCppMethod('wxRegion*', 'ConvertToRegion',
+        '(int R=-1, int G=-1, int B=-1, int tolerance=0)',
+        briefDoc="Create a :class:`wx.Region` where the transparent areas match the given RGB values.",
+        detailedDoc=[dedent("""\
+            If the RGB values are not given, then the image's mask colour components will
+            be used instead. If a non-zero tolerance is given then the pixels that fall
+            into the range of (R,G,B) to (R+tolerance, G+tolerance, B+tolerance) will be
+            considered to be transparent.
+
+            If there are no pixels matching the transparent colours then the region
+            returned will match the image's full dimensions.
+
+            :param int `R`: The red component of the transparent colour.
+            :param int `G`: The red component of the transparent colour.
+            :param int `B`: The red component of the transparent colour.
+            :param int `tolerance`: Broadens the range of colours that will
+                be considered transparent.
+            :returns: a :class:`wx.Region` object.
+            """)],
+        body="""\
+            wxRegion* region = new wxRegion();
+            unsigned char hiR, hiG, hiB;
+
+            if (R == -1) { R = self->GetMaskRed(); }
+            if (G == -1) { G = self->GetMaskGreen(); }
+            if (B == -1) { B = self->GetMaskBlue(); }
+
+            // Make sure nothing out of range was passed
+            R &= 0xFF;
+            G &= 0xFF;
+            B &= 0xFF;
+
+            hiR = (unsigned char)wxMin(0xFF, R + tolerance);
+            hiG = (unsigned char)wxMin(0xFF, G + tolerance);
+            hiB = (unsigned char)wxMin(0xFF, B + tolerance);
+
+            // Loop through the image row by row, pixel by pixel, building up
+            // rectangles to add to the region.
+            int width = self->GetWidth();
+            int height = self->GetHeight();
+
+            for (int y=0; y < height; y++)
+            {
+                wxRect rect;
+                rect.y = y;
+                rect.height = 1;
+
+                for (int x=0; x < width; x++)
+                {
+                    // search for a continuous range of non-transparent pixels
+                    int x0 = x;
+                    while ( x < width)
+                    {
+                        unsigned char red = self->GetRed(x,y);
+                        unsigned char grn = self->GetGreen(x,y);
+                        unsigned char blu = self->GetBlue(x,y);
+                        if (( red >= R && red <= hiR) &&
+                            ( grn >= G && grn <= hiG) &&
+                            ( blu >= B && blu <= hiB))  // It's transparent
+                            break;
+                        x++;
+                    }
+
+                    // Add the run of non-transparent pixels (if any) to the region
+                    if (x > x0) {
+                        rect.x = x0;
+                        rect.width = x - x0;
+                        region->Union(rect);
+                    }
+                }
+            }
+            if (region->IsEmpty())
+                region->Union(0, 0, width, height);
+            return region;
+            """)
 
 
     # For compatibility:

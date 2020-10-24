@@ -297,6 +297,9 @@ static sipWrapperType sipWrapper_Type = {
         0,                  /* ht_qualname */
         0,                  /* ht_cached_keys */
 #endif
+#if PY_VERSION_HEX >= 0x03090000
+        0,                  /* ht_module */
+#endif
 #if !defined(STACKLESS)
     },
 #endif
@@ -1128,7 +1131,7 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
 #error "Add support for capsule variables"
 #endif
 
-#ifdef WITH_THREAD
+#if PY_VERSION_HEX < 0x03070000 && defined(WITH_THREAD)
     PyEval_InitThreads();
 #endif
 
@@ -2337,7 +2340,7 @@ static PyObject *call_method(PyObject *method, const char *fmt, va_list va)
         return NULL;
 
     if (buildObject(args, fmt, va) != NULL)
-        res = PyEval_CallObject(method, args);
+        res = PyObject_CallObject(method, args);
     else
         res = NULL;
 
@@ -11678,6 +11681,9 @@ sipWrapperType sipSimpleWrapper_Type = {
 #if PY_MAJOR_VERSION >= 3
         0,                  /* ht_qualname */
         0,                  /* ht_cached_keys */
+#endif
+#if PY_VERSION_HEX >= 0x03090000
+        0,                  /* ht_module */
 #endif
 #if !defined(STACKLESS)
     },
