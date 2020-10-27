@@ -214,7 +214,7 @@ class Throbber(wx.Panel):
         :param `event`: a :class:`PaintEvent` event to be processed.
 
         """
-        self.Draw(wx.BufferedPaintDC(self))
+        self.Draw(wx.PaintDC(self))
         event.Skip()
 
 
