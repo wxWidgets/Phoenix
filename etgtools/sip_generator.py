@@ -863,7 +863,8 @@ from .%s import *
 
         else:
             stream.write('PyErr_Clear();\n')
-            stream.write('%sPy_BEGIN_ALLOW_THREADS\n' % (indent+' '*4))
+            if not method.pyHoldGIL:
+                stream.write('%sPy_BEGIN_ALLOW_THREADS\n' % (indent+' '*4))
             stream.write(indent+' '*4)
             if method.type != 'void':
                 stream.write('sipRes = ')
@@ -882,7 +883,8 @@ from .%s import *
                     stream.write('%s(%s%s);\n' % (fname, argname, pnames))
             else:
                 stream.write('%s(%s);\n' % (fname, pnames))
-            stream.write('%sPy_END_ALLOW_THREADS\n' % (indent+' '*4))
+            if not method.pyHoldGIL:
+                stream.write('%sPy_END_ALLOW_THREADS\n' % (indent+' '*4))
             stream.write('%sif (PyErr_Occurred()) sipIsErr = 1;\n' % (indent+' '*4))
         stream.write('%s%%End\n' % indent)
 
@@ -927,10 +929,12 @@ from .%s import *
         stream.write('%s%%MethodCode\n' % indent)
         if not (method.isCtor and method.isDtor):
             stream.write('%sPyErr_Clear();\n' % (indent+' '*4))
-            stream.write('%sPy_BEGIN_ALLOW_THREADS\n' % (indent+' '*4))
+            if not method.pyHoldGIL:
+                stream.write('%sPy_BEGIN_ALLOW_THREADS\n' % (indent+' '*4))
         stream.write(nci(method.body, len(indent)+4))
         if not (method.isCtor and method.isDtor):
-            stream.write('%sPy_END_ALLOW_THREADS\n' % (indent+' '*4))
+            if not method.pyHoldGIL:
+                stream.write('%sPy_END_ALLOW_THREADS\n' % (indent+' '*4))
             stream.write('%sif (PyErr_Occurred()) sipIsErr = 1;\n' % (indent+' '*4))
         stream.write('%s%%End\n\n' % indent)
 

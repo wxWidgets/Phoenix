@@ -335,7 +335,7 @@ def run():
     c.find('TakeData').ignore()
 
     c.find('GetData').ignore()
-    c.addCppMethod('PyObject*', 'GetData', '()', isConst=True,
+    c.addCppMethod('PyObject*', 'GetData', '()', isConst=True, pyHoldGIL=True,
         doc="Returns a reference to the data buffer.",
         body="return wxPyMakeBuffer(self->GetData(), self->GetSize());")
 
