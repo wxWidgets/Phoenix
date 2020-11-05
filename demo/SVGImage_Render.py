@@ -33,7 +33,7 @@ class SVGRenderPanel(wx.Panel):
 
 
     def OnPaint(self, event):
-        dc = wx.PaintDC(self)
+        dc = wx.BufferedPaintDC(self)
         dc.Clear()
 
         iw, ih = (self._img.width, self._img.height) if self._img else (100,100)
