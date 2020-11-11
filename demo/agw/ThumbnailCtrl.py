@@ -25,14 +25,15 @@ class ThumbnailCtrlDemo(wx.Frame):
     def __init__(self, parent, log):
 
         wx.Frame.__init__(self, parent, size=(850,800))
+        self.name = "ThumbnailCtrl"
 
         self.SetIcon(images.Mondrian.GetIcon())
-        self.SetTitle("ThumbnailCtrl wxPython Demo ;-)")
+        self.SetTitle(self.name + " wxPython Demo ;-)")
 
         self.statusbar = self.CreateStatusBar(2)
         self.statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
-        statusbar_fields = [("ThumbnailCtrl Demo, Michael Eager @ 15 Oct 2020"),
+        statusbar_fields = [(self.name + " Demo, Michael Eager @ 10 Nov 2020"),
                             ("Welcome To wxPython!")]
 
         for i in range(len(statusbar_fields)):
@@ -193,7 +194,7 @@ class ThumbnailCtrlDemo(wx.Frame):
 
     def OnAbout(self, event):
 
-        msg = "This Is The About Dialog Of The ThumbnailCtrl Demo.\n\n" + \
+        msg = "This Is The About Dialog Of The " + self.name + " Demo.\n\n" + \
               "Author: Andrea Gavana @ 10 Dec 2005\n\n" + \
               "Modified: Michael Eager @ 15 Oct 2020\n\n" + \
               "Please Report Any Bug/Requests Of Improvements\n" + \
@@ -201,7 +202,7 @@ class ThumbnailCtrlDemo(wx.Frame):
               "eager@eagercon.com\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 
-        dlg = wx.MessageDialog(self, msg, "ThumbnailCtrl Demo",
+        dlg = wx.MessageDialog(self, msg, self.name + " Demo",
                                wx.OK | wx.ICON_INFORMATION)
 
         dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False))
@@ -344,7 +345,7 @@ class ThumbnailCtrlDemo(wx.Frame):
             val = float(val)
         except:
             errstr = "Error: a float value is required."
-            dlg = wx.MessageDialog(self, errstr, "ThumbnailCtrlDemo Error",
+            dlg = wx.MessageDialog(self, errstr, self.name + " Error",
                                    wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
@@ -354,7 +355,7 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         if val < 1.0:
             errstr = "Error: zoom factor must be grater than 1.0."
-            dlg = wx.MessageDialog(self, errstr, "ThumbnailCtrlDemo Error",
+            dlg = wx.MessageDialog(self, errstr, self.name + " Error",
                                    wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
@@ -371,7 +372,7 @@ class ThumbnailCtrlDemo(wx.Frame):
             height = int(self.textthumbheight.GetValue().strip())
         except:
             errstr = "Error: thumb size must be integers (min 50x50)."
-            dlg = wx.MessageDialog(self, errstr, "ThumbnailCtrlDemo Error",
+            dlg = wx.MessageDialog(self, errstr, self.name + " Error",
                                    wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
@@ -581,7 +582,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.log.write("OnGlobalPopupMenu: say hello message...\n")
 
         msgstr = "Info: let's say hello to wxPython! "
-        dlg = wx.MessageDialog(self, msgstr, "ThumbnailCtrlDemo Info",
+        dlg = wx.MessageDialog(self, msgstr, self.name + " Info",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
@@ -595,7 +596,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.log.write("OnGlobalPopupMenu: number of thumbs: %d\n"%items)
 
         msgstr = "Info: number of thumbs: %d"%items
-        dlg = wx.MessageDialog(self, msgstr, "ThumbnailCtrlDemo Info",
+        dlg = wx.MessageDialog(self, msgstr, self.name + " Info",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
@@ -646,5 +647,3 @@ if __name__ == '__main__':
     import sys,os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])
-
-
