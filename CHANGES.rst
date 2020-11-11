@@ -79,6 +79,8 @@ New and improved in this release:
   was done to workaround a bug in wxMac, but it seems worthwhile enough to keep
   it around even after the bug was fixed.
 
+* Added the missing context manager methods for wx.LogNull. (#1842)
+
 
 
 
