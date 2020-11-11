@@ -8,6 +8,7 @@ import os
 import sys
 import time
 import images
+import wx.lib.agw.scrolledthumbnail as ST
 from wx.lib.agw.scrolledthumbnail import (ScrolledThumbnail,
                                           Thumb,
                                           NativeImageHandler,
@@ -25,7 +26,7 @@ class ScrolledThumbnailDemo(wx.Frame):
 
     def __init__(self, parent, log):
 
-        wx.Frame.__init__(self, parent)
+        wx.Frame.__init__(self, parent, size=(850,800))
 
         self.SetIcon(images.Mondrian.GetIcon())
         self.SetTitle("ScrolledThumbnail wxPython Demo ;-)")
@@ -105,21 +106,15 @@ class ScrolledThumbnailDemo(wx.Frame):
         self.scroll.Bind(EVT_THUMBNAILS_POINTED, self.OnPointed)
         self.scroll.Bind(EVT_THUMBNAILS_DCLICK, self.OnDClick)
 
-        splitter.SplitVertically(self.scroll, self.panel, 400)
+        splitter.SplitVertically(self.scroll, self.panel, 300)
 
         splitter.SetMinimumPaneSize(140)
-        self.SetMinSize((1000, 1000))
         self.CenterOnScreen()
 
     def SetProperties(self):
 
         self.radiostyle4.SetValue(1)
         self.showfiles.SetValue(1)
-        boldFont = wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, "")
-        self.zoombutton.SetFont(boldFont)
-        self.fontbutton.SetFont(boldFont)
-        self.dirbutton.SetFont(boldFont)
-        self.colourbutton.SetFont(boldFont)
 
 
     def DoLayout(self):
@@ -157,7 +152,6 @@ class ScrolledThumbnailDemo(wx.Frame):
         optionsizer.Add(self.fontbutton, 0, wx.ALL|wx.ADJUST_MINSIZE, 3)
         optionsizer.Add(self.colourbutton, 0, wx.TOP|wx.LEFT|wx.ADJUST_MINSIZE, 3)
         splitsizer.Add(optionsizer, 0, wx.EXPAND | wx.TOP|wx.LEFT, 5)
-        self.panel.SetAutoLayout(True)
         self.panel.SetSizer(splitsizer)
         splitsizer.Fit(self.panel)
 
@@ -246,13 +240,13 @@ class ScrolledThumbnailDemo(wx.Frame):
         pos = self.radios.index(radio)
 
         if pos == 0:
-            self.scroll.SetThumbOutline(self.scroll.THUMB_OUTLINE_NONE)
+            self.scroll.SetThumbOutline(ST.THUMB_OUTLINE_NONE)
         elif pos == 1:
-            self.scroll.SetThumbOutline(self.scroll.THUMB_OUTLINE_FULL)
+            self.scroll.SetThumbOutline(ST.THUMB_OUTLINE_FULL)
         elif pos == 2:
-            self.scroll.SetThumbOutline(self.scroll.THUMB_OUTLINE_RECT)
+            self.scroll.SetThumbOutline(ST.THUMB_OUTLINE_RECT)
         elif pos == 3:
-            self.scroll.SetThumbOutline(self.scroll.THUMB_OUTLINE_IMAGE)
+            self.scroll.SetThumbOutline(ST.THUMB_OUTLINE_IMAGE)
 
         self.scroll.Refresh()
 
