@@ -22,12 +22,13 @@ except:
 
 sys.path.append(os.path.split(dirName)[0])
 
-class ScrolledThumbnailDemo(wx.Frame):
+class ThumbDemoConfig(wx.Frame):
 
-    def __init__(self, parent, log):
+    def __init__(self, parent, log, name, about):
 
         wx.Frame.__init__(self, parent, size=(850,800))
-        self.name = "ScrolledThumbnail"
+        self.name = name
+        self.about = about
 
         self.SetIcon(images.Mondrian.GetIcon())
         self.SetTitle(self.name + " wxPython Demo ;-)")
@@ -43,13 +44,13 @@ class ScrolledThumbnailDemo(wx.Frame):
 
         self.SetMenuBar(self.CreateMenuBar())
 
-        splitter = wx.SplitterWindow(self, -1, style=wx.CLIP_CHILDREN |
+        self.splitter = wx.SplitterWindow(self, -1, style=wx.CLIP_CHILDREN |
                                      wx.SP_3D | wx.WANTS_CHARS | wx.SP_LIVE_UPDATE)
-        self.panel = wx.Panel(splitter, -1)
+        self.panel = wx.Panel(self.splitter, -1)
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.scroll = ScrolledThumbnail(splitter, -1, size=(400,300))
+        self.SetScroll()
 
         self.log = log
 
@@ -67,6 +68,7 @@ class ScrolledThumbnailDemo(wx.Frame):
         self.enabledragging = wx.CheckBox(self.panel, -1, "Enable drag and drop")
         self.setpopup = wx.CheckBox(self.panel, -1, "Set popup menu on thumbs")
         self.setgpopup = wx.CheckBox(self.panel, -1, "Set global popup menu")
+        self.DoComboCheckbox()
         self.enabletooltip = wx.CheckBox(self.panel, -1, "Enable thumb tooltips")
         self.textzoom = wx.TextCtrl(self.panel, -1, "1.4")
         self.zoombutton = wx.Button(self.panel, -1, "Set zoom factor")
@@ -96,6 +98,7 @@ class ScrolledThumbnailDemo(wx.Frame):
         self.Bind(wx.EVT_CHECKBOX, self.OnEnableDragging, self.enabledragging)
         self.Bind(wx.EVT_CHECKBOX, self.OnSetPopup, self.setpopup)
         self.Bind(wx.EVT_CHECKBOX, self.OnSetGlobalPopup, self.setgpopup)
+        self.DoBindCombo()
         self.Bind(wx.EVT_CHECKBOX, self.OnEnableToolTips, self.enabletooltip)
         self.Bind(wx.EVT_BUTTON, self.OnSetZoom, self.zoombutton)
         self.Bind(wx.EVT_BUTTON, self.OnSetThumbSize, self.thumbsizebutton)
@@ -107,9 +110,9 @@ class ScrolledThumbnailDemo(wx.Frame):
         self.scroll.Bind(EVT_THUMBNAILS_POINTED, self.OnPointed)
         self.scroll.Bind(EVT_THUMBNAILS_DCLICK, self.OnDClick)
 
-        splitter.SplitVertically(self.scroll, self.panel, 300)
+        self.splitter.SplitVertically(self.scroll, self.panel, 300)
 
-        splitter.SetMinimumPaneSize(140)
+        self.splitter.SetMinimumPaneSize(140)
         self.CenterOnScreen()
 
 
@@ -142,6 +145,7 @@ class ScrolledThumbnailDemo(wx.Frame):
         customsizer.Add(self.enabledragging, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         customsizer.Add(self.setpopup, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         customsizer.Add(self.setgpopup, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
+        self.DoAddCombo(customsizer)
         customsizer.Add(self.enabletooltip, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         splitsizer.Add(customsizer, 0, wx.TOP|wx.EXPAND|wx.LEFT, 5)
         zoomsizer.Add(self.textzoom, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
@@ -187,16 +191,7 @@ class ScrolledThumbnailDemo(wx.Frame):
 
     def OnAbout(self, event):
 
-        msg = "This Is The About Dialog Of The " + self.name + " Demo.\n\n" + \
-              "Author: Michael Eager @ 10 Nov 2020\n\n" + \
-              "Adapted from the ThumbnailCtrl Demo\n" + \
-              "By Andrea Gavana @ 10 Dec 2005\n\n" + \
-              "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Addresses:\n" + \
-              "eager@eagercon.com\n\n" + \
-              "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-
-        dlg = wx.MessageDialog(self, msg, self.name + " Demo",
+        dlg = wx.MessageDialog(self, self.about, self.name + " Demo",
                                wx.OK | wx.ICON_INFORMATION)
 
         dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False))
@@ -219,21 +214,6 @@ class ScrolledThumbnailDemo(wx.Frame):
 
         # Only destroy a dialog after you're done with it.
         dlg.Destroy()
-
-
-    def ShowDir(self, dir):
-        files = os.listdir(dir)
-        thumbs = []
-        for f in files:
-            if os.path.splitext(f)[1] in [".jpg", ".gif", ".png"]:
-                statinfo = os.stat(os.path.join(dir, f))
-                size = statinfo.st_size
-                modtime = statinfo.st_mtime
-                TIME_FMT = '%d %b %Y, %H:%M:%S'
-                lastmod = time.strftime(TIME_FMT, time.localtime(modtime))
-                thumbs.append(Thumb(dir, f, caption=f, size=size, lastmod=lastmod,
-                                    imagehandler=NativeImageHandler))
-        self.scroll.ShowThumbs(thumbs)
 
 
     def OnChangeOutline(self, event): # wxGlade: MyFrame.<event_handler>
@@ -600,6 +580,51 @@ class ScrolledThumbnailDemo(wx.Frame):
 
         event.Skip()
 
+
+    def DoComboCheckbox(self):
+        pass
+
+    def DoBindCombo(self):
+        pass
+
+    def DoAddCombo(self, customsizer):
+        pass
+
+class ScrolledThumbnailDemo (ThumbDemoConfig):
+
+    def __init__(self, parent, log):
+
+        name = "ScrolledThumbnail"
+
+        msg = "This Is The About Dialog Of The " + name + " Demo.\n\n" + \
+              "Author: Michael Eager @ 10 Nov 2020\n\n" + \
+              "Adapted from the ThumbnailCtrl Demo\n" + \
+              "By Andrea Gavana @ 10 Dec 2005\n\n" + \
+              "Please Report Any Bug/Requests Of Improvements\n" + \
+              "To Me At The Following Addresses:\n" + \
+              "eager@eagercon.com\n\n" + \
+              "Welcome To wxPython " + wx.VERSION_STRING + "!!"
+
+        super().__init__ (parent, log, name=name, about=msg)
+
+
+    def SetScroll(self):
+        self.scroll = ScrolledThumbnail(self.splitter, -1, size=(400,300))
+
+
+    def ShowDir(self, dir):
+        files = os.listdir(dir)
+        thumbs = []
+        for f in files:
+            if os.path.splitext(f)[1] in [".jpg", ".gif", ".png"]:
+                statinfo = os.stat(os.path.join(dir, f))
+                size = statinfo.st_size
+                modtime = statinfo.st_mtime
+                TIME_FMT = '%d %b %Y, %H:%M:%S'
+                lastmod = time.strftime(TIME_FMT, time.localtime(modtime))
+                thumbs.append(Thumb(dir, f, caption=f, size=size, lastmod=lastmod,
+                                    imagehandler=NativeImageHandler))
+        self.scroll.ShowThumbs(thumbs)
 
 
 #---------------------------------------------------------------------------

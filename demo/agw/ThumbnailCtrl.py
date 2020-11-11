@@ -20,12 +20,13 @@ from wx.lib.agw.scrolledthumbnail import (EVT_THUMBNAILS_SEL_CHANGED, EVT_THUMBN
                                           EVT_THUMBNAILS_DCLICK)
 
 
-class ThumbnailCtrlDemo(wx.Frame):
+class ThumbDemoConfig(wx.Frame):
 
-    def __init__(self, parent, log):
+    def __init__(self, parent, log, name, about):
 
         wx.Frame.__init__(self, parent, size=(850,800))
-        self.name = "ThumbnailCtrl"
+        self.name = name
+        self.about = about
 
         self.SetIcon(images.Mondrian.GetIcon())
         self.SetTitle(self.name + " wxPython Demo ;-)")
@@ -41,19 +42,13 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         self.SetMenuBar(self.CreateMenuBar())
 
-        splitter = wx.SplitterWindow(self, -1, style=wx.CLIP_CHILDREN |
+        self.splitter = wx.SplitterWindow(self, -1, style=wx.CLIP_CHILDREN |
                                      wx.SP_3D | wx.WANTS_CHARS | wx.SP_LIVE_UPDATE)
-        self.panel = wx.Panel(splitter, -1)
+        self.panel = wx.Panel(self.splitter, -1)
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.scroll = TC.ThumbnailCtrl(splitter, -1, imagehandler=TC.NativeImageHandler)
-        #scroll = TC.ThumbnailCtrl(splitter, -1, imagehandler=TC.PILImageHandler)
 
-        self.scroll.ShowFileNames()
-        if os.path.isdir("../bitmaps"):
-            self.scroll.ShowDir(os.path.normpath(os.getcwd() + "/../bitmaps"))
-        else:
-            self.scroll.ShowDir(os.getcwd())
+        self.SetScroll()
 
         self.log = log
 
@@ -71,7 +66,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.enabledragging = wx.CheckBox(self.panel, -1, "Enable drag and drop")
         self.setpopup = wx.CheckBox(self.panel, -1, "Set popup menu on thumbs")
         self.setgpopup = wx.CheckBox(self.panel, -1, "Set global popup menu")
-        self.showcombo = wx.CheckBox(self.panel, -1, "Show folder combobox")
+        self.DoComboCheckbox()
         self.enabletooltip = wx.CheckBox(self.panel, -1, "Enable thumb tooltips")
         self.textzoom = wx.TextCtrl(self.panel, -1, "1.4")
         self.zoombutton = wx.Button(self.panel, -1, "Set zoom factor")
@@ -101,7 +96,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.Bind(wx.EVT_CHECKBOX, self.OnEnableDragging, self.enabledragging)
         self.Bind(wx.EVT_CHECKBOX, self.OnSetPopup, self.setpopup)
         self.Bind(wx.EVT_CHECKBOX, self.OnSetGlobalPopup, self.setgpopup)
-        self.Bind(wx.EVT_CHECKBOX, self.OnShowComboBox, self.showcombo)
+        self.DoBindCombo()
         self.Bind(wx.EVT_CHECKBOX, self.OnEnableToolTips, self.enabletooltip)
         self.Bind(wx.EVT_BUTTON, self.OnSetZoom, self.zoombutton)
         self.Bind(wx.EVT_BUTTON, self.OnSetThumbSize, self.thumbsizebutton)
@@ -113,9 +108,9 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.scroll.Bind(EVT_THUMBNAILS_POINTED, self.OnPointed)
         self.scroll.Bind(EVT_THUMBNAILS_DCLICK, self.OnDClick)
 
-        splitter.SplitVertically(self.scroll, self.panel, 300)
+        self.splitter.SplitVertically(self.scroll, self.panel, 300)
 
-        splitter.SetMinimumPaneSize(140)
+        self.splitter.SetMinimumPaneSize(140)
         self.CenterOnScreen()
 
 
@@ -148,7 +143,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         customsizer.Add(self.enabledragging, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         customsizer.Add(self.setpopup, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         customsizer.Add(self.setgpopup, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
-        customsizer.Add(self.showcombo, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
+        self.DoAddCombo(customsizer)
         customsizer.Add(self.enabletooltip, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         splitsizer.Add(customsizer, 0, wx.TOP|wx.EXPAND|wx.LEFT, 5)
         zoomsizer.Add(self.textzoom, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
@@ -194,15 +189,7 @@ class ThumbnailCtrlDemo(wx.Frame):
 
     def OnAbout(self, event):
 
-        msg = "This Is The About Dialog Of The " + self.name + " Demo.\n\n" + \
-              "Author: Andrea Gavana @ 10 Dec 2005\n\n" + \
-              "Modified: Michael Eager @ 15 Oct 2020\n\n" + \
-              "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Addresses:\n\n" + \
-              "eager@eagercon.com\n\n" + \
-              "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-
-        dlg = wx.MessageDialog(self, msg, self.name + " Demo",
+        dlg = wx.MessageDialog(self, self.about, self.name + " Demo",
                                wx.OK | wx.ICON_INFORMATION)
 
         dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False))
@@ -220,7 +207,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         # This is done by getting the path data from the dialog - BEFORE
         # we destroy it.
         if dlg.ShowModal() == wx.ID_OK:
-            self.scroll.ShowDir(dlg.GetPath())
+            self.ShowDir(dlg.GetPath())
             self.log.write("OnSetDirectory: directory changed to: %s\n"%dlg.GetPath())
 
         # Only destroy a dialog after you're done with it.
@@ -309,18 +296,6 @@ class ThumbnailCtrlDemo(wx.Frame):
         else:
             self.scroll.SetGlobalPopupMenu(None)
             self.log.write("OnSetGlobalPopup: Popups disabled globally (no selection needed)\n")
-
-        event.Skip()
-
-
-    def OnShowComboBox(self, event):
-
-        if self.showcombo.GetValue() == 1:
-            self.log.write("OnShowComboBox: Directory comboBox shown\n")
-            self.scroll.ShowComboBox(True)
-        else:
-            self.log.write("OnShowComboBox: Directory comboBox hidden\n")
-            self.scroll.ShowComboBox(False)
 
         event.Skip()
 
@@ -603,6 +578,69 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         event.Skip()
 
+
+    def DoComboCheckbox(self):
+        pass
+
+    def DoBindCombo(self):
+        pass
+
+    def DoAddCombo(self, customsizer):
+        pass
+
+class ThumbnailCtrlDemo(ThumbDemoConfig):
+
+    def __init__(self, parent, log):
+
+        name = "ThumbnailCtrl"
+
+        msg = "This Is The About Dialog Of The " + name + " Demo.\n\n" + \
+              "Author: Andrea Gavana @ 10 Dec 2005\n\n" + \
+              "Modified: Michael Eager @ 15 Oct 2020\n\n" + \
+              "Please Report Any Bug/Requests Of Improvements\n" + \
+              "To Me At The Following Addresses:\n\n" + \
+              "eager@eagercon.com\n\n" + \
+              "Welcome To wxPython " + wx.VERSION_STRING + "!!"
+
+        super().__init__ (parent, log, name=name, about=msg)
+
+
+    def SetScroll(self):
+
+        self.scroll = TC.ThumbnailCtrl(self.splitter, -1, imagehandler=TC.NativeImageHandler)
+        #scroll = TC.ThumbnailCtrl(self.splitter, -1, imagehandler=TC.PILImageHandler)
+
+        self.scroll.ShowFileNames()
+        if os.path.isdir("../bitmaps"):
+            self.scroll.ShowDir(os.path.normpath(os.getcwd() + "/../bitmaps"))
+        else:
+            self.scroll.ShowDir(os.getcwd())
+
+
+    def DoComboCheckbox(self):
+        self.showcombo = wx.CheckBox(self.panel, -1, "Show folder combobox")
+
+
+    def DoBindCombo(self):
+        self.Bind(wx.EVT_CHECKBOX, self.OnShowComboBox, self.showcombo)
+
+    def DoAddCombo(self, customsizer):
+        customsizer.Add(self.showcombo, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
+
+    def ShowDir(self, dir):
+        self.scroll.ShowDir(dir)
+
+
+    def OnShowComboBox(self, event):
+
+        if self.showcombo.GetValue() == 1:
+            self.log.write("OnShowComboBox: Directory comboBox shown\n")
+            self.scroll.ShowComboBox(True)
+        else:
+            self.log.write("OnShowComboBox: Directory comboBox hidden\n")
+            self.scroll.ShowComboBox(False)
+
+        event.Skip()
 
 
 #---------------------------------------------------------------------------
