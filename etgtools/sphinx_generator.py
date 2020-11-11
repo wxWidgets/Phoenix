@@ -48,6 +48,7 @@ from sphinxtools.utilities import pickleClassInfo, pickleFunctionInfo, isNumeric
 from sphinxtools.utilities import underscore2Capitals, countSpaces
 from sphinxtools.utilities import formatContributedSnippets
 from sphinxtools.utilities import PickleFile
+from sphinxtools.utilities import textfile_open
 
 from sphinxtools.constants import VERSION, REMOVED_LINKS, SECTIONS
 from sphinxtools.constants import MAGIC_METHODS, MODULENAME_REPLACE
@@ -3229,6 +3230,14 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         for item in class_items:
             f = dispatch[item.__class__][0]
             f(item)
+
+        if klass.postProcessReST is not None:
+            full_name = os.path.join(SPHINXROOT, filename)
+            with textfile_open(full_name) as f:
+                text = f.read()
+            text = klass.postProcessReST(text)
+            with textfile_open(full_name, 'wt') as f:
+                f.write(text)
 
         if klass.enum_list:
             stream = StringIO()

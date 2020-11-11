@@ -226,7 +226,7 @@ def run():
                 are fetched instead of native types. Useful for config and such.
             :param `inc_attributes`: if True, then property attributes are added
                 in the form of ``"@<propname>@<attr>"``.
-            :param `flags`: Flags to pass to the iterator, see :ref:`wx.propgrid.PG_ITERATOR_FLAGS`
+            :param `flags`: Flags to pass to the iterator. See :ref:`wx.propgrid.PG_ITERATOR_FLAGS`.
             :returns: A dictionary with values. It is always a dictionary,
                 so if dict_ was an object with __dict__ attribute, then that
                 attribute is returned.
@@ -504,6 +504,14 @@ def run():
             """)
     c.addPyProperty('Items', '_Items')
 
+
+    def postProcessReST(text):
+        # fix some autodoc glitches
+        text = text.replace(':ref:`PropertyGridIterator Flags <propertygriditerator flags>`',
+                            ':ref:`wx.propgrid.PG_ITERATOR_FLAGS`')
+        return text
+
+    c.setReSTPostProcessor(postProcessReST)
 
     #----------------------------------------------------------
 
