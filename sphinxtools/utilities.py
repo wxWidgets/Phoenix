@@ -861,3 +861,17 @@ def isPython3():
 
     return sys.version_info >= (3, )
 
+
+def textfile_open(filename, mode='rt'):
+    """
+    Simple wrapper around open() that will use codecs.open on Python2 and
+    on Python3 will add the encoding parameter to the normal open(). The
+    mode parameter must include the 't' to put the stream into text mode.
+    """
+    assert 't' in mode
+    if sys.version_info < (3,):
+        import codecs
+        mode = mode.replace('t', '')
+        return codecs.open(filename, mode, encoding='utf-8')
+    else:
+        return open(filename, mode, encoding='utf-8')
