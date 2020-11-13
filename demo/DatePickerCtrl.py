@@ -20,15 +20,17 @@ class TestPanel(wx.Panel):
         self.Bind(wx.adv.EVT_DATE_CHANGED, self.OnDateChanged, dpc)
         sizer.Add(dpc, 0, wx.ALL, 50)
 
-        # In some cases the widget used above will be a native date
-        # picker, so show the generic one too.
-        # dpc = wx.adv.DatePickerCtrlGeneric(self, size=(120,-1),
-                                       # style = wx.TAB_TRAVERSAL
-                                       # | wx.adv.DP_DROPDOWN
-                                       # | wx.adv.DP_SHOWCENTURY
-                                       # | wx.adv.DP_ALLOWNONE )
-        # self.Bind(wx.adv.EVT_DATE_CHANGED, self.OnDateChanged, dpc)
-        # sizer.Add(dpc, 0, wx.LEFT, 50)
+        st = wx.StaticText(self,
+            label="In some cases the widget used above will be a native date picker, so show the generic one too.")
+        sizer.Add(st, 0, wx.LEFT, 50)
+
+        dpc = wx.adv.DatePickerCtrlGeneric(self, size=(120,-1),
+                                           style = wx.adv.DP_DROPDOWN
+                                           | wx.adv.DP_SHOWCENTURY
+                                           | wx.adv.DP_ALLOWNONE )
+        self.Bind(wx.adv.EVT_DATE_CHANGED, self.OnDateChanged, dpc)
+        sizer.Add((1,15))
+        sizer.Add(dpc, 0, wx.LEFT, 50)
 
 
     def OnDateChanged(self, evt):
