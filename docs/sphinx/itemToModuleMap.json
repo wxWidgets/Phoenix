@@ -891,6 +891,7 @@
 "DataViewVirtualListModel":"wx.dataview.",
 "DateEvent":"wx.adv.",
 "DatePickerCtrl":"wx.adv.",
+"DatePickerCtrlGeneric":"wx.adv.",
 "DateProperty":"wx.propgrid.",
 "DateSpan":"wx.",
 "DateTime":"wx.",
