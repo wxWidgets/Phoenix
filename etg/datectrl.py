@@ -42,8 +42,8 @@ def run():
     gdpc = tools.copyClassDef(dpc, 'wxDatePickerCtrlGeneric')
     assert isinstance(gdpc, etgtools.ClassDef)
     module.insertItemAfter(dpc, gdpc)
-    # and give it a new Python name to match Classic
-    gdpc.pyName = 'GenericDatePickerCtrl'
+    # and give it an alias matching the class name in Classic
+    module.addPyCode("GenericDatePickerCtrl = DatePickerCtrlGeneric")
 
     # now back to our regular tweaking
     for c in [dpc, gdpc]:

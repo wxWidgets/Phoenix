@@ -23,6 +23,12 @@ class log_Tests(wtc.WidgetTestCase):
         wx.LogMessage("This is a test")
         self.assertTrue(log.messageLogged)
 
+
+    def test_lognull_is_context_mgr(self):
+        with wx.LogNull():
+            pass
+
+
 #---------------------------------------------------------------------------
 
 

@@ -684,6 +684,7 @@ class ClassDef(BaseDef):
         self.isInner = False        # Is this a nested class?
         self.klass = None           # if so, then this is the outer class
         self.preMethodCode = None
+        self.postProcessReST = None
 
         # Stuff that needs to be generated after the class instead of within
         # it. Some back-end generators need to put stuff inside the class, and
@@ -1157,6 +1158,11 @@ private:
         self.addItem(item)
         return item
 
+    def setReSTPostProcessor(self, func):
+        """
+        Set a function to be called after the class's docs have been generated.
+        """
+        self.postProcessReST = func
 
 #---------------------------------------------------------------------------
 
