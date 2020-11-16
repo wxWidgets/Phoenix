@@ -12,6 +12,23 @@ from wx.lib.agw.scrolledthumbnail import (ScrolledThumbnail,
                                           EVT_THUMBNAILS_DCLICK)
 
 class ThumbDemoConfig(wx.Frame):
+    """ScrolledThumbnail or ThumbnailCtrl demo common code
+
+    This class contains code common to both the ScrolledThumbnail and
+    the ThumbnailCtrl demos.  It is extended by both of these demos to
+    address the differences in invoking :class:`ScrolledThumbnail`
+    or :class:`ThumbnailCtrl` widgets.
+
+    This class creates a SplitterWindow with the left half containing
+    the widget being demoed and the right half containing a number of
+    controls which set or change operation of the widget.  In most
+    this simply involves passing the user-specified value to the
+    widget.
+
+    For information about what setting does, as well as other settings,
+    set the documentation for :class:`ScrolledThumbnail` or
+    :class:`ThumbnailCtrl`.
+    """
 
     def __init__(self, parent, log, name, about):
 
@@ -33,12 +50,15 @@ class ThumbDemoConfig(wx.Frame):
 
         self.SetMenuBar(self.CreateMenuBar())
 
+        # Create SplitterWindow with panels for widget and controls.
         self.splitter = wx.SplitterWindow(self, -1, style=wx.CLIP_CHILDREN |
                                      wx.SP_3D | wx.WANTS_CHARS | wx.SP_LIVE_UPDATE)
         self.panel = wx.Panel(self.splitter, -1)
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
+        # Call SetScroll() to create thumbnail widget.
+        # This is provided by each of the two demos.
         self.SetScroll()
 
         self.log = log
@@ -78,6 +98,7 @@ class ThumbDemoConfig(wx.Frame):
         self.panel.SetSizer(sizer)
         sizer.Layout()
 
+
         self.Bind(wx.EVT_RADIOBUTTON, self.OnChangeOutline, self.radiostyle1)
         self.Bind(wx.EVT_RADIOBUTTON, self.OnChangeOutline, self.radiostyle2)
         self.Bind(wx.EVT_RADIOBUTTON, self.OnChangeOutline, self.radiostyle3)
@@ -99,6 +120,7 @@ class ThumbDemoConfig(wx.Frame):
         self.scroll.Bind(EVT_THUMBNAILS_POINTED, self.OnPointed)
         self.scroll.Bind(EVT_THUMBNAILS_DCLICK, self.OnDClick)
 
+        # Add thumbnail widget and control panel to SplitterWindow.
         self.splitter.SplitVertically(self.scroll, self.panel, 300)
 
         self.splitter.SetMinimumPaneSize(140)
@@ -112,6 +134,7 @@ class ThumbDemoConfig(wx.Frame):
 
 
     def DoLayout(self):
+        """Layout controls."""
 
         splitsizer = wx.BoxSizer(wx.VERTICAL)
         optionsizer = wx.StaticBoxSizer(self.optionsizer_staticbox, wx.VERTICAL)
