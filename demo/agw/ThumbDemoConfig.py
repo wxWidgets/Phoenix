@@ -32,7 +32,7 @@ class ThumbDemoConfig(wx.Frame):
 
     def __init__(self, parent, log, name, about):
 
-        wx.Frame.__init__(self, parent, size=(850,800))
+        wx.Frame.__init__(self, parent, size=(850,820))
         self.name = name
         self.about = about
 
@@ -54,8 +54,6 @@ class ThumbDemoConfig(wx.Frame):
         self.splitter = wx.SplitterWindow(self, -1, style=wx.CLIP_CHILDREN |
                                      wx.SP_3D | wx.WANTS_CHARS | wx.SP_LIVE_UPDATE)
         self.panel = wx.Panel(self.splitter, -1)
-
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # Call SetScroll() to create thumbnail widget.
         # This is provided by each of the two demos.
@@ -94,10 +92,6 @@ class ThumbDemoConfig(wx.Frame):
 
         self.SetProperties()
         self.DoLayout()
-
-        self.panel.SetSizer(sizer)
-        sizer.Layout()
-
 
         self.Bind(wx.EVT_RADIOBUTTON, self.OnChangeOutline, self.radiostyle1)
         self.Bind(wx.EVT_RADIOBUTTON, self.OnChangeOutline, self.radiostyle2)
@@ -146,12 +140,14 @@ class ThumbDemoConfig(wx.Frame):
         dirsizer = wx.StaticBoxSizer(self.dirsizer_staticbox, wx.HORIZONTAL)
         dirsizer.Add(self.dirbutton, 0, wx.LEFT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
         splitsizer.Add(dirsizer, 0, wx.EXPAND|wx.TOP|wx.LEFT, 5)
+        splitsizer.AddSpacer(15)
         radiosizer.Add(self.radiostyle1, 0, wx.LEFT|wx.TOP|wx.ADJUST_MINSIZE, 3)
         radiosizer.Add(self.radiostyle2, 0, wx.LEFT|wx.TOP|wx.ADJUST_MINSIZE, 3)
         radiosizer.Add(self.radiostyle3, 0, wx.LEFT|wx.TOP|wx.ADJUST_MINSIZE, 3)
         radiosizer.Add(self.radiostyle4, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         thumbsizer.Add(radiosizer, 1, wx.EXPAND, 0)
         splitsizer.Add(thumbsizer, 0, wx.TOP|wx.EXPAND|wx.LEFT, 5)
+        splitsizer.AddSpacer(15)
         customsizer.Add(self.highlight, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         customsizer.Add(self.showfiles, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         customsizer.Add(self.enabledragging, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
@@ -160,6 +156,7 @@ class ThumbDemoConfig(wx.Frame):
         self.DoAddCombo(customsizer)
         customsizer.Add(self.enabletooltip, 0, wx.LEFT|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         splitsizer.Add(customsizer, 0, wx.TOP|wx.EXPAND|wx.LEFT, 5)
+        splitsizer.AddSpacer(15)
         zoomsizer.Add(self.textzoom, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
         zoomsizer.Add(self.zoombutton, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
         thumbsizesizer.Add(self.textthumbwidth, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
