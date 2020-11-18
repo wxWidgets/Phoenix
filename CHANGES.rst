@@ -81,6 +81,8 @@ New and improved in this release:
 
 * Added the missing context manager methods for wx.LogNull. (#1842)
 
+* Refactored ScrolledThumbnail out of agw.ThumbnailCtrl so as to be usable 
+  outside of ThumbnailCtrl. 
 
 
 
