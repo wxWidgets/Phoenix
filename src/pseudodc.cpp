@@ -483,7 +483,7 @@ bool wxPseudoDC::GetIdGreyedOut(int id)
 // ----------------------------------------------------------------------------
 PyObject *wxPseudoDC::FindObjectsByBBox(wxCoord x, wxCoord y)
 {
-    //wxPyBlock_t blocked = wxPyBeginBlockThreads();
+    wxPyThreadBlocker blocker;
     pdcObjectList::compatibility_iterator pt = m_objectlist.GetFirst();
     pdcObject *obj;
     PyObject* pyList = NULL;
@@ -501,7 +501,6 @@ PyObject *wxPseudoDC::FindObjectsByBBox(wxCoord x, wxCoord y)
         }
         pt = pt->GetNext();
     }
-    //wxPyEndBlockThreads(blocked);
     return pyList;
 }
 
@@ -511,7 +510,7 @@ PyObject *wxPseudoDC::FindObjectsByBBox(wxCoord x, wxCoord y)
 PyObject *wxPseudoDC::FindObjects(wxCoord x, wxCoord y,
                                   wxCoord radius, const wxColor& bg)
 {
-    //wxPyBlock_t blocked = wxPyBeginBlockThreads();
+    wxPyThreadBlocker blocker;
     pdcObjectList::compatibility_iterator pt = m_objectlist.GetFirst();
     pdcObject *obj;
     PyObject* pyList = NULL;
@@ -611,8 +610,7 @@ PyObject *wxPseudoDC::FindObjects(wxCoord x, wxCoord y,
         maskdc.SelectObject(wxNullBitmap);
         memdc.SelectObject(wxNullBitmap);
     }
-    //wxPyEndBlockThreads(blocked);
-    return pyList;
+     return pyList;
 }
 
 // ----------------------------------------------------------------------------
