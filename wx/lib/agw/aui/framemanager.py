@@ -10761,4 +10761,7 @@ class AuiManager_DCP(AuiManager):
         else:
             # if we get here, there's no center pane, create our dummy
             if not self.hasDummyPane:
-                self._createDummyPane()
+                def do():
+                    self._createDummyPane()
+                    self.Update()
+                wx.CallAfter(do)
