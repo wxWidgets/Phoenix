@@ -324,12 +324,14 @@ class GridColMover(wx.EvtHandler):
         colImg = self._CaptureImage(rect)
         self.colWin = ColDragWindow(self.grid,colImg,col)
         self.colWin.Show(False)
-        self.lwin.CaptureMouse()
+        if wx.Window.GetCapture() is not None:
+            self.lwin.CaptureMouse()
         evt.Skip()
 
     def OnRelease(self,evt):
         if self.isDragging:
-            self.lwin.ReleaseMouse()
+            if self.lwin.HasCapture():
+                self.lwin.ReleaseMouse()
             self.colWin.Show(False)
             self.isDragging = False
 
@@ -465,12 +467,14 @@ class GridRowMover(wx.EvtHandler):
         rowImg = self._CaptureImage(rect)
         self.rowWin = RowDragWindow(self.grid,rowImg,row)
         self.rowWin.Show(False)
-        self.lwin.CaptureMouse()
+        if wx.Window.GetCapture() is not None:
+            self.lwin.CaptureMouse()
         evt.Skip()
 
     def OnRelease(self,evt):
         if self.isDragging:
-            self.lwin.ReleaseMouse()
+            if self.lwin.HasCapture():
+                self.lwin.ReleaseMouse()
             self.rowWin.Show(False)
             self.isDragging = False
 
