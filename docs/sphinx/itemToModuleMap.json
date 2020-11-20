@@ -1382,6 +1382,7 @@
 "GetBatteryState":"wx.",
 "GetClientDisplayRect":"wx.",
 "GetColourFromUser":"wx.",
+"GetCpuArchitectureName":"wx.",
 "GetDiskSpace":"wx.",
 "GetDisplayName":"wx.",
 "GetDisplayPPI":"wx.",
