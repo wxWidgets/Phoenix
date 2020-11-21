@@ -9,109 +9,87 @@
 
 
 
-Announcing wxPython 4.1.0
+Announcing wxPython 4.1.1
 =========================
 
-PyPI:   https://pypi.org/project/wxPython/4.1.0
+PyPI:   https://pypi.org/project/wxPython/4.1.1
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.1.0``
-
-Starting with this release wxPython has switched to tracking the
-wxWidgets master branch (version 3.1.x) for the wxWidgets source code,
-which wxPython is built upon, and which is included in the wxPython
-source archives.
-
-This will be the last release to include binaries for Python 2.7. The
-code will likely still compile and be compatible with Python 2.7 for
-some time, but no effort will be put into keeping it that way.
-
+Pip:    ``pip install wxPython==4.1.1``
 
 New and improved in this release:
 
-* Add a sample for wx.Font.AddPrivateFont to the demo.
+* This should have been mentioned in the notes for the last release,
+  but alas, it wandered away and got lost. wxWidgets is now validating
+  the flags passed when adding items to a sizer, to ensure that they
+  are the correct flags for the type of the sizer. If the given flags
+  do not make sense, for example using horizontal alignment flags in a
+  horizontal box sizer, then a wxAssertionError error is raised.
 
-* Added wrappers for the OSXEnableAutomaticQuoteSubstitution,
-  OSXEnableAutomaticDashSubstitution, and
-  OSXDisableAllSmartSubstitutions methods in wx.TextCtrl. Also added
-  OSXEnableAutomaticTabbing in wx.App.
+* Fixed missing binder for wxEVT_STC_AUTOCOMP_SELECTION_CHANGE. (#1613)
 
-* Added wx.ColourDialogEvent, wx.DCTextBgColourChanger,
-  wx.DCTextBgModeChanger, wx.grid.GridCellDateRenderer,
-  wx.grid.GridCellDateEditor, wx.SystemAppearance, etc.
+* DataViewModel.HasValue can be overridden and will inform the
+  DataViewCtrl whether or not an item and column has data. If HasValue
+  returns False, then GetValue for that item/col will not be called.
+  This allows a distinction between a truly empty cell, and one that
+  has a value even if it is an empty string. (#1600)
 
-* Many of the deprecated items in wxWidgets and wxPython are being or
-  have been removed. Be sure to test your code in a recent 4.0.x
-  release with warnings enabled so you can see which class, method or
-  function calls you need to change.
+* Added flag that allows blocking of item dragging in the
+  UltimateListControl class. (PR#1620)
 
-* Bug fixes in wx.lib.calendar: key navigation across month boundaries
-  is now possible; key navigation now sets the date and fires the
-  EVT_CALENDAR event; setter APIs now set the date correctly (#1230).
+* Add the column index to notification events in UltimateListControl
+  (PR#1630)
 
-* Switch to using a wx.Overlay in the Widget Inspection Tool to
-  highlight widgets when running on a GTK3 port.
+* Added orientation parameter to UltimateListControl.GetScrollPos.
+  (PR#1632)
 
-* Fixed issue in wx.lib.agw.customtreectrl where the label editor
-  could remain stuck forever (#1235).
+* wx.lib.agw.aui.AuiNotebook RemovePage() now hides the removed page,
+  so it needs to be shown again if it is reused in another place.
+  (PR#1668)
 
-* Grafted on a EnableSystemTheme method to the classes which support
-  it. This can be used to disable the default system theme on Windows
-  for native widgets like wx.ListCtrl, wx.TreeCtrl and
-  wx.dataview.DataViewCtrl. It has no effect on the other platforms.
+* Fixed issue that could modify `bytes` objects under Python. (PR#1680)
 
-* The wx.WS_EX_VALIDATE_RECURSIVELY extended style flag is obsolete,
-  as it is now the default (and only) behavior. The style flag has
-  been added back into wxPython for compatibility, but with a zero
-  value. You can just stop using it in your code with no change in
-  behavior. (#1278)
+* Added wx.lib.agw.aui.EVT_AUI_PANE_CLOSE event which is sent when a
+  AUI (the agw version) Pane has been closed (after it has been
+  closed, not when it is about to be closed, which is when
+  EVT_AUI_PANE_CLOSE is sent.) (PR#1628)
 
-* Fix a sometimes crash when using a wx.Overlay by letting the
-  wx.DCOverlay hold a reference to the DC, to ensure that the
-  DCOverlay is destroyed first.  (PR#1301)
+* Exposed the wx.DC methods GetGraphicsContext and SetGraphicsContext.
+  Depending on the platform and the type of the DC, there may be a
+  wx.GraphicsContext used for the implementation of the DC. If so, the
+  GetGraphicsContext method enables access to it. Be sure to check
+  that the return value is not None before trying to use it.
 
-* Replaced the Vagrant VMs used for building wxPython for various
-  Linux distros with Docker images.
+* Simplified the implementation of the wx.App.InitLocale method. See the
+  MigrationGuide for more information.
 
-* Add some missing methods in wx.adv.BitmapComboBox (#1307)
+* Added wx.lib.agw.aui.AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR constant
+  so the hint window border color can be themed as well.
 
-* Added the wx.svg package which contains code for parsing SVG
-  (Scalable Vector Graphics) files, and also code for integrating with
-  wxPython. It can rasterize the SVG to a wx.Bitmap of any size with
-  no loss of quality, and it can also render the SVG directly to a
-  wx.GraphicsContext using the GC's drawing primitives. (PR #1323)
+* The wx.lib.mixins.listCtrl.CheckListCtrlMixin is now obsolete
+  because wx.ListCtrl has new functionality which does pretty much the
+  same thing. In fact there is some overlap in method names which may
+  trip up some use cases. It is advised to drop the use of
+  CheckListCtrlMixin and just use the wx.ListBox functionality. You
+  will need to call EnableCheckBoxes to turn it on, and you may need
+  to change some event handlers or overloaded methods.
 
-* Ported the embedding sample from Classic, which shows how to use
-  wxPython from a C++ wxWidgets application that embeds Python. (PR
-  #1353)
+* wx.html2.WebView is now able to use Microsoft's Edge browser
+  component as its backend renderer. This should improve the
+  capabilities of the WebView widget on Windows, and be more
+  consistent with the WebViews on the other platforms, compared to the
+  original IE 11 backend. Using this backed requires that a new-ish
+  version of the Edge browser is installed on the end user's computer.
 
-* Fixed wx.GetApp() to use wxWidgets' global wxApp instance instead of
-  maintaining its own pointer. This way, if the wxApp is created by
-  C++ code wxPython will still be able to get access to it. (#1126)
+* Added the wx.Image.ConvertToRegion method. This lets you create a
+  wx.Region from an image and a specified color or the mask if the
+  image has one. This was done to workaround a bug in wxMac, but it
+  seems worthwhile enough to keep it around even after the bug was
+  fixed.
 
-* Added wrappers for the wx.ActivityIndicator class.
+* Added the missing context manager methods for wx.LogNull. (#1842)
 
-* Added wrappers for the wx.CollapsibleHeaderCtrl class.
-
-* Fixed issues in PlotCanvas around displaying and using
-  scrollbars. (#1428)
-
-* Added wx.msw.CHMHelpController, and also a wx.HelpController factory
-  function that creates an instance of the best Help Controller for
-  the platform. (#1536)
-
-* Added wx.adv.GenericAnimationCtrl so the generic version of the
-  animation classes can be used even on the platforms that have a
-  native version. Note that due to internal changes to support both
-  types of animations, some API changes in how the Animation objects
-  are created. See the AnimationCtrl.py sample in the demo for the
-  various usage patterns (#1579)
-
-* Added wrappers for the wx.grid.GridBlockCoords, wx.grid.GridBlocks,
-  and wx.grid.GridBlockDiffResult classes, as well as associated new
-  methods in the wx.grid.Grid class. These provide a new way to
-  interact with blocks of selected cells, including an iterator
-  interface in wx.grid.GridBlocks which should be a more efficient
-  (time and memory) way to process large groups of selections.
+* Refactored ScrolledThumbnail out of agw.ThumbnailCtrl so as to be
+  usable outside of ThumbnailCtrl.
 
 
 
