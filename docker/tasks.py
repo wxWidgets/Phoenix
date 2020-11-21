@@ -20,7 +20,7 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 
 # Distros that have been promoted to Emeritus status. They can still be selected
 # manually, but will be excluded by default when selecting all images.
-OLD = [ 'ubuntu-14.04' ]
+OLD = [ 'ubuntu-14.04', 'fedora-29' ]
 
 
 
@@ -110,11 +110,12 @@ def push(ctx, image, gui=False, include_old=False):
         'image':'Name of a docker image to use for building. May be specified more than once. Defaults to all.',
         'port': 'One of "gtk2", "gtk3" or "all". Defaults to "gtk3".',
         'venv': 'The name of a Python virtual environment to use for the build, like Py27, Py36, etc. Defaults to all.',
-        'include_old': 'Include the "OLD" distros when selecting all.'
+        'include_old': 'Include the "OLD" distros when selecting all.',
+        'keep': "Keep the container when it exits. Otherwise it will be auto-removed."
     },
     iterable=['image'],
 )
-def build_wxpython(ctx, image, venv='all', port='gtk3', include_old=False):
+def build_wxpython(ctx, image, venv='all', port='gtk3', include_old=False, keep=False):
     """
     Use docker images to build wxPython.
 
@@ -127,9 +128,10 @@ def build_wxpython(ctx, image, venv='all', port='gtk3', include_old=False):
 
     os.chdir(HERE)
     dist=os.path.abspath('../dist')
+    rm = '' if keep else '--rm'
     for img_name in image:
-        ctx.run('docker run -it --rm -v {}:/dist '
-                'wxpython4/build:{} do-build.sh {} {}'.format(dist, img_name, venv, port),
+        ctx.run('docker run -it {} -v {}:/dist '
+                'wxpython4/build:{} do-build.sh {} {}'.format(rm, dist, img_name, venv, port),
                 pty=True, echo=True)
 
 
