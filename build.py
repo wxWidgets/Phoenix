@@ -1729,6 +1729,21 @@ def cmd_build_docker(options, args):
             cmd.append('-i')
             cmd.append(img)
 
+    # Do just the gtk2 builds?
+    if options.gtk2:
+        cmd.extend(['--port', 'gtk2'])
+
+    # TODO: Instead of the simple options.gtk2 test above, do something like the
+    # following to select both. But currently if gtk2 is selected then
+    # options.gtk3 is explicity set to False... That needs to be made a little
+    # smarter.
+    # if options.gtk2 and options.gtk3:
+    #     cmd.extend(['--port', 'all'])
+    # elif options.gtk2:
+    #     cmd.extend(['--port', 'gtk2'])
+    # else:
+    #     cmd.extend(['--port', 'gtk3'])
+
     # 'none' can be used to skip building and go straight to uploading
     if options.docker_img != 'none':
         pwd = pushDir('docker')

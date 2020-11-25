@@ -8,13 +8,13 @@
 wxPython Changelog
 ==================
 
-4.1.1
------
-* (unreleased)
+4.1.1 "An attitude of gratitude"
+--------------------------------
+* 21-Nov-2020
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.1.0
+PyPI:   https://pypi.python.org/pypi/wxPython/4.1.1
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.1.0``
+Pip:    ``pip install wxPython==4.1.1``
 
 New and improved in this release:
 
@@ -81,8 +81,8 @@ New and improved in this release:
 
 * Added the missing context manager methods for wx.LogNull. (#1842)
 
-* Refactored ScrolledThumbnail out of agw.ThumbnailCtrl so as to be usable 
-  outside of ThumbnailCtrl. 
+* Refactored ScrolledThumbnail out of agw.ThumbnailCtrl so as to be usable
+  outside of ThumbnailCtrl.
 
 
 

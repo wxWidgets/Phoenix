@@ -31,7 +31,8 @@ RUN \
                 libtiff-devel \
                 libXtst-devel \
                 SDL-devel \
-                webkit2gtk3-devel; \
+                webkit2gtk3-devel \
+                which; \
 # Install all available Python packages and their dev packages
         dnf -y install python3 python3-tools python3-devel; \
         dnf -y install python36; \
