@@ -3257,6 +3257,9 @@ class AuiToolBar(wx.Control):
     def DoIdleUpdate(self):
         """ Updates the toolbar during idle times. """
 
+        if not self:
+            return # The action Destroyed the toolbar!
+
         handler = self.GetEventHandler()
         if not handler:
             return
@@ -4028,4 +4031,3 @@ class AuiToolBar(wx.Control):
 
         manager = self.GetAuiManager()
         manager.StopPreviewTimer()
-
