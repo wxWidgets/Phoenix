@@ -50,6 +50,7 @@ RUN \
 RUN \
         if [ ${USE_DEADSNAKES} = yes ]; then add-apt-repository ppa:deadsnakes/ppa; apt-get update; fi; \
         apt-get install -y python3.8 python3.8-dev libpython3.8-dev python3.8-venv; \
+        apt-get install -y python3.9 python3.9-dev libpython3.9-dev python3.9-venv; \
         apt-get clean;
 
 # Add files from host into the container
@@ -66,7 +67,8 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        python3.8 -m venv venvs/Py38;
+        python3.8 -m venv venvs/Py38; \
+        python3.9 -m venv venvs/Py39;
 
 # Define default command
 CMD ["/bin/bash", "-l"]
