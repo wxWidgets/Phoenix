@@ -125,8 +125,10 @@ def configure(conf):
 
         conf.env.INCLUDES_WX = cfg.includes
         conf.env.DEFINES_WX = cfg.wafDefines
-        conf.env.CFLAGS_WX = cfg.cflags
-        conf.env.CXXFLAGS_WX = cfg.cflags
+        conf.env.CFLAGS = cfg.cflags
+        conf.env.CXXFLAGS = cfg.cxxflags
+        conf.env.CFLAGS_WX = list()
+        conf.env.CXXFLAGS_WX = list()
         conf.env.LIBPATH_WX = cfg.libdirs
         conf.env.LIB_WX = cfg.libs
         conf.env.LIBFLAGS_WX = cfg.lflags
@@ -192,19 +194,21 @@ def configure(conf):
             conf.env['LIB_PYEXT'][0] += '_d'
 
 
-    else:
+    else: # not isWindows
         # TODO: Double-check that this works when using an installed wxWidgets
         wxConfigDir = cfg.findWxConfigDir(conf.options.wx_config)
 
         # Configuration stuff for non-Windows ports using wx-config
-        conf.env.CFLAGS_WX   = list()
-        conf.env.CXXFLAGS_WX = list()
-        conf.env.CFLAGS_WXPY   = list()
-        conf.env.CXXFLAGS_WXPY = list()
-
-        # finish configuring the Config object
+        # First finish configuring the Config object
         conf.env.wx_config = conf.options.wx_config
         cfg.finishSetup(conf.env.wx_config, conf.env.debug)
+
+        conf.env.CFLAGS = cfg.cflags[:]
+        conf.env.CXXFLAGS = cfg.cxxflags[:]
+        conf.env.CFLAGS_WX = list()
+        conf.env.CXXFLAGS_WX = list()
+        conf.env.CFLAGS_WXPY = list()
+        conf.env.CXXFLAGS_WXPY = list()
 
         # Check wx-config exists and fetch some values from it
         rpath = ' --no-rpath' if not conf.options.no_magic else ''
@@ -364,14 +368,14 @@ def configure(conf):
 
         # Some Mac-specific stuff
         if isDarwin:
-            conf.env.MACOSX_DEPLOYMENT_TARGET = "10.6"
+            conf.env.MACOSX_DEPLOYMENT_TARGET = "10.10"
 
             if conf.options.mac_arch:
                 conf.env.ARCH_WXPY = conf.options.mac_arch.split(',')
 
-    #import pprint
-    #pprint.pprint( [(k, conf.env[k]) for k in conf.env.keys()] )
-
+    # import pprint
+    # pprint.pprint( [(k, conf.env[k]) for k in conf.env.keys()] )
+    # sys.exit(0)
 
 
 #
