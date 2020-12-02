@@ -15,6 +15,7 @@ import sys
 import os
 import glob
 import fnmatch
+import shlex
 import re
 import shutil
 import subprocess
@@ -195,6 +196,7 @@ class Configuration(object):
                             '/EHsc',
                             # '/GX-'  # workaround for internal compiler error in MSVC on some machines
                             ]
+            self.cxxflags = self.cflags[:]
             self.lflags = None
 
             # These confuse WAF, but since it already reliably picks the correct
@@ -206,6 +208,7 @@ class Configuration(object):
             # Other MSVC flags...
             # Uncomment these to have debug info for all kinds of builds
             #self.cflags += ['/Od', '/Z7']
+            #self.cxxflags += ['/Od', '/Z7']
             #self.lflags = ['/DEBUG', ]
 
 
@@ -219,13 +222,15 @@ class Configuration(object):
             self.libdirs = []
             self.libs = []
 
-            self.cflags = self.getWxConfigValue('--cxxflags')
-            self.cflags = self.cflags.split()
+            self.cflags = self.getWxConfigValue('--cflags').split()
+            self.cxxflags = self.getWxConfigValue('--cxxflags').split()
             if self.debug:
-                self.cflags.append('-ggdb')
-                self.cflags.append('-O0')
+                for lst in [self.cflags, self.cxxflags]:
+                    lst.append('-ggdb')
+                    lst.append('-O0')
             else:
-                self.cflags.append('-O3')
+                for lst in [self.cflags, self.cxxflags]:
+                    lst.append('-O3')
 
             lflags = self.getWxConfigValue('--libs')
             self.MONOLITHIC = (lflags.find("_xrc") == -1)
@@ -235,9 +240,47 @@ class Configuration(object):
             self.WXRELEASE  = self.getWxConfigValue('--release')
             self.WXPREFIX   = self.getWxConfigValue('--prefix')
 
+            # Set CC, CXX and maybe LDSHARED based on what was configured for
+            # wxWidgets, but not if those values are in the environment.
             self.CC = self.CXX = self.LDSHARED = None
+            if not os.environ.get('CC'):
+                compiler, flags = self.unpackCompilerCommand(self.getWxConfigValue('--cc'))
+                self.CC = os.environ["CC"] = compiler
+                for flag in flags:
+                    if flag not in self.cflags:
+                        self.cflags.insert(0, flag)
 
-            # wxMac settings
+            if not os.environ.get('CXX'):
+                compiler, flags = self.unpackCompilerCommand(self.getWxConfigValue('--cxx'))
+                self.CXX = os.environ["CXX"] = compiler
+                for flag in flags:
+                    if flag not in self.cxxflags:
+                        self.cxxflags.insert(0, flag)
+
+            if sys.platform[:6] == "darwin" and not os.environ.get('LDSHARED'):
+                # We want to use the linker command from wx to make sure
+                # we get the right sysroot, but we also need to ensure that
+                # the other linker flags that distutils wants to use are
+                # included as well.
+                LDSHARED = distutils.sysconfig.get_config_var('LDSHARED').split()
+                # remove the compiler command
+                del LDSHARED[0]
+                # remove any -sysroot flags and their arg
+                while True:
+                    try:
+                        index = LDSHARED.index('-isysroot')
+                        # Strip this argument and the next one:
+                        del LDSHARED[index:index+2]
+                    except ValueError:
+                        break
+                LDSHARED = ' '.join(LDSHARED)
+                # Combine with wx's ld command and stash it in the env
+                # where distutils will get it later.
+                LDSHARED = self.getWxConfigValue('--ld').replace(' -o', '') + ' ' + LDSHARED
+                self.LDSHARED = os.environ["LDSHARED"]  = LDSHARED
+
+
+            # Other wxMac-only settings
             if sys.platform[:6] == "darwin":
                 self.WXPLAT = '__WXMAC__'
 
@@ -247,41 +290,16 @@ class Configuration(object):
                 else:
                     self.WXPLAT2 = '__WXOSX_COCOA__'
 
-                self.libs = ['stdc++']
                 if not self.ARCH == "":
                     for arch in self.ARCH.split(','):
-                        self.cflags.append("-arch")
-                        self.cflags.append(arch)
+                        for lst in [self.cflags, self.cxxflags]:
+                            lst.append("-arch")
+                            lst.append(arch)
                         self.lflags.append("-arch")
                         self.lflags.append(arch)
 
-                if not os.environ.get('CC') or not os.environ.get('CXX'):
-                    self.CC =  os.environ["CC"]  = self.getWxConfigValue('--cc')
-                    self.CXX = os.environ["CXX"] = self.getWxConfigValue('--cxx')
 
-                    # We want to use the linker command from wx to make sure
-                    # we get the right sysroot, but we also need to ensure that
-                    # the other linker flags that distutils wants to use are
-                    # included as well.
-                    LDSHARED = distutils.sysconfig.get_config_var('LDSHARED').split()
-                    # remove the compiler command
-                    del LDSHARED[0]
-                    # remove any -sysroot flags and their arg
-                    while 1:
-                        try:
-                            index = LDSHARED.index('-isysroot')
-                            # Strip this argument and the next one:
-                            del LDSHARED[index:index+2]
-                        except ValueError:
-                            break
-                    LDSHARED = ' '.join(LDSHARED)
-                    # Combine with wx's ld command and stash it in the env
-                    # where distutils will get it later.
-                    LDSHARED = self.getWxConfigValue('--ld').replace(' -o', '') + ' ' + LDSHARED
-                    self.LDSHARED = os.environ["LDSHARED"]  = LDSHARED
-
-
-            # wxGTK settings
+            # wxGTK-only settings
             else:
                 # Set flags for other Unix type platforms
                 if self.WXPORT == 'gtk':
@@ -296,7 +314,7 @@ class Configuration(object):
                     self.WXPLAT = '__WXGTK__'
                     portcfg = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
                 elif self.WXPORT == 'x11':
-                    msg("WARNING: The wxX11 port is no supported")
+                    msg("WARNING: The wxX11 port is not supported")
                     self.WXPLAT = '__WXX11__'
                     portcfg = ''
                     self.BUILD_BASE = self.BUILD_BASE + '-' + self.WXPORT
@@ -307,6 +325,7 @@ class Configuration(object):
                     raise SystemExit("Unknown WXPORT value: " + self.WXPORT)
 
                 self.cflags += portcfg.split()
+                self.cxxflags += portcfg.split()
 
                 # Some distros (e.g. Mandrake) put libGLU in /usr/X11R6/lib, but
                 # wx-config doesn't output that for some reason.  For now, just
@@ -318,9 +337,11 @@ class Configuration(object):
             # Move the various -I, -D, etc. flags we got from the config scripts
             # into the distutils lists.
             self.cflags = self.adjustCFLAGS(self.cflags, self.defines, self.includes)
+            self.cxxflags = self.adjustCFLAGS(self.cxxflags, self.defines, self.includes)
             self.lflags = self.adjustLFLAGS(self.lflags, self.libdirs, self.libs)
 
             self.cflags.insert(0, '-UNDEBUG')
+            self.cxxflags.insert(0, '-UNDEBUG')
 
             if self.debug and self.WXPORT == 'msw' and self.COMPILER != 'mingw32':
                 self.defines.append( ('_DEBUG', None) )
@@ -429,6 +450,16 @@ class Configuration(object):
         value = os.popen(cmd, 'r').read()[:-1]
         return value
 
+
+    def unpackCompilerCommand(self, cmd):
+        """
+        It's possible for the CC and CXX values coming from wx-config to have
+        some extra parameters tacked on. Let's split them apart.
+        """
+        cmd = shlex.split(cmd)
+        compiler = cmd[0]
+        flags = cmd[1:]
+        return compiler, flags
 
 
     def build_locale_dir(self, destdir, verbose=1):
