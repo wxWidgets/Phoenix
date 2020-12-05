@@ -1,8 +1,8 @@
 # The base image
-FROM fedora:31
+FROM fedora:33
 
 # Set environment variables
-ENV DIST_NAME=fedora-31
+ENV DIST_NAME=fedora-33
 ENV USER=wxpy
 ENV HOME=/home/$USER
 ENV PYTHONUNBUFFERED=1
@@ -35,7 +35,6 @@ RUN \
                 which; \
 # Install all available Python packages and their dev packages
         dnf -y install python3 python3-tools python3-devel; \
-        dnf -y install python38; \
 # Clean up dnf caches
         dnf clean all;
 
@@ -50,8 +49,7 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        python3.7 -m venv venvs/Py37; \
-        python3.8 -m venv venvs/Py38
+        python3.9 -m venv venvs/Py39
 
 # Add files from host into the container
 COPY scripts ${HOME}/bin
