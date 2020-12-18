@@ -412,6 +412,17 @@ class DoodleApp(wx.App, InspectionMixin, SoftwareUpdate):
         self.SetAppDisplayName('SuperDoodle')
         return True
 
+    def MacReopenApp(self):
+        """
+        Restore the main frame (if it's minimized) when the Dock icon is
+        clicked on OSX.
+        """
+        top = self.GetTopWindow()
+        if top and top.IsIconized():
+            top.Iconize(False)
+        if top:
+            top.Raise()
+
 #----------------------------------------------------------------------
 
 if __name__ == '__main__':
