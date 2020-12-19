@@ -20,7 +20,7 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 
 # Distros that have been promoted to Emeritus status. They can still be selected
 # manually, but will be excluded by default when selecting all images.
-OLD = [ 'ubuntu-14.04', 'fedora-29' ]
+OLD = [ 'ubuntu-14.04', 'fedora-29', 'fedora-30', 'fedora-31' ]
 
 
 
