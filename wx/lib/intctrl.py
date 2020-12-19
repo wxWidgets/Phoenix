@@ -848,7 +848,7 @@ class IntCtrl(wx.TextCtrl):
         # So, to ensure consistency and to prevent spurious ValueErrors,
         # we make the following test, and react accordingly:
         #
-        if value == '':
+        if value == '' or value == '-':
             if not self.IsNoneAllowed():
                 return 0
             else:
