@@ -272,6 +272,7 @@ def run():
     c.addPrivateCopyCtor()
     c.find('~wxGridCellRenderer').ignore(False)
     c.find('Clone').factory = True
+    c.find('Draw').isPureVirtual = False
     tools.fixRefCountedClass(c)
 
     for name in ITEMS:
