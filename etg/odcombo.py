@@ -62,13 +62,8 @@ def run():
 
 
     # wxItemContainer pure virtuals that have an implementation in this class
+    tools.fixItemContainerClass(c, False)
     c.addItem(etgtools.WigCode("""\
-        virtual unsigned int GetCount() const;
-        virtual wxString GetString(unsigned int n) const;
-        virtual void SetString(unsigned int n, const wxString& s);
-        virtual int GetSelection() const;
-        virtual void SetSelection(int n);
-
         virtual wxString GetStringSelection() const;
         %MethodCode
             sipRes = new wxString(sipCpp->wxItemContainerImmutable::GetStringSelection());

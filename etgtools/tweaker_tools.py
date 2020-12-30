@@ -358,6 +358,26 @@ def fixBookctrlClass(klass):
         if not klass.findItem(name):
             klass.addItem(extractors.WigCode(decl))
 
+def fixItemContainerClass(klass, addIsSelected=True):
+    """
+    Add declarations of the pure virtual methods from the base class.
+    """
+    methods = [
+        ("GetCount", "virtual unsigned int GetCount() const;"),
+        ("GetString", "virtual wxString GetString(unsigned int n) const;"),
+        ("SetString", "virtual void SetString(unsigned int n, const wxString& s);"),
+        ("SetSelection", "virtual void SetSelection(int n);"),
+        ("GetSelection", "virtual int GetSelection() const;"),
+    ]
+    if addIsSelected:
+        methods += [
+            ("IsSelected", "virtual bool IsSelected(int n) const;"),
+            ]
+
+    for name, decl in methods:
+        if not klass.findItem(name):
+            klass.addItem(extractors.WigCode(decl))
+
 
 def fixHtmlSetFonts(klass):
     # Use wxArrayInt instead of a C array of ints.

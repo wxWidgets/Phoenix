@@ -39,6 +39,7 @@ def run():
     c.find('Create').findOverload('wxString choices').ignore()
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
 
+    tools.fixItemContainerClass(c, False)
     tools.fixWindowClass(c)
 
     module.addGlobalStr('wxChoiceNameStr', c)

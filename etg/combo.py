@@ -64,6 +64,8 @@ def run():
     c.find('GetTextIndent').ignore()
     c.find('SetTextIndent').ignore()
 
+    #tools.fixItemContainerClass(c, False)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

@@ -64,13 +64,8 @@ def run():
     c.find('Create.choices').default = 'wxArrayString()'
 
     # let sip know that these pure virtuals have been implemented in this class
+    tools.fixItemContainerClass(c, False)
     c.addItem(etgtools.WigCode("""\
-        virtual unsigned int GetCount() const;
-        virtual wxString GetString(unsigned int n) const;
-        virtual void SetString(unsigned int n, const wxString & string);
-        virtual void SetSelection(int n);
-        virtual int GetSelection() const;
-
         protected:
         virtual wxString OnGetItem(size_t n) const;
         """))

@@ -101,6 +101,11 @@ def run():
             #endif
             """)
 
+    tools.fixItemContainerClass(c)
+    c.addItem(etgtools.WigCode("""\
+        virtual int GetSelections(wxArrayInt& aSelections) const;
+        """))
+
 
     tools.fixWindowClass(c)
     module.addGlobalStr('wxListBoxNameStr', c)

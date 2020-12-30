@@ -97,6 +97,11 @@ def run():
     c.addPyProperty('CheckedStrings GetCheckedStrings SetCheckedStrings')
 
 
+    tools.fixItemContainerClass(c)
+    c.addItem(etgtools.WigCode("""\
+        virtual int GetSelections(wxArrayInt& aSelections) const;
+        """))
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
