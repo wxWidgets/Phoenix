@@ -3,7 +3,7 @@
  * C++ classes that provide a thread interface to interact properly with the
  * Python threading infrastructure.
  *
- * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2020 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -80,7 +80,7 @@ int sipGetPending(void **pp, sipWrapper **op, int *fp)
 /*
  * Return TRUE if anything is pending.
  */
-int sipIsPending()
+int sipIsPending(void)
 {
     pendingDef *pd;
 
