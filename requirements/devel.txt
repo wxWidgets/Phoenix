@@ -2,6 +2,7 @@
 -r install.txt
 appdirs
 setuptools
+sip == 5.5.0
 wheel
 twine
 requests
