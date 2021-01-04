@@ -1,7 +1,7 @@
 /*
  * This file defines the API for the array type.
  *
- * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -34,9 +34,9 @@ extern "C" {
 extern PyTypeObject sipArray_Type;
 
 PyObject *sip_api_convert_to_array(void *data, const char *format,
-        SIP_SSIZE_T len, int flags);
+        Py_ssize_t len, int flags);
 PyObject *sip_api_convert_to_typed_array(void *data, const sipTypeDef *td,
-        const char *format, size_t stride, SIP_SSIZE_T len, int flags);
+        const char *format, size_t stride, Py_ssize_t len, int flags);
 
 
 #ifdef __cplusplus
