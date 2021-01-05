@@ -45,6 +45,7 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
                                getVisCVersion, getToolsPlatformName, updateLicenseFiles, \
                                TemporaryDirectory
+from buildtools.wxpysip import sip_runner
 
 import buildtools.version as version
 
@@ -87,14 +88,6 @@ wxICON = 'packaging/docset/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.19.24'
-sipMD5 = {
-    'darwin'   : '2a22cb7a35eb14384b0829593a366c29',
-    'win32'    : '49e0aa36397d7629fea95418452961fb',
-    'linux32'  : 'ea773f6fd92d5f23530730428a86df2f',
-    'linux64'  : 'b44a45191f5f84db10e2ba1c4cecd8ff',
-}
-
 wafCurrentVersion = '2.0.19'
 wafMD5 = 'ac362b60111a59ab2df63513018d5ad8'
 
@@ -638,15 +631,6 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
 
 # The download and MD5 check only needs to happen once per run, cache the sip
 # cmd value here the first time through.
-_sipCmd = None
-def getSipCmd():
-    global _sipCmd
-    if _sipCmd is None:
-        _sipCmd = getTool('sip', sipCurrentVersion, sipMD5, 'SIP', True, True)
-    return _sipCmd
-
-
-# Same thing for WAF
 _wafCmd = None
 def getWafCmd():
     global _wafCmd
@@ -1285,15 +1269,31 @@ def cmd_sip(options, args):
         if not newer_group(sipFiles, sbf) and os.path.exists(pycode):
             continue
 
-        # leave this turned off for now...
-        # typehint = '-y {}'.format(posixjoin(cfg.PKGDIR, base[1:]) + '.pyi')
-        typehint = ''
+        # Leave it turned off for now. TODO: Experiment with this...
+        # pyi_extract = posixjoin(cfg.PKGDIR, base[1:]) + '.pyi'
+        pyi_extract = None
 
-        pycode = '-X pycode'+base+':'+pycode
-        sip = getSipCmd()
-        cmd = '%s %s -c %s -b %s %s %s %s'  % \
-            (sip, cfg.SIPOPTS, tmpdir, sbf, pycode, typehint, src_name)
-        runcmd(cmd)
+        # SIP extracts are used to pull python snippets and put them into the
+        # module's .py file
+        pycode = 'pycode'+base+':'+pycode
+
+        sip_runner(src_name,
+            abi_version = '12.8',       # siplib abi version
+            warnings = True,            # enable warning messages
+            docstrings = True,          # enable the automatic generation of docstrings
+            release_gil = True,         # always release and reacquire the GIL
+            sip_module = 'wx.siplib',   # the fully qualified name of the sip module
+            sbf_file=sbf,               # File to write the generated file lists to
+            exceptions = False,         # enable support for exceptions
+            tracing = False,            # generate code with tracing enabled
+            sources_dir = tmpdir,       # the name of the code directory
+            extracts = [pycode],        # add <ID:FILE> to the list of extracts to generate
+            pyi_extract=pyi_extract,    # the name of the .pyi stub file
+            include_dirs = [
+                os.path.join(phoenixDir(), 'src'),
+                os.path.join(phoenixDir(), 'sip', 'gen'),
+            ])
+
 
         classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }
 
