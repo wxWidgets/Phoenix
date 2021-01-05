@@ -169,8 +169,6 @@ class Configuration(object):
                              ('WXUSINGDLL', '1'),
                              ('ISOLATION_AWARE_ENABLED', None),
                              #('NDEBUG',),  # using a 1-tuple makes it do an undef
-                             ('SIP_MODULE_NAME', 'wx.siplib'),
-                             ('SIP_MODULE_BASENAME', 'siplib'),
                              ]
 
             self.libs = []
