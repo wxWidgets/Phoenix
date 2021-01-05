@@ -1278,7 +1278,7 @@ def cmd_sip(options, args):
         pycode = 'pycode'+base+':'+pycode
 
         sip_runner(src_name,
-            abi_version = '12.8',       # siplib abi version
+            abi_version = cfg.SIP_ABI,  # siplib abi version
             warnings = True,            # enable warning messages
             docstrings = True,          # enable the automatic generation of docstrings
             release_gil = True,         # always release and reacquire the GIL
