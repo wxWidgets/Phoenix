@@ -323,13 +323,6 @@ def configure(conf):
         conf.env.CFLAGS_WXPY.append('-UNDEBUG')
         conf.env.CXXFLAGS_WXPY.append('-UNDEBUG')
 
-        # set the name of our siplib module
-        conf.env.CFLAGS_WXPY.append('-DSIP_MODULE_NAME=wx.siplib')
-        conf.env.CXXFLAGS_WXPY.append('-DSIP_MODULE_NAME=wx.siplib')
-
-        conf.env.CFLAGS_WXPY.append('-DSIP_MODULE_BASENAME=siplib')
-        conf.env.CXXFLAGS_WXPY.append('-DSIP_MODULE_BASENAME=siplib')
-
         # Add basic debug info for all builds
         conf.env.CFLAGS_WXPY.append('-g')
         conf.env.CXXFLAGS_WXPY.append('-g')

@@ -169,13 +169,7 @@ PyObject *sip_api_invoke_slot_ex(const sipSlot *slot, PyObject *sigargs,
             return Py_None;
         }
 
-#if PY_MAJOR_VERSION >= 3
-        sfunc = PyMethod_New(slot->meth.mfunc, self);
-#else
-        sfunc = PyMethod_New(slot->meth.mfunc, self, slot->meth.mclass);
-#endif
-
-        if (sfunc == NULL)
+        if ((sfunc = PyMethod_New(slot->meth.mfunc, self)) == NULL)
         {
             Py_XDECREF(sref);
             return NULL;
@@ -344,11 +338,7 @@ int sip_api_same_slot(const sipSlot *sp, PyObject *rxObj, const char *slot)
             return 0;
 
         return (sp->meth.mfunc == PyMethod_GET_FUNCTION(rxObj)
-                && sp->meth.mself == PyMethod_GET_SELF(rxObj)
-#if PY_MAJOR_VERSION < 3
-                && sp->meth.mclass == PyMethod_GET_CLASS(rxObj)
-#endif
-                );
+                && sp->meth.mself == PyMethod_GET_SELF(rxObj));
     }
 
     /* See if they are wrapped C++ methods. */

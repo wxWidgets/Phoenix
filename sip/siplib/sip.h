@@ -21,22 +21,11 @@
 #define _SIP_H
 
 
-/*
- * This gets round a problem with Qt's moc and Python v2.3.  Strictly speaking
- * it's a Qt problem but later versions of Python include a fix for it so we
- * might as well too.
- */
-#undef slots
-
-
 #include <Python.h>
 
-/*
- * There is a mis-feature somewhere with the Borland compiler.  This works
- * around it.
- */
-#if defined(__BORLANDC__)
-#include <rpc.h>
+/* Sanity check on the Python version. */
+#if PY_VERSION_HEX < 0x03050000
+#error "This version of SIP requires Python v3.5 or later"
 #endif
 
 
@@ -45,238 +34,35 @@ extern "C" {
 #endif
 
 
-/* Sanity check on the Python version. */
-#if PY_VERSION_HEX < 0x02030000
-#error "This version of SIP requires Python v2.3 or later"
-#endif
+/* The patch version of this implementation of the ABI. */
+#define SIP_MODULE_PATCH_VERSION    1
 
 
 /*
- * Define the SIP version number.
+ * The changes to this version of the ABI.
+ *
+ * Preserve any current exception in the wrapper tp_dealloc functions.
  */
-#define SIP_VERSION         0x041318
-#define SIP_VERSION_STR     "4.19.24"
 
 
-/*
- * Define the current API version number.  SIP must handle modules with the
- * same major number and with the same or earlier minor number.  Whenever
- * members are added to non-embedded data structures they must be appended and
- * the minor number incremented.  Whenever data structure members are removed
- * or their offset changed then the major number must be incremented and the
- * minor number set * to 0.
- *
- * History:
- *
- * 12.7 Added sip_api_visit_wrappers() to the public API.
- *      Added sip_api_register_exit_notifier() to the public API.
- *      sip_api_is_owned_by_python() is now part of the public API.
- *
- * 12.6 Added sip_api_long_as_size_t() to the public API.
- *      Added the '=' format character to sip_api_build_result().
- *      Added the '=' format character to sip_api_parse_result_ex().
- *
- * 12.5 Replaced the sipConvertFromSliceObject() macro with
- *      sip_api_convert_from_slice_object() in the public API.
- *
- * 12.4 Added sip_api_instance_destroyed_ex() to the private API.
- *
- * 12.3 Added SIP_TYPE_SCOPED_ENUM to the sipTypeDef flags.
- *      Added sip_api_convert_to_enum() to the public API.
- *      Added sip_api_convert_to_bool() to the public API.
- *      Added sip_api_long_as_char(), sip_api_long_as_signed_char(),
- *      sip_api_long_as_unsigned_char(), sip_api_long_as_short(),
- *      sip_api_long_as_unsigned_short(), sip_api_long_as_int(),
- *      sip_api_long_as_unsigned_int(), sip_api_long_as_long(),
- *      sip_api_long_as_unsigned_long(), sip_api_long_as_long_long(),
- *      sip_api_long_as_unsigned_long_long() to the public API.
- *      Deprecated sip_api_can_convert_to_enum().
- *
- * 12.2 Added sip_api_print_object() to the public API.
- *      Renamed sip_api_common_dtor() to sip_api_instance_destroyed() and added
- *      it to the public API.
- *      Added sipEventType and sip_api_register_event_handler() to the public
- *      API.
- *
- * 12.1 Added sip_api_enable_gc() to the public API.
- *
- * 12.0 Added SIP_TYPE_LIMITED_API to the sipTypeDef flags.
- *      Added sip_api_py_type_dict() and sip_api_py_type_name() to the public
- *      API.
- *      Added sip_api_set_new_user_type_handler() to the public API.
- *      Added sip_api_is_user_type() to the public API.
- *      Added sip_api_set_type_user_data() and sip_api_get_type_user_data() to
- *      the public API.
- *      Added sip_api_set_user_object() and sip_api_get_user_object() to the
- *      public API.
- *      Added sip_api_get_method() and sip_api_from_method() to the public API.
- *      Added sip_api_get_c_function() to the public API.
- *      Added sip_api_get_date() and sip_api_from_date() to the public API.
- *      Added sip_api_get_datetime() and sip_api_from_datetime() to the public
- *      API.
- *      Added sip_api_get_time() and sip_api_from_time() to the public API.
- *      Added sip_api_get_frame() to the public API.
- *      Added sip_api_check_plugin_for_type() to the public API.
- *      Added sip_api_unicode_new(), sip_api_unicode_write() and
- *      sip_api_unicode_data() to the public API.
- *      Added sip_api_get_buffer_info() and sip_api_relese_buffer_info() to the
- *      public API.
- *      Added sip_api_call_procedure_method() to the public API.
- *      Added sip_api_is_owned_by_python() to the private API.
- *      Added sip_api_is_derived_class() to the private API.
- *      Removed the im_version member from sipImportedModuleDef.
- *      Removed the im_module member from sipImportedModuleDef.
- *      Removed the em_version member from sipExportedModuleDef.
- *      Removed the em_virthandlers member from sipExportedModuleDef.
- *      Re-ordered the API functions.
- *
- * 11.3 Added sip_api_get_interpreter() to the public API.
- *
- * 11.2 Added sip_api_get_reference() to the private API.
- *
- * 11.1 Added sip_api_invoke_slot_ex().
- *
- * 11.0 Added the pyqt5QtSignal and pyqt5ClassTypeDef structures.
- *      Removed qt_interface from pyqt4ClassTypeDef.
- *      Added hack to pyqt4QtSignal.
- *
- * 10.1 Added ctd_final to sipClassTypeDef.
- *      Added ctd_init_mixin to sipClassTypeDef.
- *      Added sip_api_get_mixin_address() to the public API.
- *      Added sip_api_convert_from_new_pytype() to the public API.
- *      Added sip_api_convert_to_array() to the public API.
- *      Added sip_api_convert_to_typed_array() to the public API.
- *      Added sip_api_register_proxy_resolver() to the public API.
- *      Added sip_api_init_mixin() to the private API.
- *      Added qt_interface to pyqt4ClassTypeDef.
- *
- * 10.0 Added sip_api_set_destroy_on_exit().
- *      Added sip_api_enable_autoconversion().
- *      Removed sip_api_call_error_handler_old().
- *      Removed sip_api_start_thread().
- *
- * 9.2  Added sip_gilstate_t and SIP_RELEASE_GIL to the public API.
- *      Renamed sip_api_call_error_handler() to
- *      sip_api_call_error_handler_old().
- *      Added the new sip_api_call_error_handler() to the private API.
- *
- * 9.1  Added the capsule type.
- *      Added the 'z' format character to sip_api_build_result().
- *      Added the 'z', '!' and '$' format characters to
- *      sip_api_parse_result_ex().
- *
- * 9.0  Changed the sipVariableGetterFunc signature.
- *      Added sip_api_parse_result_ex() to the private API.
- *      Added sip_api_call_error_handler() to the private API.
- *      Added em_virterrorhandlers to sipExportedModuleDef.
- *      Re-ordered the API functions.
- *
- * 8.1  Revised the sipVariableDef structure.
- *      sip_api_get_address() is now part of the public API.
- *
- * 8.0  Changed the size of the sipSimpleWrapper structure.
- *      Added sip_api_get_address().
- *
- * 7.1  Added the 'H' format character to sip_api_parse_result().
- *      Deprecated the 'D' format character of sip_api_parse_result().
- *
- * 7.0  Added sip_api_parse_kwd_args().
- *      Added sipErrorState, sip_api_add_exception().
- *      The type initialisation function is now passed a dictionary of keyword
- *      arguments.
- *      All argument parsers now update a set of error messages rather than an
- *      argument count.
- *      The signatures of sip_api_no_function() and sip_api_no_method() have
- *      changed.
- *      Added ctd_docstring to sipClassTypeDef.
- *      Added vf_docstring to sipVersionedFunctionDef.
- *
- * 6.0  Added the sipContainerDef structure to define the contents of a class
- *      or mapped type.  Restructured sipClassDef and sipMappedTypeDef
- *      accordingly.
- *      Added the 'r' format character to sip_api_parse_args().
- *      Added the 'r' format character to sip_api_call_method() and
- *      sip_api_build_result().
- *      Added the assignment, array and copy allocation helpers.
- *
- * 5.0  Added sip_api_is_api_enabled().
- *      Renamed the td_version_nr member of sipTypeDef to be int and where -1
- *      indicates it is not versioned.
- *      Added the em_versions member to sipExportedModuleDef.
- *      Added the em_versioned_functions member to sipExportedModuleDef.
- *
- * 4.0  Much refactoring.
- *
- * 3.8  Added sip_api_register_qt_metatype() and sip_api_deprecated().
- *      Added qt_register_meta_type() to the Qt support API.
- *      The C/C++ names of enums and types are now always defined in the
- *      relevant structures and don't default to the Python name.
- *      Added the 'XE' format characters to sip_api_parse_args().
- *
- * 3.7  Added sip_api_convert_from_const_void_ptr(),
- *      sip_api_convert_from_void_ptr_and_size() and
- *      sip_api_convert_from_const_void_ptr_and_size().
- *      Added the 'g' and 'G' format characters (to replace the now deprecated
- *      'a' and 'A' format characters) to sip_api_build_result(),
- *      sip_api_call_method() and sip_api_parse_result().
- *      Added the 'k' and 'K' format characters (to replace the now deprecated
- *      'a' and 'A' format characters) to sip_api_parse_args().
- *      Added sip_api_invoke_slot().
- *      Added sip_api_parse_type().
- *      Added sip_api_is_exact_wrapped_type().
- *      Added the td_assign and td_qt fields to the sipTypeDef structure.
- *      Added the mt_assign field to the sipMappedType structure.
- *
- * 3.6  Added the 'g' format character to sip_api_parse_args().
- *
- * 3.5  Added the td_pickle field to the sipTypeDef structure.
- *      Added sip_api_transfer_break().
- *
- * 3.4  Added qt_find_connection() to the Qt support API.
- *      Added sip_api_string_as_char(), sip_api_unicode_as_wchar(),
- *      sip_api_unicode_as_wstring(), sip_api_find_class(),
- *      sip_api_find_named_enum() and sip_api_parse_signature().
- *      Added the 'A', 'w' and 'x' format characters to sip_api_parse_args(),
- *      sip_api_parse_result(), sip_api_build_result() and
- *      sip_api_call_method().
- *
- * 3.3  Added sip_api_register_int_types().
- *
- * 3.2  Added sip_api_export_symbol() and sip_api_import_symbol().
- *
- * 3.1  Added sip_api_add_mapped_type_instance().
- *
- * 3.0  Moved the Qt support out of the sip module and into PyQt.  This is
- *      such a dramatic change that there is no point in attempting to maintain
- *      backwards compatibility.
- *
- * 2.0  Added the td_flags field to the sipTypeDef structure.
- *      Added the first_child, sibling_next, sibling_prev and parent fields to
- *      the sipWrapper structure.
- *      Added the td_traverse and td_clear fields to the sipTypeDef structure.
- *      Added the em_api_minor field to the sipExportedModuleDef structure.
- *      Added sip_api_bad_operator_arg().
- *      Added sip_api_wrapper_check().
- *
- * 1.1  Added support for __pos__ and __abs__.
- *
- * 1.0  Removed all deprecated parts of the API.
- *      Removed the td_proxy field from the sipTypeDef structure.
- *      Removed the create proxy function from the 'q' and 'y' format
- *      characters to sip_api_parse_args().
- *      Removed sip_api_emit_to_slot().
- *      Reworked the enum related structures.
- *
- * 0.2  Added the 'H' format character to sip_api_parse_args().
- *
- * 0.1  Added sip_api_add_class_instance().
- *      Added the 't' format character to sip_api_parse_args().
- *      Deprecated the 'J' and 'K' format characters to sip_api_parse_result().
- *
- * 0.0  Original version.
- */
-#define SIP_API_MAJOR_NR    12
-#define SIP_API_MINOR_NR    7
+/* The ABI version implemented. */
+#define SIP_ABI_MAJOR_VERSION       12
+#define SIP_ABI_MINOR_VERSION       8
+
+/* The version of the code generator. */
+#define SIP_VERSION                 0x50500
+#define SIP_VERSION_STR             "5.5.0"
+
+/* These are all dependent on the user-specified name of the sip module. */
+#define _SIP_MODULE_FQ_NAME         "wx.siplib"
+#define _SIP_MODULE_NAME            "siplib"
+#define _SIP_MODULE_SHARED          1
+#define _SIP_MODULE_ENTRY           PyInit_siplib
+#define _SIP_MODULE_LEGACY          0
+
+/* Support the historical names. */
+#define SIP_API_MAJOR_NR    SIP_ABI_MAJOR_VERSION
+#define SIP_API_MINOR_NR    SIP_ABI_MINOR_VERSION
 
 
 /*
@@ -324,29 +110,16 @@ typedef unsigned int uint;
 #endif
 
 
-/* Some Python compatibility stuff. */
-#if PY_VERSION_HEX >= 0x02050000
+/* Remove in v5.1. */
+#define SIP_SSIZE_T             Py_ssize_t
+#define SIP_SSIZE_T_FORMAT      "%zd"
+#define SIP_USE_PYCAPSULE
+#define SIP_MODULE_RETURN(v)    return (v)
 
-#define SIP_SSIZE_T         Py_ssize_t
-#define SIP_SSIZE_T_FORMAT  "%zd"
-
-#define SIP_MLNAME_CAST(s)  (s)
-#define SIP_MLDOC_CAST(s)   (s)
-#define SIP_TPNAME_CAST(s)  (s)
-
-#else
-
-#define SIP_SSIZE_T         int
-#define SIP_SSIZE_T_FORMAT  "%d"
-
-#define SIP_MLNAME_CAST(s)  ((char *)(s))
-#define SIP_MLDOC_CAST(s)   ((char *)(s))
-#define SIP_TPNAME_CAST(s)  ((char *)(s))
-
-#endif
-
-#if PY_MAJOR_VERSION >= 3
-
+/*
+ * Remove in v5.1.  These are undocumented and can be removed when PyQt5 drops
+ * support for Python v2.
+ */
 #define SIPLong_Check       PyLong_Check
 #define SIPLong_FromLong    PyLong_FromLong
 #define SIPLong_AsLong      PyLong_AsLong
@@ -358,57 +131,6 @@ typedef unsigned int uint;
 #define SIPBytes_Size       PyBytes_Size
 #define SIPBytes_AS_STRING  PyBytes_AS_STRING
 #define SIPBytes_GET_SIZE   PyBytes_GET_SIZE
-
-#if PY_MINOR_VERSION >= 1
-#define SIP_USE_PYCAPSULE
-#endif
-
-#if PY_MINOR_VERSION < 2
-#define SIP_SUPPORT_PYCOBJECT
-#endif
-
-#else
-
-#define SIPLong_Check       PyInt_Check
-#define SIPLong_FromLong    PyInt_FromLong
-#define SIPLong_AsLong      PyInt_AsLong
-
-#define SIPBytes_Check      PyString_Check
-#define SIPBytes_FromString PyString_FromString
-#define SIPBytes_FromStringAndSize  PyString_FromStringAndSize
-#define SIPBytes_AsString   PyString_AsString
-#define SIPBytes_Size       PyString_Size
-#define SIPBytes_AS_STRING  PyString_AS_STRING
-#define SIPBytes_GET_SIZE   PyString_GET_SIZE
-
-#if PY_MINOR_VERSION >= 7
-#define SIP_USE_PYCAPSULE
-#endif
-
-#define SIP_SUPPORT_PYCOBJECT
-
-#endif
-
-#if !defined(Py_REFCNT)
-#define Py_REFCNT(ob)       (((PyObject*)(ob))->ob_refcnt)
-#endif
-
-#if !defined(Py_TYPE)
-#define Py_TYPE(ob)         (((PyObject*)(ob))->ob_type)
-#endif
-
-#if !defined(PyVarObject_HEAD_INIT)
-#define PyVarObject_HEAD_INIT(type, size)   PyObject_HEAD_INIT(type) size,
-#endif
-
-
-#if defined(SIP_USE_PYCAPSULE)
-#define SIPCapsule_FromVoidPtr(p, n)    PyCapsule_New((p), (n), NULL)
-#define SIPCapsule_AsVoidPtr(p, n)      PyCapsule_GetPointer((p), (n))
-#else
-#define SIPCapsule_FromVoidPtr(p, n)    sipConvertFromVoidPtr((p))
-#define SIPCapsule_AsVoidPtr(p, n)      sipConvertToVoidPtr((p))
-#endif
 
 
 /*
@@ -512,16 +234,11 @@ typedef int (*sipFinalFunc)(PyObject *, void *, PyObject *, PyObject **);
 typedef void *(*sipAccessFunc)(sipSimpleWrapper *, AccessFuncOp);
 typedef int (*sipTraverseFunc)(void *, visitproc, void *);
 typedef int (*sipClearFunc)(void *);
-#if PY_MAJOR_VERSION >= 3
 typedef int (*sipGetBufferFuncLimited)(PyObject *, void *, sipBufferDef *);
 typedef void (*sipReleaseBufferFuncLimited)(PyObject *, void *);
 #if !defined(Py_LIMITED_API)
 typedef int (*sipGetBufferFunc)(PyObject *, void *, Py_buffer *, int);
 typedef void (*sipReleaseBufferFunc)(PyObject *, void *, Py_buffer *);
-#endif
-#else
-typedef SIP_SSIZE_T (*sipBufferFunc)(PyObject *, void *, SIP_SSIZE_T, void **);
-typedef SIP_SSIZE_T (*sipSegCountFunc)(PyObject *, void *, SIP_SSIZE_T *);
 #endif
 typedef void (*sipDeallocFunc)(sipSimpleWrapper *);
 typedef void *(*sipCastFunc)(void *, const sipTypeDef *);
@@ -531,9 +248,9 @@ typedef PyObject *(*sipConvertFromFunc)(void *, PyObject *);
 typedef void (*sipVirtErrorHandlerFunc)(sipSimpleWrapper *, sip_gilstate_t);
 typedef int (*sipVirtHandlerFunc)(sip_gilstate_t, sipVirtErrorHandlerFunc,
         sipSimpleWrapper *, PyObject *, ...);
-typedef void (*sipAssignFunc)(void *, SIP_SSIZE_T, void *);
-typedef void *(*sipArrayFunc)(SIP_SSIZE_T);
-typedef void *(*sipCopyFunc)(const void *, SIP_SSIZE_T);
+typedef void (*sipAssignFunc)(void *, Py_ssize_t, void *);
+typedef void *(*sipArrayFunc)(Py_ssize_t);
+typedef void *(*sipCopyFunc)(const void *, Py_ssize_t);
 typedef void (*sipReleaseFunc)(void *, int);
 typedef PyObject *(*sipPickleFunc)(void *);
 typedef int (*sipAttrGetterFunc)(const sipTypeDef *, PyObject *);
@@ -544,7 +261,7 @@ typedef int (*sipNewUserTypeFunc)(sipWrapperType *);
 typedef void (*sipWrapperVisitorFunc)(sipSimpleWrapper *, void *);
 
 
-#if !defined(Py_LIMITED_API) || PY_VERSION_HEX < 0x03020000
+#if !defined(Py_LIMITED_API)
 /*
  * The meta-type of a wrapper type.
  */
@@ -638,6 +355,7 @@ struct _sipWrapper {
 
 
 /*
+ * Removed in v5.1.
  * The meta-type of an enum type.  (This is exposed only to support the
  * deprecated sipConvertFromNamedEnum() macro.)
  */
@@ -761,7 +479,7 @@ struct _sipBufferDef {
     void *bd_buffer;
 
     /* The length of the buffer. */
-    SIP_SSIZE_T bd_length;
+    Py_ssize_t bd_length;
 
     /* Set if the buffer is read-only. */
     int bd_readonly;
@@ -782,7 +500,7 @@ struct _sipBufferInfoDef {
     PyObject *bi_obj;
 
     /* The length of the buffer in bytes. */
-    SIP_SSIZE_T bi_len;
+    Py_ssize_t bi_len;
 
     /* The number of dimensions. */
     int bi_ndim;
@@ -813,11 +531,6 @@ struct _sipMethodDef {
 
     /* The bound object. */
     PyObject *pm_self;
-
-#if PY_MAJOR_VERSION < 3
-    /* The class. */
-    PyObject *pm_class;
-#endif
 };
 
 
@@ -871,9 +584,6 @@ typedef enum {
 typedef enum {
     str_slot,           /* __str__ */
     int_slot,           /* __int__ */
-#if PY_MAJOR_VERSION < 3
-    long_slot,          /* __long__ */
-#endif
     float_slot,         /* __float__ */
     len_slot,           /* __len__ */
     contains_slot,      /* __contains__ */
@@ -916,18 +626,13 @@ typedef enum {
     ne_slot,            /* __ne__ */
     gt_slot,            /* __gt__ */
     ge_slot,            /* __ge__ */
-#if PY_MAJOR_VERSION < 3
-    cmp_slot,           /* __cmp__ */
-#endif
     bool_slot,          /* __bool__, __nonzero__ */
     neg_slot,           /* __neg__ */
     repr_slot,          /* __repr__ */
     hash_slot,          /* __hash__ */
     pos_slot,           /* __pos__ */
     abs_slot,           /* __abs__ */
-#if PY_VERSION_HEX >= 0x02050000
     index_slot,         /* __index__ */
-#endif
     iter_slot,          /* __iter__ */
     next_slot,          /* __next__ */
     setattr_slot,       /* __setattr__, __delattr__ */
@@ -1039,14 +744,8 @@ struct _sipTypeDef {
     /* The C/C++ name of the type. */
     int td_cname;
 
-    /*
-     * The Python type object.  This needs to be a union until we remove the
-     * deprecated sipClass_* macros.
-     */
-    union {
-        PyTypeObject *td_py_type;
-        sipWrapperType *td_wrapper_type;
-    } u;
+    /* The Python type object. */
+    PyTypeObject *td_py_type;
 
     /* Any additional fixed data generated by a plugin. */
     void *td_plugin_data;
@@ -1130,7 +829,6 @@ typedef struct _sipClassTypeDef {
     /* The clear function. */
     sipClearFunc ctd_clear;
 
-#if PY_MAJOR_VERSION >= 3
     /* The get buffer function. */
 #if defined(Py_LIMITED_API)
     sipGetBufferFuncLimited ctd_getbuffer;
@@ -1143,19 +841,6 @@ typedef struct _sipClassTypeDef {
     sipReleaseBufferFuncLimited ctd_releasebuffer;
 #else
     sipReleaseBufferFunc ctd_releasebuffer;
-#endif
-#else
-    /* The read buffer function. */
-    sipBufferFunc ctd_readbuffer;
-
-    /* The write buffer function. */
-    sipBufferFunc ctd_writebuffer;
-
-    /* The segment count function. */
-    sipSegCountFunc ctd_segcount;
-
-    /* The char buffer function. */
-    sipBufferFunc ctd_charbuffer;
 #endif
 
     /* The deallocation function. */
@@ -1257,6 +942,7 @@ typedef struct _sipExternalTypeDef {
 
 
 /*
+ * Remove in v5.1.
  * The information describing a mapped class.  This (and anything that uses it)
  * is deprecated.
  */
@@ -1625,8 +1311,9 @@ typedef struct _sipTypeInstanceDef {
 
 
 /*
+ * Remove in v5.1.
  * Define a mapping between a wrapped type identified by a string and the
- * corresponding Python type.  This is deprecated.
+ * corresponding Python type.
  */
 typedef struct _sipStringTypeClassMap {
     /* The type as a string. */
@@ -1638,8 +1325,9 @@ typedef struct _sipStringTypeClassMap {
 
 
 /*
+ * Remove in v5.1.
  * Define a mapping between a wrapped type identified by an integer and the
- * corresponding Python type.  This is deprecated.
+ * corresponding Python type.
  */
 typedef struct _sipIntTypeClassMap {
     /* The type as an integer. */
@@ -1660,11 +1348,6 @@ typedef struct _sipPyMethod {
 
     /* Self if it is a bound method. */
     PyObject *mself;
-
-#if PY_MAJOR_VERSION < 3
-    /* The class. */
-    PyObject *mclass;
-#endif
 } sipPyMethod;
 
 
@@ -1707,7 +1390,7 @@ typedef struct _sipAPIDef {
     PyTypeObject *api_voidptr_type;
 
     void (*api_bad_catcher_result)(PyObject *method);
-    void (*api_bad_length_for_slice)(SIP_SSIZE_T seqlen, SIP_SSIZE_T slicelen);
+    void (*api_bad_length_for_slice)(Py_ssize_t seqlen, Py_ssize_t slicelen);
     PyObject *(*api_build_result)(int *isErr, const char *fmt, ...);
     PyObject *(*api_call_method)(int *isErr, PyObject *method, const char *fmt,
             ...);
@@ -1715,8 +1398,8 @@ typedef struct _sipAPIDef {
             sipSimpleWrapper *, PyObject *, const char *, ...);
     PyObject *(*api_connect_rx)(PyObject *txObj, const char *sig,
             PyObject *rxObj, const char *slot, int type);
-    SIP_SSIZE_T (*api_convert_from_sequence_index)(SIP_SSIZE_T idx,
-            SIP_SSIZE_T len);
+    Py_ssize_t (*api_convert_from_sequence_index)(Py_ssize_t idx,
+            Py_ssize_t len);
     int (*api_can_convert_to_type)(PyObject *pyObj, const sipTypeDef *td,
             int flags);
     void *(*api_convert_to_type)(PyObject *pyObj, const sipTypeDef *td,
@@ -1754,9 +1437,9 @@ typedef struct _sipAPIDef {
     PyObject *(*api_convert_from_void_ptr)(void *val);
     PyObject *(*api_convert_from_const_void_ptr)(const void *val);
     PyObject *(*api_convert_from_void_ptr_and_size)(void *val,
-            SIP_SSIZE_T size);
+            Py_ssize_t size);
     PyObject *(*api_convert_from_const_void_ptr_and_size)(const void *val,
-            SIP_SSIZE_T size);
+            Py_ssize_t size);
     void *(*api_convert_to_void_ptr)(PyObject *obj);
     int (*api_export_symbol)(const char *name, void *sym);
     void *(*api_import_symbol)(const char *name);
@@ -1777,12 +1460,12 @@ typedef struct _sipAPIDef {
     PyObject *(*api_convert_from_new_pytype)(void *cpp, PyTypeObject *py_type,
             sipWrapper *owner, sipSimpleWrapper **selfp, const char *fmt, ...);
     PyObject *(*api_convert_to_typed_array)(void *data, const sipTypeDef *td,
-            const char *format, size_t stride, SIP_SSIZE_T len, int flags);
+            const char *format, size_t stride, Py_ssize_t len, int flags);
     PyObject *(*api_convert_to_array)(void *data, const char *format,
-            SIP_SSIZE_T len, int flags);
+            Py_ssize_t len, int flags);
     int (*api_register_proxy_resolver)(const sipTypeDef *td,
             sipProxyResolverFunc resolver);
-    PyInterpreterState *(*api_get_interpreter)();
+    PyInterpreterState *(*api_get_interpreter)(void);
     sipNewUserTypeFunc (*api_set_new_user_type_handler)(const sipTypeDef *,
             sipNewUserTypeFunc);
     void (*api_set_type_user_data)(sipWrapperType *, void *);
@@ -1801,9 +1484,9 @@ typedef struct _sipAPIDef {
     int (*api_is_user_type)(const sipWrapperType *);
     struct _frame *(*api_get_frame)(int);
     int (*api_check_plugin_for_type)(const sipTypeDef *, const char *);
-    PyObject *(*api_unicode_new)(SIP_SSIZE_T, unsigned, int *, void **);
+    PyObject *(*api_unicode_new)(Py_ssize_t, unsigned, int *, void **);
     void (*api_unicode_write)(int, void *, int, unsigned);
-    void *(*api_unicode_data)(PyObject *, int *, SIP_SSIZE_T *);
+    void *(*api_unicode_data)(PyObject *, int *, Py_ssize_t *);
     int (*api_get_buffer_info)(PyObject *, sipBufferInfoDef *);
     void (*api_release_buffer_info)(sipBufferInfoDef *);
     PyObject *(*api_get_user_object)(const sipSimpleWrapper *);
@@ -1948,13 +1631,21 @@ typedef struct _sipAPIDef {
     /*
      * The following are part of the public API.
      */
-    int (*api_convert_from_slice_object)(PyObject *slice, SIP_SSIZE_T length,
-            SIP_SSIZE_T *start, SIP_SSIZE_T *stop, SIP_SSIZE_T *step,
-            SIP_SSIZE_T *slicelength);
+    int (*api_convert_from_slice_object)(PyObject *slice, Py_ssize_t length,
+            Py_ssize_t *start, Py_ssize_t *stop, Py_ssize_t *step,
+            Py_ssize_t *slicelength);
     size_t (*api_long_as_size_t)(PyObject *o);
     void (*api_visit_wrappers)(sipWrapperVisitorFunc visitor, void *closure);
     int (*api_register_exit_notifier)(PyMethodDef *md);
+
+    /*
+     * The following are not part of the public API.
+     */
+    PyObject *(*api_is_py_method_12_8)(sip_gilstate_t *gil, char *pymc,
+            sipSimpleWrapper **sipSelfp, const char *cname, const char *mname);
 } sipAPIDef;
+
+const sipAPIDef *sip_init_library(PyObject *mod_dict);
 
 
 /*
@@ -2020,7 +1711,7 @@ typedef struct _sipQtAPI {
 #define SIP_ACCFUNC         0x0008  /* If there is an access function. */
 #define SIP_NOT_IN_MAP      0x0010  /* If Python object is not in the map. */
 
-#if !defined(Py_LIMITED_API) || PY_VERSION_HEX < 0x03020000
+#if !defined(Py_LIMITED_API)
 #define SIP_PY_OWNED        0x0020  /* If owned by Python. */
 #define SIP_SHARE_MAP       0x0040  /* If the map slot might be occupied. */
 #define SIP_CPP_HAS_REF     0x0080  /* If C/C++ has a reference. */
@@ -2068,22 +1759,16 @@ typedef struct _sipQtAPI {
 #define sipTypeIsMapped(td) (((td)->td_flags & SIP_TYPE_TYPE_MASK) == SIP_TYPE_MAPPED)
 #define sipTypeIsEnum(td)   (((td)->td_flags & SIP_TYPE_TYPE_MASK) == SIP_TYPE_ENUM)
 #define sipTypeIsScopedEnum(td) (((td)->td_flags & SIP_TYPE_TYPE_MASK) == SIP_TYPE_SCOPED_ENUM)
-#define sipTypeAsPyTypeObject(td)   ((td)->u.td_py_type)
+#define sipTypeAsPyTypeObject(td)   ((td)->td_py_type)
 #define sipTypeName(td)     sipNameFromPool((td)->td_module, (td)->td_cname)
 #define sipTypePluginData(td)   ((td)->td_plugin_data)
 
 
 /*
- * Note that this was never actually documented as being part of the public
- * API.  It is now deprecated.  sipIsUserType() should be used instead.
- */
-#define sipIsExactWrappedType(wt)   (sipTypeAsPyTypeObject((wt)->wt_td) == (PyTypeObject *)(wt))
-
-
-/*
- * The following are deprecated parts of the public API.
+ * Remove in v5.1.
  */
 #define sipClassName(w)     PyString_FromString(Py_TYPE(w)->tp_name)
+#define sipIsExactWrappedType(wt)   (sipTypeAsPyTypeObject((wt)->wt_td) == (PyTypeObject *)(wt))
 
 
 /*

@@ -3,6 +3,7 @@
 appdirs
 setuptools < 45 ; python_version < '3.0'
 setuptools ; python_version >= '3.0'
+sip == 5.5.0
 
 wheel
 twine

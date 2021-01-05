@@ -85,6 +85,8 @@ class Configuration(object):
     PKGDIR = 'wx'
     # The name of the top-level package
 
+    SIP_ABI = '12.8'
+
     # ---------------------------------------------------------------
     # Basic initialization and configuration code
 
@@ -169,8 +171,6 @@ class Configuration(object):
                              ('WXUSINGDLL', '1'),
                              ('ISOLATION_AWARE_ENABLED', None),
                              #('NDEBUG',),  # using a 1-tuple makes it do an undef
-                             ('SIP_MODULE_NAME', 'wx.siplib'),
-                             ('SIP_MODULE_BASENAME', 'siplib'),
                              ]
             if int(getVisCVersion()) > 100:
                 self.defines += [ ('wxUSE_RC_MANIFEST', '1'),

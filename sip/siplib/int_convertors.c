@@ -1,7 +1,7 @@
 /*
  * The implementation of the Python object to C/C++ integer convertors.
  *
- * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -329,26 +329,6 @@ static unsigned long long_as_unsigned_long(PyObject *o, unsigned long max)
     }
     else
     {
-#if PY_VERSION_HEX < 0x02040000
-        /*
-         * Work around a bug in Python versions prior to v2.4 where an integer
-         * (or a named enum) causes an error.
-         */
-        if (!PyLong_Check(o) && PyInt_Check(o))
-        {
-            long v = PyInt_AsLong(o);
-
-            if (v < 0)
-            {
-                raise_unsigned_overflow(max);
-
-                return (unsigned long)-1;
-            }
-
-            return v;
-        }
-#endif
-
         value = PyLong_AsUnsignedLongMask(o);
     }
 
