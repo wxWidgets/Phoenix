@@ -691,7 +691,7 @@ def postProcess(folder, options):
                     next_line = splitted_text[index+1]
                     stripline = next_line.strip()
 
-                    # repalce the <hr> with a new headline for the first method or first property
+                    # replace the <hr> with a new headline for the first method or first property
                     if (stripline == '<dl class="staticmethod">' or stripline == '<dl class="method">' \
                        or stripline == '<dl class="classmethod">') and not methods_done:
                         line = '\n<br><h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>\n'
