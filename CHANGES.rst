@@ -23,6 +23,10 @@ New and improved in this release:
   the flags needed by Python added on.) The compiler commands can be overridden
   by setting CC and CXX in the environment if needed. (#1247)
 
+* Switched to SIP 5 for generating the wrapper code. Rather than a standalone
+  executable SIP is now a Python package that needs to be installed in the
+  Python environment used for the build. A dependency has been added to
+  requirements/devel.txt to help ensure that the correct version is installed.
 
 
 
