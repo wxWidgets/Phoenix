@@ -925,11 +925,11 @@ from .%s import *
             # SIP appends them all together.
             _needDocstring = False
         stream.write('%s%%MethodCode\n' % indent)
-        if not (method.isCtor and method.isDtor):
+        if not (method.isCtor or method.isDtor):
             stream.write('%sPyErr_Clear();\n' % (indent+' '*4))
             stream.write('%sPy_BEGIN_ALLOW_THREADS\n' % (indent+' '*4))
         stream.write(nci(method.body, len(indent)+4))
-        if not (method.isCtor and method.isDtor):
+        if not (method.isCtor or method.isDtor):
             stream.write('%sPy_END_ALLOW_THREADS\n' % (indent+' '*4))
             stream.write('%sif (PyErr_Occurred()) sipIsErr = 1;\n' % (indent+' '*4))
         stream.write('%s%%End\n\n' % indent)
