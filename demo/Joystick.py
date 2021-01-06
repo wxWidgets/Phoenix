@@ -160,10 +160,10 @@ class JoyPanel(wx.Panel):
 
         t = wx.StaticText(self, -1, "X - Y Axes", style = wx.ALIGN_CENTRE)
         t.SetFont(fn)
-        sizer.Add(t, 0, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER | wx.ALIGN_CENTER_HORIZONTAL, 1)
+        sizer.Add(t, 0, wx.ALL | wx.EXPAND, 1)
 
         self.control = JoyGauge(self, self.stick)
-        sizer.Add(self.control, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER | wx.ALIGN_CENTER_HORIZONTAL, 1)
+        sizer.Add(self.control, 1, wx.ALL | wx.EXPAND, 1)
 
         self.SetSizer(sizer)
         sizer.Fit(self)
@@ -355,11 +355,11 @@ class POVPanel(wx.Panel):
         gsizer.Add(t, 0, wx.ALL | wx.EXPAND, 1)
 
         self.display = POVGauge(self, stick)
-        gsizer.Add(self.display, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 1)
-        sizer.Add(gsizer, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 1)
+        gsizer.Add(self.display, 1, wx.ALL | wx.EXPAND, 1)
+        sizer.Add(gsizer, 1, wx.ALL | wx.EXPAND, 1)
 
         self.status = POVStatus(self, stick)
-        sizer.Add(self.status, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 1)
+        sizer.Add(self.status, 1, wx.ALL | wx.EXPAND, 1)
 
         self.SetSizer(sizer)
         sizer.Fit(self)
@@ -743,14 +743,14 @@ class Axis(wx.Panel):
             self.Max = wx.StaticText(self, -1, str(self.GetMax()), style=wx.ALIGN_LEFT)
             self.bar = AxisBar(self)
 
-            sizer.Add(self.Min, 0, wx.ALL | wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL, 1)
-            sizer.Add(self.bar, 1, wx.ALL | wx.ALIGN_CENTER | wx.ALIGN_CENTER_VERTICAL, 1)
-            sizer.Add(self.Max, 0, wx.ALL | wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL, 1)
+            sizer.Add(self.Min, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 1)
+            sizer.Add(self.bar, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 1)
+            sizer.Add(self.Max, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 1)
 
         else:
             # We go here if the axis in question is not available.
             self.control = wx.StaticText(self, -1, '       *** Not Present ***')
-            sizer.Add(self.control, 1, wx.ALL | wx.ALIGN_CENTER | wx.ALIGN_CENTER_VERTICAL, 1)
+            sizer.Add(self.control, 1, wx.ALL, 1)
 
         #----------------------------------------------------------------------------
 
