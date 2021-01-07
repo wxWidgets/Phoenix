@@ -86,6 +86,7 @@ class Configuration(object):
     # The name of the top-level package
 
     SIP_ABI = '12.8'
+    SIP_TRACE = False
 
     # ---------------------------------------------------------------
     # Basic initialization and configuration code
