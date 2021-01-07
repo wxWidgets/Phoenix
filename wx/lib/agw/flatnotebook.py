@@ -1056,6 +1056,7 @@ class FNBDragInfo(object):
 # Simply Used To Handle The OnDrop() Method When Dragging And Dropping Between
 # Different FlatNotebooks.
 # ---------------------------------------------------------------------------- #
+FNB_DataFormat = wx.DataFormat('FlatNotebook')
 
 class FNBDropTarget(wx.DropTarget):
     """
@@ -1074,7 +1075,7 @@ class FNBDropTarget(wx.DropTarget):
         wx.DropTarget.__init__(self)
 
         self._parent = parent
-        self._dataobject = wx.CustomDataObject(wx.DataFormat(six.u('FlatNotebook')))
+        self._dataobject = wx.CustomDataObject(FNB_DataFormat)
         self.SetDataObject(self._dataobject)
 
 
@@ -5836,7 +5837,7 @@ class PageContainer(wx.Panel):
                     self._isdragging = True
                     draginfo = FNBDragInfo(self, tabIdx)
                     drginfo = pickle.dumps(draginfo)
-                    dataobject = wx.CustomDataObject(wx.DataFormat(six.u('FlatNotebook')))
+                    dataobject = wx.CustomDataObject(FNB_DataFormat)
                     dataobject.SetData(drginfo)
                     dragSource = FNBDropSource(self)
                     dragSource.SetData(dataobject)
