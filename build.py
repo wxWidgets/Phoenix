@@ -1285,7 +1285,7 @@ def cmd_sip(options, args):
             sip_module = 'wx.siplib',   # the fully qualified name of the sip module
             sbf_file=sbf,               # File to write the generated file lists to
             exceptions = False,         # enable support for exceptions
-            tracing = False,            # generate code with tracing enabled
+            tracing = cfg.SIP_TRACE,    # generate code with tracing enabled
             sources_dir = tmpdir,       # the name of the code directory
             extracts = [pycode],        # add <ID:FILE> to the list of extracts to generate
             pyi_extract=pyi_extract,    # the name of the .pyi stub file
