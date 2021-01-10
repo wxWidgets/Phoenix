@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2018 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -206,6 +206,7 @@ class VariableDef(BaseDef):
         self.definition = ''
         self.argsString = ''
         self.pyInt = False
+        self.noSetter = False
         self.__dict__.update(**kw)
         if element is not None:
             self.extract(element)
@@ -247,6 +248,8 @@ class MemberVarDef(VariableDef):
         super(MemberVarDef, self).__init__()
         self.isStatic = False
         self.protection = 'public'
+        self.getCode = ''
+        self.setCode = ''
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
@@ -285,10 +288,10 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.pyInt = False            # treat char types as integers
         self.transfer = False         # transfer ownership of return value to C++?
         self.transferBack = False     # transfer ownership of return value from C++ to Python?
-        self.transferThis = False     # ownership of 'this' pointer transfered to C++
+        self.transferThis = False     # ownership of 'this' pointer transferred to C++
         self.cppCode = None           # Use this code instead of the default wrapper
         self.noArgParser = False      # set the NoargParser annotation
-        self.mustHaveAppFlag = False
+        self.preMethodCode = None
 
         self.__dict__.update(kw)
         if element is not None:
@@ -483,7 +486,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                         'wxArrayInt()' : '[]',
                         }
         if isinstance(self, CppMethodDef):
-            # rip appart the argsString instead of using the (empty) list of parameters
+            # rip apart the argsString instead of using the (empty) list of parameters
             lastP = self.argsString.rfind(')')
             args = self.argsString[:lastP].strip('()').split(',')
             for arg in args:
@@ -553,7 +556,11 @@ class FunctionDef(BaseDef, FixWxPrefix):
 
 
     def mustHaveApp(self, value=True):
-        self.mustHaveAppFlag = value
+        if value:
+            self.preMethodCode = "if (!wxPyCheckForApp()) return NULL;\n"
+        else:
+            self.preMethodCode = None
+
 
 #---------------------------------------------------------------------------
 
@@ -598,6 +605,10 @@ class MethodDef(FunctionDef):
             self.ignore()
 
 
+    def setVirtualCatcherCode(self, code):
+        """
+        """
+        self.virtualCatcherCode = code
 
 
 #---------------------------------------------------------------------------
@@ -661,7 +672,7 @@ class ClassDef(BaseDef):
         self.abstract = False       # is it an abstract base class?
         self.external = False       # class is in another module
         self.noDefCtor = False      # do not generate a default constructor
-        self.singlton = False       # class is a singleton so don't call the dtor until the interpreter exits
+        self.singleton = False       # class is a singleton so don't call the dtor until the interpreter exits
         self.allowAutoProperties = True
         self.headerCode = []
         self.cppCode = []
@@ -672,7 +683,8 @@ class ClassDef(BaseDef):
         self.innerclasses = []
         self.isInner = False        # Is this a nested class?
         self.klass = None           # if so, then this is the outer class
-        self.mustHaveAppFlag = False
+        self.preMethodCode = None
+        self.postProcessReST = None
 
         # Stuff that needs to be generated after the class instead of within
         # it. Some back-end generators need to put stuff inside the class, and
@@ -741,8 +753,12 @@ class ClassDef(BaseDef):
         for node in element.findall('includes'):
             self.includes.append(node.text)
         for node in element.findall('templateparamlist/param'):
-            txt = node.find('type').text
-            txt = txt.replace('class ', '')
+            if node.find('declname') is not None:
+                txt = node.find('declname').text
+            else:
+                txt = node.find('type').text
+                txt = txt.replace('class ', '')
+                txt = txt.replace('typename ', '')
             self.templateParams.append(txt)
 
         for node in element.findall('innerclass'):
@@ -805,7 +821,8 @@ class ClassDef(BaseDef):
 
 
     def includeCppCode(self, filename):
-        self.addCppCode(textfile_open(filename).read())
+        with textfile_open(filename) as fid:
+            self.addCppCode(fid.read())
 
 
     def addAutoProperties(self):
@@ -1078,6 +1095,13 @@ class ClassDef(BaseDef):
         self.addItem(WigCode(text))
 
 
+    def addDefaultCtor(self, prot='protected'):
+        # add declaration of a default constructor to this class
+        wig = WigCode("""\
+{PROT}:
+    {CLASS}();""".format(CLASS=self.name, PROT=prot))
+        self.addItem(wig)
+
     def addCopyCtor(self, prot='protected'):
         # add declaration of a copy constructor to this class
         wig = WigCode("""\
@@ -1087,6 +1111,9 @@ class ClassDef(BaseDef):
 
     def addPrivateCopyCtor(self):
         self.addCopyCtor('private')
+
+    def addPrivateDefaultCtor(self):
+        self.addDefaultCtor('private')
 
     def addPrivateAssignOp(self):
         # add declaration of an assignment opperator to this class
@@ -1111,7 +1138,10 @@ private:
         self.addItem(wig)
 
     def mustHaveApp(self, value=True):
-        self.mustHaveAppFlag = value
+        if value:
+            self.preMethodCode = "if (!wxPyCheckForApp()) return NULL;\n"
+        else:
+            self.preMethodCode = None
 
 
     def copyFromClass(self, klass, name):
@@ -1128,6 +1158,11 @@ private:
         self.addItem(item)
         return item
 
+    def setReSTPostProcessor(self, func):
+        """
+        Set a function to be called after the class's docs have been generated.
+        """
+        self.postProcessReST = func
 
 #---------------------------------------------------------------------------
 
@@ -1449,7 +1484,8 @@ class ModuleDef(BaseDef):
             self.cppCode.append(code)
 
     def includeCppCode(self, filename):
-        self.addCppCode(textfile_open(filename).read())
+        with textfile_open(filename) as fid:
+            self.addCppCode(fid.read())
 
     def addInitializerCode(self, code):
         if isinstance(code, list):
@@ -1575,10 +1611,13 @@ class ModuleDef(BaseDef):
         return pc
 
 
-    def addGlobalStr(self, name, before=None):
+    def addGlobalStr(self, name, before=None, wide=False):
         if self.findItem(name):
             self.findItem(name).ignore()
-        gv = GlobalVarDef(type='const char*', name=name)
+        if wide:
+            gv = GlobalVarDef(type='const wchar_t*', name=name)
+        else:
+            gv = GlobalVarDef(type='const char*', name=name)
         if before is None:
             self.addItem(gv)
         elif isinstance(before, int):
@@ -1592,7 +1631,8 @@ class ModuleDef(BaseDef):
         """
         Add a snippet of Python code from a file to the wrapper module.
         """
-        text = textfile_open(filename).read()
+        with textfile_open(filename) as fid:
+            text = fid.read()
         return self.addPyCode(
             "#" + '-=' * 38 + '\n' +
             ("# This code block was included from %s\n%s\n" % (filename, text)) +

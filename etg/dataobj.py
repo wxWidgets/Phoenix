@@ -4,7 +4,7 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ def addGetAllFormats(klass, pureVirtual=False):
             """,
 
         # This code will be used in the function that calls a Python implementation
-        # of this method. So we need to translate between the real C++ siganture
+        # of this method. So we need to translate between the real C++ signature
         # and the Python signature.
         virtualCatcherCode="""\
             // VirtualCatcherCode for wx.DataObject.GetAllFormats
@@ -340,11 +340,11 @@ def run():
         body="return wxPyMakeBuffer(self->GetData(), self->GetSize());")
 
     c.find('SetData').ignore()
-    c.addCppMethod('bool', 'SetData', '(wxPyBuffer* buf)',
+    c.addCppMethod_sip('bool', 'SetData', '(wxPyBuffer* buf)',
         cppSignature='bool (size_t len, const void* buf)',
         isVirtual=True,
         doc="Copies data from the provided buffer to this data object's buffer",
-        body="return self->SetData(buf->m_len, buf->m_ptr);")
+        body="sipRes = (sipSelfWasArg ? sipCpp-> ::wxCustomDataObject::SetData(buf->m_len, buf->m_ptr) : sipCpp->SetData(buf->m_len, buf->m_ptr));")
 
     addGetAllFormats(c)
     addBaseVirtuals(c)

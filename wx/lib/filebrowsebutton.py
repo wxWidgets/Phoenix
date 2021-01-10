@@ -7,7 +7,7 @@
 #
 # Author:      Mike Fletcher
 #
-# Copyright:   (c) 2000-2018 by Total Control Software
+# Copyright:   (c) 2000-2020 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port
 #----------------------------------------------------------------------
@@ -290,7 +290,7 @@ class FileBrowseButtonWithHistory( FileBrowseButton ):
 
     def GetHistory( self ):
         """Return the current history list"""
-        if self.historyCallBack != None:
+        if self.historyCallBack is not None:
             return self.historyCallBack()
         elif self.history:
             return list( self.history )
@@ -300,7 +300,7 @@ class FileBrowseButtonWithHistory( FileBrowseButton ):
 
     def OnSetFocus(self, event):
         """When the history scroll is selected, update the history"""
-        if self.historyCallBack != None:
+        if self.historyCallBack is not None:
             self.SetHistory( self.historyCallBack(), control=self.textControl)
         event.Skip()
 
@@ -425,8 +425,7 @@ if __name__ == "__main__":
             self.history={"c:\\temp":1, "c:\\tmp":1, "r:\\temp":1,"z:\\temp":1}
 
         def historyCallBack(self):
-            keys=self.history.keys()
-            keys.sort()
+            keys=sorted(self.history)
             return keys
 
         def OnFileNameChangedHistory (self, event):

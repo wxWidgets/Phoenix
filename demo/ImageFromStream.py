@@ -13,7 +13,8 @@ class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
 
-        data = open(opj('bitmaps/image.png'), "rb").read()
+        with open(opj('bitmaps/image.png'), "rb") as fid:
+            data = fid.read()
         stream = BytesIO(data)
 
         bmp = wx.Bitmap(wx.Image(stream))

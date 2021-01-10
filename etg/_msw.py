@@ -3,7 +3,7 @@
 # Author:      Dietmar Schwertberger
 #
 # Created:     13-Nov-2015
-# Copyright:   (c) 2015-2018 by Total Control Software
+# Copyright:   (c) 2015-2020 by Total Control Software
 # License:     wxWindows License
 # ---------------------------------------------------------------------------
 
@@ -31,6 +31,7 @@ ITEMS = []
 
 INCLUDES = [
             'axbase',
+            'helpchm',
             ]
 
 # Separate the list into those that are generated from ETG scripts and the

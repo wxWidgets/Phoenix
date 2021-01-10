@@ -4,8 +4,8 @@
 //
 // Author:      Robin Dunn
 //
-// Created:     24-Feb-2018
-// Copyright:   (c) 2017-2018 by Total Control Software
+// Created:     24-Feb-2017
+// Copyright:   (c) 2017-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ wxVariant wxPGVariant_in_helper(PyObject* obj)
         value << *ptr;
     }
 
-    else if (sipCanConvertToType(obj, sipType_wxArrayInt, 0)) {
+    else if (wxPyCheckNumberSequence(obj)) {
         wxArrayInt* ptr;
         ptr = (wxArrayInt*)sipConvertToType(obj, sipType_wxArrayInt, NULL, 0, &state, &isErr);
         if (!isErr) {
@@ -182,7 +182,7 @@ PyObject* wxPGVariant_out_helper(const wxVariant& value)
             size_t idx = 0;
             PyObject* value = PyList_New(0);
             for (idx=0; idx < sipCpp->GetCount(); idx++) {
-                PyObject* item = wxPGVariant_out_helper(sipCpp->Item(idx));
+                PyObject* item = wxPGVariant_out_helper(sipCpp->Item(idx)->GetData());
                 PyList_Append(value, item);
             }
             return value;

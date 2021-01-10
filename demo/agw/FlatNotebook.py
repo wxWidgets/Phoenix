@@ -878,7 +878,7 @@ class FlatNotebookDemo(wx.Frame):
         msg = "This Is The About Dialog Of The FlatNotebook Demo.\n\n" + \
             "Author: Andrea Gavana @ 02 Oct 2006\n\n" + \
             "Please Report Any Bug/Requests Of Improvements\n" + \
-            "To Me At The Following Adresses:\n\n" + \
+            "To Me At The Following Addresses:\n\n" + \
             "andrea.gavana@gmail.com\n" + "andrea.gavana@maerskoil.com\n\n" + \
             "Based On Eran C++ Implementation (wxWidgets Forum).\n\n" + \
             "Welcome To wxPython " + wx.VERSION_STRING + "!!"

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     21-May-2012
-# Copyright:   (c) 2012-2018 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -53,6 +53,7 @@ def run():
         #endif
         """)
 
+    # TODO: Also add wxGenericNotificationMessage
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

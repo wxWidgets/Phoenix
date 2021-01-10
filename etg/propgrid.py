@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Feb-2015
-# Copyright:   (c) 2015-2017 by Total Control Software
+# Copyright:   (c) 2015-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -41,8 +41,8 @@ def run():
 
     c = module.find('wxPropertyGrid')
     assert isinstance(c, etgtools.ClassDef)
-    c.bases.remove('wxScrollHelper')
-    tools.fixWindowClass(c)
+    c.bases[0] = 'wxControl'  # sip can't handle wxScrolled<wxControl>. See also below.
+    tools.fixWindowClass(c, False)
     module.addGlobalStr('wxPropertyGridNameStr', c)
 
     for name in ['RegisterEditorClass', 'DoRegisterEditorClass']:
@@ -74,6 +74,19 @@ def run():
     for item in module.allItems():
         if hasattr(item, 'type') and item.type == 'wxPGPropArg':
             item.type = 'const wxPGPropArgCls &'
+
+    # We can't let sip create a wxScrolledControl via a typedef because of the
+    # differences in the parameters of the Create methods, so instead let's just
+    # copy the method definitions from wxScrolled<> here and let the compiler
+    # sort it out.
+    import scrolwin
+    mod = scrolwin.parseAndTweakModule()
+    klass = mod.find('wxScrolled')
+    newItems = [item for item in klass.items
+        if not c.findItem(item.name) and not item.isCtor]
+    c.items.extend(newItems)
+
+
 
     c = module.find('wxPropertyGridEvent')
     tools.fixEventClass(c)

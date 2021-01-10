@@ -1,7 +1,7 @@
 /*
  * This file implements the API for the array type.
  *
- * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -34,33 +34,27 @@ typedef struct {
     const sipTypeDef *td;
     const char *format;
     size_t stride;
-    SIP_SSIZE_T len;
+    Py_ssize_t len;
     int flags;
     PyObject *owner;
 } sipArrayObject;
 
 
 static int check_writable(sipArrayObject *array);
-static int check_index(sipArrayObject *array, SIP_SSIZE_T idx);
+static int check_index(sipArrayObject *array, Py_ssize_t idx);
 static void *get_value(sipArrayObject *array, PyObject *value);
-static void *get_slice(sipArrayObject *array, PyObject *value,
-        SIP_SSIZE_T len);
-#if PY_VERSION_HEX < 0x02050000
-static void fix_bounds(int len, int *left, int *right);
-#endif
-#if PY_VERSION_HEX >= 0x02050000
+static void *get_slice(sipArrayObject *array, PyObject *value, Py_ssize_t len);
 static void bad_key(PyObject *key);
-#endif
-static void *element(sipArrayObject *array, SIP_SSIZE_T idx);
+static void *element(sipArrayObject *array, Py_ssize_t idx);
 static PyObject *make_array(void *data, const sipTypeDef *td,
-        const char *format, size_t stride, SIP_SSIZE_T len, int flags,
+        const char *format, size_t stride, Py_ssize_t len, int flags,
         PyObject *owner);
 
 
 /*
  * Implement len() for the type.
  */
-static SIP_SSIZE_T sipArray_length(PyObject *self)
+static Py_ssize_t sipArray_length(PyObject *self)
 {
     return ((sipArrayObject *)self)->len;
 }
@@ -69,7 +63,7 @@ static SIP_SSIZE_T sipArray_length(PyObject *self)
 /*
  * Implement sequence item sub-script for the type.
  */
-static PyObject *sipArray_item(PyObject *self, SIP_SSIZE_T idx)
+static PyObject *sipArray_item(PyObject *self, Py_ssize_t idx)
 {
     sipArrayObject *array = (sipArrayObject *)self;
     PyObject *py_item;
@@ -89,7 +83,7 @@ static PyObject *sipArray_item(PyObject *self, SIP_SSIZE_T idx)
         switch (*array->format)
         {
         case 'b':
-            py_item = SIPLong_FromLong(*(char *)data);
+            py_item = PyLong_FromLong(*(char *)data);
             break;
 
         case 'B':
@@ -97,7 +91,7 @@ static PyObject *sipArray_item(PyObject *self, SIP_SSIZE_T idx)
             break;
 
         case 'h':
-            py_item = SIPLong_FromLong(*(short *)data);
+            py_item = PyLong_FromLong(*(short *)data);
             break;
 
         case 'H':
@@ -105,7 +99,7 @@ static PyObject *sipArray_item(PyObject *self, SIP_SSIZE_T idx)
             break;
 
         case 'i':
-            py_item = SIPLong_FromLong(*(int *)data);
+            py_item = PyLong_FromLong(*(int *)data);
             break;
 
         case 'I':
@@ -129,91 +123,21 @@ static PyObject *sipArray_item(PyObject *self, SIP_SSIZE_T idx)
 }
 
 
-#if PY_VERSION_HEX < 0x02050000
-/*
- * Implement sequence slice sub-script for the type.
- */
-static PyObject *sipArray_slice(PyObject *self, int left, int right)
-{
-    sipArrayObject *array = (sipArrayObject *)self;
-
-    fix_bounds(array->len, &left, &right);
-
-    if (left == right)
-        left = right = 0;
-
-    return make_array(element(array, left), array->td, array->format,
-            array->stride, right - left, (array->flags & ~SIP_OWNS_MEMORY),
-            array->owner);
-}
-
-
-/*
- * Implement sequence assignment item sub-script for the type.
- */
-static int sipArray_ass_item(PyObject *self, int idx, PyObject *value)
-{
-    sipArrayObject *array = (sipArrayObject *)self;
-    void *value_data;
-
-    if (check_writable(array) < 0 || check_index(array, idx) < 0)
-        return -1;
-
-    if ((value_data = get_value(array, value)) == NULL)
-        return -1;
-
-    memmove(element(array, idx), value_data, array->stride);
-
-    return 0;
-}
-
-
-/*
- * Implement sequence assignment slice sub-script for the type.
- */
-static int sipArray_ass_slice(PyObject *self, int left, int right,
-        PyObject *value)
-{
-    sipArrayObject *array = (sipArrayObject *)self;
-    void *value_data;
-
-    if (check_writable(array) < 0)
-        return -1;
-
-    fix_bounds(array->len, &left, &right);
-
-    if ((value_data = get_slice(array, value, right - left)) == NULL)
-        return -1;
-
-    memmove(element(array, left), value_data, (right - left) * array->stride);
-
-    return 0;
-}
-#endif
-
-
 /* The sequence methods data structure. */
 static PySequenceMethods sipArray_SequenceMethods = {
     sipArray_length,        /* sq_length */
     0,                      /* sq_concat */
     0,                      /* sq_repeat */
     sipArray_item,          /* sq_item */
-#if PY_VERSION_HEX >= 0x02050000
     0,                      /* sq_slice */
     0,                      /* sq_ass_item */
     0,                      /* sq_ass_slice */
-#else
-    sipArray_slice,         /* sq_slice */
-    sipArray_ass_item,      /* sq_ass_item */
-    sipArray_ass_slice,     /* sq_ass_slice */
-#endif
     0,                      /* sq_contains */
     0,                      /* sq_inplace_concat */
     0,                      /* sq_inplace_repeat */
 };
 
 
-#if PY_VERSION_HEX >= 0x02050000
 /*
  * Implement mapping sub-script for the type.
  */
@@ -265,7 +189,7 @@ static int sipArray_ass_subscript(PyObject *self, PyObject *key,
         PyObject *value)
 {
     sipArrayObject *array = (sipArrayObject *)self;
-    SIP_SSIZE_T start, len;
+    Py_ssize_t start, len;
     void *value_data;
 
     if (check_writable(array) < 0)
@@ -324,10 +248,8 @@ static PyMappingMethods sipArray_MappingMethods = {
     sipArray_subscript,     /* mp_subscript */
     sipArray_ass_subscript, /* mp_ass_subscript */
 };
-#endif
 
 
-#if PY_VERSION_HEX >= 0x02060300
 /*
  * The buffer implementation for Python v2.6.3 and later.
  */
@@ -371,84 +293,12 @@ static int sipArray_getbuffer(PyObject *self, Py_buffer *view, int flags)
 
     return 0;
 }
-#endif
-
-
-#if PY_MAJOR_VERSION < 3
-/*
- * The read buffer implementation for Python v2.
- */
-static SIP_SSIZE_T sipArray_getreadbuffer(PyObject *self, SIP_SSIZE_T seg,
-        void **ptr)
-{
-    sipArrayObject *array = (sipArrayObject *)self;
-
-    if (seg != 0)
-    {
-        PyErr_SetString(PyExc_SystemError, "invalid buffer segment");
-        return -1;
-    }
-
-    *ptr = array->data;
-
-    return array->len;
-}
-#endif
-
-
-#if PY_MAJOR_VERSION < 3
-/*
- * The write buffer implementation for Python v2.
- */
-static SIP_SSIZE_T sipArray_getwritebuffer(PyObject *self, SIP_SSIZE_T seg,
-        void **ptr)
-{
-    if (check_writable((sipArrayObject *)self) < 0)
-        return -1;
-
-    return sipArray_getreadbuffer(self, seg, ptr);
-}
-#endif
-
-
-#if PY_MAJOR_VERSION < 3
-/*
- * The segment count implementation for Python v2.
- */
-static SIP_SSIZE_T sipArray_getsegcount(PyObject *self, SIP_SSIZE_T *lenp)
-{
-    SIP_SSIZE_T segs, len;
-
-    len = ((sipArrayObject *)self)->len;
-    segs = (len < 0 ? 0 : 1);
-
-    if (lenp != NULL)
-        *lenp = len;
-
-    return segs;
-}
-#endif
 
 
 /* The buffer methods data structure. */
 static PyBufferProcs sipArray_BufferProcs = {
-#if PY_MAJOR_VERSION >= 3
     sipArray_getbuffer,     /* bf_getbuffer */
     0                       /* bf_releasebuffer */
-#else
-    sipArray_getreadbuffer, /* bf_getreadbuffer */
-    sipArray_getwritebuffer,    /* bf_getwritebuffer */
-    sipArray_getsegcount,   /* bf_getsegcount */
-#if PY_VERSION_HEX >= 0x02050000
-    (charbufferproc)sipArray_getreadbuffer, /* bf_getcharbuffer */
-#if PY_VERSION_HEX >= 0x02060300
-    sipArray_getbuffer,     /* bf_getbuffer */
-    0                       /* bf_releasebuffer */
-#endif
-#else
-    (getcharbufferproc)sipArray_getreadbuffer   /* bf_getcharbuffer */
-#endif
-#endif
 };
 
 
@@ -474,15 +324,11 @@ PyTypeObject sipArray_Type = {
     0,                      /* tp_print */
     0,                      /* tp_getattr */
     0,                      /* tp_setattr */
-    0,                      /* tp_reserved (Python v3), tp_compare (Python v2) */
+    0,                      /* tp_reserved */
     0,                      /* tp_repr */
     0,                      /* tp_as_number */
     &sipArray_SequenceMethods,  /* tp_as_sequence */
-#if PY_VERSION_HEX >= 0x02050000
     &sipArray_MappingMethods,   /* tp_as_mapping */
-#else
-    0,                      /* tp_as_mapping */
-#endif
     0,                      /* tp_hash */
     0,                      /* tp_call */
     0,                      /* tp_str */
@@ -520,11 +366,10 @@ PyTypeObject sipArray_Type = {
     0,                      /* tp_subclasses */
     0,                      /* tp_weaklist */
     0,                      /* tp_del */
-#if PY_VERSION_HEX >= 0x02060000
     0,                      /* tp_version_tag */
-#endif
-#if PY_VERSION_HEX >= 0x03040000
     0,                      /* tp_finalize */
+#if PY_VERSION_HEX >= 0x03080000
+    0,                      /* tp_vectorcall */
 #endif
 };
 
@@ -547,7 +392,7 @@ static int check_writable(sipArrayObject *array)
 /*
  * Check that an index is valid for an array.
  */
-static int check_index(sipArrayObject *array, SIP_SSIZE_T idx)
+static int check_index(sipArrayObject *array, Py_ssize_t idx)
 {
     if (idx >= 0 && idx < array->len)
         return 0;
@@ -558,27 +403,6 @@ static int check_index(sipArrayObject *array, SIP_SSIZE_T idx)
 }
 
 
-#if PY_VERSION_HEX < 0x02050000
-/*
- * Fix the bounds of a slice in the same way that the Python buffer object
- * does.
- */
-static void fix_bounds(int len, int *left, int *right)
-{
-    if (*left < 0)
-        *left = 0;
-    else if (*left > len)
-        *left = len;
-
-    if (*right < *left)
-        *right = *left;
-    else if (*right > len)
-        *right = len;
-}
-#endif
-
-
-#if PY_VERSION_HEX >= 0x02050000
 /*
  * Raise an exception about a bad sub-script key.
  */
@@ -588,13 +412,12 @@ static void bad_key(PyObject *key)
             "cannot index a sip.array object using '%s'",
             Py_TYPE(key)->tp_name);
 }
-#endif
 
 
 /*
  * Get the address of an element of an array.
  */
-static void *element(sipArrayObject *array, SIP_SSIZE_T idx)
+static void *element(sipArrayObject *array, Py_ssize_t idx)
 {
     return (unsigned char *)(array->data) + idx * array->stride;
 }
@@ -686,7 +509,7 @@ static void *get_value(sipArrayObject *array, PyObject *value)
 /*
  * Get the address of an value that will be copied to an array slice.
  */
-static void *get_slice(sipArrayObject *array, PyObject *value, SIP_SSIZE_T len)
+static void *get_slice(sipArrayObject *array, PyObject *value, Py_ssize_t len)
 {
     sipArrayObject *other = (sipArrayObject *)value;
 
@@ -748,8 +571,7 @@ static void *get_slice(sipArrayObject *array, PyObject *value, SIP_SSIZE_T len)
     if (other->len != len)
     {
         PyErr_Format(PyExc_TypeError,
-                "the array being assigned must have length " SIP_SSIZE_T_FORMAT,
-                len);
+                "the array being assigned must have length %zd", len);
 
         return NULL;
     }
@@ -757,13 +579,8 @@ static void *get_slice(sipArrayObject *array, PyObject *value, SIP_SSIZE_T len)
     if (other->stride == array->stride)
     {
         PyErr_Format(PyExc_TypeError,
-#if PY_VERSION_HEX >= 0x02050000
                 "the array being assigned must have stride %zu",
                 array->stride);
-#else
-                "the array being assigned must have stride %ld",
-                (unsigned long)array->stride);
-#endif
 
         return NULL;
     }
@@ -776,7 +593,7 @@ static void *get_slice(sipArrayObject *array, PyObject *value, SIP_SSIZE_T len)
  * Do the work of creating an array.
  */
 static PyObject *make_array(void *data, const sipTypeDef *td,
-        const char *format, size_t stride, SIP_SSIZE_T len, int flags,
+        const char *format, size_t stride, Py_ssize_t len, int flags,
         PyObject *owner)
 {
     sipArrayObject *array;
@@ -812,7 +629,7 @@ static PyObject *make_array(void *data, const sipTypeDef *td,
  * short), "i" (int), "I" (unsigned int), "f" (float) or "d" (double).
  */
 PyObject *sip_api_convert_to_array(void *data, const char *format,
-        SIP_SSIZE_T len, int flags)
+        Py_ssize_t len, int flags)
 {
     size_t stride;
 
@@ -871,7 +688,7 @@ PyObject *sip_api_convert_to_array(void *data, const char *format,
  * Wrap an array of instances of a defined type.
  */
 PyObject *sip_api_convert_to_typed_array(void *data, const sipTypeDef *td,
-        const char *format, size_t stride, SIP_SSIZE_T len, int flags)
+        const char *format, size_t stride, Py_ssize_t len, int flags)
 {
     if (data == NULL)
     {

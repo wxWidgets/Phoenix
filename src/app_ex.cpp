@@ -52,11 +52,10 @@ public:
         m_assertMode = wxAPP_ASSERT_EXCEPTION;
         m_startupComplete = false;
         //m_callFilterEvent = false;
-        ms_appInstance = this;
+        wxApp::SetInstance(this);
     }
 
     ~wxPyApp() {
-        ms_appInstance = NULL;
         wxApp::SetInstance(NULL);
     }
 
@@ -69,6 +68,7 @@ public:
     virtual void MacPrintFile(const wxString &) {}
     virtual void MacReopenApp() {}
     virtual bool OSXIsGUIApplication() { return true; }
+    void OSXEnableAutomaticTabbing(bool) {}
 #endif
 
 #ifdef __WXMAC__
@@ -118,7 +118,6 @@ public:
 
     // implementation only
     void SetStartupComplete(bool val) { m_startupComplete = val; }
-    static wxPyApp* ms_appInstance;
 
 private:
     wxAppAssertMode m_assertMode;
@@ -128,7 +127,6 @@ private:
 
 IMPLEMENT_ABSTRACT_CLASS(wxPyApp, wxApp);
 
-wxPyApp* wxPyApp::ms_appInstance = NULL;
 extern PyObject* wxAssertionError;         // Exception object raised for wxASSERT failures
 
 
@@ -332,6 +330,11 @@ bool wxPyApp::IsDisplayAvailable()
 #endif
     {
         // Also foreground the application on the first call as a side-effect.
+        // 
+        // TODO: These APIs are deprecated, and will likely be gone in the 10.15 SDK
+        //
+        // [NSRunningApplication activateIgnoringOtherApps: YES]  ??
+        // 
         if (GetCurrentProcess(&psn) < 0 || SetFrontProcess(&psn) < 0) {
             rv = false;
         } else {
@@ -349,7 +352,7 @@ bool wxPyApp::IsDisplayAvailable()
 
 
 
-wxPyApp* wxGetApp()
+wxAppConsole* wxGetApp()
 {
-    return wxPyApp::ms_appInstance;
+    return wxApp::GetInstance();
 }

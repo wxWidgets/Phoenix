@@ -1794,8 +1794,6 @@ class AuiTabContainer(object):
             offset += self._art.GetIndentSize()
 
         rect = wx.Rect(*self._rect)
-        rect.y = 0
-        rect.height = self._rect.height
 
         # See if the given page is visible at the given tab offset (effectively scroll position)
         for i in range(tabOffset, page_count):
@@ -1807,7 +1805,6 @@ class AuiTabContainer(object):
 
             tab_button = self._tab_close_buttons[i]
 
-            rect.x = offset
             rect.width = self._rect.width - right_buttons_width - offset - 2
 
             if rect.width <= 0:
@@ -3420,6 +3417,9 @@ class AuiNotebook(wx.Panel):
                 tabctrl.SetArtProvider(art.Clone())
                 tab_frame.DoSizing()
 
+            return True
+
+        return False
 
     def UpdateHintWindowSize(self):
         """ Updates the :class:`~wx.lib.agw.aui.framemanager.AuiManager` hint window size. """
@@ -3641,8 +3641,10 @@ class AuiNotebook(wx.Panel):
             control.Reparent(active_tabctrl)
             control.Show()
 
-        self.UpdateTabCtrlHeight(force=force)
-        self.DoSizing()
+        # Note that we don't need to call DoSizing() if the height has changed, as
+        # it's already called from UpdateTabCtrlHeight() itself in this case.
+        if not self.UpdateTabCtrlHeight(force=force):
+            self.DoSizing()
         active_tabctrl.DoShowHide()
 
         # adjust selected index
@@ -3713,6 +3715,8 @@ class AuiNotebook(wx.Panel):
         # make sure we found the page
         if not wnd:
             return False
+
+        wnd.Show(show=False)
 
         # find out which onscreen tab ctrl owns this tab
         ctrl, ctrl_idx = self.FindTab(wnd)
@@ -4858,10 +4862,10 @@ class AuiNotebook(wx.Panel):
             self._textCtrl.StopEditing()
 
         ctrl = event.GetEventObject()
-        assert ctrl != None
+        assert ctrl is not None
 
         wnd = ctrl.GetWindowFromIdx(event.GetSelection())
-        assert wnd != None
+        assert wnd is not None
 
         self.SetSelectionToWindow(wnd)
 

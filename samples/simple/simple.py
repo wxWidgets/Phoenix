@@ -92,7 +92,7 @@ class MyApp(AppBaseClass):
 
         print("Print statements go to this stdout window by default.")
         if USE_WIT:
-            print("Press Ctrl-Alt-I (Cmd-Opt-I on Mac) to launch the WIT.")
+            print("Press Ctrl-Alt-I (Cmd-Opt-I on Mac) to launch the WITH.")
             self.InitInspection()
 
         frame.Show(True)

@@ -29,6 +29,11 @@ td.field-body > blockquote {
     margin-bottom: 0.5em;
 }
 
+table.docutils.align-default tbody tr td p {
+	margin: 0;
+	padding: 2px 0;
+}
+
 /* spacing around example code */
 div.highlight > pre {
     padding: 2px 5px 2px 5px;
@@ -105,20 +110,29 @@ div.document {
   background-color: rgb(230,230,230);
   position: relative;
   margin-left: 240px;
+}
+
+div.sphinxsidebarwrapper {
+    padding: 10px 5px 0 10px;
+}
+
+div.document-no-sidebar {
+  background-color: rgb(230,230,230);
+  position: relative;
+  margin-left: 0px;
   z-index: 0;
-  top: 30px;
+  top: 0px;
 }
 
 div.sphinxsidebar {
     background-color: rgb(230,230,230);
     margin-left: 0;
-    float: none;
-    position: fixed;
-    overflow: auto;
     width: 240px;
     max-width: 240px;
     height: auto;
-    z-index: 1;
+    float: none;
+    overflow: auto;
+    position: fixed;
     left: 0;
     top: 30px;
     bottom: 0;
@@ -140,11 +154,8 @@ div.related {
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     font-size: 90%;
-    position: fixed;
     line-height: normal;
-    position: fixed;
     height: auto;
-    z-index: 1;
     left: 0;
     right: 0;
     top: 0;
@@ -744,3 +755,11 @@ table.contentstable p.mybiglink {
     line-height: 150%;
 }
 
+hr.overloadsep {
+    color: #0000FF;
+    background-color: #0000FF;
+    height: 1px;
+    border: none;
+    width: 50%;
+    float: left;
+}

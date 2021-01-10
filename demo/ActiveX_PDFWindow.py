@@ -54,46 +54,46 @@ class TestPanel(wx.Panel):
         self.Bind(wx.EVT_CHOICE, self.OnZoom, ch1)
 
         leftsizer.Add(buttonsizer, proportion=0)
-        mainsizer.Add(leftsizer, proportion=1, flag=wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, border=5)
+        mainsizer.Add(leftsizer, proportion=1, flag=wx.GROW|wx.ALL, border=5)
 
         box = wx.StaticBox(self, wx.ID_ANY, "" )
         rightsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
 
         b5 = wx.Button(self, wx.ID_ANY, "Load PDF")
-        rightsizer.Add(b5, proportion=0, flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
+        rightsizer.Add(b5, proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnLoadButton, b5)
 
         b6 = wx.Button(self, wx.ID_ANY, "Print")
-        rightsizer.Add(b6, proportion=0, flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
+        rightsizer.Add(b6, proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnPrintButton, b6)
 
         tx3 = wx.StaticText(self, wx.ID_ANY, "Page mode:")
-        rightsizer.Add(tx3, proportion=0, flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
+        rightsizer.Add(tx3, proportion=0, flag=wx.ALL, border=5)
 
         ch2 = wx.Choice(self, wx.ID_ANY,size=[100,-1],
                         choices=["None", "Bookmarks", "Thumbs"])
         ch2.SetSelection(0)
-        rightsizer.Add(ch2, proportion=0, flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
+        rightsizer.Add(ch2, proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_CHOICE, self.OnPageMode, ch2)
 
         tx4 = wx.StaticText(self, wx.ID_ANY, "Layout mode:")
-        rightsizer.Add(tx4, proportion=0, flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
+        rightsizer.Add(tx4, proportion=0, flag=wx.ALL, border=5)
 
         ch3 = wx.Choice(self, wx.ID_ANY,size=[100,-1],
                         choices=["DontCare", "SinglePage",
                                  "OneColumn", "TwoColumnLeft", "TwoColumnRight" ])
         ch3.SetSelection(0)
-        rightsizer.Add(ch3, proportion=0, flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
+        rightsizer.Add(ch3, proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_CHOICE, self.OnLayoutMode, ch3)
 
         cx1 = wx.CheckBox(self, wx.ID_ANY, "Toolbar")
         cx1.SetValue( True )
-        rightsizer.Add( cx1,proportion=0, flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
+        rightsizer.Add( cx1,proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_CHECKBOX, self.OnToolbar, cx1)
 
         cx2 = wx.CheckBox(self, wx.ID_ANY, "Scrollbars")
         cx2.SetValue( True )
-        rightsizer.Add( cx2,proportion=0, flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
+        rightsizer.Add( cx2,proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_CHECKBOX, self.OnScrollbars, cx2)
 
         mainsizer.Add( rightsizer, proportion=0, flag=wx.ALL, border=15)

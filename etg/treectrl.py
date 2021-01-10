@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     26-Mar-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -80,6 +80,7 @@ def run():
     tools.fixWindowClass(c)
     module.addGlobalStr('wxTreeCtrlNameStr', before=c)
 
+    tools.addEnableSystemTheme(c, 'wx.TreeCtrl')
 
     # Set all wxTreeItemData parameters to transfer ownership.  Is this still needed with MappedTypes?
     for item in c.allItems():

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     25-Aug-2016
-# Copyright:   (c) 2016-2018 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -40,8 +40,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxMultiChoiceProperty')
+    c = module.find('wxFontProperty')
     assert isinstance(c, etgtools.ClassDef)
+    tools.fixDialogProperty(c)
+
+    c = module.find('wxMultiChoiceProperty')
+    tools.fixDialogProperty(c)
 
     # Fix up the ctor taking a wxArrayString to be the one with the easier and
     # expected API
@@ -76,13 +80,11 @@ def run():
         PyEditor = wx.deprecated(PGEditor, "Use PGEditor instead.")
         PyEditorDialogAdapter = wx.deprecated(PGEditorDialogAdapter, "Use PGEditorDialogAdapter instead.")
         PyEnumProperty = wx.deprecated(EnumProperty, "Use EnumProperty instead.")
-        PyFileDialogAdapter = wx.deprecated(PGFileDialogAdapter, "Use PGFileDialogAdapter instead.")
         PyFileProperty = wx.deprecated(FileProperty, "Use FileProperty instead.")
         PyFlagsProperty = wx.deprecated(FlagsProperty, "Use FlagsProperty instead.")
         PyFloatProperty = wx.deprecated(FloatProperty, "Use FloatProperty instead.")
         PyFontProperty = wx.deprecated(FontProperty, "Use FontProperty instead.")
         PyIntProperty = wx.deprecated(IntProperty, "Use IntProperty instead.")
-        PyLongStringDialogAdapter = wx.deprecated(PGLongStringDialogAdapter, "Use PGLongStringDialogAdapter instead.")
         PyLongStringProperty = wx.deprecated(LongStringProperty, "Use LongStringProperty instead.")
         PyProperty = wx.deprecated(PGProperty, "Use PGProperty instead.")
         PyStringProperty = wx.deprecated(StringProperty, "Use StringProperty instead.")

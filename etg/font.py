@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Nov-2010
-# Copyright:   (c) 2010-2018 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -35,8 +35,6 @@ def run():
 
     c = module.find('wxFontInfo')
     assert isinstance(c, etgtools.ClassDef)
-    ctor = c.find('wxFontInfo').findOverload('T pointSize')
-    ctor.find('pointSize').type = 'float'
 
     c = module.find('wxFont')
     assert isinstance(c, etgtools.ClassDef)
@@ -53,6 +51,14 @@ def run():
     c.find('GetDefaultEncoding').mustHaveApp()
     c.find('SetDefaultEncoding').mustHaveApp()
 
+    # Tweak the documentation in this constructor a little, replacing the
+    # link to another constructor with a simpler version of the text.
+    ctor = c.find('wxFont').findOverload('int pointSize')
+    # TODO: should implement an easier way to findDocNode() the node containing what we're looking for...
+    ref = list(ctor.detailedDoc[0])[0]
+    assert ref.text.startswith('wxFont(')
+    ref.tag = 'para'
+    ref.text = 'the constructor accepting a :ref:`wx.FontInfo`'
 
     # FFont factory function for backwards compatibility
     module.addCppFunction('wxFont*', 'FFont',

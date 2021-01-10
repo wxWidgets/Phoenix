@@ -946,7 +946,7 @@ class HTMLHelpWindow(wx.Frame):
 
         self.htmlFile = htmlFile
 
-        toolbar = self.CreateToolBar(wx.TB_HORIZONTAL|wx.TB_FLAT|wx.TB_TEXT|wx.TB_3DBUTTONS)
+        toolbar = self.CreateToolBar(wx.TB_HORIZONTAL|wx.TB_FLAT|wx.TB_TEXT)
         self.BuildToolBar(toolbar)
 
         self.html = wx.html.HtmlWindow(self, style=wx.SUNKEN_BORDER)
@@ -1612,8 +1612,8 @@ class Shortcut(object):
         split = accelerator.split('+')
         modifiers, keyCode = split[0:-1], split[-1]
 
-        inv_Accel = dict(list(zip(list(ACCELERATORS.values()), list(ACCELERATORS.keys()))))
-        inv_KeyMap = dict(list(zip(list(KEYMAP.values()), list(KEYMAP.keys()))))
+        inv_Accel = dict(zip(ACCELERATORS.values(), ACCELERATORS.keys()))
+        inv_KeyMap = dict(zip(KEYMAP.values(), KEYMAP.keys()))
 
         base = wx.ACCEL_NORMAL
 
@@ -2340,7 +2340,7 @@ class ShortcutEditor(wx.Dialog):
         def MenuItemSearch(menu, item):
 
             for menuItem in list(menu.GetMenuItems()):
-                label = menuItem.GetLabel()
+                label = menuItem.GetItemLabel()
 
                 if not label:
                     # It's a separator

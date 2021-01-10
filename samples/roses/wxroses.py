@@ -19,7 +19,7 @@
 # but the best reference should be at http://WermeNH.com/roses/index.html .
 
 # There are a number of enhancements that could be done to wxRoses, and
-# contributions are welcome as long as you don't destory the general
+# contributions are welcome as long as you don't destroy the general
 # structure, flavor, and all that.  The following list is in the order
 # I'd like to see done.  Some are easy, some aren't, some are easy if
 # you have experience in the right parts of external code.
@@ -539,6 +539,6 @@ ctrl_buttons = {}               # Button widgets for command (NE) panel
 app = wx.App(False)
 MyFrame()
 if verbose:
-    print_('spin_panels', spin_panels.keys())
-    print_('ctrl_buttons', ctrl_buttons.keys())
+    print_('spin_panels', list(spin_panels))
+    print_('ctrl_buttons', list(ctrl_buttons))
 app.MainLoop()

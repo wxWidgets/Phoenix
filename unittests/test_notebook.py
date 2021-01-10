@@ -44,6 +44,9 @@ class notebook_Tests(wtc.WidgetTestCase):
         nb.AddPage(p2, "Page2")
         nb.SetSelection(0)
 
+    def test_notebookPageAlias(self):
+        assert wx.NotebookPage is wx.Window
+
 #---------------------------------------------------------------------------
 
 

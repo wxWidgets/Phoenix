@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     09-Feb-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -30,6 +30,11 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    tools.generateStubs('wxUSE_UIACTIONSIMULATOR', module,
+                        # extraHdrCode='',
+                        # typeValMap={}
+                        )
 
     c = module.find('wxUIActionSimulator')
     assert isinstance(c, etgtools.ClassDef)

@@ -3,8 +3,18 @@
 import pickle
 import  wx
 
+CUSTOM_DATA_FORMAT = wx.DataFormat('org.wxpython.DoodleLines')
+
 #----------------------------------------------------------------------
 
+dragResultNames = {
+    wx.DragError : 'DragError',
+    wx.DragNone : 'DragNone',
+    wx.DragCopy : 'DragCopy',
+    wx.DragMove : 'DragMove',
+    wx.DragLink : 'DragLink',
+    wx.DragCancel : 'DragCancel',
+}
 
 class DoodlePad(wx.Window):
     def __init__(self, parent, log):
@@ -76,7 +86,7 @@ class DoodlePad(wx.Window):
 
         # create our own data format and use it in a
         # custom data object
-        ldata = wx.CustomDataObject("DoodleLines")
+        ldata = wx.CustomDataObject(CUSTOM_DATA_FORMAT)
         ldata.SetData(linesdata)
 
         # Also create a Bitmap version of the drawing
@@ -102,7 +112,7 @@ class DoodlePad(wx.Window):
         dropSource.SetData(data)
         self.log.WriteText("Beginning DragDrop\n")
         result = dropSource.DoDragDrop(wx.Drag_AllowMove)
-        self.log.WriteText("DragDrop completed: %d\n" % result)
+        self.log.WriteText("DragDrop completed: %s\n" % dragResultNames[result])
 
         if result == wx.DragMove:
             self.lines = []
@@ -119,13 +129,14 @@ class DoodleDropTarget(wx.DropTarget):
         self.dv = window
 
         # specify the type of data we will accept
-        self.data = wx.CustomDataObject("DoodleLines")
+        self.data = wx.CustomDataObject(CUSTOM_DATA_FORMAT)
         self.SetDataObject(self.data)
 
+        self.SetDefaultAction(wx.DragMove)
 
     # some virtual methods that track the progress of the drag
     def OnEnter(self, x, y, d):
-        self.log.WriteText("OnEnter: %d, %d, %d\n" % (x, y, d))
+        self.log.WriteText("OnEnter: %d, %d, %s\n" % (x, y, dragResultNames[d]))
         return d
 
     def OnLeave(self):
@@ -136,7 +147,7 @@ class DoodleDropTarget(wx.DropTarget):
         return True
 
     def OnDragOver(self, x, y, d):
-        #self.log.WriteText("OnDragOver: %d, %d, %d\n" % (x, y, d))
+        self.log.WriteText("OnDragOver: %d, %d, %s\n" % (x, y, dragResultNames[d]))
 
         # The value returned here tells the source what kind of visual
         # feedback to give.  For example, if wxDragCopy is returned then
@@ -150,7 +161,7 @@ class DoodleDropTarget(wx.DropTarget):
     # Called when OnDrop returns True.  We need to get the data and
     # do something with it.
     def OnData(self, x, y, d):
-        self.log.WriteText("OnData: %d, %d, %d\n" % (x, y, d))
+        self.log.WriteText("OnData: %d, %d, %s\n" % (x, y, dragResultNames[d]))
 
         # copy the data from the drag source to our data object
         if self.GetData():
@@ -160,11 +171,16 @@ class DoodleDropTarget(wx.DropTarget):
                 lines = pickle.loads(linesdata.tobytes())
                 self.dv.SetLines(lines)
 
-        # what is returned signals the source what to do
-        # with the original data (move, copy, etc.)  In this
-        # case we again just return the suggested value given
-        # to us.
-        return d
+            # what is returned signals the source what to do
+            # with the original data (move, copy, etc.)  In this
+            # case we again just return the suggested value given
+            # to us.
+            retval = d
+        else:
+            retval = wx.DragNone
+
+        self.log.WriteText('OnData returning: %s\n' % (dragResultNames[retval],))
+        return retval
 
 
 class DoodleViewer(wx.Window):
@@ -199,8 +215,6 @@ class DoodleViewer(wx.Window):
 class CustomDnDPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
-
-        self.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
 
         # Make the controls
         text1 = wx.StaticText(self, -1,
@@ -324,9 +338,9 @@ if __name__ == '__main__':
 
 overview = """<html><body>
 This demo shows Drag and Drop using a custom data type and a custom
-data object.  A type called "DoodleLines" is created and a Python
-Pickle of a list is actually transfered in the drag and drop
-opperation.
+data object.  A type called "org.wxpython.DoodleLines" is created and
+a Python Pickle of a list is actually transferred in the drag and drop
+operation.
 
 A second data object is also created containing a bitmap of the image
 and is made available to any drop target that accepts bitmaps, such as

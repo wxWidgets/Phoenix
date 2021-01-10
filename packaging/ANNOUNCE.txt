@@ -1,46 +1,95 @@
 
 [[ send to:
-   wxpython-users@googlegroups.com,
-   wxpython-dev@googlegroups.com,
-   wx-users@googlegroups.com,
-   wx-announce@googlegroups.com,
+   wxpython-users@googlegroups.com
+   wxpython-dev@googlegroups.com
+   wx-users@googlegroups.com
+   wx-announce@googlegroups.com
    Python-Announce-List@Python.Org
    ]]
 
 
-Announcing wxPython 4.0.3
+
+Announcing wxPython 4.1.1
 =========================
 
-PyPI:   https://pypi.org/project/wxPython/4.0.3
+PyPI:   https://pypi.org/project/wxPython/4.1.1
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.0.3``
+Pip:    ``pip install wxPython==4.1.1``
 
-Changes in this release include the following:
+New and improved in this release:
 
-* Fixed a linking problem on macOS. The new waf added an explicit link
-  to the Python shared library which meant that it would try to load
-  it at runtime, even if a different Python (such as Anaconda, EDM or
-  Homebrew) was used to import wxPython. This, of course, caused
-  runtime errors. (#892)
+* This should have been mentioned in the notes for the last release,
+  but alas, it wandered away and got lost. wxWidgets is now validating
+  the flags passed when adding items to a sizer, to ensure that they
+  are the correct flags for the type of the sizer. If the given flags
+  do not make sense, for example using horizontal alignment flags in a
+  horizontal box sizer, then a wxAssertionError error is raised.
 
-* Sort pages by dock_pos when added to automatic (agw.aui)
-  notebook. (#882)
+* Fixed missing binder for wxEVT_STC_AUTOCOMP_SELECTION_CHANGE. (#1613)
 
-* Fix a bug in py.introspect.getTokens. (#889)
+* DataViewModel.HasValue can be overridden and will inform the
+  DataViewCtrl whether or not an item and column has data. If HasValue
+  returns False, then GetValue for that item/col will not be called.
+  This allows a distinction between a truly empty cell, and one that
+  has a value even if it is an empty string. (#1600)
 
-* Added Vagrant configuration for Fedora-28. Removed Fedora-23 (#884)
+* Added flag that allows blocking of item dragging in the
+  UltimateListControl class. (PR#1620)
 
-* Added wrappers for the wx.WindowIDRef class and added the
-  wx.NewIdRef function. These will make it possible to create reserved
-  Window IDs using the same mechanism which is used when passing
-  wx.ID_ANY to a widget constructor.  The object returned by
-  wx.NewIdRef will automatically convert to an int when passing it to
-  a window constructor, and can also be used as the source in a
-  Bind(). (#896)
+* Add the column index to notification events in UltimateListControl
+  (PR#1630)
 
-* Fixed issue when sys.prefix is not unicode (Python2) and when its
-  contents are not translatable to utf-8.
+* Added orientation parameter to UltimateListControl.GetScrollPos.
+  (PR#1632)
 
+* wx.lib.agw.aui.AuiNotebook RemovePage() now hides the removed page,
+  so it needs to be shown again if it is reused in another place.
+  (PR#1668)
+
+* Fixed issue that could modify `bytes` objects under Python. (PR#1680)
+
+* Added wx.lib.agw.aui.EVT_AUI_PANE_CLOSE event which is sent when a
+  AUI (the agw version) Pane has been closed (after it has been
+  closed, not when it is about to be closed, which is when
+  EVT_AUI_PANE_CLOSE is sent.) (PR#1628)
+
+* Exposed the wx.DC methods GetGraphicsContext and SetGraphicsContext.
+  Depending on the platform and the type of the DC, there may be a
+  wx.GraphicsContext used for the implementation of the DC. If so, the
+  GetGraphicsContext method enables access to it. Be sure to check
+  that the return value is not None before trying to use it.
+
+* Simplified the implementation of the wx.App.InitLocale method. See the
+  MigrationGuide for more information.
+
+* Added wx.lib.agw.aui.AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR constant
+  so the hint window border color can be themed as well.
+
+* The wx.lib.mixins.listCtrl.CheckListCtrlMixin is now obsolete
+  because wx.ListCtrl has new functionality which does pretty much the
+  same thing. In fact there is some overlap in method names which may
+  trip up some use cases. It is advised to drop the use of
+  CheckListCtrlMixin and just use the wx.ListBox functionality. You
+  will need to call EnableCheckBoxes to turn it on, and you may need
+  to change some event handlers or overloaded methods.
+
+* wx.html2.WebView is now able to use Microsoft's Edge browser
+  component as its backend renderer. This should improve the
+  capabilities of the WebView widget on Windows, and be more
+  consistent with the WebViews on the other platforms, compared to the
+  original IE 11 backend. Using this backed requires that a new-ish
+  version of the Edge browser is installed on the end user's computer.
+
+* Added the wx.Image.ConvertToRegion method. This lets you create a
+  wx.Region from an image and a specified color or the mask if the
+  image has one. This was done to workaround a bug in wxMac, but it
+  seems worthwhile enough to keep it around even after the bug was
+  fixed.
+
+* Added the missing context manager methods for wx.LogNull. (#1842)
+
+* Refactored ScrolledThumbnail out of agw.ThumbnailCtrl so as to be
+  usable outside of ThumbnailCtrl.
 
 
 

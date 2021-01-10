@@ -4,7 +4,7 @@
 # Author:      Kevin Ollivier
 #
 # Created:     24-Sept-2011
-# Copyright:   (c) 2015-2018 by Kevin Ollivier, Robin Dunn
+# Copyright:   (c) 2015-2020 by Kevin Ollivier, Robin Dunn
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -130,12 +130,9 @@ def writeFile(filename, stub, values):
     if os.path.exists(filename):
         print("'%s' already exists. Exiting." % filename)
         sys.exit(1)
-    output = open(filename, 'w')
-    output.write(stub % values)
-    output.close()
+    with open(filename, 'w') as output:
+        output.write(stub % values)
     print("Wrote %s" % filename)
-
-
 
 
 if __name__ == '__main__':

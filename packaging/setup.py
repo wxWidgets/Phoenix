@@ -42,8 +42,7 @@ for wc in ['wxWidgets/configure',
 if sys.version_info < (3,):
     execfile('setup.py')
 else:
-    f = open('setup.py', 'r')
-    source = f.read()
-    f.close()
+    with open('setup.py', 'r') as f:
+        source = f.read()
     exec(source)
 

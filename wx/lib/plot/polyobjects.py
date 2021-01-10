@@ -61,7 +61,7 @@ class PolyPoints(object):
         self.attributes = {}
         self.attributes.update(self._attributes)
         for name, value in attr.items():
-            if name not in self._attributes.keys():
+            if name not in self._attributes:
                 err_txt = "Style attribute incorrect. Should be one of {}"
                 raise KeyError(err_txt.format(self._attributes.keys()))
             self.attributes[name] = value

@@ -72,17 +72,19 @@ class TestModel(dv.DataViewIndexListModel):
             item2, item1 = item1, item2
         row1 = self.GetRow(item1)
         row2 = self.GetRow(item2)
+        a = self.data[row1][col]
+        b = self.data[row2][col]
         if col == 0:
-            return cmp(int(self.data[row1][col]), int(self.data[row2][col]))
-        else:
-            return cmp(self.data[row1][col], self.data[row2][col])
-
+            a = int(a)
+            b = int(b)
+        if a < b: return -1
+        if a > b: return 1
+        return 0
 
     def DeleteRows(self, rows):
         # make a copy since we'll be sorting(mutating) the list
-        rows = list(rows)
         # use reverse order so the indexes don't change as we remove items
-        rows.sort(reverse=True)
+        rows = sorted(rows, reverse=True)
 
         for row in rows:
             # remove it from our data structure

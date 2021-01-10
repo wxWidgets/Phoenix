@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Apr-2012
-# Copyright:   (c) 2012-2018 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -61,7 +61,6 @@ def run():
     c.find('CreateCanvas').isVirtual = True
     c.find('CreateControlBar').isVirtual = True
     c.find('Initialize').isVirtual = True
-    c.find('InitializeWithModality').isVirtual = True
 
 
 

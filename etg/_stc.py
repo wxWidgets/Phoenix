@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     24-Oct-2012
-# Copyright:   (c) 2012-2018 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -86,6 +86,8 @@ def run():
     c.find('GetSelection.to_').out = True
     c.find('PositionToXY.x').out = True
     c.find('PositionToXY.y').out = True
+
+    c.find('FindText.findEnd').out = True
 
     # Split the HitTest overloads into separately named methods since once
     # the output parameters are applied they will have the same function
@@ -191,6 +193,8 @@ def run():
             self->RegisterRGBAImage(type, (unsigned char*)pixels->m_ptr);
             """)
 
+    c.find('MarkerDefinePixmap').ignore()
+    c.find('RegisterImage').findOverload('xpmData').ignore()
 
     # TODO:  Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py)
 
@@ -235,6 +239,7 @@ def run():
         EVT_STC_CLIPBOARD_PASTE = wx.PyEventBinder( wxEVT_STC_CLIPBOARD_PASTE, 1)
         EVT_STC_AUTOCOMP_COMPLETED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_COMPLETED, 1)
         EVT_STC_MARGIN_RIGHT_CLICK = wx.PyEventBinder( wxEVT_STC_MARGIN_RIGHT_CLICK, 1)
+        EVT_STC_AUTOCOMP_SELECTION_CHANGE = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_SELECTION_CHANGE, 1)
         """)
 
     #-----------------------------------------------------------------

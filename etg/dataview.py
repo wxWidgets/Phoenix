@@ -5,7 +5,7 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -109,7 +109,7 @@ def run():
     # Change the GetValue method to return the value instead of passing it
     # through a parameter for modification.
     c.find('GetValue.variant').out = True
-
+    c.find('GetValue').cppSignature = 'void (wxVariant& variant, const wxDataViewItem& item, unsigned int col)'
 
     # The DataViewItemObjectMapper class helps map from data items to Python
     # objects, and is used as a base class of PyDataViewModel as a
@@ -125,7 +125,7 @@ def run():
 
             By default a regular dictionary is used to implement the ID to object
             mapping. Optionally a WeakValueDictionary can be useful when there will be
-            a high turnover of objects and mantaining an extra reference to the
+            a high turnover of objects and maintaining an extra reference to the
             objects would be unwise.  If weak references are used then the objects
             associated with data items must be weak-referenceable.  (Things like
             stock lists and dictionaries are not.)  See :meth:`UseWeakRefs`.
@@ -195,6 +195,7 @@ def run():
     # Change the GetValueByRow method to return the value instead of passing
     # it through a parameter for modification.
     c.find('GetValueByRow.variant').out = True
+    c.find('GetValueByRow').cppSignature = 'void (wxVariant& variant, unsigned int row, unsigned int col)'
 
     # declare implementations for base class virtuals
     c.addItem(etgtools.WigCode("""\
@@ -279,7 +280,12 @@ def run():
     # an out parameter.
     m.virtualCatcherCode = """\
         PyObject *sipResObj = sipCallMethod(&sipIsErr, sipMethod, "D", editor, sipType_wxWindow, NULL);
-        if (sipResObj == Py_None) {
+        if (sipResObj == NULL) {
+            if (PyErr_Occurred())
+                PyErr_Print();
+            sipRes = false;
+        }
+        else if (sipResObj == Py_None) {
             sipRes = false;
         } else {
             sipRes = true;
@@ -373,6 +379,8 @@ def run():
     c = module.find('wxDataViewCtrl')
     tools.fixWindowClass(c)
     module.addGlobalStr('wxDataViewCtrlNameStr', c)
+
+    tools.addEnableSystemTheme(c, 'wx.dataview.DataViewCtrl')
 
     c.find('AssociateModel.model').transfer = True
     c.find('AssociateModel').pyName = '_AssociateModel'
@@ -532,6 +540,8 @@ def run():
     c.find('PrependItem.values').type = 'const wxVariantVector&'
     c.find('InsertItem.values').type = 'const wxVariantVector&'
     c.find('GetValueByRow.value').out = True
+    c.find('GetValueByRow').cppSignature = 'void (wxVariant& value, unsigned int row, unsigned int col)'
+
     c.addAutoProperties()
 
 

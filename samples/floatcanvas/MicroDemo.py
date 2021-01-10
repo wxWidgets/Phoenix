@@ -52,7 +52,7 @@ class DrawFrame(wx.Frame):
 
         Rect = Canvas.AddRectangle((50, 20), (40,10), FillColor="Red", LineStyle = None)
         Rect.MinSize = 4 # default is 1
-        Rect.DisappearWhenSmall = False # defualt is True
+        Rect.DisappearWhenSmall = False # default is True
 
         self.Show()
         Canvas.ZoomToBB()

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Feb-2015
-# Copyright:   (c) 2015-2017 by Total Control Software
+# Copyright:   (c) 2015-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -68,6 +68,10 @@ def run():
     #---------------------------------------------------------
     c = module.find('wxPGProperty')
     tools.ignoreConstOverloads(c)
+
+    # The ctors are protected, so unignore them
+    for ctor in c.find('wxPGProperty').all():
+        ctor.ignore(False)
 
     c.find('StringToValue.variant').out = True
     c.find('IntToValue.variant').out = True
@@ -192,9 +196,10 @@ def run():
                   'wxPG_FILE_SHOW_FULL_PATH',
                   'wxPG_FILE_SHOW_RELATIVE_PATH',
                   'wxPG_FILE_INITIAL_PATH',
-                  'wxPG_FILE_DIALOG_TITLE',
+                  # 'wxPG_FILE_DIALOG_TITLE',
+                  'wxPG_DIALOG_TITLE',
                   'wxPG_FILE_DIALOG_STYLE',
-                  'wxPG_DIR_DIALOG_MESSAGE',
+                  # 'wxPG_DIR_DIALOG_MESSAGE',
                   'wxPG_ARRAY_DELIMITER',
                   'wxPG_DATE_FORMAT',
                   'wxPG_DATE_PICKER_STYLE',
@@ -230,6 +235,7 @@ def run():
             PG_FILE_SHOW_RELATIVE_PATH        = u"ShowRelativePath"
             PG_FILE_INITIAL_PATH              = u"InitialPath"
             PG_FILE_DIALOG_TITLE              = u"DialogTitle"
+            PG_DIALOG_TITLE                   = u"DialogTitle"
             PG_FILE_DIALOG_STYLE              = u"DialogStyle"
             PG_DIR_DIALOG_MESSAGE             = u"DialogMessage"
             PG_ARRAY_DELIMITER                = u"Delimiter"

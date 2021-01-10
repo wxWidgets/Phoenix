@@ -17,8 +17,8 @@ def makeBlank(self):
     return empty
 
 #----------------------------------------------------------------------
-# We'll use instaces of these classes to hold our music data. Items in the
-# tree will get associated back to the coresponding Song or Genre object.
+# We'll use instances of these classes to hold our music data. Items in the
+# tree will get associated back to the corresponding Song or Genre object.
 
 class Song(object):
     def __init__(self, id, artist, title, genre):
@@ -57,7 +57,7 @@ class Genre(object):
 #     1. Artist:  string
 #     2. Title:   string
 #     3. id:      integer
-#     4. Aquired: date
+#     4. Acquired: date
 #     5. Liked:   bool
 #
 
@@ -87,7 +87,7 @@ class MyTreeListModel(dv.PyDataViewModel):
         # item(s) should be reported as children of this node. A List view
         # simply provides all items as children of this hidden root. A Tree
         # view adds additional items as children of the other items, as needed,
-        # to provide the tree hierachy.
+        # to provide the tree hierarchy.
 
         # If the parent item is invalid then it represents the hidden root
         # item, so we'll use the genre objects as its children and they will

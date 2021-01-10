@@ -118,6 +118,18 @@ class TestPanel(wx.Panel):
         render.DrawTextCtrl(self, dc, (270, 375, 100, 21))
         render.DrawTextCtrl(self, dc, (380, 375, 100, 21), wx.CONTROL_FOCUSED)
 
+        # DrawItemText
+        render.DrawItemText(self, dc, 'DrawItemText: wx.CONTROL_ISDEFAULT', (270, 420, 300, 21), align=wx.ALIGN_LEFT|wx.ALIGN_TOP, flags=wx.CONTROL_ISDEFAULT, ellipsizeMode=wx.ELLIPSIZE_END)
+        render.DrawItemText(self, dc, 'DrawItemText: wx.CONTROL_SELECTED', (270, 440, 300, 21), align=wx.ALIGN_LEFT|wx.ALIGN_TOP, flags=wx.CONTROL_SELECTED, ellipsizeMode=wx.ELLIPSIZE_END)
+        render.DrawItemText(self, dc, 'DrawItemText: wx.CONTROL_DISABLED', (270, 460, 300, 21), align=wx.ALIGN_LEFT|wx.ALIGN_TOP, flags=wx.CONTROL_DISABLED, ellipsizeMode=wx.ELLIPSIZE_END)
+
+        # DrawGauge
+        dc.DrawText("DrawGauge:", 15, 380)
+        render.DrawGauge(self, dc, (15, 400, 100, 21), value=20, max= 100, flags=wx.CONTROL_ISDEFAULT)
+        render.DrawGauge(self, dc, (15, 430, 100, 21), value=20, max= 100, flags=wx.CONTROL_DISABLED)
+        render.DrawGauge(self, dc, (15, 460, 100, 21), value=20, max= 100, flags=wx.CONTROL_CURRENT)
+        render.DrawGauge(self, dc, (15, 490, 100, 21), value=20, max= 100, flags=wx.CONTROL_FOCUSED)
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
@@ -130,7 +142,7 @@ overview = """<html><body>
 <h2><center>wx.RendererNative</center></h2>
 <p>wx.RendererNative is a class which virtualizes drawing. It abstracts the
 operations of drawing controls and allows you to draw say, a button, without
-caring about exactly how it is done, in a native and platform independant way.
+caring about exactly how it is done, in a native and platform independent way.
 </p>
 
 <p>All drawing functions take some standard parameters:<p>

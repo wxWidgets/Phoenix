@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2018 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -232,9 +232,8 @@ class InheritanceDiagram(object):
         mapfile = outfn + '.map'
 
         if os.path.isfile(outfn) and os.path.isfile(mapfile):
-            fid = open(mapfile, 'rt')
-            map = fid.read()
-            fid.close()
+            with open(mapfile, 'rt') as fid:
+                map = fid.read()
             return os.path.split(outfn)[1], map.replace('\n', ' ')
 
         code = self.generate_dot(class_summary)
@@ -288,8 +287,7 @@ class InheritanceDiagram(object):
         if p.returncode != 0:
             print(('\nERROR: Graphviz `dot` command exited with error:\n[stderr]\n%s\n[stdout]\n%s\n\n' % (stderr, stdout)))
 
-        fid = open(mapfile, 'rt')
-        map = fid.read()
-        fid.close()
+        with open(mapfile, 'rt') as fid:
+            map = fid.read()
 
         return os.path.split(outfn)[1], map.replace('\n', ' ')

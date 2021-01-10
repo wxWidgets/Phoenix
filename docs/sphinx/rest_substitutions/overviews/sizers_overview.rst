@@ -565,7 +565,7 @@ in the last sample, only the box sizer is a vertical box sizer now:
 StaticBoxSizer
 --------------
 
-:class:`wx.StaticBoxSixer` is the same as a :class:`wx.BoxSizer`, but
+:class:`wx.StaticBoxSizer` is the same as a :class:`wx.BoxSizer`, but
 surrounded by a static box. Here is a sample:
 
 

@@ -53,14 +53,14 @@ class MyCellEditor(gridlib.GridCellEditor):
         super(MyCellEditor, self).Show(show, attr)
 
 
-    def PaintBackground(self, rect, attr):
+    def PaintBackground(self, dc, rect, attr):
         """
         Draws the part of the cell not occupied by the edit control.  The
         base  class version just fills it with background colour from the
         attribute.  In this class the edit control fills the whole cell so
         don't do anything at all in order to reduce flicker.
         """
-        self.log.write("MyCellEditor: PaintBackground\n")
+        self.log.write("MyCellEditor: PaintBackground {}\n".format(rect))
 
 
     def BeginEdit(self, row, col, grid):

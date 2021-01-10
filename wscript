@@ -3,15 +3,21 @@
 #  WAF script for building and installing the wxPython extension modules.
 #
 # Author:      Robin Dunn
-# Copyright:   (c) 2013 - 2018 by Total Control Software
+# Copyright:   (c) 2013-2020 by Total Control Software
 # License:     wxWindows License
 #-----------------------------------------------------------------------------
 
 import sys
 import os
+import setuptools
 
-import buildtools.config
-cfg = buildtools.config.Config(True)
+try:
+    from textwrap import indent
+except ImportError:
+    from buildtools.backports.textwrap3 import indent
+
+from buildtools.config import Config, runcmd, msg
+cfg = Config(True)
 
 #-----------------------------------------------------------------------------
 # Options and configuration
@@ -73,13 +79,18 @@ def configure(conf):
         # Visual Studio 2017. However, waf is using "msvc 15.0" to designate
         # that version rather than "14.1" so we'll need to catch that case and
         # fix up the msvc_version accordingly.
-        if msvc_version == "14.1" and sys.version_info >= (3,7):
+        if msvc_version in ["14.1", "14.2"] and sys.version_info >= (3,7):
             ##msvc_version = '15.0'
 
             # On the other hand, microsoft says that v141 and v140 (Visual
             # Studio 2015) are binary compatible, so for now let's just drop
             # it back to "14.0" until I get all the details worked out for
-            # using VS 2017 everywhere for Python 3.7.
+            # using VS 2017 everywhere for Python 3.7+.
+            msvc_version = '14.0'
+
+        # In some cases (Azure DevOps at least) we're getting "14.1" for Python
+        # 3.6 too. Smash it down to '14.0'
+        if msvc_version == "14.1" and sys.version_info[:2] == (3,6):
             msvc_version = '14.0'
 
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
@@ -95,9 +106,10 @@ def configure(conf):
     if isWindows:
         # Search for the Python headers without doing some stuff that could
         # incorrectly fail on Windows. See my_check_python_headers below.
+        # TODO: Check if it can/should be used on other platforms too.
         conf.my_check_python_headers()
     else:
-        conf.check_python_headers()
+        conf.check_python_headers(features='pyext')
 
     # fetch and save the debug options
     conf.env.debug = conf.options.debug
@@ -113,8 +125,10 @@ def configure(conf):
 
         conf.env.INCLUDES_WX = cfg.includes
         conf.env.DEFINES_WX = cfg.wafDefines
-        conf.env.CFLAGS_WX = cfg.cflags
-        conf.env.CXXFLAGS_WX = cfg.cflags
+        conf.env.CFLAGS = cfg.cflags
+        conf.env.CXXFLAGS = cfg.cxxflags
+        conf.env.CFLAGS_WX = list()
+        conf.env.CXXFLAGS_WX = list()
         conf.env.LIBPATH_WX = cfg.libdirs
         conf.env.LIB_WX = cfg.libs
         conf.env.LIBFLAGS_WX = cfg.lflags
@@ -180,16 +194,21 @@ def configure(conf):
             conf.env['LIB_PYEXT'][0] += '_d'
 
 
-    else:
-        # Configuration stuff for non-Windows ports using wx-config
-        conf.env.CFLAGS_WX   = list()
-        conf.env.CXXFLAGS_WX = list()
-        conf.env.CFLAGS_WXPY   = list()
-        conf.env.CXXFLAGS_WXPY = list()
+    else: # not isWindows
+        # TODO: Double-check that this works when using an installed wxWidgets
+        wxConfigDir = cfg.findWxConfigDir(conf.options.wx_config)
 
-        # finish configuring the Config object
+        # Configuration stuff for non-Windows ports using wx-config
+        # First finish configuring the Config object
         conf.env.wx_config = conf.options.wx_config
         cfg.finishSetup(conf.env.wx_config, conf.env.debug)
+
+        conf.env.CFLAGS = cfg.cflags[:]
+        conf.env.CXXFLAGS = cfg.cxxflags[:]
+        conf.env.CFLAGS_WX = list()
+        conf.env.CXXFLAGS_WX = list()
+        conf.env.CFLAGS_WXPY = list()
+        conf.env.CXXFLAGS_WXPY = list()
 
         # Check wx-config exists and fetch some values from it
         rpath = ' --no-rpath' if not conf.options.no_magic else ''
@@ -216,13 +235,21 @@ def configure(conf):
                        uselib_store='WXHTML', mandatory=True,
                        msg='Finding libs for WXHTML')
 
+        if cfg.checkSetup(wxConfigDir, 'wxUSE_GLCANVAS'):
+            gl_libs = '--libs gl,core,net'
+        else:
+            gl_libs = '--libs core,net'
         conf.check_cfg(path=conf.options.wx_config, package='',
-                       args='--cxxflags --libs gl,core,net' + rpath,
+                       args='--cxxflags ' + gl_libs + rpath,
                        uselib_store='WXGL', mandatory=True,
                        msg='Finding libs for WXGL')
 
+        if cfg.checkSetup(wxConfigDir, 'wxUSE_WEBVIEW'):
+            wv_libs = '--libs webview,core,net'
+        else:
+            wv_libs = '--libs core,net'
         conf.check_cfg(path=conf.options.wx_config, package='',
-                       args='--cxxflags --libs webview,core,net' + rpath,
+                       args='--cxxflags ' + wv_libs + rpath,
                        uselib_store='WXWEBVIEW', mandatory=True,
                        msg='Finding libs for WXWEBVIEW')
 
@@ -248,8 +275,12 @@ def configure(conf):
                        uselib_store='WXRICHTEXT', mandatory=True,
                        msg='Finding libs for WXRICHTEXT')
 
+        if cfg.checkSetup(wxConfigDir, 'wxUSE_MEDIACTRL'):
+            mc_libs = '--libs media,core,net'
+        else:
+            mc_libs = '--libs core,net'
         conf.check_cfg(path=conf.options.wx_config, package='',
-                       args='--cxxflags --libs media,core,net' + rpath,
+                       args='--cxxflags ' + mc_libs + rpath,
                        uselib_store='WXMEDIA', mandatory=True,
                        msg='Finding libs for WXMEDIA')
 
@@ -292,21 +323,14 @@ def configure(conf):
         conf.env.CFLAGS_WXPY.append('-UNDEBUG')
         conf.env.CXXFLAGS_WXPY.append('-UNDEBUG')
 
-        # set the name of our siplib module
-        conf.env.CFLAGS_WXPY.append('-DSIP_MODULE_NAME=wx.siplib')
-        conf.env.CXXFLAGS_WXPY.append('-DSIP_MODULE_NAME=wx.siplib')
-
-        conf.env.CFLAGS_WXPY.append('-DSIP_MODULE_BASENAME=siplib')
-        conf.env.CXXFLAGS_WXPY.append('-DSIP_MODULE_BASENAME=siplib')
-
         # Add basic debug info for all builds
         conf.env.CFLAGS_WXPY.append('-g')
         conf.env.CXXFLAGS_WXPY.append('-g')
 
         # And if --debug is set turn on more detailed debug info and turn off optimization
         if conf.env.debug:
-            conf.env.CFLAGS_WXPY.extend(['-ggdb', '-O0'])
-            conf.env.CXXFLAGS_WXPY.extend(['-ggdb', '-O0'])
+            for flags in [conf.env.CFLAGS_PYEXT, conf.env.CXXFLAGS_PYEXT]:
+                flags.extend(['-ggdb', '-O0'])
 
         # Remove some compile flags we don't care about, ones that we may be
         # replacing ourselves anyway, or ones which may have duplicates.
@@ -337,14 +361,14 @@ def configure(conf):
 
         # Some Mac-specific stuff
         if isDarwin:
-            conf.env.MACOSX_DEPLOYMENT_TARGET = "10.6"
+            conf.env.MACOSX_DEPLOYMENT_TARGET = "10.10"
 
             if conf.options.mac_arch:
                 conf.env.ARCH_WXPY = conf.options.mac_arch.split(',')
 
-    #import pprint
-    #pprint.pprint( [(k, conf.env[k]) for k in conf.env.keys()] )
-
+    # import pprint
+    # pprint.pprint( [(k, conf.env[k]) for k in conf.env.keys()] )
+    # sys.exit(0)
 
 
 #
@@ -518,24 +542,30 @@ def build(bld):
 
     cfg.finishSetup(bld.env.wx_config)
 
+    if not isWindows:
+        cmd = ' '.join(bld.env.CC) + ' --version'
+        copmpiler = runcmd(cmd, getOutput=True, echoCmd=False)
+        copmpiler = indent(copmpiler, ' '*5)
+        msg("**** Compiler: {}\n{}".format(cmd, copmpiler))
+
     # Copy the license files from wxWidgets
     updateLicenseFiles(cfg)
 
     # create the package's __version__ module
-    open(opj(cfg.PKGDIR, '__version__.py'), 'w').write(
-        "# This file was generated by wxPython's wscript.\n\n"
-        "VERSION_STRING    = '%(VERSION)s'\n"
-        "MAJOR_VERSION     = %(VER_MAJOR)s\n"
-        "MINOR_VERSION     = %(VER_MINOR)s\n"
-        "RELEASE_NUMBER    = %(VER_RELEASE)s\n"
-        "BUILD_TYPE        = '%(BUILD_TYPE)s'\n\n"
-        "VERSION = (MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER, '%(VER_FLAGS)s')\n"
-        % cfg.__dict__)
+    with open(opj(cfg.PKGDIR, '__version__.py'), 'w') as fid:
+        fid.write("# This file was generated by wxPython's wscript.\n\n"
+                  "VERSION_STRING    = '%(VERSION)s'\n"
+                  "MAJOR_VERSION     = %(VER_MAJOR)s\n"
+                  "MINOR_VERSION     = %(VER_MINOR)s\n"
+                  "RELEASE_NUMBER    = %(VER_RELEASE)s\n"
+                  "BUILD_TYPE        = '%(BUILD_TYPE)s'\n\n"
+                  "VERSION = (MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER, '%(VER_FLAGS)s')\n"
+                  % cfg.__dict__)
     # and one for the demo folder too
-    open('demo/version.py', 'w').write(
-        "# This file was generated by wxPython's wscript.\n\n"
-        "VERSION_STRING = '%(VERSION)s'\n"
-        % cfg.__dict__)
+    with open('demo/version.py', 'w') as fid:
+        fid.write("# This file was generated by wxPython's wscript.\n\n"
+                  "VERSION_STRING = '%(VERSION)s'\n"
+                  % cfg.__dict__)
 
 
     # copy the wx locale message catalogs to the package dir
@@ -545,6 +575,8 @@ def build(bld):
     for name in ['src/__init__.py', 'src/gizmos.py',]:
         copy_file(name, cfg.PKGDIR, update=1, verbose=1)
 
+    # Copy sip's sip.h for distribution with wxPython's header
+    copy_file('sip/siplib/sip.h', 'wx/include/wxPython', update=1, verbose=1)
 
     # Create the build tasks for each of our extension modules.
     addRelwithdebugFlags(bld, 'siplib')
@@ -642,6 +674,15 @@ def copyFileToPkg(task):
     return 0
 
 
+def simpleCopy(task):
+    import shutil
+    src = task.inputs[0].abspath()
+    tgt = task.outputs[0].abspath()
+    print("{} --> {}".format(src, tgt))
+    shutil.copy(src, tgt)
+    return 0
+
+
 # Copy all the items in env with a matching postfix to a similarly
 # named item with the dest postfix.
 def _copyEnvGroup(env, srcPostfix, destPostfix):
@@ -657,7 +698,17 @@ def makeETGRule(bld, etgScript, moduleName, libFlags):
     from buildtools.config   import loadETG, getEtgSipCppFiles
 
     addRelwithdebugFlags(bld, moduleName)
-    rc = ['src/wxc.rc'] if isWindows else []
+
+    rc = []
+    if isWindows:
+        rc_name = moduleName + '.rc'
+        bld(rule=simpleCopy,
+            source='src/wxc.rc',
+            target=rc_name,
+            #before=moduleName+'.res'
+            )
+        rc = [rc_name]
+
     etg = loadETG(etgScript)
     bld(features='c cxx cxxshlib pyext',
         target=makeTargetName(bld, moduleName),

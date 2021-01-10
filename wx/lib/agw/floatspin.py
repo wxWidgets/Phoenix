@@ -842,11 +842,11 @@ class FloatSpin(wx.Control):
         :note: This method doesn't modify the current value.
         """
 
-        if (min_val != None):
+        if (min_val is not None):
             self._min = FixedPoint(str(min_val), 20)
         else:
             self._min = None
-        if (max_val != None):
+        if (max_val is not None):
             self._max = FixedPoint(str(max_val), 20)
         else:
             self._max = None
@@ -893,12 +893,12 @@ class FloatSpin(wx.Control):
         :return: A clamped copy of `var`.
         """
 
-        if (self._min != None):
+        if (self._min is not None):
             if (var < self._min):
                 var = self._min
                 return var
 
-        if (self._max != None):
+        if (self._max is not None):
             if (var > self._max):
                 var = self._max
 
@@ -1148,6 +1148,22 @@ class FloatSpin(wx.Control):
         return self._min
 
 
+    def SetMin(self, min_val):
+        """
+        Sets the minimum value for :class:`FloatSpin`.
+
+        :param `min_val`: the minimum value for :class:`FloatSpin`. If it is ``None`` it is
+         ignored.
+
+        :note: This method doesn't modify the current value.
+        """
+
+        if (min_val is not None):
+            self._min = FixedPoint(str(min_val), 20)
+        else:
+            self._min = None
+
+
     def GetMax(self):
         """
         Returns the maximum value for :class:`FloatSpin`. It can be a
@@ -1157,10 +1173,26 @@ class FloatSpin(wx.Control):
         return self._max
 
 
+    def SetMax(self, max_val):
+        """
+        Sets the maximum value for :class:`FloatSpin`.
+
+        :param `max_val`: the maximum value for :class:`FloatSpin`. If it is ``None`` it is
+         ignored.
+
+        :note: This method doesn't modify the current value.
+        """
+
+        if (max_val is not None):
+            self._max = FixedPoint(str(max_val), 20)
+        else:
+            self._max = None
+
+
     def HasRange(self):
         """ Returns whether :class:`FloatSpin` range has been set or not. """
 
-        return (self._min != None) or (self._max != None)
+        return (self._min is not None) or (self._max is not None)
 
 
     def InRange(self, value):
@@ -1172,10 +1204,10 @@ class FloatSpin(wx.Control):
 
         if (not self.HasRange()):
             return True
-        if (self._min != None):
+        if (self._min is not None):
             if (value < self._min):
                 return False
-        if (self._max != None):
+        if (self._max is not None):
             if (value > self._max):
                 return False
         return True
@@ -1202,6 +1234,16 @@ class FloatSpin(wx.Control):
             snap_value = None
 
         return finite, snap_value
+
+
+    DefaultValue = property(GetDefaultValue, SetDefaultValue)
+    Digits       = property(GetDigits,       SetDigits)
+    Font         = property(GetFont,         SetFont)
+    Format       = property(GetFormat,       SetFormat)
+    Increment    = property(GetIncrement,    SetIncrement)
+    Min          = property(GetMin,          SetMin)
+    Max          = property(GetMax,          SetMax)
+    Value        = property(GetValue,        SetValue)
 
 
 
@@ -1291,8 +1333,8 @@ class FixedPoint(object):
     negative, `str(x)[0] == "-"`.
 
     The :class:`FixedPoint` constructor can be passed an int, long, string, float,
-    :class:`FixedPoint`, or any object convertible to a float via `float()` or to a
-    long via `long()`. Passing a precision is optional; if specified, the
+    :class:`FixedPoint`, or any object convertible to a float via `float()` or to an
+    integer via `int()`. Passing a precision is optional; if specified, the
     precision must be a non-negative int. There is no inherent limit on
     the size of the precision, but if very very large you'll probably run
     out of memory.
@@ -1338,7 +1380,7 @@ class FixedPoint(object):
             return
 
         if isinstance(value, six.integer_types):
-            self.n = long(value) * _tento(p)
+            self.n = int(value) * _tento(p)
             return
 
         if isinstance(value, FixedPoint):
@@ -1399,7 +1441,7 @@ class FixedPoint(object):
         # similarly for long
         yes = 1
         try:
-            aslong = long(value)
+            aslong = int(value)
         except:
             yes = 0
         if yes:
@@ -1473,7 +1515,7 @@ class FixedPoint(object):
     __copy__ = __deepcopy__ = copy
 
     def __eq__(self, other):
-        if (other == None):
+        if other is None:
             return False
         xn, yn, p = _norm(self, other)
         return not _cmp(xn, yn)
@@ -1581,7 +1623,7 @@ class FixedPoint(object):
         return float(n) / float(_tento(p))
 
     # XXX should this round instead?
-    # XXX note e.g. long(-1.9) == -1L and long(1.9) == 1L in Python
+    # XXX note e.g. int(-1.9) == -1L and int(1.9) == 1L in Python
     # XXX note that __int__ inherits whatever __long__ does,
     # XXX and .frac() is affected too
     def __long__(self):
@@ -1613,11 +1655,11 @@ class FixedPoint(object):
 
          this equality holds true::
 
-                x = x.frac() + long(x)
+                x = x.frac() + int(x)
 
 
         """
-        return self - long(self)
+        return self - int(self)
 
     # return n, p s.t. self == n/10**p and n % 10 != 0
     def __reduce(self):
@@ -1736,7 +1778,7 @@ def _string2exact(s):
     assert intpart
     assert fracpart
 
-    i, f = long(intpart), long(fracpart)
+    i, f = int(intpart), int(fracpart)
     nfrac = len(fracpart)
     i = i * _tento(nfrac) + f
     exp = exp - nfrac
@@ -1761,8 +1803,12 @@ if __name__ == '__main__':
 
             floatspin = FloatSpin(panel, -1, pos=(50, 50), min_val=0, max_val=1,
                                   increment=0.01, value=0.1, agwStyle=FS_LEFT)
-            floatspin.SetFormat("%f")
-            floatspin.SetDigits(2)
+            floatspin.Format = "%f"
+            floatspin.Digits = 2
+            floatspin.Min = -1
+            floatspin.Max = 10
+            floatspin.Increment = 0.02
+            floatspin.Value = 0.2
 
 
     # our normal wxApp-derived class, as usual

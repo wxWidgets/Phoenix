@@ -5,7 +5,7 @@
 #
 # Created:     06-Sept-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2013-2017 by Total Control Software
+# Copyright:   (c) 2013-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ def run():
     c.addCppCtor(
         briefDoc="""\
             Constructs an AcceleratorTable from a sequence of items
-            where each item is either a wx.AcceleratorEntry or a 
+            where each item is either a wx.AcceleratorEntry or a
             corresponding 3-element tuple like (modifiers, keyCode, cmd).
             """,
         argsString='(PyObject* entries)',

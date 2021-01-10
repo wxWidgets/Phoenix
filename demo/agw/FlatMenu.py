@@ -84,7 +84,7 @@ def CreateBackgroundBitmap():
     mem_dc.Clear()
 
     # colour the menu face with background colour
-    top = wx.Colour("blue")
+    top = wx.BLUE
     bottom = wx.Colour("light blue")
     filRect = wx.Rect(0, 0, 200, 300)
     mem_dc.GradientFillConcentric(filRect, top, bottom, wx.Point(100, 150))
@@ -571,7 +571,7 @@ class FlatMenuDemo(wx.Frame):
         # Create the popup menu
         self.CreateLongPopupMenu()
 
-        # Postion the menu:
+        # Position the menu:
         # The menu should be positioned at the bottom left corner of the button.
         btnSize = btn.GetSize()
 

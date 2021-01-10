@@ -7,7 +7,7 @@
 // Author:      Robin Dunn
 //
 // Created:     26-Apr-2012
-// Copyright:   (c) 2012-2018 by Total Control Software
+// Copyright:   (c) 2012-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -31,8 +31,9 @@ public:
         #if PY_MAJOR_VERSION < 3
             // Old buffer protocol
             int rv = PyObject_AsReadBuffer(obj, (const void**)&m_ptr, &m_len);
-            return rv != -1;
-        #else
+            if (rv != -1)
+                return true;
+        #endif
             // New buffer protocol
             Py_buffer view;
             if (PyObject_GetBuffer(obj, &view, PyBUF_SIMPLE) != 0)
@@ -41,7 +42,6 @@ public:
             m_len = view.len;
             PyBuffer_Release(&view);
             return true;
-        #endif
     }
 
 

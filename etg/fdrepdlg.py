@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     30-Mar-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ def run():
 
     c = module.find('wxFindReplaceDialog')
     tools.fixTopLevelWindowClass(c)
-
+    c.find('wxFindReplaceDialog.data').keepReference = True
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

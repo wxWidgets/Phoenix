@@ -5,7 +5,7 @@
 #
 # Created:     08-Sept-2011
 # Copyright:   (c) 2013 by Wide Open Technologies
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -74,11 +74,18 @@ def run():
 
     c = module.find('wxLog')
     assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
+    c.addDefaultCtor('public')
+    c.addDtor('public', isVirtual=True)
+
 
     c.find('SetActiveTarget').transferBack = True
     c.find('SetActiveTarget.logtarget').transfer = True
     c.find('SetThreadActiveTarget').transferBack = True
     c.find('SetThreadActiveTarget.logger').transfer = True
+    c.find('SetFormatter').transferBack = True
+    c.find('SetFormatter.formatter').transfer = True
+
 
     # we need to un-ignore these protected methods as they need to be overridable
     c.find('DoLogRecord').ignore(False)
@@ -109,10 +116,12 @@ def run():
     c.addPrivateCopyCtor()
     c.addPrivateAssignOp()
 
-
-
     c = module.find('wxLogFormatter')
     c.find('FormatTime').ignore(False)
+
+    c = module.find('wxLogNull')
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
 
 
     #-----------------------------------------------------------------

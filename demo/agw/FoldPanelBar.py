@@ -184,7 +184,7 @@ class Extended(wx.Frame):
         msg = "This is the about dialog of the FoldPanelBar demo.\n\n" + \
               "Author: Andrea Gavana @ 23 Mar 2005\n\n" + \
               "Please report any bug/requests or improvements\n" + \
-              "To me at the following adresses:\n\n" + \
+              "To me at the following addresses:\n\n" + \
               "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
               "Based On Jorgen Bodde C++ demo implementation.\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
@@ -208,7 +208,7 @@ class Extended(wx.Frame):
 
     def OnFoldPanelBarDrag(self, event):
 
-        if event.GetDragStatus() == wx.SASH_STATUS_OUT_OF_RANGE:
+        if event.GetDragStatus() == wx.adv.SASH_STATUS_OUT_OF_RANGE:
             return
 
         if event.GetId() == self.ID_WINDOW_LEFT1:

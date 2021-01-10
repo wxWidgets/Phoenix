@@ -231,7 +231,7 @@ class LabelShape(RectangleShape):
         RectangleShape.__init__(self, w, h)
         self._lineShape = parent
         self._shapeRegion = region
-        self.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT))
+        self.SetPen(wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT))
 
     def OnDraw(self, dc):
         """The draw handler."""
@@ -1052,7 +1052,7 @@ class LineShape(Shape):
         old_pen = self._pen
         old_brush = self._brush
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         self.SetPen(dottedPen)
         self.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1343,7 +1343,7 @@ class LineShape(Shape):
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1396,7 +1396,7 @@ class LineShape(Shape):
             old_pen = self.GetPen()
             old_brush = self.GetBrush()
 
-            dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+            dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
             self.SetPen(dottedPen)
             self.SetBrush(wx.TRANSPARENT_BRUSH)
 

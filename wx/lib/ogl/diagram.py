@@ -113,7 +113,7 @@ class Diagram(object):
         :param `y2`: the y2 position
 
         """
-        dc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT))
+        dc.SetPen(wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         dc.DrawLines([[x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, y1]])

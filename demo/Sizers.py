@@ -431,7 +431,7 @@ theTests = [
      ),
 
     ("Edge Affinity", makeSimpleBox6,
-     "For items that don't completly fill their allotted space, and don't "
+     "For items that don't completely fill their allotted space, and don't "
      "stretch, you can specify which side (or the center) they should stay "
      "attached to."
      ),

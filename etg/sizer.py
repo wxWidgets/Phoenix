@@ -5,12 +5,14 @@
 #
 # Created:     26-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
+
+from textwrap import dedent
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -61,9 +63,9 @@ def run():
             m.find('userData').transfer = True
             m.find('userData').type = 'wxPyUserData*'
 
-    gud = c.find('GetUserData')
-    gud.type = 'wxPyUserData*'
-    gud.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetUserData());')
+    good = c.find('GetUserData')
+    good.type = 'wxPyUserData*'
+    good.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetUserData());')
 
     # these have been deprecated for a while so go ahead and get rid of them
     c.find('SetWindow').ignore()
@@ -156,10 +158,25 @@ def run():
         """)
 
     c.addPyMethod('__iter__', '(self)',
-        doc = "A Py convenience method that allows Sizers to act as iterables that will yield their wx.SizerItems.",
+        doc = "A Python convenience method that allows Sizers to act as iterables that will yield their wx.SizerItems.",
         body = "for item in self.GetChildren(): yield item")
 
     c.addPyCode('Sizer.__bool__ = Sizer.__nonzero__') # For Python 3
+
+    m = etgtools.MethodDef(type='void', name='RecalcSizes', argsString='()', isVirtual=True,
+        briefDoc="This is a deprecated version of RepositionChildren()",
+        detailedDoc=[dedent("""\
+            This is a deprecated version of RepositionChildren() which doesn't take
+            the minimal size parameter which is not needed for very simple sizers
+            but typically is for anything more complicated, so prefer to override
+            RepositionChildren() in new code.
+
+            If RepositionChildren() is not overridden, this method must be
+            overridden, calling the base class version results in an assertion
+            failure.
+            """)],
+        )
+    c.insertItemAfter(c.find('RepositionChildren'), m)
 
 
     #---------------------------------------------

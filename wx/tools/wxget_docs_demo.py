@@ -7,7 +7,7 @@
 # Author:      Steve Barnes
 #
 # Created:     06-Aug-2017
-# Copyright:   (c) 2017-2018 by Steve Barnes
+# Copyright:   (c) 2017-2020 by Steve Barnes
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
 #
@@ -45,10 +45,7 @@ else:
     from urllib import pathname2url
 
 import wx
-try:
-    import wxget
-except ImportError:
-    from . import wxget
+from wx.tools import wxget
 
 print(sys.version_info, sys.version, sys.argv)
 APP = None
@@ -86,8 +83,8 @@ def get_paths_dict():
 def unpack_cached(cached, dest_dir):
     """ Unpack from the cache."""
     print('Unpack', cached, 'to', dest_dir)
-    tf = tarfile.open(cached, "r:*")
-    tf.extractall(dest_dir)
+    with tarfile.open(cached, "r:*") as tf:
+        tf.extractall(dest_dir)
     dest_dir = os.listdir(dest_dir)[0]
     return dest_dir
 

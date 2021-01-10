@@ -55,7 +55,7 @@ When the Gauge is initialized, its "complete" value is usually set; at any rate,
 before using the Gauge, the maximum value of the control must be set. As the task
 progresses, the Gauge is updated by the program via the <code>SetValue</code> method.
 
-This control is for use within a GUI; there is a seperate ProgressDialog class
+This control is for use within a GUI; there is a separate ProgressDialog class
 to present the same sort of control as a dialog to the user.
 """
 

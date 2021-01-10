@@ -5,7 +5,7 @@
 #
 # Created:     16-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ ITEMS  = [ 'wxScrolled' ]
 
 #---------------------------------------------------------------------------
 
-def run():
+def parseAndTweakModule():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
@@ -63,6 +63,8 @@ def run():
     scrolled.find('GetSizeAvailableForScrollTarget').isVirtual = True
     scrolled.find('GetSizeAvailableForScrollTarget').ignore(False)
     scrolled.find('SendAutoScrollEvents').isVirtual = True
+    scrolled.find('ShouldScrollToChildOnFocus').ignore(False)
+    scrolled.find('ShouldScrollToChildOnFocus').isVirtual = True
 
     # The wxScrolledCanvas typedef will be output normally and SIP will treat
     # it like a class that has a wxScrolled mix-in as one of the base classes.
@@ -132,10 +134,17 @@ def run():
     tools.fixWindowClass(klass)
     module.insertItemAfter(td, klass)
 
-
     module.addPyCode("PyScrolledWindow = wx.deprecated(ScrolledWindow, 'Use ScrolledWindow instead.')")
 
-    #-----------------------------------------------------------------
+    # TODO: Can/should this be used from Python? If so then fix the declaration
+    # so sip can understand it.
+    module.find('wxCreateScrolled').ignore()
+
+    return module
+
+#-----------------------------------------------------------------
+def run():
+    module = parseAndTweakModule()
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
 

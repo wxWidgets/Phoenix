@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2012
-# Copyright:   (c) 2012-2018 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -62,7 +62,12 @@ def run():
     #-----------------------------------------------------------------
 
     module.addHeaderCode('#include <wx/glcanvas.h>')
-    tools.generateStubs('wxUSE_GLCANVAS', module)
+
+    tools.generateStubs('wxUSE_GLCANVAS', module,
+                        extraHdrCode='#define wxGLCanvasName wxT("GLCanvas")\n',
+                        typeValMap={'wxGLAttributes &': '*this',
+                                    'wxGLContextAttrs &': '*this',
+                                    })
 
     c = module.find('wxGLContext')
     assert isinstance(c, etgtools.ClassDef)

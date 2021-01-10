@@ -5,7 +5,7 @@
 #
 # Created:     9-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -39,6 +39,8 @@ def parseAndTweakModule():
     assert isinstance(c, etgtools.ClassDef)
     c.find('operator=').ignore()
     c.find('SetFont').pyArgsString = '(font, flags=TEXT_ATTR_FONT & ~TEXT_ATTR_FONT_PIXEL_SIZE)'
+    c.find('SetFontUnderlined').renameOverload('wxTextAttrUnderlineType',
+                                               'SetFontUnderlineType')
 
 
     c = module.find('wxTextCtrl')

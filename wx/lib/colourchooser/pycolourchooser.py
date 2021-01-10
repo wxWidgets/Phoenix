@@ -120,7 +120,7 @@ class PyColourChooser(wx.Panel):
     # Generate the custom colours. These colours are shared across
     # all instances of the colour chooser
     NO_CUSTOM_COLOURS = 16
-    custom_colours = [ (wx.Colour(255, 255, 255),
+    custom_colours = [ (wx.WHITE,
                         pycolourslider.PyColourSlider.HEIGHT / 2)
                      ] * NO_CUSTOM_COLOURS
     last_custom = 0
@@ -453,7 +453,8 @@ class PyColourChooser(wx.Panel):
         self.colour_slider.CaptureMouse()
 
     def onSliderUp(self, event):
-        self.colour_slider.ReleaseMouse()
+        if self.colour_slider.HasCapture():
+            self.colour_slider.ReleaseMouse()
 
     def onSliderMotion(self, event):
         """Handle mouse-down drag on the colour slider palette"""
@@ -471,7 +472,8 @@ class PyColourChooser(wx.Panel):
 
     def onPaletteUp(self, event):
         """Stores state that the mouse is no longer depressed."""
-        self.palette.ReleaseMouse() # Must call once for each CaputreMouse()
+        if self.palette.HasCapture():
+            self.palette.ReleaseMouse() # Must call once for each CaputreMouse()
 
     def onPaletteMotion(self, event):
         """Updates the colour values during mouse motion while the

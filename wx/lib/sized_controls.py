@@ -436,11 +436,11 @@ class SizedParent:
 
             if 'growable_row' in options:
                 row, proportion = options['growable_row']
-                sizer.SetGrowableRow(row, proportion)
+                sizer.AddGrowableRow(row, proportion)
 
             if 'growable_col' in options:
                 col, proportion = options['growable_col']
-                sizer.SetGrowableCol(col, proportion)
+                sizer.AddGrowableCol(col, proportion)
 
             if 'hgap' in options:
                 sizer.SetHGap(options['hgap'])
@@ -596,8 +596,6 @@ class SizedDialog(wx.Dialog):
         """
 
         wx.Dialog.__init__(self, *args, **kwargs)
-
-        self.SetExtraStyle(wx.WS_EX_VALIDATE_RECURSIVELY)
 
         self.borderLen = 12
         self.mainPanel = SizedPanel(self, -1)

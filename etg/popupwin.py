@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     15-Dec-2011
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -31,6 +31,8 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    module.addCppCode("#include <wx/popupwin.h>")
 
     c = module.find('wxPopupWindow')
     assert isinstance(c, etgtools.ClassDef)

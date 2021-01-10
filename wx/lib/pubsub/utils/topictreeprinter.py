@@ -56,7 +56,7 @@ class TopicTreePrinter(ITopicTreeVisitor):
             A = self.__printTopicArgsAll,
             a = self.__printTopicArgNames,
             L = self.__printTopicListeners)
-        assert self.allowedExtras == set(self.__contentMeth.keys())
+        assert self.allowedExtras == set(self.__contentMeth)
         import sys
         self.__destination = fileObj or sys.stdout
         self.__output = []

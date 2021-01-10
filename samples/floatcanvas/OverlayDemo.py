@@ -6,7 +6,7 @@ on top of eveything else on the Canvas, relative to window coords,
 rather than screen coords.
 
 This method uses the "GridOver" object in the FloatCanvas
-  - it was orginally dsigend for girds, graticule,s etc. that
+  - it was originally dsigend for grids, graticule,s etc. that
     are always drawn regardless of zoom, pan, etc, but it works
     for overlays too.
 

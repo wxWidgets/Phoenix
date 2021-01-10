@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     15-Nov-2010
-# Copyright:   (c) 2010-2018 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,6 +33,7 @@ ITEMS  = [
     'wxCloseEvent',
     'wxContextMenuEvent',
     'wxDisplayChangedEvent',
+    'wxDPIChangedEvent',
     'wxDropFilesEvent',
     'wxEraseEvent',
     'wxFocusEvent',
@@ -97,15 +98,6 @@ def run():
     #define wxEVT_HOTKEY 0
     #endif
     """)
-
-    # C macros that need to be ignored
-    module.find('wx__DECLARE_EVT0').ignore()
-    module.find('wx__DECLARE_EVT1').ignore()
-    module.find('wx__DECLARE_EVT2').ignore()
-    module.find('wxEVENT_HANDLER_CAST').ignore()
-    module.find('wxDECLARE_EXPORTED_EVENT').ignore()
-    module.find('wxDECLARE_EVENT').ignore()
-    module.find('wxDEFINE_EVENT').ignore()
 
 
     module.addPyClass('PyEventBinder', ['object'],
@@ -353,6 +345,8 @@ def run():
     c.abstract = True
     c.find('Clone').factory = True
 
+    c.find('GetEventUserData').ignore()
+
     c.addProperty('EventObject GetEventObject SetEventObject')
     c.addProperty('EventType GetEventType SetEventType')
     c.addProperty('Id GetId SetId')
@@ -390,19 +384,39 @@ def run():
 
 
     #---------------------------------------
+    # wxPaintEvent
+    c = module.find('wxPaintEvent')
+    # Although the default ctor is listed as public in the interface, it is
+    # magically made private for the users of the library as it can only be
+    # created within wxWidgets.
+    c.find('wxPaintEvent').protection = 'private'
+
+    #---------------------------------------
     # wxKeyEvent
     c = module.find('wxKeyEvent')
 
     c.find('GetPosition').findOverload('wxCoord').ignore()
     c.find('GetUnicodeKey').type = 'int'
 
+    c.addCppMethod('void', 'SetKeyCode', '(int keyCode)',
+        body="self->m_keyCode = keyCode;")
+
+    c.addCppMethod('void', 'SetRawKeyCode', '(int rawKeyCode)',
+        body="self->m_rawCode = rawKeyCode;")
+
+    c.addCppMethod('void', 'SetRawKeyFlags', '(int rawFlags)',
+        body="self->m_rawFlags = rawFlags;")
+
+    c.addCppMethod('void', 'SetUnicodeKey', '(int uniChar)',
+        body="self->m_uniChar = uniChar;")
+
     c.addProperty('X GetX')
     c.addProperty('Y GetY')
-    c.addProperty('KeyCode GetKeyCode')
+    c.addProperty('KeyCode GetKeyCode SetKeyCode')
     c.addProperty('Position GetPosition')
-    c.addProperty('RawKeyCode GetRawKeyCode')
-    c.addProperty('RawKeyFlags GetRawKeyFlags')
-    c.addProperty('UnicodeKey GetUnicodeKey')
+    c.addProperty('RawKeyCode GetRawKeyCode SetRawKeyCode')
+    c.addProperty('RawKeyFlags GetRawKeyFlags SetRawKeyFlags')
+    c.addProperty('UnicodeKey GetUnicodeKey SetUnicodeKey')
 
     #---------------------------------------
     # wxScrollEvent
@@ -419,10 +433,27 @@ def run():
     #---------------------------------------
     # wxMouseEvent
     c = module.find('wxMouseEvent')
-    c.addProperty('LinesPerAction GetLinesPerAction')
-    c.addProperty('LogicalPosition GetLogicalPosition')
-    c.addProperty('WheelDelta GetWheelDelta')
-    c.addProperty('WheelRotation GetWheelRotation')
+
+    c.addCppMethod('void', 'SetWheelAxis', '(wxMouseWheelAxis wheelAxis)',
+        body="self->m_wheelAxis = wheelAxis;")
+
+    c.addCppMethod('void', 'SetWheelRotation', '(int wheelRotation)',
+        body="self->m_wheelRotation = wheelRotation;")
+
+    c.addCppMethod('void', 'SetWheelDelta', '(int wheelDelta)',
+        body="self->m_wheelDelta = wheelDelta;")
+
+    c.addCppMethod('void', 'SetLinesPerAction', '(int linesPerAction)',
+        body="self->m_linesPerAction = linesPerAction;")
+
+    c.addCppMethod('void', 'SetColumnsPerAction', '(int columnsPerAction)',
+        body="self->m_columnsPerAction = columnsPerAction;")
+
+    c.addProperty('WheelAxis GetWheelAxis SetWheelAxis')
+    c.addProperty('WheelRotation GetWheelRotation SetWheelRotation')
+    c.addProperty('WheelDelta GetWheelDelta SetWheelDelta')
+    c.addProperty('LinesPerAction GetLinesPerAction SetLinesPerAction')
+    c.addProperty('ColumnsPerAction GetColumnsPerAction SetColumnsPerAction')
 
     #---------------------------------------
     # wxSetCursorEvent
@@ -577,7 +608,6 @@ def run():
     #---------------------------------------
     # wxIconizeEvent
     c = module.find('wxIconizeEvent')
-
     # deprecated and removed
     c.find('Iconized').ignore()
 

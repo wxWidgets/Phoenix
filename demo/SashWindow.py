@@ -23,7 +23,7 @@ class TestSashWindow(wx.Panel):
         topwin.SetDefaultSize((1000, 30))
         topwin.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
         topwin.SetAlignment(wx.adv.LAYOUT_TOP)
-        topwin.SetBackgroundColour(wx.Colour(255, 0, 0))
+        topwin.SetBackgroundColour(wx.RED)
         topwin.SetSashVisible(wx.adv.SASH_BOTTOM, True)
 
         self.topWindow = topwin
@@ -38,7 +38,7 @@ class TestSashWindow(wx.Panel):
         bottomwin.SetDefaultSize((1000, 30))
         bottomwin.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
         bottomwin.SetAlignment(wx.adv.LAYOUT_BOTTOM)
-        bottomwin.SetBackgroundColour(wx.Colour(0, 0, 255))
+        bottomwin.SetBackgroundColour(wx.BLUE)
         bottomwin.SetSashVisible(wx.adv.SASH_TOP, True)
 
         self.bottomWindow = bottomwin
@@ -53,7 +53,7 @@ class TestSashWindow(wx.Panel):
         leftwin1.SetDefaultSize((120, 1000))
         leftwin1.SetOrientation(wx.adv.LAYOUT_VERTICAL)
         leftwin1.SetAlignment(wx.adv.LAYOUT_LEFT)
-        leftwin1.SetBackgroundColour(wx.Colour(0, 255, 0))
+        leftwin1.SetBackgroundColour(wx.GREEN)
         leftwin1.SetSashVisible(wx.adv.SASH_RIGHT, True)
         leftwin1.SetExtraBorderSize(10)
         textWindow = wx.TextCtrl(
@@ -76,7 +76,7 @@ class TestSashWindow(wx.Panel):
         leftwin2.SetDefaultSize((120, 1000))
         leftwin2.SetOrientation(wx.adv.LAYOUT_VERTICAL)
         leftwin2.SetAlignment(wx.adv.LAYOUT_LEFT)
-        leftwin2.SetBackgroundColour(wx.Colour(0, 255, 255))
+        leftwin2.SetBackgroundColour(wx.CYAN)
         leftwin2.SetSashVisible(wx.adv.SASH_RIGHT, True)
 
         self.leftWindow2 = leftwin2

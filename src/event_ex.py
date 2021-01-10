@@ -30,6 +30,7 @@ EVT_DROP_FILES = wx.PyEventBinder( wxEVT_DROP_FILES )
 EVT_INIT_DIALOG = wx.PyEventBinder( wxEVT_INIT_DIALOG )
 EVT_SYS_COLOUR_CHANGED = wx.PyEventBinder( wxEVT_SYS_COLOUR_CHANGED )
 EVT_DISPLAY_CHANGED = wx.PyEventBinder( wxEVT_DISPLAY_CHANGED )
+EVT_DPI_CHANGED = wx.PyEventBinder( wxEVT_DPI_CHANGED )
 EVT_SHOW = wx.PyEventBinder( wxEVT_SHOW )
 EVT_MAXIMIZE = wx.PyEventBinder( wxEVT_MAXIMIZE )
 EVT_ICONIZE = wx.PyEventBinder( wxEVT_ICONIZE )
@@ -215,6 +216,8 @@ EVT_GESTURE_ROTATE = wx.PyEventBinder( wxEVT_GESTURE_ROTATE )
 EVT_TWO_FINGER_TAP = wx.PyEventBinder( wxEVT_TWO_FINGER_TAP )
 EVT_LONG_PRESS = wx.PyEventBinder( wxEVT_LONG_PRESS )
 EVT_PRESS_AND_TAP = wx.PyEventBinder( wxEVT_PRESS_AND_TAP )
+
+EVT_CLIPBOARD_CHANGED = PyEventBinder(wxEVT_CLIPBOARD_CHANGED, 1)
 
 
 # deprecated wxEVT aliases

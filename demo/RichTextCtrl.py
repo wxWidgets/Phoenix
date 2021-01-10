@@ -210,7 +210,7 @@ class RichTextFrame(wx.Frame):
 
         # Create and initialize text attributes
         self.textAttr = rt.RichTextAttr()
-        self.SetFontStyle(fontColor=wx.Colour(0, 0, 0), fontBgColor=wx.Colour(255, 255, 255), fontFace='Times New Roman', fontSize=10, fontBold=False, fontItalic=False, fontUnderline=False)
+        self.SetFontStyle(fontColor=wx.BLACK, fontBgColor=wx.WHITE, fontFace='Times New Roman', fontSize=10, fontBold=False, fontItalic=False, fontUnderline=False)
         self.rtc.WriteText('Start with plain text. ')
         self.SetFontStyle(fontBold=True)
         self.rtc.WriteText('Bold. ')
@@ -248,17 +248,17 @@ class RichTextFrame(wx.Frame):
             self.textAttr.SetFontFaceName(fontFace)
         if fontSize:
             self.textAttr.SetFontSize(fontSize)
-        if fontBold != None:
+        if fontBold is not None:
             if fontBold:
                 self.textAttr.SetFontWeight(wx.FONTWEIGHT_BOLD)
             else:
                 self.textAttr.SetFontWeight(wx.FONTWEIGHT_NORMAL)
-        if fontItalic != None:
+        if fontItalic is not None:
             if fontItalic:
                 self.textAttr.SetFontStyle(wx.FONTSTYLE_ITALIC)
             else:
                 self.textAttr.SetFontStyle(wx.FONTSTYLE_NORMAL)
-        if fontUnderline != None:
+        if fontUnderline is not None:
             if fontUnderline:
                 self.textAttr.SetFontUnderlined(True)
             else:

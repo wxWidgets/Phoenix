@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -108,6 +108,7 @@ def run():
     # TODO: these should be removed someday
     module.addPyCode("BG_STYLE_CUSTOM = BG_STYLE_PAINT")
     module.addPyCode("ADJUST_MINSIZE = 0")
+    module.addPyCode("WS_EX_VALIDATE_RECURSIVELY = 0")
 
 
     #-----------------------------------------------------------------

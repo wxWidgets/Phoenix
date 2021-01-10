@@ -135,7 +135,7 @@ class BalloonTipDemo(wx.Frame):
         mainsizer.Add(treecontrol, 0, wx.EXPAND, wx.ALL, 10)
         mainsizer.Add(slider, 0, wx.ALL, 10)
         mainsizer.Add(textctrl2, 0, wx.ALL, 10)
-        mainsizer.Add(statictext, 0, wx.EXPAND | wx.ALIGN_CENTER | wx.ALL, 10)
+        mainsizer.Add(statictext, 0, wx.EXPAND | wx.ALL, 10)
         mainsizer.Add(bitmapbutton, 0, wx.ALL, 10)
         mainsizer.Add(button2, 0, wx.ALL, 10)
 
@@ -316,7 +316,7 @@ class BalloonTipDemo(wx.Frame):
         msg = "This is the about dialog of the BalloonTip demo.\n\n" + \
               "Author: Andrea Gavana @ 29 May 2005\n\n" + \
               "Please report any bug/requests or improvements\n" + \
-              "to me at the following adresses:\n\n" + \
+              "to me at the following addresses:\n\n" + \
               "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 

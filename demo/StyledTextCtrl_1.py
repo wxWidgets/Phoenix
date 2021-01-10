@@ -64,7 +64,8 @@ class MySTC(stc.StyledTextCtrl):
     def OnDestroy(self, evt):
         # This is how the clipboard contents can be preserved after
         # the app has exited.
-        wx.TheClipboard.Flush()
+        if 'wxMac' not in wx.PlatformInfo:
+            wx.TheClipboard.Flush()
         evt.Skip()
 
 
@@ -188,15 +189,22 @@ def runTest(frame, nb, log):
     ed.StyleSetSpec(3, "face:%s,bold,size:%d" % (face2, pb))
     ed.StyleSetSpec(4, "face:%s,size:%d" % (face1, pb-1))
 
+    if wx.VERSION[0:3] < (4, 1, 0, 0, '')[0:3]:
+        def StartStyling(start, mask=255):
+            ed.StartStyling(start, mask)
+    else:
+        def StartStyling(start):
+            ed.StartStyling(start)
+
     # Now set some text to those styles...  Normally this would be
     # done in an event handler that happens when text needs displayed.
-    ed.StartStyling(98, 0xff)
+    StartStyling(98)
     ed.SetStyling(6, 1)  # set style for 6 characters using style 1
 
-    ed.StartStyling(190, 0xff)
+    StartStyling(190)
     ed.SetStyling(20, 2)
 
-    ed.StartStyling(310, 0xff)
+    StartStyling(310)
     ed.SetStyling(4, 3)
     ed.SetStyling(2, 0)
     ed.SetStyling(10, 4)
@@ -221,19 +229,29 @@ def runTest(frame, nb, log):
     ed.MarkerAdd(20, 3)
     ed.MarkerAdd(20, 0)
 
+    ed.INDICSTYLE00 = 0
+    ed.INDICSTYLE01 = 1
+    ed.INDICSTYLE02 = 2
 
     # and finally, an indicator or two
-    ed.IndicatorSetStyle(0, stc.STC_INDIC_SQUIGGLE)
-    ed.IndicatorSetForeground(0, wx.RED)
-    ed.IndicatorSetStyle(1, stc.STC_INDIC_DIAGONAL)
-    ed.IndicatorSetForeground(1, wx.BLUE)
-    ed.IndicatorSetStyle(2, stc.STC_INDIC_STRIKE)
-    ed.IndicatorSetForeground(2, wx.RED)
+    # ed.SetIndicatorCurrent(ed.INDICSTYLE00)
+    ed.IndicatorSetStyle(ed.INDICSTYLE00, stc.STC_INDIC_SQUIGGLE)
+    ed.IndicatorSetForeground(ed.INDICSTYLE00, wx.RED)
+    ed.IndicatorSetAlpha(ed.INDICSTYLE00, 64)
+    ed.IndicatorSetUnder(ed.INDICSTYLE00, True)
+    ed.IndicatorSetStyle(ed.INDICSTYLE01, stc.STC_INDIC_DIAGONAL)
+    ed.IndicatorSetForeground(ed.INDICSTYLE01, wx.BLUE)
+    ed.IndicatorSetStyle(ed.INDICSTYLE02, stc.STC_INDIC_STRIKE)
+    ed.IndicatorSetForeground(ed.INDICSTYLE02, wx.RED)
 
-    ed.StartStyling(836, stc.STC_INDICS_MASK)
-    ed.SetStyling(10, stc.STC_INDIC0_MASK)
-    ed.SetStyling(8, stc.STC_INDIC1_MASK)
-    ed.SetStyling(10, stc.STC_INDIC2_MASK | stc.STC_INDIC1_MASK)
+    ed.SetIndicatorCurrent(ed.INDICSTYLE00)
+    ed.IndicatorFillRange(836, 10)
+    ed.SetIndicatorCurrent(ed.INDICSTYLE01)
+    ed.IndicatorFillRange(846, 8)
+    ed.SetIndicatorCurrent(ed.INDICSTYLE02)
+    ed.IndicatorFillRange(854, 10)
+
+    ed.AppendText('wxPython %s\n%s\n\n' % (wx.VERSION_STRING, wx.stc.StyledTextCtrl.GetLibraryVersionInfo().GetVersionString()))
 
 
     # some test stuff...

@@ -101,6 +101,7 @@ class PlotCanvas(wx.Panel):
 
         # scrollbar variables
         self._sb_ignore = False
+        self._sb_show = False
         self._adjustingSB = False
         self._sb_xfullrange = 0
         self._sb_yfullrange = 0
@@ -690,19 +691,23 @@ class PlotCanvas(wx.Panel):
         :type:   bool
         :raises: `TypeError` if setting a non-boolean value.
         """
-        # XXX: should have sb_hor.IsShown() as well.
-        return self.sb_vert.IsShown()
+        return self._sb_show
 
     @showScrollbars.setter
     def showScrollbars(self, value):
         if not isinstance(value, bool):
             raise TypeError("Value should be True or False")
-        if value == self.showScrollbars:
+        if value == self._sb_show:
             # no change, so don't do anything
             return
+        self._sb_show = value
         self.sb_vert.Show(value)
         self.sb_hor.Show(value)
-        wx.CallAfter(self.Layout)
+
+        def _do_update():
+            self.Layout()
+            self._adjustScrollbars()
+        wx.CallAfter(_do_update)
 
     def SetUseScientificNotation(self, useScientificNotation):
         """
@@ -1852,12 +1857,12 @@ class PlotCanvas(wx.Panel):
         # Get ticks and textExtents for axis if required
         xticks = yticks = None
         xTextExtent = yTextExtent = (0, 0)  # No text for ticks
-        if self._xSpec is not 'none':
+        if self._xSpec != 'none':
             xticks = self._xticks(xAxis[0], xAxis[1])
             # w h of x axis text last number on axis
             xTextExtent = dc.GetTextExtent(xticks[-1][1])
 
-        if self._ySpec is not 'none':
+        if self._ySpec != 'none':
             yticks = self._yticks(yAxis[0], yAxis[1])
             if self.logScale[1]:
                 # make sure we have enough room to display SI notation.
@@ -2180,11 +2185,11 @@ class PlotCanvas(wx.Panel):
             sbpos = evt.GetPosition()
 
             if evt.GetOrientation() == wx.VERTICAL:
-                fullrange, pagesize = self.sb_vert.GetRange(
-                ), self.sb_vert.GetPageSize()
+                fullrange = self.sb_vert.GetRange()
+                pagesize = self.sb_vert.GetPageSize()
                 sbpos = fullrange - pagesize - sbpos
-                dist = (sbpos * self._sb_xunit -
-                        (self._getXCurrentRange()[0] - self._sb_xfullrange))
+                dist = (sbpos * self._sb_yunit -
+                        (self._getYCurrentRange()[0] - self._sb_yfullrange[0]))
                 self.ScrollUp(dist)
 
             if evt.GetOrientation() == wx.HORIZONTAL:
@@ -2909,6 +2914,7 @@ class PlotCanvas(wx.Panel):
 
     _multiples = [(2., np.log10(2.)), (5., np.log10(5.))]
 
+
     def _adjustScrollbars(self):
         if self._sb_ignore:
             self._sb_ignore = False
@@ -2964,5 +2970,6 @@ class PlotCanvas(wx.Panel):
         else:
             self.sb_vert.SetScrollbar(0, 1000, 1000, 1000)
 
-        self.SetShowScrollbars(needScrollbars)
+        self.sb_hor.Show(needScrollbars)
+        self.sb_vert.Show(needScrollbars)
         self._adjustingSB = False

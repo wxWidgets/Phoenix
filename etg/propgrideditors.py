@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Feb-2015
-# Copyright:   (c) 2015-2017 by Total Control Software
+# Copyright:   (c) 2015-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -57,7 +57,12 @@ def run():
         PyObject *sipResObj = sipCallMethod(&sipIsErr, sipMethod, "DD",
                                             property, sipType_wxPGProperty, NULL,
                                             ctrl, sipType_wxWindow, NULL);
-        if (sipResObj == Py_None) {
+        if (sipResObj == NULL) {
+            if (PyErr_Occurred())
+                PyErr_Print();
+            sipRes = false;
+        }
+        else if (sipResObj == Py_None) {
             sipRes = false;
         } else if (sipResObj && !sipIsErr) {
             sipParseResult(&sipIsErr, sipMethod, sipResObj, "(bH5)", &sipRes, sipType_wxPGVariant, &variant);
@@ -83,6 +88,13 @@ def run():
     for item in module.allItems():
         if hasattr(item, 'type') and 'wxVariant' in item.type:
             item.type = item.type.replace('wxVariant', 'wxPGVariant')
+
+    # wxPGWindowList doesn't expect to own these, but wxPropertyGrid does,
+    # so flag them as transferred to the C++ side.
+    c = module.find('wxPGWindowList')
+    c.find('wxPGWindowList.primary').transfer = True
+    c.find('wxPGWindowList.secondary').transfer = True
+    c.find('SetSecondary.secondary').transfer = True
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

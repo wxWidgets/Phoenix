@@ -4,7 +4,7 @@
 #
 # Created:     27-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -59,9 +59,12 @@ def run():
         wxEVT_COMMAND_BOOKCTRL_PAGE_CHANGING  = wxEVT_BOOKCTRL_PAGE_CHANGING
         wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED   = wxEVT_NOTEBOOK_PAGE_CHANGED
         wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING  = wxEVT_NOTEBOOK_PAGE_CHANGING
-
         """)
 
+    module.addPyCode("""\
+        # Add wx.NotebookPage alias, as seen in the documentation
+        NotebookPage = Window
+        """)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

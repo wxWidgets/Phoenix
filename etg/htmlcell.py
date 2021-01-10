@@ -3,12 +3,13 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Oct-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import MethodDef, ParamDef
 
 PACKAGE   = "wx"
 MODULE    = "_html"
@@ -62,6 +63,19 @@ def run():
     assert isinstance(m, etgtools.MethodDef)
     m.find('param').type = 'const char*'
     m.cppSignature = 'const wxHtmlCell* (int condition, const void* param)'
+
+    m = MethodDef(name='GetAbsPos', type='wxPoint', isConst=True,
+        items=[ParamDef(type='wxHtmlCell*', name='rootCell', default='NULL')],
+        doc="""\
+        Returns absolute position of the cell on HTML canvas.\n
+        If rootCell is provided, then it's considered to be the root of the
+        hierarchy and the returned value is relative to it.
+        """)
+    c.addItem(m)
+
+    m = MethodDef(name='GetRootCell', type='wxHtmlCell*', isConst=True,
+        doc="Returns the root cell of the hierarchy.")
+    c.addItem(m)
 
 
     c = module.find('wxHtmlContainerCell')

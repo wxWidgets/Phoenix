@@ -24,4 +24,4 @@ from .combobox   import BaseMaskedComboBox, PreMaskedComboBox, ComboBox, MaskedC
 from .numctrl    import NumCtrl, wxEVT_COMMAND_MASKED_NUMBER_UPDATED, EVT_NUM, NumberUpdatedEvent
 from .timectrl   import TimeCtrl, wxEVT_TIMEVAL_UPDATED, EVT_TIMEUPDATE, TimeUpdatedEvent
 from .ipaddrctrl import IpAddrCtrl
-from .ctrl       import Ctrl, controlTypes
+from .ctrl       import Ctrl, controlTypes, TEXT, COMBO, IPADDR, TIME, NUMBER

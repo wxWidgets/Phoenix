@@ -7,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2018 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ PROJECT_NAME     = 'wxPython'
 # version numbers.
 VER_MAJOR        = 4
 VER_MINOR        = 1
-VER_RELEASE      = 0
+VER_RELEASE      = 2
 
 VER_FLAGS        = "a1"     # wxPython release flags
 
@@ -62,5 +62,5 @@ VER_FLAGS        = "a1"     # wxPython release flags
 # The version numbers of wxWidgets to be used in the build
 wxVER_MAJOR        = 3
 wxVER_MINOR        = 1
-wxVER_RELEASE      = 2  # only used when wxVER_MINOR is an odd value
+wxVER_RELEASE      = 5  # only used when wxVER_MINOR is an odd value
 

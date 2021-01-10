@@ -31,9 +31,9 @@ class IdManagerTest(wtc.WidgetTestCase):
     def test_newIdRef03(self):
         """Check that Auto ID Management is enabled (--enable-autoidman)"""
         # This test is expected to fail if autoID mangagement is turned on
-        # because a reference to the ID is not being saved, so it will be 
+        # because a reference to the ID is not being saved, so it will be
         # unreserved when the first widget is destroyed.
-        
+
         id = wx.Window.NewControlId()
         b = wx.Button(self.frame, id, 'button')
         b.Destroy()
@@ -75,12 +75,30 @@ class IdManagerTest(wtc.WidgetTestCase):
         val = ref1 <= ref2
         assert type(val) == bool
 
+
     def test_WindowIDRef02(self):
         d = {wx.NewIdRef(): 'one',
              wx.NewIdRef(): 'two'}
-        keys = sorted(d.keys())
-        for k in keys:
+        for k in sorted(d):
             val = d[k]
+
+
+    def test_WindowIDRef03(self):
+        # Ensure wx.WindowIDRef can be converted to int without warning when
+        # making a call to warrped method. In Py3.8+ this means there needs to
+        # be an __index__ method.
+
+        # Turn warnings into exceptions so this test will fail if there is
+        # a warning
+        import warnings
+        warnings.simplefilter('error')
+
+        wid = wx.NewIdRef()
+        assert isinstance(wid, wx.WindowIDRef)
+
+        b = wx.Button(self.frame, wid, 'button')
+        assert b.GetId() == wid.GetId()
+
 
 #---------------------------------------------------------------------------
 

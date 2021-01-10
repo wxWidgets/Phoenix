@@ -48,7 +48,7 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
         # Special code to allow traits to be caught by autocomplete
         if hasattr(obj,'trait_get'):
             try:
-                for i in obj.trait_get().keys():
+                for i in obj.trait_get():
                     if i not in attributes:
                         if hasattr(obj, i):
                             attributes += i
@@ -75,10 +75,10 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
     # Remove duplicates from the attribute list.
     for item in attributes:
         dict[item] = None
-    attributes = dict.keys()
+    attributes = list(dict)
     # new-style swig wrappings can result in non-string attributes
     # e.g. ITK http://www.itk.org/
-    attributes = [attribute for attribute in attributes \
+    attributes = [attribute for attribute in attributes
                   if type(attribute) == str]
     attributes.sort(key=lambda x: x.upper())
     if not includeSingle:
@@ -116,7 +116,7 @@ def getAllAttributeNames(obj):
     attrdict[(key, 'dir', len(attributes))] = attributes
     # Get attributes from the object's dictionary, if it has one.
     try:
-        attributes = sorted(obj.__dict__.keys())
+        attributes = sorted(obj.__dict__)
     except Exception:  # Must catch all because object might have __getattr__.
         pass
     else:

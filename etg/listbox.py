@@ -5,7 +5,7 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -89,6 +89,22 @@ def run():
                      self->GetItem(item)->SetFont(*f);
             #endif
             """)
+
+    c.find('MSWSetTabStops').ignore()
+    c.addCppMethod('void', 'MSWSetTabStops', '(const wxArrayInt& tabStops)',
+        doc="""\
+            """,
+        body="""\
+            #ifdef __WXMSW__
+                // TODO:
+                //self->MSWSetTabStops(*tabStops);
+            #endif
+            """)
+
+    tools.fixItemContainerClass(c)
+    c.addItem(etgtools.WigCode("""\
+        virtual int GetSelections(wxArrayInt& aSelections) const;
+        """))
 
 
     tools.fixWindowClass(c)

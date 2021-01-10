@@ -4,7 +4,7 @@
 #
 # Created:     26-Aug-2011
 # Copyright:   (c) 2013 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -39,6 +39,7 @@ def run():
     c.find('Create').findOverload('wxString choices').ignore()
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
 
+    tools.fixItemContainerClass(c, False)
     tools.fixWindowClass(c)
 
     module.addGlobalStr('wxChoiceNameStr', c)

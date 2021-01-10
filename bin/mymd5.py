@@ -6,7 +6,8 @@ def main():
     for arg in sys.argv[1:]:
         for name in glob.glob(arg):
             m = hashlib.md5()
-            m.update(open(name, 'rb').read())
+            with open(name, 'rb') as fid:
+                m.update(fid.read())
             print('%-45s %s' % (name, m.hexdigest()))
 
 

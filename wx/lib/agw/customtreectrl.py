@@ -1698,7 +1698,7 @@ class GenericTreeItem(object):
         self._ownsAttr = False      # delete attribute when done
         self._type = ct_type        # item type: 0=normal, 1=check, 2=radio
         self._is3State = False      # true for 3-state checkbox items
-        self._checked = 0           # only meaningful for check and radio items
+        self._checked = False       # only meaningful for check and radio items
         self._enabled = True        # flag to enable/disable an item
         self._hypertext = False     # indicates if the item is hypertext
         self._visited = False       # visited state for an hypertext item
@@ -2378,7 +2378,7 @@ class GenericTreeItem(object):
 
         :note: This method is meaningful only for checkbox-like items.
         """
-
+        assert state in [wx.CHK_UNCHECKED, wx.CHK_CHECKED, wx.CHK_UNDETERMINED]
         if not self._is3State and state == wx.CHK_UNDETERMINED:
             raise Exception("Set3StateValue can only be used with 3-state checkbox items.")
 
@@ -2425,7 +2425,7 @@ class GenericTreeItem(object):
         
         :note: Always use :meth:`CustomTreeCtrl.CheckItem` instead to update the tree properly and send events.
         """
-
+        assert checked in [True, False]
         self._checked = checked
 
 
@@ -2725,7 +2725,7 @@ class GenericTreeItem(object):
         # evaluate children
         for child in self._children:
             res, flags = child.HitTest(point, theCtrl, flags, level + 1)
-            if res != None:
+            if res is not None:
                 return res, flags
 
         return None, 0
@@ -2778,8 +2778,7 @@ class GenericTreeItem(object):
             return None
 
         checked = self.IsChecked()
-
-        if checked > 0:
+        if checked:
             if self._type == 1:     # Checkbox
                 if checked == wx.CHK_CHECKED:
                     return self._checkedimages[TreeItemIcon_Checked]
@@ -3495,7 +3494,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
          ``EVT_TREE_ITEM_CHECKED`` events.
         """
 
-        if checked == None:
+        if checked is None:
             self.AutoToggleChild(item)
         else:
             self.AutoCheckChild(item, checked)
@@ -4764,7 +4763,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         parent = item.GetParent()
 
-        if parent == None:
+        if parent is None:
             # root item doesn't have any siblings
             return None
 
@@ -4772,7 +4771,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         if item not in siblings:
             # Item is unlinked from tree
             return None
-        
+
         index = siblings.index(item)
         n = index + 1
         return (n == len(siblings) and [None] or [siblings[n]])[0]
@@ -4792,7 +4791,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         parent = item.GetParent()
 
-        if parent == None:
+        if parent is None:
             # root item doesn't have any siblings
             return None
 
@@ -5432,7 +5431,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param `item`: an instance of :class:`GenericTreeItem`.
         """
 
-        if self._editCtrl != None and item != self._editCtrl.item() and self.IsDescendantOf(item, self._editCtrl.item()):
+        if self._editCtrl is not None and item != self._editCtrl.item() and self.IsDescendantOf(item, self._editCtrl.item()):
             self._editCtrl.StopEditing()
 
         if item != self._key_current and self.IsDescendantOf(item, self._key_current):
@@ -5471,7 +5470,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         self._dirty = True     # do this first so stuff below doesn't cause flicker
 
-        if self._editCtrl != None and self.IsDescendantOf(item, self._editCtrl.item()):
+        if self._editCtrl is not None and self.IsDescendantOf(item, self._editCtrl.item()):
             # can't delete the item being edited, cancel editing it first
             self._editCtrl.StopEditing()
 
@@ -5828,7 +5827,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         parent = crt_item.GetParent()
 
-        if parent == None: # This is root item
+        if parent is None: # This is root item
             return self.TagAllChildrenUntilLast(crt_item, last_item, select)
 
         children = parent.GetChildren()
@@ -7518,7 +7517,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             top = self.GetRootItem()
             if self.HasAGWFlag(TR_HIDE_ROOT):
                 top, cookie = self.GetFirstChild(top)
-                
+
             lastEnabled = None
             while top:
                 # Keep track of last enabled item encountered.
@@ -7536,11 +7535,11 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             top = self.GetRootItem()
             if self.HasAGWFlag(TR_HIDE_ROOT):
                 top, cookie = self.GetFirstChild(top)
-                
+
             # Scan for first enabled and displayed item.
             while top and self.IsItemEnabled(top) is False:
                 top = self.GetNextShown(top)
-                
+
             if top:
                 self.DoSelectItem(top, unselect_others, extended_select, from_key=True)
 
@@ -7575,7 +7574,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                     else:
                         if visCount > 1 and targetItem != currentItem:
                             # Move to top visible item in page.
-                            break   
+                            break
                         visCount = 0
                 # Move up to previous item, set as target if it is enabled.
                 if prevItem.IsEnabled():
@@ -7584,7 +7583,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                 # Break loop if we moved up a page size and have a new target.
                 if amount > pageSize and targetItem != currentItem:
                     break
-                prevItem = self.GetPrevShown(prevItem)                
+                prevItem = self.GetPrevShown(prevItem)
             # If we found a valid target, select it.
             if targetItem != currentItem:
                 self.DoSelectItem(targetItem, unselect_others=True,
@@ -7624,7 +7623,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                     else:
                         if visCount > 1 and targetItem != currentItem:
                             # Move to last visible item in page.
-                            break   
+                            break
                         visCount = 0
                 # Move down to next item, set as target if it is enabled.
                 if nextItem.IsEnabled():
@@ -7672,13 +7671,13 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             else:
 
                 event.Skip()
-                
+
 
     def GetPrevShown(self, item):
         """
         Returns the previous displayed item in the tree. This is either the
         last displayed child of its previous sibling, or its parent item.
-        
+
         :param `item`: an instance of :class:`GenericTreeItem`;
 
         :return: An instance of :class:`GenericTreeItem` or ``None`` if no previous item found (root).
@@ -7698,7 +7697,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         if prev == self.GetRootItem() and self.HasAGWFlag(TR_HIDE_ROOT):
             return None
         return prev
-    
+
 
     def GetNextShown(self, item):
         """
@@ -7729,7 +7728,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         # Return the next item.
         return next
 
-    
+
     def GetNextActiveItem(self, item, down=True):
         """
         Returns the next active item. Used Internally at present.
@@ -7820,14 +7819,14 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         if flags:
             return None, flags
 
-        if self._anchor == None:
+        if self._anchor is None:
             flags = TREE_HITTEST_NOWHERE
             return None, flags
 
         point = self.CalcUnscrolledPosition(*point)
         hit, flags = self._anchor.HitTest(point, self, flags, 0)
 
-        if hit == None:
+        if hit is None:
             flags = TREE_HITTEST_NOWHERE
             return None, flags
 
@@ -7901,11 +7900,12 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             else:
                 wx.YieldIfNeeded()
 
-        if self._editCtrl != None and item != self._editCtrl.item():
+        if self._editCtrl is not None and item != self._editCtrl.item():
             self._editCtrl.StopEditing()
 
-        self._editCtrl = TreeTextCtrl(self, item=item)
-        self._editCtrl.SetFocus()
+        if self._editCtrl is None:
+            self._editCtrl = TreeTextCtrl(self, item=item)
+            self._editCtrl.SetFocus()
 
 
     def GetEditControl(self):
@@ -8185,14 +8185,14 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
             self._dragCount = 0
 
-            if item == None:
-                if self._editCtrl != None and item != self._editCtrl.item():
+            if item is None:
+                if self._editCtrl is not None and item != self._editCtrl.item():
                     self._editCtrl.StopEditing()
                 return  # we hit the blank area
 
             if event.RightDown():
 
-                if self._editCtrl != None and item != self._editCtrl.item():
+                if self._editCtrl is not None and item != self._editCtrl.item():
                     self._editCtrl.StopEditing()
 
                 self._hasFocus = True
@@ -8252,11 +8252,11 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             else: # !RightDown() && !LeftUp() ==> LeftDown() || LeftDClick()
 
                 if not item or not item.IsEnabled():
-                    if self._editCtrl != None and item != self._editCtrl.item():
+                    if self._editCtrl is not None and item != self._editCtrl.item():
                         self._editCtrl.StopEditing()
                     return
 
-                if self._editCtrl != None and item != self._editCtrl.item():
+                if self._editCtrl is not None and item != self._editCtrl.item():
                     self._editCtrl.StopEditing()
 
                 self._hasFocus = True
@@ -8535,7 +8535,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             wndx, wndy = wnd.GetPosition()
             if wndy != ya:
                 wnd.Move(wndx, ya, flags=wx.SIZE_ALLOW_MINUS_ONE)
-        
+
         y += height
 
         if not item.IsExpanded():

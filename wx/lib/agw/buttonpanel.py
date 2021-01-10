@@ -354,7 +354,7 @@ class BPArt(object):
             self._gradient_type = BP_GRADIENT_NONE
 
         self._buttontext_inactive_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
-        self._selection_brush = wx.Brush(wx.Colour(225, 225, 255))
+        self._selection_brush = wx.WHITE_BRUSH
         self._selection_pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
 
         sysfont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -1931,7 +1931,7 @@ class ButtonPanel(wx.Panel):
         """
 
         lenChildren = len(self._mainsizer.GetChildren())
-        self._mainsizer.Insert(lenChildren-1, btnInfo, 0, wx.ALIGN_CENTER|wx.EXPAND, userData=btnInfo)
+        self._mainsizer.Insert(lenChildren-1, btnInfo, 0, wx.ALIGN_CENTER, userData=btnInfo)
 
         self._vButtons.append(btnInfo)
 

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     18-Nov-2011
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ def run():
         }
         // otherwise do the conversion
         *sipCppPtr = new wxPyInputStream(sipPy);
-        return sipGetState(sipTransferObj);
+        return 0; //sipGetState(sipTransferObj);
         """
 
     # Add Python file-like methods so a wx.InputStream can be used as if it

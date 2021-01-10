@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2018 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -42,10 +42,10 @@ TEMPLATE_INHERITANCE = '''
    <div id="toggleBlock-content" style="display:none;">
    <p class="graphviz">
    <center><img src="_static/images/inheritance/%s" alt="Inheritance diagram of %s" usemap="#dummy" class="inheritance"/></center>
-   </div>
    <script type="text/javascript">toggleVisibilityOnLoad(document.getElementById('toggleBlock'))</script>
    %s
    </p>
+   </div>
 
 |
 

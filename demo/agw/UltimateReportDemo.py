@@ -659,7 +659,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         fontMask = ULC.ULC_MASK_FONTCOLOUR|ULC.ULC_MASK_FONT
         fullMask = fontMask|ULC.ULC_MASK_BACKCOLOUR
 
-        customRow, customCol, colours = [0, 3], [2, 1], [wx.RED, wx.Colour("Yellow")]
+        customRow, customCol, colours = [0, 3], [2, 1], [wx.RED, wx.YELLOW]
 
         for row, col, colour in zip(customRow, customCol, colours):
             item = self.list.GetItem(row, col)
@@ -1021,8 +1021,8 @@ class TestFrame(wx.Frame):
                                               self.ulc.list.GetSecondGradientColour())
         self.firstcolour.Bind(csel.EVT_COLOURSELECT, self.OnFirstColour)
         self.secondcolour.Bind(csel.EVT_COLOURSELECT, self.OnSecondColour)
-        sizerb3.Add(self.firstcolour, 0, wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL, 3)
-        sizerb3.Add(self.secondcolour, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL, 3)
+        sizerb3.Add(self.firstcolour, 0, wx.TOP|wx.BOTTOM, 3)
+        sizerb3.Add(self.secondcolour, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 3)
         sizerb.Add(self.checkgradient, 0, wx.ALL, 3)
         sizerb.Add(sizerb1, 0)
         sizerb.Add(sizerb2, 0)

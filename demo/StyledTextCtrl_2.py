@@ -371,8 +371,8 @@ def runTest(frame, nb, log):
         p.SetSizer(s)
         p.SetAutoLayout(True)
 
-
-    ed.SetText(demoText + open('Main.py').read())
+    with open('Main.py') as fid:
+        ed.SetText(demoText + fid.read())
     ed.EmptyUndoBuffer()
     ed.Colourise(0, -1)
 

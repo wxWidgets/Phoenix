@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Test of an alternaive hit test methoid that used the bounding boxes of teh objects instead.
+Test of an alternative hit test methoid that used the bounding boxes of the objects instead.
 
 Poorly tested!
 
@@ -27,7 +27,7 @@ def BB_HitTest(self, event, HitEvent):
         object_index_list = [] #Create list for holding the indexes
         xy_p = event.GetPosition()
         xy = self.PixelToWorld( xy_p ) #Convert to the correct coords
-        for key2 in self.HitDict[HitEvent].keys():
+        for key2 in self.HitDict[HitEvent]:
             #Get Mouse Event Position
             bb =  self.HitDict[HitEvent][key2].BoundingBox
             if bb.PointInside(xy):

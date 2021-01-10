@@ -57,7 +57,7 @@ overview = """\
 <html>
 <body>
 <font size=-1>The following was gleaned as best I could from the wxWindows
-source, which was a bit reluctant to reveal its secrets. My appologies if
+source, which was a bit reluctant to reveal its secrets. My apologies if
 I missed anything - jmg</font>
 <p>
 <code><b>LEDNumberCtrl</b>( parent, id=-1, pos=wx.DefaultPosition,

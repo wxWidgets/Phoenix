@@ -5,7 +5,7 @@
 // Author:      Robin Dunn
 //
 // Created:     9-Nov-2012
-// Copyright:   (c) 2012-2018 by Total Control Software
+// Copyright:   (c) 2012-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -28,7 +28,10 @@ wxVariant wxDVCVariant_in_helper(PyObject* source)
 {
     wxVariant ret;
 
-    if (wxPyWrappedPtr_TypeCheck(source, wxT("wxDataViewIconText"))) {
+    if (source == Py_None) {
+        ret.MakeNull();
+    }
+    else if (wxPyWrappedPtr_TypeCheck(source, wxT("wxDataViewIconText"))) {
         wxDataViewIconText* ptr;
         wxPyConvertWrappedPtr(source, (void**)&ptr, wxT("wxDataViewIconText"));
         ret << *ptr;
@@ -57,7 +60,7 @@ PyObject* wxDVCVariant_out_helper(const wxVariant& value)
 
 
 
-%MappedType wxDVCVariant
+%MappedType wxDVCVariant /AllowNone/
 {
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility.

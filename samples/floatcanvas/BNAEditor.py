@@ -50,37 +50,36 @@ class BNAData:
     def Save(self, filename = None):
         if not filename:
             filename = self.filename
-        file = open(filename, 'w')
-        for i, points in enumerate(self.PointsData):
-            file.write('"%s","%s", %i\n'%(self.Names[i],self.Types[i],len(points) ) )
-            for p in points:
-                file.write("%.12f,%.12f\n"%(tuple(p)))
+        with open(filename, 'w') as file:
+            for i, points in enumerate(self.PointsData):
+                file.write('"%s","%s", %i\n'%(self.Names[i],self.Types[i],len(points) ) )
+                for p in points:
+                    file.write("%.12f,%.12f\n"%(tuple(p)))
 
     def Load(self, filename):
         #print("Loading:", filename)
-        file = open(filename,'rU')
 
         self.Filename = filename
         self.PointsData = []
         self.Names = []
         self.Types = []
-        while 1:
-            line = file.readline()
-            if not line:
-                break
-            line = line.strip()
-            Name, line = line.split('","')
-            Name = Name[1:]
-            Type,line = line.split('",')
-            num_points = int(line)
-            self.Types.append(Type)
-            self.Names.append(Name)
-            polygon = N.zeros((num_points,2),N.float)
-            for i in range(num_points):
-                polygon[i,:] = map(float, file.readline().split(','))
-            self.PointsData.append(polygon)
 
-        file.close()
+        with open(filename,'rU') as file_:
+            for line in file_:
+                if not line:
+                    break
+                line = line.strip()
+                Name, line = line.split('","')
+                Name = Name[1:]
+                Type,line = line.split('",')
+                num_points = int(line)
+                self.Types.append(Type)
+                self.Names.append(Name)
+                polygon = N.zeros((num_points,2),N.float)
+                for i in range(num_points):
+                    polygon[i,:] = map(float, file_.readline().split(','))
+                self.PointsData.append(polygon)
+
         return None
 
 class DrawFrame(wx.Frame):

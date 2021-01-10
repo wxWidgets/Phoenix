@@ -312,14 +312,6 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.Grid.SetCellHighlightPenWidth  # Does it exist
 
 
-    def test_grid42(self):
-        # old names
-        wx.grid.Grid.wxGridSelectCells
-        wx.grid.Grid.wxGridSelectRows
-        wx.grid.Grid.wxGridSelectColumns
-        wx.grid.Grid.wxGridSelectRowsOrColumns
-
-
     def test_grid43(self):
         # new names
         wx.grid.Grid.SelectCells
@@ -363,6 +355,21 @@ class grid_Tests(wtc.WidgetTestCase):
         assert tl.Get() == (1,1)
         assert br.Get() == (5,5)
 
+    def test_grid46(self):
+        g = wx.grid.Grid(self.frame)
+        g.CreateGrid(10,10)
+        g.SelectBlock((1,1), (5,5))
+        g.SelectBlock((6,5), (7,9), addToSelected=True)
+
+        blocks = g.GetSelectedBlocks()
+        assert isinstance(blocks, wx.grid.GridBlocks)
+
+        count = 0
+        for block in blocks:
+            count += 1
+            assert isinstance(block, wx.grid.GridBlockCoords)
+
+        assert count == 2
 
 #---------------------------------------------------------------------------
 

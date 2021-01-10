@@ -98,7 +98,11 @@ __date__ = "31 March 2009"
 
 import wx
 # just for isinstance
-import time
+from time import time
+try:
+    from time import perf_counter
+except ImportError:  # clock is removed in py3.8
+    from time import clock as perf_counter
 import warnings
 
 import six
@@ -128,6 +132,7 @@ if wx.Platform == "__WXMSW__":
 # AUI Events
 wxEVT_AUI_PANE_BUTTON = wx.NewEventType()
 wxEVT_AUI_PANE_CLOSE = wx.NewEventType()
+wxEVT_AUI_PANE_CLOSED = wx.NewEventType()
 wxEVT_AUI_PANE_MAXIMIZE = wx.NewEventType()
 wxEVT_AUI_PANE_RESTORE = wx.NewEventType()
 wxEVT_AUI_RENDER = wx.NewEventType()
@@ -144,6 +149,8 @@ wxEVT_AUI_PERSPECTIVE_CHANGED = wx.NewEventType()
 EVT_AUI_PANE_BUTTON = wx.PyEventBinder(wxEVT_AUI_PANE_BUTTON, 0)
 """ Fires an event when the user left-clicks on a pane button. """
 EVT_AUI_PANE_CLOSE = wx.PyEventBinder(wxEVT_AUI_PANE_CLOSE, 0)
+""" A pane in `AuiManager` is about to be closed. """
+EVT_AUI_PANE_CLOSED = wx.PyEventBinder(wxEVT_AUI_PANE_CLOSED, 0)
 """ A pane in `AuiManager` has been closed. """
 EVT_AUI_PANE_MAXIMIZE = wx.PyEventBinder(wxEVT_AUI_PANE_MAXIMIZE, 0)
 """ A pane in `AuiManager` has been maximized. """
@@ -600,7 +607,7 @@ class AuiPaneInfo(object):
         :note: A pane structure is valid if it has an associated window.
         """
 
-        return self.window != None
+        return self.window is not None
 
 
     def IsMaximized(self):
@@ -2721,6 +2728,8 @@ class AuiDockingHintWindow(wx.Frame):
         self._art = parent.GetEventHandler().GetArtProvider()
         background = self._art.GetColour(AUI_DOCKART_HINT_WINDOW_COLOUR)
         self.SetBackgroundColour(background)
+        border = self._art.GetColour(AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR)
+        self._border_pen = wx.Pen(border, 5)
 
         # Can't set background colour on a frame on wxMac
         # so add a panel to set the colour on.
@@ -2743,17 +2752,22 @@ class AuiDockingHintWindow(wx.Frame):
         """
 
         amount = 128
-        size = self.GetClientSize()
-        region = wx.Region(0, 0, size.x, 1)
+        size_x, size_y = self.GetClientSize()
+        region = wx.Region(0, 0, size_x, 1)
 
-        for y in range(size.y):
-
-            # Reverse the order of the bottom 4 bits
-            j = (y & 8 and [1] or [0])[0] | (y & 4 and [2] or [0])[0] | \
-                (y & 2 and [4] or [0])[0] | (y & 1 and [8] or [0])[0]
-
-            if 16*j+8 < amount:
-                region.Union(0, y, size.x, 1)
+        ## for y in range(size_y):
+        ##
+        ##     # Reverse the order of the bottom 4 bits
+        ##     j = (y & 8 and [1] or [0])[0] | (y & 4 and [2] or [0])[0] | \
+        ##         (y & 2 and [4] or [0])[0] | (y & 1 and [8] or [0])[0]
+        ##
+        ##     if 16*j+8 < amount:
+        ##         region.Union(0, y, size_x, 1)
+        region_Union = region.Union  # local opt
+        [region_Union(0, y, size_x, 1) for y in range(size_y)
+            if 16 * ((y & 8 and [1] or [0])[0] | (y & 4 and [2] or [0])[0] |
+                     (y & 2 and [4] or [0])[0] | (y & 1 and [8] or [0])[0])
+                     + 8 < amount]
 
         self.SetShape(region)
 
@@ -2807,6 +2821,8 @@ class AuiDockingHintWindow(wx.Frame):
         """
 
         background = self._art.GetColour(AUI_DOCKART_HINT_WINDOW_COLOUR)
+        border = self._art.GetColour(AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR)
+        self._border_pen = wx.Pen(border, 5)
 
         if wx.Platform == '__WXMAC__':
             self.panel.SetBackgroundColour(background)
@@ -2841,13 +2857,13 @@ class AuiDockingHintWindow(wx.Frame):
         :param `event`: an instance of :class:`PaintEvent` to be processed.
         """
 
-        rect = wx.Rect(wx.Point(0, 0), self.GetSize())
+        rect = wx.Rect((0, 0), self.GetSize())
 
         dc = wx.PaintDC(self)
         event.Skip()
 
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.SetPen(wx.Pen(wx.Colour(60, 60, 60), 5))
+        dc.SetPen(self._border_pen)
         rect.Deflate(1, 1)
         dc.DrawRectangle(rect)
 
@@ -3111,6 +3127,9 @@ class AuiFloatingFrame(wx.MiniFrame):
             # if we do not do this, then we can crash...
             if self._owner_mgr and self._owner_mgr._action_window == self:
                 self._owner_mgr._action_window = None
+
+            self._fly_timer.Stop()
+            self._check_fly_timer.Stop()
 
             self._mgr.UnInit()
             self.Destroy()
@@ -4645,7 +4664,7 @@ class AuiManager(wx.EvtHandler):
     def CanUseModernDockArt(self):
         """
         Returns whether :class:`dockart` can be used (Windows XP / Vista / 7 only,
-        requires Mark Hammonds's `pywin32 <http://sourceforge.net/projects/pywin32/>`_ package).
+        requires Mark Hammonds's `pywin32 <https://sourceforge.net/projects/pywin32/>`_ package).
         """
 
         if not _winxptheme:
@@ -4751,8 +4770,8 @@ class AuiManager(wx.EvtHandler):
 
         # if the pane's name identifier is blank, create a random string
         if pinfo.name == "" or already_exists:
-            pinfo.name = ("%s%08x%08x%08x") % (pinfo.window.GetName(), int(time.time()),
-                                               int(time.clock()), len(self._panes))
+            pinfo.name = ("%s%08x%08x%08x") % (pinfo.window.GetName(), int(time()),
+                                               int(perf_counter()), len(self._panes))
 
         # set initial proportion (if not already set)
         if pinfo.dock_proportion == 0:
@@ -5073,6 +5092,8 @@ class AuiManager(wx.EvtHandler):
         if to_destroy:
             to_destroy.Destroy()
 
+        # Now inform the app that we closed a pane.
+        self.FireEvent(wxEVT_AUI_PANE_CLOSED, pane_info)
 
     def MaximizePane(self, pane_info, savesizes=True):
         """
@@ -5596,15 +5617,12 @@ class AuiManager(wx.EvtHandler):
         if action_pane == -1:
             return positions, sizes
 
-        offset = 0
         for pane_i in range(action_pane-1, -1, -1):
             amount = positions[pane_i+1] - (positions[pane_i] + sizes[pane_i])
             if amount >= 0:
-                offset += amount
+                pass
             else:
                 positions[pane_i] -= -amount
-
-            offset += sizes[pane_i]
 
         # if the dock mode is fixed, make sure none of the panes
         # overlap we will bump panes that overlap
@@ -9636,6 +9654,8 @@ class AuiManager(wx.EvtHandler):
         if pane.IsFloating():
             diff = pane.floating_pos - (screenPt - self._action_offset)
             pane.floating_pos = screenPt - self._action_offset
+        else:
+            diff = wx.Point()
 
         framePos = pane.floating_pos
 
@@ -9874,7 +9894,7 @@ class AuiManager(wx.EvtHandler):
         # is the pane dockable?
         if self.CanDockPanel(pane):
             # do the drop calculation
-            ret, pane = self.DoDrop(self._docks, self._panes, pane, clientPt, self._action_offset)
+            ret, pane = self.DoDrop(self._docks, self._panes, pane, clientPt, self._toolbar_action_offset)
 
         # update floating position
         if pane.IsFloating():
@@ -10743,6 +10763,7 @@ class AuiManager_DCP(AuiManager):
         else:
             # if we get here, there's no center pane, create our dummy
             if not self.hasDummyPane:
-                self._createDummyPane()
-
-
+                def do():
+                    self._createDummyPane()
+                    self.Update()
+                wx.CallAfter(do)

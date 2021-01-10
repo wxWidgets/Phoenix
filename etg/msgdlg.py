@@ -5,7 +5,7 @@
 #
 # Created:     24-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -22,8 +22,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  =    [
-                'wxMessageDialog',
+ITEMS  =    [ 'wxMessageDialog',
             ]
 
 #---------------------------------------------------------------------------

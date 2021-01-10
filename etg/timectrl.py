@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     06-Jun-2012
-# Copyright:   (c) 2012-2018 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -36,6 +36,7 @@ def run():
     c = module.find('wxTimePickerCtrl')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
+    module.addGlobalStr('wxTimePickerCtrlNameStr', c, wide=True)
 
 
     # ignore the return value and set the parameters to be outputs

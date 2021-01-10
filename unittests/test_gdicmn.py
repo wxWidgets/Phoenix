@@ -15,7 +15,7 @@ class TestPoint(unittest.TestCase):
 
     def test_RealPoint_ctor(self):
         p = wx.Point(wx.RealPoint(1.2, 2.9))
-        self.assertTrue(p == (1,2))
+        self.assertTrue(p == (1,3))
 
     def test_copy_ctor(self):
         p1 = wx.Point(3,4)
@@ -299,8 +299,8 @@ class TestSize(unittest.TestCase):
 
         assert v1 == (12, 16)
         assert v2 == (12, 16)
-        assert v3 == (13, 17)
-        assert v4 == (14, 19)
+        assert v3 == (13, 18)
+        assert v4 == (15, 20)
 
 
 #---------------------------------------------------------------------------

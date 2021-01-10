@@ -929,7 +929,7 @@ class HyperTreeHeaderRenderer(object):
 
     def DrawHeaderButton(self, dc, rect, flags=0, params=None):
 
-        if params != None:
+        if params is not None:
             text_align = params.m_labelAlignment
             bitmap     = params.m_labelBitmap
             text_color = params.m_labelColour
@@ -965,7 +965,7 @@ class HyperTreeHeaderRenderer(object):
 
         dc.SetBackgroundMode(wx.TRANSPARENT)
 
-        if params == None:
+        if params is None:
             return
 
         # We need to draw the text and/or icon bitmap
@@ -1046,6 +1046,9 @@ class HyperTreeListDemo(wx.Frame):
         panel.SetSizer(sizer)
         sizer.Layout()
 
+        self.columnBackgroundColours = [wx.LIGHT_GREY for i in range(self.tree.GetColumnCount())]
+
+
         self.leftpanel = wx.ScrolledWindow(splitter, -1, style=wx.SUNKEN_BORDER)
         self.PopulateLeftPanel(self.tree.styles, self.tree.events)
 
@@ -1090,7 +1093,7 @@ class HyperTreeListDemo(wx.Frame):
         msg = "This Is The About Dialog Of The HyperTreeList Demo.\n\n" + \
               "Author: Andrea Gavana @ 08 May 2007\n\n" + \
               "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Adresses:\n\n" + \
+              "To Me At The Following AdresAddresseses:\n\n" + \
               "andrea.gavana@maerskoil.com\n" + "andrea.gavana@gmail.com\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 
@@ -1161,6 +1164,19 @@ class HyperTreeListDemo(wx.Frame):
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add(self.columncolour, 0)
 
+        label = wx.StaticText(self.leftpanel, -1, "Column Background Colour")
+        label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
+        self.columnchoice = wx.Choice(self.leftpanel, -1, choices = ["1","2","3"])
+        self.columnchoice.SetSelection(0)
+        self.columnchoice.Bind(wx.EVT_CHOICE, self.OnColumnChoiceChanged)
+        self.columnbackgroundcolour = csel.ColourSelect(self.leftpanel, -1, "Choose...", wx.LIGHT_GREY)
+        self.columnbackgroundcolour.Bind(csel.EVT_COLOURSELECT, self.OnColumnBackgroundColour)
+        flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
+        hSizer = wx.BoxSizer(wx.HORIZONTAL)
+        hSizer.Add(self.columnchoice, 0, wx.RIGHT, 5)
+        hSizer.Add(self.columnbackgroundcolour)
+        flexgridcolumn.Add(hSizer)
+
         label = wx.StaticText(self.leftpanel, -1, "Alignment")
         label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         alignment = wx.Choice(self.leftpanel, -1, choices=["wx.LEFT", "wx.CENTER", "wx.RIGHT"])
@@ -1217,7 +1233,7 @@ class HyperTreeListDemo(wx.Frame):
         buttonconnection.Bind(wx.EVT_BUTTON, self.OnButtonConnection)
         sizer1.Add(label, 0, wx.ALL|wx.ALIGN_CENTER, 5)
         sizer1.Add((1,0), 1, wx.EXPAND)
-        sizer1.Add(buttonconnection, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
+        sizer1.Add(buttonconnection, 0, wx.ALL, 5)
 
         sizer2 = wx.BoxSizer(wx.HORIZONTAL)
         label = wx.StaticText(self.leftpanel, -1, "Border Pen")
@@ -1228,7 +1244,7 @@ class HyperTreeListDemo(wx.Frame):
         buttonborder.Bind(wx.EVT_BUTTON, self.OnButtonBorder)
         sizer2.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer2.Add((1,0), 1, wx.EXPAND)
-        sizer2.Add(buttonborder, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
+        sizer2.Add(buttonborder, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer3 = wx.BoxSizer(wx.HORIZONTAL)
         label = wx.StaticText(self.leftpanel, -1, "Tree Buttons")
@@ -1239,7 +1255,7 @@ class HyperTreeListDemo(wx.Frame):
         buttontree.Bind(wx.EVT_BUTTON, self.OnButtonTree)
         sizer3.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer3.Add((1,0), 1, wx.EXPAND)
-        sizer3.Add(buttontree, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
+        sizer3.Add(buttontree, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer4 = wx.BoxSizer(wx.HORIZONTAL)
         label = wx.StaticText(self.leftpanel, -1, "Check/Radio Buttons")
@@ -1250,7 +1266,7 @@ class HyperTreeListDemo(wx.Frame):
         buttoncr.Bind(wx.EVT_BUTTON, self.OnButtonCheckRadio)
         sizer4.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer4.Add((1,0), 1, wx.EXPAND)
-        sizer4.Add(buttoncr, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
+        sizer4.Add(buttoncr, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer5 = wx.BoxSizer(wx.HORIZONTAL)
         radioimage = wx.RadioButton(self.leftpanel, -1, "Image Background", style=wx.RB_GROUP)
@@ -1259,7 +1275,7 @@ class HyperTreeListDemo(wx.Frame):
         self.imagebutton.Bind(wx.EVT_BUTTON, self.OnChooseImage)
         sizer5.Add(radioimage, 0, wx.ALL|wx.ALIGN_CENTER, 5)
         sizer5.Add((1,0), 1, wx.EXPAND)
-        sizer5.Add(self.imagebutton, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
+        sizer5.Add(self.imagebutton, 0, wx.ALL, 5)
 
         sizer6 = wx.BoxSizer(wx.HORIZONTAL)
         radiobackground = wx.RadioButton(self.leftpanel, -1, "Background Colour")
@@ -1291,7 +1307,7 @@ class HyperTreeListDemo(wx.Frame):
         sizera1.Add(self.unfocus, 0)
         sizera.Add(self.checknormal, 0, wx.ALL, 3)
         sizera.Add((1, 0), 1, wx.EXPAND)
-        sizera.Add(sizera1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 3)
+        sizera.Add(sizera1, 0, wx.ALL|wx.EXPAND, 3)
 
         sizerb = wx.BoxSizer(wx.VERTICAL)
         self.checkgradient = wx.CheckBox(self.leftpanel, -1, "Gradient Theme")
@@ -1313,8 +1329,8 @@ class HyperTreeListDemo(wx.Frame):
                                               self.tree.GetSecondGradientColour())
         self.firstcolour.Bind(csel.EVT_COLOURSELECT, self.OnFirstColour)
         self.secondcolour.Bind(csel.EVT_COLOURSELECT, self.OnSecondColour)
-        sizerb3.Add(self.firstcolour, 0, wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL, 3)
-        sizerb3.Add(self.secondcolour, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL, 3)
+        sizerb3.Add(self.firstcolour, 0, wx.TOP|wx.BOTTOM, 3)
+        sizerb3.Add(self.secondcolour, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 3)
         sizerb.Add(self.checkgradient, 0, wx.ALL, 3)
         sizerb.Add(sizerb1, 0)
         sizerb.Add(sizerb2, 0)
@@ -1362,6 +1378,10 @@ class HyperTreeListDemo(wx.Frame):
         self.tree = HyperTreeList(panelparent, -1, log=self.log)
         panelsizer.Add(self.tree, 1, wx.EXPAND)
         panelsizer.Layout()
+
+        for col in range(self.tree.GetColumnCount()):
+            colColour = self.columnBackgroundColours[col]
+            self.ColourColumnItems(colColour, col)
 
         panelparent.Thaw()
 
@@ -1415,6 +1435,45 @@ class HyperTreeListDemo(wx.Frame):
 
         event.Skip()
 
+    def OnColumnChoiceChanged(self, event):
+
+        selectedColumn = self.columnchoice.GetCurrentSelection()
+
+        if  selectedColumn in range(3):
+            colour = self.columnBackgroundColours[selectedColumn]
+            self.columnbackgroundcolour.SetValue(colour)
+
+    def ColourColumnItems(self, colour, col):
+
+        def ColourItems(item,colour,col):
+
+            next = item
+
+            while next is not None:
+
+                self.tree.SetItemBackgroundColour(next, colour, col)
+
+                cookie=0
+                child, cockie = self.tree.GetNextChild(next, cookie)
+
+                while child is not None:
+                    ColourItems(child, colour, col)
+                    child, cookie = self.tree.GetNextChild(next, cookie)
+
+                next = self.tree.GetNextSibling(next)
+
+        root = self.tree.GetRootItem()
+        ColourItems(root, colour, col)
+
+    def OnColumnBackgroundColour(self, event):
+
+        columnBackgroundColour = event.GetValue()
+        selectedColumn = self.columnchoice.GetCurrentSelection()
+        self.columnBackgroundColours[selectedColumn] = columnBackgroundColour
+
+        self.ColourColumnItems(columnBackgroundColour, selectedColumn)
+
+        event.Skip()
 
     def OnColumnAlignment(self, event):
 
@@ -2475,7 +2534,7 @@ class HyperTreeList(HTL.HyperTreeList):
     def OnItemCheck(self, event):
 
         item = event.GetItem()
-        self.log.write("Item " + self.GetItemText(item) + " Has Been Cheched!\n")
+        self.log.write("Item " + self.GetItemText(item) + " Has Been Checked!\n")
         event.Skip()
 
 

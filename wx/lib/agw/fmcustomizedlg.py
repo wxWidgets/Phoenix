@@ -82,7 +82,7 @@ class OrderedDict(UserDict):
 
     def update(self, dict):
         UserDict.update(self, dict)
-        for key in list(dict.keys()):
+        for key in dict:
             if key not in self._keys: self._keys.append(key)
 
     def values(self):
@@ -219,7 +219,7 @@ class FMCustomizeDlg(wx.Dialog):
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # add a separator between the book & the buttons area
-        hsizer.Add(wx.Button(self, wx.ID_OK, _("&Close")), 0, wx.EXPAND | wx.ALIGN_RIGHT)
+        hsizer.Add(wx.Button(self, wx.ID_OK, _("&Close")), 0, wx.EXPAND)
         sz.Add(wx.StaticLine(self), 0, wx.EXPAND | wx.TOP | wx.BOTTOM, 3)
         sz.Add(hsizer, 0, wx.ALIGN_RIGHT | wx.ALL, 2)
 
@@ -271,7 +271,7 @@ class FMCustomizeDlg(wx.Dialog):
 
         # Add all hidden menus to the menu bar
 
-        for key in list(self._hiddenMenus.keys()):
+        for key in self._hiddenMenus:
             choices.append(key)
 
         if self.created:

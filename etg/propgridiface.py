@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Feb-2015
-# Copyright:   (c) 2015-2018 by Total Control Software
+# Copyright:   (c) 2015-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -99,7 +99,7 @@ def run():
             return sipGetState(sipTransferObj);
         }
         else if (sipPy == Py_None) {
-            *sipCppPtr = new wxPGPropArgCls(reinterpret_cast< wxPGProperty * >(NULL));
+            *sipCppPtr = new wxPGPropArgCls(static_cast< wxPGProperty * >(NULL));
             return sipGetState(sipTransferObj);
         }
         else {
@@ -123,9 +123,13 @@ def run():
 
     spv = c.find('SetPropertyValue')
     spv.findOverload('int value').ignore()
+    spv.findOverload('wxLongLong value').ignore()
     spv.findOverload('wxLongLong_t value').ignore()
+    spv.findOverload('wxULongLong value').ignore()
     spv.findOverload('wxULongLong_t value').ignore()
     spv.findOverload('wxObject *value').ignore()
+    spv.findOverload('wchar_t *value').ignore()
+    spv.findOverload('char *value').ignore()
 
     # Reorder SetPropertyValue overloads so the one taking a long int is not
     # first. Mark others that could be auto-converted from int as
@@ -211,18 +215,20 @@ def run():
 
     c.find('GetPropertyValues').ignore()
     c.addPyMethod('GetPropertyValues',
-        '(self, dict_=None, as_strings=False, inc_attributes=False)',
+        '(self, dict_=None, as_strings=False, inc_attributes=False, flags=PG_ITERATE_PROPERTIES)',
         doc="""\
-            Returns all property values in the grid.\n
-            :param `dict_`: A to fill with the property values. If not given,
-                then a new one is created. The dict_ can be an object as well,
-                in which case it's __dict__ is used.
+            Returns all property values in the grid.
+
+            :param `dict_`: A diftionary to fill with the property values.
+                If not given, then a new one is created. The dict_ can be an
+                object as well, in which case it's __dict__ is used.
             :param `as_strings`: if True, then string representations of values
                 are fetched instead of native types. Useful for config and such.
             :param `inc_attributes`: if True, then property attributes are added
-                in the form of "@<propname>@<attr>".
+                in the form of ``"@<propname>@<attr>"``.
+            :param `flags`: Flags to pass to the iterator. See :ref:`wx.propgrid.PG_ITERATOR_FLAGS`.
             :returns: A dictionary with values. It is always a dictionary,
-                so if dict_ was and object with __dict__ attribute, then that
+                so if dict_ was an object with __dict__ attribute, then that
                 attribute is returned.
             """,
         body="""\
@@ -233,7 +239,7 @@ def run():
 
             getter = self.GetPropertyValue if not as_strings else self.GetPropertyValueAsString
 
-            it = self.GetVIterator(PG_ITERATE_PROPERTIES)
+            it = self.GetVIterator(flags)
             while not it.AtEnd():
                 p = it.GetProperty()
                 name = p.GetName()
@@ -310,7 +316,7 @@ def run():
             self.Refresh()
             """)
 
-    # TODO: should these be marked as deprecated?
+    # TODO: should these be marked as deprecated? Probably...
     module.addPyCode("""\
         PropertyGridInterface.GetValues = PropertyGridInterface.GetPropertyValues
         PropertyGridInterface.SetValues = PropertyGridInterface.SetPropertyValues
@@ -498,6 +504,14 @@ def run():
             """)
     c.addPyProperty('Items', '_Items')
 
+
+    def postProcessReST(text):
+        # fix some autodoc glitches
+        text = text.replace(':ref:`PropertyGridIterator Flags <propertygriditerator flags>`',
+                            ':ref:`wx.propgrid.PG_ITERATOR_FLAGS`')
+        return text
+
+    c.setReSTPostProcessor(postProcessReST)
 
     #----------------------------------------------------------
 

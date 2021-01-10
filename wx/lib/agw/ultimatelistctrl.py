@@ -169,6 +169,7 @@ Window Styles                    Hex Value   Description
 ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
 ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
 ``ULC_USER_ROW_HEIGHT``          0x100000000 Allows to set a custom row height (one value for all the items, only in report mode).
+``ULC_NO_ITEM_DRAG``             0x200000000 Disable item dragging
 ===============================  =========== ====================================================================================================
 
 
@@ -295,6 +296,7 @@ ULC_HEADER_IN_ALL_VIEWS = 0x20000000   # Show column headers in all view modes
 ULC_NO_FULL_ROW_SELECT  = 0x40000000   # When an item is selected, the only the item in the first column is highlighted
 ULC_FOOTER              = 0x80000000   # Show a footer too (only when header is present)
 ULC_USER_ROW_HEIGHT     = 0x100000000  # Allows to set a custom row height (one value for all the items, only in report mode).
+ULC_NO_ITEM_DRAG        = 0x200000000  # Disable item dragging
 
 ULC_MASK_TYPE  = ULC_ICON | ULC_SMALL_ICON | ULC_LIST | ULC_REPORT | ULC_TILE
 ULC_MASK_ALIGN = ULC_ALIGN_TOP | ULC_ALIGN_LEFT
@@ -347,11 +349,6 @@ ULC_STATE_DROPHILITED =   wx.LIST_STATE_DROPHILITED      # MSW only
 ULC_STATE_FOCUSED     =   wx.LIST_STATE_FOCUSED
 ULC_STATE_SELECTED    =   wx.LIST_STATE_SELECTED
 ULC_STATE_CUT         =   wx.LIST_STATE_CUT              # MSW only
-ULC_STATE_DISABLED    =   wx.LIST_STATE_DISABLED         # OS2 only
-ULC_STATE_FILTERED    =   wx.LIST_STATE_FILTERED         # OS2 only
-ULC_STATE_INUSE       =   wx.LIST_STATE_INUSE            # OS2 only
-ULC_STATE_PICKED      =   wx.LIST_STATE_PICKED           # OS2 only
-ULC_STATE_SOURCE      =   wx.LIST_STATE_SOURCE           # OS2 only
 
 # Hit test flags, used in HitTest
 ULC_HITTEST_ABOVE           = wx.LIST_HITTEST_ABOVE            # Above the client area.
@@ -359,7 +356,6 @@ ULC_HITTEST_BELOW           = wx.LIST_HITTEST_BELOW            # Below the clien
 ULC_HITTEST_NOWHERE         = wx.LIST_HITTEST_NOWHERE          # In the client area but below the last item.
 ULC_HITTEST_ONITEMICON      = wx.LIST_HITTEST_ONITEMICON       # On the bitmap associated with an item.
 ULC_HITTEST_ONITEMLABEL     = wx.LIST_HITTEST_ONITEMLABEL      # On the label (string) associated with an item.
-ULC_HITTEST_ONITEMRIGHT     = wx.LIST_HITTEST_ONITEMRIGHT      # In the area to the right of an item.
 ULC_HITTEST_ONITEMSTATEICON = wx.LIST_HITTEST_ONITEMSTATEICON  # On the state icon for a tree view item that is in a user-defined state.
 ULC_HITTEST_TOLEFT          = wx.LIST_HITTEST_TOLEFT           # To the left of the client area.
 ULC_HITTEST_TORIGHT         = wx.LIST_HITTEST_TORIGHT          # To the right of the client area.
@@ -1799,7 +1795,7 @@ class UltimateListItem(wx.Object):
     def HasAttributes(self):
         """ Returns ``True`` if the item has attributes associated with it. """
 
-        return self._attr != None
+        return self._attr is not None
 
 
     def GetTextColour(self):
@@ -2089,7 +2085,7 @@ class UltimateListItem(wx.Object):
         self._format = ULC_FORMAT_CENTRE
         self._width = 0
 
-        self._colour = wx.Colour(0, 0, 0)
+        self._colour = wx.BLACK
         self._font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
 
         self._kind = 0
@@ -2644,7 +2640,7 @@ class UltimateListItemData(object):
         :param `colour`: an instance of :class:`wx.Colour`.
         """
 
-        if colour == wx.NullColour or colour == None:
+        if colour == wx.NullColour or colour is None:
             if self._hasColour:
                 self._hasColour = False
                 del self._colour
@@ -2954,7 +2950,7 @@ class UltimateListItemData(object):
         # user data associated with the item
         self._data = 0
         self._pyData = None
-        self._colour = wx.Colour(0, 0, 0)
+        self._colour = wx.BLACK
         self._hasColour = False
         self._hasFont = False
         self._hasBackColour = False
@@ -5199,7 +5195,7 @@ class UltimateListHeaderWindow(wx.Control):
             # inside the column rect
             header_rect = wx.Rect(x-1, HEADER_OFFSET_Y-1, cw-1, ch)
 
-            if self._headerCustomRenderer != None:
+            if self._headerCustomRenderer is not None:
                self._headerCustomRenderer.DrawHeaderButton(dc, header_rect, flags)
 
                # The custom renderer will specify the color to draw the header text and buttons
@@ -5294,7 +5290,7 @@ class UltimateListHeaderWindow(wx.Control):
         # leave an unpainted area when columns are removed (and it looks better)
         if x < w:
             header_rect = wx.Rect(x, HEADER_OFFSET_Y, w - x, h)
-            if self._headerCustomRenderer != None:
+            if self._headerCustomRenderer is not None:
                 # Why does the custom renderer need this adjustment??
                 header_rect.x = header_rect.x - 1
                 header_rect.y = header_rect.y - 1
@@ -6001,6 +5997,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
          ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
          ``ULC_USER_ROW_HEIGHT``          0x100000000 Allows to set a custom row height (one value for all the items, only in report mode).
+         ``ULC_NO_ITEM_DRAG``             0x200000000 Disable item dragging
          ===============================  =========== ====================================================================================================
 
         :param `name`: the window name.
@@ -6473,7 +6470,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         resizeCol = self._resizeColumn
 
-        if self._resizeColMinWidth == None:
+        if self._resizeColMinWidth is None:
             self._resizeColMinWidth = self.GetColumnWidth(resizeCol)
 
         # We're showing the vertical scrollbar -> allow for scrollbar width
@@ -6702,7 +6699,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         image_width = 0
 
         for c in range(col):
-            image_x += self.GetColumnWidth(c)
+            if self.IsColumnShown(c):
+                image_x += self.GetColumnWidth(c)
 
         item = self.GetLine(line)
         if item.HasImage(col):
@@ -6785,7 +6783,6 @@ class UltimateListMainWindow(wx.ScrolledWindow):
          ``ULC_HITTEST_ONITEM``              0x2a0 Anywhere on the item (text, icon, checkbox image)
          ``ULC_HITTEST_ONITEMICON``           0x20 On the bitmap associated with an item
          ``ULC_HITTEST_ONITEMLABEL``          0x80 On the label (string) associated with an item
-         ``ULC_HITTEST_ONITEMRIGHT``         0x100 In the area to the right of an item
          ``ULC_HITTEST_ONITEMSTATEICON``     0x200 On the state icon for a list view item that is in a user-defined state
          ``ULC_HITTEST_TOLEFT``              0x400 To the left of the client area
          ``ULC_HITTEST_TORIGHT``             0x800 To the right of the client area
@@ -6931,9 +6928,16 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             changed = ld.Highlight(highlight)
 
         dontNotify = self.HasAGWFlag(ULC_STICKY_HIGHLIGHT) and self.HasAGWFlag(ULC_STICKY_NOSELEVENT)
+        command = (highlight and [wxEVT_COMMAND_LIST_ITEM_SELECTED] or [wxEVT_COMMAND_LIST_ITEM_DESELECTED])[0]
 
         if changed and not dontNotify:
-            self.SendNotify(line, (highlight and [wxEVT_COMMAND_LIST_ITEM_SELECTED] or [wxEVT_COMMAND_LIST_ITEM_DESELECTED])[0])
+            col = -1
+            if command==wxEVT_COMMAND_LIST_ITEM_SELECTED and wx.GetTopLevelParent(self).IsShown():
+                x, y = self.ScreenToClient(wx.GetMousePosition())
+                newItem, hitResult = self.HitTestLine(line, x, y)
+                col=newItem._col if newItem else -1
+
+            self.SendNotify(line, command, col=col)
 
         return changed
 
@@ -7302,19 +7306,21 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         pass
 
 
-    def SendNotify(self, line, command, point=wx.DefaultPosition):
+    def SendNotify(self, line, command, point=wx.DefaultPosition, col=0):
         """
         Actually sends a :class:`UltimateListEvent`.
 
         :param `line`: an instance of :class:`UltimateListLineData`;
         :param `command`: the event type to send;
         :param `point`: an instance of :class:`wx.Point`.
+        :param `col`: an integer specifying the column index.
         """
 
         bRet = True
         le = UltimateListEvent(command, self.GetParent().GetId())
         le.SetEventObject(self.GetParent())
         le.m_itemIndex = line
+        le.m_col = col
 
         # set only for events which have position
         if point != wx.DefaultPosition:
@@ -7327,7 +7333,9 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         if not self.IsVirtual():
 
             if line != -1:
-                self.GetLine(line).GetItem(0, le.m_item)
+                self.GetLine(line).GetItem(col, le.m_item)
+                le.m_item.SetId(line)
+                le.m_item.SetColumn(col)
 
             #else: this happens for wxEVT_COMMAND_LIST_ITEM_FOCUSED event
 
@@ -7475,7 +7483,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if self.IsEmpty():
             if event.RightDown():
-                self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition())
+                self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition(), -1)
 
                 evtCtx = wx.ContextMenuEvent(wx.wxEVT_CONTEXT_MENU, self.GetParent().GetId(),
                                              self.ClientToScreen(event.GetPosition()))
@@ -7577,6 +7585,9 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if event.Dragging():
 
+            if self.HasAGWFlag(ULC_NO_ITEM_DRAG):
+                return
+
             if not self._isDragging:
 
                 if self._lineLastClicked == -1 or not hitResult or not theItem or not theItem.IsEnabled():
@@ -7647,7 +7658,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         if not hitResult:
             # outside of any item
             if event.RightDown():
-                self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition())
+                self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition(), -1)
                 evtCtx = wx.ContextMenuEvent(wx.wxEVT_CONTEXT_MENU, self.GetParent().GetId(),
                                              self.ClientToScreen(event.GetPosition()))
                 evtCtx.SetEventObject(self.GetParent())
@@ -7666,7 +7677,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             self._lastOnSame = False
 
             if current == self._lineLastClicked:
-                self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_ACTIVATED)
+                self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_ACTIVATED, col=newItem._col)
 
                 if newItem and newItem.GetKind() in [1, 2] and (hitResult & ULC_HITTEST_ONITEMCHECK):
                     self.CheckItem(newItem, not self.IsItemChecked(newItem))
@@ -7714,7 +7725,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if event.RightDown():
 
-            if self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition()):
+            if self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition(), newItem._col):
                 self._lineBeforeLastClicked = self._lineLastClicked
                 self._lineLastClicked = current
                 # If the item is already selected, do not update the selection.
@@ -7729,7 +7740,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                 event.Skip()
 
         elif event.MiddleDown():
-            self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_MIDDLE_CLICK)
+            self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_MIDDLE_CLICK, col=newItem._col)
 
         elif event.LeftDown() or forceClick:
             self._lineBeforeLastClicked = self._lineLastClicked
@@ -7794,7 +7805,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             self._lastOnSame = not forceClick and (self._current == oldCurrent) and oldWasSelected
 
             if self.HasAGWFlag(ULC_STICKY_HIGHLIGHT) and self.HasAGWFlag(ULC_STICKY_NOSELEVENT) and self.HasAGWFlag(ULC_SEND_LEFTCLICK):
-                self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_LEFT_CLICK, event.GetPosition())
+                self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_LEFT_CLICK, event.GetPosition(), newItem._col)
 
 
     def DrawDnDArrow(self):
@@ -9418,6 +9429,19 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 # ----------------------------------------------------------------------------
 # item count
 # ----------------------------------------------------------------------------
+
+    def GetCheckedItemCount(self, col=0):
+        """
+        Returns the number of checked items in the given column.
+
+        :param col: an integer specifying the column index.
+        :returns: the number of checked items.
+        :rtype: int
+        """
+
+        GetLine = self.GetLine  # local optimization
+        return len([line for line in range(self.GetItemCount()) if GetLine(line).IsChecked(col)])
+
 
     def GetItemCount(self):
         """ Returns the number of items in the :class:`UltimateListCtrl`. """
@@ -11169,6 +11193,18 @@ class UltimateListCtrl(wx.Control):
 
         if self._mainWin:
             return self._mainWin.GetUserLineHeight()
+
+
+    def GetCheckedItemCount(self, col=0):
+        """
+        Returns the number of checked items in the given column.
+
+        :param 'col': an integer specifying the column index.
+        :returns: the number of checked items.
+        :rtype: int
+        """
+
+        return self._mainWin.GetCheckedItemCount(col)
 
 
     def GetColumn(self, col):
@@ -13493,15 +13529,17 @@ class UltimateListCtrl(wx.Control):
         return self._mainWin.IsVirtual()
 
 
-    def GetScrollPos(self):
+    def GetScrollPos(self, orientation):
         """
         Returns the scrollbar position.
 
         :note: This method is forwarded to :class:`UltimateListMainWindow`.
+
+        :param `orientation`: May be wx.HORIZONTAL or wx.VERTICAL.
         """
 
         if self._mainWin:
-            return self._mainWin.GetScrollPos()
+            return self._mainWin.GetScrollPos(orientation)
 
         return 0
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <rect x="64.457" y="74.096" width="175.85" height="164.054" style="fill: rgb(99, 99, 99);"/>
+  <circle style="fill: rgb(24, 183, 207); fill-opacity: 0.6; stroke: rgb(218, 85, 85); stroke-width: 4px;" cx="80.506" cy="88.903" r="59.086"/>
+  <circle style="fill: rgba(204, 96, 207, 0.53); stroke: rgb(218, 85, 85); stroke-width: 4px;" cx="210.851" cy="65.53" r="35.713"/>
+  <circle style="opacity: 0.625; fill: rgb(80, 255, 80); stroke: rgb(218, 85, 85); stroke-width: 4px;" cx="64.576" cy="204.814" r="43.156"/>
+</svg>

@@ -137,6 +137,31 @@ class WindowTests(wtc.WidgetTestCase):
         wx.DLG_PNT
 
 
+    def test_vizattrs1(self):
+        w = wx.Window(self.frame, -1, (10,10), (50,50))
+        a = w.GetClassDefaultAttributes()
+        assert isinstance(a.colBg, wx.Colour)
+        assert isinstance(a.colFg, wx.Colour)
+        assert isinstance(a.font, wx.Font)
+
+
+    def test_vizattrs2(self):
+        w = wx.Window(self.frame, -1, (10,10), (50,50))
+        assert isinstance(w.GetClassDefaultAttributes().colBg, wx.Colour)
+        assert isinstance(w.GetClassDefaultAttributes().colFg, wx.Colour)
+        assert isinstance(w.GetClassDefaultAttributes().font, wx.Font)
+
+
+    def test_vizattrs3(self):
+        w = wx.Window(self.frame, -1, (10,10), (50,50))
+        a = w.GetClassDefaultAttributes()
+        with self.assertRaises(AttributeError):
+            a.colBg = wx.Colour('blue')
+        with self.assertRaises(AttributeError):
+            a.colFg = wx.Colour('blue')
+        with self.assertRaises(AttributeError):
+            a.font = wx.NORMAL_FONT
+
 #---------------------------------------------------------------------------
 
 

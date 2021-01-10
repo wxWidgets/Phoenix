@@ -18,6 +18,14 @@ class TestPanel(wx.Panel):
 
         self.search = wx.SearchCtrl(self, size=(200,-1), style=wx.TE_PROCESS_ENTER)
 
+        if 'gtk3' in wx.PlatformInfo:
+            # Something is wrong with the bestsize of the SearchCtrl, so for now
+            # let's set it based on the size of a TextCtrl.
+            txt = wx.TextCtrl(self)
+            bs = txt.GetBestSize()
+            txt.DestroyLater()
+            self.search.SetMinSize((200, bs.height+4))
+
         # Setup the layout
         box = wx.StaticBoxSizer(sb, wx.VERTICAL)
         box.Add(searchBtnOpt, 0, wx.ALL, 5)

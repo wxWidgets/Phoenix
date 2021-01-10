@@ -470,13 +470,24 @@ class TabDragImage(wx.DragImage):
             timg = bitmap.ConvertToImage()
             if not timg.HasAlpha():
                 timg.InitAlpha()
-            for y in range(timg.GetHeight()):
-                for x in range(timg.GetWidth()):
-                    pix = wx.Colour(timg.GetRed(x, y),
-                                    timg.GetGreen(x, y),
-                                    timg.GetBlue(x, y))
-                    if pix == self._backgroundColour:
-                        timg.SetAlpha(x, y, 0)
+            ## for y in range(timg.GetHeight()):
+            ##     for x in range(timg.GetWidth()):
+            ##         pix = wx.Colour(timg.GetRed(x, y),
+            ##                         timg.GetGreen(x, y),
+            ##                         timg.GetBlue(x, y))
+            ##         if pix == self._backgroundColour:
+            ##             timg.SetAlpha(x, y, 0)
+            # local opt list comprehension
+            wxColour = wx.Colour
+            GetRed = timg.GetRed
+            GetGreen = timg.GetGreen
+            GetBlue = timg.GetBlue
+            SetAlpha = timg.SetAlpha
+            _backgroundColour = self._backgroundColour
+            [SetAlpha(x, y, 0)
+                for x in range(timg.GetWidth())
+                    for y in range(timg.GetHeight())
+                        if wxColour(GetRed(x, y), GetGreen(x, y), GetBlue(x, y)) == _backgroundColour]
             bitmap = timg.ConvertToBitmap()
         return bitmap
 

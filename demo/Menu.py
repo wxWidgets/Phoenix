@@ -29,7 +29,15 @@ check the source for this sample to see how to implement them.
         menu1 = wx.Menu()
         menu1.Append(101, "&Mercury", "This the text in the Statusbar")
         menu1.Append(102, "&Venus", "")
-        menu1.Append(103, "&Earth", "You may select Earth too")
+        if False:
+            # This is how you would create the menu item if you want to
+            # change some of the visible attributes.
+            item = wx.MenuItem(id=103, text="&Earth", helpString="You may select Earth too")
+            item.SetFont(wx.Font(wx.FontInfo(10).Bold()))
+            menu1.Append(item)
+        else:
+            # But we'll just do it the normal way for this sample
+            menu1.Append(103, "&Earth", "You may select Earth too")
         menu1.AppendSeparator()
         menu1.Append(104, "&Close", "Close this frame")
         # Add menu to the menu bar
@@ -141,7 +149,7 @@ check the source for this sample to see how to implement them.
         id = event.GetMenuId()
         item = self.GetMenuBar().FindItemById(id)
         if item:
-            text = item.GetText()
+            text = item.GetItemLabelText()
             help = item.GetHelp()
 
         # but in this case just call Skip so the default is done

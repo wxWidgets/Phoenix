@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Mar-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -58,10 +58,13 @@ def run():
                   #'OnGetItemColumnAttr',  # MSW only?
                   'OnGetItemColumnImage',
                   'OnGetItemImage',
-                  'OnGetItemText']:
+                  'OnGetItemText',
+                  'OnGetItemIsChecked',
+                  ]:
         c.find(name).ignore(False)
         c.find(name).isVirtual = True
 
+    tools.addEnableSystemTheme(c, 'wx.ListCtrl')
 
     # Tweaks to allow passing and using a Python callable object for the sort
     # compare function. First provide a sort callback function that can call the
@@ -106,7 +109,6 @@ def run():
     # instead of a wxUIntPtr.
     c.find('GetItemData').type = 'long'
     c.find('SetItemPtrData').ignore()
-
 
 
     # Change the semantics of GetColumn to return the item as the return
@@ -195,6 +197,7 @@ def run():
             return rv;
             """)
 
+    c.find('CheckItem.check').default = 'true'
 
 
     # Some deprecated aliases for Classic renames
@@ -206,7 +209,7 @@ def run():
     c.addPyCode('ListCtrl.SetStringItem = wx.deprecated(ListCtrl.SetItem, "Use SetItem instead.")')
 
 
-    # Provide a way to determine if column ordering is possble
+    # Provide a way to determine if column ordering is possible
     c.addCppMethod('bool', 'HasColumnOrderSupport', '()',
         """\
         #ifdef wxHAS_LISTCTRL_COLUMN_ORDER
@@ -360,6 +363,8 @@ def run():
         EVT_LIST_COL_DRAGGING      = PyEventBinder(wxEVT_LIST_COL_DRAGGING     , 1)
         EVT_LIST_COL_END_DRAG      = PyEventBinder(wxEVT_LIST_COL_END_DRAG     , 1)
         EVT_LIST_ITEM_FOCUSED      = PyEventBinder(wxEVT_LIST_ITEM_FOCUSED     , 1)
+        EVT_LIST_ITEM_CHECKED      = PyEventBinder(wxEVT_LIST_ITEM_CHECKED     , 1)
+        EVT_LIST_ITEM_UNCHECKED    = PyEventBinder(wxEVT_LIST_ITEM_UNCHECKED   , 1)
 
         # deprecated wxEVT aliases
         wxEVT_COMMAND_LIST_BEGIN_DRAG         = wxEVT_LIST_BEGIN_DRAG
@@ -392,4 +397,3 @@ def run():
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()
-

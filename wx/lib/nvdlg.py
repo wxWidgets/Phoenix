@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     30-Nov-2009
-# Copyright:   (c) 2009-2018 by Total Control Software
+# Copyright:   (c) 2009-2020 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port
 #----------------------------------------------------------------------
@@ -84,7 +84,7 @@ class SimpleNameValueDialog(wx.Dialog):
 
 
     def destroyFields(self):
-        for name, widgets in self._fields.iteritems():
+        for name, widgets in self._fields.items():
             for w in widgets:
                 w.Destroy()
             del self.__dict__[name]
@@ -92,12 +92,13 @@ class SimpleNameValueDialog(wx.Dialog):
 
     def loadValues(self, values):
         self.clearValues()
-        for name, value in values.iteritems():
-            if name in self._fields.keys():
-                setattr(self, name, value)
+        if values:
+            for name, value in values.items():
+                if name in self._fields:
+                    setattr(self, name, value)
 
     def clearValues(self):
-        for name in self._fields.keys():
+        for name in self._fields:
             setattr(self, name, "")
 
 

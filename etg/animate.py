@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     21-May-2012
-# Copyright:   (c) 2012-2018 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -19,6 +19,10 @@ DOCSTRING = ""
 # this script.
 ITEMS  = [ "wxAnimation",
            "wxAnimationCtrl",
+           "wxGenericAnimationCtrl",
+           "wxAnimationDecoder",
+           "wxANIDecoder",
+           "wxGIFDecoder",
            ]
 
 #---------------------------------------------------------------------------
@@ -32,12 +36,52 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxAnimation')
-    assert isinstance(c, etgtools.ClassDef)
-
     c = module.find('wxAnimationCtrl')
     tools.fixWindowClass(c)
+
+    # Grab some MethodDefs that need to be copied to wxGenericAnimationCtrl
+    play = c.find('Play')
+    play.isVirtual = True
+    others = [
+        c.find('Stop'),
+        c.find('IsPlaying'),
+        c.find('Load'),
+        c.find('LoadFile'),
+        c.find('GetAnimation'),
+        c.find('SetAnimation'),
+        c.find('SetInactiveBitmap'),
+        c.find('GetInactiveBitmap'),
+        c.find('CreateAnimation'),
+        c.find('CreateCompatibleAnimation'),
+    ]
+    nonvirtual = [ 'GetAnimation', 'GetInactiveBitmap', 'CreateAnimation',
+                   'CreateCompatibleAnimation',
+                   ]
+
+
+    c = module.find('wxGenericAnimationCtrl')
+    c.bases = ['wxControl']
+    c.addHeaderCode('#include <wx/generic/animate.h>')
+    tools.fixWindowClass(c)
+
+    # Insert a copy of the base class Play into this class. It's not in the
+    # interface docs, but sip needs to see it there, since the one that is there
+    # has a different signature.
+    c.find('Play').overloads.append(play)
+
+    # Since we pretend that the base class is wxControl (because there are
+    # different parents in different builds) then we need to copy in some
+    # methods it will be inheriting from the real base class, which is not
+    # public.
+    for m in others:
+        if m.name not in nonvirtual:
+            m.isVirtual = True
+        c.addItem(m)
+
+
+
     module.addGlobalStr('wxAnimationCtrlNameStr', c)
+
 
     # move this before wxAnimationCtrl so it can be used for default arg values
     item = module.find('wxNullAnimation')
@@ -45,8 +89,19 @@ def run():
     module.insertItemBefore(c, item)
 
 
-    # TODO: It would be nice to be able to use the generic verison on all
-    # platforms since the native GTK version has some limitations...
+    #-----------------------------------------------------------------
+    module.addItem(tools.wxListWrapperTemplate('wxAnimationDecoderList', 'wxAnimationDecoder', module,
+                                               header_extra='#include <wx/animate.h>'))
+
+    c = module.find('wxAnimationDecoder')
+    c.find('DoCanRead').ignore(False)
+
+    c = module.find('wxANIDecoder')
+    c.find('DoCanRead').ignore(False)
+
+    c = module.find('wxGIFDecoder')
+    c.find('DoCanRead').ignore(False)
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

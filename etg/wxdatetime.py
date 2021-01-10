@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Feb-2012
-# Copyright:   (c) 2012-2018 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ def run():
     tools.ignoreAllOperators(c)
 
     # Ignore ctors with unknown types or that have overload conflicts that
-    # can't be distingished in Python
+    # can't be distinguished in Python
     ctor = c.find('wxDateTime')
     ctor.findOverload('time_t').ignore()
     ctor.findOverload('struct tm').ignore()
@@ -313,8 +313,8 @@ def run():
         wxTimeSpan operator-(const wxDateTime& dt2) const;
         """))
 
-    # Add some code to automatically convert from a Python datetime.date or a
-    # datetime.datetime object
+    # Add some code (like MappedTypes) to automatically convert from a Python
+    # datetime.date or a datetime.datetime object
     c.convertFromPyObject = """\
         // Code to test a PyObject for compatibility with wxDateTime
         if (!sipIsErr) {

@@ -1337,8 +1337,8 @@ class Field:
         """
 ####        dbg('Field::Field', indent=1)
         # Validate legitimate set of parameters:
-        for key in kwargs.keys():
-            if key not in Field.valid_params.keys():
+        for key in kwargs:
+            if key not in Field.valid_params:
 ####                dbg(indent=0)
                 ae = AttributeError('invalid parameter "%s"' % (key))
                 ae.attribute = key
@@ -1366,8 +1366,8 @@ class Field:
 ##        dbg(suspend=1)
 ##        dbg('maskededit.Field::_SetParameters', indent=1)
         # Validate keyword arguments:
-        for key in kwargs.keys():
-            if key not in Field.valid_params.keys():
+        for key in kwargs:
+            if key not in Field.valid_params:
 ##                dbg(indent=0, suspend=0)
                 ae = AttributeError('invalid keyword argument "%s"' % key)
                 ae.attribute = key
@@ -1384,7 +1384,7 @@ class Field:
         old_fillChar = self._fillChar   # store so we can change choice lists accordingly if it changes
 
         # First, Assign all parameters specified:
-        for key in Field.valid_params.keys():
+        for key in Field.valid_params:
             if key in kwargs:
                 setattr(self, '_' + key, kwargs[key] )
 
@@ -1747,8 +1747,9 @@ class MaskedEditMixin:
         self._previous_mask = None
 
         # Validate legitimate set of parameters:
-        for key in kwargs.keys():
-            if key.replace('Color', 'Colour') not in list(MaskedEditMixin.valid_ctrl_params.keys()) + list(Field.valid_params.keys()):
+        valid_parameters = list(MaskedEditMixin.valid_ctrl_params) + list(Field.valid_params)
+        for key in kwargs:
+            if key.replace('Color', 'Colour') not in valid_parameters:
                 raise TypeError('%s: invalid parameter "%s"' % (name, key))
 
         ## Set up dictionary that can be used by subclasses to override or add to default
@@ -1857,14 +1858,15 @@ class MaskedEditMixin:
         # Validate keyword arguments:
         constraint_kwargs = {}
         ctrl_kwargs = {}
+        valid_parameters = list(MaskedEditMixin.valid_ctrl_params) + list(Field.valid_params)
         for key, value in kwargs.items():
             key = key.replace('Color', 'Colour')    # for b-c, and standard wxPython spelling
-            if key not in list(MaskedEditMixin.valid_ctrl_params.keys()) + list(Field.valid_params.keys()):
+            if key not in valid_parameters:
 ##                dbg(indent=0, suspend=0)
                 ae = AttributeError('Invalid keyword argument "%s" for control "%s"' % (key, self.name))
                 ae.attribute = key
                 raise ae
-            elif key in Field.valid_params.keys():
+            elif key in Field.valid_params:
                 constraint_kwargs[key] = value
             else:
                 ctrl_kwargs[key] = value
@@ -1878,10 +1880,10 @@ class MaskedEditMixin:
             autoformat = None
 
         # handle "parochial name" backward compatibility:
-        if autoformat and autoformat.find('MILTIME') != -1 and autoformat not in masktags.keys():
+        if autoformat and autoformat.find('MILTIME') != -1 and autoformat not in masktags:
             autoformat = autoformat.replace('MILTIME', '24HRTIME')
 
-        if autoformat != self._autoformat and autoformat in masktags.keys():
+        if autoformat != self._autoformat and autoformat in masktags:
 ##            dbg('autoformat:', autoformat)
             self._autoformat                  = autoformat
             mask                              = masktags[self._autoformat]['mask']
@@ -1890,7 +1892,7 @@ class MaskedEditMixin:
                 if param == 'mask': continue    # (must be present; already accounted for)
                 constraint_kwargs[param] = value
 
-        elif autoformat and not autoformat in masktags.keys():
+        elif autoformat and not autoformat in masktags:
             ae = AttributeError('invalid value for autoformat parameter: %s' % repr(autoformat))
             ae.attribute = autoformat
             raise ae
@@ -1942,7 +1944,7 @@ class MaskedEditMixin:
 ####        dbg(indent=0)
 
         # determine if changing parameters that should affect the entire control:
-        for key in MaskedEditMixin.valid_ctrl_params.keys():
+        for key in MaskedEditMixin.valid_ctrl_params:
             if key in ( 'mask', 'fields' ): continue    # (processed separately)
             if key in ctrl_kwargs:
                 setattr(self, '_' + key, ctrl_kwargs[key])
@@ -2431,8 +2433,8 @@ class MaskedEditMixin:
                         field_index += 1
 ####                        dbg('next field:', field_index)
 
-        indices = list(self._fields.keys())
-        indices.sort()
+        indices = sorted(self._fields)
+
         self._field_indices = indices[1:]
 ####        dbg('lookupField map:', indent=1)
 ##        for i in range(len(self._mask)):
@@ -2440,7 +2442,7 @@ class MaskedEditMixin:
 ####        dbg(indent=0)
 
         # Verify that all field indices specified are valid for mask:
-        for index in self._fields.keys():
+        for index in self._fields:
             if index not in [-1] + list(self._lookupField.values()):
                 ie = IndexError('field %d is not a valid field for mask "%s"' % (index, self._mask))
                 ie.index = index
@@ -2645,7 +2647,7 @@ class MaskedEditMixin:
                         raise ve
                     elif replace_to > end:
 ####                        dbg(indent=0)
-                        ve = ValueError('"%s" will not fit into field %d of control "%s"' (choice, index, self.name))
+                        ve = ValueError('"%s" will not fit into field %d of control "%s"' % (choice, index, self.name))
                         ve.value = choice
                         ve.index = index
                         raise ve
@@ -6338,7 +6340,7 @@ class MaskedEditMixin:
         wx.EVT_UPDATE_UI(self, wx.ID_UNDO, self._UndoUpdateUI)
         self._contextMenu = menu
 
-        self.PopupMenu(menu, event.GetPosition())
+        self.PopupMenu(menu)
         menu.Destroy()
         self._contextMenu = None
 ##        dbg(indent=0)
@@ -6387,7 +6389,7 @@ class MaskedEditAccessorsMixin:
     """
 
     # Define the default set of attributes exposed by the most generic masked controls:
-    exposed_basectrl_params = list(MaskedEditMixin.valid_ctrl_params.keys()) + list(Field.valid_params.keys())
+    exposed_basectrl_params = list(MaskedEditMixin.valid_ctrl_params) + list(Field.valid_params)
     exposed_basectrl_params.remove('index')
     exposed_basectrl_params.remove('extent')
     exposed_basectrl_params.remove('foregroundColour')   # (base class already has this)
@@ -6754,7 +6756,7 @@ To see a great example of validations in action, try entering a bad email addres
             self.Close()
 
         def onClickPrint(self, event):
-            for format in masktags.keys():
+            for format in masktags:
                 sep = "+------------------------+"
                 print("%s\n%s  \n  Mask: %s \n  RE Validation string: %s\n" % (sep,format, masktags[format]['mask'], masktags[format]['validRegex']))
 

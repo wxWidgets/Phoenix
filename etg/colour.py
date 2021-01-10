@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ def run():
     """, factory=True)
 
 
-    # Change this macro into a value so we wont have problems when SIP takes its
+    # Change this macro into a value so we won't have problems when SIP takes its
     # address
     module.addCppCode("""\
     #undef wxTransparentColour

@@ -1,7 +1,7 @@
 /*
  * The implementation of the Python object to C/C++ integer convertors.
  *
- * Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -22,7 +22,7 @@
  *
  * The legacy integer conversions (ie. without support for overflow checking)
  * are flawed and inconsistent.  Large Python signed values were converted to
- * -1 whereas small values where truncated.  When converting function arguments
+ * -1 whereas small values were truncated.  When converting function arguments
  * all overlows were ignored, however when converting the results returned by
  * Python re-implementations then large Python values raised an exception
  * whereas small values were truncated.
@@ -203,6 +203,15 @@ unsigned sip_api_long_as_unsigned_int(PyObject *o)
 
 
 /*
+ * Convert a Python object to a C size_t.
+ */
+size_t sip_api_long_as_size_t(PyObject *o)
+{
+    return (size_t)long_as_unsigned_long(o, SIZE_MAX);
+}
+
+
+/*
  * Convert a Python object to a C long.
  */
 long sip_api_long_as_long(PyObject *o)
@@ -237,6 +246,11 @@ unsigned PY_LONG_LONG sip_api_long_as_unsigned_long_long(PyObject *o)
 {
     unsigned PY_LONG_LONG value;
 
+    /*
+     * Note that this doesn't handle Python v2 int objects, but the old
+     * convertors didn't either.
+     */
+
     PyErr_Clear();
 
     if (overflow_checking)
@@ -252,10 +266,6 @@ unsigned PY_LONG_LONG sip_api_long_as_unsigned_long_long(PyObject *o)
     }
     else
     {
-        /*
-         * Note that this doesn't handle Python v2 int objects, but the old
-         * convertors didn't either.
-         */
         value = PyLong_AsUnsignedLongLongMask(o);
     }
 
@@ -319,26 +329,6 @@ static unsigned long long_as_unsigned_long(PyObject *o, unsigned long max)
     }
     else
     {
-#if PY_VERSION_HEX < 0x02040000
-        /*
-         * Work around a bug in Python versions prior to v2.4 where an integer
-         * (or a named enum) causes an error.
-         */
-        if (!PyLong_Check(o) && PyInt_Check(o))
-        {
-            long v = PyInt_AsLong(o);
-
-            if (v < 0)
-            {
-                raise_unsigned_overflow(max);
-
-                return (unsigned long)-1;
-            }
-
-            return v;
-        }
-#endif
-
         value = PyLong_AsUnsignedLongMask(o);
     }
 

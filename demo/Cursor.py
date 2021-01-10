@@ -216,8 +216,7 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
 
         # Create a list of choices from the dictionary above.
-        choices = cursors.keys()
-        choices = sorted(choices)
+        choices = sorted(cursors)
 
         # Create the controls.
         self.cb = wx.ComboBox(self, -1, "wx.CURSOR_DEFAULT", choices=choices,
@@ -247,7 +246,7 @@ NOTE: not all stock cursors have a specific representation on all platforms.
 
         self.SetSizer(vbSizer)
 
-        wx.CallAfter(self.cb.SetFocus) # Convienience start for mousewheel switching.
+        wx.CallAfter(self.cb.SetFocus) # Convenience start for mousewheel switching.
 
     def OnChooseCursor(self, evt):
         # Clear the dots.

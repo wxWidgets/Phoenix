@@ -175,7 +175,7 @@ wx.NativePixelData and wx.AlphaPixelData provide a cross-platform way
 to access the platform-specific pixel buffer within a wx.Bitmap.  They
 provide both a random access method, and an iterator interface.
 
-<p>Unfortunately, although these classes are convienient ways to access
+<p>Unfortunately, although these classes are convenient ways to access
 and update the contents of a wx.Bitmap, we lose most of the efficiency
 of the C++ classes by requiring one or more Python-to-C++ transitions
 for each pixel.  In fact it can be <b>much</b> slower than the other

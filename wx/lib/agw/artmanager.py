@@ -1322,7 +1322,7 @@ class ArtManager(wx.EvtHandler):
                 pSetLayeredWindowAttributes = win32api.GetProcAddress(self._winlib,
                                                                       "SetLayeredWindowAttributes")
 
-                if pSetLayeredWindowAttributes == None:
+                if pSetLayeredWindowAttributes is None:
                     return
 
                 exstyle = win32api.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
@@ -2076,7 +2076,7 @@ class ArtManager(wx.EvtHandler):
         :return: A list of strings representing the available colour schemes.
         """
 
-        return list(self._colourSchemeMap.keys())
+        return list(self._colourSchemeMap)
 
 
     def CreateGreyBitmap(self, bmp):

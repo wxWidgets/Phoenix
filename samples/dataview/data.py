@@ -46,7 +46,7 @@ musicdata = [
     [44, "Blue Man Group", "Endless Column", "New Age"],
     [45, "Blue Man Group", "Klein Mandelbrot", "New Age"],
     [46, "Kenny G", "Silhouette", "Jazz"],
-    [47, "Sade", "Smooth Operator", "Jazz"],
+    [47, "Sad", "Smooth Operator", "Jazz"],
     [48, "David Arkenstone", "Papillon (On The Wings Of The Butterfly)", "New Age"],
     [49, "David Arkenstone", "Stepping Stars", "New Age"],
     [50, "David Arkenstone", "Carnation Lily Lily Rose", "New Age"],

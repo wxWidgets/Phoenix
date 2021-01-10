@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-May-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -36,8 +36,8 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
 
-    c.addItem(MethodDef(name='GetMaxButtons', type='int', isConst=True))
-    c.addItem(MethodDef(name='GetMaxAxes', type='int', isConst=True))
+    c.addItem(MethodDef(name='GetMaxButtons', type='int', isConst=True, argsString='() const'))
+    c.addItem(MethodDef(name='GetMaxAxes', type='int', isConst=True, argsString='() const'))
 
     tools.generateStubs('wxUSE_JOYSTICK', module)
 

@@ -121,7 +121,7 @@ class DataObjTests(wtc.WidgetTestCase):
         class MyDataObject(wx.DataObject):
             def __init__(self, value=''):
                 wx.DataObject.__init__(self)
-                self.myFormats = [wx.DataFormat("My Custom DataFormat")]
+                self.myFormats = [wx.DataFormat("application.MyCustomDataFormat")]
                 self.myData = wtc.mybytes(value)
 
             def GetAllFormats(self, d):
@@ -216,7 +216,7 @@ class DataObjTests(wtc.WidgetTestCase):
         class MyDataObject(wx.DataObjectSimple):
             def __init__(self, value=''):
                 wx.DataObjectSimple.__init__(self)
-                self.SetFormat(wx.DataFormat("My Custom Data Format"))
+                self.SetFormat(wx.DataFormat("application.MyCustomDataFormat"))
                 self.myData = wtc.mybytes(value)
 
             def GetDataSize(self):

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     05-Jun-2012
-# Copyright:   (c) 2012-2018 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -44,8 +44,20 @@ def run():
     # that both of those classes have in common.
     c.bases = ['wxControl', 'wxTextEntry', 'wxItemContainer']
 
+    # Copy any method definitions from wx.ComboBox that are not declared here
+    import combobox
+    mod = combobox.parseAndTweakModule()
+    klass = mod.find('wxComboBox')
+    items = [item for item in klass.items if isinstance(item, etgtools.MethodDef) and
+                                             not item.isCtor and
+                                             not item.isDtor and
+                                             not item.ignored and
+                                             not c.findItem(item.name)]
+    c.items.extend(items)
+    #print([i.name for i in items])
+    c.find('GetCurrentSelection').ignore()
 
-    # Ignore the old C array verison of the ctor and Create methods, and
+    # Ignore the old C array version of the ctor and Create methods, and
     # fixup the remaining ctor and Create with the typical default values for
     # the args
     c.find('wxBitmapComboBox').findOverload('wxString choices').ignore()
@@ -67,15 +79,10 @@ def run():
     c.find('Append').findOverload('wxClientData *').find('clientData').transfer = True
     c.find('Insert').findOverload('wxClientData *').find('clientData').transfer = True
 
-
-    # wxItemContainer pure virtuals that have an implementation in this class
+    # We need to disambiguate GetStringSelection since it is implemented in
+    # multiple base classes
+    c.find('GetStringSelection').ignore()
     c.addItem(etgtools.WigCode("""\
-        virtual unsigned int GetCount() const;
-        virtual wxString GetString(unsigned int n) const;
-        virtual void SetString(unsigned int n, const wxString& s);
-        virtual int GetSelection() const;
-        virtual void SetSelection(int n);
-
         virtual wxString GetStringSelection() const;
         %MethodCode
             sipRes = new wxString(sipCpp->wxItemContainerImmutable::GetStringSelection());

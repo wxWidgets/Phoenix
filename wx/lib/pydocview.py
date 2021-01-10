@@ -506,7 +506,7 @@ class DocMDIParentFrameMixIn:
         window.SetDefaultSize(size)
         window.SetOrientation(orientation)
         window.SetAlignment(alignment)
-        if sash != None:  # wx.SASH_TOP is 0 so check for None instead of just doing "if sash:"
+        if sash is not None:  # wx.SASH_TOP is 0 so check for None instead of just doing "if sash:"
             window.SetSashVisible(sash, True)
         ####
         def OnEmbeddedWindowSashDrag(event):
@@ -2590,7 +2590,7 @@ class FilePropertiesService(DocService):
                 if eventHandler.ProcessUpdateUIEvent(event):
                     return True
 
-            event.Enable(wx.GetApp().GetDocumentManager().GetCurrentDocument() != None)
+            event.Enable(wx.GetApp().GetDocumentManager().GetCurrentDocument() is not None)
             return True
         else:
             return False

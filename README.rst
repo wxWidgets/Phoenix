@@ -18,6 +18,13 @@ API, enabling Python applications to have a native GUI on Windows, Macs or
 Unix systems, with a native look and feel and requiring very little (if any)
 platform specific code.
 
+.. note:: 
+    This document is primarily intended for those who will be working on
+    wxPython, or at least building with the source code fetched directly from
+    GitHub. If that's not you then please refer to the instructions at the
+    `wxPython website <https://wxpython.org/pages/downloads/>`_ about how to get
+    the current release of wxPython for your platform and chosen Python
+    environment.
 
 .. contents:: **Contents**
 
@@ -25,7 +32,21 @@ platform specific code.
 How to build wxPython Phoenix
 -----------------------------
 
-First of all, review the section below about prerequisites.
+First of all, this README is intended primarily for those who want to build
+wxPython from a workspace checked out from the wxPython Phoenix repository. If
+you are not making changes to wxPython, or needing to build it for some
+unsupported compiler or some other hardware architecture, then you probably do
+not need to put yourself through the pain for building in this way. It's a
+complicated build, and can sometimes be confusing even for the experts.
+Instead, if the binaries available at PyPI are not what you need then you can
+use pip to build from the released source archives, or from the source archives
+created in the pre-release snapshot builds. See the notes about it at: 
+
+* https://wxpython.org/pages/downloads/
+* https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip
+
+
+Next, review the section below about prerequisites.
 
 All aspects of the wxPython Phoenix build are managed through a series of
 commands provided by the build.py script. There is also a setup.py script
@@ -249,7 +270,7 @@ explanation to help a newbie find their way around.
 
     cd Phoenix
     git submodule init
-    git submodule update
+    git submodule update --recursive
 
 * **sip/gen**: The code (.sip files) produced by the ETG scripts is placed
   in this folder.
@@ -340,17 +361,19 @@ or other unixes.
 
 * dpkg-dev
 * build-essential
-* python2.7-dev         # use appropriate Python version here
-* libjpeg-dev
-* libtiff-dev
-* libsdl1.2-dev
-* libgstreamer-plugins-base0.10-dev
-* libnotify-dev
-* freeglut3
-* freeglut3-dev
-* libsm-dev
-* libgtk-3-dev
-* libwebkitgtk-3.0-dev  # or libwebkit2gtk-4.0-dev if available
+* python3.7-dev and libpython3.7-dev  # use appropriate Python version here
+* freeglut3-dev 
+* libgl1-mesa-dev 
+* libglu1-mesa-dev 
+* libgstreamer-plugins-base1.0-dev 
+* libgtk-3-dev 
+* libjpeg-dev 
+* libnotify-dev 
+* libpng-dev
+* libsdl2-dev 
+* libsm-dev 
+* libtiff-dev 
+* libwebkit2gtk-4.0-dev 
 * libxtst-dev
 
 If you are building for GTK2 then you'll also need these packages and
@@ -359,16 +382,6 @@ their dependencies:
 * libgtk2.0-dev
 * libwebkitgtk-dev
 
-If your Linux distribution has gstreamer 1.0 available then you can install
-the dev packages for that instead of the 0.10 version. For example:
-
-* libgstreamer-plugins-base1.0-dev
-
-Newer versions of Linux may need some newer versions of dependent packages
-installed, if they are available. For example:
-
-* libwebkit2gtk-4.0-dev
-* libsdl2-dev
 
 If You use a custom built python in a non standard location, You need to
 compile python with the --enable-shared option.

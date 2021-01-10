@@ -70,9 +70,9 @@ class PyGaugeDemo(wx.Panel):
         label1 = wx.StaticText(self.mainPanel, -1, "Welcome to the PyGauge demo for wxPython!")
         mainSizer.Add(label1, 0, wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, 10)
 
-        mainSizer.Add(self.gauge1, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
-        mainSizer.Add(self.gauge2, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
-        mainSizer.Add(self.gauge3, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
+        mainSizer.Add(self.gauge1, 0, wx.ALL, 20)
+        mainSizer.Add(self.gauge2, 0, wx.ALL, 20)
+        mainSizer.Add(self.gauge3, 0, wx.ALL, 20)
 
         labelBack    = wx.StaticText(self.mainPanel, -1, "Background Colour")
         labelHover   = wx.StaticText(self.mainPanel, -1, "Border Colour")
@@ -95,7 +95,7 @@ class PyGaugeDemo(wx.Panel):
         colourSizer.Add(self.gaugeRange, 0, wx.EXPAND)
         colourSizer.Add(self.gaugePadding, 0, wx.EXPAND)
 
-        mainSizer.Add(colourSizer, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 10)
+        mainSizer.Add(colourSizer, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 10)
 
 
         boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)

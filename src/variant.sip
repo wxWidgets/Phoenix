@@ -6,7 +6,7 @@
 //
 // Created:     20-Sept-2011
 // Copyright:   (c) 2011 by Kevin Ollivier
-// Copyright:   (c) 2011-2018 by Total Control Software
+// Copyright:   (c) 2011-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@
             size_t idx = 0;
             PyObject* value = PyList_New(0);
             for (idx=0; idx < sipCpp->GetCount(); idx++) {
-                PyObject* item = wxVariant_out_helper(sipCpp->Item(idx));
+                PyObject* item = wxVariant_out_helper(sipCpp->Item(idx)->GetData());
                 PyList_Append(value, item);
             }
             return value;

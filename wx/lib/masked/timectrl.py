@@ -526,7 +526,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 
         # assign keyword args as appropriate:
         for key, param_value in kwargs.items():
-            if key not in TimeCtrl.valid_ctrl_params.keys():
+            if key not in TimeCtrl.valid_ctrl_params:
                 raise AttributeError('invalid keyword argument "%s"' % key)
 
             if key == 'format':

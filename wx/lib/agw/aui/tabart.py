@@ -136,25 +136,27 @@ class AuiDefaultTabArt(object):
 
         self.SetDefaultColours()
 
+        active_colour, disabled_colour = wx.BLACK, wx.Colour(128, 128, 128)
+
         if wx.Platform == "__WXMAC__":
             bmp_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DDKSHADOW)
             self._active_close_bmp = DrawMACCloseButton(bmp_colour)
-            self._disabled_close_bmp = DrawMACCloseButton(wx.Colour(128, 128, 128))
+            self._disabled_close_bmp = DrawMACCloseButton(disabled_colour)
         else:
-            self._active_close_bmp = BitmapFromBits(nb_close_bits, 16, 16, wx.BLACK)
-            self._disabled_close_bmp = BitmapFromBits(nb_close_bits, 16, 16, wx.Colour(128, 128, 128))
+            self._active_close_bmp = BitmapFromBits(nb_close_bits, 16, 16, active_colour)
+            self._disabled_close_bmp = BitmapFromBits(nb_close_bits, 16, 16, disabled_colour)
 
         self._hover_close_bmp = self._active_close_bmp
         self._pressed_close_bmp = self._active_close_bmp
 
-        self._active_left_bmp = BitmapFromBits(nb_left_bits, 16, 16, wx.BLACK)
-        self._disabled_left_bmp = BitmapFromBits(nb_left_bits, 16, 16, wx.Colour(128, 128, 128))
+        self._active_left_bmp = BitmapFromBits(nb_left_bits, 16, 16, active_colour)
+        self._disabled_left_bmp = BitmapFromBits(nb_left_bits, 16, 16, disabled_colour)
 
-        self._active_right_bmp = BitmapFromBits(nb_right_bits, 16, 16, wx.BLACK)
-        self._disabled_right_bmp = BitmapFromBits(nb_right_bits, 16, 16, wx.Colour(128, 128, 128))
+        self._active_right_bmp = BitmapFromBits(nb_right_bits, 16, 16, active_colour)
+        self._disabled_right_bmp = BitmapFromBits(nb_right_bits, 16, 16, disabled_colour)
 
-        self._active_windowlist_bmp = BitmapFromBits(nb_list_bits, 16, 16, wx.BLACK)
-        self._disabled_windowlist_bmp = BitmapFromBits(nb_list_bits, 16, 16, wx.Colour(128, 128, 128))
+        self._active_windowlist_bmp = BitmapFromBits(nb_list_bits, 16, 16, active_colour)
+        self._disabled_windowlist_bmp = BitmapFromBits(nb_list_bits, 16, 16, disabled_colour)
 
         if wx.Platform == "__WXMAC__":
             k = Carbon.Appearance.kThemeBrushFocusHighlight if CARBON else 19
@@ -164,12 +166,12 @@ class AuiDefaultTabArt(object):
             if hasattr(wx, 'MacThemeColour'):
                 c = wx.MacThemeColour(k)
             else:
-                brush = wx.Brush(wx.BLACK)
+                brush = wx.Brush(active_colour)
                 brush.MacSetTheme(k)
                 c = brush.GetColour()
             self._focusPen = wx.Pen(c, 2, wx.PENSTYLE_SOLID)
         else:
-            self._focusPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_USER_DASH)
+            self._focusPen = wx.Pen(active_colour, 1, wx.PENSTYLE_USER_DASH)
             self._focusPen.SetDashes([1, 1])
             self._focusPen.SetCap(wx.CAP_BUTT)
 
@@ -197,18 +199,18 @@ class AuiDefaultTabArt(object):
         if base_colour is None:
             base_colour = GetBaseColour()
 
-        self.SetBaseColour( base_colour )
+        self.SetBaseColour(base_colour)
         self._border_colour = StepColour(base_colour, 75)
         self._border_pen = wx.Pen(self._border_colour)
 
-        self._background_top_colour = StepColour(self._base_colour, 90)
-        self._background_bottom_colour = StepColour(self._base_colour, 170)
+        self._background_top_colour = StepColour(base_colour, 90)
+        self._background_bottom_colour = StepColour(base_colour, 170)
 
-        self._tab_top_colour = self._base_colour
+        self._tab_top_colour = base_colour
         self._tab_bottom_colour = wx.WHITE
         self._tab_gradient_highlight_colour = wx.WHITE
 
-        self._tab_inactive_top_colour = self._base_colour
+        self._tab_inactive_top_colour = base_colour
         self._tab_inactive_bottom_colour = StepColour(self._tab_inactive_top_colour, 160)
 
         self._tab_text_colour = lambda page: page.text_colour
@@ -424,26 +426,26 @@ class AuiDefaultTabArt(object):
         # we'll just use a rectangle for the clipping region for now --
         dc.SetClippingRegion(tab_x, tab_y, clip_width+1, tab_height-3)
 
-        border_points = [wx.Point() for i in range(6)]
         agwFlags = self.GetAGWFlags()
 
+        wxPoint = wx.Point  # local opt
         if agwFlags & AUI_NB_BOTTOM:
 
-            border_points[0] = wx.Point(tab_x,             tab_y)
-            border_points[1] = wx.Point(tab_x,             tab_y+tab_height-6)
-            border_points[2] = wx.Point(tab_x+2,           tab_y+tab_height-4)
-            border_points[3] = wx.Point(tab_x+tab_width-2, tab_y+tab_height-4)
-            border_points[4] = wx.Point(tab_x+tab_width,   tab_y+tab_height-6)
-            border_points[5] = wx.Point(tab_x+tab_width,   tab_y)
+            border_points = [wxPoint(tab_x,             tab_y),
+                             wxPoint(tab_x,             tab_y+tab_height-6),
+                             wxPoint(tab_x+2,           tab_y+tab_height-4),
+                             wxPoint(tab_x+tab_width-2, tab_y+tab_height-4),
+                             wxPoint(tab_x+tab_width,   tab_y+tab_height-6),
+                             wxPoint(tab_x+tab_width,   tab_y)]
 
         else: #if (agwFlags & AUI_NB_TOP)
 
-            border_points[0] = wx.Point(tab_x,             tab_y+tab_height-4)
-            border_points[1] = wx.Point(tab_x,             tab_y+2)
-            border_points[2] = wx.Point(tab_x+2,           tab_y)
-            border_points[3] = wx.Point(tab_x+tab_width-2, tab_y)
-            border_points[4] = wx.Point(tab_x+tab_width,   tab_y+2)
-            border_points[5] = wx.Point(tab_x+tab_width,   tab_y+tab_height-4)
+            border_points = [wxPoint(tab_x,             tab_y+tab_height-4),
+                             wxPoint(tab_x,             tab_y+2),
+                             wxPoint(tab_x+2,           tab_y),
+                             wxPoint(tab_x+tab_width-2, tab_y),
+                             wxPoint(tab_x+tab_width,   tab_y+2),
+                             wxPoint(tab_x+tab_width,   tab_y+tab_height-4)]
 
         # TODO: else if (agwFlags & AUI_NB_LEFT)
         # TODO: else if (agwFlags & AUI_NB_RIGHT)
@@ -570,8 +572,8 @@ class AuiDefaultTabArt(object):
 
         offset_focus = text_offset
         if control:
-            if control.GetPosition() != wx.Point(text_offset+1, ypos):
-                control.SetPosition(wx.Point(text_offset+1, ypos))
+            if control.GetPosition() != wxPoint(text_offset+1, ypos):
+                control.SetPosition(wxPoint(text_offset+1, ypos))
 
             if not control.IsShown():
                 control.Show()
@@ -861,18 +863,18 @@ class AuiDefaultTabArt(object):
 
         max_y = 0
 
+        self_GetTabSize = self.GetTabSize  # local opt
+        measure_bmp_isok = measure_bmp.IsOk()
         for page in pages:
 
-            if measure_bmp.IsOk():
-                bmp = measure_bmp
-            else:
+            if not measure_bmp_isok:
                 bmp = page.bitmap
 
             # we don't use the caption text because we don't
             # want tab heights to be different in the case
             # of a very short piece of text on one tab and a very
             # tall piece of text on another tab
-            s, x_ext = self.GetTabSize(dc, wnd, page.caption, bmp, True, AUI_BUTTON_STATE_HIDDEN, None)
+            s, x_ext = self_GetTabSize(dc, wnd, page.caption, bmp, True, AUI_BUTTON_STATE_HIDDEN, None)
             max_y = max(max_y, s[1])
 
             if page.control:
@@ -974,27 +976,9 @@ class AuiDefaultTabArt(object):
 
             menuPopup.Check(1000+active_idx, True)
 
-        # find out the screen coordinate at the bottom of the tab ctrl
-        cli_rect = wnd.GetClientRect()
-
-        # Calculate the approximate size of the popupmenu for setting the
-        # position of the menu when its shown.
-        # Account for extra padding on left/right of text on mac menus
-        if wx.Platform in ['__WXMAC__', '__WXMSW__']:
-            longest += 32
-
-        # Bitmap/Checkmark width + padding
-        longest += 20
-
-        if self.GetAGWFlags() & AUI_NB_CLOSE_BUTTON:
-            longest += 16
-
-        pt = wx.Point(cli_rect.x + cli_rect.GetWidth() - longest,
-                     cli_rect.y + cli_rect.height)
-
         cc = AuiCommandCapture()
         wnd.PushEventHandler(cc)
-        wnd.PopupMenu(menuPopup, pt)
+        wnd.PopupMenu(menuPopup)
         command = cc.GetCommandId()
         wnd.PopEventHandler(True)
 
@@ -1507,24 +1491,9 @@ class AuiSimpleTabArt(object):
         if active_idx != -1 and not useImages:
             menuPopup.Check(1000+active_idx, True)
 
-        # find out where to put the popup menu of window
-        # items.  Subtract 100 for now to center the menu
-        # a bit, until a better mechanism can be implemented
-        pt = wx.GetMousePosition()
-        pt = wnd.ScreenToClient(pt)
-
-        if pt.x < 100:
-            pt.x = 0
-        else:
-            pt.x -= 100
-
-        # find out the screen coordinate at the bottom of the tab ctrl
-        cli_rect = wnd.GetClientRect()
-        pt.y = cli_rect.y + cli_rect.height
-
         cc = AuiCommandCapture()
         wnd.PushEventHandler(cc)
-        wnd.PopupMenu(menuPopup, pt)
+        wnd.PopupMenu(menuPopup)
         command = cc.GetCommandId()
         wnd.PopEventHandler(True)
 

@@ -95,7 +95,7 @@ class RibbonMSWArtProvider(object):
         self._panel_extension_bitmap = [wx.NullBitmap for i in range(2)]
 
         if set_colour_scheme:
-            self.SetColourScheme(wx.Colour(194, 216, 241), wx.Colour(255, 223, 114), wx.Colour(0, 0, 0))
+            self.SetColourScheme(wx.Colour(194, 216, 241), wx.Colour(255, 223, 114), wx.BLACK)
 
         self._cached_tab_separator_visibility = -10.0 # valid visibilities are in range [0, 1]
         self._tab_separation_size = 3
@@ -138,11 +138,11 @@ class RibbonMSWArtProvider(object):
 
         """
 
-        if primary != None:
+        if primary is not None:
             primary = self._primary_scheme_colour
-        if secondary != None:
+        if secondary is not None:
             secondary = self._secondary_scheme_colour
-        if tertiary != None:
+        if tertiary is not None:
             tertiary = self._tertiary_scheme_colour
 
         return primary, secondary, tertiary
@@ -650,7 +650,7 @@ class RibbonMSWArtProvider(object):
         elif id == RIBBON_ART_TAB_SEPARATOR_GRADIENT_COLOUR:
             return self._tab_separator_gradient_colour
         elif id in [RIBBON_ART_TAB_ACTIVE_BACKGROUND_TOP_COLOUR, RIBBON_ART_TAB_ACTIVE_BACKGROUND_TOP_GRADIENT_COLOUR]:
-            return wx.Colour(0, 0, 0)
+            return wx.BLACK
         elif id == RIBBON_ART_TAB_ACTIVE_BACKGROUND_COLOUR:
             return self._tab_active_background_colour
         elif id == RIBBON_ART_TAB_ACTIVE_BACKGROUND_GRADIENT_COLOUR:
@@ -1755,7 +1755,7 @@ class RibbonMSWArtProvider(object):
         true_rect = wx.Rect(*rect)
         true_rect = self.RemovePanelPadding(true_rect)
 
-        if wnd.GetExpandedPanel() != None:
+        if wnd.GetExpandedPanel() is not None:
             client_rect = wx.Rect(*true_rect)
             client_rect.x += 1
             client_rect.width -= 2
@@ -1896,7 +1896,7 @@ class RibbonMSWArtProvider(object):
         if isinstance(wnd, PANEL.RibbonPanel):
             panel = wnd
             hovered = allow_hovered and panel.IsHovered()
-            if panel.GetExpandedDummy() != None:
+            if panel.GetExpandedDummy() is not None:
                 offset = panel.GetExpandedDummy().GetPosition()
                 parent = panel.GetExpandedDummy().GetParent()
 
@@ -1906,7 +1906,7 @@ class RibbonMSWArtProvider(object):
                 panel = parent
                 if isinstance(panel, PANEL.RibbonPanel):
                     hovered = allow_hovered and panel.IsHovered()
-                    if panel.GetExpandedDummy() != None:
+                    if panel.GetExpandedDummy() is not None:
                         parent = panel.GetExpandedDummy()
 
             page = parent
@@ -1918,7 +1918,7 @@ class RibbonMSWArtProvider(object):
             if parent is None:
                 break
 
-        if page != None:
+        if page is not None:
             self.DrawPartialPageBackground(dc, wnd, rect, page, offset, hovered)
             return
 
@@ -2369,7 +2369,7 @@ class RibbonMSWArtProvider(object):
         else:
             client_size.IncBy(6, 6)
 
-        if client_offset != None:
+        if client_offset is not None:
             if self._flags & RIBBON_BAR_FLOW_VERTICAL:
                 client_offset = wx.Point(2, 3)
             else:
@@ -2404,7 +2404,7 @@ class RibbonMSWArtProvider(object):
         else:
             size.DecBy(6, 6)
 
-        if client_offset != None:
+        if client_offset is not None:
             if self._flags & RIBBON_BAR_FLOW_VERTICAL:
                 client_offset = wx.Point(2, 3)
             else:
@@ -2673,10 +2673,10 @@ class RibbonMSWArtProvider(object):
 
         """
 
-        if desired_bitmap_size != None:
+        if desired_bitmap_size is not None:
             desired_bitmap_size = wx.Size(16, 16)
 
-        if expanded_panel_direction != None:
+        if expanded_panel_direction is not None:
             if self._flags & RIBBON_BAR_FLOW_VERTICAL:
                 expanded_panel_direction = wx.EAST
             else:

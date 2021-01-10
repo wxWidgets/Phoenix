@@ -11,7 +11,7 @@ buttonDefs = {
     817 : ('GridCustTable',   ' wx.Grid using a custom Table, with non-string data '),
     819 : ('GridEnterHandler',' Remapping keys to behave differently '),
     820 : ('GridCustEditor',  ' Shows how to create a custom Cell Editor '),
-    821 : ('GridDragable',    ' A wx.Grid with dragable rows and columns '),
+    821 : ('GridDragable',    ' A wx.Grid with draggable rows and columns '),
     822 : ('GridDragAndDrop', ' Shows how to make a grid a drop target for files'),
     }
 
@@ -23,9 +23,8 @@ class ButtonPanel(wx.Panel):
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add((20, 20))
-        keys = sorted(buttonDefs.keys())
 
-        for k in keys:
+        for k in sorted(buttonDefs):
             text = buttonDefs[k][1]
             btn = wx.Button(self, k, text)
             box.Add(btn, 0, wx.ALIGN_CENTER|wx.ALL, 10)

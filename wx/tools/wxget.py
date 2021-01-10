@@ -7,7 +7,7 @@
 # Author:      Steve Barnes
 #
 # Created:     06-Aug-2017
-# Copyright:   (c) 2017-2018 by Steve Barnes
+# Copyright:   (c) 2017-2020 by Steve Barnes
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
 #
@@ -92,7 +92,7 @@ def get_save_path(url, dest_dir, force=False):
     return (url, filename)
 
 def download_wget(url, filename, trusted=False):
-    """ Try to donwload via wget."""
+    """ Try to download via wget."""
     result = False
     try:
         cmd = ["wget", url, '-O', filename]
@@ -107,7 +107,7 @@ def download_wget(url, filename, trusted=False):
     return result
 
 def download_urllib(url, filename):
-    """ Try to donwload via urllib."""
+    """ Try to download via urllib."""
     print("Trying to Download via urllib from:\n  ", url)
     keep_going = True
     try:
@@ -149,12 +149,12 @@ def download_urllib(url, filename):
                                                        message+status)
             wx.Sleep(0.08)  # Give the GUI some update time
         progress.Destroy()
-    
+
     result = os.path.exists(filename) and os.stat(filename).st_size > 0
-    return result    
+    return result
 
 def download_pip(url, filename, force=False, trusted=False):
-    """ Try to donwload via pip."""
+    """ Try to download via pip."""
     download_dir = os.path.split(filename)[0]
     if len(download_dir) == 0:
         download_dir = '.'

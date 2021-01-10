@@ -2,7 +2,7 @@
 
 # 11/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o presense of spin control causing probs (see spin ctrl demo for details)
+# o presence of spin control causing probs (see spin ctrl demo for details)
 
 
 import wx
@@ -70,17 +70,17 @@ class TestPanel( scrolled.ScrolledPanel ):
         self.radioMx = wx.RadioButton( self, -1, "Set controls to 'now' using mxDateTime")
 
         radio_vbox = wx.BoxSizer( wx.VERTICAL )
-        radio_vbox.Add( self.radio12to24, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-        radio_vbox.Add( self.radio24to12, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-        radio_vbox.Add( self.radioWx, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-        radio_vbox.Add( self.radioMx, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+        radio_vbox.Add( self.radio12to24, 0, wx.ALL, 5 )
+        radio_vbox.Add( self.radio24to12, 0, wx.ALL, 5 )
+        radio_vbox.Add( self.radioWx, 0, wx.ALL, 5 )
+        radio_vbox.Add( self.radioMx, 0, wx.ALL, 5 )
 
         buttonbox.Add( buttonChange, 0, wx.ALIGN_CENTRE|wx.ALL, 5 )
         buttonbox.Add( radio_vbox, 0, wx.ALIGN_CENTRE|wx.ALL, 5 )
 
         hbox = wx.BoxSizer( wx.HORIZONTAL )
         hbox.Add( grid, 0, wx.ALIGN_LEFT|wx.ALL, 15 )
-        hbox.Add( buttonbox, 0, wx.ALIGN_RIGHT|wx.BOTTOM, 20 )
+        hbox.Add( buttonbox, 0, wx.BOTTOM, 20 )
 
 
         box_label = wx.StaticBox( self, -1, "Bounds Control" )
@@ -119,7 +119,7 @@ class TestPanel( scrolled.ScrolledPanel ):
         grid2.Add( (20, 0), 0, wx.ALIGN_LEFT|wx.ALL, 5 )
         grid2.Add( label, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
         grid2.Add( self.target_ctrl, 0, wx.ALIGN_LEFT|wx.ALL, 5 )
-        boundsbox.Add(grid2, 0, wx.ALIGN_CENTER|wx.EXPAND|wx.ALL, 5)
+        boundsbox.Add(grid2, 0, wx.EXPAND|wx.ALL, 5)
 
         vbox = wx.BoxSizer( wx.VERTICAL )
         vbox.Add( (20, 20) )

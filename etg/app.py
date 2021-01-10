@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     22-Nov-2010
-# Copyright:   (c) 2010-2018 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ def run():
 
     etgtools.prependText(c.detailedDoc,
          "Note that it is not intended for this class to be used directly from "
-         "Python. It is wrapped just for inheriting its methods from :class:`App`.")
+         "Python. It is wrapped just for inheriting its methods in :class:`App`.")
 
     # There's no need for the command line stuff as Python has its own ways to
     # deal with that
@@ -55,7 +55,6 @@ def run():
     c.find('OnInitCmdLine').ignore()
 
     c.find('HandleEvent').ignore()
-    c.find('UsesEventLoop').ignore()
 
     # We will use OnAssertFailure, but I don't think we should let it be
     # overridden in Python.
@@ -225,12 +224,11 @@ def run():
     module.insertItemBefore(c, enum)
 
     module.addHeaderCode("""\
-        class wxPyApp;
-        wxPyApp* wxGetApp();
+        wxAppConsole* wxGetApp();
         """)
     module.find('wxTheApp').ignore()
     f = module.find('wxGetApp')
-    f.type = 'wxPyApp*'
+    f.type = 'wxAppConsole*'
     f.briefDoc = "Returns the current application object."
     f.detailedDoc = []
 
@@ -341,7 +339,12 @@ def run():
 
             Normally you would derive from this class and implement an ``OnInit``
             method that creates a frame and then calls ``self.SetTopWindow(frame)``,
-            however ``wx.App`` is also usable on it's own without derivation.
+            however ``wx.App`` is also usable on its own without derivation.
+
+            :note: In Python the wrapper for the C++ class ``wxApp`` has been renamed tp
+                :class:`wx.PyApp`. This ``wx.App`` class derives from ``wx.PyApp``, and is
+                responsible for handling the Python-specific needs for bootstrapping the
+                wxWidgets library and other Python integration related requirements.
             """,
 
         items=[
@@ -439,7 +442,10 @@ def run():
                     called.  This can be overridden in derived classes, but be sure to call
                     this method from there.
                     """,
-                body="wx.StockGDI._initStockObjects()"),
+                body="""\
+                    wx.StockGDI._initStockObjects()
+                    self.InitLocale()
+                    """),
 
             PyFunctionDef('__del__', '(self)',
                 doc="",
@@ -503,6 +509,37 @@ def run():
                             self.stdioWin.size = size
                     """),
 
+            PyFunctionDef('InitLocale', '(self)',
+                doc="""\
+                    Try to ensure that the C and Python locale is in sync with the wxWidgets
+                    locale on Windows. If you have troubles from the default behavior of this
+                    method you can override it in a derived class to behave differently.
+                    Please report the problem you encountered.
+                    """,
+                body="""\
+                    self.ResetLocale()
+                    if 'wxMSW' in PlatformInfo:
+                        import locale
+                        try:
+                            lang, enc = locale.getdefaultlocale()
+                            self._initial_locale = wx.Locale(lang, lang[:2], lang)
+                            locale.setlocale(locale.LC_ALL, lang)
+                        except (ValueError, locale.Error) as ex:
+                            target = wx.LogStderr()
+                            orig = wx.Log.SetActiveTarget(target)
+                            wx.LogError("Unable to set default locale: '{}'".format(ex))
+                            wx.Log.SetActiveTarget(orig)
+                    """),
+
+            PyFunctionDef('ResetLocale', '(self)',
+                doc="""\
+                    Release the wx.Locale object created in :meth:`InitLocale`.
+                    This should reset the application's locale to the previous settings.
+                    """,
+                body="""\
+                    self._initial_locale = None
+                    """),
+
             PyFunctionDef('Get', '()', isStatic=True,
                 doc="""\
                     A staticmethod returning the currently active application object.
@@ -510,7 +547,6 @@ def run():
                 body="return GetApp()"
                 )
             ])
-
 
 
 

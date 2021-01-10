@@ -149,8 +149,8 @@ class CustomColourData(object):
 
 class ColourSelect(wx.lib.buttons.GenBitmapButton):
     """
-    A subclass of :class:`wx.BitmapButton` that, when clicked, will
-    display a colour selection dialog.
+    A subclass of :class:`wx.lib.buttons.GenBitmapButton` that,
+    when clicked, will display a colour selection dialog.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, label="", colour=wx.BLACK,

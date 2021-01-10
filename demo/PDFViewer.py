@@ -17,15 +17,14 @@ class TestPanel(wx.Panel):
         vsizer = wx.BoxSizer( wx.VERTICAL )
         self.buttonpanel = pdfButtonPanel(self, wx.ID_ANY,
                                 wx.DefaultPosition, wx.DefaultSize, 0)
-        vsizer.Add(self.buttonpanel, 0,
-                                wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5)
+        vsizer.Add(self.buttonpanel, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.TOP, 5)
         self.viewer = pdfViewer( self, wx.ID_ANY, wx.DefaultPosition,
                                 wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
         vsizer.Add(self.viewer, 1, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
         loadbutton = wx.Button(self, wx.ID_ANY, "Load PDF file",
                                 wx.DefaultPosition, wx.DefaultSize, 0 )
         vsizer.Add(loadbutton, 0, wx.ALIGN_CENTER|wx.ALL, 5)
-        hsizer.Add(vsizer, 1, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5)
+        hsizer.Add(vsizer, 1, wx.GROW|wx.ALL, 5)
         self.SetSizer(hsizer)
         self.SetAutoLayout(True)
 

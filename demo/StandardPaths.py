@@ -26,7 +26,7 @@ class TestPanel(wx.Panel):
         # StandardPaths will use the value of wx.App().GetAppName()
         # for some of the stnadard path components.  Let's set it to
         # something that makes that obvious for the demo.  In your own
-        # apps you'll set it in to something more meaningfull for your
+        # apps you'll set it in to something more meaningful for your
         # app in your OnInit, (or just let it default.)
         wx.GetApp().SetAppName("AppName")
 

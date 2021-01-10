@@ -1514,11 +1514,11 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                 Object.SetFillColor(colors[random.randint(0,len(colors)-1)])
                 Object.SetLineColor(colors[random.randint(0,len(colors)-1)])
                 Object.SetLineWidth(random.randint(1,7))
-                Object.SetLineStyle(list(FloatCanvas.DrawObject.LineStyleList.keys())[random.randint(0,5)])
+                Object.SetLineStyle(list(FloatCanvas.DrawObject.LineStyleList)[random.randint(0,5)])
             for Object in self.ColorObjectsLine:
                 Object.SetLineColor(colors[random.randint(0,len(colors)-1)])
                 Object.SetLineWidth(random.randint(1,7))
-                Object.SetLineStyle(list(FloatCanvas.DrawObject.LineStyleList.keys())[random.randint(0,5)])
+                Object.SetLineStyle(list(FloatCanvas.DrawObject.LineStyleList)[random.randint(0,5)])
             for Object in self.ColorObjectsColor:
                 Object.SetColor(colors[random.randint(0,len(colors)-1)])
             for Object in self.ColorObjectsText:
@@ -1560,7 +1560,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Arrow.HitLineWidth = 6
             Arrow.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.ArrowClicked)
 
-            Canvas.AddText("Changable Arrow: try clicking it", (16,4), Position = "tc")
+            Canvas.AddText("Changeable Arrow: try clicking it", (16,4), Position = "tc")
             self.RotArrow = Canvas.AddArrow((16,4), 80, Direction = 0 ,LineWidth = 3, LineColor = "Green",   ArrowHeadAngle = 30)
             self.RotArrow.HitLineWidth = 6
             self.RotArrow.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.RotateArrow)
@@ -1720,9 +1720,8 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             shorelines of the whole world, in MapGen format.
 
             """
-            file = open(filename,'rt')
-            data = file.readlines()
-            data = [s.strip() for s in data]
+            with open(filename,'rt') as file_:
+                data = [s.strip() for s in file_]
 
             Shorelines = []
             segment = []
@@ -1893,7 +1892,7 @@ if __name__ == "__main__":
 
 else:
     # It's not running stand-alone, set up for wxPython demo.
-    # don't  neeed wxversion here.
+    # don't  need wxversion here.
     import wx
     if not haveNumpy:
         ## TestPanel and runTest used for integration into wxPython Demo

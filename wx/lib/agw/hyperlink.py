@@ -360,7 +360,7 @@ class HyperLinkCtrl(StaticText):
                     menuPopUp = wx.Menu("", wx.MENU_TEAROFF)
                     menuPopUp.Append(wxHYPERLINKS_POPUP_COPY, "Copy HyperLink")
                     self.Bind(wx.EVT_MENU, self.OnPopUpCopy, id=wxHYPERLINKS_POPUP_COPY)
-                    self.PopupMenu(menuPopUp, wx.Point(event.x, event.y))
+                    self.PopupMenu(menuPopUp)
                     menuPopUp.Destroy()
                     self.Unbind(wx.EVT_MENU, id=wxHYPERLINKS_POPUP_COPY)
 
@@ -443,8 +443,8 @@ class HyperLinkCtrl(StaticText):
             wx.MessageBox(ErrorMessage, "HyperLinks Error", wx.OK | wx.CENTRE | wx.ICON_ERROR)
 
 
-    def SetColours(self, link=wx.Colour(0, 0, 255), visited=wx.Colour(79, 47, 79),
-                   rollover=wx.Colour(0, 0, 255)):
+    def SetColours(self, link=wx.BLUE, visited=wx.Colour(79, 47, 79),
+                   rollover=wx.BLUE):
         """
         Sets the colours for the link, the visited link and the mouse rollover.
 

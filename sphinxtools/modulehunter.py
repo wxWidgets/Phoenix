@@ -7,7 +7,6 @@
 import os
 import sys
 import types
-import importlib
 import traceback
 import pkgutil
 
@@ -30,6 +29,11 @@ from .constants import CONSTANT_RE
 if sys.version_info < (3,):
     reload(sys)
     sys.setdefaultencoding('utf-8')
+
+if isPython3():
+    MethodTypes = (classmethod, types.MethodType, types.ClassMethodDescriptorType)
+else:
+    MethodTypes = (classmethod, types.MethodType)
 
 try:
     import wx
@@ -219,12 +223,12 @@ def inspect_source(method_class, obj, source):
 def is_classmethod(instancemethod):
     """ Determine if an instancemethod is a classmethod. """
 
-    attribute = (isPython3() and ['__self__'] or ['im_self'])[0]
+    # attribute = (isPython3() and ['__self__'] or ['im_self'])[0]
+    # if hasattr(instancemethod, attribute):
+    #     return getattr(instancemethod, attribute) is not None
+    # return False
 
-    if hasattr(instancemethod, attribute):
-        return getattr(instancemethod, attribute) is not None
-
-    return False
+    return isinstance(instancemethod, MethodTypes)
 
 
 def describe_func(obj, parent_class, module_name):
@@ -279,7 +283,10 @@ def describe_func(obj, parent_class, module_name):
         klass.number_lines = '%d' % len(source_code.split('\n'))
 
     if isinstance(obj, staticmethod):
-        klass.method = method = object_types.STATIC_METHOD
+        klass.kind = method = object_types.STATIC_METHOD
+
+    if is_classmethod(obj):
+        klass.kind = method = object_types.CLASS_METHOD
 
     try:
         code = None
@@ -338,7 +345,8 @@ def describe_class(obj, module_class, module_name, constants):
             continue
 
         try:
-            item = getattr(obj, name)
+            # item = getattr(obj, name)   # ????
+            item = obj_dict.get(name)
         except AttributeError:
             # Thanks to ReportLab for this funny exception...
             continue
@@ -351,13 +359,10 @@ def describe_class(obj, module_class, module_name, constants):
         if ismodule(item):
             continue
 
-        if ismemberdescriptor(item) or isgetsetdescriptor(item):
-            continue
-
         if isbuiltin(item):
             count += 1
         elif ismethod(item) or isfunction(item) or ismethoddescriptor(item) or \
-             isinstance(item, types.MethodType):
+             isinstance(item, MethodTypes):
             count += 1
             describe_func(item, klass, module_name)
         elif isclass(item):
@@ -365,7 +370,7 @@ def describe_class(obj, module_class, module_name, constants):
             describe_class(item, klass, module_name, constants)
         else:
             name = class_name + '.' + name
-            if isinstance(item, property):
+            if isinstance(item, property) or isgetsetdescriptor(item):
                 item_class = Property(name, item)
                 klass.Add(item_class)
 
@@ -405,6 +410,12 @@ def describe_class(obj, module_class, module_name, constants):
 
         klass.signature = description.strip()
         klass.number_lines = '%d' % len(source_code.split('\n'))
+
+    if not klass.signature:
+        if klass.superClasses:
+            klass.signature = '{}({})'.format(obj.__name__, ','.join(klass.superClasses))
+        else:
+            klass.signature = '{}(object)'.format(obj.__name__)
 
 
 def describe_module(module, kind, constants=[]):
@@ -478,7 +489,9 @@ def Import(init_name, import_name, full_process=True):
         sys.path.insert(0, dirname)
 
     try:
-        mainmod = importlib.import_module(import_name)
+        #mainmod = importlib.import_module(import_name)
+        terminal_module = import_name.split('.')[-1]
+        mainmod = __import__(import_name, globals(), fromlist=[terminal_module])
     except (ImportError, NameError):
         message = format_traceback()
         print('Error: %s' % message)
@@ -527,7 +540,8 @@ def FindModuleType(filename):
 def SubImport(import_string, module, parent_class, ispkg):
 
     try:
-        submod = importlib.import_module(import_string)
+        #submod = importlib.import_module(import_string)
+        submod = __import__(import_string, globals(), fromlist=[module])
     except:
         # pubsub and Editra can be funny sometimes...
         message = "Unable to import module/package '%s.%s'.\n         Exception was: %s"%(import_string, module, format_traceback())
@@ -607,7 +621,8 @@ def ModuleHunter(init_name, import_name, version):
     print('Message: %s' % message)
 
     module_name = os.path.splitext(getfile(mainmod))[0] + '.py'
-    contents = open(module_name, 'rt').read()
+    with open(module_name, 'rt') as fid:
+        contents = fid.read()
     constants = CONSTANT_RE.findall(contents)
 
     library_class, count = describe_module(mainmod, kind=object_types.LIBRARY, constants=constants)

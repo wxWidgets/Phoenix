@@ -1050,7 +1050,7 @@ class FMRenderer(object):
 
         # switch according to the status
         if state == ControlFocus:
-            if colour == None:
+            if colour is None:
                 penColour   = self.buttonFocusBorderColour
                 brushColour = self.buttonFocusFaceColour
             else:
@@ -1058,14 +1058,14 @@ class FMRenderer(object):
                 brushColour = ArtManager.Get().LightColour(colour, 75)
 
         elif state == ControlPressed:
-            if colour == None:
+            if colour is None:
                 penColour   = self.buttonPressedBorderColour
                 brushColour = self.buttonPressedFaceColour
             else:
                 penColour   = colour
                 brushColour = ArtManager.Get().LightColour(colour, 60)
         else:
-            if colour == None:
+            if colour is None:
                 penColour   = self.buttonBorderColour
                 brushColour = self.buttonFaceColour
             else:
@@ -1192,8 +1192,8 @@ class FMRenderer(object):
                         memDc.SetTextForeground(textColour)
 
                     # Fill the bitmap with the masking colour
-                    memDc.SetPen(wx.Pen(wx.Colour(255, 0, 0)) )
-                    memDc.SetBrush(wx.Brush(wx.Colour(255, 0, 0)) )
+                    memDc.SetPen(wx.RED_PEN)
+                    memDc.SetBrush(wx.RED_BRUSH)
                     memDc.DrawRectangle(0, 0, rect.width, rect.height)
                     memDc.SetFont(fnt)
 
@@ -1250,7 +1250,7 @@ class FMRenderer(object):
                     if not menubar._isLCD:
                         memDc.SelectObject(wx.NullBitmap)
                         # Set masking colour to the bitmap
-                        bmp.SetMask(wx.Mask(bmp, wx.Colour(255, 0, 0)))
+                        bmp.SetMask(wx.Mask(bmp, wx.RED))
                         if selected:
                             item.SetSelectedTextBitmap(bmp)
                         else:
@@ -5026,7 +5026,7 @@ class FlatMenuItem(object):
     def IsSubMenu(self):
         """ Returns whether an item is a sub-menu or not. """
 
-        return self._subMenu != None
+        return self._subMenu is not None
 
 
     def SetNormalBitmap(self, bmp):
@@ -7089,7 +7089,7 @@ class FlatMenu(FlatMenuBase):
          ``wx.NOT_FOUND`` if one was not found.
         """
 
-        if item == None or len(self._itemsArr) == 0:
+        if item is None or len(self._itemsArr) == 0:
             return wx.NOT_FOUND
 
         for i in range(len(self._itemsArr)):

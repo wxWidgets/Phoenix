@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     30-Oct-2012
-# Copyright:   (c) 2012-2018 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -41,11 +41,24 @@ def run():
     c.find('CreateHelpFrame').ignore(False)
 
     c.addItem(etgtools.WigCode("""\
+        public:
         // Add implementations for the pure virtuals in the base class
-        virtual bool DisplayBlock(long blockNo);
+        virtual bool Initialize(const wxString& file, int server);
+        virtual bool Initialize(const wxString& file);
+        virtual void SetViewer(const wxString& viewer, long flags = 0);
+        virtual bool LoadFile(const wxString& file = "");
         virtual bool DisplaySection(int sectionNo);
-        virtual bool LoadFile(const wxString& file = wxEmptyString);
+        virtual bool DisplaySection(const wxString& section);
+        virtual bool DisplayBlock(long blockNo);
+        virtual bool DisplayTextPopup(const wxString& text, const wxPoint& pos);
+        virtual bool DisplayContextPopup(int contextId);
         virtual bool Quit();
+        virtual void OnQuit();
+
+        virtual void SetFrameParameters(const wxString& titleFormat,
+                                        const wxSize& size,
+                                        const wxPoint& pos = wxDefaultPosition,
+                                        bool newFrameEachTime = false);
         """))
 
     #-----------------------------------------------------------------

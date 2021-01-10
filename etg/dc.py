@@ -5,7 +5,7 @@
 #
 # Created:     26-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -28,6 +28,8 @@ ITEMS  = [ 'wxFontMetrics',
            'wxDCPenChanger',
            'wxDCTextColourChanger',
            'wxDCFontChanger',
+           'wxDCTextBgColourChanger',
+           'wxDCTextBgModeChanger',
            ]
 
 OTHERDEPS = [ 'src/dc_ex.cpp', ]
@@ -82,13 +84,17 @@ def run():
     c.find('GetLogicalOrigin.x').out = True
     c.find('GetLogicalOrigin.y').out = True
 
+    c.find('GetClippingBox').findOverload('wxRect').ignore()
     c.find('GetClippingBox.x').out = True
     c.find('GetClippingBox.y').out = True
     c.find('GetClippingBox.width').out = True
     c.find('GetClippingBox.height').out = True
     c.addPyMethod('GetClippingRect', '(self)',
-        doc="Gets the rectangle surrounding the current clipping region",
-        body="return wx.Rect(*self.GetClippingBox())")
+        doc="Returns the rectangle surrounding the current clipping region as a wx.Rect.",
+        body="""\
+            rv, x, y, w, h = self.GetClippingBox()
+            return wx.Rect(x,y,w,h)
+            """)
 
 
     # Deal with the text-extent methods. In Classic we renamed one overloaded
@@ -192,7 +198,17 @@ def run():
     # compatibility.
     c.find('GetPixel').ignore()
     c.addCppMethod('wxColour*', 'GetPixel', '(wxCoord x, wxCoord y)',
-        doc="Gets the colour at the specified location on the DC.",
+        doc="""\
+            Gets the colour at the specified location on the DC.
+
+            This method isn't available for ``wx.PostScriptDC`` or ``wx.MetafileDC`` nor
+            for any DC in wxOSX port, and simply returns ``wx.NullColour`` there.
+
+            .. note:: Setting a pixel can be done using DrawPoint().
+
+            .. note:: This method shouldn't be used with ``wx.PaintDC`` as accessing the
+                      DC while drawing can result in unexpected results, notably in wxGTK.
+            """,
         body="""\
             wxColour* col = new wxColour;
             self->GetPixel(x, y, col);
@@ -499,6 +515,24 @@ def run():
 
     #-----------------------------------------------------------------
     c = module.find('wxDCFontChanger')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
+
+    #-----------------------------------------------------------------
+    c = module.find('wxDCTextBgColourChanger')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
+
+    #-----------------------------------------------------------------
+    c = module.find('wxDCTextBgModeChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     # context manager methods

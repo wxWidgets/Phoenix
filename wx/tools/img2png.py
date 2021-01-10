@@ -4,7 +4,7 @@
 #
 # Author:      Robin Dunn
 #
-# Copyright:   (c) 2002-2018 by Total Control Software
+# Copyright:   (c) 2002-2020 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
@@ -37,7 +37,7 @@ Options:
 
 import  sys
 import  wx
-from . import img2img
+from wx.tools import img2img
 
 app = None
 def main():

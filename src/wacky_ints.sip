@@ -8,38 +8,9 @@
 // Author:      Robin Dunn
 //
 // Created:     4-March-2016
-// Copyright:   (c) 2016-2018 by Total Control Software
+// Copyright:   (c) 2016-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
-
-
-// size_t will either be equivalent to an unsigned long, or to an
-// unsigned long long. wxWidgets' configure script has already figured out
-// which it is, so we can make it conditional on those results.
-
-%MappedType size_t {
-
-    %TypeHeaderCode
-    #include <wxPython/wxpy_api.h>
-    %End
-
-    %ConvertToTypeCode
-        // Allow conversions from any number type
-        if (!sipIsErr) {
-            if (PyNumber_Check(sipPy))
-                return TRUE;
-            return FALSE;
-        }
-
-        // Do the conversion
-        *sipCppPtr = new size_t(wxPyInt_AsSize_t(sipPy));
-        return sipGetState(sipTransferObj);
-    %End
-
-    %ConvertFromTypeCode
-        return wxPyInt_FromSize_t(*sipCpp);
-    %End
-};
 
 
 // This type is a signed integer value that is large enough to hold a

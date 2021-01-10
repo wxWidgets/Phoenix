@@ -97,7 +97,7 @@ class MyVListBox(wx.VListBox):
         color = 'white'
         if self.IsSelected(idx):
             color = self.GetSelectionBackground()
-            if not color:
+            if not color.IsOk():
                 color = 'navy'
         dc.SetPen(wx.Pen(color, 1))
         dc.SetBrush(wx.Brush(color))

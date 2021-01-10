@@ -5,7 +5,7 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -165,7 +165,7 @@ def run():
     m = c.find('StrokeLines').findOverload('points').ignore()
     c.addCppMethod('void', 'StrokeLines', '(PyObject* points)',
         pyArgsString="(point2Ds)",
-        doc="Stroke lines conencting all the points.",
+        doc="Stroke lines connecting all the points.",
         body="""\
         size_t count;
         wxPoint2D* ptsArray = wxPoint2D_array_helper(points, &count);
@@ -208,17 +208,36 @@ def run():
     markCreateFactories(c)
     c.abstract = True
 
-    for m in c.find('CreateContext').all():
-        for p in m.items:
-            if 'DC' in p.name or p.name == 'image':
-                p.keepReference = True
-    c.find('CreateContextFromImage.image').keepReference = True
+
+    # The KeepReference annotation doesn't work for us in this case, as it will
+    # hold the reference in the renderer object, but it is better to hold the
+    # reference in the returned context object instead. Otherwise there is still
+    # some possibility that the held DC will be destroyed before the context.
+    c.addPyCode("""\
+        def _ctx_hold_ref(f):
+            from functools import wraps
+            @wraps(f)
+            def wrapper(self, obj):
+                ctx = f(self, obj)
+                if ctx is not None:
+                    ctx._obj = obj
+                return ctx
+            return wrapper
+        GraphicsRenderer.CreateContext = _ctx_hold_ref(GraphicsRenderer.CreateContext)
+        GraphicsRenderer.CreateContextFromImage = _ctx_hold_ref(GraphicsRenderer.CreateContextFromImage)
+        GraphicsRenderer.CreateContextFromUnknownDC = _ctx_hold_ref(GraphicsRenderer.CreateContextFromUnknownDC)
+        """)
 
     # TODO: support this?
     c.find('CreateContext').findOverload('wxEnhMetaFileDC').ignore()
 
     # TODO: support this?
     c.find('CreateContextFromNativeHDC').ignore()
+
+    c.addPyMethod('GetType', '(self)',
+        doc="Returns the name of the GraphicsRenderer class.",
+        body="return self.GetClassInfo().GetClassName()")
+
 
 
     c.find('GetGDIPlusRenderer').ignore()
@@ -234,9 +253,9 @@ def run():
 
     c.find('GetDirect2DRenderer').ignore()
     c.addCppMethod('wxGraphicsRenderer*', 'GetDirect2DRenderer', '()', isStatic=True,
-        doc="Returns Direct2D renderer (MSW only).",
+        doc="Returns Direct2D renderer (MSW and Python3 only).",
         body="""\
-            #ifdef __WXMSW__
+            #if wxUSE_GRAPHICS_DIRECT2D
                 return wxGraphicsRenderer::GetDirect2DRenderer();
             #else
                 return NULL;
@@ -274,6 +293,11 @@ def run():
                    factory=True)
 
 
+
+    #---------------------------------------------
+    c = module.find('wxGraphicsBitmap')
+
+
     #---------------------------------------------
     c = module.find('wxGraphicsPenInfo')
     # Ignore Dashes for now
@@ -281,6 +305,10 @@ def run():
     # GraphicsPenInfo is transitory we can't save the reference in it to the
     # holder, and the pen will not have been created yet...
     c.find('Dashes').ignore()
+    c.find('GetDashes').ignore()
+    c.find('GetDashCount').ignore()
+    c.find('GetDash').ignore()
+
 
 
     #---------------------------------------------
@@ -292,6 +320,35 @@ def run():
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+
+    # Add some code to check obj.IsNull() to all methods that are used as getters for a
+    # PropertyDef. This is needed because it seems that most methods in GraphicsOpbects
+    # assume that the dev has already checked that the object is valid and so don't check
+    # it themselves. But when turned into a Python property they will automatically be called
+    # when introspecting the property values in things like wxNullGraphicsFOO. This can
+    # easily result in a fatal crash. The tweak below will raise a ValueError exception in
+    # these cases before it gets to the crashy parts.
+    checkIsNull = """\
+        if (sipCpp->IsNull()) {{
+            wxPyErr_SetString(PyExc_ValueError, "The {} is not valid (likely an uninitialized or null instance)");
+            return NULL;
+        }}
+        """
+    for module_item in module.items:
+        if isinstance(module_item, etgtools.ClassDef):
+            klass = module_item
+            if 'wxGraphicsObject' in [klass.name] + klass.bases:
+                for item in klass.items:
+                    if isinstance(item, etgtools.PropertyDef):
+                        method = klass.find(item.getter)
+                        method.preMethodCode = checkIsNull.format(klass.pyName)
+                        if item.setter:
+                            method = klass.find(item.setter)
+                            method.preMethodCode = checkIsNull.format(klass.pyName)
+
+
+
+    #-----------------------------------------------------------------
     tools.runGenerators(module)
 
 

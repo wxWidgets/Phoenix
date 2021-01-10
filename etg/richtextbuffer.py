@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Mar-2013
-# Copyright:   (c) 2013-2017 by Total Control Software
+# Copyright:   (c) 2013-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -436,7 +436,7 @@ def run():
     #-------------------------------------------------------
     # Ignore all Dump() methods since we don't wrap wxTextOutputStream.
 
-    # TODO: try swithcing the parameter type to wxOutputStream and then in
+    # TODO: try switching the parameter type to wxOutputStream and then in
     # the wrapper code create a wxTextOutputStream from that to pass on to
     # Dump.
 

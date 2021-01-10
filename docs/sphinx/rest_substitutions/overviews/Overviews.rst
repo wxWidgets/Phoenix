@@ -31,6 +31,7 @@ various aspects of the library, which are listed here.
    font_encodings
    font_overview
    grid_overview
+   high_dpi_overview
    html_overview
    internationalization
    writing_non_english_applications

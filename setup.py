@@ -5,12 +5,13 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2018 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
 import sys, os
 import glob
+import stat
 
 from setuptools                     import setup, find_packages
 from distutils.command.build        import build as orig_build
@@ -80,18 +81,18 @@ Operating System :: MacOS :: MacOS X
 Operating System :: Microsoft :: Windows :: Windows 7
 Operating System :: Microsoft :: Windows :: Windows 10
 Operating System :: POSIX
-Programming Language :: Python :: 2.7
-Programming Language :: Python :: 3.4
-Programming Language :: Python :: 3.5
 Programming Language :: Python :: 3.6
 Programming Language :: Python :: 3.7
+Programming Language :: Python :: 3.8
+Programming Language :: Python :: 3.9
 Programming Language :: Python :: Implementation :: CPython
 Topic :: Software Development :: User Interfaces
 """
 
-DEPENDENCIES = [ 'six',
-                 'Pillow',
-                 ]
+with open('requirements/install.txt') as fid:
+    INSTALL_REQUIRES = [line.strip()
+                        for line in fid.readlines()
+                        if not line.startswith('#')]
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
@@ -307,6 +308,16 @@ orig_copy_tree = distutils.dir_util.copy_tree
 distutils.dir_util.copy_tree = wx_copy_tree
 
 
+# Monkey-patch make_writeable too. Sometimes the link is copied before the
+# target, and the original make_writable will fail on a link to a missing
+# target.
+def wx_make_writable(target):
+    if not os.path.islink(target):
+        os.chmod(target, os.stat(target).st_mode | stat.S_IWRITE)
+
+import setuptools.command.build_py
+setuptools.command.build_py.make_writable = wx_make_writable
+
 
 #----------------------------------------------------------------------
 
@@ -356,7 +367,7 @@ if __name__ == '__main__':
           platforms        = PLATFORMS,
           classifiers      = [c for c in CLASSIFIERS.split("\n") if c],
           keywords         = KEYWORDS,
-          install_requires = DEPENDENCIES,
+          install_requires = INSTALL_REQUIRES,
           zip_safe         = False,
           use_2to3         = False,
           include_package_data = True,

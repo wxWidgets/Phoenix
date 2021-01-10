@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-Apr-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -60,7 +60,8 @@ def run():
     method.virtualCatcherCode = """\
         // VirtualCatcherCode for wxTaskBarIcon.CreatePopupMenu
         PyObject *sipResObj = sipCallMethod(0, sipMethod, "");
-        sipParseResult(0, sipMethod, sipResObj, "H0", sipType_wxMenu, &sipRes);
+        if (!sipResObj || sipParseResult(0, sipMethod, sipResObj, "H0", sipType_wxMenu, &sipRes) < 0)
+            PyErr_Print();
         if (sipRes) {
             sipTransferTo(sipResObj, Py_None);
         }

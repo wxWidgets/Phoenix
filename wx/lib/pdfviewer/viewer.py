@@ -145,6 +145,7 @@ class pdfViewer(wx.ScrolledWindow):
         Redraw on resize.
         """
         if self.resizing:
+            self.page_buffer_valid = False
             self.Render()
             self.resizing = False
         event.Skip()
@@ -193,8 +194,8 @@ class pdfViewer(wx.ScrolledWindow):
             Create and return a file object with the contents of filename,
             only used for testing.
             """
-            f = open(filename, 'rb')
-            stream = f.read()
+            with open(filename, 'rb') as f:
+                stream = f.read()
             return BytesIO(stream)
 
         self.pdfpathname = ''
@@ -335,8 +336,6 @@ class pdfViewer(wx.ScrolledWindow):
                 self.font_scale_size = 1.0 / device_scale
 
         self.winwidth, self.winheight = self.GetClientSize()
-        if self.winheight < 100:
-            return
         self.Ypage = self.pageheight + self.nom_page_gap
         if self.zoomscale > 0.0:
             self.scale = self.zoomscale * device_scale
@@ -345,6 +344,8 @@ class pdfViewer(wx.ScrolledWindow):
                 self.scale = self.winwidth / self.pagewidth
             else:                           # fit page
                 self.scale = self.winheight / self.pageheight
+        if self.scale == 0.0: # this could happen if the window was not yet initialized
+            self.scale = 1.0
         self.Xpagepixels = int(round(self.pagewidth*self.scale))
         self.Ypagepixels = int(round(self.Ypage*self.scale))
 
@@ -514,8 +515,8 @@ class mupdfProcessor(object):
         page = self.pdfdoc.loadPage(pageno)
         matrix = fitz.Matrix(scale, scale)
         try:
-            pix = page.getPixmap(matrix=matrix)   # MUST be keyword arg(s)
-            bmp = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
+            pix = page.getPixmap(matrix=matrix, alpha=False)   # MUST be keyword arg(s)
+            bmp = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
             gc.DrawBitmap(bmp, 0, 0, pix.width, pix.height)
             self.zoom_error = False
         except (RuntimeError, MemoryError):
@@ -1002,8 +1003,8 @@ class pdfState(object):
         self.lineDashArray = []
         self.lineDashPhase = 0
         self.miterLimit = None
-        self.strokeRGB = wx.Colour(0, 0, 0)
-        self.fillRGB = wx.Colour(0, 0, 0)       # used for both shapes & text
+        self.strokeRGB = wx.BLACK
+        self.fillRGB = wx.BLACK  # used for both shapes & text
         self.fillMode = None
 
         self.textMatrix = [1, 0, 0, 1, 0, 0]
@@ -1074,4 +1075,3 @@ class pdfPrintout(wx.Printout):
 
         self.view.pdfdoc.RenderPage(gc, pageno, sfac)
         return True
-

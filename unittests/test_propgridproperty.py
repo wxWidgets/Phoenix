@@ -15,12 +15,6 @@ class property_Tests(wtc.WidgetTestCase):
         d.m_drawnHeight
 
 
-    def test_propgridproperty02(self):
-        pg.PG_CUSTOM_IMAGE_SPACINGY
-        pg.PG_CAPRECTXMARGIN
-        pg.PG_CAPRECTYMARGIN
-
-
     def test_propgridproperty03(self):
         with self.assertRaises(TypeError):
             # it's an abstract class, so it can't be instantiated

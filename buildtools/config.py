@@ -1,5 +1,4 @@
 #----------------------------------------------------------------------
-#----------------------------------------------------------------------
 # Name:        buildtools.config
 # Purpose:     Code to set and validate platform options and etc. for
 #              the wxPython build.  Moved to their own module and
@@ -8,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2013-2018 by Total Control Software
+# Copyright:   (c) 2013-2020 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
@@ -16,6 +15,7 @@ import sys
 import os
 import glob
 import fnmatch
+import shlex
 import re
 import shutil
 import subprocess
@@ -84,6 +84,9 @@ class Configuration(object):
 
     PKGDIR = 'wx'
     # The name of the top-level package
+
+    SIP_ABI = '12.8'
+    SIP_TRACE = False
 
     # ---------------------------------------------------------------
     # Basic initialization and configuration code
@@ -169,9 +172,10 @@ class Configuration(object):
                              ('WXUSINGDLL', '1'),
                              ('ISOLATION_AWARE_ENABLED', None),
                              #('NDEBUG',),  # using a 1-tuple makes it do an undef
-                             ('SIP_MODULE_NAME', 'wx.siplib'),
-                             ('SIP_MODULE_BASENAME', 'siplib'),
                              ]
+            if int(getVisCVersion()) > 100:
+                self.defines += [ ('wxUSE_RC_MANIFEST', '1'),
+                                  ('wxUSE_DPI_AWARE_MANIFEST', '2') ]
 
             self.libs = []
             self.libdirs = [ opj(self.WXDIR, 'lib', self.VCDLL) ]
@@ -193,11 +197,19 @@ class Configuration(object):
                             '/EHsc',
                             # '/GX-'  # workaround for internal compiler error in MSVC on some machines
                             ]
+            self.cxxflags = self.cflags[:]
             self.lflags = None
+
+            # These confuse WAF, but since it already reliably picks the correct
+            # MSVC it shouldn't hurt to get rid of them.
+            for name in ['CC', 'CXX']:
+                if os.environ.get(name):
+                    os.environ.pop(name)
 
             # Other MSVC flags...
             # Uncomment these to have debug info for all kinds of builds
             #self.cflags += ['/Od', '/Z7']
+            #self.cxxflags += ['/Od', '/Z7']
             #self.lflags = ['/DEBUG', ]
 
 
@@ -211,13 +223,15 @@ class Configuration(object):
             self.libdirs = []
             self.libs = []
 
-            self.cflags = self.getWxConfigValue('--cxxflags')
-            self.cflags = self.cflags.split()
+            self.cflags = self.getWxConfigValue('--cflags').split()
+            self.cxxflags = self.getWxConfigValue('--cxxflags').split()
             if self.debug:
-                self.cflags.append('-ggdb')
-                self.cflags.append('-O0')
+                for lst in [self.cflags, self.cxxflags]:
+                    lst.append('-ggdb')
+                    lst.append('-O0')
             else:
-                self.cflags.append('-O3')
+                for lst in [self.cflags, self.cxxflags]:
+                    lst.append('-O3')
 
             lflags = self.getWxConfigValue('--libs')
             self.MONOLITHIC = (lflags.find("_xrc") == -1)
@@ -227,9 +241,47 @@ class Configuration(object):
             self.WXRELEASE  = self.getWxConfigValue('--release')
             self.WXPREFIX   = self.getWxConfigValue('--prefix')
 
+            # Set CC, CXX and maybe LDSHARED based on what was configured for
+            # wxWidgets, but not if those values are in the environment.
             self.CC = self.CXX = self.LDSHARED = None
+            if not os.environ.get('CC'):
+                compiler, flags = self.unpackCompilerCommand(self.getWxConfigValue('--cc'))
+                self.CC = os.environ["CC"] = compiler
+                for flag in flags:
+                    if flag not in self.cflags:
+                        self.cflags.insert(0, flag)
 
-            # wxMac settings
+            if not os.environ.get('CXX'):
+                compiler, flags = self.unpackCompilerCommand(self.getWxConfigValue('--cxx'))
+                self.CXX = os.environ["CXX"] = compiler
+                for flag in flags:
+                    if flag not in self.cxxflags:
+                        self.cxxflags.insert(0, flag)
+
+            if sys.platform[:6] == "darwin" and not os.environ.get('LDSHARED'):
+                # We want to use the linker command from wx to make sure
+                # we get the right sysroot, but we also need to ensure that
+                # the other linker flags that distutils wants to use are
+                # included as well.
+                LDSHARED = distutils.sysconfig.get_config_var('LDSHARED').split()
+                # remove the compiler command
+                del LDSHARED[0]
+                # remove any -sysroot flags and their arg
+                while True:
+                    try:
+                        index = LDSHARED.index('-isysroot')
+                        # Strip this argument and the next one:
+                        del LDSHARED[index:index+2]
+                    except ValueError:
+                        break
+                LDSHARED = ' '.join(LDSHARED)
+                # Combine with wx's ld command and stash it in the env
+                # where distutils will get it later.
+                LDSHARED = self.getWxConfigValue('--ld').replace(' -o', '') + ' ' + LDSHARED
+                self.LDSHARED = os.environ["LDSHARED"]  = LDSHARED
+
+
+            # Other wxMac-only settings
             if sys.platform[:6] == "darwin":
                 self.WXPLAT = '__WXMAC__'
 
@@ -239,41 +291,16 @@ class Configuration(object):
                 else:
                     self.WXPLAT2 = '__WXOSX_COCOA__'
 
-                self.libs = ['stdc++']
                 if not self.ARCH == "":
                     for arch in self.ARCH.split(','):
-                        self.cflags.append("-arch")
-                        self.cflags.append(arch)
+                        for lst in [self.cflags, self.cxxflags]:
+                            lst.append("-arch")
+                            lst.append(arch)
                         self.lflags.append("-arch")
                         self.lflags.append(arch)
 
-                if not os.environ.get('CC') or not os.environ.get('CXX'):
-                    self.CC =  os.environ["CC"]  = self.getWxConfigValue('--cc')
-                    self.CXX = os.environ["CXX"] = self.getWxConfigValue('--cxx')
 
-                    # We want to use the linker command from wx to make sure
-                    # we get the right sysroot, but we also need to ensure that
-                    # the other linker flags that distutils wants to use are
-                    # included as well.
-                    LDSHARED = distutils.sysconfig.get_config_var('LDSHARED').split()
-                    # remove the compiler command
-                    del LDSHARED[0]
-                    # remove any -sysroot flags and their arg
-                    while 1:
-                        try:
-                            index = LDSHARED.index('-isysroot')
-                            # Strip this argument and the next one:
-                            del LDSHARED[index:index+2]
-                        except ValueError:
-                            break
-                    LDSHARED = ' '.join(LDSHARED)
-                    # Combine with wx's ld command and stash it in the env
-                    # where distutils will get it later.
-                    LDSHARED = self.getWxConfigValue('--ld').replace(' -o', '') + ' ' + LDSHARED
-                    self.LDSHARED = os.environ["LDSHARED"]  = LDSHARED
-
-
-            # wxGTK settings
+            # wxGTK-only settings
             else:
                 # Set flags for other Unix type platforms
                 if self.WXPORT == 'gtk':
@@ -288,7 +315,7 @@ class Configuration(object):
                     self.WXPLAT = '__WXGTK__'
                     portcfg = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
                 elif self.WXPORT == 'x11':
-                    msg("WARNING: The wxX11 port is no supported")
+                    msg("WARNING: The wxX11 port is not supported")
                     self.WXPLAT = '__WXX11__'
                     portcfg = ''
                     self.BUILD_BASE = self.BUILD_BASE + '-' + self.WXPORT
@@ -299,6 +326,7 @@ class Configuration(object):
                     raise SystemExit("Unknown WXPORT value: " + self.WXPORT)
 
                 self.cflags += portcfg.split()
+                self.cxxflags += portcfg.split()
 
                 # Some distros (e.g. Mandrake) put libGLU in /usr/X11R6/lib, but
                 # wx-config doesn't output that for some reason.  For now, just
@@ -310,9 +338,11 @@ class Configuration(object):
             # Move the various -I, -D, etc. flags we got from the config scripts
             # into the distutils lists.
             self.cflags = self.adjustCFLAGS(self.cflags, self.defines, self.includes)
+            self.cxxflags = self.adjustCFLAGS(self.cxxflags, self.defines, self.includes)
             self.lflags = self.adjustLFLAGS(self.lflags, self.libdirs, self.libs)
 
             self.cflags.insert(0, '-UNDEBUG')
+            self.cxxflags.insert(0, '-UNDEBUG')
 
             if self.debug and self.WXPORT == 'msw' and self.COMPILER != 'mingw32':
                 self.defines.append( ('_DEBUG', None) )
@@ -341,10 +371,9 @@ class Configuration(object):
         # then the version number is built without a revision number. IOW, it
         # is a release build.  (In theory)
         if os.path.exists('REV.txt'):
-            f = open('REV.txt')
-            self.VER_FLAGS += f.read().strip()
+            with open('REV.txt') as f:
+                self.VER_FLAGS += f.read().strip()
             self.BUILD_TYPE = 'snapshot'
-            f.close()
         elif os.environ.get('WXPYTHON_RELEASE') == 'yes':
             self.BUILD_TYPE = 'release'
         else:
@@ -392,7 +421,7 @@ class Configuration(object):
         """
         # if WX_CONFIG hasn't been set to an explicit value then construct one.
         if self.WX_CONFIG is None:
-            self.WX_CONFIG='wx-config'
+            self.WX_CONFIG = os.environ.get('WX_CONFIG', 'wx-config')
             port = self.WXPORT
             if port == "x11":
                 port = "x11univ"
@@ -423,6 +452,16 @@ class Configuration(object):
         return value
 
 
+    def unpackCompilerCommand(self, cmd):
+        """
+        It's possible for the CC and CXX values coming from wx-config to have
+        some extra parameters tacked on. Let's split them apart.
+        """
+        cmd = shlex.split(cmd)
+        compiler = cmd[0]
+        flags = cmd[1:]
+        return compiler, flags
+
 
     def build_locale_dir(self, destdir, verbose=1):
         """Build a locale dir under the wxPython package."""
@@ -432,6 +471,7 @@ class Configuration(object):
             dest = opj(destdir, lang, 'LC_MESSAGES')
             mkpath(dest, verbose=verbose)
             copy_file(src, opj(dest, 'wxstd.mo'), update=1, verbose=verbose)
+            os.unlink(src)
             self.CLEANUP.append(opj(dest, 'wxstd.mo'))
             self.CLEANUP.append(dest)
 
@@ -570,6 +610,38 @@ class Configuration(object):
         return newLFLAGS
 
 
+    def checkSetup(self, build_dir, flag):
+        """
+        Find the setup.h generated by wxWidgets and return True if the given
+        flag (eg. "wxUSE_WEBKIT") is enabled.
+        """
+        def _find_setup():
+            for dirpath, dirnames, filenames in os.walk(build_dir):
+                for name in filenames:
+                    if name == 'setup.h':
+                        return opj(dirpath, name)
+            return None
+
+        setup = _find_setup()
+        if setup is None:
+            msg("WARNING: Unable to find setup.h in {}, assuming {} is not available.".format(build_dir, flag))
+            return False
+
+        with open(setup, 'rt') as f:
+            for line in f:
+                if flag in line:
+                    return '1' in line.split()
+        return False
+
+
+    def findWxConfigDir(self, wx_config):
+        output = runcmd(wx_config + " --cflags", getOutput=True, echoCmd=False)
+        # We expect that the first -I flag is the path we're looking for here
+        configDir = output.split()[0]
+        assert configDir.startswith('-I')
+        configDir = configDir[2:]
+        return configDir
+
 
 # We'll use a factory function so we can use the Configuration class as a singleton
 _config = None
@@ -635,10 +707,11 @@ def _getSbfValue(etg, keyName):
     cfg = Config()
     sbf = opj(cfg.SIPOUT, etg.NAME + '.sbf')
     out = list()
-    for line in open(sbf):
-        key, value = line.split('=')
-        if key.strip() == keyName:
-            return sorted([opj(cfg.SIPOUT, v) for v in value.strip().split()])
+    with open(sbf) as fid:
+        for line in fid:
+            key, value = line.split('=')
+            if key.strip() == keyName:
+                return sorted([opj(cfg.SIPOUT, v) for v in value.strip().split()])
     return None
 
 def getEtgSipCppFiles(etg):
@@ -707,16 +780,14 @@ def writeIfChanged(filename, text):
     """
 
     if os.path.exists(filename):
-        f = textfile_open(filename, 'rt')
-        current = f.read()
-        f.close()
+        with textfile_open(filename, 'rt') as f:
+            current = f.read()
 
         if current == text:
             return
 
-    f = textfile_open(filename, 'wt')
-    f.write(text)
-    f.close()
+    with textfile_open(filename, 'wt') as f:
+        f.write(text)
 
 
 # TODO: we might be able to get rid of this when the install code is updated...
@@ -791,7 +862,7 @@ def getVcsRev():
     return svnrev
 
 
-def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
+def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True, onError=None):
     """
     Runs a give command-line command, optionally returning the output.
     """
@@ -833,6 +904,8 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
         print("Command '%s' failed with exit code %d." % (cmd, rval))
         if getOutput:
             print(output)
+        if onError is not None:
+            onError()
         if fatal:
             sys.exit(rval)
 
@@ -925,12 +998,35 @@ def updateLicenseFiles(cfg):
     # Copy the license files from wxWidgets
     mkpath('license')
     for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt', 'gpl.txt']:
-        copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename), update=1, verbose=1)
+        copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename),
+                      update=1, verbose=1)
+
+    # Get the sip license too
+    copy_file(opj('sip', 'siplib', 'LICENSE'), opj('license', 'sip-license.txt'),
+              update=1, verbose=1)
 
     # Combine the relevant files into a single LICENSE.txt file
     text = ''
-    for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt']:
+    for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt', 'sip-license.txt']:
         with open(opj('license', filename), 'r') as f:
             text += f.read() + '\n\n'
     with open('LICENSE.txt', 'w') as f:
         f.write(text)
+
+try:
+    from tempfile import TemporaryDirectory
+except ImportError:
+    from tempfile import mkdtemp
+
+    class TemporaryDirectory(object):
+        def __init__(self, suffix='', prefix='tmp', dir=None):
+            self.name = mkdtemp(suffix, prefix, dir)
+
+        def __enter__(self):
+            return self.name
+
+        def __exit__(self, exc, value, tb):
+            self.cleanup()
+
+        def cleanup(self):
+            shutil.rmtree(self.name)

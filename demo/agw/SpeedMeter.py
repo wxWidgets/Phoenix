@@ -25,6 +25,13 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 # Beginning Of SPEEDMETER Demo wxPython Code
 #----------------------------------------------------------------------
 
+def _getAndScaleIcon(filename, width, height):
+    img = wx.Image(filename, wx.BITMAP_TYPE_ICO)
+    img.Rescale(width, height)
+    icon = wx.Icon(img.ConvertToBitmap())
+    return icon
+
+
 class SpeedMeterDemo(wx.Panel):
 
     def __init__(self, parent, log):
@@ -180,12 +187,11 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow3.SetTicks(ticks)
         self.SpeedWindow3.SetTicksColour(wx.WHITE)
 
-        self.SpeedWindow3.SetHandColour(wx.Colour(255, 255, 0))
+        self.SpeedWindow3.SetHandColour(wx.YELLOW)
 
         # Define The Icon We Want
-        icon = wx.Icon(os.path.normpath(os.path.join(bitmapDir, "smfuel.ico")), wx.BITMAP_TYPE_ICO)
-        icon.SetWidth(24)
-        icon.SetHeight(24)
+        icon = _getAndScaleIcon(
+            os.path.normpath(os.path.join(bitmapDir, "smfuel.ico")), 24, 24)
 
         # Draw The Icon In The Center Of SpeedMeter
         self.SpeedWindow3.SetMiddleIcon(icon)
@@ -205,7 +211,7 @@ class SpeedMeterDemo(wx.Panel):
         # SM_DRAW_MIDDLE_ICON: We Draw An Icon In The Center Of SpeedMeter
         #
         # NOTE: We Use The Mouse Style mousestyle=SM_MOUSE_TRACK. In This Way, Mouse
-        # Events Are Catched (Mainly Left Clicks/Drags) And You Can Change The Speed
+        # Events Are Caught (Mainly Left Clicks/Drags) And You Can Change The Speed
         # Value Using The Mouse
 
         self.SpeedWindow4 = SM.SpeedMeter(panel4,
@@ -223,7 +229,7 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow4.SetIntervals(intervals)
 
         colours = [wx.BLUE]*5
-        colours.extend([wx.Colour(255, 255, 0)]*2)
+        colours.extend([wx.YELLOW]*2)
         colours.append(wx.RED)
         self.SpeedWindow4.SetIntervalColours(colours)
 
@@ -232,7 +238,7 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow4.SetTicksColour(wx.BLACK)
         self.SpeedWindow4.SetTicksFont(wx.Font(7, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
-        self.SpeedWindow4.SetHandColour(wx.Colour(0, 0, 255))
+        self.SpeedWindow4.SetHandColour(wx.BLUE)
 
         self.SpeedWindow4.SetSpeedBackground(wx.SystemSettings.GetColour(0))
 
@@ -245,9 +251,8 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow4.SetHandStyle("Arrow")
 
         # Define The Icon We Want
-        icon = wx.Icon(os.path.normpath(os.path.join(bitmapDir, "smtemp.ico")), wx.BITMAP_TYPE_ICO)
-        icon.SetWidth(16)
-        icon.SetHeight(16)
+        icon = _getAndScaleIcon(
+            os.path.normpath(os.path.join(bitmapDir, "smtemp.ico")), 16, 16)
 
         # Draw The Icon In The Center Of SpeedMeter
         self.SpeedWindow4.SetMiddleIcon(icon)
@@ -280,7 +285,7 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow5.SetIntervals(intervals)
 
         colours = [wx.BLACK]*6
-        colours.append(wx.Colour(255, 255, 0))
+        colours.append(wx.YELLOW)
         colours.append(wx.RED)
         self.SpeedWindow5.SetIntervalColours(colours)
 
@@ -355,9 +360,8 @@ class SpeedMeterDemo(wx.Panel):
         # Set The Second Gradient Colour, Which Is The Colour Near The Center Of The SpeedMeter
         self.SpeedWindow6.SetSecondGradientColour(wx.WHITE)
 
-        icon = wx.Icon(os.path.normpath(os.path.join(bitmapDir, "smpi.ico")), wx.BITMAP_TYPE_ICO)
-        icon.SetHeight(12)
-        icon.SetWidth(12)
+        icon = _getAndScaleIcon(
+            os.path.normpath(os.path.join(bitmapDir, "smpi.ico")), 12, 12)
         self.SpeedWindow6.SetMiddleIcon(icon)
 
         self.SpeedWindow6.SetSpeedValue(pi/3)

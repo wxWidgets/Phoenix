@@ -76,10 +76,6 @@ wxPython I'll add some aliases that will issue a ``DeprecationWarning`` for
 the first release or two after we switch over to the Phoenix version of the
 code, and then remove them in a later release.
 
-For a (relatively comprehensive) list of classes, functions and methods which
-need modification while porting your code from Classic to Phoenix, please see
-the :ref:`Classic vs. Phoenix <classic vs phoenix>` document.
-
 
 FindWindow Methods
 ------------------
@@ -273,9 +269,7 @@ longer there. They will have to be used by importing a wx submodule. Most of
 them will be in the ``wx.adv`` module. One nice advantage of doing this is that
 if your application is not using any of these lesser used classes then you
 will not have to bundle the new modules (nor the associated wx DLLs) with
-your application when you use py2exe or other executable builder. See
-the :ref:`Classic vs. Phoenix <classic vs phoenix>` document for details.
-
+your application when you use py2exe or other executable builder.
 
 
 wx.ListCtrl
@@ -584,7 +578,7 @@ original, called PyPubSub. It's all the same code, but with just a different
 access path. However, now that Python 2.7 support in PyPubSub is no longer being
 maintained in the latest versions, it is now time for wxPython to disconnect
 itself in order to not have to remain on the older version. This means that
-``wx.lib.pubsub`` is now deprecated. 
+``wx.lib.pubsub`` is now deprecated.
 
 Switching to the official PyPubSub is simple however, just install the package::
 
@@ -599,11 +593,14 @@ drop the version number from the pip command above.
 wx.html.HtmlWindow.OnOpeningURL
 -------------------------------
 
-In Classic the return value of ``wx.html.HtmlWindow.OnOpeningURL`` could be
-either a value from the ``wx.html.HtmlOpeningStatus`` enumeration, or a string
-containing the URL to redirect to. In Phoenix this has been changed to a simpler
-wrapper implementation which requires that both an enum value and a string be
-returned as a tuple. For example::
+In wxPython Classic the return value of ``wx.html.HtmlWindow.OnOpeningURL`` and
+``wx.html.HtmlWindowInterface.OnHTMLOpeningURL`` could be either a value from the
+``wx.html.HtmlOpeningStatus`` enumeration, or a string containing the URL to
+redirect to.
+
+In Phoenix this has been changed to a simpler wrapper implementation which
+requires that both an enum value and a string be returned as a tuple. For
+example::
 
     def OnHTMLOpeningURL(self, urlType, url):
         if urlType == wx.html.HTML_URL_IMAGE and url != self.otherURL:
@@ -611,10 +608,134 @@ returned as a tuple. For example::
         return (wx.html.HTML_OPEN, "")
 
 
+wx.NewId is deprecated
+----------------------
+
+:func:`wx.NewId` has been used forever in wxWidgets and wxPython to generate an
+ID for use as the ID for controls, menu items, and similar things. It's really
+quite a stupid implementation however, in that it simply increments a counter
+and returns that value. There is no way for it to check if the ID is already in
+use, for example if the programmer used some static numbers for IDs, or if the
+counter wrapped around the max integer value and started over at the min integer
+value.
+
+So a few years ago the wxWidgets team implemented a reference counting scheme
+for the ID values, and started using it internally. In a more recent release the
+``wx.NewId`` function was deprecated. Then, even more recently, when code
+was added to Phoenix's generator tools to automatically deprecate things that
+are marked as deprecated in wxWidgets, then it became deprecated for us too.
+
+The recommended alternative to ``wx.NewId`` is to just use ``wx.ID_ANY`` when
+creating your widgets or other items with IDs. That will use the reference
+counted ID scheme internally and the ID will be reserved until that item is
+destroyed. In those cases where you would prefer to have items with the same ID,
+or to reuse ID values for some other reason, then you should use the
+:func:`wx.NewIdRef` function instead. It returns a :class:`wx.WindowIDRef`
+object that can be compared with each other, sorted, used as a dictionary key,
+converted to the actual integer value of the ID, etc.
+
+
+wx.WS_EX_VALIDATE_RECURSIVELY is obsolete
+-----------------------------------------
+
+The wx.WS_EX_VALIDATE_RECURSIVELY extended style flag is obsolete, as it is
+now the default (and only) behavior. The style flag has been added back into
+wxPython for compatibility, but with a zero value. You can just stop using it
+in your code with no change in behavior.
+
+
+Parameter name changes in radial gradient methods
+-------------------------------------------------
+
+The parameter names for the ``wx.GraphicsContext`` methods for creating radial
+gradients have changed in wxPython 4.1 to be a little more understandable. If
+you are passing these values via their keyword names then you will need to
+change your code. The prior C++ method signatures looked like this::
+
+    virtual wxGraphicsBrush
+    CreateRadialGradientBrush(wxDouble xo, wxDouble yo,
+                              wxDouble xc, wxDouble yc,
+                              wxDouble radius,
+                              const wxGraphicsGradientStops& stops);
+
+And they now look like this::
+
+    virtual wxGraphicsBrush
+    CreateRadialGradientBrush(wxDouble startX, wxDouble startY,
+                              wxDouble endX, wxDouble endY,
+                              wxDouble radius,
+                              const wxGraphicsGradientStops& stops,
+                              const wxGraphicsMatrix& matrix = wxNullGraphicsMatrix);
+
+
+
+Possible Locale Mismatch on Windows
+-----------------------------------
+
+On the Windows platform, prior to Python 3.8, it appears that Python did not do
+any initialization of the process locale settings, at least for the "en_US"
+based locales. For example, in Python 3.7::
+
+    >>> import locale
+    >>> locale.getdefaultlocale()
+    ('en_US', 'cp1252')
+    >>> locale.getlocale()
+    (None, None)
+
+And in Python 3.8::
+
+    >>> import locale
+    >>> locale.getdefaultlocale()
+    ('en_US', 'cp1252')
+    >>> locale.getlocale()
+    ('English_United States', '1252')
+
+Now, when you add in the wxWidgets class wxLocale, then it can get even more
+confusing on Windows. It seems that this boils down to wxWidgets setting the
+locale using a Windows-specific name like "en-US" (with a hyphen instead of an
+underscore). Since Python's locale module does not recognize this as a
+legitimate locale alias, then calling `locale.getlocale()` after a `wx.Locale`
+has been created will result in a `ValueError` exception.
+
+So wxPython has added code in the `wx.App` class to try and set up the locale so
+both Python and wxWidgets are set to equivalent settings. This is still somewhat
+experimental however, and the implementation in wxPython 4.1.0 is still
+problematic in some cases. If you have problems with it then you can disable or
+change this code by overriding the `wx.App.InitLocale` method in a derived
+class. It can either just do nothing, or you can implement some alternative
+locale setup code there.
+
+There will be a new implementation of `InitLocale` in 4.1.1 which should be
+simpler and less likely to still have problems. But you'll still be able to
+override `InitLocale` if needed.
+
+
+
+Sizer item flags validation
+---------------------------
+
+Starting with wxPython 4.1, wxWidgets is now validating the flags passed
+when adding items to a sizer, to ensure that they are the correct flags for
+the type of the sizer. If the given flags do not make sense, for example using
+horizontal alignment flags in a horizontal box sizer, then a wxAssertionError
+error is raised.
+
+
+
+CheckListCtrlMixin Redundancy
+-----------------------------
+
+The wx.lib.mixins.listCtrl.CheckListCtrlMixin is now obsolete because
+wx.ListCtrl has new functionality which does pretty much the same thing. In
+fact there is some overlap in method names which may trip up some use cases.
+It is advised to drop the use of CheckListCtrlMixin and just use the
+wx.ListBox functionality. You will need to call EnableCheckBoxes to turn it on,
+and you may need to change some event handlers or overloaded methods.
+
+
 
 .. toctree::
    :maxdepth: 2
    :hidden:
 
-   classic_vs_phoenix
 

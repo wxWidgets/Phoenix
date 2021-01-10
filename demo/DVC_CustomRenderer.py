@@ -71,10 +71,6 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
     # methods need to be implemented if this renderer is going to
     # support in-place editing of the cell value, otherwise they can
     # be omitted.
-    #
-    # NOTE: This is well supported only in the DVC implementation on Windows,
-    # so this sample will not turn on the editable mode for the custom
-    # rendered column, see below.
 
     def HasEditorCtrl(self):
         self.log.write('HasEditorCtrl')
@@ -153,20 +149,10 @@ class TestPanel(wx.Panel):
         col = self.dvc.AppendTextColumn("Artist", 1, width=170, mode=dv.DATAVIEW_CELL_EDITABLE)
         col.Alignment = wx.ALIGN_LEFT
 
-        # Use a custom renderer for the Title column.
-        # NOTE: Using an editor with the custom renderer is only well
-        # supported on the Windows version of the DVC, so we won't turn on
-        # editing in that case, and will inform the user about it.
-        if 'wxMSW' in wx.PlatformInfo:
-            custMode = dv.DATAVIEW_CELL_EDITABLE
-        else:
-            custMode = dv.DATAVIEW_CELL_INERT
-            wx.CallAfter(self.ShowMessage)
-        renderer = MyCustomRenderer(self.log, mode=custMode)
+        renderer = MyCustomRenderer(self.log, mode=dv.DATAVIEW_CELL_EDITABLE)
         col = dv.DataViewColumn("Title", renderer, 2, width=260)
         col.Alignment = wx.ALIGN_LEFT
         self.dvc.AppendColumn(col)
-
 
         col = self.dvc.AppendTextColumn("Genre", 3, width=80, mode=dv.DATAVIEW_CELL_EDITABLE)
         col.Alignment = wx.ALIGN_LEFT
@@ -201,9 +187,10 @@ def runTest(frame, nb, log):
 
 
 overview = """<html><body>
-<h2><center>DemoName</center></h2>
+<h2><center>DataViewCustomRenderer</center></h2>
 
-Say something nice here
+This sample shows how to implement a renderer for drawing the cells in a
+DataViewControl in a custom manner.
 
 </body></html>
 """

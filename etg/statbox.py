@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     29-Oct-2011
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -54,11 +54,12 @@ def run():
 
     # This is intentionally not documented, but I think it would be handy to
     # use from wxPython.
-    meth = MethodDef(name='GetBordersForSizer', isVirtual=True, type='void', protection='public',
-                     briefDoc="Returns extra space that may be needed for borders within a StaticBox.",
-                     items=[ParamDef(name='borderTop', type='int*', out=True),
-                            ParamDef(name='borderOther', type='int*', out=True),
-                            ])
+    meth = MethodDef(
+        name='GetBordersForSizer', isConst=True, isVirtual=True, type='void', protection='public',
+        briefDoc="Returns extra space that may be needed for borders within a StaticBox.",
+        items=[ParamDef(name='borderTop', type='int*', out=True),
+               ParamDef(name='borderOther', type='int*', out=True),
+               ])
     c.addItem(meth)
 
     module.addGlobalStr('wxStaticBoxNameStr', c)

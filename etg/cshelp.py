@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     06-Apr-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -44,6 +44,10 @@ def run():
     c.abstract = True
     c.find('Set').transferBack = True
     c.find('Set.helpProvider').transfer = True
+    c.find('AddHelp.window').type = 'wxWindowBase *'
+    c.find('RemoveHelp.window').type = 'wxWindowBase *'
+    c.find('ShowHelp.window').type = 'wxWindowBase *'
+    c.find('ShowHelpAtPoint.window').type = 'wxWindowBase *'
     c.mustHaveApp()
 
 

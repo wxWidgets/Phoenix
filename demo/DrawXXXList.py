@@ -106,7 +106,7 @@ def makeRandomPens(num, cache):
         c = random.choice(colours)
         t = random.randint(1, 4)
 
-        if not (c, t) in cache.keys():
+        if (c, t) not in cache:
             cache[(c, t)] = wx.Pen(c, t)
 
         pens.append( cache[(c, t)] )
@@ -120,7 +120,7 @@ def makeRandomBrushes(num, cache):
     for i in range(num):
         c = random.choice(colours)
 
-        if not c in cache.keys():
+        if c not in cache:
             cache[c] = wx.Brush(c)
 
         brushes.append( cache[c] )

@@ -85,7 +85,7 @@ class Frame(wx.Frame):
 
     def OnIconize(self, event):
         """Event handler for Iconize."""
-        self.iconized = event.Iconized()
+        self.iconized = event.IsIconized()
 
 
     def OnClose(self, event):
@@ -839,16 +839,12 @@ class ShellFrameMixin:
     def SaveHistory(self):
         if self.dataDir:
             try:
-                name = os.path.join(self.dataDir, 'history')
-                f = open(name, 'wb')
-                hist = []
                 enc = 'utf-8'
-                for h in self.shell.history:
-                    h = h.encode(enc)
-                    hist.append(h)
-                hist = b'\x00\n'.join(hist)
-                f.write(hist)
-                f.close()
+                hist = b'\x00\n'.join([h.encode(enc) 
+                                       for h in self.shell.history])
+                name = os.path.join(self.dataDir, 'history')
+                with open(name, 'wb') as f:
+                    f.write(hist)
             except:
                 d = wx.MessageDialog(self, "Error saving history file.",
                                      "Error", wx.ICON_EXCLAMATION|wx.OK)
@@ -861,9 +857,9 @@ class ShellFrameMixin:
             name = os.path.join(self.dataDir, 'history')
             if os.path.exists(name):
                 try:
-                    f = open(name, 'rb')
-                    hist = f.read()
-                    f.close()
+                    with open(name, 'rb') as f:
+                        hist = f.read()
+
                     enc = 'utf-8'
                     hist = [h.decode(enc) for h in hist.split(b'\x00\n')]
                     self.shell.history = hist
@@ -908,9 +904,8 @@ class ShellFrameMixin:
 ##         d.Destroy()
 
         try:
-            f = open(fileName, "w")
-            f.write(text)
-            f.close()
+            with open(fileName, "w") as f:
+                f.write(text)
         except:
             d = wx.MessageDialog(self, u'Error saving session',u'Error',
                                  wx.OK | wx.ICON_ERROR)
@@ -920,7 +915,11 @@ class ShellFrameMixin:
 
     def EditStartupScript(self):
         if os.path.exists(self.startupScript):
-            text = open(self.startupScript, 'U').read()
+            import io
+            # Use newline=None to translate \n \r \r\n to \n on read.  The
+            # old-style mode='U' is deprecated.
+            with io.open(self.startupScript, 'r', newline=None, encoding='utf-8') as fid:
+                text = fid.read()
         else:
             text = ''
 
@@ -928,9 +927,8 @@ class ShellFrameMixin:
         if dlg.ShowModal() == wx.ID_OK:
             text = dlg.GetText()
             try:
-                f = open(self.startupScript, 'w')
-                f.write(text)
-                f.close()
+                with open(self.startupScript, 'wb') as f:
+                    f.write(text.encode('utf-8'))
             except:
                 d = wx.MessageDialog(self, "Error saving startup file.",
                                      "Error", wx.ICON_EXCLAMATION|wx.OK)

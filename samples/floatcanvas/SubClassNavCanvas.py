@@ -3,7 +3,7 @@
 """
 A simple example of sub-classing the Navcanvas
 
--- an alternative to simply putting a NavCanvas on your yoru oen panle or whatever
+-- an alternative to simply putting a NavCanvas on your your own panel or whatever
 """
 
 import wx

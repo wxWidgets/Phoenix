@@ -250,7 +250,7 @@ class Shell(editwindow.EditWindow):
         self.stderr = sys.stderr
 
         # Import a default interpreter class if one isn't provided.
-        if InterpClass == None:
+        if InterpClass is None:
             from .interpreter import Interpreter
         else:
             Interpreter = InterpClass
@@ -1162,17 +1162,14 @@ class Shell(editwindow.EditWindow):
     def runfile(self, filename):
         """Execute all commands in file as if they were typed into the
         shell."""
-        file = open(filename)
-        try:
-            self.prompt()
-            for command in file.readlines():
+        self.prompt()
+        with open(filename) as file_:
+            for command in file_:
                 if command[:6] == 'shell.':
                     # Run shell methods silently.
                     self.run(command, prompt=False, verbose=False)
                 else:
                     self.run(command, prompt=False, verbose=True)
-        finally:
-            file.close()
 
     def autoCompleteShow(self, command, offset = 0):
         """Display auto-completion popup list."""
@@ -1439,10 +1436,7 @@ class Shell(editwindow.EditWindow):
 
     def wrap(self, wrap=True):
         """Sets whether text is word wrapped."""
-        try:
-            self.SetWrapMode(wrap)
-        except AttributeError:
-            return 'Wrapping is not available in this version.'
+        self.SetWrapMode(wrap)
 
     def zoom(self, points=0):
         """Set the zoom level.

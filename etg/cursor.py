@@ -5,7 +5,7 @@
 #
 # Created:     06-Sept-2011
 # Copyright:   (c) 2013 by Wide Open Technologies
-# Copyright:   (c) 2011-2018 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ def run():
     # created. That messes up the code that SIP generates for them, so we need
     # to come up with another solution. So instead we will just create
     # uninitialized cursor in a block of Python code, that will then be
-    # intialized later when the wx.App is created.
+    # initialized later when the wx.App is created.
     c.addCppMethod('void', '_copyFrom', '(const wxCursor* other)',
                    "*self = *other;",
                    briefDoc="For internal use only.")  # ??

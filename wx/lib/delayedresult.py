@@ -14,7 +14,7 @@ as first arg.
 In the following example, this will call consumer(delayedResult) with the
 return value from workerFn::
 
-    from delayedresult import startWorker
+    from wx.lib.delayedresult import startWorker
     startWorker(consumer, workerFn)
 
 More advanced uses:

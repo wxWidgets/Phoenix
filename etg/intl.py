@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -48,11 +48,16 @@ def run():
     c.find('WinSublang').ignore()
     c.find('GetLCID').ignore()
 
+    module.addItem(etgtools.WigCode("""\
+        char* wxSetlocale(int category, const char *locale);
+        char* wxSetlocale(int category, const wxString& locale);
+        """))
+
 
     module.addPyCode("""\
     #----------------------------------------------------------------------------
     # Add the directory where the wxWidgets catalogs were installed
-    # to the default catalog path, if they were put in the pacakge dir.
+    # to the default catalog path, if they were put in the package dir.
     import os
     _localedir = os.path.join(os.path.dirname(__file__), "locale")
     if os.path.exists(_localedir):

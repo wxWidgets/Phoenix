@@ -8,7 +8,7 @@
 // Author:      Robin Dunn
 //
 // Created:     19-Nov-2010
-// Copyright:   (c) 2010-2018 by Total Control Software
+// Copyright:   (c) 2010-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -171,6 +171,9 @@ struct wxPyAPI {
     int           (*p_wxPyDate_Check)(PyObject *obj);
     wxDateTime*   (*p_wxPyDateTime_ToWxDateTime)(PyObject *obj);
     wxDateTime*   (*p_wxPyDate_ToWxDateTime)(PyObject *obj);
+
+    bool          (*p_wxPyCheckNumberSequence)(PyObject *obj);
+    bool          (*p_wxPyCheckStringSequence)(PyObject *obj);
     // Always add new items here at the end.
 };
 
@@ -287,6 +290,16 @@ inline wxDateTime* wxPyDateTime_ToWxDateTime(PyObject *obj)
 inline wxDateTime* wxPyDate_ToWxDateTime(PyObject *obj)
     { return wxPyGetAPIPtr()->p_wxPyDate_ToWxDateTime(obj); }
 
+
+inline bool wxPyCheckNumberSequence(PyObject *obj)
+{
+    return wxPyGetAPIPtr()->p_wxPyCheckNumberSequence(obj);
+}
+
+inline bool wxPyCheckStringSequence(PyObject *obj)
+{
+    return wxPyGetAPIPtr()->p_wxPyCheckStringSequence(obj);
+}
 
 //--------------------------------------------------------------------------
 // Convenience helper for RAII-style thread blocking

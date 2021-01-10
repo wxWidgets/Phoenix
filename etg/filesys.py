@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     25-Feb-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -40,6 +40,7 @@ def run():
     c = module.find('wxFileSystem')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
     c.find('AddHandler.handler').transfer = True
     c.find('RemoveHandler').transferBack = True
 
@@ -67,8 +68,7 @@ def run():
 
     c = module.find('wxFSFile')
     c.addPrivateCopyCtor()
-    c.find('wxFSFile.stream').transfer = True
-    c.find('DetachStream').transferBack = True
+    c.find('wxFSFile.stream').keepReference = True
 
     c = module.find('wxFilterFSHandler')
     _fixHandlerClass(c)

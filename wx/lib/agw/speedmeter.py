@@ -268,14 +268,23 @@ SM_DRAW_FANCY_TICKS = 1024
 SM_MOUSE_TRACK = 1
 """ Flag to allow the left/right click of the mouse to change the :class:`SpeedMeter` value interactively. """
 
-fontfamily = list(range(70, 78))
-familyname = ["default", "decorative", "roman", "script", "swiss", "modern", "teletype"]
+fontfamily = [wx.FONTFAMILY_DEFAULT, wx.FONTFAMILY_DECORATIVE, wx.FONTFAMILY_ROMAN,
+              wx.FONTFAMILY_SCRIPT, wx.FONTFAMILY_SWISS, wx.FONTFAMILY_MODERN,
+              wx.FONTFAMILY_TELETYPE, wx.FONTFAMILY_UNKNOWN]
+familyname = ["default", "decorative", "roman", "script", "swiss", "modern",
+              "teletype", "unknown"]
 
-weights = list(range(90, 93))
-weightsname = ["normal", "light", "bold"]
+weights = [ wx.FONTWEIGHT_INVALID, wx.FONTWEIGHT_THIN, wx.FONTWEIGHT_EXTRALIGHT,
+            wx.FONTWEIGHT_LIGHT, wx.FONTWEIGHT_NORMAL, wx.FONTWEIGHT_MEDIUM,
+            wx.FONTWEIGHT_SEMIBOLD, wx.FONTWEIGHT_BOLD, wx.FONTWEIGHT_EXTRABOLD,
+            wx.FONTWEIGHT_HEAVY, wx.FONTWEIGHT_EXTRAHEAVY]
+weightsname = ["invalid", "thin", "extra-light", "normal", "medium", "semi-bold",
+               "bold", "extra-bold", "heavy", "extra-heavy"]
 
-styles = [90, 93, 94]
+styles = [ wx.FONTSTYLE_NORMAL, wx.FONTSTYLE_ITALIC, wx.FONTSTYLE_SLANT]
 stylesname = ["normal", "italic", "slant"]
+
+
 
 #----------------------------------------------------------------------
 # BUFFERENDWINDOW Class
@@ -476,6 +485,7 @@ class SpeedMeter(BufferedWindow):
         self._agwStyle = agwStyle
         self._bufferedstyle = bufferedstyle
         self._mousestyle = mousestyle
+        self._middleicon = None
 
         if self._agwStyle & SM_DRAW_SECTORS and self._agwStyle & SM_DRAW_GRADIENT:
             errstr = "\nERROR: Incompatible Options: SM_DRAW_SECTORS Can Not Be Used In "
@@ -1040,7 +1050,7 @@ class SpeedMeter(BufferedWindow):
 
         # Here We Draw The Icon In The Middle, Near The Start Of The Arrow (If Present)
         # This Is Like The "Fuel" Icon In The Cars
-        if self._agwStyle & SM_DRAW_MIDDLE_ICON:
+        if self._agwStyle & SM_DRAW_MIDDLE_ICON and self.GetMiddleIcon():
 
             middleicon = self.GetMiddleIcon()
             middlewidth, middleheight = self.GetMiddleIconDimens()

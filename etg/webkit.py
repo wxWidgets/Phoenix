@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     22-Aug-2013
-# Copyright:   (c) 2013-2018 by Total Control Software
+# Copyright:   (c) 2013-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -35,6 +35,11 @@ def run():
     # customizing the generated code and docstrings.
 
     module.addHeaderCode('#include <wx/html/webkit.h>')
+
+    tools.generateStubs('wxUSE_WEBKIT', module,
+                        extraHdrCode='extern const char* wxWebKitCtrlNameStr;\n',
+                        extraCppCode='const char* wxWebKitCtrlNameStr = "";\n')
+
 
     c = module.find('wxWebKitCtrl')
     assert isinstance(c, etgtools.ClassDef)
