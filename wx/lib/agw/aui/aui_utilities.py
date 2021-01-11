@@ -322,9 +322,9 @@ def DarkenBitmap(bmp, caption_colour, new_colour):
     """
 
     image = bmp.ConvertToImage()
-    red = caption_colour.Red()/float(new_colour.Red())
-    green = caption_colour.Green()/float(new_colour.Green())
-    blue = caption_colour.Blue()/float(new_colour.Blue())
+    red = caption_colour.Red()/new_colour.Red()
+    green = caption_colour.Green()/new_colour.Green()
+    blue = caption_colour.Blue()/new_colour.Blue()
     image = image.AdjustChannels(red, green, blue)
     return image.ConvertToBitmap()
 
@@ -655,4 +655,7 @@ def CopyAttributes(newArt, oldArt):
             setattr(newArt, attr, getattr(oldArt, attr))
 
     return newArt
+
+
+
 
