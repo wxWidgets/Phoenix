@@ -979,16 +979,16 @@ class AuiDefaultToolBarArt(object):
 
         if orient == AUI_TBTOOL_HORIZONTAL:
             text_x = rect.x
-            text_y = rect.y + (rect.height-text_height)/2
+            text_y = rect.y + (rect.height-text_height)//2
             dc.DrawText(item.GetLabel(), text_x, text_y)
 
         elif orient == AUI_TBTOOL_VERT_CLOCKWISE:
-            text_x = rect.x + (rect.width+text_width)/2
+            text_x = rect.x + (rect.width+text_width)//2
             text_y = rect.y
             dc.DrawRotatedText(item.GetLabel(), text_x, text_y, 270)
 
         elif AUI_TBTOOL_VERT_COUNTERCLOCKWISE:
-            text_x = rect.x + (rect.width-text_width)/2
+            text_x = rect.x + (rect.width-text_width)//2
             text_y = rect.y + text_height
             dc.DrawRotatedText(item.GetLabel(), text_x, text_y, 90)
 
@@ -1086,8 +1086,8 @@ class AuiDefaultToolBarArt(object):
             dropbmp_width = dropbmp_height
             dropbmp_height = tmp
 
-        dropbmp_x = dropdown_rect.x + (dropdown_rect.width/2) - dropbmp_width/2
-        dropbmp_y = dropdown_rect.y + (dropdown_rect.height/2) - dropbmp_height/2
+        dropbmp_x = dropdown_rect.x + (dropdown_rect.width//2) - dropbmp_width//2
+        dropbmp_y = dropdown_rect.y + (dropdown_rect.height//2) - dropbmp_height//2
 
         bmp_rect, text_rect = self.GetToolsPosition(dc, item, button_rect)
 
@@ -1171,7 +1171,7 @@ class AuiDefaultToolBarArt(object):
         # set the label's text colour
         dc.SetTextForeground(wx.BLACK)
 
-        text_x = rect.x + (rect.width/2) - (text_width/2) + 1
+        text_x = rect.x + (rect.width//2) - (text_width//2) + 1
         text_y = rect.y + rect.height - text_height - 1
 
         if self._agwFlags & AUI_TB_TEXT and item.GetLabel() != "":
@@ -1264,18 +1264,18 @@ class AuiDefaultToolBarArt(object):
 
         if horizontal:
 
-            rect.x += (rect.width/2)
+            rect.x += (rect.width//2)
             rect.width = 1
-            new_height = (rect.height*3)/4
-            rect.y += (rect.height/2) - (new_height/2)
+            new_height = (rect.height*3)//4
+            rect.y += (rect.height//2) - (new_height//2)
             rect.height = new_height
 
         else:
 
-            rect.y += (rect.height/2)
+            rect.y += (rect.height//2)
             rect.height = 1
-            new_width = (rect.width*3)/4
-            rect.x += (rect.width/2) - (new_width/2)
+            new_width = (rect.width*3)//4
+            rect.x += (rect.width//2) - (new_width//2)
             rect.width = new_width
 
         start_colour = StepColour(self._base_colour, 80)
@@ -1359,8 +1359,8 @@ class AuiDefaultToolBarArt(object):
                 dc.SetBrush(wx.Brush(light_gray_bg))
                 dc.DrawRectangle(rect.x+1, rect.y, rect.width, rect.height)
 
-        x = rect.x + 1 + (rect.width-self._overflow_bmp.GetWidth())/2
-        y = rect.y + 1 + (rect.height-self._overflow_bmp.GetHeight())/2
+        x = rect.x + 1 + (rect.width-self._overflow_bmp.GetWidth())//2
+        y = rect.y + 1 + (rect.height-self._overflow_bmp.GetHeight())//2
         dc.DrawBitmap(self._overflow_bmp, x, y, True)
 
 
@@ -1492,21 +1492,21 @@ class AuiDefaultToolBarArt(object):
         bmp_x = bmp_y = text_x = text_y = 0
 
         if horizontal and text_bottom:
-            bmp_x = rect.x + (rect.width/2) - (bmp_width/2)
+            bmp_x = rect.x + (rect.width//2) - (bmp_width//2)
             bmp_y = rect.y + 3
-            text_x = rect.x + (rect.width/2) - (text_width/2)
+            text_x = rect.x + (rect.width//2) - (text_width//2)
             text_y = rect.y + ((bmp_y - rect.y) * 2) + bmp_height
 
         elif horizontal and text_right:
             bmp_x = rect.x + 3
-            bmp_y = rect.y + (rect.height/2) - (bmp_height / 2)
+            bmp_y = rect.y + (rect.height//2) - (bmp_height // 2)
             text_x = rect.x + ((bmp_x - rect.x) * 2) + bmp_width
-            text_y = rect.y + (rect.height/2) - (text_height/2)
+            text_y = rect.y + (rect.height//2) - (text_height//2)
 
         elif not horizontal and text_bottom:
-            bmp_x = rect.x + (rect.width / 2) - (bmp_width / 2)
+            bmp_x = rect.x + (rect.width // 2) - (bmp_width // 2)
             bmp_y = rect.y + 3
-            text_x = rect.x + (rect.width / 2) - (text_width / 2)
+            text_x = rect.x + (rect.width // 2) - (text_width // 2)
             text_y = rect.y + ((bmp_y - rect.y) * 2) + bmp_height
 
         bmp_rect = wx.Rect(bmp_x, bmp_y, bmp_width, bmp_height)
@@ -3257,9 +3257,6 @@ class AuiToolBar(wx.Control):
     def DoIdleUpdate(self):
         """ Updates the toolbar during idle times. """
 
-        if not self:
-            return # The action Destroyed the toolbar!
-
         handler = self.GetEventHandler()
         if not handler:
             return
@@ -4031,3 +4028,4 @@ class AuiToolBar(wx.Control):
 
         manager = self.GetAuiManager()
         manager.StopPreviewTimer()
+
