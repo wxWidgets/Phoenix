@@ -1927,6 +1927,7 @@
 "IdleMode":"wx.",
 "Image":"wx.",
 "ImageAlphaBlendMode":"wx.",
+"ImageDataObject":"wx.",
 "ImageFileProperty":"wx.propgrid.",
 "ImageFromBitmap":"wx.",
 "ImageFromBuffer":"wx.",

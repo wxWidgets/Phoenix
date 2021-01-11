@@ -28,6 +28,7 @@ ITEMS  = [ 'wxDataFormat',
            'wxURLDataObject',
            'wxFileDataObject',
            'wxHTMLDataObject',
+           'wxImageDataObject'
            ]
 
 
@@ -392,6 +393,11 @@ def run():
     addSimpleVirtuals(c)
 
     #------------------------------------------------------------
+    c = module.find('wxImageDataObject')
+    addGetAllFormats(c)
+    addBaseVirtuals(c)
+
+    #------------------------------------------------------------
     c = module.find('wxFileDataObject')
     addGetAllFormats(c)
     addBaseVirtuals(c)
@@ -402,7 +408,6 @@ def run():
     addGetAllFormats(c)
     addBaseVirtuals(c)
     addSimpleVirtuals(c)
-
 
 
     #------------------------------------------------------------
