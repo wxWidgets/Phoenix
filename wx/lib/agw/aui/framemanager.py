@@ -2298,7 +2298,7 @@ class AuiSingleDockingGuide(AuiDockingGuide):
 
         useAero = (useWhidbey and [2] or [1])[0]
         bmp, dummy = GetDockingImage(self._direction, useAero, False)
-        region = wx.Region(bmp)
+        region = wx.Region(bmp, wx.Colour(0, 0, 0, 0))
 
         self.region = region
 
@@ -2495,7 +2495,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         elif useAero:
 
             self._aeroBmp = aero_dock_pane.GetBitmap()
-            region = wx.Region(self._aeroBmp)
+            region = wx.Region(self._aeroBmp, wx.Colour(0, 0, 0, 0))
 
             self._allAeroBmps = [aero_dock_pane_left.GetBitmap(), aero_dock_pane_top.GetBitmap(),
                                  aero_dock_pane_right.GetBitmap(), aero_dock_pane_bottom.GetBitmap(),
@@ -2507,7 +2507,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         elif useWhidbey:
 
             self._aeroBmp = whidbey_dock_pane.GetBitmap()
-            region = wx.Region(self._aeroBmp)
+            region = wx.Region(self._aeroBmp, wx.Colour(0, 0, 0, 0))
 
             self._allAeroBmps = [whidbey_dock_pane_left.GetBitmap(), whidbey_dock_pane_top.GetBitmap(),
                                  whidbey_dock_pane_right.GetBitmap(), whidbey_dock_pane_bottom.GetBitmap(),
