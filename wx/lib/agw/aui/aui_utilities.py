@@ -322,9 +322,9 @@ def DarkenBitmap(bmp, caption_colour, new_colour):
     """
 
     image = bmp.ConvertToImage()
-    red = caption_colour.Red()/float(new_colour.Red())
-    green = caption_colour.Green()/float(new_colour.Green())
-    blue = caption_colour.Blue()/float(new_colour.Blue())
+    red = caption_colour.Red()/new_colour.Red()
+    green = caption_colour.Green()/new_colour.Green()
+    blue = caption_colour.Blue()/new_colour.Blue()
     image = image.AdjustChannels(red, green, blue)
     return image.ConvertToBitmap()
 
@@ -584,13 +584,13 @@ def RescaleScreenShot(bmp, thumbnail_size=200):
 
     if bmpW > bmpH:
         if bmpW > thumbnail_size:
-            ratio = bmpW/float(thumbnail_size)
-            newW, newH = int(bmpW/ratio), int(bmpH/ratio)
+            ratio = bmpW/thumbnail_size
+            newW, newH = bmpW//ratio, bmpH//ratio
             img.Rescale(newW, newH, wx.IMAGE_QUALITY_HIGH)
     else:
         if bmpH > thumbnail_size:
-            ratio = bmpH/float(thumbnail_size)
-            newW, newH = int(bmpW/ratio), int(bmpH/ratio)
+            ratio = bmpH/thumbnail_size
+            newW, newH = bmpW//ratio, bmpH//ratio
             img.Rescale(newW, newH, wx.IMAGE_QUALITY_HIGH)
 
     newBmp = img.ConvertToBitmap()
@@ -666,4 +666,7 @@ def CopyAttributes(newArt, oldArt):
             setattr(newArt, attr, getattr(oldArt, attr))
 
     return newArt
+
+
+
 
