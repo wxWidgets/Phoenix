@@ -1136,14 +1136,13 @@ class TreeListHeaderWindow(wx.Window):
         parent = self.GetParent()
         le = wx.ListEvent(evtType, parent.GetId())
         le.SetEventObject(parent)
-        le.m_pointDrag = pos
 
         # the position should be relative to the parent window, not
         # this one for compatibility with MSW and common sense: the
         # user code doesn't know anything at all about this header
         # window, so why should it get positions relative to it?
-        le.m_pointDrag.y -= self.GetSize().y
-        le.m_col = self._column
+        le.SetPoint((pos.x, pos.y - self.GetSize().y))
+        le.SetColumn(self._column)
         parent.GetEventHandler().ProcessEvent(le)
 
 
