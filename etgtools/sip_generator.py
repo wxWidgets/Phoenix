@@ -206,7 +206,14 @@ from .%s import *
                     stream.write(nci(code, 4))
                     stream.write('%End\n')
                 elif codeType == 'function':
-                    raise NotImplementedError() # TODO: See generateMethod for an example, refactor to share code...
+                    ## raise NotImplementedError() # TODO: See generateMethod for an example, refactor to share code...
+                    cm = extractors.CppMethodDef.FromMethod(function)
+                    cm.body = code
+                    self.generateCppMethod(cm, stream, "", skipDeclaration=True)
+                    # generateCppMethod will have already done the overloads
+                    # and virtual catcher code, so we can just return from
+                    # here.
+                    return
         for f in function.overloads:
             self.generateFunction(f, stream, _needDocstring)
         stream.write('\n')
