@@ -979,10 +979,14 @@ class CustomTreeCtrlDemo(wx.Panel):
         self.checkvista = wx.CheckBox(pnl, -1, "Windows Vista Theme")
         self.checkvista.Bind(wx.EVT_CHECKBOX, self.OnVista)
 
+        self.dragFullScreen = wx.CheckBox(pnl, -1, "Fullscreen Drag/Drop")
+        self.dragFullScreen.Bind(wx.EVT_CHECKBOX, self.OnDragFullScreen)
+
         themessizer.Add(sizera, 0, wx.EXPAND)
         themessizer.Add(sizerb, 0, wx.EXPAND)
         themessizer.Add((0, 5))
         themessizer.Add(self.checkvista, 0, wx.EXPAND|wx.ALL, 3)
+        themessizer.Add(self.dragFullScreen, 0, wx.EXPAND|wx.ALL, 3)
 
         mainsizer.Add(stylesizer, 0, wx.EXPAND|wx.ALL, 5)
         mainsizer.Add(colourssizer, 0, wx.EXPAND|wx.ALL, 5)
@@ -1280,6 +1284,12 @@ class CustomTreeCtrlDemo(wx.Panel):
         event.Skip()
 
 
+    def OnDragFullScreen(self, event):
+        
+        self.tree.SetDragFullScreen(event.IsChecked())
+        event.Skip()
+
+
 #---------------------------------------------------------------------------
 # CustomTreeCtrl Demo Implementation
 #---------------------------------------------------------------------------
@@ -1292,8 +1302,6 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                  log=None):
 
         CT.CustomTreeCtrl.__init__(self, parent, id, pos, size, style, agwStyle)
-
-        self.SetBackgroundColour(wx.WHITE)
 
         alldata = dir(CT)
 
@@ -1581,7 +1589,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         menu = wx.Menu()
 
-        item1 = menu.Append(wx.ID_ANY, "Change item background colour")
+        item1 = menu.Append(wx.ID_ANY, "Change Item Text")
         item2 = menu.Append(wx.ID_ANY, "Modify item text colour")
         menu.AppendSeparator()
 
@@ -1592,6 +1600,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         item3 = menu.Append(wx.ID_ANY, strs)
         item4 = menu.Append(wx.ID_ANY, "Change item font")
+        item16 = menu.Append(wx.ID_ANY, "Change Item Background Colour")
         menu.AppendSeparator()
 
         if ishtml:
@@ -1622,6 +1631,9 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         item7 = menu.Append(wx.ID_ANY, "Disable item")
 
         menu.AppendSeparator()
+        item14 = menu.Append(wx.ID_ANY, "Hide Item")
+        item15 = menu.Append(wx.ID_ANY, "Unhide All Items")
+        menu.AppendSeparator()
         item8 = menu.Append(wx.ID_ANY, "Change item icons")
         menu.AppendSeparator()
         item9 = menu.Append(wx.ID_ANY, "Get other information for this item")
@@ -1635,7 +1647,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         item11 = menu.Append(wx.ID_ANY, "Prepend an item")
         item12 = menu.Append(wx.ID_ANY, "Append an item")
 
-        self.Bind(wx.EVT_MENU, self.OnItemBackground, item1)
+        self.Bind(wx.EVT_MENU, self.OnItemText, item1)
         self.Bind(wx.EVT_MENU, self.OnItemForeground, item2)
         self.Bind(wx.EVT_MENU, self.OnItemBold, item3)
         self.Bind(wx.EVT_MENU, self.OnItemFont, item4)
@@ -1648,9 +1660,24 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         self.Bind(wx.EVT_MENU, self.OnItemPrepend, item11)
         self.Bind(wx.EVT_MENU, self.OnItemAppend, item12)
         self.Bind(wx.EVT_MENU, self.OnSeparatorInsert, item13)
+        self.Bind(wx.EVT_MENU, self.OnHideItem, item14)
+        self.Bind(wx.EVT_MENU, self.OnUnhideItems, item15)
+        self.Bind(wx.EVT_MENU, self.OnItemBackground, item16)
 
         self.PopupMenu(menu)
         menu.Destroy()
+
+
+    def OnItemText(self, event):
+
+        diag = wx.TextEntryDialog(self, "Item Text", caption="Input Item Text",
+                                  value=self.GetItemText(self.current),
+                                  style=wx.OK | wx.CANCEL | wx.TE_MULTILINE)
+        reply = diag.ShowModal()
+        text = diag.GetValue()
+        diag.Destroy()
+        if reply in (wx.OK, wx.ID_OK):
+            self.SetItemText(self.current, text)
 
 
     def OnItemBackground(self, event):
@@ -1722,6 +1749,22 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
     def OnDisableItem(self, event):
 
         self.EnableItem(self.current, False)
+
+
+    def OnHideItem(self, event):
+
+        self.HideItem(self.current)
+        event.Skip()
+
+
+    def OnUnhideItems(self, event):
+
+        item = self.GetRootItem()
+        while item:
+            if item.IsHidden():
+                self.HideItem(item, False)
+            item = self.GetNext(item)
+        event.Skip()
 
 
     def OnItemIcons(self, event):
@@ -1972,8 +2015,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         self.item = event.GetItem()
         if self.item:
-            self.log.write("Beginning Drag..." + "\n")
-
+            self.log.write("Beginning Drag... fullscreen=%s\n" % self.GetDragFullScreen())
             event.Allow()
 
 
@@ -1981,16 +2023,19 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         self.item = event.GetItem()
         if self.item:
-            self.log.write("Beginning Right Drag..." + "\n")
-
+            self.log.write("Beginning Right Drag... fullscreen=%s\n" % self.GetDragFullScreen())
             event.Allow()
 
 
     def OnEndDrag(self, event):
 
-        self.item = event.GetItem()
-        if self.item:
-            self.log.write("Ending Drag!" + "\n")
+        if self.GetDragFullScreen() is True:
+            wnd = wx.FindWindowAtPoint(self.ClientToScreen(event.GetPoint()))
+            self.log.write("Ending Drag! window=%s\n" % repr(wnd))
+        else:
+            self.item = event.GetItem()
+            name = self.GetItemText(self.item) if self.item else 'None'
+            self.log.write("Ending Drag! item=%s\n" % name)
 
         event.Skip()
 

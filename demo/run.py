@@ -160,6 +160,7 @@ def main(argv):
 
 
     app = RunDemoApp(name, module, useShell)
+    locale = wx.Locale(wx.LANGUAGE_DEFAULT)
     app.MainLoop()
 
 

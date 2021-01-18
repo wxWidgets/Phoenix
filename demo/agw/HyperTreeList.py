@@ -1055,7 +1055,7 @@ class HyperTreeListDemo(wx.Frame):
         splitter.SplitVertically(self.leftpanel, panel, 300)
 
         splitter.SetMinimumPaneSize(120)
-        self.leftpanel.SetBackgroundColour(wx.WHITE)
+        #self.leftpanel.SetBackgroundColour(wx.WHITE)
         self.leftpanel.SetScrollRate(20, 20)
 
         self.Fit()
@@ -1339,10 +1339,14 @@ class HyperTreeListDemo(wx.Frame):
         self.checkvista = wx.CheckBox(self.leftpanel, -1, "Windows Vista Theme")
         self.checkvista.Bind(wx.EVT_CHECKBOX, self.OnVista)
 
+        self.dragFullScreen = wx.CheckBox(self.leftpanel, -1, "Fullscreen Drag/Drop")
+        self.dragFullScreen.Bind(wx.EVT_CHECKBOX, self.OnDragFullScreen)
+
         themessizer.Add(sizera, 0, wx.EXPAND)
         themessizer.Add(sizerb, 0, wx.EXPAND)
         themessizer.Add((0, 5))
         themessizer.Add(self.checkvista, 0, wx.EXPAND|wx.ALL, 3)
+        themessizer.Add(self.dragFullScreen, 0, wx.EXPAND|wx.ALL, 3)
 
         mainsizer.Add(stylesizer, 0, wx.EXPAND|wx.ALL, 5)
         mainsizer.Add(columnssizer, 0, wx.EXPAND|wx.ALL, 5)
@@ -1738,6 +1742,11 @@ class HyperTreeListDemo(wx.Frame):
 
         event.Skip()
 
+    def OnDragFullScreen(self, event):
+        
+        self.tree.SetDragFullScreen(event.IsChecked())
+        event.Skip()
+
 
 #---------------------------------------------------------------------------
 # HyperTreeList Implementation
@@ -1766,6 +1775,7 @@ class HyperTreeList(HTL.HyperTreeList):
         for evt in ["EVT_TREE_GET_INFO", "EVT_TREE_SET_INFO", "EVT_TREE_ITEM_MIDDLE_CLICK",
                     "EVT_TREE_STATE_IMAGE_CLICK"]:
             events.remove(evt)
+        events.extend(('EVT_LIST_COL_CLICK', 'EVT_LIST_COL_RIGHT_CLICK'))
 
         treestyles = treestyles + [i for i in dir(wx) if i.startswith("TR_")]
         treeset = {}
@@ -1776,6 +1786,8 @@ class HyperTreeList(HTL.HyperTreeList):
         self.events = events
         self.styles = treestyles
         self.item = None
+        self.sortIcon = wx.HDR_SORT_ICON_NONE
+        self.sortColumn = 0
 
         il = wx.ImageList(16, 16)
 
@@ -1906,7 +1918,8 @@ class HyperTreeList(HTL.HyperTreeList):
                           'EVT_TREE_ITEM_EXPANDING': self.OnItemExpanding, 'EVT_TREE_ITEM_GETTOOLTIP': self.OnToolTip,
                           'EVT_TREE_ITEM_MENU': self.OnItemMenu, 'EVT_TREE_ITEM_RIGHT_CLICK': self.OnRightDown,
                           'EVT_TREE_KEY_DOWN': self.OnKey, 'EVT_TREE_SEL_CHANGED': self.OnSelChanged,
-                          'EVT_TREE_SEL_CHANGING': self.OnSelChanging, "EVT_TREE_ITEM_HYPERLINK": self.OnHyperLink}
+                          'EVT_TREE_SEL_CHANGING': self.OnSelChanging, "EVT_TREE_ITEM_HYPERLINK": self.OnHyperLink,
+                          'EVT_LIST_COL_CLICK': self.OnColClick, 'EVT_LIST_COL_RIGHT_CLICK': self.OnColRightClick}
 
         mainframe = wx.GetTopLevelParent(self)
 
@@ -2100,7 +2113,7 @@ class HyperTreeList(HTL.HyperTreeList):
                          "itemtype": itemtype, "text": text, "pydata": pydata, "enabled": enabled}
 
         menu = wx.Menu()
-
+        item1 = menu.Append(wx.ID_ANY, "Change Item Text")
         item2 = menu.Append(wx.ID_ANY, "Modify Item Text Colour")
         menu.AppendSeparator()
         if isbold:
@@ -2135,6 +2148,7 @@ class HyperTreeList(HTL.HyperTreeList):
         item11 = menu.Append(wx.ID_ANY, "Prepend An Item")
         item12 = menu.Append(wx.ID_ANY, "Append An Item")
 
+        self.Bind(wx.EVT_MENU, self.OnItemText, item1)
         self.Bind(wx.EVT_MENU, self.OnItemForeground, item2)
         self.Bind(wx.EVT_MENU, self.OnItemBold, item3)
         self.Bind(wx.EVT_MENU, self.OnItemFont, item4)
@@ -2152,6 +2166,23 @@ class HyperTreeList(HTL.HyperTreeList):
         self.PopupMenu(menu)
         menu.Destroy()
         event.Skip()
+
+
+    def OnItemText(self, event):
+
+        col = wx.GetNumberFromUser("Choose column number to change text",
+                                   "Col", "Column To Modify", 0, 0,
+                                   self.GetColumnCount() - 1, self)
+        if col >= 0 and col < self.GetColumnCount():
+            diag = wx.TextEntryDialog(self, "%s Text" % self.GetColumnText(col),
+                                      caption="Input text for column %d" % col,
+                                      value=self.GetItemText(self.current,col),
+                                      style=wx.OK | wx.CANCEL | wx.TE_MULTILINE)
+            reply = diag.ShowModal()
+            text = diag.GetValue()
+            diag.Destroy()
+            if reply in (wx.OK, wx.ID_OK):
+                self.SetItemText(self.current, text, col)
 
 
     def OnItemForeground(self, event):
@@ -2381,14 +2412,16 @@ class HyperTreeList(HTL.HyperTreeList):
     def OnItemExpanded(self, event):
 
         item = event.GetItem()
-        if item:
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
             self.log.write("OnItemExpanded: %s\n" % self.GetItemText(item))
 
 
     def OnItemExpanding(self, event):
 
         item = event.GetItem()
-        if item:
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
             self.log.write("OnItemExpanding: %s\n" % self.GetItemText(item))
 
         event.Skip()
@@ -2397,14 +2430,16 @@ class HyperTreeList(HTL.HyperTreeList):
     def OnItemCollapsed(self, event):
 
         item = event.GetItem()
-        if item:
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
             self.log.write("OnItemCollapsed: %s" % self.GetItemText(item))
 
 
     def OnItemCollapsing(self, event):
 
         item = event.GetItem()
-        if item:
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
             self.log.write("OnItemCollapsing: %s\n" % self.GetItemText(item))
 
         event.Skip()
@@ -2412,8 +2447,11 @@ class HyperTreeList(HTL.HyperTreeList):
 
     def OnSelChanged(self, event):
 
-        self.item = event.GetItem()
-        if self.item:
+        item = event.GetItem()
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
+            # This event was from the HyperTreeList and not the TreeCtrl.
+            self.item = item
             self.log.write("OnSelChanged: %s" % self.GetItemText(self.item))
             if wx.Platform == '__WXMSW__':
                 self.log.write(", BoundingRect: %s\n" % self.GetBoundingRect(self.item, True))
@@ -2426,9 +2464,10 @@ class HyperTreeList(HTL.HyperTreeList):
     def OnSelChanging(self, event):
 
         item = event.GetItem()
-        olditem = event.GetOldItem()
-
-        if item:
+        # Ignore wx.TreeCtrl TREE events (item=wx.TreeItemId) from item window.
+        if item and isinstance(item, HTL.TreeListItem):
+            # This event was from the HyperTreeList and not the TreeCtrl.
+            olditem = event.GetOldItem()
             if not olditem:
                 olditemtext = "None"
             else:
@@ -2437,13 +2476,26 @@ class HyperTreeList(HTL.HyperTreeList):
 
         event.Skip()
 
+    def OnColClick(self, event):
+        column = event.GetColumn()
+        self.log.write("OnColClick: Column %d clicked" % column)
+        # Cycle through the sort icons.
+        if column != self.sortColumn:
+            self.sortIcon = wx.HDR_SORT_ICON_NONE
+            self.sortColumn = column
+        self.sortIcon = wx.HDR_SORT_ICON_DOWN if self.sortIcon == wx.HDR_SORT_ICON_UP else wx.HDR_SORT_ICON_UP
+        self.SetColumnSortIcon(column, self.sortIcon)
+
+    def OnColRightClick(self, event):
+        column = event.GetColumn()
+        self.log.write("OnColRightClick: Column %d clicked" % column)
+        self.SetColumnSortIcon(column, wx.HDR_SORT_ICON_NONE)
 
     def OnBeginDrag(self, event):
 
         self.item = event.GetItem()
         if self.item:
-            self.log.write("Beginning Drag...\n")
-
+            self.log.write("Beginning Drag... fullscreen=%s\n" % self.GetDragFullScreen())
             event.Allow()
 
 
@@ -2451,16 +2503,19 @@ class HyperTreeList(HTL.HyperTreeList):
 
         self.item = event.GetItem()
         if self.item:
-            self.log.write("Beginning Right Drag...\n")
-
+            self.log.write("Beginning Right Drag... fullscreen=%s\n" % self.GetDragFullScreen())
             event.Allow()
 
 
     def OnEndDrag(self, event):
 
-        self.item = event.GetItem()
-        if self.item:
-            self.log.write("Ending Drag!\n")
+        if self.GetDragFullScreen() is True:
+            wnd = wx.FindWindowAtPoint(self.ClientToScreen(event.GetPoint()))
+            self.log.write("Ending Drag! window=%s\n" % repr(wnd))
+        else:
+            self.item = event.GetItem()
+            name = self.GetItemText(self.item) if self.item else 'None'
+            self.log.write("Ending Drag! item=%s\n" % name)
 
         event.Skip()
 
