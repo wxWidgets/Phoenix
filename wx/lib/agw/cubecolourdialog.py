@@ -2944,16 +2944,18 @@ class CubeColourDialog(wx.Dialog):
     def SetProperties(self):
         """ Sets some initial properties for :class:`CubeColourDialog` (sizes, values). """
 
+        # Adjust for GTK3's wider SpinButtons
+        spinWidth = 120 if 'gtk3' in wx.PlatformInfo else 60
         self.okButton.SetDefault()
         self.oldColourPanel.SetMinSize((-1, 50))
         self.newColourPanel.SetMinSize((-1, 50))
-        self.redSpin.SetMinSize((60, -1))
-        self.greenSpin.SetMinSize((60, -1))
-        self.blueSpin.SetMinSize((60, -1))
-        self.hueSpin.SetMinSize((60, -1))
-        self.saturationSpin.SetMinSize((60, -1))
-        self.brightnessSpin.SetMinSize((60, -1))
-        self.alphaSpin.SetMinSize((60, -1))
+        self.redSpin.SetMinSize((spinWidth, -1))
+        self.greenSpin.SetMinSize((spinWidth, -1))
+        self.blueSpin.SetMinSize((spinWidth, -1))
+        self.hueSpin.SetMinSize((spinWidth, -1))
+        self.saturationSpin.SetMinSize((spinWidth, -1))
+        self.brightnessSpin.SetMinSize((spinWidth, -1))
+        self.alphaSpin.SetMinSize((spinWidth, -1))
         self.showAlpha.SetValue(1)
         self.accessCode.SetInitialSize((80, -1))
         self.webSafe.SetInitialSize((80, -1))
