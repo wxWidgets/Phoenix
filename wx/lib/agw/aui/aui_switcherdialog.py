@@ -621,12 +621,12 @@ class SwitcherItems(object):
                    and item.GetBitmap().GetHeight() <= 16:
                     x -= textMarginX
                     dc.DrawBitmap(item.GetBitmap(), x, item.GetRect().y + \
-                                  (item.GetRect().height - item.GetBitmap().GetHeight())/2,
+                                  (item.GetRect().height - item.GetBitmap().GetHeight())//2,
                                   True)
                     x += 16 + textMarginX
                 #x += textMarginX
 
-            y = item.GetRect().y + (item.GetRect().height - h)/2
+            y = item.GetRect().y + (item.GetRect().height - h)//2
             dc.DrawText(item.GetTitle(), x, y)
             dc.DestroyClippingRegion()
 
