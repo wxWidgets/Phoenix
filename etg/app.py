@@ -209,6 +209,16 @@ def run():
 
     #-------------------------------------------------------
 
+    module.find('wxHandleFatalExceptions').setCppCode("""\
+        #if wxUSE_ON_FATAL_EXCEPTION
+            return wxHandleFatalExceptions(doIt);
+        #else
+            wxLogInfo("This build of wxWidgets does not support wxHandleFatalExceptions.");
+            return false;
+        #endif
+        """)
+
+    #-------------------------------------------------------
 
     module.addHeaderCode("""\
         enum wxAppAssertMode {
