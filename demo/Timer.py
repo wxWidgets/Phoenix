@@ -219,6 +219,12 @@ class TestPanel(sp.ScrolledPanel):
         self.log.write("got wx.PyTimer event\n")
 
 
+    def ShutdownDemo(self):
+        for t in ['t1', 't2', 't3', 't4']:
+            if hasattr(self, t):
+                print('Stopping:', t)
+                timer = getattr(self, t)
+                timer.Stop()
 
 #----------------------------------------------------------------------
 

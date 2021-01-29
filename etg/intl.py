@@ -61,6 +61,8 @@ def run():
     import os
     _localedir = os.path.join(os.path.dirname(__file__), "locale")
     if os.path.exists(_localedir):
+        if isinstance(_localedir, (bytes, bytearray)):
+            _localedir = _localedir.decode(_sys.getfilesystemencoding())
         Locale.AddCatalogLookupPathPrefix(_localedir)
     del os
     #----------------------------------------------------------------------------

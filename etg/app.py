@@ -521,33 +521,28 @@ def run():
 
             PyFunctionDef('InitLocale', '(self)',
                 doc="""\
-                    Try to ensure that the C and Python locale is in sync with the wxWidgets
-                    locale on Windows. If you have troubles from the default behavior of this
-                    method you can override it in a derived class to behave differently.
-                    Please report the problem you encountered.
+                    Starting with version 3.8 on Windows, Python is now setting the locale
+                    to what is defined by the system as the default locale. This causes
+                    problems with wxWidgets which expects to be able to manage the locale
+                    via the wx.Locale class, so the locale will be reset here to be the
+                    default "C" locale settings.
+
+                    If you have troubles from the default behavior of this method you can
+                    override it in a derived class to behave differently. Please report
+                    the problem you encountered.
                     """,
                 body="""\
-                    self.ResetLocale()
-                    if 'wxMSW' in PlatformInfo:
+                    if _sys.platform.startswith('win') and _sys.version_info > (3,8):
                         import locale
-                        try:
-                            lang, enc = locale.getdefaultlocale()
-                            self._initial_locale = wx.Locale(lang, lang[:2], lang)
-                            locale.setlocale(locale.LC_ALL, lang)
-                        except (ValueError, locale.Error) as ex:
-                            target = wx.LogStderr()
-                            orig = wx.Log.SetActiveTarget(target)
-                            wx.LogError("Unable to set default locale: '{}'".format(ex))
-                            wx.Log.SetActiveTarget(orig)
+                        locale.setlocale(locale.LC_ALL, "C")
                     """),
 
             PyFunctionDef('ResetLocale', '(self)',
                 doc="""\
-                    Release the wx.Locale object created in :meth:`InitLocale`.
-                    This should reset the application's locale to the previous settings.
+                    This method is now a NOP and will be deprecated.
                     """,
                 body="""\
-                    self._initial_locale = None
+                    pass
                     """),
 
             PyFunctionDef('Get', '()', isStatic=True,
