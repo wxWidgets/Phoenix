@@ -11,8 +11,12 @@
 
 **Description of the problem**:
 
-<!-- if possible please include a small runnable application that demonstrates the problem -->
+<!-- if possible please include a small runnable application in the details section below that demonstrates the problem -->
+
+<details>
+  <summary>Code Example (click to expand)</summary>
 
 ```python
 # Put code sample here
 ```
+</details>
