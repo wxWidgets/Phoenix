@@ -8,6 +8,27 @@
 wxPython Changelog
 ==================
 
+4.0.8 ""
+------------------------------
+* [not yet released]
+
+PyPI:   https://pypi.org/project/wxPython/4.0.8
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.0.8``
+
+This release is comprised mostly of fixes and minor features which have been
+back-ported from the master branch.  This release is based on wxWidgets 3.0.x.
+
+This release provides the following changes:
+
+* Fix SyntaxWarnings in PlotCanvas and MaskedEditMixin.
+
+* Fix crash in wx.PseudoDC.FindObjects() with Python 3.9
+
+* Fix crash in wx.CustomDataObject.GetData() with Python 3.9
+
+
+
 4.0.7.post2 "To QTKit, or not to QTKit..."
 ------------------------------------------
 * 12-Nov-2019
