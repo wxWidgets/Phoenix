@@ -27,6 +27,12 @@ This release provides the following changes:
 
 * Fix crash in wx.CustomDataObject.GetData() with Python 3.9
 
+* Update wxWidgets to incorporate the latest 3.0.5+ backports/fixes
+
+* Add missing wx.TreeCtrl GetSpacing()/SetSpacing() methods
+
+* Fix building with Doxygen 1.9.0 (part of wxWidgets changes)
+
 
 
 4.0.7.post2 "To QTKit, or not to QTKit..."
