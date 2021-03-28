@@ -22,7 +22,15 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 # manually, but will be excluded by default when selecting all images.
 OLD = [ 'ubuntu-14.04', 'fedora-29', 'fedora-30', 'fedora-31' ]
 
-
+# Workaround for building on Fedora >=31 with cgroups v2 where docker fails
+# Reference: https://www.linuxuprising.com/2019/11/how-to-install-and-use-docker-on-fedora.html
+# After 'sudo dnf install podman'
+# Comment and uncomment appropriate lines to use podman
+docker_command='docker'
+# docker_command='podman'  # Uncomment this line to use podman
+# Because when using podman with non root user, would need extra argument to volumes
+volume_flag=':Z' if docker_command=='podman' else ''
+namespace_flag='--userns=keep-id' if docker_command=='podman' else ''
 
 @task(
     aliases=['build_image', 'bi'],
@@ -45,9 +53,9 @@ def build_images(ctx, image, gui=False, include_old=False):
     img_type = 'gui' if gui else 'build'
     for img_name in image:
         # build it
-        ctx.run('docker build --no-cache '
+        ctx.run('{command} build --no-cache '
                 '-f {type}/{name}/Dockerfile '
-                '-t wxpython4/{type}:{name}  .'.format(name=img_name, type=img_type),
+                '-t wxpython4/{type}:{name}  .'.format(command=docker_command, name=img_name, type=img_type),
                 pty=True, echo=True)
         # test it
         test_images(ctx, [img_name], gui)
@@ -74,8 +82,8 @@ def test_images(ctx, image, gui=False, include_old=False):
     img_type = 'gui' if gui else 'build'
     for img_name in image:
         # test it
-        ctx.run('docker run -it --rm -v {}:/dist '
-                'wxpython4/{}:{} hello.sh'.format(dist, img_type, img_name),
+        ctx.run('{} run {} -it --rm -v {}:/dist{} '
+                'wxpython4/{}:{} hello.sh'.format(docker_command, namespace_flag, dist, volume_flag, img_type, img_name),
                 pty=True, echo=True)
 
 
@@ -100,7 +108,7 @@ def push(ctx, image, gui=False, include_old=False):
     for img_name in image:
         # build it
         ctx.run(
-            'docker push wxpython4/{type}:{name}'.format(name=img_name, type=img_type),
+            '{command} push wxpython4/{type}:{name}'.format(command=docker_command, name=img_name, type=img_type),
             pty=True, echo=True)
 
 
@@ -130,8 +138,8 @@ def build_wxpython(ctx, image, venv='all', port='gtk3', include_old=False, keep=
     dist=os.path.abspath('../dist')
     rm = '' if keep else '--rm'
     for img_name in image:
-        ctx.run('docker run -it {} -v {}:/dist '
-                'wxpython4/build:{} do-build.sh {} {}'.format(rm, dist, img_name, venv, port),
+        ctx.run('{} run {} -it {} -v {}:/dist{} '
+                'wxpython4/build:{} do-build.sh {} {}'.format(docker_command, namespace_flag, rm, dist, volume_flag, img_name, venv, port),
                 pty=True, echo=True)
 
 
@@ -154,9 +162,8 @@ def run(ctx, image_tag, cmd=None, gui=False, port=5901, keep=False):
     imgtype = 'gui' if gui else 'build'
     cmd = '' if cmd is None else cmd
     rm = '' if keep else '--rm'
-    ctx.run(
-        'docker run -it {} -v {}:/dist -p {}:5901 wxpython4/{}:{} {}'.format(
-            rm, dist, port, imgtype, image_tag, cmd),
+    ctx.run( '{} run {} -it {} -v {}:/dist{} -p {}:5901 wxpython4/{}:{} {}'.format(docker_command,
+            namespace_flag, rm, dist, volume_flag, port, imgtype, image_tag, cmd),
         pty=True, echo=True)
 
 
