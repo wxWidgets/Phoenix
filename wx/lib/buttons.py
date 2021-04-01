@@ -60,6 +60,7 @@ Sample usage::
 
 import wx
 import wx.lib.imageutils as imageutils
+import wx.lib.colourutils as colourutils
 
 
 #----------------------------------------------------------------------
@@ -1070,6 +1071,140 @@ class GenBitmapTextToggleButton(__ToggleMixin, GenBitmapTextButton):
     """ A generic toggle bitmap button with text label. """
     pass
 
+class GenShowHideToggleButton(GenToggleButton):
+    def __init__(self, *args, menu, **kwargs):
+        GenToggleButton.__init__(self, *args, **kwargs)
+        self.SetMenu(menu)
+        self.nctvBgClr = self.GetBackgroundColour()
+        self.nctvFgClr = colourutils.BestLabelColour(self.nctvBgClr, bw=True)
+        self.actvBgClr = colourutils.GetHighlightColour()
+        self.actvFgClr = colourutils.BestLabelColour(self.actvBgClr, bw=True)
+        self.Bind(wx.EVT_TOGGLEBUTTON, self._OnToggle)
+
+    def GetInactiveBackgroundColour(self):
+        """
+        Returns the :class:`GenShowHideToggleButton` inactive background colour.
+        """
+        return self.nctvBgClr
+
+    def SetInactiveBackgroundColour(self, colour):
+        """
+        Sets the :class:`GenShowHideToggleButton` inactive background colour.
+
+        :param `colour`: a valid :class:`wx.Colour` object.
+
+        .. note:: Overridden from :class:`wx.GenButton`.
+        """
+        self.nctvBgClr = wx.Colour(colour)
+        self.Update()
+
+    def GetInactiveForegroundColour(self):
+        """
+        Returns the :class:`GenShowHideToggleButton` inactive foreground colour.
+        """
+        return self.nctvFgClr
+
+    def SetInactiveForegroundColour(self, colour):
+        """
+        Sets the :class:`GenShowHideToggleButton` inactive foreground colour.
+
+        :param `colour`: a valid :class:`wx.Colour` object.
+
+        .. note:: Overridden from :class:`wx.GenButton`.
+        """
+        self.nctvFgClr = wx.Colour(colour)
+        self.Update()
+
+    def GetActiveBackgroundColour(self):
+        """
+        Returns the :class:`GenShowHideToggleButton` active background colour.
+        """
+        return self.actvBgClr
+
+    def SetActiveBackgroundColour(self, colour):
+        """
+        Sets the :class:`GenShowHideToggleButton` active background colour.
+
+        :param `colour`: a valid :class:`wx.Colour` object.
+
+        .. note:: Overridden from :class:`wx.GenButton`.
+        """
+        self.actvBgClr = wx.Colour(colour)
+        self.Update()
+
+    def GetActiveForegroundColour(self):
+        """
+        Returns the :class:`GenShowHideToggleButton` active foreground colour.
+        """
+        return self.actvFgClr
+
+    def SetActiveForegroundColour(self, colour):
+        """
+        Sets the :class:`GenShowHideToggleButton` active foreground colour.
+
+        :param `colour`: a valid :class:`wx.Colour` object.
+
+        .. note:: Overridden from :class:`wx.GenButton`.
+        """
+        self.actvFgClr = wx.Colour(colour)
+        self.Update()
+
+    def Update(self):
+        """
+        Update()
+
+        Calling this method immediately repaints the invalidated area of the
+        window and all of its children recursively (this normally only happens
+        when the flow of control returns to the event loop).
+        """
+        wx.Window.Update(self)
+        if self.GetToggle():
+            self.SetBackgroundColour(self.actvBgClr)
+            self.SetForegroundColour(self.actvFgClr)
+        else:
+            self.SetBackgroundColour(self.nctvBgClr)
+            self.SetForegroundColour(self.nctvFgClr)
+
+    def GetMenu(self):
+        """
+        Returns the :class:`Window` or :class:`Sizer` associated with this :class:`GenShowHideToggleButton`.
+        """
+        return self._Menu
+
+    def SetMenu(self, menu):
+        """
+        Sets the :class:`Window` or :class:`Sizer` associated with this :class:`GenShowHideToggleButton`, meaning
+        that it will be shown/hidden by :event:`EVT_TOGGLEBUTTON` events.
+
+        :param `menu`: a :class:`Window` or :class:`Sizer`
+
+        .. note:: Overridden from :class:`wx.GenButton`.
+        """
+        assert isinstance(menu, wx.Window) or isinstance(menu, wx.Sizer)
+        self._Menu = menu
+        self.onToggle(self.GetToggle())
+
+    @property
+    def Menu(self):
+        """
+        See :func:`GetMenu` and :func:`SetMenu`
+        """
+        return self.GetMenu()
+
+    @Menu.setter
+    def Menu(self, menu):
+        self.SetMenu(menu)
+
+    def _OnToggle(self, event):
+        """
+        Used internally
+        """
+        state = event if isinstance(event, bool) else event.GetSelection()
+        self.Menu.Show(state)
+        self.Menu.GetContainingSizer.Layout()
+        self.Update()
+        return
+
 #----------------------------------------------------------------------
 
 
@@ -1126,6 +1261,10 @@ class ThemedGenBitmapTextButton(__ThemedMixin, GenBitmapTextButton):
 
 class ThemedGenToggleButton(__ThemedMixin, GenToggleButton):
     """ A themed generic toggle button. """
+    pass
+
+class ThemedGenShowHideToggleButton(__ThemedMixin, GenShowHideToggleButton):
+    """ A themed generic show/hide button. """
     pass
 
 class ThemedGenBitmapToggleButton(__ThemedMixin, GenBitmapToggleButton):
