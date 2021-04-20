@@ -186,8 +186,8 @@ class ScrolledPanel(wx.ScrolledWindow):
             is the ScrolledPanel itself.
         """
         cr = child.GetScreenRect()
-        spr = self.GetScreenPosition()
-        return wx.Rect(cr.x - spr.x, cr.y - spr.y, cr.width, cr.height)
+        spp = self.GetScreenPosition()
+        return wx.Rect(cr.x - spp.x, cr.y - spp.y, cr.width, cr.height)
 
 
     def ScrollChildIntoView(self, child):
