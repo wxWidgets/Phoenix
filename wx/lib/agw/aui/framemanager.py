@@ -9324,6 +9324,8 @@ class AuiManager(wx.EvtHandler):
         if pane.IsFloating():
             diff = pane.floating_pos - (screenPt - self._action_offset)
             pane.floating_pos = screenPt - self._action_offset
+        else:
+            diff = wx.Point()
 
         framePos = pane.floating_pos
 
