@@ -1087,7 +1087,7 @@ class Shell(editwindow.EditWindow):
             else:
                 indent=previousLine[:(len(previousLine)-len(lstrip))]
                 if pstrip[-1]==':' and \
-                    first_word in ['if','else','elif','for','while',
+                    first_word in ['if','else','elif','for','while','with',
                                    'def','class','try','except','finally']:
                     indent+=' '*4
 
@@ -1416,7 +1416,8 @@ class Shell(editwindow.EditWindow):
             lstrip = line.lstrip()
             if line.strip() != '' and lstrip == line and \
                     lstrip[:4] not in ['else','elif'] and \
-                    lstrip[:6] != 'except':
+                    lstrip[:6] != 'except' and \
+                    lstrip[:7] != 'finally':
                 # New command.
                 if command:
                     # Add the previous command to the list.
