@@ -250,7 +250,7 @@ class EventChooser(wx.Panel):
         self.doUpdate = False
         for position in range(self.lb.GetCount()):
             self.lb.Check(position, True)
-            index = self.lb.GetCliendData(position)
+            index = self.lb.GetClientData(position)
             self.watchList[index] = (self.watchList[index][0], check)
         self.lb.Refresh()
         self.doUpdate = True
