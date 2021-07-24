@@ -253,12 +253,6 @@ def configure(conf):
                        uselib_store='WXWEBVIEW', mandatory=True,
                        msg='Finding libs for WXWEBVIEW')
 
-        if isDarwin:
-            conf.check_cfg(path=conf.options.wx_config, package='',
-                           args='--cxxflags --libs core,net' + rpath,
-                           uselib_store='WXWEBKIT', mandatory=True,
-                           msg='Finding libs for WXWEBKIT')
-
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs xml,core,net' + rpath,
                        uselib_store='WXXML', mandatory=True,
@@ -616,8 +610,6 @@ def build(bld):
     makeETGRule(bld, 'etg/_aui.py',        '_aui',       'WXAUI')
 
     # Modules that are platform-specific
-    if isDarwin:
-        makeETGRule(bld, 'etg/_webkit.py', '_webkit',    'WXWEBKIT')
     if isWindows:
         makeETGRule(bld, 'etg/_msw.py',    '_msw',       'WX')
 
