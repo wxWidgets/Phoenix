@@ -18,6 +18,8 @@ Pip:    ``pip install wxPython==4.1.2``
 
 New and improved in this release:
 
+* This release is built using wxWidgets' 3.1.5 release tag.
+
 * Tweaked the build scripts a bit to ensure that on non-Windows platforms that
   the complier and flags used by default match those used by wxWidgets, (with
   the flags needed by Python added on.) The compiler commands can be overridden
@@ -34,6 +36,12 @@ New and improved in this release:
 
 * Fixed issues related to `time_t` being treated as a 32-bit value on Windows.
   (#1910)
+
+* Added wx.FullScreenEvent and wx.EVT_FULLSCREEN.
+
+* The legacy, OSX-Only wx.webkit module has been removed.
+
+
 
 
 
