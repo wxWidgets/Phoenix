@@ -103,6 +103,8 @@ def run():
     dtor = c.find('~wxObjectDataPtr')
     dtor.isDtor = True
 
+    ctor.findOverload('< U >').ignore()
+
     # more name hacks/fixes
     c.nodeBases = ({'wxObjectDataPtr': ('wxObjectDataPtr', [])},
                    ['wxObjectDataPtr'])

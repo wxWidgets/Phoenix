@@ -425,6 +425,8 @@ def run():
     c.find('SetEditor.editor').transfer = True  # these are probably redundant now...
     c.find('SetRenderer.renderer').transfer = True
 
+    c.find('GetRendererPtr').ignore()
+
     #-----------------------------------------------------------------
     module.find('wxGridCellRendererPtr').piIgnored = True
     module.find('wxGridCellEditorPtr').piIgnored = True
@@ -635,7 +637,7 @@ def run():
     # Custom code to deal with the wxGridBlockCoordsVector return type of these
     # methods. It's a wxVector, which we'll just convert to a list.
 
-    # TODO: There are a few of these now to we ought to either wrap wxVector, or add
+    # TODO: There are a few of these now so we ought to either wrap wxVector, or add
     #       something in tweaker_tools to make adding code like this easier and more
     #       automated.
     code = """\

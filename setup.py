@@ -220,7 +220,7 @@ if haveWheel:
 
 
         def run(self):
-            # Ensure that there is a basic library build for bdist_egg to pull from.
+            # Ensure that there is a basic library build for bdist_egg/wheel to pull from.
             self.run_command("build")
 
             _cleanup_symlinks(self)
