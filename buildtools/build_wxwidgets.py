@@ -381,7 +381,7 @@ def main(wxDir, args):
         flags = {}
         buildDir = os.path.abspath(os.path.join(wxRootDir, "build", "msw"))
 
-        print("creating wx/msw/setup.h from setup0.h")
+        print("Updating wx/msw/setup.h")
         if options.unicode:
             flags["wxUSE_UNICODE"] = "1"
             if VERSION < (2,9):
@@ -411,8 +411,8 @@ def main(wxDir, args):
 
 
         mswIncludeDir = os.path.join(wxRootDir, "include", "wx", "msw")
-        setup0File = os.path.join(mswIncludeDir, "setup0.h")
-        with open(setup0File, "rb") as f:
+        setupFile = os.path.join(mswIncludeDir, "setup.h")
+        with open(setupFile, "rb") as f:
             setupText = f.read()
             if PY3:
                 setupText = setupText.decode('utf-8')
@@ -420,10 +420,10 @@ def main(wxDir, args):
         for flag in flags:
             setupText, subsMade = re.subn(flag + "\s+?\d", "%s %s" % (flag, flags[flag]), setupText)
             if subsMade == 0:
-                print("Flag %s wasn't found in setup0.h!" % flag)
+                print("Flag %s wasn't found in setup.h!" % flag)
                 sys.exit(1)
 
-        with open(os.path.join(mswIncludeDir, "setup.h"), "wb") as f:
+        with open(setupFile, "wb") as f:
             if PY3:
                 setupText = setupText.encode('utf-8')
             f.write(setupText)
