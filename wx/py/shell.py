@@ -305,7 +305,7 @@ class Shell(editwindow.EditWindow):
 
         # Assign handler for the context menu
         self.Bind(wx.EVT_CONTEXT_MENU, self.OnContextMenu)
-        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateContextMenu)
 
         # add the option to not use the stock IDs; otherwise the context menu
         # may not work on Mac without adding the proper IDs to the menu bar
@@ -1511,7 +1511,7 @@ class Shell(editwindow.EditWindow):
         menu = self.GetContextMenu()
         self.PopupMenu(menu)
 
-    def OnUpdateUI(self, evt):
+    def OnUpdateContextMenu(self, evt):
         id = evt.Id
         if id in (self.ID_CUT, self.ID_CLEAR):
             evt.Enable(self.CanCut())
