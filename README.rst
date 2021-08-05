@@ -361,7 +361,7 @@ or other unixes.
 
 * dpkg-dev
 * build-essential
-* python3.7-dev and libpython3.7-dev  # use appropriate Python version here
+* python3.9-dev and libpython3.9-dev  # use appropriate Python version here
 * freeglut3-dev 
 * libgl1-mesa-dev 
 * libglu1-mesa-dev 
