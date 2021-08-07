@@ -12,8 +12,8 @@ jobs:
       - run: black --check . || true
       - run: codespell --ignore-words-list="actualy,ans,anumber,ba,currenty,fo,fof,hist,iif,inout,nd,nin,originaly,ot,te,thex,ue,wit" || true  # --skip="*.css,*.js,*.lock"
       - run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
-      - run: flake8 --ignore=E111,E112,E113,E114,E115,E116,E117,E121,E122,E123,E124,E125,E126,E127,E128,E129,E131,E201,E202,E203,E211,E221,E222,E225,E226,E227,E228,E231,E241,E251,E261,E262,E265,E266,E271,E272,E301,E302,E303,E305,E306,E402,E502,E701,E702,E703,E704,E711,E712,E713,E714,E721,E722,E731,E741,E742,E902,E999,F401,F403,F405,F601,F723,F811,F821,F822,F841,W291,W292,W293,W391,W503,W504,W601,W605
-                    --max-complexity=114 --max-line-length=612 --show-source --statistics .
+      - run: flake8 --ignore=E111,E112,E113,E114,E115,E116,E117,E121,E122,E123,E124,E125,E126,E127,E128,E129,E131,E201,E202,E203,E211,E221,E222,E225,E226,E227,E228,E231,E241,E251,E261,E262,E265,E266,E271,E272,E301,E302,E303,E305,E306,E401,E402,E502,E701,E702,E703,E704,E711,E712,E713,E714,E721,E722,E731,E741,E742,E902,E999,F401,F403,F405,F601,F723,F811,F821,F822,F841,W291,W292,W293,W391,W503,W504,W601,W605
+                    --max-complexity=128 --max-line-length=612 --show-source --statistics .
       - run: isort --check-only --profile black . || true
       # - run: pip install -r requirements.txt || true
       - run: pip install --editable .
