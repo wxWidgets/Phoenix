@@ -61,7 +61,7 @@ def run():
     c = module.find('wxHeaderCtrlSimple')
     tools.fixWindowClass(c)
 
-    # Uningnore the protected virtuals that are indended to be overridden in
+    # Uningnore the protected virtuals that are intended to be overridden in
     # derived classes.
     c.find('GetBestFittingWidth').ignore(False)
     c.find('GetBestFittingWidth').isVirtual = True

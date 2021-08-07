@@ -414,7 +414,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         max = self.__max
         limited = self.__limited
         self.__posCurrent = 0
-        # handle deprecated keword argument name:
+        # handle deprecated keyword argument name:
         if 'display_seconds' in kwargs:
             kwargs['displaySeconds'] = kwargs['display_seconds']
             del kwargs['display_seconds']
@@ -851,7 +851,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         adjusted to the new minimum value; if not limited, the value in the
         control will be colored as invalid.
 
-        :param `min`: Minium value for the control
+        :param `min`: Minimum value for the control
         :type `min`: integer or None
 
         """
@@ -915,7 +915,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         adjusted to this maximum value; if not limited, the value in the
         control will be colored as invalid.
 
-        :param `max`: Minium value for the control
+        :param `max`: Minimum value for the control
         :type `max`: integer or None
 
         """
@@ -975,9 +975,9 @@ class TimeCtrl(BaseMaskedTextCtrl):
 
         .. note:: Leaving out an argument will remove the corresponding bound.
 
-        :param `min`: Minium value for the control
+        :param `min`: Minimum value for the control
         :type `min`: integer or None
-        :param `max`: Minium value for the control
+        :param `max`: Minimum value for the control
         :type `max`: integer or None
 
         """

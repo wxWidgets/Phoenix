@@ -1023,7 +1023,7 @@ An event will be sent to the control when the focus changes.
 
 When the user clicks on the control,
 :class:`~wx.richtext.RichTextCtrl` determines which container to set
-as the current object focus by calling the found container's overrided
+as the current object focus by calling the found container's overridden
 :meth:`~wx.richtext.RichTextObject.AcceptsFocus` function. For
 example, although a table is a container, it must not itself be the
 object focus because there is no text editing at the table

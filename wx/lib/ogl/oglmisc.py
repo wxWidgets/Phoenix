@@ -269,7 +269,7 @@ def CentreText(dc, text_list, xpos, ypos, width, height, formatMode):
 
 def DrawFormattedText(dc, text_list, xpos, ypos, width, height, formatMode):
     """
-    Draw formated text
+    Draw formatted text
 
     :param `dc`: the :class:`wx.MemoryDC`
     :param `text_list`: a list of texts
@@ -310,7 +310,7 @@ def DrawFormattedText(dc, text_list, xpos, ypos, width, height, formatMode):
 
 def RoughlyEqual(val1, val2, tol=0.00001):
     """
-    Check if values are roughtly equal
+    Check if values are roughly equal
 
     :param `val1`: the first value to check
     :param `val2`: the second value to check
@@ -356,7 +356,7 @@ def CheckLineIntersection(x1, y1, x2, y2, x3, y3, x4, y4):
     :param `x4`: x4 position
     :param `y4`: y4 position
 
-    :returns: a lenght ratio and a k line???
+    :returns: a length ratio and a k line???
 
     """
     denominator_term = (y4 - y3) * (x2 - x1) - (y2 - y1) * (x4 - x3)

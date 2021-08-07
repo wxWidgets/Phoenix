@@ -1043,7 +1043,7 @@ values over 30. For that reason, this demo is limited to 16 buttons.
 
 POV hats come in two flavors: four-way, and continuous. four-way POVs are restricted to
 the cardinal points of the compass; continuous, or CTS POV hats can deliver input in
-.01 degree increments, theoreticaly. The data is returned as a whole number; the last
+.01 degree increments, theoretically. The data is returned as a whole number; the last
 two digits are considered to be to the right of the decimal point, so in order to
 use this information, you need to divide by 100 right off the bat.
 

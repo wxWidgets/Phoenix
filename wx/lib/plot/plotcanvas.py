@@ -86,7 +86,7 @@ class PlotCanvas(wx.Panel):
         self.Bind(wx.EVT_SCROLL_LINEUP, self.OnScroll)
         self.Bind(wx.EVT_SCROLL_LINEDOWN, self.OnScroll)
 
-        # set curser as cross-hairs
+        # set cursor as cross-hairs
         self.defaultCursor = wx.Cursor(wx.CURSOR_ARROW)
         self.HandCursor = wx.Cursor(wx.CURSOR_SIZING)
         self.GrabHandCursor = wx.Cursor(wx.CURSOR_SIZING)
@@ -325,7 +325,7 @@ class PlotCanvas(wx.Panel):
         """
         Saves the file to the type specified in the extension. If no file
         name is specified a dialog box is provided.  Returns True if
-        sucessful, otherwise False.
+        successful, otherwise False.
 
         .bmp  Save a Windows bitmap file.
         .xbm  Save an X bitmap file.

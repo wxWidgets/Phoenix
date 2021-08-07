@@ -41,7 +41,7 @@
 /*
  * The Python metatype for a C++ wrapper type.  We inherit everything from the
  * standard Python metatype except the init and getattro methods and the size
- * of the type object created is increased to accomodate the extra information
+ * of the type object created is increased to accommodate the extra information
  * we associate with a wrapped type.
  */
 
@@ -629,7 +629,7 @@ static const sipAPIDef sip_api = {
 #define FMT_AP_DEREF            0x01    /* The pointer will be dereferenced. */
 #define FMT_AP_TRANSFER         0x02    /* Implement /Transfer/. */
 #define FMT_AP_TRANSFER_BACK    0x04    /* Implement /TransferBack/. */
-#define FMT_AP_NO_CONVERTORS    0x08    /* Suppress any convertors. */
+#define FMT_AP_NO_CONVERTORS    0x08    /* Suppress any converters. */
 #define FMT_AP_TRANSFER_THIS    0x10    /* Support for /TransferThis/. */
 
 
@@ -726,7 +726,7 @@ static PyObject *sipEnumType_getattro(PyObject *self, PyObject *name);
 
 /*
  * The type data structure.  We inherit everything from the standard Python
- * metatype and the size of the type object created is increased to accomodate
+ * metatype and the size of the type object created is increased to accommodate
  * the extra information we associate with a named enum type.
  */
 static PyTypeObject sipEnumType_Type = {
@@ -1944,7 +1944,7 @@ static int sip_api_init_module(sipExportedModuleDef *client,
         }
     }
 
-    /* Set the base class object for any sub-class convertors. */
+    /* Set the base class object for any sub-class converters. */
     if (client->em_convertors != NULL)
     {
         sipSubClassConvertorDef *scc = client->em_convertors;
@@ -5384,7 +5384,7 @@ static int parsePass2(sipSimpleWrapper *self, int selfarg, PyObject *sipArgs,
     int a, ok;
     Py_ssize_t nr_pos_args;
 
-    /* Handle the converions of "self" first. */
+    /* Handle the conversions of "self" first. */
     switch (*fmt++)
     {
     case 'B':
@@ -5968,7 +5968,7 @@ static void sip_api_instance_destroyed_ex(sipSimpleWrapper **sipSelfp)
 
         /*
          * This no longer points to anything useful.  Actually it might do as
-         * the partialy destroyed C++ instance may still be trying to invoke
+         * the partially destroyed C++ instance may still be trying to invoke
          * reimplemented virtuals.
          */
         clear_access_func(sipSelf);
@@ -8859,7 +8859,7 @@ static int sip_api_can_convert_to_type(PyObject *pyObj, const sipTypeDef *td,
 /*
  * Convert a Python object to a C/C++ pointer, assuming a previous call to
  * sip_api_can_convert_to_type() has been successful.  Allow ownership to be
- * transferred and any type convertors to be disabled.
+ * transferred and any type converters to be disabled.
  */
 static void *sip_api_convert_to_type(PyObject *pyObj, const sipTypeDef *td,
         PyObject *transferObj, int flags, int *statep, int *iserrp)
@@ -8953,7 +8953,7 @@ void *sip_api_force_convert_to_type(PyObject *pyObj, const sipTypeDef *td,
 
 
 /*
- * Release a possibly temporary C/C++ instance created by a type convertor.
+ * Release a possibly temporary C/C++ instance created by a type converter.
  */
 static void sip_api_release_type(void *cpp, const sipTypeDef *td, int state)
 {
@@ -9026,11 +9026,11 @@ PyObject *sip_api_convert_from_type(void *cpp, const sipTypeDef *td,
         void *orig_cpp = cpp;
         const sipTypeDef *orig_td = td;
 
-        /* Apply the sub-class convertor. */
+        /* Apply the sub-class converter. */
         td = convertSubClass(td, &cpp);
 
         /*
-         * If the sub-class convertor has done something then check the cache
+         * If the sub-class converter has done something then check the cache
          * again using the modified values.
          */
         if (cpp != orig_cpp || td != orig_td)
@@ -9094,7 +9094,7 @@ static PyObject *sip_api_convert_from_new_type(void *cpp, const sipTypeDef *td,
         return res;
     }
 
-    /* Apply any sub-class convertor. */
+    /* Apply any sub-class converter. */
     if (sipTypeHasSCC(td))
         td = convertSubClass(td, &cpp);
 
@@ -9312,9 +9312,9 @@ static void sip_api_call_hook(const char *hookname)
 
 
 /*
- * Call any sub-class convertors for a given type returning a pointer to the
+ * Call any sub-class converters for a given type returning a pointer to the
  * sub-type object, and possibly modifying the C++ address (in the case of
- * multiple inheritence).
+ * multiple inheritance).
  */
 static const sipTypeDef *convertSubClass(const sipTypeDef *td, void **cppPtr)
 {
@@ -9331,7 +9331,7 @@ static const sipTypeDef *convertSubClass(const sipTypeDef *td, void **cppPtr)
 
 
 /*
- * Do a single pass through the available convertors.
+ * Do a single pass through the available converters.
  */
 static int convertPass(const sipTypeDef **tdp, void **cppPtr)
 {
@@ -9340,7 +9340,7 @@ static int convertPass(const sipTypeDef **tdp, void **cppPtr)
 
     /*
      * Note that this code depends on the fact that a module appears in the
-     * list of modules before any module it imports, ie. sub-class convertors
+     * list of modules before any module it imports, ie. sub-class converters
      * will be invoked for more specific types first.
      */
     for (em = moduleList; em != NULL; em = em->em_next)
@@ -9356,11 +9356,11 @@ static int convertPass(const sipTypeDef **tdp, void **cppPtr)
 
             /*
              * The base type is the "root" class that may have a number of
-             * convertors each handling a "branch" of the derived tree of
+             * converters each handling a "branch" of the derived tree of
              * classes.  The "root" normally implements the base function that
-             * provides the RTTI used by the convertors and is re-implemented
+             * provides the RTTI used by the converters and is re-implemented
              * by derived classes.  We therefore see if the target type is a
-             * sub-class of the root, ie. see if the convertor might be able to
+             * sub-class of the root, ie. see if the converter might be able to
              * convert the target type to something more specific.
              */
             if (PyType_IsSubtype(py_type, base_type))
@@ -9377,8 +9377,8 @@ static int convertPass(const sipTypeDef **tdp, void **cppPtr)
                     /*
                      * We are only interested in types that are not
                      * super-classes of the target.  This happens either
-                     * because it is in an earlier convertor than the one that
-                     * handles the type or it is in a later convertor that
+                     * because it is in an earlier converter than the one that
+                     * handles the type or it is in a later converter that
                      * handles a different branch of the hierarchy.  Either
                      * way, the ordering of the modules ensures that there will
                      * be no more than one and that it will be the right one.
@@ -9389,8 +9389,8 @@ static int convertPass(const sipTypeDef **tdp, void **cppPtr)
                         *cppPtr = ptr;
 
                         /*
-                         * Finally we allow the convertor to return a type that
-                         * is apparently unrelated to the current convertor.
+                         * Finally we allow the converter to return a type that
+                         * is apparently unrelated to the current converter.
                          * This causes the whole process to be restarted with
                          * the new values.  The use case is PyQt's QLayoutItem.
                          */
@@ -9408,7 +9408,7 @@ static int convertPass(const sipTypeDef **tdp, void **cppPtr)
      * it must be.  This can happen legitimately if the wrapped library is
      * returning an internal class that is down-cast to a more generic class.
      * Also we want this function to be safe when a class doesn't have any
-     * convertors.
+     * converters.
      */
     return FALSE;
 }
@@ -12768,7 +12768,7 @@ static int sip_api_check_plugin_for_type(const sipTypeDef *td,
      * The current thinking on plugins is that SIP v5 will look for a plugin
      * with a name derived from the name as the current module in the same
      * directory as the .sip defining the module (ie. no %Plugin directive).  A
-     * module hierachy may have multiple plugins but they must co-operate.  If
+     * module hierarchy may have multiple plugins but they must co-operate.  If
      * a plugin generates user data then it should include a void* (and a
      * run-time API) so that other plugins can extend it further.  This
      * approach means that a plugin's user data structure can be opaque.

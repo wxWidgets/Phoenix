@@ -46,7 +46,7 @@ title frame, or a PDF by providing an image of the cover page.  The images for
 these files may be generated on the fly by a suitably extended :class:`ImageHandler`,
 or may be provided with the instance of :class:`Thumb`.  The list of `Thumb`
 instances passed to `ScrolledThumbnail` may contain different derived classes,
-as long as each contains the required funtions.
+as long as each contains the required functions.
 
 NB:  Use of :class:`ScrolledThumbnail` has not been tested with extended classes.
 

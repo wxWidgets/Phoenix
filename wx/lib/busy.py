@@ -26,7 +26,7 @@ class BusyInfo(object):
     size) and the background and foreground colors of the message box can be
     set.
 
-    Creating an instace of the class will create and show a window with the
+    Creating an instance of the class will create and show a window with the
     given message, and when the instance is deleted then that window will be
     closed. This class also implements the context manager magic methods, so
     it can be used with Python's `with` statement, like this::

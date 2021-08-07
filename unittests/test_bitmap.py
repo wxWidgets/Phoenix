@@ -63,7 +63,7 @@ class BitmapTests(wtc.WidgetTestCase):
         else:
             self.assertTrue( b2.__nonzero__() == b2.IsOk() )
 
-        # check that the __nonzero__ method can be used with if satements
+        # check that the __nonzero__ method can be used with if statements
         nzcheck = False
         if b2:
             nzcheck = True

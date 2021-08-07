@@ -235,7 +235,7 @@ formatcodes
             0  integer fields get leading zeros
             D  Date[/time] field
             T  Time field
-            F  Auto-Fit: the control calulates its size from
+            F  Auto-Fit: the control calculates its size from
                the length of the template mask
             V  validate entered chars against validRegex before allowing them
                to be entered vs. being allowed by basic mask and then having
@@ -993,7 +993,7 @@ masktags = {
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
            'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
-           'description': "US Date + Time\n(w/hypens)"
+           'description': "US Date + Time\n(w/hyphens)"
            },
        "USDATE24HRTIMEMMDDYYYY/HHMMSS": {
            'mask': "##/##/#### ##:##:##",
@@ -1005,7 +1005,7 @@ masktags = {
            'mask': "##-##-#### ##:##:##",
            'formatcodes': 'DF',
            'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + milhours + ':' + minutes + ':' + seconds,
-           'description': "US Date + 24Hr Time\n(w/hypens)"
+           'description': "US Date + 24Hr Time\n(w/hyphens)"
            },
        "USDATETIMEMMDDYYYY/HHMM": {
            'mask': "##/##/#### ##:## AM",
@@ -1025,7 +1025,7 @@ masktags = {
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
            'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + hours + ':' + minutes + ' (A|P)M',
-           'description': "US Date + Time\n(w/hypens and w/o secs)"
+           'description': "US Date + Time\n(w/hyphens and w/o secs)"
            },
        "USDATE24HRTIMEMMDDYYYY-HHMM": {
            'mask': "##-##-#### ##:##",
@@ -1316,7 +1316,7 @@ class Field:
               'choiceRequired': False,          ## If choices supplied this specifies if valid value must be in the list
               'compareNoCase': False,           ## Optional flag to indicate whether or not to use case-insensitive list search
               'autoSelect': False,              ## Set to True to try auto-completion on each keystroke:
-              'validFunc': None,                ## Optional function for defining additional, possibly dynamic validation constraints on contrl
+              'validFunc': None,                ## Optional function for defining additional, possibly dynamic validation constraints on control
               'validRequired': False,           ## Set to True to disallow input that results in an invalid value
               'emptyInvalid':  False,           ## Set to True to make EMPTY = INVALID
               'description': "",                ## primarily for autoformats, but could be useful elsewhere
@@ -4180,7 +4180,7 @@ class MaskedEditMixin:
                 self._SetValue(newvalue)
                 self._SetInsertionPoint(min(edit_end, len(newvalue.rstrip())))
                 self._OnAutoSelect(field, match_index)
-                self._CheckValid()  # recolor as appopriate
+                self._CheckValid()  # recolor as appropriate
 
 
         if keycode in (wx.WXK_UP, wx.WXK_DOWN, wx.WXK_LEFT, wx.WXK_RIGHT,
@@ -4774,7 +4774,7 @@ class MaskedEditMixin:
     def _applyFormatting(self):
         """ Apply formatting depending on the control's state.
             Need to find a way to call this whenever the value changes, in case the control's
-            value has been changed or set programatically.
+            value has been changed or set programmatically.
         """
 ##        dbg(suspend=1)
 ##        dbg('MaskedEditMixin::_applyFormatting', indent=1)
@@ -5591,7 +5591,7 @@ class MaskedEditMixin:
 
         The trouble is that, a priori, there's no explicit notification of
         why the focus event we received.  However, the whole reason we need to
-        do this is because the default behavior on TAB traveral in a wx.TextCtrl is
+        do this is because the default behavior on TAB traversal in a wx.TextCtrl is
         now to select the entire contents of the window, something we don't want.
         So we can *now* test the selection range, and if it's "the whole text"
         we can assume the cause, change the insertion point to the start of
@@ -7041,7 +7041,7 @@ __i=0
 ##
 ##  Version 1.0
 ##   1. Decimal point behavior restored for decimal and integer type controls:
-##      decimal point now trucates the portion > 0.
+##      decimal point now truncates the portion > 0.
 ##   2. Return key now works like the tab character and moves to the next field,
 ##      provided no default button is set for the form panel on which the control
 ##      resides.
@@ -7227,7 +7227,7 @@ __i=0
 ##   5. Decimal values now collapse to decimal with '.00' on losefocus if the user never
 ##      presses the decimal point.
 ##   6. Cursor now goes to the beginning of the field if the user clicks in an
-##      "empty" field intead of leaving the insertion point in the middle of the
+##      "empty" field instead of leaving the insertion point in the middle of the
 ##      field.
 ##   7. New "N" mask type includes upper and lower chars plus digits. a-zA-Z0-9.
 ##   8. New formatcodes init parameter replaces other init params and adds functions.

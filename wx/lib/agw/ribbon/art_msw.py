@@ -129,7 +129,7 @@ class RibbonMSWArtProvider(object):
         in a colour scheme similar to, if not identical to, the default colours of the
         art provider. Note that if :meth:`~RibbonMSWArtProvider.SetColour` is called, then :meth:`~RibbonMSWArtProvider.GetColourScheme` does
         not try and return a colour scheme similar to colours being used - it's return
-        values are dependant upon the last values given to :meth:`~RibbonMSWArtProvider.SetColourScheme`, as
+        values are dependent upon the last values given to :meth:`~RibbonMSWArtProvider.SetColourScheme`, as
         described above.
 
         :param `primary`: Pointer to a location to store the primary colour, or ``None``;
@@ -1135,7 +1135,7 @@ class RibbonMSWArtProvider(object):
         background = page.AdjustRectToIncludeScrollButtons(background)
         background.height -= 2
 
-        # Page background isn't dependant upon the width of the page
+        # Page background isn't dependent upon the width of the page
         # (at least not the part of it intended to be painted by this
         # function). Set to wider than the page itself for when externally
         # expanded panels need a background - the expanded panel can be wider
@@ -1144,7 +1144,7 @@ class RibbonMSWArtProvider(object):
         background.x = 0
         background.width = 10000
 
-        # upper_rect, lower_rect, paint_rect are all in page co-ordinates
+        # upper_rect, lower_rect, paint_rect are all in page coordinates
         upper_rect = wx.Rect(*background)
         upper_rect.height /= 5
 
@@ -1536,7 +1536,7 @@ class RibbonMSWArtProvider(object):
         """
         Draw the background and chrome for a :class:`~wx.lib.agw.ribbon.gallery.RibbonGallery` control.
 
-        This should draw the border, brackground, scroll buttons, extension button, and
+        This should draw the border, background, scroll buttons, extension button, and
         any other UI elements which are not attached to a specific gallery item.
 
         :param `dc`: The device context to draw onto;
@@ -2517,7 +2517,7 @@ class RibbonMSWArtProvider(object):
         is resized.
 
         To optimise the drawing of page backgrounds, as small an area as possible should
-        be returned. Of couse, if the way in which a background is drawn means that the
+        be returned. Of course, if the way in which a background is drawn means that the
         entire background needs to be repainted on resize, then the entire new size
         should be returned.
 

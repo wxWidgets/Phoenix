@@ -266,7 +266,7 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
             pass       # parent's arg1 missing
 
         # with getOrCreateTopic(topic, proto), the 'required args' set
-        # is garanteed to be a subset of 'all args'
+        # is guaranteed to be a subset of 'all args'
         self.pub.getDefaultTopicMgr().getOrCreateTopic('tasd',          ok_0)
         self.pub.getDefaultTopicMgr().getOrCreateTopic('tasd.t_1',      ok_1)
         self.assertRaises(self.pub.MessageDataSpecError, self.pub.getDefaultTopicMgr().getOrCreateTopic,
@@ -298,7 +298,7 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
         self.pub.getDefaultTopicMgr().newTopic('tasd.t_2.t_23', 'desc', ('arg1',), arg1='docs for arg1') # ok_21
         check('t_2.t_24', ('arg2',), arg2='docs for arg2')                     # err_22
 
-        # check when no inheritence involved
+        # check when no inheritance involved
         # reqd args wrong
         check('t_1.t_16', ('arg1',), arg2='docs for arg2')
         check('t_1.t_17', ('arg2',), arg1='docs for arg1')

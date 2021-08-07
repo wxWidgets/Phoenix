@@ -27,7 +27,7 @@
 # Don't Know What It Means. Probably Is My Poor English...
 #
 # 4. OnSizePanel Function In FoldPanelBar Class:
-# TODO: A Smart Way To Check Wether The Old - New Width Of The
+# TODO: A Smart Way To Check Whether The Old - New Width Of The
 # Panel Changed, If So No Need To Resize The Fold Panel Items
 #
 #
@@ -736,7 +736,7 @@ class CaptionBar(wx.Window):
 
 
     def IsCollapsed(self):
-        """ Returns wether the status of the bar is expanded or collapsed. """
+        """ Returns whether the status of the bar is expanded or collapsed. """
 
         return self._collapsed
 
@@ -796,7 +796,7 @@ class CaptionBar(wx.Window):
 
     def IsVertical(self):
         """
-        Returns wether the :class:`CaptionBar` has a default orientation or not.
+        Returns whether the :class:`CaptionBar` has a default orientation or not.
         Default is vertical.
         """
 
@@ -1425,7 +1425,7 @@ class FoldPanelBar(wx.Panel):
             if vertical and rect.GetHeight() > 0 or not vertical and rect.GetWidth() > 0:
                 self.RefreshRect(rect)
 
-        # TODO: A smart way to check wether the old - new width of the
+        # TODO: A smart way to check whether the old - new width of the
         # panel changed, if so no need to resize the fold panel items
 
         self.RedisplayFoldPanelItems()
@@ -1509,7 +1509,7 @@ class FoldPanelBar(wx.Panel):
         value = wx.Rect(0,0,0,0)
         vertical = self.IsVertical()
 
-        # determine wether the number of panels left
+        # determine whether the number of panels left
         # times the size of their captions is enough
         # to be placed in the left over space
 

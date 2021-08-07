@@ -108,7 +108,7 @@ class TreeAPIHarmonizer(object):
     def GetItemImage(self, item, which=wx.TreeItemIcon_Normal, column=-1):
         # CustomTreeCtrl always wants the which argument, so provide it
         # TreeListCtr.GetItemImage has a different order of arguments than
-        # the other tree controls. Hide the differenes.
+        # the other tree controls. Hide the differences.
         if self.GetColumnCount():
             args = (item, column, which)
         else:

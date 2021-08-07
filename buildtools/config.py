@@ -937,7 +937,7 @@ def textfile_open(filename, mode='rt'):
 
 def getSipFiles(names):
     """
-    Returns a list of the coresponding .sip files for each of the names in names.
+    Returns a list of the corresponding .sip files for each of the names in names.
     """
     files = list()
     for template in ['sip/gen/%s.sip', 'src/%s.sip']:

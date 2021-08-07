@@ -14,7 +14,7 @@ an asterisk were already present in :mod:`lib` before:
 - AdvancedSplash: reproduces the behaviour of :class:`~adv.SplashScreen`, with more
   advanced features like custom shapes and text animations;
 - AquaButton: this is another custom-drawn button class which
-  *approximatively* mimics the behaviour of Aqua buttons on the Mac;
+  *approximately* mimics the behaviour of Aqua buttons on the Mac;
 - AUI: a pure-Python implementation of :mod:`~wx.lib.agw.aui`, with many bug fixes and
   new features like HUD docking and :class:`~wx.lib.agw.aui.auibook.AuiNotebook` tab arts;
 - BalloonTip: allows you to display tooltips in a balloon style window

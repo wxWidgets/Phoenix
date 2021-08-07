@@ -262,7 +262,7 @@ class dataview_Tests(wtc.WidgetTestCase):
         count2 = model.GetRefCount()
 
         # The reference count should still be 1 because the model was
-        # DecRef'ed when it's ownership transfered to C++ in the
+        # DecRef'ed when it's ownership transferred to C++ in the
         # AssociateModel call
         self.assertEqual(count2, 1)
         self.assertTrue(count2 == count1)

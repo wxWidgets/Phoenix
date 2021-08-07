@@ -61,7 +61,7 @@ def get_acroversion():
 # http://partners.adobe.com/public/developer/en/acrobat/sdk/pdf/iac/IACOverview.pdf
 # http://partners.adobe.com/public/developer/en/acrobat/sdk/pdf/iac/IACReference.pdf
 #
-# Co-ordinates passed as parameters are in points (1/72 inch).
+# Coordinates passed as parameters are in points (1/72 inch).
 
 
 if get_acroversion() >= 7.0:

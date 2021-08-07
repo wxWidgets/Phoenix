@@ -565,7 +565,7 @@ void i_wxPyReinitializeModules() {
         // function in a dyn-loaded DLL. When modules are cleaned up then that
         // DLL will be unloaded, leaving a dangling function pointer.  We'll
         // likely end up with multiple instances of some things, but that is
-        // better than the alternaive currently.
+        // better than the alternative currently.
         //wxModule::CleanUpModules();
 
         wxModule::RegisterModules();
