@@ -17,9 +17,6 @@
 
 from __future__ import print_function
 import re
-import sys
-
-_PY2 = sys.version_info[0] == 2
 
 __all__ = ['TextWrapper', 'wrap', 'fill', 'dedent', 'indent', 'shorten']
 
@@ -32,10 +29,7 @@ def _translate(s, mapping):
     Could alternatively just shift up to unicode, which is what most strings should
     be anyway, but that path is fraught with danger of causing downstream errors.
     """
-    if _PY2 and isinstance(s, str):
-        return str(unicode(s).translate(mapping))
-    else:
-        return s.translate(mapping) # default path
+    return s.translate(mapping) # default path
 
 # Hardcode the recognized whitespace characters to the US-ASCII
 # whitespace characters.  The main reason for doing this is that

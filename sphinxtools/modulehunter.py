@@ -26,10 +26,6 @@ from .utilities import isPython3, PickleFile
 from .constants import object_types, EXCLUDED_ATTRS, MODULE_TO_ICON
 from .constants import CONSTANT_RE
 
-if sys.version_info < (3,):
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
-
 if isPython3():
     MethodTypes = (classmethod, types.MethodType, types.ClassMethodDescriptorType)
 else:
@@ -155,10 +151,7 @@ def analyze_params(obj, signature):
             pvalue = pvalue.strip()
             if pname in pevals:
                 try:
-                    if isPython3():
-                        peval = str(pevals[pname])
-                    else:
-                        peval = unicode(pevals[pname])
+                    peval = str(pevals[pname])
                 except UnicodeDecodeError:
                     peval = repr(pevals[pname])
                 except TypeError:

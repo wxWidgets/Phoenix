@@ -56,14 +56,6 @@ class Interpreter(InteractiveInterpreter):
         commandBuffer until we have a complete command. If not, we
         delete that last list."""
 
-        # In case the command is unicode try encoding it
-        if not six.PY3:
-            if type(command) == unicode:
-                try:
-                    command = command.encode('utf-8')
-                except UnicodeEncodeError:
-                    pass # otherwise leave it alone
-
         if not self.more:
             try: del self.commandBuffer[-1]
             except IndexError: pass

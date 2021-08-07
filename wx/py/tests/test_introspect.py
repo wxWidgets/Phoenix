@@ -394,21 +394,6 @@ class GetBaseObjectTestCase(unittest.TestCase):
             # Class with no init.
             (Bar, Bar, 0),
         ]
-        if not PY3:
-            values.extend([
-            # Byte-compiled code.
-            (ham.func_code, ham.func_code, 0),
-            # Class with init.
-            (Foo, Foo.__init__.im_func, 1),
-            # Bound method.
-            (spam.foo, spam.foo.im_func, 1),
-            # Bound method with self named something else (spam).
-            (spam.bar, spam.bar.im_func, 1),
-            # Unbound method. (Do not drop the self argument.)
-            (eggs, eggs.im_func, 0),
-            # Callable instance.
-            (spam, spam.__call__.im_func, 1),
-            ])
         for object, baseObject, dropSelf in values:
             result = introspect.getBaseObject(object)
             self.assertEqual(result, (baseObject, dropSelf))
@@ -674,16 +659,6 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
             # BrokenStr instance.
             brokenStr,
         ]
-        if not PY3:
-            self.items.extend([
-                long(123),
-                unicode(""),
-                xrange(0),
-                # Byte-compiled code.
-                ham.func_code,
-                # Buffer.
-                buffer(''),
-            ])
 
     def tearDown(self):
         self.items = None

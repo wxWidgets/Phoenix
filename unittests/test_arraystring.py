@@ -1,14 +1,11 @@
 import unittest
 import wx
-import six
 
 #---------------------------------------------------------------------------
 
-if not six.PY3:
-    alt = unicode
-else:
-    def alt(s):
-        return bytes(s, 'utf-8')
+
+def alt(s):
+    return bytes(s, 'utf-8')
 
 
 class ArrayString(unittest.TestCase):

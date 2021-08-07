@@ -1065,7 +1065,7 @@ def _removeSidebar(path):
         tag = soup.find('div', 'document')
         if tag:
             tag.attrs['class'] = ['document-no-sidebar']
-        text = unicode(soup) if PY2 else str(soup)
+        text = str(soup)
         with textfile_open(filename, 'wt') as f:
             f.write(text)
 
