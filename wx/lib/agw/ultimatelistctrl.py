@@ -9630,8 +9630,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                 self._linesPerPage = clientHeight//lineHeight
 
                 self.SetScrollbars(SCROLL_UNIT_X, lineHeight,
-                                   (self.GetHeaderWidth()-decrement)/SCROLL_UNIT_X,
-                                   (entireHeight + lineHeight - 1)/lineHeight,
+                                   (self.GetHeaderWidth()-decrement)//SCROLL_UNIT_X,
+                                   (entireHeight + lineHeight - 1)//lineHeight,
                                    self.GetScrollPos(wx.HORIZONTAL),
                                    self.GetScrollPos(wx.VERTICAL),
                                    True)
@@ -9652,8 +9652,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                     decrement = SCROLL_UNIT_X
 
                 self.SetScrollbars(SCROLL_UNIT_X, SCROLL_UNIT_Y,
-                                   (self.GetHeaderWidth()-decrement)/SCROLL_UNIT_X,
-                                   (entireHeight + SCROLL_UNIT_Y - 1)/SCROLL_UNIT_Y,
+                                   (self.GetHeaderWidth()-decrement)//SCROLL_UNIT_X,
+                                   (entireHeight + SCROLL_UNIT_Y - 1)//SCROLL_UNIT_Y,
                                    self.GetScrollPos(wx.HORIZONTAL),
                                    self.GetScrollPos(wx.VERTICAL),
                                    True)
@@ -9704,8 +9704,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                         line._gi.ExtendWidth(widthMax)
 
                 self.SetScrollbars(SCROLL_UNIT_X, lineHeight,
-                                   (x + SCROLL_UNIT_X)/SCROLL_UNIT_X,
-                                   (y + lineHeight)/lineHeight,
+                                   (x + SCROLL_UNIT_X)//SCROLL_UNIT_X,
+                                   (y + lineHeight)//lineHeight,
                                    self.GetScrollPos(wx.HORIZONTAL),
                                    self.GetScrollPos(wx.VERTICAL),
                                    True)
@@ -9773,7 +9773,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                             break  # Everything fits, no second try required.
 
                 self.SetScrollbars(SCROLL_UNIT_X, lineHeight,
-                                   (entireWidth + SCROLL_UNIT_X)/SCROLL_UNIT_X,
+                                   (entireWidth + SCROLL_UNIT_X)//SCROLL_UNIT_X,
                                    0,
                                    self.GetScrollPos(wx.HORIZONTAL),
                                    0,
