@@ -272,7 +272,7 @@ class TestWindow(ogl.ShapeCanvas):
 
         maxWidth  = 1000
         maxHeight = 1000
-        self.SetScrollbars(20, 20, maxWidth/20, maxHeight/20)
+        self.SetScrollbars(20, 20, maxWidth//20, maxHeight//20)
 
         self.log = log
         self.frame = frame
