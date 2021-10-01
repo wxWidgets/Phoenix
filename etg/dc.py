@@ -310,6 +310,9 @@ def run():
         '(PyObject* textList, PyObject* pyPoints, PyObject* foregroundList, PyObject* backgroundList)',
         body="return wxPyDrawTextList(*self, textList, pyPoints, foregroundList, backgroundList);")
 
+    c.addCppMethod('PyObject*', '_DrawLinesBuffer',
+        '(PyObject* pyBuff)',
+        body="return wxPyDrawLinesBuffer(*self, pyBuff);")
 
     c.addPyMethod('DrawPointList', '(self, points, pens=None)',
         doc="""\
@@ -475,6 +478,16 @@ def run():
             """)
 
 
+    c.addPyMethod('DrawLinesBuffer', '(self, pyBuff)',
+        doc="""\
+            Implementation of DrawLines that can use numpy arrays, or anything else that uses the
+            python buffer protocol, directly.
+
+            :param pyBuff:    A python buffer containing integer pairs
+            """,
+        body="""\
+            return  self._DrawLinesBuffer(pyBuff)
+            """)
 
 
     #-----------------------------------------------------------------

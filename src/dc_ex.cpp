@@ -9,7 +9,6 @@
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
-
 typedef bool (*wxPyDrawListOp_t)(wxDC& dc, PyObject* coords);
 
 PyObject* wxPyDrawXXXList(wxDC& dc, wxPyDrawListOp_t doDraw,
@@ -466,3 +465,45 @@ error0:
     PyErr_SetString(PyExc_TypeError, "Expected a sequence of length-2 sequences or wx.Points.");
     return NULL;
 }
+
+
+PyObject* wxPyDrawLinesBuffer(wxDC& dc, PyObject* pyBuff)
+{
+    wxPyBlock_t blocked = wxPyBeginBlockThreads();
+    Py_buffer view;
+    PyObject* retval;
+
+
+    if (!PyObject_CheckBuffer(pyBuff)) {
+        goto err0;
+    }
+    
+    if (PyObject_GetBuffer(pyBuff, &view, PyBUF_CONTIG) < 0) {
+        goto err1;
+    }
+    
+    dc.DrawLines(view.len / view.itemsize / 2, (wxPoint *)view.buf);
+    
+    PyBuffer_Release(&view);
+
+    Py_INCREF(Py_None);
+    retval = Py_None;
+    goto exit;
+
+
+ err0:
+    PyErr_SetString(PyExc_TypeError, "Expected a buffer object");
+    retval = NULL;
+    goto exit;
+    
+  err1:
+    retval = NULL;
+    goto exit;
+
+
+
+ exit:
+    wxPyEndBlockThreads(blocked);
+    return retval;
+}
+
