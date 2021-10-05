@@ -467,7 +467,7 @@ error0:
 }
 
 
-PyObject* wxPyDrawLinesBuffer(wxDC& dc, PyObject* pyBuff)
+PyObject* wxPyDrawLinesFromBuffer(wxDC& dc, PyObject* pyBuff)
 {
     wxPyBlock_t blocked = wxPyBeginBlockThreads();
     Py_buffer view;
@@ -480,6 +480,10 @@ PyObject* wxPyDrawLinesBuffer(wxDC& dc, PyObject* pyBuff)
     
     if (PyObject_GetBuffer(pyBuff, &view, PyBUF_CONTIG) < 0) {
         goto err1;
+    }
+    
+    if (view.itemsize * 2 != sizeof(wxPoint)) {
+        goto err2;
     }
     
     dc.DrawLines(view.len / view.itemsize / 2, (wxPoint *)view.buf);
@@ -496,11 +500,15 @@ PyObject* wxPyDrawLinesBuffer(wxDC& dc, PyObject* pyBuff)
     retval = NULL;
     goto exit;
     
-  err1:
+ err1:
+    // PyObject_GetBuffer raises exception already
     retval = NULL;
     goto exit;
 
-
+ err2:
+    PyErr_SetString(PyExc_TypeError, "Item size does not match wxPoint size");
+    retval = NULL;
+    goto exit;
 
  exit:
     wxPyEndBlockThreads(blocked);
