@@ -30,13 +30,6 @@ __date__ = "31 March 2009"
 
 import wx
 
-if wx.Platform == '__WXMAC__':
-    try:
-        import Carbon.Appearance
-    except ImportError:
-        CARBON = False
-    else:
-        CARBON = True
 
 from .aui_utilities import BitmapFromBits, StepColour, IndentPressedBitmap, ChopText
 from .aui_utilities import GetBaseColour, DrawMACCloseButton, LightColour, TakeScreenShot
@@ -158,22 +151,9 @@ class AuiDefaultTabArt(object):
         self._active_windowlist_bmp = BitmapFromBits(nb_list_bits, 16, 16, active_colour)
         self._disabled_windowlist_bmp = BitmapFromBits(nb_list_bits, 16, 16, disabled_colour)
 
-        if wx.Platform == "__WXMAC__":
-            k = Carbon.Appearance.kThemeBrushFocusHighlight if CARBON else 19
-            # Get proper highlight colour for focus rectangle from the
-            # current Mac theme.  kThemeBrushFocusHighlight is
-            # available on Mac OS 8.5 and higher
-            if hasattr(wx, 'MacThemeColour'):
-                c = wx.MacThemeColour(k)
-            else:
-                brush = wx.Brush(active_colour)
-                brush.MacSetTheme(k)
-                c = brush.GetColour()
-            self._focusPen = wx.Pen(c, 2, wx.PENSTYLE_SOLID)
-        else:
-            self._focusPen = wx.Pen(active_colour, 1, wx.PENSTYLE_USER_DASH)
-            self._focusPen.SetDashes([1, 1])
-            self._focusPen.SetCap(wx.CAP_BUTT)
+        self._focusPen = wx.Pen(active_colour, 1, wx.PENSTYLE_USER_DASH)
+        self._focusPen.SetDashes([1, 1])
+        self._focusPen.SetCap(wx.CAP_BUTT)
 
 
     def SetBaseColour(self, base_colour):
@@ -2767,5 +2747,3 @@ class ChromeTabArt(AuiDefaultTabArt):
         dc.DestroyClippingRegion()
 
         return out_tab_rect, out_button_rect, x_extent
-
-
