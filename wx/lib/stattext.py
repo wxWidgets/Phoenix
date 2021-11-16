@@ -302,7 +302,7 @@ class GenStaticText(wx.Control):
             if style & wx.ALIGN_RIGHT:
                 x = width - w
             if style & wx.ALIGN_CENTER:
-                x = (width - w)/2
+                x = (width - w)//2
             dc.DrawText(line, x, y)
             y += h
 
