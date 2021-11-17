@@ -241,6 +241,28 @@ class Events(wtc.WidgetTestCase):
 
 
 
+    def test_eventUnbinding5(self):
+        "Unbind in same order of binding"
+
+        class Frame(wx.Frame):
+            def __init__(self, *args, **kw):
+                wx.Frame.__init__(self, *args, **kw)
+                self.btn = wx.Button(self, label="Hello, wxPython!")
+                self.btn.Bind(wx.EVT_BUTTON, self.onButton1)
+                self.btn.Bind(wx.EVT_BUTTON, self.onButton2)
+            def onButton1(self, evt):
+                evt.Skip()
+            def onButton2(self, evt):
+                evt.Skip()
+
+        frm = Frame(None)
+        ub1 = frm.btn.Unbind(wx.EVT_BUTTON, handler=frm.onButton1)
+        ub2 = frm.btn.Unbind(wx.EVT_BUTTON, handler=frm.onButton2)
+
+        assert ub1, "Expected Unbind() success"
+        assert ub2, "Expected Unbind() success"
+
+
     def test_DropFilesEvent_tweaks(self):
         evt = wx.DropFilesEvent(123, 'one two three four five'.split())
         self.assertTrue(evt.NumberOfFiles == 5)
