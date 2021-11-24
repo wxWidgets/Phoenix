@@ -8,8 +8,8 @@
 wxPython Changelog
 ==================
 
-4.1.2
------
+4.1.2 "Rumors of my death are only slightly exaggerated"
+--------------------------------------------------------
 * (unreleased)
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.1.2
@@ -18,7 +18,14 @@ Pip:    ``pip install wxPython==4.1.2``
 
 New and improved in this release:
 
-* This release is built using wxWidgets' 3.1.5 release tag.
+* Yes, it's been a long time since the last release. I'm not dead, just on an
+  extended break. It took me a while to get up to speed on a new job, and then
+  there was a seemingly perpetual crunch-mode to get the product through a couple
+  releases. I can't say that things are fully back to normal yet, but at least I
+  now know what I'm doing. Mostly. <wink>
+
+* This release is built using wxWidgets code very near the wxWidgets' 3.1.5
+  release tag.
 
 * Tweaked the build scripts a bit to ensure that on non-Windows platforms that
   the complier and flags used by default match those used by wxWidgets, (with
@@ -46,6 +53,7 @@ New and improved in this release:
 * Fix PyProgress on Windows by avoiding invalid sizer flags (#1985)
 
 * Fix 'More Grid Features' in demo
+
 
 
 
