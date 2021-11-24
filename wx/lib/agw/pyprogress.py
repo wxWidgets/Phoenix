@@ -481,7 +481,7 @@ class PyProgress(wx.Dialog):
         sizeDlgModified = False
 
         if wx.Platform == "__WXMSW__":
-            sizerFlags = wx.ALIGN_RIGHT|wx.ALL
+            sizerFlags = wx.ALL
         else:
             sizerFlags = wx.ALIGN_CENTER|wx.BOTTOM|wx.TOP
 

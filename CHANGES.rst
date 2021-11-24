@@ -41,7 +41,11 @@ New and improved in this release:
 
 * The legacy, OSX-Only wx.webkit module has been removed.
 
+* Fix building wxPython with Python 3.10 on Windows (#2016)
 
+* Fix PyProgress on Windows by avoiding invalid sizer flags (#1985)
+
+* Fix 'More Grid Features' in demo
 
 
 
