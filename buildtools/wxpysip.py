@@ -62,8 +62,13 @@ def sip_runner(
         abi_major, abi_minor = resolve_abi_version(abi_version).split('.')
 
         # Set the globals.
-        set_globals(SIP_VERSION, SIP_VERSION_STR, int(abi_major), int(abi_minor),
-                UserException, include_dirs)
+        sip_major_version = SIP_VERSION >> 16
+        if sip_major_version >= 6:
+            set_globals(SIP_VERSION, SIP_VERSION_STR, int(abi_major), int(abi_minor),
+                        sip_module, UserException, include_dirs)
+        else:
+            set_globals(SIP_VERSION, SIP_VERSION_STR, int(abi_major), int(abi_minor),
+                        UserException, include_dirs)
 
         # Parse the input file.
         pt, _, _, _, tags, disabled_features = parse(specification,
@@ -72,9 +77,12 @@ def sip_runner(
 
         # Generate the bindings.
         if sources_dir is not None:
-            generated_files = generateCode(pt, sources_dir, source_suffix,
-                    exceptions, tracing, release_gil, parts, tags,
-                    disabled_features, docstrings, py_debug, sip_module)
+            generate_args = [pt, sources_dir, source_suffix,
+                             exceptions, tracing, release_gil, parts, tags,
+                             disabled_features, docstrings, py_debug]
+            if sip_major_version < 6:
+                generate_args.append(sip_module)
+            generated_files = generateCode(*generate_args)
 
         if sbf_file is not None:
             generateBuildFile(sbf_file, generated_files)
@@ -107,4 +115,3 @@ def generateBuildFile(sbf_file, generated_files):
     with open(sbf_file, 'w') as f:
         f.write("sources = {}\n".format(' '.join(sources)))
         f.write("headers = {}\n".format(header))
-
