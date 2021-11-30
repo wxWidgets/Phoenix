@@ -247,14 +247,14 @@ class Configuration(object):
             if not os.environ.get('CC'):
                 compiler, flags = self.unpackCompilerCommand(self.getWxConfigValue('--cc'))
                 self.CC = os.environ["CC"] = compiler
-                for flag in flags:
+                for flag in reversed(flags):
                     if flag not in self.cflags:
                         self.cflags.insert(0, flag)
 
             if not os.environ.get('CXX'):
                 compiler, flags = self.unpackCompilerCommand(self.getWxConfigValue('--cxx'))
                 self.CXX = os.environ["CXX"] = compiler
-                for flag in flags:
+                for flag in reversed(flags):
                     if flag not in self.cxxflags:
                         self.cxxflags.insert(0, flag)
 
@@ -292,6 +292,7 @@ class Configuration(object):
                     self.WXPLAT2 = '__WXOSX_COCOA__'
 
                 if not self.ARCH == "":
+
                     for arch in self.ARCH.split(','):
                         for lst in [self.cflags, self.cxxflags]:
                             lst.append("-arch")
