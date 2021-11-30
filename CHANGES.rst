@@ -35,6 +35,12 @@ New and improved in this release:
 * Fixed issues related to `time_t` being treated as a 32-bit value on Windows.
   (#1910)
 
+* Fix building wxPython with Python 3.10 on Windows (#2016)
+
+* Fix PyProgress on Windows by avoiding invalid sizer flags (#1985)
+
+* Fix 'More Grid Features' in demo
+
 
 
 4.1.1 "An attitude of gratitude"
