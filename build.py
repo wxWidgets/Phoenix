@@ -226,15 +226,15 @@ def setPythonVersion(args):
     havePyPath = False
 
     for idx, arg in enumerate(args):
-        if re.match(r'^[0-9]\.[0-9]$', arg):
+        if re.match(r'^[0-9]\.[0-9][0-9]?$', arg):
             havePyVer = True
             PYVER = arg
-            PYSHORTVER = arg[0] + arg[2]
+            PYSHORTVER = arg[0] + arg[2:]
             del args[idx]
             break
-        if re.match(r'^[0-9][0-9]$', arg):
+        if re.match(r'^[0-9][0-9][0-9]?$', arg):
             havePyVer = True
-            PYVER = '%s.%s' % (arg[0], arg[1])
+            PYVER = '%s.%s' % (arg[0], arg[1:])
             PYSHORTVER = arg
             del args[idx]
             break
@@ -248,7 +248,7 @@ def setPythonVersion(args):
                 del args[idx:idx+2]
             PYVER = runcmd([PYTHON, '-c', 'import sys; print(sys.version[:3])'],
                            getOutput=True, echoCmd=False)
-            PYSHORTVER = PYVER[0] + PYVER[2]
+            PYSHORTVER = PYVER[0] + PYVER[2:]
             break
 
     if havePyVer:
@@ -293,8 +293,8 @@ def setPythonVersion(args):
         # If no version or path were specified then default to the python
         # that invoked this script
         PYTHON = sys.executable
-        PYVER = sys.version[:3]
-        PYSHORTVER = PYVER[0] + PYVER[2]
+        PYVER = '{}.{}'.format(sys.version_info.major, sys.version_info.minor)
+        PYSHORTVER = '{}{}'.format(sys.version_info.major, sys.version_info.minor)
 
     PYTHON = os.path.abspath(PYTHON)
     msg('Will build using: "%s"' % PYTHON)
