@@ -102,7 +102,7 @@ def configure(conf):
     if conf.options.python:
         conf.env.PYTHON = conf.options.python
     conf.load('python')
-    conf.check_python_version(minver=(2,7,0))
+    conf.check_python_version(minver=(3,6,0))
     if isWindows:
         # Search for the Python headers without doing some stuff that could
         # incorrectly fail on Windows. See my_check_python_headers below.
