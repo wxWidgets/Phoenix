@@ -26,6 +26,7 @@ import subprocess
 import tarfile
 import tempfile
 import datetime
+import shlex
 
 try:
     import pathlib
@@ -470,7 +471,6 @@ def makeOptionParser():
 def parseArgs(args):
     # If WXPYTHON_BUILD_ARGS is set in the environment, split it and add to args
     if os.environ.get('WXPYTHON_BUILD_ARGS', None):
-        import shlex
         args += shlex.split(os.environ.get('WXPYTHON_BUILD_ARGS'))
 
     # Parse the args into options
@@ -1623,6 +1623,24 @@ def cmd_build_py(options, args):
                     WX_CONFIG = wxcfg
                 else:
                     WX_CONFIG = 'wx-config' # hope it is on the PATH
+
+    if isDarwin:
+        # WAF does a test build as part of the configuration phase, but the
+        # default compiler and flags it uses are not even close to how we'll
+        # configure it later in the configuration process. At a minimum we need
+        # to add the -isysroot for builds on Darwin, and wxWidgets configure is
+        # adding this to the compiler command so we can fetch it there.
+        def _getWxCompiler(flag, compName, flagName):
+            cmd = "%s %s" % (WX_CONFIG, flag)
+            value = os.popen(cmd, 'r').read()[:-1]
+            cmd = shlex.split(value)
+            compiler = cmd[0]
+            flags = cmd[1:]
+            #os.environ[compName] = compiler  # don't reset the compiler here, it will be done later
+            os.environ[flagName] = ' '.join(flags)
+
+        _getWxCompiler('--cc', 'CC', 'CFLAGS')
+        _getWxCompiler('--cxx', 'CXX', 'CXXFLAGS')
 
 
     wafBuildBase = wafBuildDir = getWafBuildBase()
