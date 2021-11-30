@@ -209,7 +209,7 @@ def main(wxDir, args):
         "gtk3"          : (True,  "On Linux build for gtk3"),
         "mac_distdir"   : (None, "If set on Mac, will create an installer package in the specified dir."),
         "mac_universal_binary"
-                        : ("", "Comma separated list of architectures to include in the Mac universal binary"),
+                        : ("default", "Comma separated list of architectures to include in the Mac universal binary"),
         "mac_framework" : (False, "Install the Mac build as a framework"),
         "mac_framework_prefix"
                         : (defFwPrefix, "Prefix where the framework should be installed. Default: %s" % defFwPrefix),
@@ -292,25 +292,50 @@ def main(wxDir, args):
                             "--enable-autoidman",
                             ]
 
-        if sys.platform.startswith("darwin"):
-            #wxpy_configure_opts.append("--enable-monolithic")
-            pass
-        else:
+        if not sys.platform.startswith("darwin"):
             wxpy_configure_opts.append("--with-sdl")
 
-        # Set the minimum supported OSX version.
-        # TODO: Add a CLI option to set this.
         if sys.platform.startswith("darwin"):
+            universalCapable = False
+
+            # Set the minimum supported OSX version.
+            # TODO: Add a CLI option to set this.
             wxpy_configure_opts.append("--with-macosx-version-min=10.10")
-            # for xcodePath in getXcodePaths():
-            #     sdks = [ xcodePath+"/SDKs/MacOSX10.{}.sdk".format(n)
-            #              for n in range(9, 15) ]
-            #     # use the lowest available sdk on the build machine
-            #     for sdk in sdks:
-            #         if os.path.exists(sdk):
-            #             wxpy_configure_opts.append(
-            #                 "--with-macosx-sdk=%s" % sdk)
-            #             break
+
+            # find the newest SDK available on this system
+            SDK = 'none found'
+            for xcodePath in getXcodePaths():
+                possibles = [(major, minor) for major in [10, 11, 12] for minor in range(16)]
+                for major, minor in reversed(possibles):
+                    sdk = os.path.join(xcodePath, "SDKs/MacOSX{}.{}.sdk".format(major, minor))
+                    if os.path.exists(sdk):
+                        wxpy_configure_opts.append("--with-macosx-sdk=%s" % sdk)
+                        universalCapable = major >= 11
+                        SDK = sdk
+                        break
+
+            # Now cross check that if a universal build was requested that it's
+            # possible to do with the selected SDK.
+            arch = ''
+            if options.mac_universal_binary:
+                if options.mac_universal_binary == 'default':
+                    if universalCapable:
+                        arch = "arm64,x86_64"
+                    else:
+                        arch = "x86_64"
+                else:
+                    # otherwise assume the user klnows what they are doing and just use what they gave us.
+                    arch = options.mac_universal_binary
+                configure_opts.append("--enable-universal_binary=%s" % arch)
+
+            print("SDK Path:          {}".format(SDK))
+            print("Universal Capable: {}".format(universalCapable))
+            print("Architectures:     {}".format(arch))
+
+            # Using 'builtin' has problems with universal builds, make sure to
+            # force use of system regex library in case configure would
+            # otherwise try to use builtin
+            # wxpy_configure_opts.append("--with-regex=sys")
 
         if not options.mac_framework:
             if installDir and not prefixDir:
@@ -352,16 +377,6 @@ def main(wxDir, args):
             if os.path.exists(frameworkRootDir):
                 if os.path.exists(frameworkRootDir):
                     shutil.rmtree(frameworkRootDir)
-
-        if options.mac_universal_binary:
-            if options.mac_universal_binary == 'default':
-                if options.osx_cocoa:
-                    configure_opts.append("--enable-universal_binary=i386,x86_64")
-                else:
-                    configure_opts.append("--enable-universal_binary")
-            else:
-                configure_opts.append("--enable-universal_binary=%s" % options.mac_universal_binary)
-
 
         print("Configure options: " + repr(configure_opts))
         wxBuilder = builder.AutoconfBuilder()
@@ -604,13 +619,13 @@ def main(wxDir, args):
 
         # put info about the framework into wx-config
         os.chdir(frameworkRootDir)
-        text = file('lib/wx/config/%s' % configname).read()
+        text = open('lib/wx/config/%s' % configname).read()
         text = text.replace("MAC_FRAMEWORK=", "MAC_FRAMEWORK=%s" % getFrameworkName(options))
         if options.mac_framework_prefix not in ['/Library/Frameworks',
                                                 '/System/Library/Frameworks']:
             text = text.replace("MAC_FRAMEWORK_PREFIX=",
                          "MAC_FRAMEWORK_PREFIX=%s" % options.mac_framework_prefix)
-        file('lib/wx/config/%s' % configname, 'w').write(text)
+        open('lib/wx/config/%s' % configname, 'w').write(text)
 
         # The framework is finished!
         print("wxWidgets framework created at: " +

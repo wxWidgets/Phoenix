@@ -1450,8 +1450,14 @@ def cmd_build_wx(options, args):
 
         if not os.path.exists(BUILD_DIR):
             os.makedirs(BUILD_DIR)
-        if  isDarwin and options.mac_arch:
+        if  isDarwin:
+            if options.osx_cocoa:
+                build_options.append("--osx_cocoa")
+
+            if options.mac_arch:
             build_options.append("--mac_universal_binary=%s" % options.mac_arch)
+            else:
+                build_options.append("--mac_universal_binary=default")
 
         if options.no_config:
             build_options.append('--no_config')
@@ -1467,9 +1473,6 @@ def cmd_build_wx(options, args):
                     break
             else:
                 build_options.append("--no_config")
-
-        if isDarwin and options.osx_cocoa:
-            build_options.append("--osx_cocoa")
 
         #if options.install:
         #    build_options.append('--installdir=%s' % DESTDIR)
