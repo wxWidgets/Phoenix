@@ -412,14 +412,14 @@ class GradientButton(wx.Control):
 
         x, y, width, height = clientRect
 
-        gradientRect.SetHeight(gradientRect.GetHeight()/2 + ((capture==self and [1] or [0])[0]))
+        gradientRect.SetHeight(gradientRect.GetHeight()//2 + ((capture==self and [1] or [0])[0]))
         if capture != self:
             if self._mouseAction == HOVER:
                 topStart, topEnd = self.LightColour(self._topStartColour, 10), self.LightColour(self._topEndColour, 10)
             else:
                 topStart, topEnd = self._topStartColour, self._topEndColour
 
-            rc1 = wx.Rect(x, y, width, height/2)
+            rc1 = wx.Rect(x, y, width, height//2)
             path1 = self.GetPath(gc, rc1, 8)
             br1 = gc.CreateLinearGradientBrush(x, y, x, y+height/2, topStart, topEnd)
             gc.SetBrush(br1)
@@ -448,7 +448,7 @@ class GradientButton(wx.Control):
             else:
                 bottomStart, bottomEnd = self._bottomStartColour, self._bottomEndColour
 
-            rc3 = wx.Rect(x, y+height/2, width, height/2)
+            rc3 = wx.Rect(x, y+height//2, width, height//2)
             path3 = self.GetPath(gc, rc3, 8)
             br3 = gc.CreateLinearGradientBrush(x, y+height/2, x, y+height, bottomStart, bottomEnd)
             gc.SetBrush(br3)
@@ -463,7 +463,7 @@ class GradientButton(wx.Control):
             shadowOffset = 0
         else:
 
-            rc2 = wx.Rect(x+1, gradientRect.height/2, gradientRect.width, gradientRect.height)
+            rc2 = wx.Rect(x+1, gradientRect.height//2, gradientRect.width, gradientRect.height)
             path2 = self.GetPath(gc, rc2, 8)
             gc.SetPen(wx.Pen(self._pressedBottomColour))
             gc.SetBrush(wx.Brush(self._pressedBottomColour))

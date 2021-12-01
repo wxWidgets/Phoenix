@@ -165,7 +165,7 @@ class PyPalette(canvas.Canvas):
         if self.point:
             self.buffer.SetPen(wx.BLACK_PEN)
             self.buffer.SetBrush(wx.TRANSPARENT_BRUSH)
-            self.buffer.DrawCircle(self.point[0], self.point[1], 3)
+            self.buffer.DrawCircle(int(self.point[0]), int(self.point[1]), 3)
 
     def HighlightPoint(self, x, y):
         """Highlights an area of the palette with a little circle around

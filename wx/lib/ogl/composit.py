@@ -1131,11 +1131,11 @@ class DivisionShape(CompositeShape):
 
         if self._leftSide:
             dc.SetPen(self._leftSidePen)
-            dc.DrawLine(x1, y2, x1, y1)
+            dc.DrawLine(int(x1), int(y2), int(x1), int(y1))
 
         if self._topSide:
             dc.SetPen(self._topSidePen)
-            dc.DrawLine(x1, y1, x2, y1)
+            dc.DrawLine(int(x1), int(y1), int(x2), int(y1))
 
         # For testing purposes, draw a rectangle so we know
         # how big the division is.

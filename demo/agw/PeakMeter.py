@@ -149,10 +149,10 @@ class PeakMeterCtrlDemo(wx.Panel):
 
     def OnStart(self, event):
 
-        self.timer.Start(1000/2)        # 2 fps
+        self.timer.Start(1000//2)        # 2 fps
 
-        self.vertPeak.Start(1000/18)        # 18 fps
-        self.horzPeak.Start(1000/20)        # 20 fps
+        self.vertPeak.Start(1000//18)        # 18 fps
+        self.horzPeak.Start(1000//20)        # 20 fps
 
 
     def OnStop(self, event):

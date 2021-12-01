@@ -3437,7 +3437,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
             if not self.HasAGWFlag(wx.TR_NO_LINES) and children:
                 last_child = children[-1]
-                Y1 = last_child.GetY() + last_child.GetHeight() / 2
+                Y1 = last_child.GetY() + last_child.GetHeight() // 2
                 dc.DrawLine(x, oldY, x, Y1)
 
         return y, x_maincol

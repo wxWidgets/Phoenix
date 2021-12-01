@@ -173,7 +173,7 @@ class AnalogClock(wx.Window):
         scale = min([float(size.width) / self.basesize.width,
                      float(size.height) / self.basesize.height])
 
-        centre = wx.Point(size.width / 2., size.height / 2.)
+        centre = wx.Point(size.width // 2, size.height // 2)
 
         self.Box.RecalcCoords(size, centre, scale)
         self.Hands.RecalcCoords(size, centre, scale)

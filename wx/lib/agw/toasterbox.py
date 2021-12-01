@@ -1316,11 +1316,11 @@ class ToasterBoxWindow(wx.Frame):
         for line in lines:
             w, h = dc.GetTextExtent(line)
             fh += h + textPadding
-        y = (th - fh) / 2; coords = []
+        y = (th - fh) // 2; coords = []
 
         for line in lines:
             w, h = dc.GetTextExtent(line)
-            x = (tw - w) / 2
+            x = (tw - w) // 2
             coords.append((x, y))
             y += h + textPadding
 

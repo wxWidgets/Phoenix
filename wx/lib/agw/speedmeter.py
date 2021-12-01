@@ -580,8 +580,8 @@ class SpeedMeter(BufferedWindow):
         dc.SetBackground(wx.Brush(speedbackground))
         dc.Clear()
 
-        centerX = self.faceBitmap.GetWidth()/2
-        centerY = self.faceBitmap.GetHeight()/2
+        centerX = self.faceBitmap.GetWidth()//2
+        centerY = self.faceBitmap.GetHeight()//2
 
         self.CenterX = centerX
         self.CenterY = centerY
@@ -681,7 +681,7 @@ class SpeedMeter(BufferedWindow):
             # Draw The Filler (Both In "Advance" And "Reverse" Directions)
 
             dc.SetBrush(wx.Brush(fillercolour))
-            dc.DrawArc(xs2, ys2, xe2, ye2, centerX, centerY)
+            dc.DrawArc(xs2, ys2, xe2, ye2, int(centerX), int(centerY))
 
             if self._agwStyle & SM_DRAW_SECTORS == 0:
                 dc.SetBrush(wx.Brush(speedbackground))
@@ -952,7 +952,7 @@ class SpeedMeter(BufferedWindow):
                     y = y - height/2.0 - height*sin(angis)/2.0
                     fancytext.RenderToDC(fancystr, dc, x, y)
                 else:
-                    dc.DrawText(strings, x, y)
+                    dc.DrawText(strings, int(x), int(y))
 
             # This Is The Small Rectangle --> Tick Mark
             rectangle = colourangles[ii] + pi/2.0
@@ -969,6 +969,7 @@ class SpeedMeter(BufferedWindow):
             y4 = y3 + 3*self.scale*sinrect
 
             points = [(x1, y1), (x2, y2), (x4, y4), (x3, y3)]
+            points = [(int(p[0]), int(p[1])) for p in points]
 
             dc.DrawPolygon(points)
 
@@ -1003,6 +1004,7 @@ class SpeedMeter(BufferedWindow):
                         y4 = y3 + self.scale*sinrect
 
                         points = [(x1, y1), (x2, y2), (x4, y4), (x3, y3)]
+                        points = [(int(p[0]), int(p[1])) for p in points]
 
                         dc.DrawPolygon(points)
 
@@ -1017,7 +1019,7 @@ class SpeedMeter(BufferedWindow):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         if self._drawarc:
-            dc.SetPen(wx.Pen(self.GetArcColour(), 2.0))
+            dc.SetPen(wx.Pen(self.GetArcColour(), 2))
             # If It's Not A Complete Circle, Draw The Connecting Lines And The Arc
             if abs(abs(startangle - endangle) - 2*pi) > 1.0/180.0:
                 dc.DrawArc(xstart, ystart, xend, yend, centerX, centerY)
@@ -1046,7 +1048,7 @@ class SpeedMeter(BufferedWindow):
             newx = centerX + 1.5*mw*cos(middleangle) - mw/2.0
             newy = centerY - 1.5*mh*sin(middleangle) - mh/2.0
             dc.SetTextForeground(middlecolour)
-            dc.DrawText(middletext, newx, newy)
+            dc.DrawText(middletext, int(newx), int(newy))
 
         # Here We Draw The Icon In The Middle, Near The Start Of The Arrow (If Present)
         # This Is Like The "Fuel" Icon In The Cars
@@ -1054,8 +1056,8 @@ class SpeedMeter(BufferedWindow):
 
             middleicon = self.GetMiddleIcon()
             middlewidth, middleheight = self.GetMiddleIconDimens()
-            middleicon.SetWidth(middlewidth*self.scale)
-            middleicon.SetHeight(middleheight*self.scale)
+            middleicon.SetWidth(int(middlewidth*self.scale))
+            middleicon.SetHeight(int(middleheight*self.scale))
             middleangle = (startangle + endangle)/2.0
 
             mw = middleicon.GetWidth()
@@ -1064,7 +1066,7 @@ class SpeedMeter(BufferedWindow):
             newx = centerX + 1.5*mw*cos(middleangle) - mw/2.0
             newy = centerY - 1.5*mh*sin(middleangle) - mh/2.0
 
-            dc.DrawIcon(middleicon, newx, newy)
+            dc.DrawIcon(middleicon, int(newx), int(newy))
 
             # Restore Icon Dimension, If Not Something Strange Happens
             middleicon.SetWidth(middlewidth)
@@ -1109,53 +1111,61 @@ class SpeedMeter(BufferedWindow):
                 if handstyle == "Arrow":
                     # Draw The Shadow
                     shadowcolour = self.GetShadowColour()
-                    dc.SetPen(wx.Pen(shadowcolour, 5*log(self.scale+1)))
+                    dc.SetPen(wx.Pen(shadowcolour, int(5*log(self.scale+1))))
                     dc.SetBrush(wx.Brush(shadowcolour))
                     shadowdistance = 2.0*self.scale
-                    dc.DrawLine(newx + shadowdistance, newy + shadowdistance,
-                                xarr + shadowdistance, yarr + shadowdistance)
+                    dc.DrawLine(int(newx + shadowdistance), int(newy + shadowdistance),
+                                int(xarr + shadowdistance), int(yarr + shadowdistance))
 
-                    dc.DrawPolygon([(x1+shadowdistance, y1+shadowdistance),
-                                    (x2+shadowdistance, y2+shadowdistance),
-                                    (x3+shadowdistance, y3+shadowdistance)])
+                    points = [(x1+shadowdistance, y1+shadowdistance),
+                              (x2+shadowdistance, y2+shadowdistance),
+                              (x3+shadowdistance, y3+shadowdistance)]
+                    points = [(int(p[0]), int(p[1])) for p in points]
+                    dc.DrawPolygon(points)
                 else:
                     # Draw The Shadow
                     shadowcolour = self.GetShadowColour()
                     dc.SetBrush(wx.Brush(shadowcolour))
-                    dc.SetPen(wx.Pen(shadowcolour, 1.0))
+                    dc.SetPen(wx.Pen(shadowcolour, 1))
                     shadowdistance = 1.5*self.scale
 
-                    dc.DrawPolygon([(x1+shadowdistance, y1+shadowdistance),
-                                    (x2+shadowdistance, y2+shadowdistance),
-                                    (x3+shadowdistance, y3+shadowdistance),
-                                    (x4+shadowdistance, y4+shadowdistance)])
+                    points = [(x1+shadowdistance, y1+shadowdistance),
+                              (x2+shadowdistance, y2+shadowdistance),
+                              (x3+shadowdistance, y3+shadowdistance),
+                              (x4+shadowdistance, y4+shadowdistance)]
+                    points = [(int(p[0]), int(p[1])) for p in points]
+                    dc.DrawPolygon(points)
 
             if handstyle == "Arrow":
 
-                dc.SetPen(wx.Pen(handcolour, 1.5))
+                dc.SetPen(wx.Pen(handcolour, 1))
 
                 # Draw The Small Circle In The Center --> The Hand "Holder"
                 dc.SetBrush(wx.Brush(speedbackground))
-                dc.DrawCircle(centerX, centerY, 4*self.scale)
+                dc.DrawCircle(centerX, centerY, int(4*self.scale))
 
-                dc.SetPen(wx.Pen(handcolour, 5*log(self.scale+1)))
+                dc.SetPen(wx.Pen(handcolour, int(5*log(self.scale+1))))
                 # Draw The "Hand", An Arrow
-                dc.DrawLine(newx, newy, xarr, yarr)
+                dc.DrawLine(int(newx), int(newy), int(xarr), int(yarr))
 
                 # Draw The Arrow Pointer
                 dc.SetBrush(wx.Brush(handcolour))
-                dc.DrawPolygon([(x1, y1), (x2, y2), (x3, y3)])
+                points = [(x1, y1), (x2, y2), (x3, y3)]
+                points = [(int(p[0]), int(p[1])) for p in points]
+                dc.DrawPolygon(points)
 
             else:
 
                 # Draw The Hand Pointer
-                dc.SetPen(wx.Pen(handcolour, 1.5))
+                dc.SetPen(wx.Pen(handcolour, 1))
                 dc.SetBrush(wx.Brush(handcolour))
-                dc.DrawPolygon([(x1, y1), (x2, y2), (x3, y3), (x4, y4)])
+                points = [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]
+                points = [(int(p[0]), int(p[1])) for p in points]
+                dc.DrawPolygon(points)
 
                 # Draw The Small Circle In The Center --> The Hand "Holder"
                 dc.SetBrush(wx.Brush(speedbackground))
-                dc.DrawCircle(centerX, centerY, 4*self.scale)
+                dc.DrawCircle(centerX, centerY, int(4*self.scale))
 
 
     def SetIntervals(self, intervals=None):
@@ -1527,7 +1537,7 @@ class SpeedMeter(BufferedWindow):
 
         if font is None:
             self._middletextfont = wx.Font(1, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
-            self._middletextsize = 10.0
+            self._middletextsize = 10
             self._middletextfont.SetPointSize(self._middletextsize)
         else:
             self._middletextfont = font
@@ -1599,7 +1609,7 @@ class SpeedMeter(BufferedWindow):
         x = radius*cos(angle) + centerX
         y = radius*sin(angle) + centerY
 
-        return x, y
+        return int(x), int(y)
 
 
     def GetIntersection(self, current, intervals):

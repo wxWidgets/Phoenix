@@ -914,7 +914,7 @@ class PyImageList(object):
             raise Exception("Wrong index in image list")
 
         bmp = self._images[index]
-        dc.DrawBitmap(bmp, x, y, (flags & wx.IMAGELIST_DRAW_TRANSPARENT) > 0)
+        dc.DrawBitmap(bmp, x, int(y), (flags & wx.IMAGELIST_DRAW_TRANSPARENT) > 0)
 
         return True
 
@@ -4022,7 +4022,7 @@ class UltimateListLineData(object):
 
             if item.HasImage():
 
-                self._gi._rectIcon.x = self._gi._rectAll.x + 4 + (self._gi._rectAll.width - self._gi._rectIcon.width)/2
+                self._gi._rectIcon.x = self._gi._rectAll.x + 4 + (self._gi._rectAll.width - self._gi._rectIcon.width)//2
                 self._gi._rectIcon.y = self._gi._rectAll.y + 4
 
             if item.HasText():
@@ -4030,7 +4030,7 @@ class UltimateListLineData(object):
                 if self._gi._rectLabel.width > spacing:
                     self._gi._rectLabel.x = self._gi._rectAll.x + 2
                 else:
-                    self._gi._rectLabel.x = self._gi._rectAll.x + 2 + (spacing/2) - (self._gi._rectLabel.width/2)
+                    self._gi._rectLabel.x = self._gi._rectAll.x + 2 + (spacing//2) - (self._gi._rectLabel.width//2)
 
                 self._gi._rectLabel.y = self._gi._rectAll.y + self._gi._rectAll.height + 2 - self._gi._rectLabel.height
                 self._gi._rectHighlight.x = self._gi._rectLabel.x - 2
@@ -4546,7 +4546,7 @@ class UltimateListLineData(object):
                 # We got a checkbox-type item
                 ix, iy = self._owner.GetCheckboxImageSize()
                 checked = item.IsChecked()
-                self._owner.DrawCheckbox(dc, xOld, y + (height-iy+1)/2, item.GetKind(), checked, enabled)
+                self._owner.DrawCheckbox(dc, xOld, y + (height-iy+1)//2, item.GetKind(), checked, enabled)
                 xOld += ix
                 width -= ix
 
@@ -4557,7 +4557,7 @@ class UltimateListLineData(object):
                 for img in images:
 
                     ix, iy = self._owner.GetImageSize([img])
-                    self._owner.DrawImage(img, dc, xOld, y + (height-iy)/2, enabled)
+                    self._owner.DrawImage(img, dc, xOld, y + (height-iy)//2, enabled)
 
                     xOld += ix
                     width -= ix
@@ -5230,7 +5230,7 @@ class UltimateListHeaderWindow(wx.Control):
                 # We got a checkbox-type item
                 ix, iy = self._owner.GetCheckboxImageSize()
                 # We draw it on the left, always
-                self._owner.DrawCheckbox(dc, x + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)/2, kind, checked, enabled)
+                self._owner.DrawCheckbox(dc, x + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)//2, kind, checked, enabled)
                 wcheck += ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
                 cw -= ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
 
@@ -6819,7 +6819,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                     # We got a checkbox-type item
                     ix, iy = self.GetCheckboxImageSize()
                     LH = self.GetLineHeight(line)
-                    rect = wx.Rect(xOld, lineY + LH/2 - iy/2, ix, iy)
+                    rect = wx.Rect(xOld, lineY + LH//2 - iy//2, ix, iy)
                     if rect.Contains((x, y)):
                         newItem = self.GetParent().GetItem(line, col)
                         return newItem, ULC_HITTEST_ONITEMCHECK
@@ -7937,13 +7937,13 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                     while start_y > view_y:
                         start_y -= SCROLL_UNIT_Y
 
-                    self.Scroll(-1, start_y/SCROLL_UNIT_Y)
+                    self.Scroll(-1, start_y//SCROLL_UNIT_Y)
 
                 if start_y + height > view_y + client_h:
                     while start_y + height < view_y + client_h:
                         start_y += SCROLL_UNIT_Y
 
-                    self.Scroll(-1, (start_y+height-client_h+SCROLL_UNIT_Y)/SCROLL_UNIT_Y)
+                    self.Scroll(-1, (start_y+height-client_h+SCROLL_UNIT_Y)//SCROLL_UNIT_Y)
 
         else: # !report
 
@@ -7960,7 +7960,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             if rect.y + rect.height - 5 > view_y + client_h:
                 sy = (rect.y + rect.height - client_h + hLine)/hLine
 
-            self.Scroll(sx, sy)
+            self.Scroll(int(sx), int(sy))
 
 
 # ----------------------------------------------------------------------------

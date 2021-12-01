@@ -90,9 +90,9 @@ class TestMaskWindow(wx.ScrolledWindow):
 
         for text, code in logicList:
             x,y = 120+150*(i%4), 20+100*(i/4)
-            dc.DrawText(text, x, y-20)
+            dc.DrawText(text, x, int(y-20))
             mdc.SelectObject(self.bmp_withcolourmask)
-            dc.Blit(x,y, cx,cy, mdc, 0,0, code, True)
+            dc.Blit(x,int(y), cx,cy, mdc, 0,0, code, True)
             i = i + 1
 
 

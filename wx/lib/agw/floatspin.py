@@ -336,7 +336,7 @@ class FloatSpin(wx.Control):
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
-                 size=(95,-1), style=0, value=0.0, min_val=None, max_val=None,
+                 size=wx.DefaultSize, style=0, value=0.0, min_val=None, max_val=None,
                  increment=1.0, digits=-1, agwStyle=FS_LEFT,
                  name="FloatSpin"):
         """

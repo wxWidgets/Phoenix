@@ -86,7 +86,7 @@ class Ticker(wx.Control):
     def Start(self):
         """Starts the text moving"""
         if not self.timer.IsRunning():
-            self.timer.Start(1000 / self._fps)
+            self.timer.Start(1000 // self._fps)
 
 
     def IsTicking(self):
@@ -208,7 +208,7 @@ class Ticker(wx.Control):
             offx = self._offset - self._extent[0]
         else:
             offx = self.GetSize()[0] - self._offset
-        offy = (self.GetSize()[1] - self._extent[1]) / 2 #centered vertically
+        offy = (self.GetSize()[1] - self._extent[1]) // 2 #centered vertically
         dc.DrawText(self._text, offx, offy)
 
 

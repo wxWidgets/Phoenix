@@ -354,7 +354,7 @@ class RibbonButtonBar(RibbonControl):
                 self._bitmap_size_large = bitmap.GetSize()
                 if not bitmap_small.IsOk():
                     w, h = self._bitmap_size_large
-                    self._bitmap_size_small = wx.Size(0.5*w, 0.5*h)
+                    self._bitmap_size_small = wx.Size(w//2, h//2)
 
             if bitmap_small.IsOk():
 
@@ -867,8 +867,8 @@ class RibbonButtonBar(RibbonControl):
 
             layout_size = self._layouts[layout_i].overall_size
             if layout_size.x <= new_size.x and layout_size.y <= new_size.y:
-                self._layout_offset.x = (new_size.x - layout_size.x)/2
-                self._layout_offset.y = (new_size.y - layout_size.y)/2
+                self._layout_offset.x = (new_size.x - layout_size.x)//2
+                self._layout_offset.y = (new_size.y - layout_size.y)//2
                 self._current_layout = layout_i
                 break
 

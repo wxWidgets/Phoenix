@@ -1200,7 +1200,7 @@ class LineShape(Shape):
 
         points = []
         for point in self._lineControlPoints:
-            points.append(wx.Point(point[0], point[1]))
+            points.append(wx.Point(int(point[0]), int(point[1])))
 
         if self._isSpline:
             dc.DrawSpline(points)

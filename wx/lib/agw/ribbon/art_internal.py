@@ -32,9 +32,9 @@ def RibbonInterpolateColour(start_colour, end_colour, position, start_position, 
     r = end_colour.Red() - start_colour.Red()
     g = end_colour.Green() - start_colour.Green()
     b = end_colour.Blue() - start_colour.Blue()
-    r = start_colour.Red()   + (((r * position * 100) / end_position) / 100)
-    g = start_colour.Green() + (((g * position * 100) / end_position) / 100)
-    b = start_colour.Blue()  + (((b * position * 100) / end_position) / 100)
+    r = start_colour.Red()   + (((r * position * 100) // end_position) // 100)
+    g = start_colour.Green() + (((g * position * 100) // end_position) // 100)
+    b = start_colour.Blue()  + (((b * position * 100) // end_position) // 100)
 
     return wx.Colour(r, g, b)
 
@@ -61,9 +61,9 @@ def RibbonDrawParallelGradientLines(dc, nlines, line_origins, stepx, stepy, nums
     bd = end_colour.Blue() - start_colour.Blue()
 
     for step in range(numsteps):
-        r = start_colour.Red() + (((step*rd*100)/numsteps)/100)
-        g = start_colour.Green() + (((step*gd*100)/numsteps)/100)
-        b = start_colour.Blue() + (((step*bd*100)/numsteps)/100)
+        r = start_colour.Red() + (((step*rd*100)//numsteps)//100)
+        g = start_colour.Green() + (((step*gd*100)//numsteps)//100)
+        b = start_colour.Blue() + (((step*bd*100)//numsteps)//100)
 
         p = wx.Pen(wx.Colour(r, g, b))
         dc.SetPen(p)
