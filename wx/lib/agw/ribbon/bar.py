@@ -743,7 +743,7 @@ class RibbonBar(RibbonControl):
                     delta = info.ideal_width - info.small_must_have_separator_width
                     info.rect.x = x
                     info.rect.y = y
-                    info.rect.width = info.small_must_have_separator_width + delta*(width - total_small_width)/total_delta
+                    info.rect.width = info.small_must_have_separator_width + delta*(width - total_small_width)//total_delta
                     info.rect.height = self._tab_height
 
                     x += info.rect.width + tabsep
@@ -797,7 +797,7 @@ class RibbonBar(RibbonControl):
                         delta = smallest_tab_width - info.minimum_width
                         info.rect.x = x
                         info.rect.y = y
-                        info.rect.width = info.minimum_width + delta*(width - total_small_width)/total_delta
+                        info.rect.width = info.minimum_width + delta*(width - total_small_width)//total_delta
                         info.rect.height = self._tab_height
 
                         x += info.rect.width + tabsep

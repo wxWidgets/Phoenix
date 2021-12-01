@@ -45,7 +45,7 @@ class SampleWindow(wx.Window):
         dc = wx.PaintDC(self)
         w,h = dc.GetTextExtent(self.text)
         dc.Clear()
-        dc.DrawText(self.text, (sz.width-w)/2, (sz.height-h)/2)
+        dc.DrawText(self.text, (sz.width-w)//2, (sz.height-h)//2)
 
     def OnSize(self, evt):
         self.Refresh()

@@ -978,7 +978,7 @@ class PlotDemoMainFrame(wx.Frame):
 
         sx, sy = mDataDict["scaledXY"]  # scaled x,y of closest point
         # 10by10 square centered on point
-        dc.DrawRectangle(sx - 5, sy - 5, 10, 10)
+        dc.DrawRectangle(int(sx - 5), int(sy - 5), 10, 10)
         px, py = mDataDict["pointXY"]
         cNum = mDataDict["curveNum"]
         pntIn = mDataDict["pIndex"]
@@ -986,7 +986,7 @@ class PlotDemoMainFrame(wx.Frame):
         # make a string to display
         s = "Crv# %i, '%s', Pt. (%.2f,%.2f), PtInd %i" % (
             cNum, legend, px, py, pntIn)
-        dc.DrawText(s, sx, sy + 1)
+        dc.DrawText(s, int(sx), int(sy + 1))
 
 
 def run_demo():

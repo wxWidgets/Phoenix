@@ -188,7 +188,7 @@ class PyColourChooser(wx.Panel):
         self.colour_slider.Bind(wx.EVT_MOTION, self.onSliderMotion)
         self.slider = wx.Slider(
                         self, self.idSCROLL, 86, 0, self.colour_slider.HEIGHT - 1,
-                        style=wx.SL_VERTICAL, size=(15, self.colour_slider.HEIGHT)
+                        style=wx.SL_VERTICAL, size=(-1, self.colour_slider.HEIGHT)
                         )
 
         self.Bind(wx.EVT_COMMAND_SCROLL, self.onScroll, self.slider)
@@ -338,7 +338,7 @@ class PyColourChooser(wx.Panel):
         min = self.slider.GetMin()
         max = self.slider.GetMax()
         val = (1 - v) * max
-        self.slider.SetValue(val)
+        self.slider.SetValue(int(val))
 
     def getVFromSlider(self):
         """Get the current value of "V" from the v slider."""

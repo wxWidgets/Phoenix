@@ -231,7 +231,7 @@ class DividedShape(RectangleShape):
                 regionPen = region.GetActualPen()
                 if regionPen:
                     dc.SetPen(regionPen)
-                    dc.DrawLine(leftX, y, rightX, y)
+                    dc.DrawLine(int(leftX), int(y), int(rightX), int(y))
 
             currentY = actualY
 

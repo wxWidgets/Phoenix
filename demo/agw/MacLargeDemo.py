@@ -223,12 +223,12 @@ class MacRenderer(object):
             mdc.SelectObject(wx.NullBitmap)
 
         # Center the progress bar vertically in the box supplied
-        y = y + (h - PIPE_HEIGHT)/2
+        y = y + (h - PIPE_HEIGHT)//2
 
         if percent == 0:
             middle = 0
         else:
-            middle = (w * percent)/100
+            middle = int((w * percent)/100)
 
         if w < 1:
             return

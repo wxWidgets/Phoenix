@@ -615,7 +615,7 @@ class BalloonTip(object):
         if delay < 1:
             raise Exception("\nERROR: Delay Time For BalloonTip Creation Should Be Greater Than 1 ms")
 
-        self._startdelaytime = float(delay)
+        self._startdelaytime = int(delay)
 
 
     def GetStartDelay(self):
@@ -640,7 +640,7 @@ class BalloonTip(object):
         if delay < 1:
             raise Exception("\nERROR: Delay Time For BalloonTip Destruction Should Be Greater Than 1 ms")
 
-        self._enddelaytime = float(delay)
+        self._enddelaytime = int(delay)
 
 
     def GetEndDelay(self):

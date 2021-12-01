@@ -417,7 +417,7 @@ class PolyLine(PolyPoints):
 
         if not isinstance(colour, wx.Colour):
             colour = wx.Colour(colour)
-        pen = wx.Pen(colour, width, style)
+        pen = wx.Pen(colour, int(width), style)
         pen.SetCap(wx.CAP_BUTT)
         dc.SetPen(pen)
         if coord is None:
@@ -518,7 +518,7 @@ class PolySpline(PolyLine):
         style = self.attributes['style']
         if not isinstance(colour, wx.Colour):
             colour = wx.Colour(colour)
-        pen = wx.Pen(colour, width, style)
+        pen = wx.Pen(colour, int(width), style)
         pen.SetCap(wx.CAP_ROUND)
         dc.SetPen(pen)
         if coord is None:
@@ -590,7 +590,7 @@ class PolyMarker(PolyPoints):
         if fillcolour and not isinstance(fillcolour, wx.Colour):
             fillcolour = wx.Colour(fillcolour)
 
-        dc.SetPen(wx.Pen(colour, width))
+        dc.SetPen(wx.Pen(colour, int(width)))
         if fillcolour:
             dc.SetBrush(wx.Brush(fillcolour, fillstyle))
         else:
@@ -618,6 +618,7 @@ class PolyMarker(PolyPoints):
         dc.DrawEllipseList(rect.astype(np.int32))
 
     def _dot(self, dc, coords, size=1):
+        coords = [(int(c[0]), int(c[1])) for c in coords]
         dc.DrawPointList(coords)
 
     def _square(self, dc, coords, size=1):
@@ -699,7 +700,7 @@ class PolyBarsBase(PolyPoints):
 
         if not isinstance(pencolour, wx.Colour):
             pencolour = wx.Colour(pencolour)
-        pen = wx.Pen(pencolour, penwidth, penstyle)
+        pen = wx.Pen(pencolour, int(penwidth), penstyle)
         pen.SetCap(wx.CAP_BUTT)
 
         if not isinstance(fillcolour, wx.Colour):
@@ -790,6 +791,7 @@ class PolyBars(PolyBarsBase):
                 raise TypeError(err_str.format(type(barwidth)))
 
             rects = [self.calc_rect(x, y, w) for x, y, w in pts]
+            rects = [(int(r[0]), int(r[1]), int(r[2]), int(r[3])) for r in rects]
             dc.DrawRectangleList(rects)
         else:
             dc.DrawLines(coord)  # draw legend line
@@ -858,6 +860,8 @@ class PolyHistogram(PolyBarsBase):
             rects = [self.calc_rect(y, low, high)
                      for y, (low, high)
                      in zip(self.hist, self.bins)]
+            rects = [(int(r[0]), int(r[1]), int(r[2]), int(r[3]))
+                     for r in rects]
 
             dc.DrawRectangleList(rects)
         else:
@@ -1114,10 +1118,10 @@ class PolyBoxPlot(PolyPoints):
                                       self.currentShift)
 
         # rectangles are drawn (left, top, width, height) so adjust
-        iqr_box = [iqr_box[0][0],                   # X (left)
-                   iqr_box[0][1],                   # Y (top)
-                   iqr_box[1][0] - iqr_box[0][0],   # Width
-                   iqr_box[1][1] - iqr_box[0][1]]   # Height
+        iqr_box = [int(iqr_box[0][0]),                   # X (left)
+                   int(iqr_box[0][1]),                   # Y (top)
+                   int(iqr_box[1][0] - iqr_box[0][0]),   # Width
+                   int(iqr_box[1][1] - iqr_box[0][1])]   # Height
 
         box_pen = wx.Pen(wx.BLACK, 3, wx.PENSTYLE_SOLID)
         box_brush = wx.Brush(wx.GREEN, wx.BRUSHSTYLE_SOLID)
@@ -1503,7 +1507,7 @@ class PlotPrintout(wx.Printout):
         self.graph._setSize(plotAreaW, plotAreaH)
 
         # Set offset and scale
-        dc.SetDeviceOrigin(pixLeft, pixTop)
+        dc.SetDeviceOrigin(int(pixLeft), int(pixTop))
 
         # Thicken up pens and increase marker size for printing
         ratioW = float(plotAreaW) / clientDcSize[0]

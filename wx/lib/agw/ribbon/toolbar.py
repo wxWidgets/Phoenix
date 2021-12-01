@@ -1159,7 +1159,7 @@ class RibbonToolBar(RibbonControl):
 
         # Set group y positions
         for group in self._groups:
-            group.position.y = rowypos[group.position.y]
+            group.position.y = int(rowypos[group.position.y])
 
 
     def GetBestSizeForParentSize(self, parentSize):

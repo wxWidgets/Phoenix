@@ -569,9 +569,9 @@ class SButton(wx.Window):
                 rect2 = w*main//secondary
 
             if self._isup:
-                img = self._mainbuttonup.Scale(rect2, rect3)
+                img = self._mainbuttonup.Scale(int(rect2), int(rect3))
             else:
-                img = self._mainbuttondown.Scale(rect2, rect3)
+                img = self._mainbuttondown.Scale(int(rect2), int(rect3))
 
         bmp = img.ConvertToBitmap()
 
@@ -599,7 +599,7 @@ class SButton(wx.Window):
                     ypos = 0
 
         # Draw Finally The Bitmap
-        dc.DrawBitmap(bmp, xpos, ypos, True)
+        dc.DrawBitmap(bmp, int(xpos), int(ypos), True)
 
         # Store Bitmap Position And Size To Draw An Elliptical Focus Indicator
         self._xpos = xpos
@@ -646,7 +646,7 @@ class SButton(wx.Window):
             xp = xc - (tw//2)* cos(angle) - (th//2)*sin(angle)
             yp = yc + (tw//2)*sin(angle) - (th//2)*cos(angle)
 
-            dc.DrawRotatedText(label, xp + dw, yp + dh , angle*180/pi)
+            dc.DrawRotatedText(label, int(xp + dw), int(yp + dh), angle*180/pi)
 
 
     def DrawFocusIndicator(self, dc, width, height):
@@ -676,7 +676,7 @@ class SButton(wx.Window):
         else:
             # This Is An Ellipse
             if hasattr(self, "_xpos"):
-                dc.DrawEllipse(self._xpos + 2, self._ypos + 2, self._imgx - 4, self._imgy - 4)
+                dc.DrawEllipse(int(self._xpos + 2), int(self._ypos + 2), self._imgx - 4, self._imgy - 4)
 
         dc.SetLogicalFunction(wx.COPY)
 

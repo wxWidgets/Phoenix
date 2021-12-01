@@ -573,13 +573,13 @@ def RescaleScreenShot(bmp, thumbnail_size=200):
 
     if bmpW > bmpH:
         if bmpW > thumbnail_size:
-            ratio = bmpW/float(thumbnail_size)
-            newW, newH = int(bmpW/ratio), int(bmpH/ratio)
+            ratio = bmpW/thumbnail_size
+            newW, newH = int(bmpW//ratio), int(bmpH//ratio)
             img.Rescale(newW, newH, wx.IMAGE_QUALITY_HIGH)
     else:
         if bmpH > thumbnail_size:
-            ratio = bmpH/float(thumbnail_size)
-            newW, newH = int(bmpW/ratio), int(bmpH/ratio)
+            ratio = bmpH/thumbnail_size
+            newW, newH = int(bmpW//ratio), int(bmpH//ratio)
             img.Rescale(newW, newH, wx.IMAGE_QUALITY_HIGH)
 
     newBmp = img.ConvertToBitmap()

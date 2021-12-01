@@ -784,7 +784,7 @@ class PeakMeterCtrl(wx.Control):
                 maxWidth = size.x*horzBands
                 points = [wx.Point() for i in range(2)]
                 points[0].y = rectPrev.GetTopRight().y - yDecal
-                points[0].x = rectPrev.GetBottomLeft().x + self._meterData[vert]._falloff*maxWidth/self._maxValue
+                points[0].x = rectPrev.GetBottomLeft().x + self._meterData[vert]._falloff*maxWidth//self._maxValue
                 points[1].y = rectPrev.GetBottomLeft().y + yDecal
                 points[1].x = points[0].x
                 dc.SetPen(pen)

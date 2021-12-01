@@ -438,7 +438,7 @@ class AdvancedSplash(wx.Frame):
 
         if font is None:
             self._textfont = wx.Font(1, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
-            self._textsize = 10.0
+            self._textsize = 10
             self._textfont.SetPointSize(self._textsize)
         else:
             self._textfont = font

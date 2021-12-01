@@ -805,8 +805,8 @@ class RibbonGallery(RibbonControl):
         if client.GetWidth() < 0 or client.GetHeight() < 0:
             return relative_to
 
-        client.x = (client.x / self._bitmap_padded_size.x) * self._bitmap_padded_size.x
-        client.y = (client.y / self._bitmap_padded_size.y) * self._bitmap_padded_size.y
+        client.x = (client.x // self._bitmap_padded_size.x) * self._bitmap_padded_size.x
+        client.y = (client.y // self._bitmap_padded_size.y) * self._bitmap_padded_size.y
 
         size = self._art.GetGallerySize(dc, self, wx.Size(*client))
         minimum = self.GetMinSize()
@@ -849,8 +849,8 @@ class RibbonGallery(RibbonControl):
         elif direction == wx.BOTH:
             client.IncBy(self._bitmap_padded_size)
 
-        client.x = (client.x / self._bitmap_padded_size.x) * self._bitmap_padded_size.x
-        client.y = (client.y / self._bitmap_padded_size.y) * self._bitmap_padded_size.y
+        client.x = (client.x // self._bitmap_padded_size.x) * self._bitmap_padded_size.x
+        client.y = (client.y // self._bitmap_padded_size.y) * self._bitmap_padded_size.y
 
         size = self._art.GetGallerySize(dc, self, wx.Size(*client))
         minimum = self.GetMinSize()

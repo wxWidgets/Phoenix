@@ -414,7 +414,7 @@ class SpeedMeterDemo(wx.Panel):
         bsizer3 = wx.BoxSizer(wx.VERTICAL)
 
         hsizer3 = wx.BoxSizer(wx.HORIZONTAL)
-        sc = wx.SpinCtrl(panel3, -1, size=(60,20))
+        sc = wx.SpinCtrl(panel3, -1)
         sc.SetRange(1, 250)
         sc.SetValue(50)
 

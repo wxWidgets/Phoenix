@@ -200,11 +200,11 @@ class Throbber(wx.Panel):
         """
         dc.DrawBitmap(self.submaps[self.sequence[self.current]], 0, 0, True)
         if self.overlay and self.showOverlay:
-            dc.DrawBitmap(self.overlay, self.overlayX, self.overlayY, True)
+            dc.DrawBitmap(self.overlay, int(self.overlayX), int(self.overlayY), True)
         if self.label and self.showLabel:
-            dc.DrawText(self.label, self.labelX, self.labelY)
+            dc.DrawText(self.label, int(self.labelX), int(self.labelY))
             dc.SetTextForeground(wx.WHITE)
-            dc.DrawText(self.label, self.labelX-1, self.labelY-1)
+            dc.DrawText(self.label, int(self.labelX-1), int(self.labelY-1))
 
 
     def OnPaint(self, event):
