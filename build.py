@@ -1455,7 +1455,7 @@ def cmd_build_wx(options, args):
                 build_options.append("--osx_cocoa")
 
             if options.mac_arch:
-            build_options.append("--mac_universal_binary=%s" % options.mac_arch)
+                build_options.append("--mac_universal_binary=%s" % options.mac_arch)
             else:
                 build_options.append("--mac_universal_binary=default")
 
