@@ -85,7 +85,7 @@ def configure(conf):
             # On the other hand, microsoft says that v141 and v140 (Visual
             # Studio 2015) are binary compatible, so for now let's just drop
             # it back to "14.0" until I get all the details worked out for
-            # using VS 2017 everywhere for Python 3.7+.
+            # using VS 2017+ everywhere for Python 3.7+.
             msvc_version = '14.0'
 
         # In some cases (Azure DevOps at least) we're getting "14.1" for Python

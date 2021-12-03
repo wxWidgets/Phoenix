@@ -325,15 +325,12 @@ def setDevModeOptions(args):
     myDevModeOptions = [
             #'--build_dir=../bld',
             #'--prefix=/opt/wx/2.9',
-            '--jobs=8', #  % numCPUs(),
+            '--jobs={}'.format(max(2, numCPUs()/2)),
 
             # These will be ignored on the other platforms so it is okay to
             # include them unconditionally
             '--osx_cocoa',
             '--mac_arch=x86_64',
-            #'--osx_carbon',
-            #'--mac_arch=i386',
-            #'--mac_arch=i386,x86_64',
             '--no_allmo',
             ]
     if not isWindows:
@@ -1570,7 +1567,7 @@ def copyWxDlls(options):
         # For Python 3.5 and 3.6 builds we also need to copy some VC14 redist DLLs.
         # NOTE: Do it for 3.7+ too for now. But when we fully switch over to VS 2017
         # this may need to change. See notes in wscript about it.
-        if PYVER in ['3.5', '3.6', '3.7', '3.8', '3.9']:
+        if PYVER in ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10']:
             redist_dir = os.path.join(
                 phoenixDir(), 'packaging', 'msw-vcredist',
                 arch, 'Microsoft.VC140.CRT', '*.dll')
