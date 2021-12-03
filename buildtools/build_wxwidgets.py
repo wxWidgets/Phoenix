@@ -332,10 +332,11 @@ def main(wxDir, args):
             print("Universal Capable: {}".format(universalCapable))
             print("Architectures:     {}".format(arch))
 
-            # Using 'builtin' has problems with universal builds, make sure to
-            # force use of system regex library in case configure would
-            # otherwise try to use builtin
-            # wxpy_configure_opts.append("--with-regex=sys")
+            wxpy_configure_opts.append("--with-libjpeg=builtin")
+            wxpy_configure_opts.append("--with-libpng=builtin")
+            wxpy_configure_opts.append("--with-libtiff=builtin")
+            wxpy_configure_opts.append("--with-regex=builtin")
+
 
         if not options.mac_framework:
             if installDir and not prefixDir:
