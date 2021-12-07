@@ -1361,7 +1361,7 @@ class Shell(editwindow.EditWindow):
         """Replace selection with clipboard contents."""
         if self.CanPaste() and wx.TheClipboard.Open():
             ps2 = str(sys.ps2)
-            if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_TEXT)):
+            if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_UNICODETEXT)):
                 data = wx.TextDataObject()
                 if wx.TheClipboard.GetData(data):
                     self.ReplaceSelection('')
@@ -1380,7 +1380,7 @@ class Shell(editwindow.EditWindow):
         """Replace selection with clipboard contents, run commands."""
         text = ''
         if wx.TheClipboard.Open():
-            if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_TEXT)):
+            if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_UNICODETEXT)):
                 data = wx.TextDataObject()
                 if wx.TheClipboard.GetData(data):
                     text = data.GetText()
