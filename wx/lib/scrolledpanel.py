@@ -154,9 +154,10 @@ class ScrolledPanel(wx.ScrolledWindow):
 
 
     def _SetupAfter(self, scrollToTop):
-        self.SetVirtualSize(self.GetBestVirtualSize())
-        if scrollToTop:
-            self.Scroll(0,0)
+        if self:
+            self.SetVirtualSize(self.GetBestVirtualSize())
+            if scrollToTop:
+                self.Scroll(0,0)
 
 
     def OnChildFocus(self, evt):
