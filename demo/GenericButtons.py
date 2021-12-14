@@ -140,6 +140,12 @@ class TestPanel(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.OnButton, b)
         vbox.Add(b, 0, wx.ALL, 5)
 
+        # A toggle button to show/hide an associated wx.Window object
+        w = buttons.GenButton(self, -1, label="Button")
+        b = buttons.GenShowHideToggleButton(self, -1, label='Show/Hide Button', menu=w)
+        vbox.Add(b, 0, wx.ALL, 5)
+        vbox.Add(w, 0, wx.ALL, 5)
+
 
 
         border = wx.BoxSizer(wx.VERTICAL)
