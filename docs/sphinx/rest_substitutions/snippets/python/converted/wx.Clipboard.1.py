@@ -6,7 +6,7 @@
 
 
         # Test if text content is available
-        not_empty = wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_TEXT))
+        not_empty = wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_UNICODETEXT))
 
 
         # Read some text
