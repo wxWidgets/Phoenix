@@ -1072,6 +1072,7 @@ class GenBitmapTextToggleButton(__ToggleMixin, GenBitmapTextButton):
     pass
 
 class GenShowHideToggleButton(GenToggleButton):
+    """ A generic toggle bitmap button with an associated wx.Window object to show/hide on toggle. """
     def __init__(self, *args, menu, **kwargs):
         GenToggleButton.__init__(self, *args, **kwargs)
         self.SetMenu(menu)
