@@ -50,6 +50,7 @@ _treeList = [
         'ActivityIndicator',
         'GenericCheckBox',
         'CheckListCtrl',
+        'DrawLinesFromBuffer',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -275,6 +276,7 @@ _treeList = [
         'Cairo_Snippets',
         'ColourDB',
         'DragScroller',
+        'DrawLinesFromBuffer',
         'DrawXXXList',
         'FileHistory',
         'FontEnumerator',
