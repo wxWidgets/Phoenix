@@ -1,5 +1,5 @@
 
-        # this function loads somes settings from the given wx.Config object
+        # this function loads some settings from the given wx.Config object
         # the path selected inside it is left unchanged
         def LoadMySettings(config):
 

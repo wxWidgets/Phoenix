@@ -453,7 +453,7 @@ class GenButton(wx.Control):
         tw, th = dc.GetTextExtent(label)
         if not self.up:
             dx = dy = self.labelDelta
-        dc.DrawText(label, (width-tw)/2+dx, (height-th)/2+dy)
+        dc.DrawText(label, (width-tw)//2+dx, (height-th)//2+dy)
 
 
     def DrawFocusIndicator(self, dc, w, h):
@@ -535,7 +535,7 @@ class GenButton(wx.Control):
                     colBg = self.GetParent().GetBackgroundColour()
                     brush = wx.Brush(colBg)
         else:
-            # this line assumes that a pressed button should be hilighted with
+            # this line assumes that a pressed button should be highlighted with
             # a solid colour even if the background is supposed to be transparent
             brush = wx.Brush(self.faceDnClr)
         return brush
@@ -844,7 +844,7 @@ class GenBitmapButton(GenButton):
         if not self.up:
             dx = dy = self.labelDelta
         hasMask = bmp.GetMask() is not None
-        dc.DrawBitmap(bmp, (width-bw)/2+dx, (height-bh)/2+dy, hasMask)
+        dc.DrawBitmap(bmp, (width-bw)//2+dx, (height-bh)//2+dy, hasMask)
 
 
 #----------------------------------------------------------------------
@@ -926,12 +926,12 @@ class GenBitmapTextButton(GenBitmapButton):
         if not self.up:
             dx = dy = self.labelDelta
 
-        pos_x = (width-bw-tw)/2+dx      # adjust for bitmap and text to centre
+        pos_x = (width-bw-tw)//2+dx      # adjust for bitmap and text to centre
         if bmp is not None:
-            dc.DrawBitmap(bmp, pos_x, (height-bh)/2+dy, hasMask) # draw bitmap if available
+            dc.DrawBitmap(bmp, pos_x, (height-bh)//2+dy, hasMask) # draw bitmap if available
             pos_x = pos_x + 2   # extra spacing from bitmap
 
-        dc.DrawText(label, pos_x + dx+bw, (height-th)/2+dy)      # draw the text
+        dc.DrawText(label, pos_x + dx+bw, (height-th)//2+dy)      # draw the text
 
 
 #----------------------------------------------------------------------

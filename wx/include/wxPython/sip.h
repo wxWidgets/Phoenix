@@ -457,10 +457,10 @@ typedef struct _sipInitExtenderDef {
 
 
 /*
- * The information describing a sub-class convertor.
+ * The information describing a sub-class converter.
  */
 typedef struct _sipSubClassConvertorDef {
-    /* The convertor. */
+    /* The converter. */
     sipSubClassConvertFunc scc_convertor;
 
     /* The encoded base type. */
@@ -1105,7 +1105,7 @@ typedef struct _sipExportedModuleDef {
     /* The table of virtual error handlers. */
     sipVirtErrorHandlerDef *em_virterrorhandlers;
 
-    /* The sub-class convertors. */
+    /* The sub-class converters. */
     sipSubClassConvertorDef *em_convertors;
 
     /* The static instances. */
@@ -1677,7 +1677,7 @@ typedef struct _sipQtAPI {
  * sipConvertToType() and sipForceConvertToType().
  */
 #define SIP_NOT_NONE        0x01    /* Disallow None. */
-#define SIP_NO_CONVERTORS   0x02    /* Disable any type convertors. */
+#define SIP_NO_CONVERTORS   0x02    /* Disable any type converters. */
 
 
 /*
@@ -1743,7 +1743,7 @@ typedef struct _sipQtAPI {
 #define SIP_TYPE_ENUM       0x0003  /* If the type is a named enum. */
 #define SIP_TYPE_SCOPED_ENUM    0x0004  /* If the type is a scoped enum. */
 #define SIP_TYPE_ABSTRACT   0x0008  /* If the type is abstract. */
-#define SIP_TYPE_SCC        0x0010  /* If the type is subject to sub-class convertors. */
+#define SIP_TYPE_SCC        0x0010  /* If the type is subject to sub-class converters. */
 #define SIP_TYPE_ALLOW_NONE 0x0020  /* If the type can handle None. */
 #define SIP_TYPE_STUB       0x0040  /* If the type is a stub. */
 #define SIP_TYPE_NONLAZY    0x0080  /* If the type has a non-lazy method. */

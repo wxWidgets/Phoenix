@@ -100,7 +100,7 @@ class PenPanel(BasePanel):
 
         dc.SetPen(pen)
         y = labelHeight + (height - labelHeight)/2
-        dc.DrawLine(5, y, width-5, y)
+        dc.DrawLine(5, int(y), width-5, int(y))
 
 
 class BrushPanel(BasePanel):

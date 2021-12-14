@@ -1422,7 +1422,7 @@ class GenericMessageDialog(wx.Dialog):
 
         :return: a new message wrapped at maximum `wrap` pixels wide.
 
-        :todo: Estabilish if wrapping all messages by default is a better idea than
+        :todo: Establish if wrapping all messages by default is a better idea than
          provide a keyword parameter to :class:`GenericMessageDialog`. A default maximum
          line width might be the wxMac one, at 360 pixels.
         """

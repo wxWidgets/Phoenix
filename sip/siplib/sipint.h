@@ -97,7 +97,7 @@ PyObject *sip_api_convert_from_const_void_ptr_and_size(const void *val,
 
 
 /*
- * Support for int convertors.
+ * Support for int converters.
  */
 PyObject *sipEnableOverflowChecking(PyObject *self, PyObject *args);
 int sip_api_enable_overflow_checking(int enable);

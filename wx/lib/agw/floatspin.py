@@ -336,7 +336,7 @@ class FloatSpin(wx.Control):
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
-                 size=(95,-1), style=0, value=0.0, min_val=None, max_val=None,
+                 size=wx.DefaultSize, style=0, value=0.0, min_val=None, max_val=None,
                  increment=1.0, digits=-1, agwStyle=FS_LEFT,
                  name="FloatSpin"):
         """
@@ -1327,7 +1327,7 @@ class FixedPoint(object):
         >>>
 
 
-    The string produced by `str(x)` (implictly invoked by `print`) always
+    The string produced by `str(x)` (implicitly invoked by `print`) always
     contains at least one digit before the decimal point, followed by a
     decimal point, followed by exactly `x.get_precision()` digits.  If `x` is
     negative, `str(x)[0] == "-"`.
@@ -1476,7 +1476,7 @@ class FixedPoint(object):
         try:
             p = int(precision)
         except:
-            raise TypeError("precision not convertable to int: " +
+            raise TypeError("precision not convertible to int: " +
                             repr(precision))
         if p < 0:
             raise ValueError("precision must be >= 0: " + repr(precision))

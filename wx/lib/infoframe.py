@@ -8,7 +8,7 @@
 infoframe.py
 Released under wxWindows license etc.
 
-This is a fairly rudimentary, but slightly fancier tha
+This is a fairly rudimentary, but slightly fancier than
 wxPyOnDemandOutputWindow (on which it's based; thanks Robin), version
 of the same sort of thing: a file-like class called
 wxInformationalMessagesFrame. This window also has a status bar with a
@@ -256,7 +256,7 @@ class PyInformationalMessagesFrame(object):
 
     def write(self, string):
         if not wx.Thread_IsMain():
-            # Aquire the GUI mutex before making GUI calls.  Mutex is released
+            # Acquire the GUI mutex before making GUI calls.  Mutex is released
             # when locker is deleted at the end of this function.
             #
             # TODO: This should be updated to use wx.CallAfter similarly to how

@@ -288,7 +288,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
                 for x in self.data:     #becomes one column
                     data.append([x])
             else:
-                data = [self.data]      #becames one row
+                data = [self.data]      #becomes one row
             self.data = data
             first_value = data[0]
         try:
@@ -609,7 +609,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
 
     def DrawGridLine(self):
         if self.draw == True \
-        and len(self.column) > 2:    #supress grid lines if only one column
+        and len(self.column) > 2:    #suppress grid lines if only one column
             try:
                 size = self.row_line_size[self.data_cnt]
             except:
@@ -630,7 +630,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
 
     def DrawColumns(self):
         if self.draw == True \
-        and len(self.column) > 2:   #surpress grid line if only one column
+        and len(self.column) > 2:   #suppress grid line if only one column
             col = 0
             for val in self.column:
                 try:

@@ -484,7 +484,7 @@ class ThumbnailCtrl(wx.Panel):
         Deletes the selected thumbnails and their associated files.
         .. warning:: This method deletes the original files too.
 
-        :parem `thumbs`:  List of indexs to thumbnails.
+        :param `thumbs`:  List of indexes to thumbnails.
 
         """
 

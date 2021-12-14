@@ -168,7 +168,7 @@ if sys.platform == 'win32':
         ERROR_NO_MORE_FILES = 18
         IO_REPARSE_TAG_SYMLINK = 0xA000000C
 
-        # Numer of seconds between 1601-01-01 and 1970-01-01
+        # Number of seconds between 1601-01-01 and 1970-01-01
         SECONDS_BETWEEN_EPOCHS = 11644473600
 
         kernel32 = ctypes.windll.kernel32

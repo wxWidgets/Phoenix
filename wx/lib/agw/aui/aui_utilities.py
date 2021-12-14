@@ -463,7 +463,7 @@ class TabDragImage(wx.DragImage):
 
         memory.SelectObject(wx.NullBitmap)
 
-        # Gtk and Windows unfortunatly don't do so well with transparent
+        # Gtk and Windows unfortunately don't do so well with transparent
         # drawing so this hack corrects the image to have a transparent
         # background.
         if wx.Platform != '__WXMAC__':
@@ -585,12 +585,12 @@ def RescaleScreenShot(bmp, thumbnail_size=200):
     if bmpW > bmpH:
         if bmpW > thumbnail_size:
             ratio = bmpW/thumbnail_size
-            newW, newH = bmpW//ratio, bmpH//ratio
+            newW, newH = int(bmpW//ratio), int(bmpH//ratio)
             img.Rescale(newW, newH, wx.IMAGE_QUALITY_HIGH)
     else:
         if bmpH > thumbnail_size:
             ratio = bmpH/thumbnail_size
-            newW, newH = bmpW//ratio, bmpH//ratio
+            newW, newH = int(bmpW//ratio), int(bmpH//ratio)
             img.Rescale(newW, newH, wx.IMAGE_QUALITY_HIGH)
 
     newBmp = img.ConvertToBitmap()

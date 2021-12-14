@@ -335,7 +335,7 @@ class AdvancedSplash(wx.Frame):
         # Here We Redraw The Bitmap Over The Frame
         dc.DrawBitmap(self.bmp, 0, 0, True)
 
-        # We Draw The Text Anyway, Wheter It Is Empty ("") Or Not
+        # We Draw The Text Anyway, Whether It Is Empty ("") Or Not
         textcolour = self.GetTextColour()
         textfont = self.GetTextFont()
         textpos = self.GetTextPosition()
@@ -438,7 +438,7 @@ class AdvancedSplash(wx.Frame):
 
         if font is None:
             self._textfont = wx.Font(1, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
-            self._textsize = 10.0
+            self._textsize = 10
             self._textfont.SetPointSize(self._textsize)
         else:
             self._textfont = font

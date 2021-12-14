@@ -347,8 +347,8 @@ class ImageView(wx.Window):
         owidth = int(scale*iwidth)
         oheight = int(scale*iheight)
 
-        diffx = (wwidth - owidth)/2   # center calc
-        diffy = (wheight - oheight)/2   # center calc
+        diffx = (wwidth - owidth)//2   # center calc
+        diffy = (wheight - oheight)//2   # center calc
 
         if not bmp:
             if owidth!=iwidth or oheight!=iheight:

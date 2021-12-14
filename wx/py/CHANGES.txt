@@ -102,7 +102,7 @@ Modified crust.py to use a switch so it can load either a Shell or a Slices_Shel
 0.9.5 (12/23/2005)
 ------------------
 
-Applied a series of enhancments by Franz Steinaeusler, Adi Sieker, and
+Applied a series of enhancements by Franz Steinaeusler, Adi Sieker, and
 Sebastian Haase, up until their 7-31-2005 version.  (Their next
 version broke some existing functionality, and added some confusing
 hacks, and I didn't feel that the incremental gains were worth the
@@ -624,7 +624,7 @@ Changed default font size under Linux to::
     'lnsize' : 10,
 
 Changed ``Shell`` to expect a parameter referencing an Interpreter
-class, rather than an intepreter instance, to facilitate subclassing
+class, rather than an interpreter instance, to facilitate subclassing
 of Interpreter, which effectively broke when the Editor class was
 eliminated.
 

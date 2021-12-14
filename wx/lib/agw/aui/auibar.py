@@ -739,7 +739,7 @@ class AuiToolBarItem(object):
 class AuiDefaultToolBarArt(object):
     """
     Toolbar art provider code - a tab provider provides all drawing functionality to the :class:`AuiToolBar`.
-    This allows the :class:`AuiToolBar` to have a plugable look-and-feel.
+    This allows the :class:`AuiToolBar` to have a pluggable look-and-feel.
 
     By default, a :class:`AuiToolBar` uses an instance of this class called :class:`AuiDefaultToolBarArt`
     which provides bitmap art and a colour scheme that is adapted to the major platforms'
@@ -1028,7 +1028,7 @@ class AuiDefaultToolBarArt(object):
 
             elif item_state & AUI_BUTTON_STATE_CHECKED:
 
-                # it's important to put this code in an else statment after the
+                # it's important to put this code in an else statement after the
                 # hover, otherwise hovers won't draw properly for checked items
                 dc.SetPen(wx.Pen(self._highlight_colour))
                 dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 170)))
@@ -1107,7 +1107,7 @@ class AuiDefaultToolBarArt(object):
             dc.DrawRectangle(dropdown_rect)
 
         elif item_state & AUI_BUTTON_STATE_CHECKED:
-            # it's important to put this code in an else statment after the
+            # it's important to put this code in an else statement after the
             # hover, otherwise hovers won't draw properly for checked items
             dc.SetPen(wx.Pen(self._highlight_colour))
             dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 170)))
@@ -1705,7 +1705,7 @@ class AuiToolBar(wx.Control):
     def SetArtProvider(self, art):
         """
         Instructs :class:`AuiToolBar` to use art provider specified by parameter `art`
-        for all drawing calls. This allows plugable look-and-feel features.
+        for all drawing calls. This allows pluggable look-and-feel features.
 
         :param `art`: an art provider.
 

@@ -43,8 +43,8 @@ windows, although it is a custom-drawn widget.
 This class supports:
 
 * Blended triple-gradient for the tooltip background;
-* Header text and header image, with possibility to set the header font indipendently;
-* Footer text and footer image, with possibility to set the footer font indipendently;
+* Header text and header image, with possibility to set the header font independently;
+* Footer text and footer image, with possibility to set the footer font independently;
 * Multiline text message in the tooltip body, plus an optional image as "body image";
 * Bold lines and hyperlink lines in the tooltip body;
 * A wide set of predefined drawing styles for the tooltip background;
@@ -295,8 +295,8 @@ class ToolTipWindowBase(object):
 
         # Get the user options for header, bitmaps etc...
         drawHeader, drawFooter = classParent.GetDrawHeaderLine(), classParent.GetDrawFooterLine()
-        topRect = wx.Rect(frameRect.x, frameRect.y, frameRect.width, frameRect.height/2)
-        bottomRect = wx.Rect(frameRect.x, frameRect.y+frameRect.height/2, frameRect.width, frameRect.height/2+1)
+        topRect = wx.Rect(frameRect.x, frameRect.y, frameRect.width, frameRect.height//2)
+        bottomRect = wx.Rect(frameRect.x, frameRect.y+frameRect.height//2, frameRect.width, frameRect.height//2+1)
         # Fill the triple-gradient
         dc.GradientFillLinear(topRect, topColour, middleColour, wx.SOUTH)
         dc.GradientFillLinear(bottomRect, middleColour, bottomColour, wx.SOUTH)
@@ -324,9 +324,9 @@ class ToolTipWindowBase(object):
         normalText = classParent.GetTextColour()
         if header:
             dc.SetTextForeground(normalText)
-            dc.DrawText(header, bmpXPos+bmpWidth+self._spacing, (height-textHeight+self._spacing)/2)
+            dc.DrawText(header, bmpXPos+bmpWidth+self._spacing, (height-textHeight+self._spacing)//2)
         if headerBmp and headerBmp.IsOk():
-            dc.DrawBitmap(headerBmp, bmpXPos, (height-bmpHeight+self._spacing)/2, True)
+            dc.DrawBitmap(headerBmp, bmpXPos, (height-bmpHeight+self._spacing)//2, True)
 
         if header or (headerBmp and headerBmp.IsOk()):
             yPos += height
@@ -376,7 +376,7 @@ class ToolTipWindowBase(object):
                 messageHeight += textHeight
 
                 xText = (bmpWidth + 2 * self._spacing) if bmpWidth > 0 else self._spacing
-                yText += textHeight/2+self._spacing
+                yText += textHeight//2+self._spacing
                 maxWidth = max(xText + textWidth + self._spacing, maxWidth)
                 dc.DrawText(line, xText, yText)
                 if isLink:
@@ -412,8 +412,8 @@ class ToolTipWindowBase(object):
             if drawFooter:
                 # Draw the separator line before the footer
                 dc.SetPen(wx.GREY_PEN)
-                dc.DrawLine(self._spacing, yPos-self._spacing/2+toAdd,
-                            width-self._spacing, yPos-self._spacing/2+toAdd)
+                dc.DrawLine(self._spacing, yPos-self._spacing//2+toAdd,
+                            width-self._spacing, yPos-self._spacing//2+toAdd)
         # Draw the footer and footer bitmap (if any)
         dc.SetTextForeground(normalText)
         height = max(textHeight, bmpHeight)
@@ -424,7 +424,7 @@ class ToolTipWindowBase(object):
             maxWidth = max(bmpXPos + bmpWidth + (self._spacing*2) + textWidth, maxWidth)
         if footerBmp and footerBmp.IsOk():
             toAdd = (height - bmpHeight + self._spacing) / 2
-            dc.DrawBitmap(footerBmp, bmpXPos, yPos + toAdd, True)
+            dc.DrawBitmap(footerBmp, bmpXPos, int(yPos + toAdd), True)
             maxWidth = max(footerBmp.GetSize().GetWidth() + bmpXPos, maxWidth)
 
         maxHeight = yPos + height + toAdd
@@ -815,7 +815,7 @@ class SuperToolTip(object):
         :param `delay`: the delay in seconds.
         """
 
-        self._startDelayTime = float(delay)
+        self._startDelayTime = int(delay)
 
 
     def GetStartDelay(self):
@@ -831,7 +831,7 @@ class SuperToolTip(object):
         :param `delay`: the delay in seconds.
         """
 
-        self._endDelayTime = float(delay)
+        self._endDelayTime = int(delay)
 
 
     def GetEndDelay(self):
@@ -1260,7 +1260,7 @@ class SuperToolTip(object):
 
 
     def InitFont(self):
-        """ Initalizes the fonts for :class:`SuperToolTip`. """
+        """ Initializes the fonts for :class:`SuperToolTip`. """
 
         self._messageFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._headerFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)

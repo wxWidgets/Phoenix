@@ -584,12 +584,12 @@ class RibbonPanel(RibbonControl):
         minimum = wx.Size(*self.GetMinSize())
 
         if direction & wx.HORIZONTAL:
-            current.x = (current.x * 4) / 5
+            current.x = (current.x * 4) // 5
             if current.x < minimum.x:
                 current.x = minimum.x
 
         if direction & wx.VERTICAL:
-            current.y = (current.y * 4) / 5
+            current.y = (current.y * 4) // 5
             if current.y < minimum.y:
                 current.y = minimum.y
 
@@ -668,10 +668,10 @@ class RibbonPanel(RibbonControl):
         current = wx.Size(*relative_to)
 
         if direction & wx.HORIZONTAL:
-            current.x = (current.x * 5 + 3) / 4
+            current.x = (current.x * 5 + 3) // 4
 
         if direction & wx.VERTICAL:
-            current.y = (current.y * 5 + 3) / 4
+            current.y = (current.y * 5 + 3) // 4
 
         return current
 
@@ -901,13 +901,13 @@ class RibbonPanel(RibbonControl):
         Show the panel externally expanded.
 
         When a panel is minimised, it can be shown full-size in a pop-out window, which
-        is refered to as being (externally) expanded.
+        is referred to as being (externally) expanded.
 
         :returns: ``True`` if the panel was expanded, ``False`` if it was not (possibly
          due to it not being minimised, or already being expanded).
 
         :note: When a panel is expanded, there exist two panels - the original panel
-         (which is refered to as the dummy panel) and the expanded panel. The original
+         (which is referred to as the dummy panel) and the expanded panel. The original
          is termed a dummy as it sits in the ribbon bar doing nothing, while the expanded
          panel holds the panel children.
 
@@ -1020,7 +1020,7 @@ class RibbonPanel(RibbonControl):
             self.HideExpanded()
             # Do not skip event, as the panel has been de-expanded, causing the
             # child with focus to be reparented (and hidden). If the event
-            # continues propogation then bad things happen.
+            # continues propagation then bad things happen.
 
         else:
             event.Skip()
@@ -1076,25 +1076,25 @@ class RibbonPanel(RibbonControl):
         pos = wx.Point()
 
         if direction == wx.NORTH:
-            pos.x = panel.GetX() + (panel.GetWidth() - expanded_size.GetWidth()) / 2
+            pos.x = panel.GetX() + (panel.GetWidth() - expanded_size.GetWidth()) // 2
             pos.y = panel.GetY() - expanded_size.GetHeight()
             primary_x = True
             secondary_y = 1
 
         elif direction == wx.EAST:
             pos.x = panel.GetRight()
-            pos.y = panel.GetY() + (panel.GetHeight() - expanded_size.GetHeight()) / 2
+            pos.y = panel.GetY() + (panel.GetHeight() - expanded_size.GetHeight()) // 2
             secondary_x = -1
 
         elif direction == wx.SOUTH:
-            pos.x = panel.GetX() + (panel.GetWidth() - expanded_size.GetWidth()) / 2
+            pos.x = panel.GetX() + (panel.GetWidth() - expanded_size.GetWidth()) // 2
             pos.y = panel.GetBottom()
             primary_x = True
             secondary_y = -1
 
         else:
             pos.x = panel.GetX() - expanded_size.GetWidth()
-            pos.y = panel.GetY() + (panel.GetHeight() - expanded_size.GetHeight()) / 2
+            pos.y = panel.GetY() + (panel.GetHeight() - expanded_size.GetHeight()) // 2
             secondary_x = 1
 
         expanded = wx.Rect(pos, expanded_size)

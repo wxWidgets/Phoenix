@@ -4,6 +4,7 @@ import wx
 import os
 import images
 
+import wx.lib.agw.scrolledthumbnail as TC
 from wx.lib.agw.scrolledthumbnail import (ScrolledThumbnail,
                                           Thumb,
                                           NativeImageHandler,

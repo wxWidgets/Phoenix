@@ -3,7 +3,7 @@
 # Purpose:     Various kinds of generic checkbox stuff, (not native controls
 #              but self-drawn.)
 #
-# Author:      wxPython Team and wxPyWiki Contributers
+# Author:      wxPython Team and wxPyWiki Contributors
 #
 # Created:     22-June-2020
 # Copyright:   (c) 2020 by Total Control Software
@@ -127,9 +127,9 @@ class GenCheckBox(wx.Control):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         # Since the paint event draws the whole widget, we will use
         # SetBackgroundStyle(wx.BG_STYLE_PAINT) and then
-        # implementing an erase-background handler is not neccessary.
+        # implementing an erase-background handler is not necessary.
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
-        # Add a size handler to refresh so the paint wont smear when resizing.
+        # Add a size handler to refresh so the paint won't smear when resizing.
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
         # Then we want to monitor user clicks, so that we can switch our

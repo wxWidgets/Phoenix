@@ -124,7 +124,7 @@ class PopupDialog(wx.Dialog):
         selfSize = self.GetSize()
         tcSize = self.ctrl.GetSize()
 
-        pos.x -= (selfSize.width - tcSize.width) / 2
+        pos.x -= (selfSize.width - tcSize.width) // 2
         if pos.x + selfSize.width > dSize.width:
             pos.x = dSize.width - selfSize.width
         if pos.x < 0:

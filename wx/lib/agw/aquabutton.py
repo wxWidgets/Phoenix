@@ -24,14 +24,14 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~wx.lib.agw.aquabutton.AquaButton` is another custom-drawn button class which *approximatively* mimics
+:class:`~wx.lib.agw.aquabutton.AquaButton` is another custom-drawn button class which *approximately* mimics
 the behaviour of Aqua buttons on the Mac.
 
 
 Description
 ===========
 
-:class:`AquaButton` is another custom-drawn button class which *approximatively* mimics
+:class:`AquaButton` is another custom-drawn button class which *approximately* mimics
 the behaviour of Aqua buttons on the Mac. At the moment this class supports:
 
 * Bubble and shadow effects;
