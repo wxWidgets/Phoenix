@@ -51,7 +51,7 @@ achieved with this class is 1 millisecond.
 
 The size of :ref:`wx.DateTime` object is 8 bytes because it is
 represented as a 64 bit integer. The resulting range of supported
-dates is thus approximatively 580 million years, but due to the
+dates is thus approximately 580 million years, but due to the
 current limitations in the Gregorian calendar support, only dates from
 Nov 24, 4714BC are supported (this is subject to change if there is
 sufficient interest in doing it).
@@ -110,7 +110,7 @@ understand what 'in a month' means - of course, it is just::
 
 
 
-Date arithmetics
+Date arithmetic
 ----------------
 
 Many different operations may be performed with the dates, however not

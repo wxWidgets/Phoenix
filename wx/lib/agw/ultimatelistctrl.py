@@ -163,7 +163,7 @@ Window Styles                    Hex Value   Description
 ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
 ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
 ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
-``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+``ULC_BORDER_SELECT``              0x8000000 Changes border colour when an item is selected, instead of highlighting the item.
 ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
 ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
 ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
@@ -286,7 +286,7 @@ ULC_AUTO_TOGGLE_CHILD   = 0x800000     # only meaningful for checkboxes
 ULC_AUTO_CHECK_PARENT   = 0x1000000    # only meaningful for checkboxes
 ULC_SHOW_TOOLTIPS       = 0x2000000    # shows tooltips on items with ellipsis (...)
 ULC_HOT_TRACKING        = 0x4000000    # enable hot tracking on mouse motion
-ULC_BORDER_SELECT       = 0x8000000    # changes border colour whan an item is selected, instead of highlighting the item
+ULC_BORDER_SELECT       = 0x8000000    # changes border colour when an item is selected, instead of highlighting the item
 ULC_TRACK_SELECT        = 0x10000000   # Enables hot-track selection in a list control. Hot track selection means that an item
                                        # is automatically selected when the cursor remains over the item for a certain period
                                        # of time. The delay is retrieved on Windows using the win32api call
@@ -4288,7 +4288,7 @@ class UltimateListLineData(object):
         # fg colour
         # don't use foreground colour for drawing highlighted items - this might
         # make them completely invisible (and there is no way to do bit
-        # arithmetics on wxColour, unfortunately)
+        # arithmetic on wxColour, unfortunately)
 
         if not self._owner.HasAGWFlag(ULC_BORDER_SELECT) and not self._owner.HasAGWFlag(ULC_NO_FULL_ROW_SELECT):
             if highlighted:
@@ -5991,7 +5991,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
          ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
          ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
          ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
-         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour when an item is selected, instead of highlighting the item.
          ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
@@ -6309,7 +6309,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
     # bring the current item into view
     def MoveToFocus(self):
-        """ Brings tyhe current item into view. """
+        """ Brings the current item into view. """
 
         self.MoveToItem(self._current)
 
@@ -8851,8 +8851,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if self.HasCurrent() and state == 0 and stateMask & ULC_STATE_FOCUSED:
 
-            # unfocus all: only one item can be focussed, so clearing focus for
-            # all items is simply clearing focus of the focussed item.
+            # unfocus all: only one item can be focused, so clearing focus for
+            # all items is simply clearing focus of the focused item.
             self.SetItemState(self._current, state, stateMask)
 
         #(setting focus to all items makes no sense, so it is not handled here.)
@@ -10839,7 +10839,7 @@ class UltimateListCtrl(wx.Control):
          ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
          ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
          ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
-         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour when an item is selected, instead of highlighting the item.
          ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
@@ -11036,7 +11036,7 @@ class UltimateListCtrl(wx.Control):
          ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
          ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
          ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
-         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour when an item is selected, instead of highlighting the item.
          ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
@@ -11123,7 +11123,7 @@ class UltimateListCtrl(wx.Control):
          ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
          ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
          ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
-         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour when an item is selected, instead of highlighting the item.
          ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.

@@ -73,7 +73,7 @@ def run():
         """)
 
     module.addPyCode(order=15, code="""\
-        # On Windows we need to ensure that the wx pacakge folder is on on the
+        # On Windows we need to ensure that the wx package folder is on on the
         # PATH, so the MS Edge Loader DLLs can be found when they are dynamically
         # loaded.
         import os

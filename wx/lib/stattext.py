@@ -196,7 +196,7 @@ class GenStaticText(wx.Control):
           in the specified state.
 
         .. note:: Note that when a parent window is disabled, all of its
-           children are disabled as well and they are reenabled again when
+           children are disabled as well and they are re-enabled again when
            the parent is.
 
         .. note:: Overridden from :class:`wx.Control`.

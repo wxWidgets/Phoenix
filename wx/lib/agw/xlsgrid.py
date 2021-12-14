@@ -97,7 +97,7 @@ the following formatting features already implemented:
   gradient shading inside a cell as `xlrd` doesn't report this information.
 
 * Cell borders: support for all the border types and colours exposed by Excel
-  (left, top, bottom, right and diagonal borders, thin, double, thick, ect...
+  (left, top, bottom, right and diagonal borders, thin, double, thick, etc...
   line styles).
 
 * Cell text: support for all kind of fonts (except strikethrough, but this is
@@ -2069,7 +2069,7 @@ class XLSGrid(gridlib.Grid):
 
 class TransientPopup(STT.SuperToolTip):
     """
-    This is a sublass of :class:`SuperToolTip` and it is used to display a
+    This is a subclass of :class:`SuperToolTip` and it is used to display a
     "comment-window" on the cells containing a comment (a note).
 
     :note: If Mark Hammonds' `pywin32` package is not available, this class is

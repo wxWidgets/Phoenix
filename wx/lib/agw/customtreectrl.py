@@ -856,7 +856,7 @@ class DragImage(wx.DragImage):
 
         memory.SelectObject(wx.NullBitmap)
 
-        # Gtk and Windows unfortunatly don't do so well with transparent
+        # Gtk and Windows unfortunately don't do so well with transparent
         # drawing so this hack corrects the image to have a transparent
         # background.
         if wx.Platform != '__WXMAC__':
@@ -1660,7 +1660,7 @@ class GenericTreeItem(object):
 
         """
 
-        # since there can be very many of these, we save size by chosing
+        # since there can be very many of these, we save size by choosing
         # the smallest representation for the elements and by ordering
         # the members to avoid padding.
         self._text = text       # label to be rendered for item
@@ -3483,7 +3483,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
     def CheckChilds(self, item, checked=True):
         """
-        Programatically check/uncheck item children.
+        Programmatically check/uncheck item children.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
         :param bool `checked`: ``True`` to check an item, ``False`` to uncheck it.
@@ -5962,7 +5962,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
             select = True # the default
 
-            # Check if we need to toggle hilight (ctrl mode)
+            # Check if we need to toggle highlight (ctrl mode)
             if not unselect_others:
                 select = not item.IsSelected()
 
@@ -7228,7 +7228,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                     yOrigin = abs(yOrigin)
                     width, height = self.GetClientSize()
 
-                    # Move end points to the begining/end of the view?
+                    # Move end points to the beginning/end of the view?
                     if y_mid < yOrigin:
                         y_mid = yOrigin
                     if oldY > yOrigin + height:
@@ -8682,7 +8682,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Freeze :class:`CustomTreeCtrl`.
 
         Freezes the window or, in other words, prevents any updates from taking place
-        on screen, the window is not redrawn at all. :meth:`~Thaw` must be called to reenable
+        on screen, the window is not redrawn at all. :meth:`~Thaw` must be called to re-enable
         window redrawing. Calls to these two functions may be nested.
 
         :note: This method is useful for visual appearance optimization (for example,
@@ -8821,7 +8821,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         rect = self.GetBoundingRect(root, True)
 
         # It looks like the space between the "+" and the node
-        # rect occupies 4 pixels approximatively
+        # rect occupies 4 pixels approximately
         maxwidth = rect.x + rect.width + 4
         lastheight = rect.y + rect.height
 
@@ -8861,7 +8861,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             rect = self.GetBoundingRect(child, True)
 
             # It looks like the space between the "+" and the node
-            # rect occupies 4 pixels approximatively
+            # rect occupies 4 pixels approximately
             maxwidth = max(maxwidth, rect.x + rect.width + 4)
             lastheight = rect.y + rect.height
 

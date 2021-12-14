@@ -31,7 +31,7 @@ def main(args=None):
         print(__doc__)
         sys.exit(1)
 
-    # unfortunatly we need to make an app, frame and an instance of
+    # unfortunately we need to make an app, frame and an instance of
     # the ActiceX control in order to get the TypeInfo about it...
     app = wx.App()
     f = wx.Frame(None, -1, "")

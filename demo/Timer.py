@@ -172,7 +172,7 @@ class TestPanel(sp.ScrolledPanel):
 
         # Normally a FutureCall is one-shot, but we can make it
         # recurring just by calling Restart.  We can even use a
-        # different timeout or pass differnt args this time.
+        # different timeout or pass different args this time.
         self.t2.Restart(1500, "restarted")
 
         # The return value of this function is saved and can be

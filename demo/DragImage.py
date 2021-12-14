@@ -232,7 +232,7 @@ class DragCanvas(wx.ScrolledWindow):
             self.dragImage.Show()
 
 
-        # if we have shape and image then move it, posibly highlighting another shape.
+        # if we have shape and image then move it, possibly highlighting another shape.
         elif self.dragShape and self.dragImage:
             onShape = self.FindShape(evt.GetPosition())
             unhiliteOld = False

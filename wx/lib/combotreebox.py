@@ -661,7 +661,7 @@ class BaseComboTreeBox(object):
         :rtype: integer
 
         """
-        # Note: We don't need to substract 1 for the hidden root item,
+        # Note: We don't need to subtract 1 for the hidden root item,
         # because the TreeCtrl does that for us
         return self._tree.GetCount()
 

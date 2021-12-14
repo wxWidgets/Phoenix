@@ -127,7 +127,7 @@ missing features (the list is not exhaustive):
 - wxAuiManager & wxToolBar - ToolBar Of Size Zero: http://trac.wxwidgets.org/ticket/9724
 - wxAuiNotebook doesn't behave properly like a container as far as...: http://trac.wxwidgets.org/ticket/9911
 - Serious layout bugs in wxAUI: http://trac.wxwidgets.org/ticket/10620
-- wAuiDefaultTabArt::Clone() should just use copy contructor: http://trac.wxwidgets.org/ticket/11388
+- wAuiDefaultTabArt::Clone() should just use copy constructor: http://trac.wxwidgets.org/ticket/11388
 - Drop down button for check tool on wxAuiToolbar: http://trac.wxwidgets.org/ticket/11139
 
 Plus the following features:

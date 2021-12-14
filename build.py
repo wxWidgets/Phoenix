@@ -1735,7 +1735,7 @@ def cmd_build_docker(options, args):
 
     # TODO: Instead of the simple options.gtk2 test above, do something like the
     # following to select both. But currently if gtk2 is selected then
-    # options.gtk3 is explicity set to False... That needs to be made a little
+    # options.gtk3 is explicitly set to False... That needs to be made a little
     # smarter.
     # if options.gtk2 and options.gtk3:
     #     cmd.extend(['--port', 'all'])

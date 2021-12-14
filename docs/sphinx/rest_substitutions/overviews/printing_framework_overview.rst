@@ -69,7 +69,7 @@ the preview and printed images. This class provides a set of routines
 named `FitThisSizeToXXX()`, `MapScreenSizeToXXX()`, and
 `GetLogicalXXXRect`, which can be used to set the user scale and
 origin of the Printout's DC so that your class can easily map your
-image to the printout withouth getting into the details of screen and
+image to the printout without getting into the details of screen and
 printer PPI and scaling.
 
 
@@ -180,7 +180,7 @@ PageSetupDialog
 Class :ref:`wx.PageSetupDialog` puts up the standard page setup dialog,
 which allows you to specify the orientation, paper size, and related
 settings. You provide it with a :ref:`wx.PageSetupDialogData` object at
-intialization, which is used to populate the dialog; when the dialog
+initialization, which is used to populate the dialog; when the dialog
 is dismissed, this object contains the settings chosen by the user,
 including orientation and/or page margins.
 

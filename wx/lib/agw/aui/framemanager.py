@@ -4473,7 +4473,7 @@ class AuiManager(wx.EvtHandler):
     def SetArtProvider(self, art_provider):
         """
         Instructs :class:`AuiManager` to use art provider specified by the parameter
-        `art_provider` for all drawing calls. This allows plugable look-and-feel
+        `art_provider` for all drawing calls. This allows pluggable look-and-feel
         features.
 
         :param `art_provider`: a AUI dock art provider.
@@ -4495,7 +4495,7 @@ class AuiManager(wx.EvtHandler):
     def AddPane(self, window, arg1=None, arg2=None, target=None):
         """
         Tells the frame manager to start managing a child window. There
-        are four versions of this function. The first verison allows the full spectrum
+        are four versions of this function. The first version allows the full spectrum
         of pane parameter possibilities (:meth:`AddPane1`). The second version is used for
         simpler user interfaces which do not require as much configuration (:meth:`AddPane2`).
         The :meth:`AddPane3` version allows a drop position to be specified, which will determine
@@ -4606,7 +4606,7 @@ class AuiManager(wx.EvtHandler):
                 # so use GetBestSize()
                 pinfo.best_size = pinfo.window.GetBestSize()
 
-                # this is needed for Win2000 to correctly fill toolbar backround
+                # this is needed for Win2000 to correctly fill toolbar background
                 # it should probably be repeated once system colour change happens
                 if wx.Platform == "__WXMSW__" and pinfo.window.UseBgCol():
                     pinfo.window.SetBackgroundColour(self.GetArtProvider().GetColour(AUI_DOCKART_BACKGROUND_COLOUR))
@@ -6113,7 +6113,7 @@ class AuiManager(wx.EvtHandler):
     def SetDockSizeConstraint(self, width_pct, height_pct):
         """
         When a user creates a new dock by dragging a window into a docked position,
-        often times the large size of the window will create a dock that is unwieldly
+        often times the large size of the window will create a dock that is unwieldy
         large.
 
         :class:`AuiManager` by default limits the size of any new dock to 1/3 of the window
@@ -9978,7 +9978,7 @@ class AuiManager(wx.EvtHandler):
                 self.GetPane(notebook).CaptionVisible(False).PaneBorder(False)
                 self.Update()
 
-        # it seems the notebook isnt created by this stage, so remove
+        # it seems the notebook isn't created by this stage, so remove
         # the caption a moment later
         wx.CallAfter(RemoveCaption)
         return True
@@ -10395,7 +10395,7 @@ class AuiManager_DCP(AuiManager):
                              not pane.IsFloating() and pane.IsShown() for pane in self.GetAllPanes())
         if haveCenterPane:
             if self.hasDummyPane:
-                # there's our dummy pane and also another center pane, therefor let's remove our dummy
+                # there's our dummy pane and also another center pane, therefore let's remove our dummy
                 def do():
                     self._destroyDummyPane()
                     self.Update()

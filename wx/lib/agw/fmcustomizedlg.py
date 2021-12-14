@@ -225,7 +225,7 @@ class FMCustomizeDlg(wx.Dialog):
 
 
     def Initialise(self):
-        """ Initialzes the :class:`~wx.lib.agw.labelbook.LabelBook` pages. """
+        """ Initializes the :class:`~wx.lib.agw.labelbook.LabelBook` pages. """
 
         self._book.DeleteAllPages()
         self._book.AddPage(self.CreateMenusPage(), _("Menus"), True)
@@ -307,10 +307,10 @@ class FMCustomizeDlg(wx.Dialog):
 
 
     def CreateShortcutsPage(self):
-        """ Creates the :class:`~wx.lib.agw.labelbook.LabelBook` shorcuts page. """
+        """ Creates the :class:`~wx.lib.agw.labelbook.LabelBook` shortcuts page. """
 
-        shorcuts = wx.Panel(self._book, wx.ID_ANY, wx.DefaultPosition, wx.Size(300, 300))
-        return shorcuts
+        shortcuts = wx.Panel(self._book, wx.ID_ANY, wx.DefaultPosition, wx.Size(300, 300))
+        return shortcuts
 
 
     def CreateOptionsPage(self):

@@ -968,7 +968,7 @@ class PlotDemoMainFrame(wx.Frame):
 
     def DrawPointLabel(self, dc, mDataDict):
         """
-        This is the fuction that defines how the pointLabels are plotted
+        This is the function that defines how the pointLabels are plotted
 
         :param dc: DC that will be passed
         :param mDataDict: Dictionary of data that you want to use

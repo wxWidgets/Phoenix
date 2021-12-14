@@ -1,5 +1,5 @@
 /*
- * The implementation of the Python object to C/C++ integer convertors.
+ * The implementation of the Python object to C/C++ integer converters.
  *
  * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
@@ -248,7 +248,7 @@ unsigned PY_LONG_LONG sip_api_long_as_unsigned_long_long(PyObject *o)
 
     /*
      * Note that this doesn't handle Python v2 int objects, but the old
-     * convertors didn't either.
+     * converters didn't either.
      */
 
     PyErr_Clear();

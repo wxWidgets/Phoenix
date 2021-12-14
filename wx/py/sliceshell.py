@@ -3795,7 +3795,7 @@ class SlicesShell(editwindow.EditWindow):
 ##         self.GetData()
 ##         if self.textdo.GetTextLength() > 1:
 ##             text = self.textdo.GetText()
-##             # *** Do somethign with the dragged text here...
+##             # *** Do something with the dragged text here...
 ##             self.textdo.SetText('')
 ##         else:
 ##             filenames = str(self.filename.GetFilenames())

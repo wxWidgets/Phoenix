@@ -1,5 +1,5 @@
 /*
- * The implementation of the supprt for setting API versions.
+ * The implementation of the support for setting API versions.
  *
  * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *

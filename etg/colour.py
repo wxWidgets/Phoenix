@@ -82,7 +82,7 @@ def run():
     c.addProperty('blue Blue')
     c.addProperty('alpha Alpha')
 
-    c.find('GetPixel').ignore()  # We need to add a typcast
+    c.find('GetPixel').ignore()  # We need to add a typecast
     c.addCppMethod('wxIntPtr*', 'GetPixel', '()', """\
         #if defined(__WXGTK3__) || defined(__WXOSX__)
             return new wxIntPtr(0);

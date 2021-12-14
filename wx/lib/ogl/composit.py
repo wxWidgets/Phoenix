@@ -48,7 +48,7 @@ class ConstraintType(object):
         """
         Default class constructor.
 
-        :param `theType`: one of the folowing
+        :param `theType`: one of the following
          ====================================== ================================
          Constraint type                        Description
          ====================================== ================================
@@ -542,7 +542,7 @@ class CompositeShape(RectangleShape):
         Set the size.
 
         :param `w`: the width
-        :param `h`: the heigth
+        :param `h`: the height
         :param `recursive`: size the children recursively
 
         """
@@ -765,7 +765,7 @@ class CompositeShape(RectangleShape):
         """
         Constrain the children.
 
-        :returns: True if constained otherwise False
+        :returns: True if constrained otherwise False
 
         """
         self.CalculateSize()
@@ -820,7 +820,7 @@ class CompositeShape(RectangleShape):
         """
         Check if division is descendant.
 
-        :param `division`: divison to check
+        :param `division`: division to check
         :returns: `True` if division is a descendant of this container.
 
         """
@@ -1143,7 +1143,7 @@ class DivisionShape(CompositeShape):
         #dc.DrawRectangle(x1, y1, self.GetWidth(), self.GetHeight())
 
     def OnDrawContents(self, dc):
-        """The draw contens handler."""
+        """The draw contents handler."""
         CompositeShape.OnDrawContents(self, dc)
 
     def OnMovePre(self, dc, x, y, oldx, oldy, display = True):
@@ -1210,7 +1210,7 @@ class DivisionShape(CompositeShape):
         Set the size.
 
         :param `w`: the width
-        :param `h`: the heigth
+        :param `h`: the height
         :param `recursive`: `True` recurse all children
 
         """
