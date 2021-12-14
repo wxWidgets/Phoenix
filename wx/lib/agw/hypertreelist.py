@@ -55,7 +55,7 @@ two sub-windows:
 * :class:`TreeListMainWindow` is the main tree list based off :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl`.
 
 These widgets can be obtained by the :meth:`~HyperTreeList.GetHeaderWindow`
-and :meth:`~HyperTreeList.GetMainWindow` methods respectively althought this
+and :meth:`~HyperTreeList.GetMainWindow` methods respectively although this
 shouldn't be needed in normal usage because most of the methods of the
 sub-windows are monkey-patched and can be called directly from the
 :class:`~wx.lib.agw.hypertreelist.HyperTreeList` itself.
@@ -1119,7 +1119,7 @@ class TreeListHeaderWindow(wx.Window):
             # end of the current column
             xpos = 0
 
-            # find the column where this event occured
+            # find the column where this event occurred
             countCol = self.GetColumnCount()
 
             for column in range(countCol):
@@ -3437,7 +3437,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
             if not self.HasAGWFlag(wx.TR_NO_LINES) and children:
                 last_child = children[-1]
-                Y1 = last_child.GetY() + last_child.GetHeight() / 2
+                Y1 = last_child.GetY() + last_child.GetHeight() // 2
                 dc.DrawLine(x, oldY, x, Y1)
 
         return y, x_maincol
@@ -4017,7 +4017,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             header.Update()
 
         # Update the header window after this scroll event has fully finished
-        # processing, and the scoll action is complete.
+        # processing, and the scroll action is complete.
         if event.GetOrientation() == wx.HORIZONTAL:
             wx.CallAfter(_updateHeaderWindow, self._owner.GetHeaderWindow())
         event.Skip()
@@ -4391,7 +4391,7 @@ class HyperTreeList(wx.Control):
     * :class:`TreeListMainWindow` is the main tree list based off :class:`~wx.lib.agw.customtreectrl.CustomTreeCtrl`.
 
     These widgets can be obtained by the :meth:`~HyperTreeList.GetHeaderWindow`
-    and :meth:`~HyperTreeList.GetMainWindow` methods respectively althought this
+    and :meth:`~HyperTreeList.GetMainWindow` methods respectively although this
     shouldn't be needed in normal usage.
 
     Please note that in addition to the defined methods of :class:`HyperTreeList`
@@ -4408,7 +4408,7 @@ class HyperTreeList(wx.Control):
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.AutoCheckChild`                 Transverses the tree and checks/unchecks the items.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.AutoCheckParent`                Traverses up the tree and checks/unchecks parent items.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.AutoToggleChild`                Transverses the tree and toggles the items.
-    :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CheckChilds`                    Programatically check/uncheck item children.
+    :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CheckChilds`                    Programmatically check/uncheck item children.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CheckItem`                      Actually checks/uncheks an item, sending the two related events.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CheckItem2`                     Used internally to avoid ``EVT_TREE_ITEM_CHECKED`` events.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CheckSameLevel`                 Uncheck radio items which are on the same level of the checked one.
@@ -4622,7 +4622,7 @@ class HyperTreeList(wx.Control):
         Freezes the HyperTreeList main (tree) and and header windows.
         This prevents any re-calculation or updates from taking place
         allowing mass updates to the tree very quickly. :meth:`~Thaw`
-        must be called to reenable updates. Calls to these two
+        must be called to re-enable updates. Calls to these two
         functions may be nested.
         """
         self._main_win.Freeze()

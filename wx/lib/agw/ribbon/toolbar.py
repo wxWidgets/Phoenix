@@ -393,7 +393,7 @@ class RibbonToolBar(RibbonControl):
         Adds a separator to the tool bar.
 
         Separators are used to separate tools into groups. As such, a separator is not
-        explicity drawn, but is visually seen as the gap between tool groups.
+        explicitly drawn, but is visually seen as the gap between tool groups.
         """
 
         if not self._groups[-1].tools:
@@ -408,7 +408,7 @@ class RibbonToolBar(RibbonControl):
         Inserts a separator into the tool bar at the position specified by `pos`.
 
         Separators are used to separate tools into groups. As such, a separator is not
-        explicity drawn, but is visually seen as the gap between tool groups.
+        explicitly drawn, but is visually seen as the gap between tool groups.
 
         :param `pos`: the position of the new tool in the toolbar (zero-based).
 
@@ -944,7 +944,7 @@ class RibbonToolBar(RibbonControl):
         Set the number of rows to distribute tool groups over.
 
         Tool groups can be distributed over a variable number of rows. The way in which
-        groups are assigned to rows is not specificed, and the order of groups may
+        groups are assigned to rows is not specified, and the order of groups may
         change, but they will be distributed in such a way as to minimise the overall
         size of the tool bar.
 
@@ -1159,7 +1159,7 @@ class RibbonToolBar(RibbonControl):
 
         # Set group y positions
         for group in self._groups:
-            group.position.y = rowypos[group.position.y]
+            group.position.y = int(rowypos[group.position.y])
 
 
     def GetBestSizeForParentSize(self, parentSize):

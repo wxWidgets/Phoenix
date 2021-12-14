@@ -267,7 +267,7 @@ def _setup_compile(self, outdir, macros, incdirs, sources, depends, extra):
           _orig_setup_compile(self, outdir, macros, incdirs, sources, depends, extra)
 
     # Remove items from the build collection that don't need to be built
-    # because their obj file is newer than the source fle and any other
+    # because their obj file is newer than the source file and any other
     # dependencies.
     for obj in objects:
         src, ext = build[obj]

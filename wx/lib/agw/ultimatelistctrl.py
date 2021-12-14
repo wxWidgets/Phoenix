@@ -163,7 +163,7 @@ Window Styles                    Hex Value   Description
 ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
 ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
 ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
-``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+``ULC_BORDER_SELECT``              0x8000000 Changes border colour when an item is selected, instead of highlighting the item.
 ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
 ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
 ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
@@ -286,7 +286,7 @@ ULC_AUTO_TOGGLE_CHILD   = 0x800000     # only meaningful for checkboxes
 ULC_AUTO_CHECK_PARENT   = 0x1000000    # only meaningful for checkboxes
 ULC_SHOW_TOOLTIPS       = 0x2000000    # shows tooltips on items with ellipsis (...)
 ULC_HOT_TRACKING        = 0x4000000    # enable hot tracking on mouse motion
-ULC_BORDER_SELECT       = 0x8000000    # changes border colour whan an item is selected, instead of highlighting the item
+ULC_BORDER_SELECT       = 0x8000000    # changes border colour when an item is selected, instead of highlighting the item
 ULC_TRACK_SELECT        = 0x10000000   # Enables hot-track selection in a list control. Hot track selection means that an item
                                        # is automatically selected when the cursor remains over the item for a certain period
                                        # of time. The delay is retrieved on Windows using the win32api call
@@ -914,7 +914,7 @@ class PyImageList(object):
             raise Exception("Wrong index in image list")
 
         bmp = self._images[index]
-        dc.DrawBitmap(bmp, x, y, (flags & wx.IMAGELIST_DRAW_TRANSPARENT) > 0)
+        dc.DrawBitmap(bmp, x, int(y), (flags & wx.IMAGELIST_DRAW_TRANSPARENT) > 0)
 
         return True
 
@@ -4022,7 +4022,7 @@ class UltimateListLineData(object):
 
             if item.HasImage():
 
-                self._gi._rectIcon.x = self._gi._rectAll.x + 4 + (self._gi._rectAll.width - self._gi._rectIcon.width)/2
+                self._gi._rectIcon.x = self._gi._rectAll.x + 4 + (self._gi._rectAll.width - self._gi._rectIcon.width)//2
                 self._gi._rectIcon.y = self._gi._rectAll.y + 4
 
             if item.HasText():
@@ -4030,7 +4030,7 @@ class UltimateListLineData(object):
                 if self._gi._rectLabel.width > spacing:
                     self._gi._rectLabel.x = self._gi._rectAll.x + 2
                 else:
-                    self._gi._rectLabel.x = self._gi._rectAll.x + 2 + (spacing/2) - (self._gi._rectLabel.width/2)
+                    self._gi._rectLabel.x = self._gi._rectAll.x + 2 + (spacing//2) - (self._gi._rectLabel.width//2)
 
                 self._gi._rectLabel.y = self._gi._rectAll.y + self._gi._rectAll.height + 2 - self._gi._rectLabel.height
                 self._gi._rectHighlight.x = self._gi._rectLabel.x - 2
@@ -4288,7 +4288,7 @@ class UltimateListLineData(object):
         # fg colour
         # don't use foreground colour for drawing highlighted items - this might
         # make them completely invisible (and there is no way to do bit
-        # arithmetics on wxColour, unfortunately)
+        # arithmetic on wxColour, unfortunately)
 
         if not self._owner.HasAGWFlag(ULC_BORDER_SELECT) and not self._owner.HasAGWFlag(ULC_NO_FULL_ROW_SELECT):
             if highlighted:
@@ -4546,7 +4546,7 @@ class UltimateListLineData(object):
                 # We got a checkbox-type item
                 ix, iy = self._owner.GetCheckboxImageSize()
                 checked = item.IsChecked()
-                self._owner.DrawCheckbox(dc, xOld, y + (height-iy+1)/2, item.GetKind(), checked, enabled)
+                self._owner.DrawCheckbox(dc, xOld, y + (height-iy+1)//2, item.GetKind(), checked, enabled)
                 xOld += ix
                 width -= ix
 
@@ -4557,7 +4557,7 @@ class UltimateListLineData(object):
                 for img in images:
 
                     ix, iy = self._owner.GetImageSize([img])
-                    self._owner.DrawImage(img, dc, xOld, y + (height-iy)/2, enabled)
+                    self._owner.DrawImage(img, dc, xOld, y + (height-iy)//2, enabled)
 
                     xOld += ix
                     width -= ix
@@ -5230,7 +5230,7 @@ class UltimateListHeaderWindow(wx.Control):
                 # We got a checkbox-type item
                 ix, iy = self._owner.GetCheckboxImageSize()
                 # We draw it on the left, always
-                self._owner.DrawCheckbox(dc, x + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)/2, kind, checked, enabled)
+                self._owner.DrawCheckbox(dc, x + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)//2, kind, checked, enabled)
                 wcheck += ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
                 cw -= ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
 
@@ -5991,7 +5991,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
          ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
          ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
          ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
-         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour when an item is selected, instead of highlighting the item.
          ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
@@ -6309,7 +6309,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
     # bring the current item into view
     def MoveToFocus(self):
-        """ Brings tyhe current item into view. """
+        """ Brings the current item into view. """
 
         self.MoveToItem(self._current)
 
@@ -6819,7 +6819,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                     # We got a checkbox-type item
                     ix, iy = self.GetCheckboxImageSize()
                     LH = self.GetLineHeight(line)
-                    rect = wx.Rect(xOld, lineY + LH/2 - iy/2, ix, iy)
+                    rect = wx.Rect(xOld, lineY + LH//2 - iy//2, ix, iy)
                     if rect.Contains((x, y)):
                         newItem = self.GetParent().GetItem(line, col)
                         return newItem, ULC_HITTEST_ONITEMCHECK
@@ -7937,13 +7937,13 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                     while start_y > view_y:
                         start_y -= SCROLL_UNIT_Y
 
-                    self.Scroll(-1, start_y/SCROLL_UNIT_Y)
+                    self.Scroll(-1, start_y//SCROLL_UNIT_Y)
 
                 if start_y + height > view_y + client_h:
                     while start_y + height < view_y + client_h:
                         start_y += SCROLL_UNIT_Y
 
-                    self.Scroll(-1, (start_y+height-client_h+SCROLL_UNIT_Y)/SCROLL_UNIT_Y)
+                    self.Scroll(-1, (start_y+height-client_h+SCROLL_UNIT_Y)//SCROLL_UNIT_Y)
 
         else: # !report
 
@@ -7960,7 +7960,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             if rect.y + rect.height - 5 > view_y + client_h:
                 sy = (rect.y + rect.height - client_h + hLine)/hLine
 
-            self.Scroll(sx, sy)
+            self.Scroll(int(sx), int(sy))
 
 
 # ----------------------------------------------------------------------------
@@ -8851,8 +8851,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if self.HasCurrent() and state == 0 and stateMask & ULC_STATE_FOCUSED:
 
-            # unfocus all: only one item can be focussed, so clearing focus for
-            # all items is simply clearing focus of the focussed item.
+            # unfocus all: only one item can be focused, so clearing focus for
+            # all items is simply clearing focus of the focused item.
             self.SetItemState(self._current, state, stateMask)
 
         #(setting focus to all items makes no sense, so it is not handled here.)
@@ -9654,8 +9654,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                 self._linesPerPage = clientHeight//lineHeight
 
                 self.SetScrollbars(SCROLL_UNIT_X, lineHeight,
-                                   (self.GetHeaderWidth()-decrement)/SCROLL_UNIT_X,
-                                   (entireHeight + lineHeight - 1)/lineHeight,
+                                   (self.GetHeaderWidth()-decrement)//SCROLL_UNIT_X,
+                                   (entireHeight + lineHeight - 1)//lineHeight,
                                    self.GetScrollPos(wx.HORIZONTAL),
                                    self.GetScrollPos(wx.VERTICAL),
                                    True)
@@ -9676,8 +9676,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                     decrement = SCROLL_UNIT_X
 
                 self.SetScrollbars(SCROLL_UNIT_X, SCROLL_UNIT_Y,
-                                   (self.GetHeaderWidth()-decrement)/SCROLL_UNIT_X,
-                                   (entireHeight + SCROLL_UNIT_Y - 1)/SCROLL_UNIT_Y,
+                                   (self.GetHeaderWidth()-decrement)//SCROLL_UNIT_X,
+                                   (entireHeight + SCROLL_UNIT_Y - 1)//SCROLL_UNIT_Y,
                                    self.GetScrollPos(wx.HORIZONTAL),
                                    self.GetScrollPos(wx.VERTICAL),
                                    True)
@@ -9728,8 +9728,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                         line._gi.ExtendWidth(widthMax)
 
                 self.SetScrollbars(SCROLL_UNIT_X, lineHeight,
-                                   (x + SCROLL_UNIT_X)/SCROLL_UNIT_X,
-                                   (y + lineHeight)/lineHeight,
+                                   (x + SCROLL_UNIT_X)//SCROLL_UNIT_X,
+                                   (y + lineHeight)//lineHeight,
                                    self.GetScrollPos(wx.HORIZONTAL),
                                    self.GetScrollPos(wx.VERTICAL),
                                    True)
@@ -9797,7 +9797,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                             break  # Everything fits, no second try required.
 
                 self.SetScrollbars(SCROLL_UNIT_X, lineHeight,
-                                   (entireWidth + SCROLL_UNIT_X)/SCROLL_UNIT_X,
+                                   (entireWidth + SCROLL_UNIT_X)//SCROLL_UNIT_X,
                                    0,
                                    self.GetScrollPos(wx.HORIZONTAL),
                                    0,
@@ -10839,7 +10839,7 @@ class UltimateListCtrl(wx.Control):
          ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
          ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
          ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
-         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour when an item is selected, instead of highlighting the item.
          ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
@@ -11036,7 +11036,7 @@ class UltimateListCtrl(wx.Control):
          ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
          ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
          ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
-         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour when an item is selected, instead of highlighting the item.
          ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
@@ -11123,7 +11123,7 @@ class UltimateListCtrl(wx.Control):
          ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
          ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
          ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
-         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour when an item is selected, instead of highlighting the item.
          ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.

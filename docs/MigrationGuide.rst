@@ -555,7 +555,7 @@ problem into Phoenix the C++ wrappers have been tossed out and some of the
 more commonly used classes from wx.gizmos has been ported to pure Python code,
 which now lives in the ``wx.lib.gizmos`` package. There is also a temporary
 ``wx.gizmos`` module provided in order to provide the class names at the old
-location too in order to ease transitioning to the new packge. Please migrate
+location too in order to ease transitioning to the new package. Please migrate
 your code to use ``wx.lib.gizmos`` as ``wx.gizmos`` will likely go away in a
 future release.
 

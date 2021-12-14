@@ -173,7 +173,7 @@ class AnalogClock(wx.Window):
         scale = min([float(size.width) / self.basesize.width,
                      float(size.height) / self.basesize.height])
 
-        centre = wx.Point(size.width / 2., size.height / 2.)
+        centre = wx.Point(size.width // 2, size.height // 2)
 
         self.Box.RecalcCoords(size, centre, scale)
         self.Hands.RecalcCoords(size, centre, scale)
@@ -496,7 +496,7 @@ class AnalogClock(wx.Window):
 
 
     def SetBackgroundColour(self, colour):
-        """Overriden base wx.Window method."""
+        """Overridden base wx.Window method."""
 
         wx.Window.SetBackgroundColour(self, colour)
         self.Reset()
@@ -504,7 +504,7 @@ class AnalogClock(wx.Window):
 
     def SetForegroundColour(self, colour):
         """
-        Overriden base wx.Window method. This method sets a colour for
+        Overridden base wx.Window method. This method sets a colour for
         all hands and ticks at once.
         """
 
@@ -517,7 +517,7 @@ class AnalogClock(wx.Window):
 
 
     def SetWindowStyle(self, *args, **kwargs):
-        """Overriden base wx.Window method."""
+        """Overridden base wx.Window method."""
 
         size = self.GetSize()
         self.Freeze()
@@ -528,7 +528,7 @@ class AnalogClock(wx.Window):
 
 
     def SetWindowStyleFlag(self, *args, **kwargs):
-        """Overriden base wx.Window method."""
+        """Overridden base wx.Window method."""
 
         self.SetWindowStyle(*args, **kwargs)
 

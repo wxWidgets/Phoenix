@@ -46,7 +46,7 @@ title frame, or a PDF by providing an image of the cover page.  The images for
 these files may be generated on the fly by a suitably extended :class:`ImageHandler`,
 or may be provided with the instance of :class:`Thumb`.  The list of `Thumb`
 instances passed to `ScrolledThumbnail` may contain different derived classes,
-as long as each contains the required funtions.
+as long as each contains the required functions.
 
 NB:  Use of :class:`ScrolledThumbnail` has not been tested with extended classes.
 
@@ -1162,8 +1162,8 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         self._tWidth = width
         self._tHeight = height
         self._tBorder = border
-        self.SetScrollRate((self._tWidth + self._tBorder)/4,
-                           (self._tHeight + self._tBorder)/4)
+        self.SetScrollRate((self._tWidth + self._tBorder)//4,
+                           (self._tHeight + self._tBorder)//4)
         self.SetSizeHints(self._tWidth + self._tBorder*2 + 16,
                           self._tHeight + self._tBorder*2 + 8)
         if self._items:
@@ -1588,8 +1588,8 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
         ww = img.GetWidth()
         hh = img.GetHeight()
-        imgRect = wx.Rect(x + (self._tWidth - img.GetWidth())/2,
-                          y + (self._tHeight - img.GetHeight())/2,
+        imgRect = wx.Rect(int(x + (self._tWidth - img.GetWidth())/2),
+                          int(y + (self._tHeight - img.GetHeight())/2),
                           img.GetWidth(), img.GetHeight())
 
         if not thumb._alpha and self._dropShadow:
@@ -1626,14 +1626,14 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             else:
                 ty = y + hh + (self._tHeight-hh)/2 + (self._tTextHeight - sh)/2 + 3
 
-            dc.DrawText(mycaption, tx, ty)
+            dc.DrawText(mycaption, int(tx), int(ty))
 
         # outline
         if self._tOutline != THUMB_OUTLINE_NONE and (self._tOutlineNotSelected or self.IsSelected(index)):
 
             dotrect = wx.Rect()
-            dotrect.x = x - 2
-            dotrect.y = y - 2
+            dotrect.x = int(x) - 2
+            dotrect.y = int(y) - 2
             dotrect.width = bmp.GetWidth() - self._tBorder + 4
             dotrect.height = bmp.GetHeight() - self._tBorder + 4
 
@@ -1643,8 +1643,8 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
             if self._tOutline == THUMB_OUTLINE_FULL or self._tOutline == THUMB_OUTLINE_RECT:
 
-                imgRect.x = x
-                imgRect.y = y
+                imgRect.x = int(x)
+                imgRect.y = int(y)
                 imgRect.width = bmp.GetWidth() - self._tBorder
                 imgRect.height = bmp.GetHeight() - self._tBorder
 
@@ -1708,10 +1708,10 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             if col == 0:
                 row = row + 1
 
-            xwhite = ((w - self._cols*(self._tWidth + self._tBorder)))/(self._cols+1)
+            xwhite = ((w - self._cols*(self._tWidth + self._tBorder)))//(self._cols+1)
             tx = xwhite + col*(self._tWidth + self._tBorder)
 
-            ty = self._tBorder/2 + row*(self._tHeight + self._tBorder) + \
+            ty = self._tBorder//2 + row*(self._tHeight + self._tBorder) + \
                  self.GetCaptionHeight(0, row)
             tw = self._tWidth + self._tBorder
             th = self._tHeight + self.GetCaptionHeight(row) + self._tBorder
@@ -1723,7 +1723,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             self.DrawThumbnail(thmb, self._items[ii], ii)
             dc.DrawBitmap(thmb, tx, ty)
 
-        rect = wx.Rect(xwhite, self._tBorder/2,
+        rect = wx.Rect(xwhite, self._tBorder//2,
                        self._cols*(self._tWidth + self._tBorder),
                        self._rows*(self._tHeight + self._tBorder) + \
                        self.GetCaptionHeight(0, self._rows))

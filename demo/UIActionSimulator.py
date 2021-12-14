@@ -88,7 +88,7 @@ class TestPanel(wx.Panel):
 
     def _setNextKeyEvent(self):
         evtType, key, modifiers, milli = self._playbackEvents.pop(0)
-        milli = max(milli/2, 1) # play back faster than it was recorded
+        milli = max(milli//2, 1) # play back faster than it was recorded
         print(evtType, key, modifiers, milli)
         wx.CallLater(milli, self._playbackKey, evtType, key, modifiers)
 

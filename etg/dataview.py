@@ -82,7 +82,7 @@ def run():
 
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
     c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
-    c.addCppMethod('long', '__hash__', '()', "return (long)self->GetID();")
+    c.addCppMethod('long', '__hash__', '()', "return (long)(intptr_t)self->GetID();")
 
     c.addCppMethod('bool', '__eq__', '(wxDataViewItem* other)',
                    "return other ? (self->GetID() == other->GetID()) : false;")

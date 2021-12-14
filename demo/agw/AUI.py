@@ -393,7 +393,7 @@ class SizeReportCtrl(wx.Control):
         dc.SetPen(wx.LIGHT_GREY_PEN)
         dc.DrawLine(0, 0, size.x, size.y)
         dc.DrawLine(0, size.y, size.x, 0)
-        dc.DrawText(s, (size.x-w)/2, (size.y-height*5)/2)
+        dc.DrawText(s, (size.x-w)//2, (size.y-height*5)//2)
 
         if self._mgr:
 
@@ -401,19 +401,19 @@ class SizeReportCtrl(wx.Control):
 
             s = "Layer: %d"%pi.dock_layer
             w, h = dc.GetTextExtent(s)
-            dc.DrawText(s, (size.x-w)/2, ((size.y-(height*5))/2)+(height*1))
+            dc.DrawText(s, (size.x-w)//2, ((size.y-(height*5))//2)+(height*1))
 
             s = "Dock: %d Row: %d"%(pi.dock_direction, pi.dock_row)
             w, h = dc.GetTextExtent(s)
-            dc.DrawText(s, (size.x-w)/2, ((size.y-(height*5))/2)+(height*2))
+            dc.DrawText(s, (size.x-w)//2, ((size.y-(height*5))//2)+(height*2))
 
             s = "Position: %d"%pi.dock_pos
             w, h = dc.GetTextExtent(s)
-            dc.DrawText(s, (size.x-w)/2, ((size.y-(height*5))/2)+(height*3))
+            dc.DrawText(s, (size.x-w)//2, ((size.y-(height*5))//2)+(height*3))
 
             s = "Proportion: %d"%pi.dock_proportion
             w, h = dc.GetTextExtent(s)
-            dc.DrawText(s, (size.x-w)/2, ((size.y-(height*5))/2)+(height*4))
+            dc.DrawText(s, (size.x-w)//2, ((size.y-(height*5))//2)+(height*4))
 
 
     def OnEraseBackground(self, event):
@@ -435,7 +435,7 @@ class SettingsPanel(wx.Panel):
 
         s1 = wx.BoxSizer(wx.HORIZONTAL)
         self._border_size = wx.SpinCtrl(self, ID_PaneBorderSize, "%d"%frame.GetDockArt().GetMetric(aui.AUI_DOCKART_PANE_BORDER_SIZE),
-                                        wx.DefaultPosition, wx.Size(50, 20), wx.SP_ARROW_KEYS, 0, 100,
+                                        wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100,
                                         frame.GetDockArt().GetMetric(aui.AUI_DOCKART_PANE_BORDER_SIZE))
         s1.Add((1, 1), 1, wx.EXPAND)
         s1.Add(wx.StaticText(self, -1, "Pane Border Size:"))
@@ -445,7 +445,7 @@ class SettingsPanel(wx.Panel):
 
         s2 = wx.BoxSizer(wx.HORIZONTAL)
         self._sash_size = wx.SpinCtrl(self, ID_SashSize, "%d"%frame.GetDockArt().GetMetric(aui.AUI_DOCKART_SASH_SIZE), wx.DefaultPosition,
-                                      wx.Size(50, 20), wx.SP_ARROW_KEYS, 0, 100, frame.GetDockArt().GetMetric(aui.AUI_DOCKART_SASH_SIZE))
+                                      wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, frame.GetDockArt().GetMetric(aui.AUI_DOCKART_SASH_SIZE))
         s2.Add((1, 1), 1, wx.EXPAND)
         s2.Add(wx.StaticText(self, -1, "Sash Size:"))
         s2.Add(self._sash_size)
@@ -454,7 +454,7 @@ class SettingsPanel(wx.Panel):
 
         s3 = wx.BoxSizer(wx.HORIZONTAL)
         self._caption_size = wx.SpinCtrl(self, ID_CaptionSize, "%d"%frame.GetDockArt().GetMetric(aui.AUI_DOCKART_CAPTION_SIZE),
-                                         wx.DefaultPosition, wx.Size(50, 20), wx.SP_ARROW_KEYS, 0, 100, frame.GetDockArt().GetMetric(aui.AUI_DOCKART_CAPTION_SIZE))
+                                         wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, frame.GetDockArt().GetMetric(aui.AUI_DOCKART_CAPTION_SIZE))
         s3.Add((1, 1), 1, wx.EXPAND)
         s3.Add(wx.StaticText(self, -1, "Caption Size:"))
         s3.Add(self._caption_size)
@@ -807,9 +807,9 @@ class ProgressGauge(wx.Window):
 
         # We take the percent way of the colour from colour -> white
         i = percent
-        r = colour.Red() + ((i*rd*100)/high)/100
-        g = colour.Green() + ((i*gd*100)/high)/100
-        b = colour.Blue() + ((i*bd*100)/high)/100
+        r = colour.Red() + ((i*rd*100)//high)//100
+        g = colour.Green() + ((i*gd*100)//high)//100
+        b = colour.Blue() + ((i*bd*100)//high)//100
 
         return wx.Colour(r, g, b)
 
@@ -826,10 +826,10 @@ class ProgressGauge(wx.Window):
         x, y, width, height = clientRect
         x, width = self._pos, interval
 
-        gradientRect.SetHeight(gradientRect.GetHeight()/2)
+        gradientRect.SetHeight(gradientRect.GetHeight()//2)
         topStart, topEnd = self._topStartColour, self._topEndColour
 
-        rc1 = wx.Rect(x, y, width, height/2)
+        rc1 = wx.Rect(int(x), y, int(width), height//2)
         path1 = self.GetPath(gc, rc1, 8)
         br1 = gc.CreateLinearGradientBrush(x, y, x, y+height/2, topStart, topEnd)
         gc.SetBrush(br1)
@@ -845,14 +845,14 @@ class ProgressGauge(wx.Window):
 
         bottomStart, bottomEnd = self._bottomStartColour, self._bottomEndColour
 
-        rc3 = wx.Rect(x, y+height/2, width, height/2)
+        rc3 = wx.Rect(int(x), y+height//2, int(width), height//2)
         path3 = self.GetPath(gc, rc3, 8)
         br3 = gc.CreateLinearGradientBrush(x, y+height/2, x, y+height, bottomStart, bottomEnd)
         gc.SetBrush(br3)
         gc.FillPath(path3) #draw main
 
         path4 = gc.CreatePath()
-        path4.AddRectangle(x, y+height/2, width, 8)
+        path4.AddRectangle(x, y+height//2, width, 8)
         path4.CloseSubpath()
         gc.SetBrush(br3)
         gc.FillPath(path4)
@@ -2613,7 +2613,7 @@ class AuiFrame(wx.Frame):
         flex.Add(wx.TextCtrl(panel, -1, "", wx.DefaultPosition, wx.Size(100, -1)),
                  1, wx.ALL|wx.ALIGN_CENTRE, 5)
         flex.Add(wx.StaticText(panel, -1, "wxSpinCtrl:"), 0, wx.ALL|wx.ALIGN_CENTRE, 5)
-        flex.Add(wx.SpinCtrl(panel, -1, "5", wx.DefaultPosition, wx.Size(100, -1),
+        flex.Add(wx.SpinCtrl(panel, -1, "5", wx.DefaultPosition, wx.DefaultSize,
                              wx.SP_ARROW_KEYS, 5, 50, 5), 0, wx.ALL|wx.ALIGN_CENTRE, 5)
         flex.Add((5, 5))
         flex.Add((5, 5))

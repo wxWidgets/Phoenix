@@ -14,7 +14,7 @@
 """
 Tab art provider code - a tab provider provides all drawing functionality to
 the :class:`~wx.lib.agw.aui.auibook.AuiNotebook`. This allows the
-:class:`~wx.lib.agw.aui.auibook.AuiNotebook` to have a plugable look-and-feel.
+:class:`~wx.lib.agw.aui.auibook.AuiNotebook` to have a pluggable look-and-feel.
 
 By default, a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` uses an instance of this class
 called :class:`AuiDefaultTabArt` which provides bitmap art and a colour scheme that is
@@ -113,7 +113,7 @@ class AuiCommandCapture(wx.EvtHandler):
 class AuiDefaultTabArt(object):
     """
     Tab art provider code - a tab provider provides all drawing functionality to the :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
-    This allows the :class:`~wx.lib.agw.aui.auibook.AuiNotebook` to have a plugable look-and-feel.
+    This allows the :class:`~wx.lib.agw.aui.auibook.AuiNotebook` to have a pluggable look-and-feel.
 
     By default, a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` uses an instance of this class called
     :class:`AuiDefaultTabArt` which provides bitmap art and a colour scheme that is adapted to the major platforms'
@@ -2115,7 +2115,7 @@ class FF2TabArt(AuiDefaultTabArt):
         bottomStartColour = topEndColour
         bottomEndColour = topEndColour
 
-        # Incase we use bottom tabs, switch the colours
+        # In case we use bottom tabs, switch the colours
         if upperTabs:
             if focus:
                 dc.GradientFillLinear(top, topStartColour, topEndColour, wx.SOUTH)
@@ -2289,7 +2289,7 @@ class VC8TabArt(AuiDefaultTabArt):
         dc.DrawPolygon(tabPoints)
 
         if page.active:
-            # Delete the bottom line (or the upper one, incase we use wxBOTTOM)
+            # Delete the bottom line (or the upper one, in case we use wxBOTTOM)
             dc.SetPen(wx.WHITE_PEN)
             dc.DrawLine(tabPoints[0].x, tabPoints[0].y, tabPoints[6].x, tabPoints[6].y)
 

@@ -74,7 +74,7 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 
 
 
-// A macro that will help to execute simple statments wrapped in
+// A macro that will help to execute simple statements wrapped in
 // StartBlock/EndBlockThreads calls
 #define wxPyBLOCK_THREADS(stmt) \
     { wxPyThreadBlocker _blocker; stmt; }

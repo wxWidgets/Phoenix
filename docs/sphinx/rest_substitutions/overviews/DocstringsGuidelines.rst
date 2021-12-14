@@ -242,7 +242,7 @@ documentation, please follow these conventions:
 
 
 2. At the very top of the snippet file (on the first line), put your
-   name, or your alias, or anything you use as internet name preceeded
+   name, or your alias, or anything you use as internet name preceded
    by a double-hash, i.e.:
 
    ``##Andrea Gavana``

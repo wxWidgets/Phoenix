@@ -305,7 +305,7 @@ class Shape(ShapeEvtHandler):
 
     The :class:`Shape` is the top-level, abstract object that all other objects
     are derived from. All common functionality is represented by :class:`Shape`
-    members, and overriden members that appear in derived classes and have
+    members, and overridden members that appear in derived classes and have
     behaviour as documented for :class:`Shape`, are not documented separately.
     """
     GraphicsInSizeToContents = False
@@ -703,7 +703,7 @@ class Shape(ShapeEvtHandler):
         actualW = w
         actualH = h
         # Don't try to resize an object with more than one image (this
-        # case should be dealt with by overriden handlers)
+        # case should be dealt with by overridden handlers)
         if (region.GetFormatMode() & FORMAT_SIZE_TO_CONTENTS) and \
            len(region.GetFormattedText()) and \
            len(self._regions) == 1 and \
@@ -1051,7 +1051,7 @@ class Shape(ShapeEvtHandler):
         dc.SetPen(self.GetBackgroundPen())
         dc.SetBrush(self.GetBackgroundBrush())
 
-        dc.DrawRectangle(topLeftX - penWidth, topLeftY - penWidth, maxX + penWidth * 2 + 4, maxY + penWidth * 2 + 4)
+        dc.DrawRectangle(int(topLeftX - penWidth), int(topLeftY - penWidth), int(maxX + penWidth * 2 + 4), int(maxY + penWidth * 2 + 4))
 
     def EraseLinks(self, dc, attachment = -1, recurse = False):
         """
@@ -1901,7 +1901,7 @@ class Shape(ShapeEvtHandler):
         Assuming the attachment lies along a vertical or horizontal line,
         calculate the position on that point.
 
-        :param `pt1`: The first point of the line repesenting the edge of
+        :param `pt1`: The first point of the line representing the edge of
          the shape
         :param `pt2`: The second point of the line representing the edge of
          the shape
@@ -2769,9 +2769,9 @@ class RectangleShape(Shape):
             dc.SetBrush(self._brush)
 
         if self._cornerRadius:
-            dc.DrawRoundedRectangle(x1, y1, self._width, self._height, self._cornerRadius)
+            dc.DrawRoundedRectangle(int(x1), int(y1), self._width, self._height, self._cornerRadius)
         else:
-            dc.DrawRectangle(x1, y1, self._width, self._height)
+            dc.DrawRectangle(int(x1), int(y1), self._width, self._height)
 
     def GetBoundingBoxMin(self):
         """Get the bounding box minimum."""
@@ -2839,9 +2839,9 @@ class RectangleShape(Shape):
 
     def SetHeight(self, h):
         """
-        Set the heigth.
+        Set the height.
 
-        :param `h`: heigth to be set
+        :param `h`: height to be set
 
         """
         self._height = h
@@ -2882,7 +2882,7 @@ class PolygonShape(Shape):
             # Duplicate the list of points
             self._points = []
             for point in the_points:
-                new_point = wx.Point(point[0], point[1])
+                new_point = wx.Point(int(point[0]), int(point[1]))
                 self._points.append(new_point)
             self.CalculateBoundingBox()
             self._originalWidth = self._boundWidth
@@ -3444,7 +3444,7 @@ class EllipseShape(Shape):
                 dc.SetPen(self._pen)
         if self._brush:
             dc.SetBrush(self._brush)
-        dc.DrawEllipse(self._xpos - self.GetWidth() / 2.0, self._ypos - self.GetHeight() / 2.0, self.GetWidth(), self.GetHeight())
+        dc.DrawEllipse(int(self._xpos - self.GetWidth() / 2.0), int(self._ypos - self.GetHeight() / 2.0), self.GetWidth(), self.GetHeight())
 
     def SetSize(self, x, y, recursive = True):
         """
@@ -3645,7 +3645,7 @@ class ShapeRegion(object):
 
     def SetMinSize(self, w, h):
         """
-        Set the minumum size.
+        Set the minimum size.
 
         :param `w`: the minimum width
         :Param `h`: the minimum height

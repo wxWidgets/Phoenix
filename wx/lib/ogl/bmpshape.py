@@ -32,14 +32,14 @@ class BitmapShape(RectangleShape):
 
         x = self._xpos - self._bitmap.GetWidth() / 2.0
         y = self._ypos - self._bitmap.GetHeight() / 2.0
-        dc.DrawBitmap(self._bitmap, x, y, True)
+        dc.DrawBitmap(self._bitmap, int(x), int(y), True)
 
     def SetSize(self, w, h, recursive = True):
         """
         Set the size.
 
         :param `w`: the width
-        :param `h`: the heigth
+        :param `h`: the height
         :param `recursive`: not used
 
         """

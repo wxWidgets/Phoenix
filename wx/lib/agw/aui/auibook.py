@@ -939,7 +939,7 @@ class AuiTabContainer(object):
     def SetArtProvider(self, art):
         """
         Instructs :class:`AuiTabContainer` to use art provider specified by parameter `art`
-        for all drawing calls. This allows plugable look-and-feel features.
+        for all drawing calls. This allows pluggable look-and-feel features.
 
         :param `art`: an art provider.
 
@@ -3390,7 +3390,7 @@ class AuiNotebook(wx.Panel):
     def UpdateTabCtrlHeight(self, force=False):
         """
         :meth:`UpdateTabCtrlHeight` does the actual tab resizing. It's meant
-        to be used interally.
+        to be used internally.
 
         :param bool `force`: ``True`` to force the tab art to repaint.
         """
@@ -3452,8 +3452,8 @@ class AuiNotebook(wx.Panel):
         # should happen around the middle
         if tab_ctrl_count < 2:
             new_split_size = self.GetClientSize()
-            new_split_size.x /= 2
-            new_split_size.y /= 2
+            new_split_size.x //= 2
+            new_split_size.y //= 2
 
         else:
 
@@ -4716,7 +4716,7 @@ class AuiNotebook(wx.Panel):
             self.RemovePage(idx)
             # re-add in the same position so it will tab
             self.InsertPage(idx, win, title, False, bmp)
-        # restore orignial selected tab
+        # restore original selected tab
         self.SetSelection(nowSelected)
 
         self.Thaw()

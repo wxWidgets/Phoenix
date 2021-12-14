@@ -24,7 +24,7 @@ Usage:
 
 Where URL is a file URL and the optional DEST_DIR is a destination directory to
 download to, (default is to prompt the user).
-The --trusted option can be used to surpress certificate checks.
+The --trusted option can be used to suppress certificate checks.
 """
 from __future__ import (division, absolute_import, print_function, unicode_literals)
 

@@ -22,7 +22,7 @@
 
         def StringToValue(self, st, flags):
             """
-            Convert a string to the correct type for the propery.
+            Convert a string to the correct type for the property.
 
             If failed, return False or (False, None). If success, return tuple
             (True, newValue).

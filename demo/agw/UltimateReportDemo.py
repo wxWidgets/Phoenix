@@ -216,7 +216,7 @@ class UltimateRenderer_1(object):
         mdc.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         text = "%d Mb"%self.progressValue
         textWidth, dummy = mdc.GetTextExtent(text)
-        mdc.DrawText(text, rect.width/2 - textWidth/2, rect.height/2 - dummy/2)
+        mdc.DrawText(text, rect.width//2 - textWidth//2, rect.height//2 - dummy//2)
         dc.SetClippingRegion(rect.x, rect.y, rect.width, rect.height)
         dc.Blit(rect.x+3, rect.y, rect.width-6, rect.height, mdc, 0, 0)
         dc.DestroyClippingRegion()
@@ -279,12 +279,12 @@ class UltimateRenderer_1(object):
             mdc.SelectObject(wx.NullBitmap)
 
         # Center the progress bar vertically in the box supplied
-        y = y + (h - PIPE_HEIGHT)/2
+        y = y + (h - PIPE_HEIGHT)//2
 
         if percent == 0:
             middle = 0
         else:
-            middle = (w * percent)/100
+            middle = (w * percent)//100
 
         if middle == 0: # not started
             bitmap = self.REMAINING_BITMAP.GetSubBitmap((1, 0, w, PIPE_HEIGHT))
@@ -335,7 +335,7 @@ class UltimateRenderer_2(object):
         colours = [wx.RED, wx.WHITE, wx.GREEN, wx.Colour("SKY BLUE")]
         w, h = dc.GetTextExtent("Hg")
         x = rect.x + 1
-        y = rect.y + rect.height/2 - h/2
+        y = rect.y + rect.height//2 - h//2
 
         for ch in self.text:
             dc.SetTextForeground(random.choice(colours))

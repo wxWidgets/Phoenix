@@ -86,7 +86,7 @@ class Handler:
 class Sender:
     """
     Base class for various kinds of senders. A sender sends a result
-    produced by a worker funtion to a result handler (listener). Note
+    produced by a worker function to a result handler (listener). Note
     that each sender can be given a "job id". This can be anything
     (number, string, id, and object, etc) and is not used, it is
     simply added as attribute whenever a DelayedResult is created.

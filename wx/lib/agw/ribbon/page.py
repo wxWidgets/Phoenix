@@ -261,7 +261,7 @@ class RibbonPage(RibbonControl):
         Scroll the page by some amount up / down / left / right.
 
         When the page's children are too big to fit in the onscreen area given to the
-        page, scroll buttons will appear, and the page can be programatically scrolled.
+        page, scroll buttons will appear, and the page can be programmatically scrolled.
         Positive values of will scroll right or down, while negative values will scroll
         up or left (depending on the direction in which panels are stacked). A line is
         equivalent to a constant number of pixels.
@@ -284,7 +284,7 @@ class RibbonPage(RibbonControl):
         Scroll the page by a set number of pixels up / down / left / right.
 
         When the page's children are too big to fit in the onscreen area given to the
-        page, scroll buttons will appear, and the page can be programatically scrolled.
+        page, scroll buttons will appear, and the page can be programmatically scrolled.
         Positive values of will scroll right or down, while negative values will scroll
         up or left (depending on the direction in which panels are stacked).
 
@@ -418,7 +418,7 @@ class RibbonPage(RibbonControl):
         # When a resize triggers the scroll buttons to become visible, the page is resized.
         # This resize from within a resize event can cause (MSW) wxWidgets some confusion,
         # and report the 1st size to the 2nd size event. Hence the most recent size is
-        # remembered internally and used in Layout() where appropiate.
+        # remembered internally and used in Layout() where appropriate.
 
         if self.GetMajorAxis() == wx.HORIZONTAL:
             self._size_in_major_axis_for_children = width

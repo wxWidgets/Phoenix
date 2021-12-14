@@ -55,7 +55,7 @@ def run():
     #addPixelDataClass(module, 'wxImagePixelData', 'wxImage', bpp=32,
     #    doc="""\
     #    ImagePixelData: A class providing direct access to a wx.Image's
-    #    internal data usign the same api as the other PixelData classes.
+    #    internal data using the same api as the other PixelData classes.
     #    """)
 
 

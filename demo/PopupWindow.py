@@ -89,7 +89,7 @@ class TestTransientPopup(wx.PopupTransientWindow):
                           "(or its first child) loses focus in \n"
                           "any other way.")
         btn = wx.Button(panel, -1, "Press Me")
-        spin = wx.SpinCtrl(panel, -1, "Hello", size=(100,-1))
+        spin = wx.SpinCtrl(panel, -1, "Hello")
         btn.Bind(wx.EVT_BUTTON, self.OnButton)
 
         sizer = wx.BoxSizer(wx.VERTICAL)

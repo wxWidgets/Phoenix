@@ -1,4 +1,4 @@
-# Subclasses disutils.command.build_ext,
+# Subclasses distutils.command.build_ext,
 # replacing it with a SIP version that compiles .sip -> .cpp
 # before calling the original build_ext command.
 # Written by Giovanni Bajo <rasky at develer dot com>

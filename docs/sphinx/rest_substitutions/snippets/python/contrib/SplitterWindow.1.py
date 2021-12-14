@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 
 # This sample shows how to create a "spli-split" window, i.e. a
-# window split verticall which contains two windows split horizontally
+# window split vertical which contains two windows split horizontally
 
 import wx
 

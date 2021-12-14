@@ -37,7 +37,7 @@ class Element:
 
 
     def _pol2rect(self, m, t):
-        return m * math.cos(math.radians(t)), m * math.sin(math.radians(t))
+        return int(m * math.cos(math.radians(t))), int(m * math.sin(math.radians(t)))
 
 
     def _rect2pol(self, x, y):
@@ -174,7 +174,7 @@ class Face(ElementWithDyer):
 
     def Draw(self, dc):
         self.dyer.Select(dc)
-        dc.DrawCircle(self.pos.x, self.pos.y, self.radius)
+        dc.DrawCircle(self.pos.x, self.pos.y, int(self.radius))
 
 
     def RecalcCoords(self, clocksize, centre, scale):
@@ -205,7 +205,7 @@ class Hand(ElementWithDyer):
             m, t = self._rect2pol(x, y)
             polygon[i] = self._pol2rect(m, t - angle)
 
-        dc.DrawPolygon(polygon, centre.x + offset, centre.y + offset)
+        dc.DrawPolygon(polygon, int(centre.x + offset), int(centre.y + offset))
 
 
     def RecalcCoords(self, clocksize, centre, scale):
@@ -226,7 +226,7 @@ class TickSquare(Element):
         x = self.pos.x - width / 2.
         y = self.pos.y - height / 2.
 
-        dc.DrawRectangle(x + offset, y + offset, width, height)
+        dc.DrawRectangle(int(x + offset), int(y + offset), int(width), int(height))
 
 #----------------------------------------------------------------------
 
@@ -242,7 +242,7 @@ class TickCircle(Element):
         x = self.pos.x
         y = self.pos.y
 
-        dc.DrawCircle(x + offset, y + offset, radius)
+        dc.DrawCircle(int(x + offset), int(y + offset), int(radius))
 
 #----------------------------------------------------------------------
 
@@ -273,7 +273,7 @@ class TickPoly(Element):
         x = self.pos.x - width / 2.
         y = self.pos.y - height / 2.
 
-        dc.DrawPolygon(polygon, x + offset, y + offset)
+        dc.DrawPolygon(polygon, int(x + offset), int(y + offset))
 
 
     def DrawRotated(self, dc, offset=0):
@@ -290,7 +290,7 @@ class TickPoly(Element):
         x = self.pos.x - math.cos(r) * width / 2. - math.sin(r) * height / 2.
         y = self.pos.y - math.cos(r) * height / 2. + math.sin(r) * width / 2.
 
-        dc.DrawPolygon(polygon, x + offset, y + offset)
+        dc.DrawPolygon(polygon, int(x + offset), int(y + offset))
 
 #----------------------------------------------------------------------
 
@@ -309,7 +309,7 @@ class TickDecimal(Element):
         x = self.pos.x - width / 2.
         y = self.pos.y - height / 2.
 
-        dc.DrawText(self.text, x + offset, y + offset)
+        dc.DrawText(self.text, int(x + offset), int(y + offset))
 
 
     def DrawRotated(self, dc, offset=0):
@@ -321,7 +321,7 @@ class TickDecimal(Element):
         x = self.pos.x - math.cos(r) * width / 2. - math.sin(r) * height / 2.
         y = self.pos.y - math.cos(r) * height / 2. + math.sin(r) * width / 2.
 
-        dc.DrawRotatedText(self.text, x + offset, y + offset, angle)
+        dc.DrawRotatedText(self.text, int(x + offset), int(y + offset), int(angle))
 
 
 #----------------------------------------------------------------------
@@ -656,7 +656,7 @@ class TickSet:
 
         # Try to find a 'good' max size for text-based ticks.
         if a_tick.text is not None:
-            self.font.SetPointSize(size)
+            self.font.SetPointSize(int(size))
             dc = wx.MemoryDC()
             dc.SelectObject(wx.Bitmap(*clocksize.Get()))
             dc.SetFont(self.font)
@@ -686,7 +686,7 @@ class TickSet:
             x = centre.x + radius * math.sin(angle)
             y = centre.y + radius * math.cos(angle)
 
-            tick.SetPosition(wx.Point(x, y))
+            tick.SetPosition(wx.Point(int(x), int(y)))
 
 
     def GetSize(self):

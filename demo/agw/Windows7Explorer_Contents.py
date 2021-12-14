@@ -127,13 +127,13 @@ class FirstColumnRenderer(object):
         """Draw a custom progress bar using double buffering to prevent flicker"""
 
         bmpWidth, bmpHeight = self.icon.GetWidth(), self.icon.GetHeight()
-        dc.DrawIcon(self.icon, rect.x+5, rect.y+(rect.height-bmpHeight)/2)
+        dc.DrawIcon(self.icon, rect.x+5, rect.y+(rect.height-bmpHeight)//2)
 
         dc.SetFont(self.normalFont)
 
         textWidth, textHeight = dc.GetTextExtent(self.text)
         dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT))
-        dc.DrawText(self.text, rect.x+bmpWidth+10, rect.y+(rect.height - textHeight)/4)
+        dc.DrawText(self.text, rect.x+bmpWidth+10, rect.y+(rect.height - textHeight)//4)
 
         if not self.description:
             return
@@ -144,10 +144,10 @@ class FirstColumnRenderer(object):
         textWidth, textHeight = dc.GetTextExtent("Type: " + self.description)
 
         dc.SetTextForeground(self.greyColour)
-        dc.DrawText("Type: ", rect.x+bmpWidth+10, rect.y+3*(rect.height - textHeight)/4)
+        dc.DrawText("Type: ", rect.x+bmpWidth+10, rect.y+3*(rect.height - textHeight)//4)
 
         dc.SetTextForeground(wx.BLACK)
-        dc.DrawText(self.description, rect.x+bmpWidth+dummy1+10, rect.y+3*(rect.height - textHeight)/4)
+        dc.DrawText(self.description, rect.x+bmpWidth+dummy1+10, rect.y+3*(rect.height - textHeight)//4)
 
 
     def GetLineHeight(self):
@@ -207,10 +207,10 @@ class SecondColumnRenderer(object):
         textWidth, textHeight = dc.GetTextExtent("Date modified: " + date)
 
         dc.SetTextForeground(self.greyColour)
-        dc.DrawText("Date modified: ", rect.x+5, rect.y+(rect.height - textHeight)/4)
+        dc.DrawText("Date modified: ", rect.x+5, rect.y+(rect.height - textHeight)//4)
 
         dc.SetTextForeground(wx.BLACK)
-        dc.DrawText(date, rect.x+dummy1+5, rect.y+(rect.height - textHeight)/4)
+        dc.DrawText(date, rect.x+dummy1+5, rect.y+(rect.height - textHeight)//4)
 
         if not self.size:
             return
@@ -218,10 +218,10 @@ class SecondColumnRenderer(object):
         dummy1, dummy2= dc.GetTextExtent("Size: ")
 
         dc.SetTextForeground(self.greyColour)
-        dc.DrawText("Size: ", rect.x+5, rect.y+3*(rect.height - textHeight)/4)
+        dc.DrawText("Size: ", rect.x+5, rect.y+3*(rect.height - textHeight)//4)
 
         dc.SetTextForeground(wx.BLACK)
-        dc.DrawText(self.size, rect.x+dummy1+5, rect.y+3*(rect.height - textHeight)/4)
+        dc.DrawText(self.size, rect.x+dummy1+5, rect.y+3*(rect.height - textHeight)//4)
 
 
     def GetLineHeight(self):

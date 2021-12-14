@@ -240,10 +240,13 @@ def run():
                         // is evaluated. (!!!)
                         if (PyObject_RichCompareBool(cb->m_func, func, Py_EQ) == 1) {
                             delete cb;
-                            entry->m_callbackUserData = NULL;
+                            // Set callback data to a known value instead of NULL to
+                            // ensure Disconnect() removes the correct handler.
+                            entry->m_callbackUserData = new wxObject();
                             // Now Disconnect should work
                             return self->Disconnect(id, lastId, eventType,
-                                                    (wxObjectEventFunction)&wxPyCallback::EventThunker);
+                                                    (wxObjectEventFunction)&wxPyCallback::EventThunker,
+                                                    entry->m_callbackUserData);
                         }
                     }
                     entry = self->GetNextDynamicEntry(cookie);

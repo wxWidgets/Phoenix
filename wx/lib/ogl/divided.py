@@ -170,7 +170,7 @@ class DividedShape(RectangleShape):
         Default class constructor.
 
         :param `w`: width of rectangle
-        :param `h`: heigth of rectangle
+        :param `h`: height of rectangle
 
         """
         RectangleShape.__init__(self, w, h)
@@ -231,7 +231,7 @@ class DividedShape(RectangleShape):
                 regionPen = region.GetActualPen()
                 if regionPen:
                     dc.SetPen(regionPen)
-                    dc.DrawLine(leftX, y, rightX, y)
+                    dc.DrawLine(int(leftX), int(y), int(rightX), int(y))
 
             currentY = actualY
 
@@ -240,7 +240,7 @@ class DividedShape(RectangleShape):
         Set the size.
 
         :param `w`: width of rectangle
-        :param `h`: heigth of rectangle
+        :param `h`: height of rectangle
         :param `recursive`: not implemented
 
         """
