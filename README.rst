@@ -18,7 +18,7 @@ API, enabling Python applications to have a native GUI on Windows, Macs or
 Unix systems, with a native look and feel and requiring very little (if any)
 platform specific code.
 
-.. note:: 
+.. note::
     This document is primarily intended for those who will be working on
     wxPython, or at least building with the source code fetched directly from
     GitHub. If that's not you then please refer to the instructions at the
@@ -40,7 +40,7 @@ not need to put yourself through the pain for building in this way. It's a
 complicated build, and can sometimes be confusing even for the experts.
 Instead, if the binaries available at PyPI are not what you need then you can
 use pip to build from the released source archives, or from the source archives
-created in the pre-release snapshot builds. See the notes about it at: 
+created in the pre-release snapshot builds. See the notes about it at:
 
 * https://wxpython.org/pages/downloads/
 * https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip
@@ -353,27 +353,28 @@ build Phoenix.
 
 **Linux**
 
-On Ubuntu the following development packages and their dependencies
-should be installed in order to build Phoenix. Other debian-like distros
-will probably also have these or similarly named packages available.
-Extrapolate other package names accordingly for other linux distributions
-or other unixes.
+On Ubuntu the following development packages and their dependencies should be
+installed in order to build Phoenix. Other debian-like distros will probably
+also have these or similarly named packages available, or newer versions of
+Ubuntu might have evolved somewhat and require changes from this list.
+Extrapolate other package names accordingly for other linux distributions or
+other unixes.
 
 * dpkg-dev
 * build-essential
-* python3.7-dev and libpython3.7-dev  # use appropriate Python version here
-* freeglut3-dev 
-* libgl1-mesa-dev 
-* libglu1-mesa-dev 
-* libgstreamer-plugins-base1.0-dev 
-* libgtk-3-dev 
-* libjpeg-dev 
-* libnotify-dev 
+* python3-dev
+* freeglut3-dev
+* libgl1-mesa-dev
+* libglu1-mesa-dev
+* libgstreamer-plugins-base1.0-dev
+* libgtk-3-dev
+* libjpeg-dev
+* libnotify-dev
 * libpng-dev
-* libsdl2-dev 
-* libsm-dev 
-* libtiff-dev 
-* libwebkit2gtk-4.0-dev 
+* libsdl2-dev
+* libsm-dev
+* libtiff-dev
+* libwebkit2gtk-4.0-dev
 * libxtst-dev
 
 If you are building for GTK2 then you'll also need these packages and
