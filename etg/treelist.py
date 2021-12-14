@@ -47,7 +47,7 @@ def run():
     c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('long', '__hash__', '()', """\
-        return (long)self->GetID();
+        return (long)(intptr_t)self->GetID();
         """)
 
     c.addCppMethod('bool', '__eq__', '(wxTreeListItem* other)',

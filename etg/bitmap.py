@@ -106,7 +106,7 @@ def run():
         doc='MSW-only method to fetch the windows handle for the bitmap.',
         body="""\
             #ifdef __WXMSW__
-                return (long)self->GetHandle();
+                return HandleToLong(self->GetHandle());
             #else
                 return 0;
             #endif
@@ -116,7 +116,7 @@ def run():
         doc='MSW-only method to set the windows handle for the bitmap.',
         body="""\
             #ifdef __WXMSW__
-                self->SetHandle((WXHANDLE)handle);
+                self->SetHandle((WXHANDLE)LongToHandle(handle));
             #endif
             """)
 

@@ -56,7 +56,7 @@ def run():
 
     c.addCppMethod('long', 'GetHandle', '()', """\
         #ifdef __WXMSW__
-            return (long)self->GetHandle();
+            return HandleToLong(self->GetHandle());
         #else
             return 0;
         #endif
@@ -64,7 +64,7 @@ def run():
 
     c.addCppMethod('void', 'SetHandle', '(long handle)', """\
         #ifdef __WXMSW__
-            self->SetHandle((WXHANDLE)handle);
+            self->SetHandle((WXHANDLE)LongToHandle(handle));
         #endif
         """)
 
@@ -73,7 +73,7 @@ def run():
         doc='MSW-only method to create a wx.Icon from a native icon handle.',
         body="""\
             #ifdef __WXMSW__
-                return self->CreateFromHICON((WXHICON)hicon);
+                return self->CreateFromHICON((WXHICON)LongToHandle(hicon));
             #else
                 return false;
             #endif
