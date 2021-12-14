@@ -1051,7 +1051,7 @@ class Shape(ShapeEvtHandler):
         dc.SetPen(self.GetBackgroundPen())
         dc.SetBrush(self.GetBackgroundBrush())
 
-        dc.DrawRectangle(topLeftX - penWidth, topLeftY - penWidth, maxX + penWidth * 2 + 4, maxY + penWidth * 2 + 4)
+        dc.DrawRectangle(int(topLeftX - penWidth), int(topLeftY - penWidth), int(maxX + penWidth * 2 + 4), int(maxY + penWidth * 2 + 4))
 
     def EraseLinks(self, dc, attachment = -1, recurse = False):
         """
@@ -2769,9 +2769,9 @@ class RectangleShape(Shape):
             dc.SetBrush(self._brush)
 
         if self._cornerRadius:
-            dc.DrawRoundedRectangle(x1, y1, self._width, self._height, self._cornerRadius)
+            dc.DrawRoundedRectangle(int(x1), int(y1), self._width, self._height, self._cornerRadius)
         else:
-            dc.DrawRectangle(x1, y1, self._width, self._height)
+            dc.DrawRectangle(int(x1), int(y1), self._width, self._height)
 
     def GetBoundingBoxMin(self):
         """Get the bounding box minimum."""
@@ -2882,7 +2882,7 @@ class PolygonShape(Shape):
             # Duplicate the list of points
             self._points = []
             for point in the_points:
-                new_point = wx.Point(point[0], point[1])
+                new_point = wx.Point(int(point[0]), int(point[1]))
                 self._points.append(new_point)
             self.CalculateBoundingBox()
             self._originalWidth = self._boundWidth
@@ -3444,7 +3444,7 @@ class EllipseShape(Shape):
                 dc.SetPen(self._pen)
         if self._brush:
             dc.SetBrush(self._brush)
-        dc.DrawEllipse(self._xpos - self.GetWidth() / 2.0, self._ypos - self.GetHeight() / 2.0, self.GetWidth(), self.GetHeight())
+        dc.DrawEllipse(int(self._xpos - self.GetWidth() / 2.0), int(self._ypos - self.GetHeight() / 2.0), self.GetWidth(), self.GetHeight())
 
     def SetSize(self, x, y, recursive = True):
         """

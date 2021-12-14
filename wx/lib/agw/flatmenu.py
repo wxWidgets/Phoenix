@@ -736,8 +736,8 @@ class FMRenderer(object):
         """
 
         dcsaver = DCSaver(dc)
-        sepRect1 = wx.Rect(xCoord + textX, yCoord + 1, sepWidth/2, 1)
-        sepRect2 = wx.Rect(xCoord + textX + sepWidth/2, yCoord + 1, sepWidth/2-1, 1)
+        sepRect1 = wx.Rect(xCoord + textX, yCoord + 1, sepWidth//2, 1)
+        sepRect2 = wx.Rect(xCoord + textX + sepWidth//2, yCoord + 1, sepWidth//2-1, 1)
 
         artMgr = ArtManager.Get()
         backColour = artMgr.GetMenuFaceColour()
@@ -817,11 +817,11 @@ class FMRenderer(object):
             imgWidth  = bmp.GetWidth()
 
             if imageMarginX == 0:
-                xx = rect.x + (leftMarginWidth - imgWidth)/2
+                xx = rect.x + (leftMarginWidth - imgWidth)//2
             else:
-                xx = rect.x + ((leftMarginWidth - rect.height) - imgWidth)/2 + rect.height
+                xx = rect.x + ((leftMarginWidth - rect.height) - imgWidth)//2 + rect.height
 
-            yy = rect.y + (rect.height - imgHeight)/2
+            yy = rect.y + (rect.height - imgHeight)//2
             dc.DrawBitmap(bmp, xx, yy, True)
 
         if item.GetKind() == wx.ITEM_CHECK:
@@ -837,7 +837,7 @@ class FMRenderer(object):
                 if not selected and self.highlightCheckAndRadio:
                     self.DrawButton(dc, rr, ControlFocus)
 
-                dc.DrawBitmap(item._checkMarkBmp, rr.x + (rr.width - 16)/2, rr.y + (rr.height - 16)/2, True)
+                dc.DrawBitmap(item._checkMarkBmp, rr.x + (rr.width - 16)//2, rr.y + (rr.height - 16)//2, True)
 
         if item.GetKind() == wx.ITEM_RADIO:
 
@@ -852,7 +852,7 @@ class FMRenderer(object):
                 if not selected and self.highlightCheckAndRadio:
                     self.DrawButton(dc, rr, ControlFocus)
 
-                dc.DrawBitmap(item._radioMarkBmp, rr.x + (rr.width - 16)/2, rr.y + (rr.height - 16)/2, True)
+                dc.DrawBitmap(item._radioMarkBmp, rr.x + (rr.width - 16)//2, rr.y + (rr.height - 16)//2, True)
 
         # Draw text - without accelerators
         text = item.GetLabel()
@@ -890,7 +890,7 @@ class FMRenderer(object):
                 w3, dummy = dc.GetTextExtent(text3)
 
                 posx = xCoord + textX + borderXSize
-                posy = (itemHeight - h)/2 + yCoord
+                posy = (itemHeight - h)//2 + yCoord
 
                 # Draw first part
                 dc.DrawText(text1, posx, posy)
@@ -912,7 +912,7 @@ class FMRenderer(object):
             else:
 
                 w, h = dc.GetTextExtent(text)
-                dc.DrawText(text, xCoord + textX + borderXSize, (itemHeight - h)/2 + yCoord)
+                dc.DrawText(text, xCoord + textX + borderXSize, (itemHeight - h)//2 + yCoord)
 
 
         # Now draw accelerator
@@ -920,7 +920,7 @@ class FMRenderer(object):
         if item.GetAccelString():
 
             accelWidth, accelHeight = dc.GetTextExtent(item.GetAccelString())
-            dc.DrawText(item.GetAccelString(), xCoord + rightMarginX - accelWidth, (itemHeight - accelHeight)/2 + yCoord)
+            dc.DrawText(item.GetAccelString(), xCoord + rightMarginX - accelWidth, (itemHeight - accelHeight)//2 + yCoord)
 
         # Check if this item has sub-menu - if it does, draw
         # right arrow on the right margin
@@ -932,7 +932,7 @@ class FMRenderer(object):
 
             xx = xCoord + rightMarginX + borderXSize
             rr = wx.Rect(xx, rect.y + 1, rect.height-2, rect.height-2)
-            dc.DrawBitmap(rightArrowBmp, rr.x + 4, rr.y +(rr.height-16)/2, True)
+            dc.DrawBitmap(rightArrowBmp, rr.x + 4, rr.y +(rr.height-16)//2, True)
 
 
     def DrawMenuBarButton(self, dc, rect, state):
@@ -1142,7 +1142,7 @@ class FMRenderer(object):
             # Get the menu item rect
             textWidth, textHeight = dc.GetTextExtent(fixedText)
             #rect = wx.Rect(posx+menubar._spacer/2, posy, textWidth, textHeight)
-            rect = wx.Rect(posx+padding/2, posy, textWidth, textHeight)
+            rect = wx.Rect(posx+padding//2, posy, textWidth, textHeight)
 
             # Can we draw more??
             # the +DROP_DOWN_ARROW_WIDTH  is the width of the drop down arrow
@@ -1172,7 +1172,7 @@ class FMRenderer(object):
                 dc.SetTextForeground(textColour)
 
             ww, hh = dc.GetTextExtent(labelOnly)
-            textOffset = (rect.width - ww) / 2
+            textOffset = (rect.width - ww) // 2
 
             if not menubar._isLCD and item.GetTextBitmap().IsOk() and not selected:
                 dc.DrawBitmap(item.GetTextBitmap(), rect.x, rect.y, True)
@@ -1505,8 +1505,8 @@ class FMRendererMSOffice2007(FMRenderer):
         baseColour = colour
 
         # Define the middle points
-        leftPt = wx.Point(rect.x, rect.y + (rect.height / 2))
-        rightPt = wx.Point(rect.x + rect.width-1, rect.y + (rect.height / 2))
+        leftPt = wx.Point(rect.x, rect.y + (rect.height // 2))
+        rightPt = wx.Point(rect.x + rect.width-1, rect.y + (rect.height // 2))
 
         # Define the top region
         top = wx.Rect((rect.GetLeft(), rect.GetTop()), rightPt)
@@ -1572,11 +1572,11 @@ class FMRendererMSOffice2007(FMRenderer):
 
         factor = artMgr.GetMenuBgFactor()
 
-        leftPt1 = wx.Point(rect.x, rect.y + (rect.height / factor))
-        leftPt2 = wx.Point(rect.x, rect.y + (rect.height / factor)*(factor-1))
+        leftPt1 = wx.Point(rect.x, rect.y + (rect.height // factor))
+        leftPt2 = wx.Point(rect.x, rect.y + (rect.height // factor)*(factor-1))
 
-        rightPt1 = wx.Point(rect.x + rect.width, rect.y + (rect.height / factor))
-        rightPt2 = wx.Point(rect.x + rect.width, rect.y + (rect.height / factor)*(factor-1))
+        rightPt1 = wx.Point(rect.x + rect.width, rect.y + (rect.height // factor))
+        rightPt2 = wx.Point(rect.x + rect.width, rect.y + (rect.height // factor)*(factor-1))
 
         # Define the top region
         topReg = [wx.Point() for ii in range(7)]
@@ -2707,7 +2707,7 @@ class FlatMenuBar(wx.Panel):
             elif tbItem.IsCustomControl():
                 control = tbItem.GetCustomControl()
                 ctrlSize = control.GetSize()
-                ctrlPos = wx.Point(xx, rect.y + (rect.height - ctrlSize.y)/2)
+                ctrlPos = wx.Point(xx, rect.y + (rect.height - ctrlSize.y)//2)
                 if control.GetPosition() != ctrlPos:
                     control.SetPosition(ctrlPos)
 
@@ -2727,9 +2727,9 @@ class FlatMenuBar(wx.Panel):
             # Draw the toolbar image
             if bmp.IsOk():
 
-                x = xx - self._toolbarSpacer/2
+                x = xx - self._toolbarSpacer//2
                 #y = rect.y + (rect.height - bmp.GetHeight())/2 - 1
-                y = rect.y + self._toolbarMargin/2
+                y = rect.y + self._toolbarMargin//2
 
                 buttonRect = wx.Rect(x, y, highlight_width, highlight_height)
 
@@ -2745,8 +2745,8 @@ class FlatMenuBar(wx.Panel):
                     else:
                         self._tbButtons[i]._state = ControlNormal
 
-                imgx = buttonRect.x + (buttonRect.width - bmp.GetWidth())/2
-                imgy = buttonRect.y + (buttonRect.height - bmp.GetHeight())/2
+                imgx = buttonRect.x + (buttonRect.width - bmp.GetWidth())//2
+                imgy = buttonRect.y + (buttonRect.height - bmp.GetHeight())//2
 
                 if self._tbButtons[i]._state == ControlFocus and not self._tbButtons[i]._tbItem.IsSelected():
 
@@ -2827,8 +2827,8 @@ class FlatMenuBar(wx.Panel):
         dropArrowBmp = self.GetRenderer()._bitmaps["arrow_down"]
 
         # Calc the image coordinates
-        xx = rect.x + (DROP_DOWN_ARROW_WIDTH - dropArrowBmp.GetWidth())/2
-        yy = rect.y + (rect.height - dropArrowBmp.GetHeight())/2
+        xx = rect.x + (DROP_DOWN_ARROW_WIDTH - dropArrowBmp.GetWidth())//2
+        yy = rect.y + (rect.height - dropArrowBmp.GetHeight())//2
 
         dc.DrawBitmap(dropArrowBmp, xx, yy + self._spacer, True)
         self._dropDownButtonState = state
@@ -3269,8 +3269,8 @@ class FlatMenuBar(wx.Panel):
 
         # draw the bitmap over the highlight
         buttonRect = wx.Rect(*rect)
-        x = rect.x + (buttonRect.width - self._tbButtons[idx]._tbItem.GetBitmap().GetWidth())/2
-        y = rect.y + (buttonRect.height - self._tbButtons[idx]._tbItem.GetBitmap().GetHeight())/2
+        x = rect.x + (buttonRect.width - self._tbButtons[idx]._tbItem.GetBitmap().GetWidth())//2
+        y = rect.y + (buttonRect.height - self._tbButtons[idx]._tbItem.GetBitmap().GetHeight())//2
 
         if state == ControlFocus:
 
@@ -3784,7 +3784,7 @@ class FlatMenuBar(wx.Panel):
         pn.Name("flat_menu_bar")
         pn.Caption("Menu Bar")
         pn.Top()
-        pn.MinSize(wx.Size(xx/2, self._barHeight))
+        pn.MinSize(wx.Size(xx//2, self._barHeight))
         pn.LeftDockable(False)
         pn.RightDockable(False)
         pn.ToolbarPane()
@@ -3997,8 +3997,8 @@ class FlatMenuButton(object):
         """
 
         rect = wx.Rect(self._pos, self._size)
-        xx = rect.x + (rect.width - self._normalBmp.GetWidth())/2
-        yy = rect.y + (rect.height - self._normalBmp.GetHeight())/2
+        xx = rect.x + (rect.width - self._normalBmp.GetWidth())//2
+        yy = rect.y + (rect.height - self._normalBmp.GetHeight())//2
 
         self._parent.GetRenderer().DrawScrollButton(dc, rect, self._state)
         dc.DrawBitmap(self._normalBmp, xx, yy, True)

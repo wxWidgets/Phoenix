@@ -858,9 +858,9 @@ def PaintStraightGradientBox(dc, rect, startColour, endColour, vertical=True):
 
     for i in range(high+1):
 
-        r = startColour.Red() + ((i*rd*100)/high)/100
-        g = startColour.Green() + ((i*gd*100)/high)/100
-        b = startColour.Blue() + ((i*bd*100)/high)/100
+        r = startColour.Red() + ((i*rd*100)//high)//100
+        g = startColour.Green() + ((i*gd*100)//high)//100
+        b = startColour.Blue() + ((i*bd*100)//high)//100
 
         p = wx.Pen(wx.Colour(r, g, b))
         dc.SetPen(p)
@@ -2631,9 +2631,9 @@ class FNBRendererDefault(FNBRenderer):
         imageYCoord = (pc.HasAGWFlag(FNB_BOTTOM) and [6] or [8])[0]
 
         if hasImage:
-            textOffset = 2*pc._pParent._nPadding + 16 + shapePoints/2
+            textOffset = 2*pc._pParent._nPadding + 16 + shapePoints//2
         else:
-            textOffset = pc._pParent._nPadding + shapePoints/2
+            textOffset = pc._pParent._nPadding + shapePoints//2
 
         textOffset += 2
 

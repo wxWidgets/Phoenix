@@ -293,7 +293,7 @@ class LEDNumberCtrl(wx.Control):
 
         if digit & c.COLON:
             dc.SetBrush(wx.Brush(lineColor))
-            centerX = XPos + (self.m_lineLength + self.m_digitMargin) / 2
-            radius = self.m_lineWidth / 2
-            dc.DrawCircle(centerX, (self.m_lineLength + (self.m_lineMargin * 4)) / 2, radius)
-            dc.DrawCircle(centerX, (self.m_lineLength * 2 + (self.m_lineMargin * 6)) * 3 / 4, radius)
+            centerX = XPos + (self.m_lineLength + self.m_digitMargin) // 2
+            radius = self.m_lineWidth // 2
+            dc.DrawCircle(centerX, (self.m_lineLength + (self.m_lineMargin * 4)) // 2, radius)
+            dc.DrawCircle(centerX, (self.m_lineLength * 2 + (self.m_lineMargin * 6)) * 3 // 4, radius)

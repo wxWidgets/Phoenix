@@ -234,7 +234,7 @@ class PersistentFrame1(wx.Frame):
         sizer_1.Add(label_1, 0, wx.ALL, 5)
         sizer_1.Add(combo, 0, wx.LEFT|wx.RIGHT, 5)
         sizer_1.Add((20, 20), 1)
-        box2.Add(sizer_1, 1, wx.EXPAND|wx.ALIGN_CENTER, 0)
+        box2.Add(sizer_1, 1, wx.EXPAND, 0)
         box2.Add((0, 0), 1, 1)
 
         otherPanel.SetSizer(box2)

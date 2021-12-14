@@ -296,7 +296,7 @@ class DrawObject:
         else:
             self.Pen = self.PenList.setdefault(
                 (LineColor, LineStyle, LineWidth),
-                wx.Pen(LineColor, LineWidth, self.LineStyleList[LineStyle]))
+                wx.Pen(LineColor, int(LineWidth), self.LineStyleList[LineStyle]))
 
     def SetHitBrush(self, HitColor):
         """
@@ -1202,14 +1202,14 @@ class SquarePoint(XYObjectMixin, ColorOnlyMixin, DrawObject):
             x = xc - Size/2.0
             y = yc - Size/2.0
             dc.SetBrush(self.Brush)
-            dc.DrawRectangle(x, y, Size, Size)
+            dc.DrawRectangle(int(x), int(y), Size, Size)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             if self.Size <= 1:
                 HTdc.DrawPoint(xc, xc)
             else:
                 HTdc.SetBrush(self.HitBrush)
-                HTdc.DrawRectangle(x, y, Size, Size)
+                HTdc.DrawRectangle(int(x), int(y), Size, Size)
 
 class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
     """A RectEllipse draw object."""
@@ -2161,7 +2161,7 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
         W = H * (self.bmpWidth / self.bmpHeight)
         if (self.ScaledBitmap is None) or (H != self.ScaledHeight) :
             self.ScaledHeight = H
-            Img = self.Image.Scale(W, H)
+            Img = self.Image.Scale(int(W), int(H))
             self.ScaledBitmap = wx.Bitmap(Img)
 
         XY = self.ShiftFun(XY[0], XY[1], W, H)

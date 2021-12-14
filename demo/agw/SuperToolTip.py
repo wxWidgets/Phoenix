@@ -43,7 +43,7 @@ class SuperToolTipDemo(wx.Frame):
         self.topColourPicker = wx.ColourPickerCtrl(self.mainPanel, colour=wx.WHITE)
         system = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         r, g, b, a = system
-        self.middleColourPicker = wx.ColourPickerCtrl(self.mainPanel, colour=wx.Colour((255-r)/2, (255-g)/2, (255-b)/2))
+        self.middleColourPicker = wx.ColourPickerCtrl(self.mainPanel, colour=wx.Colour((255-r)//2, (255-g)//2, (255-b)//2))
         self.bottomColourPicker = wx.ColourPickerCtrl(self.mainPanel, colour=system)
         self.headerCheck = wx.CheckBox(self.mainPanel, -1, "Show Header")
         self.headerText = wx.TextCtrl(self.mainPanel, -1, "Merge And Center")
@@ -233,7 +233,6 @@ class SuperToolTipDemo(wx.Frame):
         frameSizer.Add(self.mainPanel, 1, wx.EXPAND, 0)
         self.SetSizer(frameSizer)
         frameSizer.Layout()
-        frameSizer.Fit(self)
         self.Layout()
 
         wx.CallAfter(mainSizer.Layout)

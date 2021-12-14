@@ -965,7 +965,7 @@ class XLSText(object):
             xp = xc - (text_width/2)*xshift - (text_height/2)*yshift
             yp = yc + (text_width/2)*yshift - (text_height/2)*xshift
 
-            dc.DrawRotatedText(value, xp, yp, self.rotation)
+            dc.DrawRotatedText(value, int(xp), int(yp), self.rotation)
 
         else:
 
@@ -1125,7 +1125,7 @@ class XLSRichText(XLSText):
             if font.escapement == 1:
                 ypos = ypos - maxH + height
 
-            dc.DrawText(chunk, start, ypos)
+            dc.DrawText(chunk, start, int(ypos))
             start += width
 
 

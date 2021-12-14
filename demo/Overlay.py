@@ -56,7 +56,6 @@ class TestPanel(wx.Panel):
         self.penstylesCombo.SetToolTip('Pen Style')
 
         self.overlayPenWidth = wx.SpinCtrl(self, -1, value='',
-                                           size=(75, -1),
                                            style=wx.SP_ARROW_KEYS,
                                            min=1, max=24, initial=1)
         self.overlayPenWidth.SetToolTip('Pen Width')

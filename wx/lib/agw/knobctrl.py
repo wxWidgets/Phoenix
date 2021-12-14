@@ -325,7 +325,7 @@ class BufferedWindow(wx.Window):
         memory.Clear()
 
         minradius = min(0.9*self.Width/2.0, 0.9*self.Height/2.0)
-        memory.DrawCircle(self.Width//2, self.Height//2, minradius)
+        memory.DrawCircle(self.Width//2, self.Height//2, int(minradius))
         memory.SelectObject(wx.NullBitmap)
         self._region = wx.Region(self._Buffer, self.GetBackgroundColour())
         self._minradius = minradius
@@ -645,8 +645,8 @@ class KnobCtrl(BufferedWindow):
             dxi = math.cos(angle)*((width - xshift + tagLen - 6)/2.0 - tagLen)
             dyi = math.sin(angle)*((height - yshift + tagLen - 6)/2.0 - tagLen)
 
-            dc.DrawLine(width//2 - sxi, height//2 - syi,
-                        width//2 - dxi, height//2 - dyi)
+            dc.DrawLine(int(width//2 - sxi), int(height//2 - syi),
+                        int(width//2 - dxi), int(height//2 - dyi))
 
 
     def DrawDiagonalGradient(self, dc, size):
@@ -759,8 +759,8 @@ class KnobCtrl(BufferedWindow):
         p1 = wx.Pen(self.OffsetColour(pencolour, -70), 2)
         p2 = wx.Pen(self.OffsetColour(pencolour, 10), 1)
 
-        pt1 = wx.Point(cx-r*math.sqrt(2)/2.0, cy+r*math.sqrt(2)/2.0)
-        pt2 = wx.Point(cx+r*math.sqrt(2)/2.0, cy-r*math.sqrt(2)/2.0)
+        pt1 = wx.Point(int(cx-r*math.sqrt(2)/2.0), int(cy+r*math.sqrt(2)/2.0))
+        pt2 = wx.Point(int(cx+r*math.sqrt(2)/2.0), int(cy-r*math.sqrt(2)/2.0))
 
         dc.SetPen(p2)
         dc.DrawArc(pt1, pt2, (cx, cy))
@@ -779,7 +779,7 @@ class KnobCtrl(BufferedWindow):
         radius = 0.9*min(size.x, size.y)/2.0
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetPen(wx.Pen(self._boundingcolour))
-        dc.DrawCircle(self.Width//2, self.Height//2, radius)
+        dc.DrawCircle(self.Width//2, self.Height//2, int(radius))
 
 
     def CircleCoords(self, radius, angle, centerX, centerY):

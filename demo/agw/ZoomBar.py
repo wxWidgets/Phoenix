@@ -55,7 +55,7 @@ class TestPanel(wx.Panel):
         reflections = glob.glob(bitmapDir + "/*96Flip40.png")
 
         separatorImage = bitmapDir + "/separator.gif"
-        separatorReflection = bitmapDir + "/separatorFlip.png"
+        separatorReflection = bitmapDir + "/separatorflip.png"
         count = 0
 
         for std, ref in zip(standard, reflections):
