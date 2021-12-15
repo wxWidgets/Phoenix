@@ -22,8 +22,9 @@ def TestLinesFromBuffer(dc, log):
         y2 = np.sin(vs * 16 * np.pi) * w/2 * vs + h/2
         
 
-        pts1 = np.append(x1, y1, 1).astype('int32')
-        pts2 = np.append(x2, y2, 1).astype('int32')
+        # Data has to be the same size as a C integer
+        pts1 = np.append(x1, y1, 1).astype('intc')
+        pts2 = np.append(x2, y2, 1).astype('intc')
 
         dc.SetPen(wx.BLACK_PEN)
         t1 = time.time()
@@ -110,9 +111,16 @@ the python buffer protocol.
     DrawLinesFromBuffer(pyBuff)
 </pre>
 
+The buffer object needs to provide an array of C integers organized as 
+x, y point pairs.  The size of a C integer is platform dependent.
+With numpy, the intc data type will provide the appropriate element size.
+
 If called with an object that doesn't support
 the python buffer protocol, or if the underlying element size does not
-match the size of a wxPoint, a TypeError exception is raised.
+match the size of a C integer, a TypeError exception is raised.  If 
+the buffer provided has float data with the same element size as a 
+C integer, no error will be raised, but the lines will not be drawn
+in the appropriate places.
 """
 
 

@@ -48,8 +48,9 @@ class dcDrawLists_Tests(wtc.WidgetTestCase):
         ys.shape = ys.size, 1
         pts = np.append(xs, ys, 1)
 
-        dc.DrawLinesFromBuffer(pts.astype('int32'))
-        self.assertRaises(TypeError, dc.DrawLinesFromBuffer, pts.astype('int64'))
+        dc.DrawLinesFromBuffer(pts.astype('intc'))
+        self.assertRaises(TypeError, dc.DrawLinesFromBuffer, 
+                          pts.astype('int64') if np.intc(1).nbytes != np.int64(1).nbytes else pts.astype('int32'))
         self.assertRaises(TypeError, dc.DrawLinesFromBuffer, pts.tolist())
         del dc
 
