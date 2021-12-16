@@ -92,7 +92,11 @@ def run():
     module.find('wxWebViewHandler.wxWebViewHandler').argsString = '(const wxString& scheme="")'
 
     tools.generateStubs('wxUSE_WEBVIEW', module,
-                        typeValMap={'wxWebViewNavigationActionFlags': 'wxWEBVIEW_NAV_ACTION_NONE'})
+                        typeValMap={
+                            'wxWebViewNavigationActionFlags': 'wxWEBVIEW_NAV_ACTION_NONE',
+                            'wxWebViewZoom': 'wxWEBVIEW_ZOOM_MEDIUM',
+                            'wxVersionInfo': 'wxVersionInfo()',
+                            })
 
     c = module.find('wxWebView')
     assert isinstance(c, etgtools.ClassDef)

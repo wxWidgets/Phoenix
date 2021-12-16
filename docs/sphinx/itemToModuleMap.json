@@ -2630,7 +2630,7 @@
 "ObjectRefData":"wx.",
 "OperatingSystemId":"wx.",
 "Orientation":"wx.",
-"Origin":"wx.HelpEvent.",
+"Origin":"wx.grid.GridActivationSource.",
 "OutBottom":"wx.",
 "OutCode":"wx.",
 "OutLeft":"wx.",
