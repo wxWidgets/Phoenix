@@ -310,6 +310,9 @@ def run():
         '(PyObject* textList, PyObject* pyPoints, PyObject* foregroundList, PyObject* backgroundList)',
         body="return wxPyDrawTextList(*self, textList, pyPoints, foregroundList, backgroundList);")
 
+    c.addCppMethod('PyObject*', '_DrawLinesFromBuffer',
+        '(PyObject* pyBuff)',
+        body="return wxPyDrawLinesFromBuffer(*self, pyBuff);")
 
     c.addPyMethod('DrawPointList', '(self, points, pens=None)',
         doc="""\
@@ -475,6 +478,28 @@ def run():
             """)
 
 
+    c.addPyMethod('DrawLinesFromBuffer', '(self, pyBuff)',
+        doc="""\
+            Implementation of DrawLines that can use numpy arrays, or anything else that uses the
+            python buffer protocol directly without any element conversion.  This provides a 
+            significant performance increase over the standard DrawLines function.
+            
+            The pyBuff argument needs to provide an array of C integers organized as 
+            x, y point pairs.  The size of a C integer is platform dependent.
+            With numpy, the intc data type will provide the appropriate element size.
+
+            If called with an object that doesn't support
+            the python buffer protocol, or if the underlying element size does not
+            match the size of a C integer, a TypeError exception is raised.  If 
+            the buffer provided has float data with the same element size as a 
+            C integer, no error will be raised, but the lines will not be drawn
+            in the appropriate places.
+
+            :param pyBuff:    A python buffer containing integer pairs
+            """,
+        body="""\
+            return  self._DrawLinesFromBuffer(pyBuff)
+            """)
 
 
     #-----------------------------------------------------------------
