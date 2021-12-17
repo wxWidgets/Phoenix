@@ -309,7 +309,7 @@ def main(wxDir, args):
                 for major, minor in reversed(possibles):
                     sdk = os.path.join(xcodePath, "SDKs/MacOSX{}.{}.sdk".format(major, minor))
                     if os.path.exists(sdk):
-                        wxpy_configure_opts.append("--with-macosx-sdk=%s" % sdk)
+                        #wxpy_configure_opts.append("--with-macosx-sdk=%s" % sdk)
                         universalCapable = major >= 11
                         SDK = sdk
                         break
