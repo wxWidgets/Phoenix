@@ -309,7 +309,11 @@ def main(wxDir, args):
                 for major, minor in reversed(possibles):
                     sdk = os.path.join(xcodePath, "SDKs/MacOSX{}.{}.sdk".format(major, minor))
                     if os.path.exists(sdk):
-                        #wxpy_configure_opts.append("--with-macosx-sdk=%s" % sdk)
+                        # Although we've found a SDK, we're not actually using
+                        # it at the moment. The builds seem to work better if we
+                        # let the compiler use whatever it considers to be the
+                        # default.
+                        # wxpy_configure_opts.append("--with-macosx-sdk=%s" % sdk)
                         universalCapable = major >= 11
                         SDK = sdk
                         break
@@ -328,7 +332,7 @@ def main(wxDir, args):
                     arch = options.mac_universal_binary
                 configure_opts.append("--enable-universal_binary=%s" % arch)
 
-            print("SDK Path:          {}".format(SDK))
+            # print("SDK Path:          {}".format(SDK))
             print("Universal Capable: {}".format(universalCapable))
             print("Architectures:     {}".format(arch))
 
