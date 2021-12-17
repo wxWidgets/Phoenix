@@ -2709,6 +2709,9 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
 
         return True
 
+    def InitLocale(self):
+        super().InitLocale()
+        self._locale = wx.Locale(wx.LANGUAGE_ENGLISH)
 
 
 #---------------------------------------------------------------------------

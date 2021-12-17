@@ -26,6 +26,7 @@ import subprocess
 import tarfile
 import tempfile
 import datetime
+import shlex
 
 try:
     import pathlib
@@ -88,8 +89,8 @@ wxICON = 'packaging/docset/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-wafCurrentVersion = '2.0.19'
-wafMD5 = 'ac362b60111a59ab2df63513018d5ad8'
+wafCurrentVersion = '2.0.22'
+wafMD5 = 'f2e5880ba4ecd06f7991181bdba1138b'
 
 doxygenCurrentVersion = '1.8.8'
 doxygenMD5 = {
@@ -226,15 +227,15 @@ def setPythonVersion(args):
     havePyPath = False
 
     for idx, arg in enumerate(args):
-        if re.match(r'^[0-9]\.[0-9]$', arg):
+        if re.match(r'^[0-9]\.[0-9][0-9]?$', arg):
             havePyVer = True
             PYVER = arg
-            PYSHORTVER = arg[0] + arg[2]
+            PYSHORTVER = arg[0] + arg[2:]
             del args[idx]
             break
-        if re.match(r'^[0-9][0-9]$', arg):
+        if re.match(r'^[0-9][0-9][0-9]?$', arg):
             havePyVer = True
-            PYVER = '%s.%s' % (arg[0], arg[1])
+            PYVER = '%s.%s' % (arg[0], arg[1:])
             PYSHORTVER = arg
             del args[idx]
             break
@@ -248,7 +249,7 @@ def setPythonVersion(args):
                 del args[idx:idx+2]
             PYVER = runcmd([PYTHON, '-c', 'import sys; print(sys.version[:3])'],
                            getOutput=True, echoCmd=False)
-            PYSHORTVER = PYVER[0] + PYVER[2]
+            PYSHORTVER = PYVER[0] + PYVER[2:]
             break
 
     if havePyVer:
@@ -293,8 +294,8 @@ def setPythonVersion(args):
         # If no version or path were specified then default to the python
         # that invoked this script
         PYTHON = sys.executable
-        PYVER = sys.version[:3]
-        PYSHORTVER = PYVER[0] + PYVER[2]
+        PYVER = '{}.{}'.format(sys.version_info.major, sys.version_info.minor)
+        PYSHORTVER = '{}{}'.format(sys.version_info.major, sys.version_info.minor)
 
     PYTHON = os.path.abspath(PYTHON)
     msg('Will build using: "%s"' % PYTHON)
@@ -324,15 +325,12 @@ def setDevModeOptions(args):
     myDevModeOptions = [
             #'--build_dir=../bld',
             #'--prefix=/opt/wx/2.9',
-            '--jobs=8', #  % numCPUs(),
+            '--jobs={}'.format(max(2, int(numCPUs()/2))),
 
             # These will be ignored on the other platforms so it is okay to
             # include them unconditionally
             '--osx_cocoa',
             '--mac_arch=x86_64',
-            #'--osx_carbon',
-            #'--mac_arch=i386',
-            #'--mac_arch=i386,x86_64',
             '--no_allmo',
             ]
     if not isWindows:
@@ -470,7 +468,6 @@ def makeOptionParser():
 def parseArgs(args):
     # If WXPYTHON_BUILD_ARGS is set in the environment, split it and add to args
     if os.environ.get('WXPYTHON_BUILD_ARGS', None):
-        import shlex
         args += shlex.split(os.environ.get('WXPYTHON_BUILD_ARGS'))
 
     # Parse the args into options
@@ -1450,8 +1447,14 @@ def cmd_build_wx(options, args):
 
         if not os.path.exists(BUILD_DIR):
             os.makedirs(BUILD_DIR)
-        if  isDarwin and options.mac_arch:
-            build_options.append("--mac_universal_binary=%s" % options.mac_arch)
+        if  isDarwin:
+            if options.osx_cocoa:
+                build_options.append("--osx_cocoa")
+
+            if options.mac_arch:
+                build_options.append("--mac_universal_binary=%s" % options.mac_arch)
+            else:
+                build_options.append("--mac_universal_binary=default")
 
         if options.no_config:
             build_options.append('--no_config')
@@ -1467,9 +1470,6 @@ def cmd_build_wx(options, args):
                     break
             else:
                 build_options.append("--no_config")
-
-        if isDarwin and options.osx_cocoa:
-            build_options.append("--osx_cocoa")
 
         #if options.install:
         #    build_options.append('--installdir=%s' % DESTDIR)
@@ -1567,7 +1567,7 @@ def copyWxDlls(options):
         # For Python 3.5 and 3.6 builds we also need to copy some VC14 redist DLLs.
         # NOTE: Do it for 3.7+ too for now. But when we fully switch over to VS 2017
         # this may need to change. See notes in wscript about it.
-        if PYVER in ['3.5', '3.6', '3.7', '3.8', '3.9']:
+        if PYVER in ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10']:
             redist_dir = os.path.join(
                 phoenixDir(), 'packaging', 'msw-vcredist',
                 arch, 'Microsoft.VC140.CRT', '*.dll')
@@ -1623,6 +1623,24 @@ def cmd_build_py(options, args):
                     WX_CONFIG = wxcfg
                 else:
                     WX_CONFIG = 'wx-config' # hope it is on the PATH
+
+    if isDarwin:
+        # WAF does a test build as part of the configuration phase, but the
+        # default compiler and flags it uses are not even close to how we'll
+        # configure it later in the configuration process. At a minimum we need
+        # to add the -isysroot for builds on Darwin, and wxWidgets configure is
+        # adding this to the compiler command so we can fetch it there.
+        def _getWxCompiler(flag, compName, flagName):
+            cmd = "%s %s" % (WX_CONFIG, flag)
+            value = os.popen(cmd, 'r').read()[:-1]
+            cmd = shlex.split(value)
+            compiler = cmd[0]
+            flags = cmd[1:]
+            #os.environ[compName] = compiler  # don't reset the compiler here, it will be done later
+            os.environ[flagName] = ' '.join(flags)
+
+        _getWxCompiler('--cc', 'CC', 'CFLAGS')
+        _getWxCompiler('--cxx', 'CXX', 'CXXFLAGS')
 
 
     wafBuildBase = wafBuildDir = getWafBuildBase()

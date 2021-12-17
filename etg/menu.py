@@ -99,6 +99,7 @@ def run():
         body="""\
             return self->FindItem(id);""")
 
+    c.find('MSWCommand').ignore()
 
     #-----------------------------------------------------------------
     c = module.find('wxMenuBar')

@@ -346,7 +346,7 @@ def run():
                     :param int millis: number of milliseconds to delay until calling the callable object
                     :param PyObject callableObj: the callable object
                     :param args: arguments to be passed to the callable object
-                    :param kw: keywords to be passed to the callable object
+                    :param kw: keyword arguments to be passed to the callable object
                 """,
 
                 body="""\
