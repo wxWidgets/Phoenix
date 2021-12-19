@@ -794,7 +794,6 @@ class SlicesShell(editwindow.EditWindow):
 
         # Assign handler for the context menu
         self.Bind(wx.EVT_CONTEXT_MENU, self.OnContextMenu)
-        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI)
 
         # add the option to not use the stock IDs; otherwise the context menu
         # may not work on Mac without adding the proper IDs to the menu bar
@@ -825,6 +824,15 @@ class SlicesShell(editwindow.EditWindow):
         self.Bind(wx.EVT_MENU, lambda evt: self.Clear(), id=self.ID_CLEAR)
         self.Bind(wx.EVT_MENU, lambda evt: self.Undo(), id=self.ID_UNDO)
         self.Bind(wx.EVT_MENU, lambda evt: self.Redo(), id=self.ID_REDO)
+
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCut()), id=self.ID_CUT)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCut()), id=self.ID_CLEAR)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCopy()), id=self.ID_COPY)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCopy()), id=frame.ID_COPY_PLUS)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanPaste()), id=self.ID_PASTE)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanPaste()), id=frame.ID_PASTE_PLUS)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanUndo()), id=self.ID_UNDO)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanRedo()), id=self.ID_REDO)
 
         # Assign handler for idle time.
         self.waiting = False
@@ -3571,19 +3579,6 @@ class SlicesShell(editwindow.EditWindow):
     def OnContextMenu(self, evt):
         menu = self.GetContextMenu()
         self.PopupMenu(menu)
-
-    def OnUpdateUI(self, evt):
-        id = evt.Id
-        if id in (self.ID_CUT, self.ID_CLEAR):
-            evt.Enable(self.CanCut())
-        elif id in (self.ID_COPY, frame.ID_COPY_PLUS):
-            evt.Enable(self.CanCopy())
-        elif id in (self.ID_PASTE, frame.ID_PASTE_PLUS):
-            evt.Enable(self.CanPaste())
-        elif id == self.ID_UNDO:
-            evt.Enable(self.CanUndo())
-        elif id == self.ID_REDO:
-            evt.Enable(self.CanRedo())
 
     def LoadPySlicesFile(self,fid):
         invalidFileString = 'Not a valid input format'
