@@ -925,14 +925,14 @@ def DrawButton(dc, rect, focus, upperTabs):
 
     if focus:
         if upperTabs:
-            leftPt = wx.Point(rect.x, rect.y + (rect.height / 10)*8)
-            rightPt = wx.Point(rect.x + rect.width - 2, rect.y + (rect.height / 10)*8)
+            leftPt = wx.Point(rect.x, int(rect.y + (rect.height / 10)*8))
+            rightPt = wx.Point(rect.x + rect.width - 2, int(rect.y + (rect.height / 10)*8))
         else:
-            leftPt = wx.Point(rect.x, rect.y + (rect.height / 10)*5)
-            rightPt = wx.Point(rect.x + rect.width - 2, rect.y + (rect.height / 10)*5)
+            leftPt = wx.Point(rect.x, int(rect.y + (rect.height / 10)*5))
+            rightPt = wx.Point(rect.x + rect.width - 2, int(rect.y + (rect.height / 10)*5))
     else:
-        leftPt = wx.Point(rect.x, rect.y + (rect.height / 2))
-        rightPt = wx.Point(rect.x + rect.width - 2, rect.y + (rect.height / 2))
+        leftPt = wx.Point(rect.x, int(rect.y + (rect.height / 2)))
+        rightPt = wx.Point(rect.x + rect.width - 2, int(rect.y + (rect.height / 2)))
 
     # Define the top region
     top = wx.Rect(rect.GetTopLeft(), rightPt)
@@ -2769,7 +2769,7 @@ class FNBRendererFirefox2(FNBRenderer):
         if pageTextColour is not None:
             dc.SetTextForeground(pageTextColour)
 
-        dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
+        dc.DrawText(pc.GetPageText(tabIdx), int(posx + textOffset), imageYCoord)
 
         # draw 'x' on tab (if enabled)
         if pc.HasAGWFlag(FNB_X_ON_TAB) and tabIdx == pc.GetSelection():
