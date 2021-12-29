@@ -132,8 +132,8 @@ class SVGimage(SVGimageBase):
         """
         size = wx.Size(*size)
         if window:
-            size.width *= window.GetContentScaleFactor()
-            size.height *= window.GetContentScaleFactor()
+            size.width = int(size.width * window.GetContentScaleFactor())
+            size.height = int(size.height * window.GetContentScaleFactor())
 
         # We can only have one overall scale factor for both dimensions with
         # this rasterization method, so chose either the minimum of width or
