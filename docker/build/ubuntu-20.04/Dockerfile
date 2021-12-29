@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 
 # Set environment variables
 ENV DIST_NAME=ubuntu-20.04
-ENV USE_DEADSNAKES=no
+ENV USE_DEADSNAKES=yes
 ENV USER=wxpy
 ENV HOME=/home/$USER
 ENV PYTHONUNBUFFERED=1
@@ -51,6 +51,7 @@ RUN \
         if [ ${USE_DEADSNAKES} = yes ]; then add-apt-repository ppa:deadsnakes/ppa; apt-get update; fi; \
         apt-get install -y python3.8 python3.8-dev libpython3.8-dev python3.8-venv; \
         apt-get install -y python3.9 python3.9-dev libpython3.9-dev python3.9-venv; \
+        apt-get install -y python3.10 python3.10-dev libpython3.10-dev python3.10-venv; \
         apt-get clean;
 
 # Add files from host into the container
@@ -68,7 +69,8 @@ RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
         python3.8 -m venv venvs/Py38; \
-        python3.9 -m venv venvs/Py39;
+        python3.9 -m venv venvs/Py39; \
+        python3.10 -m venv venvs/Py310;
 
 # Define default command
 CMD ["/bin/bash", "-l"]
