@@ -1014,7 +1014,7 @@ class CaptionBar(wx.Window):
         rf, gf, bf = 0, 0, 0
 
         for y in range(rect.y, rect.y + rect.height):
-            currCol = (r1 + rf, g1 + gf, b1 + bf)
+            currCol = (int(r1 + rf), int(g1 + gf), int(b1 + bf))
 
             dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(rect.x, rect.y + (y - rect.y), rect.width, rect.height)
