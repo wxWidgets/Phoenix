@@ -425,6 +425,7 @@ class PolyLine(PolyPoints):
                 for c1, c2 in zip(self.scaled, self.scaled[1:]):
                     self._path(dc, c1, c2, drawstyle)
         else:
+            coord = [(int(c[0]), int(c[1])) for c in coord]
             dc.DrawLines(coord)  # draw legend line
 
     def getSymExtent(self, printerScale):
@@ -478,6 +479,7 @@ class PolyLine(PolyPoints):
             err_txt = "Invalid drawstyle '{}'. Must be one of {}."
             raise ValueError(err_txt.format(drawstyle, self._drawstyles))
 
+        line = [(int(p[0]), int(p[1])) for p in line]
         dc.DrawLines(line)
 
 
@@ -523,8 +525,9 @@ class PolySpline(PolyLine):
         dc.SetPen(pen)
         if coord is None:
             if len(self.scaled) >= 3:
-                dc.DrawSpline(self.scaled)
+                dc.DrawSpline(self.scaled.astype(np.int32))
         else:
+            coord = [(int(c[0]), int(c[1])) for c in coord]
             dc.DrawLines(coord)  # draw legend line
 
 
