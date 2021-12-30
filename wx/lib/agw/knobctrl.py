@@ -675,7 +675,7 @@ class KnobCtrl(BufferedWindow):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         for ii in range(0, maxsize, 2):
-            currCol = (r1 + rf, g1 + gf, b1 + bf)
+            currCol = (int(r1 + rf), int(g1 + gf), int(b1 + bf))
             dc.SetPen(wx.Pen(currCol, 2))
             dc.DrawLine(0, ii+2, ii+2, 0)
             rf = rf + rstep
@@ -683,7 +683,7 @@ class KnobCtrl(BufferedWindow):
             bf = bf + bstep
 
         for ii in range(0, maxsize, 2):
-            currCol = (r1 + rf, g1 + gf, b1 + bf)
+            currCol = (int(r1 + rf), int(g1 + gf), int(b1 + bf))
             dc.SetPen(wx.Pen(currCol, 2))
             dc.DrawLine(ii+2, maxsize, maxsize, ii+2)
             rf = rf + rstep
@@ -763,9 +763,9 @@ class KnobCtrl(BufferedWindow):
         pt2 = wx.Point(int(cx+r*math.sqrt(2)/2.0), int(cy-r*math.sqrt(2)/2.0))
 
         dc.SetPen(p2)
-        dc.DrawArc(pt1, pt2, (cx, cy))
+        dc.DrawArc(pt1, pt2, (int(cx), int(cy)))
         dc.SetPen(p1)
-        dc.DrawArc(pt2, pt1, (cx, cy))
+        dc.DrawArc(pt2, pt1, (int(cx), int(cy)))
 
 
     def DrawBoundingCircle(self, dc, size):

@@ -3738,7 +3738,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         if pageTextColour is not None:
             dc.SetTextForeground(pageTextColour)
 
-        dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
+        dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, int(imageYCoord))
 
         # draw 'x' on tab (if enabled)
         if pc.HasAGWFlag(FNB_X_ON_TAB) and tabIdx == pc.GetSelection():

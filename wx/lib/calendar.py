@@ -491,7 +491,7 @@ class CalDraw:
 
         tw, th = DC.GetTextExtent(month)
         adjust = self.cx_st + (self.sizew - tw) / 2
-        DC.DrawText(month, adjust, self.cy_st + th)
+        DC.DrawText(month, int(adjust), self.cy_st + th)
 
         year = str(self.year)
         tw, th = DC.GetTextExtent(year)
@@ -602,7 +602,7 @@ class CalDraw:
 
             DC.SetPen(pen)
 
-            point = (x + diffx, y + diffy)
+            point = (int(x + diffx), int(y + diffy))
             DC.DrawText(day, point)
             cnt_x = cnt_x + 1
 
@@ -679,7 +679,7 @@ class CalDraw:
 
         adj_v = adj_v + self.num_indent_vert
 
-        DC.DrawText(text, (x + adj_h, y + adj_v))
+        DC.DrawText(text, (int(x + adj_h), int(y + adj_v)))
 
     def DrawDayText(self, DC, key):
         """
@@ -1518,7 +1518,7 @@ class CalenDlg(wx.Dialog):
 
         # alternate spin button to control the month
         h = self.m_date.GetSize().height
-        self.m_spin = wx.SpinButton(self, -1, (115, 20), (h * 1.5, h), wx.SP_VERTICAL)
+        self.m_spin = wx.SpinButton(self, -1, (115, 20), (int(h * 1.5), h), wx.SP_VERTICAL)
         self.m_spin.SetRange(1, 12)
         self.m_spin.SetValue(date.month)
         self.Bind(wx.EVT_SPIN, self.OnMonthSpin, self.m_spin)
@@ -1527,7 +1527,7 @@ class CalenDlg(wx.Dialog):
         self.y_date = wx.TextCtrl(self, -1, str(date.year), (160, 20), (60, -1))
         h = self.y_date.GetSize().height
 
-        self.y_spin = wx.SpinButton(self, -1, (225, 20), (h * 1.5, h), wx.SP_VERTICAL)
+        self.y_spin = wx.SpinButton(self, -1, (225, 20), (int(h * 1.5), h), wx.SP_VERTICAL)
         self.y_spin.SetRange(date.year-100, date.year+100)
         self.y_spin.SetValue(date.year)
 

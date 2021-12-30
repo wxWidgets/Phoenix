@@ -1306,9 +1306,9 @@ class RibbonMSWArtProvider(object):
         background.height -= 2
 
         if style & RIBBON_SCROLL_BTN_UP:
-            background.height /= 2
+            background.height //= 2
         else:
-            background.height /= 5
+            background.height //= 5
 
         dc.GradientFillLinear(background, self._page_background_top_colour,
                               self._page_background_top_gradient_colour, wx.SOUTH)
@@ -1363,28 +1363,28 @@ class RibbonMSWArtProvider(object):
         result = style & RIBBON_SCROLL_BTN_DIRECTION_MASK
 
         if result == RIBBON_SCROLL_BTN_LEFT:
-            arrow_points[0] = wx.Point(rect.width / 2 - 2, rect.height / 2)
+            arrow_points[0] = wx.Point(rect.width // 2 - 2, rect.height // 2)
             if style & RIBBON_SCROLL_BTN_ACTIVE:
                 arrow_points[0].y += 1
             arrow_points[1] = arrow_points[0] + wx.Point(3, -3)
             arrow_points[2] = arrow_points[0] + wx.Point(3,  3)
 
         elif result == RIBBON_SCROLL_BTN_RIGHT:
-            arrow_points[0] = wx.Point(rect.width / 2 + 2, rect.height / 2)
+            arrow_points[0] = wx.Point(rect.width // 2 + 2, rect.height // 2)
             if style & RIBBON_SCROLL_BTN_ACTIVE:
                 arrow_points[0].y += 1
             arrow_points[1] = arrow_points[0] - wx.Point(3,  3)
             arrow_points[2] = arrow_points[0] - wx.Point(3, -3)
 
         elif result == RIBBON_SCROLL_BTN_UP:
-            arrow_points[0] = wx.Point(rect.width / 2, rect.height / 2 - 2)
+            arrow_points[0] = wx.Point(rect.width // 2, rect.height // 2 - 2)
             if style & RIBBON_SCROLL_BTN_ACTIVE:
                 arrow_points[0].y += 1
             arrow_points[1] = arrow_points[0] + wx.Point( 3, 3)
             arrow_points[2] = arrow_points[0] + wx.Point(-3, 3)
 
         elif result == RIBBON_SCROLL_BTN_DOWN:
-            arrow_points[0] = wx.Point(rect.width / 2, rect.height / 2 + 2)
+            arrow_points[0] = wx.Point(rect.width // 2, rect.height // 2 + 2)
             if style & RIBBON_SCROLL_BTN_ACTIVE:
                 arrow_points[0].y += 1
             arrow_points[1] = arrow_points[0] - wx.Point( 3, 3)
