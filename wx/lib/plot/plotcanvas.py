@@ -71,6 +71,7 @@ class PlotCanvas(wx.Panel):
         self.border = (1, 1)
 
         self.SetBackgroundColour("white")
+        self.SetForegroundColour("black")
 
         # Create some mouse events for zooming
         self.canvas.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
