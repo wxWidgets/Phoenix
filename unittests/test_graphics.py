@@ -40,6 +40,7 @@ class graphics_Tests(wtc.WidgetTestCase):
 
         panel = MyPanel(self.frame)
         self.myUpdate(panel)
+        self.waitFor(100)
         self.assertTrue(panel.painted)
         self.assertTrue(panel.gcIsOk)
 
