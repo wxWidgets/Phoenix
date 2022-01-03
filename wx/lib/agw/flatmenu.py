@@ -3893,14 +3893,13 @@ havePopupWindow = 1
 
 if wx.Platform == '__WXMAC__':
     havePopupWindow = 0
-    wx.PopupWindow = mcPopupWindow
 
 
 # ---------------------------------------------------------------------------- #
 # Class ShadowPopupWindow
 # ---------------------------------------------------------------------------- #
 
-class ShadowPopupWindow(wx.PopupWindow):
+class ShadowPopupWindow(wx.PopupWindow if havePopupWindow else mcPopupWindow):
     """ Base class for generic :class:`FlatMenu` derived from :class:`PopupWindow`. """
 
     def __init__(self, parent=None):
