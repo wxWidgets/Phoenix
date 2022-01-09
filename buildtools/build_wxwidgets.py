@@ -63,6 +63,10 @@ def getXcodePaths():
     return [base, base+"/Platforms/MacOSX.platform/Developer"]
 
 
+def getDefaultSDKVersion():
+    return getoutput("xcrun --show-sdk-version")
+
+
 def getVisCVersion():
     text = getoutput("cl.exe")
     if 'Version 13' in text:
@@ -302,21 +306,12 @@ def main(wxDir, args):
             # TODO: Add a CLI option to set this.
             wxpy_configure_opts.append("--with-macosx-version-min=10.10")
 
-            # find the newest SDK available on this system
-            SDK = 'none found'
-            for xcodePath in getXcodePaths():
-                possibles = [(major, minor) for major in [10, 11, 12] for minor in range(16)]
-                for major, minor in reversed(possibles):
-                    sdk = os.path.join(xcodePath, "SDKs/MacOSX{}.{}.sdk".format(major, minor))
-                    if os.path.exists(sdk):
-                        # Although we've found a SDK, we're not actually using
-                        # it at the moment. The builds seem to work better if we
-                        # let the compiler use whatever it considers to be the
-                        # default.
-                        # wxpy_configure_opts.append("--with-macosx-sdk=%s" % sdk)
-                        universalCapable = major >= 11
-                        SDK = sdk
-                        break
+            # find the default SDK version on this system
+            SDK = getDefaultSDKVersion()
+            major = int(SDK.split(".")[0])
+            universalCapable = major >= 11
+            if not universalCapable:
+                print("WARNING: detected SDK is not universal capable.  Please set SDKROOT environment variable to a path containing an SDK >= 11.")
 
             # Now cross check that if a universal build was requested that it's
             # possible to do with the selected SDK.
@@ -332,7 +327,7 @@ def main(wxDir, args):
                     arch = options.mac_universal_binary
                 configure_opts.append("--enable-universal_binary=%s" % arch)
 
-            # print("SDK Path:          {}".format(SDK))
+            print("SDK Version:       {}".format(SDK))
             print("Universal Capable: {}".format(universalCapable))
             print("Architectures:     {}".format(arch))
 
