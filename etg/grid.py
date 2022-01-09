@@ -690,6 +690,7 @@ def run():
         EVT_GRID_LABEL_RIGHT_DCLICK = wx.PyEventBinder( wxEVT_GRID_LABEL_RIGHT_DCLICK )
         EVT_GRID_ROW_SIZE = wx.PyEventBinder( wxEVT_GRID_ROW_SIZE )
         EVT_GRID_COL_SIZE = wx.PyEventBinder( wxEVT_GRID_COL_SIZE )
+        EVT_GRID_COL_AUTO_SIZE = wx.PyEventBinder( wxEVT_GRID_COL_AUTO_SIZE )
         EVT_GRID_RANGE_SELECTING = wx.PyEventBinder( wxEVT_GRID_RANGE_SELECTING )
         EVT_GRID_RANGE_SELECTED = wx.PyEventBinder( wxEVT_GRID_RANGE_SELECTED )
         EVT_GRID_CELL_CHANGING = wx.PyEventBinder( wxEVT_GRID_CELL_CHANGING )
@@ -714,6 +715,7 @@ def run():
         EVT_GRID_CMD_LABEL_RIGHT_DCLICK =  wx.PyEventBinder( wxEVT_GRID_LABEL_RIGHT_DCLICK, 1 )
         EVT_GRID_CMD_ROW_SIZE =            wx.PyEventBinder( wxEVT_GRID_ROW_SIZE,           1 )
         EVT_GRID_CMD_COL_SIZE =            wx.PyEventBinder( wxEVT_GRID_COL_SIZE,           1 )
+        EVT_GRID_CMD_COL_AUTO_SIZE =       wx.PyEventBinder( wxEVT_GRID_COL_AUTO_SIZE,      1 )
         EVT_GRID_CMD_RANGE_SELECTING =     wx.PyEventBinder( wxEVT_GRID_RANGE_SELECTING,    1 )
         EVT_GRID_CMD_RANGE_SELECTED =      wx.PyEventBinder( wxEVT_GRID_RANGE_SELECTED,     1 )
         EVT_GRID_CMD_CELL_CHANGING =       wx.PyEventBinder( wxEVT_GRID_CELL_CHANGING,      1 )
@@ -730,6 +732,7 @@ def run():
         # Just for compatibility, remove them in a future release
         EVT_GRID_RANGE_SELECT =            EVT_GRID_RANGE_SELECTED
         EVT_GRID_CMD_RANGE_SELECT =        EVT_GRID_CMD_RANGE_SELECTED
+        wxEVT_GRID_RANGE_SELECT =          wxEVT_GRID_RANGE_SELECTED
 
         """)
 

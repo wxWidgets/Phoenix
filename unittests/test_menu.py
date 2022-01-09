@@ -19,7 +19,7 @@ class menu_Tests(wtc.WidgetTestCase):
         m = self.makeMenu()
         m.AppendSeparator()
         m2 = self.makeMenu()
-        m.Append(-1, 'submenu', m2)
+        m.AppendSubMenu(m2, 'submenu')
         return m
 
 

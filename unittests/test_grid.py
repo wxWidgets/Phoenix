@@ -250,7 +250,10 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.wxEVT_GRID_LABEL_RIGHT_DCLICK
         wx.grid.wxEVT_GRID_ROW_SIZE
         wx.grid.wxEVT_GRID_COL_SIZE
+        wx.grid.wxEVT_GRID_COL_AUTO_SIZE
         wx.grid.wxEVT_GRID_RANGE_SELECT
+        wx.grid.wxEVT_GRID_RANGE_SELECTING
+        wx.grid.wxEVT_GRID_RANGE_SELECTED
         wx.grid.wxEVT_GRID_CELL_CHANGING
         wx.grid.wxEVT_GRID_CELL_CHANGED
         wx.grid.wxEVT_GRID_SELECT_CELL
@@ -273,7 +276,10 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.EVT_GRID_LABEL_RIGHT_DCLICK
         wx.grid.EVT_GRID_ROW_SIZE
         wx.grid.EVT_GRID_COL_SIZE
+        wx.grid.EVT_GRID_COL_AUTO_SIZE
         wx.grid.EVT_GRID_RANGE_SELECT
+        wx.grid.EVT_GRID_RANGE_SELECTING
+        wx.grid.EVT_GRID_RANGE_SELECTED
         wx.grid.EVT_GRID_CELL_CHANGING
         wx.grid.EVT_GRID_CELL_CHANGED
         wx.grid.EVT_GRID_SELECT_CELL

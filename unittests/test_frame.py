@@ -54,10 +54,13 @@ class frame_Tests(wtc.WidgetTestCase):
         f = wx.Frame(self.frame, title="Title", pos=(50,50), size=(100,100))
         f.Show()
         f.Maximize()
-        self.myYield()
+        self.waitFor(100)
         assert f.IsMaximized()
-        f.Restore()
-        self.myYield()
+        if 'wxGTK' in wx.PlatformInfo:
+            f.Maximize(False)
+        else:
+            f.Restore()
+        self.waitFor(100)
         assert not f.IsMaximized()
         f.Close()
 
