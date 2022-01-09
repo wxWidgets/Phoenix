@@ -6426,7 +6426,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         rf, gf, bf = 0, 0, 0
 
         for y in range(rect.y, rect.y + rect.height):
-            currCol = (r1 + rf, g1 + gf, b1 + bf)
+            currCol = (int(r1 + rf), int(g1 + gf), int(b1 + bf))
             dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(rect.x, y, rect.width, 1)
             rf = rf + rstep
@@ -6533,7 +6533,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         dc.SetPen(wx.TRANSPARENT_PEN)
 
         for y in range(filRect.y, filRect.y + filRect.height):
-            currCol = (r1 + rf, g1 + gf, b1 + bf)
+            currCol = (int(r1 + rf), int(g1 + gf), int(b1 + bf))
             dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(filRect.x, y, filRect.width, 1)
             rf = rf + rstep
