@@ -87,6 +87,8 @@ def parseAndTweakModule():
         body="""\
             #ifdef __WXMSW__
                 return self->ShowNativeCaret(show);
+            #else
+                return false;
             #endif
             """)
     c.addCppMethod('bool', 'HideNativeCaret', '()',
@@ -97,6 +99,8 @@ def parseAndTweakModule():
         body="""\
             #ifdef __WXMSW__
                 return self->HideNativeCaret();
+            #else
+                return false;
             #endif
             """)
 
