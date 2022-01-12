@@ -707,7 +707,8 @@ class PlotCanvas(wx.Panel):
 
         def _do_update():
             self.Layout()
-            self._adjustScrollbars()
+            if self.last_draw is not None:
+                self._adjustScrollbars()
         wx.CallAfter(_do_update)
 
     def SetUseScientificNotation(self, useScientificNotation):
