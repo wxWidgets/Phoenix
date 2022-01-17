@@ -884,6 +884,31 @@ def getWafBuildBase():
 def getBashPath():
     """Check if there is a bash.exe on the PATH"""
     bash = which('bash.exe')
+
+    if not bash and isWindows:
+        import winreg
+
+        try:
+            handle = winreg.OpenKeyEx(
+                winreg.HKEY_LOCAL_MACHINE,
+                r'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1'
+            )
+        except winreg.error:
+            pass
+        else:
+            try:
+                path = winreg.QueryValueEx(handle, "InstallLocation")[0]
+                winreg.CloseKey(handle)
+                path = os.path.join(path, 'bin', 'bash.exe')
+
+                if os.path.exists(path):
+                    bash = path
+
+            except winreg.error:
+                pass
+
+            winreg.CloseKey(handle)
+
     return bash
 
 
