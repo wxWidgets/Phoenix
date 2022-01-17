@@ -785,37 +785,72 @@ def uploadTree(srcPath, destPath, options, days=30):
 
 def checkCompiler(quiet=False):
     if isWindows:
-        # Make sure that the compiler that Python wants to use can be found.
-        # It will terminate if the compiler is not found or other exceptions
-        # are raised.
-        cmd = "import setuptools, distutils.msvc9compiler as msvc; " \
-              "mc = msvc.MSVCCompiler(); " \
-              "mc.initialize(); " \
-              "print(mc.cc)"
-        CC = runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False)
+        import setuptools
+
+        # we use the internal mechanics of setup tools to collect comtypes
+        # which is a library used to build the COM interfaces to Visual Studio
+        # In order for those mechanics to work properly the wheel library needs
+        # to be available in the python installation and it cannot be added
+        # during runtime. This is because of how setuptools turns the collected
+        # library into an egg.
+        try:
+            __import__('wheel')
+        except ImportError:
+            raise RuntimeError(
+                'The "wheel" library is required to build wxPython for Windows'
+            )
+
+        setuptools.setup(
+            name='msvc_compiler',
+            script_args=['build'],
+            setup_requires=['comtypes'],
+            # dependency_links=[
+            #     'https://github.com/enthought/comtypes'
+            #     '/tarball/1.1.10.tar.gz#egg=comtypes'
+            # ]
+        )
+
+        from buildtools import msvc
+
+        # setup the build environment making the minimum conpiler version 14.2
+        # A user does not need to have a full blown Visual Studio installation
+        # in order to build wxPython. They can use Visual Studio Build Tools
+        # as well. Build Tools doe not include any of the GUI replated
+        # components of Visual Studio.
+        # If the msvc script isunable to locate an MSVC compiler that is of
+        # version >= 14.2 the msvc script will raise RuntimeError.
+
+        # the msvc script works in a manner where no part of either setuptools
+        # or distutils is overriden. It uses mechanics that can alter what
+        # setuptools and distutils sees and uses for the build environment
+        # without tampering with any of the original code in those libraries.
+
+        # the msvc script does not use the problematic vcvars*.bat files that
+        # come with an MSVC compiler. It builds the environment from the ground
+        # up by reading the registry and using the COM interfaces. The
+        # subprocess module is only used for Visual Studio  installatons that
+        # are older then 2017 which  wouldn't be an issue because the wxPython
+        # build system needs the MSVC compiler to be at least 14.2 (VS 2019)
+
+        # If the environment variable "DISTUTILS_DEBUG=1" is set There is
+        # going to be a HUGE dump of information from the msvc module to
+        # stdout by way of distutils.log.debug(). If the logging level is set
+        # to DEBUG by using distutils.log.set_threshold(distutils.log.DEBUG)
+        # or any other mechanics to set the logging level to DEBUG here will
+        # be a heap of information dumped to stdout by the msvc module.
+
+        # Just so this is on record and can be used at a later date if needs
+        # be the MSVC compiler defaults to c++11. If you need to change this
+        # extra compiler arguments will have to be added, "/std:cpp_version"
+        # where cpp_version is the version of cpp to be used ie: "c++20".
+        # The __cplusplus macro does not change when using the /std compiler
+        # switch. You have to specifically tell the compuler to update the
+        # value for the __cplusplus macro using "/Zc:__cplusplus"
+        environment = msvc.setup_environment(minimum_c_version=14.2)
+
         if not quiet:
-            msg("MSVC: %s" % CC)
-
-        # Now get the environment variables which that compiler needs from
-        # its vcvarsall.bat command and load them into this process's
-        # environment.
-        cmd = "import setuptools, distutils.msvc9compiler as msvc; " \
-              "arch = msvc.PLAT_TO_VCVARS[msvc.get_platform()]; " \
-              "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
-              "print(env)"
-        env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
-
-        def _b(v):
-            return str(v)
-            #if PY2:
-            #    return bytes(v)
-            #else:
-            #    return bytes(v, 'utf8')
-
-        os.environ['PATH'] = _b(env['path'])
-        os.environ['INCLUDE'] = _b(env['include'])
-        os.environ['LIB'] = _b(env['lib'])
-        os.environ['LIBPATH'] = _b(env['libpath'])
+            # this gives a simple output of the build environment.
+            print(environment)
 
     # NOTE: SIP is now generating code with scoped-enums. Older linux
     # platforms like what we're using for builds, and also TravisCI for

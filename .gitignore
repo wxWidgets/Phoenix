@@ -8,6 +8,11 @@
 wingdbstub.py*
 mydbstub.py*
 
+# temporary storage location for modules
+# that are needed when setting up a build
+# environment in Windows
+.eggs
+
 .idea
 .cache
 .vagrant
