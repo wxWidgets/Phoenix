@@ -19,3 +19,5 @@ sphinx==2.2.0 ; python_version >= '3.0'
 sphinx==1.8.5 ; python_version < '3.0'
 doc2dash==2.3.0
 beautifulsoup4
+
+https://github.com/kdschlosser/comtypes/tarball/python_3; sys_platform == 'win32'

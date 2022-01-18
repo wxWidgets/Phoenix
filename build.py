@@ -785,31 +785,6 @@ def uploadTree(srcPath, destPath, options, days=30):
 
 def checkCompiler(quiet=False):
     if isWindows:
-        import setuptools
-
-        # we use the internal mechanics of setup tools to collect comtypes
-        # which is a library used to build the COM interfaces to Visual Studio
-        # In order for those mechanics to work properly the wheel library needs
-        # to be available in the python installation and it cannot be added
-        # during runtime. This is because of how setuptools turns the collected
-        # library into an egg.
-        try:
-            __import__('wheel')
-        except ImportError:
-            raise RuntimeError(
-                'The "wheel" library is required to build wxPython for Windows'
-            )
-
-        setuptools.setup(
-            name='msvc_compiler',
-            script_args=['build'],
-            setup_requires=['comtypes'],
-            dependency_links=[
-                'https://github.com/kdschlosser/comtypes/python_3'
-                '/tarball/1.1.10.tar.gz#egg=comtypes'
-            ]
-        )
-
         from buildtools import msvc
 
         # setup the build environment making the minimum conpiler version 14.2
