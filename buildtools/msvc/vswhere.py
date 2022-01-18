@@ -436,7 +436,7 @@ class ISetupInstance(IUnknown):
         try:
             # noinspection PyUnresolvedReferences
             return self.GetDisplayName()
-        except OSError:
+        except (OSError, ValueError):
             pass
 
     @property
@@ -444,7 +444,7 @@ class ISetupInstance(IUnknown):
         try:
             # noinspection PyUnresolvedReferences
             return self.GetDescription()
-        except OSError:
+        except (OSError, ValueError):
             pass
 
     def __str__(self):
