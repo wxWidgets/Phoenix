@@ -804,10 +804,10 @@ def checkCompiler(quiet=False):
             name='msvc_compiler',
             script_args=['build'],
             setup_requires=['comtypes'],
-            # dependency_links=[
-            #     'https://github.com/enthought/comtypes'
-            #     '/tarball/1.1.10.tar.gz#egg=comtypes'
-            # ]
+            dependency_links=[
+                'https://github.com/kdschlosser/comtypes/python_3'
+                '/tarball/1.1.10.tar.gz#egg=comtypes'
+            ]
         )
 
         from buildtools import msvc
