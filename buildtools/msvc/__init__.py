@@ -2064,6 +2064,7 @@ class VisualStudioInfo(object):
 
         template = (
             '== {name}==============================================\n'
+            '   description:        {description}\n'
             '   version:            {version}\n'
             '   version (friendly): {product_line_version}\n'
             '   display version:    {product_display_version}\n'
@@ -2075,11 +2076,15 @@ class VisualStudioInfo(object):
             '   state:              {state}\n'
         )
 
-        if self.__name__ == 'VisualStudioInfo':
-            name = 'Visual Studio '
-        else:
-            name = 'Build Tools =='
+        name = installation.display_name
 
+        if name is None:
+            if self.__name__ == 'VisualStudioInfo':
+                name = 'Visual Studio '
+            else:
+                name = 'Build Tools =='
+
+        description = installation.description
         path = installation.path
         version = installation.version
         is_complete = installation.is_complete
@@ -2094,6 +2099,7 @@ class VisualStudioInfo(object):
 
         return template.format(
             name=name,
+            description=description,
             path=path,
             version=version,
             is_complete=is_complete,

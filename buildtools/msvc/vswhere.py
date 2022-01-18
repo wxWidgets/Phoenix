@@ -68,6 +68,11 @@ PULONGLONG = POINTER(ctypes.c_ulonglong)
 LPSAFEARRAY = POINTER(SAFEARRAY)
 _CoTaskMemFree = ctypes.windll.ole32.CoTaskMemFree
 
+kernel32 = ctypes.windll.kernel32
+
+_GetUserDefaultLCID = kernel32.GetUserDefaultLCID
+_GetUserDefaultLCID.restype = LCID
+
 
 def HRESULT_FROM_WIN32(x):
     return x
@@ -435,16 +440,16 @@ class ISetupInstance(IUnknown):
     def display_name(self):
         try:
             # noinspection PyUnresolvedReferences
-            return self.GetDisplayName()
-        except (OSError, ValueError):
+            return self.GetDisplayName(_GetUserDefaultLCID())
+        except (OSError, ValueError, comtypes.COMError):
             pass
 
     @property
     def description(self):
         try:
             # noinspection PyUnresolvedReferences
-            return self.GetDescription()
-        except (OSError, ValueError):
+            return self.GetDescription(_GetUserDefaultLCID())
+        except (OSError, ValueError, comtypes.COMError):
             pass
 
     def __str__(self):
@@ -1125,6 +1130,7 @@ ISetupInstance._methods_ = [
         [],
         HRESULT,
         "GetDisplayName",
+        (['in'], LCID, "lcid"),
         (['out'], POINTER(BSTR), "pbstrDisplayName")
     ),
     # Gets the description of the product installed in this instance.
@@ -1132,7 +1138,7 @@ ISetupInstance._methods_ = [
         [],
         HRESULT,
         "GetDescription",
-        # (['in'], LCID, "lcid"),
+        (['in'], LCID, "lcid"),
         (['out'], POINTER(BSTR), "pbstrDescription")
     ),
     # Resolves the optional relative path to the root path of the instance.
