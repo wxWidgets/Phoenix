@@ -1512,6 +1512,10 @@ class VisualCInfo(object):
 
         if os.path.exists(references_path):
             lib_path += [references_path]
+        else:
+            references_path = os.path.join(path, 'x86', 'store', 'references')
+            if os.path.exists(references_path):
+                lib_path += [references_path]
 
         return lib_path
 
@@ -1572,10 +1576,15 @@ class VisualCInfo(object):
             VCToolsRedistDir=self.tools_redist_directory,
             Path=self.path,
             LIB=self.lib,
-            Include=self.include,
+            INCLUDE=self.include,
             LIBPATH=self.lib_path,
             FSHARPINSTALLDIR=self.f_sharp_path
         )
+
+        html_help = self.html_help_path
+
+        if html_help is not None:
+            env['HTMLHelpDir'] = html_help
 
         if self._product_semantic_version is not None:
             env['VSCMD_VER'] = self._product_semantic_version
@@ -2601,7 +2610,7 @@ class WindowsSDKInfo(object):
             LIB=self.lib,
             Path=self.path,
             LIBPATH=self.lib_path,
-            Include=self.include,
+            INCLUDE=self.include,
             UniversalCRTSdkDir=self.ucrt_sdk_directory,
             ExtensionSdkDir=self.extension_sdk_directory,
             WindowsSdkVerBinPath=ver_bin_path,
@@ -3016,20 +3025,45 @@ class NETInfo(object):
         return '32' if self.platform == 'x86' else '64'
 
     @property
-    def _net_fx_versions(self):
-        import fnmatch
-
-        framework = self.version[1:].split('.')[:2]
-        net_fx_key = (
-            'WinSDK-NetFx{framework}Tools-{platform}'
-        ).format(
-            framework=''.join(framework),
-            platform=self.platform
-        )
+    def netfx_sdk_directory(self) -> Optional[str]:
+        framework = '.'.join(self.version[1:].split('.')[:2])
         ver = float(int(self.vc_version.split('.')[0]))
 
         if ver in (9.0, 10.0, 11.0, 12.0):
-            key = 'Microsoft SDKs\\Windows\\v{0}\\{1}'.format(
+            key = 'Microsoft SDKs\\Windows\\v{0}\\'.format(self.sdk_version)
+        else:
+            key = 'Microsoft SDKs\\NETFXSDK\\{0}\\'.format(framework)
+
+        net_fx_path = _get_reg_value(
+            key,
+            'KitsInstallationFolder',
+            wow6432=True
+        )
+
+        if net_fx_path and os.path.exists(net_fx_path):
+            return net_fx_path
+
+    @property
+    def net_fx_tools_directory(self) -> Optional[str]:
+        framework = self.version[1:].split('.')[:2]
+
+        if framework[0] == '4':
+            net_framework = '40'
+        else:
+            net_framework = ''.join(framework)
+
+        net_fx_key = (
+            'WinSDK-NetFx{framework}Tools-{platform}'
+        ).format(
+            framework=''.join(net_framework),
+            platform=self.platform
+        )
+
+        framework = '.'.join(framework)
+        ver = float(int(self.vc_version.split('.')[0]))
+
+        if ver in (9.0, 10.0, 11.0, 12.0):
+            key = 'Microsoft SDKs\\Windows\\v{0}\\{1}\\'.format(
                 self.sdk_version,
                 net_fx_key
             )
@@ -3037,56 +3071,24 @@ class NETInfo(object):
             if self.sdk_version in ('6.0A', '6.1'):
                 key = key.replace(net_fx_key, 'WinSDKNetFxTools')
 
-            keys = (key,)
-        else:
-            keys = (
-                'Microsoft SDKs\\NETFXSDK\\3.5*\\' + net_fx_key,
-                'Microsoft SDKs\\NETFXSDK\\4.0*\\' + net_fx_key,
-                'Microsoft SDKs\\NETFXSDK\\4.5*\\' + net_fx_key,
-                'Microsoft SDKs\\NETFXSDK\\4.6*\\' + net_fx_key,
-                'Microsoft SDKs\\NETFXSDK\\4.7*\\' + net_fx_key,
-                'Microsoft SDKs\\NETFXSDK\\4.8*\\' + net_fx_key,
-                'Microsoft SDKs\\NETFXSDK\\4.6*\\' + net_fx_key,
-                'Microsoft SDKs\\Windows\\v8.1\\' + net_fx_key,
-                'Microsoft SDKs\\Windows\\v10.0\\' + net_fx_key,
-            )
-
-        for key in keys:
-            if '*' in key:
-                for fx_ver in _read_reg_keys('Microsoft SDKs\\NETFXSDK'):
-                    fx_ver = 'Microsoft SDKs\\NETFXSDK\\{0}\\{1}'.format(
-                        fx_ver,
-                        net_fx_key
-                    )
-
-                    if fnmatch.fnmatch(fx_ver, key):
-                        yield fx_ver
-            else:
-                val = _get_reg_value(
-                    key + '\\',
-                    'InstallationFolder'
-                )
-                if val:
-                    yield val
-
-    @property
-    def netfx_sdk_directory(self) -> Optional[str]:
-        for key in self._net_fx_versions:
             net_fx_path = _get_reg_value(
-                key.rsplit('\\', 1)[0],
-                'KitsInstallationFolder'
+                key,
+                'InstallationFolder',
+                wow6432=True
+            )
+        else:
+            key = 'Microsoft SDKs\\NETFXSDK\\{0}\\{1}\\'.format(
+                framework,
+                net_fx_key
+            )
+            net_fx_path = _get_reg_value(
+                key,
+                'InstallationFolder',
+                wow6432=True
             )
 
-            if net_fx_path and os.path.exists(net_fx_path):
-                return net_fx_path
-
-    @property
-    def net_fx_tools_directory(self) -> Optional[str]:
-        for key in self._net_fx_versions:
-            net_fx_path = _get_reg_value(key, 'InstallationFolder')
-
-            if net_fx_path and os.path.exists(net_fx_path):
-                return net_fx_path
+        if net_fx_path and os.path.exists(net_fx_path):
+            return net_fx_path
 
     @property
     def add(self) -> str:
@@ -3242,16 +3244,13 @@ class NETInfo(object):
 
     @property
     def include(self) -> list:
-        net_fx_tools = self.net_fx_tools_directory
+        sdk_directory = self.netfx_sdk_directory
 
-        if net_fx_tools:
-            net_fx_tools = os.path.join(
-                net_fx_tools,
-                'include',
-                'um'
-            )
-            if os.path.exists(net_fx_tools):
-                return [net_fx_tools]
+        if sdk_directory:
+            include_dir = os.path.join(sdk_directory, 'include', 'um')
+
+            if os.path.exists(include_dir):
+                return [include_dir]
 
         return []
 
@@ -3266,31 +3265,82 @@ class NETInfo(object):
             LIB=self.lib,
             Path=self.path,
             LIBPATH=self.lib_path,
-            Include=self.include,
+            INCLUDE=self.include,
             __DOTNET_PREFERRED_BITNESS=self.preferred_bitness,
             FrameworkDir=directory,
-            FrameworkVersion=self.version,
             NETFXSDKDir=self.netfx_sdk_directory,
         )
+
+        version = self.version[1:].split('.')
+        if version[0] == '4':
+            version = ['4', '0']
+        else:
+            version = version[:2]
+
+        net_p = 'v' + ('.'.join(version))
 
         env[self.add] = '1'
         if self.platform == 'x64':
             directory_64 = self.directory_64
 
             if directory_64:
+                loc = os.path.join(directory_64, net_p)
+
+                if os.path.exists(loc):
+                    version_64 = loc
+                else:
+                    for p in os.listdir(directory_64):
+                        if not os.path.isdir(os.path.join(directory_64, p)):
+                            continue
+
+                        if p[1:] < net_p[1:]:
+                            continue
+
+                        version_64 = p
+                        break
+                    else:
+                        version_64 = self.version_64
+
                 directory_64 += '\\'
+            else:
+                version_64 = None
 
             env['FrameworkDir64'] = directory_64
-            env['FrameworkVersion64'] = self.version_64
+            env['FrameworkVersion64'] = version_64
+            env['FrameworkVersion'] = version_64
+
         else:
             directory_32 = self.directory_32
+
             if directory_32:
+                loc = os.path.join(directory_32, net_p)
+
+                if not os.path.exists(loc):
+                    for p in os.listdir(directory_32):
+                        if not os.path.isdir(os.path.join(directory_32, p)):
+                            continue
+
+                        if p[1:] < net_p[1:]:
+                            continue
+
+                        version_32 = p
+                        break
+                    else:
+                        version_32 = self.version_64
+
+                else:
+                    version_32 = loc
+
                 directory_32 += '\\'
+            else:
+                version_32 = None
 
             env['FrameworkDir32'] = directory_32
-            env['FrameworkVersion32'] = self.version_32
+            env['FrameworkVersion32'] = version_32
+            env['FrameworkVersion'] = version_32
 
         framework = env['FrameworkVersion'][1:].split('.')[:2]
+
         framework_version_key = (
             'Framework{framework}Version'.format(framework=''.join(framework))
         )
