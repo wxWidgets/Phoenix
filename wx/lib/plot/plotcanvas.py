@@ -2228,7 +2228,7 @@ class PlotCanvas(wx.Panel):
         """Draws and erases pointLabels"""
         width = self._Buffer.GetWidth()
         height = self._Buffer.GetHeight()
-        if sys.platform != "darwin":
+        if sys.platform not in ("darwin", "linux"):
             tmp_Buffer = wx.Bitmap(width, height)
             dcs = wx.MemoryDC()
             dcs.SelectObject(tmp_Buffer)
@@ -2242,7 +2242,7 @@ class PlotCanvas(wx.Panel):
         dc = wx.BufferedDC(dc, self._Buffer)
         # this will erase if called twice
         dc.Blit(0, 0, width, height, dcs, 0, 0, self._logicalFunction)
-        if sys.platform == "darwin":
+        if sys.platform in ("darwin", "linux"):
             self._Buffer = tmp_Buffer
 
     def _drawLegend(self, dc, graphics, rhsW, topH, legendBoxWH,
