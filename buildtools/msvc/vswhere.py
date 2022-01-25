@@ -24,66 +24,813 @@
 #
 # #############################################################################
 
-try:
-    import comtypes
-except ImportError:
-    raise RuntimeError('the comtypes library is needed to run this script')
+
+# #############################################################################
+#
+# This software is OSI Certified Open Source Software.
+# OSI Certified is a certification mark of the Open Source Initiative.
+#
+# Copyright (c) 2006-2013, Thomas Heller.
+# Copyright (c) 2014, Comtypes Developers.
+# All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+# #############################################################################
 
 import weakref
 import ctypes
+import sys
+import atexit
+import datetime
+from _ctypes import COMError
+from ctypes import POINTER, HRESULT
 from ctypes.wintypes import (
-    LPFILETIME,
     LPCOLESTR,
     ULONG,
+    USHORT,
     LPCWSTR,
     LPVOID,
-    LCID
-)
-
-from comtypes.automation import (
-    tagVARIANT,
-    BSTR
-)
-from comtypes import (
-    GUID,
-    COMMETHOD,
-    POINTER,
-    IUnknown,
-    HRESULT
-)
-from comtypes._safearray import (  # NOQA
-    SAFEARRAY,
+    LCID,
+    DWORD,
+    LONG,
+    WORD,
+    BYTE,
+    INT,
+    BOOL,
+    SHORT,
+    UINT,
+    FLOAT,
+    DOUBLE,
     VARIANT_BOOL,
-    SafeArrayLock,
-    SafeArrayUnlock
 )
 
-LPVARIANT = POINTER(tagVARIANT)
-VARIANT = tagVARIANT
+UBYTE = ctypes.c_ubyte
+ULONGLONG = ctypes.c_ulonglong
+LONGLONG = ctypes.c_longlong
+VARTYPE = USHORT
+PVOID = ctypes.c_void_p
 ENUM = ctypes.c_uint
-IID = GUID
-CLSID = GUID
-MAXUINT = 0xFFFFFFFF
 PULONGLONG = POINTER(ctypes.c_ulonglong)
-LPSAFEARRAY = POINTER(SAFEARRAY)
+
+_oleaut32 = ctypes.windll.oleaut32
+_ole32_nohresult = ctypes.windll.ole32
+_ole32 = ctypes.oledll.ole32
+_kernel32 = ctypes.windll.kernel32
+
+_StringFromCLSID = _ole32.StringFromCLSID
 _CoTaskMemFree = ctypes.windll.ole32.CoTaskMemFree
+_CLSIDFromString = _ole32.CLSIDFromString
+_VariantClear = _oleaut32.VariantClear
 
-kernel32 = ctypes.windll.kernel32
+_SafeArrayLock = _oleaut32.SafeArrayLock
+_SafeArrayLock.restype = HRESULT
 
-_GetUserDefaultLCID = kernel32.GetUserDefaultLCID
+_SafeArrayUnlock = _oleaut32.SafeArrayUnlock
+_SafeArrayUnlock.restype = HRESULT
+
+_GetUserDefaultLCID = _kernel32.GetUserDefaultLCID
 _GetUserDefaultLCID.restype = LCID
+
+_FileTimeToSystemTime = _kernel32.FileTimeToSystemTime
+_FileTimeToSystemTime.restype = BOOL
+
+_SystemTimeToFileTime = _kernel32.SystemTimeToFileTime
+_SystemTimeToFileTime.restype = BOOL
+
+ctypes.pythonapi.PyInstanceMethod_New.argtypes = [ctypes.py_object]
+ctypes.pythonapi.PyInstanceMethod_New.restype = ctypes.py_object
+PyInstanceMethod_Type = type(ctypes.pythonapi.PyInstanceMethod_New(id))
+
+CLSCTX_SERVER = 5
+CLSCTX_ALL = 7
+COINIT_APARTMENTTHREADED = 0x2
+MAXUINT = 0xFFFFFFFF
+
+ERROR_FILE_NOT_FOUND = 0x00000002
+ERROR_NOT_FOUND = 0x00000490
 
 
 def HRESULT_FROM_WIN32(x):
     return x
 
 
-ERROR_FILE_NOT_FOUND = 0x00000002
-ERROR_NOT_FOUND = 0x00000490
-
 # Constants
 E_NOTFOUND = HRESULT_FROM_WIN32(ERROR_NOT_FOUND)
 E_FILENOTFOUND = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND)
+
+VT_EMPTY = 0
+VT_NULL = 1
+VT_I2 = 2
+VT_I4 = 3
+VT_R4 = 4
+VT_R8 = 5
+VT_CY = 6
+VT_DATE = 7
+VT_BSTR = 8
+VT_BOOL = 11
+VT_I1 = 16
+VT_UI1 = 17
+VT_UI2 = 18
+VT_UI4 = 19
+VT_I8 = 20
+VT_UI8 = 21
+VT_INT = 22
+VT_UINT = 23
+
+
+_PARAMFLAGS = {
+    "in": 1,
+    "out": 2,
+    "lcid": 4,
+    "retval": 8,
+    "optional": 16,
+}
+
+
+def instancemethod(func, inst, _):
+    mth = PyInstanceMethod_Type(func)
+    if inst is None:
+        return mth
+    return mth.__get__(inst)
+
+
+def CoInitialize():
+    flags = getattr(sys, "coinit_flags", COINIT_APARTMENTTHREADED)
+    _ole32.CoInitializeEx(None, flags)
+
+
+def CoUninitialize():
+    _ole32_nohresult.CoUninitialize()
+
+
+def CoCreateInstance(clsid, interface=None, clsctx=None, punkouter=None):
+    if clsctx is None:
+        clsctx = CLSCTX_SERVER
+
+    if interface is None:
+        interface = IUnknown
+
+    p = POINTER(interface)()
+    iid = interface._iid_  # NOQA
+    _ole32.CoCreateInstance(
+        ctypes.byref(clsid),
+        punkouter,
+        clsctx,
+        ctypes.byref(iid),
+        ctypes.byref(p)
+    )
+    return p
+
+
+def _shutdown(
+    func=_ole32_nohresult.CoUninitialize,
+    _exc_clear=getattr(sys, "exc_clear", lambda: None)
+):
+    _exc_clear()
+
+    try:
+        func()
+    except WindowsError:
+        pass
+
+    if _cominterface_meta is not None:
+        _cominterface_meta._com_shutting_down = True
+
+
+class ReferenceEmptyClass(object):
+    pass
+
+
+class Patch(object):
+    def __init__(self, target):
+        self.target = target
+
+    def __call__(self, patches):
+        for name, value in list(vars(patches).items()):
+            if name in vars(ReferenceEmptyClass):
+                continue
+            n_replace = getattr(value, '__no_replace', False)
+            if n_replace and hasattr(self.target, name):
+                continue
+
+            setattr(self.target, name, value)
+
+
+def no_replace(f):
+    f.__no_replace = True
+    return f
+
+
+class tagSAFEARRAYBOUND(ctypes.Structure):
+    _fields_ = [
+        ('cElements', DWORD),
+        ('lLbound', LONG),
+    ]
+
+
+SAFEARRAYBOUND = tagSAFEARRAYBOUND
+
+
+class tagSAFEARRAY(ctypes.Structure):
+    _fields_ = [
+        ('cDims', USHORT),
+        ('fFeatures', USHORT),
+        ('cbElements', DWORD),
+        ('cLocks', DWORD),
+        ('pvData', PVOID),
+        ('rgsabound', SAFEARRAYBOUND * 1),
+    ]
+
+
+SAFEARRAY = tagSAFEARRAY
+LPSAFEARRAY = POINTER(SAFEARRAY)
+
+_SafeArrayLock.argtypes = [POINTER(SAFEARRAY)]
+_SafeArrayUnlock.argtypes = [POINTER(SAFEARRAY)]
+
+
+class BSTR(ctypes.c_wchar_p):
+    _needsfree = False
+
+    def __repr__(self):
+        return "%s(%r)" % (self.__class__.__name__, self.value)
+
+    def __ctypes_from_outparam__(self):
+        self._needsfree = True
+        return self.value
+
+    def __del__(self, _free=_oleaut32.SysFreeString):
+        if self._b_base_ is None or self._needsfree:  # NOQA
+            _free(self)
+
+    def from_param(cls, value):
+        if isinstance(value, cls):
+            return value
+
+        return cls(value)
+
+    from_param = classmethod(from_param)
+
+
+class GUID(ctypes.Structure):
+    _fields_ = [
+        ("Data1", DWORD),
+        ("Data2", WORD),
+        ("Data3", WORD),
+        ("Data4", BYTE * 8)
+    ]
+
+    def __init__(self, name=None):
+        ctypes.Structure.__init__(self)
+
+        if name is not None:
+            _CLSIDFromString(str(name), ctypes.byref(self))
+
+    def __repr__(self):
+        return 'GUID("%s")' % str(self)
+
+    def __str__(self):
+        p = ctypes.c_wchar_p()
+        _StringFromCLSID(ctypes.byref(self), ctypes.byref(p))
+        result = p.value
+        _CoTaskMemFree(p)
+        return result
+
+    def __eq__(self, other):
+        # noinspection PyTypeChecker
+        return isinstance(other, GUID) and bytes(self) == bytes(other)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        # noinspection PyTypeChecker
+        return hash(bytes(self))
+
+
+IID = GUID
+CLSID = GUID
+
+
+def _encode_idl(names):
+    # sum up all values found in _PARAMFLAGS, ignoring all others.
+    return sum([_PARAMFLAGS.get(n, 0) for n in names])
+
+
+def COMMETHOD(idlflags, restype, methodname, *argspec):
+    paramflags = []
+    argtypes = []
+
+    for item in argspec:
+        idl, typ, argname = item
+        pflags = _encode_idl(idl)
+        paramflags.append((pflags, argname))
+        argtypes.append(typ)
+
+    return (
+        restype,
+        methodname,
+        tuple(argtypes),
+        tuple(paramflags),
+        tuple(idlflags),
+        None
+    )
+
+
+com_interface_registry = {}
+
+
+class _cominterface_meta(type):
+    _com_shutting_down = False
+
+    def __new__(self, name, bases, namespace):  # NOQA
+        methods = namespace.pop("_methods_", None)
+        cls = type.__new__(self, name, bases, namespace)
+
+        if methods is not None:
+            cls._methods_ = methods
+
+        if bases == (object,):
+            _ptr_bases = (cls, _compointer_base)
+        else:
+            _ptr_bases = (cls, POINTER(bases[0]))
+
+        p = type(_compointer_base)(
+            "POINTER(%s)" % cls.__name__,
+            _ptr_bases,
+            {
+                "__com_interface__": cls,
+                "_needs_com_addref_": None
+            }
+        )
+
+        from ctypes import _pointer_type_cache  # NOQA
+        _pointer_type_cache[cls] = p
+
+        @Patch(POINTER(p))
+        class ReferenceFix(object):  # NOQA
+            def __setitem__(self, index, value):
+                if index != 0:
+                    if bool(value):
+                        value.AddRef()
+
+                    super(POINTER(p), self).__setitem__(index, value)  # NOQA
+                    return
+
+                from _ctypes import CopyComPointer
+                CopyComPointer(value, self)
+
+        return cls
+
+    def __setattr__(self, name, value):
+        if name == "_methods_":
+            self._make_methods(value)
+
+        type.__setattr__(self, name, value)
+
+    def __get_baseinterface_methodcount(self):
+        itf_name = None
+        try:
+            result = 0
+            for itf in self.mro()[1:-1]:
+                itf_name = itf.__name__
+                result += len(itf.__dict__["_methods_"])
+            return result
+
+        except KeyError as err:
+            (name,) = err.args
+            if name == "_methods_":
+                raise TypeError(
+                    "baseinterface '%s' has no _methods_" % itf_name
+                )
+            raise
+
+    def _fix_inout_args(self, func, argtypes, paramflags):  # NOQA
+        SIMPLETYPE = type(INT)
+        BYREFTYPE = type(ctypes.byref(INT()))
+
+        def call_with_inout(self_, *args, **kw):
+            args = list(args)
+            outargs = {}
+            outnum = 0
+            for i, info in enumerate(paramflags):
+                direction = info[0]
+                if direction & 3 == 3:
+                    name = info[1]
+                    atyp = argtypes[i]._type_  # NOQA
+
+                    try:
+                        try:
+                            v = args[i]
+                        except IndexError:
+                            v = kw[name]
+                    except KeyError:
+                        v = atyp()
+                    else:
+                        if getattr(v, "_type_", None) is atyp:
+                            pass
+                        elif type(atyp) is SIMPLETYPE:
+                            v = atyp(v)
+                        else:
+                            v = atyp.from_param(v)
+                            assert not isinstance(v, BYREFTYPE)
+                    outargs[outnum] = v
+                    outnum += 1
+                    if len(args) > i:
+                        args[i] = v
+                    else:
+                        kw[name] = v
+                elif direction & 2 == 2:
+                    outnum += 1
+
+            rescode = func(self_, *args, **kw)
+
+            if outnum == 1:
+                if len(outargs) == 1:
+                    rescode = rescode.__ctypes_from_outparam__()
+                return rescode
+
+            rescode = list(rescode)
+            for outnum, o in list(outargs.items()):
+                rescode[outnum] = o.__ctypes_from_outparam__()
+            return rescode
+
+        return call_with_inout
+
+    def _make_methods(self, methods):
+        iid = self.__dict__["_iid_"]
+
+        iid = str(iid)
+        com_interface_registry[iid] = self
+        del iid
+
+        vtbl_offset = self.__get_baseinterface_methodcount()
+
+        for i, item in enumerate(methods):
+            restype, name, argtypes, paramflags, idlflags, doc = item
+            prototype = ctypes.WINFUNCTYPE(restype, *argtypes)
+
+            if restype == HRESULT:
+                # noinspection PyTypeChecker
+                raw_func = prototype(
+                    i + vtbl_offset,
+                    name,
+                    None,
+                    self._iid_  # NOQA
+                )
+
+                func = prototype(
+                    i + vtbl_offset,
+                    name,
+                    paramflags,
+                    self._iid_  # NOQA
+                )
+            else:
+                # noinspection PyTypeChecker
+                raw_func = prototype(i + vtbl_offset, name, None, None)
+                # noinspection PyTypeChecker
+                func = prototype(i + vtbl_offset, name, paramflags, None)
+
+            setattr(
+                self,
+                "_%s__com_%s" % (self.__name__, name),
+                instancemethod(raw_func, None, self)
+            )
+
+            if paramflags:
+                dirflags = [(p[0] & 3) for p in paramflags]
+                if 3 in dirflags:
+                    func = self._fix_inout_args(func, argtypes, paramflags)
+
+            func.__doc__ = doc
+            func.__name__ = name
+
+            mth = instancemethod(func, None, self)
+
+            if hasattr(self, name):
+                setattr(self, "_" + name, mth)
+            else:
+                setattr(self, name, mth)
+
+
+class _compointer_meta(type(ctypes.c_void_p), _cominterface_meta):
+    pass
+
+
+class _compointer_base(ctypes.c_void_p, metaclass=_compointer_meta):
+
+    def __del__(self):
+        if self:
+            if not type(self)._com_shutting_down:  # NOQA
+                self.Release()  # NOQA
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __eq__(self, other):
+        if not isinstance(other, _compointer_base):
+            return False
+
+        val1 = super(_compointer_base, self).value
+        val2 = super(_compointer_base, other).value
+
+        return val1 == val2
+
+    def __hash__(self):
+        return hash(super(_compointer_base, self).value)
+
+    def __get_value(self):
+        return self
+
+    value = property(__get_value, doc="""Return self.""")
+
+    def __repr__(self):
+        ptr = super(_compointer_base, self).value
+        return "<%s ptr=0x%x at %x>" % (
+            self.__class__.__name__,
+            ptr or 0,
+            id(self)
+        )
+
+    def from_param(cls, value):
+        if value is None:
+            return None
+        if value == 0:
+            return None
+        if isinstance(value, cls):
+            return value
+
+        if cls._iid_ == getattr(value, "_iid_", None):  # NOQA
+            return value
+
+        try:
+            table = value._com_pointers_  # NOQA
+        except AttributeError:
+            pass
+        else:
+            try:
+                return table[cls._iid_]  # NOQA
+            except KeyError:
+                raise TypeError(
+                    "Interface %s not supported" % cls._iid_  # NOQA
+                )
+
+        return value.QueryInterface(cls.__com_interface__)  # NOQA
+
+    from_param = classmethod(from_param)
+
+
+class IUnknown(object, metaclass=_cominterface_meta):
+    _case_insensitive_ = False
+    _iid_ = GUID("{00000000-0000-0000-C000-000000000046}")
+
+    _methods_ = [
+        COMMETHOD(
+            [],
+            HRESULT,
+            "QueryInterface",
+            (['in'], POINTER(GUID), "riid"),
+            (['in'], POINTER(PVOID), "ppvObject")
+        ),
+        COMMETHOD(
+            [],
+            ULONG,
+            "AddRef"
+        ),
+        COMMETHOD(
+            [],
+            ULONG,
+            "Release"
+        )
+    ]
+
+    def QueryInterface(self, interface, iid=None):
+        p = POINTER(interface)()
+
+        if iid is None:
+            iid = interface._iid_  # NOQA
+
+        self.__com_QueryInterface(ctypes.byref(iid), ctypes.byref(p))  # NOQA
+
+        clsid = self.__dict__.get('__clsid')
+        if clsid is not None:
+            p.__dict__['__clsid'] = clsid
+
+        return p
+
+    def AddRef(self):
+        return self.__com_AddRef()  # NOQA
+
+    def Release(self):
+        return self.__com_Release()  # NOQA
+
+
+class tagDEC(ctypes.Structure):
+    _fields_ = [
+        ("wReserved", ctypes.c_ushort),
+        ("scale", ctypes.c_ubyte),
+        ("sign", ctypes.c_ubyte),
+        ("Hi32", ctypes.c_ulong),
+        ("Lo64", ctypes.c_ulonglong)
+    ]
+
+
+DECIMAL = tagDEC
+
+
+class _FILETIME(ctypes.Structure):
+    _fields_ = [
+        ('dwLowDateTime', DWORD),
+        ('dwHighDateTime', DWORD)
+    ]
+
+    @property
+    def value(self):
+        system_time = SYSTEMTIME()
+        _FileTimeToSystemTime(ctypes.byref(self), ctypes.byref(system_time))
+        return system_time.value
+
+    @value.setter
+    def value(self, dt):
+        system_time = SYSTEMTIME()
+        system_time.value = dt
+        _SystemTimeToFileTime(ctypes.byref(system_time), ctypes.byref(self))
+
+
+FILETIME = _FILETIME
+LPFILETIME = POINTER(FILETIME)
+
+
+class _SYSTEMTIME(ctypes.Structure):
+    _fields_ = [
+        ('wYear', WORD),
+        ('wMonth', WORD),
+        ('wDayOfWeek', WORD),
+        ('wDay', WORD),
+        ('wHour', WORD),
+        ('wMinute', WORD),
+        ('wSecond', WORD),
+        ('wMilliseconds', WORD),
+    ]
+
+    @property
+    def value(self):
+        dt = datetime.datetime(
+            year=self.wYear,
+            month=self.wMonth,
+            day=self.wDay,
+            hour=self.wHour,
+            minute=self.wMinute,
+            second=self.wSecond,
+            microsecond=self.wMilliseconds * 1000
+        )
+
+        return dt
+
+    # noinspection PyAttributeOutsideInit
+    @value.setter
+    def value(self, dt):
+        if isinstance(dt, (int, float)):
+            dt = datetime.datetime.fromtimestamp(dt)
+
+        weekday = dt.weekday() + 1
+        if weekday == 7:
+            weekday = 0
+
+        self.wYear = dt.year
+        self.wMonth = dt.month
+        self.wDayOfWeek = weekday
+        self.wDay = dt.day
+        self.wHour = dt.hour
+        self.wMinute = dt.minute
+        self.wSecond = dt.second
+        self.wMilliseconds = int(dt.microsecond / 1000)
+
+
+SYSTEMTIME = _SYSTEMTIME
+
+
+class tagVARIANT(ctypes.Structure):
+    class U_VARIANT1(ctypes.Union):
+        class __tagVARIANT(ctypes.Structure):
+            class U_VARIANT2(ctypes.Union):
+                class _tagBRECORD(ctypes.Structure):
+                    # noinspection PyTypeChecker
+                    _fields_ = [
+                        ("pvRecord", PVOID),
+                        ("pRecInfo", POINTER(IUnknown))
+                    ]
+
+                _fields_ = [
+                    ("VT_BOOL", VARIANT_BOOL),
+                    ("VT_I1", BYTE),
+                    ("VT_I2", SHORT),
+                    ("VT_I4", LONG),
+                    ("VT_I8", LONGLONG),
+                    ("VT_INT", INT),
+                    ("VT_UI1", UBYTE),
+                    ("VT_UI2", USHORT),
+                    ("VT_UI4", ULONG),
+                    ("VT_UI8", ULONGLONG),
+                    ("VT_UINT", UINT),
+                    ("VT_R4", FLOAT),
+                    ("VT_R8", DOUBLE),
+                    ("VT_CY", LONGLONG),
+                    ("c_wchar_p", ctypes.c_wchar_p),
+                    ("c_void_p", PVOID),
+                    ("pparray", POINTER(POINTER(tagSAFEARRAY))),
+                    ("bstrVal", BSTR),
+                    ("_tagBRECORD", _tagBRECORD),
+                ]
+                _anonymous_ = ["_tagBRECORD"]
+
+            _fields_ = [
+                ("vt", VARTYPE),
+                ("wReserved1", USHORT),
+                ("wReserved2", USHORT),
+                ("wReserved3", USHORT),
+                ("_", U_VARIANT2)
+            ]
+
+        _fields_ = [
+            ("__VARIANT_NAME_2", __tagVARIANT),
+            ("decVal", DECIMAL)
+        ]
+        _anonymous_ = ["__VARIANT_NAME_2"]
+
+    _fields_ = [
+        ("__VARIANT_NAME_1", U_VARIANT1)
+    ]
+    _anonymous_ = ["__VARIANT_NAME_1"]
+
+    def __init__(self):
+        ctypes.Structure.__init__(self)
+
+    def __del__(self):
+        if self._b_needsfree_:
+            _VariantClear(self)
+
+    @property
+    def value(self):
+        vt = self.vt
+        if vt in (VT_EMPTY, VT_NULL):
+            return None
+        elif vt == VT_I1:
+            return self._.VT_I1
+        elif vt == VT_I2:
+            return self._.VT_I2
+        elif vt == VT_I4:
+            return self._.VT_I4
+        elif vt == VT_I8:
+            return self._.VT_I8
+        elif vt == VT_UI8:
+            return self._.VT_UI8
+        elif vt == VT_INT:
+            return self._.VT_INT
+        elif vt == VT_UI1:
+            return self._.VT_UI1
+        elif vt == VT_UI2:
+            return self._.VT_UI2
+        elif vt == VT_UI4:
+            return self._.VT_UI4
+        elif vt == VT_UINT:
+            return self._.VT_UINT
+        elif vt == VT_R4:
+            return self._.VT_R4
+        elif vt == VT_R8:
+            return self._.VT_R8
+        elif vt == VT_BOOL:
+            return self._.VT_BOOL
+        elif vt == VT_BSTR:
+            return self._.bstrVal
+
+    def __ctypes_from_outparam__(self):
+        result = self.value
+        self.vt = VT_EMPTY
+        return result
+
+
+LPVARIANT = POINTER(tagVARIANT)
+VARIANT = tagVARIANT
+
+_VariantClear.argtypes = (POINTER(VARIANT),)
 
 
 # Enumerations
@@ -414,7 +1161,7 @@ class ISetupInstance(IUnknown):
     @property
     def install_date(self):
         # noinspection PyUnresolvedReferences
-        return self.GetInstallDate()
+        return self.GetInstallDate().value
 
     @property
     def name(self):
@@ -441,7 +1188,7 @@ class ISetupInstance(IUnknown):
         try:
             # noinspection PyUnresolvedReferences
             return self.GetDisplayName(_GetUserDefaultLCID())
-        except (OSError, ValueError, comtypes.COMError):
+        except (OSError, ValueError, COMError):
             pass
 
     @property
@@ -449,19 +1196,21 @@ class ISetupInstance(IUnknown):
         try:
             # noinspection PyUnresolvedReferences
             return self.GetDescription(_GetUserDefaultLCID())
-        except (OSError, ValueError, comtypes.COMError):
+        except (OSError, ValueError, COMError):
             pass
 
     def __str__(self):
+        title_bar = '-- ' + str(self.display_name) + ' '
+        title_bar += '-' * (63 - len(title_bar))
         res = [
+            title_bar,
+            'description: ' + str(self.description),
+            'version: ' + str(self.version),
             'id: ' + str(self.id),
             'name: ' + str(self.name),
-            'display name: ' + str(self.display_name),
-            'description: ' + str(self.description),
             'path: ' + str(self.path),
-            'version: ' + str(self.version),
             'full version: ' + str(self.full_version),
-            'install date: ' + str(self.install_date)
+            'install date: ' + self.install_date.strftime('%c')
         ]
         return '\n'.join(res)
 
@@ -478,10 +1227,10 @@ class ISetupInstance2(ISetupInstance):
         # noinspection PyUnresolvedReferences
         safearray = self.GetPackages()
 
-        SafeArrayLock(safearray)
+        _SafeArrayLock(safearray)
 
         # noinspection PyTypeChecker
-        packs = comtypes.cast(
+        packs = ctypes.cast(
             safearray.contents.pvData,
             POINTER(POINTER(ISetupPackageReference))
         )
@@ -493,7 +1242,7 @@ class ISetupInstance2(ISetupInstance):
             p = packs[i]
             res.append(p)
 
-        SafeArrayUnlock(safearray)
+        _SafeArrayUnlock(safearray)
         res = Packages(res)
         return res
 
@@ -549,7 +1298,7 @@ class ISetupInstance2(ISetupInstance):
     @property
     def is_prerelease(self):
         catalog = self.QueryInterface(ISetupInstanceCatalog)
-        return catalog.IsPrerelease()
+        return catalog.IsPrerelease()  # NOQA
 
     @property
     def catalog(self):
@@ -582,7 +1331,8 @@ class ISetupInstance2(ISetupInstance):
             'properties:',
             '{properties}',
             'catalog:',
-            '{catalog}'
+            '{catalog}',
+            '-' * 63
         ]
 
         res = '\n'.join(res)
@@ -740,7 +1490,7 @@ class IEnumSetupInstances(IUnknown):
                 set_instance, num = self.Next(1)
                 yield set_instance
 
-            except comtypes.COMError:
+            except COMError:
                 break
 
 
@@ -754,7 +1504,7 @@ class ISetupConfiguration(IUnknown):
     def __call__(self):
         try:
             return self.QueryInterface(ISetupConfiguration2)
-        except ValueError:
+        except (ValueError, OSError, COMError):
             return self
 
     def __iter__(self):
@@ -767,6 +1517,13 @@ class ISetupConfiguration(IUnknown):
                 break
 
             yield si(helper)
+
+    def __str__(self):
+        res = []
+        for instance_config in self:
+            res += [str(instance_config)]
+
+        return '\n\n\n'.join(res)
 
 
 IID_ISetupConfiguration2 = IID("{26AAB78C-4A60-49D6-AF3B-3C35BC93365D}")
@@ -810,10 +1567,10 @@ class ISetupErrorState(IUnknown):
         except ValueError:
             return Packages([])
 
-        SafeArrayLock(safearray)
+        _SafeArrayLock(safearray)
 
         # noinspection PyTypeChecker
-        packs = comtypes.cast(
+        packs = ctypes.cast(
             safearray.contents.pvData,
             POINTER(POINTER(ISetupFailedPackageReference))
         )
@@ -826,7 +1583,7 @@ class ISetupErrorState(IUnknown):
             p = p.QueryInterface(ISetupFailedPackageReference2)
             res.append(p)
 
-        SafeArrayUnlock(safearray)
+        _SafeArrayUnlock(safearray)
         res = Packages(res)
         return res
 
@@ -838,10 +1595,10 @@ class ISetupErrorState(IUnknown):
         except ValueError:
             return Packages([])
 
-        SafeArrayLock(safearray)
+        _SafeArrayLock(safearray)
 
         # noinspection PyTypeChecker
-        packs = comtypes.cast(
+        packs = ctypes.cast(
             safearray.contents.pvData,
             POINTER(POINTER(ISetupFailedPackageReference))
         )
@@ -854,7 +1611,7 @@ class ISetupErrorState(IUnknown):
             p = p.QueryInterface(ISetupFailedPackageReference2)
             res.append(p)
 
-        SafeArrayUnlock(safearray)
+        _SafeArrayUnlock(safearray)
         res = Packages(res)
         return res
 
@@ -950,16 +1707,16 @@ class ISetupPropertyStore(IUnknown):
         # noinspection PyUnresolvedReferences
         safearray = self.GetNames()
 
-        SafeArrayLock(safearray)
+        _SafeArrayLock(safearray)
 
-        names = comtypes.cast(safearray.contents.pvData, POINTER(BSTR))
+        names = ctypes.cast(safearray.contents.pvData, POINTER(BSTR))
         cPackages = safearray.contents.rgsabound[0].cElements
 
         res = []
         for i in range(cPackages):
             res.append(names[i])
 
-        SafeArrayUnlock(safearray)
+        _SafeArrayUnlock(safearray)
 
         return res
 
@@ -968,7 +1725,7 @@ class ISetupPropertyStore(IUnknown):
             # noinspection PyUnresolvedReferences
             v = VARIANT()
 
-            self.GetValue(n, ctypes.byref(v))
+            self.GetValue(n, ctypes.byref(v))  # NOQA
 
             v = v.value
             if isinstance(v, BSTR):
@@ -994,16 +1751,16 @@ class ISetupLocalizedPropertyStore(IUnknown):
         # noinspection PyUnresolvedReferences
         safearray = self.GetNames()
 
-        SafeArrayLock(safearray)
+        _SafeArrayLock(safearray)
 
-        names = comtypes.cast(safearray.contents.pvData, POINTER(BSTR))
+        names = ctypes.cast(safearray.contents.pvData, POINTER(BSTR))
         cPackages = safearray.contents.rgsabound[0].cElements
 
         res = []
         for i in range(cPackages):
             res.append(names[i])
 
-        SafeArrayUnlock(safearray)
+        _SafeArrayUnlock(safearray)
 
         return res
 
@@ -1012,7 +1769,7 @@ class ISetupLocalizedPropertyStore(IUnknown):
             # noinspection PyUnresolvedReferences
             v = VARIANT()
 
-            self.GetValue(n, ctypes.byref(v))
+            self.GetValue(n, ctypes.byref(v))  # NOQA
 
             v = v.value
             if isinstance(v, BSTR):
@@ -1485,7 +2242,6 @@ class SetupConfiguration(IUnknown):
 
     # Gets an ISetupConfiguration that provides information about
     # product instances installed on the machine.
-
     # noinspection PyTypeChecker
     _methods_ = [
         COMMETHOD(
@@ -1504,16 +2260,17 @@ class SetupConfiguration(IUnknown):
     @classmethod
     def _callback(cls, _):
         cls._instance_ = None
-        comtypes.CoUninitialize()
+        CoUninitialize()
 
     @classmethod
     def GetSetupConfiguration(cls):
         if cls._instance_ is None:
-            comtypes.CoInitialize()
-            instance = comtypes.CoCreateInstance(
+            CoInitialize()
+            # noinspection PyCallingNonCallable
+            instance = CoCreateInstance(
                 CLSID_SetupConfiguration,
                 ISetupConfiguration,
-                comtypes.CLSCTX_ALL
+                CLSCTX_ALL
             )()
 
             cls._instance_ = weakref.ref(instance, cls._callback)
@@ -1523,7 +2280,9 @@ class SetupConfiguration(IUnknown):
         return instance
 
 
+atexit.register(_shutdown)
+
+
 if __name__ == '__main__':
     setup_config = SetupConfiguration.GetSetupConfiguration()
-    for instance_config in setup_config:
-        print(instance_config)
+    print(setup_config)

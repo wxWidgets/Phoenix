@@ -346,187 +346,6 @@ def _convert_version(ver):
     return ver
 
 
-class Environment(object):
-
-    def __init__(
-        self,
-        minimum_c_version: Optional[Union[int, float]] = None,
-        strict_c_version: Optional[Union[int, float]] = None,
-        minimum_toolkit_version: Optional[int] = None,
-        strict_toolkit_version: Optional[int] = None,
-        minimum_sdk_version: Optional[str] = None,
-        strict_sdk_version: Optional[str] = None,
-        minimum_net_version: Optional[str] = None,
-        strict_net_version: Optional[str] = None,
-        vs_version: Optional[Union[str, int]] = None
-    ):
-        self.python = PythonInfo()
-
-        self.visual_c = VisualCInfo(
-            self,
-            minimum_c_version,
-            strict_c_version,
-            minimum_toolkit_version,
-            strict_toolkit_version,
-            vs_version
-        )
-
-        self.visual_studio = VisualStudioInfo(
-            self,
-            self.visual_c
-        )
-
-        self.windows_sdk = WindowsSDKInfo(
-            self,
-            self.visual_c,
-            minimum_sdk_version,
-            strict_sdk_version
-        )
-
-        self.dot_net = NETInfo(
-            self,
-            self.visual_c,
-            self.windows_sdk.version,
-            minimum_net_version,
-            strict_net_version
-        )
-
-    @property
-    def machine_architecture(self):
-        import platform
-        return 'x64' if '64' in platform.machine() else 'x86'
-
-    @property
-    def platform(self):
-        """
-        :return: x86 or x64
-        """
-        import platform
-
-        win_64 = self.machine_architecture == 'x64'
-        python_64 = platform.architecture()[0] == '64bit' and win_64
-
-        return 'x64' if python_64 else 'x86'
-
-    @property
-    def configuration(self):
-        """
-        Build configuration
-        :return: one of ReleaseDLL, DebugDLL
-        """
-
-        if os.path.splitext(sys.executable)[0].endswith('_d'):
-            config = 'Debug'
-        else:
-            config = 'Release'
-
-        return config
-
-    def __iter__(self):
-        for item in self.build_environment.items():
-            yield item
-
-    @property
-    def build_environment(self):
-        """
-        This would be the work horse. This is where all of the gathered
-        information is put into a single container and returned.
-        The information is then added to os.environ in order to allow the
-        build process to run properly.
-
-        List of environment variables generated:
-        PATH
-        LIBPATH
-        LIB
-        INCLUDE
-        Platform
-        FrameworkDir
-        FrameworkVersion
-        FrameworkDIR32
-        FrameworkVersion32
-        FrameworkDIR64
-        FrameworkVersion64
-        VCToolsRedistDir
-        VCINSTALLDIR
-        VCToolsInstallDir
-        VCToolsVersion
-        WindowsLibPath
-        WindowsSdkDir
-        WindowsSDKVersion
-        WindowsSdkBinPath
-        WindowsSdkVerBinPath
-        WindowsSDKLibVersion
-        __DOTNET_ADD_32BIT
-        __DOTNET_ADD_64BIT
-        __DOTNET_PREFERRED_BITNESS
-        Framework{framework version}Version
-        NETFXSDKDir
-        UniversalCRTSdkDir
-        UCRTVersion
-        ExtensionSdkDir
-
-        These last 2 are set to ensure that distuils uses these environment
-        variables when compiling libopenzwave.pyd
-        MSSDK
-        DISTUTILS_USE_SDK
-
-        :return: dict of environment variables
-        """
-        path = os.environ.get('Path', '')
-
-        env = dict(
-            __VSCMD_PREINIT_PATH=path,
-            Platform=self.platform,
-            VSCMD_ARG_app_plat='Desktop',
-            VSCMD_ARG_HOST_ARCH=self.platform,
-            VSCMD_ARG_TGT_ARCH=self.platform,
-            __VSCMD_script_err_count='0'
-        )
-
-        env_path = set()
-
-        def update_env(cls):
-            for key, value in cls:
-                if key == 'Path':
-                    for item in value.split(';'):
-                        env_path.add(item)
-                    continue
-
-                if key in env:
-                    env[key] += ';' + value
-                else:
-                    env[key] = value
-
-        update_env(self.visual_c)
-        update_env(self.visual_studio)
-        update_env(self.windows_sdk)
-        update_env(self.dot_net)
-
-        env['Path'] = (';'.join(env_path)) + ';' + path
-
-        return env
-
-    def __str__(self):
-        template = (
-            'Machine architecture: {machine_architecture}\n'
-            'Build architecture: {architecture}\n'
-        )
-
-        res = [
-            template.format(
-                machine_architecture=self.machine_architecture,
-                architecture=self.platform
-            ),
-            str(self.python),
-            str(self.visual_studio),
-            str(self.visual_c),
-            str(self.windows_sdk),
-            str(self.dot_net),
-        ]
-
-        return '\n'.join(res)
-
-
 # I have separated the environment into several classes
 # Environment - the main environment class.
 # the environment class is what is going to get used. this handles all of the
@@ -603,7 +422,7 @@ class VisualCInfo(object):
 
     def __init__(
         self, 
-        environ: Environment,
+        environ: "Environment",
         minimum_c_version: Optional[Union[int, float]] = None,
         strict_c_version: Optional[Union[int, float]] = None,
         minimum_toolkit_version: Optional[int] = None,
@@ -666,6 +485,8 @@ class VisualCInfo(object):
         self._minimum_toolkit_version = minimum_toolkit_version
 
         if _vswhere is not None:
+            distutils.log.debug('\n' + str(_vswhere))
+
             cpp_id = 'Microsoft.VisualCpp.Tools.Host{0}.Target{1}'.format(
                 environ.machine_architecture.upper(),
                 environ.python.architecture.upper()
@@ -683,9 +504,6 @@ class VisualCInfo(object):
             cpp_installation = None
 
             for installation in _vswhere:
-
-                distutils.log.debug(str(installation) + '\n\n')
-
                 if vs_version is not None:
                     try:
                         if isinstance(vs_version, str):
@@ -866,6 +684,34 @@ class VisualCInfo(object):
                 )
                 if os.path.exists(devinit_path):
                     self._devinit_path = devinit_path
+
+    @property
+    def has_ninja(self):
+        ide_path = os.path.split(self.ide_install_directory)[0]
+        ninja_path = os.path.join(
+            ide_path,
+            'CommonExtensions',
+            'Microsoft',
+            'CMake',
+            'Ninja',
+            'ninja.exe'
+        )
+        return os.path.exists(ninja_path)
+
+    @property
+    def has_cmake(self):
+        ide_path = os.path.split(self.ide_install_directory)[0]
+
+        cmake_path = os.path.join(
+            ide_path,
+            'CommonExtensions',
+            'Microsoft',
+            'CMake',
+            'CMake',
+            'bin',
+            'cmake.exe'
+        )
+        return os.path.exists(cmake_path)
 
     @property
     def cmake_paths(self) -> list:
@@ -1196,37 +1042,6 @@ class VisualCInfo(object):
                 tools_version[0] +
                 tools_version[1][:1]
             )
-            #
-            #
-            # tool_path = self.tools_redist_directory
-            # x64 = self.platform == 'x64'
-            #
-            # dirs = os.listdir(self.tools_redist_directory)
-            #
-            #
-            # if x64:
-            #     if 'amd64' in dirs:
-            #         tool_path = os.path.join(tool_path, 'amd64')
-            #     else:
-            #         tool_path = os.path.join(tool_path, 'x64')
-            #
-            # else:
-            #     tool_path = os.path.join(tool_path, 'x86')
-            #
-            # if os.path.exists(tool_path):
-            #     max_ver = 0
-            #
-            #     for f in os.listdir(tool_path):
-            #         if not f.endswith('CRT'):
-            #             continue
-            #         try:
-            #             ver = int(f.split('.')[1].lstrip('VC'))
-            #             max_ver = max(max_ver, ver)
-            #         except:
-            #             continue
-            #
-            #     if max_ver != 0:
-            #         self._toolset_version = 'v' + str(max_ver)
 
         return self._toolset_version
 
@@ -1777,8 +1592,10 @@ class VisualCInfo(object):
     def __str__(self):
         template = (
             '== Visual C ===================================================\n'
-            '   version: {visual_c_version}\n'
-            '   path:    {visual_c_path}\n'
+            '   version:   {visual_c_version}\n'
+            '   path:      {visual_c_path}\n'
+            '   has cmake: {has_cmake}\n'
+            '   has ninja: {has_ninja}\n'
             '\n'
             '   -- Tools ---------------------------------------------------\n'
             '      version:     {tools_version}\n'
@@ -1806,6 +1623,8 @@ class VisualCInfo(object):
         return template.format(
             visual_c_version=self.version,
             visual_c_path=self.install_directory,
+            has_cmake=self.has_cmake,
+            has_ninja=self.has_ninja,
             tools_version=self.tools_version,
             tools_install_path=self.tools_install_directory,
             vc_tools_redist_path=self.tools_redist_directory,
@@ -1826,7 +1645,7 @@ class VisualStudioInfo(object):
 
     def __init__(
         self, 
-        environ: Environment, 
+        environ: "Environment",
         c_info: VisualCInfo
     ):
         self.environment = environ
@@ -2063,8 +1882,9 @@ class VisualStudioInfo(object):
             return ''
 
         template = (
-            '== {name}==============================================\n'
+            '== {name} \n'
             '   description:        {description}\n'
+            '   install date:       {install_date}\n'
             '   version:            {version}\n'
             '   version (friendly): {product_line_version}\n'
             '   display version:    {product_display_version}\n'
@@ -2080,12 +1900,13 @@ class VisualStudioInfo(object):
 
         if name is None:
             if self.__name__ == 'VisualStudioInfo':
-                name = 'Visual Studio '
+                name = 'Visual Studio'
             else:
-                name = 'Build Tools =='
+                name = 'Build Tools'
 
         description = installation.description
         path = installation.path
+        install_date = installation.install_date.strftime('%c')
         version = installation.version
         is_complete = installation.is_complete
         is_prerelease = installation.is_prerelease
@@ -2097,9 +1918,10 @@ class VisualStudioInfo(object):
         product_display_version = catalog.product_display_version
         product_line_version = catalog.product_line_version
 
-        return template.format(
+        res = template.format(
             name=name,
             description=description,
+            install_date=install_date,
             path=path,
             version=version,
             is_complete=is_complete,
@@ -2111,12 +1933,16 @@ class VisualStudioInfo(object):
             state=state
         )
 
+        res = res.split('\n', 1)
+        res[0] += '=' * (63 - len(res[0]))
+        return '\n'.join(res)
+
 
 class WindowsSDKInfo(object):
 
     def __init__(
         self, 
-        environ: Environment, 
+        environ: "Environment",
         c_info: VisualCInfo, 
         minimum_sdk_version: Optional[str] = None,
         strict_sdk_version: Optional[str] = None
@@ -2754,7 +2580,6 @@ class WindowsSDKInfo(object):
         return self._directory
 
     def __iter__(self):
-
         ver_bin_path = self.ver_bin_path
         directory = self.directory
 
@@ -2833,7 +2658,7 @@ class NETInfo(object):
 
     def __init__(
         self,
-        environ: Environment,
+        environ: "Environment",
         c_info: VisualCInfo,
         sdk_version: str,
         minimum_net_version: Optional[str] = None,
@@ -3505,6 +3330,202 @@ class NETInfo(object):
         )
 
 
+class Environment(object):
+    _original_environment = {k_: v_ for k_, v_ in os.environ.items()}
+
+    def __init__(
+        self,
+        minimum_c_version: Optional[Union[int, float]] = None,
+        strict_c_version: Optional[Union[int, float]] = None,
+        minimum_toolkit_version: Optional[int] = None,
+        strict_toolkit_version: Optional[int] = None,
+        minimum_sdk_version: Optional[str] = None,
+        strict_sdk_version: Optional[str] = None,
+        minimum_net_version: Optional[str] = None,
+        strict_net_version: Optional[str] = None,
+        vs_version: Optional[Union[str, int]] = None
+    ):
+        self.python = PythonInfo()
+
+        self.visual_c = VisualCInfo(
+            self,
+            minimum_c_version,
+            strict_c_version,
+            minimum_toolkit_version,
+            strict_toolkit_version,
+            vs_version
+        )
+
+        self.visual_studio = VisualStudioInfo(
+            self,
+            self.visual_c
+        )
+
+        self.windows_sdk = WindowsSDKInfo(
+            self,
+            self.visual_c,
+            minimum_sdk_version,
+            strict_sdk_version
+        )
+
+        self.dot_net = NETInfo(
+            self,
+            self.visual_c,
+            self.windows_sdk.version,
+            minimum_net_version,
+            strict_net_version
+        )
+
+    def reset_environment(self):
+        for key in list(os.environ.keys())[:]:
+            if key not in self._original_environment:
+                del os.environ[key]
+
+        os.environ.update(self._original_environment)
+
+    @property
+    def machine_architecture(self):
+        import platform
+        return 'x64' if '64' in platform.machine() else 'x86'
+
+    @property
+    def platform(self):
+        """
+        :return: x86 or x64
+        """
+        import platform
+
+        win_64 = self.machine_architecture == 'x64'
+        python_64 = platform.architecture()[0] == '64bit' and win_64
+
+        return 'x64' if python_64 else 'x86'
+
+    @property
+    def configuration(self):
+        """
+        Build configuration
+        :return: one of ReleaseDLL, DebugDLL
+        """
+
+        if os.path.splitext(sys.executable)[0].endswith('_d'):
+            config = 'Debug'
+        else:
+            config = 'Release'
+
+        return config
+
+    def __iter__(self):
+        for item in self.build_environment.items():
+            yield item
+
+    @property
+    def build_environment(self):
+        """
+        This would be the work horse. This is where all of the gathered
+        information is put into a single container and returned.
+        The information is then added to os.environ in order to allow the
+        build process to run properly.
+
+        List of environment variables generated:
+        PATH
+        LIBPATH
+        LIB
+        INCLUDE
+        Platform
+        FrameworkDir
+        FrameworkVersion
+        FrameworkDIR32
+        FrameworkVersion32
+        FrameworkDIR64
+        FrameworkVersion64
+        VCToolsRedistDir
+        VCINSTALLDIR
+        VCToolsInstallDir
+        VCToolsVersion
+        WindowsLibPath
+        WindowsSdkDir
+        WindowsSDKVersion
+        WindowsSdkBinPath
+        WindowsSdkVerBinPath
+        WindowsSDKLibVersion
+        __DOTNET_ADD_32BIT
+        __DOTNET_ADD_64BIT
+        __DOTNET_PREFERRED_BITNESS
+        Framework{framework version}Version
+        NETFXSDKDir
+        UniversalCRTSdkDir
+        UCRTVersion
+        ExtensionSdkDir
+
+        These last 2 are set to ensure that distuils uses these environment
+        variables when compiling libopenzwave.pyd
+        MSSDK
+        DISTUTILS_USE_SDK
+
+        :return: dict of environment variables
+        """
+        path = os.environ.get('Path', '')
+
+        env = dict(
+            __VSCMD_PREINIT_PATH=path,
+            Platform=self.platform,
+            VSCMD_ARG_app_plat='Desktop',
+            VSCMD_ARG_HOST_ARCH=self.platform,
+            VSCMD_ARG_TGT_ARCH=self.platform,
+            __VSCMD_script_err_count='0'
+        )
+
+        path = set(item.strip() for item in path.split(';') if item.strip())
+        env_path = set()
+
+        def update_env(cls):
+            for key, value in cls:
+                if key == 'Path':
+                    for item in value.split(';'):
+                        env_path.add(item)
+                    continue
+
+                if key in env:
+                    env[key] += ';' + value
+                else:
+                    env[key] = value
+
+        update_env(self.visual_c)
+        update_env(self.visual_studio)
+        update_env(self.windows_sdk)
+        update_env(self.dot_net)
+
+        env_path = [item for item in env_path if item not in path]
+        env_path = ';'.join(env_path)
+
+        if env_path:
+            env_path += ';'
+
+        env['Path'] = env_path + ';'.join(path)
+
+        return env
+
+    def __str__(self):
+        template = (
+            'Machine architecture: {machine_architecture}\n'
+            'Build architecture: {architecture}\n'
+        )
+
+        res = [
+            template.format(
+                machine_architecture=self.machine_architecture,
+                architecture=self.platform
+            ),
+            str(self.python),
+            str(self.visual_studio),
+            str(self.visual_c),
+            str(self.windows_sdk),
+            str(self.dot_net),
+        ]
+
+        return '\n'.join(res)
+
+
 def setup_environment(
     minimum_c_version: Optional[Union[int, float]] = None,
     strict_c_version: Optional[Union[int, float]] = None,
@@ -3611,6 +3632,15 @@ def setup_environment(
     distutils.log.debug('\n' + str(environment))
 
     for key, value in environment.build_environment.items():
+        old_val = os.environ.get(key, value)
+        if old_val != value:
+            if ';' in old_val or ';' in value:
+                old_val = set(old_val.split(';'))
+                value = set(';'.split(value))
+
+                value = old_val.union(value)
+                value = ';'.join(item for item in value)
+
         os.environ[key] = value
 
     return environment
