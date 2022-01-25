@@ -227,7 +227,7 @@ selection mode where there is always one item selected. When an item is
 selected a ``EVT_TREE_SEL_CHANGING`` event is sent which can be vetoed to
 prevent the selection from occuring. A ``EVT_TREE_SEL_CHANGED`` event is sent
 out when the selection has successfully changed. If the selection gets cleared
-by the user or programatically, the next Idle handler will select the root item
+by the user or programmatically, the next Idle handler will select the root item
 ensuring there is a selected item at all times.
 
 If the ``TR_MULTIPLE`` style is set the tree can have any number of selected
@@ -273,7 +273,7 @@ can be enabled or disabled with :meth:`~CustomTreeCtrl.SetItemWindowEnabled`.
 By default item windows are shown immediately after the item text. If the
 ``TR_ALIGN_WINDOWS`` style is set, all windows for a level of the tree will
 be aligned to the longest text in that level. The ``TR_ALIGN_WINDOWS_RIGHT``
-style will instead right-alight all windows added to the tree.
+style will instead right-align all windows added to the tree.
 
 Keyboard focus in the tree can be difficult to manage once windows are added.
 Most platforms will shift focus to an item window any time the tree gets focus.
@@ -967,7 +967,7 @@ class DragImage(wx.DragImage):
 
         memory.SelectObject(wx.NullBitmap)
 
-        # Gtk and Windows unfortunatly don't do so well with transparent
+        # Gtk and Windows unfortunately don't do so well with transparent
         # drawing so this hack corrects the image to have a transparent
         # background.
         if wx.Platform != '__WXMAC__':
@@ -1777,7 +1777,7 @@ class GenericTreeItem(object):
 
         """
 
-        # since there can be very many of these, we save size by chosing
+        # since there can be very many of these, we save size by choosing
         # the smallest representation for the elements and by ordering
         # the members to avoid padding.
         self._text = text       # label to be rendered for item
@@ -3765,7 +3765,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
     def CheckChilds(self, item, checked=True):
         """
-        Programatically check/uncheck item children.
+        Programmatically check/uncheck item children.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
         :param bool `checked`: ``True`` to check an item, ``False`` to uncheck it.
@@ -6584,7 +6584,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
             select = True   # the default
 
-            # Check if we need to toggle hilight (ctrl mode)
+            # Check if we need to toggle highlight (ctrl mode)
             if not unselect_others:
                 select = not item.IsSelected()
 
@@ -7257,7 +7257,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         rf, gf, bf = 0, 0, 0
 
         for y in range(rect.y, rect.y + rect.height):
-            currCol = (r1 + rf, g1 + gf, b1 + bf)
+            currCol = (int(r1 + rf), int(g1 + gf), int(b1 + bf))
             dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(rect.x, y, rect.width, 1)
             rf = rf + rstep
@@ -7364,7 +7364,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         dc.SetPen(wx.TRANSPARENT_PEN)
 
         for y in range(filRect.y, filRect.y + filRect.height):
-            currCol = (r1 + rf, g1 + gf, b1 + bf)
+            currCol = (int(r1 + rf), int(g1 + gf), int(b1 + bf))
             dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(filRect.x, y, filRect.width, 1)
             rf = rf + rstep
@@ -7903,7 +7903,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                     xOrigin, yOrigin = dc.GetDeviceOrigin()
                     yOrigin = abs(yOrigin)
                    
-                    # Move end points to the begining/end of the view?
+                    # Move end points to the beginning/end of the view?
                     if y_mid < yOrigin:
                         y_mid = yOrigin
                     if lastY > yOrigin + height:
@@ -9502,7 +9502,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Freeze :class:`CustomTreeCtrl`.
 
         Freezes the window or, in other words, prevents any updates from taking place
-        on screen, the window is not redrawn at all. :meth:`~Thaw` must be called to reenable
+        on screen, the window is not redrawn at all. :meth:`~Thaw` must be called to re-enable
         window redrawing. Calls to these two functions may be nested.
 
         :note: This method is useful for visual appearance optimization (for example,
@@ -9523,7 +9523,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Thaw :class:`CustomTreeCtrl`.
 
-        Reenables window updating after a previous call to :meth:`~Freeze`. To really thaw the
+        Re-enables window updating after a previous call to :meth:`~Freeze`. To really thaw the
         control, it must be called exactly the same number of times as :meth:`~Freeze`.
 
         :raise: `Exception` if :meth:`~Thaw` has been called without an un-matching :meth:`~Freeze`.
@@ -9647,7 +9647,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         rect = self.GetBoundingRect(root, True)
 
         # It looks like the space between the "+" and the node
-        # rect occupies 4 pixels approximatively
+        # rect occupies 4 pixels approximately
         maxwidth = rect.x + rect.width + 4
         lastheight = rect.y + rect.height
 
@@ -9687,7 +9687,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             rect = self.GetBoundingRect(child, True)
 
             # It looks like the space between the "+" and the node
-            # rect occupies 4 pixels approximatively
+            # rect occupies 4 pixels approximately
             maxwidth = max(maxwidth, rect.x + rect.width + 4)
             lastheight = rect.y + rect.height
 
