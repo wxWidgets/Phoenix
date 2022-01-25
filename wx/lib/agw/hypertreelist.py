@@ -4599,7 +4599,7 @@ class HyperTreeList(wx.Control):
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.AutoCheckChild`                 Transverses the tree and checks/unchecks the items.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.AutoCheckParent`                Traverses up the tree and checks/unchecks parent items.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.AutoToggleChild`                Transverses the tree and toggles the items.
-    :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CheckChilds`                    Programatically check/uncheck item children.
+    :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CheckChilds`                    Programmatically check/uncheck item children.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CheckItem`                      Actually checks/uncheks an item, sending the two related events.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CheckItem2`                     Used internally to avoid ``EVT_TREE_ITEM_CHECKED`` events.
     :meth:`~wx.lib.agw.customtreectrl.CustomTreeCtrl.CheckSameLevel`                 Uncheck radio items which are on the same level of the checked one.
@@ -4814,7 +4814,7 @@ class HyperTreeList(wx.Control):
         Freezes the HyperTreeList main (tree) and and header windows.
         This prevents any re-calculation or updates from taking place
         allowing mass updates to the tree very quickly. :meth:`~Thaw`
-        must be called to reenable updates. Calls to these two
+        must be called to re-enable updates. Calls to these two
         functions may be nested.
         """
         self._main_win.Freeze()
@@ -4825,7 +4825,7 @@ class HyperTreeList(wx.Control):
         """
         Thaw :class:`HyperTreeList`.
 
-        Reenables updates to the main (tree) and header windows after a
+        Re-enables updates to the main (tree) and header windows after a
         previous call to :meth:`~Freeze`. To really thaw the control, it
         must be called exactly the same number of times as :meth:`~Freeze`.
         When fully thawed the tree will re-calculate and update itself.
@@ -5685,7 +5685,7 @@ if __name__ == '__main__':
                 if not self.tree.GetItemWindow(child, column=3):
                     widget = wx.StaticBitmap(hypertree, bitmap=bitmap)
                     self.tree.SetItemWindow(child, widget, column=3)
-                if index > 1000:
+                if index > 100:
                     break
             self.Thaw()
             self.tree.Thaw()
