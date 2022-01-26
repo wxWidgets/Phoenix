@@ -3637,6 +3637,9 @@ def setup_environment(
     :return: Environment instance
     :rtype: Environment
     """
+
+    distutils.log.set_threshold(distutils.log.DEBUG)
+
     if not _IS_WIN:
         raise RuntimeError(
             'This script will only work with a Windows opperating system.'
@@ -3679,7 +3682,10 @@ def setup_environment(
         vs_version
     )
 
-    distutils.log.debug('\n' + str(environment))
+    distutils.log.debug('\n' + str(environment) + '\n\n')
+    distutils.log.debug('SET ENVIRONMENT VARIABLES')
+    distutils.log.debug('------------------------------------------------')
+    distutils.log.debug('\n')
 
     for key, value in environment.build_environment.items():
         old_val = os.environ.get(key, value)
@@ -3691,7 +3697,11 @@ def setup_environment(
                 value = old_val.union(value)
                 value = ';'.join(item for item in value)
 
+        distutils.log.debug(key + '=' + value)
         os.environ[key] = value
+
+    distutils.log.debug('\n\n')
+    distutils.log.set_threshold(distutils.log.ERROR)
 
     return environment
 
