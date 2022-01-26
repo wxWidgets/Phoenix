@@ -478,12 +478,24 @@ def main(wxDir, args):
                     "CPPFLAGS=/I%s" %
                      os.path.join(os.environ.get("CAIRO_ROOT", ""), 'include\\cairo'))
 
-            if options.jom:
-                nmakeCommand = 'jom.exe'
-
             if options.no_dpi_aware:
                 args.append("USE_DPI_AWARE_MANIFEST=0")
 
+            if options.jom:
+                nmakeCommand = 'jom.exe'
+            else:
+                from . import msvc
+                environment = msvc.setup_environment(minimum_c_version=14.2)
+
+                if (
+                    environment.visual_c.has_cmake and
+                    environment.visual_c.has_ninja
+                ):
+                    args.pop(0)
+                    for i, arg in enumerate(args[:]):
+                        args[i] = '-D' + arg
+                    buildDir = wxRootDir
+                    nmakeCommand = 'cmake.exe'
 
             wxBuilder = builder.MSVCBuilder(commandName=nmakeCommand)
 
@@ -511,9 +523,17 @@ def main(wxDir, args):
     if options.extra_make:
         args.append(options.extra_make)
 
-    if not sys.platform.startswith("win"):
+    if sys.platform.startswith("win"):
+        if nmakeCommand.startswith('cmake'):
+            args.insert(0, '-GNinja')
+    else:
         args.append("--jobs=" + options.jobs)
+
     exitIfError(wxBuilder.build(dir=buildDir, options=args), "Error building")
+
+    if sys.platform.startswith("win") and nmakeCommand.startswith('cmake'):
+        wxBuilder = builder.MSVCBuilder(commandName='ninja.exe')
+        exitIfError(wxBuilder.build(dir=buildDir, options=['-j ' + options.jobs]), "Error building")
 
     if options.install:
         extra=None
