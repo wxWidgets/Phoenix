@@ -496,8 +496,9 @@ def main(wxDir, args):
                         args[i] = '-D' + arg
                     buildDir = wxRootDir
                     nmakeCommand = 'cmake.exe'
-                    os.environ['INCLUDE'] += (
-                        ';' + os.path.join(wxRootDir, 'include', 'msvc')
+                    os.environ['INCLUDE'] = (
+                        os.path.join(wxRootDir, 'include', 'msvc') + ';' +
+                        os.environ['INCLUDE']
                     )
 
             wxBuilder = builder.MSVCBuilder(commandName=nmakeCommand)

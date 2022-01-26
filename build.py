@@ -79,6 +79,7 @@ unstable_series = (version.wxVER_MINOR % 2) == 1  # is the minor version odd or 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 devMode = False
+win_environment = None
 
 baseName = version.PROJECT_NAME
 eggInfoName = baseName + '.egg-info'
@@ -785,47 +786,54 @@ def uploadTree(srcPath, destPath, options, days=30):
 
 def checkCompiler(quiet=False):
     if isWindows:
-        from buildtools import msvc
+        global win_environment
 
-        # setup the build environment making the minimum conpiler version 14.2
-        # A user does not need to have a full blown Visual Studio installation
-        # in order to build wxPython. They can use Visual Studio Build Tools
-        # as well. Build Tools doe not include any of the GUI replated
-        # components of Visual Studio.
-        # If the msvc script isunable to locate an MSVC compiler that is of
-        # version >= 14.2 the msvc script will raise RuntimeError.
+        if win_environment is None:
+            from buildtools import msvc
 
-        # the msvc script works in a manner where no part of either setuptools
-        # or distutils is overriden. It uses mechanics that can alter what
-        # setuptools and distutils sees and uses for the build environment
-        # without tampering with any of the original code in those libraries.
+            # setup the build environment making the minimum conpiler version
+            # 14.2 A user does not need to have a full blown Visual Studio
+            # installation in order to build wxPython. They can use Visual
+            # Studio Build Tools as well. Build Tools doe not include any of
+            # the GUI replated components of Visual Studio.
+            # If the msvc script isunable to locate an MSVC compiler that is
+            # of version >= 14.2 the msvc script will raise RuntimeError.
 
-        # the msvc script does not use the problematic vcvars*.bat files that
-        # come with an MSVC compiler. It builds the environment from the ground
-        # up by reading the registry and using the COM interfaces. The
-        # subprocess module is only used for Visual Studio  installatons that
-        # are older then 2017 which  wouldn't be an issue because the wxPython
-        # build system needs the MSVC compiler to be at least 14.2 (VS 2019)
+            # the msvc script works in a manner where no part of either
+            # setuptools or distutils is overriden. It uses mechanics that can
+            # alter what setuptools and distutils sees and uses for the build
+            # environment without tampering with any of the original code in
+            # those libraries.
 
-        # If the environment variable "DISTUTILS_DEBUG=1" is set There is
-        # going to be a HUGE dump of information from the msvc module to
-        # stdout by way of distutils.log.debug(). If the logging level is set
-        # to DEBUG by using distutils.log.set_threshold(distutils.log.DEBUG)
-        # or any other mechanics to set the logging level to DEBUG here will
-        # be a heap of information dumped to stdout by the msvc module.
+            # the msvc script does not use the problematic vcvars*.bat files
+            # that come with an MSVC compiler. It builds the environment from
+            # the ground up by reading the registry and using the COM
+            # interfaces. The subprocess module is only used for Visual Studio
+            # installatons that are older then 2017 which  wouldn't be an
+            # issue because the wxPython build system needs the MSVC compiler
+            # to be at least 14.2 (VS 2019)
 
-        # Just so this is on record and can be used at a later date if needs
-        # be the MSVC compiler defaults to c++11. If you need to change this
-        # extra compiler arguments will have to be added, "/std:cpp_version"
-        # where cpp_version is the version of cpp to be used ie: "c++20".
-        # The __cplusplus macro does not change when using the /std compiler
-        # switch. You have to specifically tell the compuler to update the
-        # value for the __cplusplus macro using "/Zc:__cplusplus"
-        environment = msvc.setup_environment(minimum_c_version=14.2)
+            # If the environment variable "DISTUTILS_DEBUG=1" is set There is
+            # going to be a HUGE dump of information from the msvc module to
+            # stdout by way of distutils.log.debug(). If the logging level is
+            # set to DEBUG by using distutils.log.set_threshold(
+            # distutils.log.DEBUG) or any other mechanics to set the logging
+            # level to DEBUG here will be a heap of information dumped to
+            # stdout by the msvc module.
 
-        if not quiet:
-            # this gives a simple output of the build environment.
-            print(environment)
+            # Just so this is on record and can be used at a later date if
+            # needs be the MSVC compiler defaults to c++11. If you need to
+            # change this extra compiler arguments will have to be added,
+            # "/std:cpp_version" where cpp_version is the version of cpp to
+            # be used ie: "c++20". The __cplusplus macro does not change when
+            # using the /std compiler switch. You have to specifically tell
+            # the compiler to update the value for the __cplusplus macro
+            # using "/Zc:__cplusplus"
+            win_environment = msvc.setup_environment(minimum_c_version=14.2)
+
+            if not quiet:
+                # this gives a simple output of the build environment.
+                print(win_environment)
 
     # NOTE: SIP is now generating code with scoped-enums. Older linux
     # platforms like what we're using for builds, and also TravisCI for
