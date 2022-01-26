@@ -3525,18 +3525,17 @@ class Environment(object):
             __VSCMD_script_err_count='0'
         )
 
-        path = set(item.strip() for item in path.split(';') if item.strip())
         env_path = set()
 
         def update_env(cls):
             for key, value in cls:
                 if key == 'Path':
-                    for item in value.split(';'):
+                    for item in value.split(os.pathsep):
                         env_path.add(item)
                     continue
 
                 if key in env:
-                    env[key] += ';' + value
+                    env[key] += os.pathsep + value
                 else:
                     env[key] = value
 
@@ -3545,13 +3544,8 @@ class Environment(object):
         update_env(self.windows_sdk)
         update_env(self.dot_net)
 
-        env_path = [item for item in env_path if item not in path]
-        env_path = ';'.join(env_path)
-
-        if env_path:
-            env_path += ';'
-
-        env['Path'] = env_path + ';'.join(path)
+        env_path = os.pathsep.join(item for item in env_path)
+        env['Path'] = env_path
 
         return env
 
@@ -3688,12 +3682,17 @@ def setup_environment(
     for key, value in environment.build_environment.items():
         old_val = os.environ.get(key, value)
         if old_val != value:
-            if ';' in old_val or ';' in value:
-                old_val = set(old_val.split(';'))
-                value = set(value.split(';'))
+            if os.pathsep in old_val or os.pathsep in value:
+                value = [item for item in set(value.split(os.pathsep))]
+                old_val = [
+                    item for item in set(old_val.split(os.pathsep))
+                    if item not in value
+                ]
 
-                value = old_val.union(value)
-                value = ';'.join(item.strip() for item in value if item.strip())
+                value.extend(old_val)
+                value = os.pathsep.join(
+                    item.strip() for item in value if item.strip()
+                )
 
         distutils.log.debug(key + '=' + value)
         os.environ[key] = value
@@ -3715,11 +3714,6 @@ if __name__ == '__main__':
     print('SET ENVIRONMENT VARIABLES')
     print('------------------------------------------------')
     print()
-    for k, v in envr:
-        if os.pathsep in v:
-            v = v.split(';')
-            if not v[-1]:
-                v = v[:-1]
-
-        print(k + ':', v)
-        print()
+    for k in envr.build_environment.keys():
+        v = os.environ[k]
+        print(k + '=', v)
