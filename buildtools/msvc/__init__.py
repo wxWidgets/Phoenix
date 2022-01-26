@@ -3638,8 +3638,6 @@ def setup_environment(
     :rtype: Environment
     """
 
-    distutils.log.set_threshold(distutils.log.DEBUG)
-
     if not _IS_WIN:
         raise RuntimeError(
             'This script will only work with a Windows opperating system.'
@@ -3692,16 +3690,15 @@ def setup_environment(
         if old_val != value:
             if ';' in old_val or ';' in value:
                 old_val = set(old_val.split(';'))
-                value = set(';'.split(value))
+                value = set(value.split(';'))
 
                 value = old_val.union(value)
-                value = ';'.join(item for item in value)
+                value = ';'.join(item.strip() for item in value if item.strip())
 
         distutils.log.debug(key + '=' + value)
         os.environ[key] = value
 
     distutils.log.debug('\n\n')
-    distutils.log.set_threshold(distutils.log.ERROR)
 
     return environment
 
