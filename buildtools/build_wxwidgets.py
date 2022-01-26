@@ -530,7 +530,7 @@ def main(wxDir, args):
                     setuphdirwxmswrcdefs = os.path.join(setuphdirwxmsw, 'cdefs.h')
                     if not os.path.exists(setuphdirwxmswrcdefs):
                         genrcdefs = os.path.join(wxRootDir, 'include', 'wx', 'msw', 'genrcdefs.h')
-                        command = 'cl /EP /nologo "{0}" > "{0}"'.format(
+                        command = 'cl /EP /nologo "{0}" > "{1}"'.format(
                             genrcdefs,
                             setuphdirwxmswrcdefs
                         )
