@@ -491,15 +491,59 @@ def main(wxDir, args):
                     environment.visual_c.has_cmake and
                     environment.visual_c.has_ninja
                 ):
+
+                    buildDir = wxRootDir
+                    nmakeCommand = 'cmake.exe'
+                    libdirname = (
+                        'vc' +
+                        environment.visual_c.version.split('.')[0] +
+                        '0_' +
+                        environment.python.architecture +
+                        '_dll'
+                    )
+                    libdirname = os.path.join(wxRootDir, 'lib', libdirname)
+                    if not os.path.exists(libdirname):
+                        os.makedirs(libdirname)
+
+                    setuphdir = os.path.join(
+                        libdirname,
+                        'mswu' if 'UNICODE=1' in args else 'msw'
+                    )
+                    if not os.path.exists(setuphdir):
+                        os.makedirs(setuphdir)
+
+                    setuphdirwx = os.path.join(setuphdir, 'wx')
+                    if not os.path.exists(setuphdirwx):
+                        os.makedirs(setuphdirwx)
+
+                    setuphdirwxsetup = os.path.join(setuphdirwx, 'setup.h')
+                    if not os.path.exists(setuphdirwxsetup):
+                        import shutil
+
+                        src = os.path.join(wxRootDir, 'include', 'wx', 'msw', 'setup.h')
+                        shutil.copyfile(src, setuphdirwxsetup)
+
+                    setuphdirwxmsw = os.path.join(setuphdirwx, 'msw')
+                    if not os.path.exists(setuphdirwxmsw):
+                        os.makedirs(setuphdirwxmsw)
+
+                    setuphdirwxmswrcdefs = os.path.join(setuphdirwxmsw, 'cdefs.h')
+                    if not os.path.exists(setuphdirwxmswrcdefs):
+                        genrcdefs = os.path.join(wxRootDir, 'include', 'wx', 'msw', 'genrcdefs.h')
+                        command = 'cl /EP /nologo "{0}" > "{0}"'.format(
+                            genrcdefs,
+                            setuphdirwxmswrcdefs
+                        )
+                        run(command)
+
+                    if 'CPPFLAGS' not in os.environ:
+                        os.environ['CPPFLAGS'] = '/I"{0}"'.format(setuphdir)
+                    else:
+                        os.environ['CPPFLAGS'] += ' /I"{0}"'.format(setuphdir)
+
                     args.pop(0)
                     for i, arg in enumerate(args[:]):
                         args[i] = '-D' + arg
-                    buildDir = wxRootDir
-                    nmakeCommand = 'cmake.exe'
-                    os.environ['INCLUDE'] = (
-                        os.path.join(wxRootDir, 'include', 'msvc') + ';' +
-                        os.environ['INCLUDE']
-                    )
 
             wxBuilder = builder.MSVCBuilder(commandName=nmakeCommand)
 
