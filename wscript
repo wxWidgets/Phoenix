@@ -70,8 +70,10 @@ def configure(conf):
         # version. We have a chicken-egg problem here. The compiler needs to
         # be selected before the Python stuff can be configured, but we need
         # Python to know what version of the compiler to use.
-        import distutils.msvc9compiler
-        msvc_version = str( distutils.msvc9compiler.get_build_version() )
+        from buildtools import msvc
+
+        environment = msvc.setup_environment(minimum_c_version=14.2)
+        msvc_version = environment.visual_c.version
 
         # When building for Python 3.7 the msvc_version returned will be
         # "14.1" as that is the version of the BasePlatformToolkit that stock
@@ -416,11 +418,13 @@ def my_check_python_headers(conf):
     conf.parse_flags(all_flags, 'PYEXT')
 
     if isWindows:
-        libname = 'python' + conf.env['PYTHON_VERSION'].replace('.', '')
+        from buildtools import msvc
 
-        if dct['LIBDIR'] and os.path.isdir(dct['LIBDIR']):
-            libpath = [dct['LIBDIR']]
-        else:
+        python_info = msvc.PythonInfo()
+        libname = os.path.splitext(python_info.dependency)[0]
+        libpath = python_info.libraries
+
+        if not libpath or not os.path.isdir(libpath[0]):
             base_prefix = get_windows_base_prefix(conf, dct['prefix'])
             libpath = [os.path.join(base_prefix, "libs")]
 
@@ -478,12 +482,22 @@ def my_check_python_headers(conf):
         env.append_value('CXXFLAGS_PYEXT', ['-fno-strict-aliasing'])
 
     if env.CC_NAME == "msvc":
-        from distutils.msvccompiler import MSVCCompiler
-        dist_compiler = MSVCCompiler()
-        dist_compiler.initialize()
-        env.append_value('CFLAGS_PYEXT', dist_compiler.compile_options)
-        env.append_value('CXXFLAGS_PYEXT', dist_compiler.compile_options)
-        env.append_value('LINKFLAGS_PYEXT', dist_compiler.ldflags_shared)
+        from buildtools import msvc
+        environment = msvc.setup_environment(minimum_c_version=14.2)
+
+        ldflags_shared = [
+            '/DLL', '/nologo', '/INCREMENTAL:NO', '/LTCG'
+        ]
+        compile_options = ['/nologo', '/Ox', '/GL', '/MD', '/W3', '/DNDEBUG']
+
+        if environment.python.architecture == 'x86':
+            compile_options += ['/GX']
+        else:
+            compile_options += ['/GS-']
+
+        env.append_value('CFLAGS_PYEXT', compile_options)
+        env.append_value('CXXFLAGS_PYEXT', compile_options)
+        env.append_value('LINKFLAGS_PYEXT', ldflags_shared)
 
 
 def get_windows_base_prefix(conf, default):
@@ -591,7 +605,6 @@ def build(bld):
         uselib   = 'siplib WX WXPY',
     )
     makeExtCopyRule(bld, 'siplib')
-
     # Add build rules for each of our ETG generated extension modules
     makeETGRule(bld, 'etg/_core.py',       '_core',      'WX')
     makeETGRule(bld, 'etg/_adv.py',        '_adv',       'WXADV')
@@ -608,7 +621,6 @@ def build(bld):
     makeETGRule(bld, 'etg/_ribbon.py',     '_ribbon',    'WXRIBBON')
     makeETGRule(bld, 'etg/_propgrid.py',   '_propgrid',  'WXPROPGRID')
     makeETGRule(bld, 'etg/_aui.py',        '_aui',       'WXAUI')
-
     # Modules that are platform-specific
     if isWindows:
         makeETGRule(bld, 'etg/_msw.py',    '_msw',       'WX')
@@ -687,7 +699,7 @@ def _copyEnvGroup(env, srcPostfix, destPostfix):
 
 # Make extension module build rules using info gleaned from an ETG script
 def makeETGRule(bld, etgScript, moduleName, libFlags):
-    from buildtools.config   import loadETG, getEtgSipCppFiles
+    from buildtools.config import loadETG, getEtgSipCppFiles
 
     addRelwithdebugFlags(bld, moduleName)
 
@@ -700,6 +712,7 @@ def makeETGRule(bld, etgScript, moduleName, libFlags):
             #before=moduleName+'.res'
             )
         rc = [rc_name]
+
 
     etg = loadETG(etgScript)
     bld(features='c cxx cxxshlib pyext',

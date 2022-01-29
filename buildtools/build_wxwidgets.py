@@ -63,19 +63,17 @@ def getXcodePaths():
     return [base, base+"/Platforms/MacOSX.platform/Developer"]
 
 
+win_environment = None
+
 def getVisCVersion():
-    text = getoutput("cl.exe")
-    if 'Version 13' in text:
-        return '71'
-    if 'Version 15' in text:
-        return '90'
-    if 'Version 16' in text:
-        return '100'
-    if 'Version 19' in text:
-        return '140'
-    # TODO: Add more tests to get the other versions...
-    else:
-        return 'FIXME'
+    global win_environment
+
+    if win_environment is None:
+        from . import msvc
+
+        win_environment = msvc.setup_environment(minimum_c_version=14.2)
+
+    return win_environment.visual_c.version.split('.')[0] + '0'
 
 
 def exitIfError(code, msg):
@@ -429,7 +427,6 @@ def main(wxDir, args):
             if not options.no_msedge:
                 flags["wxUSE_WEBVIEW_EDGE"] = "1"
 
-
         mswIncludeDir = os.path.join(wxRootDir, "include", "wx", "msw")
         setupFile = os.path.join(mswIncludeDir, "setup.h")
         with open(setupFile, "rb") as f:
@@ -451,99 +448,167 @@ def main(wxDir, args):
         args = []
         if toolkit == "msvc":
             print("setting build options...")
-            args.append("-f makefile.vc")
-            if options.unicode:
-                args.append("UNICODE=1")
-                if VERSION < (2,9):
-                    args.append("MSLU=1")
-
-            if options.wxpython:
-                args.append("OFFICIAL_BUILD=1")
-                args.append("COMPILER_VERSION=%s" % getVisCVersion())
-                args.append("SHARED=1")
-                args.append("MONOLITHIC=0")
-                args.append("USE_OPENGL=1")
-                args.append("USE_GDIPLUS=1")
-
-                if not options.debug:
-                    args.append("BUILD=release")
+            from . import msvc
+            environment = msvc.setup_environment(minimum_c_version=14.2)
+            if (
+                not options.jom and
+                environment.visual_c.has_cmake and
+                environment.visual_c.has_ninja
+            ):
+                nmakeCommand = 'cmake.exe'
+                if environment.python.architecture == 'x64':
+                    libdirname = 'vc_x64_dll'
+                    libdirrename = 'vc%s_x64_dll'
                 else:
-                    args.append("BUILD=debug")
+                    libdirname = 'vc_dll'
+                    libdirrename = 'vc%s_dll'
 
-            if options.shared:
-                args.append("SHARED=1")
+                libdirrename %= getVisCVersion()
+                libdirrename = os.path.join(wxRootDir, 'lib', libdirrename)
+                libdirname = os.path.join(wxRootDir, 'lib', libdirname)
 
-            if options.cairo:
-                args.append(
-                    "CPPFLAGS=/I%s" %
-                     os.path.join(os.environ.get("CAIRO_ROOT", ""), 'include\\cairo'))
+                if not os.path.exists(libdirname):
+                    print('creating directory', libdirname)
+                    os.makedirs(libdirname)
 
-            if options.no_dpi_aware:
-                args.append("USE_DPI_AWARE_MANIFEST=0")
+                if options.unicode:
+                    setuphdir = os.path.join(libdirname, 'mswu')
+                else:
+                    setuphdir = os.path.join(libdirname, 'msw')
 
-            if options.jom:
-                nmakeCommand = 'jom.exe'
-            else:
-                from . import msvc
-                environment = msvc.setup_environment(minimum_c_version=14.2)
+                if not os.path.exists(setuphdir):
+                    print('creating directory', setuphdir)
+                    os.makedirs(setuphdir)
 
-                if (
-                    environment.visual_c.has_cmake and
-                    environment.visual_c.has_ninja
-                ):
+                setuphdirwx = os.path.join(setuphdir, 'wx')
+                if not os.path.exists(setuphdirwx):
+                    print('creating directory', setuphdirwx)
+                    os.makedirs(setuphdirwx)
 
-                    buildDir = wxRootDir
-                    nmakeCommand = 'cmake.exe'
-                    libdirname = (
-                        'vc' +
-                        environment.visual_c.version.split('.')[0] +
-                        '0_' +
-                        environment.python.architecture +
-                        '_dll'
+                setuphdirwxsetup = os.path.join(setuphdirwx, 'setup.h')
+                if not os.path.exists(setuphdirwxsetup):
+                    src = os.path.join(
+                        wxRootDir,
+                        'include',
+                        'wx',
+                        'msw',
+                        'setup.h'
                     )
-                    libdirname = os.path.join(wxRootDir, 'lib', libdirname)
-                    if not os.path.exists(libdirname):
-                        os.makedirs(libdirname)
+                    print('copying file', src, '->', setuphdirwxsetup)
+                    shutil.copyfile(src, setuphdirwxsetup)
 
-                    setuphdir = os.path.join(
-                        libdirname,
-                        'mswu' if 'UNICODE=1' in args else 'msw'
-                    )
-                    if not os.path.exists(setuphdir):
-                        os.makedirs(setuphdir)
+                setuphdirwxmsw = os.path.join(setuphdirwx, 'msw')
+                if not os.path.exists(setuphdirwxmsw):
+                    print('creating directory', setuphdirwxmsw)
+                    os.makedirs(setuphdirwxmsw)
 
-                    setuphdirwx = os.path.join(setuphdir, 'wx')
-                    if not os.path.exists(setuphdirwx):
-                        os.makedirs(setuphdirwx)
-
-                    setuphdirwxsetup = os.path.join(setuphdirwx, 'setup.h')
-                    if not os.path.exists(setuphdirwxsetup):
-                        import shutil
-
-                        src = os.path.join(wxRootDir, 'include', 'wx', 'msw', 'setup.h')
-                        shutil.copyfile(src, setuphdirwxsetup)
-
-                    setuphdirwxmsw = os.path.join(setuphdirwx, 'msw')
-                    if not os.path.exists(setuphdirwxmsw):
-                        os.makedirs(setuphdirwxmsw)
-
-                    setuphdirwxmswrcdefs = os.path.join(setuphdirwxmsw, 'cdefs.h')
-                    if not os.path.exists(setuphdirwxmswrcdefs):
-                        genrcdefs = os.path.join(wxRootDir, 'include', 'wx', 'msw', 'genrcdefs.h')
-                        command = 'cl /EP /nologo "{0}" > "{1}"'.format(
-                            genrcdefs,
-                            setuphdirwxmswrcdefs
+                setuphdirwxmswrcdefs = os.path.join(setuphdirwxmsw, 'cdefs.h')
+                if not os.path.exists(setuphdirwxmswrcdefs):
+                    genrcdefs = os.path.join(
+                        wxRootDir, 'include', 'wx', 'msw', 'genrcdefs.h'
                         )
-                        run(command)
+                    command = 'cl /EP /nologo "{0}" > "{1}"'.format(
+                        genrcdefs,
+                        setuphdirwxmswrcdefs
+                    )
 
-                    if 'CPPFLAGS' not in os.environ:
-                        os.environ['CPPFLAGS'] = '/I"{0}"'.format(setuphdir)
+                    print(
+                        'compiling file',
+                        genrcdefs,
+                        '->',
+                        setuphdirwxmswrcdefs
+                    )
+                    run(command)
+
+                if 'CPPFLAGS' not in os.environ:
+                    os.environ['CPPFLAGS'] = '/I"{0}"'.format(setuphdir)
+                else:
+                    os.environ['CPPFLAGS'] += ' /I"{0}"'.format(setuphdir)
+
+                args.append("-DwxBUILD_CUSTOM_SETUP_HEADER_PATH=%s" % setuphdir)
+
+                if options.wxpython:
+                    # args.append("-DOFFICIAL_BUILD=1")
+                    args.append("-DCOMPILER_VERSION=%s" % getVisCVersion())
+                    # args.append("-DwxBUILD_VENDOR=wxPython")
+                    # args.append("-DwxBUILD_FLAVOUR=wxPython")
+                    args.append("-DwxBUILD_SHARED=1")
+                    args.append("-DwxBUILD_MONOLITHIC=0")
+                    args.append("-DwxUSE_OPENGL=1")
+                    args.append("-DwxUSE_GRAPHICS_GDIPLUS=1")
+
+                    if options.debug:
+                        args.append("-DCMAKE_BUILD_TYPE=Debug")
+                        args.append("-DwxBUILD_OPTIMISE=0")
+                        args.append("-DwxBUILD_STRIPPED_RELEASE=0")
+
                     else:
-                        os.environ['CPPFLAGS'] += ' /I"{0}"'.format(setuphdir)
+                        args.append("-DCMAKE_BUILD_TYPE=Release")
+                        args.append("-DwxBUILD_OPTIMISE=1")
+                        args.append("-DwxBUILD_STRIPPED_RELEASE=1")
 
-                    args.pop(0)
-                    for i, arg in enumerate(args[:]):
-                        args[i] = '-D' + arg
+                if options.shared:
+                    args.append("-DwxBUILD_SHARED=1")
+
+                if options.cairo:
+                    args.append(
+                        "CMAKE_CXX_FLAGS=/DWIN32 /D_WINDOWS /GR /EHsc /I%s" %
+                        os.path.join(
+                            os.environ.get("CAIRO_ROOT", ""), 'include\\cairo'
+                        )
+                    )
+
+                if options.no_dpi_aware:
+                    args.append("-DwxUSE_DPI_AWARE_MANIFEST=none")
+
+                for flag, value in flags.items():
+                    if flag in (
+                        'wxDIALOG_UNIT_COMPATIBILITY',
+                        'wxUSE_DATEPICKCTRL_GENERIC'
+                    ):
+                        continue
+
+                    args.append('-D' + flag.strip() + '=' + value)
+
+                args.append('-S"%s"' % wxRootDir)
+                args.append('-B"%s"' % wxRootDir)
+
+            else:
+                if options.jom:
+                    nmakeCommand = 'jom.exe'
+
+                args.append("-f makefile.vc")
+                if options.unicode:
+                    args.append("UNICODE=1")
+                    if VERSION < (2, 9):
+                        args.append("MSLU=1")
+
+                if options.wxpython:
+                    args.append("OFFICIAL_BUILD=1")
+                    args.append("COMPILER_VERSION=%s" % getVisCVersion())
+                    args.append("SHARED=1")
+                    args.append("MONOLITHIC=0")
+                    args.append("USE_OPENGL=1")
+                    args.append("USE_GDIPLUS=1")
+
+                    if not options.debug:
+                        args.append("BUILD=release")
+                    else:
+                        args.append("BUILD=debug")
+
+                if options.shared:
+                    args.append("SHARED=1")
+
+                if options.cairo:
+                    args.append(
+                        "CPPFLAGS=/I%s" %
+                        os.path.join(
+                            os.environ.get("CAIRO_ROOT", ""), 'include\\cairo'
+                            )
+                    )
+
+                if options.no_dpi_aware:
+                    args.append("USE_DPI_AWARE_MANIFEST=0")
 
             wxBuilder = builder.MSVCBuilder(commandName=nmakeCommand)
 
@@ -564,7 +629,48 @@ def main(wxDir, args):
 
     if options.clean:
         print("Performing cleanup.")
-        wxBuilder.clean(dir=buildDir, options=args)
+        if (
+            sys.platform.startswith("win") and
+            nmakeCommand.startswith('cmake')
+        ):
+            try:
+                shutil.rmtree(libdirrename)
+            except OSError:
+                pass
+
+            try:
+                shutil.rmtree(libdirname)
+            except OSError:
+                pass
+
+            files = [
+                '.ninja_deps',
+                '.ninja_log',
+                'cmake_install.cmake',
+                'uninstall.cmake',
+                'CMakeCache.txt',
+                'CMakeFiles',
+                'libs',
+                'utils/CMakeFiles',
+                'utils/cmake_install.cmake',
+            ]
+
+            for f in files:
+                f = os.path.join(wxRootDir, f)
+                if not os.path.exists(f):
+                    continue
+                if os.path.isdir(f):
+                    try:
+                        shutil.rmtree(f)
+                    except OSError:
+                        pass
+                elif os.path.isfile(f):
+                    try:
+                        os.remove(f)
+                    except OSError:
+                        pass
+        else:
+            wxBuilder.clean(dir=buildDir, options=args)
 
         sys.exit(0)
 
@@ -580,8 +686,28 @@ def main(wxDir, args):
     exitIfError(wxBuilder.build(dir=buildDir, options=args), "Error building")
 
     if sys.platform.startswith("win") and nmakeCommand.startswith('cmake'):
-        wxBuilder = builder.MSVCBuilder(commandName='ninja.exe')
-        exitIfError(wxBuilder.build(dir=buildDir, options=['-j ' + options.jobs]), "Error building")
+        ninja_builder = builder.MSVCBuilder(commandName='ninja.exe')
+        for arg in args:
+            if arg.startswith('-B'):
+                break
+        else:
+            raise RuntimeError('Sanity check, this shouldn\'t happen')
+        ninja_args = [
+            '-C"{0}"'.format(wxRootDir),
+            '-f"{0}"'.format(os.path.join(wxRootDir, 'build.ninja')),
+            '-j ' + options.jobs
+        ]
+        exitIfError(ninja_builder.build(dir=buildDir, options=ninja_args), "Error building")
+        print('renaming directory', libdirname, '->', libdirrename)
+        os.rename(libdirname, libdirrename)
+        for f in os.listdir(libdirrename):
+            if 'vc_custom' in f:
+                dst = f.replace('vc_custom', 'vc' + getVisCVersion())
+                print('renaming file', f, '->', dst)
+
+                dst = os.path.join(libdirrename, dst)
+                src = os.path.join(libdirrename, f)
+                os.rename(src, dst)
 
     if options.install:
         extra=None

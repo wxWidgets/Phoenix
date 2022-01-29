@@ -157,8 +157,15 @@ class Configuration(object):
 
             if os.environ.get('CPU', None) in ['AMD64', 'X64']:
                 self.VCDLL = 'vc%s_x64_dll' % getVisCVersion()
+                # Fix error RC2188 ..\ext\wxWidgets\include\wx/msw/wx.rc(125)
+                self.defines = [
+                    ('WX_CPU_AMD64', None),
+                ]
             else:
                 self.VCDLL = 'vc%s_dll' % getVisCVersion()
+                self.defines = [
+                    ('WX_CPU_X86', None),
+                ]
 
             self.includes += ['include',
                               opj(self.WXDIR, 'lib', self.VCDLL, 'msw'  + self.libFlag()),
@@ -166,7 +173,7 @@ class Configuration(object):
                               opj(self.WXDIR, 'contrib', 'include'),
                               ]
 
-            self.defines = [ ('WIN32', None),
+            self.defines += [ ('WIN32', None),
                              ('_WINDOWS', None),
                              (self.WXPLAT, None),
                              ('WXUSINGDLL', '1'),
@@ -178,7 +185,7 @@ class Configuration(object):
                                   ('wxUSE_DPI_AWARE_MANIFEST', '2') ]
 
             self.libs = []
-            self.libdirs = [ opj(self.WXDIR, 'lib', self.VCDLL) ]
+            self.libdirs = [opj(self.WXDIR, 'lib', self.VCDLL)]
             if self.MONOLITHIC:
                 self.libs += makeLibName('')
             else:
@@ -951,20 +958,10 @@ def getSipFiles(names):
 
 
 def getVisCVersion():
-    text = runcmd("cl.exe", getOutput=True, echoCmd=False)
-    if 'Version 13' in text:
-        return '71'
-    if 'Version 15' in text:
-        return '90'
-    if 'Version 16' in text:
-        return '100'
-    if 'Version 18' in text:
-        return '120'
-    if 'Version 19' in text:
-        return '140'
-    # TODO: Add more tests to get the other versions...
-    else:
-        return 'FIXME'
+    from . import msvc
+    environment = msvc.setup_environment(minimum_c_version=14.2)
+    version = environment.visual_c.version
+    return version.split('.')[0] + '0'
 
 
 _haveObjDump = None

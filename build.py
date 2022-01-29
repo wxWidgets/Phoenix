@@ -1695,7 +1695,6 @@ def cmd_build_py(options, args):
         _getWxCompiler('--cc', 'CC', 'CFLAGS')
         _getWxCompiler('--cxx', 'CXX', 'CXXFLAGS')
 
-
     wafBuildBase = wafBuildDir = getWafBuildBase()
     if isWindows:
         wafBuildDir = posixjoin(wafBuildBase, 'release')
@@ -1986,9 +1985,55 @@ def cmd_egg_info(options, args, egg_base=None):
 def cmd_clean_wx(options, args):
     cmdTimer = CommandTimer('clean_wx')
     if isWindows:
+        checkCompiler()
+        if (
+            win_environment.visual_c.has_cmake and
+            win_environment.visual_c.has_ninja
+        ):
+            wx_dir = wxDir()
+
+            if win_environment.python.architecture == 'x64':
+                libdirname = 'vc_x64_dll'
+                libdirrename = 'vc%s_x64_dll'
+            else:
+                libdirname = 'vc_dll'
+                libdirrename = 'vc%s_dll'
+
+            libdirrename %= getVisCVersion()
+
+            files = [
+                '.ninja_deps',
+                '.ninja_log',
+                'cmake_install.cmake',
+                'uninstall.cmake',
+                'CMakeCache.txt',
+                'CMakeFiles',
+                'libs',
+                'utils/CMakeFiles',
+                'utils/cmake_install.cmake',
+                'lib/' + libdirrename,
+                'lib/' + libdirname
+            ]
+
+            for f in files:
+                f = os.path.join(wx_dir, f)
+                if not os.path.exists(f):
+                    continue
+                if os.path.isdir(f):
+                    try:
+                        shutil.rmtree(f)
+                    except OSError:
+                        pass
+                elif os.path.isfile(f):
+                    try:
+                        os.remove(f)
+                    except OSError:
+                        pass
+
         if options.both:
             options.debug = True
         msw = getMSWSettings(options)
+
         deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion2_nodot, msw.dll_type))))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion3_nodot, msw.dll_type))))
