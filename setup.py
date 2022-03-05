@@ -365,6 +365,7 @@ if __name__ == '__main__':
           author           = AUTHOR,
           author_email     = AUTHOR_EMAIL,
           url              = URL,
+          project_urls     = PROJECT_URLS,
           download_url     = DOWNLOAD_URL,
           license          = LICENSE,
           platforms        = PLATFORMS,
