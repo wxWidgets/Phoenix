@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     2-Sept-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -34,6 +34,9 @@ def run():
     c = module.find('wxMemoryDC')
     c.addPrivateCopyCtor()
     c.mustHaveApp()
+
+    # remove the const overload of GetSelectedBitmap
+    c.find('GetSelectedBitmap').findOverload('', isConst=True).ignore()
 
 
     #-----------------------------------------------------------------

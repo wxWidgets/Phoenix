@@ -79,7 +79,7 @@ def _get_elem(elem):
     if not ET.iselement(elem):
         try:
             elem = ET.fromstring(elem)
-        except Exception:
+        except:
             py2and3.print_("Value Error", elem)
             raise ValueError("Cannot convert to element")
     return elem
@@ -98,7 +98,8 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
         self._topics = {}
         self._treeDoc = ''
         if format == TOPIC_TREE_FROM_FILE:
-            self._parse_tree(_get_elem(open(xml,mode="r").read()))
+            with open(xml, mode="r") as fid:
+                self._parse_tree(_get_elem(fid.read()))
         elif format == TOPIC_TREE_FROM_STRING:
             self._parse_tree(_get_elem(xml))
         else:

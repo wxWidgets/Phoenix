@@ -23,7 +23,7 @@ keyword parameter.
 
 PB_STYLE_DEFAULT:
 Creates a flat label button with rounded corners, the highlight for mouse over
-and press states is based off of the hightlight color from the systems current
+and press states is based off of the highlight color from the systems current
 theme.
 
 PB_STYLE_GRADIENT:
@@ -177,7 +177,7 @@ class PlateButton(wx.Control):
         """Draw the bitmap if one has been set
 
         :param wx.GCDC `gc`: :class:`wx.GCDC` to draw with
-        :return: x cordinate to draw text at
+        :return: x coordinate to draw text at
 
         """
         if self.IsEnabled():
@@ -188,7 +188,7 @@ class PlateButton(wx.Control):
         if bmp is not None and bmp.IsOk():
             bw, bh = bmp.GetSize()
             ypos = (self.GetSize()[1] - bh) // 2
-            gc.DrawBitmap(bmp, 6, ypos, bmp.GetMask() != None)
+            gc.DrawBitmap(bmp, 6, ypos, bmp.GetMask() is not None)
             return bw + 6
         else:
             return 6
@@ -264,7 +264,7 @@ class PlateButton(wx.Control):
         """Draw the button"""
         # TODO using a buffered paintdc on windows with the nobg style
         #      causes lots of weird drawing. So currently the use of a
-        #      buffered dc is dissabled for this style.
+        #      buffered dc is disabled for this style.
         if PB_STYLE_NOBG & self._style:
             dc = wx.PaintDC(self)
         else:
@@ -784,14 +784,6 @@ class PlateButton(wx.Control):
     def ShowMenu(self):
         """Show the dropdown menu if one is associated with this control"""
         if self._menu is not None:
-            size = self.GetSize()
-            adj = wx.Platform == '__WXMAC__' and 3 or 0
-
-            if self._style & PB_STYLE_SQUARE:
-                xpos = 1
-            else:
-                xpos = size[1] / 2
-
-            self.PopupMenu(self._menu, (xpos, size[1] + adj))
+            self.PopupMenu(self._menu)
 
     #---- End Public Member Functions ----#

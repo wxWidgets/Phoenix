@@ -1,10 +1,9 @@
-    
+
                 def FunctionInAWorkerThread(strs):
-                
+
                     evt = wx.CommandEvent()
-    
-                    # NOT evt.SetString(strs) as this would be a shallow copy
-                    evt.SetString(strs[:]) # make a deep copy
-    
+
+                    evt.SetString(strs)
+
                     wx.TheApp.QueueEvent(evt)
-                
+

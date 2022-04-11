@@ -7,35 +7,37 @@ import wx.aui as aui
 
 from six import BytesIO
 
-ID_CreateTree = wx.NewId()
-ID_CreateGrid = wx.NewId()
-ID_CreateText = wx.NewId()
-ID_CreateHTML = wx.NewId()
-ID_CreateSizeReport = wx.NewId()
-ID_GridContent = wx.NewId()
-ID_TextContent = wx.NewId()
-ID_TreeContent = wx.NewId()
-ID_HTMLContent = wx.NewId()
-ID_SizeReportContent = wx.NewId()
-ID_CreatePerspective = wx.NewId()
-ID_CopyPerspective = wx.NewId()
+ID_CreateTree = wx.NewIdRef()
+ID_CreateGrid = wx.NewIdRef()
+ID_CreateText = wx.NewIdRef()
+ID_CreateHTML = wx.NewIdRef()
+ID_CreateSizeReport = wx.NewIdRef()
+ID_GridContent = wx.NewIdRef()
+ID_TextContent = wx.NewIdRef()
+ID_TreeContent = wx.NewIdRef()
+ID_HTMLContent = wx.NewIdRef()
+ID_SizeReportContent = wx.NewIdRef()
+ID_CreatePerspective = wx.NewIdRef()
+ID_CopyPerspective = wx.NewIdRef()
 
-ID_TransparentHint = wx.NewId()
-ID_VenetianBlindsHint = wx.NewId()
-ID_RectangleHint = wx.NewId()
-ID_NoHint = wx.NewId()
-ID_HintFade = wx.NewId()
-ID_AllowFloating = wx.NewId()
-ID_NoVenetianFade = wx.NewId()
-ID_TransparentDrag = wx.NewId()
-ID_AllowActivePane = wx.NewId()
-ID_NoGradient = wx.NewId()
-ID_VerticalGradient = wx.NewId()
-ID_HorizontalGradient = wx.NewId()
+ID_TransparentHint = wx.NewIdRef()
+ID_VenetianBlindsHint = wx.NewIdRef()
+ID_RectangleHint = wx.NewIdRef()
+ID_NoHint = wx.NewIdRef()
+ID_HintFade = wx.NewIdRef()
+ID_AllowFloating = wx.NewIdRef()
+ID_NoVenetianFade = wx.NewIdRef()
+ID_TransparentDrag = wx.NewIdRef()
+ID_AllowActivePane = wx.NewIdRef()
+ID_NoGradient = wx.NewIdRef()
+ID_VerticalGradient = wx.NewIdRef()
+ID_HorizontalGradient = wx.NewIdRef()
 
-ID_Settings = wx.NewId()
-ID_About = wx.NewId()
-ID_FirstPerspective = ID_CreatePerspective+1000
+ID_Settings = wx.NewIdRef()
+ID_About = wx.NewIdRef()
+
+# This reserves count IDs and returns a list of WindowIDRef objects
+ID_FirstPerspective = wx.NewIdRef(100)
 
 
 
@@ -126,9 +128,9 @@ class PyAUIFrame(wx.Frame):
         self._perspectives_menu.Append(ID_CreatePerspective, "Create Perspective")
         self._perspectives_menu.Append(ID_CopyPerspective, "Copy Perspective Data To Clipboard")
         self._perspectives_menu.AppendSeparator()
-        self._perspectives_menu.Append(ID_FirstPerspective+0, "Default Startup")
-        self._perspectives_menu.Append(ID_FirstPerspective+1, "All Panes")
-        self._perspectives_menu.Append(ID_FirstPerspective+2, "Vertical Toolbar")
+        self._perspectives_menu.Append(ID_FirstPerspective[0], "Default Startup")
+        self._perspectives_menu.Append(ID_FirstPerspective[1], "All Panes")
+        self._perspectives_menu.Append(ID_FirstPerspective[2], "Vertical Toolbar")
 
         help_menu = wx.Menu()
         help_menu.Append(ID_About, "About...")
@@ -414,8 +416,8 @@ class PyAUIFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_HorizontalGradient)
 
 
-        self.Bind(wx.EVT_MENU_RANGE, self.OnRestorePerspective, id=ID_FirstPerspective,
-                  id2=ID_FirstPerspective+1000)
+        self.Bind(wx.EVT_MENU_RANGE, self.OnRestorePerspective,
+                  id=ID_FirstPerspective[0], id2=ID_FirstPerspective[-1])
 
 
     def OnPaneClose(self, event):
@@ -584,7 +586,7 @@ class PyAUIFrame(wx.Frame):
         if len(self._perspectives) == 0:
             self._perspectives_menu.AppendSeparator()
 
-        self._perspectives_menu.Append(ID_FirstPerspective + len(self._perspectives), dlg.GetValue())
+        self._perspectives_menu.Append(ID_FirstPerspective[len(self._perspectives)], dlg.GetValue())
         self._perspectives.append(self._mgr.SavePerspective())
 
 
@@ -599,7 +601,7 @@ class PyAUIFrame(wx.Frame):
 
     def OnRestorePerspective(self, event):
 
-        self._mgr.LoadPerspective(self._perspectives[event.GetId() - ID_FirstPerspective])
+        self._mgr.LoadPerspective(self._perspectives[event.GetId() - ID_FirstPerspective[0].Value])
 
 
     def GetStartPosition(self):

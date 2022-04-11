@@ -60,18 +60,11 @@ class TestPanel(wx.Panel):
         self.SetAutoLayout(True)
 
 
-    def __del__(self):
-        if self.process is not None:
-            self.process.Detach()
-            self.process.CloseOutput()
-            self.process = None
-
-
     def OnExecuteBtn(self, evt):
         cmd = self.cmd.GetValue()
 
         self.process = wx.Process(self)
-        self.process.Redirect();
+        self.process.Redirect()
         pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
         self.log.write('OnExecuteBtn: "%s" pid: %s\n' % (cmd, pid))
 
@@ -126,6 +119,17 @@ class TestPanel(wx.Panel):
         self.exBtn.Enable(True)
 
 
+    def ShutdownDemo(self):
+        # Called when the demo application is switching to a new sample. Tell
+        # the process to close (by closign its output stream) and then wait
+        # for the termination signals to be received and processed.
+        if self.process is not None:
+            self.process.CloseOutput()
+            wx.MilliSleep(250)
+            wx.Yield()
+            self.process = None
+
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
@@ -140,14 +144,14 @@ overview = """\
 <html><body>
 <h2>wx.Process</h2>
 
-wx.Process lets you get notified when an asyncronous child process
+wx.Process lets you get notified when an asynchronous child process
 started by wxExecute terminates, and also to get input/output streams
 for the child process's stdout, stderr and stdin.
 
 <p>
 This demo launches a simple python script that echos back on stdout
 lines that it reads from stdin.  You can send text to the echo
-process' stdin by typing in the lower textctrl and clicking Send.
+process's stdin by typing in the lower textctrl and clicking Send.
 
 <p>
 Clicking the Close Stream button will close the demo's end of the

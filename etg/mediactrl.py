@@ -4,7 +4,7 @@
 #              Dietmar Schwertberger
 #
 # Created:     24-Nov-2015
-# Copyright:   (c) 2015-2017 by Total Control Software
+# Copyright:   (c) 2015-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -29,11 +29,15 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    module.addHeaderCode('#include "wx/mediactrl.h"')
 
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    module.addHeaderCode('#include <wx/mediactrl.h>')
+    module.addHeaderCode('#include <wx/uri.h>')
+    tools.generateStubs('wxUSE_MEDIACTRL', module,
+                        typeValMap={'wxMediaState': 'wxMEDIASTATE_STOPPED'})
 
     c = module.find('wxMediaCtrl')
     c.addPrivateCopyCtor()
@@ -62,7 +66,7 @@ def run():
     c = module.find('wxMediaEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
                 EVT_MEDIA_LOADED = wx.PyEventBinder( wxEVT_MEDIA_LOADED )
                 EVT_MEDIA_STOP = wx.PyEventBinder( wxEVT_MEDIA_STOP )
                 EVT_MEDIA_FINISHED = wx.PyEventBinder( wxEVT_MEDIA_FINISHED )

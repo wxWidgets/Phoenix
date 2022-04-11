@@ -1,4 +1,4 @@
-    
+
     sw = wx.StopWatch()
     CallLongRunningFunction()
     wx.LogMessage("The long running function took %dms to execute", sw.Time())

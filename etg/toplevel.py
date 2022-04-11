@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     4-Dec-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -39,9 +39,6 @@ def run():
     c.find('wxTopLevelWindow.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'
 
-    c.find('HandleSettingChange').ignore()
-    c.find('SetLeftMenu').ignore()
-    c.find('SetRightMenu').ignore()
     c.find('IsUsingNativeDecorations').ignore()
     c.find('UseNativeDecorations').ignore()
     c.find('UseNativeDecorationsByDefault').ignore()
@@ -69,6 +66,8 @@ def run():
             return 0;
         #endif
         """)
+
+    c.find('GeometrySerializer').abstract = True
 
     c.addProperty('DefaultItem GetDefaultItem SetDefaultItem')
     c.addProperty('Icon GetIcon SetIcon')

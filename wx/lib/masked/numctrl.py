@@ -220,7 +220,7 @@ GetValue()
     fractionWidth is 0, or a float otherwise.
 
 
-SetParameters(\*\*kwargs)
+SetParameters(**kwargs)
     Allows simultaneous setting of various attributes
     of the control after construction.  Keyword arguments
     allowed are the same parameters as supported in the constructor.
@@ -549,7 +549,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##        dbg('kwargs:', kwargs)
         for key, param_value in kwargs.items():
             key = key.replace('Color', 'Colour')
-            if key not in NumCtrl.valid_ctrl_params.keys():
+            if key not in NumCtrl.valid_ctrl_params:
                 raise AttributeError('invalid keyword argument "%s"' % key)
             else:
                 init_args[key] = param_value
@@ -583,7 +583,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
         self._integerWidth = init_args['integerWidth']
         if init_args['groupDigits']:
-            self._groupSpace = (self._integerWidth - 1) / 3
+            self._groupSpace = (self._integerWidth - 1) // 3
         else:
             self._groupSpace = 0
         intmask = '#{%d}' % (self._integerWidth + self._groupSpace)
@@ -697,7 +697,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 self._groupDigits = kwargs['groupDigits']
 
             if self._groupDigits:
-                self._groupSpace = (self._integerWidth - 1) / 3
+                self._groupSpace = (self._integerWidth - 1) // 3
             else:
                 self._groupSpace = 0
 
@@ -739,9 +739,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         # for all other parameters, assign keyword args as appropriate:
         for key, param_value in kwargs.items():
             key = key.replace('Color', 'Colour')
-            if key not in NumCtrl.valid_ctrl_params.keys():
+            if key not in NumCtrl.valid_ctrl_params:
                 raise AttributeError('invalid keyword argument "%s"' % key)
-            elif key not in MaskedEditMixin.valid_ctrl_params.keys():
+            elif key not in MaskedEditMixin.valid_ctrl_params:
                 setattr(self, '_' + key, param_value)
             elif key in ('mask', 'autoformat'): # disallow explicit setting of mask
                 raise AttributeError('invalid keyword argument "%s"' % key)
@@ -809,7 +809,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 maskededit_kwargs['stopFieldChangeIfInvalid'] = False
 
 ##        dbg('maskededit_kwargs:', maskededit_kwargs)
-        if maskededit_kwargs.keys():
+        if maskededit_kwargs:
             self.SetCtrlParameters(**maskededit_kwargs)
 
         # Go ensure all the format codes necessary are present:
@@ -929,7 +929,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
     def _GetNumValue(self, value):
         """
         This function attempts to "clean up" a text value, providing a regularized
-        convertable string, via atol() or atof(), for any well-formed numeric text value.
+        convertible string, via atol() or atof(), for any well-formed numeric text value.
         """
         return value.replace(self._groupChar, '').replace(self._decimalChar, '.').replace('(', '-').replace(')','').strip()
 
@@ -1012,7 +1012,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
     def _SetValue(self, value):
         """
         This routine supersedes the base masked control _SetValue().  It is
-        needed to ensure that the value of the control is always representable/convertable
+        needed to ensure that the value of the control is always representable/convertible
         to a numeric return value (via GetValue().)  This routine also handles
         automatic adjustment and grouping of the value without explicit intervention
         by the user.
@@ -1369,7 +1369,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         If min > the max value allowed by the width of the control,
         the function will return False, and the min will not be set.
 
-        :param `min`: Minium value for the control
+        :param `min`: Minimum value for the control
         :type `min`: integer or None
 
         """
@@ -1410,7 +1410,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         If max > the max value allowed by the width of the control,
         the function will return False, and the max will not be set.
 
-        :param `max`: Minium value for the control
+        :param `max`: Minimum value for the control
         :type `max`: integer or None
 
         """
@@ -1443,9 +1443,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
         .. note:: leaving out an argument will remove the corresponding bound.
 
-        :param `min`: Minium value for the control
+        :param `min`: Minimum value for the control
         :type `min`: integer or None
-        :param `max`: Minium value for the control
+        :param `max`: Minimum value for the control
         :type `max`: integer or None
 
         """
@@ -1919,7 +1919,7 @@ if __name__ == '__main__':
             style = wx.DEFAULT_DIALOG_STYLE ):
             wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
-            self.int_ctrl = NumCtrl(self, wx.NewId(), size=(55,20))
+            self.int_ctrl = NumCtrl(self, wx.ID_ANY, size=(55,20))
             self.OK = wx.Button( self, wx.ID_OK, "OK")
             self.Cancel = wx.Button( self, wx.ID_CANCEL, "Cancel")
 

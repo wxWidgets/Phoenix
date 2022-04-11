@@ -52,6 +52,23 @@ class msgdlg_Tests(wtc.WidgetTestCase):
         wx.STAY_ON_TOP
 
 
+    def test_msgdlgLabels1(self):
+        dlg = wx.MessageDialog(None, 'Message', 'Caption')
+        dlg.SetHelpLabel('help')
+        dlg.SetOKCancelLabels('ok', 'cancel')
+        dlg.SetOKLabel('ok')
+        dlg.SetYesNoCancelLabels('yes', 'no', 'cancel')
+        dlg.SetYesNoLabels('yes', 'no')
+
+    def test_msgdlgLabels2(self):
+        dlg = wx.MessageDialog(None, 'Message', 'Caption')
+        dlg.SetHelpLabel(wx.ID_HELP)
+        dlg.SetOKCancelLabels(wx.ID_OK, wx.ID_CANCEL)
+        dlg.SetOKLabel(wx.ID_OK)
+        dlg.SetYesNoCancelLabels(wx.ID_YES, wx.ID_NO, wx.ID_CANCEL)
+        dlg.SetYesNoLabels(wx.ID_YES, wx.ID_NO)
+
+
     def test_gmsgdlg1(self):
         dlg = wx.GenericMessageDialog(None, 'Message', 'Caption')
         wx.CallLater(250, dlg.EndModal, wx.ID_OK)

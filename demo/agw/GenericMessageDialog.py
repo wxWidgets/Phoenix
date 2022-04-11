@@ -106,7 +106,7 @@ class GenericMessageDialogDemo(wx.Panel):
         mainSizer.Add(self.buttonKinds, 0, wx.ALL, 5)
         mainSizer.Add(self.dialogStyles, 0, wx.ALL, 5)
         mainSizer.Add((10, 0), 0, 0, 0)
-        mainSizer.Add(self.showDialog, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10)
+        mainSizer.Add(self.showDialog, 0, wx.ALL, 10)
         mainSizer.Add((10, 0), 0, 0, 0)
 
         panelSizer.Add(mainSizer, 1, wx.EXPAND)

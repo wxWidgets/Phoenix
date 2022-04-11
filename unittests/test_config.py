@@ -188,6 +188,14 @@ class ConfigTests(wtc.WidgetTestCase):
         if os.path.exists(name):
             os.remove(name)
 
+    def test_ConfigEnums(self):
+        # Test for presence of config enums
+        wx.CONFIG_USE_LOCAL_FILE
+        wx.CONFIG_USE_GLOBAL_FILE
+        wx.CONFIG_USE_RELATIVE_PATH
+        wx.CONFIG_USE_NO_ESCAPE_CHARACTERS
+        wx.CONFIG_USE_SUBDIR
+
 #---------------------------------------------------------------------------
 
 

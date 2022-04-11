@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Dec-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,13 +33,13 @@ def run():
     c = module.find('wxClientDataContainer')
     assert isinstance(c, etgtools.ClassDef)
 
-    c.find('SetClientObject.data').transfer = True
 
     # The [G|S]etClientData methods deal with untyped void* values, which we
-    # don't support. The [G|S]etClientObject methods use wxClientData instaces
+    # don't support. The [G|S]etClientObject methods use wxClientData instances
     # which we have a MappedType for, so make the ClientData methods just be
     # aliases for ClientObjects. From the Python programmer's perspective they
     # would be virtually the same anyway.
+    c.find('SetClientObject.data').transfer = True
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
     c.find('GetClientObject').pyName = 'GetClientData'
@@ -50,7 +50,7 @@ def run():
     c.addPyMethod('SetClientObject', '(self, data)',
         doc="Alias for :meth:`SetClientData`",
         body="self.SetClientData(data)")
-
+    c.addPyProperty('ClientData GetClientData SetClientData')
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

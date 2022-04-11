@@ -160,20 +160,20 @@ looking at the :meth:`wx.BoxSizer.Add` signature:
 
    Appends a child to the sizer.
 
-   :param `window`: a window, a spacer or another sizer to be added to the sizer. Its initial size 
-    (either set explicitly by the user or calculated internally) is interpreted as the minimal and 
+   :param `window`: a window, a spacer or another sizer to be added to the sizer. Its initial size
+    (either set explicitly by the user or calculated internally) is interpreted as the minimal and
     in many cases also the initial size.
-   :param int proportion: this parameter is used in :class:`wx.BoxSizer` to indicate if a child of a sizer 
-    can change its size in the main orientation of the :class:`wx.BoxSizer` - where 0 stands for not changeable 
-    and a value of more than zero is interpreted relative to the value of other children of the same 
-    :class:`wx.BoxSizer`. For example, you might have a horizontal :class:`wx.BoxSizer` with three children, two 
-    of which are supposed to change their size with the sizer. Then the two stretchable windows would 
+   :param int proportion: this parameter is used in :class:`wx.BoxSizer` to indicate if a child of a sizer
+    can change its size in the main orientation of the :class:`wx.BoxSizer` - where 0 stands for not changeable
+    and a value of more than zero is interpreted relative to the value of other children of the same
+    :class:`wx.BoxSizer`. For example, you might have a horizontal :class:`wx.BoxSizer` with three children, two
+    of which are supposed to change their size with the sizer. Then the two stretchable windows would
     get a value of 1 each to make them grow and shrink equally with the sizer's horizontal dimension.
    :param int flag: OR-combination of flags affecting sizer's behaviour.
    :param int border: determines the border width, if the flag parameter is set to include any border flag.
-   :param object userData: allows an extra object to be attached to the sizer item, for use in derived 
+   :param object userData: allows an extra object to be attached to the sizer item, for use in derived
     classes when sizing information is more complex than the proportion and flag will allow for.
-    
+
    :rtype: :class:`wx.SizerItem`
 
 
@@ -191,19 +191,19 @@ set to 0; we'll worry about them later.
     sizer.Add(wx.Button(self, -1, 'An extremely long button text'), 0, 0, 0)
     sizer.Add(wx.Button(self, -1, 'Small button'), 0, 0, 0)
     self.SetSizer(sizer)
-    
+
 
 You'll notice a couple of things about this:
 
 * The buttons are just big enough to accommodate the text in them. In
   fact, any control placed into a sizer this way will appear at its
   minimum size unless we change the parameters.
-  
+
 * The window size is not changed to fit the sizer. This results in a
   lot of ugly empty space.
 
 
-Let's worry about the second issue first. To make the window size more appropriate, we can set 
+Let's worry about the second issue first. To make the window size more appropriate, we can set
 the size hints to tell the enclosing window to adjust to the size of the sizer:
 
 .. figure:: _static/images/overviews/boxsizer2.png
@@ -233,15 +233,15 @@ are in relation to each other. In a vertical sizer, this changes the
 height; in a horizontal sizer, this changes the width. Here are some
 examples:
 
-.. list-table:: 
+.. list-table::
    :header-rows: 1
    :widths: 40 10
    :class: centertable
 
    * - Code
-   
+
      - Resulting Image
-   
+
    * - .. code-block:: python
           :emphasize-lines: 3,4
 
@@ -273,22 +273,22 @@ examples:
 
      - .. figure:: _static/images/overviews/boxsizer32.png
           :align: left
-                  
+
 
 |
 
 If one of the `proportion` parameters is 0, that :class:`wx.Window`
 will be the minimum size, and the others will resize proportionally:
 
-.. list-table:: 
+.. list-table::
    :header-rows: 1
    :widths: 40 10
    :class: centertable
 
    * - Code
-   
+
      - Resulting Image
-   
+
    * - .. code-block:: python
           :emphasize-lines: 4,5
 
@@ -303,7 +303,7 @@ will be the minimum size, and the others will resize proportionally:
      - .. figure:: _static/images/overviews/boxsizer33.png
           :align: left
 
-   * - Same code as above, with window resized. The top button (proportion 0) is still the minimum height, 
+   * - Same code as above, with window resized. The top button (proportion 0) is still the minimum height,
        and the third button is still twice the height of the second.
 
      - .. figure:: _static/images/overviews/boxsizer34.png
@@ -338,15 +338,15 @@ specific kind of sizer used.
 Let's start with the simplest case: the alignment flags. These are
 pretty self-explanatory.
 
-.. list-table:: 
+.. list-table::
    :header-rows: 1
    :widths: 40 10
    :class: centertable
 
    * - Code
-   
+
      - Resulting Image
-   
+
    * - .. code-block:: python
           :emphasize-lines: 4
 
@@ -380,15 +380,15 @@ pretty self-explanatory.
 
 Next is the ``wx.EXPAND`` flag. This is synonymous with ``wx.GROW``.
 
-.. list-table:: 
+.. list-table::
    :header-rows: 1
    :widths: 40 10
    :class: centertable
 
    * - Code
-   
+
      - Resulting Image
-   
+
    * - .. code-block:: python
           :emphasize-lines: 4
 
@@ -405,24 +405,24 @@ Next is the ``wx.EXPAND`` flag. This is synonymous with ``wx.GROW``.
 
 
 
-You can see that the first button takes its minimum size, and the second one grows to match it. This affects 
-controls in the opposite manner of the second parameter; ``wx.EXPAND`` in a vertical sizer causes horizontal 
+You can see that the first button takes its minimum size, and the second one grows to match it. This affects
+controls in the opposite manner of the second parameter; ``wx.EXPAND`` in a vertical sizer causes horizontal
 expansion, and in a horizontal sizer it causes vertical expansion.
 
-Next is ``wx.SHAPED``. This flag ensures that the width and height of the object stay proportional to each other. 
-It doesn't make much sense for buttons, but can be excellent for bitmaps, which would be contorted or clipped 
+Next is ``wx.SHAPED``. This flag ensures that the width and height of the object stay proportional to each other.
+It doesn't make much sense for buttons, but can be excellent for bitmaps, which would be contorted or clipped
 if not scaled proportionally.
 
 
-.. list-table:: 
+.. list-table::
    :header-rows: 1
    :widths: 30 10
    :class: centertable
 
    * - Code
-   
+
      - Resulting Image
-   
+
    * - .. code-block:: python
           :emphasize-lines: 4
 
@@ -452,15 +452,15 @@ control on which the border should appear. In order to demonstrate
 this most clearly, we'll keep the ``wx.EXPAND`` flag.
 
 
-.. list-table:: 
+.. list-table::
    :header-rows: 1
    :widths: 40 10
    :class: centertable
 
    * - Code
-   
+
      - Resulting Image
-   
+
    * - .. code-block:: python
           :emphasize-lines: 4
 
@@ -470,11 +470,11 @@ this most clearly, we'll keep the ``wx.EXPAND`` flag.
           sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.EXPAND | wx.LEFT, 20)
           sizer.SetSizeHints(self)
           self.SetSizer(sizer)
-          
-          
+
+
      - .. figure:: _static/images/overviews/boxsizer53.png
           :align: left
-          
+
 
    * - .. code-block:: python
           :emphasize-lines: 4
@@ -485,11 +485,11 @@ this most clearly, we'll keep the ``wx.EXPAND`` flag.
           sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 20)
           sizer.SetSizeHints(self)
           self.SetSizer(sizer)
-          
-          
+
+
      - .. figure:: _static/images/overviews/boxsizer54.png
           :align: left
-          
+
 
    * - .. code-block:: python
           :emphasize-lines: 4
@@ -500,8 +500,8 @@ this most clearly, we'll keep the ``wx.EXPAND`` flag.
           sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 20)
           sizer.SetSizeHints(self)
           self.SetSizer(sizer)
-          
-          
+
+
      - .. figure:: _static/images/overviews/boxsizer55.png
           :align: left
 
@@ -514,8 +514,8 @@ this most clearly, we'll keep the ``wx.EXPAND`` flag.
           sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.EXPAND | wx.ALL, 20)
           sizer.SetSizeHints(self)
           self.SetSizer(sizer)
-          
-          
+
+
      - .. figure:: _static/images/overviews/boxsizer56.png
           :align: left
 
@@ -565,7 +565,7 @@ in the last sample, only the box sizer is a vertical box sizer now:
 StaticBoxSizer
 --------------
 
-:class:`wx.StaticBoxSixer` is the same as a :class:`wx.BoxSizer`, but
+:class:`wx.StaticBoxSizer` is the same as a :class:`wx.BoxSizer`, but
 surrounded by a static box. Here is a sample:
 
 
@@ -675,9 +675,9 @@ Example::
         # has a text ctrl at the top and two buttons at the bottom.
 
         class MyDialog(wx.Dialog):
-        
+
             def __init__(self, parent, id, title):
-                
+
                 wx.Dialog(parent, id, title, wx.DefaultPosition, wx.DefaultSize,
                           wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
@@ -711,7 +711,7 @@ Example::
                 self.SetSizerAndFit(topsizer) # use the sizer for layout and size window
                                               # accordingly and prevent it from being resized
                                               # to smaller size
-                
+
 
 
 Note that the new way of specifying flags to :ref:`wx.Sizer` is via
@@ -725,9 +725,9 @@ Here's how you'd do the previous example with :ref:`wx.SizerFlags`::
         # has a text ctrl at the top and two buttons at the bottom.
 
         class MyDialog(wx.Dialog):
-        
+
             def __init__(self, parent, id, title):
-                
+
                 wx.Dialog(parent, id, title, wx.DefaultPosition, wx.DefaultSize,
                           wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
@@ -742,7 +742,7 @@ Here's how you'd do the previous example with :ref:`wx.SizerFlags`::
                 button_sizer.Add(
                         wx.Button(self, wx.ID_OK, "OK"),
                         wx.SizerFlags(0).Align().Border(wx.ALL, 10))
-                        
+
                 button_sizer.Add(
                         wx.Button(self, wx.ID_CANCEL, "Cancel"),
                         wx.SizerFlags(0).Align().Border(wx.ALL, 10))

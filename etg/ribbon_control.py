@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Jun-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -32,12 +32,6 @@ def run():
     # customizing the generated code and docstrings.
 
     module.addHeaderCode('#include <wx/ribbon/control.h>')
-
-    # Not sure why these are showing up in this module as they are in core, so
-    # let's just turn them off here...
-    module.find('wxEllipsizeFlags').ignore()
-    module.find('wxEllipsizeMode').ignore()
-
 
     c = module.find('wxRibbonControl')
     assert isinstance(c, etgtools.ClassDef)

@@ -230,7 +230,7 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-The main issue with multi-threaded GUI programming is the thread safty
+The main issue with multi-threaded GUI programming is the thread safety
 of the GUI itself.  On most platforms the GUI is not thread safe and
 so any cross platform GUI Toolkit and applications written with it
 need to take that into account.

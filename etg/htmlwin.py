@@ -3,12 +3,13 @@
 # Author:      Robin Dunn
 #
 # Created:     29-Oct-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import MethodDef, ParamDef
 
 PACKAGE   = "wx"
 MODULE    = "_html"
@@ -34,24 +35,39 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    c = module.find('wxHtmlWindowInterface')
+    assert isinstance(c, etgtools.ClassDef)
+    c.find('OnHTMLOpeningURL.redirect').out = True
+    c.find('OnHTMLOpeningURL.redirect').name = 'redirectTo'
+
+
     c = module.find('wxHtmlWindow')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
-    c.bases = ['wxScrolledWindow']
-
-    c.find('OnCellClicked').ignore(False)
-    c.find('OnCellMouseHover').ignore(False)
-    c.find('AddFilter.filter').transfer = True
-
+    c.bases = ['wxScrolledWindow', 'wxHtmlWindowInterface']
     tools.fixHtmlSetFonts(c)
 
-    # Pure virtuals inherited from wxHtmlWindowInterface
+    c.find('AddFilter.filter').transfer = True
+    c.find('OnOpeningURL.redirect').out = True
+    c.find('OnOpeningURL.redirect').name = 'redirectTo'
+
+    # Turn the virtual flag back on for some methods
+    for name in [ 'OnLinkClicked',
+                  'OnOpeningURL',
+                  'OnSetTitle',
+                  'OnCellMouseHover',
+                  'OnCellClicked' ]:
+        c.find(name).isVirtual = True
+        c.find(name).ignore(False)
+
+    # Declare that the pure virtuals inherited from wxHtmlWindowInterface have
+    # implementations here
     c.addItem(etgtools.WigCode("""\
         virtual void SetHTMLWindowTitle(const wxString& title);
         virtual void OnHTMLLinkClicked(const wxHtmlLinkInfo& link);
         virtual wxHtmlOpeningStatus OnHTMLOpeningURL(wxHtmlURLType type,
                                                      const wxString& url,
-                                                     wxString *redirect) const;
+                                                     wxString *redirectTo /Out/) const;
         virtual wxPoint HTMLCoordsToWindow(wxHtmlCell *cell,
                                            const wxPoint& pos) const;
         virtual wxWindow* GetHTMLWindow();
@@ -62,8 +78,18 @@ def run():
         virtual wxCursor GetHTMLCursor(wxHtmlWindowInterface::HTMLCursor type) const;
         """))
 
+    m = MethodDef(name='ScrollToAnchor', type='bool', protection='protected',
+        items=[ParamDef(type='const wxString&', name='anchor')],
+        doc="""\
+            Scrolls to anchor of this name.
+            Returns True is anchor exists, False otherwise.
+        """)
+    c.addItem(m)
+
+
     c = module.find('wxHtmlLinkEvent')
     tools.fixEventClass(c)
+
 
     c = module.find('wxHtmlCellEvent')
     tools.fixEventClass(c)

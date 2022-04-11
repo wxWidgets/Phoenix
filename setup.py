@@ -5,12 +5,13 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
 import sys, os
 import glob
+import stat
 
 from setuptools                     import setup, find_packages
 from distutils.command.build        import build as orig_build
@@ -27,17 +28,19 @@ from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
 import buildtools.version as version
 
 
+# Create a buildtools.config.Configuration object
+cfg = Config(noWxConfig=True)
+DOCS_BASE='http://docs.wxPython.org'
+
 #----------------------------------------------------------------------
 
 NAME             = version.PROJECT_NAME
 DESCRIPTION      = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
 AUTHOR           = "Robin Dunn"
-AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"
+AUTHOR_EMAIL     = "robin@alldunn.com"
 URL              = "http://wxPython.org/"
-#DOWNLOAD_URL     = "http://wxPython.org/download.php"
-#DOWNLOAD_URL     = "http://wxpython.org/Phoenix/snapshot-builds/"
-DOWNLOAD_URL     = "https://pypi.python.org/pypi/{}".format(NAME)
-LICENSE          = "wxWidgets Library License (LGPL derivative)"
+DOWNLOAD_URL     = "https://pypi.org/project/{}".format(NAME)
+LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,user-interface,awesome"
 
@@ -52,16 +55,23 @@ Unix systems, with a native look and feel and requiring very little (if any)
 platform specific code.
 
 For more information please refer to the
-`README file <https://github.com/wxWidgets/Phoenix/blob/master/README.rst>`_,
-the `Migration Guide <https://wxpython.org/Phoenix/docs/html/MigrationGuide.html>`_,
-or the `wxPython API documentation <https://wxpython.org/Phoenix/docs/html/main.html>`_.
-"""
+`README file <https://github.com/wxWidgets/Phoenix/blob/wxPython-{version}/README.rst>`_,
+the `Migration Guide <{docs_base}/MigrationGuide.html>`_,
+or the `wxPython API documentation <{docs_base}/index.html>`_.
 
-# or maybe LONG_DESCRIPTION=open("README.rst").read() ??
+Archive files containing a copy of the wxPython documentation, the demo and
+samples, and also a set of MSVC .pdb files for Windows are available
+`here <https://extras.wxPython.org/wxPython4/extras/>`_.
+
+The utility tools wxdocs and wxdemo will download the appropriate files with wxget,
+(if necessary), unpack them, (if necessary) and launch the appropriate version of
+the respective items. (Documents are launched in the default browser and demo is started
+with python).
+""".format(version=cfg.VERSION, docs_base=DOCS_BASE)
 
 
 CLASSIFIERS      = """\
-Development Status :: 3 - Alpha
+Development Status :: 6 - Mature
 Environment :: MacOS X :: Cocoa
 Environment :: Win32 (MS Windows)
 Environment :: X11 Applications :: GTK
@@ -71,16 +81,18 @@ Operating System :: MacOS :: MacOS X
 Operating System :: Microsoft :: Windows :: Windows 7
 Operating System :: Microsoft :: Windows :: Windows 10
 Operating System :: POSIX
-Programming Language :: Python :: 2.7
-Programming Language :: Python :: 3.4
-Programming Language :: Python :: 3.5
 Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.7
+Programming Language :: Python :: 3.8
+Programming Language :: Python :: 3.9
 Programming Language :: Python :: Implementation :: CPython
 Topic :: Software Development :: User Interfaces
 """
 
-DEPENDENCIES = [ 'six',
-                 ]
+with open('requirements/install.txt') as fid:
+    INSTALL_REQUIRES = [line.strip()
+                        for line in fid.readlines()
+                        if not line.startswith('#')]
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
@@ -208,7 +220,7 @@ if haveWheel:
 
 
         def run(self):
-            # Ensure that there is a basic library build for bdist_egg to pull from.
+            # Ensure that there is a basic library build for bdist_egg/wheel to pull from.
             self.run_command("build")
 
             _cleanup_symlinks(self)
@@ -296,11 +308,18 @@ orig_copy_tree = distutils.dir_util.copy_tree
 distutils.dir_util.copy_tree = wx_copy_tree
 
 
+# Monkey-patch make_writeable too. Sometimes the link is copied before the
+# target, and the original make_writable will fail on a link to a missing
+# target.
+def wx_make_writable(target):
+    if not os.path.islink(target):
+        os.chmod(target, os.stat(target).st_mode | stat.S_IWRITE)
+
+import setuptools.command.build_py
+setuptools.command.build_py.make_writable = wx_make_writable
+
 
 #----------------------------------------------------------------------
-
-# Create a buildtools.config.Configuration object
-cfg = Config(noWxConfig=True)
 
 WX_PKGLIST = [cfg.PKGDIR] + [cfg.PKGDIR + '.' + pkg for pkg in find_packages('wx')]
 
@@ -311,7 +330,10 @@ ENTRY_POINTS = {
         "img2xpm = wx.tools.img2xpm:main",
         "pywxrc = wx.tools.pywxrc:main",
 #        ],
-#    'gui_scripts' : [  # TODO: Why was this done?
+#    'gui_scripts' : [  # TODO: Why was this commented out?
+        "wxget = wx.tools.wxget:main",  # New wx wget
+        "wxdocs = wx.tools.wxget_docs_demo:docs_main",  # Get/Launch Docs
+        "wxdemo = wx.tools.wxget_docs_demo:demo_main",  # Get/Launch Demo
         "helpviewer = wx.tools.helpviewer:main",
         "pycrust = wx.py.PyCrust:main",
         "pyshell = wx.py.PyShell:main",
@@ -345,7 +367,7 @@ if __name__ == '__main__':
           platforms        = PLATFORMS,
           classifiers      = [c for c in CLASSIFIERS.split("\n") if c],
           keywords         = KEYWORDS,
-          install_requires = DEPENDENCIES,
+          install_requires = INSTALL_REQUIRES,
           zip_safe         = False,
           use_2to3         = False,
           include_package_data = True,

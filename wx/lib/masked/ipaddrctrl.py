@@ -112,7 +112,7 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
         if 'formatcodes' not in kwargs:
             kwargs['formatcodes'] = 'F_Sr<>'
         if 'validRegex' not in kwargs:
-            kwargs['validRegex'] = "(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}"
+            kwargs['validRegex'] = r"(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}"
 
 
         BaseMaskedTextCtrl.__init__(
@@ -127,7 +127,7 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
 
         # set up individual field parameters as well:
         field_params = {}
-        field_params['validRegex'] = "(   |  \d| \d |\d  | \d\d|\d\d |\d \d|(1\d\d|2[0-4]\d|25[0-5]))"
+        field_params['validRegex'] = r"(   |  \d| \d |\d  | \d\d|\d\d |\d \d|(1\d\d|2[0-4]\d|25[0-5]))"
 
         # require "valid" string; this prevents entry of any value > 255, but allows
         # intermediate constructions; overall control validation requires well-formatted value.
@@ -155,7 +155,7 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
         if not event.ShiftDown():
             if pos > edit_start and pos < edit_end:
                 # clip data in field to the right of pos, if adjusting fields
-                # when not at delimeter; (assumption == they hit '.')
+                # when not at delimiter; (assumption == they hit '.')
                 newvalue = oldvalue[:pos] + ' ' * (edit_end - pos) + oldvalue[edit_end:]
                 self._SetValue(newvalue)
                 self._SetInsertionPoint(pos)

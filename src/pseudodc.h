@@ -5,7 +5,7 @@
 // Modified by: Robin Dunn
 //
 // Created:     25-May-2006
-// Copyright:   (c) 2006-2017 Total Control Software
+// Copyright:   (c) 2006-2020 Total Control Software
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     14-Nov-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -43,8 +43,8 @@ def run():
         #endif
         """)
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();""")
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('int', 'GetIndex', '()', """\
         #ifdef __WXMSW__

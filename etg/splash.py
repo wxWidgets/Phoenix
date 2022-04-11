@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     21-May-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ def run():
             self->GetSplashWindow()->SetBitmap(*bitmap);
             """)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         SPLASH_CENTER_ON_PARENT = SPLASH_CENTRE_ON_PARENT
         SPLASH_CENTER_ON_SCREEN = SPLASH_CENTRE_ON_SCREEN
         SPLASH_NO_CENTER = SPLASH_NO_CENTRE

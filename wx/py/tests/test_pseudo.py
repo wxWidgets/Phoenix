@@ -4,14 +4,7 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 
 import unittest
 
-# Import from this module's parent directory.
-import os
-import sys
-sys.path.insert(0, os.pardir)
-import pseudo
-del sys.path[0]
-del sys
-del os
+from wx.py import pseudo
 
 
 """

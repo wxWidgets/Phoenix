@@ -283,7 +283,7 @@ class HyperLinkCtrl(StaticText):
 
         :param `URL`: the url link we wish to navigate;
         :param `ReportErrors`: Use ``True`` to display error dialog if an error
-         occurrs navigating to the URL;
+         occurs navigating to the URL;
         :param `NotSameWinIfPossible`: Use ``True`` to attempt to open the URL
          in new browser window.
         """
@@ -360,7 +360,7 @@ class HyperLinkCtrl(StaticText):
                     menuPopUp = wx.Menu("", wx.MENU_TEAROFF)
                     menuPopUp.Append(wxHYPERLINKS_POPUP_COPY, "Copy HyperLink")
                     self.Bind(wx.EVT_MENU, self.OnPopUpCopy, id=wxHYPERLINKS_POPUP_COPY)
-                    self.PopupMenu(menuPopUp, wx.Point(event.x, event.y))
+                    self.PopupMenu(menuPopUp)
                     menuPopUp.Destroy()
                     self.Unbind(wx.EVT_MENU, id=wxHYPERLINKS_POPUP_COPY)
 
@@ -435,7 +435,7 @@ class HyperLinkCtrl(StaticText):
         :class:`MessageBox`.
 
         :param `ErrorMessage`: a string representing the error to display;
-        :param `ReportErrors`: ``True`` to display error dialog if an error occurrs
+        :param `ReportErrors`: ``True`` to display error dialog if an error occurs
          navigating to the URL.
         """
 
@@ -443,8 +443,8 @@ class HyperLinkCtrl(StaticText):
             wx.MessageBox(ErrorMessage, "HyperLinks Error", wx.OK | wx.CENTRE | wx.ICON_ERROR)
 
 
-    def SetColours(self, link=wx.Colour(0, 0, 255), visited=wx.Colour(79, 47, 79),
-                   rollover=wx.Colour(0, 0, 255)):
+    def SetColours(self, link=wx.BLUE, visited=wx.Colour(79, 47, 79),
+                   rollover=wx.BLUE):
         """
         Sets the colours for the link, the visited link and the mouse rollover.
 
@@ -592,7 +592,7 @@ class HyperLinkCtrl(StaticText):
         Set whether to report browser errors or not.
 
         :param `ReportErrors`: Use ``True`` to display error dialog if an error
-         occurrs navigating to the URL;
+         occurs navigating to the URL;
         """
 
         self._ReportErrors = ReportErrors

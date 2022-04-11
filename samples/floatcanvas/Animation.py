@@ -7,7 +7,10 @@ this is very old-style code: don't imitate it!
 
 """
 
-from time import clock
+try:
+    from time import process_time as clock
+except ImportError:
+    from time import clock
 import wx
 print(wx.VERSION_STRING)
 from numpy import *
@@ -223,7 +226,7 @@ class DemoApp(wx.App):
 
     I'd like the cursor to change as you change tools, but the stock
     wx.Cursors didn't include anything I liked, so I stuck with the
-    pointer. Pleae let me know if you have any nice cursor images for me to
+    pointer. Please let me know if you have any nice cursor images for me to
     use.
 
 
@@ -251,18 +254,17 @@ def Read_MapGen(filename,stats = False):
     Each NumPy array in the list is an NX2 array of Python Floats.
 
     The demo should have come with a file, "world.dat" that is the
-    shorelines of the whole worls, in MapGen format.
+    shorelines of the whole world, in MapGen format.
 
     """
     from numpy import array
-    file = open(filename,'rt')
-    data = file.readlines()
-    data = [s.strip() for s in data]
+    with open(filename,'rt') as file_:
+        data = [s.strip() for s in file_.readlines()]
 
     Shorelines = []
     segment = []
     for line in data:
-        if line == "# -b": #New segment begining
+        if line == "# -b": #New segment beginning
             if segment: Shorelines.append(array(segment))
             segment = []
         else:
@@ -276,21 +278,11 @@ def Read_MapGen(filename,stats = False):
             NumPoints = NumPoints + len(segment)
         AvgPoints = NumPoints / NumSegments
         print("Number of Segments: ", NumSegments)
-        print("Average Number of Points per segment: ",AvgPoints)
+        print("Average Number of Points per segment: ", AvgPoints)
 
     return Shorelines
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     app = DemoApp(0)
     app.MainLoop()
-
-
-
-
-
-
-
-
-
-

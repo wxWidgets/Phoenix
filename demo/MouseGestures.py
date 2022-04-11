@@ -25,10 +25,10 @@ class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
 
-        ID_GESTURE = wx.NewId()
-        ID_MOUSE = wx.NewId()
-        ID_MODIFIER = wx.NewId()
-        ID_VISIBLE = wx.NewId()
+        ID_GESTURE = wx.NewIdRef()
+        ID_MOUSE = wx.NewIdRef()
+        ID_MODIFIER = wx.NewIdRef()
+        ID_VISIBLE = wx.NewIdRef()
 
         self.log = log
 
@@ -73,7 +73,7 @@ class TestPanel(wx.Panel):
         outsideSizer.Add(text, 0, wx.EXPAND|wx.ALL, 5)
         outsideSizer.Add(wx.StaticLine(self, -1), 0, wx.EXPAND)
         outsideSizer.Add(wx.StaticText(self, -1, '   '), 0, wx.EXPAND)
-        outsideSizer.Add(wx.StaticText(self, -1, 'Hold The Middle Mouse Button Down to Gesticulate'), 0, wx.EXPAND)
+        outsideSizer.Add(wx.StaticText(self, -1, 'Hold The Right Mouse Button Down to Gesticulate'), 0, wx.EXPAND)
         outsideSizer.Add(wx.StaticText(self, -1, 'Left Then Right, Left, The Diagonal Up/Right, Down Then Right, Diagonal Down/Right Then Diagonal Up/Right, and Up are Preset'), 0, wx.EXPAND)
         outsideSizer.Add(wx.StaticText(self, -1, 'Left,Down,Right,Up Sets the line colour to Blue.'), 0, wx.EXPAND)
         outsideSizer.Add(wx.StaticText(self, -1, 'Right,Down,Left,Up Sets the line colour to Orange.'), 0, wx.EXPAND)
@@ -94,7 +94,7 @@ class TestPanel(wx.Panel):
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnToggleVisible, id=ID_VISIBLE)
 
     def LogSomethingClever(self, somethingclever):
-        self.log.WriteText(somethingclever)
+        self.log.WriteText(' '.join(somethingclever))
 
     def OnAddGesture(self, event):
         d = wx.TextEntryDialog(self, "Enter Gesture (LRUD1379) (EG Right Then Up Then DownLeft is RU1):", "Add New Gesture", "")
@@ -145,7 +145,7 @@ class TestPanel(wx.Panel):
             self.mg.SetMouseButton(choices[i])
             self.log.WriteText('Set the Mouse Button to ' + schoices[i])
 
-    def OnDownThenRight(self):
+    def OnDownThenRight(self, *args):
         self.log.WriteText('You made an "L"!')
 
     def OnToggleVisible(self, event):
@@ -156,16 +156,16 @@ class TestPanel(wx.Panel):
         else:
             self.log.WriteText('Made Gestures Invisible')
 
-    def SetToBlue(self):
+    def SetToBlue(self, *args):
         self.mg.SetGesturePen(wx.Colour(0, 144, 255), 5)
         self.log.WriteText('Set Gesture Colour to Blue')
 
-    def SetToOrange(self):
+    def SetToOrange(self, *args):
         self.mg.SetGesturePen(wx.Colour(255, 156, 0), 5)
         self.log.WriteText('Set Gesture Colour to Orange')
 
     def ShowSomethingClever(self, somethingclever):
-        d = wx.MessageDialog(self, somethingclever, 'Mouse Gesture Action', wx.OK)
+        d = wx.MessageDialog(self, '\n'.join(somethingclever), 'Mouse Gesture Action', wx.OK)
         d.ShowModal()
         d.Destroy()
 

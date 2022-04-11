@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     25-Feb-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -40,6 +40,7 @@ def run():
     c = module.find('wxFileSystem')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
     c.find('AddHandler.handler').transfer = True
     c.find('RemoveHandler').transferBack = True
 
@@ -48,12 +49,13 @@ def run():
     c.find('GetLeftLocation').ignore(False)
     c.find('GetProtocol').ignore(False)
     c.find('GetRightLocation').ignore(False)
+    c.find('OpenFile').factory = True
 
 
     def _fixHandlerClass(klass):
         klass.addItem(etgtools.WigCode("""\
             virtual bool CanOpen(const wxString& location);
-            virtual wxFSFile* OpenFile(wxFileSystem& fs, const wxString& location);
+            virtual wxFSFile* OpenFile(wxFileSystem& fs, const wxString& location) /Factory/;
             virtual wxString FindFirst(const wxString& spec, int flags = 0);
             virtual wxString FindNext();
             """))
@@ -66,6 +68,7 @@ def run():
 
     c = module.find('wxFSFile')
     c.addPrivateCopyCtor()
+    c.find('wxFSFile.stream').keepReference = True
 
     c = module.find('wxFilterFSHandler')
     _fixHandlerClass(c)
@@ -80,10 +83,17 @@ def run():
     _fixHandlerClass(c)
     c.addPrivateCopyCtor()
 
-    # Make some more python-friendly versions of the AddFile methods accepting raw data
-    c.find('AddFile').findOverload('binarydata').ignore()
-    c.find('AddFileWithMimeType').findOverload('binarydata').ignore()
+    # Make some more python-friendly versions of the AddFile methods accepting text or raw data
+    c.find('AddFile').findOverload('textdata').ignore()
+    c.addCppMethod('void', 'AddFile', '(const wxString& filename, const wxString& textdata)',
+        isStatic=True,
+        doc="Add a file from text data, which will first be converted to utf-8 encoded bytes.",
+        body="""\
+            wxScopedCharBuffer buf = textdata->utf8_str();
+            wxMemoryFSHandler::AddFile(*filename, (const char*)buf, strlen(buf));
+            """)
 
+    c.find('AddFile').findOverload('binarydata').ignore()
     c.addCppMethod('void', 'AddFile', '(const wxString& filename, wxPyBuffer* binarydata)',
         isStatic=True,
         doc="Add a file from raw data in a python buffer compatible object.",
@@ -91,6 +101,17 @@ def run():
             wxMemoryFSHandler::AddFile(*filename, binarydata->m_ptr, binarydata->m_len);
             """)
 
+    c.find('AddFileWithMimeType').findOverload('textdata').ignore()
+    c.addCppMethod('void', 'AddFileWithMimeType',
+                   '(const wxString& filename, const wxString& textdata, const wxString& mimetype)',
+        isStatic=True,
+        doc="Add a file from text data, which will first be converted to utf-8 encoded bytes.",
+        body="""\
+            wxScopedCharBuffer buf = textdata->utf8_str();
+            wxMemoryFSHandler::AddFileWithMimeType(*filename, (const char*)buf, strlen(buf), *mimetype);
+            """)
+
+    c.find('AddFileWithMimeType').findOverload('binarydata').ignore()
     c.addCppMethod('void', 'AddFileWithMimeType',
                    '(const wxString& filename, wxPyBuffer* binarydata, const wxString& mimetype)',
         isStatic=True,

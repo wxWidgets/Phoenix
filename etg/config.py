@@ -5,7 +5,7 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -22,6 +22,7 @@ DOCSTRING = ""
 ITEMS  = [ 'wxConfigBase',
            'wxFileConfig',
            'wxConfigPathChanger',
+           'interface_2wx_2config_8h.xml'
            ]
 
 #---------------------------------------------------------------------------
@@ -55,11 +56,19 @@ def run():
         else:
             func.find('defaultVal').default = 'wxEmptyString'
 
-    c.addCppMethod('long', 'ReadInt', '(const wxString& key, long defaultVal=0)',  """\
+    c.addCppMethod('long', '_cpp_ReadInt', '(const wxString& key, long defaultVal=0)',  """\
         long rv;
         self->Read(*key, &rv, defaultVal);
         return rv;
         """)
+    c.addPyMethod('ReadInt', '(self, key, defaultVal=0)', body="""\
+        import six
+        rv = self._cpp_ReadInt(key, defaultVal)
+        if six.PY2:
+            rv = int(rv)
+        return rv
+        """)
+
     c.addCppMethod('double', 'ReadFloat', '(const wxString& key, double defaultVal=0.0)', """\
         double rv;
         self->Read(*key, &rv, defaultVal);
@@ -169,8 +178,7 @@ def run():
     c.addPrivateCopyCtor()
     c.find('wxFileConfig').findOverload('wxInputStream').find('conv').ignore()
     ctor = c.find('wxFileConfig').findOverload('wxString').find('conv').ignore()
-    #ctor.items.remove(ctor.find('conv'))
-    ctor = c.find('Save').find('conv').ignore()
+    c.find('Save').ignore()
     c.find('GetGlobalFile').ignore()
     c.find('GetLocalFile').ignore()
 
@@ -179,7 +187,13 @@ def run():
     c.find('GetFirstEntry').ignore()
     c.find('GetNextEntry').ignore()
 
-
+    c.addCppMethod('bool', 'Save', '(wxOutputStream& os)', doc=c.find('Save').briefDoc, body="""\
+        #if wxUSE_STREAMS
+            return self->Save(*os);
+        #else
+            wxPyRaiseNotImplemented();
+        #endif
+        """)
 
     #-----------------------------------------------------------------
     # In C++ wxConfig is a #define to some other config class. We'll let our

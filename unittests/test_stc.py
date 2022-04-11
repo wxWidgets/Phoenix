@@ -59,16 +59,25 @@ class stc_Tests(wtc.WidgetTestCase):
         ed.EmptyUndoBuffer()
         ed.GotoPos(0)
 
-        ed.IndicatorSetStyle(0, stc.STC_INDIC_SQUIGGLE)
-        ed.IndicatorSetForeground(0, wx.RED)
-        ed.IndicatorSetStyle(1, stc.STC_INDIC_DIAGONAL)
-        ed.IndicatorSetForeground(1, wx.BLUE)
-        ed.IndicatorSetStyle(2, stc.STC_INDIC_STRIKE)
-        ed.IndicatorSetForeground(2, wx.RED)
-        ed.StartStyling(100, stc.STC_INDICS_MASK)
-        ed.SetStyling(10, stc.STC_INDIC0_MASK)
-        ed.SetStyling(8, stc.STC_INDIC1_MASK)
-        ed.SetStyling(10, stc.STC_INDIC2_MASK | stc.STC_INDIC1_MASK)
+        ed.INDICSTYLE00 = 0
+        ed.INDICSTYLE01 = 1
+        ed.INDICSTYLE02 = 2
+
+        ed.IndicatorSetStyle(ed.INDICSTYLE00, stc.STC_INDIC_SQUIGGLE)
+        ed.IndicatorSetForeground(ed.INDICSTYLE00, wx.RED)
+        ed.IndicatorSetStyle(ed.INDICSTYLE01, stc.STC_INDIC_DIAGONAL)
+        ed.IndicatorSetForeground(ed.INDICSTYLE01, wx.BLUE)
+        ed.IndicatorSetStyle(ed.INDICSTYLE02, stc.STC_INDIC_STRIKE)
+        ed.IndicatorSetForeground(ed.INDICSTYLE02, wx.RED)
+
+        ed.StartStyling(100)
+
+        ed.SetIndicatorCurrent(ed.INDICSTYLE00)
+        ed.IndicatorFillRange(836, 10)
+        ed.SetIndicatorCurrent(ed.INDICSTYLE01)
+        ed.IndicatorFillRange(846, 8)
+        ed.SetIndicatorCurrent(ed.INDICSTYLE02)
+        ed.IndicatorFillRange(854, 10)
 
 
     def test_stcStyleTextCtrl3(self):
@@ -84,11 +93,12 @@ class stc_Tests(wtc.WidgetTestCase):
         ed.StyleSetSpec(3, "face:%s,bold,size:%d" % (face2, pb))
         ed.StyleSetSpec(4, "face:%s,size:%d" % (face1, pb-1))
         ed.StyleSetSpec(5, "back:#FFF0F0")
-        ed.StartStyling(80, 0xff)
+
+        ed.StartStyling(80)
         ed.SetStyling(6, 1)
-        ed.StartStyling(100, 0xff)
+        ed.StartStyling(100)
         ed.SetStyling(20, 2)
-        ed.StartStyling(180, 0xff)
+        ed.StartStyling(180)
         ed.SetStyling(4, 3)
         ed.SetStyling(2, 0)
         ed.SetStyling(10, 4)

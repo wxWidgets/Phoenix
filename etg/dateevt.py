@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     09-Apr-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,13 +37,17 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_DATE_CHANGED = wx.PyEventBinder( wxEVT_DATE_CHANGED, 1 )
         EVT_TIME_CHANGED = wx.PyEventBinder( wxEVT_TIME_CHANGED, 1 )
         """)
 
+    c.addPyMethod('PyGetDate', '(self)',
+        doc="Return the date as a Python datetime.date object.",
+        body="return wx.wxdate2pydate(self.GetDate())",
+        deprecated="Use GetDate instead.")
+
     c.addPyCode("""\
-        DateEvent.PyGetDate = wx.deprecated(DateEvent.GetDate, 'Use GetDate instead.')
         DateEvent.PySetDate = wx.deprecated(DateEvent.SetDate, 'Use SetDate instead.')
         """)
 

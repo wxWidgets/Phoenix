@@ -39,7 +39,7 @@ ability of selecting multiple folders at once. It may be useful when you wish to
 present to the user a directory browser which allows multiple folder selections.
 :class:`MultiDirDialog` sports the following features:
 
-* Ability to select a single or mutliple folders, depending on the style passed;
+* Ability to select a single or multiple folders, depending on the style passed;
 * More colourful and eye-catching buttons;
 * Good old Python code :-D .
 
@@ -426,8 +426,8 @@ class MultiDirDialog(wx.Dialog):
         mainSizer.Add(self.dirCtrl, 1, wx.EXPAND|wx.ALL, 10)
 
         label = wx.StaticText(self, -1, _("Folder:"))
-        textSizer.Add(label, 0, wx.LEFT|wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 10)
-        textSizer.Add(self.folderText, 1, wx.RIGHT|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10)
+        textSizer.Add(label, 0, wx.LEFT|wx.RIGHT, 10)
+        textSizer.Add(self.folderText, 1, wx.RIGHT|wx.EXPAND, 10)
         mainSizer.Add(textSizer, 0, wx.EXPAND|wx.BOTTOM, 10)
 
         # Add the fancy buttons
@@ -468,7 +468,7 @@ class MultiDirDialog(wx.Dialog):
         """
         Recurse a directory tree to include the parent-folder.
 
-        :param `treeCtrl`: the tree control associated with teh internal :class:`GenericDirCtrl`;
+        :param `treeCtrl`: the tree control associated with the internal :class:`GenericDirCtrl`;
         :param `item`: the selected tree control item;
         :param `itemText`: the selected tree control item text.
         """

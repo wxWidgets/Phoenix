@@ -6,7 +6,7 @@
 # Author:       Robin Dunn
 #
 # Created:      A long time ago, in a galaxy far, far away...
-# Copyright:    (c) 1999-2017 by Total Control Software
+# Copyright:    (c) 1999-2020 by Total Control Software
 # Licence:      wxWindows license
 # Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
@@ -171,8 +171,7 @@ def RemoveHTMLTags(data):
 
 def FormatDocs(keyword, values, num):
 
-    names = list(values.keys())
-    names.sort()
+    names = sorted(values)
 
     headers = (num == 2 and [_eventHeaders] or [_styleHeaders])[0]
     table = (num == 2 and [_eventTable] or [_styleTable])[0]
@@ -347,8 +346,8 @@ def FindImages(text, widgetName):
         if "src=" in items:
             possibleImage = items.replace("src=", "").strip()
             possibleImage = possibleImage.replace('"', "")
-            f = urllib.request.urlopen(_trunkURL + possibleImage)
-            stream = f.read()
+            with urllib.request.urlopen(_trunkURL + possibleImage) as f:
+                stream = f.read()
         elif "alt=" in items:
             plat = items.replace("alt=", "").replace("'", "").strip()
             path = os.path.join(imagesDir, plat, widgetName + ".png")
@@ -360,6 +359,36 @@ def FindImages(text, widgetName):
 
     return winAppearance
 
+
+def GetCaretPeriod(win = None):
+    """
+    Attempts to identify the correct caret blinkrate to use in the Demo Code panel.
+
+    :pram wx.Window win: a window to pass to wx.SystemSettings.GetMetric.
+
+    :return: a value in milliseconds that indicates the proper period.
+    :rtype: int
+
+    :raises: ValueError if unable to resolve a proper caret blink rate.
+    """
+    if '--no-caret-blink' in sys.argv:
+        return 0
+
+    try:
+        onmsec  = wx.SystemSettings.GetMetric(wx.SYS_CARET_ON_MSEC, win)
+        offmsec = wx.SystemSettings.GetMetric(wx.SYS_CARET_OFF_MSEC, win)
+
+        # check values aren't -1
+        if -1 in (onmsec, offmsec):
+            raise ValueError("Unable to determine caret blink rate.")
+
+        # attempt to average.
+        # (wx systemsettings allows on and off time, but scintilla just takes a single period.)
+        return int((onmsec + offmsec) / 2.0)
+
+    except AttributeError:
+        # Issue where wx.SYS_CARET_ON/OFF_MSEC is unavailable.
+        raise ValueError("Unable to determine caret blink rate.")
 
 #---------------------------------------------------------------------------
 # Set up a thread that will scan the wxWidgets docs for window styles,
@@ -388,12 +417,12 @@ class InternetThread(Thread):
 
         try:
             url = _docsURL % ReplaceCapitals(self.selectedClass)
-            fid = urllib.request.urlopen(url)
+            with urllib.request.urlopen(url) as fid:
+                if six.PY2:
+                    originalText = fid.read()
+                else:
+                    originalText = fid.read().decode("utf-8")
 
-            if six.PY2:
-                originalText = fid.read()
-            else:
-                originalText = fid.read().decode("utf-8")
             text = RemoveHTMLTags(originalText).split("\n")
             data = FindWindowStyles(text, originalText, self.selectedClass)
 
@@ -497,7 +526,7 @@ try:
         def SetUpEditor(self):
             """
             This method carries out the work of setting up the demo editor.
-            It's seperate so as not to clutter up the init code.
+            It's separate so as not to clutter up the init code.
             """
             import keyword
 
@@ -611,6 +640,12 @@ try:
             self.SetCaretForeground("BLUE")
             # Selection background
             self.SetSelBackground(1, '#66CCFF')
+
+            # Attempt to set caret blink rate.
+            try:
+                self.SetCaretPeriod(GetCaretPeriod(self))
+            except ValueError:
+                pass
 
             self.SetSelBackground(True, wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
             self.SetSelForeground(True, wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
@@ -797,12 +832,9 @@ class DemoCodePanel(wx.Panel):
                 wx.LogMessage("Created directory for modified demos: %s" % GetModifiedDirectory())
 
         # Save
-        f = open(modifiedFilename, "wt")
         source = self.editor.GetText()
-        try:
+        with open(modifiedFilename, "wt") as f:
             f.write(source)
-        finally:
-            f.close()
 
         busy = wx.BusyInfo("Reloading demo module...")
         self.demoModules.LoadFromFile(modModified, modifiedFilename)
@@ -928,11 +960,11 @@ def GetDocImagesDir():
 
 def SearchDemo(name, keyword):
     """ Returns whether a demo contains the search keyword or not. """
-    fid = open(GetOriginalFilename(name), "rt")
-    fullText = fid.read()
-    fid.close()
+    with open(GetOriginalFilename(name), "rt") as fid:
+        fullText = fid.read()
 
-    fullText = fullText.decode("iso-8859-1")
+    if six.PY2:
+        fullText = fullText.decode("iso-8859-1")
 
     if fullText.find(keyword) >= 0:
         return True
@@ -977,10 +1009,7 @@ def HuntExternalDemos():
 
     # Sort and reverse the external demos keys so that they
     # come back in alphabetical order
-    keys = list(externalDemos.keys())
-    keys.sort()
-    keys.reverse()
-
+    keys = sorted(externalDemos, reverse=True)
     # Loop over all external packages
     for extern in keys:
         package = externalDemos[extern]
@@ -1063,15 +1092,12 @@ class DemoModules(object):
 
     def LoadFromFile(self, modID, filename):
         self.modules[modID][2] = filename
-        file = open(filename, "rt")
-        self.LoadFromSource(modID, file.read())
-        file.close()
-
+        with open(filename, "rt") as file_:
+            self.LoadFromSource(modID, file_.read())
 
     def LoadFromSource(self, modID, source):
         self.modules[modID][1] = source
         self.LoadDict(modID)
-
 
     def LoadDict(self, modID):
         if self.name != __name__:
@@ -1139,13 +1165,8 @@ class DemoModules(object):
 
         source = self.modules[modID][1]
         filename = self.modules[modID][2]
-
-        try:
-            file = open(filename, "wt")
-            file.write(source)
-        finally:
-            file.close()
-
+        with open(filename, "wt") as file_:
+            file_.write(source)
 
     def Delete(self, modID):
         if self.modActive == modID:
@@ -1243,7 +1264,7 @@ class DemoErrorPanel(wx.Panel):
         self.list.SetColumnWidth(2, wx.LIST_AUTOSIZE)
         self.box.Add(wx.StaticText(self, -1, "Traceback:")
                      , 0, wx.ALIGN_CENTER | wx.TOP, 5)
-        self.box.Add(self.list, 1, wx.GROW | wx.ALIGN_CENTER | wx.ALL, 5)
+        self.box.Add(self.list, 1, wx.EXPAND | wx.ALL, 5)
         self.box.Add(wx.StaticText(self, -1, "Entries from the demo module are shown in blue\n"
                                            + "Double-click on them to go to the offending line")
                      , 0, wx.ALIGN_CENTER | wx.BOTTOM, 5)
@@ -1306,10 +1327,10 @@ class MainPanel(wx.Panel):
 #---------------------------------------------------------------------------
 
 class DemoTaskBarIcon(TaskBarIcon):
-    TBMENU_RESTORE = wx.NewId()
-    TBMENU_CLOSE   = wx.NewId()
-    TBMENU_CHANGE  = wx.NewId()
-    TBMENU_REMOVE  = wx.NewId()
+    TBMENU_RESTORE = wx.NewIdRef()
+    TBMENU_CLOSE   = wx.NewIdRef()
+    TBMENU_CHANGE  = wx.NewIdRef()
+    TBMENU_REMOVE  = wx.NewIdRef()
 
     def __init__(self, frame):
         TaskBarIcon.__init__(self, wx.adv.TBI_DOCK) # wx.adv.TBI_CUSTOM_STATUSITEM
@@ -1353,8 +1374,8 @@ class DemoTaskBarIcon(TaskBarIcon):
             img = img.Scale(16, 16)
         elif "wxGTK" in wx.PlatformInfo:
             img = img.Scale(22, 22)
-        # wxMac can be any size upto 128x128, so leave the source img alone....
-        icon = wx.IconFromBitmap(img.ConvertToBitmap())
+        # wxMac can be any size up to 128x128, so leave the source img alone....
+        icon = wx.Icon(img.ConvertToBitmap())
         return icon
 
 
@@ -1492,6 +1513,14 @@ class wxPythonDemo(wx.Frame):
         self.filter.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN,
                          lambda e: self.filter.SetValue(''))
         self.filter.Bind(wx.EVT_TEXT_ENTER, self.OnSearch)
+
+        if 'gtk3' in wx.PlatformInfo:
+            # Something is wrong with the bestsize of the SearchCtrl, so for now
+            # let's set it based on the size of a TextCtrl.
+            txt = wx.TextCtrl(leftPanel)
+            bs = txt.GetBestSize()
+            txt.DestroyLater()
+            self.filter.SetMinSize((-1, bs.height+4))
 
         searchMenu = wx.Menu()
         item = searchMenu.AppendRadioItem(-1, "Sample Name")
@@ -1631,14 +1660,11 @@ class wxPythonDemo(wx.Frame):
             self.pickledData = {}
             return
 
-        fid = open(pickledFile, "rb")
-        try:
-            self.pickledData = cPickle.load(fid)
-        except:
-            self.pickledData = {}
-
-        fid.close()
-
+        with open(pickledFile, "rb") as fid:
+            try:
+                self.pickledData = cPickle.load(fid)
+            except:
+                self.pickledData = {}
 
     def BuildMenuBar(self):
 
@@ -1650,8 +1676,7 @@ class wxPythonDemo(wx.Frame):
                            wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnToggleRedirect, item)
 
-        wx.App.SetMacExitMenuItemId(9123)
-        exitItem = wx.MenuItem(menu, 9123, 'E&xit\tCtrl-Q', 'Get the heck outta here!')
+        exitItem = wx.MenuItem(menu, wx.ID_EXIT, 'E&xit\tCtrl-Q', 'Get the heck outta here!')
         exitItem.SetBitmap(images.catalog['exit'].GetBitmap())
         menu.Append(exitItem)
         self.Bind(wx.EVT_MENU, self.OnFileExit, exitItem)
@@ -1689,8 +1714,7 @@ class wxPythonDemo(wx.Frame):
         item.Check(self.allowAuiFloating)
         self.Bind(wx.EVT_MENU, self.OnAllowAuiFloating, item)
 
-        auiPerspectives = list(self.auiConfigurations.keys())
-        auiPerspectives.sort()
+        auiPerspectives = sorted(self.auiConfigurations)
         perspectivesMenu = wx.Menu()
         item = wx.MenuItem(perspectivesMenu, -1, DEFAULT_PERSPECTIVE, "Load startup default perspective", wx.ITEM_RADIO)
         self.Bind(wx.EVT_MENU, self.OnAUIPerspectives, item)
@@ -1702,7 +1726,7 @@ class wxPythonDemo(wx.Frame):
             perspectivesMenu.Append(item)
             self.Bind(wx.EVT_MENU, self.OnAUIPerspectives, item)
 
-        menu.Append(wx.ID_ANY, "&AUI Perspectives", perspectivesMenu)
+        menu.AppendSubMenu(perspectivesMenu, "&AUI Perspectives")
         self.perspectives_menu = perspectivesMenu
 
         item = wx.MenuItem(menu, -1, 'Save Perspective', 'Save AUI perspective')
@@ -2234,7 +2258,7 @@ class wxPythonDemo(wx.Frame):
 
     def OnToggleRedirect(self, event):
         app = wx.GetApp()
-        if event.Checked():
+        if event.IsChecked():
             app.RedirectStdio()
             print("Print statements and other standard output will now be directed to this window.")
         else:
@@ -2280,7 +2304,7 @@ class wxPythonDemo(wx.Frame):
 
     def OnAllowAuiFloating(self, event):
 
-        self.allowAuiFloating = event.Checked()
+        self.allowAuiFloating = event.IsChecked()
         for pane in self.mgr.GetAllPanes():
             if pane.name != "Notebook":
                 pane.Floatable(self.allowAuiFloating)
@@ -2368,7 +2392,7 @@ class wxPythonDemo(wx.Frame):
         about.Destroy()
 
     def OnHelpFind(self, event):
-        if self.finddlg != None:
+        if self.finddlg is not None:
             return
 
         self.nb.SetSelection(1)
@@ -2378,7 +2402,7 @@ class wxPythonDemo(wx.Frame):
 
 
     def OnUpdateFindItems(self, evt):
-        evt.Enable(self.finddlg == None)
+        evt.Enable(self.finddlg is None)
 
 
     def OnFind(self, event):
@@ -2478,8 +2502,8 @@ class wxPythonDemo(wx.Frame):
         self.mainmenu = None
         self.StopDownload()
 
-        # if self.tbicon is not None:
-            # self.tbicon.Destroy()
+        if self.tbicon is not None:
+            self.tbicon.Destroy()
 
         config = GetConfig()
         config.Write('ExpansionState', str(self.tree.GetExpansionState()))
@@ -2491,9 +2515,8 @@ class wxPythonDemo(wx.Frame):
 
         MakeDocDirs()
         pickledFile = GetDocFile()
-        fid = open(pickledFile, "wb")
-        cPickle.dump(self.pickledData, fid, cPickle.HIGHEST_PROTOCOL)
-        fid.close()
+        with open(pickledFile, "wb") as fid:
+            cPickle.dump(self.pickledData, fid, cPickle.HIGHEST_PROTOCOL)
 
         self.Destroy()
 
@@ -2549,7 +2572,7 @@ class wxPythonDemo(wx.Frame):
 
     #---------------------------------------------
     def OnIconfiy(self, evt):
-        wx.LogMessage("OnIconfiy: %s" % evt.Iconized())
+        wx.LogMessage("OnIconfiy: %s" % evt.IsIconized())
         evt.Skip()
 
     #---------------------------------------------
@@ -2577,7 +2600,7 @@ class MySplashScreen(SplashScreen):
                                  wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
                                  5000, None, -1)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        self.fc = wx.CallLater(2000, self.ShowMain)
+        self.fc = wx.CallLater(1000, self.ShowMain)
 
 
     def OnClose(self, evt):
@@ -2661,7 +2684,7 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
 
         self.InitInspection()  # for the InspectionMixin base class
 
-        # Now that we've warned the user about possibile problems,
+        # Now that we've warned the user about possible problems,
         # lets import images
         import images as i
         global images
@@ -2686,6 +2709,9 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
 
         return True
 
+    def InitLocale(self):
+        super().InitLocale()
+        self._locale = wx.Locale(wx.LANGUAGE_ENGLISH)
 
 
 #---------------------------------------------------------------------------

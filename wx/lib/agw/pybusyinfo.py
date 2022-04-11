@@ -178,11 +178,11 @@ class PyInfoFrame(wx.Frame):
         size = self.GetSize()
         bmp = wx.Bitmap(size.x, size.y)
         dc = wx.BufferedDC(None, bmp)
-        dc.SetBackground(wx.Brush(wx.Colour(0, 0, 0)))
+        dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
-        dc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1))
+        dc.SetPen(wx.BLACK_PEN)
         dc.DrawRoundedRectangle(0, 0, size.x, size.y, 12)
-        r = wx.Region(bmp, wx.Colour(0, 0, 0))
+        r = wx.Region(bmp, wx.BLACK)
         # Store the non-rectangular region
         self.reg = r
 

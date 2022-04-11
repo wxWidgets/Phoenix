@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     15-Sept-2008
-# Copyright:   (c) 2008-2017 by Total Control Software
+# Copyright:   (c) 2008-2020 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port
 #----------------------------------------------------------------------
@@ -197,12 +197,14 @@ class GraphicsPen(GraphicsObject):
 
     @staticmethod
     def CreateFromPen(pen):
-        """Convert a :class:`wx.Pen` to a ``GraphicsPen``"""
-        assert isinstance(pen, wx.Pen)
-        p = GraphicsPen(pen.Colour, pen.Width, pen.Style)
-        p._cap = pen.Cap
-        p._dashes = pen.Dashes
-        p._join = pen.Join
+        """Convert a :class:`wx.Pen` or :class:`wx.GraphicsPenInfo` to a ``GraphicsPen``"""
+        assert isinstance(pen, (wx.Pen, wx.GraphicsPenInfo))
+        p = GraphicsPen(pen.GetColour(), pen.GetWidth(), pen.GetStyle())
+        p._cap = pen.GetCap()
+        p._join = pen.GetJoin()
+        if isinstance(pen, wx.Pen):
+            # TODO: GraphicsPenInfo still needs Dashes support added.
+            p._dashes = pen.GetDashes()
         return p
 
 
@@ -1324,13 +1326,13 @@ class GraphicsContext(GraphicsObject):
 
     def CreatePath(self):
         """
-        Create a new path obejct.
+        Create a new path object.
         """
         return GraphicsPath()
 
     def CreatePen(self, pen):
         """
-        Create a new pen from a wx.Pen.
+        Create a new pen from a wx.Pen or a wx.GraphicsPenInfo.
         """
         return GraphicsPen.CreateFromPen(pen)
 
@@ -1752,7 +1754,7 @@ class GraphicsContext(GraphicsObject):
 
     def DrawEllipse(self, x, y, w, h):
         """
-        Stroke and fill an elipse that fits in the given rectangle,
+        Stroke and fill an ellipse that fits in the given rectangle,
         using the current pen and current brush.
         """
         path = GraphicsPath()
@@ -1822,6 +1824,10 @@ class GraphicsContext(GraphicsObject):
         opacity = self._layerOpacities.pop()
         self._context.pop_group_to_source()
         self._context.paint_with_alpha(opacity)
+
+
+    def Flush(self):
+        pass
 
 
     def GetSize(self):

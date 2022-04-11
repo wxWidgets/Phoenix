@@ -9,12 +9,12 @@
 # License:     wxWindows License
 #----------------------------------------------------------------------
 #---------------------------------------------------------------------------
-# This setup file is placed in the root folder of the source dist tarball, 
-# and will be used to help do automated builds from tools like easy_install 
-# or pip.  These tools expect to find at least the setup.py in the root 
+# This setup file is placed in the root folder of the source dist tarball,
+# and will be used to help do automated builds from tools like easy_install
+# or pip.  These tools expect to find at least the setup.py in the root
 # folder, so let's accommodate them...
 #---------------------------------------------------------------------------
- 
+
 import sys, os, glob
 
 # Restructure the content of the tarball so things like pip or easy_install
@@ -42,8 +42,7 @@ for wc in ['wxWidgets/configure',
 if sys.version_info < (3,):
     execfile('setup.py')
 else:
-    f = open('setup.py', 'r')
-    source = f.read()
-    f.close()
+    with open('setup.py', 'r') as f:
+        source = f.read()
     exec(source)
 

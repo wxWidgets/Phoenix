@@ -68,7 +68,7 @@ remember is that the `cookie` passed to
 :meth:`wx.TreeCtrl.GetNextChild` should be the same variable (and that
 nothing should be done with it by the user code).
 
-Among other features of the tree control are: 
+Among other features of the tree control are:
 
 * Item Sorting with :meth:`wx.TreeCtrl.SortChildren` which uses the
   user-defined comparison function `OnCompareItems` (by default the

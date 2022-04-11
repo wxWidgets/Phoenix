@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     1-June-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ class NullLog:
 
 #----------------------------------------------------------------------
 # This class is used to provide an interface between a ComboCtrl and the
-# ListCtrl that is used as the popoup for the combo widget.
+# ListCtrl that is used as the popup for the combo widget.
 
 class ListCtrlComboPopup(wx.ComboPopup):
 

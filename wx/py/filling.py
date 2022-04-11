@@ -140,7 +140,7 @@ class FillingTree(wx.TreeCtrl):
         children = self.objGetChildren(obj)
         if not children:
             return
-        keys = sorted(children.keys(), key=lambda x: six.text_type(x).lower())
+        keys = sorted(children, key=lambda x: six.text_type(x).lower())
         for key in keys:
             itemtext = six.text_type(key)
             # Show string dictionary items with single quotes, except
@@ -207,7 +207,7 @@ class FillingTree(wx.TreeCtrl):
             parent = self.GetItemParent(item)
             obj = self.GetItemData(parent)
         # Apply dictionary syntax to dictionary items, except the root
-        # and first level children of a namepace.
+        # and first level children of a namespace.
         if ((isinstance(obj, dict)
             or 'BTrees' in six.text_type(type(obj))
             and hasattr(obj, 'keys'))
@@ -290,7 +290,7 @@ class Filling(wx.SplitterWindow):
                                 static=static)
         self.text = FillingText(parent=self, static=static)
 
-        wx.CallLater(1, self.SplitVertically, self.tree, self.text, 200)
+        wx.CallLater(25, self.SplitVertically, self.tree, self.text, 200)
 
         self.SetMinimumPaneSize(1)
 

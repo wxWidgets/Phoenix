@@ -235,7 +235,7 @@ formatcodes
             0  integer fields get leading zeros
             D  Date[/time] field
             T  Time field
-            F  Auto-Fit: the control calulates its size from
+            F  Auto-Fit: the control calculates its size from
                the length of the template mask
             V  validate entered chars against validRegex before allowing them
                to be entered vs. being allowed by basic mask and then having
@@ -906,7 +906,7 @@ charmonths_dict = {'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6,
                    'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12}
 
 days   = '(01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)'
-hours  = '(0\d| \d|1[012])'
+hours  = r'(0\d| \d|1[012])'
 milhours = '(00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23)'
 minutes = """(00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|\
 16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|35|\
@@ -943,25 +943,25 @@ masktags = {
        "USPHONEFULLEXT": {
            'mask': "(###) ###-#### x:###",
            'formatcodes': 'F^->',
-           'validRegex': "^\(\d{3}\) \d{3}-\d{4}",
+           'validRegex': r"^\(\d{3}\) \d{3}-\d{4}",
            'description': "Phone Number w/opt. ext"
            },
        "USPHONETIGHTEXT": {
            'mask': "###-###-#### x:###",
            'formatcodes': 'F^->',
-           'validRegex': "^\d{3}-\d{3}-\d{4}",
+           'validRegex': r"^\d{3}-\d{3}-\d{4}",
            'description': "Phone Number\n (w/hyphens and opt. ext)"
            },
        "USPHONEFULL": {
            'mask': "(###) ###-####",
            'formatcodes': 'F^->',
-           'validRegex': "^\(\d{3}\) \d{3}-\d{4}",
+           'validRegex': r"^\(\d{3}\) \d{3}-\d{4}",
            'description': "Phone Number only"
            },
        "USPHONETIGHT": {
            'mask': "###-###-####",
            'formatcodes': 'F^->',
-           'validRegex': "^\d{3}-\d{3}-\d{4}",
+           'validRegex': r"^\d{3}-\d{3}-\d{4}",
            'description': "Phone Number\n(w/hyphens)"
            },
        "USSTATE": {
@@ -985,107 +985,107 @@ masktags = {
            'mask': "##/##/#### ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + months + '/' + days + '/' + '\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + months + '/' + days + '/' + r'\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "US Date + Time"
            },
        "USDATETIMEMMDDYYYY-HHMMSS": {
            'mask': "##-##-#### ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
-           'description': "US Date + Time\n(w/hypens)"
+           'validRegex': '^' + months + '-' + days + '-' + r'\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'description': "US Date + Time\n(w/hyphens)"
            },
        "USDATE24HRTIMEMMDDYYYY/HHMMSS": {
            'mask': "##/##/#### ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '/' + days + '/' + '\d{4} ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + months + '/' + days + '/' + r'\d{4} ' + milhours + ':' + minutes + ':' + seconds,
            'description': "US Date + 24Hr (Military) Time"
            },
        "USDATE24HRTIMEMMDDYYYY-HHMMSS": {
            'mask': "##-##-#### ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + milhours + ':' + minutes + ':' + seconds,
-           'description': "US Date + 24Hr Time\n(w/hypens)"
+           'validRegex': '^' + months + '-' + days + '-' + r'\d{4} ' + milhours + ':' + minutes + ':' + seconds,
+           'description': "US Date + 24Hr Time\n(w/hyphens)"
            },
        "USDATETIMEMMDDYYYY/HHMM": {
            'mask': "##/##/#### ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + months + '/' + days + '/' + '\d{4} ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + months + '/' + days + '/' + r'\d{4} ' + hours + ':' + minutes + ' (A|P)M',
            'description': "US Date + Time\n(without seconds)"
            },
        "USDATE24HRTIMEMMDDYYYY/HHMM": {
            'mask': "##/##/#### ##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '/' + days + '/' + '\d{4} ' + milhours + ':' + minutes,
+           'validRegex': '^' + months + '/' + days + '/' + r'\d{4} ' + milhours + ':' + minutes,
            'description': "US Date + 24Hr Time\n(without seconds)"
            },
        "USDATETIMEMMDDYYYY-HHMM": {
            'mask': "##-##-#### ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + hours + ':' + minutes + ' (A|P)M',
-           'description': "US Date + Time\n(w/hypens and w/o secs)"
+           'validRegex': '^' + months + '-' + days + '-' + r'\d{4} ' + hours + ':' + minutes + ' (A|P)M',
+           'description': "US Date + Time\n(w/hyphens and w/o secs)"
            },
        "USDATE24HRTIMEMMDDYYYY-HHMM": {
            'mask': "##-##-#### ##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + milhours + ':' + minutes,
+           'validRegex': '^' + months + '-' + days + '-' + r'\d{4} ' + milhours + ':' + minutes,
            'description': "US Date + 24Hr Time\n(w/hyphens and w/o seconds)"
            },
        "USDATEMMDDYYYY/": {
            'mask': "##/##/####",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '/' + days + '/' + '\d{4}',
+           'validRegex': '^' + months + '/' + days + '/' + r'\d{4}',
            'description': "US Date\n(MMDDYYYY)"
            },
        "USDATEMMDDYY/": {
            'mask': "##/##/##",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '/' + days + '/\d\d',
+           'validRegex': '^' + months + '/' + days + r'/\d\d',
            'description': "US Date\n(MMDDYY)"
            },
        "USDATEMMDDYYYY-": {
            'mask': "##-##-####",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '-' + days + '-' +'\d{4}',
+           'validRegex': '^' + months + '-' + days + '-' + r'\d{4}',
            'description': "MM-DD-YYYY"
            },
 
        "EUDATEYYYYMMDD/": {
            'mask': "####/##/##",
            'formatcodes': 'DF',
-           'validRegex': '^' + '\d{4}'+ '/' + months + '/' + days,
+           'validRegex': '^' + r'\d{4}'+ '/' + months + '/' + days,
            'description': "YYYY/MM/DD"
            },
        "EUDATEYYYYMMDD.": {
            'mask': "####.##.##",
            'formatcodes': 'DF',
-           'validRegex': '^' + '\d{4}'+ '.' + months + '.' + days,
+           'validRegex': '^' + r'\d{4}'+ '.' + months + '.' + days,
            'description': "YYYY.MM.DD"
            },
        "EUDATEDDMMYYYY/": {
            'mask': "##/##/####",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '/' + months + '/' + '\d{4}',
+           'validRegex': '^' + days + '/' + months + '/' + r'\d{4}',
            'description': "DD/MM/YYYY"
            },
        "EUDATEDDMMYYYY.": {
            'mask': "##.##.####",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '.' + months + '.' + '\d{4}',
+           'validRegex': '^' + days + '.' + months + '.' + r'\d{4}',
            'description': "DD.MM.YYYY"
            },
        "EUDATEDDMMMYYYY.": {
            'mask': "##.CCC.####",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '.' + charmonths + '.' + '\d{4}',
+           'validRegex': '^' + days + '.' + charmonths + '.' + r'\d{4}',
            'description': "DD.Month.YYYY"
            },
        "EUDATEDDMMMYYYY/": {
            'mask': "##/CCC/####",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '/' + charmonths + '/' + '\d{4}',
+           'validRegex': '^' + days + '/' + charmonths + '/' + r'\d{4}',
            'description': "DD/Month/YYYY"
            },
 
@@ -1093,28 +1093,28 @@ masktags = {
            'mask': "####/##/## ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + '\d{4}'+ '/' + months + '/' + days + ' ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + r'\d{4}'+ '/' + months + '/' + days + ' ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "YYYY/MM/DD HH:MM:SS"
            },
        "EUDATETIMEYYYYMMDD.HHMMSS": {
            'mask': "####.##.## ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + '\d{4}'+ '.' + months + '.' + days + ' ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + r'\d{4}'+ '.' + months + '.' + days + ' ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "YYYY.MM.DD HH:MM:SS"
            },
        "EUDATETIMEDDMMYYYY/HHMMSS": {
            'mask': "##/##/#### ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + days + '/' + months + '/' + '\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + days + '/' + months + '/' + r'\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "DD/MM/YYYY HH:MM:SS"
            },
        "EUDATETIMEDDMMYYYY.HHMMSS": {
            'mask': "##.##.#### ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + days + '.' + months + '.' + '\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + days + '.' + months + '.' + r'\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "DD.MM.YYYY HH:MM:SS"
            },
 
@@ -1122,76 +1122,76 @@ masktags = {
            'mask': "####/##/## ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + '\d{4}'+ '/' + months + '/' + days + ' ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + r'\d{4}'+ '/' + months + '/' + days + ' ' + hours + ':' + minutes + ' (A|P)M',
            'description': "YYYY/MM/DD HH:MM"
            },
        "EUDATETIMEYYYYMMDD.HHMM": {
            'mask': "####.##.## ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + '\d{4}'+ '.' + months + '.' + days + ' ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + r'\d{4}'+ '.' + months + '.' + days + ' ' + hours + ':' + minutes + ' (A|P)M',
            'description': "YYYY.MM.DD HH:MM"
            },
        "EUDATETIMEDDMMYYYY/HHMM": {
            'mask': "##/##/#### ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + days + '/' + months + '/' + '\d{4} ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + days + '/' + months + '/' + r'\d{4} ' + hours + ':' + minutes + ' (A|P)M',
            'description': "DD/MM/YYYY HH:MM"
            },
        "EUDATETIMEDDMMYYYY.HHMM": {
            'mask': "##.##.#### ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + days + '.' + months + '.' + '\d{4} ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + days + '.' + months + '.' + r'\d{4} ' + hours + ':' + minutes + ' (A|P)M',
            'description': "DD.MM.YYYY HH:MM"
            },
 
        "EUDATE24HRTIMEYYYYMMDD/HHMMSS": {
            'mask': "####/##/## ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + '\d{4}'+ '/' + months + '/' + days + ' ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + r'\d{4}'+ '/' + months + '/' + days + ' ' + milhours + ':' + minutes + ':' + seconds,
            'description': "YYYY/MM/DD 24Hr Time"
            },
        "EUDATE24HRTIMEYYYYMMDD.HHMMSS": {
            'mask': "####.##.## ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + '\d{4}'+ '.' + months + '.' + days + ' ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + r'\d{4}'+ '.' + months + '.' + days + ' ' + milhours + ':' + minutes + ':' + seconds,
            'description': "YYYY.MM.DD 24Hr Time"
            },
        "EUDATE24HRTIMEDDMMYYYY/HHMMSS": {
            'mask': "##/##/#### ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '/' + months + '/' + '\d{4} ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + days + '/' + months + '/' + r'\d{4} ' + milhours + ':' + minutes + ':' + seconds,
            'description': "DD/MM/YYYY 24Hr Time"
            },
        "EUDATE24HRTIMEDDMMYYYY.HHMMSS": {
            'mask': "##.##.#### ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '.' + months + '.' + '\d{4} ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + days + '.' + months + '.' + r'\d{4} ' + milhours + ':' + minutes + ':' + seconds,
            'description': "DD.MM.YYYY 24Hr Time"
            },
        "EUDATE24HRTIMEYYYYMMDD/HHMM": {
            'mask': "####/##/## ##:##",
-           'formatcodes': 'DF','validRegex': '^' + '\d{4}'+ '/' + months + '/' + days + ' ' + milhours + ':' + minutes,
+           'formatcodes': 'DF','validRegex': '^' + r'\d{4}'+ '/' + months + '/' + days + ' ' + milhours + ':' + minutes,
            'description': "YYYY/MM/DD 24Hr Time\n(w/o seconds)"
            },
        "EUDATE24HRTIMEYYYYMMDD.HHMM": {
            'mask': "####.##.## ##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + '\d{4}'+ '.' + months + '.' + days + ' ' + milhours + ':' + minutes,
+           'validRegex': '^' + r'\d{4}'+ '.' + months + '.' + days + ' ' + milhours + ':' + minutes,
            'description': "YYYY.MM.DD 24Hr Time\n(w/o seconds)"
            },
        "EUDATE24HRTIMEDDMMYYYY/HHMM": {
            'mask': "##/##/#### ##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '/' + months + '/' + '\d{4} ' + milhours + ':' + minutes,
+           'validRegex': '^' + days + '/' + months + '/' + r'\d{4} ' + milhours + ':' + minutes,
            'description': "DD/MM/YYYY 24Hr Time\n(w/o seconds)"
            },
        "EUDATE24HRTIMEDDMMYYYY.HHMM": {
            'mask': "##.##.#### ##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '.' + months + '.' + '\d{4} ' + milhours + ':' + minutes,
+           'validRegex': '^' + days + '.' + months + '.' + r'\d{4} ' + milhours + ':' + minutes,
            'description': "DD.MM.YYYY 24Hr Time\n(w/o seconds)"
            },
 
@@ -1224,37 +1224,37 @@ masktags = {
        "USSOCIALSEC": {
            'mask': "###-##-####",
            'formatcodes': 'F',
-           'validRegex': "\d{3}-\d{2}-\d{4}",
+           'validRegex': r"\d{3}-\d{2}-\d{4}",
            'description': "Social Sec#"
            },
        "CREDITCARD": {
            'mask': "####-####-####-####",
            'formatcodes': 'F',
-           'validRegex': "\d{4}-\d{4}-\d{4}-\d{4}",
+           'validRegex': r"\d{4}-\d{4}-\d{4}-\d{4}",
            'description': "Credit Card"
            },
        "EXPDATEMMYY": {
            'mask': "##/##",
            'formatcodes': "F",
-           'validRegex': "^" + months + "/\d\d",
+           'validRegex': "^" + months + r"/\d\d",
            'description': "Expiration MM/YY"
            },
        "USZIP": {
            'mask': "#####",
            'formatcodes': 'F',
-           'validRegex': "^\d{5}",
+           'validRegex': r"^\d{5}",
            'description': "US 5-digit zip code"
            },
        "USZIPPLUS4": {
            'mask': "#####-####",
            'formatcodes': 'F',
-           'validRegex': "\d{5}-(\s{4}|\d{4})",
+           'validRegex': r"\d{5}-(\s{4}|\d{4})",
            'description': "US zip+4 code"
            },
        "PERCENT": {
            'mask': "0.##",
            'formatcodes': 'F',
-           'validRegex': "^0.\d\d",
+           'validRegex': r"^0.\d\d",
            'description': "Percentage"
            },
        "AGE": {
@@ -1267,13 +1267,13 @@ masktags = {
            'mask': "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
            'excludeChars': " \\/*&%$#!+='\"",
            'formatcodes': "F>",
-           'validRegex': "^\w+([\-\.]\w+)*@((([a-zA-Z0-9]+(\-[a-zA-Z0-9]+)*\.)+)[a-zA-Z]{2,4}|\[(\d|\d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(\d|\d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}\]) *$",
+           'validRegex': r"^\w+([\-\.]\w+)*@((([a-zA-Z0-9]+(\-[a-zA-Z0-9]+)*\.)+)[a-zA-Z]{2,4}|\[(\d|\d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(\d|\d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}\]) *$",
            'description': "Email address"
            },
        "IPADDR": {
            'mask': "###.###.###.###",
            'formatcodes': 'F_Sr',
-           'validRegex': "(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}",
+           'validRegex': r"(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}",
            'description': "IP Address\n(see IpAddrCtrl)"
            }
        }
@@ -1316,7 +1316,7 @@ class Field:
               'choiceRequired': False,          ## If choices supplied this specifies if valid value must be in the list
               'compareNoCase': False,           ## Optional flag to indicate whether or not to use case-insensitive list search
               'autoSelect': False,              ## Set to True to try auto-completion on each keystroke:
-              'validFunc': None,                ## Optional function for defining additional, possibly dynamic validation constraints on contrl
+              'validFunc': None,                ## Optional function for defining additional, possibly dynamic validation constraints on control
               'validRequired': False,           ## Set to True to disallow input that results in an invalid value
               'emptyInvalid':  False,           ## Set to True to make EMPTY = INVALID
               'description': "",                ## primarily for autoformats, but could be useful elsewhere
@@ -1337,8 +1337,8 @@ class Field:
         """
 ####        dbg('Field::Field', indent=1)
         # Validate legitimate set of parameters:
-        for key in kwargs.keys():
-            if key not in Field.valid_params.keys():
+        for key in kwargs:
+            if key not in Field.valid_params:
 ####                dbg(indent=0)
                 ae = AttributeError('invalid parameter "%s"' % (key))
                 ae.attribute = key
@@ -1366,8 +1366,8 @@ class Field:
 ##        dbg(suspend=1)
 ##        dbg('maskededit.Field::_SetParameters', indent=1)
         # Validate keyword arguments:
-        for key in kwargs.keys():
-            if key not in Field.valid_params.keys():
+        for key in kwargs:
+            if key not in Field.valid_params:
 ##                dbg(indent=0, suspend=0)
                 ae = AttributeError('invalid keyword argument "%s"' % key)
                 ae.attribute = key
@@ -1384,7 +1384,7 @@ class Field:
         old_fillChar = self._fillChar   # store so we can change choice lists accordingly if it changes
 
         # First, Assign all parameters specified:
-        for key in Field.valid_params.keys():
+        for key in Field.valid_params:
             if key in kwargs:
                 setattr(self, '_' + key, kwargs[key] )
 
@@ -1747,8 +1747,9 @@ class MaskedEditMixin:
         self._previous_mask = None
 
         # Validate legitimate set of parameters:
-        for key in kwargs.keys():
-            if key.replace('Color', 'Colour') not in list(MaskedEditMixin.valid_ctrl_params.keys()) + list(Field.valid_params.keys()):
+        valid_parameters = list(MaskedEditMixin.valid_ctrl_params) + list(Field.valid_params)
+        for key in kwargs:
+            if key.replace('Color', 'Colour') not in valid_parameters:
                 raise TypeError('%s: invalid parameter "%s"' % (name, key))
 
         ## Set up dictionary that can be used by subclasses to override or add to default
@@ -1857,14 +1858,15 @@ class MaskedEditMixin:
         # Validate keyword arguments:
         constraint_kwargs = {}
         ctrl_kwargs = {}
+        valid_parameters = list(MaskedEditMixin.valid_ctrl_params) + list(Field.valid_params)
         for key, value in kwargs.items():
             key = key.replace('Color', 'Colour')    # for b-c, and standard wxPython spelling
-            if key not in list(MaskedEditMixin.valid_ctrl_params.keys()) + list(Field.valid_params.keys()):
+            if key not in valid_parameters:
 ##                dbg(indent=0, suspend=0)
                 ae = AttributeError('Invalid keyword argument "%s" for control "%s"' % (key, self.name))
                 ae.attribute = key
                 raise ae
-            elif key in Field.valid_params.keys():
+            elif key in Field.valid_params:
                 constraint_kwargs[key] = value
             else:
                 ctrl_kwargs[key] = value
@@ -1878,10 +1880,10 @@ class MaskedEditMixin:
             autoformat = None
 
         # handle "parochial name" backward compatibility:
-        if autoformat and autoformat.find('MILTIME') != -1 and autoformat not in masktags.keys():
+        if autoformat and autoformat.find('MILTIME') != -1 and autoformat not in masktags:
             autoformat = autoformat.replace('MILTIME', '24HRTIME')
 
-        if autoformat != self._autoformat and autoformat in masktags.keys():
+        if autoformat != self._autoformat and autoformat in masktags:
 ##            dbg('autoformat:', autoformat)
             self._autoformat                  = autoformat
             mask                              = masktags[self._autoformat]['mask']
@@ -1890,7 +1892,7 @@ class MaskedEditMixin:
                 if param == 'mask': continue    # (must be present; already accounted for)
                 constraint_kwargs[param] = value
 
-        elif autoformat and not autoformat in masktags.keys():
+        elif autoformat and not autoformat in masktags:
             ae = AttributeError('invalid value for autoformat parameter: %s' % repr(autoformat))
             ae.attribute = autoformat
             raise ae
@@ -1942,7 +1944,7 @@ class MaskedEditMixin:
 ####        dbg(indent=0)
 
         # determine if changing parameters that should affect the entire control:
-        for key in MaskedEditMixin.valid_ctrl_params.keys():
+        for key in MaskedEditMixin.valid_ctrl_params:
             if key in ( 'mask', 'fields' ): continue    # (processed separately)
             if key in ctrl_kwargs:
                 setattr(self, '_' + key, ctrl_kwargs[key])
@@ -2257,7 +2259,7 @@ class MaskedEditMixin:
         """
 ##        dbg('_processMask: mask', mask, indent=1)
         # regular expression for parsing c{n} syntax:
-        rex = re.compile('([' + "".join(maskchars) + '])\{(\d+)\}')
+        rex = re.compile('([' + "".join(maskchars) + r'])\{(\d+)\}')
         s = mask
         match = rex.search(s)
         while match:    # found an(other) occurrence
@@ -2431,8 +2433,8 @@ class MaskedEditMixin:
                         field_index += 1
 ####                        dbg('next field:', field_index)
 
-        indices = list(self._fields.keys())
-        indices.sort()
+        indices = sorted(self._fields)
+
         self._field_indices = indices[1:]
 ####        dbg('lookupField map:', indent=1)
 ##        for i in range(len(self._mask)):
@@ -2440,7 +2442,7 @@ class MaskedEditMixin:
 ####        dbg(indent=0)
 
         # Verify that all field indices specified are valid for mask:
-        for index in self._fields.keys():
+        for index in self._fields:
             if index not in [-1] + list(self._lookupField.values()):
                 ie = IndexError('field %d is not a valid field for mask "%s"' % (index, self._mask))
                 ie.index = index
@@ -2645,7 +2647,7 @@ class MaskedEditMixin:
                         raise ve
                     elif replace_to > end:
 ####                        dbg(indent=0)
-                        ve = ValueError('"%s" will not fit into field %d of control "%s"' (choice, index, self.name))
+                        ve = ValueError('"%s" will not fit into field %d of control "%s"' % (choice, index, self.name))
                         ve.value = choice
                         ve.index = index
                         raise ve
@@ -3229,6 +3231,13 @@ class MaskedEditMixin:
 ####        dbg(indent=0)
         return self._fields[self._lookupField[pos]]
 
+    def SetForegroundColour(self, colour):
+        super(MaskedEditMixin, self).SetForegroundColour(colour)
+        self._foregroundColour = colour
+
+    def SetBackgroundColour(self, colour):
+        super(MaskedEditMixin, self).SetBackgroundColour(colour)
+        self._validBackgroundColour = colour
 
     def ClearValue(self):
         """ Blanks the current control value by replacing it with the default value."""
@@ -4171,7 +4180,7 @@ class MaskedEditMixin:
                 self._SetValue(newvalue)
                 self._SetInsertionPoint(min(edit_end, len(newvalue.rstrip())))
                 self._OnAutoSelect(field, match_index)
-                self._CheckValid()  # recolor as appopriate
+                self._CheckValid()  # recolor as appropriate
 
 
         if keycode in (wx.WXK_UP, wx.WXK_DOWN, wx.WXK_LEFT, wx.WXK_RIGHT,
@@ -4765,7 +4774,7 @@ class MaskedEditMixin:
     def _applyFormatting(self):
         """ Apply formatting depending on the control's state.
             Need to find a way to call this whenever the value changes, in case the control's
-            value has been changed or set programatically.
+            value has been changed or set programmatically.
         """
 ##        dbg(suspend=1)
 ##        dbg('MaskedEditMixin::_applyFormatting', indent=1)
@@ -5582,7 +5591,7 @@ class MaskedEditMixin:
 
         The trouble is that, a priori, there's no explicit notification of
         why the focus event we received.  However, the whole reason we need to
-        do this is because the default behavior on TAB traveral in a wx.TextCtrl is
+        do this is because the default behavior on TAB traversal in a wx.TextCtrl is
         now to select the entire contents of the window, something we don't want.
         So we can *now* test the selection range, and if it's "the whole text"
         we can assume the cause, change the insertion point to the start of
@@ -6331,7 +6340,7 @@ class MaskedEditMixin:
         wx.EVT_UPDATE_UI(self, wx.ID_UNDO, self._UndoUpdateUI)
         self._contextMenu = menu
 
-        self.PopupMenu(menu, event.GetPosition())
+        self.PopupMenu(menu)
         menu.Destroy()
         self._contextMenu = None
 ##        dbg(indent=0)
@@ -6380,7 +6389,7 @@ class MaskedEditAccessorsMixin:
     """
 
     # Define the default set of attributes exposed by the most generic masked controls:
-    exposed_basectrl_params = list(MaskedEditMixin.valid_ctrl_params.keys()) + list(Field.valid_params.keys())
+    exposed_basectrl_params = list(MaskedEditMixin.valid_ctrl_params) + list(Field.valid_params)
     exposed_basectrl_params.remove('index')
     exposed_basectrl_params.remove('extent')
     exposed_basectrl_params.remove('foregroundColour')   # (base class already has this)
@@ -6448,7 +6457,7 @@ def _isTimeType( fmtstring ):
 
 
 def _isFloatingPoint( fmtstring):
-    filter = re.compile("[ ]?[#]+\.[#]+\n")
+    filter = re.compile(r"[ ]?[#]+\.[#]+\n")
     if re.match(filter,fmtstring+"\n"): return True
     return False
 
@@ -6522,7 +6531,7 @@ class __test(wx.App):
             self.editList  = []
             rowcount    = 4
 
-            id, id1 = wx.NewId(), wx.NewId()
+            id, id1 = wx.NewIdRef(2)
             self.command1  = wx.Button( self.panel, id, "&Close" )
             self.command2  = wx.Button( self.panel, id1, "&AutoFormats" )
             self.sizer.Add(self.command1, row=0, col=0, flag=wx.ALL, border = 5)
@@ -6571,20 +6580,20 @@ Try entering nonsensical or partial values in validated fields to see what happe
             # the options!
             controls = [
             #description        mask                    excl format     regexp                              range,list,initial
-           ("Phone No",         "(###) ###-#### x:###", "", 'F!^-R',    "^\(\d\d\d\) \d\d\d-\d\d\d\d",    (),[],''),
+           ("Phone No",         "(###) ###-#### x:###", "", 'F!^-R',    r"^\(\d\d\d\) \d\d\d-\d\d\d\d",    (),[],''),
            ("Last Name Only",   "C{14}",                "", 'F {list}', '^[A-Z][a-zA-Z]+',                  (),('Smith','Jones','Williams'),''),
            ("Full Name",        "C{14}",                "", 'F_',       '^[A-Z][a-zA-Z]+ [A-Z][a-zA-Z]+',   (),[],''),
-           ("Social Sec#",      "###-##-####",          "", 'F',        "\d{3}-\d{2}-\d{4}",                (),[],''),
-           ("U.S. Zip+4",       "#{5}-#{4}",            "", 'F',        "\d{5}-(\s{4}|\d{4})",(),[],''),
+           ("Social Sec#",      "###-##-####",          "", 'F',        r"\d{3}-\d{2}-\d{4}",                (),[],''),
+           ("U.S. Zip+4",       "#{5}-#{4}",            "", 'F',        r"\d{5}-(\s{4}|\d{4})",(),[],''),
            ("U.S. State (2 char)\n(with default)","AA",                 "", 'F!',       "[A-Z]{2}",                         (),states, 'AZ'),
-           ("Customer No",      "\CAA-###",              "", 'F!',      "C[A-Z]{2}-\d{3}",                   (),[],''),
+           ("Customer No",      r"\CAA-###",              "", 'F!',      r"C[A-Z]{2}-\d{3}",                   (),[],''),
            ("Date (MDY) + Time\n(with default)",      "##/##/#### ##:## AM",  'BCDEFGHIJKLMNOQRSTUVWXYZ','DFR!',"",                (),[], r'03/05/2003 12:00 AM'),
            ("Invoice Total",    "#{9}.##",              "", 'F-R,',     "",                                 (),[], ''),
            ("Integer (signed)\n(with default)", "#{6}",                 "", 'F-R',      "",                                 (),[], '0     '),
            ("Integer (unsigned)\n(with default), 1-399", "######",      "", 'F',        "",                                 (1,399),[], '1     '),
            ("Month selector",   "XXX",                  "", 'F',        "",                                 (),
                 ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],""),
-           ("fraction selector","#/##",                 "", 'F',        "^\d\/\d\d?",                       (),
+           ("fraction selector","#/##",                 "", 'F',        r"^\d\/\d\d?",                       (),
                 ['2/3', '3/4', '1/2', '1/4', '1/8', '1/16', '1/32', '1/64'], "")
            ]
 
@@ -6697,7 +6706,7 @@ To see a great example of validations in action, try entering a bad email addres
             self.sizer.Add( self.label3, row=3,col=1, flag=wx.ALL,border=5)
             self.sizer.Add( self.label4, row=3,col=2, flag=wx.ALL,border=5)
 
-            id, id1 = wx.NewId(), wx.NewId()
+            id, id1 = wx.NewIdRef(2)
             self.command1  = wx.Button( self.panel, id, "&Close")
             self.command2  = wx.Button( self.panel, id1, "&Print Formats")
             self.panel.Bind(wx.EVT_BUTTON, self.onClick, self.command1)
@@ -6747,7 +6756,7 @@ To see a great example of validations in action, try entering a bad email addres
             self.Close()
 
         def onClickPrint(self, event):
-            for format in masktags.keys():
+            for format in masktags:
                 sep = "+------------------------+"
                 print("%s\n%s  \n  Mask: %s \n  RE Validation string: %s\n" % (sep,format, masktags[format]['mask'], masktags[format]['validRegex']))
 
@@ -7032,7 +7041,7 @@ __i=0
 ##
 ##  Version 1.0
 ##   1. Decimal point behavior restored for decimal and integer type controls:
-##      decimal point now trucates the portion > 0.
+##      decimal point now truncates the portion > 0.
 ##   2. Return key now works like the tab character and moves to the next field,
 ##      provided no default button is set for the form panel on which the control
 ##      resides.
@@ -7218,7 +7227,7 @@ __i=0
 ##   5. Decimal values now collapse to decimal with '.00' on losefocus if the user never
 ##      presses the decimal point.
 ##   6. Cursor now goes to the beginning of the field if the user clicks in an
-##      "empty" field intead of leaving the insertion point in the middle of the
+##      "empty" field instead of leaving the insertion point in the middle of the
 ##      field.
 ##   7. New "N" mask type includes upper and lower chars plus digits. a-zA-Z0-9.
 ##   8. New formatcodes init parameter replaces other init params and adds functions.

@@ -7,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     8-July-2002
-# Copyright:   (c) 2002-2017 by Total Control Software
+# Copyright:   (c) 2002-2020 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------
@@ -196,7 +196,7 @@ class GenStaticText(wx.Control):
           in the specified state.
 
         .. note:: Note that when a parent window is disabled, all of its
-           children are disabled as well and they are reenabled again when
+           children are disabled as well and they are re-enabled again when
            the parent is.
 
         .. note:: Overridden from :class:`wx.Control`.
@@ -302,8 +302,8 @@ class GenStaticText(wx.Control):
             if style & wx.ALIGN_RIGHT:
                 x = width - w
             if style & wx.ALIGN_CENTER:
-                x = (width - w)/2
-            dc.DrawText(line, x, y)
+                x = (width - w)//2
+            dc.DrawText(line, int(x), int(y))
             y += h
 
 
@@ -319,4 +319,3 @@ class GenStaticText(wx.Control):
 
 
 #----------------------------------------------------------------------
-

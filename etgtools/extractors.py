@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -16,6 +16,7 @@ import sys
 import os
 import pprint
 import xml.etree.ElementTree as et
+import copy
 
 from .tweaker_tools import FixWxPrefix, magicMethods, \
                            guessTypeInt, guessTypeFloat, guessTypeStr, \
@@ -25,10 +26,6 @@ from sphinxtools.utilities import findDescendants
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
 # methods, functions and other items in the C/C++ API being wrapped.
-#
-# NOTE: Currently very little is being done with the docstrings. They can
-# either be reprocessed later by the document generator or we can do more
-# tinkering with them here.  It just depends on decisions not yet made...
 #---------------------------------------------------------------------------
 
 class BaseDef(object):
@@ -44,6 +41,7 @@ class BaseDef(object):
         self.docsIgnored = False # skip this item when generating docs
         self.briefDoc = ''       # either a string or a single para Element
         self.detailedDoc = []    # collection of para Elements
+        self.deprecated = False  # is this item deprecated
 
         # The items list is used by some subclasses to collect items that are
         # part of that item, like methods of a ClassDef, parameters in a
@@ -71,6 +69,31 @@ class BaseDef(object):
         if len(bd):
             self.briefDoc = bd[0] # Should be just one <para> element
         self.detailedDoc = list(element.find('detaileddescription'))
+
+
+    def checkDeprecated(self):
+        # Don't iterate all items, just the para items found in detailedDoc,
+        # so that classes with a deprecated method don't likewise become deprecated.
+        for para in self.detailedDoc:
+            for item in para.iter():
+                itemid = item.get('id')
+                if itemid and itemid.startswith('deprecated'):
+                    self.deprecated = True
+                    return
+
+
+    def clearDeprecated(self):
+        """
+        Remove the deprecation notice from the detailedDoc, if any, and reset
+        self.deprecated to False.
+        """
+        self.deprecated = False
+        for para in self.detailedDoc:
+            for item in para.iter():
+                itemid = item.get('id')
+                if itemid and itemid.startswith('deprecated'):
+                    self.detailedDoc.remove(para)
+                    return
 
 
     def ignore(self, val=True):
@@ -155,7 +178,7 @@ class BaseDef(object):
 
     def findAll(self, name):
         """
-        Search recursivly for items that have the given name.
+        Search recursively for items that have the given name.
         """
         matches = list()
         for item in self.allItems():
@@ -183,6 +206,7 @@ class VariableDef(BaseDef):
         self.definition = ''
         self.argsString = ''
         self.pyInt = False
+        self.noSetter = False
         self.__dict__.update(**kw)
         if element is not None:
             self.extract(element)
@@ -224,6 +248,8 @@ class MemberVarDef(VariableDef):
         super(MemberVarDef, self).__init__()
         self.isStatic = False
         self.protection = 'public'
+        self.getCode = ''
+        self.setCode = ''
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
@@ -255,7 +281,6 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.pyArgsString = ''
         self.isOverloaded = False
         self.overloads = []
-        self.deprecated = False       # is the function deprecated
         self.factory = False          # a factory function that creates a new instance of the return value
         self.pyReleaseGIL = False     # release the Python GIL for this function call
         self.pyHoldGIL = False        # hold the Python GIL for this function call
@@ -263,10 +288,10 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.pyInt = False            # treat char types as integers
         self.transfer = False         # transfer ownership of return value to C++?
         self.transferBack = False     # transfer ownership of return value from C++ to Python?
-        self.transferThis = False     # ownership of 'this' pointer transfered to C++
+        self.transferThis = False     # ownership of 'this' pointer transferred to C++
         self.cppCode = None           # Use this code instead of the default wrapper
         self.noArgParser = False      # set the NoargParser annotation
-        self.mustHaveAppFlag = False
+        self.preMethodCode = None
 
         self.__dict__.update(kw)
         if element is not None:
@@ -279,6 +304,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.type = flattenNode(element.find('type'))
         self.definition = element.find('definition').text
         self.argsString = element.find('argsstring').text
+        self.checkDeprecated()
         for node in element.findall('param'):
             p = ParamDef(node)
             self.items.append(p)
@@ -460,7 +486,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                         'wxArrayInt()' : '[]',
                         }
         if isinstance(self, CppMethodDef):
-            # rip appart the argsString instead of using the (empty) list of parameters
+            # rip apart the argsString instead of using the (empty) list of parameters
             lastP = self.argsString.rfind(')')
             args = self.argsString[:lastP].strip('()').split(',')
             for arg in args:
@@ -530,7 +556,11 @@ class FunctionDef(BaseDef, FixWxPrefix):
 
 
     def mustHaveApp(self, value=True):
-        self.mustHaveAppFlag = value
+        if value:
+            self.preMethodCode = "if (!wxPyCheckForApp()) return NULL;\n"
+        else:
+            self.preMethodCode = None
+
 
 #---------------------------------------------------------------------------
 
@@ -575,6 +605,10 @@ class MethodDef(FunctionDef):
             self.ignore()
 
 
+    def setVirtualCatcherCode(self, code):
+        """
+        """
+        self.virtualCatcherCode = code
 
 
 #---------------------------------------------------------------------------
@@ -596,6 +630,7 @@ class ParamDef(BaseDef):
         self.transferBack = False     # transfer ownership of arg from C++ to Python?
         self.transferThis = False     # ownership of 'this' pointer transferred to this arg
         self.keepReference = False    # an extra reference to the arg is held
+        self.constrained = False      # limit auto-conversion of similar types (like float -> int)
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
@@ -635,10 +670,9 @@ class ClassDef(BaseDef):
         self.enum_file = ''         # To link sphinx output classes to enums
         self.includes = []          # .h file for this class
         self.abstract = False       # is it an abstract base class?
-        self.deprecated = False     # mark all methods as deprecated
         self.external = False       # class is in another module
         self.noDefCtor = False      # do not generate a default constructor
-        self.singlton = False       # class is a singleton so don't call the dtor until the interpreter exits
+        self.singleton = False       # class is a singleton so don't call the dtor until the interpreter exits
         self.allowAutoProperties = True
         self.headerCode = []
         self.cppCode = []
@@ -649,7 +683,8 @@ class ClassDef(BaseDef):
         self.innerclasses = []
         self.isInner = False        # Is this a nested class?
         self.klass = None           # if so, then this is the outer class
-        self.mustHaveAppFlag = False
+        self.preMethodCode = None
+        self.postProcessReST = None
 
         # Stuff that needs to be generated after the class instead of within
         # it. Some back-end generators need to put stuff inside the class, and
@@ -708,6 +743,7 @@ class ClassDef(BaseDef):
     def extract(self, element):
         super(ClassDef, self).extract(element)
 
+        self.checkDeprecated()
         self.nodeBases = self.findHierarchy(element, {}, [], False)
 
         for node in element.findall('basecompoundref'):
@@ -717,8 +753,12 @@ class ClassDef(BaseDef):
         for node in element.findall('includes'):
             self.includes.append(node.text)
         for node in element.findall('templateparamlist/param'):
-            txt = node.find('type').text
-            txt = txt.replace('class ', '')
+            if node.find('declname') is not None:
+                txt = node.find('declname').text
+            else:
+                txt = node.find('type').text
+                txt = txt.replace('class ', '')
+                txt = txt.replace('typename ', '')
             self.templateParams.append(txt)
 
         for node in element.findall('innerclass'):
@@ -781,7 +821,8 @@ class ClassDef(BaseDef):
 
 
     def includeCppCode(self, filename):
-        self.addCppCode(textfile_open(filename).read())
+        with textfile_open(filename) as fid:
+            self.addCppCode(fid.read())
 
 
     def addAutoProperties(self):
@@ -1054,6 +1095,13 @@ class ClassDef(BaseDef):
         self.addItem(WigCode(text))
 
 
+    def addDefaultCtor(self, prot='protected'):
+        # add declaration of a default constructor to this class
+        wig = WigCode("""\
+{PROT}:
+    {CLASS}();""".format(CLASS=self.name, PROT=prot))
+        self.addItem(wig)
+
     def addCopyCtor(self, prot='protected'):
         # add declaration of a copy constructor to this class
         wig = WigCode("""\
@@ -1064,6 +1112,9 @@ class ClassDef(BaseDef):
     def addPrivateCopyCtor(self):
         self.addCopyCtor('private')
 
+    def addPrivateDefaultCtor(self):
+        self.addDefaultCtor('private')
+
     def addPrivateAssignOp(self):
         # add declaration of an assignment opperator to this class
         wig = WigCode("""\
@@ -1071,11 +1122,12 @@ private:
     {CLASS}& operator=(const {CLASS}&);""".format(CLASS=self.name))
         self.addItem(wig)
 
-    def addDtor(self, prot='protected'):
+    def addDtor(self, prot='protected', isVirtual=False):
         # add declaration of a destructor to this class
+        virtual = 'virtual ' if isVirtual else ''
         wig = WigCode("""\
 {PROT}:
-    ~{CLASS}();""".format(CLASS=self.name, PROT=prot))
+    {VIRTUAL}~{CLASS}();""".format(VIRTUAL=virtual, CLASS=self.name, PROT=prot))
         self.addItem(wig)
 
     def addDefaultCtor(self, prot='protected'):
@@ -1086,8 +1138,31 @@ private:
         self.addItem(wig)
 
     def mustHaveApp(self, value=True):
-        self.mustHaveAppFlag = value
+        if value:
+            self.preMethodCode = "if (!wxPyCheckForApp()) return NULL;\n"
+        else:
+            self.preMethodCode = None
 
+
+    def copyFromClass(self, klass, name):
+        """
+        Copy an item from another class into this class. If it is a pure
+        virtual method in the other class then assume that it has a concrete
+        implementation in this class and change the flag.
+
+        Returns the new item.
+        """
+        item = copy.deepcopy(klass.find(name))
+        if isinstance(item, MethodDef) and item.isPureVirtual:
+            item.isPureVirtual = False
+        self.addItem(item)
+        return item
+
+    def setReSTPostProcessor(self, func):
+        """
+        Set a function to be called after the class's docs have been generated.
+        """
+        self.postProcessReST = func
 
 #---------------------------------------------------------------------------
 
@@ -1196,6 +1271,7 @@ class CppMethodDef(MethodDef):
         self.cppSignature = cppSignature
         self.virtualCatcherCode = virtualCatcherCode
         self.isCore = _globalIsCore
+        self.isSlot = False
         self.__dict__.update(kw)
 
     @staticmethod
@@ -1408,7 +1484,8 @@ class ModuleDef(BaseDef):
             self.cppCode.append(code)
 
     def includeCppCode(self, filename):
-        self.addCppCode(textfile_open(filename).read())
+        with textfile_open(filename) as fid:
+            self.addCppCode(fid.read())
 
     def addInitializerCode(self, code):
         if isinstance(code, list):
@@ -1534,12 +1611,17 @@ class ModuleDef(BaseDef):
         return pc
 
 
-    def addGlobalStr(self, name, before=None):
+    def addGlobalStr(self, name, before=None, wide=False):
         if self.findItem(name):
             self.findItem(name).ignore()
-        gv = GlobalVarDef(type='const char*', name=name)
+        if wide:
+            gv = GlobalVarDef(type='const wchar_t*', name=name)
+        else:
+            gv = GlobalVarDef(type='const char*', name=name)
         if before is None:
             self.addItem(gv)
+        elif isinstance(before, int):
+            self.insertItem(before, gv)
         else:
             self.insertItemBefore(before, gv)
         return gv
@@ -1549,7 +1631,8 @@ class ModuleDef(BaseDef):
         """
         Add a snippet of Python code from a file to the wrapper module.
         """
-        text = textfile_open(filename).read()
+        with textfile_open(filename) as fid:
+            text = fid.read()
         return self.addPyCode(
             "#" + '-=' * 38 + '\n' +
             ("# This code block was included from %s\n%s\n" % (filename, text)) +

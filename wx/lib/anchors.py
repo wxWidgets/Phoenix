@@ -6,7 +6,7 @@
 # Author:      Riaan Booysen
 #
 # Created:     15-Dec-2000
-# Copyright:   (c) 2000-2017 by Total Control Software
+# Copyright:   (c) 2000-2020 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 # 11/30/2003 - Jeff Grimmett (grimmtooth@softhome.net)

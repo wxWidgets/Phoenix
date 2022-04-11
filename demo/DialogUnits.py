@@ -7,7 +7,7 @@
 # Author:       Robin Dunn
 #
 # Created:      A long time ago, in a galaxy far, far away...
-# Copyright:    (c) 1998-2017 by Total Control Software
+# Copyright:    (c) 1998-2020 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
 

@@ -328,7 +328,7 @@ value entry ctrl:""")
             if value.find('.') != -1:
                 numvalue = float(value)
             else:
-                numvalue = long(value)
+                numvalue = int(value)
         else:
             numvalue = value   # try to clear the value again
 

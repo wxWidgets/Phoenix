@@ -12,6 +12,11 @@ class busyinfo_Tests(wtc.WidgetTestCase):
         del busy
 
 
+    def test_busyinfo2(self):
+        with wx.BusyInfo('This is a busy info message'):
+            self.waitFor(250)
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

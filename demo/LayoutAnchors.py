@@ -5,7 +5,7 @@ import wx.lib.anchors as anchors
 
 #----------------------------------------------------------------------
 
-# Nifty little trick here; apply wx.NewId() to generate a series of
+# Nifty little trick here; apply wx.NewIdRef() to generate a series of
 # IDs used later on in the app.
 
 [   ID_ANCHORSDEMOFRAMEANCHOREDPANEL,
@@ -18,7 +18,7 @@ import wx.lib.anchors as anchors
     ID_ANCHORSDEMOFRAMEBOTTOMCHECKBOX,
     ID_ANCHORSDEMOFRAME,
     ID_ANCHORSDEMOFRAMELEFTCHECKBOX,
- ] = map(lambda _init_ctrls: wx.NewId(), range(10))
+ ] = wx.NewIdRef(10)
 
 # A small note here: while only certain parts of this frame are actually demonstrating
 # the capabilities of the LayoutAnchors feature, all the controls are within the same
@@ -70,7 +70,7 @@ class AnchorsDemoFrame(wx.Frame):
                                 pos = (8, 40)
                                 )
 
-        self.backgroundPanel.SetBackgroundColour(wx.Colour(255, 255, 255))
+        self.backgroundPanel.SetBackgroundColour(wx.WHITE)
         self.backgroundPanel.SetConstraints(
             anchors.LayoutAnchors(self.backgroundPanel, True, True, True, True)
             )

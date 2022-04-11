@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     30-Dec-1999
-# Copyright:   (c) 1999-2017 by Total Control Software
+# Copyright:   (c) 1999-2020 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)

@@ -55,7 +55,7 @@ class TestPanel(wx.Panel):
         reflections = glob.glob(bitmapDir + "/*96Flip40.png")
 
         separatorImage = bitmapDir + "/separator.gif"
-        separatorReflection = bitmapDir + "/separatorFlip.png"
+        separatorReflection = bitmapDir + "/separatorflip.png"
         count = 0
 
         for std, ref in zip(standard, reflections):
@@ -123,10 +123,10 @@ class TestPanel(wx.Panel):
 
         sizer_2.Add(sizer_3, 0, wx.EXPAND|wx.ALL, 5)
 
-        sizer_2.Add(self.centerZoom, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
-        sizer_2.Add(self.showReflections, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
-        sizer_2.Add(self.showLabels, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
-        sizer_2.Add(self.enableButton, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
+        sizer_2.Add(self.centerZoom, 0, wx.ALL, 5)
+        sizer_2.Add(self.showReflections, 0, wx.ALL, 5)
+        sizer_2.Add(self.showLabels, 0, wx.ALL, 5)
+        sizer_2.Add(self.enableButton, 0, wx.ALL, 5)
         sizer_1.Add(sizer_2, 1, wx.EXPAND, 0)
         centerSizer.Add(sizer_1, 0, wx.EXPAND, 0)
         centerSizer.Add(self.zbp, 0, wx.TOP|wx.EXPAND, 20)

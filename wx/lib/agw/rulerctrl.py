@@ -257,7 +257,7 @@ def ConvertWXToPIL(bmp):
 
     width = bmp.GetWidth()
     height = bmp.GetHeight()
-    img = Image.fromstring("RGBA", (width, height), bmp.GetData())
+    img = Image.frombytes("RGBA", (width, height), bmp.GetData())
 
     return img
 
@@ -276,12 +276,12 @@ def ConvertPILToWX(pil, alpha=True):
 
     if alpha:
         image = wx.Image(*pil.size)
-        image.SetData(pil.convert("RGB").tostring())
-        image.SetAlpha(pil.convert("RGBA").tostring()[3::4])
+        image.SetData(pil.convert("RGB").tobytes())
+        image.SetAlpha(pil.convert("RGBA").tobytes()[3::4])
     else:
         image = wx.Image(pil.size[0], pil.size[1])
         new_image = pil.convert('RGB')
-        data = new_image.tostring()
+        data = new_image.tobytes()
         image.SetData(data)
 
     return image
@@ -344,7 +344,7 @@ class RulerCtrlEvent(wx.CommandEvent):
 
 class Label(object):
     """
-    Auxilary class. Just holds information about a label in :class:`RulerCtrl`.
+    Auxiliary class. Just holds information about a label in :class:`RulerCtrl`.
     """
 
     def __init__(self, pos=-1, lx=-1, ly=-1, text=""):
@@ -390,7 +390,7 @@ class Indicator(object):
 
         self._parent = parent
         if id == wx.ID_ANY:
-            id = wx.NewId()
+            id = wx.NewIdRef()
 
         self._id = id
         self._colour = None

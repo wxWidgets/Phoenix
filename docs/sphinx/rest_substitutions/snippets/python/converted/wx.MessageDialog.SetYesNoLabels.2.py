@@ -1,4 +1,4 @@
-    
+
             dlg = wx.MessageDialog(parent, message, caption)
             if dlg.SetYesNoLabels("&Quit", "&Don't quit"):
                 dlg.SetMessage("What do you want to do?")

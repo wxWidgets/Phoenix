@@ -4,7 +4,7 @@
 #
 # Created:     26-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,7 +33,9 @@ def run():
 
     c = module.find('wxStaticBitmap')
     c.find('wxStaticBitmap.label').default = 'wxNullBitmap'
+    c.find('wxStaticBitmap.label').name = 'bitmap'
     c.find('Create.label').default = 'wxNullBitmap'
+    c.find('Create.label').name = 'bitmap'
     tools.fixWindowClass(c)
 
     module.addGlobalStr('wxStaticBitmapNameStr', c)

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     22-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -19,6 +19,7 @@ DOCSTRING = ""
 # this script.
 ITEMS  = [ 'wxPlatformInfo',
            'wxLinuxDistributionInfo',
+           'wxPlatformId',
            ]
 
 #---------------------------------------------------------------------------
@@ -48,7 +49,7 @@ def run():
     c.find('GetOperatingSystemFamilyName').findOverload('os').ignore()
     c.find('GetPortIdName').findOverload('port').ignore()
     c.find('GetPortIdShortName').findOverload('port').ignore()
-
+    c.find('GetBitness').findOverload('bitness').ignore()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

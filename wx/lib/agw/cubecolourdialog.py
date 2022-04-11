@@ -1637,8 +1637,11 @@ class BasePyControl(wx.Control):
         wx.Control.__init__(self, parent, style=wx.NO_BORDER)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
+        if not self.IsDoubleBuffered():
+            self.SetDoubleBuffered(True)
+
         self._bitmap = bitmap
-        mask = wx.Mask(self._bitmap, wx.Colour(192, 192, 192))
+        mask = wx.Mask(self._bitmap, wx.LIGHT_GREY)
         self._bitmap.SetMask(mask)
 
         self._mainDialog = wx.GetTopLevelParent(self)
@@ -2669,7 +2672,7 @@ class CustomPanel(wx.Control):
             if c.IsOk():
                 self._customColours[i] = self._colourData.GetCustomColour(i)
             else:
-                self._customColours[i] = wx.Colour(255, 255, 255)
+                self._customColours[i] = wx.WHITE
 
             if c == curr:
                 self._colourSelection = i
@@ -2941,16 +2944,18 @@ class CubeColourDialog(wx.Dialog):
     def SetProperties(self):
         """ Sets some initial properties for :class:`CubeColourDialog` (sizes, values). """
 
+        # Adjust for GTK3's wider SpinButtons
+        spinWidth = 120 if 'gtk3' in wx.PlatformInfo else 60
         self.okButton.SetDefault()
         self.oldColourPanel.SetMinSize((-1, 50))
         self.newColourPanel.SetMinSize((-1, 50))
-        self.redSpin.SetMinSize((60, -1))
-        self.greenSpin.SetMinSize((60, -1))
-        self.blueSpin.SetMinSize((60, -1))
-        self.hueSpin.SetMinSize((60, -1))
-        self.saturationSpin.SetMinSize((60, -1))
-        self.brightnessSpin.SetMinSize((60, -1))
-        self.alphaSpin.SetMinSize((60, -1))
+        self.redSpin.SetMinSize((spinWidth, -1))
+        self.greenSpin.SetMinSize((spinWidth, -1))
+        self.blueSpin.SetMinSize((spinWidth, -1))
+        self.hueSpin.SetMinSize((spinWidth, -1))
+        self.saturationSpin.SetMinSize((spinWidth, -1))
+        self.brightnessSpin.SetMinSize((spinWidth, -1))
+        self.alphaSpin.SetMinSize((spinWidth, -1))
         self.showAlpha.SetValue(1)
         self.accessCode.SetInitialSize((80, -1))
         self.webSafe.SetInitialSize((80, -1))
@@ -3003,7 +3008,7 @@ class CubeColourDialog(wx.Dialog):
         customLabel = wx.StaticText(self.mainPanel, -1, _("Custom Colours"))
         customSizer.Add(customLabel, 0, wx.BOTTOM, 3)
         customSizer.Add(self.customColours, 0)
-        customSizer.Add(self.addCustom, 0, wx.TOP|wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
+        customSizer.Add(self.addCustom, 0, wx.TOP|wx.ALIGN_LEFT, 5)
         mainSizer.Add(customSizer, (0, 2), (2, 2), wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5)
 
         rgbSizer.Add(self.rgbBitmap, 0, wx.ALL, 15)
@@ -3311,7 +3316,7 @@ class CubeColourDialog(wx.Dialog):
         :param `agwStyle`: can only be ``CCD_SHOW_ALPHA`` or ``None``.
         """
 
-        show = self.GetAGWWindowStyleFlag() & CCD_SHOW_ALPHA
+        show = agwStyle & CCD_SHOW_ALPHA
         self._agwStyle = agwStyle
 
         self.mainSizer.Show(self.alphaSizers[0], show)

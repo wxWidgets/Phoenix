@@ -23,42 +23,38 @@ ID_COPY = wx.ID_COPY
 ID_PASTE = wx.ID_PASTE
 ID_CLEAR = wx.ID_CLEAR
 ID_SELECTALL = wx.ID_SELECTALL
-ID_EMPTYBUFFER = wx.NewId()
+ID_EMPTYBUFFER = wx.NewIdRef()
 ID_ABOUT = wx.ID_ABOUT
-ID_HELP = wx.NewId()
-ID_AUTOCOMP = wx.NewId()
-ID_AUTOCOMP_SHOW = wx.NewId()
-ID_AUTOCOMP_MAGIC = wx.NewId()
-ID_AUTOCOMP_SINGLE = wx.NewId()
-ID_AUTOCOMP_DOUBLE = wx.NewId()
-ID_CALLTIPS = wx.NewId()
-ID_CALLTIPS_SHOW = wx.NewId()
-ID_CALLTIPS_INSERT = wx.NewId()
-ID_COPY_PLUS = wx.NewId()
-ID_NAMESPACE = wx.NewId()
-ID_PASTE_PLUS = wx.NewId()
-ID_WRAP = wx.NewId()
-ID_TOGGLE_MAXIMIZE = wx.NewId()
-ID_SHOW_LINENUMBERS = wx.NewId()
-ID_ENABLESHELLMODE = wx.NewId()
-ID_ENABLEAUTOSYMPY = wx.NewId()
-ID_AUTO_SAVESETTINGS = wx.NewId()
-ID_SAVEACOPY = wx.NewId()
-ID_SAVEHISTORY = wx.NewId()
-ID_SAVEHISTORYNOW = wx.NewId()
-ID_CLEARHISTORY = wx.NewId()
-ID_SAVESETTINGS = wx.NewId()
-ID_DELSETTINGSFILE = wx.NewId()
-ID_EDITSTARTUPSCRIPT = wx.NewId()
-ID_EXECSTARTUPSCRIPT = wx.NewId()
-ID_SHOWPYSLICESTUTORIAL = wx.NewId()
-ID_STARTUP = wx.NewId()
-ID_SETTINGS = wx.NewId()
+ID_HELP = wx.NewIdRef()
+ID_AUTOCOMP_SHOW = wx.NewIdRef()
+ID_AUTOCOMP_MAGIC = wx.NewIdRef()
+ID_AUTOCOMP_SINGLE = wx.NewIdRef()
+ID_AUTOCOMP_DOUBLE = wx.NewIdRef()
+ID_CALLTIPS_SHOW = wx.NewIdRef()
+ID_CALLTIPS_INSERT = wx.NewIdRef()
+ID_COPY_PLUS = wx.NewIdRef()
+ID_NAMESPACE = wx.NewIdRef()
+ID_PASTE_PLUS = wx.NewIdRef()
+ID_WRAP = wx.NewIdRef()
+ID_TOGGLE_MAXIMIZE = wx.NewIdRef()
+ID_SHOW_LINENUMBERS = wx.NewIdRef()
+ID_ENABLESHELLMODE = wx.NewIdRef()
+ID_ENABLEAUTOSYMPY = wx.NewIdRef()
+ID_AUTO_SAVESETTINGS = wx.NewIdRef()
+ID_SAVEACOPY = wx.NewIdRef()
+ID_SAVEHISTORY = wx.NewIdRef()
+ID_SAVEHISTORYNOW = wx.NewIdRef()
+ID_CLEARHISTORY = wx.NewIdRef()
+ID_SAVESETTINGS = wx.NewIdRef()
+ID_DELSETTINGSFILE = wx.NewIdRef()
+ID_EDITSTARTUPSCRIPT = wx.NewIdRef()
+ID_EXECSTARTUPSCRIPT = wx.NewIdRef()
+ID_SHOWPYSLICESTUTORIAL = wx.NewIdRef()
 ID_FIND = wx.ID_FIND
-ID_FINDNEXT = wx.NewId()
-ID_FINDPREVIOUS = wx.NewId()
-ID_SHOWTOOLS = wx.NewId()
-ID_HIDEFOLDINGMARGIN = wx.NewId()
+ID_FINDNEXT = wx.NewIdRef()
+ID_FINDPREVIOUS = wx.NewIdRef()
+ID_SHOWTOOLS = wx.NewIdRef()
+ID_HIDEFOLDINGMARGIN = wx.NewIdRef()
 
 
 
@@ -89,7 +85,7 @@ class Frame(wx.Frame):
 
     def OnIconize(self, event):
         """Event handler for Iconize."""
-        self.iconized = event.Iconized()
+        self.iconized = event.IsIconized()
 
 
     def OnClose(self, event):
@@ -182,9 +178,9 @@ class Frame(wx.Frame):
                  'Include attributes visible to __getattr__ and __setattr__',
                  wx.ITEM_CHECK)
         m.Append(ID_AUTOCOMP_SINGLE, 'Include Single &Underscores\tCtrl+Shift+U',
-                 'Include attibutes prefixed by a single underscore', wx.ITEM_CHECK)
+                 'Include attributes prefixed by a single underscore', wx.ITEM_CHECK)
         m.Append(ID_AUTOCOMP_DOUBLE, 'Include &Double Underscores\tCtrl+Shift+D',
-                 'Include attibutes prefixed by a double underscore', wx.ITEM_CHECK)
+                 'Include attributes prefixed by a double underscore', wx.ITEM_CHECK)
         m = self.calltipsMenu = wx.Menu()
         m.Append(ID_CALLTIPS_SHOW, 'Show Call &Tips\tCtrl+Shift+T',
                  'Show call tips with argument signature and docstring', wx.ITEM_CHECK)
@@ -192,10 +188,9 @@ class Frame(wx.Frame):
                  '&Insert Call Tips', wx.ITEM_CHECK)
 
         m = self.optionsMenu = wx.Menu()
-        m.Append(ID_AUTOCOMP, '&Auto Completion', self.autocompMenu,
-                     'Auto Completion Options')
-        m.Append(ID_CALLTIPS, '&Call Tips', self.calltipsMenu,
-                     'Call Tip Options')
+        m.AppendSubMenu(self.autocompMenu, '&Auto Completion',
+                        'Auto Completion Options')
+        m.AppendSubMenu(self.calltipsMenu, '&Call Tips', 'Call Tip Options')
 
         m.AppendSeparator()
 
@@ -206,7 +201,7 @@ class Frame(wx.Frame):
                  'Save history')
         self.historyMenu.Append(ID_CLEARHISTORY, '&Clear History ',
                  'Clear history')
-        m.Append(-1, "&History", self.historyMenu, "History Options")
+        m.AppendSubMenu(self.historyMenu, "&History", "History Options")
 
         self.startupMenu = wx.Menu()
         self.startupMenu.Append(ID_EXECSTARTUPSCRIPT,
@@ -219,7 +214,7 @@ class Frame(wx.Frame):
             self.startupMenu.Append(ID_SHOWPYSLICESTUTORIAL,
                                 '&Show PySlices Tutorial',
                                 'Show PySlices Tutorial', wx.ITEM_CHECK)
-        m.Append(ID_STARTUP, '&Startup', self.startupMenu, 'Startup Options')
+        m.AppendSubMenu(self.startupMenu, '&Startup', 'Startup Options')
 
         self.settingsMenu = wx.Menu()
         if self.shellName in ['PySlices','SymPySlices']:
@@ -239,7 +234,7 @@ class Frame(wx.Frame):
         self.settingsMenu.Append(ID_DELSETTINGSFILE,
                                  '&Revert to default',
                                  'Revert to the default settings')
-        m.Append(ID_SETTINGS, '&Settings', self.settingsMenu, 'Settings Options')
+        m.AppendSubMenu(self.settingsMenu, '&Settings', 'Settings Options')
 
         m = self.helpMenu = wx.Menu()
         m.Append(ID_HELP, '&Help\tF1', 'Help!')
@@ -844,16 +839,12 @@ class ShellFrameMixin:
     def SaveHistory(self):
         if self.dataDir:
             try:
-                name = os.path.join(self.dataDir, 'history')
-                f = open(name, 'wb')
-                hist = []
                 enc = 'utf-8'
-                for h in self.shell.history:
-                    h = h.encode(enc)
-                    hist.append(h)
-                hist = b'\x00\n'.join(hist)
-                f.write(hist)
-                f.close()
+                hist = b'\x00\n'.join([h.encode(enc) 
+                                       for h in self.shell.history])
+                name = os.path.join(self.dataDir, 'history')
+                with open(name, 'wb') as f:
+                    f.write(hist)
             except:
                 d = wx.MessageDialog(self, "Error saving history file.",
                                      "Error", wx.ICON_EXCLAMATION|wx.OK)
@@ -866,9 +857,9 @@ class ShellFrameMixin:
             name = os.path.join(self.dataDir, 'history')
             if os.path.exists(name):
                 try:
-                    f = open(name, 'rb')
-                    hist = f.read()
-                    f.close()
+                    with open(name, 'rb') as f:
+                        hist = f.read()
+
                     enc = 'utf-8'
                     hist = [h.decode(enc) for h in hist.split(b'\x00\n')]
                     self.shell.history = hist
@@ -913,9 +904,8 @@ class ShellFrameMixin:
 ##         d.Destroy()
 
         try:
-            f = open(fileName, "w")
-            f.write(text)
-            f.close()
+            with open(fileName, "w") as f:
+                f.write(text)
         except:
             d = wx.MessageDialog(self, u'Error saving session',u'Error',
                                  wx.OK | wx.ICON_ERROR)
@@ -925,7 +915,11 @@ class ShellFrameMixin:
 
     def EditStartupScript(self):
         if os.path.exists(self.startupScript):
-            text = open(self.startupScript, 'U').read()
+            import io
+            # Use newline=None to translate \n \r \r\n to \n on read.  The
+            # old-style mode='U' is deprecated.
+            with io.open(self.startupScript, 'r', newline=None, encoding='utf-8') as fid:
+                text = fid.read()
         else:
             text = ''
 
@@ -933,9 +927,8 @@ class ShellFrameMixin:
         if dlg.ShowModal() == wx.ID_OK:
             text = dlg.GetText()
             try:
-                f = open(self.startupScript, 'w')
-                f.write(text)
-                f.close()
+                with open(self.startupScript, 'wb') as f:
+                    f.write(text.encode('utf-8'))
             except:
                 d = wx.MessageDialog(self, "Error saving startup file.",
                                      "Error", wx.ICON_EXCLAMATION|wx.OK)

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     4-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -51,7 +51,6 @@ def run():
     c.find('GetRounded.y').out = True
 
     # these have link errors
-    c.find('SetPolarCoordinates').ignore()
     c.find('operator/=').findOverload('wxDouble').ignore()
     c.find('operator*=').findOverload('wxDouble').ignore()
 
@@ -59,6 +58,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxPoint2DDouble')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(dd)", self->m_x, self->m_y);
         """,
         briefDoc="""\
@@ -72,6 +72,7 @@ def run():
     c.addPyMethod('__repr__', '(self)',            'return "wx.Point2D"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
     c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
+    c.addPyMethod('__bool__', '(self)',            'return self.Get() != (0,0)')
     c.addPyMethod('__reduce__', '(self)',          'return (Point2D, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
@@ -105,6 +106,7 @@ def run():
     c.convertFromPyObject = tools.convertFourDoublesTemplate('wxRect2DDouble')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(dddd)",
                     self->m_x, self->m_y, self->m_width, self->m_height);
         """,
@@ -119,6 +121,7 @@ def run():
     c.addPyMethod('__repr__', '(self)',            'return "wx.Rect2D"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
     c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0,0,0)')
+    c.addPyMethod('__bool__', '(self)',            'return self.Get() != (0,0,0,0)')
     c.addPyMethod('__reduce__', '(self)',          'return (Rect2D, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',

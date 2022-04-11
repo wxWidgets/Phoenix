@@ -97,6 +97,11 @@ class auibook_Tests(wtc.WidgetTestCase):
         wx.aui.EVT_AUINOTEBOOK_BG_DCLICK
 
 
+    def test_auibook11(self):
+        nb = wx.aui.AuiNotebook(self.frame)
+        nb.AddPage(wx.Panel(nb), "Page")
+        nb.SetArtProvider(wx.aui.AuiDefaultTabArt())
+
 
 #---------------------------------------------------------------------------
 

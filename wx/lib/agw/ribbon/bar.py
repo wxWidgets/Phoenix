@@ -96,6 +96,7 @@ See Also
 
 
 import wx
+from functools import cmp_to_key
 
 import six
 
@@ -742,7 +743,7 @@ class RibbonBar(RibbonControl):
                     delta = info.ideal_width - info.small_must_have_separator_width
                     info.rect.x = x
                     info.rect.y = y
-                    info.rect.width = info.small_must_have_separator_width + delta*(width - total_small_width)/total_delta
+                    info.rect.width = info.small_must_have_separator_width + delta*(width - total_small_width)//total_delta
                     info.rect.height = self._tab_height
 
                     x += info.rect.width + tabsep
@@ -766,7 +767,7 @@ class RibbonBar(RibbonControl):
                         # Sneaky obj array trickery to not copy the tab descriptors
                         sorted_pages.append(info)
 
-                    sorted_pages.sort(self.OrderPageTabInfoBySmallWidthAsc)
+                    sorted_pages.sort(key=cmp_to_key(self.OrderPageTabInfoBySmallWidthAsc))
                     width -= tabsep*(numtabs - 1)
 
                     for i, info in enumerate(self._pages):
@@ -796,7 +797,7 @@ class RibbonBar(RibbonControl):
                         delta = smallest_tab_width - info.minimum_width
                         info.rect.x = x
                         info.rect.y = y
-                        info.rect.width = info.minimum_width + delta*(width - total_small_width)/total_delta
+                        info.rect.width = info.minimum_width + delta*(width - total_small_width)//total_delta
                         info.rect.height = self._tab_height
 
                         x += info.rect.width + tabsep
@@ -1027,7 +1028,7 @@ class RibbonBar(RibbonControl):
                 notification.SetEventObject(self)
                 self.GetEventHandler().ProcessEvent(notification)
 
-        elif tab == None:
+        elif tab is None:
             if self._tab_scroll_left_button_rect.Contains(event.GetPosition()):
                 self._tab_scroll_left_button_state |= RIBBON_SCROLL_BTN_ACTIVE | RIBBON_SCROLL_BTN_HOVERED
                 self.RefreshTabBar()

@@ -1,0 +1,61 @@
+Recent changes for the SuperDoodle application
+==============================================
+
+This is not a real change-log, but rather serves as an example that goes
+along with SuperDoodle's example of self-updating functionality. To see it
+in action download and unzip either the Windows or Mac version of
+SuperDoodle 1.0.0 from http://wxPython.org/software-update-test/. When you
+run the 1.0.0 version there will be a "Check for Updates..." item on the
+help menu that you can use to see how the self-updating UI works. The
+application will download the latest version available, install it, and
+will restart SuperDoodle for you. Be sure to check the version numbers in
+the About dialog before and after the update so you can see that it is
+changing. (That is the only real change in each of the application
+updates.)
+
+And now we return you to the totally fake change log, already in
+progress...
+
+
+Version 1.0.3
+-------------
+    * A little of this, a little of that.
+    * Fixed the foozlehopper.
+    * Added a whatsamagigit
+    * There's a wocket in my pocket.
+    
+    
+Version 1.0.2
+-------------
+    * "I don't believe there's a power in the 'verse that can stop Kaylee
+      from being cheerful."
+      
+    * "Ten percent of nuthin' is...let me do the math here...nuthin' into
+      nuthin'...carry the nuthin'..."
+      
+    * "Well, what about you, Shepherd? How come you're flying about with us
+      brigands? I mean, shouldn't you be off bringing religiosity to the
+      Fuzzie-Wuzzies or some such?"
+      
+    * "Do you know what the chain of command is here? It's the chain I go
+      get and beat you with to show you who's in command."
+      
+    * "A man walks down the street in that hat, people know he's not afraid
+      of anything."
+      
+    
+
+Version 1.0.1
+-------------
+    * "Time is an illusion. Lunchtime doubly so."
+    
+    * "The ships hung in the sky in much the same way that bricks don't."
+    
+    * "Forty-two."
+    
+    * "Reality is frequently inaccurate."
+    
+    
+Version 1.0.0
+-------------
+    * Initial release.

@@ -1,7 +1,7 @@
 /*
  * The implementation of the different descriptors.
  *
- * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -102,11 +102,10 @@ PyTypeObject sipMethodDescr_Type = {
     0,                      /* tp_subclasses */
     0,                      /* tp_weaklist */
     0,                      /* tp_del */
-#if PY_VERSION_HEX >= 0x02060000
     0,                      /* tp_version_tag */
-#endif
-#if PY_VERSION_HEX >= 0x03040000
     0,                      /* tp_finalize */
+#if PY_VERSION_HEX >= 0x03080000
+    0,                      /* tp_vectorcall */
 #endif
 };
 
@@ -173,13 +172,7 @@ static PyObject *sipMethodDescr_repr(PyObject *self)
 {
     sipMethodDescr *md = (sipMethodDescr *)self;
 
-    return
-#if PY_MAJOR_VERSION >= 3
-            PyUnicode_FromFormat
-#else
-            PyString_FromFormat
-#endif
-                    ("<built-in method %s>", md->pmd->ml_name);
+    return PyUnicode_FromFormat("<built-in method %s>", md->pmd->ml_name);
 }
 
 
@@ -311,11 +304,10 @@ PyTypeObject sipVariableDescr_Type = {
     0,                      /* tp_subclasses */
     0,                      /* tp_weaklist */
     0,                      /* tp_del */
-#if PY_VERSION_HEX >= 0x02060000
     0,                      /* tp_version_tag */
-#endif
-#if PY_VERSION_HEX >= 0x03040000
     0,                      /* tp_finalize */
+#if PY_VERSION_HEX >= 0x03080000
+    0,                      /* tp_vectorcall */
 #endif
 };
 

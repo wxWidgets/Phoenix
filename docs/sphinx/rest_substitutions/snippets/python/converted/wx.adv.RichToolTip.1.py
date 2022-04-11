@@ -1,4 +1,4 @@
-    
+
         password = wx.TextCtrl(parent, style=wx.TE_PASSWORD)
 
         # Later on...

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     2-Sept-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ def run():
     c.find('wxGCDC.printerDC').keepReference = True
 
     c.find('wxGCDC.context').transfer = True
-    c.find('SetGraphicsContext.ctx').transfer = True
+    c.find('SetGraphicsContext.context').transfer = True
 
 
     #-----------------------------------------------------------------

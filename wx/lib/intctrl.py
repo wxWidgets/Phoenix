@@ -495,9 +495,7 @@ class IntCtrl(wx.TextCtrl):
             self.SetLongAllowed(allow_long)
         else:
             self.SetLongAllowed(1)
-        self.SetValue(value)
-        self.__oldvalue = 0
-
+        self.ChangeValue(value)
 
     def OnText( self, event ):
         """
@@ -509,7 +507,7 @@ class IntCtrl(wx.TextCtrl):
         before passing the events on.
         """
         value = self.GetValue()
-        if value != self.__oldvalue:
+        if self.__oldvalue is None or value != self.__oldvalue:
             try:
                 self.GetEventHandler().ProcessEvent(
                     IntUpdatedEvent( self.GetId(), self.GetValue(), self ) )
@@ -720,7 +718,7 @@ class IntCtrl(wx.TextCtrl):
         if max is None: max = value
 
         # if bounds set, and value is None, return False
-        if value == None and (min is not None or max is not None):
+        if value is None and (min is not None or max is not None):
             return 0
         else:
             return min <= value <= max
@@ -804,10 +802,10 @@ class IntCtrl(wx.TextCtrl):
         Colors text with oob_color if current value exceeds bounds
         set for control.
         """
-        if not self.IsInBounds(value):
-            self.SetForegroundColour(self.__oob_color)
-        else:
+        if value is None or self.IsInBounds(value):
             self.SetForegroundColour(self.__default_color)
+        else:
+            self.SetForegroundColour(self.__oob_color)
         self.Refresh()
 
 
@@ -850,7 +848,7 @@ class IntCtrl(wx.TextCtrl):
         # So, to ensure consistency and to prevent spurious ValueErrors,
         # we make the following test, and react accordingly:
         #
-        if value == '':
+        if value == '' or value == '-':
             if not self.IsNoneAllowed():
                 return 0
             else:
@@ -859,8 +857,8 @@ class IntCtrl(wx.TextCtrl):
             try:
                 return int( value )
             except ValueError:
-                if self.IsLongAllowed():
-                    return long( value )
+                if self.IsLongAllowed() and (LONGTYPE is not int):
+                    return LONGTYPE( value )
                 else:
                     raise
 
@@ -929,6 +927,14 @@ class IntCtrl(wx.TextCtrl):
                 wx.CallAfter(self.SetInsertionPoint, new_pos)
 
 
+    Limited     = property(IsLimited,     SetLimited)
+    LongAllowed = property(IsLongAllowed, SetLongAllowed)
+    Min         = property(GetMin,        SetMin)
+    Max         = property(GetMax,        SetMax)
+    NoneAllowed = property(IsNoneAllowed, SetNoneAllowed)
+    Value       = property(GetValue,      SetValue)
+
+
 
 #===========================================================================
 
@@ -942,7 +948,7 @@ if __name__ == '__main__':
             style = wx.DEFAULT_DIALOG_STYLE ):
             wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
-            self.int_ctrl = IntCtrl(self, wx.NewId(), size=(55,20))
+            self.int_ctrl = IntCtrl(self, wx.ID_ANY, size=(55,20))
             self.OK = wx.Button( self, wx.ID_OK, "OK")
             self.Cancel = wx.Button( self, wx.ID_CANCEL, "Cancel")
 
@@ -976,11 +982,11 @@ if __name__ == '__main__':
 
         def OnClick(self, event):
             dlg = myDialog(self.panel, -1, "test IntCtrl")
-            dlg.int_ctrl.SetValue(501)
+            dlg.int_ctrl.Value = 501
             dlg.int_ctrl.SetInsertionPoint(1)
             dlg.int_ctrl.SetSelection(1,2)
             rc = dlg.ShowModal()
-            print('final value', dlg.int_ctrl.GetValue())
+            print('final value %r' % dlg.int_ctrl.Value)
             del dlg
             self.frame.Destroy()
 

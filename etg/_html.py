@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Oct-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode('#include <wxpy_api.h>')
+    module.addHeaderCode('#include <wxPython/wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode("import wx", order=10)
     module.addInclude(INCLUDES)
@@ -85,6 +85,12 @@ def run():
         #include <wx/html/helpwnd.h>
         #include <wx/html/helpfrm.h>
         #include <wx/html/helpdlg.h>
+        """)
+
+    # Redo the initialization of wxModules in the case where this extension
+    # module is not imported until *after* the wx.App has been created.
+    module.addInitializerCode("""\
+        wxPyReinitializeModules();
         """)
 
     #-----------------------------------------------------------------

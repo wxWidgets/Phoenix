@@ -135,6 +135,7 @@ class CrustSlicesFrame(crust.CrustFrame):
                                  hideFoldingMargin=self.hideFoldingMargin,
                                  *args, **kwds)
         self.sliceshell = self.crust.sliceshell
+        self.shell = self.sliceshell
         self.buffer = self.sliceshell.buffer
         # Override the filling so that status messages go to the status bar.
         self.crust.filling.tree.setStatusText = self.SetStatusText
@@ -286,9 +287,8 @@ class CrustSlicesFrame(crust.CrustFrame):
                                  wildcard='*.pyslices',
                                  default_path=self.currentDirectory)
         if file!=None and file!=u'':
-            fid=open(file,'r')
-            self.sliceshell.LoadPySlicesFile(fid)
-            fid.close()
+            with open(file,'r') as fid:
+                self.sliceshell.LoadPySlicesFile(fid)
             self.currentDirectory = os.path.split(file)[0]
             self.SetTitle( os.path.split(file)[1] + ' - PySlices')
             self.sliceshell.NeedsCheckForSave=False
@@ -318,12 +318,9 @@ class CrustSlicesFrame(crust.CrustFrame):
         if not self.buffer.confirmed:
             self.buffer.confirmed = self.buffer.overwriteConfirm(filepath)
         if self.buffer.confirmed:
-            try:
-                fid = open(filepath, 'wb')
+            with open(filepath, 'wb') as fid:
                 self.sliceshell.SavePySlicesFile(fid)
-            finally:
-                if fid:
-                    fid.close()
+
             self.sliceshell.SetSavePoint()
             self.SetTitle( os.path.split(filepath)[1] + ' - PySlices')
             self.sliceshell.NeedsCheckForSave=False
@@ -375,13 +372,9 @@ class CrustSlicesFrame(crust.CrustFrame):
                 result.path+=".pyslices"
 
             # if not os.path.exists(result.path):
-            try: # Allow overwrite...
-                fid = open(result.path, 'wb')
+            # Allow overwrite...
+            with open(result.path, 'wb') as fid:
                 self.sliceshell.SavePySlicesFile(fid)
-            finally:
-                if fid:
-                    fid.close()
-
             cancel = False
         else:
             cancel = True

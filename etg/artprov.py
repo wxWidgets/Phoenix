@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     07-Apr-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -49,18 +49,8 @@ def run():
     c.find('GetBitmap').mustHaveApp()
     c.find('GetIcon').mustHaveApp()
 
-    # Change the types of the art constants from wxString to const char*
-    # since that is what they really are.
-    artConsts = list()
-    for item in module:
-        if isinstance(item, etgtools.GlobalVarDef):
-            if item.type in ['wxArtClient', 'wxArtID']:
-                item.type = 'const char*'
-                artConsts.append(item)
-    # move them to the front of the module
-    for item in artConsts:
-        module.items.remove(item)
-        module.items.insert(0, item)
+    # deprecated and removed
+    c.find('Insert').ignore()
 
 
     #-----------------------------------------------------------------

@@ -52,7 +52,7 @@ Application Shutdown
 
 The application normally shuts down when the last of its top level
 windows is closed. This is normally the expected behaviour and means
-that it is enough to call :meth:`wx.Window.Close`() in response to the
+that it is enough to call :meth:`wx.Window.Close` in response to the
 "Exit" menu command if your program has a single top level window.  If
 this behavior is not desirable :meth:`wx.PyApp.SetExitOnFrameDelete` can
 be called to change it.

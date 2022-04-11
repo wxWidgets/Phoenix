@@ -91,8 +91,8 @@ def getWxRelease(wxRoot=None):
     if not wxRoot:
         global wxRootDir
         wxRoot = wxRootDir
-
-    configureText = open(os.path.join(wxRoot, "configure.in"), "r").read()
+    with open(os.path.join(wxRoot, "configure.in"), "r") as fid:
+        configureText = fid.read()
     majorVersion = re.search("wx_major_version_number=(\d+)", configureText).group(1)
     minorVersion = re.search("wx_minor_version_number=(\d+)", configureText).group(1)
 
@@ -205,10 +205,11 @@ def main(wxDir, args):
         "jobs"          : (defJobs, "Number of jobs to run at one time in make. Default: %s" % defJobs),
         "install"       : (False, "Install the toolkit to the installdir directory, or the default dir."),
         "installdir"    : ("", "Directory where built wxWidgets will be installed"),
-        "gtk3"          : (False, "On Linux build for gtk3 (default gtk2)"),
+        "gtk2"          : (False, "On Linux build for gtk2 (default gtk3"),
+        "gtk3"          : (True,  "On Linux build for gtk3"),
         "mac_distdir"   : (None, "If set on Mac, will create an installer package in the specified dir."),
         "mac_universal_binary"
-                        : ("", "Comma separated list of architectures to include in the Mac universal binary"),
+                        : ("default", "Comma separated list of architectures to include in the Mac universal binary"),
         "mac_framework" : (False, "Install the Mac build as a framework"),
         "mac_framework_prefix"
                         : (defFwPrefix, "Prefix where the framework should be installed. Default: %s" % defFwPrefix),
@@ -225,12 +226,13 @@ def main(wxDir, args):
         "features"      : ("", "A comma-separated list of wxUSE_XYZ defines on Win, or a list of configure flags on unix."),
         "verbose"       : (False, "Print commands as they are run, (to aid with debugging this script)"),
         "jom"           : (False, "Use jom.exe instead of nmake for MSW builds."),
+        "no_dpi_aware"  : (False, "Don't use the DPI_AWARE_MANIFEST."),
+        "no_msedge"     : (False, "Do not include the MS Edge backend for wx.html2.WebView. (Windows only)"),
     }
 
     parser = optparse.OptionParser(usage="usage: %prog [options]", version="%prog 1.0")
 
-    keys = option_dict.keys()
-    for opt in sorted(keys):
+    for opt in sorted(option_dict):
         default = option_dict[opt][0]
         action = "store"
         if type(default) == bool:
@@ -268,44 +270,77 @@ def main(wxDir, args):
         elif options.osx_carbon:
             configure_opts.append("--with-osx_carbon")
 
-        if options.gtk3:
-            configure_opts.append("--with-gtk=3")
+        if options.gtk2:
+            options.gtk3 = False
+
+        if not sys.platform.startswith("darwin"):
+            if options.gtk3:
+                configure_opts.append("--with-gtk=3")
+
+            if options.gtk2:
+                configure_opts.append("--with-gtk=2")
 
         wxpy_configure_opts = [
-                            "--with-opengl",
                             "--enable-sound",
                             "--enable-graphics_ctx",
-                            "--enable-mediactrl",
                             "--enable-display",
                             "--enable-geometry",
                             "--enable-debug_flag",
                             "--enable-optimise",
                             "--disable-debugreport",
                             "--enable-uiactionsim",
+                            "--enable-autoidman",
                             ]
 
-        if sys.platform.startswith("darwin"):
-            #wxpy_configure_opts.append("--enable-monolithic")
-            pass
-        else:
+        if not sys.platform.startswith("darwin"):
             wxpy_configure_opts.append("--with-sdl")
 
-        # Try to use use lowest available SDK back to 10.5. Both Carbon and
-        # Cocoa builds require at least the 10.5 SDK now. We only add it to
-        # the wxpy options because this is a hard-requirement for wxPython,
-        # but other cases it is optional and is left up to the developer.
-        # TODO: there should be a command line option to set the SDK...
         if sys.platform.startswith("darwin"):
-            for xcodePath in getXcodePaths():
-                sdks = [ xcodePath+"/SDKs/MacOSX10.{}.sdk".format(n)
-                         for n in range(5, 15) ]
+            universalCapable = False
 
-                # use the lowest available sdk on the build machine
-                for sdk in sdks:
+            # Set the minimum supported OSX version.
+            # TODO: Add a CLI option to set this.
+            wxpy_configure_opts.append("--with-macosx-version-min=10.10")
+
+            # find the newest SDK available on this system
+            SDK = 'none found'
+            for xcodePath in getXcodePaths():
+                possibles = [(major, minor) for major in [10, 11, 12] for minor in range(16)]
+                for major, minor in reversed(possibles):
+                    sdk = os.path.join(xcodePath, "SDKs/MacOSX{}.{}.sdk".format(major, minor))
                     if os.path.exists(sdk):
-                        wxpy_configure_opts.append(
-                            "--with-macosx-sdk=%s" % sdk)
+                        # Although we've found a SDK, we're not actually using
+                        # it at the moment. The builds seem to work better if we
+                        # let the compiler use whatever it considers to be the
+                        # default.
+                        # wxpy_configure_opts.append("--with-macosx-sdk=%s" % sdk)
+                        universalCapable = major >= 11
+                        SDK = sdk
                         break
+
+            # Now cross check that if a universal build was requested that it's
+            # possible to do with the selected SDK.
+            arch = ''
+            if options.mac_universal_binary:
+                if options.mac_universal_binary == 'default':
+                    if universalCapable:
+                        arch = "arm64,x86_64"
+                    else:
+                        arch = "x86_64"
+                else:
+                    # otherwise assume the user klnows what they are doing and just use what they gave us.
+                    arch = options.mac_universal_binary
+                configure_opts.append("--enable-universal_binary=%s" % arch)
+
+            # print("SDK Path:          {}".format(SDK))
+            print("Universal Capable: {}".format(universalCapable))
+            print("Architectures:     {}".format(arch))
+
+            wxpy_configure_opts.append("--with-libjpeg=builtin")
+            wxpy_configure_opts.append("--with-libpng=builtin")
+            wxpy_configure_opts.append("--with-libtiff=builtin")
+            wxpy_configure_opts.append("--with-regex=builtin")
+
 
         if not options.mac_framework:
             if installDir and not prefixDir:
@@ -348,16 +383,6 @@ def main(wxDir, args):
                 if os.path.exists(frameworkRootDir):
                     shutil.rmtree(frameworkRootDir)
 
-        if options.mac_universal_binary:
-            if options.mac_universal_binary == 'default':
-                if options.osx_cocoa:
-                    configure_opts.append("--enable-universal_binary=i386,x86_64")
-                else:
-                    configure_opts.append("--enable-universal_binary")
-            else:
-                configure_opts.append("--enable-universal_binary=%s" % options.mac_universal_binary)
-
-
         print("Configure options: " + repr(configure_opts))
         wxBuilder = builder.AutoconfBuilder()
         if not options.no_config and not options.clean:
@@ -376,7 +401,7 @@ def main(wxDir, args):
         flags = {}
         buildDir = os.path.abspath(os.path.join(wxRootDir, "build", "msw"))
 
-        print("creating wx/msw/setup.h from setup0.h")
+        print("Updating wx/msw/setup.h")
         if options.unicode:
             flags["wxUSE_UNICODE"] = "1"
             if VERSION < (2,9):
@@ -397,21 +422,17 @@ def main(wxDir, args):
             flags["wxUSE_POSTSCRIPT"] = "1"
             flags["wxUSE_AFM_FOR_POSTSCRIPT"] = "0"
             flags["wxUSE_DATEPICKCTRL_GENERIC"] = "1"
-
-            # Remove this when Windows XP finally dies, or when there is a
-            # solution for ticket #13116...
-            flags["wxUSE_COMPILER_TLS"] = "0"
-
-            if VERSION < (2,9):
-                flags["wxUSE_DIB_FOR_BITMAP"] = "1"
-
-            if VERSION >= (2,9):
-                flags["wxUSE_UIACTIONSIMULATOR"] = "1"
+            flags["wxUSE_IFF"] = "1"
+            flags["wxUSE_ACCESSIBILITY"] = "1"
+            flags["wxUSE_WINRT"] = "0"
+            flags["wxUSE_UIACTIONSIMULATOR"] = "1"
+            if not options.no_msedge:
+                flags["wxUSE_WEBVIEW_EDGE"] = "1"
 
 
         mswIncludeDir = os.path.join(wxRootDir, "include", "wx", "msw")
-        setup0File = os.path.join(mswIncludeDir, "setup0.h")
-        with open(setup0File, "rb") as f:
+        setupFile = os.path.join(mswIncludeDir, "setup.h")
+        with open(setupFile, "rb") as f:
             setupText = f.read()
             if PY3:
                 setupText = setupText.decode('utf-8')
@@ -419,10 +440,10 @@ def main(wxDir, args):
         for flag in flags:
             setupText, subsMade = re.subn(flag + "\s+?\d", "%s %s" % (flag, flags[flag]), setupText)
             if subsMade == 0:
-                print("Flag %s wasn't found in setup0.h!" % flag)
+                print("Flag %s wasn't found in setup.h!" % flag)
                 sys.exit(1)
 
-        with open(os.path.join(mswIncludeDir, "setup.h"), "wb") as f:
+        with open(setupFile, "wb") as f:
             if PY3:
                 setupText = setupText.encode('utf-8')
             f.write(setupText)
@@ -459,6 +480,10 @@ def main(wxDir, args):
 
             if options.jom:
                 nmakeCommand = 'jom.exe'
+
+            if options.no_dpi_aware:
+                args.append("USE_DPI_AWARE_MANIFEST=0")
+
 
             wxBuilder = builder.MSVCBuilder(commandName=nmakeCommand)
 
@@ -580,9 +605,8 @@ def main(wxDir, args):
         for include in glob.glob(header_dir + "/*.h"):
             headers += "#include <wx/" + os.path.basename(include) + ">\n"
 
-        framework_header = open("%s.h" % fwname, "w")
-        framework_header.write(header_template % headers)
-        framework_header.close()
+        with open("%s.h" % fwname, "w") as framework_header:
+            framework_header.write(header_template % headers)
 
         run("ln -s -f %s wx" % header_dir)
         os.chdir("wx-%s/wx" % version)
@@ -600,13 +624,13 @@ def main(wxDir, args):
 
         # put info about the framework into wx-config
         os.chdir(frameworkRootDir)
-        text = file('lib/wx/config/%s' % configname).read()
+        text = open('lib/wx/config/%s' % configname).read()
         text = text.replace("MAC_FRAMEWORK=", "MAC_FRAMEWORK=%s" % getFrameworkName(options))
         if options.mac_framework_prefix not in ['/Library/Frameworks',
                                                 '/System/Library/Frameworks']:
             text = text.replace("MAC_FRAMEWORK_PREFIX=",
                          "MAC_FRAMEWORK_PREFIX=%s" % options.mac_framework_prefix)
-        file('lib/wx/config/%s' % configname, 'w').write(text)
+        open('lib/wx/config/%s' % configname, 'w').write(text)
 
         # The framework is finished!
         print("wxWidgets framework created at: " +

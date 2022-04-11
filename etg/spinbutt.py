@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     01-Nov-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ def run():
     c.addPyMethod('GetRange', '(self)', 'return (self.GetMin(), self.GetMax())')
     c.addPyMethod('SetMin', '(self, minVal)', 'self.SetRange(minVal, self.GetMax())')
     c.addPyMethod('SetMax', '(self, maxVal)', 'self.SetRange(self.GetMin(), maxVal)')
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_SPIN_UP   = wx.PyEventBinder( wxEVT_SPIN_UP, 1)
         EVT_SPIN_DOWN = wx.PyEventBinder( wxEVT_SPIN_DOWN, 1)
         EVT_SPIN      = wx.PyEventBinder( wxEVT_SPIN, 1)

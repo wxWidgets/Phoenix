@@ -16,12 +16,13 @@
 The sized controls default HIG compliant sizers under the hood and provides
 a simple interface for customizing those sizers.
 
-The following sized controls exists:
+The following sized controls exist:
 
-:class:`wx.SizedFrame`
-:class:`wx.SizedDialog`
-:class:`wx.SizedPanel`
-:class:`wx.SizedScrolledPanel`
+:class:`SizedFrame`
+:class:`SizedDialog`
+:class:`SizedPanel`
+:class:`SizedScrolledPanel`
+:class `SizedStaticBox`
 
 Description
 ===========
@@ -92,243 +93,6 @@ minsize = {   "fixed":    wx.FIXED_MINSIZE,
 
 misc_flags = {   "expand": wx.EXPAND, }
 
-
-class TableSizer(wx.Sizer):
-    """
-    An attempt at creating a more intuitive replacement for nesting box sizers.
-    """
-    def __init__(self, rows=0, cols=0):
-        wx.Sizer.__init__(self)
-        self.rows = rows
-        self.cols = cols
-        self.fixed_width = 0
-        self.fixed_height = 0
-        self.hgrow = 0
-        self.vgrow = 0
-
-        self.row_widths = []
-        self.col_heights = []
-
-        # allow us to use 'old-style' proportions when emulating box sizers
-        self.isHorizontal = (self.rows == 1 and self.cols == 0)
-        self.isVertical = (self.cols == 1 and self.rows == 0)
-
-    def CalcNumRowsCols(self):
-        """
-        Calculate the number of rows and columns needed.
-
-        :returns: The number of rows and columns needed by the sizer.
-        :rtype: `tuple`
-        """
-        numrows = self.rows
-        numcols = self.cols
-        numchild = len(self.GetChildren())
-
-        if numrows == 0 and numcols == 0:
-            return 0, 0
-
-        if numrows == 0:
-            rows, mod = divmod(numchild, self.cols)
-            if mod > 0:
-                rows += 1
-            numrows = rows
-
-        if numcols == 0:
-            cols, mod = divmod(numchild, self.rows)
-            if mod > 0:
-                cols += 1
-            numcols = cols
-
-        return numrows, numcols
-
-    def CalcMin(self):
-        """
-        Calculate the minimum size.
-
-        :rtype: :ref:`wx.Size`
-
-        """
-        numrows, numcols = self.CalcNumRowsCols()
-        numchild = len(self.GetChildren())
-
-        if numchild == 0:
-            return wx.Size(10, 10)
-
-        if numrows == 0 and numcols == 0:
-            print("TableSizer must have the number of rows or columns set. Cannot continue.")
-            return wx.Size(10, 10)
-
-        self.row_widths = [0 for x in range(0, numrows)]
-        self.col_heights = [0 for x in range(0, numcols)]
-        currentRow = 0
-        currentCol = 0
-        counter = 0
-        self.hgrow = 0
-        self.vgrow = 0
-
-        # get the max row width and max column height
-        for item in self.GetChildren():
-            if self.cols != 0:
-                currentRow, currentCol = divmod(counter, numcols)
-            else:
-                currentCol, currentRow = divmod(counter, numrows)
-
-            if item.IsShown():
-                width, height = item.CalcMin()
-
-                if self.isVertical and item.GetProportion() > 0:
-                    self.hgrow += item.GetProportion()
-                elif self.isHorizontal and item.GetProportion() > 0:
-                    self.vgrow += item.GetProportion()
-
-                if width > self.row_widths[currentRow]:
-                    self.row_widths[currentRow] = width
-
-                if height > self.col_heights[currentCol]:
-                    self.col_heights[currentCol] = height
-
-            counter += 1
-
-        minwidth = 0
-        for row_width in self.row_widths:
-            minwidth += row_width
-
-        minheight = 0
-        for col_height in self.col_heights:
-            minheight += col_height
-
-        self.fixed_width = minwidth
-        self.fixed_height = minheight
-
-        return wx.Size(minwidth, minheight)
-
-    def RecalcSizes(self):
-        """
-        Recalculate the sizes.
-        """
-
-        numrows, numcols = self.CalcNumRowsCols()
-        numchild = len(self.GetChildren())
-
-        if numchild == 0:
-            return
-        currentRow = 0
-        currentCol = 0
-        counter = 0
-
-        print("cols %d, rows %d" % (self.cols, self.rows))
-        print("fixed_height %d, fixed_width %d" % (self.fixed_height, self.fixed_width))
-        #print("self.GetSize() = " + `self.GetSize()`)
-
-        row_widths = [0 for x in range(0, numrows)]
-        col_heights = [0 for x in range(0, numcols)]
-        item_sizes = [0 for x in range(0, len(self.GetChildren()))]
-        grow_sizes = [0 for x in range(0, len(self.GetChildren()))]
-
-        curHPos = 0
-        curVPos = 0
-        curCol = 0
-        curRow = 0
-        # first, we set sizes for all children, and while doing so, calc
-        # the maximum row heights and col widths. Then, afterwards we handle
-        # the positioning of the controls
-
-        for item in self.GetChildren():
-            if self.cols != 0:
-                currentRow, currentCol = divmod(counter, numcols)
-            else:
-                currentCol, currentRow = divmod(counter, numrows)
-            if item.IsShown():
-                item_minsize = item.GetMinSizeWithBorder()
-                width = item_minsize[0]
-                height = item_minsize[1]
-
-                print("row_height %d, row_width %d" % (self.col_heights[currentCol], self.row_widths[currentRow]))
-                growable_width = (self.GetSize()[0]) - width
-                growable_height = (self.GetSize()[1]) - height
-
-                #if not self.isVertical and not self.isHorizontal:
-                #    growable_width = self.GetSize()[0] - self.row_widths[currentRow]
-                #    growable_height = self.GetSize()[1] - self.col_heights[currentCol]
-
-                #print("grow_height %d, grow_width %d" % (growable_height, growable_width))
-
-                item_vgrow = 0
-                item_hgrow = 0
-                # support wx.EXPAND for box sizers to be compatible
-                if item.GetFlag() & wx.EXPAND:
-                    if self.isVertical:
-                        if self.hgrow > 0 and item.GetProportion() > 0:
-                            item_hgrow = (growable_width * item.GetProportion()) / self.hgrow
-                        item_vgrow = growable_height
-
-                    elif self.isHorizontal:
-                        if self.vgrow > 0 and item.GetProportion() > 0:
-                            item_vgrow = (growable_height * item.GetProportion()) / self.vgrow
-                        item_hgrow = growable_width
-
-                if growable_width > 0 and item.GetHGrow() > 0:
-                    item_hgrow = (growable_width * item.GetHGrow()) / 100
-                    print("hgrow = %d" % (item_hgrow))
-
-                if growable_height > 0 and item.GetVGrow() > 0:
-                    item_vgrow = (growable_height * item.GetVGrow()) / 100
-                    print("vgrow = %d" % (item_vgrow))
-
-                grow_size = wx.Size(item_hgrow, item_vgrow)
-                size = item_minsize #wx.Size(item_minsize[0] + item_hgrow, item_minsize[1] + item_vgrow)
-                if size[0] + grow_size[0] > row_widths[currentRow]:
-                    row_widths[currentRow] = size[0] + grow_size[0]
-                if size[1] + grow_size[1] > col_heights[currentCol]:
-                    col_heights[currentCol] = size[1] + grow_size[1]
-
-                grow_sizes[counter] = grow_size
-                item_sizes[counter] = size
-
-            counter += 1
-
-        counter = 0
-        for item in self.GetChildren():
-            if self.cols != 0:
-                currentRow, currentCol = divmod(counter, numcols)
-            else:
-                currentCol, currentRow = divmod(counter, numrows)
-
-            itempos = self.GetPosition()
-            if item.IsShown():
-                rowstart = itempos[0]
-                for row in range(0, currentRow):
-                    rowstart += row_widths[row]
-
-                colstart = itempos[1]
-                for col in range(0, currentCol):
-                    #print("numcols = %d, currentCol = %d, col = %d" % (numcols, currentCol, col))
-                    colstart += col_heights[col]
-
-                itempos[0] += rowstart
-                itempos[1] += colstart
-
-                if item.GetFlag() & wx.ALIGN_RIGHT:
-                    itempos[0] += (row_widths[currentRow] - item_sizes[counter][0])
-                elif item.GetFlag() & (wx.ALIGN_CENTER | wx.ALIGN_CENTER_HORIZONTAL):
-                    itempos[0] += (row_widths[currentRow] - item_sizes[counter][0]) / 2
-
-                if item.GetFlag() & wx.ALIGN_BOTTOM:
-                    itempos[1] += (col_heights[currentCol] - item_sizes[counter][1])
-                elif item.GetFlag() & (wx.ALIGN_CENTER | wx.ALIGN_CENTER_VERTICAL):
-                    itempos[1] += (col_heights[currentCol] - item_sizes[counter][1]) / 2
-
-                hgrowth =  (grow_sizes[counter][0] - itempos[0])
-                if hgrowth > 0:
-                    item_sizes[counter][0] += hgrowth
-
-                vgrowth =  (grow_sizes[counter][1] - itempos[1])
-                if vgrowth > 0:
-                    item_sizes[counter][1] += vgrowth
-                #item_sizes[counter][1] -= itempos[1]
-                item.SetDimension(itempos, item_sizes[counter])
-
-            counter += 1
 
 def GetDefaultBorder(self):
     """
@@ -599,29 +363,33 @@ class SizedParent:
     """
     def AddChild(self, child):
         """
-        Add a child to sizer
+        This extends the default wx.Window behavior to also add the child
+        to its parent's sizer, if one exists, and set default properties.
+        When an entire UI layout is managed via Sizers, this helps reduce
+        the amount of sizer boilerplate code that needs to be written.
 
         :param `child`: child (window or another sizer) to be added to sizer.
         :type `child`: :class:`wx.Window` or :class:`wx.Sizer`
         """
 
-        # Note: The wx.LogNull is used here to suppress a log message
-        # on wxMSW that happens because when AddChild is called the
-        # widget's hwnd hasn't been set yet, so the GetWindowRect that
-        # happens as a result of sizer.Add (in wxSizerItem::SetWindow)
-        # fails.  A better fix would be to defer this code somehow
-        # until after the child widget is fully constructed.
         sizer = self.GetSizer()
-        nolog = wx.LogNull()
-        item = sizer.Add(child)
-        del nolog
-        item.SetUserData({"HGrow":0, "VGrow":0})
+        if sizer:
+            # Note: The wx.LogNull is used here to suppress a log message
+            # on wxMSW that happens because when AddChild is called the
+            # widget's hwnd hasn't been set yet, so the GetWindowRect that
+            # happens as a result of sizer.Add (in wxSizerItem::SetWindow)
+            # fails.  A better fix would be to defer this code somehow
+            # until after the child widget is fully constructed.
+            nolog = wx.LogNull()
+            item = sizer.Add(child)
+            del nolog
+            item.SetUserData({"HGrow": 0, "VGrow": 0})
 
-        # Note: One problem is that the child class given to AddChild
-        # is the underlying wxWidgets control, not its Python subclass. So if
-        # you derive your own class, and override that class' GetDefaultBorder(),
-        # etc. methods, it will have no effect.
-        child.SetDefaultSizerProps()
+            # Note: One problem is that the child class given to AddChild
+            # is the underlying wxWidgets control, not its Python subclass. So if
+            # you derive your own class, and override that class' GetDefaultBorder(),
+            # etc. methods, it will have no effect.
+            child.SetDefaultSizerProps()
 
     def GetSizerType(self):
         """
@@ -638,7 +406,7 @@ class SizedParent:
         to it.
 
         :param string `type`: sizer type, valid values are "horizontal", "vertical",
-         "form", "table" and "grid";
+         "form", and "grid";
         :param dict `options`: dictionary of options depending on type.
 
         """
@@ -646,25 +414,14 @@ class SizedParent:
         sizer = None
         self.sizerType = type
         if type == "horizontal":
-            sizer = wx.BoxSizer(wx.HORIZONTAL) # TableSizer(0, 1)
+            sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         elif type == "vertical":
-            sizer = wx.BoxSizer(wx.VERTICAL) # TableSizer(1, 0)
+            sizer = wx.BoxSizer(wx.VERTICAL)
 
         elif type == "form":
-            #sizer = TableSizer(2, 0)
             sizer = wx.FlexGridSizer(0, 2, 0, 0)
             #sizer.AddGrowableCol(1)
-
-        elif type == "table":
-            rows = cols = 0
-            if 'rows' in options:
-                rows = int(options['rows'])
-
-            if 'cols' in options:
-                cols = int(options['cols'])
-
-            sizer = TableSizer(rows, cols)
 
         elif type == "grid":
             sizer = wx.FlexGridSizer(0, 0, 0, 0)
@@ -679,11 +436,11 @@ class SizedParent:
 
             if 'growable_row' in options:
                 row, proportion = options['growable_row']
-                sizer.SetGrowableRow(row, proportion)
+                sizer.AddGrowableRow(row, proportion)
 
             if 'growable_col' in options:
                 col, proportion = options['growable_col']
-                sizer.SetGrowableCol(col, proportion)
+                sizer.AddGrowableCol(col, proportion)
 
             if 'hgap' in options:
                 sizer.SetHGap(options['hgap'])
@@ -751,7 +508,7 @@ class SizedPanel(wx.Panel, SizedParent):
         """
 
         wx.Panel.__init__(self, *args, **kwargs)
-        sizer = wx.BoxSizer(wx.VERTICAL) #TableSizer(1, 0)
+        sizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(sizer)
         self.sizerType = "vertical"
 
@@ -793,7 +550,7 @@ class SizedScrolledPanel(sp.ScrolledPanel, SizedParent):
         """
 
         sp.ScrolledPanel.__init__(self, *args, **kwargs)
-        sizer = wx.BoxSizer(wx.VERTICAL) #TableSizer(1, 0)
+        sizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(sizer)
         self.sizerType = "vertical"
         self.SetupScrolling()
@@ -839,8 +596,6 @@ class SizedDialog(wx.Dialog):
         """
 
         wx.Dialog.__init__(self, *args, **kwargs)
-
-        self.SetExtraStyle(wx.WS_EX_VALIDATE_RECURSIVELY)
 
         self.borderLen = 12
         self.mainPanel = SizedPanel(self, -1)
@@ -910,3 +665,27 @@ class SizedFrame(wx.Frame):
         Return the pane to add controls too
         """
         return self.mainPanel
+
+
+class SizedStaticBox(wx.StaticBox, SizedParent):
+    def __init__(self, *args, **kwargs):
+        wx.StaticBox.__init__(self, *args, **kwargs)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.SetSizer(sizer)
+        self.sizerType = "vertical"
+
+    def AddChild(self, child):
+        """
+        Called automatically by wx, do not call it from user code.
+        """
+        wx.StaticBox.AddChild(self, child)
+        SizedParent.AddChild(self, child)
+
+    def _SetNewSizer(self, sizer):
+        """
+        Set a new sizer, detach old sizer, add new one and add items
+        to new sizer.
+        """
+        props = self._DetachFromSizer(sizer)
+        wx.StaticBox.SetSizer(self, sizer)
+        self._AddToNewSizer(sizer, props)

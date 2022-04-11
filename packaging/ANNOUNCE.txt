@@ -1,87 +1,144 @@
 
 [[ send to:
-   wxpython-users@googlegroups.com,
-   wxpython-dev@googlegroups.com,
-   wx-users@googlegroups.com,
-   wx-announce@googlegroups.com,
+   wxpython-users@googlegroups.com
+   wxpython-dev@googlegroups.com
+   wx-users@googlegroups.com
+   wx-announce@googlegroups.com
    Python-Announce-List@Python.Org
    ]]
 
 
-Announcing wxPython 4.0.0a1
----------------------------
 
-https://pypi.python.org/pypi/wxPython/4.0.0a1
+Announcing wxPython 4.1.1
+=========================
 
-I'm pleased to announce that wxPython's Project Phoenix has made it's public
-debut as wxPython 4.0.0a1, available from PyPI. Don't let the fact that it is
-marked as an "alpha" release scare you away. It is an alpha simply because
-this is the **first** in several ways:
+PyPI:   https://pypi.org/project/wxPython/4.1.1
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.1.1``
 
-  * It's the first real release of Phoenix, which is built on a different
-    foundation than Classic wxPython was.
+New and improved in this release:
 
-  * It's the first wxPython release intended to be fully available from PyPI and
-    buildable/installable by pip on all of the supported platforms.
+* This should have been mentioned in the notes for the last release,
+  but alas, it wandered away and got lost. wxWidgets is now validating
+  the flags passed when adding items to a sizer, to ensure that they
+  are the correct flags for the type of the sizer. If the given flags
+  do not make sense, for example using horizontal alignment flags in a
+  horizontal box sizer, then a wxAssertionError error is raised.
 
-  * It's the first release for Python3 (binaries for 3.5 and 3.6 are provided,
-    and building for 3.4 is still possible as well). In addition, Python 2.7
-    is also supported from the same codebase, with binaries available.
+* Fixed missing binder for wxEVT_STC_AUTOCOMP_SELECTION_CHANGE. (#1613)
 
-  * The wheel files are fully self-contained and relocatable on the supported
-    platforms, so they are installable in virtual environments without needing
-    to be able to find specific versions of the wxWidgets shared libraries
-    (or others) at fixed locations elsewhere in the file-system.
+* DataViewModel.HasValue can be overridden and will inform the
+  DataViewCtrl whether or not an item and column has data. If HasValue
+  returns False, then GetValue for that item/col will not be called.
+  This allows a distinction between a truly empty cell, and one that
+  has a value even if it is an empty string. (#1600)
 
-  * And as with most alphas, there are still a few things that are not
-    finished or polished yet.
+* Added flag that allows blocking of item dragging in the
+  UltimateListControl class. (PR#1620)
 
-But even with all that, many people have been using the pre-release snapshots
-of Phoenix for quite a while now, and it has been relatively stable and solid
-for them.
+* Add the column index to notification events in UltimateListControl
+  (PR#1630)
+
+* Added orientation parameter to UltimateListControl.GetScrollPos.
+  (PR#1632)
+
+* wx.lib.agw.aui.AuiNotebook RemovePage() now hides the removed page,
+  so it needs to be shown again if it is reused in another place.
+  (PR#1668)
+
+* Fixed issue that could modify `bytes` objects under Python. (PR#1680)
+
+* Added wx.lib.agw.aui.EVT_AUI_PANE_CLOSE event which is sent when a
+  AUI (the agw version) Pane has been closed (after it has been
+  closed, not when it is about to be closed, which is when
+  EVT_AUI_PANE_CLOSE is sent.) (PR#1628)
+
+* Exposed the wx.DC methods GetGraphicsContext and SetGraphicsContext.
+  Depending on the platform and the type of the DC, there may be a
+  wx.GraphicsContext used for the implementation of the DC. If so, the
+  GetGraphicsContext method enables access to it. Be sure to check
+  that the return value is not None before trying to use it.
+
+* Simplified the implementation of the wx.App.InitLocale method. See the
+  MigrationGuide for more information.
+
+* Added wx.lib.agw.aui.AUI_DOCKART_HINT_WINDOW_BORDER_COLOUR constant
+  so the hint window border color can be themed as well.
+
+* The wx.lib.mixins.listCtrl.CheckListCtrlMixin is now obsolete
+  because wx.ListCtrl has new functionality which does pretty much the
+  same thing. In fact there is some overlap in method names which may
+  trip up some use cases. It is advised to drop the use of
+  CheckListCtrlMixin and just use the wx.ListBox functionality. You
+  will need to call EnableCheckBoxes to turn it on, and you may need
+  to change some event handlers or overloaded methods.
+
+* wx.html2.WebView is now able to use Microsoft's Edge browser
+  component as its backend renderer. This should improve the
+  capabilities of the WebView widget on Windows, and be more
+  consistent with the WebViews on the other platforms, compared to the
+  original IE 11 backend. Using this backed requires that a new-ish
+  version of the Edge browser is installed on the end user's computer.
+
+* Added the wx.Image.ConvertToRegion method. This lets you create a
+  wx.Region from an image and a specified color or the mask if the
+  image has one. This was done to workaround a bug in wxMac, but it
+  seems worthwhile enough to keep it around even after the bug was
+  fixed.
+
+* Added the missing context manager methods for wx.LogNull. (#1842)
+
+* Refactored ScrolledThumbnail out of agw.ThumbnailCtrl so as to be
+  usable outside of ThumbnailCtrl.
+
 
 
 
 What is wxPython?
 -----------------
 
-wxPython is a cross-platform GUI toolkit for the Python programming language.
-It allows Python programmers to create programs with a robust, highly
-functional graphical user interface, simply and easily. It is implemented as a
-set of Python extension modules that wrap the GUI components of the popular
-wxWidgets cross platform library, which is written in C++. Supported platforms
-are Microsoft Windows, Mac OS X and macOS, and Linux or other unix-like
-systems with GTK2 or GTK3 libraries. In most cases the native widgets are used
-on each platform to provide a 100% native look and feel for the application.
+wxPython is a cross-platform GUI toolkit for the Python programming
+language.  It allows Python programmers to create programs with a
+robust, highly functional graphical user interface, simply and
+easily. It is implemented as a set of Python extension modules that
+wrap the GUI components of the popular wxWidgets cross platform
+library, which is written in C++. Supported platforms are Microsoft
+Windows, Mac OS X and macOS, and Linux or other unix-like systems with
+GTK2 or GTK3 libraries. In most cases the native widgets are used on
+each platform to provide a 100% native look and feel for the
+application.
 
 
 What is wxPython Phoenix?
 -------------------------
 
-wxPython's Project Phoenix is a new from-the-ground-up implementation of
-wxPython, created with the intent of making wxPython “better, stronger, faster
-than he was before.” In other words, this new implementation is focused on
-improving speed, maintainability and extensibility of wxPython, as well as
-removing most of the cruft that had accumulated over the long life of Classic
-wxPython.
+wxPython's Project Phoenix is a new from-the-ground-up implementation
+of wxPython, created with the intent of making wxPython “better,
+stronger, faster than he was before.” In other words, this new
+implementation is focused on improving speed, maintainability and
+extensibility of wxPython, as well as removing most of the cruft that
+had accumulated over the long life of Classic wxPython.
 
-The project has been in development off and on, mostly behind the scenes, for
-many years. For the past few years automated snapshot builds have been
-available for those adventurous enough to try it, and many people eventually
-started using the snapshots in their projects, even for production releases.
-While there are still some things on the periphery that need to be completed,
-the core of the new wxPython extension modules which wrap the wxWidgets code
-has been stable for a long time now.
+The project has been in development off and on, mostly behind the
+scenes, for many years. For the past few years automated snapshot
+builds have been available for those adventurous enough to try it, and
+many people eventually started using the snapshots in their projects,
+even for production releases.  While there are still some things on
+the periphery that need to be completed, the core of the new wxPython
+extension modules which wrap the wxWidgets code has been stable for a
+long time now.
 
-Due to some things being cleaned up, reorganized, simplified and dehackified
-wxPython Phoenix is not completely backwards compatible with wxPython Classic.
-This is intended. In general, however, the API differences tend to be minor
-and some applications can use Phoenix with slight, or even no modifications.
-In some other cases the correct way to do things was also available in Classic
-and it's only the wrong way that has been removed from Phoenix.  For more
+Due to some things being cleaned up, reorganized, simplified and
+dehackified wxPython Phoenix is not completely backwards compatible
+with wxPython Classic.  This is intended. In general, however, the API
+differences tend to be minor and some applications can use Phoenix
+with slight, or even with no modifications.  In some other cases the
+correct way to do things was also available in Classic and it's only
+the wrong way that has been removed from Phoenix.  For more
 information there is a Migration Guide document available at:
-https://wxpython.org/Phoenix/docs/html/MigrationGuide.html
+https://docs.wxpython.org/MigrationGuide.html
 
-The new wxPython API reference documentation, including all Python-specific
-additions and customizations, and docs for the wx.lib package, is located at:
-https://wxpython.org/Phoenix/docs/html/main.html
+The new wxPython API reference documentation, including all
+Python-specific additions and customizations, and docs for the wx.lib
+package, is located at: https://docs.wxpython.org/
+

@@ -7,7 +7,7 @@ import wx.dataview as dv
 #----------------------------------------------------------------------
 
 # This model class provides the data to the view when it is asked for.
-# Since it is a list-only model (no hierachical data) then it is able
+# Since it is a list-only model (no hierarchical data) then it is able
 # to be referenced by row rather than by item object, so in this way
 # it is easier to comprehend and use than other model types.  In this
 # example we also provide a Compare function to assist with sorting of
@@ -39,6 +39,7 @@ class TestModel(dv.DataViewIndexListModel):
     def SetValueByRow(self, value, row, col):
         self.log.write("SetValue: (%d,%d) %s\n" % (row, col, value))
         self.data[row][col] = value
+        return True
 
     # Report how many columns this model provides data for.
     def GetColumnCount(self):
@@ -71,17 +72,19 @@ class TestModel(dv.DataViewIndexListModel):
             item2, item1 = item1, item2
         row1 = self.GetRow(item1)
         row2 = self.GetRow(item2)
+        a = self.data[row1][col]
+        b = self.data[row2][col]
         if col == 0:
-            return cmp(int(self.data[row1][col]), int(self.data[row2][col]))
-        else:
-            return cmp(self.data[row1][col], self.data[row2][col])
-
+            a = int(a)
+            b = int(b)
+        if a < b: return -1
+        if a > b: return 1
+        return 0
 
     def DeleteRows(self, rows):
         # make a copy since we'll be sorting(mutating) the list
-        rows = list(rows)
         # use reverse order so the indexes don't change as we remove items
-        rows.sort(reverse=True)
+        rows = sorted(rows, reverse=True)
 
         for row in rows:
             # remove it from our data structure

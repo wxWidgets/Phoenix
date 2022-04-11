@@ -5,7 +5,7 @@
 #
 # Created:     09-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ ITEMS  = [ 'wxComboBox' ]
 
 #---------------------------------------------------------------------------
 
-def run():
+def parseAndTweakModule():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
@@ -35,6 +35,8 @@ def run():
     c = module.find('wxComboBox')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
+
+    tools.fixTextClipboardMethods(c)
 
     c.find('wxComboBox').findOverload('wxString choices').ignore()
     c.find('wxComboBox').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
@@ -71,8 +73,12 @@ def run():
     c.addPyCode("ComboBox.GetMark = wx.deprecated(ComboBox.GetTextSelection, 'Use GetTextSelection instead.')")
 
     module.addGlobalStr('wxComboBoxNameStr', c)
+    return module
 
-    #-----------------------------------------------------------------
+#-----------------------------------------------------------------
+
+def run():
+    module = parseAndTweakModule()
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
 

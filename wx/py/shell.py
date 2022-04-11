@@ -14,6 +14,7 @@ import keyword
 import os
 import sys
 import time
+from functools import cmp_to_key
 
 from .buffer import Buffer
 from . import dispatcher
@@ -234,6 +235,7 @@ class Shell(editwindow.EditWindow):
                  size=wx.DefaultSize, style=wx.CLIP_CHILDREN,
                  introText='', locals=None, InterpClass=None,
                  startupScript=None, execStartupScript=True,
+                 useStockId=True,
                  *args, **kwds):
         """Create Shell instance."""
         editwindow.EditWindow.__init__(self, parent, id, pos, size, style)
@@ -248,7 +250,7 @@ class Shell(editwindow.EditWindow):
         self.stderr = sys.stderr
 
         # Import a default interpreter class if one isn't provided.
-        if InterpClass == None:
+        if InterpClass is None:
             from .interpreter import Interpreter
         else:
             Interpreter = InterpClass
@@ -303,19 +305,45 @@ class Shell(editwindow.EditWindow):
 
         # Assign handler for the context menu
         self.Bind(wx.EVT_CONTEXT_MENU, self.OnContextMenu)
-        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI)
+
+        # add the option to not use the stock IDs; otherwise the context menu
+        # may not work on Mac without adding the proper IDs to the menu bar
+        if useStockId:
+            self.ID_CUT = wx.ID_CUT
+            self.ID_COPY = wx.ID_COPY
+            self.ID_PASTE = wx.ID_PASTE
+            self.ID_SELECTALL = wx.ID_SELECTALL
+            self.ID_CLEAR = wx.ID_CLEAR
+            self.ID_UNDO = wx.ID_UNDO
+            self.ID_REDO = wx.ID_REDO
+        else:
+            self.ID_CUT = wx.NewIdRef()
+            self.ID_COPY = wx.NewIdRef()
+            self.ID_PASTE = wx.NewIdRef()
+            self.ID_SELECTALL = wx.NewIdRef()
+            self.ID_CLEAR = wx.NewIdRef()
+            self.ID_UNDO = wx.NewIdRef()
+            self.ID_REDO = wx.NewIdRef()
 
         # Assign handlers for edit events
-        self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=wx.ID_CUT)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Copy(), id=wx.ID_COPY)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=self.ID_CUT)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Copy(), id=self.ID_COPY)
         self.Bind(wx.EVT_MENU, lambda evt: self.CopyWithPrompts(), id=frame.ID_COPY_PLUS)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Paste(), id=wx.ID_PASTE)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Paste(), id=self.ID_PASTE)
         self.Bind(wx.EVT_MENU, lambda evt: self.PasteAndRun(), id=frame.ID_PASTE_PLUS)
-        self.Bind(wx.EVT_MENU, lambda evt: self.SelectAll(), id=wx.ID_SELECTALL)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Clear(), id=wx.ID_CLEAR)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Undo(), id=wx.ID_UNDO)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Redo(), id=wx.ID_REDO)
+        self.Bind(wx.EVT_MENU, lambda evt: self.SelectAll(), id=self.ID_SELECTALL)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Clear(), id=self.ID_CLEAR)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Undo(), id=self.ID_UNDO)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Redo(), id=self.ID_REDO)
 
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCut()), id=self.ID_CUT)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCut()), id=self.ID_CLEAR)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCopy()), id=self.ID_COPY)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCopy()), id=frame.ID_COPY_PLUS)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanPaste()), id=self.ID_PASTE)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanPaste()), id=frame.ID_PASTE_PLUS)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanUndo()), id=self.ID_UNDO)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanRedo()), id=self.ID_REDO)
 
         # Assign handler for idle time.
         self.waiting = False
@@ -740,7 +768,7 @@ class Shell(editwindow.EditWindow):
         import re
 
         #sort out only "good" words
-        newlist = re.split("[ \.\[\]=}(\)\,0-9\"]", joined)
+        newlist = re.split(r"[ \.\[\]=}(\)\,0-9\"]", joined)
 
         #length > 1 (mix out "trash")
         thlist = []
@@ -750,10 +778,12 @@ class Shell(editwindow.EditWindow):
 
         #unique (no duplicate words
         #oneliner from german python forum => unique list
-        unlist = [thlist[i] for i in xrange(len(thlist)) if thlist[i] not in thlist[:i]]
+        unlist = [thlist[i] for i in range(len(thlist)) if thlist[i] not in thlist[:i]]
 
         #sort lowercase
-        unlist.sort(lambda a, b: cmp(a.lower(), b.lower()))
+        def _cmp(a,b):
+            return  ((a > b) - (a < b))
+        unlist.sort(key=cmp_to_key(lambda a, b: _cmp(a.lower(), b.lower())))
 
         #this is more convenient, isn't it?
         self.AutoCompSetIgnoreCase(True)
@@ -1064,7 +1094,7 @@ class Shell(editwindow.EditWindow):
             else:
                 indent=previousLine[:(len(previousLine)-len(lstrip))]
                 if pstrip[-1]==':' and \
-                    first_word in ['if','else','elif','for','while',
+                    first_word in ['if','else','elif','for','while','with',
                                    'def','class','try','except','finally']:
                     indent+=' '*4
 
@@ -1139,17 +1169,14 @@ class Shell(editwindow.EditWindow):
     def runfile(self, filename):
         """Execute all commands in file as if they were typed into the
         shell."""
-        file = open(filename)
-        try:
-            self.prompt()
-            for command in file.readlines():
+        self.prompt()
+        with open(filename) as file_:
+            for command in file_:
                 if command[:6] == 'shell.':
                     # Run shell methods silently.
                     self.run(command, prompt=False, verbose=False)
                 else:
                     self.run(command, prompt=False, verbose=True)
-        finally:
-            file.close()
 
     def autoCompleteShow(self, command, offset = 0):
         """Display auto-completion popup list."""
@@ -1341,7 +1368,7 @@ class Shell(editwindow.EditWindow):
         """Replace selection with clipboard contents."""
         if self.CanPaste() and wx.TheClipboard.Open():
             ps2 = str(sys.ps2)
-            if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_TEXT)):
+            if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_UNICODETEXT)):
                 data = wx.TextDataObject()
                 if wx.TheClipboard.GetData(data):
                     self.ReplaceSelection('')
@@ -1360,7 +1387,7 @@ class Shell(editwindow.EditWindow):
         """Replace selection with clipboard contents, run commands."""
         text = ''
         if wx.TheClipboard.Open():
-            if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_TEXT)):
+            if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_UNICODETEXT)):
                 data = wx.TextDataObject()
                 if wx.TheClipboard.GetData(data):
                     text = data.GetText()
@@ -1396,7 +1423,8 @@ class Shell(editwindow.EditWindow):
             lstrip = line.lstrip()
             if line.strip() != '' and lstrip == line and \
                     lstrip[:4] not in ['else','elif'] and \
-                    lstrip[:6] != 'except':
+                    lstrip[:6] != 'except' and \
+                    lstrip[:7] != 'finally':
                 # New command.
                 if command:
                     # Add the previous command to the list.
@@ -1416,10 +1444,7 @@ class Shell(editwindow.EditWindow):
 
     def wrap(self, wrap=True):
         """Sets whether text is word wrapped."""
-        try:
-            self.SetWrapMode(wrap)
-        except AttributeError:
-            return 'Wrapping is not available in this version.'
+        self.SetWrapMode(wrap)
 
     def zoom(self, points=0):
         """Set the zoom level.
@@ -1472,39 +1497,26 @@ class Shell(editwindow.EditWindow):
             in order to correctly respect our immutable buffer.
         """
         menu = wx.Menu()
-        menu.Append(wx.ID_UNDO, "Undo")
-        menu.Append(wx.ID_REDO, "Redo")
+        menu.Append(self.ID_UNDO, "Undo")
+        menu.Append(self.ID_REDO, "Redo")
 
         menu.AppendSeparator()
 
-        menu.Append(wx.ID_CUT, "Cut")
-        menu.Append(wx.ID_COPY, "Copy")
-        menu.Append(frame.ID_COPY_PLUS, "Copy Plus")
-        menu.Append(wx.ID_PASTE, "Paste")
-        menu.Append(frame.ID_PASTE_PLUS, "Paste Plus")
-        menu.Append(wx.ID_CLEAR, "Clear")
+        menu.Append(self.ID_CUT, "Cut")
+        menu.Append(self.ID_COPY, "Copy")
+        menu.Append(frame.ID_COPY_PLUS, "Copy With Prompts")
+        menu.Append(self.ID_PASTE, "Paste")
+        menu.Append(frame.ID_PASTE_PLUS, "Paste And Run")
+        menu.Append(self.ID_CLEAR, "Clear")
 
         menu.AppendSeparator()
 
-        menu.Append(wx.ID_SELECTALL, "Select All")
+        menu.Append(self.ID_SELECTALL, "Select All")
         return menu
 
     def OnContextMenu(self, evt):
         menu = self.GetContextMenu()
         self.PopupMenu(menu)
-
-    def OnUpdateUI(self, evt):
-        id = evt.Id
-        if id in (wx.ID_CUT, wx.ID_CLEAR):
-            evt.Enable(self.CanCut())
-        elif id in (wx.ID_COPY, frame.ID_COPY_PLUS):
-            evt.Enable(self.CanCopy())
-        elif id in (wx.ID_PASTE, frame.ID_PASTE_PLUS):
-            evt.Enable(self.CanPaste())
-        elif id == wx.ID_UNDO:
-            evt.Enable(self.CanUndo())
-        elif id == wx.ID_REDO:
-            evt.Enable(self.CanRedo())
 
 
 
@@ -1552,7 +1564,7 @@ class Shell(editwindow.EditWindow):
 ##         self.GetData()
 ##         if self.textdo.GetTextLength() > 1:
 ##             text = self.textdo.GetText()
-##             # *** Do somethign with the dragged text here...
+##             # *** Do something with the dragged text here...
 ##             self.textdo.SetText('')
 ##         else:
 ##             filenames = str(self.filename.GetFilenames())

@@ -14,15 +14,18 @@ __docformat__ = "restructuredtext en"
 
 # Standard Library
 import sys
+import time as _time
 
 # Third-Party
 import wx
 import numpy as np
 
 # Package
+from .polyobjects import PlotPrintout
+from .polyobjects import PolyMarker, PolyLine, PolyBoxPlot
 from .utils import DisplaySide
 from .utils import set_displayside
-from .utils import PendingDeprecation
+from .utils import pendingDeprecation
 from .utils import TempStyle
 from .utils import scale_and_shift_point
 
@@ -68,6 +71,7 @@ class PlotCanvas(wx.Panel):
         self.border = (1, 1)
 
         self.SetBackgroundColour("white")
+        self.SetForegroundColour("black")
 
         # Create some mouse events for zooming
         self.canvas.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
@@ -83,7 +87,7 @@ class PlotCanvas(wx.Panel):
         self.Bind(wx.EVT_SCROLL_LINEUP, self.OnScroll)
         self.Bind(wx.EVT_SCROLL_LINEDOWN, self.OnScroll)
 
-        # set curser as cross-hairs
+        # set cursor as cross-hairs
         self.defaultCursor = wx.Cursor(wx.CURSOR_ARROW)
         self.HandCursor = wx.Cursor(wx.CURSOR_SIZING)
         self.GrabHandCursor = wx.Cursor(wx.CURSOR_SIZING)
@@ -98,6 +102,7 @@ class PlotCanvas(wx.Panel):
 
         # scrollbar variables
         self._sb_ignore = False
+        self._sb_show = False
         self._adjustingSB = False
         self._sb_xfullrange = 0
         self._sb_yfullrange = 0
@@ -170,24 +175,24 @@ class PlotCanvas(wx.Panel):
 
         # Default Pens
         self._gridPen = wx.Pen(wx.Colour(180, 180, 180, 255),
-                               self._pointSize[0],
+                               int(self._pointSize[0]),
                                wx.PENSTYLE_DOT)
 
         self._centerLinePen = wx.Pen(wx.RED,
-                                     self._pointSize[0],
+                                     int(self._pointSize[0]),
                                      wx.PENSTYLE_SHORT_DASH)
 
         self._axesPen = wx.Pen(wx.BLACK,
-                               self._pointSize[0],
+                               int(self._pointSize[0]),
                                wx.PENSTYLE_SOLID)
 
         self._tickPen = wx.Pen(wx.BLACK,
-                               self._pointSize[0],
+                               int(self._pointSize[0]),
                                wx.PENSTYLE_SOLID)
-        self._tickLength = tuple(x * 3 for x in self._pointSize)
+        self._tickLength = tuple(-x * 2 for x in self._pointSize)
 
         self._diagonalPen = wx.Pen(wx.BLUE,
-                                   self._pointSize[0],
+                                   int(self._pointSize[0]),
                                    wx.PENSTYLE_DOT_DASH)
 
     def SetCursor(self, cursor):
@@ -300,23 +305,28 @@ class PlotCanvas(wx.Panel):
 
         :getter: Returns the length of the tick marks.
         :setter: Sets the length of the tick marks.
-        :type:   int or float
+        :type:   tuple of (xlength, ylength): int or float
         :raise:  `TypeError` when setting a value that is not an int or float.
         """
         return self._tickLength
 
     @tickLength.setter
     def tickLength(self, length):
-        if not isinstance(length, (int, float)):
-            raise TypeError("`length` must be an integer or float")
-        self._tickWidth = length
+        if not isinstance(length, (tuple, list)):
+            raise TypeError("`length` must be a 2-tuple of ints or floats")
+        self._tickLength = length
+
+    @property
+    def tickLengthPrinterScale(self):
+        return (3 * self.printerScale * self._tickLength[0],
+                3 * self.printerScale * self._tickLength[1])
 
     # SaveFile
     def SaveFile(self, fileName=''):
         """
         Saves the file to the type specified in the extension. If no file
         name is specified a dialog box is provided.  Returns True if
-        sucessful, otherwise False.
+        successful, otherwise False.
 
         .bmp  Save a Windows bitmap file.
         .xbm  Save an X bitmap file.
@@ -333,7 +343,7 @@ class PlotCanvas(wx.Panel):
             "png": wx.BITMAP_TYPE_PNG,       # Save a PNG file.
         }
 
-        fType = _string.lower(fileName[-3:])
+        fType = fileName[-3:].lower()
         dlg1 = None
         while fType not in extensions:
 
@@ -360,12 +370,12 @@ class PlotCanvas(wx.Panel):
                                      ".",
                                      "",
                                      wildcard_str,
-                                     wx.SAVE | wx.OVERWRITE_PROMPT,
+                                     wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
                                      )
 
             if dlg1.ShowModal() == wx.ID_OK:
                 fileName = dlg1.GetPath()
-                fType = _string.lower(fileName[-3:])
+                fType = fileName[-3:].lower()
             else:                      # exit without saving
                 dlg1.Destroy()
                 return False
@@ -446,26 +456,28 @@ class PlotCanvas(wx.Panel):
         frame.Centre(wx.BOTH)
         frame.Show(True)
 
-    @PendingDeprecation("self.logScale property")
     def setLogScale(self, logscale):
         """
         Set the log scale boolean value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.logScale` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.logScale`
+           property instead.
         """
+        pendingDeprecation("self.logScale property")
         self.logScale = logscale
 
-    @PendingDeprecation("self.logScale property")
     def getLogScale(self):
         """
         Set the log scale boolean value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.logScale` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.logScale`
+           property instead.
         """
+        pendingDeprecation("self.logScale property")
         return self.logScale
 
     @property
@@ -522,28 +534,30 @@ class PlotCanvas(wx.Panel):
         self.ySpec = 'min'
         self._absScale = absscale
 
-    @PendingDeprecation("self.fontSizeAxis property")
     def SetFontSizeAxis(self, point=10):
         """
         Set the tick and axis label font size (default is 10 point)
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeAxis` property
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeAxis`
+           property
            instead.
         """
+        pendingDeprecation("self.fontSizeAxis property")
         self.fontSizeAxis = point
 
-    @PendingDeprecation("self.fontSizeAxis property")
     def GetFontSizeAxis(self):
         """
         Get current tick and axis label font size in points
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeAxis` property
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeAxis`
+           property
            instead.
         """
+        pendingDeprecation("self.fontSizeAxis property")
         return self.fontSizeAxis
 
     @property
@@ -563,28 +577,28 @@ class PlotCanvas(wx.Panel):
     def fontSizeAxis(self, value):
         self._fontSizeAxis = value
 
-    @PendingDeprecation("self.fontSizeTitle property")
     def SetFontSizeTitle(self, point=15):
         """
         Set Title font size (default is 15 point)
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeTitle` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeTitle`
+           property instead.
         """
+        pendingDeprecation("self.fontSizeTitle property")
         self.fontSizeTitle = point
 
-    @PendingDeprecation("self.fontSizeTitle property")
     def GetFontSizeTitle(self):
         """
         Get Title font size (default is 15 point)
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeTitle` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeTitle`
+           property instead.
         """
+        pendingDeprecation("self.fontSizeTitle property")
         return self.fontSizeTitle
 
     @property
@@ -604,16 +618,16 @@ class PlotCanvas(wx.Panel):
     def fontSizeTitle(self, pointsize):
         self._fontSizeTitle = pointsize
 
-    @PendingDeprecation("self.fontSizeLegend property")
     def SetFontSizeLegend(self, point=7):
         """
         Set legend font size (default is 7 point)
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeLegend' property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeLegend'
+           property instead.
         """
+        pendingDeprecation("self.fontSizeLegend property")
         self.fontSizeLegend = point
 
     def GetFontSizeLegend(self):
@@ -622,8 +636,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeLegend' property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeLegend'
+           property instead.
         """
         return self.fontSizeLegend
 
@@ -644,28 +658,28 @@ class PlotCanvas(wx.Panel):
     def fontSizeLegend(self, point):
         self._fontSizeLegend = point
 
-    @PendingDeprecation("self.showScrollbars property")
     def SetShowScrollbars(self, value):
         """
         Set the showScrollbars value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.showScrollbars` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.showScrollbars`
+           property instead.
         """
+        pendingDeprecation("self.showScrollbars property")
         self.showScrollbars = value
 
-    @PendingDeprecation("self.showScrollbars property")
     def GetShowScrollbars(self):
         """
         Get the showScrollbars value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.showScrollbars` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.showScrollbars`
+           property instead.
         """
+        pendingDeprecation("self.showScrollbars property")
         return self.showScrollbars
 
     @property
@@ -678,42 +692,49 @@ class PlotCanvas(wx.Panel):
         :type:   bool
         :raises: `TypeError` if setting a non-boolean value.
         """
-        # XXX: should have sb_hor.IsShown() as well.
-        return self.sb_vert.IsShown()
+        return self._sb_show
 
     @showScrollbars.setter
     def showScrollbars(self, value):
         if not isinstance(value, bool):
             raise TypeError("Value should be True or False")
-        if value == self.showScrollbars:
+        if value == self._sb_show:
             # no change, so don't do anything
             return
+        self._sb_show = value
         self.sb_vert.Show(value)
         self.sb_hor.Show(value)
-        wx.CallAfter(self.Layout)
 
-    @PendingDeprecation("self.useScientificNotation property")
+        def _do_update():
+            self.Layout()
+            if self.last_draw is not None:
+                self._adjustScrollbars()
+        wx.CallAfter(_do_update)
+
     def SetUseScientificNotation(self, useScientificNotation):
         """
         Set the useScientificNotation value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.useScientificNotation`
+           Use the
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.useScientificNotation`
            property instead.
         """
+        pendingDeprecation("self.useScientificNotation property")
         self.useScientificNotation = useScientificNotation
 
-    @PendingDeprecation("self.useScientificNotation property")
     def GetUseScientificNotation(self):
         """
         Get the useScientificNotation value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.useScientificNotation`
+           Use the
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.useScientificNotation`
            property instead.
         """
+        pendingDeprecation("self.useScientificNotation property")
         return self.useScientificNotation
 
     @property
@@ -734,28 +755,30 @@ class PlotCanvas(wx.Panel):
             raise TypeError("Value should be True or False")
         self._useScientificNotation = value
 
-    @PendingDeprecation("self.enableAntiAliasing property")
     def SetEnableAntiAliasing(self, enableAntiAliasing):
         """
         Set the enableAntiAliasing value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableAntiAliasing`
+           Use the
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableAntiAliasing`
            property instead.
         """
+        pendingDeprecation("self.enableAntiAliasing property")
         self.enableAntiAliasing = enableAntiAliasing
 
-    @PendingDeprecation("self.enableAntiAliasing property")
     def GetEnableAntiAliasing(self):
         """
         Get the enableAntiAliasing value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableAntiAliasing`
+           Use the
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableAntiAliasing`
            property instead.
         """
+        pendingDeprecation("self.enableAntiAliasing property")
         return self.enableAntiAliasing
 
     @property
@@ -777,28 +800,28 @@ class PlotCanvas(wx.Panel):
         self._antiAliasingEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableHiRes property")
     def SetEnableHiRes(self, enableHiRes):
         """
         Set the enableHiRes value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableHiRes` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableHiRes`
+           property instead.
         """
+        pendingDeprecation("self.enableHiRes property")
         self.enableHiRes = enableHiRes
 
-    @PendingDeprecation("self.enableHiRes property")
     def GetEnableHiRes(self):
         """
         Get the enableHiRes value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableHiRes` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableHiRes`
+           property instead.
         """
+        pendingDeprecation("self.enableHiRes property")
         return self._hiResEnabled
 
     @property
@@ -820,28 +843,28 @@ class PlotCanvas(wx.Panel):
         self._hiResEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableDrag property")
     def SetEnableDrag(self, value):
         """
         Set the enableDrag value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDrag` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDrag`
+           property instead.
         """
+        pendingDeprecation("self.enableDrag property")
         self.enableDrag = value
 
-    @PendingDeprecation("self.enableDrag property")
     def GetEnableDrag(self):
         """
         Get the enableDrag value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDrag` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDrag`
+           property instead.
         """
+        pendingDeprecation("self.enableDrag property")
         return self.enableDrag
 
     @property
@@ -856,11 +879,11 @@ class PlotCanvas(wx.Panel):
 
         .. note::
            This is mutually exclusive with
-           :attr:`~wx.lib.plot.PlotCanvas.enableZoom`. Setting one will
-           disable the other.
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableZoom`. Setting
+           one will disable the other.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.enableZoom`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableZoom`
         """
         return self._dragEnabled
 
@@ -876,28 +899,28 @@ class PlotCanvas(wx.Panel):
             self.SetCursor(self.defaultCursor)
         self._dragEnabled = value
 
-    @PendingDeprecation("self.enableZoom property")
     def SetEnableZoom(self, value):
         """
         Set the enableZoom value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableZoom` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableZoom`
+           property instead.
         """
+        pendingDeprecation("self.enableZoom property")
         self.enableZoom = value
 
-    @PendingDeprecation("self.enableZoom property")
     def GetEnableZoom(self):
         """
         Get the enableZoom value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableZoom` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableZoom`
+           property instead.
         """
+        pendingDeprecation("self.enableZoom property")
         return self.enableZoom
 
     @property
@@ -912,11 +935,11 @@ class PlotCanvas(wx.Panel):
 
         .. note::
            This is mutually exclusive with
-           :attr:`~wx.lib.plot.PlotCanvas.enableDrag`. Setting one will
-           disable the other.
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDrag`. Setting
+           one will disable the other.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.enableDrag`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDrag`
         """
         return self._zoomEnabled
 
@@ -932,28 +955,28 @@ class PlotCanvas(wx.Panel):
             self.SetCursor(self.defaultCursor)
         self._zoomEnabled = value
 
-    @PendingDeprecation("self.enableGrid property")
     def SetEnableGrid(self, value):
         """
         Set the enableGrid value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableGrid` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableGrid`
+           property instead.
         """
+        pendingDeprecation("self.enableGrid property")
         self.enableGrid = value
 
-    @PendingDeprecation("self.enableGrid property")
     def GetEnableGrid(self):
         """
         Get the enableGrid value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableGrid` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableGrid`
+           property instead.
         """
+        pendingDeprecation("self.enableGrid property")
         return self.enableGrid
 
     @property
@@ -987,28 +1010,28 @@ class PlotCanvas(wx.Panel):
         self._gridEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableCenterLines property")
     def SetEnableCenterLines(self, value):
         """
         Set the enableCenterLines value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableCenterLines`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableCenterLines`
            property instead.
         """
+        pendingDeprecation("self.enableCenterLines property")
         self.enableCenterLines = value
 
-    @PendingDeprecation("self.enableCenterLines property")
     def GetEnableCenterLines(self):
         """
         Get the enableCenterLines value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableCenterLines`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableCenterLines`
            property instead.
         """
+        pendingDeprecation("self.enableCenterLines property")
         return self.enableCenterLines
 
     @property
@@ -1036,28 +1059,28 @@ class PlotCanvas(wx.Panel):
         self._centerLinesEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableDiagonals property")
     def SetEnableDiagonals(self, value):
         """
         Set the enableDiagonals value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDiagonals`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDiagonals`
            property instead.
         """
+        pendingDeprecation("self.enableDiagonals property")
         self.enableDiagonals = value
 
-    @PendingDeprecation("self.enableDiagonals property")
     def GetEnableDiagonals(self):
         """
         Get the enableDiagonals value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDiagonals`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDiagonals`
            property instead.
         """
+        pendingDeprecation("self.enableDiagonals property")
         return self.enableDiagonals
 
     @property
@@ -1090,28 +1113,28 @@ class PlotCanvas(wx.Panel):
         self._diagonalsEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableLegend property")
     def SetEnableLegend(self, value):
         """
         Set the enableLegend value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableLegend`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableLegend`
            property instead.
         """
+        pendingDeprecation("self.enableLegend property")
         self.enableLegend = value
 
-    @PendingDeprecation("self.enableLegend property")
     def GetEnableLegend(self):
         """
         Get the enableLegend value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableLegend`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableLegend`
            property instead.
         """
+        pendingDeprecation("self.enableLegend property")
         return self.enableLegend
 
     @property
@@ -1135,28 +1158,28 @@ class PlotCanvas(wx.Panel):
         self._legendEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableTitle property")
     def SetEnableTitle(self, value):
         """
         Set the enableTitle value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableTitle` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableTitle`
+           property instead.
         """
+        pendingDeprecation("self.enableTitle property")
         self.enableTitle = value
 
-    @PendingDeprecation("self.enableTitle property")
     def GetEnableTitle(self):
         """
         Get the enableTitle value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableTitle` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableTitle`
+           property instead.
         """
+        pendingDeprecation("self.enableTitle property")
         return self.enableTitle
 
     @property
@@ -1178,28 +1201,28 @@ class PlotCanvas(wx.Panel):
         self._titleEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enablePointLabel property")
     def SetEnablePointLabel(self, value):
         """
         Set the enablePointLabel value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enablePointLabel`
            property instead.
         """
+        pendingDeprecation("self.enablePointLabel property")
         self.enablePointLabel = value
 
-    @PendingDeprecation("self.enablePointLabel property")
     def GetEnablePointLabel(self):
         """
         Set the enablePointLabel value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enablePointLabel`
            property instead.
         """
+        pendingDeprecation("self.enablePointLabel property")
         return self.enablePointLabel
 
     @property
@@ -1377,28 +1400,28 @@ class PlotCanvas(wx.Panel):
         self._axesLabelsEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.pointLabelFunc property")
     def SetPointLabelFunc(self, func):
         """
         Set the enablePointLabel value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enablePointLabel`
            property instead.
         """
+        pendingDeprecation("self.pointLabelFunc property")
         self.pointLabelFunc = func
 
-    @PendingDeprecation("self.pointLabelFunc property")
     def GetPointLabelFunc(self):
         """
         Get the enablePointLabel value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enablePointLabel`
            property instead.
         """
+        pendingDeprecation("self.pointLabelFunc property")
         return self.pointLabelFunc
 
     @property
@@ -1467,48 +1490,52 @@ class PlotCanvas(wx.Panel):
         x, y = (screenPos - self._pointShift) / self._pointScale
         return x, y
 
-    @PendingDeprecation("self.xSpec property")
     def SetXSpec(self, spectype='auto'):
         """
         Set the xSpec value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.xSpec` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xSpec`
+           property instead.
         """
+        pendingDeprecation("self.xSpec property")
         self.xSpec = spectype
 
-    @PendingDeprecation("self.ySpec property")
     def SetYSpec(self, spectype='auto'):
         """
         Set the ySpec value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.ySpec` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.ySpec`
+           property instead.
         """
+        pendingDeprecation("self.ySpec property")
         self.ySpec = spectype
 
-    @PendingDeprecation("self.xSpec property")
     def GetXSpec(self):
         """
         Get the xSpec value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.xSpec` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xSpec`
+           property instead.
         """
+        pendingDeprecation("self.xSpec property")
         return self.xSpec
 
-    @PendingDeprecation("self.ySpec property")
     def GetYSpec(self):
         """
         Get the ySpec value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.ySpec` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.ySpec`
+           property instead.
         """
+        pendingDeprecation("self.ySpec property")
         return self.ySpec
 
     @property
@@ -1533,7 +1560,7 @@ class PlotCanvas(wx.Panel):
         + list or tuple: a list of (min, max) values. Must be length 2.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.ySpec`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.ySpec`
         """
         return self._xSpec
 
@@ -1569,7 +1596,7 @@ class PlotCanvas(wx.Panel):
         + list or tuple: a list of (min, max) values. Must be length 2.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.xSpec`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xSpec`
         """
         return self._ySpec
 
@@ -1583,15 +1610,16 @@ class PlotCanvas(wx.Panel):
                 raise TypeError(err_str)
         self._ySpec = value
 
-    @PendingDeprecation("self.xMaxRange property")
     def GetXMaxRange(self):
         """
         Get the xMaxRange value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.xMaxRange` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xMaxRange`
+           property instead.
         """
+        pendingDeprecation("self.xMaxRange property")
         return self.xMaxRange
 
     @property
@@ -1602,7 +1630,7 @@ class PlotCanvas(wx.Panel):
         :getter: Returns the value of xMaxRange.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.yMaxRange`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.yMaxRange`
         """
         xAxis = self._getXMaxRange()
         if self.logScale[0]:
@@ -1616,15 +1644,16 @@ class PlotCanvas(wx.Panel):
         xAxis = self._axisInterval(self._xSpec, p1[0], p2[0])  # in user units
         return xAxis
 
-    @PendingDeprecation("self.yMaxRange property")
     def GetYMaxRange(self):
         """
         Get the yMaxRange value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.yMaxRange` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.yMaxRange`
+           property instead.
         """
+        pendingDeprecation("self.yMaxRange property")
         return self.yMaxRange
 
     @property
@@ -1635,7 +1664,7 @@ class PlotCanvas(wx.Panel):
         :getter: Returns the value of yMaxRange.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.xMaxRange`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xMaxRange`
         """
         yAxis = self._getYMaxRange()
         if self.logScale[1]:
@@ -1649,16 +1678,16 @@ class PlotCanvas(wx.Panel):
         yAxis = self._axisInterval(self._ySpec, p1[1], p2[1])
         return yAxis
 
-    @PendingDeprecation("self.xCurrentRange property")
     def GetXCurrentRange(self):
         """
         Get the xCurrentRange value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.xCurrentRange` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xCurrentRange`
+           property instead.
         """
+        pendingDeprecation("self.xCurrentRange property")
         return self.xCurrentRange
 
     @property
@@ -1670,7 +1699,7 @@ class PlotCanvas(wx.Panel):
         :getter: Returns the value of xCurrentRange.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.yCurrentRange`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.yCurrentRange`
         """
         xAxis = self._getXCurrentRange()
         if self.logScale[0]:
@@ -1682,16 +1711,16 @@ class PlotCanvas(wx.Panel):
         portion of graph"""
         return self.last_draw[1]
 
-    @PendingDeprecation("self.yCurrentRange property")
     def GetYCurrentRange(self):
         """
         Get the yCurrentRange value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.yCurrentRange` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.yCurrentRange`
+           property instead.
         """
+        pendingDeprecation("self.yCurrentRange property")
         return self.yCurrentRange
 
     @property
@@ -1703,7 +1732,7 @@ class PlotCanvas(wx.Panel):
         :getter: Returns the value of yCurrentRange.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.xCurrentRange`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xCurrentRange`
         """
         yAxis = self._getYCurrentRange()
         if self.logScale[1]:
@@ -1763,7 +1792,7 @@ class PlotCanvas(wx.Panel):
             if not isinstance(dc, wx.GCDC):
                 try:
                     dc = wx.GCDC(dc)
-                except Exception:
+                except Exception:               # XXX: Yucky.
                     pass
                 else:
                     if self._hiResEnabled:
@@ -1824,34 +1853,27 @@ class PlotCanvas(wx.Panel):
             # upper right corner user scale (xmax,ymax)
             p2 = np.array([xAxis[1], yAxis[1]])
 
-        # saves most recient values
+        # saves most recent values
         self.last_draw = (graphics, np.array(xAxis), np.array(yAxis))
 
         # Get ticks and textExtents for axis if required
-        if self._xSpec is not 'none':
+        xticks = yticks = None
+        xTextExtent = yTextExtent = (0, 0)  # No text for ticks
+        if self._xSpec != 'none':
             xticks = self._xticks(xAxis[0], xAxis[1])
-        else:
-            xticks = None
-        if xticks:
             # w h of x axis text last number on axis
             xTextExtent = dc.GetTextExtent(xticks[-1][1])
-        else:
-            xTextExtent = (0, 0)  # No text for ticks
-        if self._ySpec is not 'none':
+
+        if self._ySpec != 'none':
             yticks = self._yticks(yAxis[0], yAxis[1])
-        else:
-            yticks = None
-        if yticks:
             if self.logScale[1]:
+                # make sure we have enough room to display SI notation.
                 yTextExtent = dc.GetTextExtent('-2e-2')
             else:
                 yTextExtentBottom = dc.GetTextExtent(yticks[0][1])
                 yTextExtentTop = dc.GetTextExtent(yticks[-1][1])
                 yTextExtent = (max(yTextExtentBottom[0], yTextExtentTop[0]),
                                max(yTextExtentBottom[1], yTextExtentTop[1]))
-        else:
-            yticks = None
-            yTextExtent = (0, 0)  # No text for ticks
 
         # TextExtents for Title and Axis Labels
         titleWH, xLabelWH, yLabelWH = self._titleLablesWH(dc, graphics)
@@ -1889,10 +1911,10 @@ class PlotCanvas(wx.Panel):
                              legendTextExt)
 
         # allow for scaling and shifting plotted points
-        scale = (self.plotbox_size - textSize_scale) / \
-            (p2 - p1) * np.array((1, -1))
-        shift = -p1 * scale + self.plotbox_origin + \
-            textSize_shift * np.array((1, -1))
+        scale = ((self.plotbox_size - textSize_scale) / (p2 - p1)
+                 * np.array((1, -1)))
+        shift = (-p1 * scale + self.plotbox_origin
+                 + textSize_shift * np.array((1, -1)))
         # make available for mouse events
         self._pointScale = scale / self._pointSize
         self._pointShift = shift / self._pointSize
@@ -1905,10 +1927,10 @@ class PlotCanvas(wx.Panel):
         # set clipping area so drawing does not occur outside axis box
         ptx, pty, rectWidth, rectHeight = self._point2ClientCoord(p1, p2)
         # allow graph to overlap axis lines by adding units to w and h
-        dc.SetClippingRegion(ptx * self._pointSize[0],
-                             pty * self._pointSize[1],
-                             rectWidth * self._pointSize[0] + 2,
-                             rectHeight * self._pointSize[1] + 1)
+        dc.SetClippingRegion(int(ptx * self._pointSize[0]),
+                             int(pty * self._pointSize[1]),
+                             int(rectWidth * self._pointSize[0] + 2),
+                             int(rectHeight * self._pointSize[1] + 1))
         # Draw the lines and markers
 #        start = _time.perf_counter()
         graphics.draw(dc)
@@ -1980,8 +2002,8 @@ class PlotCanvas(wx.Panel):
             if len(obj.points) == 0:
                 continue  # go to next obj
             #[curveNum, legend, closest pt index, pointXY, scaledXY, dist]
-            cn = [curveNum] + \
-                [obj.getLegend()] + obj.getClosestPoint(pntXY, pointScaled)
+            cn = ([curveNum] +
+                  [obj.getLegend()] + obj.getClosestPoint(pntXY, pointScaled))
             l.append(cn)
         return l
 
@@ -2066,7 +2088,7 @@ class PlotCanvas(wx.Panel):
                 np.array,
                 map(self.PositionScreenToUser,
                     [coordinates, self._screenCoordinates]
-                )
+                    )
             )
             dist = newpos - oldpos
             self._screenCoordinates = coordinates
@@ -2165,16 +2187,16 @@ class PlotCanvas(wx.Panel):
             sbpos = evt.GetPosition()
 
             if evt.GetOrientation() == wx.VERTICAL:
-                fullrange, pagesize = self.sb_vert.GetRange(
-                ), self.sb_vert.GetPageSize()
+                fullrange = self.sb_vert.GetRange()
+                pagesize = self.sb_vert.GetPageSize()
                 sbpos = fullrange - pagesize - sbpos
-                dist = sbpos * self._sb_xunit - \
-                    (self._getXCurrentRange()[0] - self._sb_xfullrange)
+                dist = (sbpos * self._sb_yunit -
+                        (self._getYCurrentRange()[0] - self._sb_yfullrange[0]))
                 self.ScrollUp(dist)
 
             if evt.GetOrientation() == wx.HORIZONTAL:
-                dist = sbpos * self._sb_xunit - \
-                    (self._getXCurrentRange()[0] - self._sb_xfullrange[0])
+                dist = (sbpos * self._sb_xunit -
+                        (self._getXCurrentRange()[0] - self._sb_xfullrange[0]))
                 self.ScrollRight(dist)
 
     # Private Methods **************************************************
@@ -2206,7 +2228,7 @@ class PlotCanvas(wx.Panel):
         """Draws and erases pointLabels"""
         width = self._Buffer.GetWidth()
         height = self._Buffer.GetHeight()
-        if sys.platform != "darwin":
+        if sys.platform not in ("darwin", "linux"):
             tmp_Buffer = wx.Bitmap(width, height)
             dcs = wx.MemoryDC()
             dcs.SelectObject(tmp_Buffer)
@@ -2220,24 +2242,29 @@ class PlotCanvas(wx.Panel):
         dc = wx.BufferedDC(dc, self._Buffer)
         # this will erase if called twice
         dc.Blit(0, 0, width, height, dcs, 0, 0, self._logicalFunction)
-        if sys.platform == "darwin":
+        if sys.platform in ("darwin", "linux"):
             self._Buffer = tmp_Buffer
 
     def _drawLegend(self, dc, graphics, rhsW, topH, legendBoxWH,
                     legendSymExt, legendTextExt):
         """Draws legend symbols and text"""
         # top right hand corner of graph box is ref corner
-        trhc = self.plotbox_origin + \
-            (self.plotbox_size - [rhsW, topH]) * [1, -1]
+        trhc = (self.plotbox_origin +
+                (self.plotbox_size - [rhsW, topH]) * [1, -1])
         # border space between legend sym and graph box
         legendLHS = .091 * legendBoxWH[0]
         # 1.1 used as space between lines
         lineHeight = max(legendSymExt[1], legendTextExt[1]) * 1.1
         dc.SetFont(self._getFont(self._fontSizeLegend))
+
+        from .polyobjects import PolyLine
+        from .polyobjects import PolyMarker
+        from .polyobjects import PolyBoxPlot
+
         for i in range(len(graphics)):
             o = graphics[i]
             s = i * lineHeight
-            if isinstance(o, PolyMarker) or isinstance(o, BoxPlot):
+            if isinstance(o, PolyMarker) or isinstance(o, PolyBoxPlot):
                 # draw marker with legend
                 pnt = (trhc[0] + legendLHS + legendSymExt[0] / 2.,
                        trhc[1] + s + lineHeight / 2.)
@@ -2255,7 +2282,7 @@ class PlotCanvas(wx.Panel):
             pnt = ((trhc[0] + legendLHS + legendSymExt[0]
                     + 5 * self._pointSize[0]),
                    trhc[1] + s + lineHeight / 2. - legendTextExt[1] / 2)
-            dc.DrawText(o.getLegend(), pnt[0], pnt[1])
+            dc.DrawText(o.getLegend(), int(pnt[0]), int(pnt[1]))
         dc.SetFont(self._getFont(self._fontSizeAxis))  # reset
 
     def _titleLablesWH(self, dc, graphics):
@@ -2304,7 +2331,7 @@ class PlotCanvas(wx.Panel):
         dc.SetPen(wx.Pen(wx.BLACK))
         dc.SetBrush(wx.Brush(wx.WHITE, wx.BRUSHSTYLE_TRANSPARENT))
         dc.SetLogicalFunction(wx.INVERT)
-        dc.DrawRectangle(ptx, pty, rectWidth, rectHeight)
+        dc.DrawRectangle(int(ptx), int(pty), int(rectWidth), int(rectHeight))
         dc.SetLogicalFunction(wx.COPY)
 
     def _getFont(self, size):
@@ -2398,7 +2425,7 @@ class PlotCanvas(wx.Panel):
         # increases thickness for printing only
         pen = self.gridPen
         penWidth = self.printerScale * pen.GetWidth()
-        pen.SetWidth(penWidth)
+        pen.SetWidth(int(penWidth))
         dc.SetPen(pen)
 
         x, y, width, height = self._point2ClientCoord(p1, p2)
@@ -2407,13 +2434,13 @@ class PlotCanvas(wx.Panel):
             if self.enableGrid[0]:
                 for x, _ in xticks:
                     pt = scale_and_shift_point(x, p1[1], scale, shift)
-                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] - height)
+                    dc.DrawLine(int(pt[0]), int(pt[1]), int(pt[0]), int(pt[1] - height))
 
         if self._ySpec != 'none':
             if self.enableGrid[1]:
                 for y, label in yticks:
                     pt = scale_and_shift_point(p1[0], y, scale, shift)
-                    dc.DrawLine(pt[0], pt[1], pt[0] + width, pt[1])
+                    dc.DrawLine(int(pt[0]), int(pt[1]), int(pt[0] + width), int(pt[1]))
 
     @TempStyle('pen')
     def _drawTicks(self, dc, p1, p2, scale, shift, xticks, yticks):
@@ -2446,12 +2473,12 @@ class PlotCanvas(wx.Panel):
         # increases thickness for printing only
         pen = self.tickPen
         penWidth = self.printerScale * pen.GetWidth()
-        pen.SetWidth(penWidth)
+        pen.SetWidth(int(penWidth))
         dc.SetPen(pen)
 
         # lengthen lines for printing
-        yTickLength = 3 * self.printerScale * self._tickLength[1]
-        xTickLength = 3 * self.printerScale * self._tickLength[0]
+        xTickLength = self.tickLengthPrinterScale[0]
+        yTickLength = self.tickLengthPrinterScale[1]
 
         ticks = self.enableTicks
         if self.xSpec != 'none':        # I don't like this :-/
@@ -2459,13 +2486,13 @@ class PlotCanvas(wx.Panel):
                 lines = []
                 for x, label in xticks:
                     pt = scale_and_shift_point(x, p1[1], scale, shift)
-                    lines.append((pt[0], pt[1], pt[0], pt[1] - xTickLength))
+                    lines.append((int(pt[0]), int(pt[1]), int(pt[0]), int(pt[1] - xTickLength)))
                 dc.DrawLineList(lines)
             if ticks.top:
                 lines = []
                 for x, label in xticks:
                     pt = scale_and_shift_point(x, p2[1], scale, shift)
-                    lines.appned((pt[0], pt[1], pt[0], pt[1] + xTickLength))
+                    lines.append((int(pt[0]), int(pt[1]), int(pt[0]), int(pt[1] + xTickLength)))
                 dc.DrawLineList(lines)
 
         if self.ySpec != 'none':
@@ -2473,13 +2500,13 @@ class PlotCanvas(wx.Panel):
                 lines = []
                 for y, label in yticks:
                     pt = scale_and_shift_point(p1[0], y, scale, shift)
-                    lines.append((pt[0], pt[1], pt[0] + yTickLength, pt[1]))
+                    lines.append((int(pt[0]), int(pt[1]), int(pt[0] + yTickLength), int(pt[1])))
                 dc.DrawLineList(lines)
             if ticks.right:
                 lines = []
                 for y, label in yticks:
                     pt = scale_and_shift_point(p2[0], y, scale, shift)
-                    lines.append((pt[0], pt[1], pt[0] - yTickLength, pt[1]))
+                    lines.append((int(pt[0]), int(pt[1]), int(pt[0] - yTickLength), int(pt[1])))
                 dc.DrawLineList(lines)
 
     @TempStyle('pen')
@@ -2506,25 +2533,25 @@ class PlotCanvas(wx.Panel):
         # increases thickness for printing only
         pen = self.centerLinePen
         penWidth = self.printerScale * pen.GetWidth()
-        pen.SetWidth(penWidth)
+        pen.SetWidth(int(penWidth))
         dc.SetPen(pen)
 
         if self._centerLinesEnabled in ('Horizontal', True):
             y1 = scale[1] * p1[1] + shift[1]
             y2 = scale[1] * p2[1] + shift[1]
             y = (y1 - y2) / 2.0 + y2
-            dc.DrawLine(scale[0] * p1[0] + shift[0],
-                        y,
-                        scale[0] * p2[0] + shift[0],
-                        y)
+            dc.DrawLine(int(scale[0] * p1[0] + shift[0]),
+                        int(y),
+                        int(scale[0] * p2[0] + shift[0]),
+                        int(y))
         if self._centerLinesEnabled in ('Vertical', True):
             x1 = scale[0] * p1[0] + shift[0]
             x2 = scale[0] * p2[0] + shift[0]
             x = (x1 - x2) / 2.0 + x2
-            dc.DrawLine(x,
-                        scale[1] * p1[1] + shift[1],
-                        x,
-                        scale[1] * p2[1] + shift[1])
+            dc.DrawLine(int(x),
+                        int(scale[1] * p1[1] + shift[1]),
+                        int(x),
+                        int(scale[1] * p2[1] + shift[1]))
 
     @TempStyle('pen')
     def _drawDiagonals(self, dc, p1, p2, scale, shift):
@@ -2550,19 +2577,19 @@ class PlotCanvas(wx.Panel):
         """
         pen = self.diagonalPen
         penWidth = self.printerScale * pen.GetWidth()
-        pen.SetWidth(penWidth)
+        pen.SetWidth(int(penWidth))
         dc.SetPen(pen)
 
         if self._diagonalsEnabled in ('Bottomleft-Topright', True):
-            dc.DrawLine(scale[0] * p1[0] + shift[0],
-                        scale[1] * p1[1] + shift[1],
-                        scale[0] * p2[0] + shift[0],
-                        scale[1] * p2[1] + shift[1])
+            dc.DrawLine(int(scale[0] * p1[0] + shift[0]),
+                        int(scale[1] * p1[1] + shift[1]),
+                        int(scale[0] * p2[0] + shift[0]),
+                        int(scale[1] * p2[1] + shift[1]))
         if self._diagonalsEnabled in ('Bottomright-Topleft', True):
-            dc.DrawLine(scale[0] * p1[0] + shift[0],
-                        scale[1] * p2[1] + shift[1],
-                        scale[0] * p2[0] + shift[0],
-                        scale[1] * p1[1] + shift[1])
+            dc.DrawLine(int(scale[0] * p1[0] + shift[0]),
+                        int(scale[1] * p2[1] + shift[1]),
+                        int(scale[0] * p2[0] + shift[0]),
+                        int(scale[1] * p1[1] + shift[1]))
 
     @TempStyle('pen')
     def _drawAxes(self, dc, p1, p2, scale, shift):
@@ -2589,7 +2616,7 @@ class PlotCanvas(wx.Panel):
         # increases thickness for printing only
         pen = self.axesPen
         penWidth = self.printerScale * pen.GetWidth()
-        pen.SetWidth(penWidth)
+        pen.SetWidth(int(penWidth))
         dc.SetPen(pen)
 
         axes = self.enableAxes
@@ -2598,29 +2625,29 @@ class PlotCanvas(wx.Panel):
                 lower, upper = p1[0], p2[0]
                 a1 = scale_and_shift_point(lower, p1[1], scale, shift)
                 a2 = scale_and_shift_point(upper, p1[1], scale, shift)
-                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+                dc.DrawLine(int(a1[0]), int(a1[1]), int(a2[0]), int(a2[1]))
             if axes.top:
                 lower, upper = p1[0], p2[0]
                 a1 = scale_and_shift_point(lower, p2[1], scale, shift)
                 a2 = scale_and_shift_point(upper, p2[1], scale, shift)
-                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+                dc.DrawLine(int(a1[0]), int(a1[1]), int(a2[0]), int(a2[1]))
 
         if self.ySpec != 'none':
             if axes.left:
                 lower, upper = p1[1], p2[1]
                 a1 = scale_and_shift_point(p1[0], lower, scale, shift)
                 a2 = scale_and_shift_point(p1[0], upper, scale, shift)
-                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+                dc.DrawLine(int(a1[0]), int(a1[1]), int(a2[0]), int(a2[1]))
             if axes.right:
                 lower, upper = p1[1], p2[1]
                 a1 = scale_and_shift_point(p2[0], lower, scale, shift)
                 a2 = scale_and_shift_point(p2[0], upper, scale, shift)
-                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+                dc.DrawLine(int(a1[0]), int(a1[1]), int(a2[0]), int(a2[1]))
 
     @TempStyle('pen')
     def _drawAxesValues(self, dc, p1, p2, scale, shift, xticks, yticks):
         """
-        Draws the axes values
+        Draws the axes values: numbers representing each major grid or tick.
 
         :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
         :type `dc`: :class:`wx.DC`
@@ -2643,6 +2670,13 @@ class PlotCanvas(wx.Panel):
         :param yticks: The Y tick definition
         :type yticks: list of length-2 lists
         """
+        # get the tick lengths so that labels don't overlap
+        xTickLength = self.tickLengthPrinterScale[0]
+        yTickLength = self.tickLengthPrinterScale[1]
+        # only care about negative (out of plot area) tick lengths.
+        xTickLength = xTickLength if xTickLength < 0 else 0
+        yTickLength = yTickLength if yTickLength < 0 else 0
+
         # TODO: More code duplication? Same as _drawGrid and _drawTicks?
         # TODO: update the bounding boxes when adding right and top values
         axes = self.enableAxesValues
@@ -2654,7 +2688,8 @@ class PlotCanvas(wx.Panel):
                     w = dc.GetTextExtent(label)[0]
                     pt = scale_and_shift_point(x, p1[1], scale, shift)
                     coords.append(
-                        (pt[0] - w/2, pt[1] + 2 * self._pointSize[1])
+                        (int(pt[0] - w/2),
+                         int(pt[1] + 2 * self._pointSize[1] - xTickLength))
                     )
                 dc.DrawTextList(labels, coords)
 
@@ -2665,7 +2700,8 @@ class PlotCanvas(wx.Panel):
                     w, h = dc.GetTextExtent(label)
                     pt = scale_and_shift_point(x, p2[1], scale, shift)
                     coords.append(
-                        (pt[0] - w/2, pt[1] - 2 * self._pointSize[1] - h)
+                        (int(pt[0] - w/2),
+                         int(pt[1] - 2 * self._pointSize[1] - h - xTickLength))
                     )
                 dc.DrawTextList(labels, coords)
 
@@ -2678,7 +2714,8 @@ class PlotCanvas(wx.Panel):
                     w = dc.GetTextExtent(label)[0]
                     pt = scale_and_shift_point(p1[0], y, scale, shift)
                     coords.append(
-                        (pt[0] - w - 3 * self._pointSize[0], pt[1] - 0.5 * h)
+                        (int(pt[0] - w - 3 * self._pointSize[0] + yTickLength),
+                         int(pt[1] - 0.5 * h))
                     )
                 dc.DrawTextList(labels, coords)
 
@@ -2690,7 +2727,8 @@ class PlotCanvas(wx.Panel):
                     w = dc.GetTextExtent(label)[0]
                     pt = scale_and_shift_point(p2[0], y, scale, shift)
                     coords.append(
-                        (pt[0] + 3 * self._pointSize[0], pt[1] - 0.5 * h)
+                        (int(pt[0] + 3 * self._pointSize[0] + yTickLength),
+                         int(pt[1] - 0.5 * h))
                     )
                 dc.DrawTextList(labels, coords)
 
@@ -2749,29 +2787,36 @@ class PlotCanvas(wx.Panel):
             + (self.plotbox_size[0] - lhsW - rhsW) / 2. - titleWH[0] / 2.,
             self.plotbox_origin[1] - self.plotbox_size[1]
         )
-        dc.DrawText(graphics.title, titlePos[0], titlePos[1])
+        dc.DrawText(graphics.title, int(titlePos[0]), int(titlePos[1]))
 
     def _drawAxesLabels(self, dc, graphics, lhsW, rhsW, bottomH, topH,
                         xLabelWH, yLabelWH):
         """
         Draws the axes labels
         """
+        # get the tick lengths so that labels don't overlap
+        xTickLength = self.tickLengthPrinterScale[0]
+        yTickLength = self.tickLengthPrinterScale[1]
+        # only care about negative (out of plot area) tick lengths.
+        xTickLength = xTickLength if xTickLength < 0 else 0
+        yTickLength = yTickLength if yTickLength < 0 else 0
+
         # TODO: axes values get big when this is turned off
         dc.SetFont(self._getFont(self._fontSizeAxis))
         xLabelPos = (
             self.plotbox_origin[0] + lhsW
             + (self.plotbox_size[0] - lhsW - rhsW) / 2. - xLabelWH[0] / 2.,
-            self.plotbox_origin[1] - xLabelWH[1]
+            self.plotbox_origin[1] - xLabelWH[1] - yTickLength
         )
-        dc.DrawText(graphics.xLabel, xLabelPos[0], xLabelPos[1])
+        dc.DrawText(graphics.xLabel, int(xLabelPos[0]), int(xLabelPos[1]))
         yLabelPos = (
-            self.plotbox_origin[0] - 3 * self._pointSize[0],
+            self.plotbox_origin[0] - 3 * self._pointSize[0] + xTickLength,
             self.plotbox_origin[1] - bottomH
             - (self.plotbox_size[1] - bottomH - topH) / 2. + yLabelWH[0] / 2.
         )
         if graphics.yLabel:  # bug fix for Linux
             dc.DrawRotatedText(
-                graphics.yLabel, yLabelPos[0], yLabelPos[1], 90)
+                graphics.yLabel, int(yLabelPos[0]), int(yLabelPos[1]), 90)
 
     @TempStyle('pen')
     def _drawPlotAreaLabels(self, dc, graphics, lhsW, rhsW, titleWH,
@@ -2871,6 +2916,7 @@ class PlotCanvas(wx.Panel):
 
     _multiples = [(2., np.log10(2.)), (5., np.log10(5.))]
 
+
     def _adjustScrollbars(self):
         if self._sb_ignore:
             self._sb_ignore = False
@@ -2898,7 +2944,7 @@ class PlotCanvas(wx.Panel):
         if pos >= 0:
             pagesize = int((r_current[1] - r_current[0]) / unit)
 
-            self.sb_hor.SetScrollbar(pos, pagesize, sbfullrange, pagesize)
+            self.sb_hor.SetScrollbar(pos, pagesize, int(sbfullrange), pagesize)
             self._sb_xunit = unit
             needScrollbars = needScrollbars or (pagesize != sbfullrange)
         else:
@@ -2920,11 +2966,12 @@ class PlotCanvas(wx.Panel):
         if pos >= 0:
             pagesize = int((r_current[1] - r_current[0]) / unit)
             pos = (sbfullrange - 1 - pos - pagesize)
-            self.sb_vert.SetScrollbar(pos, pagesize, sbfullrange, pagesize)
+            self.sb_vert.SetScrollbar(int(pos), pagesize, int(sbfullrange), pagesize)
             self._sb_yunit = unit
             needScrollbars = needScrollbars or (pagesize != sbfullrange)
         else:
             self.sb_vert.SetScrollbar(0, 1000, 1000, 1000)
 
-        self.SetShowScrollbars(needScrollbars)
+        self.sb_hor.Show(needScrollbars)
+        self.sb_vert.Show(needScrollbars)
         self._adjustingSB = False

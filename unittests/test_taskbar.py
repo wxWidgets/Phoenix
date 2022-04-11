@@ -36,6 +36,37 @@ class taskbar_Tests(wtc.WidgetTestCase):
         wx.adv.wxEVT_TASKBAR_BALLOON_TIMEOUT
         wx.adv.wxEVT_TASKBAR_BALLOON_CLICK
 
+
+    # Test that the CreatePopupMenu override works
+    def test_taskbar3(self):
+        class MyTaskBarIcon(wx.adv.TaskBarIcon):
+            def __init__(self):
+                super().__init__()
+                self.flag = False
+            def CreatePopupMenu(self):
+                self.flag = True
+        tbi = MyTaskBarIcon()
+        evt = wx.adv.TaskBarIconEvent(wx.adv.wxEVT_TASKBAR_RIGHT_DOWN, tbi)
+        wx.PostEvent(tbi, evt)
+        self.myYield()
+        self.assertTrue(tbi.flag)
+
+
+    # Test that the GetPopupMenu override works
+    def test_taskbar4(self):
+        class MyTaskBarIcon(wx.adv.TaskBarIcon):
+            def __init__(self):
+                super().__init__()
+                self.flag = False
+            def GetPopupMenu(self):
+                self.flag = True
+        tbi = MyTaskBarIcon()
+        evt = wx.adv.TaskBarIconEvent(wx.adv.wxEVT_TASKBAR_RIGHT_DOWN, tbi)
+        wx.PostEvent(tbi, evt)
+        self.myYield()
+        self.assertTrue(tbi.flag)
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

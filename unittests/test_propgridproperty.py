@@ -15,12 +15,6 @@ class property_Tests(wtc.WidgetTestCase):
         d.m_drawnHeight
 
 
-    def test_propgridproperty02(self):
-        pg.PG_CUSTOM_IMAGE_SPACINGY
-        pg.PG_CAPRECTXMARGIN
-        pg.PG_CAPRECTYMARGIN
-
-
     def test_propgridproperty03(self):
         with self.assertRaises(TypeError):
             # it's an abstract class, so it can't be instantiated
@@ -48,15 +42,15 @@ class property_Tests(wtc.WidgetTestCase):
         c = pg.PGCell()
 
 
-    def test_propgridproperty07(self):
-        attrs = pg.PGAttributeStorage()
-        attrs.Set('name',     'value')
-        attrs.Set('one',      1)
-        attrs.Set('two.one',  2.1)
-        attrs.Set('true',     True)
-        assert attrs.GetCount() == 4
-        assert attrs.FindValue('name') == 'value'
-        # TODO: Add some iteration tests
+    # def test_propgridproperty07(self):
+    #     attrs = pg.PGAttributeStorage()
+    #     attrs.Set('name',     'value')
+    #     attrs.Set('one',      1)
+    #     attrs.Set('two.one',  2.1)
+    #     attrs.Set('true',     True)
+    #     assert attrs.GetCount() == 4
+    #     assert attrs.FindValue('name') == 'value'
+    #     # TODO: Add some iteration tests
 
 
     def test_propgridproperty08(self):

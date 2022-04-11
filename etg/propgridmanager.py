@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     31-Aug-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,13 +37,13 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.ignoreConstOverloads(c)
 
-
     module.addGlobalStr('wxPropertyGridManagerNameStr', c)
 
     c = module.find('wxPropertyGridManager')
     tools.fixWindowClass(c, hideVirtuals=False, ignoreProtected=False)
     tools.ignoreConstOverloads(c)
 
+    c.find('AddPage.pageObj').transfer = True
 
     # Add some extra Python code to be executed when a wxPropertyGridManager
     # is constructed. In Classic with SWIG we did this with %pythonAppend, is
@@ -60,6 +60,10 @@ def run():
         PropertyGridManager.__init__ = _PropertyGridManager__init__
         """)
 
+    # Make sure sip knows there is an implementation of this method
+    c.addItem(etgtools.WigCode("""\
+        virtual void RefreshProperty( wxPGProperty* p );
+        """))
 
 
     # wxPGPropArg is a typedef for "const wxPGPropArgCls&" so having the

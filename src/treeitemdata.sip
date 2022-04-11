@@ -6,7 +6,7 @@
 // Author:      Robin Dunn
 //
 // Created:     28-Mar-2012
-// Copyright:   (c) 2012-2017 by Total Control Software
+// Copyright:   (c) 2012-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@
 %ModuleHeaderCode
 #include <wx/treebase.h>
 
-// A wxTreeItemData that knows what to do with PyObjects for maintianing the refcount
+// A wxTreeItemData that knows what to do with PyObjects for maintaining the refcount
 class wxPyTreeItemData : public wxPyUserDataHelper<wxTreeItemData>
 {
 public:

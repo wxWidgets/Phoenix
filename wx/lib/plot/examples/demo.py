@@ -28,7 +28,8 @@ except ImportError:
     imported.  It probably is not installed (it's not part of the
     standard Python distribution). See the Numeric Python site
     (http://numpy.scipy.org) for information on downloading source or
-    binaries."""
+    binaries, or just try `pip install numpy` and it will probably
+    work."""
     raise ImportError("NumPy not found.\n" + msg)
 
 
@@ -338,6 +339,8 @@ class PlotDemoMainFrame(wx.Frame):
         # Show closest point when enabled
         self.client.canvas.Bind(wx.EVT_MOTION, self.OnMotion)
 
+        self.OnPlotDraw1(None)
+
         wx.CallAfter(wx.MessageBox,
                      "Various plot types can be shown using the Plot menu. " +
                      "Check out the Options menu too.",
@@ -355,8 +358,8 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnFilePrint, id=202)
         menu.Append(203, 'Save Plot...', 'Save current plot')
         self.Bind(wx.EVT_MENU, self.OnSaveFile, id=203)
-        menu.Append(205, 'E&xit', 'Enough of this already!')
-        self.Bind(wx.EVT_MENU, self.OnFileExit, id=205)
+        menu.Append(wx.ID_EXIT, 'E&xit', 'Enough of this already!')
+        self.Bind(wx.EVT_MENU, self.OnFileExit, id=wx.ID_EXIT)
         self.mainmenu.Append(menu, '&File')
 
     def _init_plot_menu(self):
@@ -426,6 +429,10 @@ class PlotDemoMainFrame(wx.Frame):
                     'Activates dragging mode', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableDrag, id=217)
 
+        item = menu.Append(-1, 'Enable &Scrollbars (if needed)',
+                    'Enable Scrollbars (if needed)', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableScrollbars, item)
+
         menu.Append(222, 'Enable &Point Label',
                     'Show Closest Point', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnablePointLabel, id=222)
@@ -467,7 +474,7 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableGridY, id=2152)
         self.Bind(wx.EVT_MENU, self.OnEnableGridAll, id=2153)
 
-        menu.Append(215, 'Enable Grid', submenu, 'Turn on Grid')
+        menu.AppendSubMenu(submenu, 'Enable Grid', 'Turn on Grid')
 
         ### SubMenu for Axes
         submenu = wx.Menu()
@@ -485,8 +492,7 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableAxesBottomLeft, id=2405)
         self.Bind(wx.EVT_MENU, self.OnEnableAxesAll, id=2406)
 
-        menu.Append(240, 'Enable Axes', submenu,
-                    'Enables the display of the Axes')
+        menu.AppendSubMenu(submenu, 'Enable Axes', 'Enables the display of the Axes')
 
         submenu = wx.Menu()
         submenu_items = ("Bottom", "Left", "Top", "Right")
@@ -505,11 +511,11 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableAxesValuesTop, id=2453)
         self.Bind(wx.EVT_MENU, self.OnEnableAxesValuesRight, id=2454)
 
-        menu.Append(245, 'Enable Axes Values', submenu,
-                    'Enables the display of the axes values')
+        menu.AppendSubMenu(submenu, 'Enable Axes Values', 'Enables the display of the axes values')
 
         submenu = wx.Menu()
-        submenu_items = ("Bottom", "Left", "Top", "Right")
+        submenu_items = ("Bottom", "Left", "Top", "Right",
+                         "Bottom+Left", "All")
         help_txt = "Enables {} ticks"
         self.ticksSubMenu = submenu
         for _i, item in enumerate(submenu_items, 2501):
@@ -524,9 +530,10 @@ class PlotDemoMainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableTicksLeft, id=2502)
         self.Bind(wx.EVT_MENU, self.OnEnableTicksTop, id=2503)
         self.Bind(wx.EVT_MENU, self.OnEnableTicksRight, id=2504)
+        self.Bind(wx.EVT_MENU, self.OnEnableTicksBottomLeft, id=2505)
+        self.Bind(wx.EVT_MENU, self.OnEnableTicksAll, id=2506)
 
-        menu.Append(250, 'Enable Ticks', submenu,
-                    'Enables the display of the ticks')
+        menu.AppendSubMenu(submenu, 'Enable Ticks','Enables the display of the ticks')
 
         menu.Append(255, 'Enable Plot Title',
                     'Enables the plot title', kind=wx.ITEM_CHECK)
@@ -576,8 +583,8 @@ class PlotDemoMainFrame(wx.Frame):
     def _init_help_menu(self):
         """ Create the "Help" menu items. """
         menu = wx.Menu()
-        menu.Append(300, '&About', 'About this thing...')
-        self.Bind(wx.EVT_MENU, self.OnHelpAbout, id=300)
+        menu.Append(wx.ID_ABOUT, '&About', 'About this thing...')
+        self.Bind(wx.EVT_MENU, self.OnHelpAbout, id=wx.ID_ABOUT)
         self.mainmenu.Append(menu, '&Help')
 
     # -----------------------------------------------------------------------
@@ -829,8 +836,8 @@ class PlotDemoMainFrame(wx.Frame):
         self.ticksSubMenu.Check(2502, self.client.enableTicks[1])
         self.ticksSubMenu.Check(2503, self.client.enableTicks[2])
         self.ticksSubMenu.Check(2504, self.client.enableTicks[3])
-#        self.ticksSubMenu.Check(2505, all(self.client.enableTicks[:2]))
-#        self.axesSubMenu.Check(2506, all(self.client.enableTicks))
+        self.ticksSubMenu.Check(2505, all(self.client.enableTicks[:2]))
+        self.ticksSubMenu.Check(2506, all(self.client.enableTicks))
 
     def OnEnableTicksBottom(self, event):
         old = self.client.enableTicks
@@ -854,6 +861,17 @@ class PlotDemoMainFrame(wx.Frame):
         old = self.client.enableTicks
         self.client.enableTicks = (old[0], old[1],
                                    old[2], event.IsChecked())
+        self._checkOtherTicksMenuItems()
+
+    def OnEnableTicksBottomLeft(self, event):
+        checked = event.IsChecked()
+        old = self.client.enableTicks
+        self.client.enableTicks = (checked, checked, old[2], old[3])
+        self._checkOtherTicksMenuItems()
+
+    def OnEnableTicksAll(self, event):
+        checked = event.IsChecked()
+        self.client.enableTicks = tuple([checked] * 4)
         self._checkOtherTicksMenuItems()
 
     # -----------------------------------------------------------------------
@@ -891,6 +909,9 @@ class PlotDemoMainFrame(wx.Frame):
         self.client.enableDrag = event.IsChecked()
         if self.mainmenu.IsChecked(214):
             self.mainmenu.Check(214, False)
+
+    def OnEnableScrollbars(self, event):
+        self.client.showScrollbars = event.IsChecked()
 
     def OnEnableLegend(self, event):
         self.client.enableLegend = event.IsChecked()
@@ -947,7 +968,7 @@ class PlotDemoMainFrame(wx.Frame):
 
     def DrawPointLabel(self, dc, mDataDict):
         """
-        This is the fuction that defines how the pointLabels are plotted
+        This is the function that defines how the pointLabels are plotted
 
         :param dc: DC that will be passed
         :param mDataDict: Dictionary of data that you want to use
@@ -963,7 +984,7 @@ class PlotDemoMainFrame(wx.Frame):
 
         sx, sy = mDataDict["scaledXY"]  # scaled x,y of closest point
         # 10by10 square centered on point
-        dc.DrawRectangle(sx - 5, sy - 5, 10, 10)
+        dc.DrawRectangle(int(sx - 5), int(sy - 5), 10, 10)
         px, py = mDataDict["pointXY"]
         cNum = mDataDict["curveNum"]
         pntIn = mDataDict["pIndex"]
@@ -971,7 +992,7 @@ class PlotDemoMainFrame(wx.Frame):
         # make a string to display
         s = "Crv# %i, '%s', Pt. (%.2f,%.2f), PtInd %i" % (
             cNum, legend, px, py, pntIn)
-        dc.DrawText(s, sx, sy + 1)
+        dc.DrawText(s, int(sx), int(sy + 1))
 
 
 def run_demo():

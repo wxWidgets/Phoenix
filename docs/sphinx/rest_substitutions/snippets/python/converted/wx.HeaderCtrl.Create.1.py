@@ -1,2 +1,2 @@
-    
-     wx.HD_DEFAULT_STYLE & ~wx.HD_ALLOW_REORDER 
+
+     wx.HD_DEFAULT_STYLE & ~wx.HD_ALLOW_REORDER

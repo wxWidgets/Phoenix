@@ -57,16 +57,16 @@ def getRawFunction(callable_):
     recognized type (function, method or has __call__ method)."""
     firstArg = 0
     if isfunction(callable_):
-        #print('Function %s' % getID(callable_))
+        #print 'Function', getID(callable_)
         func = callable_
     elif ismethod(callable_):
-        #print('Method %s' % getID(callable_))
+        #print 'Method', getID(callable_)
         func = callable_
         if func.__self__ is not None:
             # Method is bound, don't care about the self arg
             firstArg = 1
     elif hasattr(callable_, '__call__'):
-        #print('Functor %s' % getID(callable_))
+        #print 'Functor', getID(callable_)
         func = callable_.__call__
         firstArg = 1  # don't care about the self arg
     else:

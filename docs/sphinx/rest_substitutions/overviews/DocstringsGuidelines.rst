@@ -45,12 +45,12 @@ these fields are recognized and formatted nicely:
 
 * ``param``, ``parameter``, ``arg``, ``argument``, ``key``,
   ``keyword``: Description of a parameter.
-  
+
 * ``type``: Type of a parameter.
 
 * ``raises``, ``raise``, ``except``, ``exception``: That (and when) a
   specific exception is raised.
-  
+
 * ``var``, ``ivar``, ``cvar``: Description of a variable.
 
 * ``returns``, ``return``: Description of the return value.
@@ -168,19 +168,19 @@ admonitions:
    a severe limitation of a method, class or function. In the Phoenix
    world, this may also indicate that a particular widget is not
    supported under one or more platforms;
-   
-3. ``.. deprecated::`` : used to mark deprecated methods, classes or
-   functions;
+
+3. ``.. wxdeprecated::`` : used to mark deprecated methods, classes or
+   functions. Please avoid using ``.. deprecated``. ;
 
 4. ``.. availability::`` : normally employed to make the user
    understand on which platform(s) a particular functionality is
    supported/available;
-   
+
 5. ``.. seealso::`` or ``:see:`` : added primarily to facilitate the
    browsing of the docs, this admonition should be employed every time
    you think a user may be interested in seeing a related/similar
    method or a function providing an alternative implementation;
-   
+
 6. ``.. todo::`` : used to mark incomplete methods/functions, or
    simply as a remainder for the user and the developer that some more
    functionality needs to be added.
@@ -196,7 +196,7 @@ this::
        - The note contains all indented body elements
          following.
        - It includes this bullet list.
-       
+
 
 |
 
@@ -242,23 +242,23 @@ documentation, please follow these conventions:
 
 
 2. At the very top of the snippet file (on the first line), put your
-   name, or your alias, or anything you use as internet name preceeded
+   name, or your alias, or anything you use as internet name preceded
    by a double-hash, i.e.:
-   
+
    ``##Andrea Gavana``
-   
-   
+
+
    So that your source code looks more or less like this::
-   
+
        ##Chris Barker
        #!/usr/bin/env python
        """
        A simple test of the GridBagSizer
        http://wiki.wxpython.org/index.cgi/WriteItYourself
        """
-   
+
        # Whatever code here...
-       def SendSizeEvent(self):       
+       def SendSizeEvent(self):
            self.AdjustMySize()
 
 
@@ -293,7 +293,7 @@ especially on Linux/Mac platforms.
 If you wish to contribute a screenshot of a widget to be included in
 the documentation, please follow these conventions:
 
-- If the widget is a class belonging to the main `wx` namespace, 
+- If the widget is a class belonging to the main `wx` namespace,
   use the full class name in lower case (i.e., `wx.Frame` ==>
   `wx.frame.png`);
 

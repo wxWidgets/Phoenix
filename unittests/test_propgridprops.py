@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittests import wtc
 import wx.propgrid as pg
@@ -74,6 +75,7 @@ class propgridprops_Tests(wtc.WidgetTestCase):
                               values=[1, 2, 3])
 
 
+    @unittest.skip('class was removed?')
     def test_propgridprops11(self):
         da = pg.PGFileDialogAdapter()
 
@@ -86,9 +88,10 @@ class propgridprops_Tests(wtc.WidgetTestCase):
         p2 = pg.FileProperty('label', 'name', value)
 
         fn = p2.GetFileName()
-        assert fn == value
+        assert fn.replace(os.path.sep, '/') == value
 
 
+    @unittest.skip('class was removed?')
     def test_propgridprops13(self):
         pg.PG_PROP_NO_ESCAPE
         da = pg.PGLongStringDialogAdapter()

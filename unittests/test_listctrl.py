@@ -124,18 +124,12 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.LIST_STATE_FOCUSED
         wx.LIST_STATE_SELECTED
         wx.LIST_STATE_CUT
-        wx.LIST_STATE_DISABLED
-        wx.LIST_STATE_FILTERED
-        wx.LIST_STATE_INUSE
-        wx.LIST_STATE_PICKED
-        wx.LIST_STATE_SOURCE
 
         wx.LIST_HITTEST_ABOVE
         wx.LIST_HITTEST_BELOW
         wx.LIST_HITTEST_NOWHERE
         wx.LIST_HITTEST_ONITEMICON
         wx.LIST_HITTEST_ONITEMLABEL
-        wx.LIST_HITTEST_ONITEMRIGHT
         wx.LIST_HITTEST_ONITEMSTATEICON
         wx.LIST_HITTEST_TOLEFT
         wx.LIST_HITTEST_TORIGHT
@@ -172,7 +166,31 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.LIST_FIND_RIGHT
 
 
+    def _makeListCtrl(self):
+        lc = wx.ListCtrl(self.frame, style=wx.LC_REPORT)
+        lc.AppendColumn('AAAA')
+        lc.AppendColumn('BBBB')
+        lc.InsertItem(0, 'item 1A')
+        lc.SetItem(0, 1, 'item 1B')
+        return lc
 
+
+    def test_listctrlItemData01(self):
+        lc = self._makeListCtrl()
+        lc.SetItemData(0, 12345)
+        data = lc.GetItemData(0)
+        assert data == 12345
+
+
+    def test_listctrlItemData02(self):
+        lc = self._makeListCtrl()
+        with self.assertRaises(OverflowError):
+            lc.SetItemData(0, wx._core._LONG_MAX + 100)
+
+
+    def test_listctrlDeleteAllColumns(self):
+        lc = self._makeListCtrl()
+        lc.DeleteAllColumns()
 
 
 #---------------------------------------------------------------------------

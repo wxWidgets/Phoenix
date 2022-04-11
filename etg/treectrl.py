@@ -3,12 +3,13 @@
 # Author:      Robin Dunn
 #
 # Created:     26-Mar-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import MethodDef, ParamDef
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -38,9 +39,31 @@ def run():
     #-------------------------------------------------------
     c = module.find('wxTreeItemId')
     assert isinstance(c, etgtools.ClassDef)
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
+
+    # add the void* ctor missing from the interface
+    ctor = MethodDef(name='wxTreeItemId', isCtor=True,
+                     items=[ ParamDef(name='pItem', type='void*') ])
+    # add it as an overload to the existing ctor
+    c.find('wxTreeItemId').overloads.append(ctor)
+
+
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
+
+    c.addCppMethod('bool', '__eq__', '(const wxTreeItemId& other)', """\
+        return *self == *other;
         """)
+    c.addCppMethod('bool', '__ne__', '(const wxTreeItemId& other)', """\
+        return *self != *other;
+        """)
+
+    c.addPyMethod('__hash__', '(self)', """\
+        return hash(int(self.GetID()))
+        """)
+
+    module.find('operator==').ignore()
+    module.find('operator!=').ignore()
+
 
     td = etgtools.TypedefDef(name='wxTreeItemIdValue', type='void*')
     module.insertItemBefore(c, td)
@@ -57,6 +80,7 @@ def run():
     tools.fixWindowClass(c)
     module.addGlobalStr('wxTreeCtrlNameStr', before=c)
 
+    tools.addEnableSystemTheme(c, 'wx.TreeCtrl')
 
     # Set all wxTreeItemData parameters to transfer ownership.  Is this still needed with MappedTypes?
     for item in c.allItems():
@@ -147,7 +171,7 @@ def run():
     c = module.find('wxTreeEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_TREE_BEGIN_DRAG        = PyEventBinder(wxEVT_TREE_BEGIN_DRAG       , 1)
         EVT_TREE_BEGIN_RDRAG       = PyEventBinder(wxEVT_TREE_BEGIN_RDRAG      , 1)
         EVT_TREE_BEGIN_LABEL_EDIT  = PyEventBinder(wxEVT_TREE_BEGIN_LABEL_EDIT , 1)

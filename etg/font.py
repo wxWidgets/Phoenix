@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,6 +33,9 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    c = module.find('wxFontInfo')
+    assert isinstance(c, etgtools.ClassDef)
+
     c = module.find('wxFont')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
@@ -48,6 +51,14 @@ def run():
     c.find('GetDefaultEncoding').mustHaveApp()
     c.find('SetDefaultEncoding').mustHaveApp()
 
+    # Tweak the documentation in this constructor a little, replacing the
+    # link to another constructor with a simpler version of the text.
+    ctor = c.find('wxFont').findOverload('int pointSize')
+    # TODO: should implement an easier way to findDocNode() the node containing what we're looking for...
+    ref = list(ctor.detailedDoc[0])[0]
+    assert ref.text.startswith('wxFont(')
+    ref.tag = 'para'
+    ref.text = 'the constructor accepting a :ref:`wx.FontInfo`'
 
     # FFont factory function for backwards compatibility
     module.addCppFunction('wxFont*', 'FFont',
@@ -80,9 +91,8 @@ def run():
     #c.addProperty('Underlined GetUnderlined SetUnderlined')
     #c.addProperty('Strikethrough GetStrikethrough SetStrikethrough')
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('void*', 'GetHFONT', '()',
         doc="Returns the font's native handle.",
@@ -114,6 +124,18 @@ def run():
         #endif
         """)
 
+    c.find('AddPrivateFont').setCppCode("""\
+        #if wxUSE_PRIVATE_FONTS
+            return wxFont::AddPrivateFont(*filename);
+        #else
+            wxPyRaiseNotImplemented();
+            return false;
+        #endif
+        """)
+
+    c.addCppMethod('bool', 'CanUsePrivateFont', '()', isStatic=True,
+        doc="Returns ``True`` if this build of wxPython supports using :meth:`AddPrivateFont`.",
+        body="return wxUSE_PRIVATE_FONTS;")
 
 
     # The stock Font items are documented as simple pointers, but in reality

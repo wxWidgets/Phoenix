@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Apr-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -61,7 +61,6 @@ def run():
     c.find('CreateCanvas').isVirtual = True
     c.find('CreateControlBar').isVirtual = True
     c.find('Initialize').isVirtual = True
-    c.find('InitializeWithModality').isVirtual = True
 
 
 
@@ -72,9 +71,9 @@ def run():
         ctor.find('printout').transfer = True
         ctor.find('printoutForPrinting').transfer = True
     c.addPrivateCopyCtor()
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
+
     c.addPyCode("PrintPreview.Ok = wx.deprecated(PrintPreview.IsOk, 'Use IsOk instead.')")
 
     c = module.find('wxPrinter')

@@ -136,12 +136,21 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
         data = img.GetDataBuffer()
         self.assertTrue(isinstance(data, memoryview))
-        data[0] = 1
-        data[1] = 2
-        data[2] = 3
-        self.assertEqual(1, img.GetRed(0,0))
-        self.assertEqual(2, img.GetGreen(0,0))
-        self.assertEqual(3, img.GetBlue(0,0))
+        if six.PY2:
+            data[0] = b'1'
+            data[1] = b'2'
+            data[2] = b'3'
+            self.assertEqual(ord('1'), img.GetRed(0,0))
+            self.assertEqual(ord('2'), img.GetGreen(0,0))
+            self.assertEqual(ord('3'), img.GetBlue(0,0))
+        else:
+            data[0] = 1
+            data[1] = 2
+            data[2] = 3
+            self.assertEqual(1, img.GetRed(0,0))
+            self.assertEqual(2, img.GetGreen(0,0))
+            self.assertEqual(3, img.GetBlue(0,0))
+
 
     def test_imageGetAlphaDataBuffer(self):
         w = h = 10
@@ -150,12 +159,20 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
         data = img.GetAlphaBuffer()
         self.assertTrue(isinstance(data, memoryview))
-        data[0] = 1
-        data[1] = 2
-        data[2] = 3
-        self.assertEqual(1, img.GetAlpha(0,0))
-        self.assertEqual(2, img.GetAlpha(1,0))
-        self.assertEqual(3, img.GetAlpha(2,0))
+        if six.PY2:
+            data[0] = b'1'
+            data[1] = b'2'
+            data[2] = b'3'
+            self.assertEqual(ord('1'), img.GetAlpha(0,0))
+            self.assertEqual(ord('2'), img.GetAlpha(1,0))
+            self.assertEqual(ord('3'), img.GetAlpha(2,0))
+        else:
+            data[0] = 1
+            data[1] = 2
+            data[2] = 3
+            self.assertEqual(1, img.GetAlpha(0,0))
+            self.assertEqual(2, img.GetAlpha(1,0))
+            self.assertEqual(3, img.GetAlpha(2,0))
 
 
     def test_imageSetDataBuffer1(self):
@@ -260,6 +277,38 @@ class image_Tests(wtc.WidgetTestCase):
         imghndlr = TestImageHandler()
         wx.Image.AddHandler(imghndlr)
 
+    def test_imageHandlerStandardDerivations(self):
+        # checks that all of the standard wx derivations are available.
+        wx.GIFHandler()
+        wx.IFFHandler()
+        wx.JPEGHandler()
+        wx.PCXHandler()
+        wx.PNGHandler()
+        wx.PNMHandler()
+        wx.TGAHandler()
+        wx.TIFFHandler()
+        wx.XPMHandler()
+
+    def test_imageHandlerStandardDerivationsDerivation(self):
+        for cls in (wx.GIFHandler, wx.IFFHandler, wx.JPEGHandler,
+                    wx.PCXHandler, wx.PNGHandler, wx.PNMHandler,
+                    wx.TGAHandler, wx.TIFFHandler,wx.XPMHandler):
+
+            class TestImageHandler(cls):
+                def __init__(self):
+                    cls.__init__(self)
+                    ext = cls.__name__.replace("Handler", "")
+                    self.Name = "%s File" % ext
+                    self.Extension = ext
+                    self.MimeType = 'image/ext'
+
+                    self.Type = getattr(wx, "BITMAP_TYPE_%s" % ext)
+
+                def DoCanRead(self, stream):
+                    return True
+
+            imghndlr = TestImageHandler()
+            wx.Image.AddHandler(imghndlr)
 
 #---------------------------------------------------------------------------
 

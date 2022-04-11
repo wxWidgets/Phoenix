@@ -3,7 +3,7 @@
 # Author:      Scott Talbert
 #
 # Created:     31-Jul-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

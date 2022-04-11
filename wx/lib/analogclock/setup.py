@@ -179,7 +179,7 @@ class _Group_1(_GroupBase):
         p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(0, 1), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.bw = wx.SpinCtrl(self, size=(75, 21),
+        p = self.bw = wx.SpinCtrl(self,
                                   min=0, max=100, value="75")
         sizer.Add(p, pos=(0, 2), span=(1, 2), flag=wx.ALIGN_CENTRE_VERTICAL)
 
@@ -193,7 +193,7 @@ class _Group_1(_GroupBase):
         p = self.ls = wx.StaticText(self, label="Size:")
         sizer.Add(p, pos=(2, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.sz = wx.SpinCtrl(self, size=(75, 21),
+        p = self.sz = wx.SpinCtrl(self,
                                   min=0, max=100, value="75")
         sizer.Add(p, pos=(2, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 
@@ -212,7 +212,7 @@ class _Group_2(_Group_1):
         p = wx.StaticText(self, label="Offset:")
         sizer.Add(p, pos=(3, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.of = wx.SpinCtrl(self, size=(75, 21),
+        p = self.of = wx.SpinCtrl(self,
                                   min=0, max=100, value="75")
         sizer.Add(p, pos=(3, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 

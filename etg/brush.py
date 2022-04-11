@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     2-Sept-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -40,10 +40,8 @@ def run():
         if ctor.isCtor and ctor.argsString != '()':
             ctor.mustHaveApp()
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
-
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppCode("""\
         #ifdef __WXMAC__
@@ -68,7 +66,7 @@ def run():
     # created. That messes up the code that SIP generates for them, so we need
     # to come up with another solution. So instead we will just create
     # uninitialized brush in a block of Python code, that will then be
-    # intialized later when the wx.App is created.
+    # initialized later when the wx.App is created.
     c.addCppMethod('void', '_copyFrom', '(const wxBrush* other)',
                    "*self = *other;",
                    briefDoc="For internal use only.")  # ??

@@ -17,15 +17,16 @@ class TestPanel(wx.Panel):
         self.tt5 = wx.ToolTip("hmmm")
         self.tt6 = wx.ToolTip("wxPython (Phoenix)\n" * 10)
         self.tt7 = wx.ToolTip("Enable ToolTips.")
-        self.tt8 = wx.ToolTip("bla bla bla" * 50)
+        self.tt8 = wx.ToolTip("bla bla bla " * 50)
         ## self.tt8.SetMaxWidth(-1)
         self.tt8.SetMaxWidth(0)
 
+        wx.StaticText(self, -1, "Hover over a button to see a tool tip", (250,30))
         self.btn1 = wx.Button(self, -1, "Simple ToolTip", pos=(50, 30))
         self.btn1.SetToolTip(self.tt1)
         self.btn2 = wx.Button(self, -1, "Multi-Line ToolTip", pos=(50, 60))
         self.btn2.SetToolTip(self.tt2)
-        self.btn3 = wx.Button(self, -1, "Disable ToolTips", pos=(50, 90))
+        self.btn3 = wx.Button(self, -1, "Disable ToolTips (if supported)", pos=(50, 90))
         self.btn3.SetToolTip(self.tt3)
         self.btn3.Bind(wx.EVT_BUTTON, self.OnDisableToolTips)
         self.btn4 = wx.Button(self, -1, "ToolTip.GetTip(self.tt1) = %s" % self.tt1.GetTip(), pos=(50, 120))
@@ -40,12 +41,14 @@ class TestPanel(wx.Panel):
         self.btn7.Bind(wx.EVT_BUTTON, self.OnEnableToolTips)
         self.btn8 = wx.Button(self, -1, "ToolTip.SetMaxWidth(0)", pos=(50, 240))
         self.btn8.SetToolTip(self.tt8)
+        self.btn9 = wx.Button(self, -1, "ToolTip set by string", pos=(50, 270))
+        self.btn9.SetToolTip("ToolTip set without a wx.ToolTip")
 
     def OnDisableToolTips(self, event):
-        self.tt3.Enable(False)
+        wx.ToolTip.Enable(False)
 
     def OnEnableToolTips(self, event):
-        self.tt7.Enable(True)
+        wx.ToolTip.Enable(True)
 
 
 def runTest(frame, nb, log):

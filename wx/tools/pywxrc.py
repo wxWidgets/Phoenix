@@ -11,7 +11,7 @@
 #
 #              Editable blocks by Roman Rolinsky
 #
-# Copyright:   (c) 2004-2017 by Total Control Software, 2000 Vaclav Slavik
+# Copyright:   (c) 2004-2020 by Total Control Software, 2000 Vaclav Slavik
 # Licence:     wxWindows license
 # Tags:        phoenix-port
 #----------------------------------------------------------------------
@@ -33,7 +33,7 @@ Usage: python pywxrc.py -h
 
 import sys, os, getopt, glob, re
 import xml.dom.minidom as minidom
-from six import print_
+from six import print_, byte2int
 
 #----------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ __res = None
 def get_resources():
     \"\"\" This function provides access to the XML resources in this module.\"\"\"
     global __res
-    if __res == None:
+    if __res is None:
         __init_resources()
     return __res
 
@@ -62,7 +62,7 @@ def get_resources():
     CLASS_HEADER = """\
 class xrc%(windowName)s(wx.%(windowClass)s):
 #!XRCED:begin-block:xrc%(windowName)s.PreCreate
-    def PreCreate(self, pre):
+    def PreCreate(self):
         \"\"\" This function is called during the class's initialization.
 
         Override it for custom setup before the window is created usually to
@@ -73,11 +73,9 @@ class xrc%(windowName)s(wx.%(windowClass)s):
 #!XRCED:end-block:xrc%(windowName)s.PreCreate
 
     def __init__(self, parent):
-        # Two stage creation (see http://wiki.wxpython.org/index.cgi/TwoStageCreation)
-        pre = wx.Pre%(windowClass)s()
-        self.PreCreate(pre)
-        get_resources().LoadOn%(windowClass)s(pre, parent, "%(windowName)s")
-        self.PostCreate(pre)
+        wx.%(windowClass)s.__init__(self)
+        self.PreCreate()
+        get_resources().Load%(windowClass)s(self, parent, "%(windowName)s")
 
         # Define variables for the controls, bind event handlers
 """
@@ -85,9 +83,7 @@ class xrc%(windowName)s(wx.%(windowClass)s):
     SUBCLASS_HEADER = """\
 class %(subclass)s(wx.%(windowClass)s):
     def __init__(self):
-        # Two stage creation (see http://wiki.wxpython.org/index.cgi/TwoStageCreation)
-        pre = wx.Pre%(windowClass)s()
-        self.PostCreate(pre)
+        wx.%(windowClass)s.__init__(self)
         self.Bind(wx.EVT_WINDOW_CREATE, self.OnCreate)
 
 #!XRCED:begin-block:%(subclass)s._PostInit
@@ -213,14 +209,14 @@ class xrc%(windowName)s(wx.%(windowClass)s):
 
 def __init_resources():
     global __res
-    __res = xrc.EmptyXmlResource()
+    __res = xrc.XmlResource()
 """
 
     LOAD_RES_FILE = """\
     __res.Load('%(resourceFilename)s')"""
 
     FILE_AS_STRING = """\
-    %(filename)s = '''\\
+    %(filename)s = b'''\\
 %(fileData)s'''
 
 """
@@ -230,7 +226,7 @@ def __init_resources():
 """
 
     ADD_FILE_TO_MEMFS = """\
-    wx.MemoryFSHandler.AddFile('XRC/%(memoryPath)s/%(filename)s', %(filename)s)
+    wx.MemoryFSHandler.AddFile('XRC/%(memoryPath)s/%(filename)s', memoryview(%(filename)s))
 """
 
     LOAD_RES_MEMFS = """\
@@ -243,7 +239,7 @@ def __init_resources():
 def __gettext_strings():
     # This is a dummy function that lists all the strings that are used in
     # the XRC file in the _("a string") format to be recognized by GNU
-    # gettext utilities (specificaly the xgettext utility) and the
+    # gettext utilities (specifically the xgettext utility) and the
     # mki18n.py script.  For more information see:
     # http://wiki.wxpython.org/index.cgi/Internationalization
 
@@ -299,22 +295,23 @@ class XmlResourceCompiler:
         # later when they try to run the program.
         if subclasses:
             subclasses = self.ReplaceBlocks(u"\n".join(subclasses))
-            print_(subclasses.encode("UTF-8"), file=outputFile)
+            print_(subclasses, file=outputFile)
         if classes:
             classes = self.ReplaceBlocks(u"\n".join(classes))
-            print_(classes.encode("UTF-8"), file=outputFile)
+            print_(classes, file=outputFile)
 
         print_(self.templates.INIT_RESOURE_HEADER, file=outputFile)
         if embedResources:
             print_(self.templates.PREPARE_MEMFS, file=outputFile)
         resources = u"\n".join(resources)
-        print_(resources.encode("UTF-8"), file=outputFile)
+        print_(resources, file=outputFile)
 
         if generateGetText:
-            # These have already been converted to utf-8...
-            gettextStrings = ['    _("%s")' % s for s in gettextStrings]
-            gettextStrings = "\n".join(gettextStrings)
-            print_(self.templates.GETTEXT_DUMMY_FUNC % gettextStrings, file=outputFile)
+            # gettextStrings is a list of unicode strings as returned by ConvertText
+            conversions = [u'    _("%s")' % s for s in gettextStrings]
+            conversion_block = u"\n".join(conversions)
+            conversion_func = self.templates.GETTEXT_DUMMY_FUNC % conversion_block
+            print_(conversion_func, file=outputFile)
 
     #-------------------------------------------------------------------
 
@@ -328,6 +325,7 @@ class XmlResourceCompiler:
             resourceDocument = minidom.parse(inFile)
             resource = resourceDocument.firstChild
             strings = self.FindStringsInNode(resource)
+            # strings is a list of unicode strings as returned by ConvertText
             strings = ['_("%s");' % s for s in strings]
             print_("\n".join(strings), file=outputFile)
 
@@ -400,7 +398,10 @@ class XmlResourceCompiler:
                 if widgetClass == "MenuItem":
                     outputList.append(self.templates.MENUBAR_MENUITEM_VAR % locals())
                 elif widgetClass == "Menu":
-                    label = widget.getElementsByTagName("label")[0]
+                    for e in widget.childNodes:
+                        if e.nodeType == e.ELEMENT_NODE and e.tagName == "label":
+                            label = e
+                            break
                     label = label.childNodes[0].data
                     outputList.append(self.templates.MENUBAR_MENU_VAR % locals())
                 else:
@@ -424,7 +425,10 @@ class XmlResourceCompiler:
                 if widgetClass == "MenuItem":
                     outputList.append(self.templates.MENU_MENUITEM_VAR % locals())
                 elif widgetClass == "Menu":
-                    label = widget.getElementsByTagName("label")[0]
+                    for e in widget.childNodes:
+                        if e.nodeType == e.ELEMENT_NODE and e.tagName == "label":
+                            label = e
+                            break
                     label = label.childNodes[0].data
                     outputList.append(self.templates.MENU_MENU_VAR % locals())
                 else:
@@ -469,22 +473,26 @@ class XmlResourceCompiler:
             widgetName = widget.getAttribute("name")
             if widgetName != "" and widgetClass != "":
                 vars.append(widgetName)
-                if widgetClass not in \
-                       ['tool', 'unknown', 'notebookpage', 'separator',
-                        'sizeritem', 'Menu', 'MenuBar', 'MenuItem']:
-                    outputList.append(self.templates.CREATE_WIDGET_VAR % locals())
-                elif widgetClass == "MenuBar":
+                if widgetClass == "MenuBar":
                     outputList.append(self.templates.FRAME_MENUBAR_VAR % locals())
                 elif widgetClass == "MenuItem":
                     outputList.append(self.templates.FRAME_MENUBAR_MENUITEM_VAR % locals())
                 elif widgetClass == "Menu":
-                    label = widget.getElementsByTagName("label")[0]
+                    # Only look directly under for the "label"
+                    for e in widget.childNodes:
+                        if e.nodeType == e.ELEMENT_NODE and e.tagName == "label":
+                            label = e
+                            break
                     label = label.childNodes[0].data
                     outputList.append(self.templates.FRAME_MENUBAR_MENU_VAR % locals())
-                elif widgetClass == "ToolBar":
-                    outputList.append(self.templates.FRAME_TOOLBAR_VAR % locals())
+#                 elif widgetClass == "ToolBar":
+#                     outputList.append(self.templates.FRAME_TOOLBAR_VAR % locals())
                 elif widgetClass == "tool":
                     outputList.append(self.templates.FRAME_TOOLBAR_TOOL_VAR % locals())
+                elif widgetClass in ('unknown', 'notebookpage', 'separator', 'sizeritem'):
+                    pass
+                else:
+                    outputList.append(self.templates.CREATE_WIDGET_VAR % locals())
 
         return outputList
 
@@ -618,32 +626,32 @@ class XmlResourceCompiler:
 
     def FileToString(self, filename):
         outputList = []
-
-        buffer = open(filename, "rb").read()
+        with open(filename, "rb") as fid:
+            buffer = fid.read()
         fileLen = len(buffer)
 
         linelng = 0
-        for i in xrange(fileLen):
-            s = buffer[i]
-            c = ord(s)
-            if s == '\n':
+        for i in range(fileLen):
+            s = buffer[i:i+1]
+            c = byte2int(s)
+            if s == b'\n':
                 tmp = s
                 linelng = 0
-            elif c < 32 or c > 127 or s == "'":
-                tmp = "\\x%02x" % c
-            elif s == "\\":
-                tmp = "\\\\"
+            elif c < 32 or c > 127 or s == b"'":
+                tmp = b"\\x%02x" % c
+            elif s == b"\\":
+                tmp = b"\\\\"
             else:
                 tmp = s
 
             if linelng > 70:
                 linelng = 0
-                outputList.append("\\\n")
+                outputList.append(b"\\\n")
 
             outputList.append(tmp)
             linelng += len(tmp)
 
-        return "".join(outputList)
+        return (b"".join(outputList)).decode('utf-8')
 
     #-------------------------------------------------------------------
 
@@ -752,6 +760,17 @@ class XmlResourceCompiler:
     #-------------------------------------------------------------------
 
     def ConvertText(self, st):
+        """
+        Encode special characters as escaped C/Python string characters.
+
+            \n => \\n
+            \r => \\r
+            \t => \\t
+            \ => \\
+            " => \"
+
+        Returns result as string, which is bytes in py2 or unicode in py3.
+        """
         st2 = ""
         dt = list(st)
 
@@ -783,7 +802,7 @@ class XmlResourceCompiler:
             else:
                 st2 += dt[i]
 
-        return st2.encode("UTF-8")
+        return st2
 
     #-------------------------------------------------------------------
 
@@ -850,7 +869,6 @@ def main(args=None):
     if not args:
         args = sys.argv[1:]
 
-    resourceFilename = ""
     outputFilename = None
     embedResources = False
     generateGetText = False
@@ -925,7 +943,7 @@ def main(args=None):
         print_("%s." % str(exc), file=sys.stderr)
     else:
         if outputFilename != "-":
-            print_("Resources written to %s." % outputFilename, file=outputFilename)
+            print_("Resources written to %s." % outputFilename, file=sys.stderr)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

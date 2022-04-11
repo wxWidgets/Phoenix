@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     9-Dec-1999
-# Copyright:   (c) 1999-2017 by Total Control Software
+# Copyright:   (c) 1999-2020 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, unittest, documented
 #----------------------------------------------------------------------
@@ -172,19 +172,24 @@ class GenButton(wx.Control):
         self.SetLabel(label)
         self.InheritAttributes()
         self.SetInitialSize(size)
-        self.InitColours()
+        face = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE)
+        if 'wxMac' in wx.PlatformInfo and face.alpha == 0:
+            face = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT)
+            assert face.alpha != 0, "a different default system colour is needed!"
+        self.SetBackgroundColour(face)
 
-        self.Bind(wx.EVT_LEFT_DOWN,        self.OnLeftDown)
-        self.Bind(wx.EVT_LEFT_UP,          self.OnLeftUp)
-        self.Bind(wx.EVT_LEFT_DCLICK,      self.OnLeftDown)
-        self.Bind(wx.EVT_MOTION,           self.OnMotion)
-        self.Bind(wx.EVT_SET_FOCUS,        self.OnGainFocus)
-        self.Bind(wx.EVT_KILL_FOCUS,       self.OnLoseFocus)
-        self.Bind(wx.EVT_KEY_DOWN,         self.OnKeyDown)
-        self.Bind(wx.EVT_KEY_UP,           self.OnKeyUp)
-        self.Bind(wx.EVT_PAINT,            self.OnPaint)
-        self.Bind(wx.EVT_ERASE_BACKGROUND, lambda evt: None)
-        self.Bind(wx.EVT_SIZE,             self.OnSize)
+        self.Bind(wx.EVT_LEFT_DOWN,          self.OnLeftDown)
+        self.Bind(wx.EVT_LEFT_UP,            self.OnLeftUp)
+        self.Bind(wx.EVT_LEFT_DCLICK,        self.OnLeftDown)
+        self.Bind(wx.EVT_MOTION,             self.OnMotion)
+        self.Bind(wx.EVT_SET_FOCUS,          self.OnGainFocus)
+        self.Bind(wx.EVT_KILL_FOCUS,         self.OnLoseFocus)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.OnLoseCapture)
+        self.Bind(wx.EVT_KEY_DOWN,           self.OnKeyDown)
+        self.Bind(wx.EVT_KEY_UP,             self.OnKeyUp)
+        self.Bind(wx.EVT_PAINT,              self.OnPaint)
+        self.Bind(wx.EVT_ERASE_BACKGROUND,   lambda evt: None)
+        self.Bind(wx.EVT_SIZE,               self.OnSize)
         self.InitOtherEvents()
 
 
@@ -192,7 +197,7 @@ class GenButton(wx.Control):
         """
         Override this method in a subclass to initialize any other events that
         need to be bound.  Added so :meth:`__init__` doesn't need to be
-        overriden, which is complicated with multiple inheritance.
+        overridden, which is complicated with multiple inheritance.
         """
 
         pass
@@ -448,7 +453,7 @@ class GenButton(wx.Control):
         tw, th = dc.GetTextExtent(label)
         if not self.up:
             dx = dy = self.labelDelta
-        dc.DrawText(label, (width-tw)/2+dx, (height-th)/2+dy)
+        dc.DrawText(label, (width-tw)//2+dx, (height-th)//2+dy)
 
 
     def DrawFocusIndicator(self, dc, w, h):
@@ -530,7 +535,7 @@ class GenButton(wx.Control):
                     colBg = self.GetParent().GetBackgroundColour()
                     brush = wx.Brush(colBg)
         else:
-            # this line assumes that a pressed button should be hilighted with
+            # this line assumes that a pressed button should be highlighted with
             # a solid colour even if the background is supposed to be transparent
             brush = wx.Brush(self.faceDnClr)
         return brush
@@ -543,7 +548,7 @@ class GenButton(wx.Control):
         :param `event`: a :class:`wx.MouseEvent` event to be processed.
         """
 
-        if not self.IsEnabled():
+        if (not self.IsEnabled()) or self.HasCapture():
             return
 
         self.up = False
@@ -620,6 +625,18 @@ class GenButton(wx.Control):
         """
 
         self.hasFocus = False
+        self.Refresh()
+        self.Update()
+
+
+    def OnLoseCapture(self, event):
+        """
+        Handles the ``wx.EVT_MOUSE_CAPTURE_LOST`` event for :class:`GenButton`.
+
+        :param `event`: a :class:`wx.MouseCaptureLostEvent` event to be processed.
+        """
+
+        self.up = True
         self.Refresh()
         self.Update()
 
@@ -826,8 +843,8 @@ class GenBitmapButton(GenButton):
         bw,bh = bmp.GetWidth(), bmp.GetHeight()
         if not self.up:
             dx = dy = self.labelDelta
-        hasMask = bmp.GetMask() != None
-        dc.DrawBitmap(bmp, (width-bw)/2+dx, (height-bh)/2+dy, hasMask)
+        hasMask = bmp.GetMask() is not None
+        dc.DrawBitmap(bmp, (width-bw)//2+dx, (height-bh)//2+dy, hasMask)
 
 
 #----------------------------------------------------------------------
@@ -909,12 +926,12 @@ class GenBitmapTextButton(GenBitmapButton):
         if not self.up:
             dx = dy = self.labelDelta
 
-        pos_x = (width-bw-tw)/2+dx      # adjust for bitmap and text to centre
+        pos_x = (width-bw-tw)//2+dx      # adjust for bitmap and text to centre
         if bmp is not None:
-            dc.DrawBitmap(bmp, pos_x, (height-bh)/2+dy, hasMask) # draw bitmap if available
+            dc.DrawBitmap(bmp, pos_x, (height-bh)//2+dy, hasMask) # draw bitmap if available
             pos_x = pos_x + 2   # extra spacing from bitmap
 
-        dc.DrawText(label, pos_x + dx+bw, (height-th)/2+dy)      # draw the text
+        dc.DrawText(label, pos_x + dx+bw, (height-th)//2+dy)      # draw the text
 
 
 #----------------------------------------------------------------------
@@ -962,6 +979,9 @@ class __ToggleMixin(object):
             return
 
         self.saveUp = self.up
+        if self.HasCapture():
+            return
+
         self.up = not self.up
         self.CaptureMouse()
         self.SetFocus()

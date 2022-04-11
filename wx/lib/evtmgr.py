@@ -261,7 +261,7 @@ class EventManager:
 
     def __getTopics(self, win=None):
         if win is None:
-            return self.messageAdapterDict.keys()
+            return list(self.messageAdapterDict)
 
         if win is not None:
             try:
@@ -306,7 +306,7 @@ class EventManager:
 
 
 #---------------------------------------------------------------------------
-# From here down is implementaion and support classes, although you may
+# From here down is implementation and support classes, although you may
 # find some of them useful in other contexts.
 #---------------------------------------------------------------------------
 

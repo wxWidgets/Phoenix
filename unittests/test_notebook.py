@@ -23,7 +23,6 @@ class notebook_Tests(wtc.WidgetTestCase):
         wx.NB_FIXEDWIDTH
         wx.NB_MULTILINE
         wx.NB_NOPAGETHEME
-        wx.NB_FLAT
 
         wx.NB_HITTEST_NOWHERE
         wx.NB_HITTEST_ONICON
@@ -44,6 +43,9 @@ class notebook_Tests(wtc.WidgetTestCase):
         p2 = wx.Panel(nb)
         nb.AddPage(p2, "Page2")
         nb.SetSelection(0)
+
+    def test_notebookPageAlias(self):
+        assert wx.NotebookPage is wx.Window
 
 #---------------------------------------------------------------------------
 

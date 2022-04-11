@@ -4,7 +4,7 @@
 #
 # Created:     27-Aug-2011
 # Copyright:   (c) 2013 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Wide Open Technologies
+# Copyright:   (c) 2011-2020 by Wide Open Technologies
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

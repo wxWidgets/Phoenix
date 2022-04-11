@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     25-Oct-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ ITEMS  = [ 'wxAuiManager',
            'wxAuiManagerEvent',
            'wxAuiDockInfo',
            'wxAuiDockUIPart',
-           'wxAuiPaneButton',
+           'wxAuiFloatingFrame'
            ]
 
 #---------------------------------------------------------------------------
@@ -50,7 +50,7 @@ def run():
     c = module.find('wxAuiManagerEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_AUI_PANE_BUTTON = wx.PyEventBinder( wxEVT_AUI_PANE_BUTTON )
         EVT_AUI_PANE_CLOSE = wx.PyEventBinder( wxEVT_AUI_PANE_CLOSE )
         EVT_AUI_PANE_MAXIMIZE = wx.PyEventBinder( wxEVT_AUI_PANE_MAXIMIZE )
@@ -66,9 +66,6 @@ def run():
 
     module.addItem(tools.wxArrayWrapperTemplate(
             'wxAuiDockUIPartArray', 'wxAuiDockUIPart', module))
-
-    module.addItem(tools.wxArrayWrapperTemplate(
-            'wxAuiPaneButtonArray', 'wxAuiPaneButton', module))
 
     module.addItem(tools.wxArrayWrapperTemplate(
             'wxAuiPaneInfoPtrArray', 'wxAuiPaneInfo', module, itemIsPtr=True))

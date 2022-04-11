@@ -1,6 +1,6 @@
-    
+
     # ... Some code here...
-    
+
     # you have wx.HtmlTag variable tag which is equal to the
     # HTML tag <FONT SIZE=+2 COLOR="#0000FF">
     dummy = tag.GetParam("SIZE")

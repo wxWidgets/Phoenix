@@ -11,11 +11,13 @@ mydbstub.py*
 .idea
 .cache
 .vagrant
+.vscode
 
 /build
 /tmp
 /dist
 /license
+/LICENSE.txt
 /*.egg-info
 /REV.txt
 /.idea
@@ -25,7 +27,9 @@ mydbstub.py*
 /bin/waf3-*
 /bin/doxygen-*
 
-/docs/html
+/demo/version.py
+
+/docs/html*
 /docs/sphinx/*.txt
 /docs/sphinx/*.rst
 /docs/sphinx/*.pkl
@@ -56,6 +60,17 @@ mydbstub.py*
 /wx/locale
 /wx/*.dll
 
+/wx/svg/*.so
+/wx/svg/*.pyd
+wx/svg/_version.py
+
 /unittests/lib_pubsub_provider_actual.py
 
 ubuntu-xenial-16.04-cloudimg-console.log
+ubuntu-bionic-18.04-cloudimg-console.log
+.pytest_cache
+
+/samples/doodle/build
+/samples/doodle/dist
+samples/embedded/embedded
+samples/embedded/embedded.o

@@ -463,7 +463,7 @@ class SButton(wx.Window):
 
 
     def IsEnabled(self):
-        """ Returns wheter the button is enabled or not. """
+        """ Returns whether the button is enabled or not. """
 
         return self._enabled
 
@@ -569,9 +569,9 @@ class SButton(wx.Window):
                 rect2 = w*main//secondary
 
             if self._isup:
-                img = self._mainbuttonup.Scale(rect2, rect3)
+                img = self._mainbuttonup.Scale(int(rect2), int(rect3))
             else:
-                img = self._mainbuttondown.Scale(rect2, rect3)
+                img = self._mainbuttondown.Scale(int(rect2), int(rect3))
 
         bmp = img.ConvertToBitmap()
 
@@ -599,7 +599,7 @@ class SButton(wx.Window):
                     ypos = 0
 
         # Draw Finally The Bitmap
-        dc.DrawBitmap(bmp, xpos, ypos, True)
+        dc.DrawBitmap(bmp, int(xpos), int(ypos), True)
 
         # Store Bitmap Position And Size To Draw An Elliptical Focus Indicator
         self._xpos = xpos
@@ -646,7 +646,7 @@ class SButton(wx.Window):
             xp = xc - (tw//2)* cos(angle) - (th//2)*sin(angle)
             yp = yc + (tw//2)*sin(angle) - (th//2)*cos(angle)
 
-            dc.DrawRotatedText(label, xp + dw, yp + dh , angle*180/pi)
+            dc.DrawRotatedText(label, int(xp + dw), int(yp + dh), angle*180/pi)
 
 
     def DrawFocusIndicator(self, dc, width, height):
@@ -676,7 +676,7 @@ class SButton(wx.Window):
         else:
             # This Is An Ellipse
             if hasattr(self, "_xpos"):
-                dc.DrawEllipse(self._xpos + 2, self._ypos + 2, self._imgx - 4, self._imgy - 4)
+                dc.DrawEllipse(int(self._xpos + 2), int(self._ypos + 2), self._imgx - 4, self._imgy - 4)
 
         dc.SetLogicalFunction(wx.COPY)
 
@@ -909,7 +909,7 @@ class SButton(wx.Window):
 
         width = bmp.GetWidth()
         height = bmp.GetHeight()
-        img = Image.fromstring("RGBA", (width, height), bmp.GetData())
+        img = Image.frombytes("RGBA", (width, height), bmp.GetData())
 
         return img
 
@@ -925,12 +925,12 @@ class SButton(wx.Window):
 
         if alpha:
             image = wx.Image(*pil.size)
-            image.SetData(pil.convert("RGB").tostring())
-            image.SetAlpha(pil.convert("RGBA").tostring()[3::4])
+            image.SetData(pil.convert("RGB").tobytes())
+            image.SetAlpha(pil.convert("RGBA").tobytes()[3::4])
         else:
             image = wx.Image(pil.size[0], pil.size[1])
             new_image = pil.convert('RGB')
-            data = new_image.tostring()
+            data = new_image.tobytes()
             image.SetData(data)
 
         return image
@@ -1124,7 +1124,7 @@ class SBitmapButton(SButton):
         if not self._isup:
             dw = dh = self._labeldelta
 
-        hasMask = bmp.GetMask() != None
+        hasMask = bmp.GetMask() is not None
         dc.DrawBitmap(bmp, (width - bw)//2 + dw, (height - bh)//2 + dh, hasMask)
 
 
@@ -1193,7 +1193,7 @@ class SBitmapTextButton(SBitmapButton):
 
         bmp = self._bmplabel
 
-        if bmp != None:     # if the bitmap is used
+        if bmp is not None:     # if the bitmap is used
 
             if self._bmpdisabled and not self.IsEnabled():
                 bmp = self._bmpdisabled
@@ -1209,7 +1209,7 @@ class SBitmapTextButton(SBitmapButton):
             if not self._isup:
                 dw = dh = self._labeldelta
 
-            hasMask = bmp.GetMask() != None
+            hasMask = bmp.GetMask() is not None
 
         else:
 
@@ -1234,7 +1234,7 @@ class SBitmapTextButton(SBitmapButton):
 
         rotangle = self.GetAngleOfRotation()*pi/180.0
 
-        if bmp != None:
+        if bmp is not None:
             if rotangle < 1.0/180.0:
                 dc.DrawBitmap(bmp, pos_x, (height - bh)//2 + dh, hasMask) # draw bitmap if available
                 pos_x = pos_x + 4   # extra spacing from bitmap

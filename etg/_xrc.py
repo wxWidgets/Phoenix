@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     28-Nov-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode('#include <wxpy_api.h>')
+    module.addHeaderCode('#include <wxPython/wxpy_api.h>')
     module.addImport('_core')
     module.addImport('_xml')
     module.addPyCode('''\
@@ -61,10 +61,11 @@ def run():
     module.addInclude(INCLUDES)
 
     module.addInitializerCode("""\
-        //wxXmlInitResourceModule();
+        wxXmlInitResourceModule();
         wxXmlResource::Get()->InitAllHandlers();
         """)
 
+    module.addHeaderCode('#include <wx/animate.h>')
     module.addHeaderCode('#include <wx/xrc/xmlres.h>')
     module.addHeaderCode('#include <wx/fs_mem.h>')
     module.addHeaderCode('#include "wxpybuffer.h"')
@@ -72,6 +73,7 @@ def run():
     module.insertItem(0, etgtools.WigCode("""\
         // forward declarations
         class wxAnimation;
+        class wxAnimationCtrl;
         """))
 
     #-----------------------------------------------------------------
@@ -143,6 +145,11 @@ def run():
 
     c.find('DoCreateResource').factory = True
 
+    # TODO: It looks like there may be a bug in wx here.
+    # Just ignore it for now.
+    c.find('GetFilePath').ignore()
+
+    c.find('GetAnimation.ctrl').type = 'wxAnimationCtrl *'
 
     #-----------------------------------------------------------------
     module.addPyFunction('EmptyXmlResource', '(flags=XRC_USE_LOCALE, domain="")',
@@ -166,7 +173,7 @@ def run():
             MethodDef(name='wxXmlSubclassFactory', isCtor=True),
             MethodDef(name='~wxXmlSubclassFactory', isDtor=True),
             MethodDef(name='Create', type='wxObject*',
-                isVirtual=True, isPureVirtual=True,
+                isVirtual=True, isPureVirtual=True, factory=True,
                 items=[ParamDef(type='const wxString&', name='className')])
             ])
     module.addItem(cls)

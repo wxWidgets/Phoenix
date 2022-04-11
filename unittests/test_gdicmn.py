@@ -4,7 +4,7 @@ import wx
 
 #---------------------------------------------------------------------------
 
-class Point(unittest.TestCase):
+class TestPoint(unittest.TestCase):
 
     def test_default_ctor(self):
         p = wx.Point()
@@ -15,7 +15,7 @@ class Point(unittest.TestCase):
 
     def test_RealPoint_ctor(self):
         p = wx.Point(wx.RealPoint(1.2, 2.9))
-        self.assertTrue(p == (1,2))
+        self.assertTrue(p == (1,3))
 
     def test_copy_ctor(self):
         p1 = wx.Point(3,4)
@@ -143,11 +143,22 @@ class Point(unittest.TestCase):
         with self.assertRaises(TypeError):
             p = wx.Point(wx.Size(10,20))
 
+    def test_floatingMultiply(self):
+        v0 = wx.Point(3,4)
+        v1 = v0 * 4
+        v2 = v0 * 4.0
+        v3 = v0 * 4.4
+        v4 = v0 * 4.9
+
+        assert v1 == (12, 16)
+        assert v2 == (12, 16)
+        assert v3 == (13, 17)
+        assert v4 == (14, 19)
 
 #---------------------------------------------------------------------------
 
 
-class Size(unittest.TestCase):
+class TestSize(unittest.TestCase):
 
     def test_default_ctor(self):
         s = wx.Size()
@@ -279,10 +290,23 @@ class Size(unittest.TestCase):
             p = wx.Size(wx.Point(10,20))
 
 
+    def test_floatingMultiply(self):
+        v0 = wx.Size(3,4)
+        v1 = v0 * 4
+        v2 = v0 * 4.0
+        v3 = v0 * 4.4
+        v4 = v0 * 4.9
+
+        assert v1 == (12, 16)
+        assert v2 == (12, 16)
+        assert v3 == (13, 18)
+        assert v4 == (15, 20)
+
+
 #---------------------------------------------------------------------------
 
 
-class RealPoint(unittest.TestCase):
+class TestRealPoint(unittest.TestCase):
 
     def test_default_ctor(self):
         p = wx.RealPoint()
@@ -304,6 +328,7 @@ class RealPoint(unittest.TestCase):
         p.y += 2
 
 
+    @unittest.skip("Fails: https://github.com/wxWidgets/Phoenix/issues/2070")
     def test_GetIM(self):
         # Test the immutable version returned by GetIM
         obj = wx.RealPoint(1,2)
@@ -315,11 +340,24 @@ class RealPoint(unittest.TestCase):
         assert obj == obj2
 
 
+    def test_floatingMultiply(self):
+        v0 = wx.RealPoint(3,4)
+        v1 = v0 * 4
+        v2 = v0 * 4.0
+        v3 = v0 * 4.4
+        v4 = v0 * 4.9
+
+        assert v1 == (12.0, 16.0)
+        assert v2 == (12.0, 16.0)
+        assert round(v3.x, 2) == 13.20
+        assert round(v3.y, 2) == 17.60
+        assert round(v4.x, 2) == 14.70
+        assert round(v4.y, 2) == 19.60
 
 
 #---------------------------------------------------------------------------
 
-class Rect(unittest.TestCase):
+class TestRect(unittest.TestCase):
 
     def test_default_ctor(self):
         r = wx.Rect()

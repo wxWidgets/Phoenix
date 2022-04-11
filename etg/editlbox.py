@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     21-May-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -50,6 +50,31 @@ def run():
             return arr;""",
         factory=True)
 
+
+    # These are not in the documented C++ API. Should they be?
+    c.addCppMethod('wxListCtrl*', 'GetListCtrl', '()',
+        doc="Returns a reference to the listctrl used in the EditableListBox.",
+        body="return self->GetListCtrl();")
+
+    c.addCppMethod('wxBitmapButton*', 'GetDelButton', '()',
+        doc="Returns a reference to the delete button used in the EditableListBox.",
+        body="return self->GetDelButton();")
+
+    c.addCppMethod('wxBitmapButton*', 'GetNewButton', '()',
+        doc="Returns a reference to the new button used in the EditableListBox.",
+        body="return self->GetNewButton();")
+
+    c.addCppMethod('wxBitmapButton*', 'GetUpButton', '()',
+        doc="Returns a reference to the up button used in the EditableListBox.",
+        body="return self->GetUpButton();")
+
+    c.addCppMethod('wxBitmapButton*', 'GetDownButton', '()',
+        doc="Returns a reference to the down button used in the EditableListBox.",
+        body="return self->GetDownButton();")
+
+    c.addCppMethod('wxBitmapButton*', 'GetEditButton', '()',
+        doc="Returns a reference to the edit button used in the EditableListBox.",
+        body="return self->GetEditButton();")
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

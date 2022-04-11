@@ -5,10 +5,9 @@
 // Author:      Robin Dunn
 //
 // Created:     18-Aug-2012
-// Copyright:   (c) 2012-2017 by Total Control Software
+// Copyright:   (c) 2012-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
-
 
 typedef bool (*wxPyDrawListOp_t)(wxDC& dc, PyObject* coords);
 
@@ -466,3 +465,53 @@ error0:
     PyErr_SetString(PyExc_TypeError, "Expected a sequence of length-2 sequences or wx.Points.");
     return NULL;
 }
+
+
+PyObject* wxPyDrawLinesFromBuffer(wxDC& dc, PyObject* pyBuff)
+{
+    wxPyBlock_t blocked = wxPyBeginBlockThreads();
+    Py_buffer view;
+    PyObject* retval;
+
+
+    if (!PyObject_CheckBuffer(pyBuff)) {
+        goto err0;
+    }
+    
+    if (PyObject_GetBuffer(pyBuff, &view, PyBUF_CONTIG) < 0) {
+        goto err1;
+    }
+    
+    if (view.itemsize * 2 != sizeof(wxPoint)) {
+        goto err2;
+    }
+    
+    dc.DrawLines(view.len / view.itemsize / 2, (wxPoint *)view.buf);
+    
+    PyBuffer_Release(&view);
+
+    Py_INCREF(Py_None);
+    retval = Py_None;
+    goto exit;
+
+
+ err0:
+    PyErr_SetString(PyExc_TypeError, "Expected a buffer object");
+    retval = NULL;
+    goto exit;
+    
+ err1:
+    // PyObject_GetBuffer raises exception already
+    retval = NULL;
+    goto exit;
+
+ err2:
+    PyErr_SetString(PyExc_TypeError, "Item size does not match wxPoint size");
+    retval = NULL;
+    goto exit;
+
+ exit:
+    wxPyEndBlockThreads(blocked);
+    return retval;
+}
+

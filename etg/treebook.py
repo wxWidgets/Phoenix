@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     18-Jun-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -36,7 +36,11 @@ def run():
     c = module.find('wxTreebook')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
-    tools.fixBookctrlClass(c, True)
+    tools.fixBookctrlClass(c)
+
+    c.addCppMethod('wxTreeCtrl*', 'GetTreeCtrl', '()',
+        doc="Returns the tree control used for selecting pages.",
+        body="return(self->GetTreeCtrl());")
 
     module.addPyCode("""\
         EVT_TREEBOOK_PAGE_CHANGED = wx.PyEventBinder( wxEVT_TREEBOOK_PAGE_CHANGED, 1 )

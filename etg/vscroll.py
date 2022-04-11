@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Dec-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -91,7 +91,79 @@ def run():
 
 
     c = module.find('wxVScrolledWindow')
+    assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
+
+    # These methods are listed in the docs for wxVScrolledWindow as present
+    # but deprecated, but are not actually documented so we don't see them in
+    # the incoming XML. Since they're deprecated lets just add simple wrappers
+    # here instead of formally documenting them.
+
+    # NOTE: Some of these are virtual, and there are also OnGetLineHeight and
+    # OnGetLinesHint protected virtual methods, but trying to support them as
+    # virtuals from here is causing more troubles than it is probably worth
+    # due to ambiguities, etc... Revisit later if people complain.
+
+    c.addPyMethod('HitTest', '(self, *args)',
+        doc="Deprecated compatibility helper.",
+        deprecated='Use VirtualHitTest instead.',
+        body="""\
+            if len(args) == 2:
+                x, y = args
+                return self.VirtualHitTest(y)
+            else:
+                pt = args[0]
+                return self.VirtualHitTest(pt[1])
+            """)
+
+    c.addCppMethod('unsigned long',  'GetFirstVisibleLine', '()',
+        doc="Deprecated compatibility helper.",
+        deprecated='Use GetVisibleRowsBegin instead.',
+        body="return self->GetVisibleRowsBegin();")
+
+    c.addCppMethod('unsigned long',  'GetLastVisibleLine', '()',
+        doc="Deprecated compatibility helper.",
+        deprecated='Use GetVisibleRowsEnd instead.',
+        body="return self->GetVisibleRowsEnd();")
+
+    c.addCppMethod('unsigned long',  'GetLineCount', '()',
+        doc="Deprecated compatibility helper.",
+        deprecated='Use GetRowCount instead.',
+        body="return self->GetRowCount();")
+
+    c.addCppMethod('void',  'SetLineCount', '(unsigned long count)',
+        doc="Deprecated compatibility helper.",
+        deprecated='Use SetRowCount instead.',
+        body="self->SetRowCount(count);")
+
+    c.addCppMethod('void',  'RefreshLine', '(unsigned long line)',
+        doc="Deprecated compatibility helper.",
+        deprecated='Use RefreshRow instead.',
+        body="self->RefreshRow(line);")
+
+    c.addCppMethod('void',  'RefreshLines', '(unsigned long from_, unsigned long to_)',
+        doc="Deprecated compatibility helper.",
+        deprecated='Use RefreshRows instead.',
+        body="self->RefreshRows(from_, to_);")
+
+    c.addCppMethod('bool',  'ScrollToLine', '(unsigned long line)',
+        doc="Deprecated compatibility helper.",
+        deprecated='Use ScrollToRow instead.',
+        body="return self->ScrollToRow(line);")
+
+    c.addCppMethod('bool',  'ScrollLines', '(int lines)',
+        doc="Deprecated compatibility helper.",
+        deprecated='Use ScrollRows instead.',
+        #body="return self->wxVarVScrollLegacyAdaptor::ScrollLines(lines);")
+        body="return self->ScrollRows(lines);")
+
+    c.addCppMethod('bool',  'ScrollPages', '(int pages)',
+        doc="Deprecated compatibility helper.",
+        deprecated='Use ScrollRowPages instead.',
+        #body="return self->wxVarVScrollLegacyAdaptor::ScrollPages(pages);")
+        body="return self->ScrollRowPages(pages);")
+
+
 
     c = module.find('wxHScrolledWindow')
     tools.fixWindowClass(c)

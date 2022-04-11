@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     18-Oct-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ header_pi = """\
 #
 # See: https://wingware.com/doc/edit/helping-wing-analyze-code
 #
-# Copyright: (c) 2017 by Total Control Software
+# Copyright: (c) 2020 by Total Control Software
 # License:   wxWindows License
 #---------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ header_pyi = """\
 # See: https://www.python.org/dev/peps/pep-0484/
 #      https://www.jetbrains.com/help/pycharm/2016.1/type-hinting-in-pycharm.html
 #
-# Copyright: (c) 2017 by Total Control Software
+# Copyright: (c) 2020 by Total Control Software
 # License:   wxWindows License
 #---------------------------------------------------------------------------
 
@@ -105,11 +105,10 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         def _checkAndWriteHeader(destFile, header, docstring):
             if not os.path.exists(destFile):
                 # create the file and write the header
-                f = textfile_open(destFile, 'wt')
-                f.write(header)
-                if docstring:
-                    f.write('\n"""\n%s"""\n' % docstring)
-                f.close()
+                with textfile_open(destFile, 'wt') as f:
+                    f.write(header)
+                    if docstring:
+                        f.write('\n"""\n%s"""\n' % docstring)
 
         if not SKIP_PI_FILE:
             _checkAndWriteHeader(destFile_pi, header_pi, module.docstring)
@@ -131,7 +130,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         sectionBeginMarker = '#-- begin-%s --#' % sectionName
         sectionEndMarker = '#-- end-%s --#' % sectionName
 
-        lines = textfile_open(destFile, 'rt').readlines()
+        with textfile_open(destFile, 'rt') as fid:
+            lines = fid.readlines()
         for idx, line in enumerate(lines):
             if line.startswith(sectionBeginMarker):
                 sectionBeginLine = idx
@@ -147,11 +147,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             # replace the existing lines
             lines[sectionBeginLine+1:sectionEndLine] = [sectionText]
 
-        f = textfile_open(destFile, 'wt')
-        f.writelines(lines)
-        f.close()
-
-
+        with textfile_open(destFile, 'wt') as f:
+            f.writelines(lines)
 
     #-----------------------------------------------------------------------
     def generateModule(self, module, stream):
@@ -272,7 +269,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
         # Now write the Python equivalent class for the typedef
         if not bases:
-            bases = ['object']  # this should not happpen, but just in case...
+            bases = ['object']  # this should not happen, but just in case...
         stream.write('%sclass %s(%s):\n' % (indent, name, ', '.join(bases)))
         indent2 = indent + ' '*4
         if typedef.briefDoc:

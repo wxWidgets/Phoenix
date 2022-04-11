@@ -72,7 +72,7 @@ background of a window::
 
 	data = wx.ColourData()
 	data.SetChooseFull(True)
-	
+
 	for i in xrange(16):
 	    colour = wx.Colour(i*16, i*16, i*16)
 	    data.SetCustomColour(i, colour)
@@ -186,14 +186,14 @@ The wildcard may be a specification for multiple types of file with a
 description for each, such as::
 
     wildcard = "BMP files (*.bmp)|*.bmp|GIF files (*.gif)|*.gif"
-    
+
 
 
 .. _dirdialog overview:
 
 DirDialog Overview
 -------------------
-    
+
 
 This dialog shows a directory selector dialog, allowing the user to
 select a single directory.

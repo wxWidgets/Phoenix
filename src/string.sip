@@ -5,7 +5,7 @@
 // Author:      Robin Dunn
 //
 // Created:     9-Nov-2010
-// Copyright:   (c) 2010-2017 by Total Control Software
+// Copyright:   (c) 2010-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -24,7 +24,7 @@
 
     %ConvertToTypeCode
         #if wxUSE_UNICODE_WCHAR == 0
-        #error wxString converison can only handle WCHAR wxStrings currently
+        #error wxString conversion can only handle WCHAR wxStrings currently
         #endif
 
         // Code to test a PyObject for compatibility with wxString

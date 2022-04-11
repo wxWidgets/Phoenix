@@ -1,5 +1,5 @@
 """
-Various utilities used by topic-related modules.
+Various utilities used by topic-related modules. 
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
@@ -29,8 +29,8 @@ class WeakNone:
 
 def smartDedent(paragraph):
     """Dedent paragraph using textwrap.dedent(), but properly dedents
-    even if the first line of paragraph does not contain blanks.
-    This handles the case where a user types a documentation string as
+    even if the first line of paragraph does not contain blanks. 
+    This handles the case where a user types a documentation string as 
         '''A long string spanning
         several lines.'''
     """
@@ -76,15 +76,15 @@ def validateName(topicName):
 
 def stringize(topicName):
     """If topicName is a string, just return it
-    as is. If it is a topic definition object (ie an object that has
+    as is. If it is a topic definition object (ie an object that has 
     'msgDataSpec' as data member), return the dotted name of corresponding
-    topic. Otherwise, assume topicName is a tuple and convert it to to a
-    dotted name i.e. ('a','b','c') => 'a.b.c'. Empty name is not allowed
+    topic. Otherwise, assume topicName is a tuple and convert it to to a 
+    dotted name i.e. ('a','b','c') => 'a.b.c'. Empty name is not allowed 
     (ValueError). The reverse operation is tupleize(topicName)."""
     if py2and3.isstring(topicName):
         return topicName
-
-    if hasattr(topicName, "msgDataSpec"):
+    
+    if hasattr(topicName, "msgDataSpec"): 
         return topicName._topicNameStr
 
     try:
@@ -92,27 +92,27 @@ def stringize(topicName):
     except Exception:
         exc = py2and3.getexcobj()
         raise TopicNameError(topicName, str(exc))
-
+    
     return name
 
 
 def tupleize(topicName):
     """If topicName is a tuple of strings, just return it as is. Otherwise,
-    convert it to tuple, assuming dotted notation used for topicName. I.e.
-    'a.b.c' => ('a','b','c'). Empty topicName is not allowed (ValueError).
+    convert it to tuple, assuming dotted notation used for topicName. I.e. 
+    'a.b.c' => ('a','b','c'). Empty topicName is not allowed (ValueError). 
     The reverse operation is stringize(topicNameTuple)."""
-    # assume name is most often str; if more often tuple,
+    # assume name is most often str; if more often tuple, 
     # then better use isinstance(name, tuple)
-    if hasattr(topicName, "msgDataSpec"):
+    if hasattr(topicName, "msgDataSpec"): 
         topicName = topicName._topicNameStr
-    if py2and3.isstring(topicName):
+    if py2and3.isstring(topicName): 
         topicTuple = tuple(topicName.split('.'))
     else:
         topicTuple = tuple(topicName) # assume already tuple of strings
-
+        
     if not topicTuple:
         raise TopicNameError(topicTuple, "Topic name can't be empty!")
-
+                
     return topicTuple
 
 

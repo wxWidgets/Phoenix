@@ -63,7 +63,7 @@ class BitmapTests(wtc.WidgetTestCase):
         else:
             self.assertTrue( b2.__nonzero__() == b2.IsOk() )
 
-        # check that the __nonzero__ method can be used with if satements
+        # check that the __nonzero__ method can be used with if statements
         nzcheck = False
         if b2:
             nzcheck = True
@@ -112,6 +112,7 @@ class BitmapTests(wtc.WidgetTestCase):
         wx.BitmapBufferFormat_RGB32
         wx.BitmapBufferFormat_ARGB32
 
+    @unittest.skipIf('wxMac' in wx.PlatformInfo, 'Changing exiting bitmap size not allowed on wxMac')
     def test_bitmapSetSize(self):
         b1 = wx.Bitmap(1,1)
         b1.SetSize((20,30))

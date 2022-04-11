@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-Apr-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_TASKBAR_MOVE = wx.PyEventBinder (         wxEVT_TASKBAR_MOVE )
         EVT_TASKBAR_LEFT_DOWN = wx.PyEventBinder (    wxEVT_TASKBAR_LEFT_DOWN )
         EVT_TASKBAR_LEFT_UP = wx.PyEventBinder (      wxEVT_TASKBAR_LEFT_UP )
@@ -60,11 +60,14 @@ def run():
     method.virtualCatcherCode = """\
         // VirtualCatcherCode for wxTaskBarIcon.CreatePopupMenu
         PyObject *sipResObj = sipCallMethod(0, sipMethod, "");
-        sipParseResult(0, sipMethod, sipResObj, "H0", sipType_wxMenu, &sipRes);
+        if (!sipResObj || sipParseResult(0, sipMethod, sipResObj, "H0", sipType_wxMenu, &sipRes) < 0)
+            PyErr_Print();
         if (sipRes) {
             sipTransferTo(sipResObj, Py_None);
         }
         """
+    method = c.find('GetPopupMenu')
+    method.ignore(False)
 
 
     c.find('Destroy').transferThis = True
@@ -74,6 +77,15 @@ def run():
         doc="""\
             Show a balloon notification (the icon must have been already
             initialized using SetIcon).  Only implemented for Windows.
+
+            The ``title`` and ``text`` parameters are limited to 63 and 255
+            characters respectively, ``msec`` is the timeout, in milliseconds,
+            before the balloon disappears (will be clamped down to the allowed
+            10-30s range by Windows if it's outside it) and ``flags`` can
+            include wxICON_ERROR/INFO/WARNING to show a corresponding icon.
+
+            Returns ``True`` if balloon was shown, ``False`` on error (incorrect
+            parameters or function unsupported by OS).
             """,
         body="""\
             #ifdef __WXMSW__

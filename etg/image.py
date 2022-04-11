@@ -5,12 +5,13 @@
 #
 # Created:     25-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from buildtools.backports.textwrap3 import dedent
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -22,6 +23,15 @@ DOCSTRING = ""
 ITEMS  = [ 'wxImage',
            'wxImageHistogram',
            'wxImageHandler',
+           'wxTIFFHandler',
+           'wxGIFHandler',
+           "wxIFFHandler",
+           "wxJPEGHandler",
+           "wxPCXHandler",
+           "wxPNGHandler",
+           "wxPNMHandler",
+           "wxTGAHandler",
+           "wxXPMHandler"
            #'wxQuantize',
            #'wxPalette',
            ]
@@ -350,6 +360,7 @@ def run():
 
 
     c.addCppMethod('int', '__nonzero__', '()', 'return self->IsOk();')
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addPyMethod('ConvertToBitmap', '(self, depth=-1)',
         doc="""\
@@ -486,6 +497,83 @@ def run():
     c.addProperty('Type GetType SetType')
 
 
+    c.addCppMethod('wxRegion*', 'ConvertToRegion',
+        '(int R=-1, int G=-1, int B=-1, int tolerance=0)',
+        briefDoc="Create a :class:`wx.Region` where the transparent areas match the given RGB values.",
+        detailedDoc=[dedent("""\
+            If the RGB values are not given, then the image's mask colour components will
+            be used instead. If a non-zero tolerance is given then the pixels that fall
+            into the range of (R,G,B) to (R+tolerance, G+tolerance, B+tolerance) will be
+            considered to be transparent.
+
+            If there are no pixels matching the transparent colours then the region
+            returned will match the image's full dimensions.
+
+            :param int `R`: The red component of the transparent colour.
+            :param int `G`: The red component of the transparent colour.
+            :param int `B`: The red component of the transparent colour.
+            :param int `tolerance`: Broadens the range of colours that will
+                be considered transparent.
+            :returns: a :class:`wx.Region` object.
+            """)],
+        body="""\
+            wxRegion* region = new wxRegion();
+            unsigned char hiR, hiG, hiB;
+
+            if (R == -1) { R = self->GetMaskRed(); }
+            if (G == -1) { G = self->GetMaskGreen(); }
+            if (B == -1) { B = self->GetMaskBlue(); }
+
+            // Make sure nothing out of range was passed
+            R &= 0xFF;
+            G &= 0xFF;
+            B &= 0xFF;
+
+            hiR = (unsigned char)wxMin(0xFF, R + tolerance);
+            hiG = (unsigned char)wxMin(0xFF, G + tolerance);
+            hiB = (unsigned char)wxMin(0xFF, B + tolerance);
+
+            // Loop through the image row by row, pixel by pixel, building up
+            // rectangles to add to the region.
+            int width = self->GetWidth();
+            int height = self->GetHeight();
+
+            for (int y=0; y < height; y++)
+            {
+                wxRect rect;
+                rect.y = y;
+                rect.height = 1;
+
+                for (int x=0; x < width; x++)
+                {
+                    // search for a continuous range of non-transparent pixels
+                    int x0 = x;
+                    while ( x < width)
+                    {
+                        unsigned char red = self->GetRed(x,y);
+                        unsigned char grn = self->GetGreen(x,y);
+                        unsigned char blu = self->GetBlue(x,y);
+                        if (( red >= R && red <= hiR) &&
+                            ( grn >= G && grn <= hiG) &&
+                            ( blu >= B && blu <= hiB))  // It's transparent
+                            break;
+                        x++;
+                    }
+
+                    // Add the run of non-transparent pixels (if any) to the region
+                    if (x > x0) {
+                        rect.x = x0;
+                        rect.width = x - x0;
+                        region->Union(rect);
+                    }
+                }
+            }
+            if (region->IsEmpty())
+                region->Union(0, 0, width, height);
+            return region;
+            """)
+
+
     # For compatibility:
     module.addPyFunction('EmptyImage', '(width=0, height=0, clear=True)',
                          deprecated="Use :class:`Image` instead.",
@@ -574,6 +662,68 @@ def run():
     c.find('DoGetImageCount').ignore(False)
     c.find('DoCanRead').ignore(False)
 
+    module.addHeaderCode("""\
+        #include <wx/imaggif.h>
+        #include <wx/imagiff.h>
+        #include <wx/imagjpeg.h>
+        #include <wx/imagpcx.h>
+        #include <wx/imagpng.h>
+        #include <wx/imagpnm.h>
+        #include <wx/imagtga.h>
+        #include <wx/imagtiff.h>
+        #include <wx/imagxpm.h>
+        """)
+
+    #-------------------------------------------------------
+    # tweak for GIFHandler
+    # need to include anidecod.h, otherwise use of forward declared class
+    # compilation errors will occur.
+    c = module.find('wxGIFHandler')
+    c.find('DoCanRead').ignore(False)
+
+    module.addHeaderCode("#include <wx/anidecod.h>")
+    module.addItem(tools.wxArrayWrapperTemplate('wxImageArray', 'wxImage', module))
+
+    #-------------------------------------------------------
+    # tweak for IFFHandler
+    c = module.find('wxIFFHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for JPEGHandler
+    c = module.find('wxJPEGHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for PCXHandler
+    c = module.find('wxPCXHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for PNGHandler
+    c = module.find('wxPNGHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for PNMHandler
+    c = module.find('wxPNMHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for TGAHandler
+    c = module.find('wxTGAHandler')
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for TIFFHandler
+    c = module.find('wxTIFFHandler')
+    c.find('GetLibraryVersionInfo').ignore()
+    c.find('DoCanRead').ignore(False)
+
+    #-------------------------------------------------------
+    # tweak for XPMHandler
+    c = module.find('wxXPMHandler')
+    c.find('DoCanRead').ignore(False)
 
     #-------------------------------------------------------
 

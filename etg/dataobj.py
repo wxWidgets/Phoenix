@@ -4,7 +4,7 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -28,6 +28,7 @@ ITEMS  = [ 'wxDataFormat',
            'wxURLDataObject',
            'wxFileDataObject',
            'wxHTMLDataObject',
+           'wxImageDataObject'
            ]
 
 
@@ -50,7 +51,7 @@ def addGetAllFormats(klass, pureVirtual=False):
         isConst=True,
         doc="""\
             Returns a list of wx.DataFormat objects which this data object
-            supports transfering in the given direction.""",
+            supports transferring in the given direction.""",
         body="""\
             size_t count = self->GetFormatCount(dir);
             wxDataFormat* formats = new wxDataFormat[count];
@@ -67,7 +68,7 @@ def addGetAllFormats(klass, pureVirtual=False):
             """,
 
         # This code will be used in the function that calls a Python implementation
-        # of this method. So we need to translate between the real C++ siganture
+        # of this method. So we need to translate between the real C++ signature
         # and the Python signature.
         virtualCatcherCode="""\
             // VirtualCatcherCode for wx.DataObject.GetAllFormats
@@ -116,12 +117,12 @@ def addBaseVirtuals(c):
         doc="",
         body="return self->SetData(*format, buf->m_len, buf->m_ptr);",
         virtualCatcherCode="""\
-            {0}* self = ({0}*)sipPySelf->data;
+            {0}* self = static_cast<{0}*>(wxPyGetCppPtr(sipPySelf));
             sipRes = self->{0}::SetData(format, len, buf);
             """.format(c.name))
 
     # We need to let SIP know that the pure virtuals in the base class have
-    # impelmentations in C even though they will not be used much (if at
+    # implementations in C even though they will not be used much (if at
     # all.)
     if not c.findItem('GetFormatCount'):
         c.addItem(
@@ -132,6 +133,7 @@ def addBaseVirtuals(c):
         private:
         virtual size_t GetDataSize(const wxDataFormat& format) const;
         virtual bool   GetDataHere(const wxDataFormat& format, void* buf) const;
+        public:
         """))
 
 
@@ -162,6 +164,11 @@ def run():
     module.items.remove(item)
     module.insertItemAfter(c, item)
 
+    module.addPyCode("""\
+        def CustomDataFormat(format):
+            return wx.DataFormat(format)
+        CustomDataFormat = wx.deprecated(CustomDataFormat, "Use wx.DataFormat instead.")
+        """)
 
     #------------------------------------------------------------
     c = module.find('wxDataObject')
@@ -203,7 +210,7 @@ def run():
             PyObject* resObj = NULL;
             Py_ssize_t size = 0;
 
-            self = PyMethod_Self(sipMethod); // this shouldn't fail, and the reference is borrowed
+            self = wxPyMethod_Self(sipMethod); // this shouldn't fail, and the reference is borrowed
 
             fmtObj = wxPyConstructObject((void*)&format, "wxDataFormat", false);
             if (!fmtObj) goto error;
@@ -277,7 +284,7 @@ def run():
             PyObject* resObj = NULL;
             Py_ssize_t size = 0;
 
-            self = PyMethod_Self(sipMethod);
+            self = wxPyMethod_Self(sipMethod);
 
             sizeObj = PyObject_CallMethod(self, "GetDataSize", "", NULL);
             if (!sizeObj) goto error;
@@ -334,11 +341,11 @@ def run():
         body="return wxPyMakeBuffer(self->GetData(), self->GetSize());")
 
     c.find('SetData').ignore()
-    c.addCppMethod('bool', 'SetData', '(wxPyBuffer* buf)',
+    c.addCppMethod_sip('bool', 'SetData', '(wxPyBuffer* buf)',
         cppSignature='bool (size_t len, const void* buf)',
         isVirtual=True,
         doc="Copies data from the provided buffer to this data object's buffer",
-        body="return self->SetData(buf->m_len, buf->m_ptr);")
+        body="sipRes = (sipSelfWasArg ? sipCpp-> ::wxCustomDataObject::SetData(buf->m_len, buf->m_ptr) : sipCpp->SetData(buf->m_len, buf->m_ptr));")
 
     addGetAllFormats(c)
     addBaseVirtuals(c)
@@ -371,7 +378,12 @@ def run():
 
     addGetAllFormats(c)
     addBaseVirtuals(c)
-    addSimpleVirtuals(c)
+
+    # It also causes mismatches regarding what virtuals are available
+    # in the base classes. For now just ignore them for this class. If
+    # they really are needed then something more creative will need to
+    # be done.
+    #addSimpleVirtuals(c)
 
 
     #------------------------------------------------------------
@@ -379,6 +391,11 @@ def run():
     addGetAllFormats(c)
     addBaseVirtuals(c)
     addSimpleVirtuals(c)
+
+    #------------------------------------------------------------
+    c = module.find('wxImageDataObject')
+    addGetAllFormats(c)
+    addBaseVirtuals(c)
 
     #------------------------------------------------------------
     c = module.find('wxFileDataObject')
@@ -391,7 +408,6 @@ def run():
     addGetAllFormats(c)
     addBaseVirtuals(c)
     addSimpleVirtuals(c)
-
 
 
     #------------------------------------------------------------

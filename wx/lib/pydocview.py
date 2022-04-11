@@ -34,8 +34,8 @@ else:
 # Constants
 #----------------------------------------------------------------------------
 
-VIEW_TOOLBAR_ID = wx.NewId()
-VIEW_STATUSBAR_ID = wx.NewId()
+VIEW_TOOLBAR_ID = wx.NewIdRef()
+VIEW_STATUSBAR_ID = wx.NewIdRef()
 
 EMBEDDED_WINDOW_TOP = 1
 EMBEDDED_WINDOW_BOTTOM = 2
@@ -48,7 +48,7 @@ EMBEDDED_WINDOW_BOTTOMRIGHT = 128
 EMBEDDED_WINDOW_ALL = EMBEDDED_WINDOW_TOP | EMBEDDED_WINDOW_BOTTOM | EMBEDDED_WINDOW_LEFT | EMBEDDED_WINDOW_RIGHT | \
                       EMBEDDED_WINDOW_TOPLEFT | EMBEDDED_WINDOW_BOTTOMLEFT | EMBEDDED_WINDOW_TOPRIGHT | EMBEDDED_WINDOW_BOTTOMRIGHT
 
-SAVEALL_ID = wx.NewId()
+SAVEALL_ID = wx.NewIdRef()
 
 WINDOW_MENU_NUM_ITEMS = 9
 
@@ -502,11 +502,11 @@ class DocMDIParentFrameMixIn:
         Creates the embedded window with the specified size, orientation, and alignment.  If the
         window is not visible it will retain the size with which it was last viewed.
         """
-        window = wx.SashLayoutWindow(parent, wx.NewId(), style = wx.NO_BORDER | wx.SW_3D)
+        window = wx.SashLayoutWindow(parent, wx.ID_ANY, style = wx.NO_BORDER | wx.SW_3D)
         window.SetDefaultSize(size)
         window.SetOrientation(orientation)
         window.SetAlignment(alignment)
-        if sash != None:  # wx.SASH_TOP is 0 so check for None instead of just doing "if sash:"
+        if sash is not None:  # wx.SASH_TOP is 0 so check for None instead of just doing "if sash:"
             window.SetSashVisible(sash, True)
         ####
         def OnEmbeddedWindowSashDrag(event):
@@ -557,7 +557,7 @@ class DocMDIParentFrameMixIn:
                         window.SetDefaultSize((window._sizeBeforeHidden[0], window._sizeBeforeHidden[0] - self.GetEmbeddedWindow(EMBEDDED_WINDOW_BOTTOMRIGHT).GetSize()[1]))
                 else:
                     window.SetDefaultSize(window._sizeBeforeHidden)
-                    # If it is not the size of the full parent sashwindow set the other window's size so that if it gets shown it will have a cooresponding size
+                    # If it is not the size of the full parent sashwindow set the other window's size so that if it gets shown it will have a corresponding size
                     if window._sizeBeforeHidden[1] < parentSashWindow.GetClientSize()[1]:
                         otherWindowSize = (-1, parentSashWindow.GetClientSize()[1] - window._sizeBeforeHidden[1])
                         if window == self.GetEmbeddedWindow(EMBEDDED_WINDOW_BOTTOMLEFT):
@@ -796,9 +796,9 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
         Creates the notebook to use for the tabbed document interface.
         """
         if wx.Platform != "__WXMAC__":
-            self._notebook = wx.Notebook(self, wx.NewId())
+            self._notebook = wx.Notebook(self, wx.ID_ANY)
         else:
-            self._notebook = wx.Listbook(self, wx.NewId(), style=wx.LB_LEFT)
+            self._notebook = wx.Listbook(self, wx.ID_ANY, style=wx.LB_LEFT)
         # self._notebook.SetSizer(wx.NotebookSizer(self._notebook))
         if wx.Platform != "__WXMAC__":
             wx.EVT_NOTEBOOK_PAGE_CHANGED(self, self._notebook.GetId(), self.OnNotebookPageChanged)
@@ -899,13 +899,13 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
         x, y = event.GetX(), event.GetY()
         if index > -1:
             doc = self._notebook.GetPage(index).GetView().GetDocument()
-            id = wx.NewId()
+            id = wx.NewIdRef()
             menu.Append(id, _("Close"))
             def OnRightMenuSelect(event):
                 doc.DeleteAllViews()
             wx.EVT_MENU(self, id, OnRightMenuSelect)
             if self._notebook.GetPageCount() > 1:
-                id = wx.NewId()
+                id = wx.NewIdRef()
                 menu.Append(id, _("Close All but \"%s\"" % doc.GetPrintableName()))
                 def OnRightMenuSelect(event):
                     for i in range(self._notebook.GetPageCount()-1, -1, -1): # Go from len-1 to 0
@@ -916,7 +916,7 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
                 wx.EVT_MENU(self, id, OnRightMenuSelect)
                 menu.AppendSeparator()
                 tabsMenu = wx.Menu()
-                menu.AppendMenu(wx.NewId(), _("Select Tab"), tabsMenu)
+                menu.AppendMenu(wx.ID_ANY, _("Select Tab"), tabsMenu)
         else:
             y = y - 25  # wxBug: It is offsetting click events in the blank notebook area
             tabsMenu = menu
@@ -924,7 +924,7 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
         if self._notebook.GetPageCount() > 1:
             selectIDs = {}
             for i in range(0, self._notebook.GetPageCount()):
-                id = wx.NewId()
+                id = wx.NewIdRef()
                 selectIDs[id] = i
                 tabsMenu.Append(id, self._notebook.GetPageText(i))
                 def OnRightMenuSelect(event):
@@ -1497,9 +1497,9 @@ class OptionsDialog(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
 
         if wx.Platform == "__WXMAC__":
-            optionsNotebook = wx.Listbook(self, wx.NewId(), style=wx.LB_DEFAULT)
+            optionsNotebook = wx.Listbook(self, wx.ID_ANY, style=wx.LB_DEFAULT)
         else:
-            optionsNotebook = wx.Notebook(self, wx.NewId(), style=wx.NB_MULTILINE)  # NB_MULTILINE is windows platform only
+            optionsNotebook = wx.Notebook(self, wx.ID_ANY, style=wx.NB_MULTILINE)  # NB_MULTILINE is windows platform only
         sizer.Add(optionsNotebook, 0, wx.ALL | wx.EXPAND, SPACE)
 
         if wx.Platform == "__WXMAC__":
@@ -1863,7 +1863,7 @@ class DocApp(wx.App):
         """
         Returns the instance of a particular type of service that has been installed
         into the DocApp.  For example, "wx.GetApp().GetService(pydocview.OptionsService)"
-        returns the isntance of the OptionsService that is running within the DocApp.
+        returns the instance of the OptionsService that is running within the DocApp.
         """
         for service in self._services:
             if isinstance(service, type):
@@ -2542,7 +2542,7 @@ class FilePropertiesService(DocService):
     with the current document.
     """
 
-    PROPERTIES_ID = wx.NewId()
+    PROPERTIES_ID = wx.NewIdRef()
 
 
     def __init__(self):
@@ -2590,7 +2590,7 @@ class FilePropertiesService(DocService):
                 if eventHandler.ProcessUpdateUIEvent(event):
                     return True
 
-            event.Enable(wx.GetApp().GetDocumentManager().GetCurrentDocument() != None)
+            event.Enable(wx.GetApp().GetDocumentManager().GetCurrentDocument() is not None)
             return True
         else:
             return False
@@ -2851,11 +2851,11 @@ class WindowMenuService(DocService):
     #----------------------------------------------------------------------------
     # Constants
     #----------------------------------------------------------------------------
-    ARRANGE_WINDOWS_ID = wx.NewId()
-    SELECT_MORE_WINDOWS_ID = wx.NewId()
-    SELECT_NEXT_WINDOW_ID = wx.NewId()
-    SELECT_PREV_WINDOW_ID = wx.NewId()
-    CLOSE_CURRENT_WINDOW_ID = wx.NewId()
+    ARRANGE_WINDOWS_ID = wx.NewIdRef()
+    SELECT_MORE_WINDOWS_ID = wx.NewIdRef()
+    SELECT_NEXT_WINDOW_ID = wx.NewIdRef()
+    SELECT_PREV_WINDOW_ID = wx.NewIdRef()
+    CLOSE_CURRENT_WINDOW_ID = wx.NewIdRef()
 
 
     def __init__(self):
@@ -2864,7 +2864,7 @@ class WindowMenuService(DocService):
         """
         self._selectWinIds = []
         for i in range(0, 9):
-            self._selectWinIds.append(wx.NewId())
+            self._selectWinIds.append(wx.NewIdRef())
 
 
     def InstallControls(self, frame, menuBar=None, toolBar=None, statusBar=None, document=None):
@@ -3013,6 +3013,7 @@ class WindowMenuService(DocService):
             currentFrame = wx.GetApp().GetTopWindow()
 
         windowMenuIndex = currentFrame.GetMenuBar().FindMenu(_("&Window"))
+        assert windowMenuIndex != wx.NOT_FOUND, "Menu not found in MenuBar for {}".format(_("&Window"))
         windowMenu = currentFrame.GetMenuBar().GetMenu(windowMenuIndex)
 
         if self.GetDocumentManager().GetFlags() & wx.lib.docview.DOC_SDI:
@@ -3055,7 +3056,7 @@ class WindowMenuService(DocService):
 
             if numPages > len(self._selectWinIds):
                 for i in range(len(self._selectWinIds), numPages):
-                    self._selectWinIds.append(wx.NewId())
+                    self._selectWinIds.append(wx.NewIdRef())
                     wx.EVT_MENU(currentFrame, self._selectWinIds[i], self.OnCtrlKeySelect)
 
             for i in range(0, numPages):

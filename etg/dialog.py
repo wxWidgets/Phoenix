@@ -4,7 +4,7 @@
 #
 # Created:     26-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -43,8 +43,6 @@ def run():
     c.find('wxDialog.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'
 
-    # PocketPC only, don't think we'll need these ;)
-    c.find('DoOK').ignore()
     c.find('GetToolBar').ignore()
 
     # Uses a template, but it would be easier to reimplement it in Python if

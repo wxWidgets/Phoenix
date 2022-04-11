@@ -405,7 +405,7 @@ class MultiClient(wx.Window):
     def Select(self):
         self.GetParent().multiView.UnSelect()
         self.selected = True
-        self.SetBackgroundColour(wx.Colour(255,255,0)) # Yellow
+        self.SetBackgroundColour(wx.YELLOW)
         self.Refresh()
 
     def CalcSize(self,parent):
@@ -698,6 +698,7 @@ class EmptyChild(wx.Window):
 
 #----------------------------------------------------------------------
 
+# TODO: Switch to wx.Overlay instead of screen DC
 
 def DrawSash(win,x,y,direction):
     dc = wx.ScreenDC()
@@ -711,7 +712,7 @@ def DrawSash(win,x,y,direction):
             if ((i + j) & 1):
                 bdc.DrawPoint(i,j)
 
-    brush = wx.Brush(wx.Colour(0,0,0))
+    brush = wx.BLACK_BRUSH
     brush.SetStipple(bmp)
 
     dc.SetBrush(brush)

@@ -8,7 +8,7 @@ import os
 
 #----------------------------------------------------------------------
 # This class is used to provide an interface between a ComboCtrl and the
-# ListCtrl that is used as the popoup for the combo widget.
+# ListCtrl that is used as the popup for the combo widget.
 
 class ListCtrlComboPopup(wx.ComboPopup):
 

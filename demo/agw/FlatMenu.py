@@ -48,18 +48,18 @@ else:
 # Menu items IDs
 #-------------------------------
 
-MENU_STYLE_DEFAULT = wx.NewId()
-MENU_STYLE_XP = wx.NewId()
-MENU_STYLE_2007 = wx.NewId()
-MENU_STYLE_VISTA = wx.NewId()
-MENU_STYLE_MY = wx.NewId()
-MENU_USE_CUSTOM = wx.NewId()
-MENU_LCD_MONITOR = wx.NewId()
-MENU_HELP = wx.NewId()
+MENU_STYLE_DEFAULT = wx.NewIdRef()
+MENU_STYLE_XP = wx.NewIdRef()
+MENU_STYLE_2007 = wx.NewIdRef()
+MENU_STYLE_VISTA = wx.NewIdRef()
+MENU_STYLE_MY = wx.NewIdRef()
+MENU_USE_CUSTOM = wx.NewIdRef()
+MENU_LCD_MONITOR = wx.NewIdRef()
+MENU_HELP = wx.NewIdRef()
 
-MENU_DISABLE_MENU_ITEM = wx.NewId()
-MENU_REMOVE_MENU = wx.NewId()
-MENU_TRANSPARENCY = wx.NewId()
+MENU_DISABLE_MENU_ITEM = wx.NewIdRef()
+MENU_REMOVE_MENU = wx.NewIdRef()
+MENU_TRANSPARENCY = wx.NewIdRef()
 
 MENU_NEW_FILE = 10005
 MENU_SAVE = 10006
@@ -84,7 +84,7 @@ def CreateBackgroundBitmap():
     mem_dc.Clear()
 
     # colour the menu face with background colour
-    top = wx.Colour("blue")
+    top = wx.BLUE
     bottom = wx.Colour("light blue")
     filRect = wx.Rect(0, 0, 200, 300)
     mem_dc.GradientFillConcentric(filRect, top, bottom, wx.Point(100, 150))
@@ -571,7 +571,7 @@ class FlatMenuDemo(wx.Frame):
         # Create the popup menu
         self.CreateLongPopupMenu()
 
-        # Postion the menu:
+        # Position the menu:
         # The menu should be positioned at the bottom left corner of the button.
         btnSize = btn.GetSize()
 

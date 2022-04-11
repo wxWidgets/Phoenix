@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-July-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags:        phoenix-port, py3-port
@@ -29,7 +29,7 @@ if os.name == 'nt':
     _cairo_path = os.environ.get('CAIRO')
     if not _cairo_path:
         _cairo_path = op.abspath(op.dirname(wx.__file__))
-        os.environ['PATH'] = _cairo_path + os.pathsep + _save_path
+    os.environ['PATH'] = _cairo_path + os.pathsep + _save_path
 
 import cairocffi
 from cairocffi import cairo as cairo_c

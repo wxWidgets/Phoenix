@@ -110,31 +110,7 @@ class RibbonToolBarEvent(wx.PyCommandEvent):
          the window.
         """
 
-        pos = wx.Point()
-
-        if self._bar._active_tool:
-            # Find the group which contains the tool
-            group_count = len(self._bar._groups)
-            tobreak = False
-
-            for g in range(group_count):
-                group = self._bar._groups[g]
-                tool_count = len(group.tools)
-
-                for t in range(tool_count):
-                    tool = group.tools[t]
-                    if tool == self._bar._active_tool:
-                        pos = wx.Point(*group.position)
-                        pos += tool.position
-                        pos.y += tool.size.GetHeight()
-                        g = group_count
-                        tobreak = True
-                        break
-
-                if tobreak:
-                    break
-
-        return self._bar.PopupMenu(menu, pos)
+        return self._bar.PopupMenu(menu)
 
 
 class RibbonToolBarToolBase(object):
@@ -297,7 +273,7 @@ class RibbonToolBar(RibbonControl):
         return self.InsertTool(pos, tool_id, bitmap, wx.NullBitmap, help_string, RIBBON_BUTTON_HYBRID, None)
 
 
-    def AddToggleTool(self, bitmap, help_string=""):
+    def AddToggleTool(self, tool_id, bitmap, help_string=""):
         """
         Add a toggle tool to the tool bar (simple version).
 
@@ -417,7 +393,7 @@ class RibbonToolBar(RibbonControl):
         Adds a separator to the tool bar.
 
         Separators are used to separate tools into groups. As such, a separator is not
-        explicity drawn, but is visually seen as the gap between tool groups.
+        explicitly drawn, but is visually seen as the gap between tool groups.
         """
 
         if not self._groups[-1].tools:
@@ -432,7 +408,7 @@ class RibbonToolBar(RibbonControl):
         Inserts a separator into the tool bar at the position specified by `pos`.
 
         Separators are used to separate tools into groups. As such, a separator is not
-        explicity drawn, but is visually seen as the gap between tool groups.
+        explicitly drawn, but is visually seen as the gap between tool groups.
 
         :param `pos`: the position of the new tool in the toolbar (zero-based).
 
@@ -968,7 +944,7 @@ class RibbonToolBar(RibbonControl):
         Set the number of rows to distribute tool groups over.
 
         Tool groups can be distributed over a variable number of rows. The way in which
-        groups are assigned to rows is not specificed, and the order of groups may
+        groups are assigned to rows is not specified, and the order of groups may
         change, but they will be distributed in such a way as to minimise the overall
         size of the tool bar.
 
@@ -1004,7 +980,7 @@ class RibbonToolBar(RibbonControl):
         :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
-        if self._art == None:
+        if self._art is None:
             return False
 
         # Calculate the size of each group and the position/size of each tool
@@ -1123,7 +1099,7 @@ class RibbonToolBar(RibbonControl):
         :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
-        if self._art == None:
+        if self._art is None:
             return
 
         # Choose row count with largest possible area
@@ -1183,7 +1159,7 @@ class RibbonToolBar(RibbonControl):
 
         # Set group y positions
         for group in self._groups:
-            group.position.y = rowypos[group.position.y]
+            group.position.y = int(rowypos[group.position.y])
 
 
     def GetBestSizeForParentSize(self, parentSize):
@@ -1250,7 +1226,7 @@ class RibbonToolBar(RibbonControl):
 
         dc = wx.AutoBufferedPaintDC(self)
 
-        if self._art == None:
+        if self._art is None:
             return
 
         self._art.DrawToolBarBackground(dc, self, wx.Rect(0, 0, *self.GetSize()))

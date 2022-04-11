@@ -6,6 +6,9 @@ if 'wxEVT_NULL' in dir():
     import wx._core
     __version__ = VERSION_STRING
 
+    # Add the build type to PlatformInfo
+    PlatformInfo = PlatformInfo + ('build-type: ' + BUILD_TYPE, )
+
     # Register a function to be called when Python terminates that will clean
     # up and release all system resources that wxWidgets allocated.
     import atexit

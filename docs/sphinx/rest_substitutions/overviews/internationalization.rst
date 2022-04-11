@@ -13,7 +13,7 @@
 
 "Internationalization" (often referred to as i18n) is the process to change an
 application so that all user visible texts are translated to the user selected
-language and that things like dates, money amounts and numbers in general are 
+language and that things like dates, money amounts and numbers in general are
 shown in a format the user is familiar with/or used to.
 
 The easiest way to show what is needed is by using a little code sample.
@@ -26,7 +26,7 @@ Prepare the source code
 -----------------------
 
 Text translation in Python is done using gettext [1]_ , to ensure that all
-wxPython labels are also translated we will use :class:`wx.Locale` and 
+wxPython labels are also translated we will use :class:`wx.Locale` and
 :func:`wx.GetTranslation` .
 
 How to prepare your source code to enable translation of texts::
@@ -66,7 +66,7 @@ The ``.pot`` file is then provided to the translators and they use it to
 generate a ``.po`` file for the language they translate too or they can also use
 the ``.pot`` file to merge new/changed text strings to an existing ``.po`` file.
 
-To do the actual translation we recomment `poEdit` [2]_ , it allows you to
+To do the actual translation we recommend `poEdit` [2]_ , it allows you to
 create or update a translation catalog (``.po`` file) from the ``.pot`` file.
 
 

@@ -345,7 +345,7 @@ class ToasterBox(wx.Timer):
         else:
             pos = wx.Point((x + (width/2) - (toast_width/2)), (y + (height/2) - (toast_height/2)))
 
-        tb.SetPopupPosition(pos)
+        self.SetPopupPosition(pos)
 
 
     CentreOnParent = CenterOnParent
@@ -372,7 +372,7 @@ class ToasterBox(wx.Timer):
         else:
             pos = wx.Point((width/2) - (toast_width/2), (height/2) - (toast_height/2))
 
-        tb.SetPopupPosition(pos)
+        self.SetPopupPosition(pos)
 
 
     CentreOnScreen = CenterOnScreen
@@ -984,7 +984,7 @@ class ToasterBoxWindow(wx.Frame):
         self._direction = wx.UP
         self.SetupPositions()
         self.ScrollUp()
-        timerid = wx.NewId()
+        timerid = wx.NewIdRef()
         self.showtime = wx.Timer(self, timerid)
         self.showtime.Start(self._pausetime)
         self.Bind(wx.EVT_TIMER, self.NotifyTimer, id=timerid)
@@ -1247,6 +1247,7 @@ class ToasterBoxWindow(wx.Frame):
 
             if self._amount < 0:
                 self.Hide()
+                self.showtime.Stop()
                 if self._parent2:
                     self._parent2.Notify()
 
@@ -1315,11 +1316,11 @@ class ToasterBoxWindow(wx.Frame):
         for line in lines:
             w, h = dc.GetTextExtent(line)
             fh += h + textPadding
-        y = (th - fh) / 2; coords = []
+        y = (th - fh) // 2; coords = []
 
         for line in lines:
             w, h = dc.GetTextExtent(line)
-            x = (tw - w) / 2
+            x = (tw - w) // 2
             coords.append((x, y))
             y += h + textPadding
 

@@ -1,4 +1,4 @@
-    
+
         bitmap = wx.Bitmap('splash16.png', wx.BITMAP_TYPE_PNG)
 
         splash = wx.adv.SplashScreen(bitmap, wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,

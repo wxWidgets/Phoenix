@@ -1,9 +1,9 @@
-    
+
         # Called when window needs to be repainted.
         def OnPaint(self, event):
-        
+
             dc = wx.PaintDC(self)
-    
+
             # Find out where the window is scrolled to
             vbX, vbY = self.GetViewStart()
 
@@ -17,5 +17,5 @@
                 # Repaint this rectangle
                 PaintRectangle(rect, dc)
 
-                upd.Next()            
-        
+                upd.Next()
+

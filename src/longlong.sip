@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
-// Name:        datetime.sip
+// Name:        longlong.sip
 // Purpose:     Implements a %MappedType for wxLongLong
 //
 // Author:      Robin Dunn
 //
 // Created:     29-Feb-2012
-// Copyright:   (c) 2012-2017 by Total Control Software
+// Copyright:   (c) 2012-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:
-# Copyright:   (c) 2013-2017 by Total Control Software
+# Copyright:   (c) 2013-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -32,9 +32,8 @@ def run():
 
     c = module.find('wxVideoMode')
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     module.addItem(tools.wxArrayWrapperTemplate(
         'wxArrayVideoModes', 'wxVideoMode', module))

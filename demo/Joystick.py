@@ -2,7 +2,7 @@
 
 #----------------------------------------------------------------------------
 # Name:        Joystick.py
-# Purpose:     Demonstrate use of wx.Joystick
+# Purpose:     Demonstrate use of wx.adv.Joystick
 #
 # Author:      Jeff Grimmett (grimmtoo@softhome.net), adapted from original
 #              .wdr-derived demo
@@ -17,9 +17,6 @@ import math
 import wx
 import wx.adv
 
-haveJoystick = True
-if wx.Platform == "__WXMAC__":
-    haveJoystick = False
 
 #----------------------------------------------------------------------------
 
@@ -80,7 +77,7 @@ class JoyGauge(wx.Panel):
         dc = wx.BufferedPaintDC(self, self.buffer)
 
     def DrawJoystick(self, dc):
-        # draw the guage as a maxed square in the center of this window.
+        # draw the gauge as a maxed square in the center of this window.
         w, h = self.GetClientSize()
         edgeSize = min(w, h)
 
@@ -136,7 +133,8 @@ class JoyGauge(wx.Panel):
 
             # Now to draw it.
             dc.SetPen(wx.Pen(wx.RED, 2))
-            dc.CrossHair(x, y)
+            dc.DrawLine(x, 0, x, h)
+            dc.DrawLine(0, y, w, y)
 
 
     def Update(self):
@@ -162,10 +160,10 @@ class JoyPanel(wx.Panel):
 
         t = wx.StaticText(self, -1, "X - Y Axes", style = wx.ALIGN_CENTRE)
         t.SetFont(fn)
-        sizer.Add(t, 0, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER | wx.ALIGN_CENTER_HORIZONTAL, 1)
+        sizer.Add(t, 0, wx.ALL | wx.EXPAND, 1)
 
         self.control = JoyGauge(self, self.stick)
-        sizer.Add(self.control, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER | wx.ALIGN_CENTER_HORIZONTAL, 1)
+        sizer.Add(self.control, 1, wx.ALL | wx.EXPAND, 1)
 
         self.SetSizer(sizer)
         sizer.Fit(self)
@@ -178,7 +176,7 @@ class JoyPanel(wx.Panel):
 
 class POVGauge(wx.Panel):
     #
-    # Display the current postion of the POV control
+    # Display the current position of the POV control
     #
     def __init__(self, parent, stick):
 
@@ -221,7 +219,7 @@ class POVGauge(wx.Panel):
         dc = wx.BufferedPaintDC(self, self.buffer)
 
     def DrawPOV(self, dc):
-        # draw the guage as a maxed circle in the center of this window.
+        # draw the gauge as a maxed circle in the center of this window.
         w, h = self.GetClientSize()
         diameter = min(w, h)
 
@@ -357,11 +355,11 @@ class POVPanel(wx.Panel):
         gsizer.Add(t, 0, wx.ALL | wx.EXPAND, 1)
 
         self.display = POVGauge(self, stick)
-        gsizer.Add(self.display, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 1)
-        sizer.Add(gsizer, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 1)
+        gsizer.Add(self.display, 1, wx.ALL | wx.EXPAND, 1)
+        sizer.Add(gsizer, 1, wx.ALL | wx.EXPAND, 1)
 
         self.status = POVStatus(self, stick)
-        sizer.Add(self.status, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 1)
+        sizer.Add(self.status, 1, wx.ALL | wx.EXPAND, 1)
 
         self.SetSizer(sizer)
         sizer.Fit(self)
@@ -610,7 +608,7 @@ class InfoPanel(wx.Panel):
 class AxisBar(wx.Gauge):
     #
     # This class allows us to use a wx.Gauge to display the axis value
-    # with a fancy label overlayed onto the guage itself. Two values are
+    # with a fancy label overlaid onto the gauge itself. Two values are
     # used to do things: first of all, since the gauge is limited to
     # positive numbers, the scale is fixed at 0 to 1000. We will receive
     # an adjusted value to use to render the gauge itself. The other value
@@ -626,9 +624,10 @@ class AxisBar(wx.Gauge):
         self.SetBackgroundColour('light blue')
         self.SetForegroundColour('orange')
 
-        # Capture paint events for purpose of updating
-        # the displayed value.
-        self.Bind(wx.EVT_PAINT, self.onPaint)
+        # NOTE: See comment below
+        # # Capture paint events for purpose of updating
+        # # the displayed value.
+        # self.Bind(wx.EVT_PAINT, self.onPaint)
 
     def Update(self, value, rawvalue):
         # Updates the gauge itself, sets the raw value for
@@ -647,15 +646,24 @@ class AxisBar(wx.Gauge):
 
         # Clear out the gauge
         dc.Clear()
-        # and then carry out business as usual
-        wx.Gauge.OnPaint(self, evt)
+
+        # NOTE: in Classic we exposed wxWindow::OnPaint for MSW, so the default
+        #       paint behavior can be triggered and then we can draw on top of
+        #       that after the native OnPaint is done. For Phoenix, I chose to
+        #       not do this any more, so this breaks. Not sure this is really
+        #       needed for this demo, but if so then we'll nede to find another
+        #       way to do this. In the meantime, this is commented out, and the
+        #       Paint event will also not be captured at all.
+
+        # # and then carry out business as usual
+        # wx.Gauge.OnPaint(self, evt)
 
         # This is the size available to us.
         w, h = dc.GetSize()
 
         # This is what we will overlay on the gauge.
         # It reflects the actual value received from the
-        # wx.Joystick.
+        # wx.adv.Joystick.
         txt = str(self.rawvalue)
 
         # Copy the default font, make it bold.
@@ -735,14 +743,14 @@ class Axis(wx.Panel):
             self.Max = wx.StaticText(self, -1, str(self.GetMax()), style=wx.ALIGN_LEFT)
             self.bar = AxisBar(self)
 
-            sizer.Add(self.Min, 0, wx.ALL | wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL, 1)
-            sizer.Add(self.bar, 1, wx.ALL | wx.ALIGN_CENTER | wx.ALIGN_CENTER_VERTICAL, 1)
-            sizer.Add(self.Max, 0, wx.ALL | wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL, 1)
+            sizer.Add(self.Min, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 1)
+            sizer.Add(self.bar, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 1)
+            sizer.Add(self.Max, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 1)
 
         else:
             # We go here if the axis in question is not available.
             self.control = wx.StaticText(self, -1, '       *** Not Present ***')
-            sizer.Add(self.control, 1, wx.ALL | wx.ALIGN_CENTER | wx.ALIGN_CENTER_VERTICAL, 1)
+            sizer.Add(self.control, 1, wx.ALL, 1)
 
         #----------------------------------------------------------------------------
 
@@ -820,7 +828,7 @@ class Axis(wx.Panel):
 class AxisPanel(wx.Panel):
     #
     # Contained herein is a panel that offers a graphical display
-    # of the levels for all axes supported by wx.Joystick. If
+    # of the levels for all axes supported by wx.adv.Joystick. If
     # your system doesn't have a particular axis, it will be
     # 'dummied' for transparent use.
     #
@@ -829,7 +837,7 @@ class AxisPanel(wx.Panel):
         self.stick = stick
 
         # Defines labels and 'tokens' to identify each
-        # supporte axis.
+        # supported axis.
         axesList = [
             ('X Axis ', 'X'),   ('Y Axis ', 'Y'),
             ('Z Axis ', 'Z'),   ('Rudder ', 'Rudder'),
@@ -945,17 +953,25 @@ class JoystickDemoPanel(wx.Panel):
     def ShutdownDemo(self):
         if self.stick:
             self.stick.ReleaseCapture()
+        self.stick.Destroy()
         self.stick = None
 
 #----------------------------------------------------------------------------
 
 def runTest(frame, nb, log):
-    if haveJoystick:
-        win = JoystickDemoPanel(nb, log)
-        return win
-    else:
+    if not wx.adv.USE_JOYSTICK:
         from wx.lib.msgpanel import MessagePanel
         win = MessagePanel(nb, 'wx.Joystick is not available on this platform.',
+                        'Sorry', wx.ICON_WARNING)
+        return win
+
+    elif wx.adv.Joystick.GetNumberJoysticks() != 0:
+        win = JoystickDemoPanel(nb, log)
+        return win
+
+    else:
+        from wx.lib.msgpanel import MessagePanel
+        win = MessagePanel(nb, 'No joysticks are found on this system.',
                            'Sorry', wx.ICON_WARNING)
         return win
 
@@ -965,13 +981,13 @@ def runTest(frame, nb, log):
 overview = """\
 <html>
 <body>
-<h1>wx.Joystick</h1>
-This demo illustrates the use of the wx.Joystick class, which is an interface to
+<h1>wx.adv.Joystick</h1>
+This demo illustrates the use of the wx.adv.Joystick class, which is an interface to
 one or more joysticks attached to your system.
 
 <p>The data that can be retrieved from the joystick comes in four basic flavors.
 All of these are illustrated in the demo. In fact, this demo illustrates everything
-you <b>can</b> get from the wx.Joystick control.
+you <b>can</b> get from the wx.adv.Joystick control.
 
 <ul>
 <li>Static information such as Manufacturer ID and model name,
@@ -981,7 +997,7 @@ you <b>can</b> get from the wx.Joystick control.
 </ul>
 
 <p>Getting data from the joystick can be event-driven thanks to four event types associated
-with wx.JoystickEvent, or the joystick can be polled programatically to get data on
+with wx.JoystickEvent, or the joystick can be polled programmatically to get data on
 a regular basis.
 
 <h2>Data types</h2>
@@ -1027,7 +1043,7 @@ values over 30. For that reason, this demo is limited to 16 buttons.
 
 POV hats come in two flavors: four-way, and continuous. four-way POVs are restricted to
 the cardinal points of the compass; continuous, or CTS POV hats can deliver input in
-.01 degree increments, theoreticaly. The data is returned as a whole number; the last
+.01 degree increments, theoretically. The data is returned as a whole number; the last
 two digits are considered to be to the right of the decimal point, so in order to
 use this information, you need to divide by 100 right off the bat.
 
@@ -1036,10 +1052,10 @@ versus a four-way hat.
 
 <h2>Caveats</h2>
 
-The wx.Joystick control is in many ways incomplete at the C++ library level, but it is
+The wx.adv.Joystick control is in many ways incomplete at the C++ library level, but it is
 not insurmountable.  In short, while the joystick interface <i>can</i> be event-driven,
 the wx.JoystickEvent class lacks event binders for all event types. Thus, you cannot
-rely on wx.JoystickEvents to tell you when something has changed, necessarilly.
+rely on wx.JoystickEvents to tell you when something has changed, necessarily.
 
 <ul>
 <li>There are no events associated with the POV control.

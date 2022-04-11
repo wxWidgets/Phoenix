@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     4-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -95,7 +95,7 @@ def run():
         wxPoint operator-();
         wxPoint operator-(const wxPoint& other);
         wxPoint operator-(const wxSize& other);
-        wxPoint operator*(int i);
+        wxPoint operator*(double d);
         wxPoint operator/(int i);
         """))
 
@@ -104,6 +104,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxPoint')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->x, self->y);
         """,
         pyArgsString="() -> (x,y)",
@@ -116,7 +117,6 @@ def run():
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.Point"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
-    c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
     c.addPyMethod('__reduce__', '(self)',          'return (Point, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
@@ -164,7 +164,7 @@ def run():
     c.addItem(etgtools.WigCode("""\
         wxSize operator+(const wxSize& other);
         wxSize operator-(const wxSize& other);
-        wxSize operator*(int i);
+        wxSize operator*(double d);
         wxSize operator/(int i);
 
         wxPoint operator+(const wxPoint& other);
@@ -178,6 +178,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxSize')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->GetWidth(), self->GetHeight());
         """,
         pyArgsString="() -> (width, height)",
@@ -190,6 +191,7 @@ def run():
     c.addPyMethod('__repr__', '(self)',            'return "wx.Size"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
     c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
+    c.addPyMethod('__bool__', '(self)',            'return self.Get() != (0,0)')
     c.addPyMethod('__reduce__', '(self)',          'return (Size, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
@@ -257,6 +259,7 @@ def run():
     c.convertFromPyObject = tools.convertFourIntegersTemplate('wxRect')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(iiii)",
                               self->x, self->y, self->width, self->height);
         """,
@@ -270,6 +273,7 @@ def run():
     c.addPyMethod('__repr__', '(self)',            'return "wx.Rect"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
     c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0,0,0)')
+    c.addPyMethod('__bool__', '(self)',            'return self.Get() != (0,0,0,0)')
     c.addPyMethod('__reduce__', '(self)',          'return (Rect, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
@@ -303,15 +307,22 @@ def run():
     c.addItem(etgtools.WigCode("""\
         wxRealPoint operator+(const wxRealPoint& other);
         wxRealPoint operator-(const wxRealPoint& other);
-        wxRealPoint operator*(int i);
         wxRealPoint operator/(int i);
         """))
 
+    # wxRealPoint::operator* truncates to int before assigning to the new point
+    # object, which seems dumb. So let's make our own implementation which
+    # preserves the floating point result.
+    c.addCppMethod('wxRealPoint*', '__mul__', '(double d)', isSlot=True,
+        body="""\
+            return new wxRealPoint(self->x * d, self->y * d);
+            """)
 
     # wxRealPoint typemap
     c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxRealPoint')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(dd)", self->x, self->y);
         """,
         pyArgsString="() -> (x, y)",
@@ -324,6 +335,7 @@ def run():
     c.addPyMethod('__repr__', '(self)',            'return "wx.RealPoint"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
     c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
+    c.addPyMethod('__bool__', '(self)',            'return self.Get() != (0,0)')
     c.addPyMethod('__reduce__', '(self)',          'return (Rect, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',

@@ -51,7 +51,7 @@ achieved with this class is 1 millisecond.
 
 The size of :ref:`wx.DateTime` object is 8 bytes because it is
 represented as a 64 bit integer. The resulting range of supported
-dates is thus approximatively 580 million years, but due to the
+dates is thus approximately 580 million years, but due to the
 current limitations in the Gregorian calendar support, only dates from
 Nov 24, 4714BC are supported (this is subject to change if there is
 sufficient interest in doing it).
@@ -110,7 +110,7 @@ understand what 'in a month' means - of course, it is just::
 
 
 
-Date arithmetics
+Date arithmetic
 ----------------
 
 Many different operations may be performed with the dates, however not
@@ -124,11 +124,11 @@ Here is what can be done:
   :ref:`wx.DateTime` resulting in a new :ref:`wx.DateTime` object and also 2
   objects of the same span class can be added together giving another
   object of the same class.
-  
+
 * **Subtraction**: the same types of operations as above are allowed
   and, additionally, a difference between two :ref:`wx.DateTime` objects
   can be taken and this will yield :ref:`wx.TimeSpan`.
-  
+
 * **Multiplication**: a :ref:`wx.TimeSpan` or :ref:`wx.DateSpan` object can
   be multiplied by an integer number resulting in an object of the
   same type.

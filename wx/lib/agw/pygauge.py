@@ -150,7 +150,7 @@ class PyGauge(wx.Window):
         self._value = [0]
         self._valueSorted = [0]
 
-        self._timerId = wx.NewId()
+        self._timerId = wx.NewIdRef()
         self._timer = None
 
         self._drawIndicatorText = False
@@ -218,7 +218,7 @@ class PyGauge(wx.Window):
     def GetBarGradient(self):
         """ Returns a tuple containing the gradient start and end colours. """
 
-        if self._barGradient == None:
+        if self._barGradient is None:
             return None
 
         return self._barGradient[0]
@@ -344,7 +344,7 @@ class PyGauge(wx.Window):
                 c1,c2 = gradient
                 w = rect.width * (float(self._valueSorted[i]) / self._range)
                 r = copy.copy(rect)
-                r.width = w
+                r.width = int(w)
                 dc.GradientFillLinear(r, c1, c2, wx.EAST)
         else:
             for i, colour in enumerate(self._barColourSorted):
@@ -352,7 +352,7 @@ class PyGauge(wx.Window):
                 dc.SetPen(wx.Pen(colour))
                 w = rect.width * (float(self._valueSorted[i]) / self._range)
                 r = copy.copy(rect)
-                r.width = w
+                r.width = int(w)
                 dc.DrawRectangle(r)
 
 
@@ -505,12 +505,12 @@ class PyGauge(wx.Window):
         """ Internal method which sorts things so we draw the longest bar first. """
 
         if self.GetBarGradient():
-            tmp = sorted(zip(self._value,self._barGradient)); tmp.reverse()
+            tmp = sorted(zip(self._value,self._barGradient), key=lambda x: x[0]); tmp.reverse()
             a, b = list(zip(*tmp))
             self._valueSorted       = list(a)
             self._barGradientSorted = list(b)
         else:
-            tmp = sorted(zip(self._value,self._barColour)); tmp.reverse()
+            tmp = sorted(zip(self._value,self._barColour), key=lambda x: x[0]); tmp.reverse()
             a, b = list(zip(*tmp))
             self._valueSorted     = list(a)
             self._barColourSorted = list(b)

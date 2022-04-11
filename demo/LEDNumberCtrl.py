@@ -3,7 +3,7 @@
 import time
 
 import wx
-import wx.gizmos as gizmos
+import wx.lib.gizmos as gizmos  # Formerly wx.gizmos in Classic
 
 #----------------------------------------------------------------------
 
@@ -13,15 +13,19 @@ class TestPanel(wx.Panel):
         self.log = log
 
         led = gizmos.LEDNumberCtrl(self, -1, (25,25), (280, 50))
-        led.SetValue("01234")
+        led.SetValue("012.34")
 
         led = gizmos.LEDNumberCtrl(self, -1, (25,100), (280, 50))
         led.SetValue("56789")
         led.SetAlignment(gizmos.LED_ALIGN_RIGHT)
         led.SetDrawFaded(False)
+        led.SetForegroundColour('yellow')
 
         led = gizmos.LEDNumberCtrl(self, -1, (25,175), (280, 50),
                               gizmos.LED_ALIGN_CENTER)# | gizmos.LED_DRAW_FADED)
+        led.SetForegroundColour('black')
+        led.SetBackgroundColour('white')
+
         self.clock = led
         self.OnTimer(None)
 
@@ -32,7 +36,7 @@ class TestPanel(wx.Panel):
 
     def OnTimer(self, evt):
         t = time.localtime(time.time())
-        st = time.strftime("%I-%M-%S", t)
+        st = time.strftime("%H:%M:%S", t)
         self.clock.SetValue(st)
 
 
@@ -53,7 +57,7 @@ overview = """\
 <html>
 <body>
 <font size=-1>The following was gleaned as best I could from the wxWindows
-source, which was a bit reluctant to reveal its secrets. My appologies if
+source, which was a bit reluctant to reveal its secrets. My apologies if
 I missed anything - jmg</font>
 <p>
 <code><b>LEDNumberCtrl</b>( parent, id=-1, pos=wx.DefaultPosition,

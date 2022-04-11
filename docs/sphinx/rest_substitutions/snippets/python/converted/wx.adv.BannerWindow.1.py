@@ -5,7 +5,7 @@
 
                 # ... create the frame itself ...
                 wx.Frame.__init__(self, parent)
-            
+
                 # Create and initialize the banner.
                 banner = wx.adv.BannerWindow(self, wx.TOP)
                 banner.SetText("Welcome to my wonderful program",

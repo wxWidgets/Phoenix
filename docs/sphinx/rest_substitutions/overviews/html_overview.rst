@@ -156,7 +156,7 @@ lines which are ignored)::
 All filenames (including the Default topic) are relative to the location of
 the ``".hhp"`` file.
 
-.. note:: 
+.. note::
 
    For localization, in addition the ``".hhp"`` file may contain the line::
 
@@ -165,7 +165,7 @@ the ``".hhp"`` file.
    which specifies what charset (e.g. "iso8859_1") was used in contents and
    index files. Please note that this line is incompatible with MS HTML Help
    Workshop and it would either silently remove it or complain with some error.
-   
+
 
 Contents file (.hhc)
 ~~~~~~~~~~~~~~~~~~~~~
@@ -334,7 +334,7 @@ containers unmodified (in other words, number of OpenContainer and
 CloseContainer calls should be same within :meth:`~wx.html.HtmlTagHandler.HandleTag` 's
 body).
 
-.. note:: 
+.. note::
 
    Notice that it would be usually better to use
    :meth:`~wx.html.HtmlContainerCell.InsertCell` instead of adding text to the parser

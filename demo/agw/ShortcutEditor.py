@@ -33,7 +33,7 @@ TOP_MENUS = ['File', 'Edit', 'View', 'Options', 'Window', 'Help']
 COMBINATIONS = string.ascii_uppercase + string.digits
 COMBINATIONS = [c for c in COMBINATIONS] + list(SE.KEYMAP.values())
 
-ACCEL_IDS = [wx.NewId() for i in range(6)]
+ACCEL_IDS = wx.NewIdRef(6)
 
 _ = wx.GetTranslation
 
@@ -136,11 +136,10 @@ _window = PyEmbeddedImage(
 
 def GetValidMenuImages():
 
-    keys = catalog.keys()
     valid_images = []
     counter = 0
 
-    for key in keys:
+    for key in catalog:
         bmp = catalog[key].GetBitmap()
         if bmp.GetWidth() == 16 and bmp.GetHeight() == 16:
             valid_images.append(bmp)
@@ -204,7 +203,7 @@ class ShortcutEditorDemo(wx.Frame):
 
         for i in range(6):
             name = 'Accelerator %d'%(i+1)
-            choice = random.choice(list(SE.ACCELERATORS.keys()))
+            choice = random.choice(list(SE.ACCELERATORS))
 
             if choice == wx.ACCEL_ALT:
                 letter = random.choice(COMBINATIONS)
@@ -216,7 +215,7 @@ class ShortcutEditorDemo(wx.Frame):
                     wxk = ord(letter)
 
             else:
-                wxk = random.choice(list(SE.KEYMAP.keys()))
+                wxk = random.choice(list(SE.KEYMAP))
 
             accel = (choice, wxk, ACCEL_IDS[i])
             saved_accel = (name, choice, wxk, ACCEL_IDS[i])
@@ -388,8 +387,8 @@ def runTest(frame, nb, log):
 
 #----------------------------------------------------------------------
 
-
-overview = open(HTML_HELP, 'rt').read()
+with open(HTML_HELP, 'rt') as fid:
+    overview = fid.read()
 
 
 if __name__ == '__main__':

@@ -45,7 +45,7 @@ class SampleWindow(wx.Window):
         dc = wx.PaintDC(self)
         w,h = dc.GetTextExtent(self.text)
         dc.Clear()
-        dc.DrawText(self.text, (sz.width-w)/2, (sz.height-h)/2)
+        dc.DrawText(self.text, (sz.width-w)//2, (sz.height-h)//2)
 
     def OnSize(self, evt):
         self.Refresh()
@@ -283,7 +283,7 @@ def makeGrid1(win):
 #----------------------------------------------------------------------
 
 def makeGrid2(win):
-    gs = wx.GridSizer(3, 3)  # rows, cols, vgap, hgap
+    gs = wx.GridSizer(3, 3, 0, 0)  # rows, cols, vgap, hgap
 
     box = wx.BoxSizer(wx.VERTICAL)
     box.Add(SampleWindow(win, 'A'), 0, wx.EXPAND)
@@ -431,7 +431,7 @@ theTests = [
      ),
 
     ("Edge Affinity", makeSimpleBox6,
-     "For items that don't completly fill their allotted space, and don't "
+     "For items that don't completely fill their allotted space, and don't "
      "stretch, you can specify which side (or the center) they should stay "
      "attached to."
      ),

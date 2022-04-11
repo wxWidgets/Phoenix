@@ -7,7 +7,7 @@
 # Author:       Robin Dunn & Gary Dumer
 #
 # Created:
-# Copyright:    (c) 1998-2017 by Total Control Software
+# Copyright:    (c) 1998-2020 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
 
@@ -90,7 +90,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         wx.Panel.__init__(self, parent, -1, style=wx.WANTS_CHARS)
 
         self.log = log
-        tID = wx.NewId()
+        tID = wx.NewIdRef()
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -122,6 +122,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         self.list.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
         sizer.Add(self.list, 1, wx.EXPAND)
+        self.list.EnableCheckBoxes(enable=True)
 
         self.PopulateList()
 
@@ -144,6 +145,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.Bind(wx.EVT_LIST_COL_DRAGGING, self.OnColDragging, self.list)
         self.Bind(wx.EVT_LIST_COL_END_DRAG, self.OnColEndDrag, self.list)
         self.Bind(wx.EVT_LIST_BEGIN_LABEL_EDIT, self.OnBeginEdit, self.list)
+        self.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnEndEdit, self.list)
 
         self.list.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick)
         self.list.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
@@ -155,7 +157,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.list.Bind(wx.EVT_RIGHT_UP, self.OnRightClick)
 
     def OnUseNative(self, event):
-        wx.SystemOptions.SetOptionInt("mac.listctrl.always_use_generic", not event.IsChecked())
+        wx.SystemOptions.SetOption("mac.listctrl.always_use_generic", not event.IsChecked())
         wx.GetApp().GetTopWindow().LoadDemo("ListCtrl")
 
     def PopulateList(self):
@@ -245,12 +247,12 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         event.Skip()
 
-    def OnItemDeselected(self, evt):
-        item = evt.GetItem()
-        self.log.WriteText("OnItemDeselected: %d" % evt.Index)
+    def OnItemDeselected(self, event):
+        item = event.GetItem()
+        self.log.WriteText("OnItemDeselected: %d" % event.Index)
 
         # Show how to reselect something we don't want deselected
-        if evt.Index == 11:
+        if event.Index == 11:
             wx.CallAfter(self.list.SetItemState, 11, wx.LIST_STATE_SELECTED, wx.LIST_STATE_SELECTED)
 
     def OnItemActivated(self, event):
@@ -260,6 +262,10 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
     def OnBeginEdit(self, event):
         self.log.WriteText("OnBeginEdit")
+        event.Allow()
+
+    def OnEndEdit(self, event):
+        self.log.WriteText("OnEndEdit: " + event.GetText())
         event.Allow()
 
     def OnItemDelete(self, event):
@@ -290,6 +296,21 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
     def OnColEndDrag(self, event):
         self.log.WriteText("OnColEndDrag\n")
 
+    def OnCheckAllBoxes(self, event):
+        itemcount = self.list.GetItemCount()
+        [self.list.CheckItem(item=i, check=True) for i in range(itemcount)]
+        self.log.WriteText("OnCheckAllBoxes\n")
+
+    def OnUnCheckAllBoxes(self, event):
+        itemcount = self.list.GetItemCount()
+        [self.list.CheckItem(item=i, check=False) for i in range(itemcount)]
+        self.log.WriteText("OnUnCheckAllBoxes\n")
+
+    def OnGetItemsChecked(self, event):
+        itemcount = self.list.GetItemCount()
+        itemschecked = [i for i in range(itemcount) if self.list.IsItemChecked(item=i)]
+        self.log.WriteText("OnGetItemsChecked: %s \n" % itemschecked)
+
     def OnDoubleClick(self, event):
         self.log.WriteText("OnDoubleClick item %s\n" % self.list.GetItemText(self.currentItem))
         event.Skip()
@@ -299,12 +320,15 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         # only do this part the first time so the events are only bound once
         if not hasattr(self, "popupID1"):
-            self.popupID1 = wx.NewId()
-            self.popupID2 = wx.NewId()
-            self.popupID3 = wx.NewId()
-            self.popupID4 = wx.NewId()
-            self.popupID5 = wx.NewId()
-            self.popupID6 = wx.NewId()
+            self.popupID1 = wx.NewIdRef()
+            self.popupID2 = wx.NewIdRef()
+            self.popupID3 = wx.NewIdRef()
+            self.popupID4 = wx.NewIdRef()
+            self.popupID5 = wx.NewIdRef()
+            self.popupID6 = wx.NewIdRef()
+            self.popupID7 = wx.NewIdRef()
+            self.popupID8 = wx.NewIdRef()
+            self.popupID9 = wx.NewIdRef()
 
             self.Bind(wx.EVT_MENU, self.OnPopupOne, id=self.popupID1)
             self.Bind(wx.EVT_MENU, self.OnPopupTwo, id=self.popupID2)
@@ -312,6 +336,9 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
             self.Bind(wx.EVT_MENU, self.OnPopupFour, id=self.popupID4)
             self.Bind(wx.EVT_MENU, self.OnPopupFive, id=self.popupID5)
             self.Bind(wx.EVT_MENU, self.OnPopupSix, id=self.popupID6)
+            self.Bind(wx.EVT_MENU, self.OnCheckAllBoxes, id=self.popupID7)
+            self.Bind(wx.EVT_MENU, self.OnUnCheckAllBoxes, id=self.popupID8)
+            self.Bind(wx.EVT_MENU, self.OnGetItemsChecked, id=self.popupID9)
 
         # make a menu
         menu = wx.Menu()
@@ -322,6 +349,9 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         menu.Append(self.popupID4, "DeleteAllItems")
         menu.Append(self.popupID5, "GetItem")
         menu.Append(self.popupID6, "Edit")
+        menu.Append(self.popupID7, "Check All Boxes")
+        menu.Append(self.popupID8, "UnCheck All Boxes")
+        menu.Append(self.popupID9, "Get Checked Items")
 
         # Popup the menu.  If an item is selected then its handler
         # will be called before PopupMenu returns.
@@ -390,7 +420,7 @@ This example demonstrates how to use mixins. The following mixins are available.
 <p>A mixin class that handles sorting of a wxListCtrl in REPORT mode when the column
 header is clicked on.
 
-<p>There are a few requirments needed in order for this to work genericly:
+<p>There are a few requirements needed in order for this to work genericly:
 <p><ol>
     <li>The combined class must have a <code>GetListCtrl</code> method that returns
     the ListCtrl to be sorted, and the list control must exist at the time the

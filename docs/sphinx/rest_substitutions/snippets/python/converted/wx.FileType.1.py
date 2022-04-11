@@ -8,11 +8,11 @@
 
 
             def GetParamValue(self, name):
-            
+
                 # parameter names are not case-sensitive
                 if name.lower() == "charset":
                     return "US-ASCII"
                 else:
                     return wx.MessageParameters.GetParamValue(name)
-            
+
 

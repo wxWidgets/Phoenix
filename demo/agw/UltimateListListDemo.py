@@ -89,8 +89,7 @@ class TestFrame(wx.Frame):
 
         # load some images into an image list
         il = wx.ImageList(16, 16, True)
-        imgs = list(catalog.keys())
-        imgs.sort()
+        imgs = sorted(catalog)
 
         for img in imgs:
             bmp = catalog[img].GetBitmap()

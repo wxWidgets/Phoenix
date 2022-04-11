@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     14-Nov-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -51,12 +51,12 @@ def run():
             return icon;
             """)
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();""")
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('long', 'GetHandle', '()', """\
         #ifdef __WXMSW__
-            return (long)self->GetHandle();
+            return HandleToLong(self->GetHandle());
         #else
             return 0;
         #endif
@@ -64,7 +64,7 @@ def run():
 
     c.addCppMethod('void', 'SetHandle', '(long handle)', """\
         #ifdef __WXMSW__
-            self->SetHandle((WXHANDLE)handle);
+            self->SetHandle((WXHANDLE)LongToHandle(handle));
         #endif
         """)
 
@@ -73,7 +73,7 @@ def run():
         doc='MSW-only method to create a wx.Icon from a native icon handle.',
         body="""\
             #ifdef __WXMSW__
-                return self->CreateFromHICON((WXHICON)hicon);
+                return self->CreateFromHICON((WXHICON)LongToHandle(hicon));
             #else
                 return false;
             #endif

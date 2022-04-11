@@ -116,11 +116,11 @@ class AuiMDIParentFrame(wx.Frame):
 
         else:
 
-            if pChild.GetMenuBar() == None:
+            if pChild.GetMenuBar() is None:
                 return
 
             # Do we need to save the current bar?
-            if self._pMyMenuBar == None:
+            if self._pMyMenuBar is None:
                 self._pMyMenuBar = self.GetMenuBar()
 
             self.SetMenuBar(pChild.GetMenuBar())
@@ -320,7 +320,7 @@ class AuiMDIChildFrame(wx.Panel):
         # before Create() (as is customary on some ports with wxFrame-type
         # windows), or wx.MINIMIZE can be passed in the style flags.  Note that
         # AuiMDIChildFrame is not really derived from wxFrame, as MDIChildFrame
-        # is, but those are the expected symantics.  No style flag is passed
+        # is, but those are the expected semantics.  No style flag is passed
         # onto the panel underneath.
 
         self._activate_on_create = True

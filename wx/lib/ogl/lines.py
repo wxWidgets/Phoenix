@@ -122,7 +122,7 @@ class ArrowHead(object):
             self._metaFile = mf
             self._id = arrowId
             if self._id == -1:
-                self._id = wx.NewId()
+                self._id = wx.NewIdRef()
 
     def _GetType(self):
         return self._arrowType
@@ -225,13 +225,13 @@ class LabelShape(RectangleShape):
         :param `parent`: the parent an instance of :class:`Line`
         :param `region`: the shape region an instance of :class:`~lib.ogl.ShapeRegion`
         :param `w`: width in points
-        :param `h`: heigth in points
+        :param `h`: height in points
 
         """
         RectangleShape.__init__(self, w, h)
         self._lineShape = parent
         self._shapeRegion = region
-        self.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT))
+        self.SetPen(wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT))
 
     def OnDraw(self, dc):
         """The draw handler."""
@@ -440,7 +440,7 @@ class LineShape(Shape):
         self._lineControlPoints.insert(len(self._lineControlPoints)-1, point)
 
     def DeleteLineControlPoint(self):
-        """Delete an arbitary point on the line."""
+        """Delete an arbitrary point on the line."""
         if len(self._lineControlPoints) < 3:
             return False
 
@@ -923,26 +923,12 @@ class LineShape(Shape):
                 # | /(x1, y1)
                 # |______________________
                 #
-                theta = 0.0
                 x1 = startPositionX
                 y1 = startPositionY
                 x2 = float(positionOnLineX)
                 y2 = float(positionOnLineY)
 
-                if x1 == x2 and y1 == y2:
-                    theta = 0.0
-                elif x1 == x2 and y1 > y2:
-                    theta = 3.0 * math.pi / 2.0
-                elif x1 == x2 and y2 > y1:
-                    theta = math.pi / 2.0
-                elif x2 > x1 and y2 >= y1:
-                    theta = math.atan((y2 - y1) / (x2 - x1))
-                elif x2 < x1:
-                    theta = math.pi + math.atan((y2 - y1) / (x2 - x1))
-                elif x2 > x1 and y2 < y1:
-                    theta = 2 * math.pi + math.atan((y2 - y1) / (x2 - x1))
-                else:
-                    raise "Unknown arrowhead rotation case"
+                theta = math.atan2(y2 - y1, x2 - x1) % (2 * math.pi)
 
                 # Rotate about the centre of the object, then place
                 # the object on the line.
@@ -1066,7 +1052,7 @@ class LineShape(Shape):
         old_pen = self._pen
         old_brush = self._brush
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         self.SetPen(dottedPen)
         self.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1104,7 +1090,7 @@ class LineShape(Shape):
         return True
 
     def OnMoveLink(self, dc, moveControlPoints = True):
-        """The move linke handler, called when a connected object has moved, to move the link to
+        """The move link handler, called when a connected object has moved, to move the link to
         correct position.
         """
         if not self._from or not self._to:
@@ -1214,7 +1200,7 @@ class LineShape(Shape):
 
         points = []
         for point in self._lineControlPoints:
-            points.append(wx.Point(point[0], point[1]))
+            points.append(wx.Point(int(point[0]), int(point[1])))
 
         if self._isSpline:
             dc.DrawSpline(points)
@@ -1353,10 +1339,11 @@ class LineShape(Shape):
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
         """The sizing drag left handler."""
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1382,7 +1369,8 @@ class LineShape(Shape):
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
         """The sizing begin drag left handler."""
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         if pt._type == CONTROL_POINT_LINE:
             pt._originalPos = pt._point
@@ -1408,7 +1396,7 @@ class LineShape(Shape):
             old_pen = self.GetPen()
             old_brush = self.GetBrush()
 
-            dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+            dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
             self.SetPen(dottedPen)
             self.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1424,7 +1412,8 @@ class LineShape(Shape):
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
         """The sizing end drag left handler."""
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         self.SetDisableLabel(False)
 
@@ -1498,7 +1487,7 @@ class LineShape(Shape):
          `ARROW_POSITION_START`                   arrow appears at the start
          ======================================== ==================================
 
-        :param `size`: specifies the lenght of the arrow
+        :param `size`: specifies the length of the arrow
         :param `xOffset`: specifies the offset from the end of the line
         :param `name`: specifies a name
         :param `mf`: mf can be a wxPseduoMetaFile, perhaps loaded from a simple Windows

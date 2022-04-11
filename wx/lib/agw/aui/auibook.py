@@ -175,7 +175,7 @@ class TabTextCtrl(ExpandoTextCtrl):
         x += image_w
         w -= image_w + 4
 
-        y = (self._tabEdited.rect.height - h)/2 + 1
+        y = (self._tabEdited.rect.height - h)//2 + 1
 
         expandoStyle = wx.WANTS_CHARS
         if wx.Platform in ["__WXGTK__", "__WXMAC__"]:
@@ -340,6 +340,7 @@ class AuiNotebookPage(object):
         self.rect = wx.Rect()           # tab's hit rectangle
         self.active = False             # True if the page is currently active
         self.enabled = True             # True if the page is currently enabled
+        self.hidden = False             # true if the page is currently hidden
         self.hasCloseButton = True      # True if the page has a close button using the style
                                         # AUI_NB_CLOSE_ON_ALL_TABS
         self.control = None             # A control can now be inside a tab
@@ -605,15 +606,16 @@ class TabNavigatorWindow(wx.Dialog):
     similar to what you would get by hitting ``Alt`` + ``Tab`` on Windows.
     """
 
-    def __init__(self, parent, props):
+    def __init__(self, parent, props, centreOnMouse=False):
         """
         Default class constructor. Used internally.
 
         :param `parent`: the :class:`TabNavigatorWindow` parent;
         :param `props`: the :class:`TabNavigatorProps` object.
+        :param `centreOnMouse`: popup position of the dialog at mouse cursor. Defaults to Centre.
         """
 
-        wx.Dialog.__init__(self, parent, wx.ID_ANY, "", size=props.MinSize, style=0)
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, "", size=props.MinSize, style=wx.RESIZE_BORDER)
 
         self._selectedItem = -1
         self._indexMap = []
@@ -660,6 +662,8 @@ class TabNavigatorWindow(wx.Dialog):
 
         # Connect events to the list box
         self._listBox.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
+        self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)  # Process tab/shift-tab if dialog has focus also.
+        self._panel.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)  # Process tab/shift-tab if panel has focus also.
         self._listBox.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)
         self._listBox.Bind(wx.EVT_LISTBOX_DCLICK, self.OnItemSelected)
 
@@ -667,16 +671,71 @@ class TabNavigatorWindow(wx.Dialog):
         self._panel.Bind(wx.EVT_PAINT, self.OnPanelPaint)
         self._panel.Bind(wx.EVT_ERASE_BACKGROUND, self.OnPanelEraseBg)
 
+        # Connect mouse events to the panel
+        self.delta = (0, 0)
+        self._panel.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
+        self._panel.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+        self._panel.Bind(wx.EVT_MOTION, self.OnMotion)
+
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self._listBox.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self.PopulateListControl(parent)
 
         self.SetInitialSize(props.MinSize)
-        self.Centre()
+        if centreOnMouse:
+            mousePosX, mousePosY = wx.GetMousePosition()
+            sizeW, sizeH = props.MinSize
+            self.SetPosition((mousePosX - sizeW // 2, mousePosY - sizeH // 2))  # CentreOnMouse
+        else:
+            self.Centre()
 
         # Set focus on the list box to avoid having to click on it to change
         # the tab selection under GTK.
         self._listBox.SetFocus()
+
+
+    def OnLeftDown(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` event for self._panel.
+
+        :param `event`: a :class:`MouseEvent` event to be processed.
+        """
+
+        if self._panel.HasCapture():
+            self._panel.ReleaseMouse()
+        self._panel.CaptureMouse()
+        x, y = self.ClientToScreen(event.GetPosition())
+        originx, originy = self.GetPosition()
+        dx = x - originx
+        dy = y - originy
+        self.delta = ((dx, dy))
+        self._panel.SetFocus()
+
+
+    def OnLeftUp(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_UP`` event for self._panel.
+
+        :param `event`: a :class:`MouseEvent` event to be processed.
+        """
+
+        if self._panel.HasCapture():
+            self._panel.ReleaseMouse()
+            self._listBox.SetFocus()
+            self.Refresh()
+
+
+    def OnMotion(self, event):
+        """
+        Handles the ``wx.EVT_MOTION`` event for self._panel.
+
+        :param `event`: a :class:`MouseEvent` event to be processed.
+        """
+
+        if event.Dragging() and event.LeftIsDown():
+            x, y = self.ClientToScreen(event.GetPosition())
+            fp = (x - self.delta[0], y - self.delta[1])
+            self.Move(fp)
 
 
     def OnKeyUp(self, event):
@@ -688,7 +747,8 @@ class TabNavigatorWindow(wx.Dialog):
 
         if event.GetKeyCode() == wx.WXK_CONTROL:
             self.CloseDialog()
-
+        elif event.GetKeyCode() == wx.WXK_ESCAPE:
+            self.CloseDialog(wx.ID_CANCEL)
 
     def OnNavigationKey(self, event):
         """
@@ -767,12 +827,13 @@ class TabNavigatorWindow(wx.Dialog):
         self.CloseDialog()
 
 
-    def CloseDialog(self):
+    def CloseDialog(self, returnId=wx.ID_OK):
         """ Closes the :class:`TabNavigatorWindow` dialog, setting selection in :class:`AuiNotebook`. """
 
-        bk = self.GetParent()
+        if self._panel.HasCapture():
+            self._panel.ReleaseMouse()
         self._selectedItem = self._listBox.GetSelection()
-        self.EndModal(wx.ID_OK)
+        self.EndModal(returnId)
 
 
     def GetSelectedPage(self):
@@ -803,7 +864,7 @@ class TabNavigatorWindow(wx.Dialog):
         # Draw the caption title and place the bitmap
         # get the bitmap optimal position, and draw it
         bmpPt, txtPt = wx.Point(), wx.Point()
-        bmpPt.y = (rect.height - self._props.Icon.GetHeight())/2
+        bmpPt.y = (rect.height - self._props.Icon.GetHeight())//2
         bmpPt.x = 3
         mem_dc.DrawBitmap(self._props.Icon, bmpPt.x, bmpPt.y, True)
 
@@ -814,7 +875,7 @@ class TabNavigatorWindow(wx.Dialog):
         fontHeight = mem_dc.GetCharHeight()
 
         txtPt.x = bmpPt.x + self._props.Icon.GetWidth() + 4
-        txtPt.y = (rect.height - fontHeight)/2
+        txtPt.y = (rect.height - fontHeight)//2
         mem_dc.SetTextForeground(wx.WHITE)
         mem_dc.DrawText("Opened tabs:", txtPt.x, txtPt.y)
         mem_dc.SelectObject(wx.NullBitmap)
@@ -878,7 +939,7 @@ class AuiTabContainer(object):
     def SetArtProvider(self, art):
         """
         Instructs :class:`AuiTabContainer` to use art provider specified by parameter `art`
-        for all drawing calls. This allows plugable look-and-feel features.
+        for all drawing calls. This allows pluggable look-and-feel features.
 
         :param `art`: an art provider.
 
@@ -1129,8 +1190,11 @@ class AuiTabContainer(object):
             if page.window == wnd:
                 page.active = True
                 found = True
+                page.hidden = False
             else:
                 page.active = False
+
+        self.DoShowHide()
 
         return found
 
@@ -1203,6 +1267,41 @@ class AuiTabContainer(object):
 
         return len(self._pages)
 
+    def GetShownPageCount(self):
+        """ Returns the number of pages shown in the :class:`AuiTabContainer`. """
+        cnt = 0
+        for page in self._pages:
+            if not page.hidden:
+                cnt += 1
+        return cnt
+
+    def GetHidden(self, idx):
+        """
+        Returns whether a tab is hidden or not.
+
+        :param integer `idx`: the tab index.
+        """
+
+        if idx < 0 or idx >= len(self._pages):
+            return False
+
+        return self._pages[idx].hidden
+
+    def HideTab(self, idx, hidden=True):
+        """
+        hides/shows a tab in the :class:`AuiTabContainer`.
+
+        :param integer `idx`: the tab index;
+        :param bool `hidden`: ``True`` to hide a tab, ``False`` to show it.
+        """
+
+        if idx < 0 or idx >= len(self._pages):
+            raise Exception("Invalid Page index")
+
+        self._pages[idx].hidden = hidden
+        if hidden:
+            wnd = self.GetWindowFromIdx(idx)
+            wnd.Show(False)
 
     def GetEnabled(self, idx):
         """
@@ -1232,6 +1331,25 @@ class AuiTabContainer(object):
         wnd = self.GetWindowFromIdx(idx)
         wnd.Enable(enable)
 
+    def FindNextActiveTab(self, idx):
+        """
+        Finds the next active tab in the :class:`AuiTabContainer`.
+
+        :param integer `idx`: the index of the first (most obvious) tab to check for active status;
+        """
+
+        if self.GetEnabled(idx) and not self.GetHidden(idx):
+            return idx
+
+        for indx in range(idx+1, self.GetPageCount()):
+            if self.GetEnabled(indx) and not self.GetHidden(indx):
+                return indx
+
+        for indx in range(idx-1, -1, -1):
+            if self.GetEnabled(indx) and not self.GetHidden(indx):
+                return indx
+
+        return 0
 
     def AddButton(self, id, location, normal_bitmap=wx.NullBitmap, disabled_bitmap=wx.NullBitmap, name=""):
         """
@@ -1370,6 +1488,9 @@ class AuiTabContainer(object):
 
         for i in range(page_count):
             page = self._pages[i]
+
+            if page.hidden:
+                continue
 
             # determine if a close button is on this tab
             close_button = False
@@ -1537,6 +1658,10 @@ class AuiTabContainer(object):
         for i in range(self._tab_offset, page_count):
 
             page = self._pages[i]
+
+            if page.hidden:
+                continue
+
             tab_button = self._tab_close_buttons[i]
 
             # determine if a close button is on this tab
@@ -1669,16 +1794,17 @@ class AuiTabContainer(object):
             offset += self._art.GetIndentSize()
 
         rect = wx.Rect(*self._rect)
-        rect.y = 0
-        rect.height = self._rect.height
 
         # See if the given page is visible at the given tab offset (effectively scroll position)
         for i in range(tabOffset, page_count):
 
             page = self._pages[i]
+
+            if page.hidden:
+                continue
+
             tab_button = self._tab_close_buttons[i]
 
-            rect.x = offset
             rect.width = self._rect.width - right_buttons_width - offset - 2
 
             if rect.width <= 0:
@@ -1738,6 +1864,10 @@ class AuiTabContainer(object):
 
         for i in range(self._tab_offset, len(self._pages)):
             page = self._pages[i]
+
+            if page.hidden:
+                continue
+
             if page.rect.Contains((x,y)):
                 return page.window
 
@@ -2019,15 +2149,15 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         if self._is_dragging:
 
-            if self.HasCapture():
-                self.ReleaseMouse()
-
             self._is_dragging = False
             if self._drag_image:
                 self._drag_image.EndDrag()
                 del self._drag_image
                 self._drag_image = None
                 self.GetParent().Refresh()
+
+            if self.HasCapture():
+                self.ReleaseMouse()
 
             evt = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_END_DRAG, self.GetId())
             evt.SetSelection(self.GetIdxFromWindow(self._click_tab))
@@ -2420,15 +2550,21 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         if button == AUI_BUTTON_LEFT or button == AUI_BUTTON_RIGHT:
             if button == AUI_BUTTON_LEFT:
-                if self.GetTabOffset() > 0:
-
-                    self.SetTabOffset(self.GetTabOffset()-1)
-                    self.Refresh()
-                    self.Update()
+                for i in range(self.GetTabOffset()-1, -1, -1):
+                    page = self._pages[i]
+                    if not page.hidden:
+                        self.SetTabOffset(i)
+                        self.Refresh()
+                        self.Update()
+                        break
             else:
-                self.SetTabOffset(self.GetTabOffset()+1)
-                self.Refresh()
-                self.Update()
+                for i in range(self.GetTabOffset()+1, self.GetPageCount()):
+                    page = self._pages[i]
+                    if not page.hidden:
+                        self.SetTabOffset(i)
+                        self.Refresh()
+                        self.Update()
+                        break
 
         elif button == AUI_BUTTON_WINDOWLIST:
             idx = self.GetArtProvider().ShowDropDown(self, self._pages, self.GetActivePage())
@@ -3254,7 +3390,7 @@ class AuiNotebook(wx.Panel):
     def UpdateTabCtrlHeight(self, force=False):
         """
         :meth:`UpdateTabCtrlHeight` does the actual tab resizing. It's meant
-        to be used interally.
+        to be used internally.
 
         :param bool `force`: ``True`` to force the tab art to repaint.
         """
@@ -3281,6 +3417,9 @@ class AuiNotebook(wx.Panel):
                 tabctrl.SetArtProvider(art.Clone())
                 tab_frame.DoSizing()
 
+            return True
+
+        return False
 
     def UpdateHintWindowSize(self):
         """ Updates the :class:`~wx.lib.agw.aui.framemanager.AuiManager` hint window size. """
@@ -3313,8 +3452,8 @@ class AuiNotebook(wx.Panel):
         # should happen around the middle
         if tab_ctrl_count < 2:
             new_split_size = self.GetClientSize()
-            new_split_size.x /= 2
-            new_split_size.y /= 2
+            new_split_size.x //= 2
+            new_split_size.y //= 2
 
         else:
 
@@ -3502,8 +3641,10 @@ class AuiNotebook(wx.Panel):
             control.Reparent(active_tabctrl)
             control.Show()
 
-        self.UpdateTabCtrlHeight(force=force)
-        self.DoSizing()
+        # Note that we don't need to call DoSizing() if the height has changed, as
+        # it's already called from UpdateTabCtrlHeight() itself in this case.
+        if not self.UpdateTabCtrlHeight(force=force):
+            self.DoSizing()
         active_tabctrl.DoShowHide()
 
         # adjust selected index
@@ -3561,12 +3702,51 @@ class AuiNotebook(wx.Panel):
         :see: :meth:`DeletePage`
         """
 
-        # save active window pointer
+        if not self.HidePage(page_idx):
+            return False
+
         active_wnd = None
         if self._curpage >= 0:
             active_wnd = self._tabs.GetWindowFromIdx(self._curpage)
 
         # save pointer of window being deleted
+        wnd = self._tabs.GetWindowFromIdx(page_idx)
+
+        # make sure we found the page
+        if not wnd:
+            return False
+
+        wnd.Show(show=False)
+
+        # find out which onscreen tab ctrl owns this tab
+        ctrl, ctrl_idx = self.FindTab(wnd)
+        if not ctrl:
+            return False
+
+        # remove the tab from main catalog
+        if not self._tabs.RemovePage(wnd):
+            return False
+
+        # remove the tab from the onscreen tab ctrl
+        ctrl.RemovePage(wnd)
+
+        self.RemoveEmptyTabFrames()
+
+        # set the active window since its index may be changed
+        if active_wnd and not self.IsBeingDeleted():
+            self.SetSelectionToWindow(active_wnd)
+
+        return True
+
+    def HidePage(self, page_idx, hidden=True):
+        """
+        Sets whether a page is hidden.
+
+        :param integer `page_idx`: the page index;
+        :param bool `hidden`: ``True`` to hide the page, ``False`` to show it.
+        """
+
+        # save pointer of window being hidden
         wnd = self._tabs.GetWindowFromIdx(page_idx)
         new_active = None
 
@@ -3583,84 +3763,72 @@ class AuiNotebook(wx.Panel):
         is_curpage = (self._curpage == page_idx)
         is_active_in_split = currentPage.active
 
-        # remove the tab from main catalog
-        if not self._tabs.RemovePage(wnd):
-            return False
+        # hide the tab from main catalog
+        self._tabs.HideTab(page_idx, hidden)
 
-        # remove the tab from the onscreen tab ctrl
-        ctrl.RemovePage(wnd)
+        # hide the tab from the onscreen tab ctrl
+        ctrl.HideTab(ctrl_idx, hidden)
 
-        if is_active_in_split:
-
-            ctrl_new_page_count = ctrl.GetPageCount()
-
-            if ctrl_idx >= ctrl_new_page_count:
-                ctrl_idx = ctrl_new_page_count - 1
-
-            if ctrl_idx >= 0 and ctrl_idx < ctrl.GetPageCount():
-
-                ctrl_idx = self.FindNextActiveTab(ctrl_idx, ctrl)
-
-                # set new page as active in the tab split
-                ctrl.SetActivePage(ctrl_idx)
-
-                # if the page deleted was the current page for the
-                # entire tab control, then record the window
-                # pointer of the new active page for activation
-                if is_curpage:
-                    new_active = ctrl.GetWindowFromIdx(ctrl_idx)
-
+        # hide the tab ctrl if there is no shown tab.
+        if ctrl.GetShownPageCount() == 0:
+            self._mgr.ShowPane(self.GetTabFrameFromTabCtrl(ctrl), False)
+            ctrl.Show(False)
         else:
+            self._mgr.ShowPane(self.GetTabFrameFromTabCtrl(ctrl), True)
+            ctrl.Show(True)
 
-            # we are not deleting the active page, so keep it the same
-            new_active = active_wnd
+        if hidden:
 
-        if not new_active:
+            if is_active_in_split:
+                if ctrl.GetShownPageCount() > 0:
 
-            # we haven't yet found a new page to active,
-            # so select the next page from the main tab
-            # catalogue
+                    ctrl_idx = ctrl.FindNextActiveTab(ctrl_idx)
 
-            if 0 <= page_idx < self._tabs.GetPageCount():
-                new_active = self._tabs.GetPage(page_idx).window
-            if not new_active and self._tabs.GetPageCount() > 0:
-                new_active = self._tabs.GetPage(0).window
+                    # set new page as active in the tab split
+                    ctrl.SetActivePage(ctrl_idx)
 
-        self.RemoveEmptyTabFrames()
+                    # if the page hidden was the current page for the
+                    # entire tab control, then record the window
+                    # pointer of the new active page for activation
+                    if is_curpage:
+                        new_active = ctrl.GetWindowFromIdx(ctrl_idx)
+                else:
+                    ctrl.SetNoneActive()
 
-        # set new active pane
-        if new_active:
-            if not self.IsBeingDeleted():
-                self._curpage = -1
-                self.SetSelectionToWindow(new_active)
+            if is_curpage:
+                if not new_active and self.GetShownPageCount() > 0:
+                    idx = self.FindNextActiveTab(page_idx)
+                    new_active = self.GetPage(idx)
+
+                # set new active pane
+                if new_active:
+                    self.SetSelectionToWindow(new_active)
+                else:
+                    # no shown page
+                    self._curpage = -1
+                    self._tabs.SetNoneActive()
         else:
-            self._curpage = -1
-            self._tabs.SetNoneActive()
+            if ctrl.GetActivePage() < 0:
+                # no active page on tab ctrl, set it to wnd
+                ctrl.SetActivePage(wnd)
+
+            if self._curpage < 0:
+                # no current page, set it to wnd
+                self.SetSelectionToWindow(wnd)
+
+        self.Refresh()
 
         return True
 
-
-    def FindNextActiveTab(self, ctrl_idx, ctrl):
+    def FindNextActiveTab(self, idx):
         """
         Finds the next active tab (used mainly when :class:`AuiNotebook` has inactive/disabled
         tabs in it).
 
-        :param integer `ctrl_idx`: the index of the first (most obvious) tab to check for active status;
-        :param `ctrl`: an instance of :class:`AuiTabCtrl`.
+        :param integer `idx`: the index of the first (most obvious) tab to check for active status;
         """
 
-        if self.GetEnabled(ctrl_idx):
-            return ctrl_idx
-
-        for indx in range(ctrl_idx, ctrl.GetPageCount()):
-            if self.GetEnabled(indx):
-                return indx
-
-        for indx in range(ctrl_idx, -1, -1):
-            if self.GetEnabled(indx):
-                return indx
-
-        return 0
+        return self._tabs.FindNextActiveTab(idx)
 
 
     def HideAllTabs(self, hidden=True):
@@ -4187,7 +4355,6 @@ class AuiNotebook(wx.Panel):
             ctrl, ctrl_idx = self.FindTab(wnd)
 
             if ctrl:
-                self._tabs.SetActivePage(wnd)
                 ctrl.SetActivePage(ctrl_idx)
                 self.DoSizing()
                 ctrl.DoShowHide()
@@ -4262,6 +4429,9 @@ class AuiNotebook(wx.Panel):
 
         return self._tabs.GetPageCount()
 
+    def GetShownPageCount(self):
+        """ Returns the number of pages shown in the notebook. """
+        return self._tabs.GetShownPageCount()
 
     def GetPage(self, page_idx):
         """
@@ -4310,6 +4480,14 @@ class AuiNotebook(wx.Panel):
         self._tabs.EnableTab(page_idx, enable)
         self.Refresh()
 
+    def GetHidden(self, page_idx):
+        """
+        Returns whether the page specified by the index `page_idx` is hidden.
+
+        :param integer `page_idx`: the page index.
+        """
+
+        return self._tabs.GetHidden(page_idx)
 
     def DoSizing(self):
         """ Performs all sizing operations in each tab control. """
@@ -4455,7 +4633,7 @@ class AuiNotebook(wx.Panel):
             dest_tabs.AddButton(clone.id, clone.location, clone.bitmap, clone.dis_bitmap)
         # create a pane info structure with the information
         # about where the pane should be added
-        pane_info = framemanager.AuiPaneInfo().Bottom().CaptionVisible(False)
+        pane_info = framemanager.AuiPaneInfo().Bottom().CaptionVisible(False).BestSize(self.CalculateNewSplitSize())
 
         if direction == wx.LEFT:
 
@@ -4538,7 +4716,7 @@ class AuiNotebook(wx.Panel):
             self.RemovePage(idx)
             # re-add in the same position so it will tab
             self.InsertPage(idx, win, title, False, bmp)
-        # restore orignial selected tab
+        # restore original selected tab
         self.SetSelection(nowSelected)
 
         self.Thaw()
@@ -4684,10 +4862,10 @@ class AuiNotebook(wx.Panel):
             self._textCtrl.StopEditing()
 
         ctrl = event.GetEventObject()
-        assert ctrl != None
+        assert ctrl is not None
 
         wnd = ctrl.GetWindowFromIdx(event.GetSelection())
-        assert wnd != None
+        assert wnd is not None
 
         self.SetSelectionToWindow(wnd)
 
@@ -5061,7 +5239,8 @@ class AuiNotebook(wx.Panel):
                 new_tabs._tabs.SetArtProvider(self._tabs.GetArtProvider().Clone())
                 new_tabs._tabs.SetAGWFlags(self._agwFlags)
 
-                self._mgr.AddPane(new_tabs, framemanager.AuiPaneInfo().Bottom().CaptionVisible(False), mouse_client_pt)
+                self._mgr.AddPane(new_tabs, framemanager.AuiPaneInfo().Bottom().CaptionVisible(False).BestSize(self.CalculateNewSplitSize()),
+                                  mouse_client_pt)
                 self._mgr.Update()
                 dest_tabs = new_tabs._tabs
 
@@ -5581,7 +5760,7 @@ class AuiNotebook(wx.Panel):
 
                 else:
                     main_idx = self._tabs.GetIdxFromWindow(close_wnd)
-                    self.DeletePage(main_idx)
+                    wx.CallAfter(self.DeletePage, main_idx)
 
                 # notify owner that the tab has been closed
                 e2 = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSED, self.GetId())

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     25-Aug-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -19,6 +19,7 @@ DOCSTRING = ""
 # this script.
 ITEMS  = [ 'wxPGInDialogValidator',
            'wxStringProperty',
+           'wxNumericProperty',
            'wxNumericPropertyValidator',
            'wxIntProperty',
            'wxUIntProperty',
@@ -27,9 +28,8 @@ ITEMS  = [ 'wxPGInDialogValidator',
            'wxEnumProperty',
            'wxEditEnumProperty',
            'wxFlagsProperty',
-           'wxPGFileDialogAdapter',
+           'wxEditorDialogProperty',
            'wxFileProperty',
-           'wxPGLongStringDialogAdapter',
            'wxLongStringProperty',
            'wxDirProperty',
            'wxArrayStringProperty',
@@ -38,6 +38,7 @@ ITEMS  = [ 'wxPGInDialogValidator',
            ]
 
 #---------------------------------------------------------------------------
+
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
@@ -53,6 +54,14 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.bases = ['wxValidator']
 
+    c = module.find('wxNumericProperty')
+    c.find('wxNumericProperty').ignore(False)
+    c.addPrivateDefaultCtor()
+
+    c = module.find('wxEditorDialogProperty')
+    c.find('wxEditorDialogProperty').ignore(False)
+    c.find('DisplayEditorDialog').ignore(False)
+    c.addPrivateDefaultCtor()
 
     for name in ['wxEnumProperty', 'wxEditEnumProperty']:
         c = module.find(name)
@@ -78,11 +87,17 @@ def run():
     c.detailedDoc = []
 
     c = module.find('wxLongStringProperty')
-    c.find('OnButtonClick.value').inOut = True
-    c.find('DisplayEditorDialog.value').inOut = True
+    tools.fixDialogProperty(c)
 
     c = module.find('wxDirProperty')
-    c.find('OnButtonClick.value').inOut = True
+    tools.fixDialogProperty(c)
+
+    c = module.find('wxFileProperty')
+    tools.fixDialogProperty(c)
+
+    c = module.find('wxArrayStringProperty')
+    tools.fixDialogProperty(c)
+    c.find('GenerateValueAsString').ignore(False)
 
     c = module.find('wxPGArrayEditorDialog')
     tools.fixWindowClass(c, hideVirtuals=False, ignoreProtected=False)
@@ -97,6 +112,12 @@ def run():
     for item in module.allItems():
         if hasattr(item, 'type') and 'wxVariant' in item.type:
             item.type = item.type.replace('wxVariant', 'wxPGVariant')
+
+    # Switch all StringToValue and IntToValue methods to return the variant
+    # value instead of using it as a parameter.
+    for item in module.allItems():
+        if (item.name in ['StringToValue', 'IntToValue'] and item.findItem('variant')):
+            item.find('variant').out = True
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

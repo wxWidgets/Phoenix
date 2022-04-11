@@ -80,8 +80,8 @@ bottom of the dialog. This is done as follows, in
   new :ref:`wx.ScrolledWindow` object, using the old top-level sizer for
   the scrolled window and creating a new top-level sizer to lay out
   the scrolled window and standard button sizer.
-  
-  
+
+
 .. _layout adaptation code:
 
 Customising scrolling adaptation
@@ -134,8 +134,8 @@ not fool-proof, and may fail in the following situations:
 - The dialog makes assumptions about the sizer hierarchy, for example
   to show or hide children of the top-level sizer. However, the
   original sizer hierarchy will still hold until `Show` or `ShowModal`
-  is called.  
-  
+  is called.
+
 You can help make sure that your dialogs will continue to function
 after adaptation by:
 

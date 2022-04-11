@@ -17,7 +17,7 @@ class MainWindow(wx.Frame):
 
         self.Show()
 
-        
+
     def OnClose(self, event):
 
         # This displays a message box asking the user to confirm

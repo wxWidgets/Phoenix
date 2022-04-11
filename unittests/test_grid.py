@@ -15,6 +15,15 @@ class grid_Tests(wtc.WidgetTestCase):
     # will probably be easier to test features and interoperability between
     # the classes in a non-unitest situation. See Phoenix/samples/grid
 
+    def test_grid00(self):
+        wx.grid.GRID_AUTOSIZE
+        wx.grid.GRID_DRAW_ROWS_HEADER
+        wx.grid.GRID_DRAW_COLS_HEADER
+        wx.grid.GRID_DRAW_CELL_LINES
+        wx.grid.GRID_DRAW_BOX_RECT
+        wx.grid.GRID_DRAW_SELECTION
+        wx.grid.GRID_DRAW_DEFAULT
+
 
     def test_grid01(self):
         c1 = wx.grid.GridCellCoords()
@@ -241,7 +250,10 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.wxEVT_GRID_LABEL_RIGHT_DCLICK
         wx.grid.wxEVT_GRID_ROW_SIZE
         wx.grid.wxEVT_GRID_COL_SIZE
+        wx.grid.wxEVT_GRID_COL_AUTO_SIZE
         wx.grid.wxEVT_GRID_RANGE_SELECT
+        wx.grid.wxEVT_GRID_RANGE_SELECTING
+        wx.grid.wxEVT_GRID_RANGE_SELECTED
         wx.grid.wxEVT_GRID_CELL_CHANGING
         wx.grid.wxEVT_GRID_CELL_CHANGED
         wx.grid.wxEVT_GRID_SELECT_CELL
@@ -264,7 +276,10 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.EVT_GRID_LABEL_RIGHT_DCLICK
         wx.grid.EVT_GRID_ROW_SIZE
         wx.grid.EVT_GRID_COL_SIZE
+        wx.grid.EVT_GRID_COL_AUTO_SIZE
         wx.grid.EVT_GRID_RANGE_SELECT
+        wx.grid.EVT_GRID_RANGE_SELECTING
+        wx.grid.EVT_GRID_RANGE_SELECTED
         wx.grid.EVT_GRID_CELL_CHANGING
         wx.grid.EVT_GRID_CELL_CHANGED
         wx.grid.EVT_GRID_SELECT_CELL
@@ -303,6 +318,14 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.Grid.SetCellHighlightPenWidth  # Does it exist
 
 
+    def test_grid43(self):
+        # new names
+        wx.grid.Grid.SelectCells
+        wx.grid.Grid.SelectRows
+        wx.grid.Grid.SelectColumns
+        wx.grid.Grid.SelectRowsOrColumns
+
+
     def test_GetIM(self):
         # Test the immutable version returned by GetIM
         obj = wx.grid.GridCellCoords(1,2)
@@ -313,6 +336,46 @@ class grid_Tests(wtc.WidgetTestCase):
         obj2 = wx.grid.GridCellCoords(im)
         assert obj == obj2
 
+
+    def test_grid44(self):
+        g = wx.grid.Grid(self.frame)
+        g.CreateGrid(10,10)
+        g.SelectBlock((1,1), (5,5))
+
+        tl = g.GetSelectionBlockTopLeft()
+        br = g.GetSelectionBlockBottomRight()
+
+        assert tl[0].Get() == (1,1)
+        assert br[0].Get() == (5,5)
+
+
+    def test_grid45(self):
+        # See issue #297
+        g = wx.grid.Grid(self.frame)
+        g.CreateGrid(10,10)
+        g.SelectBlock((1,1), (5,5))
+
+        tl = g.GetSelectionBlockTopLeft()[0]
+        br = g.GetSelectionBlockBottomRight()[0]
+
+        assert tl.Get() == (1,1)
+        assert br.Get() == (5,5)
+
+    def test_grid46(self):
+        g = wx.grid.Grid(self.frame)
+        g.CreateGrid(10,10)
+        g.SelectBlock((1,1), (5,5))
+        g.SelectBlock((6,5), (7,9), addToSelected=True)
+
+        blocks = g.GetSelectedBlocks()
+        assert isinstance(blocks, wx.grid.GridBlocks)
+
+        count = 0
+        for block in blocks:
+            count += 1
+            assert isinstance(block, wx.grid.GridBlockCoords)
+
+        assert count == 2
 
 #---------------------------------------------------------------------------
 

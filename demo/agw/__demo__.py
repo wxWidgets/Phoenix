@@ -73,26 +73,7 @@ def GetRecentAdditions():
     into the Recent Additions tree item in the wxPython demo.
     """
 
-    # For the moment, we add all the widgets in AGW as
-    # Recent Additions
-    if wx.VERSION < (2, 9):
-        recentAdditions = ['AdvancedSplash', 'AquaButton', 'AUI', 'BalloonTip',
-                           'ButtonPanel', 'CubeColourDialog', 'CustomTreeCtrl',
-                           'FlatMenu', 'FlatNotebook', 'FloatSpin',
-                           'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
-                           'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
-                           'AGWInfoBar', 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
-                           'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
-                           'PyCollapsiblePane', 'PyProgress', 'RibbonBar', 'RulerCtrl',
-                           'ShapedButton', 'ShortcutEditor', 'SpeedMeter', 'SuperToolTip',
-                           'ThumbnailCtrl', 'ToasterBox', 'UltimateListCtrl',
-                           'XLSGrid', 'ZoomBar']
-    elif wx.VERSION < (2,9,2):
-        recentAdditions = ['AUI', 'AGWInfoBar', 'PersistentControls', 'PyBusyInfo', 'PyGauge',
-                           'RibbonBar', 'ShortcutEditor', 'UltimateListCtrl',
-                           'XLSGrid', 'ZoomBar']
-    else:
-        recentAdditions = ['AGWInfoBar', 'PersistentControls', 'ShortcutEditor', 'XLSGrid']
+    recentAdditions = []
 
     # Return the Recent Additions for AGW
     return recentAdditions
@@ -116,7 +97,8 @@ def GetDemos():
                 'AGWInfoBar', 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                 'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
                 'PyCollapsiblePane', 'PyGauge', 'PyProgress', 'RibbonBar',
-                'RulerCtrl', 'ShapedButton', 'ShortcutEditor', 'SpeedMeter',
+                'RulerCtrl', 'ScrolledThumbnail', 'ShapedButton',
+                'ShortcutEditor', 'SpeedMeter',
                 'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
                 'UltimateListCtrl', 'XLSGrid', 'ZoomBar']
 

@@ -1,11 +1,11 @@
 #----------------------------------------------------------------------
 # Name:        wx.lib.utils
-# Purpose:     Miscelaneous utility functions
+# Purpose:     Miscellaneous utility functions
 #
 # Author:      Robin Dunn
 #
 # Created:     18-Jan-2009
-# Copyright:   (c) 2009-2017 Total Control Software
+# Copyright:   (c) 2009-2020 Total Control Software
 # Licence:     wxWidgets license
 #
 # Tags:        phoenix-port, unittest, documented

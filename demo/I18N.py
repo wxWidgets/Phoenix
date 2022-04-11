@@ -10,7 +10,7 @@ from Main import opj
 
 # Normally you would just set _ to be a reference to the
 # wx.GetTranslation function, and then wrap all you literal strings in
-# _() function calls.  Then everytime you use one of your literals, it
+# _() function calls.  Then every time you use one of your literals, it
 # would first pass through the translation function and try to load a
 # translated version of the string from the current message catalogs.
 # For this example, since we are changinb language on the fly, and
@@ -32,7 +32,7 @@ exampleStrings = [
  wxID_LANGUAGESELECTPANELLANGFILTERRB, wxID_LANGUAGESELECTPANELSTATICLINE1,
  wxID_LANGUAGESELECTPANELSTATICTEXT1, wxID_LANGUAGESELECTPANELSTATICTEXT2,
  wxID_LANGUAGESELECTPANELSTATICTEXT3, wxID_LANGUAGESELECTPANELTRANSLATEDST,
-] = [wx.NewId() for _init_ctrls in range(9)]
+] = wx.NewIdRef(9)
 
 class LanguageSelectPanel(wx.Panel):
     def _init_coll_boxSizer3_Items(self, parent):
@@ -93,7 +93,7 @@ class LanguageSelectPanel(wx.Panel):
 
         self.langCtrlContainer = wx.Panel(id=wxID_LANGUAGESELECTPANELLANGCTRLCONTAINER,
               name='langCtrlContainer', parent=self, style=wx.TAB_TRAVERSAL)
-        self.langCtrlContainer.SetBackgroundColour(wx.Colour(255, 255, 255))
+        self.langCtrlContainer.SetBackgroundColour(wx.WHITE)
         self.langCtrlContainer.Bind(wx.EVT_SIZE, self.OnLangCtrlContainerSize)
 
         self.langFilterRB = wx.RadioBox(choices=['Translated example languages',

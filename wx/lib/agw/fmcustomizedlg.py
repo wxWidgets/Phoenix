@@ -82,7 +82,7 @@ class OrderedDict(UserDict):
 
     def update(self, dict):
         UserDict.update(self, dict)
-        for key in list(dict.keys()):
+        for key in dict:
             if key not in self._keys: self._keys.append(key)
 
     def values(self):
@@ -219,13 +219,13 @@ class FMCustomizeDlg(wx.Dialog):
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # add a separator between the book & the buttons area
-        hsizer.Add(wx.Button(self, wx.ID_OK, _("&Close")), 0, wx.EXPAND | wx.ALIGN_RIGHT)
+        hsizer.Add(wx.Button(self, wx.ID_OK, _("&Close")), 0, wx.EXPAND)
         sz.Add(wx.StaticLine(self), 0, wx.EXPAND | wx.TOP | wx.BOTTOM, 3)
         sz.Add(hsizer, 0, wx.ALIGN_RIGHT | wx.ALL, 2)
 
 
     def Initialise(self):
-        """ Initialzes the :class:`~wx.lib.agw.labelbook.LabelBook` pages. """
+        """ Initializes the :class:`~wx.lib.agw.labelbook.LabelBook` pages. """
 
         self._book.DeleteAllPages()
         self._book.AddPage(self.CreateMenusPage(), _("Menus"), True)
@@ -271,7 +271,7 @@ class FMCustomizeDlg(wx.Dialog):
 
         # Add all hidden menus to the menu bar
 
-        for key in list(self._hiddenMenus.keys()):
+        for key in self._hiddenMenus:
             choices.append(key)
 
         if self.created:
@@ -286,7 +286,7 @@ class FMCustomizeDlg(wx.Dialog):
             self._visibleMenus = visible
             self._hiddenMenus = hidden
 
-        self._menuListId = wx.NewId()
+        self._menuListId = wx.NewIdRef()
         self._checkListMenus = wx.CheckListBox(menus, self._menuListId, pos=wx.DefaultPosition, size=wx.Size(250, 250),
                                                choices=self.order, style=wx.BORDER_SIMPLE)
         self._checkListMenus.Bind(wx.EVT_CHECKLISTBOX, self.OnMenuChecked)
@@ -307,10 +307,10 @@ class FMCustomizeDlg(wx.Dialog):
 
 
     def CreateShortcutsPage(self):
-        """ Creates the :class:`~wx.lib.agw.labelbook.LabelBook` shorcuts page. """
+        """ Creates the :class:`~wx.lib.agw.labelbook.LabelBook` shortcuts page. """
 
-        shorcuts = wx.Panel(self._book, wx.ID_ANY, wx.DefaultPosition, wx.Size(300, 300))
-        return shorcuts
+        shortcuts = wx.Panel(self._book, wx.ID_ANY, wx.DefaultPosition, wx.Size(300, 300))
+        return shortcuts
 
 
     def CreateOptionsPage(self):
@@ -338,7 +338,7 @@ class FMCustomizeDlg(wx.Dialog):
         #     + Menu bar background colour  (combo button)
         #-----------------------------------------------------------
 
-        self._menuStyleID = wx.NewId()
+        self._menuStyleID = wx.NewIdRef()
         choices =  [_("Default Style"), _("Metallic")]
         self._menuStyle = wx.RadioBox(options, self._menuStyleID, _("Menu bar style"),
                                       wx.DefaultPosition, wx.DefaultSize, choices)
@@ -357,19 +357,19 @@ class FMCustomizeDlg(wx.Dialog):
         vsizer.Add(self._menuStyle, 0, wx.EXPAND | wx.ALL, 5)
 
         self._sbStyle = wx.StaticBoxSizer(wx.StaticBox(options, -1, _("Default style settings")), wx.VERTICAL)
-        self._drawVertGradID = wx.NewId()
+        self._drawVertGradID = wx.NewIdRef()
         self._verticalGradient = wx.CheckBox(options, self._drawVertGradID, _("Draw vertical gradient"))
         self._verticalGradient.Bind(wx.EVT_CHECKBOX, self.OnChangeStyle)
         self._sbStyle.Add(self._verticalGradient, 0, wx.EXPAND | wx.ALL, 3)
         self._verticalGradient.SetValue(ArtManager.Get().GetMBVerticalGradient())
 
-        self._drawBorderID = wx.NewId()
+        self._drawBorderID = wx.NewIdRef()
         self._drawBorder = wx.CheckBox(options, self._drawBorderID, _("Draw border around menu bar"))
         self._drawBorder.Bind(wx.EVT_CHECKBOX, self.OnChangeStyle)
         self._sbStyle.Add(self._drawBorder, 0, wx.EXPAND | wx.ALL, 3)
         self._drawBorder.SetValue(ArtManager.Get().GetMenuBarBorder())
 
-        self._shadowUnderTBID = wx.NewId()
+        self._shadowUnderTBID = wx.NewIdRef()
         self._shadowUnderTB =  wx.CheckBox(options, self._shadowUnderTBID, _("Toolbar float over menu bar"))
         self._shadowUnderTB.Bind(wx.EVT_CHECKBOX, self.OnChangeStyle)
         self._sbStyle.Add(self._shadowUnderTB, 0, wx.EXPAND | wx.ALL, 3)
@@ -379,7 +379,7 @@ class FMCustomizeDlg(wx.Dialog):
 
         # Misc
         sb = wx.StaticBoxSizer(wx.StaticBox(options, -1, _("Colour Scheme")), wx.VERTICAL)
-        self._colourID = wx.NewId()
+        self._colourID = wx.NewIdRef()
 
         colourChoices = ArtManager.Get().GetColourSchemes()
         colourChoices.sort()

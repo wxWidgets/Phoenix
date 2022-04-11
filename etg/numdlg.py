@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     21-Jan-2017
-# Copyright:   (c) 2017 by Total Control Software
+# Copyright:   (c) 2017-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -17,8 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'numdlg_8h.xml',
-
+ITEMS  = [ 'wxNumberEntryDialog',
            ]
 
 #---------------------------------------------------------------------------
@@ -33,6 +32,9 @@ def run():
     # customizing the generated code and docstrings.
 
     module.addHeaderCode('#include <wx/numdlg.h>')
+
+    c = module.find('wxNumberEntryDialog')
+    tools.fixTopLevelWindowClass(c)
 
     c = module.find('wxGetNumberFromUser')
     c.mustHaveApp()

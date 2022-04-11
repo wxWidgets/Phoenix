@@ -5,7 +5,7 @@
 # Author:      Miki Tebeka <miki.tebeka@gmail.com>
 #
 # Created:     18-Sept-2006
-# Copyright:   (c) 2006-2017 by Total Control Software
+# Copyright:   (c) 2006-2020 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags:        phoenix-port, documented
@@ -46,8 +46,8 @@ Sample usage::
         time.sleep(DELAY)
         wx.PostEvent(win, GooEvent(id, goo=id))
 
-    ID_CMD1 = wx.NewId()
-    ID_CMD2 = wx.NewId()
+    ID_CMD1 = wx.NewIdRef()
+    ID_CMD2 = wx.NewIdRef()
 
     class Frame(wx.Frame):
         def __init__(self):
@@ -170,8 +170,8 @@ def _test():
         time.sleep(DELAY)
         wx.PostEvent(win, GooEvent(id, goo=id))
 
-    ID_CMD1 = wx.NewId()
-    ID_CMD2 = wx.NewId()
+    ID_CMD1 = wx.NewIdRef()
+    ID_CMD2 = wx.NewIdRef()
 
     class Frame(wx.Frame):
         def __init__(self):

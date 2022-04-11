@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ def run():
     # Iterator stuff
     c.addPyMethod('__iter__', '(self)', 'return PyRegionIterator(self)',
                   """\
-                  Returns a rectangle interator conforming to the Python iterator
+                  Returns a rectangle iterator conforming to the Python iterator
                   protocol.""")
     c.addPyCode("""\
         class PyRegionIterator(object):
@@ -88,11 +88,12 @@ def run():
     c.mustHaveApp()
     c.find('operator++').ignore()
 
-    # SIP maps operator bool() to __int__, but Classic used __nonzero__. Does
-    # it make any difference either way?
     c.find('operator bool').ignore()
     c.addCppMethod('int', '__nonzero__', '()', 'return (int)self->operator bool();',
                    'Returns true while there are still rectangles available in the iteration.')
+    c.addCppMethod('int', '__bool__', '()', 'return (int)self->operator bool();',
+                   'Returns true while there are still rectangles available in the iteration.')
+
 
     c.addCppMethod('void', 'Next', '()', 'self->operator++();',
                    'Move the iterator to the next rectangle in the region.')

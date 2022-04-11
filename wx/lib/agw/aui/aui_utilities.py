@@ -322,9 +322,9 @@ def DarkenBitmap(bmp, caption_colour, new_colour):
     """
 
     image = bmp.ConvertToImage()
-    red = caption_colour.Red()/float(new_colour.Red())
-    green = caption_colour.Green()/float(new_colour.Green())
-    blue = caption_colour.Blue()/float(new_colour.Blue())
+    red = caption_colour.Red()/new_colour.Red()
+    green = caption_colour.Green()/new_colour.Green()
+    blue = caption_colour.Blue()/new_colour.Blue()
     image = image.AdjustChannels(red, green, blue)
     return image.ConvertToBitmap()
 
@@ -463,20 +463,31 @@ class TabDragImage(wx.DragImage):
 
         memory.SelectObject(wx.NullBitmap)
 
-        # Gtk and Windows unfortunatly don't do so well with transparent
+        # Gtk and Windows unfortunately don't do so well with transparent
         # drawing so this hack corrects the image to have a transparent
         # background.
         if wx.Platform != '__WXMAC__':
             timg = bitmap.ConvertToImage()
             if not timg.HasAlpha():
                 timg.InitAlpha()
-            for y in range(timg.GetHeight()):
-                for x in range(timg.GetWidth()):
-                    pix = wx.Colour(timg.GetRed(x, y),
-                                    timg.GetGreen(x, y),
-                                    timg.GetBlue(x, y))
-                    if pix == self._backgroundColour:
-                        timg.SetAlpha(x, y, 0)
+            ## for y in range(timg.GetHeight()):
+            ##     for x in range(timg.GetWidth()):
+            ##         pix = wx.Colour(timg.GetRed(x, y),
+            ##                         timg.GetGreen(x, y),
+            ##                         timg.GetBlue(x, y))
+            ##         if pix == self._backgroundColour:
+            ##             timg.SetAlpha(x, y, 0)
+            # local opt list comprehension
+            wxColour = wx.Colour
+            GetRed = timg.GetRed
+            GetGreen = timg.GetGreen
+            GetBlue = timg.GetBlue
+            SetAlpha = timg.SetAlpha
+            _backgroundColour = self._backgroundColour
+            [SetAlpha(x, y, 0)
+                for x in range(timg.GetWidth())
+                    for y in range(timg.GetHeight())
+                        if wxColour(GetRed(x, y), GetGreen(x, y), GetBlue(x, y)) == _backgroundColour]
             bitmap = timg.ConvertToBitmap()
         return bitmap
 
@@ -573,13 +584,13 @@ def RescaleScreenShot(bmp, thumbnail_size=200):
 
     if bmpW > bmpH:
         if bmpW > thumbnail_size:
-            ratio = bmpW/float(thumbnail_size)
-            newW, newH = int(bmpW/ratio), int(bmpH/ratio)
+            ratio = bmpW/thumbnail_size
+            newW, newH = int(bmpW//ratio), int(bmpH//ratio)
             img.Rescale(newW, newH, wx.IMAGE_QUALITY_HIGH)
     else:
         if bmpH > thumbnail_size:
-            ratio = bmpH/float(thumbnail_size)
-            newW, newH = int(bmpW/ratio), int(bmpH/ratio)
+            ratio = bmpH/thumbnail_size
+            newW, newH = int(bmpW//ratio), int(bmpH//ratio)
             img.Rescale(newW, newH, wx.IMAGE_QUALITY_HIGH)
 
     newBmp = img.ConvertToBitmap()
@@ -655,4 +666,7 @@ def CopyAttributes(newArt, oldArt):
             setattr(newArt, attr, getattr(oldArt, attr))
 
     return newArt
+
+
+
 

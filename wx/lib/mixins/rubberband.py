@@ -53,7 +53,7 @@ def normalizeBox(box):
 def boxToExtent(box):
     """
     Convert a box specification to an extent specification.
-    I put this into a seperate function after I realized that
+    I put this into a separate function after I realized that
     I had been implementing it wrong in several places.
     """
     b = normalizeBox(box)
@@ -74,7 +74,7 @@ def pointOnBox(x, y, box, thickness=1):
     of the box.  The thickness defines how thick the
     edge should be.  This is necessary for HCI reasons:
     For example, it's normally very difficult for a user
-    to manuever the mouse onto a one pixel border.
+    to maneuver the mouse onto a one pixel border.
     """
     outerBox = box
     innerBox = (box[0]+thickness, box[1]+thickness, box[2]-(thickness*2), box[3]-(thickness*2))
@@ -182,13 +182,13 @@ class RubberBand:
         x, y = event.GetPosition()
 
         # First make sure we have started a box.
-        if self.currentBox == None and not event.LeftDown():
+        if self.currentBox is None and not event.LeftDown():
             # No box started yet.  Set cursor to the initial kind.
             self.__setCursor(wx.CURSOR_CROSS)
             return
 
         if event.LeftDown():
-            if self.currentBox == None:
+            if self.currentBox is None:
                 # No RB Box, so start a new one.
                 self.currentBox = (x, y, 0, 0)
                 self.hasLetUp   = 0
@@ -242,13 +242,13 @@ class RubberBand:
 
         x0,y0,w0,h0 = self.currentBox
         currentExtent = boxToExtent(self.currentBox)
-        if x == None:
+        if x is None:
             if w0 < 1:
                 w0 += 1
             else:
                 w0 -= 1
             x = x0 + w0
-        if y == None:
+        if y is None:
             if h0 < 1:
                 h0 += 1
             else:

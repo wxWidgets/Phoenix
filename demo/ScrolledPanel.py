@@ -113,7 +113,7 @@ def runTest(frame, nb, log):
 overview = """<html><body>
 ScrolledPanel fills a "hole" in the implementation of wx.ScrolledWindow,
 providing automatic scrollbar and scrolling behavior and the tab traversal
-mangement that wx.ScrolledWindow lacks.
+management that wx.ScrolledWindow lacks.
 </body></html>
 """
 

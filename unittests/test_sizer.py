@@ -56,7 +56,7 @@ class sizer_Tests(wtc.WidgetTestCase):
     def test_sizerFlags(self):
         bs = wx.BoxSizer()
         bs.Add(wx.Panel(self.frame),
-               wx.SizerFlags(2).Border(wx.ALL, 5).Align(wx.ALIGN_RIGHT))
+               wx.SizerFlags(2).Border(wx.ALL, 5).Align(wx.ALIGN_TOP))
 
     def test_sizerAddMany(self):
         bs = wx.BoxSizer()
@@ -71,6 +71,17 @@ class sizer_Tests(wtc.WidgetTestCase):
         self.assertTrue(items[1].IsSpacer())
         self.assertTrue(items[2].Border == 5)
 
+    def test_iter(self):
+        bs = wx.BoxSizer()
+        widgetlist = [wx.Panel(self.frame) for _ in range(5)]
+        for w in widgetlist:
+            bs.Add(w)
+
+        sizeritems = [x for x in bs]
+        for item in sizeritems:
+            self.assertTrue(isinstance(item, wx.SizerItem))
+
+        self.assertEqual([x.GetWindow() for x in bs], widgetlist)
 
     def test_sizerSpacers1(self):
         bs = wx.BoxSizer()

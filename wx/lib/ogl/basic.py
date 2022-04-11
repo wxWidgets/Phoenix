@@ -305,7 +305,7 @@ class Shape(ShapeEvtHandler):
 
     The :class:`Shape` is the top-level, abstract object that all other objects
     are derived from. All common functionality is represented by :class:`Shape`
-    members, and overriden members that appear in derived classes and have
+    members, and overridden members that appear in derived classes and have
     behaviour as documented for :class:`Shape`, are not documented separately.
     """
     GraphicsInSizeToContents = False
@@ -521,7 +521,8 @@ class Shape(ShapeEvtHandler):
         """
         if redraw and self.GetCanvas():
             dc = wx.MemoryDC()
-            dc.SelectObject(self.GetCanvas()._Buffer)
+            dc.SelectObject(self.GetCanvas().GetBuffer())
+            self.GetCanvas().PrepareDC(dc)
             self.Erase(dc)
             self._shadowMode = mode
             self.Draw(dc)
@@ -702,7 +703,7 @@ class Shape(ShapeEvtHandler):
         actualW = w
         actualH = h
         # Don't try to resize an object with more than one image (this
-        # case should be dealt with by overriden handlers)
+        # case should be dealt with by overridden handlers)
         if (region.GetFormatMode() & FORMAT_SIZE_TO_CONTENTS) and \
            len(region.GetFormattedText()) and \
            len(self._regions) == 1 and \
@@ -965,7 +966,7 @@ class Shape(ShapeEvtHandler):
 
     def AssignNewIds(self):
         """Assign new ids to this image and its children."""
-        self._id = wx.NewId()
+        self._id = wx.NewIdRef()
         for child in self._children:
             child.AssignNewIds()
 
@@ -1050,7 +1051,7 @@ class Shape(ShapeEvtHandler):
         dc.SetPen(self.GetBackgroundPen())
         dc.SetBrush(self.GetBackgroundBrush())
 
-        dc.DrawRectangle(topLeftX - penWidth, topLeftY - penWidth, maxX + penWidth * 2 + 4, maxY + penWidth * 2 + 4)
+        dc.DrawRectangle(int(topLeftX - penWidth), int(topLeftY - penWidth), int(maxX + penWidth * 2 + 4), int(maxY + penWidth * 2 + 4))
 
     def EraseLinks(self, dc, attachment = -1, recurse = False):
         """
@@ -1196,7 +1197,8 @@ class Shape(ShapeEvtHandler):
         self.ApplyAttachmentOrdering(ordering)
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         self.MoveLinks(dc)
 
         if not self.GetCanvas().GetQuickEditMode():
@@ -1273,12 +1275,11 @@ class Shape(ShapeEvtHandler):
                 self._parent.GetEventHandler().OnDragLeft(draw, x, y, keys, attachment)
             return
 
-        # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
-        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
 
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -1305,9 +1306,8 @@ class Shape(ShapeEvtHandler):
         DragOffsetX = self._xpos - x
         DragOffsetY = self._ypos - y
 
-        # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
-        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         # New policy: don't erase shape until end of drag.
@@ -1316,7 +1316,7 @@ class Shape(ShapeEvtHandler):
         yy = y + DragOffsetY
         xx, yy = self._canvas.Snap(xx, yy)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1336,9 +1336,8 @@ class Shape(ShapeEvtHandler):
                 self._parent.GetEventHandler().OnEndDragLeft(x, y, keys, attachment)
             return
 
-        # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
-        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(wx.COPY)
 
         xx = x + DragOffsetX
@@ -1443,7 +1442,8 @@ class Shape(ShapeEvtHandler):
         """Flash the shape."""
         if self.GetCanvas():
             dc = wx.MemoryDC()
-            dc.SelectObject(self.GetCanvas()._Buffer)
+            dc.SelectObject(self.GetCanvas().GetBuffer())
+            self.GetCanvas().PrepareDC(dc)
             dc.SetLogicalFunction(OGLRBLF)
             self.Draw(dc)
             dc.SetLogicalFunction(wx.COPY)
@@ -1569,7 +1569,8 @@ class Shape(ShapeEvtHandler):
         line.SetAttachments(attachFrom, attachTo)
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         self.MoveLinks(dc)
 
     def RemoveLine(self, line):
@@ -1900,7 +1901,7 @@ class Shape(ShapeEvtHandler):
         Assuming the attachment lies along a vertical or horizontal line,
         calculate the position on that point.
 
-        :param `pt1`: The first point of the line repesenting the edge of
+        :param `pt1`: The first point of the line representing the edge of
          the shape
         :param `pt2`: The second point of the line representing the edge of
          the shape
@@ -2050,7 +2051,7 @@ class Shape(ShapeEvtHandler):
             shoulder1[1] = neck[1] - totalBranchLength / 2.0
             shoulder2[1] = neck[1] + totalBranchLength / 2.0
         else:
-            raise "Unrecognised attachment point in GetBranchingAttachmentInfo"
+            raise ValueError("Unrecognised attachment point in GetBranchingAttachmentInfo")
         return root, neck, shoulder1, shoulder2
 
     def GetBranchingAttachmentPoint(self, attachment, n):
@@ -2092,7 +2093,7 @@ class Shape(ShapeEvtHandler):
             stemPt[0] = neck[0]
             stemPt[1] = pt[1]
         else:
-            raise "Unrecognised attachment point in GetBranchingAttachmentPoint"
+            raise ValueError("Unrecognised attachment point in GetBranchingAttachmentPoint")
 
         return pt, stemPt
 
@@ -2139,7 +2140,7 @@ class Shape(ShapeEvtHandler):
             root[0] = self.GetX() - width / 2.0
             root[1] = self.GetY()
         else:
-            raise "Unrecognised attachment point in GetBranchingAttachmentRoot"
+            raise ValueError("Unrecognised attachment point in GetBranchingAttachmentRoot")
 
         return root
 
@@ -2507,10 +2508,11 @@ class Shape(ShapeEvtHandler):
         bound_x, bound_y = self.GetBoundingBoxMin()
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -2588,7 +2590,8 @@ class Shape(ShapeEvtHandler):
         self._canvas.CaptureMouse()
 
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         bound_x, bound_y = self.GetBoundingBoxMin()
@@ -2615,7 +2618,7 @@ class Shape(ShapeEvtHandler):
         pt._controlPointDragStartWidth = bound_x
         pt._controlPointDragStartHeight = bound_y
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -2689,7 +2692,8 @@ class Shape(ShapeEvtHandler):
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
         """The sizing end drag left handler."""
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         if self._canvas.HasCapture():
             self._canvas.ReleaseMouse()
@@ -2765,9 +2769,9 @@ class RectangleShape(Shape):
             dc.SetBrush(self._brush)
 
         if self._cornerRadius:
-            dc.DrawRoundedRectangle(x1, y1, self._width, self._height, self._cornerRadius)
+            dc.DrawRoundedRectangle(int(x1), int(y1), self._width, self._height, self._cornerRadius)
         else:
-            dc.DrawRectangle(x1, y1, self._width, self._height)
+            dc.DrawRectangle(int(x1), int(y1), self._width, self._height)
 
     def GetBoundingBoxMin(self):
         """Get the bounding box minimum."""
@@ -2835,9 +2839,9 @@ class RectangleShape(Shape):
 
     def SetHeight(self, h):
         """
-        Set the heigth.
+        Set the height.
 
-        :param `h`: heigth to be set
+        :param `h`: height to be set
 
         """
         self._height = h
@@ -2878,7 +2882,7 @@ class PolygonShape(Shape):
             # Duplicate the list of points
             self._points = []
             for point in the_points:
-                new_point = wx.Point(point[0], point[1])
+                new_point = wx.Point(int(point[0]), int(point[1]))
                 self._points.append(new_point)
             self.CalculateBoundingBox()
             self._originalWidth = self._boundWidth
@@ -3290,10 +3294,11 @@ class PolygonShape(Shape):
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
         """The sizing drag left handler."""
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -3306,7 +3311,8 @@ class PolygonShape(Shape):
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
         """The sizing begin drag left handler."""
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         self.Erase(dc)
@@ -3322,7 +3328,7 @@ class PolygonShape(Shape):
         if pt._originalDistance == 0:
             pt._originalDistance = 0.0001
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        dottedPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -3337,7 +3343,8 @@ class PolygonShape(Shape):
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
         """The sizing end drag left handler."""
         dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SelectObject(self.GetCanvas().GetBuffer())
+        self.GetCanvas().PrepareDC(dc)
 
         if self._canvas.HasCapture():
             self._canvas.ReleaseMouse()
@@ -3437,7 +3444,7 @@ class EllipseShape(Shape):
                 dc.SetPen(self._pen)
         if self._brush:
             dc.SetBrush(self._brush)
-        dc.DrawEllipse(self._xpos - self.GetWidth() / 2.0, self._ypos - self.GetHeight() / 2.0, self.GetWidth(), self.GetHeight())
+        dc.DrawEllipse(int(self._xpos - self.GetWidth() / 2.0), int(self._ypos - self.GetHeight() / 2.0), self.GetWidth(), self.GetHeight())
 
     def SetSize(self, x, y, recursive = True):
         """
@@ -3638,7 +3645,7 @@ class ShapeRegion(object):
 
     def SetMinSize(self, w, h):
         """
-        Set the minumum size.
+        Set the minimum size.
 
         :param `w`: the minimum width
         :Param `h`: the minimum height

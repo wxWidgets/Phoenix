@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Feb-2015
-# Copyright:   (c) 2015-2017 by Total Control Software
+# Copyright:   (c) 2015-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -21,6 +21,7 @@ ITEMS  = [ 'interface_2wx_2propgrid_2propgrid_8h.xml',
            'wxPGValidationInfo',
            'wxPropertyGrid',
            'wxPropertyGridEvent',
+           'wxPropertyGridPopulator',
            ]
 
 #---------------------------------------------------------------------------
@@ -40,12 +41,13 @@ def run():
 
     c = module.find('wxPropertyGrid')
     assert isinstance(c, etgtools.ClassDef)
-    c.bases.remove('wxScrollHelper')
-    tools.fixWindowClass(c)
+    c.bases[0] = 'wxControl'  # sip can't handle wxScrolled<wxControl>. See also below.
+    tools.fixWindowClass(c, False)
     module.addGlobalStr('wxPropertyGridNameStr', c)
 
-    for m in c.find('RegisterEditorClass').all():
-        m.find('editor').transfer = True
+    for name in ['RegisterEditorClass', 'DoRegisterEditorClass']:
+        for m in c.find(name).all():
+            m.find('editor').transfer = True
 
 
     # TODO: provide a way to use a Python callable as a sort function
@@ -73,17 +75,23 @@ def run():
         if hasattr(item, 'type') and item.type == 'wxPGPropArg':
             item.type = 'const wxPGPropArgCls &'
 
+    # We can't let sip create a wxScrolledControl via a typedef because of the
+    # differences in the parameters of the Create methods, so instead let's just
+    # copy the method definitions from wxScrolled<> here and let the compiler
+    # sort it out.
+    import scrolwin
+    mod = scrolwin.parseAndTweakModule()
+    klass = mod.find('wxScrolled')
+    newItems = [item for item in klass.items
+        if not c.findItem(item.name) and not item.isCtor]
+    c.items.extend(newItems)
 
-    td = module.find('wxPGVFBFlags')
-    assert isinstance(td, etgtools.TypedefDef)
-    td.type = 'unsigned char'
-    td.noTypeName = True
 
 
     c = module.find('wxPropertyGridEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_PG_CHANGED = wx.PyEventBinder( wxEVT_PG_CHANGED, 1 )
         EVT_PG_CHANGING = wx.PyEventBinder( wxEVT_PG_CHANGING, 1 )
         EVT_PG_SELECTED = wx.PyEventBinder( wxEVT_PG_SELECTED, 1 )
@@ -107,6 +115,25 @@ def run():
     for item in module.allItems():
         if hasattr(item, 'type') and 'wxVariant' in item.type:
             item.type = item.type.replace('wxVariant', 'wxPGVariant')
+
+
+    # Switch wxPGVFBFlags to unsigned char
+    td = module.find('wxPGVFBFlags')
+    td.ignore()
+
+    for name in ['wxPGValidationInfo.GetFailureBehavior',
+                 'wxPGValidationInfo.SetFailureBehavior.failureBehavior',
+                 'wxPropertyGridEvent.GetValidationFailureBehavior',
+                 'wxPropertyGridEvent.SetValidationFailureBehavior.flags',
+                ]:
+        item = module.find(name)
+        assert item.type == 'wxPGVFBFlags'
+        item.type = 'byte'
+
+
+
+    c = module.find('wxPropertyGridPopulator')
+    tools.ignoreConstOverloads(c)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -21,12 +21,12 @@ class lib_pdfviewer_pdfviewer_Tests(wtc.WidgetTestCase):
 
     @unittest.skipIf(not havePyPDF, "PyMuPDF or PyPDF2 required")
     def test_lib_pdfviewer_pdfviewerButtonPanelCtor(self):
-        bp = pdfButtonPanel(self.frame, wx.NewId(),
+        bp = pdfButtonPanel(self.frame, wx.ID_ANY,
                             wx.DefaultPosition, wx.DefaultSize, 0)
 
     @unittest.skipIf(not havePyPDF,  "PyMuPDF or PyPDF2 required")
     def test_lib_pdfviewer_pdfviewerPdfViewerCtor(self):
-        pv = pdfViewer(self.frame, wx.NewId(), wx.DefaultPosition,
+        pv = pdfViewer(self.frame, wx.ID_ANY, wx.DefaultPosition,
                        wx.DefaultSize,
                        wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
 
@@ -34,10 +34,10 @@ class lib_pdfviewer_pdfviewer_Tests(wtc.WidgetTestCase):
     def test_lib_pdfviewer_loadFile(self):
         paneCont = sc.SizedPanel(self.frame)
 
-        self.buttonpanel = pdfButtonPanel(paneCont, wx.NewId(),
+        self.buttonpanel = pdfButtonPanel(paneCont, wx.ID_ANY,
                                 wx.DefaultPosition, wx.DefaultSize, 0)
         self.buttonpanel.SetSizerProps(expand=True)
-        self.viewer = pdfViewer(paneCont, wx.NewId(), wx.DefaultPosition,
+        self.viewer = pdfViewer(paneCont, wx.ID_ANY, wx.DefaultPosition,
                                 wx.DefaultSize,
                                 wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
         self.viewer.SetSizerProps(expand=True, proportion=1)

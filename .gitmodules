@@ -1,4 +1,6 @@
 [submodule "ext/wxWidgets"]
 	path = ext/wxWidgets
 	url = https://github.com/wxWidgets/wxWidgets.git
-	branch = wxPy-3.0-branch
+[submodule "ext/nanosvg"]
+	path = ext/nanosvg
+	url = https://github.com/wxWidgets/nanosvg.git

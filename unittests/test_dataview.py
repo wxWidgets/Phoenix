@@ -1,7 +1,6 @@
 import unittest
 from unittests import wtc
 import wx
-import six
 import wx.dataview as dv
 import os
 import sys
@@ -45,14 +44,15 @@ class dataview_Tests(wtc.WidgetTestCase):
 
     def test_dataviewItem7(self):
         n = sys.maxsize
-        if six.PY3:
-            assert type(n) is int
-        else:
-            assert type(n) is long
         dvi = dv.DataViewItem(n)
         self.assertTrue(dvi)
         self.assertTrue(int(dvi.GetID()) == n)
 
+
+    def test_dataviewItem8(self):
+        dvi = dv.DataViewItem(111)
+        assert (None == dvi) == False
+        assert (None != dvi) == True
 
 
     #-------------------------------------------------------
@@ -245,7 +245,7 @@ class dataview_Tests(wtc.WidgetTestCase):
                 return 10
 
             def GetValueByRow(self, row, col):
-                return 'value(%d, %d)' (row, col)
+                return 'value(%d, %d)' % (row, col)
 
             def SetValueByRow(self, value, row, col):
                 return True
@@ -262,7 +262,7 @@ class dataview_Tests(wtc.WidgetTestCase):
         count2 = model.GetRefCount()
 
         # The reference count should still be 1 because the model was
-        # DecRef'ed when it's ownership transfered to C++ in the
+        # DecRef'ed when it's ownership transferred to C++ in the
         # AssociateModel call
         self.assertEqual(count2, 1)
         self.assertTrue(count2 == count1)
@@ -414,7 +414,6 @@ class dataview_Tests(wtc.WidgetTestCase):
         evt.GetValue
         evt.SetValue
         evt.IsEditCancelled
-        evt.SetEditCanceled
         evt.SetDataViewColumn
         evt.GetDataViewColumn
         evt.GetPosition

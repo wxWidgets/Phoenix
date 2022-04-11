@@ -23,15 +23,12 @@ class menuitem_Tests(wtc.WidgetTestCase):
         m.Help
         m.Id
         m.ItemLabel
-        m.ItemLabelText
         m.Kind
-        m.Label
         m.MarginWidth
         m.Menu
-        m.Name
         m.SubMenu
-        m.Text
         m.TextColour
+        m.Enabled
 
 
     def test_menuitemKinds(self):

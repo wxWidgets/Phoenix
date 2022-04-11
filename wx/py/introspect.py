@@ -48,7 +48,7 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
         # Special code to allow traits to be caught by autocomplete
         if hasattr(obj,'trait_get'):
             try:
-                for i in obj.trait_get().keys():
+                for i in obj.trait_get():
                     if i not in attributes:
                         if hasattr(obj, i):
                             attributes += i
@@ -75,10 +75,10 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
     # Remove duplicates from the attribute list.
     for item in attributes:
         dict[item] = None
-    attributes = dict.keys()
+    attributes = list(dict)
     # new-style swig wrappings can result in non-string attributes
     # e.g. ITK http://www.itk.org/
-    attributes = [attribute for attribute in attributes \
+    attributes = [attribute for attribute in attributes
                   if type(attribute) == str]
     attributes.sort(key=lambda x: x.upper())
     if not includeSingle:
@@ -116,7 +116,7 @@ def getAllAttributeNames(obj):
     attrdict[(key, 'dir', len(attributes))] = attributes
     # Get attributes from the object's dictionary, if it has one.
     try:
-        attributes = sorted(obj.__dict__.keys())
+        attributes = sorted(obj.__dict__)
     except Exception:  # Must catch all because object might have __getattr__.
         pass
     else:
@@ -175,7 +175,7 @@ def getCallTip(command='', locals=None):
         pass
     elif inspect.isfunction(obj):
         # tip1 is a string like: "getCallTip(command='', locals=None)"
-        argspec = inspect.getargspec(obj)
+        argspec = inspect.getargspec(obj) if not PY3 else inspect.getfullargspec(obj)
         argspec = inspect.formatargspec(*argspec)
         if dropSelf:
             # The first parameter to a method is a reference to an
@@ -228,10 +228,11 @@ def getRoot(command, terminator=None):
     command = rtrimTerminus(command, terminator)
     if terminator == '.':
         tokens = getTokens(command)
-        if not tokens:
-            return ''
-        if tokens[-1][0] is tokenize.ENDMARKER:
+        if tokens and tokens[-1][0] is tokenize.ENDMARKER:
             # Remove the end marker.
+            del tokens[-1]
+        if tokens and tokens[-1][0] is tokenize.NEWLINE:
+            # Remove newline.
             del tokens[-1]
         if not tokens:
             return ''
@@ -258,7 +259,7 @@ def getRoot(command, terminator=None):
         tokentype = token[0]
         tokenstring = token[1]
         line = token[4]
-        if tokentype is tokenize.ENDMARKER:
+        if tokentype in (tokenize.ENDMARKER, tokenize.NEWLINE):
             continue
         if PY3 and tokentype is tokenize.ENCODING:
             line = lastline
@@ -280,7 +281,7 @@ def getRoot(command, terminator=None):
                 # start represents the last known good point in the line.
                 start = token[2][1]
         elif len(tokenstring) == 1 and tokenstring in ('[({])}'):
-            # Remember, we're working backwords.
+            # Remember, we're working backwards.
             # So prefix += tokenstring would be wrong.
             if prefix in emptyTypes and tokenstring in ('[({'):
                 # We've already got an empty type identified so now we
@@ -325,7 +326,8 @@ def getTokens(command):
                 tokens.append(args)
             tokenize.tokenize_loop(f.readline, eater)
         else:
-            tokens = list(tokenize.tokenize(f.readline))
+            for t in tokenize.tokenize(f.readline):
+                tokens.append(t)
     except tokenize.TokenError:
         # This is due to a premature EOF, which we expect since we are
         # feeding in fragments of Python code.
@@ -350,14 +352,14 @@ def getBaseObject(obj):
         # inspect.getargspec() complains that the object isn't a
         # Python function.
         try:
-            if obj.im_self is None:
+            if obj.__self__ is None:
                 # This is an unbound method so we do not drop self
                 # from the argspec, since an instance must be passed
                 # as the first arg.
                 dropSelf = 0
             else:
                 dropSelf = 1
-            obj = obj.im_func
+            obj = obj.__func__
         except AttributeError:
             dropSelf = 0
     elif inspect.isclass(obj):
@@ -371,7 +373,7 @@ def getBaseObject(obj):
     elif callable(obj):
         # Get the __call__ method instead.
         try:
-            obj = obj.__call__.im_func
+            obj = obj.__call__.__func__
             dropSelf = 1
         except AttributeError:
             dropSelf = 0
@@ -382,7 +384,7 @@ def getBaseObject(obj):
 def getConstructor(obj):
     """Return constructor for class object, or None if there isn't one."""
     try:
-        return obj.__init__.im_func
+        return obj.__init__.__func__
     except AttributeError:
         for base in obj.__bases__:
             constructor = getConstructor(base)

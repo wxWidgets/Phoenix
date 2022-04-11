@@ -4,7 +4,7 @@ Extractor, Tweaker, Generator Scripts
 What is this stuff?
 -------------------
 
-This directory contains Extractror-Tweaker-Generator (ETG) scripts which are
+This directory contains Extractor-Tweaker-Generator (ETG) scripts which are
 used to drive the process of converting the wxWidgets Doxygen XML files into
 the files that will be fed to the bindings generator tool (SIP).
 
@@ -28,8 +28,8 @@ generators which will traverse the object tree and generate code as needed.
 Checklist for all new etg files
 -------------------------------
 
-    * Use the bin/make-new-etg-file.py script to create a new boiler plate etg
-      and unittest file for you. In simplest cases all you'll do after that is
+    * Use the bin/make-new-etg-file.py script to create a new boilerplate etg
+      and unittest files for you. In simplest cases all you'll do after that is
       add the class names to be processed, and add some unittest code for it.
 
     * Use a filename that matches the wxWidgets/interface/wx file name

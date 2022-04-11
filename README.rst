@@ -18,6 +18,13 @@ API, enabling Python applications to have a native GUI on Windows, Macs or
 Unix systems, with a native look and feel and requiring very little (if any)
 platform specific code.
 
+.. note::
+    This document is primarily intended for those who will be working on
+    wxPython, or at least building with the source code fetched directly from
+    GitHub. If that's not you then please refer to the instructions at the
+    `wxPython website <https://wxpython.org/pages/downloads/>`_ about how to get
+    the current release of wxPython for your platform and chosen Python
+    environment.
 
 .. contents:: **Contents**
 
@@ -25,7 +32,21 @@ platform specific code.
 How to build wxPython Phoenix
 -----------------------------
 
-First of all, review the section below about prerequisites.
+First of all, this README is intended primarily for those who want to build
+wxPython from a workspace checked out from the wxPython Phoenix repository. If
+you are not making changes to wxPython, or needing to build it for some
+unsupported compiler or some other hardware architecture, then you probably do
+not need to put yourself through the pain for building in this way. It's a
+complicated build, and can sometimes be confusing even for the experts.
+Instead, if the binaries available at PyPI are not what you need then you can
+use pip to build from the released source archives, or from the source archives
+created in the pre-release snapshot builds. See the notes about it at:
+
+* https://wxpython.org/pages/downloads/
+* https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip
+
+
+Next, review the section below about prerequisites.
 
 All aspects of the wxPython Phoenix build are managed through a series of
 commands provided by the build.py script. There is also a setup.py script
@@ -79,8 +100,7 @@ you will need to do an additional step. The git repository is set up to bring
 in the wxWidgets code as a git "submodule" so after cloning the Phoenix
 repository, you can get the wxWidgets source with these commands::
 
-  $ git submodule init
-  $ git submodule update
+  $ git submodule update --init --recursive
 
 This will clone the wxWidgets repo into: ``Phoenix/ext/wxWidgets``. Once the
 submodule is updated, the build script should be able to build wxWidgets.
@@ -91,8 +111,8 @@ details. However be aware that doing so will require a wxWidgets that is
 **very** close to the same age as the Phoenix code, at least for the
 unreleased preview snapshots. In other words, the wxWidgets build should use
 code from the wxWidgets source repository within a few days of when the
-Phoenix code was checked out. Currently Phoenix is expecting to be used with
-a wxWidgets built from the ``WX_3_0_BRANCH`` git branch.
+Phoenix code was checked out. Currently the master branch of Phoenix is
+tracking the master branch of wxWidgets.
 
 On the other hand, it is probably best to just let wxPython build and bundle
 wxWidgets. The build tools will by default build wxWidgets in a way that
@@ -250,7 +270,7 @@ explanation to help a newbie find their way around.
 
     cd Phoenix
     git submodule init
-    git submodule update
+    git submodule update --recursive
 
 * **sip/gen**: The code (.sip files) produced by the ETG scripts is placed
   in this folder.
@@ -306,6 +326,7 @@ yourself. There are likely some other things that may not have been mentioned
 here, if you find something else that should be mentioned then please submit
 a PR for updating this document.
 
+
 **Windows**
 
 All the source code needed for wxWidgets and wxPython Phoenix are
@@ -329,28 +350,42 @@ If you want to build Phoenix with debug info then you will need to first
 build a debug version of Python, and then use that Python (python_d.exe) to
 build Phoenix.
 
+
 **Linux**
 
-On Ubuntu the following development packages and their dependencies
-should be installed in order to build Phoenix. Other debian-like distros
-will probably also have these or similarly named packages available.
-Extrapolate accordingly for other linux distributions or other unixes.
+On Ubuntu the following development packages and their dependencies should be
+installed in order to build Phoenix. Other debian-like distros will probably
+also have these or similarly named packages available, or newer versions of
+Ubuntu might have evolved somewhat and require changes from this list.
+Extrapolate other package names accordingly for other linux distributions or
+other unixes.
 
 * dpkg-dev
 * build-essential
-* python2.7-dev     # use appropriate Python version
-* libwebkitgtk-dev
-* libjpeg-dev
-* libtiff-dev
-* libgtk2.0-dev
-* libsdl1.2-dev
-* libgstreamer-plugins-base0.10-dev
-* libnotify-dev
-* freeglut3
+* python3-dev
 * freeglut3-dev
+* libgl1-mesa-dev
+* libglu1-mesa-dev
+* libgstreamer-plugins-base1.0-dev
+* libgtk-3-dev
+* libjpeg-dev
+* libnotify-dev
+* libpng-dev
+* libsdl2-dev
+* libsm-dev
+* libtiff-dev
+* libwebkit2gtk-4.0-dev
+* libxtst-dev
 
-If your Linux distribution has gstreamer 1.0 available then you can install
-the dev packages for that instead of the 0.10 version.
+If you are building for GTK2 then you'll also need these packages and
+their dependencies:
+
+* libgtk2.0-dev
+* libwebkitgtk-dev
+
+
+If You use a custom built python in a non standard location, You need to
+compile python with the --enable-shared option.
 
 **Mac OSX**
 
@@ -383,6 +418,14 @@ get involved please subscribe to the group at
 https://groups.google.com/forum/#!forum/wxpython-dev and join in.
 
 
+Latest Snapshot Builds
+----------------------
+
+You can find snapshots of the latest wxPython Phoenix build files,
+including source snapshots, wheels files for Windows and Mac, and etc. at:
+https://wxpython.org/Phoenix/snapshot-builds/.  These files are built at most
+once per day, on any day that has had a commit to the master branch.
+
+
 .. image:: docs/phoenix-fire-md.png
    :width: 100%
-

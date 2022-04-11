@@ -24,8 +24,7 @@ class TablePanel(wx.Panel):
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add((20, 30))
-        keys = list(buttonDefs.keys())
-        keys.sort()
+        keys = sorted(buttonDefs)
 
         for k in keys:
             text = buttonDefs[k][1]
@@ -43,19 +42,16 @@ class TablePanel(wx.Panel):
 
     def ReadData(self):
         test_file = "./data/testtable.txt"
-        file = open(test_file,'r',1)
-        i = 0
 
-        data = []
-        while 1:
-            text = file.readline()
-            text = text.strip()
-            if not text:
-                break
+        with open(test_file,'r', 1) as file_:
+            data = []
+            for text in file_:
+                text = text.strip()
+                if not text:
+                    break
 
-            list_val = text.split('\t')
-            data.append(list_val)
-        file.close()
+                list_val = text.split('\t')
+                data.append(list_val)
 
         self.header = data[0]
         self.data = data[1:]
@@ -154,12 +150,8 @@ class TablePanel(wx.Panel):
     def PreviewText(self):
         prt = printout.PrintTable(self.frame)
         prt.SetHeader("PROCLAMATION")
-        file = open('data/proclamation.txt')
-        data = []
-        for txt in file:
-            data.append(txt.strip())
-        file.close()
-        prt.data = data
+        with open('data/proclamation.txt') as file_:
+            prt.data = [txt.strip() for txt in file_]
         prt.Preview()
 
     def PrintWide(self):

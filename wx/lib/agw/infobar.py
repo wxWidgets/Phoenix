@@ -71,7 +71,7 @@ For example::
     info = InfoBar(parent)
     bitmap = wx.Bitmap('nice_bitmap.png', wx.BITMAP_TYPE_PNG)
 
-    info.AddButton(wx.NewId(), 'New Button', bitmap)
+    info.AddButton(wx.ID_ANY, 'New Button', bitmap)
 
 
 

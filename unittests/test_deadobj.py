@@ -35,7 +35,7 @@ class deadobj_Tests(wtc.WidgetTestCase):
 
     def test_deadobjException(self):
         # There should be a RuntimeError exception if we try to use an object
-        # after it's C++ parts have been detroyed.
+        # after it's C++ parts have been destroyed.
         p = wx.Panel(self.frame)
         p.Destroy()
         with self.assertRaises(RuntimeError):

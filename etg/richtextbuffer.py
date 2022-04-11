@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Mar-2013
-# Copyright:   (c) 2013-2017 by Total Control Software
+# Copyright:   (c) 2013-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -23,6 +23,7 @@ ITEMS  = [ "wxTextAttrDimension",
            "wxTextAttrDimensionConverter",
            "wxTextAttrBorder",
            "wxTextAttrBorders",
+           "wxTextAttrShadow",
            "wxTextBoxAttr",
            "wxRichTextAttr",
            "wxRichTextProperties",
@@ -109,11 +110,13 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.find('SetValue').findOverload('units').ignore()
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
 
     #-------------------------------------------------------
     c = module.find('wxTextAttrDimensions')
     tools.ignoreConstOverloads(c)
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
 
     #-------------------------------------------------------
     c = module.find('wxTextAttrSize')
@@ -121,17 +124,25 @@ def run():
     c.find('SetWidth').findOverload('units').ignore()
     c.find('SetHeight').findOverload('units').ignore()
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
 
     #-------------------------------------------------------
     c = module.find('wxTextAttrBorder')
     tools.ignoreConstOverloads(c)
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
 
 
     #-------------------------------------------------------
     c = module.find('wxTextAttrBorders')
     tools.ignoreConstOverloads(c)
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
+
+
+    #-------------------------------------------------------
+    c = module.find('wxTextAttrShadow')
+    tools.ignoreConstOverloads(c)
 
 
     #-------------------------------------------------------
@@ -155,6 +166,7 @@ def run():
     c = module.find('wxRichTextSelection')
     tools.ignoreConstOverloads(c)
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsValid();")
     c.find('operator[]').ignore()
 
 
@@ -166,6 +178,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxRichTextRange')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(ii)", self->GetStart(), self->GetEnd());
         """,
         pyArgsString="() -> (start, end)",
@@ -178,6 +191,7 @@ def run():
     c.addPyMethod('__repr__', '(self)',            'return "RichTextRange"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
     c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
+    c.addPyMethod('__bool__', '(self)',            'return self.Get() != (0,0)')
     c.addPyMethod('__reduce__', '(self)',          'return (RichTextRange, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
@@ -314,6 +328,7 @@ def run():
     #-------------------------------------------------------
     c = module.find('wxRichTextImage')
     _fixDrawObject(c)
+    c.find('LoadAndScaleImageCache.changed').inOut = True
 
     #-------------------------------------------------------
     c = module.find('wxRichTextBuffer')
@@ -353,6 +368,30 @@ def run():
 
     c.find('FindHandlerFilenameOrType').pyName = 'FindHandlerByFilename'
 
+    c.find('GetExtWildcard').ignore()
+    c.addCppMethod('PyObject*', 'GetExtWildcard', '(bool combine=false, bool save=false)',
+        doc="""\
+            Gets a wildcard string for the file dialog based on all the currently
+            loaded richtext file handlers, and a list that can be used to map
+            those filter types to the file handler type.""",
+        body="""\
+            wxString wildcards;
+            wxArrayInt types;
+            wildcards = wxRichTextBuffer::GetExtWildcard(combine, save, &types);
+
+            wxPyThreadBlocker blocker;
+            PyObject* list = PyList_New(0);
+            for (size_t i=0; i < types.GetCount(); i++) {
+                PyObject* number = wxPyInt_FromLong(types[i]);
+                PyList_Append(list, number);
+                Py_DECREF(number);
+            }
+            PyObject* tup = PyTuple_New(2);
+            PyTuple_SET_ITEM(tup, 0, wx2PyString(wildcards));
+            PyTuple_SET_ITEM(tup, 1, list);
+            return tup;
+            """,
+        isStatic=True)
 
     #-------------------------------------------------------
     c = module.find('wxRichTextTable')
@@ -397,7 +436,7 @@ def run():
     #-------------------------------------------------------
     # Ignore all Dump() methods since we don't wrap wxTextOutputStream.
 
-    # TODO: try swithcing the parameter type to wxOutputStream and then in
+    # TODO: try switching the parameter type to wxOutputStream and then in
     # the wrapper code create a wxTextOutputStream from that to pass on to
     # Dump.
 

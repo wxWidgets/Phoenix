@@ -46,6 +46,14 @@ class cmndata_tests(wtc.WidgetTestCase):
             pd.__nonzero__()
             pdd.__nonzero__()
 
+
+    def test_PD_PaperSize(self):
+        pd = wx.PrintData()
+        pd.GetPaperSize()
+        pd.SetPaperSize( wx.Size(int(8.5*300), 11*300) )
+        pd.PaperSize
+
+
 #---------------------------------------------------------------------------
 
 

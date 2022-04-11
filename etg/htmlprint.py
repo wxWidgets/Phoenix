@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     29-Oct-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -45,11 +45,21 @@ def run():
     c = module.find('wxHtmlEasyPrinting')
     c.mustHaveApp()
     c.addPrivateCopyCtor()
+    tools.fixHtmlSetFonts(c)
 
     c = module.find('wxHtmlPrintout')
     c.mustHaveApp()
     c.addPrivateCopyCtor()
+    tools.fixHtmlSetFonts(c)
 
+    # Ensure sip knows these virtuals are present in this class.
+    c.addItem(etgtools.WigCode("""\
+        bool OnPrintPage(int page);
+        bool HasPage(int page);
+        void GetPageInfo(int *minPage, int *maxPage, int *selPageFrom, int *selPageTo);
+        bool OnBeginDocument(int startPage, int endPage);
+        void OnPreparePrinting();
+        """))
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

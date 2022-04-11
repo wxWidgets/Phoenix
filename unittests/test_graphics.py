@@ -23,6 +23,28 @@ class graphics_Tests(wtc.WidgetTestCase):
         gc = wx.GraphicsContext.Create(img)
         self.assertTrue(gc.IsOk())
 
+    def test_gcCreate4(self):
+        class MyPanel(wx.Panel):
+            def __init__(self, parent):
+                super(MyPanel, self).__init__(parent)
+                self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
+                self.Bind(wx.EVT_PAINT, self.OnPaint)
+                self.painted = False
+                self.gcIsOk = False
+
+            def OnPaint(self, evt):
+                dc = wx.AutoBufferedPaintDC(self)
+                gc = wx.GraphicsContext.Create(dc)
+                self.gcIsOk = gc.IsOk()
+                self.painted = True
+
+        panel = MyPanel(self.frame)
+        self.myUpdate(panel)
+        self.waitFor(100)
+        self.assertTrue(panel.painted)
+        self.assertTrue(panel.gcIsOk)
+
+
     def test_gcCreateBitmap(self):
         self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)

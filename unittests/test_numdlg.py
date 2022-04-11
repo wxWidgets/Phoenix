@@ -6,9 +6,16 @@ import wx
 
 class numdlg_Tests(wtc.WidgetTestCase):
 
-    # TODO: Remove this test and add real ones.
     def test_numdlg1(self):
-        self.fail("Unit tests for numdlg not implemented yet.")
+        dlg = wx.NumberEntryDialog(None, "Message", "Prompt", "Caption", 50, 0, 100)
+        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+        dlg.ShowModal()
+        self.assertEqual(dlg.GetValue(), 50)
+        dlg.Destroy()
+
+    def test_numdlg2(self):
+        # Ideally we would call this but don't know how to dismiss the dialog
+        wx.GetNumberFromUser
 
 #---------------------------------------------------------------------------
 

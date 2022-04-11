@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     29-Mar-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -38,7 +38,17 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
 
-    c.addPyCode("""\
+    c.find('GetPaths').ignore()
+    c.addCppMethod('wxArrayString*', 'GetPaths', '()', pyArgsString="() -> list",
+        doc='Returns a list of the currently selected paths.',
+        body="""\
+            wxArrayString* paths = new wxArrayString;
+            self->GetPaths(*paths);
+            return paths;
+            """
+    )
+
+    module.addPyCode("""\
         EVT_DIRCTRL_SELECTIONCHANGED = wx.PyEventBinder( wxEVT_DIRCTRL_SELECTIONCHANGED, 1 )
         EVT_DIRCTRL_FILEACTIVATED = wx.PyEventBinder( wxEVT_DIRCTRL_FILEACTIVATED, 1 )
         """)

@@ -56,7 +56,7 @@ class MyParentFrame(wx.MDIParentFrame):
         win.SetDefaultSize((1000, 30))
         win.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
         win.SetAlignment(wx.adv.LAYOUT_TOP)
-        win.SetBackgroundColour(wx.Colour(255, 0, 0))
+        win.SetBackgroundColour(wx.RED)
         win.SetSashVisible(wx.adv.SASH_BOTTOM, True)
 
         self.topWindow = win
@@ -67,7 +67,7 @@ class MyParentFrame(wx.MDIParentFrame):
         win.SetDefaultSize((1000, 30))
         win.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
         win.SetAlignment(wx.adv.LAYOUT_BOTTOM)
-        win.SetBackgroundColour(wx.Colour(0, 0, 255))
+        win.SetBackgroundColour(wx.BLUE)
         win.SetSashVisible(wx.adv.SASH_TOP, True)
 
         self.bottomWindow = win
@@ -78,7 +78,7 @@ class MyParentFrame(wx.MDIParentFrame):
         win.SetDefaultSize((120, 1000))
         win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
         win.SetAlignment(wx.adv.LAYOUT_LEFT)
-        win.SetBackgroundColour(wx.Colour(0, 255, 0))
+        win.SetBackgroundColour(wx.GREEN)
         win.SetSashVisible(wx.adv.SASH_RIGHT, True)
         win.SetExtraBorderSize(10)
         textWindow = wx.TextCtrl(win, -1, "", style=wx.TE_MULTILINE|wx.SUNKEN_BORDER)
@@ -92,7 +92,7 @@ class MyParentFrame(wx.MDIParentFrame):
         win.SetDefaultSize((120, 1000))
         win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
         win.SetAlignment(wx.adv.LAYOUT_LEFT)
-        win.SetBackgroundColour(wx.Colour(0, 255, 255))
+        win.SetBackgroundColour(wx.CYAN)
         win.SetSashVisible(wx.adv.SASH_RIGHT, True)
 
         self.leftWindow2 = win

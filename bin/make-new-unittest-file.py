@@ -4,7 +4,7 @@
 # Author:      Robin Dunn
 #
 # Created:     12-July-2012
-# Copyright:   (c) 2013 by Robin Dunn
+# Copyright:   (c) 2013-2020 by Robin Dunn
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -52,9 +52,9 @@ def writeFile(filename, stub, values):
     if os.path.exists(filename):
         print("'%s' already exists. Exiting." % filename)
         sys.exit(1)
-    output = open(filename, 'w')
-    output.write(stub % values)
-    output.close()
+    with open(filename, 'w') as output:
+        output.write(stub % values)
+
     print("Wrote %s" % filename)
 
 

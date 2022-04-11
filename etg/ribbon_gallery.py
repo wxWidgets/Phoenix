@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Jun-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ def run():
     c = module.find('wxRibbonGalleryEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_RIBBONGALLERY_HOVER_CHANGED = wx.PyEventBinder( wxEVT_RIBBONGALLERY_HOVER_CHANGED, 1 )
         EVT_RIBBONGALLERY_SELECTED = wx.PyEventBinder( wxEVT_RIBBONGALLERY_SELECTED, 1 )
         EVT_RIBBONGALLERY_CLICKED = wx.PyEventBinder( wxEVT_RIBBONGALLERY_CLICKED, 1 )

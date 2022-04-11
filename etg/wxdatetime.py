@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Feb-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -62,6 +62,7 @@ def run():
     gs = module.addGlobalStr('wxDefaultDateTimeFormat', module.find('wxInvalidDateTime'))
     module.addGlobalStr('wxDefaultTimeSpanFormat', gs)
 
+
     #---------------------------------------------
     # Tweaks for the wxDateTime class
     c = module.find('wxDateTime')
@@ -70,7 +71,7 @@ def run():
     tools.ignoreAllOperators(c)
 
     # Ignore ctors with unknown types or that have overload conflicts that
-    # can't be distingished in Python
+    # can't be distinguished in Python
     ctor = c.find('wxDateTime')
     ctor.findOverload('time_t').ignore()
     ctor.findOverload('struct tm').ignore()
@@ -312,43 +313,32 @@ def run():
         wxTimeSpan operator-(const wxDateTime& dt2) const;
         """))
 
-    # Add some code to automatically convert from a Python datetime.date or a
-    # datetime.datetime object
-    c.addHeaderCode("#include <datetime.h>")
+    # Add some code (like MappedTypes) to automatically convert from a Python
+    # datetime.date or a datetime.datetime object
     c.convertFromPyObject = """\
-        PyDateTime_IMPORT;
-
         // Code to test a PyObject for compatibility with wxDateTime
         if (!sipIsErr) {
             if (sipCanConvertToType(sipPy, sipType_wxDateTime, SIP_NO_CONVERTORS))
                     return TRUE;
-            if (PyDateTime_Check(sipPy) || PyDate_Check(sipPy))
+            if (wxPyDateTime_Check(sipPy) || wxPyDate_Check(sipPy))
                 return TRUE;
             return FALSE;
         }
 
         // Code to convert a compatible PyObject to a wxDateTime
-        if (PyDateTime_Check(sipPy)) {
-            *sipCppPtr = new wxDateTime(PyDateTime_GET_DAY(sipPy),
-                                        (wxDateTime::Month)(PyDateTime_GET_MONTH(sipPy)-1),
-                                        PyDateTime_GET_YEAR(sipPy),
-                                        PyDateTime_DATE_GET_HOUR(sipPy),
-                                        PyDateTime_DATE_GET_MINUTE(sipPy),
-                                        PyDateTime_DATE_GET_SECOND(sipPy),
-                                        PyDateTime_DATE_GET_MICROSECOND(sipPy)/1000); // micro to milli
+        if (wxPyDateTime_Check(sipPy)) {
+            *sipCppPtr = wxPyDateTime_ToWxDateTime(sipPy);
             return sipGetState(sipTransferObj);
         }
-        if (PyDate_Check(sipPy)) {
-            *sipCppPtr = new wxDateTime(PyDateTime_GET_DAY(sipPy),
-                                        (wxDateTime::Month)(PyDateTime_GET_MONTH(sipPy)-1),
-                                        PyDateTime_GET_YEAR(sipPy));
+        if (wxPyDate_Check(sipPy)) {
+            *sipCppPtr = wxPyDate_ToWxDateTime(sipPy);
             return sipGetState(sipTransferObj);
         }
         // if we get this far then it must already be a wxDateTime instance
         *sipCppPtr = reinterpret_cast<wxDateTime*>(sipConvertToType(
                 sipPy, sipType_wxDateTime, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
 
-        return 0;  // Not a new isntance
+        return 0;  // Not a new instance
         """
 
 

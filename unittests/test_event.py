@@ -1,10 +1,11 @@
 import unittest
+from unittests import wtc
 import wx
 
 
 #---------------------------------------------------------------------------
 
-class Events(unittest.TestCase):
+class Events(wtc.WidgetTestCase):
 
     # Test the constructors to make sure the classes are not abstract, except
     # for wx.Event
@@ -45,7 +46,6 @@ class Events(unittest.TestCase):
         evt = wx.FocusEvent()
 
     def test_HelpEvent_ctor(self):
-        app = wx.App()
         evt = wx.HelpEvent()
 
     def test_IconizeEvent_ctor(self):
@@ -67,6 +67,30 @@ class Events(unittest.TestCase):
         evt = wx.KeyEvent()
         unikey = evt.GetUnicodeKey()
         self.assertTrue(isinstance(unikey, int))
+
+    def test_KeyEvent_SetUnicodeKey(self):
+        evt = wx.KeyEvent()
+        value = 666
+        evt.SetUnicodeKey(value)
+        self.assertTrue(evt.GetUnicodeKey() == value)
+
+    def test_KeyEvent_SetKeyCode(self):
+        evt = wx.KeyEvent()
+        value = wx.WXK_ADD
+        evt.SetKeyCode(value)
+        self.assertTrue(evt.GetKeyCode() == value)
+
+    def test_KeyEvent_SetRawKeyCode(self):
+        evt = wx.KeyEvent()
+        value = wx.WXK_ADD
+        evt.SetRawKeyCode(value)
+        self.assertTrue(evt.GetRawKeyCode() == value)
+
+    def test_KeyEvent_SetRawKeyFlags(self):
+        evt = wx.KeyEvent()
+        value = 3
+        evt.SetRawKeyFlags(value)
+        self.assertTrue(evt.GetRawKeyFlags() == value)
 
     def test_MaximizeEvent_ctor(self):
         evt = wx.MaximizeEvent()
@@ -91,9 +115,6 @@ class Events(unittest.TestCase):
 
     def test_NotifyEvent_ctor(self):
         evt = wx.NotifyEvent()
-
-    def test_PaintEvent_ctor(self):
-        evt = wx.PaintEvent()
 
     def test_PaletteChangedEvent_ctor(self):
         evt = wx.PaletteChangedEvent()
@@ -138,12 +159,108 @@ class Events(unittest.TestCase):
             def OnSize(self, evt):
                 self.gotEvent = True
                 evt.EventObject.Close()
-        app = wx.App()
         frm = Frame(None)
         frm.Show()
         frm.SetSize((200,100))
-        #app.MainLoop()
+        self.myYield()
         self.assertTrue(frm.gotEvent)
+
+
+    def test_eventUnbinding1(self):
+        "Unbind without specifying handler"
+        self.gotEvent = False
+
+        def _onSize(evt):
+            self.gotEvent = True
+
+        self.frame.Bind(wx.EVT_SIZE, _onSize)
+        val = self.frame.Unbind(wx.EVT_SIZE)
+        assert val, "Unbind returned false"
+
+        self.frame.SetSize((200,200))
+        self.myYield()
+        assert not self.gotEvent, "Expected gotEvent to still be False"
+
+
+    def test_eventUnbinding2(self):
+        "Unbind with specifying handler, simple function object"
+        self.gotEvent = False
+
+        def _onSize(evt):
+            self.gotEvent = True
+
+        self.frame.Bind(wx.EVT_SIZE, _onSize)
+        val = self.frame.Unbind(wx.EVT_SIZE, handler=_onSize)
+        assert val, "Unbind returned False"
+
+        self.frame.SetSize((200,200))
+        self.myYield()
+        assert not self.gotEvent, "Expected gotEvent to still be False"
+
+
+    def test_eventUnbinding3(self):
+        "Unbind with specifying handler, a bound method"
+
+        class Frame(wx.Frame):
+            def __init__(self, *args, **kw):
+                wx.Frame.__init__(self, *args, **kw)
+                self.Bind(wx.EVT_SIZE, self.OnSize)
+                self.gotEvent = False
+                self.obj = self.OnSize
+
+            def doUnBind(self):
+                #assert id(self.obj) != id(self.OnSize)  # Strange, but it's possible
+                val = self.Unbind(wx.EVT_SIZE, handler=self.OnSize)
+                assert val, "Unbind returned False"
+
+            def OnSize(self, evt):
+                self.gotEvent = True
+                evt.EventObject.Close()
+
+        frm = Frame(None)
+        frm.doUnBind()
+        frm.Show()
+        frm.SetSize((200,100))
+        self.myYield()
+        assert not frm.gotEvent, "Expected gotEvent to still be False"
+
+
+    def test_eventUnbinding4(self):
+        "Unbind by passing None to Bind()"
+        self.gotEvent = False
+
+        def _onSize(evt):
+            self.gotEvent = True
+
+        self.frame.Bind(wx.EVT_SIZE, _onSize)
+        self.frame.Bind(wx.EVT_SIZE, None)
+
+        self.frame.SetSize((200,200))
+        self.myYield()
+        assert not self.gotEvent, "Expected gotEvent to still be False"
+
+
+
+    def test_eventUnbinding5(self):
+        "Unbind in same order of binding"
+
+        class Frame(wx.Frame):
+            def __init__(self, *args, **kw):
+                wx.Frame.__init__(self, *args, **kw)
+                self.btn = wx.Button(self, label="Hello, wxPython!")
+                self.btn.Bind(wx.EVT_BUTTON, self.onButton1)
+                self.btn.Bind(wx.EVT_BUTTON, self.onButton2)
+            def onButton1(self, evt):
+                evt.Skip()
+            def onButton2(self, evt):
+                evt.Skip()
+
+        frm = Frame(None)
+        ub1 = frm.btn.Unbind(wx.EVT_BUTTON, handler=frm.onButton1)
+        ub2 = frm.btn.Unbind(wx.EVT_BUTTON, handler=frm.onButton2)
+
+        assert ub1, "Expected Unbind() success"
+        assert ub2, "Expected Unbind() success"
 
 
     def test_DropFilesEvent_tweaks(self):
@@ -170,6 +287,19 @@ class Events(unittest.TestCase):
 
         eh = MyEvtHandler()
         eh.Destroy()
+
+
+
+    def test_ClientData1(self):
+        evt = wx.CommandEvent()
+        evt.SetClientData('hello')
+        assert evt.GetClientData() == 'hello'
+
+
+    def test_ClientData2(self):
+        evt = wx.CommandEvent()
+        evt.SetClientObject('hello')
+        assert evt.GetClientObject() == 'hello'
 
 
 #---------------------------------------------------------------------------

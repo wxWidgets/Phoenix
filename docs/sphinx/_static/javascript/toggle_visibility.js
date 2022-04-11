@@ -2,13 +2,13 @@
  * toggle_visibility.js
  * --------------------
  *
- * These functions enable the user to toggle the visibility of a block of 
+ * These functions enable the user to toggle the visibility of a block of
  * the document, which is delimited by a <div> tag with an expected id
- * attribute.  The magic happens via using the id of the object passed to 
- * toggle visibility to make the id's used to find the other elements that 
- * will be operated upon.  
+ * attribute.  The magic happens via using the id of the object passed to
+ * toggle visibility to make the id's used to find the other elements that
+ * will be operated upon.
  */
- 
+
 function hasClass(ele,cls) {
     return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
 }

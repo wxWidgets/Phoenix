@@ -1,4 +1,4 @@
-    
+
         down_bits = [255, 255, 255, 255, 31,
                      255, 255, 255, 31, 255, 255, 255, 31, 255, 255, 255,
                      31, 255, 255, 255, 31, 255, 255, 255, 31, 255, 255,
@@ -12,7 +12,7 @@
                      255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
                      255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
                      255]
-    
+
         down_mask = [240, 1, 0, 0, 240, 1,
                      0, 0, 240, 1, 0, 0, 240, 1, 0, 0, 240, 1, 0, 0, 240, 1,
                      0, 0, 240, 1, 0, 0, 240, 1, 0, 0, 255, 31, 0, 0, 255,
@@ -22,19 +22,19 @@
                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                      0, 0, 0, 0, 0]
-    
+
         if wx.Platform == '__WXMSW__':
-            
+
             down_bitmap = wx.BitmapFromBits(down_bits, 32, 32)
             down_mask_bitmap = wx.BitmapFromBits(down_mask, 32, 32)
-    
+
             down_bitmap.SetMask(wx.Mask(down_mask_bitmap))
             down_image = down_bitmap.ConvertToImage()
             down_image.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
             down_image.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 14)
             down_cursor = wx.Cursor(down_image)
-            
+
         elif wx.Platform == '__WXGTK__':
-            
+
             down_cursor = wx.Cursor(down_bits, 32, 32, 6, 14,
                                     down_mask, wx.WHITE, wx.BLACK)

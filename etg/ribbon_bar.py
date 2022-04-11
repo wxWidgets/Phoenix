@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Jun-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ def run():
     c = module.find('wxRibbonBarEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_RIBBONBAR_PAGE_CHANGED    = wx.PyEventBinder(wxEVT_RIBBONBAR_PAGE_CHANGED, 1)
         EVT_RIBBONBAR_PAGE_CHANGING   = wx.PyEventBinder(wxEVT_RIBBONBAR_PAGE_CHANGING,1)
         EVT_RIBBONBAR_TAB_MIDDLE_DOWN = wx.PyEventBinder(wxEVT_RIBBONBAR_TAB_MIDDLE_DOWN, 1)

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     22-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -49,6 +49,10 @@ def run():
                   #'GetStandardPaths',
                   ]:
         c.find(name).factory = True
+
+    c.find('GetToolkitVersion.major').out = True
+    c.find('GetToolkitVersion.minor').out = True
+    c.find('GetToolkitVersion.micro').out = True
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

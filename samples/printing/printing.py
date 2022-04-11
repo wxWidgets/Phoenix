@@ -115,7 +115,8 @@ class PrintFrameworkSample(wx.Frame):
         self.tc.SetFont(wx.Font(FONTSIZE, wx.FONTFAMILY_TELETYPE,
                                 wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         filename = os.path.join(os.path.dirname(__file__), "sample-text.txt")
-        self.tc.SetValue(open(filename).read())
+        with open(filename) as fid:
+            self.tc.SetValue(fid.read())
         self.tc.Bind(wx.EVT_SET_FOCUS, self.OnClearSelection)
         wx.CallAfter(self.tc.SetInsertionPoint, 0)
 

@@ -24,7 +24,7 @@ class PublisherMixin:
         self._publish(msgKwargs)
 
     ############## IMPLEMENTATION ###############
-
+    
     class IterState:
         def __init__(self, msgKwargs):
             self.filteredArgs = msgKwargs

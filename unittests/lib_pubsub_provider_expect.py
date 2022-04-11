@@ -22,7 +22,7 @@ class test_import_export_no_change2:
         Sub topic 1 of root topic. Docs rely on one blank line for
         topic doc, and indentation for each argument doc.
         """
-
+        
         def msgDataSpec(arg1, arg2=None):
             """
             - arg1: some multiline doc

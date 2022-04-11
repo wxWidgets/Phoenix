@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     29-Jun-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ def run():
     module.addGlobalStr('wxHeaderCtrlNameStr', c)
     module.addHeaderCode('#include <wx/headerctrl.h>')
 
-    # Uningnore the protected virtuals that are indended to be overridden in
+    # Uningnore the protected virtuals that are intended to be overridden in
     # derived classes.
     for name in ['GetColumn', 'UpdateColumnVisibility', 'UpdateColumnsOrder',
                  'UpdateColumnWidthToFit', 'OnColumnCountChanging']:
@@ -61,7 +61,7 @@ def run():
     c = module.find('wxHeaderCtrlSimple')
     tools.fixWindowClass(c)
 
-    # Uningnore the protected virtuals that are indended to be overridden in
+    # Uningnore the protected virtuals that are intended to be overridden in
     # derived classes.
     c.find('GetBestFittingWidth').ignore(False)
     c.find('GetBestFittingWidth').isVirtual = True
@@ -119,4 +119,3 @@ def run():
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()
-

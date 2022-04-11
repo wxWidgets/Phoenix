@@ -11,57 +11,85 @@ HOWTO Release wxPython Phoenix
 1. Ensure the buildbot master and slaves are running, and that
    ~/release-builds on Havok is empty
 
-2. Ensure that the branch to be built has been pushed to github.com/RobinD42/Phoenix
+2. Ensure that the branch to be built has been pushed to
+   github.com/wxWidgets/Phoenix
 
 3. Log in to buildbot master
 
-4. On the "Builders" page check the dist-* and the bdist-* builders
+4. On the "Builders" page click the "trigger-all-dist" builder at the bottom of
+   the list. Next, click the force-build button.
 
-5. Set a name/value pair to buildargs/--release
+5. Add the name of the branch to the appropriate field, and click the "Do a
+   release build?" checkbox.
 
-6. If a branch other than master should be used (for testing, etc.) then enter
-   that branch name in the Branch field
+6. Click the force-build button
 
-7. Click the Force Build button
+7. Building wheel files for selected linux distros can be done while the other
+   builds are still running. Fetch the source tarball when it is finished and put
+   it in Phoenix/dist. Run the following::
 
-8. This can be done while the other builds are still running. Fetch the source
-   tarball when it is finished and put it in Phoenix/dist. Run the following::
+        python build.py build_docker --release --upload
 
-        python setup.py build_vagrant --release --upload
+8. Go do something else for a couple hours...
 
-9. Go do something else for a couple hours...
-
-10. ...it's still not done, come back later...
+9. ...it's still not done, come back later. Or maybe tomorrow...
 
 
 
 11. When the build is done and successful then the release version of the docs
     src and wheel files should be on Havok in ~/release-builds. Do whatever
-    testing should be done.
+    smoke-testing should be done.
 
 12. Digitally sign the files with this command::
 
         cd ~/release-builds
-        for f in *.whl *.tar.gz; do gpg --detach-sign -a $f; done
+        for f in wxPython-4*; do gpg --detach-sign -a $f; done
+        for f in $(find linux -name "*.whl"); do echo $f; gpg --detach-sign -a $f; done
 
 13. Upload to PyPI with::
 
         cd ~/release-builds
         twine upload wxPython-4*
 
-    (Twine doesn't know what to do with the docs file so it needs to be excluded.)
+    (Twine doesn't know what to do with the docs and other files so they need
+    to be excluded by the wildcard.)
 
-14. Upload the docs and demos tarballs to ?????. Upload the linux wheels to ????
+14. Upload the wxPython-docs-*.tar.gz documentation file to docs.wxpython.org::
 
-15. Tag the released revision in git, using a name like wxPython-4.0.0 (using
-    the actual version number of course.)
+        scp wxPython-docs-*.tar.gz wxpython-docs:wxpython-docs/tmp
 
-16. Bump the version numbers in buildtools/version.py appropriately for the
+    TODO: Automate this!
+    Go to the site and unpack the new docs into the document root.
+
+15. Upload the docs, demos and pdb archive files to extras.wxpython.org/wxPython4/extras/::
+
+        VERSION={current release version number}
+        ssh wxpython-extras "mkdir -p wxpython-extras/htdocs/wxPython4/extras/$VERSION"
+        scp wxPython-[^0-9]* wxpython-extras:wxpython-extras/htdocs/wxPython4/extras/$VERSION
+
+16. Upload the Linux wheels::
+
+        scp -r linux wxpython-extras:wxpython-extras/htdocs/wxPython4/extras/
+
+17. Save a copy of everything to the NAS::
+
+        mkdir /stuff/Development/wxPython/wxPython4/extras/$VERSION
+        cp -v wxPython-[^0-9]* /stuff/Development/wxPython/wxPython4/extras/$VERSION
+        cp -v wxPython-4* /stuff/Development/wxPython/wxPython4/pypi
+        cp -rv linux /stuff/Development/wxPython/wxPython4/extras
+
+18. Tag the released revision in git, using a name like wxPython-4.0.0 (using
+    the actual version number of course.) Push the tag to all remotes.
+
+19. Bump the version numbers in buildtools/version.py appropriately for the
     next anticipated release, so future snapshot builds will be recognized as
     pre-release development versions for the next official release, not the
     one just completed.
 
-17. If making an announcement about this release, (I think it's okay not to for
-    minor releases or smallish bug fixes,) send the text to the email addresses
-    listed at the top of the packaging/ANNOUNCE.txt file.
+20. If making an announcement about this release, (I think it's okay not to
+    for minor releases or smallish bug fixes,) send the text in
+    packaging/ANNOUNCE.txt to the email addresses listed at the top of the
+    file.
+
+21. Add a news post to the wxPython site about the release.
 

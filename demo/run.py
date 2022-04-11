@@ -7,7 +7,7 @@
 # Author:       Robin Dunn
 #
 # Created:      6-March-2000
-# Copyright:    (c) 2000-2017 by Total Control Software
+# Copyright:    (c) 2000-2020 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ import sys, os
 # stuff for debugging
 print("Python %s" % sys.version)
 print("wx.version: %s" % wx.version())
-##print("pid: %s" % os.getpid()); raw_input("Press Enter...")
+##print("pid: %s" % os.getpid()); input("Press Enter...")
 
 assertMode = wx.APP_ASSERT_DIALOG
 ##assertMode = wx.APP_ASSERT_EXCEPTION
@@ -55,7 +55,7 @@ class RunDemoApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         self.SetAssertMode(assertMode)
         self.InitInspection()  # for the InspectionMixin base class
 
-        frame = wx.Frame(None, -1, "RunDemo: " + self.name, pos=(50,50), size=(200,100),
+        frame = wx.Frame(None, -1, "RunDemo: " + self.name, size=(200,100),
                         style=wx.DEFAULT_FRAME_STYLE, name="run a sample")
         frame.CreateStatusBar()
 
@@ -83,7 +83,7 @@ class RunDemoApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         # its own top-level window
         if win:
             # so set the frame to a good size for showing stuff
-            frame.SetSize((640, 480))
+            frame.SetSize((800, 600))
             win.SetFocus()
             self.window = win
             ns['win'] = win
@@ -152,11 +152,15 @@ def main(argv):
     demoFolder = os.path.realpath(os.path.dirname(__file__))
     os.chdir(demoFolder)
 
+    sys.path.insert(0, os.path.join(demoFolder, 'agw'))
+    sys.path.insert(0, '.')
+
     name, ext  = os.path.splitext(argv[1])
     module = __import__(name)
 
 
     app = RunDemoApp(name, module, useShell)
+    locale = wx.Locale(wx.LANGUAGE_DEFAULT)
     app.MainLoop()
 
 

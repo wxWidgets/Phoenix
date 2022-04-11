@@ -73,7 +73,7 @@ It is not used by global protocols like HTTP but it becomes handy when
 nesting protocols - for example you may want to access files in a ZIP
 archive:
 
-``file:archives/cpp_doc.zip#zip:reference/fopen.htm#syntax`` 
+``file:archives/cpp_doc.zip#zip:reference/fopen.htm#syntax``
 
 In this example, the protocol is ``"zip"``, right location is
 ``"reference/fopen.htm"``, anchor is ``"syntax"`` and left location is
@@ -103,7 +103,7 @@ The following virtual file system handlers are part of wxPython so far:
   stored in memory (such as bitmaps) as if they were regular
   files. See :ref:`wx.MemoryFSHandler` for details.  URL is prefixed with
   memory:, e.g. ``"memory:myfile.htm"``.
-  
+
 
 In addition, :ref:`FileSystem` itself can access local files.
 

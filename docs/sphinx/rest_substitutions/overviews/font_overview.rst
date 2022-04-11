@@ -42,12 +42,12 @@ be transported to a different Windows machine or other platform.
 .. note:: There is currently a difference between the appearance of
    fonts on the two platforms, if the mapping mode is anything
    other than ``MM_TEXT``. Under X, font size is always specified in
-   points. Under MS Windows, the unit for text is points but 
+   points. Under MS Windows, the unit for text is points but
    the text is scaled according to the current mapping mode. However,
    user scaling on a device context will also scale fonts under both
    environments.
-   
-   
+
+
 Native font information
 -----------------------
 
@@ -70,4 +70,4 @@ font.
    implemented for Windows and Unix (GTK+ and Motif) ports only, all
    the methods are available for all the ports and should be used to
    make your program work correctly when they are implemented later.
-   
+

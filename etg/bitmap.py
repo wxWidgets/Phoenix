@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #---------------------------------------------------------------------------
 # Name:        etg/bitmap.py
 # Author:      Kevin Ollivier
@@ -5,9 +6,11 @@
 #
 # Created:     25-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
+
+from textwrap import dedent
 
 import etgtools
 import etgtools.tweaker_tools as tools
@@ -40,12 +43,16 @@ def run():
 
     c = module.find('wxMask')
     c.mustHaveApp()
+    for m in c.find('Create').all():
+        m.ignore()
 
     c = module.find('wxBitmap')
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
-
     tools.removeVirtuals(c)
+
+    # TODO: The wxCursor version of the ctor is not implemented on OSX...
+    c.find('wxBitmap').findOverload('wxCursor').ignore()
 
     c.find('wxBitmap.bits').type = 'const char*'
     c.find('wxBitmap.type').default = 'wxBITMAP_TYPE_ANY'
@@ -85,20 +92,21 @@ def run():
 
     c.find('SetMask.mask').transfer = True
 
-    c.addCppMethod('void', 'SetMaskColour', '(const wxColour& colour)', """\
+    c.addCppMethod('void', 'SetMaskColour', '(const wxColour& colour)',
+        doc="Create a mask for this bitmap based on the pixels with the given colour.",
+        body="""\
         wxMask* mask = new wxMask(*self, *colour);
         self->SetMask(mask);
         """)
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('long', 'GetHandle', '()',
         doc='MSW-only method to fetch the windows handle for the bitmap.',
         body="""\
             #ifdef __WXMSW__
-                return (long)self->GetHandle();
+                return HandleToLong(self->GetHandle());
             #else
                 return 0;
             #endif
@@ -108,7 +116,7 @@ def run():
         doc='MSW-only method to set the windows handle for the bitmap.',
         body="""\
             #ifdef __WXMSW__
-                self->SetHandle((WXHANDLE)handle);
+                self->SetHandle((WXHANDLE)LongToHandle(handle));
             #endif
             """)
 
@@ -159,7 +167,7 @@ def run():
 
     c.addCppMethod('void', 'CopyFromBuffer',
         '(wxPyBuffer* data, wxBitmapBufferFormat format=wxBitmapBufferFormat_RGB, int stride=-1)',
-        doc="""\
+        doc=dedent("""\
             Copy data from a buffer object to replace the bitmap pixel data.
             Default format is plain RGB, but other formats are now supported as
             well.  The following symbols are used to specify the format of the
@@ -170,7 +178,7 @@ def run():
                 wx.BitmapBufferFormat_RGBA     A simple sequence of RGBA bytes
                 wx.BitmapBufferFormat_ARGB32   A sequence of 32-bit values in native endian order, with alpha in the upper 8 bits, followed by red, green, and blue.
                 wx.BitmapBufferFormat_RGB32    Same as above but the alpha byte is ignored.
-                =============================  ================================""",
+                =============================  ================================"""),
         body="""\
             wxPyCopyBitmapFromBuffer(self, (byte*)data->m_ptr, data->m_len, format, stride);
         """)
@@ -178,9 +186,9 @@ def run():
 
     c.addCppMethod('void', 'CopyToBuffer',
         '(wxPyBuffer* data, wxBitmapBufferFormat format=wxBitmapBufferFormat_RGB, int stride=-1)',
-        doc="""\
+        doc=dedent("""\
             Copy pixel data to a buffer object.  See :meth:`CopyFromBuffer` for buffer
-            format details.""",
+            format details."""),
         body="""\
             wxPyCopyBitmapToBuffer(self, (byte*)data->m_ptr, data->m_len, format, stride);
             """)
@@ -192,13 +200,13 @@ def run():
         '(int width, int height, wxPyBuffer* data, wxPyBuffer* alpha)',
         isStatic=True,
         factory=True,
-        doc="""\
+        doc=dedent("""\
             Creates a :class:`wx.Bitmap` from in-memory data.  The data and alpha
             parameters must be a Python object that implements the buffer
             interface, such as a string, bytearray, etc.  The data object
             is expected to contain a series of RGB bytes and be at least
-            width*height*3 bytes long, while the alpha object is expected
-            to be width*height bytes long and represents the image's alpha
+            ``(width ∗ height ∗ 3)`` bytes long, while the alpha object is expected
+            to be ``(width ∗ height)`` bytes long and represents the image's alpha
             channel.  On Windows and Mac the RGB values will be
             'premultiplied' by the alpha values.  (The other platforms do
             the multiplication themselves.)
@@ -209,7 +217,7 @@ def run():
             platforms, and so instead an efficient as possible copy of the
             data is made from the buffer object to the bitmap's native pixel
             buffer.
-            """,
+            """),
         body="""\
             if (!data->checkSize(width*height*3) || !alpha->checkSize(width*height))
                 return NULL;
@@ -244,11 +252,11 @@ def run():
     c.addCppMethod('wxBitmap*', 'FromBuffer', '(int width, int height, wxPyBuffer* data)',
         isStatic=True,
         factory=True,
-        doc="""\
+        doc=dedent("""\
             Creates a :class:`wx.Bitmap` from in-memory data.  The data parameter
             must be a Python object that implements the buffer interface, such
             as a string, bytearray, etc.  The data object is expected to contain
-            a series of RGB bytes and be at least width*height*3 bytes long.
+            a series of RGB bytes and be at least ``(width ∗ height ∗ 3)`` bytes long.
 
             Unlike :func:`wx.ImageFromBuffer` the bitmap created with this function
             does not share the memory block with the buffer object.  This is
@@ -256,7 +264,7 @@ def run():
             platforms, and so instead an efficient as possible copy of the
             data is made from the buffer object to the bitmap's native pixel
             buffer.
-            """,
+            """),
         body="""\
             wxBitmap* bmp = new wxBitmap(width, height, 24);
             wxPyCopyBitmapFromBuffer(bmp, (byte*)data->m_ptr, data->m_len, wxBitmapBufferFormat_RGB);
@@ -284,11 +292,11 @@ def run():
     c.addCppMethod('wxBitmap*', 'FromBufferRGBA', '(int width, int height, wxPyBuffer* data)',
         isStatic=True,
         factory=True,
-        doc="""\
+        doc=dedent("""\
             Creates a :class:`wx.Bitmap` from in-memory data.  The data parameter
             must be a Python object that implements the buffer interface, such
             as a string, bytearray, etc.  The data object is expected to contain
-            a series of RGBA bytes and be at least width*height*4 bytes long.
+            a series of RGBA bytes and be at least ``(width ∗ height ∗ 4)`` bytes long.
             On Windows and Mac the RGB values will be 'premultiplied' by the
             alpha values.  (The other platforms do the multiplication themselves.)
 
@@ -298,7 +306,7 @@ def run():
             platforms, and so instead an efficient as possible copy of the
             data is made from the buffer object to the bitmap's native pixel
             buffer.
-            """,
+            """),
         body="""\
             wxBitmap* bmp = new wxBitmap(width, height, 32);
             wxPyCopyBitmapFromBuffer(bmp, (byte*)data->m_ptr, data->m_len, wxBitmapBufferFormat_RGBA);
@@ -316,16 +324,14 @@ def run():
         body='return Bitmap.FromBufferRGBA(width, height, dataBuffer)')
 
 
-
-
     c.addCppMethod('wxBitmap*', 'FromRGBA',
         '(int width, int height, byte red=0, byte green=0, byte blue=0, byte alpha=0)',
         isStatic=True,
         factory=True,
-        doc="""\
+        doc=dedent("""\
             Creates a new empty 32-bit :class:`wx.Bitmap` where every pixel has been
             initialized with the given RGBA values.
-            """,
+            """),
         body="""\
             if ( !(width > 0 && height > 0) ) {
                 wxPyErr_SetString(PyExc_ValueError, "Width and height must be greater than zero");
@@ -354,6 +360,24 @@ def run():
             }
             return bmp;
             """)
+
+
+    c.find('NewFromPNGData').detailedDoc = [dedent("""\
+        This helper function provides the simplest way to create a wx.Bitmap from
+        in-memory PNG image data.
+        """)]
+
+    c.addCppMethod('wxBitmap*', 'FromPNGData', '(wxPyBuffer* data)',
+        isStatic=True,
+        factory=True,
+        doc=dedent("""\
+            Like :meth:`NewFromPNGData`, but with a simpler API accepting a Python
+            buffer-compatible object.
+            """),
+        body="""\
+            wxBitmap bmp = wxBitmap::NewFromPNGData(data->m_ptr, data->m_len);
+            return new wxBitmap(bmp);
+            """ )
 
     module.addPyFunction('EmptyBitmapRGBA', '(width, height, red=0, green=0, blue=0, alpha=0)',
         deprecated="Use :meth:`wx.Bitmap.FromRGBA` instead.",

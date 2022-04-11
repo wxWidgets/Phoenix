@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     28-Oct-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ NAME      = "stockitem"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'stockitem_8h.xml',
            ]
 

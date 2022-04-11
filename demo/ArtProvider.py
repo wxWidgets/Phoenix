@@ -69,6 +69,8 @@ ArtIDs = [ "wx.ART_ADD_BOOKMARK",
            "wx.ART_QUIT",
            "wx.ART_FIND",
            "wx.ART_FIND_AND_REPLACE",
+           "wx.ART_FULL_SCREEN",
+           "wx.ART_EDIT",
            ]
 
 
@@ -132,7 +134,7 @@ class TestPanel(wx.Panel):
         sizer.Add(title, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
 
         line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
-        sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        sizer.Add(line, 0, wx.EXPAND|wx.ALL, 5)
 
         fgs = wx.FlexGridSizer(cols=3, hgap=10, vgap=10)
 

@@ -31,8 +31,8 @@ sys.stdout.write("""
           ***    ATTENTION   ***
 This messaging protocol is deprecated. This module, and hence arg1
 messaging protocol, will be removed in v3.4 of PyPubSub. Please make
-the necessary changes to your code so that it no longer requires this
-module. The pypubsub documentation provides steps that may be useful
+the necessary changes to your code so that it no longer requires this 
+module. The pypubsub documentation provides steps that may be useful 
 to minimize the chance of introducing bugs in your application.
 ======================================================================
 
@@ -42,6 +42,6 @@ to minimize the chance of introducing bugs in your application.
 def enforceArgName(commonName):
     """This will configure pubsub to require that all listeners use
     the same argument name (*commonName*) as first parameter. This
-    is a ueful first step in migrating an application that has been
+    is a useful first step in migrating an application that has been
     using *arg1* protocol to the more powerful *kwargs* protocol. """
     policies.setMsgDataArgName(1, commonName)

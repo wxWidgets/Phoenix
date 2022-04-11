@@ -3,12 +3,13 @@
 # Author:      Robin Dunn
 #
 # Created:     9-Sept-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
+import copy
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -34,7 +35,7 @@ def run():
 
     module.addHeaderCode("#include <wx/progdlg.h>")
 
-    c = module.find('wxGenericProgressDialog')
+    c = gpd = module.find('wxGenericProgressDialog')
     assert isinstance(c, etgtools.ClassDef)
 
     tools.fixWindowClass(c)#, False)
@@ -45,6 +46,18 @@ def run():
 
 
     c = module.find('wxProgressDialog')
+
+    # Copy methods from the generic to the native class. This is needed
+    # because none of the methods are declared in the interface files, and
+    # since on MSW some non-virtual methods are reimplemented in
+    # wxProgressDialogs they will not be called if SIP doesn't know about
+    # them. We'll copy all of them and let the C++ compiler sort things out.
+    for item in gpd:
+        if (isinstance(item, etgtools.MethodDef) and
+                not item.isCtor and
+                not item.isDtor):
+            c.addItem(copy.deepcopy(item))
+
     tools.fixWindowClass(c)
 
     #-----------------------------------------------------------------

@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Sept-2008
-# Copyright:   (c) 2008-2017 by Total Control Software
+# Copyright:   (c) 2008-2020 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags:        phoenix-port, py3-port
@@ -357,6 +357,52 @@ class Pycairo_CAPI(ctypes.Structure):
                                                       ctypes.c_void_p,
                                                       ctypes.py_object)),
             ('Check_Status', ctypes.PYFUNCTYPE(ctypes.c_int, ctypes.c_int))]
+
+    # This structure is known good with pycairo 1.11.1+.
+    else:
+        _fields_ = [
+            ('Context_Type', ctypes.py_object),
+            ('Context_FromContext', ctypes.PYFUNCTYPE(ctypes.py_object,
+                                                      ctypes.c_void_p,
+                                                      ctypes.py_object,
+                                                      ctypes.py_object)),
+            ('FontFace_Type', ctypes.py_object),
+            ('ToyFontFace_Type', ctypes.py_object),
+            ('FontFace_FromFontFace', ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.c_void_p)),
+            ('FontOptions_Type', ctypes.py_object),
+            ('FontOptions_FromFontOptions', ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.c_void_p)),
+            ('Matrix_Type', ctypes.py_object),
+            ('Matrix_FromMatrix', ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.c_void_p)),
+            ('Path_Type', ctypes.py_object),
+            ('Path_FromPath', ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.c_void_p)),
+            ('Pattern_Type', ctypes.py_object),
+            ('SolidPattern_Type', ctypes.py_object),
+            ('SurfacePattern_Type', ctypes.py_object),
+            ('Gradient_Type', ctypes.py_object),
+            ('LinearGradient_Type', ctypes.py_object),
+            ('RadialGradient_Type', ctypes.py_object),
+            ('Pattern_FromPattern', ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.c_void_p,
+                                                      ctypes.py_object)), #** changed in 1.8.4
+            ('ScaledFont_Type', ctypes.py_object),
+            ('ScaledFont_FromScaledFont', ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.c_void_p)),
+            ('Surface_Type', ctypes.py_object),
+            ('ImageSurface_Type', ctypes.py_object),
+            ('PDFSurface_Type', ctypes.py_object),
+            ('PSSurface_Type', ctypes.py_object),
+            ('SVGSurface_Type', ctypes.py_object),
+            ('Win32Surface_Type', ctypes.py_object),
+            ('Win32PrintingSurface_Type', ctypes.py_object),  #** new
+            ('XCBSurface_Type', ctypes.py_object),            #** new
+            ('XlibSurface_Type', ctypes.py_object),
+            ('Surface_FromSurface', ctypes.PYFUNCTYPE(ctypes.py_object,
+                                                      ctypes.c_void_p,
+                                                      ctypes.py_object)),
+            ('Check_Status', ctypes.PYFUNCTYPE(ctypes.c_int, ctypes.c_int)),
+            ('RectangleInt_Type', ctypes.py_object),
+            ('RectangleInt_FromRectangleInt', ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.c_void_p)),
+            ('Region_Type', ctypes.py_object),
+            ('Region_FromRegion', ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.c_void_p)),
+            ('RecordingSurface_Type', ctypes.py_object)]
 
 
 def _loadPycairoAPI():

@@ -20,7 +20,7 @@ class TestPanel(wx.Panel):
         info = wx.adv.AboutDialogInfo()
         info.Name = "Hello World"
         info.Version = "1.2.3"
-        info.Copyright = "(c) 2013-2017 Programmers and Coders Everywhere"
+        info.Copyright = "(c) 2013-2020 Programmers and Coders Everywhere"
         info.Description = wordwrap(
             "A \"hello world\" program is a software program that prints out "
             "\"Hello world!\" on a display device. It is used in many introductory "

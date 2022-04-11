@@ -5,7 +5,7 @@
 // Author:      Robin Dunn
 //
 // Created:     2-Sept-2011
-// Copyright:   (c) 2011-2017 by Total Control Software
+// Copyright:   (c) 2011-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -13,43 +13,38 @@
 // Some SIP MappedTypes that automatically convert Python lists of
 // strings/ints to and from wxArrayString/wxArrayInt.
 
+// TODO: SWitch to iterator protocol APIs
+
 //--------------------------------------------------------------------------
 
 %MappedType wxArrayString
 {
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
+        // Verify that the object is a sequence, but not bytes or unicode
         if (!sipIsErr) {
-            int success = TRUE;
-            // ensure that it is a sequence
-            if (! PySequence_Check(sipPy))
-                success = FALSE;
-            // Ensure it is not a string or unicode object (they are sequences)
-            else if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
-                success = FALSE;
-            // ensure each item is a string/unicode object
-            else {
-                Py_ssize_t i, len = PySequence_Length(sipPy);
-                for (i=0; i<len; i++) {
-                    PyObject* item = PySequence_GetItem(sipPy, i);
-                    if (!PyBytes_Check(item) && !PyUnicode_Check(item)) {
-                        Py_DECREF(item);
-                        success = FALSE;
-                        break;
-                    }
-                    Py_DECREF(item);
-                }
-            }
-            if (!success)
-                PyErr_SetString(PyExc_TypeError, "Sequence of string or unicode objects expected.");
-            return success;
+            return (PySequence_Check(sipPy) &&
+                    !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)));
         }
+
 
         // Code to create a new wxArrayString and convert a compatible PyObject
         wxArrayString *array = new wxArrayString;
         Py_ssize_t i, len = PySequence_Length(sipPy);
         for (i=0; i<len; i++) {
             PyObject* item = PySequence_GetItem(sipPy, i);
+
+            // Ensure each item is a bytes or string/unicode object
+            if ( !PyBytes_Check(item) && !PyUnicode_Check(item) ) {
+                // raise a TypeError if not
+                PyErr_Format(PyExc_TypeError,
+                             "Item at index %zd has type '%s' but a sequence of bytes or strings is expected",
+                             i, sipPyTypeName(Py_TYPE(item)));
+                delete array;
+                Py_DECREF(item);
+                *sipIsErr = 1;
+                return 0;
+            }
 
             // if it's a string object convert it to unicode first, assuming utf-8
             if (PyBytes_Check(item)) {
@@ -62,6 +57,7 @@
                     return 0;
                 }
             }
+            PyErr_Clear();
             wxString string;
             size_t len = PyUnicode_GET_SIZE(item);
             if (len) {
@@ -113,26 +109,8 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
-            int success = TRUE;
-            // ensure that it is a sequence
-            if (! PySequence_Check(sipPy))
-                success = FALSE;
-            // ensure each item is a number object
-            else {
-                Py_ssize_t i, len = PySequence_Length(sipPy);
-                for (i=0; i<len; i++) {
-                    PyObject* item = PySequence_GetItem(sipPy, i);
-                    if (!PyNumber_Check(item)) {
-                        Py_DECREF(item);
-                        success = FALSE;
-                        break;
-                    }
-                    Py_DECREF(item);
-                }
-            }
-            if (!success)
-                PyErr_SetString(PyExc_TypeError, "Sequence of numbers expected.");
-            return success;
+            return (PySequence_Check(sipPy) &&
+                    !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)));
         }
 
         // Code to create a new wxArrayInt and convert a compatible PyObject
@@ -140,6 +118,20 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
         Py_ssize_t i, len = PySequence_Length(sipPy);
         for (i=0; i<len; i++) {
             PyObject* item = PySequence_GetItem(sipPy, i);
+
+            // Ensure each item is a number object
+            if ( !PyNumber_Check(item) ) {
+                // raise a TypeError if not
+                PyErr_Format(PyExc_TypeError,
+                             "Item at index %zd has type '%s' but a sequence of numbers is expected",
+                             i, sipPyTypeName(Py_TYPE(item)));
+                delete array;
+                Py_DECREF(item);
+                *sipIsErr = 1;
+                return 0;
+            }
+
+            // Convert to Integer
             PyObject* number = wxPyNumber_Int(item);
             if (PyErr_Occurred()) {
                 *sipIsErr = 1;
@@ -147,6 +139,7 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
                 Py_DECREF(item);
                 return 0;
             }
+            // And add it to the array
             array->Add(wxPyInt_AS_LONG(number));
             Py_DECREF(item);
             Py_DECREF(number);
@@ -189,26 +182,8 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
-            int success = TRUE;
-            // ensure that it is a sequence
-            if (! PySequence_Check(sipPy))
-                success = FALSE;
-            // ensure each item is a number object
-            else {
-                Py_ssize_t i, len = PySequence_Length(sipPy);
-                for (i=0; i<len; i++) {
-                    PyObject* item = PySequence_GetItem(sipPy, i);
-                    if (!PyNumber_Check(item)) {
-                        Py_DECREF(item);
-                        success = FALSE;
-                        break;
-                    }
-                    Py_DECREF(item);
-                }
-            }
-            if (!success)
-                PyErr_SetString(PyExc_TypeError, "Sequence of numbers expected.");
-            return success;
+            return (PySequence_Check(sipPy) &&
+                    !(PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)));
         }
 
         // Code to create a new wxArrayDouble and convert a compatible PyObject
@@ -216,6 +191,20 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
         Py_ssize_t i, len = PySequence_Length(sipPy);
         for (i=0; i<len; i++) {
             PyObject* item = PySequence_GetItem(sipPy, i);
+
+            // Ensure each item is a number object
+            if ( !PyNumber_Check(item) ) {
+                // raise a TypeError if not
+                PyErr_Format(PyExc_TypeError,
+                             "Item at index %zd has type '%s' but a sequence of numbers is expected",
+                             i, sipPyTypeName(Py_TYPE(item)));
+                delete array;
+                Py_DECREF(item);
+                *sipIsErr = 1;
+                return 0;
+            }
+
+            // Convert to a Float
             PyObject* number = PyNumber_Float(item);
             if (PyErr_Occurred()) {
                 *sipIsErr = 1;
@@ -223,6 +212,7 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
                 Py_DECREF(item);
                 return 0;
             }
+            // And add it to the array
             array->Add(PyFloat_AS_DOUBLE(number));
             Py_DECREF(item);
             Py_DECREF(number);

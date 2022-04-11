@@ -42,7 +42,7 @@ class utils_Tests(wtc.WidgetTestCase):
         wx.GetMouseState()
         wx.EnableTopLevelWindows(True)
         wx.FindWindowAtPoint((1,1))
-        wx.NewId()
+        wx.Window.NewControlId()
         wx.RegisterId(12345)
         wx.GetUserName()
         wx.GetUserId()

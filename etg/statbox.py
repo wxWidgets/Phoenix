@@ -3,12 +3,14 @@
 # Author:      Robin Dunn
 #
 # Created:     29-Oct-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import MethodDef, ParamDef
+
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -36,6 +38,29 @@ def run():
     c.find('wxStaticBox.label').default = 'wxEmptyString'
     c.find('Create.label').default = 'wxEmptyString'
     tools.fixWindowClass(c)
+
+    # TODO: The window-label ctor is only available on MSW and GTK so disable
+    # for now. Maybe replace it with a factory function that returns None on
+    # OSX??
+    c.find('wxStaticBox').findOverload('wxWindow *label').ignore()
+    c.find('Create').findOverload('wxWindow *label').ignore()
+
+    # "unfix" the 2nd ctor and Create method so the required parameter lists
+    # are different enough for them to be overloaded.
+    #for name in ['wxStaticBox', 'Create']:
+    #    m = c.find(name).findOverload('wxWindow *label')
+    #    m.find('id').default = ''
+
+
+    # This is intentionally not documented, but I think it would be handy to
+    # use from wxPython.
+    meth = MethodDef(
+        name='GetBordersForSizer', isConst=True, isVirtual=True, type='void', protection='public',
+        briefDoc="Returns extra space that may be needed for borders within a StaticBox.",
+        items=[ParamDef(name='borderTop', type='int*', out=True),
+               ParamDef(name='borderOther', type='int*', out=True),
+               ])
+    c.addItem(meth)
 
     module.addGlobalStr('wxStaticBoxNameStr', c)
 

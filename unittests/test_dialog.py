@@ -20,11 +20,15 @@ class dialog_Tests(wtc.WidgetTestCase):
             dlg.Destroy()
             self.assertTrue(val == wx.ID_OK)
             self.myYield()
+        else:
+            dlg.Show()
+            dlg.Destroy()
+            self.myYield()
 
 
     def test_dialogDefaultCtor(self):
         dlg = wx.Dialog()
-        dlg.Create(None, title='dialog')
+        dlg.Create(self.frame, title='dialog')
         self.runDialog(dlg)
 
     def test_dialog1(self):
@@ -32,10 +36,6 @@ class dialog_Tests(wtc.WidgetTestCase):
         dlg = wx.Dialog(self.frame, title='Hello')
         self.runDialog(dlg)
 
-    def test_dialog2(self):
-        # without parent
-        dlg = wx.Dialog(None, title='World')
-        self.runDialog(dlg)
 
     def test_dialogTextSizer(self):
         dlg = wx.Dialog(self.frame, title='Hello')

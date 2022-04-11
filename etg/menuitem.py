@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     10-Sept-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -36,10 +36,19 @@ def run():
     c.addPrivateCopyCtor()
     tools.removeVirtuals(c)
 
+    c.find('wxMenuItem.subMenu').transfer = True
     c.find('SetSubMenu.menu').transfer = True
 
+    # deprecated and removed
+    c.find('GetLabel').ignore()
+    c.find('GetName').ignore()
+    c.find('GetText').ignore()
+    c.find('SetText').ignore()
+    c.find('GetLabelFromText').ignore()
+
+
     # These are MSW only. Make them be empty stubs for the other ports
-    c.find('GetBackgroundColour').type = 'wxColour*'
+    c.find('GetBackgroundColour').type = 'const wxColour*'
     c.find('GetBackgroundColour').setCppCode("""\
         #ifdef __WXMSW__
             return &self->GetBackgroundColour();
@@ -54,7 +63,7 @@ def run():
         #endif
         """)
 
-    c.find('GetFont').type = 'wxFont*'
+    c.find('GetFont').type = 'const wxFont*'
     c.find('GetFont').setCppCode("""\
         #ifdef __WXMSW__
             return &self->GetFont();
@@ -83,7 +92,7 @@ def run():
         #endif
         """)
 
-    c.find('GetTextColour').type = 'wxColour*'
+    c.find('GetTextColour').type = 'const wxColour*'
     c.find('GetTextColour').setCppCode("""\
         #ifdef __WXMSW__
             return &self->GetTextColour();
@@ -140,9 +149,11 @@ def run():
         #endif
         """)
 
+    c.addAutoProperties()
+    c.addItem(etgtools.PropertyDef('Enabled', 'IsEnabled', 'Enable'))
 
     c.find('GetAccel').factory = True
-    c.find('GetAccelFromString').ignore()  # Not implemented anywere?
+    c.find('GetAccelFromString').ignore()  # Not implemented anywhere?
 
     module.addItem(tools.wxListWrapperTemplate('wxMenuItemList', 'wxMenuItem', module))
 

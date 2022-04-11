@@ -1,6 +1,6 @@
-    
+
         def OnInit(self):
-        
+
             self.name = "SingleApp-%s" % wx.GetUserId()
             self.instance = wx.SingleInstanceChecker(self.name)
 
@@ -10,5 +10,5 @@
 
             frame = SingleAppFrame(None, "SingleApp")
             frame.Show()
-            return True        
-            
+            return True
+

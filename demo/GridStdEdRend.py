@@ -12,6 +12,7 @@ class MyCustomRenderer(gridlib.GridCellRenderer):
         gridlib.GridCellRenderer.__init__(self)
 
     def Draw(self, grid, attr, dc, rect, row, col, isSelected):
+        super().Draw(grid, attr, dc, rect, row, col, isSelected)
         dc.SetBackgroundMode(wx.SOLID)
         dc.SetBrush(wx.Brush(wx.BLACK, wx.BRUSHSTYLE_SOLID))
         dc.SetPen(wx.TRANSPARENT_PEN)

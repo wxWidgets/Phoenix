@@ -752,7 +752,7 @@ class ArtManager(wx.EvtHandler):
         :param string `name`: the bitmap name.
 
         :return: The stock bitmap, if `name` was found in the stock bitmap dictionary.
-         Othewise, :class:`NullBitmap` is returned.
+         Otherwise, :class:`NullBitmap` is returned.
         """
 
         return self._bitmaps.get(name, wx.NullBitmap)
@@ -1160,9 +1160,9 @@ class ArtManager(wx.EvtHandler):
         :return: An instance of :class:`wx.Colour`.
         """
 
-        r = random.randint(0, 255) # Random value betweem 0-255
-        g = random.randint(0, 255) # Random value betweem 0-255
-        b = random.randint(0, 255) # Random value betweem 0-255
+        r = random.randint(0, 255) # Random value between 0-255
+        g = random.randint(0, 255) # Random value between 0-255
+        b = random.randint(0, 255) # Random value between 0-255
 
         return wx.Colour(r, g, b)
 
@@ -1194,7 +1194,7 @@ class ArtManager(wx.EvtHandler):
         :param string `text`: the text to be (eventually) truncated;
         :param integer `maxWidth`: the maximum width allowed for the text.
 
-        :return: A new string containining the (possibly) truncated text.
+        :return: A new string containing the (possibly) truncated text.
         """
 
         textLen = len(text)
@@ -1322,7 +1322,7 @@ class ArtManager(wx.EvtHandler):
                 pSetLayeredWindowAttributes = win32api.GetProcAddress(self._winlib,
                                                                       "SetLayeredWindowAttributes")
 
-                if pSetLayeredWindowAttributes == None:
+                if pSetLayeredWindowAttributes is None:
                     return
 
                 exstyle = win32api.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
@@ -1447,7 +1447,7 @@ class ArtManager(wx.EvtHandler):
 
     def GetBitmapStartLocation(self, dc, rect, bitmap, text="", style=0):
         """
-        Returns the top left `x` and `y` cordinates of the bitmap drawing.
+        Returns the top left `x` and `y` coordinates of the bitmap drawing.
 
         :param `dc`: an instance of :class:`wx.DC`;
         :param wx.Rect `rect`: the bitmap's client rectangle;
@@ -1466,7 +1466,7 @@ class ArtManager(wx.EvtHandler):
          ``BU_EXT_RIGHT_TO_LEFT_STYLE``    32   A button suitable for right-to-left languages
          ============================== ======= ================================
 
-        :return: A tuple containining the top left `x` and `y` cordinates of the bitmap drawing.
+        :return: A tuple containing the top left `x` and `y` coordinates of the bitmap drawing.
         """
 
         alignmentBuffer = self.GetAlignBuffer()
@@ -1495,7 +1495,7 @@ class ArtManager(wx.EvtHandler):
                 # get the truncated text. The text may stay as is, it is not a must that is will be trancated
                 fixedText = self.TruncateText(dc, text, maxWidth)
 
-                # get the fixed text dimentions
+                # get the fixed text dimensions
                 fixedTextWidth, fixedTextHeight = dc.GetTextExtent(fixedText)
 
                 # calculate the start location
@@ -1513,7 +1513,7 @@ class ArtManager(wx.EvtHandler):
                 # get the truncated text. The text may stay as is, it is not a must that is will be trancated
                 fixedText = self.TruncateText(dc, text, maxWidth)
 
-                # get the fixed text dimentions
+                # get the fixed text dimensions
                 fixedTextWidth, fixedTextHeight = dc.GetTextExtent(fixedText)
 
                 if maxWidth > fixedTextWidth:
@@ -1535,7 +1535,7 @@ class ArtManager(wx.EvtHandler):
 
     def GetTextStartLocation(self, dc, rect, bitmap, text, style=0):
         """
-        Returns the top left `x` and `y` cordinates of the text drawing.
+        Returns the top left `x` and `y` coordinates of the text drawing.
         In case the text is too long, the text is being fixed (the text is cut and
         a '...' mark is added in the end).
 
@@ -1545,7 +1545,7 @@ class ArtManager(wx.EvtHandler):
         :param string `text`: the button label;
         :param integer `style`: the button style.
 
-        :return: A tuple containining the top left `x` and `y` cordinates of the text drawing, plus
+        :return: A tuple containing the top left `x` and `y` coordinates of the text drawing, plus
          the truncated version of the input `text`.
 
         :see: :meth:`~ArtManager.GetBitmapStartLocation` for a list of valid button styles.
@@ -1563,7 +1563,7 @@ class ArtManager(wx.EvtHandler):
 
         fixedText = self.TruncateText(dc, text, maxWidth)
 
-        # get the fixed text dimentions
+        # get the fixed text dimensions
         fixedTextWidth, fixedTextHeight = dc.GetTextExtent(fixedText)
         startLocationY = (rect.height - fixedTextHeight) / 2 + rect.y
 
@@ -1648,7 +1648,7 @@ class ArtManager(wx.EvtHandler):
         location, labelOnly = self.GetAccelIndex(text)
         startLocationX, startLocationY, fixedText = self.GetTextStartLocation(dc, rect, bitmap, labelOnly, style)
 
-        # after all the caculations are finished, it is time to draw the text
+        # after all the calculations are finished, it is time to draw the text
         # underline the first letter that is marked with a '&'
         if location == -1 or font.GetUnderlined() or location >= len(fixedText):
             # draw the text
@@ -1781,9 +1781,9 @@ class ArtManager(wx.EvtHandler):
         Returns the mnemonic index of the label and the label stripped of the ampersand mnemonic
         (e.g. 'lab&el' ==> will result in 3 and labelOnly = label).
 
-        :param string `label`: a string containining an ampersand.
+        :param string `label`: a string containing an ampersand.
 
-        :return: A tuple containining the mnemonic index of the label and the label
+        :return: A tuple containing the mnemonic index of the label and the label
          stripped of the ampersand mnemonic.
         """
 
@@ -1843,7 +1843,7 @@ class ArtManager(wx.EvtHandler):
         """
         Returns the currently used menu theme.
 
-        :return: A string containining the currently used theme for the menu.
+        :return: A string containing the currently used theme for the menu.
         """
 
         return self._menuTheme
@@ -2076,7 +2076,7 @@ class ArtManager(wx.EvtHandler):
         :return: A list of strings representing the available colour schemes.
         """
 
-        return list(self._colourSchemeMap.keys())
+        return list(self._colourSchemeMap)
 
 
     def CreateGreyBitmap(self, bmp):

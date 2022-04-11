@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     18-May-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -18,6 +18,8 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
 ITEMS  = [ "wxPowerEvent",
+           'wxPowerResource',
+           'wxPowerResourceBlocker',
            ]
 
 #---------------------------------------------------------------------------
@@ -61,12 +63,20 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_POWER_SUSPENDING       = wx.PyEventBinder( wxEVT_POWER_SUSPENDING , 1 )
         EVT_POWER_SUSPENDED        = wx.PyEventBinder( wxEVT_POWER_SUSPENDED , 1 )
         EVT_POWER_SUSPEND_CANCEL   = wx.PyEventBinder( wxEVT_POWER_SUSPEND_CANCEL , 1 )
         EVT_POWER_RESUME           = wx.PyEventBinder( wxEVT_POWER_RESUME , 1 )
         """)
+
+
+    c = module.find('wxPowerResourceBlocker')
+    c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
+    # add context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'pass')
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

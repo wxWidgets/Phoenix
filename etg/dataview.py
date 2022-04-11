@@ -5,13 +5,13 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
+from etgtools import PyFunctionDef, ParamDef
 
 PACKAGE   = "wx"
 MODULE    = "_dataview"
@@ -35,6 +35,7 @@ ITEMS  = [
             'wxDataViewCustomRenderer',
             'wxDataViewTextRenderer',
             'wxDataViewIconTextRenderer',
+            'wxDataViewCheckIconTextRenderer',
             'wxDataViewProgressRenderer',
             'wxDataViewSpinRenderer',
             'wxDataViewToggleRenderer',
@@ -46,6 +47,7 @@ ITEMS  = [
             'wxDataViewColumn',
             'wxDataViewCtrl',
             'wxDataViewEvent',
+            'wxDataViewValueAdjuster',
 
             'wxDataViewListCtrl',
             'wxDataViewListStore',
@@ -78,14 +80,14 @@ def run():
     c = module.find('wxDataViewItem')
     assert isinstance(c, etgtools.ClassDef)
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
-    c.addCppMethod('long', '__hash__', '()', """\
-        return (long)self->GetID();
-        """)
-    c.addCppMethod('bool', '__eq__', '(wxDataViewItem* other)', "return (self->GetID() == other->GetID());")
-    c.addCppMethod('bool', '__ne__', '(wxDataViewItem* other)', "return (self->GetID() != other->GetID());")
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
+    c.addCppMethod('long', '__hash__', '()', "return (long)(intptr_t)self->GetID();")
+
+    c.addCppMethod('bool', '__eq__', '(wxDataViewItem* other)',
+                   "return other ? (self->GetID() == other->GetID()) : false;")
+    c.addCppMethod('bool', '__ne__', '(wxDataViewItem* other)',
+                   "return other ? (self->GetID() != other->GetID()) : true;")
     c.addAutoProperties()
 
 
@@ -97,6 +99,7 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxDataViewModel')
     c.addAutoProperties()
+    tools.fixRefCountedClass(c)
 
     c.find('~wxDataViewModel').ignore(False)
 
@@ -106,7 +109,7 @@ def run():
     # Change the GetValue method to return the value instead of passing it
     # through a parameter for modification.
     c.find('GetValue.variant').out = True
-
+    c.find('GetValue').cppSignature = 'void (wxVariant& variant, const wxDataViewItem& item, unsigned int col)'
 
     # The DataViewItemObjectMapper class helps map from data items to Python
     # objects, and is used as a base class of PyDataViewModel as a
@@ -122,7 +125,7 @@ def run():
 
             By default a regular dictionary is used to implement the ID to object
             mapping. Optionally a WeakValueDictionary can be useful when there will be
-            a high turnover of objects and mantaining an extra reference to the
+            a high turnover of objects and maintaining an extra reference to the
             objects would be unwise.  If weak references are used then the objects
             associated with data items must be weak-referenceable.  (Things like
             stock lists and dictionaries are not.)  See :meth:`UseWeakRefs`.
@@ -187,10 +190,12 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxDataViewListModel')
     c.addAutoProperties()
+    tools.fixRefCountedClass(c)
 
     # Change the GetValueByRow method to return the value instead of passing
     # it through a parameter for modification.
     c.find('GetValueByRow.variant').out = True
+    c.find('GetValueByRow').cppSignature = 'void (wxVariant& variant, unsigned int row, unsigned int col)'
 
     # declare implementations for base class virtuals
     c.addItem(etgtools.WigCode("""\
@@ -229,27 +234,70 @@ def run():
     def _fixupBoolGetters(method, sig):
         method.type = 'void'
         method.find('value').out = True
+        method.find('value').type = 'wxDVCVariant&'
         method.cppSignature = sig
 
+    def _fixupTypeParam(klass):
+        param = klass.findItem('{}.varianttype'.format(klass.name))
+        if param and param.default == 'GetDefaultType()':
+            param.default = '{}::GetDefaultType()'.format(klass.name)
 
     c = module.find('wxDataViewRenderer')
     c.addPrivateCopyCtor()
     c.abstract = True
-    c.addAutoProperties()
     c.find('GetView').ignore(False)
+
+    # TODO: This is only available when wxUSE_ACCESSIBILITY is set to 1
+    c.find('GetAccessibleDescription').ignore()
+
+    c.addAutoProperties()
 
     # Change variant getters to return the value
     for name, sig in [
-        ('GetValue',               'bool (wxDVCVariant& value)'),
-        ('GetValueFromEditorCtrl', 'bool (wxWindow * editor, wxDVCVariant& value)'),
+        ('GetValue',               'bool (wxVariant& value)'),
+        ('GetValueFromEditorCtrl', 'bool (wxWindow * editor, wxVariant& value)'),
         ]:
         _fixupBoolGetters(c.find(name), sig)
 
+    m = c.find('SetValue')
+    m.find('value').type = 'const wxDVCVariant&'
+    m.cppSignature = 'bool (const wxVariant& value)'
+
+    m = c.find('CreateEditorCtrl')
+    m.cppSignature = 'wxWindow* (wxWindow * parent, wxRect labelRect, const wxVariant& value)'
+
+    c.find('GetView').ignore(False)
+
+
 
     c = module.find('wxDataViewCustomRenderer')
-    _fixupBoolGetters(c.find('GetValueFromEditorCtrl'),
-                      'bool (wxWindow * editor, wxDVCVariant& value)')
+    _fixupTypeParam(c)
+    m = c.find('GetValueFromEditorCtrl')
+    _fixupBoolGetters(m, 'bool (wxWindow * editor, wxVariant& value)')
+
+    # Change the virtual method handler code to follow the same pattern as the
+    # tweaked public API, namely that the value is the return value instead of
+    # an out parameter.
+    m.virtualCatcherCode = """\
+        PyObject *sipResObj = sipCallMethod(&sipIsErr, sipMethod, "D", editor, sipType_wxWindow, NULL);
+        if (sipResObj == NULL) {
+            if (PyErr_Occurred())
+                PyErr_Print();
+            sipRes = false;
+        }
+        else if (sipResObj == Py_None) {
+            sipRes = false;
+        } else {
+            sipRes = true;
+            sipParseResult(&sipIsErr, sipMethod, sipResObj, "H5", sipType_wxDVCVariant, &value);
+        }
+        """
+
     c.find('GetTextExtent').ignore(False)
+
+    m = c.find('CreateEditorCtrl')
+    m.cppSignature = 'wxWindow* (wxWindow * parent, wxRect labelRect, const wxVariant& value)'
+
 
     module.addPyCode("""\
         PyDataViewCustomRenderer = wx.deprecated(DataViewCustomRenderer,
@@ -270,13 +318,13 @@ def run():
                   ]:
         c = module.find(name)
         c.addAutoProperties()
+        _fixupTypeParam(c)
 
         c.addItem(etgtools.WigCode("""\
-            virtual bool SetValue( const wxDVCVariant &value );
-            virtual void GetValue( wxDVCVariant &value /Out/ ) const [bool (wxDVCVariant& value)];
+            virtual bool SetValue( const wxDVCVariant &value ) [bool (const wxVariant& value)];
+            virtual void GetValue( wxDVCVariant &value /Out/ ) const [bool (wxVariant& value)];
             %Property(name=Value, get=GetValue, set=SetValue)
-            """))
-
+            """, protection='public'))
 
     # The SpinRenderer has a few additional pure virtuals that need to be declared
     # since it derives from DataViewCustomRenderer
@@ -284,7 +332,7 @@ def run():
     c.addItem(etgtools.WigCode("""\
         virtual wxSize GetSize() const;
         virtual bool Render(wxRect cell, wxDC* dc, int state);
-        """))
+        """, protection='public'))
 
 
     #-----------------------------------------------------------------
@@ -331,6 +379,8 @@ def run():
     c = module.find('wxDataViewCtrl')
     tools.fixWindowClass(c)
     module.addGlobalStr('wxDataViewCtrlNameStr', c)
+
+    tools.addEnableSystemTheme(c, 'wx.dataview.DataViewCtrl')
 
     c.find('AssociateModel.model').transfer = True
     c.find('AssociateModel').pyName = '_AssociateModel'
@@ -401,11 +451,13 @@ def run():
             """)
 
 
+    # TODO: add support for wxVector templates
+    c.find('GetSortingColumns').ignore()
+
+
     #-----------------------------------------------------------------
     c = module.find('wxDataViewEvent')
     tools.fixEventClass(c)
-
-    c.addProperty('EditCancelled', 'IsEditCancelled', 'SetEditCanceled')
 
     c.find('SetCache.from').name = 'from_'
     c.find('SetCache.to').name = 'to_'
@@ -488,17 +540,26 @@ def run():
     c.find('PrependItem.values').type = 'const wxVariantVector&'
     c.find('InsertItem.values').type = 'const wxVariantVector&'
     c.find('GetValueByRow.value').out = True
+    c.find('GetValueByRow').cppSignature = 'void (wxVariant& value, unsigned int row, unsigned int col)'
+
     c.addAutoProperties()
 
 
     #-----------------------------------------------------------------
+    def _setClientDataTrasfer(klass):
+        for item in klass.allItems():
+            if isinstance(item, ParamDef) and item.type == 'wxClientData *':
+                item.transfer = True
+
     c = module.find('wxDataViewTreeCtrl')
     tools.fixWindowClass(c)
+    _setClientDataTrasfer(c)
     c.find('GetStore').overloads = []
-
 
     c = module.find('wxDataViewTreeStore')
     c.addAutoProperties()
+    tools.fixRefCountedClass(c)
+    _setClientDataTrasfer(c)
 
 
     #-----------------------------------------------------------------

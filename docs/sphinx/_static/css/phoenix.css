@@ -16,7 +16,7 @@ div.body p, div.body dd, div.body li {
     text-align: left;
 }
 
-ul.simple { 
+ul.simple {
     margin-top: 0;
     margin-bottom: 0;
     padding-top: 0;
@@ -27,6 +27,11 @@ ul.simple {
 td.field-body > blockquote {
     margin-top: 0.1em;
     margin-bottom: 0.5em;
+}
+
+table.docutils.align-default tbody tr td p {
+	margin: 0;
+	padding: 2px 0;
 }
 
 /* spacing around example code */
@@ -50,22 +55,22 @@ div.quotebar {
 }
 
 /**
- * Hide dummy toctrees 
+ * Hide dummy toctrees
  */
 
-ul { 
+ul {
   padding-top: 0;
   padding-bottom: 0;
   margin-top: 0;
   margin-bottom: 0;
 }
-ul li { 
+ul li {
   padding-top: 0;
   padding-bottom: 0;
   margin-top: 0;
   margin-bottom: 0;
 }
-ul li a.reference { 
+ul li a.reference {
   padding-top: 0;
   padding-bottom: 0;
   margin-top: 0;
@@ -75,20 +80,20 @@ ul li a.reference {
 /**
  * Make high-level subsections easier to distinguish from top-level ones
  */
-div.body h3 { 
+div.body h3 {
   background-color: transparent;
 }
 
-div.body h4 { 
+div.body h4 {
   border: none;
   background-color: transparent;
 }
 
-/** 
+/**
  * Scipy colors
  */
 
-body { 
+body {
     background-color: rgb(230,230,230);
     font-size: 0.90em;
 }
@@ -101,27 +106,36 @@ div.headerimage-noshow {
 	display:none;
 }
 
-div.document { 
+div.document {
   background-color: rgb(230,230,230);
   position: relative;
   margin-left: 240px;
+}
+
+div.sphinxsidebarwrapper {
+    padding: 10px 5px 0 10px;
+}
+
+div.document-no-sidebar {
+  background-color: rgb(230,230,230);
+  position: relative;
+  margin-left: 0px;
   z-index: 0;
-  top: 30px;
+  top: 0px;
 }
 
 div.sphinxsidebar {
     background-color: rgb(230,230,230);
     margin-left: 0;
-    float: none;
-    position: fixed;
-    overflow: auto;
     width: 240px;
     max-width: 240px;
     height: auto;
-    z-index: 1;
+    float: none;
+    overflow: auto;
+    position: fixed;
     left: 0;
     top: 30px;
-    bottom: 0;    
+    bottom: 0;
 }
 
 div#searchbox {
@@ -129,7 +143,7 @@ div#searchbox {
 }
 
 div#sourcelink {
-    position: absolute; 
+    position: absolute;
     bottom: 0;
     font-style: italic;
     font-size: small;
@@ -140,11 +154,8 @@ div.related {
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     font-size: 90%;
-    position: fixed;
     line-height: normal;
-    position: fixed;
     height: auto;
-    z-index: 1;
     left: 0;
     right: 0;
     top: 0;
@@ -249,7 +260,7 @@ div.footer {
 	float:left;
 	text-align:center;
 }
-	
+
 .floatcenter {
 	position:relative;
         float:none;
@@ -272,8 +283,8 @@ div.headerfix :target {
   margin-top: -{{ 30 }};
 }
 
-/** 
- * Extra admonitions 
+/**
+ * Extra admonitions
  */
 
 div.return {
@@ -290,18 +301,18 @@ div.availability {
   border: 1px solid #adff2f;
 }
 
-div.plot-output { 
+div.plot-output {
   clear-after: both;
 }
 
-div.plot-output .figure { 
+div.plot-output .figure {
   float: center;
   text-align: center;
   margin-bottom: 0;
   padding-bottom: 0;
 }
 
-div.plot-output .caption { 
+div.plot-output .caption {
   margin-top: 2;
   padding-top: 0;
 }
@@ -310,11 +321,11 @@ div.plot-output p.admonition-title {
   display: none;
 }
 
-div.plot-output:after { 
-  content: ""; 
-  display: block; 
-  height: 0; 
-  clear: both; 
+div.plot-output:after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
 }
 
 .doctodo {
@@ -369,7 +380,7 @@ div.admonition {
     text-align: left;
     background-image: url('../images/sphinxdocs/todo.png');
     background-repeat: no-repeat;
-    background-position: 5px 5px;  
+    background-position: 5px 5px;
     padding-left: 33px;
 }
 
@@ -383,7 +394,7 @@ div.seealso {
     text-align: left;
     background-image: url('../images/sphinxdocs/seealso.png');
     background-repeat: no-repeat;
-    background-position: 5px 5px;  
+    background-position: 5px 5px;
     padding-left: 33px;
 }
 
@@ -397,7 +408,7 @@ div.warning {
     text-align: left;
     background-image: url('../images/sphinxdocs/warning.png');
     background-repeat: no-repeat;
-    background-position: 5px 5px;  
+    background-position: 5px 5px;
     padding-left: 33px;
 }
 
@@ -411,7 +422,7 @@ div.todo {
     text-align: left;
     background-image: url('../images/sphinxdocs/todo.png');
     background-repeat: no-repeat;
-    background-position: 5px 5px;  
+    background-position: 5px 5px;
     padding-left: 33px;
 }
 
@@ -456,7 +467,7 @@ div.note {
     text-align: left;
     background-image: url('../images/sphinxdocs/info.png');
     background-repeat: no-repeat;
-    background-position: 5px 5px;  
+    background-position: 5px 5px;
     padding-left: 33px;
 }
 
@@ -470,12 +481,22 @@ div.availability {
     text-align: left;
     background-image: url('../images/sphinxdocs/available.png');
     background-repeat: no-repeat;
-    background-position: 5px 5px;  
+    background-position: 5px 5px;
     padding-left: 33px;
 }
 
 .availability tt {
     background: #e8f7c4;
+}
+
+div.wxdeprecated {
+  background-color: #ffe6c3;
+  border: 1px solid #edc388;
+  text-align: left;
+  background-image: url('../images/sphinxdocs/warning.png');
+  background-repeat: no-repeat;
+  background-position: 5px 5px;
+  padding-left: 33px;
 }
 
 
@@ -502,12 +523,12 @@ table.field-list th {
   padding-left: 5px;
 }
 
-table.field-list { 
+table.field-list {
   border-collapse: separate;
   border-spacing: 10px;
 }
 
-/** 
+/**
  * Styling for footnotes
  */
 
@@ -723,3 +744,22 @@ tt {
 .myactive {background-color: rgb(230, 230, 230);  background-position: 0 5px;}
 
 
+p.mybiglink a.mybiglink {
+    font-size: 1.2em;
+    color: #355f7c;
+    text-decoration: none;
+
+}
+
+table.contentstable p.mybiglink {
+    line-height: 150%;
+}
+
+hr.overloadsep {
+    color: #0000FF;
+    background-color: #0000FF;
+    height: 1px;
+    border: none;
+    width: 50%;
+    float: left;
+}

@@ -48,7 +48,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
 
     def test_uiactionMouseMotion(self):
         p = MouseEventsPanel(self.frame, wx.EVT_MOTION)
-        self.myYield()
+        self.waitFor(WAIT)
 
         uia = wx.UIActionSimulator()
         uia.MouseMove(p.ClientToScreen((1,1)));   self.waitFor(WAIT)
@@ -65,7 +65,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
 
     def test_uiactionMouseLeftDownUp(self):
         p = MouseEventsPanel(self.frame, [wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP])
-        self.myYield()
+        self.waitFor(WAIT)
 
         uia = wx.UIActionSimulator()
         uia.MouseMove(p.ClientToScreen((10,10)));   self.waitFor(WAIT)
@@ -80,7 +80,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
 
     def test_uiactionMouseRightDownUp(self):
         p = MouseEventsPanel(self.frame, [wx.EVT_RIGHT_DOWN, wx.EVT_RIGHT_UP])
-        self.myYield()
+        self.waitFor(WAIT)
 
         uia = wx.UIActionSimulator()
         uia.MouseMove(p.ClientToScreen((10,10)));  self.waitFor(WAIT)
@@ -95,7 +95,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
 
     def test_uiactionMouseLeftClick(self):
         p = MouseEventsPanel(self.frame, [wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP])
-        self.myYield()
+        self.waitFor(WAIT)
 
         uia = wx.UIActionSimulator()
         uia.MouseMove(p.ClientToScreen((10,10)));  self.waitFor(WAIT)
@@ -109,7 +109,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
 
     def test_uiactionMouseLeftDClick(self):
         p = MouseEventsPanel(self.frame, [wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP, wx.EVT_LEFT_DCLICK])
-        self.myYield()
+        self.waitFor(WAIT)
 
         uia = wx.UIActionSimulator()
         uia.MouseMove(p.ClientToScreen((10,10)));  self.waitFor(WAIT)
@@ -125,6 +125,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
 
     def test_uiactionMouseDD(self):
         p = MouseEventsPanel(self.frame, [wx.EVT_MOTION, wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP])
+        self.waitFor(WAIT)
 
         x1, y1 = p.ClientToScreen((10,10))
         x2 = x1 + 20
@@ -186,7 +187,7 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
     @unittest.skipIf(sys.platform == 'darwin', 'wx.UIActionSimulator.Text needs work...')
     def test_uiactionKeyboardText(self):
         uia = wx.UIActionSimulator()
-        uia.Text("This is a test")
+        uia.Text(b"This is a test")
         self.waitFor(WAIT*2)
 
         self.assertEqual(self.tc.GetValue(), "This is a test")

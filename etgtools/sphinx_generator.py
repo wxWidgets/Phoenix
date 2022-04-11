@@ -4,7 +4,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -48,6 +48,7 @@ from sphinxtools.utilities import pickleClassInfo, pickleFunctionInfo, isNumeric
 from sphinxtools.utilities import underscore2Capitals, countSpaces
 from sphinxtools.utilities import formatContributedSnippets
 from sphinxtools.utilities import PickleFile
+from sphinxtools.utilities import textfile_open
 
 from sphinxtools.constants import VERSION, REMOVED_LINKS, SECTIONS
 from sphinxtools.constants import MAGIC_METHODS, MODULENAME_REPLACE
@@ -205,7 +206,7 @@ class Node(object):
         This method returns ``True`` if this node contains a specific class into its
         descendants.
 
-        :param `klass`: can be any of the classes definied in this script except :class:`XMLDocString`.
+        :param `klass`: can be any of the classes defined in this script except :class:`XMLDocString`.
         :param `node`: another `Node` instance or ``None`` if this is the first invocation of
          this function.
 
@@ -382,7 +383,7 @@ class Root(Node):
         text = Node.Join(self, with_tail)
 
         # Health check
-        existing_sections = list(self.sections.keys())
+        existing_sections = list(self.sections)
 
         for section_name, dummy in SECTIONS:
             if section_name not in self.sections:
@@ -651,9 +652,8 @@ class ParameterList(Node):
 ##                    class_name = wx2Sphinx(xml_item.className)[1] + '.'
 ##
 ##                print '\n      |||  %s;%s;%s  |||\n'%(class_name[0:-1], signature, param)
-##                fid = open('mismatched.txt', 'a')
-##                fid.write('%s;%s;%s\n'%(class_name[0:-1], signature, param))
-##                fid.close()
+##                with open('mismatched.txt', 'a') as fid:
+##                    fid.write('%s;%s;%s\n'%(class_name[0:-1], signature, param))
 
 
     # -----------------------------------------------------------------------
@@ -1042,7 +1042,7 @@ class Section(Node):
         text = Node.Join(self, with_tail=False)
 
         if not text.strip() or len(text.strip()) < 3:
-            # Empy text or just trailing commas
+            # Empty text or just trailing commas
             return ''
 
         if self.is_overload and self.share_docstrings:
@@ -1065,9 +1065,15 @@ class Section(Node):
                         version = version[0:-1]
                     text = '%s\n%s%s'%(version, sub_spacer, text)
 
+                # Show both the wxPython and the wxWidgets version numbers for
+                # versions >= 3. That's not entirely accurate, but close enough.
+                if text.startswith('3.'):
+                    wx_ver = text[:5]
+                    text = '4.{}/wxWidgets-{} {}'.format(wx_ver[2], wx_ver, text[5:])
+
         elif section_type == 'deprecated':
             # Special treatment for deprecated, wxWidgets devs do not put the version number
-            text = '%s\n%s%s'%(VERSION, sub_spacer, text.lstrip('Deprecated'))
+            text = '\n%s%s'%(sub_spacer, text.lstrip('Deprecated'))
 
         elif section_type == 'par':
             # Horrible hack... Why is there a </para> end tag inside the @par tag???
@@ -1410,9 +1416,8 @@ class Snippet(Node):
         if not os.path.exists(os.path.dirname(self.cpp_file)):
             os.makedirs(os.path.dirname(self.cpp_file))
 
-        fid = open(self.cpp_file, 'wt')
-        fid.write(self.snippet)
-        fid.close()
+        with open(self.cpp_file, 'wt') as fid:
+            fid.write(self.snippet)
 
         if not os.path.isfile(self.converted_py):
 
@@ -1437,33 +1442,29 @@ class Snippet(Node):
             for code in py_code.splitlines():
                 new_py_code += spacer + code + '\n'
 
-            fid = open(self.python_file, 'wt')
-            fid.write(new_py_code)
-            fid.close()
-
+            with open(self.python_file, 'wt') as fid:
+                fid.write(new_py_code)
         else:
 
-            fid = open(self.converted_py, 'rt')
             highlight = None
 
-            while 1:
-                tline = fid.readline()
+            with open(self.converted_py, 'rt') as fid:
+                while True:
+                    tline = fid.readline()
 
-                if not tline:  # end of file
-                    code = ""
-                    fid.close()
+                    if not tline:  # end of file
+                        code = ""
+                        break
+
+                    if 'code-block::' in tline:
+                        highlight = tline.replace('#', '').strip()
+                        continue
+
+                    if not tline.strip():
+                        continue
+
+                    code = tline + fid.read()
                     break
-
-                if 'code-block::' in tline:
-                    highlight = tline.replace('#', '').strip()
-                    continue
-
-                if not tline.strip():
-                    continue
-
-                code = tline + fid.read()
-                fid.close()
-                break
 
             if highlight:
                 docstrings += '\n\n%s\n\n'%highlight
@@ -1917,6 +1918,27 @@ class ULink(Node):
 
 # ----------------------------------------------------------------------- #
 
+class DashBase(Node):
+    dash_text = '-'
+
+    def Join(self, with_tail=True):
+        text = self.dash_text
+        if self.element.text:
+            text += self.element.text
+        if with_tail and self.element.tail:
+            text += convertToPython(self.element.tail)
+        return text
+
+
+class EnDash(DashBase):
+    dash_text = u'\u2013'
+
+class EmDash(DashBase):
+    dash_text = u'\u2014'
+
+
+# ----------------------------------------------------------------------- #
+
 class XMLDocString(object):
     """
     This is the main class of this script, and it uses heavily the :class:`Node`
@@ -1979,9 +2001,12 @@ class XMLDocString(object):
         else:
             raise Exception('Unhandled docstring kind for %s'%xml_item.__class__.__name__)
 
+        # Some of the Extractors (xml item) will set deprecated themselves, in which case it is set as a
+        # non-empty string. In such cases, this branch will insert a deprecated section into the xml tree
+        # so that the Node Tree (see classes above) will generate the deprecated  tag on their own in self.RecurseXML
         if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, string_base):
             element = et.Element('deprecated', kind='deprecated')
-            element.text = VERSION
+            element.text = xml_item.deprecated
 
             deprecated_section = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
             self.root.AddSection(deprecated_section)
@@ -2213,6 +2238,11 @@ class XMLDocString(object):
 
             self.root.AddSection(section)
             rest_class = parent
+
+        elif tag == 'ndash':
+            rest_class = EnDash(element, parent)
+        elif tag == 'mdash':
+            rest_class = EmDash(element, parent)
 
         else:
             rest_class = Node('', parent)
@@ -2619,12 +2649,6 @@ class XMLDocString(object):
 
         self.Reformat(stream)
 
-        if hasattr(method, 'deprecated') and method.deprecated:
-            text = method.deprecated
-            if isinstance(text, string_base):
-                text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, text.replace('\n', ' '))
-                stream.write(text)
-
         possible_py = self.HuntContributedSnippets()
 
         if possible_py:
@@ -2669,14 +2693,6 @@ class XMLDocString(object):
         stream.write('\n\n')
 
         self.Reformat(stream)
-
-        if hasattr(function, 'deprecated') and function.deprecated:
-            if isinstance(function.deprecated, int):
-                msg = ""
-            else:
-                msg = function.deprecated.replace('\n', ' ')
-            text = '%s %s\n%s%s\n\n'%('   .. deprecated::', VERSION, ' '*6, msg)
-            stream.write(text)
 
         possible_py = self.HuntContributedSnippets()
 
@@ -2880,22 +2896,19 @@ class XMLDocString(object):
                 pickleItem(desc, self.current_module, self.class_name, 'class')
 
         if self.overloads:
-
             docstrings += '\n\n%s|overload| Overloaded Implementations:\n\n'%spacer
-            docstrings += '%s**~~~**\n\n'%spacer
+            docstrings += '%s:html:`<hr class="overloadsep" /><br />`\n\n'%spacer
 
             for index, over in enumerate(self.overloads):
                 for line in over.splitlines():
                     docstrings += spacer + line + '\n'
-
-                docstrings += '%s**~~~**\n\n'%spacer
+                docstrings += '%s:html:`<hr class="overloadsep" /><br />`\n\n'%spacer
 
         if '**Perl Note:**' in docstrings:
             index = docstrings.index('**Perl Note:**')
             docstrings = docstrings[0:index]
 
         stream.write(docstrings + "\n\n")
-
 
 # ---------------------------------------------------------------------------
 
@@ -3218,6 +3231,14 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             f = dispatch[item.__class__][0]
             f(item)
 
+        if klass.postProcessReST is not None:
+            full_name = os.path.join(SPHINXROOT, filename)
+            with textfile_open(full_name) as f:
+                text = f.read()
+            text = klass.postProcessReST(text)
+            with textfile_open(full_name, 'wt') as f:
+                f.write(text)
+
         if klass.enum_list:
             stream = StringIO()
             stream.write("\n.. toctree::\n   :maxdepth: 1\n   :hidden:\n\n")
@@ -3331,10 +3352,6 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 newdocs += line + "\n"
 
         stream.write(newdocs + '\n\n')
-
-        if hasattr(pm, 'deprecated') and pm.deprecated:
-            text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, pm.deprecated.replace('\n', ' '))
-            stream.write(text)
 
         c = self.current_class
         name = c.pyName if c.pyName else removeWxPrefix(c.name)

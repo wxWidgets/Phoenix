@@ -50,7 +50,7 @@ code using the usual::
 method.
 
 The control is generic, and support theming (well, I tested it under
-Windows with the three defauls themes: grey, blue, silver and the
+Windows with the three default themes: grey, blue, silver and the
 classic look).
 
 
@@ -105,19 +105,19 @@ Usage example::
 
             titleBar = BP.ButtonPanel(mainPanel, -1, "A Simple Test & Demo")
 
-            btn1 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png4.png", wx.BITMAP_TYPE_PNG))
+            btn1 = BP.ButtonInfo(titleBar, wx.ID_ANY, wx.Bitmap("png4.png", wx.BITMAP_TYPE_PNG))
             titleBar.AddButton(btn1)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn1)
 
-            btn2 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png3.png", wx.BITMAP_TYPE_PNG))
+            btn2 = BP.ButtonInfo(titleBar, wx.ID_ANY, wx.Bitmap("png3.png", wx.BITMAP_TYPE_PNG))
             titleBar.AddButton(btn2)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn2)
 
-            btn3 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png2.png", wx.BITMAP_TYPE_PNG))
+            btn3 = BP.ButtonInfo(titleBar, wx.ID_ANY, wx.Bitmap("png2.png", wx.BITMAP_TYPE_PNG))
             titleBar.AddButton(btn3)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn3)
 
-            btn4 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png1.png", wx.BITMAP_TYPE_PNG))
+            btn4 = BP.ButtonInfo(titleBar, wx.ID_ANY, wx.Bitmap("png1.png", wx.BITMAP_TYPE_PNG))
             titleBar.AddButton(btn4)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn4)
 
@@ -354,7 +354,7 @@ class BPArt(object):
             self._gradient_type = BP_GRADIENT_NONE
 
         self._buttontext_inactive_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
-        self._selection_brush = wx.Brush(wx.Colour(225, 225, 255))
+        self._selection_brush = wx.WHITE_BRUSH
         self._selection_pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
 
         sysfont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -758,7 +758,7 @@ class BPArt(object):
         """
 
         if style & BP_USE_GRADIENT:
-            # Draw gradient colour in the backgroud of the panel
+            # Draw gradient colour in the background of the panel
             self.FillGradientColour(dc, rect)
 
         # Draw a rectangle around the panel
@@ -853,7 +853,7 @@ class Control(wx.EvtHandler):
         self._parent = parent
 
         if id == wx.ID_ANY:
-            self._id = wx.NewId()
+            self._id = wx.NewIdRef()
         else:
             self._id = id
 
@@ -939,7 +939,7 @@ class Control(wx.EvtHandler):
          done, i.e. if the window had already been in the specified state.
 
         :note: Note that when a parent window is disabled, all of its children are disabled as
-         well and they are reenabled again when the parent is.
+         well and they are re-enabled again when the parent is.
         """
 
         self.disabled = not enable
@@ -1387,7 +1387,7 @@ class ButtonInfo(Control):
         """
 
         if id == wx.ID_ANY:
-            id = wx.NewId()
+            id = wx.NewIdRef()
 
         self._status = status
         self._rect = wx.Rect()
@@ -1931,7 +1931,7 @@ class ButtonPanel(wx.Panel):
         """
 
         lenChildren = len(self._mainsizer.GetChildren())
-        self._mainsizer.Insert(lenChildren-1, btnInfo, 0, wx.ALIGN_CENTER|wx.EXPAND, userData=btnInfo)
+        self._mainsizer.Insert(lenChildren-1, btnInfo, 0, wx.ALIGN_CENTER, userData=btnInfo)
 
         self._vButtons.append(btnInfo)
 
@@ -2287,7 +2287,7 @@ class ButtonPanel(wx.Panel):
 
     def LayoutItems(self):
         """
-        Layout the items using a different algorithms depending on the existance
+        Layout the items using a different algorithms depending on the existence
         of the main caption.
         """
 
@@ -2728,7 +2728,7 @@ class ButtonPanel(wx.Panel):
         def Freeze(self):
             """
             Freezes the window or, in other words, prevents any updates from taking place
-            on screen, the window is not redrawn at all. :meth:`~ButtonPanel.Thaw` must be called to reenable
+            on screen, the window is not redrawn at all. :meth:`~ButtonPanel.Thaw` must be called to re-enable
             window redrawing. Calls to these two functions may be nested.
 
             :note: This method is useful for visual appearance optimization.
@@ -2776,19 +2776,19 @@ if __name__ == '__main__':
 
             titleBar = ButtonPanel(mainPanel, -1, 'A Simple Test & Demo')
 
-            btn1 = ButtonInfo(titleBar, wx.NewId(),
+            btn1 = ButtonInfo(titleBar, wx.ID_ANY,
                               wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (32, 32)),
                               text='Button 1')
             titleBar.AddButton(btn1)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn1)
 
-            btn2 = ButtonInfo(titleBar, wx.NewId(),
+            btn2 = ButtonInfo(titleBar, wx.ID_ANY,
                               wx.ArtProvider.GetBitmap(wx.ART_TIP, wx.ART_OTHER, (32, 32)),
                               text='Button 2')
             titleBar.AddButton(btn2)
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn2)
 
-            btn3 = ButtonInfo(titleBar, wx.NewId(),
+            btn3 = ButtonInfo(titleBar, wx.ID_ANY,
                               wx.ArtProvider.GetBitmap(wx.ART_WARNING, wx.ART_OTHER, (32, 32)),
                               text='Button 3')
 

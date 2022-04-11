@@ -875,7 +875,7 @@ class ImageContainerBase(wx.Panel):
                 self.DrawPin(dc, self._pinBtnRect, not self._bCollapsed)
                 return
 
-        # Incase panel is collapsed, there is nothing
+        # In case panel is collapsed, there is nothing
         # to check
         if self._bCollapsed:
             return
@@ -902,7 +902,7 @@ class ImageContainerBase(wx.Panel):
         self._nHoveredImgIdx = -1
 
         # Make sure the pin button status is NONE
-        # incase we were in pin button style
+        # in case we were in pin button style
         style = self.GetParent().GetAGWWindowStyleFlag()
 
         if style & INB_USE_PIN_BUTTON:
@@ -1044,7 +1044,7 @@ class ImageContainerBase(wx.Panel):
         elif self._nPinButtonStatus == INB_PIN_PRESSED:
 
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.SetPen(wx.Pen(wx.Colour("LIGHT GREY")))
+            dc.SetPen(wx.LIGHT_GREY_PEN)
             dc.DrawRectangle(xx, rect.y, 16, 16)
 
             # Draw upper and left border with grey colour
@@ -1247,7 +1247,7 @@ class ImageContainer(ImageContainerBase):
         # We reserver 20 pixels for the 'pin' button
 
         # The drawing of the images start position. This is
-        # depenedent of the style, especially when Pin button
+        # dependent of the style, especially when Pin button
         # style is requested
 
         if bUsePin:
@@ -1270,9 +1270,9 @@ class ImageContainer(ImageContainerBase):
 
             count = count + 1
 
-            # incase the 'fit button' style is applied, we set the rectangle width to the
+            # in case the 'fit button' style is applied, we set the rectangle width to the
             # text width plus padding
-            # Incase the style IS applied, but the style is either LEFT or RIGHT
+            # In case the style IS applied, but the style is either LEFT or RIGHT
             # we ignore it
             dc.SetFont(normalFont)
 
@@ -1300,7 +1300,7 @@ class ImageContainer(ImageContainerBase):
                     rectWidth += 1
 
             # Check that we have enough space to draw the button
-            # If Pin button is used, consider its space as well (applicable for top/botton style)
+            # If Pin button is used, consider its space as well (applicable for top/bottom style)
             # since in the left/right, its size is already considered in 'pos'
             pinBtnSize = (bUsePin and [20] or [0])[0]
 
@@ -1360,7 +1360,7 @@ class ImageContainer(ImageContainerBase):
             else:
                 rect = wx.Rect(pos, 0, rectWidth, rectWidth)
 
-            # Incase user set both flags:
+            # In case user set both flags:
             # INB_SHOW_ONLY_TEXT and INB_SHOW_ONLY_IMAGES
             # We override them to display both
 
@@ -1376,13 +1376,13 @@ class ImageContainer(ImageContainerBase):
 
                 if bUseYcoord:
 
-                    imgXcoord = self._nImgSize / 2
-                    imgYcoord = (style & INB_SHOW_ONLY_IMAGES and [pos + self._nImgSize / 2] or [pos + imgTopPadding])[0]
+                    imgXcoord = self._nImgSize // 2
+                    imgYcoord = (style & INB_SHOW_ONLY_IMAGES and [pos + self._nImgSize // 2] or [pos + imgTopPadding])[0]
 
                 else:
 
-                    imgXcoord = pos + (rectWidth / 2) - (self._nImgSize / 2)
-                    imgYcoord = (style & INB_SHOW_ONLY_IMAGES and [self._nImgSize / 2] or [imgTopPadding])[0]
+                    imgXcoord = pos + (rectWidth // 2) - (self._nImgSize // 2)
+                    imgYcoord = (style & INB_SHOW_ONLY_IMAGES and [self._nImgSize // 2] or [imgTopPadding])[0]
 
                 self._ImageList.Draw(self._pagesInfoVec[i].GetImageIndex(), dc,
                                      imgXcoord, imgYcoord,
@@ -1408,15 +1408,15 @@ class ImageContainer(ImageContainerBase):
 
                 if bUseYcoord:
 
-                    textOffsetX = ((rectWidth - textWidth) / 2 )
+                    textOffsetX = ((rectWidth - textWidth) // 2 )
                     textOffsetY = (not style & INB_SHOW_ONLY_TEXT  and [pos + self._nImgSize  + imgTopPadding + 3] or \
-                                       [pos + ((self._nImgSize * 2 - textHeight) / 2 )])[0]
+                                       [pos + ((self._nImgSize * 2 - textHeight) // 2 )])[0]
 
                 else:
 
-                    textOffsetX = (rectWidth - textWidth) / 2  + pos + nTextPaddingLeft
+                    textOffsetX = (rectWidth - textWidth) // 2  + pos + nTextPaddingLeft
                     textOffsetY = (not style & INB_SHOW_ONLY_TEXT and [self._nImgSize + imgTopPadding + 3] or \
-                                       [((self._nImgSize * 2 - textHeight) / 2 )])[0]
+                                       [((self._nImgSize * 2 - textHeight) // 2 )])[0]
 
                 dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOWTEXT))
                 dc.DrawText(fixedText, textOffsetX, textOffsetY)
@@ -1591,8 +1591,8 @@ class LabelContainer(ImageContainerBase):
             # Draw gradient in the background area
             startColour = self._coloursMap[INB_TAB_AREA_BACKGROUND_COLOUR]
             endColour   = ArtManager.Get().LightColour(self._coloursMap[INB_TAB_AREA_BACKGROUND_COLOUR], 50)
-            ArtManager.Get().PaintStraightGradientBox(dc, wx.Rect(0, 0, size.x / 2, size.y), startColour, endColour, False)
-            ArtManager.Get().PaintStraightGradientBox(dc, wx.Rect(size.x / 2, 0, size.x / 2, size.y), endColour, startColour, False)
+            ArtManager.Get().PaintStraightGradientBox(dc, wx.Rect(0, 0, size.x // 2, size.y), startColour, endColour, False)
+            ArtManager.Get().PaintStraightGradientBox(dc, wx.Rect(size.x // 2, 0, size.x // 2, size.y), endColour, startColour, False)
 
         else:
 
@@ -1638,7 +1638,7 @@ class LabelContainer(ImageContainerBase):
 
             if self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
                 font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-                font.SetPointSize(font.GetPointSize() * self.GetParent().GetFontSizeMultiple())
+                font.SetPointSize(int(font.GetPointSize() * self.GetParent().GetFontSizeMultiple()))
 
                 if self.GetParent().GetFontBold():
                     font.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -1954,7 +1954,7 @@ class LabelContainer(ImageContainerBase):
 
         # Redraw the text with underlined font
         underLinedFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        underLinedFont.SetPointSize(underLinedFont.GetPointSize() * self.GetParent().GetFontSizeMultiple())
+        underLinedFont.SetPointSize(int(underLinedFont.GetPointSize() * self.GetParent().GetFontSizeMultiple()))
         if self.GetParent().GetFontBold():
             underLinedFont.SetWeight(wx.FONTWEIGHT_BOLD)
         elif self.HasAGWFlag(INB_BOLD_TAB_SELECTION) and selected:
@@ -2050,7 +2050,7 @@ class LabelContainer(ImageContainerBase):
         imgRect = wx.Rect(*rect)
 
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetPointSize(font.GetPointSize() * self.GetParent().GetFontSizeMultiple())
+        font.SetPointSize(int(font.GetPointSize() * self.GetParent().GetFontSizeMultiple()))
 
         if self.GetParent().GetFontBold():
             font.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -2069,7 +2069,7 @@ class LabelContainer(ImageContainerBase):
 
         # Text bounding rectangle
         textRect.x += nPadding
-        textRect.y = rect.y + (rect.height - h)/2
+        textRect.y = rect.y + (rect.height - h)//2
         textRect.width = rect.width - 2 * nPadding
 
         if bmp.IsOk() and not self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
@@ -2086,7 +2086,7 @@ class LabelContainer(ImageContainerBase):
 
             imgRect.x += nPadding
             imgRect.width = bmp.GetWidth()
-            imgRect.y = rect.y + (rect.height - bmp.GetHeight())/2
+            imgRect.y = rect.y + (rect.height - bmp.GetHeight())//2
             imgRect.height = bmp.GetHeight()
 
         # Draw bounding rectangle
@@ -2496,7 +2496,7 @@ class FlatBookBase(wx.Panel):
             dc = wx.MemoryDC()
             dc.SelectObject(wx.Bitmap(1, 1))
             font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-            font.SetPointSize(font.GetPointSize()*self._fontSizeMultiple)
+            font.SetPointSize(int(font.GetPointSize()*self._fontSizeMultiple))
             if self.GetFontBold() or agwStyle & INB_BOLD_TAB_SELECTION:
                 font.SetWeight(wx.FONTWEIGHT_BOLD)
             dc.SetFont(font)

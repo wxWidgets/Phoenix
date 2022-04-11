@@ -213,7 +213,7 @@ class ShapedButtonDemo(wx.Frame):
                  wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Tahoma"),
                  fnt, wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, True, "Verdana")]
 
-        lcolours = [None, wx.WHITE, wx.Colour("Yellow"), wx.WHITE,
+        lcolours = [None, wx.WHITE, wx.YELLOW, wx.WHITE,
                     None, None, wx.BLUE, wx.WHITE, wx.WHITE]
 
         bsizer = wx.FlexGridSizer(3, 3, 5, 5)
@@ -266,7 +266,7 @@ class ShapedButtonDemo(wx.Frame):
         btn2.Bind(wx.EVT_BUTTON, self.OnTogglePlayStop)
 
         btn3 = SButton(self.panel, -1, "Rotated")
-        btn3.SetButtonColour(wx.Colour("Cyan"))
+        btn3.SetButtonColour(wx.CYAN)
         btn3.SetLabelColour(wx.WHITE)
         btn3.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         btn3.SetAngleOfRotation(90)
@@ -340,13 +340,13 @@ class ShapedButtonDemo(wx.Frame):
 
         file_menu = wx.Menu()
 
-        AS_EXIT = wx.NewId()
+        AS_EXIT = wx.NewIdRef()
         file_menu.Append(AS_EXIT, "&Exit")
         self.Bind(wx.EVT_MENU, self.OnClose, id=AS_EXIT)
 
         help_menu = wx.Menu()
 
-        AS_ABOUT = wx.NewId()
+        AS_ABOUT = wx.NewIdRef()
         help_menu.Append(AS_ABOUT, "&About...")
         self.Bind(wx.EVT_MENU, self.OnAbout, id=AS_ABOUT)
 
@@ -368,7 +368,7 @@ class ShapedButtonDemo(wx.Frame):
         msg = "This Is The About Dialog Of The ShapedButton Demo.\n\n" + \
               "Author: Andrea Gavana @ 18 Oct 2005\n\n" + \
               "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Adresses:\n\n" + \
+              "To Me At The Following Addresses:\n\n" + \
               "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 

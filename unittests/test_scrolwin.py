@@ -26,6 +26,9 @@ class scrolwin_Tests(wtc.WidgetTestCase):
         self.assertEqual(w.CalcScrolledPosition( (0,0) ),  (-3*rate,-3*rate)) # pixels
         self.assertEqual(w.CalcUnscrolledPosition( (0,0) ),(3*rate,3*rate))   # pixels
 
+        vs = w.GetVirtualSize()
+        assert isinstance(vs, wx.Size)
+
 
     def test_scrolwinCtor(self):
         w = wx.ScrolledWindow(self.frame)

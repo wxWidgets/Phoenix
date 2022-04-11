@@ -261,7 +261,7 @@ class RibbonPage(RibbonControl):
         Scroll the page by some amount up / down / left / right.
 
         When the page's children are too big to fit in the onscreen area given to the
-        page, scroll buttons will appear, and the page can be programatically scrolled.
+        page, scroll buttons will appear, and the page can be programmatically scrolled.
         Positive values of will scroll right or down, while negative values will scroll
         up or left (depending on the direction in which panels are stacked). A line is
         equivalent to a constant number of pixels.
@@ -284,7 +284,7 @@ class RibbonPage(RibbonControl):
         Scroll the page by a set number of pixels up / down / left / right.
 
         When the page's children are too big to fit in the onscreen area given to the
-        page, scroll buttons will appear, and the page can be programatically scrolled.
+        page, scroll buttons will appear, and the page can be programmatically scrolled.
         Positive values of will scroll right or down, while negative values will scroll
         up or left (depending on the direction in which panels are stacked).
 
@@ -418,7 +418,7 @@ class RibbonPage(RibbonControl):
         # When a resize triggers the scroll buttons to become visible, the page is resized.
         # This resize from within a resize event can cause (MSW) wxWidgets some confusion,
         # and report the 1st size to the 2nd size event. Hence the most recent size is
-        # remembered internally and used in Layout() where appropiate.
+        # remembered internally and used in Layout() where appropriate.
 
         if self.GetMajorAxis() == wx.HORIZONTAL:
             self._size_in_major_axis_for_children = width
@@ -561,7 +561,7 @@ class RibbonPage(RibbonControl):
 
                 if self._scroll_buttons_visible:
                     available_space -= self._scroll_amount
-                    if self._scroll_right_btn != None:
+                    if self._scroll_right_btn is not None:
                         available_space += GetSizeInOrientation(self._scroll_right_btn.GetSize(), major_axis)
 
                 if available_space > 0:
@@ -637,7 +637,7 @@ class RibbonPage(RibbonControl):
         self._scroll_buttons_visible = show_left or show_right
 
         if show_left:
-            if self._scroll_left_btn == None:
+            if self._scroll_left_btn is None:
 
                 temp_dc = wx.MemoryDC()
 
@@ -657,13 +657,13 @@ class RibbonPage(RibbonControl):
                 reposition = True
 
         else:
-            if self._scroll_left_btn != None:
+            if self._scroll_left_btn is not None:
                 self._scroll_left_btn.Destroy()
                 self._scroll_left_btn = None
                 reposition = True
 
         if show_right:
-            if self._scroll_right_btn == None:
+            if self._scroll_right_btn is None:
 
                 temp_dc = wx.MemoryDC()
 
@@ -684,7 +684,7 @@ class RibbonPage(RibbonControl):
                 reposition = True
 
         else:
-            if self._scroll_right_btn != None:
+            if self._scroll_right_btn is not None:
                 self._scroll_right_btn.Destroy()
                 self._scroll_right_btn = None
                 reposition = True
@@ -795,7 +795,7 @@ class RibbonPage(RibbonControl):
                                 largest_size = size
                                 largest_panel = panel
 
-            if largest_panel != None:
+            if largest_panel is not None:
                 if largest_panel.IsSizingContinuous():
                     size = largest_panel.GetSize()
                     amount = minimum_amount
@@ -850,7 +850,7 @@ class RibbonPage(RibbonControl):
             if not isinstance(panel, RibbonPanel):
                 continue
 
-            if panel.GetExpandedPanel() != None:
+            if panel.GetExpandedPanel() is not None:
                 return panel.HideExpanded()
 
         return False

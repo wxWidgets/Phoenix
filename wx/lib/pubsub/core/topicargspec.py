@@ -53,9 +53,9 @@ class ArgSpecGiven:
             self.argsDocs = argsDocs
 
             # check that all args marked as required are in argsDocs
-            missingArgs = set(self.reqdArgs).difference(self.argsDocs.keys()) # py3: iter keys ok
+            missingArgs = set(self.reqdArgs).difference(self.argsDocs)
             if missingArgs:
-                msg = 'Params [%s] missing inherited required args [%%s]' % ','.join(argsDocs.keys()) # iter keys ok
+                msg = 'Params [%s] missing inherited required args [%%s]' % ','.join(argsDocs)
                 raise MessageDataSpecError(msg, missingArgs)
 
     def setAll(self, allArgsDocs, reqdArgs = None):
@@ -68,7 +68,7 @@ class ArgSpecGiven:
         return self.argsSpecType == ArgSpecGiven.SPEC_GIVEN_ALL
 
     def getOptional(self):
-        return tuple( set( self.argsDocs.keys() ).difference( self.reqdArgs ) )
+        return tuple( set( self.argsDocs ).difference( self.reqdArgs ) )
 
     def __str__(self):
         return "%s, %s, %s" % \

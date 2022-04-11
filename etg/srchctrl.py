@@ -5,7 +5,7 @@
 #
 # Created:     9-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -42,30 +42,30 @@ def run():
 
     c.addCppMethod('void', 'SetSearchBitmap', '(const wxBitmap* bmp)',
             """\
-            #ifdef __WXMAC__
+            #if wxUSE_NATIVE_SEARCH_CONTROL
             #else
                 self->SetSearchBitmap(*bmp);
             #endif
             """)
     c.addCppMethod('void', 'SetSearchMenuBitmap', '(const wxBitmap* bmp)',
             """\
-            #ifdef __WXMAC__
+            #if wxUSE_NATIVE_SEARCH_CONTROL
             #else
                 self->SetSearchMenuBitmap(*bmp);
             #endif
             """)
     c.addCppMethod('void', 'SetCancelBitmap', '(const wxBitmap* bmp)',
             """\
-            #ifdef __WXMAC__
+            #if wxUSE_NATIVE_SEARCH_CONTROL
             #else
-                self->SetSearchMenuBitmap(*bmp);
+                self->SetCancelBitmap(*bmp);
             #endif
             """)
 
     searchCtrl = c
 
 
-    # The safest way to reconcile the differences in the class hierachy
+    # The safest way to reconcile the differences in the class hierarchy
     # between the native wxSearchCtrl on Mac and the generic one on the other
     # platforms is to just say that this class derives directly from
     # wxControl (the first common ancestor) instead of wxTextCtrl, and then
@@ -85,25 +85,6 @@ def run():
     klass = mod.find('wxTextEntry')
     searchCtrl.items.extend(klass.items)
 
-    # Do the same with wxTextCtrl, but also remove things like the
-    # Constructors and Create methods first.
-    import textctrl
-    mod = textctrl.parseAndTweakModule()
-    klass = mod.find('wxTextCtrl')
-    # get just the methods that are not ctors, dtor or Create
-    items = [item for item in klass.items if isinstance(item, etgtools.MethodDef) and
-                                             not item.isCtor and
-                                             not item.isDtor and
-                                             item.name != 'Create']
-    searchCtrl.items.extend(items)
-
-
-    searchCtrl.find('LoadFile').ignore()
-    searchCtrl.find('SaveFile').ignore()
-    searchCtrl.find('MacCheckSpelling').ignore()
-    searchCtrl.find('ShowNativeCaret').ignore()
-    searchCtrl.find('HideNativeCaret').ignore()
-
 
     # Add some properties that autoProperties would not see because they are
     # not using 'Get' and 'Set'
@@ -113,12 +94,16 @@ def run():
     tools.fixWindowClass(searchCtrl)
 
     module.addPyCode("""\
-        EVT_SEARCHCTRL_CANCEL_BTN = wx.PyEventBinder( wxEVT_SEARCHCTRL_CANCEL_BTN, 1)
-        EVT_SEARCHCTRL_SEARCH_BTN = wx.PyEventBinder( wxEVT_SEARCHCTRL_SEARCH_BTN, 1)
+        EVT_SEARCH_CANCEL = wx.PyEventBinder( wxEVT_SEARCH_CANCEL, 1)
+        EVT_SEARCH = wx.PyEventBinder( wxEVT_SEARCH, 1)
 
         # deprecated wxEVT aliases
+        wxEVT_SEARCHCTRL_CANCEL_BTN = wxEVT_SEARCH_CANCEL
+        wxEVT_SEARCHCTRL_SEARCH_BTN = wxEVT_SEARCH
         wxEVT_COMMAND_SEARCHCTRL_CANCEL_BTN  = wxEVT_SEARCHCTRL_CANCEL_BTN
         wxEVT_COMMAND_SEARCHCTRL_SEARCH_BTN  = wxEVT_SEARCHCTRL_SEARCH_BTN
+        EVT_SEARCHCTRL_CANCEL_BTN = wx.PyEventBinder( wxEVT_SEARCHCTRL_CANCEL_BTN, 1)
+        EVT_SEARCHCTRL_SEARCH_BTN = wx.PyEventBinder( wxEVT_SEARCHCTRL_SEARCH_BTN, 1)
         """)
 
     #-----------------------------------------------------------------

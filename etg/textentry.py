@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     03-Nov-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -46,6 +46,9 @@ def parseAndTweakModule():
     c.find('SetSelection.from').name = 'from_'
     c.find('SetSelection.to').name = 'to_'
     c.find('AutoComplete').findOverload('wxTextCompleter').find('completer').transfer = True
+
+    # Re-enable virtualness for (Can)Cut/Copy/Paste/Undo/Redo
+    tools.fixTextClipboardMethods(c)
 
     return module
 

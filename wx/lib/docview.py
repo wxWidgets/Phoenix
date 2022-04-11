@@ -16,6 +16,7 @@ import os.path
 import shutil
 import wx
 import sys
+from functools import cmp_to_key
 _ = wx.GetTranslation
 
 
@@ -319,7 +320,7 @@ class Document(wx.EvtHandler):
         Calls :meth:`View.Close` and deletes each view. Deleting the final view will
         implicitly delete the document itself, because the wxView destructor
         calls RemoveView. This in turn calls :meth:`Document.OnChangedViewList`,
-        whose default implemention is to save and delete the document if no
+        whose default implementation is to save and delete the document if no
         views exist.
         """
         manager = self.GetDocumentManager()
@@ -1315,31 +1316,31 @@ class DocManager(wx.EvtHandler):
         if initialize:
             self.Initialize()
 
-        wx.EVT_MENU(self, wx.ID_OPEN, self.OnFileOpen)
-        wx.EVT_MENU(self, wx.ID_CLOSE, self.OnFileClose)
-        wx.EVT_MENU(self, wx.ID_CLOSE_ALL, self.OnFileCloseAll)
-        wx.EVT_MENU(self, wx.ID_REVERT, self.OnFileRevert)
-        wx.EVT_MENU(self, wx.ID_NEW, self.OnFileNew)
-        wx.EVT_MENU(self, wx.ID_SAVE, self.OnFileSave)
-        wx.EVT_MENU(self, wx.ID_SAVEAS, self.OnFileSaveAs)
-        wx.EVT_MENU(self, wx.ID_UNDO, self.OnUndo)
-        wx.EVT_MENU(self, wx.ID_REDO, self.OnRedo)
-        wx.EVT_MENU(self, wx.ID_PRINT, self.OnPrint)
-        wx.EVT_MENU(self, wx.ID_PRINT_SETUP, self.OnPrintSetup)
-        wx.EVT_MENU(self, wx.ID_PREVIEW, self.OnPreview)
+        self.Bind(wx.EVT_MENU, self.OnFileOpen, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_MENU, self.OnFileClose, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_MENU, self.OnFileCloseAll, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_MENU, self.OnFileRevert, id=wx.ID_REVERT)
+        self.Bind(wx.EVT_MENU, self.OnFileNew, id=wx.ID_NEW)
+        self.Bind(wx.EVT_MENU, self.OnFileSave, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_MENU, self.OnFileSaveAs, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU, self.OnUndo, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_MENU, self.OnRedo, id=wx.ID_REDO)
+        self.Bind(wx.EVT_MENU, self.OnPrint, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_MENU, self.OnPrintSetup, id=wx.ID_PRINT_SETUP)
+        self.Bind(wx.EVT_MENU, self.OnPreview, id=wx.ID_PREVIEW)
 
-        wx.EVT_UPDATE_UI(self, wx.ID_OPEN, self.OnUpdateFileOpen)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLOSE, self.OnUpdateFileClose)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLOSE_ALL, self.OnUpdateFileCloseAll)
-        wx.EVT_UPDATE_UI(self, wx.ID_REVERT, self.OnUpdateFileRevert)
-        wx.EVT_UPDATE_UI(self, wx.ID_NEW, self.OnUpdateFileNew)
-        wx.EVT_UPDATE_UI(self, wx.ID_SAVE, self.OnUpdateFileSave)
-        wx.EVT_UPDATE_UI(self, wx.ID_SAVEAS, self.OnUpdateFileSaveAs)
-        wx.EVT_UPDATE_UI(self, wx.ID_UNDO, self.OnUpdateUndo)
-        wx.EVT_UPDATE_UI(self, wx.ID_REDO, self.OnUpdateRedo)
-        wx.EVT_UPDATE_UI(self, wx.ID_PRINT, self.OnUpdatePrint)
-        wx.EVT_UPDATE_UI(self, wx.ID_PRINT_SETUP, self.OnUpdatePrintSetup)
-        wx.EVT_UPDATE_UI(self, wx.ID_PREVIEW, self.OnUpdatePreview)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateFileOpen, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateFileClose, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateFileCloseAll, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateFileRevert, id=wx.ID_REVERT)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateFileNew, id=wx.ID_NEW)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateFileSave, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateFileSaveAs, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUndo, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateRedo, id=wx.ID_REDO)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdatePrint, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdatePrintSetup, id=wx.ID_PRINT_SETUP)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdatePreview, id=wx.ID_PREVIEW)
 
 
     def Destroy(self):
@@ -1594,21 +1595,21 @@ class DocManager(wx.EvtHandler):
         """
         Updates the user interface for the File Close command.
         """
-        event.Enable(self.GetCurrentDocument() != None)
+        event.Enable(self.GetCurrentDocument() is not None)
 
 
     def OnUpdateFileCloseAll(self, event):
         """
         Updates the user interface for the File Close All command.
         """
-        event.Enable(self.GetCurrentDocument() != None)
+        event.Enable(self.GetCurrentDocument() is not None)
 
 
     def OnUpdateFileRevert(self, event):
         """
         Updates the user interface for the File Revert command.
         """
-        event.Enable(self.GetCurrentDocument() != None)
+        event.Enable(self.GetCurrentDocument() is not None)
 
 
     def OnUpdateFileNew(self, event):
@@ -1623,14 +1624,14 @@ class DocManager(wx.EvtHandler):
         Updates the user interface for the File Save command.
         """
         doc = self.GetCurrentDocument()
-        event.Enable(doc != None and doc.IsModified())
+        event.Enable(doc is not None and doc.IsModified())
 
 
     def OnUpdateFileSaveAs(self, event):
         """
         Updates the user interface for the File Save As command.
         """
-        event.Enable(self.GetCurrentDocument() != None and self.GetCurrentDocument().GetWriteable())
+        event.Enable(self.GetCurrentDocument() is not None and self.GetCurrentDocument().GetWriteable())
 
 
     def OnUpdateUndo(self, event):
@@ -1638,7 +1639,7 @@ class DocManager(wx.EvtHandler):
         Updates the user interface for the Undo command.
         """
         doc = self.GetCurrentDocument()
-        event.Enable(doc != None and doc.GetCommandProcessor() != None and doc.GetCommandProcessor().CanUndo())
+        event.Enable(doc is not None and doc.GetCommandProcessor() is not None and doc.GetCommandProcessor().CanUndo())
         if doc and doc.GetCommandProcessor():
             doc.GetCommandProcessor().SetMenuStrings()
         else:
@@ -1650,7 +1651,7 @@ class DocManager(wx.EvtHandler):
         Updates the user interface for the Redo command.
         """
         doc = self.GetCurrentDocument()
-        event.Enable(doc != None and doc.GetCommandProcessor() != None and doc.GetCommandProcessor().CanRedo())
+        event.Enable(doc is not None and doc.GetCommandProcessor() is not None and doc.GetCommandProcessor().CanRedo())
         if doc and doc.GetCommandProcessor():
             doc.GetCommandProcessor().SetMenuStrings()
         else:
@@ -1661,7 +1662,7 @@ class DocManager(wx.EvtHandler):
         """
         Updates the user interface for the Print command.
         """
-        event.Enable(self.GetCurrentDocument() != None)
+        event.Enable(self.GetCurrentDocument() is not None)
 
 
     def OnUpdatePrintSetup(self, event):
@@ -1675,7 +1676,7 @@ class DocManager(wx.EvtHandler):
         """
         Updates the user interface for the Print Preview command.
         """
-        event.Enable(self.GetCurrentDocument() != None)
+        event.Enable(self.GetCurrentDocument() is not None)
 
 
     def GetCurrentView(self):
@@ -2111,7 +2112,7 @@ class DocManager(wx.EvtHandler):
         only an approximate method of finding a template for creating a
         document.
 
-        Note this wxPython verson looks for and returns a default template
+        Note this wxPython version looks for and returns a default template
         if no specific template is found.
         """
         default = None
@@ -2219,7 +2220,7 @@ class DocManager(wx.EvtHandler):
         if sort:
             def tempcmp(a, b):
                 return cmp(a.GetDescription(), b.GetDescription())
-            templates.sort(tempcmp)
+            templates.sort(key=cmp_to_key(tempcmp))
 
         strings = []
         for temp in templates:
@@ -2259,7 +2260,7 @@ class DocManager(wx.EvtHandler):
         if sort:
             def tempcmp(a, b):
                 return cmp(a.GetViewTypeName(), b.GetViewTypeName())
-            templates.sort(tempcmp)
+            templates.sort(key=cmp_to_key(tempcmp))
 
         res = wx.GetSingleChoiceIndex(_("Select a document view:"),
                                       _("Views"),
@@ -2365,36 +2366,36 @@ class DocParentFrame(wx.Frame):
         wx.Frame.__init__(self, frame, id, title, pos, size, style)
         self._docManager = manager
 
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-        wx.EVT_MENU(self, wx.ID_EXIT, self.OnExit)
-        wx.EVT_MENU_RANGE(self, wx.ID_FILE1, wx.ID_FILE9, self.OnMRUFile)
+        self.Bind(wx.EVT_MENU, self.OnExit, id=wx.ID_EXIT)
+        self.Bind(wx.EVT_MENU_RANGE, self.OnMRUFile, id=wx.ID_FILE1, id2=wx.ID_FILE9)
 
-        wx.EVT_MENU(self, wx.ID_NEW, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_OPEN, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_CLOSE_ALL, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_CLOSE, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_REVERT, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_SAVE, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_SAVEAS, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_UNDO, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_REDO, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PRINT, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PRINT_SETUP, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PREVIEW, self.ProcessEvent)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_NEW)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_REVERT)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_REDO)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PRINT_SETUP)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PREVIEW)
 
-        wx.EVT_UPDATE_UI(self, wx.ID_NEW, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_OPEN, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLOSE_ALL, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLOSE, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_REVERT, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_SAVE, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_SAVEAS, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_UNDO, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_REDO, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PRINT, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PRINT_SETUP, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PREVIEW, self.ProcessUpdateUIEvent)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_NEW)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_REVERT)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_REDO)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PRINT_SETUP)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PREVIEW)
 
 
     def ProcessEvent(self, event):
@@ -2468,38 +2469,38 @@ class DocChildFrame(wx.Frame):
         Constructor.
         """
         wx.Frame.__init__(self, frame, id, title, pos, size, style, name)
-        wx.EVT_ACTIVATE(self, self.OnActivate)
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_ACTIVATE, self.OnActivate)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         self._childDocument = doc
         self._childView = view
         if view:
             view.SetFrame(self)
 
-        wx.EVT_MENU(self, wx.ID_NEW, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_OPEN, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_CLOSE_ALL, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_CLOSE, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_REVERT, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_SAVE, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_SAVEAS, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_UNDO, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_REDO, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PRINT, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PRINT_SETUP, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PREVIEW, self.ProcessEvent)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_NEW)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_REVERT)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_REDO)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PRINT_SETUP)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PREVIEW)
 
-        wx.EVT_UPDATE_UI(self, wx.ID_NEW, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_OPEN, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLOSE_ALL, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLOSE, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_REVERT, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_SAVE, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_SAVEAS, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_UNDO, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_REDO, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PRINT, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PRINT_SETUP, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PREVIEW, self.ProcessUpdateUIEvent)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_NEW)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_REVERT)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_REDO)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PRINT_SETUP)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PREVIEW)
 
 
     def ProcessEvent(self, event):
@@ -2611,36 +2612,36 @@ class DocMDIParentFrame(wx.MDIParentFrame):
         wx.MDIParentFrame.__init__(self, frame, id, title, pos, size, style, name)
         self._docManager = manager
 
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-        wx.EVT_MENU(self, wx.ID_EXIT, self.OnExit)
-        wx.EVT_MENU_RANGE(self, wx.ID_FILE1, wx.ID_FILE9, self.OnMRUFile)
+        self.Bind(wx.EVT_MENU, self.OnExit, id=wx.ID_EXIT)
+        self.Bind(wx.EVT_MENU_RANGE, self.OnMRUFile, id=wx.ID_FILE1, id2=wx.ID_FILE9)
 
-        wx.EVT_MENU(self, wx.ID_NEW, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_OPEN, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_CLOSE_ALL, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_CLOSE, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_REVERT, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_SAVE, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_SAVEAS, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_UNDO, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_REDO, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PRINT, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PRINT_SETUP, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PREVIEW, self.ProcessEvent)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_NEW)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_REVERT)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_REDO)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PRINT_SETUP)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PREVIEW)
 
-        wx.EVT_UPDATE_UI(self, wx.ID_NEW, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_OPEN, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLOSE_ALL, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLOSE, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_REVERT, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_SAVE, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_SAVEAS, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_UNDO, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_REDO, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PRINT, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PRINT_SETUP, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PREVIEW, self.ProcessUpdateUIEvent)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_NEW)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_REVERT)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_REDO)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PRINT_SETUP)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PREVIEW)
 
 
     def ProcessEvent(self, event):
@@ -2722,8 +2723,8 @@ class DocMDIChildFrame(wx.MDIChildFrame):
         # self.Create(doc, view, frame, id, title, pos, size, style, name)
         self._activeEvent = None
         self._activated = 0
-        wx.EVT_ACTIVATE(self, self.OnActivate)
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_ACTIVATE, self.OnActivate)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         if frame:  # wxBug: For some reason the EVT_ACTIVATE event is not getting triggered for the first mdi client window that is opened so we have to do it manually
             mdiChildren = filter(lambda x: isinstance(x, wx.MDIChildFrame), frame.GetChildren())
@@ -3115,7 +3116,7 @@ class CommandProcessor(wx.Object):
         Sets the menu labels according to the currently set menu and the
         current command state.
         """
-        if self.GetEditMenu() != None:
+        if self.GetEditMenu() is not None:
             undoCommand = self._GetCurrentCommand()
             redoCommand = self._GetCurrentRedoCommand()
             undoItem = self.GetEditMenu().FindItemById(wx.ID_UNDO)
@@ -3145,7 +3146,7 @@ class CommandProcessor(wx.Object):
         Returns ``True`` if the currently-active command can be undone,
         ``False`` otherwise.
         """
-        if self._GetCurrentCommand() == None:
+        if self._GetCurrentCommand() is None:
             return False
         return self._GetCurrentCommand().CanUndo()
 
@@ -3155,7 +3156,7 @@ class CommandProcessor(wx.Object):
         Returns ``True`` if the currently-active command can be redone,
         ``False`` otherwise.
         """
-        return self._GetCurrentRedoCommand() != None
+        return self._GetCurrentRedoCommand() is not None
 
 
     def Submit(self, command, storeIt=True):

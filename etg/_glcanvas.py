@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -19,7 +19,10 @@ These classes enable viewing and interacting with an OpenGL context in a wx.Wind
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'wxGLContext',
+ITEMS  = [ 'wxGLAttribsBase',
+           'wxGLAttributes',
+           'wxGLContextAttrs',
+           'wxGLContext',
            'wxGLCanvas',
           ]
 
@@ -50,7 +53,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode('#include <wxpy_api.h>')
+    module.addHeaderCode('#include <wxPython/wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode('import wx', order=10)
     module.addInclude(INCLUDES)
@@ -60,6 +63,11 @@ def run():
 
     module.addHeaderCode('#include <wx/glcanvas.h>')
 
+    tools.generateStubs('wxUSE_GLCANVAS', module,
+                        extraHdrCode='#define wxGLCanvasName wxT("GLCanvas")\n',
+                        typeValMap={'wxGLAttributes &': '*this',
+                                    'wxGLContextAttrs &': '*this',
+                                    })
 
     c = module.find('wxGLContext')
     assert isinstance(c, etgtools.ClassDef)
@@ -67,19 +75,27 @@ def run():
     c.addPrivateCopyCtor()
 
 
+    c = module.find('wxGLAttribsBase')
+    assert isinstance(c, etgtools.ClassDef)
+    c.find('GetGLAttrs').ignore()
 
     c = module.find('wxGLCanvas')
     tools.fixWindowClass(c)
 
     # We already have a MappedType for wxArrayInt, so just tweak the
     # interfaces to use that instead of a const int pointer.
-    c.find('wxGLCanvas').ignore()
+    c.find('wxGLCanvas').findOverload('const int *attribList').ignore()
     m = c.addCppCtor_sip(
         argsString="""(
-             wxWindow* parent, wxWindowID id=wxID_ANY, wxArrayInt* attribList=NULL,
-             const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize,
-             long style=0, const wxString& name="GLCanvas",
-             const wxPalette& palette=wxNullPalette)""",
+             wxWindow* parent /TransferThis/,
+             wxWindowID id=wxID_ANY,
+             wxArrayInt* attribList=NULL,
+             const wxPoint& pos=wxDefaultPosition,
+             const wxSize& size=wxDefaultSize,
+             long style=0,
+             const wxString& name="GLCanvas",
+             const wxPalette& palette=wxNullPalette)
+             """,
         cppSignature="""(
              wxWindow* parent, wxWindowID id=wxID_ANY, const int* attribList=NULL,
              const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize,
@@ -88,20 +104,24 @@ def run():
         pyArgsString="(parent, id=wx.ID_ANY, attribList=None, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, name='GLCanvas', palette=wx.NullPalette)",
         body="""\
             const int* attribPtr = NULL;
-            if (attribList)
+            if (attribList) {
+                attribList->push_back(0); // ensure it is zero-terminated
                 attribPtr = &attribList->front();
+            }
             sipCpp = new sipwxGLCanvas(parent, id, attribPtr, *pos, *size, style, *name, *palette);
             """,
         noDerivedCtor=False,
         )
 
 
-    m = c.find('IsDisplaySupported')
+    m = c.find('IsDisplaySupported').findOverload('attribList')
     m.find('attribList').type = 'wxArrayInt*'
     m.setCppCode_sip("""\
         const int* attribPtr = NULL;
-        if (attribList)
+        if (attribList) {
+            attribList->push_back(0); // ensure it is zero-terminated
             attribPtr = &attribList->front();
+        }
         sipRes = wxGLCanvas::IsDisplaySupported(attribPtr);
         """)
 

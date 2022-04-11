@@ -15,7 +15,7 @@ The style ``wx.SP_3D`` has been used to show a 3D border and 3D sash.
 
 .. figure:: _static/images/overviews/overview_splitter_3d.png
    :align: center
-   
+
 
 
 Example
@@ -47,7 +47,7 @@ after creation::
 
 	    if splitter.IsSplit():
 		splitter.Unsplit()
-		
+
 	    leftWindow.Show(True)
 	    rightWindow.Show(True)
 	    splitter.SplitVertically(leftWindow, rightWindow)
@@ -57,7 +57,7 @@ after creation::
 
 	    if splitter.IsSplit():
 		splitter.Unsplit()
-		
+
 	    leftWindow.Show(True)
 	    rightWindow.Show(True)
 	    splitter.SplitHorizontally(leftWindow, rightWindow)
@@ -67,6 +67,6 @@ after creation::
 
 	    if splitter.IsSplit():
 		splitter.Unsplit()
-		
-		
+
+
 

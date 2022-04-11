@@ -65,7 +65,7 @@ def testForContinuations(codeBlock,ignoreErrors=False):
                 #print('Invalid Indentation!!')
                 return ['Invalid Indentation Error',i]
 
-        firstWord = re.match(' *\w*',l).group().lstrip()
+        firstWord = re.match(r' *\w*',l).group().lstrip()
         if firstWord in ['if','else','elif','for','while',
                          'def','class','try','except','finally']:
             hasContinuationWord = True
@@ -80,7 +80,7 @@ def testForContinuations(codeBlock,ignoreErrors=False):
         for r in result:
             j = r.group()
 
-            if stringMark == None:
+            if stringMark is None:
                 if j=='#': # If it is a legitimate comment, ignore everything after
                     commented=True
                     # get length up to last non-comment character

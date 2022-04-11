@@ -5,7 +5,7 @@
 #
 # Created:     26-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -28,6 +28,8 @@ ITEMS  = [ 'wxFontMetrics',
            'wxDCPenChanger',
            'wxDCTextColourChanger',
            'wxDCFontChanger',
+           'wxDCTextBgColourChanger',
+           'wxDCTextBgModeChanger',
            ]
 
 OTHERDEPS = [ 'src/dc_ex.cpp', ]
@@ -50,6 +52,8 @@ def run():
     c.addPrivateCopyCtor()
     c.addPublic()
     tools.removeVirtuals(c)
+
+    c.addDtor('public', True)
 
     # Keep only the wxSize overloads of these
     c.find('GetSize').findOverload('wxCoord').ignore()
@@ -80,13 +84,17 @@ def run():
     c.find('GetLogicalOrigin.x').out = True
     c.find('GetLogicalOrigin.y').out = True
 
+    c.find('GetClippingBox').findOverload('wxRect').ignore()
     c.find('GetClippingBox.x').out = True
     c.find('GetClippingBox.y').out = True
     c.find('GetClippingBox.width').out = True
     c.find('GetClippingBox.height').out = True
     c.addPyMethod('GetClippingRect', '(self)',
-        doc="Gets the rectangle surrounding the current clipping region",
-        body="return wx.Rect(*self.GetClippingBox())")
+        doc="Returns the rectangle surrounding the current clipping region as a wx.Rect.",
+        body="""\
+            rv, x, y, w, h = self.GetClippingBox()
+            return wx.Rect(x,y,w,h)
+            """)
 
 
     # Deal with the text-extent methods. In Classic we renamed one overloaded
@@ -190,7 +198,17 @@ def run():
     # compatibility.
     c.find('GetPixel').ignore()
     c.addCppMethod('wxColour*', 'GetPixel', '(wxCoord x, wxCoord y)',
-        doc="Gets the colour at the specified location on the DC.",
+        doc="""\
+            Gets the colour at the specified location on the DC.
+
+            This method isn't available for ``wx.PostScriptDC`` or ``wx.MetafileDC`` nor
+            for any DC in wxOSX port, and simply returns ``wx.NullColour`` there.
+
+            .. note:: Setting a pixel can be done using DrawPoint().
+
+            .. note:: This method shouldn't be used with ``wx.PaintDC`` as accessing the
+                      DC while drawing can result in unexpected results, notably in wxGTK.
+            """,
         body="""\
             wxColour* col = new wxColour;
             self->GetPixel(x, y, col);
@@ -223,9 +241,8 @@ def run():
         """)
 
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addPyMethod('GetBoundingBox', '(self)', doc="""\
         GetBoundingBox() -> (x1,y1, x2,y2)\n
@@ -233,23 +250,28 @@ def run():
         body="return (self.MinX(), self.MinY(), self.MaxX(), self.MaxY())")
 
 
+    m = c.find('GetHandle')
+    m.type = 'wxUIntPtr*'
+    m.setCppCode("return new wxUIntPtr((wxUIntPtr)self->GetHandle());")
+
+
     c.addCppMethod('long', 'GetHDC', '()', """\
         #ifdef __WXMSW__
-            return (long)self->GetHandle();
+            return HandleToLong(self->GetHandle());
         #else
             wxPyRaiseNotImplemented();
             return 0;
         #endif""")
-    c.addCppMethod('void*', 'GetCGContext', '()', """\
+    c.addCppMethod('wxUIntPtr*', 'GetCGContext', '()', """\
         #ifdef __WXMAC__
-            return self->GetHandle();
+            return new wxUIntPtr((wxUIntPtr)self->GetHandle());
         #else
             wxPyRaiseNotImplemented();
             return NULL;
         #endif""")
-    c.addCppMethod('void*', 'GetGdkDrawable', '()', """\
+    c.addCppMethod('wxUIntPtr*', 'GetGdkDrawable', '()', """\
         #ifdef __WXGTK__
-            return self->GetHandle();
+            return new wxUIntPtr((wxUIntPtr)self->GetHandle());
         #else
             wxPyRaiseNotImplemented();
             return NULL;
@@ -258,6 +280,10 @@ def run():
     c.addPyCode('DC.GetHDC = wx.deprecated(DC.GetHDC, "Use GetHandle instead.")')
     c.addPyCode('DC.GetCGContext = wx.deprecated(DC.GetCGContext, "Use GetHandle instead.")')
     c.addPyCode('DC.GetGdkDrawable = wx.deprecated(DC.GetGdkDrawable, "Use GetHandle instead.")')
+
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Destroy()')
 
 
     # This file contains implementations of functions for quickly drawing
@@ -284,6 +310,9 @@ def run():
         '(PyObject* textList, PyObject* pyPoints, PyObject* foregroundList, PyObject* backgroundList)',
         body="return wxPyDrawTextList(*self, textList, pyPoints, foregroundList, backgroundList);")
 
+    c.addCppMethod('PyObject*', '_DrawLinesFromBuffer',
+        '(PyObject* pyBuff)',
+        body="return wxPyDrawLinesFromBuffer(*self, pyBuff);")
 
     c.addPyMethod('DrawPointList', '(self, points, pens=None)',
         doc="""\
@@ -449,6 +478,28 @@ def run():
             """)
 
 
+    c.addPyMethod('DrawLinesFromBuffer', '(self, pyBuff)',
+        doc="""\
+            Implementation of DrawLines that can use numpy arrays, or anything else that uses the
+            python buffer protocol directly without any element conversion.  This provides a 
+            significant performance increase over the standard DrawLines function.
+            
+            The pyBuff argument needs to provide an array of C integers organized as 
+            x, y point pairs.  The size of a C integer is platform dependent.
+            With numpy, the intc data type will provide the appropriate element size.
+
+            If called with an object that doesn't support
+            the python buffer protocol, or if the underlying element size does not
+            match the size of a C integer, a TypeError exception is raised.  If 
+            the buffer provided has float data with the same element size as a 
+            C integer, no error will be raised, but the lines will not be drawn
+            in the appropriate places.
+
+            :param pyBuff:    A python buffer containing integer pairs
+            """,
+        body="""\
+            return  self._DrawLinesFromBuffer(pyBuff)
+            """)
 
 
     #-----------------------------------------------------------------
@@ -489,6 +540,24 @@ def run():
 
     #-----------------------------------------------------------------
     c = module.find('wxDCFontChanger')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
+
+    #-----------------------------------------------------------------
+    c = module.find('wxDCTextBgColourChanger')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
+
+    #-----------------------------------------------------------------
+    c = module.find('wxDCTextBgModeChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     # context manager methods

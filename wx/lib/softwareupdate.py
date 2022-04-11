@@ -7,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     1-Aug-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags:        py3-port??
@@ -85,7 +85,7 @@ class SoftwareUpdate(object):
         base URL (with a trailing '/') for the location of the update
         packages, or an instance of a class derived from the
         esky.finder.VersionFinder class is required. A custom VersionFinder
-        can be used to find and fetch the newer verison of the software in
+        can be used to find and fetch the newer version of the software in
         some other way, if desired.
 
         Call this method from the app's OnInit method.
@@ -156,9 +156,8 @@ class SoftwareUpdate(object):
                 newest = self._esky.find_update()
                 chLogTxt = ''
                 if newest is not None and self._changelogURL:
-                    req = urlopen(self._changelogURL, timeout=4)
-                    chLogTxt = req.read()
-                    req.close()
+                    with urlopen(self._changelogURL, timeout=4) as req:
+                        chLogTxt = req.read()
                 return (newest, chLogTxt)
 
             except URLError:
@@ -189,7 +188,7 @@ class SoftwareUpdate(object):
             newest, chLogTxt = result
             if newest is None:
                 if not silentUnlessUpdate:
-                    MultiMessageBox("You are already running the newest verison of %s." %
+                    MultiMessageBox("You are already running the newest version of %s." %
                                     self.GetAppDisplayName(),
                                     self._caption, parent=parentWindow, icon=self._icon,
                                     style=wx.OK|SOT)
@@ -197,7 +196,7 @@ class SoftwareUpdate(object):
             self._parentWindow = parentWindow
 
             resp = MultiMessageBox("A new version of %s is available.\n\n"
-                   "You are currently running verison %s; version %s is now "
+                   "You are currently running version %s; version %s is now "
                    "available for download.  Do you wish to install it now?"
                    % (self.GetAppDisplayName(), active, newest),
                    self._caption, msg2=chLogTxt, style=wx.YES_NO|SOT,
@@ -227,9 +226,9 @@ class SoftwareUpdate(object):
 
             try:
                 # Let Esky handle all the rest of the update process so we can
-                # take advantage of the error checking and priviledge elevation
-                # (if neccessary) that they have done so we don't have to worry
-                # about that ourselves like we would if we broke down the proccess
+                # take advantage of the error checking and privilege elevation
+                # (if necessary) that they have done so we don't have to worry
+                # about that ourselves like we would if we broke down the process
                 # into component steps.
                 self._esky.auto_update(self._updateProgress)
 
@@ -269,7 +268,7 @@ class SoftwareUpdate(object):
                 info.exe = exe
 
                 # Make sure the CWD not in the current version's appdir, so it can
-                # hopefully be cleaned up either as we exit or as the next verison
+                # hopefully be cleaned up either as we exit or as the next version
                 # is starting.
                 os.chdir(os.path.dirname(exe))
 

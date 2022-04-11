@@ -14,7 +14,7 @@ class statbmp_Tests(wtc.WidgetTestCase):
     def test_statbmpCtor(self):
         bmp = wx.Bitmap(pngFile)
         sb = wx.StaticBitmap(self.frame, -1, bmp)
-        sb = wx.StaticBitmap(self.frame, label=bmp)
+        sb = wx.StaticBitmap(self.frame, bitmap=bmp)
 
 
     def test_statbmpDefaultCtor(self):
@@ -25,7 +25,7 @@ class statbmp_Tests(wtc.WidgetTestCase):
 
     def test_statbmpProperties(self):
         bmp = wx.Bitmap(pngFile)
-        sb = wx.StaticBitmap(self.frame, label=bmp)
+        sb = wx.StaticBitmap(self.frame, bitmap=bmp)
 
         sb.Bitmap
         sb.Bitmap = wx.Bitmap(pngFile2)

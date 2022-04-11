@@ -385,9 +385,9 @@ class BalloonFrame(wx.Frame):
 
         bmp = wx.Bitmap(size.x,size.y)
         dc = wx.BufferedDC(None, bmp)
-        dc.SetBackground(wx.Brush(wx.Colour(0,0,0)))
+        dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
-        dc.SetPen(wx.Pen(wx.Colour(0,0,0), 1, wx.PENSTYLE_TRANSPARENT))
+        dc.SetPen(wx.Pen(wx.BLACK, 1, wx.PENSTYLE_TRANSPARENT))
 
         if self._shape == BT_ROUNDED:
             dc.DrawRoundedRectangle(0, 20, boxwidth, boxheight-20, 12)
@@ -407,7 +407,7 @@ class BalloonFrame(wx.Frame):
         else:
             dc.DrawPolygon(((20, boxheight), (20, boxheight+20), (40, boxheight)))
 
-        r = wx.Region(bmp, wx.Colour(0, 0, 0))
+        r = wx.Region(bmp, wx.BLACK)
         self.hasShape = self.SetShape(r)
 
         if self._tipstyle == BT_BUTTON:
@@ -615,7 +615,7 @@ class BalloonTip(object):
         if delay < 1:
             raise Exception("\nERROR: Delay Time For BalloonTip Creation Should Be Greater Than 1 ms")
 
-        self._startdelaytime = float(delay)
+        self._startdelaytime = int(delay)
 
 
     def GetStartDelay(self):
@@ -640,7 +640,7 @@ class BalloonTip(object):
         if delay < 1:
             raise Exception("\nERROR: Delay Time For BalloonTip Destruction Should Be Greater Than 1 ms")
 
-        self._enddelaytime = float(delay)
+        self._enddelaytime = int(delay)
 
 
     def GetEndDelay(self):

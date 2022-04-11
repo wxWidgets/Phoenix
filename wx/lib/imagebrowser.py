@@ -76,21 +76,35 @@ A simple usage would be::
 """
 
 import  os
-import  sys
 import  wx
+
+if 'wxOSX' in wx.PlatformInfo:
+    # The wx.BitmapButton doesn't do so well on OSX with very small bitmaps,
+    # so use a custom class there.
+    import wx.lib.buttons
+    class BitmapButton(wx.lib.buttons.GenBitmapButton):
+        def __init__(self, *args, **kw):
+            super(BitmapButton, self).__init__(*args, **kw)
+            self.SetBezelWidth(1)
+            self.SetInitialSize()
+            print(self.GetSize(), self.GetBestSize())
+
+else:
+    BitmapButton = wx.BitmapButton
+
 
 _ = wx.GetTranslation
 
 #---------------------------------------------------------------------------
 
 BAD_IMAGE = -1
-ID_WHITE_BG = wx.NewId()
-ID_BLACK_BG = wx.NewId()
-ID_GREY_BG = wx.NewId()
-ID_CHECK_BG = wx.NewId()
-ID_NO_FRAME = wx.NewId()
-ID_BOX_FRAME = wx.NewId()
-ID_CROP_FRAME = wx.NewId()
+ID_WHITE_BG = wx.NewIdRef()
+ID_BLACK_BG = wx.NewIdRef()
+ID_GREY_BG = wx.NewIdRef()
+ID_CHECK_BG = wx.NewIdRef()
+ID_NO_FRAME = wx.NewIdRef()
+ID_BOX_FRAME = wx.NewIdRef()
+ID_CROP_FRAME = wx.NewIdRef()
 
 def ConvertBMP(file_nm):
     """
@@ -117,20 +131,25 @@ def ConvertBMP(file_nm):
     return BAD_IMAGE
 
 
-def GetCheckeredBitmap(blocksize=8, ntiles=4, rgb0='\xFF', rgb1='\xCC'):
+def GetCheckeredBitmap(blocksize=8, ntiles=4, rgb0=b'\xFF', rgb1=b'\xCC'):
     """
     Creates a square RGB checkered bitmap using the two specified colors.
 
     The bitmap returned will have width = height = blocksize*ntiles*2
 
     :param int `blocksize`:  the number of pixels in each solid color square
-    :param int `ntiles1`:  the number of tiles along width and height.  Each tile is 2x2 blocks.
-    :param `rbg0`: the first color, as 3-byte strings.
-    :param `rgb1`: the second color, as 3-byte strings. If only 1 byte is provided, it is treated as a grey value.
+    :param int `ntiles1`:  the number of tiles along width and height.  Each
+        tile is 2x2 blocks.
+    :param `rbg0`: the first color, as 3-character bytes object.
+    :param `rgb1`: the second color, as 3-character bytes object. If only 1
+        character is provided, it is treated as a grey value.
 
-    :return: :class:`wx.BitmapFromBuffer`
+    :return: :class:`wx.Bitmap`
 
     """
+    assert isinstance(rgb0, bytes)
+    assert isinstance(rgb1, bytes)
+
     size = blocksize*ntiles*2
 
     if len(rgb0)==1:
@@ -219,7 +238,7 @@ class ImageView(wx.Window):
         else:
             if self.check_bmp is None:
                 self.check_bmp = GetCheckeredBitmap()
-                self.check_dim_bmp = GetCheckeredBitmap(rgb0='\x7F', rgb1='\x66')
+                self.check_dim_bmp = GetCheckeredBitmap(rgb0=b'\x7F', rgb1=b'\x66')
             if border == ID_CROP_FRAME:
                 self.dark_bg = self.check_dim_bmp
                 self.lite_bg = self.check_bmp
@@ -328,8 +347,8 @@ class ImageView(wx.Window):
         owidth = int(scale*iwidth)
         oheight = int(scale*iheight)
 
-        diffx = (wwidth - owidth)/2   # center calc
-        diffy = (wheight - oheight)/2   # center calc
+        diffx = (wwidth - owidth)//2   # center calc
+        diffy = (wheight - oheight)//2   # center calc
 
         if not bmp:
             if owidth!=iwidth or oheight!=iheight:
@@ -360,46 +379,46 @@ class ImagePanel(wx.Panel):
         vbox.Add(hbox_ctrls, 0, wx.ALIGN_RIGHT|wx.TOP, 4)
 
         bmp = GetNamedBitmap('White')
-        btn = wx.BitmapButton(self, ID_WHITE_BG, bmp, style=wx.BU_EXACTFIT)
+        btn = BitmapButton(self, ID_WHITE_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to white"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
         bmp = GetNamedBitmap('Grey')
-        btn = wx.BitmapButton(self, ID_GREY_BG, bmp, style=wx.BU_EXACTFIT)
+        btn = BitmapButton(self, ID_GREY_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to grey"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
         bmp = GetNamedBitmap('Black')
-        btn = wx.BitmapButton(self, ID_BLACK_BG, bmp, style=wx.BU_EXACTFIT)
+        btn = BitmapButton(self, ID_BLACK_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
         btn.SetToolTip(_("Set background to black"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
         bmp = GetNamedBitmap('Checked')
-        btn = wx.BitmapButton(self, ID_CHECK_BG, bmp, style=wx.BU_EXACTFIT)
+        btn = BitmapButton(self, ID_CHECK_BG, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetImgBackground, btn)
-        btn.SetToolTip(_("Set background to chekered pattern"))
+        btn.SetToolTip(_("Set background to checkered pattern"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
 
         hbox_ctrls.AddSpacer(7)
 
         bmp = GetNamedBitmap('NoFrame')
-        btn = wx.BitmapButton(self, ID_NO_FRAME, bmp, style=wx.BU_EXACTFIT)
+        btn = BitmapButton(self, ID_NO_FRAME, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
         btn.SetToolTip(_("No framing around image"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
         bmp = GetNamedBitmap('BoxFrame')
-        btn = wx.BitmapButton(self, ID_BOX_FRAME, bmp, style=wx.BU_EXACTFIT)
+        btn = BitmapButton(self, ID_BOX_FRAME, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
         btn.SetToolTip(_("Frame image with a box"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
 
         bmp = GetNamedBitmap('CropFrame')
-        btn = wx.BitmapButton(self, ID_CROP_FRAME, bmp, style=wx.BU_EXACTFIT|wx.BORDER_SIMPLE)
+        btn = BitmapButton(self, ID_CROP_FRAME, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
         btn.SetToolTip(_("Frame image with a dimmed background"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
@@ -444,7 +463,7 @@ class ImageDialog(wx.Dialog):
         self.set_dir = os.getcwd()
         self.set_file = None
 
-        if set_dir != None:
+        if set_dir is not None:
             if os.path.exists(set_dir):     # set to working directory if nothing set
                 self.set_dir = set_dir
 
@@ -462,14 +481,14 @@ class ImageDialog(wx.Dialog):
         hbox_loc.Add(self.dir, 1, wx.GROW|wx.ALIGN_LEFT|wx.ALL, 5)
 
         up_bmp = wx.ArtProvider.GetBitmap(wx.ART_GO_DIR_UP, wx.ART_BUTTON, (16,16))
-        btn = wx.BitmapButton(self, -1, up_bmp)
+        btn = BitmapButton(self, -1, up_bmp, style=wx.BU_EXACTFIT)
         btn.SetHelpText(_("Up one level"))
         btn.SetToolTip(_("Up one level"))
         self.Bind(wx.EVT_BUTTON, self.OnUpDirectory, btn)
         hbox_loc.Add(btn, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 2)
 
         folder_bmp = wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN, wx.ART_BUTTON, (16,16))
-        btn = wx.BitmapButton(self, -1, folder_bmp)
+        btn = BitmapButton(self, -1, folder_bmp, style=wx.BU_EXACTFIT)
         btn.SetHelpText(_("Browse for a &folder..."))
         btn.SetToolTip(_("Browse for a folder..."))
         self.Bind(wx.EVT_BUTTON, self.OnChooseDirectory, btn)
@@ -761,7 +780,7 @@ class FindFiles:
             path = path.upper()
             value = i.upper()
 
-            if pattern.match(value) != None:
+            if pattern.match(value) is not None:
                 filelist.append(i)
 
 
@@ -777,7 +796,7 @@ class FindFiles:
             if ch == "*":
                 f = f + ".*"
             elif ch == ".":
-                f = f + "\."
+                f = f + r"\."
             elif ch == "?":
                 f = f + "."
             else:

@@ -1,12 +1,12 @@
-    
+
             # Signal enumeration
-        
+
             wx.SIGNONE  # verify if the process exists under Unix
-            wx.SIGHUP  
-            wx.SIGINT  
-            wx.SIGQUIT 
-            wx.SIGILL  
-            wx.SIGTRAP 
+            wx.SIGHUP
+            wx.SIGINT
+            wx.SIGQUIT
+            wx.SIGILL
+            wx.SIGTRAP
             wx.SIGABRT
             wx.SIGEMT
             wx.SIGFPE
@@ -17,4 +17,4 @@
             wx.SIGPIPE
             wx.SIGALRM
             wx.SIGTERM  # terminate the process gently
-        
+

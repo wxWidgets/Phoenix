@@ -216,7 +216,7 @@ class UltimateRenderer_1(object):
         mdc.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         text = "%d Mb"%self.progressValue
         textWidth, dummy = mdc.GetTextExtent(text)
-        mdc.DrawText(text, rect.width/2 - textWidth/2, rect.height/2 - dummy/2)
+        mdc.DrawText(text, rect.width//2 - textWidth//2, rect.height//2 - dummy//2)
         dc.SetClippingRegion(rect.x, rect.y, rect.width, rect.height)
         dc.Blit(rect.x+3, rect.y, rect.width-6, rect.height, mdc, 0, 0)
         dc.DestroyClippingRegion()
@@ -279,12 +279,12 @@ class UltimateRenderer_1(object):
             mdc.SelectObject(wx.NullBitmap)
 
         # Center the progress bar vertically in the box supplied
-        y = y + (h - PIPE_HEIGHT)/2
+        y = y + (h - PIPE_HEIGHT)//2
 
         if percent == 0:
             middle = 0
         else:
-            middle = (w * percent)/100
+            middle = (w * percent)//100
 
         if middle == 0: # not started
             bitmap = self.REMAINING_BITMAP.GetSubBitmap((1, 0, w, PIPE_HEIGHT))
@@ -335,7 +335,7 @@ class UltimateRenderer_2(object):
         colours = [wx.RED, wx.WHITE, wx.GREEN, wx.Colour("SKY BLUE")]
         w, h = dc.GetTextExtent("Hg")
         x = rect.x + 1
-        y = rect.y + rect.height/2 - h/2
+        y = rect.y + rect.height//2 - h//2
 
         for ch in self.text:
             dc.SetTextForeground(random.choice(colours))
@@ -659,7 +659,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         fontMask = ULC.ULC_MASK_FONTCOLOUR|ULC.ULC_MASK_FONT
         fullMask = fontMask|ULC.ULC_MASK_BACKCOLOUR
 
-        customRow, customCol, colours = [0, 3], [2, 1], [wx.RED, wx.Colour("Yellow")]
+        customRow, customCol, colours = [0, 3], [2, 1], [wx.RED, wx.YELLOW]
 
         for row, col, colour in zip(customRow, customCol, colours):
             item = self.list.GetItem(row, col)
@@ -855,12 +855,12 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         # only do this part the first time so the events are only bound once
         if not hasattr(self, "popupID1"):
-            self.popupID1 = wx.NewId()
-            self.popupID2 = wx.NewId()
-            self.popupID3 = wx.NewId()
-            self.popupID4 = wx.NewId()
-            self.popupID5 = wx.NewId()
-            self.popupID6 = wx.NewId()
+            self.popupID1 = wx.NewIdRef()
+            self.popupID2 = wx.NewIdRef()
+            self.popupID3 = wx.NewIdRef()
+            self.popupID4 = wx.NewIdRef()
+            self.popupID5 = wx.NewIdRef()
+            self.popupID6 = wx.NewIdRef()
 
             self.Bind(wx.EVT_MENU, self.OnPopupOne, id=self.popupID1)
             self.Bind(wx.EVT_MENU, self.OnPopupTwo, id=self.popupID2)
@@ -1021,8 +1021,8 @@ class TestFrame(wx.Frame):
                                               self.ulc.list.GetSecondGradientColour())
         self.firstcolour.Bind(csel.EVT_COLOURSELECT, self.OnFirstColour)
         self.secondcolour.Bind(csel.EVT_COLOURSELECT, self.OnSecondColour)
-        sizerb3.Add(self.firstcolour, 0, wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL, 3)
-        sizerb3.Add(self.secondcolour, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL, 3)
+        sizerb3.Add(self.firstcolour, 0, wx.TOP|wx.BOTTOM, 3)
+        sizerb3.Add(self.secondcolour, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 3)
         sizerb.Add(self.checkgradient, 0, wx.ALL, 3)
         sizerb.Add(sizerb1, 0)
         sizerb.Add(sizerb2, 0)

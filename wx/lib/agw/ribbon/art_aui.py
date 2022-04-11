@@ -390,7 +390,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             grad_rect = wx.Rect(*tab.rect)
             grad_rect.height -= 4
             grad_rect.width -= 1
-            grad_rect.height /= 2
+            grad_rect.height //= 2
             grad_rect.y = grad_rect.y + tab.rect.height - grad_rect.height - 1
             dc.SetBrush(self._tab_active_top_background_brush)
             dc.DrawRectangle(tab.rect.x, tab.rect.y + 3, tab.rect.width - 1, grad_rect.y - tab.rect.y - 3)
@@ -401,7 +401,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             btm_rect = wx.Rect(*tab.rect)
             btm_rect.height -= 4
             btm_rect.width -= 1
-            btm_rect.height /= 2
+            btm_rect.height //= 2
             btm_rect.y = btm_rect.y + tab.rect.height - btm_rect.height - 1
             dc.SetBrush(self._tab_hover_background_brush)
             dc.DrawRectangle(btm_rect.x, btm_rect.y, btm_rect.width, btm_rect.height)
@@ -434,8 +434,8 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             icon = tab.page.GetIcon()
             if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS == 0:
                 if icon.IsOk():
-                    x = tab.rect.x + (tab.rect.width - icon.GetWidth()) / 2
-                    dc.DrawBitmap(icon, x, tab.rect.y + 1 + (tab.rect.height - 1 - icon.GetHeight()) / 2, True)
+                    x = tab.rect.x + (tab.rect.width - icon.GetWidth()) // 2
+                    dc.DrawBitmap(icon, x, tab.rect.y + 1 + (tab.rect.height - 1 - icon.GetHeight()) // 2, True)
 
         if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS:
             label = tab.page.GetLabel()
@@ -450,7 +450,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
                     offset += icon.GetWidth() + 2
 
                 text_width, text_height = dc.GetTextExtent(label)
-                x = (tab.rect.width - 2 - text_width - offset) / 2
+                x = (tab.rect.width - 2 - text_width - offset) // 2
                 if x > 8:
                     x = 8
                 elif x < 1:
@@ -458,7 +458,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
                 width = tab.rect.width - x - 2
                 x += tab.rect.x + offset
-                y = tab.rect.y + (tab.rect.height - text_height) / 2
+                y = tab.rect.y + (tab.rect.height - text_height) // 2
 
                 if icon.IsOk():
                     dc.DrawBitmap(icon, x - offset, tab.rect.y + (tab.rect.height - icon.GetHeight()) / 2, True)
@@ -892,8 +892,8 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
                                   self._page_hover_background_gradient_colour, wx.SOUTH)
 
         if bitmap.IsOk():
-            dc.DrawBitmap(bitmap, preview.x + (preview.width - bitmap.GetWidth()) / 2,
-                          preview.y + (preview.height - bitmap.GetHeight()) / 2, True)
+            dc.DrawBitmap(bitmap, preview.x + (preview.width - bitmap.GetWidth()) // 2,
+                          preview.y + (preview.height - bitmap.GetHeight()) // 2, True)
 
 
     def DrawPartialPanelBackground(self, dc, wnd, rect):
@@ -954,7 +954,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         """
         Draw the background and chrome for a :class:`~wx.lib.agw.ribbon.gallery.RibbonGallery` control.
 
-        This should draw the border, brackground, scroll buttons, extension button, and
+        This should draw the border, background, scroll buttons, extension button, and
         any other UI elements which are not attached to a specific gallery item.
 
         :param `dc`: The device context to draw onto;
@@ -1024,7 +1024,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             dc.DrawRectangle(reduced_rect.x, reduced_rect.y, reduced_rect.width, reduced_rect.height)
             btn_bitmap = bitmaps[3]
 
-        dc.DrawBitmap(btn_bitmap, reduced_rect.x + reduced_rect.width / 2 - 2, (rect.y + rect.height / 2) - 2, True)
+        dc.DrawBitmap(btn_bitmap, reduced_rect.x + reduced_rect.width // 2 - 2, (rect.y + rect.height // 2) - 2, True)
 
 
     def DrawGalleryItemBackground(self, dc, wnd, rect, item):
@@ -1277,7 +1277,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             if is_split_hybrid:
                 dc.DrawLine(rect.x + avail_width + 1, rect.y, rect.x + avail_width + 1, rect.y + rect.height)
 
-            dc.DrawBitmap(self._toolbar_drop_bitmap, bg_rect.x + avail_width + 2, bg_rect.y + (bg_rect.height / 2) - 2, True)
+            dc.DrawBitmap(self._toolbar_drop_bitmap, bg_rect.x + avail_width + 2, bg_rect.y + (bg_rect.height // 2) - 2, True)
 
-        dc.DrawBitmap(bitmap, bg_rect.x + (avail_width - bitmap.GetWidth()) / 2, bg_rect.y + (bg_rect.height - bitmap.GetHeight()) / 2, True)
+        dc.DrawBitmap(bitmap, bg_rect.x + (avail_width - bitmap.GetWidth()) // 2, bg_rect.y + (bg_rect.height - bitmap.GetHeight()) // 2, True)
 

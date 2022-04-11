@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     18-Jun-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,6 +37,11 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
     tools.fixBookctrlClass(c)
+
+    c.addCppMethod('wxChoice*', 'GetChoiceCtrl', '()',
+        doc="Returns the choice control used for selecting pages.",
+        body="return(self->GetChoiceCtrl());")
+
 
     module.addPyCode("""\
         EVT_CHOICEBOOK_PAGE_CHANGED  = wx.PyEventBinder( wxEVT_CHOICEBOOK_PAGE_CHANGED, 1 )

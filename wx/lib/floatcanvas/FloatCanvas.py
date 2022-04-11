@@ -48,7 +48,10 @@ import sys
 mac = sys.platform.startswith("darwin")
 
 import numpy as N
-from time import clock
+try:
+    from time import process_time as clock
+except ImportError:
+    from time import clock
 import wx
 import six
 
@@ -207,12 +210,12 @@ class FloatCanvas(wx.Panel):
         self.BoundingBoxDirty = False
         self.MinScale = None
         self.MaxScale = None
-        self.ViewPortCenter= N.array( (0,0), N.float)
+        self.ViewPortCenter= N.array( (0,0), float)
 
         self.SetProjectionFun(None)
 
-        self.MapProjectionVector = N.array( (1,1), N.float) # No Projection to start!
-        self.TransformVector = N.array( (1,-1), N.float) # default Transformation
+        self.MapProjectionVector = N.array( (1,1), float) # No Projection to start!
+        self.TransformVector = N.array( (1,-1), float) # default Transformation
 
         self.Scale = 1
         self.ObjectUnderMouse = None
@@ -236,7 +239,7 @@ class FloatCanvas(wx.Panel):
         elif callable(ProjectionFun):
             self.ProjectionFun = ProjectionFun
         elif ProjectionFun is None:
-            self.ProjectionFun = lambda x=None: N.array( (1,1), N.float)
+            self.ProjectionFun = lambda x=None: N.array( (1,1), float)
         else:
             raise FloatCanvasError('Projectionfun must be either:'
                                    ' "FlatEarth", None, or a callable object '
@@ -259,7 +262,7 @@ class FloatCanvas(wx.Panel):
         MinLatitude = -75
         Lat = min(CenterPoint[1],MaxLatitude)
         Lat = max(Lat,MinLatitude)
-        return N.array((N.cos(N.pi*Lat/180),1),N.float)
+        return N.array((N.cos(N.pi*Lat/180),1),float)
 
     def SetMode(self, Mode):
         """
@@ -277,7 +280,7 @@ class FloatCanvas(wx.Panel):
         self.SetCursor(self.GUIMode.Cursor)
 
     def MakeHitDict(self):
-        """Initialize the Hit dictonary."""
+        """Initialize the Hit dictionary."""
         ##fixme: Should this just be None if nothing has been bound?
         self.HitDict = {EVT_FC_LEFT_DOWN: {},
                         EVT_FC_LEFT_UP: {},
@@ -528,9 +531,9 @@ class FloatCanvas(wx.Panel):
                                         depth=self.HitTestBitmapDepth)
 
     def MakeNewForegroundHTBitmap(self):
-        ## Note: the foreground and backround HT bitmaps are in separate functions
+        ## Note: the foreground and background HT bitmaps are in separate functions
         ##       so that they can be created separate --i.e. when a foreground is
-        ##       added after the backgound is drawn
+        ##       added after the background is drawn
         """
         Off screen Bitmap used for Hit tests on foreground objects
 
@@ -550,7 +553,7 @@ class FloatCanvas(wx.Panel):
         self.Draw()
 
     def InitializePanel(self):
-        """Intialize the panel."""
+        """Initialize the panel."""
         PanelSize  = N.array(self.GetClientSize(),  N.int32)
         self.PanelSize  = N.maximum(PanelSize, (2,2)) ## OS-X sometimes gives a Size event when the panel is size (0,0)
         self.HalfPanelSize = self.PanelSize / 2 # lrk: added for speed in WorldToPixel
@@ -700,19 +703,19 @@ class FloatCanvas(wx.Panel):
          ============== ======================================================
 
         """
-        shift = N.asarray(shift,N.float)
-        if CoordType == 'Panel':# convert from panel coordinates
-            shift = shift * N.array((-1,1),N.float) *self.PanelSize/self.TransformVector
-        elif CoordType == 'Pixel': # convert from pixel coordinates
+        shift = N.asarray(shift,float)
+        if CoordType.lower() == 'panel':# convert from panel coordinates
+            shift = shift * N.array((-1,1),float) *self.PanelSize/self.TransformVector
+        elif CoordType.lower() == 'pixel': # convert from pixel coordinates
             shift = shift/self.TransformVector
-        elif CoordType == 'World': # No conversion
+        elif CoordType.lower() == 'world': # No conversion
             pass
         else:
             raise FloatCanvasError('CoordType must be either "Panel", "Pixel", or "World"')
 
         self.ViewPortCenter = self.ViewPortCenter + shift
         self.MapProjectionVector = self.ProjectionFun(self.ViewPortCenter)
-        self.TransformVector = N.array((self.Scale,-self.Scale),N.float) * self.MapProjectionVector
+        self.TransformVector = N.array((self.Scale,-self.Scale),float) * self.MapProjectionVector
         self._BackgroundDirty = True
         if ReDraw:
             self.Draw()
@@ -729,7 +732,7 @@ class FloatCanvas(wx.Panel):
                        after zooming. If center is not given, the center will stay the same.
 
         :param centerCoords: flag indicating whether the center given is in pixel or world
-                             coords. Options are: "world" or "pixel"
+                             coords. Options are: "World" or "Pixel"
         :param keepPointInPlace: boolean flag. If False, the center point is what's given.
                                  If True, the image is shifted so that the given center point
                                  is kept in the same pixel space. This facilitates keeping the
@@ -739,19 +742,21 @@ class FloatCanvas(wx.Panel):
             center = self.ViewPortCenter
             centerCoords = 'World' #override input if they don't give a center point.
 
-        if centerCoords == "Pixel":
+        if centerCoords.lower() == "pixel":
             oldpoint = self.PixelToWorld( center )
+        elif centerCoords.lower() == 'world':
+            oldpoint = N.array(center, float)
         else:
-            oldpoint = N.array(center, N.float)
+            raise FloatCanvasError('centerCoords must be either "World" or "Pixel"')
 
         self.Scale = self.Scale*factor
         if keepPointInPlace:
             self.SetToNewScale(False)
 
-            if centerCoords == "Pixel":
+            if centerCoords.lower() == "pixel":
                 newpoint = self.PixelToWorld( center )
             else:
-                newpoint = N.array(center, N.float)
+                newpoint = N.array(center, float)
             delta = (newpoint - oldpoint)
             self.MoveImage(-delta, 'World')
         else:
@@ -774,7 +779,7 @@ class FloatCanvas(wx.Panel):
             BoundingBox = self.BoundingBox
         if (BoundingBox is not None) and (not BoundingBox.IsNull()):
             self.ViewPortCenter = N.array(((BoundingBox[0,0]+BoundingBox[1,0])/2,
-                                         (BoundingBox[0,1]+BoundingBox[1,1])/2 ),N.float_)
+                                         (BoundingBox[0,1]+BoundingBox[1,1])/2 ),float_)
             self.MapProjectionVector = self.ProjectionFun(self.ViewPortCenter)
             # Compute the new Scale
             BoundingBox = BoundingBox*self.MapProjectionVector # this does need to make a copy!
@@ -794,7 +799,7 @@ class FloatCanvas(wx.Panel):
                 self._BackgroundDirty = True
         else:
             # Reset the shifting and scaling to defaults when there is no BB
-            self.ViewPortCenter= N.array( (0,0), N.float)
+            self.ViewPortCenter= N.array( (0,0), float)
             self.Scale= 1
         self.SetToNewScale(DrawFlag=DrawFlag)
 
@@ -811,7 +816,7 @@ class FloatCanvas(wx.Panel):
         if self.MaxScale is not None:
             Scale = min(Scale, self.MaxScale)
         self.MapProjectionVector = self.ProjectionFun(self.ViewPortCenter)
-        self.TransformVector = N.array((Scale,-Scale),N.float) * self.MapProjectionVector
+        self.TransformVector = N.array((Scale,-Scale),float) * self.MapProjectionVector
         self.Scale = Scale
         self._BackgroundDirty = True
         if DrawFlag:
@@ -884,9 +889,9 @@ class FloatCanvas(wx.Panel):
             SetToNull=True
         if SetToNull:
             self.BoundingBox = BBox.NullBBox()
-            self.ViewPortCenter= N.array( (0,0), N.float)
-            self.TransformVector = N.array( (1,-1), N.float)
-            self.MapProjectionVector = N.array( (1,1), N.float)
+            self.ViewPortCenter= N.array( (0,0), float)
+            self.TransformVector = N.array( (1,-1), float)
+            self.MapProjectionVector = N.array( (1,1), float)
             self.Scale = 1
         self.BoundingBoxDirty = False
 
@@ -898,7 +903,7 @@ class FloatCanvas(wx.Panel):
         or a NX2 Numpy array of x,y coordinates.
 
         """
-        return  (((N.asarray(Points, N.float) -
+        return  (((N.asarray(Points, float) -
                    (self.PanelSize/2))/self.TransformVector) +
                  self.ViewPortCenter)
 
@@ -910,7 +915,7 @@ class FloatCanvas(wx.Panel):
         a 2-tuple, or sequence of 2-tuples.
         """
         #Note: this can be called by users code for various reasons, so N.asarray is needed.
-        return  (((N.asarray(Coordinates,N.float) -
+        return  (((N.asarray(Coordinates,float) -
                    self.ViewPortCenter)*self.TransformVector)+
                  (self.HalfPanelSize)).astype('i')
 
@@ -922,7 +927,7 @@ class FloatCanvas(wx.Panel):
         Lengths should be a NX2 array of (x,y) coordinates, or
         a 2-tuple, or sequence of 2-tuples.
         """
-        return  ( (N.asarray(Lengths, N.float)*self.TransformVector) ).astype('i')
+        return  ( (N.asarray(Lengths, float)*self.TransformVector) ).astype('i')
 
     def ScalePixelToWorld(self,Lengths):
         """
@@ -932,7 +937,7 @@ class FloatCanvas(wx.Panel):
         Lengths should be a NX2 array of (x,y) coordinates, or
         a 2-tuple, or sequence of 2-tuples.
         """
-        return  (N.asarray(Lengths,N.float) / self.TransformVector)
+        return  (N.asarray(Lengths,float) / self.TransformVector)
 
     def AddObject(self, obj):
         """

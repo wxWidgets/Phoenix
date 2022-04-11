@@ -29,7 +29,8 @@ extensions = ['sphinx.ext.todo',
               'sphinx.ext.autodoc',
               'sphinx.ext.autosummary',
               'sphinx.ext.coverage',
-              'availability']
+              'availability',
+              'deprecation']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -153,7 +154,7 @@ html_style = 'css/phoenix.css'
 
 # Custom sidebar templates, maps document names to template names.
 html_sidebars = {
-    'index': ['indexsidebar.html'], # TODO: index page doesn't have a sidebar??
+    'index': ['searchbox.html'],
     'main':  ['searchbox.html'],
     '**':    ['localtoc.html',
              #'relations.html',  # Next/Prev in the sidebar, disabled for now

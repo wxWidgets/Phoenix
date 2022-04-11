@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     13-May-2013
-# Copyright:   (c) 2013-2017 by Total Control Software
+# Copyright:   (c) 2013-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -75,6 +75,8 @@ def run():
 
     c.find('SetListStyle.def').name = 'styleDef'
     c.find('ApplyStyle.def').name = 'styleDef'
+
+    tools.fixTextClipboardMethods(c)
 
     c.addPyMethod('GetDefaultStyle', '(self)', 'return self.GetDefaultStyleEx()',
                   deprecated='Use GetDefaultStyleEx instead')

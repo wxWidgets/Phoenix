@@ -4,7 +4,7 @@
 #
 # Created:     27-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -53,13 +53,13 @@ def run():
     """)
 
     c.find('SetInstallPrefix').setCppCode("""\
-    #ifdef __WXMSW__
+    #ifndef wxHAS_STDPATHS_INSTALL_PREFIX
     #else
         self->SetInstallPrefix(*prefix);
     #endif
     """)
     c.find('GetInstallPrefix').setCppCode("""\
-    #ifdef __WXMSW__
+    #ifndef wxHAS_STDPATHS_INSTALL_PREFIX
         return new wxString;
     #else
         return new wxString(self->GetInstallPrefix());

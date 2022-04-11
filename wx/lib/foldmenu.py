@@ -23,7 +23,7 @@ class FoldOutWindow(wx.PopupWindow):
         self.SetBackgroundColour(faceClr)
 
     def AddButton(self,bitmap,handler=None):
-        id=wx.NewId()
+        id=wx.NewIdRef()
         btn=wx.BitmapButton(self,id,bitmap)
         self.sizer.Add(btn, 1, wx.ALIGN_CENTER|wx.ALL|wx.EXPAND, 2)
         self.Bind(wx.EVT_BUTTON, self.OnBtnClick, btn)

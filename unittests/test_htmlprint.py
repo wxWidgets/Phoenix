@@ -17,8 +17,15 @@ class htmlprint_Tests(wtc.WidgetTestCase):
         obj.SetSize(*size)
         obj.SetHtmlText('<body><h1>Hello World</h1></body>')
 
-        obj.Render(0,0, [])
+        obj.Render(0,0)
 
+
+    def test_htmlprint2(self):
+        hep = wx.html.HtmlEasyPrinting(parentWindow=self.frame)
+        hep.SetFonts('', '', [7,8,10,12,16,22,30])
+
+    def test_htmlprint3(self):
+        po = wx.html.HtmlPrintout()
 
 #---------------------------------------------------------------------------
 

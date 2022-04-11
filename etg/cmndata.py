@@ -4,7 +4,7 @@
 #              Robin Dunn
 #
 # Created:     15-Sept-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -41,9 +41,8 @@ def run():
 
     c.find('GetPrintData').overloads = []
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addProperty('MarginBottomRight', 'GetMarginBottomRight', 'SetMarginBottomRight')
     c.addProperty('MarginTopLeft', 'GetMarginTopLeft', 'SetMarginTopLeft')
@@ -59,9 +58,11 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('wxSize*', 'GetPaperSize', '()', 'return new wxSize(self->GetPaperSize());')
+    c.addCppMethod('void', 'SetPaperSize', '(const wxSize* sz)', 'self->SetPaperSize(*sz);')
+
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     # TODO: These two methods should use something other than a PyString for
     # holding the data...
@@ -92,9 +93,8 @@ def run():
     tools.removeVirtuals(c)
     c.find('SetSetupDialog').ignore()
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addAutoProperties()
 

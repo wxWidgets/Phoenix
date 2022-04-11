@@ -59,7 +59,7 @@ def GetMonthList():
     for i in range(13):
         name = wx.lib.calendar.Month[i]
 
-        if name != None:
+        if name is not None:
             monthlist.append(name)
 
     return monthlist
@@ -309,17 +309,17 @@ class CalendFrame(wx.Frame):
     def MakeFileMenu(self):
         menu = wx.Menu()
 
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         menu.Append(mID, 'Decrement', 'Next')
         self.Bind(wx.EVT_MENU, self.OnDecMonth, id=mID)
 
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         menu.Append(mID, 'Increment', 'Dec')
         self.Bind(wx.EVT_MENU, self.OnIncMonth, id=mID)
 
         menu.AppendSeparator()
 
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         menu.Append(mID, 'E&xit', 'Exit')
         self.Bind(wx.EVT_MENU, self.OnCloseWindow, id=mID)
 
@@ -328,23 +328,23 @@ class CalendFrame(wx.Frame):
     def MakeToolMenu(self):
         tb = self.CreateToolBar(wx.TB_HORIZONTAL|wx.NO_BORDER)
 
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         SetToolPath(self, tb, mID, images.DbDec.GetBitmap(), 'Dec Year')
         self.Bind(wx.EVT_TOOL, self.OnDecYear, id=mID)
 
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         SetToolPath(self, tb, mID, images.Dec.GetBitmap(), 'Dec Month')
         self.Bind(wx.EVT_TOOL, self.OnDecMonth, id=mID)
 
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         SetToolPath(self, tb, mID, images.Pt.GetBitmap(), 'Current Month')
         self.Bind(wx.EVT_TOOL, self.OnCurrent, id=mID)
 
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         SetToolPath(self, tb, mID, images.Inc.GetBitmap(), 'Inc Month')
         self.Bind(wx.EVT_TOOL, self.OnIncMonth, id=mID)
 
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         SetToolPath(self, tb, mID, images.DbInc.GetBitmap(), 'Inc Year')
         self.Bind(wx.EVT_TOOL, self.OnIncYear, id=mID)
 

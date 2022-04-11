@@ -49,7 +49,7 @@ To be more precise, each event is described by:
   several buttons, all generating the same button click event),
   checking the event source object or its id allows to distinguish
   between them.
-  
+
 
 
 .. _event handling:
@@ -82,7 +82,7 @@ usually in the code of the class defining the handler itself, call its
 	        wx.Frame.__init__(self, parent)
 
                 # Other initialization code...
-		
+
                 self.Bind(wx.EVT_MENU, self.OnExit, id=wx.ID_EXIT)
 
 
@@ -123,7 +123,7 @@ event handler::
 	        wx.Frame.__init__(self, parent)
 
                 # Other initialization code...
-                
+
                 self.Bind(wx.EVT_MENU, OnFrameExit, id=wx.ID_EXIT)
 
 
@@ -189,8 +189,8 @@ having handled the event and the search continues):
 8. Finally, i.e., if the event is still not processed, the
    :ref:`wx.App` object itself (which derives from
    :ref:`wx.EvtHandler`) gets a last chance to process it.
-   
-   
+
+
 **Please pay close attention to step 6!** People often overlook or get
 confused by this powerful feature of the wxPython event processing
 system. The details of event propagation up the window hierarchy are
@@ -313,8 +313,8 @@ You can bind the events normally via either binding syntax::
 
 	self.Bind(EVT_SOME_NEW_EVENT, self.handler)
 	EVT_SOME_NEW_EVENT(self, self.handler)
-	
-	
+
+
 You can also attach arbitrary data to the event during its creation,
 then post it to whatever window you choose::
 
@@ -322,8 +322,8 @@ then post it to whatever window you choose::
 	    evt = SomeNewEvent(attr1="hello", attr2=654)
 	    # Post the event
 	    wx.PostEvent(target, evt)
-	    
-	    
+
+
 When handling events with such arbitrary data, you can fetch the data
 via attributes, named the same as the names passed in during the event
 instance creation. That is, given the two keyword arguments passed to
@@ -334,8 +334,8 @@ instance creation. That is, given the two keyword arguments passed to
 		# Given the above constructed event, the following is true
 		evt.attr1 == "hello"
 		evt.attr2 == 654
-        
-        
+
+
 
 
 Miscellaneous Notes
@@ -408,6 +408,6 @@ user-specified identifiers which must be always positive.
 You can use ``wx.ID_HIGHEST`` to determine the number above which it is
 safe to define your own identifiers. Or, you can use identifiers below
 ``wx.ID_LOWEST``.  Finally, you can allocate identifiers dynamically
-using :func:`wx.NewId` function too. If you use :func:`wx.NewId`
+using :func:`wx.NewIdRef` function too. If you use :func:`wx.NewIdRef`
 consistently in your application, you can be sure that your
 identifiers don't conflict accidentally.

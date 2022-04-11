@@ -17,7 +17,7 @@ timer until you are completely finished with it. """
 
 doc1 = """\
 Binding an event handler to the wx.EVT_TIMER event is the
-prefered way to use the wx.Timer class directly.  It makes
+preferred way to use the wx.Timer class directly.  It makes
 handling timer events work just like normal window events.  You
 just need to specify the window that is to receive the event in
 the wx.Timer constructor.  If that window needs to be able to
@@ -139,7 +139,7 @@ class TestPanel(sp.ScrolledPanel):
 
     def OnTest1Stop(self, evt):
         self.t1.Stop()
-        self.log.write("EVT_TIMER timer stoped\n")
+        self.log.write("EVT_TIMER timer stopped\n")
         del self.t1
         self.t1b2.Disable()
 
@@ -172,11 +172,11 @@ class TestPanel(sp.ScrolledPanel):
 
         # Normally a FutureCall is one-shot, but we can make it
         # recurring just by calling Restart.  We can even use a
-        # different timeout or pass differnt args this time.
+        # different timeout or pass different args this time.
         self.t2.Restart(1500, "restarted")
 
         # The return value of this function is saved and can be
-        # retrived later.  See OnTest2Stop above.
+        # retrieved later.  See OnTest2Stop above.
         return "This is my return value"
 
 
@@ -192,7 +192,7 @@ class TestPanel(sp.ScrolledPanel):
 
     def OnTest3Stop(self, evt):
         self.t3.Stop()
-        self.log.write("NotifyTimer timer stoped\n")
+        self.log.write("NotifyTimer timer stopped\n")
         del self.t3
         self.t3b2.Disable()
 
@@ -211,7 +211,7 @@ class TestPanel(sp.ScrolledPanel):
 
     def OnTest4Stop(self, evt):
         self.t4.Stop()
-        self.log.write("wx.PyTimer timer stoped\n")
+        self.log.write("wx.PyTimer timer stopped\n")
         del self.t4
         self.t4b2.Disable()
 
@@ -219,6 +219,12 @@ class TestPanel(sp.ScrolledPanel):
         self.log.write("got wx.PyTimer event\n")
 
 
+    def ShutdownDemo(self):
+        for t in ['t1', 't2', 't3', 't4']:
+            if hasattr(self, t):
+                print('Stopping:', t)
+                timer = getattr(self, t)
+                timer.Stop()
 
 #----------------------------------------------------------------------
 

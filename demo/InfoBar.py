@@ -72,7 +72,7 @@ to display non-critical information to the user."""
 
 
     def OnAddButton(self, evt):
-        btnId = wx.NewId()
+        btnId = wx.NewIdRef()
         self.info.AddButton(btnId, "new button")
         self.info.Bind(wx.EVT_BUTTON, self.OnButtonClicked, id=btnId)
 

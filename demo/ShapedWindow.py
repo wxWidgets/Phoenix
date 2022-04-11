@@ -26,14 +26,19 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_RIGHT_UP,    self.OnExit)
         self.Bind(wx.EVT_PAINT,       self.OnPaint)
 
-        self.bmp = images.Vippi.GetBitmap()
+        # Load the image and ensure it has a Mask, (rather than an alpha channel)
+        img = images.Vippi.GetImage()
+        if img.HasAlpha():
+            img.ConvertAlphaToMask()
+        # Convert it to a wx.Bitmap, which will be used in SetWindowShape, and
+        # in OnPaint below.
+        self.bmp = wx.Bitmap(img)
+
         w, h = self.bmp.GetWidth(), self.bmp.GetHeight()
         self.SetClientSize( (w, h) )
 
-        if wx.Platform != "__WXMAC__":
-            # wxMac clips the tooltip to the window shape, YUCK!!!
-            self.SetToolTip("Right-click to close the window\n"
-                            "Double-click the image to set/unset the window shape")
+        self.SetToolTip("Right-click to close the window\n"
+                        "Double-click the image to set/unset the window shape")
 
         if wx.Platform == "__WXGTK__":
             # wxGTK requires that the window be created before you can
@@ -49,9 +54,17 @@ class TestFrame(wx.Frame):
 
 
     def SetWindowShape(self, *evt):
-        # Use the bitmap's mask to determine the region
+        # Use the bitmap's mask to create a wx.Region
         r = wx.Region(self.bmp)
+
+        # NOTE: Starting in 4.1 you can also get a wx.Region directly from
+        # a wx.Image, so you can save a step if you don't need it as a wx.Bitmap
+        # for anything else.
+        #r = self.img.ConvertToRegion()
+
+        # Use the region to set the frame's shape
         self.hasShape = self.SetShape(r)
+
 
     def OnDoubleClick(self, evt):
         if self.hasShape:

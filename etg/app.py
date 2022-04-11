@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     22-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ def run():
 
     etgtools.prependText(c.detailedDoc,
          "Note that it is not intended for this class to be used directly from "
-         "Python. It is wrapped just for inheriting its methods from :class:`App`.")
+         "Python. It is wrapped just for inheriting its methods in :class:`App`.")
 
     # There's no need for the command line stuff as Python has its own ways to
     # deal with that
@@ -55,7 +55,6 @@ def run():
     c.find('OnInitCmdLine').ignore()
 
     c.find('HandleEvent').ignore()
-    c.find('UsesEventLoop').ignore()
 
     # We will use OnAssertFailure, but I don't think we should let it be
     # overridden in Python.
@@ -68,6 +67,8 @@ def run():
     c.find('OnExceptionInMainLoop').ignore()
     c.find('OnFatalException').ignore()
     c.find('OnUnhandledException').ignore()
+    c.find('StoreCurrentException').ignore()
+    c.find('RethrowStoredException').ignore()
 
     # Release the GIL for potentially blocking or long-running functions
     c.find('MainLoop').releaseGIL()
@@ -117,19 +118,6 @@ def run():
         body="""\
             #ifdef __WXMSW__
                 return wxApp::GetComCtl32Version();
-            #else
-                wxPyRaiseNotImplemented();
-                return 0;
-            #endif
-            """)
-    c.addCppMethod('int', 'GetShell32Version', '()',
-        isStatic=True,
-        doc="""\
-        Returns 400, 470, 471, etc. for shell32.dll 4.00, 4.70, 4.71 or 0 if
-        it wasn't found at all.  Raises an exception on non-Windows platforms.""",
-        body="""\
-            #ifdef __WXMSW__
-                return wxApp::GetShell32Version();
             #else
                 wxPyRaiseNotImplemented();
                 return 0;
@@ -221,6 +209,16 @@ def run():
 
     #-------------------------------------------------------
 
+    module.find('wxHandleFatalExceptions').setCppCode("""\
+        #if wxUSE_ON_FATAL_EXCEPTION
+            return wxHandleFatalExceptions(doIt);
+        #else
+            wxLogInfo("This build of wxWidgets does not support wxHandleFatalExceptions.");
+            return false;
+        #endif
+        """)
+
+    #-------------------------------------------------------
 
     module.addHeaderCode("""\
         enum wxAppAssertMode {
@@ -236,12 +234,11 @@ def run():
     module.insertItemBefore(c, enum)
 
     module.addHeaderCode("""\
-        class wxPyApp;
-        wxPyApp* wxGetApp();
+        wxAppConsole* wxGetApp();
         """)
     module.find('wxTheApp').ignore()
     f = module.find('wxGetApp')
-    f.type = 'wxPyApp*'
+    f.type = 'wxAppConsole*'
     f.briefDoc = "Returns the current application object."
     f.detailedDoc = []
 
@@ -352,7 +349,12 @@ def run():
 
             Normally you would derive from this class and implement an ``OnInit``
             method that creates a frame and then calls ``self.SetTopWindow(frame)``,
-            however ``wx.App`` is also usable on it's own without derivation.
+            however ``wx.App`` is also usable on its own without derivation.
+
+            :note: In Python the wrapper for the C++ class ``wxApp`` has been renamed tp
+                :class:`wx.PyApp`. This ``wx.App`` class derives from ``wx.PyApp``, and is
+                responsible for handling the Python-specific needs for bootstrapping the
+                wxWidgets library and other Python integration related requirements.
             """,
 
         items=[
@@ -430,7 +432,10 @@ def run():
                         self.RedirectStdio(filename)
 
                     # Use Python's install prefix as the default
-                    wx.StandardPaths.Get().SetInstallPrefix(_sys.prefix)
+                    prefix = _sys.prefix
+                    if isinstance(prefix, (bytes, bytearray)):
+                        prefix = prefix.decode(_sys.getfilesystemencoding())
+                    wx.StandardPaths.Get().SetInstallPrefix(prefix)
 
                     # Until the new native control for wxMac is up to par, still use the generic one.
                     wx.SystemOptions.SetOption("mac.listctrl.always_use_generic", 1)
@@ -447,7 +452,10 @@ def run():
                     called.  This can be overridden in derived classes, but be sure to call
                     this method from there.
                     """,
-                body="wx.StockGDI._initStockObjects()"),
+                body="""\
+                    wx.StockGDI._initStockObjects()
+                    self.InitLocale()
+                    """),
 
             PyFunctionDef('__del__', '(self)',
                 doc="",
@@ -511,6 +519,32 @@ def run():
                             self.stdioWin.size = size
                     """),
 
+            PyFunctionDef('InitLocale', '(self)',
+                doc="""\
+                    Starting with version 3.8 on Windows, Python is now setting the locale
+                    to what is defined by the system as the default locale. This causes
+                    problems with wxWidgets which expects to be able to manage the locale
+                    via the wx.Locale class, so the locale will be reset here to be the
+                    default "C" locale settings.
+
+                    If you have troubles from the default behavior of this method you can
+                    override it in a derived class to behave differently. Please report
+                    the problem you encountered.
+                    """,
+                body="""\
+                    if _sys.platform.startswith('win') and _sys.version_info > (3,8):
+                        import locale
+                        locale.setlocale(locale.LC_ALL, "C")
+                    """),
+
+            PyFunctionDef('ResetLocale', '(self)',
+                doc="""\
+                    This method is now a NOP and will be deprecated.
+                    """,
+                body="""\
+                    pass
+                    """),
+
             PyFunctionDef('Get', '()', isStatic=True,
                 doc="""\
                     A staticmethod returning the currently active application object.
@@ -518,7 +552,6 @@ def run():
                 body="return GetApp()"
                 )
             ])
-
 
 
 

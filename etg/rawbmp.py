@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     14-Aug-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ def run():
     #addPixelDataClass(module, 'wxImagePixelData', 'wxImage', bpp=32,
     #    doc="""\
     #    ImagePixelData: A class providing direct access to a wx.Image's
-    #    internal data usign the same api as the other PixelData classes.
+    #    internal data using the same api as the other PixelData classes.
     #    """)
 
 
@@ -171,10 +171,8 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
 
         MethodDef(type=itrName, name='GetPixels', isConst=True),
 
-        CppMethodDef('int', '__nonzero__', '()',
-            body="""\
-                return (int)self->operator bool();
-                """),
+        CppMethodDef('int', '__nonzero__', '()', body="return (int)self->operator bool();"),
+        CppMethodDef('int', '__bool__', '()', body="return self->operator bool();"),
         ])
 
     # add this class to the module
@@ -200,10 +198,8 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
 
         MethodDef(type='bool', name='IsOk', isConst=True),
 
-        CppMethodDef('int', '__nonzero__', '()',
-            body="""\
-                return (int)self->IsOk();
-                """),
+        CppMethodDef('int', '__nonzero__', '()', body="return (int)self->IsOk();"),
+        CppMethodDef('int', '__bool__', '()', body="return self->IsOk();"),
 
         MethodDef(type='void', name='Offset', items=[
             ParamDef(type='const %s&' % pd, name='data'),

@@ -8,7 +8,7 @@
 // Author:      Robin Dunn
 //
 // Created:     26-Apr-2012
-// Copyright:   (c) 2012-2017 by Total Control Software
+// Copyright:   (c) 2012-2020 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
@@ -24,7 +24,10 @@
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
             if (PyObject_CheckBuffer(sipPy)              // New buffer interface
-                || PyObject_CheckReadBuffer(sipPy))      // or old buffer interface
+                #if PY_MAJOR_VERSION < 3
+                    || PyObject_CheckReadBuffer(sipPy)   // or old buffer interface
+                #endif
+                )
                 return TRUE;
             return FALSE;
         }

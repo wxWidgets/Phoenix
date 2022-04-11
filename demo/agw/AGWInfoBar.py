@@ -24,11 +24,10 @@ from images import catalog
 
 def GetValidImages():
 
-    keys = catalog.keys()
     valid_images = []
     counter = 0
 
-    for key in keys:
+    for key in catalog:
         bmp = catalog[key].GetBitmap()
         if bmp.GetWidth() == 16 and bmp.GetHeight() == 16:
             valid_images.append(bmp)
@@ -115,7 +114,7 @@ to display non-critical information to the user."""
 
 
     def OnAddButton(self, event):
-        btnId = wx.NewId()
+        btnId = wx.NewIdRef()
 
         if self.checkBitmap.GetValue():
             bitmap = random.choice(self.valid_images)

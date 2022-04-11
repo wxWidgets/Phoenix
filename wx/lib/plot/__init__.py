@@ -2,10 +2,7 @@
 # pylint: disable=C0413
 #   C0413: Import should be placed at the top of the module
 """
-wx.lib.plot
-===========
-
-This is a simple plotting library for the wxPython Phoenix project.
+A simple plotting library for the wxPython Phoenix project.
 
 """
 __version__ = "0.0.1"
@@ -42,7 +39,8 @@ from .polyobjects import PlotGraphics
 from .polyobjects import PlotPrintout
 
 from .utils import TempStyle
-from .utils import PendingDeprecation
+from .utils import pendingDeprecation
+from .utils import PlotPendingDeprecation
 
 # For backwards compat.
 BoxPlot = PolyBoxPlot

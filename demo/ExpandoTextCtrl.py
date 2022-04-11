@@ -145,7 +145,7 @@ overview = """<html><body>
 <h2><center>ExpandoTextCtrl</center></h2>
 
 The ExpandoTextCtrl is a multi-line wx.TextCtrl that will
-adjust its height on the fly as needed to accomodate the number of
+adjust its height on the fly as needed to accommodate the number of
 lines needed to display the current content of the control.  It is
 assumed that the width of the control will be a fixed value and
 that only the height will be adjusted automatically.  If the

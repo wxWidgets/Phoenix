@@ -43,11 +43,11 @@ class MyColLabelRenderer(glr.GridLabelRenderer):
 class MyCornerLabelRenderer(glr.GridLabelRenderer):
     def __init__(self):
         import images
-        self._bmp = images.Smiles.getBitmap()
+        self._bmp = images.Smiles.GetBitmap()
 
     def Draw(self, grid, dc, rect, rc):
-        x = rect.left + (rect.width - self._bmp.GetWidth()) / 2
-        y = rect.top + (rect.height - self._bmp.GetHeight()) / 2
+        x = rect.left + (rect.width - self._bmp.GetWidth()) // 2
+        y = rect.top + (rect.height - self._bmp.GetHeight()) // 2
         dc.DrawBitmap(self._bmp, x, y, True)
 
 

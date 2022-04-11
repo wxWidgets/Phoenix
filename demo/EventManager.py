@@ -7,7 +7,7 @@
 # Author:      Robb Shecter (robb@acm.org)
 #
 # Created:     16-December-2002
-# Copyright:   (c) 2002-2017 by Robb Shecter (robb@acm.org),
+# Copyright:   (c) 2002-2020 by Robb Shecter (robb@acm.org) and
 #              Total Control Software
 # Licence:     wxWindows license
 #---------------------------------------------------------------------------

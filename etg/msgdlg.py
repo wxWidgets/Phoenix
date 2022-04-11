@@ -5,12 +5,14 @@
 #
 # Created:     24-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools.extractors import ParamDef
+
 import copy
 
 PACKAGE   = "wx"
@@ -20,8 +22,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  =    [
-                'wxMessageDialog',
+ITEMS  =    [ 'wxMessageDialog',
             ]
 
 #---------------------------------------------------------------------------
@@ -40,23 +41,16 @@ def run():
 
     module.addGlobalStr('wxMessageBoxCaptionStr', c)
 
-    # These argument types are actually ButtonLabel, but the class is a private
-    # helper. We will always be passing in strings, and ButtonLabel will implicitly
-    # convert.
-    #
-    # TODO: Add a mapped type for ButtonLabel that converts from a string or stock ID. See #276
-    c.find('SetHelpLabel.help').type = 'const wxString&'
-    c.find('SetOKCancelLabels.ok').type = 'const wxString&'
-    c.find('SetOKCancelLabels.cancel').type = 'const wxString&'
+    # Several of the wxMessageDIalog methods take a
+    # wxMessageDialog::ButtonLabel parameter, which enables either a string or
+    # a Stock ID to be passed. To facilitate this same ability for Python the
+    # SIP types are changed to a custom type which is a MappedType which
+    # handles converting from the two types for us. See msgdlg_btnlabel.sip
+    c.find('ButtonLabel').ignore()
+    for item in c.allItems():
+        if isinstance(item, ParamDef) and item.type == 'const ButtonLabel &':
+            item.type = 'const wxMessageDialogButtonLabel &'
 
-    c.find('SetOKLabel.ok').type = 'const wxString&'
-
-    c.find('SetYesNoCancelLabels.yes').type = 'const wxString&'
-    c.find('SetYesNoCancelLabels.no').type = 'const wxString&'
-    c.find('SetYesNoCancelLabels.cancel').type = 'const wxString&'
-
-    c.find('SetYesNoLabels.yes').type = 'const wxString&'
-    c.find('SetYesNoLabels.no').type = 'const wxString&'
 
     tools.fixTopLevelWindowClass(c)
 

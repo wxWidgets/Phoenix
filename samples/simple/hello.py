@@ -15,7 +15,7 @@ st = wx.StaticText(pnl, pos=(15,40),
 st.SetFont(wx.FFont(10, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
 
 bmp = wx.Bitmap(os.path.join(os.path.dirname(__file__), 'phoenix_main.png'))
-sb = wx.StaticBitmap(pnl, label=bmp, pos=(15,85))
+sb = wx.StaticBitmap(pnl, bitmap=bmp, pos=(15,85))
 
 frm.Show()
 app.MainLoop()

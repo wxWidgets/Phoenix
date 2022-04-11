@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     26-Jan-2007
-# Copyright:   (c) 2007-2017 by Total Control Software
+# Copyright:   (c) 2007-2020 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags:        py3-port, phoenix-port, documented
@@ -88,7 +88,7 @@ class InspectionTool:
     def Show(self, selectObj=None, refreshTree=False):
         """
         Creates the inspection frame if it hasn't been already, and
-        raises it if neccessary.
+        raises it if necessary.
 
         :param `selectObj`: Pass a widget or sizer to have that object be
                      preselected in widget tree.
@@ -762,7 +762,7 @@ class FlagsFormatter(object):
 
     def __str__(self):
         st = []
-        for k in self.d.keys():
+        for k in self.d:
             if self.val & k:
                 st.append(self.d[k])
         if st:
@@ -823,7 +823,7 @@ class _InspectionHighlighter(object):
     highlightTime = 3000   # how long to display the highlights
 
                            # how to draw it
-    useOverlay = 'wxMac' in wx.PlatformInfo
+    useOverlay = 'wxMac' in wx.PlatformInfo or 'gtk3' in wx.PlatformInfo
 
 
     def __init__(self):
@@ -874,7 +874,7 @@ class _InspectionHighlighter(object):
         pos = self.FindHighlightPos(tlw, win.ClientToScreen(pos))
         rect.SetPosition(pos)
         if rect.width < 1: rect.width = 1
-        if rect.width < 1: rect.width = 1
+        if rect.height < 1: rect.height = 1
         self.DoHighlight(tlw, rect, self.color1, penWidth)
 
 
@@ -1052,7 +1052,7 @@ class _InspectionHighlighter(object):
 
     def FlickerTLW(self, tlw):
         """
-        Use a timer to alternate a TLW between shown and hidded state a
+        Use a timer to alternate a TLW between shown and hidden state a
         few times.  Use to highlight a TLW since drawing and clearing an
         outline is trickier.
         """

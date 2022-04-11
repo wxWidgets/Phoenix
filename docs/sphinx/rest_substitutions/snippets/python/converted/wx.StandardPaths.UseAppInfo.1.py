@@ -1,2 +1,2 @@
-          
-           info = AppInfo_AppName | AppInfo_VendorName 
+
+           info = AppInfo_AppName | AppInfo_VendorName

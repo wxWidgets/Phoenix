@@ -13,9 +13,7 @@ This contains all of the PolyXXX objects used by :mod:`wx.lib.plot`.
 __docformat__ = "restructuredtext en"
 
 # Standard Library
-import string as _string
 import time as _time
-import sys
 import wx
 import warnings
 from collections import namedtuple
@@ -33,12 +31,9 @@ except:
     raise ImportError("NumPy not found.\n" + msg)
 
 # Package
-from .utils import PendingDeprecation
+from .utils import pendingDeprecation
 from .utils import TempStyle
-
-
-# XXX: Comment out this line to disable deprecation warnings
-warnings.simplefilter('default')
+from .utils import pairwise
 
 
 class PolyPoints(object):
@@ -66,7 +61,7 @@ class PolyPoints(object):
         self.attributes = {}
         self.attributes.update(self._attributes)
         for name, value in attr.items():
-            if name not in self._attributes.keys():
+            if name not in self._attributes:
                 err_txt = "Style attribute incorrect. Should be one of {}"
                 raise KeyError(err_txt.format(self._attributes.keys()))
             self.attributes[name] = value
@@ -90,13 +85,18 @@ class PolyPoints(object):
             raise ValueError("`logscale` must be a 2-tuple of bools")
         self._logscale = logscale
 
-    @PendingDeprecation("self.logScale property")
     def setLogScale(self, logscale):
         """
         Set to change the axes to plot Log10(values)
 
         Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.polyobjects.PolyPoints.logScale`
+           property instead.
         """
+        pendingDeprecation("self.logScale property")
         self._logscale = logscale
 
     @property
@@ -272,7 +272,7 @@ class PolyPoints(object):
 
     def boundingBox(self):
         """
-        Returns the bouding box for the entire dataset as a tuple with this
+        Returns the bounding box for the entire dataset as a tuple with this
         format::
 
             ((minX, minY), (maxX, maxY))
@@ -305,7 +305,7 @@ class PolyPoints(object):
             # no curves to draw
             return
 
-        # TODO: Can we remove the if statement alltogether? Does
+        # TODO: Can we remove the if statement altogether? Does
         #       scaleAndShift ever get called when the current value equals
         #       the new value?
 
@@ -417,7 +417,7 @@ class PolyLine(PolyPoints):
 
         if not isinstance(colour, wx.Colour):
             colour = wx.Colour(colour)
-        pen = wx.Pen(colour, width, style)
+        pen = wx.Pen(colour, int(width), style)
         pen.SetCap(wx.CAP_BUTT)
         dc.SetPen(pen)
         if coord is None:
@@ -425,6 +425,7 @@ class PolyLine(PolyPoints):
                 for c1, c2 in zip(self.scaled, self.scaled[1:]):
                     self._path(dc, c1, c2, drawstyle)
         else:
+            coord = [(int(c[0]), int(c[1])) for c in coord]
             dc.DrawLines(coord)  # draw legend line
 
     def getSymExtent(self, printerScale):
@@ -478,6 +479,7 @@ class PolyLine(PolyPoints):
             err_txt = "Invalid drawstyle '{}'. Must be one of {}."
             raise ValueError(err_txt.format(drawstyle, self._drawstyles))
 
+        line = [(int(p[0]), int(p[1])) for p in line]
         dc.DrawLines(line)
 
 
@@ -518,13 +520,14 @@ class PolySpline(PolyLine):
         style = self.attributes['style']
         if not isinstance(colour, wx.Colour):
             colour = wx.Colour(colour)
-        pen = wx.Pen(colour, width, style)
+        pen = wx.Pen(colour, int(width), style)
         pen.SetCap(wx.CAP_ROUND)
         dc.SetPen(pen)
         if coord is None:
-            if len(self.scaled):  # bugfix for Mac OS X
-                dc.DrawSpline(self.scaled)
+            if len(self.scaled) >= 3:
+                dc.DrawSpline(self.scaled.astype(np.int32))
         else:
+            coord = [(int(c[0]), int(c[1])) for c in coord]
             dc.DrawLines(coord)  # draw legend line
 
 
@@ -574,8 +577,6 @@ class PolyMarker(PolyPoints):
                    'legend': ''}
 
     def __init__(self, points, **attr):
-
-
         PolyPoints.__init__(self, points, attr)
 
     def draw(self, dc, printerScale, coord=None):
@@ -592,7 +593,7 @@ class PolyMarker(PolyPoints):
         if fillcolour and not isinstance(fillcolour, wx.Colour):
             fillcolour = wx.Colour(fillcolour)
 
-        dc.SetPen(wx.Pen(colour, width))
+        dc.SetPen(wx.Pen(colour, int(width)))
         if fillcolour:
             dc.SetBrush(wx.Brush(fillcolour, fillstyle))
         else:
@@ -620,6 +621,7 @@ class PolyMarker(PolyPoints):
         dc.DrawEllipseList(rect.astype(np.int32))
 
     def _dot(self, dc, coords, size=1):
+        coords = [(int(c[0]), int(c[1])) for c in coords]
         dc.DrawPointList(coords)
 
     def _square(self, dc, coords, size=1):
@@ -681,7 +683,7 @@ class PolyBarsBase(PolyPoints):
         PolyPoints.__init__(self, points, attr)
 
     def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
-        """same as override method, but retuns a value."""
+        """same as override method, but returns a value."""
         scaled = scale * data + shift
         return scaled
 
@@ -701,7 +703,7 @@ class PolyBarsBase(PolyPoints):
 
         if not isinstance(pencolour, wx.Colour):
             pencolour = wx.Colour(pencolour)
-        pen = wx.Pen(pencolour, penwidth, penstyle)
+        pen = wx.Pen(pencolour, int(penwidth), penstyle)
         pen.SetCap(wx.CAP_BUTT)
 
         if not isinstance(fillcolour, wx.Colour):
@@ -792,6 +794,7 @@ class PolyBars(PolyBarsBase):
                 raise TypeError(err_str.format(type(barwidth)))
 
             rects = [self.calc_rect(x, y, w) for x, y, w in pts]
+            rects = [(int(r[0]), int(r[1]), int(r[2]), int(r[3])) for r in rects]
             dc.DrawRectangleList(rects)
         else:
             dc.DrawLines(coord)  # draw legend line
@@ -840,14 +843,6 @@ class PolyHistogram(PolyBarsBase):
         self.hist = hist
         self.binspec = binspec
 
-        # need to create a series of points to be used by PolyPoints
-        import itertools
-        def pairwise(iterable):
-            "s -> (s0,s1), (s1,s2), (s2, s3), ..."
-            a, b = itertools.tee(iterable)
-            next(b, None)
-            return zip(a, b)
-
         # define the bins and center x locations
         self.bins = list(pairwise(self.binspec))
         bar_center_x = (pair[0] + (pair[1] - pair[0])/2 for pair in self.bins)
@@ -868,6 +863,8 @@ class PolyHistogram(PolyBarsBase):
             rects = [self.calc_rect(y, low, high)
                      for y, (low, high)
                      in zip(self.hist, self.bins)]
+            rects = [(int(r[0]), int(r[1]), int(r[2]), int(r[3]))
+                     for r in rects]
 
             dc.DrawRectangleList(rects)
         else:
@@ -985,7 +982,7 @@ class PolyBoxPlot(PolyPoints):
             p = self._points
             pxy = np.array(pntXY)
 
-        # determine distnace for each point
+        # determine distance for each point
         d = np.sqrt(np.add.reduce((p - pxy) ** 2, 1))  # sqrt(dx^2+dy^2)
         pntIndex = np.argmin(d)
         dist = d[pntIndex]
@@ -1013,13 +1010,13 @@ class PolyBoxPlot(PolyPoints):
 
         outliers are outside of 1.5 * IQR
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         data : array-like
             The data to plot
 
-        Returns:
-        --------
+        Returns
+        -------
         bpdata : collections.namedtuple
             Descriptive statistics for data:
             (min_data, low_whisker, q25, median, q75, high_whisker, max_data)
@@ -1060,7 +1057,7 @@ class PolyBoxPlot(PolyPoints):
         return outliers
 
     def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
-        """same as override method, but retuns a value."""
+        """same as override method, but returns a value."""
         scaled = scale * data + shift
         return scaled
 
@@ -1069,8 +1066,8 @@ class PolyBoxPlot(PolyPoints):
         """
         Draws a box plot on the DC.
 
-        Notes:
-        ------
+        Notes
+        -----
         The following draw order is required:
 
         1. First the whisker line
@@ -1080,7 +1077,7 @@ class PolyBoxPlot(PolyPoints):
         This is because
 
         + The whiskers are drawn as single line rather than two lines
-        + The median line must be visable over the box if the box has a fill.
+        + The median line must be visible over the box if the box has a fill.
 
         Other than that, the draw order can be changed.
         """
@@ -1124,10 +1121,10 @@ class PolyBoxPlot(PolyPoints):
                                       self.currentShift)
 
         # rectangles are drawn (left, top, width, height) so adjust
-        iqr_box = [iqr_box[0][0],                   # X (left)
-                   iqr_box[0][1],                   # Y (top)
-                   iqr_box[1][0] - iqr_box[0][0],   # Width
-                   iqr_box[1][1] - iqr_box[0][1]]   # Height
+        iqr_box = [int(iqr_box[0][0]),                   # X (left)
+                   int(iqr_box[0][1]),                   # Y (top)
+                   int(iqr_box[1][0] - iqr_box[0][0]),   # Width
+                   int(iqr_box[1][1] - iqr_box[0][1])]   # Height
 
         box_pen = wx.Pen(wx.BLACK, 3, wx.PENSTYLE_SOLID)
         box_brush = wx.Brush(wx.GREEN, wx.BRUSHSTYLE_SOLID)
@@ -1235,11 +1232,6 @@ class PlotGraphics(object):
 
     @property
     def logScale(self):
-        # TODO: convert to try..except statement
-#        try:
-#        return [obj.logScale for obj in self.objects]
-#        except:     # what error would be returned?
-#            return
         if len(self.objects) == 0:
             return
         return [obj.logScale for obj in self.objects]
@@ -1254,16 +1246,16 @@ class PlotGraphics(object):
         for obj in self.objects:
             obj.logScale = logscale
 
-    @PendingDeprecation("self.logScale property")
     def setLogScale(self, logscale):
         """
         Set the log scale boolean value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.logScale` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.logScale`
+           property instead.
         """
+        pendingDeprecation("self.logScale property")
         self.logScale = logscale
 
     @property
@@ -1294,88 +1286,88 @@ class PlotGraphics(object):
         for o in self.objects:
             o.scaleAndShift(scale, shift)
 
-    @PendingDeprecation("self.printerScale property")
     def setPrinterScale(self, scale):
         """
         Thickens up lines and markers only for printing
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.printerScale` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.printerScale`
+           property instead.
         """
+        pendingDeprecation("self.printerScale property")
         self.printerScale = scale
 
-    @PendingDeprecation("self.xLabel property")
     def setXLabel(self, xLabel=''):
         """
         Set the X axis label on the graph
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.xLabel` property
-           instead.
-       """
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.xLabel`
+           property instead.
+        """
+        pendingDeprecation("self.xLabel property")
         self.xLabel = xLabel
 
-    @PendingDeprecation("self.yLabel property")
     def setYLabel(self, yLabel=''):
         """
         Set the Y axis label on the graph
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.yLabel` property
-           instead.
-       """
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.yLabel`
+           property instead.
+        """
+        pendingDeprecation("self.yLabel property")
         self.yLabel = yLabel
 
-    @PendingDeprecation("self.title property")
     def setTitle(self, title=''):
         """
         Set the title at the top of graph
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.title` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.title`
+           property instead.
         """
+        pendingDeprecation("self.title property")
         self.title = title
 
-    @PendingDeprecation("self.xLabel property")
     def getXLabel(self):
         """
         Get X axis label string
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.xLabel` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.xLabel`
+           property instead.
         """
+        pendingDeprecation("self.xLabel property")
         return self.xLabel
 
-    @PendingDeprecation("self.yLabel property")
     def getYLabel(self):
         """
         Get Y axis label string
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.yLabel` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.yLabel`
+           property instead.
         """
+        pendingDeprecation("self.yLabel property")
         return self.yLabel
 
-    @PendingDeprecation("self.title property")
     def getTitle(self, title=''):
         """
         Get the title at the top of graph
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.title` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.title`
+           property instead.
         """
+        pendingDeprecation("self.title property")
         return self.title
 
     @property
@@ -1445,9 +1437,7 @@ class PlotGraphics(object):
         return self.objects[item]
 
 
-
-
-#-------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 # Used to layout the printer page
 
 
@@ -1477,7 +1467,7 @@ class PlotPrintout(wx.Printout):
 #        print("DC GetSize", dc.GetSize())
 #        print("GetPageSizePixels", self.GetPageSizePixels())
         # Note PPIScreen does not give the correct number
-        # Calulate everything for printer and then scale for preview
+        # Calculate everything for printer and then scale for preview
         PPIPrinter = self.GetPPIPrinter()        # printer dots/inch (w,h)
         # PPIScreen= self.GetPPIScreen()          # screen dots/inch (w,h)
         dcSize = dc.GetSize()                    # DC size
@@ -1520,7 +1510,7 @@ class PlotPrintout(wx.Printout):
         self.graph._setSize(plotAreaW, plotAreaH)
 
         # Set offset and scale
-        dc.SetDeviceOrigin(pixLeft, pixTop)
+        dc.SetDeviceOrigin(int(pixLeft), int(pixTop))
 
         # Thicken up pens and increase marker size for printing
         ratioW = float(plotAreaW) / clientDcSize[0]

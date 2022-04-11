@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ PUNCTUATION = '!"#$%\'()*,./:;<=>?@\\^{|}~'
 # Conversion between XML sections and ReST sections
 SECTIONS = [('return'    , ':returns:'),
             ('since'     , '.. versionadded::'),
-            ('deprecated', '.. deprecated::'),
+            ('deprecated', '.. wxdeprecated::'),   # use the custom admonition for deprecation
             ('warning'   , '.. warning::'),
             ('remarks'   , '.. note::'),
             ('remark'    , '.. note::'),
@@ -60,7 +60,9 @@ SECTIONS = [('return'    , ':returns:'),
             ('note'      , '.. note::'),
             ('see'       , '.. seealso::'),
             ('todo'      , '.. todo::'),
-            ('par'       , '')]
+            ('pre'       , ':precondition:'),
+            ('par'       , '')
+            ]
 
 
 # List of things to remove/ignore (there may be more)
@@ -256,10 +258,12 @@ DOXY_2_REST = [('@author:',        '\n.. moduleauthor:: '),
                ('@kwarg',          ':keyword'),
                ('@note:',          '\n.. note:: '),
                ('@package:',       '\n**Package:** '),
-               ('@package',       '\n**Package:** '),
+               ('@package',        '\n**Package:** '),
                ('@postcondition:', '\n:postcondition: '),
                ('@pre:',           '\n:precondition: '),
                ('@precondition:',  '\n:precondition: '),
+               ('@pre',            '\n:precondition: '),
+               ('@precondition',   '\n:precondition: '),
                ('@requires:',      '\n:requires: '),
                ('@returns:',       '\n:returns: '),
                ('@return:',        '\n:returns: '),

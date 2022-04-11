@@ -88,7 +88,7 @@ Usage example::
                                           wx.Size(180, 200), wx.SIMPLE_BORDER)
 
             progress_pie.SetBackColour(wx.Colour(150, 200, 255))
-            progress_pie.SetFilledColour(wx.Colour(255, 0, 0))
+            progress_pie.SetFilledColour(wx.RED)
             progress_pie.SetUnfilledColour(wx.WHITE)
             progress_pie.SetHeight(20)
 
@@ -193,7 +193,7 @@ class PieCtrlLegend(wx.Window):
         self._titlecolour = wx.Colour(0, 0, 127)
         self._labelcolour = wx.BLACK
         self._labelfont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._backcolour = wx.Colour(255, 255, 0)
+        self._backcolour = wx.YELLOW
         self._backgroundDC = wx.MemoryDC()
         self._parent = parent
 
@@ -356,14 +356,23 @@ class PieCtrlLegend(wx.Window):
         mdc.SetTextForeground(self._labelcolour)
         maxwidth = 0
 
-        for ii in range(len(self._parent._series)):
+        # local opts
+        wxBrush = wx.Brush
+        _parent_series = self._parent._series
+        _horborder = self._horborder
+        mdc_GetTextExtent = mdc.GetTextExtent
+        mdc_SetBrush = mdc.SetBrush
+        mdc_DrawCircle = mdc.DrawCircle
+        mdc_DrawText = mdc.DrawText
 
-            tw, th = mdc.GetTextExtent(self._parent._series[ii].GetLabel())
-            mdc.SetBrush(wx.Brush(self._parent._series[ii].GetColour()))
-            mdc.DrawCircle(self._horborder+5, dy+th//2, 5)
-            mdc.DrawText(self._parent._series[ii].GetLabel(), self._horborder+15, dy)
+        for ii in range(len(_parent_series)):
+
+            tw, th = mdc_GetTextExtent(_parent_series[ii].GetLabel())
+            mdc_SetBrush(wxBrush(_parent_series[ii].GetColour()))
+            mdc_DrawCircle(_horborder+5, dy+th//2, 5)
+            mdc_DrawText(_parent_series[ii].GetLabel(), _horborder+15, dy)
             dy = dy + th + 3
-            maxwidth = max(maxwidth, int(2*self._horborder+tw+15))
+            maxwidth = max(maxwidth, int(2*_horborder+tw+15))
 
         dy = dy + self._verborder
         if w != maxwidth or h != dy:
@@ -524,8 +533,8 @@ class PieCtrl(wx.Window):
     def RecreateCanvas(self):
         """ Recreates the :class:`PieCtrl` container (canvas). """
 
-        self._canvasbitmap = wx.Bitmap(self.GetSize().GetWidth(),
-                                       self.GetSize().GetHeight())
+        self._canvasbitmap = wx.Bitmap(max(1, self.GetSize().GetWidth()),
+                                       max(1, self.GetSize().GetHeight()))
         self._canvasDC.SelectObject(self._canvasbitmap)
 
 
@@ -535,15 +544,17 @@ class PieCtrl(wx.Window):
         angles = []
         total = 0.0
 
-        for ii in range(len(self._series)):
-            total = total + self._series[ii].GetValue()
+        _series = self._series  # local opt
+
+        for ii in range(len(_series)):
+            total = total + _series[ii].GetValue()
 
         current = 0.0
         angles.append(current)
 
-        for ii in range(len(self._series)):
+        for ii in range(len(_series)):
 
-            current = current + self._series[ii].GetValue()
+            current = current + _series[ii].GetValue()
             angles.append(360.0*current/total)
 
         return angles
@@ -555,7 +566,6 @@ class PieCtrl(wx.Window):
 
         :param `angle`: the orientation angle for :class:`PieCtrl`, in radians.
         """
-
         if angle < 0:
             angle = 0
         if angle > pi/2:
@@ -660,38 +670,47 @@ class PieCtrl(wx.Window):
         :param `h`: the control's height.
         """
 
+        # local opts
+        _angle = self._angle
+        _rotationangle = self._rotationangle
+        wxPen = wx.Pen
+        wxBrush = wx.Brush
+        dc_SetPen = dc.SetPen
+        dc_SetBrush = dc.SetBrush
+        dc_DrawEllipticArc = dc.DrawEllipticArc
+
         angles = self.GetPartAngles()
         oldpen = dc.GetPen()
 
         if self._showedges:
-            dc.SetPen(wx.BLACK_PEN)
+            dc_SetPen(wx.BLACK_PEN)
 
         for ii in range(len(angles)):
-
             if ii > 0:
-
                 if not self._showedges:
-                    dc.SetPen(wx.Pen(self._series[ii-1].GetColour()))
+                    dc_SetPen(wxPen(self._series[ii-1].GetColour()))
 
-                dc.SetBrush(wx.Brush(self._series[ii-1].GetColour()))
+                dc_SetBrush(wxBrush(self._series[ii-1].GetColour()))
 
                 if angles[ii-1] != angles[ii]:
-                    dc.DrawEllipticArc(0, int((1-sin(self._angle))*(h//2)+cy), w,
-                                       int(h*sin(self._angle)),
-                                       angles[ii-1]+self._rotationangle/pi*180,
-                                       angles[ii]+self._rotationangle/pi*180)
-
+                    height = int(h*sin(_angle))
+                    if height > 0:
+                        dc_DrawEllipticArc(0, int((1-sin(_angle))*(h//2)+cy),
+                                        w, height,
+                                        angles[ii-1]+_rotationangle/pi*180,
+                                        angles[ii]+_rotationangle/pi*180)
 
         if len(self._series) == 1:
+            height = int(h*sin(_angle))
+            if height > 0:
+                dc_SetBrush(wxBrush(self._series[0].GetColour()))
+                dc_DrawEllipticArc(0, int((1-sin(_angle))*(h//2)+cy),
+                                w, height, 0, 360)
 
-            dc.SetBrush(wx.Brush(self._series[0].GetColour()))
-            dc.DrawEllipticArc(0, int((1-sin(self._angle))*(h//2)+cy), w,
-                               int(h*sin(self._angle)), 0, 360)
-
-        dc.SetPen(oldpen)
+        dc_SetPen(oldpen)
 
 
-    def Draw(self, pdc):
+    def Draw(self, dc):
         """
         Draws all the sectors of :class:`PieCtrl`.
 
@@ -700,41 +719,56 @@ class PieCtrl(wx.Window):
 
         w, h = self.GetSize()
 
-        self._canvasDC.SetBackground(wx.WHITE_BRUSH)
-        self._canvasDC.Clear()
+        # local opts
+        _angle = self._angle
+        _rotationangle = self._rotationangle
+        _height = self._height
+        _canvasDC = self._canvasDC
+        wxBrush = wx.Brush
+        wxPen = wx.Pen
+        wxColour = wx.Colour
+        _canvasDC_SetBrush = _canvasDC.SetBrush
+        _canvasDC_SetPen = _canvasDC.SetPen
+        _canvasDC_GetPen = _canvasDC.GetPen
+        _canvasDC_DrawPolygon = _canvasDC.DrawPolygon
+        tau = pi * 2
+
+        _canvasDC.SetBackground(wx.WHITE_BRUSH)
+        _canvasDC.Clear()
 
         if self._background != wx.NullBitmap:
-
-            for ii in range(0, w, self._background.GetWidth()):
-
-                for jj in range(0, h, self._background.GetHeight()):
-
-                    self._canvasDC.DrawBitmap(self._background, ii, jj)
-
+            ## for ii in range(0, w, self._background.GetWidth()):
+            ##     for jj in range(0, h, self._background.GetHeight()):
+            ##         _canvasDC.DrawBitmap(self._background, ii, jj)
+            _background = self._background
+            bw, bh = _background.GetSize()
+            _canvasDC_DrawBitmap = _canvasDC.DrawBitmap
+            [_canvasDC_DrawBitmap(_background, ii, jj)
+                for jj in range(0, h, bh)
+                    for ii in range(0, w, bw)]
         else:
-
-            self._canvasDC.SetBackground(wx.Brush(self._backcolour))
-            self._canvasDC.Clear()
+            _canvasDC.SetBackground(wxBrush(self._backcolour))
+            _canvasDC.Clear()
 
         if len(self._series) > 0:
+            _series = self._series  # local opt
 
-            if self._angle <= pi/2:
-                self.DrawParts(self._canvasDC, 0, int(self._height*cos(self._angle)), w, h)
+            if _angle <= pi/2:
+                self.DrawParts(_canvasDC, 0, int(_height*cos(_angle)), w, h)
             else:
-                self.DrawParts(self._canvasDC, 0, 0, w, h)
+                self.DrawParts(_canvasDC, 0, 0, w, h)
 
             points = [[0, 0]]*4
             triangle = [[0, 0]]*3
-            self._canvasDC.SetPen(wx.Pen(wx.BLACK))
+            _canvasDC_SetPen(wx.BLACK_PEN)
             angles = self.GetPartAngles()
             angleindex = 0
-            self._canvasDC.SetBrush(wx.Brush(wx.Colour(self._series[angleindex].GetColour().Red(),
-                                                       self._series[angleindex].GetColour().Green(),
-                                                       self._series[angleindex].GetColour().Blue())))
+            c = _series[angleindex].GetColour()
+            _canvasDC_SetBrush(wxBrush(wxColour(c.red, c.green, c.blue)))
             changeangle = False
             x = 0.0
 
-            while x <= 2*pi:
+            while x <= tau:
 
                 changeangle = False
 
@@ -746,8 +780,8 @@ class PieCtrl(wx.Window):
                         x = angles[angleindex+1]*pi/180.0
 
                 points[0] = points[1]
-                px = int(w/2.0*(1+cos(x+self._rotationangle)))
-                py = int(h/2.0-sin(self._angle)*h/2.0*sin(x+self._rotationangle)-1)
+                px = int(w/2.0*(1+cos(x+_rotationangle)))
+                py = int(h/2.0-sin(_angle)*h/2.0*sin(x+_rotationangle)-1)
                 points[1] = [px, py]
                 triangle[0] = [w // 2, h // 2]
                 triangle[1] = points[0]
@@ -755,11 +789,11 @@ class PieCtrl(wx.Window):
 
                 if x > 0:
 
-                    self._canvasDC.SetBrush(wx.Brush(self._series[angleindex].GetColour()))
-                    oldPen = self._canvasDC.GetPen()
-                    self._canvasDC.SetPen(wx.Pen(self._series[angleindex].GetColour()))
-                    self._canvasDC.DrawPolygon([wx.Point(pts[0], pts[1]) for pts in triangle])
-                    self._canvasDC.SetPen(oldPen)
+                    _canvasDC_SetBrush(wxBrush(_series[angleindex].GetColour()))
+                    oldPen = _canvasDC_GetPen()
+                    _canvasDC_SetPen(wxPen(_series[angleindex].GetColour()))
+                    _canvasDC_DrawPolygon(triangle)
+                    _canvasDC_SetPen(oldPen)
 
                 if changeangle:
 
@@ -767,26 +801,25 @@ class PieCtrl(wx.Window):
 
                 x = x + 0.05
 
-            x = 2*pi
             points[0] = points[1]
-            px = int(w/2.0 * (1+cos(x+self._rotationangle)))
-            py = int(h/2.0-sin(self._angle)*h/2.0*sin(x+self._rotationangle)-1)
+            px = int(w/2.0 * (1+cos(tau+_rotationangle)))
+            py = int(h/2.0-sin(_angle)*h/2.0*sin(tau+_rotationangle)-1)
             points[1] = [px, py]
             triangle[0] = [w // 2, h // 2]
             triangle[1] = points[0]
             triangle[2] = points[1]
 
-            self._canvasDC.SetBrush(wx.Brush(self._series[angleindex].GetColour()))
-            oldPen = self._canvasDC.GetPen()
-            self._canvasDC.SetPen(wx.Pen(self._series[angleindex].GetColour()))
-            self._canvasDC.DrawPolygon([wx.Point(pts[0], pts[1]) for pts in triangle])
+            _canvasDC_SetBrush(wxBrush(_series[angleindex].GetColour()))
+            oldPen = _canvasDC_GetPen()
+            _canvasDC_SetPen(wxPen(_series[angleindex].GetColour()))
+            _canvasDC_DrawPolygon(triangle)
 
-            self._canvasDC.SetPen(oldPen)
+            _canvasDC_SetPen(oldPen)
             angleindex = 0
 
             x = 0.0
 
-            while x <= 2*pi:
+            while x <= tau:
 
                 changeangle = False
                 if angleindex < len(angles):
@@ -798,24 +831,23 @@ class PieCtrl(wx.Window):
 
                 points[0] = points[1]
                 points[3] = points[2]
-                px = int(w/2.0 * (1+cos(x+self._rotationangle)))
-                py = int(h/2.0-sin(self._angle)*h/2.0*sin(x+self._rotationangle)-1)
+                px = int(w/2.0 * (1+cos(x+_rotationangle)))
+                py = int(h/2.0-sin(_angle)*h/2.0*sin(x+_rotationangle)-1)
                 points[1] = [px, py]
-                points[2] = [px, int(py+self._height*cos(self._angle))]
+                points[2] = [px, int(py+_height*cos(_angle))]
 
                 if w > 0:
-
-                    curColour = wx.Colour(int(self._series[angleindex].GetColour().Red()*(1.0-float(px)/w)),
-                                          int(self._series[angleindex].GetColour().Green()*(1.0-float(px)/w)),
-                                          int(self._series[angleindex].GetColour().Blue()*(1.0-float(px)/w)))
+                    c = _series[angleindex].GetColour()
+                    v = 1.0-float(px)/w
+                    curColour = wxColour(int(c.red*v), int(c.green*v), int(c.blue*v))
 
                     if not self._showedges:
-                        self._canvasDC.SetPen(wx.Pen(curColour))
+                        _canvasDC_SetPen(wxPen(curColour))
 
-                    self._canvasDC.SetBrush(wx.Brush(curColour))
+                    _canvasDC_SetBrush(wxBrush(curColour))
 
-                if sin(x+self._rotationangle) < 0 and sin(x-0.05+self._rotationangle) <= 0 and x > 0:
-                    self._canvasDC.DrawPolygon([wx.Point(pts[0], pts[1]) for pts in points])
+                if sin(x+_rotationangle) < 0 and sin(x-0.05+_rotationangle) <= 0 and x > 0:
+                    _canvasDC_DrawPolygon(points)
 
                 if changeangle:
 
@@ -823,35 +855,33 @@ class PieCtrl(wx.Window):
 
                 x = x + 0.05
 
-            x = 2*pi
             points[0] = points[1]
             points[3] = points[2]
-            px = int(w/2.0 * (1+cos(x+self._rotationangle)))
-            py = int(h/2.0-sin(self._angle)*h/2.0*sin(x+self._rotationangle)-1)
+            px = int(w/2.0 * (1+cos(tau+_rotationangle)))
+            py = int(h/2.0-sin(_angle)*h/2.0*sin(tau+_rotationangle)-1)
             points[1] = [px, py]
-            points[2] = [px, int(py+self._height*cos(self._angle))]
+            points[2] = [px, int(py+_height*cos(_angle))]
 
             if w > 0:
-
-                curColour = wx.Colour(int(self._series[angleindex].GetColour().Red()*(1.0-float(px)/w)),
-                                      int(self._series[angleindex].GetColour().Green()*(1.0-float(px)/w)),
-                                      int(self._series[angleindex].GetColour().Blue()*(1.0-float(px)/w)))
+                c = _series[angleindex].GetColour()
+                v = 1.0-float(px)/w
+                curColour = wxColour(int(c.red*v), int(c.green*v), int(c.blue*v))
 
                 if not self._showedges:
-                    self._canvasDC.SetPen(wx.Pen(curColour))
+                    _canvasDC_SetPen(wxPen(curColour))
 
-                self._canvasDC.SetBrush(wx.Brush(curColour))
+                _canvasDC_SetBrush(wxBrush(curColour))
 
-            if sin(x+self._rotationangle) < 0 and sin(x-0.05+self._rotationangle) <= 0:
-                self._canvasDC.DrawPolygon([wx.Point(pts[0], pts[1]) for pts in points])
+            if sin(x+_rotationangle) < 0 and sin(x-0.05+_rotationangle) <= 0:
+                _canvasDC_DrawPolygon(points)
 
-            if self._angle <= pi/2:
-                self.DrawParts(self._canvasDC, 0, 0, w, h)
+            if _angle <= pi/2:
+                self.DrawParts(_canvasDC, 0, 0, w, h)
             else:
-                self.DrawParts(self._canvasDC, 0, int(self._height*cos(self._angle)), w, h)
+                self.DrawParts(_canvasDC, 0, int(_height*cos(_angle)), w, h)
 
-        pdc.Blit(0, 0, w, h, self._canvasDC, 0, 0)
-        self._legend.RecreateBackground(self._canvasDC)
+        dc.Blit(0, 0, w, h, _canvasDC, 0, 0)
+        self._legend.RecreateBackground(_canvasDC)
 
 
     def OnPaint(self, event):
@@ -1028,7 +1058,7 @@ if __name__ == '__main__':
                                        wx.Size(180, 200), wx.SIMPLE_BORDER)
 
             progress_pie.SetBackColour(wx.Colour(150, 200, 255))
-            progress_pie.SetFilledColour(wx.Colour(255, 0, 0))
+            progress_pie.SetFilledColour(wx.RED)
             progress_pie.SetUnfilledColour(wx.WHITE)
             progress_pie.SetHeight(20)
 

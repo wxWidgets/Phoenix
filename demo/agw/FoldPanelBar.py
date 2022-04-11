@@ -184,7 +184,7 @@ class Extended(wx.Frame):
         msg = "This is the about dialog of the FoldPanelBar demo.\n\n" + \
               "Author: Andrea Gavana @ 23 Mar 2005\n\n" + \
               "Please report any bug/requests or improvements\n" + \
-              "To me at the following adresses:\n\n" + \
+              "To me at the following addresses:\n\n" + \
               "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
               "Based On Jorgen Bodde C++ demo implementation.\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
@@ -208,7 +208,7 @@ class Extended(wx.Frame):
 
     def OnFoldPanelBarDrag(self, event):
 
-        if event.GetDragStatus() == wx.SASH_STATUS_OUT_OF_RANGE:
+        if event.GetDragStatus() == wx.adv.SASH_STATUS_OUT_OF_RANGE:
             return
 
         if event.GetId() == self.ID_WINDOW_LEFT1:
@@ -297,11 +297,11 @@ class Extended(wx.Frame):
 
         item = self._pnl.AddFoldPanel("Caption Style", False, foldIcons=Images)
 
-        self.ID_USE_VGRADIENT = wx.NewId()
-        self.ID_USE_HGRADIENT = wx.NewId()
-        self.ID_USE_SINGLE = wx.NewId()
-        self.ID_USE_RECTANGLE = wx.NewId()
-        self.ID_USE_FILLED_RECTANGLE = wx.NewId()
+        self.ID_USE_VGRADIENT = wx.NewIdRef()
+        self.ID_USE_HGRADIENT = wx.NewIdRef()
+        self.ID_USE_SINGLE = wx.NewIdRef()
+        self.ID_USE_RECTANGLE = wx.NewIdRef()
+        self.ID_USE_FILLED_RECTANGLE = wx.NewIdRef()
 
         currStyle =  wx.RadioButton(item, self.ID_USE_VGRADIENT, "&Vertical Gradient")
         self._pnl.AddFoldPanelWindow(item, currStyle, fpb.FPB_ALIGN_WIDTH,
@@ -339,7 +339,7 @@ class Extended(wx.Frame):
         item = self._pnl.AddFoldPanel("Misc Stuff", collapsed=True, foldIcons=Images,
                                       cbstyle=cs)
 
-        button2 = wx.Button(item, wx.NewId(), "Collapse All")
+        button2 = wx.Button(item, wx.ID_ANY, "Collapse All")
         self._pnl.AddFoldPanelWindow(item, button2)
         self._pnl.AddFoldPanelWindow(item, wx.StaticText(item, -1, "Enter Some Comments"),
                                      fpb.FPB_ALIGN_WIDTH, 5, 20)
@@ -501,7 +501,7 @@ class Extended(wx.Frame):
             style.SetCaptionStyle(fpb.CAPTIONBAR_FILLED_RECTANGLE)
 
         else:
-            raise "ERROR: Undefined Style Selected For CaptionBar: " + repr(eventid)
+            raise ValueError("Undefined Style Selected For CaptionBar: " + repr(eventid))
 
         col1 = wx.Colour(self._rslider1.GetValue(), self._gslider1.GetValue(),
                          self._bslider1.GetValue())
@@ -523,13 +523,13 @@ class Extended(wx.Frame):
         # Make a menubar
         file_menu = wx.Menu()
 
-        FPBTEST_QUIT = wx.NewId()
-        FPBTEST_REFRESH = wx.NewId()
-        FPB_BOTTOM_FOLD = wx.NewId()
-        FPB_SINGLE_FOLD = wx.NewId()
-        FPB_EXCLUSIVE_FOLD = wx.NewId()
-        FPBTEST_TOGGLE_WINDOW = wx.NewId()
-        FPBTEST_ABOUT = wx.NewId()
+        FPBTEST_QUIT = wx.NewIdRef()
+        FPBTEST_REFRESH = wx.NewIdRef()
+        FPB_BOTTOM_FOLD = wx.NewIdRef()
+        FPB_SINGLE_FOLD = wx.NewIdRef()
+        FPB_EXCLUSIVE_FOLD = wx.NewIdRef()
+        FPBTEST_TOGGLE_WINDOW = wx.NewIdRef()
+        FPBTEST_ABOUT = wx.NewIdRef()
 
         file_menu.Append(FPBTEST_QUIT, "&Exit")
 
@@ -722,10 +722,10 @@ class Collapsed(wx.Frame):
 
     def CreateMenuBar(self):
 
-        FoldPanelBarTest_Quit = wx.NewId()
-        FoldPanelBarTest_About = wx.NewId()
-        FoldPanelBarTest_Horizontal = wx.NewId()
-        FoldPanelBarTest_Vertical = wx.NewId()
+        FoldPanelBarTest_Quit = wx.NewIdRef()
+        FoldPanelBarTest_About = wx.NewIdRef()
+        FoldPanelBarTest_Horizontal = wx.NewIdRef()
+        FoldPanelBarTest_Vertical = wx.NewIdRef()
 
         menuFile = wx.Menu()
         menuFile.Append(FoldPanelBarTest_Horizontal, "&Horizontal\tAlt-H")
@@ -846,8 +846,8 @@ class NotCollapsed(wx.Frame):
 
     def CreateMenuBar(self):
 
-        FoldPanelBarTest_Quit = wx.NewId()
-        FoldPanelBarTest_About = wx.NewId()
+        FoldPanelBarTest_Quit = wx.NewIdRef()
+        FoldPanelBarTest_About = wx.NewIdRef()
 
         menuFile = wx.Menu()
         menuFile.Append(FoldPanelBarTest_Quit, "E&xit\tAlt-X", "Quit This Program")

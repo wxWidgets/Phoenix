@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ def run():
     """, factory=True)
 
 
-    # Change this macro into a value so we wont have problems when SIP takes its
+    # Change this macro into a value so we won't have problems when SIP takes its
     # address
     module.addCppCode("""\
     #undef wxTransparentColour
@@ -82,9 +82,9 @@ def run():
     c.addProperty('blue Blue')
     c.addProperty('alpha Alpha')
 
-    c.find('GetPixel').ignore()  # We need to add a typcast
+    c.find('GetPixel').ignore()  # We need to add a typecast
     c.addCppMethod('wxIntPtr*', 'GetPixel', '()', """\
-        #ifdef __WXGTK3__
+        #if defined(__WXGTK3__) || defined(__WXOSX__)
             return new wxIntPtr(0);
         #else
             return new wxIntPtr((wxIntPtr)self->GetPixel());
@@ -154,6 +154,7 @@ def run():
             blue =  self->Blue();
             alpha = self->Alpha();
         }
+        wxPyThreadBlocker blocker;
         if (includeAlpha)
             return sipBuildResult(0, "(iiii)", red, green, blue, alpha);
         else
@@ -170,7 +171,6 @@ def run():
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.Colour"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
-    c.addPyMethod('__nonzero__', '(self)',         'return self.IsOk()')
     c.addPyMethod('__reduce__', '(self)',          'return (Colour, self.Get())')
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
@@ -182,6 +182,9 @@ def run():
                   else: raise IndexError
                   """)
     c.addPyCode('Colour.__safe_for_unpickling__ = True')
+
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     # Types that can be converted to wx.Colour:
     #     wxColour (duh)
@@ -258,7 +261,7 @@ def run():
                 PyObject* o4 = PySequence_ITEM(sipPy, 3);
                 *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3),
                                           wxPyInt_AsLong(o4));
-                Py_DECREF(o4);            
+                Py_DECREF(o4);
             }
             Py_DECREF(o1);
             Py_DECREF(o2);

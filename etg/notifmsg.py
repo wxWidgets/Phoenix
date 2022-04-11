@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     21-May-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,7 +33,28 @@ def run():
 
     c = module.find('wxNotificationMessage')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
+    # take care of some methods only available on MSW
+    c.find('UseTaskBarIcon').setCppCode("""\
+        #ifdef __WXMSW__
+            return wxNotificationMessage::UseTaskBarIcon(icon);
+        #else
+            wxPyRaiseNotImplemented();
+            return NULL;
+        #endif
+        """)
+
+    c.find('MSWUseToasts').setCppCode("""\
+        #ifdef __WXMSW__
+            return wxNotificationMessage::MSWUseToasts(*shortcutPath, *appId);
+        #else
+            wxPyRaiseNotImplemented();
+            return false;
+        #endif
+        """)
+
+    # TODO: Also add wxGenericNotificationMessage
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

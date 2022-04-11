@@ -4,7 +4,7 @@
 #
 # Created:     26-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Totcal Control Software
+# Copyright:   (c) 2011-2020 by Totcal Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

@@ -7,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Mar-2009
-# Copyright:   (c) 2009-2017 by Total Control Software
+# Copyright:   (c) 2009-2020 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 
@@ -156,7 +156,7 @@ class GridWithLabelRenderersMixin(object):
     # for now we will have to calculate them ourselves.
     def _getColLeftRight(self, col):
         c = 0
-        left = 0
+        left = -1
         while c < col:
             left += self.GetColSize(c)
             c += 1
@@ -165,11 +165,11 @@ class GridWithLabelRenderersMixin(object):
 
     def _getRowTopBottom(self, row):
         r = 0
-        top = 0
+        top = -1
         while r < row:
             top += self.GetRowSize(r)
             r += 1
-        bottom = top + self.GetRowSize(row) - 1
+        bottom = top + self.GetRowSize(row)
         return top, bottom
 
 
@@ -203,8 +203,12 @@ class GridLabelRenderer(object):
         dc.DrawLine(left, top, left, bottom)
         dc.DrawLine(left, bottom, right, bottom)
         dc.SetPen(wx.WHITE_PEN)
-        dc.DrawLine(left+1, top, left+1, bottom)
-        dc.DrawLine(left+1, top, right, top)
+        if top == 0:
+            dc.DrawLine(left + 1, top, left + 1, bottom)
+            dc.DrawLine(left + 1, top, right, top)
+        else:
+            dc.DrawLine(left + 1, top + 1, left + 1, bottom)
+            dc.DrawLine(left + 1, top + 1, right - 1, top + 1)
 
 
     def DrawText(self, grid, dc, rect, text, hAlign, vAlign):

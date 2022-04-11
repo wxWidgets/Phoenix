@@ -1,6 +1,6 @@
-    
+
         col = notebook.GetThemeBackgroundColour()
-        
-        if col.IsOk():        
+
+        if col.IsOk():
             page.SetBackgroundColour(col)
-        
+

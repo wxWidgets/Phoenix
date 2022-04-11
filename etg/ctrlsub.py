@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     2-Sept-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -46,7 +46,8 @@ def run():
         assert isinstance(m, etgtools.MethodDef)
         if 'void *' in m.argsString or \
            'wxClientData **' in m.argsString or \
-           'wxString *' in m.argsString:
+           'wxString *' in m.argsString or \
+            'std::vector' in m.argsString:
             m.ignore()
 
     for m in c.findAll('Append'):
@@ -58,10 +59,11 @@ def run():
 
 
     # The [G|S]etClientData methods deal with untyped void* values, which we
-    # don't support. The [G|S]etClientObject methods use wxClientData instaces
+    # don't support. The [G|S]etClientObject methods use wxClientData instances
     # which we have a MappedType for, so make the ClientData methods just be
     # aliases for ClientObjects. From the Python programmer's perspective they
     # would be virtually the same anyway.
+    c.find('SetClientObject.data').transfer = True
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
     c.find('GetClientObject').pyName = 'GetClientData'
@@ -74,16 +76,22 @@ def run():
         body="self.SetClientData(n, data)")
 
 
-    # Deal with transfering ownership of wxClientData objects
+    # Deal with transferring ownership of wxClientData objects
     c.find('DetachClientObject').transfer = True
     c.find('SetClientObject.data').transfer = True
     c.find('Append').findOverload('clientData').find('clientData').transfer = True
     c.find('Insert').findOverload('clientData').find('clientData').transfer = True
 
     # for compatibility, should they be deprecated?
-    c.addPyMethod('AppendItems', '(self, items)',    'self.Append(items)')
-    c.addPyMethod('GetItems', '(self)',    'return self.GetStrings()')
-    c.addPyMethod('SetItems', '(self, items)',    'self.Set(items)')
+    c.addPyMethod('AppendItems', '(self, items)',
+        doc="Alias for :meth:`Append`",
+        body="self.Append(items)")
+    c.addPyMethod('GetItems', '(self)',
+        doc="Alias for :meth:`GetStrings`",
+        body="return self.GetStrings()")
+    c.addPyMethod('SetItems', '(self, items)',
+        body="self.Set(items)",
+        doc="Alias for :meth:`Set`")
 
 
     c = module.find('wxControlWithItems')

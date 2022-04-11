@@ -1,2 +1,2 @@
-    
-     EnableEllipsize(wx.ELLIPSIZE_NONE) 
+
+     EnableEllipsize(wx.ELLIPSIZE_NONE)

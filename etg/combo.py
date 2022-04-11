@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     31-May-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -59,6 +59,12 @@ def run():
     c.find('Replace.from').name = 'frm'
     c.find('SetSelection.from').name = 'frm'
 
+
+    # deprecated and removed
+    c.find('GetTextIndent').ignore()
+    c.find('SetTextIndent').ignore()
+
+    #tools.fixItemContainerClass(c, False)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

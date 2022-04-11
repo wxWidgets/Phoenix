@@ -331,7 +331,7 @@ class RibbonGallery(RibbonControl):
             self._down_button_state = RIBBON_GALLERY_BUTTON_NORMAL
         if self._extension_button_state != RIBBON_GALLERY_BUTTON_DISABLED:
             self._extension_button_state = RIBBON_GALLERY_BUTTON_NORMAL
-        if self._hovered_item != None:
+        if self._hovered_item is not None:
             self._hovered_item = None
             notification = RibbonGalleryEvent(wxEVT_COMMAND_RIBBONGALLERY_HOVER_CHANGED, self.GetId())
             notification.SetEventObject(self)
@@ -382,7 +382,7 @@ class RibbonGallery(RibbonControl):
                 self._mouse_active_rect = wx.Rect(*self._extension_button_rect)
                 self._extension_button_state = RIBBON_GALLERY_BUTTON_ACTIVE
 
-        if self._mouse_active_rect != None:
+        if self._mouse_active_rect is not None:
             self.Refresh(False)
 
 
@@ -393,7 +393,7 @@ class RibbonGallery(RibbonControl):
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
-        if self._mouse_active_rect != None:
+        if self._mouse_active_rect is not None:
             pos = event.GetPosition()
 
             if self._active_item:
@@ -417,7 +417,7 @@ class RibbonGallery(RibbonControl):
                     notification.SetEventObject(self)
                     self.GetEventHandler().ProcessEvent(notification)
 
-                elif self._active_item != None:
+                elif self._active_item is not None:
                     if self._selected_item != self._active_item:
                         self._selected_item = self._active_item
                         notification = RibbonGalleryEvent(wxEVT_COMMAND_RIBBONGALLERY_SELECTED, self.GetId())
@@ -486,7 +486,7 @@ class RibbonGallery(RibbonControl):
         :note: Reimplemented from :class:`wx.Window`.
         """
 
-        if self._scroll_limit == 0 or self._art == None:
+        if self._scroll_limit == 0 or self._art is None:
             return False
 
         line_size = self._bitmap_padded_size.GetHeight()
@@ -576,7 +576,7 @@ class RibbonGallery(RibbonControl):
 
         dc = wx.AutoBufferedPaintDC(self)
 
-        if self._art == None:
+        if self._art is None:
             return
 
         self._art.DrawGalleryBackground(dc, self, wx.Rect(0, 0, *self.GetSize()))
@@ -672,7 +672,7 @@ class RibbonGallery(RibbonControl):
 
     def CalculateMinSize(self):
 
-        if self._art == None or not self._bitmap_size.IsFullySpecified():
+        if self._art is None or not self._bitmap_size.IsFullySpecified():
             self.SetMinSize(wx.Size(20, 20))
         else:
             self._bitmap_padded_size = wx.Size(*self._bitmap_size)
@@ -702,7 +702,7 @@ class RibbonGallery(RibbonControl):
 
     def Layout(self):
 
-        if self._art == None:
+        if self._art is None:
             return False
 
         dc = wx.MemoryDC()
@@ -789,7 +789,7 @@ class RibbonGallery(RibbonControl):
         rather than :meth:`RibbonControl.GetNextSmallerSize() <lib.agw.ribbon.control.RibbonControl.GetNextSmallerSize>`.
         """
 
-        if self._art == None:
+        if self._art is None:
             return relative_to
 
         dc = wx.MemoryDC()
@@ -805,8 +805,8 @@ class RibbonGallery(RibbonControl):
         if client.GetWidth() < 0 or client.GetHeight() < 0:
             return relative_to
 
-        client.x = (client.x / self._bitmap_padded_size.x) * self._bitmap_padded_size.x
-        client.y = (client.y / self._bitmap_padded_size.y) * self._bitmap_padded_size.y
+        client.x = (client.x // self._bitmap_padded_size.x) * self._bitmap_padded_size.x
+        client.y = (client.y // self._bitmap_padded_size.y) * self._bitmap_padded_size.y
 
         size = self._art.GetGallerySize(dc, self, wx.Size(*client))
         minimum = self.GetMinSize()
@@ -830,7 +830,7 @@ class RibbonGallery(RibbonControl):
         rather than :meth:`RibbonControl.GetNextLargerSize() <lib.agw.ribbon.control.RibbonControl.GetNextLargerSize>`.
         """
 
-        if self._art == None:
+        if self._art is None:
             return relative_to
 
         dc = wx.MemoryDC()
@@ -849,8 +849,8 @@ class RibbonGallery(RibbonControl):
         elif direction == wx.BOTH:
             client.IncBy(self._bitmap_padded_size)
 
-        client.x = (client.x / self._bitmap_padded_size.x) * self._bitmap_padded_size.x
-        client.y = (client.y / self._bitmap_padded_size.y) * self._bitmap_padded_size.y
+        client.x = (client.x // self._bitmap_padded_size.x) * self._bitmap_padded_size.x
+        client.y = (client.y // self._bitmap_padded_size.y) * self._bitmap_padded_size.y
 
         size = self._art.GetGallerySize(dc, self, wx.Size(*client))
         minimum = self.GetMinSize()

@@ -42,10 +42,10 @@ The Phoenix extension modules need to load the dynamic libraries that contain
 the wxWidgets code for the platform. In most cases the extension modules in
 this snapshot already know to look in the same folder for the wxWidgets
 shared libraries. This will work for Windows and Mac, and should also work
-for any unix-like system based on ELF binaries, and if the expected objdump 
+for any unix-like system based on ELF binaries, and if the expected objdump
 utility was found on the build system.
 
-For those cases where the build was not able to perform the neccesary magic
+For those cases where the build was not able to perform the necessary magic
 required to be able to make and use relocatable shared libraries, you may
 need to do a little extra to help wxPython find the wxWidgets libraries.
 Check your platform's documentation for details, but it may be as simple as

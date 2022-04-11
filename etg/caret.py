@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     17-Jun-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -39,9 +39,8 @@ def run():
     c.find('GetPosition').findOverload('int *').ignore()
     c.find('GetSize').findOverload('int *').ignore()
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-        """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
 
     #-----------------------------------------------------------------

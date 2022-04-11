@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     8-Nov-2010
-# Copyright:   (c) 2010-2017 by Total Control Software
+# Copyright:   (c) 2010-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -48,6 +48,7 @@ INCLUDES = [  # base and core stuff
               'clntdatactnr',
               'userdata',
               'wxpybuffer',
+              'msgdlg_btnlabel',
 
               'stockgdi',
               'longlong',
@@ -68,7 +69,8 @@ INCLUDES = [  # base and core stuff
               'position',
               'colour',
 
-              'stream', 'filesys',
+              'stream',
+              'filesys',
 
               # GDI and graphics
               'image',
@@ -91,6 +93,7 @@ INCLUDES = [  # base and core stuff
               'dcprint',
               'dcps',
               'dcsvg',
+              'metafile',
               'graphics',
               'imaglist',
               'overlay',
@@ -99,6 +102,7 @@ INCLUDES = [  # base and core stuff
               'rawbmp',
 
               # more core
+              'access',
               'accel',
               'log',
               'dataobj',
@@ -178,7 +182,10 @@ INCLUDES = [  # base and core stuff
               'listbook',
               'toolbook',
               'treebook',
+              'simplebook',
               'vlbox',
+              'activityindicator',
+              'collheaderctrl',
 
               # toplevel and dialogs
               'nonownedwnd',
@@ -254,7 +261,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode('#include <wxpy_api.h>')
+    module.addHeaderCode('#include <wxPython/wxpy_api.h>')
 
     module.addInclude(INCLUDES)
     module.includePyCode('src/core_ex.py', order=10)
@@ -277,7 +284,7 @@ def run():
                     port = 'gtk3'
             else:
                 port = '???'
-            return "%s %s (phoenix)" % (wx.VERSION_STRING, port)
+            return "%s %s (phoenix) %s" % (wx.VERSION_STRING, port, wx.wxWidgets_version)
             """)
 
 
@@ -321,17 +328,17 @@ def run():
             method.
 
             If you don't need to get the return value or restart the timer
-            then there is no need to hold a reference to this object.  It will
-            hold a reference to itself while the timer is running (the timer
-            has a reference to :meth:`~wx.CallLater.Notify`) but the cycle will be
-            broken when the timer completes, automatically cleaning up the
-            :class:`wx.CallLater` object.
+            then there is no need to hold a reference to this object. CallLater
+            maintains references to its instances while they are running. When they
+            finish, the internal reference is deleted and the GC is free to collect
+            naturally.
 
             .. seealso::
                 :func:`wx.CallAfter`
 
             """,
         items = [
+            PyCodeDef('__instances = {}'),
             PyFunctionDef('__init__', '(self, millis, callableObj, *args, **kwargs)',
                 doc="""\
                     Constructs a new :class:`wx.CallLater` object.
@@ -339,7 +346,7 @@ def run():
                     :param int millis: number of milliseconds to delay until calling the callable object
                     :param PyObject callableObj: the callable object
                     :param args: arguments to be passed to the callable object
-                    :param kw: keywords to be passed to the callable object
+                    :param kw: keyword arguments to be passed to the callable object
                 """,
 
                 body="""\
@@ -372,6 +379,7 @@ def run():
                     if args or kwargs:
                         self.SetArgs(*args, **kwargs)
                     self.Stop()
+                    CallLater.__instances[self] = "value irrelevant"  # Maintain a reference to avoid GC
                     self.timer = wx.PyTimer(self.Notify)
                     self.timer.Start(self.millis, wx.TIMER_ONE_SHOT)
                     self.running = True"""),
@@ -380,6 +388,8 @@ def run():
             PyFunctionDef('Stop', '(self)',
                 doc="Stop and destroy the timer.",
                 body="""\
+                    if self in CallLater.__instances:
+                        del CallLater.__instances[self]
                     if self.timer is not None:
                         self.timer.Stop()
                         self.timer = None"""),

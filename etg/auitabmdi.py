@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Oct-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,12 +37,16 @@ def run():
     c = module.find('wxAuiMDIParentFrame')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
+    c.find('SetMenuBar.menuBar').transfer = True
+    c.find('SetArtProvider.provider').transfer = True
 
 
     c = module.find('wxAuiMDIChildFrame')
+    c.bases = ['wxTDIChildFrame']
     tools.fixTopLevelWindowClass(c)
     tools.fixSetStatusWidths(c.find('SetStatusWidths'))
-
+    c.find('SetMenuBar.menuBar').transfer = True
+    c.find('Show').isVirtual = True
 
     c = module.find('wxAuiMDIClientWindow')
     tools.fixWindowClass(c)

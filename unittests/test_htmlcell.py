@@ -33,6 +33,11 @@ class htmlcell_Tests(wtc.WidgetTestCase):
         hw = wx.html.HtmlWindow(self.frame)
         obj = wx.html.HtmlWidgetCell(hw)
 
+    def test_htmlcell9(self):
+        c = wx.html.HtmlCell()
+        c.FindCellByPos
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

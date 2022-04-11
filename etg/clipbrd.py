@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     09-May-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -76,6 +76,11 @@ def run():
 
         TheClipboard = _wxPyDelayedInitWrapper(Clipboard.Get)
         """)
+
+    # Add the missing event type for the clipboard event
+    module.addItem(etgtools.WigCode(
+        "wxEventType wxEVT_CLIPBOARD_CHANGED /PyName=wxEVT_CLIPBOARD_CHANGED/;"))
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -1,4 +1,4 @@
-# Subclasses disutils.command.build_ext,
+# Subclasses distutils.command.build_ext,
 # replacing it with a SIP version that compiles .sip -> .cpp
 # before calling the original build_ext command.
 # Written by Giovanni Bajo <rasky at develer dot com>
@@ -72,7 +72,8 @@ class build_ext (build_ext_base):
 
     def _sip_calc_signature(self):
         sip_bin = self._find_sip()
-        return sha1(open(sip_bin, "rb").read()).hexdigest()
+        with open(sip_bin, "rb") as fid:
+            return sha1(fid.read()).hexdigest()
 
     def _sip_signature_file(self):
         return os.path.join(self._sip_output_dir(), "sip.signature")
@@ -90,7 +91,8 @@ class build_ext (build_ext_base):
                 if not os.path.isfile(sigfile):
                     self.force = True
                 else:
-                    old_sig = open(sigfile).read()
+                    with open(sigfile) as fid:
+                        old_sig = fid.read()
                     new_sig = self._sip_calc_signature()
                     if old_sig != new_sig:
                         self.force = True
@@ -136,7 +138,8 @@ class build_ext (build_ext_base):
             sbf = os.path.join(self._sip_output_dir(), replace_suffix(sipbasename, ".sbf"))
             if newer_group([sip]+depends, sbf) or self.force:
                 self._sip_compile(sip_bin, sip, sbf)
-                open(self._sip_signature_file(), "w").write(self._sip_calc_signature())
+                with open(self._sip_signature_file(), "w") as f_out:
+                    f_out.write(self._sip_calc_signature())
             out = self._get_sip_output_list(sbf)
             generated_sources.extend(out)
 

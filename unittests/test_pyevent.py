@@ -9,7 +9,7 @@ import wx
 class PyEvents(unittest.TestCase):
 
     def test_PyEvent(self):
-        id = wx.NewId()
+        id = wx.Window.NewControlId()
         typ = wx.NewEventType()
         evt = wx.PyEvent(id, typ)
         evt.newAttr = "hello"
@@ -24,7 +24,7 @@ class PyEvents(unittest.TestCase):
 
 
     def test_PyCommandEvent(self):
-        id = wx.NewId()
+        id = wx.Window.NewControlId()
         typ = wx.NewEventType()
         evt = wx.PyCommandEvent(id, typ)
         evt.newAttr = "hello"

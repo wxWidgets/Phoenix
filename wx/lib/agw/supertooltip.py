@@ -43,8 +43,8 @@ windows, although it is a custom-drawn widget.
 This class supports:
 
 * Blended triple-gradient for the tooltip background;
-* Header text and header image, with possibility to set the header font indipendently;
-* Footer text and footer image, with possibility to set the footer font indipendently;
+* Header text and header image, with possibility to set the header font independently;
+* Footer text and footer image, with possibility to set the footer font independently;
 * Multiline text message in the tooltip body, plus an optional image as "body image";
 * Bold lines and hyperlink lines in the tooltip body;
 * A wide set of predefined drawing styles for the tooltip background;
@@ -155,55 +155,56 @@ if wx.Platform == "__WXMSW__":
 
 # Define a bunch of predefined colour schemes...
 
-_colourSchemes = {"Beige": (wx.Colour(255,255,255), wx.Colour(242,242,223), wx.Colour(198,195,160), wx.Colour(0,0,0)),
-                  "Blue": (wx.Colour(255,255,255), wx.Colour(202,220,246), wx.Colour(150,180,222), wx.Colour(0,0,0)),
-                  "Blue 2": (wx.Colour(255,255,255), wx.Colour(228,236,248), wx.Colour(198,214,235), wx.Colour(0,0,0)),
-                  "Blue 3": (wx.Colour(255,255,255), wx.Colour(213,233,243), wx.Colour(151,195,216), wx.Colour(0,0,0)),
-                  "Blue 4": (wx.Colour(255,255,255), wx.Colour(227,235,255), wx.Colour(102,153,255), wx.Colour(0,0,0)),
-                  "Blue Glass": (wx.Colour(182,226,253), wx.Colour(137,185,232), wx.Colour(188,244,253), wx.Colour(0,0,0)),
-                  "Blue Glass 2": (wx.Colour(192,236,255), wx.Colour(147,195,242), wx.Colour(198,254,255), wx.Colour(0,0,0)),
-                  "Blue Glass 3": (wx.Colour(212,255,255), wx.Colour(167,215,255), wx.Colour(218,255,255), wx.Colour(0,0,0)),
-                  "Blue Inverted": (wx.Colour(117,160,222), wx.Colour(167,210,240), wx.Colour(233,243,255), wx.Colour(0,0,0)),
-                  "Blue Shift": (wx.Colour(124,178,190), wx.Colour(13,122,153),  wx.Colour(0,89,116),    wx.Colour(255,255,255)),
-                  "CodeProject": (wx.Colour(255,250,172), wx.Colour(255,207,157), wx.Colour(255,153,0),   wx.Colour(0,0,0)),
-                  "Dark Gray": (wx.Colour(195,195,195), wx.Colour(168,168,168), wx.Colour(134,134,134), wx.Colour(255,255,255)),
-                  "Deep Purple": (wx.Colour(131,128,164), wx.Colour(112,110,143), wx.Colour(90,88,117),   wx.Colour(255,255,255)),
-                  "Electric Blue": (wx.Colour(224,233,255), wx.Colour(135,146,251), wx.Colour(99,109,233),  wx.Colour(0,0,0)),
-                  "Firefox": (wx.Colour(255,254,207), wx.Colour(254,248,125), wx.Colour(225,119,24),  wx.Colour(0,0,0)),
-                  "Gold": (wx.Colour(255,202,0),   wx.Colour(255,202,0),   wx.Colour(255,202,0),   wx.Colour(0,0,0)),
-                  "Gold Shift": (wx.Colour(178,170,107), wx.Colour(202,180,32),  wx.Colour(162,139,1),   wx.Colour(255,255,255)),
-                  "Gray": (wx.Colour(255,255,255), wx.Colour(228,228,228), wx.Colour(194,194,194), wx.Colour(0,0,0)),
-                  "Green": (wx.Colour(234,241,223), wx.Colour(211,224,180), wx.Colour(182,200,150), wx.Colour(0,0,0)),
-                  "Green Shift": (wx.Colour(129,184,129), wx.Colour(13,185,15),   wx.Colour(1,125,1), wx.Colour(255,255,255)),
-                  "Light Green": (wx.Colour(174,251,171), wx.Colour(145,221,146), wx.Colour(90,176,89),   wx.Colour(0,0,0)),
-                  "NASA Blue": (wx.Colour(0,91,134),    wx.Colour(0,100,150),   wx.Colour(0,105,160),   wx.Colour(255,255,255)),
-                  "Office 2007 Blue": (wx.Colour(255,255,255), wx.Colour(242,246,251), wx.Colour(202,218,239), wx.Colour(76,76,76)),
-                  "Orange Shift": (wx.Colour(179,120,80),  wx.Colour(183,92,19),   wx.Colour(157,73,1),    wx.Colour(255,255,255)),
-                  "Outlook Green": (wx.Colour(236,242,208), wx.Colour(219,230,187), wx.Colour(195,210,155), wx.Colour(0,0,0)),
-                  "Pale Green": (wx.Colour(249,255,248), wx.Colour(206,246,209), wx.Colour(148,225,155), wx.Colour(0,0,0)),
-                  "Pink Blush": (wx.Colour(255,254,255), wx.Colour(255,231,242), wx.Colour(255,213,233), wx.Colour(0,0,0)),
-                  "Pink Shift": (wx.Colour(202,135,188), wx.Colour(186,8,158),   wx.Colour(146,2,116),   wx.Colour(255,255,255)),
-                  "Pretty Pink": (wx.Colour(255,240,249), wx.Colour(253,205,217), wx.Colour(255,150,177), wx.Colour(0,0,0)),
-                  "Red": (wx.Colour(255,183,176), wx.Colour(253,157,143), wx.Colour(206,88,78),   wx.Colour(0,0,0)),
-                  "Red Shift": (wx.Colour(186,102,102), wx.Colour(229,23,9),    wx.Colour(182,11,1),    wx.Colour(255,255,255)),
-                  "Silver": (wx.Colour(255,255,255), wx.Colour(242,242,246), wx.Colour(212,212,224), wx.Colour(0,0,0)),
-                  "Silver 2": (wx.Colour(255,255,255), wx.Colour(242,242,248), wx.Colour(222,222,228), wx.Colour(0,0,0)),
-                  "Silver Glass": (wx.Colour(158,158,158), wx.Colour(255,255,255), wx.Colour(105,105,105), wx.Colour(0,0,0)),
-                  "Silver Inverted": (wx.Colour(161,160,186), wx.Colour(199,201,213), wx.Colour(255,255,255), wx.Colour(0,0,0)),
-                  "Silver Inverted 2": (wx.Colour(181,180,206), wx.Colour(219,221,233), wx.Colour(255,255,255), wx.Colour(0,0,0)),
-                  "Soylent Green": (wx.Colour(134,211,131), wx.Colour(105,181,106), wx.Colour(50,136,49),   wx.Colour(255,255,255)),
-                  "Spring Green": (wx.Colour(154,231,151), wx.Colour(125,201,126), wx.Colour(70,156,69),   wx.Colour(255,255,255)),
-                  "Too Blue": (wx.Colour(255,255,255), wx.Colour(225,235,244), wx.Colour(188,209,226), wx.Colour(0,0,0)),
-                  "Totally Green": (wx.Colour(190,230,160), wx.Colour(190,230,160), wx.Colour(190,230,160), wx.Colour(0,0,0)),
-                  "XP Blue": (wx.Colour(119,185,236), wx.Colour(81,144,223),  wx.Colour(36,76,171),   wx.Colour(255,255,255)),
-                  "Yellow": (wx.Colour(255,255,220), wx.Colour(255,231,161), wx.Colour(254,218,108), wx.Colour(0,0,0))}
+_colourSchemes = {
+    "Beige": (wx.WHITE, wx.Colour(242, 242, 223), wx.Colour(198, 195, 160), wx.BLACK),
+    "Blue": (wx.WHITE, wx.Colour(202, 220, 246), wx.Colour(150, 180, 222), wx.BLACK),
+    "Blue 2": (wx.WHITE, wx.Colour(228, 236, 248), wx.Colour(198, 214, 235), wx.BLACK),
+    "Blue 3": (wx.WHITE, wx.Colour(213, 233, 243), wx.Colour(151, 195, 216), wx.BLACK),
+    "Blue 4": (wx.WHITE, wx.Colour(227, 235, 255), wx.Colour(102, 153, 255), wx.BLACK),
+    "Blue Glass": (wx.Colour(182, 226, 253), wx.Colour(137, 185, 232), wx.Colour(188, 244, 253), wx.BLACK),
+    "Blue Glass 2": (wx.Colour(192, 236, 255), wx.Colour(147, 195, 242), wx.Colour(198, 254, 255), wx.BLACK),
+    "Blue Glass 3": (wx.Colour(212, 255, 255), wx.Colour(167, 215, 255), wx.Colour(218, 255, 255), wx.BLACK),
+    "Blue Inverted": (wx.Colour(117, 160, 222), wx.Colour(167, 210, 240), wx.Colour(233, 243, 255), wx.BLACK),
+    "Blue Shift": (wx.Colour(124, 178, 190), wx.Colour(13, 122, 153),  wx.Colour(0, 89, 116), wx.WHITE),
+    "CodeProject": (wx.Colour(255, 250, 172), wx.Colour(255, 207, 157), wx.Colour(255, 153, 0), wx.BLACK),
+    "Dark Gray": (wx.Colour(195, 195, 195), wx.Colour(168, 168, 168), wx.Colour(134, 134, 134), wx.WHITE),
+    "Deep Purple": (wx.Colour(131, 128, 164), wx.Colour(112, 110, 143), wx.Colour(90, 88, 117), wx.WHITE),
+    "Electric Blue": (wx.Colour(224, 233, 255), wx.Colour(135, 146, 251), wx.Colour(99, 109, 233), wx.BLACK),
+    "Firefox": (wx.Colour(255, 254, 207), wx.Colour(254, 248, 125), wx.Colour(225, 119, 24), wx.BLACK),
+    "Gold": (wx.Colour(255, 202, 0), wx.Colour(255, 202, 0), wx.Colour(255, 202, 0), wx.BLACK),
+    "Gold Shift": (wx.Colour(178, 170, 107), wx.Colour(202, 180, 32), wx.Colour(162, 139, 1), wx.WHITE),
+    "Gray": (wx.WHITE, wx.Colour(228, 228, 228), wx.Colour(194, 194, 194), wx.BLACK),
+    "Green": (wx.Colour(234, 241, 223), wx.Colour(211, 224, 180), wx.Colour(182, 200, 150), wx.BLACK),
+    "Green Shift": (wx.Colour(129, 184, 129), wx.Colour(13, 185, 15), wx.Colour(1, 125, 1), wx.WHITE),
+    "Light Green": (wx.Colour(174, 251, 171), wx.Colour(145, 221, 146), wx.Colour(90, 176, 89), wx.BLACK),
+    "NASA Blue": (wx.Colour(0, 91, 134), wx.Colour(0, 100, 150), wx.Colour(0, 105, 160), wx.WHITE),
+    "Office 2007 Blue": (wx.WHITE, wx.Colour(242, 246, 251), wx.Colour(202, 218, 239), wx.Colour(76, 76, 76)),
+    "Orange Shift": (wx.Colour(179, 120, 80), wx.Colour(183, 92, 19), wx.Colour(157, 73, 1), wx.WHITE),
+    "Outlook Green": (wx.Colour(236, 242, 208), wx.Colour(219, 230, 187), wx.Colour(195, 210, 155), wx.BLACK),
+    "Pale Green": (wx.Colour(249, 255, 248), wx.Colour(206, 246, 209), wx.Colour(148, 225, 155), wx.BLACK),
+    "Pink Blush": (wx.Colour(255, 254, 255), wx.Colour(255, 231, 242), wx.Colour(255, 213, 233), wx.BLACK),
+    "Pink Shift": (wx.Colour(202, 135, 188), wx.Colour(186, 8, 158), wx.Colour(146, 2, 116), wx.WHITE),
+    "Pretty Pink": (wx.Colour(255, 240, 249), wx.Colour(253, 205, 217), wx.Colour(255, 150, 177), wx.BLACK),
+    "Red": (wx.Colour(255, 183, 176), wx.Colour(253, 157, 143), wx.Colour(206, 88, 78), wx.BLACK),
+    "Red Shift": (wx.Colour(186, 102, 102), wx.Colour(229, 23, 9), wx.Colour(182, 11, 1), wx.WHITE),
+    "Silver": (wx.WHITE, wx.Colour(242, 242, 246), wx.Colour(212, 212, 224), wx.BLACK),
+    "Silver 2": (wx.WHITE, wx.Colour(242, 242, 248), wx.Colour(222, 222, 228), wx.BLACK),
+    "Silver Glass": (wx.Colour(158, 158, 158), wx.WHITE, wx.Colour(105, 105, 105), wx.BLACK),
+    "Silver Inverted": (wx.Colour(161, 160, 186), wx.Colour(199, 201, 213), wx.WHITE, wx.BLACK),
+    "Silver Inverted 2": (wx.Colour(181, 180, 206), wx.Colour(219, 221, 233), wx.WHITE, wx.BLACK),
+    "Soylent Green": (wx.Colour(134, 211, 131), wx.Colour(105, 181, 106), wx.Colour(50, 136, 49), wx.WHITE),
+    "Spring Green": (wx.Colour(154, 231, 151), wx.Colour(125, 201, 126), wx.Colour(70, 156, 69), wx.WHITE),
+    "Too Blue": (wx.WHITE, wx.Colour(225, 235, 244), wx.Colour(188, 209, 226), wx.BLACK),
+    "Totally Green": (wx.Colour(190, 230, 160), wx.Colour(190, 230, 160), wx.Colour(190, 230, 160), wx.BLACK),
+    "XP Blue": (wx.Colour(119, 185, 236), wx.Colour(81, 144, 223), wx.Colour(36, 76, 171), wx.WHITE),
+    "Yellow": (wx.Colour(255, 255, 220), wx.Colour(255, 231, 161), wx.Colour(254, 218, 108), wx.BLACK)
+    }
 
 
 def GetStyleKeys():
     """ Returns the predefined styles keywords. """
 
-    schemes = list(_colourSchemes.keys())
-    schemes.sort()
+    schemes = sorted(_colourSchemes)
     return schemes
 
 
@@ -294,8 +295,8 @@ class ToolTipWindowBase(object):
 
         # Get the user options for header, bitmaps etc...
         drawHeader, drawFooter = classParent.GetDrawHeaderLine(), classParent.GetDrawFooterLine()
-        topRect = wx.Rect(frameRect.x, frameRect.y, frameRect.width, frameRect.height/2)
-        bottomRect = wx.Rect(frameRect.x, frameRect.y+frameRect.height/2, frameRect.width, frameRect.height/2+1)
+        topRect = wx.Rect(frameRect.x, frameRect.y, frameRect.width, frameRect.height//2)
+        bottomRect = wx.Rect(frameRect.x, frameRect.y+frameRect.height//2, frameRect.width, frameRect.height//2+1)
         # Fill the triple-gradient
         dc.GradientFillLinear(topRect, topColour, middleColour, wx.SOUTH)
         dc.GradientFillLinear(bottomRect, middleColour, bottomColour, wx.SOUTH)
@@ -317,13 +318,15 @@ class ToolTipWindowBase(object):
             # We got the header text
             dc.SetFont(headerFont)
             textWidth, textHeight = dc.GetTextExtent(header)
-        maxWidth = max(bmpWidth+(textWidth+self._spacing*3), maxWidth)
+            maxWidth = max(bmpWidth+(textWidth+self._spacing*3), maxWidth)
         # Calculate the header height
         height = max(textHeight, bmpHeight)
+        normalText = classParent.GetTextColour()
         if header:
-            dc.DrawText(header, bmpXPos+bmpWidth+self._spacing, (height-textHeight+self._spacing)/2)
+            dc.SetTextForeground(normalText)
+            dc.DrawText(header, bmpXPos+bmpWidth+self._spacing, (height-textHeight+self._spacing)//2)
         if headerBmp and headerBmp.IsOk():
-            dc.DrawBitmap(headerBmp, bmpXPos, (height-bmpHeight+self._spacing)/2, True)
+            dc.DrawBitmap(headerBmp, bmpXPos, (height-bmpHeight+self._spacing)//2, True)
 
         if header or (headerBmp and headerBmp.IsOk()):
             yPos += height
@@ -345,7 +348,6 @@ class ToolTipWindowBase(object):
         lines = classParent.GetMessage().split("\n")
         yText = yPos
         embImgPos = yPos
-        normalText = wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENUTEXT)
         hyperLinkText = wx.BLUE
         messagePos = self._getTextExtent(dc, lines[0] if lines else "")[1] // 2 + self._spacing
         for line in lines:
@@ -374,7 +376,7 @@ class ToolTipWindowBase(object):
                 messageHeight += textHeight
 
                 xText = (bmpWidth + 2 * self._spacing) if bmpWidth > 0 else self._spacing
-                yText += textHeight/2+self._spacing
+                yText += textHeight//2+self._spacing
                 maxWidth = max(xText + textWidth + self._spacing, maxWidth)
                 dc.DrawText(line, xText, yText)
                 if isLink:
@@ -410,8 +412,8 @@ class ToolTipWindowBase(object):
             if drawFooter:
                 # Draw the separator line before the footer
                 dc.SetPen(wx.GREY_PEN)
-                dc.DrawLine(self._spacing, yPos-self._spacing/2+toAdd,
-                            width-self._spacing, yPos-self._spacing/2+toAdd)
+                dc.DrawLine(self._spacing, yPos-self._spacing//2+toAdd,
+                            width-self._spacing, yPos-self._spacing//2+toAdd)
         # Draw the footer and footer bitmap (if any)
         dc.SetTextForeground(normalText)
         height = max(textHeight, bmpHeight)
@@ -422,7 +424,7 @@ class ToolTipWindowBase(object):
             maxWidth = max(bmpXPos + bmpWidth + (self._spacing*2) + textWidth, maxWidth)
         if footerBmp and footerBmp.IsOk():
             toAdd = (height - bmpHeight + self._spacing) / 2
-            dc.DrawBitmap(footerBmp, bmpXPos, yPos + toAdd, True)
+            dc.DrawBitmap(footerBmp, bmpXPos, int(yPos + toAdd), True)
             maxWidth = max(footerBmp.GetSize().GetWidth() + bmpXPos, maxWidth)
 
         maxHeight = yPos + height + toAdd
@@ -662,7 +664,7 @@ class ToolTipWindowBase(object):
         pSetLayeredWindowAttributes = win32api.GetProcAddress(self._winlib,
                                                               "SetLayeredWindowAttributes")
 
-        if pSetLayeredWindowAttributes == None:
+        if pSetLayeredWindowAttributes is None:
             return
 
         exstyle = win32api.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
@@ -813,7 +815,7 @@ class SuperToolTip(object):
         :param `delay`: the delay in seconds.
         """
 
-        self._startDelayTime = float(delay)
+        self._startDelayTime = int(delay)
 
 
     def GetStartDelay(self):
@@ -829,7 +831,7 @@ class SuperToolTip(object):
         :param `delay`: the delay in seconds.
         """
 
-        self._endDelayTime = float(delay)
+        self._endDelayTime = int(delay)
 
 
     def GetEndDelay(self):
@@ -1258,7 +1260,7 @@ class SuperToolTip(object):
 
 
     def InitFont(self):
-        """ Initalizes the fonts for :class:`SuperToolTip`. """
+        """ Initializes the fonts for :class:`SuperToolTip`. """
 
         self._messageFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._headerFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)

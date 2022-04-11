@@ -14,7 +14,7 @@ class treectrl_Tests(wtc.WidgetTestCase):
         t.Create(self.frame)
 
 
-    def test_treectrlTreeItemId(self):
+    def test_treectrlTreeItemId01(self):
         tree = wx.TreeCtrl(self.frame)
         root = tree.AddRoot('root item')
         self.assertTrue(isinstance(root, wx.TreeItemId))
@@ -27,6 +27,28 @@ class treectrl_Tests(wtc.WidgetTestCase):
         child = tree.AppendItem(root, 'child item')
         self.assertTrue(child is not root)
         self.assertTrue(child != root)
+
+
+    def test_treectrlTreeItemId02(self):
+        # Can a TreeItemId be a dictionary key?
+        tree = wx.TreeCtrl(self.frame)
+        root = tree.AddRoot('root item')
+        r = tree.GetRootItem()
+        child = tree.AppendItem(root, 'child item')
+
+        d = dict()
+        d[root] = 'root'
+        d[child] = 'child'
+        assert d[root] == 'root'
+        assert d[r] == 'root'
+
+
+    def test_treectrlTreeItemId03(self):
+        # Compare with None
+        tree = wx.TreeCtrl(self.frame)
+        root = tree.AddRoot('root item')
+        self.assertTrue(root != None)
+        self.assertFalse(root == None)
 
 
     def test_treectrlTreeItemData(self):

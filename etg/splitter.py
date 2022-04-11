@@ -5,7 +5,7 @@
 #
 # Created:     27-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ def run():
     c = module.find('wxSplitterEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_SPLITTER_SASH_POS_CHANGED = wx.PyEventBinder( wxEVT_SPLITTER_SASH_POS_CHANGED, 1 )
         EVT_SPLITTER_SASH_POS_CHANGING = wx.PyEventBinder( wxEVT_SPLITTER_SASH_POS_CHANGING, 1 )
         EVT_SPLITTER_DOUBLECLICKED = wx.PyEventBinder( wxEVT_SPLITTER_DOUBLECLICKED, 1 )

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     29-Oct-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -42,6 +42,10 @@ def run():
 
     for m in c.findAll('ScanParam'):
         m.ignore()
+
+    c.find('GetBeginPos').ignore()
+    c.find('GetEndPos1').ignore()
+    c.find('GetEndPos2').ignore()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

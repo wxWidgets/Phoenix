@@ -14,9 +14,7 @@ class gauge_Tests(wtc.WidgetTestCase):
     def test_gaugeProperties(self):
         g = wx.Gauge(self.frame)
 
-        g.BezelFace
         g.Range
-        g.ShadowWidth
         g.Value
 
 

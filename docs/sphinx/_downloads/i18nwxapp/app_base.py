@@ -3,7 +3,7 @@
 # Author:   Werner F. Bruhin
 # Purpose:  how to I18N enable an application
 #
-# Inspired by the I18N wxPython demo and the Internationalization page on 
+# Inspired by the I18N wxPython demo and the Internationalization page on
 # the wxPython wiki.
 #
 
@@ -19,11 +19,11 @@ import wx
 
 def _displayHook(obj):
     if obj is not None:
-        print repr(obj)
+        print (repr(obj))
 
 # add translation macro to builtin similar to what gettext does
-import __builtin__
-__builtin__.__dict__['_'] = wx.GetTranslation
+import builtins
+builtins.__dict__['_'] = wx.GetTranslation
 
 import app_const as appC
 
@@ -34,11 +34,11 @@ class BaseApp(wx.App, InspectionMixin):
         self.Init() # InspectionMixin
         # work around for Python stealing "_"
         sys.displayhook = _displayHook
-        
+
         self.appName = "I18N sample application"
-        
+
         self.doConfig()
-        
+
         self.locale = None
         wx.Locale.AddCatalogLookupPathPrefix('locale')
         self.updateLanguage(self.appConfig.Read(u"Language"))
@@ -62,40 +62,40 @@ class BaseApp(wx.App, InspectionMixin):
                                        vendorName=u'who you wish',
                                        localFilename=os.path.join(
                                        self.configLoc, "AppConfig"))
-    
+
         if not self.appConfig.HasEntry(u'Language'):
             # on first run we default to German
             self.appConfig.Write(key=u'Language', value=u'de')
-            
+
         self.appConfig.Flush()
 
     def updateLanguage(self, lang):
         """
         Update the language to the requested one.
-        
+
         Make *sure* any existing locale is deleted before the new
         one is created.  The old C++ object needs to be deleted
         before the new one is created, and if we just assign a new
         instance to the old Python variable, the old C++ locale will
         not be destroyed soon enough, likely causing a crash.
-        
+
         :param string `lang`: one of the supported language codes
-        
+
         """
         # if an unsupported language is requested default to English
         if lang in appC.supLang:
             selLang = appC.supLang[lang]
         else:
             selLang = wx.LANGUAGE_ENGLISH
-            
+
         if self.locale:
             assert sys.getrefcount(self.locale) <= 2
             del self.locale
-        
+
         # create a locale object for this language
         self.locale = wx.Locale(selLang)
         if self.locale.IsOk():
             self.locale.AddCatalog(appC.langDomain)
         else:
             self.locale = None
-            
+

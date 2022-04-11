@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     24-Oct-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode('#include <wxpy_api.h>')
+    module.addHeaderCode('#include <wxPython/wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode('''\
     import wx
@@ -64,6 +64,7 @@ def run():
     #-----------------------------------------------------------------
 
     module.addHeaderCode('#include <wx/stc/stc.h>')
+    module.addHeaderCode('#include "wxpybuffer.h"')
 
 
     c = module.find('wxStyledTextCtrl')
@@ -85,6 +86,8 @@ def run():
     c.find('GetSelection.to_').out = True
     c.find('PositionToXY.x').out = True
     c.find('PositionToXY.y').out = True
+
+    c.find('FindText.findEnd').out = True
 
     # Split the HitTest overloads into separately named methods since once
     # the output parameters are applied they will have the same function
@@ -146,13 +149,18 @@ def run():
                                              not c.findItem(item.name)]
     c.items.extend(items)
 
+    tc_excludes = ['OSXEnableAutomaticQuoteSubstitution',
+                   'OSXEnableAutomaticDashSubstitution',
+                   'OSXDisableAllSmartSubstitutions',
+                   ]
     import textctrl
     mod = textctrl.parseAndTweakModule()
     klass = mod.find('wxTextCtrl')
     items = [item for item in klass.items if isinstance(item, etgtools.MethodDef) and
                                              not item.isCtor and
                                              not item.isDtor and
-                                             not c.findItem(item.name)]
+                                             not c.findItem(item.name) and
+                                             not item.name in tc_excludes]
     c.items.extend(items)
 
     c.find('EmulateKeyPress').ignore()
@@ -162,6 +170,31 @@ def run():
     c.find('ShowNativeCaret').ignore()
     c.find('HideNativeCaret').ignore()
 
+    # Change the *RGBAImage methods to accept any buffer object
+    c.find('MarkerDefineRGBAImage').ignore()
+    c.addCppMethod('void', 'MarkerDefineRGBAImage', '(int markerNumber, wxPyBuffer* pixels)',
+        doc="""\
+            Define a marker from RGBA data.\n
+            It has the width and height from RGBAImageSetWidth/Height. You must
+            ensure that the buffer is at least width*height*4 bytes long.
+            """,
+        body="""\
+            self->MarkerDefineRGBAImage(markerNumber, (unsigned char*)pixels->m_ptr);
+            """)
+
+    c.find('RegisterRGBAImage').ignore()
+    c.addCppMethod('void', 'RegisterRGBAImage', '(int type, wxPyBuffer* pixels)',
+        doc="""\
+            Register an RGBA image for use in autocompletion lists.\n
+            It has the width and height from RGBAImageSetWidth/Height. You must
+            ensure that the buffer is at least width*height*4 bytes long.
+            """,
+        body="""\
+            self->RegisterRGBAImage(type, (unsigned char*)pixels->m_ptr);
+            """)
+
+    c.find('MarkerDefinePixmap').ignore()
+    c.find('RegisterImage').findOverload('xpmData').ignore()
 
     # TODO:  Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py)
 
@@ -170,7 +203,7 @@ def run():
     c = module.find('wxStyledTextEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_STC_CHANGE = wx.PyEventBinder( wxEVT_STC_CHANGE, 1 )
         EVT_STC_STYLENEEDED = wx.PyEventBinder( wxEVT_STC_STYLENEEDED, 1 )
         EVT_STC_CHARADDED = wx.PyEventBinder( wxEVT_STC_CHARADDED, 1 )
@@ -202,10 +235,25 @@ def run():
         EVT_STC_INDICATOR_RELEASE = wx.PyEventBinder( wxEVT_STC_INDICATOR_RELEASE, 1 )
         EVT_STC_AUTOCOMP_CANCELLED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_CANCELLED, 1 )
         EVT_STC_AUTOCOMP_CHAR_DELETED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_CHAR_DELETED, 1 )
+        EVT_STC_CLIPBOARD_COPY = wx.PyEventBinder( wxEVT_STC_CLIPBOARD_COPY, 1)
+        EVT_STC_CLIPBOARD_PASTE = wx.PyEventBinder( wxEVT_STC_CLIPBOARD_PASTE, 1)
+        EVT_STC_AUTOCOMP_COMPLETED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_COMPLETED, 1)
+        EVT_STC_MARGIN_RIGHT_CLICK = wx.PyEventBinder( wxEVT_STC_MARGIN_RIGHT_CLICK, 1)
+        EVT_STC_AUTOCOMP_SELECTION_CHANGE = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_SELECTION_CHANGE, 1)
         """)
 
     #-----------------------------------------------------------------
 
+    # Keep some of the old names
+    module.addPyCode("""\
+        # compatibility aliases
+        STC_SCMOD_NORM = STC_KEYMOD_NORM
+        STC_SCMOD_SHIFT = STC_KEYMOD_SHIFT
+        STC_SCMOD_CTRL = STC_KEYMOD_CTRL
+        STC_SCMOD_ALT = STC_KEYMOD_ALT
+        STC_SCMOD_SUPER = STC_KEYMOD_SUPER
+        STC_SCMOD_META = STC_KEYMOD_META
+        """)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

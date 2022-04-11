@@ -28,8 +28,8 @@ class intl_Tests(wtc.WidgetTestCase):
     def test_intlGetString(self):
         # This tests if we're able to pull translations from the wx message catalogs
         loc = wx.Locale(wx.LANGUAGE_SPANISH)
-        st = loc.GetString('Next')
-        self.assertEqual(st, 'Siguiente')
+        st = loc.GetString('&Next')
+        self.assertEqual(st, '&Siguiente')
 
 
     def test_intlConstants(self):
@@ -38,6 +38,10 @@ class intl_Tests(wtc.WidgetTestCase):
         wx.LANGUAGE_ALBANIAN
         wx.LANGUAGE_AMHARIC
 
+
+    def test_intlGetLocaleFunc(self):
+        # check that this function exists
+        l = wx.GetLocale()
 
 
 #---------------------------------------------------------------------------

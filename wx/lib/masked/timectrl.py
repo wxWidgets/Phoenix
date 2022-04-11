@@ -44,6 +44,10 @@
 # o wxMaskedTextCtrl -> masked.TextCtrl
 # o wxTimeCtrl -> masked.TimeCtrl
 #
+# 2/4/2018   - jensgoe (mail@jensgoepfert.de)
+# o wx.Validator_IsSilent() -> wx.Validator.IsSilent()
+#
+
 
 """
 *TimeCtrl* provides a multi-cell control that allows manipulation of a time
@@ -410,7 +414,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         max = self.__max
         limited = self.__limited
         self.__posCurrent = 0
-        # handle deprecated keword argument name:
+        # handle deprecated keyword argument name:
         if 'display_seconds' in kwargs:
             kwargs['displaySeconds'] = kwargs['display_seconds']
             del kwargs['display_seconds']
@@ -522,7 +526,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 
         # assign keyword args as appropriate:
         for key, param_value in kwargs.items():
-            if key not in TimeCtrl.valid_ctrl_params.keys():
+            if key not in TimeCtrl.valid_ctrl_params:
                 raise AttributeError('invalid keyword argument "%s"' % key)
 
             if key == 'format':
@@ -578,7 +582,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
                 # Set hour field to zero-pad, right-insert, require explicit field change,
                 # select entire field on entry, and require a resultant valid entry
                 # to allow character entry:
-                hourfield = Field(formatcodes='0r<SV', validRegex='0\d|1\d|2[0123]', validRequired=True)
+                hourfield = Field(formatcodes='0r<SV', validRegex=r'0\d|1\d|2[0123]', validRequired=True)
             else:
                 if self.__displaySeconds:  maskededit_kwargs['autoformat'] = 'TIMEHHMMSS'
                 else:                      maskededit_kwargs['autoformat'] = 'TIMEHHMM'
@@ -591,7 +595,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 
             # Field 1 is always a zero-padded right-insert minute field,
             # similarly configured as above:
-            minutefield = Field(formatcodes='0r<SV', validRegex='[0-5]\d', validRequired=True)
+            minutefield = Field(formatcodes='0r<SV', validRegex=r'[0-5]\d', validRequired=True)
 
             fields = [ hourfield, minutefield ]
             if self.__displaySeconds:
@@ -847,7 +851,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         adjusted to the new minimum value; if not limited, the value in the
         control will be colored as invalid.
 
-        :param `min`: Minium value for the control
+        :param `min`: Minimum value for the control
         :type `min`: integer or None
 
         """
@@ -911,7 +915,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         adjusted to this maximum value; if not limited, the value in the
         control will be colored as invalid.
 
-        :param `max`: Minium value for the control
+        :param `max`: Minimum value for the control
         :type `max`: integer or None
 
         """
@@ -971,9 +975,9 @@ class TimeCtrl(BaseMaskedTextCtrl):
 
         .. note:: Leaving out an argument will remove the corresponding bound.
 
-        :param `min`: Minium value for the control
+        :param `min`: Minimum value for the control
         :type `min`: integer or None
-        :param `max`: Minium value for the control
+        :param `max`: Minimum value for the control
         :type `max`: integer or None
 
         """
@@ -1339,7 +1343,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
             self.SetValue(newvalue)
 
         except ValueError:  # must not be in bounds:
-            if not wx.Validator_IsSilent():
+            if not wx.Validator.IsSilent():
                 wx.Bell()
 ##        dbg(indent=0)
 

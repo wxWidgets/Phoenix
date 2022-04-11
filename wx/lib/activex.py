@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     5-June-2008
-# Copyright:   (c) 2008-2017 by Total Control Software
+# Copyright:   (c) 2008-2020 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 
@@ -120,7 +120,7 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
 
         # Set some wx.Window properties
         if wxid == wx.ID_ANY:
-            wxid = wx.Window.NewControlId()
+            wxid = wx.NewIdRef()
         self.SetId(wxid)
         self.SetName(name)
         self.SetMinSize(size)
@@ -151,11 +151,13 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
         # accelerators can be dealt with the way that the AXControl
         # wants them to be done. MSWTranslateMessage is called before
         # wxWidgets handles and eats the navigation keys itself.
-        res = self.ipao.TranslateAccelerator(msg)
-        if res == hr.S_OK:
-            return True
-        else:
-            return super(ActiveXCtrl, self).MSWTranslateMessage(msg)
+        try:
+            res = self.ipao.TranslateAccelerator(msg)
+            if res == hr.S_OK:
+                return True
+        except OSError:
+            pass
+        return super(ActiveXCtrl, self).MSWTranslateMessage(msg)
 
 
     # TBD: Are the focus handlers needed?

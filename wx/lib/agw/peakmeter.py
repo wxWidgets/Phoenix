@@ -329,9 +329,9 @@ class PeakMeterCtrl(wx.Control):
     def InitData(self):
         """ Initializes the control. """
 
-        colLime = wx.Colour(0, 255, 0)
-        colRed = wx.Colour(255, 0, 0)
-        colYellow = wx.Colour(255, 255, 0)
+        colLime = wx.GREEN
+        colRed = wx.RED
+        colYellow = wx.YELLOW
 
         self._showGrid = False
         self._showFalloff = True
@@ -784,7 +784,7 @@ class PeakMeterCtrl(wx.Control):
                 maxWidth = size.x*horzBands
                 points = [wx.Point() for i in range(2)]
                 points[0].y = rectPrev.GetTopRight().y - yDecal
-                points[0].x = rectPrev.GetBottomLeft().x + self._meterData[vert]._falloff*maxWidth/self._maxValue
+                points[0].x = rectPrev.GetBottomLeft().x + self._meterData[vert]._falloff*maxWidth//self._maxValue
                 points[1].y = rectPrev.GetBottomLeft().y + yDecal
                 points[1].x = points[0].x
                 dc.SetPen(pen)

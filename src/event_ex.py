@@ -30,6 +30,7 @@ EVT_DROP_FILES = wx.PyEventBinder( wxEVT_DROP_FILES )
 EVT_INIT_DIALOG = wx.PyEventBinder( wxEVT_INIT_DIALOG )
 EVT_SYS_COLOUR_CHANGED = wx.PyEventBinder( wxEVT_SYS_COLOUR_CHANGED )
 EVT_DISPLAY_CHANGED = wx.PyEventBinder( wxEVT_DISPLAY_CHANGED )
+EVT_DPI_CHANGED = wx.PyEventBinder( wxEVT_DPI_CHANGED )
 EVT_SHOW = wx.PyEventBinder( wxEVT_SHOW )
 EVT_MAXIMIZE = wx.PyEventBinder( wxEVT_MAXIMIZE )
 EVT_ICONIZE = wx.PyEventBinder( wxEVT_ICONIZE )
@@ -82,6 +83,7 @@ EVT_MOUSE_EVENTS = wx.PyEventBinder([ wxEVT_LEFT_DOWN,
                                       wxEVT_AUX2_UP,
                                       wxEVT_AUX2_DCLICK,
                                      ])
+EVT_MAGNIFY = wx.PyEventBinder( wxEVT_MAGNIFY )
 
 
 # Scrolling from wxWindow (sent to wxScrolledWindow)
@@ -207,6 +209,17 @@ EVT_JOYSTICK_EVENTS = wx.PyEventBinder([ wxEVT_JOY_BUTTON_DOWN,
                                         wxEVT_JOY_MOVE,
                                         wxEVT_JOY_ZMOVE,
                                         ])
+
+EVT_GESTURE_PAN = wx.PyEventBinder( wxEVT_GESTURE_PAN )
+EVT_GESTURE_ZOOM = wx.PyEventBinder( wxEVT_GESTURE_ZOOM )
+EVT_GESTURE_ROTATE = wx.PyEventBinder( wxEVT_GESTURE_ROTATE )
+EVT_TWO_FINGER_TAP = wx.PyEventBinder( wxEVT_TWO_FINGER_TAP )
+EVT_LONG_PRESS = wx.PyEventBinder( wxEVT_LONG_PRESS )
+EVT_PRESS_AND_TAP = wx.PyEventBinder( wxEVT_PRESS_AND_TAP )
+
+EVT_CLIPBOARD_CHANGED = wx.PyEventBinder(wxEVT_CLIPBOARD_CHANGED, 1)
+
+EVT_FULLSCREEN = wx.PyEventBinder(wxEVT_FULLSCREEN, 1)
 
 # deprecated wxEVT aliases
 wxEVT_COMMAND_BUTTON_CLICKED         = wxEVT_BUTTON

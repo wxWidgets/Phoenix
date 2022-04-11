@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     21-Nov-2006
-# Copyright:   (c) 2006-2017 by Total Control Software
+# Copyright:   (c) 2006-2020 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags: phoenix-port, documented, unittest
@@ -160,7 +160,7 @@ class InspectionMixin(object):
 
     def ShowInspectionTool(self):
         """
-        Show the Inspection tool, creating it if neccesary, setting it
+        Show the Inspection tool, creating it if necessary, setting it
         to display the widget under the cursor.
         """
         # get the current widget under the mouse

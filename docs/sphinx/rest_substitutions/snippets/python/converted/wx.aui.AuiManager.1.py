@@ -1,4 +1,4 @@
-    
+
     text1 = wx.TextCtrl(self)
     text2 = wx.TextCtrl(self)
     self.mgr.AddPane(text1, wx.LEFT, "Pane Caption")

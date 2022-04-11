@@ -1,7 +1,7 @@
 ##Andrea Gavana
 #!/usr/bin/env python
 
-# This sample makes the main frame "immortal", i.e., non-closable 
+# This sample makes the main frame "immortal", i.e., non-closable
 # by the user. The main window can not be close by pressing Alt+F4
 # or by clicking on the "X" button in the titlebar
 
@@ -19,7 +19,7 @@ class MainWindow(wx.Frame):
         self.Show()
         self.close_attempts = 0
 
-        
+
     def OnClose(self, event):
 
         # Veto the event the user can not close the main

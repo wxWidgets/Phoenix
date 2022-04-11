@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     26-Oct-2016
-# Copyright:   (c) 2016-2017 by Total Control Software
+# Copyright:   (c) 2016-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -42,6 +42,9 @@ def run():
     c = module.find('wxAuiNotebook')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
+    tools.fixBookctrlClass(c)
+    c.find('SetArtProvider.art').transfer = True
+
 
     c = module.find('wxAuiTabContainer')
     tools.ignoreConstOverloads(c)
@@ -57,7 +60,7 @@ def run():
 
     c = module.find('wxAuiNotebookEvent')
     tools.fixEventClass(c)
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_AUINOTEBOOK_PAGE_CLOSE = wx.PyEventBinder( wxEVT_AUINOTEBOOK_PAGE_CLOSE, 1 )
         EVT_AUINOTEBOOK_PAGE_CLOSED = wx.PyEventBinder( wxEVT_AUINOTEBOOK_PAGE_CLOSED, 1 )
         EVT_AUINOTEBOOK_PAGE_CHANGED = wx.PyEventBinder( wxEVT_AUINOTEBOOK_PAGE_CHANGED, 1 )
@@ -77,6 +80,25 @@ def run():
 
 
 
+
+    #-----------------------------------------------------------------
+    # Add AuiTabCtrl in.
+    c = etgtools.ClassDef(name = "wxAuiTabCtrl",
+        bases = ["wxControl", "wxAuiTabContainer"],
+        mustHaveAppFlag = True,
+        items = [
+            etgtools.MethodDef(name = "wxAuiTabCtrl",
+                classname="wxAuiTabCtrl", isCtor=True,
+                items = [
+                    etgtools.ParamDef(type = "wxWindow*", name = "parent"),
+                    etgtools.ParamDef(type = "wxWindowID", name = "id", default="wxID_ANY"),
+                    etgtools.ParamDef(type = "const wxPoint&", name = "pos", default = "wxDefaultPosition"),
+                    etgtools.ParamDef(type = "const wxSize&", name = "size", default = "wxDefaultSize"),
+                    etgtools.ParamDef(type = "long", name = "style", default = "0") ]),
+            etgtools.MethodDef(type = "bool", name = "IsDragging", classname = "wxAuiTabCtrl", isConst = True)
+            ])
+    tools.fixWindowClass(c)
+    module.addItem(c)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

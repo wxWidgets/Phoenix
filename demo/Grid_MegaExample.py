@@ -67,7 +67,6 @@ class MegaTable(Grid.GridTableBase):
             elif new > current:
                 msg = Grid.GridTableMessage(self,addmsg,new-current)
                 grid.ProcessTableMessage(msg)
-                self.UpdateValues(grid)
 
         grid.EndBatch()
 
@@ -79,13 +78,6 @@ class MegaTable(Grid.GridTableBase):
         # update the scrollbars and the displayed part of the grid
         grid.AdjustScrollbars()
         grid.ForceRefresh()
-
-
-    def UpdateValues(self, grid):
-        """Update all displayed values"""
-        # This sends an event to the grid table to update all of the values
-        msg = Grid.GridTableMessage(self, Grid.GRIDTABLE_REQUEST_VIEW_GET_VALUES)
-        grid.ProcessTableMessage(msg)
 
     def _updateColAttrs(self, grid):
         """
@@ -332,8 +324,8 @@ class MegaGrid(Grid.Grid):
 
     def rowPopup(self, row, evt):
         """(row, evt) -> display a popup menu when a row label is right clicked"""
-        appendID = wx.NewId()
-        deleteID = wx.NewId()
+        appendID = wx.NewIdRef()
+        deleteID = wx.NewIdRef()
         x = self.GetRowSize(row)/2
 
         if not self.GetSelectedRows():
@@ -365,8 +357,8 @@ class MegaGrid(Grid.Grid):
         right clicked"""
         x = self.GetColSize(col)/2
         menu = wx.Menu()
-        id1 = wx.NewId()
-        sortID = wx.NewId()
+        id1 = wx.NewIdRef()
+        sortID = wx.NewIdRef()
 
         xo, yo = evt.GetPosition()
         self.SelectCol(col)

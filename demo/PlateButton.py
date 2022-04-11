@@ -129,7 +129,7 @@ class TestPanel(scrolled.ScrolledPanel):
                 #       set when the background is not a solid color. On wxMac
                 #       it is a no-op as this type of transparency is achieved
                 #       without any help needed. On wxGtk it doesn't hurt to
-                #       set but also unfortunatly doesn't help at all.
+                #       set but also unfortunately doesn't help at all.
                 bstyle = btn[2] | platebtn.PB_STYLE_NOBG
             else:
                 bstyle = btn[2]
@@ -155,15 +155,15 @@ class TestPanel(scrolled.ScrolledPanel):
                 if btn[0] is not None and btn[0] == folder:
                     for fname in os.listdir(wx.GetHomeDir()):
                         if not fname.startswith('.'):
-                            menu.Append(wx.NewId(), fname)
+                            menu.Append(wx.ID_ANY, fname)
                 elif btn[0] is not None and btn[0] == bookmark:
                     for url in ['http://wxpython.org', 'http://slashdot.org',
                                 'http://editra.org', 'http://xkcd.com']:
-                        menu.Append(wx.NewId(), url, "Open %s in your browser" % url)
+                        menu.Append(wx.ID_ANY, url, "Open %s in your browser" % url)
                 else:
-                    menu.Append(wx.NewId(), "Menu Item 1")
-                    menu.Append(wx.NewId(), "Menu Item 2")
-                    menu.Append(wx.NewId(), "Menu Item 3")
+                    menu.Append(wx.ID_ANY, "Menu Item 1")
+                    menu.Append(wx.ID_ANY, "Menu Item 2")
+                    menu.Append(wx.ID_ANY, "Menu Item 3")
                 tbtn.SetMenu(menu)
 
             # Set a custom colour?

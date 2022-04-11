@@ -1,7 +1,7 @@
 /*
  * This file defines the SIP library internal interfaces.
  *
- * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2020 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -91,9 +91,31 @@ extern PyTypeObject sipVoidPtr_Type;
 void *sip_api_convert_to_void_ptr(PyObject *obj);
 PyObject *sip_api_convert_from_void_ptr(void *val);
 PyObject *sip_api_convert_from_const_void_ptr(const void *val);
-PyObject *sip_api_convert_from_void_ptr_and_size(void *val, SIP_SSIZE_T size);
+PyObject *sip_api_convert_from_void_ptr_and_size(void *val, Py_ssize_t size);
 PyObject *sip_api_convert_from_const_void_ptr_and_size(const void *val,
-        SIP_SSIZE_T size);
+        Py_ssize_t size);
+
+
+/*
+ * Support for int converters.
+ */
+PyObject *sipEnableOverflowChecking(PyObject *self, PyObject *args);
+int sip_api_enable_overflow_checking(int enable);
+int sip_api_convert_to_bool(PyObject *o);
+char sip_api_long_as_char(PyObject *o);
+signed char sip_api_long_as_signed_char(PyObject *o);
+unsigned char sip_api_long_as_unsigned_char(PyObject *o);
+short sip_api_long_as_short(PyObject *o);
+unsigned short sip_api_long_as_unsigned_short(PyObject *o);
+int sip_api_long_as_int(PyObject *o);
+unsigned int sip_api_long_as_unsigned_int(PyObject *o);
+long sip_api_long_as_long(PyObject *o);
+unsigned long sip_api_long_as_unsigned_long(PyObject *o);
+#if defined(HAVE_LONG_LONG)
+PY_LONG_LONG sip_api_long_as_long_long(PyObject *o);
+unsigned PY_LONG_LONG sip_api_long_as_unsigned_long_long(PyObject *o);
+#endif
+size_t sip_api_long_as_size_t(PyObject *o);
 
 
 extern sipQtAPI *sipQtSupport;  /* The Qt support API. */
@@ -117,12 +139,11 @@ void *sip_api_get_address(sipSimpleWrapper *w);
 void *sip_api_get_cpp_ptr(sipSimpleWrapper *w, const sipTypeDef *td);
 PyObject *sip_api_convert_from_type(void *cppPtr, const sipTypeDef *td,
         PyObject *transferObj);
-void sip_api_common_dtor(sipSimpleWrapper *sipSelf);
+void sip_api_instance_destroyed(sipSimpleWrapper *sipSelf);
 void sip_api_end_thread(void);
 void *sip_api_force_convert_to_type(PyObject *pyObj, const sipTypeDef *td,
         PyObject *transferObj, int flags, int *statep, int *iserrp);
 void sip_api_free_sipslot(sipSlot *slot);
-unsigned long sip_api_long_as_unsigned_long(PyObject *o);
 int sip_api_same_slot(const sipSlot *sp, PyObject *rxObj, const char *slot);
 PyObject *sip_api_invoke_slot(const sipSlot *slot, PyObject *sigargs);
 PyObject *sip_api_invoke_slot_ex(const sipSlot *slot, PyObject *sigargs,
@@ -130,6 +151,10 @@ PyObject *sip_api_invoke_slot_ex(const sipSlot *slot, PyObject *sigargs,
 void *sip_api_convert_rx(sipWrapper *txSelf, const char *sigargs,
         PyObject *rxObj, const char *slot, const char **memberp, int flags);
 int sip_api_save_slot(sipSlot *sp, PyObject *rxObj, const char *slot);
+int sip_api_convert_from_slice_object(PyObject *slice, Py_ssize_t length,
+        Py_ssize_t *start, Py_ssize_t *stop, Py_ssize_t *step,
+        Py_ssize_t *slicelength);
+int sip_api_deprecated(const char *classname, const char *method);
 
 
 /*
@@ -139,7 +164,7 @@ sipClassTypeDef *sipGetGeneratedClassType(const sipEncodedTypeDef *enc,
         const sipClassTypeDef *ctd);
 void sipSaveMethod(sipPyMethod *pm,PyObject *meth);
 int sipGetPending(void **pp, sipWrapper **op, int *fp);
-int sipIsPending();
+int sipIsPending(void);
 PyObject *sipWrapInstance(void *cpp,  PyTypeObject *py_type, PyObject *args,
         sipWrapper *owner, int flags);
 void *sipConvertRxEx(sipWrapper *txSelf, const char *sigargs,
@@ -152,7 +177,9 @@ sipSimpleWrapper *sipOMFindObject(sipObjectMap *om, void *key,
 void sipOMAddObject(sipObjectMap *om, sipSimpleWrapper *val);
 int sipOMRemoveObject(sipObjectMap *om, sipSimpleWrapper *val);
 
-void sipSetBool(void *ptr,int val);
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#define sipSetBool(p, v)    (*(_Bool *)(p) = (v))
+#endif
 
 
 #ifdef __cplusplus

@@ -92,7 +92,7 @@ protected:
         PyObject* arglist = PyTuple_New(1);
         PyTuple_SET_ITEM(arglist, 0, PyBytes_FromStringAndSize((char*)buffer, bufsize));
 
-        PyObject* result = PyEval_CallObject(m_write, arglist);
+        PyObject* result = PyObject_CallObject(m_write, arglist);
         Py_DECREF(arglist);
 
         if (result != NULL)
@@ -116,7 +116,7 @@ protected:
         PyTuple_SET_ITEM(arglist, 1, wxPyInt_FromLong(mode));
 
 
-        PyObject* result = PyEval_CallObject(m_seek, arglist);
+        PyObject* result = PyObject_CallObject(m_seek, arglist);
         Py_DECREF(arglist);
         Py_XDECREF(result);
         return OnSysTell();
@@ -126,7 +126,7 @@ protected:
     {
         wxPyThreadBlocker blocker;
         PyObject* arglist = Py_BuildValue("()");
-        PyObject* result = PyEval_CallObject(m_tell, arglist);
+        PyObject* result = PyObject_CallObject(m_tell, arglist);
         Py_DECREF(arglist);
         wxFileOffset o = 0;
         if (result != NULL) {

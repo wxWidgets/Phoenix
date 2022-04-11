@@ -1,20 +1,19 @@
 
         # Write some text to the clipboard
         if wx.TheClipboard.Open():
-
-            # This data objects are held by the clipboard,
-            # so do not delete them in the app.
             wx.TheClipboard.SetData(wx.TextDataObject("Some text"))
             wx.TheClipboard.Close()
 
-        # Read some text
-        if wx.TheClipboard.Open():
 
-            if wx.TheClipboard.IsSupported(wx.DF_TEXT):
-            
-                data = wx.TextDataObject()
-                wx.TheClipboard.GetData(data)
-                wx.MessageBox(data.GetText())
-            
+        # Test if text content is available
+        not_empty = wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_UNICODETEXT))
+
+
+        # Read some text
+        text_data = wx.TextDataObject()
+        if wx.TheClipboard.Open():
+            success = wx.TheClipboard.GetData(text_data)
             wx.TheClipboard.Close()
+        if success:
+            return text_data.GetText()
 

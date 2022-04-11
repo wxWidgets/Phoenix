@@ -1,6 +1,6 @@
 
         def ScanDocument():
-            
+
             doc = wx.xml.XmlDocument()
             if not doc.Load("myfile.xml"):
                 return False
@@ -38,7 +38,7 @@
 
                     # process tag2 ...
                     attrvalue3 = child.GetAttribute("attr3", "default-value")
-                
+
 
                 child = child.GetNext()
 

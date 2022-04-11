@@ -5,7 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     15-May-2001
-# Copyright:   (c) 2001-2017 by Total Control Software
+# Copyright:   (c) 2001-2020 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------------
@@ -47,7 +47,7 @@ class ColumnSorterMixin:
     A mixin class that handles sorting of a wx.ListCtrl in REPORT mode when
     the column header is clicked on.
 
-    There are a few requirments needed in order for this to work genericly:
+    There are a few requirements needed in order for this to work genericly:
 
       1. The combined class must have a GetListCtrl method that
          returns the wx.ListCtrl to be sorted, and the list control
@@ -106,7 +106,7 @@ class ColumnSorterMixin:
         Returns a tuple of image list indexesthe indexes in the image list for an image to be put on the column
         header when sorting in descending order.
         """
-        return (-1, -1)  # (decending, ascending) image IDs
+        return (-1, -1)  # (descending, ascending) image IDs
 
 
     def GetColumnSorter(self):
@@ -297,17 +297,11 @@ class ListCtrlAutoWidthMixin:
 
         resizeCol = max(1, resizeCol)
 
-        if self._resizeColMinWidth == None:
+        if self._resizeColMinWidth is None:
             self._resizeColMinWidth = self.GetColumnWidth(resizeCol - 1)
 
-        # We're showing the vertical scrollbar -> allow for scrollbar width
-        # NOTE: on GTK, the scrollbar is included in the client size, but on
-        # Windows it is not included
+        # Get total width
         listWidth = self.GetClientSize().width
-        if wx.Platform != '__WXMSW__':
-            if self.GetItemCount() > self.GetCountPerPage():
-                scrollWidth = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
-                listWidth = listWidth - scrollWidth
 
         totColWidth = 0 # Width of all columns except last one.
         for col in range(numCols):
@@ -449,7 +443,7 @@ class TextEditMixin:
     """
 
     editorBgColour = wx.Colour(255,255,175) # Yellow
-    editorFgColour = wx.Colour(0,0,0)       # black
+    editorFgColour = wx.BLACK
 
     def __init__(self):
         #editor = wx.TextCtrl(self, -1, pos=(-1,-1), size=(-1,-1),
@@ -590,7 +584,7 @@ class TextEditMixin:
                 # don't start scrolling unless we really need to
                 offset = x0+x1-self.GetSize()[0]-scrolloffset
                 # scroll a bit more than what is minimum required
-                # so we don't have to scroll everytime the user presses TAB
+                # so we don't have to scroll every time the user presses TAB
                 # which is very tireing to the eye
                 addoffset = self.GetSize()[0]/4
                 # but be careful at the end of the list
@@ -611,14 +605,15 @@ class TextEditMixin:
 
         y0 = self.GetItemRect(row)[1]
 
-        editor = self.editor
-        editor.SetSize(x0-scrolloffset,y0, x1,-1)
+        def _activate_editor(editor):
+            editor.SetSize(x0-scrolloffset,y0, x1,-1, wx.SIZE_USE_EXISTING)
+            editor.SetValue(self.GetItem(row, col).GetText())
+            editor.Show()
+            editor.Raise()
+            editor.SetSelection(-1,-1)
+            editor.SetFocus()
 
-        editor.SetValue(self.GetItem(row, col).GetText())
-        editor.Show()
-        editor.Raise()
-        editor.SetSelection(-1,-1)
-        editor.SetFocus()
+        wx.CallAfter(_activate_editor, self.editor)
 
         self.curRow = row
         self.curCol = col
@@ -640,19 +635,18 @@ class TextEditMixin:
         evt = wx.ListEvent(wx.wxEVT_COMMAND_LIST_END_LABEL_EDIT, self.GetId())
         evt.Index = self.curRow
         evt.Column = self.curCol
-        item = self.GetItem(self.curRow, self.curCol)
-        evt.Item.SetId(item.GetId())
-        evt.Item.SetColumn(item.GetColumn())
-        evt.Item.SetData(item.GetData())
-        evt.Item.SetText(text) #should be empty string if editor was canceled
+        item = wx.ListItem(self.GetItem(self.curRow, self.curCol))
+        item.SetText(text)
+        evt.SetItem(item)
+
         ret = self.GetEventHandler().ProcessEvent(evt)
         if not ret or evt.IsAllowed():
             if self.IsVirtual():
-                # replace by whather you use to populate the virtual ListCtrl
+                # replace by whatever you use to populate the virtual ListCtrl
                 # data source
                 self.SetVirtualData(self.curRow, self.curCol, text)
             else:
-                self.SetStringItem(self.curRow, self.curCol, text)
+                self.SetItem(self.curRow, self.curCol, text)
         self.RefreshItem(self.curRow)
 
     def _SelectIndex(self, row):
@@ -698,7 +692,12 @@ HISTORY:
 1.1     - Initial version
 """
 
-class CheckListCtrlMixin:
+_warning = (
+"The CheckListCtrlMixin class has been made redundant by new checkbox features in the "
+"wx.ListCtrl class. It is advised to switch your code to use that instead of this mixin.")
+
+
+class CheckListCtrlMixin(object):
     """
     This is a mixin for ListCtrl which add a checkbox in the first
     column of each row. It is inspired by limodou's CheckList.py(which
@@ -715,8 +714,14 @@ class CheckListCtrlMixin:
           CheckItem().
 
     You should not set a imagelist for the ListCtrl once this mixin is used.
+
+    WARNING: This class is obsolete as wx.ListCtrl now includes nearly the same
+    functionality.
     """
     def __init__(self, check_image=None, uncheck_image=None, imgsz=(16,16)):
+        import warnings
+        warnings.warn(_warning)
+
         if check_image is not None:
             imgsz = check_image.GetSize()
         elif uncheck_image is not None:
@@ -733,13 +738,21 @@ class CheckListCtrlMixin:
 
         self.uncheck_image = self.__imagelist_.Add(uncheck_image)
         self.check_image = self.__imagelist_.Add(check_image)
-        self.SetImageList(self.__imagelist_, wx.IMAGE_LIST_SMALL)
+        self.AssignImageList(self.__imagelist_, wx.IMAGE_LIST_SMALL)
         self.__last_check_ = None
 
         self.Bind(wx.EVT_LEFT_DOWN, self.__OnLeftDown_)
 
-        # override the default methods of ListCtrl/ListView
-        self.InsertStringItem = self.__InsertStringItem_
+        # Monkey-patch in a new InsertItem so we can also set the image ID for the item
+        self._origInsertItem = self.InsertItem
+        self.InsertItem = self.__InsertItem_
+
+
+    def __InsertItem_(self, *args, **kw):
+        index = self._origInsertItem(*args, **kw)
+        self.SetItemImage(index, self.uncheck_image)
+        return index
+
 
     def __CreateBitmap(self, flag=0, size=(16, 16)):
         """Create a bitmap of the platforms native checkbox. The flag
@@ -748,15 +761,13 @@ class CheckListCtrlMixin:
         """
         bmp = wx.Bitmap(*size)
         dc = wx.MemoryDC(bmp)
+        dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
         wx.RendererNative.Get().DrawCheckBox(self, dc,
                                              (0, 0, size[0], size[1]), flag)
         dc.SelectObject(wx.NullBitmap)
         return bmp
 
-    def __InsertStringItem_(self, index, label):
-        index = self.InsertItem(index, label, 0)
-        return index
 
     def __OnLeftDown_(self, evt):
         (index, flags) = self.HitTest(evt.GetPosition())
@@ -794,12 +805,12 @@ class CheckListCtrlMixin:
     def IsChecked(self, index):
         return self.GetItem(index).GetImage() == 1
 
-    def CheckItem(self, index, check = True):
+    def CheckItem(self, index, check=True):
         img_idx = self.GetItem(index).GetImage()
-        if img_idx == 0 and check is True:
+        if img_idx == 0 and check:
             self.SetItemImage(index, 1)
             self.OnCheckItem(index, True)
-        elif img_idx == 1 and check is False:
+        elif img_idx == 1 and not check:
             self.SetItemImage(index, 0)
             self.OnCheckItem(index, False)
 

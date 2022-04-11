@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     30-Mar-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_FIND = wx.PyEventBinder( wxEVT_FIND, 1 )
         EVT_FIND_NEXT = wx.PyEventBinder( wxEVT_FIND_NEXT, 1 )
         EVT_FIND_REPLACE = wx.PyEventBinder( wxEVT_FIND_REPLACE, 1 )
@@ -54,7 +54,7 @@ def run():
 
     c = module.find('wxFindReplaceDialog')
     tools.fixTopLevelWindowClass(c)
-
+    c.find('wxFindReplaceDialog.data').keepReference = True
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

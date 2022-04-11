@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     31-Aug-2011
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -17,7 +17,9 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'wxPen', 'wxPenList', ]
+ITEMS  = [ 'wxPenInfo',
+           'wxPen',
+           'wxPenList', ]
 
 #---------------------------------------------------------------------------
 
@@ -91,7 +93,7 @@ def run():
     # created. That messes up the code that SIP generates for them, so we need
     # to come up with another solution. So instead we will just create
     # uninitialized pens in a block of Python code, that will then be
-    # intialized later when the wx.App is created.
+    # initialized later when the wx.App is created.
     c.addCppMethod('void', '_copyFrom', '(const wxPen* other)',
                    "*self = *other;",
                    briefDoc="For internal use only.")  # ??
@@ -103,9 +105,19 @@ def run():
     module.addPyCode(pycode)
 
 
+    c = module.find('wxPenInfo')
+    # Ignore Dashes for now
+    # TODO: we need to do something like SetDashes above, but since PenInfo is
+    # transitory we can't save the reference in it to the holder, and the pen
+    # will not have been created yet...
+    c.find('Dashes').ignore()
+    c.find('GetDashes').ignore()
+    c.find('GetDashCount').ignore()
+    c.find('GetDash').ignore()
+
+
     # it is delay-initialized, see stockgdi.sip
     module.find('wxThePenList').ignore()
-
 
 
     # Some aliases that should be phased out eventually, (sooner rather than

@@ -21,13 +21,13 @@ found for the specified protocol. The default protocol is kwargs.
 
 Only one protocol can be used in an application. The default protocol,
 if none is chosen by user, is kwargs, as selected by the call to
-_prependModulePath() at end of this file.
+_prependModulePath() at end of this file. 
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 """
-
+    
 
 def _prependModulePath(extra):
     """Insert extra at beginning of package's path list. Should only be
@@ -57,15 +57,15 @@ from .listener import (
 
 from .topicobj import (
     Topic,
-    SenderMissingReqdMsgDataError,
-    SenderUnknownMsgDataError,
-    MessageDataSpecError,
-    TopicDefnError,
+    SenderMissingReqdMsgDataError, 
+    SenderUnknownMsgDataError, 
+    MessageDataSpecError, 
+    TopicDefnError, 
     ExcHandlerError,
 )
 
 from .topicmgr import (
-    TopicManager,
+    TopicManager, 
     TopicDefnError,
     TopicNameError,
     ALL_TOPICS,
@@ -75,12 +75,12 @@ from .topicdefnprovider import (
     ITopicDefnProvider,
     TopicDefnProvider,
     ITopicDefnDeserializer,
-    UnrecognizedSourceFormatError,
-
+    UnrecognizedSourceFormatError, 
+    
     exportTopicTreeSpec,
     TOPIC_TREE_FROM_MODULE,
     TOPIC_TREE_FROM_STRING,
-    TOPIC_TREE_FROM_CLASS,
+    TOPIC_TREE_FROM_CLASS, 
 )
 
 from .topictreetraverser import (

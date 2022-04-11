@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     29-Oct-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -61,64 +61,78 @@ def run():
     module.addCppCode("""\
         class wxPyHtmlTagsModule : public wxHtmlTagsModule {
         public:
-            wxPyHtmlTagsModule(PyObject* thc) : wxHtmlTagsModule() {
-                m_tagHandlerClass = thc;
-                wxPyThreadBlocker blocker;
-                Py_INCREF(m_tagHandlerClass);
-                RegisterModule(this);
+            wxPyHtmlTagsModule() : wxHtmlTagsModule() {
+            }
+
+            bool OnInit() {
                 wxHtmlWinParser::AddModule(this);
+                return true;
             }
 
             void OnExit() {
                 wxPyThreadBlocker blocker;
-                Py_DECREF(m_tagHandlerClass);
-                m_tagHandlerClass = NULL;
-                for (size_t x=0; x < m_objArray.GetCount(); x++) {
-                    PyObject* obj = (PyObject*)m_objArray.Item(x);
+                for (size_t x=0; x < m_tagHandlersArray.GetCount(); x++) {
+                    PyObject* obj = (PyObject*)m_tagHandlersArray.Item(x);
                     Py_DECREF(obj);
                 }
+                m_tagHandlersArray.Clear();
+                wxHtmlWinParser::RemoveModule(this);
             }
 
             void FillHandlersTable(wxHtmlWinParser *parser) {
                 wxPyThreadBlocker blocker;
-                wxHtmlWinTagHandler* thPtr = 0;
-                // First, make a new instance of the tag handler
-                PyObject* arg = PyTuple_New(0);
-                PyObject* obj = PyObject_CallObject(m_tagHandlerClass, arg);
-                Py_DECREF(arg);
 
-                // Make sure it succeeded
-                if (!obj) {
-                    PyErr_Print();
-                    return;
+                // make a new instance of each handler class and register it with the parser
+                for (size_t cls=0; cls < s_tagHandlerClasses.GetCount(); cls++) {
+                    PyObject* pyClass = (PyObject*)s_tagHandlerClasses.Item(cls);
+
+                    wxHtmlWinTagHandler* thPtr = NULL;
+
+                    PyObject* arg = PyTuple_New(0);
+                    PyObject* obj = PyObject_CallObject(pyClass, arg);
+                    Py_DECREF(arg);
+
+                    // Make sure it succeeded
+                    if (!obj) {
+                        PyErr_Print();
+                        return;
+                    }
+
+                    // now figure out where it's C++ object is...
+                    if (! wxPyConvertWrappedPtr(obj, (void **)&thPtr, wxT("wxHtmlWinTagHandler"))) {
+                        return;
+                    }
+
+                    // add it,
+                    parser->AddTagHandler(thPtr);
+
+                    // and track it
+                    m_tagHandlersArray.Add(obj);
                 }
+            }
 
-                // now figure out where it's C++ object is...
-                if (! wxPyConvertWrappedPtr(obj, (void **)&thPtr, wxT("wxHtmlWinTagHandler"))) {
-                    return;
-                }
-
-                // add it,
-                parser->AddTagHandler(thPtr);
-
-                // and track it.
-                m_objArray.Add(obj);
+            static void AddPyTagHandler(PyObject* tagHandlerClass) {
+                wxPyThreadBlocker blocker;
+                Py_INCREF(tagHandlerClass);
+                s_tagHandlerClasses.Add(tagHandlerClass);
             }
 
         private:
-            PyObject*           m_tagHandlerClass;
-            wxArrayPtrVoid      m_objArray;
+            wxDECLARE_DYNAMIC_CLASS(wxPyHtmlTagsModule);
 
+            static wxArrayPtrVoid       s_tagHandlerClasses;
+            wxArrayPtrVoid              m_tagHandlersArray;
         };
+
+        wxIMPLEMENT_DYNAMIC_CLASS(wxPyHtmlTagsModule, wxHtmlTagsModule)
+        wxArrayPtrVoid wxPyHtmlTagsModule::s_tagHandlerClasses;
         """)
 
 
     module.addCppFunction('void', 'HtmlWinParser_AddTagHandler', '(PyObject* tagHandlerClass)',
         body="""\
-            // Dynamically create a new wxModule.  Refcounts tagHandlerClass
-            // and adds itself to the wxModules list and to the wxHtmlWinParser.
-            new wxPyHtmlTagsModule(tagHandlerClass);
-            wxModule::InitializeModules();
+            wxPyHtmlTagsModule::AddPyTagHandler(tagHandlerClass);
+            wxPyReinitializeModules();
             """)
 
 

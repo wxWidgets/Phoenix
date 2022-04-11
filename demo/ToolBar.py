@@ -22,6 +22,7 @@ class TestSearchCtrl(wx.SearchCtrl):
         style |= wx.TE_PROCESS_ENTER
         wx.SearchCtrl.__init__(self, parent, id, value, pos, size, style)
         self.Bind(wx.EVT_TEXT_ENTER, self.OnTextEntered)
+        self.Bind(wx.EVT_SEARCHCTRL_SEARCH_BTN, self.OnTextEntered)
         self.Bind(wx.EVT_MENU_RANGE, self.OnMenuItem, id=1, id2=self.maxSearches)
         self.doSearch = doSearch
         self.searches = []
@@ -123,7 +124,7 @@ class TestToolBar(wx.Frame):
         self.Bind(wx.EVT_TIMER, self.OnClearSB)
 
         tb.AddSeparator()
-        cbID = wx.NewId()
+        cbID = wx.NewIdRef()
 
         tb.AddControl(
             wx.ComboBox(
@@ -221,7 +222,7 @@ Toolbar creation is a two-step process. First, the toolbar is defined using the
 various Add* methods of wx.ToolBar. Once all is set up, then wx.Toolbar.Realize()
 must be called to render it.
 
-wx.Toolbar events are also propogated as Menu events; this is especially handy when
+wx.Toolbar events are also propagated as Menu events; this is especially handy when
 you have a menu bar that contains items that carry out the same function. For example,
 it is not uncommon to have a little 'floppy' toolbar icon to 'save' the current file
 (whatever it is) as well as a FILE/SAVE menu item that does the same thing. In this

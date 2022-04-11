@@ -5,7 +5,7 @@
 #
 # Created:     06-Sept-2011
 # Copyright:   (c) 2013 by Wide Open Technologies
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -46,13 +46,12 @@ def run():
     # TODO: This ctor ^^ in Classic has a custom implementation for wxGTK that
     # sets the hotspot. Is that still needed?
 
-    c.addCppMethod('int', '__nonzero__', '()', """\
-        return self->IsOk();
-    """)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
+    c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addCppMethod('long', 'GetHandle', '()', """\
     #ifdef __WXMSW__
-        return (long)self->GetHandle();
+        return HandleToLong(self->GetHandle());
     #else
         return 0;
     #endif""",
@@ -60,7 +59,7 @@ def run():
 
     c.addCppMethod('void', 'SetHandle', '(long handle)', """\
     #ifdef __WXMSW__
-        self->SetHandle((WXHANDLE)handle);
+        self->SetHandle((WXHANDLE)LongToHandle(handle));
     #endif""",
     briefDoc="Set the handle to use for this Cursor.  Windows only.")
 
@@ -72,7 +71,7 @@ def run():
     # created. That messes up the code that SIP generates for them, so we need
     # to come up with another solution. So instead we will just create
     # uninitialized cursor in a block of Python code, that will then be
-    # intialized later when the wx.App is created.
+    # initialized later when the wx.App is created.
     c.addCppMethod('void', '_copyFrom', '(const wxCursor* other)',
                    "*self = *other;",
                    briefDoc="For internal use only.")  # ??

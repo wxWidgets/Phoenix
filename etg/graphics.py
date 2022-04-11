@@ -5,7 +5,7 @@
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
-# Copyright:   (c) 2011-2017 by Total Control Software
+# Copyright:   (c) 2011-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -24,6 +24,7 @@ ITEMS  = [
             'wxGraphicsBitmap',
             'wxGraphicsBrush',
             'wxGraphicsFont',
+            'wxGraphicsPenInfo',
             'wxGraphicsPen',
             'wxGraphicsContext',
             'wxGraphicsGradientStop',
@@ -46,7 +47,8 @@ def run():
 
     module.addHeaderCode('#include <wx/gdicmn.h>')
 
-    def markFactories(klass):
+    def markCreateFactories(klass):
+        """Mark all Create methods as factories"""
         for func in klass.allItems():
             if isinstance(func, etgtools.FunctionDef) \
                and func.name.startswith('Create') \
@@ -59,29 +61,48 @@ def run():
     c.mustHaveApp()
     c.addCppMethod('bool', 'IsOk', '()', 'return !self->IsNull();')
     c.addCppMethod('int', '__nonzero__', '()', "return !self->IsNull();")
+    c.addCppMethod('int', '__bool__', '()', "return !self->IsNull();")
 
 
     #---------------------------------------------
     c = module.find('wxGraphicsContext')
     assert isinstance(c, etgtools.ClassDef)
-    markFactories(c)
     tools.removeVirtuals(c)
     c.abstract = True
     c.mustHaveApp()
 
+    c.addCppMethod('wxGraphicsContext*', 'Create', '(wxAutoBufferedPaintDC* autoPaintDC /KeepReference/)',
+        pyArgsString='(autoPaintDC) -> GraphicsContext',
+        isStatic=True,
+        body="""\
+            return wxGraphicsContext::Create(*autoPaintDC);
+            """)
 
-    # Ensure that the target DC or image lives as long as the GC does. NOTE:
-    # Since the Creates are static methods there is no self to associate the
-    # extra reference with, but since they are factories then that extra
-    # reference will be held by the return value of the factory instead.
+    m = c.find('Create').findOverload('wxEnhMetaFileDC')
+    m.find('metaFileDC').type = 'const wxMetafileDC&'
+    m.argsString = '(const wxMetafileDC& metaFileDC)'
+    m.setCppCode("""\
+        #ifdef __WXMSW__
+        #if wxUSE_ENH_METAFILE
+            return wxGraphicsContext::Create(*metaFileDC);
+        #endif
+        #endif
+            wxPyRaiseNotImplemented();
+            return NULL;
+        """)
+
+    markCreateFactories(c)
+
+    # Ensure that the target DC or image passed to Create lives as long as the
+    # GC does. NOTE: Since the Creates are static methods there is no self to
+    # associate the extra reference with, but since they are factories then
+    # that extra reference will be held by the return value of the factory
+    # instead.
     for m in c.find('Create').all():
         for p in m.items:
             if 'DC' in p.name or p.name == 'image':
                 p.keepReference = True
 
-
-    # FIXME: Handle wxEnhMetaFileDC?
-    c.find('Create').findOverload('wxEnhMetaFileDC').ignore()
 
     c.find('GetSize.width').out = True
     c.find('GetSize.height').out = True
@@ -111,6 +132,7 @@ def run():
         body="""\
         wxDouble width = 0.0, height = 0.0;
         self->GetTextExtent(*text, &width, &height, NULL, NULL);
+        wxPyThreadBlocker blocker;
         return sipBuildResult(0, "(dd)", width, height);
         """)
 
@@ -139,11 +161,11 @@ def run():
         """)
 
     # Also reimplement the main StrokeLines method to reuse the same helper
-    # function as StrokLineSegments
+    # function as StrokeLineSegments
     m = c.find('StrokeLines').findOverload('points').ignore()
     c.addCppMethod('void', 'StrokeLines', '(PyObject* points)',
         pyArgsString="(point2Ds)",
-        doc="Stroke lines conencting all the points.",
+        doc="Stroke lines connecting all the points.",
         body="""\
         size_t count;
         wxPoint2D* ptsArray = wxPoint2D_array_helper(points, &count);
@@ -169,6 +191,9 @@ def run():
         }
         """)
 
+    # TODO: support this?
+    c.find('CreateFromNativeHDC').ignore()
+
     #---------------------------------------------
     c = module.find('wxGraphicsPath')
     tools.removeVirtuals(c)
@@ -180,18 +205,62 @@ def run():
     #---------------------------------------------
     c = module.find('wxGraphicsRenderer')
     tools.removeVirtuals(c)
-    markFactories(c)
+    markCreateFactories(c)
     c.abstract = True
 
-    for m in c.find('CreateContext').all():
-        for p in m.items:
-            if 'DC' in p.name or p.name == 'image':
-                p.keepReference = True
-    c.find('CreateContextFromImage.image').keepReference = True
 
-    # FIXME: Handle wxEnhMetaFileDC?
+    # The KeepReference annotation doesn't work for us in this case, as it will
+    # hold the reference in the renderer object, but it is better to hold the
+    # reference in the returned context object instead. Otherwise there is still
+    # some possibility that the held DC will be destroyed before the context.
+    c.addPyCode("""\
+        def _ctx_hold_ref(f):
+            from functools import wraps
+            @wraps(f)
+            def wrapper(self, obj):
+                ctx = f(self, obj)
+                if ctx is not None:
+                    ctx._obj = obj
+                return ctx
+            return wrapper
+        GraphicsRenderer.CreateContext = _ctx_hold_ref(GraphicsRenderer.CreateContext)
+        GraphicsRenderer.CreateContextFromImage = _ctx_hold_ref(GraphicsRenderer.CreateContextFromImage)
+        GraphicsRenderer.CreateContextFromUnknownDC = _ctx_hold_ref(GraphicsRenderer.CreateContextFromUnknownDC)
+        """)
+
+    # TODO: support this?
     c.find('CreateContext').findOverload('wxEnhMetaFileDC').ignore()
 
+    # TODO: support this?
+    c.find('CreateContextFromNativeHDC').ignore()
+
+    c.addPyMethod('GetType', '(self)',
+        doc="Returns the name of the GraphicsRenderer class.",
+        body="return self.GetClassInfo().GetClassName()")
+
+
+
+    c.find('GetGDIPlusRenderer').ignore()
+    c.addCppMethod('wxGraphicsRenderer*', 'GetGDIPlusRenderer', '()', isStatic=True,
+        doc="Returns GDI+ renderer (MSW only).",
+        body="""\
+            #ifdef __WXMSW__
+                return wxGraphicsRenderer::GetGDIPlusRenderer();
+            #else
+                return NULL;
+            #endif
+            """)
+
+    c.find('GetDirect2DRenderer').ignore()
+    c.addCppMethod('wxGraphicsRenderer*', 'GetDirect2DRenderer', '()', isStatic=True,
+        doc="Returns Direct2D renderer (MSW and Python3 only).",
+        body="""\
+            #if wxUSE_GRAPHICS_DIRECT2D
+                return wxGraphicsRenderer::GetDirect2DRenderer();
+            #else
+                return NULL;
+            #endif
+            """)
 
     #---------------------------------------------
     c = module.find('wxGraphicsMatrix')
@@ -224,6 +293,24 @@ def run():
                    factory=True)
 
 
+
+    #---------------------------------------------
+    c = module.find('wxGraphicsBitmap')
+
+
+    #---------------------------------------------
+    c = module.find('wxGraphicsPenInfo')
+    # Ignore Dashes for now
+    # TODO: we need to do something like wx.Pen.SetDashes, but since
+    # GraphicsPenInfo is transitory we can't save the reference in it to the
+    # holder, and the pen will not have been created yet...
+    c.find('Dashes').ignore()
+    c.find('GetDashes').ignore()
+    c.find('GetDashCount').ignore()
+    c.find('GetDash').ignore()
+
+
+
     #---------------------------------------------
     # Use the pyNames we set for these classes in geometry.py so the old
     # names do not show up in the docstrings, etc.
@@ -233,6 +320,35 @@ def run():
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+
+    # Add some code to check obj.IsNull() to all methods that are used as getters for a
+    # PropertyDef. This is needed because it seems that most methods in GraphicsOpbects
+    # assume that the dev has already checked that the object is valid and so don't check
+    # it themselves. But when turned into a Python property they will automatically be called
+    # when introspecting the property values in things like wxNullGraphicsFOO. This can
+    # easily result in a fatal crash. The tweak below will raise a ValueError exception in
+    # these cases before it gets to the crashy parts.
+    checkIsNull = """\
+        if (sipCpp->IsNull()) {{
+            wxPyErr_SetString(PyExc_ValueError, "The {} is not valid (likely an uninitialized or null instance)");
+            return NULL;
+        }}
+        """
+    for module_item in module.items:
+        if isinstance(module_item, etgtools.ClassDef):
+            klass = module_item
+            if 'wxGraphicsObject' in [klass.name] + klass.bases:
+                for item in klass.items:
+                    if isinstance(item, etgtools.PropertyDef):
+                        method = klass.find(item.getter)
+                        method.preMethodCode = checkIsNull.format(klass.pyName)
+                        if item.setter:
+                            method = klass.find(item.setter)
+                            method.preMethodCode = checkIsNull.format(klass.pyName)
+
+
+
+    #-----------------------------------------------------------------
     tools.runGenerators(module)
 
 

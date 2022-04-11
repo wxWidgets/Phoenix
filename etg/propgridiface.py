@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Feb-2015
-# Copyright:   (c) 2015-2017 by Total Control Software
+# Copyright:   (c) 2015-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -32,6 +32,16 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    # These are duplicates, ignore the ones in this module
+    module.find('wxPG_PROPERTYVALUES_FLAGS').ignore()
+    module.find('wxPG_LABEL').ignore()
+    module.find('wxPG_LABEL_STRING').ignore()
+    module.find('wxPG_COLOUR_BLACK').ignore()
+    module.find('wxPG_COLOUR').ignore()
+    module.find('wxPG_DEFAULT_IMAGE_SIZE').ignore()
+
+
+    #----------------------------------------------------------
     c = module.find('wxPGPropArgCls')
     assert isinstance(c, etgtools.ClassDef)
     c.find('wxPGPropArgCls').findOverload('wxString &').ignore()
@@ -89,7 +99,7 @@ def run():
             return sipGetState(sipTransferObj);
         }
         else if (sipPy == Py_None) {
-            *sipCppPtr = new wxPGPropArgCls(reinterpret_cast< wxPGProperty * >(NULL));
+            *sipCppPtr = new wxPGPropArgCls(static_cast< wxPGProperty * >(NULL));
             return sipGetState(sipTransferObj);
         }
         else {
@@ -103,24 +113,46 @@ def run():
 
 
     #----------------------------------------------------------
-
     c = module.find('wxPropertyGridInterface')
     c.abstract = True
     for m in c.findAll('GetIterator'):
         if m.type == 'wxPropertyGridConstIterator':
             m.ignore()
 
-    c.find('SetPropertyValue').findOverload('int value').ignore()
-    c.find('SetPropertyValue').findOverload('bool value').ignore()
-    c.find('SetPropertyValue').findOverload('wxLongLong_t value').ignore()
-    c.find('SetPropertyValue').findOverload('wxULongLong_t value').ignore()
-    c.find('SetPropertyValue').findOverload('wxObject *value').ignore()
+    tools.ignoreConstOverloads(c)
+
+    spv = c.find('SetPropertyValue')
+    spv.findOverload('int value').ignore()
+    spv.findOverload('wxLongLong value').ignore()
+    spv.findOverload('wxLongLong_t value').ignore()
+    spv.findOverload('wxULongLong value').ignore()
+    spv.findOverload('wxULongLong_t value').ignore()
+    spv.findOverload('wxObject *value').ignore()
+    spv.findOverload('wchar_t *value').ignore()
+    spv.findOverload('char *value').ignore()
+
+    # Reorder SetPropertyValue overloads so the one taking a long int is not
+    # first. Mark others that could be auto-converted from int as
+    # "constrained" so they will only be used for that specific type. This
+    # should result in SetPropertyValue(id, double) only used for floats and
+    # not ints, or other things that can convert to int.
+    spv.findOverload('bool value').find('value').constrained = True
+    spv.findOverload('double value').find('value').constrained = True
+    spv_long = spv.findOverload('long value')
+    spv_long.ignore()
+    spv.reorderOverloads() # Ensures an ignored item is not first,
+    spv_long.ignore(False) # and then we can unignore it.
+
 
     c.find('Append.property').transfer = True
     c.find('AppendIn.newProperty').transfer = True
     for m in c.find('Insert').all():
         m.find('newProperty').transfer = True
 
+    # Fix some syntax that sip doesn't like
+    p = c.find('GetPropertiesWithFlag.iterFlags')
+    if p.default.startswith('('):
+        p.default = p.default[1:-1]
 
 
     # Tons of Python method implementations ported from Classic...
@@ -183,18 +215,20 @@ def run():
 
     c.find('GetPropertyValues').ignore()
     c.addPyMethod('GetPropertyValues',
-        '(self, dict_=None, as_strings=False, inc_attributes=False)',
+        '(self, dict_=None, as_strings=False, inc_attributes=False, flags=PG_ITERATE_PROPERTIES)',
         doc="""\
-            Returns all property values in the grid.\n
-            :param `dict_`: A to fill with the property values. If not given,
-                then a new one is created. The dict_ can be an object as well,
-                in which case it's __dict__ is used.
+            Returns all property values in the grid.
+
+            :param `dict_`: A diftionary to fill with the property values.
+                If not given, then a new one is created. The dict_ can be an
+                object as well, in which case it's __dict__ is used.
             :param `as_strings`: if True, then string representations of values
                 are fetched instead of native types. Useful for config and such.
             :param `inc_attributes`: if True, then property attributes are added
-                in the form of "@<propname>@<attr>".
+                in the form of ``"@<propname>@<attr>"``.
+            :param `flags`: Flags to pass to the iterator. See :ref:`wx.propgrid.PG_ITERATOR_FLAGS`.
             :returns: A dictionary with values. It is always a dictionary,
-                so if dict_ was and object with __dict__ attribute, then that
+                so if dict_ was an object with __dict__ attribute, then that
                 attribute is returned.
             """,
         body="""\
@@ -205,7 +239,7 @@ def run():
 
             getter = self.GetPropertyValue if not as_strings else self.GetPropertyValueAsString
 
-            it = self.GetVIterator(PG_ITERATE_PROPERTIES)
+            it = self.GetVIterator(flags)
             while not it.AtEnd():
                 p = it.GetProperty()
                 name = p.GetName()
@@ -282,7 +316,7 @@ def run():
             self.Refresh()
             """)
 
-    # TODO: should these be marked as deprecated?
+    # TODO: should these be marked as deprecated? Probably...
     module.addPyCode("""\
         PropertyGridInterface.GetValues = PropertyGridInterface.GetPropertyValues
         PropertyGridInterface.SetValues = PropertyGridInterface.SetPropertyValues
@@ -470,6 +504,14 @@ def run():
             """)
     c.addPyProperty('Items', '_Items')
 
+
+    def postProcessReST(text):
+        # fix some autodoc glitches
+        text = text.replace(':ref:`PropertyGridIterator Flags <propertygriditerator flags>`',
+                            ':ref:`wx.propgrid.PG_ITERATOR_FLAGS`')
+        return text
+
+    c.setReSTPostProcessor(postProcessReST)
 
     #----------------------------------------------------------
 

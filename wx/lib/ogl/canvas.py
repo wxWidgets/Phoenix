@@ -82,8 +82,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         self._firstDragY = 0
         self._checkTolerance = True
 
-        self._Overlay = wx.Overlay()
-        self._Buffer = wx.Bitmap(10, 10)
+        self._buffer = wx.Bitmap(1, 1)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -93,8 +92,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         """
         Update the buffer with the background and redraw the full diagram.
         """
-        dc = wx.MemoryDC()
-        dc.SelectObject(self._Buffer)
+        dc = wx.MemoryDC(self._buffer)
 
         dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
         dc.Clear() # make sure you clear the bitmap!
@@ -106,12 +104,15 @@ class ShapeCanvas(wx.ScrolledWindow):
         """
         The size handler, it initializes the buffer to the size of the window.
         """
-        Size  = self.GetClientSize()
+        size  = self.GetVirtualSize()
 
         # Make sure we don't try to create a 0 size bitmap
-        Size = (max(Size[0], 1), max(Size[1], 1))
-        self._Buffer = wx.Bitmap(Size[0], Size[1])
+        size = wx.Size(max(size.x, 1), max(size.y, 1))
+        self._buffer = wx.Bitmap(size.x, size.y)
         self.Draw()
+
+    def GetBuffer(self):
+        return self._buffer
 
     def SetDiagram(self, diag):
         """Set the diagram associated with this canvas.
@@ -130,21 +131,13 @@ class ShapeCanvas(wx.ScrolledWindow):
         The paint handler, uses :class:`BufferedPaintDC` to draw the
         buffer to the screen.
         """
-        dc = wx.BufferedPaintDC(self)
-        dc.DrawBitmap(self._Buffer, 0, 0)
+        dc = wx.PaintDC(self)
+        self.PrepareDC(dc)
+        dc.DrawBitmap(self._buffer, 0, 0)
 
     def OnMouseEvent(self, evt):
         """The mouse event handler."""
-        # we just get position, so is using ClientDC fine here?
-        dc = wx.ClientDC(self)
-        x, y = evt.GetLogicalPosition(dc)
-        # del it so we don't get tempted to use it for something else
-        del dc
-        ## result seems to be the same using either here, but not sure which is correct
-        #dc = wx.MemoryDC()
-        #dc.SelectObject(self._Buffer)
-        #x, y = evt.GetLogicalPosition(dc)
-
+        x, y = self.CalcUnscrolledPosition(evt.GetPosition())
         keys = 0
         if evt.ShiftDown():
             keys |= KEY_SHIFT
@@ -356,7 +349,7 @@ class ShapeCanvas(wx.ScrolledWindow):
             if object.IsShown() and \
                isinstance(object, LineShape) and \
                object.HitTest(x, y) and \
-               ((info == None) or isinstance(object, info)) and \
+               ((info is None) or isinstance(object, info)) and \
                (not notObject or not notObject.HasDescendant(object)):
                 temp_attachment, dist = object.HitTest(x, y)
                 # A line is trickier to spot than a normal object.
@@ -379,7 +372,7 @@ class ShapeCanvas(wx.ScrolledWindow):
                    (isinstance(object, DivisionShape) or
                     not isinstance(object, CompositeShape)) and
                     object.HitTest(x, y) and
-                    (info == None or isinstance(object, info)) and
+                    (info is None or isinstance(object, info)) and
                     (not notObject or not notObject.HasDescendant(object))):
                 temp_attachment, dist = object.HitTest(x, y)
                 if not isinstance(object, LineShape):

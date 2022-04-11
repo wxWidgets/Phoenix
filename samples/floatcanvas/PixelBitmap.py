@@ -24,7 +24,7 @@ class PixelBitmap:
     Canvas.GridOver = MyPixelBitmap
 
     It will always be drawn on top of everything else, and be positioned
-    according to pixel coordinates on teh screen, regardless of zoom and
+    according to pixel coordinates on the screen, regardless of zoom and
     pan position.
 
     """

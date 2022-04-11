@@ -210,17 +210,7 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
         :param `menu`: an instance of :class:`wx.Menu`.
         """
 
-        pos = wx.Point()
-
-        if self._bar._active_button:
-            size = self._bar._active_button.base.sizes[self._bar._active_button.size]
-            btn_rect = wx.Rect()
-            btn_rect.SetTopLeft(self._bar._layout_offset + self._bar._active_button.position)
-            btn_rect.SetSize(wx.Size(*size.size))
-            pos = btn_rect.GetBottomLeft()
-            pos.y += 1
-
-        return self._bar.PopupMenu(menu, pos)
+        return self._bar.PopupMenu(menu)
 
 
 class RibbonButtonBar(RibbonControl):
@@ -364,7 +354,7 @@ class RibbonButtonBar(RibbonControl):
                 self._bitmap_size_large = bitmap.GetSize()
                 if not bitmap_small.IsOk():
                     w, h = self._bitmap_size_large
-                    self._bitmap_size_small = wx.Size(0.5*w, 0.5*h)
+                    self._bitmap_size_small = wx.Size(w//2, h//2)
 
             if bitmap_small.IsOk():
 
@@ -877,8 +867,8 @@ class RibbonButtonBar(RibbonControl):
 
             layout_size = self._layouts[layout_i].overall_size
             if layout_size.x <= new_size.x and layout_size.y <= new_size.y:
-                self._layout_offset.x = (new_size.x - layout_size.x)/2
-                self._layout_offset.y = (new_size.y - layout_size.y)/2
+                self._layout_offset.x = (new_size.x - layout_size.x)//2
+                self._layout_offset.y = (new_size.y - layout_size.y)//2
                 self._current_layout = layout_i
                 break
 
@@ -1000,7 +990,7 @@ class RibbonButtonBar(RibbonControl):
 
     def MakeLayouts(self):
 
-        if self._layouts_valid or self._art == None:
+        if self._layouts_valid or self._art is None:
             return
 
         # Clear existing layouts
@@ -1085,7 +1075,7 @@ class RibbonButtonBar(RibbonControl):
         if count >= first_btn or used_width >= available_width:
             return False, count
 
-        if last_button != None:
+        if last_button is not None:
             last_button = count
 
         layout = RibbonButtonBarLayout()
@@ -1103,7 +1093,7 @@ class RibbonButtonBar(RibbonControl):
             # If height isn't preserved (i.e. it is reduced), then the minimum
             # size for the button bar will decrease, preventing the original
             # layout from being used (in some cases).
-            # It may be a good idea to always preverse the height, but for now
+            # It may be a good idea to always preserve the height, but for now
             # it is only done when the first button is involved in a collapse.
             preserve_height = True
 
@@ -1168,17 +1158,17 @@ class RibbonButtonBar(RibbonControl):
 
                 break
 
-        if new_hovered == None and self.GetToolTip():
+        if new_hovered is None and self.GetToolTip():
             self.SetToolTip("")
 
-        if new_hovered != self._hovered_button or (self._hovered_button != None and \
+        if new_hovered != self._hovered_button or (self._hovered_button is not None and \
                                                    new_hovered_state != self._hovered_button.base.state):
 
-            if self._hovered_button != None:
+            if self._hovered_button is not None:
                 self._hovered_button.base.state &= ~RIBBON_BUTTONBAR_BUTTON_HOVER_MASK
 
             self._hovered_button = new_hovered
-            if self._hovered_button != None:
+            if self._hovered_button is not None:
                 self._hovered_button.base.state = new_hovered_state
                 self.SetToolTip(self._hovered_button.base.help_string)
 
@@ -1308,12 +1298,12 @@ class RibbonButtonBar(RibbonControl):
         """
 
         repaint = False
-        if self._hovered_button != None:
+        if self._hovered_button is not None:
             self._hovered_button.base.state &= ~RIBBON_BUTTONBAR_BUTTON_HOVER_MASK
             self._hovered_button = None
             repaint = True
 
-        if self._active_button != None and not self._lock_active_state:
+        if self._active_button is not None and not self._lock_active_state:
             self._active_button.base.state &= ~RIBBON_BUTTONBAR_BUTTON_ACTIVE_MASK
             repaint = True
 

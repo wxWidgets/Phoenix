@@ -64,8 +64,8 @@ class GradientButtonDemo(wx.Panel):
         label1 = wx.StaticText(self.mainPanel, -1, "Welcome to the GradientButton demo for wxPython!")
         mainSizer.Add(label1, 0, wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, 10)
 
-        mainSizer.Add(self.btn1, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 15)
-        btnSizer.Add(self.btn2, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        mainSizer.Add(self.btn1, 0, wx.LEFT|wx.RIGHT|wx.TOP, 15)
+        btnSizer.Add(self.btn2, 0, wx.ALL, 5)
         btnSizer.Add((20, 0))
 
         firstStrings = ["Top Start", "Bottom Start", "Pressed Top", "Text Colour"]
@@ -73,17 +73,17 @@ class GradientButtonDemo(wx.Panel):
 
         for strings in firstStrings:
             label = wx.StaticText(self.mainPanel, -1, strings)
-            colourSizer.Add(label, 0, wx.ALIGN_CENTER|wx.EXPAND)
+            colourSizer.Add(label, 0, wx.EXPAND)
         for strings in firstStrings:
-            colourSizer.Add(self.FindWindowByName(strings), 0, wx.ALIGN_CENTER|wx.BOTTOM|wx.EXPAND, 10)
+            colourSizer.Add(self.FindWindowByName(strings), 0, wx.BOTTOM|wx.EXPAND, 10)
 
         for strings in secondStrings:
             label = wx.StaticText(self.mainPanel, -1, strings)
-            colourSizer.Add(label, 0, wx.ALIGN_CENTER|wx.EXPAND)
+            colourSizer.Add(label, 0, wx.EXPAND)
         for strings in secondStrings[:-1]:
-            colourSizer.Add(self.FindWindowByName(strings), 0, wx.ALIGN_CENTER|wx.EXPAND, 10)
+            colourSizer.Add(self.FindWindowByName(strings), 0, wx.EXPAND, 10)
 
-        btnSizer.Add(colourSizer, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL)
+        btnSizer.Add(colourSizer, 0, wx.EXPAND)
         btnSizer.Add((10, 0))
         mainSizer.Add(btnSizer, 0, wx.EXPAND|wx.ALL, 10)
 

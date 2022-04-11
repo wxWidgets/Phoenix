@@ -15,9 +15,8 @@ class TestPanel(wx.Panel):
 
 
     def OnButton(self, evt):
-        f = open("Main.py", "r")
-        msg = f.read()
-        f.close()
+        with open("Main.py", "r") as f:
+            msg = f.read()
 
         dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, "message test")
         dlg.ShowModal()

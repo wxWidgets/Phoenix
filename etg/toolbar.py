@@ -3,12 +3,13 @@
 # Author:      Robin Dunn
 #
 # Created:     07-Mar-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools.extractors import ExtractorError
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -64,13 +65,14 @@ def run():
     gcd.type = 'wxPyUserData*'
     gcd.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetClientData());')
 
+    c.find('SetDropdownMenu.menu').transfer = True
 
 
     #---------------------------------------------
     c = module.find('wxToolBar')
     tools.fixWindowClass(c)
+    tools.ignoreConstOverloads(c)
     _fixClientData(c)
-    c.find('SetBitmapResource').ignore()
     module.addGlobalStr('wxToolBarNameStr', c)
 
     gcd = c.find('GetToolClientData')
@@ -80,10 +82,22 @@ def run():
     c.find('AddTool.tool').transfer = True
     c.find('InsertTool.tool').transfer = True
 
+    # Conform the help text parameters.
+    m = c.find('AddTool')
+    for method in m.all():
+        for helper in ('shortHelp', 'longHelp'):
+            try:
+                param = method.find("{}String".format(helper))
+                param.name = helper
+            except ExtractorError:
+                pass
+
     c.find('OnLeftClick').ignore()
     c.find('OnMouseEnter').ignore()
     c.find('OnRightClick').ignore()
     c.find('OnLeftClick').ignore()
+
+    c.find('SetDropdownMenu.menu').transfer = True
 
 
     # Add some deprecated methods to aid with Classic compatibility.

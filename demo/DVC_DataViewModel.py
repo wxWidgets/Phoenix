@@ -19,8 +19,8 @@ def makeBlank(self):
     return empty
 
 #----------------------------------------------------------------------
-# We'll use instaces of these classes to hold our music data. Items in the
-# tree will get associated back to the coresponding Song or Genre object.
+# We'll use instances of these classes to hold our music data. Items in the
+# tree will get associated back to the corresponding Song or Genre object.
 
 class Song(object):
     def __init__(self, id, artist, title, genre):
@@ -61,7 +61,7 @@ class Genre(object):
 #     1. Artist:  string
 #     2. Title:   string
 #     3. id:      integer
-#     4. Aquired: date
+#     4. Acquired: date
 #     5. Liked:   bool
 #
 
@@ -102,7 +102,7 @@ class MyTreeListModel(dv.PyDataViewModel):
         # item(s) should be reported as children of this node. A List view
         # simply provides all items as children of this hidden root. A Tree
         # view adds additional items as children of the other items, as needed,
-        # to provide the tree hierachy.
+        # to provide the tree hierarchy.
         ##self.log.write("GetChildren\n")
 
         # If the parent item is invalid then it represents the hidden root
@@ -114,7 +114,7 @@ class MyTreeListModel(dv.PyDataViewModel):
             return len(self.data)
 
         # Otherwise we'll fetch the python object associated with the parent
-        # item and make DV items for each of it's child objects.
+        # item and make DV items for each of its child objects.
         node = self.ItemToObject(parent)
         if isinstance(node, Genre):
             for song in node.songs:
@@ -159,6 +159,16 @@ class MyTreeListModel(dv.PyDataViewModel):
                     return self.ObjectToItem(g)
 
 
+    def HasValue(self, item, col):
+        # Overriding this method allows you to let the view know if there is any
+        # data at all in the cell. If it returns False then GetValue will not be
+        # called for this item and column.
+        node = self.ItemToObject(item)
+        if isinstance(node, Genre) and col > 0:
+            return False
+        return True
+
+
     def GetValue(self, item, col):
         # Return the value to be displayed for this item and column. For this
         # example we'll just pull the values from the data objects we
@@ -168,17 +178,11 @@ class MyTreeListModel(dv.PyDataViewModel):
         node = self.ItemToObject(item)
 
         if isinstance(node, Genre):
-            # We'll only use the first column for the Genre objects,
-            # for the other columns lets just return empty values
-            mapper = { 0 : node.name,
-                       1 : "",
-                       2 : "",
-                       3 : "",
-                       4 : wx.DateTime.FromTimeT(0),  # TODO: There should be some way to indicate a null value...
-                       5 : False,
-                       }
-            return mapper[col]
-
+            # Due to the HasValue implementation above, GetValue should only
+            # be called for the first column for Genre objects. We'll verify
+            # that with this assert.
+            assert col == 0, "Unexpected column value for Genre objects"
+            return node.name
 
         elif isinstance(node, Song):
             mapper = { 0 : node.genre,
@@ -245,33 +249,39 @@ class TestPanel(wx.Panel):
         # Create an instance of our model...
         if model is None:
             self.model = MyTreeListModel(data, log)
+            newModel = True # it's a new instance so we need to decref it below
         else:
             self.model = model
+            newModel = False
 
-        # Tel the DVC to use the model
+        # Tell the DVC to use the model
         self.dvc.AssociateModel(self.model)
+        if newModel:
+            self.model.DecRef()
 
         # Define the columns that we want in the view.  Notice the
-        # parameter which tells the view which col in the data model to pull
+        # parameter which tells the view which column in the data model to pull
         # values from for each view column.
         if 1:
             # here is an example of adding a column with full control over the renderer, etc.
             tr = dv.DataViewTextRenderer()
             c0 = dv.DataViewColumn("Genre",   # title
                                    tr,        # renderer
-                                   0,         # data model column
-                                   width=80)
+                                   0)         # data model column
             self.dvc.AppendColumn(c0)
         else:
             # otherwise there are convenience methods for the simple cases
-            self.dvc.AppendTextColumn("Genre",   0, width=80)
+            c0 = self.dvc.AppendTextColumn("Genre",   0)
+
+        c0.SetMinWidth(80)
+        c0.SetAlignment(wx.ALIGN_LEFT)
 
         c1 = self.dvc.AppendTextColumn("Artist",   1, width=170, mode=dv.DATAVIEW_CELL_EDITABLE)
         c2 = self.dvc.AppendTextColumn("Title",    2, width=260, mode=dv.DATAVIEW_CELL_EDITABLE)
         c3 = self.dvc.AppendDateColumn('Acquired', 4, width=100, mode=dv.DATAVIEW_CELL_ACTIVATABLE)
         c4 = self.dvc.AppendToggleColumn('Like',   5, width=40, mode=dv.DATAVIEW_CELL_ACTIVATABLE)
 
-        # Notice how we pull the data from col 3, but this is the 6th col
+        # Notice how we pull the data from col 3, but this is the 6th column
         # added to the DVC. The order of the view columns is not dependent on
         # the order of the model columns at all.
         c5 = self.dvc.AppendTextColumn("id", 3, width=40,  mode=dv.DATAVIEW_CELL_EDITABLE)
@@ -291,6 +301,7 @@ class TestPanel(wx.Panel):
 
         self.Sizer.Add(b1, 0, wx.ALL, 5)
 
+        wx.CallAfter(c0.SetMinWidth, 80)
 
     def OnNewView(self, evt):
         f = wx.Frame(None, title="New view, shared model", size=(600,400))
@@ -324,7 +335,7 @@ def runTest(frame, nb, log):
             genre = Genre(song.genre)
             data[song.genre] = genre
         genre.songs.append(song)
-    data = data.values()
+    data = list(data.values())
 
     # Finally create the test window
     win = TestPanel(nb, log, data=data)

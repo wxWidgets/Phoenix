@@ -3,7 +3,7 @@
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 
 from .interpreter import Interpreter
-import imp
+import types
 import os
 import sys
 
@@ -23,7 +23,7 @@ class Buffer:
         self.name = ''
         self.editors = {}
         self.editor = None
-        self.modules = sys.modules.keys()
+        self.modules = list(sys.modules)
         self.syspath = sys.path[:]
         while True:
             try:
@@ -111,7 +111,7 @@ class Buffer:
         text = text.replace('\r\n', '\n')
         text = text.replace('\r', '\n')
         name = self.modulename or self.name
-        module = imp.new_module(name)
+        module = types.ModuleType(name)
         newspace = module.__dict__.copy()
         try:
             try:
@@ -131,6 +131,6 @@ class Buffer:
                 return True
         finally:
             sys.path = syspath
-            for m in sys.modules.keys():
+            for m in sys.modules:
                 if m not in self.modules:
                     del sys.modules[m]

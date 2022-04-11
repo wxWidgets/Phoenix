@@ -1,4 +1,4 @@
-    
+
     def Clone(self):
-    
-        return MyEvent() 
+
+        return MyEvent()

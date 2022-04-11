@@ -150,7 +150,9 @@ class Builder:
 # Concrete subclasses of abstract Builder interface
 
 class GNUMakeBuilder(Builder):
-    def __init__(self, commandName="make", formatName="GNUMake"):
+    def __init__(self, commandName=None, formatName="GNUMake"):
+        if commandName is None:
+            commandName = os.environ.get("MAKE", "make")
         Builder.__init__(self, commandName=commandName, formatName=formatName)
 
 
@@ -222,7 +224,7 @@ class MSVCProjectBuilder(Builder):
             if os.environ.has_key(key):
                 self.programDir = os.path.join(os.environ[key], "..", "IDE")
 
-        if self.programDir == None:
+        if self.programDir is None:
             for version in ["9.0", "8", ".NET 2003"]:
                 msvcDir = "C:\\Program Files\\Microsoft Visual Studio %s\\Common7\\IDE" % version
                 if os.path.exists(msvcDir):

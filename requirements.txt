@@ -1,12 +1,1 @@
-# Phoenix build and test requirements
-appdirs
-setuptools
-six
-wheel
-twine
-sphinx
-requests
-pytest
-pytest-xdist
-pytest-timeout
-numpy
+-r requirements/devel.txt

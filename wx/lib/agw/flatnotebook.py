@@ -858,9 +858,9 @@ def PaintStraightGradientBox(dc, rect, startColour, endColour, vertical=True):
 
     for i in range(high+1):
 
-        r = startColour.Red() + ((i*rd*100)/high)/100
-        g = startColour.Green() + ((i*gd*100)/high)/100
-        b = startColour.Blue() + ((i*bd*100)/high)/100
+        r = startColour.Red() + ((i*rd*100)//high)//100
+        g = startColour.Green() + ((i*gd*100)//high)//100
+        b = startColour.Blue() + ((i*bd*100)//high)//100
 
         p = wx.Pen(wx.Colour(r, g, b))
         dc.SetPen(p)
@@ -925,14 +925,14 @@ def DrawButton(dc, rect, focus, upperTabs):
 
     if focus:
         if upperTabs:
-            leftPt = wx.Point(rect.x, rect.y + (rect.height / 10)*8)
-            rightPt = wx.Point(rect.x + rect.width - 2, rect.y + (rect.height / 10)*8)
+            leftPt = wx.Point(rect.x, int(rect.y + (rect.height / 10)*8))
+            rightPt = wx.Point(rect.x + rect.width - 2, int(rect.y + (rect.height / 10)*8))
         else:
-            leftPt = wx.Point(rect.x, rect.y + (rect.height / 10)*5)
-            rightPt = wx.Point(rect.x + rect.width - 2, rect.y + (rect.height / 10)*5)
+            leftPt = wx.Point(rect.x, int(rect.y + (rect.height / 10)*5))
+            rightPt = wx.Point(rect.x + rect.width - 2, int(rect.y + (rect.height / 10)*5))
     else:
-        leftPt = wx.Point(rect.x, rect.y + (rect.height / 2))
-        rightPt = wx.Point(rect.x + rect.width - 2, rect.y + (rect.height / 2))
+        leftPt = wx.Point(rect.x, int(rect.y + (rect.height / 2)))
+        rightPt = wx.Point(rect.x + rect.width - 2, int(rect.y + (rect.height / 2)))
 
     # Define the top region
     top = wx.Rect(rect.GetTopLeft(), rightPt)
@@ -947,7 +947,7 @@ def DrawButton(dc, rect, focus, upperTabs):
     bottomStartColour = topEndColour
     bottomEndColour = topEndColour
 
-    # Incase we use bottom tabs, switch the colours
+    # In case we use bottom tabs, switch the colours
     if upperTabs:
         if focus:
             PaintStraightGradientBox(dc, top, topStartColour, topEndColour)
@@ -1056,6 +1056,7 @@ class FNBDragInfo(object):
 # Simply Used To Handle The OnDrop() Method When Dragging And Dropping Between
 # Different FlatNotebooks.
 # ---------------------------------------------------------------------------- #
+FNB_DataFormat = wx.DataFormat('FlatNotebook')
 
 class FNBDropTarget(wx.DropTarget):
     """
@@ -1074,7 +1075,7 @@ class FNBDropTarget(wx.DropTarget):
         wx.DropTarget.__init__(self)
 
         self._parent = parent
-        self._dataobject = wx.CustomDataObject(wx.DataFormat(six.u('FlatNotebook')))
+        self._dataobject = wx.CustomDataObject(FNB_DataFormat)
         self.SetDataObject(self._dataobject)
 
 
@@ -2169,7 +2170,7 @@ class FNBRenderer(object):
             # Default style
             tabWidth += 2*shapePoints
 
-        hasImage = pc._ImageList != None and pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
+        hasImage = pc._ImageList is not None and pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
 
         # For VC71 style, we only add the icon size (16 pixels)
         if hasImage:
@@ -2197,15 +2198,11 @@ class FNBRenderer(object):
         dc = wx.MemoryDC()
         dc.SelectObject(wx.Bitmap(1,1))
 
-        # For GTK it seems that we must do this steps in order
-        # for the tabs will get the proper height on initialization
-        # on MSW, preforming these steps yields wierd results
         normalFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont = normalFont
 
-        if "__WXGTK__" in wx.PlatformInfo:
-            boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
-            dc.SetFont(boldFont)
+        boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
+        dc.SetFont(boldFont)
 
         height = dc.GetCharHeight()
 
@@ -2234,7 +2231,7 @@ class FNBRenderer(object):
                 pc.Hide()
                 return
 
-        # Get the text hight
+        # Get the text height
         tabHeight = self.CalcTabHeight(pageContainer)
         agwStyle = pc.GetParent().GetAGWWindowStyleFlag()
 
@@ -2293,7 +2290,7 @@ class FNBRenderer(object):
             pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
             dc.SetPen(pen)
 
-            # Draw thik grey line between the windows area and
+            # Draw thick grey line between the windows area and
             # the tab area
             for num in range(3):
                 dc.DrawLine(0, greyLineYVal + num, size.x, greyLineYVal + num)
@@ -2363,7 +2360,7 @@ class FNBRenderer(object):
                 x1 = posx
                 x2 = posx + tabWidth + 2
 
-            # Restore the text forground
+            # Restore the text foreground
             dc.SetTextForeground(pc._activeTextColour)
 
             # Update the tab position & size
@@ -2634,9 +2631,9 @@ class FNBRendererDefault(FNBRenderer):
         imageYCoord = (pc.HasAGWFlag(FNB_BOTTOM) and [6] or [8])[0]
 
         if hasImage:
-            textOffset = 2*pc._pParent._nPadding + 16 + shapePoints/2
+            textOffset = 2*pc._pParent._nPadding + 16 + shapePoints//2
         else:
-            textOffset = pc._pParent._nPadding + shapePoints/2
+            textOffset = pc._pParent._nPadding + shapePoints//2
 
         textOffset += 2
 
@@ -2769,7 +2766,7 @@ class FNBRendererFirefox2(FNBRenderer):
         if pageTextColour is not None:
             dc.SetTextForeground(pageTextColour)
 
-        dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
+        dc.DrawText(pc.GetPageText(tabIdx), int(posx + textOffset), imageYCoord)
 
         # draw 'x' on tab (if enabled)
         if pc.HasAGWFlag(FNB_X_ON_TAB) and tabIdx == pc.GetSelection():
@@ -2836,8 +2833,8 @@ class FNBRendererVC71(FNBRenderer):
             dc.DrawLine(posx + tabWidth, blackLineY1, posx + tabWidth, blackLineY2)
 
             # To give the tab more 3D look we do the following
-            # Incase the tab is on top,
-            # Draw a thik white line on topof the rectangle
+            # In case the tab is on top,
+            # Draw a thick white line on topof the rectangle
             # Otherwise, draw a thin (1 pixel) black line at the bottom
 
             pen = wx.Pen((pc.HasAGWFlag(FNB_BOTTOM) and [wx.BLACK] or [wx.WHITE])[0])
@@ -3060,7 +3057,7 @@ class FNBRendererVC8(FNBRenderer):
                 pc.Hide()
                 return
 
-        # Get the text hight
+        # Get the text height
         tabHeight = self.CalcTabHeight(pageContainer)
 
         # Set the font for measuring the tab height
@@ -3145,7 +3142,7 @@ class FNBRendererVC8(FNBRenderer):
             posx = vTabsInfo[cur].x
 
             # By default we clean the tab region
-            # incase we use the VC8 style which requires
+            # in case we use the VC8 style which requires
             # the region, it will be filled by the function
             # drawVc8Tab
             pc._pagesInfoVec[i].GetRegion().Clear()
@@ -3156,7 +3153,7 @@ class FNBRendererVC8(FNBRenderer):
             pc._pagesInfoVec[i].GetXRect().SetSize(wx.Size(-1, -1))
 
             # Draw the tab
-            # Incase we are drawing the active tab
+            # In case we are drawing the active tab
             # we need to redraw so it will appear on top
             # of all other tabs
 
@@ -3171,14 +3168,14 @@ class FNBRendererVC8(FNBRenderer):
 
                 self.DrawTab(pc, dc, posx, i, tabWidth, tabHeight, pc._nTabXButtonStatus)
 
-            # Restore the text forground
+            # Restore the text foreground
             dc.SetTextForeground(pc._activeTextColour)
 
             # Update the tab position & size
             pc._pagesInfoVec[i].SetPosition(wx.Point(posx, VERTICAL_BORDER_PADDING))
             pc._pagesInfoVec[i].SetSize(wx.Size(tabWidth, tabHeight))
 
-        # Incase we are in VC8 style, redraw the active tab (incase it is visible)
+        # In case we are in VC8 style, redraw the active tab (in case it is visible)
         if pc.GetSelection() >= pc._nFrom and pc.GetSelection() < pc._nFrom + len(vTabsInfo):
 
             self.DrawTab(pc, dc, activeTabPosx, pc.GetSelection(), activeTabWidth, activeTabHeight, pc._nTabXButtonStatus)
@@ -3272,8 +3269,8 @@ class FNBRendererVC8(FNBRenderer):
             dc.SetPen(curPen)
             dc.DrawLine(posx, lineY, posx+rect.width, lineY)
 
-        # Incase we are drawing the selected tab, we draw the border of it as well
-        # but without the bottom (upper line incase of wxBOTTOM)
+        # In case we are drawing the selected tab, we draw the border of it as well
+        # but without the bottom (upper line in case of wxBOTTOM)
         if tabIdx == pc.GetSelection():
 
             borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
@@ -3281,7 +3278,7 @@ class FNBRendererVC8(FNBRenderer):
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.DrawPolygon(tabPoints)
 
-            # Delete the bottom line (or the upper one, incase we use wxBOTTOM)
+            # Delete the bottom line (or the upper one, in case we use wxBOTTOM)
             dc.SetPen(wx.WHITE_PEN)
             dc.DrawLine(tabPoints[0].x, tabPoints[0].y, tabPoints[6].x, tabPoints[6].y)
 
@@ -3397,7 +3394,7 @@ class FNBRendererVC8(FNBRenderer):
         # If we are drawing the selected tab, we need also to draw a line
         # from 0.tabPoints[0].x and tabPoints[6].x . end, we achieve this
         # by drawing the rectangle with transparent brush
-        # the line under the selected tab will be deleted by the drwaing loop
+        # the line under the selected tab will be deleted by the drawing loop
         if bSelectedTab:
             self.DrawTabsLine(pc, dc)
 
@@ -3619,7 +3616,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         self._first = True
         self._factor = 1
 
-    # definte this because we don't want to use the bold font
+    # define this because we don't want to use the bold font
     def CalcTabWidth(self, pageContainer, tabIdx, tabHeight):
         """
         Calculates the width of the input tab.
@@ -3661,7 +3658,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
             # Default style
             tabWidth += 2*shapePoints
 
-        hasImage = pc._ImageList != None and pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
+        hasImage = pc._ImageList is not None and pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
 
         # For VC71 style, we only add the icon size (16 pixels)
         if hasImage:
@@ -3738,7 +3735,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         if pageTextColour is not None:
             dc.SetTextForeground(pageTextColour)
 
-        dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
+        dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, int(imageYCoord))
 
         # draw 'x' on tab (if enabled)
         if pc.HasAGWFlag(FNB_X_ON_TAB) and tabIdx == pc.GetSelection():
@@ -3851,7 +3848,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
             # Draw the tab (border, text, image & 'x' on tab)
             self.DrawTab(pc, dc, posx, i, tabWidth, tabHeight, pc._nTabXButtonStatus)
 
-            # Restore the text forground
+            # Restore the text foreground
             dc.SetTextForeground(pc._activeTextColour)
 
             # Update the tab position & size
@@ -3972,7 +3969,7 @@ class FlatNotebook(wx.Panel):
         if "__WXGTK__" in wx.PlatformInfo:
             # For GTK it seems that we must do this steps in order
             # for the tabs will get the proper height on initialization
-            # on MSW, preforming these steps yields wierd results
+            # on MSW, preforming these steps yields weird results
             boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
             boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
             dc.SetFont(boldFont)
@@ -5635,7 +5632,7 @@ class PageContainer(wx.Panel):
             #! fix for tabfocus
             da_page = self._pParent.GetPage(page)
 
-            if da_page != None:
+            if da_page is not None:
                 da_page.SetFocus()
 
         if not self.IsTabVisible(page):
@@ -5840,7 +5837,7 @@ class PageContainer(wx.Panel):
                     self._isdragging = True
                     draginfo = FNBDragInfo(self, tabIdx)
                     drginfo = pickle.dumps(draginfo)
-                    dataobject = wx.CustomDataObject(wx.DataFormat(six.u('FlatNotebook')))
+                    dataobject = wx.CustomDataObject(FNB_DataFormat)
                     dataobject.SetData(drginfo)
                     dragSource = FNBDropSource(self)
                     dragSource.SetData(dataobject)
@@ -6210,12 +6207,12 @@ class PageContainer(wx.Panel):
 
     def CanFitToScreen(self, page):
         """
-        Returns wheter a tab can fit in the left space in the screen or not.
+        Returns whether a tab can fit in the left space in the screen or not.
 
         :param `page`: an integer specifying the page index.
         """
 
-        # Incase the from is greater than page,
+        # In case the from is greater than page,
         # we need to reset the self._nFrom, so in order
         # to force the caller to do so, we return false
         if self._nFrom > page:
@@ -6455,7 +6452,7 @@ class PageContainer(wx.Panel):
             if wx.VERSION > (2, 6, 3, 0) and self.TabHasImage(i):
                 item.SetBitmap(self.GetImageList().GetBitmap(pi.GetImageIndex()))
 
-            popupMenu.AppendItem(item)
+            popupMenu.Append(item)
             item.Enable(pi.GetEnabled())
 
         self.PopupMenu(popupMenu)

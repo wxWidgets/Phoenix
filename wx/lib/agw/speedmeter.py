@@ -161,7 +161,7 @@ This class supports the following window styles:
 Window Styles               Hex Value   Description
 =========================== =========== ==================================================
 ``SM_ROTATE_TEXT``                  0x1 Draws the ticks rotated: the ticks are rotated accordingly to the tick marks positions.
-``SM_DRAW_SECTORS``                 0x2 Different intervals are painted in differend colours (every sector of the circle has its own colour).
+``SM_DRAW_SECTORS``                 0x2 Different intervals are painted in different colours (every sector of the circle has its own colour).
 ``SM_DRAW_PARTIAL_SECTORS``         0x4 Every interval has its own colour, but only a circle corona is painted near the ticks.
 ``SM_DRAW_HAND``                    0x8 The hand (arrow indicator) is drawn.
 ``SM_DRAW_SHADOW``                 0x10 A shadow for the hand is drawn.
@@ -217,7 +217,7 @@ SM_BUFFERED_DC = 1
 #----------------------------------------------------------------------
 # SM_ROTATE_TEXT: Draws The Ticks Rotated: The Ticks Are Rotated
 #                 Accordingly To The Tick Marks Positions
-# SM_DRAW_SECTORS: Different Intervals Are Painted In Differend Colours
+# SM_DRAW_SECTORS: Different Intervals Are Painted In Different Colours
 #                  (Every Sector Of The Circle Has Its Own Colour)
 # SM_DRAW_PARTIAL_SECTORS: Every Interval Has Its Own Colour, But Only
 #                          A Circle Corona Is Painted Near The Ticks
@@ -239,7 +239,7 @@ SM_BUFFERED_DC = 1
 SM_ROTATE_TEXT = 1
 """ Draws the ticks rotated: the ticks are rotated accordingly to the tick marks positions. """
 SM_DRAW_SECTORS = 2
-""" Different intervals are painted in differend colours (every sector of the circle has its own colour). """
+""" Different intervals are painted in different colours (every sector of the circle has its own colour). """
 SM_DRAW_PARTIAL_SECTORS = 4
 """ Every interval has its own colour, but only a circle corona is painted near the ticks. """
 SM_DRAW_HAND = 8
@@ -268,14 +268,23 @@ SM_DRAW_FANCY_TICKS = 1024
 SM_MOUSE_TRACK = 1
 """ Flag to allow the left/right click of the mouse to change the :class:`SpeedMeter` value interactively. """
 
-fontfamily = list(range(70, 78))
-familyname = ["default", "decorative", "roman", "script", "swiss", "modern", "teletype"]
+fontfamily = [wx.FONTFAMILY_DEFAULT, wx.FONTFAMILY_DECORATIVE, wx.FONTFAMILY_ROMAN,
+              wx.FONTFAMILY_SCRIPT, wx.FONTFAMILY_SWISS, wx.FONTFAMILY_MODERN,
+              wx.FONTFAMILY_TELETYPE, wx.FONTFAMILY_UNKNOWN]
+familyname = ["default", "decorative", "roman", "script", "swiss", "modern",
+              "teletype", "unknown"]
 
-weights = list(range(90, 93))
-weightsname = ["normal", "light", "bold"]
+weights = [ wx.FONTWEIGHT_INVALID, wx.FONTWEIGHT_THIN, wx.FONTWEIGHT_EXTRALIGHT,
+            wx.FONTWEIGHT_LIGHT, wx.FONTWEIGHT_NORMAL, wx.FONTWEIGHT_MEDIUM,
+            wx.FONTWEIGHT_SEMIBOLD, wx.FONTWEIGHT_BOLD, wx.FONTWEIGHT_EXTRABOLD,
+            wx.FONTWEIGHT_HEAVY, wx.FONTWEIGHT_EXTRAHEAVY]
+weightsname = ["invalid", "thin", "extra-light", "normal", "medium", "semi-bold",
+               "bold", "extra-bold", "heavy", "extra-heavy"]
 
-styles = [90, 93, 94]
+styles = [ wx.FONTSTYLE_NORMAL, wx.FONTSTYLE_ITALIC, wx.FONTSTYLE_SLANT]
 stylesname = ["normal", "italic", "slant"]
+
+
 
 #----------------------------------------------------------------------
 # BUFFERENDWINDOW Class
@@ -333,6 +342,7 @@ class BufferedWindow(wx.Window):
             # platforms at initialization, but little harm done.
             self.doSetWindowCreated(None)
 
+
     def doSetWindowCreated(self, evt):
         """
         Method to call OnSize on GTK when window is created.
@@ -340,13 +350,13 @@ class BufferedWindow(wx.Window):
         self._isWindowCreated = True
         self.OnSize(None)
 
+
     def Draw(self, dc):
         """
         This method should be overridden when sub-classed.
 
         :param `dc`: an instance of :class:`wx.DC`.
         """
-
         pass
 
 
@@ -397,12 +407,16 @@ class BufferedWindow(wx.Window):
 
         if self._bufferedstyle == SM_BUFFERED_DC:
             dc = wx.BufferedDC(wx.ClientDC(self), self._Buffer)
+            if 'wxMSW' in wx.PlatformInfo:
+                dc = wx.GCDC(dc)
             self.Draw(dc)
         else:
             # update the buffer
             dc = wx.MemoryDC()
             dc.SelectObject(self._Buffer)
 
+            if 'wxMSW' in wx.PlatformInfo:
+                dc = wx.GCDC(dc)
             self.Draw(dc)
             # update the screen
             wx.ClientDC(self).Blit(0, 0, self.Width, self.Height, dc, 0, 0)
@@ -441,7 +455,7 @@ class SpeedMeter(BufferedWindow):
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
          ``SM_ROTATE_TEXT``                  0x1 Draws the ticks rotated: the ticks are rotated accordingly to the tick marks positions.
-         ``SM_DRAW_SECTORS``                 0x2 Different intervals are painted in differend colours (every sector of the circle has its own colour).
+         ``SM_DRAW_SECTORS``                 0x2 Different intervals are painted in different colours (every sector of the circle has its own colour).
          ``SM_DRAW_PARTIAL_SECTORS``         0x4 Every interval has its own colour, but only a circle corona is painted near the ticks.
          ``SM_DRAW_HAND``                    0x8 The hand (arrow indicator) is drawn.
          ``SM_DRAW_SHADOW``                 0x10 A shadow for the hand is drawn.
@@ -471,6 +485,7 @@ class SpeedMeter(BufferedWindow):
         self._agwStyle = agwStyle
         self._bufferedstyle = bufferedstyle
         self._mousestyle = mousestyle
+        self._middleicon = None
 
         if self._agwStyle & SM_DRAW_SECTORS and self._agwStyle & SM_DRAW_GRADIENT:
             errstr = "\nERROR: Incompatible Options: SM_DRAW_SECTORS Can Not Be Used In "
@@ -522,6 +537,13 @@ class SpeedMeter(BufferedWindow):
         self.SetHandStyle()
         self.DrawExternalArc()
 
+        # If no initial size is set then use (1,1) instead of the (20,20) that
+        # wxWindow will default to. This is so we don't set the initial
+        # self.scale based on (20,20) but will instead wait until the initial
+        # size is set by the sizer. See Draw() implementation below.
+        if size == wx.DefaultSize:
+            size = wx.Size(1,1)
+
         BufferedWindow.__init__(self, parent, id, pos, size,
                                 style=wx.NO_FULL_REPAINT_ON_RESIZE,
                                 bufferedstyle=bufferedstyle)
@@ -558,8 +580,8 @@ class SpeedMeter(BufferedWindow):
         dc.SetBackground(wx.Brush(speedbackground))
         dc.Clear()
 
-        centerX = self.faceBitmap.GetWidth()/2
-        centerY = self.faceBitmap.GetHeight()/2
+        centerX = self.faceBitmap.GetWidth()//2
+        centerY = self.faceBitmap.GetHeight()//2
 
         self.CenterX = centerX
         self.CenterY = centerY
@@ -568,8 +590,9 @@ class SpeedMeter(BufferedWindow):
         radius = min(centerX, centerY) - 2
 
         self.Radius = radius
+        self.Radius = radius
 
-        # Get The Angle Of Existance Of The Sector
+        # Get The Angle Of Existence Of The Sector
         anglerange = self.GetAngleRange()
         startangle = anglerange[1]
         endangle = anglerange[0]
@@ -658,7 +681,7 @@ class SpeedMeter(BufferedWindow):
             # Draw The Filler (Both In "Advance" And "Reverse" Directions)
 
             dc.SetBrush(wx.Brush(fillercolour))
-            dc.DrawArc(xs2, ys2, xe2, ye2, centerX, centerY)
+            dc.DrawArc(xs2, ys2, xe2, ye2, int(centerX), int(centerY))
 
             if self._agwStyle & SM_DRAW_SECTORS == 0:
                 dc.SetBrush(wx.Brush(speedbackground))
@@ -929,7 +952,7 @@ class SpeedMeter(BufferedWindow):
                     y = y - height/2.0 - height*sin(angis)/2.0
                     fancytext.RenderToDC(fancystr, dc, x, y)
                 else:
-                    dc.DrawText(strings, x, y)
+                    dc.DrawText(strings, int(x), int(y))
 
             # This Is The Small Rectangle --> Tick Mark
             rectangle = colourangles[ii] + pi/2.0
@@ -946,6 +969,7 @@ class SpeedMeter(BufferedWindow):
             y4 = y3 + 3*self.scale*sinrect
 
             points = [(x1, y1), (x2, y2), (x4, y4), (x3, y3)]
+            points = [(int(p[0]), int(p[1])) for p in points]
 
             dc.DrawPolygon(points)
 
@@ -958,10 +982,11 @@ class SpeedMeter(BufferedWindow):
 
                     for tcount in range(ticknum):
                         if direction == "Advance":
-                            oldinterval = (oldinterval + spacing) - start
-                            stint = oldinterval
+                            oldinterval = (oldinterval + spacing)
+                            stint = oldinterval - start
                         else:
-                            oldinterval = start + (oldinterval + spacing)
+                            #oldinterval = start + (oldinterval + spacing)
+                            oldinterval = (oldinterval + spacing)
                             stint = end - oldinterval
 
                         angle = (stint/float(span))*(startangle-endangle) - startangle
@@ -979,6 +1004,7 @@ class SpeedMeter(BufferedWindow):
                         y4 = y3 + self.scale*sinrect
 
                         points = [(x1, y1), (x2, y2), (x4, y4), (x3, y3)]
+                        points = [(int(p[0]), int(p[1])) for p in points]
 
                         dc.DrawPolygon(points)
 
@@ -993,7 +1019,7 @@ class SpeedMeter(BufferedWindow):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         if self._drawarc:
-            dc.SetPen(wx.Pen(self.GetArcColour(), 2.0))
+            dc.SetPen(wx.Pen(self.GetArcColour(), 2))
             # If It's Not A Complete Circle, Draw The Connecting Lines And The Arc
             if abs(abs(startangle - endangle) - 2*pi) > 1.0/180.0:
                 dc.DrawArc(xstart, ystart, xend, yend, centerX, centerY)
@@ -1022,16 +1048,16 @@ class SpeedMeter(BufferedWindow):
             newx = centerX + 1.5*mw*cos(middleangle) - mw/2.0
             newy = centerY - 1.5*mh*sin(middleangle) - mh/2.0
             dc.SetTextForeground(middlecolour)
-            dc.DrawText(middletext, newx, newy)
+            dc.DrawText(middletext, int(newx), int(newy))
 
         # Here We Draw The Icon In The Middle, Near The Start Of The Arrow (If Present)
         # This Is Like The "Fuel" Icon In The Cars
-        if self._agwStyle & SM_DRAW_MIDDLE_ICON:
+        if self._agwStyle & SM_DRAW_MIDDLE_ICON and self.GetMiddleIcon():
 
             middleicon = self.GetMiddleIcon()
             middlewidth, middleheight = self.GetMiddleIconDimens()
-            middleicon.SetWidth(middlewidth*self.scale)
-            middleicon.SetHeight(middleheight*self.scale)
+            middleicon.SetWidth(int(middlewidth*self.scale))
+            middleicon.SetHeight(int(middleheight*self.scale))
             middleangle = (startangle + endangle)/2.0
 
             mw = middleicon.GetWidth()
@@ -1040,7 +1066,7 @@ class SpeedMeter(BufferedWindow):
             newx = centerX + 1.5*mw*cos(middleangle) - mw/2.0
             newy = centerY - 1.5*mh*sin(middleangle) - mh/2.0
 
-            dc.DrawIcon(middleicon, newx, newy)
+            dc.DrawIcon(middleicon, int(newx), int(newy))
 
             # Restore Icon Dimension, If Not Something Strange Happens
             middleicon.SetWidth(middlewidth)
@@ -1085,53 +1111,61 @@ class SpeedMeter(BufferedWindow):
                 if handstyle == "Arrow":
                     # Draw The Shadow
                     shadowcolour = self.GetShadowColour()
-                    dc.SetPen(wx.Pen(shadowcolour, 5*log(self.scale+1)))
+                    dc.SetPen(wx.Pen(shadowcolour, int(5*log(self.scale+1))))
                     dc.SetBrush(wx.Brush(shadowcolour))
                     shadowdistance = 2.0*self.scale
-                    dc.DrawLine(newx + shadowdistance, newy + shadowdistance,
-                                xarr + shadowdistance, yarr + shadowdistance)
+                    dc.DrawLine(int(newx + shadowdistance), int(newy + shadowdistance),
+                                int(xarr + shadowdistance), int(yarr + shadowdistance))
 
-                    dc.DrawPolygon([(x1+shadowdistance, y1+shadowdistance),
-                                    (x2+shadowdistance, y2+shadowdistance),
-                                    (x3+shadowdistance, y3+shadowdistance)])
+                    points = [(x1+shadowdistance, y1+shadowdistance),
+                              (x2+shadowdistance, y2+shadowdistance),
+                              (x3+shadowdistance, y3+shadowdistance)]
+                    points = [(int(p[0]), int(p[1])) for p in points]
+                    dc.DrawPolygon(points)
                 else:
                     # Draw The Shadow
                     shadowcolour = self.GetShadowColour()
                     dc.SetBrush(wx.Brush(shadowcolour))
-                    dc.SetPen(wx.Pen(shadowcolour, 1.0))
+                    dc.SetPen(wx.Pen(shadowcolour, 1))
                     shadowdistance = 1.5*self.scale
 
-                    dc.DrawPolygon([(x1+shadowdistance, y1+shadowdistance),
-                                    (x2+shadowdistance, y2+shadowdistance),
-                                    (x3+shadowdistance, y3+shadowdistance),
-                                    (x4+shadowdistance, y4+shadowdistance)])
+                    points = [(x1+shadowdistance, y1+shadowdistance),
+                              (x2+shadowdistance, y2+shadowdistance),
+                              (x3+shadowdistance, y3+shadowdistance),
+                              (x4+shadowdistance, y4+shadowdistance)]
+                    points = [(int(p[0]), int(p[1])) for p in points]
+                    dc.DrawPolygon(points)
 
             if handstyle == "Arrow":
 
-                dc.SetPen(wx.Pen(handcolour, 1.5))
+                dc.SetPen(wx.Pen(handcolour, 1))
 
                 # Draw The Small Circle In The Center --> The Hand "Holder"
                 dc.SetBrush(wx.Brush(speedbackground))
-                dc.DrawCircle(centerX, centerY, 4*self.scale)
+                dc.DrawCircle(centerX, centerY, int(4*self.scale))
 
-                dc.SetPen(wx.Pen(handcolour, 5*log(self.scale+1)))
+                dc.SetPen(wx.Pen(handcolour, int(5*log(self.scale+1))))
                 # Draw The "Hand", An Arrow
-                dc.DrawLine(newx, newy, xarr, yarr)
+                dc.DrawLine(int(newx), int(newy), int(xarr), int(yarr))
 
                 # Draw The Arrow Pointer
                 dc.SetBrush(wx.Brush(handcolour))
-                dc.DrawPolygon([(x1, y1), (x2, y2), (x3, y3)])
+                points = [(x1, y1), (x2, y2), (x3, y3)]
+                points = [(int(p[0]), int(p[1])) for p in points]
+                dc.DrawPolygon(points)
 
             else:
 
                 # Draw The Hand Pointer
-                dc.SetPen(wx.Pen(handcolour, 1.5))
+                dc.SetPen(wx.Pen(handcolour, 1))
                 dc.SetBrush(wx.Brush(handcolour))
-                dc.DrawPolygon([(x1, y1), (x2, y2), (x3, y3), (x4, y4)])
+                points = [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]
+                points = [(int(p[0]), int(p[1])) for p in points]
+                dc.DrawPolygon(points)
 
                 # Draw The Small Circle In The Center --> The Hand "Holder"
                 dc.SetBrush(wx.Brush(speedbackground))
-                dc.DrawCircle(centerX, centerY, 4*self.scale)
+                dc.DrawCircle(centerX, centerY, int(4*self.scale))
 
 
     def SetIntervals(self, intervals=None):
@@ -1503,7 +1537,7 @@ class SpeedMeter(BufferedWindow):
 
         if font is None:
             self._middletextfont = wx.Font(1, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
-            self._middletextsize = 10.0
+            self._middletextsize = 10
             self._middletextfont.SetPointSize(self._middletextsize)
         else:
             self._middletextfont = font
@@ -1575,7 +1609,7 @@ class SpeedMeter(BufferedWindow):
         x = radius*cos(angle) + centerX
         y = radius*sin(angle) + centerY
 
-        return x, y
+        return int(x), int(y)
 
 
     def GetIntersection(self, current, intervals):
@@ -1665,7 +1699,7 @@ class SpeedMeter(BufferedWindow):
 
     def DrawExternalArc(self, draw=True):
         """
-        Specify wheter or not you wish to draw the external (thicker) arc.
+        Specify whether or not you wish to draw the external (thicker) arc.
 
         :param `draw`: ``True`` to draw the external arc, ``False`` otherwise.
         """

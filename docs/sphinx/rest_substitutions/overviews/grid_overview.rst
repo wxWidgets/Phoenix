@@ -34,7 +34,7 @@ some of the formatting functions::
     class GridFrame(wx.Frame):
         def __init__(self, parent):
             wx.Frame.__init__(self, parent)
-            
+
             # Create a wxGrid object
             grid = wx.grid.Grid(self, -1)
 
@@ -70,7 +70,7 @@ some of the formatting functions::
 
 
     if __name__ == '__main__':
-        
+
         app = wx.App(0)
         frame = GridFrame(None)
         app.MainLoop()
@@ -80,10 +80,10 @@ Here is a list of classes related to :class:`~wx.grid.Grid`:
 
 - :class:`~wx.grid.Grid`: The main grid control class itself.
 - :class:`~wx.grid.GridTableBase`: The base class for grid data provider.
-- :class:`~wx.grid.GridStringTable`: Simple :class:`~wx.grid.GridTableBase` implementation 
-  supporting only string data items and storing them all in memory (hence suitable 
+- :class:`~wx.grid.GridStringTable`: Simple :class:`~wx.grid.GridTableBase` implementation
+  supporting only string data items and storing them all in memory (hence suitable
   for not too large grids only).
-- :class:`~wx.grid.GridCellAttr`: A cell attribute, allowing to customize its appearance 
+- :class:`~wx.grid.GridCellAttr`: A cell attribute, allowing to customize its appearance
   as well as the renderer and editor used for displaying and editing it.
 - :class:`~wx.grid.GridCellAttrProvider`: The object responsible for storing and retrieving the cell attributes.
 - :class:`~wx.grid.GridColLabelWindow`: The window showing the grid columns labels.

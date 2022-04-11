@@ -1,109 +1,119 @@
 .. wxPython Phoenix documentation
    Created:   9-Dec-2011
-   Copyright: (c) 2011-2016 by Total Control Software
+   Copyright: (c) 2011-2017 by Total Control Software
    License:   wxWindows License
 
-=======================================
-Welcome to the wxPython Phoenix Project
-=======================================
+.. include:: headings.inc
+
+==========================
+wxPython API Documentation
+==========================
+
+!WELCOME!
+
+If you are porting your code from Classic wxPython, be sure to read the
+`Migration Guide <MigrationGuide.html>`_  to get a better feel for
+how some things have changed.
+
+You can download a local copy of this documentation using a new utility script
+included with wxPython called ``wxdocs``. It will open the local copy of the
+documentation in your default browser, downloading it first if needed. There
+is also a similar tool called ``wxdemo`` that will download (if needed)
+and launch the wxPython demo for you.
+
+.. note:: If you wish to help in the documentation effort, the main
+   docstrings guidelines are outlined in the
+   `Docstring Guidelines <https://docs.wxpython.org/DocstringsGuidelines.html>`_
+   document.
 
 
-wxPython
-========
+.. raw:: html
 
-wxPython is a **GUI toolkit** for the `Python <http://www.python.org/>`_
-programming language. It allows Python programmers to create programs with a
-robust, highly functional graphical user interface, simply and easily.
+     <h2>Sections</h2>
 
-.. figure:: _static/images/sphinxdocs/central_bar.png
-   :align: center
+     <table class="contentstable" align="center" style="margin-left: 25px">
+       <tr><td>
+         <p class="mybiglink"><a class="mybiglink" href="Overviews.html">wx Overview Documents</a><br/>
+            <span class="linkdescr">A collection of overview and how-to documents about various wx topics. </span></p>
 
+         <p class="mybiglink"><a class="mybiglink" href="wx.functions.html">wx functions</a><br/>
+            <span class="linkdescr">The index of top-level functions available in the wx package. </span></p>
 
-|
+       </td></tr>
+      </table>
 
-What is wxPython
-----------------
+     <h3>Modules</h3>
 
-wxPython is a **GUI toolkit** for the `Python <http://www.python.org/>`_
-programming language. It allows Python programmers to create programs with a
-robust, highly functional graphical user interface, simply and easily. It is
-implemented as a Python extension module (native code) that wraps the popular
-`wxWidgets <http://wxwidgets.org/>`_ cross platform GUI library, which is
-written in C++.
+     <table class="contentstable" align="center" style="margin-left: 25px">
+       <tr>
+       <td width="50%" valign="top">
+         <p class="mybiglink"><a class="mybiglink" href="wx.1moduleindex.html">wx</a><br/>
+            <span class="linkdescr">The classes which appear in the main wx namespace</span></p>
 
-Like Python and wxWidgets, wxPython is *Open Source* which means that it is
-free for anyone to use and the source code is available for anyone to look at
-and modify. Or anyone can contribute fixes or enhancements to the project.
+         <p class="mybiglink"><a class="mybiglink" href="wx.adv.1moduleindex.html">wx.adv</a><br/>
+            <span class="linkdescr">Less commonly used or more advanced classes</span></p>
 
-wxPython is a *cross-platform* toolkit. This means that the same program will
-run on multiple platforms without modification. Currently supported platforms
-are 32-bit Microsoft Windows, most Unix or unix-like systems, and Macintosh OS
-X+, in most cases the native widgets are used on each platform.
+         <p class="mybiglink"><a class="mybiglink" href="wx.grid.1moduleindex.html">wx.grid</a><br/>
+            <span class="linkdescr">Widget and supporting classes for displaying and editing tabular data</span></p>
 
-Since the language is Python, wxPython programs are **simple, easy** to write
-and easy to understand.
+         <p class="mybiglink"><a class="mybiglink" href="wx.dataview.1moduleindex.html">wx.dataview</a><br/>
+            <span class="linkdescr">Classes for viewing tabular or hierarchical data</span></p>
 
-As an example, this is a simple "Hello World" program with wxPython::
+         <p class="mybiglink"><a class="mybiglink" href="wx.richtext.1moduleindex.html">wx.richtext</a><br/>
+            <span class="linkdescr">A generic, ground-up implementation of a text control capable of showing multiple text styles and images.</span></p>
 
-    import wx
+         <p class="mybiglink"><a class="mybiglink" href="wx.ribbon.1moduleindex.html">wx.ribbon</a><br/>
+            <span class="linkdescr">A set of classes for writing a ribbon-based UI, typically a combination of tabs and toolbar, similar to the UI in MS Office and Windows 10.</span></p>
 
-    app = wx.App()
+         <p class="mybiglink"><a class="mybiglink" href="wx.html.1moduleindex.html">wx.html</a><br/>
+            <span class="linkdescr">Widget and supporting classes for a generic html renderer</span></p>
 
-    frame = wx.Frame(None, -1, "Hello World")
-    frame.Show()
+         <p class="mybiglink"><a class="mybiglink" href="wx.html2.1moduleindex.html">wx.html2</a><br/>
+            <span class="linkdescr">Widget and supporting classes for a native html renderer, with CSS and javascript support</span></p>
 
-    app.MainLoop()
+         <p class="mybiglink"><a class="mybiglink" href="wx.aui.1moduleindex.html">wx.aui</a><br/>
+            <span class="linkdescr">Docking/floating window panes, draggable notebook tabs, etc.</span></p>
 
+         <p class="mybiglink"><a class="mybiglink" href="wx.svg.html">wx.svg</a><br/>
+            <span class="linkdescr">Classes to parse and render Scalable Vector Graphics files.</span></p>
 
-The GUI layouts you can build with wxPython are almost infinite: it has an
-extremely rich set of widgets (derived from `wxWidgets`) and greatly extended
-by a huge set of pure-Python controls written over the years.
+       </td>
+       <td valign="top" width="50%" style="margin-left: 5px">
+         <p class="mybiglink"><a class="mybiglink" href="wx.lib.html">wx.lib</a><br/>
+            <span class="linkdescr">Our pure-Python library of widgets</span></p>
 
+         <p class="mybiglink"><a class="mybiglink" href="wx.glcanvas.1moduleindex.html">wx.glcanvas</a><br/>
+            <span class="linkdescr">Classes for embedding OpenGL views in a window</span></p>
 
-What is wxPython Phoenix?
--------------------------
+         <p class="mybiglink"><a class="mybiglink" href="wx.stc.1moduleindex.html">wx.stc</a><br/>
+            <span class="linkdescr">Classes for Styled Text Control, a.k.a Scintilla</span></p>
 
-**Phoenix** is the code name of a new implementation of wxPython.  The name comes
-from the `mythical bird <https://en.wikipedia.org/wiki/Phoenix_(mythology)>`_
-that bursts into flames at the end of its life and from the ashes is reborn as
-a new, stronger, and better phoenix.  Likewise the intent with the
-*wxPython Phoenix* project is throw almost everything from *wxPython Classic*
-into the fire to be built anew from the ashes of its former self, without all
-of the old crud that had built up over the long life of Classic.
+         <p class="mybiglink"><a class="mybiglink" href="wx.msw.1moduleindex.html">wx.msw</a><br/>
+            <span class="linkdescr">A few classes available only on Windows</span></p>
 
-Much of that crud were rather hacky things which had to be done to
-work around limitations of the technology available at the time.  Those are
-easy to get rid of.  Others are things that seemed good at the time, but in
-retrospect turned out to be bad ideas.  Some of those are a little more
-tricky, but still a good idea to change.  The end result will be a new
-wxPython that is better, stronger, and faster than he was before, and which is
-easier to maintain, extend and document.
+         <p class="mybiglink"><a class="mybiglink" href="wx.media.1moduleindex.html">wx.media</a><br/>
+            <span class="linkdescr">MediaCtrl and related classes</span></p>
 
-Although there hasn't been a formal release yet, Phoenix is already in a
-usable state with snapshot builds available after new commits are merged,
-and is in active use on a number of projects already.  Progress is still being
-made and an official release is on the way.  Stay tuned to the wxPython
-developer and user groups for more information and announcements.
+         <p class="mybiglink"><a class="mybiglink" href="wx.propgrid.1moduleindex.html">wx.propgrid</a><br/>
+            <span class="linkdescr">PropertyGrid and related classes for editing a grid of name/value pairs. </span></p>
 
-Meanwhile, here are some important links:
+         <p class="mybiglink"><a class="mybiglink" href="wx.xrc.1moduleindex.html">wx.xrc</a><br/>
+            <span class="linkdescr">Classes for loading widgets and layout from XML</span></p>
 
-  * The `MigrationGuide <MigrationGuide.html>`_ will help you understand the
-    differences between wxPython Phoenix and Classic.  In addition,
-    `classic_vs_phoenix <classic_vs_phoenix.html>`_ documents
-    some names that have been changed, or which haven't yet been ported to
-    Phoenix.
+         <p class="mybiglink"><a class="mybiglink" href="wx.xml.1moduleindex.html">wx.xml</a><br/>
+            <span class="linkdescr">Some simple XML classes for use with XRC</span></p>
 
-  * The new wxPython API documentation is available `here <main.html>`_.
+         <p class="mybiglink"><a class="mybiglink" href="wx.py.html">wx.py</a><br/>
+            <span class="linkdescr">The py package, containing PyCrust and related modules</span></p>
 
-  * The `Project Phoenix <http://wiki.wxpython.org/ProjectPhoenix>`_ section
-    of the wxPython wiki has information about the background of, and reasons
-    for this project, as well as information for developers who want to help
-    out.
+         <p class="mybiglink"><a class="mybiglink" href="wx.tools.html">wx.tools</a><br/>
+            <span class="linkdescr">Some useful tools and utilities for wxPython.</span></p>
 
-  * Source code and issue tracking are available at the
-    `Phoenix GitHub <https://github.com/wxWidgets/Phoenix>`_ repository. Be
-    sure to read the README.rst file there to learn how to build wxWidgets and
-    Phoenix for yourself.
+         <p class="mybiglink"><a class="mybiglink" href="wx.functions.html">functions</a><br/>
+            <span class="linkdescr">Top-level functions in the wx package.</span></p>
+
+       </td></tr>
+     </table>
 
 
 
@@ -112,49 +122,12 @@ Meanwhile, here are some important links:
    :maxdepth: 2
    :hidden:
    :glob:
-   
+
    MigrationGuide
-   TODO
    DocstringsGuidelines
+   Overviews
    wx.functions
    wx.1moduleindex
-   app_overview
-   bitmap_overview
-   bookctrl_overview
-   command_overview
-   common_dialogs_overview
-   config_overview
-   dataobject_overview
-   datetime_overview
-   dc_overview
-   dialog_overview
-   dnd_overview
-   events_overview
-   filesystem_overview
-   font_encodings
-   font_overview
-   grid_overview
-   html_overview
-   internationalization
-   writing_non_english_applications
-   listctrl_overview
-   log_classes_overview
-   printing_framework_overview
-   refcount_overview
-   richtextctrl_overview
-   scrolling_overview
-   sizers_overview
-   splitterwindow_overview
-   standard_event_identifiers
-   stock_items
-   tipprovider_overview
-   toolbar_overview
-   treectrl_overview
-   validator_overview
-   window_deletion_overview
-   window_ids_overview
-   window_sizing_overview
-   window_styles_overview
    wx.adv.1moduleindex
    wx.adv.functions
    wx.dataview.1moduleindex
@@ -178,5 +151,4 @@ Meanwhile, here are some important links:
    wx.lib
    wx.py
    wx.tools
-
-
+   wx.svg

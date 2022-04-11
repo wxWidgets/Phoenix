@@ -37,7 +37,7 @@ class PublisherArg1Stage2(Publisher):
     """
 
     _base = Publisher
-
+    
     class SenderTooManyKwargs(RuntimeError):
         def __init__(self, kwargs, commonArgName):
             extra = kwargs.copy()
@@ -72,6 +72,6 @@ class PublisherArg1Stage2(Publisher):
 
 if policies.msgProtocolTransStage is not None:
     Publisher = PublisherArg1Stage2
-    #print('Using protocol %s' % Publisher)
+    #print 'Using protocol', Publisher
 
 

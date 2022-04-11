@@ -86,7 +86,7 @@ class TestListCtrlPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1, style=wx.WANTS_CHARS)
 
         self.log = log
-        tID = wx.NewId()
+        tID = wx.NewIdRef()
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 

@@ -7,21 +7,26 @@ in Python.
 
 import time
 import wx
+import wx.lib.newevent as ne
+
 
 ##import os; raw_input('PID: %d\nPress enter...' % os.getpid())
+
+GooEvent, EVT_GOO = ne.NewCommandEvent()
 
 #---------------------------------------------------------------------------
 
 class MyFrame(wx.Frame):
 
     def __init__(self, parent, id, title):
-        wx.Frame.__init__(self, parent, id, title,
-                         (100, 100), (160, 150))
+        wx.Frame.__init__(self, parent, id, title, size=(300, 200))
 
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_MOVE, self.OnMove)
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         self.Bind(wx.EVT_IDLE, self.OnIdle)
+        self.Bind(wx.EVT_BUTTON, self.OnButton)
+        self.Bind(EVT_GOO, self.OnGoo, id=123)
 
         self.count = 0
 
@@ -39,6 +44,10 @@ class MyFrame(wx.Frame):
         self.idleCtrl = wx.TextCtrl(panel, -1, "", style=wx.TE_READONLY)
         sizer.Add(wx.StaticText(panel, -1, "Idle:"))
         sizer.Add(self.idleCtrl)
+
+        btn = wx.Button(panel, label='PostEvent')
+        sizer.Add(1,1)
+        sizer.Add(btn)
 
         border = wx.BoxSizer()
         border.Add(sizer, 0, wx.ALL, 20)
@@ -61,6 +70,12 @@ class MyFrame(wx.Frame):
         pos = event.GetPosition()
         self.posCtrl.SetValue("%s, %s" % (pos.x, pos.y))
 
+    def OnButton(self, evt):
+        evt = GooEvent(id=123)
+        wx.PostEvent(self, evt)
+
+    def OnGoo(self, evt):
+        print('got EVT_GOO')
 
 
 #---------------------------------------------------------------------------
@@ -76,7 +91,7 @@ class MyEventLoop(wx.GUIEventLoop):
         # Do whatever you want to have done for each iteration of the event
         # loop. In this example we'll just sleep a bit to simulate something
         # real happening.
-        time.sleep(0.10)
+        time.sleep(0.05)
 
 
     def Run(self):
@@ -95,17 +110,15 @@ class MyEventLoop(wx.GUIEventLoop):
                 if self.shouldExit:
                     break
 
-                # dispatch all the pending events and call Dispatch() to wait
-                # for the next message
-                if not self.ProcessEvents():
-                    break
+                # Dispatch all the pending events
+                self.ProcessEvents()
 
                 # Currently on wxOSX Pending always returns true, so the
                 # ProcessIdle above is not ever called. Call it here instead.
                 if 'wxOSX' in wx.PlatformInfo:
                     self.ProcessIdle()
 
-            # Proces remaining queued messages, if any
+            # Process remaining queued messages, if any
             while True:
                 checkAgain = False
                 if wx.GetApp() and wx.GetApp().HasPendingEvents():

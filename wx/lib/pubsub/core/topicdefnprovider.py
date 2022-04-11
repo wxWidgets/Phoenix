@@ -277,9 +277,8 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
             import os, tempfile
             creationDir = os.getcwd()
             fileID, path = tempfile.mkstemp('.py', moduleNamePre, dir=creationDir)
-            stringFile = os.fdopen(fileID, 'w')
-            stringFile.write( dedent(source) )
-            stringFile.close()
+            with os.fdopen(fileID, 'w') as stringFile:
+                stringFile.write( dedent(source) )
             return path, [creationDir]
 
         self.__filename, searchPath = createTmpModule()
@@ -443,11 +442,8 @@ def exportTopicTreeSpec(moduleName = None, rootTopic=None, bak='bak', moduleDoc=
         filename = '%s.py' % moduleName
         if bak:
             _backupIfExists(filename, bak)
-        moduleFile = open(filename, 'w')
-        try:
+        with open(filename, 'w') as moduleFile:
             TopicTreeSpecPrinter(rootTopic, fileObj=moduleFile, treeDoc=moduleDoc)
-        finally:
-            moduleFile.close()
 
 ##############################################################
 
@@ -612,9 +608,9 @@ class TopicTreeSpecPrinter:
             # but ignore the arg keys that are in parent args docs:
             parentMsgKeys = ()
             if topicObj.getParent() is not None:
-                parentMsgKeys = topicObj.getParent().getArgDescriptions().keys() # keys iter ok
+                parentMsgKeys = set(topicObj.getParent().getArgDescriptions())
             argsDocs = topicObj.getArgDescriptions()
-            for key in sorted(py2and3.iterkeys(argsDocs)):
+            for key in sorted(argsDocs):
                 if key not in parentMsgKeys:
                     argDesc = argsDocs[key]
                     msg = "- %s: %s" % (key, argDesc)

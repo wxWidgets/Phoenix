@@ -31,7 +31,7 @@ class TestPanel(wx.Panel):
         self.log.WriteText("CWD: %s\n" % os.getcwd())
 
         # Create the dialog. In this case the current directory is forced as the starting
-        # directory for the dialog, and no default file name is forced. This can easilly
+        # directory for the dialog, and no default file name is forced. This can easily
         # be changed in your program. This is an 'open' dialog, and allows multitple
         # file selections as well.
         #
@@ -70,7 +70,7 @@ class TestPanel(wx.Panel):
         self.log.WriteText("CWD: %s\n" % os.getcwd())
 
         # Create the dialog. In this case the current directory is forced as the starting
-        # directory for the dialog, and no default file name is forced. This can easilly
+        # directory for the dialog, and no default file name is forced. This can easily
         # be changed in your program. This is an 'save' dialog.
         #
         # Unlike the 'open dialog' example found elsewhere, this example does NOT

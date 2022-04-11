@@ -23,7 +23,7 @@ class TestPanel(wx.Panel):
 
         self.spin = wx.SpinButton(self, -1,
                                   (w, 50),
-                                  (h*2/3, h),
+                                  (-1, -1),
                                   wx.SP_VERTICAL)
         self.spin.SetRange(1, 100)
         self.spin.SetValue(1)

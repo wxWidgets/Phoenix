@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     29-Jul-2012
-# Copyright:   (c) 2012-2017 by Total Control Software
+# Copyright:   (c) 2012-2020 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -32,10 +32,23 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    c = module.find('wxFileSystemWatcherEvent')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addItem(etgtools.MethodDef(name='Clone', type='wxEvent*', argsString='() const',
+                                 isConst=True, isVirtual=True))
+
+    tools.generateStubs('wxUSE_FSWATCHER', module,
+                        extraHdrCode='static wxFileName _NullFileName;\n',
+                        typeValMap={'const wxFileName &': '_NullFileName',
+                                    'wxFSWWarningType': 'wxFSW_WARNING_NONE'}
+                                    )
+
+    # In the C++ code the wxFSW_EVENT_UNMOUNT item is only part of the enum
+    # for platforms that have INOTIFY so we need to fake it elsewhere.
     module.addHeaderCode("""
         #include <wx/fswatcher.h>
-        #ifndef wxHAS_INOTIFY
-        #define wxFSW_EVENT_UNMOUNT 0x2000
+        #if wxUSE_FSWATCHER && !defined(wxHAS_INOTIFY) && !defined(wxHAVE_FSEVENTS_FILE_NOTIFICATIONS)
+            const int wxFSW_EVENT_UNMOUNT = 0x2000;
         #endif
         """)
 
@@ -46,7 +59,7 @@ def run():
     c = module.find('wxFileSystemWatcherEvent')
     tools.fixEventClass(c)
 
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_FSWATCHER = wx.PyEventBinder(wxEVT_FSWATCHER)
         """)
 
