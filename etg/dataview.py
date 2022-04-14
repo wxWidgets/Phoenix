@@ -344,7 +344,7 @@ def run():
     c.addItem(etgtools.WigCode("""\
         virtual void SetTitle(const wxString& title);
         virtual wxString GetTitle() const;
-        virtual void SetBitmap(const wxBitmap& bitmap);
+        virtual void SetBitmap(const wxBitmapBundle& bitmap);
         virtual wxBitmap GetBitmap() const;
         virtual void SetWidth(int width);
         virtual int GetWidth() const;

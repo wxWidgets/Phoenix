@@ -110,6 +110,9 @@ def run():
     module.addPyCode("ADJUST_MINSIZE = 0")
     module.addPyCode("WS_EX_VALIDATE_RECURSIVELY = 0")
 
+    # This is only supported with C++14, so ignore it for now
+    module.find('wxDEPRECATED_ATTR').ignore()
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

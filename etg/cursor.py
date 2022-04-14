@@ -45,6 +45,7 @@ def run():
     c.find('wxCursor').findOverload('cursorName').find('type').default='wxBITMAP_TYPE_ANY'
     # TODO: This ctor ^^ in Classic has a custom implementation for wxGTK that
     # sets the hotspot. Is that still needed?
+    c.find('wxCursor').findOverload('(const char *const *xpmData)').ignore()
 
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
     c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")

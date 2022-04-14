@@ -150,7 +150,6 @@ def run():
 
 
     # transfer imagelist ownership
-    c.find('AssignImageList.imageList').transfer = True
     c.find('AssignStateImageList.imageList').transfer = True
     c.find('AssignButtonsImageList.imageList').transfer = True
 
