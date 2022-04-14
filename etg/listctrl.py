@@ -333,6 +333,10 @@ def run():
         #endif
         """)
 
+    # Documented wrongly in 3.1.6
+    c.find('RemoveSortIndicator').type = 'void'
+    c.find('RemoveSortIndicator').isConst = False
+
 
     #-------------------------------------------------------
     c = module.find('wxListView')
