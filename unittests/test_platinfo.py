@@ -9,7 +9,7 @@ class platinfo_Tests(wtc.WidgetTestCase):
     def test_platinfo(self):
         pi = wx.PlatformInformation.Get()
 
-        pi.GetArchitecture()
+        pi.GetBitness()
         pi.GetOperatingSystemId()
         pi.GetPortId()
 
@@ -17,8 +17,8 @@ class platinfo_Tests(wtc.WidgetTestCase):
 
     def test_platinfoProperties(self):
         pi = wx.PlatformInformation.Get()
-        pi.ArchName
-        pi.Architecture
+        pi.Bitness
+        pi.BitnessName
         pi.DesktopEnvironment
         pi.Endianness
         pi.EndiannessName

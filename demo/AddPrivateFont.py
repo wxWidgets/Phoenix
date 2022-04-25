@@ -72,12 +72,7 @@ def runTest(frame, nb, log):
 
 
 
-overview = """<html><body>
-https://wxpython.org/Phoenix/docs/html/wx.Font.html#wx.Font.AddPrivateFont
-
-Specify the name of a file containing a TrueType font to be made available to
-the current application.
-
+overview = """
 This method can be used to allow this application to use the font from the
 given file even if it is not globally installed on the system.
 
@@ -105,7 +100,6 @@ Returns: True if the font was added and can now be used.
 
 New in version wxWidgets 3.1.1.
 
-</body></html>
 """
 
 

@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxNotificationMessage')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     # take care of some methods only available on MSW
     c.find('UseTaskBarIcon').setCppCode("""\

@@ -61,7 +61,7 @@ class BBox(N.ndarray):
         fromPoints
 
         """
-        arr = N.array(data, N.float)
+        arr = N.array(data, float)
         arr.shape = (2,2)
         if arr[0,0] > arr[1,0] or arr[0,1] > arr[1,1]:
             # note: zero sized BB OK.
@@ -174,7 +174,7 @@ class BBox(N.ndarray):
         #~ # returns the bounding box of a bunch of bounding boxes
         #~ upperleft = N.minimum.reduce(bboxarray[:,0])
         #~ lowerright = N.maximum.reduce(bboxarray[:,1])
-        #~ return N.array((upperleft, lowerright), N.float)
+        #~ return N.array((upperleft, lowerright), float)
     #~ _getboundingbox = staticmethod(_getboundingbox)
 
 
@@ -212,7 +212,7 @@ def asBBox(data):
 
     if isinstance(data, BBox):
         return data
-    arr = N.asarray(data, N.float)
+    arr = N.asarray(data, float)
     return N.ndarray.__new__(BBox, shape=arr.shape, dtype=arr.dtype, buffer=arr)
 
 def fromPoints(Points):
@@ -225,7 +225,7 @@ def fromPoints(Points):
     If a single point is passed in, a zero-size Bounding Box is returned.
 
     """
-    Points = N.asarray(Points, N.float).reshape(-1,2)
+    Points = N.asarray(Points, float).reshape(-1,2)
 
     arr = N.vstack( (Points.min(0), Points.max(0)) )
     return N.ndarray.__new__(BBox, shape=arr.shape, dtype=arr.dtype, buffer=arr)
@@ -241,9 +241,9 @@ def fromBBArray(BBarray):
     #upperleft = N.minimum.reduce(BBarray[:,0])
     #lowerright = N.maximum.reduce(BBarray[:,1])
 
- #   BBarray = N.asarray(BBarray, N.float).reshape(-1,2)
+ #   BBarray = N.asarray(BBarray, float).reshape(-1,2)
  #   arr = N.vstack( (BBarray.min(0), BBarray.max(0)) )
-    BBarray = N.asarray(BBarray, N.float).reshape(-1,2,2)
+    BBarray = N.asarray(BBarray, float).reshape(-1,2,2)
     arr = N.vstack( (BBarray[:,0,:].min(0), BBarray[:,1,:].max(0)) )
     return asBBox(arr)
     #return asBBox( (upperleft, lowerright) ) * 2
@@ -260,7 +260,7 @@ def NullBBox():
 
     """
 
-    arr = N.array(((N.nan, N.nan),(N.nan, N.nan)), N.float)
+    arr = N.array(((N.nan, N.nan),(N.nan, N.nan)), float)
     return N.ndarray.__new__(BBox, shape=arr.shape, dtype=arr.dtype, buffer=arr)
 
 def InfBBox():
@@ -269,7 +269,7 @@ def InfBBox():
 
     """
 
-    arr = N.array(((-N.inf, -N.inf),(N.inf, N.inf)), N.float)
+    arr = N.array(((-N.inf, -N.inf),(N.inf, N.inf)), float)
     return N.ndarray.__new__(BBox, shape=arr.shape, dtype=arr.dtype, buffer=arr)
 
 class RectBBox(BBox):

@@ -796,7 +796,7 @@ class FindFiles:
             if ch == "*":
                 f = f + ".*"
             elif ch == ".":
-                f = f + "\."
+                f = f + r"\."
             elif ch == "?":
                 f = f + "."
             else:

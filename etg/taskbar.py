@@ -66,6 +66,8 @@ def run():
             sipTransferTo(sipResObj, Py_None);
         }
         """
+    method = c.find('GetPopupMenu')
+    method.ignore(False)
 
 
     c.find('Destroy').transferThis = True

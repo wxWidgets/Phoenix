@@ -71,6 +71,7 @@ class PlotCanvas(wx.Panel):
         self.border = (1, 1)
 
         self.SetBackgroundColour("white")
+        self.SetForegroundColour("black")
 
         # Create some mouse events for zooming
         self.canvas.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
@@ -706,7 +707,8 @@ class PlotCanvas(wx.Panel):
 
         def _do_update():
             self.Layout()
-            self._adjustScrollbars()
+            if self.last_draw is not None:
+                self._adjustScrollbars()
         wx.CallAfter(_do_update)
 
     def SetUseScientificNotation(self, useScientificNotation):
@@ -2226,7 +2228,7 @@ class PlotCanvas(wx.Panel):
         """Draws and erases pointLabels"""
         width = self._Buffer.GetWidth()
         height = self._Buffer.GetHeight()
-        if sys.platform != "darwin":
+        if sys.platform not in ("darwin", "linux"):
             tmp_Buffer = wx.Bitmap(width, height)
             dcs = wx.MemoryDC()
             dcs.SelectObject(tmp_Buffer)
@@ -2240,7 +2242,7 @@ class PlotCanvas(wx.Panel):
         dc = wx.BufferedDC(dc, self._Buffer)
         # this will erase if called twice
         dc.Blit(0, 0, width, height, dcs, 0, 0, self._logicalFunction)
-        if sys.platform == "darwin":
+        if sys.platform in ("darwin", "linux"):
             self._Buffer = tmp_Buffer
 
     def _drawLegend(self, dc, graphics, rhsW, topH, legendBoxWH,

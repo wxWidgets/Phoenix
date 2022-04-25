@@ -11,6 +11,7 @@
                     else:
 
                         # It's a special key, deal with all the known ones:
+                        keycode = event.GetKeyCode()
                         if keycode in [wx.WXK_LEFT, wx.WXK_RIGHT]:
                             # move cursor ...
                             MoveCursor()

@@ -245,7 +245,7 @@ class dataview_Tests(wtc.WidgetTestCase):
                 return 10
 
             def GetValueByRow(self, row, col):
-                return 'value(%d, %d)' (row, col)
+                return 'value(%d, %d)' % (row, col)
 
             def SetValueByRow(self, value, row, col):
                 return True

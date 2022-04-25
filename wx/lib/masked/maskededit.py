@@ -906,7 +906,7 @@ charmonths_dict = {'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6,
                    'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12}
 
 days   = '(01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)'
-hours  = '(0\d| \d|1[012])'
+hours  = r'(0\d| \d|1[012])'
 milhours = '(00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23)'
 minutes = """(00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|\
 16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|35|\
@@ -943,25 +943,25 @@ masktags = {
        "USPHONEFULLEXT": {
            'mask': "(###) ###-#### x:###",
            'formatcodes': 'F^->',
-           'validRegex': "^\(\d{3}\) \d{3}-\d{4}",
+           'validRegex': r"^\(\d{3}\) \d{3}-\d{4}",
            'description': "Phone Number w/opt. ext"
            },
        "USPHONETIGHTEXT": {
            'mask': "###-###-#### x:###",
            'formatcodes': 'F^->',
-           'validRegex': "^\d{3}-\d{3}-\d{4}",
+           'validRegex': r"^\d{3}-\d{3}-\d{4}",
            'description': "Phone Number\n (w/hyphens and opt. ext)"
            },
        "USPHONEFULL": {
            'mask': "(###) ###-####",
            'formatcodes': 'F^->',
-           'validRegex': "^\(\d{3}\) \d{3}-\d{4}",
+           'validRegex': r"^\(\d{3}\) \d{3}-\d{4}",
            'description': "Phone Number only"
            },
        "USPHONETIGHT": {
            'mask': "###-###-####",
            'formatcodes': 'F^->',
-           'validRegex': "^\d{3}-\d{3}-\d{4}",
+           'validRegex': r"^\d{3}-\d{3}-\d{4}",
            'description': "Phone Number\n(w/hyphens)"
            },
        "USSTATE": {
@@ -985,107 +985,107 @@ masktags = {
            'mask': "##/##/#### ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + months + '/' + days + '/' + '\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + months + '/' + days + '/' + r'\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "US Date + Time"
            },
        "USDATETIMEMMDDYYYY-HHMMSS": {
            'mask': "##-##-#### ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + months + '-' + days + '-' + r'\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "US Date + Time\n(w/hyphens)"
            },
        "USDATE24HRTIMEMMDDYYYY/HHMMSS": {
            'mask': "##/##/#### ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '/' + days + '/' + '\d{4} ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + months + '/' + days + '/' + r'\d{4} ' + milhours + ':' + minutes + ':' + seconds,
            'description': "US Date + 24Hr (Military) Time"
            },
        "USDATE24HRTIMEMMDDYYYY-HHMMSS": {
            'mask': "##-##-#### ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + months + '-' + days + '-' + r'\d{4} ' + milhours + ':' + minutes + ':' + seconds,
            'description': "US Date + 24Hr Time\n(w/hyphens)"
            },
        "USDATETIMEMMDDYYYY/HHMM": {
            'mask': "##/##/#### ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + months + '/' + days + '/' + '\d{4} ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + months + '/' + days + '/' + r'\d{4} ' + hours + ':' + minutes + ' (A|P)M',
            'description': "US Date + Time\n(without seconds)"
            },
        "USDATE24HRTIMEMMDDYYYY/HHMM": {
            'mask': "##/##/#### ##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '/' + days + '/' + '\d{4} ' + milhours + ':' + minutes,
+           'validRegex': '^' + months + '/' + days + '/' + r'\d{4} ' + milhours + ':' + minutes,
            'description': "US Date + 24Hr Time\n(without seconds)"
            },
        "USDATETIMEMMDDYYYY-HHMM": {
            'mask': "##-##-#### ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + months + '-' + days + '-' + r'\d{4} ' + hours + ':' + minutes + ' (A|P)M',
            'description': "US Date + Time\n(w/hyphens and w/o secs)"
            },
        "USDATE24HRTIMEMMDDYYYY-HHMM": {
            'mask': "##-##-#### ##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '-' + days + '-' + '\d{4} ' + milhours + ':' + minutes,
+           'validRegex': '^' + months + '-' + days + '-' + r'\d{4} ' + milhours + ':' + minutes,
            'description': "US Date + 24Hr Time\n(w/hyphens and w/o seconds)"
            },
        "USDATEMMDDYYYY/": {
            'mask': "##/##/####",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '/' + days + '/' + '\d{4}',
+           'validRegex': '^' + months + '/' + days + '/' + r'\d{4}',
            'description': "US Date\n(MMDDYYYY)"
            },
        "USDATEMMDDYY/": {
            'mask': "##/##/##",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '/' + days + '/\d\d',
+           'validRegex': '^' + months + '/' + days + r'/\d\d',
            'description': "US Date\n(MMDDYY)"
            },
        "USDATEMMDDYYYY-": {
            'mask': "##-##-####",
            'formatcodes': 'DF',
-           'validRegex': '^' + months + '-' + days + '-' +'\d{4}',
+           'validRegex': '^' + months + '-' + days + '-' + r'\d{4}',
            'description': "MM-DD-YYYY"
            },
 
        "EUDATEYYYYMMDD/": {
            'mask': "####/##/##",
            'formatcodes': 'DF',
-           'validRegex': '^' + '\d{4}'+ '/' + months + '/' + days,
+           'validRegex': '^' + r'\d{4}'+ '/' + months + '/' + days,
            'description': "YYYY/MM/DD"
            },
        "EUDATEYYYYMMDD.": {
            'mask': "####.##.##",
            'formatcodes': 'DF',
-           'validRegex': '^' + '\d{4}'+ '.' + months + '.' + days,
+           'validRegex': '^' + r'\d{4}'+ '.' + months + '.' + days,
            'description': "YYYY.MM.DD"
            },
        "EUDATEDDMMYYYY/": {
            'mask': "##/##/####",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '/' + months + '/' + '\d{4}',
+           'validRegex': '^' + days + '/' + months + '/' + r'\d{4}',
            'description': "DD/MM/YYYY"
            },
        "EUDATEDDMMYYYY.": {
            'mask': "##.##.####",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '.' + months + '.' + '\d{4}',
+           'validRegex': '^' + days + '.' + months + '.' + r'\d{4}',
            'description': "DD.MM.YYYY"
            },
        "EUDATEDDMMMYYYY.": {
            'mask': "##.CCC.####",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '.' + charmonths + '.' + '\d{4}',
+           'validRegex': '^' + days + '.' + charmonths + '.' + r'\d{4}',
            'description': "DD.Month.YYYY"
            },
        "EUDATEDDMMMYYYY/": {
            'mask': "##/CCC/####",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '/' + charmonths + '/' + '\d{4}',
+           'validRegex': '^' + days + '/' + charmonths + '/' + r'\d{4}',
            'description': "DD/Month/YYYY"
            },
 
@@ -1093,28 +1093,28 @@ masktags = {
            'mask': "####/##/## ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + '\d{4}'+ '/' + months + '/' + days + ' ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + r'\d{4}'+ '/' + months + '/' + days + ' ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "YYYY/MM/DD HH:MM:SS"
            },
        "EUDATETIMEYYYYMMDD.HHMMSS": {
            'mask': "####.##.## ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + '\d{4}'+ '.' + months + '.' + days + ' ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + r'\d{4}'+ '.' + months + '.' + days + ' ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "YYYY.MM.DD HH:MM:SS"
            },
        "EUDATETIMEDDMMYYYY/HHMMSS": {
            'mask': "##/##/#### ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + days + '/' + months + '/' + '\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + days + '/' + months + '/' + r'\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "DD/MM/YYYY HH:MM:SS"
            },
        "EUDATETIMEDDMMYYYY.HHMMSS": {
            'mask': "##.##.#### ##:##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + days + '.' + months + '.' + '\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
+           'validRegex': '^' + days + '.' + months + '.' + r'\d{4} ' + hours + ':' + minutes + ':' + seconds + ' (A|P)M',
            'description': "DD.MM.YYYY HH:MM:SS"
            },
 
@@ -1122,76 +1122,76 @@ masktags = {
            'mask': "####/##/## ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + '\d{4}'+ '/' + months + '/' + days + ' ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + r'\d{4}'+ '/' + months + '/' + days + ' ' + hours + ':' + minutes + ' (A|P)M',
            'description': "YYYY/MM/DD HH:MM"
            },
        "EUDATETIMEYYYYMMDD.HHMM": {
            'mask': "####.##.## ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + '\d{4}'+ '.' + months + '.' + days + ' ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + r'\d{4}'+ '.' + months + '.' + days + ' ' + hours + ':' + minutes + ' (A|P)M',
            'description': "YYYY.MM.DD HH:MM"
            },
        "EUDATETIMEDDMMYYYY/HHMM": {
            'mask': "##/##/#### ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + days + '/' + months + '/' + '\d{4} ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + days + '/' + months + '/' + r'\d{4} ' + hours + ':' + minutes + ' (A|P)M',
            'description': "DD/MM/YYYY HH:MM"
            },
        "EUDATETIMEDDMMYYYY.HHMM": {
            'mask': "##.##.#### ##:## AM",
            'excludeChars': am_pm_exclude,
            'formatcodes': 'DF!',
-           'validRegex': '^' + days + '.' + months + '.' + '\d{4} ' + hours + ':' + minutes + ' (A|P)M',
+           'validRegex': '^' + days + '.' + months + '.' + r'\d{4} ' + hours + ':' + minutes + ' (A|P)M',
            'description': "DD.MM.YYYY HH:MM"
            },
 
        "EUDATE24HRTIMEYYYYMMDD/HHMMSS": {
            'mask': "####/##/## ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + '\d{4}'+ '/' + months + '/' + days + ' ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + r'\d{4}'+ '/' + months + '/' + days + ' ' + milhours + ':' + minutes + ':' + seconds,
            'description': "YYYY/MM/DD 24Hr Time"
            },
        "EUDATE24HRTIMEYYYYMMDD.HHMMSS": {
            'mask': "####.##.## ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + '\d{4}'+ '.' + months + '.' + days + ' ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + r'\d{4}'+ '.' + months + '.' + days + ' ' + milhours + ':' + minutes + ':' + seconds,
            'description': "YYYY.MM.DD 24Hr Time"
            },
        "EUDATE24HRTIMEDDMMYYYY/HHMMSS": {
            'mask': "##/##/#### ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '/' + months + '/' + '\d{4} ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + days + '/' + months + '/' + r'\d{4} ' + milhours + ':' + minutes + ':' + seconds,
            'description': "DD/MM/YYYY 24Hr Time"
            },
        "EUDATE24HRTIMEDDMMYYYY.HHMMSS": {
            'mask': "##.##.#### ##:##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '.' + months + '.' + '\d{4} ' + milhours + ':' + minutes + ':' + seconds,
+           'validRegex': '^' + days + '.' + months + '.' + r'\d{4} ' + milhours + ':' + minutes + ':' + seconds,
            'description': "DD.MM.YYYY 24Hr Time"
            },
        "EUDATE24HRTIMEYYYYMMDD/HHMM": {
            'mask': "####/##/## ##:##",
-           'formatcodes': 'DF','validRegex': '^' + '\d{4}'+ '/' + months + '/' + days + ' ' + milhours + ':' + minutes,
+           'formatcodes': 'DF','validRegex': '^' + r'\d{4}'+ '/' + months + '/' + days + ' ' + milhours + ':' + minutes,
            'description': "YYYY/MM/DD 24Hr Time\n(w/o seconds)"
            },
        "EUDATE24HRTIMEYYYYMMDD.HHMM": {
            'mask': "####.##.## ##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + '\d{4}'+ '.' + months + '.' + days + ' ' + milhours + ':' + minutes,
+           'validRegex': '^' + r'\d{4}'+ '.' + months + '.' + days + ' ' + milhours + ':' + minutes,
            'description': "YYYY.MM.DD 24Hr Time\n(w/o seconds)"
            },
        "EUDATE24HRTIMEDDMMYYYY/HHMM": {
            'mask': "##/##/#### ##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '/' + months + '/' + '\d{4} ' + milhours + ':' + minutes,
+           'validRegex': '^' + days + '/' + months + '/' + r'\d{4} ' + milhours + ':' + minutes,
            'description': "DD/MM/YYYY 24Hr Time\n(w/o seconds)"
            },
        "EUDATE24HRTIMEDDMMYYYY.HHMM": {
            'mask': "##.##.#### ##:##",
            'formatcodes': 'DF',
-           'validRegex': '^' + days + '.' + months + '.' + '\d{4} ' + milhours + ':' + minutes,
+           'validRegex': '^' + days + '.' + months + '.' + r'\d{4} ' + milhours + ':' + minutes,
            'description': "DD.MM.YYYY 24Hr Time\n(w/o seconds)"
            },
 
@@ -1224,37 +1224,37 @@ masktags = {
        "USSOCIALSEC": {
            'mask': "###-##-####",
            'formatcodes': 'F',
-           'validRegex': "\d{3}-\d{2}-\d{4}",
+           'validRegex': r"\d{3}-\d{2}-\d{4}",
            'description': "Social Sec#"
            },
        "CREDITCARD": {
            'mask': "####-####-####-####",
            'formatcodes': 'F',
-           'validRegex': "\d{4}-\d{4}-\d{4}-\d{4}",
+           'validRegex': r"\d{4}-\d{4}-\d{4}-\d{4}",
            'description': "Credit Card"
            },
        "EXPDATEMMYY": {
            'mask': "##/##",
            'formatcodes': "F",
-           'validRegex': "^" + months + "/\d\d",
+           'validRegex': "^" + months + r"/\d\d",
            'description': "Expiration MM/YY"
            },
        "USZIP": {
            'mask': "#####",
            'formatcodes': 'F',
-           'validRegex': "^\d{5}",
+           'validRegex': r"^\d{5}",
            'description': "US 5-digit zip code"
            },
        "USZIPPLUS4": {
            'mask': "#####-####",
            'formatcodes': 'F',
-           'validRegex': "\d{5}-(\s{4}|\d{4})",
+           'validRegex': r"\d{5}-(\s{4}|\d{4})",
            'description': "US zip+4 code"
            },
        "PERCENT": {
            'mask': "0.##",
            'formatcodes': 'F',
-           'validRegex': "^0.\d\d",
+           'validRegex': r"^0.\d\d",
            'description': "Percentage"
            },
        "AGE": {
@@ -1267,13 +1267,13 @@ masktags = {
            'mask': "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
            'excludeChars': " \\/*&%$#!+='\"",
            'formatcodes': "F>",
-           'validRegex': "^\w+([\-\.]\w+)*@((([a-zA-Z0-9]+(\-[a-zA-Z0-9]+)*\.)+)[a-zA-Z]{2,4}|\[(\d|\d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(\d|\d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}\]) *$",
+           'validRegex': r"^\w+([\-\.]\w+)*@((([a-zA-Z0-9]+(\-[a-zA-Z0-9]+)*\.)+)[a-zA-Z]{2,4}|\[(\d|\d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(\d|\d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}\]) *$",
            'description': "Email address"
            },
        "IPADDR": {
            'mask': "###.###.###.###",
            'formatcodes': 'F_Sr',
-           'validRegex': "(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}",
+           'validRegex': r"(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}",
            'description': "IP Address\n(see IpAddrCtrl)"
            }
        }
@@ -2259,7 +2259,7 @@ class MaskedEditMixin:
         """
 ##        dbg('_processMask: mask', mask, indent=1)
         # regular expression for parsing c{n} syntax:
-        rex = re.compile('([' + "".join(maskchars) + '])\{(\d+)\}')
+        rex = re.compile('([' + "".join(maskchars) + r'])\{(\d+)\}')
         s = mask
         match = rex.search(s)
         while match:    # found an(other) occurrence
@@ -6457,7 +6457,7 @@ def _isTimeType( fmtstring ):
 
 
 def _isFloatingPoint( fmtstring):
-    filter = re.compile("[ ]?[#]+\.[#]+\n")
+    filter = re.compile(r"[ ]?[#]+\.[#]+\n")
     if re.match(filter,fmtstring+"\n"): return True
     return False
 
@@ -6580,20 +6580,20 @@ Try entering nonsensical or partial values in validated fields to see what happe
             # the options!
             controls = [
             #description        mask                    excl format     regexp                              range,list,initial
-           ("Phone No",         "(###) ###-#### x:###", "", 'F!^-R',    "^\(\d\d\d\) \d\d\d-\d\d\d\d",    (),[],''),
+           ("Phone No",         "(###) ###-#### x:###", "", 'F!^-R',    r"^\(\d\d\d\) \d\d\d-\d\d\d\d",    (),[],''),
            ("Last Name Only",   "C{14}",                "", 'F {list}', '^[A-Z][a-zA-Z]+',                  (),('Smith','Jones','Williams'),''),
            ("Full Name",        "C{14}",                "", 'F_',       '^[A-Z][a-zA-Z]+ [A-Z][a-zA-Z]+',   (),[],''),
-           ("Social Sec#",      "###-##-####",          "", 'F',        "\d{3}-\d{2}-\d{4}",                (),[],''),
-           ("U.S. Zip+4",       "#{5}-#{4}",            "", 'F',        "\d{5}-(\s{4}|\d{4})",(),[],''),
+           ("Social Sec#",      "###-##-####",          "", 'F',        r"\d{3}-\d{2}-\d{4}",                (),[],''),
+           ("U.S. Zip+4",       "#{5}-#{4}",            "", 'F',        r"\d{5}-(\s{4}|\d{4})",(),[],''),
            ("U.S. State (2 char)\n(with default)","AA",                 "", 'F!',       "[A-Z]{2}",                         (),states, 'AZ'),
-           ("Customer No",      "\CAA-###",              "", 'F!',      "C[A-Z]{2}-\d{3}",                   (),[],''),
+           ("Customer No",      r"\CAA-###",              "", 'F!',      r"C[A-Z]{2}-\d{3}",                   (),[],''),
            ("Date (MDY) + Time\n(with default)",      "##/##/#### ##:## AM",  'BCDEFGHIJKLMNOQRSTUVWXYZ','DFR!',"",                (),[], r'03/05/2003 12:00 AM'),
            ("Invoice Total",    "#{9}.##",              "", 'F-R,',     "",                                 (),[], ''),
            ("Integer (signed)\n(with default)", "#{6}",                 "", 'F-R',      "",                                 (),[], '0     '),
            ("Integer (unsigned)\n(with default), 1-399", "######",      "", 'F',        "",                                 (1,399),[], '1     '),
            ("Month selector",   "XXX",                  "", 'F',        "",                                 (),
                 ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],""),
-           ("fraction selector","#/##",                 "", 'F',        "^\d\/\d\d?",                       (),
+           ("fraction selector","#/##",                 "", 'F',        r"^\d\/\d\d?",                       (),
                 ['2/3', '3/4', '1/2', '1/4', '1/8', '1/16', '1/32', '1/64'], "")
            ]
 
