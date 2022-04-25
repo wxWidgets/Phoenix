@@ -276,7 +276,7 @@ wxWindow* MyFrame::DoPythonStuff(wxWindow* parent)
     wxASSERT(arg != NULL);
     PyObject* tuple = PyTuple_New(1);
     PyTuple_SET_ITEM(tuple, 0, arg);
-    result = PyEval_CallObject(func, tuple);
+    result = PyObject_CallObject(func, tuple);
 
     // Was there an exception?
     if (! result)

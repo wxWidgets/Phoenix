@@ -50,7 +50,7 @@ void wxPyCallback::EventThunker(wxEvent& event) {
         // Call the event handler, passing the event object
         tuple = PyTuple_New(1);
         PyTuple_SET_ITEM(tuple, 0, arg);  // steals ref to arg
-        result = PyEval_CallObject(func, tuple);
+        result = PyObject_CallObject(func, tuple);
         if ( result ) {
             Py_DECREF(result);   // result is ignored, but we still need to decref it
             PyErr_Clear();       // Just in case...

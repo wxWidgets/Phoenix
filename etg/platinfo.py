@@ -19,6 +19,7 @@ DOCSTRING = ""
 # this script.
 ITEMS  = [ 'wxPlatformInfo',
            'wxLinuxDistributionInfo',
+           'wxPlatformId',
            ]
 
 #---------------------------------------------------------------------------

@@ -85,7 +85,7 @@ def configure(conf):
             # On the other hand, microsoft says that v141 and v140 (Visual
             # Studio 2015) are binary compatible, so for now let's just drop
             # it back to "14.0" until I get all the details worked out for
-            # using VS 2017 everywhere for Python 3.7+.
+            # using VS 2017+ everywhere for Python 3.7+.
             msvc_version = '14.0'
 
         # In some cases (Azure DevOps at least) we're getting "14.1" for Python
@@ -102,7 +102,7 @@ def configure(conf):
     if conf.options.python:
         conf.env.PYTHON = conf.options.python
     conf.load('python')
-    conf.check_python_version(minver=(2,7,0))
+    conf.check_python_version(minver=(3,6,0))
     if isWindows:
         # Search for the Python headers without doing some stuff that could
         # incorrectly fail on Windows. See my_check_python_headers below.
@@ -252,12 +252,6 @@ def configure(conf):
                        args='--cxxflags ' + wv_libs + rpath,
                        uselib_store='WXWEBVIEW', mandatory=True,
                        msg='Finding libs for WXWEBVIEW')
-
-        if isDarwin:
-            conf.check_cfg(path=conf.options.wx_config, package='',
-                           args='--cxxflags --libs core,net' + rpath,
-                           uselib_store='WXWEBKIT', mandatory=True,
-                           msg='Finding libs for WXWEBKIT')
 
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs xml,core,net' + rpath,
@@ -616,8 +610,6 @@ def build(bld):
     makeETGRule(bld, 'etg/_aui.py',        '_aui',       'WXAUI')
 
     # Modules that are platform-specific
-    if isDarwin:
-        makeETGRule(bld, 'etg/_webkit.py', '_webkit',    'WXWEBKIT')
     if isWindows:
         makeETGRule(bld, 'etg/_msw.py',    '_msw',       'WX')
 

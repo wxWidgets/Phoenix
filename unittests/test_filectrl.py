@@ -37,7 +37,7 @@ class filectrl_Tests(wtc.WidgetTestCase):
                          defaultDirectory=os.path.dirname(__file__),
                          defaultFilename=os.path.basename(__file__),
                          style=wx.FC_OPEN)
-        self.waitFor(100)
+        self.waitFor(300)
 
         self.assertEqual(fc.GetFilename(), os.path.basename(__file__))
         self.assertEqual(fc.GetPath(), os.path.abspath(__file__))
@@ -50,7 +50,7 @@ class filectrl_Tests(wtc.WidgetTestCase):
                          defaultDirectory=os.path.dirname(__file__),
                          defaultFilename=os.path.basename(__file__),
                          style=wx.FC_OPEN|wx.FC_MULTIPLE)
-        self.waitFor(100)
+        self.waitFor(300)
 
         self.assertEqual(fc.GetFilenames(), [os.path.basename(__file__)])
         self.assertEqual(fc.GetPaths(), [os.path.abspath(__file__)])

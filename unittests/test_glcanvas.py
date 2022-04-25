@@ -34,7 +34,7 @@ class glcanvas_Tests(wtc.WidgetTestCase):
 
 
     def test_glcanvas3(self):
-        attribs = [wx.glcanvas.WX_GL_DEPTH_SIZE, 32,
+        attribs = [wx.glcanvas.WX_GL_DEPTH_SIZE, 24,
                    wx.glcanvas.WX_GL_DOUBLEBUFFER,
                    0]
         cvs = wx.glcanvas.GLCanvas(self.frame, attribList=attribs)

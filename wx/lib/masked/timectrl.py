@@ -582,7 +582,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
                 # Set hour field to zero-pad, right-insert, require explicit field change,
                 # select entire field on entry, and require a resultant valid entry
                 # to allow character entry:
-                hourfield = Field(formatcodes='0r<SV', validRegex='0\d|1\d|2[0123]', validRequired=True)
+                hourfield = Field(formatcodes='0r<SV', validRegex=r'0\d|1\d|2[0123]', validRequired=True)
             else:
                 if self.__displaySeconds:  maskededit_kwargs['autoformat'] = 'TIMEHHMMSS'
                 else:                      maskededit_kwargs['autoformat'] = 'TIMEHHMM'
@@ -595,7 +595,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 
             # Field 1 is always a zero-padded right-insert minute field,
             # similarly configured as above:
-            minutefield = Field(formatcodes='0r<SV', validRegex='[0-5]\d', validRequired=True)
+            minutefield = Field(formatcodes='0r<SV', validRegex=r'[0-5]\d', validRequired=True)
 
             fields = [ hourfield, minutefield ]
             if self.__displaySeconds:

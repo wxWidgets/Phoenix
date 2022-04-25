@@ -220,7 +220,7 @@ GetValue()
     fractionWidth is 0, or a float otherwise.
 
 
-SetParameters(\*\*kwargs)
+SetParameters(**kwargs)
     Allows simultaneous setting of various attributes
     of the control after construction.  Keyword arguments
     allowed are the same parameters as supported in the constructor.

@@ -44,6 +44,7 @@ ITEMS  = [
     'wxJoystickEvent',
     'wxKeyEvent',
     'wxMaximizeEvent',
+    'wxFullScreenEvent',
     'wxMenuEvent',
     'wxMouseCaptureChangedEvent',
     'wxMouseCaptureLostEvent',
