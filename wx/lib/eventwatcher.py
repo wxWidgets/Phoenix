@@ -249,7 +249,7 @@ class EventChooser(wx.Panel):
     def checkAll(self, check):
         self.doUpdate = False
         for position in range(self.lb.GetCount()):
-            self.lb.Check(position, True)
+            self.lb.Check(position, check)
             index = self.lb.GetClientData(position)
             self.watchList[index] = (self.watchList[index][0], check)
         self.lb.Refresh()
