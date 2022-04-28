@@ -12,7 +12,7 @@ class ButtonTests(wtc.WidgetTestCase):
     def test_ButtonCtors(self):
         btn = wx.Button(self.frame, label='label')
         btn = wx.Button(self.frame, -1, 'label', (10,10), (100,-1), wx.BU_LEFT)
-        bmp = wx.Bitmap(pngFile)
+        bmp = wx.BitmapBundle(wx.Bitmap(pngFile))
         btn.SetBitmap(bmp)
 
     def test_ButtonProperties(self):

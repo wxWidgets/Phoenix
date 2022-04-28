@@ -34,7 +34,7 @@ class wizard_Tests(wtc.WidgetTestCase):
 
     def test_wizard2(self):
         # Create the wizard
-        bmp = wx.Bitmap(pngFile)
+        bmp = wx.BitmapBundle(wx.Bitmap(pngFile))
         wiz = wx.adv.Wizard(self.frame, title="Test Wizard 2", bitmap=bmp)
 
         # create the pages
@@ -54,7 +54,7 @@ class wizard_Tests(wtc.WidgetTestCase):
 
     def test_wizard3(self):
         # Same as above but use the Chain function to connect the pages
-        bmp = wx.Bitmap(pngFile)
+        bmp = wx.BitmapBundle(wx.Bitmap(pngFile))
         wiz = wx.adv.Wizard(self.frame, title="Test Wizard 2", bitmap=bmp)
 
         pages = []
@@ -74,7 +74,7 @@ class wizard_Tests(wtc.WidgetTestCase):
 
     def test_wizard4(self):
         # Create the wizard
-        bmp = wx.Bitmap(pngFile)
+        bmp = wx.BitmapBundle(wx.Bitmap(pngFile))
         wiz = wx.adv.Wizard(self.frame, title="Test Wizard 2", bitmap=bmp)
 
         # create the pages
