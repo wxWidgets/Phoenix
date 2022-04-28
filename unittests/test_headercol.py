@@ -14,9 +14,9 @@ class headercol_Tests(wtc.WidgetTestCase):
 
 
     def test_headercolCtor2(self):
-        bmp = wx.Bitmap(pngFile)
+        bmp = wx.BitmapBundle(wx.Bitmap(pngFile))
         hc = wx.HeaderColumnSimple(bmp, flags=wx.COL_RESIZABLE)
-        hc.Bitmap
+        hc.BitmapBundle
 
 
     def test_headercolProperties(self):

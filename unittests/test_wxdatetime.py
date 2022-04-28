@@ -158,7 +158,7 @@ class datetime_Tests(wtc.WidgetTestCase):
     def test_datetimeParseDate3(self):
         d = wx.DateTime()
         val = d.ParseDate('10/25/2015   non-date text')
-        self.assertEqual(val, 13)
+        self.assertEqual(val, 10)
 
 
     def test_datetimeParseDateTime1(self):
