@@ -621,40 +621,44 @@ class SettingsPanel(wx.Panel):
         return image.ConvertToBitmap()
 
 
+    def CreateColourBitmapBundle(self, c):
+        return wx.BitmapBundle(self.CreateColourBitmap(c))
+
+
     def UpdateColours(self):
 
         bk = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_BACKGROUND_COLOUR)
-        self._background_colour.SetBitmapLabel(self.CreateColourBitmap(bk))
+        self._background_colour.SetBitmapLabel(self.CreateColourBitmapBundle(bk))
 
         cap = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_INACTIVE_CAPTION_COLOUR)
-        self._inactive_caption_colour.SetBitmapLabel(self.CreateColourBitmap(cap))
+        self._inactive_caption_colour.SetBitmapLabel(self.CreateColourBitmapBundle(cap))
 
         capgrad = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR)
-        self._inactive_caption_gradient_colour.SetBitmapLabel(self.CreateColourBitmap(capgrad))
+        self._inactive_caption_gradient_colour.SetBitmapLabel(self.CreateColourBitmapBundle(capgrad))
 
         captxt = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR)
-        self._inactive_caption_text_colour.SetBitmapLabel(self.CreateColourBitmap(captxt))
+        self._inactive_caption_text_colour.SetBitmapLabel(self.CreateColourBitmapBundle(captxt))
 
         acap = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_ACTIVE_CAPTION_COLOUR)
-        self._active_caption_colour.SetBitmapLabel(self.CreateColourBitmap(acap))
+        self._active_caption_colour.SetBitmapLabel(self.CreateColourBitmapBundle(acap))
 
         acapgrad = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR)
-        self._active_caption_gradient_colour.SetBitmapLabel(self.CreateColourBitmap(acapgrad))
+        self._active_caption_gradient_colour.SetBitmapLabel(self.CreateColourBitmapBundle(acapgrad))
 
         acaptxt = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR)
-        self._active_caption_text_colour.SetBitmapLabel(self.CreateColourBitmap(acaptxt))
+        self._active_caption_text_colour.SetBitmapLabel(self.CreateColourBitmapBundle(acaptxt))
 
         sash = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_SASH_COLOUR)
-        self._sash_colour.SetBitmapLabel(self.CreateColourBitmap(sash))
+        self._sash_colour.SetBitmapLabel(self.CreateColourBitmapBundle(sash))
 
         border = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_BORDER_COLOUR)
-        self._border_colour.SetBitmapLabel(self.CreateColourBitmap(border))
+        self._border_colour.SetBitmapLabel(self.CreateColourBitmapBundle(border))
 
         gripper = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_GRIPPER_COLOUR)
-        self._gripper_colour.SetBitmapLabel(self.CreateColourBitmap(gripper))
+        self._gripper_colour.SetBitmapLabel(self.CreateColourBitmapBundle(gripper))
 
         hint = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_HINT_WINDOW_COLOUR)
-        self._hint_colour.SetBitmapLabel(self.CreateColourBitmap(hint))
+        self._hint_colour.SetBitmapLabel(self.CreateColourBitmapBundle(hint))
 
 
     def OnPaneBorderSize(self, event):

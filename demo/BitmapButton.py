@@ -46,7 +46,7 @@ class TestPanel(wx.Panel):
         # we need to make it be the same size as the primary image, so
         # grab a subsection of this new image
         cropped = img.GetSubImage((20, 20, bmp.GetWidth(), bmp.GetHeight()))
-        b.SetBitmapPressed(cropped.ConvertToBitmap())
+        b.SetBitmapPressed(wx.BitmapBundle(cropped.ConvertToBitmap()))
 
         b.SetToolTip("This is a bitmap button with \nwx.NO_BORDER style.")
         self.Bind(wx.EVT_BUTTON, self.OnClick, b)
