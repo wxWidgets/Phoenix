@@ -86,36 +86,38 @@ class TestToolBar(wx.Frame):
         self.CreateStatusBar()
 
         tsize = (24,24)
-        new_bmp =  wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, tsize)
-        open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
-        copy_bmp = wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, tsize)
-        paste_bmp= wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, tsize)
+        new_bmp =  wx.ArtProvider.GetBitmapBundle(wx.ART_NEW, wx.ART_TOOLBAR, tsize)
+        open_bmp = wx.ArtProvider.GetBitmapBundle(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
+        copy_bmp = wx.ArtProvider.GetBitmapBundle(wx.ART_COPY, wx.ART_TOOLBAR, tsize)
+        paste_bmp= wx.ArtProvider.GetBitmapBundle(wx.ART_PASTE, wx.ART_TOOLBAR, tsize)
+        null_bmp = wx.BitmapBundle(wx.NullBitmap)
 
         tb.SetToolBitmapSize(tsize)
 
         #tb.AddTool(10, new_bmp, "New", "Long help for 'New'")
-        tb.AddTool(10, "New", new_bmp, wx.NullBitmap, wx.ITEM_NORMAL, "New", "Long help for 'New'", None)
+        tb.AddTool(10, "New", new_bmp, null_bmp, wx.ITEM_NORMAL, "New", "Long help for 'New'", None)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=10)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=10)
 
         #tb.AddTool(20, open_bmp, "Open", "Long help for 'Open'")
-        tb.AddTool(20, "Open", open_bmp, wx.NullBitmap, wx.ITEM_NORMAL, "Open", "Long help for 'Open'", None)
+        tb.AddTool(20, "Open", open_bmp, null_bmp, wx.ITEM_NORMAL, "Open", "Long help for 'Open'", None)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=20)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=20)
 
         tb.AddSeparator()
-        tb.AddTool(30, "Copy", copy_bmp, wx.NullBitmap, wx.ITEM_NORMAL, "Copy", "Long help for 'Copy'", None)
+        tb.AddTool(30, "Copy", copy_bmp, null_bmp, wx.ITEM_NORMAL, "Copy", "Long help for 'Copy'", None)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=30)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=30)
 
-        tb.AddTool(40, "Paste", paste_bmp, wx.NullBitmap, wx.ITEM_NORMAL, "Paste", "Long help for 'Paste'", None)
+        tb.AddTool(40, "Paste", paste_bmp, null_bmp, wx.ITEM_NORMAL, "Paste", "Long help for 'Paste'", None)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=40)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=40)
 
         tb.AddSeparator()
 
         #tool = tb.AddCheckTool(50, images.Tog1.GetBitmap(), shortHelp="Toggle this")
-        tool = tb.AddTool(50, "Checkable", images.Tog1.GetBitmap(),
+        tool = tb.AddTool(50, "Checkable",
+                          wx.BitmapBundle(images.Tog1.GetBitmap()),
                           shortHelp="Toggle this",  kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=50)
 

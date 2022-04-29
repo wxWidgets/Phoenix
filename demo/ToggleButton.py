@@ -23,7 +23,7 @@ class TestPanel(wx.Panel):
         panel.Move((50,50))
 
         b = wx.ToggleButton(self, -1, "can have bitmaps too", pos=(50,125))
-        b.SetBitmap(images.Mondrian.Bitmap)
+        b.SetBitmap(wx.BitmapBundle(images.Mondrian.Bitmap))
         b.SetInitialSize() # adjust default size for the bitmap
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnToggle, b)
 

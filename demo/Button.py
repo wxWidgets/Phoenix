@@ -30,7 +30,7 @@ class TestPanel(wx.Panel):
                            "above or below the label.")
         self.Bind(wx.EVT_BUTTON, self.OnClick, b)
 
-        b.SetBitmap(images.Mondrian.Bitmap,
+        b.SetBitmap(wx.BitmapBundle(images.Mondrian.Bitmap),
                     wx.LEFT    # Left is the default, the image can be on the other sides too
                     #wx.RIGHT
                     #wx.TOP
