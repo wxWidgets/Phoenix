@@ -208,15 +208,15 @@ class InspectionFrame(wx.Frame):
         tbar = self.CreateToolBar(wx.TB_HORIZONTAL | wx.TB_FLAT | wx.TB_TEXT | wx.NO_BORDER )
         tbar.SetToolBitmapSize((24,24))
 
-        refreshBmp = Refresh.GetBitmap()
-        findWidgetBmp = Find.GetBitmap()
-        showSizersBmp = ShowSizers.GetBitmap()
-        expandTreeBmp = ExpandTree.GetBitmap()
-        collapseTreeBmp = CollapseTree.GetBitmap()
-        highlightItemBmp = HighlightItem.GetBitmap()
-        evtWatcherBmp = EvtWatcher.GetBitmap()
+        refreshBmp = wx.BitmapBundle(Refresh.GetBitmap())
+        findWidgetBmp = wx.BitmapBundle(Find.GetBitmap())
+        showSizersBmp = wx.BitmapBundle(ShowSizers.GetBitmap())
+        expandTreeBmp = wx.BitmapBundle(ExpandTree.GetBitmap())
+        collapseTreeBmp = wx.BitmapBundle(CollapseTree.GetBitmap())
+        highlightItemBmp = wx.BitmapBundle(HighlightItem.GetBitmap())
+        evtWatcherBmp = wx.BitmapBundle(EvtWatcher.GetBitmap())
 
-        toggleFillingBmp = ShowFilling.GetBitmap()
+        toggleFillingBmp = wx.BitmapBundle(ShowFilling.GetBitmap())
 
         refreshTool = tbar.AddTool(-1, 'Refresh', refreshBmp,
                                    shortHelp = 'Refresh widget tree (F1)')

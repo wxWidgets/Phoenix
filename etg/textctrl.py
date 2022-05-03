@@ -9,6 +9,8 @@
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
+import sys
+
 import etgtools
 import etgtools.tweaker_tools as tools
 
@@ -143,6 +145,15 @@ def parseAndTweakModule():
                 wxPyRaiseNotImplemented();
             #endif
             """)
+
+    # TODO: add support for wxTextProofOptions (only supported on MSW/GTK3)
+    # so will need stubs on other platforms.
+    c.find('EnableProofCheck').ignore()
+    c.find('GetProofCheckOptions').ignore()
+
+    # This function only exists on OSX
+    if sys.platform != 'darwin':
+        c.find('OSXEnableNewLineReplacement').ignore()
 
 
 

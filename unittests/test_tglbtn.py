@@ -12,7 +12,7 @@ class tglbtn_Tests(wtc.WidgetTestCase):
     def test_tglbtnCtors(self):
         btn = wx.ToggleButton(self.frame, label='label')
         btn = wx.ToggleButton(self.frame, -1, 'label', (10,10), (100,-1), wx.BU_LEFT)
-        bmp = wx.Bitmap(pngFile)
+        bmp = wx.BitmapBundle(wx.Bitmap(pngFile))
         btn.SetBitmap(bmp)
 
 

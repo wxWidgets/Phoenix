@@ -62,5 +62,5 @@ VER_FLAGS        = "a1"     # wxPython release flags
 # The version numbers of wxWidgets to be used in the build
 wxVER_MAJOR        = 3
 wxVER_MINOR        = 1
-wxVER_RELEASE      = 5  # only used when wxVER_MINOR is an odd value
+wxVER_RELEASE      = 6  # only used when wxVER_MINOR is an odd value
 

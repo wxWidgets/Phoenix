@@ -79,6 +79,9 @@ def run():
             #endif
             """)
 
+    # Documented wrongly in 3.1.6
+    c.find('GetLogicalSize').type = 'wxSize'
+
 
     # For compatibility:
     module.addPyFunction('EmptyIcon', '()',

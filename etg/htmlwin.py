@@ -73,7 +73,7 @@ def run():
         virtual wxWindow* GetHTMLWindow();
         virtual wxColour GetHTMLBackgroundColour() const;
         virtual void SetHTMLBackgroundColour(const wxColour& clr);
-        virtual void SetHTMLBackgroundImage(const wxBitmap& bmpBg);
+        virtual void SetHTMLBackgroundImage(const wxBitmapBundle& bmpBg);
         virtual void SetHTMLStatusText(const wxString& text);
         virtual wxCursor GetHTMLCursor(wxHtmlWindowInterface::HTMLCursor type) const;
         """))

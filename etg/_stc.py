@@ -152,6 +152,7 @@ def run():
     tc_excludes = ['OSXEnableAutomaticQuoteSubstitution',
                    'OSXEnableAutomaticDashSubstitution',
                    'OSXDisableAllSmartSubstitutions',
+                   'OSXEnableNewLineReplacement',
                    ]
     import textctrl
     mod = textctrl.parseAndTweakModule()

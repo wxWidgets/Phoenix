@@ -12,7 +12,7 @@ class taskbar_Tests(wtc.WidgetTestCase):
 
     def test_taskbar1(self):
         icon = wx.adv.TaskBarIcon(wx.adv.TBI_DOCK)
-        icon.SetIcon(wx.Icon(icoFile), "The tip string")
+        icon.SetIcon(wx.BitmapBundle(wx.Icon(icoFile)), "The tip string")
         self.assertTrue(icon.IsOk())
         icon.Destroy()
         self.myYield()

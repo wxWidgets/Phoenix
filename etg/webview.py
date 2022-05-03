@@ -91,12 +91,24 @@ def run():
     # This tweak is needed only for the stub code
     module.find('wxWebViewHandler.wxWebViewHandler').argsString = '(const wxString& scheme="")'
 
+    # Documented wrongly in 3.1.6 (needs to be fixed in stubs too)
+    c = module.find('wxWebViewFactory')
+    c.find('GetVersionInfo').argsString = '()'
+    c.find('GetVersionInfo').items = []
+
     tools.generateStubs('wxUSE_WEBVIEW', module,
                         typeValMap={
                             'wxWebViewNavigationActionFlags': 'wxWEBVIEW_NAV_ACTION_NONE',
                             'wxWebViewZoom': 'wxWEBVIEW_ZOOM_MEDIUM',
                             'wxVersionInfo': 'wxVersionInfo()',
                             })
+
+    # Missing in 3.1.6
+    module.addItem(etgtools.WigCode("""\
+        wxEventType wxEVT_WEBVIEW_FULLSCREEN_CHANGED /PyName=wxEVT_WEBVIEW_FULLSCREEN_CHANGED/;
+        wxEventType wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED /PyName=wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED/;
+        wxEventType wxEVT_WEBVIEW_SCRIPT_RESULT /PyName=wxEVT_WEBVIEW_SCRIPT_RESULT/;
+        """))
 
     c = module.find('wxWebView')
     assert isinstance(c, etgtools.ClassDef)

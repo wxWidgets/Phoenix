@@ -22,8 +22,8 @@ class preferences_Tests(wtc.WidgetTestCase):
         class MyPrefsPage(wx.PreferencesPage):
             def GetName(self):
                 return 'MyPrefsPage'
-            def GetLargeIcon(self):
-                return wx.ArtProvider.GetBitmap(wx.ART_HELP, wx.ART_TOOLBAR, (32,32))
+            def GetIcon(self):
+                return wx.ArtProvider.GetBitmapBundle(wx.ART_HELP, wx.ART_TOOLBAR)
             def CreateWindow(self, parent):
                 return MyPrefsPanel(parent)
 
