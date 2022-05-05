@@ -119,7 +119,7 @@ class BalloonTipDemo(wx.Frame):
         button2 = wx.Button(panel, -1, "Disable BalloonTip")
 
         tbicon = TaskBarIcon()
-        tbicon.SetIcon(images.Mondrian.GetIcon())
+        tbicon.SetIcon(wx.BitmapBundle(images.Mondrian.GetIcon()))
 
         controls = list(panel.GetChildren())
         controls.append(tbicon)

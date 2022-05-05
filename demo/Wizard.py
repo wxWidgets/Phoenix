@@ -148,7 +148,7 @@ class TestPanel(wx.Panel):
 
     def OnRunSimpleWizard(self, evt):
         # Create the wizard and the pages
-        wizard = wiz(self, -1, "Simple Wizard", images.WizTest1.GetBitmap())
+        wizard = wiz(self, -1, "Simple Wizard", wx.BitmapBundle(images.WizTest1.GetBitmap()))
         page1 = TitledPage(wizard, "Page 1")
         page2 = TitledPage(wizard, "Page 2")
         page3 = TitledPage(wizard, "Page 3")
@@ -181,7 +181,7 @@ wxWizardPageSimple class can easily be used for the pages."""))
         #wizard.SetExtraStyle(wx.WIZARD_EX_HELPBUTTON)
         #wizard.Create(self, self.ID_wiz, "Simple Wizard",
         #              images.WizTest1.GetBitmap())
-        wizard = wiz(self, -1, "Dynamic Wizard", images.WizTest1.GetBitmap())
+        wizard = wiz(self, -1, "Dynamic Wizard", wx.BitmapBundle(images.WizTest1.GetBitmap()))
 
         page1 = TitledPage(wizard, "Page 1")
         page2 = SkipNextPage(wizard, "Page 2")

@@ -99,7 +99,7 @@ class lib_agw_speedmeter_Tests(wtc.WidgetTestCase):
         fgSizer.Add(panel1, 1, wx.EXPAND)
 
         boxSizer = wx.BoxSizer()
-        panel.SetSizer(boxSizer)
+        panel1.SetSizer(boxSizer)
         spW = SM.SpeedMeter(panel1,
                             agwStyle=SM.SM_DRAW_HAND |
                             SM.SM_DRAW_SECTORS |

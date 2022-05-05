@@ -109,11 +109,12 @@ def run():
 
 
     c.find('GetBitmap').type = 'const wxBitmap*'
+    c.find('GetBitmap').transferBack = True
     c.find('GetBitmap').setCppCode("""\
         #ifdef __WXMSW__
-            return &self->GetBitmap(checked);
+            return new wxBitmap(self->GetBitmap(checked));
         #else
-            return &self->GetBitmap();
+            return new wxBitmap(self->GetBitmap());
         #endif
         """)
 
@@ -156,6 +157,10 @@ def run():
     c.find('GetAccelFromString').ignore()  # Not implemented anywhere?
 
     module.addItem(tools.wxListWrapperTemplate('wxMenuItemList', 'wxMenuItem', module))
+
+    # Documented wrongly in 3.1.6
+    c.find('AddExtraAccel.accel').isConst = True
+    c.find('AddExtraAccel.accel').type = 'wxAcceleratorEntry&'
 
 
 

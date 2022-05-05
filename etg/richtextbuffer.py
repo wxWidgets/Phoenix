@@ -79,8 +79,6 @@ def run():
         tools.wxArrayWrapperTemplate('wxRichTextVariantArray', 'wxVariant', module))
     module.addItem(
         tools.wxListWrapperTemplate('wxRichTextObjectList', 'wxRichTextObject', module))
-    module.addItem(
-        tools.wxListWrapperTemplate('wxRichTextLineList', 'wxRichTextLine', module))
 
     # Can this even work?  Apparently it does.
     module.addItem(
@@ -319,6 +317,21 @@ def run():
                                     fakeListClassName='wxRichTextObjectList_'))
     c.find('MoveToList.list').type = 'wxRichTextObjectList_&'
     c.find('MoveFromList.list').type = 'wxRichTextObjectList_&'
+    # TODO: figure out why wxvector.sip doesn't work for this
+    c.find('GetLines').type = 'PyObject*'
+    c.find('GetLines').setCppCode("""\
+        wxPyThreadBlocker blocker;
+        PyObject* result = PyList_New(0);
+        const wxRichTextLineVector& vector = self->GetLines();
+        for (size_t idx=0; idx < vector.size(); idx++) {{
+            PyObject* obj;
+            wxRichTextLine* item = new wxRichTextLine(*vector.at(idx));
+            obj = wxPyConstructObject((void*)item, "wxRichTextLine", true);
+            PyList_Append(result, obj);
+            Py_DECREF(obj);
+        }}
+        return result;
+        """)
 
 
     #-------------------------------------------------------

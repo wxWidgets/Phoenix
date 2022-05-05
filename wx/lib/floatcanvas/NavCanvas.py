@@ -119,7 +119,8 @@ class NavCanvas(wx.Panel):
         self.ModesDict = {}
         for Mode in Modes:
             tool = tb.AddTool(wx.ID_ANY, label=Mode[0],
-                              shortHelp=Mode[0], bitmap=Mode[2],
+                              shortHelp=Mode[0],
+                              bitmap=wx.BitmapBundle(Mode[2]),
                               kind=wx.ITEM_RADIO)
             self.Bind(wx.EVT_TOOL, self.SetMode, tool)
             self.ModesDict[tool.GetId()]=Mode[1]

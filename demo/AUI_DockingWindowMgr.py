@@ -157,18 +157,18 @@ class PyAUIFrame(wx.Frame):
         tb1 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER)
         tb1.SetToolBitmapSize(wx.Size(48,48))
-        tb1.AddTool(101, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
+        tb1.AddTool(101, "Test", wx.ArtProvider.GetBitmapBundle(wx.ART_ERROR))
         tb1.AddSeparator()
-        tb1.AddTool(102, "Test", wx.ArtProvider.GetBitmap(wx.ART_QUESTION))
-        tb1.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_INFORMATION))
-        tb1.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_WARNING))
-        tb1.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE))
+        tb1.AddTool(102, "Test", wx.ArtProvider.GetBitmapBundle(wx.ART_QUESTION))
+        tb1.AddTool(103, "Test", wx.ArtProvider.GetBitmapBundle(wx.ART_INFORMATION))
+        tb1.AddTool(103, "Test", wx.ArtProvider.GetBitmapBundle(wx.ART_WARNING))
+        tb1.AddTool(103, "Test", wx.ArtProvider.GetBitmapBundle(wx.ART_MISSING_IMAGE))
         tb1.Realize()
 
         tb2 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER)
         tb2.SetToolBitmapSize(wx.Size(16,16))
-        tb2_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(16, 16))
+        tb2_bmp1 = wx.ArtProvider.GetBitmapBundle(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(16, 16))
         tb2.AddTool(101, "Test", tb2_bmp1)
         tb2.AddTool(101, "Test", tb2_bmp1)
         tb2.AddTool(101, "Test", tb2_bmp1)
@@ -186,7 +186,7 @@ class PyAUIFrame(wx.Frame):
         tb3 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER)
         tb3.SetToolBitmapSize(wx.Size(16,16))
-        tb3_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16, 16))
+        tb3_bmp1 = wx.ArtProvider.GetBitmapBundle(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16, 16))
         tb3.AddTool(101, "Test", tb3_bmp1)
         tb3.AddTool(101, "Test", tb3_bmp1)
         tb3.AddTool(101, "Test", tb3_bmp1)
@@ -199,7 +199,7 @@ class PyAUIFrame(wx.Frame):
         tb4 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER | wx.TB_HORZ_TEXT)
         tb4.SetToolBitmapSize(wx.Size(16,16))
-        tb4_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16, 16))
+        tb4_bmp1 = wx.ArtProvider.GetBitmapBundle(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16, 16))
         tb4.AddTool(101, "Item 1", tb4_bmp1)
         tb4.AddTool(101, "Item 2", tb4_bmp1)
         tb4.AddTool(101, "Item 3", tb4_bmp1)
@@ -214,12 +214,12 @@ class PyAUIFrame(wx.Frame):
         tb5 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER | wx.TB_VERTICAL)
         tb5.SetToolBitmapSize(wx.Size(48, 48))
-        tb5.AddTool(101, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
+        tb5.AddTool(101, "Test", wx.ArtProvider.GetBitmapBundle(wx.ART_ERROR))
         tb5.AddSeparator()
-        tb5.AddTool(102, "Test", wx.ArtProvider.GetBitmap(wx.ART_QUESTION))
-        tb5.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_INFORMATION))
-        tb5.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_WARNING))
-        tb5.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE))
+        tb5.AddTool(102, "Test", wx.ArtProvider.GetBitmapBundle(wx.ART_QUESTION))
+        tb5.AddTool(103, "Test", wx.ArtProvider.GetBitmapBundle(wx.ART_INFORMATION))
+        tb5.AddTool(103, "Test", wx.ArtProvider.GetBitmapBundle(wx.ART_WARNING))
+        tb5.AddTool(103, "Test", wx.ArtProvider.GetBitmapBundle(wx.ART_MISSING_IMAGE))
         tb5.Realize()
 
         # add a bunch of panes
@@ -767,7 +767,7 @@ class SizeReportCtrl(wx.Control):
         dc.SetPen(wx.LIGHT_GREY_PEN)
         dc.DrawLine(0, 0, size.x, size.y)
         dc.DrawLine(0, size.y, size.x, 0)
-        dc.DrawText(s, (size.x-w)/2, ((size.y-(height*5))/2))
+        dc.DrawText(s, int((size.x-w)/2), int((size.y-(height*5))/2))
 
         if self._mgr:
 
@@ -775,19 +775,19 @@ class SizeReportCtrl(wx.Control):
 
             s = ("Layer: %d")%pi.dock_layer
             w, h = dc.GetTextExtent(s)
-            dc.DrawText(s, (size.x-w)/2, ((size.y-(height*5))/2)+(height*1))
+            dc.DrawText(s, int((size.x-w)/2), int(((size.y-(height*5))/2)+(height*1)))
 
             s = ("Dock: %d Row: %d")%(pi.dock_direction, pi.dock_row)
             w, h = dc.GetTextExtent(s)
-            dc.DrawText(s, (size.x-w)/2, ((size.y-(height*5))/2)+(height*2))
+            dc.DrawText(s, int((size.x-w)/2), int(((size.y-(height*5))/2)+(height*2)))
 
             s = ("Position: %d")%pi.dock_pos
             w, h = dc.GetTextExtent(s)
-            dc.DrawText(s, (size.x-w)/2, ((size.y-(height*5))/2)+(height*3))
+            dc.DrawText(s, int((size.x-w)/2), int(((size.y-(height*5))/2)+(height*3)))
 
             s = ("Proportion: %d")%pi.dock_proportion
             w, h = dc.GetTextExtent(s)
-            dc.DrawText(s, (size.x-w)/2, ((size.y-(height*5))/2)+(height*4))
+            dc.DrawText(s, int((size.x-w)/2), int(((size.y-(height*5))/2)+(height*4)))
 
 
     def OnEraseBackground(self, event):
@@ -1002,37 +1002,41 @@ class SettingsPanel(wx.Panel):
         return image.ConvertToBitmap()
 
 
+    def CreateColorBitmapBundle(self, c):
+        return wx.BitmapBundle(self.CreateColorBitmap(c))
+
+
     def UpdateColors(self):
 
         bk = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_BACKGROUND_COLOUR)
-        self._background_color.SetBitmapLabel(self.CreateColorBitmap(bk))
+        self._background_color.SetBitmapLabel(self.CreateColorBitmapBundle(bk))
 
         cap = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_INACTIVE_CAPTION_COLOUR)
-        self._inactive_caption_color.SetBitmapLabel(self.CreateColorBitmap(cap))
+        self._inactive_caption_color.SetBitmapLabel(self.CreateColorBitmapBundle(cap))
 
         capgrad = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR)
-        self._inactive_caption_gradient_color.SetBitmapLabel(self.CreateColorBitmap(capgrad))
+        self._inactive_caption_gradient_color.SetBitmapLabel(self.CreateColorBitmapBundle(capgrad))
 
         captxt = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR)
-        self._inactive_caption_text_color.SetBitmapLabel(self.CreateColorBitmap(captxt))
+        self._inactive_caption_text_color.SetBitmapLabel(self.CreateColorBitmapBundle(captxt))
 
         acap = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_ACTIVE_CAPTION_COLOUR)
-        self._active_caption_color.SetBitmapLabel(self.CreateColorBitmap(acap))
+        self._active_caption_color.SetBitmapLabel(self.CreateColorBitmapBundle(acap))
 
         acapgrad = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR)
-        self._active_caption_gradient_color.SetBitmapLabel(self.CreateColorBitmap(acapgrad))
+        self._active_caption_gradient_color.SetBitmapLabel(self.CreateColorBitmapBundle(acapgrad))
 
         acaptxt = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR)
-        self._active_caption_text_color.SetBitmapLabel(self.CreateColorBitmap(acaptxt))
+        self._active_caption_text_color.SetBitmapLabel(self.CreateColorBitmapBundle(acaptxt))
 
         sash = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_SASH_COLOUR)
-        self._sash_color.SetBitmapLabel(self.CreateColorBitmap(sash))
+        self._sash_color.SetBitmapLabel(self.CreateColorBitmapBundle(sash))
 
         border = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_BORDER_COLOUR)
-        self._border_color.SetBitmapLabel(self.CreateColorBitmap(border))
+        self._border_color.SetBitmapLabel(self.CreateColorBitmapBundle(border))
 
         gripper = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_GRIPPER_COLOUR)
-        self._gripper_color.SetBitmapLabel(self.CreateColorBitmap(gripper))
+        self._gripper_color.SetBitmapLabel(self.CreateColorBitmapBundle(gripper))
 
 
     def OnPaneBorderSize(self, event):

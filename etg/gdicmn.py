@@ -155,6 +155,9 @@ def run():
              c.find('operator*=').all() + \
              c.find('operator/=').all():
         f.ignore(False)
+    # Ignore these because they conflict with __imul__() and __itruediv__()
+    c.find('operator*=').findOverload('double').ignore()
+    c.find('operator/=').findOverload('double').ignore()
 
     c.addCppMethod('bool', '__eq__', '(const wxSize& other)',
         body="return *self == *other;")

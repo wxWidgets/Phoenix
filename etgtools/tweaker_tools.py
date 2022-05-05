@@ -497,7 +497,6 @@ def addWindowVirtuals(klass):
         ('DoSetSize',                 'void DoSetSize(int x, int y, int width, int height, int sizeFlags)'),
         ('DoSetClientSize',           'void DoSetClientSize(int width, int height)'),
         ('DoSetSizeHints',            'void DoSetSizeHints( int minW, int minH, int maxW, int maxH, int incW, int incH )'),
-        ('DoGetBorderSize',           'wxSize DoGetBorderSize() const'),
         ('DoMoveWindow',              'void DoMoveWindow(int x, int y, int width, int height)'),
         ('DoSetWindowVariant',        'void DoSetWindowVariant( wxWindowVariant variant)'),
         ('GetDefaultBorder',          'wxBorder GetDefaultBorder() const'),
