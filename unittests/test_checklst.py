@@ -45,6 +45,16 @@ class CheckListBoxTests(wtc.WidgetTestCase):
         c.CheckedStrings = ['three']
         self.assertTrue(set(c.GetCheckedItems()) == set([2]))
 
+    def test_GetSelections(self):
+        c = wx.CheckListBox(
+            self.frame,
+            choices="one two three four".split(),
+            style=wx.LB_EXTENDED,
+        )
+        self.assertEqual(c.GetSelections(), [])
+        c.SetSelection(2)
+        self.assertEqual(c.GetSelections(), [2])
+
 
 #---------------------------------------------------------------------------
 
