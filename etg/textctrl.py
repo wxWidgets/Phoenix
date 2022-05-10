@@ -9,8 +9,6 @@
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
-import sys
-
 import etgtools
 import etgtools.tweaker_tools as tools
 
@@ -151,9 +149,12 @@ def parseAndTweakModule():
     c.find('EnableProofCheck').ignore()
     c.find('GetProofCheckOptions').ignore()
 
-    # This function only exists on OSX
-    if sys.platform != 'darwin':
-        c.find('OSXEnableNewLineReplacement').ignore()
+    # This method exists only on OSX
+    c.find('OSXEnableNewLineReplacement').setCppCode("""\
+        #ifdef __WXMAC__
+            self->OSXEnableNewLineReplacement(enable);
+        #endif
+        """)
 
 
 

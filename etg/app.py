@@ -10,7 +10,6 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
-import sys
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -207,8 +206,11 @@ def run():
     c.addProperty('UseBestVisual GetUseBestVisual SetUseBestVisual')
     c.addProperty('TopWindow GetTopWindow SetTopWindow')
 
-    if sys.platform != 'linux':
-        c.find('GTKSuppressDiagnostics').ignore()
+    c.find('GTKSuppressDiagnostics').setCppCode("""\
+        #ifdef __WXGTK__
+            GTKSuppressDiagnostics(flags);
+        #endif
+        """)
 
     #-------------------------------------------------------
 
