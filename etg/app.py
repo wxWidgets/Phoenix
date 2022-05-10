@@ -208,7 +208,7 @@ def run():
 
     c.find('GTKSuppressDiagnostics').setCppCode("""\
         #ifdef __WXGTK__
-            GTKSuppressDiagnostics(flags);
+            wxApp::GTKSuppressDiagnostics(flags);
         #endif
         """)
 
