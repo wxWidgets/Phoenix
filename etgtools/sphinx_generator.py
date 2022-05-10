@@ -794,7 +794,9 @@ class Paragraph(Node):
                 section = Section(element, None, self.kind)
 
                 root = self.GetTopLevelParent()
-                root.AddSection(section)
+                # TODO: Why is there sometimes not a top-level parent node?
+                if root is not None:
+                    root.AddSection(section)
 
             else:
 
