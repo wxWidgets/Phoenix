@@ -41,6 +41,15 @@ def run():
     c.find('Create').findOverload('wxString choices').ignore()
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
 
+    c.addCppMethod('wxArrayInt*', 'GetSelections', '()',
+        isConst=True, factory=True,
+        doc="Returns a list of the indices of the currently selected items.",
+        body="""\
+            wxArrayInt* array = new wxArrayInt;
+            self->GetSelections(*array);
+            return array;
+            """)
+
     tools.fixWindowClass(c)
 
 
