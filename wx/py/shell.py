@@ -1518,7 +1518,14 @@ class Shell(editwindow.EditWindow):
         menu = self.GetContextMenu()
         self.PopupMenu(menu)
 
-
+    def SetSelection(self, from_, to_):
+        """Selects the text starting at the first position up to
+        (but not including) the character at the last position.
+        """
+        # (override) Patch for miss-insertion position when from_ > to_.
+        # Note: This is needed until the stc SetSelection bug is fixed.
+        self.SetAnchor(from_)
+        self.SetCurrentPos(to_)
 
 
 ## NOTE: The DnD of file names is disabled until we can figure out how
