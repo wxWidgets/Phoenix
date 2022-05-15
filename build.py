@@ -792,12 +792,7 @@ def checkCompiler(quiet=False):
         # about time to do away with this...)
 
         arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
-        info = getMSVCInfo(PYTHON, arch)
-
-        os.environ['PATH'] =    info.path
-        os.environ['INCLUDE'] = info.include
-        os.environ['LIB'] =     info.lib
-        os.environ['LIBPATH'] = info.libpath
+        info = getMSVCInfo(PYTHON, arch, set_env=True)
 
         # Make sure there is now a cl.exe on the PATH
         CL = 'NOT FOUND'
