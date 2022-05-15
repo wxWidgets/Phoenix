@@ -45,7 +45,7 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                macSetLoaderNames, \
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
                                getVisCVersion, getToolsPlatformName, updateLicenseFiles, \
-                               TemporaryDirectory
+                               TemporaryDirectory, getMSVCInfo
 from buildtools.wxpysip import sip_runner
 
 import buildtools.version as version
@@ -785,37 +785,30 @@ def uploadTree(srcPath, destPath, options, days=30):
 
 def checkCompiler(quiet=False):
     if isWindows:
-        # Make sure that the compiler that Python wants to use can be found.
-        # It will terminate if the compiler is not found or other exceptions
-        # are raised.
-        cmd = "import setuptools, distutils.msvc9compiler as msvc; " \
-              "mc = msvc.MSVCCompiler(); " \
-              "mc.initialize(); " \
-              "print(mc.cc)"
-        CC = runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False)
+        # Make sure that the compiler that Python wants to use can be found. It
+        # will terminate if the compiler is not found or other exceptions are
+        # raised. Note that we execute these checks using the target Python in
+        # case the one running this script is different. (TODO: It's probably
+        # about time to do away with this...)
+
+        arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
+        info = getMSVCInfo(PYTHON, arch)
+
+        os.environ['PATH'] =    info.path
+        os.environ['INCLUDE'] = info.include
+        os.environ['LIB'] =     info.lib
+        os.environ['LIBPATH'] = info.libpath
+
+        # Make sure there is now a cl.exe on the PATH
+        CL = 'NOT FOUND'
+        for d in os.environ['PATH'].split(os.pathsep):
+            p = pathlib.Path(d, 'cl.exe')
+            if p.exists():
+                CL = p
+                break
         if not quiet:
-            msg("MSVC: %s" % CC)
+            msg(f"CL.exe: {CL}")
 
-        # Now get the environment variables which that compiler needs from
-        # its vcvarsall.bat command and load them into this process's
-        # environment.
-        cmd = "import setuptools, distutils.msvc9compiler as msvc; " \
-              "arch = msvc.PLAT_TO_VCVARS[msvc.get_platform()]; " \
-              "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
-              "print(env)"
-        env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
-
-        def _b(v):
-            return str(v)
-            #if PY2:
-            #    return bytes(v)
-            #else:
-            #    return bytes(v, 'utf8')
-
-        os.environ['PATH'] = _b(env['path'])
-        os.environ['INCLUDE'] = _b(env['include'])
-        os.environ['LIB'] = _b(env['lib'])
-        os.environ['LIBPATH'] = _b(env['libpath'])
 
     # NOTE: SIP is now generating code with scoped-enums. Older linux
     # platforms like what we're using for builds, and also TravisCI for
