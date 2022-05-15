@@ -981,7 +981,7 @@ def getExpectedVisCVersion():
 
 
 MSVCinfo = None
-def getMSVCInfo(PYTHON, arch):
+def getMSVCInfo(PYTHON, arch, set_env=False):
     """
     Fetch info from the system about MSVC, such as versions, paths, etc.
     """
@@ -1004,6 +1004,12 @@ def getMSVCInfo(PYTHON, arch):
     cmd = cmd.format(arch)
     env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
     info = AttrDict(env)
+
+    if set_env:
+        os.environ['PATH'] =    info.path
+        os.environ['INCLUDE'] = info.include
+        os.environ['LIB'] =     info.lib
+        os.environ['LIBPATH'] = info.libpath
 
     MSVCinfo = info
     return info
