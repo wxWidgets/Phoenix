@@ -136,11 +136,12 @@ def run():
 
 
     c.find('GetDisabledBitmap').type = 'const wxBitmap*'
+    c.find('GetDisabledBitmap').transferBack = True  # Python takes ownership of the return value
     c.find('GetDisabledBitmap').setCppCode("""\
         #ifdef __WXMSW__
-            return &self->GetDisabledBitmap();
+            return new wxBitmap(self->GetDisabledBitmap());
         #else
-            return &wxNullBitmap;
+            return new wxBitmap(wxNullBitmap);
         #endif
         """)
 
