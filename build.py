@@ -1662,8 +1662,6 @@ def cmd_build_py(options, args):
             build_options.append('--msvc_arch=x86')
     if not isWindows:
         build_options.append('--wx_config=%s' % WX_CONFIG)
-    if options.verbose:
-        build_options.append('--verbose')
     if options.jobs:
         build_options.append('--jobs=%s' % options.jobs)
     if options.relwithdebug:
@@ -1714,7 +1712,7 @@ def cmd_build_py(options, args):
         wafBuildDir = posixjoin(wafBuildBase, 'release')
         build_options.append('--out=%s' % wafBuildDir)
         cmd = '"%s" %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
-        runcmd(cmd)
+        runcmd(cmd, onError=_onWafError)
 
     copyWxDlls(options)
     cmd_build_others(options, args)
