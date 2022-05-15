@@ -16,6 +16,7 @@ import types
 import subprocess
 
 from buildtools import builder
+from buildtools.config import getVisCVersion
 
 PY3 = sys.version_info[0] == 3
 
@@ -62,20 +63,6 @@ def getXcodePaths():
     base = getoutput("xcode-select -print-path")
     return [base, base+"/Platforms/MacOSX.platform/Developer"]
 
-
-def getVisCVersion():
-    text = getoutput("cl.exe")
-    if 'Version 13' in text:
-        return '71'
-    if 'Version 15' in text:
-        return '90'
-    if 'Version 16' in text:
-        return '100'
-    if 'Version 19' in text:
-        return '140'
-    # TODO: Add more tests to get the other versions...
-    else:
-        return 'FIXME'
 
 
 def exitIfError(code, msg):
