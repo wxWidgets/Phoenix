@@ -965,13 +965,13 @@ def getExpectedVisCVersion():
     """
     Returns the Visual C version that Python is expecting, based on the usual
     version that stock Python was built with.
+    (Not currently used, we're just selecting the latest available compiler
+    >= 14.0 for now...)
     """
     if MSVCinfo is None:
         raise RuntimeError('getMSVCInfo has not been called yet.')
     py_ver = MSVCinfo.py_ver
-    if py_ver in ((3, 4),):
-        min_ver = 10.0
-    elif py_ver in ((3, 5), (3, 6), (3, 7), (3, 8)):
+    if py_ver in ((3, 5), (3, 6), (3, 7), (3, 8)):
         min_ver = 14.0
     elif py_ver in ((3, 9), (3, 10)):
         min_ver = 14.2
