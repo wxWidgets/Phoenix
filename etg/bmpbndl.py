@@ -58,6 +58,7 @@ def run():
 
         // Otherwise, a conversion is needed
         int state = 0;
+        // TODO: A macro for these nearly identical statements would be a good idea...
         if (sipCanConvertToType(sipPy, sipType_wxBitmap, SIP_NO_CONVERTORS)) {
             wxBitmap* obj = reinterpret_cast<wxBitmap*>(
                 sipConvertToType(sipPy, sipType_wxBitmap, sipTransferObj, SIP_NO_CONVERTORS, &state, sipIsErr));
