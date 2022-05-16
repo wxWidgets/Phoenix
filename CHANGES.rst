@@ -18,13 +18,13 @@ Pip:    ``pip install wxPython==4.1.2``
 
 New and improved in this release:
 
-* Yes, it's been a long time since the last release. I'm not dead, just on an
+* Yes, it's been a VERY long time since the last release. I'm not dead, just on an
   extended break. It took me a while to get up to speed on a new job, and then
   there was a seemingly perpetual crunch-mode to get the product through a couple
   releases. I can't say that things are fully back to normal yet, but at least I
   now know what I'm doing. Mostly. <wink>
 
-* This release is built using wxWidgets code very near the wxWidgets' 3.1.5
+* This release is built using wxWidgets code very near the wxWidgets' 3.1.6
   release tag.
 
 * Tweaked the build scripts a bit to ensure that on non-Windows platforms that
@@ -53,6 +53,15 @@ New and improved in this release:
 * Fix PyProgress on Windows by avoiding invalid sizer flags (#1985)
 
 * Fix 'More Grid Features' in demo
+
+* Many of the widgets which deal with bitmaps have been changed to use a
+  wx.BitmapBundle object instead. This is the mechanism which wxWidgets has
+  implemented for adapting to things like Hi-DPI displays. Essentially you can
+  load a list of bitmaps of different sizes into a wx.BitmapBundle, and the
+  widget can choose one based on the display density. Existing code should be
+  able to continue to pass a wx.Bitmap to the widget constructor or to methods
+  like SetBitmap, as wxPython will automatically convert from a wx.Bitmap to a
+  wx.BitmapBundle where it is needed.
 
 
 
