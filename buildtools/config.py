@@ -994,7 +994,7 @@ def getMSVCInfo(PYTHON, arch, set_env=False):
     cmd = \
         "import os, sys, setuptools.msvc; " \
         "setuptools.msvc.isfile = lambda path: path is not None and os.path.isfile(path); " \
-        "ei = setuptools.msvc.EnvironmentInfo('{}'); " \
+        "ei = setuptools.msvc.EnvironmentInfo('{}', vc_min_ver=14.0); " \
         "env = ei.return_env(); " \
         "env['vc_ver'] = ei.vc_ver; " \
         "env['vs_ver'] = ei.vs_ver; " \
