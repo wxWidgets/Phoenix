@@ -804,6 +804,16 @@ def checkCompiler(quiet=False):
         if not quiet:
             msg(f"CL.exe: {CL}")
 
+            msg('include: ' + info.include)
+            msg('lib:     ' + info.lib)
+            msg('libpath: ' + info.libpath)
+
+            for d in info.include.split(os.pathsep):
+                p = pathlib.Path(d, 'tchar.h')
+                if p.exists():
+                    msg('tchar.h: ' + str(p))
+                    break
+
 
     # NOTE: SIP is now generating code with scoped-enums. Older linux
     # platforms like what we're using for builds, and also TravisCI for
