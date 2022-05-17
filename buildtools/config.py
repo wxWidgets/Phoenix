@@ -1011,6 +1011,11 @@ def getMSVCInfo(PYTHON, arch, set_env=False):
         os.environ['LIB'] =     info.lib
         os.environ['LIBPATH'] = info.libpath
 
+        # We already have everything we need, tell distutils to not go hunting
+        # for it all again if it happens to be called.
+        os.environ['DISTUTILS_USE_SDK'] = "1"
+        os.environ['MSSdk'] = "1"
+
     MSVCinfo = info
     return info
 
