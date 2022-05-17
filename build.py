@@ -785,11 +785,10 @@ def uploadTree(srcPath, destPath, options, days=30):
 
 def checkCompiler(quiet=False):
     if isWindows:
-        # Make sure that the compiler that Python wants to use can be found. It
-        # will terminate if the compiler is not found or other exceptions are
-        # raised. Note that we execute these checks using the target Python in
-        # case the one running this script is different. (TODO: It's probably
-        # about time to do away with this...)
+        # Set up the PATH and other environment variables so the proper version
+        # of MSVC will be used. The setuptools package is used to find the
+        # needed info, so the target python shoudl have a recent version of
+        # setuptools installed.
 
         arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
         info = getMSVCInfo(PYTHON, arch, set_env=True)
@@ -804,15 +803,15 @@ def checkCompiler(quiet=False):
         if not quiet:
             msg(f"CL.exe: {CL}")
 
-            msg('include: ' + info.include)
-            msg('lib:     ' + info.lib)
-            msg('libpath: ' + info.libpath)
-
-            for d in info.include.split(os.pathsep):
-                p = pathlib.Path(d, 'tchar.h')
-                if p.exists():
-                    msg('tchar.h: ' + str(p))
-                    break
+            # Just needed for debugging
+            # msg('include: ' + info.include)
+            # msg('lib:     ' + info.lib)
+            # msg('libpath: ' + info.libpath)
+            # for d in info.include.split(os.pathsep):
+            #     p = pathlib.Path(d, 'tchar.h')
+            #     if p.exists():
+            #         msg('tchar.h: ' + str(p))
+            #         break
 
 
     # NOTE: SIP is now generating code with scoped-enums. Older linux
