@@ -212,6 +212,9 @@ def run():
         #endif
         """)
 
+    c.find('GetGUIInstance').ignore()
+
+
     #-------------------------------------------------------
 
     module.find('wxHandleFatalExceptions').setCppCode("""\

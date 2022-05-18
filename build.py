@@ -1901,6 +1901,10 @@ def cmd_bdist_wheel(options, args):
     if options.upload:
         filemask = "dist/%s-%s-*.whl" % (baseName, cfg.VERSION)
         filenames = glob.glob(filemask)
+        print(f'**** filemask: {filemask}')
+        print(f'**** matched:  {filenames}')
+        print(f'**** all dist: {glob.glob("dist/*")}')
+
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
         if pdbzip:
