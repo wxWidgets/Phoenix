@@ -27,6 +27,8 @@ from distutils.dep_util  import newer
 
 import distutils.sysconfig
 
+from attrdict import AttrDict
+
 runSilently = False
 
 #----------------------------------------------------------------------
@@ -951,20 +953,71 @@ def getSipFiles(names):
 
 
 def getVisCVersion():
-    text = runcmd("cl.exe", getOutput=True, echoCmd=False)
-    if 'Version 13' in text:
-        return '71'
-    if 'Version 15' in text:
-        return '90'
-    if 'Version 16' in text:
-        return '100'
-    if 'Version 18' in text:
-        return '120'
-    if 'Version 19' in text:
-        return '140'
-    # TODO: Add more tests to get the other versions...
+    if MSVCinfo is None:
+        raise RuntimeError('getMSVCInfo has not been called yet.')
+    # Convert a float like 14.28 to 140, for historical reasons
+    # TODO: decide on switching to 142, 143, etc.??
+    ver = str(int(MSVCinfo.vc_ver)) + '0'
+    return ver
+
+
+def getExpectedVisCVersion():
+    """
+    Returns the Visual C version that Python is expecting, based on the usual
+    version that stock Python was built with.
+    (Not currently used, we're just selecting the latest available compiler
+    >= 14.0 for now...)
+    """
+    if MSVCinfo is None:
+        raise RuntimeError('getMSVCInfo has not been called yet.')
+    py_ver = MSVCinfo.py_ver
+    if py_ver in ((3, 5), (3, 6), (3, 7), (3, 8)):
+        min_ver = 14.0
+    elif py_ver in ((3, 9), (3, 10)):
+        min_ver = 14.2
     else:
-        return 'FIXME'
+        raise RuntimeError('This library does not support python version %d.%d' % py_version)
+    return min_ver
+
+
+MSVCinfo = None
+def getMSVCInfo(PYTHON, arch, set_env=False):
+    """
+    Fetch info from the system about MSVC, such as versions, paths, etc.
+    """
+    global MSVCinfo
+    if MSVCinfo is not None:
+        return MSVCinfo
+
+    # Note that it starts with a monkey-patch in setuptools.msvc to
+    # workaround this issue: pypa/setuptools#1902
+    cmd = \
+        "import os, sys, setuptools.msvc; " \
+        "setuptools.msvc.isfile = lambda path: path is not None and os.path.isfile(path); " \
+        "ei = setuptools.msvc.EnvironmentInfo('{}', vc_min_ver=14.0); " \
+        "env = ei.return_env(); " \
+        "env['vc_ver'] = ei.vc_ver; " \
+        "env['vs_ver'] = ei.vs_ver; " \
+        "env['arch'] = ei.pi.arch; " \
+        "env['py_ver'] = sys.version_info[:2]; " \
+        "print(env)"
+    cmd = cmd.format(arch)
+    env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
+    info = AttrDict(env)
+
+    if set_env:
+        os.environ['PATH'] =    info.path
+        os.environ['INCLUDE'] = info.include
+        os.environ['LIB'] =     info.lib
+        os.environ['LIBPATH'] = info.libpath
+
+        # We already have everything we need, tell distutils to not go hunting
+        # for it all again if it happens to be called.
+        os.environ['DISTUTILS_USE_SDK'] = "1"
+        os.environ['MSSdk'] = "1"
+
+    MSVCinfo = info
+    return info
 
 
 _haveObjDump = None
