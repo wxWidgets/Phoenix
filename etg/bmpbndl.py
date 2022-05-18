@@ -39,6 +39,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
 
     c.find('FromSVG').findOverload('char *data, const wxSize &sizeDef').ignore()
+    c.find('FromImpl.impl').transfer = True
 
     # Allow on-the-fly creation of a wx.BitmapBundle from a wx.Bitmap, wx.Icon
     # or a wx.Image
