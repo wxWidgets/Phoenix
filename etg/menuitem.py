@@ -47,13 +47,16 @@ def run():
     c.find('GetLabelFromText').ignore()
 
 
-    # These are MSW only. Make them be empty stubs for the other ports
-    c.find('GetBackgroundColour').type = 'const wxColour*'
+    # These are MSW only. Make them be empty stubs for the other ports. Several
+    # have incorrect details in the interface docs, so we need to tweak their
+    # return types too.
+    c.find('GetBackgroundColour').type = 'wxColour*'
+    c.find('GetBackgroundColour').factory = True
     c.find('GetBackgroundColour').setCppCode("""\
         #ifdef __WXMSW__
-            return &self->GetBackgroundColour();
+            return new wxColor(self->GetBackgroundColour());
         #else
-            return &wxNullColour;
+            return new wxColour;
         #endif
         """)
 
@@ -63,12 +66,13 @@ def run():
         #endif
         """)
 
-    c.find('GetFont').type = 'const wxFont*'
+    c.find('GetFont').type = 'wxFont*'
+    c.find('GetFont').factory = True
     c.find('GetFont').setCppCode("""\
         #ifdef __WXMSW__
-            return &self->GetFont();
+            return new wxFont(self->GetFont());
         #else
-            return &wxNullFont;
+            return new wxFont;
         #endif
         """)
 
@@ -92,12 +96,13 @@ def run():
         #endif
         """)
 
-    c.find('GetTextColour').type = 'const wxColour*'
+    c.find('GetTextColour').type = 'wxColour*'
+    c.find('GetTextColour').factory = True
     c.find('GetTextColour').setCppCode("""\
         #ifdef __WXMSW__
-            return &self->GetTextColour();
+            return new wxColour(self->GetTextColour());
         #else
-            return &wxNullColour;
+            return new wxColour;
         #endif
         """)
 
@@ -108,13 +113,13 @@ def run():
         """)
 
 
-    c.find('GetBitmap').type = 'const wxBitmap*'
-    c.find('GetBitmap').transferBack = True
+    c.find('GetBitmap').type = 'wxBitmap*'
+    c.find('GetBitmap').factory = True
     c.find('GetBitmap').setCppCode("""\
         #ifdef __WXMSW__
             return new wxBitmap(self->GetBitmap(checked));
         #else
-            return new wxBitmap(self->GetBitmap());
+            return new wxBitmap(self->GetBitmap()); // no checked arg in this case
         #endif
         """)
 
@@ -135,13 +140,13 @@ def run():
         """)
 
 
-    c.find('GetDisabledBitmap').type = 'const wxBitmap*'
-    c.find('GetDisabledBitmap').transferBack = True  # Python takes ownership of the return value
+    c.find('GetDisabledBitmap').type = 'wxBitmap*'
+    c.find('GetDisabledBitmap').factory = True
     c.find('GetDisabledBitmap').setCppCode("""\
         #ifdef __WXMSW__
             return new wxBitmap(self->GetDisabledBitmap());
         #else
-            return new wxBitmap(wxNullBitmap);
+            return new wxBitmap;
         #endif
         """)
 
@@ -150,6 +155,7 @@ def run():
             self->SetDisabledBitmap(*disabled);
         #endif
         """)
+
 
     c.addAutoProperties()
     c.addItem(etgtools.PropertyDef('Enabled', 'IsEnabled', 'Enable'))

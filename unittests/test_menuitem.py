@@ -12,7 +12,7 @@ class menuitem_Tests(wtc.WidgetTestCase):
     def test_menuitemCtor(self):
         m1 = wx.MenuItem()
         m2 = wx.MenuItem(None, -1, "Menu Item", "Help text", wx.ITEM_NORMAL)
-        m2.SetBitmap(wx.Bitmap(pngFile))
+        m2.SetBitmap(wx.BitmapBundle(wx.Bitmap(pngFile)))
 
 
     def test_menuitemProperties(self):
