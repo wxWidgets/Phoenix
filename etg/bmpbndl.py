@@ -40,6 +40,53 @@ def run():
 
     c.find('FromSVG').findOverload('char *data, const wxSize &sizeDef').ignore()
 
+    # Allow on-the-fly creation of a wx.BitmapBundle from a wx.Bitmap, wx.Icon
+    # or a wx.Image
+    c.convertFromPyObject = """\
+        // Check for type compatibility
+        if (!sipIsErr) {
+            if (sipCanConvertToType(sipPy, sipType_wxBitmap, SIP_NO_CONVERTORS))
+                return 1;
+            if (sipCanConvertToType(sipPy, sipType_wxIcon, SIP_NO_CONVERTORS))
+                return 1;
+            if (sipCanConvertToType(sipPy, sipType_wxImage, SIP_NO_CONVERTORS))
+                return 1;
+            if (sipCanConvertToType(sipPy, sipType_wxBitmapBundle, SIP_NO_CONVERTORS))
+                return 1;
+            return 0;
+        }
+
+        // Otherwise, a conversion is needed
+        int state = 0;
+        // TODO: A macro for these nearly identical statements would be a good idea...
+        if (sipCanConvertToType(sipPy, sipType_wxBitmap, SIP_NO_CONVERTORS)) {
+            wxBitmap* obj = reinterpret_cast<wxBitmap*>(
+                sipConvertToType(sipPy, sipType_wxBitmap, sipTransferObj, SIP_NO_CONVERTORS, &state, sipIsErr));
+            *sipCppPtr = new wxBitmapBundle(*obj);
+            sipReleaseType(obj, sipType_wxBitmap, state);
+            return sipGetState(sipTransferObj);
+        }
+        if (sipCanConvertToType(sipPy, sipType_wxIcon, SIP_NO_CONVERTORS)) {
+            wxIcon* obj = reinterpret_cast<wxIcon*>(
+                sipConvertToType(sipPy, sipType_wxIcon, sipTransferObj, SIP_NO_CONVERTORS, &state, sipIsErr));
+            *sipCppPtr = new wxBitmapBundle(*obj);
+            sipReleaseType(obj, sipType_wxIcon, state);
+            return sipGetState(sipTransferObj);
+        }
+        if (sipCanConvertToType(sipPy, sipType_wxImage, SIP_NO_CONVERTORS)) {
+            wxImage* obj = reinterpret_cast<wxImage*>(
+                sipConvertToType(sipPy, sipType_wxImage, sipTransferObj, SIP_NO_CONVERTORS, &state, sipIsErr));
+            *sipCppPtr = new wxBitmapBundle(*obj);
+            sipReleaseType(obj, sipType_wxImage, state);
+            return sipGetState(sipTransferObj);
+        }
+
+        // The final option is that it is already a wxBitmapBundle, so just fetch the pointer and return
+        *sipCppPtr = reinterpret_cast<wxBitmapBundle*>(
+            sipConvertToType(sipPy, sipType_wxBitmapBundle, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
+        return 0; // not a new instance
+        """
+
 
     c = module.find('wxBitmapBundleImpl')
     assert isinstance(c, etgtools.ClassDef)
