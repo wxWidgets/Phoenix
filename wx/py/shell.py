@@ -946,7 +946,7 @@ class Shell(editwindow.EditWindow):
             startpos = self.GetCurrentPos() + ps1size
             line += 1
             self.GotoLine(line)
-            while self.GetCurLine()[0][:ps2size] == ps2:
+            while self.GetCurLine()[0][:ps2size] == ps2 and line < self.LineCount:
                 line += 1
                 self.GotoLine(line)
             stoppos = self.GetCurrentPos()
