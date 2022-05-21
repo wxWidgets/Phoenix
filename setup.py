@@ -40,8 +40,9 @@ AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "robin@alldunn.com"
 URL              = "http://wxPython.org/"
 PROJECT_URLS     = {
-    "Source": "https://github.com/wxWidgets/Phoenix",
-}
+                    "Source": "https://github.com/wxWidgets/Phoenix",
+                    "Documentation": "https://docs.wxpython.org/",
+                   }
 DOWNLOAD_URL     = "https://pypi.org/project/{}".format(NAME)
 LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
