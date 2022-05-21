@@ -446,41 +446,7 @@ class MultiDirDialog(wx.Dialog):
 
     def GetPaths(self):
         """ Returns the folders selected by the user, or the default path. """
-
-        # Retrieve the tree control and the selections the
-        # user has made
-        treeCtrl = self.dirCtrl.GetTreeCtrl()
-        selections = treeCtrl.GetSelections()
-
-        folders = []
-
-        # Loop recursively over the selected folder and its sub-direcories
-        for select in selections:
-            itemText = treeCtrl.GetItemText(select)
-            # Recurse on it.
-            folder = self.RecurseTopDir(treeCtrl, select, itemText)
-            folders.append(os.path.normpath(folder))
-
-        return folders
-
-
-    def RecurseTopDir(self, treeCtrl, item, itemText):
-        """
-        Recurse a directory tree to include the parent-folder.
-
-        :param `treeCtrl`: the tree control associated with the internal :class:`GenericDirCtrl`;
-        :param `item`: the selected tree control item;
-        :param `itemText`: the selected tree control item text.
-        """
-
-        # Get the item parent
-        parent = treeCtrl.GetItemParent(item)
-        if parent != treeCtrl.GetRootItem():
-            # Not the root item, recurse again on it
-            itemText = treeCtrl.GetItemText(parent) + "/" + itemText
-            itemText = self.RecurseTopDir(treeCtrl, parent, itemText)
-
-        return itemText
+        return self.dirCtrl.GetPaths()
 
 
     def BindEvents(self):
