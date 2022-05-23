@@ -297,3 +297,12 @@ class EditWindow(stc.StyledTextCtrl):
         # show and select the found text
         self.ShowPosition(loc)
         self.SetSelection(loc, loc + len(findstring))
+
+    def SetSelection(self, from_, to_):
+        """Selects the text starting at the first position up to
+        (but not including) the character at the last position.
+        """
+        # (override) Patch for miss-insertion position when from_ > to_.
+        # Note: This is needed until the stc SetSelection bug is fixed.
+        self.SetAnchor(from_)
+        self.SetCurrentPos(to_)
