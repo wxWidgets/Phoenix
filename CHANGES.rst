@@ -18,11 +18,11 @@ Pip:    ``pip install wxPython==4.1.2``
 
 New and improved in this release:
 
-* Yes, it's been a VERY long time since the last release. I'm not dead, just on an
-  extended break. It took me a while to get up to speed on a new job, and then
-  there was a seemingly perpetual crunch-mode to get the product through a couple
-  releases. I can't say that things are fully back to normal yet, but at least I
-  now know what I'm doing. Mostly. <wink>
+* Yes, it's been a VERY long time since the last release. I'm not dead, just on
+  an extended break. It took me a while to get up to speed on a new day job, and
+  then there was a seemingly perpetual crunch-mode to get the product through a
+  couple release cycles. I can't say that things are fully back to normal yet,
+  but at least I now know what I'm doing. Mostly. <wink>
 
 * This release is built using wxWidgets code very near the wxWidgets' 3.1.6
   release tag.
@@ -32,12 +32,18 @@ New and improved in this release:
   the flags needed by Python added on.) The compiler commands can be overridden
   by setting CC and CXX in the environment if needed. (#1247)
 
+* On Windows the build code that locates and sets up the environment for the
+  MSVC compiler no longer relies on distutils code, but is now using more modern
+  code in setuptools instead. This enables much more compiler flexibility and
+  wxPython should now be buildable with Visual Studio versions from 2015 through
+  2022+.
+
 * Switched to SIP 5 for generating the wrapper code. Rather than a standalone
   executable, SIP is now a Python package that needs to be installed in the
   Python environment used for the build. A dependency has been added to
   requirements/devel.txt to help ensure that the correct version is installed.
 
-* Change wx.App.InitLocale to just do `locale.setlocale(locale.LC_ALL, "C")`
+* Changed wx.App.InitLocale to just do `locale.setlocale(locale.LC_ALL, "C")`
   to undo what Python (3.8+ on Windows) does. This lets wxWidgets start with an
   uninitialized locale as it expects. (#1637)
 
@@ -55,13 +61,14 @@ New and improved in this release:
 * Fix 'More Grid Features' in demo
 
 * Many of the widgets which deal with bitmaps have been changed to use a
-  wx.BitmapBundle object instead. This is the mechanism which wxWidgets has
-  implemented for adapting to things like Hi-DPI displays. Essentially you can
-  load a list of bitmaps of different sizes into a wx.BitmapBundle, and the
-  widget can choose one based on the display density. Existing code should be
-  able to continue to pass a wx.Bitmap to the widget constructor or to methods
-  like SetBitmap, as wxPython will automatically convert from a wx.Bitmap to a
-  wx.BitmapBundle where it is needed.
+  wx.BitmapBundle object instead of wx.Bitmap. This is the mechanism which
+  wxWidgets has implemented for adapting to things like Hi-DPI displays.
+  Essentially you can load a list of bitmaps of different sizes (but similar or
+  scaled content) into a wx.BitmapBundle, and the widget can choose one based on
+  the display density. Existing code should be able to continue to pass a
+  wx.Bitmap to the widget constructor or to methods like SetBitmap, as wxPython
+  will automatically convert from a wx.Bitmap to a wx.BitmapBundle containing
+  the single image where it is needed.
 
 
 
