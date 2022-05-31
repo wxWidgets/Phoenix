@@ -854,8 +854,8 @@ class Shell(editwindow.EditWindow):
         or (self.historyIndex >= len(self.history)-2):
             searchOrder = range(len(self.history))
         else:
-            searchOrder = range(self.historyIndex+1, len(self.history)) + \
-                          range(self.historyIndex)
+            ls = list(range(len(self.history)))
+            searchOrder = ls[self.historyIndex+1:] + ls[:self.historyIndex]
         for i in searchOrder:
             command = self.history[i]
             if command[:len(searchText)] == searchText:
@@ -946,7 +946,7 @@ class Shell(editwindow.EditWindow):
             startpos = self.GetCurrentPos() + ps1size
             line += 1
             self.GotoLine(line)
-            while self.GetCurLine()[0][:ps2size] == ps2:
+            while self.GetCurLine()[0][:ps2size] == ps2 and line < self.LineCount:
                 line += 1
                 self.GotoLine(line)
             stoppos = self.GetCurrentPos()

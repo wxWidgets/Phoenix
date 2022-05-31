@@ -5580,7 +5580,7 @@ class AuiManager(wx.EvtHandler):
         # finally, add the pane sizer to the dock sizer
         if pane.HasBorder():
             # allowing space for the pane's border
-            sizer_item = cont.Add(horz_pane_sizer, pane_proportion,
+            sizer_item = cont.Add(horz_pane_sizer, int(round(pane_proportion)),
                                   wx.EXPAND | wx.ALL, pane_border_size)
             part = AuiDockUIPart()
             part.type = AuiDockUIPart.typePaneBorder
@@ -5592,7 +5592,7 @@ class AuiManager(wx.EvtHandler):
             part.sizer_item = sizer_item
             uiparts.append(part)
         else:
-            sizer_item = cont.Add(horz_pane_sizer, pane_proportion, wx.EXPAND)
+            sizer_item = cont.Add(horz_pane_sizer, int(round(pane_proportion)), wx.EXPAND)
 
         return uiparts
 

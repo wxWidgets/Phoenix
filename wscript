@@ -16,7 +16,7 @@ try:
 except ImportError:
     from buildtools.backports.textwrap3 import indent
 
-from buildtools.config import Config, runcmd, msg
+from buildtools.config import Config, runcmd, msg, getMSVCInfo
 cfg = Config(True)
 
 #-----------------------------------------------------------------------------
@@ -66,43 +66,28 @@ def options(opt):
 
 def configure(conf):
     if isWindows:
-        # For now simply choose the compiler version based on the Python
-        # version. We have a chicken-egg problem here. The compiler needs to
-        # be selected before the Python stuff can be configured, but we need
-        # Python to know what version of the compiler to use.
-        import distutils.msvc9compiler
-        msvc_version = str( distutils.msvc9compiler.get_build_version() )
+        # Set up the MSVC compiler info for wxPython's build
 
-        # When building for Python 3.7 the msvc_version returned will be
-        # "14.1" as that is the version of the BasePlatformToolkit that stock
-        # Python 3.7 was built with, a.k.a v141, which is the default in
-        # Visual Studio 2017. However, waf is using "msvc 15.0" to designate
-        # that version rather than "14.1" so we'll need to catch that case and
-        # fix up the msvc_version accordingly.
-        if msvc_version in ["14.1", "14.2"] and sys.version_info >= (3,7):
-            ##msvc_version = '15.0'
+        PYTHON = conf.options.python if conf.options.python else sys.executable
+        info = getMSVCInfo(PYTHON, conf.options.msvc_arch, set_env=True)
 
-            # On the other hand, microsoft says that v141 and v140 (Visual
-            # Studio 2015) are binary compatible, so for now let's just drop
-            # it back to "14.0" until I get all the details worked out for
-            # using VS 2017+ everywhere for Python 3.7+.
-            msvc_version = '14.0'
+        # WAF uses the VisualStudio version to select the compiler, rather than
+        # the compiler version like we see elsewhere. Luckily we've got that
+        # value in the MSVC info.
+        msvc_version = f"msvc {info.vs_ver}"
 
-        # In some cases (Azure DevOps at least) we're getting "14.1" for Python
-        # 3.6 too. Smash it down to '14.0'
-        if msvc_version == "14.1" and sys.version_info[:2] == (3,6):
-            msvc_version = '14.0'
-
-        conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
+        conf.env['MSVC_VERSIONS'] = [msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
         conf.load('msvc')
     else:
+        # Otherwise, use WAF's default setup for the C and C++ compiler
         conf.load('compiler_c compiler_cxx')
 
+    # Set up Python
     if conf.options.python:
         conf.env.PYTHON = conf.options.python
     conf.load('python')
-    conf.check_python_version(minver=(3,6,0))
+    conf.check_python_version(minver=(3,7,0))
     if isWindows:
         # Search for the Python headers without doing some stuff that could
         # incorrectly fail on Windows. See my_check_python_headers below.

@@ -244,12 +244,12 @@ class GridColMover(wx.EvtHandler):
         self.cellX = 0
         self.didMove = False
         self.isDragging = False
+        self.captured = False
 
         self.Bind(wx.EVT_MOTION, self.OnMouseMove)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnPress)
         self.Bind(wx.EVT_LEFT_UP, self.OnRelease)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
-
 
     def OnDestroy(self, evt):
         assert self.lwin.GetEventHandler() is self
@@ -324,14 +324,15 @@ class GridColMover(wx.EvtHandler):
         colImg = self._CaptureImage(rect)
         self.colWin = ColDragWindow(self.grid,colImg,col)
         self.colWin.Show(False)
-        if wx.Window.GetCapture() is not None:
+        if wx.Window.GetCapture() is None:
             self.lwin.CaptureMouse()
-        evt.Skip()
+            self.captured = True
 
     def OnRelease(self,evt):
         if self.isDragging:
-            if self.lwin.HasCapture():
+            if self.captured and self.lwin.HasCapture():
                 self.lwin.ReleaseMouse()
+            self.captured = False
             self.colWin.Show(False)
             self.isDragging = False
 
@@ -353,7 +354,6 @@ class GridColMover(wx.EvtHandler):
                              GridColMoveEvent(self.grid.GetId(), dCol, bCol))
 
             self.colWin.Destroy()
-        evt.Skip()
 
     def _CaptureImage(self,rect):
         bmp = wx.Bitmap(rect.width,rect.height)
@@ -378,6 +378,7 @@ class GridRowMover(wx.EvtHandler):
         self.cellY = 0
         self.didMove = False
         self.isDragging = False
+        self.captured = False
 
         self.Bind(wx.EVT_MOTION, self.OnMouseMove)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnPress)
@@ -467,14 +468,15 @@ class GridRowMover(wx.EvtHandler):
         rowImg = self._CaptureImage(rect)
         self.rowWin = RowDragWindow(self.grid,rowImg,row)
         self.rowWin.Show(False)
-        if wx.Window.GetCapture() is not None:
+        if wx.Window.GetCapture() is None:
             self.lwin.CaptureMouse()
-        evt.Skip()
+            self.captured = True
 
     def OnRelease(self,evt):
         if self.isDragging:
-            if self.lwin.HasCapture():
+            if self.captured and self.lwin.HasCapture():
                 self.lwin.ReleaseMouse()
+            self.captured = False
             self.rowWin.Show(False)
             self.isDragging = False
 
@@ -496,7 +498,6 @@ class GridRowMover(wx.EvtHandler):
                              GridRowMoveEvent(self.grid.GetId(), dRow, bRow))
 
             self.rowWin.Destroy()
-        evt.Skip()
 
     def _CaptureImage(self,rect):
         bmp = wx.Bitmap(rect.width,rect.height)
