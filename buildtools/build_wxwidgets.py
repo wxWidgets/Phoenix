@@ -315,7 +315,7 @@ def main(wxDir, args):
                     else:
                         arch = "x86_64"
                 else:
-                    # otherwise assume the user klnows what they are doing and just use what they gave us.
+                    # otherwise assume the user knows what they are doing and just use what they gave us.
                     arch = options.mac_universal_binary
                 configure_opts.append("--enable-universal_binary=%s" % arch)
 

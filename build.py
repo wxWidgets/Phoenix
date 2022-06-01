@@ -1047,7 +1047,8 @@ def cmd_docset_py(options, args):
         tarball.add(opj('dist', name+'.docset'), name+'.docset', filter=_setTarItemPerms)
 
     if options.upload:
-        uploadPackage(tarfilename, options)
+        uploadPackage(tarfilename, options, keep=5,
+                      mask='%s-docset-%s*' % (baseName, cfg.VER_MAJOR))
 
     msg("Docset file built at %s" % tarfilename)
 
