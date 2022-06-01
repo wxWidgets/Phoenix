@@ -322,15 +322,6 @@ def setDevModeOptions(args):
     # anybody besides Robin is using this option do not depend on the options
     # it inserts into the args list being consistent. They could change at any
     # update from the repository.
-    if isDarwin:
-        import platform
-        proc = platform.processor()
-        if proc == 'i386':
-            proc = 'x86_64'
-        if proc == 'arm':
-            proc = 'arm64'
-    else:
-        proc = 'unk'
 
     myDevModeOptions = [
             #'--build_dir=../bld',
@@ -340,7 +331,7 @@ def setDevModeOptions(args):
             # These will be ignored on the other platforms so it is okay to
             # include them unconditionally
             '--osx_cocoa',
-            '--mac_arch={}'.format(proc),
+            '--mac_arch=arm64,x86_64',
             '--no_allmo',
             ]
     if not isWindows:
