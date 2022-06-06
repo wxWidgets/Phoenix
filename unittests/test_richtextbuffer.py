@@ -238,7 +238,13 @@ class richtextbuffer_Tests(wtc.WidgetTestCase):
         o1 = wx.richtext.RichTextLine(None)
 
     def test_richtextbuffer26(self):
-        o1 = wx.richtext.RichTextLineList()
+        para = wx.richtext.RichTextParagraph()
+        para.AllocateLine(0)
+        para.AllocateLine(1)
+        lines = para.GetLines()
+        self.assertEqual(len(lines), 2)
+        for l in lines:
+            self.assertTrue(isinstance(l, wx.richtext.RichTextLine))
 
     def test_richtextbuffer27(self):
         o1 = wx.richtext.RichTextParagraph()

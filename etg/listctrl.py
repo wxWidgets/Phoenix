@@ -82,7 +82,7 @@ def run():
             PyObject* args = Py_BuildValue("(LL)", item1, item2);
         #endif
 
-            PyObject* result = PyEval_CallObject(func, args);
+            PyObject* result = PyObject_CallObject(func, args);
             Py_DECREF(args);
             if (result) {
                 retval = wxPyInt_AsLong(result);
@@ -332,6 +332,10 @@ def run():
             return (wxWindow*)self->m_mainWin;
         #endif
         """)
+
+    # Documented wrongly in 3.1.6
+    c.find('RemoveSortIndicator').type = 'void'
+    c.find('RemoveSortIndicator').isConst = False
 
 
     #-------------------------------------------------------

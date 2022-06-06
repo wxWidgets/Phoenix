@@ -49,6 +49,7 @@ INCLUDES = [  # base and core stuff
               'userdata',
               'wxpybuffer',
               'msgdlg_btnlabel',
+              'wxvector',
 
               'stockgdi',
               'longlong',
@@ -76,6 +77,7 @@ INCLUDES = [  # base and core stuff
               'image',
               'gdiobj',
               'bitmap',
+              'bmpbndl',
               'icon', 'iconloc', 'iconbndl',
               'font',
               'fontutil',

@@ -43,7 +43,7 @@ class toolbar_Tests(wtc.WidgetTestCase):
 
         tools = []
         for bmp in bmps:
-            tool = tb.AddTool(-1, 'label', bmp)
+            tool = tb.AddTool(-1, 'label', wx.BitmapBundle(bmp))
             self.assertTrue(isinstance(tool, wx.ToolBarToolBase))
             tools.append(tool)
         tb.Realize()

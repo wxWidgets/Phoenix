@@ -87,6 +87,8 @@ def parseAndTweakModule():
         body="""\
             #ifdef __WXMSW__
                 return self->ShowNativeCaret(show);
+            #else
+                return false;
             #endif
             """)
     c.addCppMethod('bool', 'HideNativeCaret', '()',
@@ -97,6 +99,8 @@ def parseAndTweakModule():
         body="""\
             #ifdef __WXMSW__
                 return self->HideNativeCaret();
+            #else
+                return false;
             #endif
             """)
 
@@ -139,6 +143,18 @@ def parseAndTweakModule():
                 wxPyRaiseNotImplemented();
             #endif
             """)
+
+    # TODO: add support for wxTextProofOptions (only supported on MSW/GTK3)
+    # so will need stubs on other platforms.
+    c.find('EnableProofCheck').ignore()
+    c.find('GetProofCheckOptions').ignore()
+
+    # This method exists only on OSX
+    c.find('OSXEnableNewLineReplacement').setCppCode("""\
+        #ifdef __WXMAC__
+            self->OSXEnableNewLineReplacement(enable);
+        #endif
+        """)
 
 
 

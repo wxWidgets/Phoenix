@@ -2142,7 +2142,7 @@ class SlicesShell(editwindow.EditWindow):
         import re
 
         #sort out only "good" words
-        newlist = re.split("[ \.\[\]=}(\)\,0-9\"]", joined)
+        newlist = re.split(r"[ \.\[\]=}(\)\,0-9\"]", joined)
 
         #length > 1 (mix out "trash")
         thlist = []
@@ -2270,8 +2270,8 @@ class SlicesShell(editwindow.EditWindow):
         or (self.historyIndex >= len(self.history)-2):
             searchOrder = range(len(self.history))
         else:
-            searchOrder = range(self.historyIndex+1, len(self.history)) + \
-                          range(self.historyIndex)
+            ls = list(range(len(self.history)))
+            searchOrder = ls[self.historyIndex+1:] + ls[:self.historyIndex]
         for i in searchOrder:
             command = self.history[i]
             if command[:len(searchText)] == searchText:

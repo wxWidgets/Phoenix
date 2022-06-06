@@ -21,7 +21,7 @@ class Listener(ListenerBase):
     be given the Topic object for the message sent by sendMessage().
     Such a Listener will have wantsTopicObjOnCall() True.
     
-    Callables that have a '\**kargs' argument will receive all message
+    Callables that have a '**kargs' argument will receive all message
     data, not just that for the topic they are subscribed to. Such a listener
     will have wantsAllMessageData() True. 
     """

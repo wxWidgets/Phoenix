@@ -337,8 +337,8 @@ class lib_pubsub_TopicMgr2_GetOrCreate_DefnProv(wtc.PubsubTestCase):
 
 
 class lib_pubsub_TopicMgr3_TreeTraverser(wtc.PubsubTestCase):
-    expectedOutput = '''\
-\-- Topic "a2"
+    expectedOutput = \
+r'''\-- Topic "a2"
     \-- Topic "a"
         \-- Topic "a"
         \-- Topic "b"

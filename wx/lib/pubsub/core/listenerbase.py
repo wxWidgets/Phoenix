@@ -79,7 +79,7 @@ class ListenerBase:
         return self._autoTopicArgName is not None
 
     def wantsAllMessageData(self):
-        """True if this listener wants all message data: it has a \**kwargs argument"""
+        """True if this listener wants all message data: it has a **kwargs argument"""
         return self.acceptsAllKwargs
     
     def _unlinkFromTopic_(self):

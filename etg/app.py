@@ -206,6 +206,14 @@ def run():
     c.addProperty('UseBestVisual GetUseBestVisual SetUseBestVisual')
     c.addProperty('TopWindow GetTopWindow SetTopWindow')
 
+    c.find('GTKSuppressDiagnostics').setCppCode("""\
+        #ifdef __WXGTK__
+            wxApp::GTKSuppressDiagnostics(flags);
+        #endif
+        """)
+
+    c.find('GetGUIInstance').ignore()
+
 
     #-------------------------------------------------------
 

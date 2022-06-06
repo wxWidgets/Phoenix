@@ -45,7 +45,7 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                macSetLoaderNames, \
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
                                getVisCVersion, getToolsPlatformName, updateLicenseFiles, \
-                               TemporaryDirectory
+                               TemporaryDirectory, getMSVCInfo
 from buildtools.wxpysip import sip_runner
 
 import buildtools.version as version
@@ -104,7 +104,7 @@ toolsURL = 'https://wxpython.org/Phoenix/tools'
 
 
 # MS Edge code and DLLs needed for the wxWEBVIEW_BACKEND_EDGE backend
-MS_edge_version = '1.0.622.22'
+MS_edge_version = '1.0.1185.39'
 MS_edge_url = 'https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/{}'.format(MS_edge_version)
 
 #---------------------------------------------------------------------------
@@ -322,15 +322,6 @@ def setDevModeOptions(args):
     # anybody besides Robin is using this option do not depend on the options
     # it inserts into the args list being consistent. They could change at any
     # update from the repository.
-    if isDarwin:
-        import platform
-        proc = platform.processor()
-        if proc == 'i386':
-            proc = 'x86_64'
-        if proc == 'arm':
-            proc = 'arm64'
-    else:
-        proc = 'unk'
 
     myDevModeOptions = [
             #'--build_dir=../bld',
@@ -340,7 +331,7 @@ def setDevModeOptions(args):
             # These will be ignored on the other platforms so it is okay to
             # include them unconditionally
             '--osx_cocoa',
-            '--mac_arch={}'.format(proc),
+            '--mac_arch=arm64,x86_64',
             '--no_allmo',
             ]
     if not isWindows:
@@ -785,37 +776,34 @@ def uploadTree(srcPath, destPath, options, days=30):
 
 def checkCompiler(quiet=False):
     if isWindows:
-        # Make sure that the compiler that Python wants to use can be found.
-        # It will terminate if the compiler is not found or other exceptions
-        # are raised.
-        cmd = "import setuptools, distutils.msvc9compiler as msvc; " \
-              "mc = msvc.MSVCCompiler(); " \
-              "mc.initialize(); " \
-              "print(mc.cc)"
-        CC = runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False)
+        # Set up the PATH and other environment variables so the proper version
+        # of MSVC will be used. The setuptools package is used to find the
+        # needed info, so the target python shoudl have a recent version of
+        # setuptools installed.
+
+        arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
+        info = getMSVCInfo(PYTHON, arch, set_env=True)
+
+        # Make sure there is now a cl.exe on the PATH
+        CL = 'NOT FOUND'
+        for d in os.environ['PATH'].split(os.pathsep):
+            p = pathlib.Path(d, 'cl.exe')
+            if p.exists():
+                CL = p
+                break
         if not quiet:
-            msg("MSVC: %s" % CC)
+            msg(f"CL.exe: {CL}")
 
-        # Now get the environment variables which that compiler needs from
-        # its vcvarsall.bat command and load them into this process's
-        # environment.
-        cmd = "import setuptools, distutils.msvc9compiler as msvc; " \
-              "arch = msvc.PLAT_TO_VCVARS[msvc.get_platform()]; " \
-              "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
-              "print(env)"
-        env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
+            # Just needed for debugging
+            # msg('include: ' + info.include)
+            # msg('lib:     ' + info.lib)
+            # msg('libpath: ' + info.libpath)
+            # for d in info.include.split(os.pathsep):
+            #     p = pathlib.Path(d, 'tchar.h')
+            #     if p.exists():
+            #         msg('tchar.h: ' + str(p))
+            #         break
 
-        def _b(v):
-            return str(v)
-            #if PY2:
-            #    return bytes(v)
-            #else:
-            #    return bytes(v, 'utf8')
-
-        os.environ['PATH'] = _b(env['path'])
-        os.environ['INCLUDE'] = _b(env['include'])
-        os.environ['LIB'] = _b(env['lib'])
-        os.environ['LIBPATH'] = _b(env['libpath'])
 
     # NOTE: SIP is now generating code with scoped-enums. Older linux
     # platforms like what we're using for builds, and also TravisCI for
@@ -1050,7 +1038,8 @@ def cmd_docset_py(options, args):
         tarball.add(opj('dist', name+'.docset'), name+'.docset', filter=_setTarItemPerms)
 
     if options.upload:
-        uploadPackage(tarfilename, options)
+        uploadPackage(tarfilename, options, keep=5,
+                      mask='%s-docset-%s*' % (baseName, cfg.VER_MAJOR))
 
     msg("Docset file built at %s" % tarfilename)
 
@@ -1674,8 +1663,6 @@ def cmd_build_py(options, args):
             build_options.append('--msvc_arch=x86')
     if not isWindows:
         build_options.append('--wx_config=%s' % WX_CONFIG)
-    if options.verbose:
-        build_options.append('--verbose')
     if options.jobs:
         build_options.append('--jobs=%s' % options.jobs)
     if options.relwithdebug:
@@ -1726,7 +1713,7 @@ def cmd_build_py(options, args):
         wafBuildDir = posixjoin(wafBuildBase, 'release')
         build_options.append('--out=%s' % wafBuildDir)
         cmd = '"%s" %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
-        runcmd(cmd)
+        runcmd(cmd, onError=_onWafError)
 
     copyWxDlls(options)
     cmd_build_others(options, args)
@@ -1906,6 +1893,10 @@ def cmd_bdist_wheel(options, args):
     if options.upload:
         filemask = "dist/%s-%s-*.whl" % (baseName, cfg.VERSION)
         filenames = glob.glob(filemask)
+        print(f'**** filemask: {filemask}')
+        print(f'**** matched:  {filenames}')
+        print(f'**** all dist: {glob.glob("dist/*")}')
+
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
         if pdbzip:

@@ -381,8 +381,8 @@ class InfoBar(wx.Control):
         self._button = wx.BitmapButton(self, wx.ID_ANY, bmp, style=wx.BORDER_NONE)
 
         if wx.Platform != '__WXGTK__':
-            self._button.SetBitmapPressed(GetCloseButtonBitmap(self, sizeBmp, colBg, wx.CONTROL_PRESSED))
-            self._button.SetBitmapCurrent(GetCloseButtonBitmap(self, sizeBmp, colBg, wx.CONTROL_CURRENT))
+            self._button.SetBitmapPressed(wx.BitmapBundle(GetCloseButtonBitmap(self, sizeBmp, colBg, wx.CONTROL_PRESSED)))
+            self._button.SetBitmapCurrent(wx.BitmapBundle(GetCloseButtonBitmap(self, sizeBmp, colBg, wx.CONTROL_CURRENT)))
 
         self._button.SetBackgroundColour(colBg)
         self._button.SetToolTip(_("Hide this notification message."))

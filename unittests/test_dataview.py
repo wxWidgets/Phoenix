@@ -87,7 +87,7 @@ class dataview_Tests(wtc.WidgetTestCase):
 
     def test_dataviewIconText2(self):
         icon = wx.Icon(pngFile)
-        dit = dv.DataViewIconText('Smile!', icon)
+        dit = dv.DataViewIconText('Smile!', wx.BitmapBundle(icon))
         dit.Icon
         dit.Text
 
@@ -245,7 +245,7 @@ class dataview_Tests(wtc.WidgetTestCase):
                 return 10
 
             def GetValueByRow(self, row, col):
-                return 'value(%d, %d)' (row, col)
+                return 'value(%d, %d)' % (row, col)
 
             def SetValueByRow(self, value, row, col):
                 return True

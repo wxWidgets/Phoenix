@@ -219,7 +219,7 @@ def run():
                     # force a copy, in case the _colorData is shared
                     self.colour = wx.Colour(colour)
                     bmp = self._makeBitmap()
-                    self.SetBitmapLabel(bmp)
+                    self.SetBitmapLabel(wx.BitmapBundle(bmp))
 
                 def GetColour(self):
                     return self.colour
