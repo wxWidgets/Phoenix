@@ -261,6 +261,7 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.wxEVT_GRID_EDITOR_HIDDEN
         wx.grid.wxEVT_GRID_EDITOR_CREATED
         wx.grid.wxEVT_GRID_CELL_BEGIN_DRAG
+        wx.grid.wxEVT_GRID_ROW_MOVE
         wx.grid.wxEVT_GRID_COL_MOVE
         wx.grid.wxEVT_GRID_COL_SORT
         wx.grid.wxEVT_GRID_TABBING
@@ -287,6 +288,7 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.EVT_GRID_EDITOR_HIDDEN
         wx.grid.EVT_GRID_EDITOR_CREATED
         wx.grid.EVT_GRID_CELL_BEGIN_DRAG
+        wx.grid.EVT_GRID_ROW_MOVE
         wx.grid.EVT_GRID_COL_MOVE
         wx.grid.EVT_GRID_COL_SORT
         wx.grid.EVT_GRID_TABBING
