@@ -46,6 +46,8 @@ def run():
 
     c = module.find('wxPropertyGridPageState')
     tools.ignoreConstOverloads(c)
+    # Incorrectly documented in 3.1.7
+    c.find('GetColumnFullWidth.p').type = 'wxPGProperty *'
 
 
     module.find('wxPG_IT_CHILDREN').ignore()

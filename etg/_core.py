@@ -196,6 +196,7 @@ INCLUDES = [  # base and core stuff
               'dirdlg',
               'dirctrl',
               'filedlg',
+              'filedlgcustomize',
               'frame',
               'msgdlg',
               'richmsgdlg',
