@@ -1485,15 +1485,14 @@ class wxPythonDemo(wx.Frame):
 
         # Create a Notebook
         self.nb = wx.Notebook(pnl, -1, style=wx.CLIP_CHILDREN)
-        if 'wxMac' not in wx.PlatformInfo:
-            imgList = wx.ImageList(16, 16)
-            for png in ["overview", "code", "demo"]:
-                bmp = images.catalog[png].GetBitmap()
-                imgList.Add(bmp)
-            for indx in range(9):
-                bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
-                imgList.Add(bmp)
-            self.nb.AssignImageList(imgList)
+        imgList = wx.ImageList(16, 16)
+        for png in ["overview", "code", "demo"]:
+            bmp = images.catalog[png].GetBitmap()
+            imgList.Add(bmp)
+        for indx in range(9):
+            bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
+            imgList.Add(bmp)
+        self.nb.AssignImageList(imgList)
 
         self.BuildMenuBar()
 
@@ -1537,23 +1536,9 @@ class wxPythonDemo(wx.Frame):
         self.tree.Bind(wx.EVT_LEFT_DOWN, self.OnTreeLeftDown)
 
         # Set up a wx.html.HtmlWindow on the Overview Notebook page
-        # we put it in a panel first because there seems to be a
-        # refresh bug of some sort (wxGTK) when it is directly in
-        # the notebook...
-
-        if 0:  # the old way
-            self.ovr = wx.html.HtmlWindow(self.nb, -1, size=(400, 400))
-            self.nb.AddPage(self.ovr, self.overviewText, imageId=0)
-
-        else:  # hopefully I can remove this hacky code soon, see SF bug #216861
-            panel = wx.Panel(self.nb, -1, style=wx.CLIP_CHILDREN)
-            self.ovr = wx.html.HtmlWindow(panel, -1, size=(400, 400))
-            self.nb.AddPage(panel, self.overviewText, imageId=0)
-
-            def OnOvrSize(evt, ovr=self.ovr):
-                ovr.SetSize(evt.GetSize())
-            panel.Bind(wx.EVT_SIZE, OnOvrSize)
-            panel.Bind(wx.EVT_ERASE_BACKGROUND, EmptyHandler)
+        # for displaying info about each sample in the demo.
+        self.ovr = wx.html.HtmlWindow(self.nb, -1, size=(400, 400))
+        self.nb.AddPage(self.ovr, self.overviewText, imageId=0)
 
         if "gtk2" in wx.PlatformInfo or "gtk3" in wx.PlatformInfo:
             self.ovr.SetStandardFonts()
@@ -2691,7 +2676,7 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         images = i
 
         # For debugging
-        #self.SetAssertMode(wx.PYAPP_ASSERT_DIALOG|wx.PYAPP_ASSERT_EXCEPTION)
+        #self.SetAssertMode(wx.APP_ASSERT_DIALOG|wx.APP_ASSERT_EXCEPTION)
 
         wx.SystemOptions.SetOption("mac.window-plain-transition", 1)
         self.SetAppName("wxPyDemo")
