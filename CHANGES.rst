@@ -24,7 +24,7 @@ New and improved in this release:
   couple release cycles. I can't say that things are fully back to normal yet,
   but at least I now know what I'm doing. Mostly. <wink>
 
-* This release is built using wxWidgets code very near the wxWidgets' 3.1.6
+* This release is built using wxWidgets code very near the wxWidgets' 3.1.7
   release tag.
 
 * Tweaked the build scripts a bit to ensure that on non-Windows platforms that
