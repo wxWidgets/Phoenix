@@ -59,6 +59,17 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.noDefCtor = True
 
+    # Change the AddChoice method to use a wxArrayString instead of a C array
+    # and size.
+    m = c.find('AddChoice')
+    m.find('n').ignore()
+    m.find('strings').type = 'const wxArrayString&'
+    m.argsString = '(size_t n, const wxArrayString& strings)'
+    m.setCppCode("""\
+        const wxString* ptr = &strings->front();
+        return self->AddChoice(strings->size(), ptr);
+        """)
+
     c = module.find('wxFileDialogCustomizeHook')
     assert isinstance(c, etgtools.ClassDef)
 
