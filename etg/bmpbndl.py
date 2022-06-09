@@ -95,6 +95,10 @@ def run():
     m = MethodDef(name='~wxBitmapBundleImpl', isDtor=True, isVirtual=True, protection='protected')
     c.addItem(m)
 
+    c.find('DoGetPreferredSize').ignore(False)
+    c.find('GetIndexToUpscale').ignore(False)
+    c.find('GetNextAvailableScale').ignore(False)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
