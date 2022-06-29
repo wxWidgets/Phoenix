@@ -526,6 +526,10 @@ def deleteIfExists(deldir, verbose=True):
             if verbose:
                 import traceback
                 msg("Error: %s" % traceback.format_exc(1))
+    else:
+        if verbose:
+            msg("Unable to delete: '%s' (it doesn't exist or is not a folder)" % deldir)
+
 
 def delFiles(fileList, verbose=True):
     for afile in fileList:
@@ -1941,7 +1945,7 @@ def cmd_clean_wx(options, args):
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion2_nodot, msw.dll_type))))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion3_nodot, msw.dll_type))))
         if PYTHON_ARCH == '64bit':
-            deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll_x64' % (getVisCVersion(), msw.dll_type)))
+            deleteIfExists(opj(msw.buildDir, 'vc%s_x64_msw%sdll' % (getVisCVersion(), msw.dll_type)))
         else:
             deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll' % (getVisCVersion(), msw.dll_type)))
 
