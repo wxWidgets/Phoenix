@@ -8,13 +8,13 @@
 wxPython Changelog
 ==================
 
-4.1.2 "Rumors of my death are only slightly exaggerated"
+4.2.0 "Rumors of my death are only slightly exaggerated"
 --------------------------------------------------------
 * (unreleased)
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.1.2
+PyPI:   https://pypi.python.org/pypi/wxPython/4.2.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.1.2``
+Pip:    ``pip install wxPython==4.2.0``
 
 New and improved in this release:
 
@@ -24,7 +24,7 @@ New and improved in this release:
   couple release cycles. I can't say that things are fully back to normal yet,
   but at least I now know what I'm doing. Mostly. <wink>
 
-* This release is built using wxWidgets code very near the wxWidgets' 3.1.7
+* This release is built using wxWidgets code very near the wxWidgets' 3.2.0
   release tag.
 
 * Tweaked the build scripts a bit to ensure that on non-Windows platforms that

@@ -37,7 +37,7 @@ def run():
 
     c = module.find('wxBitmapBundle')
     assert isinstance(c, etgtools.ClassDef)
-
+    c.find('wxBitmapBundle').findOverload('xpm').ignore()
     c.find('FromSVG').findOverload('char *data, const wxSize &sizeDef').ignore()
     c.find('FromImpl.impl').transfer = True
 
