@@ -92,6 +92,10 @@ def run():
 
     c.find('SetMask.mask').transfer = True
 
+    # TODO: This is different than the docs, but only on MSW... Remove this
+    # if/when that gets fixed.
+    c.find('UseAlpha').type = 'void'
+
     c.addCppMethod('void', 'SetMaskColour', '(const wxColour& colour)',
         doc="Create a mask for this bitmap based on the pixels with the given colour.",
         body="""\

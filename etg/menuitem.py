@@ -113,9 +113,10 @@ def run():
         """)
 
 
-    c.find('GetBitmap').type = 'wxBitmap*'
-    c.find('GetBitmap').factory = True
-    c.find('GetBitmap').setCppCode("""\
+    m = c.find('GetBitmap').findOverload('checked')
+    m.type = 'wxBitmap*'
+    m.factory = True
+    m.setCppCode("""\
         #ifdef __WXMSW__
             return new wxBitmap(self->GetBitmap(checked));
         #else
@@ -123,7 +124,8 @@ def run():
         #endif
         """)
 
-    c.find('SetBitmap').setCppCode("""\
+    m = c.find('SetBitmap').findOverload('checked')
+    m.setCppCode("""\
         #ifdef __WXMSW__
             self->SetBitmap(*bmp, checked);
         #else

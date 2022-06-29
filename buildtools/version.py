@@ -23,8 +23,8 @@ PROJECT_NAME     = 'wxPython'
 # MINOR numbers each time there is a corresponding bump in the wxWidgets
 # version numbers.
 VER_MAJOR        = 4
-VER_MINOR        = 1
-VER_RELEASE      = 2
+VER_MINOR        = 2
+VER_RELEASE      = 0
 
 VER_FLAGS        = "a1"     # wxPython release flags
 
@@ -61,6 +61,6 @@ VER_FLAGS        = "a1"     # wxPython release flags
 
 # The version numbers of wxWidgets to be used in the build
 wxVER_MAJOR        = 3
-wxVER_MINOR        = 1
-wxVER_RELEASE      = 7  # only used when wxVER_MINOR is an odd value
+wxVER_MINOR        = 2
+wxVER_RELEASE      = 0  # only used when wxVER_MINOR is an odd value
 
