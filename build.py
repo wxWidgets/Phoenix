@@ -1256,7 +1256,7 @@ def cmd_sip(options, args):
         tmpdir = tmpdir.replace('\\', '/')
         src_name = src_name.replace('\\', '/')
         base = os.path.basename(os.path.splitext(src_name)[0])
-        sbf = posixjoin(cfg.SIPOUT, base) + '.sbf'
+        sbf = posixjoin(cfg.ROOT_DIR, cfg.SIPOUT, base) + '.sbf'
         pycode = base[1:] # remove the leading _
         pycode = opj(cfg.ROOT_DIR, cfg.PKGDIR, pycode) + '.py'
 

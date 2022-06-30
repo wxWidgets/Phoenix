@@ -47,7 +47,7 @@ mydbstub.py*
 /sip/cpp/*.cpp
 /sip/cpp-*
 /sip/gen/*.sip
-/sip/siplib/.update
+/sip/siplib
 
 /wx/*.py
 /wx/*.pyc
