@@ -1336,7 +1336,7 @@ def cmd_sip(options, args):
                 else:
                     # ...or totally remove them by replacing those lines with ''
                     import re
-                    srcTxt = re.sub(r'^#line.*\n', '', srcTxt, flags=re.MULTILINE)
+                    srcTxt = re.sub(r'^\s*#line.*\n', '', srcTxt, flags=re.MULTILINE)
                 className = classesNeedingClassInfo.get(os.path.basename(src))
                 if className:
                     srcTxt = injectClassInfo(className, srcTxt)
