@@ -46,7 +46,6 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
                                getVisCVersion, getToolsPlatformName, updateLicenseFiles, \
                                TemporaryDirectory, getMSVCInfo
-from buildtools.wxpysip import sip_runner
 
 import buildtools.version as version
 
@@ -1259,7 +1258,7 @@ def cmd_sip(options, args):
         base = os.path.basename(os.path.splitext(src_name)[0])
         sbf = posixjoin(cfg.SIPOUT, base) + '.sbf'
         pycode = base[1:] # remove the leading _
-        pycode = posixjoin(cfg.PKGDIR, pycode) + '.py'
+        pycode = opj(cfg.ROOT_DIR, cfg.PKGDIR, pycode) + '.py'
 
         # Check if any of the included files are newer than the .sbf file
         # produced by the previous run of sip. If not then we don't need to
@@ -1277,23 +1276,54 @@ def cmd_sip(options, args):
         # module's .py file
         pycode = 'pycode'+base+':'+pycode
 
-        sip_runner(src_name,
-            abi_version = cfg.SIP_ABI,  # siplib abi version
-            warnings = True,            # enable warning messages
-            docstrings = True,          # enable the automatic generation of docstrings
-            release_gil = True,         # always release and reacquire the GIL
-            sip_module = 'wx.siplib',   # the fully qualified name of the sip module
-            sbf_file=sbf,               # File to write the generated file lists to
-            exceptions = False,         # enable support for exceptions
-            tracing = cfg.SIP_TRACE,    # generate code with tracing enabled
-            sources_dir = tmpdir,       # the name of the code directory
-            extracts = [pycode],        # add <ID:FILE> to the list of extracts to generate
-            pyi_extract=pyi_extract,    # the name of the .pyi stub file
-            include_dirs = [
-                os.path.join(phoenixDir(), 'src'),
-                os.path.join(phoenixDir(), 'sip', 'gen'),
-            ])
+        # Write out a pyproject.toml to configure sip
+        pyproject_toml = (
+            '[build-system]\n'
+            'requires = ["sip >=5.5.0, <7"]\n'
+            'build-backend = "sipbuild.api"\n'
+            '\n'
+            '[tool.sip.metadata]\n'
+            'name = "{base}"\n'
+            '\n'
+            '[tool.sip.bindings.{base}]\n'
+            'docstrings = true\n'
+            'release-gil = true\n'
+            'exceptions = false\n'
+            'tracing = {tracing}\n'
+            'protected-is-public = false\n'
+            'generate-extracts = [\'{extracts}\']\n'
+            'pep484-pyi = false\n'
+            '\n'
+            '[tool.sip.project]\n'
+            'abi-version = "{abi_version}"\n'
+            'sip-files-dir = \'{sip_gen_dir}\'\n'
+            'sip-include-dirs = [\'{src_dir}\']\n'
+            'sip-module = "wx.siplib"\n'
+        ).format(
+            base=base,
+            abi_version=cfg.SIP_ABI,
+            tracing=str(cfg.SIP_TRACE).lower(),
+            extracts=pycode,
+            src_dir=opj(phoenixDir(), 'src'),
+            sip_gen_dir=opj(phoenixDir(), 'sip', 'gen'),
+        )
+        with open(opj(tmpdir, 'pyproject.toml'), 'w') as f:
+            f.write(pyproject_toml)
 
+        sip_pwd = pushDir(tmpdir)
+        cmd = 'sip-build --no-compile'
+        runcmd(cmd)
+        del sip_pwd
+
+        # Write out a sip build file (no longer done by sip itself)
+        sip_tmp_out_dir = opj(tmpdir, 'build', base)
+        sip_pwd = pushDir(sip_tmp_out_dir)
+        header = glob.glob('*.h')[0]
+        sources = glob.glob('*.cpp')
+        del sip_pwd
+        with open(sbf, 'w') as f:
+            f.write("sources = {}\n".format(' '.join(sources)))
+            f.write("headers = {}\n".format(header))
 
         classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }
 
@@ -1302,7 +1332,7 @@ def cmd_sip(options, args):
                 srcTxt = f.read()
                 if keepHashLines:
                     # Either just fix the pathnames in the #line lines...
-                    srcTxt = srcTxt.replace(tmpdir, cfg.SIPOUT)
+                    srcTxt = srcTxt.replace(sip_tmp_out_dir, cfg.SIPOUT)
                 else:
                     # ...or totally remove them by replacing those lines with ''
                     import re
@@ -1333,7 +1363,7 @@ def cmd_sip(options, args):
         # Check each file in tmpdir to see if it is different than the same file
         # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
         # ignore it.
-        for src in glob.glob(tmpdir + '/*'):
+        for src in glob.glob(sip_tmp_out_dir + '/*'):
             dest = opj(cfg.SIPOUT, os.path.basename(src))
             if not os.path.exists(dest):
                 msg('%s is a new file, copying...' % os.path.basename(src))
@@ -1355,6 +1385,17 @@ def cmd_sip(options, args):
 
         # Remove tmpdir and its contents
         shutil.rmtree(tmpdir)
+
+    # Generate sip module code
+    deleteIfExists(cfg.SIPINC)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        cmd = 'sip-module --sdist --abi-version {} --target-dir {} wx.siplib'.format(cfg.SIP_ABI, tmpdir)
+        runcmd(cmd)
+        tf_name = glob.glob(tmpdir + '/*.tar*')[0]
+        tf_dir = os.path.splitext(os.path.splitext(tf_name)[0])[0]
+        with tarfile.open(tf_name) as tf:
+            tf.extractall(tmpdir)
+        shutil.move(tf_dir, cfg.SIPINC)
 
 
 def cmd_touch(options, args):
