@@ -168,6 +168,12 @@ def main(args):
     os.environ['PYTHONUNBUFFERED'] = 'yes'
     os.environ['WXWIN'] = wxDir()
 
+    # Ensure that PYTHON's containing folder is on the PATH. Normally it will
+    # already be there, and probably at the beginning. But if this script was
+    # invoked with a venv Python without activating the venv (like we do on the
+    # BuildBot) then it may not be in the PATH at all.
+    os.environ['PATH'] += os.pathsep + os.path.dirname(PYTHON)
+
     wxpydir = os.path.join(phoenixDir(), "wx")
     if not os.path.exists(wxpydir):
         os.makedirs(wxpydir)
