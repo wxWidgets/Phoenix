@@ -59,6 +59,7 @@ mydbstub.py*
 /wx/libwx_*
 /wx/locale
 /wx/*.dll
+/wx/include/wxPython/sip.h
 
 /wx/svg/*.so
 /wx/svg/*.pyd
