@@ -25,6 +25,7 @@ cfg = Config(True)
 APPNAME = 'wxPython'
 VERSION = cfg.VERSION
 
+skipMSVC = os.getenv('CC_NAME') in ['gcc', 'clang']
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
@@ -33,7 +34,7 @@ out = 'build/waf'
 
 
 def options(opt):
-    if isWindows:
+    if isWindows and not skipMSVC:
         opt.load('msvc')
     else:
         opt.load('compiler_c compiler_cxx')
@@ -65,7 +66,7 @@ def options(opt):
 
 
 def configure(conf):
-    if isWindows:
+    if isWindows and not skipMSVC:
         # Set up the MSVC compiler info for wxPython's build
 
         PYTHON = conf.options.python if conf.options.python else sys.executable
@@ -79,6 +80,11 @@ def configure(conf):
         conf.env['MSVC_VERSIONS'] = [msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
         conf.load('msvc')
+    elif isWindows:
+        if os.getenv('CC_NAME') == 'gcc':
+            conf.load('gcc gxx winres')
+        elif os.getenv('CC_NAME') == 'clang':
+            conf.load('clang clangxx winres')
     else:
         # Otherwise, use WAF's default setup for the C and C++ compiler
         conf.load('compiler_c compiler_cxx')
@@ -103,7 +109,7 @@ def configure(conf):
     # Ensure that the headers in siplib and Phoenix's src dir can be found
     conf.env.INCLUDES_WXPY = ['sip/siplib', 'wx/include', 'src']
 
-    if isWindows:
+    if isWindows and not skipMSVC:
         # Windows/MSVC specific stuff
 
         cfg.finishSetup(debug=conf.env.debug)
@@ -643,7 +649,7 @@ def copyFileToPkg(task):
     open(tgt, "wb").close() # essentially just a unix 'touch' command
     tgt = opj(cfg.PKGDIR, os.path.basename(src))
     copy_file(src, tgt, verbose=1)
-    if isWindows and task.env.msvc_relwithdebug:
+    if isWindows and not skipMSVC and task.env.msvc_relwithdebug:
         # also copy the .pdb file
         src = src.replace('.pyd', '.pdb')
         tgt = opj(cfg.PKGDIR, os.path.basename(src))
@@ -697,7 +703,7 @@ def makeETGRule(bld, etgScript, moduleName, libFlags):
 
 # Add flags to create .pdb files for debugging with MSVC
 def addRelwithdebugFlags(bld, moduleName):
-    if isWindows and bld.env.msvc_relwithdebug:
+    if isWindows and not skipMSVC and bld.env.msvc_relwithdebug:
         compile_flags = ['/Zi', '/Fd_tmp_{}.pdb'.format(moduleName)]
         if sys.version_info > (3,5):
             # It looks like the /FS flag doesn't exist in the compilers used

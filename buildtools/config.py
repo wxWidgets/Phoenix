@@ -71,7 +71,10 @@ class Configuration(object):
     WXDLLVER = None
     # Version part of wxWidgets LIB/DLL names
 
-    COMPILER = 'msvc'
+    if os.getenv('CC_NAME') in ['gcc', 'clang']:
+        COMPILER = 'mingw32'
+    else:
+        COMPILER = 'msvc'
     # Used to select which compiler will be used on Windows.  This not
     # only affects distutils, but also some of the default flags and
     # other assumptions in this script.  Current supported values are
