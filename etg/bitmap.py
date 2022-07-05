@@ -209,8 +209,8 @@ def run():
             parameters must be a Python object that implements the buffer
             interface, such as a string, bytearray, etc.  The data object
             is expected to contain a series of RGB bytes and be at least
-            ``(width ∗ height ∗ 3)`` bytes long, while the alpha object is expected
-            to be ``(width ∗ height)`` bytes long and represents the image's alpha
+            ``(width * height * 3)`` bytes long, while the alpha object is expected
+            to be ``(width * height)`` bytes long and represents the image's alpha
             channel.  On Windows and Mac the RGB values will be
             'premultiplied' by the alpha values.  (The other platforms do
             the multiplication themselves.)
@@ -260,7 +260,7 @@ def run():
             Creates a :class:`wx.Bitmap` from in-memory data.  The data parameter
             must be a Python object that implements the buffer interface, such
             as a string, bytearray, etc.  The data object is expected to contain
-            a series of RGB bytes and be at least ``(width ∗ height ∗ 3)`` bytes long.
+            a series of RGB bytes and be at least ``(width * height * 3)`` bytes long.
 
             Unlike :func:`wx.ImageFromBuffer` the bitmap created with this function
             does not share the memory block with the buffer object.  This is
@@ -300,7 +300,7 @@ def run():
             Creates a :class:`wx.Bitmap` from in-memory data.  The data parameter
             must be a Python object that implements the buffer interface, such
             as a string, bytearray, etc.  The data object is expected to contain
-            a series of RGBA bytes and be at least ``(width ∗ height ∗ 4)`` bytes long.
+            a series of RGBA bytes and be at least ``(width * height * 4)`` bytes long.
             On Windows and Mac the RGB values will be 'premultiplied' by the
             alpha values.  (The other platforms do the multiplication themselves.)
 
