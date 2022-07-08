@@ -496,8 +496,14 @@ class mupdfProcessor(object):
             stream = bytearray(pdf_file.read())
             self.pdfdoc = fitz.open(pathname, stream)
 
-        self.numpages = self.pdfdoc.pageCount
-        page = self.pdfdoc.loadPage(0)
+        try:
+            self.numpages = self.pdfdoc.page_count
+        except AttributeError: # old PyMuPDF version
+            self.numpages = self.pdfdoc.pageCount
+        try:
+            page = self.pdfdoc.load_page(0)
+        except AttributeError: # old PyMuPDF version
+            page = self.pdfdoc.loadPage(0)
         self.pagewidth = page.bound().width
         self.pageheight = page.bound().height
         self.page_rect = page.bound()
@@ -512,10 +518,17 @@ class mupdfProcessor(object):
 
     def RenderPage(self, gc, pageno, scale=1.0):
         " Render the set of pagedrawings into gc for specified page "
-        page = self.pdfdoc.loadPage(pageno)
+        try:
+            page = self.pdfdoc.load_page(pageno)
+        except AttributeError: # old PyMuPDF version
+            page = self.pdfdoc.loadPage(pageno)
         matrix = fitz.Matrix(scale, scale)
         try:
-            pix = page.getPixmap(matrix=matrix, alpha=False)   # MUST be keyword arg(s)
+            try:
+                # MUST be keyword arg(s)
+                pix = page.get_pixmap(matrix=matrix, alpha=False)
+            except AttributeError: # old PyMuPDF version
+                pix = page.getPixmap(matrix=matrix, alpha=False)
             bmp = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
             gc.DrawBitmap(bmp, 0, 0, pix.width, pix.height)
             self.zoom_error = False
