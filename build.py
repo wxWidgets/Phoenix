@@ -2157,10 +2157,16 @@ def cmd_sdist(options, args):
 
     # copy Phoenix's generated code into the archive tree
     msg('Copying generated files...')
-    for srcdir in ['cpp', 'gen']:
+    os.mkdir(posixjoin(PDEST, 'sip', 'siplib'))
+    for srcdir in ['cpp', 'gen', 'siplib']:
         destdir = posixjoin(PDEST, 'sip', srcdir)
         for name in glob.glob(posixjoin('sip', srcdir, '*')):
-            copyFile(name, destdir)
+            try:
+                copyFile(name, destdir)
+            except IsADirectoryError:
+                pass
+    sip_h_dir = posixjoin(cfg.PKGDIR, 'include', 'wxPython')
+    copyFile(posixjoin(sip_h_dir, 'sip.h'), posixjoin(PDEST, sip_h_dir))
     for wc in ['*.py', '*.pi', '*.pyi']:
         destdir = posixjoin(PDEST, cfg.PKGDIR)
         for name in glob.glob(posixjoin(cfg.PKGDIR, wc)):
