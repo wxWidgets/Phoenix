@@ -142,12 +142,15 @@ class Configuration(object):
         self.finishSetup()
 
 
-    def finishSetup(self, wx_config=None, debug=None):
+    def finishSetup(self, wx_config=None, debug=None, compiler=None):
         if wx_config is not None:
             self.WX_CONFIG = wx_config
 
         if debug is not None:
             self.debug = debug
+
+        if compiler is not None:
+            self.COMPILER = compiler
 
         #---------------------------------------
         # MSW specific settings
