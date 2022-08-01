@@ -129,7 +129,11 @@ class wx_build(orig_build):
                 'message and the wxWidgets and Phoenix build steps in the future.\n')
 
             # Use the same Python that is running this script.
-            cmd = ['"{}"'.format(sys.executable), '-u', 'build.py', 'build']
+            if isWindows:
+                cmd = ['"{}"'.format(sys.executable), '-u', 'build.py', 'dox',
+                       'etg', '--nodoc', 'sip', 'build_wx', 'build_py']
+            else:
+                cmd = ['"{}"'.format(sys.executable), '-u', 'build.py', 'build']
             cmd = ' '.join(cmd)
             runcmd(cmd)
 
