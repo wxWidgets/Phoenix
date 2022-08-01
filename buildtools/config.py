@@ -906,6 +906,9 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True, onError=None):
         output = output.rstrip()
 
     rval = sp.wait()
+    if output is not None:
+        output = output.replace('\x00', '')
+
     if rval:
         # Failed!
         #raise subprocess.CalledProcessError(rval, cmd)
