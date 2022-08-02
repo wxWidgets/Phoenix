@@ -906,6 +906,10 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True, onError=None):
         output = output.rstrip()
 
     rval = sp.wait()
+
+    # on Windows for some reason the output can contain a bunch of NULL
+    # characters. this ends up adding a space at each character in the output.
+    # here we do a simple check for NULL characters and remove them.
     if output is not None:
         output = output.replace('\x00', '')
 
@@ -959,10 +963,10 @@ def getSipFiles(names):
     return files
 
 
-
 def getVisCVersion():
-    from . import msvc
-    environment = msvc.setup_environment(minimum_c_version=14.2)
+    import pyMSVC  # NOQA
+
+    environment = pyMSVC.setup_environment(minimum_c_version=14.2)
     version = environment.visual_c.version
     return version.split('.')[0] + '0'
 

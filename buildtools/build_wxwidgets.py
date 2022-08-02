@@ -69,9 +69,9 @@ def getVisCVersion():
     global win_environment
 
     if win_environment is None:
-        from . import msvc
+        import pyMSVC  # NOQA
 
-        win_environment = msvc.setup_environment(minimum_c_version=14.2)
+        win_environment = pyMSVC.setup_environment(minimum_c_version=14.2)
 
     return win_environment.visual_c.version.split('.')[0] + '0'
 
@@ -447,9 +447,9 @@ def main(wxDir, args):
 
         args = []
         if toolkit == "msvc":
-            print("setting build options...")
-            from . import msvc
-            environment = msvc.setup_environment(minimum_c_version=14.2)
+            # print("setting build options...")
+            # import pyMSVC  # NOQA
+            # environment = pyMSVC.setup_environment(minimum_c_version=14.2)
             # if (
             #     not options.jom and
             #     environment.visual_c.has_cmake and

@@ -2,6 +2,7 @@
 requires=[
     "setuptools>=57.5.0",
     "wheel",
+    "pyMSVC;sys_platform=='win32'",
     "appdirs",
     "sip==5.5.0",
     "twine",

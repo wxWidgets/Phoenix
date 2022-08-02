@@ -789,7 +789,7 @@ def checkCompiler(quiet=False):
         global win_environment
 
         if win_environment is None:
-            from buildtools import msvc
+            import pyMSVC  # NOQA
 
             # setup the build environment making the minimum conpiler version
             # 14.2 A user does not need to have a full blown Visual Studio
@@ -829,7 +829,7 @@ def checkCompiler(quiet=False):
             # using the /std compiler switch. You have to specifically tell
             # the compiler to update the value for the __cplusplus macro
             # using "/Zc:__cplusplus"
-            win_environment = msvc.setup_environment(minimum_c_version=14.2)
+            win_environment = pyMSVC.setup_environment(minimum_c_version=14.2)
 
             if not quiet:
                 # this gives a simple output of the build environment.
