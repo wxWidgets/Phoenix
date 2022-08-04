@@ -24,8 +24,7 @@ New and improved in this release:
   couple release cycles. I can't say that things are fully back to normal yet,
   but at least I now know what I'm doing. Mostly. <wink>
 
-* This release is built using wxWidgets code very near the wxWidgets' 3.2.0
-  release tag.
+* This release is built using the wxWidgets' 3.2.0 release tag.
 
 * Tweaked the build scripts a bit to ensure that on non-Windows platforms that
   the compiler and flags used by default match those used by wxWidgets, (with
@@ -38,10 +37,12 @@ New and improved in this release:
   wxPython should now be buildable with Visual Studio versions from 2015 through
   2022+.
 
-* Switched to SIP 5 for generating the wrapper code. Rather than a standalone
+* Switched to SIP 6 for generating the wrapper code. Rather than a standalone
   executable, SIP is now a Python package that needs to be installed in the
   Python environment used for the build. A dependency has been added to
   requirements/devel.txt to help ensure that the correct version is installed.
+  The wx.siplib module code is no longer kept in the repository, but is
+  generated during build.
 
 * Changed wx.App.InitLocale to just do `locale.setlocale(locale.LC_ALL, "C")`
   to undo what Python (3.8+ on Windows) does. This lets wxWidgets start with an
@@ -70,6 +71,37 @@ New and improved in this release:
   will automatically convert from a wx.Bitmap to a wx.BitmapBundle containing
   the single image where it is needed.
 
+* Add support for new wx.grid event, EVT_GRID_ROW_MOVE
+
+* Fix path issues in wx.lib.agw.multidirdialog (#2120)
+
+* Fix eventwatcher checkAll(check=False) (#2139)
+
+* Fix exception on grid labels click in 4.1.1a (#1841)
+
+* Fix a large number of Python 3.10 issues.  In Python 3.10, a change was
+  implemented where extension functions that take integer arguments will no
+  longer silently accept non-integer arguments (e.g., floats) that can only be
+  converted to integers with a loss of precision.  Fixed most of these issues
+  in the pure-Python classes and demos by explicitly converting the parameters
+  to int before passing them to wxWidgets.  There is loss of precision, but
+  this was happening before (automatically) anyway as most wxWidgets
+  DeviceContext functions operate using integers.
+
+* Fix PlotCanvas point label drawing on Linux
+
+* Fix GetPopupMenu override for wx.adv.TaskbarIcon (#2067)
+
+* Fix invisible text in lib.plot with dark theme
+
+* Add new button type: ShowHideToggleButton.  Like a ToggleButton, but with an
+  associated "menu", a Window or Sizer which is shown/hidden when button is
+  toggled. Includes methods for setting active and inactive fore/background
+  colours.
+
+* Fix unbinding of events in FIFO order (#2027)
+
+* Enable customization of layout of pdfviewer button panel
 
 
 
