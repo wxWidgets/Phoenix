@@ -76,8 +76,8 @@ def _cycleidxs(indexcount, maxvalue, step):
             pacc.MoveTo(pdata, 0, 0)
             outcolor = pacc.Get()[:3]
         else:
-            outcolor = dc.GetPixel(0,0)
-        return outcolor == color
+            outcolor = dc.GetPixel(0, 0)
+        return outcolor[:indexcount] == color[:indexcount]
 
     if indexcount == 0:
         yield ()
@@ -242,6 +242,7 @@ class DrawObject:
         if not self._Canvas.HitDict:
             self._Canvas.MakeHitDict()
         self._Canvas.HitDict[Event][self.HitColor] = (self) # put the object in the hit dict, indexed by its color
+
 
     def UnBindAll(self):
         """
