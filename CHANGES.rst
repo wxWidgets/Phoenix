@@ -10,7 +10,7 @@ wxPython Changelog
 
 4.2.0 "Rumors of my death are only slightly exaggerated"
 --------------------------------------------------------
-* (unreleased)
+* 7-Aug-2022
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.2.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
@@ -42,14 +42,14 @@ New and improved in this release:
   Python environment used for the build. A dependency has been added to
   requirements/devel.txt to help ensure that the correct version is installed.
   The wx.siplib module code is no longer kept in the repository, but is
-  generated during build.
+  generated during the build.
 
 * Changed wx.App.InitLocale to just do `locale.setlocale(locale.LC_ALL, "C")`
   to undo what Python (3.8+ on Windows) does. This lets wxWidgets start with an
   uninitialized locale as it expects. (#1637)
 
-* Fixed issues related to `time_t` being treated as a 32-bit value on Windows.
-  (#1910)
+* Fixed issues related to `time_t` always being treated as a 32-bit value on
+  Windows. (#1910)
 
 * Added wx.FullScreenEvent and wx.EVT_FULLSCREEN.
 
@@ -69,7 +69,7 @@ New and improved in this release:
   the display density. Existing code should be able to continue to pass a
   wx.Bitmap to the widget constructor or to methods like SetBitmap, as wxPython
   will automatically convert from a wx.Bitmap to a wx.BitmapBundle containing
-  the single image where it is needed.
+  the single image provided.
 
 * Add support for new wx.grid event, EVT_GRID_ROW_MOVE
 
