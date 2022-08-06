@@ -108,7 +108,8 @@ New and improved in this release:
 * IntCtrl: Change default colour to wx.NullColour so the default color will be
   used. (#2215)
 
-* Change PopupControl to respect all the parameters passed to it's init (#2218)
+* Change PopupControl to respect all the parameters passed to its init method.
+  (#2218)
 
 * Fixes in flatmenu.py Remove and DestroyItem (#2219)
 
