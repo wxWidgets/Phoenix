@@ -103,6 +103,16 @@ New and improved in this release:
 
 * Enable customization of layout of pdfviewer button panel
 
+* Support newer PyMuPDF versions (#2205)
+
+* IntCtrl: Change default colour to wx.NullColour so the default color will be
+  used. (#2215)
+
+* Change PopupControl to respect all the parameters passed to it's init (#2218)
+
+* Fixes in flatmenu.py Remove and DestroyItem (#2219)
+
+
 
 
 4.1.1 "An attitude of gratitude"
