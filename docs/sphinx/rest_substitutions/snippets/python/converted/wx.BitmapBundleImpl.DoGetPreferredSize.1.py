@@ -20,8 +20,8 @@
             return bitmap
 
         def GetNextAvailableScale(self, idx):
-            # The zero marks the end of available scales, and it this method
-            # won't be called again after the zero is returned.
+            # The zero marks the end of available scales, and it means this
+            # method won't be called again after the zero is returned.
             availableScales =  [1.0, 1.5, 2.0, 0]
             scale = availableScales[idx]
             idx += 1
