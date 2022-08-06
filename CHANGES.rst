@@ -112,6 +112,8 @@ New and improved in this release:
 
 * Fixes in flatmenu.py Remove and DestroyItem (#2219)
 
+* Using the MinGW toolchain to build wxPython has been simplified a bit. (#2211)
+
 
 
 
