@@ -398,7 +398,7 @@ class IntCtrl(wx.TextCtrl):
                 name = "integer",
                 min=None, max=None,
                 limited = 0, allow_none = 0, allow_long = 0,
-                default_color = wx.BLACK, oob_color = wx.RED,
+                default_color = wx.NullColour, oob_color = wx.RED,
         ):
         """
         Default constructor
