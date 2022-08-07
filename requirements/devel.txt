@@ -9,7 +9,7 @@ wheel
 twine
 requests
 requests[security]
-cython==0.29.24
+cython==0.29.32
 pytest
 pytest-xdist
 pytest-forked
