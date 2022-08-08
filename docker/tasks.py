@@ -29,6 +29,8 @@ OLD = [ 'debian-9',
         'fedora-31',
         'fedora-32',
         'fedora-33',
+        'centos-7',
+        'centos-8',
         ]
 
 
