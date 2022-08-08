@@ -72,10 +72,10 @@ HOWTO Release wxPython Phoenix
 
 16. Save a copy of everything to the NAS::
 
-        mkdir /stuff/Development/wxPython/wxPython4/extras/$VERSION
-        cp -v wxPython-[^0-9]* /stuff/Development/wxPython/wxPython4/extras/$VERSION
-        cp -v wxPython-4* /stuff/Development/wxPython/wxPython4/pypi
-        cp -rv linux /stuff/Development/wxPython/wxPython4/extras
+        mkdir /Volumes/STUFF/Development/wxPython/wxPython4/extras/$VERSION
+        cp -v wxPython-[^0-9]* /Volumes/STUFF/Development/wxPython/wxPython4/extras/$VERSION
+        cp -v wxPython-4* /Volumes/STUFF/Development/wxPython/wxPython4/pypi
+        cp -rv linux /Volumes/STUFF/Development/wxPython/wxPython4/extras
 
 17. Tag the released revision in git, using a name like wxPython-4.0.0 (using
     the actual version number of course.) Push the tag to all remotes.
