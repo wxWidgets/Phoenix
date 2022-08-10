@@ -27,8 +27,6 @@ from distutils.dep_util  import newer
 
 import distutils.sysconfig
 
-from attrdict import AttrDict
-
 runSilently = False
 
 #----------------------------------------------------------------------
@@ -991,6 +989,8 @@ def getMSVCInfo(PYTHON, arch, set_env=False):
     global MSVCinfo
     if MSVCinfo is not None:
         return MSVCinfo
+
+    from attrdict import AttrDict
 
     # Note that it starts with a monkey-patch in setuptools.msvc to
     # workaround this issue: pypa/setuptools#1902
