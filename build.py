@@ -1286,7 +1286,7 @@ def cmd_sip(options, args):
         # Write out a pyproject.toml to configure sip
         pyproject_toml = textwrap.dedent("""\
             [build-system]
-            requires = ["sip >=5.5.0, <7"]
+            requires = ["sip >=6.6.2, <7"]
             build-backend = "sipbuild.api"
 
             [tool.sip.metadata]
