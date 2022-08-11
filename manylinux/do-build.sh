@@ -4,7 +4,7 @@
 # actual build of the Phoenix wheels. See tasks.py and README.md for details.
 #--------------------------------------------------------------------------
 set -o errexit
-set -o xtrace
+#set -o xtrace
 
 export PYTHONUNBUFFERED=1
 
@@ -70,7 +70,6 @@ function do_build() {
 
     # do the manylinux magic
     auditwheel show dist/wxPython-$VERSION-*linux*.whl
-    # auditwheel repair -w dist --strip dist/*.whl
     auditwheel repair -w dist  dist/*.whl
 
     # do a quickie smoke-test with a virtual env
