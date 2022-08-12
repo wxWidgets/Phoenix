@@ -33,9 +33,7 @@ Building is simple. You need a system with docker available, and you need a
 wxPython sdist to be present in the ../dist folder. This makes it easy to build
 using the exact same source code that was used to build already released
 versions of wxPython, and also saves the time needed for the code generation
-steps. The Python invoke package is also needed, but if you used
-../requirements.txt to install packages into your Python then you've already got
-it.
+steps. The Python invoke package is also needed.
 
 To start a build run a command like the following:
 
