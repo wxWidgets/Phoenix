@@ -11,7 +11,7 @@ export PYTHONUNBUFFERED=1
 VERSION=$1
 shift
 PYTHONS="$@"
-if [ -z $PYTHONS ]; then
+if [ "" == "$PYTHONS" ]; then
     PYTHONS=3.8
 fi
 
@@ -70,13 +70,13 @@ function do_build() {
 
     # do the manylinux magic
     auditwheel show dist/wxPython-$VERSION-*linux*.whl
-    auditwheel repair -w dist  dist/*.whl
+    auditwheel repair -w dist  dist/wxPython-$VERSION-*linux*.whl
 
     # do a quickie smoke-test with a virtual env
     mkdir tmp
     $PYTHON -m venv tmp/test
     tmp/test/bin/pip install -U pip
-    tmp/test/bin/pip install dist/wxPython-*manylinux*
+    tmp/test/bin/pip install dist/wxPython-*manylinux*.whl
     tmp/test/bin/python -c "import wx; print(wx.version())"
     rm -rf tmp
 
