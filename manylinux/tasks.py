@@ -60,6 +60,6 @@ def build(ctx, pythons='', keep=False, interactive=False, arch='x86_64'):
     pythons = pythons.split(',')
     pythons = ' '.join(pythons)
     cmd = f'/scripts/do-build.sh {version} {pythons}'
-    extra = '-e INTERACTIVE=1' if interactive else ''
+    extra = '-e INTERACTIVE=yes' if interactive else ''
     run(ctx, cmd, keep, extra, arch)
 

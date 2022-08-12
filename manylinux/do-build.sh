@@ -93,7 +93,7 @@ for pyver in $PYTHONS; do
     do_build $pyver
 done
 
-if [ -n $INTERACTIVE ]; then
+if [ "$INTERACTIVE" == "yes" ]; then
     exec /bin/bash -i
 fi
 
