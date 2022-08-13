@@ -84,6 +84,11 @@ function do_build() {
     mv dist/wxPython-*-manylinux*.whl /dist
     rm dist/wxPython-*.whl
     export PATH=$OLD_PATH
+
+    # Clean up the Python parts of this build, since we can do more than one
+    # build per invocation of the docker image.
+    rm -rf build/waf
+    rm -f wx/* || true
 }
 
 
