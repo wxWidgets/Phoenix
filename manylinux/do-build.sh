@@ -87,8 +87,8 @@ function do_build() {
 
     # Clean up the Python parts of this build, since we can do more than one
     # build per invocation of the docker image.
-    rm -rf build/waf
-    rm -f wx/* || true
+    rm -rf build/waf wx/__pycache__
+    rm -f wx/*.so || true
 }
 
 
