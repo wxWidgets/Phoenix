@@ -779,7 +779,7 @@ class FloatCanvas(wx.Panel):
             BoundingBox = self.BoundingBox
         if (BoundingBox is not None) and (not BoundingBox.IsNull()):
             self.ViewPortCenter = N.array(((BoundingBox[0,0]+BoundingBox[1,0])/2,
-                                         (BoundingBox[0,1]+BoundingBox[1,1])/2 ),float_)
+                                         (BoundingBox[0,1]+BoundingBox[1,1])/2 ),N.float_)
             self.MapProjectionVector = self.ProjectionFun(self.ViewPortCenter)
             # Compute the new Scale
             BoundingBox = BoundingBox*self.MapProjectionVector # this does need to make a copy!
