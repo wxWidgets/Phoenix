@@ -144,10 +144,12 @@ class ColumnSorterMixin:
         """
         Return a tuple containing the index of the column that was last sorted
         and the sort direction of that column.
-        Usage:
-        col, ascending = self.GetSortState()
-        # Make changes to list items... then resort
-        self.SortListItems(col, ascending)
+
+        Usage::
+
+            col, ascending = self.GetSortState()
+            # Make changes to list items... then resort
+            self.SortListItems(col, ascending)
         """
         return (self._col, self._colSortFlag[self._col])
 
