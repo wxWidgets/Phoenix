@@ -185,7 +185,7 @@ class listctrl_Tests(wtc.WidgetTestCase):
     def test_listctrlItemData02(self):
         lc = self._makeListCtrl()
         with self.assertRaises(OverflowError):
-            lc.SetItemData(0, wx._core._LONG_MAX + 100)
+            lc.SetItemData(0, wx._core._LLONG_MAX + 100)
 
 
     def test_listctrlDeleteAllColumns(self):
