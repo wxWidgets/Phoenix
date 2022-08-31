@@ -335,11 +335,7 @@ bool wxPyApp::IsDisplayAvailable()
         //
         // [NSRunningApplication activateIgnoringOtherApps: YES]  ??
         // 
-        if (GetCurrentProcess(&psn) < 0 || SetFrontProcess(&psn) < 0) {
-            rv = false;
-        } else {
-            rv = true;
-        }
+        rv = true;
     }
     return rv;
 #endif
