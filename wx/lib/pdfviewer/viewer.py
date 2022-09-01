@@ -296,7 +296,7 @@ class pdfViewer(wx.ScrolledWindow):
 
         """
         if pagenum > 0 and pagenum <= self.numpages:
-            self.Scroll(0, pagenum*self.Ypagepixels/self.GetScrollPixelsPerUnit()[1] + 1)
+            self.Scroll(0, pagenum * self.Ypagepixels // self.GetScrollPixelsPerUnit()[1] + 1)
         else:
             self.Scroll(0, 0)
         # calling Scroll sometimes doesn't raise wx.EVT_SCROLLWIN eg Windows 8 64 bit - so
@@ -351,7 +351,7 @@ class pdfViewer(wx.ScrolledWindow):
 
         # adjust inter-page gap so Ypagepixels is a whole number of scroll increments
         # and page numbers change precisely on a scroll click
-        idiv = self.Ypagepixels/self.scrollrate
+        idiv = self.Ypagepixels // self.scrollrate
         nlo = idiv * self.scrollrate
         nhi = (idiv + 1) * self.scrollrate
         if nhi - self.Ypagepixels < self.Ypagepixels - nlo:
