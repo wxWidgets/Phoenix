@@ -140,7 +140,7 @@ class KnobCtrlDemo(wx.Panel):
         minvalue = self.knob1.GetMinValue()
         maxvalue = self.knob1.GetMaxValue()
 
-        therange = (maxvalue-minvalue)/(event.GetPosition()-1)
+        therange = int((maxvalue-minvalue)/(event.GetPosition()-1))
         tickrange = range(minvalue, maxvalue+1, therange)
         self.knob1.SetTags(tickrange)
 
