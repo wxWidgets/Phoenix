@@ -49,15 +49,15 @@ class PenStyleComboBox(wx.adv.OwnerDrawnComboBox):
 
         if flags & wx.adv.ODCB_PAINTING_CONTROL:
             # for painting the control itself
-            dc.DrawLine( r.x+5, r.y+r.height/2, r.x+r.width - 5, r.y+r.height/2 )
+            dc.DrawLine( r.x+5, int(r.y+r.height/2), r.x+r.width - 5, int(r.y+r.height/2) )
 
         else:
             # for painting the items in the popup
             dc.DrawText(self.GetString( item ),
                         r.x + 3,
-                        (r.y + 0) + ( (r.height/2) - dc.GetCharHeight() )/2
+                        int((r.y + 0) + ( (r.height/2) - dc.GetCharHeight() )/2)
                         )
-            dc.DrawLine( r.x+5, r.y+((r.height/4)*3)+1, r.x+r.width - 5, r.y+((r.height/4)*3)+1 )
+            dc.DrawLine( r.x+5, int(r.y+((r.height/4)*3)+1), r.x+r.width - 5, int(r.y+((r.height/4)*3)+1) )
 
 
     # Overridden from OwnerDrawnComboBox, called for drawing the
