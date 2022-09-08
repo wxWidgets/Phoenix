@@ -10,7 +10,10 @@ and lists them along with a backlink to the original location.
 from docutils import nodes
 
 from sphinx.locale import _
-from sphinx.environment import NoUri
+try:
+    from sphinx.errors import NoUri         # since Sphinx 3.0
+except ImportError:
+    from sphinx.environment import NoUri    # till Sphinx 3.0
 from sphinx.util.nodes import set_source_info
 from docutils.parsers.rst import Directive
 
