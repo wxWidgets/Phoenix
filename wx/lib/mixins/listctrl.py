@@ -588,7 +588,7 @@ class TextEditMixin:
                 # scroll a bit more than what is minimum required
                 # so we don't have to scroll every time the user presses TAB
                 # which is very tireing to the eye
-                addoffset = self.GetSize()[0]/4
+                addoffset = self.GetSize()[0]//4
                 # but be careful at the end of the list
                 if addoffset + scrolloffset < self.GetSize()[0]:
                     offset += addoffset
