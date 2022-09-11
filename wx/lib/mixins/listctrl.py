@@ -461,7 +461,7 @@ class TextEditMixin:
 
     def make_editor(self, col_style=wx.LIST_FORMAT_LEFT):
 
-        style =wx.TE_PROCESS_ENTER|wx.TE_PROCESS_TAB|wx.TE_RICH2
+        style =wx.TE_PROCESS_ENTER|wx.TE_PROCESS_TAB
         style |= {wx.LIST_FORMAT_LEFT: wx.TE_LEFT,
                   wx.LIST_FORMAT_RIGHT: wx.TE_RIGHT,
                   wx.LIST_FORMAT_CENTRE : wx.TE_CENTRE
