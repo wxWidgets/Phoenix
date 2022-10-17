@@ -8,6 +8,21 @@
 wxPython Changelog
 ==================
 
+4.2.1
+-------------------
+* unreleased
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.2.1
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.2.1``
+
+New and improved in this release:
+
+* Added wrappers for wxGenericStaticBitmap.
+
+
+
+
 4.2.0 "Rumors of my death are only slightly exaggerated"
 --------------------------------------------------------
 * 7-Aug-2022
