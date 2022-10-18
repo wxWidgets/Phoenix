@@ -8,6 +8,8 @@
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
+import copy
+
 import etgtools
 import etgtools.tweaker_tools as tools
 
@@ -37,6 +39,16 @@ def run():
     c.find('Create.label').default = 'wxNullBitmap'
     c.find('Create.label').name = 'bitmap'
     tools.fixWindowClass(c)
+
+    # Make a copy of wxStaticBitmap so we can generate wrapper code for
+    # wxGenericStaticBitmap too.
+    module.addHeaderCode('#include <wx/generic/statbmpg.h>')
+    gsb = copy.deepcopy(c)
+    assert isinstance(gsb, etgtools.ClassDef)
+    gsb.name = 'wxGenericStaticBitmap'
+    for ctor in gsb.findAll('wxStaticBitmap'):
+        ctor.name = 'wxGenericStaticBitmap'
+    module.addItem(gsb)
 
     module.addGlobalStr('wxStaticBitmapNameStr', c)
 
