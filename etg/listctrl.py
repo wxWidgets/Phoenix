@@ -183,7 +183,7 @@ def run():
 
     c.addCppMethod(
         'PyObject*', 'HitTestSubItem', '(const wxPoint& point)',
-        pyArgsString="HitTestSubItem(point) -> (item, flags, subitem)",
+        pyArgsString="(point) -> (item, flags, subitem)",
         doc="Determines which item (if any) is at the specified point, giving details in flags.",
         body="""\
             long item, subitem;
