@@ -461,7 +461,7 @@ class TextEditMixin:
 
     def make_editor(self, col_style=wx.LIST_FORMAT_LEFT):
 
-        style =wx.TE_PROCESS_ENTER|wx.TE_PROCESS_TAB|wx.TE_RICH2
+        style =wx.TE_PROCESS_ENTER|wx.TE_PROCESS_TAB
         style |= {wx.LIST_FORMAT_LEFT: wx.TE_LEFT,
                   wx.LIST_FORMAT_RIGHT: wx.TE_RIGHT,
                   wx.LIST_FORMAT_CENTRE : wx.TE_CENTRE
@@ -588,7 +588,7 @@ class TextEditMixin:
                 # scroll a bit more than what is minimum required
                 # so we don't have to scroll every time the user presses TAB
                 # which is very tireing to the eye
-                addoffset = self.GetSize()[0]/4
+                addoffset = self.GetSize()[0]//4
                 # but be careful at the end of the list
                 if addoffset + scrolloffset < self.GetSize()[0]:
                     offset += addoffset
