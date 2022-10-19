@@ -1093,7 +1093,7 @@ class SettingsPanel(wx.Panel):
         else:
             return
 
-        self._frame.GetDockArt().SetColor(var, dlg.GetColourData().GetColour())
+        self._frame.GetDockArt().SetColour(var, dlg.GetColourData().GetColour())
         self._frame.DoUpdate()
         self.UpdateColors()
 
