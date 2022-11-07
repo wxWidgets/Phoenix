@@ -383,7 +383,7 @@ def my_check_python_headers(conf):
     if not pybin:
         conf.fatal('Could not find the python executable')
 
-    v = 'prefix SO LDFLAGS LIBDIR LIBPL INCLUDEPY Py_ENABLE_SHARED MACOSX_DEPLOYMENT_TARGET LDSHARED CFLAGS'.split()
+    v = 'prefix SO EXT_SUFFIX LDFLAGS LIBDIR LIBPL INCLUDEPY Py_ENABLE_SHARED MACOSX_DEPLOYMENT_TARGET LDSHARED CFLAGS'.split()
     try:
         lst = conf.get_python_variables(["get_config_var('%s') or ''" % x for x in v])
     except RuntimeError:
@@ -397,7 +397,7 @@ def my_check_python_headers(conf):
     if dct[x]:
         conf.env[x] = conf.environ[x] = dct[x]
 
-    env['pyext_PATTERN'] = '%s' + dct['SO'] # not a mistake
+    env['pyext_PATTERN'] = '%s' + (dct['EXT_SUFFIX'] or dct['SO']) # SO is deprecated in 3.5 and removed in 3.11
 
     # Check for python libraries for embedding
     all_flags = dct['LDFLAGS'] + ' ' + dct['CFLAGS']
