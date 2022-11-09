@@ -212,6 +212,12 @@ def run():
         #endif
         """)
 
+    c.find('GTKAllowDiagnosticsControl').setCppCode("""\
+        #ifdef __WXGTK__
+            wxApp::GTKAllowDiagnosticsControl();
+        #endif
+        """)
+           
     c.find('GetGUIInstance').ignore()
 
 
