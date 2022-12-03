@@ -13,6 +13,7 @@ from . import images
 import inspect
 from . import introspect
 import types
+import warnings
 
 
 COMMONTYPES = [getattr(types, t) for t in dir(types) \
@@ -124,17 +125,19 @@ class FillingTree(wx.TreeCtrl):
                 key = '[' + six.text_type(n) + ']'
                 d[key] = obj[n]
         if otype not in COMMONTYPES:
-            for key in introspect.getAttributeNames(obj):
-                if wx.Platform == '__WXMSW__':
-                    if key == 'DropTarget': # Windows bug fix.
-                        continue
-                # Believe it or not, some attributes can disappear,
-                # such as the exc_traceback attribute of the sys
-                # module. So this is nested in a try block.
-                try:
-                    d[key] = getattr(obj, key)
-                except Exception:
-                    pass
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", DeprecationWarning)
+                for key in introspect.getAttributeNames(obj):
+                    if wx.Platform == '__WXMSW__':
+                        if key == 'DropTarget': # Windows bug fix.
+                            continue
+                    # Believe it or not, some attributes can disappear,
+                    # such as the exc_traceback attribute of the sys
+                    # module. So this is nested in a try block.
+                    try:
+                        d[key] = getattr(obj, key)
+                    except Exception:
+                        pass
         return d
 
     def addChildren(self, item):
