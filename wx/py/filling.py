@@ -151,6 +151,22 @@ class FillingTree(wx.TreeCtrl):
         """
         return True
 
+    @staticmethod
+    def format(obj):
+        """Format function that determines how the item is displayed.
+        
+        You can overwrite this like:
+        >>> FillingTree.format = staticmethod(pprint.pformat)
+        """
+        if isinstance(obj, six.string_types):
+            value = repr(obj)
+        else:
+            try:
+                value = six.text_type(obj)
+            except Exception:
+                value = ''
+        return 'Value: ' + value
+
     def addChildren(self, item):
         self.DeleteChildren(item)
         obj = self.GetItemData(item)
@@ -188,13 +204,7 @@ class FillingTree(wx.TreeCtrl):
         text = ''
         text += self.getFullName(item)
         text += '\n\nType: ' + six.text_type(otype)
-        try:
-            value = six.text_type(obj)
-        except Exception:
-            value = ''
-        if isinstance(obj, six.string_types):
-            value = repr(obj)
-        text += u'\n\nValue: ' + value
+        text += '\n\n' + self.format(obj)
         if otype not in SIMPLETYPES:
             try:
                 text += '\n\nDocstring:\n\n"""' + \
