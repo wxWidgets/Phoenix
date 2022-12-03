@@ -135,10 +135,21 @@ class FillingTree(wx.TreeCtrl):
                     # such as the exc_traceback attribute of the sys
                     # module. So this is nested in a try block.
                     try:
-                        d[key] = getattr(obj, key)
+                        v = getattr(obj, key)
+                        if self.filter(v):
+                            d[key] = v
                     except Exception:
                         pass
         return d
+
+    @staticmethod
+    def filter(obj):
+        """Filter function that determines whether the item is displayed.
+        
+        You can overwrite this like:
+        >>> FillingTree.filter = staticmethod(inspect.ismethod)
+        """
+        return True
 
     def addChildren(self, item):
         self.DeleteChildren(item)
