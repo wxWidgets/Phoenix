@@ -106,10 +106,7 @@ class FillingTree(wx.TreeCtrl):
 
     def objHasChildren(self, obj):
         """Return true if object has children."""
-        if self.objGetChildren(obj):
-            return True
-        else:
-            return False
+        return type(obj) not in COMMONTYPES
 
     def objGetChildren(self, obj):
         """Return dictionary with attributes or contents of object."""
