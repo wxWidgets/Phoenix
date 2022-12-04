@@ -173,10 +173,17 @@ class FillingTree(wx.TreeCtrl):
                 item, cookie = self.GetNextChild(root, cookie)
         obj = self.GetItemData(item)
         children = self.objGetChildren(obj)
+        # Show string dictionary items with single quotes, except
+        # for the first level of items, if they represent a namespace.
+        # cf. addChildren
+        if (isinstance(obj, dict)
+            and (item != self.root
+                 or item == self.root and not self.rootIsNamespace)):
+            children = dict((repr(k), v) for k, v in children.items())
         items = dict((self.GetItemText(i), i) for i in _gen(item))
         A = set(items)
         B = set(children)
-        for key in A - B:
+        for key in (A - B):
             self.Delete(items[key])
         for key in (B & A):
             i = items[key]
