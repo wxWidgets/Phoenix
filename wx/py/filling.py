@@ -93,7 +93,7 @@ class FillingTree(wx.TreeCtrl):
         """Display information about the item."""
         busy = wx.BusyCursor()
         self.item = event.GetItem()
-        self.display()
+        self.display(rooting=False)
 
     def OnItemActivated(self, event):
         """Launch a DirFrame."""
@@ -167,6 +167,31 @@ class FillingTree(wx.TreeCtrl):
                 value = ''
         return 'Value: ' + value
 
+    def updateChildren(self, item):
+        """Update the item data."""
+        def _gen(root):
+            item, cookie = self.GetFirstChild(root)
+            while item:
+                yield item
+                item, cookie = self.GetNextChild(root, cookie)
+        obj = self.GetItemData(item)
+        children = self.objGetChildren(obj)
+        items = dict((self.GetItemText(i), i) for i in _gen(item))
+        A = set(items)
+        B = set(children)
+        for key in A - B:
+            self.Delete(items[key])
+        for key in (B & A):
+            i = items[key]
+            child = children[key]
+            if self.GetItemData(i) != child:
+                self.SetItemData(i, child)
+        for key in sorted(B - A):
+            itemtext = six.text_type(key)
+            child = children[key]
+            branch = self.AppendItem(item, itemtext, data=child)
+            self.SetItemHasChildren(branch, self.objHasChildren(child))
+
     def addChildren(self, item):
         self.DeleteChildren(item)
         obj = self.GetItemData(item)
@@ -188,12 +213,44 @@ class FillingTree(wx.TreeCtrl):
             branch = self.AppendItem(parent=item, text=itemtext, data=child)
             self.SetItemHasChildren(branch, self.objHasChildren(child))
 
-    def display(self):
+    def display(self, rooting=True):
+        """Display the current item data.
+        Called when an item/branch needs to be updated.
+        Args:
+            rooting: True if the current item must be updated
+                     False otherwise to reduce overheads.
+        """
         item = self.item
         if not item:
             return
+        parent = self.GetItemParent(item) # Check a parent one above.
+        if parent:
+            def _roots(item):
+                """Retrace the root of parent/item data.
+                Returns the parent whose item needs to be updated.
+                """
+                parent = self.GetItemParent(item)
+                if not parent:
+                    return None
+                obj = self.GetItemData(parent)
+                key = self.GetItemText(item)
+                try:
+                    # data = self.objGetChildren(obj)[key] # overheads...
+                    data = getattr(obj, key) # easier way to access here.
+                    if self.GetItemData(item) != data:
+                        self.SetItemData(item, data)
+                        return item
+                except AttributeError:
+                    return item
+                return _roots(parent)
+            root = _roots(item)
+            if rooting:
+                if root and self.IsExpanded(root):
+                    self.updateChildren(root) # Update roots items.
+                if parent != root:
+                    self.updateChildren(parent) # Update parent items.
         if self.IsExpanded(item):
-            self.addChildren(item)
+            self.updateChildren(item) # Update the current item if necessary.
         self.setText('')
         obj = self.GetItemData(item)
         if wx.Platform == '__WXMSW__':
@@ -201,7 +258,7 @@ class FillingTree(wx.TreeCtrl):
                 return
         self.SetItemHasChildren(item, self.objHasChildren(obj))
         otype = type(obj)
-        text = ''
+        text = '# '
         text += self.getFullName(item)
         text += '\n\nType: ' + six.text_type(otype)
         text += '\n\n' + self.format(obj)
