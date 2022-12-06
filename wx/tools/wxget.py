@@ -127,7 +127,7 @@ def download_urllib(url, filename):
         dstyle = wx.PD_APP_MODAL | wx.PD_CAN_ABORT | wx.PD_AUTO_HIDE
         if file_size:
             progress = wx.ProgressDialog('Downloading', message,
-                                         maximum=1+file_size/block_sz, style=dstyle)
+                                         maximum=1+file_size//block_sz, style=dstyle)
         else:
             progress = wx.ProgressDialog('Downloading', message, style=dstyle)
 
@@ -135,8 +135,8 @@ def download_urllib(url, filename):
         while keep_going:
             read_buffer = url_res.read(block_sz)
             if not read_buffer:
-                progress.Update(file_size_dl / block_sz, "message+\nDONE!")
-                wx.Sleep(0.2)
+                progress.Update(file_size_dl // block_sz, "message+\nDONE!")
+                wx.MilliSleep(200)
                 break
 
             file_size_dl += len(read_buffer)
@@ -145,9 +145,9 @@ def download_urllib(url, filename):
             status = "{0:16}".format(file_size_dl)
             if file_size:
                 status += "   [{0:6.2f}%]".format(file_size_dl * 100 / file_size)
-            (keep_going, dummy_skip) = progress.Update(file_size_dl / block_sz,
+            (keep_going, dummy_skip) = progress.Update(file_size_dl // block_sz,
                                                        message+status)
-            wx.Sleep(0.08)  # Give the GUI some update time
+            wx.MilliSleep(80)  # Give the GUI some update time
         progress.Destroy()
 
     result = os.path.exists(filename) and os.stat(filename).st_size > 0
