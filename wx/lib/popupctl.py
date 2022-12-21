@@ -118,13 +118,16 @@ class PopupDialog(wx.Dialog):
         self.win.SetClientSize(self.content.GetSize())
         self.SetSize(self.win.GetSize())
 
-    def Display(self):
+    def Display(self, align=wx.ALIGN_CENTER):
         pos = self.ctrl.ClientToScreen( (0,0) )
         dSize = wx.GetDisplaySize()
         selfSize = self.GetSize()
         tcSize = self.ctrl.GetSize()
 
-        pos.x -= (selfSize.width - tcSize.width) // 2
+        if align == wx.ALIGN_CENTER:
+            pos.x -= (selfSize.width - tcSize.width) // 2
+        elif align == wx.ALIGN_RIGHT:
+            pos.x -= (selfSize.width - tcSize.width)
         if pos.x + selfSize.width > dSize.width:
             pos.x = dSize.width - selfSize.width
         if pos.x < 0:
@@ -154,6 +157,7 @@ class PopupControl(wx.Control):
         self.bCtrl = PopButton(self, wx.ID_ANY, style=wx.BORDER_NONE)
         self.pop = None
         self.content = None
+        self.align = wx.ALIGN_CENTER
 
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.bCtrl.Bind(wx.EVT_BUTTON, self.OnButton, self.bCtrl)
@@ -161,6 +165,10 @@ class PopupControl(wx.Control):
 
         self.SetInitialSize(_kwargs.get('size', wx.DefaultSize))
         self.SendSizeEvent()
+
+    def SetPopupAlignment(self, align):
+        # Whether the pop dialog should align center, light or right
+        self.align = align
 
 
     def OnFocus(self,evt):
@@ -191,7 +199,7 @@ class PopupControl(wx.Control):
             else:
                 print('No Content to pop')
         if self.pop:
-            self.pop.Display()
+            self.pop.Display(self.align)
 
 
     def Enable(self, flag):
