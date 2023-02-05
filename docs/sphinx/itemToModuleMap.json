@@ -7240,6 +7240,7 @@
 "TheFontList":"wx.",
 "TheMimeTypesManager":"wx.",
 "ThePenList":"wx.",
+"ThreadEvent":"wx.",
 "TimePickerCtrl":"wx.adv.",
 "TimePickerCtrlNameStr":"wx.adv.",
 "TimeSpan":"wx.",
