@@ -140,6 +140,9 @@ class Events(wtc.WidgetTestCase):
     def test_SysColourChangedEvent_ctor(self):
         evt = wx.SysColourChangedEvent()
 
+    def test_ThreadEvent_ctor(self):
+        evt = wx.ThreadEvent()
+
     def test_UpdateUIEvent_ctor(self):
         evt = wx.UpdateUIEvent()
 
