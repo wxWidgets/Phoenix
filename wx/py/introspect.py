@@ -175,8 +175,11 @@ def getCallTip(command='', locals=None):
         pass
     elif inspect.isfunction(obj):
         # tip1 is a string like: "getCallTip(command='', locals=None)"
-        argspec = inspect.getargspec(obj) if not PY3 else inspect.getfullargspec(obj)
-        argspec = inspect.formatargspec(*argspec)
+        try:
+            argspec = str(inspect.signature(obj)) # PY35 or later
+        except AttributeError:
+            argspec = inspect.getargspec(obj) if not PY3 else inspect.getfullargspec(obj)
+            argspec = inspect.formatargspec(*argspec)
         if dropSelf:
             # The first parameter to a method is a reference to an
             # instance, usually coded as "self", and is usually passed
