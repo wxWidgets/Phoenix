@@ -3,6 +3,7 @@ things like call tips and command auto completion."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 
+import re
 import sys
 import inspect
 import tokenize
@@ -214,7 +215,11 @@ def getCallTip(command='', locals=None):
         tip = '%s%s\n\n%s' % (tip1, tip2, tip3)
     else:
         tip = tip1
-    calltip = (name, argspec[1:-1], tip.strip())
+    # Extract argspec from the signature e.g., (x, /, *, ...) -> int
+    m = re.search(r'\((.*)\)', argspec)
+    if m:
+        argspec = m.group(1)
+    calltip = (name, argspec, tip.strip())
     return calltip
 
 def getRoot(command, terminator=None):
