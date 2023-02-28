@@ -49,7 +49,7 @@ class PixelBitmap:
         else:
             raise FC.FloatCanvasError("PixelBitmap takes only a wx.Bitmap or a wx.Image as input")
 
-        self.XY = np.asarray(XY, dtype=np.int).reshape((2,))
+        self.XY = np.asarray(XY, dtype=int).reshape((2,))
         self.Position = Position
 
         (self.Width, self.Height) = self.Bitmap.GetWidth(), self.Bitmap.GetHeight()
