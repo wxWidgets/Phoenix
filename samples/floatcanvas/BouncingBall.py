@@ -49,7 +49,7 @@ class MovingObjectMixin: # Borrowed from MovingElements.py
 
 class Ball(MovingObjectMixin, FloatCanvas.Circle):
     def __init__(self, XY, Velocity, Radius=2.0, **kwargs):
-        self.Velocity = np.asarray(Velocity, np.float).reshape((2,))
+        self.Velocity = np.asarray(Velocity, float).reshape((2,))
         self.Radius = Radius
         self.Moving = False
         FloatCanvas.Circle.__init__(self, XY, Diameter=Radius*2, FillColor="red", **kwargs)
