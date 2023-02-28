@@ -366,7 +366,7 @@ class ProgressGauge(wx.Window):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         for ii in range(int(self._pos), int(self._pos+interval)):
-            currCol = (r1 + rf, g1 + gf, b1 + bf)
+            currCol = [int(x) for x in (r1 + rf, g1 + gf, b1 + bf)]
             dc.SetPen(wx.Pen(currCol, 2))
             dc.DrawLine(ii, 1, ii, ysize-2)
             rf = rf + rstep
