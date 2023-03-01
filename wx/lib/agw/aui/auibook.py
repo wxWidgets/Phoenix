@@ -1462,7 +1462,7 @@ class AuiTabContainer(object):
         button_count = len(self._buttons)
 
         # create off-screen bitmap
-        bmp = wx.Bitmap(self._rect.GetWidth(), self._rect.GetHeight())
+        bmp = wx.Bitmap(self._rect.GetWidth(), self._rect.GetHeight(), raw_dc)
         dc.SelectObject(bmp)
 
         if not dc.IsOk():
