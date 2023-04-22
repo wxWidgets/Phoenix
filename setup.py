@@ -374,7 +374,6 @@ if __name__ == '__main__':
           keywords         = KEYWORDS,
           install_requires = INSTALL_REQUIRES,
           zip_safe         = False,
-          use_2to3         = False,
           include_package_data = True,
 
           packages         = WX_PKGLIST,
