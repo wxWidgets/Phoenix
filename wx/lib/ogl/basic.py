@@ -1377,11 +1377,11 @@ class Shape(ShapeEvtHandler):
 
     def OnDrawOutline(self, dc, x, y, w, h):
         """The draw outline handler."""
-        points = [[x - w / 2.0, y - h / 2.0],
-                [x + w / 2.0, y - h / 2.0],
-                [x + w / 2.0, y + h / 2.0],
-                [x - w / 2.0, y + h / 2.0],
-                [x - w / 2.0, y - h / 2.0],
+        points = [[int(x - w / 2.0), int(y - h / 2.0)],
+                [int(x + w / 2.0), int(y - h / 2.0)],
+                [int(x + w / 2.0), int(y + h / 2.0)],
+                [int(x - w / 2.0), int(y + h / 2.0)],
+                [int(x - w / 2.0), int(y - h / 2.0)],
                 ]
 
         dc.DrawLines(points)
@@ -3174,7 +3174,7 @@ class PolygonShape(Shape):
                 dc.SetPen(self._pen)
         if self._brush:
             dc.SetBrush(self._brush)
-        dc.DrawPolygon(self._points, self._xpos, self._ypos)
+        dc.DrawPolygon(self._points, int(self._xpos), int(self._ypos))
 
     def OnDrawOutline(self, dc, x, y, w, h):
         """The draw outline handler."""
@@ -3185,8 +3185,8 @@ class PolygonShape(Shape):
 
         intPoints = []
         for point in self._originalPoints:
-            intPoints.append(wx.Point(x_proportion * point[0], y_proportion * point[1]))
-        dc.DrawPolygon(intPoints, x, y)
+            intPoints.append(wx.Point(int(x_proportion * point[0]), int(y_proportion * point[1])))
+        dc.DrawPolygon(intPoints, int(x), int(y))
 
     # Make as many control points as there are vertices
     def MakeControlPoints(self):
