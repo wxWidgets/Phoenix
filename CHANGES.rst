@@ -20,6 +20,9 @@ New and improved in this release:
 
 * Added wrappers for wxGenericStaticBitmap.
 
+* This release was built using the wxWidgets' v3.2.2.1 release tag.
+
+* Added Python 3.11 to the build system.
 
 
 
