@@ -2198,8 +2198,13 @@ def cmd_sdist(options, args):
     # Copy the Sphinx source files in the docs tree, excluding the html and
     # sphinx/build folders, if present.
     shutil.rmtree(opj(PDEST, 'docs'), ignore_errors=True)
-    shutil.copytree('docs', opj(PDEST, 'docs'),
-                    ignore=shutil.ignore_patterns('html', 'build', '__pycache__', 'cpp'))
+    if options.nodoc:
+        os.makedirs(opj(PDEST, 'docs'))
+        with open(opj(PDEST, 'docs', 'README.txt'), 'wt') as f:
+            f.write("The sphinx files and generated docs are not included in this archive.\n")
+    else:
+        shutil.copytree('docs', opj(PDEST, 'docs'),
+                        ignore=shutil.ignore_patterns('html', 'build', '__pycache__', 'cpp'))
 
     # Add some extra stuff to the root folder
     cmd_egg_info(options, args, egg_base=PDEST)
