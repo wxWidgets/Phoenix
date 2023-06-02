@@ -1033,7 +1033,7 @@ def canGetSOName():
 
 def getSOName(filename):
     output = runcmd('objdump -p %s' % filename, True)
-    result = re.search('^\s+SONAME\s+(.+)$', output, re.MULTILINE)
+    result = re.search(r'^\s+SONAME\s+(.+)$', output, re.MULTILINE)
     if result:
         return result.group(1)
     return None

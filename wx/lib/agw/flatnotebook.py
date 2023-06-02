@@ -2232,7 +2232,7 @@ class FNBRenderer(object):
                 return
 
         # Get the text height
-        tabHeight = self.CalcTabHeight(pageContainer)
+        tabHeight = int(self.CalcTabHeight(pageContainer))
         agwStyle = pc.GetParent().GetAGWWindowStyleFlag()
 
         # Calculate the number of rows required for drawing the tabs
@@ -2366,8 +2366,8 @@ class FNBRenderer(object):
             # Update the tab position & size
             posy = (pc.HasAGWFlag(FNB_BOTTOM) and [0] or [VERTICAL_BORDER_PADDING])[0]
 
-            pc._pagesInfoVec[i].SetPosition(wx.Point(posx, posy))
-            pc._pagesInfoVec[i].SetSize(wx.Size(tabWidth, tabHeight))
+            pc._pagesInfoVec[i].SetPosition(wx.Point(int(posx), int(posy)))
+            pc._pagesInfoVec[i].SetSize(wx.Size(int(tabWidth), int(tabHeight)))
             self.DrawFocusRectangle(dc, pc, pc._pagesInfoVec[i])
 
             posx += tabWidth
@@ -2461,7 +2461,7 @@ class FNBRenderer(object):
                 break;
 
             # Add a result to the returned vector
-            tabRect = wx.Rect(posx, VERTICAL_BORDER_PADDING, tabWidth , tabHeight)
+            tabRect = wx.Rect(int(posx), VERTICAL_BORDER_PADDING, int(tabWidth) , int(tabHeight))
             vTabInfo.append(tabRect)
 
             # Advance posx
@@ -2567,7 +2567,7 @@ class FNBRendererDefault(FNBRenderer):
         pc = pageContainer
 
         tabPoints = [wx.Point() for ii in range(7)]
-        tabPoints[0].x = posx
+        tabPoints[0].x = int(posx)
         tabPoints[0].y = (pc.HasAGWFlag(FNB_BOTTOM) and [2] or [tabHeight - 2])[0]
 
         tabPoints[1].x = int(posx+(tabHeight-2)*math.tan(float(pc._pagesInfoVec[tabIdx].GetTabAngle())/180.0*math.pi))
@@ -2646,14 +2646,14 @@ class FNBRendererDefault(FNBRenderer):
 
             imageXOffset = textOffset - 16 - padding
             pc._ImageList.Draw(pc._pagesInfoVec[tabIdx].GetImageIndex(), dc,
-                                     posx + imageXOffset, imageYCoord,
+                                     int(posx + imageXOffset), int(imageYCoord),
                                      wx.IMAGELIST_DRAW_TRANSPARENT, True)
 
         pageTextColour = pc._pParent.GetPageTextColour(tabIdx)
         if pageTextColour is not None:
             dc.SetTextForeground(pageTextColour)
 
-        dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
+        dc.DrawText(pc.GetPageText(tabIdx), int(posx + textOffset), int(imageYCoord))
 
         # draw 'x' on tab (if enabled)
         if pc.HasAGWFlag(FNB_X_ON_TAB) and tabIdx == pc.GetSelection():
@@ -2777,7 +2777,7 @@ class FNBRendererFirefox2(FNBRenderer):
             # take a bitmap from the position of the 'x' button (the x on tab button)
             # this bitmap will be used later to delete old buttons
             tabCloseButtonYCoord = imageYCoord
-            x_rect = wx.Rect(tabCloseButtonXCoord, tabCloseButtonYCoord, 16, 16)
+            x_rect = wx.Rect(int(tabCloseButtonXCoord), int(tabCloseButtonYCoord), 16, 16)
 
             # Draw the tab
             self.DrawTabX(pc, dc, x_rect, tabIdx, btnStatus)

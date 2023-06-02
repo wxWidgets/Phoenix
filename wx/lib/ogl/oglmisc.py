@@ -528,7 +528,7 @@ def GetArrowPoints(x1, y1, x2, y2, length, width):
     x3 = -length * i_bar + x2
     y3 = -length * j_bar + y2
 
-    return x2, y2, width * -j_bar + x3, width * i_bar + y3, -width * -j_bar + x3, -width * i_bar + y3
+    return int(x2), int(y2), int(width * -j_bar + x3), int(width * i_bar + y3), int(-width * -j_bar + x3), int(-width * i_bar + y3)
 
 
 def DrawArcToEllipse(x1, y1, width1, height1, x2, y2, x3, y3):
