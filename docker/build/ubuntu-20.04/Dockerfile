@@ -52,6 +52,7 @@ RUN \
         apt-get install -y python3.8 python3.8-dev libpython3.8-dev python3.8-venv; \
         apt-get install -y python3.9 python3.9-dev libpython3.9-dev python3.9-venv; \
         apt-get install -y python3.10 python3.10-dev libpython3.10-dev python3.10-venv; \
+        apt-get install -y python3.10 python3.11-dev libpython3.11-dev python3.11-venv; \
         apt-get clean;
 
 # Add files from host into the container
@@ -70,7 +71,8 @@ RUN \
         mkdir -p ${HOME}/venvs; \
         python3.8 -m venv venvs/Py38; \
         python3.9 -m venv venvs/Py39; \
-        python3.10 -m venv venvs/Py310;
+        python3.10 -m venv venvs/Py310; \
+        python3.11 -m venv venvs/Py311;
 
 # Define default command
 CMD ["/bin/bash", "-l"]
