@@ -162,6 +162,8 @@ Usage: ./build.py [command(s)] [options]
 
 
 def main(args):
+    options, commands = parseArgs(args)
+
     setPythonVersion(args)
     setDevModeOptions(args)
 
@@ -182,8 +184,6 @@ def main(args):
     if not args or 'help' in args or '--help' in args or '-h' in args:
         usage()
         sys.exit(1)
-
-    options, commands = parseArgs(args)
 
     cfg = Config(noWxConfig=True)
     msg('cfg.VERSION: %s' % cfg.VERSION)
@@ -453,6 +453,7 @@ def makeOptionParser():
         ("regenerate_sysconfig", (False, "Waf uses Python's sysconfig and related tools to configure the build. In some cases that info can be incorrect, so this option regenerates it. Must have write access to Python's lib folder.")),
         ("no_allmo",       (False, "Skip regenerating the wxWidgets message catalogs")),
         ("no_msedge",      (False, "Do not include the MS Edge backend for wx.html2.WebView. (Windows only)")),
+        ("quiet",          (False, "Silence some of the messages from build.py"))
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -498,6 +499,10 @@ def parseArgs(args):
 
     if options.gtk2:
         options.gtk3 = False
+
+    if options.quiet:
+        import buildtools.config
+        buildtools.config.runSilently = True
 
     return options, args
 
@@ -1080,6 +1085,10 @@ def cmd_docset(options, args):
     cmd_docset_wx(options, args)
     cmd_docset_py(options, args)
 
+
+def cmd_version(options, args):
+    cfg = Config()
+    print(cfg.VERSION)
 
 
 def cmd_etg(options, args):
