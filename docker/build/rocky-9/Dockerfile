@@ -54,7 +54,8 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        python3.9 -m venv venvs/Py39;
+        python3.9 -m venv venvs/Py39; \
+        python3.11 -m venv venvs/Py311;
 
 # Add files from host into the container
 COPY scripts ${HOME}/bin

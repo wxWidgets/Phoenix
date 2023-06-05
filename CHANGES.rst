@@ -8,8 +8,8 @@
 wxPython Changelog
 ==================
 
-4.2.1
--------------------
+4.2.1 "Size matters not." (Yoda)
+--------------------------------
 * 1-June-2023
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.2.1
@@ -18,13 +18,16 @@ Pip:    ``pip install wxPython==4.2.1``
 
 New and improved in this release:
 
-* Added wrappers for wxGenericStaticBitmap.
-
 * This release was built using the wxWidgets' v3.2.2.1 release tag.
 
 * Added Python 3.11 to the build system.
 
 * Added Python 3.12 (beta) to the build system.
+
+* Added wrappers for wxGenericStaticBitmap.
+
+* Added wx.ThreadEvent.
+
 
 
 
