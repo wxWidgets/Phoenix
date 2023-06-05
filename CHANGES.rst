@@ -10,7 +10,7 @@ wxPython Changelog
 
 4.2.1 "Size matters not." (Yoda)
 --------------------------------
-* 1-June-2023
+* 7-June-2023
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.2.1
 Extras: https://extras.wxPython.org/wxPython4/extras/

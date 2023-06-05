@@ -9,115 +9,24 @@
 
 
 
-Announcing wxPython 4.2.0
+Announcing wxPython 4.2.1
 =========================
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.2.0
+PyPI:   https://pypi.python.org/pypi/wxPython/4.2.1
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.2.0``
+Pip:    ``pip install wxPython==4.2.1``
 
-* Yes, it's been a VERY long time since the last release. I'm not
-  dead, just on an extended break. It took me a while to get up to
-  speed on a new day job, and then there was a seemingly perpetual
-  crunch-mode to get the product through a couple release cycles. I
-  can't say that things are fully back to normal yet, but at least I
-  now know what I'm doing. Mostly. <wink>
+New and improved in this release:
 
-* This release is built using the wxWidgets' 3.2.0 release tag.
+* This release was built using the wxWidgets' v3.2.2.1 release tag.
 
-* Tweaked the build scripts a bit to ensure that on non-Windows
-  platforms that the compiler and flags used by default match those
-  used by wxWidgets, (with the flags needed by Python added on.) The
-  compiler commands can be overridden by setting CC and CXX in the
-  environment if needed. (#1247)
+* Added Python 3.11 to the build system.
 
-* On Windows the build code that locates and sets up the environment
-  for the MSVC compiler no longer relies on distutils code, but is now
-  using more modern code in setuptools instead. This enables much more
-  compiler flexibility and wxPython should now be buildable with
-  Visual Studio versions from 2015 through 2022+.
+* Added Python 3.12 (beta) to the build system.
 
-* Switched to SIP 6 for generating the wrapper code. Rather than a
-  standalone executable, SIP is now a Python package that needs to be
-  installed in the Python environment used for the build. A dependency
-  has been added to requirements/devel.txt to help ensure that the
-  correct version is installed.  The wx.siplib module code is no
-  longer kept in the repository, but is generated during the build.
+* Added wrappers for wxGenericStaticBitmap.
 
-* Changed wx.App.InitLocale to just do
-  `locale.setlocale(locale.LC_ALL, "C")` to undo what Python (3.8+ on
-  Windows) does. This lets wxWidgets start with an uninitialized
-  locale as it expects. (#1637)
-
-* Fixed issues related to `time_t` always being treated as a 32-bit
-  value on Windows. (#1910)
-
-* Added wx.FullScreenEvent and wx.EVT_FULLSCREEN.
-
-* The legacy, OSX-Only wx.webkit module has been removed.
-
-* Fix building wxPython with Python 3.10 on Windows (#2016)
-
-* Fix PyProgress on Windows by avoiding invalid sizer flags (#1985)
-
-* Fix 'More Grid Features' in demo
-
-* Many of the widgets which deal with bitmaps have been changed to use
-  a wx.BitmapBundle object instead of wx.Bitmap. This is the mechanism
-  which wxWidgets has implemented for adapting to things like Hi-DPI
-  displays.  Essentially you can load a list of bitmaps of different
-  sizes (but similar or scaled content) into a wx.BitmapBundle, and
-  the widget can choose one based on the display density. Existing
-  code should be able to continue to pass a wx.Bitmap to the widget
-  constructor or to methods like SetBitmap, as wxPython will
-  automatically convert from a wx.Bitmap to a wx.BitmapBundle
-  containing the single image provided.
-
-* Add support for new wx.grid event, EVT_GRID_ROW_MOVE
-
-* Fix path issues in wx.lib.agw.multidirdialog (#2120)
-
-* Fix eventwatcher checkAll(check=False) (#2139)
-
-* Fix exception on grid labels click in 4.1.1a (#1841)
-
-* Fix a large number of Python 3.10 issues.  In Python 3.10, a change
-  was implemented where extension functions that take integer
-  arguments will no longer silently accept non-integer arguments
-  (e.g., floats) that can only be converted to integers with a loss of
-  precision.  Fixed most of these issues in the pure-Python classes
-  and demos by explicitly converting the parameters to int before
-  passing them to wxWidgets.  There is loss of precision, but this was
-  happening before (automatically) anyway as most wxWidgets
-  DeviceContext functions operate using integers.
-
-* Fix PlotCanvas point label drawing on Linux
-
-* Fix GetPopupMenu override for wx.adv.TaskbarIcon (#2067)
-
-* Fix invisible text in lib.plot with dark theme
-
-* Add new button type: ShowHideToggleButton.  Like a ToggleButton, but
-  with an associated "menu", a Window or Sizer which is shown/hidden
-  when button is toggled. Includes methods for setting active and
-  inactive fore/background colours.
-
-* Fix unbinding of events in FIFO order (#2027)
-
-* Enable customization of layout of pdfviewer button panel
-
-* Support newer PyMuPDF versions (#2205)
-
-* IntCtrl: Change default colour to wx.NullColour so the default
-  color will be used. (#2215)
-
-* Change PopupControl to respect all the parameters passed to its
-  init method (#2218)
-
-* Fixes in flatmenu.py Remove and DestroyItem (#2219)
-
-* Using the MinGW toolchain to build wxPython has been simplified
-  a bit. (#2211)
+* Added wx.ThreadEvent.
 
 
 
