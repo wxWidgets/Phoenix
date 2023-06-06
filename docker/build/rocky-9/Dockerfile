@@ -41,6 +41,7 @@ RUN \
                 webkit2gtk3-devel; \
 # Install all available Python packages and their dev packages
         yum -y install python3 python3-devel; \
+        yum -y install python3.11 python3.11-devel; \
 # Clean up the yum caches
         yum clean all;
 
