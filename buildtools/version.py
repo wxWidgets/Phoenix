@@ -26,7 +26,7 @@ VER_MAJOR        = 4
 VER_MINOR        = 2
 VER_RELEASE      = 1
 
-VER_FLAGS        = "a1"     # wxPython release flags
+VER_FLAGS        = ""     # wxPython release flags
 
 # The VER_FLAGS value is appended to the version number constructed from the
 # first 3 components and should be set according to the following patterns.
