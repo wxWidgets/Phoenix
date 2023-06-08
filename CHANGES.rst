@@ -8,6 +8,20 @@
 wxPython Changelog
 ==================
 
+
+4.2.2
+------
+* (unreleased)
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.2.2
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.2.2``
+
+New and improved in this release:
+
+
+
+
 4.2.1 "Size matters not." (Yoda)
 --------------------------------
 * 7-June-2023
