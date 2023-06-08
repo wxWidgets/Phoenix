@@ -80,15 +80,19 @@ HOWTO Release wxPython Phoenix
 17. Tag the released revision in git, using a name like wxPython-4.0.0 (using
     the actual version number of course.) Push the tag to all remotes.
 
-18. Bump the version numbers in buildtools/version.py appropriately for the
+18. Make a release at GitHub. Copy the generated source file into the release,
+    and use a message that indicates the source archives created by GitHub are
+    not complete.
+
+19. Bump the version numbers in buildtools/version.py appropriately for the
     next anticipated release, so future snapshot builds will be recognized as
     pre-release development versions for the next official release, not the
     one just completed.
 
-19. If making an announcement about this release, (I think it's okay not to
+20. If making an announcement about this release, (I think it's okay not to
     for minor releases or smallish bug fixes,) send the text in
     packaging/ANNOUNCE.txt to the email addresses listed at the top of the
     file.
 
-20. Add a news post to the wxPython site about the release.
+21. Add a news post to the wxPython site about the release.
 
