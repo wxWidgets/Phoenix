@@ -11,6 +11,7 @@ on:
     branches: [ 'master' ]
   pull_request:
     branches: [ 'master' ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -18,6 +19,9 @@ permissions:
 defaults:
   run:
     shell: bash
+
+env:
+  PYTHONUNBUFFERED: 1
 
 jobs:
   build-source-dist:
