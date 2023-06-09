@@ -1586,18 +1586,20 @@ def cmd_build_wx(options, args):
         sys.exit(1)
 
     if not options.no_allmo:
-        # Build the wx message catalogs, but first check that there is a msgfmt
-        # command available
-        if findCmd('msgfmt') and findCmd('make'):
-            locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
-            print('Building message catalogs in ' + os.getcwd())
-            runcmd('make allmo')
-            del locale_pwd
-        else:
-            print("WARNING: msgfmt and/or make commands not found, message catalogs not \n"
-                "         rebuilt. Please install gettext and associated tools.")
+        make_allmo()
 
 
+def make_allmo():
+    # Build the wx message catalogs, but first check that there is a msgfmt
+    # command available
+    if findCmd('msgfmt') and findCmd('make'):
+        locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
+        print('Building message catalogs in ' + os.getcwd())
+        runcmd('make allmo')
+        del locale_pwd
+    else:
+        print("WARNING: msgfmt and/or make commands not found, message catalogs not \n"
+            "         rebuilt. Please install gettext and associated tools.")
 
 def copyWxDlls(options):
     if options.no_magic or options.use_syswx:
@@ -2144,8 +2146,9 @@ def cmd_sdist(options, args):
 
     # Make a place to export everything to
     PDEST = 'build/sdist'
-    if not os.path.exists(PDEST):
-        os.makedirs(PDEST)
+    if os.path.exists(PDEST):
+        shutil.rmtree(PDEST)
+    os.makedirs(PDEST)
 
     # and a place to put the final tarball
     if not os.path.exists('dist'):
@@ -2170,10 +2173,13 @@ def cmd_sdist(options, args):
     _archive_submodules('.', os.path.abspath(PDEST))
 
     generateVersionFiles(cfg)
+    # copy .py files that need to go into the root wx package dir
+    for name in ['src/__init__.py', 'src/gizmos.py',]:
+        copyFile(name, cfg.PKGDIR, verbose=True)
 
     # copy Phoenix's generated code into the archive tree
     msg('Copying generated files...')
-    os.mkdir(posixjoin(PDEST, 'sip', 'siplib'))
+    os.makedirs(posixjoin(PDEST, 'sip', 'siplib'), exist_ok=True)
     for srcdir in ['cpp', 'gen', 'siplib']:
         destdir = posixjoin(PDEST, 'sip', srcdir)
         for name in glob.glob(posixjoin('sip', srcdir, '*')):
@@ -2197,6 +2203,8 @@ def cmd_sdist(options, args):
 
     # Copy the locale message catalogs
     msg('Copying message catalog files...')
+    if not glob.glob(opj(cfg.WXDIR, 'locale', '*.mo')):
+        make_allmo()
     cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
     shutil.copytree(opj(cfg.PKGDIR, 'locale'), opj(PDEST, cfg.PKGDIR, 'locale'))
 
@@ -2237,6 +2245,7 @@ def cmd_sdist(options, args):
 
     msg('Cleaning up...')
     del pwd
+    os.chdir(phoenixDir())
     shutil.rmtree(PDEST)
 
     if options.upload:
