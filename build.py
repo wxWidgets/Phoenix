@@ -46,7 +46,7 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                macSetLoaderNames, \
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
                                getVisCVersion, getToolsPlatformName, updateLicenseFiles, \
-                               TemporaryDirectory, getMSVCInfo
+                               TemporaryDirectory, getMSVCInfo, generateVersionFiles
 
 import buildtools.version as version
 
@@ -162,10 +162,9 @@ Usage: ./build.py [command(s)] [options]
 
 
 def main(args):
-    options, commands = parseArgs(args)
-
-    setPythonVersion(args)
     setDevModeOptions(args)
+    options, commands = parseArgs(args)
+    setPythonVersion(args)
 
     os.environ['PYTHONPATH'] = os.environ.get('PYTHONPATH', '') + os.pathsep + phoenixDir()
     os.environ['PYTHONUNBUFFERED'] = 'yes'
@@ -2169,6 +2168,8 @@ def cmd_sdist(options, args):
                         _archive_submodules(sub, opj(dest, sub))
 
     _archive_submodules('.', os.path.abspath(PDEST))
+
+    generateVersionFiles(cfg)
 
     # copy Phoenix's generated code into the archive tree
     msg('Copying generated files...')
