@@ -4,7 +4,7 @@
 # used in subsequent jobs on each supported platform and Python version.
 #---------------------------------------------------------------------------
 
-name: wxPython CI build source
+name: ci-build
 
 on:
   push:
@@ -24,10 +24,10 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      VERSION:
+      VERSION: ${{ steps.generate.outputs.version }}
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v3
         with:
           submodules: 'recursive'
@@ -48,25 +48,24 @@ jobs:
         run: |
           python build.py setrev etg sip --nodoc sdist
           VERSION=$(python build.py --quiet version)
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Save sdist as workflow artifact
+      - name: Save sdist as job artifact
         uses: actions/upload-artifact@v3
         with:
-          name: wxPython-ci-sdist-${{ steps.generate.outputs.VERSION }}
-          path: dist/wxPython-${{ steps.generate.outputs.VERSION }}.tar.gz
+          name: wxPython-source
+          path: dist/wxPython-${{ steps.generate.outputs.version }}.tar.gz
 
 
 #---------------------------------------------------------------------------
 
   # build-wheels:
-  #   name: wheels
   #   needs: build-source-dist
   #   strategy:
   #     matrix:
   #       os: [ubuntu-latest, windows-latest, macos-latest]
   #       python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
-  #       architechture: ['x86', 'x64']
+  #       architecture: ['x86', 'x64']
   #       # Exclude x86 configs on non-Windows OSs
   #       exclude:
   #         - os: ubuntu-latest
@@ -74,36 +73,22 @@ jobs:
   #         - os: macos-latest
   #           architecture: x86
 
-  #       # # Add matrix slots for 32-bit Pythons on Windows
-  #       # include:
-  #       #   - os: 'windows-latest'
-  #       #     python-version: '3.7'
-  #       #     architecture: 'x86'
-  #       #   - os: 'windows-latest'
-  #       #     python-version: '3.8'
-  #       #     architecture: 'x86'
-  #       #   - os: 'windows-latest'
-  #       #     python-version: '3.9'
-  #       #     architecture: 'x86'
-  #       #   - os: 'windows-latest'
-  #       #     python-version: '3.10'
-  #       #     architecture: 'x86'
-  #       #   - os: 'windows-latest'
-  #       #     python-version: '3.11'
-  #       #     architecture: 'x86'
+  #   env:
+  #     VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
 
   #   runs-on: ${{ matrix.os }}
 
   #   steps:
-  #     - name: Checkout
+  #     - name: Checkout repo
   #       uses: actions/checkout@v3
   #       with:
   #         submodules: 'recursive'
 
-  #     - name: download CI sdist archive
+  #     - name: download CI source artifact
   #       uses: actions/download-artifact@v3
   #       with:
-  #         name: wxPython-ci-sdist-${{ needs.build-source-dist.generate.VERSION }}
+  #         name: wxPython-source
+  #         path: dist
 
   #     - name: Set up Python ${{ matrix.python-version }}
   #       uses: actions/setup-python@v4
@@ -112,15 +97,15 @@ jobs:
   #         architecture: '${{ matrix.architecture }}'
   #         cache: 'pip'
 
-  #     - name: Install dependencies
-  #       shell: bash
+  #     - name: Install Python dependencies
   #       run: |
   #         python -m pip install --upgrade pip setuptools wheel
   #         python -m pip install --upgrade -r requirements.txt
 
-  #         # TODO: Install needed apt packages if we're on Linux
-  #         if [ ${{ matrix.os }} == ubuntu-latest ]; then
-  #             apt-get install -y \
+  #     - name: Install Ubuntu dependencies
+  #       if: ${{ matrix.os }} == ubuntu-latest
+  #       run: |
+  #         apt-get install -y \
   #                 freeglut3 \
   #                 freeglut3-dev \
   #                 libgl1-mesa-dev \
@@ -134,14 +119,22 @@ jobs:
   #                 libtiff-dev \
   #                 libwebkit2gtk-4.0-dev \
   #                 libxtst-dev;
-  #         fi
 
-  #     - name: Build wheel
-  #       shell: bash
+  #     - name: Build wxPython wheel
   #       run: |
-  #           mkdir -p dist
-  #           mv wxPython-${{ needs.build-source-dist.generate.VERSION }}.tar.gz dist
-  #           cd dist
-  #           pip wheel -v wxPython-${{ needs.build-source-dist.generate.VERSION }}.tar.gz
+  #         cd dist
+  #         pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
 
-  #       # Archive wheel file
+  #     - name: Simple smoke test
+  #       run: |
+  #         cd dist
+  #         pip install wxPython-*.whl
+  #         python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
+
+  #     - name: Save wheel as job artifact
+  #       uses: actions/upload-artifact@v3
+  #       # Just Windows and Macos
+  #       if: ${{ matrix.os != 'ubuntu-latest' }}
+  #       with:
+  #         name: wxPython-wheel-${{ matrix.os }}-py${{ matrix.python-version }}-${{ matrix.architecture}}
+  #         path: dist/wxPython-*.whl
