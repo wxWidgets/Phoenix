@@ -1415,6 +1415,9 @@ def cmd_sip(options, args):
             tf.extractall(tmpdir)
         shutil.move(tf_dir, cfg.SIPINC)
 
+    # Copy sip's sip.h for distribution with wxPython's header
+    copyFile('sip/siplib/sip.h', 'wx/include/wxPython', verbose=True)
+
 
 def cmd_touch(options, args):
     cmdTimer = CommandTimer('touch')
