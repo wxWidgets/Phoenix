@@ -46,7 +46,7 @@ jobs:
       - name: Generate code and create sdist
         id: generate
         run: |
-          python build.py setrev etg sip --nodoc sdist
+          python build.py setrev dox etg sip --nodoc sdist
           VERSION=$(python build.py --quiet version)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
