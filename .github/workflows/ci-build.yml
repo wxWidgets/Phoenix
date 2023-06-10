@@ -7,23 +7,36 @@
 name: ci-build
 
 on:
+  # Trigger on push or PRs targeting the master branch
   push:
     branches: [ 'master' ]
   pull_request:
     branches: [ 'master' ]
+
+  # Also allow manual triggering (via web ui)
   workflow_dispatch:
+
+# Cancel the workflow if another instance in the same workflow and PR is triggered
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 defaults:
   run:
+    # always use bash shell, even on windows
     shell: bash
 
 env:
   PYTHONUNBUFFERED: 1
 
+#---------------------------------------------------------------------------
+
 jobs:
+  # Build a wxPython source archive, and save it as an artifact for use in the
+  # job that builds the wheels.
   build-source-dist:
     runs-on: ubuntu-latest
 
@@ -35,6 +48,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: 'recursive'
+          fetch-depth: 0
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
@@ -64,82 +78,113 @@ jobs:
 
 #---------------------------------------------------------------------------
 
-  # build-wheels:
-  #   needs: build-source-dist
-  #   strategy:
-  #     matrix:
-  #       os: [ubuntu-latest, windows-latest, macos-latest]
-  #       python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
-  #       architecture: ['x86', 'x64']
-  #       # Exclude x86 configs on non-Windows OSs
-  #       exclude:
-  #         - os: ubuntu-latest
-  #           architecture: x86
-  #         - os: macos-latest
-  #           architecture: x86
+  # Use pip and the wxPython-source artifact to build a wxPython wheel for every
+  # supported Python version and architecture.
+  build-wheels:
+    # wait for prior job to complete
+    needs: build-source-dist
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        # Start small while testing this job, when done remove the next 2 lines and
+        # uncomment the following ones.
+        python-version: [ '3.9', '3.10' ]
+        architecture: [ 'x64' ]
+        # python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11' ]
+        # architecture: [ 'x86', 'x64' ]
+        # # Exclude x86 configs on non-Windows OSs
+        # exclude:
+        #   - os: ubuntu-latest
+        #     architecture: x86
+        #   - os: macos-latest
+        #     architecture: x86
 
-  #   env:
-  #     VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
+    env:
+      VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
 
-  #   runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v3
-  #       with:
-  #         submodules: 'recursive'
+    outputs:
+      short_name: ${{ steps.init.outputs.short_name }}
+      cannonical_id: ${{ steps.init.outputs.cannonical_id }}
 
-  #     - name: download CI source artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: wxPython-source
-  #         path: dist
+    steps:
+      - name: initialize variables
+        id: init
+        run: |
+          if [ ${{ matrix.os }} == ubuntu-latest ]; then
+              short_name=linux
+          elif [ ${{ matrix.os }} == macos-latest ]; then
+              short_name=macos
+          elif [ ${{ matrix.os }} == windows-latest ]; then
+              if [ ${{ matrix.architecture }} == x64 ]; then
+                  short_name=win64
+              else
+                  short_name=win32
+              fi
+          fi
+          echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
+          echo "cannonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
 
-  #     - name: Set up Python ${{ matrix.python-version }}
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: '${{ matrix.python-version }}'
-  #         architecture: '${{ matrix.architecture }}'
-  #         cache: 'pip'
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
 
-  #     - name: Install Python dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip setuptools wheel
-  #         python -m pip install --upgrade -r requirements.txt
+      - name: download CI source artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: wxPython-source
+          path: dist
 
-  #     - name: Install Ubuntu dependencies
-  #       if: ${{ matrix.os }} == ubuntu-latest
-  #       run: |
-  #         apt-get install -y \
-  #                 freeglut3 \
-  #                 freeglut3-dev \
-  #                 libgl1-mesa-dev \
-  #                 libglu1-mesa-dev \
-  #                 libgstreamer-plugins-base1.0-dev \
-  #                 libgtk-3-dev \
-  #                 libjpeg-dev \
-  #                 libnotify-dev \
-  #                 libsdl2-dev \
-  #                 libsm-dev \
-  #                 libtiff-dev \
-  #                 libwebkit2gtk-4.0-dev \
-  #                 libxtst-dev;
+      - name: Set up Python ${{ matrix.python-version }}-${{ matrix.architecture }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: '${{ matrix.python-version }}'
+          architecture: '${{ matrix.architecture }}'
+          cache: 'pip'
 
-  #     - name: Build wxPython wheel
-  #       run: |
-  #         cd dist
-  #         pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade -r requirements.txt
 
-  #     - name: Simple smoke test
-  #       run: |
-  #         cd dist
-  #         pip install wxPython-*.whl
-  #         python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
+      - name: Install Ubuntu dependencies
+        if: ${{ matrix.os }} == ubuntu-latest
+        run: |
+          sudo apt-get install -y \
+                  build-essential \
+                  freeglut3-dev \
+                  libcurl4-openssl-dev \
+                  libexpat1-dev \
+                  libgl1-mesa-dev \
+                  libglu1-mesa-dev \
+                  libgstreamer-plugins-bad1.0-dev \
+                  libgstreamer-plugins-base1.0-dev \
+                  libgtk-3-dev \
+                  libjpeg-dev \
+                  libnotify-dev \
+                  libsdl2-dev \
+                  libsm-dev \
+                  libtiff-dev \
+                  libwebkit2gtk-4.0-dev \
+                  libxtst-dev
 
-  #     - name: Save wheel as job artifact
-  #       uses: actions/upload-artifact@v3
-  #       # Just Windows and Macos
-  #       if: ${{ matrix.os != 'ubuntu-latest' }}
-  #       with:
-  #         name: wxPython-wheel-${{ matrix.os }}-py${{ matrix.python-version }}-${{ matrix.architecture}}
-  #         path: dist/wxPython-*.whl
+      - name: Build the wxPython wheel
+        run: |
+          cd dist
+          pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+
+      - name: Simple smoke test
+        run: |
+          cd dist
+          pip install wxPython-*.whl
+          python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
+
+      - name: Save wheel as job artifact
+        uses: actions/upload-artifact@v3
+        # Just Windows and MacOS for now
+        if: ${{ matrix.os != 'ubuntu-latest' }}
+        with:
+          name: wxPython-wheel-${{ steps.init.outputs.cannonical_id }}
+          path: dist/wxPython-*.whl
