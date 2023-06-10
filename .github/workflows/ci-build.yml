@@ -62,12 +62,16 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install --upgrade -r requirements.txt
 
-      - name: Generate code and create sdist
+      - name: Generate wrapper code
         id: generate
         run: |
-          python build.py setrev dox etg sip --nodoc sdist
+          python build.py setrev dox etg sip --nodoc
           VERSION=$(python build.py --quiet version)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create source distribution (sdist)
+        run: |
+          python build.py sdist
 
       - name: Save sdist as job artifact
         uses: actions/upload-artifact@v3
