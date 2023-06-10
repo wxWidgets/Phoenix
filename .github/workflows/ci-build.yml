@@ -150,18 +150,15 @@ jobs:
           python -m pip install --upgrade -r requirements.txt
 
       - name: Install Ubuntu dependencies
-        if: ${{ matrix.os }} == ubuntu-latest
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-                  build-essential \
                   freeglut3-dev \
                   libcurl4-openssl-dev \
                   libexpat1-dev \
                   libgl1-mesa-dev \
                   libglu1-mesa-dev \
-                  libgstreamer-plugins-bad1.0-dev \
-                  libgstreamer-plugins-base1.0-dev \
                   libgtk-3-dev \
                   libjpeg-dev \
                   libnotify-dev \
@@ -169,7 +166,11 @@ jobs:
                   libsm-dev \
                   libtiff-dev \
                   libwebkit2gtk-4.0-dev \
-                  libxtst-dev
+                  libxtst-dev \
+                  libunwind-dev \
+                  libgstreamer1.0-dev \
+                  libgstreamer-plugins-base1.0-dev
+
 
       - name: Build the wxPython wheel
         run: |
