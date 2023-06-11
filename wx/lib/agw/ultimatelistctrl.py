@@ -5265,7 +5265,7 @@ class UltimateListHeaderWindow(wx.Control):
                 xAligned = x + cw - wLabel - HEADER_OFFSET_X
 
             elif align == ULC_FORMAT_CENTER:
-                xAligned = x + wcheck + (cw - wLabel)/2
+                xAligned = x + wcheck + (cw - wLabel)//2
 
             # if we have an image, draw it on the right of the label
             if imageList:
@@ -5603,7 +5603,7 @@ class UltimateListHeaderWindow(wx.Control):
 
         w, h = self.GetClientSize()
         ix, iy = self._owner.GetCheckboxImageSize()
-        rect = wx.Rect(theX + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)/2, ix, iy)
+        rect = wx.Rect(theX + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)//2, ix, iy)
 
         if rect.Contains(pos):
             # User clicked on the checkbox
