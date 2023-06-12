@@ -797,6 +797,14 @@ def checkCompiler(quiet=False):
 
         arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
         info = getMSVCInfo(PYTHON, arch, set_env=True)
+        if not quiet:
+            msg('MSVCinfo:')
+            msg(f'   vc_ver:  {info.vc_ver}')
+            msg(f'   vs_ver:  {info.vs_ver}')
+            msg(f'   arch:    {info.arch}')
+            msg(f'   include: {info.include}')
+            msg(f'   lib:     {info.lib}')
+            msg(f'   libpath: {info.libpath}')
 
         # Make sure there is now a cl.exe on the PATH
         CL = 'NOT FOUND'
@@ -806,17 +814,16 @@ def checkCompiler(quiet=False):
                 CL = p
                 break
         if not quiet:
-            msg(f"CL.exe: {CL}")
+            msg(f'   CL.exe:  {CL}')
 
             # Just needed for debugging
-            # msg('include: ' + info.include)
-            # msg('lib:     ' + info.lib)
-            # msg('libpath: ' + info.libpath)
-            # for d in info.include.split(os.pathsep):
-            #     p = pathlib.Path(d, 'tchar.h')
-            #     if p.exists():
-            #         msg('tchar.h: ' + str(p))
-            #         break
+            for d in info.include.split(os.pathsep):
+                p = pathlib.Path(d, 'tchar.h')
+                if p.exists():
+                    msg(f'   tchar.h: {p}')
+                    break
+            else:
+                msg('**** tchar.h NOT FOUND!')
 
 
     # NOTE: SIP is now generating code with scoped-enums. Older linux
@@ -2149,6 +2156,7 @@ def cmd_sdist(options, args):
     if os.path.exists(PDEST):
         shutil.rmtree(PDEST)
     os.makedirs(PDEST)
+    TMP = os.path.abspath('build')
 
     # and a place to put the final tarball
     if not os.path.exists('dist'):
@@ -2160,7 +2168,11 @@ def cmd_sdist(options, args):
         if not os.path.exists(dest):
             os.path.makedirs(dest)
         pwd = pushDir(root)
-        runcmd('git archive HEAD | tar -x -C %s' % dest, echoCmd=False)
+        #runcmd('git archive HEAD | tar -x -C %s' % dest, echoCmd=False)
+        archive = opj(TMP, 'export.tar')
+        runcmd('git archive --format=tar -o %s HEAD' % archive)
+        runcmd('tar -C %s -xf %s' %(dest, archive))
+        os.unlink(archive)
 
         if os.path.exists('.gitmodules'):
             with open('.gitmodules', 'rt') as fid:
@@ -2183,10 +2195,8 @@ def cmd_sdist(options, args):
     for srcdir in ['cpp', 'gen', 'siplib']:
         destdir = posixjoin(PDEST, 'sip', srcdir)
         for name in glob.glob(posixjoin('sip', srcdir, '*')):
-            try:
+            if not os.path.isdir(name):
                 copyFile(name, destdir)
-            except IsADirectoryError:
-                pass
     sip_h_dir = posixjoin(cfg.PKGDIR, 'include', 'wxPython')
     copyFile(posixjoin(sip_h_dir, 'sip.h'), posixjoin(PDEST, sip_h_dir))
     for wc in ['*.py', '*.pi', '*.pyi']:
