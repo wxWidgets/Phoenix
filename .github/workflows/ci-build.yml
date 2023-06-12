@@ -175,6 +175,9 @@ jobs:
                   libgstreamer1.0-dev \
                   libgstreamer-plugins-base1.0-dev
 
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: '${{ matrix.architecture }}'
 
       - name: Build the wxPython wheel
         run: |
