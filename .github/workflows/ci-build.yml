@@ -90,18 +90,14 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        # Start small while testing this job, when done remove the next 2 lines and
-        # uncomment the following ones.
-        python-version: [ '3.9', '3.10' ]
-        architecture: [ 'x64' ]
-        # python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11' ]
-        # architecture: [ 'x86', 'x64' ]
-        # # Exclude x86 configs on non-Windows OSs
-        # exclude:
-        #   - os: ubuntu-latest
-        #     architecture: x86
-        #   - os: macos-latest
-        #     architecture: x86
+        python-version: [ '3.8', '3.9', '3.10', '3.11' ]
+        architecture: [ 'x86', 'x64' ]
+        # Exclude x86 configs on non-Windows OSs
+        exclude:
+          - os: ubuntu-latest
+            architecture: x86
+          - os: macos-latest
+            architecture: x86
 
     env:
       VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
@@ -175,7 +171,8 @@ jobs:
                   libgstreamer1.0-dev \
                   libgstreamer-plugins-base1.0-dev
 
-      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: '${{ matrix.architecture }}'
 
@@ -192,7 +189,8 @@ jobs:
 
       - name: Save wheel as job artifact
         uses: actions/upload-artifact@v3
-        # Just Windows and MacOS for now
+        # Just Windows and MacOS for now, all we care about for Linux at this
+        # point is that the build was successful.
         if: ${{ matrix.os != 'ubuntu-latest' }}
         with:
           name: wxPython-wheel-${{ steps.init.outputs.cannonical_id }}
