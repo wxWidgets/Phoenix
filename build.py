@@ -797,14 +797,16 @@ def checkCompiler(quiet=False):
 
         arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
         info = getMSVCInfo(PYTHON, arch, set_env=True)
-        if not quiet:
-            msg('MSVCinfo:')
-            msg(f'   vc_ver:  {info.vc_ver}')
-            msg(f'   vs_ver:  {info.vs_ver}')
-            msg(f'   arch:    {info.arch}')
-            msg(f'   include: {info.include}')
-            msg(f'   lib:     {info.lib}')
-            msg(f'   libpath: {info.libpath}')
+
+        # # Just needed for debugging
+        # if not quiet:
+        #     msg('MSVCinfo:')
+        #     msg(f'   vc_ver:  {info.vc_ver}')
+        #     msg(f'   vs_ver:  {info.vs_ver}')
+        #     msg(f'   arch:    {info.arch}')
+        #     msg(f'   include: {info.include}')
+        #     msg(f'   lib:     {info.lib}')
+        #     msg(f'   libpath: {info.libpath}')
 
         # Make sure there is now a cl.exe on the PATH
         CL = 'NOT FOUND'
@@ -816,14 +818,14 @@ def checkCompiler(quiet=False):
         if not quiet:
             msg(f'   CL.exe:  {CL}')
 
-            # Just needed for debugging
-            for d in info.include.split(os.pathsep):
-                p = pathlib.Path(d, 'tchar.h')
-                if p.exists():
-                    msg(f'   tchar.h: {p}')
-                    break
-            else:
-                msg('**** tchar.h NOT FOUND!')
+            # # Just needed for debugging
+            # for d in info.include.split(os.pathsep):
+            #     p = pathlib.Path(d, 'tchar.h')
+            #     if p.exists():
+            #         msg(f'   tchar.h: {p}')
+            #         break
+            # else:
+            #     msg('**** tchar.h NOT FOUND!')
 
 
     # NOTE: SIP is now generating code with scoped-enums. Older linux
