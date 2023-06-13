@@ -187,7 +187,7 @@ jobs:
           cd dist
           pip install wxPython-*.whl
           python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
-          pip uninstall wxPython
+          pip uninstall --yes wxPython
 
       - name: Save wheel as job artifact
         uses: actions/upload-artifact@v3
