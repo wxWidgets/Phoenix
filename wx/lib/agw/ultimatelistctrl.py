@@ -5273,7 +5273,7 @@ class UltimateListHeaderWindow(wx.Control):
                     if img >= 0:
                         imageList.Draw(img, dc,
                                        xAligned + wLabel - (ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE)*(indx+1),
-                                       HEADER_OFFSET_Y + (h - 4 - iy)/2,
+                                       HEADER_OFFSET_Y + (h - 4 - iy)//2,
                                        wx.IMAGELIST_DRAW_TRANSPARENT)
 
                         cw -= ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
