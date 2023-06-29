@@ -7914,9 +7914,9 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
 
                 if rect.y < view_y:
-                    self.Scroll(-1, rect.y/hLine)
+                    self.Scroll(-1, rect.y//hLine)
                 if rect.y+rect.height+5 > view_y+client_h:
-                    self.Scroll(-1, (rect.y+rect.height-client_h+hLine)/hLine)
+                    self.Scroll(-1, (rect.y+rect.height-client_h+hLine)//hLine)
 
                 if wx.Platform == "__WXMAC__":
                     # At least on Mac the visible lines value will get reset inside of
