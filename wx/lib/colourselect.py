@@ -321,10 +321,12 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
 
         if label:
             # Add a label to it
-            avg = functools.reduce(lambda a, b: a + b, self.colour.Get()) / 3
-            fcolour = avg > 128 and wx.BLACK or wx.WHITE
-            dc.SetTextForeground(fcolour)
-            dc.DrawLabel(label, (0,0, width-bdr, height-bdr),
+            labcol =  self.colour.Get()
+            avg = (labcol[0] + labcol[1] + labcol[2])/3
+            if len(labcol) > 3: # alpha included
+                avg *= labcol[3]/255.0
+            dc.SetTextForeground(wx.BLACK if avg > 128 else wx.WHITE)
+            dc.DrawLabel(label, (0, 0, width-bdr, height-bdr),
                          wx.ALIGN_CENTER)
 
         dc.SelectObject(wx.NullBitmap)
@@ -382,4 +384,3 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
         # moved after dlg.Destroy, since who knows what the callback will do...
         if changed:
             self.OnChange()
-
