@@ -314,6 +314,7 @@ def run():
                 if p.type == 'unsigned char':
                     p.pyInt = True
 
+    setParamsPyInt('Clear')
     setParamsPyInt('Replace')
     setParamsPyInt('ConvertAlphaToMask')
     setParamsPyInt('ConvertToMono')
