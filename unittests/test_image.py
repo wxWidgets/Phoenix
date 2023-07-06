@@ -310,6 +310,10 @@ class image_Tests(wtc.WidgetTestCase):
             imghndlr = TestImageHandler()
             wx.Image.AddHandler(imghndlr)
 
+    def test_imageClear(self):
+        img = wx.Image(100,100)
+        img.Clear(255)
+
 #---------------------------------------------------------------------------
 
 
