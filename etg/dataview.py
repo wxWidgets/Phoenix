@@ -24,6 +24,7 @@ ITEMS  = [
             'wxDataViewItem',
             'wxDataViewItemAttr',
             'wxDataViewIconText',
+            'wxDataViewCheckIconText',
             'wxDataViewModelNotifier',
 
             'wxDataViewModel',
@@ -308,6 +309,7 @@ def run():
     # them in all these classes
     for name in [ 'wxDataViewTextRenderer',
                   'wxDataViewIconTextRenderer',
+                  'wxDataViewCheckIconTextRenderer',
                   'wxDataViewProgressRenderer',
                   'wxDataViewSpinRenderer',
                   'wxDataViewToggleRenderer',
