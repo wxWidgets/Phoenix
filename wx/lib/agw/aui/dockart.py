@@ -208,7 +208,7 @@ class AuiDefaultDockArt(object):
 
         self._active_caption_gradient_colour = LightContrastColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
         self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
-        self._inactive_caption_text_colour = wx.BLACK
+        self._inactive_caption_text_colour =  wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
 
 
     def SetDefaultColours(self, base_colour=None):
