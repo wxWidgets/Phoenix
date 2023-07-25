@@ -42,7 +42,6 @@ for manipulating the SVG shape info in memory.
 
 import sys
 
-cimport cython.object
 from cpython.buffer cimport (
     Py_buffer, PyObject_CheckBuffer, PyObject_GetBuffer, PyBUF_SIMPLE,
     PyBuffer_Release)
