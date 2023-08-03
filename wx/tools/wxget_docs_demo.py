@@ -33,6 +33,7 @@ import os
 import subprocess
 import webbrowser
 import tarfile
+import warnings
 if sys.version_info >= (3,):
     from urllib.error import HTTPError
     import urllib.request as urllib2
@@ -84,7 +85,11 @@ def unpack_cached(cached, dest_dir):
     """ Unpack from the cache."""
     print('Unpack', cached, 'to', dest_dir)
     with tarfile.open(cached, "r:*") as tf:
-        tf.extractall(dest_dir)
+        try:
+            tf.extractall(dest_dir, filter='data')
+        except TypeError:
+            warnings.warn('Falling back to less safe tarfile.extractall')
+            tf.extractall(dest_dir)
     dest_dir = os.listdir(dest_dir)[0]
     return dest_dir
 

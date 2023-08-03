@@ -28,6 +28,7 @@ import tempfile
 import datetime
 import shlex
 import textwrap
+import warnings
 
 try:
     import pathlib
@@ -1403,7 +1404,11 @@ def cmd_sip(options, args):
         tf_name = glob.glob(tmpdir + '/*.tar*')[0]
         tf_dir = os.path.splitext(os.path.splitext(tf_name)[0])[0]
         with tarfile.open(tf_name) as tf:
-            tf.extractall(tmpdir)
+            try:
+                tf.extractall(tmpdir, filter='data')
+            except TypeError:
+                warnings.warn('Falling back to less safe tarfile.extractall')
+                tf.extractall(tmpdir)
         shutil.move(tf_dir, cfg.SIPINC)
 
 
