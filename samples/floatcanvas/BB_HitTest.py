@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 """
-Test of an alternative hit test methoid that used the bounding boxes of the objects instead.
+Test of an alternative hit test method that used the bounding boxes of the objects instead.
 
-Poorly tested!
+Poorly tested -- and broken on recent versions
+
 
 Edited from code contributed by Benjamin Jessup on the mailing list
 

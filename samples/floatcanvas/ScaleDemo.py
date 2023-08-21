@@ -30,7 +30,7 @@ def YScaleFun(center):
 
     """
     # center gets ignored in this case
-    return N.array((5e7, 1), N.float)
+    return N.array((5e7, 1), N.float64)
 
 class DrawFrame(wx.Frame):
 
@@ -49,7 +49,7 @@ class DrawFrame(wx.Frame):
                                      size = (500,500),
                                      ProjectionFun = YScaleFun,
                                      Debug = 0,
-                                     BackgroundColor = "DARK SLATE BLUE",
+                                     BackgroundColor = "LIGHT BLUE",
                                      ).Canvas
 
         self.Canvas = Canvas

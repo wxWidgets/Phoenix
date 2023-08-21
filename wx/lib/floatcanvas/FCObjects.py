@@ -2706,7 +2706,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
             Diameter = ScaleWorldToPixel( (self.Diameter,self.Diameter) )[0]
         else:
             Diameter = self.Diameter
-        WH = N.array((Diameter,Diameter), dtype = int32)
+        WH = N.array((Diameter,Diameter), dtype = N.int32)
         Corner = CenterXY - (WH / 2).astype(N.int32)
         dc.SetPen(self.Pen)
         for i, brush in enumerate(self.Brushes):

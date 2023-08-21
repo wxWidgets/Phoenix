@@ -7,7 +7,6 @@ BNA is a simple text format for storing polygons in lat-long coordinates.
 
 """
 import os, sys
-import sets
 
 import numpy as N
 
@@ -64,20 +63,20 @@ class BNAData:
         self.Names = []
         self.Types = []
 
-        with open(filename,'rU') as file_:
+        with open(filename,'r') as file_:
             for line in file_:
                 if not line:
                     break
                 line = line.strip()
                 Name, line = line.split('","')
                 Name = Name[1:]
-                Type,line = line.split('",')
+                Type, line = line.split('",')
                 num_points = int(line)
                 self.Types.append(Type)
                 self.Names.append(Name)
-                polygon = N.zeros((num_points,2),N.float)
+                polygon = N.zeros((num_points,2),N.float64)
                 for i in range(num_points):
-                    polygon[i,:] = map(float, file_.readline().split(','))
+                    polygon[i,:] = [float(p) for p in file_.readline().split(',')]
                 self.PointsData.append(polygon)
 
         return None
@@ -129,9 +128,9 @@ class DrawFrame(wx.Frame):
 
         wx.EVT_CLOSE(self, self.OnCloseWindow)
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove )
-        FloatCanvas.EVT_LEFT_UP(self.Canvas, self.OnLeftUp )
-        FloatCanvas.EVT_LEFT_DOWN(self.Canvas, self.OnLeftDown)
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp )
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
 
         try:
             self.FileDialog = wx.FileDialog(self, "Pick a BNA file",".","","*", wx.FD_OPEN)
@@ -208,7 +207,7 @@ class DrawFrame(wx.Frame):
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
             dc.SetLogicalFunction(wx.XOR)
             if self.SelectedPointNeighbors is None:
-                self.SelectedPointNeighbors = N.zeros((3,2), N.float)
+                self.SelectedPointNeighbors = N.zeros((3,2), N.float64)
                 #fixme: This feels very inelegant!
                 if Index == 0:
                     self.SelectedPointNeighbors[0] = self.SelectedPoly.Points[-1]
@@ -278,6 +277,16 @@ class DrawFrame(wx.Frame):
         try:
             AllPolys = []
             self.BNAFile  = BNAData(filename)
+        except Exception as err:
+            raise
+            dlg = wx.MessageDialog(None,
+                                   'There was something wrong with the selected bna file',
+                                   'File Loading Error:\n'
+                                   f'{err}',
+                                   wx.OK | wx.ICON_ERROR)
+            dlg.ShowModal()
+            dlg.Destroy()
+        else:
             print("loaded BNAFile:", self.BNAFile.Filename)
             for i, shoreline in enumerate(self.BNAFile.PointsData):
                 Poly = self.Canvas.AddPolygon(shoreline,
@@ -289,16 +298,8 @@ class DrawFrame(wx.Frame):
                 Poly.BNAIndex = i
                 AllPolys.append(Poly)
             self.Canvas.ZoomToBB()
-            self.ChangedPolys = sets.Set()
+            self.ChangedPolys = set()
             self.AllPolys = AllPolys
-        except:
-            #raise
-            dlg = wx.MessageDialog(None,
-                                   'There was something wrong with the selected bna file',
-                                   'File Loading Error',
-                                   wx.OK | wx.ICON_ERROR)
-            dlg.ShowModal()
-            dlg.Destroy()
 
 
 class BNAEditor(wx.App):

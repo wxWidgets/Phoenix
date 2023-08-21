@@ -23,7 +23,7 @@ except ImportError:
 # print("FloatCanvas at:", FloatCanvas.__file__)
 
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources
-print("FloatCanvas at:", FloatCanvas.__file__)
+# print("FloatCanvas at:", FloatCanvas.__file__)
 
 import wx.lib.colourdb
 import time
