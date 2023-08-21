@@ -616,7 +616,7 @@ class PolyMarker(PolyPoints):
     def _circle(self, dc, coords, size=1):
         fact = 2.5 * size
         wh = 5.0 * size
-        rect = np.zeros((len(coords), 4), np.float) + [0.0, 0.0, wh, wh]
+        rect = np.zeros((len(coords), 4), float) + [0.0, 0.0, wh, wh]
         rect[:, 0:2] = coords - [fact, fact]
         dc.DrawEllipseList(rect.astype(np.int32))
 
@@ -627,7 +627,7 @@ class PolyMarker(PolyPoints):
     def _square(self, dc, coords, size=1):
         fact = 2.5 * size
         wh = 5.0 * size
-        rect = np.zeros((len(coords), 4), np.float) + [0.0, 0.0, wh, wh]
+        rect = np.zeros((len(coords), 4), float) + [0.0, 0.0, wh, wh]
         rect[:, 0:2] = coords - [fact, fact]
         dc.DrawRectangleList(rect.astype(np.int32))
 
@@ -1199,7 +1199,7 @@ class PolyBoxPlot(PolyPoints):
         size = 0.5
         fact = 2.5 * size
         wh = 5.0 * size
-        rect = np.zeros((len(pt_data), 4), np.float) + [0.0, 0.0, wh, wh]
+        rect = np.zeros((len(pt_data), 4), float) + [0.0, 0.0, wh, wh]
         rect[:, 0:2] = pt_data - [fact, fact]
         dc.DrawRectangleList(rect.astype(np.int32))
 

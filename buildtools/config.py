@@ -27,8 +27,6 @@ from distutils.dep_util  import newer
 
 import distutils.sysconfig
 
-from attrdict import AttrDict
-
 runSilently = False
 
 #----------------------------------------------------------------------
@@ -142,12 +140,15 @@ class Configuration(object):
         self.finishSetup()
 
 
-    def finishSetup(self, wx_config=None, debug=None):
+    def finishSetup(self, wx_config=None, debug=None, compiler=None):
         if wx_config is not None:
             self.WX_CONFIG = wx_config
 
         if debug is not None:
             self.debug = debug
+
+        if compiler is not None:
+            self.COMPILER = compiler
 
         #---------------------------------------
         # MSW specific settings
@@ -989,6 +990,8 @@ def getMSVCInfo(PYTHON, arch, set_env=False):
     if MSVCinfo is not None:
         return MSVCinfo
 
+    from attrdict import AttrDict
+
     # Note that it starts with a monkey-patch in setuptools.msvc to
     # workaround this issue: pypa/setuptools#1902
     cmd = \
@@ -1030,7 +1033,7 @@ def canGetSOName():
 
 def getSOName(filename):
     output = runcmd('objdump -p %s' % filename, True)
-    result = re.search('^\s+SONAME\s+(.+)$', output, re.MULTILINE)
+    result = re.search(r'^\s+SONAME\s+(.+)$', output, re.MULTILINE)
     if result:
         return result.group(1)
     return None

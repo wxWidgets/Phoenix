@@ -89,6 +89,7 @@ Programming Language :: Python :: 3.7
 Programming Language :: Python :: 3.8
 Programming Language :: Python :: 3.9
 Programming Language :: Python :: 3.10
+Programming Language :: Python :: 3.11
 Programming Language :: Python :: Implementation :: CPython
 Topic :: Software Development :: User Interfaces
 """
@@ -374,7 +375,6 @@ if __name__ == '__main__':
           keywords         = KEYWORDS,
           install_requires = INSTALL_REQUIRES,
           zip_safe         = False,
-          use_2to3         = False,
           include_package_data = True,
 
           packages         = WX_PKGLIST,

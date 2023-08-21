@@ -2270,7 +2270,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         """
         XY = WorldToPixel(self.XY)
         H = ScaleWorldToPixel(self.Height)[0]
-        W = H * (self.bmpWidth / self.bmpHeight)
+        W = int(H * (self.bmpWidth / self.bmpHeight))
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (0, 0, self.bmpWidth, self.bmpHeight, W, H) ):
         #if True: #fixme: (self.ScaledBitmap is None) or (H != self.ScaledHeight) :
             self.ScaledHeight = H
@@ -2690,7 +2690,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
         dc.SetPen(self.Pen)
         for i, brush in enumerate(self.Brushes):
             dc.SetBrush( brush )
-            dc.DrawEllipticArc(Corner[0], Corner[1], WH[0], WH[1], self.Angles[i], self.Angles[i+1])
+            dc.DrawEllipticArc(int(Corner[0]), int(Corner[1]), int(WH[0]), int(WH[1]), self.Angles[i], self.Angles[i+1])
         if HTdc and self.HitAble:
             if self.Scaled:
                 radius = (ScaleWorldToPixel(self.Diameter)/2)[0]# just the x-coord
@@ -2698,7 +2698,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
                 radius = self.Diameter/2
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
-            HTdc.DrawCircle(CenterXY, radius)
+            HTdc.DrawCircle(CenterXY.tolist(), int(radius))
 
 
 class Group(DrawObject):

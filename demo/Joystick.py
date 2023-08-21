@@ -87,15 +87,15 @@ class JoyGauge(wx.Panel):
 
         # Restrict our drawing activities to the square defined
         # above.
-        dc.SetClippingRegion(xorigin, yorigin, edgeSize, edgeSize)
+        dc.SetClippingRegion(int(xorigin), int(yorigin), int(edgeSize), int(edgeSize))
 
         dc.SetBrush(wx.Brush(wx.Colour(251, 252, 237)))
-        dc.DrawRectangle(xorigin, yorigin, edgeSize, edgeSize)
+        dc.DrawRectangle(int(xorigin), int(yorigin), int(edgeSize), int(edgeSize))
 
         dc.SetPen(wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT_DASH))
 
-        dc.DrawLine(xorigin, yorigin + center, xorigin + edgeSize, yorigin + center)
-        dc.DrawLine(xorigin + center, yorigin, xorigin + center, yorigin + edgeSize)
+        dc.DrawLine(int(xorigin), int(yorigin + center), int(xorigin + edgeSize), int(yorigin + center))
+        dc.DrawLine(int(xorigin + center), int(yorigin), int(xorigin + center), int(yorigin + edgeSize))
 
         if self.stick:
             # Get the joystick position as a float
@@ -133,8 +133,8 @@ class JoyGauge(wx.Panel):
 
             # Now to draw it.
             dc.SetPen(wx.Pen(wx.RED, 2))
-            dc.DrawLine(x, 0, x, h)
-            dc.DrawLine(0, y, w, y)
+            dc.DrawLine(int(x), 0, int(x), int(h))
+            dc.DrawLine(0, int(y), int(w), int(y))
 
 
     def Update(self):
@@ -230,14 +230,14 @@ class POVGauge(wx.Panel):
 
         # our 'raster'.
         dc.SetBrush(wx.Brush(wx.WHITE))
-        dc.DrawCircle(xcenter, ycenter, diameter/2)
+        dc.DrawCircle(int(xcenter), int(ycenter), int(diameter/2))
         dc.SetBrush(wx.Brush(wx.BLACK))
-        dc.DrawCircle(xcenter, ycenter, 10)
+        dc.DrawCircle(int(xcenter), int(ycenter), 10)
 
         # fancy decorations
         dc.SetPen(wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT_DASH))
-        dc.DrawLine(xorigin, ycenter, xorigin + diameter, ycenter)
-        dc.DrawLine(xcenter, yorigin, xcenter, yorigin + diameter)
+        dc.DrawLine(int(xorigin), int(ycenter), int(xorigin + diameter), int(ycenter))
+        dc.DrawLine(int(xcenter), int(yorigin), int(xcenter), int(yorigin + diameter))
 
         if self.stick:
             if self.avail:
@@ -275,11 +275,11 @@ class POVGauge(wx.Panel):
 
                 # Draw the line
                 dc.SetPen(wx.Pen(wx.BLUE, 2))
-                dc.DrawLine(xcenter, ycenter, nx, ny)
+                dc.DrawLine(int(xcenter), int(ycenter), int(nx), int(ny))
 
                 # And a little thing to show the endpoint
                 dc.SetBrush(wx.Brush(wx.BLUE))
-                dc.DrawCircle(nx, ny, 8)
+                dc.DrawCircle(int(nx), int(ny), 8)
 
 
     def Update(self):
@@ -442,7 +442,7 @@ class LED(wx.Panel):
         else:
             dc.SetBrush(wx.Brush(wx.BLACK))
 
-        dc.DrawCircle(center, center, bw/2)
+        dc.DrawCircle(int(center), int(center), int(bw/2))
 
         txt = str(self.number)
 
@@ -463,7 +463,7 @@ class LED(wx.Panel):
         # functions. The pseudo-shadow gives the text contrast
         # regardless of whether the bar is under it or not.
         dc.SetTextForeground(wx.WHITE)
-        dc.DrawText(txt, tx, ty)
+        dc.DrawText(txt, int(tx), int(ty))
 
 
 
@@ -690,10 +690,10 @@ class AxisBar(wx.Gauge):
         # functions. The pseudo-shadow gives the text contrast
         # regardless of whether the bar is under it or not.
         dc.SetTextForeground(wx.BLACK)
-        dc.DrawText(txt, tx, ty)
+        dc.DrawText(txt, int(tx), int(ty))
 
         dc.SetTextForeground('white')
-        dc.DrawText(txt, tx-1, ty-1)
+        dc.DrawText(txt, int(tx-1), int(ty-1))
 
 
 #----------------------------------------------------------------------------

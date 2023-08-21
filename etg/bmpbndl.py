@@ -98,6 +98,8 @@ def run():
     c.find('DoGetPreferredSize').ignore(False)
     c.find('GetIndexToUpscale').ignore(False)
     c.find('GetNextAvailableScale').ignore(False)
+    c.find('GetNextAvailableScale.i').inOut = True
+    c.find('GetNextAvailableScale.i').name = 'idx'
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

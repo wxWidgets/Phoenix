@@ -74,7 +74,7 @@ ITEMS  = [
     'wxPressAndTapEvent',
 
 
-    #'wxThreadEvent',
+    'wxThreadEvent',
 
 ]
 
@@ -614,6 +614,12 @@ def run():
     c = module.find('wxIconizeEvent')
     # deprecated and removed
     c.find('Iconized').ignore()
+
+    #---------------------------------------
+    # wxThreadEvent
+    c = module.find('wxThreadEvent')
+    c.find('SetPayload').ignore()
+    c.find('GetPayload').ignore()
 
 
 

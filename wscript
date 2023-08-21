@@ -35,8 +35,7 @@ out = 'build/waf'
 def options(opt):
     if isWindows:
         opt.load('msvc')
-    else:
-        opt.load('compiler_c compiler_cxx')
+    opt.load('compiler_c compiler_cxx')
     opt.load('python')
 
     opt.add_option('--debug', dest='debug', action='store_true', default=False,
@@ -56,6 +55,8 @@ def options(opt):
                    help='On Linux build for gtk2 (default gtk3)')
     opt.add_option('--gtk3', dest='gtk3', action='store_true', default=True,
                    help='On Linux build for gtk3')
+    opt.add_option('--no_msvc', dest='use_msvc', action='store_false', default=isWindows,
+                   help='Set to use a MinGW toolchain')
     opt.add_option('--msvc_arch', dest='msvc_arch', default='x86', action='store',
                    help='The architecture to target for MSVC builds. Supported values '
                    'are: "x86" or "x64"')
@@ -65,7 +66,7 @@ def options(opt):
 
 
 def configure(conf):
-    if isWindows:
+    if conf.options.use_msvc:
         # Set up the MSVC compiler info for wxPython's build
 
         PYTHON = conf.options.python if conf.options.python else sys.executable
@@ -82,6 +83,8 @@ def configure(conf):
     else:
         # Otherwise, use WAF's default setup for the C and C++ compiler
         conf.load('compiler_c compiler_cxx')
+        if isWindows:
+            conf.load('winres')
 
     # Set up Python
     if conf.options.python:
@@ -100,10 +103,12 @@ def configure(conf):
     conf.env.debug = conf.options.debug
     conf.env.msvc_relwithdebug = conf.options.msvc_relwithdebug
 
+    conf.env.use_msvc = conf.options.use_msvc
+
     # Ensure that the headers in siplib and Phoenix's src dir can be found
     conf.env.INCLUDES_WXPY = ['sip/siplib', 'wx/include', 'src']
 
-    if isWindows:
+    if conf.options.use_msvc:
         # Windows/MSVC specific stuff
 
         cfg.finishSetup(debug=conf.env.debug)
@@ -186,7 +191,8 @@ def configure(conf):
         # Configuration stuff for non-Windows ports using wx-config
         # First finish configuring the Config object
         conf.env.wx_config = conf.options.wx_config
-        cfg.finishSetup(conf.env.wx_config, conf.env.debug)
+        cfg.finishSetup(conf.env.wx_config, conf.env.debug,
+                        'mingw32' if isWindows and not conf.env.use_msvc else None)
 
         conf.env.CFLAGS = cfg.cflags[:]
         conf.env.CXXFLAGS = cfg.cxxflags[:]
@@ -377,7 +383,7 @@ def my_check_python_headers(conf):
     if not pybin:
         conf.fatal('Could not find the python executable')
 
-    v = 'prefix SO LDFLAGS LIBDIR LIBPL INCLUDEPY Py_ENABLE_SHARED MACOSX_DEPLOYMENT_TARGET LDSHARED CFLAGS'.split()
+    v = 'prefix SO EXT_SUFFIX LDFLAGS LIBDIR LIBPL INCLUDEPY Py_ENABLE_SHARED MACOSX_DEPLOYMENT_TARGET LDSHARED CFLAGS'.split()
     try:
         lst = conf.get_python_variables(["get_config_var('%s') or ''" % x for x in v])
     except RuntimeError:
@@ -391,7 +397,7 @@ def my_check_python_headers(conf):
     if dct[x]:
         conf.env[x] = conf.environ[x] = dct[x]
 
-    env['pyext_PATTERN'] = '%s' + dct['SO'] # not a mistake
+    env['pyext_PATTERN'] = '%s' + (dct['EXT_SUFFIX'] or dct['SO']) # SO is deprecated in 3.5 and removed in 3.11
 
     # Check for python libraries for embedding
     all_flags = dct['LDFLAGS'] + ' ' + dct['CFLAGS']
@@ -519,7 +525,8 @@ def build(bld):
     from distutils.file_util import copy_file
     from buildtools.config   import opj, updateLicenseFiles
 
-    cfg.finishSetup(bld.env.wx_config)
+    cfg.finishSetup(wx_config=bld.env.wx_config,
+                    compiler='mingw32' if isWindows and not bld.env.use_msvc else None)
 
     if not isWindows:
         cmd = ' '.join(bld.env.CC) + ' --version'
@@ -643,7 +650,7 @@ def copyFileToPkg(task):
     open(tgt, "wb").close() # essentially just a unix 'touch' command
     tgt = opj(cfg.PKGDIR, os.path.basename(src))
     copy_file(src, tgt, verbose=1)
-    if isWindows and task.env.msvc_relwithdebug:
+    if task.env.use_msvc and task.env.msvc_relwithdebug:
         # also copy the .pdb file
         src = src.replace('.pyd', '.pdb')
         tgt = opj(cfg.PKGDIR, os.path.basename(src))
@@ -677,7 +684,7 @@ def makeETGRule(bld, etgScript, moduleName, libFlags):
     addRelwithdebugFlags(bld, moduleName)
 
     rc = []
-    if isWindows:
+    if bld.env.use_msvc:
         rc_name = moduleName + '.rc'
         bld(rule=simpleCopy,
             source='src/wxc.rc',
@@ -697,7 +704,7 @@ def makeETGRule(bld, etgScript, moduleName, libFlags):
 
 # Add flags to create .pdb files for debugging with MSVC
 def addRelwithdebugFlags(bld, moduleName):
-    if isWindows and bld.env.msvc_relwithdebug:
+    if bld.env.use_msvc and bld.env.msvc_relwithdebug:
         compile_flags = ['/Zi', '/Fd_tmp_{}.pdb'.format(moduleName)]
         if sys.version_info > (3,5):
             # It looks like the /FS flag doesn't exist in the compilers used

@@ -10,7 +10,10 @@ and lists them along with a backlink to the original location.
 from docutils import nodes
 
 from sphinx.locale import _
-from sphinx.environment import NoUri
+try:
+    from sphinx.errors import NoUri         # since Sphinx 3.0
+except ImportError:
+    from sphinx.environment import NoUri    # till Sphinx 3.0
 from sphinx.util.nodes import set_source_info
 from docutils.parsers.rst import Directive
 
@@ -181,11 +184,11 @@ def depart_availability_node(self, node):
 # ----------------------------------------------------------------------- #
 
 def setup(app):
-    app.add_javascript('javascript/header.js')
-    app.add_javascript('javascript/sidebar.js')
-    app.add_javascript('javascript/jquery.collapse.js')
-    app.add_javascript('javascript/jquery.cookie.js')
-    app.add_javascript('javascript/toggle_visibility.js')
+    app.add_js_file('javascript/header.js')
+    app.add_js_file('javascript/sidebar.js')
+    app.add_js_file('javascript/jquery.collapse.js')
+    app.add_js_file('javascript/jquery.cookie.js')
+    app.add_js_file('javascript/toggle_visibility.js')
 
     app.add_config_value('availability_include_availabilities', False, False)
 

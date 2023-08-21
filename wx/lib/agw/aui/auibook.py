@@ -1462,7 +1462,7 @@ class AuiTabContainer(object):
         button_count = len(self._buttons)
 
         # create off-screen bitmap
-        bmp = wx.Bitmap(self._rect.GetWidth(), self._rect.GetHeight())
+        bmp = wx.Bitmap(self._rect.GetWidth(), self._rect.GetHeight(), raw_dc)
         dc.SelectObject(bmp)
 
         if not dc.IsOk():
@@ -4610,8 +4610,8 @@ class AuiNotebook(wx.Panel):
             # because there are two panes, always split them
             # equally
             split_size = self.GetClientSize()
-            split_size.x /= 2
-            split_size.y /= 2
+            split_size.x //= 2
+            split_size.y //= 2
 
         # create a new tab frame
         new_tabs = TabFrame(self)
@@ -4638,22 +4638,22 @@ class AuiNotebook(wx.Panel):
         if direction == wx.LEFT:
 
             pane_info.Left()
-            mouse_pt = wx.Point(0, cli_size.y/2)
+            mouse_pt = wx.Point(0, cli_size.y//2)
 
         elif direction == wx.RIGHT:
 
             pane_info.Right()
-            mouse_pt = wx.Point(cli_size.x, cli_size.y/2)
+            mouse_pt = wx.Point(cli_size.x, cli_size.y//2)
 
         elif direction == wx.TOP:
 
             pane_info.Top()
-            mouse_pt = wx.Point(cli_size.x/2, 0)
+            mouse_pt = wx.Point(cli_size.x//2, 0)
 
         elif direction == wx.BOTTOM:
 
             pane_info.Bottom()
-            mouse_pt = wx.Point(cli_size.x/2, cli_size.y)
+            mouse_pt = wx.Point(cli_size.x//2, cli_size.y)
 
         self._mgr.AddPane(new_tabs, pane_info, mouse_pt)
         self._mgr.Update()

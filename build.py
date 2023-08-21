@@ -27,6 +27,8 @@ import tarfile
 import tempfile
 import datetime
 import shlex
+import textwrap
+import warnings
 
 try:
     import pathlib
@@ -88,8 +90,8 @@ wxICON = 'packaging/docset/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-wafCurrentVersion = '2.0.22'
-wafMD5 = 'f2e5880ba4ecd06f7991181bdba1138b'
+wafCurrentVersion = '2.0.24'
+wafMD5 = '698f382cca34a08323670f34830325c4'
 
 doxygenCurrentVersion = '1.8.8'
 doxygenMD5 = {
@@ -1283,36 +1285,38 @@ def cmd_sip(options, args):
         pycode = 'pycode'+base+':'+pycode
 
         # Write out a pyproject.toml to configure sip
-        pyproject_toml = (
-            '[build-system]\n'
-            'requires = ["sip >=5.5.0, <7"]\n'
-            'build-backend = "sipbuild.api"\n'
-            '\n'
-            '[tool.sip.metadata]\n'
-            'name = "{base}"\n'
-            '\n'
-            '[tool.sip.bindings.{base}]\n'
-            'docstrings = true\n'
-            'release-gil = true\n'
-            'exceptions = false\n'
-            'tracing = {tracing}\n'
-            'protected-is-public = false\n'
-            'generate-extracts = [\'{extracts}\']\n'
-            'pep484-pyi = false\n'
-            '\n'
-            '[tool.sip.project]\n'
-            'abi-version = "{abi_version}"\n'
-            'sip-files-dir = \'{sip_gen_dir}\'\n'
-            'sip-include-dirs = [\'{src_dir}\']\n'
-            'sip-module = "wx.siplib"\n'
-        ).format(
-            base=base,
-            abi_version=cfg.SIP_ABI,
-            tracing=str(cfg.SIP_TRACE).lower(),
-            extracts=pycode,
-            src_dir=opj(phoenixDir(), 'src'),
-            sip_gen_dir=opj(phoenixDir(), 'sip', 'gen'),
+        pyproject_toml = textwrap.dedent("""\
+            [build-system]
+            requires = ["sip >=6.6.2, <7"]
+            build-backend = "sipbuild.api"
+
+            [tool.sip.metadata]
+            name = "{base}"
+
+            [tool.sip.bindings.{base}]
+            docstrings = true
+            release-gil = true
+            exceptions = false
+            tracing = {tracing}
+            protected-is-public = false
+            generate-extracts = [\'{extracts}\']
+            pep484-pyi = false
+
+            [tool.sip.project]
+            abi-version = "{abi_version}"
+            sip-files-dir = '{sip_gen_dir}'
+            sip-include-dirs = ['{src_dir}']
+            sip-module = "wx.siplib"
+            """.format(
+                base=base,
+                abi_version=cfg.SIP_ABI,
+                tracing=str(cfg.SIP_TRACE).lower(),
+                extracts=pycode,
+                src_dir=opj(phoenixDir(), 'src'),
+                sip_gen_dir=opj(phoenixDir(), 'sip', 'gen'),
+                )
         )
+
         with open(opj(tmpdir, 'pyproject.toml'), 'w') as f:
             f.write(pyproject_toml)
 
@@ -1400,7 +1404,11 @@ def cmd_sip(options, args):
         tf_name = glob.glob(tmpdir + '/*.tar*')[0]
         tf_dir = os.path.splitext(os.path.splitext(tf_name)[0])[0]
         with tarfile.open(tf_name) as tf:
-            tf.extractall(tmpdir)
+            try:
+                tf.extractall(tmpdir, filter='data')
+            except TypeError:
+                warnings.warn('Falling back to less safe tarfile.extractall')
+                tf.extractall(tmpdir)
         shutil.move(tf_dir, cfg.SIPINC)
 
 
@@ -2195,8 +2203,13 @@ def cmd_sdist(options, args):
     # Copy the Sphinx source files in the docs tree, excluding the html and
     # sphinx/build folders, if present.
     shutil.rmtree(opj(PDEST, 'docs'), ignore_errors=True)
-    shutil.copytree('docs', opj(PDEST, 'docs'),
-                    ignore=shutil.ignore_patterns('html', 'build', '__pycache__', 'cpp'))
+    if options.nodoc:
+        os.makedirs(opj(PDEST, 'docs'))
+        with open(opj(PDEST, 'docs', 'README.txt'), 'wt') as f:
+            f.write("The sphinx files and generated docs are not included in this archive.\n")
+    else:
+        shutil.copytree('docs', opj(PDEST, 'docs'),
+                        ignore=shutil.ignore_patterns('html', 'build', '__pycache__', 'cpp'))
 
     # Add some extra stuff to the root folder
     cmd_egg_info(options, args, egg_base=PDEST)

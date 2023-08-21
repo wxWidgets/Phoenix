@@ -1,8 +1,8 @@
 # The base image
-FROM fedora:36
+FROM fedora:38
 
 # Set environment variables
-ENV DIST_NAME=fedora-36
+ENV DIST_NAME=fedora-38
 ENV USER=wxpy
 ENV HOME=/home/$USER
 ENV PYTHONUNBUFFERED=1
@@ -37,8 +37,7 @@ RUN \
 RUN \
 # Install all available Python packages and their dev packages
         dnf -y install python3 python3-tools python3-devel; \
-        dnf -y install python3.9; \
-        dnf -y install python3.11; \
+        dnf -y install python3.10 python3.10-tools python3.10-devel;
 
 RUN \
 # Clean up dnf caches
@@ -55,7 +54,6 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        python3.9 -m venv venvs/Py39; \
         python3.10 -m venv venvs/Py310; \
         python3.11 -m venv venvs/Py311;
 

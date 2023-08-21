@@ -5265,7 +5265,7 @@ class UltimateListHeaderWindow(wx.Control):
                 xAligned = x + cw - wLabel - HEADER_OFFSET_X
 
             elif align == ULC_FORMAT_CENTER:
-                xAligned = x + wcheck + (cw - wLabel)/2
+                xAligned = x + wcheck + (cw - wLabel)//2
 
             # if we have an image, draw it on the right of the label
             if imageList:
@@ -5273,7 +5273,7 @@ class UltimateListHeaderWindow(wx.Control):
                     if img >= 0:
                         imageList.Draw(img, dc,
                                        xAligned + wLabel - (ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE)*(indx+1),
-                                       HEADER_OFFSET_Y + (h - 4 - iy)/2,
+                                       HEADER_OFFSET_Y + (h - 4 - iy)//2,
                                        wx.IMAGELIST_DRAW_TRANSPARENT)
 
                         cw -= ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
@@ -5603,7 +5603,7 @@ class UltimateListHeaderWindow(wx.Control):
 
         w, h = self.GetClientSize()
         ix, iy = self._owner.GetCheckboxImageSize()
-        rect = wx.Rect(theX + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)/2, ix, iy)
+        rect = wx.Rect(theX + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)//2, ix, iy)
 
         if rect.Contains(pos):
             # User clicked on the checkbox
@@ -7914,9 +7914,9 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
 
                 if rect.y < view_y:
-                    self.Scroll(-1, rect.y/hLine)
+                    self.Scroll(-1, rect.y//hLine)
                 if rect.y+rect.height+5 > view_y+client_h:
-                    self.Scroll(-1, (rect.y+rect.height-client_h+hLine)/hLine)
+                    self.Scroll(-1, (rect.y+rect.height-client_h+hLine)//hLine)
 
                 if wx.Platform == "__WXMAC__":
                     # At least on Mac the visible lines value will get reset inside of
