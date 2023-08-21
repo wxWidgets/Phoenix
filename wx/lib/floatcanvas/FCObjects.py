@@ -11,7 +11,7 @@
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
-This is where FloatCanvas defines its drawings objects.
+This is where FloatCanvas defines its drawing objects.
 """
 
 import sys
@@ -693,7 +693,7 @@ class Polygon(PointsObjectMixin, LineAndFillMixin, DrawObject):
         self.SetBrush(FillColor,FillStyle)
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel = None, HTdc=None):
-        Points = WorldToPixel(self.Points)#.tolist()
+        Points = WorldToPixel(self.Points)
         dc.SetPen(self.Pen)
         dc.SetBrush(self.Brush)
         dc.DrawPolygon(Points)
@@ -781,12 +781,12 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
                  XY,
                  Length,
                  Direction,
-                 LineColor = "Black",
-                 LineStyle = "Solid",
-                 LineWidth    = 2,
-                 ArrowHeadSize = 8,
-                 ArrowHeadAngle = 30,
-                 InForeground = False):
+                 LineColor="Black",
+                 LineStyle="Solid",
+                 LineWidth=2,
+                 ArrowHeadSize=8,
+                 ArrowHeadAngle=30,
+                 InForeground=False):
         """
         Default class constructor.
 
@@ -807,7 +807,7 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
         DrawObject.__init__(self, InForeground)
 
         self.XY = N.array(XY, float)
-        self.XY.shape = (2,) # Make sure it is a length 2 vector
+        self.XY.shape = (2,)  # Make sure it is a length 2 vector
         self.Length = Length
         self.Direction = float(Direction)
         self.ArrowHeadSize = ArrowHeadSize
@@ -820,10 +820,10 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
         self.LineStyle = LineStyle
         self.LineWidth = LineWidth
 
-        self.SetPen(LineColor,LineStyle,LineWidth)
+        self.SetPen(LineColor, LineStyle, LineWidth)
 
-        ##fixme: How should the HitTest be drawn?
-        self.HitLineWidth = max(LineWidth,self.MinHitLineWidth)
+        # fixme: How should the HitTest be drawn?
+        self.HitLineWidth = max(LineWidth, self.MinHitLineWidth)
 
     def SetDirection(self, Direction):
         """
@@ -894,7 +894,7 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         dc.SetPen(self.Pen)
         xy = WorldToPixel(self.XY)
-        ArrowPoints = xy + self.ArrowPoints
+        ArrowPoints = N.round((xy + self.ArrowPoints)).astype(N.int32)
         dc.DrawLines(ArrowPoints)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
@@ -970,13 +970,14 @@ class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
             self.ArrowPoints[i,:,:] = AP
         self.ArrowPoints *= S
 
-    def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
+    def _Draw(self, dc, WorldToPixel, ScaleWorldToPixel, HTdc=None):
         Points = WorldToPixel(self.Points)
-        ArrowPoints = Points[1:,N.newaxis,:] + self.ArrowPoints
+        ArrowPoints = N.round(Points[1:, N.newaxis, :]
+                              + self.ArrowPoints).astype(N.int32)
         dc.SetPen(self.Pen)
         dc.DrawLines(Points)
         for arrow in ArrowPoints:
-                dc.DrawLines(arrow)
+            dc.DrawLines(arrow)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.DrawLines(Points)
@@ -1441,15 +1442,36 @@ class TextObjectMixin(XYObjectMixin):
     ## than pixel coords as the y axis is reversed
     ## pad is the extra space around the text
     ## if world = 1, the vertical shift is done in y-up coordinates
-    ShiftFunDict = {'tl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y + pad - 2*world*pad),
-                    'tc': lambda x, y, w, h, world=0, pad=0: (x - w/2,     y + pad - 2*world*pad),
-                    'tr': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y + pad - 2*world*pad),
-                    'cl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y - h/2 + world*h),
-                    'cc': lambda x, y, w, h, world=0, pad=0: (x - w/2,     y - h/2 + world*h),
-                    'cr': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y - h/2 + world*h),
-                    'bl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y - h + 2*world*h - pad + world*2*pad) ,
-                    'bc': lambda x, y, w, h, world=0, pad=0: (x - w/2,     y - h + 2*world*h - pad + world*2*pad) ,
-                    'br': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y - h + 2*world*h - pad + world*2*pad)}
+    ShiftFunDict = {
+        'tl':
+        lambda x, y, w, h, world=0, pad=0:
+        (x + pad, y + pad - 2 * world * pad),
+        'tc':
+        lambda x, y, w, h, world=0, pad=0:
+        (x - w // 2, y + pad - 2 * world * pad),
+        'tr':
+        lambda x, y, w, h, world=0, pad=0:
+        (x - w - pad, y + pad - 2 * world * pad),
+        'cl':
+        lambda x, y, w, h, world=0, pad=0:
+        (x + pad, y - h // 2 + world * h),
+        'cc':
+        lambda x, y, w, h, world=0, pad=0:
+        (x - w // 2, y - h // 2 + world * h),
+        'cr':
+        lambda x, y, w, h, world=0, pad=0:
+        (x - w - pad, y - h // 2 + world * h),
+        'bl':
+        lambda x, y, w, h, world=0, pad=0:
+        (x + pad, y - h + 2 * world * h - pad + world * 2 * pad),
+        'bc':
+        lambda x, y, w, h, world=0, pad=0:
+        (x - w // 2, y - h + 2 * world * h - pad + world * 2 * pad),
+        'br':
+        lambda x, y, w, h, world=0, pad=0:
+        (x - w - pad, y - h + 2 * world * h - pad + world * 2 * pad)
+    }
+
 
 class Text(TextObjectMixin, DrawObject):
     """
@@ -2159,18 +2181,18 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         XY = WorldToPixel(self.XY)
         H = ScaleWorldToPixel(self.Height)[0]
-        W = H * (self.bmpWidth / self.bmpHeight)
+        W = H * int(self.bmpWidth // self.bmpHeight)
         if (self.ScaledBitmap is None) or (H != self.ScaledHeight) :
             self.ScaledHeight = H
             Img = self.Image.Scale(int(W), int(H))
             self.ScaledBitmap = wx.Bitmap(Img)
-
         XY = self.ShiftFun(XY[0], XY[1], W, H)
         dc.DrawBitmap(self.ScaledBitmap, XY, True)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
             HTdc.DrawRectangle(XY, (W, H) )
+
 
 class ScaledBitmap2(TextObjectMixin, DrawObject, ):
     """
@@ -2233,7 +2255,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         ## fixme: this should all accommodate different scales for X and Y
         if Width is None:
             self.BmpScale = float(self.bmpHeight) / Height
-            self.Width = self.bmpWidth / self.BmpScale
+            self.Width = int(self.bmpWidth / self.BmpScale)
         self.WH = N.array((self.Width, Height), float)
         ##fixme: should this have a y = -1 to shift to y-up?
         self.BmpScale = self.bmpWH / self.WH
@@ -2292,7 +2314,6 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         """
         Subsets just the part of the bitmap that is visible
         then scales and draws that.
-
         """
         BBworld = BBox.asBBox(self._Canvas.ViewPortBB)
         BBbitmap = BBox.fromPoints(self.WorldToBitmap(BBworld))
@@ -2685,8 +2706,8 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
             Diameter = ScaleWorldToPixel( (self.Diameter,self.Diameter) )[0]
         else:
             Diameter = self.Diameter
-        WH = N.array((Diameter,Diameter), dtype = float)
-        Corner = CenterXY - (WH / 2)
+        WH = N.array((Diameter,Diameter), dtype = int32)
+        Corner = CenterXY - (WH / 2).astype(N.int32)
         dc.SetPen(self.Pen)
         for i, brush in enumerate(self.Brushes):
             dc.SetBrush( brush )
@@ -2695,7 +2716,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
             if self.Scaled:
                 radius = (ScaleWorldToPixel(self.Diameter)/2)[0]# just the x-coord
             else:
-                radius = self.Diameter/2
+                radius = int(self.Diameter/2)
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
             HTdc.DrawCircle(CenterXY.tolist(), int(radius))

@@ -9,21 +9,28 @@ except ImportError:
             # numpy isn't there
             haveNumpy = False
             errorText = (
-            "The FloatCanvas requires the numpy module, version 1.* \n\n"
-            "You can get info about it at:\n"
-            "http://numpy.scipy.org/\n\n"
+            "The FloatCanvas requires the numpy module, version > 1.24 \n\n"
+            "You can get info about it from conda or pip"
             )
 
 #---------------------------------------------------------------------------
 
 
+# # uncomment and adjust to use a local copy
+# import sys
+# sys.path.append("./")
+# from floatcanvas import NavCanvas, FloatCanvas, Resources
+# print("FloatCanvas at:", FloatCanvas.__file__)
+
+from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources
+print("FloatCanvas at:", FloatCanvas.__file__)
+
+import wx.lib.colourdb
+import time
+import random
+
+
 def BuildDrawFrame(): # this gets called when needed, rather than on import
-    try:
-        from floatcanvas import NavCanvas, FloatCanvas, Resources
-    except ImportError: # if it's not there locally, try the wxPython lib.
-        from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources
-    import wx.lib.colourdb
-    import time, random
 
     class DrawFrame(wx.Frame):
 
@@ -32,11 +39,10 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
         """
 
+        def __init__(self, parent, id, title, position, size):
+            wx.Frame.__init__(self, parent, id, title, position, size)
 
-        def __init__(self,parent, id,title,position,size):
-            wx.Frame.__init__(self,parent, id,title,position, size)
-
-            ## Set up the MenuBar
+            # Set up the MenuBar
             MenuBar = wx.MenuBar()
 
             file_menu = wx.Menu()
@@ -100,7 +106,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             MenuBar.Append(draw_menu, "&Tests")
 
             view_menu = wx.Menu()
-            item = view_menu.Append(-1, "Zoom to &Fit","Zoom to fit the window")
+            item = view_menu.Append(-1, "Zoom to &Fit", "Zoom to fit the window")
             self.Bind(wx.EVT_MENU, self.ZoomToFit, item)
             MenuBar.Append(view_menu, "&View")
 
@@ -118,7 +124,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             # Add the Canvas
             NC = NavCanvas.NavCanvas(self,
                                      Debug = 0,
-                                     BackgroundColor = "DARK SLATE BLUE")
+                                     BackgroundColor = "MEDIUM SLATE BLUE")
 
             self.Canvas = NC.Canvas # reference the contained FloatCanvas
 
@@ -1845,9 +1851,12 @@ if __name__ == "__main__":
             wx.App.__init__(self, *args, **kwargs)
 
         def OnInit(self):
-            wx.InitAllImageHandlers()
+            # wx.InitAllImageHandlers()
             DrawFrame = BuildDrawFrame()
-            frame = DrawFrame(None, -1, "FloatCanvas Demo App",wx.DefaultPosition,(700,700))
+            frame = DrawFrame(None, -1,
+                              "FloatCanvas Demo App",
+                              wx.DefaultPosition,
+                              (700,700))
 
             self.SetTopWindow(frame)
             frame.Show()
