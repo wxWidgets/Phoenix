@@ -3,27 +3,20 @@
 """
 Small demo of catching Mouse events using just FloatCanvas, rather than
 NavCanvas
-
 """
 
 import wx
+from wx.lib.floatcanvas import FloatCanvas, GUIMode
 
 app = wx.App(0)
 
-try:
-    # See if there is a local copy
-    import sys
-    sys.path.append("../")
-    from floatcanvas import NavCanvas, FloatCanvas, GUIMode
-except ImportError:
-    from wx.lib.floatcanvas import NavCanvas, FloatCanvas, GUIMode
 
 class TestFrame(wx.Frame):
 
     def __init__(self, *args, **kwargs):
 
         wx.Frame.__init__(self, *args, **kwargs)
-        self.canvas =FloatCanvas.FloatCanvas(self, BackgroundColor = "DARK SLATE BLUE")
+        self.canvas =FloatCanvas.FloatCanvas(self, BackgroundColor="DARK SLATE BLUE")
 
         # Layout
         MainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -32,7 +25,7 @@ class TestFrame(wx.Frame):
 
         self.canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
 
-        self.canvas.AddRectangle((10,10), (100, 20), FillColor="red")
+        self.canvas.AddRectangle((10, 10), (100, 20), FillColor="red")
 
         self.canvas.SetMode(GUIMode.GUIMouse(self.canvas))
 
