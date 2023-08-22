@@ -60,9 +60,19 @@ class RubberBandBox(GUIMode.GUIBase):
         self.Drawing = False
         self.RBRect = None
         self.StartPointWorld = None
-        self.overlay = wx.Overlay()
+        # self.overlay = wx.Overlay()
+        self.overlay = None
 
         return None
+
+    # def __del__(self):
+    #     """
+    #     you get a crash on exit if it's not deleted
+
+    #     though this di
+    #     """
+
+    #     self.overlay = None
 
     def OnMove(self, event):
         if self.Drawing:
@@ -96,6 +106,7 @@ class RubberBandBox(GUIMode.GUIBase):
         # Start drawing
         self.Drawing = True
         self.StartPoint = event.GetPosition()
+        self.overlay = wx.Overlay()
 
     def OnLeftUp(self, event):
         # Stop Drawing and clear the overlay
@@ -110,3 +121,18 @@ class RubberBandBox(GUIMode.GUIBase):
                           )
             wx.CallAfter(self.CallBack, world_rect)
         self.RBRect = None
+        wx.CallAfter(self._delete_overlay)
+
+    def _delete_overlay(self):
+        """
+        This is a total Kludge, but I was getting crashes (on a Mac) if it was kept around
+
+        Putting it in __del__ didn't work :-(
+
+        Clearing it directly in OnLeftUp crashed also - I guess rending wasn't completely done?
+
+        I *think* this is due to a bug in wxPython -- it should delete an Overlay on it's own,
+        but what can you do?
+
+        """
+        self.overlay = None
