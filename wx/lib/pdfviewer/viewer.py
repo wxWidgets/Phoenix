@@ -335,7 +335,9 @@ class pdfViewer(wx.ScrolledWindow):
             if not have_cairo:
                 self.font_scale_size = 1.0 / device_scale
 
-        self.winwidth, self.winheight = self.GetClientSize()
+        clientSize = self.GetClientSize()
+        clientSize.IncTo((1,1)) # Ensure non-zero dimensions to avoid zero-size bitmaps
+        self.winwidth, self.winheight = clientSize
         self.Ypage = self.pageheight + self.nom_page_gap
         if self.zoomscale > 0.0:
             self.scale = self.zoomscale * device_scale
@@ -344,8 +346,6 @@ class pdfViewer(wx.ScrolledWindow):
                 self.scale = self.winwidth / self.pagewidth
             else:                           # fit page
                 self.scale = self.winheight / self.pageheight
-        if self.scale == 0.0: # this could happen if the window was not yet initialized
-            self.scale = 1.0
         self.Xpagepixels = int(round(self.pagewidth*self.scale))
         self.Ypagepixels = int(round(self.Ypage*self.scale))
 
@@ -355,9 +355,9 @@ class pdfViewer(wx.ScrolledWindow):
         nlo = idiv * self.scrollrate
         nhi = (idiv + 1) * self.scrollrate
         if nhi - self.Ypagepixels < self.Ypagepixels - nlo:
-            self.Ypagepixels = nhi
+            self.Ypagepixels = max(nhi, 1)  # Avoid Ypagepixels==0 -> zerodivision error
         else:
-            self.Ypagepixels = nlo
+            self.Ypagepixels = max(nlo, 1)  # Avoid Ypagepixels==0 -> zerodivision error
         self.page_gap = self.Ypagepixels/self.scale - self.pageheight
 
         self.maxwidth = max(self.winwidth, self.Xpagepixels)
