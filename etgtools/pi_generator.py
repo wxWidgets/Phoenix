@@ -380,9 +380,6 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         argsString = function.pyArgsString
         if not argsString:
             argsString = '()'
-        if '->' in argsString:
-            pos = argsString.find(')')
-            argsString = argsString[:pos+1]
         if '(' != argsString[0]:
             pos = argsString.find('(')
             argsString = argsString[pos:]
@@ -552,9 +549,6 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         argsString = method.pyArgsString
         if not argsString:
             argsString = '()'
-        if '->' in argsString:
-            pos = argsString.find(') ->')
-            argsString = argsString[:pos+1]
         if '(' != argsString[0]:
             pos = argsString.find('(')
             argsString = argsString[pos:]

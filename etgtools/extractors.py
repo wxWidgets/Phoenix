@@ -466,7 +466,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         params = list()
         returns = list()
         if self.type and self.type != 'void':
-            returns.append(self.cleanName(self.type))
+            returns.append(self.cleanType(self.type))
 
         defValueMap = { 'true':  'True',
                         'false': 'False',
