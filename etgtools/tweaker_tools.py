@@ -14,6 +14,8 @@ stage of the ETG scripts.
 
 import etgtools as extractors
 from .generators import textfile_open
+import keyword
+import re
 import sys, os
 import copy
 import textwrap
@@ -135,7 +137,79 @@ class FixWxPrefix(object):
 
         FixWxPrefix._coreTopLevelNames = names
 
+    def cleanName(self, name: str, is_expression: bool = False) -> str:
+        """Process a C++ name for use in Python code. In all cases, this means
+        handling name collisions with Python keywords. For names that will be
+        used for an identifier (ex: class, method, constant) - `is_expression`
+        is False - this also includes the reserved constant names 'False',
+        'True', and 'None'.  When `is_expression` is True, name are allowed to
+        include special characters and the reserved constant names - this is
+        intended for cleaning up type-hint expressions ans default value
+        expressions.
 
+        Finally, the 'wx.' prefix is added if needed.
+        """
+        for txt in ['const', '*', '&', ' ']:
+            name = name.replace(txt, '')
+        name = name.replace('::', '.')
+        if not is_expression:
+            name = re.sub(r'[^a-zA-Z0-9_\.]', '', name)
+        if not (is_expression and name in ['True', 'False', 'None']) and keyword.iskeyword(name):
+            name = f'_{name}' # Python keyword name collision
+        name = name.strip()
+        return self.fixWxPrefix(name, True)
+
+    def cleanType(self, type_name: str) -> str:
+        """Process a C++ type name for use as a type annotation in Python code.
+        Handles translation of common C++ types to Python types, as well as a
+        few specific wx types to Python types.
+        """
+        double_type = 'float' if PY3 else 'double'
+        long_type = 'int' if PY3 else 'long'
+        type_map = {
+            # Some types are guesses, marked with TODO to verify automatic
+            # conversion actually happens.  Also, these are the type-names
+            # after processing by cleanName (so spaces are removed)
+            # --String types
+            'String': 'str',
+            'Char': 'str',
+            'char':' str',
+            'FileName': 'str', # TODO: check conversion
+            # --Int types
+            'byte': 'int',
+            'short': 'int',
+            'Int': 'int',
+            'unsigned': 'int',
+            'unsignedchar': 'int',
+            'unsignedshort': 'int',
+            'unsignedint': 'int',
+            'time_t': 'int',
+            'size_t': 'int',
+            'Int32': 'int',
+            'long': long_type,
+            'unsignedlong': long_type,
+            'ulong': long_type,
+            'LongLong': long_type,
+            # --Float types
+            'double': double_type,
+            'Double': double_type,
+            # --Others
+            'PyObject': 'Any',
+            'WindowID': 'int', # defined in wx/defs.h
+        }
+        type_name = self.cleanName(type_name)
+        # Special handling of Vector<type> types -
+        if type_name.startswith('Vector<') and type_name.endswith('>'):
+            # Special handling for 'Vector<type>' types
+            type_name = self.cleanName(type_name[7:-1])
+            return f'list[{type_name}]'
+        if type_name.startswith('Array'):
+            type_name = self.cleanName(type_name[5:])
+            if type_name:
+                return f'list[{type_name}]'
+            else:
+                return 'list'
+        return type_map.get(type_name, type_name)
 
 
 def ignoreAssignmentOperators(node):

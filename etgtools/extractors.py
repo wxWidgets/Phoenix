@@ -466,17 +466,10 @@ class FunctionDef(BaseDef, FixWxPrefix):
         TODO: Maybe (optionally) use this syntax to document arg types?
               http://www.python.org/dev/peps/pep-3107/
         """
-        def _cleanName(name):
-            for txt in ['const', '*', '&', ' ']:
-                name = name.replace(txt, '')
-            name = name.replace('::', '.')
-            name = self.fixWxPrefix(name, True)
-            return name
-
         params = list()
         returns = list()
         if self.type and self.type != 'void':
-            returns.append(_cleanName(self.type))
+            returns.append(self.cleanName(self.type))
 
         defValueMap = { 'true':  'True',
                         'false': 'False',
@@ -523,8 +516,8 @@ class FunctionDef(BaseDef, FixWxPrefix):
                         default = param.default
                         if default in defValueMap:
                             default = defValueMap.get(default)
-
-                        s += '=' + '|'.join([_cleanName(x) for x in default.split('|')])
+                        default = '|'.join([self.cleanName(x, True) for x in default.split('|')])
+                        s = f'{s}={default}'
                     params.append(s)
 
         self.pyArgsString = '(' + ', '.join(params) + ')'
