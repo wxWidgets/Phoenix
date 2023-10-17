@@ -169,11 +169,12 @@ class FixWxPrefix(object):
         type_map = {
             # Some types are guesses, marked with TODO to verify automatic
             # conversion actually happens.  Also, these are the type-names
-            # after processing by cleanName (so spaces are removed)
+            # after processing by cleanName (so spaces are removed), or
+            # after potentially lopping off an 'Array' prefix.
             # --String types
             'String': 'str',
             'Char': 'str',
-            'char':' str',
+            'char': 'str',
             'FileName': 'str', # TODO: check conversion
             # --Int types
             'byte': 'int',
@@ -196,20 +197,38 @@ class FixWxPrefix(object):
             # --Others
             'PyObject': 'Any',
             'WindowID': 'int', # defined in wx/defs.h
+            # A few instances, for example in LogInfo:
         }
         type_name = self.cleanName(type_name)
         # Special handling of Vector<type> types -
         if type_name.startswith('Vector<') and type_name.endswith('>'):
             # Special handling for 'Vector<type>' types
-            type_name = self.cleanName(type_name[7:-1])
+            type_name = self.cleanType(type_name[7:-1])
             return f'list[{type_name}]'
         if type_name.startswith('Array'):
-            type_name = self.cleanName(type_name[5:])
+            type_name = self.cleanType(type_name[5:])
             if type_name:
                 return f'list[{type_name}]'
             else:
                 return 'list'
         return type_map.get(type_name, type_name)
+    
+    def parseNameAndType(self, name_string: str, type_string: str | None) -> tuple[str, str | None]:
+        """Given an identifier name and an optional type annotation, process
+        these per cleanName and cleanType. Further performs transforms on the
+        identifier name that may be required due to the type annotation.
+        Ex. The transformation "any_identifier : ..." -> "*args" requires
+        modifying both the identifier name and the annotation.
+        """
+        name_string = self.cleanName(name_string)
+        if type_string:
+            type_string = self.cleanType(type_string)
+            if type_string == '...':
+                name_string = '*args'
+                type_string = None
+        if not type_string:
+            type_string = None
+        return name_string, type_string
 
 
 def ignoreAssignmentOperators(node):

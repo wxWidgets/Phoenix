@@ -462,9 +462,6 @@ class FunctionDef(BaseDef, FixWxPrefix):
         """
         Create a pythonized version of the argsString in function and method
         items that can be used as part of the docstring.
-
-        TODO: Maybe (optionally) use this syntax to document arg types?
-              http://www.python.org/dev/peps/pep-3107/
         """
         params = list()
         returns = list()
@@ -477,6 +474,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                         'wxString()': '""',
                         'wxArrayString()' : '[]',
                         'wxArrayInt()' : '[]',
+                        'wxEmptyString':  "''", # Makes signatures much shorter
                         }
         if isinstance(self, CppMethodDef):
             # rip apart the argsString instead of using the (empty) list of parameters
@@ -495,7 +493,14 @@ class FunctionDef(BaseDef, FixWxPrefix):
                     else:
                         default = self.fixWxPrefix(default, True)
                 # now grab just the last word, it should be the variable name
-                arg = arg.split()[-1]
+                # The rest will be the type information
+                arg_type, arg = arg.rsplit(None, 1)
+                arg, arg_type = self.parseNameAndType(arg, arg_type)
+                if arg_type:
+                    if default == 'None':
+                        arg = f'{arg}: {arg_type} | None'
+                    else:
+                        arg = f'{arg}: {arg_type}'
                 if default:
                     arg += '=' + default
                 params.append(arg)
@@ -506,25 +511,33 @@ class FunctionDef(BaseDef, FixWxPrefix):
                     continue
                 if param.arraySize:
                     continue
-                s = param.pyName or param.name
+                s, param_type = self.parseNameAndType(param.pyName or param.name, param.type)
                 if param.out:
-                    returns.append(s)
+                    if param_type:
+                        returns.append(param_type)
                 else:
                     if param.inOut:
-                        returns.append(s)
+                        if param_type:
+                            returns.append(param_type)
+                    if param_type:
+                        s = f'{s}: {param_type}'
                     if param.default:
                         default = param.default
                         if default in defValueMap:
                             default = defValueMap.get(default)
+                        if param_type and default == 'None':
+                            s = f'{s} | None'
                         default = '|'.join([self.cleanName(x, True) for x in default.split('|')])
                         s = f'{s}={default}'
                     params.append(s)
 
-        self.pyArgsString = '(' + ', '.join(params) + ')'
-        if len(returns) == 1:
-            self.pyArgsString += ' -> ' + returns[0]
-        if len(returns) > 1:
-            self.pyArgsString += ' -> (' + ', '.join(returns) + ')'
+        self.pyArgsString = f"({', '.join(params)})"
+        if not returns:
+            self.pyArgsString = f'{self.pyArgsString} -> None'
+        elif len(returns) == 1:
+            self.pyArgsString = f'{self.pyArgsString} -> {returns[0]}'
+        elif len(returns) > 1:
+            self.pyArgsString = f"{self.pyArgsString} -> tuple[{', '.join(returns)}]"
 
 
     def collectPySignatures(self):
