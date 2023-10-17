@@ -81,12 +81,15 @@ def nci(text, numSpaces=0, stripLeading=True):
     return newText
 
 
-def wrapText(text):
+def wrapText(text, dontWrap: str = ''):
     import textwrap
     lines = []
     tw = textwrap.TextWrapper(width=70, break_long_words=False)
     for line in text.split('\n'):
-        lines.append(tw.fill(line))
+        if dontWrap and line.lstrip().startswith(dontWrap):
+            lines.append(line)
+        else:
+            lines.append(tw.fill(line))
     return '\n'.join(lines)
 
 
