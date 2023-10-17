@@ -79,7 +79,7 @@ header_pyi = """\
 
 typing_imports = """\
 from __future__ import annotations
-from typing import Any
+from typing import Any, overload
 
 """
 
@@ -366,29 +366,35 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
 
     #-----------------------------------------------------------------------
-    def generateFunction(self, function, stream):
+    def generateFunction(self, function, stream, is_overload=False):
         assert isinstance(function, extractors.FunctionDef)
         if not function.pyName:
             return
+        if not is_overload and function.hasOverloads():
+            for f in function.overloads:
+                self.generateFunction(f, stream, True)
+            stream.write('\n@overload')
+        elif is_overload:
+            stream.write('\n@overload')
         stream.write('\ndef %s' % function.pyName)
-        if function.hasOverloads():
-            stream.write('(*args, **kw)')
-        else:
-            argsString = function.pyArgsString
-            if not argsString:
-                argsString = '()'
-            if '->' in argsString:
-                pos = argsString.find(')')
-                argsString = argsString[:pos+1]
-            if '(' != argsString[0]:
-                pos = argsString.find('(')
-                argsString = argsString[pos:]
-            argsString = argsString.replace('::', '.')
-            stream.write(argsString)
+        argsString = function.pyArgsString
+        if not argsString:
+            argsString = '()'
+        if '->' in argsString:
+            pos = argsString.find(')')
+            argsString = argsString[:pos+1]
+        if '(' != argsString[0]:
+            pos = argsString.find('(')
+            argsString = argsString[pos:]
+        argsString = argsString.replace('::', '.')
+        stream.write(argsString)
         stream.write(':\n')
-        stream.write('    """\n')
-        stream.write(nci(function.pyDocstring, 4))
-        stream.write('    """\n')
+        if is_overload:
+            stream.write('    ...\n')
+        else:
+            stream.write('    """\n')
+            stream.write(nci(function.pyDocstring, 4))
+            stream.write('    """\n')
 
 
     def generateParameters(self, parameters, stream, indent):
@@ -518,7 +524,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         stream.write('%s%s = property(None, None)\n' % (indent, prop.name))
 
 
-    def generateMethod(self, method, stream, indent, name=None, docstring=None):
+    def generateMethod(self, method, stream, indent, name=None, docstring=None, is_overload=False):
         assert isinstance(method, extractors.MethodDef)
         for m in method.all():  # use the first not ignored if there are overloads
             if not m.ignored or piIgnored(m):
@@ -534,44 +540,47 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             name = magicMethods[name]
 
         # write the method declaration
+        if not is_overload and method.hasOverloads():
+            for m in method.overloads:
+                self.generateMethod(m, stream, indent, name, None, True)
+            stream.write(f'\n{indent}@overload')
+        elif is_overload:
+            stream.write(f'\n{indent}@overload')
         if method.isStatic:
             stream.write('\n%s@staticmethod' % indent)
         stream.write('\n%sdef %s' % (indent, name))
-        if method.hasOverloads():
-            if not method.isStatic:
-                stream.write('(self, *args, **kw)')
+        argsString = method.pyArgsString
+        if not argsString:
+            argsString = '()'
+        if '->' in argsString:
+            pos = argsString.find(') ->')
+            argsString = argsString[:pos+1]
+        if '(' != argsString[0]:
+            pos = argsString.find('(')
+            argsString = argsString[pos:]
+        if not method.isStatic:
+            if argsString == '()':
+                argsString = '(self)'
             else:
-                stream.write('(*args, **kw)')
-        else:
-            argsString = method.pyArgsString
-            if not argsString:
-                argsString = '()'
-            if '->' in argsString:
-                pos = argsString.find(') ->')
-                argsString = argsString[:pos+1]
-            if '(' != argsString[0]:
-                pos = argsString.find('(')
-                argsString = argsString[pos:]
-            if not method.isStatic:
-                if argsString == '()':
-                    argsString = '(self)'
-                else:
-                    argsString = '(self, ' + argsString[1:]
-            argsString = argsString.replace('::', '.')
-            stream.write(argsString)
+                argsString = '(self, ' + argsString[1:]
+        argsString = argsString.replace('::', '.')
+        stream.write(argsString)
         stream.write(':\n')
         indent2 = indent + ' '*4
 
         # docstring
-        if not docstring:
-            if hasattr(method, 'pyDocstring'):
-                docstring = method.pyDocstring
-            else:
-                docstring = ""
-        stream.write('%s"""\n' % indent2)
-        if docstring.strip():
-            stream.write(nci(docstring, len(indent2)))
-        stream.write('%s"""\n' % indent2)
+        if is_overload:
+            stream.write(f'{indent2}...\n')
+        else:
+            if not docstring:
+                if hasattr(method, 'pyDocstring'):
+                    docstring = method.pyDocstring
+                else:
+                    docstring = ""
+            stream.write('%s"""\n' % indent2)
+            if docstring.strip():
+                stream.write(nci(docstring, len(indent2)))
+            stream.write('%s"""\n' % indent2)
 
 
 
