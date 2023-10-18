@@ -200,7 +200,7 @@ class FixWxPrefix(object):
             # --Others
             'PyObject': 'Any',
             'WindowID': 'int', # defined in wx/defs.h
-            # A few instances, for example in LogInfo:
+            'Coord': 'int', # defined in wx/types.h
         }
         type_name = self.cleanName(type_name)
         # Special handling of Vector<type> types -
