@@ -504,7 +504,12 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         assert isinstance(memberVar, extractors.MemberVarDef)
         if memberVar.ignored or piIgnored(memberVar):
             return
-        stream.write('%s%s = property(None, None)\n' % (indent, memberVar.name))
+        member_type = memberVar.type
+        if member_type:
+            member_type = self.cleanType(member_type)
+        if not member_type: # Unknown type for the member variable
+            member_type = 'Any'
+        stream.write(f'{indent}{memberVar.name}: {member_type}\n')
 
 
     def generateProperty(self, prop, stream, indent):
