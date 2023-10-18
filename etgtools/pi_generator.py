@@ -81,7 +81,7 @@ header_pyi = """\
 typing_imports = """\
 from __future__ import annotations
 from enum import IntEnum, IntFlag, auto
-from typing import (Any, overload, TypeAlias, TypeVar, ParamSpec, Generic,
+from typing import (Any, overload, TypeAlias, Generic,
     Union, Optional, List, Tuple, Callable
 )
 try:
