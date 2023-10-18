@@ -19,7 +19,7 @@ import re
 import sys, os
 import copy
 import textwrap
-from typing import Union, Tuple
+from typing import Optional, Tuple
 
 
 PY3 = sys.version_info[0] == 3
@@ -222,7 +222,7 @@ class FixWxPrefix(object):
                 return 'list'
         return type_map.get(type_name, type_name)
     
-    def parseNameAndType(self, name_string: str, type_string: Union[str, None]) -> Tuple[str, str | None]:
+    def parseNameAndType(self, name_string: str, type_string: Optional[str]) -> Tuple[str, Optional[str]]:
         """Given an identifier name and an optional type annotation, process
         these per cleanName and cleanType. Further performs transforms on the
         identifier name that may be required due to the type annotation.
