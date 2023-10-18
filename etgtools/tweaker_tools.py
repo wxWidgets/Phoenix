@@ -141,7 +141,7 @@ class FixWxPrefix(object):
 
         FixWxPrefix._coreTopLevelNames = names
 
-    def cleanName(self, name: str, is_expression: bool = False) -> str:
+    def cleanName(self, name: str, is_expression: bool = False, fix_wx: bool = True) -> str:
         """Process a C++ name for use in Python code. In all cases, this means
         handling name collisions with Python keywords. For names that will be
         used for an identifier (ex: class, method, constant) - `is_expression`
@@ -161,7 +161,10 @@ class FixWxPrefix(object):
         if not (is_expression and name in ['True', 'False', 'None']) and keyword.iskeyword(name):
             name = f'_{name}' # Python keyword name collision
         name = name.strip()
-        return self.fixWxPrefix(name, True)
+        if fix_wx:
+            return self.fixWxPrefix(name, True)
+        else:
+            return removeWxPrefix(name)
 
     def cleanType(self, type_name: str) -> str:
         """Process a C++ type name for use as a type annotation in Python code.
@@ -225,7 +228,7 @@ class FixWxPrefix(object):
         Ex. The transformation "any_identifier : ..." -> "*args" requires
         modifying both the identifier name and the annotation.
         """
-        name_string = self.cleanName(name_string)
+        name_string = self.cleanName(name_string, fix_wx=False)
         if type_string:
             type_string = self.cleanType(type_string)
             if type_string == '...':
