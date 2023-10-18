@@ -509,16 +509,22 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
     def generateProperty(self, prop, stream, indent):
         assert isinstance(prop, extractors.PropertyDef)
-        if prop.ignored or piIgnored(prop):
-            return
-        stream.write('%s%s = property(None, None)\n' % (indent, prop.name))
+        self._generateProperty(prop, stream, indent)
 
 
     def generatePyProperty(self, prop, stream, indent):
         assert isinstance(prop, extractors.PyPropertyDef)
+        self._generateProperty(prop, stream, indent)
+
+    def _generateProperty(self, prop: extractors.PyPropertyDef | extractors.PropertyDef, stream, indent: str):
         if prop.ignored or piIgnored(prop):
             return
-        stream.write('%s%s = property(None, None)\n' % (indent, prop.name))
+        if prop.setter and prop.getter:
+            stream.write(f'{indent}{prop.name} = property({prop.getter}, {prop.setter})\n')
+        elif prop.getter:
+            stream.write(f'{indent}{prop.name} = property({prop.getter})\n')
+        elif prop.setter:
+            stream.write(f'{indent}{prop.name} = property(fset={prop.setter})\n') 
 
 
     def generateMethod(self, method, stream, indent, name=None, docstring=None, is_overload=False):
