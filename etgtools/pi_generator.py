@@ -22,6 +22,7 @@ want to add some type info to that version of the file eventually...
 """
 
 import sys, os, re
+from typing import Union
 import etgtools.extractors as extractors
 import etgtools.generators as generators
 from etgtools.generators import nci, Utf8EncodingStream, textfile_open
@@ -81,7 +82,7 @@ typing_imports = """\
 from __future__ import annotations
 from collections.abc import Callable
 from enum import IntEnum, IntFlag, auto
-from typing import Any, overload, TypeAlias, TypeVar, ParamSpec, Generic
+from typing import Any, overload, TypeAlias, TypeVar, ParamSpec, Generic, Union, Optional
 
 """
 
@@ -250,7 +251,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             stream.write(f'{indent}    {name} = auto()\n')
         # Create the alias if needed
         if alias:
-            stream.write(f'{indent}{alias}: TypeAlias = {enum_name} | int\n')
+            stream.write(f'{indent}{alias}: TypeAlias = Union[{enum_name}, int]\n')
         # And bring the enum members into global scope.  We can't use
         # enum.global_enum for this because:
         #  1. It's only available on Python 3.11+
@@ -547,7 +548,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         assert isinstance(prop, extractors.PyPropertyDef)
         self._generateProperty(prop, stream, indent)
 
-    def _generateProperty(self, prop: extractors.PyPropertyDef | extractors.PropertyDef, stream, indent: str):
+    def _generateProperty(self, prop: Union[extractors.PyPropertyDef, extractors.PropertyDef], stream, indent: str):
         if prop.ignored or piIgnored(prop):
             return
         if prop.setter and prop.getter:

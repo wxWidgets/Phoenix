@@ -498,7 +498,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                 arg, arg_type = self.parseNameAndType(arg, arg_type)
                 if arg_type:
                     if default == 'None':
-                        arg = f'{arg}: {arg_type} | None'
+                        arg = f'{arg}: Optional[{arg_type}]'
                     else:
                         arg = f'{arg}: {arg_type}'
                 if default:
@@ -519,16 +519,19 @@ class FunctionDef(BaseDef, FixWxPrefix):
                     if param.inOut:
                         if param_type:
                             returns.append(param_type)
-                    if param_type:
-                        s = f'{s}: {param_type}'
                     if param.default:
                         default = param.default
                         if default in defValueMap:
                             default = defValueMap.get(default)
-                        if param_type and default == 'None':
-                            s = f'{s} | None'
+                        if param_type:
+                            if default == 'None':
+                                s = f'{s}: Optional[{param_type}]'
+                            else:
+                                s = f'{s}: {param_type}'
                         default = '|'.join([self.cleanName(x, True) for x in default.split('|')])
                         s = f'{s}={default}'
+                    elif param_type:
+                        s = f'{s} : {param_type}'
                     params.append(s)
 
         self.pyArgsString = f"({', '.join(params)})"
