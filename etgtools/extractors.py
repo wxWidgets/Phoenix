@@ -540,7 +540,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         elif len(returns) == 1:
             self.pyArgsString = f'{self.pyArgsString} -> {returns[0]}'
         elif len(returns) > 1:
-            self.pyArgsString = f"{self.pyArgsString} -> tuple[{', '.join(returns)}]"
+            self.pyArgsString = f"{self.pyArgsString} -> Tuple[{', '.join(returns)}]"
 
 
     def collectPySignatures(self):
