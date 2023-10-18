@@ -84,6 +84,10 @@ from enum import IntEnum, IntFlag, auto
 from typing import (Any, overload, TypeAlias, TypeVar, ParamSpec, Generic,
     Union, Optional, List, Tuple, Callable
 )
+try:
+    from typing import ParamSpec
+except ImportError:
+    from typing_extensions import ParamSpec
 
 """
 
