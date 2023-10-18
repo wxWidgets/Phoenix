@@ -79,7 +79,8 @@ header_pyi = """\
 
 typing_imports = """\
 from __future__ import annotations
-from typing import Any, overload
+from enum import IntEnum, IntFlag, auto
+from typing import Any, overload, TypeAlias
 
 """
 
@@ -224,11 +225,42 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         assert isinstance(enum, extractors.EnumDef)
         if enum.ignored or piIgnored(enum):
             return
+        # These enum classes aren't actually accessible from the real wx
+        # module, o we need to prepend _. But we want to make a type alias to
+        # the non-prefixed name, so method signatures can reference it without
+        # any special code, and also allow bare ints as inputs.
+        if '@' in enum.name or not enum.name:
+            # Anonymous enum
+            enum_name = f"_enum_{enum.name.replace('@', '').strip()}"
+            alias = ''
+        else:
+            alias = self.fixWxPrefix(enum.name)
+            enum_name = f'_{alias}'
+        if 'Flags' in enum_name:
+            enum_type = 'IntFlag'
+        else:
+            enum_type = 'IntEnum'
+        # Create the enum definition
+        stream.write(f'\n{indent}class {enum_name}({enum_type}):\n')
         for v in enum.items:
             if v.ignored or piIgnored(v):
                 continue
             name = v.pyName or v.name
-            stream.write('%s%s = 0\n' % (indent, name))
+            stream.write(f'{indent}    {name} = auto()\n')
+        # Create the alias if needed
+        if alias:
+            stream.write(f'{indent}{alias}: TypeAlias = {enum_name} | int\n')
+        # And bring the enum members into global scope.  We can't use
+        # enum.global_enum for this because:
+        #  1. It's only available on Python 3.11+
+        #  2. FixWxPrefix wouldn't be able to pick up the names, since it's
+        #     detecting based on AST parsing, not runtime changes (which
+        #     enum.global_enum performs).
+        for v in enum.items:
+            if v.ignored or piIgnored(v):
+                continue
+            name = v.pyName or v.name
+            stream.write(f'{indent}{name} = {enum_name}.{name}\n')
 
     #-----------------------------------------------------------------------
     def generateGlobalVar(self, globalVar, stream):

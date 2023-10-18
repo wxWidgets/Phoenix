@@ -100,6 +100,7 @@ class FixWxPrefix(object):
         testName = name
         if '(' in name:
             testName = name[:name.find('(')]
+        testName = testName.split('.')[0]
 
         if testName in FixWxPrefix._coreTopLevelNames:
             return 'wx.'+name
