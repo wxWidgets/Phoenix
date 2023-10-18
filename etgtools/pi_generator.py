@@ -79,8 +79,9 @@ header_pyi = """\
 
 typing_imports = """\
 from __future__ import annotations
+from collections.abc import Callable
 from enum import IntEnum, IntFlag, auto
-from typing import Any, overload, TypeAlias
+from typing import Any, overload, TypeAlias, TypeVar, ParamSpec, Generic
 
 """
 
@@ -371,7 +372,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if pc.bases:
             stream.write('(%s):\n' % ', '.join(pc.bases))
         else:
-            stream.write('(object):\n')
+            stream.write(':\n')
         indent2 = indent + ' '*4
         if pc.briefDoc:
             stream.write('%s"""\n' % indent2)
@@ -465,8 +466,6 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             bases = [self.fixWxPrefix(b, True) for b in bases]
             stream.write(', '.join(bases))
             stream.write(')')
-        else:
-            stream.write('(object)')
         stream.write(':\n')
         indent2 = indent + ' '*4
 
