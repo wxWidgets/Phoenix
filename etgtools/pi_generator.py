@@ -82,7 +82,7 @@ typing_imports = """\
 from __future__ import annotations
 from collections.abc import Callable
 from enum import IntEnum, IntFlag, auto
-from typing import Any, overload, TypeAlias, TypeVar, ParamSpec, Generic, Union, Optional
+from typing import Any, overload, TypeAlias, TypeVar, ParamSpec, Generic, Union, Optional, List
 
 """
 

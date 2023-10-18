@@ -213,11 +213,11 @@ class FixWxPrefix(object):
         if type_name.startswith('Vector<') and type_name.endswith('>'):
             # Special handling for 'Vector<type>' types
             type_name = self.cleanType(type_name[7:-1])
-            return f'list[{type_name}]'
+            return f'List[{type_name}]'
         if type_name.startswith('Array'):
             type_name = self.cleanType(type_name[5:])
             if type_name:
-                return f'list[{type_name}]'
+                return f'List[{type_name}]'
             else:
                 return 'list'
         return type_map.get(type_name, type_name)
