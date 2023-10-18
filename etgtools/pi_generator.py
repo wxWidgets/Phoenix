@@ -236,22 +236,16 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if globalVar.ignored or piIgnored(globalVar):
             return
         name = globalVar.pyName or globalVar.name
+        valTyp = 'Any'
         if guessTypeInt(globalVar):
-            valTyp = '0'
+            valTyp = 'int'
         elif guessTypeFloat(globalVar):
-            valTyp = '0.0'
+            valTyp = 'float'
         elif guessTypeStr(globalVar):
-            valTyp = '""'
-        else:
-            valTyp = globalVar.type
-            valTyp = valTyp.replace('const ', '')
-            valTyp = valTyp.replace('*', '')
-            valTyp = valTyp.replace('&', '')
-            valTyp = valTyp.replace(' ', '')
-            valTyp = self.fixWxPrefix(valTyp)
-            valTyp += '()'
-
-        stream.write('%s = %s\n' % (name, valTyp))
+            valTyp = 'str'
+        elif globalVar.type:
+            valTyp = self.cleanType(globalVar.type) or valTyp
+        stream.write(f'{name}: {valTyp}\n')
 
     #-----------------------------------------------------------------------
     def generateDefine(self, define, stream):
@@ -259,10 +253,11 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if define.ignored or piIgnored(define):
             return
         # we're assuming that all #defines that are not ignored are integer or string values
+        name = define.pyName or define.name
         if '"' in define.value:
-            stream.write('%s = ""\n' % (define.pyName or define.name))
+            stream.write(f'{name}: str\n')
         else:
-            stream.write('%s = 0\n' % (define.pyName or define.name))
+            stream.write(f'{name}: int\n')
 
     #-----------------------------------------------------------------------
     def generateTypedef(self, typedef, stream, indent=''):
