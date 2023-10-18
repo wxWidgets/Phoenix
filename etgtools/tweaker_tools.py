@@ -199,6 +199,7 @@ class FixWxPrefix(object):
             'double': double_type,
             'Double': double_type,
             # --Others
+            'void': 'Any',
             'PyObject': 'Any',
             'WindowID': 'int', # defined in wx/defs.h
             'Coord': 'int', # defined in wx/types.h
