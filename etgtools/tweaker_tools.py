@@ -122,6 +122,9 @@ class FixWxPrefix(object):
                 names.append(item.name)
             elif isinstance(item, ast.FunctionDef):
                 names.append(item.name)
+            elif isinstance(item, ast.AnnAssign):
+                if isinstance(item.target, ast.Name):
+                    names.append(item.target.id)
 
         names = list()
         filename = 'wx/core.pyi'
