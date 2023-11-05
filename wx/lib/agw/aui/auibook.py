@@ -2457,7 +2457,8 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         :rtype: :class:`wx.Window`.
         """
-
+        if not self:
+            return None # The AuiTabCtrl has already been destroyed
         screen_pt = wx.GetMousePosition()
         client_pt = self.ScreenToClient(screen_pt)
         return self.TabHitTest(client_pt.x, client_pt.y)
