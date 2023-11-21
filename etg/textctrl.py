@@ -114,35 +114,29 @@ def parseAndTweakModule():
 
 
     # OSX methods for controlling native features
-    c.addCppMethod('void', 'OSXEnableAutomaticQuoteSubstitution', '(bool enable)',
-        doc="Mac-only method for turning on/off automatic quote substitutions.",
-        body="""\
-            #ifdef __WXMAC__
-                self->OSXEnableAutomaticQuoteSubstitution(enable);
-            #else
-                wxPyRaiseNotImplemented();
-            #endif
-            """)
+    c.find('OSXEnableAutomaticQuoteSubstitution').setCppCode("""\
+        #ifdef __WXMAC__
+            self->OSXEnableAutomaticQuoteSubstitution(enable);
+        #else
+            wxPyRaiseNotImplemented();
+        #endif
+        """)
 
-    c.addCppMethod('void', 'OSXEnableAutomaticDashSubstitution', '(bool enable)',
-        doc="Mac-only method for turning on/off automatic dash substitutions.",
-        body="""\
-            #ifdef __WXMAC__
-                self->OSXEnableAutomaticDashSubstitution(enable);
-            #else
-                wxPyRaiseNotImplemented();
-            #endif
-            """)
+    c.find('OSXEnableAutomaticDashSubstitution').setCppCode("""\
+        #ifdef __WXMAC__
+            self->OSXEnableAutomaticDashSubstitution(enable);
+        #else
+            wxPyRaiseNotImplemented();
+        #endif
+        """)
 
-    c.addCppMethod('void', 'OSXDisableAllSmartSubstitutions', '()',
-        doc="Mac-only method to disable all automatic text substitutions.",
-        body="""\
-            #ifdef __WXMAC__
-                self->OSXDisableAllSmartSubstitutions();
-            #else
-                wxPyRaiseNotImplemented();
-            #endif
-            """)
+    c.find('OSXDisableAllSmartSubstitutions').setCppCode("""\
+        #ifdef __WXMAC__
+            self->OSXDisableAllSmartSubstitutions();
+        #else
+            wxPyRaiseNotImplemented();
+        #endif
+        """)
 
     # TODO: add support for wxTextProofOptions (only supported on MSW/GTK3)
     # so will need stubs on other platforms.
