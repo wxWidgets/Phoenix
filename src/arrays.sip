@@ -59,7 +59,7 @@
             }
             PyErr_Clear();
             wxString string;
-            size_t len = PyUnicode_GET_LENGTH(item);
+            size_t len = PyUnicode_AsWideChar(item, NULL, 0);
             if (len) {
                 wxPyUnicode_AsWideChar(item, wxStringBuffer(string, len), len);
             }
