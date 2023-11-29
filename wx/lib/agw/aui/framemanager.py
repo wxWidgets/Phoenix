@@ -4778,6 +4778,11 @@ class AuiManager(wx.EvtHandler):
                     id = notebook.GetPageIndex(p.window)
                     notebook.RemovePage(id)
                     p.window.Reparent(self._frame)
+                    
+                elif p.IsMinimized():
+                    # if we were minimized, restore so any restore icons in toolbars are removed
+                    self.RestoreMinimizedPane(p)
+                    
 
                 # make sure there are no references to this pane in our uiparts,
                 # just in case the caller doesn't call Update() immediately after
@@ -4807,6 +4812,11 @@ class AuiManager(wx.EvtHandler):
         # if we were maximized, restore
         if pane_info.IsMaximized():
             self.RestorePane(pane_info)
+            
+        # if we were minimized, restore so any restore icons in toolbars are removed
+        if pane_info.IsMinimized():
+            self.RestoreMinimizedPane(pane_info)
+
 
         if pane_info.frame:
             if self._agwFlags & AUI_MGR_ANIMATE_FRAMES:
@@ -5072,6 +5082,9 @@ class AuiManager(wx.EvtHandler):
 
         result = "name=" + EscapeDelimiters(pane.name) + ";"
         result += "caption=" + EscapeDelimiters(pane.caption) + ";"
+        if pane.minimize_target:
+            result += "minitarget=" + EscapeDelimiters(pane.minimize_target) + ";"
+        result += "minimode=%u;" % pane.minimize_mode 
 
         result += "state=%u;" % pane.state
         result += "dir=%d;" % pane.dock_direction
@@ -5119,6 +5132,10 @@ class AuiManager(wx.EvtHandler):
                 pane.name = value
             elif val_name == "caption":
                 pane.caption = value
+            elif val_name == "minitarget":
+                pane.minimize_target = value
+            elif val_name == "minimode":
+                pane.minimize_mode = int(value)
             elif val_name == "state":
                 pane.state = int(value)
             elif val_name == "dir":
@@ -5195,7 +5212,8 @@ class AuiManager(wx.EvtHandler):
                                                              dock.size)
         return result
 
-    def LoadPerspective(self, layout, update=True, restorecaption=False):
+    def LoadPerspective(self, layout, update=True, restorecaption=False, 
+                        restoreminimize=False):
         """
         Loads a layout which was saved with :meth:`SavePerspective`.
 
@@ -5206,6 +5224,8 @@ class AuiManager(wx.EvtHandler):
         :param bool `update`: whether to update immediately the window or not;
         :param bool `restorecaption`: ``False``, restore from persist storage,
          otherwise use the caption defined in code.
+        :param bool `restoreminimize`: ``False``, restore from persist storage,
+         otherwise use the minimize_toolbar and minimize_mode defined in code.
         """
 
         input = layout
@@ -5223,6 +5243,7 @@ class AuiManager(wx.EvtHandler):
         # mark all panes currently managed as docked and hidden
         saveCapt = {}  # see restorecaption param
         saveIcon = {}  # icons are not preserved by perspectives, so preserve them
+        saveMinimize = {} # see restoreminimize param
         for pane in self._panes:
 
             # dock the notebook pages
@@ -5238,6 +5259,7 @@ class AuiManager(wx.EvtHandler):
             pane.Dock().Hide()
             saveCapt[pane.name] = pane.caption
             saveIcon[pane.name] = pane.icon
+            saveMinimize[pane.name] = pane.minimize_target, pane.minimize_mode
 
         # clear out the dock array; this will be reconstructed
         self._docks = []
@@ -5298,6 +5320,10 @@ class AuiManager(wx.EvtHandler):
             # restore icons from code. This is always done. Since icons are not saved in perspectives        
             if pane.name in saveIcon:
                 pane.icon = saveIcon[pane.name]
+            # restore minimize parameters from code
+            if restoreminimize:
+                if pane.name in saveMinimize:
+                    pane.minimize_target, pane.minimize_mode = saveMinimize[pane.name]
 
             if not p.IsOk():
                 if pane.IsNotebookControl():
@@ -5319,10 +5345,29 @@ class AuiManager(wx.EvtHandler):
             if isinstance(pane.window, auibar.AuiToolBar) and (pane.IsFloatable() or pane.IsDockable()):
                 pane.window.SetGripperVisible(True)
 
-        for p in self._panes:
-            if p.IsMinimized():
-                self.MinimizePane(p, False)
-
+        inexistentPaneIndexes = []
+        for paneIndex, p in enumerate(self._panes):
+            if p.window:
+                if p.IsMinimized():
+                    self.MinimizePane(p, False)
+                elif p.minimize_mode & AUI_MINIMIZE_POS_MASK == AUI_MINIMIZE_POS_TOOLBAR:
+                    # If the pane specifies a minimize toolbar, which would be preserved by the loading
+                    # operation rather than using an automatic toolbar which would not be preserved) then 
+                    # if pane was minimized before we loaded perspective but the new perspective unminimized
+                    # it then its minimize-from-restore icon is still in the toolbar and must be removed
+                    minimizeToolbar = self.GetPane(p.minimize_target).window
+                    item = minimizeToolbar.FindToolByUserData((ID_RESTORE_FRAME, p.window))
+                    if item: # Delete the icon if it was there
+                        minimizeToolbar.DeleteTool(item)
+            else:
+                # The perspective is referencing a non-existing pane that was added nonetheless. This will
+                # happen with a notebook that ends up containing no pages
+                inexistentPaneIndexes.append(paneIndex)
+                
+        for paneIndex in reversed(inexistentPaneIndexes): # reverse is required when deleting elements by index
+            del self._panes[index]
+                
+            
         if update:
             self.Update()
 
@@ -9863,13 +9908,20 @@ class AuiManager(wx.EvtHandler):
                     restore_bitmap = img.ConvertToBitmap()
 
             target = None
+            restoreToolAlreadyInToolbar = False
             if posMask == AUI_MINIMIZE_POS_TOOLBAR:
                 target = paneInfo.name
+                if paneInfo.IsMinimized() and minimize_toolbar.FindToolByUserData((ID_RESTORE_FRAME, paneInfo.window)):
+                    # We are loading a perspective. If the perspective contains the minimize_toolbar,
+                    # then the restore tool for this pane is already in it and we should not add it again
+                    restoreToolAlreadyInToolbar = True
 
-            minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap,
-                                           _(six.u("Restore %s")) % paneInfo.caption, target=target)
-            minimize_toolbar.SetAuiManager(self)
-            minimize_toolbar.Realize()
+            if not restoreToolAlreadyInToolbar:
+                tool = minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap,
+                                               _(six.u("Restore %s")) % paneInfo.caption, target=target)
+                tool.SetUserData((ID_RESTORE_FRAME, paneInfo.window))
+                minimize_toolbar.SetAuiManager(self)
+                minimize_toolbar.Realize()
             toolpanelname = paneInfo.name + "_min"
 
             if paneInfo.IsMaximized():
@@ -10031,8 +10083,8 @@ class AuiManager(wx.EvtHandler):
                 targetName = pane.minimize_target
                 toolbarPane = self.GetPane(targetName)
                 toolbar = toolbarPane.window
-                item = toolbar.FindToolByLabel(pane.caption)
-                toolbar.DeleteTool(item.id)
+                item = toolbar.FindToolByUserData((ID_RESTORE_FRAME, pane.window))
+                toolbar.DeleteTool(item)
             else:
                 paneInfo.window.Show(False)
                 self.DetachPane(paneInfo.window)
