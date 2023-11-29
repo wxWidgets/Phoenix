@@ -5223,6 +5223,7 @@ class AuiManager(wx.EvtHandler):
 
         # mark all panes currently managed as docked and hidden
         saveCapt = {}  # see restorecaption param
+        saveIcon = {}  # icons are not preserved by perspectives, so preserve them
         for pane in self._panes:
 
             # dock the notebook pages
@@ -5237,6 +5238,7 @@ class AuiManager(wx.EvtHandler):
 
             pane.Dock().Hide()
             saveCapt[pane.name] = pane.caption
+            saveIcon[pane.name] = pane.icon
 
         # clear out the dock array; this will be reconstructed
         self._docks = []
@@ -5294,6 +5296,9 @@ class AuiManager(wx.EvtHandler):
             if restorecaption:
                 if pane.name in saveCapt:
                     pane.Caption(saveCapt[pane.name])
+            # restore icons from code. This is always done. Since icons are not saved in perspectives        
+            if pane.name in saveIcon:
+                pane.icon = saveIcon[pane.name]
 
             if not p.IsOk():
                 if pane.IsNotebookControl():
