@@ -316,6 +316,14 @@ class pdfViewer(wx.ScrolledWindow):
 
     # This section is concerned with rendering a sub-set of drawing commands on demand
 
+    def CheckPageDimensions(self, width, height):
+        # check that document page width and height fits the page
+        # for example for documents with pages of different sizes, adjust it to the maximum
+        if width > self.pagewidth or height > self.pageheight:
+            self.pagewidth  = max(width, self.pagewidth)
+            self.pageheight = max(height, self.pageheight)
+            self.CalculateDimensions ()
+
     def CalculateDimensions(self):
         """
         Compute the required buffer sizes to hold the viewed rectangle and
@@ -506,7 +514,6 @@ class mupdfProcessor(object):
             page = self.pdfdoc.loadPage(0)
         self.pagewidth = page.bound().width
         self.pageheight = page.bound().height
-        self.page_rect = page.bound()
         self.zoom_error = False     #set if memory errors during render
 
     def DrawFile(self, frompage, topage):
@@ -522,6 +529,10 @@ class mupdfProcessor(object):
             page = self.pdfdoc.load_page(pageno)
         except AttributeError: # old PyMuPDF version
             page = self.pdfdoc.loadPage(pageno)
+
+        # adapt on the fly document page dimensions if necessary
+        self.parent.CheckPageDimensions (page.bound().width, page.bound().height)
+
         matrix = fitz.Matrix(scale, scale)
         try:
             try:
@@ -593,6 +604,11 @@ class pypdfProcessor(object):
             self.gstate = pdfState()    # state is reset with every new page
             self.saved_state = []
             self.page = self.pdfdoc.getPage(pageno)
+
+            # adapt on the fly document page dimensions if necessary
+            self.parent.CheckPageDimensions(self.page.mediaBox.getUpperRight_x(),
+                                            self.page.mediaBox.getUpperRight_y())
+
             numpages_generated += 1
             pdf_fonts = self.FetchFonts(self.page)
             self.pagedrawings[pageno] = self.ProcessOperators(
