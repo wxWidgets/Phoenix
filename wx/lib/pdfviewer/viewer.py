@@ -317,8 +317,7 @@ class pdfViewer(wx.ScrolledWindow):
     # This section is concerned with rendering a sub-set of drawing commands on demand
 
     def CheckPageDimensions(self, width, height):
-        # check that document page width and height fits the page
-        # for example for documents with pages of different sizes, adjust it to the maximum
+        # for documents with pages of different sizes, adjust it to the maximum
         if width > self.pagewidth or height > self.pageheight:
             self.pagewidth  = max(width, self.pagewidth)
             self.pageheight = max(height, self.pageheight)
