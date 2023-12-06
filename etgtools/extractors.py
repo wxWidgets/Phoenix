@@ -62,6 +62,8 @@ class BaseDef(object):
         # class. Should be overridden in derived classes to get what each one
         # needs in addition to the base.
         self.name = element.find(self.nameTag).text
+        if self.name is None:
+            self.name = ''
         if '::' in self.name:
             loc = self.name.rfind('::')
             self.name = self.name[loc+2:]
@@ -1574,12 +1576,21 @@ class ModuleDef(BaseDef):
             extractingMsg(kind, element)
             for node in element.findall('sectiondef/memberdef'):
                 self.addElement(node)
+            for node in element.findall('sectiondef/member'):
+                node = self.resolveRefid(node)
+                self.addElement(node)
 
         else:
             raise ExtractorError('Unknown module item kind: %s' % kind)
 
         return item
 
+    def resolveRefid(self, node):
+        from etgtools import XMLSRC
+        refid = node.get('refid')
+        fname = os.path.join(XMLSRC, refid.rsplit('_', 1)[0]) + '.xml'
+        root = et.parse(fname).getroot()
+        return root.find(".//memberdef[@id='{}']".format(refid))
 
 
     def addCppFunction(self, type, name, argsString, body, doc=None, **kw):
