@@ -4038,7 +4038,6 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
         self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
-        self.Bind(wx.EVT_CLOSE, self.OnClose)
         if '__WXGTK__' in wx.PlatformInfo:
             self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
 
@@ -4283,6 +4282,7 @@ class AuiManager(wx.EvtHandler):
         self.UnInit()
 
         self._frame = managed_window
+        self._frame.Bind(wx.EVT_CLOSE, self.OnClose)
         self._frame.PushEventHandler(self)
 
         # if the owner is going to manage an MDI parent frame,
@@ -4406,8 +4406,7 @@ class AuiManager(wx.EvtHandler):
         """
 
         event.Skip()
-        if event.GetEventObject() == self._frame:
-            wx.CallAfter(self.UnInit)
+        wx.CallAfter(self.UnInit)
 
     def OnDestroy(self, event):
         """Called when the managed window is destroyed. Makes sure that :meth:`UnInit`
