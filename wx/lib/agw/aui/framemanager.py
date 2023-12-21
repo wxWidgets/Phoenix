@@ -6145,11 +6145,8 @@ class AuiManager(wx.EvtHandler):
         return self._dock_constraint_x, self._dock_constraint_y
 
     def Update(self):
-        if '__WXGTK__' in wx.PlatformInfo:
-            wx.CallAfter(self.DoUpdate)
-        else:
-            self.DoUpdate()
-
+        wx.CallAfter(self.DoUpdate)
+        
     def DoUpdateEvt(self, evt):
         self.Unbind(wx.EVT_WINDOW_CREATE)
         wx.CallAfter(self.DoUpdate)
