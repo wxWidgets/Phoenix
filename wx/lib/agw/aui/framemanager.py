@@ -6215,12 +6215,6 @@ class AuiManager(wx.EvtHandler):
         if not self._masterManager:
             self.UpdateNotebook()
 
-        # delete old sizer first
-        self._frame.SetSizer(None)
-
-        # create a layout for all of the panes
-        sizer = self.LayoutAll(self._panes, self._docks, self._uiparts, False)
-
         # hide or show panes as necessary,
         # and float panes as necessary
 
@@ -6319,6 +6313,12 @@ class AuiManager(wx.EvtHandler):
                 r = p.rect
 
             old_pane_rects.append(r)
+            
+        # delete old sizer first
+        self._frame.SetSizer(None)
+
+        # create a layout for all of the panes
+        sizer = self.LayoutAll(self._panes, self._docks, self._uiparts, False)
 
         # apply the new sizer
         self._frame.SetSizer(sizer)
