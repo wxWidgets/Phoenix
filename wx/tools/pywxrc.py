@@ -521,7 +521,7 @@ class XmlResourceCompiler:
         # Generate subclasses
         for subclass in subclasses:
             windowClass = bases[subclass]
-            subclass = re.sub("^\S+\.", "", subclass)
+            subclass = re.sub(r"^\S+\.", "", subclass)
             windowClass = re.sub("^wx", "", windowClass)
             outputList.append(self.templates.SUBCLASS_HEADER % locals())
             outputList.append('\n')
@@ -760,7 +760,7 @@ class XmlResourceCompiler:
     #-------------------------------------------------------------------
 
     def ConvertText(self, st):
-        """
+        r"""
         Encode special characters as escaped C/Python string characters.
 
             \n => \\n
