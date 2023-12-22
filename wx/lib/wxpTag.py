@@ -14,7 +14,7 @@
 # o Updated for V2.5 compatibility
 #
 
-'''
+r'''
 wx.lib.wxpTag
 
 This module contains a wxHtmlTagHandler that knows how to build
