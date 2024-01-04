@@ -2466,10 +2466,10 @@ class DotGrid:
                 if len(Points) > 100:
                     xy = Points
                     xywh = N.concatenate((xy-radius, N.ones(xy.shape) * self.Size ), 1 )
-                    dc.DrawEllipseList(xywh)
+                    dc.DrawEllipseList(xywh.astype(N.int32))
                 else:
                     for xy in Points:
-                        dc.DrawCircle(xy[0],xy[1], radius)
+                        dc.DrawCircle(xy[0], xy[1], radius)
 
 class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
     """

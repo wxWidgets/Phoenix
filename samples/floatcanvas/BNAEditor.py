@@ -126,10 +126,10 @@ class DrawFrame(wx.Frame):
                                           BackgroundColor = "DARK SLATE BLUE"
                                           ).Canvas
 
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
-        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp )
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp)
         self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
 
         try:

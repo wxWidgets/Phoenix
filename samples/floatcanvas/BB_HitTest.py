@@ -2,8 +2,9 @@
 """
 Test of an alternative hit test method that used the bounding boxes of the objects instead.
 
-Poorly tested -- and broken on recent versions
+Poorly tested -- and broken in recent versions
 
+NOTE: probably the issue is different event IDs or something.
 
 Edited from code contributed by Benjamin Jessup on the mailing list
 
