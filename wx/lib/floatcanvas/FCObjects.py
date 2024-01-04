@@ -7,7 +7,7 @@
 # Created:
 # Version:
 # Date:
-# Licence:
+# License:
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
@@ -2181,8 +2181,8 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         XY = WorldToPixel(self.XY)
         H = ScaleWorldToPixel(self.Height)[0]
-        W = H * int(self.bmpWidth // self.bmpHeight)
-        if (self.ScaledBitmap is None) or (H != self.ScaledHeight) :
+        W = int(H * self.bmpWidth / self.bmpHeight)
+        if (self.ScaledBitmap is None) or (H != self.ScaledHeight):
             self.ScaledHeight = H
             Img = self.Image.Scale(int(W), int(H))
             self.ScaledBitmap = wx.Bitmap(Img)
@@ -2316,60 +2316,58 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         then scales and draws that.
         """
         BBworld = BBox.asBBox(self._Canvas.ViewPortBB)
-        BBbitmap = BBox.fromPoints(self.WorldToBitmap(BBworld))
+        BBbitmap = BBox.fromPoints(self.WorldToBitmap(BBworld)).astype(N.int32)
 
         XYs = WorldToPixel(self.XY)
         # figure out subimage:
         # fixme: this should be able to be done more succinctly!
-
-        if BBbitmap[0,0] < 0:
+        if BBbitmap[0, 0] < 0:
             Xb = 0
-        elif BBbitmap[0,0] >  self.bmpWH[0]: # off the bitmap
+        elif BBbitmap[0, 0] >  self.bmpWH[0]:  # off the bitmap
             Xb = 0
         else:
-            Xb = BBbitmap[0,0]
-            XYs[0] = 0 # draw at origin
+            Xb = BBbitmap[0, 0]
+            XYs[0] = 0  # draw at origin
 
-        if BBbitmap[0,1] < 0:
+        if BBbitmap[0, 1] < 0:
             Yb = 0
-        elif BBbitmap[0,1] >  self.bmpWH[1]: # off the bitmap
+        elif BBbitmap[0, 1] > self.bmpWH[1]:  # off the bitmap
             Yb = 0
             ShouldDraw = False
         else:
-            Yb = BBbitmap[0,1]
-            XYs[1] = 0 # draw at origin
+            Yb = BBbitmap[0, 1]
+            XYs[1] = 0  # draw at origin
 
-        if BBbitmap[1,0] < 0:
-            #off the screen --  This should never happen!
+        if BBbitmap[1, 0] < 0:
+            # off the screen --  This should never happen!
             Wb = 0
-        elif BBbitmap[1,0] > self.bmpWH[0]:
+        elif BBbitmap[1, 0] > self.bmpWH[0]:
             Wb = self.bmpWH[0] - Xb
         else:
-            Wb = BBbitmap[1,0] - Xb
+            Wb = BBbitmap[1, 0] - Xb
 
-        if BBbitmap[1,1] < 0:
+        if BBbitmap[1, 1] < 0:
             # off the screen --  This should never happen!
             Hb = 0
             ShouldDraw = False
-        elif BBbitmap[1,1] > self.bmpWH[1]:
+        elif BBbitmap[1, 1] > self.bmpWH[1]:
             Hb = self.bmpWH[1] - Yb
         else:
-            Hb = BBbitmap[1,1] - Yb
+            Hb = BBbitmap[1, 1] - Yb
 
         FullHeight = ScaleWorldToPixel(self.Height)[0]
-        scale = float(FullHeight) / float(self.bmpWH[1])
-        Ws = int(scale * Wb + 0.5) # add the 0.5 to  round
+        # scale = float(FullHeight) / float(self.bmpWH[1])
+        scale = FullHeight / self.bmpWH[1]
+        Ws = int(scale * Wb + 0.5)  # add the 0.5 to  round
         Hs = int(scale * Hb + 0.5)
-        if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (Xb, Yb, Wb, Hb, Ws, Ws) ):
+        if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (Xb, Yb, Wb, Hb, Ws, Ws)):
             Img = self.Image.GetSubImage(wx.Rect(Xb, Yb, Wb, Hb))
-            #print("rescaling with High quality")
             Img.Rescale(Ws, Hs, quality=wx.IMAGE_QUALITY_HIGH)
             bmp = wx.Bitmap(Img)
-            self.ScaledBitmap = ((Xb, Yb, Wb, Hb, Ws, Ws), bmp)# this defines the cached bitmap
-            #XY = self.ShiftFun(XY[0], XY[1], W, H)
-            #fixme: get the shiftfun working!
+            self.ScaledBitmap = ((Xb, Yb, Wb, Hb, Ws, Ws), bmp)  # this defines the cached bitmap
+            # XY = self.ShiftFun(XY[0], XY[1], W, H)
+            # fixme: get the shiftfun working!
         else:
-            #print("Using cached bitmap")
             ##fixme: The cached bitmap could be used if the one needed is the same scale, but
             ##       a subset of the cached one.
             bmp = self.ScaledBitmap[1]
