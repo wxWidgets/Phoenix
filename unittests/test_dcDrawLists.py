@@ -63,8 +63,8 @@ def makeRandomRectangles():
     rects = []
 
     for i in range(num):
-        W = random.randint(10, w/2)
-        H = random.randint(10, h/2)
+        W = random.randint(10, w//2)
+        H = random.randint(10, h//2)
         x = random.randint(0, w - W)
         y = random.randint(0, h - H)
         rects.append( (x, y, W, H) )
