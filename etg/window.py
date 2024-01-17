@@ -259,9 +259,9 @@ def run():
             wxPyRaiseNotImplemented();
         #endif
         """)
+    c.find('CreateAccessible').factory = True
     c.find('CreateAccessible').setCppCode("""\
         #if wxUSE_ACCESSIBILITY
-            //wxAccessible* acc = self->CreateAccessible();
             return self->CreateAccessible();
         #else
             wxPyRaiseNotImplemented();
