@@ -8435,6 +8435,10 @@ class AuiManager(wx.EvtHandler):
                                     not part.sizer_item.IsShown()):
                 continue
 
+            # don't draw items that have a pane whose window has been deleted
+            if part.pane and not part.pane.window:
+                continue
+
             ptype = part.type
 
             if ptype in [AuiDockUIPart.typeDockSizer, AuiDockUIPart.typePaneSizer]:
