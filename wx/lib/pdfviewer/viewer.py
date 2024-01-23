@@ -292,11 +292,16 @@ class pdfViewer(wx.ScrolledWindow):
         :param integer `pagenum`: go to the provided page number if it is valid
 
         """
+        if not hasattr(self, "cumYpagespixels"):
+            return False # This could happen if the file is still loading
+        
         if pagenum > 0 and pagenum <= self.numpages:
             self.Scroll(0, self.cumYpagespixels[pagenum-1] //
                            self.GetScrollPixelsPerUnit()[1])
+            return True
         else:
             self.Scroll(0, 0)
+            return False
         # calling Scroll sometimes doesn't raise wx.EVT_SCROLLWIN eg Windows 8 64 bit - so
         wx.CallAfter(self.Render)
 
