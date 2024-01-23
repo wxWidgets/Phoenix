@@ -23,11 +23,8 @@
 This module provides the :class:`~wx.lib.pdfviewer.viewer.pdfViewer` to view PDF
 files.
 """
-
-import sys
-import os
-import time
-import types
+import bisect
+import itertools
 import copy
 import shutil
 from six import BytesIO, string_types
@@ -213,8 +210,8 @@ class pdfViewer(wx.ScrolledWindow):
             self.pdfdoc = pypdfProcessor(self, pdf_file, self.ShowLoadProgress)
 
         self.numpages = self.pdfdoc.numpages
-        self.pagewidth = self.pdfdoc.pagewidth
-        self.pageheight = self.pdfdoc.pageheight
+        self.pagesizes = [self.pdfdoc.GetPageSize(i) for i in range(self.numpages)]
+        
         self.page_buffer_valid = False
         self.Scroll(0, 0)               # in case this is a re-LoadFile
         self.CalculateDimensions()      # to get initial visible page range
@@ -298,12 +295,19 @@ class pdfViewer(wx.ScrolledWindow):
         :param integer `pagenum`: go to the provided page number if it is valid
 
         """
-        if pagenum > 0 and pagenum <= self.numpages:
-            self.Scroll(0, pagenum * self.Ypagepixels // self.GetScrollPixelsPerUnit()[1] + 1)
-        else:
-            self.Scroll(0, 0)
         # calling Scroll sometimes doesn't raise wx.EVT_SCROLLWIN eg Windows 8 64 bit - so
         wx.CallAfter(self.Render)
+
+        if not hasattr(self, "cumYpagespixels"):
+            return False # This could happen if the file is still loading
+        
+        if pagenum > 0 and pagenum <= self.numpages:
+            self.Scroll(0, self.cumYpagespixels[pagenum-1] //
+                           self.GetScrollPixelsPerUnit()[1])
+            return True
+        else:
+            self.Scroll(0, 0)
+            return False
 
     @property
     def ShowLoadProgress(self):
@@ -338,53 +342,73 @@ class pdfViewer(wx.ScrolledWindow):
             if not have_cairo:
                 self.font_scale_size = 1.0 / device_scale
 
-        self.winwidth, self.winheight = self.GetClientSize()
-        self.Ypage = self.pageheight + self.nom_page_gap
+        clientSize = self.GetClientSize()
+        if clientSize.width < 5 or clientSize.height < 5:
+            return False # Window is too small to render
+        self.winwidth, self.winheight = clientSize
+        self.Ypages = [self.pagesizes[pageno][1] + self.nom_page_gap 
+                       for pageno in range(self.numpages)]
         if self.zoomscale > 0.0:
-            self.scale = self.zoomscale * device_scale
+            self.scales = [self.zoomscale * device_scale]*self.numpages
         else:
             if int(self.zoomscale) == -1:   # fit width
-                self.scale = self.winwidth / self.pagewidth
+                self.scales = [self.winwidth / self.pagesizes[pageno][0] 
+                               for pageno in range(self.numpages)]
             else:                           # fit page
-                self.scale = self.winheight / self.pageheight
-        if self.scale == 0.0: # this could happen if the window was not yet initialized
-            self.scale = 1.0
-        self.Xpagepixels = int(round(self.pagewidth*self.scale))
-        self.Ypagepixels = int(round(self.Ypage*self.scale))
+                self.scales = [self.winheight / self.pagesizes[pageno][1] 
+                               for pageno in range(self.numpages)]
+        self.Xpagespixels = [int(round(self.pagesizes[pageno][0] * self.scales[pageno]))
+                             for pageno in range(self.numpages)]
 
-        # adjust inter-page gap so Ypagepixels is a whole number of scroll increments
-        # and page numbers change precisely on a scroll click
-        idiv = self.Ypagepixels // self.scrollrate
-        nlo = idiv * self.scrollrate
-        nhi = (idiv + 1) * self.scrollrate
-        if nhi - self.Ypagepixels < self.Ypagepixels - nlo:
-            self.Ypagepixels = nhi
-        else:
-            self.Ypagepixels = nlo
-        self.page_gap = self.Ypagepixels/self.scale - self.pageheight
+        self.Ypagespixels = [None]*self.numpages
+        self.page_gaps = [None]*self.numpages
+        for pageno in range(self.numpages):
+            Ypagepixels = int(round(self.Ypages[pageno] * self.scales[pageno]))
+            # adjust Ypagespixels (total number of vertical pixels per page including bottom
+            # inter-page gap so Ypagepixels is a whole number of scroll increments and pages
+            # change precisely on a scroll click
+            idiv = Ypagepixels // self.scrollrate
+            nlo = idiv * self.scrollrate
+            nhi = (idiv + 1) * self.scrollrate
+            if nhi - Ypagepixels < Ypagepixels - nlo:
+                self.Ypagespixels[pageno] = nhi
+            else:
+                self.Ypagespixels[pageno] = nlo
+            self.page_gaps[pageno] = (self.Ypagespixels[pageno]/self.scales[pageno] -
+                                      self.pagesizes[pageno][1])
 
-        self.maxwidth = max(self.winwidth, self.Xpagepixels)
-        self.maxheight = max(self.winheight, self.numpages*self.Ypagepixels)
+        self.cumYpagespixels = list(itertools.accumulate(self.Ypagespixels))
+
+        self.maxwidth = max(self.winwidth, 
+                            max(self.Xpagespixels[pageno] for pageno in range(self.numpages)))
+        self.maxheight = max(self.winheight, self.cumYpagespixels[-1])
         self.SetVirtualSize((self.maxwidth, self.maxheight))
         self.SetScrollRate(self.scrollrate, self.scrollrate)
 
         xv, yv = self.GetViewStart()
         dx, dy = self.GetScrollPixelsPerUnit()
+         
         self.x0, self.y0   = (xv * dx, yv * dy)
-        self.frompage = int(min(self.y0/self.Ypagepixels, self.numpages-1))
-        self.topage = int(min((self.y0+self.winheight-1)/self.Ypagepixels, self.numpages-1))
-        self.pagebufferwidth = max(self.Xpagepixels, self.winwidth)
-        self.pagebufferheight = (self.topage - self.frompage + 1) * self.Ypagepixels
+        self.frompage = max(bisect.bisect_left(self.cumYpagespixels, self.y0+1), 0)
+        self.topage = min(bisect.bisect_right(self.cumYpagespixels, self.y0+self.winheight-1),
+                          self.numpages-1)
+        if self.frompage > self.topage:
+            return False # Nothing to render. Can happen during initialization
+        
+        self.page_x0 = 0
+        self.pagebufferwidth = max(self.Xpagespixels[pageno]
+                                   for pageno in range(self.frompage, self.topage+1))
+        self.page_y0 = self.cumYpagespixels[self.frompage-1] if self.frompage else 0
+        self.pagebufferheight = self.cumYpagespixels[self.topage] - self.page_y0
 
         # Inform buttonpanel controls of any changes
         if self.buttonpanel:
             self.buttonpanel.Update(self.frompage, self.numpages,
-                                      self.scale/device_scale)
-
-        self.page_y0 = self.frompage * self.Ypagepixels
-        self.page_x0 = 0
+                                      self.scales[self.frompage]/device_scale)
+        
         self.xshift = self.x0 - self.page_x0
         self.yshift = self.y0 - self.page_y0
+        
         if not self.page_buffer_valid:  # via external setting
             self.cur_frompage = self.frompage
             self.cur_topage = self.topage
@@ -393,7 +417,8 @@ class pdfViewer(wx.ScrolledWindow):
                 self.page_buffer_valid = False    # due to page buffer change
                 self.cur_frompage = self.frompage
                 self.cur_topage = self.topage
-        return
+                
+        return True
 
     def Render(self):
         """
@@ -407,7 +432,8 @@ class pdfViewer(wx.ScrolledWindow):
         """
         if not self.have_file:
             return
-        self.CalculateDimensions()
+        if not self.CalculateDimensions():
+            return # Invalid dimensions: Nothing to render
         if not self.page_buffer_valid:
             # Initialize the buffer bitmap.
             self.pagebuffer = wx.Bitmap(self.pagebufferwidth, self.pagebufferheight)
@@ -423,8 +449,12 @@ class pdfViewer(wx.ScrolledWindow):
             gc.FillPath(path)
 
             for pageno in range(self.frompage, self.topage+1):
+                scale = self.scales[pageno]
+                pagegap = self.page_gaps[pageno]
                 self.xpageoffset = 0 - self.x0
-                self.ypageoffset = pageno*self.Ypagepixels - self.page_y0
+                self.ypageoffset = (self.cumYpagespixels[pageno] - self.Ypagespixels[pageno] -
+                                    self.page_y0)
+    
                 gc.PushState()
                 if mupdf:
                     gc.Translate(self.xpageoffset, self.ypageoffset)
@@ -432,22 +462,27 @@ class pdfViewer(wx.ScrolledWindow):
                 else:
 
                     gc.Translate(self.xpageoffset, self.ypageoffset +
-                                    self.pageheight*self.scale)
-                    gc.Scale(self.scale, self.scale)
-                self.pdfdoc.RenderPage(gc, pageno, scale=self.scale)
-                # Show inter-page gap
-                gc.SetBrush(wx.Brush(wx.Colour(180, 180, 180)))        #mid grey
+                                    self.pagesizes[pageno][1]*scale)
+                    gc.Scale(scale, scale)
+                self.pdfdoc.RenderPage(gc, pageno, scale=scale)
+                
+                # Show non-page areas as gray
+                gc.PushState()
+                gc.SetBrush(wx.Brush(self.GetBackgroundColour()))
                 gc.SetPen(wx.TRANSPARENT_PEN)
-                if mupdf:
-                    gc.DrawRectangle(0, self.pageheight*self.scale,
-                                 self.pagewidth*self.scale, self.page_gap*self.scale)
-                else:
-                    gc.DrawRectangle(0, 0, self.pagewidth, self.page_gap)
-                gc.PopState()
-            gc.PushState()
-            gc.Translate(0-self.x0, 0-self.page_y0)
-            self.RenderPageBoundaries(gc)
-            gc.PopState()
+                gc.Scale(1.0, 1.0)
+                
+                #inter-page gap
+                gc.DrawRectangle(0, self.pagesizes[pageno][1]*scale,
+                                 self.pagesizes[pageno][0]*scale, pagegap*scale)
+                # gap to the right of the page
+                extrawidth = self.winwidth - self.Xpagespixels[pageno]
+                if extrawidth > 0:
+                    gc.DrawRectangle(self.pagesizes[pageno][0]*scale, 0, 
+                                     extrawidth, self.Ypagespixels[pageno])
+                gc.PopState() # Pop non-page area
+        
+                gc.PopState() # Pop page area
 
         self.page_buffer_valid = True
         self.Refresh(0) # Blit appropriate area of new or existing page buffer to screen
@@ -456,20 +491,6 @@ class pdfViewer(wx.ScrolledWindow):
         if self.page_after_zoom_change:
             self.GoPage(self.page_after_zoom_change)
             self.page_after_zoom_change = None
-
-    def RenderPageBoundaries(self, gc):
-        """
-        Show non-page areas in grey.
-        """
-        gc.SetBrush(wx.Brush(wx.Colour(180, 180, 180)))        #mid grey
-        gc.SetPen(wx.TRANSPARENT_PEN)
-        gc.Scale(1.0, 1.0)
-        extrawidth = self.winwidth - self.Xpagepixels
-        if extrawidth > 0:
-            gc.DrawRectangle(self.winwidth-extrawidth, 0, extrawidth, self.maxheight)
-        extraheight = self.winheight - (self.numpages*self.Ypagepixels - self.y0)
-        if extraheight > 0:
-            gc.DrawRectangle(0, self.winheight-extraheight, self.maxwidth, extraheight)
 
 #============================================================================
 
@@ -503,15 +524,18 @@ class mupdfProcessor(object):
             self.numpages = self.pdfdoc.page_count
         except AttributeError: # old PyMuPDF version
             self.numpages = self.pdfdoc.pageCount
-        try:
-            page = self.pdfdoc.load_page(0)
-        except AttributeError: # old PyMuPDF version
-            page = self.pdfdoc.loadPage(0)
-        self.pagewidth = page.bound().width
-        self.pageheight = page.bound().height
-        self.page_rect = page.bound()
-        self.zoom_error = False     #set if memory errors during render
 
+        self.zoom_error = False     #set if memory errors during render
+        
+    def GetPageSize(self, pageNum):
+        """ Return width, height for the page """
+        try:
+            page = self.pdfdoc.load_page(pageNum)
+        except AttributeError: # old PyMuPDF version
+            page = self.pdfdoc.loadPage(pageNum)
+        bound = page.bound()
+        return bound.width, bound.height
+        
     def DrawFile(self, frompage, topage):
         """
         This is a no-op for mupdf. Each page is scaled and drawn on
@@ -555,9 +579,6 @@ class pypdfProcessor(object):
         self.showloadprogress = showloadprogress
         self.pdfdoc = PdfFileReader(fileobj)
         self.numpages = self.pdfdoc.getNumPages()
-        page1 = self.pdfdoc.getPage(0)
-        self.pagewidth = float(page1.mediaBox.getUpperRight_x())
-        self.pageheight = float(page1.mediaBox.getUpperRight_y())
         self.pagedrawings = {}
         self.unimplemented = {}
         self.formdrawings = {}
@@ -566,6 +587,10 @@ class pypdfProcessor(object):
         self.saved_state = None
         self.knownfont = False
         self.progbar = None
+        
+    def GetPageSize(self, pageNum):
+        mediaBox = self.pdfdoc.getPage(pageNum).mediaBox
+        return float(mediaBox.getUpperRight_x()), float(mediaBox.getUpperRight_y())
 
     # These methods interpret the PDF contents as a set of drawing commands
 
@@ -1078,8 +1103,8 @@ class pdfPrintout(wx.Printout):
         if mupdf:
             sfac = 4.0
         pageno = page - 1       # zero based
-        width = self.view.pagewidth
-        height = self.view.pageheight
+        width = self.view.pagesizes[pageno][0]
+        height = self.view.pagesizes[pageno][1]
         self.FitThisSizeToPage(wx.Size(int(width*sfac), int(height*sfac)))
         dc = self.GetDC()
         gc = wx.GraphicsContext.Create(dc)
