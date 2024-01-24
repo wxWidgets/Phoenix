@@ -9025,6 +9025,16 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         self.SetItem(item)
         self.RefreshLine(item._itemId)
 
+        if self.HasAGWFlag(ULC_AUTO_CHECK_PARENT) and\
+                item.GetKind() == 1:        # check box like item
+            col = item.GetColumn()
+            info = self.GetColumn(col)
+            if self.GetCheckedItemCount(col) == self.GetItemCount():
+                info.Check(True)
+            else:
+                info.Check(False)
+            self.SetColumn(col, info)
+
         if not sendEvent:
             return
 
