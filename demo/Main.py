@@ -56,7 +56,6 @@ import re
 import shutil
 from threading import Thread
 
-from distutils.version import LooseVersion
 
 import wx
 import wx.adv
@@ -2661,7 +2660,7 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
     def OnInit(self):
 
         # Check runtime version
-        if LooseVersion(version.VERSION_STRING) != LooseVersion(wx.VERSION_STRING):
+        if version.VERSION_STRING != wx.VERSION_STRING:
             wx.MessageBox(caption="Warning",
                           message="You're using version %s of wxPython, but this copy of the demo was written for version %s.\n"
                           "There may be some version incompatibilities..."
