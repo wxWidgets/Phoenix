@@ -33,7 +33,6 @@ import os
 import wx
 import subprocess
 import ssl
-import pip
 
 if sys.version_info >= (3,):
     from urllib.error import (HTTPError, URLError)
@@ -43,6 +42,11 @@ else:
     import urllib2
     from urllib2 import (HTTPError, URLError)
     import urlparse
+
+try:
+    import pip
+except ImportError as e:
+    pip = None
 
 def get_docs_demo_url(demo=False):
     """ Get the URL for the docs or demo."""
@@ -196,8 +200,8 @@ def download_file(url, dest=None, force=False, trusted=False):
         success = download_wget(url, filename, trusted)  # Try wget
         if not success:
             success = download_urllib(url, filename)  # Try urllib
-        if not success:
-            success = download_pip(url, filename, force, trusted)  # Try urllib
+        if not success and pip is not None:
+            success = download_pip(url, filename, force, trusted)  # Try pip
         if not success:
             split_url = url.split('/')
             msg = '\n'.join([
