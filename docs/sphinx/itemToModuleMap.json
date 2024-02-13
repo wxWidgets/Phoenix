@@ -874,6 +874,7 @@
 "DataViewBitmapRenderer":"wx.dataview.",
 "DataViewCellMode":"wx.dataview.",
 "DataViewCellRenderState":"wx.dataview.",
+"DataViewCheckIconText":"wx.dataview.",
 "DataViewCheckIconTextRenderer":"wx.dataview.",
 "DataViewChoiceRenderer":"wx.dataview.",
 "DataViewColumn":"wx.dataview.",
