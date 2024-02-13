@@ -840,7 +840,7 @@ class SpeedMeter(BufferedWindow):
             interface = 0
 
             for ind in range(numsteps+1):
-                currCol = (r1 + rf, g1 + gf, b1 + bf)
+                currCol = (r1 + int(rf), g1 +int(gf), b1 +int(bf))
                 dc.SetBrush(wx.Brush(currCol))
 
                 gradradius = flrect - radiusteps*ind
