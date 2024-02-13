@@ -1290,7 +1290,7 @@ def cmd_sip(options, args):
             requires = ["sip >=6.6.2, <7"]
             build-backend = "sipbuild.api"
 
-            [tool.sip.metadata]
+            [project]
             name = "{base}"
 
             [tool.sip.bindings.{base}]

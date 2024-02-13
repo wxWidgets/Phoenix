@@ -75,7 +75,7 @@ def run():
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxChar'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='wxInt64', name='time_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='long long', name='wxFileOffset'))
-    module.insertItemAfter(td, etgtools.TypedefDef(type='SIP_SSIZE_T', name='ssize_t'))
+    module.insertItemAfter(td, etgtools.TypedefDef(type='Py_ssize_t', name='ssize_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned char', name='byte', pyInt=True))
     module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long', name='ulong'))
 

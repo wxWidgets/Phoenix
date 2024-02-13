@@ -958,7 +958,7 @@ class {ListClass}
         {TypeDef}
     %End
 public:
-    SIP_SSIZE_T __len__();
+    Py_ssize_t __len__();
     %MethodCode
         sipRes = sipCpp->size();
     %End
@@ -1129,7 +1129,7 @@ def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False, getIt
 class {ArrayClass}
 {{
 public:
-    SIP_SSIZE_T __len__();
+    Py_ssize_t __len__();
     %MethodCode
         sipRes = sipCpp->GetCount();
     %End
@@ -1183,7 +1183,7 @@ def wxArrayPtrWrapperTemplate(ArrayClass, ItemClass, module):
 class {ArrayClass}
 {{
 public:
-    SIP_SSIZE_T __len__();
+    Py_ssize_t __len__();
     %MethodCode
         sipRes = sipCpp->GetCount();
     %End

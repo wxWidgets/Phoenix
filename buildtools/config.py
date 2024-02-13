@@ -85,7 +85,7 @@ class Configuration(object):
     PKGDIR = 'wx'
     # The name of the top-level package
 
-    SIP_ABI = '12.8'
+    SIP_ABI = '12.9'
     SIP_TRACE = False
 
     # ---------------------------------------------------------------
