@@ -68,10 +68,11 @@
 # control the display (without blocking the user's control) would be pretty
 # straightforward.
 
+from __future__ import print_function
+
 import wx
 import clroses
 import wx.lib.colourselect as cs
-from six import print_
 
 # Class SpinPanel creates a control that includes both a StaticText widget
 # which holds the the name of a parameter and a SpinCtrl widget which
@@ -109,7 +110,7 @@ class SpinPanel(wx.Panel):
         name = self.st.GetLabel()
         value = self.sc.GetValue()
         if verbose:
-            print_('OnSpin', name, '=', value)
+            print('OnSpin', name, '=', value)
         self.callback(name, value)      # Call MyFrame.OnSpinback to call clroses
 
 
@@ -372,10 +373,10 @@ class MyFrame(wx.Frame, clroses.rose):
         h = max(600, fh)        # Change 600 to desired minimum size
         w = h + fw - rw
         if verbose:
-            print_('rose panel size', (rw, rh))
-            print_('side panel size', (sw, sh))
-            print_('     frame size', (fw, fh))
-            print_('Want size', (w,h))
+            print('rose panel size', (rw, rh))
+            print('side panel size', (sw, sh))
+            print('     frame size', (fw, fh))
+            print('Want size', (w,h))
         self.SetSize((w, h))
         self.SupplyControlValues()      # Ask clroses to tell us all the defaults
         self.Show()
@@ -386,25 +387,25 @@ class MyFrame(wx.Frame, clroses.rose):
     # Go/Stop button
     def OnGoStop(self, event):
         if verbose:
-            print_('OnGoStop')
+            print('OnGoStop')
         self.cmd_go_stop()
 
     # Redraw/Redraw
     def OnRedraw(self, event):
         if verbose:
-            print_('OnRedraw')
+            print('OnRedraw')
         self.cmd_redraw()
 
     # Backward/Reverse
     def OnBackward(self, event):
         if verbose:
-            print_('OnBackward')
+            print('OnBackward')
         self.cmd_backward()
 
     # Forward/Skip
     def OnForward(self, event):
         if verbose:
-            print_('OnForward')
+            print('OnForward')
         self.cmd_step()
 
 
@@ -415,7 +416,7 @@ class MyFrame(wx.Frame, clroses.rose):
 
     def AppClear(self):
         if verbose:
-            print_('AppClear: clear screen')
+            print('AppClear: clear screen')
         self.rose_panel.Clear()
 
     def AppCreateLine(self, line):
@@ -467,8 +468,8 @@ class MyFrame(wx.Frame, clroses.rose):
     # Method to provide a single callback after some amount of time.
     def AppAfter(self, msec, callback):
         if self.timer_callback:
-            print_('AppAfter: timer_callback already set!')
-        # print_('AppAfter:', callback)
+            print('AppAfter: timer_callback already set!')
+        # print('AppAfter:', callback)
         self.timer_callback = callback
         self.timer.Start(msec, True)
 
@@ -476,14 +477,14 @@ class MyFrame(wx.Frame, clroses.rose):
     # interest in.
     def AppCancelTimer(self):
         self.timer.Stop()
-        # print_('AppCancelTimer')
+        # print('AppCancelTimer')
         self.timer_callback = None
 
     # When the timer happens, we come here and jump off to clroses internal code.
     def OnTimer(self, evt):
         callback = self.timer_callback
         self.timer_callback = None
-        # print_('OnTimer,', callback)
+        # print('OnTimer,', callback)
         if callback:
             callback()          # Often calls AppAfter() and sets the callback
         else:
@@ -502,7 +503,7 @@ class MyFrame(wx.Frame, clroses.rose):
     # Called when data in spin boxes changes.
     def OnSpinback(self, name, value):
         if verbose:
-            print_('OnSpinback', name, value)
+            print('OnSpinback', name, value)
         if name == 'Style':
             self.SetStyle(value)
         elif name == 'Sincr':
@@ -530,7 +531,7 @@ class MyFrame(wx.Frame, clroses.rose):
         elif name == 'Delay':
             self.SetWaitDelay(value)
         else:
-            print_('OnSpinback: Don\'t recognize', name)
+            print('OnSpinback: Don\'t recognize', name)
 
 verbose = 0                     # Need some command line options...
 spin_panels = {}                # Hooks to get from rose to panel labels
@@ -539,6 +540,6 @@ ctrl_buttons = {}               # Button widgets for command (NE) panel
 app = wx.App(False)
 MyFrame()
 if verbose:
-    print_('spin_panels', list(spin_panels))
-    print_('ctrl_buttons', list(ctrl_buttons))
+    print('spin_panels', list(spin_panels))
+    print('ctrl_buttons', list(ctrl_buttons))
 app.MainLoop()

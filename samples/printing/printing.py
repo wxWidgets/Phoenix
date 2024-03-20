@@ -1,5 +1,6 @@
+from __future__ import print_function
+
 import wx
-from six import print_
 import os
 
 FONTSIZE = 10
@@ -180,7 +181,7 @@ class PrintFrameworkSample(wx.Frame):
             data = dlg.GetPageSetupData()
             self.pdata = wx.PrintData(data.GetPrintData()) # force a copy
             self.pdata.SetPaperId(data.GetPaperId())
-            #print_("paperID %r, paperSize %r" % (self.pdata.GetPaperId(), self.pdata.GetPaperSize()))
+            #print("paperID %r, paperSize %r" % (self.pdata.GetPaperId(), self.pdata.GetPaperSize()))
             self.margins = (data.GetMarginTopLeft(),
                             data.GetMarginBottomRight())
         dlg.Destroy()
@@ -226,20 +227,20 @@ class PrintFrameworkSample(wx.Frame):
         dlg = wx.PrintDialog(self, data)
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetPrintDialogData()
-            print_()
-            print_("GetFromPage:", data.GetFromPage())
-            print_("GetToPage:", data.GetToPage())
-            print_("GetMinPage:", data.GetMinPage())
-            print_("GetMaxPage:", data.GetMaxPage())
-            print_("GetNoCopies:", data.GetNoCopies())
-            print_("GetAllPages:", data.GetAllPages())
-            print_("GetSelection:", data.GetSelection())
-            print_("GetCollate:", data.GetCollate())
-            print_("GetPrintToFile:", data.GetPrintToFile())
+            print()
+            print("GetFromPage:", data.GetFromPage())
+            print("GetToPage:", data.GetToPage())
+            print("GetMinPage:", data.GetMinPage())
+            print("GetMaxPage:", data.GetMaxPage())
+            print("GetNoCopies:", data.GetNoCopies())
+            print("GetAllPages:", data.GetAllPages())
+            print("GetSelection:", data.GetSelection())
+            print("GetCollate:", data.GetCollate())
+            print("GetPrintToFile:", data.GetPrintToFile())
 
             self.pdata = wx.PrintData(data.GetPrintData())
-            print_()
-            print_("GetPrinterName:", self.pdata.GetPrinterName())
+            print()
+            print("GetPrinterName:", self.pdata.GetPrinterName())
 
         dlg.Destroy()
 
