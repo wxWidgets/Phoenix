@@ -6,8 +6,9 @@ printTreeDocs and printTreeSpec.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
+from __future__ import print_function
+
 import sys
-from .. import py2and3
 
 __all__ = ('printImported', 'StructMsg', 'Callback', 'Enum' )
 
@@ -16,7 +17,7 @@ def printImported():
     """Output a list of pubsub modules imported so far"""
     ll = sorted([mod for mod in sys.modules if mod.find('pubsub') >= 0])
 
-    py2and3.print_('\n'.join(ll))
+    print('\n'.join(ll))
 
 
 class StructMsg:

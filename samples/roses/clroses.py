@@ -36,8 +36,9 @@
 # ideal Roses program should be, however, callers are welcome to assert their
 # independence, override defaults, ignore features, etc.
 
+from __future__ import print_function
+
 from math import sin, cos, pi
-from six import print_
 
 # Rose class knows about:
 # > Generating points and vectors (returning data as a list of points)
@@ -151,7 +152,7 @@ class rose:
     # update parameters or stop.
     def restart(self):
         if self.verbose:
-            print_('restart: int_state', self.int_state, 'cmd_state', self.cmd_state)
+            print('restart: int_state', self.int_state, 'cmd_state', self.cmd_state)
         try:
             tmp = self.sin_table[0]
         except:
@@ -192,7 +193,7 @@ class rose:
     # before initialization is done.
     def repaint(self, delay):
         if self.int_state != self.INT_RESIZE:
-            # print_('repaint after', delay)
+            # print('repaint after', delay)
             self.int_state = self.INT_RESIZE
             self.AppCancelTimer()
             self.AppAfter(delay, self.clock)
@@ -264,7 +265,7 @@ class rose:
     # roses is 0.)
     def clock(self):
         if self.int_state == self.INT_IDLE:
-            # print_('clock called in idle state')
+            # print('clock called in idle state')
             delay = 0
         elif self.int_state == self.INT_DRAW:
             line, run = self.roselet()
@@ -295,7 +296,7 @@ class rose:
 
         if delay == 0:
             if self.verbose:
-                print_('clock: going idle from state', self.int_state)
+                print('clock: going idle from state', self.int_state)
         else:
             self.AppAfter(delay, self.clock)
 

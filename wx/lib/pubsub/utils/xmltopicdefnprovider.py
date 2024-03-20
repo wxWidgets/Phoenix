@@ -45,6 +45,8 @@ of the XML tree.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
+from __future__ import print_function
+
 __author__ = 'Joshua R English'
 __revision__ = 6
 __date__ = '2013-07-27'
@@ -80,7 +82,7 @@ def _get_elem(elem):
         try:
             elem = ET.fromstring(elem)
         except:
-            py2and3.print_("Value Error", elem)
+            print("Value Error", elem)
             raise ValueError("Cannot convert to element")
     return elem
 
