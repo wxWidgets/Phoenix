@@ -100,13 +100,7 @@ def wrapText(text, dontWrap: str = ''):
 # in the StringIO
 import io
 class Utf8EncodingStream(io.StringIO):
-    if sys.version_info < (3,):
-        def write(self, text):
-            if isinstance(text, str):
-                text = text.decode('utf-8')
-            return io.StringIO.write(self, text)
-
-
+    pass
 
 
 def textfile_open(filename, mode='rt'):
@@ -116,12 +110,7 @@ def textfile_open(filename, mode='rt'):
     mode parameter must include the 't' to put the stream into text mode.
     """
     assert 't' in mode
-    if sys.version_info < (3,):
-        import codecs
-        mode = mode.replace('t', '')
-        return codecs.open(filename, mode, encoding='utf-8')
-    else:
-        return open(filename, mode, encoding='utf-8')
+    return open(filename, mode, encoding='utf-8')
 
 
 #---------------------------------------------------------------------------

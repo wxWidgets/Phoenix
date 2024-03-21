@@ -53,10 +53,6 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
 import buildtools.version as version
 
 
-# which version of Python is running this script
-PY2 = sys.version_info[0] == 2
-PY3 = sys.version_info[0] == 3
-
 
 # defaults
 PYVER = '2.7'
@@ -1086,7 +1082,7 @@ def _removeSidebar(path):
         tag = soup.find('div', 'document')
         if tag:
             tag.attrs['class'] = ['document-no-sidebar']
-        text = unicode(soup) if PY2 else str(soup)
+        text = str(soup)
         with textfile_open(filename, 'wt') as f:
             f.write(text)
 
@@ -1506,9 +1502,6 @@ def cmd_build_wx(options, args):
 
         if options.jom:
             build_options.append('--jom')
-
-        if PY2:
-            build_options.append('--no_dpi_aware')
 
     else:
         # Platform is something other than MSW

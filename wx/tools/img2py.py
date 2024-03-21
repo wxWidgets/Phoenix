@@ -198,10 +198,7 @@ def img2py(image_file, python_file,
         while data:
             part = data[:72]
             data = data[72:]
-            if sys.version > '3':
-                output = '    %s' % part
-            else:
-                output = '    "%s"' % part
+            output = '    %s' % part
             if not data:
                 output += ")"
             lines.append(output)
