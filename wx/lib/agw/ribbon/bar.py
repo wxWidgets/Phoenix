@@ -774,7 +774,7 @@ class RibbonBar(RibbonControl):
                         if info.small_must_have_separator_width*(numtabs - i) <= width:
                             info.rect.width = info.small_must_have_separator_width
                         else:
-                            info.rect.width = width/(numtabs - i)
+                            info.rect.width = int(width/(numtabs - i))
 
                         width -= info.rect.width
 
