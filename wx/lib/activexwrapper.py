@@ -24,7 +24,7 @@ except ImportError:
     if hasattr(sys, "frozen"):
         import os, win32api
         dllpath = os.path.join(win32api.GetSystemDirectory(), 'MFC71.DLL')
-        if sys.version[:3] >= '2.4' and not os.path.exists(dllpath):
+        if not os.path.exists(dllpath):
             message = "%s not found" % dllpath
         else:
             raise       # original error message

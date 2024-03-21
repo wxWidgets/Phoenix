@@ -18,8 +18,6 @@ import subprocess
 from buildtools import builder
 from buildtools.config import getVisCVersion
 
-PY3 = sys.version_info[0] == 3
-
 # builder object
 wxBuilder = None
 
@@ -421,8 +419,7 @@ def main(wxDir, args):
         setupFile = os.path.join(mswIncludeDir, "setup.h")
         with open(setupFile, "rb") as f:
             setupText = f.read()
-            if PY3:
-                setupText = setupText.decode('utf-8')
+            setupText = setupText.decode('utf-8')
 
         for flag in flags:
             setupText, subsMade = re.subn(flag + "\s+?\d", "%s %s" % (flag, flags[flag]), setupText)
@@ -431,8 +428,7 @@ def main(wxDir, args):
                 sys.exit(1)
 
         with open(setupFile, "wb") as f:
-            if PY3:
-                setupText = setupText.encode('utf-8')
+            setupText = setupText.encode('utf-8')
             f.write(setupText)
 
         args = []

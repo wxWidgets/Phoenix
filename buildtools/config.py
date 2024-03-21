@@ -482,18 +482,8 @@ class Configuration(object):
 
     def build_locale_list(self, srcdir):
         # get a list of all files under the srcdir, to be used for install_data
-        if sys.version_info[0] == 2:
-            def walk_helper(lst, dirname, files):
-                for f in files:
-                    filename = opj(dirname, f)
-                    if not os.path.isdir(filename):
-                        lst.append( (dirname, [filename]) )
-            file_list = []
-            os.path.walk(srcdir, walk_helper, file_list)
-            return file_list
-        else:
-            # TODO: Python3 version using os.walk generator
-            return []
+        # TODO: Python3 version using os.walk generator
+        return []
 
 
     def find_data_files(self, srcdir, *wildcards, **kw):
@@ -897,8 +887,7 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True, onError=None):
     if getOutput:
         outputEncoding = 'cp1252' if sys.platform == 'win32' else 'utf-8'
         output = sp.stdout.read()
-        if sys.version_info > (3,):
-            output = output.decode(outputEncoding)
+        output = output.decode(outputEncoding)
         output = output.rstrip()
 
     rval = sp.wait()
@@ -917,11 +906,8 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True, onError=None):
 
 
 def myExecfile(filename, ns):
-    if sys.version_info < (3,):
-        execfile(filename, ns)
-    else:
-        with open(filename, 'r') as f:
-            exec(f.read(), ns)
+    with open(filename, 'r') as f:
+        exec(f.read(), ns)
 
 
 def textfile_open(filename, mode='rt'):
@@ -931,12 +917,7 @@ def textfile_open(filename, mode='rt'):
     mode parameter must include the 't' to put the stream into text mode.
     """
     assert 't' in mode
-    if sys.version_info < (3,):
-        import codecs
-        mode = mode.replace('t', '')
-        return codecs.open(filename, mode, encoding='utf-8')
-    else:
-        return open(filename, mode, encoding='utf-8')
+    return open(filename, mode, encoding='utf-8')
 
 
 def getSipFiles(names):

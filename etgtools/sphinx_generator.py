@@ -20,12 +20,7 @@ import sys
 import shutil
 import textwrap
 
-if sys.version_info < (3, ):
-    from StringIO import StringIO
-    string_base = basestring
-else:
-    from io import StringIO
-    string_base = str
+from io import StringIO
 
 import xml.etree.ElementTree as et
 
@@ -146,7 +141,7 @@ class Node(object):
         :returns: The element text for the input `tag_name` or ``None``.
         """
 
-        if isinstance(self.element, string_base):
+        if isinstance(self.element, str):
             return None
 
         return self.element.get(tag_name)
@@ -268,7 +263,7 @@ class Node(object):
         if self.element is None:
             return text
 
-        if isinstance(self.element, string_base):
+        if isinstance(self.element, str):
             text = self.element
         else:
             text, tail = self.element.text, self.element.tail
@@ -1381,7 +1376,7 @@ class Snippet(Node):
             if tag == 'sp':
                 self.snippet += ' '
 
-            if isinstance(element, string_base):
+            if isinstance(element, str):
                 self.snippet += element
             else:
                 if element.text:
@@ -2006,7 +2001,7 @@ class XMLDocString(object):
         # Some of the Extractors (xml item) will set deprecated themselves, in which case it is set as a
         # non-empty string. In such cases, this branch will insert a deprecated section into the xml tree
         # so that the Node Tree (see classes above) will generate the deprecated  tag on their own in self.RecurseXML
-        if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, string_base):
+        if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, str):
             element = et.Element('deprecated', kind='deprecated')
             element.text = xml_item.deprecated
 
@@ -2128,7 +2123,7 @@ class XMLDocString(object):
         if element is None:
             return Node('', parent)
 
-        if isinstance(element, string_base):
+        if isinstance(element, str):
             rest_class = Paragraph(element, parent, self.kind)
             return rest_class
 
@@ -2754,7 +2749,7 @@ class XMLDocString(object):
             name = convertToPython(name)
             stream.write('%-80s' % name)
 
-            if not isinstance(docstrings, string_base):
+            if not isinstance(docstrings, str):
                 rest_class = self.RecurseXML(docstrings, self.root)
                 docstrings = rest_class.Join()
 
@@ -3394,7 +3389,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         brief = memberVar.briefDoc
         briefDoc = None
-        if not isinstance(brief, string_base):
+        if not isinstance(brief, str):
             docstring = XMLDocString(memberVar)
             #docstring.current_module = self.current_module
             briefDoc = docstring.GetBrief()
@@ -3541,7 +3536,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             simple_docs = convertToPython(method.pyDocstring)
         else:
             brief = method.briefDoc
-            if not isinstance(brief, string_base):
+            if not isinstance(brief, str):
                 docstring = XMLDocString(method)
                 docstring.kind = 'method'
                 docstring.current_module = self.current_module

@@ -24,13 +24,9 @@ from .constants import INHERITANCEROOT
 ENOENT = getattr(errno, 'ENOENT', 0)
 EPIPE  = getattr(errno, 'EPIPE', 0)
 
-if sys.version_info < (3, ):
-    string_base = basestring
-else:
-    string_base = str
 
 
-class InheritanceDiagram(object):
+class InheritanceDiagram:
     """
     Given a list of classes, determines the set of classes that they inherit
     from all the way to the root "object", and then is able to generate a
@@ -239,7 +235,7 @@ class InheritanceDiagram(object):
         code = self.generate_dot(class_summary)
 
         # graphviz expects UTF-8 by default
-        if isinstance(code, string_base):
+        if isinstance(code, str):
             code = code.encode('utf-8')
 
         dot_args = ['dot']

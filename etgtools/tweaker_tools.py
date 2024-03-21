@@ -19,8 +19,6 @@ import copy
 import textwrap
 
 
-PY3 = sys.version_info[0] == 3
-
 magicMethods = {
     'operator!='    : '__ne__',
     'operator=='    : '__eq__',
@@ -123,12 +121,8 @@ class FixWxPrefix(object):
 
         names = list()
         filename = 'wx/core.pyi'
-        if PY3:
-            with open(filename, 'rt', encoding='utf-8') as f:
-                text = f.read()
-        else:
-            with open(filename, 'r') as f:
-                text = f.read()
+        with open(filename, 'rt', encoding='utf-8') as f:
+            text = f.read()
         parseTree = ast.parse(text, filename)
         for item in parseTree.body:
             _processItem(item, names)
