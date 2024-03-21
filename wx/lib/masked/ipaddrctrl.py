@@ -23,7 +23,6 @@ user hits '.' when typing.
 """
 
 import  wx
-import  six
 from wx.lib.masked import BaseMaskedTextCtrl
 
 # jmg 12/9/03 - when we cut ties with Py 2.2 and earlier, this would
@@ -188,7 +187,7 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
 
         """
 ##        dbg('IpAddrCtrl::SetValue(%s)' % str(value), indent=1)
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
 ##            dbg(indent=0)
             raise ValueError('%s must be a string' % str(value))
 

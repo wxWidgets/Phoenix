@@ -10,7 +10,6 @@ from code import InteractiveInterpreter, compile_command
 from . import dispatcher
 from . import introspect
 import wx
-import six
 
 class Interpreter(InteractiveInterpreter):
     """Interpreter based on code.InteractiveInterpreter."""
@@ -25,7 +24,7 @@ class Interpreter(InteractiveInterpreter):
         self.stdout = stdout
         self.stderr = stderr
         if rawin:
-            from six.moves import builtins
+            import builtins
             builtins.raw_input = rawin
             del builtins
         if showInterpIntro:
@@ -55,14 +54,6 @@ class Interpreter(InteractiveInterpreter):
         command we keep appending the pieces to the last list in
         commandBuffer until we have a complete command. If not, we
         delete that last list."""
-
-        # In case the command is unicode try encoding it
-        if not six.PY3:
-            if type(command) == unicode:
-                try:
-                    command = command.encode('utf-8')
-                except UnicodeEncodeError:
-                    pass # otherwise leave it alone
 
         if not self.more:
             try: del self.commandBuffer[-1]

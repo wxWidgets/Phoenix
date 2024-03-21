@@ -18,8 +18,7 @@ import images
 
 # helper function to make sure we don't convert unicode objects to strings
 # or vice versa when converting lists and None values to text.
-import six
-convert = six.text_type
+convert = str
 
 #----------------------------------------------------------------------------
 

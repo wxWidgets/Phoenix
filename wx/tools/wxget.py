@@ -26,22 +26,15 @@ Where URL is a file URL and the optional DEST_DIR is a destination directory to
 download to, (default is to prompt the user).
 The --trusted option can be used to suppress certificate checks.
 """
-from __future__ import (division, absolute_import, print_function, unicode_literals)
-
 import sys
 import os
 import wx
 import subprocess
 import ssl
 
-if sys.version_info >= (3,):
-    from urllib.error import (HTTPError, URLError)
-    import urllib.request as urllib2
-    import urllib.parse as urlparse
-else:
-    import urllib2
-    from urllib2 import (HTTPError, URLError)
-    import urlparse
+from urllib.error import (HTTPError, URLError)
+import urllib.request as urllib2
+import urllib.parse as urlparse
 
 try:
     import pip

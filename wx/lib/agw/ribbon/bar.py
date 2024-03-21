@@ -98,8 +98,6 @@ See Also
 import wx
 from functools import cmp_to_key
 
-import six
-
 from .control import RibbonControl
 
 from .art_internal import RibbonPageTabInfo
@@ -607,7 +605,7 @@ class RibbonBar(RibbonControl):
     def SetActivePage(self, page):
         """ See comments on :meth:`~RibbonBar.SetActivePageByIndex` and :meth:`~RibbonBar.SetActivePageByPage`. """
 
-        if isinstance(page, six.integer_types):
+        if isinstance(page, int):
             return self.SetActivePageByIndex(page)
 
         return self.SetActivePageByPage(page)

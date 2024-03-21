@@ -13,8 +13,6 @@
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 import sys
 import glob
 import hashlib

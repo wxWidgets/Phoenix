@@ -22,18 +22,11 @@ from .librarydescription import Method, Property, Attribute
 
 from . import inheritance
 
-from .utilities import isPython3, PickleFile
+from .utilities import PickleFile
 from .constants import object_types, EXCLUDED_ATTRS, MODULE_TO_ICON
 from .constants import CONSTANT_RE
 
-if sys.version_info < (3,):
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
-
-if isPython3():
-    MethodTypes = (classmethod, types.MethodType, types.ClassMethodDescriptorType)
-else:
-    MethodTypes = (classmethod, types.MethodType)
+MethodTypes = (classmethod, types.MethodType, types.ClassMethodDescriptorType)
 
 try:
     import wx

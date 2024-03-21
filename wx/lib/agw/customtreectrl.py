@@ -349,8 +349,6 @@ License And Version
 
 Latest Revision: Helio Guilherme @ 09 Aug 2018, 21.35 GMT
 
-Version 2.7
-
 """
 
 # Version Info
@@ -358,9 +356,6 @@ __version__ = "2.7"
 
 import wx
 from wx.lib.expando import ExpandoTextCtrl
-
-# Python 2/3 compatibility helper
-import six
 
 # ----------------------------------------------------------------------------
 # Constants

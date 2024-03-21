@@ -9,7 +9,6 @@ import weakref
 
 from .topicutils import (stringize, WeakNone)
 from .validatedefnargs import verifySubset
-from .. import py2and3
 
 ### Exceptions raised during check() from sendMessage()
 
@@ -101,7 +100,7 @@ class ArgsInfo:
         """docs is a mapping from arg names to their documentation"""
         if not self.isComplete():
             raise
-        for arg, doc in py2and3.iteritems(docs):
+        for arg, doc in docs.items():
             self.allDocs[arg] = doc
 
     def check(self, msgKwargs):
@@ -115,14 +114,14 @@ class ArgsInfo:
         hasReqd = (needReqd <= all)
         if not hasReqd:
             raise SenderMissingReqdMsgDataError(
-                self.topicNameTuple, py2and3.keys(msgKwargs), needReqd - all)
+                self.topicNameTuple, msgKwargs.keys(), needReqd - all)
 
         # check that all other args are among the optional spec
         optional = all - needReqd
         ok = (optional <= set(self.allOptional))
         if not ok:
             raise SenderUnknownMsgDataError( self.topicNameTuple,
-                py2and3.keys(msgKwargs), optional - set(self.allOptional) )
+                msgKwargs.keys(), optional - set(self.allOptional) )
 
     def filterArgs(self, msgKwargs):
         """Returns a dict which contains only those items of msgKwargs

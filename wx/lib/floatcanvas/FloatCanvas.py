@@ -42,8 +42,6 @@ Many samples are available in the `wxPhoenix/samples/floatcanvas` folder.
 
 """
 
-from __future__ import division
-
 import sys
 mac = sys.platform.startswith("darwin")
 
@@ -53,7 +51,6 @@ try:
 except ImportError:
     from time import clock
 import wx
-import six
 
 from .FCObjects import *
 

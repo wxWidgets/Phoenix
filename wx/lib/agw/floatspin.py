@@ -177,10 +177,7 @@ import wx
 import locale
 from math import ceil, floor
 
-# Python 2/3 compatibility helper
-import six
-if six.PY3:
-    long = int
+long = int
 
 # Set The Styles For The Underline wx.TextCtrl
 FS_READONLY = 1
@@ -1379,7 +1376,7 @@ class FixedPoint(object):
             self.n = n
             return
 
-        if isinstance(value, six.integer_types):
+        if isinstance(value, int):
             self.n = int(value) * _tento(p)
             return
 

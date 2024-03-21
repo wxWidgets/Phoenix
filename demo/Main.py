@@ -54,6 +54,7 @@
 import sys, os, time, traceback
 import re
 import shutil
+from io import BytesIO
 from threading import Thread
 
 
@@ -66,8 +67,6 @@ from wx.adv import TaskBarIcon as TaskBarIcon
 from wx.adv import SplashScreen as SplashScreen
 import wx.lib.mixins.inspection
 
-import six
-from six import exec_, BytesIO
 from six.moves import cPickle
 from six.moves import urllib
 
@@ -417,10 +416,7 @@ class InternetThread(Thread):
         try:
             url = _docsURL % ReplaceCapitals(self.selectedClass)
             with urllib.request.urlopen(url) as fid:
-                if six.PY2:
-                    originalText = fid.read()
-                else:
-                    originalText = fid.read().decode("utf-8")
+                originalText = fid.read().decode("utf-8")
 
             text = RemoveHTMLTags(originalText).split("\n")
             data = FindWindowStyles(text, originalText, self.selectedClass)
@@ -962,9 +958,6 @@ def SearchDemo(name, keyword):
     with open(GetOriginalFilename(name), "rt") as fid:
         fullText = fid.read()
 
-    if six.PY2:
-        fullText = fullText.decode("iso-8859-1")
-
     if fullText.find(keyword) >= 0:
         return True
 
@@ -1075,10 +1068,9 @@ class DemoModules(object):
         self.modules = [[dict(),  ""    ,    ""     , "<original>"  ,        None],
                         [dict(),  ""    ,    ""     , "<modified>"  ,        None]]
 
-        getcwd = os.getcwd if six.PY3 else os.getcwdu
         for i in [modOriginal, modModified]:
             self.modules[i][0]['__file__'] = \
-                os.path.join(getcwd(), GetOriginalFilename(name))
+                os.path.join(os.getcwd(), GetOriginalFilename(name))
 
         # load original module
         self.LoadFromFile(modOriginal, GetOriginalFilename(name))
@@ -1102,12 +1094,10 @@ class DemoModules(object):
         if self.name != __name__:
             source = self.modules[modID][1]
             description = self.modules[modID][2]
-            if six.PY2:
-                description = description.encode(sys.getfilesystemencoding())
 
             try:
                 code = compile(source, description, "exec")
-                exec_(code, self.modules[modID][0])
+                exec(code, self.modules[modID][0])
             except:
                 self.modules[modID][4] = DemoError(sys.exc_info())
                 self.modules[modID][0] = None
@@ -2227,10 +2217,6 @@ class wxPythonDemo(wx.Frame):
         itemText = self.tree.GetItemText(item)
 
         self.pickledData[itemText] = data
-
-        if six.PY2:
-            # TODO: verify that this encoding is correct
-            text = text.decode('iso8859_1')
 
         self.StopDownload()
         self.ovr.SetPage(text)

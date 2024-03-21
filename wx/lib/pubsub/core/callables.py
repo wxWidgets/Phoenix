@@ -11,13 +11,14 @@ CallArgsInfo regarding its autoTopicArgName data member.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 """
+import sys
 
 from inspect import ismethod, isfunction, signature, Parameter
 
-from .. import py2and3
-
 AUTO_TOPIC    = '## your listener wants topic name ## (string unlikely to be used by caller)'
 
+def getexcobj():
+    return sys.exc_info()[1]
 
 def getModule(obj):
     """Get the module in which an object was defined. Returns '__main__'
@@ -189,8 +190,7 @@ def getArgs(callable_):
     try:
         func, firstArgIdx = getRawFunction(callable_)
     except ValueError:
-        from .. import py2and3
-        exc = py2and3.getexcobj()
+        exc = getexcobj()
         raise ListenerMismatchError(str(exc), callable_)
 
     return CallArgsInfo(func, firstArgIdx)

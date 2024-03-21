@@ -192,8 +192,6 @@ import math
 import weakref
 import pickle
 
-import six
-
 # Used on OSX to get access to carbon api constants
 if wx.Platform == '__WXMAC__':
     try:
@@ -6550,7 +6548,7 @@ class PageContainer(wx.Panel):
         if page < len(self._pagesInfoVec):
             return self._pagesInfoVec[page].GetCaption()
         else:
-            return six.u('')
+            return ''
 
 
     def SetPageText(self, page, text):

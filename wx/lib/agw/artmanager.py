@@ -6,7 +6,7 @@ This module contains drawing routines and customizations for the AGW widgets
 import wx
 import random
 
-from six import BytesIO
+from io import BytesIO
 
 from .fmresources import *
 
