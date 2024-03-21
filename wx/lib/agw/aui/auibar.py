@@ -31,9 +31,6 @@ import wx
 
 from .aui_utilities import BitmapFromBits, StepColour, GetLabelSize
 from .aui_utilities import GetBaseColour, MakeDisabledBitmap
-
-import six
-
 from .aui_constants import *
 
 
@@ -68,7 +65,7 @@ class CommandToolBarEvent(wx.PyCommandEvent):
         :param integer `win_id`: the window identification number.
         """
 
-        if type(command_type) in six.integer_types:
+        if type(command_type) in int:
             wx.PyCommandEvent.__init__(self, command_type, win_id)
         else:
             wx.PyCommandEvent.__init__(self, command_type.GetEventType(), command_type.GetId())
@@ -158,7 +155,7 @@ class AuiToolBarEvent(CommandToolBarEvent):
 
         CommandToolBarEvent.__init__(self, command_type, win_id)
 
-        if type(command_type) in six.integer_types:
+        if type(command_type) in int:
             self.notify = wx.NotifyEvent(command_type, win_id)
         else:
             self.notify = wx.NotifyEvent(command_type.GetEventType(), command_type.GetId())

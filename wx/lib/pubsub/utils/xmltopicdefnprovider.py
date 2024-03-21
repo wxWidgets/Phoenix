@@ -45,8 +45,6 @@ of the XML tree.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-from __future__ import print_function
-
 __author__ = 'Joshua R English'
 __revision__ = 6
 __date__ = '2013-07-27'
@@ -58,7 +56,6 @@ from ..core.topicdefnprovider import (
     ArgSpecGiven,
     TOPIC_TREE_FROM_STRING,
     )
-from .. import py2and3
 
 try:
     from elementtree import ElementTree as ET
@@ -162,7 +159,7 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
         return self._topics.get(topicNameTuple, (None, None))
 
     def topicNames(self):
-        return py2and3.iterkeys(self._topics) # dict_keys iter in 3, list in 2
+        return self._topics.keys()
 
     def getTreeDoc(self):
         return self._treeDoc
@@ -259,7 +256,7 @@ def exportTopicTreeSpecXml(moduleName=None, rootTopic=None, bak='bak', moduleDoc
     if rootTopic is None:
         from .. import pub
         rootTopic = pub.getDefaultTopicTreeRoot()
-    elif py2and3.isstring(rootTopic):
+    elif isintance(rootTopic, str):
         from .. import pub
         rootTopic = pub.getTopic(rootTopic)
 

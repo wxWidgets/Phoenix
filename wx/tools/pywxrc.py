@@ -31,8 +31,6 @@ Usage: python pywxrc.py -h
   -o, --output   output filename, or - for stdout
 """
 
-from __future__ import print_function
-
 import sys, os, getopt, glob, re
 import xml.dom.minidom as minidom
 from six import byte2int

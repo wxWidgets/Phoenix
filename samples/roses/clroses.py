@@ -36,8 +36,6 @@
 # ideal Roses program should be, however, callers are welcome to assert their
 # independence, override defaults, ignore features, etc.
 
-from __future__ import print_function
-
 from math import sin, cos, pi
 
 # Rose class knows about:

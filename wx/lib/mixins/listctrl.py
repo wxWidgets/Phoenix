@@ -33,12 +33,9 @@
 
 import  locale
 import  wx
-import six
 
-if six.PY3:
-    # python 3 lacks cmp:
-    def cmp(a, b):
-        return (a > b) - (a < b)
+def cmp(a, b):
+    return (a > b) - (a < b)
 
 #----------------------------------------------------------------------------
 
@@ -161,10 +158,10 @@ class ColumnSorterMixin:
         item2 = self.itemDataMap[key2][col]
 
         #--- Internationalization of string sorting with locale module
-        if isinstance(item1, six.text_type) and isinstance(item2, six.text_type):
+        if isinstance(item1, str) and isinstance(item2, str):
             # both are unicode (py2) or str (py3)
             cmpVal = locale.strcoll(item1, item2)
-        elif isinstance(item1, six.binary_type) or isinstance(item2, six.binary_type):
+        elif isinstance(item1, bytes) or isinstance(item2, bytes):
             # at least one is a str (py2) or byte (py3)
             cmpVal = locale.strcoll(str(item1), str(item2))
         else:

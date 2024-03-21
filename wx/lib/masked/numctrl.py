@@ -401,7 +401,6 @@ GetAutoSize()
 import  copy
 
 import  wx
-import  six
 
 from sys import maxsize
 MAXINT = maxsize     # (constants should be in upper case)
@@ -1641,7 +1640,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##            dbg(indent=0)
             return self._template
 
-        elif isinstance(value, six.string_types):
+        elif isinstance(value, str):
             value = self._GetNumValue(value)
 ##            dbg('cleansed num value: "%s"' % value)
             if value == "":

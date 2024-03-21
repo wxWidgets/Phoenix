@@ -6,8 +6,6 @@ printTreeDocs and printTreeSpec.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-from __future__ import print_function
-
 import sys
 
 __all__ = ('printImported', 'StructMsg', 'Callback', 'Enum' )

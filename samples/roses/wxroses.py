@@ -68,8 +68,6 @@
 # control the display (without blocking the user's control) would be pretty
 # straightforward.
 
-from __future__ import print_function
-
 import wx
 import clroses
 import wx.lib.colourselect as cs

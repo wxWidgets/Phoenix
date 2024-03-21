@@ -62,10 +62,7 @@ def run():
         return rv;
         """)
     c.addPyMethod('ReadInt', '(self, key, defaultVal=0)', body="""\
-        import six
         rv = self._cpp_ReadInt(key, defaultVal)
-        if six.PY2:
-            rv = int(rv)
         return rv
         """)
 

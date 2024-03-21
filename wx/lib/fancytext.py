@@ -58,7 +58,6 @@ import math
 import sys
 
 import wx
-import six
 
 import xml.parsers.expat
 
@@ -255,8 +254,6 @@ class Renderer:
     def renderCharacterData(self, data, x, y):
         raise NotImplementedError()
 
-from six import PY3
-
 def _addGreek():
     alpha = 0xE1
     Alpha = 0xC1
@@ -265,10 +262,7 @@ def _addGreek():
     for i, name in enumerate(_greek_letters):
         def start(self, attrs, code=chr(alpha+i)):
             self.start_font({"encoding" : _greekEncoding})
-            if not PY3:
-                self.characterData(code.decode('iso8859-7'))
-            else:
-                self.characterData(code)
+            self.characterData(code)
             self.end_font()
         setattr(Renderer, "start_%s" % name, start)
         setattr(Renderer, "end_%s" % name, end)
@@ -276,10 +270,7 @@ def _addGreek():
             continue # There is no capital for altsigma
         def start(self, attrs, code=chr(Alpha+i)):
             self.start_font({"encoding" : _greekEncoding})
-            if not PY3:
-                self.characterData(code.decode('iso8859-7'))
-            else:
-                self.characterData(code)
+            self.characterData(code)
             self.end_font()
         setattr(Renderer, "start_%s" % name.capitalize(), start)
         setattr(Renderer, "end_%s" % name.capitalize(), end)
@@ -366,8 +357,6 @@ def RenderToRenderer(str, renderer, enclose=True):
         if enclose:
             str = '<?xml version="1.0"?><FancyText>%s</FancyText>' % str
         p = xml.parsers.expat.ParserCreate()
-        if six.PY2:
-            p.returns_unicode = 0
         p.StartElementHandler = renderer.startElement
         p.EndElementHandler = renderer.endElement
         p.CharacterDataHandler = renderer.characterData

@@ -35,7 +35,6 @@ import datetime
 
 import wx
 import wx.adv
-import six
 
 from .persist_handlers import FindHandler, HasCtrlHandler
 
@@ -44,7 +43,7 @@ from .persist_constants import PM_DEFAULT_STYLE, PM_PERSIST_CONTROL_VALUE
 
 # ----------------------------------------------------------------------------------- #
 
-class PersistentObject(object):
+class PersistentObject:
     """
     :class:`PersistentObject`: ABC for anything persistent.
 
@@ -785,10 +784,10 @@ class PersistenceManager(object):
         kind = repr(value.__class__).split("'")[1]
 
         if self._customConfigHandler is not None:
-            result = self._customConfigHandler.SaveValue(self.GetKey(obj, keyName), repr((kind, six.text_type(value))))
+            result = self._customConfigHandler.SaveValue(self.GetKey(obj, keyName), repr((kind, str(value))))
         else:
             config = self.GetPersistenceFile()
-            result = config.Write(self.GetKey(obj, keyName), repr((kind, six.text_type(value))))
+            result = config.Write(self.GetKey(obj, keyName), repr((kind, str(value))))
             config.Flush()
 
         return result
