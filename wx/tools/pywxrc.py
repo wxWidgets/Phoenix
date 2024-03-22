@@ -33,7 +33,9 @@ Usage: python pywxrc.py -h
 
 import sys, os, getopt, glob, re
 import xml.dom.minidom as minidom
-from six import byte2int
+
+import operator
+byte2int = operator.itemgetter(0)
 
 #----------------------------------------------------------------------
 

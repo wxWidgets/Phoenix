@@ -41,12 +41,11 @@ import  string
 import  types
 
 import  wx
-import six
 
 #----------------------------------------------------------------------------
 
-MAXSIZE = six.MAXSIZE     # (constants should be in upper case)
-MINSIZE = -six.MAXSIZE-1
+MAXSIZE = sys.maxsize     # (constants should be in upper case)
+MINSIZE = -sys.MAXSIZE-1
 LONGTYPE = int
 
 #----------------------------------------------------------------------------

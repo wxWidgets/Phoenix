@@ -52,8 +52,11 @@
 # Last updated: Andrea Gavana, 20 Oct 2008, 18.00 GMT
 
 import sys, os, time, traceback
+import pickle
 import re
 import shutil
+import urllib.error
+import urllib.request
 from io import BytesIO
 from threading import Thread
 
@@ -67,8 +70,6 @@ from wx.adv import TaskBarIcon as TaskBarIcon
 from wx.adv import SplashScreen as SplashScreen
 import wx.lib.mixins.inspection
 
-from six.moves import cPickle
-from six.moves import urllib
 
 import version
 
@@ -1636,7 +1637,7 @@ class wxPythonDemo(wx.Frame):
 
         with open(pickledFile, "rb") as fid:
             try:
-                self.pickledData = cPickle.load(fid)
+                self.pickledData = pickle.load(fid)
             except:
                 self.pickledData = {}
 
@@ -1677,7 +1678,7 @@ class wxPythonDemo(wx.Frame):
         item.Check(self.allowDocs)
         self.Bind(wx.EVT_MENU, self.OnAllowDownload, item)
 
-        item = wx.MenuItem(menu, -1, 'Delete saved docs', 'Deletes the cPickle file where docs are stored')
+        item = wx.MenuItem(menu, -1, 'Delete saved docs', 'Deletes the pickle file where docs are stored')
         item.SetBitmap(images.catalog['deletedocs'].GetBitmap())
         menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnDeleteDocs, item)
@@ -2486,7 +2487,7 @@ class wxPythonDemo(wx.Frame):
         MakeDocDirs()
         pickledFile = GetDocFile()
         with open(pickledFile, "wb") as fid:
-            cPickle.dump(self.pickledData, fid, cPickle.HIGHEST_PROTOCOL)
+            pickle.dump(self.pickledData, fid, pickle.HIGHEST_PROTOCOL)
 
         self.Destroy()
 
