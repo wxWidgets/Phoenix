@@ -46,8 +46,6 @@ Event Name                               Description
 
 import wx
 
-import six
-
 from .control import RibbonControl
 from .art import *
 
@@ -345,7 +343,7 @@ class RibbonButtonBar(RibbonControl):
         if not bitmap.IsOk() and not bitmap_small.IsOk():
             raise Exception("Invalid main bitmap")
 
-        if not isinstance(help_string, six.string_types):
+        if not isinstance(help_string, str):
             raise Exception("Invalid help string parameter")
 
         if not self._buttons:

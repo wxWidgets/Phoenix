@@ -316,10 +316,9 @@ def run():
         sequence with an item for each column''',
         body="""\
         if len(entry):
-            from six import text_type
-            pos = self.InsertItem(self.GetItemCount(), text_type(entry[0]))
+            pos = self.InsertItem(self.GetItemCount(), str(entry[0]))
             for i in range(1, len(entry)):
-                self.SetItem(pos, i, text_type(entry[i]))
+                self.SetItem(pos, i, str(entry[i]))
             return pos
         """)
 

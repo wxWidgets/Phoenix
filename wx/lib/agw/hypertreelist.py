@@ -302,9 +302,6 @@ from wx.lib.agw.customtreectrl import DragImage, TreeEvent, GenericTreeItem, Cho
 from wx.lib.agw.customtreectrl import TreeEditTimer as TreeListEditTimer
 from wx.lib.agw.customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED, EVT_TREE_ITEM_HYPERLINK
 
-# Python 2/3 compatibility helper
-import six
-
 # Version Info
 __version__ = "1.4"
 
@@ -453,7 +450,7 @@ class TreeListColumnInfo(object):
         :param `edit`: ``True`` to set the column as editable, ``False`` otherwise.
         """
 
-        if isinstance(input, six.string_types):
+        if isinstance(input, str):
             self._text = input
             self._width = width
             self._flag = flag
@@ -3662,7 +3659,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         if self._curColumn == -1:
             self._curColumn = 0
 
-        self.SetItemText(self._editItem, six.text_type(value), self._curColumn)
+        self.SetItemText(self._editItem, str(value), self._curColumn)
 
 
     def OnCancelEdit(self):

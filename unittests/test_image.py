@@ -1,8 +1,7 @@
 import unittest
 from unittests import wtc
 import wx
-import six
-from six import BytesIO as FileLikeObject
+from io import BytesIO as FileLikeObject
 import os
 
 
@@ -136,20 +135,12 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
         data = img.GetDataBuffer()
         self.assertTrue(isinstance(data, memoryview))
-        if six.PY2:
-            data[0] = b'1'
-            data[1] = b'2'
-            data[2] = b'3'
-            self.assertEqual(ord('1'), img.GetRed(0,0))
-            self.assertEqual(ord('2'), img.GetGreen(0,0))
-            self.assertEqual(ord('3'), img.GetBlue(0,0))
-        else:
-            data[0] = 1
-            data[1] = 2
-            data[2] = 3
-            self.assertEqual(1, img.GetRed(0,0))
-            self.assertEqual(2, img.GetGreen(0,0))
-            self.assertEqual(3, img.GetBlue(0,0))
+        data[0] = 1
+        data[1] = 2
+        data[2] = 3
+        self.assertEqual(1, img.GetRed(0,0))
+        self.assertEqual(2, img.GetGreen(0,0))
+        self.assertEqual(3, img.GetBlue(0,0))
 
 
     def test_imageGetAlphaDataBuffer(self):
@@ -159,20 +150,12 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
         data = img.GetAlphaBuffer()
         self.assertTrue(isinstance(data, memoryview))
-        if six.PY2:
-            data[0] = b'1'
-            data[1] = b'2'
-            data[2] = b'3'
-            self.assertEqual(ord('1'), img.GetAlpha(0,0))
-            self.assertEqual(ord('2'), img.GetAlpha(1,0))
-            self.assertEqual(ord('3'), img.GetAlpha(2,0))
-        else:
-            data[0] = 1
-            data[1] = 2
-            data[2] = 3
-            self.assertEqual(1, img.GetAlpha(0,0))
-            self.assertEqual(2, img.GetAlpha(1,0))
-            self.assertEqual(3, img.GetAlpha(2,0))
+        data[0] = 1
+        data[1] = 2
+        data[2] = 3
+        self.assertEqual(1, img.GetAlpha(0,0))
+        self.assertEqual(2, img.GetAlpha(1,0))
+        self.assertEqual(3, img.GetAlpha(2,0))
 
 
     def test_imageSetDataBuffer1(self):

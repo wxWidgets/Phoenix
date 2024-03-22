@@ -1,24 +1,16 @@
 import sys
 import os
 import re
-
-if sys.version_info < (3,):
-    from StringIO import StringIO
-else:
-    from io import StringIO
+from io import StringIO
 
 from inspect import getmro, getclasstree, getdoc, getcomments
 
 from .utilities import makeSummary, chopDescription, writeSphinxOutput, PickleFile
-from .utilities import findControlImages, formatExternalLink, isPython3
+from .utilities import findControlImages, formatExternalLink
 from .constants import object_types, MODULE_TO_ICON, DOXY_2_REST, SPHINXROOT
 from . import templates
 
 EPYDOC_PATTERN = re.compile(r'\S+{\S+}', re.DOTALL)
-
-if sys.version_info < (3,):
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
 
 
 def make_class_tree(tree):
@@ -1016,12 +1008,7 @@ class Property(ChildrenBase):
 class Attribute(ChildrenBase):
 
     def __init__(self, name, specs, value):
-
-        if isPython3():
-            specs = str(specs)
-        else:
-            specs = unicode(specs)
-
+        specs = str(specs)
         start, end = specs.find("'"), specs.rfind("'")
         specs = specs[start+1:end]
 

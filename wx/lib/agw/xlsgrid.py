@@ -250,8 +250,6 @@ import string
 
 import wx.grid as gridlib
 
-import six
-
 from wx.lib.embeddedimage import PyEmbeddedImage
 from wx.lib.wordwrap import wordwrap
 
@@ -439,8 +437,8 @@ def SplitThousands(s, tSep=',', dSep='.'):
 
     """
 
-    if not isinstance(s, six.string_types):
-        s = six.u(s)
+    if not isinstance(s, str):
+        s = str(s)
 
     cnt = 0
     numChars = dSep + '0123456789'
@@ -837,7 +835,7 @@ class XLSText(object):
                 value = representation%value
             except ValueError:
                 # Fall back to string
-                value = six.u(value)
+                value = str(value)
 
             if "#," in number_format:
                 value = SplitThousands(value)

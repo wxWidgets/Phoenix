@@ -21,7 +21,6 @@
 
 import wx
 
-import six
 MV_HOR = 0
 MV_VER = not MV_HOR
 
@@ -63,7 +62,7 @@ class MultiSash(wx.Window):
     def SetSaveData(self,data):
         mod = data['_defChild_mod']
         dChild = mod + '.' + data['_defChild_class']
-        six.exec_('import %s' % mod)
+        exec('import %s' % mod)
         self._defChild = eval(dChild)
         old = self.child
         self.child = MultiSplit(self,self,wx.Point(0,0),self.GetSize())
@@ -327,7 +326,7 @@ class MultiViewLeaf(wx.Window):
     def SetSaveData(self,data):
         mod = data['detailClass_mod']
         dChild = mod + '.' + data['detailClass_class']
-        six.exec_('import %s' % mod)
+        exec('import %s' % mod)
         detClass = eval(dChild)
         self.SetSize(data['x'],data['y'],data['w'],data['h'])
         old = self.detail

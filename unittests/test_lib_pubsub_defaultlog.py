@@ -7,10 +7,10 @@
 """
 
 import unittest
+from io import StringIO
 from unittests import wtc
 
 from wx.lib.pubsub.utils import notification
-from six import StringIO
 
 #---------------------------------------------------------------------------
 

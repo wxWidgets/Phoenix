@@ -11,8 +11,7 @@ implemented using an wx.html.HtmlWindow.
 
 import sys
 import os
-
-from six.moves import cPickle as pickle
+import pickle
 
 import wx
 import wx.html

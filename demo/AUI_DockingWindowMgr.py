@@ -5,7 +5,7 @@ import wx.grid
 import wx.html
 import wx.aui as aui
 
-from six import BytesIO
+from io import BytesIO
 
 ID_CreateTree = wx.NewIdRef()
 ID_CreateGrid = wx.NewIdRef()
