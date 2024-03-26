@@ -125,6 +125,9 @@ class FillingTree(wx.TreeCtrl):
                 d[key] = obj[n]
         if otype not in COMMONTYPES:
             for key in introspect.getAttributeNames(obj):
+                if wx.Platform == '__WXMSW__':
+                    if key == 'DropTarget': # Windows bug fix.
+                        continue
                 # Believe it or not, some attributes can disappear,
                 # such as the exc_traceback attribute of the sys
                 # module. So this is nested in a try block.
