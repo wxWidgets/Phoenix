@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 import wx
 
 ## import the installed version
@@ -13,11 +12,10 @@ from wx.lib.floatcanvas.FCObjects import PieChart
 #from floatcanvas import NavCanvas, FloatCanvas
 #from floatcanvas.SpecialObjects import PieChart
 
-
 import numpy as N
 
-class DrawFrame(wx.Frame):
 
+class DrawFrame(wx.Frame):
     """
     A frame used for the FloatCanvas Demo
 
@@ -29,15 +27,17 @@ class DrawFrame(wx.Frame):
         self.CreateStatusBar()
 
         # Add the Canvas
-        Canvas = NavCanvas.NavCanvas(self,-1,
-                                     size = (500,500),
-                                     Debug = 0,
-                                     BackgroundColor = "DARK SLATE BLUE",
-                                     ).Canvas
+        Canvas = NavCanvas.NavCanvas(
+            self,
+            -1,
+            size=(500, 500),
+            Debug=0,
+            BackgroundColor="DARK SLATE BLUE",
+        ).Canvas
 
         self.Canvas = Canvas
 
-        Values = (10,10,10)
+        Values = (10, 10, 10)
         Colors = ('Red', 'Blue', 'Green')
         Pie1 = PieChart(N.array((0, 0)), 10, Values, Colors, Scaled=False)
         Canvas.AddObject(Pie1)
@@ -54,13 +54,16 @@ class DrawFrame(wx.Frame):
         # missng slice!
         Values = (10, 15, 12, 24)
         Colors = ('Red', 'Blue', 'Green', None)
-        Pie4 = PieChart(N.array((0, -15)), 10, Values, Colors, LineColor="Black")
+        Pie4 = PieChart(N.array((0, -15)),
+                        10,
+                        Values,
+                        Colors,
+                        LineColor="Black")
         Canvas.AddObject(Pie4)
-
 
         # Test the styles
         Values = (10, 12, 14)
-        Styles = ("Solid", "CrossDiagHatch","CrossHatch")
+        Styles = ("Solid", "CrossDiagHatch", "CrossHatch")
         Colors = ('Red', 'Blue', 'Green')
         Pie4 = PieChart(N.array((20, -20)), 10, Values, Colors, Styles)
         Canvas.AddObject(Pie2)
@@ -68,7 +71,7 @@ class DrawFrame(wx.Frame):
         Pie1.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Pie1Hit)
         Pie2.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Pie2Hit)
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
 
         self.Show()
         Canvas.ZoomToBB()
@@ -83,9 +86,9 @@ class DrawFrame(wx.Frame):
         """
         Updates the status bar with the world coordinates
         """
-        self.SetStatusText("%.2g, %.2g"%tuple(event.Coords))
+        self.SetStatusText("%.2g, %.2g" % tuple(event.Coords))
 
 
 app = wx.App(False)
-F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
+F = DrawFrame(None, title="FloatCanvas Demo App", size=(700, 700))
 app.MainLoop()

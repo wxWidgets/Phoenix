@@ -9,9 +9,7 @@ It also shows how one can use the Mouse to interact and change objects on a Canv
 this really needs to be re-done with GUI-Modes.
 """
 
-
 import wx
-
 
 ## import the installed version
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources
@@ -62,7 +60,7 @@ class DrawFrame(wx.Frame):
         self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp )
         self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
 
-        Point = N.array((0,0), N.float)
+        Point = N.array((0,0), N.float64)
 
 
 

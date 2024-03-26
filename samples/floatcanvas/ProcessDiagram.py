@@ -100,8 +100,8 @@ class NodeObject(FC.Group, MovingObjectMixin, ConnectorObjectMixin):
                  TextColor = "Black",
                  InForeground  = False,
                  IsVisible = True):
-        XY = N.asarray(XY, N.float).reshape(2,)
-        WH = N.asarray(WH, N.float).reshape(2,)
+        XY = N.asarray(XY, N.float64).reshape(2,)
+        WH = N.asarray(WH, N.float64).reshape(2,)
         Label = FC.ScaledText(Label,
                         XY,
                         Size = WH[1] / 2.0,
@@ -212,7 +212,7 @@ class TriangleShape1(FC.Polygon, MovingObjectMixin):
         Points = N.array(((0, c),
                           ( L/2.0, -c/2.0),
                           (-L/2.0, -c/2.0)),
-                          N.float_)
+                          N.float64)
 
         Points += XY
         return Points
