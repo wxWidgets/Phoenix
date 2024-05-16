@@ -251,6 +251,23 @@ def run():
             return NULL;
         #endif
         """)
+    c.find('GetOrCreateAccessible').setCppCode("""\
+        #if wxUSE_ACCESSIBILITY
+            return self->GetOrCreateAccessible();
+        #else
+            wxPyRaiseNotImplemented();
+            return NULL;
+        #endif
+        """)
+    c.find('CreateAccessible').factory = True
+    c.find('CreateAccessible').setCppCode("""\
+        #if wxUSE_ACCESSIBILITY
+            return self->CreateAccessible();
+        #else
+            wxPyRaiseNotImplemented();
+            return NULL;
+        #endif
+        """)
     c.find('SetAccessible.accessible').transfer = True
     c.find('SetAccessible').setCppCode("""\
         #if wxUSE_ACCESSIBILITY
