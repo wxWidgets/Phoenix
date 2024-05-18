@@ -479,7 +479,6 @@ def addWindowVirtuals(klass):
         ('SetValidator',             'void SetValidator( const wxValidator &validator )'),
         ('GetValidator',             'wxValidator* GetValidator()'),
         ('EnableVisibleFocus',       'void EnableVisibleFocus(bool enabled)'),
-        ('CreateAccessible',         'wxAccessible* CreateAccessible()'),
 
         ## What about these?
         #bool HasMultiplePages() const
