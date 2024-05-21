@@ -610,7 +610,7 @@ from .%s import *
 
         # get the docstring text
         text = nci(extractors.flattenNode(item.briefDoc, False))
-        text = wrapText(text)
+        text = wrapText(text, item.pyName or item.name)
 
 
         #if isinstance(item, extractors.ClassDef):
