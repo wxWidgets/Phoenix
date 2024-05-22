@@ -281,7 +281,6 @@ IsLimited()
 import  copy
 
 import  wx
-import  six
 
 from wx.tools.dbg import Logger
 from wx.lib.masked import Field, BaseMaskedTextCtrl
@@ -762,8 +761,8 @@ class TimeCtrl(BaseMaskedTextCtrl):
 ##            dbg('value = "%s"' % value)
 
         valid = True    # assume true
-        if isinstance(value, six.string_types):
-            value = six.text_type(value)  # convert to regular string
+        if isinstance(value, str):
+            value = str(value)  # convert to regular string
 
             # Construct constant wxDateTime, then try to parse the string:
             wxdt = wx.DateTime.FromDMY(1, 0, 1970)
@@ -1385,7 +1384,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         if self.IsLimited() and not self.IsInBounds(value):
 ##            dbg(indent=0)
             raise ValueError (
-                'value %s is not within the bounds of the control' % six.text_type(value) )
+                'value %s is not within the bounds of the control' % str(value) )
 ##        dbg(indent=0)
         return value
 

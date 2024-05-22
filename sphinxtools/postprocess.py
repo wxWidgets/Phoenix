@@ -25,9 +25,6 @@ from .constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
 from .constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
 from .constants import DOCSTRING_KEY
 
-PY2 = sys.version_info[0] == 2
-PY3 = sys.version_info[0] == 3
-
 # ----------------------------------------------------------------------- #
 
 
@@ -750,7 +747,7 @@ def removeHeaderImage(text, options):
     tag = soup.find('div', 'headerimage')
     if tag:
         tag.extract()
-        text = unicode(soup) if PY2 else str(soup)
+        text = str(soup)
     return text
 
 
@@ -762,7 +759,7 @@ def tweakModuleIndex(text):
         href = tag['href'].split('.html#')
         if len(href) == 2 and href[0] == href[1]:
             tag['href'] = href[0] + '.html'
-    return unicode(soup) if PY2 else str(soup)
+    return str(soup)
 
 
 def tooltipsOnInheritance(text, class_summary):

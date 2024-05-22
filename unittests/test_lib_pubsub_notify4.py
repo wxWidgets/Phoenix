@@ -9,7 +9,6 @@
 import unittest
 from unittests import wtc
 
-import six
 from difflib import ndiff, unified_diff, context_diff
 
 
@@ -45,7 +44,7 @@ class lib_pubsub_NotifyN(wtc.PubsubTestCase):
         self.pub.setNotificationFlags(all=True)
 
         def verify(**ref):
-            for key, val in six.iteritems(notifiee.counts):
+            for key, val in notifiee.counts.items():
                 if key in ref:
                     self.assertEqual(val, ref[key], "\n%s\n%s" % (notifiee.counts, ref) )
                 else:

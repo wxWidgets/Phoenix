@@ -46,8 +46,6 @@ from cpython.buffer cimport (
     Py_buffer, PyObject_CheckBuffer, PyObject_GetBuffer, PyBUF_SIMPLE,
     PyBuffer_Release)
 
-PY2 = sys.version_info[0] == 2
-
 #----------------------------------------------------------------------------
 # Replicate the C enums and values for Python, dropping the leading 'N'
 

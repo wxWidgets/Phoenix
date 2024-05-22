@@ -5,15 +5,16 @@ Various utilities used by topic-related modules.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 """
+import sys
 
 from textwrap import TextWrapper, dedent
 
 from .topicexc import TopicNameError
 
-from .. import py2and3
-
 __all__ = []
 
+def getexcobj():
+    return sys.exc_info()[1]
 
 UNDERSCORE = '_' # topic name can't start with this
 # just want something unlikely to clash with user's topic names
@@ -81,7 +82,7 @@ def stringize(topicName):
     topic. Otherwise, assume topicName is a tuple and convert it to to a 
     dotted name i.e. ('a','b','c') => 'a.b.c'. Empty name is not allowed 
     (ValueError). The reverse operation is tupleize(topicName)."""
-    if py2and3.isstring(topicName):
+    if isinstance(topicName, str):
         return topicName
     
     if hasattr(topicName, "msgDataSpec"): 
@@ -90,7 +91,7 @@ def stringize(topicName):
     try:
         name = '.'.join(topicName)
     except Exception:
-        exc = py2and3.getexcobj()
+        exc = getexcobj()
         raise TopicNameError(topicName, str(exc))
     
     return name
@@ -105,7 +106,7 @@ def tupleize(topicName):
     # then better use isinstance(name, tuple)
     if hasattr(topicName, "msgDataSpec"): 
         topicName = topicName._topicNameStr
-    if py2and3.isstring(topicName): 
+    if isinstance(topicName, str):
         topicTuple = tuple(topicName.split('.'))
     else:
         topicTuple = tuple(topicName) # assume already tuple of strings

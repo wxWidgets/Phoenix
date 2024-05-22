@@ -1,6 +1,5 @@
 import unittest
 import wx
-import six
 from unittests import wtc
 import datetime
 import time
@@ -45,12 +44,8 @@ class datetime_Tests(wtc.WidgetTestCase):
 
     def test_datetimeGetAmPm(self):
         am, pm = wx.DateTime.GetAmPmStrings()
-        if six.PY3:
-            base = str
-        else:
-            base = unicode
-        self.assertTrue(isinstance(am, base) and am != "")
-        self.assertTrue(isinstance(pm, base) and pm != "")
+        self.assertTrue(isinstance(am, str) and am != "")
+        self.assertTrue(isinstance(pm, str) and pm != "")
 
 
     def test_datetimeProperties(self):

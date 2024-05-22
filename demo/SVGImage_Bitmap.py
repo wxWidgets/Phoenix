@@ -2,7 +2,6 @@
 import sys
 import os
 import glob
-import six
 
 import wx
 from wx.svg import SVGimage
@@ -26,8 +25,6 @@ class SVGBitmapDisplay(wx.Panel):
 
 
     def UpdateSVG(self, svg_filename):
-        if six.PY2 and isinstance(svg_filename, unicode):
-            svg_filename = svg_filename.encode(sys.getfilesystemencoding())
         img = SVGimage.CreateFromFile(svg_filename)
         bmp = img.ConvertToScaledBitmap(self.bmp_size, self)
         self.statbmp.SetBitmap(bmp)

@@ -7,14 +7,13 @@ closely.
 """
 
 import sys
-from .. import py2and3
 
 def _resolve_name(name, package, level):
     """Return the absolute name of the module to be imported."""
     if not hasattr(package, 'rindex'):
         raise ValueError("'package' not set to a string")
     dot = len(package)
-    for x in py2and3.xrange(level, 1, -1):
+    for x in range(level, 1, -1):
         try:
             dot = package.rindex('.', 0, dot)
         except ValueError:
