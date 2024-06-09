@@ -96,19 +96,10 @@ TRAC site for some docs and updates:
 
 http://trac.paulmcnett.com/floatcanvas
 
-Mailing List:
 
-http://mail.paulmcnett.com/cgi-bin/mailman/listinfo/floatcanvas
+For Development issues / questions use the wxPython resources
 
-The latest code is in the main wx SVN:
-
-For classic:
-
-http://svn.wxwidgets.org/viewvc/wx/wxPython/3rdParty/FloatCanvas/
-
-For Phoenix:
-
-http://svn.wxwidgets.org/svn/wx/wxPython/Phoenix/trunk/wx/lib/floatcanvas
+https://github.com/wxWidgets/Phoenix
 
 Check for updates or answers to questions, send me an email.
 Please let me know if you're using this!!!
@@ -119,6 +110,6 @@ Chris.Barker@noaa.gov
 
 """
 
-__version__ = "0.9.18"
+__version__ = "0.10.0"
 
 
