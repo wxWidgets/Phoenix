@@ -136,6 +136,16 @@ def run():
     m1.find('externalLeading').out = True
 
     c.find('GetHandle').type = 'wxUIntPtr*'
+    c.find('GetHandle').detailedDoc = [
+        """The returned value is the platform-defined handle for the native \
+        window containing the widget. On Windows this is an HWND, on X11 it \
+        is the X window ID, on Wayland it is a wl_surface, etc.\n\n"""
+
+        """Note this differs from the C++ version of GetHandle which \
+        returns a GtkWidget if the GTK backend is in use.\n\n"""
+
+        """On some platforms this may return 0 if the window has not yet been shown."""
+    ]
     c.find('GetHandle').setCppCode("return new wxUIntPtr(wxPyGetWinHandle(self));")
 
     c.addCppMethod('void*', 'GetGtkWidget', '()', """\
