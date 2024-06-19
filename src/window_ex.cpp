@@ -95,13 +95,13 @@ static HandleType GetHandleType(const wxWindow *win) {
 #ifdef __WXGTK__
     GtkWidget *gtk_widget = win->GetHandle();
     if (!gtk_widget) {
-        return HANDLE_TYPE_UNKNWON;
+        return HANDLE_TYPE_UNKNOWN;
     };
     // gtk_widget_get_window disappears in GTK4; then it will be via
     // gtk_widget_get_native() -> gtk_native_get_surface().
     GdkWindow *window = gtk_widget_get_window(gtk_widget);
     if (!window) {
-        return HANDLE_TYPE_UNKNWON;
+        return HANDLE_TYPE_UNKNOWN;
     }
 #ifdef GDK_WINDOWING_X11
     if (GDK_IS_X11_WINDOW(window)) {
