@@ -148,6 +148,12 @@ def run():
     ]
     c.find('GetHandle').setCppCode("return new wxUIntPtr(wxPyGetWinHandle(self));")
 
+    c.addCppMethod('wxString', 'GetHandleType', '()',
+        doc="Returns a string identifying the type of OS window returned by :meth:`GetHandle`.\n\n"
+            "The value will be one of 'Windows', 'Mac', 'X11', or 'Wayland', "
+            "or an empty string if the backend is unknown.",
+        body="return new wxString(wxPyGetWinHandleType(self), wxConvUTF8);")
+
     c.addCppMethod('void*', 'GetGtkWidget', '()', """\
     #ifdef __WXGTK__
         return (void*)self->GetHandle();
@@ -342,6 +348,7 @@ def run():
     c.addProperty('GrandParent GetGrandParent')
     c.addProperty('TopLevelParent GetTopLevelParent')
     c.addProperty('Handle GetHandle')
+    c.addProperty('HandleType GetHandleType')
     c.addProperty('HelpText GetHelpText SetHelpText')
     c.addProperty('Id GetId SetId')
     c.addProperty('Label GetLabel SetLabel')
