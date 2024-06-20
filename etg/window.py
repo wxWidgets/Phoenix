@@ -240,6 +240,23 @@ def run():
             return pix
             """)
 
+    c.addCppMethod('void*', 'GetNativeWindowHandle', '()',
+           'return wxPyNativeWindowHandle(self);',
+           doc="""Returns a platform-specific handle to the OS window containing this widget.
+
+                The :meth:`GetNativeWindowHandleType` method provides the concrete type of the handle.
+
+                On some platforms this may return 0 until you have called :meth:`Show` on the window.""")
+
+    c.addCppMethod('wxString', 'GetNativeWindowHandleType', '()',
+           body="""\
+                return new wxString(
+                    wxPyNativeWindowHandleTypeString(self),
+                    wxConvUTF8
+                );""",
+           doc="""Returns a string describing the type of object that will be returned by :meth:`GetNativeWindowHandle`.
+
+               An empty string is returned if the platform is not supported.""")
 
     # wxAccessbile is MSW only. Provide a NotImplemented fallback for the
     # other platforms.
@@ -343,6 +360,8 @@ def run():
     c.addProperty('MinSize GetMinSize SetMinSize')
     c.addProperty('MinWidth GetMinWidth')
     c.addProperty('Name GetName SetName')
+    c.addProperty('NativeWindowHandle GetNativeWindowHandle')
+    c.addProperty('NativeWindowHandleType GetNativeWindowHandleType')
     c.addProperty('Parent GetParent')
     c.addProperty('Position GetPosition SetPosition')
     c.addProperty('ScreenPosition GetScreenPosition')

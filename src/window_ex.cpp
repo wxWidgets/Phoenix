@@ -1,4 +1,4 @@
-
+#include <stddef.h>
 #ifdef __WXMSW__
 #include <wx/msw/private.h>
 #endif
@@ -43,4 +43,27 @@ wxUIntPtr wxPyGetWinHandle(const wxWindow* win)
     return (wxUIntPtr)win->GetHandle();
 #endif
     return 0;
+}
+
+
+void * wxPyNativeWindowHandle(const wxWindow *win)
+{
+    return NULL;
+}
+
+enum NativeHandleType {
+    HANDLE_TYPE_UNKNOWN,
+};
+
+int wxPyNativeWindowHandleType(const wxWindow *win)
+{
+    return HANDLE_TYPE_UNKNOWN;
+}
+
+const char * wxPyNativeWindowHandleTypeString(const wxWindow *win)
+{
+    switch (wxPyNativeWindowHandleType(win)) {
+        default:
+            return "";
+    }
 }

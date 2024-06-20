@@ -168,14 +168,14 @@ class WindowTests(wtc.WidgetTestCase):
     def test_NativeWindowHandleType(self):
         w = wx.Window(self.frame, -1, (10,10), (50,50))
         self.assertEqual(w.GetNativeWindowHandleType(), w.NativeWindowHandleType)
-        self.assert_(w.NativeWindowHandleType)
+        self.assertTrue(w.NativeWindowHandleType)
 
 
     def test_NativeWindowHandle(self):
         parent = self.frame
         child = wx.Window(self.frame, -1, (10,10), (50,50))
         self.assertEqual(parent.NativeWindowHandle, parent.GetNativeWindowHandle())
-        self.assertNotEqual(parent.NativeWindowHandle, 0)
+        self.assertTrue(parent.NativeWindowHandle)
         # This tries to be a platform-agnostic test by confirming that,
         # regardless of what the window handle type really is, it should be the
         # same value for two normal widgets in the same OS window. In contrast,
