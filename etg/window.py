@@ -240,8 +240,8 @@ def run():
             return pix
             """)
 
-    c.addCppMethod('void*', 'GetNativeWindowHandle', '()',
-           'return wxPyNativeWindowHandle(self);',
+    c.addCppMethod('size_t', 'GetNativeWindowHandle', '()',
+           'return (size_t)wxPyNativeWindowHandle(self);',
            doc="""Returns a platform-specific handle to the OS window containing this widget.
 
                 The :meth:`GetNativeWindowHandleType` method provides the concrete type of the handle.
