@@ -60,6 +60,8 @@ class WindowTests(wtc.WidgetTestCase):
         w.MinSize
         w.MinWidth
         w.Name
+        w.NativeWindowHandle
+        w.NativeWindowHandleType
         w.Parent
         w.Position
         w.Rect
@@ -161,6 +163,27 @@ class WindowTests(wtc.WidgetTestCase):
             a.colFg = wx.Colour('blue')
         with self.assertRaises(AttributeError):
             a.font = wx.NORMAL_FONT
+
+
+    def test_NativeWindowHandleType(self):
+        w = wx.Window(self.frame, -1, (10,10), (50,50))
+        self.assertEqual(w.GetNativeWindowHandleType(), w.NativeWindowHandleType)
+        self.assert_(w.NativeWindowHandleType)
+
+
+    def test_NativeWindowHandle(self):
+        parent = self.frame
+        child = wx.Window(self.frame, -1, (10,10), (50,50))
+        self.assertEqual(parent.NativeWindowHandle, parent.GetNativeWindowHandle())
+        self.assertNotEqual(parent.NativeWindowHandle, 0)
+        # This tries to be a platform-agnostic test by confirming that,
+        # regardless of what the window handle type really is, it should be the
+        # same value for two normal widgets in the same OS window. In contrast,
+        # wxWidgets C++ GetHandle on GTK or Cocoa will return a different value
+        # for every widget, implying that whatever the return type is, it's not
+        # the OS window.
+        self.assertEqual(parent.NativeWindowHandle, child.NativeWindowHandle)
+
 
 #---------------------------------------------------------------------------
 
