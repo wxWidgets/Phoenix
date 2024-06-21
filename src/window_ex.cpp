@@ -113,11 +113,11 @@ static int get_gtk_handle_type(const wxWindow *win) {
 static void * get_gtk_handle(const wxWindow *win) {
     GdkWindow *gdkwin = get_gdk_window(win);
     if (!gdkwin) {
-        return HANDLE_TYPE_UNKNOWN;
+        return NULL;
     }
 #ifdef GDK_WINDOWING_X11
     if (GDK_IS_X11_WINDOW(gdkwin)) {
-        return gdk_x11_window_get_xid(gdkwin);
+        return (void *)gdk_x11_window_get_xid(gdkwin);
     }
 #endif
 #ifdef GDK_WINDOWING_WAYLAND
