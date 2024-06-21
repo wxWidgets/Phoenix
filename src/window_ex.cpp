@@ -79,7 +79,16 @@ static GdkWindow * get_gdk_window(const wxWindow *win) {
     if (!gtk) {
         return NULL;
     }
-    return gtk_widget_get_window(gtk);
+    // confusing: on X (and maybe others), every widget is a window, and the
+    // GDK window will be the widget-window instead of the real toplevel
+    // window. solution: passing through gtk_widget_get_toplevel. it
+    // is...weirdly defined. the docs say to check the return value right away
+    // with GTK_IS_WINDOW.
+    GtkWidget *toplevel = gtk_widget_get_toplevel(gtk);
+    if (!GTK_IS_WINDOW(toplevel)) {
+        return NULL;
+    }
+    return gtk_widget_get_window(toplevel);
 }
 
 static int get_gtk_handle_type(const wxWindow *win) {
