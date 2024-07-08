@@ -4859,10 +4859,11 @@ class FlatMenuItem(object):
         self.SetLabel(self._text)
         self.SetMenuBar()
 
-        self._checkMarkBmp = wx.Bitmap(check_mark_xpm)
-        self._checkMarkBmp.SetMask(wx.Mask(self._checkMarkBmp, wx.WHITE))
-        self._radioMarkBmp = wx.Bitmap(radio_item_xpm)
-        self._radioMarkBmp.SetMask(wx.Mask(self._radioMarkBmp, wx.WHITE))
+        if not hasattr(FlatMenuItem, '_checkMarkBmp'):
+           FlatMenuItem._checkMarkBmp = wx.Bitmap(check_mark_xpm)
+           FlatMenuItem._checkMarkBmp.SetMask(wx.Mask(self._checkMarkBmp, wx.WHITE))
+           FlatMenuItem._radioMarkBmp = wx.Bitmap(radio_item_xpm)
+           FlatMenuItem._radioMarkBmp.SetMask(wx.Mask(self._radioMarkBmp, wx.WHITE))
 
 
     def SetLongHelp(self, help):
@@ -5354,6 +5355,11 @@ class FlatMenu(FlatMenuBase):
         self.Bind(wx.EVT_RIGHT_DOWN, self.OnMouseRightDown)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(wx.EVT_TIMER, self.OnTimer)
+
+ 
+    def Destroy(self, *args, **kwargs):
+		self.Clear()
+        super().Destroy(*args, **kwargs)
 
 
     def SetMenuBar(self, mb):
