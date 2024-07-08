@@ -570,7 +570,6 @@ def build(bld):
         features = 'c cxx cshlib cxxshlib pyext',
         target   = makeTargetName(bld, 'siplib'),
         source   = ['sip/siplib/apiversions.c',
-                    'sip/siplib/bool.cpp',
                     'sip/siplib/descriptors.c',
                     'sip/siplib/int_convertors.c',
                     'sip/siplib/objmap.c',
