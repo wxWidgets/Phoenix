@@ -47,6 +47,12 @@ class TestPanel(wx.Panel):
         # Create the WebView
         self.wv = webview.WebView.New(self, backend=backend)
 
+        # Register a virtual FS handler for the "memory" scheme
+        memory = wx.MemoryFSHandler()
+        wx.FileSystem.AddHandler(memory)
+        memory.AddFileWithMimeType('hello', 'Hello!', 'text/plain')
+        self.wv.RegisterHandler(wx.html2.WebViewFSHandler('memory'))
+
         self.Bind(webview.EVT_WEBVIEW_NAVIGATING, self.OnWebViewNavigating, self.wv)
         self.Bind(webview.EVT_WEBVIEW_LOADED, self.OnWebViewLoaded, self.wv)
 
@@ -79,7 +85,8 @@ class TestPanel(wx.Panel):
             self, -1, "", style=wx.CB_DROPDOWN|wx.TE_PROCESS_ENTER)
         self.location.AppendItems(['http://wxPython.org',
                                    'http://wxwidgets.org',
-                                   'http://google.com'])
+                                   'http://google.com',
+                                   'memory:hello'])
         self.Bind(wx.EVT_COMBOBOX, self.OnLocationSelect, self.location)
         self.location.Bind(wx.EVT_TEXT_ENTER, self.OnLocationEnter)
         btnSizer.Add(self.location, 1, wx.EXPAND|wx.ALL, 2)
