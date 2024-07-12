@@ -4,7 +4,7 @@ Provide the Topic class.
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
-
+import sys
 
 from weakref import ref as weakref
 
@@ -38,8 +38,8 @@ from .topicargspec import (
     MessageDataSpecError,
 )
 
-from .. import py2and3
-
+def getexcobj():
+    return sys.exc_info()[1]
 
 class Topic(PublisherMixin):
     """
@@ -140,7 +140,7 @@ class Topic(PublisherMixin):
                     self.__parentTopic()._getListenerSpec())
             except MessageDataSpecError:
                 # discard the lower part of the stack trace
-                exc = py2and3.getexcobj()
+                exc = getexcobj()
                 raise exc
             self.__finalize()
 
@@ -242,7 +242,7 @@ class Topic(PublisherMixin):
 
     def getSubtopics(self):
         """Get a list of Topic instances that are subtopics of self."""
-        return py2and3.values(self.__subTopics)
+        return self.__subTopics.values()
 
     def getNumListeners(self):
         """Return number of listeners currently subscribed to topic. This is
@@ -262,12 +262,12 @@ class Topic(PublisherMixin):
     def getListeners(self):
         """Get a copy of list of listeners subscribed to this topic. Safe to iterate over while listeners
         get un/subscribed from this topics (such as while sending a message)."""
-        return py2and3.keys(self.__listeners)
+        return self.__listeners.keys()
 
     def getListenersIter(self):
         """Get an iterator over listeners subscribed to this topic. Do not use if listeners can be
         un/subscribed while iterating. """
-        return py2and3.iterkeys(self.__listeners)
+        return self.__listeners.keys()
 
     def validate(self, listener):
         """Checks whether listener could be subscribed to this topic:
@@ -337,11 +337,11 @@ class Topic(PublisherMixin):
         if filter is None:
             for listener in self.__listeners:
                 listener._unlinkFromTopic_()
-            unsubd = py2and3.keys(self.__listeners)
+            unsubd = self.__listeners.keys()
             self.__listeners = {}
         else:
             unsubd = []
-            for listener in py2and3.keys(self.__listeners):
+            for listener in self.__listeners.keys():
                 if filter(listener):
                     unsubd.append(listener)
                     listener._unlinkFromTopic_()
@@ -408,7 +408,7 @@ class Topic(PublisherMixin):
                     handler( listener.name(), topicObj )
                     self.__handlingUncaughtListenerExc = False
                 except Exception:
-                    exc = py2and3.getexcobj()
+                    exc = getexcobj()
                     #print 'exception raised', exc
                     self.__handlingUncaughtListenerExc = False
                     raise ExcHandlerError(listener.name(), topicObj, exc)
@@ -441,7 +441,7 @@ class Topic(PublisherMixin):
         self.unsubscribeAllListeners()
         self.__parentTopic = None
 
-        for subName, subObj in py2and3.iteritems(self.__subTopics):
+        for subName, subObj in self.__subTopics.items():
             assert isinstance(subObj, Topic)
             #print 'Unlinking %s from parent' % subObj.getName()
             subObj.__undefineBranch(topicsMap)

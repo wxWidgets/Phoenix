@@ -1,7 +1,6 @@
 import unittest
 from unittests import wtc
 import wx
-import six
 import os
 
 pngFile = os.path.join(os.path.dirname(__file__), 'pointy.png')
@@ -70,10 +69,7 @@ class CursorTests(wtc.WidgetTestCase):
 
         c2 = wx.Cursor(wx.CURSOR_ARROW)
         self.assertTrue( c2.IsOk() )
-        if six.PY3:
-            self.assertTrue( c2.__bool__() == c2.IsOk() )
-        else:
-            self.assertTrue( c2.__nonzero__() == c2.IsOk() )
+        self.assertTrue( c2.__bool__() == c2.IsOk() )
 
         # check that the __nonzero__ method can be used with if statements
         nzcheck = False

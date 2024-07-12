@@ -2594,16 +2594,7 @@ SWITCHER_TEXT_MARGIN_Y = 1
 if __name__ == '__main__':
     # Easy image extraction.
     import sys
-    if sys.version_info[0] == 2:
-        PY2 = True
-        PY3 = False
-    elif sys.version_info[0] == 3:
-        PY2 = False
-        PY3 = True
-    if PY2:
-        answer = int(raw_input('Enter 1 to extract all bitmaps: '))
-    elif PY3:
-        answer = int(input('Enter 1 to extract all bitmaps: '))
+    answer = int(input('Enter 1 to extract all bitmaps: '))
     if answer == 1:
         app = wx.App(0)
         import os
@@ -2622,7 +2613,4 @@ if __name__ == '__main__':
             except Exception:
                 pass
         app.MainLoop()
-        if PY2:
-            raw_input('Press Enter To Exit.')
-        elif PY3:
-            input('Press Enter To Exit.')
+        input('Press Enter To Exit.')

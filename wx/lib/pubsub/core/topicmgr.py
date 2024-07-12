@@ -40,8 +40,6 @@ from .treeconfig import TreeConfig
 from .topicdefnprovider import ITopicDefnProvider
 from .topicmgrimpl import getRootTopicSpec
 
-from .. import py2and3
-
 
 # ---------------------------------------------------------
 
@@ -255,7 +253,7 @@ class TopicManager:
     def checkAllTopicsHaveMDS(self):
         """Check that all topics that have been created for their MDS.
         Raise a TopicDefnError if one is found that does not have one."""
-        for topic in py2and3.itervalues(self._topicsMap):
+        for topic in self._topicsMap.values():
             if not topic.hasMDS():
                 raise TopicDefnError(topic.getNameTuple())
 
@@ -287,7 +285,7 @@ class TopicManager:
         subscribed. Note: the listener can also get messages from any 
         sub-topic of returned list."""
         assocTopics = []
-        for topicObj in py2and3.itervalues(self._topicsMap):
+        for topicObj in self._topicsMap.values():
             if topicObj.hasListener(listener):
                 assocTopics.append(topicObj)
         return assocTopics        

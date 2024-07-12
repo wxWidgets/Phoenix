@@ -22,18 +22,11 @@ from .librarydescription import Method, Property, Attribute
 
 from . import inheritance
 
-from .utilities import isPython3, PickleFile
+from .utilities import PickleFile
 from .constants import object_types, EXCLUDED_ATTRS, MODULE_TO_ICON
 from .constants import CONSTANT_RE
 
-if sys.version_info < (3,):
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
-
-if isPython3():
-    MethodTypes = (classmethod, types.MethodType, types.ClassMethodDescriptorType)
-else:
-    MethodTypes = (classmethod, types.MethodType)
+MethodTypes = (classmethod, types.MethodType, types.ClassMethodDescriptorType)
 
 try:
     import wx
@@ -155,10 +148,7 @@ def analyze_params(obj, signature):
             pvalue = pvalue.strip()
             if pname in pevals:
                 try:
-                    if isPython3():
-                        peval = str(pevals[pname])
-                    else:
-                        peval = unicode(pevals[pname])
+                    peval = str(pevals[pname])
                 except UnicodeDecodeError:
                     peval = repr(pevals[pname])
                 except TypeError:
@@ -223,7 +213,7 @@ def inspect_source(method_class, obj, source):
 def is_classmethod(instancemethod):
     """ Determine if an instancemethod is a classmethod. """
 
-    # attribute = (isPython3() and ['__self__'] or ['im_self'])[0]
+    # attribute = (['__self__'] or ['im_self'])[0]
     # if hasattr(instancemethod, attribute):
     #     return getattr(instancemethod, attribute) is not None
     # return False
@@ -291,20 +281,11 @@ def describe_func(obj, parent_class, module_name):
     try:
         code = None
         if method in [object_types.METHOD, object_types.METHOD_DESCRIPTOR, object_types.INSTANCE_METHOD]:
-            if isPython3():
-                code = obj.__func__.__code__
-            else:
-                code = obj.im_func.func_code
+            code = obj.__func__.__code__
         elif method == object_types.STATIC_METHOD:
-            if isPython3():
-                code = obj.__func__.__code__
-            else:
-                code = obj.im_func.func_code
+            code = obj.__func__.__code__
         else:
-            if isPython3():
-                code = obj.__code__
-            else:
-                code = obj.func_code
+            code = obj.__code__
     except AttributeError:
         code = None
 

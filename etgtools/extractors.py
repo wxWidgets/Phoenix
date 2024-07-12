@@ -28,7 +28,7 @@ from sphinxtools.utilities import findDescendants
 # methods, functions and other items in the C/C++ API being wrapped.
 #---------------------------------------------------------------------------
 
-class BaseDef(object):
+class BaseDef:
     """
     The base class for all element types and provides the common attributes
     and functions that they all share.
@@ -1684,11 +1684,7 @@ def flattenNode(node, rstrip=True):
     # TODO: can we just use ElementTree.tostring for this function?
     if node is None:
         return ""
-    if sys.version_info < (3,):
-        strclass = basestring
-    else:
-        strclass = str
-    if isinstance(node, strclass):
+    if isinstance(node, str):
         return node
     text = node.text or ""
     for n in node:

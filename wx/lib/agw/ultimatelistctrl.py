@@ -236,10 +236,9 @@ Version 0.8
 import wx
 import math
 import bisect
+import io
 import zlib
 from functools import cmp_to_key
-
-import six
 
 from wx.lib.expando import ExpandoTextCtrl
 
@@ -550,7 +549,7 @@ IL_FIXED_SIZE = 0
 IL_VARIABLE_SIZE = 1
 
 # Python integers, to make long types to work with CreateListItem
-INTEGER_TYPES = six.integer_types
+INTEGER_TYPES = int
 
 
 # ----------------------------------------------------------------------------
@@ -652,7 +651,7 @@ def GetdragcursorBitmap():
 def GetdragcursorImage():
     """ Returns the drag and drop cursor image as a :class:`wx.Image`. """
 
-    stream = six.BytesIO(GetdragcursorData())
+    stream = io.BytesIO(GetdragcursorData())
     return wx.Image(stream)
 
 
@@ -13124,9 +13123,9 @@ class UltimateListCtrl(wx.Control):
 
         if entry:
             pos = self.GetItemCount()
-            self.InsertStringItem(pos, six.u(entry[0]))
+            self.InsertStringItem(pos, str(entry[0]))
             for i in range(1, len(entry)):
-                self.SetStringItem(pos, i, six.u(entry[i]))
+                self.SetStringItem(pos, i, str(entry[i]))
 
             return pos
 

@@ -359,7 +359,7 @@ r'''\-- Topic "a2"
         topicMgr.getOrCreateTopic('a2.b.a')
         topicMgr.getOrCreateTopic('a2.b.b')
 
-        from six import StringIO
+        from io import StringIO
         buffer = StringIO()
         printTreeDocs(rootTopic=root, width=70, fileObj=buffer)
         self.assertEqual( buffer.getvalue(), self.expectedOutput )

@@ -16,7 +16,6 @@ wx.lib.wxcairo implementation functions using PyCairo.
 """
 
 import wx
-from six import PY3
 
 import cairo
 import ctypes
@@ -413,16 +412,10 @@ def _loadPycairoAPI():
     if not hasattr(cairo, 'CAPI'):
         return
 
-    if PY3:
-        PyCapsule_GetPointer = ctypes.pythonapi.PyCapsule_GetPointer
-        PyCapsule_GetPointer.argtypes = [ctypes.py_object, ctypes.c_char_p]
-        PyCapsule_GetPointer.restype = ctypes.c_void_p
-        ptr = PyCapsule_GetPointer(cairo.CAPI, b'cairo.CAPI')
-    else:
-        PyCObject_AsVoidPtr = ctypes.pythonapi.PyCObject_AsVoidPtr
-        PyCObject_AsVoidPtr.argtypes = [ctypes.py_object]
-        PyCObject_AsVoidPtr.restype = ctypes.c_void_p
-        ptr = PyCObject_AsVoidPtr(cairo.CAPI)
+    PyCapsule_GetPointer = ctypes.pythonapi.PyCapsule_GetPointer
+    PyCapsule_GetPointer.argtypes = [ctypes.py_object, ctypes.c_char_p]
+    PyCapsule_GetPointer.restype = ctypes.c_void_p
+    ptr = PyCapsule_GetPointer(cairo.CAPI, b'cairo.CAPI')
     pycairoAPI = ctypes.cast(ptr, ctypes.POINTER(Pycairo_CAPI)).contents
 
 #----------------------------------------------------------------------------

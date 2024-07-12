@@ -2,7 +2,6 @@ import unittest
 from unittests import wtc
 import wx
 import os
-import six
 
 pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 
@@ -58,10 +57,7 @@ class BitmapTests(wtc.WidgetTestCase):
         self.assertTrue( not b1.IsOk() )
         b2 = wx.Bitmap(5, 10, 24)
         self.assertTrue( b2.IsOk() )
-        if six.PY3:
-            self.assertTrue( b2.__bool__() == b2.IsOk() )
-        else:
-            self.assertTrue( b2.__nonzero__() == b2.IsOk() )
+        self.assertTrue( b2.__bool__() == b2.IsOk() )
 
         # check that the __nonzero__ method can be used with if statements
         nzcheck = False
