@@ -573,6 +573,8 @@ def to_list(input):
     else:
         raise Exception("Invalid parameter passed to `to_list`: only integers and list are accepted.")
 
+def wxRectInt(x,y,w,h):
+    return wx.Rect(int(x),int(y),int(w),int(h))
 
 def CheckVariableRowHeight(listCtrl, text):
     """
@@ -737,7 +739,7 @@ class PyImageList(object):
 
                 numImages = bitmap.GetWidth()/self._width
                 for subIndex in range(numImages):
-                    rect = wx.Rect(self._width * subIndex, 0, self._width, self._height)
+                    rect = wxRectInt(self._width * subIndex, 0, self._width, self._height)
                     tmpBmp = bitmap.GetSubBitmap(rect)
                     self._images.append(tmpBmp)
 
@@ -3090,7 +3092,7 @@ class UltimateListItemData(object):
         :param `y`: the `y` mouse position.
         """
 
-        return wx.Rect(self.GetX(), self.GetY(), self.GetWidth(), self.GetHeight()).Contains((x, y))
+        return wxRectInt(self.GetX(), self.GetY(), self.GetWidth(), self.GetHeight()).Contains((x, y))
 
 
     def GetX(self):
@@ -4472,7 +4474,7 @@ class UltimateListLineData(object):
 
                 width = self._owner.GetColumnWidth(col)
                 if self._owner.IsColumnShown(col):
-                    paintRect = wx.Rect(x, y, self._owner.GetColumnWidth(col)-2*HEADER_OFFSET_X, rect.height)
+                    paintRect = wxRectInt(x, y, self._owner.GetColumnWidth(col)-2*HEADER_OFFSET_X, rect.height)
                     break
 
                 xOld = x
@@ -4535,7 +4537,7 @@ class UltimateListLineData(object):
             x += width
 
             if item.GetCustomRenderer():
-                customRect = wx.Rect(xOld-HEADER_OFFSET_X, rect.y, width, rect.height)
+                customRect = wxRectInt(xOld-HEADER_OFFSET_X, rect.y, width, rect.height)
                 item.GetCustomRenderer().DrawSubItem(dc, customRect, line, highlighted, enabled)
                 continue
 
@@ -4575,9 +4577,9 @@ class UltimateListLineData(object):
                 if rect.height > ySize and not item._expandWin:
                     ya += (rect.height - ySize)/2
 
-            itemRect = wx.Rect(xOld-2*HEADER_OFFSET_X, rect.y, width-xSize-HEADER_OFFSET_X, rect.height)
+            itemRect = wxRectInt(xOld-2*HEADER_OFFSET_X, rect.y, width-xSize-HEADER_OFFSET_X, rect.height)
             if overflow:
-                itemRect = wx.Rect(xOld-2*HEADER_OFFSET_X, rect.y, rectHL.width-xSize-HEADER_OFFSET_X, rect.height)
+                itemRect = wxRectInt(xOld-2*HEADER_OFFSET_X, rect.y, rectHL.width-xSize-HEADER_OFFSET_X, rect.height)
 
             dc.SetClippingRegion(itemRect)
 
@@ -4619,7 +4621,7 @@ class UltimateListLineData(object):
                     if font:
                         dc.SetFont(item.GetFont())
 
-                itemRect = wx.Rect(itemRect.x+MARGIN_BETWEEN_TEXT_AND_ICON, itemRect.y, itemRect.width-8, itemRect.height)
+                itemRect = wxRectInt(itemRect.x+MARGIN_BETWEEN_TEXT_AND_ICON, itemRect.y, itemRect.width-8, itemRect.height)
                 self.DrawTextFormatted(dc, item.GetText(), line, col, itemRect, overflow)
 
                 if coloured:
@@ -5193,7 +5195,7 @@ class UltimateListHeaderWindow(wx.Control):
 
             # the width of the rect to draw: make it smaller to fit entirely
             # inside the column rect
-            header_rect = wx.Rect(x-1, HEADER_OFFSET_Y-1, cw-1, ch)
+            header_rect = wxRectInt(x-1, HEADER_OFFSET_Y-1, cw-1, ch)
 
             if self._headerCustomRenderer is not None:
                self._headerCustomRenderer.DrawHeaderButton(dc, header_rect, flags)
@@ -5280,8 +5282,8 @@ class UltimateListHeaderWindow(wx.Control):
 
             # draw the text clipping it so that it doesn't overwrite the column
             # boundary
-            dc.SetClippingRegion(x, HEADER_OFFSET_Y, cw, h - 4)
-            self.DrawTextFormatted(dc, text, wx.Rect(xAligned+EXTRA_WIDTH, HEADER_OFFSET_Y, cw-EXTRA_WIDTH, h-4))
+            dc.SetClippingRegion(int(x), int(HEADER_OFFSET_Y), int(cw), int(h - 4))
+            self.DrawTextFormatted(dc, text, wxRectInt(xAligned+EXTRA_WIDTH, HEADER_OFFSET_Y, cw-EXTRA_WIDTH, h-4))
 
             x += wCol
             dc.DestroyClippingRegion()
@@ -5289,7 +5291,7 @@ class UltimateListHeaderWindow(wx.Control):
         # Fill in what's missing to the right of the columns, otherwise we will
         # leave an unpainted area when columns are removed (and it looks better)
         if x < w:
-            header_rect = wx.Rect(x, HEADER_OFFSET_Y, w - x, h)
+            header_rect = wxRectInt(x, HEADER_OFFSET_Y, w - x, h)
             if self._headerCustomRenderer is not None:
                 # Why does the custom renderer need this adjustment??
                 header_rect.x = header_rect.x - 1
@@ -5603,7 +5605,7 @@ class UltimateListHeaderWindow(wx.Control):
 
         w, h = self.GetClientSize()
         ix, iy = self._owner.GetCheckboxImageSize()
-        rect = wx.Rect(theX + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)//2, ix, iy)
+        rect = wxRectInt(theX + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)//2, ix, iy)
 
         if rect.Contains(pos):
             # User clicked on the checkbox
@@ -6679,7 +6681,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         if not self.InReportView():
             return self.GetLine(line)._gi._rectAll
 
-        rect = wx.Rect(HEADER_OFFSET_X, self.GetLineY(line), self.GetHeaderWidth(), self.GetLineHeight(line))
+        rect = wxRectInt(HEADER_OFFSET_X, self.GetLineY(line), self.GetHeaderWidth(), self.GetLineHeight(line))
         return rect
 
 
@@ -6712,7 +6714,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             image_x     += self.GetCheckboxImageSize()[0]
             image_width += self.GetCheckboxImageSize()[0]
 
-        rect = wx.Rect(image_x + HEADER_OFFSET_X, self.GetLineY(line), self.GetColumnWidth(col) - image_width, self.GetLineHeight(line))
+        rect = wxRectInt(image_x + HEADER_OFFSET_X, self.GetLineY(line), self.GetColumnWidth(col) - image_width, self.GetLineHeight(line))
         return rect
 
 
@@ -6732,7 +6734,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         if ld.GetKind() in [1, 2]:
             image_x += self.GetCheckboxImageSize()[0]
 
-        rect = wx.Rect(image_x, self.GetLineY(line), *self.GetImageSize(ld.GetImage()))
+        rect = wxRectInt(image_x, self.GetLineY(line), *self.GetImageSize(ld.GetImage()))
         return rect
 
 
@@ -6749,7 +6751,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         ld = self.GetLine(line)
         LH = self.GetLineHeight(line)
         wcheck, hcheck = self.GetCheckboxImageSize()
-        rect = wx.Rect(HEADER_OFFSET_X, self.GetLineY(line) + LH/2 - hcheck/2, wcheck, hcheck)
+        rect = wxRectInt(HEADER_OFFSET_X, self.GetLineY(line) + LH/2 - hcheck/2, wcheck, hcheck)
         return rect
 
 
@@ -6819,7 +6821,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                     # We got a checkbox-type item
                     ix, iy = self.GetCheckboxImageSize()
                     LH = self.GetLineHeight(line)
-                    rect = wx.Rect(xOld, lineY + LH//2 - iy//2, ix, iy)
+                    rect = wxRectInt(xOld, lineY + LH//2 - iy//2, ix, iy)
                     if rect.Contains((x, y)):
                         newItem = self.GetParent().GetItem(line, col)
                         return newItem, ULC_HITTEST_ONITEMCHECK
@@ -6827,7 +6829,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                 if item.IsHyperText():
                     start, end = self.GetItemTextSize(item)
                     label_rect = self.GetLineLabelRect(line, col)
-                    rect = wx.Rect(xOld+start, lineY, min(end, label_rect.width), self.GetLineHeight(line))
+                    rect = wxRectInt(xOld+start, lineY, min(end, label_rect.width), self.GetLineHeight(line))
                     if rect.Contains((x, y)):
                         newItem = self.GetParent().GetItem(line, col)
                         return newItem, ULC_HITTEST_ONITEMLABEL
@@ -7175,7 +7177,12 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                     if col < self.GetColumnCount()-1:
                         x_pos -= 2
 
-                    dc.DrawLine(x_pos, firstItemRect.GetY() - 1 - dev_y, x_pos, lastItemRect.GetBottom() + 1 - dev_y)
+                    dc.DrawLine(
+                        int(x_pos), 
+                        int(firstItemRect.GetY() - 1 - dev_y), 
+                        int(x_pos), 
+                        int(lastItemRect.GetBottom() + 1 - dev_y)
+                    )
 
 
         else: # !report
@@ -8263,19 +8270,19 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if self.HasAGWFlag(ULC_ICON) and self._normal_image_list:
             imgList = (enabled and [self._normal_image_list] or [self._normal_grayed_image_list])[0]
-            imgList.Draw(index, dc, x, y, wx.IMAGELIST_DRAW_TRANSPARENT)
+            imgList.Draw(index, dc, int(x), int(y), wx.IMAGELIST_DRAW_TRANSPARENT)
 
         elif self.HasAGWFlag(ULC_SMALL_ICON) and self._small_image_list:
             imgList = (enabled and [self._small_image_list] or [self._small_grayed_image_list])[0]
-            imgList.Draw(index, dc, x, y, wx.IMAGELIST_DRAW_TRANSPARENT)
+            imgList.Draw(index, dc, int(x), int(y), wx.IMAGELIST_DRAW_TRANSPARENT)
 
         elif self.HasAGWFlag(ULC_LIST) and self._small_image_list:
             imgList = (enabled and [self._small_image_list] or [self._small_grayed_image_list])[0]
-            imgList.Draw(index, dc, x, y, wx.IMAGELIST_DRAW_TRANSPARENT)
+            imgList.Draw(index, dc, int(x), int(y), wx.IMAGELIST_DRAW_TRANSPARENT)
 
         elif self.InReportView() and self._small_image_list:
             imgList = (enabled and [self._small_image_list] or [self._small_grayed_image_list])[0]
-            imgList.Draw(index, dc, x, y, wx.IMAGELIST_DRAW_TRANSPARENT)
+            imgList.Draw(index, dc, int(x), int(y), wx.IMAGELIST_DRAW_TRANSPARENT)
 
 
     def DrawCheckbox(self, dc, x, y, kind, checked, enabled):
@@ -9544,7 +9551,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         if yMax > sizeAll.y:
             xMax += wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
 
-        return wx.Rect(0, 0, xMax, yMax)
+        return wxRectInt(0, 0, xMax, yMax)
 
 
     def GetSubItemRect(self, item, subItem):
@@ -9663,12 +9670,14 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
                 self._linesPerPage = clientHeight//lineHeight
 
-                self.SetScrollbars(SCROLL_UNIT_X, lineHeight,
-                                   (self.GetHeaderWidth()-decrement)//SCROLL_UNIT_X,
-                                   (entireHeight + lineHeight - 1)//lineHeight,
-                                   self.GetScrollPos(wx.HORIZONTAL),
-                                   self.GetScrollPos(wx.VERTICAL),
-                                   True)
+                self.SetScrollbars(
+                    SCROLL_UNIT_X, lineHeight,
+                    int((self.GetHeaderWidth() - decrement) / SCROLL_UNIT_X),
+                    int((entireHeight + lineHeight - 1) / lineHeight),
+                    self.GetScrollPos(wx.HORIZONTAL),
+                    self.GetScrollPos(wx.VERTICAL),
+                    True
+                )
 
             else:
 
