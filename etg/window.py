@@ -276,6 +276,21 @@ def run():
             wxPyRaiseNotImplemented();
         #endif
         """)
+    c.find('CreateAccessible').factory = True
+    c.find('CreateAccessible').setCppCode("""\
+        #if wxUSE_ACCESSIBILITY
+            return self->CreateAccessible();
+        #else
+            wxPyRaiseNotImplemented();
+        #endif
+        """)
+    c.find('GetOrCreateAccessible').setCppCode("""\
+        #if wxUSE_ACCESSIBILITY
+            return self->GetOrCreateAccessible();
+        #else
+            wxPyRaiseNotImplemented();
+        #endif
+        """)
 
     # Make some of the protected methods visible and overridable from Python
     c.find('SendDestroyEvent').ignore(False)
