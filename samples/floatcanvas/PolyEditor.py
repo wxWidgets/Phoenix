@@ -112,7 +112,7 @@ class DrawFrame(wx.Frame):
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
             dc.SetLogicalFunction(wx.XOR)
             if self.SelectedPointNeighbors is None:
-                self.SelectedPointNeighbors = N.zeros((3,2), N.float_)
+                self.SelectedPointNeighbors = N.zeros((3,2), N.float64)
                 #fixme: This feels very inelegant!
                 if Index == 0:
                     self.SelectedPointNeighbors[0] = self.SelectedPoly.Points[-1]
