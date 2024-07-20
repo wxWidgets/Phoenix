@@ -601,7 +601,7 @@ class FloatCanvas(wx.Panel):
 
         """
 
-        if any(self.PanelSize <= 2 ):
+        if N.any(self.PanelSize <= 2 ):
             # it's possible for this to get called before being properly initialized.
             return
         if self.Debug: start = clock()

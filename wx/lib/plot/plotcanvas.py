@@ -2044,7 +2044,7 @@ class PlotCanvas(wx.Panel):
         """
         if self.last_PointLabel is not None:
             # compare pointXY
-            if any(
+            if np.any(
                     mDataDict["pointXY"] != self.last_PointLabel["pointXY"]):
                 # closest changed
                 self._drawPointLabel(self.last_PointLabel)  # erase old
