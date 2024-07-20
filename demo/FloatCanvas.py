@@ -720,7 +720,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
             x += dx
             color = "SEA GREEN"
-            Points = N.array(( (x, y), (x, y+2.*h/3), (x+w, y+h), (x+w, y+h/2.), (x + 2.*w/3, y+h/2.), (x + 2.*w/3,y) ), N.float_)
+            Points = N.array(( (x, y), (x, y+2.*h/3), (x+w, y+h), (x+w, y+h/2.), (x + 2.*w/3, y+h/2.), (x + 2.*w/3,y) ), N.float64)
             R = Canvas.AddPolygon(Points,  LineWidth = 2, FillColor = color)
             R.Name = color + " Polygon"
             R.Bind(FloatCanvas.EVT_FC_RIGHT_DOWN, self.RectGotHitRight)
@@ -729,7 +729,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
             x += dx
             color = "Red"
-            Points = N.array(( (x, y), (x, y+2.*h/3), (x+w, y+h), (x+w, y+h/2.), (x + 2.*w/3, y+h/2.), (x + 2.*w/3,y) ), N.float_)
+            Points = N.array(( (x, y), (x, y+2.*h/3), (x+w, y+h), (x+w, y+h/2.), (x + 2.*w/3, y+h/2.), (x + 2.*w/3,y) ), N.float64)
             R = Canvas.AddPointSet(Points,  Diameter = 4, Color = color)
             R.Name = "PointSet"
             R.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.PointSetGotHit)
@@ -1139,7 +1139,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           Family = wx.FONTFAMILY_ROMAN,
                                           Alignment = "right"
                                           )
-            Point = N.array((100, -20), N.float_)
+            Point = N.array((100, -20), N.float64)
             Box = Canvas.AddScaledTextBox("Here is even more auto wrapped text. This time the line spacing is set to 0.8. \n\nThe Padding is set to 0.",
                                           Point,
                                           Size = 3,
@@ -1153,7 +1153,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           )
             Canvas.AddPoint(Point, "Red", 2)
 
-            Point = N.array((0, -40), N.float_)
+            Point = N.array((0, -40), N.float64)
     #        Point = N.array((0, 0), N.float_)
             for Position in ["tl", "bl", "tr", "br"]:
     #        for Position in ["br"]:
@@ -1172,7 +1172,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           )
             Canvas.AddPoint(Point, "Red", 4)
 
-            Point = N.array((-20, 60), N.float_)
+            Point = N.array((-20, 60), N.float64)
             Box = Canvas.AddScaledTextBox("Here is some\ncentered\ntext",
                                           Point,
                                           Size = 4,
@@ -1188,7 +1188,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineSpacing = 0.8
                                           )
 
-            Point = N.array((-20, 20), N.float_)
+            Point = N.array((-20, 20), N.float64)
             Box = Canvas.AddScaledTextBox("Here is some\nright aligned\ntext",
                                           Point,
                                           Size = 4,
@@ -1203,7 +1203,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineSpacing = 0.8
                                           )
 
-            Point = N.array((100, -60), N.float_)
+            Point = N.array((100, -60), N.float64)
             Box = Canvas.AddScaledTextBox("Here is some auto wrapped text. This time it is centered, rather than right aligned.\n\nThe Padding is set to 2.",
                                           Point,
                                           Size = 3,

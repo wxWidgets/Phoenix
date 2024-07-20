@@ -64,7 +64,7 @@ class TriangleShape1(FC.Polygon, ShapeMixin):
         Points = N.array(((0, c),
                           ( L/2.0, -c/2.0),
                           (-L/2.0, -c/2.0)),
-                          N.float_)
+                          N.float64)
 
         Points += XY
         return Points
@@ -104,7 +104,7 @@ class DrawFrame(wx.Frame):
         Points = N.array(((0,0),
                           (1,0),
                           (0.5, 1)),
-                         N.float_)
+                         N.float64)
 
         data  = (( (0,0),  1),
                  ( (3,3),  2),
