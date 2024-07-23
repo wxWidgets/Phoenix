@@ -1,44 +1,30 @@
 #!/usr/bin/env python
 
 """
-A simple demo that shows how to use FloatCanvas to draw rectangles on the screen
-
-Note: this is now broken -- the events are not getting to the Rubber Band Box object.
-      It should be re-factored to use GUIMode
+A simple demo that shows how to use FloatCanvas to draw rectangles
+on a Canvas.
 """
-
-
 import wx
 
-## import a local version
-#import sys
-#sys.path.append("..")
-#from floatcanvas import NavCanvas, FloatCanvas, Resources, Utilities, GUIMode
-#from floatcanvas.Utilities import GUI
-
-## import the installed version
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, GUIMode
 from wx.lib.floatcanvas.Utilities import GUI
 
-import numpy as N
 
 class DrawFrame(wx.Frame):
-
     """
-    A frame used for the FloatCanvas Demo
-
+    A frame used for the  Demo
     """
 
-    def __init__(self,parent, id,title,position,size):
-        wx.Frame.__init__(self,parent, id,title,position, size)
+    def __init__(self, parent, id, title, position, size):
+        wx.Frame.__init__(self, parent, id, title, position, size)
 
         self.CreateStatusBar()
         # Add the Canvas
         NC = NavCanvas.NavCanvas(self,
-                                 size= (500,500),
-                                 ProjectionFun = None,
-                                 Debug = 0,
-                                 BackgroundColor = "DARK SLATE BLUE",
+                                 size=(500, 500),
+                                 ProjectionFun=None,
+                                 Debug=0,
+                                 BackgroundColor="DARK SLATE BLUE",
                                  )
 
         self.Canvas = NC.Canvas
@@ -96,11 +82,13 @@ class DrawFrame(wx.Frame):
         Updates the status bar with the world coordinates
 
         """
-        self.SetStatusText("%.4f, %.4f"%tuple(event.Coords))
+        self.SetStatusText(f"{event.Coords[0]:.2f}, {event.Coords[1]:.2f}")
         event.Skip()
 
+
 app = wx.App()
-DrawFrame(None, -1, "FloatCanvas Rectangle Drawer", wx.DefaultPosition, (700,700) )
+DrawFrame(None, wx.ID_ANY, "FloatCanvas Rectangle Drawer",
+          wx.DefaultPosition, (700,700) )
 app.MainLoop()
 
 

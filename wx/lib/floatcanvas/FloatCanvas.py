@@ -601,7 +601,7 @@ class FloatCanvas(wx.Panel):
 
         """
 
-        if N.sometrue(self.PanelSize <= 2 ):
+        if N.any(self.PanelSize <= 2 ):
             # it's possible for this to get called before being properly initialized.
             return
         if self.Debug: start = clock()
@@ -778,8 +778,9 @@ class FloatCanvas(wx.Panel):
                 self._ResetBoundingBox()
             BoundingBox = self.BoundingBox
         if (BoundingBox is not None) and (not BoundingBox.IsNull()):
-            self.ViewPortCenter = N.array(((BoundingBox[0,0]+BoundingBox[1,0])/2,
-                                         (BoundingBox[0,1]+BoundingBox[1,1])/2 ),N.float_)
+            self.ViewPortCenter = N.array(((BoundingBox[0, 0] + BoundingBox[1, 0]) / 2,
+                                           (BoundingBox[0, 1] + BoundingBox[1, 1]) / 2),
+                                          float)
             self.MapProjectionVector = self.ProjectionFun(self.ViewPortCenter)
             # Compute the new Scale
             BoundingBox = BoundingBox*self.MapProjectionVector # this does need to make a copy!
@@ -907,19 +908,18 @@ class FloatCanvas(wx.Panel):
                    (self.PanelSize/2))/self.TransformVector) +
                  self.ViewPortCenter)
 
-    def WorldToPixel(self,Coordinates):
+    def WorldToPixel(self, Coordinates):
         """
         This function will get passed to the drawing functions of the objects,
         to transform from world to pixel coordinates.
         Coordinates should be a NX2 array of (x,y) coordinates, or
         a 2-tuple, or sequence of 2-tuples.
         """
-        #Note: this can be called by users code for various reasons, so N.asarray is needed.
-        return  (((N.asarray(Coordinates,float) -
-                   self.ViewPortCenter)*self.TransformVector)+
-                 (self.HalfPanelSize)).astype('i')
+        # Note: this can be called by users code for various reasons, so N.asarray is needed.
+        return (((N.asarray(Coordinates, float) - self.ViewPortCenter) *
+                 self.TransformVector) + (self.HalfPanelSize)).astype(N.int32)
 
-    def ScaleWorldToPixel(self,Lengths):
+    def ScaleWorldToPixel(self, Lengths):
         """
         This function will get passed to the drawing functions of the objects,
         to Change a length from world to pixel coordinates.
@@ -927,17 +927,18 @@ class FloatCanvas(wx.Panel):
         Lengths should be a NX2 array of (x,y) coordinates, or
         a 2-tuple, or sequence of 2-tuples.
         """
-        return  ( (N.asarray(Lengths, float)*self.TransformVector) ).astype('i')
+        return ((N.asarray(Lengths, float) * self.TransformVector)).astype(N.int32)
 
-    def ScalePixelToWorld(self,Lengths):
+
+    def ScalePixelToWorld(self, Lengths):
         """
-        This function computes a pair of x.y lengths,
+        This function computes a pair of x,y lengths,
         to change then from pixel to world coordinates.
 
         Lengths should be a NX2 array of (x,y) coordinates, or
         a 2-tuple, or sequence of 2-tuples.
         """
-        return  (N.asarray(Lengths,float) / self.TransformVector)
+        return  (N.asarray(Lengths, float) / self.TransformVector)
 
     def AddObject(self, obj):
         """
@@ -977,12 +978,13 @@ class FloatCanvas(wx.Panel):
         device context.
         """
         dc.SetBackground(self.BackgroundBrush)
-        #i = 0
-        PanelSize0, PanelSize1 = self.PanelSize # for speed
-        WorldToPixel = self.WorldToPixel # for speed
-        ScaleWorldToPixel = self.ScaleWorldToPixel # for speed
-        Blit = ScreenDC.Blit # for speed
-        NumBetweenBlits = self.NumBetweenBlits # for speed
+
+        PanelSize0, PanelSize1 = self.PanelSize  # for speed
+        WorldToPixel = self.WorldToPixel  # for speed
+        ScaleWorldToPixel = self.ScaleWorldToPixel  # for speed
+        Blit = ScreenDC.Blit  # for speed
+        NumBetweenBlits = self.NumBetweenBlits  # for speed
+
         for i, Object in enumerate(self._ShouldRedraw(DrawList, ViewPortBB)):
             if Object.Visible:
                 Object._Draw(dc, WorldToPixel, ScaleWorldToPixel, HTdc)

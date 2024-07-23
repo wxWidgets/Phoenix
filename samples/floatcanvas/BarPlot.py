@@ -27,7 +27,7 @@ def YScaleFun(center):
     """
 
     # center gets ignored in this case
-    return N.array((1, float(NumChannels)/MaxValue), N.float)
+    return N.array((1, float(NumChannels) / MaxValue), N.float64)
 
 def ScaleWorldToPixel(self, Lengths):
     """
@@ -41,7 +41,7 @@ def ScaleWorldToPixel(self, Lengths):
         Lengths should be a NX2 array of (x,y) coordinates, or
         a 2-tuple, or sequence of 2-tuples.
     """
-    return  N.ceil(( (N.asarray(Lengths, N.float)*self.TransformVector) )).astype('i')
+    return  N.ceil(( (N.asarray(Lengths, N.float64)*self.TransformVector) )).astype('i')
 
 
 class DrawFrame(wx.Frame):
