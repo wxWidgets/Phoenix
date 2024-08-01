@@ -364,7 +364,8 @@ class PyGauge(wx.Window):
             if self._drawIndicatorText_drawPercent:
                 drawValue = (float(self._valueSorted[i]) * 100)  / self._range
 
-            drawString = self._drawIndicatorText_formatString.format(drawValue)
+            drawString = self._drawIndicatorText_formatString.format(
+                drawValue, value=drawValue, range=self._range)
             rect = self.GetClientRect()
             (textWidth, textHeight, descent, extraLeading) = dc.GetFullTextExtent(drawString)
             textYPos = (rect.height-textHeight)//2
@@ -423,7 +424,7 @@ class PyGauge(wx.Window):
             error_occurred = True
             try:
                 # This is to test if format string is valid. If not, it will be replaced with default one.
-                formatString.format(12.345)
+                formatString.format(12.345, value=12.345, range=54.321)
                 error_occurred = False
             except Exception as e:
                 print(("We have exception: %s"%e))
