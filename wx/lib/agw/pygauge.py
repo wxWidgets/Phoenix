@@ -436,8 +436,8 @@ class PyGauge(wx.Window):
         # Here formatString is either valid formatting string, or None in case of error or None passed
         if formatString is None:
             if self._drawIndicatorText_drawPercent:
-                self._drawIndicatorText_formatString = "{:.0f}%"
-            else: self._drawIndicatorText_formatString = "{:.0f}"
+                self._drawIndicatorText_formatString = "{value:.0f}%"
+            else: self._drawIndicatorText_formatString = "{value:.0f}"
         else:
             self._drawIndicatorText_formatString = formatString
 
