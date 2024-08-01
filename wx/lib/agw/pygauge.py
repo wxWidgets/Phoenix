@@ -113,7 +113,6 @@ Version 0.1
 """
 
 import wx
-import copy
 
 
 class PyGauge(wx.Window):
@@ -343,7 +342,7 @@ class PyGauge(wx.Window):
             for i, gradient in enumerate(self._barGradientSorted):
                 c1,c2 = gradient
                 w = rect.width * (float(self._valueSorted[i]) / self._range)
-                r = copy.copy(rect)
+                r = wx.Rect(rect)
                 r.width = int(w)
                 dc.GradientFillLinear(r, c1, c2, wx.EAST)
         else:
@@ -351,7 +350,7 @@ class PyGauge(wx.Window):
                 dc.SetBrush(wx.Brush(colour))
                 dc.SetPen(wx.Pen(colour))
                 w = rect.width * (float(self._valueSorted[i]) / self._range)
-                r = copy.copy(rect)
+                r = wx.Rect(rect)
                 r.width = int(w)
                 dc.DrawRectangle(r)
 
