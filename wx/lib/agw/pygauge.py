@@ -393,9 +393,10 @@ class PyGauge(wx.Window):
          will be used. Usually text would be displayed centered in the control, but if the text font is too large
          to be displayed (either in width or height) the corresponding coordinate will be set to zero;
         :param wx.Colour `colour`: the colour with which indication should be drawn, if ``None`` then ``wx.BLACK`` will be used;
-        :param string `formatString`: a string specifying format of the indication (should have one and only one
-         number placeholder). If set to ``None``, will use ``{:.0f}`` format string for values and ``{:.0f}%``
-         format string for percentages. As described in http://docs.python.org/library/string.html#format-specification-mini-language.
+        :param string `formatString`: a string specifying format of the indication (could have one and only one unnamed
+         number placeholder and a `value` and `range` number placeholder). If set to ``None``, will use ``{value:.0f}``
+         format string for values and ``{value:.0f}%` format string for percentages. As described in
+         http://docs.python.org/library/string.html#format-specification-mini-language.
 
         .. note:: `formatString` will override addition of percent sign (after value) even if `drawPercent` is ``True``.
 
