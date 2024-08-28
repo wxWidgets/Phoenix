@@ -26,15 +26,6 @@ import wx
 from .aui_constants import *
 
 
-if wx.Platform == "__WXMAC__":
-    try:
-        import Carbon.Appearance
-    except ImportError:
-        CARBON = False
-    else:
-        CARBON = True
-
-
 def BlendColour(fg, bg, alpha):
     """
     Blends the two colour component `fg` and `bg` into one colour component, adding
@@ -183,18 +174,7 @@ def GetBaseColour():
     mimicking as closely as possible the platform UI colours.
     """
 
-    if wx.Platform == "__WXMAC__":
-        k = Carbon.Appearance.kThemeBrushToolbarBackground if CARBON else 52
-        if hasattr(wx, 'MacThemeColour'):
-            base_colour = wx.MacThemeColour(k)
-        else:
-            brush = wx.Brush(wx.BLACK)
-            brush.MacSetTheme(k)
-            base_colour = brush.GetColour()
-
-    else:
-
-        base_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
+    base_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
 
     # the base_colour is too pale to use as our base colour,
     # so darken it a bit
@@ -666,7 +646,3 @@ def CopyAttributes(newArt, oldArt):
             setattr(newArt, attr, getattr(oldArt, attr))
 
     return newArt
-
-
-
-

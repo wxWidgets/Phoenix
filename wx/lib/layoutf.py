@@ -132,8 +132,8 @@ class Layoutf(wx.LayoutConstraints):
              'r': 'wx.Right', 'h': 'wx.Height', 'w': 'wx.Width',
              'x': 'wx.CentreX', 'y': 'wx.CentreY' }
 
-    rexp1 = re.compile('^\s*([tlrbhwxy])\s*([!\?\*])\s*(\d*)\s*$')
-    rexp2 = re.compile('^\s*([tlrbhwxy])\s*([=%<>^_])\s*([tlrbhwxy]?)\s*(\d*)\s*#(\d+)\s*$')
+    rexp1 = re.compile(r'^\s*([tlrbhwxy])\s*([!\?\*])\s*(\d*)\s*$')
+    rexp2 = re.compile(r'^\s*([tlrbhwxy])\s*([=%<>^_])\s*([tlrbhwxy]?)\s*(\d*)\s*#(\d+)\s*$')
 
     def __init__(self,pstr=None,winlist=None):
         wx.LayoutConstraints.__init__(self)

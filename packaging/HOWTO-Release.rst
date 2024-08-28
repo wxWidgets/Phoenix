@@ -45,6 +45,8 @@ HOWTO Release wxPython Phoenix
         for f in wxPython-4*; do gpg --detach-sign -a $f; done
         for f in $(find linux -name "*.whl"); do echo $f; gpg --detach-sign -a $f; done
 
+    NOTE: It looks like PyPI does not support gpg signatures any longer, so this step can be skipped/
+
 12. Upload to PyPI with::
 
         cd ~/release-builds

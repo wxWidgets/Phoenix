@@ -3,13 +3,13 @@
 appdirs
 setuptools < 74 ; sys.platform == 'win32'
 setuptools ; sys.platform != 'win32'
-sip == 6.7.9
+sip == 6.8.5
 
 wheel
 twine
 requests
 requests[security]
-cython==0.29.34
+cython==3.0.10
 pytest
 pytest-xdist
 pytest-forked

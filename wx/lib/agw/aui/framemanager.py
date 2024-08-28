@@ -4038,7 +4038,6 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
         self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
-        self.Bind(wx.EVT_CLOSE, self.OnClose)
         if '__WXGTK__' in wx.PlatformInfo:
             self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
 
@@ -4283,6 +4282,7 @@ class AuiManager(wx.EvtHandler):
         self.UnInit()
 
         self._frame = managed_window
+        self._frame.Bind(wx.EVT_CLOSE, self.OnClose)
         self._frame.PushEventHandler(self)
 
         # if the owner is going to manage an MDI parent frame,
@@ -4406,8 +4406,7 @@ class AuiManager(wx.EvtHandler):
         """
 
         event.Skip()
-        if event.GetEventObject() == self._frame:
-            wx.CallAfter(self.UnInit)
+        wx.CallAfter(self.UnInit)
 
     def OnDestroy(self, event):
         """Called when the managed window is destroyed. Makes sure that :meth:`UnInit`
@@ -5223,6 +5222,7 @@ class AuiManager(wx.EvtHandler):
 
         # mark all panes currently managed as docked and hidden
         saveCapt = {}  # see restorecaption param
+        saveIcon = {}  # icons are not preserved by perspectives, so preserve them
         for pane in self._panes:
 
             # dock the notebook pages
@@ -5237,6 +5237,7 @@ class AuiManager(wx.EvtHandler):
 
             pane.Dock().Hide()
             saveCapt[pane.name] = pane.caption
+            saveIcon[pane.name] = pane.icon
 
         # clear out the dock array; this will be reconstructed
         self._docks = []
@@ -5294,6 +5295,9 @@ class AuiManager(wx.EvtHandler):
             if restorecaption:
                 if pane.name in saveCapt:
                     pane.Caption(saveCapt[pane.name])
+            # restore icons from code. This is always done. Since icons are not saved in perspectives        
+            if pane.name in saveIcon:
+                pane.icon = saveIcon[pane.name]
 
             if not p.IsOk():
                 if pane.IsNotebookControl():
@@ -6141,11 +6145,8 @@ class AuiManager(wx.EvtHandler):
         return self._dock_constraint_x, self._dock_constraint_y
 
     def Update(self):
-        if '__WXGTK__' in wx.PlatformInfo:
-            wx.CallAfter(self.DoUpdate)
-        else:
-            self.DoUpdate()
-
+        wx.CallAfter(self.DoUpdate)
+        
     def DoUpdateEvt(self, evt):
         self.Unbind(wx.EVT_WINDOW_CREATE)
         wx.CallAfter(self.DoUpdate)
@@ -6213,12 +6214,6 @@ class AuiManager(wx.EvtHandler):
         # Only the master manager should create/destroy notebooks...
         if not self._masterManager:
             self.UpdateNotebook()
-
-        # delete old sizer first
-        self._frame.SetSizer(None)
-
-        # create a layout for all of the panes
-        sizer = self.LayoutAll(self._panes, self._docks, self._uiparts, False)
 
         # hide or show panes as necessary,
         # and float panes as necessary
@@ -6318,6 +6313,12 @@ class AuiManager(wx.EvtHandler):
                 r = p.rect
 
             old_pane_rects.append(r)
+            
+        # delete old sizer first
+        self._frame.SetSizer(None)
+
+        # create a layout for all of the panes
+        sizer = self.LayoutAll(self._panes, self._docks, self._uiparts, False)
 
         # apply the new sizer
         self._frame.SetSizer(sizer)

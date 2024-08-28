@@ -91,6 +91,31 @@ class dataview_Tests(wtc.WidgetTestCase):
         dit.Icon
         dit.Text
 
+    #-------------------------------------------------------
+    def test_dataviewCheckIconText1(self):
+        dcit = dv.DataViewCheckIconText()
+        icon = wx.Icon(pngFile)
+        dcit.SetIcon(icon)
+        dcit.SetText('Smile!')
+
+    def test_dataviewCheckIconText2(self):
+        icon = wx.Icon(pngFile)
+        dcit = dv.DataViewCheckIconText('Smile!', wx.BitmapBundle(icon), wx.CHK_CHECKED)
+        dcit.Icon
+        dcit.Text
+        dcit.CheckedState
+
+    def test_dataviewCheckIconText3(self):
+        icon = wx.Icon(pngFile)
+        dcit = dv.DataViewCheckIconText('Smile!', wx.BitmapBundle(icon))
+        state = dcit.GetCheckedState()
+        assert state == wx.CHK_UNDETERMINED
+
+        dcit.SetCheckedState(wx.CHK_CHECKED)
+        state = dcit.GetCheckedState()
+        assert state == wx.CHK_CHECKED
+
+
 
     #-------------------------------------------------------
     def test_dataviewModelNotifier1(self):
@@ -169,6 +194,9 @@ class dataview_Tests(wtc.WidgetTestCase):
 
     def test_dataviewRenderer12(self):
         r = dv.DataViewChoiceRenderer("one two three".split())
+
+    def test_dataviewRenderer13(self):
+        r = dv.DataViewCheckIconTextRenderer()
 
 
     #-------------------------------------------------------

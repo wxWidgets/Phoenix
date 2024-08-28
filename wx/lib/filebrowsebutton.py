@@ -52,6 +52,7 @@ class FileBrowseButton(wx.Panel):
         :param toolTip:        Help text
         :param dialogTitle:    Title used in file dialog
         :param startDirectory: Default directory for file dialog startup
+        :param initialValue:   Value initially present in the text field
         :param fileMask:       File mask (glob pattern, such as *.*) to use in file dialog
         :param fileMode:       wx.FD_OPEN or wx.FD_SAVE, indicates type of file dialog to use
         :param changeCallback: Optional callback called for all changes in value of the control
@@ -335,13 +336,14 @@ class DirBrowseButton(FileBrowseButton):
                  toolTip = 'Type directory name or browse to select',
                  dialogTitle = '',
                  startDirectory = '.',
+                 initialValue = '',
                  changeCallback = None,
                  dialogClass = wx.DirDialog,
                  newDirectory = False,
                  name = 'dirBrowseButton'):
         FileBrowseButton.__init__(self, parent, id, pos, size, style,
                                   labelText, buttonText, toolTip,
-                                  dialogTitle, startDirectory,
+                                  dialogTitle, startDirectory, initialValue,
                                   changeCallback = changeCallback,
                                   name = name)
         self.dialogClass = dialogClass

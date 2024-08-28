@@ -95,12 +95,14 @@ class GridWithLabelRenderersMixin(object):
     def _onPaintRowLabels(self, evt):
         window = evt.GetEventObject()
         dc = wx.PaintDC(window)
+        gridWindow = self.GetGridWindow()
 
-        rows = self.CalcRowLabelsExposed(window.GetUpdateRegion())
+        rows = self.CalcRowLabelsExposed(window.GetUpdateRegion(), gridWindow)
         if rows == [-1]:
             return
 
-        x, y = self.CalcUnscrolledPosition((0,0))
+        offset = self.GetGridWindowOffset(gridWindow)
+        x, y = self.CalcUnscrolledPosition(offset)
         pt = dc.GetDeviceOrigin()
         dc.SetDeviceOrigin(pt.x, pt.y-y)
         for row in rows:
@@ -119,12 +121,14 @@ class GridWithLabelRenderersMixin(object):
     def _onPaintColLabels(self, evt):
         window = evt.GetEventObject()
         dc = wx.PaintDC(window)
+        gridWindow = self.GetGridWindow()
 
-        cols = self.CalcColLabelsExposed(window.GetUpdateRegion())
+        cols = self.CalcColLabelsExposed(window.GetUpdateRegion(), gridWindow)
         if cols == [-1]:
             return
 
-        x, y = self.CalcUnscrolledPosition((0,0))
+        offset = self.GetGridWindowOffset(gridWindow)
+        x, y = self.CalcUnscrolledPosition(offset)
         pt = dc.GetDeviceOrigin()
         dc.SetDeviceOrigin(pt.x-x, pt.y)
         for col in cols:

@@ -608,10 +608,10 @@ class RibbonButtonBar(RibbonControl):
         :see: :meth:`~RibbonButtonBar.ClearButtons`
         """
 
-        for button in self._buttons:
+        for i, button in enumerate(self._buttons):
             if button.id == button_id:
                 self._layouts_valid = False
-                self._buttons.pop(button)
+                self._buttons.pop(i)
                 self.Realize()
                 self.Refresh()
                 return True

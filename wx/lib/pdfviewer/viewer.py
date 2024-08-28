@@ -1077,7 +1077,7 @@ class pdfPrintout(wx.Printout):
         pageno = page - 1       # zero based
         width = self.view.pagewidth
         height = self.view.pageheight
-        self.FitThisSizeToPage(wx.Size(width*sfac, height*sfac))
+        self.FitThisSizeToPage(wx.Size(int(width*sfac), int(height*sfac)))
         dc = self.GetDC()
         gc = wx.GraphicsContext.Create(dc)
         if not mupdf:

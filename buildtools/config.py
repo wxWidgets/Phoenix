@@ -85,7 +85,7 @@ class Configuration(object):
     PKGDIR = 'wx'
     # The name of the top-level package
 
-    SIP_ABI = '12.8'
+    SIP_ABI = '12.9'
     SIP_TRACE = False
 
     # ---------------------------------------------------------------
@@ -1081,7 +1081,7 @@ def updateLicenseFiles(cfg):
     # Combine the relevant files into a single LICENSE.txt file
     text = ''
     for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt', 'sip-license.txt']:
-        with open(opj('license', filename), 'r') as f:
+        with open(opj('license', filename), 'r', encoding='utf-8') as f:
             text += f.read() + '\n\n'
     with open('LICENSE.txt', 'w') as f:
         f.write(text)

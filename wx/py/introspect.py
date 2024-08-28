@@ -171,6 +171,7 @@ def getCallTip(command='', locals=None):
         pass
     tip1 = ''
     argspec = ''
+    obj = inspect.unwrap(obj)
     if inspect.isbuiltin(obj):
         # Builtin functions don't have an argspec that we can get.
         pass
