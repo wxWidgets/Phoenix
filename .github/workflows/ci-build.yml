@@ -59,7 +59,6 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install -y gettext
-          python -m pip install --upgrade pip setuptools wheel
           python -m pip install --upgrade -r requirements.txt
 
       - name: Generate wrapper code
@@ -147,7 +146,6 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel
           python -m pip install --upgrade -r requirements.txt
 
       - name: Install Ubuntu dependencies
