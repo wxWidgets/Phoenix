@@ -89,14 +89,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest, windows-latest, macos-14-large ]
         python-version: [ '3.8', '3.9', '3.10', '3.11', '3.12', '3.13-dev' ]
         architecture: [ 'x86', 'x64' ]
         # Exclude x86 configs on non-Windows OSs
         exclude:
           - os: ubuntu-latest
             architecture: x86
-          - os: macos-latest
+          - os: macos-14-large
             architecture: x86
 
     env:
@@ -114,7 +114,7 @@ jobs:
         run: |
           if [ ${{ matrix.os }} == ubuntu-latest ]; then
               short_name=linux
-          elif [ ${{ matrix.os }} == macos-latest ]; then
+          elif [ ${{ matrix.os }} == macos-14-large ]; then
               short_name=macos
           elif [ ${{ matrix.os }} == windows-latest ]; then
               if [ ${{ matrix.architecture }} == x64 ]; then
