@@ -101,7 +101,7 @@ doxygenMD5 = {
 }
 
 # And the location where they can be downloaded from
-toolsURL = 'https://wxpython.org/Phoenix/tools'
+toolsURL = 'https://wxwidgets.github.io/wxPython-tools'
 
 
 # MS Edge code and DLLs needed for the wxWEBVIEW_BACKEND_EDGE backend
