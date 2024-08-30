@@ -33,7 +33,7 @@ Development at GitHub.com
 -----------------------------
 
 Development of wxPython is done with git, using
-https://github.com/wxWidgets/Phoenix as the main devlopment site.
+https://github.com/wxWidgets/Phoenix as the main development site.
 
 Currently (September, 2024), only 2 developers (@swt2c, @RobinD42) can merge
 pull requests, or assign others to review pull requests.
@@ -60,13 +60,11 @@ Next, review the section below about prerequisites.
 
 All aspects of the wxPython Phoenix build are managed through a series of
 commands provided by the build.py script. There is also a setup.py script
-available for those who are used to the standard distutils or setuptools types
-of builds. The setup.py script assumes that all of the code generation steps
-have already been performed, and so it is suitable for use when building from
-a source snapshot tarball or when using easy_install or pip. The setup.py
-script will delegate to build.py for the actual build, and build.py will
-delegate to setup.py when doing setuptoolsy things like performing an install
-or building a wheel.
+available for builds using setuptools.  The setup.py script assumes that all of
+the code generation steps have already been performed, and so it is suitable
+for use when building from a source snapshot tarball or when using pip. The
+setup.py script will delegate to build.py for the actual build, and build.py
+will delegate to setup.py when using pip or building a wheel.
 
 Using the build.py script allows for greater control over the build process
 than setup.py does, including commands for performing the various
@@ -412,7 +410,7 @@ Phoenix.
 Help and Helping
 ----------------
 
-Discussions about Phoenix developmet happen on this Github page.  Discussions
+Discussions about Phoenix development happen on this Github page.  Discussions
 about Python usage happen at https://discuss.wxpython.org/.
 
 
