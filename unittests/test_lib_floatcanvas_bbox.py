@@ -30,7 +30,7 @@ class testCreator(wtc.WidgetTestCase):
         self.assertRaises(ValueError, BBox, (0,0,5,6,7) )
 
     def testArrayConstruction(self):
-        A = N.array(((4,5),(10,12)), N.float_)
+        A = N.array(((4,5),(10,12)), N.float64)
         B = BBox(A)
         self.assertTrue(isinstance(B, BBox))
 
@@ -79,7 +79,7 @@ class testAsBBox(wtc.WidgetTestCase):
 
     def testPassArray2(self):
         # same data type -- should be a view
-        A = N.array( (((0,0),(5,5))), N.float_ )
+        A = N.array( (((0,0),(5,5))), N.float64 )
         C = asBBox(A)
         A[0,0] = -10
         self.assertTrue(C[0,0] == A[0,0])
@@ -341,7 +341,7 @@ class testFromPoints(wtc.WidgetTestCase):
         Pts = N.array( ((5,2),
                 (3,4),
                 (1,6),
-                ), N.float_ )
+                ), N.float64 )
         B = fromPoints(Pts)
         #B = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
         self.assertTrue(B[0,0] == 1.0 and
@@ -362,7 +362,7 @@ class testFromPoints(wtc.WidgetTestCase):
                         )
 
     def testSinglePoint(self):
-        Pts = N.array( (5,2), N.float_ )
+        Pts = N.array( (5,2), N.float64 )
         B = fromPoints(Pts)
         self.assertTrue(B[0,0] == 5.0 and
                         B[0,1] == 2.0 and
@@ -460,7 +460,7 @@ class testNullBBox(wtc.WidgetTestCase):
     B3 = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
 
     def testValues(self):
-        self.assertTrue( N.alltrue(N.isnan(self.B1)) )
+        self.assertTrue( N.all(N.isnan(self.B1)) )
 
     def testIsNull(self):
         self.assertTrue( self.B1.IsNull )
@@ -496,7 +496,7 @@ class testInfBBox(wtc.WidgetTestCase):
     NB = NullBBox()
 
     def testValues(self):
-        self.assertTrue( N.alltrue(N.isinf(self.B1)) )
+        self.assertTrue( N.all(N.isinf(self.B1)) )
 
 #    def testIsNull(self):
 #        self.assertTrue( self.B1.IsNull )
