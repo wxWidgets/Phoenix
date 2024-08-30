@@ -410,8 +410,9 @@ Phoenix.
 Help and Helping
 ----------------
 
-Discussions about Phoenix development happen on this Github page.  Discussions
-about Python usage happen at https://discuss.wxpython.org/.
+Please use  `GitHub issues <https://github.com/wxWidgets/Phoenix/issues>`_
+to report bugs.  Discussions about Python usage happen at
+`Discuss wxPython <https://discuss.wxpython.org/>`_.
 
 
 Latest Snapshot Builds
