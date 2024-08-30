@@ -29,6 +29,16 @@ platform specific code.
 .. contents:: **Contents**
 
 
+Development at GitHub.com
+-----------------------------
+
+Development of wxPython is done with git, using
+https://github.com/wxWidgets/Phoenix as the main devlopment site.
+
+Currently (September, 2024), only 2 developers (@swt2c, @RobinD42) can merge
+pull requests, or assign others to review pull requests.
+
+
 How to build wxPython Phoenix
 -----------------------------
 
@@ -187,7 +197,7 @@ Some other useful commands and options are:
   checking of the input.
 
 * **M.N**: This is the Major.Minor version number of the Python that the
-  extension modules will be built for, such as "3.3". This allows you to run
+  extension modules will be built for, such as "3.11". This allows you to run
   build.py with a different Python than what you are building for, which is
   handy for things like buildbots running in a virtualenv for one Python
   that need to be able to run builds for other versions too.
@@ -329,22 +339,14 @@ a PR for updating this document.
 
 **Windows**
 
-All the source code needed for wxWidgets and wxPython Phoenix are
-included in the wxWidgets and Phoenix source trees. In addition to a
-stock Python installation you will also need a copy of Visual Studio 2008
-(for Python2.7 compatibility) or Visual Studio 2015 (for Python 3.x
-support). It should also be possible to build using Mingw32, but there
-will need to be some changes made to the build scripts to support that.
+All the source code needed for wxWidgets and wxPython Phoenix are included in
+the wxWidgets and Phoenix source trees. In addition to a stock Python
+installation you will also need a copy Visual Studio 2015. It may be possible
+to build using Mingw32, but there will need to be some changes made to the
+build scripts to support that.
 
 You may also want to get a copy of the MS SDK in order to have newer
-definitions of the Windows API. I typically use 7.0 or 7.1 with Visual
-Studio 2008.
-
-Unfortunately Microsoft no longer distributes Visual Studio 2008. But don't
-panic! They have recently made available a "Microsoft Visual C++ Compiler for
-Python 2.7" package, which can also be used for building Phoenix for Python
-2.7. Plus it's free! You can get it at:
-http://www.microsoft.com/en-us/download/details.aspx?id=44266
+definitions of the Windows API.
 
 If you want to build Phoenix with debug info then you will need to first
 build a debug version of Python, and then use that Python (python_d.exe) to
@@ -384,7 +386,7 @@ their dependencies:
 * libwebkitgtk-dev
 
 
-If You use a custom built python in a non standard location, You need to
+If you use a custom built python in a non standard location, You need to
 compile python with the --enable-shared option.
 
 **Mac OSX**
@@ -400,9 +402,7 @@ package.
 
 Also like on Windows, using the same or similar compiler that was used to
 build Python usually helps things to work better and have a better chance
-for success. For example, the stock Python 2.7 will try to use "gcc-4.2"
-when building extensions, but newer versions of Xcode may not have that
-command available. I am currently using Xcode 7.1.1.
+for success.
 
 If all else fails it is not too hard to build Python yourself using
 whatever Xcode you have installed, and then use that Python when building
@@ -412,10 +412,8 @@ Phoenix.
 Help and Helping
 ----------------
 
-Most discussions about Phoenix happen on the wxPython-dev google group
-(a.k.a. the wxPython-dev mail list.) If you have questions or would like to
-get involved please subscribe to the group at
-https://groups.google.com/forum/#!forum/wxpython-dev and join in.
+Discussions about Phoenix developmet happen on this Github page.  Discussions
+about Python usage happen at https://discuss.wxpython.org/.
 
 
 Latest Snapshot Builds
