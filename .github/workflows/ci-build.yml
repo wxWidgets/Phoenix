@@ -38,7 +38,7 @@ jobs:
   # Build a wxPython source archive, and save it as an artifact for use in the
   # job that builds the wheels.
   build-source-dist:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     outputs:
       VERSION: ${{ steps.generate.outputs.version }}
@@ -89,12 +89,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-13 ]
+        os: [ ubuntu-22.04, windows-2022, macos-13 ]
         python-version: [ '3.8', '3.9', '3.10', '3.11', '3.12', '3.13-dev' ]
         architecture: [ 'x86', 'x64' ]
         # Exclude x86 configs on non-Windows OSs
         exclude:
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             architecture: x86
           - os: macos-13
             architecture: x86
@@ -112,11 +112,11 @@ jobs:
       - name: initialize variables
         id: init
         run: |
-          if [ ${{ matrix.os }} == ubuntu-latest ]; then
+          if [ ${{ matrix.os }} == ubuntu-22.04 ]; then
               short_name=linux
           elif [ ${{ matrix.os }} == macos-13 ]; then
               short_name=macos
-          elif [ ${{ matrix.os }} == windows-latest ]; then
+          elif [ ${{ matrix.os }} == windows-2022 ]; then
               if [ ${{ matrix.architecture }} == x64 ]; then
                   short_name=win64
               else
@@ -149,7 +149,7 @@ jobs:
           python -m pip install --upgrade -r requirements.txt
 
       - name: Install Ubuntu dependencies
-        if: ${{ matrix.os == 'ubuntu-latest' }}
+        if: ${{ matrix.os == 'ubuntu-22.04' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -191,7 +191,7 @@ jobs:
         uses: actions/upload-artifact@v4
         # Just Windows and MacOS for now, all we care about for Linux at this
         # point is that the build was successful.
-        if: ${{ matrix.os != 'ubuntu-latest' }}
+        if: ${{ matrix.os != 'ubuntu-22.04' }}
         with:
           name: wxPython-wheel-${{ steps.init.outputs.cannonical_id }}
           path: dist/wxPython-*.whl
