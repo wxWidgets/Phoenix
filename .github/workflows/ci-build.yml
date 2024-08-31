@@ -106,7 +106,7 @@ jobs:
 
     outputs:
       short_name: ${{ steps.init.outputs.short_name }}
-      cannonical_id: ${{ steps.init.outputs.cannonical_id }}
+      canonical_id: ${{ steps.init.outputs.canonical_id }}
 
     steps:
       - name: initialize variables
@@ -124,7 +124,7 @@ jobs:
               fi
           fi
           echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
-          echo "cannonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
+          echo "canonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -193,5 +193,5 @@ jobs:
         # point is that the build was successful.
         if: ${{ matrix.os != 'ubuntu-22.04' }}
         with:
-          name: wxPython-wheel-${{ steps.init.outputs.cannonical_id }}
+          name: wxPython-wheel-${{ steps.init.outputs.canonical_id }}
           path: dist/wxPython-*.whl
