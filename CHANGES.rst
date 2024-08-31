@@ -18,6 +18,53 @@ Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.2.2``
 
 New and improved in this release:
+* This release was built using the wxWidgets' v3.2.5 release tag.  This is the first release built using GitHub infrastructure instead of the buildbots.  Please report any problems with the wheels.
+
+* Fix some Python 3.12 compatibility issues (segfault on exit) by upgrading sip & waf
+
+* Fix more float/int conversion issues in wx.lib classes (#2415, #2417, #2429, #2470, #2528, #2542)
+
+* Add initialValue argument to wx.lib.DirBrowseButton (#2430)
+
+* Fix wxImage.Clear() (#2433)
+
+* Fix blurry text in AuiNotebook tab (#2360)
+
+* Add support for frozen rows and columns to GridWithLabelRenderersMixin (#2436)
+
+* demo: ShortcutEditor: Fix broken call GetMenuBar() (#2412)
+
+* Add proper support for DataViewCheckIconTextRenderer (#2425)
+
+* Remove legacy macOS logic, use wx.SystemSettings to select colors (#2018)
+
+* Build: Use new tarfile.extractall() filter for safer tarfile extraction (#2443)
+
+* Fix typo in wx.lib.agw.persist_handlers (#2469)
+
+* Fix 'str' to 'wxString' converstation, when emoji is inside string (#2446)
+
+* Use unwrap before isbuiltin check (#2487)
+
+* Preserve pane icons when loading a perspective in agw.aui (#2494)
+
+* wx.agw.aui: don't uninitialize the AuiManager if the window close event is vetoed (#2460)
+
+* Pure python AUI: Make behavior in all platforms more equal (#2501)
+
+* wx.agw.aui. Do layout as the last step after all pane infos have recomputed their best sizes (#2500)
+
+* Fix additional SyntaxWarnings with Python 3.12 (#2502)
+
+* Fix wx.lib.agw.ribbon.RibbonButtonBar DeleteButton function (#2511)
+
+* UltimateListCtrl: Add support for ULC_AUTO_CHECK_PARENT (#2518)
+
+* Remove dependency on distutils (#2519)
+
+* Improve wx.lib.agw.FlatMenu memory usage (#2373)
+
+* Support NumPy 2.0 (#2580, 2591)
 
 
 
