@@ -126,7 +126,12 @@ jobs:
           echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
           echo "canonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
 
-      - name: Download CI source artifact
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: download CI source artifact
         uses: actions/download-artifact@v4
         with:
           name: wxPython-source
