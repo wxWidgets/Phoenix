@@ -91,13 +91,7 @@ def configure(conf):
         conf.env.PYTHON = conf.options.python
     conf.load('python')
     conf.check_python_version(minver=(3,7,0))
-    if isWindows:
-        # Search for the Python headers without doing some stuff that could
-        # incorrectly fail on Windows. See my_check_python_headers below.
-        # TODO: Check if it can/should be used on other platforms too.
-        conf.my_check_python_headers()
-    else:
-        conf.check_python_headers(features='pyext')
+    conf.check_python_headers(features='pyext')
 
     # fetch and save the debug options
     conf.env.debug = conf.options.debug
