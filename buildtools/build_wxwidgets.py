@@ -80,13 +80,13 @@ def getWxRelease(wxRoot=None):
         wxRoot = wxRootDir
     with open(os.path.join(wxRoot, "configure.in"), "r") as fid:
         configureText = fid.read()
-    majorVersion = re.search("wx_major_version_number=(\d+)", configureText).group(1)
-    minorVersion = re.search("wx_minor_version_number=(\d+)", configureText).group(1)
+    majorVersion = re.search(r"wx_major_version_number=(\d+)", configureText).group(1)
+    minorVersion = re.search(r"wx_minor_version_number=(\d+)", configureText).group(1)
 
     versionText = "%s.%s" % (majorVersion, minorVersion)
 
     if int(minorVersion) % 2:
-        releaseVersion = re.search("wx_release_number=(\d+)", configureText).group(1)
+        releaseVersion = re.search(r"wx_release_number=(\d+)", configureText).group(1)
         versionText += ".%s" % (releaseVersion)
 
     return versionText
@@ -425,7 +425,7 @@ def main(wxDir, args):
                 setupText = setupText.decode('utf-8')
 
         for flag in flags:
-            setupText, subsMade = re.subn(flag + "\s+?\d", "%s %s" % (flag, flags[flag]), setupText)
+            setupText, subsMade = re.subn(flag + r"\s+?\d", "%s %s" % (flag, flags[flag]), setupText)
             if subsMade == 0:
                 print("Flag %s wasn't found in setup.h!" % flag)
                 sys.exit(1)

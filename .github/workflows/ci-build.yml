@@ -1,0 +1,197 @@
+#---------------------------------------------------------------------------
+# This workflow will build and archive a wxPython source distribution for
+# CI. It will start by building a sdist archive first, and then that will be
+# used in subsequent jobs on each supported platform and Python version.
+#---------------------------------------------------------------------------
+
+name: ci-build
+
+on:
+  # Trigger on push or PRs targeting the master branch
+  push:
+    branches: [ 'master' ]
+  pull_request:
+    branches: [ 'master' ]
+
+  # Also allow manual triggering (via web ui)
+  workflow_dispatch:
+
+# Cancel the workflow if another instance in the same workflow and PR is triggered
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    # always use bash shell, even on windows
+    shell: bash
+
+env:
+  PYTHONUNBUFFERED: 1
+
+#---------------------------------------------------------------------------
+
+jobs:
+  # Build a wxPython source archive, and save it as an artifact for use in the
+  # job that builds the wheels.
+  build-source-dist:
+    runs-on: ubuntu-22.04
+
+    outputs:
+      VERSION: ${{ steps.generate.outputs.version }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y gettext
+          python -m pip install --upgrade -r requirements.txt
+
+      - name: Generate wrapper code
+        id: generate
+        run: |
+          python build.py setrev dox etg sip --nodoc
+          VERSION=$(python build.py --quiet version)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create source distribution (sdist)
+        run: |
+          python build.py sdist
+
+      - name: Save sdist as job artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wxPython-source
+          path: dist/wxPython-${{ steps.generate.outputs.version }}.tar.gz
+
+
+#---------------------------------------------------------------------------
+
+  # Use pip and the wxPython-source artifact to build a wxPython wheel for every
+  # supported Python version and architecture.
+  build-wheels:
+    # wait for prior job to complete
+    needs: build-source-dist
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-22.04, windows-2022, macos-13 ]
+        python-version: [ '3.8', '3.9', '3.10', '3.11', '3.12', '3.13-dev' ]
+        architecture: [ 'x86', 'x64' ]
+        # Exclude x86 configs on non-Windows OSs
+        exclude:
+          - os: ubuntu-22.04
+            architecture: x86
+          - os: macos-13
+            architecture: x86
+
+    env:
+      VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
+
+    runs-on: ${{ matrix.os }}
+
+    outputs:
+      short_name: ${{ steps.init.outputs.short_name }}
+      canonical_id: ${{ steps.init.outputs.canonical_id }}
+
+    steps:
+      - name: initialize variables
+        id: init
+        run: |
+          if [ ${{ matrix.os }} == ubuntu-22.04 ]; then
+              short_name=linux
+          elif [ ${{ matrix.os }} == macos-13 ]; then
+              short_name=macos
+          elif [ ${{ matrix.os }} == windows-2022 ]; then
+              if [ ${{ matrix.architecture }} == x64 ]; then
+                  short_name=win64
+              else
+                  short_name=win32
+              fi
+          fi
+          echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
+          echo "canonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: download CI source artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: wxPython-source
+          path: dist
+
+      - name: Set up Python ${{ matrix.python-version }}-${{ matrix.architecture }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '${{ matrix.python-version }}'
+          architecture: '${{ matrix.architecture }}'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade -r requirements.txt
+
+      - name: Install Ubuntu dependencies
+        if: ${{ matrix.os == 'ubuntu-22.04' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+                  freeglut3-dev \
+                  libcurl4-openssl-dev \
+                  libexpat1-dev \
+                  libgl1-mesa-dev \
+                  libglu1-mesa-dev \
+                  libgtk-3-dev \
+                  libjpeg-dev \
+                  libnotify-dev \
+                  libsdl2-dev \
+                  libsm-dev \
+                  libtiff-dev \
+                  libwebkit2gtk-4.0-dev \
+                  libxtst-dev \
+                  libunwind-dev \
+                  libgstreamer1.0-dev \
+                  libgstreamer-plugins-base1.0-dev
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: '${{ matrix.architecture }}'
+
+      - name: Build the wxPython wheel
+        run: |
+          cd dist
+          pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+
+      - name: Simple smoke test
+        run: |
+          cd dist
+          pip install wxPython-*.whl
+          python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
+          pip uninstall --yes wxPython
+
+      - name: Save wheel as job artifact
+        uses: actions/upload-artifact@v4
+        # Just Windows and MacOS for now, all we care about for Linux at this
+        # point is that the build was successful.
+        if: ${{ matrix.os != 'ubuntu-22.04' }}
+        with:
+          name: wxPython-wheel-${{ steps.init.outputs.canonical_id }}
+          path: dist/wxPython-*.whl

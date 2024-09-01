@@ -12,6 +12,7 @@ mydbstub.py*
 .cache
 .vagrant
 .vscode
+.env
 
 /build
 /tmp
