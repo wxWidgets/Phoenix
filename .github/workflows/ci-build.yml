@@ -215,6 +215,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         path: dist/
+        merge-multiple: true
     - name: Publish distribution to TestPyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
