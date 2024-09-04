@@ -195,3 +195,27 @@ jobs:
         with:
           name: wxPython-wheel-${{ steps.init.outputs.canonical_id }}
           path: dist/wxPython-*.whl
+
+
+  publish-to-testpypi:
+    name: Publish Python distribution to TestPyPI
+    if: github.event_name != 'pull_request'
+    needs: build-wheels
+    runs-on: ubuntu-22.04
+
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/wxPython
+
+    permissions:
+      id-token: write
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        path: dist/
+    - name: Publish distribution to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
