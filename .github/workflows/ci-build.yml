@@ -10,10 +10,10 @@ on:
   # Trigger on push or PRs targeting the master branch
   push:
     branches: [ 'master' ]
+    tags:
+      - '*'
   pull_request:
     branches: [ 'master' ]
-  tags:
-    - '*'
 
   # Also allow manual triggering (via web ui)
   workflow_dispatch:
