@@ -12,6 +12,8 @@ on:
     branches: [ 'master' ]
   pull_request:
     branches: [ 'master' ]
+  tags:
+    - '*'
 
   # Also allow manual triggering (via web ui)
   workflow_dispatch:
