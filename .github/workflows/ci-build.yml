@@ -221,3 +221,33 @@ jobs:
         merge-multiple: true
     - name: Publish distribution to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
+
+
+  github-release:
+    name: Create GitHub Release and upload source
+    needs: publish-to-pypi
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+    - name: Download source distribution
+      uses: actions/download-artifact@v4
+      with:
+        name: wxPython-source
+        path: dist
+    - name: Create GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        gh release create '${{ github.ref_name }}' \
+          --repo '${{ github.repository }}' \
+          --notes ""
+    - name: Upload source distribution to GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        gh release upload '${{ github.ref_name }}' dist/* \
+          --repo '${{ github.repository }}'
