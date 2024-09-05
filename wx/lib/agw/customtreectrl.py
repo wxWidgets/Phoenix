@@ -1428,6 +1428,9 @@ class TreeTextCtrl(ExpandoTextCtrl):
             bs = self.GetBestSize()
             self.SetSize((-1, bs.height))
 
+        if self._startValue:
+            self.SelectAll()
+          
         self.Bind(wx.EVT_CHAR, self.OnChar)
         self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
