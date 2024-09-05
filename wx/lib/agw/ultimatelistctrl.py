@@ -4573,7 +4573,7 @@ class UltimateListLineData(object):
                 xa, ya = self._owner.CalcScrolledPosition((0, rect.y))
                 wndx += xa
                 if rect.height > ySize and not item._expandWin:
-                    ya += (rect.height - ySize)/2
+                    ya += (rect.height - ySize)//2
 
             itemRect = wx.Rect(xOld-2*HEADER_OFFSET_X, rect.y, width-xSize-HEADER_OFFSET_X, rect.height)
             if overflow:
