@@ -1534,7 +1534,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
         # scroll view
         xu, yu = self.GetScrollPixelsPerUnit()
-        sy = sy/yu + (sy%yu and [1] or [0])[0] # convert sy to scroll units
+        sy = sy//yu + (sy%yu and [1] or [0])[0] # convert sy to scroll units
         x, y = self.GetViewStart()
 
         self.Scroll(x,sy)
