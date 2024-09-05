@@ -11,7 +11,7 @@ on:
   push:
     branches: [ 'master' ]
     tags:
-      - '*'
+      - 'wxPython-*'
   pull_request:
     branches: [ 'master' ]
 
@@ -207,8 +207,8 @@ jobs:
     runs-on: ubuntu-22.04
 
     environment:
-      name: testpypi
-      url: https://test.pypi.org/p/wxPython
+      name: pypi
+      url: https://pypi.org/p/wxPython
 
     permissions:
       id-token: write
@@ -221,5 +221,3 @@ jobs:
         merge-multiple: true
     - name: Publish distribution to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
