@@ -9370,7 +9370,7 @@ class AuiManager(wx.EvtHandler):
 
                 notebookRoot = GetNotebookRoot(self._panes, paneInfo.notebook_id)
 
-                if not notebookRoot or not notebookRoot.IsDocked():
+                if not notebookRoot or not notebookRoot.IsDocked() or not notebookRoot.IsShown():
                     continue
 
             rc = paneInfo.window.GetScreenRect()
