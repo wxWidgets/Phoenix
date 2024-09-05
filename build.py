@@ -41,7 +41,7 @@ except ImportError:
     from buildtools.backports.shutil_which import which
 
 
-from distutils.dep_util import newer, newer_group
+from setuptools.modified import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macSetLoaderNames, \
