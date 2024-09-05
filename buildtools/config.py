@@ -907,29 +907,29 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True, onError=None):
         otherKwArgs = dict(stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT)
 
-    sp = subprocess.Popen(cmd, shell=True, env=os.environ, **otherKwArgs)
+    with subprocess.Popen(cmd, shell=True, env=os.environ, **otherKwArgs) as sp:
 
-    output = None
-    if getOutput:
-        outputEncoding = 'cp1252' if sys.platform == 'win32' else 'utf-8'
-        output = sp.stdout.read()
-        if sys.version_info > (3,):
-            output = output.decode(outputEncoding)
-        output = output.rstrip()
-
-    rval = sp.wait()
-    if rval:
-        # Failed!
-        #raise subprocess.CalledProcessError(rval, cmd)
-        print("Command '%s' failed with exit code %d." % (cmd, rval))
+        output = None
         if getOutput:
-            print(output)
-        if onError is not None:
-            onError()
-        if fatal:
-            sys.exit(rval)
+            outputEncoding = 'cp1252' if sys.platform == 'win32' else 'utf-8'
+            output = sp.stdout.read()
+            if sys.version_info > (3,):
+                output = output.decode(outputEncoding)
+            output = output.rstrip()
 
-    return output
+        rval = sp.wait()
+        if rval:
+            # Failed!
+            #raise subprocess.CalledProcessError(rval, cmd)
+            print("Command '%s' failed with exit code %d." % (cmd, rval))
+            if getOutput:
+                print(output)
+            if onError is not None:
+                onError()
+            if fatal:
+                sys.exit(rval)
+
+        return output
 
 
 def myExecfile(filename, ns):
