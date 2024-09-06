@@ -115,10 +115,12 @@ jobs:
       - name: initialize variables
         id: init
         run: |
+          build_opts=$WXPYTHON_BUILD_ARGS
           if [ ${{ matrix.os }} == ubuntu-22.04 ]; then
               short_name=linux
           elif [ ${{ matrix.os }} == macos-13 ]; then
               short_name=macos
+              build_opts="$build_opts --mac_arch=arm64,x86_64"
           elif [ ${{ matrix.os }} == windows-2022 ]; then
               if [ ${{ matrix.architecture }} == x64 ]; then
                   short_name=win64
@@ -128,6 +130,7 @@ jobs:
           fi
           echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
           echo "canonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
+          echo "build_opts=$build_opts" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -179,6 +182,8 @@ jobs:
           arch: '${{ matrix.architecture }}'
 
       - name: Build the wxPython wheel
+        env:
+          WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
         run: |
           cd dist
           pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
