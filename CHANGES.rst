@@ -11,14 +11,14 @@ wxPython Changelog
 
 4.2.2
 ------
-* (unreleased)
+* 9-Sept-2024
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.2.2
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.2.2``
 
 New and improved in this release:
-* This release was built using the wxWidgets' v3.2.5 release tag.  This is the first release built using GitHub infrastructure instead of the buildbots.  Please report any problems with the wheels.
+* This release was built using the wxWidgets' v3.2.6 release tag.  This is the first release built using GitHub infrastructure instead of the buildbots.  Please report any problems with the wheels.
 
 * Fix some Python 3.12 compatibility issues (segfault on exit) by upgrading sip & waf
 
@@ -65,6 +65,14 @@ New and improved in this release:
 * Improve wx.lib.agw.FlatMenu memory usage (#2373)
 
 * Support NumPy 2.0 (#2580, 2591)
+
+* Fix EditLabel on CustomTreeCtrl doesn't automatically select the entire text (#2549)
+
+* Fix Widgets placed in the UltimateListControl are drawn in the wrong location (#2410)
+
+* Fix wx.lib.agw.aui sometimes shows "ghost" docking guide (#2364)
+
+* Fix Thumbnailctrl SetSelection raises exception if it tries to scroll (#2345)
 
 
 
