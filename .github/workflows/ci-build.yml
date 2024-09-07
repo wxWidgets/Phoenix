@@ -256,3 +256,25 @@ jobs:
       run: |
         gh release upload '${{ github.ref_name }}' dist/* \
           --repo '${{ github.repository }}'
+
+
+  upload-wheels-to-snapshot-builds:
+    name: Upload wheels to snapshot-builds on wxpython.org
+    if: github.event_name == 'push'
+    needs: build-wheels
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        path: dist/
+        merge-multiple: true
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.RIOBU_SSH_KEY }}
+        known_hosts: ${{ secrets.RIOBU_KNOWN_HOSTS }}
+    - name: SCP wheels
+      run: |
+        scp -p dist/* rbot.wxpython@riobu.com:snapshot-builds/
