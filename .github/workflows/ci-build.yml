@@ -93,18 +93,6 @@ jobs:
           name: demo
           path: dist/wxPython-demo-${{ steps.generate.outputs.version }}.tar.gz
 
-      - name: Build documentation
-        if: github.event_name == 'push'
-        run: |
-          python build.py wxlib sphinx bdist_docs docset_py
-
-      - name: Save docs as job artifact
-        if: github.event_name == 'push'
-        uses: actions/upload-artifact@v4
-        with:
-          name: docs
-          path: dist/wxPython-docs*-${{ steps.generate.outputs.version }}.tar.gz
-
 
 #---------------------------------------------------------------------------
 
@@ -152,9 +140,15 @@ jobs:
                   short_name=win32
               fi
           fi
+          if [ ${{ matrix.os }} == ubuntu-22.04 ] && [ ${{ matrix.python-version }} == 3.12 ] && [ ${{ github.event_name }} == 'push' ]; then
+              build_docs=yes
+          else
+              build_docs=no
+          fi
           echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
           echo "canonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
           echo "build_opts=$build_opts" >> "$GITHUB_OUTPUT"
+          echo "build_docs=$build_docs" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -227,6 +221,18 @@ jobs:
         with:
           name: wxPython-wheel-${{ steps.init.outputs.canonical_id }}
           path: dist/wxPython-*.whl
+
+      - name: Build documentation
+        if: ${{ steps.init.outputs.build_docs }} == 'yes'
+        run: |
+          python build.py wxlib sphinx bdist_docs docset_py
+
+      - name: Save docs as job artifact
+        if: ${{ steps.init.outputs.build_docs }} == 'yes'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: dist/wxPython-docs*-${{ steps.generate.outputs.version }}.tar.gz
 
 
   publish-to-pypi:
