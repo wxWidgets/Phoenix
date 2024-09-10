@@ -140,7 +140,7 @@ jobs:
                   short_name=win32
               fi
           fi
-          if [ ${{ matrix.os }} == ubuntu-22.04 ] && [ ${{ matrix.python-version }} == 3.12 ] && [ ${{ github.event_name }} == 'push' ]; then
+          if [ ${{ matrix.os }} == ubuntu-22.04 ] && [ ${{ matrix.python-version }} == 3.10 ] && [ ${{ github.event_name }} == 'push' ]; then
               build_docs=yes
           else
               build_docs=no
@@ -223,12 +223,12 @@ jobs:
           path: dist/wxPython-*.whl
 
       - name: Build documentation
-        if: ${{ steps.init.outputs.build_docs }} == 'yes'
+        if: ${{ steps.init.outputs.build_docs == 'yes' }}
         run: |
-          python build.py wxlib sphinx bdist_docs docset_py
+          python build.py setrev wxlib sphinx bdist_docs docset_py
 
       - name: Save docs as job artifact
-        if: ${{ steps.init.outputs.build_docs }} == 'yes'
+        if: ${{ steps.init.outputs.build_docs == 'yes' }}
         uses: actions/upload-artifact@v4
         with:
           name: docs
