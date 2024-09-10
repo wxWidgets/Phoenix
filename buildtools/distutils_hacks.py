@@ -18,7 +18,11 @@ import distutils.command.install_data
 import distutils.command.install_headers
 import distutils.command.clean
 
-from setuptools.modified import newer, newer_group
+try:
+    from setuptools.modified import newer, newer_group
+except ImportError:
+    from distutils.dep_util import newer, newer_group
+
 from distutils import log
 
 from .config import Config, posixjoin, loadETG, etg2sip

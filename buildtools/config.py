@@ -23,7 +23,10 @@ import platform
 
 from distutils.file_util import copy_file
 from distutils.dir_util  import mkpath
-from setuptools.modified  import newer
+try:
+    from setuptools.modified import newer
+except ImportError:
+    from distutils.dep_util import newer
 
 import distutils.sysconfig
 
