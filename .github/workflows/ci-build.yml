@@ -239,7 +239,6 @@ jobs:
 
       - name: Build documentation
         run: |
-          cd dist
           python build.py setrev dox etg sip build_wx build_py wxlib sphinx bdist_docs docset_py
 
       - name: Save docs as job artifact
