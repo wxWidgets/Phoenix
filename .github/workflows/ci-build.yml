@@ -41,7 +41,7 @@ jobs:
   # Build a wxPython source archive, and save it as an artifact for use in the
   # job that builds the wheels.
   build-source-dist:
-    runs-on: ubuntu-22.04
+    runs-on: windows-2022
 
     outputs:
       VERSION: ${{ steps.generate.outputs.version }}
@@ -56,20 +56,17 @@ jobs:
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.9'
           cache: 'pip'
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get install -y gettext
-          python -m pip install --upgrade -r requirements.txt
 
       - name: Generate wrapper code
         id: generate
         run: |
+          git rev-list --count HEAD
           python build.py setrev dox etg sip --nodoc
           VERSION=$(python build.py --quiet version)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          blah
 
       - name: Create source distribution (sdist)
         run: |
