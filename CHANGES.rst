@@ -11,7 +11,7 @@ wxPython Changelog
 
 4.2.2
 ------
-* 9-Sept-2024
+* 11-Sept-2024
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.2.2
 Extras: https://extras.wxPython.org/wxPython4/extras/
