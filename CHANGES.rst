@@ -9,6 +9,20 @@ wxPython Changelog
 ==================
 
 
+
+4.2.3
+------
+* (unreleased)
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.2.3
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.2.3``
+
+New and improved in this release:
+
+
+
+
 4.2.2
 ------
 * 11-Sept-2024
