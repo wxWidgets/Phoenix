@@ -3,7 +3,6 @@
 import sys
 import os
 import wx
-import six
 import time
 import datetime
 import operator
@@ -27,12 +26,7 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 bitmapDir = os.path.join(dirName, 'bitmaps')
 sys.path.append(os.path.split(dirName)[0])
 
-# helper function to make sure we don't convert unicode objects to strings
-# or vice versa when converting lists and None values to text.
 convert = str
-if six.PY2:
-    if 'unicode' in wx.PlatformInfo:
-        convert = unicode
 
 
 def FormatFileSize(size):

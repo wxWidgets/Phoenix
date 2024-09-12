@@ -105,8 +105,6 @@ except ImportError:  # clock is removed in py3.8
     from time import clock as perf_counter
 import warnings
 
-import six
-
 from . import auibar
 from . import auibook
 
@@ -987,7 +985,7 @@ class AuiPaneInfo(object):
             ret = self.MinSize1(arg1)
         elif isinstance(arg1, tuple):
             ret = self.MinSize1(wx.Size(*arg1))
-        elif isinstance(arg1, six.integer_types) and arg2 is not None:
+        elif isinstance(arg1, int) and arg2 is not None:
             ret = self.MinSize2(arg1, arg2)
         else:
             raise Exception("Invalid argument passed to `MinSize`: arg1=%s, arg2=%s" % (repr(arg1), repr(arg2)))
@@ -1028,7 +1026,7 @@ class AuiPaneInfo(object):
             ret = self.MaxSize1(arg1)
         elif isinstance(arg1, tuple):
             ret = self.MaxSize1(wx.Size(*arg1))
-        elif isinstance(arg1, six.integer_types) and arg2 is not None:
+        elif isinstance(arg1, int) and arg2 is not None:
             ret = self.MaxSize2(arg1, arg2)
         else:
             raise Exception("Invalid argument passed to `MaxSize`: arg1=%s, arg2=%s" % (repr(arg1), repr(arg2)))
@@ -1071,7 +1069,7 @@ class AuiPaneInfo(object):
             ret = self.BestSize1(arg1)
         elif isinstance(arg1, tuple):
             ret = self.BestSize1(wx.Size(*arg1))
-        elif isinstance(arg1, six.integer_types) and arg2 is not None:
+        elif isinstance(arg1, int) and arg2 is not None:
             ret = self.BestSize2(arg1, arg2)
         else:
             raise Exception("Invalid argument passed to `BestSize`: arg1=%s, arg2=%s" % (repr(arg1), repr(arg2)))
@@ -4122,7 +4120,7 @@ class AuiManager(wx.EvtHandler):
         :param `item`: either a pane name or a :class:`wx.Window`.
         """
 
-        if isinstance(item, six.string_types):
+        if isinstance(item, str):
             return self.GetPaneByName(item)
         else:
             return self.GetPaneByWidget(item)
@@ -6416,7 +6414,7 @@ class AuiManager(wx.EvtHandler):
             elif paneInfo.IsNotebookControl() and not paneInfo.window:
                 paneInfo.window = self._notebooks[paneInfo.notebook_id]
 
-        for notebook_id, pnp in six.iteritems(pages_and_panes):
+        for notebook_id, pnp in pages_and_panes.items():
             # sort the panes with dock_pos
             sorted_pnp = sorted(pnp, key=lambda pane: pane.dock_pos)
             notebook = self._notebooks[notebook_id]
@@ -9863,7 +9861,7 @@ class AuiManager(wx.EvtHandler):
                 target = paneInfo.name
 
             minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap,
-                                           _(six.u("Restore %s")) % paneInfo.caption, target=target)
+                                           _("Restore %s") % paneInfo.caption, target=target)
             minimize_toolbar.SetAuiManager(self)
             minimize_toolbar.Realize()
             toolpanelname = paneInfo.name + "_min"

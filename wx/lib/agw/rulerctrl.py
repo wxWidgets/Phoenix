@@ -153,6 +153,7 @@ Version 0.4
 
 """
 
+import io
 import wx
 import math
 import zlib
@@ -165,9 +166,6 @@ try:
     _hasPIL = True
 except:
     pass
-
-# Python 2/3 compatibility helper
-import six
 
 # Built-in formats
 IntFormat = 1
@@ -225,7 +223,7 @@ def GetIndicatorBitmap():
 def GetIndicatorImage():
     """ Returns the image indicator as a :class:`wx.Image`. """
 
-    stream = six.BytesIO(GetIndicatorData())
+    stream = io.BytesIO(GetIndicatorData())
     return wx.Image(stream)
 
 

@@ -26,24 +26,16 @@ launch it.
 
 Use: doc|demo --force to force a fresh download.
 """
-from __future__ import (division, absolute_import, print_function, unicode_literals)
-
 import sys
 import os
 import subprocess
 import webbrowser
 import tarfile
 import warnings
-if sys.version_info >= (3,):
-    from urllib.error import HTTPError
-    import urllib.request as urllib2
-    import urllib.parse as urlparse
-    from urllib.request import pathname2url
-else:
-    import urllib2
-    from urllib2 import HTTPError
-    import urlparse
-    from urllib import pathname2url
+from urllib.error import HTTPError
+import urllib.request as urllib2
+import urllib.parse as urlparse
+from urllib.request import pathname2url
 
 import wx
 from wx.tools import wxget

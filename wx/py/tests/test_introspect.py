@@ -8,8 +8,6 @@ import os
 import unittest
 from wx.py import introspect
 
-PY3 = sys.version_info[0] == 3
-
 """
 These unittest methods are preferred:
 -------------------------------------
@@ -394,21 +392,6 @@ class GetBaseObjectTestCase(unittest.TestCase):
             # Class with no init.
             (Bar, Bar, 0),
         ]
-        if not PY3:
-            values.extend([
-            # Byte-compiled code.
-            (ham.func_code, ham.func_code, 0),
-            # Class with init.
-            (Foo, Foo.__init__.im_func, 1),
-            # Bound method.
-            (spam.foo, spam.foo.im_func, 1),
-            # Bound method with self named something else (spam).
-            (spam.bar, spam.bar.im_func, 1),
-            # Unbound method. (Do not drop the self argument.)
-            (eggs, eggs.im_func, 0),
-            # Callable instance.
-            (spam, spam.__call__.im_func, 1),
-            ])
         for object, baseObject, dropSelf in values:
             result = introspect.getBaseObject(object)
             self.assertEqual(result, (baseObject, dropSelf))
@@ -674,16 +657,6 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
             # BrokenStr instance.
             brokenStr,
         ]
-        if not PY3:
-            self.items.extend([
-                long(123),
-                unicode(""),
-                xrange(0),
-                # Byte-compiled code.
-                ham.func_code,
-                # Buffer.
-                buffer(''),
-            ])
 
     def tearDown(self):
         self.items = None
@@ -829,33 +802,10 @@ class Q(P):
 
 class GetConstructorTestCase(unittest.TestCase):
 
-    @unittest.skipIf(PY3, "Python2 specific test")
-    def test_getConstructor(self):
-        args = ('self', 'a', 'b', 'args', 'kwargs')
-        varnames = introspect.getConstructor(O).func_code.co_varnames
-        self.assertEqual(varnames, args)
-        varnames = introspect.getConstructor(P).func_code.co_varnames
-        self.assertEqual(varnames, args)
-        args = ('self', 'c', 'd')
-        varnames = introspect.getConstructor(Q).func_code.co_varnames
-        self.assertEqual(varnames, args)
-
     def test_getConstructor_None(self):
         values = (N, 1, 'spam', {}, [], (), dir)
         for value in values:
             self.assertEqual(introspect.getConstructor(N), None)
-
-    @unittest.skipIf(PY3, "Python2 specific test")
-    def test_getConstructor_MultipleInheritance(self):
-        # Test old style inheritance rules.
-        args = ('self', 'a')
-        varnames = introspect.getConstructor(D1).func_code.co_varnames
-        self.assertEqual(varnames, args)
-        if 'object' in __builtins__:
-            # Test new style inheritance rules as well.
-            args = ('self', 'b')
-            varnames = introspect.getConstructor(D2).func_code.co_varnames
-            self.assertEqual(varnames, args)
 
 
 if __name__ == '__main__':

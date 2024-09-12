@@ -30,14 +30,8 @@ import wx
 import sys
 import os
 import atexit
-import six
-
-if six.PY3:
-    from urllib.request import urlopen
-    from urllib.error import URLError
-else:
-    from urllib2 import urlopen
-    from urllib2 import URLError
+from urllib.request import urlopen
+from urllib.error import URLError
 
 from wx.lib.dialogs import MultiMessageBox
 

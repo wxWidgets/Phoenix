@@ -80,9 +80,9 @@ will be adjusted accordingly.::
     bmp = img.ConvertToScaledBitmap(wx.Size(24,24), self)
 
 """
+from itertools import zip_longest
 
 import wx
-from six.moves import zip_longest
 
 from ._nanosvg import *
 

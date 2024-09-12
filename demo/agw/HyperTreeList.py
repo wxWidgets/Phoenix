@@ -4,14 +4,12 @@
 import os
 import string
 import random
+import sys
+from io import BytesIO
 
 import wx
 import wx.lib.colourselect as csel
 import wx.lib.colourutils as cutils
-
-import sys
-
-from six import BytesIO
 
 try:
     dirName = os.path.dirname(os.path.abspath(__file__))

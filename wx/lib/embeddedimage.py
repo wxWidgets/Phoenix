@@ -13,9 +13,9 @@
 #----------------------------------------------------------------------
 
 import base64
+from io import BytesIO
 
 import wx
-from six import BytesIO
 
 try:
     b64decode = base64.b64decode
@@ -23,7 +23,7 @@ except AttributeError:
     b64decode = base64.decodestring
 
 
-class PyEmbeddedImage(object):
+class PyEmbeddedImage:
     """
     PyEmbeddedImage is primarily intended to be used by code generated
     by img2py as a means of embedding image data in a python module so

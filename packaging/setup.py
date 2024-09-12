@@ -15,7 +15,7 @@
 # folder, so let's accommodate them...
 #---------------------------------------------------------------------------
 
-import sys, os, glob
+import os, glob
 
 # Restructure the content of the tarball so things like pip or easy_install
 # know how to build stuff. To be compatible with those tools the main source
@@ -39,10 +39,7 @@ for wc in ['wxWidgets/configure',
 
 # Now execute the real setup.py that was copied here in order to do whatever
 # command was trying to be done before.
-if sys.version_info < (3,):
-    execfile('setup.py')
-else:
-    with open('setup.py', 'r') as f:
-        source = f.read()
-    exec(source)
+with open('setup.py', 'r') as f:
+    source = f.read()
+exec(source)
 

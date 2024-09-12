@@ -3,7 +3,7 @@
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com> / David Mashburn <david.n.mashburn@gmail.com>"
 
 import wx
-from six import BytesIO
+from io import BytesIO
 
 def getPyIcon(shellName='PyCrust'):
     icon = wx.Icon()
