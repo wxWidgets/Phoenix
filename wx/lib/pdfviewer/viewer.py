@@ -38,7 +38,10 @@ VERBOSE = True
 
 try:
     # see http://pythonhosted.org/PyMuPDF - documentation & installation
-    import fitz
+    try:
+        import pymupdf
+    except ImportError:
+        import fitz as pymupdf
     mupdf = True
     if VERBOSE: print('pdfviewer using PyMuPDF (GPL)')
 except ImportError:
@@ -474,7 +477,7 @@ class mupdfProcessor(object):
     """
     Create an instance of this class to open a PDF file, process the contents of
     each page and render each one on demand using the GPL mupdf library, which is
-    accessed via the python-fitz package bindings (version 1.9.1 or later)
+    accessed via the pymupdf package bindings (version 1.9.1 or later)
     """
     def __init__(self, parent, pdf_file):
         """
@@ -484,17 +487,17 @@ class mupdfProcessor(object):
         """
         self.parent = parent
         if isinstance(pdf_file, string_types):
-            # a filename/path string, pass the name to fitz.open
+            # a filename/path string, pass the name to pymupdf.open
             pathname = pdf_file
-            self.pdfdoc = fitz.open(pathname)
+            self.pdfdoc = pymupdf.open(pathname)
         else:
-            # assume it is a file-like object, pass the stream content to fitz.open
+            # assume it is a file-like object, pass the stream content to pymupdf.open
             # and a '.pdf' extension in pathname to identify the stream type
             pathname = 'fileobject.pdf'
             if pdf_file.tell() > 0:     # not positioned at start
                 pdf_file.seek(0)
             stream = bytearray(pdf_file.read())
-            self.pdfdoc = fitz.open(pathname, stream)
+            self.pdfdoc = pymupdf.open(pathname, stream)
 
         try:
             self.numpages = self.pdfdoc.page_count
@@ -522,7 +525,7 @@ class mupdfProcessor(object):
             page = self.pdfdoc.load_page(pageno)
         except AttributeError: # old PyMuPDF version
             page = self.pdfdoc.loadPage(pageno)
-        matrix = fitz.Matrix(scale, scale)
+        matrix = pymupdf.Matrix(scale, scale)
         try:
             try:
                 # MUST be keyword arg(s)
