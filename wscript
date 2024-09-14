@@ -9,6 +9,7 @@
 
 import sys
 import os
+import glob
 import setuptools
 
 try:
@@ -542,19 +543,12 @@ def build(bld):
 
     # Create the build tasks for each of our extension modules.
     addRelwithdebugFlags(bld, 'siplib')
+    module_src = sorted(glob.glob('sip/siplib/*.c'))
+    if isWindows: module_src.append('sip/siplib/bool.cpp')
     siplib = bld(
         features = 'c cxx cshlib cxxshlib pyext',
         target   = makeTargetName(bld, 'siplib'),
-        source   = ['sip/siplib/apiversions.c',
-                    'sip/siplib/descriptors.c',
-                    'sip/siplib/int_convertors.c',
-                    'sip/siplib/objmap.c',
-                    'sip/siplib/qtlib.c',
-                    'sip/siplib/sip_array.c',
-                    'sip/siplib/siplib.c',
-                    'sip/siplib/threads.c',
-                    'sip/siplib/voidptr.c',
-                    ],
+        source   = module_src,
         uselib   = 'siplib WX WXPY',
     )
     makeExtCopyRule(bld, 'siplib')
