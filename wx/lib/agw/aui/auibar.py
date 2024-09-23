@@ -271,8 +271,9 @@ class AuiToolBarItem(object):
     """
     AuiToolBarItem is a toolbar element.
 
-    It has a unique id (except for the separators which always have id = -1), the
-    style (telling whether it is a normal button, separator or a control), the
+    It has a unique id (except for the separators which always have id = -1 and the
+    automatically added restore-from-minimize which always have id = ID_RESTORE_FRAME), 
+    the style (telling whether it is a normal button, separator or a control), the
     state (toggled or not, enabled or not) and short and long help strings. The
     default implementations use the short help string for the tooltip text which
     is popped up when the mouse pointer enters the tool and the long help string
@@ -2035,26 +2036,26 @@ class AuiToolBar(wx.Control):
         self.Clear()
 
 
-    def DeleteTool(self, tool_id):
+    def DeleteTool(self, tool):
         """
         Removes the specified tool from the toolbar and deletes it.
 
-        :param integer `tool_id`: the :class:`AuiToolBarItem` identifier.
+        :param `tool`: the :class:`AuiToolBarItem` or its integer identifier.
 
         :returns: ``True`` if the tool was deleted, ``False`` otherwise.
 
         :note: Note that it is unnecessary to call :meth:`Realize` for the change to
          take place, it will happen immediately.
         """
-
-        idx = self.GetToolIndex(tool_id)
-
-        if idx >= 0 and idx < len(self._items):
-            self._items.pop(idx)
-            self.Realize()
-            return True
-
-        return False
+        if isinstance(tool, AuiToolBarItem):
+            try:
+                self._items.remove(tool)
+                self.Realize()
+                return True
+            except ValueError:
+                return False
+        # Assume tool is the id of the tool to be removed
+        return self.DeleteToolByPos(self.GetToolIndex(tool))
 
 
     def DeleteToolByPos(self, pos):
@@ -2113,6 +2114,19 @@ class AuiToolBar(wx.Control):
 
         return None
 
+
+    def FindToolByUserData(self, userData):
+        """
+        Finds a tool for the given client id.
+
+        :param PyObject `userData`: the user data object.
+        """
+
+        for item in self._items:
+            if item.user_data == userData:
+                return item
+
+        return None
 
     def FindToolForPosition(self, x, y):
         """
