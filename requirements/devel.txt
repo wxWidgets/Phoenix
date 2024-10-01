@@ -23,8 +23,8 @@ sphinxcontrib-htmlhelp<2.0.5
 sphinxcontrib-jsmath<1.0.2
 sphinxcontrib-qthelp<1.0.7
 sphinxcontrib-serializinghtml<1.1.10
-Jinja2==2.10
-markupsafe==1.1.1
+Jinja2>=3.1.4
+markupsafe>=2.0
 doc2dash==2.3.0
 beautifulsoup4
 attrdict3 ; sys_platform == 'win32'
