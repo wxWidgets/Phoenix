@@ -20,6 +20,7 @@ import textwrap
 
 
 PY3 = sys.version_info[0] == 3
+isWindows = sys.platform.startswith('win')
 
 magicMethods = {
     'operator!='    : '__ne__',
@@ -485,6 +486,9 @@ def addWindowVirtuals(klass):
         #void UpdateWindowUI(long flags = wxUPDATE_UI_NONE);
         #void DoUpdateWindowUI(wxUpdateUIEvent& event) ;
     ]
+    if isWindows:
+        # does not compile on GTK and macOS.
+        publicWindowVirtuals.append( ('CreateAccessible', 'wxAccessible* CreateAccessible()') )
 
     protectedWindowVirtuals = [
         ('ProcessEvent',              'bool ProcessEvent(wxEvent & event)'),
