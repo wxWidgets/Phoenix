@@ -5244,6 +5244,10 @@ class AuiManager(wx.EvtHandler):
         saveCapt = {}  # see restorecaption param
         saveIcon = {}  # icons are not preserved by perspectives, so preserve them
         saveMinimize = {} # see restoreminimize param
+        
+        if not self._notebooks:
+            self.DoUpdate()
+
         for pane in self._panes:
 
             # dock the notebook pages
