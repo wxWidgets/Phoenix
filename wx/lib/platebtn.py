@@ -482,7 +482,7 @@ class PlateButton(wx.Control):
         :return: :class:`wx.Bitmap` or None
 
         """
-        return self.BitmapDisabled
+        return self._bmp['disable']
 
 
     def GetBitmapLabel(self):
@@ -491,7 +491,7 @@ class PlateButton(wx.Control):
         :return: :class:`wx.Bitmap` or None
 
         """
-        return self.BitmapLabel
+        return self._bmp['enable']
 
     # GetBitmap Aliases for BitmapButton api
     GetBitmapFocus = GetBitmapLabel
