@@ -405,11 +405,11 @@ class InspectionFrame(wx.Frame):
         rect = utils.AdjustRectToScreen(self.GetRect())
         self.SetRect(rect)
 
-        perspective = config.Read('perspective', '')
+        perspective = config.Read('perspective1', '')
         if perspective:
             try:
                 self.mgr.LoadPerspective(perspective)
-            except wx.PyAssertionError:
+            except Exception:
                 # ignore bad perspective string errors
                 pass
         self.includeSizers = config.ReadBool('includeSizers', False)
@@ -430,7 +430,7 @@ class InspectionFrame(wx.Frame):
 
         if hasattr(self, "mgr"):
             perspective = self.mgr.SavePerspective()
-            config.Write('perspective', perspective)
+            config.Write('perspective1', perspective)
             config.WriteBool('includeSizers', self.includeSizers)
 
 #---------------------------------------------------------------------------
