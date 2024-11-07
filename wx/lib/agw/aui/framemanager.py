@@ -5178,7 +5178,7 @@ class AuiManager(wx.EvtHandler):
             elif val_name == "transparent":
                 pane.transparent = int(value)
             else:
-                raise Exception("Bad perspective string")
+                raise Exception("Bad perspective string", val_name)
 
         # replace escaped characters so we can
         # split up the string easily
