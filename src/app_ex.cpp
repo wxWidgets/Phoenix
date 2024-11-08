@@ -1,6 +1,5 @@
 
 #ifdef __WXGTK__
-#include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #endif
 
@@ -299,11 +298,11 @@ int wxPyApp::MainLoop()
 bool wxPyApp::IsDisplayAvailable()
 {
 #ifdef __WXGTK__
-    Display* display;
-    display = XOpenDisplay(NULL);
+    GdkDisplay* display;
+    display = gdk_display_open(NULL);
     if (display == NULL)
         return false;
-    XCloseDisplay(display);
+    gdk_display_close(display);
     return true;
 #endif
 
