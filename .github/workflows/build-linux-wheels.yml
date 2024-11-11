@@ -59,7 +59,7 @@ jobs:
       matrix:
         os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-24.04 ]
         python-version: [ '3.9' ]
-        architecture: [ 'x86_64' ]
+        architecture: [ 'x64' ]
 
     env:
       VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
