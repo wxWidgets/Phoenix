@@ -1,0 +1,169 @@
+name: build-linux-wheels
+
+on:
+  workflow_dispatch:
+
+env:
+  PYTHONUNBUFFERED: 1
+  WXPYTHON_BUILD_ARGS: '--release'
+
+jobs:
+  # Build a wxPython source archive, and save it as an artifact for use in the
+  # job that builds the wheels.
+  build-source-dist:
+    runs-on: ubuntu-22.04
+
+    outputs:
+      VERSION: ${{ steps.generate.outputs.version }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y gettext
+          python -m pip install --upgrade -r requirements.txt
+
+      - name: Generate wrapper code
+        id: generate
+        run: |
+          python build.py setrev dox etg sip --nodoc
+          VERSION=$(python build.py --quiet version)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create source distribution (sdist)
+        run: |
+          python build.py sdist
+
+      - name: Save sdist as job artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wxPython-source
+          path: dist/wxPython-${{ steps.generate.outputs.version }}.tar.gz
+
+  build-wheels:
+    # wait for prior job to complete
+    needs: build-source-dist
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-24.04 ]
+        python-version: [ '3.9' ]
+        architecture: [ 'x86_64' ]
+
+    env:
+      VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
+
+    runs-on: ${{ matrix.os }}
+
+    outputs:
+      short_name: ${{ steps.init.outputs.short_name }}
+      canonical_id: ${{ steps.init.outputs.canonical_id }}
+
+    steps:
+      - name: initialize variables
+        id: init
+        run: |
+          build_opts=$WXPYTHON_BUILD_ARGS
+          short_name=linux
+          echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
+          echo "canonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
+          echo "build_opts=$build_opts" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: download CI source artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: wxPython-source
+          path: dist
+
+      - name: Set up Python ${{ matrix.python-version }}-${{ matrix.architecture }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '${{ matrix.python-version }}'
+          architecture: '${{ matrix.architecture }}'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade -r requirements.txt
+
+      - name: Install Ubuntu dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+                  freeglut3-dev \
+                  libcurl4-openssl-dev \
+                  libexpat1-dev \
+                  libgl1-mesa-dev \
+                  libglu1-mesa-dev \
+                  libgtk-3-dev \
+                  libjpeg-dev \
+                  libnotify-dev \
+                  libsdl2-dev \
+                  libsm-dev \
+                  libtiff-dev \
+                  libwebkit2gtk-4.0-dev \
+                  libxtst-dev \
+                  libunwind-dev \
+                  libgstreamer1.0-dev \
+                  libgstreamer-plugins-base1.0-dev
+
+      - name: Build the wxPython wheel
+        env:
+          WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
+        run: |
+          cd dist
+          pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+
+      - name: Simple smoke test
+        run: |
+          cd dist
+          pip install wxPython-*.whl
+          python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
+          pip uninstall --yes wxPython
+
+      - name: Save wheel as job artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wxPython-wheel-${{ matrix.os }}-${{ steps.init.outputs.canonical_id }}
+          path: dist/wxPython-*.whl
+
+  upload-wheels-to-extras:
+    name: Upload wheels to extras on wxpython.org
+    needs: build-wheels
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-24.04 ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        pattern: wxPython-wheel-${{ matrix.os }}-*
+        path: dist/
+        merge-multiple: true
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.RIOBU_SSH_KEY }}
+        known_hosts: ${{ secrets.RIOBU_KNOWN_HOSTS }}
+    - name: SCP wheels
+      run: |
+        scp -p dist/* rbot.wxpython@riobu.com:wxpython-extras/htdocs/wxPython4/extras/linux/gtk3/${{ matrix.os }}/
