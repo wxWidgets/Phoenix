@@ -104,24 +104,7 @@ jobs:
 
       - name: Install Ubuntu dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-                  freeglut3-dev \
-                  libcurl4-openssl-dev \
-                  libexpat1-dev \
-                  libgl1-mesa-dev \
-                  libglu1-mesa-dev \
-                  libgtk-3-dev \
-                  libjpeg-dev \
-                  libnotify-dev \
-                  libsdl2-dev \
-                  libsm-dev \
-                  libtiff-dev \
-                  libwebkit2gtk-4.0-dev \
-                  libxtst-dev \
-                  libunwind-dev \
-                  libgstreamer1.0-dev \
-                  libgstreamer-plugins-base1.0-dev
+          ./buildtools/install_depends.sh
 
       - name: Build the wxPython wheel
         env:
