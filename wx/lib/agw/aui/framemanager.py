@@ -5178,7 +5178,7 @@ class AuiManager(wx.EvtHandler):
             elif val_name == "transparent":
                 pane.transparent = int(value)
             else:
-                raise Exception("Bad perspective string")
+                raise Exception("Bad perspective string", val_name)
 
         # replace escaped characters so we can
         # split up the string easily
@@ -9519,17 +9519,17 @@ class AuiManager(wx.EvtHandler):
         elif self._has_maximized:
             self.RestoreMaximizedPane()
 
-        # reorder for dropping to a new notebook
-        # (caution: this code breaks the reference!)
-        tempPaneInfo = self.CopyTarget(paneInfo)
-        self._panes.remove(paneInfo)
-        self._panes.append(tempPaneInfo)
-
         if ret:
+            # reorder for dropping to a new notebook
+            # (caution: this code breaks the reference!)
+            tempPaneInfo = self.CopyTarget(paneInfo)
+            self._panes.remove(paneInfo)
+            self._panes.append(tempPaneInfo)
+
             self.Update()
 
-        if tempPaneInfo.IsFloating():
-            self.SnapPane(tempPaneInfo, tempPaneInfo.floating_pos, tempPaneInfo.floating_size, False)
+            if tempPaneInfo.IsFloating():
+                self.SnapPane(tempPaneInfo, tempPaneInfo.floating_pos, tempPaneInfo.floating_size, False)
 
         self.HideHint()
         ShowDockingGuides(self._guides, False)

@@ -2756,9 +2756,9 @@ class RectangleShape(Shape):
             dc.SetPen(TransparentPen)
 
             if self._cornerRadius:
-                dc.DrawRoundedRectangle(x1 + self._shadowOffsetX, y1 + self._shadowOffsetY, self._width, self._height, self._cornerRadius)
+                dc.DrawRoundedRectangle(int(x1 + self._shadowOffsetX), int(y1 + self._shadowOffsetY), int(self._width), int(self._height), self._cornerRadius)
             else:
-                dc.DrawRectangle(x1 + self._shadowOffsetX, y1 + self._shadowOffsetY, self._width, self._height)
+                dc.DrawRectangle(int(x1 + self._shadowOffsetX), int(y1 + self._shadowOffsetY), int(self._width), int(self._height))
 
         if self._pen:
             if self._pen.GetWidth() == 0:
@@ -2769,9 +2769,9 @@ class RectangleShape(Shape):
             dc.SetBrush(self._brush)
 
         if self._cornerRadius:
-            dc.DrawRoundedRectangle(int(x1), int(y1), self._width, self._height, self._cornerRadius)
+            dc.DrawRoundedRectangle(int(x1), int(y1), int(self._width), int(self._height), self._cornerRadius)
         else:
-            dc.DrawRectangle(int(x1), int(y1), self._width, self._height)
+            dc.DrawRectangle(int(x1), int(y1), int(self._width), int(self._height))
 
     def GetBoundingBoxMin(self):
         """Get the bounding box minimum."""

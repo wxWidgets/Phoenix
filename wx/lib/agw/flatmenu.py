@@ -5358,10 +5358,8 @@ class FlatMenu(FlatMenuBase):
 
 
     def Destroy(self, *args, **kwargs):
-        try:
-            self.Clear()
-        finally:
-            return super().Destroy(*args, **kwargs)
+        self.Clear()
+        return super().Destroy(*args, **kwargs)
 
 
     def SetMenuBar(self, mb):
