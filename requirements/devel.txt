@@ -2,7 +2,7 @@
 -r install.txt
 appdirs
 setuptools
-sip == 6.8.5
+sip == 6.9.0
 
 wheel
 twine
