@@ -38,6 +38,7 @@ def run():
 
     # These are protected and so they are ignored by default.  Unignore them.
     c.find('CreateBitmap').ignore(False)
+    c.find('CreateBitmapBundle').ignore(False)
     c.find('CreateIconBundle').ignore(False)
 
     # deal with ownership transfers
