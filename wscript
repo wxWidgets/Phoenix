@@ -56,7 +56,7 @@ def options(opt):
                    help='Set to use a MinGW toolchain')
     opt.add_option('--msvc_arch', dest='msvc_arch', default='x86', action='store',
                    help='The architecture to target for MSVC builds. Supported values '
-                   'are: "x86" or "x64"')
+                   'are: "x86", "x64", or "arm64"')
     opt.add_option('--msvc_relwithdebug', dest='msvc_relwithdebug', action='store_true', default=False,
                    help='Turn on debug info for release builds for MSVC builds.')
 

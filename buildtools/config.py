@@ -161,8 +161,9 @@ class Configuration(object):
             # will probably vary...
             self.WXPLAT = '__WXMSW__'
 
-            if os.environ.get('CPU', None) in ['AMD64', 'X64']:
-                self.VCDLL = 'vc%s_x64_dll' % getVisCVersion()
+            if os.environ.get('CPU', None) in ['AMD64', 'X64', 'ARM64']:
+                arch_str = 'arm64' if os.environ['CPU'] == 'ARM64' else 'x64'
+                self.VCDLL = 'vc%s_%s_dll' % (getVisCVersion(), arch_str)
             else:
                 self.VCDLL = 'vc%s_dll' % getVisCVersion()
 
