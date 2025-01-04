@@ -57,7 +57,6 @@ PYVER = '3.9'
 PYSHORTVER = '39'
 PYTHON = None  # it will be set later
 PYTHON_ARCH = 'UNKNOWN'
-PYTHON_MACHINE = None
 MSVC_ARCH = None
 
 # convenience access to the wxPython version digits
@@ -162,7 +161,7 @@ Usage: ./build.py [command(s)] [options]
 def main(args):
     setDevModeOptions(args)
     options, commands = parseArgs(args)
-    setPythonVersion(args)
+    setPythonVersion(options, args)
 
     os.environ['PYTHONPATH'] = os.environ.get('PYTHONPATH', '') + os.pathsep + phoenixDir()
     os.environ['PYTHONUNBUFFERED'] = 'yes'
@@ -220,12 +219,11 @@ def main(args):
 #---------------------------------------------------------------------------
 
 
-def setPythonVersion(args):
+def setPythonVersion(options, args):
     global PYVER
     global PYSHORTVER
     global PYTHON
     global PYTHON_ARCH
-    global PYTHON_MACHINE
     global MSVC_ARCH
 
     havePyVer = False
@@ -310,23 +308,26 @@ def setPythonVersion(args):
         [PYTHON, '-c', 'import platform; print(platform.architecture()[0])'],
         True, False)
     if isWindows:
-        PYTHON_MACHINE = runcmd(
-            [PYTHON, '-c', 'import platform; print(platform.machine())'],
-            True, False)
-        if PYTHON_MACHINE == 'ARM64':
-            MSVC_ARCH = 'arm64'
-        elif PYTHON_ARCH == '64bit':
-            MSVC_ARCH = 'x64'
+        if options.msvc_arch:
+            MSVC_ARCH = options.msvc_arch
         else:
-            MSVC_ARCH = 'x86'
+            machine = runcmd(
+                [PYTHON, '-c', 'import platform; print(platform.machine())'],
+                True, False)
+            if machine == 'ARM64':
+                MSVC_ARCH = 'arm64'
+            elif PYTHON_ARCH == '64bit':
+                MSVC_ARCH = 'x64'
+            else:
+                MSVC_ARCH = 'x86'
 
     msg('Python\'s architecture is %s' % PYTHON_ARCH)
     os.environ['PYTHON'] = PYTHON
 
     if PYTHON_ARCH == '64bit':
         # Make sure this is set in case it wasn't above.
-        if isWindows and PYTHON_MACHINE == 'ARM64':
-            os.environ['CPU'] = 'ARM64'
+        if isWindows:
+            os.environ['CPU'] = MSVC_ARCH.split('_')[-1].upper()
         else:
             os.environ['CPU'] = 'X64'
 
@@ -466,7 +467,8 @@ def makeOptionParser():
         ("regenerate_sysconfig", (False, "Waf uses Python's sysconfig and related tools to configure the build. In some cases that info can be incorrect, so this option regenerates it. Must have write access to Python's lib folder.")),
         ("no_allmo",       (False, "Skip regenerating the wxWidgets message catalogs")),
         ("no_msedge",      (False, "Do not include the MS Edge backend for wx.html2.WebView. (Windows only)")),
-        ("quiet",          (False, "Silence some of the messages from build.py"))
+        ("quiet",          (False, "Silence some of the messages from build.py")),
+        ("msvc_arch",      ("",    "The MSVC architecture to build for")),
         ]
 
     parser = optparse.OptionParser("build options:")
