@@ -113,6 +113,11 @@ jobs:
             architecture: x86
           - os: macos-13
             architecture: x86
+        include:
+          - os: windows-2022
+            architecture: x64
+            python-version: '3.13'
+            msvc_arch: amd64_arm64
 
     env:
       VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
@@ -138,6 +143,9 @@ jobs:
                   short_name=win64
               else
                   short_name=win32
+              fi
+              if [ ${{ matrix.msvc_arch }} != '' ]; then
+                  build_opts="$build_opts --msvc_arch=${{ matrix.msvc_arch }}"
               fi
           fi
           echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
