@@ -117,7 +117,7 @@ jobs:
             architecture: x86
         include:
           - os: windows-2022
-            architecture: arm64
+            architecture: x64
             python-version: '3.13'
             msvc_arch: amd64_arm64
 
@@ -147,7 +147,7 @@ jobs:
                   short_name=win32
               fi
               if [ ${{ matrix.msvc_arch }} != '' ]; then
-                  build_opts="$build_opts --msvc_arch=${{ matrix.msvc_arch }}"
+                  build_opts="$build_opts --msvc_arch=${{ matrix.msvc_arch }} --python='C:\BlahPython\pythonarm64.3.13.0\tools\python.exe'"
               fi
           fi
           echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
@@ -176,6 +176,12 @@ jobs:
           python-version: '${{ matrix.python-version }}'
           architecture: '${{ matrix.architecture }}'
           cache: 'pip'
+
+      - name: Install ARM64 Python
+        if: ${{ matrix.msvc_arch }}
+        run: |
+          nuget install pythonarm64 -Version ${{ matrix.python-version }} -OutputDirectory 'C:\BlahPython'
+          dir 'C:\BlahPython'
 
       - name: Install Python dependencies
         run: |
