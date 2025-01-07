@@ -434,6 +434,7 @@ def fixSizerClass(klass):
     removeVirtuals(klass)
     klass.find('CalcMin').isVirtual = True
     klass.find('RepositionChildren').isVirtual = True
+    klass.find('InformFirstDirection').isVirtual = True
 
     # in the wxSizer class it is pure-virtual
     if klass.name == 'wxSizer':
