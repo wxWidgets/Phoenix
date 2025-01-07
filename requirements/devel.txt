@@ -28,3 +28,4 @@ markupsafe==1.1.1
 doc2dash==2.3.0
 beautifulsoup4
 attrdict3 ; sys_platform == 'win32'
+typing-extensions; python_version < '3.10'

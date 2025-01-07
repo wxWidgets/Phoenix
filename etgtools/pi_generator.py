@@ -22,6 +22,7 @@ want to add some type info to that version of the file eventually...
 """
 
 import sys, os, re
+from typing import Union
 import etgtools.extractors as extractors
 import etgtools.generators as generators
 from etgtools.generators import nci, Utf8EncodingStream, textfile_open
@@ -77,6 +78,19 @@ header_pyi = """\
 
 """
 
+typing_imports = """\
+from __future__ import annotations
+from enum import IntEnum, IntFlag, auto
+from typing import (Any, overload, TypeAlias, Generic,
+    Union, Optional, List, Tuple, Callable
+)
+try:
+    from typing import ParamSpec
+except ImportError:
+    from typing_extensions import ParamSpec
+
+"""
+
 #---------------------------------------------------------------------------
 
 def piIgnored(obj):
@@ -112,18 +126,21 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
         if not SKIP_PI_FILE:
             _checkAndWriteHeader(destFile_pi, header_pi, module.docstring)
+            self.writeSection(destFile_pi, 'typing-imports', typing_imports, at_end=False)
             self.writeSection(destFile_pi, module.name, stream.getvalue())
 
         if not SKIP_PYI_FILE:
             _checkAndWriteHeader(destFile_pyi, header_pyi, module.docstring)
+            self.writeSection(destFile_pyi, 'typing-imports', typing_imports, at_end=False)
             self.writeSection(destFile_pyi, module.name, stream.getvalue())
 
 
-    def writeSection(self, destFile, sectionName, sectionText):
+    def writeSection(self, destFile, sectionName, sectionText, at_end = True):
         """
         Read all the lines from destFile, remove those currently between
         begin/end markers for sectionName (if any), and write the lines back
         to the file with the new text in sectionText.
+        `at_end` determines where in the file the section is added when missing
         """
         sectionBeginLine = -1
         sectionEndLine = -1
@@ -139,10 +156,23 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
                 sectionEndLine = idx
 
         if sectionBeginLine == -1:
-            # not there already, add to the end
-            lines.append(sectionBeginMarker + '\n')
-            lines.append(sectionText)
-            lines.append(sectionEndMarker + '\n')
+            if at_end:
+                # not there already, add to the end
+                lines.append(sectionBeginMarker + '\n')
+                lines.append(sectionText)
+                lines.append(sectionEndMarker + '\n')
+            else:
+                # not there already, add to the beginning
+                # Skip the header
+                idx = 0
+                for idx, line in enumerate(lines):
+                    if not line.startswith('#'):
+                        break
+                lines[idx+1:idx+1] = [
+                    sectionBeginMarker + '\n',
+                    sectionText,
+                    sectionEndMarker + '\n',
+                ]
         else:
             # replace the existing lines
             lines[sectionBeginLine+1:sectionEndLine] = [sectionText]
@@ -202,11 +232,42 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         assert isinstance(enum, extractors.EnumDef)
         if enum.ignored or piIgnored(enum):
             return
+        # These enum classes aren't actually accessible from the real wx
+        # module, o we need to prepend _. But we want to make a type alias to
+        # the non-prefixed name, so method signatures can reference it without
+        # any special code, and also allow bare ints as inputs.
+        if '@' in enum.name or not enum.name:
+            # Anonymous enum
+            enum_name = f"_enum_{enum.name.replace('@', '').strip()}"
+            alias = ''
+        else:
+            alias = self.fixWxPrefix(enum.name)
+            enum_name = f'_{alias}'
+        if 'Flags' in enum_name:
+            enum_type = 'IntFlag'
+        else:
+            enum_type = 'IntEnum'
+        # Create the enum definition
+        stream.write(f'\n{indent}class {enum_name}({enum_type}):\n')
         for v in enum.items:
             if v.ignored or piIgnored(v):
                 continue
             name = v.pyName or v.name
-            stream.write('%s%s = 0\n' % (indent, name))
+            stream.write(f'{indent}    {name} = auto()\n')
+        # Create the alias if needed
+        if alias:
+            stream.write(f'{indent}{alias}: TypeAlias = Union[{enum_name}, int]\n')
+        # And bring the enum members into global scope.  We can't use
+        # enum.global_enum for this because:
+        #  1. It's only available on Python 3.11+
+        #  2. FixWxPrefix wouldn't be able to pick up the names, since it's
+        #     detecting based on AST parsing, not runtime changes (which
+        #     enum.global_enum performs).
+        for v in enum.items:
+            if v.ignored or piIgnored(v):
+                continue
+            name = v.pyName or v.name
+            stream.write(f'{indent}{name} = {enum_name}.{name}\n')
 
     #-----------------------------------------------------------------------
     def generateGlobalVar(self, globalVar, stream):
@@ -214,22 +275,16 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if globalVar.ignored or piIgnored(globalVar):
             return
         name = globalVar.pyName or globalVar.name
+        valTyp = 'Any'
         if guessTypeInt(globalVar):
-            valTyp = '0'
+            valTyp = 'int'
         elif guessTypeFloat(globalVar):
-            valTyp = '0.0'
+            valTyp = 'float'
         elif guessTypeStr(globalVar):
-            valTyp = '""'
-        else:
-            valTyp = globalVar.type
-            valTyp = valTyp.replace('const ', '')
-            valTyp = valTyp.replace('*', '')
-            valTyp = valTyp.replace('&', '')
-            valTyp = valTyp.replace(' ', '')
-            valTyp = self.fixWxPrefix(valTyp)
-            valTyp += '()'
-
-        stream.write('%s = %s\n' % (name, valTyp))
+            valTyp = 'str'
+        elif globalVar.type:
+            valTyp = self.cleanType(globalVar.type) or valTyp
+        stream.write(f'{name}: {valTyp}\n')
 
     #-----------------------------------------------------------------------
     def generateDefine(self, define, stream):
@@ -237,10 +292,11 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if define.ignored or piIgnored(define):
             return
         # we're assuming that all #defines that are not ignored are integer or string values
+        name = define.pyName or define.name
         if '"' in define.value:
-            stream.write('%s = ""\n' % (define.pyName or define.name))
+            stream.write(f'{name}: str\n')
         else:
-            stream.write('%s = 0\n' % (define.pyName or define.name))
+            stream.write(f'{name}: int\n')
 
     #-----------------------------------------------------------------------
     def generateTypedef(self, typedef, stream, indent=''):
@@ -322,7 +378,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if pc.bases:
             stream.write('(%s):\n' % ', '.join(pc.bases))
         else:
-            stream.write('(object):\n')
+            stream.write(':\n')
         indent2 = indent + ' '*4
         if pc.briefDoc:
             stream.write('%s"""\n' % indent2)
@@ -344,29 +400,32 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
 
     #-----------------------------------------------------------------------
-    def generateFunction(self, function, stream):
+    def generateFunction(self, function, stream, is_overload=False):
         assert isinstance(function, extractors.FunctionDef)
         if not function.pyName:
             return
+        if not is_overload and function.hasOverloads():
+            for f in function.overloads:
+                self.generateFunction(f, stream, True)
+            stream.write('\n@overload')
+        elif is_overload:
+            stream.write('\n@overload')
         stream.write('\ndef %s' % function.pyName)
-        if function.hasOverloads():
-            stream.write('(*args, **kw)')
-        else:
-            argsString = function.pyArgsString
-            if not argsString:
-                argsString = '()'
-            if '->' in argsString:
-                pos = argsString.find(')')
-                argsString = argsString[:pos+1]
-            if '(' != argsString[0]:
-                pos = argsString.find('(')
-                argsString = argsString[pos:]
-            argsString = argsString.replace('::', '.')
-            stream.write(argsString)
+        argsString = function.pyArgsString
+        if not argsString:
+            argsString = '()'
+        if '(' != argsString[0]:
+            pos = argsString.find('(')
+            argsString = argsString[pos:]
+        argsString = argsString.replace('::', '.')
+        stream.write(argsString)
         stream.write(':\n')
-        stream.write('    """\n')
-        stream.write(nci(function.pyDocstring, 4))
-        stream.write('    """\n')
+        if is_overload:
+            stream.write('    ...\n')
+        else:
+            stream.write('    """\n')
+            stream.write(nci(function.pyDocstring, 4))
+            stream.write('    """\n')
 
 
     def generateParameters(self, parameters, stream, indent):
@@ -413,8 +472,6 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             bases = [self.fixWxPrefix(b, True) for b in bases]
             stream.write(', '.join(bases))
             stream.write(')')
-        else:
-            stream.write('(object)')
         stream.write(':\n')
         indent2 = indent + ' '*4
 
@@ -479,24 +536,35 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         assert isinstance(memberVar, extractors.MemberVarDef)
         if memberVar.ignored or piIgnored(memberVar):
             return
-        stream.write('%s%s = property(None, None)\n' % (indent, memberVar.name))
+        member_type = memberVar.type
+        if member_type:
+            member_type = self.cleanType(member_type)
+        if not member_type: # Unknown type for the member variable
+            member_type = 'Any'
+        stream.write(f'{indent}{memberVar.name}: {member_type}\n')
 
 
     def generateProperty(self, prop, stream, indent):
         assert isinstance(prop, extractors.PropertyDef)
-        if prop.ignored or piIgnored(prop):
-            return
-        stream.write('%s%s = property(None, None)\n' % (indent, prop.name))
+        self._generateProperty(prop, stream, indent)
 
 
     def generatePyProperty(self, prop, stream, indent):
         assert isinstance(prop, extractors.PyPropertyDef)
+        self._generateProperty(prop, stream, indent)
+
+    def _generateProperty(self, prop: Union[extractors.PyPropertyDef, extractors.PropertyDef], stream, indent: str):
         if prop.ignored or piIgnored(prop):
             return
-        stream.write('%s%s = property(None, None)\n' % (indent, prop.name))
+        if prop.setter and prop.getter:
+            stream.write(f'{indent}{prop.name} = property({prop.getter}, {prop.setter})\n')
+        elif prop.getter:
+            stream.write(f'{indent}{prop.name} = property({prop.getter})\n')
+        elif prop.setter:
+            stream.write(f'{indent}{prop.name} = property(fset={prop.setter})\n') 
 
 
-    def generateMethod(self, method, stream, indent, name=None, docstring=None):
+    def generateMethod(self, method, stream, indent, name=None, docstring=None, is_overload=False):
         assert isinstance(method, extractors.MethodDef)
         for m in method.all():  # use the first not ignored if there are overloads
             if not m.ignored or piIgnored(m):
@@ -512,44 +580,44 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             name = magicMethods[name]
 
         # write the method declaration
+        if not is_overload and method.hasOverloads():
+            for m in method.overloads:
+                self.generateMethod(m, stream, indent, name, None, True)
+            stream.write(f'\n{indent}@overload')
+        elif is_overload:
+            stream.write(f'\n{indent}@overload')
         if method.isStatic:
             stream.write('\n%s@staticmethod' % indent)
         stream.write('\n%sdef %s' % (indent, name))
-        if method.hasOverloads():
-            if not method.isStatic:
-                stream.write('(self, *args, **kw)')
+        argsString = method.pyArgsString
+        if not argsString:
+            argsString = '()'
+        if '(' != argsString[0]:
+            pos = argsString.find('(')
+            argsString = argsString[pos:]
+        if not method.isStatic:
+            if argsString == '()':
+                argsString = '(self)'
             else:
-                stream.write('(*args, **kw)')
-        else:
-            argsString = method.pyArgsString
-            if not argsString:
-                argsString = '()'
-            if '->' in argsString:
-                pos = argsString.find(') ->')
-                argsString = argsString[:pos+1]
-            if '(' != argsString[0]:
-                pos = argsString.find('(')
-                argsString = argsString[pos:]
-            if not method.isStatic:
-                if argsString == '()':
-                    argsString = '(self)'
-                else:
-                    argsString = '(self, ' + argsString[1:]
-            argsString = argsString.replace('::', '.')
-            stream.write(argsString)
+                argsString = '(self, ' + argsString[1:]
+        argsString = argsString.replace('::', '.')
+        stream.write(argsString)
         stream.write(':\n')
         indent2 = indent + ' '*4
 
         # docstring
-        if not docstring:
-            if hasattr(method, 'pyDocstring'):
-                docstring = method.pyDocstring
-            else:
-                docstring = ""
-        stream.write('%s"""\n' % indent2)
-        if docstring.strip():
-            stream.write(nci(docstring, len(indent2)))
-        stream.write('%s"""\n' % indent2)
+        if is_overload:
+            stream.write(f'{indent2}...\n')
+        else:
+            if not docstring:
+                if hasattr(method, 'pyDocstring'):
+                    docstring = method.pyDocstring
+                else:
+                    docstring = ""
+            stream.write('%s"""\n' % indent2)
+            if docstring.strip():
+                stream.write(nci(docstring, len(indent2)))
+            stream.write('%s"""\n' % indent2)
 
 
 
