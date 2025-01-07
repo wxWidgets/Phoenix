@@ -104,8 +104,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-22.04, windows-2022, macos-13 ]
-        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13' ]
+        #os: [ ubuntu-22.04, windows-2022, macos-13 ]
+        #python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13' ]
+        os: [ windows-2022 ]
+        python-version: [ '3.13' ]
         architecture: [ 'x86', 'x64' ]
         # Exclude x86 configs on non-Windows OSs
         exclude:
@@ -113,6 +115,11 @@ jobs:
             architecture: x86
           - os: macos-13
             architecture: x86
+        include:
+          - os: windows-2022
+            architecture: x64
+            python-version: '3.13'
+            msvc_arch: amd64_arm64
 
     env:
       VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
@@ -139,6 +146,9 @@ jobs:
               else
                   short_name=win32
               fi
+              if [ ${{ matrix.msvc_arch }} != '' ]; then
+                  build_opts="$build_opts --msvc_arch=${{ matrix.msvc_arch }} --python='C:\BlahPython\pythonarm64.3.13.0\tools\python.exe'"
+              fi
           fi
           echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
           echo "canonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
@@ -155,12 +165,23 @@ jobs:
           name: wxPython-source
           path: dist
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          detached: true
+
       - name: Set up Python ${{ matrix.python-version }}-${{ matrix.architecture }}
         uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           architecture: '${{ matrix.architecture }}'
           cache: 'pip'
+
+      - name: Install ARM64 Python
+        if: ${{ matrix.msvc_arch }}
+        run: |
+          nuget install pythonarm64 -Version ${{ matrix.python-version }} -OutputDirectory 'C:\BlahPython'
+          dir 'C:\BlahPython'
 
       - name: Install Python dependencies
         run: |
@@ -191,7 +212,7 @@ jobs:
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: '${{ matrix.architecture }}'
+          arch: '${{ matrix.msvc_arch || matrix.architecture }}'
 
       - name: Build the wxPython wheel
         env:
