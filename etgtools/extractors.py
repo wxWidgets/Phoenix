@@ -538,7 +538,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                         default = '|'.join([self.cleanName(x, True) for x in default.split('|')])
                         s = f'{s}={default}'
                     elif param_type:
-                        s = f'{s} : {param_type}'
+                        s = f'{s}: {param_type}'
                     params.append(s)
 
         self.pyArgsString = f"({', '.join(params)})"

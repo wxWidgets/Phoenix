@@ -622,7 +622,9 @@ class ParameterList(Node):
         theargs = []
 
         for arg in arguments:
-
+            arg = arg.split(':')[0].strip() # Remove the typehint
+            if arg in ('_from', '_def', '_is'): # Reserved Python keywords we've had to rename
+                arg = arg[1:]
             myarg = arg.split('=')[0].strip()
             if myarg:
                 theargs.append(myarg)
