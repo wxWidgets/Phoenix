@@ -717,6 +717,15 @@ class ClassDef(BaseDef):
         if element is not None:
             self.extract(element)
 
+    def is_top_level(self) -> bool:
+        """Check if this class is a subclass of wx.TopLevelWindow"""
+        if not self.nodeBases:
+            return False
+        all_classes, specials = self.nodeBases
+        if 'wxTopLevelWindow' in specials:
+            return True
+        return 'wxTopLevelWindow' in all_classes
+
 
     def renameClass(self, newName):
         self.pyName = newName

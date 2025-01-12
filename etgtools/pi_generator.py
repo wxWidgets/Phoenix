@@ -517,7 +517,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             if item.isCtor:
                 item.klass = klass
                 self.generateMethod(item, stream, indent2,
-                                    name='__init__', docstring=klass.pyDocstring)
+                                    name='__init__', docstring=klass.pyDocstring,
+                                    is_top_level_init=klass.is_top_level())
 
         for item in public:
             item.klass = klass
@@ -564,7 +565,18 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             stream.write(f'{indent}{prop.name} = property(fset={prop.setter})\n') 
 
 
-    def generateMethod(self, method, stream, indent, name=None, docstring=None, is_overload=False):
+    def generateMethod(self, method, stream, indent, name=None, docstring=None, is_overload=False, is_top_level_init=False):
+        """Write the python declaration for a method (type-stub or otherwise):
+        method: MethodDef holding information about the method
+        stream: output stream to write to
+        indent: indentation level to use when writing
+        name: name of the method, if wanting to override what is identified in `method`
+        docstring: docstring to use, if wanting to override what is in method.pyDocString
+        is_overload: If this declaration should be marked with `@typing.overload`
+        is_top_level_init: If this class is a subclass of wx.TopLevelWindow and is an __init__ method, to apply the
+            transformation `parent: <WindowType>` -> `parent: Optional[<WindowType>]`, because TopLevelWindow
+            allows for a `None` parent.
+        """
         assert isinstance(method, extractors.MethodDef)
         for m in method.all():  # use the first not ignored if there are overloads
             if not m.ignored or piIgnored(m):
@@ -582,7 +594,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         # write the method declaration
         if not is_overload and method.hasOverloads():
             for m in method.overloads:
-                self.generateMethod(m, stream, indent, name, None, True)
+                self.generateMethod(m, stream, indent, name, None, True, is_top_level_init)
             stream.write(f'\n{indent}@overload')
         elif is_overload:
             stream.write(f'\n{indent}@overload')
@@ -601,6 +613,15 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             else:
                 argsString = '(self, ' + argsString[1:]
         argsString = argsString.replace('::', '.')
+        if is_top_level_init:
+            # For classes derived from TopLevelWindow, the parent argument is allowed
+            # to be None. If the argsString isn't already marked this way due to
+            # having `=None` in it, add the Optional[type] typehint to it.
+            argsString = re.sub(
+                r'([,(]\s*)parent\s*:\s*((?!Optional\[)(\w[\w\d_\.]*))\s*([,)=])',
+                r'\g<1>parent: Optional[\g<3>]\g<4>',
+                argsString,
+            )
         stream.write(argsString)
         stream.write(':\n')
         indent2 = indent + ' '*4
