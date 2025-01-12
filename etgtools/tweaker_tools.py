@@ -155,7 +155,8 @@ class FixWxPrefix(object):
 
         Finally, the 'wx.' prefix is added if needed.
         """
-        for txt in ['const', '*', '&', ' ']:
+        name = re.sub(r'(const(?![\w\d]))', '', name) # remove 'const', but not 'const'raints
+        for txt in ['*', '&', ' ']:
             name = name.replace(txt, '')
         name = name.replace('::', '.')
         if not is_expression:
@@ -166,7 +167,7 @@ class FixWxPrefix(object):
         if fix_wx:
             return self.fixWxPrefix(name, True)
         else:
-            return removeWxPrefix(name)
+            return name
 
     def cleanType(self, type_name: str) -> str:
         """Process a C++ type name for use as a type annotation in Python code.

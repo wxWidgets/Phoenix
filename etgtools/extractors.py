@@ -533,10 +533,14 @@ class FunctionDef(BaseDef, FixWxPrefix):
                         default = '|'.join([self.cleanName(x, True) for x in default.split('|')])
                         s = f'{s}={default}'
                     elif param_type:
-                        s = f'{s} : {param_type}'
+                        s = f'{s}: {param_type}'
                     params.append(s)
 
         self.pyArgsString = f"({', '.join(params)})"
+        # __bool__ and __nonzero__ need to be defined as returning int for SIP, but for Python
+        # __bool__ is required to return a bool:
+        if (self.name or self.pyName) in ('__bool__', '__nonzero__'):
+            returns = ['bool']
         if not returns:
             self.pyArgsString = f'{self.pyArgsString} -> None'
         elif len(returns) == 1:
@@ -707,6 +711,15 @@ class ClassDef(BaseDef):
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
+
+    def is_top_level(self) -> bool:
+        """Check if this class is a subclass of wx.TopLevelWindow"""
+        if not self.nodeBases:
+            return False
+        all_classes, specials = self.nodeBases
+        if 'wxTopLevelWindow' in specials:
+            return True
+        return 'wxTopLevelWindow' in all_classes
 
 
     def renameClass(self, newName):
