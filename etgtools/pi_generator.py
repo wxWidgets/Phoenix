@@ -22,7 +22,7 @@ want to add some type info to that version of the file eventually...
 """
 
 import sys, os, re
-from typing import Union
+from typing import Optional, Union
 import etgtools.extractors as extractors
 import etgtools.generators as generators
 from etgtools.generators import nci, Utf8EncodingStream, textfile_open
@@ -390,7 +390,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         # these are the only kinds of items allowed to be items in a PyClass
         dispatch = {
             extractors.PyFunctionDef    : self.generatePyFunction,
-            extractors.PyPropertyDef    : self.generatePyProperty,
+            extractors.PyPropertyDef    : lambda a,b,c: self.generatePyProperty(pc, a, b, c),
             extractors.PyCodeDef        : self.generatePyCode,
             extractors.PyClassDef       : self.generatePyClass,
         }
@@ -500,8 +500,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         dispatch = {
             extractors.MemberVarDef     : self.generateMemberVar,
             extractors.TypedefDef       : lambda a,b,c: None,
-            extractors.PropertyDef      : self.generateProperty,
-            extractors.PyPropertyDef    : self.generatePyProperty,
+            extractors.PropertyDef      : lambda a,b,c: self.generateProperty(klass, a, b, c),
+            extractors.PyPropertyDef    : lambda a,b,c: self.generatePyProperty(klass, a, b, c),
             extractors.MethodDef        : self.generateMethod,
             extractors.EnumDef          : self.generateEnum,
             extractors.CppMethodDef     : self.generateCppMethod,
@@ -535,6 +535,15 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         stream.write('%s# end of class %s\n\n' % (indent, klassName))
 
 
+    def find_method(self, klass: extractors.ClassDef, method_name: str) -> Optional[extractors.MethodDef]:
+        methods = (i for i in klass if isinstance(i, extractors.MethodDef) and not i.isCtor and not i.isDtor)
+        for method in methods:
+            name = method.name or method.pyName
+            if name == method_name:
+                return method
+        return None
+
+
     def generateMemberVar(self, memberVar, stream, indent):
         assert isinstance(memberVar, extractors.MemberVarDef)
         if memberVar.ignored or piIgnored(memberVar):
@@ -547,23 +556,50 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         stream.write(f'{indent}{memberVar.name}: {member_type}\n')
 
 
-    def generateProperty(self, prop, stream, indent):
+    def generateProperty(self, klass, prop, stream, indent):
         assert isinstance(prop, extractors.PropertyDef)
-        self._generateProperty(prop, stream, indent)
+        self._generateProperty(klass, prop, stream, indent)
 
 
-    def generatePyProperty(self, prop, stream, indent):
+    def generatePyProperty(self, klass, prop, stream, indent):
         assert isinstance(prop, extractors.PyPropertyDef)
-        self._generateProperty(prop, stream, indent)
+        self._generateProperty(klass, prop, stream, indent)
 
-    def _generateProperty(self, prop: Union[extractors.PyPropertyDef, extractors.PropertyDef], stream, indent: str):
+    def _generateProperty(self, klass: extractors.ClassDef, prop: Union[extractors.PyPropertyDef, extractors.PropertyDef], stream, indent: str):
         if prop.ignored or piIgnored(prop):
             return
+        value_type = ''
+        if prop.getter:
+            getter = self.find_method(klass, prop.getter)
+            if getter and '->' in getter.pyArgsString:
+                value_type = getter.pyArgsString.split('->')[1].strip()
+        if prop.setter:
+            setter = self.find_method(klass, prop.setter)
+            if setter:
+                args = setter.pyArgsString.split('->')[0]
+                args = args.strip().strip('()')
+                args = args.split(',')
+                if args:
+                    value_arg = args[0]
+                    if ':' in value_arg:
+                        value_type = value_arg.split(':')[1].strip()
+                        value_type = value_type.split('=')[0]
         if prop.setter and prop.getter:
-            stream.write(f'{indent}{prop.name} = property({prop.getter}, {prop.setter})\n')
+            if value_type:
+                stream.write(f'{indent}@property\n')
+                stream.write(f'{indent}def {prop.name}(self) -> {value_type}: ...\n')
+                stream.write(f'{indent}@{prop.name}.setter\n')
+                stream.write(f'{indent}def {prop.name}(self, value: {value_type}, /) -> None: ...\n')
+            else:
+                stream.write(f'{indent}{prop.name} = property({prop.getter}, {prop.setter})\n')
         elif prop.getter:
-            stream.write(f'{indent}{prop.name} = property({prop.getter})\n')
+            if value_type:
+                stream.write(f'{indent}@property\n')
+                stream.write(f'{indent}def {prop.name}(self) -> {value_type}: ...\n')
+            else:
+                stream.write(f'{indent}{prop.name} = property({prop.getter})\n')
         elif prop.setter:
+            # Can't use the decorator syntax in this situation
             stream.write(f'{indent}{prop.name} = property(fset={prop.setter})\n') 
 
 
