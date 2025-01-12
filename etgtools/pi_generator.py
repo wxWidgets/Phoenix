@@ -295,6 +295,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         name = define.pyName or define.name
         if '"' in define.value:
             stream.write(f'{name}: str\n')
+        elif define.value in ('true', 'false'):
+            stream.write(f'{name}: bool\n')
         else:
             stream.write(f'{name}: int\n')
 
