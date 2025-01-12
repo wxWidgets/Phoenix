@@ -322,7 +322,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             t = typedef.type.replace('>', '')
             t = t.replace(' ', '')
             bases = t.split('<')
-            bases = [self.fixWxPrefix(b, True) for b in bases]
+            bases = (self.fixWxPrefix(b, True) for b in bases)
+            bases = [b.replace('*', '') for b in bases] # fix for RichTextLine*
             name = self.fixWxPrefix(typedef.name)
 
         # Now write the Python equivalent class for the typedef
