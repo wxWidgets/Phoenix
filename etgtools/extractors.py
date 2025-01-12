@@ -542,6 +542,10 @@ class FunctionDef(BaseDef, FixWxPrefix):
                     params.append(s)
 
         self.pyArgsString = f"({', '.join(params)})"
+        # __bool__ and __nonzero__ need to be defined as returning int for SIP, but for Python
+        # __bool__ is required to return a bool:
+        if (self.name or self.pyName) in ('__bool__', '__nonzero__'):
+            returns = ['bool']
         if not returns:
             self.pyArgsString = f'{self.pyArgsString} -> None'
         elif len(returns) == 1:
