@@ -162,7 +162,7 @@ class FixWxPrefix(object):
         if fix_wx:
             return self.fixWxPrefix(name, True)
         else:
-            return removeWxPrefix(name)
+            return name
 
     def cleanType(self, type_name: str) -> str:
         """Process a C++ type name for use as a type annotation in Python code.
