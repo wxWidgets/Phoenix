@@ -19,9 +19,9 @@ from typing import Optional
 import xml.etree.ElementTree as et
 import copy
 
-from .tweaker_tools import FixWxPrefix, MethodType, magicMethods, \
+from .tweaker_tools import AutoConversionInfo, FixWxPrefix, MethodType, magicMethods, \
                            guessTypeInt, guessTypeFloat, guessTypeStr, \
-                           textfile_open, Signature
+                           textfile_open, Signature, removeWxPrefix
 from sphinxtools.utilities import findDescendants
 
 if sys.version_info >= (3, 11):
@@ -506,7 +506,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                 # now grab just the last word, it should be the variable name
                 # The rest will be the type information
                 arg_type, arg = arg.rsplit(None, 1)
-                arg, arg_type = self.parseNameAndType(arg, arg_type)
+                arg, arg_type = self.parseNameAndType(arg, arg_type, True)
                 params.append(P(arg, arg_type, default))
                 if default == 'None':
                     params[-1].make_optional()
@@ -517,7 +517,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                     continue
                 if param.arraySize:
                     continue
-                s, param_type = self.parseNameAndType(param.pyName or param.name, param.type)
+                s, param_type = self.parseNameAndType(param.pyName or param.name, param.type, not param.out)
                 if param.out:
                     if param_type:
                         returns.append(param_type)
@@ -696,7 +696,7 @@ class ClassDef(BaseDef):
         self.headerCode = []
         self.cppCode = []
         self.convertToPyObject = None
-        self.convertFromPyObject = None
+        self._convertFromPyObject = None
         self.allowNone = False      # Allow the convertFrom code to handle None too.
         self.instanceCode = None    # Code to be used to create new instances of this class
         self.innerclasses = []
@@ -715,6 +715,18 @@ class ClassDef(BaseDef):
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
+
+    @property
+    def convertFromPyObject(self) -> Optional[str]:
+        return self._convertFromPyObject
+    
+    @convertFromPyObject.setter
+    def convertFromPyObject(self, value: AutoConversionInfo) -> None:
+        self._convertFromPyObject = value.code
+        name = self.name or self.pyName
+        name = removeWxPrefix(name)
+        print('Registering:', name, value.convertables)
+        FixWxPrefix.register_autoconversion(name, value.convertables)
 
     def is_top_level(self) -> bool:
         """Check if this class is a subclass of wx.TopLevelWindow"""

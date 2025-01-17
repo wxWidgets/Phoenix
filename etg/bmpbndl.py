@@ -10,6 +10,7 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools import MethodDef
+import etgtools.tweaker_tools
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -43,7 +44,9 @@ def run():
 
     # Allow on-the-fly creation of a wx.BitmapBundle from a wx.Bitmap, wx.Icon
     # or a wx.Image
-    c.convertFromPyObject = """\
+    c.convertFromPyObject = etgtools.tweaker_tools.AutoConversionInfo(
+        ('wx.Bitmap', 'wx.Icon', ),
+        """\
         // Check for type compatibility
         if (!sipIsErr) {
             if (sipCanConvertToType(sipPy, sipType_wxBitmap, SIP_NO_CONVERTORS))
@@ -86,7 +89,7 @@ def run():
         *sipCppPtr = reinterpret_cast<wxBitmapBundle*>(
             sipConvertToType(sipPy, sipType_wxBitmapBundle, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
         return 0; // not a new instance
-        """
+        """)
 
 
     c = module.find('wxBitmapBundleImpl')

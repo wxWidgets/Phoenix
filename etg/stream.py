@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+import etgtools.tweaker_tools
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -76,7 +77,9 @@ def run():
     c.includeCppCode('src/stream_input.cpp')
 
     # Use that class for the convert code
-    c.convertFromPyObject = """\
+    c.convertFromPyObject = etgtools.tweaker_tools.AutoConversionInfo(
+        (), # TODO: Track down what python types actually can be wrapped
+        """\
         // is it just a typecheck?
         if (!sipIsErr) {
             if (wxPyInputStream::Check(sipPy))
@@ -86,7 +89,7 @@ def run():
         // otherwise do the conversion
         *sipCppPtr = new wxPyInputStream(sipPy);
         return 0; //sipGetState(sipTransferObj);
-        """
+        """)
 
     # Add Python file-like methods so a wx.InputStream can be used as if it
     # was any other Python file object.
@@ -236,7 +239,9 @@ def run():
     c.includeCppCode('src/stream_output.cpp')
 
     # Use that class for the convert code
-    c.convertFromPyObject = """\
+    c.convertFromPyObject = etgtools.tweaker_tools.AutoConversionInfo(
+        (), # TODO: Track down what python types can actually be converted
+        """\
         // is it just a typecheck?
         if (!sipIsErr) {
             if (wxPyOutputStream::Check(sipPy))
@@ -246,7 +251,7 @@ def run():
         // otherwise do the conversion
         *sipCppPtr = new wxPyOutputStream(sipPy);
         return sipGetState(sipTransferObj);
-        """
+        """)
 
 
     # Add Python file-like methods so a wx.OutputStream can be used as if it

@@ -168,7 +168,7 @@ class Signature:
             parameters = self._parameters.values()
         stringizer = str if typed else type(self).Parameter.untyped
         return_type = f' -> {self.return_type}' if self.return_type else ''
-        return f'({', '.join(map(stringizer, parameters))}){return_type}'
+        return f"({', '.join(map(stringizer, parameters))}){return_type}"
     
     def signature(self, typed: bool = True) -> str:
         """Get the full signature for the function/method, including method and
@@ -254,6 +254,11 @@ class FixWxPrefix(object):
     """
 
     _coreTopLevelNames = None
+    _auto_conversions: dict[str, tuple[str, ...]] = {}
+
+    @classmethod
+    def register_autoconversion(cls, class_name: str, convertables: tuple[str, ...]) -> None:
+        cls._auto_conversions[class_name] = convertables
 
     def fixWxPrefix(self, name, checkIsCore=False):
         # By default remove the wx prefix like normal
@@ -295,7 +300,9 @@ class FixWxPrefix(object):
                 names.append(item.name)
             elif isinstance(item, ast.AnnAssign):
                 if isinstance(item.target, ast.Name):
-                    names.append(item.target.id)
+                    # Exclude typing TypeAlias's from detection
+                    if not (item.annotation == 'TypeAlias' and item.target.id.startswith('_')):
+                        names.append(item.target.id)
 
         names = list()
         filename = 'wx/core.pyi'
@@ -336,7 +343,7 @@ class FixWxPrefix(object):
         else:
             return name
 
-    def cleanType(self, type_name: str) -> str:
+    def cleanType(self, type_name: str, is_input: bool = False) -> str:
         """Process a C++ type name for use as a type annotation in Python code.
         Handles translation of common C++ types to Python types, as well as a
         few specific wx types to Python types.
@@ -389,9 +396,13 @@ class FixWxPrefix(object):
                 return f'List[{type_name}]'
             else:
                 return 'list'
+        allowed_types = self._auto_conversions.get(type_name, ())
+        if allowed_types and is_input:
+            allowed_types = (type_name, *(self.cleanType(t) for t in allowed_types))
+            type_name = f"Union[{', '.join(allowed_types)}]"
         return type_map.get(type_name, type_name)
     
-    def parseNameAndType(self, name_string: str, type_string: Optional[str]) -> Tuple[str, Optional[str]]:
+    def parseNameAndType(self, name_string: str, type_string: Optional[str], is_input: bool = False) -> Tuple[str, Optional[str]]:
         """Given an identifier name and an optional type annotation, process
         these per cleanName and cleanType. Further performs transforms on the
         identifier name that may be required due to the type annotation.
@@ -400,7 +411,7 @@ class FixWxPrefix(object):
         """
         name_string = self.cleanName(name_string, fix_wx=False)
         if type_string:
-            type_string = self.cleanType(type_string)
+            type_string = self.cleanType(type_string, is_input)
             if type_string == '...':
                 name_string = '*args'
                 type_string = None
@@ -1029,7 +1040,9 @@ def addGetIMMethodTemplate(module, klass, fields):
 
 def convertTwoIntegersTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
-    return """\
+    return AutoConversionInfo(
+        ('_TwoInts', ),
+        """\
    // is it just a typecheck?
    if (!sipIsErr) {{
        // is it already an instance of {CLASS}?
@@ -1057,12 +1070,14 @@ def convertTwoIntegersTemplate(CLASS):
     Py_DECREF(o1);
     Py_DECREF(o2);
     return SIP_TEMPORARY;
-    """.format(**locals())
+    """.format(**locals()))
 
 
 def convertFourIntegersTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
-    return """\
+    return AutoConversionInfo(
+        ('_FourInts', ),
+        """\
     // is it just a typecheck?
     if (!sipIsErr) {{
         // is it already an instance of {CLASS}?
@@ -1094,13 +1109,15 @@ def convertFourIntegersTemplate(CLASS):
     Py_DECREF(o3);
     Py_DECREF(o4);
     return SIP_TEMPORARY;
-    """.format(**locals())
+    """.format(**locals()))
 
 
 
 def convertTwoDoublesTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
-    return """\
+    return AutoConversionInfo(
+        ('_TwoFloats', ),
+        """\
     // is it just a typecheck?
     if (!sipIsErr) {{
         // is it already an instance of {CLASS}?
@@ -1128,12 +1145,14 @@ def convertTwoDoublesTemplate(CLASS):
     Py_DECREF(o1);
     Py_DECREF(o2);
     return SIP_TEMPORARY;
-    """.format(**locals())
+    """.format(**locals()))
 
 
 def convertFourDoublesTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
-    return """\
+    return AutoConversionInfo(
+        ('_FourFloats', ),
+        """\
     // is it just a typecheck?
     if (!sipIsErr) {{
         // is it already an instance of {CLASS}?
@@ -1166,7 +1185,7 @@ def convertFourDoublesTemplate(CLASS):
     Py_DECREF(o3);
     Py_DECREF(o4);
     return SIP_TEMPORARY;
-    """.format(**locals())
+    """.format(**locals()))
 
 
 
