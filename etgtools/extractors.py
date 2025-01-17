@@ -281,6 +281,8 @@ class FunctionDef(BaseDef, FixWxPrefix):
     """
     Information about a standalone function.
     """
+    _default_method_type = MethodType.FUNCTION
+
     def __init__(self, element=None, **kw):
         super(FunctionDef, self).__init__()
         self.type = None
@@ -548,7 +550,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
             return_type = returns[0]
         else:
             return_type = f"Tuple[{', '.join(returns)}]"
-        kind = MethodType.STATIC_METHOD if getattr(self, 'isStatic', False) else MethodType.METHOD
+        kind = MethodType.STATIC_METHOD if getattr(self, 'isStatic', False) else type(self)._default_method_type
         self.signature = Signature(name, *params, return_type=return_type, method_type=kind)
         self.pyArgsString = self.signature.args_string(False)
 
@@ -587,6 +589,8 @@ class MethodDef(FunctionDef):
     """
     Represents a class method, ctor or dtor declaration.
     """
+    _default_method_type = MethodType.METHOD
+
     def __init__(self, element=None, className=None, **kw):
         super(MethodDef, self).__init__()
         self.className = className
@@ -725,7 +729,6 @@ class ClassDef(BaseDef):
         self._convertFromPyObject = value.code
         name = self.name or self.pyName
         name = removeWxPrefix(name)
-        print('Registering:', name, value.convertables)
         FixWxPrefix.register_autoconversion(name, value.convertables)
 
     def is_top_level(self) -> bool:
