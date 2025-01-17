@@ -15,12 +15,13 @@ wxWidgets API info which we need from them.
 import sys
 import os
 import pprint
-import xml.etree.ElementTree as ET
+from typing import Optional
+import xml.etree.ElementTree as et
 import copy
 
-from .tweaker_tools import FixWxPrefix, magicMethods, \
+from .tweaker_tools import FixWxPrefix, MethodType, magicMethods, \
                            guessTypeInt, guessTypeFloat, guessTypeStr, \
-                           textfile_open
+                           textfile_open, Signature
 from sphinxtools.utilities import findDescendants
 
 if sys.version_info >= (3, 11):
@@ -285,6 +286,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.type = None
         self.definition = ''
         self.argsString = ''
+        self.signature: Optional[Signature] = None
         self.pyArgsString = ''
         self.isOverloaded = False
         self.overloads = []
@@ -406,7 +408,10 @@ class FunctionDef(BaseDef, FixWxPrefix):
         else:
             parent = self.klass
         item = self.findOverload(matchText)
+        assert item is not None
         item.pyName = newName
+        if item.signature:
+            item.signature.method_name = newName
         item.__dict__.update(kw)
 
         if item is self and not self.hasOverloads():
@@ -470,8 +475,8 @@ class FunctionDef(BaseDef, FixWxPrefix):
         Create a pythonized version of the argsString in function and method
         items that can be used as part of the docstring.
         """
-        params = list()
-        returns = list()
+        params: list[Signature.Parameter] = []
+        returns: list[str] = []
         if self.type and self.type != 'void':
             returns.append(self.cleanType(self.type))
 
@@ -483,6 +488,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                         'wxArrayInt()' : '[]',
                         'wxEmptyString':  "''", # Makes signatures much shorter
                         }
+        P = Signature.Parameter
         if isinstance(self, CppMethodDef):
             # rip apart the argsString instead of using the (empty) list of parameters
             lastP = self.argsString.rfind(')')
@@ -495,22 +501,15 @@ class FunctionDef(BaseDef, FixWxPrefix):
                 if '=' in arg:
                     default = arg.split('=')[1].strip()
                     arg = arg.split('=')[0].strip()
-                    if default in defValueMap:
-                        default = defValueMap.get(default)
-                    else:
-                        default = self.fixWxPrefix(default, True)
+                    default = defValueMap.get(default, default)
+                    default = self.fixWxPrefix(default, True)
                 # now grab just the last word, it should be the variable name
                 # The rest will be the type information
                 arg_type, arg = arg.rsplit(None, 1)
                 arg, arg_type = self.parseNameAndType(arg, arg_type)
-                if arg_type:
-                    if default == 'None':
-                        arg = f'{arg}: Optional[{arg_type}]'
-                    else:
-                        arg = f'{arg}: {arg_type}'
-                if default:
-                    arg += '=' + default
-                params.append(arg)
+                params.append(P(arg, arg_type, default))
+                if default == 'None':
+                    params[-1].make_optional()
         else:
             for param in self.items:
                 assert isinstance(param, ParamDef)
@@ -523,35 +522,35 @@ class FunctionDef(BaseDef, FixWxPrefix):
                     if param_type:
                         returns.append(param_type)
                 else:
+                    default = ''
                     if param.inOut:
                         if param_type:
                             returns.append(param_type)
                     if param.default:
                         default = param.default
-                        if default in defValueMap:
-                            default = defValueMap.get(default)
-                        if param_type:
-                            if default == 'None':
-                                s = f'{s}: Optional[{param_type}]'
-                            else:
-                                s = f'{s}: {param_type}'
+                        default = defValueMap.get(default, default)
                         default = '|'.join([self.cleanName(x, True) for x in default.split('|')])
-                        s = f'{s}={default}'
-                    elif param_type:
-                        s = f'{s}: {param_type}'
-                    params.append(s)
-
-        self.pyArgsString = f"({', '.join(params)})"
+                    params.append(P(s, param_type, default))
+                    if default == 'None':
+                        params[-1].make_optional()
+        if getattr(self, 'isCtor', False):
+            name = '__init__'
+        else:
+            name = self.name or self.pyName
+            name = self.fixWxPrefix(name)
         # __bool__ and __nonzero__ need to be defined as returning int for SIP, but for Python
         # __bool__ is required to return a bool:
-        if (self.name or self.pyName) in ('__bool__', '__nonzero__'):
-            returns = ['bool']
-        if not returns:
-            self.pyArgsString = f'{self.pyArgsString} -> None'
+        if name in ('__bool__', '__nonzero__'):
+            return_type = 'bool'
+        elif not returns:
+            return_type = 'None'
         elif len(returns) == 1:
-            self.pyArgsString = f'{self.pyArgsString} -> {returns[0]}'
-        elif len(returns) > 1:
-            self.pyArgsString = f"{self.pyArgsString} -> Tuple[{', '.join(returns)}]"
+            return_type = returns[0]
+        else:
+            return_type = f"Tuple[{', '.join(returns)}]"
+        kind = MethodType.STATIC_METHOD if getattr(self, 'isStatic', False) else MethodType.METHOD
+        self.signature = Signature(name, *params, return_type=return_type, method_type=kind)
+        self.pyArgsString = self.signature.args_string(False)
 
 
     def collectPySignatures(self):
@@ -1283,7 +1282,7 @@ class CppMethodDef(MethodDef):
     NOTE: This one is not automatically extracted, but can be added to
           classes in the tweaker stage
     """
-    def __init__(self, type, name, argsString, body, doc=None, isConst=False,
+    def __init__(self, type, name, argsString: str, body, doc=None, isConst=False,
                  cppSignature=None, virtualCatcherCode=None, **kw):
         super(CppMethodDef, self).__init__()
         self.type = type

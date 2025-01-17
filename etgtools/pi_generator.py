@@ -413,16 +413,11 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             stream.write('\n@overload')
         elif is_overload:
             stream.write('\n@overload')
-        stream.write('\ndef %s' % function.pyName)
-        argsString = function.pyArgsString
-        if not argsString:
-            argsString = '()'
-        if '(' != argsString[0]:
-            pos = argsString.find('(')
-            argsString = argsString[pos:]
-        argsString = argsString.replace('::', '.')
-        stream.write(argsString)
-        stream.write(':\n')
+        if not function.signature:
+            function.makePyArgsString()
+        assert function.signature is not None
+        for line in function.signature.definition_lines():
+            stream.write(f'\n{line}')
         if is_overload:
             stream.write('    ...\n')
         else:
@@ -572,19 +567,12 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         value_type = ''
         if prop.getter:
             getter = self.find_method(klass, prop.getter)
-            if getter and '->' in getter.pyArgsString:
-                value_type = getter.pyArgsString.split('->')[1].strip()
+            if getter and getter.signature:
+                value_type = getter.signature.return_type
         if prop.setter:
             setter = self.find_method(klass, prop.setter)
-            if setter:
-                args = setter.pyArgsString.split('->')[0]
-                args = args.strip().strip('()')
-                args = args.split(',')
-                if args:
-                    value_arg = args[0]
-                    if ':' in value_arg:
-                        value_type = value_arg.split(':')[1].strip()
-                        value_type = value_type.split('=')[0]
+            if setter and setter.signature:
+                value_type = setter.signature[0].type_hint
         if prop.setter and prop.getter:
             if value_type:
                 stream.write(f'{indent}@property\n')
@@ -626,10 +614,6 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if method.isDtor:
             return
 
-        name = name or method.pyName or method.name
-        if name in magicMethods:
-            name = magicMethods[name]
-
         # write the method declaration
         if not is_overload and method.hasOverloads():
             for m in method.overloads:
@@ -637,32 +621,16 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             stream.write(f'\n{indent}@overload')
         elif is_overload:
             stream.write(f'\n{indent}@overload')
-        if method.isStatic:
-            stream.write('\n%s@staticmethod' % indent)
-        stream.write('\n%sdef %s' % (indent, name))
-        argsString = method.pyArgsString
-        if not argsString:
-            argsString = '()'
-        if '(' != argsString[0]:
-            pos = argsString.find('(')
-            argsString = argsString[pos:]
-        if not method.isStatic:
-            if argsString == '()':
-                argsString = '(self)'
-            else:
-                argsString = '(self, ' + argsString[1:]
-        argsString = argsString.replace('::', '.')
-        if is_top_level_init:
-            # For classes derived from TopLevelWindow, the parent argument is allowed
-            # to be None. If the argsString isn't already marked this way due to
-            # having `=None` in it, add the Optional[type] typehint to it.
-            argsString = re.sub(
-                r'([,(]\s*)parent\s*:\s*((?!Optional\[)(\w[\w\d_\.]*))\s*([,)=])',
-                r'\g<1>parent: Optional[\g<3>]\g<4>',
-                argsString,
-            )
-        stream.write(argsString)
-        stream.write(':\n')
+        if not method.signature:
+            method.makePyArgsString()
+        assert method.signature is not None
+        if name is not None:
+            method.signature.method_name = name
+        if is_top_level_init and 'parent' in method.signature:
+            method.signature['parent'].make_optional()
+        for line in method.signature.definition_lines():
+            stream.write(f'\n{indent}{line}')
+        stream.write('\n')
         indent2 = indent + ' '*4
 
         # docstring

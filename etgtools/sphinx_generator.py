@@ -14,6 +14,7 @@ the various XML elements passed by the Phoenix extractors into ReST format.
 """
 
 # Standard library stuff
+import keyword
 import os
 import operator
 import sys
@@ -28,7 +29,7 @@ import xml.etree.ElementTree as ET
 import etgtools.extractors as extractors
 import etgtools.generators as generators
 from etgtools.item_module_map import ItemModuleMap
-from etgtools.tweaker_tools import removeWxPrefix
+from etgtools.tweaker_tools import removeWxPrefix, ParameterType
 
 # Sphinx-Phoenix specific stuff
 from sphinxtools.inheritance import InheritanceDiagram
@@ -580,30 +581,13 @@ class ParameterList(Node):
         if xml_item.hasOverloads() and not is_overload:
             return
 
-        arguments = xml_item.pyArgsString
+        if xml_item.signature is None:
+            xml_item.makePyArgsString()
+        assert xml_item.signature is not None
+        signature = xml_item.signature.signature()
+        arguments = list(xml_item.signature)
         if not arguments:
             return
-
-        if hasattr(xml_item, 'isStatic') and not xml_item.isStatic:
-            if arguments[:2] == '()':
-                return
-
-            arguments = arguments[1:]
-
-        if '->' in arguments:
-            arguments, dummy = arguments.split("->")
-
-        arguments = arguments.strip()
-        if arguments.endswith(','):
-            arguments = arguments[0:-1]
-
-        if arguments.startswith('('):
-            arguments = arguments[1:]
-        if arguments.endswith(')'):
-            arguments = arguments[0:-1]
-
-        signature = name + '(%s)'%arguments
-        arguments = arguments.split(',')
 
         py_parameters = []
         for key, parameter in self.py_parameters.items():
@@ -619,38 +603,22 @@ class ParameterList(Node):
                   '  ==> Parameter list from wxWidgets XML items:     %s\n\n' \
                   'This may be a documentation bug in wxWidgets or a side-effect of removing the `wx` prefix from signatures.\n\n'
 
-        theargs = []
-
         for arg in arguments:
-            arg = arg.split(':')[0].strip() # Remove the typehint
-            if arg in ('_from', '_def', '_is'): # Reserved Python keywords we've had to rename
-                arg = arg[1:]
-            myarg = arg.split('=')[0].strip()
-            if myarg:
-                theargs.append(myarg)
-
-            if '*' in arg or ')' in arg:
+            arg_name = arg.name
+            if arg.position_type in (ParameterType.VAR_ARGS, ParameterType.KWARGS):
                 continue
+            if arg_name.startswith('_') and keyword.iskeyword(arg_name[1:]): # Reserved Python keywords we've had to rename
+                arg_name = arg_name[1:]
+            
+            #if '*' in arg_name:
+            #    continue
 
-            arg = arg.split('=')[0].strip()
-
-            if arg and arg not in py_parameters:
-
+            if arg_name not in py_parameters:
                 class_name = ''
                 if hasattr(xml_item, 'className') and xml_item.className is not None:
                     class_name = wx2Sphinx(xml_item.className)[1] + '.'
 
                 print((message % (class_name + name, arg, signature, py_parameters)))
-
-##        for param in py_parameters:
-##            if param not in theargs:
-##                class_name = ''
-##                if hasattr(xml_item, 'className') and xml_item.className is not None:
-##                    class_name = wx2Sphinx(xml_item.className)[1] + '.'
-##
-##                print '\n      |||  %s;%s;%s  |||\n'%(class_name[0:-1], signature, param)
-##                with open('mismatched.txt', 'a') as fid:
-##                    fid.write('%s;%s;%s\n'%(class_name[0:-1], signature, param))
 
 
     # -----------------------------------------------------------------------

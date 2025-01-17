@@ -12,6 +12,7 @@ Some helpers and utility functions that can assist with the tweaker
 stage of the ETG scripts.
 """
 
+import enum
 import etgtools as extractors
 from .generators import textfile_open
 import keyword
@@ -19,7 +20,7 @@ import re
 import sys, os
 import copy
 import textwrap
-from typing import Optional, Tuple
+from typing import NamedTuple, Optional, Tuple, Union
 
 
 isWindows = sys.platform.startswith('win')
@@ -38,6 +39,174 @@ magicMethods = {
     'operator bool' : '__int__',  # Why not __nonzero__?
     # TODO: add more
 }
+
+
+class AutoConversionInfo(NamedTuple):
+    convertables: tuple[str, ...] # String type-hints for each of the types that can be automatically converted to this class
+    code: str                     # Code that will be added to SIP for this conversion
+
+
+class ParameterType(enum.Enum):
+    VAR_ARGS = enum.auto()
+    KWARGS = enum.auto()
+    POSITIONAL_ONLY = enum.auto()
+    DEFAULT = enum.auto()
+
+
+class MethodType(enum.Enum):
+    STATIC_METHOD = enum.auto()  # Class @staticmethod method
+    CLASS_METHOD = enum.auto()   # Class @classmethod method
+    METHOD = enum.auto()         # Class regular method
+    FUNCTION = enum.auto()       # non-class function
+
+
+class Signature:
+    """Like inspect.Signature, but a bit simpler because we need it only for a few purposes:
+    - Creation from a C++ args string
+    - We *don't* want stringized (ie: all of them) type-hints to be evaluated, since we're
+      processing them in a context where most of them will be unresolvable.
+    """
+
+    class Parameter:
+        __slots__ = ('name', 'type_hint', 'default', 'position_type', )
+        name: str
+        type_hint: Optional[str]
+        default: Optional[str]
+        position_type: ParameterType
+
+        def __init__(self, name: str, type_hint: Optional[str] = None, default: Optional[str] = None, position_type: ParameterType = ParameterType.DEFAULT) -> None:
+            if name.startswith('**'):
+                name = name[2:]
+                position_type = ParameterType.KWARGS
+            elif name.startswith('*'):
+                name = name[1:]
+                position_type = ParameterType.VAR_ARGS
+            type_hint = type_hint.replace('::', '.') if type_hint else None
+            default = default.replace('::', '.') if default else None
+            self.name = name
+            self.type_hint = type_hint
+            self.default = default
+            self.position_type = position_type
+
+        @property
+        def _position_marking(self) -> str:
+            if self.position_type is ParameterType.KWARGS:
+                return '**'
+            elif self.position_type is ParameterType.VAR_ARGS:
+                return '*'
+            return ''
+
+        def untyped(self) -> str:
+            if self.default is None:
+                return f'{self._position_marking}{self.name}'
+            else:
+                return f'{self._position_marking}{self.name}={self.default}'
+
+        def __str__(self) -> str:
+            if self.type_hint is None and self.default is None:
+                return f'{self._position_marking}{self.name}'
+            elif self.type_hint is None:
+                return f'{self._position_marking}{self.name}={self.default}'
+            elif self.default is None:
+                return f'{self._position_marking}{self.name}: {self.type_hint}'
+            else:
+                return f'{self._position_marking}{self.name}: {self.type_hint}={self.default}'
+            
+        def make_optional(self) -> None:
+            if self.type_hint is not None and not self.type_hint.startswith('Optional['):
+                self.type_hint = f'Optional[{self.type_hint}]'
+
+    __slots__ = ('_method_name', 'return_type', '_parameters', '_method_type', )
+    _method_name: str
+    return_type: Optional[str]
+    _parameters: dict[str, Parameter]
+    _method_type: MethodType    
+
+    def __init__(self, method_name: str, *parameters: Parameter, return_type: Optional[str] = None, method_type: MethodType = MethodType.METHOD) -> None:
+        self._parameters = {
+            p.name: p
+            for p in parameters
+        }
+        self.return_type = return_type.replace('::', '.') if return_type else None
+        self._method_type = method_type
+        self.method_name = method_name
+
+    @property
+    def method_name(self) -> str:
+        return self._method_name
+    
+    @method_name.setter
+    def method_name(self, value: str, /) -> None:
+        self._method_name = magicMethods.get(value, value)
+
+    def __getitem__(self, key: Union[str, int]) -> Parameter:
+        """Get parameter by name or by index. Indexing is into the paramters skips 'cls' and 'self' for
+        classmethods and methods.
+        """
+        if isinstance(key, int):
+            key = list(self._parameters)[key]
+        if isinstance(key, str):
+            return self._parameters[key]
+        else:
+            raise TypeError(f'Indexing must be via parameter name or index, got {key}')
+        
+    def __iter__(self):
+        return iter(self._parameters.values())
+        
+    def __contains__(self, parameter_name: str) -> bool:
+        return parameter_name in self._parameters
+
+    def args_string(self, typed: bool = True, include_selfcls: bool = False) -> str:
+        """Get a string of just the parameters needed for the method signature, 
+        optionally with 'self' or 'cls' where applicable, and type-hints
+        """
+        if include_selfcls and self.is_classmethod:
+            parameters = (type(self).Parameter('cls'), *self._parameters.values())
+        elif include_selfcls and self.is_method:
+            parameters = (type(self).Parameter('self'), *self._parameters.values())
+        else:
+            parameters = self._parameters.values()
+        stringizer = str if typed else type(self).Parameter.untyped
+        return_type = f' -> {self.return_type}' if self.return_type else ''
+        return f'({', '.join(map(stringizer, parameters))}){return_type}'
+    
+    def signature(self, typed: bool = True) -> str:
+        """Get the full signature for the function/method, including method and
+        all required python syntax, optionally including all type-hints.
+        """
+        return f'def {self.method_name}{self.args_string(typed, True)}:'
+    
+    def __str__(self) -> str:
+        return self.signature()
+
+    def definition_lines(self, typed: bool = True) -> list[str]:
+        """return the lines required to write the full method definition,
+        including decorators
+        """
+        if self.is_staticmethod:
+            lines = ['@staticmethod']
+        elif self.is_classmethod:
+            lines = ['@classmethod']
+        else:
+            lines = []
+        lines.append(self.signature(typed))
+        return lines
+
+    @property
+    def is_staticmethod(self) -> bool:
+        return self._method_type is MethodType.STATIC_METHOD
+    
+    @property
+    def is_classmethod(self) -> bool:
+        return self._method_type is MethodType.CLASS_METHOD
+    
+    @property
+    def is_method(self) -> bool:
+        return self._method_type is MethodType.METHOD
+    
+    @property
+    def is_function(self) -> bool:
+        return self._method_type is MethodType.FUNCTION
 
 
 def removeWxPrefixes(node):
@@ -151,7 +320,10 @@ class FixWxPrefix(object):
         Finally, the 'wx.' prefix is added if needed.
         """
         name = re.sub(r'(const(?![\w\d]))', '', name) # remove 'const', but not 'const'raints
-        for txt in ['*', '&', ' ']:
+        replacements = [' ', '*']
+        if not is_expression:
+            replacements.extend(['&'])
+        for txt in replacements:
             name = name.replace(txt, '')
         name = name.replace('::', '.')
         if not is_expression:
