@@ -540,8 +540,6 @@ class FunctionDef(BaseDef, FixWxPrefix):
         else:
             name = self.pyName or self.name
             name = self.fixWxPrefix(name)
-            if 'Destroy' in (name, self.name, self.pyName):
-                print(f'Generating signature for: {name}, {self.name}, {self.pyName}')
         # __bool__ and __nonzero__ need to be defined as returning int for SIP, but for Python
         # __bool__ is required to return a bool:
         if name in ('__bool__', '__nonzero__'):
