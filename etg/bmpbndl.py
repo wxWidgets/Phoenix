@@ -10,7 +10,6 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools import MethodDef
-import etgtools.tweaker_tools
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -44,7 +43,7 @@ def run():
 
     # Allow on-the-fly creation of a wx.BitmapBundle from a wx.Bitmap, wx.Icon
     # or a wx.Image
-    c.convertFromPyObject = etgtools.tweaker_tools.AutoConversionInfo(
+    c.convertFromPyObject = tools.AutoConversionInfo(
         ('wx.Bitmap', 'wx.Icon', ),
         """\
         // Check for type compatibility

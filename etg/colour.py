@@ -9,7 +9,6 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
-import etgtools.tweaker_tools
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -193,7 +192,7 @@ def run():
     #     String with color name or #RRGGBB or #RRGGBBAA format
     #     None  (converts to wxNullColour)
     c.allowNone = True
-    c.convertFromPyObject = etgtools.tweaker_tools.AutoConversionInfo(
+    c.convertFromPyObject = tools.AutoConversionInfo(
         ('wx.Colour', '_ThreeInts', '_FourInts', 'str', 'None'),
         """\
         // is it just a typecheck?

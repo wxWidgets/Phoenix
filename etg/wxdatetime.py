@@ -9,7 +9,6 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
-import etgtools.tweaker_tools
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -312,7 +311,7 @@ def run():
 
     # Add some code (like MappedTypes) to automatically convert from a Python
     # datetime.date or a datetime.datetime object
-    c.convertFromPyObject = etgtools.tweaker_tools.AutoConversionInfo(
+    c.convertFromPyObject = tools.AutoConversionInfo(
         ('datetime', 'date', ),
         """\
         // Code to test a PyObject for compatibility with wxDateTime

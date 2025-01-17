@@ -9,7 +9,6 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
-import etgtools.tweaker_tools
 
 PACKAGE   = "wx"
 MODULE    = "_propgrid"
@@ -71,7 +70,7 @@ def run():
 
     c.find('GetPtr').overloads[0].ignore()
 
-    c.convertFromPyObject = etgtools.tweaker_tools.AutoConversionInfo(
+    c.convertFromPyObject = tools.AutoConversionInfo(
         ('str', 'None', ),
         """\
         // Code to test a PyObject for compatibility with wxPGPropArgCls

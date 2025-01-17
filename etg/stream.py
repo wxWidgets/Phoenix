@@ -9,7 +9,6 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
-import etgtools.tweaker_tools
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -77,7 +76,7 @@ def run():
     c.includeCppCode('src/stream_input.cpp')
 
     # Use that class for the convert code
-    c.convertFromPyObject = etgtools.tweaker_tools.AutoConversionInfo(
+    c.convertFromPyObject = tools.AutoConversionInfo(
         (), # TODO: Track down what python types actually can be wrapped
         """\
         // is it just a typecheck?
@@ -239,7 +238,7 @@ def run():
     c.includeCppCode('src/stream_output.cpp')
 
     # Use that class for the convert code
-    c.convertFromPyObject = etgtools.tweaker_tools.AutoConversionInfo(
+    c.convertFromPyObject = tools.AutoConversionInfo(
         (), # TODO: Track down what python types can actually be converted
         """\
         // is it just a typecheck?
