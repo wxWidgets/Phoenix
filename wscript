@@ -75,7 +75,7 @@ def configure(conf):
         # WAF uses the VisualStudio version to select the compiler, rather than
         # the compiler version like we see elsewhere. Luckily we've got that
         # value in the MSVC info.
-        msvc_version = f"msvc {info.vs_ver}"
+        msvc_version = f'msvc {info["vs_ver"]}'
 
         conf.env['MSVC_VERSIONS'] = [msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]

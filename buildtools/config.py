@@ -977,7 +977,7 @@ def getVisCVersion():
         raise RuntimeError('getMSVCInfo has not been called yet.')
     # Convert a float like 14.28 to 140, for historical reasons
     # TODO: decide on switching to 142, 143, etc.??
-    ver = str(int(MSVCinfo.vc_ver)) + '0'
+    ver = str(int(MSVCinfo["vc_ver"])) + '0'
     return ver
 
 
@@ -990,7 +990,7 @@ def getExpectedVisCVersion():
     """
     if MSVCinfo is None:
         raise RuntimeError('getMSVCInfo has not been called yet.')
-    py_ver = MSVCinfo.py_ver
+    py_ver = MSVCinfo["py_ver"]
     if py_ver in ((3, 5), (3, 6), (3, 7), (3, 8)):
         min_ver = 14.0
     elif py_ver in ((3, 9), (3, 10)):
@@ -1009,8 +1009,6 @@ def getMSVCInfo(PYTHON, arch, set_env=False):
     if MSVCinfo is not None:
         return MSVCinfo
 
-    from attrdict import AttrDict
-
     # Note that it starts with a monkey-patch in setuptools.msvc to
     # workaround this issue: pypa/setuptools#1902
     cmd = \
@@ -1025,13 +1023,13 @@ def getMSVCInfo(PYTHON, arch, set_env=False):
         "print(env)"
     cmd = cmd.format(arch)
     env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
-    info = AttrDict(env)
+    info = dict(env)
 
     if set_env:
-        os.environ['PATH'] =    info.path
-        os.environ['INCLUDE'] = info.include
-        os.environ['LIB'] =     info.lib
-        os.environ['LIBPATH'] = info.libpath
+        os.environ['PATH'] =    info["path"]
+        os.environ['INCLUDE'] = info["include"]
+        os.environ['LIB'] =     info["lib"]
+        os.environ['LIBPATH'] = info["libpath"]
 
         # We already have everything we need, tell distutils to not go hunting
         # for it all again if it happens to be called.
