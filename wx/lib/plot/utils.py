@@ -13,6 +13,7 @@ This is a collection of utilities used by the :mod:`wx.lib.plot` package.
 __docformat__ = "restructuredtext en"
 
 # Standard Library
+import sys
 import functools
 import inspect
 import itertools
@@ -21,6 +22,12 @@ from warnings import warn as _warn
 # Third Party
 import wx
 import numpy as np
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
+
 
 class PlotPendingDeprecation(wx.wxPyDeprecationWarning):
     pass
@@ -195,7 +202,7 @@ class TempStyle(object):
 
         return wrapper
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         self._save_items(self.dc)
         return self
 
