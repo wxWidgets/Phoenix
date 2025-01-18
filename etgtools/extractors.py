@@ -23,6 +23,11 @@ from .tweaker_tools import FixWxPrefix, magicMethods, \
                            textfile_open
 from sphinxtools.utilities import findDescendants
 
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
+
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
 # methods, functions and other items in the C/C++ API being wrapped.
@@ -98,7 +103,7 @@ class BaseDef(object):
                     return
 
 
-    def ignore(self, val=True):
+    def ignore(self, val=True) -> Self:
         self.ignored = val
         return self
 
@@ -426,7 +431,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         return item
 
 
-    def ignore(self, val=True):
+    def ignore(self, val=True) -> Self:
         # In addition to ignoring this item, reorder any overloads to ensure
         # the primary overload is not ignored, if possible.
         super(FunctionDef, self).ignore(val)

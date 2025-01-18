@@ -294,7 +294,7 @@ Latest Revision: Andrea Gavana @ 30 Jul 2014, 21.00 GMT
 Version 1.4
 
 """
-
+import sys
 import wx
 
 from wx.lib.agw.customtreectrl import CustomTreeCtrl
@@ -304,6 +304,11 @@ from wx.lib.agw.customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHEC
 
 # Python 2/3 compatibility helper
 import six
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 # Version Info
 __version__ = "1.4"
@@ -488,7 +493,7 @@ class TreeListColumnInfo(object):
         return self._text
 
 
-    def SetText(self, text):
+    def SetText(self, text) -> Self:
         """
         Sets the column header label.
 
@@ -505,7 +510,7 @@ class TreeListColumnInfo(object):
         return self._width
 
 
-    def SetWidth(self, width):
+    def SetWidth(self, width) -> Self:
         """
         Sets the column header width.
 
@@ -522,7 +527,7 @@ class TreeListColumnInfo(object):
         return self._flag
 
 
-    def SetAlignment(self, flag):
+    def SetAlignment(self, flag) -> Self:
         """
         Sets the column text alignment.
 
@@ -540,7 +545,7 @@ class TreeListColumnInfo(object):
         return self._colour
 
 
-    def SetColour(self, colour):
+    def SetColour(self, colour) -> Self:
         """
         Sets the column text colour.
 
@@ -557,7 +562,7 @@ class TreeListColumnInfo(object):
         return self._image
 
 
-    def SetImage(self, image):
+    def SetImage(self, image) -> Self:
         """
         Sets the column image index.
 
@@ -575,7 +580,7 @@ class TreeListColumnInfo(object):
         return self._selected_image
 
 
-    def SetSelectedImage(self, image):
+    def SetSelectedImage(self, image) -> Self:
         """
         Sets the column image index in the selected state.
 
@@ -594,7 +599,7 @@ class TreeListColumnInfo(object):
         return self._edit
 
 
-    def SetEditable(self, edit):
+    def SetEditable(self, edit) -> Self:
         """
         Sets the column as editable or non-editable.
 
@@ -611,7 +616,7 @@ class TreeListColumnInfo(object):
         return self._shown
 
 
-    def SetShown(self, shown):
+    def SetShown(self, shown) -> Self:
         """
         Sets the column as shown or hidden.
 
@@ -623,7 +628,7 @@ class TreeListColumnInfo(object):
         return self
 
 
-    def SetFont(self, font):
+    def SetFont(self, font) -> Self:
         """
         Sets the column text font.
 
@@ -646,7 +651,7 @@ class TreeListColumnInfo(object):
         return self._sort_icon
 
 
-    def SetSortIcon(self, sortIcon, colour=None):
+    def SetSortIcon(self, sortIcon, colour=None) -> Self:
         """
         Sets the column sort icon displayed in the header.
 
