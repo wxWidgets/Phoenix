@@ -41,19 +41,19 @@ class cmdproc_Tests(wtc.WidgetTestCase):
 
         cmds = cmdproc.GetCommands()
         self.assertEqual(len(cmds), 5)
-        self.assertEqual([x.value for x in cmds], [True]*5)
+        self.assertEqual([x.value for x in list(cmds)], [True]*5)
 
         self.assertTrue(cmdproc.CanUndo())
         self.assertFalse(cmdproc.CanRedo())
 
         cmdproc.Undo()
         cmdproc.Undo()
-        self.assertEqual([x.value for x in cmds], [True]*3 + [False]*2)
+        self.assertEqual([x.value for x in list(cmds)], [True]*3 + [False]*2)
 
         self.assertTrue(cmdproc.CanRedo())
         cmdproc.Redo()
         cmdproc.Redo()
-        self.assertEqual([x.value for x in cmds], [True]*5)
+        self.assertEqual([x.value for x in list(cmds)], [True]*5)
 
         cmdproc.Undo()
         cmdproc.Undo()
