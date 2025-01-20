@@ -5,8 +5,10 @@
 .waf-*
 .waf3-*
 .lock-waf*
+.DS_Store
 wingdbstub.py*
 mydbstub.py*
+venv*/
 
 .idea
 .cache
