@@ -12,8 +12,8 @@ pytest-xdist
 pytest-forked
 pytest-timeout
 
-sphinx; python_version >= '3.0'
-alabaster
+sphinx
+sphinxcontrib-jquery
 sphinxcontrib-applehelp
 sphinxcontrib-devhelp
 sphinxcontrib-htmlhelp
