@@ -83,9 +83,9 @@ wxICON = 'packaging/docset/mondrian.png'
 wafCurrentVersion = '2.1.5'
 wafMD5 = '2e7b2166c030dbac3e21891048df10aa'
 
-doxygenCurrentVersion = '1.8.8'
+doxygenCurrentVersion = '1.9.1'
 doxygenMD5 = {
-    'darwin' : '71c590e6cab47100f23919a2696cc7fd',
+    'darwin' : '6912d41cef5971fb07573190849a8a84',
     'win32'  : 'a3dcff227458e423c132f16f57e26510',
     'linux'  : '083b3d8f614b538696041c7364e0f334',
 }
