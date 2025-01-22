@@ -95,6 +95,7 @@ is by running the AUI sample (`AUI.py`).
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 __date__ = "31 March 2009"
 
+import sys
 import wx
 # just for isinstance
 from time import time
@@ -117,6 +118,11 @@ from . import tabart
 from .aui_utilities import Clip, PaneCreateStippleBitmap, GetDockingImage, GetSlidingPoints
 
 from .aui_constants import *
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 # Define this as a translation function
 _ = wx.GetTranslation
@@ -254,7 +260,7 @@ class AuiDockingGuideInfo(object):
         self.host = other.host
         self.dock_direction = other.dock_direction
 
-    def Host(self, h):
+    def Host(self, h) -> Self:
         """
         Hosts a docking guide window.
 
@@ -264,37 +270,37 @@ class AuiDockingGuideInfo(object):
         self.host = h
         return self
 
-    def Left(self):
+    def Left(self) -> Self:
         """ Sets the guide window to left docking. """
 
         self.dock_direction = AUI_DOCK_LEFT
         return self
 
-    def Right(self):
+    def Right(self) -> Self:
         """ Sets the guide window to right docking. """
 
         self.dock_direction = AUI_DOCK_RIGHT
         return self
 
-    def Top(self):
+    def Top(self) -> Self:
         """ Sets the guide window to top docking. """
 
         self.dock_direction = AUI_DOCK_TOP
         return self
 
-    def Bottom(self):
+    def Bottom(self) -> Self:
         """ Sets the guide window to bottom docking. """
 
         self.dock_direction = AUI_DOCK_BOTTOM
         return self
 
-    def Center(self):
+    def Center(self) -> Self:
         """ Sets the guide window to center docking. """
 
         self.dock_direction = AUI_DOCK_CENTER
         return self
 
-    def Centre(self):
+    def Centre(self) -> Self:
         """ Sets the guide window to centre docking. """
 
         self.dock_direction = AUI_DOCK_CENTRE
@@ -809,7 +815,7 @@ class AuiPaneInfo(object):
 
         return self.HasFlag(self.optionGripperTop)
 
-    def Window(self, w):
+    def Window(self, w) -> Self:
         """
         Associate a :class:`wx.Window` derived window to this pane.
 
@@ -823,7 +829,7 @@ class AuiPaneInfo(object):
         self.window = w
         return self
 
-    def Name(self, name):
+    def Name(self, name) -> Self:
         """
         Sets the name of the pane so it can be referenced in lookup functions.
 
@@ -842,7 +848,7 @@ class AuiPaneInfo(object):
         self.name = name
         return self
 
-    def Caption(self, caption):
+    def Caption(self, caption) -> Self:
         """
         Sets the caption of the pane.
 
@@ -852,7 +858,7 @@ class AuiPaneInfo(object):
         self.caption = caption
         return self
 
-    def Left(self):
+    def Left(self) -> Self:
         """
         Sets the pane dock position to the left side of the frame.
 
@@ -863,7 +869,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_LEFT
         return self
 
-    def Right(self):
+    def Right(self) -> Self:
         """
         Sets the pane dock position to the right side of the frame.
 
@@ -874,7 +880,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_RIGHT
         return self
 
-    def Top(self):
+    def Top(self) -> Self:
         """
         Sets the pane dock position to the top of the frame.
 
@@ -885,7 +891,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_TOP
         return self
 
-    def Bottom(self):
+    def Bottom(self) -> Self:
         """
         Sets the pane dock position to the bottom of the frame.
 
@@ -896,7 +902,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_BOTTOM
         return self
 
-    def Center(self):
+    def Center(self) -> Self:
         """
         Sets the pane to the center position of the frame.
 
@@ -910,7 +916,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_CENTER
         return self
 
-    def Centre(self):
+    def Centre(self) -> Self:
         """
         Sets the pane to the center position of the frame.
 
@@ -924,7 +930,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_CENTRE
         return self
 
-    def Direction(self, direction):
+    def Direction(self, direction) -> Self:
         """
         Determines the direction of the docked pane. It is functionally the
         same as calling :meth:`Left`, :meth:`Right`, :meth:`Top` or :meth:`Bottom`,
@@ -938,7 +944,7 @@ class AuiPaneInfo(object):
         self.dock_direction = direction
         return self
 
-    def Layer(self, layer):
+    def Layer(self, layer) -> Self:
         """
         Determines the layer of the docked pane.
 
@@ -952,7 +958,7 @@ class AuiPaneInfo(object):
         self.dock_layer = layer
         return self
 
-    def Row(self, row):
+    def Row(self, row) -> Self:
         """
         Determines the row of the docked pane.
 
@@ -962,7 +968,7 @@ class AuiPaneInfo(object):
         self.dock_row = row
         return self
 
-    def Position(self, pos):
+    def Position(self, pos) -> Self:
         """
         Determines the position of the docked pane.
 
@@ -972,7 +978,7 @@ class AuiPaneInfo(object):
         self.dock_pos = pos
         return self
 
-    def MinSize(self, arg1=None, arg2=None):
+    def MinSize(self, arg1=None, arg2=None) -> Self:
         """
         Sets the minimum size of the pane.
 
@@ -994,7 +1000,7 @@ class AuiPaneInfo(object):
 
         return ret
 
-    def MinSize1(self, size):
+    def MinSize1(self, size) -> Self:
         """
         Sets the minimum size of the pane.
 
@@ -1003,7 +1009,7 @@ class AuiPaneInfo(object):
         self.min_size = size
         return self
 
-    def MinSize2(self, x, y):
+    def MinSize2(self, x, y) -> Self:
         """
         Sets the minimum size of the pane.
 
@@ -1013,7 +1019,7 @@ class AuiPaneInfo(object):
         self.min_size = wx.Size(x, y)
         return self
 
-    def MaxSize(self, arg1=None, arg2=None):
+    def MaxSize(self, arg1=None, arg2=None) -> Self:
         """
         Sets the maximum size of the pane.
 
@@ -1035,7 +1041,7 @@ class AuiPaneInfo(object):
 
         return ret
 
-    def MaxSize1(self, size):
+    def MaxSize1(self, size) -> Self:
         """
         Sets the maximum size of the pane.
 
@@ -1045,7 +1051,7 @@ class AuiPaneInfo(object):
         self.max_size = size
         return self
 
-    def MaxSize2(self, x, y):
+    def MaxSize2(self, x, y) -> Self:
         """
         Sets the maximum size of the pane.
 
@@ -1055,7 +1061,7 @@ class AuiPaneInfo(object):
         self.max_size.Set(x, y)
         return self
 
-    def BestSize(self, arg1=None, arg2=None):
+    def BestSize(self, arg1=None, arg2=None) -> Self:
         """
         Sets the ideal size for the pane. The docking manager will attempt to use
         this size as much as possible when docking or floating the pane.
@@ -1078,7 +1084,7 @@ class AuiPaneInfo(object):
 
         return ret
 
-    def BestSize1(self, size):
+    def BestSize1(self, size) -> Self:
         """
         Sets the best size of the pane.
 
@@ -1088,7 +1094,7 @@ class AuiPaneInfo(object):
         self.best_size = size
         return self
 
-    def BestSize2(self, x, y):
+    def BestSize2(self, x, y) -> Self:
         """
         Sets the best size of the pane.
 
@@ -1098,7 +1104,7 @@ class AuiPaneInfo(object):
         self.best_size.Set(x, y)
         return self
 
-    def FloatingPosition(self, pos):
+    def FloatingPosition(self, pos) -> Self:
         """
         Sets the position of the floating pane.
 
@@ -1108,7 +1114,7 @@ class AuiPaneInfo(object):
         self.floating_pos = wx.Point(*pos)
         return self
 
-    def FloatingSize(self, size):
+    def FloatingSize(self, size) -> Self:
         """
         Sets the size of the floating pane.
 
@@ -1118,12 +1124,12 @@ class AuiPaneInfo(object):
         self.floating_size = wx.Size(*size)
         return self
 
-    def Maximize(self):
+    def Maximize(self) -> Self:
         """ Makes the pane take up the full area."""
 
         return self.SetFlag(self.optionMaximized, True)
 
-    def Minimize(self):
+    def Minimize(self) -> Self:
         """
         Makes the pane minimized in a :class:`~wx.lib.agw.aui.auibar.AuiToolBar`.
 
@@ -1138,7 +1144,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionMinimized, True)
 
-    def MinimizeMode(self, mode):
+    def MinimizeMode(self, mode) -> Self:
         """
         Sets the expected minimized mode if the minimize button is visible.
 
@@ -1177,7 +1183,7 @@ class AuiPaneInfo(object):
         self.minimize_mode = mode
         return self
 
-    def MinimizeTarget(self, toolbarPane):
+    def MinimizeTarget(self, toolbarPane) -> Self:
         """
         Minimizes the panes using a :class:`AuiPaneInfo` as a target. As :class:`AuiPaneInfo` properties
         need to be copied back and forth every time the perspective has changed, we
@@ -1197,12 +1203,12 @@ class AuiPaneInfo(object):
         self.minimize_target = toolbarPane.name
         return self
 
-    def Restore(self):
+    def Restore(self) -> Self:
         """ Is the reverse of :meth:`Maximize` and :meth:`Minimize`."""
 
         return self.SetFlag(self.optionMaximized | self.optionMinimized, False)
 
-    def Fixed(self):
+    def Fixed(self) -> Self:
         """
         Forces a pane to be fixed size so that it cannot be resized.
         After calling :meth:`Fixed`, :meth:`IsFixed` will return ``True``.
@@ -1210,7 +1216,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionResizable, False)
 
-    def Resizable(self, resizable=True):
+    def Resizable(self, resizable=True) -> Self:
         """
         Allows a pane to be resizable if `resizable` is ``True``, and forces
         it to be a fixed size if `resizeable` is ``False``.
@@ -1235,7 +1241,7 @@ class AuiPaneInfo(object):
         self.transparent = alpha
         self.needsTransparency = True
 
-    def Dock(self):
+    def Dock(self) -> Self:
         """ Indicates that a pane should be docked. It is the opposite of :meth:`Float`. """
 
         if self.IsNotebookPage():
@@ -1244,7 +1250,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionFloating, False)
 
-    def Float(self):
+    def Float(self) -> Self:
         """ Indicates that a pane should be floated. It is the opposite of :meth:`Dock`. """
 
         if self.IsNotebookPage():
@@ -1253,7 +1259,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionFloating, True)
 
-    def Hide(self):
+    def Hide(self) -> Self:
         """
         Indicates that a pane should be hidden.
 
@@ -1262,7 +1268,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionHidden, True)
 
-    def Show(self, show=True):
+    def Show(self, show=True) -> Self:
         """
         Indicates that a pane should be shown.
 
@@ -1272,7 +1278,7 @@ class AuiPaneInfo(object):
         return self.SetFlag(self.optionHidden, not show)
 
     # By defaulting to 1000, the tab will get placed at the end
-    def NotebookPage(self, id, tab_position=1000):
+    def NotebookPage(self, id, tab_position=1000) -> Self:
         """
         Forces a pane to be a notebook page, so that the pane can be
         docked on top to another to create a :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
@@ -1291,7 +1297,7 @@ class AuiPaneInfo(object):
 
         return self
 
-    def NotebookControl(self, id):
+    def NotebookControl(self, id) -> Self:
         """
         Forces a pane to be a notebook control (:class:`~wx.lib.agw.aui.auibook.AuiNotebook`).
 
@@ -1322,7 +1328,7 @@ class AuiPaneInfo(object):
 
         return not self.IsNotebookPage() and self.HasNotebook()
 
-    def SetNameFromNotebookId(self):
+    def SetNameFromNotebookId(self) -> Self:
         """ Sets the pane name once docked in a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` using the notebook id. """
 
         if self.notebook_id >= 0:
@@ -1330,7 +1336,7 @@ class AuiPaneInfo(object):
 
         return self
 
-    def CaptionVisible(self, visible=True, left=False):
+    def CaptionVisible(self, visible=True, left=False) -> Self:
         """
         Indicates that a pane caption should be visible. If `visible` is ``False``, no pane
         caption is drawn.
@@ -1346,7 +1352,7 @@ class AuiPaneInfo(object):
         self.SetFlag(self.optionCaptionLeft, False)
         return self.SetFlag(self.optionCaption, visible)
 
-    def PaneBorder(self, visible=True):
+    def PaneBorder(self, visible=True) -> Self:
         """
         Indicates that a border should be drawn for the pane.
 
@@ -1355,7 +1361,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionPaneBorder, visible)
 
-    def Gripper(self, visible=True):
+    def Gripper(self, visible=True) -> Self:
         """
         Indicates that a gripper should be drawn for the pane.
 
@@ -1364,7 +1370,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionGripper, visible)
 
-    def GripperTop(self, attop=True):
+    def GripperTop(self, attop=True) -> Self:
         """
         Indicates that a gripper should be drawn at the top of the pane.
 
@@ -1373,7 +1379,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionGripperTop, attop)
 
-    def CloseButton(self, visible=True):
+    def CloseButton(self, visible=True) -> Self:
         """
         Indicates that a close button should be drawn for the pane.
 
@@ -1382,7 +1388,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.buttonClose, visible)
 
-    def MaximizeButton(self, visible=True):
+    def MaximizeButton(self, visible=True) -> Self:
         """
         Indicates that a maximize button should be drawn for the pane.
 
@@ -1391,7 +1397,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.buttonMaximize, visible)
 
-    def MinimizeButton(self, visible=True):
+    def MinimizeButton(self, visible=True) -> Self:
         """
         Indicates that a minimize button should be drawn for the pane.
 
@@ -1400,7 +1406,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.buttonMinimize, visible)
 
-    def PinButton(self, visible=True):
+    def PinButton(self, visible=True) -> Self:
         """
         Indicates that a pin button should be drawn for the pane.
 
@@ -1409,7 +1415,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.buttonPin, visible)
 
-    def DestroyOnClose(self, b=True):
+    def DestroyOnClose(self, b=True) -> Self:
         """
         Indicates whether a pane should be destroyed when it is closed.
 
@@ -1422,7 +1428,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionDestroyOnClose, b)
 
-    def TopDockable(self, b=True):
+    def TopDockable(self, b=True) -> Self:
         """
         Indicates whether a pane can be docked at the top of the frame.
 
@@ -1431,7 +1437,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionTopDockable, b)
 
-    def BottomDockable(self, b=True):
+    def BottomDockable(self, b=True) -> Self:
         """
         Indicates whether a pane can be docked at the bottom of the frame.
 
@@ -1449,7 +1455,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionLeftDockable, b)
 
-    def RightDockable(self, b=True):
+    def RightDockable(self, b=True) -> Self:
         """
         Indicates whether a pane can be docked on the right of the frame.
 
@@ -1458,7 +1464,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionRightDockable, b)
 
-    def Floatable(self, b=True):
+    def Floatable(self, b=True) -> Self:
         """
         Sets whether the user will be able to undock a pane and turn it
         into a floating window.
@@ -1468,7 +1474,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionFloatable, b)
 
-    def Movable(self, b=True):
+    def Movable(self, b=True) -> Self:
         """
         Indicates whether a pane can be moved.
 
@@ -1477,7 +1483,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionMovable, b)
 
-    def NotebookDockable(self, b=True):
+    def NotebookDockable(self, b=True) -> Self:
         """
         Indicates whether a pane can be docked in an automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
 
@@ -1486,7 +1492,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionNotebookDockable, b)
 
-    def DockFixed(self, b=True):
+    def DockFixed(self, b=True) -> Self:
         """
         Causes the containing dock to have no resize sash. This is useful
         for creating panes that span the entire width or height of a dock, but should
@@ -1516,7 +1522,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionTopSnapped, b)
 
-    def BottomSnappable(self, b=True):
+    def BottomSnappable(self, b=True) -> Self:
         """
         Indicates whether a pane can be snapped at the bottom of the main frame.
 
@@ -1525,7 +1531,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionBottomSnapped, b)
 
-    def LeftSnappable(self, b=True):
+    def LeftSnappable(self, b=True) -> Self:
         """
         Indicates whether a pane can be snapped on the left of the main frame.
 
@@ -1543,7 +1549,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionRightSnapped, b)
 
-    def Snappable(self, b=True):
+    def Snappable(self, b=True) -> Self:
         """
         Indicates whether a pane can be snapped on the main frame. This is
         equivalent as calling :meth:`TopSnappable` . :meth:`BottomSnappable` . :meth:`LeftSnappable` . :meth:`RightSnappable` .
@@ -1553,7 +1559,7 @@ class AuiPaneInfo(object):
 
         return self.TopSnappable(b).BottomSnappable(b).LeftSnappable(b).RightSnappable(b)
 
-    def FlyOut(self, b=True):
+    def FlyOut(self, b=True) -> Self:
         """
         Indicates whether a pane, when floating, has a "fly-out" effect
         (i.e., floating panes which only show themselves when moused over).
@@ -1564,7 +1570,7 @@ class AuiPaneInfo(object):
         return self.SetFlag(self.optionFlyOut, b)
 
     # Copy over the members that pertain to docking position
-    def SetDockPos(self, source):
+    def SetDockPos(self, source) -> Self:
         """
         Copies the `source` pane members that pertain to docking position to `self`.
 
@@ -1583,7 +1589,7 @@ class AuiPaneInfo(object):
 
         return self
 
-    def DefaultPane(self):
+    def DefaultPane(self) -> Self:
         """ Specifies that the pane should adopt the default pane settings. """
 
         state = self.state
@@ -1596,7 +1602,7 @@ class AuiPaneInfo(object):
         self.state = state
         return self
 
-    def CentrePane(self):
+    def CentrePane(self) -> Self:
         """
         Specifies that the pane should adopt the default center pane settings.
 
@@ -1606,7 +1612,7 @@ class AuiPaneInfo(object):
 
         return self.CenterPane()
 
-    def CenterPane(self):
+    def CenterPane(self) -> Self:
         """
         Specifies that the pane should adopt the default center pane settings.
 
@@ -1617,7 +1623,7 @@ class AuiPaneInfo(object):
         self.state = 0
         return self.Center().PaneBorder().Resizable()
 
-    def ToolbarPane(self):
+    def ToolbarPane(self) -> Self:
         """ Specifies that the pane should adopt the default toolbar pane settings. """
 
         self.DefaultPane()
@@ -1633,7 +1639,7 @@ class AuiPaneInfo(object):
 
         return self
 
-    def Icon(self, icon):
+    def Icon(self, icon) -> Self:
         """
         Specifies whether an icon is drawn on the left of the caption text when
         the pane is docked. If `icon` is ``None`` or :class:`NullIcon`, no icon is drawn on
@@ -1649,7 +1655,7 @@ class AuiPaneInfo(object):
         self.icon = icon
         return self
 
-    def SetFlag(self, flag, option_state):
+    def SetFlag(self, flag, option_state) -> Self:
         """
         Turns the property given by `flag` on or off with the `option_state`
         parameter.

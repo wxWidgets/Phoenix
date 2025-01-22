@@ -14,9 +14,14 @@
 """
 This module contains methods used throughout the :class:`bar` library.
 """
-
+import sys
 import wx
 import math
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 
 def RibbonInterpolateColour(start_colour, end_colour, position, start_position, end_position):
@@ -200,7 +205,7 @@ class RibbonHSLColour(object):
         return self.Lighter(-delta)
 
 
-    def MakeDarker(self, delta):
+    def MakeDarker(self, delta) -> Self:
 
         self.luminance -= delta
         return self
