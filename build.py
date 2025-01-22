@@ -1156,7 +1156,10 @@ def cmd_sphinx(options, args):
     pwd2 = pushDir(sphinxDir)
     buildDir = os.path.join(sphinxDir, 'build')
     htmlDir = os.path.join(phoenixDir(), 'docs', 'html')
-    runcmd('{} -m sphinx -b html -d {}/doctrees . {}'.format(PYTHON, buildDir, htmlDir))
+    sphinx_log = os.path.join(htmlDir, 'warnings', 'sphinx_warnings.log')
+
+    runcmd('{} -m sphinx --builder html --color --warning-file {} \
+    --doctree-dir {}/doctrees . {}'.format(PYTHON, sphinx_log, buildDir, htmlDir))
     del pwd2
 
     msg('Postprocessing sphinx output...')
