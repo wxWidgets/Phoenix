@@ -339,7 +339,7 @@ def removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, te
 
 def addSpacesToLinks(text):
 
-    regex = re.findall('\w:ref:`(.*?)`', text)
+    regex = re.findall(r'\w:ref:`(.*?)`', text)
 
     for reg in regex:
         text = text.replace(':ref:`%s`'%reg, ' :ref:`%s`'%reg)
