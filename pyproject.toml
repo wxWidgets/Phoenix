@@ -1,0 +1,14 @@
+[project]
+name = "wxPython"
+dynamic = [
+    "authors",
+    "classifiers",
+    "dependencies",
+    "description",
+    "keywords",
+    "license",
+    "readme",
+    "scripts",
+    "urls",
+    "version",
+]
