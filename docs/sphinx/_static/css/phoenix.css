@@ -551,7 +551,7 @@ cite, code, tt {
     letter-spacing: 0.01em;
 }
 
-code.descname, code.descclassname  {
+code.descname, code.descclassname, span.sig-name {
     font-weight: bold;
 }
 a.headerlink {
