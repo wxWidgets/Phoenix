@@ -1018,8 +1018,8 @@ def cmd_docset_py(options, args):
         sys.exit(1)
 
     # clear out any old docset build
-    name = 'wxPython-{}'.format(cfg.VERSION)
-    docset = posixjoin('dist', '{}.docset'.format(name))
+    name = 'wxPython-{}.docset'.format(cfg.VERSION)
+    docset = posixjoin('dist', name)
     if os.path.isdir(docset):
         shutil.rmtree(docset)
 
@@ -1036,7 +1036,7 @@ def cmd_docset_py(options, args):
 
     # Remove the sidebar from the pages in the docset
     msg('Removing sidebar from docset pages...')
-    _removeSidebar(opj('dist', name+'.docset', 'Contents', 'Resources', 'Documents'))
+    _removeSidebar(opj('dist', name, 'Contents', 'Resources', 'Documents'))
 
     # build the tarball
     msg('Archiving Phoenix docset...')
@@ -1045,7 +1045,7 @@ def cmd_docset_py(options, args):
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
     with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
-        tarball.add(opj('dist', name+'.docset'), name+'.docset', filter=_setTarItemPerms)
+        tarball.add(opj('dist', name), name, filter=_setTarItemPerms)
 
     if options.upload:
         uploadPackage(tarfilename, options, keep=5,
