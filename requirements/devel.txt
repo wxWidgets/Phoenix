@@ -14,12 +14,6 @@ pytest-timeout
 
 sphinx
 sphinxcontrib-jquery
-sphinxcontrib-applehelp
-sphinxcontrib-devhelp
-sphinxcontrib-htmlhelp
-sphinxcontrib-jsmath
-sphinxcontrib-qthelp
-sphinxcontrib-serializinghtml
 Jinja2
 markupsafe
 doc2dash
