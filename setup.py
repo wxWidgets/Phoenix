@@ -18,15 +18,12 @@ from distutils.command.build        import build as orig_build
 from setuptools.command.install     import install as orig_install
 from setuptools.command.bdist_egg   import bdist_egg as orig_bdist_egg
 from setuptools.command.sdist       import sdist as orig_sdist
-try:
-    from wheel.bdist_wheel import bdist_wheel as orig_bdist_wheel
-    haveWheel = True
-except ImportError:
-    haveWheel = False
+from setuptools.command.bdist_wheel import bdist_wheel as orig_bdist_wheel
 
 from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
 import buildtools.version as version
 
+haveWheel = True
 
 # Create a buildtools.config.Configuration object
 cfg = Config(noWxConfig=True)

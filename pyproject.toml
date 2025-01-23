@@ -15,7 +15,7 @@ dynamic = [
 
 [build-system]
 requires = [
-    "setuptools>=61",
+    "setuptools>=70.1",
     "cython == 3.0.10",
     "sip == 6.9.1",
 ]
