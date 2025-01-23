@@ -144,9 +144,8 @@ div#searchbox {
 
 div#sourcelink {
     position: absolute;
-    bottom: 0;
-    font-style: italic;
-    font-size: small;
+    bottom: 0.2rem;
+    left: 0.5rem;
 }
 
 div.related {
@@ -551,9 +550,10 @@ cite, code, tt {
     letter-spacing: 0.01em;
 }
 
-code.descname, code.descclassname, span.sig-name {
+code.descname, code.descclassname, span.sig-name, span.sig-prename {
     font-weight: bold;
 }
+
 a.headerlink {
     color: #c60f0f;
     font-size: 0.8em;
@@ -753,6 +753,14 @@ p.mybiglink a.mybiglink {
 
 table.contentstable p.mybiglink {
     line-height: 150%;
+}
+
+hr {
+    color: #ccc;
+    background-color: #ccc;
+    height: 1px;
+    border: none;
+    margin-bottom: 0.7rem;
 }
 
 hr.overloadsep {
