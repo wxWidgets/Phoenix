@@ -23,7 +23,7 @@ and launch the wxPython demo for you.
 
 .. note:: If you wish to help in the documentation effort, the main
    docstrings guidelines are outlined in the
-   `Docstring Guidelines <https://docs.wxpython.org/DocstringsGuidelines.html>`_
+   `Docstring Guidelines <DocstringsGuidelines.html>`_
    document.
 
 
