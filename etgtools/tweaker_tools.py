@@ -1055,6 +1055,11 @@ public:
         if (PyErr_Occurred())
             return NULL;
     %End
+
+    PyObject* __iter__();
+    %MethodCode
+        return PyObject_SelfIter(sipSelf);
+    %End
 }};
 
 class {ListClass}
