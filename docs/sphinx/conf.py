@@ -168,9 +168,7 @@ html_sidebars = {
 html_additional_pages = {'gallery': 'gallery.html',
                          'main': 'main.html'}
 
-# If false, no module index is generated.
-html_use_modindex = True
-
+html_domain_indices = {'py-modindex'}
 # A list of ignored prefixes for module index sorting.
 modindex_common_prefix = ['wx.', 'wx.lib.', 'wx.py.']
 
