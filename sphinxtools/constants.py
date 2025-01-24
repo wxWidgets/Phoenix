@@ -179,7 +179,7 @@ TODAY = datetime.date.today().strftime('%d %B %Y')
 # Inheritance diagram external hyperlinks
 
 PYTHON_DOCS = 'https://docs.python.org/3/library/'
-NUMPY_DOCS = 'https://numpy.org/doc/stable/reference/'
+NUMPY_DOCS = 'https://numpy.org/doc/stable/reference/generated/'
 
 EXTERN_INHERITANCE = {'UserDict.'  : PYTHON_DOCS,
                       'ctypes.'    : PYTHON_DOCS,
