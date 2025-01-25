@@ -254,6 +254,36 @@ div.footer {
   color: rgb(0,102,204);
 }
 
+.control-appearance-figures {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: end;
+    column-gap: 1.0em;
+    justify-content: space-around;
+}
+
+.appearance-figure {
+    margin: 0;
+    padding: 0;
+    max-width: 500px;
+    flex-shrink: 1;
+}
+
+.appearance-figure img {
+    max-height: 320px;
+}
+
+figcaption {
+    text-align: center;
+    text-align-last: center;
+}
+
+figcaption a.headerlink {
+    margin: 0;
+    padding: 0;
+}
+
 .floatleft {
 	position: relative;
 	float:left;
