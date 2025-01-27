@@ -1592,7 +1592,7 @@ class XRef(Node):
                 text = ''
 
             elif not isNumeric(text):
-                text = '``%s``'%text
+                text = '``%s``' % text.strip()
 
         elif 'funcmacro' in values:
             if '(' in stripped:
