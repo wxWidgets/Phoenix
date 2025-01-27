@@ -2893,7 +2893,7 @@ class XMLDocString(object):
                 pickleItem(desc, self.current_module, self.class_name, 'class')
 
         if self.overloads:
-            docstrings += '\n\n%s|overload| Overloaded Implementations:\n\n'%spacer
+            docstrings += '\n\n%s|overload| **Overloaded Implementations:**\n\n'%spacer
             docstrings += '%s:html:`<hr class="overloadsep" /><br />`\n\n'%spacer
 
             for index, over in enumerate(self.overloads):

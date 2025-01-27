@@ -669,9 +669,6 @@ def postProcess(folder, options):
         with textfile_open(filename, "rt") as fid:
             orig_text = text = fid.read()
 
-        text = text.replace('Overloaded Implementations:',
-                            '<strong>Overloaded Implementations:</strong>')
-
         for item in HTML_REPLACE:
             if item in ('class', 'py class'):
                 continue
