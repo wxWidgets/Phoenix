@@ -156,7 +156,7 @@ def _cleanup_symlinks(cmd):
     #
     build_lib = cmd.get_finalized_command('build').build_lib
     build_lib = opj(build_lib, 'wx')
-    for libname in glob.glob(opj(build_lib, 'libwx*')):
+    for libname in sorted(glob.glob(opj(build_lib, 'libwx*'))):
 
         if os.path.islink(libname):
             if isDarwin:

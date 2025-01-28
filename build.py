@@ -947,7 +947,7 @@ def do_regenerate_sysconfig():
 
         # grab the file in that folder and copy it into the Python lib
         p = opj(td, pybd, '*')
-        datafile = glob.glob(opj(td, pybd, '*'))[0]
+        datafile = sorted(glob.glob(opj(td, pybd, '*')))[0]
         cmd = [PYTHON, '-c', 'import sysconfig; print(sysconfig.get_path("stdlib"))']
         stdlib = runcmd(cmd, getOutput=True)
         shutil.copy(datafile, stdlib)
@@ -1077,7 +1077,7 @@ def _removeSidebar(path):
     Remove the sidebar <div> from the pages going into the docset
     """
     from bs4 import BeautifulSoup
-    for filename in glob.glob(opj(path, '*.html')):
+    for filename in sorted(glob.glob(opj(path, '*.html'))):
         with textfile_open(filename, 'rt') as f:
             text = f.read()
         text = text.replace('<script src="_static/javascript/sidebar.js" type="text/javascript"></script>', '')
@@ -1116,7 +1116,7 @@ def cmd_etg(options, args):
         flags += ' --nodoc'
 
     # get the files to run, moving _core the to the front of the list
-    etgfiles = glob.glob(opj('etg', '_*.py'))
+    etgfiles = sorted(glob.glob(opj('etg', '_*.py')))
     core_file = opj('etg', '_core.py')
     if core_file in etgfiles:
         etgfiles.remove(core_file)
@@ -1149,13 +1149,13 @@ def cmd_sphinx(options, args):
     if not os.path.isdir(sphinxDir):
         raise Exception('Missing sphinx folder in the distribution')
 
-    textFiles = glob.glob(sphinxDir + '/*.txt')
+    textFiles = sorted(glob.glob(sphinxDir + '/*.txt'))
     if not textFiles:
         raise Exception('No documentation files found. Please run "build.py touch etg" first')
 
     # Copy the rst files into txt files
     restDir = os.path.join(sphinxDir, 'rest_substitutions', 'overviews')
-    rstFiles = glob.glob(restDir + '/*.rst')
+    rstFiles = sorted(glob.glob(restDir + '/*.rst'))
     for rst in rstFiles:
         rstName = os.path.split(rst)[1]
         txt = os.path.join(sphinxDir, os.path.splitext(rstName)[0] + '.txt')
@@ -1165,7 +1165,7 @@ def cmd_sphinx(options, args):
     genGallery()
 
     # Copy the hand-edited top level doc files too
-    rstFiles = glob.glob(os.path.join(phoenixDir(), 'docs', '*.rst'))
+    rstFiles = sorted(glob.glob(os.path.join(phoenixDir(), 'docs', '*.rst')))
     for rst in rstFiles:
         txt = os.path.join(sphinxDir, os.path.splitext(os.path.basename(rst))[0] + '.txt')
         copyIfNewer(rst, txt)
@@ -1272,7 +1272,7 @@ def cmd_sip(options, args):
     cmdTimer = CommandTimer('sip')
     cfg = Config()
     pwd = pushDir(cfg.ROOT_DIR)
-    modules = glob.glob(opj(cfg.SIPGEN, '_*.sip'))
+    modules = sorted(glob.glob(opj(cfg.SIPGEN, '_*.sip')))
     # move _core the to the front of the list
     core_file = opj(cfg.SIPGEN, '_core.sip')
     if core_file in modules:
@@ -1348,8 +1348,8 @@ def cmd_sip(options, args):
         # Write out a sip build file (no longer done by sip itself)
         sip_tmp_out_dir = opj(tmpdir, 'build', base)
         sip_pwd = pushDir(sip_tmp_out_dir)
-        header = glob.glob('*.h')[0]
-        sources = glob.glob('*.cpp')
+        header = sorted(glob.glob('*.h'))[0]
+        sources = sorted(glob.glob('*.cpp'))
         del sip_pwd
         with open(sbf, 'w') as f:
             f.write("sources = {}\n".format(' '.join(sources)))
@@ -1393,7 +1393,7 @@ def cmd_sip(options, args):
         # Check each file in tmpdir to see if it is different than the same file
         # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
         # ignore it.
-        for src in glob.glob(sip_tmp_out_dir + '/*'):
+        for src in sorted(glob.glob(sip_tmp_out_dir + '/*')):
             dest = opj(cfg.SIPOUT, os.path.basename(src))
             if not os.path.exists(dest):
                 msg('%s is a new file, copying...' % os.path.basename(src))
@@ -1421,7 +1421,7 @@ def cmd_sip(options, args):
     with tempfile.TemporaryDirectory() as tmpdir:
         cmd = 'sip-module --sdist --abi-version {} --target-dir {} wx.siplib'.format(cfg.SIP_ABI, tmpdir)
         runcmd(cmd)
-        tf_name = glob.glob(tmpdir + '/*.tar*')[0]
+        tf_name = sorted(glob.glob(tmpdir + '/*.tar*'))[0]
         tf_dir = os.path.splitext(os.path.splitext(tf_name)[0])[0]
         with tarfile.open(tf_name) as tf:
             try:
@@ -1439,7 +1439,7 @@ def cmd_touch(options, args):
     cmdTimer = CommandTimer('touch')
     pwd = pushDir(phoenixDir())
     etg = pathlib.Path('etg')
-    for item in etg.glob('*.py'):
+    for item in sorted(etg.glob('*.py')):
         item.touch()
     cmd_touch_others(options, args)
 
@@ -1631,21 +1631,21 @@ def copyWxDlls(options):
         arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
         dlls = list()
         if not options.debug or options.both:
-            dlls += glob.glob(os.path.join(msw.dllDir, "wx*%su_*.dll" % ver))
+            dlls += sorted(glob.glob(os.path.join(msw.dllDir, "wx*%su_*.dll" % ver)))
             if options.relwithdebug:
-                dlls += glob.glob(os.path.join(msw.dllDir, "wx*%su_*.pdb" % ver))
+                dlls += sorted(glob.glob(os.path.join(msw.dllDir, "wx*%su_*.pdb" % ver)))
         if options.debug or options.both:
-            dlls += glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.dll" % ver))
-            dlls += glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.pdb" % ver))
+            dlls += sorted(glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.dll" % ver)))
+            dlls += sorted(glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.pdb" % ver)))
 
         # Also copy the cairo DLLs if needed
         if options.cairo:
             cairo_root = os.path.join(phoenixDir(), 'packaging', 'msw-cairo')
-            dlls += glob.glob(os.path.join(cairo_root, arch, 'bin', '*.dll'))
+            dlls += sorted(glob.glob(os.path.join(cairo_root, arch, 'bin', '*.dll')))
 
         # And the webview2 (MS EDGE) DLL
         wv2_root = os.path.join(phoenixDir(), 'packaging', 'msw-webview2')
-        dlls += glob.glob(os.path.join(wv2_root, arch, '*.dll'))
+        dlls += sorted(glob.glob(os.path.join(wv2_root, arch, '*.dll')))
 
         # For Python 3.5 and 3.6 builds we also need to copy some VC14 redist DLLs.
         # NOTE: Do it for 3.7+ too for now. But when we fully switch over to VS 2017
@@ -1654,7 +1654,7 @@ def copyWxDlls(options):
             redist_dir = os.path.join(
                 phoenixDir(), 'packaging', 'msw-vcredist',
                 arch, 'Microsoft.VC140.CRT', '*.dll')
-            dlls += glob.glob(redist_dir)
+            dlls += sorted(glob.glob(redist_dir))
 
         for dll in dlls:
             copyIfNewer(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)), verbose=True)
@@ -1663,22 +1663,22 @@ def copyWxDlls(options):
         # Copy the wxWidgets dylibs
         cfg = Config()
         wxlibdir = os.path.join(getBuildDir(options), "lib")
-        dlls = glob.glob(wxlibdir + '/*.dylib')
+        dlls = sorted(glob.glob(wxlibdir + '/*.dylib'))
         for dll in dlls:
             copyIfNewer(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)), verbose=True)
 
         # Now use install_name_tool to change the extension modules to look
         # in the same folder for the wx libs, instead of the build dir. Also
         # change the wx libs the same way.
-        macSetLoaderNames(glob.glob(opj(phoenixDir(), cfg.PKGDIR, '*.so')) +
-                     glob.glob(opj(phoenixDir(), cfg.PKGDIR, '*.dylib')))
+        macSetLoaderNames(sorted(glob.glob(opj(phoenixDir(), cfg.PKGDIR, '*.so'))) +
+                     sorted(glob.glob(opj(phoenixDir(), cfg.PKGDIR, '*.dylib'))))
 
     else:
         # Not Windows and not OSX.  For now that means that we'll assume it's wxGTK.
         cfg = Config()
         wxlibdir = os.path.join(getBuildDir(options), "lib")
-        dlls = glob.glob(wxlibdir + '/libwx_*.so')
-        dlls += glob.glob(wxlibdir + '/libwx_*.so.[0-9]*')
+        dlls = sorted(glob.glob(wxlibdir + '/libwx_*.so'))
+        dlls += sorted(glob.glob(wxlibdir + '/libwx_*.so.[0-9]*'))
         for dll in dlls:
             copyIfNewer(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)), verbose=True)
 
@@ -1872,7 +1872,7 @@ def cmd_touch_others(options, args):
     pwd = pushDir(phoenixDir())
     cfg = Config(noWxConfig=True)
     pth = pathlib.Path(opj(cfg.PKGDIR, 'svg'))
-    for item in pth.glob('*.pyx'):
+    for item in sorted(pth.glob('*.pyx')):
         item.touch()
 
 
@@ -1882,7 +1882,7 @@ def cmd_clean_others(options, args):
     cfg = Config(noWxConfig=True)
     files = []
     for wc in ['*.pyd', '*.so']:
-        files += glob.glob(opj(cfg.PKGDIR, 'svg', wc))
+        files += sorted(glob.glob(opj(cfg.PKGDIR, 'svg', wc)))
     delFiles(files)
 
 
@@ -1931,7 +1931,7 @@ def cmd_build_pdbzip(options, args):
             os.mkdir('dist')
 
         cfg = Config()
-        filenames = glob.glob('./wx/*.pdb')
+        filenames = sorted(glob.glob('./wx/*.pdb'))
         if not filenames:
             msg('No PDB files found in ./wx!')
             return
@@ -1963,7 +1963,7 @@ def cmd_bdist_egg(options, args):
     cfg = Config()
     if options.upload:
         filemask = "dist/%s-%s-*.egg" % (baseName, cfg.VERSION)
-        filenames = glob.glob(filemask)
+        filenames = sorted(glob.glob(filemask))
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
         if pdbzip:
@@ -1976,10 +1976,10 @@ def cmd_bdist_wheel(options, args):
     cfg = Config()
     if options.upload:
         filemask = "dist/%s-%s-*.whl" % (baseName, cfg.VERSION)
-        filenames = glob.glob(filemask)
+        filenames = sorted(glob.glob(filemask))
         print(f'**** filemask: {filemask}')
         print(f'**** matched:  {filenames}')
-        print(f'**** all dist: {glob.glob("dist/*")}')
+        print(f'**** all dist: {sorted(glob.glob("dist/*"))}')
 
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
@@ -1994,7 +1994,7 @@ def cmd_bdist_wininst(options, args):
     cfg = Config()
     if options.upload:
         filemask = "dist/%s-%s-*.exe" % (baseName, cfg.VERSION)
-        filenames = glob.glob(filemask)
+        filenames = sorted(glob.glob(filemask))
         assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
         uploadPackage(filenames[0], options)
         if pdbzip:
@@ -2022,8 +2022,8 @@ def cmd_clean_wx(options, args):
             options.debug = True
         msw = getMSWSettings(options)
         deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
-        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion2_nodot, msw.dll_type))))
-        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion3_nodot, msw.dll_type))))
+        delFiles(sorted(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion2_nodot, msw.dll_type)))))
+        delFiles(sorted(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion3_nodot, msw.dll_type)))))
         if PYTHON_ARCH == '64bit':
             deleteIfExists(opj(msw.buildDir, 'vc%s_x64_msw%sdll' % (getVisCVersion(), msw.dll_type)))
         else:
@@ -2048,19 +2048,19 @@ def cmd_clean_py(options, args):
     deleteIfExists(getWafBuildBase())
     files = list()
     for wc in ['*.py', '*.pyc', '*.so', '*.dylib', '*.pyd', '*.pdb', '*.pi', '*.pyi']:
-        files += glob.glob(opj(cfg.PKGDIR, wc))
+        files += sorted(glob.glob(opj(cfg.PKGDIR, wc)))
     if isWindows:
         msw = getMSWSettings(options)
         for wc in [ 'wx*' + wxversion2_nodot + msw.dll_type + '*.dll',
                     'wx*' + wxversion3_nodot + msw.dll_type + '*.dll']:
-            files += glob.glob(opj(cfg.PKGDIR, wc))
+            files += sorted(glob.glob(opj(cfg.PKGDIR, wc)))
     delFiles(files)
 
     # Also remove any remaining DLLs just to make sure. This includes the C++
     # runtime DLLs, Cairo, etc.
     # TODO: Check for specific files, not just *.dll
     if isWindows:
-        files = glob.glob(opj(cfg.PKGDIR, '*.dll'))
+        files = sorted(glob.glob(opj(cfg.PKGDIR, '*.dll')))
         delFiles(files)
 
 
@@ -2090,7 +2090,7 @@ def cmd_clean_sphinx(options, args):
               opj(sphinxDir, '_static/images/inheritance/*.*'),
               ]
     for wc in globs:
-        for f in glob.glob(wc):
+        for f in sorted(glob.glob(wc)):
             os.remove(f)
 
     dirs = [opj(sphinxDir, 'build'),
@@ -2132,7 +2132,7 @@ def cmd_cleanall(options, args):
     assert os.getcwd() == phoenixDir()
     files = list()
     for wc in ['sip/cpp/*.h', 'sip/cpp/*.cpp', 'sip/cpp/*.sbf', 'sip/gen/*.sip']:
-        files += glob.glob(wc)
+        files += sorted(glob.glob(wc))
     delFiles(files)
 
     cmd_clean_docker(options, args)
@@ -2204,14 +2204,14 @@ def cmd_sdist(options, args):
     os.makedirs(posixjoin(PDEST, 'sip', 'siplib'), exist_ok=True)
     for srcdir in ['cpp', 'gen', 'siplib']:
         destdir = posixjoin(PDEST, 'sip', srcdir)
-        for name in glob.glob(posixjoin('sip', srcdir, '*')):
+        for name in sorted(glob.glob(posixjoin('sip', srcdir, '*'))):
             if not os.path.isdir(name):
                 copyFile(name, destdir)
     sip_h_dir = posixjoin(cfg.PKGDIR, 'include', 'wxPython')
     copyFile(posixjoin(sip_h_dir, 'sip.h'), posixjoin(PDEST, sip_h_dir))
     for wc in ['*.py', '*.pi', '*.pyi']:
         destdir = posixjoin(PDEST, cfg.PKGDIR)
-        for name in glob.glob(posixjoin(cfg.PKGDIR, wc)):
+        for name in sorted(glob.glob(posixjoin(cfg.PKGDIR, wc))):
             copyFile(name, destdir)
     copyFile('demo/version.py', posixjoin(PDEST, 'demo'))
 
@@ -2260,7 +2260,7 @@ def cmd_sdist(options, args):
         os.remove(tarfilename)
     pwd = pushDir(PDEST)
     with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
-        for name in glob.glob('*'):
+        for name in sorted(glob.glob('*')):
             tarball.add(name, os.path.join(rootname, name), filter=_setTarItemPerms)
 
     msg('Cleaning up...')
@@ -2314,7 +2314,7 @@ def cmd_sdist_demo(options, args):
         os.remove(tarfilename)
     pwd = pushDir(PDEST)
     with tarfile.open(name=tarfilename, mode="w:gz") as tarball:
-        for name in glob.glob('*'):
+        for name in sorted(glob.glob('*')):
             tarball.add(name, os.path.join(rootname, name), filter=_setTarItemPerms)
 
     msg('Cleaning up...')
@@ -2366,7 +2366,7 @@ def cmd_bdist(options, args):
             # If the DLLs are not already in the wx package folder then go fetch
             # them now.
             msg("Archiving wxWidgets shared libraries...")
-            dlls = glob.glob(os.path.join(wxlibdir, "*%s" % dllext))
+            dlls = sorted(glob.glob(os.path.join(wxlibdir, "*%s" % dllext)))
             for dll in dlls:
                 tarball.add(dll, os.path.join(rootname, 'wx', os.path.basename(dll)))
 
