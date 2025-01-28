@@ -1348,8 +1348,8 @@ def cmd_sip(options, args):
         # Write out a sip build file (no longer done by sip itself)
         sip_tmp_out_dir = opj(tmpdir, 'build', base)
         sip_pwd = pushDir(sip_tmp_out_dir)
-        header = glob.glob('*.h')[0]
-        sources = glob.glob('*.cpp')
+        header = sorted(glob.glob('*.h'))[0]
+        sources = sorted(glob.glob('*.cpp'))
         del sip_pwd
         with open(sbf, 'w') as f:
             f.write("sources = {}\n".format(' '.join(sources)))
