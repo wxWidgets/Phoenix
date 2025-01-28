@@ -33,7 +33,7 @@ if os.path.exists(SRC) and os.path.isdir(SRC):
 for wc in ['wxWidgets/configure',
            'wxWidgets/src/stc/gen_iface.py',
            'bin/waf-*', ]:
-    for item in glob.glob(wc):
+    for item in sorted(glob.glob(wc)):
         os.chmod(item, 0o755)
 
 

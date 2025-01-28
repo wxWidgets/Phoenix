@@ -117,7 +117,7 @@ def macFixupInstallNames(destdir, prefix, buildDir=None):
     print("**** macFixupInstallNames(%s, %s, %s)" % (destdir, prefix, buildDir))
     pwd = os.getcwd()
     os.chdir(destdir+prefix+'/lib')
-    dylibs = glob.glob('*.dylib')     # ('*[0-9].[0-9].[0-9].[0-9]*.dylib')
+    dylibs = sorted(glob.glob('*.dylib'))     # ('*[0-9].[0-9].[0-9].[0-9]*.dylib')
     for lib in dylibs:
         cmd = 'install_name_tool -id %s/lib/%s %s/lib/%s' % \
               (prefix,lib,  destdir+prefix,lib)
@@ -571,7 +571,7 @@ def main(wxDir, args):
                 renameLibrary(libfile, "wx" + lib)
                 run("ln -s -f ../../../%s %s/wx%s" % (libfile, frameworkDir, lib))
 
-        for lib in glob.glob("lib/*.dylib"):
+        for lib in sorted(glob.glob("lib/*.dylib")):
             if not os.path.islink(lib):
                 corelibname = "lib/lib%s-%s.0.dylib" % (basename, version)
                 run("install_name_tool -id %s %s" % (os.path.join(prefixDir, lib), lib))
@@ -589,7 +589,7 @@ def main(wxDir, args):
 """
         headers = ""
         header_dir = "wx-%s/wx" % version
-        for include in glob.glob(header_dir + "/*.h"):
+        for include in sorted(glob.glob(header_dir + "/*.h")):
             headers += "#include <wx/" + os.path.basename(include) + ">\n"
 
         with open("%s.h" % fwname, "w") as framework_header:

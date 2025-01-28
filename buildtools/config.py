@@ -472,7 +472,7 @@ class Configuration(object):
 
     def build_locale_dir(self, destdir, verbose=1):
         """Build a locale dir under the wxPython package."""
-        moFiles = glob.glob(opj(self.WXDIR, 'locale', '*.mo'))
+        moFiles = sorted(glob.glob(opj(self.WXDIR, 'locale', '*.mo')))
         for src in moFiles:
             lang = os.path.splitext(os.path.basename(src))[0]
             dest = opj(destdir, lang, 'LC_MESSAGES')
@@ -525,7 +525,7 @@ class Configuration(object):
         else:
             walk_helper((file_list, wildcards),
                         srcdir,
-                        [os.path.basename(f) for f in glob.glob(opj(srcdir, '*'))])
+                        [os.path.basename(f) for f in sorted(glob.glob(opj(srcdir, '*')))])
         return file_list
 
 
@@ -818,7 +818,7 @@ def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
     print("**** macFixDependencyInstallName(%s, %s, %s, %s)" % (destdir, prefix, extension, buildDir))
     pwd = os.getcwd()
     os.chdir(destdir+prefix+'/lib')
-    dylibs = glob.glob('*.dylib')
+    dylibs = sorted(glob.glob('*.dylib'))
     for lib in dylibs:
         #cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s' % \
         #      (destdir+prefix,lib,  prefix,lib,  extension)
