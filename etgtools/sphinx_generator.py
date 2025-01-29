@@ -1163,7 +1163,9 @@ class Image(Node):
         rel_path = os.path.normpath(static_path[rel_path_index:])
 
         docstrings = '\n\n'
-        docstrings += '.. figure:: %s\n' % rel_path
+        # Sphinx (on windows) can't parse windows style paths when reading
+        # .rst files. Therefore paths are written unix style.
+        docstrings += '.. figure:: %s\n' % rel_path.replace('\\', '/')
         docstrings += '   :align: center\n\n\n'
         docstrings += '|\n\n'
 
