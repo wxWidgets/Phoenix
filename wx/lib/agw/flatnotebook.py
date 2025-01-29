@@ -3728,7 +3728,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
 
             imageXOffset = textOffset - 16 - padding
             pc._ImageList.Draw(pc._pagesInfoVec[tabIdx].GetImageIndex(), dc,
-                                     posx + imageXOffset, imageYCoord,
+                                     int(posx + imageXOffset), int(imageYCoord),
                                      wx.IMAGELIST_DRAW_TRANSPARENT, True)
 
         pageTextColour = pc._pParent.GetPageTextColour(tabIdx)
@@ -3855,7 +3855,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
             posy = (pc.HasAGWFlag(FNB_BOTTOM) and [0] or [VERTICAL_BORDER_PADDING])[0]
 
             pc._pagesInfoVec[i].SetPosition(wx.Point(posx, posy))
-            pc._pagesInfoVec[i].SetSize(wx.Size(tabWidth, tabHeight))
+            pc._pagesInfoVec[i].SetSize(wx.Size(int(tabWidth), int(tabHeight)))
 
             posx += tabWidth
 
