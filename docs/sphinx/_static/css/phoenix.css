@@ -107,9 +107,10 @@ div.headerimage-noshow {
 }
 
 div.document {
-  background-color: rgb(230,230,230);
-  position: relative;
-  margin-left: 240px;
+    background-color: rgb(230,230,230);
+    position: relative;
+    margin-left: 240px;
+    z-index: 500;
 }
 
 div.sphinxsidebarwrapper {
@@ -140,6 +141,7 @@ div.sphinxsidebar {
     left: 0;
     top: 30px;
     bottom: 0;
+    z-index: 600;
 }
 
 #searchbox {
@@ -159,9 +161,9 @@ div.related {
     font-size: 90%;
     line-height: normal;
     height: auto;
-    left: 0;
-    right: 0;
+    position: sticky;
     top: 0;
+    z-index: 999;
 }
 
 div.related ul {
