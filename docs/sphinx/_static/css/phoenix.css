@@ -114,6 +114,10 @@ div.document {
 
 div.sphinxsidebarwrapper {
     padding: 10px 5px 0 10px;
+    min-height: 98%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 div.document-no-sidebar {
@@ -138,14 +142,14 @@ div.sphinxsidebar {
     bottom: 0;
 }
 
-div#searchbox {
-    margin-top: 30px;
+#searchbox {
+    margin-top: 1.8em;
+    flex-grow: 1;
 }
 
-div#sourcelink {
-    position: absolute;
-    bottom: 0.2rem;
-    left: 0.5rem;
+#sourcelink {
+    margin-top: 1.8em;
+    flex-grow: 0;
 }
 
 div.related {
