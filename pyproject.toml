@@ -25,4 +25,5 @@ requires = [
 build-backend = "setuptools.build_meta:__legacy__"
 
 [tool.setuptools.packages.find]
+exclude = ["src", "buildtools*", "etgtools", "sphinxtools", "src", "unittests"]
 namespaces = false
