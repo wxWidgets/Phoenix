@@ -71,7 +71,7 @@ wxWidgets implementation of the :class:`ThumbnailCtrl` control.  Andrea Gavana
 notes that :class:`ThumbnailCtrl` wouldn't have been so fast and complete
 without the suggestions and hints from Peter Damoc.
 
-Usage:
+Usage
 =====
 
 Usage example::

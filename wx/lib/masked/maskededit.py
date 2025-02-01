@@ -117,7 +117,7 @@ mask
         X       Allow string.letters, string.punctuation, string.digits
         &       Allow string.punctuation only (doesn't include all unicode symbols)
         \*      Allow any visible character
-        |       explicit field boundary (takes no space in the control; allows mix
+        \|      Explicit field boundary (takes no space in the control; allows mix
                 of adjacent mask characters to be treated as separate fields,
                 eg: '&|###' means "field 0 = '&', field 1 = '###'", but there's
                 no fixed characters in between.
@@ -189,59 +189,67 @@ defaultEncoding
 formatcodes
   These other properties can be passed to the class when instantiating it:
     Formatcodes are specified as a string of single character formatting
-    codes that modify  behavior of the control::
+    codes that modify  behavior of the control:
 
-            _  Allow spaces
-            !  Force upper
-            ^  Force lower
-            R  Right-align field(s)
-            r  Right-insert in field(s) (implies R)
-            <  Stay in field until explicit navigation out of it
+    =======  ==========================================================
+      _       Allow spaces
+      !       Force upper
+      ^       Force lower
+      R       Right-align field(s)
+      r       Right-insert in field(s) (implies R)
+      <       Stay in field until explicit navigation out of it
 
-            >  Allow insert/delete within partially filled fields (as
-               opposed to the default "overwrite" mode for fixed-width
-               masked edit controls.)  This allows single-field controls
-               or each field within a multi-field control to optionally
-               behave more like standard text controls.
-               (See EMAIL or phone number autoformat examples.)
+      >       Allow insert/delete within partially filled fields (as
+              opposed to the default "overwrite" mode for fixed-width
+              masked edit controls.)  This allows single-field controls
+              or each field within a multi-field control to optionally
+              behave more like standard text controls.
+              (See EMAIL or phone number autoformat examples.)
 
-               *Note: This also governs whether backspace/delete operations
-               shift contents of field to right of cursor, or just blank the
-               erased section.
+              .. note::
 
-               Also, when combined with 'r', this indicates that the field
-               or control allows right insert anywhere within the current
-               non-empty value in the field.  (Otherwise right-insert behavior
-               is only performed to when the entire right-insertable field is
-               selected or the cursor is at the right edge of the field.*
+                  This also governs whether backspace/delete operations
+                  shift contents of field to right of cursor, or just blank
+                  the erased section.
+
+                  Also, when combined with 'r', this indicates that the field
+                  or control allows right insert anywhere within the current
+                  non-empty value in the field.  (Otherwise right-insert behavior
+                  is only performed to when the entire right-insertable field is
+                  selected or the cursor is at the right edge of the field.
 
 
-            ,  Allow grouping character in integer fields of numeric controls
-               and auto-group/regroup digits (if the result fits) when leaving
-               such a field.  (If specified, .SetValue() will attempt to
-               auto-group as well.)
-               ',' is also the default grouping character.  To change the
-               grouping character and/or decimal character, use the groupChar
-               and decimalChar parameters, respectively.
-               Note: typing the "decimal point" character in such fields will
-               clip the value to that left of the cursor for integer
-               fields of controls with "integer" or "floating point" masks.
-               If the ',' format code is specified, this will also cause the
-               resulting digits to be regrouped properly, using the current
-               grouping character.
-            -  Prepend and reserve leading space for sign to mask and allow
-               signed values (negative #s shown in red by default.) Can be
-               used with argument useParensForNegatives (see below.)
-            0  integer fields get leading zeros
-            D  Date[/time] field
-            T  Time field
-            F  Auto-Fit: the control calculates its size from
-               the length of the template mask
-            V  validate entered chars against validRegex before allowing them
-               to be entered vs. being allowed by basic mask and then having
-               the resulting value just colored as invalid.
-               (See USSTATE autoformat demo for how this can be used.)
-            S  select entire field when navigating to new field
+      ,       Allow grouping character in integer fields of numeric controls
+              and auto-group/regroup digits (if the result fits) when leaving
+              such a field.  (If specified, .SetValue() will attempt to
+              auto-group as well.)
+              ',' is also the default grouping character.  To change the
+              grouping character and/or decimal character, use the groupChar
+              and decimalChar parameters, respectively.
+
+              .. note::
+
+                  Typing the "decimal point" character in such fields will
+                  clip the value to that left of the cursor for integer
+                  fields of controls with "integer" or "floating point" masks.
+
+              If the ',' format code is specified, this will also cause the
+              resulting digits to be regrouped properly, using the current
+              grouping character.
+      \-      Prepend and reserve leading space for sign to mask and allow
+              signed values (negative #s shown in red by default.) Can be
+              used with argument useParensForNegatives (see below.)
+      0       Integer fields get leading zeros
+      D       Date[/time] field
+      T       Time field
+      F       Auto-Fit: the control calculates its size from
+              the length of the template mask
+      V       Validate entered chars against validRegex before allowing them
+              to be entered vs. being allowed by basic mask and then having
+              the resulting value just colored as invalid.
+              (See USSTATE autoformat demo for how this can be used.)
+      S       Select entire field when navigating to new field
+    =======  ==========================================================
 
 fillChar
 
