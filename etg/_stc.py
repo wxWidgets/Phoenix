@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+import sphinxtools.stc_doc_postprocess as postprocess
 
 PACKAGE   = "wx"
 MODULE    = "_stc"
@@ -259,6 +260,7 @@ def run():
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
+    postprocess.categorise_methods()
 
 
 
