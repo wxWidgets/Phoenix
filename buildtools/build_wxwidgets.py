@@ -370,13 +370,19 @@ def main(wxDir, args):
                 if os.path.exists(frameworkRootDir):
                     shutil.rmtree(frameworkRootDir)
 
+        # Workaround OpenSUSE libdir issue by unsetting CONFIG_SITE envvar
+        env = None
+        if "CONFIG_SITE" in os.environ:
+            env = dict(os.environ)
+            del env["CONFIG_SITE"]
+
         print("Configure options: " + repr(configure_opts))
         wxBuilder = builder.AutoconfBuilder()
         if not options.no_config and not options.clean:
             olddir = os.getcwd()
             if buildDir:
                 os.chdir(buildDir)
-            exitIfError(wxBuilder.configure(dir=wxRootDir, options=configure_opts),
+            exitIfError(wxBuilder.configure(dir=wxRootDir, options=configure_opts, env=env),
                         "Error running configure")
             os.chdir(olddir)
 
