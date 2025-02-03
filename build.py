@@ -21,6 +21,11 @@ import os
 import re
 import shutil
 import subprocess
+import requests
+from requests.exceptions import HTTPError
+import traceback
+from io import BytesIO
+import bz2
 import tarfile
 import tempfile
 import datetime
@@ -86,8 +91,8 @@ wafMD5 = '2e7b2166c030dbac3e21891048df10aa'
 doxygenCurrentVersion = '1.9.1'
 doxygenMD5 = {
     'darwin' : '6912d41cef5971fb07573190849a8a84',
-    'win32'  : 'a3dcff227458e423c132f16f57e26510',
-    'linux'  : '083b3d8f614b538696041c7364e0f334',
+    'win32'  : '90439896025dc8ddcd5d767ab2c2c489',
+    'linux'  : '5e869ab2085183f3d297b0156a10d4a1',
 }
 
 # And the location where they can be downloaded from
@@ -525,7 +530,6 @@ def deleteIfExists(deldir, verbose=True):
             shutil.rmtree(deldir)
         except Exception:
             if verbose:
-                import traceback
                 msg("Error: %s" % traceback.format_exc(1))
     else:
         if verbose:
@@ -538,6 +542,49 @@ def delFiles(fileList, verbose=True):
             print("Removing file: %s" % afile)
         os.remove(afile)
 
+def errorMsg(txt, cmdname, envvar):
+    msg('ERROR: ' + txt)
+    msg('       Set %s in the environment to use a local build of %s instead' % (envvar, cmdname))
+
+def downloadTool(cmd, cmdname, envvar):
+    msg('Not found.  Attempting to download...')
+    url = f"{toolsURL}/{os.path.basename(cmd)}.bz2"
+
+    try:
+        resp = requests.get(url)
+        resp.raise_for_status()
+    except HTTPError:
+        # The files could be packed as a tarball
+        url = url.replace(".bz2", ".tar.bz2")
+        try:
+            resp = requests.get(url)
+            resp.raise_for_status()
+        except HTTPError:
+            errorMsg('Unable to download ' + url, cmdname, envvar)
+            traceback.print_exc()
+            sys.exit(1)
+
+    msg('Connection successful...')
+    data = resp.content
+    msg('Data downloaded...')
+
+    if ".tar." in url:
+        with tarfile.open('r:bz2', fileobj=BytesIO(data)) as tar:
+            # Extraction filters are only available since Python 3.12
+            tar.extraction_filter = getattr(tarfile, 'data_filter',
+                                            (lambda member, path: member))
+            filelist = []
+            for file in tar.getmembers():
+                if file.name.startswith("doxygen") or \
+                    file.name.startswith("libclang"):
+                    filelist.append(file)
+
+            tar.extractall(members=filelist, path=os.path.dirname(cmd))
+    else:
+        data = bz2.decompress(data)
+        Path(cmd).write_bytes(data)
+
+    os.chmod(cmd, 0o755)
 
 def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
     # Check in the bin dir for the specified version of the tool command. If
@@ -546,88 +593,67 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
     if os.environ.get(envVar):
         # Setting a value in the environment overrides other options
         return os.environ.get(envVar)
+
+    # setup
+    if platformBinary:
+        platform = getToolsPlatformName(linuxBits)
+        ext = ''
+        if platform == 'win32':
+            ext = '.exe'
+        cmd = opj(phoenixDir(), 'bin', '%s-%s-%s%s' % (cmdName, version, platform, ext))
+        md5 = MD5[platform]
     else:
-        # setup
-        if platformBinary:
-            platform = getToolsPlatformName(linuxBits)
-            ext = ''
-            if platform == 'win32':
-                ext = '.exe'
-            cmd = opj(phoenixDir(), 'bin', '%s-%s-%s%s' % (cmdName, version, platform, ext))
-            md5 = MD5[platform]
-        else:
-            cmd = opj(phoenixDir(), 'bin', '%s-%s' % (cmdName, version))
-            md5 = MD5
+        cmd = opj(phoenixDir(), 'bin', '%s-%s' % (cmdName, version))
+        md5 = MD5
 
+    msg('Checking for %s...' % cmd)
+    if os.path.exists(cmd):
+        # if the file exists run some verification checks on it
 
-        def _error_msg(txt):
-            msg('ERROR: ' + txt)
-            msg('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
-
-
-        msg('Checking for %s...' % cmd)
-        if os.path.exists(cmd):
-            # if the file exists run some verification checks on it
-
-            # first make sure it is a normal file
-            if not os.path.isfile(cmd):
-                _error_msg('%s exists but is not a regular file.' % cmd)
-                sys.exit(1)
-
-            # now check the MD5 if not in dev mode and it's set to None
-            if not (devMode and md5 is None):
-                m = hashlib.md5()
-                m.update(Path(cmd).read_bytes())
-                if m.hexdigest() != md5:
-                    _error_msg('MD5 mismatch, got "%s"\n       '
-                               'expected          "%s"' % (m.hexdigest(), md5))
-                    sys.exit(1)
-
-            # If the cmd is a script run by some interpreter, or similar,
-            # then we don't need to check anything else
-            if not platformBinary:
-                return cmd
-
-            # Ensure that commands that are platform binaries are executable
-            if not os.access(cmd, os.R_OK | os.X_OK):
-                _error_msg('Cannot execute %s due to permissions error' % cmd)
-                sys.exit(1)
-
-            try:
-                p = subprocess.Popen([cmd, '--help'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=os.environ)
-                p.communicate()
-            except OSError as e:
-                _error_msg('Could not execute %s, got "%s"' % (cmd, e))
-                sys.exit(1)
-
-            # if we get this far then all is well, the cmd is good to go
-            return cmd
-
-
-        msg('Not found.  Attempting to download...')
-        url = '%s/%s.bz2' % (toolsURL, os.path.basename(cmd))
-        try:
-            import requests
-            resp = requests.get(url)
-            resp.raise_for_status()
-            msg('Connection successful...')
-            data = resp.content
-            msg('Data downloaded...')
-        except Exception:
-            _error_msg('Unable to download ' + url)
-            import traceback
-            traceback.print_exc()
+        # first make sure it is a normal file
+        if not os.path.isfile(cmd):
+            errorMsg('%s exists but is not a regular file.' % cmd,
+                       cmdName, envVar)
             sys.exit(1)
 
-        import bz2
-        data = bz2.decompress(data)
-        Path(cmd).write_bytes(data)
-        os.chmod(cmd, 0o755)
+        # now check the MD5 if not in dev mode and it's set to None
+        if not (devMode and md5 is None):
+            m = hashlib.md5()
+            m.update(Path(cmd).read_bytes())
+            if m.hexdigest() != md5:
+                errorMsg('MD5 mismatch, got "%s"\n       '
+                           'expected          "%s"' % (m.hexdigest(), md5),
+                           cmdName, envVar)
+                sys.exit(1)
 
-        # Recursive call so the MD5 value will be double-checked on what was
-        # just downloaded
-        return getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits)
+        # If the cmd is a script run by some interpreter, or similar,
+        # then we don't need to check anything else
+        if not platformBinary:
+            return cmd
 
+        # Ensure that commands that are platform binaries are executable
+        if not os.access(cmd, os.R_OK | os.X_OK):
+            errorMsg('Cannot execute %s due to permissions error' % cmd,
+                       cmdName, envVar)
+            sys.exit(1)
+
+        try:
+            p = subprocess.Popen([cmd, '--help'], stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE, env=os.environ)
+            p.communicate()
+        except OSError as e:
+            errorMsg('Could not execute %s, got "%s"' % (cmd, e),
+                       cmdName, envVar)
+            sys.exit(1)
+
+        # if we get this far then all is well, the cmd is good to go
+        return cmd
+
+    downloadTool(cmd, cmdName, envVar)
+
+    # Recursive call so the MD5 value will be double-checked on what was
+    # just downloaded
+    return getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits)
 
 
 # The download and MD5 check only needs to happen once per run, cache the sip
@@ -658,14 +684,12 @@ def getMSWebView2():
 
         msg('Downloading microsoft.web.webview2 {}...'.format(MS_edge_version))
         try:
-            import requests
             resp = requests.get(MS_edge_url)
             resp.raise_for_status()
             msg('Connection successful...')
             data = resp.content
             msg('Data downloaded...')
         except Exception:
-            import traceback
             traceback.print_exc()
             sys.exit(1)
 
@@ -1571,7 +1595,6 @@ def cmd_build_wx(options, args):
 
     except Exception:
         print("ERROR: failed building wxWidgets")
-        import traceback
         traceback.print_exc()
         sys.exit(1)
 
