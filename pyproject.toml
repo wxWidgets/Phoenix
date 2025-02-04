@@ -1,17 +1,73 @@
 [project]
 name = "wxPython"
+description = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
+requires-python = ">= 3.9"
+authors = [
+    { name = "Robin Dunn", email = "robin@alldunn.com" },
+    { name = "Scott Talbert", email = "swt@techie.net" },
+]
+keywords = [
+    "GUI",
+    "awesome",
+    "cross-platform",
+    "user-interface",
+    "wx",
+    "wxWidgets",
+    "wxWindows",
+]
+classifiers = [
+    "Development Status :: 6 - Mature",
+    "Environment :: MacOS X :: Cocoa",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: X11 Applications :: GTK",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved",
+    "Operating System :: MacOS",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Microsoft :: Windows :: Windows 7",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Operating System :: POSIX",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Software Development :: User Interfaces",
+]
 dynamic = [
-    "authors",
-    "classifiers",
     "dependencies",
-    "description",
-    "keywords",
     "license",
     "readme",
-    "scripts",
-    "urls",
     "version",
 ]
+
+[project.scripts]
+helpviewer = "wx.tools.helpviewer:main"
+img2png = "wx.tools.img2png:main"
+img2py = "wx.tools.img2py:main"
+img2xpm = "wx.tools.img2xpm:main"
+pycrust = "wx.py.PyCrust:main"
+pyshell = "wx.py.PyShell:main"
+pyslices = "wx.py.PySlices:main"
+pyslicesshell = "wx.py.PySlicesShell:main"
+pywxrc = "wx.tools.pywxrc:main"
+wxdemo = "wx.tools.wxget_docs_demo:demo_main" # Get/Launch Demo
+wxdocs = "wx.tools.wxget_docs_demo:docs_main" # Get/Launch Docs
+wxget = "wx.tools.wxget:main"                 # New wx wget
+
+[project.urls]
+Documentation = "https://docs.wxpython.org/"
+Download = "https://pypi.org/project/wxPython"
+Homepage = "https://wxPython.org/"
+Source = "https://github.com/wxWidgets/Phoenix"
+Repository = "https://github.com/wxWidgets/Phoenix.git"
+Issues = "https://github.com/wxWidgets/Phoenix/issues"
+Discuss = "https://discuss.wxpython.org/"
 
 [build-system]
 requires = [

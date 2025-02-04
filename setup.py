@@ -31,19 +31,8 @@ DOCS_BASE='http://docs.wxPython.org'
 
 #----------------------------------------------------------------------
 
-NAME             = version.PROJECT_NAME
-DESCRIPTION      = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
-AUTHOR           = "Robin Dunn"
-AUTHOR_EMAIL     = "robin@alldunn.com"
-URL              = "http://wxPython.org/"
-PROJECT_URLS     = {
-                    "Source": "https://github.com/wxWidgets/Phoenix",
-                    "Documentation": "https://docs.wxpython.org/",
-                   }
-DOWNLOAD_URL     = "https://pypi.org/project/{}".format(NAME)
 LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
-KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,user-interface,awesome"
 
 LONG_DESCRIPTION = """\
 Welcome to wxPython's Project Phoenix! Phoenix is the improved next-generation
@@ -70,27 +59,6 @@ the respective items. (Documents are launched in the default browser and demo is
 with python).
 """.format(version=cfg.VERSION, docs_base=DOCS_BASE)
 
-
-CLASSIFIERS      = """\
-Development Status :: 6 - Mature
-Environment :: MacOS X :: Cocoa
-Environment :: Win32 (MS Windows)
-Environment :: X11 Applications :: GTK
-Intended Audience :: Developers
-License :: OSI Approved
-Operating System :: MacOS :: MacOS X
-Operating System :: Microsoft :: Windows :: Windows 7
-Operating System :: Microsoft :: Windows :: Windows 10
-Operating System :: POSIX
-Programming Language :: Python :: 3.7
-Programming Language :: Python :: 3.8
-Programming Language :: Python :: 3.9
-Programming Language :: Python :: 3.10
-Programming Language :: Python :: 3.11
-Programming Language :: Python :: 3.12
-Programming Language :: Python :: Implementation :: CPython
-Topic :: Software Development :: User Interfaces
-"""
 
 with open('requirements/install.txt') as fid:
     INSTALL_REQUIRES = [line.strip()
@@ -326,28 +294,6 @@ setuptools.command.build_py.make_writable = wx_make_writable
 
 WX_PKGLIST = [cfg.PKGDIR] + [cfg.PKGDIR + '.' + pkg for pkg in find_packages('wx')]
 
-ENTRY_POINTS = {
-    'console_scripts' : [
-        "img2png = wx.tools.img2png:main",
-        "img2py = wx.tools.img2py:main",
-        "img2xpm = wx.tools.img2xpm:main",
-        "pywxrc = wx.tools.pywxrc:main",
-#        ],
-#    'gui_scripts' : [  # TODO: Why was this commented out?
-        "wxget = wx.tools.wxget:main",  # New wx wget
-        "wxdocs = wx.tools.wxget_docs_demo:docs_main",  # Get/Launch Docs
-        "wxdemo = wx.tools.wxget_docs_demo:demo_main",  # Get/Launch Demo
-        "helpviewer = wx.tools.helpviewer:main",
-        "pycrust = wx.py.PyCrust:main",
-        "pyshell = wx.py.PyShell:main",
-        "pyslices = wx.py.PySlices:main",
-        "pyslicesshell = wx.py.PySlicesShell:main",
-        ],
-    }
-
-SCRIPTS = []
-DATA_FILES = []
-
 HEADERS = None
 BUILD_OPTIONS = { } #'build_base' : cfg.BUILD_BASE }
 #if cfg.WXPORT == 'msw':
@@ -358,20 +304,11 @@ BUILD_OPTIONS = { } #'build_base' : cfg.BUILD_BASE }
 
 
 if __name__ == '__main__':
-    setup(name             = NAME,
-          version          = cfg.VERSION,
-          description      = DESCRIPTION,
+    setup(version          = cfg.VERSION,
           long_description = LONG_DESCRIPTION,
           long_description_content_type = 'text/x-rst',
-          author           = AUTHOR,
-          author_email     = AUTHOR_EMAIL,
-          url              = URL,
-          project_urls     = PROJECT_URLS,
-          download_url     = DOWNLOAD_URL,
           license          = LICENSE,
           platforms        = PLATFORMS,
-          classifiers      = [c for c in CLASSIFIERS.split("\n") if c],
-          keywords         = KEYWORDS,
           install_requires = INSTALL_REQUIRES,
           zip_safe         = False,
           include_package_data = True,
@@ -381,9 +318,6 @@ if __name__ == '__main__':
 
           options          = { 'build'     : BUILD_OPTIONS },
 
-          scripts          = SCRIPTS,
-          data_files       = DATA_FILES,
           headers          = HEADERS,
           cmdclass         = CMDCLASS,
-          entry_points     = ENTRY_POINTS,
         )

@@ -25,34 +25,9 @@ cfg = Config(noWxConfig=True)
 
 DESCRIPTION      = 'Wrapper for nanosvg library, plus code for integrating with wxPython'
 LONG_DESCRIPTION = ''
-AUTHOR           = 'Robin Dunn'
-AUTHOR_EMAIL     = 'robin@alldunn.com'
-URL              = "http://wxPython.org/"
-DOWNLOAD_URL     = "https://pypi.org/project/wxPython"
 LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
-KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,user-interface,awesome"
 
-CLASSIFIERS      = """\
-Development Status :: 6 - Mature
-Environment :: MacOS X :: Cocoa
-Environment :: Win32 (MS Windows)
-Environment :: X11 Applications :: GTK
-Intended Audience :: Developers
-License :: OSI Approved
-Operating System :: MacOS :: MacOS X
-Operating System :: Microsoft :: Windows :: Windows 7
-Operating System :: Microsoft :: Windows :: Windows 10
-Operating System :: POSIX
-Programming Language :: Python :: 3.7
-Programming Language :: Python :: 3.8
-Programming Language :: Python :: 3.9
-Programming Language :: Python :: 3.10
-Programming Language :: Python :: 3.11
-Programming Language :: Python :: 3.12
-Programming Language :: Python :: Implementation :: CPython
-Topic :: Software Development :: User Interfaces
-"""
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 PACKAGE = 'wx.svg'
@@ -85,15 +60,8 @@ setup(name             = 'wx.svg',
       version          = cfg.VERSION,
       description      = DESCRIPTION,
       long_description = LONG_DESCRIPTION,
-      author           = AUTHOR,
-      author_email     = AUTHOR_EMAIL,
-      url              = URL,
-      download_url     = DOWNLOAD_URL,
       license          = LICENSE,
-      classifiers      = [c for c in CLASSIFIERS.split("\n") if c],
-      keywords         = KEYWORDS,
       #packages         = [PACKAGE],
       ext_modules      = modules,
       options          = { 'build' : BUILD_OPTIONS,  },
-      scripts          = [],
 )
