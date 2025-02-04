@@ -65,7 +65,7 @@ class CommandToolBarEvent(wx.PyCommandEvent):
         :param integer `win_id`: the window identification number.
         """
 
-        if type(command_type) in int:
+        if isinstance(command_type, int):
             wx.PyCommandEvent.__init__(self, command_type, win_id)
         else:
             wx.PyCommandEvent.__init__(self, command_type.GetEventType(), command_type.GetId())
@@ -155,7 +155,7 @@ class AuiToolBarEvent(CommandToolBarEvent):
 
         CommandToolBarEvent.__init__(self, command_type, win_id)
 
-        if type(command_type) in int:
+        if isinstance(command_type, int):
             self.notify = wx.NotifyEvent(command_type, win_id)
         else:
             self.notify = wx.NotifyEvent(command_type.GetEventType(), command_type.GetId())

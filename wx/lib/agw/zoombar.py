@@ -373,7 +373,7 @@ class ZoomBarImage(object):
         self._oldHeight = 0
         self._vCenter = 0
         self._hCenter = 0
-        self._oldInc = -sys.MAXSIZE
+        self._oldInc = -sys.maxsize
         self._isSeparator = False
         self._enabled = True
 

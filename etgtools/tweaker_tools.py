@@ -168,8 +168,8 @@ class FixWxPrefix(object):
         Handles translation of common C++ types to Python types, as well as a
         few specific wx types to Python types.
         """
-        double_type = 'float' if PY3 else 'double'
-        long_type = 'int' if PY3 else 'long'
+        double_type = 'float'
+        long_type = 'int'
         type_map = {
             # Some types are guesses, marked with TODO to verify automatic
             # conversion actually happens.  Also, these are the type-names

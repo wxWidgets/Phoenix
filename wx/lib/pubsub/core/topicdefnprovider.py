@@ -295,7 +295,7 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
         # remove the temporary module and its compiled version (*.pyc)
         os.remove(self.__filename)
         try: # py3.2+ uses special folder/filename for .pyc files
-            from imp import cache_from_source
+            from importlib.util import cache_from_source
             os.remove(cache_from_source(self.__filename))
         except ImportError:
             os.remove(self.__filename + 'c')
@@ -356,7 +356,7 @@ class TopicDefnProvider(ITopicDefnProvider):
         return desc, spec
 
     def topicNames(self):
-        return self.__topicDefns.keys()
+        return iter(self.__topicDefns.keys())
 
     def getTreeDoc(self):
         return self.__treeDocs
@@ -427,7 +427,7 @@ def exportTopicTreeSpec(moduleName = None, rootTopic=None, bak='bak', moduleDoc=
     if rootTopic is None:
         from .. import pub
         rootTopic = pub.getDefaultTopicMgr().getRootAllTopics()
-    elif isintance(rootTopic, str):
+    elif isinstance(rootTopic, str):
         from .. import pub
         rootTopic = pub.getDefaultTopicMgr().getTopic(rootTopic)
 

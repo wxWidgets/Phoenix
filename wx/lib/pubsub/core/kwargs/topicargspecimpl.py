@@ -114,14 +114,14 @@ class ArgsInfo:
         hasReqd = (needReqd <= all)
         if not hasReqd:
             raise SenderMissingReqdMsgDataError(
-                self.topicNameTuple, msgKwargs.keys(), needReqd - all)
+                self.topicNameTuple, list(msgKwargs.keys()), needReqd - all)
 
         # check that all other args are among the optional spec
         optional = all - needReqd
         ok = (optional <= set(self.allOptional))
         if not ok:
             raise SenderUnknownMsgDataError( self.topicNameTuple,
-                msgKwargs.keys(), optional - set(self.allOptional) )
+                list(msgKwargs.keys()), optional - set(self.allOptional) )
 
     def filterArgs(self, msgKwargs):
         """Returns a dict which contains only those items of msgKwargs

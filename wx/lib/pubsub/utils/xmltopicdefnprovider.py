@@ -159,7 +159,7 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
         return self._topics.get(topicNameTuple, (None, None))
 
     def topicNames(self):
-        return self._topics.keys()
+        return iter(self._topics.keys())
 
     def getTreeDoc(self):
         return self._treeDoc
@@ -256,7 +256,7 @@ def exportTopicTreeSpecXml(moduleName=None, rootTopic=None, bak='bak', moduleDoc
     if rootTopic is None:
         from .. import pub
         rootTopic = pub.getDefaultTopicTreeRoot()
-    elif isintance(rootTopic, str):
+    elif isinstance(rootTopic, str):
         from .. import pub
         rootTopic = pub.getTopic(rootTopic)
 

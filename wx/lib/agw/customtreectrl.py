@@ -349,6 +349,8 @@ License And Version
 
 Latest Revision: Helio Guilherme @ 09 Aug 2018, 21.35 GMT
 
+Version 2.7
+
 """
 
 # Version Info

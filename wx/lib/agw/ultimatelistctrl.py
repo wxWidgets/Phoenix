@@ -548,9 +548,6 @@ if wx.Platform == "__WXMSW__":
 IL_FIXED_SIZE = 0
 IL_VARIABLE_SIZE = 1
 
-# Python integers, to make long types to work with CreateListItem
-INTEGER_TYPES = int
-
 
 # ----------------------------------------------------------------------------
 # Functions
@@ -567,7 +564,7 @@ def to_list(input):
 
     if isinstance(input, list):
         return input
-    elif isinstance(input, INTEGER_TYPES):
+    elif isinstance(input, int):
         return [input]
     else:
         raise Exception("Invalid parameter passed to `to_list`: only integers and list are accepted.")
@@ -595,7 +592,7 @@ def CreateListItem(itemOrId, col):
     :param `col`: the item column.
     """
 
-    if type(itemOrId) in INTEGER_TYPES:
+    if isinstance(itemOrId, int):
         item = UltimateListItem()
         item._itemId = itemOrId
         item._col = col
@@ -2285,7 +2282,7 @@ class CommandListEvent(wx.PyCommandEvent):
         :param `winid`: the event identifier.
         """
 
-        if type(commandTypeOrEvent) in INTEGER_TYPES:
+        if isinstance(commandTypeOrEvent, int):
 
             wx.PyCommandEvent.__init__(self, commandTypeOrEvent, winid)
 
@@ -2452,7 +2449,7 @@ class UltimateListEvent(CommandListEvent):
 
         CommandListEvent.__init__(self, commandTypeOrEvent, winid)
 
-        if type(commandTypeOrEvent) in INTEGER_TYPES:
+        if isinstance(commandTypeOrEvent, int):
             self.notify = wx.NotifyEvent(commandTypeOrEvent, winid)
         else:
             self.notify = wx.NotifyEvent(commandTypeOrEvent.GetEventType(), commandTypeOrEvent.GetId())

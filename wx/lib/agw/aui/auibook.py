@@ -391,7 +391,7 @@ class CommandNotebookEvent(wx.PyCommandEvent):
         :param integer `win_id`: the window identification number.
         """
 
-        if type(command_type) in int:
+        if isinstance(command_type, int):
             wx.PyCommandEvent.__init__(self, command_type, win_id)
         else:
             wx.PyCommandEvent.__init__(self, command_type.GetEventType(), command_type.GetId())
@@ -524,7 +524,7 @@ class AuiNotebookEvent(CommandNotebookEvent):
 
         CommandNotebookEvent.__init__(self, command_type, win_id)
 
-        if type(command_type) in int:
+        if isinstance(command_type, int):
             self.notify = wx.NotifyEvent(command_type, win_id)
         else:
             self.notify = wx.NotifyEvent(command_type.GetEventType(), command_type.GetId())
@@ -1173,7 +1173,7 @@ class AuiTabContainer(object):
         :param `wndOrInt`: an instance of :class:`wx.Window` or an integer specifying a tab index.
         """
 
-        if type(wndOrInt) in int:
+        if isinstance(wndOrInt, int):
 
             if wndOrInt >= len(self._pages):
                 return False

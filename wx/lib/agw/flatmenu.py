@@ -197,6 +197,7 @@ __version__ = "1.0"
 import wx
 import os
 import math
+import io
 
 import wx.lib.colourutils as colourutils
 

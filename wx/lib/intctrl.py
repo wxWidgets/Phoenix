@@ -45,7 +45,7 @@ import  wx
 #----------------------------------------------------------------------------
 
 MAXSIZE = sys.maxsize     # (constants should be in upper case)
-MINSIZE = -sys.MAXSIZE-1
+MINSIZE = -sys.maxsize-1
 LONGTYPE = int
 
 #----------------------------------------------------------------------------
@@ -697,7 +697,7 @@ class IntCtrl(wx.TextCtrl):
             value = self.GetValue()
 
         if( not (value is None and self.IsNoneAllowed())
-            and type(value) not in int ):
+            and not isinstance(value, int) ):
             raise ValueError (
                 'IntCtrl requires integer values, passed %s'% repr(value) )
 
@@ -809,7 +809,7 @@ class IntCtrl(wx.TextCtrl):
         elif type(value) == LONGTYPE and not self.IsLongAllowed():
             raise ValueError (
                 'IntCtrl requires integer value, passed long' )
-        elif type(value) not in int:
+        elif not isinstance(value, int):
             raise ValueError (
                 'IntCtrl requires integer value, passed %s'% repr(value) )
 
