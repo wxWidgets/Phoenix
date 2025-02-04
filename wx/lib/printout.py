@@ -27,9 +27,7 @@ import  copy
 import  types
 import  wx
 
-import six
-
-class PrintBase(object):
+class PrintBase:
     def SetPrintFont(self, font):      # set the DC font parameters
         fattr = font["Attr"]
         if fattr[0] == 1:
@@ -273,7 +271,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
         self.column.append(pos_x)
 
         #module logic expects two dimensional data -- fix input if needed
-        if isinstance(self.data, six.string_types):
+        if isinstance(self.data, str):
             self.data = [[copy.copy(self.data)]] # a string becomes a single cell
         try:
             rows = len(self.data)
@@ -282,7 +280,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
             rows = 1
         first_value = self.data[0]
 
-        if isinstance(first_value, six.string_types): # a sequence of strings
+        if isinstance(first_value, str): # a sequence of strings
             if self.label == [] and self.set_column == []:
                 data = []
                 for x in self.data:     #becomes one column
@@ -562,7 +560,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
         self.col = 0
         max_y = 0
         for vtxt in row_val:
-            if not isinstance(vtxt, six.string_types):
+            if not isinstance(vtxt, str):
                 vtxt = str(vtxt)
             self.region = self.column[self.col+1] - self.column[self.col]
             self.indent = self.column[self.col]

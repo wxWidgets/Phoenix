@@ -11,10 +11,7 @@ import sys
 import os
 import setuptools
 
-try:
-    from textwrap import indent
-except ImportError:
-    from buildtools.backports.textwrap3 import indent
+from textwrap import indent
 
 from buildtools.config import Config, runcmd, msg, getMSVCInfo, generateVersionFiles
 cfg = Config(True)

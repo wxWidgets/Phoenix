@@ -2,10 +2,8 @@
 the local namespace or any object."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-# Tags: py3-port
 
 import wx
-import six
 
 from . import dispatcher
 from . import editwindow
@@ -115,13 +113,13 @@ class FillingTree(wx.TreeCtrl):
         busy = wx.BusyCursor()
         otype = type(obj)
         if (isinstance(obj, dict)
-            or 'BTrees' in six.text_type(otype)
+            or 'BTrees' in str(otype)
             and hasattr(obj, 'keys')):
             return obj
         d = {}
         if isinstance(obj, (list, tuple)):
             for n in range(len(obj)):
-                key = '[' + six.text_type(n) + ']'
+                key = '[' + str(n) + ']'
                 d[key] = obj[n]
         if otype not in COMMONTYPES:
             for key in introspect.getAttributeNames(obj):
@@ -143,14 +141,14 @@ class FillingTree(wx.TreeCtrl):
         children = self.objGetChildren(obj)
         if not children:
             return
-        keys = sorted(children, key=lambda x: six.text_type(x).lower())
+        keys = sorted(children, key=lambda x: str(x).lower())
         for key in keys:
-            itemtext = six.text_type(key)
+            itemtext = str(key)
             # Show string dictionary items with single quotes, except
             # for the first level of items, if they represent a
             # namespace.
             if isinstance(obj, dict) \
-            and isinstance(key, six.string_types) \
+            and isinstance(key, str) \
             and (item != self.root
                  or (item == self.root and not self.rootIsNamespace)):
                 itemtext = repr(key)
@@ -173,12 +171,12 @@ class FillingTree(wx.TreeCtrl):
         otype = type(obj)
         text = ''
         text += self.getFullName(item)
-        text += '\n\nType: ' + six.text_type(otype)
+        text += '\n\nType: ' + str(otype)
         try:
-            value = six.text_type(obj)
+            value = str(obj)
         except Exception:
             value = ''
-        if isinstance(obj, six.string_types):
+        if isinstance(obj, str):
             value = repr(obj)
         text += u'\n\nValue: ' + value
         if otype not in SIMPLETYPES:
@@ -187,7 +185,7 @@ class FillingTree(wx.TreeCtrl):
                         inspect.getdoc(obj).strip() + '"""'
             except Exception:
                 pass
-        if isinstance(obj, six.class_types):
+        if isinstance(obj, type):
             try:
                 text += '\n\nClass Definition:\n\n' + \
                         inspect.getsource(obj.__class__)
@@ -212,7 +210,7 @@ class FillingTree(wx.TreeCtrl):
         # Apply dictionary syntax to dictionary items, except the root
         # and first level children of a namespace.
         if ((isinstance(obj, dict)
-            or 'BTrees' in six.text_type(type(obj))
+            or 'BTrees' in str(type(obj))
             and hasattr(obj, 'keys'))
             and ((item != self.root and parent != self.root)
             or (parent == self.root and not self.rootIsNamespace))):

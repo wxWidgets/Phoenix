@@ -22,7 +22,6 @@ import textwrap
 from typing import Optional, Tuple
 
 
-PY3 = sys.version_info[0] == 3
 isWindows = sys.platform.startswith('win')
 
 magicMethods = {
@@ -131,12 +130,8 @@ class FixWxPrefix(object):
 
         names = list()
         filename = 'wx/core.pyi'
-        if PY3:
-            with open(filename, 'rt', encoding='utf-8') as f:
-                text = f.read()
-        else:
-            with open(filename, 'r') as f:
-                text = f.read()
+        with open(filename, 'rt', encoding='utf-8') as f:
+            text = f.read()
         parseTree = ast.parse(text, filename)
         for item in parseTree.body:
             _processItem(item, names)
@@ -173,8 +168,8 @@ class FixWxPrefix(object):
         Handles translation of common C++ types to Python types, as well as a
         few specific wx types to Python types.
         """
-        double_type = 'float' if PY3 else 'double'
-        long_type = 'int' if PY3 else 'long'
+        double_type = 'float'
+        long_type = 'int'
         type_map = {
             # Some types are guesses, marked with TODO to verify automatic
             # conversion actually happens.  Also, these are the type-names

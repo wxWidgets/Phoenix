@@ -1,6 +1,6 @@
 import sys
 import os
-from six import BytesIO
+from io import BytesIO
 
 import wx
 import wx.html2 as webview

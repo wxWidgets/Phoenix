@@ -1,7 +1,6 @@
 import unittest
 from unittests import wtc
 import wx.lib.CDate as cdate
-import six
 import datetime
 
 class lib_cdate_Tests(wtc.WidgetTestCase):

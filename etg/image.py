@@ -11,7 +11,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from buildtools.backports.textwrap3 import dedent
+from textwrap import dedent
 
 PACKAGE   = "wx"
 MODULE    = "_core"

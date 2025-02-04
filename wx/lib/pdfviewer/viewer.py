@@ -27,7 +27,7 @@ import bisect
 import itertools
 import copy
 import shutil
-from six import BytesIO, string_types
+from io import BytesIO
 
 import wx
 
@@ -199,7 +199,7 @@ class pdfViewer(wx.ScrolledWindow):
             return BytesIO(stream)
 
         self.pdfpathname = ''
-        if isinstance(pdf_file, string_types):
+        if isinstance(pdf_file, str):
             # a filename/path string, save its name
             self.pdfpathname = pdf_file
             # remove comment from next line to test using a file-like object
@@ -507,7 +507,7 @@ class mupdfProcessor(object):
         Could also be a string representing a path to a PDF file.
         """
         self.parent = parent
-        if isinstance(pdf_file, string_types):
+        if isinstance(pdf_file, str):
             # a filename/path string, pass the name to pymupdf.open
             pathname = pdf_file
             self.pdfdoc = pymupdf.open(pathname)

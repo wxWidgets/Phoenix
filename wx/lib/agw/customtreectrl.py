@@ -359,9 +359,6 @@ __version__ = "2.7"
 import wx
 from wx.lib.expando import ExpandoTextCtrl
 
-# Python 2/3 compatibility helper
-import six
-
 # ----------------------------------------------------------------------------
 # Constants
 # ----------------------------------------------------------------------------

@@ -1,7 +1,6 @@
 import unittest
 from unittests import wtc
 import wx
-import six
 
 #---------------------------------------------------------------------------
 
@@ -37,14 +36,9 @@ class cmndata_tests(wtc.WidgetTestCase):
         pd = wx.PrintData()
         pdd = wx.PrintDialogData()
 
-        if six.PY3:
-            psdd.__bool__()
-            pd.__bool__()
-            pdd.__bool__()
-        else:
-            psdd.__nonzero__()
-            pd.__nonzero__()
-            pdd.__nonzero__()
+        psdd.__bool__()
+        pd.__bool__()
+        pdd.__bool__()
 
 
     def test_PD_PaperSize(self):

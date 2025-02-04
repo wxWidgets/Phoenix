@@ -2,7 +2,6 @@
 import sys
 import os
 import glob
-import six
 
 import wx
 from wx.svg import SVGimage
@@ -26,8 +25,6 @@ class SVGRenderPanel(wx.Panel):
 
 
     def SetSVGFile(self, svg_filename):
-        if six.PY2 and isinstance(svg_filename, unicode):
-            svg_filename = svg_filename.encode(sys.getfilesystemencoding())
         self._img = SVGimage.CreateFromFile(svg_filename)
         self.Refresh()
 

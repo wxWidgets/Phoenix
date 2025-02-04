@@ -28,7 +28,6 @@ import wx.py
 import wx.stc
 #import wx.aui as aui
 import wx.lib.agw.aui as aui
-import six
 import wx.lib.utils as utils
 import sys
 import inspect
@@ -635,7 +634,7 @@ class InspectionInfoPanel(wx.stc.StyledTextCtrl):
 
 
     def Fmt(self, name, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return "    %s = '%s'" % (name, value)
         else:
             return "    %s = %s" % (name, value)

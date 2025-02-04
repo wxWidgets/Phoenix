@@ -3,8 +3,6 @@ from unittests import wtc
 import wx
 import wx.propgrid as pg
 
-import six
-
 #---------------------------------------------------------------------------
 
 class pgvariant_Tests(wtc.WidgetTestCase):

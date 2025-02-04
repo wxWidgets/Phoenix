@@ -1,7 +1,6 @@
 import unittest
 import wx
 import sys, os
-import six
 
 #---------------------------------------------------------------------------
 
@@ -84,12 +83,9 @@ class WidgetTestCase(unittest.TestCase):
 
 
     def myExecfile(self, filename, ns):
-        if not six.PY3:
-            execfile(filename, ns)
-        else:
-            with open(filename, 'r') as f:
-                source = f.read()
-            exec(source, ns)
+        with open(filename, 'r') as f:
+            source = f.read()
+        exec(source, ns)
 
 
     def execSample(self, name):
@@ -109,10 +105,7 @@ class Namespace(object):
 #---------------------------------------------------------------------------
 
 def mybytes(text):
-    if six.PY3:
-        return bytes(text, 'utf-8')
-    else:
-        return str(text)
+    return bytes(text, 'utf-8')
 
 #---------------------------------------------------------------------------
 

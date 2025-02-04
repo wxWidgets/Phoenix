@@ -2,7 +2,6 @@
 
 import wx
 import wx.lib.mixins.listctrl as listmix
-from six import unichr
 
 #----------------------------------------------------------------------
 
@@ -265,15 +264,15 @@ class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
                 if keycode == 0:
                     keyname = "NUL"
                 elif keycode < 27:
-                    keyname = u"Ctrl-%s" % unichr(ord('A') + keycode-1)
+                    keyname = u"Ctrl-%s" % chr(ord('A') + keycode-1)
                 else:
-                    keyname = u"\"%s\"" % unichr(keycode)
+                    keyname = u"\"%s\"" % chr(keycode)
             else:
                 keyname = u"(%s)" % keycode
 
         UniChr = ''
         if "unicode" in wx.PlatformInfo:
-            UniChr = "\"" + unichr(evt.GetUnicodeKey()) + "\""
+            UniChr = "\"" + chr(evt.GetUnicodeKey()) + "\""
 
         modifiers = ""
         for mod, ch in [(evt.ControlDown(),    'C'),

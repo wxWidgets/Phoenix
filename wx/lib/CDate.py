@@ -15,7 +15,6 @@
 #               in a string format, then an error was raised.
 #
 """Date and calendar classes and date utitility methods."""
-from __future__ import division
 import time
 
 # I18N

@@ -236,10 +236,9 @@ Version 0.8
 import wx
 import math
 import bisect
+import io
 import zlib
 from functools import cmp_to_key
-
-import six
 
 from wx.lib.expando import ExpandoTextCtrl
 
@@ -549,9 +548,6 @@ if wx.Platform == "__WXMSW__":
 IL_FIXED_SIZE = 0
 IL_VARIABLE_SIZE = 1
 
-# Python integers, to make long types to work with CreateListItem
-INTEGER_TYPES = six.integer_types
-
 
 # ----------------------------------------------------------------------------
 # Functions
@@ -568,7 +564,7 @@ def to_list(input):
 
     if isinstance(input, list):
         return input
-    elif isinstance(input, INTEGER_TYPES):
+    elif isinstance(input, int):
         return [input]
     else:
         raise Exception("Invalid parameter passed to `to_list`: only integers and list are accepted.")
@@ -596,7 +592,7 @@ def CreateListItem(itemOrId, col):
     :param `col`: the item column.
     """
 
-    if type(itemOrId) in INTEGER_TYPES:
+    if isinstance(itemOrId, int):
         item = UltimateListItem()
         item._itemId = itemOrId
         item._col = col
@@ -652,7 +648,7 @@ def GetdragcursorBitmap():
 def GetdragcursorImage():
     """ Returns the drag and drop cursor image as a :class:`wx.Image`. """
 
-    stream = six.BytesIO(GetdragcursorData())
+    stream = io.BytesIO(GetdragcursorData())
     return wx.Image(stream)
 
 
@@ -2286,7 +2282,7 @@ class CommandListEvent(wx.PyCommandEvent):
         :param `winid`: the event identifier.
         """
 
-        if type(commandTypeOrEvent) in INTEGER_TYPES:
+        if isinstance(commandTypeOrEvent, int):
 
             wx.PyCommandEvent.__init__(self, commandTypeOrEvent, winid)
 
@@ -2453,7 +2449,7 @@ class UltimateListEvent(CommandListEvent):
 
         CommandListEvent.__init__(self, commandTypeOrEvent, winid)
 
-        if type(commandTypeOrEvent) in INTEGER_TYPES:
+        if isinstance(commandTypeOrEvent, int):
             self.notify = wx.NotifyEvent(commandTypeOrEvent, winid)
         else:
             self.notify = wx.NotifyEvent(commandTypeOrEvent.GetEventType(), commandTypeOrEvent.GetId())
@@ -13124,9 +13120,9 @@ class UltimateListCtrl(wx.Control):
 
         if entry:
             pos = self.GetItemCount()
-            self.InsertStringItem(pos, six.u(entry[0]))
+            self.InsertStringItem(pos, str(entry[0]))
             for i in range(1, len(entry)):
-                self.SetStringItem(pos, i, six.u(entry[i]))
+                self.SetStringItem(pos, i, str(entry[i]))
 
             return pos
 

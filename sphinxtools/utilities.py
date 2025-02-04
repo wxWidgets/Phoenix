@@ -16,14 +16,8 @@ import codecs
 import shutil
 import re
 
-if sys.version_info < (3,):
-    import cPickle as pickle
-    from UserDict import UserDict
-    string_base = basestring
-else:
-    import pickle
-    from collections import UserDict
-    string_base = str
+import pickle
+from collections import UserDict
 
 # Phoenix-specific imports
 from .templates import TEMPLATE_CONTRIB
@@ -448,7 +442,7 @@ def findControlImages(elementOrString):
     """
     from etgtools.tweaker_tools import removeWxPrefix
 
-    if isinstance(elementOrString, string_base):
+    if isinstance(elementOrString, str):
         class_name = py_class_name = elementOrString.lower()
     else:
         element = elementOrString
@@ -860,12 +854,6 @@ def formatExternalLink(fullname, inheritance=False):
     return full_page
 
 
-def isPython3():
-    """ Returns ``True`` if we are using Python 3.x. """
-
-    return sys.version_info >= (3, )
-
-
 def textfile_open(filename, mode='rt'):
     """
     Simple wrapper around open() that will use codecs.open on Python2 and
@@ -873,9 +861,4 @@ def textfile_open(filename, mode='rt'):
     mode parameter must include the 't' to put the stream into text mode.
     """
     assert 't' in mode
-    if sys.version_info < (3,):
-        import codecs
-        mode = mode.replace('t', '')
-        return codecs.open(filename, mode, encoding='utf-8')
-    else:
-        return open(filename, mode, encoding='utf-8')
+    return open(filename, mode, encoding='utf-8')

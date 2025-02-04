@@ -39,7 +39,6 @@ the ``wx.GraphicsContext`` classes a little better than Cairo's.
 
 import sys
 import math
-import six
 
 import wx
 import wx.lib.wxcairo as wxcairo
@@ -1890,7 +1889,7 @@ def _makeColour(colour):
     Helper which makes a wx.Colour from any of the allowed typemaps (string,
     tuple, etc.)
     """
-    if isinstance(colour, (six.string_types, tuple)):
+    if isinstance(colour, (str, tuple)):
         return wx.NamedColour(colour)
     else:
         return colour

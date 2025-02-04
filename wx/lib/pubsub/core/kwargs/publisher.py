@@ -6,7 +6,7 @@
 
 from .publisherbase import PublisherBase
 from .datamsg import Message
-from .. import (policies, py2and3)
+from .. import (policies)
 
 
 
@@ -42,7 +42,7 @@ class PublisherArg1Stage2(Publisher):
         def __init__(self, kwargs, commonArgName):
             extra = kwargs.copy()
             del extra[commonArgName]
-            msg = 'Sender has too many kwargs (%s)' % ( py2and3.keys(extra),)
+            msg = 'Sender has too many kwargs (%s)' % ( list(extra.keys()),)
             RuntimeError.__init__(self, msg)
 
     class SenderWrongKwargName(RuntimeError):
@@ -60,7 +60,7 @@ class PublisherArg1Stage2(Publisher):
         if len(kwarg) > 1:
             raise self.SenderTooManyKwargs(kwarg, commonArgName)
         elif len(kwarg) == 1 and commonArgName not in kwarg:
-            raise self.SenderWrongKwargName( py2and3.keys(kwarg)[0], commonArgName)
+            raise self.SenderWrongKwargName( list(kwarg.keys())[0], commonArgName)
 
         data = kwarg.get(commonArgName, None)
         kwargs = { commonArgName: self.Msg( _topicName, data) }

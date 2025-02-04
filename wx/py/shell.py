@@ -8,7 +8,6 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 
 import wx
 from wx import stc
-from six import PY3
 
 import keyword
 import os
@@ -410,7 +409,7 @@ class Shell(editwindow.EditWindow):
 
         This sets "close", "exit" and "quit" to a helpful string.
         """
-        from six.moves import builtins
+        import builtins
         builtins.close = builtins.exit = builtins.quit = \
             'Click on the close button to leave the application.'
         builtins.cd = cd
@@ -438,12 +437,9 @@ class Shell(editwindow.EditWindow):
         """Execute the user's PYTHONSTARTUP script if they have one."""
         if startupScript and os.path.isfile(startupScript):
             text = 'Startup script executed: ' + startupScript
-            if PY3:
-                self.push('print(%r)' % text)
-                self.push('with open(%r, "r") as f:\n'
-                          '    exec(f.read())\n' % (startupScript))
-            else:
-                self.push('print(%r); execfile(%r)' % (text, startupScript))
+            self.push('print(%r)' % text)
+            self.push('with open(%r, "r") as f:\n'
+                      '    exec(f.read())\n' % (startupScript))
             self.interp.startupScript = startupScript
         else:
             self.push('')

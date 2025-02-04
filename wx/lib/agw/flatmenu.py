@@ -197,10 +197,9 @@ __version__ = "1.0"
 import wx
 import os
 import math
+import io
 
 import wx.lib.colourutils as colourutils
-
-import six
 
 from .fmcustomizedlg import FMCustomizeDlg
 from .artmanager import ArtManager, DCSaver
@@ -590,7 +589,7 @@ class FMRenderer(object):
 
         else:
 
-            stream = six.BytesIO(xpm)
+            stream = io.BytesIO(xpm)
             img = wx.Image(stream)
 
         return wx.Bitmap(img)
@@ -2226,7 +2225,7 @@ class MenuEntryInfo(object):
         :param integer `cmd`: the menu accelerator identifier.
         """
 
-        if isinstance(titleOrMenu, six.string_types):
+        if isinstance(titleOrMenu, str):
 
             self._title = titleOrMenu
             self._menu = menu
@@ -3595,7 +3594,7 @@ class FlatMenuBar(wx.Panel):
         if self._showCustomize:
             if invT + invM > 0:
                 self._moreMenu.AppendSeparator()
-            item = FlatMenuItem(self._moreMenu, self._popupDlgCmdId, _(six.u("Customize...")))
+            item = FlatMenuItem(self._moreMenu, self._popupDlgCmdId, _("Customize..."))
             self._moreMenu.AppendItem(item)
 
 
