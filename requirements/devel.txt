@@ -6,8 +6,7 @@ sip == 6.9.1
 
 wheel
 twine
-requests
-requests[security]
+requests >= 2.26.0
 cython==3.0.10
 pytest
 pytest-xdist
