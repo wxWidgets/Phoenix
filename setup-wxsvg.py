@@ -64,5 +64,4 @@ setup(name             = 'wx.svg',
       #packages         = [PACKAGE],
       ext_modules      = modules,
       options          = { 'build' : BUILD_OPTIONS,  },
-      scripts          = [],
 )

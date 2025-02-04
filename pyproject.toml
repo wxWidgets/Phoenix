@@ -43,9 +43,22 @@ dynamic = [
     "dependencies",
     "license",
     "readme",
-    "scripts",
     "version",
 ]
+
+[project.scripts]
+helpviewer = "wx.tools.helpviewer:main"
+img2png = "wx.tools.img2png:main"
+img2py = "wx.tools.img2py:main"
+img2xpm = "wx.tools.img2xpm:main"
+pycrust = "wx.py.PyCrust:main"
+pyshell = "wx.py.PyShell:main"
+pyslices = "wx.py.PySlices:main"
+pyslicesshell = "wx.py.PySlicesShell:main"
+pywxrc = "wx.tools.pywxrc:main"
+wxdemo = "wx.tools.wxget_docs_demo:demo_main" # Get/Launch Demo
+wxdocs = "wx.tools.wxget_docs_demo:docs_main" # Get/Launch Docs
+wxget = "wx.tools.wxget:main"                 # New wx wget
 
 [project.urls]
 Documentation = "https://docs.wxpython.org/"
