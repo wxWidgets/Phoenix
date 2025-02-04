@@ -18,6 +18,7 @@ import glob
 import hashlib
 import optparse
 import os
+import pathlib
 import re
 import shutil
 import subprocess
@@ -27,11 +28,6 @@ import datetime
 import shlex
 import textwrap
 import warnings
-
-try:
-    import pathlib
-except ImportError:
-    import buildtools.backports.pathlib2 as pathlib
 
 try:
     from shutil import which
