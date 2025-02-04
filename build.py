@@ -29,10 +29,7 @@ import shlex
 import textwrap
 import warnings
 
-try:
-    from shutil import which
-except ImportError:
-    from buildtools.backports.shutil_which import which
+from shutil import which
 
 try:
     from setuptools.modified import newer, newer_group
