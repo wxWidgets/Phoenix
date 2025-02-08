@@ -1182,7 +1182,7 @@ def cmd_sphinx(options, args):
     htmlDir = os.path.join(phoenixDir(), 'docs', 'html')
     sphinx_log = os.path.join(htmlDir, 'warnings', 'sphinx_warnings.log')
 
-    runcmd('{} -m sphinx --builder html --color --warning-file {} \
+    runcmd('"{}" -m sphinx --builder html --color --warning-file {} \
     --doctree-dir {}/doctrees . {}'.format(PYTHON, sphinx_log, buildDir, htmlDir))
     del pwd2
 
