@@ -1809,8 +1809,7 @@ def cmd_build_docker(options, args):
     cmd = ['inv', 'build-wxpython']
     if options.docker_img != 'all':
         for img in options.docker_img.split(','):
-            cmd.append('-i')
-            cmd.append(img)
+            cmd.extend(('-i', img))
 
     # Do just the gtk2 builds?
     if options.gtk2:
