@@ -3,7 +3,7 @@ import wx
 
 hadImportError = False
 try:
-    import numpy
+    import numpy as np
     import wx.lib.plot
 except ImportError:
     hadImportError = True

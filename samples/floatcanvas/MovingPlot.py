@@ -7,7 +7,7 @@ efficient moving line on it.
 """
 
 import wx
-import numpy as N
+import numpy as np
 
 ## import the installed version
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas
@@ -114,19 +114,19 @@ class DrawFrame(wx.Frame):
         # what the options are.
 
         self.Canvas.AddRectangle((0, -1.1),
-                                 (2*N.pi, 2.2),
+                                 (2*np.pi, 2.2),
                                  LineColor = "Black",
                                  LineStyle = "Solid",
                                  LineWidth    = 1,
                                  FillColor    = None,
                                  FillStyle    = "Solid",
                                  InForeground = 0)
-        for tic in N.arange(7):
+        for tic in np.arange(7):
             self.Canvas.AddText("%1.1f"%tic,
                                 (tic,-1.1),
                                 Position = 'tc')
 
-        for tic in N.arange(-1, 1.1, 0.5):
+        for tic in np.arange(-1, 1.1, 0.5):
             self.Canvas.AddText("%1.1f"%tic,
                                 (0,tic),
                                 Position = 'cr')
@@ -145,7 +145,7 @@ class DrawFrame(wx.Frame):
 
     def OnTimer(self,event):
         self.count += .1
-        self.data1[:,1] = N.sin(self.time+self.count) #fake move
+        self.data1[:,1] = np.sin(self.time+self.count) #fake move
 
         self.line.SetPoints(self.data1)
 
@@ -155,11 +155,11 @@ class DrawFrame(wx.Frame):
         self.n  = 100
         self.dT = 0.05
 
-        self.time = 2.0*N.pi*N.arange(100)/100.0
+        self.time = 2.0*np.pi*np.arange(100)/100.0
 
-        self.data1 = 1.0*N.ones((100,2))
+        self.data1 = 1.0*np.ones((100,2))
         self.data1[:,0] = self.time
-        self.data1[:,1] = N.sin(self.time)
+        self.data1[:,1] = np.sin(self.time)
         Canvas = self.Canvas
         self.Canvas.ClearAll()
         self.DrawAxis()

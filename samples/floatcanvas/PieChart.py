@@ -14,7 +14,7 @@ from wx.lib.floatcanvas.FCObjects import PieChart
 #from floatcanvas.SpecialObjects import PieChart
 
 
-import numpy as N
+import numpy as np
 
 class DrawFrame(wx.Frame):
 
@@ -39,22 +39,22 @@ class DrawFrame(wx.Frame):
 
         Values = (10,10,10)
         Colors = ('Red', 'Blue', 'Green')
-        Pie1 = PieChart(N.array((0, 0)), 10, Values, Colors, Scaled=False)
+        Pie1 = PieChart(np.array((0, 0)), 10, Values, Colors, Scaled=False)
         Canvas.AddObject(Pie1)
 
         Values = (10, 5, 5)
-        Pie2 = PieChart(N.array((40, 0)), 10, Values, Colors)
+        Pie2 = PieChart(np.array((40, 0)), 10, Values, Colors)
         Canvas.AddObject(Pie2)
 
         # test default colors
         Values = (10, 15, 12, 24, 6, 10, 13, 11, 9, 13, 15, 12)
-        Pie3 = PieChart(N.array((20, 20)), 10, Values, LineColor="Black")
+        Pie3 = PieChart(np.array((20, 20)), 10, Values, LineColor="Black")
         Canvas.AddObject(Pie3)
 
         # missng slice!
         Values = (10, 15, 12, 24)
         Colors = ('Red', 'Blue', 'Green', None)
-        Pie4 = PieChart(N.array((0, -15)), 10, Values, Colors, LineColor="Black")
+        Pie4 = PieChart(np.array((0, -15)), 10, Values, Colors, LineColor="Black")
         Canvas.AddObject(Pie4)
 
 
@@ -62,7 +62,7 @@ class DrawFrame(wx.Frame):
         Values = (10, 12, 14)
         Styles = ("Solid", "CrossDiagHatch","CrossHatch")
         Colors = ('Red', 'Blue', 'Green')
-        Pie4 = PieChart(N.array((20, -20)), 10, Values, Colors, Styles)
+        Pie4 = PieChart(np.array((20, -20)), 10, Values, Colors, Styles)
         Canvas.AddObject(Pie2)
 
         Pie1.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Pie1Hit)

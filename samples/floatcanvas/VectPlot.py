@@ -6,7 +6,7 @@ A small test app that uses FloatCanvas to draw a vector plot.
 """
 
 import wx
-import numpy as N
+import numpy as np
 import random
 
 ## import the installed version
@@ -95,19 +95,19 @@ class DrawFrame(wx.Frame):
         # what the options are.
 
         self.Canvas.AddRectangle((0, -1.1),
-                                 (2*N.pi, 2.2),
+                                 (2*np.pi, 2.2),
                                  LineColor = "Black",
                                  LineStyle = "Solid",
                                  LineWidth    = 1,
                                  FillColor    = None,
                                  FillStyle    = "Solid",
                                  InForeground = 0)
-        for tic in N.arange(7):
+        for tic in np.arange(7):
             self.Canvas.AddText("%1.1f"%tic,
                                 (tic, -1.1),
                                 Position = 'tc')
 
-        for tic in N.arange(-1,1.1,0.5):
+        for tic in np.arange(-1,1.1,0.5):
             self.Canvas.AddText("%1.1f"%tic,
                                 (0,tic),
                                 Position = 'cr')
@@ -122,10 +122,10 @@ class DrawFrame(wx.Frame):
         #Canvas.Draw()
 
     def Plot(self, event = None):
-        x = N.arange(0, 2*N.pi, 0.1)
+        x = np.arange(0, 2*np.pi, 0.1)
         x.shape = (-1,1)
-        y = N.sin(x)
-        data = N.concatenate((x, y),1)
+        y = np.sin(x)
+        data = np.concatenate((x, y),1)
 
         Canvas = self.Canvas
         self.Canvas.ClearAll()

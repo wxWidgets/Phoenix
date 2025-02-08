@@ -22,7 +22,7 @@ from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources
 #from floatcanvas import NavCanvas, FloatCanvas, Resources
 
 
-import numpy as N
+import numpy as np
 
 LongString = (
 """This is a long string. It is a bunch of text. I am using it to test how the nifty wrapping text box works when you want to re-size.
@@ -62,7 +62,7 @@ class DrawFrame(wx.Frame):
         self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp )
         self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
 
-        Point = N.array((0,0), N.float)
+        Point = np.array((0,0), np.float)
 
 
 
