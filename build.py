@@ -577,8 +577,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
             # now check the MD5 if not in dev mode and it's set to None
             if not (devMode and md5 is None):
                 m = hashlib.md5()
-                with open(cmd, 'rb') as fid:
-                    m.update(fid.read())
+                m.update(Path(cmd).read_bytes())
                 if m.hexdigest() != md5:
                     _error_msg('MD5 mismatch, got "%s"\n       '
                                'expected          "%s"' % (m.hexdigest(), md5))
@@ -622,8 +621,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
 
         import bz2
         data = bz2.decompress(data)
-        with open(cmd, 'wb') as f:
-            f.write(data)
+        Path(cmd).write_bytes(data)
         os.chmod(cmd, 0o755)
 
         # Recursive call so the MD5 value will be double-checked on what was
@@ -672,8 +670,7 @@ def getMSWebView2():
             sys.exit(1)
 
         # Write the downloaded data to a local file
-        with open(opj(dest, fname), 'wb') as f:
-            f.write(data)
+        Path(dest, fname).write_bytes(data)
 
         # Unzip it
         from zipfile import ZipFile
@@ -929,8 +926,7 @@ def do_regenerate_sysconfig():
 
         # On success the new data module will have been written to a subfolder
         # of the current folder, which is recorded in ./pybuilddir.txt
-        with open('pybuilddir.txt', 'r') as fp:
-            pybd = fp.read()
+        pybd = Path('pybuilddir.txt').read_text()
 
         # grab the file in that folder and copy it into the Python lib
         p = opj(td, pybd, '*')
@@ -1323,9 +1319,7 @@ def cmd_sip(options, args):
                 sip_gen_dir=opj(phoenixDir(), 'sip', 'gen'),
                 )
         )
-
-        with open(opj(tmpdir, 'pyproject.toml'), 'w') as f:
-            f.write(pyproject_toml)
+        Path(tmpdir, 'pyproject.toml').write_text(pyproject_toml)
 
         sip_pwd = pushDir(tmpdir)
         cmd = 'sip-build --no-compile'
@@ -1770,8 +1764,7 @@ def cmd_build_py(options, args):
 
             msg('*-'*40)
             msg('WAF config log "{}":'.format(logfilename))
-            with open(logfilename, 'r') as log:
-                msg(log.read())
+            msg(Path(logfilename).read_text())
             msg('*-'*40)
     runcmd(cmd, onError=_onWafError)
 
@@ -2377,9 +2370,7 @@ def cmd_setrev(options, args):
 
     else:
         svnrev = getVcsRev()
-        with open('REV.txt', 'w') as f:
-            svnrev = '.dev'+svnrev
-            f.write(svnrev)
+        Path('REV.txt').write_text(svnrev)
         msg('REV.txt set to "%s"' % svnrev)
 
     cfg = Config()
