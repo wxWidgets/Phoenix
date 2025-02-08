@@ -934,7 +934,7 @@ def do_regenerate_sysconfig():
 
         # grab the file in that folder and copy it into the Python lib
         p = opj(td, pybd, '*')
-        datafile = sorted(glob.glob(opj(td, pybd, '*')))[0]
+        datafile = min(glob.glob(opj(td, pybd, '*')))
         cmd = [PYTHON, '-c', 'import sysconfig; print(sysconfig.get_path("stdlib"))']
         stdlib = runcmd(cmd, getOutput=True)
         shutil.copy(datafile, stdlib)
@@ -1335,7 +1335,7 @@ def cmd_sip(options, args):
         # Write out a sip build file (no longer done by sip itself)
         sip_tmp_out_dir = opj(tmpdir, 'build', base)
         sip_pwd = pushDir(sip_tmp_out_dir)
-        header = sorted(glob.glob('*.h'))[0]
+        header = min(glob.glob('*.h'))
         sources = sorted(glob.glob('*.cpp'))
         del sip_pwd
         with open(sbf, 'w') as f:
@@ -1408,7 +1408,7 @@ def cmd_sip(options, args):
     with tempfile.TemporaryDirectory() as tmpdir:
         cmd = 'sip-module --sdist --abi-version {} --target-dir {} wx.siplib'.format(cfg.SIP_ABI, tmpdir)
         runcmd(cmd)
-        tf_name = sorted(glob.glob(tmpdir + '/*.tar*'))[0]
+        tf_name = min(glob.glob(tmpdir + '/*.tar*'))
         tf_dir = os.path.splitext(os.path.splitext(tf_name)[0])[0]
         with tarfile.open(tf_name) as tf:
             try:
