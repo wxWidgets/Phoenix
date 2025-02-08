@@ -29,6 +29,7 @@ venv*/
 /bin/waf-*
 /bin/waf3-*
 /bin/doxygen-*
+/bin/libclang*
 
 /demo/version.py
 
