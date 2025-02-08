@@ -18,7 +18,6 @@ import glob
 import hashlib
 import optparse
 import os
-import pathlib
 import re
 import shutil
 import subprocess
@@ -29,6 +28,7 @@ import shlex
 import textwrap
 import warnings
 
+from pathlib import Path
 from shutil import which
 
 try:
@@ -802,7 +802,7 @@ def checkCompiler(quiet=False):
         # Make sure there is now a cl.exe on the PATH
         CL = 'NOT FOUND'
         for d in os.environ['PATH'].split(os.pathsep):
-            p = pathlib.Path(d, 'cl.exe')
+            p = Path(d, 'cl.exe')
             if p.exists():
                 CL = p
                 break
@@ -811,7 +811,7 @@ def checkCompiler(quiet=False):
 
             # # Just needed for debugging
             # for d in info.include.split(os.pathsep):
-            #     p = pathlib.Path(d, 'tchar.h')
+            #     p = Path(d, 'tchar.h')
             #     if p.exists():
             #         msg(f'   tchar.h: {p}')
             #         break
@@ -1425,7 +1425,7 @@ def cmd_sip(options, args):
 def cmd_touch(options, args):
     cmdTimer = CommandTimer('touch')
     pwd = pushDir(phoenixDir())
-    etg = pathlib.Path('etg')
+    etg = Path('etg')
     for item in sorted(etg.glob('*.py')):
         item.touch()
     cmd_touch_others(options, args)
@@ -1854,7 +1854,7 @@ def cmd_touch_others(options, args):
     cmdTimer = CommandTimer('touch_others')
     pwd = pushDir(phoenixDir())
     cfg = Config(noWxConfig=True)
-    pth = pathlib.Path(opj(cfg.PKGDIR, 'svg'))
+    pth = Path(opj(cfg.PKGDIR, 'svg'))
     for item in sorted(pth.glob('*.pyx')):
         item.touch()
 
