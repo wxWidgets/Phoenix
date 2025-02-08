@@ -62,7 +62,7 @@ class DrawFrame(wx.Frame):
         self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp )
         self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
 
-        Point = np.array((0,0), np.float)
+        Point = np.array((0,0), float)
 
 
 

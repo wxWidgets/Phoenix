@@ -30,7 +30,7 @@ def YScaleFun(center):
 
     """
     # center gets ignored in this case
-    return np.array((5e7, 1), np.float)
+    return np.array((5e7, 1), float)
 
 class DrawFrame(wx.Frame):
 

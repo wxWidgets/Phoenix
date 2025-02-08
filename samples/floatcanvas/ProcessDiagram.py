@@ -100,8 +100,8 @@ class NodeObject(FC.Group, MovingObjectMixin, ConnectorObjectMixin):
                  TextColor = "Black",
                  InForeground  = False,
                  IsVisible = True):
-        XY = np.asarray(XY, np.float).reshape(2,)
-        WH = np.asarray(WH, np.float).reshape(2,)
+        XY = np.asarray(XY, float).reshape(2,)
+        WH = np.asarray(WH, float).reshape(2,)
         Label = FC.ScaledText(Label,
                         XY,
                         Size = WH[1] / 2.0,
