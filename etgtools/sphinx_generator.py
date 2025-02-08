@@ -22,7 +22,7 @@ import textwrap
 
 from io import StringIO
 
-import xml.etree.ElementTree as et
+import xml.etree.ElementTree as ET
 
 # Phoenix-specific stuff
 import etgtools.extractors as extractors
@@ -783,7 +783,7 @@ class Paragraph(Node):
 
                 first = line.index('Availability:')
 
-                element = et.Element('available', kind='available')
+                element = ET.Element('available', kind='available')
                 element.text = line[first+13:]
 
                 section = Section(element, None, self.kind)
@@ -2002,7 +2002,7 @@ class XMLDocString(object):
         # non-empty string. In such cases, this branch will insert a deprecated section into the xml tree
         # so that the Node Tree (see classes above) will generate the deprecated  tag on their own in self.RecurseXML
         if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, str):
-            element = et.Element('deprecated', kind='deprecated')
+            element = ET.Element('deprecated', kind='deprecated')
             element.text = xml_item.deprecated
 
             deprecated_section = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
@@ -2227,7 +2227,7 @@ class XMLDocString(object):
             rest_class = ULink(element, parent)
 
         elif tag == 'onlyfor':
-            onlyfor = et.Element('available', kind='available')
+            onlyfor = ET.Element('available', kind='available')
             onlyfor.text = text
             onlyfor.tail = tail
 
@@ -2586,7 +2586,7 @@ class XMLDocString(object):
                     else:
                         new_section.append('`%s`' % stripped)
 
-            element = et.Element('return', kind='return')
+            element = ET.Element('return', kind='return')
             element.text = '( %s )'%(', '.join(new_section))
 
             return_section = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
@@ -3571,7 +3571,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                     else:
                         new_section.append('`%s`'%stripped)
 
-            element = et.Element('return', kind='return')
+            element = ET.Element('return', kind='return')
             element.text = '( %s )'%(', '.join(new_section))
 
             rtype2 = Section(element, None, 'method')

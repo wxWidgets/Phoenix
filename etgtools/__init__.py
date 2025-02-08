@@ -85,7 +85,7 @@ def parseDoxyXML(module, class_or_filename_list):
             print("Loading %s..." % pathname)
         _filesparsed.add(pathname)
 
-        root = et.parse(pathname).getroot()
+        root = ET.parse(pathname).getroot()
         for element in root:
             # extract and add top-level elements from the XML document
             item = module.addElement(element)

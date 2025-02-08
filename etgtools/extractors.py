@@ -15,7 +15,7 @@ wxWidgets API info which we need from them.
 import sys
 import os
 import pprint
-import xml.etree.ElementTree as et
+import xml.etree.ElementTree as ET
 import copy
 
 from .tweaker_tools import FixWxPrefix, magicMethods, \
@@ -666,7 +666,7 @@ class ParamDef(BaseDef):
                 self.default = flattenNode(element.find('defval'))
         except:
             print("error when parsing element:")
-            et.dump(element)
+            ET.dump(element)
             raise
 #---------------------------------------------------------------------------
 
@@ -740,7 +740,7 @@ class ClassDef(BaseDef):
                 return all_classes, specials
 
             fname = os.path.join(XMLSRC, refid+'.xml')
-            root = et.parse(fname).getroot()
+            root = ET.parse(fname).getroot()
             compounds = findDescendants(root, 'basecompoundref')
         else:
             compounds = element.findall('basecompoundref')
@@ -783,7 +783,7 @@ class ClassDef(BaseDef):
             from etgtools import XMLSRC
             ref = node.get('refid')
             fname = os.path.join(XMLSRC, ref+'.xml')
-            root = et.parse(fname).getroot()
+            root = ET.parse(fname).getroot()
             innerclass = root[0]
             kind = innerclass.get('kind')
             assert kind in ['class', 'struct']
@@ -1603,7 +1603,7 @@ class ModuleDef(BaseDef):
         from etgtools import XMLSRC
         refid = node.get('refid')
         fname = os.path.join(XMLSRC, refid.rsplit('_', 1)[0]) + '.xml'
-        root = et.parse(fname).getroot()
+        root = ET.parse(fname).getroot()
         return root.find(".//memberdef[@id='{}']".format(refid))
 
 
@@ -1749,7 +1749,7 @@ def prependText(node, text):
 
 
 def makeTextElement(text):
-    element = et.Element('para')
+    element = ET.Element('para')
     element.text = text
     return element
 
