@@ -1330,10 +1330,7 @@ def cmd_sip(options, args):
         header = min(glob.glob('*.h'))
         sources = sorted(glob.glob('*.cpp'))
         del sip_pwd
-        with open(sbf, 'w') as f:
-            f.write("sources = {}\n".format(' '.join(sources)))
-            f.write("headers = {}\n".format(header))
-
+        Path(sbf).write_text(f"sources = {' '.join(sources)}\nheaders = {header}\n")
         classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }
 
         def processSrc(src, keepHashLines=False):
@@ -2212,8 +2209,7 @@ def cmd_sdist(options, args):
     shutil.rmtree(opj(PDEST, 'docs'), ignore_errors=True)
     if options.nodoc:
         os.makedirs(opj(PDEST, 'docs'))
-        with open(opj(PDEST, 'docs', 'README.txt'), 'wt') as f:
-            f.write("The sphinx files and generated docs are not included in this archive.\n")
+        Path(PDEST, 'docs', 'README.txt').write_text("The sphinx files and generated docs are not included in this archive.\n")
     else:
         shutil.copytree('docs', opj(PDEST, 'docs'),
                         ignore=shutil.ignore_patterns('html', 'build', '__pycache__', 'cpp'))
