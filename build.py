@@ -39,7 +39,7 @@ except ImportError:
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macSetLoaderNames, \
-                               getVcsRev, runcmd, textfile_open, getSipFiles, \
+                               getVcsRev, runcmd, getSipFiles, \
                                getVisCVersion, getToolsPlatformName, updateLicenseFiles, \
                                TemporaryDirectory, getMSVCInfo, generateVersionFiles
 
@@ -1061,8 +1061,7 @@ def _removeSidebar(path):
     """
     from bs4 import BeautifulSoup
     for filename in sorted(glob.glob(opj(path, '*.html'))):
-        with textfile_open(filename, 'rt') as f:
-            text = f.read()
+        text = Path(filename).read_text(encoding="utf-8")
         text = text.replace('<script src="_static/javascript/sidebar.js" type="text/javascript"></script>', '')
         soup = BeautifulSoup(text, 'html.parser')
         tag = soup.find('div', 'sphinxsidebar')
@@ -1072,8 +1071,7 @@ def _removeSidebar(path):
         if tag:
             tag.attrs['class'] = ['document-no-sidebar']
         text = str(soup)
-        with textfile_open(filename, 'wt') as f:
-            f.write(text)
+        Path(filename).write_text(text, encoding="utf-8")
 
 
 def cmd_docset(options, args):
@@ -1339,7 +1337,7 @@ def cmd_sip(options, args):
         classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }
 
         def processSrc(src, keepHashLines=False):
-            with textfile_open(src, 'rt') as f:
+            with open(src, 'rt', encoding="utf-8") as f:
                 srcTxt = f.read()
                 if keepHashLines:
                     # Either just fix the pathnames in the #line lines...
@@ -1375,24 +1373,21 @@ def cmd_sip(options, args):
         # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
         # ignore it.
         for src in sorted(glob.glob(sip_tmp_out_dir + '/*')):
-            dest = opj(cfg.SIPOUT, os.path.basename(src))
-            if not os.path.exists(dest):
+            dest = Path(opj(cfg.SIPOUT, os.path.basename(src)))
+            if not dest.exists():
                 msg('%s is a new file, copying...' % os.path.basename(src))
                 srcTxt = processSrc(src, options.keep_hash_lines)
-                with textfile_open(dest, 'wt') as f:
-                    f.write(srcTxt)
+                dest.write_text(srcTxt, encoding="utf-8")
                 continue
 
             srcTxt = processSrc(src, options.keep_hash_lines)
-            with textfile_open(dest, 'rt') as f:
-                destTxt = f.read()
+            destTxt = dest.read_text(encoding="utf-8")
 
             if srcTxt == destTxt:
                 pass
             else:
                 msg('%s is changed, copying...' % os.path.basename(src))
-                with textfile_open(dest, 'wt') as f:
-                    f.write(srcTxt)
+                dest.write_text(srcTxt, encoding="utf-8")
 
         # Remove tmpdir and its contents
         shutil.rmtree(tmpdir)
