@@ -192,7 +192,7 @@ class DrawFrame(wx.Frame):
         Points = np.array(((0,0),
                           (1,0),
                           (0.5, 1)),
-                         np.float)
+                         float)
 
         data  = (( (0,0),  1),
                  ( (3,3),  2),
