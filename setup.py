@@ -23,8 +23,6 @@ from setuptools.command.bdist_wheel import bdist_wheel as orig_bdist_wheel
 from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
 import buildtools.version as version
 
-haveWheel = True
-
 # Create a buildtools.config.Configuration object
 cfg = Config(noWxConfig=True)
 DOCS_BASE='http://docs.wxPython.org'
@@ -174,30 +172,28 @@ class wx_bdist_egg(orig_bdist_egg):
         # Run the default bdist_egg command
         orig_bdist_egg.run(self)
 
+class wx_bdist_wheel(orig_bdist_wheel):
+    def finalize_options(self):
+        # Do a bit of monkey-patching to let bdist_wheel know that there
+        # really are extension modules in this build, even though they are
+        # not built here.
+        def _has_ext_modules(self):
+            return True
+        from setuptools.dist import Distribution
+        #Distribution.is_pure = _is_pure
+        Distribution.has_ext_modules = _has_ext_modules
 
-if haveWheel:
-    class wx_bdist_wheel(orig_bdist_wheel):
-        def finalize_options(self):
-            # Do a bit of monkey-patching to let bdist_wheel know that there
-            # really are extension modules in this build, even though they are
-            # not built here.
-            def _has_ext_modules(self):
-                return True
-            from setuptools.dist import Distribution
-            #Distribution.is_pure = _is_pure
-            Distribution.has_ext_modules = _has_ext_modules
-
-            orig_bdist_wheel.finalize_options(self)
+        orig_bdist_wheel.finalize_options(self)
 
 
-        def run(self):
-            # Ensure that there is a basic library build for bdist_egg/wheel to pull from.
-            self.run_command("build")
+    def run(self):
+        # Ensure that there is a basic library build for bdist_egg/wheel to pull from.
+        self.run_command("build")
 
-            _cleanup_symlinks(self)
+        _cleanup_symlinks(self)
 
-            # Run the default bdist_wheel command
-            orig_bdist_wheel.run(self)
+        # Run the default bdist_wheel command
+        orig_bdist_wheel.run(self)
 
 
 class wx_install(orig_install):
@@ -233,10 +229,8 @@ CMDCLASS = {
     'bdist_egg'   : wx_bdist_egg,
     'install'     : wx_install,
     'sdist'       : wx_sdist,
+    'bdist_wheel' : wx_bdist_wheel,
     }
-if haveWheel:
-    CMDCLASS['bdist_wheel'] = wx_bdist_wheel
-
 
 
 #----------------------------------------------------------------------

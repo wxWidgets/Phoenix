@@ -48,8 +48,8 @@ import buildtools.version as version
 
 
 # defaults
-PYVER = '2.7'
-PYSHORTVER = '27'
+PYVER = '3.9'
+PYSHORTVER = '39'
 PYTHON = None  # it will be set later
 PYTHON_ARCH = 'UNKNOWN'
 
@@ -106,7 +106,7 @@ Usage: ./build.py [command(s)] [options]
 
   Commands:
       N.N NN        Major.Minor version number of the Python to use to run
-                    the other commands.  Default is 2.7.  Or you can use
+                    the other commands.  Default is 3.9.  Or you can use
                     --python to specify the actual Python executable to use.
 
       dox           Run Doxygen to produce the XML file used by ETG scripts
