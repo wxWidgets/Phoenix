@@ -122,7 +122,7 @@ Version 0.7
 """
 
 import wx
-from wx.lib.stattext import GenStaticText as StaticText
+from wx import StaticText
 
 # Import the useful webbrowser module for platform-independent results
 import webbrowser
