@@ -19,9 +19,9 @@ TEST_GC = False
 
 if USE_NUMPY:
     try:
-        import numpy
+        import numpy as np
         def makeByteArray(shape):
-            return numpy.empty(shape, numpy.uint8)
+            return np.empty(shape, np.uint8)
         numtype = 'numpy'
     except ImportError:
         try:

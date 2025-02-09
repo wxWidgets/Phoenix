@@ -19,7 +19,7 @@ from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 
 NumHexagons = 1000
 
-import numpy as N
+import numpy as np
 from numpy.random import uniform
 
 import  random
@@ -56,8 +56,8 @@ class DrawFrame(wx.Frame):
         print("Max colors:", len(self.colors))
         Canvas = self.Canvas
         D = 1.0
-        h = D *N.sqrt(3)/2
-        Hex = N.array(((D   , 0),
+        h = D *np.sqrt(3)/2
+        Hex = np.array(((D   , 0),
                      (D/2 , -h),
                      (-D/2, -h),
                      (-D  , 0),

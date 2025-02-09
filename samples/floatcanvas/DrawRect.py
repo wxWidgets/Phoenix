@@ -20,7 +20,7 @@ import wx
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, GUIMode
 from wx.lib.floatcanvas.Utilities import GUI
 
-import numpy as N
+import numpy as np
 
 class DrawFrame(wx.Frame):
 

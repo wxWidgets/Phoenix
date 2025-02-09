@@ -41,8 +41,8 @@ class Colour(wtc.WidgetTestCase):
 
 
     def test_numpy_ctor(self):
-        import numpy
-        a = numpy.array( [1,2,3,4] )
+        import numpy as np
+        a = np.array( [1,2,3,4] )
         c = wx.Colour(a)
         self.assertTrue(c.Get() == (1,2,3,4))
 

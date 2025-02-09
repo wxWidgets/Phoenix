@@ -26,7 +26,7 @@ elif ver == 'local':
     from floatcanvas import FloatCanvas as FC
     from floatcanvas.Utilities import BBox
 
-import numpy as N
+import numpy as np
 
 ## here we create some new mixins:
 
@@ -38,7 +38,7 @@ class MovingObjectMixin:
 
     def GetOutlinePoints(self):
         BB = self.BoundingBox
-        OutlinePoints = N.array( ( (BB[0,0], BB[0,1]),
+        OutlinePoints = np.array( ( (BB[0,0], BB[0,1]),
                                     (BB[0,0], BB[1,1]),
                                     (BB[1,0], BB[1,1]),
                                     (BB[1,0], BB[0,1]),
@@ -119,7 +119,7 @@ class ConnectorLine(FC.LineOnlyMixin, FC.DrawObject,):
 
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
-        Points = N.array( (self.Object1.GetConnectPoint(),
+        Points = np.array( (self.Object1.GetConnectPoint(),
                            self.Object2.GetConnectPoint()) )
         Points = WorldToPixel(Points)
         dc.SetPen(self.Pen)
@@ -139,7 +139,7 @@ class TriangleShape1(FC.Polygon, MovingObjectMixin):
         L is the length of one side of the Triangle
         """
 
-        XY = N.asarray(XY)
+        XY = np.asarray(XY)
         XY.shape = (2,)
 
         Points = self.CompPoints(XY, L)
@@ -155,12 +155,12 @@ class TriangleShape1(FC.Polygon, MovingObjectMixin):
         return self.Points
 
     def CompPoints(self, XY, L):
-        c = L/ N.sqrt(3)
+        c = L/ np.sqrt(3)
 
-        Points = N.array(((0, c),
+        Points = np.array(((0, c),
                           ( L/2.0, -c/2.0),
                           (-L/2.0, -c/2.0)),
-                          N.float64)
+                          np.float64)
 
         Points += XY
         return Points
@@ -189,10 +189,10 @@ class DrawFrame(wx.Frame):
         Canvas.Bind(FC.EVT_MOTION, self.OnMove )
         Canvas.Bind(FC.EVT_LEFT_UP, self.OnLeftUp )
 
-        Points = N.array(((0,0),
+        Points = np.array(((0,0),
                           (1,0),
                           (0.5, 1)),
-                         N.float)
+                         np.float)
 
         data  = (( (0,0),  1),
                  ( (3,3),  2),

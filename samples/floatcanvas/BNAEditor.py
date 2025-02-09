@@ -9,7 +9,7 @@ BNA is a simple text format for storing polygons in lat-long coordinates.
 import os, sys
 import sets
 
-import numpy as N
+import numpy as np
 
 #### import local version:
 #sys.path.append("..")
@@ -75,7 +75,7 @@ class BNAData:
                 num_points = int(line)
                 self.Types.append(Type)
                 self.Names.append(Name)
-                polygon = N.zeros((num_points,2),N.float)
+                polygon = np.zeros((num_points,2),np.float)
                 for i in range(num_points):
                     polygon[i,:] = map(float, file_.readline().split(','))
                 self.PointsData.append(polygon)
@@ -208,7 +208,7 @@ class DrawFrame(wx.Frame):
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
             dc.SetLogicalFunction(wx.XOR)
             if self.SelectedPointNeighbors is None:
-                self.SelectedPointNeighbors = N.zeros((3,2), N.float)
+                self.SelectedPointNeighbors = np.zeros((3,2), np.float)
                 #fixme: This feels very inelegant!
                 if Index == 0:
                     self.SelectedPointNeighbors[0] = self.SelectedPoly.Points[-1]
