@@ -18,7 +18,6 @@ import glob
 import hashlib
 import optparse
 import os
-import pathlib
 import re
 import shutil
 import subprocess
@@ -29,6 +28,7 @@ import shlex
 import textwrap
 import warnings
 
+from pathlib import Path
 from shutil import which
 
 try:
@@ -39,7 +39,7 @@ except ImportError:
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macSetLoaderNames, \
-                               getVcsRev, runcmd, textfile_open, getSipFiles, \
+                               getVcsRev, runcmd, getSipFiles, \
                                getVisCVersion, getToolsPlatformName, updateLicenseFiles, \
                                TemporaryDirectory, getMSVCInfo, generateVersionFiles
 
@@ -577,8 +577,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
             # now check the MD5 if not in dev mode and it's set to None
             if not (devMode and md5 is None):
                 m = hashlib.md5()
-                with open(cmd, 'rb') as fid:
-                    m.update(fid.read())
+                m.update(Path(cmd).read_bytes())
                 if m.hexdigest() != md5:
                     _error_msg('MD5 mismatch, got "%s"\n       '
                                'expected          "%s"' % (m.hexdigest(), md5))
@@ -622,8 +621,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
 
         import bz2
         data = bz2.decompress(data)
-        with open(cmd, 'wb') as f:
-            f.write(data)
+        Path(cmd).write_bytes(data)
         os.chmod(cmd, 0o755)
 
         # Recursive call so the MD5 value will be double-checked on what was
@@ -672,8 +670,7 @@ def getMSWebView2():
             sys.exit(1)
 
         # Write the downloaded data to a local file
-        with open(opj(dest, fname), 'wb') as f:
-            f.write(data)
+        Path(dest, fname).write_bytes(data)
 
         # Unzip it
         from zipfile import ZipFile
@@ -802,7 +799,7 @@ def checkCompiler(quiet=False):
         # Make sure there is now a cl.exe on the PATH
         CL = 'NOT FOUND'
         for d in os.environ['PATH'].split(os.pathsep):
-            p = pathlib.Path(d, 'cl.exe')
+            p = Path(d, 'cl.exe')
             if p.exists():
                 CL = p
                 break
@@ -811,7 +808,7 @@ def checkCompiler(quiet=False):
 
             # # Just needed for debugging
             # for d in info.include.split(os.pathsep):
-            #     p = pathlib.Path(d, 'tchar.h')
+            #     p = Path(d, 'tchar.h')
             #     if p.exists():
             #         msg(f'   tchar.h: {p}')
             #         break
@@ -929,12 +926,11 @@ def do_regenerate_sysconfig():
 
         # On success the new data module will have been written to a subfolder
         # of the current folder, which is recorded in ./pybuilddir.txt
-        with open('pybuilddir.txt', 'r') as fp:
-            pybd = fp.read()
+        pybd = Path('pybuilddir.txt').read_text()
 
         # grab the file in that folder and copy it into the Python lib
         p = opj(td, pybd, '*')
-        datafile = sorted(glob.glob(opj(td, pybd, '*')))[0]
+        datafile = min(glob.glob(opj(td, pybd, '*')))
         cmd = [PYTHON, '-c', 'import sysconfig; print(sysconfig.get_path("stdlib"))']
         stdlib = runcmd(cmd, getOutput=True)
         shutil.copy(datafile, stdlib)
@@ -1065,8 +1061,7 @@ def _removeSidebar(path):
     """
     from bs4 import BeautifulSoup
     for filename in sorted(glob.glob(opj(path, '*.html'))):
-        with textfile_open(filename, 'rt') as f:
-            text = f.read()
+        text = Path(filename).read_text(encoding="utf-8")
         text = text.replace('<script src="_static/javascript/sidebar.js" type="text/javascript"></script>', '')
         soup = BeautifulSoup(text, 'html.parser')
         tag = soup.find('div', 'sphinxsidebar')
@@ -1076,8 +1071,7 @@ def _removeSidebar(path):
         if tag:
             tag.attrs['class'] = ['document-no-sidebar']
         text = str(soup)
-        with textfile_open(filename, 'wt') as f:
-            f.write(text)
+        Path(filename).write_text(text, encoding="utf-8")
 
 
 def cmd_docset(options, args):
@@ -1323,9 +1317,7 @@ def cmd_sip(options, args):
                 sip_gen_dir=opj(phoenixDir(), 'sip', 'gen'),
                 )
         )
-
-        with open(opj(tmpdir, 'pyproject.toml'), 'w') as f:
-            f.write(pyproject_toml)
+        Path(tmpdir, 'pyproject.toml').write_text(pyproject_toml)
 
         sip_pwd = pushDir(tmpdir)
         cmd = 'sip-build --no-compile'
@@ -1335,17 +1327,14 @@ def cmd_sip(options, args):
         # Write out a sip build file (no longer done by sip itself)
         sip_tmp_out_dir = opj(tmpdir, 'build', base)
         sip_pwd = pushDir(sip_tmp_out_dir)
-        header = sorted(glob.glob('*.h'))[0]
+        header = min(glob.glob('*.h'))
         sources = sorted(glob.glob('*.cpp'))
         del sip_pwd
-        with open(sbf, 'w') as f:
-            f.write("sources = {}\n".format(' '.join(sources)))
-            f.write("headers = {}\n".format(header))
-
+        Path(sbf).write_text(f"sources = {' '.join(sources)}\nheaders = {header}\n")
         classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }
 
         def processSrc(src, keepHashLines=False):
-            with textfile_open(src, 'rt') as f:
+            with open(src, 'rt', encoding="utf-8") as f:
                 srcTxt = f.read()
                 if keepHashLines:
                     # Either just fix the pathnames in the #line lines...
@@ -1381,24 +1370,21 @@ def cmd_sip(options, args):
         # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
         # ignore it.
         for src in sorted(glob.glob(sip_tmp_out_dir + '/*')):
-            dest = opj(cfg.SIPOUT, os.path.basename(src))
-            if not os.path.exists(dest):
+            dest = Path(opj(cfg.SIPOUT, os.path.basename(src)))
+            if not dest.exists():
                 msg('%s is a new file, copying...' % os.path.basename(src))
                 srcTxt = processSrc(src, options.keep_hash_lines)
-                with textfile_open(dest, 'wt') as f:
-                    f.write(srcTxt)
+                dest.write_text(srcTxt, encoding="utf-8")
                 continue
 
             srcTxt = processSrc(src, options.keep_hash_lines)
-            with textfile_open(dest, 'rt') as f:
-                destTxt = f.read()
+            destTxt = dest.read_text(encoding="utf-8")
 
             if srcTxt == destTxt:
                 pass
             else:
                 msg('%s is changed, copying...' % os.path.basename(src))
-                with textfile_open(dest, 'wt') as f:
-                    f.write(srcTxt)
+                dest.write_text(srcTxt, encoding="utf-8")
 
         # Remove tmpdir and its contents
         shutil.rmtree(tmpdir)
@@ -1408,7 +1394,7 @@ def cmd_sip(options, args):
     with tempfile.TemporaryDirectory() as tmpdir:
         cmd = 'sip-module --sdist --abi-version {} --target-dir {} wx.siplib'.format(cfg.SIP_ABI, tmpdir)
         runcmd(cmd)
-        tf_name = sorted(glob.glob(tmpdir + '/*.tar*'))[0]
+        tf_name = min(glob.glob(tmpdir + '/*.tar*'))
         tf_dir = os.path.splitext(os.path.splitext(tf_name)[0])[0]
         with tarfile.open(tf_name) as tf:
             try:
@@ -1425,7 +1411,7 @@ def cmd_sip(options, args):
 def cmd_touch(options, args):
     cmdTimer = CommandTimer('touch')
     pwd = pushDir(phoenixDir())
-    etg = pathlib.Path('etg')
+    etg = Path('etg')
     for item in sorted(etg.glob('*.py')):
         item.touch()
     cmd_touch_others(options, args)
@@ -1770,8 +1756,7 @@ def cmd_build_py(options, args):
 
             msg('*-'*40)
             msg('WAF config log "{}":'.format(logfilename))
-            with open(logfilename, 'r') as log:
-                msg(log.read())
+            msg(Path(logfilename).read_text())
             msg('*-'*40)
     runcmd(cmd, onError=_onWafError)
 
@@ -1809,8 +1794,7 @@ def cmd_build_docker(options, args):
     cmd = ['inv', 'build-wxpython']
     if options.docker_img != 'all':
         for img in options.docker_img.split(','):
-            cmd.append('-i')
-            cmd.append(img)
+            cmd.extend(('-i', img))
 
     # Do just the gtk2 builds?
     if options.gtk2:
@@ -1855,7 +1839,7 @@ def cmd_touch_others(options, args):
     cmdTimer = CommandTimer('touch_others')
     pwd = pushDir(phoenixDir())
     cfg = Config(noWxConfig=True)
-    pth = pathlib.Path(opj(cfg.PKGDIR, 'svg'))
+    pth = Path(opj(cfg.PKGDIR, 'svg'))
     for item in sorted(pth.glob('*.pyx')):
         item.touch()
 
@@ -2225,8 +2209,7 @@ def cmd_sdist(options, args):
     shutil.rmtree(opj(PDEST, 'docs'), ignore_errors=True)
     if options.nodoc:
         os.makedirs(opj(PDEST, 'docs'))
-        with open(opj(PDEST, 'docs', 'README.txt'), 'wt') as f:
-            f.write("The sphinx files and generated docs are not included in this archive.\n")
+        Path(PDEST, 'docs', 'README.txt').write_text("The sphinx files and generated docs are not included in this archive.\n")
     else:
         shutil.copytree('docs', opj(PDEST, 'docs'),
                         ignore=shutil.ignore_patterns('html', 'build', '__pycache__', 'cpp'))
@@ -2378,9 +2361,7 @@ def cmd_setrev(options, args):
 
     else:
         svnrev = getVcsRev()
-        with open('REV.txt', 'w') as f:
-            svnrev = '.dev'+svnrev
-            f.write(svnrev)
+        Path('REV.txt').write_text(svnrev)
         msg('REV.txt set to "%s"' % svnrev)
 
     cfg = Config()
