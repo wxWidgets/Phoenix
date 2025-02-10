@@ -1504,8 +1504,6 @@ def cmd_build_wx(options, args):
 
             if options.mac_arch:
                 build_options.append("--mac_universal_binary=%s" % options.mac_arch)
-            else:
-                build_options.append("--mac_universal_binary=default")
 
         if options.no_config:
             build_options.append('--no_config')
