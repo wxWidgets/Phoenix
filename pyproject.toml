@@ -74,7 +74,7 @@ requires = [
     "setuptools>=70.1",
     "cython == 3.0.10",
     "requests >= 2.26.0",
-    "sip == 6.9.1",
+    "sip == 6.10.0",
 ]
 # Using "setuptools.build_meta:__legacy__" instead of "setuptools.build_meta" for now.
 # Allows to have access to the folder on the search path when building, like before.
