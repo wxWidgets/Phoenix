@@ -1492,7 +1492,7 @@ def cmd_test(options, args, tests=None):
         # otherwise, run only the test modules given
         cmd += ' '.join(tests)
 
-    runcmd(cmd, fatal=False)
+    runcmd(cmd)
 
 
 
