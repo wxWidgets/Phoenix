@@ -144,8 +144,14 @@ jobs:
           build_opts=$WXPYTHON_BUILD_ARGS
           if [ ${{ matrix.os }} == ubuntu-22.04 ]; then
               short_name=linux
-          elif [ ${{ matrix.os }} == macos-13 ] || [ ${{ matrix.os }} == macos-14 ]; then
+          elif [ ${{ matrix.os }} == macos-13 ]; then
               short_name=macos
+              echo "_PYTHON_HOST_PLATFORM=macosx-10.10-x86_64" >> "$GITHUB_ENV"
+              echo "ARCHFLAGS=-arch $(uname -m)" >> "$GITHUB_ENV"
+          elif [ ${{ matrix.os }} == macos-14 ]; then
+              short_name=macos
+              echo "_PYTHON_HOST_PLATFORM=macosx-11.0-arm64" >> "$GITHUB_ENV"
+              echo "ARCHFLAGS=-arch $(uname -m)" >> "$GITHUB_ENV"
           elif [ ${{ matrix.os }} == windows-2022 ]; then
               if [ ${{ matrix.architecture }} == x64 ]; then
                   short_name=win64
