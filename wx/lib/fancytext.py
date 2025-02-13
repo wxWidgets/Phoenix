@@ -329,14 +329,14 @@ class DCRenderer(Renderer):
         width, height, descent, leading = self.dc.GetFullTextExtent("M")
         width = max(width, 10)
         height = max(height, width / 2)
-        self.dc.SetPen(wx.Pen(self.getCurrentColor(), max(1, width/10)))
+        self.dc.SetPen(wx.Pen(self.getCurrentColor(), int(max(1, width/10))))
         self.dc.SetBrush(wx.TRANSPARENT_BRUSH)
         y = self.y + self.offsets[-1]
         r = iround( 0.95 * width / 4)
         xc = (2*self.x + width) / 2
         yc = iround(y-1.5*r)
-        self.dc.DrawCircle(xc - r, yc, r)
-        self.dc.DrawCircle(xc + r, yc, r)
+        self.dc.DrawCircle(int(xc - r), yc, r)
+        self.dc.DrawCircle(int(xc + r), yc, r)
         self.updateDims(width, height, 0, 0)
 
     def start_times(self, attrs):
