@@ -50,7 +50,7 @@ module = Extension(name='wx.svg._nanosvg',
 if have_cython:
     modules = cythonize([module],
                         compiler_directives={'embedsignature': True,
-                                             'language_level':2,
+                                             'language_level': 3,       # was two
                                             })
 else:
     modules = [module]
