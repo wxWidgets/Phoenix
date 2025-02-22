@@ -1,0 +1,359 @@
+#---------------------------------------------------------------------------
+# This workflow will build and archive a wxPython source distribution for
+# CI. It will start by building a sdist archive first, and then that will be
+# used in subsequent jobs on each supported platform and Python version.
+#---------------------------------------------------------------------------
+
+name: ci-build-3.13t-only
+
+on:
+  # Trigger on push or PRs targeting the master branch
+  push:
+    branches: [ 'master' ]
+    tags:
+      - 'wxPython-*'
+  pull_request:
+    branches: [ 'master' ]
+
+  # Also allow manual triggering (via web ui)
+  workflow_dispatch:
+
+# Cancel the workflow if another instance in the same workflow and PR is triggered
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    # always use bash shell, even on windows
+    shell: bash
+
+env:
+  PYTHONUNBUFFERED: 1
+  WXPYTHON_BUILD_ARGS: ${{ startsWith(github.ref, 'refs/tags/') && '--release' || '' }}
+
+#---------------------------------------------------------------------------
+
+jobs:
+  # Build a wxPython source archive, and save it as an artifact for use in the
+  # job that builds the wheels.
+  build-source-dist:
+    runs-on: ubuntu-22.04
+
+    outputs:
+      VERSION: ${{ steps.generate.outputs.version }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          sudo apt update -y
+          sudo apt upgrade -y
+          sudo apt-get install -y gettext
+          python -m pip install --upgrade -r requirements.txt
+
+      - name: Generate wrapper code
+        id: generate
+        run: |
+          python build.py setrev dox etg sip --nodoc
+          VERSION=$(python build.py --quiet version)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create source distribution (sdist)
+        run: |
+          python build.py sdist
+
+      - name: Save sdist as job artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wxPython-source
+          path: dist/wxPython-${{ steps.generate.outputs.version }}.tar.gz
+
+      - name: Create demo source distribution (sdist_demo)
+        if: github.event_name == 'push'
+        run: |
+          python build.py sdist_demo
+
+      - name: Save demo sdist as job artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo
+          path: dist/wxPython-demo-${{ steps.generate.outputs.version }}.tar.gz
+
+
+#---------------------------------------------------------------------------
+
+  # Use pip and the wxPython-source artifact to build a wxPython wheel for every
+  # supported Python version and architecture.
+  build-wheels:
+    # wait for prior job to complete
+    needs: build-source-dist
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ "windows-2022"] # windows only [ ubuntu-22.04, windows-2022, macos-13 ]
+        python-version: [ '3.13t' ] # removed all gil versions
+        architecture: [ 'x64' ] # 64-bit only
+        # Exclude x86 configs on non-Windows OSs
+        exclude:
+          - os: ubuntu-22.04
+            architecture: x86
+          - os: macos-13
+            architecture: x86
+          # Only build oldest and newest Pythons on PRs
+          - python-version: ${{ github.event_name == 'pull_request' && '3.10' }}
+          - python-version: ${{ github.event_name == 'pull_request' && '3.11' }}
+          - python-version: ${{ github.event_name == 'pull_request' && '3.12' }}
+
+    env:
+      VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
+
+    runs-on: ${{ matrix.os }}
+
+    outputs:
+      short_name: ${{ steps.init.outputs.short_name }}
+      canonical_id: ${{ steps.init.outputs.canonical_id }}
+
+    steps:
+      - name: initialize variables
+        id: init
+        run: |
+          build_opts=$WXPYTHON_BUILD_ARGS
+          if [ ${{ matrix.os }} == ubuntu-22.04 ]; then
+              short_name=linux
+          elif [ ${{ matrix.os }} == macos-13 ]; then
+              short_name=macos
+              build_opts="$build_opts --mac_arch=arm64,x86_64"
+          elif [ ${{ matrix.os }} == windows-2022 ]; then
+              if [ ${{ matrix.architecture }} == x64 ]; then
+                  short_name=win64
+              else
+                  short_name=win32
+              fi
+          fi
+          echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
+          echo "canonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
+          echo "build_opts=$build_opts" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: download CI source artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: wxPython-source
+          path: dist
+
+      - name: Set up Python ${{ matrix.python-version }}-${{ matrix.architecture }}
+        uses: actions/setup-python@v5
+        # instead of "!endsWith..."
+        if: endsWith(matrix.python-version, 't') != true 
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: '${{ matrix.architecture }}'
+          cache: 'pip'
+      - uses: deadsnakes/action@v3.2.0
+        if: endsWith(matrix.python-version, 't')
+        with:
+          python-version: ${{ matrix.python-version }}
+          # not supported, runs-on should ensure os + architecture (?), otherwise x86 is not that important anyway
+          # architecture: '${{ matrix.architecture }}' 
+          # deadsnake does not support cahing
+          # cache: 'pip'
+          # debug: true  # Optional, to select a Python debug build
+          nogil: true  # Optional, to select a free-threaded Python build (3.13+ only)
+        
+        # PREVIOUS: 
+        # uses: actions/setup-python@v5
+        # with:
+        #   python-version: '${{ matrix.python-version }}'
+        #   architecture: '${{ matrix.architecture }}'
+          # cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade -r requirements.txt
+
+      - name: Install Ubuntu dependencies
+        if: ${{ matrix.os == 'ubuntu-22.04' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+                  freeglut3-dev \
+                  libcurl4-openssl-dev \
+                  libexpat1-dev \
+                  libgl1-mesa-dev \
+                  libglu1-mesa-dev \
+                  libgtk-3-dev \
+                  libjpeg-dev \
+                  libnotify-dev \
+                  libsdl2-dev \
+                  libsm-dev \
+                  libtiff-dev \
+                  libwebkit2gtk-4.0-dev \
+                  libxtst-dev \
+                  libunwind-dev \
+                  libgstreamer1.0-dev \
+                  libgstreamer-plugins-base1.0-dev
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: '${{ matrix.architecture }}'
+
+      - name: Build the wxPython wheel
+        env:
+          WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
+        run: |
+          cd dist
+          pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+
+      - name: Simple smoke test
+        run: |
+          cd dist
+          pip install wxPython-*.whl
+          python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
+          pip uninstall --yes wxPython
+
+      - name: Save wheel as job artifact
+        uses: actions/upload-artifact@v4
+        # Just Windows and MacOS for now, all we care about for Linux at this
+        # point is that the build was successful.
+        if: ${{ matrix.os != 'ubuntu-22.04' }}
+        with:
+          name: wxPython-wheel-${{ steps.init.outputs.canonical_id }}
+          path: dist/wxPython-*.whl
+
+  build-documentation:
+    name: Build wxPython documentation
+    if: github.event_name == 'push'
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade -r requirements.txt
+          python -m pip install pillow
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: 'x64'
+
+      - name: Setup Graphviz
+        uses: ts-graphviz/setup-graphviz@v2
+
+      - name: Build documentation
+        run: |
+          python build.py setrev dox etg sip build_wx build_py wxlib sphinx bdist_docs docset_py
+
+      - name: Save docs as job artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: dist/wxPython-docs*.tar.gz
+
+
+  publish-to-pypi:
+    name: Publish Python distribution to PyPI
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build-wheels
+    runs-on: ubuntu-22.04
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/wxPython
+
+    permissions:
+      id-token: write
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        pattern: wxPython-*
+        path: dist/
+        merge-multiple: true
+    - name: Publish distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+
+
+  github-release:
+    name: Create GitHub Release and upload source
+    needs: publish-to-pypi
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+    - name: Download source distribution
+      uses: actions/download-artifact@v4
+      with:
+        name: wxPython-source
+        path: dist
+    - name: Create GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        gh release create '${{ github.ref_name }}' \
+          --repo '${{ github.repository }}' \
+          --notes ""
+    - name: Upload source distribution to GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        gh release upload '${{ github.ref_name }}' dist/* \
+          --repo '${{ github.repository }}'
+
+
+  upload-wheels-to-snapshot-builds:
+    name: Upload wheels to snapshot-builds on wxpython.org
+    if: github.event_name == 'push'
+    needs: build-wheels
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        path: dist/
+        merge-multiple: true
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.RIOBU_SSH_KEY }}
+        known_hosts: ${{ secrets.RIOBU_KNOWN_HOSTS }}
+    - name: SCP wheels
+      run: |
+        scp -p dist/* rbot.wxpython@riobu.com:snapshot-builds/
