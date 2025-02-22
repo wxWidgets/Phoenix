@@ -161,10 +161,29 @@ jobs:
 
       - name: Set up Python ${{ matrix.python-version }}-${{ matrix.architecture }}
         uses: actions/setup-python@v5
+        # instead of "!endsWith..."
+        if: endsWith(matrix.python-version, 't') != true 
         with:
-          python-version: '${{ matrix.python-version }}'
+          python-version: ${{ matrix.python-version }}
           architecture: '${{ matrix.architecture }}'
           cache: 'pip'
+      - uses: deadsnakes/action@v3.2.0
+        if: endsWith(matrix.python-version, 't')
+        with:
+          python-version: ${{ matrix.python-version }}
+          # not supported, runs-on should ensure os + architecture (?), otherwise x86 is not that important anyway
+          # architecture: '${{ matrix.architecture }}' 
+          # deadsnake does not support cahing
+          # cache: 'pip'
+          # debug: true  # Optional, to select a Python debug build
+          nogil: true  # Optional, to select a free-threaded Python build (3.13+ only)
+        
+        # PREVIOUS: 
+        # uses: actions/setup-python@v5
+        # with:
+        #   python-version: '${{ matrix.python-version }}'
+        #   architecture: '${{ matrix.architecture }}'
+          # cache: 'pip'
 
       - name: Install Python dependencies
         run: |
