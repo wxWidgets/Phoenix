@@ -1,7 +1,7 @@
 .. include:: headings.inc
 
 
-.. _html overview:
+.. _high dpi overview:
 
 ======================================
 |phoenix_title|  **High DPI Overview**

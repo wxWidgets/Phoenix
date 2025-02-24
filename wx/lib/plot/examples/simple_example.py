@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+.. highlight:: shell
+
 A simple example showing how to use lib.plot from wxPython.
 
 It is intended to be run as a standalone script via::
 
-  user@host:.../site-packages/wx/lib/plot$ python examples/simple_example.py
+    user@host:.../site-packages/wx/lib/plot$ python examples/simple_example.py
 
 """
 __docformat__ = "restructuredtext en"
