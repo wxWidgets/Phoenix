@@ -424,7 +424,7 @@ def makeOptionParser():
 
         ("extra_setup",    ("",    "Extra args to pass on setup.py's command line.")),
         ("extra_make",     ("",    "Extra args to pass on [n]make's command line.")),
-        ("extra_waf",      ("",    "Extra args to pass on waf's command line.")),
+        ("extra_waf",      ("-v",    "Extra args to pass on waf's command line.")),
         ("extra_pytest",   ("",    "Extra args to pass on py.test's command line.")),
 
         (("j","jobs"),     ("",    "Number of parallel compile jobs to do, if supported.")),
@@ -1504,8 +1504,6 @@ def cmd_build_wx(options, args):
 
             if options.mac_arch:
                 build_options.append("--mac_universal_binary=%s" % options.mac_arch)
-            else:
-                build_options.append("--mac_universal_binary=default")
 
         if options.no_config:
             build_options.append('--no_config')

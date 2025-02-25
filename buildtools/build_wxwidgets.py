@@ -194,7 +194,7 @@ def main(wxDir, args):
         "gtk3"          : (True,  "On Linux build for gtk3"),
         "mac_distdir"   : (None, "If set on Mac, will create an installer package in the specified dir."),
         "mac_universal_binary"
-                        : ("default", "Comma separated list of architectures to include in the Mac universal binary"),
+                        : ("", "Comma separated list of architectures to include in the Mac universal binary"),
         "mac_framework" : (False, "Install the Mac build as a framework"),
         "mac_framework_prefix"
                         : (defFwPrefix, "Prefix where the framework should be installed. Default: %s" % defFwPrefix),
