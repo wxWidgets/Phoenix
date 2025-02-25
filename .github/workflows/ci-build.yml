@@ -146,12 +146,18 @@ jobs:
               short_name=linux
           elif [ ${{ matrix.os }} == macos-13 ]; then
               short_name=macos
-              echo "_PYTHON_HOST_PLATFORM=macosx-10.10-x86_64" >> "$GITHUB_ENV"
-              echo "ARCHFLAGS=-arch $(uname -m)" >> "$GITHUB_ENV"
+              #echo "_PYTHON_HOST_PLATFORM=macosx-10.10-x86_64" >> "$GITHUB_ENV"
+              #echo "ARCHFLAGS=-arch $(uname -m)" >> "$GITHUB_ENV"
+              echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
+              echo "CIBW_BUILD_VERBOSITY=1" >> "$GITHUB_ENV"
+              echo "MACOSX_DEPLOYMENT_TARGET=10.10" >> "$GITHUB_ENV"
           elif [ ${{ matrix.os }} == macos-14 ]; then
               short_name=macos
-              echo "_PYTHON_HOST_PLATFORM=macosx-11.0-arm64" >> "$GITHUB_ENV"
-              echo "ARCHFLAGS=-arch $(uname -m)" >> "$GITHUB_ENV"
+              #echo "_PYTHON_HOST_PLATFORM=macosx-11.0-arm64" >> "$GITHUB_ENV"
+              #echo "ARCHFLAGS=-arch $(uname -m)" >> "$GITHUB_ENV"
+              echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
+              echo "CIBW_BUILD_VERBOSITY=1" >> "$GITHUB_ENV"
+              echo "MACOSX_DEPLOYMENT_TARGET=11.0" >> "$GITHUB_ENV"
           elif [ ${{ matrix.os }} == windows-2022 ]; then
               if [ ${{ matrix.architecture }} == x64 ]; then
                   short_name=win64
@@ -216,8 +222,13 @@ jobs:
         env:
           WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
         run: |
-          cd dist
-          pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+          if [ -z "$CIBW_BUILD" ]; then
+              cd dist
+              pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+          else
+              pip install cibuildwheel
+              cibuildwheel dist/wxPython-${{ env.VERSION }}.tar.gz --output-dir dist
+          fi
 
       - name: Simple smoke test
         run: |
