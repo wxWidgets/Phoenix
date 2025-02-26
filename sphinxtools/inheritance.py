@@ -105,8 +105,7 @@ class InheritanceDiagram:
         'shape': 'box',
         'fontsize': 10,
         'height': 0.3,
-        'fontname': '"Vera Sans, DejaVu Sans, Liberation Sans, '
-                    'Arial, Helvetica, sans"',
+        'fontname': '"Liberation Sans, Arial, sans-serif"',
         'style': '"setlinewidth(0.5)"',
     }
     default_edge_attrs = {
@@ -136,8 +135,9 @@ class InheritanceDiagram:
 
         inheritance_node_attrs = {"align": "center", 'shape': 'box',
                                   'fontsize': 12, 'height': 0.3,
-                                  'fontname': '"Vera Sans, DejaVu Sans, Liberation Sans, '
-                                  'Arial, Helvetica, sans"', 'style': '"setlinewidth(0.8), rounded"',
+                                  'margin': '"0.15, 0.05"',
+                                  'fontname': '"Liberation Sans, Arial, sans-serif"',
+                                  'style': '"setlinewidth(0.8), rounded"',
                                   'labelloc': 'c', 'fontcolor': 'grey45',
                                   "color": "dodgerblue4"}
 
