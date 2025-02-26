@@ -232,10 +232,10 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 0
 
-      - name: Set up Python 3.9
+      - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.13'
           cache: 'pip'
 
       - name: Install Python dependencies
