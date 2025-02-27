@@ -13,18 +13,19 @@ wx.stc.StyledTextCtrl class. This class has more than 760 methods,
 so the 'Method Summary' is sorted into categories.
 """
 
-import os
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
+from buildtools.config import msg
 from sphinxtools.constants import XMLSRC, SPHINXROOT
 
-STC_CLASS_XML = os.path.join(XMLSRC, "classwx_styled_text_ctrl.xml")
-STC_RST = os.path.join(SPHINXROOT, "wx.stc.StyledTextCtrl.txt")
+STC_CLASS_XML = Path(XMLSRC, "classwx_styled_text_ctrl.xml")
+STC_RST = Path(SPHINXROOT, "wx.stc.StyledTextCtrl.txt")
 TBL_SEP = "======================================================" + \
           "========================== ===========================" + \
           "=====================================================\n"
 
-def _parse_method_categories(xml_file: str):
+def _parse_method_categories(xml_file):
     """
     Parses values from an xml file containing categories, method
     names and occasional additional category descriptions.
@@ -83,7 +84,7 @@ def _parse_description(para):
 
     return description
 
-def _parse_stcdoc_segments(file: str):
+def _parse_stcdoc_segments(file):
     """
     Read the reStructuredText file and split relevant parts into textblocks.
     """
@@ -225,23 +226,31 @@ def _output_reordered_doc(pretext, posttext, grouped_methods):
 
     doc += posttext
 
-    with open(STC_RST, 'w', encoding="utf-8") as f:
-        f.write(doc)
+    STC_RST.write_text(doc, encoding="utf-8")
 
     # print(f"Debug: Wrote {m_count} methods to new file.")
 
-def categorise_methods():
+def stc_categorise_methods():
     """
     Loads the ReST file, categorises the method summary and saves a new file. 
     Thr original file is overwritten.
     """
+    if not STC_CLASS_XML.is_file():
+        return msg(f"Warning: StyledTextCtrl post-processing failed: {STC_CLASS_XML.name} not available.")
+
     mapping = _parse_method_categories(STC_CLASS_XML)
+
+    if not STC_RST.is_file():
+        return msg(f"Warning: StyledTextCtrl post-processing failed: {STC_RST.name} not available.")
+
     pre, methods, post, links = _parse_stcdoc_segments(STC_RST)
     grouped_methods = _methods_to_categories(methods, mapping)
     sorted_methods = {key: grouped_methods[key] for key in links}
     _output_reordered_doc(pre, post, sorted_methods)
 
+    return msg("StyledTextCtrl post-processing completed successfully.")
+
 
 if __name__ == "__main__":
-    categorise_methods()
+    stc_categorise_methods()
 

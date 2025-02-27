@@ -1145,6 +1145,7 @@ def cmd_etg(options, args):
 
 def cmd_sphinx(options, args):
     from sphinxtools.postprocess import genIndexes, makeHeadings, postProcess, genGallery
+    from sphinxtools.stc_doc_postprocess import stc_categorise_methods
 
     cmdTimer = CommandTimer('sphinx')
     pwd = pushDir(phoenixDir())
@@ -1157,6 +1158,9 @@ def cmd_sphinx(options, args):
     textFiles = sorted(glob.glob(sphinxDir + '/*.txt'))
     if not textFiles:
         raise Exception('No documentation files found. Please run "build.py touch etg" first')
+
+    # Sort all wx.stc.StyledTextCtrl methods into categories
+    stc_categorise_methods()
 
     # Copy the rst files into txt files
     restDir = os.path.join(sphinxDir, 'rest_substitutions', 'overviews')
