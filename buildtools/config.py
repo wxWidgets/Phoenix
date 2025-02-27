@@ -280,6 +280,14 @@ class Configuration(object):
                         del LDSHARED[index:index+2]
                     except ValueError:
                         break
+                # also remove any -arch flags and their arg
+                while True:
+                    try:
+                        index = LDSHARED.index('-arch')
+                        # Strip this argument and the next one:
+                        del LDSHARED[index:index+2]
+                    except ValueError:
+                        break
                 LDSHARED = ' '.join(LDSHARED)
                 # Combine with wx's ld command and stash it in the env
                 # where distutils will get it later.
