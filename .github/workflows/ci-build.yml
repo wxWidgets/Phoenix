@@ -207,7 +207,7 @@ jobs:
       - name: Simple smoke test
         run: |
           cd dist
-          pip install wxPython-*.whl
+          pip install wxpython-*.whl
           python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
           pip uninstall --yes wxPython
 
@@ -218,7 +218,7 @@ jobs:
         if: ${{ matrix.os != 'ubuntu-22.04' }}
         with:
           name: wxPython-wheel-${{ steps.init.outputs.canonical_id }}
-          path: dist/wxPython-*.whl
+          path: dist/wxpython-*.whl
 
   build-documentation:
     name: Build wxPython documentation
