@@ -92,7 +92,7 @@ doxygenCurrentVersion = '1.9.1'
 doxygenMD5 = {
     'darwin' : '6912d41cef5971fb07573190849a8a84',
     'win32'  : '90439896025dc8ddcd5d767ab2c2c489',
-    'linux'  : 'ed0461d5303a23ac19c343ad55b64f2e',
+    'linux'  : 'ed2c35099165fce0d07d9a1809935928',
 }
 
 # And the location where they can be downloaded from
