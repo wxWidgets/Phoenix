@@ -1163,7 +1163,9 @@ class Image(Node):
         rel_path = os.path.normpath(static_path[rel_path_index:])
 
         docstrings = '\n\n'
-        docstrings += '.. figure:: %s\n' % rel_path
+        # Sphinx (on windows) can't parse windows style paths when reading
+        # .rst files. Therefore paths are written unix style.
+        docstrings += '.. figure:: %s\n' % rel_path.replace('\\', '/')
         docstrings += '   :align: center\n\n\n'
         docstrings += '|\n\n'
 
@@ -1592,7 +1594,7 @@ class XRef(Node):
                 text = ''
 
             elif not isNumeric(text):
-                text = '``%s``'%text
+                text = '``%s``' % text.strip()
 
         elif 'funcmacro' in values:
             if '(' in stripped:
@@ -2893,7 +2895,7 @@ class XMLDocString(object):
                 pickleItem(desc, self.current_module, self.class_name, 'class')
 
         if self.overloads:
-            docstrings += '\n\n%s|overload| Overloaded Implementations:\n\n'%spacer
+            docstrings += '\n\n%s|overload| **Overloaded Implementations:**\n\n'%spacer
             docstrings += '%s:html:`<hr class="overloadsep" /><br />`\n\n'%spacer
 
             for index, over in enumerate(self.overloads):

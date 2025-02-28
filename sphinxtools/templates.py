@@ -60,26 +60,27 @@ TEMPLATE_APPEARANCE = '''
 
 |
 
-.. figure:: _static/images/widgets/fullsize/wxmsw/%s
-   :alt: wxMSW
-   :figclass: floatleft
+.. container:: control-appearance-figures
 
-   **wxMSW**
+   .. figure:: _static/images/widgets/fullsize/wxmsw/%s
+      :alt: wxMSW
+      :figclass: appearance-figure
 
-
-.. figure:: _static/images/widgets/fullsize/wxmac/%s
-   :alt: wxMAC
-   :figclass: floatright
-
-   **wxMAC**
+      **wxMSW**
 
 
-.. figure:: _static/images/widgets/fullsize/wxgtk/%s
-   :alt: wxGTK
-   :figclass: floatcenter
+   .. figure:: _static/images/widgets/fullsize/wxmac/%s
+      :alt: wxMAC
+      :figclass: appearance-figure
 
-   **wxGTK**
+      **wxMAC**
 
+
+   .. figure:: _static/images/widgets/fullsize/wxgtk/%s
+      :alt: wxGTK
+      :figclass: appearance-figure
+
+      **wxGTK**
 
 |
 

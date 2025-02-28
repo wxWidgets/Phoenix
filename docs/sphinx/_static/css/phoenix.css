@@ -107,13 +107,18 @@ div.headerimage-noshow {
 }
 
 div.document {
-  background-color: rgb(230,230,230);
-  position: relative;
-  margin-left: 240px;
+    background-color: rgb(230,230,230);
+    position: relative;
+    margin-left: 240px;
+    z-index: 500;
 }
 
 div.sphinxsidebarwrapper {
     padding: 10px 5px 0 10px;
+    min-height: 98%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 div.document-no-sidebar {
@@ -136,17 +141,17 @@ div.sphinxsidebar {
     left: 0;
     top: 30px;
     bottom: 0;
+    z-index: 600;
 }
 
-div#searchbox {
-    margin-top: 30px;
+#searchbox {
+    margin-top: 1.8em;
+    flex-grow: 1;
 }
 
-div#sourcelink {
-    position: absolute;
-    bottom: 0;
-    font-style: italic;
-    font-size: small;
+#sourcelink {
+    margin-top: 1.8em;
+    flex-grow: 0;
 }
 
 div.related {
@@ -156,9 +161,9 @@ div.related {
     font-size: 90%;
     line-height: normal;
     height: auto;
-    left: 0;
-    right: 0;
+    position: sticky;
     top: 0;
+    z-index: 999;
 }
 
 div.related ul {
@@ -253,6 +258,36 @@ div.footer {
 
 .field-list th {
   color: rgb(0,102,204);
+}
+
+.control-appearance-figures {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: end;
+    column-gap: 1.0em;
+    justify-content: space-around;
+}
+
+.appearance-figure {
+    margin: 0;
+    padding: 0;
+    max-width: 500px;
+    flex-shrink: 1;
+}
+
+.appearance-figure img {
+    max-height: 320px;
+}
+
+figcaption {
+    text-align: center;
+    text-align-last: center;
+}
+
+figcaption a.headerlink {
+    margin: 0;
+    padding: 0;
 }
 
 .floatleft {
@@ -551,9 +586,10 @@ cite, code, tt {
     letter-spacing: 0.01em;
 }
 
-code.descname, code.descclassname  {
+code.descname, code.descclassname, span.sig-name, span.sig-prename {
     font-weight: bold;
 }
+
 a.headerlink {
     color: #c60f0f;
     font-size: 0.8em;
@@ -753,6 +789,14 @@ p.mybiglink a.mybiglink {
 
 table.contentstable p.mybiglink {
     line-height: 150%;
+}
+
+hr {
+    color: #ccc;
+    background-color: #ccc;
+    height: 1px;
+    border: none;
+    margin-bottom: 0.7rem;
 }
 
 hr.overloadsep {

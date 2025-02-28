@@ -13,7 +13,7 @@ import pkgutil
 
 from buildtools.config import phoenixDir
 
-from inspect import getargspec, ismodule, getdoc, getmodule, getcomments, isfunction
+from inspect import getfullargspec, ismodule, getdoc, getmodule, getcomments, isfunction
 from inspect import ismethoddescriptor, getsource, ismemberdescriptor, isgetsetdescriptor
 from inspect import isbuiltin, isclass, getfile, ismethod
 
@@ -117,23 +117,21 @@ def analyze_params(obj, signature):
         return signature, param_tuple
 
     try:
-        arginfo = getargspec(obj)
-        # TODO: Switch to getfullargspec
+        arginfo = getfullargspec(obj)
     except (TypeError, ValueError):
         arginfo = None
 
     pevals = {}
 
     if arginfo:
-        args = arginfo[0]
-        argsvar = arginfo[1]
+        args = arginfo.args
 
-        if arginfo[3]:
+        if arginfo.defaults:
 
-            dl = len(arginfo[3])
+            dl = len(arginfo.defaults)
             al = len(args)
             defargs = args[al-dl:al]
-            info = arginfo[3]
+            info = arginfo.defaults
 
             for d, i in zip(defargs, info):
                 pevals[d] = i

@@ -8,14 +8,14 @@
     :license: BSD, see LICENSE for details.
 #}
 {%- if pagename != "search" and builder != "singlehtml" %}
-<div id="searchbox" style="display: none" role="search">
-  <h4>{{ _('Search') }}</h4>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">{{ _('Search') }}</h3>
+    <div class="searchformwrapper">
     <form class="search" action="{{ pathto('search') }}" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="{{ _('Go') }}" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 {%- endif %}
