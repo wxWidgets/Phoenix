@@ -104,15 +104,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-22.04, windows-2022, macos-13 ]
+        os: [ ubuntu-22.04, windows-2022, macos-13, macos-14 ]
         python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13' ]
-        architecture: [ 'x86', 'x64' ]
+        architecture: [ 'x86', 'x64', 'arm64' ]
         # Exclude x86 configs on non-Windows OSs
         exclude:
           - os: ubuntu-22.04
             architecture: x86
+          - os: ubuntu-22.04
+            architecture: arm64
           - os: macos-13
             architecture: x86
+          - os: macos-13
+            architecture: arm64
+          - os: macos-14
+            architecture: x86
+          - os: macos-14
+            architecture: x64
+          - os: windows-2022
+            architecture: arm64
           # Only build oldest and newest Pythons on PRs
           - python-version: ${{ github.event_name == 'pull_request' && '3.10' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.11' }}
@@ -136,7 +146,14 @@ jobs:
               short_name=linux
           elif [ ${{ matrix.os }} == macos-13 ]; then
               short_name=macos
-              build_opts="$build_opts --mac_arch=arm64,x86_64"
+              echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
+              echo "CIBW_BUILD_VERBOSITY=1" >> "$GITHUB_ENV"
+              echo "MACOSX_DEPLOYMENT_TARGET=10.10" >> "$GITHUB_ENV"
+          elif [ ${{ matrix.os }} == macos-14 ]; then
+              short_name=macos
+              echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
+              echo "CIBW_BUILD_VERBOSITY=1" >> "$GITHUB_ENV"
+              echo "MACOSX_DEPLOYMENT_TARGET=11.0" >> "$GITHUB_ENV"
           elif [ ${{ matrix.os }} == windows-2022 ]; then
               if [ ${{ matrix.architecture }} == x64 ]; then
                   short_name=win64
@@ -201,8 +218,13 @@ jobs:
         env:
           WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
         run: |
-          cd dist
-          pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+          if [ -z "$CIBW_BUILD" ]; then
+              cd dist
+              pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+          else
+              pip install cibuildwheel
+              cibuildwheel dist/wxPython-${{ env.VERSION }}.tar.gz --output-dir dist
+          fi
 
       - name: Simple smoke test
         run: |
