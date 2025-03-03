@@ -339,7 +339,7 @@ def removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, te
 
 def addSpacesToLinks(text):
 
-    regex = re.findall('\w:ref:`(.*?)`', text)
+    regex = re.findall(r'\w:ref:`(.*?)`', text)
 
     for reg in regex:
         text = text.replace(':ref:`%s`'%reg, ' :ref:`%s`'%reg)
@@ -657,22 +657,24 @@ def postProcess(folder, options):
     for indx, enum in enumerate(enum_base):
         html_file = os.path.split(enum_files[indx])[1]
         base = enum.split('.')[-1]
-        new = '(<a class="reference internal" href="%s" title="%s"><em>%s</em></a>)'%(html_file, base, base)
-        enum_dict['(<em>%s</em>)'%enum] = new
+        new = '(<a class="reference internal" href="%s" title="%s"><em>%s</em></a>)' % (html_file, base, base)
+        enum_dict['(<em>%s</em>)' % enum] = new
 
     for filename in fileNames:
         if "genindex" in filename or "modindex" in filename:
             continue
 
-        methods_done = properties_done = False
+        methods_done = attr_done = fn_done = False
 
         with textfile_open(filename, "rt") as fid:
             orig_text = text = fid.read()
 
-        text = text.replace('Overloaded Implementations:', '<strong>Overloaded Implementations:</strong>')
         for item in HTML_REPLACE:
-            if item != 'class':
-                text = text.replace('<dl class="%s">'%item, '\n<br><hr />\n<dl class="%s">'%item)
+            if item in ('class', 'py class'):
+                continue
+
+            text = text.replace('<dl class="%s">' % item,
+                                '<br><hr><dl class="%s">' % item)
 
         newtext = ''
         splitted_text = text.splitlines()
@@ -684,19 +686,32 @@ def postProcess(folder, options):
                     line = line.replace('– <p>', '– ')
                     line = line.replace('</p>', '')
 
-                if line.strip() == '<br><hr />' or line.strip() == '<dd><br><hr />':
-                    next_line = splitted_text[index+1]
-                    stripline = next_line.strip()
+                if not fn_done and \
+                    line.strip() in ('<br><hr><dl class="function">',
+                                     '<br><hr><dl class="py function">'):
 
-                    # replace the <hr> with a new headline for the first method or first property
-                    if (stripline == '<dl class="staticmethod">' or stripline == '<dl class="method">' \
-                       or stripline == '<dl class="classmethod">') and not methods_done:
-                        line = '\n<br><h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>\n'
-                        methods_done = True
+                    line = line[8:]
+                    fn_done = True
 
-                    elif stripline == '<dl class="attribute">' and not properties_done:
-                        line = '\n<br><h3>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>\n'
-                        properties_done = True
+                if not methods_done and \
+                    line.strip() in ('<br><hr><dl class="method">',
+                                     '<br><hr><dl class="py method">',
+                                     '<br><hr><dl class="staticmethod">',
+                                     '<br><hr><dl class="classmethod">'):
+
+                    line = '\n<br>\n<h3>Methods<a class="headerlink" \
+                           href="#methods" title="Permalink to this \
+                           headline">¶</a></h3>\n' + line[8:]
+                    methods_done = True
+
+                if not attr_done and \
+                    line.strip() in ('<br><hr><dl class="attribute">',
+                                     '<br><hr><dl class="py attribute">'):
+
+                    line = '\n<br>\n<h3>Properties<a class="headerlink" \
+                            href="#properties" title="Permalink to this \
+                            headline">¶</a></h3>\n' + line[8:]
+                    attr_done = True
 
             newtext += line + '\n'
 

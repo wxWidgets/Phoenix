@@ -5,8 +5,10 @@
 .waf-*
 .waf3-*
 .lock-waf*
+.DS_Store
 wingdbstub.py*
 mydbstub.py*
+venv*/
 
 .idea
 .cache
@@ -27,6 +29,7 @@ mydbstub.py*
 /bin/waf-*
 /bin/waf3-*
 /bin/doxygen-*
+/bin/libclang*
 
 /demo/version.py
 

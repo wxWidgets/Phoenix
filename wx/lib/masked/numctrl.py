@@ -89,7 +89,7 @@ masked.NumCtrl:
              emptyBackgroundColour = "White",
              validBackgroundColour = "White",
              invalidBackgroundColour = "Yellow",
-             autoSize = True
+             autoSize = True,
              )
 
 
