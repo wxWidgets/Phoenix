@@ -21,6 +21,7 @@ from sphinxtools.constants import XMLSRC, SPHINXROOT
 
 STC_CLASS_XML = Path(XMLSRC, "classwx_styled_text_ctrl.xml")
 STC_RST = Path(SPHINXROOT, "wx.stc.StyledTextCtrl.txt")
+STC_INFO = ".. !Method post-processing has been applied!"
 TBL_SEP = "======================================================" + \
           "========================== ===========================" + \
           "=====================================================\n"
@@ -103,6 +104,9 @@ def _parse_stcdoc_segments(file):
     with open(file, 'r', encoding="utf-8") as f:
         for line in f:
 
+            if line.strip() == STC_INFO:
+                return ("SKIP", '', '', '')
+
             if parse_posttext:
                 posttext += line
 
@@ -130,7 +134,7 @@ def _parse_stcdoc_segments(file):
                 current_method = line[30:].split('`')[0].strip()
 
                 if not current_method:
-                    print("stc_doc_postprocess:: WARNING: Invalid method name")
+                    msg("stc_doc_postprocess:: WARNING: Invalid method name")
                 else:
                     methods[current_method] = line
 
@@ -218,7 +222,7 @@ def _output_reordered_doc(pretext, posttext, grouped_methods):
     Writes the formatted ReST to a file. Overwrites the original file.
     """
     m_count = 0  # count the written methods
-    doc = pretext
+    doc = STC_INFO + '\n' + pretext
 
     for category, methods in grouped_methods.items():
         cat, m_count = _assemble_method_category(category, methods, m_count)
@@ -244,6 +248,9 @@ def stc_categorise_methods():
         return msg(f"Warning: StyledTextCtrl post-processing failed: {STC_RST.name} not available.")
 
     pre, methods, post, links = _parse_stcdoc_segments(STC_RST)
+    if pre == "SKIP":
+        return msg("StyledTextCtrl post-processing has already been applied, skipping.")
+
     grouped_methods = _methods_to_categories(methods, mapping)
     sorted_methods = {key: grouped_methods[key] for key in links}
     _output_reordered_doc(pre, post, sorted_methods)
