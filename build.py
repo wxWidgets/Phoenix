@@ -57,6 +57,7 @@ PYVER = '3.9'
 PYSHORTVER = '39'
 PYTHON = None  # it will be set later
 PYTHON_ARCH = 'UNKNOWN'
+MSVC_ARCH = None
 
 # convenience access to the wxPython version digits
 version2 = "%d.%d" % (version.VER_MAJOR, version.VER_MINOR)
@@ -160,7 +161,7 @@ Usage: ./build.py [command(s)] [options]
 def main(args):
     setDevModeOptions(args)
     options, commands = parseArgs(args)
-    setPythonVersion(args)
+    setPythonVersion(options, args)
 
     os.environ['PYTHONPATH'] = os.environ.get('PYTHONPATH', '') + os.pathsep + phoenixDir()
     os.environ['PYTHONUNBUFFERED'] = 'yes'
@@ -218,11 +219,12 @@ def main(args):
 #---------------------------------------------------------------------------
 
 
-def setPythonVersion(args):
+def setPythonVersion(options, args):
     global PYVER
     global PYSHORTVER
     global PYTHON
     global PYTHON_ARCH
+    global MSVC_ARCH
 
     havePyVer = False
     havePyPath = False
@@ -305,13 +307,29 @@ def setPythonVersion(args):
     PYTHON_ARCH = runcmd(
         [PYTHON, '-c', 'import platform; print(platform.architecture()[0])'],
         True, False)
+    if isWindows:
+        if options.msvc_arch:
+            MSVC_ARCH = options.msvc_arch
+        else:
+            machine = runcmd(
+                [PYTHON, '-c', 'import platform; print(platform.machine())'],
+                True, False)
+            if machine == 'ARM64':
+                MSVC_ARCH = 'arm64'
+            elif PYTHON_ARCH == '64bit':
+                MSVC_ARCH = 'x64'
+            else:
+                MSVC_ARCH = 'x86'
 
     msg('Python\'s architecture is %s' % PYTHON_ARCH)
     os.environ['PYTHON'] = PYTHON
 
     if PYTHON_ARCH == '64bit':
         # Make sure this is set in case it wasn't above.
-        os.environ['CPU'] = 'X64'
+        if isWindows:
+            os.environ['CPU'] = MSVC_ARCH.split('_')[-1].upper()
+        else:
+            os.environ['CPU'] = 'X64'
 
 
 
@@ -379,8 +397,9 @@ def getMSWSettings(options):
         pass
     msw = MSWsettings()
     msw.CPU = os.environ.get('CPU')
-    if msw.CPU in ['AMD64', 'X64'] or PYTHON_ARCH == '64bit':
-        msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_x64_dll" % getVisCVersion())
+    if msw.CPU in ['AMD64', 'X64', 'ARM64'] or PYTHON_ARCH == '64bit':
+        msw.dllArch = 'arm64' if msw.CPU == 'ARM64' else 'x64'
+        msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_%s_dll" % (getVisCVersion(), msw.dllArch))
     else:
         msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_dll" % getVisCVersion())
     msw.buildDir = posixjoin(wxDir(), "build", "msw")
@@ -448,7 +467,8 @@ def makeOptionParser():
         ("regenerate_sysconfig", (False, "Waf uses Python's sysconfig and related tools to configure the build. In some cases that info can be incorrect, so this option regenerates it. Must have write access to Python's lib folder.")),
         ("no_allmo",       (False, "Skip regenerating the wxWidgets message catalogs")),
         ("no_msedge",      (False, "Do not include the MS Edge backend for wx.html2.WebView. (Windows only)")),
-        ("quiet",          (False, "Silence some of the messages from build.py"))
+        ("quiet",          (False, "Silence some of the messages from build.py")),
+        ("msvc_arch",      ("",    "The MSVC architecture to build for")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -807,8 +827,7 @@ def checkCompiler(quiet=False):
         # needed info, so the target python shoudl have a recent version of
         # setuptools installed.
 
-        arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
-        info = getMSVCInfo(PYTHON, arch, set_env=True)
+        info = getMSVCInfo(PYTHON, MSVC_ARCH, set_env=True)
 
         # # Just needed for debugging
         # if not quiet:
@@ -1626,7 +1645,7 @@ def copyWxDlls(options):
         cfg = Config()
 
         ver = wxversion3_nodot if unstable_series else wxversion2_nodot
-        arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
+        arch = msw.dllArch if PYTHON_ARCH == '64bit' else 'x86'
         dlls = list()
         if not options.debug or options.both:
             dlls += sorted(glob.glob(os.path.join(msw.dllDir, "wx*%su_*.dll" % ver)))
@@ -1739,10 +1758,7 @@ def cmd_build_py(options, args):
     if isDarwin and options.mac_arch:
         build_options.append("--mac_arch=%s" % options.mac_arch)
     if isWindows:
-        if PYTHON_ARCH == '64bit':
-            build_options.append('--msvc_arch=x64')
-        else:
-            build_options.append('--msvc_arch=x86')
+        build_options.append('--msvc_arch=%s' % MSVC_ARCH)
     if not isWindows:
         build_options.append('--wx_config=%s' % WX_CONFIG)
     if options.jobs:
@@ -2021,7 +2037,7 @@ def cmd_clean_wx(options, args):
         delFiles(sorted(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion2_nodot, msw.dll_type)))))
         delFiles(sorted(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion3_nodot, msw.dll_type)))))
         if PYTHON_ARCH == '64bit':
-            deleteIfExists(opj(msw.buildDir, 'vc%s_x64_msw%sdll' % (getVisCVersion(), msw.dll_type)))
+            deleteIfExists(opj(msw.buildDir, 'vc%s_%s_msw%sdll' % (getVisCVersion(), msw.dllArch, msw.dll_type)))
         else:
             deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll' % (getVisCVersion(), msw.dll_type)))
 
