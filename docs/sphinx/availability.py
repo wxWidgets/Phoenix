@@ -8,14 +8,10 @@ and lists them along with a backlink to the original location.
 """
 
 from docutils import nodes
+from docutils.parsers.rst import Directive
 
 from sphinx.locale import _
-try:
-    from sphinx.errors import NoUri         # since Sphinx 3.0
-except ImportError:
-    from sphinx.environment import NoUri    # till Sphinx 3.0
-from sphinx.util.nodes import set_source_info
-from docutils.parsers.rst import Directive
+from sphinx.errors import NoUri
 
 # ----------------------------------------------------------------------- #
 class availability_node(nodes.Admonition, nodes.Element): pass
@@ -184,12 +180,6 @@ def depart_availability_node(self, node):
 # ----------------------------------------------------------------------- #
 
 def setup(app):
-    app.add_js_file('javascript/header.js')
-    app.add_js_file('javascript/sidebar.js')
-    app.add_js_file('javascript/jquery.collapse.js')
-    app.add_js_file('javascript/jquery.cookie.js')
-    app.add_js_file('javascript/toggle_visibility.js')
-
     app.add_config_value('availability_include_availabilities', False, False)
 
     app.add_node(availabilitylist)

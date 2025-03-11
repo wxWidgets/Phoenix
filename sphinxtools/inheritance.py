@@ -131,7 +131,8 @@ class InheritanceDiagram:
         """
 
         inheritance_graph_attrs = {"fontsize": 9, "ratio": 'auto',
-                                   "size": '""', "rankdir": "TB"}
+                                   "size": '""', "rankdir": "TB",
+                                   "bgcolor": "transparent"}
 
         inheritance_node_attrs = {"align": "center", 'shape': 'box',
                                   'fontsize': 12, 'height': 0.3,

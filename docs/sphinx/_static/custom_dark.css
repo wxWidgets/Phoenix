@@ -1,0 +1,19 @@
+/* This css file is not used directly. It is appended to the darkmode css
+* of the theme, so that the customisation integrate nicely with the darkmode
+* switcher of the theme. */
+
+div.related a, div.footer a {
+    color: var(--custom-style-orange);
+}
+
+.nav-item.nav-item-this a {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+div.body h1, div.body h2 {
+    background: #333;
+}
+
+th, dl.field-list > dt {
+    background-color: #303030;
+}
