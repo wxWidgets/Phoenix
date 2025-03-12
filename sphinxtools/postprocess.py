@@ -662,10 +662,18 @@ def postProcess(folder, options):
         new = '(<a class="reference internal" href="%s" title="%s"><em>%s</em></a>)' % (html_file, base, base)
         enum_dict['(<em>%s</em>)' % enum] = new
 
-    fileNames = sorted(glob.glob(folder + "/*.html"))
+    filenames = sorted(glob.glob(folder + "/*.html"))
 
-    for filename in fileNames:
+    for filename in filenames:
         if "genindex" in filename or "modindex" in filename:
+            with textfile_open(filename, "rt") as fid:
+                text = fid.read()
+
+            newtext = addHeaderImage(text, options)
+
+            with textfile_open(filename, "wt") as fid:
+                fid.write(newtext)
+
             continue
 
         methods_done = attr_done = fn_done = False
@@ -726,9 +734,8 @@ def postProcess(folder, options):
 
         basename = os.path.split(filename)[1]
         if basename == 'index.html':
+            newtext = addHeaderImage(newtext, options)
             newtext = changeWelcomeText(newtext, options)
-        else:
-            newtext = removeHeaderImage(newtext, options)
 
         if '1moduleindex' in basename:
             newtext = tweakModuleIndex(newtext)
@@ -761,26 +768,26 @@ def changeWelcomeText(text, options):
     return text
 
 
-def removeHeaderImage(text, options):
-    soup = BeautifulSoup(text, 'html.parser')
+def addHeaderImage(text, options):
+    soup = _get_clear_soup(text)
 
-    tag = soup.find('div', 'headerimage')
-    if tag:
-        tag.extract()
+    body_tag = soup.find('div', 'body')
+
+    if body_tag:
+        img_tag = soup.new_tag("img")
+        img_tag["src"] = "_static/images/sphinxdocs/phoenix_top.png"
+        img_tag["alt"] = "Phoenix Logo"
+        body_tag.insert(0, img_tag)
+        div_tag = soup.new_tag("div")
+        div_tag["class"] = "headerimage"
+        img_tag.wrap(div_tag)
         return soup.prettify(formatter="html")
 
     return text
 
 
 def tweakModuleIndex(text):
-    soup = BeautifulSoup(text, 'html.parser')
-
-    # Bugfix: BeautifulSoup sometimes wrongly parses tags as
-    # childelements of <link> tags and produces invalid html
-    for link in soup.html.head.findAll('link'):
-        if link.contents:
-            linktag = link.unwrap()
-            soup.html.head.append(linktag)
+    soup = _get_clear_soup(text)
 
     for tag in soup.findAll('a'):
         # Chop off the #anchor if it is identical to the basname of the doc
@@ -789,6 +796,19 @@ def tweakModuleIndex(text):
             tag['href'] = href[0] + '.html'
 
     return soup.prettify(formatter="html")
+
+
+def _get_clear_soup(text):
+    soup = BeautifulSoup(text, "html.parser")
+
+    # Bugfix: BeautifulSoup sometimes wrongly parses tags as
+    # childelements of <link> tags and produces invalid html
+    for link in soup.html.head.findAll("link"):
+        if link.contents:
+            linktag = link.unwrap()
+            soup.html.head.append(linktag)
+
+    return soup
 
 
 def tooltipsOnInheritance(text, class_summary):

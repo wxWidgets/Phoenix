@@ -14,6 +14,11 @@ a[href], div.related a:hover, div.footer a, div.footer a:hover {
     color: #444;
 }
 
+.headerimage {
+    text-align: center;
+    margin: 0.5em 0 0.8em 0;
+}
+
 div.body h1, div.body h2 {
     padding: 0.3em 0.8rem 0.3rem 0.8rem;
     margin-bottom: 0.5rem;
