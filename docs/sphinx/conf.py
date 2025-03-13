@@ -23,18 +23,16 @@ from buildtools.config import Config
 sys.path.append(os.path.abspath('.'))
 sys.path.append(os.path.abspath('..'))
 
-# -- General configuration -----------------------------------------------------
+# -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ["sphinxcontrib.jquery",
-              'sphinx.ext.todo',
+extensions = ['sphinx.ext.todo',
               'sphinx.ext.autodoc',
               'sphinx.ext.autosummary',
               'sphinx.ext.coverage',
               'availability',
-              'deprecation',
-              ]
+              'deprecation']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -109,7 +107,7 @@ keep_warnings = False
 show_warning_types = True
 supress_warnings = []
 
-# -- Options for HTML output ---------------------------------------------------
+# -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.
 html_theme = "python_docs_theme"
@@ -126,7 +124,7 @@ html_theme_options = {
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = ['.']
+# html_theme_path = ['.']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -149,11 +147,8 @@ html_favicon = '_static/images/sphinxdocs/phoenix_small.ico'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-html_css_files = ["custom.css", ]
-html_js_files = ["header.js",
-                 "jquery.collapse.js",
-                 "jquery.cookie.js",
-                 "toggle_visibility.js"]
+html_css_files = ["custom.css"]
+# html_js_files = []
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -209,7 +204,7 @@ html_show_sourcelink = True
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'PhoenixDocs'
 
-# -- Options for LaTeX output --------------------------------------------------
+# -- Options for LaTeX output ------------------------------------------------
 
 # The paper size ('letter' or 'a4').
 #latex_paper_size = 'letter'
@@ -255,10 +250,13 @@ latex_documents = [
 # dict(pdf_compressed = True))
 # would mean that specific document would be compressed
 # regardless of the global pdf_compressed setting.
-pdf_documents = [('index', 'PhoenixDocs', 'wxPython (Phoenix) Documentation', 'The wxPython Team'),]
+pdf_documents = [('index', 'PhoenixDocs',
+                  'wxPython (Phoenix) Documentation',
+                  'The wxPython Team'),]
 
 # A comma-separated list of custom stylesheets. Example:
-# pdf_stylesheets = ['sphinx', 'kerning', 'a4', "C:\\AGW\\agw\\fonts\\sphinx.json"]
+#pdf_stylesheets = ['sphinx', 'kerning', 'a4',
+#                   "C:\\AGW\\agw\\fonts\\sphinx.json"]
 # Create a compressed PDF
 # Use True/False or 1/0
 # Example: compressed=True
@@ -294,8 +292,7 @@ pdf_verbosity = 2
 # if you get "DelayedTable too big" errors
 pdf_splittables = True
 
-# Options for the link checker
-# ----------------------------
+# -- Options for the link checker --------------------------------------------
 
 linkcheck_allowed_redirects = {
     # Microsoft's redirects to learn.microsoft.com

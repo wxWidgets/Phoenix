@@ -1,7 +1,9 @@
 :root {
     --custom-style-orange: #ED8E00;
+    --custom-link-hover: #00B0E4;
 }
 
+/* Link styling */
 div.related a, div.footer a {
     color: var(--custom-style-orange);
 }
@@ -14,11 +16,13 @@ a[href], div.related a:hover, div.footer a, div.footer a:hover {
     color: #444;
 }
 
+/* Headerimage */
 .headerimage {
     text-align: center;
     margin: 0.5em 0 0.8em 0;
 }
 
+/* Custom headlines */
 div.body h1, div.body h2 {
     padding: 0.3em 0.8rem 0.3rem 0.8rem;
     margin-bottom: 0.5rem;
@@ -26,6 +30,7 @@ div.body h1, div.body h2 {
     border-radius: 5px;
 }
 
+/* Screenshots of widgets */
 .control-appearance-figures {
     display: flex;
     flex-direction: row;
@@ -51,12 +56,57 @@ figcaption {
     text-align-last: center;
 }
 
+/* Collapsible inheritance diagrams */
+.collapsible-checkbox {
+    display: none;
+}
+
+.collapsible-label {
+    display: block;
+    cursor: pointer;
+}
+
+.collapsible-label:hover {
+    color: var(--custom-link-hover);
+}
+
+.collapsible-label::before {
+    content: ' ';
+    display: inline-block;
+    color: var(--custom-style-orange);
+
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid currentColor;
+    vertical-align: middle;
+    margin-right: .7rem;
+    transform: translateX(4px) translateY(-2px);
+
+    transition: transform .25s ease-out;
+}
+
+.collapsible-checkbox:checked + .collapsible-label::before {
+    transform: rotate(90deg) translateX(-1px) translateY(-4px);
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+
+.collapsible-checkbox:checked + .collapsible-label + .collapsible-content {
+  max-height: 100vh;
+}
+
+/* Overloaded methods */
 .body .overloadsep {
     border: 0;
     background-color: var(--custom-style-orange);
     height: 2px;
 }
 
+/* Tables */
 th, dl.field-list > dt {
     background-color: #F0F0F0;
     border-radius: 3px;
@@ -70,3 +120,4 @@ table.docutils {
 table.align-default {
     margin-left: unset;
 }
+
