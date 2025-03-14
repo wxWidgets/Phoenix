@@ -16,7 +16,7 @@ import sys
 import os
 import pprint
 from typing import Optional
-import xml.etree.ElementTree as et
+import xml.etree.ElementTree as ET
 import copy
 
 from .tweaker_tools import AutoConversionInfo, FixWxPrefix, MethodType, magicMethods, \
