@@ -70,7 +70,9 @@ def run():
 
     c.find('GetPtr').overloads[0].ignore()
 
-    c.convertFromPyObject = """\
+    c.convertFromPyObject = tools.AutoConversionInfo(
+        ('str', 'None', ),
+        """\
         // Code to test a PyObject for compatibility with wxPGPropArgCls
         if (!sipIsErr) {
             if (sipCanConvertToType(sipPy, sipType_wxPGPropArgCls, SIP_NO_CONVERTORS))
@@ -109,7 +111,7 @@ def run():
                 SIP_NO_CONVERTORS, 0, sipIsErr));
             return 0; // not a new instance
         }
-        """
+        """)
 
 
     #----------------------------------------------------------

@@ -311,7 +311,9 @@ def run():
 
     # Add some code (like MappedTypes) to automatically convert from a Python
     # datetime.date or a datetime.datetime object
-    c.convertFromPyObject = """\
+    c.convertFromPyObject = tools.AutoConversionInfo(
+        ('datetime', 'date', ),
+        """\
         // Code to test a PyObject for compatibility with wxDateTime
         if (!sipIsErr) {
             if (sipCanConvertToType(sipPy, sipType_wxDateTime, SIP_NO_CONVERTORS))
@@ -335,7 +337,7 @@ def run():
                 sipPy, sipType_wxDateTime, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
 
         return 0;  // Not a new instance
-        """
+        """)
 
 
     #---------------------------------------------
