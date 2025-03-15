@@ -11,7 +11,7 @@ from wx.py import introspect
 """
 These unittest methods are preferred:
 -------------------------------------
-self.assert_(expr, msg=None)
+self.assertTrue(expr, msg=None)
 self.assertEqual(first, second, msg=None)
 self.assertRaises(excClass, callableObj, *args, **kwargs)
 self.fail(msg=None)
@@ -23,15 +23,15 @@ class ModuleTestCase(unittest.TestCase):
 
     def test_module(self):
         module = introspect
-        self.assert_(module.__author__)
-        self.assert_(module.getAllAttributeNames)
-        self.assert_(module.getAttributeNames)
-        self.assert_(module.getAutoCompleteList)
-        self.assert_(module.getBaseObject)
-        self.assert_(module.getCallTip)
-        self.assert_(module.getConstructor)
-        self.assert_(module.getRoot)
-        self.assert_(module.rtrimTerminus)
+        self.assertTrue(module.__author__)
+        self.assertTrue(module.getAllAttributeNames)
+        self.assertTrue(module.getAttributeNames)
+        self.assertTrue(module.getAutoCompleteList)
+        self.assertTrue(module.getBaseObject)
+        self.assertTrue(module.getCallTip)
+        self.assertTrue(module.getConstructor)
+        self.assertTrue(module.getRoot)
+        self.assertTrue(module.rtrimTerminus)
 
 
 class RtrimTerminusTestCase(unittest.TestCase):
@@ -665,7 +665,7 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
     def test_getAttributeNames(self):
         for item in self.items:
             self._checkAttributeNames(item)
-        if 'object' in __builtins__:
+        if 'object' in __builtins__ if isinstance(__builtins__, dict) else vars(__builtins__):
             self._checkAttributeNames(object)
 
     def test_getAttributeNames_NoSingle(self):
@@ -698,8 +698,8 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
         attributes = [attribute for attribute in self.values \
                       if hasattr(item, attribute)]
         for attribute in attributes:
-            self.assert_(attribute in result,
-                         ':item: %r :attribute: %r' % (item, attribute))
+            self.assertTrue(attribute in result,
+                            ':item: %r :attribute: %r' % (item, attribute))
 
 
 class GetAutoCompleteListTestCase(GetAttributeTestCase):
@@ -726,8 +726,8 @@ class GetAutoCompleteListTestCase(GetAttributeTestCase):
             attributes = [attribute for attribute in self.values \
                           if hasattr(object, attribute)]
             for attribute in attributes:
-                self.assert_(attribute in result,
-                             ':item: %r :attribute: %r' % (item, attribute))
+                self.assertTrue(attribute in result,
+                                ':item: %r :attribute: %r' % (item, attribute))
 
     def test_getAutoCompleteList_NoSingle(self):
         for item in self.items:
@@ -771,7 +771,7 @@ class C1(A1):
 class D1(C1, B1):
     pass
 
-if 'object' in __builtins__:
+if 'object' in __builtins__ if isinstance(__builtins__, dict) else vars(__builtins__):
     class A2(object):
         def __init__(self, a):
             self.a = a
@@ -809,4 +809,5 @@ class GetConstructorTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    sys.ps2 = '... '
     unittest.main()

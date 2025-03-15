@@ -10,7 +10,7 @@ from wx.py import version
 """
 These unittest methods are preferred:
 -------------------------------------
-self.assert_(expr, msg=None)
+self.assertTrue(expr, msg=None)
 self.assertEqual(first, second, msg=None)
 self.assertRaises(excClass, callableObj, *args, **kwargs)
 self.fail(msg=None)
@@ -22,14 +22,14 @@ class ModuleTestCase(unittest.TestCase):
 
     def test_module(self):
         module = version
-        self.assert_(module.__author__)
-        self.assert_(module.VERSION)
+        self.assertTrue(module.__author__)
+        self.assertTrue(module.VERSION)
 
 
 class VersionTestCase(unittest.TestCase):
 
     def test_VERSION(self):
-        self.assert_(isinstance(version.VERSION, str))
+        self.assertTrue(isinstance(version.VERSION, str))
 
 
 if __name__ == '__main__':
