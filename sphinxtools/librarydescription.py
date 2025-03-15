@@ -6,7 +6,7 @@ from io import StringIO
 from inspect import getmro, getclasstree, getdoc, getcomments
 
 from .utilities import makeSummary, chopDescription, writeSphinxOutput, PickleFile
-from .utilities import findControlImages, formatExternalLink
+from .utilities import findWidgetScreenshots, formatExternalLink
 from .constants import object_types, MODULE_TO_ICON, DOXY_2_REST, SPHINXROOT
 from . import templates
 
@@ -713,7 +713,7 @@ class Class(ParentBase):
             image_desc = templates.TEMPLATE_INHERITANCE % ('class', short_name, png, short_name, map)
             stream.write(image_desc)
 
-        appearance = findControlImages(self.name.lower())
+        appearance = findWidgetScreenshots(self.name.lower())
         if appearance:
             appearance_desc = templates.TEMPLATE_APPEARANCE % tuple(appearance)
             stream.write(appearance_desc + '\n\n')

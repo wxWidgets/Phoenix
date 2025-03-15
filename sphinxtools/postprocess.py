@@ -508,17 +508,6 @@ def makeModuleIndex(sphinxDir, file):
 def genGallery():
     print("Generating gallery...")
 
-    link = '<div class="gallery_class">'
-
-    link_template = """\
-    <table><caption align="bottom"><a href="%s"><b>%s</b></a></caption>
-    <tr>
-    <td><a href="%s"><img src="_static/images/widgets/fullsize/%s/%s" border="20" alt="%s"/></a>
-    </td>
-    </tr>
-    </table>
-    """
-
     image_folder = WIDGETS_IMAGES_ROOT
     platforms = ['wxmsw', 'wxgtk', 'wxmac']
 
@@ -556,9 +545,15 @@ def genGallery():
         for plat_index in rand_list:
             platform = platforms[plat_index]
             plat_images = image_files[platform]
+            widget_name = os.path.splitext(html)[0]
 
             if possible_png in plat_images:
-                text += link_template % (html, os.path.splitext(html)[0], html, platform, possible_png, os.path.splitext(html)[0])
+                text += templates.TEMPLATE_GALLERY_FIGURE % (html,
+                                                             widget_name,
+                                                             platform,
+                                                             possible_png,
+                                                             widget_name,
+                                                             widget_name)
                 text += '\n'
                 break
 

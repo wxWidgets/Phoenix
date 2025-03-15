@@ -51,9 +51,34 @@ div.body h1, div.body h2 {
     max-height: 320px;
 }
 
+.appearance-figure figcaption p {
+    margin: 0;
+    padding: 0;
+}
+
+.appearance-figure figcaption .headerlink {
+    display: none;
+}
+
 figcaption {
     text-align: center;
     text-align-last: center;
+}
+
+/* Widget gallery */
+.widget-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: baseline;
+}
+
+.widget-gallery figure {
+    max-width: 200px;
+    margin: 0.8rem 0.6rem 0.8rem 0.6rem;
+    padding: 0;
+    text-align: center;
+    font-weight: bold;
 }
 
 /* Collapsible inheritance diagrams */
@@ -121,3 +146,7 @@ table.align-default {
     margin-left: unset;
 }
 
+table figure {
+    padding: 0;
+    margin: 0;
+}
