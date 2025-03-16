@@ -1,3 +1,11 @@
+---
+name: Bug Report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
+---
+
 <!-- For bugs or other problems please provide the following details in addition to
      your issue report, if applicable. See also https://wxpython.org/pages/how-to-submit-issue/
 
