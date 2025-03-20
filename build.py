@@ -2261,6 +2261,14 @@ def cmd_sdist(options, args):
     copyFile(opj(PDEST, '{}.egg-info/PKG-INFO'.format(baseName)),
              opj(PDEST, 'PKG-INFO'))
 
+    # (TEMP) apply patch to wxWidgets for building newer libraries
+    msg('Applying patches...')
+    pwd = pushDir(PDEST)
+    runcmd('dos2unix ext/wxWidgets/build/msw/makefile.vc')
+    runcmd('patch -p1 -d ext/wxWidgets -i ../../buildtools/newer_libtiff_pcre.patch')
+    runcmd('unix2dos ext/wxWidgets/build/msw/makefile.vc')
+    del pwd
+
     # build the tarball
     msg('Archiving Phoenix source...')
     rootname = "%s-%s" % (baseName, cfg.VERSION)
