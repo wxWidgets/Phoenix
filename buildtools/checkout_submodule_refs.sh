@@ -7,3 +7,4 @@
 set -e
 
 pushd ext/wxWidgets/src/tiff && git checkout 4ab5e7a6aeacf09699e91300da9310874641053f && popd
+pushd ext/wxWidgets/3rdparty/pcre && git checkout b4b4098743aaa80ec78ea18da2f175c1b26dda18 && popd
