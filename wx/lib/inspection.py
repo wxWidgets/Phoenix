@@ -655,9 +655,10 @@ class InspectionInfoPanel(wx.stc.StyledTextCtrl):
                 count += _countAllChildren(child.GetChildren())
             return count
 
-        count = len([c for c in obj.GetChildren() if not c.IsTopLevel()])
-        rcount = _countChildren(obj.GetChildren())
-        tlwcount = _countAllChildren(obj.GetChildren())
+        children = list(obj.GetChildren())
+        count = len([c for c in children if not c.IsTopLevel()])
+        rcount = _countChildren(children)
+        tlwcount = _countAllChildren(children)
 
         st = ["Widget:"]
         if hasattr(obj, 'GetName'):
