@@ -420,6 +420,7 @@ def makeOptionParser():
         ("keep_hash_lines",(False, "Don't remove the '#line N' lines from the SIP generated code")),
         ("gtk2",           (False, "On Linux build for gtk2 (default gtk3)")),
         ("gtk3",           (True,  "On Linux build for gtk3")),
+        ("qt",             (False, "On Linux build for qt")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
         ("osx_carbon",     (False, "Build the OSX Carbon port on Mac (unsupported)")),
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
@@ -1746,6 +1747,7 @@ def cmd_build_py(options, args):
         wafBuildDir = posixjoin(wafBuildBase, 'release')
 
     build_options = list()
+    multi_options = list()
     if options.verbose:
         build_options.append('--verbose')
 
@@ -1768,8 +1770,15 @@ def cmd_build_py(options, args):
             build_options.append('--gtk2')
             wafBuildDir = posixjoin(wafBuildBase, 'gtk2')
         if options.gtk3:
+            if options.qt:
+                # Build qt later
+                build_options.append('--multi')
+                multi_options = build_options[:]
             build_options.append('--gtk3')
             wafBuildDir = posixjoin(wafBuildBase, 'gtk3')
+        if options.qt and not options.gtk3:
+            build_options.append('--qt')
+            wafBuildDir = posixjoin(wafBuildBase, 'qt')
 
     build_options.append('--python="%s"' % PYTHON)
     build_options.append('--out=%s' % wafBuildDir) # this needs to be the last option
@@ -1801,6 +1810,16 @@ def cmd_build_py(options, args):
             msg(Path(logfilename).read_text())
             msg('*-'*40)
     runcmd(cmd, onError=_onWafError)
+
+    if not isWindows and not isDarwin and options.gtk3 and options.qt:
+        multi_options = [f'{opt}-qt' if 'wx-config' in opt else opt for opt in multi_options]
+        multi_options.append('--qt')
+        wafBuildDir = posixjoin(wafBuildBase, 'qt')
+        multi_options.append('--python="%s"' % PYTHON)
+        multi_options.append('--out=%s' % wafBuildDir)
+
+        cmd = '"%s" %s %s configure build %s' % (PYTHON, waf, ' '.join(multi_options), options.extra_waf)
+        runcmd(cmd, onError=_onWafError)
 
     if isWindows and options.both:
         build_options.remove('--debug')
