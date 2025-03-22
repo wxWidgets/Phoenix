@@ -120,6 +120,10 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 #define wxPort "__WXGTK__"
 #define wxPortName "wxGTK"
 #endif
+#ifdef __WXQT__
+#define wxPort "__WXQT__"
+#define wxPortName "wxQT"
+#endif
 #ifdef __WXMSW__
 #define wxPort "__WXMSW__"
 #define wxPortName "wxMSW"
@@ -187,6 +191,9 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 #else
     _AddInfoString("gtk1");
 #endif
+#endif
+#ifdef __WXQT__
+    _AddInfoString("qt");
 #endif
 #ifdef __WXDEBUG__
     _AddInfoString("wx-assertions-on");
