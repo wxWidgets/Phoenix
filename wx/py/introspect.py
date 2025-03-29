@@ -40,7 +40,7 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
         # Add some attributes that don't always get picked up.
         special_attrs = ['__bases__', '__class__', '__dict__', '__name__',
                          '__closure__', '__code__', '__defaults__',
-                         '__globals__',
+                         '__kwdefaults__', '__globals__', '__qualname__',
                          '__builtins__',  # Added to method attributes in 3.10
                          '__get__',       # Not found in `dir(method)` in 3.11
                          ]
