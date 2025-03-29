@@ -39,8 +39,11 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
     if not hasattrAlwaysReturnsTrue(obj):
         # Add some attributes that don't always get picked up.
         special_attrs = ['__bases__', '__class__', '__dict__', '__name__',
-                         'func_closure', 'func_code', 'func_defaults',
-                         'func_dict', 'func_doc', 'func_globals', 'func_name']
+                         '__closure__', '__code__', '__defaults__',
+                         '__globals__',
+                         '__builtins__',  # Added to method attributes in 3.10
+                         '__get__',       # Not found in `dir(method)` in 3.11
+                         ]
         attributes += [attr for attr in special_attrs \
                        if hasattr(obj, attr)]
     if includeMagic:
