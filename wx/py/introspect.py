@@ -243,10 +243,12 @@ def getRoot(command, terminator=None):
         if tokens and tokens[-1][0] is tokenize.NEWLINE:
             # Remove newline.
             del tokens[-1]
+        if tokens and tokens[-1][0] is tokenize.NL:
+            # Remove non-logical newline.
+            del tokens[-1]
         if not tokens:
             return ''
-        if terminator == '.' and \
-               (tokens[-1][1] != '.' or tokens[-1][0] is not tokenize.OP):
+        if tokens[-1][1] != '.' or tokens[-1][0] is not tokenize.OP:
             # Trap decimals in numbers, versus the dot operator.
             return ''
 
@@ -268,7 +270,7 @@ def getRoot(command, terminator=None):
         tokentype = token[0]
         tokenstring = token[1]
         line = token[4]
-        if tokentype in (tokenize.ENDMARKER, tokenize.NEWLINE):
+        if tokentype in (tokenize.ENDMARKER, tokenize.NEWLINE, tokenize.NL):
             continue
         if tokentype is tokenize.ENCODING:
             line = lastline
