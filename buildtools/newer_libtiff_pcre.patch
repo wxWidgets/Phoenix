@@ -1,0 +1,66 @@
+From 9d46675f8b4e372947f29bb5880aede77bdf6d53 Mon Sep 17 00:00:00 2001
+From: Scott Talbert <swt@techie.net>
+Date: Mon, 24 Mar 2025 18:11:18 -0400
+Subject: [PATCH] Update makefiles to build with newer tiff and pcre
+
+---
+ Makefile.in | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/Makefile.in b/Makefile.in
+index 49deccbbaf..a562cecc93 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -90,6 +90,7 @@ WXREGEX_CFLAGS = $(WX_CPPFLAGS) -DNDEBUG \
+ 	$(____SHARED) $(CPPFLAGS) $(CFLAGS)
+ WXREGEX_OBJECTS =  \
+ 	wxregex_pcre2_auto_possess.o \
++	wxregex_pcre2_chkdint.o \
+ 	wxregex_pcre2_compile.o \
+ 	wxregex_pcre2_config.o \
+ 	wxregex_pcre2_context.o \
+@@ -231,9 +232,11 @@ WXTIFF_OBJECTS =  \
+ 	wxtiff_tif_fax3sm.o \
+ 	wxtiff_tif_flush.o \
+ 	wxtiff_tif_getimage.o \
++	wxtiff_tif_hash_set.o \
+ 	wxtiff_tif_jbig.o \
+ 	wxtiff_tif_jpeg.o \
+ 	wxtiff_tif_jpeg_12.o \
++	wxtiff_tif_lerc.o \
+ 	wxtiff_tif_luv.o \
+ 	wxtiff_tif_lzma.o \
+ 	wxtiff_tif_lzw.o \
+@@ -14962,6 +14965,9 @@ locale_uninstall:
+ wxregex_pcre2_auto_possess.o: $(srcdir)/3rdparty/pcre/src/pcre2_auto_possess.c
+ 	$(CCC) -c -o $@ $(WXREGEX_CFLAGS) $(srcdir)/3rdparty/pcre/src/pcre2_auto_possess.c
+ 
++wxregex_pcre2_chkdint.o: $(srcdir)/3rdparty/pcre/src/pcre2_chkdint.c
++	$(CCC) -c -o $@ $(WXREGEX_CFLAGS) $(srcdir)/3rdparty/pcre/src/pcre2_chkdint.c
++
+ wxregex_pcre2_compile.o: $(srcdir)/3rdparty/pcre/src/pcre2_compile.c
+ 	$(CCC) -c -o $@ $(WXREGEX_CFLAGS) $(srcdir)/3rdparty/pcre/src/pcre2_compile.c
+ 
+@@ -15346,6 +15352,9 @@ wxtiff_tif_flush.o: $(srcdir)/src/tiff/libtiff/tif_flush.c
+ wxtiff_tif_getimage.o: $(srcdir)/src/tiff/libtiff/tif_getimage.c
+ 	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_getimage.c
+ 
++wxtiff_tif_hash_set.o: $(srcdir)/src/tiff/libtiff/tif_hash_set.c
++	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_hash_set.c
++
+ wxtiff_tif_jbig.o: $(srcdir)/src/tiff/libtiff/tif_jbig.c
+ 	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_jbig.c
+ 
+@@ -15355,6 +15364,9 @@ wxtiff_tif_jpeg.o: $(srcdir)/src/tiff/libtiff/tif_jpeg.c
+ wxtiff_tif_jpeg_12.o: $(srcdir)/src/tiff/libtiff/tif_jpeg_12.c
+ 	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_jpeg_12.c
+ 
++wxtiff_tif_lerc.o: $(srcdir)/src/tiff/libtiff/tif_lerc.c
++	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_lerc.c
++
+ wxtiff_tif_luv.o: $(srcdir)/src/tiff/libtiff/tif_luv.c
+ 	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_luv.c
+ 
+-- 
+2.48.1
+
