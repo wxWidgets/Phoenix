@@ -39,8 +39,11 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
     if not hasattrAlwaysReturnsTrue(obj):
         # Add some attributes that don't always get picked up.
         special_attrs = ['__bases__', '__class__', '__dict__', '__name__',
-                         'func_closure', 'func_code', 'func_defaults',
-                         'func_dict', 'func_doc', 'func_globals', 'func_name']
+                         '__closure__', '__code__', '__defaults__',
+                         '__kwdefaults__', '__globals__', '__qualname__',
+                         '__builtins__',  # Added to method attributes in 3.10
+                         '__get__',       # Not found in `dir(method)` in 3.11
+                         ]
         attributes += [attr for attr in special_attrs \
                        if hasattr(obj, attr)]
     if includeMagic:
@@ -243,10 +246,12 @@ def getRoot(command, terminator=None):
         if tokens and tokens[-1][0] is tokenize.NEWLINE:
             # Remove newline.
             del tokens[-1]
+        if tokens and tokens[-1][0] is tokenize.NL:
+            # Remove non-logical newline.
+            del tokens[-1]
         if not tokens:
             return ''
-        if terminator == '.' and \
-               (tokens[-1][1] != '.' or tokens[-1][0] is not tokenize.OP):
+        if tokens[-1][1] != '.' or tokens[-1][0] is not tokenize.OP:
             # Trap decimals in numbers, versus the dot operator.
             return ''
 
@@ -268,7 +273,7 @@ def getRoot(command, terminator=None):
         tokentype = token[0]
         tokenstring = token[1]
         line = token[4]
-        if tokentype in (tokenize.ENDMARKER, tokenize.NEWLINE):
+        if tokentype in (tokenize.ENDMARKER, tokenize.NEWLINE, tokenize.NL):
             continue
         if tokentype is tokenize.ENCODING:
             line = lastline
