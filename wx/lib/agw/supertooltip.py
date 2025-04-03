@@ -682,18 +682,22 @@ class ToolTipWindowBase(object):
 
 
     def CalculateBestPosition(self,widget):
+        x, y = wx.GetMousePosition()
         screen = wx.ClientDisplayRect()[2:]
-        left,top = widget.ClientToScreen((0, 0))
-        right,bottom = widget.ClientToScreen(widget.GetClientRect()[2:])
+        left, top = widget.ClientToScreen((0, 0))
+        right, bottom = widget.ClientToScreen(widget.GetClientRect()[2:])
         size = self.GetSize()
-        if right+size[0]>screen[0]:
-            xpos = left-size[0]
+
+        if x+size[0]>screen[0]:
+            xpos = x-size[0]
         else:
-            xpos = right
+            xpos = x
+
         if bottom+size[1]>screen[1]:
-            ypos = top-size[1]
+            ypos = top-size[1] + 6
         else:
-            ypos = bottom
+            ypos = bottom + 6
+
         self.SetPosition((xpos,ypos))
 
 
