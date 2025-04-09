@@ -1,0 +1,121 @@
+From 6f80b7033bf4c79c160d1a58e14a5e78de17b449 Mon Sep 17 00:00:00 2001
+From: Scott Talbert <swt@techie.net>
+Date: Tue, 8 Apr 2025 19:01:23 -0400
+Subject: [PATCH] Update makefiles to build with newer tiff and pcre
+
+---
+ Makefile.in           | 12 ++++++++++++
+ build/msw/makefile.vc | 12 ++++++++++++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/Makefile.in b/Makefile.in
+index 49deccbbaf..a562cecc93 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -90,6 +90,7 @@ WXREGEX_CFLAGS = $(WX_CPPFLAGS) -DNDEBUG \
+ 	$(____SHARED) $(CPPFLAGS) $(CFLAGS)
+ WXREGEX_OBJECTS =  \
+ 	wxregex_pcre2_auto_possess.o \
++	wxregex_pcre2_chkdint.o \
+ 	wxregex_pcre2_compile.o \
+ 	wxregex_pcre2_config.o \
+ 	wxregex_pcre2_context.o \
+@@ -231,9 +232,11 @@ WXTIFF_OBJECTS =  \
+ 	wxtiff_tif_fax3sm.o \
+ 	wxtiff_tif_flush.o \
+ 	wxtiff_tif_getimage.o \
++	wxtiff_tif_hash_set.o \
+ 	wxtiff_tif_jbig.o \
+ 	wxtiff_tif_jpeg.o \
+ 	wxtiff_tif_jpeg_12.o \
++	wxtiff_tif_lerc.o \
+ 	wxtiff_tif_luv.o \
+ 	wxtiff_tif_lzma.o \
+ 	wxtiff_tif_lzw.o \
+@@ -14962,6 +14965,9 @@ locale_uninstall:
+ wxregex_pcre2_auto_possess.o: $(srcdir)/3rdparty/pcre/src/pcre2_auto_possess.c
+ 	$(CCC) -c -o $@ $(WXREGEX_CFLAGS) $(srcdir)/3rdparty/pcre/src/pcre2_auto_possess.c
+ 
++wxregex_pcre2_chkdint.o: $(srcdir)/3rdparty/pcre/src/pcre2_chkdint.c
++	$(CCC) -c -o $@ $(WXREGEX_CFLAGS) $(srcdir)/3rdparty/pcre/src/pcre2_chkdint.c
++
+ wxregex_pcre2_compile.o: $(srcdir)/3rdparty/pcre/src/pcre2_compile.c
+ 	$(CCC) -c -o $@ $(WXREGEX_CFLAGS) $(srcdir)/3rdparty/pcre/src/pcre2_compile.c
+ 
+@@ -15346,6 +15352,9 @@ wxtiff_tif_flush.o: $(srcdir)/src/tiff/libtiff/tif_flush.c
+ wxtiff_tif_getimage.o: $(srcdir)/src/tiff/libtiff/tif_getimage.c
+ 	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_getimage.c
+ 
++wxtiff_tif_hash_set.o: $(srcdir)/src/tiff/libtiff/tif_hash_set.c
++	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_hash_set.c
++
+ wxtiff_tif_jbig.o: $(srcdir)/src/tiff/libtiff/tif_jbig.c
+ 	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_jbig.c
+ 
+@@ -15355,6 +15364,9 @@ wxtiff_tif_jpeg.o: $(srcdir)/src/tiff/libtiff/tif_jpeg.c
+ wxtiff_tif_jpeg_12.o: $(srcdir)/src/tiff/libtiff/tif_jpeg_12.c
+ 	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_jpeg_12.c
+ 
++wxtiff_tif_lerc.o: $(srcdir)/src/tiff/libtiff/tif_lerc.c
++	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_lerc.c
++
+ wxtiff_tif_luv.o: $(srcdir)/src/tiff/libtiff/tif_luv.c
+ 	$(CCC) -c -o $@ $(WXTIFF_CFLAGS) $(srcdir)/src/tiff/libtiff/tif_luv.c
+ 
+diff --git a/build/msw/makefile.vc b/build/msw/makefile.vc
+index f1d20ad7f4..3efd7d8ea3 100644
+--- a/build/msw/makefile.vc
++++ b/build/msw/makefile.vc
+@@ -48,6 +48,7 @@ WXREGEX_CFLAGS = /M$(__RUNTIME_LIBS_10)$(__DEBUGRUNTIME) /DWIN32 \
+ 	$(CPPFLAGS) $(CFLAGS)
+ WXREGEX_OBJECTS =  \
+ 	$(OBJS)\wxregex_pcre2_auto_possess.obj \
++	$(OBJS)\wxregex_pcre2_chkdint.obj \
+ 	$(OBJS)\wxregex_pcre2_compile.obj \
+ 	$(OBJS)\wxregex_pcre2_config.obj \
+ 	$(OBJS)\wxregex_pcre2_context.obj \
+@@ -202,9 +203,11 @@ WXTIFF_OBJECTS =  \
+ 	$(OBJS)\wxtiff_tif_fax3sm.obj \
+ 	$(OBJS)\wxtiff_tif_flush.obj \
+ 	$(OBJS)\wxtiff_tif_getimage.obj \
++	$(OBJS)\wxtiff_tif_hash_set.obj \
+ 	$(OBJS)\wxtiff_tif_jbig.obj \
+ 	$(OBJS)\wxtiff_tif_jpeg.obj \
+ 	$(OBJS)\wxtiff_tif_jpeg_12.obj \
++	$(OBJS)\wxtiff_tif_lerc.obj \
+ 	$(OBJS)\wxtiff_tif_luv.obj \
+ 	$(OBJS)\wxtiff_tif_lzma.obj \
+ 	$(OBJS)\wxtiff_tif_lzw.obj \
+@@ -6498,6 +6501,9 @@ build_cfg_file: $(SETUPHDIR)
+ $(OBJS)\wxregex_pcre2_auto_possess.obj: ..\..\3rdparty\pcre\src\pcre2_auto_possess.c
+ 	$(CC) /c /nologo /TC /Fo$@ $(WXREGEX_CFLAGS) ..\..\3rdparty\pcre\src\pcre2_auto_possess.c
+ 
++$(OBJS)\wxregex_pcre2_chkdint.obj: ..\..\3rdparty\pcre\src\pcre2_chkdint.c
++	$(CC) /c /nologo /TC /Fo$@ $(WXREGEX_CFLAGS) ..\..\3rdparty\pcre\src\pcre2_chkdint.c
++
+ $(OBJS)\wxregex_pcre2_compile.obj: ..\..\3rdparty\pcre\src\pcre2_compile.c
+ 	$(CC) /c /nologo /TC /Fo$@ $(WXREGEX_CFLAGS) ..\..\3rdparty\pcre\src\pcre2_compile.c
+ 
+@@ -6870,6 +6876,9 @@ $(OBJS)\wxtiff_tif_flush.obj: ..\..\src\tiff\libtiff\tif_flush.c
+ $(OBJS)\wxtiff_tif_getimage.obj: ..\..\src\tiff\libtiff\tif_getimage.c
+ 	$(CC) /c /nologo /TC /Fo$@ $(WXTIFF_CFLAGS) ..\..\src\tiff\libtiff\tif_getimage.c
+ 
++$(OBJS)\wxtiff_tif_hash_set.obj: ..\..\src\tiff\libtiff\tif_hash_set.c
++	$(CC) /c /nologo /TC /Fo$@ $(WXTIFF_CFLAGS) ..\..\src\tiff\libtiff\tif_hash_set.c
++
+ $(OBJS)\wxtiff_tif_jbig.obj: ..\..\src\tiff\libtiff\tif_jbig.c
+ 	$(CC) /c /nologo /TC /Fo$@ $(WXTIFF_CFLAGS) ..\..\src\tiff\libtiff\tif_jbig.c
+ 
+@@ -6879,6 +6888,9 @@ $(OBJS)\wxtiff_tif_jpeg.obj: ..\..\src\tiff\libtiff\tif_jpeg.c
+ $(OBJS)\wxtiff_tif_jpeg_12.obj: ..\..\src\tiff\libtiff\tif_jpeg_12.c
+ 	$(CC) /c /nologo /TC /Fo$@ $(WXTIFF_CFLAGS) ..\..\src\tiff\libtiff\tif_jpeg_12.c
+ 
++$(OBJS)\wxtiff_tif_lerc.obj: ..\..\src\tiff\libtiff\tif_lerc.c
++	$(CC) /c /nologo /TC /Fo$@ $(WXTIFF_CFLAGS) ..\..\src\tiff\libtiff\tif_lerc.c
++
+ $(OBJS)\wxtiff_tif_luv.obj: ..\..\src\tiff\libtiff\tif_luv.c
+ 	$(CC) /c /nologo /TC /Fo$@ $(WXTIFF_CFLAGS) ..\..\src\tiff\libtiff\tif_luv.c
+ 
+-- 
+2.49.0
+
