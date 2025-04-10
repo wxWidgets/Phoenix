@@ -119,7 +119,7 @@ jobs:
       - name: Simple smoke test
         run: |
           cd dist
-          pip install wxPython-*.whl
+          pip install wxpython-*.whl
           python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
           pip uninstall --yes wxPython
 
@@ -127,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wxPython-wheel-${{ matrix.os }}-${{ steps.init.outputs.canonical_id }}
-          path: dist/wxPython-*.whl
+          path: dist/wxpython-*.whl
 
   upload-wheels-to-extras:
     name: Upload wheels to extras on wxpython.org
