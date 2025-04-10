@@ -12,13 +12,88 @@ wxPython Changelog
 
 4.2.3
 ------
-* (unreleased)
+* 9-Apr-2025
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.2.3
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.2.3``
 
 New and improved in this release:
+* This release was built using the wxWidgets' v3.2.7 release tag.  The only exception is that libtiff and pcre2 bundled with wxWidgets are updated to the versions from the wxWidgets master branch (libtiff 4.7.0 and pcre2 10.44).
+
+* Fix test issues with wx.lib.introspect (#2717)
+
+* Add support for building on Windows ARM64 (#2521)
+
+* Incorporate many improvements to type stubs (#2665)
+
+* Fix building documentation with latest sphinx (#2672)
+
+* Build smaller architecture-specific wheels on macOS instead of large universal2 wheels
+
+* Calculate scroll based on child's relative position to scrolledpanel in wx.lib.scrolledpanel
+
+* Fix float -> int conversion issues in wx.lib.fancytext (#2703)
+
+* Replace deprecated NumPy type aliases
+
+* Use wx.StaticText in wx.lib.agw.hyperlink (#2686)
+
+* Implement partial support for pyproject.toml and other build process improvements
+
+* Remove use of six and most Python 2 compatibility code
+
+* Fix wxWidgets build on OpenSUSE (#558, #1067, #2422, #2532)
+
+* Fix more int conversions in wx.lib.agw.flatnotebook
+
+* Make build output reproducible
+
+* Enable overridding wx.Sizer.InformFirstDirection() (#2452)
+
+* Implement __iter__ for wxList iterator classes (fixes Python 3.13.1 issue)
+
+* Fix wx.lib.mixins.rubberband not clearing DC on redraw
+
+* Support implementing CreateBitmapBundle for custom ArtProvider
+
+* Fix float/int conversion issues in wx.lib.ogl
+
+* Include usage of `wxMemoryFSHandler` in webview demo
+
+* Fix crash when accessing wx.stc.StyledTextCtrl.DropTarget.Data (#2043)
+
+* Fix AuiManager pane minimizing issue
+
+* Add range field to wx.lib.agw.pygauge.PyGauge format string (#2583)
+
+* Fix pickling of wx.RealPoint (#2644)
+
+* Avoid calling FlatMenu Destroy() in a finally block (#2630)
+
+* Update wxApp.IsDisplayAvailable to work on Wayland
+
+* Fix InspectionTool crashes due to bad perspective string errors
+
+* Drop support for Python 3.8 (EOL)
+
+* Add CreateAccessible for Windows only
+
+* Added check condition to AuiManager LoadPerspective()
+
+* Fix RecursionError in platebtn bitmap getters
+
+* Add Python implementation of GetPaths (#1944)
+
+* Support Wayland GTK backend in Window.GetHandle
+
+* Refactor python only pdfviewer to support displaying pdf files where not all pages have the same size
+
+* Improve support when specifying a pre-existing toolbar as the target for the restore icon when minimizing a pane in agw.aui
+
+* Multiple bugfixes in pure python aui
+
+* pdfviewer: Add support for pymupdf renaming
 
 
 
