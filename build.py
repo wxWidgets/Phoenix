@@ -21,8 +21,6 @@ import os
 import re
 import shutil
 import subprocess
-import requests
-from requests.exceptions import HTTPError
 import traceback
 from io import BytesIO
 import bz2
@@ -569,15 +567,16 @@ def downloadTool(cmd, cmdname, envvar):
     url = f"{toolsURL}/{os.path.basename(cmd)}.bz2"
 
     try:
+        import requests
         resp = requests.get(url)
         resp.raise_for_status()
-    except HTTPError:
+    except requests.exceptions.HTTPError:
         # The files could be packed as a tarball
         url = url.replace(".bz2", ".tar.bz2")
         try:
             resp = requests.get(url)
             resp.raise_for_status()
-        except HTTPError:
+        except requests.exceptions.HTTPError:
             errorMsg('Unable to download ' + url, cmdname, envvar)
             traceback.print_exc()
             sys.exit(1)
@@ -702,6 +701,7 @@ def getMSWebView2():
 
         msg('Downloading microsoft.web.webview2 {}...'.format(MS_edge_version))
         try:
+            import requests
             resp = requests.get(MS_edge_url)
             resp.raise_for_status()
             msg('Connection successful...')
