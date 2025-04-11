@@ -76,9 +76,7 @@ requires = [
     "requests >= 2.26.0",
     "sip == 6.10.0",
 ]
-# Using "setuptools.build_meta:__legacy__" instead of "setuptools.build_meta" for now.
-# Allows to have access to the folder on the search path when building, like before.
-build-backend = "setuptools.build_meta:__legacy__"
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 exclude = ["src", "buildtools*", "etgtools", "sphinxtools", "src", "unittests"]
