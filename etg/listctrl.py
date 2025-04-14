@@ -325,7 +325,7 @@ def run():
 
     c.addCppMethod('wxWindow*', 'GetMainWindow', '()',
         body="""\
-        #if defined(__WXMSW__) || defined(__WXMAC__)
+        #if defined(__WXMSW__) || defined(__WXMAC__) || defined(__WXQT__)
             return self;
         #else
             return (wxWindow*)self->m_mainWin;
