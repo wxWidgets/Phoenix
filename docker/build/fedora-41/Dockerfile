@@ -6,7 +6,7 @@ ENV DIST_NAME=fedora-41
 ENV USER=wxpy
 ENV HOME=/home/$USER
 ENV PYTHONUNBUFFERED=1
-ENV PATH=$HOME/bin:$PATH
+ENV PATH=$HOME/bin:/usr/bin:$PATH
 ENV GTK2_OK=no
 
 # Update and install basic OS packages
@@ -16,8 +16,9 @@ RUN \
         dnf -y install gcc-c++ sudo nano which; \
 # Set up a user, and etc.
         mkdir -p /dist; \
-        adduser -m ${USER}; \
+        adduser -m -s /usr/bin/bash ${USER}; \
         echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers; \
+        mkdir -p ${HOME}/bin; \
 # Install development packages needed for building wxPython
         dnf install -y \
                 freeglut-devel \
@@ -30,7 +31,7 @@ RUN \
                 libSM-devel \
                 libtiff-devel \
                 libXtst-devel \
-                SDL-devel \
+                SDL2-devel \
                 webkit2gtk3-devel;
 
 RUN \
@@ -42,10 +43,6 @@ RUN \
 # Clean up dnf caches
         dnf clean all;
 
-
-# Set the user and group to use for the rest of the commands
-USER ${USER}:${USER}
-
 # Set the working directory
 WORKDIR ${HOME}
 
@@ -53,12 +50,16 @@ WORKDIR ${HOME}
 RUN \
         cd ${HOME}; \
         mkdir -p ${HOME}/venvs; \
-        python3.13 -m venv venvs/Py313; \
-        python3.14 -m venv venvs/Py314;
+        python3.13 -m venv ${HOME}/venvs/Py313; \
+        python3.14 -m venv ${HOME}/venvs/Py314; \
+        chown -R ${USER}:${USER} ${HOME};
 
 # Add files from host into the container
-COPY scripts ${HOME}/bin
+COPY ./scripts/* ${HOME}/bin
+
+# Set the user and group to use for the rest of the commands
+USER ${USER}:${USER}
 
 # Define default command
-CMD ["/bin/bash", "-l"]
+CMD ["/usr/bin/bash", "-l"]
 
