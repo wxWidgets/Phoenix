@@ -8,8 +8,6 @@ from .topicmgr import (
     TreeConfig
 )
 
-from .. import py2and3 
-
 
 class PublisherBase:
     """
@@ -177,7 +175,7 @@ class PublisherBase:
         if topicName is None:
             # unsubscribe all listeners from all topics
             topicsMap = self.__topicMgr._topicsMap
-            for topicName, topicObj in py2and3.iteritems(topicsMap):
+            for topicName, topicObj in topicsMap.items():
                 if topicFilter is None or topicFilter(topicName):
                     tmp = topicObj.unsubscribeAllListeners(listenerFilter)
                     unsubdListeners.extend(tmp)

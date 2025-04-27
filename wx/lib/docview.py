@@ -1023,7 +1023,7 @@ class DocTemplate(wx.Object):
 
 
     def __init__(self, manager, description, filter, dir, ext, docTypeName, viewTypeName, docType, viewType, flags=DEFAULT_TEMPLATE_FLAGS, icon=None):
-        """
+        r"""
         Constructor. Create instances dynamically near the start of your
         application after creating a wxDocManager instance, and before doing
         any document or view operations.

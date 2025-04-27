@@ -1335,7 +1335,7 @@ class TreeCtrlHandler(AbstractHandler):
         if not root:
             return []
         if self._window.HasFlag(wx.TR_HIDE_ROOT):
-            return self.GeSelectionStateOfChildren(root)
+            return self.GetSelectionStateOfChildren(root)
         else:
             return self.GetSelectionStateOfItem(root)
 

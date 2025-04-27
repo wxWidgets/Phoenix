@@ -8,8 +8,10 @@
     :license: BSD, see LICENSE for details.
 #}
 {%- if show_source and has_source and sourcename %}
-    <div id="sourcelink" role="note" aria-label="source link">
-        <a href="{{ pathto('_sources/' + sourcename, true)|e }}"
-           rel="nofollow">{{ _('Show page source') }}</a>
-    </div>
+  <div id="sourcelink" role="note" aria-label="source link">
+    <ul class="this-page-menu">
+      <li><a href="{{ pathto('_sources/' + sourcename, true)|e }}"
+            rel="nofollow">{{ _('Show Source') }}</a></li>
+    </ul>
+   </div>
 {%- endif %}

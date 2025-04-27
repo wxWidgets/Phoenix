@@ -12,14 +12,18 @@ Some helpers and utility functions that can assist with the tweaker
 stage of the ETG scripts.
 """
 
+import enum
 import etgtools as extractors
 from .generators import textfile_open
+import keyword
+import re
 import sys, os
 import copy
 import textwrap
+from typing import NamedTuple, Optional, Tuple, Union
 
 
-PY3 = sys.version_info[0] == 3
+isWindows = sys.platform.startswith('win')
 
 magicMethods = {
     'operator!='    : '__ne__',
@@ -35,6 +39,174 @@ magicMethods = {
     'operator bool' : '__int__',  # Why not __nonzero__?
     # TODO: add more
 }
+
+
+class AutoConversionInfo(NamedTuple):
+    convertables: Tuple[str, ...] # String type-hints for each of the types that can be automatically converted to this class
+    code: str                     # Code that will be added to SIP for this conversion
+
+
+class ParameterType(enum.Enum):
+    VAR_ARGS = enum.auto()
+    KWARGS = enum.auto()
+    POSITIONAL_ONLY = enum.auto()
+    DEFAULT = enum.auto()
+
+
+class MethodType(enum.Enum):
+    STATIC_METHOD = enum.auto()  # Class @staticmethod method
+    CLASS_METHOD = enum.auto()   # Class @classmethod method
+    METHOD = enum.auto()         # Class regular method
+    FUNCTION = enum.auto()       # non-class function
+
+
+class Signature:
+    """Like inspect.Signature, but a bit simpler because we need it only for a few purposes:
+    - Creation from a C++ args string
+    - We *don't* want stringized (ie: all of them) type-hints to be evaluated, since we're
+      processing them in a context where most of them will be unresolvable.
+    """
+
+    class Parameter:
+        __slots__ = ('name', 'type_hint', 'default', 'position_type', )
+        name: str
+        type_hint: Optional[str]
+        default: Optional[str]
+        position_type: ParameterType
+
+        def __init__(self, name: str, type_hint: Optional[str] = None, default: Optional[str] = None, position_type: ParameterType = ParameterType.DEFAULT) -> None:
+            if name.startswith('**'):
+                name = name[2:]
+                position_type = ParameterType.KWARGS
+            elif name.startswith('*'):
+                name = name[1:]
+                position_type = ParameterType.VAR_ARGS
+            type_hint = type_hint.replace('::', '.') if type_hint else None
+            default = default.replace('::', '.') if default else None
+            self.name = name
+            self.type_hint = type_hint
+            self.default = default
+            self.position_type = position_type
+
+        @property
+        def _position_marking(self) -> str:
+            if self.position_type is ParameterType.KWARGS:
+                return '**'
+            elif self.position_type is ParameterType.VAR_ARGS:
+                return '*'
+            return ''
+
+        def untyped(self) -> str:
+            if self.default is None:
+                return f'{self._position_marking}{self.name}'
+            else:
+                return f'{self._position_marking}{self.name}={self.default}'
+
+        def __str__(self) -> str:
+            if self.type_hint is None and self.default is None:
+                return f'{self._position_marking}{self.name}'
+            elif self.type_hint is None:
+                return f'{self._position_marking}{self.name}={self.default}'
+            elif self.default is None:
+                return f'{self._position_marking}{self.name}: {self.type_hint}'
+            else:
+                return f'{self._position_marking}{self.name}: {self.type_hint}={self.default}'
+            
+        def make_optional(self) -> None:
+            if self.type_hint is not None and not self.type_hint.startswith('Optional['):
+                self.type_hint = f'Optional[{self.type_hint}]'
+
+    __slots__ = ('_method_name', 'return_type', '_parameters', '_method_type', )
+    _method_name: str
+    return_type: Optional[str]
+    _parameters: dict[str, Parameter]
+    _method_type: MethodType    
+
+    def __init__(self, method_name: str, *parameters: Parameter, return_type: Optional[str] = None, method_type: MethodType = MethodType.METHOD) -> None:
+        self._parameters = {
+            p.name: p
+            for p in parameters
+        }
+        self.return_type = return_type.replace('::', '.') if return_type else None
+        self._method_type = method_type
+        self.method_name = method_name
+
+    @property
+    def method_name(self) -> str:
+        return self._method_name
+    
+    @method_name.setter
+    def method_name(self, value: str, /) -> None:
+        self._method_name = magicMethods.get(value, value)
+
+    def __getitem__(self, key: Union[str, int]) -> Parameter:
+        """Get parameter by name or by index. Indexing is into the paramters skips 'cls' and 'self' for
+        classmethods and methods.
+        """
+        if isinstance(key, int):
+            key = list(self._parameters)[key]
+        if isinstance(key, str):
+            return self._parameters[key]
+        else:
+            raise TypeError(f'Indexing must be via parameter name or index, got {key}')
+        
+    def __iter__(self):
+        return iter(self._parameters.values())
+        
+    def __contains__(self, parameter_name: str) -> bool:
+        return parameter_name in self._parameters
+
+    def args_string(self, typed: bool = True, include_selfcls: bool = False) -> str:
+        """Get a string of just the parameters needed for the method signature, 
+        optionally with 'self' or 'cls' where applicable, and type-hints
+        """
+        if include_selfcls and self.is_classmethod:
+            parameters = (type(self).Parameter('cls'), *self._parameters.values())
+        elif include_selfcls and self.is_method:
+            parameters = (type(self).Parameter('self'), *self._parameters.values())
+        else:
+            parameters = self._parameters.values()
+        stringizer = str if typed else type(self).Parameter.untyped
+        return_type = f' -> {self.return_type}' if self.return_type else ''
+        return f"({', '.join(map(stringizer, parameters))}){return_type}"
+    
+    def signature(self, typed: bool = True) -> str:
+        """Get the full signature for the function/method, including method and
+        all required python syntax, optionally including all type-hints.
+        """
+        return f'def {self.method_name}{self.args_string(typed, True)}:'
+    
+    def __str__(self) -> str:
+        return self.signature()
+
+    def definition_lines(self, typed: bool = True) -> list[str]:
+        """return the lines required to write the full method definition,
+        including decorators
+        """
+        if self.is_staticmethod:
+            lines = ['@staticmethod']
+        elif self.is_classmethod:
+            lines = ['@classmethod']
+        else:
+            lines = []
+        lines.append(self.signature(typed))
+        return lines
+
+    @property
+    def is_staticmethod(self) -> bool:
+        return self._method_type is MethodType.STATIC_METHOD
+    
+    @property
+    def is_classmethod(self) -> bool:
+        return self._method_type is MethodType.CLASS_METHOD
+    
+    @property
+    def is_method(self) -> bool:
+        return self._method_type is MethodType.METHOD
+    
+    @property
+    def is_function(self) -> bool:
+        return self._method_type is MethodType.FUNCTION
 
 
 def removeWxPrefixes(node):
@@ -82,6 +254,11 @@ class FixWxPrefix(object):
     """
 
     _coreTopLevelNames = None
+    _auto_conversions: dict[str, Tuple[str, ...]] = {}
+
+    @classmethod
+    def register_autoconversion(cls, class_name: str, convertables: Tuple[str, ...]) -> None:
+        cls._auto_conversions[class_name] = convertables
 
     def fixWxPrefix(self, name, checkIsCore=False):
         # By default remove the wx prefix like normal
@@ -98,6 +275,7 @@ class FixWxPrefix(object):
         testName = name
         if '(' in name:
             testName = name[:name.find('(')]
+        testName = testName.split('.')[0]
 
         if testName in FixWxPrefix._coreTopLevelNames:
             return 'wx.'+name
@@ -120,22 +298,126 @@ class FixWxPrefix(object):
                 names.append(item.name)
             elif isinstance(item, ast.FunctionDef):
                 names.append(item.name)
+            elif isinstance(item, ast.AnnAssign):
+                if isinstance(item.target, ast.Name):
+                    # Exclude typing TypeAlias's from detection
+                    if not (item.annotation == 'TypeAlias' and item.target.id.startswith('_')):
+                        names.append(item.target.id)
 
         names = list()
         filename = 'wx/core.pyi'
-        if PY3:
-            with open(filename, 'rt', encoding='utf-8') as f:
-                text = f.read()
-        else:
-            with open(filename, 'r') as f:
-                text = f.read()
+        with open(filename, 'rt', encoding='utf-8') as f:
+            text = f.read()
         parseTree = ast.parse(text, filename)
         for item in parseTree.body:
             _processItem(item, names)
 
         FixWxPrefix._coreTopLevelNames = names
 
+    def cleanName(self, name: str, is_expression: bool = False, fix_wx: bool = True) -> str:
+        """Process a C++ name for use in Python code. In all cases, this means
+        handling name collisions with Python keywords. For names that will be
+        used for an identifier (ex: class, method, constant) - `is_expression`
+        is False - this also includes the reserved constant names 'False',
+        'True', and 'None'.  When `is_expression` is True, name are allowed to
+        include special characters and the reserved constant names - this is
+        intended for cleaning up type-hint expressions ans default value
+        expressions.
 
+        Finally, the 'wx.' prefix is added if needed.
+        """
+        name = re.sub(r'(const(?![\w\d]))', '', name) # remove 'const', but not 'const'raints
+        replacements = [' ', '*']
+        if not is_expression:
+            replacements.extend(['&'])
+        for txt in replacements:
+            name = name.replace(txt, '')
+        name = name.replace('::', '.')
+        if not is_expression:
+            name = re.sub(r'[^a-zA-Z0-9_\.]', '', name)
+        if not (is_expression and name in ['True', 'False', 'None']) and keyword.iskeyword(name):
+            name = f'_{name}' # Python keyword name collision
+        name = name.strip()
+        if fix_wx:
+            return self.fixWxPrefix(name, True)
+        else:
+            return name
+
+    def cleanType(self, type_name: str, is_input: bool = False) -> str:
+        """Process a C++ type name for use as a type annotation in Python code.
+        Handles translation of common C++ types to Python types, as well as a
+        few specific wx types to Python types.
+        """
+        double_type = 'float'
+        long_type = 'int'
+        type_map = {
+            # Some types are guesses, marked with TODO to verify automatic
+            # conversion actually happens.  Also, these are the type-names
+            # after processing by cleanName (so spaces are removed), or
+            # after potentially lopping off an 'Array' prefix.
+            # --String types
+            'String': 'str',
+            'Char': 'str',
+            'char': 'str',
+            'FileName': 'str', # TODO: check conversion
+            # --Int types
+            'byte': 'int',
+            'short': 'int',
+            'Int': 'int',
+            'unsigned': 'int',
+            'unsignedchar': 'int',
+            'unsignedshort': 'int',
+            'unsignedint': 'int',
+            'time_t': 'int',
+            'size_t': 'int',
+            'Int32': 'int',
+            'long': long_type,
+            'unsignedlong': long_type,
+            'ulong': long_type,
+            'LongLong': long_type,
+            # --Float types
+            'double': double_type,
+            'Double': double_type,
+            # --Others
+            'void': 'Any',
+            'PyObject': 'Any',
+            'WindowID': 'int', # defined in wx/defs.h
+            'Coord': 'int', # defined in wx/types.h
+        }
+        type_name = self.cleanName(type_name)
+        # Special handling of Vector<type> types -
+        if type_name.startswith('Vector<') and type_name.endswith('>'):
+            # Special handling for 'Vector<type>' types
+            type_name = self.cleanType(type_name[7:-1])
+            return f'List[{type_name}]'
+        if type_name.startswith('Array'):
+            type_name = self.cleanType(type_name[5:])
+            if type_name:
+                return f'List[{type_name}]'
+            else:
+                return 'list'
+        allowed_types = self._auto_conversions.get(type_name, ())
+        if allowed_types and is_input:
+            allowed_types = (type_name, *(self.cleanType(t) for t in allowed_types))
+            type_name = f"Union[{', '.join(allowed_types)}]"
+        return type_map.get(type_name, type_name)
+    
+    def parseNameAndType(self, name_string: str, type_string: Optional[str], is_input: bool = False) -> Tuple[str, Optional[str]]:
+        """Given an identifier name and an optional type annotation, process
+        these per cleanName and cleanType. Further performs transforms on the
+        identifier name that may be required due to the type annotation.
+        Ex. The transformation "any_identifier : ..." -> "*args" requires
+        modifying both the identifier name and the annotation.
+        """
+        name_string = self.cleanName(name_string, fix_wx=False)
+        if type_string:
+            type_string = self.cleanType(type_string, is_input)
+            if type_string == '...':
+                name_string = '*args'
+                type_string = None
+        if not type_string:
+            type_string = None
+        return name_string, type_string
 
 
 def ignoreAssignmentOperators(node):
@@ -331,6 +613,10 @@ def fixSizerClass(klass):
     removeVirtuals(klass)
     klass.find('CalcMin').isVirtual = True
     klass.find('RepositionChildren').isVirtual = True
+    try:
+        klass.find('InformFirstDirection').isVirtual = True
+    except extractors.ExtractorError:
+        pass
 
     # in the wxSizer class it is pure-virtual
     if klass.name == 'wxSizer':
@@ -485,6 +771,9 @@ def addWindowVirtuals(klass):
         #void UpdateWindowUI(long flags = wxUPDATE_UI_NONE);
         #void DoUpdateWindowUI(wxUpdateUIEvent& event) ;
     ]
+    if isWindows:
+        # does not compile on GTK and macOS.
+        publicWindowVirtuals.append( ('CreateAccessible', 'wxAccessible* CreateAccessible()') )
 
     protectedWindowVirtuals = [
         ('ProcessEvent',              'bool ProcessEvent(wxEvent & event)'),
@@ -751,7 +1040,9 @@ def addGetIMMethodTemplate(module, klass, fields):
 
 def convertTwoIntegersTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
-    return """\
+    return AutoConversionInfo(
+        ('_TwoInts', ),
+        """\
    // is it just a typecheck?
    if (!sipIsErr) {{
        // is it already an instance of {CLASS}?
@@ -779,12 +1070,14 @@ def convertTwoIntegersTemplate(CLASS):
     Py_DECREF(o1);
     Py_DECREF(o2);
     return SIP_TEMPORARY;
-    """.format(**locals())
+    """.format(**locals()))
 
 
 def convertFourIntegersTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
-    return """\
+    return AutoConversionInfo(
+        ('_FourInts', ),
+        """\
     // is it just a typecheck?
     if (!sipIsErr) {{
         // is it already an instance of {CLASS}?
@@ -816,13 +1109,15 @@ def convertFourIntegersTemplate(CLASS):
     Py_DECREF(o3);
     Py_DECREF(o4);
     return SIP_TEMPORARY;
-    """.format(**locals())
+    """.format(**locals()))
 
 
 
 def convertTwoDoublesTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
-    return """\
+    return AutoConversionInfo(
+        ('_TwoFloats', ),
+        """\
     // is it just a typecheck?
     if (!sipIsErr) {{
         // is it already an instance of {CLASS}?
@@ -850,12 +1145,14 @@ def convertTwoDoublesTemplate(CLASS):
     Py_DECREF(o1);
     Py_DECREF(o2);
     return SIP_TEMPORARY;
-    """.format(**locals())
+    """.format(**locals()))
 
 
 def convertFourDoublesTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
-    return """\
+    return AutoConversionInfo(
+        ('_FourFloats', ),
+        """\
     // is it just a typecheck?
     if (!sipIsErr) {{
         // is it already an instance of {CLASS}?
@@ -888,7 +1185,7 @@ def convertFourDoublesTemplate(CLASS):
     Py_DECREF(o3);
     Py_DECREF(o4);
     return SIP_TEMPORARY;
-    """.format(**locals())
+    """.format(**locals()))
 
 
 
@@ -949,6 +1246,11 @@ public:
         if (PyErr_Occurred())
             return NULL;
     %End
+
+    PyObject* __iter__();
+    %MethodCode
+        return PyObject_SelfIter(sipSelf);
+    %End
 }};
 
 class {ListClass}
@@ -958,7 +1260,7 @@ class {ListClass}
         {TypeDef}
     %End
 public:
-    SIP_SSIZE_T __len__();
+    Py_ssize_t __len__();
     %MethodCode
         sipRes = sipCpp->size();
     %End
@@ -1129,7 +1431,7 @@ def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False, getIt
 class {ArrayClass}
 {{
 public:
-    SIP_SSIZE_T __len__();
+    Py_ssize_t __len__();
     %MethodCode
         sipRes = sipCpp->GetCount();
     %End
@@ -1183,7 +1485,7 @@ def wxArrayPtrWrapperTemplate(ArrayClass, ItemClass, module):
 class {ArrayClass}
 {{
 public:
-    SIP_SSIZE_T __len__();
+    Py_ssize_t __len__();
     %MethodCode
         sipRes = sipCpp->GetCount();
     %End

@@ -71,7 +71,7 @@ wxWidgets implementation of the :class:`ThumbnailCtrl` control.  Andrea Gavana
 notes that :class:`ThumbnailCtrl` wouldn't have been so fast and complete
 without the suggestions and hints from Peter Damoc.
 
-Usage:
+Usage
 =====
 
 Usage example::
@@ -173,18 +173,15 @@ Version 1.0
 # Beginning Of ThumbnailCtrl wxPython Code
 #----------------------------------------------------------------------
 
+import io
 import os
 import wx
-import six
 import zlib
 from math import radians
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
-if six.PY3:
-    import _thread as thread
-else:
-    import thread
+import _thread as thread
 
 #----------------------------------------------------------------------
 # Get Default Icon/Data
@@ -308,9 +305,9 @@ b'x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\xac \xcc\xc1\
 def getShadow():
     """ Creates a shadow behind every thumbnail. """
 
-    sh_tr = wx.Image(six.BytesIO(getDataTR())).ConvertToBitmap()
-    sh_bl = wx.Image(six.BytesIO(getDataBL())).ConvertToBitmap()
-    sh_sh = wx.Image(six.BytesIO(getDataSH())).Rescale(500, 500, wx.IMAGE_QUALITY_HIGH)
+    sh_tr = wx.Image(io.BytesIO(getDataTR())).ConvertToBitmap()
+    sh_bl = wx.Image(io.BytesIO(getDataBL())).ConvertToBitmap()
+    sh_sh = wx.Image(io.BytesIO(getDataSH())).Rescale(500, 500, wx.IMAGE_QUALITY_HIGH)
     return (sh_tr, sh_bl, sh_sh.ConvertToBitmap())
 
 
@@ -1534,7 +1531,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
         # scroll view
         xu, yu = self.GetScrollPixelsPerUnit()
-        sy = sy/yu + (sy%yu and [1] or [0])[0] # convert sy to scroll units
+        sy = sy//yu + (sy%yu and [1] or [0])[0] # convert sy to scroll units
         x, y = self.GetViewStart()
 
         self.Scroll(x,sy)

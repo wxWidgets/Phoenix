@@ -125,6 +125,15 @@ def run():
         sipRes = wxGLCanvas::IsDisplaySupported(attribPtr);
         """)
 
+    c.find('CreateSurface').setCppCode("""\
+        #if wxUSE_GLCANVAS_EGL
+            return self->CreateSurface();
+        #else
+            wxPyRaiseNotImplemented();
+            return false;
+        #endif
+        """)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

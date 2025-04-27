@@ -16,7 +16,6 @@ wx.lib.wxcairo implementation functions using PyCairo.
 """
 
 import wx
-from six import PY3
 
 import cairo
 import ctypes
@@ -112,7 +111,7 @@ def _FontFaceFromFont(font):
 
     elif 'wxMSW' in wx.PlatformInfo:
         fontfaceptr = voidp( cairoLib.cairo_win32_font_face_create_for_hfont(
-            ctypes.c_ulong(font.GetHFONT())) )
+            ctypes.c_ulong(int(font.GetHFONT()))) )
         fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
 
     elif 'wxGTK' in wx.PlatformInfo:
@@ -413,16 +412,10 @@ def _loadPycairoAPI():
     if not hasattr(cairo, 'CAPI'):
         return
 
-    if PY3:
-        PyCapsule_GetPointer = ctypes.pythonapi.PyCapsule_GetPointer
-        PyCapsule_GetPointer.argtypes = [ctypes.py_object, ctypes.c_char_p]
-        PyCapsule_GetPointer.restype = ctypes.c_void_p
-        ptr = PyCapsule_GetPointer(cairo.CAPI, b'cairo.CAPI')
-    else:
-        PyCObject_AsVoidPtr = ctypes.pythonapi.PyCObject_AsVoidPtr
-        PyCObject_AsVoidPtr.argtypes = [ctypes.py_object]
-        PyCObject_AsVoidPtr.restype = ctypes.c_void_p
-        ptr = PyCObject_AsVoidPtr(cairo.CAPI)
+    PyCapsule_GetPointer = ctypes.pythonapi.PyCapsule_GetPointer
+    PyCapsule_GetPointer.argtypes = [ctypes.py_object, ctypes.c_char_p]
+    PyCapsule_GetPointer.restype = ctypes.c_void_p
+    ptr = PyCapsule_GetPointer(cairo.CAPI, b'cairo.CAPI')
     pycairoAPI = ctypes.cast(ptr, ctypes.POINTER(Pycairo_CAPI)).contents
 
 #----------------------------------------------------------------------------

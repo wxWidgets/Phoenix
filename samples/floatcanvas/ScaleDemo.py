@@ -22,7 +22,7 @@ from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 #from floatcanvas import NavCanvas, FloatCanvas
 
 
-import numpy as N
+import numpy as np
 
 def YScaleFun(center):
     """
@@ -30,7 +30,7 @@ def YScaleFun(center):
 
     """
     # center gets ignored in this case
-    return N.array((5e7, 1), N.float)
+    return np.array((5e7, 1), float)
 
 class DrawFrame(wx.Frame):
 
@@ -54,8 +54,8 @@ class DrawFrame(wx.Frame):
 
         self.Canvas = Canvas
 
-        Point = N.array((50e-6, 0))
-        Size = N.array(( (2000e-6 - 5e-6), 50000))
+        Point = np.array((50e-6, 0))
+        Size = np.array(( (2000e-6 - 5e-6), 50000))
         Box = Canvas.AddRectangle(Point,
                                   Size,
                                   FillColor = "blue"

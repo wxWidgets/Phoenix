@@ -21,7 +21,7 @@ elif ver == 'local':
     from floatcanvas import NavCanvas,  Resources
     from floatcanvas import FloatCanvas as FC
 
-import numpy as N
+import numpy as np
 
 ## here we create a new DrawObject:
 ##  code borrowed and adapted from Werner Bruhin
@@ -45,7 +45,7 @@ class TriangleShape1(FC.Polygon, ShapeMixin):
         L is the length of one side of the Triangle
         """
 
-        XY = N.asarray(XY)
+        XY = np.asarray(XY)
         XY.shape = (2,)
 
         Points = self.CompPoints(XY, L)
@@ -59,12 +59,12 @@ class TriangleShape1(FC.Polygon, ShapeMixin):
         ShapeMixin.__init__(self)
 
     def CompPoints(self, XY, L):
-        c = L/ N.sqrt(3)
+        c = L/ np.sqrt(3)
 
-        Points = N.array(((0, c),
+        Points = np.array(((0, c),
                           ( L/2.0, -c/2.0),
                           (-L/2.0, -c/2.0)),
-                          N.float_)
+                          np.float64)
 
         Points += XY
         return Points
@@ -101,10 +101,10 @@ class DrawFrame(wx.Frame):
                             FillColor    = "CYAN",
                             FillStyle    = "Solid")
 
-        Points = N.array(((0,0),
+        Points = np.array(((0,0),
                           (1,0),
                           (0.5, 1)),
-                         N.float_)
+                         np.float64)
 
         data  = (( (0,0),  1),
                  ( (3,3),  2),

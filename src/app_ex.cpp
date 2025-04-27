@@ -1,6 +1,5 @@
 
 #ifdef __WXGTK__
-#include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #endif
 
@@ -299,11 +298,11 @@ int wxPyApp::MainLoop()
 bool wxPyApp::IsDisplayAvailable()
 {
 #ifdef __WXGTK__
-    Display* display;
-    display = XOpenDisplay(NULL);
+    GdkDisplay* display;
+    display = gdk_display_open(NULL);
     if (display == NULL)
         return false;
-    XCloseDisplay(display);
+    gdk_display_close(display);
     return true;
 #endif
 
@@ -329,17 +328,8 @@ bool wxPyApp::IsDisplayAvailable()
     } else
 #endif
     {
-        // Also foreground the application on the first call as a side-effect.
-        // 
-        // TODO: These APIs are deprecated, and will likely be gone in the 10.15 SDK
-        //
-        // [NSRunningApplication activateIgnoringOtherApps: YES]  ??
-        // 
-        if (GetCurrentProcess(&psn) < 0 || SetFrontProcess(&psn) < 0) {
-            rv = false;
-        } else {
-            rv = true;
-        }
+        // Assume all is well... Until something better is found again.
+        rv = true;
     }
     return rv;
 #endif

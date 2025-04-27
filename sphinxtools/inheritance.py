@@ -10,27 +10,20 @@
 #---------------------------------------------------------------------------
 
 # Standard library imports
-
 import os
 import sys
 import errno
 from subprocess import Popen, PIPE
 
 # Phoenix-specific imports
-
-from .utilities import wx2Sphinx, formatExternalLink
+from .utilities import formatExternalLink
 from .constants import INHERITANCEROOT
 
 ENOENT = getattr(errno, 'ENOENT', 0)
 EPIPE  = getattr(errno, 'EPIPE', 0)
 
-if sys.version_info < (3, ):
-    string_base = basestring
-else:
-    string_base = str
 
-
-class InheritanceDiagram(object):
+class InheritanceDiagram:
     """
     Given a list of classes, determines the set of classes that they inherit
     from all the way to the root "object", and then is able to generate a
@@ -112,8 +105,7 @@ class InheritanceDiagram(object):
         'shape': 'box',
         'fontsize': 10,
         'height': 0.3,
-        'fontname': '"Vera Sans, DejaVu Sans, Liberation Sans, '
-                    'Arial, Helvetica, sans"',
+        'fontname': '"Liberation Sans, Arial, sans-serif"',
         'style': '"setlinewidth(0.5)"',
     }
     default_edge_attrs = {
@@ -127,7 +119,8 @@ class InheritanceDiagram(object):
     def _format_graph_attrs(self, attrs):
         return ''.join(['%s=%s;\n' % x for x in list(attrs.items())])
 
-    def generate_dot(self, class_summary, name="dummy", graph_attrs={}, node_attrs={}, edge_attrs={}):
+    def generate_dot(self, class_summary, name="dummy",
+                     graph_attrs={}, node_attrs={}, edge_attrs={}):
         """Generate a graphviz dot graph from the classes that were passed in
         to __init__.
 
@@ -137,18 +130,22 @@ class InheritanceDiagram(object):
         key/value pairs to pass on as graphviz properties.
         """
 
-        inheritance_graph_attrs = dict(fontsize=9, ratio='auto', size='""', rankdir="TB")
-        inheritance_node_attrs = {"align": "center", 'shape': 'box',
-                                  'fontsize': 10, 'height': 0.3,
-                                  'fontname': '"Vera Sans, DejaVu Sans, Liberation Sans, '
-                                  'Arial, Helvetica, sans"', 'style': '"setlinewidth(0.5)"',
-                                  'labelloc': 'c', 'fontcolor': 'grey45'}
+        inheritance_graph_attrs = {"fontsize": 9, "ratio": 'auto',
+                                   "size": '""', "rankdir": "TB"}
 
-        inheritance_edge_attrs = {'arrowsize': 0.5,
-                                  'style': '"setlinewidth(0.5)"',
-                                  'color': '"#23238E"',
+        inheritance_node_attrs = {"align": "center", 'shape': 'box',
+                                  'fontsize': 12, 'height': 0.3,
+                                  'margin': '"0.15, 0.05"',
+                                  'fontname': '"Liberation Sans, Arial, sans-serif"',
+                                  'style': '"setlinewidth(0.8), rounded"',
+                                  'labelloc': 'c', 'fontcolor': 'grey45',
+                                  "color": "dodgerblue4"}
+
+        inheritance_edge_attrs = {'arrowsize': 0.6,
+                                  'style': '"setlinewidth(0.8)"',
+                                  'color': 'dodgerblue4',
                                   'dir': 'back',
-                                  'arrowtail': 'open',
+                                  'arrowtail': 'normal',
                                   }
 
         g_attrs = self.default_graph_attrs.copy()
@@ -167,9 +164,9 @@ class InheritanceDiagram(object):
             this_node_attrs = n_attrs.copy()
 
             if fullname in self.specials:
-                this_node_attrs['fontcolor'] = 'black'
-                this_node_attrs['color'] = 'blue'
-                this_node_attrs['style'] = 'bold'
+                this_node_attrs['fontcolor'] = 'dodgerblue4'
+                this_node_attrs['color'] = 'dodgerblue2'
+                this_node_attrs['style'] = '"bold, rounded"'
 
             if class_summary is None:
                 # Phoenix base classes, assume there is always a link
@@ -189,7 +186,7 @@ class InheritanceDiagram(object):
             for base_name in bases:
                 this_edge_attrs = e_attrs.copy()
                 if fullname in self.specials:
-                    this_edge_attrs['color'] = 'red'
+                    this_edge_attrs['color'] = 'darkorange1'
 
                 res.append('  "%s" -> "%s" [%s];\n' %
                            (base_name, fullname,
@@ -202,7 +199,7 @@ class InheritanceDiagram(object):
 
     def makeInheritanceDiagram(self, class_summary=None):
         """
-        Actually generates the inheritance diagram as a PNG file plus the corresponding
+        Actually generates the inheritance diagram as a SVG file plus the corresponding
         MAP file for mouse navigation over the inheritance boxes.
 
         These two files are saved into the ``INHERITANCEROOT`` folder (see `sphinxtools/constants.py`
@@ -213,7 +210,7 @@ class InheritanceDiagram(object):
 
         :rtype: `tuple`
 
-        :returns: a tuple containing the PNG file name and a string representing the content
+        :returns: a tuple containing the SVG file name and a string representing the content
          of the MAP file (with newlines stripped away).
 
         .. note:: The MAP file is deleted as soon as its content has been read.
@@ -228,18 +225,18 @@ class InheritanceDiagram(object):
         else:
             filename = self.specials[0]
 
-        outfn = os.path.join(static_root, filename + '_inheritance.png')
+        outfn = os.path.join(static_root, filename + '_inheritance.svg')
         mapfile = outfn + '.map'
 
         if os.path.isfile(outfn) and os.path.isfile(mapfile):
-            with open(mapfile, 'rt') as fid:
-                map = fid.read()
-            return os.path.split(outfn)[1], map.replace('\n', ' ')
+            with open(mapfile, 'rt', encoding="utf-8") as fid:
+                mp = fid.read()
+            return os.path.split(outfn)[1], mp.replace('\n', ' ')
 
         code = self.generate_dot(class_summary)
 
         # graphviz expects UTF-8 by default
-        if isinstance(code, string_base):
+        if isinstance(code, str):
             code = code.encode('utf-8')
 
         dot_args = ['dot']
@@ -249,7 +246,7 @@ class InheritanceDiagram(object):
         if os.path.isfile(mapfile):
             os.remove(mapfile)
 
-        dot_args.extend(['-Tpng', '-o' + outfn])
+        dot_args.extend(['-Tsvg', '-o' + outfn])
         dot_args.extend(['-Tcmapx', '-o' + mapfile])
 
         popen_args = {
@@ -287,7 +284,7 @@ class InheritanceDiagram(object):
         if p.returncode != 0:
             print(('\nERROR: Graphviz `dot` command exited with error:\n[stderr]\n%s\n[stdout]\n%s\n\n' % (stderr, stdout)))
 
-        with open(mapfile, 'rt') as fid:
-            map = fid.read()
+        with open(mapfile, 'rt', encoding="utf-8") as fid:
+            mp = fid.read()
 
-        return os.path.split(outfn)[1], map.replace('\n', ' ')
+        return os.path.split(outfn)[1], mp.replace('\n', ' ')

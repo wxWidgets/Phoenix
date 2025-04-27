@@ -1,6 +1,6 @@
 import random
 import time
-from six.moves import _thread
+import _thread
 
 import wx
 import wx.lib.newevent

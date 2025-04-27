@@ -327,7 +327,7 @@ class ShortcutEditorDemo(wx.Frame):
     def OnMenuShortcuts(self, event):
 
         itemId = event.GetId()
-        menu = event.GetEventObject().GetMenuBar()
+        menu = event.GetEventObject()
         menuItem = menu.FindItemById(itemId)
 
         label = menuItem.GetItemLabel()

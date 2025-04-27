@@ -32,7 +32,6 @@ import wx
 import datetime
 
 from wx.lib.expando import ExpandoTextCtrl
-import six
 
 from . import tabart as TA
 
@@ -392,7 +391,7 @@ class CommandNotebookEvent(wx.PyCommandEvent):
         :param integer `win_id`: the window identification number.
         """
 
-        if type(command_type) in six.integer_types:
+        if isinstance(command_type, int):
             wx.PyCommandEvent.__init__(self, command_type, win_id)
         else:
             wx.PyCommandEvent.__init__(self, command_type.GetEventType(), command_type.GetId())
@@ -525,7 +524,7 @@ class AuiNotebookEvent(CommandNotebookEvent):
 
         CommandNotebookEvent.__init__(self, command_type, win_id)
 
-        if type(command_type) in six.integer_types:
+        if isinstance(command_type, int):
             self.notify = wx.NotifyEvent(command_type, win_id)
         else:
             self.notify = wx.NotifyEvent(command_type.GetEventType(), command_type.GetId())
@@ -1174,7 +1173,7 @@ class AuiTabContainer(object):
         :param `wndOrInt`: an instance of :class:`wx.Window` or an integer specifying a tab index.
         """
 
-        if type(wndOrInt) in six.integer_types:
+        if isinstance(wndOrInt, int):
 
             if wndOrInt >= len(self._pages):
                 return False
@@ -1462,7 +1461,7 @@ class AuiTabContainer(object):
         button_count = len(self._buttons)
 
         # create off-screen bitmap
-        bmp = wx.Bitmap(self._rect.GetWidth(), self._rect.GetHeight())
+        bmp = wx.Bitmap(self._rect.GetWidth(), self._rect.GetHeight(), raw_dc)
         dc.SelectObject(bmp)
 
         if not dc.IsOk():
@@ -2457,7 +2456,8 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         :rtype: :class:`wx.Window`.
         """
-
+        if not self:
+            return None # The AuiTabCtrl has already been destroyed
         screen_pt = wx.GetMousePosition()
         client_pt = self.ScreenToClient(screen_pt)
         return self.TabHitTest(client_pt.x, client_pt.y)
@@ -4080,7 +4080,7 @@ class AuiNotebook(wx.Panel):
         if page >= self._tabs.GetPageCount():
             return False
 
-        if not isinstance(image, six.integer_types):
+        if not isinstance(image, int):
             raise Exception("The image parameter must be an integer, you passed " \
                             "%s"%repr(image))
 
@@ -4610,8 +4610,8 @@ class AuiNotebook(wx.Panel):
             # because there are two panes, always split them
             # equally
             split_size = self.GetClientSize()
-            split_size.x /= 2
-            split_size.y /= 2
+            split_size.x //= 2
+            split_size.y //= 2
 
         # create a new tab frame
         new_tabs = TabFrame(self)
@@ -4638,22 +4638,22 @@ class AuiNotebook(wx.Panel):
         if direction == wx.LEFT:
 
             pane_info.Left()
-            mouse_pt = wx.Point(0, cli_size.y/2)
+            mouse_pt = wx.Point(0, cli_size.y//2)
 
         elif direction == wx.RIGHT:
 
             pane_info.Right()
-            mouse_pt = wx.Point(cli_size.x, cli_size.y/2)
+            mouse_pt = wx.Point(cli_size.x, cli_size.y//2)
 
         elif direction == wx.TOP:
 
             pane_info.Top()
-            mouse_pt = wx.Point(cli_size.x/2, 0)
+            mouse_pt = wx.Point(cli_size.x//2, 0)
 
         elif direction == wx.BOTTOM:
 
             pane_info.Bottom()
-            mouse_pt = wx.Point(cli_size.x/2, cli_size.y)
+            mouse_pt = wx.Point(cli_size.x//2, cli_size.y)
 
         self._mgr.AddPane(new_tabs, pane_info, mouse_pt)
         self._mgr.Update()

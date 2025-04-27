@@ -18,15 +18,13 @@ from distutils.command.build        import build as orig_build
 from setuptools.command.install     import install as orig_install
 from setuptools.command.bdist_egg   import bdist_egg as orig_bdist_egg
 from setuptools.command.sdist       import sdist as orig_sdist
-try:
-    from wheel.bdist_wheel import bdist_wheel as orig_bdist_wheel
-    haveWheel = True
-except ImportError:
-    haveWheel = False
+from setuptools.command.bdist_wheel import bdist_wheel as orig_bdist_wheel
+
+# Alter the path so that buildtools can be imported from the current directory.
+sys.path.insert(0, os.path.dirname(__file__))
 
 from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
 import buildtools.version as version
-
 
 # Create a buildtools.config.Configuration object
 cfg = Config(noWxConfig=True)
@@ -34,19 +32,8 @@ DOCS_BASE='http://docs.wxPython.org'
 
 #----------------------------------------------------------------------
 
-NAME             = version.PROJECT_NAME
-DESCRIPTION      = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
-AUTHOR           = "Robin Dunn"
-AUTHOR_EMAIL     = "robin@alldunn.com"
-URL              = "http://wxPython.org/"
-PROJECT_URLS     = {
-                    "Source": "https://github.com/wxWidgets/Phoenix",
-                    "Documentation": "https://docs.wxpython.org/",
-                   }
-DOWNLOAD_URL     = "https://pypi.org/project/{}".format(NAME)
 LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
-KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,user-interface,awesome"
 
 LONG_DESCRIPTION = """\
 Welcome to wxPython's Project Phoenix! Phoenix is the improved next-generation
@@ -73,25 +60,6 @@ the respective items. (Documents are launched in the default browser and demo is
 with python).
 """.format(version=cfg.VERSION, docs_base=DOCS_BASE)
 
-
-CLASSIFIERS      = """\
-Development Status :: 6 - Mature
-Environment :: MacOS X :: Cocoa
-Environment :: Win32 (MS Windows)
-Environment :: X11 Applications :: GTK
-Intended Audience :: Developers
-License :: OSI Approved
-Operating System :: MacOS :: MacOS X
-Operating System :: Microsoft :: Windows :: Windows 7
-Operating System :: Microsoft :: Windows :: Windows 10
-Operating System :: POSIX
-Programming Language :: Python :: 3.6
-Programming Language :: Python :: 3.7
-Programming Language :: Python :: 3.8
-Programming Language :: Python :: 3.9
-Programming Language :: Python :: Implementation :: CPython
-Topic :: Software Development :: User Interfaces
-"""
 
 with open('requirements/install.txt') as fid:
     INSTALL_REQUIRES = [line.strip()
@@ -154,7 +122,7 @@ def _cleanup_symlinks(cmd):
     #
     build_lib = cmd.get_finalized_command('build').build_lib
     build_lib = opj(build_lib, 'wx')
-    for libname in glob.glob(opj(build_lib, 'libwx*')):
+    for libname in sorted(glob.glob(opj(build_lib, 'libwx*'))):
 
         if os.path.islink(libname):
             if isDarwin:
@@ -207,30 +175,28 @@ class wx_bdist_egg(orig_bdist_egg):
         # Run the default bdist_egg command
         orig_bdist_egg.run(self)
 
+class wx_bdist_wheel(orig_bdist_wheel):
+    def finalize_options(self):
+        # Do a bit of monkey-patching to let bdist_wheel know that there
+        # really are extension modules in this build, even though they are
+        # not built here.
+        def _has_ext_modules(self):
+            return True
+        from setuptools.dist import Distribution
+        #Distribution.is_pure = _is_pure
+        Distribution.has_ext_modules = _has_ext_modules
 
-if haveWheel:
-    class wx_bdist_wheel(orig_bdist_wheel):
-        def finalize_options(self):
-            # Do a bit of monkey-patching to let bdist_wheel know that there
-            # really are extension modules in this build, even though they are
-            # not built here.
-            def _has_ext_modules(self):
-                return True
-            from setuptools.dist import Distribution
-            #Distribution.is_pure = _is_pure
-            Distribution.has_ext_modules = _has_ext_modules
-
-            orig_bdist_wheel.finalize_options(self)
+        orig_bdist_wheel.finalize_options(self)
 
 
-        def run(self):
-            # Ensure that there is a basic library build for bdist_egg/wheel to pull from.
-            self.run_command("build")
+    def run(self):
+        # Ensure that there is a basic library build for bdist_egg/wheel to pull from.
+        self.run_command("build")
 
-            _cleanup_symlinks(self)
+        _cleanup_symlinks(self)
 
-            # Run the default bdist_wheel command
-            orig_bdist_wheel.run(self)
+        # Run the default bdist_wheel command
+        orig_bdist_wheel.run(self)
 
 
 class wx_install(orig_install):
@@ -266,10 +232,8 @@ CMDCLASS = {
     'bdist_egg'   : wx_bdist_egg,
     'install'     : wx_install,
     'sdist'       : wx_sdist,
+    'bdist_wheel' : wx_bdist_wheel,
     }
-if haveWheel:
-    CMDCLASS['bdist_wheel'] = wx_bdist_wheel
-
 
 
 #----------------------------------------------------------------------
@@ -327,28 +291,6 @@ setuptools.command.build_py.make_writable = wx_make_writable
 
 WX_PKGLIST = [cfg.PKGDIR] + [cfg.PKGDIR + '.' + pkg for pkg in find_packages('wx')]
 
-ENTRY_POINTS = {
-    'console_scripts' : [
-        "img2png = wx.tools.img2png:main",
-        "img2py = wx.tools.img2py:main",
-        "img2xpm = wx.tools.img2xpm:main",
-        "pywxrc = wx.tools.pywxrc:main",
-#        ],
-#    'gui_scripts' : [  # TODO: Why was this commented out?
-        "wxget = wx.tools.wxget:main",  # New wx wget
-        "wxdocs = wx.tools.wxget_docs_demo:docs_main",  # Get/Launch Docs
-        "wxdemo = wx.tools.wxget_docs_demo:demo_main",  # Get/Launch Demo
-        "helpviewer = wx.tools.helpviewer:main",
-        "pycrust = wx.py.PyCrust:main",
-        "pyshell = wx.py.PyShell:main",
-        "pyslices = wx.py.PySlices:main",
-        "pyslicesshell = wx.py.PySlicesShell:main",
-        ],
-    }
-
-SCRIPTS = []
-DATA_FILES = []
-
 HEADERS = None
 BUILD_OPTIONS = { } #'build_base' : cfg.BUILD_BASE }
 #if cfg.WXPORT == 'msw':
@@ -359,22 +301,13 @@ BUILD_OPTIONS = { } #'build_base' : cfg.BUILD_BASE }
 
 
 if __name__ == '__main__':
-    setup(name             = NAME,
-          version          = cfg.VERSION,
-          description      = DESCRIPTION,
+    setup(version          = cfg.VERSION,
           long_description = LONG_DESCRIPTION,
-          author           = AUTHOR,
-          author_email     = AUTHOR_EMAIL,
-          url              = URL,
-          project_urls     = PROJECT_URLS,
-          download_url     = DOWNLOAD_URL,
+          long_description_content_type = 'text/x-rst',
           license          = LICENSE,
           platforms        = PLATFORMS,
-          classifiers      = [c for c in CLASSIFIERS.split("\n") if c],
-          keywords         = KEYWORDS,
           install_requires = INSTALL_REQUIRES,
           zip_safe         = False,
-          use_2to3         = False,
           include_package_data = True,
 
           packages         = WX_PKGLIST,
@@ -382,9 +315,6 @@ if __name__ == '__main__':
 
           options          = { 'build'     : BUILD_OPTIONS },
 
-          scripts          = SCRIPTS,
-          data_files       = DATA_FILES,
           headers          = HEADERS,
           cmdclass         = CMDCLASS,
-          entry_points     = ENTRY_POINTS,
         )

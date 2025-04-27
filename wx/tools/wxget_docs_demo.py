@@ -26,23 +26,16 @@ launch it.
 
 Use: doc|demo --force to force a fresh download.
 """
-from __future__ import (division, absolute_import, print_function, unicode_literals)
-
 import sys
 import os
 import subprocess
 import webbrowser
 import tarfile
-if sys.version_info >= (3,):
-    from urllib.error import HTTPError
-    import urllib.request as urllib2
-    import urllib.parse as urlparse
-    from urllib.request import pathname2url
-else:
-    import urllib2
-    from urllib2 import HTTPError
-    import urlparse
-    from urllib import pathname2url
+import warnings
+from urllib.error import HTTPError
+import urllib.request as urllib2
+import urllib.parse as urlparse
+from urllib.request import pathname2url
 
 import wx
 from wx.tools import wxget
@@ -84,7 +77,11 @@ def unpack_cached(cached, dest_dir):
     """ Unpack from the cache."""
     print('Unpack', cached, 'to', dest_dir)
     with tarfile.open(cached, "r:*") as tf:
-        tf.extractall(dest_dir)
+        try:
+            tf.extractall(dest_dir, filter='data')
+        except TypeError:
+            warnings.warn('Falling back to less safe tarfile.extractall')
+            tf.extractall(dest_dir)
     dest_dir = os.listdir(dest_dir)[0]
     return dest_dir
 

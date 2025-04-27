@@ -15,7 +15,7 @@
 # folder, so let's accommodate them...
 #---------------------------------------------------------------------------
 
-import sys, os, glob
+import os, glob
 
 # Restructure the content of the tarball so things like pip or easy_install
 # know how to build stuff. To be compatible with those tools the main source
@@ -33,16 +33,13 @@ if os.path.exists(SRC) and os.path.isdir(SRC):
 for wc in ['wxWidgets/configure',
            'wxWidgets/src/stc/gen_iface.py',
            'bin/waf-*', ]:
-    for item in glob.glob(wc):
+    for item in sorted(glob.glob(wc)):
         os.chmod(item, 0o755)
 
 
 # Now execute the real setup.py that was copied here in order to do whatever
 # command was trying to be done before.
-if sys.version_info < (3,):
-    execfile('setup.py')
-else:
-    with open('setup.py', 'r') as f:
-        source = f.read()
-    exec(source)
+with open('setup.py', 'r') as f:
+    source = f.read()
+exec(source)
 

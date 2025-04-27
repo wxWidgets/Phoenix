@@ -196,6 +196,7 @@ INCLUDES = [  # base and core stuff
               'dirdlg',
               'dirctrl',
               'filedlg',
+              'filedlgcustomize',
               'frame',
               'msgdlg',
               'richmsgdlg',
@@ -290,7 +291,16 @@ def run():
             """)
 
 
-    module.addPyFunction('CallAfter', '(callableObj, *args, **kw)', doc="""\
+    module.addPyCode('import typing', order=10)
+    module.addPyCode("""\
+        _T = typing.TypeVar('_T')
+        try:
+            _P = typing.ParamSpec('_P')
+        except AttributeError:
+            import typing_extensions
+            _P = typing_extensions.ParamSpec('_P')
+        """)
+    module.addPyFunction('CallAfter', '(callableObj: typing.Callable[_P, _T], *args: _P.args, **kw: _P.kwargs) -> None', doc="""\
             Call the specified function after the current and pending event
             handlers have been completed.  This is also good for making GUI
             method calls from non-GUI threads.  Any extra positional or
@@ -321,7 +331,7 @@ def run():
             wx.PostEvent(app, evt)""")
 
 
-    module.addPyClass('CallLater', ['object'],
+    module.addPyClass('CallLater', ['typing.Generic[_P, _T]'],
         doc="""\
             A convenience class for :class:`wx.Timer`, that calls the given callable
             object once after the given amount of milliseconds, passing any
@@ -341,7 +351,7 @@ def run():
             """,
         items = [
             PyCodeDef('__instances = {}'),
-            PyFunctionDef('__init__', '(self, millis, callableObj, *args, **kwargs)',
+            PyFunctionDef('__init__', '(self, millis, callableObj: typing.Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs) -> None',
                 doc="""\
                     Constructs a new :class:`wx.CallLater` object.
 
@@ -365,7 +375,7 @@ def run():
 
             PyFunctionDef('__del__', '(self)', 'self.Stop()'),
 
-            PyFunctionDef('Start', '(self, millis=None, *args, **kwargs)',
+            PyFunctionDef('Start', '(self, millis: typing.Optional[int]=None, *args: _P.args, **kwargs: _P.kwargs) -> None',
                 doc="""\
                     (Re)start the timer
 
@@ -387,7 +397,7 @@ def run():
                     self.running = True"""),
             PyCodeDef('Restart = Start'),
 
-            PyFunctionDef('Stop', '(self)',
+            PyFunctionDef('Stop', '(self) -> None',
                 doc="Stop and destroy the timer.",
                 body="""\
                     if self in CallLater.__instances:
@@ -396,16 +406,16 @@ def run():
                         self.timer.Stop()
                         self.timer = None"""),
 
-            PyFunctionDef('GetInterval', '(self)', """\
+            PyFunctionDef('GetInterval', '(self) -> int', """\
                 if self.timer is not None:
                     return self.timer.GetInterval()
                 else:
                     return 0"""),
 
-            PyFunctionDef('IsRunning', '(self)',
+            PyFunctionDef('IsRunning', '(self) -> bool',
                 """return self.timer is not None and self.timer.IsRunning()"""),
 
-            PyFunctionDef('SetArgs', '(self, *args, **kwargs)',
+            PyFunctionDef('SetArgs', '(self, *args: _P.args, **kwargs: _P.kwargs) -> None',
                 doc="""\
                     (Re)set the args passed to the callable object.  This is
                     useful in conjunction with :meth:`Start` if
@@ -420,7 +430,7 @@ def run():
                     self.args = args
                     self.kwargs = kwargs"""),
 
-            PyFunctionDef('HasRun', '(self)', 'return self.hasRun',
+            PyFunctionDef('HasRun', '(self) -> bool', 'return self.hasRun',
                 doc="""\
                     Returns whether or not the callable has run.
 
@@ -428,7 +438,7 @@ def run():
 
                     """),
 
-            PyFunctionDef('GetResult', '(self)', 'return self.result',
+            PyFunctionDef('GetResult', '(self) -> _T', 'return self.result',
                 doc="""\
                     Returns the value of the callable.
 
@@ -436,7 +446,7 @@ def run():
                     :return: result from callable
                     """),
 
-            PyFunctionDef('Notify', '(self)',
+            PyFunctionDef('Notify', '(self) -> None',
                 doc="The timer has expired so call the callable.",
                 body="""\
                     if self.callable and getattr(self.callable, 'im_self', True):
@@ -455,7 +465,7 @@ def run():
     module.addPyCode("FutureCall = deprecated(CallLater, 'Use CallLater instead.')")
 
     module.addPyCode("""\
-        def GetDefaultPyEncoding():
+        def GetDefaultPyEncoding() -> str:
             return "utf-8"
         GetDefaultPyEncoding = deprecated(GetDefaultPyEncoding, msg="wxPython now always uses utf-8")
         """)

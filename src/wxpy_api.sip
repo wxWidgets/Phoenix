@@ -54,7 +54,7 @@ static wxString i_Py2wxString(PyObject* source)
         }
     }
     wxString target;
-    size_t len = PyUnicode_GET_SIZE(uni);
+    size_t len = PyUnicode_AsWideChar(uni, NULL, 0);
     if (len) {
         wxPyUnicode_AsWideChar(uni, wxStringBuffer(target, len), len);
     }
@@ -84,7 +84,7 @@ static wxString i_Py2wxString(PyObject* source)
 //        }
 //    }
 //    // TODO: Coerce non-unicode types to unicode here?  (Classic does)
-//    size_t len = PyUnicode_GET_SIZE(uni);
+//    size_t len = PyUnicode_AsWideChar(uni, NULL, 0);
 //    if (len) {
 //        wxPyUnicode_AsWideChar(uni, wxStringBuffer(str, len), len);
 //    }

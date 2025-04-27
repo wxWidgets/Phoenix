@@ -8,12 +8,10 @@ import os
 import unittest
 from wx.py import introspect
 
-PY3 = sys.version_info[0] == 3
-
 """
 These unittest methods are preferred:
 -------------------------------------
-self.assert_(expr, msg=None)
+self.assertTrue(expr, msg=None)
 self.assertEqual(first, second, msg=None)
 self.assertRaises(excClass, callableObj, *args, **kwargs)
 self.fail(msg=None)
@@ -25,15 +23,15 @@ class ModuleTestCase(unittest.TestCase):
 
     def test_module(self):
         module = introspect
-        self.assert_(module.__author__)
-        self.assert_(module.getAllAttributeNames)
-        self.assert_(module.getAttributeNames)
-        self.assert_(module.getAutoCompleteList)
-        self.assert_(module.getBaseObject)
-        self.assert_(module.getCallTip)
-        self.assert_(module.getConstructor)
-        self.assert_(module.getRoot)
-        self.assert_(module.rtrimTerminus)
+        self.assertTrue(module.__author__)
+        self.assertTrue(module.getAllAttributeNames)
+        self.assertTrue(module.getAttributeNames)
+        self.assertTrue(module.getAutoCompleteList)
+        self.assertTrue(module.getBaseObject)
+        self.assertTrue(module.getCallTip)
+        self.assertTrue(module.getConstructor)
+        self.assertTrue(module.getRoot)
+        self.assertTrue(module.rtrimTerminus)
 
 
 class RtrimTerminusTestCase(unittest.TestCase):
@@ -394,21 +392,6 @@ class GetBaseObjectTestCase(unittest.TestCase):
             # Class with no init.
             (Bar, Bar, 0),
         ]
-        if not PY3:
-            values.extend([
-            # Byte-compiled code.
-            (ham.func_code, ham.func_code, 0),
-            # Class with init.
-            (Foo, Foo.__init__.im_func, 1),
-            # Bound method.
-            (spam.foo, spam.foo.im_func, 1),
-            # Bound method with self named something else (spam).
-            (spam.bar, spam.bar.im_func, 1),
-            # Unbound method. (Do not drop the self argument.)
-            (eggs, eggs.im_func, 0),
-            # Callable instance.
-            (spam, spam.__call__.im_func, 1),
-            ])
         for object, baseObject, dropSelf in values:
             result = introspect.getBaseObject(object)
             self.assertEqual(result, (baseObject, dropSelf))
@@ -428,9 +411,12 @@ class GetAttributeTestCase(unittest.TestCase):
             '__builtins__',
             '__call__',
             '__class__',
+            '__closure__',
             '__cmp__',
+            '__code__',
             '__coerce__',
             '__contains__',
+            '__defaults__',
             '__del__',
             '__delattr__',
             '__delitem__',
@@ -445,12 +431,14 @@ class GetAttributeTestCase(unittest.TestCase):
             '__flags__',
             '__float__',
             '__floordiv__',
+            '__func__',
             '__ge__',
             '__get__',
             '__getattr__',
             '__getattribute__',
             '__getitem__',
             '__getslice__',
+            '__globals__',
             '__gt__',
             '__hash__',
             '__hex__',
@@ -461,6 +449,7 @@ class GetAttributeTestCase(unittest.TestCase):
             '__invert__',
             '__itemsize__',
             '__iter__',
+            '__kwdefaults__',
             '__le__',
             '__len__',
             '__long__',
@@ -480,6 +469,7 @@ class GetAttributeTestCase(unittest.TestCase):
             '__path__',
             '__pos__',
             '__pow__',
+            '__qualname__',
             '__radd__',
             '__rand__',
             '__rdiv__',
@@ -539,18 +529,8 @@ class GetAttributeTestCase(unittest.TestCase):
             'fileno',
             'find',
             'flush',
-            'func_closure',
-            'func_code',
-            'func_defaults',
-            'func_dict',
-            'func_doc',
-            'func_globals',
-            'func_name',
             'get',
             'has_key',
-            'im_class',
-            'im_func',
-            'im_self',
             'imag',
             'index',
             'insert',
@@ -674,16 +654,6 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
             # BrokenStr instance.
             brokenStr,
         ]
-        if not PY3:
-            self.items.extend([
-                long(123),
-                unicode(""),
-                xrange(0),
-                # Byte-compiled code.
-                ham.func_code,
-                # Buffer.
-                buffer(''),
-            ])
 
     def tearDown(self):
         self.items = None
@@ -692,7 +662,7 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
     def test_getAttributeNames(self):
         for item in self.items:
             self._checkAttributeNames(item)
-        if 'object' in __builtins__:
+        if 'object' in __builtins__ if isinstance(__builtins__, dict) else vars(__builtins__):
             self._checkAttributeNames(object)
 
     def test_getAttributeNames_NoSingle(self):
@@ -725,8 +695,8 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
         attributes = [attribute for attribute in self.values \
                       if hasattr(item, attribute)]
         for attribute in attributes:
-            self.assert_(attribute in result,
-                         ':item: %r :attribute: %r' % (item, attribute))
+            self.assertTrue(attribute in result,
+                            ':item: %r :attribute: %r' % (item, attribute))
 
 
 class GetAutoCompleteListTestCase(GetAttributeTestCase):
@@ -753,8 +723,8 @@ class GetAutoCompleteListTestCase(GetAttributeTestCase):
             attributes = [attribute for attribute in self.values \
                           if hasattr(object, attribute)]
             for attribute in attributes:
-                self.assert_(attribute in result,
-                             ':item: %r :attribute: %r' % (item, attribute))
+                self.assertTrue(attribute in result,
+                                ':item: %r :attribute: %r' % (item, attribute))
 
     def test_getAutoCompleteList_NoSingle(self):
         for item in self.items:
@@ -798,7 +768,7 @@ class C1(A1):
 class D1(C1, B1):
     pass
 
-if 'object' in __builtins__:
+if 'object' in __builtins__ if isinstance(__builtins__, dict) else vars(__builtins__):
     class A2(object):
         def __init__(self, a):
             self.a = a
@@ -829,34 +799,12 @@ class Q(P):
 
 class GetConstructorTestCase(unittest.TestCase):
 
-    @unittest.skipIf(PY3, "Python2 specific test")
-    def test_getConstructor(self):
-        args = ('self', 'a', 'b', 'args', 'kwargs')
-        varnames = introspect.getConstructor(O).func_code.co_varnames
-        self.assertEqual(varnames, args)
-        varnames = introspect.getConstructor(P).func_code.co_varnames
-        self.assertEqual(varnames, args)
-        args = ('self', 'c', 'd')
-        varnames = introspect.getConstructor(Q).func_code.co_varnames
-        self.assertEqual(varnames, args)
-
     def test_getConstructor_None(self):
         values = (N, 1, 'spam', {}, [], (), dir)
         for value in values:
             self.assertEqual(introspect.getConstructor(N), None)
 
-    @unittest.skipIf(PY3, "Python2 specific test")
-    def test_getConstructor_MultipleInheritance(self):
-        # Test old style inheritance rules.
-        args = ('self', 'a')
-        varnames = introspect.getConstructor(D1).func_code.co_varnames
-        self.assertEqual(varnames, args)
-        if 'object' in __builtins__:
-            # Test new style inheritance rules as well.
-            args = ('self', 'b')
-            varnames = introspect.getConstructor(D2).func_code.co_varnames
-            self.assertEqual(varnames, args)
-
 
 if __name__ == '__main__':
+    sys.ps2 = '... '
     unittest.main()

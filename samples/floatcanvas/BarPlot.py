@@ -9,7 +9,7 @@ from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 #sys.path.append("../")
 #from floatcanvas import NavCanvas, FloatCanvas
 
-import numpy as N
+import numpy as np
 from numpy import random as random
 
 NumChannels = 200
@@ -27,7 +27,7 @@ def YScaleFun(center):
     """
 
     # center gets ignored in this case
-    return N.array((1, float(NumChannels)/MaxValue), N.float)
+    return np.array((1, float(NumChannels)/MaxValue), float)
 
 def ScaleWorldToPixel(self, Lengths):
     """
@@ -41,7 +41,7 @@ def ScaleWorldToPixel(self, Lengths):
         Lengths should be a NX2 array of (x,y) coordinates, or
         a 2-tuple, or sequence of 2-tuples.
     """
-    return  N.ceil(( (N.asarray(Lengths, N.float)*self.TransformVector) )).astype('i')
+    return  np.ceil(( (np.asarray(Lengths, float)*self.TransformVector) )).astype('i')
 
 
 class DrawFrame(wx.Frame):
@@ -75,7 +75,7 @@ class DrawFrame(wx.Frame):
         self.BarWidth = 0.75
         # add an X axis
         Canvas.AddLine(((0,0), (NumChannels, 0 )),)
-        for x in N.linspace(1, NumChannels, 11):
+        for x in np.linspace(1, NumChannels, 11):
             Canvas.AddText("%i"%x, (x-1+self.BarWidth/2,0), Position="tc")
 
         for i, Value in enumerate(self.Values):

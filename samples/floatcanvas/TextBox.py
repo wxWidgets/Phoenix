@@ -15,7 +15,7 @@ from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 #sys.path.append("..")
 #from floatcanvas import NavCanvas, FloatCanvas
 
-import numpy as N
+import numpy as np
 
 class DrawFrame(wx.Frame):
 
@@ -188,7 +188,7 @@ class DrawFrame(wx.Frame):
                                       Family = wx.ROMAN,
                                       Alignment = "right"
                                       )
-        Point = N.array((100, -20), N.float_)
+        Point = np.array((100, -20), np.float64)
         Box = Canvas.AddScaledTextBox("Here is even more auto wrapped text. This time the line spacing is set to 0.8. \n\nThe Padding is set to 0.",
                                       Point,
                                       Size = 3,
@@ -202,7 +202,7 @@ class DrawFrame(wx.Frame):
                                       )
         Canvas.AddPoint(Point, "Red", 2)
 
-        Point = N.array((0, -40), N.float_)
+        Point = np.array((0, -40), np.float64)
 #        Point = N.array((0, 0), N.float_)
         for Position in ["tl", "bl", "tr", "br"]:
 #        for Position in ["br"]:
@@ -221,7 +221,7 @@ class DrawFrame(wx.Frame):
                                       )
         Canvas.AddPoint(Point, "Red", 4)
 
-        Point = N.array((-20, 60), N.float_)
+        Point = np.array((-20, 60), np.float64)
         Box = Canvas.AddScaledTextBox("Here is some\ncentered\ntext",
                                       Point,
                                       Size = 4,
@@ -237,7 +237,7 @@ class DrawFrame(wx.Frame):
                                       LineSpacing = 0.8
                                       )
 
-        Point = N.array((-20, 20), N.float_)
+        Point = np.array((-20, 20), np.float64)
         Box = Canvas.AddScaledTextBox("Here is some\nright aligned\ntext",
                                       Point,
                                       Size = 4,
@@ -252,7 +252,7 @@ class DrawFrame(wx.Frame):
                                       LineSpacing = 0.8
                                       )
 
-        Point = N.array((100, -60), N.float_)
+        Point = np.array((100, -60), np.float64)
         Box = Canvas.AddScaledTextBox("Here is some auto wrapped text. This time it is centered, rather than right aligned.\n\nThe Padding is set to 2.",
                                       Point,
                                       Size = 3,

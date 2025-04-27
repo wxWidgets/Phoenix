@@ -236,10 +236,9 @@ Version 0.8
 import wx
 import math
 import bisect
+import io
 import zlib
 from functools import cmp_to_key
-
-import six
 
 from wx.lib.expando import ExpandoTextCtrl
 
@@ -549,9 +548,6 @@ if wx.Platform == "__WXMSW__":
 IL_FIXED_SIZE = 0
 IL_VARIABLE_SIZE = 1
 
-# Python integers, to make long types to work with CreateListItem
-INTEGER_TYPES = six.integer_types
-
 
 # ----------------------------------------------------------------------------
 # Functions
@@ -568,7 +564,7 @@ def to_list(input):
 
     if isinstance(input, list):
         return input
-    elif isinstance(input, INTEGER_TYPES):
+    elif isinstance(input, int):
         return [input]
     else:
         raise Exception("Invalid parameter passed to `to_list`: only integers and list are accepted.")
@@ -596,7 +592,7 @@ def CreateListItem(itemOrId, col):
     :param `col`: the item column.
     """
 
-    if type(itemOrId) in INTEGER_TYPES:
+    if isinstance(itemOrId, int):
         item = UltimateListItem()
         item._itemId = itemOrId
         item._col = col
@@ -652,7 +648,7 @@ def GetdragcursorBitmap():
 def GetdragcursorImage():
     """ Returns the drag and drop cursor image as a :class:`wx.Image`. """
 
-    stream = six.BytesIO(GetdragcursorData())
+    stream = io.BytesIO(GetdragcursorData())
     return wx.Image(stream)
 
 
@@ -2286,7 +2282,7 @@ class CommandListEvent(wx.PyCommandEvent):
         :param `winid`: the event identifier.
         """
 
-        if type(commandTypeOrEvent) in INTEGER_TYPES:
+        if isinstance(commandTypeOrEvent, int):
 
             wx.PyCommandEvent.__init__(self, commandTypeOrEvent, winid)
 
@@ -2453,7 +2449,7 @@ class UltimateListEvent(CommandListEvent):
 
         CommandListEvent.__init__(self, commandTypeOrEvent, winid)
 
-        if type(commandTypeOrEvent) in INTEGER_TYPES:
+        if isinstance(commandTypeOrEvent, int):
             self.notify = wx.NotifyEvent(commandTypeOrEvent, winid)
         else:
             self.notify = wx.NotifyEvent(commandTypeOrEvent.GetEventType(), commandTypeOrEvent.GetId())
@@ -4573,7 +4569,7 @@ class UltimateListLineData(object):
                 xa, ya = self._owner.CalcScrolledPosition((0, rect.y))
                 wndx += xa
                 if rect.height > ySize and not item._expandWin:
-                    ya += (rect.height - ySize)/2
+                    ya += (rect.height - ySize)//2
 
             itemRect = wx.Rect(xOld-2*HEADER_OFFSET_X, rect.y, width-xSize-HEADER_OFFSET_X, rect.height)
             if overflow:
@@ -5265,7 +5261,7 @@ class UltimateListHeaderWindow(wx.Control):
                 xAligned = x + cw - wLabel - HEADER_OFFSET_X
 
             elif align == ULC_FORMAT_CENTER:
-                xAligned = x + wcheck + (cw - wLabel)/2
+                xAligned = x + wcheck + (cw - wLabel)//2
 
             # if we have an image, draw it on the right of the label
             if imageList:
@@ -5273,7 +5269,7 @@ class UltimateListHeaderWindow(wx.Control):
                     if img >= 0:
                         imageList.Draw(img, dc,
                                        xAligned + wLabel - (ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE)*(indx+1),
-                                       HEADER_OFFSET_Y + (h - 4 - iy)/2,
+                                       HEADER_OFFSET_Y + (h - 4 - iy)//2,
                                        wx.IMAGELIST_DRAW_TRANSPARENT)
 
                         cw -= ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
@@ -5603,7 +5599,7 @@ class UltimateListHeaderWindow(wx.Control):
 
         w, h = self.GetClientSize()
         ix, iy = self._owner.GetCheckboxImageSize()
-        rect = wx.Rect(theX + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)/2, ix, iy)
+        rect = wx.Rect(theX + HEADER_OFFSET_X, HEADER_OFFSET_Y + (h - 4 - iy)//2, ix, iy)
 
         if rect.Contains(pos):
             # User clicked on the checkbox
@@ -7914,9 +7910,9 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
 
                 if rect.y < view_y:
-                    self.Scroll(-1, rect.y/hLine)
+                    self.Scroll(-1, rect.y//hLine)
                 if rect.y+rect.height+5 > view_y+client_h:
-                    self.Scroll(-1, (rect.y+rect.height-client_h+hLine)/hLine)
+                    self.Scroll(-1, (rect.y+rect.height-client_h+hLine)//hLine)
 
                 if wx.Platform == "__WXMAC__":
                     # At least on Mac the visible lines value will get reset inside of
@@ -9024,6 +9020,16 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         item.Check(checked)
         self.SetItem(item)
         self.RefreshLine(item._itemId)
+
+        if self.HasAGWFlag(ULC_AUTO_CHECK_PARENT) and\
+                item.GetKind() == 1:        # check box like item
+            col = item.GetColumn()
+            info = self.GetColumn(col)
+            if self.GetCheckedItemCount(col) == self.GetItemCount():
+                info.Check(True)
+            else:
+                info.Check(False)
+            self.SetColumn(col, info)
 
         if not sendEvent:
             return
@@ -13114,9 +13120,9 @@ class UltimateListCtrl(wx.Control):
 
         if entry:
             pos = self.GetItemCount()
-            self.InsertStringItem(pos, six.u(entry[0]))
+            self.InsertStringItem(pos, str(entry[0]))
             for i in range(1, len(entry)):
-                self.SetStringItem(pos, i, six.u(entry[i]))
+                self.SetStringItem(pos, i, str(entry[i]))
 
             return pos
 

@@ -5,7 +5,7 @@ PolyEditor: a simple app for editing polygons
 
 Used as a demo for FloatCanvas
 """
-import numpy as N
+import numpy as np
 import random
 import numpy.random as RandomArray
 
@@ -112,7 +112,7 @@ class DrawFrame(wx.Frame):
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
             dc.SetLogicalFunction(wx.XOR)
             if self.SelectedPointNeighbors is None:
-                self.SelectedPointNeighbors = N.zeros((3,2), N.float_)
+                self.SelectedPointNeighbors = np.zeros((3,2), np.float64)
                 #fixme: This feels very inelegant!
                 if Index == 0:
                     self.SelectedPointNeighbors[0] = self.SelectedPoly.Points[-1]

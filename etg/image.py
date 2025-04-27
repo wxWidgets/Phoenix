@@ -11,7 +11,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from buildtools.backports.textwrap3 import dedent
+from textwrap import dedent
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -314,6 +314,7 @@ def run():
                 if p.type == 'unsigned char':
                     p.pyInt = True
 
+    setParamsPyInt('Clear')
     setParamsPyInt('Replace')
     setParamsPyInt('ConvertAlphaToMask')
     setParamsPyInt('ConvertToMono')

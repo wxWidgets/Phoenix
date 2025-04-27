@@ -113,7 +113,6 @@ Version 0.1
 """
 
 import wx
-import copy
 
 
 class PyGauge(wx.Window):
@@ -343,7 +342,7 @@ class PyGauge(wx.Window):
             for i, gradient in enumerate(self._barGradientSorted):
                 c1,c2 = gradient
                 w = rect.width * (float(self._valueSorted[i]) / self._range)
-                r = copy.copy(rect)
+                r = wx.Rect(rect)
                 r.width = int(w)
                 dc.GradientFillLinear(r, c1, c2, wx.EAST)
         else:
@@ -351,7 +350,7 @@ class PyGauge(wx.Window):
                 dc.SetBrush(wx.Brush(colour))
                 dc.SetPen(wx.Pen(colour))
                 w = rect.width * (float(self._valueSorted[i]) / self._range)
-                r = copy.copy(rect)
+                r = wx.Rect(rect)
                 r.width = int(w)
                 dc.DrawRectangle(r)
 
@@ -364,15 +363,16 @@ class PyGauge(wx.Window):
             if self._drawIndicatorText_drawPercent:
                 drawValue = (float(self._valueSorted[i]) * 100)  / self._range
 
-            drawString = self._drawIndicatorText_formatString.format(drawValue)
+            drawString = self._drawIndicatorText_formatString.format(
+                drawValue, value=drawValue, range=self._range)
             rect = self.GetClientRect()
             (textWidth, textHeight, descent, extraLeading) = dc.GetFullTextExtent(drawString)
-            textYPos = (rect.height-textHeight)/2
+            textYPos = (rect.height-textHeight)//2
 
             if textHeight > rect.height:
                 textYPos = 0-descent+extraLeading
 
-            textXPos = (rect.width-textWidth)/2
+            textXPos = (rect.width-textWidth)//2
 
             if textWidth>rect.width:
                 textXPos = 0
@@ -392,9 +392,10 @@ class PyGauge(wx.Window):
          will be used. Usually text would be displayed centered in the control, but if the text font is too large
          to be displayed (either in width or height) the corresponding coordinate will be set to zero;
         :param wx.Colour `colour`: the colour with which indication should be drawn, if ``None`` then ``wx.BLACK`` will be used;
-        :param string `formatString`: a string specifying format of the indication (should have one and only one
-         number placeholder). If set to ``None``, will use ``{:.0f}`` format string for values and ``{:.0f}%``
-         format string for percentages. As described in http://docs.python.org/library/string.html#format-specification-mini-language.
+        :param string `formatString`: a string specifying format of the indication (could have one and only one unnamed
+         number placeholder and a `value` and `range` number placeholder). If set to ``None``, will use ``{value:.0f}``
+         format string for values and ``{value:.0f}%` format string for percentages. As described in
+         http://docs.python.org/library/string.html#format-specification-mini-language.
 
         .. note:: `formatString` will override addition of percent sign (after value) even if `drawPercent` is ``True``.
 
@@ -423,7 +424,7 @@ class PyGauge(wx.Window):
             error_occurred = True
             try:
                 # This is to test if format string is valid. If not, it will be replaced with default one.
-                formatString.format(12.345)
+                formatString.format(12.345, value=12.345, range=54.321)
                 error_occurred = False
             except Exception as e:
                 print(("We have exception: %s"%e))
@@ -434,8 +435,8 @@ class PyGauge(wx.Window):
         # Here formatString is either valid formatting string, or None in case of error or None passed
         if formatString is None:
             if self._drawIndicatorText_drawPercent:
-                self._drawIndicatorText_formatString = "{:.0f}%"
-            else: self._drawIndicatorText_formatString = "{:.0f}"
+                self._drawIndicatorText_formatString = "{value:.0f}%"
+            else: self._drawIndicatorText_formatString = "{value:.0f}"
         else:
             self._drawIndicatorText_formatString = formatString
 

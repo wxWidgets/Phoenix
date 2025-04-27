@@ -1,23 +1,19 @@
 # Python packages needed for building and testing wxPython Phoenix
 -r install.txt
 appdirs
-setuptools < 45 ; python_version < '3.0'
-setuptools ; python_version >= '3.0'
-sip == 5.5.0
+setuptools
+sip == 6.10.0
 
-wheel
 twine
-requests
-requests[security]
-cython==0.29.24
+requests >= 2.26.0
+cython==3.0.10
 pytest
 pytest-xdist
 pytest-forked
 pytest-timeout
 
-sphinx==2.2.0 ; python_version >= '3.0'
-sphinx==1.8.5 ; python_version < '3.0'
-Jinja2==2.10
-doc2dash==2.3.0
+sphinx
+sphinxcontrib-jquery
+doc2dash
 beautifulsoup4
-attrdict3
+typing-extensions; python_version < '3.11'

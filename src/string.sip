@@ -45,7 +45,7 @@
             }
         }
         *sipCppPtr = new wxString();
-        size_t len = PyUnicode_GET_SIZE(uni);
+        size_t len = PyUnicode_AsWideChar(uni, NULL, 0);
         if (len) {
             wxPyUnicode_AsWideChar(uni, wxStringBuffer(**sipCppPtr, len), len);
         }

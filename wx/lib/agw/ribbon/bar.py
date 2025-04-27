@@ -98,8 +98,6 @@ See Also
 import wx
 from functools import cmp_to_key
 
-import six
-
 from .control import RibbonControl
 
 from .art_internal import RibbonPageTabInfo
@@ -607,7 +605,7 @@ class RibbonBar(RibbonControl):
     def SetActivePage(self, page):
         """ See comments on :meth:`~RibbonBar.SetActivePageByIndex` and :meth:`~RibbonBar.SetActivePageByPage`. """
 
-        if isinstance(page, six.integer_types):
+        if isinstance(page, int):
             return self.SetActivePageByIndex(page)
 
         return self.SetActivePageByPage(page)
@@ -774,7 +772,7 @@ class RibbonBar(RibbonControl):
                         if info.small_must_have_separator_width*(numtabs - i) <= width:
                             info.rect.width = info.small_must_have_separator_width
                         else:
-                            info.rect.width = width/(numtabs - i)
+                            info.rect.width = int(width/(numtabs - i))
 
                         width -= info.rect.width
 

@@ -8,13 +8,208 @@
 wxPython Changelog
 ==================
 
-4.1.2 "Rumors of my death are only slightly exaggerated"
---------------------------------------------------------
+
+
+
+4.2.4
+------
 * (unreleased)
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.1.2
+PyPI:   https://pypi.python.org/pypi/wxPython/4.2.4
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.1.2``
+Pip:    ``pip install wxPython==4.2.4``
+
+New and improved in this release:
+
+
+
+
+4.2.3
+------
+* 9-Apr-2025
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.2.3
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.2.3``
+
+New and improved in this release:
+* This release was built using the wxWidgets' v3.2.7 release tag.  The only exception is that libtiff and pcre2 bundled with wxWidgets are updated to the versions from the wxWidgets master branch (libtiff 4.7.0 and pcre2 10.44).
+
+* Fix test issues with wx.lib.introspect (#2717)
+
+* Add support for building on Windows ARM64 (#2521)
+
+* Incorporate many improvements to type stubs (#2665)
+
+* Fix building documentation with latest sphinx (#2672)
+
+* Build smaller architecture-specific wheels on macOS instead of large universal2 wheels
+
+* Calculate scroll based on child's relative position to scrolledpanel in wx.lib.scrolledpanel
+
+* Fix float -> int conversion issues in wx.lib.fancytext (#2703)
+
+* Replace deprecated NumPy type aliases
+
+* Use wx.StaticText in wx.lib.agw.hyperlink (#2686)
+
+* Implement partial support for pyproject.toml and other build process improvements
+
+* Remove use of six and most Python 2 compatibility code
+
+* Fix wxWidgets build on OpenSUSE (#558, #1067, #2422, #2532)
+
+* Fix more int conversions in wx.lib.agw.flatnotebook
+
+* Make build output reproducible
+
+* Enable overridding wx.Sizer.InformFirstDirection() (#2452)
+
+* Implement __iter__ for wxList iterator classes (fixes Python 3.13.1 issue)
+
+* Fix wx.lib.mixins.rubberband not clearing DC on redraw
+
+* Support implementing CreateBitmapBundle for custom ArtProvider
+
+* Fix float/int conversion issues in wx.lib.ogl
+
+* Include usage of `wxMemoryFSHandler` in webview demo
+
+* Fix crash when accessing wx.stc.StyledTextCtrl.DropTarget.Data (#2043)
+
+* Fix AuiManager pane minimizing issue
+
+* Add range field to wx.lib.agw.pygauge.PyGauge format string (#2583)
+
+* Fix pickling of wx.RealPoint (#2644)
+
+* Avoid calling FlatMenu Destroy() in a finally block (#2630)
+
+* Update wxApp.IsDisplayAvailable to work on Wayland
+
+* Fix InspectionTool crashes due to bad perspective string errors
+
+* Drop support for Python 3.8 (EOL)
+
+* Add CreateAccessible for Windows only
+
+* Added check condition to AuiManager LoadPerspective()
+
+* Fix RecursionError in platebtn bitmap getters
+
+* Add Python implementation of GetPaths (#1944)
+
+* Support Wayland GTK backend in Window.GetHandle
+
+* Refactor python only pdfviewer to support displaying pdf files where not all pages have the same size
+
+* Improve support when specifying a pre-existing toolbar as the target for the restore icon when minimizing a pane in agw.aui
+
+* Multiple bugfixes in pure python aui
+
+* pdfviewer: Add support for pymupdf renaming
+
+
+
+
+4.2.2
+------
+* 11-Sept-2024
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.2.2
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.2.2``
+
+New and improved in this release:
+* This release was built using the wxWidgets' v3.2.6 release tag.  This is the first release built using GitHub infrastructure instead of the buildbots.  Please report any problems with the wheels.
+
+* Fix some Python 3.12 compatibility issues (segfault on exit) by upgrading sip & waf
+
+* Fix more float/int conversion issues in wx.lib classes (#2415, #2417, #2429, #2470, #2528, #2542)
+
+* Add initialValue argument to wx.lib.DirBrowseButton (#2430)
+
+* Fix wxImage.Clear() (#2433)
+
+* Fix blurry text in AuiNotebook tab (#2360)
+
+* Add support for frozen rows and columns to GridWithLabelRenderersMixin (#2436)
+
+* demo: ShortcutEditor: Fix broken call GetMenuBar() (#2412)
+
+* Add proper support for DataViewCheckIconTextRenderer (#2425)
+
+* Remove legacy macOS logic, use wx.SystemSettings to select colors (#2018)
+
+* Build: Use new tarfile.extractall() filter for safer tarfile extraction (#2443)
+
+* Fix typo in wx.lib.agw.persist_handlers (#2469)
+
+* Fix 'str' to 'wxString' converstation, when emoji is inside string (#2446)
+
+* Use unwrap before isbuiltin check (#2487)
+
+* Preserve pane icons when loading a perspective in agw.aui (#2494)
+
+* wx.agw.aui: don't uninitialize the AuiManager if the window close event is vetoed (#2460)
+
+* Pure python AUI: Make behavior in all platforms more equal (#2501)
+
+* wx.agw.aui. Do layout as the last step after all pane infos have recomputed their best sizes (#2500)
+
+* Fix additional SyntaxWarnings with Python 3.12 (#2502)
+
+* Fix wx.lib.agw.ribbon.RibbonButtonBar DeleteButton function (#2511)
+
+* UltimateListCtrl: Add support for ULC_AUTO_CHECK_PARENT (#2518)
+
+* Remove dependency on distutils (#2519)
+
+* Improve wx.lib.agw.FlatMenu memory usage (#2373)
+
+* Support NumPy 2.0 (#2580, 2591)
+
+* Fix EditLabel on CustomTreeCtrl doesn't automatically select the entire text (#2549)
+
+* Fix Widgets placed in the UltimateListControl are drawn in the wrong location (#2410)
+
+* Fix wx.lib.agw.aui sometimes shows "ghost" docking guide (#2364)
+
+* Fix Thumbnailctrl SetSelection raises exception if it tries to scroll (#2345)
+
+
+
+
+4.2.1 "Size matters not." (Yoda)
+--------------------------------
+* 7-June-2023
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.2.1
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.2.1``
+
+New and improved in this release:
+
+* This release was built using the wxWidgets' v3.2.2.1 release tag.
+
+* Added Python 3.11 to the build system.
+
+* Added Python 3.12 (beta) to the build system.
+
+* Added wrappers for wxGenericStaticBitmap.
+
+* Added wx.ThreadEvent.
+
+
+
+
+4.2.0 "Rumors of my death are only slightly exaggerated"
+--------------------------------------------------------
+* 7-Aug-2022
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.2.0
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.2.0``
 
 New and improved in this release:
 
@@ -24,8 +219,7 @@ New and improved in this release:
   couple release cycles. I can't say that things are fully back to normal yet,
   but at least I now know what I'm doing. Mostly. <wink>
 
-* This release is built using wxWidgets code very near the wxWidgets' 3.1.6
-  release tag.
+* This release is built using the wxWidgets' 3.2.0 release tag.
 
 * Tweaked the build scripts a bit to ensure that on non-Windows platforms that
   the compiler and flags used by default match those used by wxWidgets, (with
@@ -38,17 +232,19 @@ New and improved in this release:
   wxPython should now be buildable with Visual Studio versions from 2015 through
   2022+.
 
-* Switched to SIP 5 for generating the wrapper code. Rather than a standalone
+* Switched to SIP 6 for generating the wrapper code. Rather than a standalone
   executable, SIP is now a Python package that needs to be installed in the
   Python environment used for the build. A dependency has been added to
   requirements/devel.txt to help ensure that the correct version is installed.
+  The wx.siplib module code is no longer kept in the repository, but is
+  generated during the build.
 
 * Changed wx.App.InitLocale to just do `locale.setlocale(locale.LC_ALL, "C")`
   to undo what Python (3.8+ on Windows) does. This lets wxWidgets start with an
   uninitialized locale as it expects. (#1637)
 
-* Fixed issues related to `time_t` being treated as a 32-bit value on Windows.
-  (#1910)
+* Fixed issues related to `time_t` always being treated as a 32-bit value on
+  Windows. (#1910)
 
 * Added wx.FullScreenEvent and wx.EVT_FULLSCREEN.
 
@@ -68,7 +264,51 @@ New and improved in this release:
   the display density. Existing code should be able to continue to pass a
   wx.Bitmap to the widget constructor or to methods like SetBitmap, as wxPython
   will automatically convert from a wx.Bitmap to a wx.BitmapBundle containing
-  the single image where it is needed.
+  the single image provided.
+
+* Add support for new wx.grid event, EVT_GRID_ROW_MOVE
+
+* Fix path issues in wx.lib.agw.multidirdialog (#2120)
+
+* Fix eventwatcher checkAll(check=False) (#2139)
+
+* Fix exception on grid labels click in 4.1.1a (#1841)
+
+* Fix a large number of Python 3.10 issues.  In Python 3.10, a change was
+  implemented where extension functions that take integer arguments will no
+  longer silently accept non-integer arguments (e.g., floats) that can only be
+  converted to integers with a loss of precision.  Fixed most of these issues
+  in the pure-Python classes and demos by explicitly converting the parameters
+  to int before passing them to wxWidgets.  There is loss of precision, but
+  this was happening before (automatically) anyway as most wxWidgets
+  DeviceContext functions operate using integers.
+
+* Fix PlotCanvas point label drawing on Linux
+
+* Fix GetPopupMenu override for wx.adv.TaskbarIcon (#2067)
+
+* Fix invisible text in lib.plot with dark theme
+
+* Add new button type: ShowHideToggleButton.  Like a ToggleButton, but with an
+  associated "menu", a Window or Sizer which is shown/hidden when button is
+  toggled. Includes methods for setting active and inactive fore/background
+  colours.
+
+* Fix unbinding of events in FIFO order (#2027)
+
+* Enable customization of layout of pdfviewer button panel
+
+* Support newer PyMuPDF versions (#2205)
+
+* IntCtrl: Change default colour to wx.NullColour so the default color will be
+  used. (#2215)
+
+* Change PopupControl to respect all the parameters passed to its init method.
+  (#2218)
+
+* Fixes in flatmenu.py Remove and DestroyItem (#2219)
+
+* Using the MinGW toolchain to build wxPython has been simplified a bit. (#2211)
 
 
 

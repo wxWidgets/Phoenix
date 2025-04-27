@@ -572,7 +572,7 @@ class RibbonFrame(wx.Frame):
                                        (c.Blue() + 192) % 256)
 
             dc.SetTextForeground(foreground)
-            dc.DrawText(colour, (iWidth - size.GetWidth() + 1) / 2, (iHeight - size.GetHeight()) / 2)
+            dc.DrawText(colour, int((iWidth - size.GetWidth() + 1) / 2), int((iHeight - size.GetHeight()) / 2))
             dc.SelectObjectAsSource(wx.NullBitmap)
 
             item = gallery.Append(bitmap, wx.ID_ANY)

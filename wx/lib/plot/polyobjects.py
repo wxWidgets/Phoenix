@@ -120,7 +120,7 @@ class PolyPoints(object):
         :type: tuple of bool, length 2
         :raises ValueError: when setting an invalid value
 
-        .. notes::
+        .. note::
 
            This is a simplified example of how SymLog works::
 
@@ -163,7 +163,7 @@ class PolyPoints(object):
         :type: tuple of float, length 2
         :raises ValueError: when setting an invalid value
 
-        .. notes::
+        .. note::
 
            This is a simplified example of how SymLog works::
 
@@ -221,7 +221,7 @@ class PolyPoints(object):
         :setter: Sets the value of points.
         :type: list of `(x, y)` pairs
 
-        .. Note::
+        .. note::
 
            Only set unscaled points - do not perform the log, abs, or symlog
            adjustments yourself.
@@ -616,7 +616,7 @@ class PolyMarker(PolyPoints):
     def _circle(self, dc, coords, size=1):
         fact = 2.5 * size
         wh = 5.0 * size
-        rect = np.zeros((len(coords), 4), np.float) + [0.0, 0.0, wh, wh]
+        rect = np.zeros((len(coords), 4), float) + [0.0, 0.0, wh, wh]
         rect[:, 0:2] = coords - [fact, fact]
         dc.DrawEllipseList(rect.astype(np.int32))
 
@@ -627,7 +627,7 @@ class PolyMarker(PolyPoints):
     def _square(self, dc, coords, size=1):
         fact = 2.5 * size
         wh = 5.0 * size
-        rect = np.zeros((len(coords), 4), np.float) + [0.0, 0.0, wh, wh]
+        rect = np.zeros((len(coords), 4), float) + [0.0, 0.0, wh, wh]
         rect[:, 0:2] = coords - [fact, fact]
         dc.DrawRectangleList(rect.astype(np.int32))
 
@@ -1010,17 +1010,10 @@ class PolyBoxPlot(PolyPoints):
 
         outliers are outside of 1.5 * IQR
 
-        Parameters
-        ----------
-        data : array-like
-            The data to plot
-
-        Returns
-        -------
-        bpdata : collections.namedtuple
-            Descriptive statistics for data:
+        :param array-like data: The data to plot
+        :return bpdata:  Descriptive statistics for data:
             (min_data, low_whisker, q25, median, q75, high_whisker, max_data)
-
+        :rtype: collections.namedtuple
         """
         data = self._clean_data(data)
 
@@ -1066,20 +1059,20 @@ class PolyBoxPlot(PolyPoints):
         """
         Draws a box plot on the DC.
 
-        Notes
-        -----
-        The following draw order is required:
+        .. note::
 
-        1. First the whisker line
-        2. Then the IQR box
-        3. Lasly the median line.
+            The following draw order is required:
 
-        This is because
+            1. First the whisker line
+            2. Then the IQR box
+            3. Lasly the median line.
 
-        + The whiskers are drawn as single line rather than two lines
-        + The median line must be visible over the box if the box has a fill.
+            This is because
 
-        Other than that, the draw order can be changed.
+            + The whiskers are drawn as single line rather than two lines
+            + The median line must be visible over the box if the box has a fill.
+
+            Other than that, the draw order can be changed.
         """
         self._draw_whisker(dc, printerScale)
         self._draw_iqr_box(dc, printerScale)
@@ -1199,7 +1192,7 @@ class PolyBoxPlot(PolyPoints):
         size = 0.5
         fact = 2.5 * size
         wh = 5.0 * size
-        rect = np.zeros((len(pt_data), 4), np.float) + [0.0, 0.0, wh, wh]
+        rect = np.zeros((len(pt_data), 4), float) + [0.0, 0.0, wh, wh]
         rect[:, 0:2] = pt_data - [fact, fact]
         dc.DrawRectangleList(rect.astype(np.int32))
 

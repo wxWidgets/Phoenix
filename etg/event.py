@@ -74,7 +74,7 @@ ITEMS  = [
     'wxPressAndTapEvent',
 
 
-    #'wxThreadEvent',
+    'wxThreadEvent',
 
 ]
 
@@ -99,11 +99,6 @@ def run():
     #define wxEVT_HOTKEY 0
     #endif
     """)
-
-    # Missing in 3.1.6
-    module.addItem(etgtools.WigCode("""\
-        wxEventType wxEVT_FULLSCREEN /PyName=wxEVT_FULLSCREEN/;
-        """))
 
 
     module.addPyClass('PyEventBinder', ['object'],
@@ -619,6 +614,12 @@ def run():
     c = module.find('wxIconizeEvent')
     # deprecated and removed
     c.find('Iconized').ignore()
+
+    #---------------------------------------
+    # wxThreadEvent
+    c = module.find('wxThreadEvent')
+    c.find('SetPayload').ignore()
+    c.find('GetPayload').ignore()
 
 
 

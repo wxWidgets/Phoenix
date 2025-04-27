@@ -95,6 +95,7 @@ is by running the AUI sample (`AUI.py`).
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 __date__ = "31 March 2009"
 
+import sys
 import wx
 # just for isinstance
 from time import time
@@ -104,8 +105,6 @@ try:
 except ImportError:  # clock is removed in py3.8
     from time import clock as perf_counter
 import warnings
-
-import six
 
 from . import auibar
 from . import auibook
@@ -117,6 +116,11 @@ from . import tabart
 from .aui_utilities import Clip, PaneCreateStippleBitmap, GetDockingImage, GetSlidingPoints
 
 from .aui_constants import *
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 # Define this as a translation function
 _ = wx.GetTranslation
@@ -254,7 +258,7 @@ class AuiDockingGuideInfo(object):
         self.host = other.host
         self.dock_direction = other.dock_direction
 
-    def Host(self, h):
+    def Host(self, h) -> Self:
         """
         Hosts a docking guide window.
 
@@ -264,37 +268,37 @@ class AuiDockingGuideInfo(object):
         self.host = h
         return self
 
-    def Left(self):
+    def Left(self) -> Self:
         """ Sets the guide window to left docking. """
 
         self.dock_direction = AUI_DOCK_LEFT
         return self
 
-    def Right(self):
+    def Right(self) -> Self:
         """ Sets the guide window to right docking. """
 
         self.dock_direction = AUI_DOCK_RIGHT
         return self
 
-    def Top(self):
+    def Top(self) -> Self:
         """ Sets the guide window to top docking. """
 
         self.dock_direction = AUI_DOCK_TOP
         return self
 
-    def Bottom(self):
+    def Bottom(self) -> Self:
         """ Sets the guide window to bottom docking. """
 
         self.dock_direction = AUI_DOCK_BOTTOM
         return self
 
-    def Center(self):
+    def Center(self) -> Self:
         """ Sets the guide window to center docking. """
 
         self.dock_direction = AUI_DOCK_CENTER
         return self
 
-    def Centre(self):
+    def Centre(self) -> Self:
         """ Sets the guide window to centre docking. """
 
         self.dock_direction = AUI_DOCK_CENTRE
@@ -809,7 +813,7 @@ class AuiPaneInfo(object):
 
         return self.HasFlag(self.optionGripperTop)
 
-    def Window(self, w):
+    def Window(self, w) -> Self:
         """
         Associate a :class:`wx.Window` derived window to this pane.
 
@@ -823,7 +827,7 @@ class AuiPaneInfo(object):
         self.window = w
         return self
 
-    def Name(self, name):
+    def Name(self, name) -> Self:
         """
         Sets the name of the pane so it can be referenced in lookup functions.
 
@@ -842,7 +846,7 @@ class AuiPaneInfo(object):
         self.name = name
         return self
 
-    def Caption(self, caption):
+    def Caption(self, caption) -> Self:
         """
         Sets the caption of the pane.
 
@@ -852,7 +856,7 @@ class AuiPaneInfo(object):
         self.caption = caption
         return self
 
-    def Left(self):
+    def Left(self) -> Self:
         """
         Sets the pane dock position to the left side of the frame.
 
@@ -863,7 +867,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_LEFT
         return self
 
-    def Right(self):
+    def Right(self) -> Self:
         """
         Sets the pane dock position to the right side of the frame.
 
@@ -874,7 +878,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_RIGHT
         return self
 
-    def Top(self):
+    def Top(self) -> Self:
         """
         Sets the pane dock position to the top of the frame.
 
@@ -885,7 +889,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_TOP
         return self
 
-    def Bottom(self):
+    def Bottom(self) -> Self:
         """
         Sets the pane dock position to the bottom of the frame.
 
@@ -896,7 +900,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_BOTTOM
         return self
 
-    def Center(self):
+    def Center(self) -> Self:
         """
         Sets the pane to the center position of the frame.
 
@@ -910,7 +914,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_CENTER
         return self
 
-    def Centre(self):
+    def Centre(self) -> Self:
         """
         Sets the pane to the center position of the frame.
 
@@ -924,7 +928,7 @@ class AuiPaneInfo(object):
         self.dock_direction = AUI_DOCK_CENTRE
         return self
 
-    def Direction(self, direction):
+    def Direction(self, direction) -> Self:
         """
         Determines the direction of the docked pane. It is functionally the
         same as calling :meth:`Left`, :meth:`Right`, :meth:`Top` or :meth:`Bottom`,
@@ -938,7 +942,7 @@ class AuiPaneInfo(object):
         self.dock_direction = direction
         return self
 
-    def Layer(self, layer):
+    def Layer(self, layer) -> Self:
         """
         Determines the layer of the docked pane.
 
@@ -952,7 +956,7 @@ class AuiPaneInfo(object):
         self.dock_layer = layer
         return self
 
-    def Row(self, row):
+    def Row(self, row) -> Self:
         """
         Determines the row of the docked pane.
 
@@ -962,7 +966,7 @@ class AuiPaneInfo(object):
         self.dock_row = row
         return self
 
-    def Position(self, pos):
+    def Position(self, pos) -> Self:
         """
         Determines the position of the docked pane.
 
@@ -972,7 +976,7 @@ class AuiPaneInfo(object):
         self.dock_pos = pos
         return self
 
-    def MinSize(self, arg1=None, arg2=None):
+    def MinSize(self, arg1=None, arg2=None) -> Self:
         """
         Sets the minimum size of the pane.
 
@@ -987,14 +991,14 @@ class AuiPaneInfo(object):
             ret = self.MinSize1(arg1)
         elif isinstance(arg1, tuple):
             ret = self.MinSize1(wx.Size(*arg1))
-        elif isinstance(arg1, six.integer_types) and arg2 is not None:
+        elif isinstance(arg1, int) and arg2 is not None:
             ret = self.MinSize2(arg1, arg2)
         else:
             raise Exception("Invalid argument passed to `MinSize`: arg1=%s, arg2=%s" % (repr(arg1), repr(arg2)))
 
         return ret
 
-    def MinSize1(self, size):
+    def MinSize1(self, size) -> Self:
         """
         Sets the minimum size of the pane.
 
@@ -1003,7 +1007,7 @@ class AuiPaneInfo(object):
         self.min_size = size
         return self
 
-    def MinSize2(self, x, y):
+    def MinSize2(self, x, y) -> Self:
         """
         Sets the minimum size of the pane.
 
@@ -1013,7 +1017,7 @@ class AuiPaneInfo(object):
         self.min_size = wx.Size(x, y)
         return self
 
-    def MaxSize(self, arg1=None, arg2=None):
+    def MaxSize(self, arg1=None, arg2=None) -> Self:
         """
         Sets the maximum size of the pane.
 
@@ -1028,14 +1032,14 @@ class AuiPaneInfo(object):
             ret = self.MaxSize1(arg1)
         elif isinstance(arg1, tuple):
             ret = self.MaxSize1(wx.Size(*arg1))
-        elif isinstance(arg1, six.integer_types) and arg2 is not None:
+        elif isinstance(arg1, int) and arg2 is not None:
             ret = self.MaxSize2(arg1, arg2)
         else:
             raise Exception("Invalid argument passed to `MaxSize`: arg1=%s, arg2=%s" % (repr(arg1), repr(arg2)))
 
         return ret
 
-    def MaxSize1(self, size):
+    def MaxSize1(self, size) -> Self:
         """
         Sets the maximum size of the pane.
 
@@ -1045,7 +1049,7 @@ class AuiPaneInfo(object):
         self.max_size = size
         return self
 
-    def MaxSize2(self, x, y):
+    def MaxSize2(self, x, y) -> Self:
         """
         Sets the maximum size of the pane.
 
@@ -1055,7 +1059,7 @@ class AuiPaneInfo(object):
         self.max_size.Set(x, y)
         return self
 
-    def BestSize(self, arg1=None, arg2=None):
+    def BestSize(self, arg1=None, arg2=None) -> Self:
         """
         Sets the ideal size for the pane. The docking manager will attempt to use
         this size as much as possible when docking or floating the pane.
@@ -1071,14 +1075,14 @@ class AuiPaneInfo(object):
             ret = self.BestSize1(arg1)
         elif isinstance(arg1, tuple):
             ret = self.BestSize1(wx.Size(*arg1))
-        elif isinstance(arg1, six.integer_types) and arg2 is not None:
+        elif isinstance(arg1, int) and arg2 is not None:
             ret = self.BestSize2(arg1, arg2)
         else:
             raise Exception("Invalid argument passed to `BestSize`: arg1=%s, arg2=%s" % (repr(arg1), repr(arg2)))
 
         return ret
 
-    def BestSize1(self, size):
+    def BestSize1(self, size) -> Self:
         """
         Sets the best size of the pane.
 
@@ -1088,7 +1092,7 @@ class AuiPaneInfo(object):
         self.best_size = size
         return self
 
-    def BestSize2(self, x, y):
+    def BestSize2(self, x, y) -> Self:
         """
         Sets the best size of the pane.
 
@@ -1098,7 +1102,7 @@ class AuiPaneInfo(object):
         self.best_size.Set(x, y)
         return self
 
-    def FloatingPosition(self, pos):
+    def FloatingPosition(self, pos) -> Self:
         """
         Sets the position of the floating pane.
 
@@ -1108,7 +1112,7 @@ class AuiPaneInfo(object):
         self.floating_pos = wx.Point(*pos)
         return self
 
-    def FloatingSize(self, size):
+    def FloatingSize(self, size) -> Self:
         """
         Sets the size of the floating pane.
 
@@ -1118,12 +1122,12 @@ class AuiPaneInfo(object):
         self.floating_size = wx.Size(*size)
         return self
 
-    def Maximize(self):
+    def Maximize(self) -> Self:
         """ Makes the pane take up the full area."""
 
         return self.SetFlag(self.optionMaximized, True)
 
-    def Minimize(self):
+    def Minimize(self) -> Self:
         """
         Makes the pane minimized in a :class:`~wx.lib.agw.aui.auibar.AuiToolBar`.
 
@@ -1138,7 +1142,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionMinimized, True)
 
-    def MinimizeMode(self, mode):
+    def MinimizeMode(self, mode) -> Self:
         """
         Sets the expected minimized mode if the minimize button is visible.
 
@@ -1177,7 +1181,7 @@ class AuiPaneInfo(object):
         self.minimize_mode = mode
         return self
 
-    def MinimizeTarget(self, toolbarPane):
+    def MinimizeTarget(self, toolbarPane) -> Self:
         """
         Minimizes the panes using a :class:`AuiPaneInfo` as a target. As :class:`AuiPaneInfo` properties
         need to be copied back and forth every time the perspective has changed, we
@@ -1197,12 +1201,12 @@ class AuiPaneInfo(object):
         self.minimize_target = toolbarPane.name
         return self
 
-    def Restore(self):
+    def Restore(self) -> Self:
         """ Is the reverse of :meth:`Maximize` and :meth:`Minimize`."""
 
         return self.SetFlag(self.optionMaximized | self.optionMinimized, False)
 
-    def Fixed(self):
+    def Fixed(self) -> Self:
         """
         Forces a pane to be fixed size so that it cannot be resized.
         After calling :meth:`Fixed`, :meth:`IsFixed` will return ``True``.
@@ -1210,7 +1214,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionResizable, False)
 
-    def Resizable(self, resizable=True):
+    def Resizable(self, resizable=True) -> Self:
         """
         Allows a pane to be resizable if `resizable` is ``True``, and forces
         it to be a fixed size if `resizeable` is ``False``.
@@ -1235,7 +1239,7 @@ class AuiPaneInfo(object):
         self.transparent = alpha
         self.needsTransparency = True
 
-    def Dock(self):
+    def Dock(self) -> Self:
         """ Indicates that a pane should be docked. It is the opposite of :meth:`Float`. """
 
         if self.IsNotebookPage():
@@ -1244,7 +1248,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionFloating, False)
 
-    def Float(self):
+    def Float(self) -> Self:
         """ Indicates that a pane should be floated. It is the opposite of :meth:`Dock`. """
 
         if self.IsNotebookPage():
@@ -1253,7 +1257,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionFloating, True)
 
-    def Hide(self):
+    def Hide(self) -> Self:
         """
         Indicates that a pane should be hidden.
 
@@ -1262,7 +1266,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionHidden, True)
 
-    def Show(self, show=True):
+    def Show(self, show=True) -> Self:
         """
         Indicates that a pane should be shown.
 
@@ -1272,7 +1276,7 @@ class AuiPaneInfo(object):
         return self.SetFlag(self.optionHidden, not show)
 
     # By defaulting to 1000, the tab will get placed at the end
-    def NotebookPage(self, id, tab_position=1000):
+    def NotebookPage(self, id, tab_position=1000) -> Self:
         """
         Forces a pane to be a notebook page, so that the pane can be
         docked on top to another to create a :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
@@ -1291,7 +1295,7 @@ class AuiPaneInfo(object):
 
         return self
 
-    def NotebookControl(self, id):
+    def NotebookControl(self, id) -> Self:
         """
         Forces a pane to be a notebook control (:class:`~wx.lib.agw.aui.auibook.AuiNotebook`).
 
@@ -1322,7 +1326,7 @@ class AuiPaneInfo(object):
 
         return not self.IsNotebookPage() and self.HasNotebook()
 
-    def SetNameFromNotebookId(self):
+    def SetNameFromNotebookId(self) -> Self:
         """ Sets the pane name once docked in a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` using the notebook id. """
 
         if self.notebook_id >= 0:
@@ -1330,7 +1334,7 @@ class AuiPaneInfo(object):
 
         return self
 
-    def CaptionVisible(self, visible=True, left=False):
+    def CaptionVisible(self, visible=True, left=False) -> Self:
         """
         Indicates that a pane caption should be visible. If `visible` is ``False``, no pane
         caption is drawn.
@@ -1346,7 +1350,7 @@ class AuiPaneInfo(object):
         self.SetFlag(self.optionCaptionLeft, False)
         return self.SetFlag(self.optionCaption, visible)
 
-    def PaneBorder(self, visible=True):
+    def PaneBorder(self, visible=True) -> Self:
         """
         Indicates that a border should be drawn for the pane.
 
@@ -1355,7 +1359,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionPaneBorder, visible)
 
-    def Gripper(self, visible=True):
+    def Gripper(self, visible=True) -> Self:
         """
         Indicates that a gripper should be drawn for the pane.
 
@@ -1364,7 +1368,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionGripper, visible)
 
-    def GripperTop(self, attop=True):
+    def GripperTop(self, attop=True) -> Self:
         """
         Indicates that a gripper should be drawn at the top of the pane.
 
@@ -1373,7 +1377,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionGripperTop, attop)
 
-    def CloseButton(self, visible=True):
+    def CloseButton(self, visible=True) -> Self:
         """
         Indicates that a close button should be drawn for the pane.
 
@@ -1382,7 +1386,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.buttonClose, visible)
 
-    def MaximizeButton(self, visible=True):
+    def MaximizeButton(self, visible=True) -> Self:
         """
         Indicates that a maximize button should be drawn for the pane.
 
@@ -1391,7 +1395,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.buttonMaximize, visible)
 
-    def MinimizeButton(self, visible=True):
+    def MinimizeButton(self, visible=True) -> Self:
         """
         Indicates that a minimize button should be drawn for the pane.
 
@@ -1400,7 +1404,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.buttonMinimize, visible)
 
-    def PinButton(self, visible=True):
+    def PinButton(self, visible=True) -> Self:
         """
         Indicates that a pin button should be drawn for the pane.
 
@@ -1409,7 +1413,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.buttonPin, visible)
 
-    def DestroyOnClose(self, b=True):
+    def DestroyOnClose(self, b=True) -> Self:
         """
         Indicates whether a pane should be destroyed when it is closed.
 
@@ -1422,7 +1426,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionDestroyOnClose, b)
 
-    def TopDockable(self, b=True):
+    def TopDockable(self, b=True) -> Self:
         """
         Indicates whether a pane can be docked at the top of the frame.
 
@@ -1431,7 +1435,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionTopDockable, b)
 
-    def BottomDockable(self, b=True):
+    def BottomDockable(self, b=True) -> Self:
         """
         Indicates whether a pane can be docked at the bottom of the frame.
 
@@ -1449,7 +1453,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionLeftDockable, b)
 
-    def RightDockable(self, b=True):
+    def RightDockable(self, b=True) -> Self:
         """
         Indicates whether a pane can be docked on the right of the frame.
 
@@ -1458,7 +1462,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionRightDockable, b)
 
-    def Floatable(self, b=True):
+    def Floatable(self, b=True) -> Self:
         """
         Sets whether the user will be able to undock a pane and turn it
         into a floating window.
@@ -1468,7 +1472,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionFloatable, b)
 
-    def Movable(self, b=True):
+    def Movable(self, b=True) -> Self:
         """
         Indicates whether a pane can be moved.
 
@@ -1477,7 +1481,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionMovable, b)
 
-    def NotebookDockable(self, b=True):
+    def NotebookDockable(self, b=True) -> Self:
         """
         Indicates whether a pane can be docked in an automatic :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
 
@@ -1486,7 +1490,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionNotebookDockable, b)
 
-    def DockFixed(self, b=True):
+    def DockFixed(self, b=True) -> Self:
         """
         Causes the containing dock to have no resize sash. This is useful
         for creating panes that span the entire width or height of a dock, but should
@@ -1516,7 +1520,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionTopSnapped, b)
 
-    def BottomSnappable(self, b=True):
+    def BottomSnappable(self, b=True) -> Self:
         """
         Indicates whether a pane can be snapped at the bottom of the main frame.
 
@@ -1525,7 +1529,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionBottomSnapped, b)
 
-    def LeftSnappable(self, b=True):
+    def LeftSnappable(self, b=True) -> Self:
         """
         Indicates whether a pane can be snapped on the left of the main frame.
 
@@ -1543,7 +1547,7 @@ class AuiPaneInfo(object):
 
         return self.SetFlag(self.optionRightSnapped, b)
 
-    def Snappable(self, b=True):
+    def Snappable(self, b=True) -> Self:
         """
         Indicates whether a pane can be snapped on the main frame. This is
         equivalent as calling :meth:`TopSnappable` . :meth:`BottomSnappable` . :meth:`LeftSnappable` . :meth:`RightSnappable` .
@@ -1553,7 +1557,7 @@ class AuiPaneInfo(object):
 
         return self.TopSnappable(b).BottomSnappable(b).LeftSnappable(b).RightSnappable(b)
 
-    def FlyOut(self, b=True):
+    def FlyOut(self, b=True) -> Self:
         """
         Indicates whether a pane, when floating, has a "fly-out" effect
         (i.e., floating panes which only show themselves when moused over).
@@ -1564,7 +1568,7 @@ class AuiPaneInfo(object):
         return self.SetFlag(self.optionFlyOut, b)
 
     # Copy over the members that pertain to docking position
-    def SetDockPos(self, source):
+    def SetDockPos(self, source) -> Self:
         """
         Copies the `source` pane members that pertain to docking position to `self`.
 
@@ -1583,7 +1587,7 @@ class AuiPaneInfo(object):
 
         return self
 
-    def DefaultPane(self):
+    def DefaultPane(self) -> Self:
         """ Specifies that the pane should adopt the default pane settings. """
 
         state = self.state
@@ -1596,7 +1600,7 @@ class AuiPaneInfo(object):
         self.state = state
         return self
 
-    def CentrePane(self):
+    def CentrePane(self) -> Self:
         """
         Specifies that the pane should adopt the default center pane settings.
 
@@ -1606,7 +1610,7 @@ class AuiPaneInfo(object):
 
         return self.CenterPane()
 
-    def CenterPane(self):
+    def CenterPane(self) -> Self:
         """
         Specifies that the pane should adopt the default center pane settings.
 
@@ -1617,7 +1621,7 @@ class AuiPaneInfo(object):
         self.state = 0
         return self.Center().PaneBorder().Resizable()
 
-    def ToolbarPane(self):
+    def ToolbarPane(self) -> Self:
         """ Specifies that the pane should adopt the default toolbar pane settings. """
 
         self.DefaultPane()
@@ -1633,7 +1637,7 @@ class AuiPaneInfo(object):
 
         return self
 
-    def Icon(self, icon):
+    def Icon(self, icon) -> Self:
         """
         Specifies whether an icon is drawn on the left of the caption text when
         the pane is docked. If `icon` is ``None`` or :class:`NullIcon`, no icon is drawn on
@@ -1649,7 +1653,7 @@ class AuiPaneInfo(object):
         self.icon = icon
         return self
 
-    def SetFlag(self, flag, option_state):
+    def SetFlag(self, flag, option_state) -> Self:
         """
         Turns the property given by `flag` on or off with the `option_state`
         parameter.
@@ -4038,7 +4042,6 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
         self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
-        self.Bind(wx.EVT_CLOSE, self.OnClose)
         if '__WXGTK__' in wx.PlatformInfo:
             self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
 
@@ -4123,7 +4126,7 @@ class AuiManager(wx.EvtHandler):
         :param `item`: either a pane name or a :class:`wx.Window`.
         """
 
-        if isinstance(item, six.string_types):
+        if isinstance(item, str):
             return self.GetPaneByName(item)
         else:
             return self.GetPaneByWidget(item)
@@ -4283,6 +4286,7 @@ class AuiManager(wx.EvtHandler):
         self.UnInit()
 
         self._frame = managed_window
+        self._frame.Bind(wx.EVT_CLOSE, self.OnClose)
         self._frame.PushEventHandler(self)
 
         # if the owner is going to manage an MDI parent frame,
@@ -4406,8 +4410,7 @@ class AuiManager(wx.EvtHandler):
         """
 
         event.Skip()
-        if event.GetEventObject() == self._frame:
-            wx.CallAfter(self.UnInit)
+        wx.CallAfter(self.UnInit)
 
     def OnDestroy(self, event):
         """Called when the managed window is destroyed. Makes sure that :meth:`UnInit`
@@ -4779,6 +4782,11 @@ class AuiManager(wx.EvtHandler):
                     id = notebook.GetPageIndex(p.window)
                     notebook.RemovePage(id)
                     p.window.Reparent(self._frame)
+                    
+                elif p.IsMinimized():
+                    # if we were minimized, restore so any restore icons in toolbars are removed
+                    self.RestoreMinimizedPane(p)
+                    
 
                 # make sure there are no references to this pane in our uiparts,
                 # just in case the caller doesn't call Update() immediately after
@@ -4808,6 +4816,11 @@ class AuiManager(wx.EvtHandler):
         # if we were maximized, restore
         if pane_info.IsMaximized():
             self.RestorePane(pane_info)
+            
+        # if we were minimized, restore so any restore icons in toolbars are removed
+        if pane_info.IsMinimized():
+            self.RestoreMinimizedPane(pane_info)
+
 
         if pane_info.frame:
             if self._agwFlags & AUI_MGR_ANIMATE_FRAMES:
@@ -5073,6 +5086,9 @@ class AuiManager(wx.EvtHandler):
 
         result = "name=" + EscapeDelimiters(pane.name) + ";"
         result += "caption=" + EscapeDelimiters(pane.caption) + ";"
+        if pane.minimize_target:
+            result += "minitarget=" + EscapeDelimiters(pane.minimize_target) + ";"
+        result += "minimode=%u;" % pane.minimize_mode 
 
         result += "state=%u;" % pane.state
         result += "dir=%d;" % pane.dock_direction
@@ -5120,6 +5136,10 @@ class AuiManager(wx.EvtHandler):
                 pane.name = value
             elif val_name == "caption":
                 pane.caption = value
+            elif val_name == "minitarget":
+                pane.minimize_target = value
+            elif val_name == "minimode":
+                pane.minimize_mode = int(value)
             elif val_name == "state":
                 pane.state = int(value)
             elif val_name == "dir":
@@ -5162,7 +5182,7 @@ class AuiManager(wx.EvtHandler):
             elif val_name == "transparent":
                 pane.transparent = int(value)
             else:
-                raise Exception("Bad perspective string")
+                raise Exception("Bad perspective string", val_name)
 
         # replace escaped characters so we can
         # split up the string easily
@@ -5196,7 +5216,8 @@ class AuiManager(wx.EvtHandler):
                                                              dock.size)
         return result
 
-    def LoadPerspective(self, layout, update=True, restorecaption=False):
+    def LoadPerspective(self, layout, update=True, restorecaption=False, 
+                        restoreminimize=False):
         """
         Loads a layout which was saved with :meth:`SavePerspective`.
 
@@ -5207,6 +5228,8 @@ class AuiManager(wx.EvtHandler):
         :param bool `update`: whether to update immediately the window or not;
         :param bool `restorecaption`: ``False``, restore from persist storage,
          otherwise use the caption defined in code.
+        :param bool `restoreminimize`: ``False``, restore from persist storage,
+         otherwise use the minimize_toolbar and minimize_mode defined in code.
         """
 
         input = layout
@@ -5223,6 +5246,12 @@ class AuiManager(wx.EvtHandler):
 
         # mark all panes currently managed as docked and hidden
         saveCapt = {}  # see restorecaption param
+        saveIcon = {}  # icons are not preserved by perspectives, so preserve them
+        saveMinimize = {} # see restoreminimize param
+        
+        if not self._notebooks:
+            self.DoUpdate()
+
         for pane in self._panes:
 
             # dock the notebook pages
@@ -5237,6 +5266,8 @@ class AuiManager(wx.EvtHandler):
 
             pane.Dock().Hide()
             saveCapt[pane.name] = pane.caption
+            saveIcon[pane.name] = pane.icon
+            saveMinimize[pane.name] = pane.minimize_target, pane.minimize_mode
 
         # clear out the dock array; this will be reconstructed
         self._docks = []
@@ -5294,6 +5325,13 @@ class AuiManager(wx.EvtHandler):
             if restorecaption:
                 if pane.name in saveCapt:
                     pane.Caption(saveCapt[pane.name])
+            # restore icons from code. This is always done. Since icons are not saved in perspectives        
+            if pane.name in saveIcon:
+                pane.icon = saveIcon[pane.name]
+            # restore minimize parameters from code
+            if restoreminimize:
+                if pane.name in saveMinimize:
+                    pane.minimize_target, pane.minimize_mode = saveMinimize[pane.name]
 
             if not p.IsOk():
                 if pane.IsNotebookControl():
@@ -5315,10 +5353,29 @@ class AuiManager(wx.EvtHandler):
             if isinstance(pane.window, auibar.AuiToolBar) and (pane.IsFloatable() or pane.IsDockable()):
                 pane.window.SetGripperVisible(True)
 
-        for p in self._panes:
-            if p.IsMinimized():
-                self.MinimizePane(p, False)
-
+        inexistentPaneIndexes = []
+        for paneIndex, p in enumerate(self._panes):
+            if p.window:
+                if p.IsMinimized():
+                    self.MinimizePane(p, False)
+                elif p.minimize_mode & AUI_MINIMIZE_POS_MASK == AUI_MINIMIZE_POS_TOOLBAR:
+                    # If the pane specifies a minimize toolbar, which would be preserved by the loading
+                    # operation rather than using an automatic toolbar which would not be preserved) then 
+                    # if pane was minimized before we loaded perspective but the new perspective unminimized
+                    # it then its minimize-from-restore icon is still in the toolbar and must be removed
+                    minimizeToolbar = self.GetPane(p.minimize_target).window
+                    item = minimizeToolbar.FindToolByUserData((ID_RESTORE_FRAME, p.window))
+                    if item: # Delete the icon if it was there
+                        minimizeToolbar.DeleteTool(item)
+            else:
+                # The perspective is referencing a non-existing pane that was added nonetheless. This will
+                # happen with a notebook that ends up containing no pages
+                inexistentPaneIndexes.append(paneIndex)
+                
+        for paneIndex in reversed(inexistentPaneIndexes): # reverse is required when deleting elements by index
+            del self._panes[index]
+                
+            
         if update:
             self.Update()
 
@@ -6141,11 +6198,8 @@ class AuiManager(wx.EvtHandler):
         return self._dock_constraint_x, self._dock_constraint_y
 
     def Update(self):
-        if '__WXGTK__' in wx.PlatformInfo:
-            wx.CallAfter(self.DoUpdate)
-        else:
-            self.DoUpdate()
-
+        wx.CallAfter(self.DoUpdate)
+        
     def DoUpdateEvt(self, evt):
         self.Unbind(wx.EVT_WINDOW_CREATE)
         wx.CallAfter(self.DoUpdate)
@@ -6213,12 +6267,6 @@ class AuiManager(wx.EvtHandler):
         # Only the master manager should create/destroy notebooks...
         if not self._masterManager:
             self.UpdateNotebook()
-
-        # delete old sizer first
-        self._frame.SetSizer(None)
-
-        # create a layout for all of the panes
-        sizer = self.LayoutAll(self._panes, self._docks, self._uiparts, False)
 
         # hide or show panes as necessary,
         # and float panes as necessary
@@ -6318,6 +6366,12 @@ class AuiManager(wx.EvtHandler):
                 r = p.rect
 
             old_pane_rects.append(r)
+            
+        # delete old sizer first
+        self._frame.SetSizer(None)
+
+        # create a layout for all of the panes
+        sizer = self.LayoutAll(self._panes, self._docks, self._uiparts, False)
 
         # apply the new sizer
         self._frame.SetSizer(sizer)
@@ -6415,7 +6469,7 @@ class AuiManager(wx.EvtHandler):
             elif paneInfo.IsNotebookControl() and not paneInfo.window:
                 paneInfo.window = self._notebooks[paneInfo.notebook_id]
 
-        for notebook_id, pnp in six.iteritems(pages_and_panes):
+        for notebook_id, pnp in pages_and_panes.items():
             # sort the panes with dock_pos
             sorted_pnp = sorted(pnp, key=lambda pane: pane.dock_pos)
             notebook = self._notebooks[notebook_id]
@@ -8434,6 +8488,10 @@ class AuiManager(wx.EvtHandler):
                                     not part.sizer_item.IsShown()):
                 continue
 
+            # don't draw items that have a pane whose window has been deleted
+            if part.pane and not part.pane.window:
+                continue
+
             ptype = part.type
 
             if ptype in [AuiDockUIPart.typeDockSizer, AuiDockUIPart.typePaneSizer]:
@@ -9369,7 +9427,7 @@ class AuiManager(wx.EvtHandler):
 
                 notebookRoot = GetNotebookRoot(self._panes, paneInfo.notebook_id)
 
-                if not notebookRoot or not notebookRoot.IsDocked():
+                if not notebookRoot or not notebookRoot.IsDocked() or not notebookRoot.IsShown():
                     continue
 
             rc = paneInfo.window.GetScreenRect()
@@ -9465,17 +9523,17 @@ class AuiManager(wx.EvtHandler):
         elif self._has_maximized:
             self.RestoreMaximizedPane()
 
-        # reorder for dropping to a new notebook
-        # (caution: this code breaks the reference!)
-        tempPaneInfo = self.CopyTarget(paneInfo)
-        self._panes.remove(paneInfo)
-        self._panes.append(tempPaneInfo)
-
         if ret:
+            # reorder for dropping to a new notebook
+            # (caution: this code breaks the reference!)
+            tempPaneInfo = self.CopyTarget(paneInfo)
+            self._panes.remove(paneInfo)
+            self._panes.append(tempPaneInfo)
+
             self.Update()
 
-        if tempPaneInfo.IsFloating():
-            self.SnapPane(tempPaneInfo, tempPaneInfo.floating_pos, tempPaneInfo.floating_size, False)
+            if tempPaneInfo.IsFloating():
+                self.SnapPane(tempPaneInfo, tempPaneInfo.floating_pos, tempPaneInfo.floating_size, False)
 
         self.HideHint()
         ShowDockingGuides(self._guides, False)
@@ -9858,13 +9916,20 @@ class AuiManager(wx.EvtHandler):
                     restore_bitmap = img.ConvertToBitmap()
 
             target = None
+            restoreToolAlreadyInToolbar = False
             if posMask == AUI_MINIMIZE_POS_TOOLBAR:
                 target = paneInfo.name
+                if paneInfo.IsMinimized() and minimize_toolbar.FindToolByUserData((ID_RESTORE_FRAME, paneInfo.window)):
+                    # We are loading a perspective. If the perspective contains the minimize_toolbar,
+                    # then the restore tool for this pane is already in it and we should not add it again
+                    restoreToolAlreadyInToolbar = True
 
-            minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap,
-                                           _(six.u("Restore %s")) % paneInfo.caption, target=target)
-            minimize_toolbar.SetAuiManager(self)
-            minimize_toolbar.Realize()
+            if not restoreToolAlreadyInToolbar:
+                tool = minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap,
+                                               _("Restore %s") % paneInfo.caption, target=target)
+                tool.SetUserData((ID_RESTORE_FRAME, paneInfo.window))
+                minimize_toolbar.SetAuiManager(self)
+                minimize_toolbar.Realize()
             toolpanelname = paneInfo.name + "_min"
 
             if paneInfo.IsMaximized():
@@ -10026,8 +10091,8 @@ class AuiManager(wx.EvtHandler):
                 targetName = pane.minimize_target
                 toolbarPane = self.GetPane(targetName)
                 toolbar = toolbarPane.window
-                item = toolbar.FindToolByLabel(pane.caption)
-                toolbar.DeleteTool(item.id)
+                item = toolbar.FindToolByUserData((ID_RESTORE_FRAME, pane.window))
+                toolbar.DeleteTool(item)
             else:
                 paneInfo.window.Show(False)
                 self.DetachPane(paneInfo.window)

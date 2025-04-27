@@ -197,10 +197,9 @@ __version__ = "1.0"
 import wx
 import os
 import math
+import io
 
 import wx.lib.colourutils as colourutils
-
-import six
 
 from .fmcustomizedlg import FMCustomizeDlg
 from .artmanager import ArtManager, DCSaver
@@ -590,7 +589,7 @@ class FMRenderer(object):
 
         else:
 
-            stream = six.BytesIO(xpm)
+            stream = io.BytesIO(xpm)
             img = wx.Image(stream)
 
         return wx.Bitmap(img)
@@ -2226,7 +2225,7 @@ class MenuEntryInfo(object):
         :param integer `cmd`: the menu accelerator identifier.
         """
 
-        if isinstance(titleOrMenu, six.string_types):
+        if isinstance(titleOrMenu, str):
 
             self._title = titleOrMenu
             self._menu = menu
@@ -3595,7 +3594,7 @@ class FlatMenuBar(wx.Panel):
         if self._showCustomize:
             if invT + invM > 0:
                 self._moreMenu.AppendSeparator()
-            item = FlatMenuItem(self._moreMenu, self._popupDlgCmdId, _(six.u("Customize...")))
+            item = FlatMenuItem(self._moreMenu, self._popupDlgCmdId, _("Customize..."))
             self._moreMenu.AppendItem(item)
 
 
@@ -4096,7 +4095,7 @@ class FlatMenuButton(object):
         :param `input2`: if not ``None``, it is an integer representing the button `y` position.
         """
 
-        if type(input) == type(1):
+        if type(input1) == type(1):
             self._pos = wx.Point(input1, input2)
         else:
             self._pos = input1
@@ -4112,7 +4111,7 @@ class FlatMenuButton(object):
         :param `input2`: if not ``None``, it is an integer representing the button height.
         """
 
-        if type(input) == type(1):
+        if type(input1) == type(1):
             self._size = wx.Size(input1, input2)
         else:
             self._size = input1
@@ -4859,10 +4858,11 @@ class FlatMenuItem(object):
         self.SetLabel(self._text)
         self.SetMenuBar()
 
-        self._checkMarkBmp = wx.Bitmap(check_mark_xpm)
-        self._checkMarkBmp.SetMask(wx.Mask(self._checkMarkBmp, wx.WHITE))
-        self._radioMarkBmp = wx.Bitmap(radio_item_xpm)
-        self._radioMarkBmp.SetMask(wx.Mask(self._radioMarkBmp, wx.WHITE))
+        if not hasattr(FlatMenuItem, '_checkMarkBmp'):
+            FlatMenuItem._checkMarkBmp = wx.Bitmap(check_mark_xpm)
+            FlatMenuItem._checkMarkBmp.SetMask(wx.Mask(self._checkMarkBmp, wx.WHITE))
+            FlatMenuItem._radioMarkBmp = wx.Bitmap(radio_item_xpm)
+            FlatMenuItem._radioMarkBmp.SetMask(wx.Mask(self._radioMarkBmp, wx.WHITE))
 
 
     def SetLongHelp(self, help):
@@ -5354,6 +5354,11 @@ class FlatMenu(FlatMenuBase):
         self.Bind(wx.EVT_RIGHT_DOWN, self.OnMouseRightDown)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(wx.EVT_TIMER, self.OnTimer)
+
+
+    def Destroy(self, *args, **kwargs):
+        self.Clear()
+        return super().Destroy(*args, **kwargs)
 
 
     def SetMenuBar(self, mb):
@@ -6646,7 +6651,7 @@ class FlatMenu(FlatMenuBase):
         :param `item`: can be either a menu item identifier or a plain :class:`FlatMenuItem`.
         """
 
-        if type(item) != type(1):
+        if not isinstance(item, (wx.StandardID, int)):
             item = item.GetId()
 
         return self._RemoveById(item)
@@ -6673,7 +6678,7 @@ class FlatMenu(FlatMenuBase):
         :param `item`: can be either a menu item identifier or a plain :class:`FlatMenuItem`.
         """
 
-        if type(item) != type(1):
+        if not isinstance(item, (wx.StandardID, int)):
             item = item.GetId()
 
         self._DestroyById(item)

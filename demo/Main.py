@@ -52,11 +52,14 @@
 # Last updated: Andrea Gavana, 20 Oct 2008, 18.00 GMT
 
 import sys, os, time, traceback
+import pickle
 import re
 import shutil
+import urllib.error
+import urllib.request
+from io import BytesIO
 from threading import Thread
 
-from distutils.version import LooseVersion
 
 import wx
 import wx.adv
@@ -67,10 +70,6 @@ from wx.adv import TaskBarIcon as TaskBarIcon
 from wx.adv import SplashScreen as SplashScreen
 import wx.lib.mixins.inspection
 
-import six
-from six import exec_, BytesIO
-from six.moves import cPickle
-from six.moves import urllib
 
 import version
 
@@ -418,10 +417,7 @@ class InternetThread(Thread):
         try:
             url = _docsURL % ReplaceCapitals(self.selectedClass)
             with urllib.request.urlopen(url) as fid:
-                if six.PY2:
-                    originalText = fid.read()
-                else:
-                    originalText = fid.read().decode("utf-8")
+                originalText = fid.read().decode("utf-8")
 
             text = RemoveHTMLTags(originalText).split("\n")
             data = FindWindowStyles(text, originalText, self.selectedClass)
@@ -963,9 +959,6 @@ def SearchDemo(name, keyword):
     with open(GetOriginalFilename(name), "rt") as fid:
         fullText = fid.read()
 
-    if six.PY2:
-        fullText = fullText.decode("iso-8859-1")
-
     if fullText.find(keyword) >= 0:
         return True
 
@@ -1076,10 +1069,9 @@ class DemoModules(object):
         self.modules = [[dict(),  ""    ,    ""     , "<original>"  ,        None],
                         [dict(),  ""    ,    ""     , "<modified>"  ,        None]]
 
-        getcwd = os.getcwd if six.PY3 else os.getcwdu
         for i in [modOriginal, modModified]:
             self.modules[i][0]['__file__'] = \
-                os.path.join(getcwd(), GetOriginalFilename(name))
+                os.path.join(os.getcwd(), GetOriginalFilename(name))
 
         # load original module
         self.LoadFromFile(modOriginal, GetOriginalFilename(name))
@@ -1103,12 +1095,10 @@ class DemoModules(object):
         if self.name != __name__:
             source = self.modules[modID][1]
             description = self.modules[modID][2]
-            if six.PY2:
-                description = description.encode(sys.getfilesystemencoding())
 
             try:
                 code = compile(source, description, "exec")
-                exec_(code, self.modules[modID][0])
+                exec(code, self.modules[modID][0])
             except:
                 self.modules[modID][4] = DemoError(sys.exc_info())
                 self.modules[modID][0] = None
@@ -1485,15 +1475,14 @@ class wxPythonDemo(wx.Frame):
 
         # Create a Notebook
         self.nb = wx.Notebook(pnl, -1, style=wx.CLIP_CHILDREN)
-        if 'wxMac' not in wx.PlatformInfo:
-            imgList = wx.ImageList(16, 16)
-            for png in ["overview", "code", "demo"]:
-                bmp = images.catalog[png].GetBitmap()
-                imgList.Add(bmp)
-            for indx in range(9):
-                bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
-                imgList.Add(bmp)
-            self.nb.AssignImageList(imgList)
+        imgList = wx.ImageList(16, 16)
+        for png in ["overview", "code", "demo"]:
+            bmp = images.catalog[png].GetBitmap()
+            imgList.Add(bmp)
+        for indx in range(9):
+            bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
+            imgList.Add(bmp)
+        self.nb.AssignImageList(imgList)
 
         self.BuildMenuBar()
 
@@ -1537,23 +1526,9 @@ class wxPythonDemo(wx.Frame):
         self.tree.Bind(wx.EVT_LEFT_DOWN, self.OnTreeLeftDown)
 
         # Set up a wx.html.HtmlWindow on the Overview Notebook page
-        # we put it in a panel first because there seems to be a
-        # refresh bug of some sort (wxGTK) when it is directly in
-        # the notebook...
-
-        if 0:  # the old way
-            self.ovr = wx.html.HtmlWindow(self.nb, -1, size=(400, 400))
-            self.nb.AddPage(self.ovr, self.overviewText, imageId=0)
-
-        else:  # hopefully I can remove this hacky code soon, see SF bug #216861
-            panel = wx.Panel(self.nb, -1, style=wx.CLIP_CHILDREN)
-            self.ovr = wx.html.HtmlWindow(panel, -1, size=(400, 400))
-            self.nb.AddPage(panel, self.overviewText, imageId=0)
-
-            def OnOvrSize(evt, ovr=self.ovr):
-                ovr.SetSize(evt.GetSize())
-            panel.Bind(wx.EVT_SIZE, OnOvrSize)
-            panel.Bind(wx.EVT_ERASE_BACKGROUND, EmptyHandler)
+        # for displaying info about each sample in the demo.
+        self.ovr = wx.html.HtmlWindow(self.nb, -1, size=(400, 400))
+        self.nb.AddPage(self.ovr, self.overviewText, imageId=0)
 
         if "gtk2" in wx.PlatformInfo or "gtk3" in wx.PlatformInfo:
             self.ovr.SetStandardFonts()
@@ -1662,7 +1637,7 @@ class wxPythonDemo(wx.Frame):
 
         with open(pickledFile, "rb") as fid:
             try:
-                self.pickledData = cPickle.load(fid)
+                self.pickledData = pickle.load(fid)
             except:
                 self.pickledData = {}
 
@@ -1703,7 +1678,7 @@ class wxPythonDemo(wx.Frame):
         item.Check(self.allowDocs)
         self.Bind(wx.EVT_MENU, self.OnAllowDownload, item)
 
-        item = wx.MenuItem(menu, -1, 'Delete saved docs', 'Deletes the cPickle file where docs are stored')
+        item = wx.MenuItem(menu, -1, 'Delete saved docs', 'Deletes the pickle file where docs are stored')
         item.SetBitmap(images.catalog['deletedocs'].GetBitmap())
         menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnDeleteDocs, item)
@@ -2244,10 +2219,6 @@ class wxPythonDemo(wx.Frame):
 
         self.pickledData[itemText] = data
 
-        if six.PY2:
-            # TODO: verify that this encoding is correct
-            text = text.decode('iso8859_1')
-
         self.StopDownload()
         self.ovr.SetPage(text)
         #print("load time: ", time.time() - start)
@@ -2516,7 +2487,7 @@ class wxPythonDemo(wx.Frame):
         MakeDocDirs()
         pickledFile = GetDocFile()
         with open(pickledFile, "wb") as fid:
-            cPickle.dump(self.pickledData, fid, cPickle.HIGHEST_PROTOCOL)
+            pickle.dump(self.pickledData, fid, pickle.HIGHEST_PROTOCOL)
 
         self.Destroy()
 
@@ -2676,7 +2647,7 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
     def OnInit(self):
 
         # Check runtime version
-        if LooseVersion(version.VERSION_STRING) != LooseVersion(wx.VERSION_STRING):
+        if version.VERSION_STRING != wx.VERSION_STRING:
             wx.MessageBox(caption="Warning",
                           message="You're using version %s of wxPython, but this copy of the demo was written for version %s.\n"
                           "There may be some version incompatibilities..."
@@ -2691,7 +2662,7 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         images = i
 
         # For debugging
-        #self.SetAssertMode(wx.PYAPP_ASSERT_DIALOG|wx.PYAPP_ASSERT_EXCEPTION)
+        #self.SetAssertMode(wx.APP_ASSERT_DIALOG|wx.APP_ASSERT_EXCEPTION)
 
         wx.SystemOptions.SetOption("mac.window-plain-transition", 1)
         self.SetAppName("wxPyDemo")

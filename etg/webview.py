@@ -103,13 +103,6 @@ def run():
                             'wxVersionInfo': 'wxVersionInfo()',
                             })
 
-    # Missing in 3.1.6
-    module.addItem(etgtools.WigCode("""\
-        wxEventType wxEVT_WEBVIEW_FULLSCREEN_CHANGED /PyName=wxEVT_WEBVIEW_FULLSCREEN_CHANGED/;
-        wxEventType wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED /PyName=wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED/;
-        wxEventType wxEVT_WEBVIEW_SCRIPT_RESULT /PyName=wxEVT_WEBVIEW_SCRIPT_RESULT/;
-        """))
-
     c = module.find('wxWebView')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
@@ -256,6 +249,7 @@ def run():
         EVT_WEBVIEW_TITLE_CHANGED = wx.PyEventBinder( wxEVT_WEBVIEW_TITLE_CHANGED, 1 )
         EVT_WEBVIEW_FULLSCREEN_CHANGED = wx.PyEventBinder( wxEVT_WEBVIEW_FULLSCREEN_CHANGED, 1)
         EVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED = wx.PyEventBinder( wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED, 1)
+        EVT_WEBVIEW_SCRIPT_RESULT = wx.PyEventBinder( wxEVT_WEBVIEW_SCRIPT_RESULT, 1)
 
         # deprecated wxEVT aliases
         wxEVT_COMMAND_WEBVIEW_NAVIGATING     = wxEVT_WEBVIEW_NAVIGATING

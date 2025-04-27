@@ -37,13 +37,15 @@ def run():
 
     c = module.find('wxBitmapBundle')
     assert isinstance(c, etgtools.ClassDef)
-
+    c.find('wxBitmapBundle').findOverload('xpm').ignore()
     c.find('FromSVG').findOverload('char *data, const wxSize &sizeDef').ignore()
     c.find('FromImpl.impl').transfer = True
 
     # Allow on-the-fly creation of a wx.BitmapBundle from a wx.Bitmap, wx.Icon
     # or a wx.Image
-    c.convertFromPyObject = """\
+    c.convertFromPyObject = tools.AutoConversionInfo(
+        ('wx.Bitmap', 'wx.Icon', ),
+        """\
         // Check for type compatibility
         if (!sipIsErr) {
             if (sipCanConvertToType(sipPy, sipType_wxBitmap, SIP_NO_CONVERTORS))
@@ -86,7 +88,7 @@ def run():
         *sipCppPtr = reinterpret_cast<wxBitmapBundle*>(
             sipConvertToType(sipPy, sipType_wxBitmapBundle, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
         return 0; // not a new instance
-        """
+        """)
 
 
     c = module.find('wxBitmapBundleImpl')
@@ -94,6 +96,12 @@ def run():
 
     m = MethodDef(name='~wxBitmapBundleImpl', isDtor=True, isVirtual=True, protection='protected')
     c.addItem(m)
+
+    c.find('DoGetPreferredSize').ignore(False)
+    c.find('GetIndexToUpscale').ignore(False)
+    c.find('GetNextAvailableScale').ignore(False)
+    c.find('GetNextAvailableScale.i').inOut = True
+    c.find('GetNextAvailableScale.i').name = 'idx'
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

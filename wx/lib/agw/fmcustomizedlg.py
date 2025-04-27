@@ -14,14 +14,9 @@
 This module contains a custom dialog class used to personalize the appearance of a
 :class:`~wx.lib.agw.flatmenu.FlatMenu` on the fly, allowing also the user of your application to do the same.
 """
+from collections import UserDict
 
 import wx
-import six
-
-if six.PY2:
-    from UserDict import UserDict
-else:
-    from collections import UserDict
 
 from .artmanager import ArtManager
 from .fmresources import *

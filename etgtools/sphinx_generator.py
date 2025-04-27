@@ -14,26 +14,22 @@ the various XML elements passed by the Phoenix extractors into ReST format.
 """
 
 # Standard library stuff
+import keyword
 import os
 import operator
 import sys
 import shutil
 import textwrap
 
-if sys.version_info < (3, ):
-    from StringIO import StringIO
-    string_base = basestring
-else:
-    from io import StringIO
-    string_base = str
+from io import StringIO
 
-import xml.etree.ElementTree as et
+import xml.etree.ElementTree as ET
 
 # Phoenix-specific stuff
 import etgtools.extractors as extractors
 import etgtools.generators as generators
 from etgtools.item_module_map import ItemModuleMap
-from etgtools.tweaker_tools import removeWxPrefix
+from etgtools.tweaker_tools import removeWxPrefix, ParameterType
 
 # Sphinx-Phoenix specific stuff
 from sphinxtools.inheritance import InheritanceDiagram
@@ -146,7 +142,7 @@ class Node(object):
         :returns: The element text for the input `tag_name` or ``None``.
         """
 
-        if isinstance(self.element, string_base):
+        if isinstance(self.element, str):
             return None
 
         return self.element.get(tag_name)
@@ -268,7 +264,7 @@ class Node(object):
         if self.element is None:
             return text
 
-        if isinstance(self.element, string_base):
+        if isinstance(self.element, str):
             text = self.element
         else:
             text, tail = self.element.text, self.element.tail
@@ -585,30 +581,13 @@ class ParameterList(Node):
         if xml_item.hasOverloads() and not is_overload:
             return
 
-        arguments = xml_item.pyArgsString
+        if xml_item.signature is None:
+            xml_item.makePyArgsString()
+        assert xml_item.signature is not None
+        signature = xml_item.signature.signature()
+        arguments = list(xml_item.signature)
         if not arguments:
             return
-
-        if hasattr(xml_item, 'isStatic') and not xml_item.isStatic:
-            if arguments[:2] == '()':
-                return
-
-            arguments = arguments[1:]
-
-        if '->' in arguments:
-            arguments, dummy = arguments.split("->")
-
-        arguments = arguments.strip()
-        if arguments.endswith(','):
-            arguments = arguments[0:-1]
-
-        if arguments.startswith('('):
-            arguments = arguments[1:]
-        if arguments.endswith(')'):
-            arguments = arguments[0:-1]
-
-        signature = name + '(%s)'%arguments
-        arguments = arguments.split(',')
 
         py_parameters = []
         for key, parameter in self.py_parameters.items():
@@ -624,36 +603,22 @@ class ParameterList(Node):
                   '  ==> Parameter list from wxWidgets XML items:     %s\n\n' \
                   'This may be a documentation bug in wxWidgets or a side-effect of removing the `wx` prefix from signatures.\n\n'
 
-        theargs = []
-
         for arg in arguments:
-
-            myarg = arg.split('=')[0].strip()
-            if myarg:
-                theargs.append(myarg)
-
-            if '*' in arg or ')' in arg:
+            arg_name = arg.name
+            if arg.position_type in (ParameterType.VAR_ARGS, ParameterType.KWARGS):
                 continue
+            if arg_name.startswith('_') and keyword.iskeyword(arg_name[1:]): # Reserved Python keywords we've had to rename
+                arg_name = arg_name[1:]
+            
+            #if '*' in arg_name:
+            #    continue
 
-            arg = arg.split('=')[0].strip()
-
-            if arg and arg not in py_parameters:
-
+            if arg_name not in py_parameters:
                 class_name = ''
                 if hasattr(xml_item, 'className') and xml_item.className is not None:
                     class_name = wx2Sphinx(xml_item.className)[1] + '.'
 
                 print((message % (class_name + name, arg, signature, py_parameters)))
-
-##        for param in py_parameters:
-##            if param not in theargs:
-##                class_name = ''
-##                if hasattr(xml_item, 'className') and xml_item.className is not None:
-##                    class_name = wx2Sphinx(xml_item.className)[1] + '.'
-##
-##                print '\n      |||  %s;%s;%s  |||\n'%(class_name[0:-1], signature, param)
-##                with open('mismatched.txt', 'a') as fid:
-##                    fid.write('%s;%s;%s\n'%(class_name[0:-1], signature, param))
 
 
     # -----------------------------------------------------------------------
@@ -788,7 +753,7 @@ class Paragraph(Node):
 
                 first = line.index('Availability:')
 
-                element = et.Element('available', kind='available')
+                element = ET.Element('available', kind='available')
                 element.text = line[first+13:]
 
                 section = Section(element, None, self.kind)
@@ -1168,7 +1133,9 @@ class Image(Node):
         rel_path = os.path.normpath(static_path[rel_path_index:])
 
         docstrings = '\n\n'
-        docstrings += '.. figure:: %s\n' % rel_path
+        # Sphinx (on windows) can't parse windows style paths when reading
+        # .rst files. Therefore paths are written unix style.
+        docstrings += '.. figure:: %s\n' % rel_path.replace('\\', '/')
         docstrings += '   :align: center\n\n\n'
         docstrings += '|\n\n'
 
@@ -1381,7 +1348,7 @@ class Snippet(Node):
             if tag == 'sp':
                 self.snippet += ' '
 
-            if isinstance(element, string_base):
+            if isinstance(element, str):
                 self.snippet += element
             else:
                 if element.text:
@@ -1597,7 +1564,7 @@ class XRef(Node):
                 text = ''
 
             elif not isNumeric(text):
-                text = '``%s``'%text
+                text = '``%s``' % text.strip()
 
         elif 'funcmacro' in values:
             if '(' in stripped:
@@ -2006,8 +1973,8 @@ class XMLDocString(object):
         # Some of the Extractors (xml item) will set deprecated themselves, in which case it is set as a
         # non-empty string. In such cases, this branch will insert a deprecated section into the xml tree
         # so that the Node Tree (see classes above) will generate the deprecated  tag on their own in self.RecurseXML
-        if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, string_base):
-            element = et.Element('deprecated', kind='deprecated')
+        if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, str):
+            element = ET.Element('deprecated', kind='deprecated')
             element.text = xml_item.deprecated
 
             deprecated_section = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
@@ -2128,7 +2095,7 @@ class XMLDocString(object):
         if element is None:
             return Node('', parent)
 
-        if isinstance(element, string_base):
+        if isinstance(element, str):
             rest_class = Paragraph(element, parent, self.kind)
             return rest_class
 
@@ -2232,7 +2199,7 @@ class XMLDocString(object):
             rest_class = ULink(element, parent)
 
         elif tag == 'onlyfor':
-            onlyfor = et.Element('available', kind='available')
+            onlyfor = ET.Element('available', kind='available')
             onlyfor.text = text
             onlyfor.tail = tail
 
@@ -2591,7 +2558,7 @@ class XMLDocString(object):
                     else:
                         new_section.append('`%s`' % stripped)
 
-            element = et.Element('return', kind='return')
+            element = ET.Element('return', kind='return')
             element.text = '( %s )'%(', '.join(new_section))
 
             return_section = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
@@ -2754,7 +2721,7 @@ class XMLDocString(object):
             name = convertToPython(name)
             stream.write('%-80s' % name)
 
-            if not isinstance(docstrings, string_base):
+            if not isinstance(docstrings, str):
                 rest_class = self.RecurseXML(docstrings, self.root)
                 docstrings = rest_class.Join()
 
@@ -2898,7 +2865,7 @@ class XMLDocString(object):
                 pickleItem(desc, self.current_module, self.class_name, 'class')
 
         if self.overloads:
-            docstrings += '\n\n%s|overload| Overloaded Implementations:\n\n'%spacer
+            docstrings += '\n\n%s|overload| **Overloaded Implementations:**\n\n'%spacer
             docstrings += '%s:html:`<hr class="overloadsep" /><br />`\n\n'%spacer
 
             for index, over in enumerate(self.overloads):
@@ -3394,7 +3361,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         brief = memberVar.briefDoc
         briefDoc = None
-        if not isinstance(brief, string_base):
+        if not isinstance(brief, str):
             docstring = XMLDocString(memberVar)
             #docstring.current_module = self.current_module
             briefDoc = docstring.GetBrief()
@@ -3541,7 +3508,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             simple_docs = convertToPython(method.pyDocstring)
         else:
             brief = method.briefDoc
-            if not isinstance(brief, string_base):
+            if not isinstance(brief, str):
                 docstring = XMLDocString(method)
                 docstring.kind = 'method'
                 docstring.current_module = self.current_module
@@ -3576,7 +3543,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                     else:
                         new_section.append('`%s`'%stripped)
 
-            element = et.Element('return', kind='return')
+            element = ET.Element('return', kind='return')
             element.text = '( %s )'%(', '.join(new_section))
 
             rtype2 = Section(element, None, 'method')

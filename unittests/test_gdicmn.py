@@ -35,8 +35,8 @@ class TestPoint(unittest.TestCase):
         p = wx.Point( [123,456] )
 
     def test_numpy_ctor(self):
-        import numpy
-        a = numpy.array([123,456])
+        import numpy as np
+        a = np.array([123,456])
         p = wx.Point(a)
 
 
@@ -399,8 +399,8 @@ class TestRect(unittest.TestCase):
         self.assertTrue(r1 == (1,2,3,4))
 
     def test_numpy_ctor(self):
-        import numpy
-        r1 = wx.Rect( numpy.array([1,2,3,4]) )
+        import numpy as np
+        r1 = wx.Rect( np.array([1,2,3,4]) )
         self.assertTrue(r1 == (1,2,3,4))
 
 

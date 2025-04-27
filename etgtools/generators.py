@@ -81,12 +81,15 @@ def nci(text, numSpaces=0, stripLeading=True):
     return newText
 
 
-def wrapText(text):
+def wrapText(text, dontWrap: str = ''):
     import textwrap
     lines = []
     tw = textwrap.TextWrapper(width=70, break_long_words=False)
     for line in text.split('\n'):
-        lines.append(tw.fill(line))
+        if dontWrap and line.lstrip().startswith(dontWrap):
+            lines.append(line)
+        else:
+            lines.append(tw.fill(line))
     return '\n'.join(lines)
 
 
@@ -97,13 +100,7 @@ def wrapText(text):
 # in the StringIO
 import io
 class Utf8EncodingStream(io.StringIO):
-    if sys.version_info < (3,):
-        def write(self, text):
-            if isinstance(text, str):
-                text = text.decode('utf-8')
-            return io.StringIO.write(self, text)
-
-
+    pass
 
 
 def textfile_open(filename, mode='rt'):
@@ -113,12 +110,7 @@ def textfile_open(filename, mode='rt'):
     mode parameter must include the 't' to put the stream into text mode.
     """
     assert 't' in mode
-    if sys.version_info < (3,):
-        import codecs
-        mode = mode.replace('t', '')
-        return codecs.open(filename, mode, encoding='utf-8')
-    else:
-        return open(filename, mode, encoding='utf-8')
+    return open(filename, mode, encoding='utf-8')
 
 
 #---------------------------------------------------------------------------

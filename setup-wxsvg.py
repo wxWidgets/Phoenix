@@ -25,12 +25,9 @@ cfg = Config(noWxConfig=True)
 
 DESCRIPTION      = 'Wrapper for nanosvg library, plus code for integrating with wxPython'
 LONG_DESCRIPTION = ''
-AUTHOR           = 'Robin Dunn'
-AUTHOR_EMAIL     = 'robin@alldunn.com'
-URL              = "http://wxPython.org/"
-DOWNLOAD_URL     = "https://pypi.org/project/wxPython"
 LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
+
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 PACKAGE = 'wx.svg'
@@ -63,10 +60,6 @@ setup(name             = 'wx.svg',
       version          = cfg.VERSION,
       description      = DESCRIPTION,
       long_description = LONG_DESCRIPTION,
-      author           = AUTHOR,
-      author_email     = AUTHOR_EMAIL,
-      url              = URL,
-      download_url     = DOWNLOAD_URL,
       license          = LICENSE,
       #packages         = [PACKAGE],
       ext_modules      = modules,

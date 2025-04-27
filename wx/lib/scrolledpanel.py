@@ -174,6 +174,23 @@ class ScrolledPanel(wx.ScrolledWindow):
             evt.Skip()
 
 
+    def GetChildRectRelativeToSelf(self, child: wx.Window):
+        """
+        Same as `child.GetRect()` except the position returned is relative
+        to this ScrolledPanel rather than the child's parent.
+
+        :param wx.Window `child`: any :class:`wx.Window` - derived control.
+
+        .. note:: window.GetRect returns the size of a window, and its position
+            relative to its parent. When calculating ScrollChildIntoView, the
+            position relative to its parent is not relevant unless the parent 
+            is the ScrolledPanel itself.
+        """
+        cr = child.GetScreenRect()
+        spp = self.GetScreenPosition()
+        return wx.Rect(cr.x - spp.x, cr.y - spp.y, cr.width, cr.height)
+
+
     def ScrollChildIntoView(self, child):
         """
         Scroll the panel so that the specified child window is in view.
@@ -188,7 +205,7 @@ class ScrolledPanel(wx.ScrolledWindow):
 
         sppu_x, sppu_y = self.GetScrollPixelsPerUnit()
         vs_x, vs_y   = self.GetViewStart()
-        cr = child.GetRect()
+        cr = self.GetChildRectRelativeToSelf(child)
         clntsz = self.GetClientSize()
         new_vs_x, new_vs_y = -1, -1
 

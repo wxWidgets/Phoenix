@@ -1377,11 +1377,11 @@ class Shape(ShapeEvtHandler):
 
     def OnDrawOutline(self, dc, x, y, w, h):
         """The draw outline handler."""
-        points = [[x - w / 2.0, y - h / 2.0],
-                [x + w / 2.0, y - h / 2.0],
-                [x + w / 2.0, y + h / 2.0],
-                [x - w / 2.0, y + h / 2.0],
-                [x - w / 2.0, y - h / 2.0],
+        points = [[int(x - w / 2.0), int(y - h / 2.0)],
+                [int(x + w / 2.0), int(y - h / 2.0)],
+                [int(x + w / 2.0), int(y + h / 2.0)],
+                [int(x - w / 2.0), int(y + h / 2.0)],
+                [int(x - w / 2.0), int(y - h / 2.0)],
                 ]
 
         dc.DrawLines(points)
@@ -2756,9 +2756,9 @@ class RectangleShape(Shape):
             dc.SetPen(TransparentPen)
 
             if self._cornerRadius:
-                dc.DrawRoundedRectangle(x1 + self._shadowOffsetX, y1 + self._shadowOffsetY, self._width, self._height, self._cornerRadius)
+                dc.DrawRoundedRectangle(int(x1 + self._shadowOffsetX), int(y1 + self._shadowOffsetY), int(self._width), int(self._height), self._cornerRadius)
             else:
-                dc.DrawRectangle(x1 + self._shadowOffsetX, y1 + self._shadowOffsetY, self._width, self._height)
+                dc.DrawRectangle(int(x1 + self._shadowOffsetX), int(y1 + self._shadowOffsetY), int(self._width), int(self._height))
 
         if self._pen:
             if self._pen.GetWidth() == 0:
@@ -2769,9 +2769,9 @@ class RectangleShape(Shape):
             dc.SetBrush(self._brush)
 
         if self._cornerRadius:
-            dc.DrawRoundedRectangle(int(x1), int(y1), self._width, self._height, self._cornerRadius)
+            dc.DrawRoundedRectangle(int(x1), int(y1), int(self._width), int(self._height), self._cornerRadius)
         else:
-            dc.DrawRectangle(int(x1), int(y1), self._width, self._height)
+            dc.DrawRectangle(int(x1), int(y1), int(self._width), int(self._height))
 
     def GetBoundingBoxMin(self):
         """Get the bounding box minimum."""
@@ -3174,7 +3174,7 @@ class PolygonShape(Shape):
                 dc.SetPen(self._pen)
         if self._brush:
             dc.SetBrush(self._brush)
-        dc.DrawPolygon(self._points, self._xpos, self._ypos)
+        dc.DrawPolygon(self._points, int(self._xpos), int(self._ypos))
 
     def OnDrawOutline(self, dc, x, y, w, h):
         """The draw outline handler."""
@@ -3185,8 +3185,8 @@ class PolygonShape(Shape):
 
         intPoints = []
         for point in self._originalPoints:
-            intPoints.append(wx.Point(x_proportion * point[0], y_proportion * point[1]))
-        dc.DrawPolygon(intPoints, x, y)
+            intPoints.append(wx.Point(int(x_proportion * point[0]), int(y_proportion * point[1])))
+        dc.DrawPolygon(intPoints, int(x), int(y))
 
     # Make as many control points as there are vertices
     def MakeControlPoints(self):

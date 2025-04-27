@@ -971,8 +971,8 @@ class LineShape(Shape):
         # Drawing over the line only seems to work if the line has a thickness
         # of 1.
         if old_pen and old_pen.GetWidth() > 1:
-            dc.DrawRectangle(self._xpos - bound_x / 2.0 - 2, self._ypos - bound_y / 2.0 - 2,
-                             bound_x + 4, bound_y + 4)
+            dc.DrawRectangle(int(self._xpos - bound_x / 2.0 - 2), int(self._ypos - bound_y / 2.0 - 2),
+                             int(bound_x + 4), int(bound_y + 4))
         else:
             self._erasing = True
             self.GetEventHandler().OnDraw(dc)

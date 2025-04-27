@@ -3,12 +3,13 @@ things like call tips and command auto completion."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 
+import re
 import sys
 import inspect
 import tokenize
 import types
 import wx
-from six import BytesIO, PY3, string_types
+from io import BytesIO
 
 def getAutoCompleteList(command='', locals=None, includeMagic=1,
                         includeSingle=1, includeDouble=1):
@@ -38,8 +39,11 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
     if not hasattrAlwaysReturnsTrue(obj):
         # Add some attributes that don't always get picked up.
         special_attrs = ['__bases__', '__class__', '__dict__', '__name__',
-                         'func_closure', 'func_code', 'func_defaults',
-                         'func_dict', 'func_doc', 'func_globals', 'func_name']
+                         '__closure__', '__code__', '__defaults__',
+                         '__kwdefaults__', '__globals__', '__qualname__',
+                         '__builtins__',  # Added to method attributes in 3.10
+                         '__get__',       # Not found in `dir(method)` in 3.11
+                         ]
         attributes += [attr for attr in special_attrs \
                        if hasattr(obj, attr)]
     if includeMagic:
@@ -170,13 +174,17 @@ def getCallTip(command='', locals=None):
         pass
     tip1 = ''
     argspec = ''
+    obj = inspect.unwrap(obj)
     if inspect.isbuiltin(obj):
         # Builtin functions don't have an argspec that we can get.
         pass
     elif inspect.isfunction(obj):
         # tip1 is a string like: "getCallTip(command='', locals=None)"
-        argspec = inspect.getargspec(obj) if not PY3 else inspect.getfullargspec(obj)
-        argspec = inspect.formatargspec(*argspec)
+        try:
+            argspec = str(inspect.signature(obj)) # PY35 or later
+        except AttributeError:
+            argspec = inspect.getfullargspec(obj)
+            argspec = inspect.formatargspec(*argspec)
         if dropSelf:
             # The first parameter to a method is a reference to an
             # instance, usually coded as "self", and is usually passed
@@ -211,7 +219,11 @@ def getCallTip(command='', locals=None):
         tip = '%s%s\n\n%s' % (tip1, tip2, tip3)
     else:
         tip = tip1
-    calltip = (name, argspec[1:-1], tip.strip())
+    # Extract argspec from the signature e.g., (x, /, *, ...) -> int
+    m = re.search(r'\((.*)\)', argspec)
+    if m:
+        argspec = m.group(1)
+    calltip = (name, argspec, tip.strip())
     return calltip
 
 def getRoot(command, terminator=None):
@@ -234,10 +246,12 @@ def getRoot(command, terminator=None):
         if tokens and tokens[-1][0] is tokenize.NEWLINE:
             # Remove newline.
             del tokens[-1]
+        if tokens and tokens[-1][0] is tokenize.NL:
+            # Remove non-logical newline.
+            del tokens[-1]
         if not tokens:
             return ''
-        if terminator == '.' and \
-               (tokens[-1][1] != '.' or tokens[-1][0] is not tokenize.OP):
+        if tokens[-1][1] != '.' or tokens[-1][0] is not tokenize.OP:
             # Trap decimals in numbers, versus the dot operator.
             return ''
 
@@ -259,9 +273,9 @@ def getRoot(command, terminator=None):
         tokentype = token[0]
         tokenstring = token[1]
         line = token[4]
-        if tokentype in (tokenize.ENDMARKER, tokenize.NEWLINE):
+        if tokentype in (tokenize.ENDMARKER, tokenize.NEWLINE, tokenize.NL):
             continue
-        if PY3 and tokentype is tokenize.ENCODING:
+        if tokentype is tokenize.ENCODING:
             line = lastline
             break
         if tokentype in (tokenize.NAME, tokenize.STRING, tokenize.NUMBER) \
@@ -307,7 +321,7 @@ def getTokens(command):
     """Return list of token tuples for command."""
 
     # In case the command is unicode try encoding it
-    if isinstance(command,  string_types):
+    if isinstance(command,  str):
         try:
             command = command.encode('utf-8')
         except UnicodeEncodeError:
@@ -321,13 +335,8 @@ def getTokens(command):
     #   tokens = [token for token in tokenize.generate_tokens(f.readline)]
     # because of need to append as much as possible before TokenError.
     try:
-        if not PY3:
-            def eater(*args):
-                tokens.append(args)
-            tokenize.tokenize_loop(f.readline, eater)
-        else:
-            for t in tokenize.tokenize(f.readline):
-                tokens.append(t)
+        for t in tokenize.tokenize(f.readline):
+            tokens.append(t)
     except tokenize.TokenError:
         # This is due to a premature EOF, which we expect since we are
         # feeding in fragments of Python code.

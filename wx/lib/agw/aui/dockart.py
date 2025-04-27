@@ -208,7 +208,7 @@ class AuiDefaultDockArt(object):
 
         self._active_caption_gradient_colour = LightContrastColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
         self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
-        self._inactive_caption_text_colour = wx.BLACK
+        self._inactive_caption_text_colour =  wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
 
 
     def SetDefaultColours(self, base_colour=None):
@@ -612,7 +612,7 @@ class AuiDefaultDockArt(object):
         draw_text = ChopText(dc, text, variable)
 
         if captionLeft:
-            dc.DrawRotatedText(draw_text, rect.x+(rect.width/2)-(h/2)-1, rect.y+rect.height-3-caption_offset, 90)
+            dc.DrawRotatedText(draw_text, rect.x+(rect.width//2)-(h//2)-1, rect.y+rect.height-3-caption_offset, 90)
         else:
             dc.DrawText(draw_text, rect.x+3+caption_offset, rect.y+(rect.height//2)-(h//2)-1)
 

@@ -7,10 +7,14 @@
 demo.py
 =======
 
-This is a demo showing some of the capabilities of the :mod:`wx.lib.plot`
-package. It is intended to be run as a standalone script via::
+.. highlight:: shell
 
-  user@host:.../site-packages/wx/lib/plot$ python examples/demo.py
+This is a demo showing some of the capabilities of the :mod:`wx.lib.plot`
+package. 
+
+It is intended to be run as a standalone script via::
+
+    user@host:.../site-packages/wx/lib/plot$ python examples/demo.py
 
 """
 __docformat__ = "restructuredtext en"
@@ -231,7 +235,7 @@ def _draw8Objects():
     """
     Box plot
     """
-    data1 = np.array([np.NaN, 337, 607, 583, 512, 531, 558, 381, 621, 574,
+    data1 = np.array([np.nan, 337, 607, 583, 512, 531, 558, 381, 621, 574,
                       538, 577, 679, 415, 454, 417, 635, 319, 350, 183,
                       863, 337, 607, 583, 512, 531, 558, 381, 621, 574,
                       538, 577, 679, 415, 454, 417, 635, 319, 350, 97])

@@ -5,13 +5,16 @@
 .waf-*
 .waf3-*
 .lock-waf*
+.DS_Store
 wingdbstub.py*
 mydbstub.py*
+venv*/
 
 .idea
 .cache
 .vagrant
 .vscode
+.env
 
 /build
 /tmp
@@ -26,6 +29,7 @@ mydbstub.py*
 /bin/waf-*
 /bin/waf3-*
 /bin/doxygen-*
+/bin/libclang*
 
 /demo/version.py
 
@@ -47,7 +51,7 @@ mydbstub.py*
 /sip/cpp/*.cpp
 /sip/cpp-*
 /sip/gen/*.sip
-/sip/siplib/.update
+/sip/siplib
 
 /wx/*.py
 /wx/*.pyc
@@ -59,6 +63,7 @@ mydbstub.py*
 /wx/libwx_*
 /wx/locale
 /wx/*.dll
+/wx/include/wxPython/sip.h
 
 /wx/svg/*.so
 /wx/svg/*.pyd

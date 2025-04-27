@@ -53,7 +53,7 @@ class DrawFrame(wx.Frame):
         Canvas = self.Canvas
         phi = (sqrt(5) + 1)/2 - 1
         oradius = 10.0
-        for i in xrange(720):
+        for i in range(720):
             radius = 1.5 * oradius * sin(i * pi/720)
             Color = (255*(i / 720.), 255*( i / 720.), 255 * 0.25)
             x = oradius + 0.25*i*cos(phi*i*2*pi)

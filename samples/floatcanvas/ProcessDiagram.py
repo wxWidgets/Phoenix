@@ -25,7 +25,7 @@ elif ver == 'local':
     from floatcanvas import FloatCanvas as FC
     from floatcanvas.Utilities import BBox
 
-import numpy as N
+import numpy as np
 
 ## here we create some new mixins:
 ## fixme: These really belong in floatcanvas package -- but I kind of want to clean it up some first
@@ -45,7 +45,7 @@ class MovingObjectMixin:
 
         """
         BB = self.BoundingBox
-        OutlinePoints = N.array( ( (BB[0,0], BB[0,1]),
+        OutlinePoints = np.array( ( (BB[0,0], BB[0,1]),
                                    (BB[0,0], BB[1,1]),
                                    (BB[1,0], BB[1,1]),
                                    (BB[1,0], BB[0,1]),
@@ -100,8 +100,8 @@ class NodeObject(FC.Group, MovingObjectMixin, ConnectorObjectMixin):
                  TextColor = "Black",
                  InForeground  = False,
                  IsVisible = True):
-        XY = N.asarray(XY, N.float).reshape(2,)
-        WH = N.asarray(WH, N.float).reshape(2,)
+        XY = np.asarray(XY, float).reshape(2,)
+        WH = np.asarray(WH, float).reshape(2,)
         Label = FC.ScaledText(Label,
                         XY,
                         Size = WH[1] / 2.0,
@@ -171,7 +171,7 @@ class ConnectorLine(FC.LineOnlyMixin, FC.DrawObject,):
 
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
-        Points = N.array( (self.Object1.GetConnectPoint(),
+        Points = np.array( (self.Object1.GetConnectPoint(),
                            self.Object2.GetConnectPoint()) )
         Points = WorldToPixel(Points)
         dc.SetPen(self.Pen)
@@ -191,7 +191,7 @@ class TriangleShape1(FC.Polygon, MovingObjectMixin):
         L is the length of one side of the Triangle
         """
 
-        XY = N.asarray(XY)
+        XY = np.asarray(XY)
         XY.shape = (2,)
 
         Points = self.CompPoints(XY, L)
@@ -207,12 +207,12 @@ class TriangleShape1(FC.Polygon, MovingObjectMixin):
         return self.Points
 
     def CompPoints(self, XY, L):
-        c = L/ N.sqrt(3)
+        c = L/ np.sqrt(3)
 
-        Points = N.array(((0, c),
+        Points = np.array(((0, c),
                           ( L/2.0, -c/2.0),
                           (-L/2.0, -c/2.0)),
-                          N.float_)
+                          np.float64)
 
         Points += XY
         return Points

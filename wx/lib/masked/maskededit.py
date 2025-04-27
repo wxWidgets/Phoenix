@@ -117,7 +117,7 @@ mask
         X       Allow string.letters, string.punctuation, string.digits
         &       Allow string.punctuation only (doesn't include all unicode symbols)
         \*      Allow any visible character
-        |       explicit field boundary (takes no space in the control; allows mix
+        \|      Explicit field boundary (takes no space in the control; allows mix
                 of adjacent mask characters to be treated as separate fields,
                 eg: '&|###' means "field 0 = '&', field 1 = '###'", but there's
                 no fixed characters in between.
@@ -189,59 +189,67 @@ defaultEncoding
 formatcodes
   These other properties can be passed to the class when instantiating it:
     Formatcodes are specified as a string of single character formatting
-    codes that modify  behavior of the control::
+    codes that modify  behavior of the control:
 
-            _  Allow spaces
-            !  Force upper
-            ^  Force lower
-            R  Right-align field(s)
-            r  Right-insert in field(s) (implies R)
-            <  Stay in field until explicit navigation out of it
+    =======  ==========================================================
+      _       Allow spaces
+      !       Force upper
+      ^       Force lower
+      R       Right-align field(s)
+      r       Right-insert in field(s) (implies R)
+      <       Stay in field until explicit navigation out of it
 
-            >  Allow insert/delete within partially filled fields (as
-               opposed to the default "overwrite" mode for fixed-width
-               masked edit controls.)  This allows single-field controls
-               or each field within a multi-field control to optionally
-               behave more like standard text controls.
-               (See EMAIL or phone number autoformat examples.)
+      >       Allow insert/delete within partially filled fields (as
+              opposed to the default "overwrite" mode for fixed-width
+              masked edit controls.)  This allows single-field controls
+              or each field within a multi-field control to optionally
+              behave more like standard text controls.
+              (See EMAIL or phone number autoformat examples.)
 
-               *Note: This also governs whether backspace/delete operations
-               shift contents of field to right of cursor, or just blank the
-               erased section.
+              .. note::
 
-               Also, when combined with 'r', this indicates that the field
-               or control allows right insert anywhere within the current
-               non-empty value in the field.  (Otherwise right-insert behavior
-               is only performed to when the entire right-insertable field is
-               selected or the cursor is at the right edge of the field.*
+                  This also governs whether backspace/delete operations
+                  shift contents of field to right of cursor, or just blank
+                  the erased section.
+
+                  Also, when combined with 'r', this indicates that the field
+                  or control allows right insert anywhere within the current
+                  non-empty value in the field.  (Otherwise right-insert behavior
+                  is only performed to when the entire right-insertable field is
+                  selected or the cursor is at the right edge of the field.
 
 
-            ,  Allow grouping character in integer fields of numeric controls
-               and auto-group/regroup digits (if the result fits) when leaving
-               such a field.  (If specified, .SetValue() will attempt to
-               auto-group as well.)
-               ',' is also the default grouping character.  To change the
-               grouping character and/or decimal character, use the groupChar
-               and decimalChar parameters, respectively.
-               Note: typing the "decimal point" character in such fields will
-               clip the value to that left of the cursor for integer
-               fields of controls with "integer" or "floating point" masks.
-               If the ',' format code is specified, this will also cause the
-               resulting digits to be regrouped properly, using the current
-               grouping character.
-            -  Prepend and reserve leading space for sign to mask and allow
-               signed values (negative #s shown in red by default.) Can be
-               used with argument useParensForNegatives (see below.)
-            0  integer fields get leading zeros
-            D  Date[/time] field
-            T  Time field
-            F  Auto-Fit: the control calculates its size from
-               the length of the template mask
-            V  validate entered chars against validRegex before allowing them
-               to be entered vs. being allowed by basic mask and then having
-               the resulting value just colored as invalid.
-               (See USSTATE autoformat demo for how this can be used.)
-            S  select entire field when navigating to new field
+      ,       Allow grouping character in integer fields of numeric controls
+              and auto-group/regroup digits (if the result fits) when leaving
+              such a field.  (If specified, .SetValue() will attempt to
+              auto-group as well.)
+              ',' is also the default grouping character.  To change the
+              grouping character and/or decimal character, use the groupChar
+              and decimalChar parameters, respectively.
+
+              .. note::
+
+                  Typing the "decimal point" character in such fields will
+                  clip the value to that left of the cursor for integer
+                  fields of controls with "integer" or "floating point" masks.
+
+              If the ',' format code is specified, this will also cause the
+              resulting digits to be regrouped properly, using the current
+              grouping character.
+      \-      Prepend and reserve leading space for sign to mask and allow
+              signed values (negative #s shown in red by default.) Can be
+              used with argument useParensForNegatives (see below.)
+      0       Integer fields get leading zeros
+      D       Date[/time] field
+      T       Time field
+      F       Auto-Fit: the control calculates its size from
+              the length of the template mask
+      V       Validate entered chars against validRegex before allowing them
+              to be entered vs. being allowed by basic mask and then having
+              the resulting value just colored as invalid.
+              (See USSTATE autoformat demo for how this can be used.)
+      S       Select entire field when navigating to new field
+    =======  ==========================================================
 
 fillChar
 
@@ -813,7 +821,6 @@ import  string
 import  sys
 
 import  wx
-import  six
 
 # jmg 12/9/03 - when we cut ties with Py 2.2 and earlier, this would
 # be a good place to implement the 2.3 logger class
@@ -1490,7 +1497,7 @@ class Field:
                 raise TypeError('%s: choices must be a sequence of strings' % str(self._index))
             elif len( self._choices) > 0:
                 for choice in self._choices:
-                    if not isinstance(choice, six.string_types):
+                    if not isinstance(choice, str):
 ##                        dbg(indent=0, suspend=0)
                         raise TypeError('%s: choices must be a sequence of strings' % str(self._index))
 
@@ -1954,7 +1961,7 @@ class MaskedEditMixin:
         for key in ('emptyBackgroundColour', 'invalidBackgroundColour', 'validBackgroundColour',
                     'foregroundColour', 'signedForegroundColour'):
             if key in ctrl_kwargs:
-                if isinstance(ctrl_kwargs[key], six.string_types):
+                if isinstance(ctrl_kwargs[key], str):
                     c = wx.Colour(ctrl_kwargs[key])
                     if c.Get() == (-1, -1, -1):
                         raise TypeError('%s not a legal color specification for %s' % (repr(ctrl_kwargs[key]), key))
@@ -3062,23 +3069,15 @@ class MaskedEditMixin:
 
             if key < 256:
                 char = chr(key) # (must work if we got this far)
-                if not six.PY3:
-                    char = char.decode(self._defaultEncoding)
             else:
                 char = unichr(event.GetUnicodeKey())
 ##                dbg('unicode char:', char)
 
-            excludes = six.text_type()
-            if not isinstance(field._excludeChars, six.text_type):
-                if six.PY3:
-                    excludes += field._excludeChars
-                else:
-                    excludes += field._excludeChars.decode(self._defaultEncoding)
-            if not isinstance(self._ctrl_constraints, six.text_type):
-                if six.PY3:
-                    excludes += field._excludeChars
-                else:
-                    excludes += self._ctrl_constraints._excludeChars.decode(self._defaultEncoding)
+            excludes = str()
+            if not isinstance(field._excludeChars, str):
+                excludes += field._excludeChars
+            if not isinstance(self._ctrl_constraints, str):
+                excludes += field._excludeChars
             else:
                 excludes += self._ctrl_constraints._excludeChars
 
@@ -4634,11 +4633,6 @@ class MaskedEditMixin:
         maskChar = self.maskdict[pos]
         okchars = self.maskchardict[maskChar]    ## entry, get mask approved characters
 
-        # convert okchars to unicode if required; will force subsequent appendings to
-        # result in unicode strings
-        if not six.PY3 and not isinstance(okchars, six.text_type):
-            okchars = okchars.decode(self._defaultEncoding)
-
         field = self._FindField(pos)
         if okchars and field._okSpaces:          ## Allow spaces?
             okchars += " "
@@ -5225,12 +5219,6 @@ class MaskedEditMixin:
                 left  = text[0:pos]
                 right   = text[pos+1:]
 
-            if not isinstance(char, six.text_type):
-                # convert the keyboard constant to a unicode value, to
-                # ensure it can be concatenated into the control value:
-                if not six.PY3:
-                    char = char.decode(self._defaultEncoding)
-
             newtext = left + char + right
 ####            dbg('left:    "%s"' % left)
 ####            dbg('right:   "%s"' % right)
@@ -5764,8 +5752,6 @@ class MaskedEditMixin:
         else:
             item = 'selection'
 ##        dbg('maxlength:', maxlength)
-        if not six.PY3 and not isinstance(paste_text, six.text_type):
-            paste_text = paste_text.decode(self._defaultEncoding)
 
         length_considered = len(paste_text)
         if length_considered > maxlength:
@@ -5870,9 +5856,6 @@ class MaskedEditMixin:
             paste_text = value
 
         if paste_text is not None:
-
-            if not six.PY3 and not isinstance(paste_text, six.text_type):
-                paste_text = paste_text.decode(self._defaultEncoding)
 
 ##            dbg('paste text: "%s"' % paste_text)
             # (conversion will raise ValueError if paste isn't legal)

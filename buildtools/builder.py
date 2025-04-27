@@ -165,7 +165,7 @@ class AutoconfBuilder(GNUMakeBuilder):
     def __init__(self, formatName="autoconf"):
         GNUMakeBuilder.__init__(self, formatName=formatName)
 
-    def configure(self, dir=None, options=None):
+    def configure(self, dir=None, options=None, env=None):
         #olddir = os.getcwd()
         #os.chdir(dir)
 
@@ -193,9 +193,9 @@ class AutoconfBuilder(GNUMakeBuilder):
         optionsStr = " ".join(options) if options else ""
         command = "%s %s" % (configure_cmd, optionsStr)
         print(command)
-        result = os.system(command)
+        result = subprocess.run(command, shell=True, env=env)
         #os.chdir(olddir)
-        return result
+        return result.returncode
 
 
 class MSVCBuilder(Builder):

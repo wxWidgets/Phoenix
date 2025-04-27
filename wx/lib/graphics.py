@@ -37,14 +37,17 @@ the ``wx.GraphicsContext`` classes a little better than Cairo's.
    is maintained.
 """
 
+import sys
 import math
-import six
 
 import wx
 import wx.lib.wxcairo as wxcairo
 import cairo
 
-
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 # Other ideas:
 # 1. TextToPath (or maybe make this part of the Path class
@@ -760,13 +763,13 @@ class GraphicsMatrix(GraphicsObject):
         return self._matrix
 
 
-    def Concat(self, matrix):
+    def Concat(self, matrix) -> Self:
         """Concatenates the matrix passed with the current matrix."""
         self._matrix = self._matrix * matrix._matrix
         return self
 
 
-    def Invert(self):
+    def Invert(self) -> Self:
         """Inverts the matrix."""
         self._matrix.invert()
         return self
@@ -782,19 +785,19 @@ class GraphicsMatrix(GraphicsObject):
         return self._matrix == cairo.Matrix()
 
 
-    def Rotate(self, angle):
+    def Rotate(self, angle) -> Self:
         """Rotates the matrix in radians"""
         self._matrix.rotate(angle)
         return self
 
 
-    def Scale(self, xScale, yScale):
+    def Scale(self, xScale, yScale) -> Self:
         """Scale the matrix"""
         self._matrix.scale(xScale, yScale)
         return self
 
 
-    def Translate(self, dx, dy):
+    def Translate(self, dx, dy) -> Self:
         """Translate the matrix.  This shifts the origin."""
         self._matrix.translate(dx, dy)
         return self
@@ -836,7 +839,7 @@ class GraphicsPath(GraphicsObject):
         self._pathContext = cairo.Context(surface)
 
 
-    def AddArc(self, x, y, radius, startAngle, endAngle, clockwise=True):
+    def AddArc(self, x, y, radius, startAngle, endAngle, clockwise=True) -> Self:
         """
         Adds an arc of a circle centering at (x,y) with radius, from
         startAngle to endAngle.
@@ -849,7 +852,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def AddArcToPoint(self, x1, y1 , x2, y2, radius ):
+    def AddArcToPoint(self, x1, y1 , x2, y2, radius ) -> Self:
         """
         Adds a an arc to two tangents connecting (current) to (x1,y1)
         and (x1,y1) to (x2,y2), also a straight line from (current) to
@@ -888,7 +891,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def AddCircle(self, x, y, radius):
+    def AddCircle(self, x, y, radius) -> Self:
         """
         Appends a new closed sub-path as a circle around (x,y).
         """
@@ -898,7 +901,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def AddCurveToPoint(self, cx1, cy1, cx2, cy2, x, y):
+    def AddCurveToPoint(self, cx1, cy1, cx2, cy2, x, y) -> Self:
         """
         Adds a cubic Bezier curve from the current point, using two
         control points and an end point.
@@ -907,7 +910,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def AddEllipse(self, x, y, w, h):
+    def AddEllipse(self, x, y, w, h) -> Self:
         """
         Appends an ellipse fitting into the given rectangle as a closed sub-path.
         """
@@ -925,7 +928,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def AddLineToPoint(self, x, y):
+    def AddLineToPoint(self, x, y) -> Self:
         """
         Adds a straight line from the current point to (x,y)
         """
@@ -933,7 +936,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def AddPath(self, path):
+    def AddPath(self, path) -> Self:
         """
         Appends the given path to this path.
         """
@@ -941,7 +944,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def AddQuadCurveToPoint(self, cx, cy, x, y):
+    def AddQuadCurveToPoint(self, cx, cy, x, y) -> Self:
         """
         Adds a quadratic Bezier curve from the current point, using a
         control point and an end point.
@@ -957,7 +960,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def AddRectangle(self, x, y, w, h):
+    def AddRectangle(self, x, y, w, h) -> Self:
         """
         Adds a new rectangle as a closed sub-path.
         """
@@ -965,7 +968,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def AddRoundedRectangle(self, x, y, w, h, radius):
+    def AddRoundedRectangle(self, x, y, w, h, radius) -> Self:
         """
         Adds a new rounded rectangle as a closed sub-path.
         """
@@ -981,7 +984,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def CloseSubpath(self):
+    def CloseSubpath(self) -> Self:
         """
         Adds a line segment to the path from the current point to the
         beginning of the current sub-path, and closes this sub-path.
@@ -1016,7 +1019,7 @@ class GraphicsPath(GraphicsObject):
         return self._pathContext.copy_path()
 
 
-    def MoveToPoint(self, x, y):
+    def MoveToPoint(self, x, y) -> Self:
         """
         Begins a new sub-path at (x,y) by moving the "current point" there.
         """
@@ -1024,7 +1027,7 @@ class GraphicsPath(GraphicsObject):
         return self
 
 
-    def Transform(self, matrix):
+    def Transform(self, matrix) -> Self:
         """
         Transforms each point in this path by the matrix
         """
@@ -1886,7 +1889,7 @@ def _makeColour(colour):
     Helper which makes a wx.Colour from any of the allowed typemaps (string,
     tuple, etc.)
     """
-    if isinstance(colour, (six.string_types, tuple)):
+    if isinstance(colour, (str, tuple)):
         return wx.NamedColour(colour)
     else:
         return colour

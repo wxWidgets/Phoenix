@@ -25,9 +25,6 @@ from .constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
 from .constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
 from .constants import DOCSTRING_KEY
 
-PY2 = sys.version_info[0] == 2
-PY3 = sys.version_info[0] == 3
-
 # ----------------------------------------------------------------------- #
 
 
@@ -76,7 +73,7 @@ def genIndexes(sphinxDir):
     files.
     """
     print("Generating indexes...")
-    pklfiles = glob.glob(sphinxDir + '/*.pkl')
+    pklfiles = sorted(glob.glob(sphinxDir + '/*.pkl'))
 
     for file in pklfiles:
         if file.endswith('functions.pkl'):
@@ -109,8 +106,8 @@ def buildEnumsAndMethods(sphinxDir):
 
     unreferenced_classes = {}
 
-    textfiles = glob.glob(sphinxDir + '/*.txt')
-    enum_files = glob.glob(sphinxDir + '/*.enumeration.txt')
+    textfiles = sorted(glob.glob(sphinxDir + '/*.txt'))
+    enum_files = sorted(glob.glob(sphinxDir + '/*.enumeration.txt'))
 
     enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
     enum_base = [enum.replace('.enumeration', '') for enum in enum_base]
@@ -342,7 +339,7 @@ def removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, te
 
 def addSpacesToLinks(text):
 
-    regex = re.findall('\w:ref:`(.*?)`', text)
+    regex = re.findall(r'\w:ref:`(.*?)`', text)
 
     for reg in regex:
         text = text.replace(':ref:`%s`'%reg, ' :ref:`%s`'%reg)
@@ -426,12 +423,12 @@ def makeModuleIndex(sphinxDir, file):
         # "wx.lower.UpperName". This is so we don't put all the enums in the
         # submodules in the core wx module too.
         # TODO: This may not work on case-insensitive file systems, check it.
-        enum_files = glob.glob(sphinxDir + '/wx.[A-Z]*.enumeration.txt')
+        enum_files = sorted(glob.glob(sphinxDir + '/wx.[A-Z]*.enumeration.txt'))
     else:
         label = '.'.join(local_file.split('.')[0:2])
         module = label
         enumDots = 3
-        enum_files = glob.glob(sphinxDir + '/%s*.enumeration.txt' % module)
+        enum_files = sorted(glob.glob(sphinxDir + '/%s*.enumeration.txt' % module))
 
     enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
 
@@ -531,11 +528,11 @@ def genGallery():
         plat_folder = os.path.join(image_folder, folder)
         os.chdir(plat_folder)
 
-        image_files[folder] = glob.glob('*.png')
+        image_files[folder] = sorted(glob.glob('*.png'))
 
     os.chdir(pwd)
 
-    txt_files = glob.glob(SPHINXROOT + '/*.txt')
+    txt_files = sorted(glob.glob(SPHINXROOT + '/*.txt'))
     html_files = {}
 
     for text in txt_files:
@@ -647,9 +644,9 @@ def addJavaScript(text):
 # ----------------------------------------------------------------------- #
 
 def postProcess(folder, options):
-    fileNames = glob.glob(folder + "/*.html")
+    fileNames = sorted(glob.glob(folder + "/*.html"))
 
-    enum_files = glob.glob(folder + '/*.enumeration.html')
+    enum_files = sorted(glob.glob(folder + '/*.enumeration.html'))
 
     enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
     enum_base = [enum.replace('.enumeration', '') for enum in enum_base]
@@ -660,22 +657,24 @@ def postProcess(folder, options):
     for indx, enum in enumerate(enum_base):
         html_file = os.path.split(enum_files[indx])[1]
         base = enum.split('.')[-1]
-        new = '(<a class="reference internal" href="%s" title="%s"><em>%s</em></a>)'%(html_file, base, base)
-        enum_dict['(<em>%s</em>)'%enum] = new
+        new = '(<a class="reference internal" href="%s" title="%s"><em>%s</em></a>)' % (html_file, base, base)
+        enum_dict['(<em>%s</em>)' % enum] = new
 
     for filename in fileNames:
         if "genindex" in filename or "modindex" in filename:
             continue
 
-        methods_done = properties_done = False
+        methods_done = attr_done = fn_done = False
 
         with textfile_open(filename, "rt") as fid:
             orig_text = text = fid.read()
 
-        text = text.replace('Overloaded Implementations:', '<strong>Overloaded Implementations:</strong>')
         for item in HTML_REPLACE:
-            if item != 'class':
-                text = text.replace('<dl class="%s">'%item, '\n<br><hr />\n<dl class="%s">'%item)
+            if item in ('class', 'py class'):
+                continue
+
+            text = text.replace('<dl class="%s">' % item,
+                                '<br><hr><dl class="%s">' % item)
 
         newtext = ''
         splitted_text = text.splitlines()
@@ -687,19 +686,32 @@ def postProcess(folder, options):
                     line = line.replace('– <p>', '– ')
                     line = line.replace('</p>', '')
 
-                if line.strip() == '<br><hr />' or line.strip() == '<dd><br><hr />':
-                    next_line = splitted_text[index+1]
-                    stripline = next_line.strip()
+                if not fn_done and \
+                    line.strip() in ('<br><hr><dl class="function">',
+                                     '<br><hr><dl class="py function">'):
 
-                    # replace the <hr> with a new headline for the first method or first property
-                    if (stripline == '<dl class="staticmethod">' or stripline == '<dl class="method">' \
-                       or stripline == '<dl class="classmethod">') and not methods_done:
-                        line = '\n<br><h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>\n'
-                        methods_done = True
+                    line = line[8:]
+                    fn_done = True
 
-                    elif stripline == '<dl class="attribute">' and not properties_done:
-                        line = '\n<br><h3>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>\n'
-                        properties_done = True
+                if not methods_done and \
+                    line.strip() in ('<br><hr><dl class="method">',
+                                     '<br><hr><dl class="py method">',
+                                     '<br><hr><dl class="staticmethod">',
+                                     '<br><hr><dl class="classmethod">'):
+
+                    line = '\n<br>\n<h3>Methods<a class="headerlink" \
+                           href="#methods" title="Permalink to this \
+                           headline">¶</a></h3>\n' + line[8:]
+                    methods_done = True
+
+                if not attr_done and \
+                    line.strip() in ('<br><hr><dl class="attribute">',
+                                     '<br><hr><dl class="py attribute">'):
+
+                    line = '\n<br>\n<h3>Properties<a class="headerlink" \
+                            href="#properties" title="Permalink to this \
+                            headline">¶</a></h3>\n' + line[8:]
+                    attr_done = True
 
             newtext += line + '\n'
 
@@ -750,7 +762,7 @@ def removeHeaderImage(text, options):
     tag = soup.find('div', 'headerimage')
     if tag:
         tag.extract()
-        text = unicode(soup) if PY2 else str(soup)
+        text = str(soup)
     return text
 
 
@@ -762,7 +774,7 @@ def tweakModuleIndex(text):
         href = tag['href'].split('.html#')
         if len(href) == 2 and href[0] == href[1]:
             tag['href'] = href[0] + '.html'
-    return unicode(soup) if PY2 else str(soup)
+    return str(soup)
 
 
 def tooltipsOnInheritance(text, class_summary):

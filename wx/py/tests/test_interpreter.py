@@ -10,7 +10,7 @@ from wx.py import interpreter
 """
 These unittest methods are preferred:
 -------------------------------------
-self.assert_(expr, msg=None)
+self.assertTrue(expr, msg=None)
 self.assertEqual(first, second, msg=None)
 self.assertRaises(excClass, callableObj, *args, **kwargs)
 self.fail(msg=None)
@@ -22,13 +22,13 @@ class ModuleTestCase(unittest.TestCase):
 
     def test_module(self):
         module = interpreter
-        self.assert_(module.__author__)
-        self.assert_(module.Interpreter)
-        self.assert_(module.Interpreter.push)
-        self.assert_(module.Interpreter.runsource)
-        self.assert_(module.Interpreter.getAutoCompleteList)
-        self.assert_(module.Interpreter.getCallTip)
-        self.assert_(module.InterpreterAlaCarte)
+        self.assertTrue(module.__author__)
+        self.assertTrue(module.Interpreter)
+        self.assertTrue(module.Interpreter.push)
+        self.assertTrue(module.Interpreter.runsource)
+        self.assertTrue(module.Interpreter.getAutoCompleteList)
+        self.assertTrue(module.Interpreter.getCallTip)
+        self.assertTrue(module.InterpreterAlaCarte)
 
 
 class InterpreterTestCase(unittest.TestCase):

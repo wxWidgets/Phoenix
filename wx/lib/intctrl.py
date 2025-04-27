@@ -41,17 +41,12 @@ import  string
 import  types
 
 import  wx
-import six
 
 #----------------------------------------------------------------------------
 
-MAXSIZE = six.MAXSIZE     # (constants should be in upper case)
-MINSIZE = -six.MAXSIZE-1
-
-if six.PY2:
-    LONGTYPE = long
-else:
-    LONGTYPE = int
+MAXSIZE = sys.maxsize     # (constants should be in upper case)
+MINSIZE = -sys.maxsize-1
+LONGTYPE = int
 
 #----------------------------------------------------------------------------
 
@@ -398,7 +393,7 @@ class IntCtrl(wx.TextCtrl):
                 name = "integer",
                 min=None, max=None,
                 limited = 0, allow_none = 0, allow_long = 0,
-                default_color = wx.BLACK, oob_color = wx.RED,
+                default_color = wx.NullColour, oob_color = wx.RED,
         ):
         """
         Default constructor
@@ -469,10 +464,7 @@ class IntCtrl(wx.TextCtrl):
         self.__default_color = wx.BLACK
         self.__oob_color = wx.RED
         self.__allow_none = 0
-        if six.PY2:
-            self.__allow_long = 0
-        else:
-            self.__allow_long = 1
+        self.__allow_long = 1
         self.__oldvalue = None
 
         if validator == wx.DefaultValidator:
@@ -491,10 +483,7 @@ class IntCtrl(wx.TextCtrl):
         self.SetLimited(limited)
         self.SetColors(default_color, oob_color)
         self.SetNoneAllowed(allow_none)
-        if six.PY2:
-            self.SetLongAllowed(allow_long)
-        else:
-            self.SetLongAllowed(1)
+        self.SetLongAllowed(1)
         self.ChangeValue(value)
 
     def OnText( self, event ):
@@ -708,7 +697,7 @@ class IntCtrl(wx.TextCtrl):
             value = self.GetValue()
 
         if( not (value is None and self.IsNoneAllowed())
-            and type(value) not in six.integer_types ):
+            and not isinstance(value, int) ):
             raise ValueError (
                 'IntCtrl requires integer values, passed %s'% repr(value) )
 
@@ -820,7 +809,7 @@ class IntCtrl(wx.TextCtrl):
         elif type(value) == LONGTYPE and not self.IsLongAllowed():
             raise ValueError (
                 'IntCtrl requires integer value, passed long' )
-        elif type(value) not in six.integer_types:
+        elif not isinstance(value, int):
             raise ValueError (
                 'IntCtrl requires integer value, passed %s'% repr(value) )
 

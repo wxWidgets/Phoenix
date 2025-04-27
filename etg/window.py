@@ -136,6 +136,16 @@ def run():
     m1.find('externalLeading').out = True
 
     c.find('GetHandle').type = 'wxUIntPtr*'
+    c.find('GetHandle').detailedDoc = [
+        """The returned value differs from the C++ version of GetHandle when \
+        running on the GTK port. When running on Wayland with GTK, this \
+        function returns a `wl_surface` pointer for the native OS window \
+        containing the widget. On X11 with GTK, this returns the X window \
+        ID for the containing window. On any other backend with GTK, this \
+        function returns 0.\n\n"""
+
+        """On some platforms this may return 0 if the window has not yet been shown."""
+    ]
     c.find('GetHandle').setCppCode("return new wxUIntPtr(wxPyGetWinHandle(self));")
 
     c.addCppMethod('void*', 'GetGtkWidget', '()', """\
@@ -246,6 +256,23 @@ def run():
     c.find('GetAccessible').setCppCode("""\
         #if wxUSE_ACCESSIBILITY
             return self->GetAccessible();
+        #else
+            wxPyRaiseNotImplemented();
+            return NULL;
+        #endif
+        """)
+    c.find('GetOrCreateAccessible').setCppCode("""\
+        #if wxUSE_ACCESSIBILITY
+            return self->GetOrCreateAccessible();
+        #else
+            wxPyRaiseNotImplemented();
+            return NULL;
+        #endif
+        """)
+    c.find('CreateAccessible').factory = True
+    c.find('CreateAccessible').setCppCode("""\
+        #if wxUSE_ACCESSIBILITY
+            return self->CreateAccessible();
         #else
             wxPyRaiseNotImplemented();
             return NULL;

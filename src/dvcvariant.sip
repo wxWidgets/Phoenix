@@ -31,6 +31,11 @@ wxVariant wxDVCVariant_in_helper(PyObject* source)
     if (source == Py_None) {
         ret.MakeNull();
     }
+    else if (wxPyWrappedPtr_TypeCheck(source, wxT("wxDataViewCheckIconText"))) {
+        wxDataViewCheckIconText* ptr;
+        wxPyConvertWrappedPtr(source, (void**)&ptr, wxT("wxDataViewCheckIconText"));
+        ret << *ptr;
+    }
     else if (wxPyWrappedPtr_TypeCheck(source, wxT("wxDataViewIconText"))) {
         wxDataViewIconText* ptr;
         wxPyConvertWrappedPtr(source, (void**)&ptr, wxT("wxDataViewIconText"));
@@ -45,8 +50,13 @@ wxVariant wxDVCVariant_in_helper(PyObject* source)
 PyObject* wxDVCVariant_out_helper(const wxVariant& value)
 {
     PyObject* ret;
-
-    if ( value.IsType("wxDataViewIconText") )
+    if (value.IsType("wxDataViewCheckIconText") )
+    {
+        wxDataViewCheckIconText val;
+        val << value;
+        ret = wxPyConstructObject(new wxDataViewCheckIconText(val), wxT("wxDataViewCheckIconText"), 0);
+    }
+    else if ( value.IsType("wxDataViewIconText") )
     {
         wxDataViewIconText val;
         val << value;

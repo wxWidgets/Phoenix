@@ -22,7 +22,7 @@ HOWTO Release wxPython Phoenix
 5. Add the name of the branch to the appropriate field, and click the "Do a
    release build?" checkbox.
 
-6. Click the force-build button
+6. Click the Start Build button
 
 7. Building wheel files for selected linux distros can be done while the other
    builds are still running. Fetch the source tarball when it is finished and put
@@ -35,18 +35,19 @@ HOWTO Release wxPython Phoenix
 9. ...it's still not done, come back later. Or maybe tomorrow...
 
 
-
-11. When the build is done and successful then the release version of the docs
+10. When the build is done and successful then the release version of the docs
     src and wheel files should be on Havok in ~/release-builds. Do whatever
     smoke-testing should be done.
 
-12. Digitally sign the files with this command::
+11. Digitally sign the files with this command::
 
         cd ~/release-builds
         for f in wxPython-4*; do gpg --detach-sign -a $f; done
         for f in $(find linux -name "*.whl"); do echo $f; gpg --detach-sign -a $f; done
 
-13. Upload to PyPI with::
+    NOTE: It looks like PyPI does not support gpg signatures any longer, so this step can be skipped/
+
+12. Upload to PyPI with::
 
         cd ~/release-builds
         twine upload wxPython-4*
@@ -54,32 +55,36 @@ HOWTO Release wxPython Phoenix
     (Twine doesn't know what to do with the docs and other files so they need
     to be excluded by the wildcard.)
 
-14. Upload the wxPython-docs-*.tar.gz documentation file to docs.wxpython.org::
+13. Upload the wxPython-docs-*.tar.gz documentation file to docs.wxpython.org::
 
         scp wxPython-docs-*.tar.gz wxpython-docs:wxpython-docs/tmp
 
     TODO: Automate this!
     Go to the site and unpack the new docs into the document root.
 
-15. Upload the docs, demos and pdb archive files to extras.wxpython.org/wxPython4/extras/::
+14. Upload the docs, demos and pdb archive files to extras.wxpython.org/wxPython4/extras/::
 
         VERSION={current release version number}
         ssh wxpython-extras "mkdir -p wxpython-extras/htdocs/wxPython4/extras/$VERSION"
         scp wxPython-[^0-9]* wxpython-extras:wxpython-extras/htdocs/wxPython4/extras/$VERSION
 
-16. Upload the Linux wheels::
+15. Upload the Linux wheels::
 
         scp -r linux wxpython-extras:wxpython-extras/htdocs/wxPython4/extras/
 
-17. Save a copy of everything to the NAS::
+16. Save a copy of everything to the NAS::
 
-        mkdir /stuff/Development/wxPython/wxPython4/extras/$VERSION
-        cp -v wxPython-[^0-9]* /stuff/Development/wxPython/wxPython4/extras/$VERSION
-        cp -v wxPython-4* /stuff/Development/wxPython/wxPython4/pypi
-        cp -rv linux /stuff/Development/wxPython/wxPython4/extras
+        mkdir /Volumes/STUFF/Development/wxPython/wxPython4/extras/$VERSION
+        cp -v wxPython-[^0-9]* /Volumes/STUFF/Development/wxPython/wxPython4/extras/$VERSION
+        cp -v wxPython-4* /Volumes/STUFF/Development/wxPython/wxPython4/pypi
+        cp -rv linux /Volumes/STUFF/Development/wxPython/wxPython4/extras
 
-18. Tag the released revision in git, using a name like wxPython-4.0.0 (using
+17. Tag the released revision in git, using a name like wxPython-4.0.0 (using
     the actual version number of course.) Push the tag to all remotes.
+
+18. Make a release at GitHub. Copy the generated source file into the release,
+    and use a message that indicates the source archives created by GitHub are
+    not complete.
 
 19. Bump the version numbers in buildtools/version.py appropriately for the
     next anticipated release, so future snapshot builds will be recognized as

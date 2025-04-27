@@ -27,9 +27,7 @@ import  copy
 import  types
 import  wx
 
-import six
-
-class PrintBase(object):
+class PrintBase:
     def SetPrintFont(self, font):      # set the DC font parameters
         fattr = font["Attr"]
         if fattr[0] == 1:
@@ -64,18 +62,18 @@ class PrintBase(object):
                 if self.draw == True and txtdraw == True:
                     test_out = self.TestFull(vout)
                     if self.align == wx.ALIGN_LEFT:
-                        self.DC.DrawText(test_out, self.indent+self.pcell_left_margin, y)
+                        self.DC.DrawText(test_out, int(self.indent+self.pcell_left_margin), int(y))
 
                     elif self.align == wx.ALIGN_CENTRE:
                         diff = self.GetCellDiff(test_out, self.region)
-                        self.DC.DrawText(test_out, self.indent+diff/2, y)
+                        self.DC.DrawText(test_out, int(self.indent+diff/2), int(y))
 
                     elif self.align == wx.ALIGN_RIGHT:
                         diff = self.GetCellDiff(test_out, self.region)
-                        self.DC.DrawText(test_out, self.indent+diff, y)
+                        self.DC.DrawText(test_out, int(self.indent+diff), int(y))
 
                     else:
-                        self.DC.DrawText(test_out, self.indent+self.pcell_left_margin, y)
+                        self.DC.DrawText(test_out, int(self.indent+self.pcell_left_margin), int(y))
                 text = remain
                 y = y + self.space
         return y - self.space + self.pt_space_after
@@ -152,18 +150,18 @@ class PrintBase(object):
                 if self.draw == True and txtdraw == True:
                     test_out = vout
                     if align == wx.ALIGN_LEFT:
-                        self.DC.DrawText(test_out, indent, y)
+                        self.DC.DrawText(test_out, int(indent), int(y))
 
                     elif align == wx.ALIGN_CENTRE:
                         diff = self.GetCellDiff(test_out, pagew)
-                        self.DC.DrawText(test_out, indent+diff/2, y)
+                        self.DC.DrawText(test_out, int(indent+diff/2), int(y))
 
                     elif align == wx.ALIGN_RIGHT:
                         diff = self.GetCellDiff(test_out, pagew)
-                        self.DC.DrawText(test_out, indent+diff, y)
+                        self.DC.DrawText(test_out, int(indent+diff), int(y))
 
                     else:
-                        self.DC.DrawText(test_out, indent, y_out)
+                        self.DC.DrawText(test_out, int(indent), int(y_out))
                 text = remain
                 y = y + y_line
         return y - y_line
@@ -273,7 +271,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
         self.column.append(pos_x)
 
         #module logic expects two dimensional data -- fix input if needed
-        if isinstance(self.data, six.string_types):
+        if isinstance(self.data, str):
             self.data = [[copy.copy(self.data)]] # a string becomes a single cell
         try:
             rows = len(self.data)
@@ -282,7 +280,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
             rows = 1
         first_value = self.data[0]
 
-        if isinstance(first_value, six.string_types): # a sequence of strings
+        if isinstance(first_value, str): # a sequence of strings
             if self.label == [] and self.set_column == []:
                 data = []
                 for x in self.data:     #becomes one column
@@ -531,8 +529,8 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
         brush = wx.Brush(colour, wx.BRUSHSTYLE_SOLID)
         self.DC.SetBrush(brush)
         height = self.label_space + self.label_pt_space_before + self.label_pt_space_after
-        self.DC.DrawRectangle(self.column[0], self.y,
-                              self.end_x-self.column[0]+1, height)
+        self.DC.DrawRectangle(int(self.column[0]), int(self.y),
+                              int(self.end_x-self.column[0]+1), int(height))
 
     def ColourRowCells(self, height):
         if self.draw == False:
@@ -550,7 +548,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
 
             start_x = self.column[col]
             width = self.column[col+1] - start_x + 2
-            self.DC.DrawRectangle(start_x, self.y, width, height)
+            self.DC.DrawRectangle(int(start_x), int(self.y), int(width), int(height))
             col = col + 1
 
     def PrintRow(self, row_val, draw = True, align = wx.ALIGN_LEFT):
@@ -562,7 +560,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
         self.col = 0
         max_y = 0
         for vtxt in row_val:
-            if not isinstance(vtxt, six.string_types):
+            if not isinstance(vtxt, str):
                 vtxt = str(vtxt)
             self.region = self.column[self.col+1] - self.column[self.col]
             self.indent = self.column[self.col]
@@ -626,7 +624,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
 
             y_out = self.y
 #            y_out = self.y + self.pt_space_before + self.pt_space_after     # adjust for extra spacing
-            self.DC.DrawLine(self.column[0], y_out, self.end_x, y_out)
+            self.DC.DrawLine(int(self.column[0]), int(y_out), int(self.end_x), int(y_out))
 
     def DrawColumns(self):
         if self.draw == True \
@@ -648,7 +646,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
                 indent = val
 
                 self.DC.SetPen(wx.Pen(colour, size))
-                self.DC.DrawLine(indent, self.y_start, indent, self.y)
+                self.DC.DrawLine(int(indent), int(self.y_start), int(indent), int(self.y))
                 col = col + 1
 
     def DrawText(self):

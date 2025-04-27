@@ -39,6 +39,16 @@ def run():
 
     module.find('wxDirSelectorPromptStr').ignore()
 
+    c.find('GetPaths').ignore()
+    c.addCppMethod('wxArrayString*', 'GetPaths', '()', pyArgsString="() -> list",
+        doc='Returns a list of the currently selected paths.',
+        body="""\
+            wxArrayString* paths = new wxArrayString;
+            self->GetPaths(*paths);
+            return paths;
+            """
+    )
+
     c = module.find('wxDirSelector')
     c.mustHaveApp()
 

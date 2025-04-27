@@ -15,20 +15,26 @@ wxWidgets API info which we need from them.
 import sys
 import os
 import pprint
-import xml.etree.ElementTree as et
+from typing import Optional
+import xml.etree.ElementTree as ET
 import copy
 
-from .tweaker_tools import FixWxPrefix, magicMethods, \
+from .tweaker_tools import AutoConversionInfo, FixWxPrefix, MethodType, magicMethods, \
                            guessTypeInt, guessTypeFloat, guessTypeStr, \
-                           textfile_open
+                           textfile_open, Signature, removeWxPrefix
 from sphinxtools.utilities import findDescendants
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
 # methods, functions and other items in the C/C++ API being wrapped.
 #---------------------------------------------------------------------------
 
-class BaseDef(object):
+class BaseDef:
     """
     The base class for all element types and provides the common attributes
     and functions that they all share.
@@ -62,6 +68,8 @@ class BaseDef(object):
         # class. Should be overridden in derived classes to get what each one
         # needs in addition to the base.
         self.name = element.find(self.nameTag).text
+        if self.name is None:
+            self.name = ''
         if '::' in self.name:
             loc = self.name.rfind('::')
             self.name = self.name[loc+2:]
@@ -96,7 +104,7 @@ class BaseDef(object):
                     return
 
 
-    def ignore(self, val=True):
+    def ignore(self, val=True) -> Self:
         self.ignored = val
         return self
 
@@ -273,11 +281,14 @@ class FunctionDef(BaseDef, FixWxPrefix):
     """
     Information about a standalone function.
     """
+    _default_method_type = MethodType.FUNCTION
+
     def __init__(self, element=None, **kw):
         super(FunctionDef, self).__init__()
         self.type = None
         self.definition = ''
         self.argsString = ''
+        self.signature: Optional[Signature] = None
         self.pyArgsString = ''
         self.isOverloaded = False
         self.overloads = []
@@ -399,7 +410,10 @@ class FunctionDef(BaseDef, FixWxPrefix):
         else:
             parent = self.klass
         item = self.findOverload(matchText)
+        assert item is not None
         item.pyName = newName
+        if item.signature:
+            item.signature.method_name = newName
         item.__dict__.update(kw)
 
         if item is self and not self.hasOverloads():
@@ -424,7 +438,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         return item
 
 
-    def ignore(self, val=True):
+    def ignore(self, val=True) -> Self:
         # In addition to ignoring this item, reorder any overloads to ensure
         # the primary overload is not ignored, if possible.
         super(FunctionDef, self).ignore(val)
@@ -462,21 +476,11 @@ class FunctionDef(BaseDef, FixWxPrefix):
         """
         Create a pythonized version of the argsString in function and method
         items that can be used as part of the docstring.
-
-        TODO: Maybe (optionally) use this syntax to document arg types?
-              http://www.python.org/dev/peps/pep-3107/
         """
-        def _cleanName(name):
-            for txt in ['const', '*', '&', ' ']:
-                name = name.replace(txt, '')
-            name = name.replace('::', '.')
-            name = self.fixWxPrefix(name, True)
-            return name
-
-        params = list()
-        returns = list()
+        params: list[Signature.Parameter] = []
+        returns: list[str] = []
         if self.type and self.type != 'void':
-            returns.append(_cleanName(self.type))
+            returns.append(self.cleanType(self.type))
 
         defValueMap = { 'true':  'True',
                         'false': 'False',
@@ -484,7 +488,9 @@ class FunctionDef(BaseDef, FixWxPrefix):
                         'wxString()': '""',
                         'wxArrayString()' : '[]',
                         'wxArrayInt()' : '[]',
+                        'wxEmptyString':  "''", # Makes signatures much shorter
                         }
+        P = Signature.Parameter
         if isinstance(self, CppMethodDef):
             # rip apart the argsString instead of using the (empty) list of parameters
             lastP = self.argsString.rfind(')')
@@ -497,15 +503,15 @@ class FunctionDef(BaseDef, FixWxPrefix):
                 if '=' in arg:
                     default = arg.split('=')[1].strip()
                     arg = arg.split('=')[0].strip()
-                    if default in defValueMap:
-                        default = defValueMap.get(default)
-                    else:
-                        default = self.fixWxPrefix(default, True)
+                    default = defValueMap.get(default, default)
+                    default = self.fixWxPrefix(default, True)
                 # now grab just the last word, it should be the variable name
-                arg = arg.split()[-1]
-                if default:
-                    arg += '=' + default
-                params.append(arg)
+                # The rest will be the type information
+                arg_type, arg = arg.rsplit(None, 1)
+                arg, arg_type = self.parseNameAndType(arg, arg_type, True)
+                params.append(P(arg, arg_type, default))
+                if default == 'None':
+                    params[-1].make_optional()
         else:
             for param in self.items:
                 assert isinstance(param, ParamDef)
@@ -513,25 +519,40 @@ class FunctionDef(BaseDef, FixWxPrefix):
                     continue
                 if param.arraySize:
                     continue
-                s = param.pyName or param.name
+                s, param_type = self.parseNameAndType(param.pyName or param.name, param.type, not param.out)
                 if param.out:
-                    returns.append(s)
+                    if param_type:
+                        returns.append(param_type)
                 else:
+                    default = ''
                     if param.inOut:
-                        returns.append(s)
+                        if param_type:
+                            returns.append(param_type)
                     if param.default:
                         default = param.default
-                        if default in defValueMap:
-                            default = defValueMap.get(default)
-
-                        s += '=' + '|'.join([_cleanName(x) for x in default.split('|')])
-                    params.append(s)
-
-        self.pyArgsString = '(' + ', '.join(params) + ')'
-        if len(returns) == 1:
-            self.pyArgsString += ' -> ' + returns[0]
-        if len(returns) > 1:
-            self.pyArgsString += ' -> (' + ', '.join(returns) + ')'
+                        default = defValueMap.get(default, default)
+                        default = '|'.join([self.cleanName(x, True) for x in default.split('|')])
+                    params.append(P(s, param_type, default))
+                    if default == 'None':
+                        params[-1].make_optional()
+        if getattr(self, 'isCtor', False):
+            name = '__init__'
+        else:
+            name = self.pyName or self.name
+            name = self.fixWxPrefix(name)
+        # __bool__ and __nonzero__ need to be defined as returning int for SIP, but for Python
+        # __bool__ is required to return a bool:
+        if name in ('__bool__', '__nonzero__'):
+            return_type = 'bool'
+        elif not returns:
+            return_type = 'None'
+        elif len(returns) == 1:
+            return_type = returns[0]
+        else:
+            return_type = f"Tuple[{', '.join(returns)}]"
+        kind = MethodType.STATIC_METHOD if getattr(self, 'isStatic', False) else type(self)._default_method_type
+        self.signature = Signature(name, *params, return_type=return_type, method_type=kind)
+        self.pyArgsString = self.signature.args_string(False)
 
 
     def collectPySignatures(self):
@@ -568,6 +589,8 @@ class MethodDef(FunctionDef):
     """
     Represents a class method, ctor or dtor declaration.
     """
+    _default_method_type = MethodType.METHOD
+
     def __init__(self, element=None, className=None, **kw):
         super(MethodDef, self).__init__()
         self.className = className
@@ -650,7 +673,7 @@ class ParamDef(BaseDef):
                 self.default = flattenNode(element.find('defval'))
         except:
             print("error when parsing element:")
-            et.dump(element)
+            ET.dump(element)
             raise
 #---------------------------------------------------------------------------
 
@@ -677,7 +700,7 @@ class ClassDef(BaseDef):
         self.headerCode = []
         self.cppCode = []
         self.convertToPyObject = None
-        self.convertFromPyObject = None
+        self._convertFromPyObject = None
         self.allowNone = False      # Allow the convertFrom code to handle None too.
         self.instanceCode = None    # Code to be used to create new instances of this class
         self.innerclasses = []
@@ -696,6 +719,26 @@ class ClassDef(BaseDef):
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
+
+    @property
+    def convertFromPyObject(self) -> Optional[str]:
+        return self._convertFromPyObject
+    
+    @convertFromPyObject.setter
+    def convertFromPyObject(self, value: AutoConversionInfo) -> None:
+        self._convertFromPyObject = value.code
+        name = self.pyName or self.name
+        name = removeWxPrefix(name)
+        FixWxPrefix.register_autoconversion(name, value.convertables)
+
+    def is_top_level(self) -> bool:
+        """Check if this class is a subclass of wx.TopLevelWindow"""
+        if not self.nodeBases:
+            return False
+        all_classes, specials = self.nodeBases
+        if 'wxTopLevelWindow' in specials:
+            return True
+        return 'wxTopLevelWindow' in all_classes
 
 
     def renameClass(self, newName):
@@ -724,7 +767,7 @@ class ClassDef(BaseDef):
                 return all_classes, specials
 
             fname = os.path.join(XMLSRC, refid+'.xml')
-            root = et.parse(fname).getroot()
+            root = ET.parse(fname).getroot()
             compounds = findDescendants(root, 'basecompoundref')
         else:
             compounds = element.findall('basecompoundref')
@@ -767,7 +810,7 @@ class ClassDef(BaseDef):
             from etgtools import XMLSRC
             ref = node.get('refid')
             fname = os.path.join(XMLSRC, ref+'.xml')
-            root = et.parse(fname).getroot()
+            root = ET.parse(fname).getroot()
             innerclass = root[0]
             kind = innerclass.get('kind')
             assert kind in ['class', 'struct']
@@ -1254,7 +1297,7 @@ class CppMethodDef(MethodDef):
     NOTE: This one is not automatically extracted, but can be added to
           classes in the tweaker stage
     """
-    def __init__(self, type, name, argsString, body, doc=None, isConst=False,
+    def __init__(self, type, name, argsString: str, body, doc=None, isConst=False,
                  cppSignature=None, virtualCatcherCode=None, **kw):
         super(CppMethodDef, self).__init__()
         self.type = type
@@ -1574,12 +1617,21 @@ class ModuleDef(BaseDef):
             extractingMsg(kind, element)
             for node in element.findall('sectiondef/memberdef'):
                 self.addElement(node)
+            for node in element.findall('sectiondef/member'):
+                node = self.resolveRefid(node)
+                self.addElement(node)
 
         else:
             raise ExtractorError('Unknown module item kind: %s' % kind)
 
         return item
 
+    def resolveRefid(self, node):
+        from etgtools import XMLSRC
+        refid = node.get('refid')
+        fname = os.path.join(XMLSRC, refid.rsplit('_', 1)[0]) + '.xml'
+        root = ET.parse(fname).getroot()
+        return root.find(".//memberdef[@id='{}']".format(refid))
 
 
     def addCppFunction(self, type, name, argsString, body, doc=None, **kw):
@@ -1673,11 +1725,7 @@ def flattenNode(node, rstrip=True):
     # TODO: can we just use ElementTree.tostring for this function?
     if node is None:
         return ""
-    if sys.version_info < (3,):
-        strclass = basestring
-    else:
-        strclass = str
-    if isinstance(node, strclass):
+    if isinstance(node, str):
         return node
     text = node.text or ""
     for n in node:
@@ -1728,7 +1776,7 @@ def prependText(node, text):
 
 
 def makeTextElement(text):
-    element = et.Element('para')
+    element = ET.Element('para')
     element.text = text
     return element
 

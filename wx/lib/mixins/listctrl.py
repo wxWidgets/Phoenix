@@ -33,12 +33,9 @@
 
 import  locale
 import  wx
-import six
 
-if six.PY3:
-    # python 3 lacks cmp:
-    def cmp(a, b):
-        return (a > b) - (a < b)
+def cmp(a, b):
+    return (a > b) - (a < b)
 
 #----------------------------------------------------------------------------
 
@@ -144,10 +141,12 @@ class ColumnSorterMixin:
         """
         Return a tuple containing the index of the column that was last sorted
         and the sort direction of that column.
-        Usage:
-        col, ascending = self.GetSortState()
-        # Make changes to list items... then resort
-        self.SortListItems(col, ascending)
+
+        Usage::
+
+            col, ascending = self.GetSortState()
+            # Make changes to list items... then resort
+            self.SortListItems(col, ascending)
         """
         return (self._col, self._colSortFlag[self._col])
 
@@ -159,10 +158,10 @@ class ColumnSorterMixin:
         item2 = self.itemDataMap[key2][col]
 
         #--- Internationalization of string sorting with locale module
-        if isinstance(item1, six.text_type) and isinstance(item2, six.text_type):
+        if isinstance(item1, str) and isinstance(item2, str):
             # both are unicode (py2) or str (py3)
             cmpVal = locale.strcoll(item1, item2)
-        elif isinstance(item1, six.binary_type) or isinstance(item2, six.binary_type):
+        elif isinstance(item1, bytes) or isinstance(item2, bytes):
             # at least one is a str (py2) or byte (py3)
             cmpVal = locale.strcoll(str(item1), str(item2))
         else:
@@ -459,7 +458,7 @@ class TextEditMixin:
 
     def make_editor(self, col_style=wx.LIST_FORMAT_LEFT):
 
-        style =wx.TE_PROCESS_ENTER|wx.TE_PROCESS_TAB|wx.TE_RICH2
+        style =wx.TE_PROCESS_ENTER|wx.TE_PROCESS_TAB
         style |= {wx.LIST_FORMAT_LEFT: wx.TE_LEFT,
                   wx.LIST_FORMAT_RIGHT: wx.TE_RIGHT,
                   wx.LIST_FORMAT_CENTRE : wx.TE_CENTRE
@@ -586,7 +585,7 @@ class TextEditMixin:
                 # scroll a bit more than what is minimum required
                 # so we don't have to scroll every time the user presses TAB
                 # which is very tireing to the eye
-                addoffset = self.GetSize()[0]/4
+                addoffset = self.GetSize()[0]//4
                 # but be careful at the end of the list
                 if addoffset + scrolloffset < self.GetSize()[0]:
                     offset += addoffset

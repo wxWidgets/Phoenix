@@ -332,8 +332,7 @@ class RubberBand:
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetLogicalFunction(wx.XOR)
         if boxToErase:
-            r = wx.Rect(*boxToErase)
-            dc.DrawRectangle(r)
+            dc.Clear()
 
         r = wx.Rect(*boxToDraw)
         dc.DrawRectangle(r)
