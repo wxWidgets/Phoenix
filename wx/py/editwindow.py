@@ -187,7 +187,7 @@ class EditWindow(stc.StyledTextCtrl):
         self.StyleSetSpec(stc.STC_P_COMMENTBLOCK,
                           "fore:#7F7F7F")
         self.StyleSetSpec(stc.STC_P_STRINGEOL,
-                          "fore:#000000,face:%(mono)s,back:#E0C0E0,eolfilled" % faces)
+                          "fore:#000000,face:%(mono)s,back:#E0C0E0,eol" % faces)
 
     def OnUpdateUI(self, event):
         """Check for matching braces."""
