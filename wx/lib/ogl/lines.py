@@ -409,7 +409,7 @@ class LineShape(Shape):
         self._lineControlPoints = []
 
         for _ in range(n):
-            point = wx.RealPoint(-999, -999)
+            point = wx.Point(-999, -999)
             self._lineControlPoints.append(point)
 
         # pi: added _initialised to keep track of when we have set
@@ -473,7 +473,7 @@ class LineShape(Shape):
                     else:
                         y2 = first_point[1]
                         y1 = last_point[1]
-                    self._lineControlPoints[i] = wx.RealPoint((x2 - x1) / 2.0 + x1, (y2 - y1) / 2.0 + y1)
+                    self._lineControlPoints[i] = wx.RealPoint((x2 - x1) // 2 + x1, (y2 - y1) // 2 + y1)
             self._initialised = True
 
     def FormatText(self, dc, s, i):
@@ -666,12 +666,12 @@ class LineShape(Shape):
 
 
         """
-        self._lineControlPoints[0] = wx.RealPoint(x1, y1)
-        self._lineControlPoints[-1] = wx.RealPoint(x2, y2)
+        self._lineControlPoints[0] = wx.Point(x1, y1)
+        self._lineControlPoints[-1] = wx.Point(x2, y2)
 
-        # Find centre point
-        self._xpos = (x1 + x2) / 2.0
-        self._ypos = (y1 + y2) / 2.0
+        # Find center point
+        self._xpos = (x1 + x2) // 2
+        self._ypos = (y1 + y2) // 2
 
     # Get absolute positions of ends
     def GetEnds(self):

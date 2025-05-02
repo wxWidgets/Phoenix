@@ -337,8 +337,8 @@ def FindEndForBox(width, height, x1, y1, x2, y2):
     :returns: the end position
 
     """
-    xvec = [x1 - width / 2.0, x1 - width / 2.0, x1 + width / 2.0, x1 + width / 2.0, x1 - width / 2.0]
-    yvec = [y1 - height / 2.0, y1 + height / 2.0, y1 + height / 2.0, y1 - height / 2.0, y1 - height / 2.0]
+    xvec = [x1 - width // 2, x1 - width // 2, x1 + width // 2, x1 + width // 2, x1 - width // 2]
+    yvec = [y1 - height // 2, y1 + height // 2, y1 + height // 2, y1 - height // 2, y1 - height // 2]
 
     return FindEndForPolyline(xvec, yvec, x2, y2, x1, y1)
 
@@ -419,7 +419,9 @@ def FindEndForPolyline(xvec, yvec, x1, y1, x2, y2):
         if line_ratio < min_ratio:
             min_ratio = line_ratio
 
-    return x1 + (x2 - x1) * min_ratio, y1 + (y2 - y1) * min_ratio
+    x: int = round(x1 + (x2 - x1) * min_ratio)
+    y: int = round(y1 + (y2 - y1) * min_ratio)
+    return x, y
 
 
 def PolylineHitTest(xvec, yvec, x1, y1, x2, y2):

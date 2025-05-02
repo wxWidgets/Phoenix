@@ -324,8 +324,8 @@ class Shape(ShapeEvtHandler):
         self._id = 0
         self._formatted = False
         self._canvas = canvas
-        self._xpos = 0.0
-        self._ypos = 0.0
+        self._xpos = 0
+        self._ypos = 0
         self._pen = BlackForegroundPen
         self._brush = wx.WHITE_BRUSH
         self._font = NormalFont
@@ -353,7 +353,7 @@ class Shape(ShapeEvtHandler):
         self._centreResize = True
         self._maintainAspectRatio = False
         self._highlighted = False
-        self._rotation = 0.0
+        self._rotation = 0
         self._branchNeckLength = 10
         self._branchStemLength = 10
         self._branchSpacing = 10
@@ -3612,15 +3612,15 @@ class ShapeRegion(object):
         else:
             self._regionText = ""
             self._font = NormalFont
-            self._minHeight = 5.0
-            self._minWidth = 5.0
-            self._width = 0.0
-            self._height = 0.0
-            self._x = 0.0
-            self._y = 0.0
+            self._minHeight = 5
+            self._minWidth = 5
+            self._width = 0
+            self._height = 0
+            self._x = 0
+            self._y = 0
 
-            self._regionProportionX = -1.0
-            self._regionProportionY = -1.0
+            self._regionProportionX = -1
+            self._regionProportionY = -1
             self._formatMode = FORMAT_CENTRE_HORIZ | FORMAT_CENTRE_VERT
             self._regionName = ""
             self._textColour = "BLACK"
