@@ -2518,22 +2518,22 @@ class Shape(ShapeEvtHandler):
 
         if self.GetCentreResize():
             # Maintain the same centre point
-            new_width = 2.0 * abs(x - self.GetX())
-            new_height = 2.0 * abs(y - self.GetY())
+            new_width = 2 * abs(x - self.GetX())
+            new_height = 2 * abs(y - self.GetY())
 
             # Constrain sizing according to what control point you're dragging
             if pt._type == CONTROL_POINT_HORIZONTAL:
                 if self.GetMaintainAspectRatio():
-                    new_height = bound_y * (new_width / bound_x)
+                    new_height = bound_y * (new_width // bound_x)
                 else:
                     new_height = bound_y
             elif pt._type == CONTROL_POINT_VERTICAL:
                 if self.GetMaintainAspectRatio():
-                    new_width = bound_x * (new_height / bound_y)
+                    new_width = bound_x * (new_height // bound_y)
                 else:
                     new_width = bound_x
             elif pt._type == CONTROL_POINT_DIAGONAL and (keys & KEY_SHIFT):
-                new_height = bound_y * (new_width / bound_x)
+                new_height = bound_y * (new_width // bound_x)
 
             if self.GetFixedWidth():
                 new_width = bound_x
@@ -2558,23 +2558,23 @@ class Shape(ShapeEvtHandler):
                 newX1 = pt._controlPointDragStartX
                 newX2 = newX1 + pt._controlPointDragStartWidth
             elif pt._type == CONTROL_POINT_DIAGONAL and (keys & KEY_SHIFT or self.GetMaintainAspectRatio()):
-                newH = (newX2 - newX1) * (float(pt._controlPointDragStartHeight) / pt._controlPointDragStartWidth)
+                newH = (newX2 - newX1) * (float(pt._controlPointDragStartHeight) // pt._controlPointDragStartWidth)
                 if self.GetY() > pt._controlPointDragStartY:
                     newY2 = newY1 + newH
                 else:
                     newY1 = newY2 - newH
 
-            newWidth = float(newX2 - newX1)
-            newHeight = float(newY2 - newY1)
+            newWidth = round(newX2 - newX1)
+            newHeight = round(newY2 - newY1)
 
             if pt._type == CONTROL_POINT_VERTICAL and self.GetMaintainAspectRatio():
-                newWidth = bound_x * (newHeight / bound_y)
+                newWidth = bound_x * (newHeight // bound_y)
 
             if pt._type == CONTROL_POINT_HORIZONTAL and self.GetMaintainAspectRatio():
-                newHeight = bound_y * (newWidth / bound_x)
+                newHeight = bound_y * (newWidth // bound_x)
 
-            pt._controlPointDragPosX = newX1 + newWidth / 2.0
-            pt._controlPointDragPosY = newY1 + newHeight / 2.0
+            pt._controlPointDragPosX = newX1 + newWidth // 2
+            pt._controlPointDragPosY = newY1 + newHeight // 2
             if self.GetFixedWidth():
                 newWidth = bound_x
 
@@ -2600,19 +2600,19 @@ class Shape(ShapeEvtHandler):
         # Choose the 'opposite corner' of the object as the stationary
         # point in case this is non-centring resizing.
         if pt.GetX() < self.GetX():
-            pt._controlPointDragStartX = self.GetX() + bound_x / 2.0
+            pt._controlPointDragStartX = self.GetX() + bound_x // 2
         else:
-            pt._controlPointDragStartX = self.GetX() - bound_x / 2.0
+            pt._controlPointDragStartX = self.GetX() - bound_x // 2
 
         if pt.GetY() < self.GetY():
-            pt._controlPointDragStartY = self.GetY() + bound_y / 2.0
+            pt._controlPointDragStartY = self.GetY() + bound_y // 2
         else:
-            pt._controlPointDragStartY = self.GetY() - bound_y / 2.0
+            pt._controlPointDragStartY = self.GetY() - bound_y // 2
 
         if pt._type == CONTROL_POINT_HORIZONTAL:
-            pt._controlPointDragStartY = self.GetY() - bound_y / 2.0
+            pt._controlPointDragStartY = self.GetY() - bound_y // 2
         elif pt._type == CONTROL_POINT_VERTICAL:
-            pt._controlPointDragStartX = self.GetX() - bound_x / 2.0
+            pt._controlPointDragStartX = self.GetX() - bound_x // 2
 
         # We may require the old width and height
         pt._controlPointDragStartWidth = bound_x
@@ -2623,22 +2623,22 @@ class Shape(ShapeEvtHandler):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         if self.GetCentreResize():
-            new_width = 2.0 * abs(x - self.GetX())
-            new_height = 2.0 * abs(y - self.GetY())
+            new_width = 2 * abs(x - self.GetX())
+            new_height = 2 * abs(y - self.GetY())
 
             # Constrain sizing according to what control point you're dragging
             if pt._type == CONTROL_POINT_HORIZONTAL:
                 if self.GetMaintainAspectRatio():
-                    new_height = bound_y * (new_width / bound_x)
+                    new_height = bound_y * (new_width // bound_x)
                 else:
                     new_height = bound_y
             elif pt._type == CONTROL_POINT_VERTICAL:
                 if self.GetMaintainAspectRatio():
-                    new_width = bound_x * (new_height / bound_y)
+                    new_width = bound_x * (new_height // bound_y)
                 else:
                     new_width = bound_x
             elif pt._type == CONTROL_POINT_DIAGONAL and (keys & KEY_SHIFT):
-                new_height = bound_y * (new_width / bound_x)
+                new_height = bound_y * (new_width // bound_x)
 
             if self.GetFixedWidth():
                 new_width = bound_x
@@ -2662,23 +2662,23 @@ class Shape(ShapeEvtHandler):
                 newX1 = pt._controlPointDragStartX
                 newX2 = newX1 + pt._controlPointDragStartWidth
             elif pt._type == CONTROL_POINT_DIAGONAL and (keys & KEY_SHIFT or self.GetMaintainAspectRatio()):
-                newH = (newX2 - newX1) * (float(pt._controlPointDragStartHeight) / pt._controlPointDragStartWidth)
+                newH = (newX2 - newX1) * (round(pt._controlPointDragStartHeight) // pt._controlPointDragStartWidth)
                 if pt.GetY() > pt._controlPointDragStartY:
                     newY2 = newY1 + newH
                 else:
                     newY1 = newY2 - newH
 
-            newWidth = float(newX2 - newX1)
-            newHeight = float(newY2 - newY1)
+            newWidth = round(newX2 - newX1)
+            newHeight = round(newY2 - newY1)
 
             if pt._type == CONTROL_POINT_VERTICAL and self.GetMaintainAspectRatio():
-                newWidth = bound_x * (newHeight / bound_y)
+                newWidth = bound_x * (newHeight // bound_y)
 
             if pt._type == CONTROL_POINT_HORIZONTAL and self.GetMaintainAspectRatio():
-                newHeight = bound_y * (newWidth / bound_x)
+                newHeight = bound_y * (newWidth // bound_x)
 
-            pt._controlPointDragPosX = newX1 + newWidth / 2.0
-            pt._controlPointDragPosY = newY1 + newHeight / 2.0
+            pt._controlPointDragPosX = newX1 + newWidth // 2
+            pt._controlPointDragPosY = newY1 + newHeight // 2
             if self.GetFixedWidth():
                 newWidth = bound_x
 

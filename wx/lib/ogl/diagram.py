@@ -31,7 +31,7 @@ class Diagram(object):
         self._diagramCanvas = None
         self._quickEditMode = False
         self._snapToGrid = True
-        self._gridSpacing = 5.0
+        self._gridSpacing = 5
         self._shapeList = []
         self._mouseTolerance = DEFAULT_MOUSE_TOLERANCE
 
@@ -162,7 +162,7 @@ class Diagram(object):
 
         """
         if self._snapToGrid:
-            return self._gridSpacing * int(x / self._gridSpacing + 0.5), self._gridSpacing * int(y / self._gridSpacing + 0.5)
+            return self._gridSpacing * round(x / self._gridSpacing + 0.5), self._gridSpacing * round(y / self._gridSpacing + 0.5)
         return x, y
 
     def SetGridSpacing(self, spacing):
