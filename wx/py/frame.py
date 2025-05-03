@@ -543,12 +543,7 @@ class Frame(wx.Frame):
                 "Find & Replace", wx.FR_NOWHOLEWORD|wx.FR_REPLACEDIALOG)
         self.findDlg.Show()
 
-    def OnFindNext(self, event,backward=False):
-        if backward and (self.findData.GetFlags() & wx.FR_DOWN):
-            self.findData.SetFlags( self.findData.GetFlags() ^ wx.FR_DOWN )
-        elif not backward and not (self.findData.GetFlags() & wx.FR_DOWN):
-            self.findData.SetFlags( self.findData.GetFlags() ^ wx.FR_DOWN )
-
+    def OnFindNext(self, event, backward=False):
         if not self.findData.GetFindString():
             self.OnFindText(event)
             return
@@ -556,12 +551,16 @@ class Frame(wx.Frame):
             win = self.findDlg.GetParent()
         else:
             win = wx.Window.FindFocus()
+            if backward:
+                self.findData.Flags &= ~wx.FR_DOWN
+            else:
+                self.findData.Flags |= wx.FR_DOWN
         win.DoFindNext(self.findData, self.findDlg)
         if self.findDlg is not None:
             self.OnFindClose(None)
 
     def OnFindPrevious(self, event):
-        self.OnFindNext(event,backward=True)
+        self.OnFindNext(event, backward=True)
 
     def OnFindClose(self, event):
         self.findDlg.Destroy()
