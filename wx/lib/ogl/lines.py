@@ -433,10 +433,10 @@ class LineShape(Shape):
             last_point = self._lineControlPoints[-1]
             second_last_point = self._lineControlPoints[-2]
 
-            line_x = (last_point[0] + second_last_point[0]) / 2.0
-            line_y = (last_point[1] + second_last_point[1]) / 2.0
+            line_x = (last_point[0] + second_last_point[0]) // 2
+            line_y = (last_point[1] + second_last_point[1]) // 2
 
-        point = wx.RealPoint(line_x, line_y)
+        point = wx.Point(line_x, line_y)
         self._lineControlPoints.insert(len(self._lineControlPoints)-1, point)
 
     def DeleteLineControlPoint(self):
@@ -473,7 +473,7 @@ class LineShape(Shape):
                     else:
                         y2 = first_point[1]
                         y1 = last_point[1]
-                    self._lineControlPoints[i] = wx.RealPoint((x2 - x1) // 2 + x1, (y2 - y1) // 2 + y1)
+                    self._lineControlPoints[i] = wx.Point((x2 - x1) // 2 + x1, (y2 - y1) // 2 + y1)
             self._initialised = True
 
     def FormatText(self, dc, s, i):
@@ -600,7 +600,7 @@ class LineShape(Shape):
         """
         if position == 0:
             # Want to take the middle section for the label
-            half_way = int(len(self._lineControlPoints) / 2.0)
+            half_way = int(len(self._lineControlPoints) // 2)
 
             # Find middle of this line
             point = self._lineControlPoints[half_way - 1]
@@ -609,7 +609,7 @@ class LineShape(Shape):
             dx = next_point[0] - point[0]
             dy = next_point[1] - point[1]
 
-            return point[0] + dx / 2.0, point[1] + dy / 2.0
+            return point[0] + dx // 2, point[1] + dy // 2
         elif position == 1:
             return self._lineControlPoints[0][0], self._lineControlPoints[0][1]
         elif position == 2:
@@ -1420,7 +1420,7 @@ class LineShape(Shape):
         if pt._type == CONTROL_POINT_LINE:
             x, y = self._canvas.Snap(x, y)
 
-            rpt = wx.RealPoint(x, y)
+            rpt = wx.Point(x, y)
 
             # Move the control point back to where it was;
             # MoveControlPoint will move it to the new position
@@ -1461,7 +1461,7 @@ class LineShape(Shape):
 
         return True
 
-    def AddArrow(self, type, end = ARROW_POSITION_END, size = 10.0, xOffset = 0.0, name = "", mf = None, arrowId = -1):
+    def AddArrow(self, type, end = ARROW_POSITION_END, size = 10, xOffset = 0, name = "", mf = None, arrowId = -1):
         """
         Add an arrow (or annotation) to the line.
 
