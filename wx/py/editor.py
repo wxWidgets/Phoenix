@@ -274,8 +274,8 @@ class EditorNotebookFrame(EditorFrame):
         Called automatically by base class during init."""
         self.notebook = EditorNotebook(parent=self)
         intro = 'Py %s' % version.VERSION
-        import imp
-        module = imp.new_module('__main__')
+        import types
+        module = types.ModuleType('__main__')
         module.__dict__['__builtins__'] = __builtins__
         namespace = module.__dict__.copy()
         self.crust = crust.Crust(parent=self.notebook, intro=intro, locals=namespace)
