@@ -11,7 +11,7 @@
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
-This is where FloatCanvas defines its drawings objects.
+This is where FloatCanvas defines its drawing objects.
 """
 
 import sys
@@ -1434,13 +1434,13 @@ class TextObjectMixin(XYObjectMixin):
     ## pad is the extra space around the text
     ## if world = 1, the vertical shift is done in y-up coordinates
     ShiftFunDict = {'tl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y + pad - 2*world*pad),
-                    'tc': lambda x, y, w, h, world=0, pad=0: (x - w/2,     y + pad - 2*world*pad),
+                    'tc': lambda x, y, w, h, world=0, pad=0: (x - w//2,    y + pad - 2*world*pad),
                     'tr': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y + pad - 2*world*pad),
-                    'cl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y - h/2 + world*h),
-                    'cc': lambda x, y, w, h, world=0, pad=0: (x - w/2,     y - h/2 + world*h),
-                    'cr': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y - h/2 + world*h),
+                    'cl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y - h//2 + world*h),
+                    'cc': lambda x, y, w, h, world=0, pad=0: (x - w//2,    y - h//2 + world*h),
+                    'cr': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y - h//2 + world*h),
                     'bl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y - h + 2*world*h - pad + world*2*pad) ,
-                    'bc': lambda x, y, w, h, world=0, pad=0: (x - w/2,     y - h + 2*world*h - pad + world*2*pad) ,
+                    'bc': lambda x, y, w, h, world=0, pad=0: (x - w//2,    y - h + 2*world*h - pad + world*2*pad) ,
                     'br': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y - h + 2*world*h - pad + world*2*pad)}
 
 class Text(TextObjectMixin, DrawObject):
@@ -2582,7 +2582,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
         Default class constructor.
 
         :param `XY`: The (x,y) coords of the center of the chart
-        :param `Diameter`: The diamter of the chart in world coords, unless you
+        :param `Diameter`: The diameter of the chart in world coords, unless you
                  set "Scaled" to False, in which case it's in pixel coords.
         :param `Values`: sequence of values you want to make the chart of.
         :param `FillColors`: sequence of colors you want the slices. If
@@ -2627,7 +2627,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
 
     def SetFillStyles(self, FillStyles):
         """
-        Set te FillStyles and update the Brushes.
+        Set the FillStyles and update the Brushes.
 
         :param `FillStyles`: Fill style you want ("Solid", "Hash", etc)
         """
@@ -2715,7 +2715,7 @@ class Group(DrawObject):
         self.ObjectList = []
         DrawObject.__init__(self, InForeground, IsVisible)
 
-        # this one uses a proprty for _Canvas...
+        # this one uses a property for _Canvas...
         self._Actual_Canvas = None
 
         self.CalcBoundingBox()
