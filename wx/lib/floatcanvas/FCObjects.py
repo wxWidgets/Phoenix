@@ -685,7 +685,7 @@ class Polygon(PointsObjectMixin, LineAndFillMixin, DrawObject):
         self.SetBrush(FillColor,FillStyle)
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel = None, HTdc=None):
-        Points = WorldToPixel(self.Points)#.tolist()
+        Points = WorldToPixel(self.Points)
         dc.SetPen(self.Pen)
         dc.SetBrush(self.Brush)
         dc.DrawPolygon(Points)
@@ -886,7 +886,7 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         dc.SetPen(self.Pen)
         xy = WorldToPixel(self.XY)
-        ArrowPoints = xy + self.ArrowPoints
+        ArrowPoints = (xy + self.ArrowPoints).astype(int)
         dc.DrawLines(ArrowPoints)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
@@ -964,11 +964,11 @@ class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         Points = WorldToPixel(self.Points)
-        ArrowPoints = Points[1:,np.newaxis,:] + self.ArrowPoints
+        ArrowPoints = (Points[1:,np.newaxis,:] + self.ArrowPoints).astype(int)
         dc.SetPen(self.Pen)
         dc.DrawLines(Points)
         for arrow in ArrowPoints:
-                dc.DrawLines(arrow)
+            dc.DrawLines(arrow)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.DrawLines(Points)
@@ -1065,7 +1065,7 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
             if len(Points) > 100:
                 xy = Points
                 xywh = np.concatenate((xy-radius, np.ones(xy.shape) * self.Diameter ), 1 )
-                dc.DrawEllipseList(xywh)
+                dc.DrawEllipseList(xywh.astype(int))
             else:
                 for xy in Points:
                     dc.DrawCircle(xy[0],xy[1], radius)
@@ -1080,7 +1080,7 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
                 if len(Points) > 100:
                     xy = Points
                     xywh = np.concatenate((xy-radius, np.ones(xy.shape) * self.Diameter ), 1 )
-                    HTdc.DrawEllipseList(xywh)
+                    HTdc.DrawEllipseList(xywh.astype(int))
                 else:
                     for xy in Points:
                         HTdc.DrawCircle(xy[0],xy[1], radius)
@@ -2151,10 +2151,10 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         XY = WorldToPixel(self.XY)
         H = ScaleWorldToPixel(self.Height)[0]
-        W = H * (self.bmpWidth / self.bmpHeight)
+        W = int(H * (self.bmpWidth / self.bmpHeight))
         if (self.ScaledBitmap is None) or (H != self.ScaledHeight) :
             self.ScaledHeight = H
-            Img = self.Image.Scale(int(W), int(H))
+            Img = self.Image.Scale(W, H)
             self.ScaledBitmap = wx.Bitmap(Img)
 
         XY = self.ShiftFun(XY[0], XY[1], W, H)
@@ -2439,7 +2439,7 @@ class DotGrid:
                 if len(Points) > 100:
                     xy = Points
                     xywh = np.concatenate((xy-radius, np.ones(xy.shape) * self.Size ), 1 )
-                    dc.DrawEllipseList(xywh)
+                    dc.DrawEllipseList(xywh.astype(int))
                 else:
                     for xy in Points:
                         dc.DrawCircle(xy[0],xy[1], radius)
