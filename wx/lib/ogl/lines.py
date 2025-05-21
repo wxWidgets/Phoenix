@@ -666,8 +666,8 @@ class LineShape(Shape):
 
 
         """
-        self._lineControlPoints[0] = wx.Point(x1, y1)
-        self._lineControlPoints[-1] = wx.Point(x2, y2)
+        self._lineControlPoints[0] = wx.Point(round(x1), round(y1))
+        self._lineControlPoints[-1] = wx.Point(round(x2), round(y2))
 
         # Find center point
         self._xpos = (x1 + x2) // 2
@@ -896,7 +896,7 @@ class LineShape(Shape):
             else:
                 dc.SetBrush(self._brush)
 
-            dc.DrawEllipse(x1, y1, diameter, diameter)
+            dc.DrawEllipse(round(x1), round(y1), diameter, diameter)
         elif at == ARROW_SINGLE_OBLIQUE:
             pass
         elif at == ARROW_METAFILE:
