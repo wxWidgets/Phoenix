@@ -414,7 +414,7 @@ class PseudoMetaFile(object):
         self._currentRotation = theta
 
     def LoadFromMetaFile(self, filename, rwidth, rheight):
-        if not os.path.exist(filename):
+        if not os.path.exists(filename):
             return False
 
         print("LoadFromMetaFile not implemented yet.")
