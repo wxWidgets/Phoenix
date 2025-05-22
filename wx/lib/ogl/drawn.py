@@ -755,10 +755,10 @@ class DrawnShape(RectangleShape):
 
         return RectangleShape.GetPerimeterPoint(self, x1, y1, x2, y2)
 
-    def LoadFromMetaFile(self, filename):
+    def LoadFromMetaFile(self, filename, rwidth, rheight):
         """Load a (very simple) Windows metafile, created for example by
         Top Draw, the Windows shareware graphics package."""
-        return self._metafiles[0].LoadFromMetaFile(filename)
+        return self._metafiles[0].LoadFromMetaFile(filename, rwidth, rheight)
 
     # Set of functions for drawing into a pseudo metafile.
     # They use integers, but doubles are used internally for accuracy
