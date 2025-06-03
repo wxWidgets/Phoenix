@@ -74,7 +74,7 @@ requires = [
     "setuptools>=70.1",
     "cython == 3.0.10",
     "requests >= 2.26.0",
-    "sip == 6.10.0",
+    "sip == 6.12.0",
 ]
 build-backend = "setuptools.build_meta"
 
