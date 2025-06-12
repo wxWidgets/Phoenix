@@ -151,11 +151,13 @@ jobs:
               short_name=macos
               echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
               echo "CIBW_BUILD_VERBOSITY=1" >> "$GITHUB_ENV"
+              echo "CIBW_BUILD_FRONTEND=pip" >> "$GITHUB_ENV"
               echo "MACOSX_DEPLOYMENT_TARGET=10.10" >> "$GITHUB_ENV"
           elif [ ${{ matrix.os }} == macos-14 ]; then
               short_name=macos
               echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
               echo "CIBW_BUILD_VERBOSITY=1" >> "$GITHUB_ENV"
+              echo "CIBW_BUILD_FRONTEND=pip" >> "$GITHUB_ENV"
               echo "MACOSX_DEPLOYMENT_TARGET=11.0" >> "$GITHUB_ENV"
           elif [ ${{ matrix.os }} == windows-2022 ]; then
               if [ ${{ matrix.architecture }} == x64 ]; then
