@@ -251,34 +251,30 @@ class EditWindow(stc.StyledTextCtrl):
 
     def ShowPosition(self, pos):
         line = self.LineFromPosition(pos)
-        #self.EnsureVisible(line)
+        self.EnsureVisible(line)  # Expand the line if folded.
         self.GotoLine(line)
 
     def DoFindNext(self, findData, findDlg=None):
         backward = not (findData.GetFlags() & wx.FR_DOWN)
-        matchcase = (findData.GetFlags() & wx.FR_MATCHCASE) != 0
-        end = self.GetLastPosition()
-        # Changed to reflect the fact that StyledTextControl is in UTF-8 encoding
-        textstring = self.GetRange(0, end).encode('utf-8')
-        findstring = findData.GetFindString().encode('utf-8')
-        if not matchcase:
-            textstring = textstring.lower()
-            findstring = findstring.lower()
+        matchcase = findData.GetFlags() & wx.FR_MATCHCASE
+        wholeword = findData.GetFlags() & wx.FR_WHOLEWORD
+        findstring = findData.GetFindString().encode()
+        self.SetSearchFlags(0
+            | (wx.stc.STC_FIND_MATCHCASE if matchcase else 0)
+            | (wx.stc.STC_FIND_WHOLEWORD if wholeword else 0)
+        )
         if backward:
-            start = self.GetSelection()[0]
-            loc = textstring.rfind(findstring, 0, start)
+            self.TargetStart = self.GetAnchor()  # backward anchor
+            self.TargetEnd = 0
         else:
-            start = self.GetSelection()[1]
-            loc = textstring.find(findstring, start)
+            self.TargetStart = self.GetCurrentPos()  # forward anchor
+            self.TargetEnd = self.TextLength
+        loc = self.SearchInTarget(findstring)
 
         # if it wasn't found then restart at beginning
-        if loc == -1 and start != 0:
-            if backward:
-                start = end
-                loc = textstring.rfind(findstring, 0, start)
-            else:
-                start = 0
-                loc = textstring.find(findstring, start)
+        if loc == -1:
+            self.TargetStart = self.TextLength if backward else 0
+            loc = self.SearchInTarget(findstring)
 
         # was it still not found?
         if loc == -1:

@@ -536,11 +536,10 @@ class Frame(wx.Frame):
             return
         win = wx.Window.FindFocus()
         if self.shellName == 'PyCrust':
-            self.findDlg = wx.FindReplaceDialog(win, self.findData,
-                                               "Find",wx.FR_NOWHOLEWORD)
+            self.findDlg = wx.FindReplaceDialog(win, self.findData, "Find")
         else:
-            self.findDlg = wx.FindReplaceDialog(win, self.findData,
-                "Find & Replace", wx.FR_NOWHOLEWORD|wx.FR_REPLACEDIALOG)
+            self.findDlg = wx.FindReplaceDialog(win, self.findData, "Find & Replace",
+                                                wx.FR_REPLACEDIALOG)
         self.findDlg.Show()
 
     def OnFindNext(self, event, backward=False):
