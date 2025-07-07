@@ -61,7 +61,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-24.04 ]
-        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13' ]
+        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
         architecture: [ 'x64' ]
 
     env:
@@ -100,6 +100,7 @@ jobs:
           python-version: '${{ matrix.python-version }}'
           architecture: '${{ matrix.architecture }}'
           cache: 'pip'
+          freethreaded: true
 
       - name: Install Python dependencies
         run: |

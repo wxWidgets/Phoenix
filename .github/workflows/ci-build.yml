@@ -190,6 +190,7 @@ jobs:
           architecture: '${{ matrix.architecture }}'
           cache: 'pip'
           allow-prereleases: true
+          freethreaded: true
 
       - name: Install Python dependencies
         run: |
