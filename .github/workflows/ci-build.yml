@@ -108,7 +108,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-22.04, windows-2022, macos-13, macos-14 ]
-        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13', '3.13t', '3.14', '3,14t' ]
+        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13', '3.13t', '3.14', '3.14t' ]
         architecture: [ 'x86', 'x64', 'arm64' ]
         # Exclude x86 configs on non-Windows OSs
         exclude:
