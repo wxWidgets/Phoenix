@@ -40,6 +40,7 @@ def run():
     c.find('GetMetric').mustHaveApp()
     c.find('HasFeature').mustHaveApp()
     c.find('GetScreenType').mustHaveApp()
+    c.find('GetAppearance').mustHaveApp()
 
 
     c = module.find('wxSystemAppearance')
