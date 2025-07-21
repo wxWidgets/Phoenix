@@ -2,6 +2,23 @@
 * of the theme, so that the customisation integrate nicely with the darkmode
 * switcher of the theme. */
 
+:root {
+    --custom-style-orange: #ff7f00;
+    --custom-link-hover: #FFA04C;
+    --custom-link-blue: #83c1ff;
+    --custom-visited-blue: #42A1FF;
+    --seealso-background: #ff7f001a;
+    --seealso-border: var(--custom-style-orange);
+}
+
+div.body a {
+    color: var(--custom-link-blue);
+}
+
+div.body a:visited {
+    color: var(--custom-visited-blue);
+}
+
 div.related a, div.footer a {
     color: var(--custom-style-orange);
 }

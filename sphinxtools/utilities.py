@@ -454,41 +454,42 @@ def findWidgetScreenshots(elementOrString):
         class_name = class_name.lower()
         py_class_name = py_class_name.lower()
 
-    image_folder = Path(DOXYROOT, 'images')
+    doxy_image_folder = Path(DOXYROOT, "images")
 
     appearance = ODict()
 
-    for sub_folder in ['msw', 'mac', 'gtk']:
+    for platform in ["msw", "gtk", "mac"]:
 
-        png_file = f"appear-{class_name}-{sub_folder}.png"
-        appearance[sub_folder] = ''
+        possible_file = f"appear-{class_name}-{platform}.png"
+        appearance[platform] = ''
 
-        possible_image = Path(image_folder, png_file)
-        new_path = Path(WIDGETS_IMAGES_ROOT, "wx" + sub_folder)
+        possible_image = Path(doxy_image_folder, possible_file)
+        subfolder = ''.join(("wx", platform))
+        py_subpath = Path(WIDGETS_IMAGES_ROOT, subfolder)
 
-        py_png_file = py_class_name + '.png'
-        new_file = Path(new_path, py_png_file)
+        py_png_file = py_class_name + ".png"
+        py_filepath = Path(py_subpath, py_png_file)
 
-        if new_file.is_file():
+        if py_filepath.is_file():
 
-            appearance[sub_folder] = py_png_file
+            appearance[platform] = py_png_file
 
         elif possible_image.is_file():
 
-            if not new_path.is_dir():
-                new_path.mkdir(parents=True)
+            if not py_subpath.is_dir():
+                py_subpath.mkdir(parents=True)
 
-            if not new_file.is_file():
-                shutil.copyfile(possible_image, new_file)
+            if not py_filepath.is_file():
+                shutil.copyfile(possible_image, py_filepath)
 
-            appearance[sub_folder] = py_png_file
+            appearance[platform] = py_png_file
 
     if not any(list(appearance.values())):
         return []
 
-    for sub_folder, image in list(appearance.items()):
+    for platform, image in list(appearance.items()):
         if not image:
-            appearance[sub_folder] = '../no_appearance.png'
+            appearance[platform] = "../no_appearance.png"
 
     return list(appearance.values())
 

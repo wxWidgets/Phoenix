@@ -3,7 +3,7 @@
 {%- block rootrellink %}
     <li><img src="{{ pathto('_static/' ~ theme_root_icon, 1) }}"
         alt="{{ theme_root_icon_alt_text }}"
-        style="vertical-align: middle; margin-top: -1px"/>
+        style="width: 24px; vertical-align: middle; margin-top: -1px"/>
     </li>
     <li><a href="https://wxpython.org/">Home</a>{{ reldelim2 }}</li>
     <li><a href="gallery.html">Gallery</a>{{ reldelim2 }}</li>
@@ -13,6 +13,14 @@
     </li>
 
 {%- endblock %}
+
+{%- block extrahead -%}
+    <link rel="icon" type="image/svg+xml" href="_static/phoenix_small.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="_images/phoenix_small.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="_images/apple-touch-icon.png">
+
+    {{ super() }}
+{%- endblock -%}
 
 {% block footer %}
     <div class="footer">
