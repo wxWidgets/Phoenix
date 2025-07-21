@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1067 1067" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="mondrian" transform="matrix(4.16667,0,0,4.16667,0,0)">
+        <rect x="0" y="0" width="256" height="256"/>
+        <g transform="matrix(-1,0,0,1,64,-184)">
+            <rect x="8" y="192" width="48" height="56" style="fill:rgb(255,0,0);"/>
+        </g>
+        <g transform="matrix(-1,0,0,1,312,-184)">
+            <rect x="64" y="192" width="184" height="56" style="fill:white;"/>
+        </g>
+        <g transform="matrix(-1,0,0,1,64,64)">
+            <rect x="8" y="8" width="48" height="176" style="fill:white;"/>
+        </g>
+        <g transform="matrix(-1,0,0,1,272,8)">
+            <rect x="64" y="64" width="144" height="120" style="fill:white;"/>
+        </g>
+        <g transform="matrix(-1,0,0,1,464,-72)">
+            <rect x="216" y="144" width="32" height="40" style="fill:rgb(0,0,255);"/>
+        </g>
+        <g transform="matrix(-1,0,0,1,464,112)">
+            <rect x="216" y="8" width="32" height="128" style="fill:white;"/>
+        </g>
+        <g transform="matrix(-1,0,0,1,376,192)">
+            <rect x="168" y="8" width="40" height="48" style="fill:rgb(0,191,0);"/>
+        </g>
+        <g transform="matrix(-1,0,0,1,224,192)">
+            <rect x="64" y="8" width="96" height="48" style="fill:rgb(255,255,0);"/>
+        </g>
+    </g>
+</svg>
