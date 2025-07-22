@@ -296,9 +296,11 @@ pdf_splittables = True
 
 linkcheck_allowed_redirects = {
     # Microsoft's redirects to learn.microsoft.com
-    # r'https://msdn.microsoft.com/.*': 'https://learn.microsoft.com/.*',
-    # r'https://docs.microsoft.com/.*': 'https://learn.microsoft.com/.*',
-    # r'https://go.microsoft.com/fwlink/\?LinkID=\d+': 'https://learn.microsoft.com/.*',
+    r'https://msdn.microsoft.com/.*': 'https://learn.microsoft.com/.*',
+    r'https://docs.microsoft.com/.*': 'https://learn.microsoft.com/.*',
+    r'https://go.microsoft.com/fwlink/\?LinkID=\d+': 'https://learn.microsoft.com/.*',
+    r'http://docs.python.org/.*': 'https://docs.python.org/3/.*',
+    r' http://en.wikipedia.org/wiki/.*': 'https://en.wikipedia.org/wiki/.*'
 }
 
 linkcheck_anchors_ignore = [

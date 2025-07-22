@@ -11,9 +11,8 @@ wxPython API Documentation
 
 !WELCOME!
 
-If you are porting your code from Classic wxPython, be sure to read the
-`Migration Guide <MigrationGuide.html>`_  to get a better feel for
-how some things have changed.
+If you are porting your code from Classic wxPython, be sure to read the 
+:doc:`MigrationGuide` to get a better feel for how some things have changed.
 
 You can download a local copy of this documentation using a new utility script
 included with wxPython called ``wxdocs``. It will open the local copy of the
@@ -22,8 +21,7 @@ is also a similar tool called ``wxdemo`` that will download (if needed)
 and launch the wxPython demo for you.
 
 .. note:: If you wish to help in the documentation effort, the main
-   docstrings guidelines are outlined in the
-   `Docstring Guidelines <DocstringsGuidelines.html>`_
+   docstrings guidelines are outlined in the :doc:`DocstringsGuidelines`
    document.
 
 
@@ -139,7 +137,6 @@ and launch the wxPython demo for you.
    wx.richtext.1moduleindex
    wx.richtext.functions
    wx.stc.1moduleindex
-   wx.webkit.1moduleindex
    wx.xml.1moduleindex
    wx.xrc.1moduleindex
    wx.xrc.functions

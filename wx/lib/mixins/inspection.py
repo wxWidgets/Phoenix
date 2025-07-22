@@ -34,10 +34,10 @@ class.
 Usage
 =====
 
-The following samples assume the default key sequence (*ctrl-alt-i*) to start
+The following samples assume the default key sequence :kbd:`Ctrl-Alt-i` to start
 the WIT, additional information can be found on the following wiki page.
 
-http://wiki.wxpython.org/Widget_Inspection_Tool
+`How to use the Widget Inspection Tool <https://wiki.wxpython.org/How%20to%20use%20Widget%20Inspection%20Tool%20-%20WIT%20%28Phoenix%29>`_
 
 InspectableApp usage::
 

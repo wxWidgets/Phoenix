@@ -1,6 +1,9 @@
-========================================
-wxPython Project Phoenix Migration Guide
-========================================
+
+.. _migration guide:
+
+=======================
+Phoenix Migration Guide
+=======================
 
 wxPython's Project Phoenix is a new incarnation of the wxPython
 toolkit in which everything that existed before will be cast into the
@@ -9,7 +12,7 @@ better, brighter, stronger and faster than before.  For more details
 about why and how, please see the ProjectPhoenix_ pages in the
 wiki.
 
-.. _ProjectPhoenix: http://wiki.wxpython.org/ProjectPhoenix
+.. _ProjectPhoenix: https://wiki.wxpython.org/ProjectPhoenix
 
 This document will describe some of the incompatibilities that
 programmers will run into when migrating code from Classic wxPython to
@@ -48,7 +51,7 @@ compliant with Python's PEP-440_. This includes syntax for alpha, beta,
 release candidate releases, post-release builds, development snapshots, etc.
 See ``buildtools/version.py`` in the Phoenix source tree for more details.
 
-.. _PEP-440: https://www.python.org/dev/peps/pep-0440/
+.. _PEP-440: https://peps.python.org/pep-0440/
 
 
 Overloaded Functions
@@ -399,7 +402,8 @@ Python buffer objects are used for transferring data to/from the clipboard or
 DnD partner.  Anything that supports the buffer protocol can be used for
 setting or providing data, and a ``memoryview`` object is created for the APIs
 where the data object should fetch from or copy to a specific memory location.
- Here is a simple example::
+
+Here is a simple example::
 
         class MyDataObject(wx.DataObjectSimple):
             def __init__(self, value=''):

@@ -55,7 +55,7 @@ This implementation allows you to use either directly the :class:`PaintDC`, or t
 better (for me) double buffered style with :class:`BufferedPaintDC`. the double
 buffered implementation has been adapted from the wxPython wiki example:
 
-http://wiki.wxpython.org/index.cgi/doublebuffereddrawing
+https://wiki.wxpython.org/DoubleBufferedDrawing
 
 
 Usage
