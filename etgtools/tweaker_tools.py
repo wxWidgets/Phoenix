@@ -20,7 +20,7 @@ import re
 import sys, os
 import copy
 import textwrap
-from typing import NamedTuple, Optional, Tuple, Union
+from typing import Final, NamedTuple, Optional, Tuple, Union
 
 
 isWindows = sys.platform.startswith('win')
@@ -246,20 +246,24 @@ def removeWxPrefix(name):
     return name
 
 
-def load_auto_conversions(destFile=None):
+# Filename for type auto conversion cache file 
+_AUTO_CONVERSION_CACHE_FILE: Final = '__auto_conversion_cache__.json'
+
+
+def load_auto_conversions(destFile: str | None = None) -> dict[str, Tuple[str, ...]]:
     """Load FixWxPrefix auto conversions from cache file if it exists."""
     import json
     if not destFile:
         from buildtools.config import Config
 
         cfg = Config(noWxConfig=True)
-        phoenixRoot = cfg.ROOT_DIR
-        destFile = os.path.join(phoenixRoot, 'sip/gen', '__auto_conversion_cache__.json')
+        destFile = os.path.join(cfg.ROOT_DIR, 'sip', 'gen', _AUTO_CONVERSION_CACHE_FILE)
     # Need to merge existing data with current data
     if os.path.isfile(destFile):
         with open(destFile, 'r', encoding='utf-8') as f:
             return json.load(f)
     return {}
+
 
 class FixWxPrefix(object):
     """
@@ -271,16 +275,15 @@ class FixWxPrefix(object):
     _auto_conversions: dict[str, Tuple[str, ...]] = load_auto_conversions()
 
     @classmethod
-    def cache_auto_conversions(cls, destFile=None):
-        """Save current auto conversions to a cache."""
+    def cache_auto_conversions(cls, destFile: str | None = None) -> None:
+        """Save current auto conversions to a cache file."""
         import json
 
         if not destFile:
             from buildtools.config import Config
 
             cfg = Config(noWxConfig=True)
-            phoenixRoot = cfg.ROOT_DIR
-            destFile = os.path.join(phoenixRoot, 'sip/gen', '__auto_conversion_cache__.json')
+            destFile = os.path.join(cfg.ROOT_DIR, 'sip', 'gen', _AUTO_CONVERSION_CACHE_FILE)
         # We overwrite the cache file, as we should have loaded the existing values when
         # initializing the class.
         with textfile_open(destFile, 'wt') as f:

@@ -1149,6 +1149,11 @@ def cmd_etg(options, args):
     # 2. Actually create the sip files
     # This is needed because each etg file is run in its own python invocation, so
     # the data is lost between them.
+
+    # First delete the old cache if found
+    cacheFile = opj(cfg.ROOT_DIR, 'sip', 'gen', '__auto_conversion_cache__.json')
+    if os.path.isfile(cacheFile):
+        os.remove(cacheFile)
     is_newer = {}
     for script in etgfiles:
         sipfile = etg2sip(script)
@@ -1170,6 +1175,9 @@ def cmd_etg(options, args):
     for script in etgfiles:
         if is_newer[script]:
             runcmd('"%s" %s %s' % (PYTHON, script, flags))
+    # Delete the cache
+    if os.path.isfile(cacheFile):
+        os.remove(cacheFile)
 
 
 def cmd_sphinx(options, args):
