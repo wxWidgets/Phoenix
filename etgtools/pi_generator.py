@@ -591,8 +591,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
                     value_types.append(setter.signature[0].type_hint)
                 if setter.hasOverloads():
                     for overload in setter.overloads:
-                        if overload.signature and len(overload.signature._parameters) == 1:
-                            value_types.append( overload.signature[0].type_hint)
+                        if not overload.ignored and overload.signature and len(overload.signature._parameters) == 1:
+                            value_types.append(overload.signature[0].type_hint)
                 if len(value_types) == 1:
                     value_type = value_types[0]
                 elif value_types:
