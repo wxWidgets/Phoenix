@@ -401,7 +401,7 @@ class FixWxPrefix(object):
             'time_t': 'int',
             'size_t': 'int',
             'Int32': 'int',
-            'UInt32': 'int',
+            'Uint32': 'int',
             'long': long_type,
             'unsignedlong': long_type,
             'ulong': long_type,
