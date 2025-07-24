@@ -246,6 +246,20 @@ def removeWxPrefix(name):
     return name
 
 
+def load_auto_conversions(destFile=None):
+    """Load FixWxPrefix auto conversions from cache file if it exists."""
+    import json
+    if not destFile:
+        from buildtools.config import Config
+
+        cfg = Config(noWxConfig=True)
+        phoenixRoot = cfg.ROOT_DIR
+        destFile = os.path.join(phoenixRoot, 'sip/gen', '__auto_conversion_cache__.json')
+    # Need to merge existing data with current data
+    if os.path.isfile(destFile):
+        with open(destFile, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
 
 class FixWxPrefix(object):
     """
@@ -254,7 +268,23 @@ class FixWxPrefix(object):
     """
 
     _coreTopLevelNames = None
-    _auto_conversions: dict[str, Tuple[str, ...]] = {}
+    _auto_conversions: dict[str, Tuple[str, ...]] = load_auto_conversions()
+
+    @classmethod
+    def cache_auto_conversions(cls, destFile=None):
+        """Save current auto conversions to a cache."""
+        import json
+
+        if not destFile:
+            from buildtools.config import Config
+
+            cfg = Config(noWxConfig=True)
+            phoenixRoot = cfg.ROOT_DIR
+            destFile = os.path.join(phoenixRoot, 'sip/gen', '__auto_conversion_cache__.json')
+        # We overwrite the cache file, as we should have loaded the existing values when
+        # initializing the class.
+        with textfile_open(destFile, 'wt') as f:
+            json.dump(FixWxPrefix._auto_conversions, f)
 
     @classmethod
     def register_autoconversion(cls, class_name: str, convertables: Tuple[str, ...]) -> None:
@@ -371,6 +401,7 @@ class FixWxPrefix(object):
             'time_t': 'int',
             'size_t': 'int',
             'Int32': 'int',
+            'UInt32': 'int',
             'long': long_type,
             'unsignedlong': long_type,
             'ulong': long_type,
@@ -950,6 +981,9 @@ def runGenerators(module):
     checkForUnitTestModule(module)
 
     generators = list()
+    if '--only-cache-auto-conversions' in sys.argv:
+        FixWxPrefix.cache_auto_conversions()
+        return
 
     # Create the code generator selected from command line args
     generators.append(getWrapperGenerator())
