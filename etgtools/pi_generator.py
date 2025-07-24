@@ -571,19 +571,45 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
     def _generateProperty(self, klass: extractors.ClassDef, prop: Union[extractors.PyPropertyDef, extractors.PropertyDef], stream, indent: str):
         if prop.ignored or piIgnored(prop):
             return
+        # Track separate value and return types.
+        # This prevents us from emitting Union types on the getter, which do not make sense in practice,
+        # as exactly one type will be returned, even if multiple types are allowed by the setter.
         value_type = ''
+        return_type = ''
         if prop.getter:
             getter = self.find_method(klass, prop.getter)
             if getter and getter.signature:
-                value_type = getter.signature.return_type
+                return_type = getter.signature.return_type
         if prop.setter:
             setter = self.find_method(klass, prop.setter)
-            if setter and setter.signature:
-                value_type = setter.signature[0].type_hint
+            # The setter can be overloaded and we should find all setters which have exactly one argument and Union their types.
+            # We need to do this, because the property-setter only has one argument, so we assume that all overloads which
+            # take more than one argument are not applicable here.
+            if setter:
+                value_types =[]
+                if setter.signature and len(setter.signature._parameters) == 1:
+                    value_types.append(setter.signature[0].type_hint)
+                if setter.hasOverloads():
+                    for overload in setter.overloads:
+                        if overload.signature and len(overload.signature._parameters) == 1:
+                            value_types.append( overload.signature[0].type_hint)
+                if len(value_types) == 1:
+                    value_type = value_types[0]
+                elif value_types:
+                    # This does not flatten already existing Unions, but this is allowed
+                    value_type = f'Union[{", ".join(value_types)}]'
+        # We choose some default values if no types were found above. This may lead to wrong info, if the underlying getter and setter types are wrong to begin with
+        if value_type or return_type:
+            if not value_type:
+                value_type = return_type
+            elif not return_type:
+                # We probably should not choose the value_type as default if it contains a Union,
+                # but this might still be better than using Any.
+                return_type = value_type
         if prop.setter and prop.getter:
-            if value_type:
+            if value_type and return_type:
                 stream.write(f'{indent}@property\n')
-                stream.write(f'{indent}def {prop.name}(self) -> {value_type}: ...\n')
+                stream.write(f'{indent}def {prop.name}(self) -> {return_type}: ...\n')
                 stream.write(f'{indent}@{prop.name}.setter\n')
                 stream.write(f'{indent}def {prop.name}(self, value: {value_type}, /) -> None: ...\n')
             else:
@@ -591,7 +617,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         elif prop.getter:
             if value_type:
                 stream.write(f'{indent}@property\n')
-                stream.write(f'{indent}def {prop.name}(self) -> {value_type}: ...\n')
+                stream.write(f'{indent}def {prop.name}(self) -> {return_type}: ...\n')
             else:
                 stream.write(f'{indent}{prop.name} = property({prop.getter})\n')
         elif prop.setter:
