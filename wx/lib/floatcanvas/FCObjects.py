@@ -2139,6 +2139,7 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
         self.CalcBoundingBox()
         self.ScaledBitmap = None
         self.ScaledHeight = None
+        self.MaxSize = 20e6  # cf. FHD 1,920 x 1,080
 
     def CalcBoundingBox(self):
         """Calculate the bounding box."""
@@ -2152,13 +2153,16 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
         XY = WorldToPixel(self.XY)
         H = ScaleWorldToPixel(self.Height)[0]
         W = int(H * (self.bmpWidth / self.bmpHeight))
-        if (self.ScaledBitmap is None) or (H != self.ScaledHeight) :
-            self.ScaledHeight = H
-            Img = self.Image.Scale(W, H)
-            self.ScaledBitmap = wx.Bitmap(Img)
-
         XY = self.ShiftFun(XY[0], XY[1], W, H)
-        dc.DrawBitmap(self.ScaledBitmap, XY, True)
+        if 0 < H * float(W) < self.MaxSize:
+            if (self.ScaledBitmap is None) or (H != self.ScaledHeight):
+                Img = self.Image.Scale(W, H)
+                self.ScaledHeight = H
+                self.ScaledBitmap = wx.Bitmap(Img)
+            dc.DrawBitmap(self.ScaledBitmap, XY, True)
+        else:
+            gc = wx.GraphicsContext.Create(dc)
+            gc.DrawBitmap(self.ScaledBitmap, *XY, W, H)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
