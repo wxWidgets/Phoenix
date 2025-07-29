@@ -250,7 +250,7 @@ def removeWxPrefix(name):
 _AUTO_CONVERSION_CACHE_FILE: Final = '__auto_conversion_cache__.json'
 
 
-def load_auto_conversions(destFile: str | None = None) -> dict[str, Tuple[str, ...]]:
+def load_auto_conversions(destFile: Optional[str] = None) -> dict[str, Tuple[str, ...]]:
     """Load FixWxPrefix auto conversions from cache file if it exists."""
     import json
     if not destFile:
@@ -275,7 +275,7 @@ class FixWxPrefix(object):
     _auto_conversions: dict[str, Tuple[str, ...]] = load_auto_conversions()
 
     @classmethod
-    def cache_auto_conversions(cls, destFile: str | None = None) -> None:
+    def cache_auto_conversions(cls, destFile: Optional[str] = None) -> None:
         """Save current auto conversions to a cache file."""
         import json
 
