@@ -3444,7 +3444,7 @@ class EllipseShape(Shape):
                 dc.SetPen(self._pen)
         if self._brush:
             dc.SetBrush(self._brush)
-        dc.DrawEllipse(int(self._xpos - self.GetWidth() / 2.0), int(self._ypos - self.GetHeight() / 2.0), self.GetWidth(), self.GetHeight())
+        dc.DrawEllipse(int(self._xpos - self.GetWidth() / 2.0), int(self._ypos - self.GetHeight() / 2.0), int(self.GetWidth()), int(self.GetHeight()))
 
     def SetSize(self, x, y, recursive = True):
         """
