@@ -13609,6 +13609,7 @@ class UltimateListCtrl(wx.Control):
             raise Exception("Invalid height passed to SetHeaderHeight: %s"%repr(height))
 
         self._headerWin._headerHeight = height
+        self._headerWin.InvalidateBestSize()
         self.DoLayout()
 
 
