@@ -926,7 +926,7 @@ class AuiTabContainer(object):
         self._tab_close_buttons = []
         self._click_tab = None
 
-        self._rect = wx.Rect()
+        self._rect = wx.Rect(0, 0, 1, 1)
         self._auiNotebook = auiNotebook
 
         self.AddButton(AUI_BUTTON_LEFT, wx.LEFT, name="Scroll Left")
