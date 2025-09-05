@@ -126,6 +126,10 @@ jobs:
             architecture: x64
           - os: windows-2022
             architecture: arm64
+          - os: windows-11-arm
+            architecture: x86
+          - os: windows-11-arm
+            architecture: x64
           # Only build oldest and newest Pythons on PRs
           - python-version: ${{ github.event_name == 'pull_request' && '3.10' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.11' }}
