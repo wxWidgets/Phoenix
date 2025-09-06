@@ -216,42 +216,42 @@ def run():
                   ]:
         module.find(name).ignore()
 
-        module.addPyCode("""\
-            PG_ATTR_DEFAULT_VALUE             = u"DefaultValue"
-            PG_ATTR_MIN                       = u"Min"
-            PG_ATTR_MAX                       = u"Max"
-            PG_ATTR_UNITS                     = u"Units"
-            PG_ATTR_HINT                      = u"Hint"
-            PG_ATTR_INLINE_HELP               = PG_ATTR_HINT
-            PG_ATTR_AUTOCOMPLETE              = u"AutoComplete"
-            PG_BOOL_USE_CHECKBOX              = u"UseCheckbox"
-            PG_BOOL_USE_DOUBLE_CLICK_CYCLING  = u"UseDClickCycling"
-            PG_FLOAT_PRECISION                = u"Precision"
-            PG_STRING_PASSWORD                = u"Password"
-            PG_UINT_BASE                      = u"Base"
-            PG_UINT_PREFIX                    = u"Prefix"
-            PG_FILE_WILDCARD                  = u"Wildcard"
-            PG_FILE_SHOW_FULL_PATH            = u"ShowFullPath"
-            PG_FILE_SHOW_RELATIVE_PATH        = u"ShowRelativePath"
-            PG_FILE_INITIAL_PATH              = u"InitialPath"
-            PG_FILE_DIALOG_TITLE              = u"DialogTitle"
-            PG_DIALOG_TITLE                   = u"DialogTitle"
-            PG_FILE_DIALOG_STYLE              = u"DialogStyle"
-            PG_DIR_DIALOG_MESSAGE             = u"DialogMessage"
-            PG_ARRAY_DELIMITER                = u"Delimiter"
-            PG_DATE_FORMAT                    = u"DateFormat"
-            PG_DATE_PICKER_STYLE              = u"PickerStyle"
-            PG_ATTR_SPINCTRL_STEP             = u"Step"
-            PG_ATTR_SPINCTRL_WRAP             = u"Wrap"
-            PG_ATTR_SPINCTRL_MOTION           = u"MotionSpin"
-            PG_ATTR_SPINCTRL_MOTIONSPIN       = PG_ATTR_SPINCTRL_MOTION
-            PG_ATTR_MULTICHOICE_USERSTRINGMODE= u"UserStringMode"
-            PG_COLOUR_ALLOW_CUSTOM            = u"AllowCustom"
-            PG_COLOUR_HAS_ALPHA               = u"HasAlpha"
+    module.addPyCode("""\
+        PG_ATTR_DEFAULT_VALUE             = u"DefaultValue"
+        PG_ATTR_MIN                       = u"Min"
+        PG_ATTR_MAX                       = u"Max"
+        PG_ATTR_UNITS                     = u"Units"
+        PG_ATTR_HINT                      = u"Hint"
+        PG_ATTR_INLINE_HELP               = PG_ATTR_HINT
+        PG_ATTR_AUTOCOMPLETE              = u"AutoComplete"
+        PG_BOOL_USE_CHECKBOX              = u"UseCheckbox"
+        PG_BOOL_USE_DOUBLE_CLICK_CYCLING  = u"UseDClickCycling"
+        PG_FLOAT_PRECISION                = u"Precision"
+        PG_STRING_PASSWORD                = u"Password"
+        PG_UINT_BASE                      = u"Base"
+        PG_UINT_PREFIX                    = u"Prefix"
+        PG_FILE_WILDCARD                  = u"Wildcard"
+        PG_FILE_SHOW_FULL_PATH            = u"ShowFullPath"
+        PG_FILE_SHOW_RELATIVE_PATH        = u"ShowRelativePath"
+        PG_FILE_INITIAL_PATH              = u"InitialPath"
+        PG_FILE_DIALOG_TITLE              = u"DialogTitle"
+        PG_DIALOG_TITLE                   = u"DialogTitle"
+        PG_FILE_DIALOG_STYLE              = u"DialogStyle"
+        PG_DIR_DIALOG_MESSAGE             = u"DialogMessage"
+        PG_ARRAY_DELIMITER                = u"Delimiter"
+        PG_DATE_FORMAT                    = u"DateFormat"
+        PG_DATE_PICKER_STYLE              = u"PickerStyle"
+        PG_ATTR_SPINCTRL_STEP             = u"Step"
+        PG_ATTR_SPINCTRL_WRAP             = u"Wrap"
+        PG_ATTR_SPINCTRL_MOTION           = u"MotionSpin"
+        PG_ATTR_SPINCTRL_MOTIONSPIN       = PG_ATTR_SPINCTRL_MOTION
+        PG_ATTR_MULTICHOICE_USERSTRINGMODE= u"UserStringMode"
+        PG_COLOUR_ALLOW_CUSTOM            = u"AllowCustom"
+        PG_COLOUR_HAS_ALPHA               = u"HasAlpha"
 
-            NullProperty                      = None
-            PGChoicesEmptyData                = None
-            """)
+        NullProperty                      = None
+        PGChoicesEmptyData                = None
+        """)
 
 
     # Switch all wxVariant types to wxPGVariant, so the propgrid-specific
