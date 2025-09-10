@@ -275,7 +275,7 @@ class OpPolyDraw(DrawOp):
 
     def Scale(self, scaleX, scaleY):
         for i in range(self._noPoints):
-            self._points[i] = wx.Point(self._points[i][0] * scaleX, self._points[i][1] * scaleY)
+            self._points[i] = wx.Point(int(self._points[i][0] * scaleX), int(self._points[i][1] * scaleY))
 
     def Translate(self, x, y):
         for i in range(self._noPoints):

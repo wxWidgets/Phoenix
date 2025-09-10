@@ -11,7 +11,7 @@
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
-This is where FloatCanvas defines its drawings objects.
+This is where FloatCanvas defines its drawing objects.
 """
 
 import sys
@@ -685,7 +685,7 @@ class Polygon(PointsObjectMixin, LineAndFillMixin, DrawObject):
         self.SetBrush(FillColor,FillStyle)
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel = None, HTdc=None):
-        Points = WorldToPixel(self.Points)#.tolist()
+        Points = WorldToPixel(self.Points)
         dc.SetPen(self.Pen)
         dc.SetBrush(self.Brush)
         dc.DrawPolygon(Points)
@@ -886,7 +886,7 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         dc.SetPen(self.Pen)
         xy = WorldToPixel(self.XY)
-        ArrowPoints = xy + self.ArrowPoints
+        ArrowPoints = (xy + self.ArrowPoints).astype(int)
         dc.DrawLines(ArrowPoints)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
@@ -964,11 +964,11 @@ class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         Points = WorldToPixel(self.Points)
-        ArrowPoints = Points[1:,np.newaxis,:] + self.ArrowPoints
+        ArrowPoints = (Points[1:,np.newaxis,:] + self.ArrowPoints).astype(int)
         dc.SetPen(self.Pen)
         dc.DrawLines(Points)
         for arrow in ArrowPoints:
-                dc.DrawLines(arrow)
+            dc.DrawLines(arrow)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.DrawLines(Points)
@@ -1065,7 +1065,7 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
             if len(Points) > 100:
                 xy = Points
                 xywh = np.concatenate((xy-radius, np.ones(xy.shape) * self.Diameter ), 1 )
-                dc.DrawEllipseList(xywh)
+                dc.DrawEllipseList(xywh.astype(int))
             else:
                 for xy in Points:
                     dc.DrawCircle(xy[0],xy[1], radius)
@@ -1080,7 +1080,7 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
                 if len(Points) > 100:
                     xy = Points
                     xywh = np.concatenate((xy-radius, np.ones(xy.shape) * self.Diameter ), 1 )
-                    HTdc.DrawEllipseList(xywh)
+                    HTdc.DrawEllipseList(xywh.astype(int))
                 else:
                     for xy in Points:
                         HTdc.DrawCircle(xy[0],xy[1], radius)
@@ -1434,13 +1434,13 @@ class TextObjectMixin(XYObjectMixin):
     ## pad is the extra space around the text
     ## if world = 1, the vertical shift is done in y-up coordinates
     ShiftFunDict = {'tl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y + pad - 2*world*pad),
-                    'tc': lambda x, y, w, h, world=0, pad=0: (x - w/2,     y + pad - 2*world*pad),
+                    'tc': lambda x, y, w, h, world=0, pad=0: (x - w//2,    y + pad - 2*world*pad),
                     'tr': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y + pad - 2*world*pad),
-                    'cl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y - h/2 + world*h),
-                    'cc': lambda x, y, w, h, world=0, pad=0: (x - w/2,     y - h/2 + world*h),
-                    'cr': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y - h/2 + world*h),
+                    'cl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y - h//2 + world*h),
+                    'cc': lambda x, y, w, h, world=0, pad=0: (x - w//2,    y - h//2 + world*h),
+                    'cr': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y - h//2 + world*h),
                     'bl': lambda x, y, w, h, world=0, pad=0: (x + pad,     y - h + 2*world*h - pad + world*2*pad) ,
-                    'bc': lambda x, y, w, h, world=0, pad=0: (x - w/2,     y - h + 2*world*h - pad + world*2*pad) ,
+                    'bc': lambda x, y, w, h, world=0, pad=0: (x - w//2,    y - h + 2*world*h - pad + world*2*pad) ,
                     'br': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y - h + 2*world*h - pad + world*2*pad)}
 
 class Text(TextObjectMixin, DrawObject):
@@ -2139,6 +2139,7 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
         self.CalcBoundingBox()
         self.ScaledBitmap = None
         self.ScaledHeight = None
+        self.MaxSize = 20e6  # cf. FHD 1,920 x 1,080
 
     def CalcBoundingBox(self):
         """Calculate the bounding box."""
@@ -2151,14 +2152,17 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         XY = WorldToPixel(self.XY)
         H = ScaleWorldToPixel(self.Height)[0]
-        W = H * (self.bmpWidth / self.bmpHeight)
-        if (self.ScaledBitmap is None) or (H != self.ScaledHeight) :
-            self.ScaledHeight = H
-            Img = self.Image.Scale(int(W), int(H))
-            self.ScaledBitmap = wx.Bitmap(Img)
-
+        W = int(H * (self.bmpWidth / self.bmpHeight))
         XY = self.ShiftFun(XY[0], XY[1], W, H)
-        dc.DrawBitmap(self.ScaledBitmap, XY, True)
+        if 0 < H * float(W) < self.MaxSize:
+            if (self.ScaledBitmap is None) or (H != self.ScaledHeight):
+                Img = self.Image.Scale(W, H)
+                self.ScaledHeight = H
+                self.ScaledBitmap = wx.Bitmap(Img)
+            dc.DrawBitmap(self.ScaledBitmap, XY, True)
+        else:
+            gc = wx.GraphicsContext.Create(dc)
+            gc.DrawBitmap(self.ScaledBitmap, *XY, W, H)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
@@ -2439,7 +2443,7 @@ class DotGrid:
                 if len(Points) > 100:
                     xy = Points
                     xywh = np.concatenate((xy-radius, np.ones(xy.shape) * self.Size ), 1 )
-                    dc.DrawEllipseList(xywh)
+                    dc.DrawEllipseList(xywh.astype(int))
                 else:
                     for xy in Points:
                         dc.DrawCircle(xy[0],xy[1], radius)
@@ -2582,7 +2586,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
         Default class constructor.
 
         :param `XY`: The (x,y) coords of the center of the chart
-        :param `Diameter`: The diamter of the chart in world coords, unless you
+        :param `Diameter`: The diameter of the chart in world coords, unless you
                  set "Scaled" to False, in which case it's in pixel coords.
         :param `Values`: sequence of values you want to make the chart of.
         :param `FillColors`: sequence of colors you want the slices. If
@@ -2627,7 +2631,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
 
     def SetFillStyles(self, FillStyles):
         """
-        Set te FillStyles and update the Brushes.
+        Set the FillStyles and update the Brushes.
 
         :param `FillStyles`: Fill style you want ("Solid", "Hash", etc)
         """
@@ -2715,7 +2719,7 @@ class Group(DrawObject):
         self.ObjectList = []
         DrawObject.__init__(self, InForeground, IsVisible)
 
-        # this one uses a proprty for _Canvas...
+        # this one uses a property for _Canvas...
         self._Actual_Canvas = None
 
         self.CalcBoundingBox()
