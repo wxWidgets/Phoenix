@@ -178,8 +178,10 @@ jobs:
               else
                   short_name=win32
               fi
+              build_opts="$build_opts --relwithdebug"
           elif [ ${{ matrix.os }} == windows-11-arm ]; then
               short_name=win64
+              build_opts="$build_opts --relwithdebug"
           fi
           echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
           echo "canonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
@@ -247,6 +249,13 @@ jobs:
               cibuildwheel dist/wxpython-${{ env.VERSION }}.tar.gz --output-dir dist
           fi
 
+      - name: Build the PDB zipfile
+        if: runner.os == 'Windows'
+        env:
+          WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
+        run: |
+          python build.py build_pdbzip
+
       - name: Simple smoke test
         run: |
           cd dist
@@ -262,6 +271,13 @@ jobs:
         with:
           name: wxPython-wheel-${{ steps.init.outputs.canonical_id }}
           path: dist/wxpython-*.whl
+
+      - name: Save pdb as job artifact
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows'
+        with:
+          name: pdb-${{ steps.init.outputs.canonical_id }}
+          path: dist/wxPython-pdb-*.zip
 
   build-documentation:
     name: Build wxPython documentation
