@@ -1456,6 +1456,10 @@ class PlotCanvas(wx.Panel):
             xAxis = (xAxis[0] + units, xAxis[1] + units)
             self._Draw(graphics, xAxis, yAxis)
 
+    def ScrollLeft(self, units):
+        """Move view left number of axis units."""
+        self.ScrollRight(-units)
+
     def ScrollUp(self, units):
         """Move view up number of axis units."""
         self.last_PointLabel = None  # reset pointLabel
@@ -1463,6 +1467,10 @@ class PlotCanvas(wx.Panel):
             graphics, xAxis, yAxis = self.last_draw
             yAxis = (yAxis[0] + units, yAxis[1] + units)
             self._Draw(graphics, xAxis, yAxis)
+      
+    def ScrollDown(self, units):
+        """Move view down number of axis units."""
+        self.ScrollUp(-units)
 
     def GetXY(self, event):
         """Wrapper around _getXY, which handles log scales"""
