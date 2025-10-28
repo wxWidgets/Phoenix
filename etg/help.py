@@ -39,6 +39,11 @@ def run():
     c.find('GetFrameParameters.pos').out = True
     c.find('GetFrameParameters.newFrameEachTime').out = True
 
+    # We want to avoid having to link with wxHTML so override the include of
+    # wx/help.h and use wx/helpbase.h instead.  This is needed with GCC 16+
+    # which performs more aggressive inlining.
+    c.includes[c.includes.index('wx/help.h')] = 'wx/helpbase.h'
+
 
     # NOTE: Since wxHelpController is an alias for wxHtmlHelpController on
     # Mac and GTK, and since we don't want to force the wx.core extension
