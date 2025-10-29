@@ -26,10 +26,10 @@ jobs:
       - name: Checkout specific submodule refs
         run: buildtools/checkout_submodule_refs.sh
 
-      - name: Set up Python 3.10
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.13'
           cache: 'pip'
 
       - name: Install dependencies
@@ -61,7 +61,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-24.04 ]
-        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13' ]
+        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13', '3.14' ]
         architecture: [ 'x64' ]
 
     env:
