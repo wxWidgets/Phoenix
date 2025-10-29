@@ -82,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wxPython-source
-          path: dist/wxPython-${{ steps.generate.outputs.version }}.tar.gz
+          path: dist/wxpython-${{ steps.generate.outputs.version }}.tar.gz
 
       - name: Create demo source distribution (sdist_demo)
         if: github.event_name == 'push'
@@ -243,10 +243,10 @@ jobs:
         run: |
           if [ -z "$CIBW_BUILD" ]; then
               cd dist
-              pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+              pip wheel -v wxpython-${{ env.VERSION }}.tar.gz
           else
               pip install cibuildwheel
-              cibuildwheel dist/wxPython-${{ env.VERSION }}.tar.gz --output-dir dist
+              cibuildwheel dist/wxpython-${{ env.VERSION }}.tar.gz --output-dir dist
           fi
 
       - name: Simple smoke test

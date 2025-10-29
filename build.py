@@ -2271,7 +2271,7 @@ def cmd_sdist(options, args):
 
     # build the tarball
     msg('Archiving Phoenix source...')
-    rootname = "%s-%s" % (baseName, cfg.VERSION)
+    rootname = "%s-%s" % (baseName.lower(), cfg.VERSION)
     tarfilename = posixjoin(phoenixDir(), 'dist', '%s.tar.gz' % rootname)
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
