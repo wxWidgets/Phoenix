@@ -13,14 +13,50 @@ wxPython Changelog
 
 4.2.4
 ------
-* (unreleased)
+* 28-Oct-2025
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.2.4
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.2.4``
 
 New and improved in this release:
+* This release was built using the wxWidgets' v3.2.8.1 release tag.  The only exception is that libtiff and pcre2 bundled with wxWidgets are updated to the versions from the wxWidgets master branch (libtiff 4.7.0 and pcre2 10.44).
 
+* Fix using `setuptools.build_meta` backend (#2732)
+
+* Fix EOL style in wx.py.editwindow.py (#2741)
+
+* Replace imp with types in wx.py.editor.py (#2745)
+
+* Fix floatcanvas Text.ShiftFunDict: convert float to int (#2749)
+
+* Fix up/down option not working on the initial search in wx.py.frame (#2747)
+
+* Fix floatcanvas Arrow, Point, Bitmap drawings (#2750)
+
+* Officially support and build wheels for Python 3.14 and Windows 11 ARM
+
+* Fix crash when calling wx.SystemSettings.GetAppearance() without App (#2771)
+
+* Enable whole word search in wx.py.editwindow (#2769)
+
+* Add MaxSize limit to ScaledBitmap drawing in FloatCanvas (#2768)
+
+* Fix more OGL float/int conversion issues (#2739)
+
+* Major speedups and bug fixes to CustomTreeCtrl and HyperTreeList (#2088)
+
+* Fix duplicated string constants in wx.propgrid (#2790)
+
+* Add non-zero width and height to default tab size to avoid wxWidgets warning in wx.lib.agw.aui.auibook (#2788)
+
+* Fix SetHeaderHeight in UltimateListCtrl (#2239)
+
+* Add ScrollLeft and ScrollDown to PlotCanvas (#2795)
+
+* Add sample of PlotCanvas usage (#2794)
+
+* Fix a linker issue with GCC 16+ and wxHelpControllerBase (#2807)
 
 
 
