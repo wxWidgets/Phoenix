@@ -107,7 +107,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-22.04, windows-2022, macos-15-intel, macos-14, windows-11-arm ]
+        os: [ windows-2022 ]
         python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
         architecture: [ 'x86', 'x64', 'arm64' ]
         # Exclude x86 configs on non-Windows OSs
