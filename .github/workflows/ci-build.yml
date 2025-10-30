@@ -243,7 +243,8 @@ jobs:
         run: |
           if [ -z "$CIBW_BUILD" ]; then
               cd dist
-              pip wheel -v wxpython-${{ env.VERSION }}.tar.gz
+              pip wheel -vvv --no-clean wxpython-${{ env.VERSION }}.tar.gz
+              find .
           else
               pip install cibuildwheel
               cibuildwheel dist/wxpython-${{ env.VERSION }}.tar.gz --output-dir dist
