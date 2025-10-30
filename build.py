@@ -912,10 +912,10 @@ def dos2bashPath(path):
         return path
     else:
         # Otherwise, do a simple translate and hope for the best?
-        # c:/foo --> /c/foo
+        # c:/foo --> /mnt/c/foo
         # TODO: Check this!!
         drive, rest = os.path.splitdrive(path)
-        path = '/{}/{}'.format(drive[0], rest)
+        path = '/mnt/{}/{}'.format(drive[0], rest)
         return path
 
 
@@ -1011,6 +1011,7 @@ def _doDox(arg):
 
         d = posixjoin(wxDir(), 'docs/doxygen')
         d = d.replace('\\', '/')
+        d = dos2bashPath(d)
         cmd = '"{}" -l -c "cd {} && ./regen.sh {}"'.format(bash, d, arg)
     else:
         os.environ['DOXYGEN'] = doxCmd
