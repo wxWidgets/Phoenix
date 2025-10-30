@@ -1945,7 +1945,12 @@ def cmd_build_pdbzip(options, args):
         if not filenames:
             msg('No PDB files found in ./wx!')
             return
-        arch = 'win_amd64' if PYTHON_ARCH == '64bit' else 'win32'
+        if PYTHON_MACHINE == 'ARM64':
+            arch = 'win_arm64'
+        elif PYTHON_ARCH == '64bit':
+            arch = 'win_amd64'
+        else:
+            arch = 'win32'
         pyver = 'py{}'.format(PYSHORTVER)
         zipname = 'dist/{}-pdb-{}-{}-{}.zip'.format(baseName, cfg.VERSION, pyver, arch)
         from zipfile import ZipFile, ZIP_DEFLATED
