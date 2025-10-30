@@ -1,4 +1,4 @@
 # Runtime dependencies needed when using wxPython Phoenix
-numpy ; python_version >= '3.0' and python_version < '3.12'
+numpy
 # pillow < 3.0
 typing-extensions; python_version < '3.11'
