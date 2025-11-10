@@ -361,6 +361,29 @@ jobs:
           --repo '${{ github.repository }}'
 
 
+  upload-demo-docs-to-extras:
+    name: Upload demo/docs to extras.wxpython.org
+    needs: [build-source-dist, publish-to-pypi]
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Download demo/docs
+      uses: actions/download-artifact@v4
+      with:
+        pattern: d*
+        path: dist/
+        merge-multiple: true
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.RIOBU_SSH_KEY }}
+        known_hosts: ${{ secrets.RIOBU_KNOWN_HOSTS }}
+    - name: Make directory and SCP demo/docs
+      run: |
+        ssh rbot.wxpython@riobu.com mkdir -p wxpython-extras/htdocs/wxPython4/extras/${{ needs.build-source-dist.outputs.VERSION }}
+        scp -p dist/* rbot.wxpython@riobu.com:wxpython-extras/htdocs/wxPython4/extras/${{ needs.build-source-dist.outputs.VERSION }}/
+
+
   upload-wheels-to-snapshot-builds:
     name: Upload wheels to snapshot-builds on wxpython.org
     if: github.event_name == 'push'
