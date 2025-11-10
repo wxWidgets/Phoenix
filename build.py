@@ -85,8 +85,8 @@ wxICON = 'packaging/docset/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-wafCurrentVersion = '2.1.5'
-wafMD5 = '2e7b2166c030dbac3e21891048df10aa'
+wafCurrentVersion = '2.1.8'
+wafMD5 = 'adefb38faba08f87bbbc585dcf74bf3f'
 
 doxygenCurrentVersion = '1.9.1'
 doxygenMD5 = {
