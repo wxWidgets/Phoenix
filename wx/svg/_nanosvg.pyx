@@ -77,6 +77,15 @@ cpdef enum SVGfillRule:
 cpdef enum SVGflags:
     SVG_FLAGS_VISIBLE = NSVG_FLAGS_VISIBLE
 
+# Populate the module namespace with enum values to keep compatibility with packages
+# compiled with cython > 3.1 (see https://github.com/cython/cython/issues/4571)
+globals().update(getattr(SVGpaintType, "__members__"))
+globals().update(getattr(SVGspreadType, "__members__"))
+globals().update(getattr(SVGlineJoin, "__members__"))
+globals().update(getattr(SVGlineCap, "__members__"))
+globals().update(getattr(SVGfillRule, "__members__"))
+globals().update(getattr(SVGflags, "__members__"))
+
 
 #----------------------------------------------------------------------------
 # Cython classes for wrapping the nanosvg structs
