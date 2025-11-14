@@ -174,15 +174,15 @@ class SVGimage(SVGimageBase):
                 ctx.Scale(sx, sy)
 
             for shape in self.shapes:
-                if not shape.flags & SVG_FLAGS_VISIBLE:
+                if not shape.flags & SVGflags.SVG_FLAGS_VISIBLE:
                     continue
                 if shape.opacity != 1.0:
                     ctx.BeginLayer(shape.opacity)
                 brush = self._makeBrush(ctx, shape)
                 pen = self._makePen(ctx, shape)
 
-                rule = { SVG_FILLRULE_NONZERO : wx.WINDING_RULE,
-                        SVG_FILLRULE_EVENODD : wx.ODDEVEN_RULE }.get(shape.fillRule, 0)
+                rule = { SVGfillRule.SVG_FILLRULE_NONZERO : wx.WINDING_RULE,
+                        SVGfillRule.SVG_FILLRULE_EVENODD : wx.ODDEVEN_RULE }.get(shape.fillRule, 0)
 
                 # The shape's path is comprised of one or more subpaths, collect
                 # and accumulate them in a new GraphicsPath
@@ -237,16 +237,16 @@ class SVGimage(SVGimageBase):
         # set up a brush from the shape.fill (SVGpaint) object
 
         # no brush
-        if shape.fill.type == SVG_PAINT_NONE:
+        if shape.fill.type == SVGpaintType.SVG_PAINT_NONE:
             brush = wx.NullGraphicsBrush
 
         # brush with a solid color
-        elif shape.fill.type == SVG_PAINT_COLOR:
+        elif shape.fill.type == SVGpaintType.SVG_PAINT_COLOR:
             r,g,b,a = shape.fill.color_rgba
             brush = ctx.CreateBrush(wx.Brush(wx.Colour(r,g,b,a)))
 
         # brush with a linear gradient
-        elif shape.fill.type == SVG_PAINT_LINEAR_GRADIENT:
+        elif shape.fill.type == SVGpaintType.SVG_PAINT_LINEAR_GRADIENT:
             # NanoSVG gives gradients their own transform which normalizes the
             # linear gradients to go from (0, 0) to (0,1) in the transformed
             # space. So once we have the transform set we can use those points
@@ -271,7 +271,7 @@ class SVGimage(SVGimageBase):
             brush = ctx.CreateLinearGradientBrush(x1,y1, x2,y2, stops, matrix)
 
         # brush with a radial gradient
-        elif shape.fill.type == SVG_PAINT_RADIAL_GRADIENT:
+        elif shape.fill.type == SVGpaintType.SVG_PAINT_RADIAL_GRADIENT:
             # Likewise, NanoSVG normalizes radial gradients with a transform
             # that puts the center (cx, cy) at (0,0) and the radius has a length
             # of 1.
@@ -299,24 +299,24 @@ class SVGimage(SVGimageBase):
     def _makePen(self, ctx, shape):
         # set up a pen from the shape.stroke (SVGpaint) object
         width = shape.strokeWidth
-        join = { SVG_JOIN_MITER : wx.JOIN_MITER,
-                 SVG_JOIN_ROUND : wx.JOIN_ROUND,
-                 SVG_JOIN_BEVEL : wx.JOIN_BEVEL}.get(shape.strokeLineJoin, 0)
-        cap =  { SVG_CAP_BUTT : wx.CAP_BUTT,
-                 SVG_CAP_ROUND : wx.CAP_ROUND,
-                 SVG_CAP_SQUARE : wx.CAP_PROJECTING}.get(shape.strokeLineCap, 0)
+        join = { SVGlineJoin.SVG_JOIN_MITER : wx.JOIN_MITER,
+                 SVGlineJoin.SVG_JOIN_ROUND : wx.JOIN_ROUND,
+                 SVGlineJoin.SVG_JOIN_BEVEL : wx.JOIN_BEVEL}.get(shape.strokeLineJoin, 0)
+        cap =  { SVGlineCap.SVG_CAP_BUTT : wx.CAP_BUTT,
+                 SVGlineCap.SVG_CAP_ROUND : wx.CAP_ROUND,
+                 SVGlineCap.SVG_CAP_SQUARE : wx.CAP_PROJECTING}.get(shape.strokeLineCap, 0)
         # TODO: handle dashes
 
         info = wx.GraphicsPenInfo(wx.BLACK).Width(width).Join(join).Cap(cap)
 
-        if shape.stroke.type == SVG_PAINT_NONE:
+        if shape.stroke.type == SVGpaintType.SVG_PAINT_NONE:
             pen = wx.NullGraphicsPen
 
-        elif shape.stroke.type == SVG_PAINT_COLOR:
+        elif shape.stroke.type == SVGpaintType.SVG_PAINT_COLOR:
             info.Colour(shape.stroke.color_rgba)
             pen = ctx.CreatePen(info)
 
-        elif shape.stroke.type == SVG_PAINT_LINEAR_GRADIENT:
+        elif shape.stroke.type == SVGpaintType.SVG_PAINT_LINEAR_GRADIENT:
             x1, y1, = (0.0, 0.0)
             x2, y2, = (0.0, 1.0)
             gradient = shape.stroke.gradient
@@ -333,7 +333,7 @@ class SVGimage(SVGimageBase):
             info.LinearGradient(x1,y1, x2,y2, stops, matrix)
             pen = ctx.CreatePen(info)
 
-        elif shape.stroke.type == SVG_PAINT_RADIAL_GRADIENT:
+        elif shape.stroke.type == SVGpaintType.SVG_PAINT_RADIAL_GRADIENT:
             cx, cy = (0.0, 0.0)
             radius = 1
             gradient = shape.stroke.gradient
