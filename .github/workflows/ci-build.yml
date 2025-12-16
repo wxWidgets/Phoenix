@@ -108,7 +108,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-22.04, windows-2022, macos-15-intel, macos-14, windows-11-arm ]
-        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13', '3.14' ]
+        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
         architecture: [ 'x86', 'x64', 'arm64' ]
         # Exclude x86 configs on non-Windows OSs
         exclude:
@@ -131,16 +131,14 @@ jobs:
           - os: windows-11-arm
             architecture: x64
           # Only build oldest and newest Pythons on PRs
-          - python-version: ${{ github.event_name == 'pull_request' && '3.10' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.11' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.12' }}
+          - python-version: ${{ github.event_name == 'pull_request' && '3.13' }}
           # Skip Windows x86 builds on PRs
           - architecture: ${{ github.event_name == 'pull_request' && 'x86' }}
           # Only build windows-11-arm on pushes
           - os: ${{ github.event_name != 'push' && 'windows-11-arm' }}
           # Python interpreter < 3.11 doesn't exist for Windows 11 ARM
-          - os: windows-11-arm
-            python-version: '3.9'
           - os: windows-11-arm
             python-version: '3.10'
 
