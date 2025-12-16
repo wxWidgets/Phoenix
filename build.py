@@ -84,15 +84,15 @@ pyICON = 'packaging/docset/Vippi-blocks-icon-32.png'
 wxICON = 'packaging/docset/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
-# MD5s of the tool binaries currently in use.
+# SHA256s of the tool binaries currently in use.
 wafCurrentVersion = '2.1.8'
-wafMD5 = 'adefb38faba08f87bbbc585dcf74bf3f'
+wafSHA256 = 'd45bbd147d4d22c01ffb59ce6ea230b64c202a90d5447e7a53a2b440b86a42f3'
 
 doxygenCurrentVersion = '1.9.1'
-doxygenMD5 = {
-    'darwin' : '6912d41cef5971fb07573190849a8a84',
-    'win32'  : '90439896025dc8ddcd5d767ab2c2c489',
-    'linux'  : 'ed2c35099165fce0d07d9a1809935928',
+doxygenSHA256 = {
+    'darwin' : '01bc02017b83369a75d9f52c687217395c772382ee5e9157d0afbc2e2929ce5e',
+    'win32'  : '3ef1084566b8c9bf33706d47b974ad07ddb4d2e26037eb199ff406c62f4c693e',
+    'linux'  : '5b8171931bc2b83bb4d19ab1b9ffc423d82df6ebaedc053364ef9543fb6b82e8',
 }
 
 # And the location where they can be downloaded from
@@ -603,10 +603,10 @@ def downloadTool(cmd, cmdname, envvar):
 
     os.chmod(cmd, 0o755)
 
-def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
+def getTool(cmdName, version, SHA256, envVar, platformBinary, linuxBits=False):
     # Check in the bin dir for the specified version of the tool command. If
     # it's not there then attempt to download it. Validity of the binary is
-    # checked with an MD5 hash.
+    # checked with an SHA256 hash.
     if os.environ.get(envVar):
         # Setting a value in the environment overrides other options
         return os.environ.get(envVar)
@@ -618,10 +618,10 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
         if platform == 'win32':
             ext = '.exe'
         cmd = opj(phoenixDir(), 'bin', '%s-%s-%s%s' % (cmdName, version, platform, ext))
-        md5 = MD5[platform]
+        sha256 = SHA256[platform]
     else:
         cmd = opj(phoenixDir(), 'bin', '%s-%s' % (cmdName, version))
-        md5 = MD5
+        sha256 = SHA256
 
     msg('Checking for %s...' % cmd)
     if os.path.exists(cmd):
@@ -633,13 +633,13 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
                        cmdName, envVar)
             sys.exit(1)
 
-        # now check the MD5 if not in dev mode and it's set to None
-        if not (devMode and md5 is None):
-            m = hashlib.md5()
+        # now check the SHA256 if not in dev mode and it's set to None
+        if not (devMode and sha256 is None):
+            m = hashlib.sha256()
             m.update(Path(cmd).read_bytes())
-            if m.hexdigest() != md5:
-                errorMsg('MD5 mismatch, got "%s"\n       '
-                           'expected          "%s"' % (m.hexdigest(), md5),
+            if m.hexdigest() != sha256:
+                errorMsg('SHA256 mismatch, got "%s"\n       '
+                           'expected          "%s"' % (m.hexdigest(), sha256),
                            cmdName, envVar)
                 sys.exit(1)
 
@@ -668,18 +668,18 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
 
     downloadTool(cmd, cmdName, envVar)
 
-    # Recursive call so the MD5 value will be double-checked on what was
+    # Recursive call so the SHA256 value will be double-checked on what was
     # just downloaded
-    return getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits)
+    return getTool(cmdName, version, SHA256, envVar, platformBinary, linuxBits)
 
 
-# The download and MD5 check only needs to happen once per run, cache the sip
+# The download and SHA256 check only needs to happen once per run, cache the sip
 # cmd value here the first time through.
 _wafCmd = None
 def getWafCmd():
     global _wafCmd
     if _wafCmd is None:
-        _wafCmd = getTool('waf', wafCurrentVersion, wafMD5, 'WAF', False)
+        _wafCmd = getTool('waf', wafCurrentVersion, wafSHA256, 'WAF', False)
     return _wafCmd
 
 # and Doxygen
@@ -687,7 +687,7 @@ _doxCmd = None
 def getDoxCmd():
     global _doxCmd
     if _doxCmd is None:
-        _doxCmd = getTool('doxygen', doxygenCurrentVersion, doxygenMD5, 'DOXYGEN', True)
+        _doxCmd = getTool('doxygen', doxygenCurrentVersion, doxygenSHA256, 'DOXYGEN', True)
     return _doxCmd
 
 
