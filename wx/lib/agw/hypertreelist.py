@@ -2341,6 +2341,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         self._curColumn = -1    # no current column
         self._owner = parent
         self._main_column = 0
+        self._x_maincol = 0
         self._dragItem = None
 
         self._imgWidth = self._imgWidth2 = 0
