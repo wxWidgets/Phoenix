@@ -76,6 +76,7 @@ class PlotCanvas(wx.Panel):
         # Create some mouse events for zooming
         self.canvas.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
         self.canvas.Bind(wx.EVT_LEFT_UP, self.OnMouseLeftUp)
+        self.canvas.Bind(wx.EVT_MOUSEWHEEL, self.OnWheel)
         self.canvas.Bind(wx.EVT_MOTION, self.OnMotion)
         self.canvas.Bind(wx.EVT_LEFT_DCLICK, self.OnMouseDoubleClick)
         self.canvas.Bind(wx.EVT_RIGHT_DOWN, self.OnMouseRightDown)
@@ -112,8 +113,8 @@ class PlotCanvas(wx.Panel):
         self._screenCoordinates = np.array([0.0, 0.0])
 
         # Zooming variables
-        self._zoomInFactor = 0.5
-        self._zoomOutFactor = 2
+        self._zoomInFactor = 1 / 1.2
+        self._zoomOutFactor = 1.2
         self._zoomCorner1 = np.array([0.0, 0.0])  # left mouse down corner
         self._zoomCorner2 = np.array([0.0, 0.0])   # left mouse up corner
         self._zoomEnabled = False
@@ -1972,20 +1973,25 @@ class PlotCanvas(wx.Panel):
         dc.SetTextBackground(self.GetBackgroundColour())
         self.last_draw = None
 
-    def Zoom(self, Center, Ratio):
+    def Zoom(self, Mouse, Ratio):
         """
         Zoom on the plot
-        Centers on the X,Y coords given in Center
+        Zooms on the X,Y coords given in Mouse
         Zooms by the Ratio = (Xratio, Yratio) given
         """
         self.last_PointLabel = None  # reset maker
-        x, y = Center
+        x, y = Mouse
         if self.last_draw is not None:
             (graphics, xAxis, yAxis) = self.last_draw
+
+            xr = (x-xAxis[0])/(xAxis[1]-xAxis[0])
+            yr = (y-yAxis[0])/(yAxis[1]-yAxis[0])
+
             w = (xAxis[1] - xAxis[0]) * Ratio[0]
+            xAxis = ( x - w*xr, x + w*(1-xr) )
             h = (yAxis[1] - yAxis[0]) * Ratio[1]
-            xAxis = (x - w / 2, x + w / 2)
-            yAxis = (y - h / 2, y + h / 2)
+            yAxis = ( y - h*yr, y + h*(1-yr) )
+
             self._Draw(graphics, xAxis, yAxis)
 
     def GetClosestPoints(self, pntXY, pointScaled=True):
@@ -2080,6 +2086,16 @@ class PlotCanvas(wx.Panel):
     #
     #       What this change would do is remove most of the if statements
     #       within these event handlers.
+
+    def OnWheel(self, evt):
+        X,Y = self._getXY(evt)
+        if evt.GetWheelRotation() < 0:
+            zoom = [1.0 if evt.ShiftDown() else self._zoomOutFactor, 1.0 if evt.ControlDown() else self._zoomOutFactor]
+            self.Zoom((X, Y), zoom)
+        else:
+            zoom = [1.0 if evt.ShiftDown() else self._zoomInFactor, 1.0 if evt.ControlDown() else self._zoomInFactor]
+            self.Zoom((X, Y), zoom)
+
     def OnMotion(self, event):
         if self._zoomEnabled and event.LeftIsDown():
             if self._hasDragged:
