@@ -52,6 +52,10 @@ def options(opt):
                    help='On Linux build for gtk2 (default gtk3)')
     opt.add_option('--gtk3', dest='gtk3', action='store_true', default=True,
                    help='On Linux build for gtk3')
+    opt.add_option('--qt', dest='qt', action='store_true', default=False,
+                   help='On Linux build for qt')
+    opt.add_option('--multi', dest='multi', action='store_true', default=False,
+                   help='On Linux build for multiple backends')
     opt.add_option('--no_msvc', dest='use_msvc', action='store_false', default=isWindows,
                    help='Set to use a MinGW toolchain')
     opt.add_option('--msvc_arch', dest='msvc_arch', default='x86', action='store',
@@ -283,15 +287,27 @@ def configure(conf):
         # wxWidgets.  If we ever support other ports then this code will need
         # to be adjusted.
         if not isDarwin:
+            platflags = ''
             if conf.options.gtk2:
                 conf.options.gtk3 = False
+                conf.options.qt = False
+                conf.options.multi = False
+            if conf.options.qt:
+                conf.options.gtk3 = False
             if conf.options.gtk2:
-                gtkflags = os.popen('pkg-config gtk+-2.0 --cflags', 'r').read()[:-1]
-            else:
-                gtkflags = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
+                platflags = os.popen('pkg-config gtk+-2.0 --cflags', 'r').read()[:-1]
+            elif conf.options.gtk3:
+                platflags = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
+            elif conf.options.qt:
+                platflags = os.popen('pkg-config Qt5Core Qt5Gui --cflags', 'r').read()[:-1]
+                conf.options.gtk3 = False
 
-            conf.env.CFLAGS_WX   += gtkflags.split()
-            conf.env.CXXFLAGS_WX += gtkflags.split()
+            conf.env.gtk3 = conf.options.gtk3
+            conf.env.qt = conf.options.qt
+            conf.env.multi = conf.options.multi
+
+            conf.env.CFLAGS_WX   += platflags.split()
+            conf.env.CXXFLAGS_WX += platflags.split()
 
         # clear out Python's default NDEBUG and make sure it is undef'd too just in case
         if 'NDEBUG' in conf.env.DEFINES_PYEXT:
@@ -534,14 +550,31 @@ def build(bld):
     cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
 
     # copy .py files that need to go into the root wx package dir
-    for name in ['src/__init__.py', 'src/gizmos.py',]:
-        copy_file(name, cfg.PKGDIR, update=1, verbose=1)
+    if isWindows:
+        default = 'msw'
+    elif isDarwin:
+        default = 'mac'
+    elif bld.env.gtk2:
+        default = 'gtk2'
+    elif bld.env.gtk3:
+        default = 'gtk3'
+    elif bld.env.qt and not bld.env.multi:
+        default = 'qt'
+    plats = ['gtk3', 'qt'] if bld.env.multi else [default]
+    bld(features='subst', source='src/__init__.py', target='__init__.py', DEFAULT=default, PLATS=str(plats))
+    bld(rule=copyFileToPkg, source='__init__.py', target='pkg.__init__')
+    copy_file('src/gizmos.py', cfg.PKGDIR, update=1, verbose=1)
+
+    extra = dict()
+    plat = ''
+    if not isWindows and not isDarwin and bld.env.multi:
+        plat = '_gtk3' if bld.env.gtk3 else '_qt'
 
     # Create the build tasks for each of our extension modules.
-    addRelwithdebugFlags(bld, 'siplib')
+    addRelwithdebugFlags(bld, f'siplib{plat}')
     siplib = bld(
         features = 'c cxx cshlib cxxshlib pyext',
-        target   = makeTargetName(bld, 'siplib'),
+        target   = makeTargetName(bld, f'siplib{plat}'),
         source   = ['sip/siplib/apiversions.c',
                     'sip/siplib/descriptors.c',
                     'sip/siplib/int_convertors.c',
@@ -553,8 +586,12 @@ def build(bld):
                     'sip/siplib/voidptr.c',
                     ],
         uselib   = 'siplib WX WXPY',
+        **extra,
     )
-    makeExtCopyRule(bld, 'siplib')
+    makeExtCopyRule(bld, f'siplib{plat}')
+    if not isWindows and not isDarwin and bld.env.multi:
+        siplib.env['LDFLAGS'].append_value(f'--defsym=PyInit_siplib{plat}=PyInit_siplib')
+        makeModSubstRule(bld, 'siplib')
 
     # Add build rules for each of our ETG generated extension modules
     makeETGRule(bld, 'etg/_core.py',       '_core',      'WX')
@@ -613,6 +650,17 @@ def makeExtCopyRule(bld, name):
     bld(rule=copyFileToPkg, source=src, target=tgt, after=name)
 
 
+# Make a rule that will copy a multi module to the in-place package
+# dir so we can test locally without doing an install.
+def makeModSubstRule(bld, name):
+    name = makeTargetName(bld, name)
+    subst = f'{name}.py'
+    # just a name to be touched to serve as the timestamp of the copy
+    tgt = 'pkg.%s' % os.path.splitext(subst)[0]
+    bld(features='subst', source='src/multi.py', target=subst, NAME=name)
+    bld(rule=copyFileToPkg, source=subst, target=tgt)
+
+
 # This is the task function to be called by the above rule.
 def copyFileToPkg(task):
     from distutils.file_util import copy_file
@@ -653,6 +701,11 @@ def _copyEnvGroup(env, srcPostfix, destPostfix):
 def makeETGRule(bld, etgScript, moduleName, libFlags):
     from buildtools.config   import loadETG, getEtgSipCppFiles
 
+    extra = dict()
+    if not isWindows and not isDarwin and bld.env.multi:
+        base = moduleName
+        moduleName += '_gtk3' if bld.env.gtk3 else '_qt'
+
     addRelwithdebugFlags(bld, moduleName)
 
     rc = []
@@ -666,12 +719,15 @@ def makeETGRule(bld, etgScript, moduleName, libFlags):
         rc = [rc_name]
 
     etg = loadETG(etgScript)
-    bld(features='c cxx cxxshlib pyext',
+    mod = bld(features='c cxx cxxshlib pyext',
         target=makeTargetName(bld, moduleName),
         source=getEtgSipCppFiles(etg) + rc,
         uselib='{} {} WXPY'.format(moduleName, libFlags),
-        )
+        **extra)
     makeExtCopyRule(bld, moduleName)
+    if not isWindows and not isDarwin and bld.env.multi:
+        mod.env['LDFLAGS'].append_value(f'--defsym=PyInit_{moduleName}=PyInit_{base}')
+        makeModSubstRule(bld, base)
 
 
 # Add flags to create .pdb files for debugging with MSVC
