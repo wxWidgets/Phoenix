@@ -120,7 +120,12 @@ details. However be aware that doing so will require a wxWidgets that is
 unreleased preview snapshots. In other words, the wxWidgets build should use
 code from the wxWidgets source repository within a few days of when the
 Phoenix code was checked out. Currently the master branch of Phoenix is
-tracking the master branch of wxWidgets.
+tracking the master branch of wxWidgets. Also note that even when using an
+external copy of wxWidgets with ``--use_syswx`` option, you still need the
+contents of ``ext/nanosvg`` submodule for the build to succeed, so you will
+still need to run at least::
+
+    git submodule update --init ext/nanosvg
 
 On the other hand, it is probably best to just let wxPython build and bundle
 wxWidgets. The build tools will by default build wxWidgets in a way that
