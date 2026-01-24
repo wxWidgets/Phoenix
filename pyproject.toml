@@ -75,6 +75,7 @@ requires = [
     "cython >= 3.0.10",
     "requests >= 2.26.0",
     "sip == 6.12.0",
+    "typing-extensions",
 ]
 build-backend = "setuptools.build_meta"
 
