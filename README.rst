@@ -228,7 +228,11 @@ Example build command-lines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To do a complete build from a totally clean git workspace, you will
-need to use several of the commands listed above.  For example::
+need to install the requirements first with::
+
+    python -m pip install -r requirements.txt
+
+and then use several of the commands listed above.  For example::
 
     python build.py dox etg --nodoc sip build
 
