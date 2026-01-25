@@ -1472,6 +1472,104 @@ del _{ArrayClass_pyName}___repr__
 
 
 
+def stdVectorWrapperTemplate(VectorClass, ItemClass, module, itemIsPtr=False, getItemCopy=False, typeHeaderHelper=""):
+    moduleName = module.module
+    VectorClass_pyName = removeWxPrefix(VectorClass)
+    itemRef = '*' if itemIsPtr else '&'
+    itemDeref = '' if itemIsPtr else '*'
+    addrOf = '' if itemIsPtr else '&'
+
+    # *** TODO: This can probably be done in a way that is not SIP-specific.
+    # Try creating extractor objects from scratch and attach cppMethods to
+    # them as needed, etc..
+
+    if not getItemCopy:
+        getitemMeth = '''\
+        {ItemClass}{itemRef} __getitem__(long index);
+        %MethodCode
+            if (0 > index)
+                index += sipCpp->size();
+
+            if ((index < sipCpp->size()) && (0 <= index)) {{
+                sipRes = {addrOf}sipCpp->at(index);
+            }}
+            else {{
+                wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
+                sipError = sipErrorFail;
+            }}
+        %End
+        '''.format(**locals())
+    else:
+        getitemMeth = '''\
+        {ItemClass}* __getitem__(long index) /Factory/;
+        %MethodCode
+            if (0 > index)
+                index += sipCpp->size();
+            if ((index < sipCpp->size()) && (0 <= index)) {{
+                sipRes = new {ItemClass}(sipCpp->at(index));
+            }}
+            else {{
+                wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
+                sipError = sipErrorFail;
+            }}
+        %End
+        '''.format(**locals())
+
+
+    return extractors.WigCode('''\
+class {VectorClass}
+{{
+%TypeHeaderCode
+    #include <vector>
+    #include <algorithm>
+
+    {typeHeaderHelper}
+%End
+
+public:
+    Py_ssize_t __len__();
+    %MethodCode
+        sipRes = sipCpp->size();
+    %End
+
+    {getitemMeth}
+
+    int __contains__({ItemClass}{itemRef} obj);
+    %MethodCode
+        auto it = std::find(sipCpp->begin(), sipCpp->end(), {itemDeref}obj);
+        sipRes = (it != sipCpp->end());
+    %End
+
+    void append({ItemClass}{itemRef} obj);
+    %MethodCode
+        sipCpp->push_back({itemDeref}obj);
+    %End
+
+    // TODO:  add support for index(value, [start, [stop]])
+    int index({ItemClass}{itemRef} obj);
+    %MethodCode
+        auto it = std::find(sipCpp->begin(), sipCpp->end(), {itemDeref}obj);
+
+        if (it == sipCpp->end()) {{
+            sipError = sipErrorFail;
+            PyErr_SetString(PyExc_ValueError, "sequence.index(x): x not in sequence");
+        }}
+        else {{
+            sipRes = std::distance(sipCpp->begin(), it);
+        }}
+    %End
+}};
+
+%Extract(id=pycode{moduleName})
+def _{VectorClass_pyName}___repr__(self):
+    return "{VectorClass_pyName}: " + repr(list(self))
+{VectorClass_pyName}.__repr__ = _{VectorClass_pyName}___repr__
+del _{VectorClass_pyName}___repr__
+%End
+'''.format(**locals()))
+
+
+
 # Same as the above, but for use with  WX_DEFINE_ARRAY_PTR
 def wxArrayPtrWrapperTemplate(ArrayClass, ItemClass, module):
     moduleName = module.module
