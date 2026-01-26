@@ -450,7 +450,6 @@ def makeOptionParser():
 
         (("j","jobs"),     ("",    "Number of parallel compile jobs to do, if supported.")),
         ("both",           (False, "Build both a debug and release version. (Only used on Windows)")),
-        ("unicode",        (True,  "Build wxPython with unicode support (always on for wx2.9+)")),
         (("v", "verbose"), (False, "Print out more information during the build.")),
         ("nodoc",          (False, "Do not run the default docs generator")),
         ("upload",         (False, "Upload bdist and/or sdist packages to snapshot server.")),
@@ -1510,7 +1509,7 @@ def cmd_build_wx(options, args):
         return
     checkCompiler()
 
-    build_options = ['--wxpython', '--unicode']
+    build_options = ['--wxpython']
 
     if options.jobs:
         build_options.append('--jobs=%s' % options.jobs)

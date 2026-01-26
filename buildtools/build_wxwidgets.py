@@ -202,7 +202,6 @@ def main(wxDir, args):
         "no_config"     : (False, "Turn off configure step on autoconf builds"),
         "config_only"   : (False, "Only run the configure step and then exit"),
         "rebake"        : (False, "Regenerate Bakefile and autoconf files"),
-        "unicode"       : (False, "Build the library with unicode support"),
         "wxpython"      : (False, "Build the wxWidgets library with all options needed by wxPython"),
         "osx_cocoa"     : (False, "Build the Cocoa port"),
         "osx_carbon"    : (False, "Build the Carbon port"),
@@ -243,9 +242,6 @@ def main(wxDir, args):
         configure_opts = []
         if options.features != "":
             configure_opts.extend(options.features.split(" "))
-
-        if options.unicode:
-            configure_opts.append("--enable-unicode")
 
         if options.debug:
             configure_opts.append("--enable-debug")
@@ -393,10 +389,6 @@ def main(wxDir, args):
         buildDir = os.path.abspath(os.path.join(wxRootDir, "build", "msw"))
 
         print("Updating wx/msw/setup.h")
-        if options.unicode:
-            flags["wxUSE_UNICODE"] = "1"
-            if VERSION < (2,9):
-                flags["wxUSE_UNICODE_MSLU"] = "1"
 
         if options.cairo:
             if not os.environ.get("CAIRO_ROOT"):
@@ -441,10 +433,6 @@ def main(wxDir, args):
         if toolkit == "msvc":
             print("setting build options...")
             args.append("-f makefile.vc")
-            if options.unicode:
-                args.append("UNICODE=1")
-                if VERSION < (2,9):
-                    args.append("MSLU=1")
 
             if options.wxpython:
                 args.append("OFFICIAL_BUILD=1")
