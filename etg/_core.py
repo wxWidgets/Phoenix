@@ -50,6 +50,7 @@ INCLUDES = [  # base and core stuff
               'wxpybuffer',
               'msgdlg_btnlabel',
               'wxvector',
+              'stdvector',
 
               'stockgdi',
               'longlong',
