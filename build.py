@@ -2185,7 +2185,7 @@ def cmd_sdist(options, args):
     def _archive_submodules(root, dest):
         msg('Exporting {}...'.format(root))
         if not os.path.exists(dest):
-            os.path.makedirs(dest)
+            os.makedirs(dest)
         pwd = pushDir(root)
         #runcmd('git archive HEAD | tar -x -C %s' % dest, echoCmd=False)
         archive = opj(TMP, 'export.tar')
