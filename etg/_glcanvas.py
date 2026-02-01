@@ -125,12 +125,23 @@ def run():
         sipRes = wxGLCanvas::IsDisplaySupported(attribPtr);
         """)
 
-    c.find('CreateSurface').setCppCode("""\
-        #if wxUSE_GLCANVAS_EGL
-            return self->CreateSurface();
+    # Needs additional work in etgtools to deal with out args in setCppCode
+    c.find('GetEGLVersion').ignore()
+
+    c.find('GetGLXVersion').setCppCode("""\
+        #if wxHAS_GLX
+            return wxGLCanvas::GetGLXVersion();
         #else
             wxPyRaiseNotImplemented();
-            return false;
+            return 0;
+        #endif
+        """)
+
+    c.find('PreferGLX').setCppCode("""\
+        #if wxHAS_GLX
+            wxGLCanvas::PreferGLX();
+        #else
+            wxPyRaiseNotImplemented();
         #endif
         """)
 

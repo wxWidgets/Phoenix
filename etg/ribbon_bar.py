@@ -56,11 +56,22 @@ def run():
         EVT_RIBBONBAR_HELP_CLICK      = wx.PyEventBinder(wxEVT_RIBBONBAR_HELP_CLICK, 1)
         """)
 
+    ribbon_tab_info_equality_code = """
+#include <wx/ribbon/bar.h>
+
+inline bool operator==(const wxRibbonPageTabInfo& a, const wxRibbonPageTabInfo& b) {
+        return a.page == b.page && 
+               a.rect == b.rect && 
+               a.active == b.active && 
+               a.hovered == b.hovered;
+    }
+"""
 
     module.addItem(
-        tools.wxArrayWrapperTemplate('wxRibbonPageTabInfoArray',
-                                     'wxRibbonPageTabInfo',
-                                     module))
+        tools.stdVectorWrapperTemplate('wxRibbonPageTabInfoArray',
+                                       'wxRibbonPageTabInfo',
+                                       module, 
+                                       typeHeaderHelper=ribbon_tab_info_equality_code))
 
 
     #-----------------------------------------------------------------

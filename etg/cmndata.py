@@ -21,6 +21,7 @@ DOCSTRING = ""
 ITEMS  = [ 'wxPageSetupDialogData',
            'wxPrintData',
            'wxPrintDialogData',
+           'wxPrintPageRange',
            ]
 
 #---------------------------------------------------------------------------
@@ -93,11 +94,28 @@ def run():
     tools.removeVirtuals(c)
     c.find('SetSetupDialog').ignore()
 
+    c.find('GetPageRanges').type = 'wxPrintPageRanges'
+    # TBD, fix later?
+    c.find('SetPageRanges').ignore()
+
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")
     c.addCppMethod('int', '__bool__', '()', "return self->IsOk();")
 
     c.addAutoProperties()
 
+    c = module.find('wxPrintPageRanges')
+    assert isinstance(c, etgtools.TypedefDef)
+    c.ignore()
+    
+    page_range_equality_code = """
+#include <wx/cmndata.h>
+inline bool operator==(const wxPrintPageRange& a, const wxPrintPageRange& b) {
+    return a.fromPage == b.fromPage && a.toPage == b.toPage;
+}
+"""
+    module.addItem(tools.stdVectorWrapperTemplate(
+        'wxPrintPageRanges', 'wxPrintPageRange', module, typeHeaderHelper=page_range_equality_code))
+ 
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

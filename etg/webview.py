@@ -25,6 +25,9 @@ ITEMS  = [ 'wxWebViewHistoryItem',
            'wxWebViewEvent',
            'wxWebViewFactory',
            'wxWebViewIE',
+           'wxWebViewHandlerRequest',
+           'wxWebViewConfiguration',
+           'wxWebViewWindowFeatures',
            ]
 
 #---------------------------------------------------------------------------
@@ -93,8 +96,8 @@ def run():
 
     # Documented wrongly in 3.1.6 (needs to be fixed in stubs too)
     c = module.find('wxWebViewFactory')
-    c.find('GetVersionInfo').argsString = '()'
-    c.find('GetVersionInfo').items = []
+    c.find('GetVersionInfo').ignore()
+    c.find('CreateConfiguration').ignore()
 
     tools.generateStubs('wxUSE_WEBVIEW', module,
                         typeValMap={
@@ -107,6 +110,8 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
     c.abstract = True
+    c.find('GetBackendVersionInfo').ignore()
+    c.find('NewConfiguration').ignore()
 
     for m in c.find('New').all():
         m.factory = True
@@ -271,6 +276,18 @@ def run():
         c = module.find(name)
         c.find('GetFile').factory = True
 
+        
+    c = module.find('wxWebViewHandler')
+    c.find('StartRequest').ignore()
+    
+    c = module.find('wxWebViewHandlerRequest')
+    c.find('GetDataString').ignore()
+
+    c = module.find('wxWebViewConfiguration')
+    c.abstract = True
+ 
+    c = module.find('wxWebViewWindowFeatures')
+    c.abstract = True
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

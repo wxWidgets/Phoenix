@@ -76,7 +76,7 @@ def getWxRelease(wxRoot=None):
     if not wxRoot:
         global wxRootDir
         wxRoot = wxRootDir
-    with open(os.path.join(wxRoot, "configure.in"), "r") as fid:
+    with open(os.path.join(wxRoot, "configure.ac"), "r") as fid:
         configureText = fid.read()
     majorVersion = re.search(r"wx_major_version_number=(\d+)", configureText).group(1)
     minorVersion = re.search(r"wx_minor_version_number=(\d+)", configureText).group(1)

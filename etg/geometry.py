@@ -50,6 +50,9 @@ def run():
     c.find('GetRounded.x').out = True
     c.find('GetRounded.y').out = True
 
+    c.find('GetFloor').findOverload('').ignore()
+    c.find('GetRounded').findOverload('').ignore()
+
     # these have link errors
     c.find('operator/=').findOverload('wxDouble').ignore()
     c.find('operator*=').findOverload('wxDouble').ignore()
@@ -102,6 +105,10 @@ def run():
     c.find('m_y').pyName = 'y'
     c.find('m_width').pyName = 'width'
     c.find('m_height').pyName = 'height'
+    
+    # new in 3.3.1, ignore for now as theres two overloads each
+    c.find('Inflate').ignore()
+    c.find('Deflate').ignore()
 
     c.convertFromPyObject = tools.convertFourDoublesTemplate('wxRect2DDouble')
 

@@ -124,14 +124,6 @@ def run():
             #endif
             """)
 
-    c.addCppMethod('void', 'SetSize', '(const wxSize& size)',
-        doc='Set the bitmap size (does not alter the existing native bitmap data or image size).',
-        body="""\
-            self->SetWidth(size->x);
-            self->SetHeight(size->y);
-            """)
-
-
 
     # On MSW the bitmap handler classes are different than what is
     # documented, and this causes compile errors. Nobody has needed them from

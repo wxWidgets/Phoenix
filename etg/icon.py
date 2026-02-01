@@ -82,6 +82,9 @@ def run():
     # Documented wrongly in 3.1.6
     c.find('GetLogicalSize').type = 'wxSize'
 
+    c.find('SetDepth').ignore()
+    c.find('SetHeight').ignore()
+    c.find('SetWidth').ignore()
 
     # For compatibility:
     module.addPyFunction('EmptyIcon', '()',

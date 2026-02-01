@@ -38,7 +38,6 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.find('Set.t').transfer = True
     c.find('SetLoader.loader').transfer = True
-    c.find('AddCatalog').findOverload('msgIdCharset').ignore()
 
 
     c = module.find('wxTranslationsLoader')
@@ -61,9 +60,6 @@ def run():
 
     # Just add a forward declaration for now
     module.insertItem(0, etgtools.WigCode("class wxMsgCatalog;"))
-
-
-    module.find('_').ignore()
 
 
     #-----------------------------------------------------------------

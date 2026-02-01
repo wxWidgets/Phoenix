@@ -32,15 +32,6 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    # These are duplicates, ignore the ones in this module
-    module.find('wxPG_PROPERTYVALUES_FLAGS').ignore()
-    module.find('wxPG_LABEL').ignore()
-    module.find('wxPG_LABEL_STRING').ignore()
-    module.find('wxPG_COLOUR_BLACK').ignore()
-    module.find('wxPG_COLOUR').ignore()
-    module.find('wxPG_DEFAULT_IMAGE_SIZE').ignore()
-
-
     #----------------------------------------------------------
     c = module.find('wxPGPropArgCls')
     assert isinstance(c, etgtools.ClassDef)

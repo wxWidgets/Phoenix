@@ -2183,6 +2183,10 @@ def cmd_sdist(options, args):
 
     # recursively export a git archive of this repo and submodules
     def _archive_submodules(root, dest):
+        # Skip deps/sljit which is a submodule of ext/wxWidgets/3rdparty/pcre
+        # It seems to be oddly configured and not needed?
+        if root == 'deps/sljit':
+            return
         msg('Exporting {}...'.format(root))
         if not os.path.exists(dest):
             os.makedirs(dest)

@@ -464,6 +464,10 @@ def run():
     c.find('SetCache.from').name = 'from_'
     c.find('SetCache.to').name = 'to_'
 
+    c.find('SetDataViewColumn').ignore()
+    c.find('SetModel').ignore()
+    c.find('SetItem').ignore()
+
     c.find('GetDataBuffer').ignore()
     c.addCppMethod('PyObject*', 'GetDataBuffer', '()', isConst=True,
         doc="Gets the data buffer for a drop data transfer",

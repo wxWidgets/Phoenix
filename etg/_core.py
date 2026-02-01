@@ -241,6 +241,7 @@ INCLUDES = [  # base and core stuff
               'modalhook',
               'unichar',
               'stockitem',
+              'darkmode',
               ]
 
 

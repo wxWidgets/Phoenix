@@ -98,6 +98,8 @@ def run():
     c.find('GetPageInfo.pageFrom').out = True
     c.find('GetPageInfo.pageTo').out = True
 
+    #TBD, fix later?
+    c.find('GetPagesInfo').ignore()
 
     c = module.find('wxPrintAbortDialog')
     tools.fixTopLevelWindowClass(c)

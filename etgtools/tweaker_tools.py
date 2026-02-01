@@ -789,7 +789,6 @@ def addWindowVirtuals(klass):
         ('DoMoveWindow',              'void DoMoveWindow(int x, int y, int width, int height)'),
         ('DoSetWindowVariant',        'void DoSetWindowVariant( wxWindowVariant variant)'),
         ('GetDefaultBorder',          'wxBorder GetDefaultBorder() const'),
-        ('GetDefaultBorderForControl','wxBorder GetDefaultBorderForControl() const'),
         ('DoFreeze',                  'void DoFreeze()'),
         ('DoThaw',                    'void DoThaw()'),
         ('HasTransparentBackground',  'bool HasTransparentBackground()'),

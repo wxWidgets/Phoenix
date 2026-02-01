@@ -49,6 +49,8 @@ def run():
     # Incorrectly documented in 3.1.7
     c.find('GetColumnFullWidth.p').type = 'wxPGProperty *'
 
+    c = module.find('wxPropertyGridIteratorBase')
+    c.addPrivateDefaultCtor()
 
     module.find('wxPG_IT_CHILDREN').ignore()
 

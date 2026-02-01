@@ -40,6 +40,10 @@ def parseAndTweakModule():
     scrolled.find('GetViewStart.x').out = True
     scrolled.find('GetViewStart.y').out = True
 
+    scrolled.find('GetViewStartPixels').findOverload('()').ignore()
+    scrolled.find('GetViewStartPixels.x').out = True
+    scrolled.find('GetViewStartPixels.y').out = True
+
     m = scrolled.find('CalcScrolledPosition').findOverload('xx')
     m.find('xx').out = True
     m.find('yy').out = True
