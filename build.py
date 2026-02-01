@@ -100,7 +100,7 @@ toolsURL = 'https://wxwidgets.github.io/wxPython-tools'
 
 
 # MS Edge code and DLLs needed for the wxWEBVIEW_BACKEND_EDGE backend
-MS_edge_version = '1.0.1185.39'
+MS_edge_version = '1.0.3719.77'
 MS_edge_url = 'https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/{}'.format(MS_edge_version)
 
 #---------------------------------------------------------------------------
