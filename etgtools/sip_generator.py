@@ -249,7 +249,12 @@ from .%s import *
         name = enum.name
         if name.startswith('@'):
             name = ''
-        stream.write('%senum %s%s\n%s{\n' % (indent, name, self.annotate(enum), indent))
+            
+        scoping = ''
+        if enum.isScoped:
+            scoping = ' class '
+            
+        stream.write('%senum %s%s%s\n%s{\n' % (indent, scoping, name, self.annotate(enum), indent))
         values = []
         for v in enum.items:
             if v.ignored:
@@ -265,7 +270,12 @@ from .%s import *
         if globalVar.ignored:
             return
 
-        stream.write('%s %s' % (globalVar.type, globalVar.name))
+        # SIP doesn't understand constexpr - just change to const
+        globalVarType = globalVar.type
+        if globalVarType.startswith('constexpr '):
+            globalVarType = 'const' + globalVarType[9:]
+
+        stream.write('%s %s' % (globalVarType, globalVar.name))
         stream.write('%s;\n\n' % self.annotate(globalVar))
 
 

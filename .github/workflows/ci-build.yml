@@ -53,9 +53,6 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 0
 
-      - name: Checkout specific submodule refs
-        run: buildtools/checkout_submodule_refs.sh
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -64,7 +61,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get install -y gettext dos2unix
+          sudo apt-get install -y gettext
           python -m pip install --upgrade -r requirements.txt
 
       - name: Generate wrapper code
@@ -164,7 +161,7 @@ jobs:
               echo "CIBW_BUILD_VERBOSITY=1" >> "$GITHUB_ENV"
               echo "CIBW_BUILD_FRONTEND=pip" >> "$GITHUB_ENV"
               echo "CIBW_ENABLE=cpython-prerelease" >> "$GITHUB_ENV"
-              echo "MACOSX_DEPLOYMENT_TARGET=10.10" >> "$GITHUB_ENV"
+              echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> "$GITHUB_ENV"
           elif [ ${{ matrix.os }} == macos-14 ]; then
               short_name=macos
               echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"

@@ -45,6 +45,7 @@ def run():
     m = c.find('wxOwnerDrawnComboBox').findOverload('wxArrayString')
     m.find('value').default = 'wxEmptyString'
     m.find('choices').default = 'wxArrayString()'
+    c.find('wxOwnerDrawnComboBox').findOverload('wxString &name=wxComboBoxNameStr').ignore()
 
     c.find('Create').ignore()
     c.find('Create').findOverload('wxString choices').ignore()

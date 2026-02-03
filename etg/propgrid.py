@@ -117,21 +117,6 @@ def run():
             item.type = item.type.replace('wxVariant', 'wxPGVariant')
 
 
-    # Switch wxPGVFBFlags to unsigned char
-    td = module.find('wxPGVFBFlags')
-    td.ignore()
-
-    for name in ['wxPGValidationInfo.GetFailureBehavior',
-                 'wxPGValidationInfo.SetFailureBehavior.failureBehavior',
-                 'wxPropertyGridEvent.GetValidationFailureBehavior',
-                 'wxPropertyGridEvent.SetValidationFailureBehavior.flags',
-                ]:
-        item = module.find(name)
-        assert item.type == 'wxPGVFBFlags'
-        item.type = 'byte'
-
-
-
     c = module.find('wxPropertyGridPopulator')
     tools.ignoreConstOverloads(c)
 

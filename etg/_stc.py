@@ -167,9 +167,10 @@ def run():
     c.find('EmulateKeyPress').ignore()
     c.find('IsMultiLine').ignore()
     c.find('IsSingleLine').ignore()
-    c.find('MacCheckSpelling').ignore()
     c.find('ShowNativeCaret').ignore()
     c.find('HideNativeCaret').ignore()
+    c.find('GTKGetTextBuffer').ignore()
+    c.find('GTKGetEditable').ignore()
 
     # Change the *RGBAImage methods to accept any buffer object
     c.find('MarkerDefineRGBAImage').ignore()
@@ -211,7 +212,6 @@ def run():
         EVT_STC_SAVEPOINTREACHED = wx.PyEventBinder( wxEVT_STC_SAVEPOINTREACHED, 1 )
         EVT_STC_SAVEPOINTLEFT = wx.PyEventBinder( wxEVT_STC_SAVEPOINTLEFT, 1 )
         EVT_STC_ROMODIFYATTEMPT = wx.PyEventBinder( wxEVT_STC_ROMODIFYATTEMPT, 1 )
-        EVT_STC_KEY = wx.PyEventBinder( wxEVT_STC_KEY, 1 )
         EVT_STC_DOUBLECLICK = wx.PyEventBinder( wxEVT_STC_DOUBLECLICK, 1 )
         EVT_STC_UPDATEUI = wx.PyEventBinder( wxEVT_STC_UPDATEUI, 1 )
         EVT_STC_MODIFIED = wx.PyEventBinder( wxEVT_STC_MODIFIED, 1 )
@@ -220,7 +220,6 @@ def run():
         EVT_STC_NEEDSHOWN = wx.PyEventBinder( wxEVT_STC_NEEDSHOWN, 1 )
         EVT_STC_PAINTED = wx.PyEventBinder( wxEVT_STC_PAINTED, 1 )
         EVT_STC_USERLISTSELECTION = wx.PyEventBinder( wxEVT_STC_USERLISTSELECTION, 1 )
-        EVT_STC_URIDROPPED = wx.PyEventBinder( wxEVT_STC_URIDROPPED, 1 )
         EVT_STC_DWELLSTART = wx.PyEventBinder( wxEVT_STC_DWELLSTART, 1 )
         EVT_STC_DWELLEND = wx.PyEventBinder( wxEVT_STC_DWELLEND, 1 )
         EVT_STC_START_DRAG = wx.PyEventBinder( wxEVT_STC_START_DRAG, 1 )
@@ -255,6 +254,13 @@ def run():
         STC_SCMOD_SUPER = STC_KEYMOD_SUPER
         STC_SCMOD_META = STC_KEYMOD_META
         """)
+
+    module.find('wxSTC_INDIC0_MASK').ignore()
+    module.find('wxSTC_INDIC1_MASK').ignore()
+    module.find('wxSTC_INDIC2_MASK').ignore()
+    module.find('wxSTC_INDICS_MASK').ignore()
+    module.find('wxEVT_STC_KEY').ignore()
+    module.find('wxEVT_STC_URIDROPPED').ignore()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

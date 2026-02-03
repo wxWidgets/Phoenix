@@ -23,6 +23,7 @@ ITEMS  = [ "wxAnimation",
            "wxAnimationDecoder",
            "wxANIDecoder",
            "wxGIFDecoder",
+           "wxAnimationBundle",
            ]
 
 #---------------------------------------------------------------------------

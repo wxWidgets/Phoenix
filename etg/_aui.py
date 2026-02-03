@@ -35,6 +35,7 @@ INCLUDES = [ 'auiframemanager',
              'auibar',
              'auibook',
              'auitabmdi',
+             'auiserializer',
              ]
 
 

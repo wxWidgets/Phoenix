@@ -40,6 +40,9 @@ def run():
     c = module.find('wxAuiManager')
     assert isinstance(c, etgtools.ClassDef)
     c.find('ProcessDockResult').ignore(False)
+    c.find('CalculateHintRect').find('offset').default="wxPoint(0,0)"
+    c.find('DrawHintRect').find('offset').default="wxPoint(0,0)"
+    c.find('GetAllPanes').findOverload('', isConst=True).ignore()
 
     c = module.find('wxAuiPaneInfo')
     module.addItem(
@@ -60,18 +63,9 @@ def run():
         EVT_AUI_FIND_MANAGER = wx.PyEventBinder( wxEVT_AUI_FIND_MANAGER )
         """)
 
-
-    module.addItem(tools.wxArrayWrapperTemplate(
-            'wxAuiDockInfoArray', 'wxAuiDockInfo', module))
-
-    module.addItem(tools.wxArrayWrapperTemplate(
-            'wxAuiDockUIPartArray', 'wxAuiDockUIPart', module))
-
     module.addItem(tools.wxArrayWrapperTemplate(
             'wxAuiPaneInfoPtrArray', 'wxAuiPaneInfo', module, itemIsPtr=True))
 
-    module.addItem(tools.wxArrayWrapperTemplate(
-            'wxAuiDockInfoPtrArray', 'wxAuiDockInfo', module, itemIsPtr=True))
 
 
     #-----------------------------------------------------------------

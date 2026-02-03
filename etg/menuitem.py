@@ -141,6 +141,17 @@ def run():
         #endif
         """)
 
+    m = c.find('GetBitmapBundle').findOverload('checked')
+    m.type = 'wxBitmapBundle*'
+    m.factory = True
+    m.setCppCode("""\
+        #ifdef __WXMSW__
+            return new wxBitmapBundle(self->GetBitmapBundle(checked));
+        #else
+            return new wxBitmapBundle(self->GetBitmapBundle()); // no checked arg in this case
+        #endif
+        """)
+
 
     c.find('GetDisabledBitmap').type = 'wxBitmap*'
     c.find('GetDisabledBitmap').factory = True
@@ -155,6 +166,16 @@ def run():
     c.find('SetDisabledBitmap').setCppCode("""\
         #ifdef __WXMSW__
             self->SetDisabledBitmap(*disabled);
+        #endif
+        """)
+
+    c.find('GetDisabledBitmapBundle').type = 'wxBitmapBundle*'
+    c.find('GetDisabledBitmapBundle').factory = True
+    c.find('GetDisabledBitmapBundle').setCppCode("""\
+        #ifdef __WXMSW__
+            return new wxBitmapBundle(self->GetDisabledBitmapBundle());
+        #else
+            return new wxBitmapBundle;
         #endif
         """)
 

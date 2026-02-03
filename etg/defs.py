@@ -67,6 +67,8 @@ def run():
     module.find('wxDELETEA').ignore()
     module.find('wxSwap').ignore()
     module.find('wxVaCopy').ignore()
+    
+    module.find('wxSsize').ignore()
 
     # Add some typedefs for basic wx types and others so the backend
     # generator knows what they are
@@ -113,6 +115,9 @@ def run():
     # This is only supported with C++14, so ignore it for now
     module.find('wxDEPRECATED_ATTR').ignore()
 
+    # no point in even having
+    module.find('wxOVERRIDE').ignore()
+    module.find('wxWARN_UNUSED').ignore()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

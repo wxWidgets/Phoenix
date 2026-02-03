@@ -38,7 +38,13 @@ def run():
                   'wxRibbonAUIArtProvider']:
         c = module.find(klass)
         assert isinstance(c, etgtools.ClassDef)
-        c.find('Clone').factory = True
+        
+        if c.findItem('Clone'):
+            c.find('Clone').factory = True
+        else:
+            c.addItem(etgtools.WigCode("""\
+            virtual wxRibbonArtProvider* Clone() const /Factory/;
+            """))
 
         m = c.findItem('GetColourScheme')
         if m:

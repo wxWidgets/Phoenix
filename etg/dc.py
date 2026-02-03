@@ -23,6 +23,7 @@ DOCSTRING = ""
 # this script.
 ITEMS  = [ 'wxFontMetrics',
            'wxDC',
+           'wxReadOnlyDC',
            'wxDCClipper',
            'wxDCBrushChanger',
            'wxDCPenChanger',
@@ -45,33 +46,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxDC')
+    c = module.find('wxReadOnlyDC')
     assert isinstance(c, etgtools.ClassDef)
-    c.mustHaveApp()
-
-    c.addPrivateCopyCtor()
-    c.addPublic()
-    tools.removeVirtuals(c)
-
-    c.addDtor('public', True)
 
     # Keep only the wxSize overloads of these
     c.find('GetSize').findOverload('wxCoord').ignore()
     c.find('GetSizeMM').findOverload('wxCoord').ignore()
-
-    # TODO: needs wxAffineMatrix2D support.
-    #c.find('GetTransformMatrix').ignore()
-    #c.find('SetTransformMatrix').ignore()
-
-    # remove wxPoint* overloads, we use the wxPointList ones
-    c.find('DrawLines').findOverload('wxPoint points').ignore()
-    c.find('DrawPolygon').findOverload('wxPoint points').ignore()
-    c.find('DrawSpline').findOverload('wxPoint points').ignore()
-
-    # TODO: we'll need a custom method implementation for this since there
-    # are multiple array parameters involved...
-    c.find('DrawPolyPolygon').ignore()
-
 
     # Add output param annotations so the generated docstrings will be correct
     c.find('GetUserScale.x').out = True
@@ -83,18 +63,6 @@ def run():
     c.find('GetLogicalOrigin').overloads = []
     c.find('GetLogicalOrigin.x').out = True
     c.find('GetLogicalOrigin.y').out = True
-
-    c.find('GetClippingBox').findOverload('wxRect').ignore()
-    c.find('GetClippingBox.x').out = True
-    c.find('GetClippingBox.y').out = True
-    c.find('GetClippingBox.width').out = True
-    c.find('GetClippingBox.height').out = True
-    c.addPyMethod('GetClippingRect', '(self)',
-        doc="Returns the rectangle surrounding the current clipping region as a wx.Rect.",
-        body="""\
-            rv, x, y, w, h = self.GetClippingBox()
-            return wx.Rect(x,y,w,h)
-            """)
 
 
     # Deal with the text-extent methods. In Classic we renamed one overloaded
@@ -159,6 +127,57 @@ def run():
         .. seealso:: :class:`wx.Font`, :meth:`~wx.DC.SetFont`,
            :meth:`~wx.DC.GetPartialTextExtents, :meth:`~wx.DC.GetTextExtent`
         """)]
+
+    c.abstract = True
+    
+
+
+    # Return the array instead of using an output parameter
+    m = c.find('GetPartialTextExtents')
+    m.type = 'wxArrayInt*'
+    m.find('widths').ignore()
+    m.factory = True  # a new instance is being created
+    m.setCppCode("""\
+        wxArrayInt rval;
+        self->GetPartialTextExtents(*text, rval);
+        return new wxArrayInt(rval);
+        """)
+
+    c = module.find('wxDC')
+    assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
+
+    c.addPrivateCopyCtor()
+    c.addPublic()
+    tools.removeVirtuals(c)
+
+    c.addDtor('public', True)
+
+    # TODO: needs wxAffineMatrix2D support.
+    #c.find('GetTransformMatrix').ignore()
+    #c.find('SetTransformMatrix').ignore()
+
+    # remove wxPoint* overloads, we use the wxPointList ones
+    c.find('DrawLines').findOverload('wxPoint points').ignore()
+    c.find('DrawPolygon').findOverload('wxPoint points').ignore()
+    c.find('DrawSpline').findOverload('wxPoint points').ignore()
+
+    # TODO: we'll need a custom method implementation for this since there
+    # are multiple array parameters involved...
+    c.find('DrawPolyPolygon').ignore()
+
+    c.find('GetClippingBox').findOverload('wxRect').ignore()
+    c.find('GetClippingBox.x').out = True
+    c.find('GetClippingBox.y').out = True
+    c.find('GetClippingBox.width').out = True
+    c.find('GetClippingBox.height').out = True
+    c.addPyMethod('GetClippingRect', '(self)',
+        doc="Returns the rectangle surrounding the current clipping region as a wx.Rect.",
+        body="""\
+            rv, x, y, w, h = self.GetClippingBox()
+            return wx.Rect(x,y,w,h)
+            """)
+
 
     # Now add the simpler versions of the extent methods
     c.addCppMethod('wxSize*', 'GetTextExtent', '(const wxString& st)', isConst=True,
@@ -227,18 +246,6 @@ def run():
         return new wxRect(rv);
         """)
     c.addPyCode('DC.DrawImageLabel = wx.deprecated(DC.DrawLabel, "Use DrawLabel instead.")')
-
-
-    # Return the array instead of using an output parameter
-    m = c.find('GetPartialTextExtents')
-    m.type = 'wxArrayInt*'
-    m.find('widths').ignore()
-    m.factory = True  # a new instance is being created
-    m.setCppCode("""\
-        wxArrayInt rval;
-        self->GetPartialTextExtents(*text, rval);
-        return new wxArrayInt(rval);
-        """)
 
 
     c.addCppMethod('int', '__nonzero__', '()', "return self->IsOk();")

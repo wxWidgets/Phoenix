@@ -682,9 +682,6 @@ def run():
     c = module.find('wxGIFHandler')
     c.find('DoCanRead').ignore(False)
 
-    module.addHeaderCode("#include <wx/anidecod.h>")
-    module.addItem(tools.wxArrayWrapperTemplate('wxImageArray', 'wxImage', module))
-
     #-------------------------------------------------------
     # tweak for IFFHandler
     c = module.find('wxIFFHandler')

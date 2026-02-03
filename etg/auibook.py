@@ -22,9 +22,15 @@ ITEMS  = [ 'wxAuiNotebook',
            'wxAuiTabContainerButton',
            'wxAuiTabContainer',
            'wxAuiTabArt',
-           'wxAuiDefaultTabArt',
+           'wxAuiFlatTabArt',
+           'wxAuiGenericTabArt',
            'wxAuiSimpleTabArt',
            'wxAuiNotebookEvent',
+           'wxAuiNotebookPosition',
+           'wxAuiBookDeserializer',
+           'wxAuiBookSerializer',
+           'wxAuiTabLayoutInfo',
+           'wxAuiDockLayoutInfo'
            ]
 
 #---------------------------------------------------------------------------
@@ -45,18 +51,55 @@ def run():
     tools.fixBookctrlClass(c)
     c.find('SetArtProvider.art').transfer = True
 
+    c.find('GetAllTabCtrls').ignore()
+    c.find('GetPagesInDisplayOrder').ignore()
 
     c = module.find('wxAuiTabContainer')
     tools.ignoreConstOverloads(c)
+    c.find('GetPages').ignore()
 
-    module.addItem(tools.wxArrayWrapperTemplate(
-            'wxAuiNotebookPageArray', 'wxAuiNotebookPage', module))
+    notebook_page_equality_code = """
+#include <wx/aui/auibook.h>
 
-    module.addItem(tools.wxArrayWrapperTemplate(
-            'wxAuiTabContainerButtonArray', 'wxAuiTabContainerButton', module))
+inline bool operator==(const wxAuiNotebookPage& a, const wxAuiNotebookPage& b) {
+
+    if (a.window != b.window) return false;
+    
+    return true;
+}
+"""
+    module.addItem(tools.stdVectorWrapperTemplate(
+            'wxAuiNotebookPageArray', 'wxAuiNotebookPage', module, typeHeaderHelper=notebook_page_equality_code))
+            
+    tab_button_equality_code = """
+#include <wx/aui/auibook.h> 
+
+inline bool operator==(const wxAuiTabContainerButton& a, const wxAuiTabContainerButton& b) {
+    return a.id == b.id;
+}
+"""
+
+    module.addItem(tools.stdVectorWrapperTemplate(
+            'wxAuiTabContainerButtonArray', 'wxAuiTabContainerButton', module, typeHeaderHelper=tab_button_equality_code))
+                  
+    c = module.find('wxAuiNotebookPage')
+    c.find('buttons').ignore()
+    
+    c = module.find('wxAuiTabLayoutInfo')
+    c.find('pages').ignore()
+    c.find('pinned').ignore()
 
     c = module.find('wxAuiTabArt')
     c.abstract = True
+    c.find('GetBestTabCtrlSize').ignore()
+    
+    c = module.find('wxAuiGenericTabArt')
+    c.find('GetBestTabCtrlSize').ignore()
+    c.find('ShowDropDown').ignore()
+    
+    c = module.find('wxAuiSimpleTabArt')
+    c.find('GetBestTabCtrlSize').ignore()
+    c.find('ShowDropDown').ignore()
 
     c = module.find('wxAuiNotebookEvent')
     tools.fixEventClass(c)
@@ -79,6 +122,26 @@ def run():
         """)
 
 
+        
+    module.addPyCode("AuiDefaultTabArt = AuiFlatTabArt")
+     
+    c = module.find('wxAuiBookDeserializer')
+    c.abstract = True
+    c.find('LoadNotebookTabs').ignore()
+    
+    c = module.find('wxAuiBookSerializer')
+    c.abstract = True
+    
+    c = module.find('wxAuiFlatTabArt')
+    c.addPrivateCopyCtor()
+    
+    
+    c = module.find('wxAuiNotebookPosition')
+    c.find('operator bool').ignore()
+    
+    c = module.find('wxAuiTabContainer')
+    s = c.find('HitTestResult')
+    s.find('operator bool').ignore()
 
 
     #-----------------------------------------------------------------
@@ -90,11 +153,10 @@ def run():
             etgtools.MethodDef(name = "wxAuiTabCtrl",
                 classname="wxAuiTabCtrl", isCtor=True,
                 items = [
-                    etgtools.ParamDef(type = "wxWindow*", name = "parent"),
+                    etgtools.ParamDef(type = "wxAuiNotebook*", name = "parent"),
                     etgtools.ParamDef(type = "wxWindowID", name = "id", default="wxID_ANY"),
-                    etgtools.ParamDef(type = "const wxPoint&", name = "pos", default = "wxDefaultPosition"),
-                    etgtools.ParamDef(type = "const wxSize&", name = "size", default = "wxDefaultSize"),
-                    etgtools.ParamDef(type = "long", name = "style", default = "0") ]),
+                ],
+            ),
             etgtools.MethodDef(type = "bool", name = "IsDragging", classname = "wxAuiTabCtrl", isConst = True)
             ])
     tools.fixWindowClass(c)

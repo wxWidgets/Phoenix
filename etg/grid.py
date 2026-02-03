@@ -113,7 +113,6 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.addAutoProperties(c)
     c.find('operator!').ignore()
-    c.find('operator=').ignore()
 
     # Add a typemap for 2 element sequences
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxGridCellCoords')

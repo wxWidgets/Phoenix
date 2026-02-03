@@ -56,6 +56,7 @@ def run():
     #---------------------------------------------------------
     c = module.find('wxPGCellRenderer')
     c.bases = ['wxRefCounter']
+    c.find('DrawCaptionSelectionRect').ignore()
 
 
     #---------------------------------------------------------
@@ -75,8 +76,6 @@ def run():
 
     c.find('StringToValue.variant').out = True
     c.find('IntToValue.variant').out = True
-
-    c.find('HasFlag').findOverload('FlagType').ignore()
 
     c.addProperty('m_value GetValue SetValue')
 
@@ -117,7 +116,6 @@ def run():
             """)
 
     c.find('AddPrivateChild.prop').transfer = True
-    c.find('AddChild.prop').transfer = True
 
     # The [G|S]etClientData methods deal with untyped void* values, which we
     # don't support. The [G|S]etClientObject methods use wxClientData instances
@@ -138,10 +136,6 @@ def run():
         body="self.SetClientData(n, data)")
 
     c.find('GetEditorDialog').factory = True
-
-    # deprecated and removed
-    c.find('AddChild').ignore()
-    c.find('GetValueString').ignore()
 
 
     #---------------------------------------------------------

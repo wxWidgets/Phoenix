@@ -19,7 +19,10 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'wxCursor', ]
+ITEMS  = [
+    'wxCursor',
+    'wxCursorBundle',
+]
 
 #---------------------------------------------------------------------------
 

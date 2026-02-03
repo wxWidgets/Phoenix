@@ -247,7 +247,7 @@ def run():
                                   const wxRect& rect, int descent, int style);"""))
         if not c.findItem('Layout') and addMissingVirtuals:
             c.addItem(etgtools.WigCode("""\
-                virtual bool Layout(wxDC& dc, wxRichTextDrawingContext& context,
+                virtual bool Layout(wxReadOnlyDC& dc, wxRichTextDrawingContext& context,
                                     const wxRect& rect, const wxRect& parentRect,
                                     int style);"""))
 
@@ -256,7 +256,7 @@ def run():
             c.addItem(etgtools.WigCode("""\
                 virtual bool GetRangeSize(const wxRichTextRange& range, wxSize& size,
                               int& descent,
-                              wxDC& dc, wxRichTextDrawingContext& context, int flags,
+                              wxReadOnlyDC& dc, wxRichTextDrawingContext& context, int flags,
                               const wxPoint& position = wxPoint(0,0),
                               const wxSize& parentSize = wxDefaultSize,
                               wxArrayInt* partialExtents = NULL) const;"""))

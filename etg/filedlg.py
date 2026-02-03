@@ -37,6 +37,8 @@ def run():
     module.addGlobalStr('wxFileDialogNameStr', c)
     module.find('wxFileSelectorDefaultWildcardStr').ignore()
 
+    # TODO: make this work on non-OSX
+    module.find('wxOSX_FILEDIALOG_ALWAYS_SHOW_TYPES').ignore()
 
     # TODO: add this back. We'll need a way to pass it a callable that can be
     # called from a C ExtraControlCreatorFunction function

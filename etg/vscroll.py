@@ -9,7 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import WigCode
+from etgtools import WigCode, TypedefDef, ClassDef, MethodDef, ParamDef
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -22,9 +22,9 @@ ITEMS  = [ "wxVarScrollHelperBase",
            "wxVarVScrollHelper",
            "wxVarHScrollHelper",
            "wxVarHVScrollHelper",
-           "wxVScrolledWindow",
            "wxHScrolledWindow",
            "wxHVScrolledWindow",
+           "wxVScrolled",
            ]
 
 
@@ -33,6 +33,8 @@ ITEMS  = [ "wxVarScrollHelperBase",
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    module.addHeaderCode("#include <wx/vscroll.h>")
+
     etgtools.parseDoxyXML(module, ITEMS)
 
     #-----------------------------------------------------------------
@@ -87,12 +89,6 @@ def run():
     # that they are private so it won't add support for them and end up with
     # multiple inheritance ambiguities.
     c.addItem(WigCode(baseVirtuals, protection='private'))
-
-
-
-    c = module.find('wxVScrolledWindow')
-    assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)
 
     # These methods are listed in the docs for wxVScrolledWindow as present
     # but deprecated, but are not actually documented so we don't see them in
@@ -163,13 +159,68 @@ def run():
         #body="return self->wxVarVScrollLegacyAdaptor::ScrollPages(pages);")
         body="return self->ScrollRowPages(pages);")
 
-
-
     c = module.find('wxHScrolledWindow')
     tools.fixWindowClass(c)
 
     c = module.find('wxHVScrolledWindow')
     tools.fixWindowClass(c)
+    
+    
+    # The wxVScrolledCanvas typedef will be output normally and SIP will treat
+    # it like a class that has a wxScrolled mix-in as one of the base classes.
+    # Let's add some more info to them for the doc generators.
+    docBase = """\
+    The :ref:`{name}` class is a combination of the :ref:`{base}` and
+    :ref:`VScrolled` classes, and manages scrolling for its client area,
+    transforming the coordinates according to the scrollbar positions,
+    and setting the scroll positions, thumb sizes and ranges according to
+    the area in view.
+    """
+    item = module.find('wxVScrolledCanvas')
+    item.docAsClass = True
+    item.bases = ['wxWindow', 'wxVScrolled']
+    item.briefDoc = docBase.format(name='VScrolledCanvas', base='Window')
+  
+    # move it ahead of wxVScrolledWindow
+    vsw = module.find('wxVScrolledWindow')
+    module.items.remove(item)
+    module.insertItemBefore(vsw, item)
+    
+    assert isinstance(vsw, TypedefDef)
+    td = TypedefDef(name='_VScrolledWindowBase',
+                    type='wxVScrolled<wxPanel>',
+                    noTypeName=True,
+                    piIgnored=True)
+    module.insertItemAfter(vsw, td)
+    module.addHeaderCode('typedef wxVScrolled<wxPanel> _VScrolledWindowBase;')
+    vsw.ignore()
+    
+    # Now implement the class definition
+    klass = ClassDef(
+        name='wxVScrolledWindow',
+        bases=['_VScrolledWindowBase'],
+        piBases=['Window', 'VScrolled'],
+        briefDoc=vsw.briefDoc, detailedDoc=vsw.detailedDoc,
+        items=[
+            MethodDef(name='wxVScrolledWindow', isCtor=True, items=[],
+                overloads=[
+                    MethodDef(name='wxVScrolledWindow', isCtor=True, items=[
+                        ParamDef(name='parent', type='wxWindow*'),
+                        ParamDef(name='id', type='wxWindowID', default='wxID_ANY'),
+                        ParamDef(name='pos', type='const wxPoint&', default='wxDefaultPosition'),
+                        ParamDef(name='size', type='const wxSize&', default='wxDefaultSize'),
+                        ParamDef(name='style', type='long', default='wxScrolledWindowStyle'),
+                        ParamDef(name='name', type='const wxString&', default='wxPanelNameStr'),
+                        ]),
+                    ]),
+            MethodDef(name='SetFocusIgnoringChildren', type='void', items=[],
+                briefDoc="""\
+                    In contrast to SetFocus() this will set the focus to the panel even if
+                    there are child windows in the panel. This is only rarely needed."""),
+            ],
+        )
+    tools.fixWindowClass(klass)
+    module.insertItemAfter(td, klass)
 
 
     #-----------------------------------------------------------------

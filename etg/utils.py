@@ -61,14 +61,9 @@ def run():
     module.find('wxGetLinuxDistributionInfo').ignore()
     module.find('wxGetDisplayName').ignore()
     module.find('wxSetDisplayName').ignore()
-    module.find('wxPostDelete').ignore()
 
     # TODO: Can this be added back? It was removed because of compiler errors.
     module.find('wxGetDiskSpace').ignore()
-
-    # deprecated and removed
-    module.find('wxUsleep').ignore()
-
 
     # ignore all the environment related functions
     for item in module.allItems():
@@ -112,6 +107,15 @@ that can be used more than once then please see :func:`wx.NewIdRef`.""".replace(
                      ]:
         f = module.find(funcname)
         f.mustHaveApp()
+
+    module.find('wxMSWIsOnSecureScreen').setCppCode("""\
+        #ifdef __WINDOWS__
+            return wxMSWIsOnSecureScreen();
+        #else
+            wxPyRaiseNotImplemented();
+            return false;
+        #endif
+        """)
 
 
 

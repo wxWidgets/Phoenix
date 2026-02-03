@@ -30,24 +30,8 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-
-    module.find('wxPG_LABEL').ignore()
-    module.find('wxPG_LABEL_STRING').ignore()
-    module.find('wxPG_NULL_BITMAP').ignore()
-    module.find('wxPG_COLOUR_BLACK').ignore()
-    module.find('wxPG_COLOUR').ignore()
-    module.find('wxPG_DEFAULT_IMAGE_SIZE').ignore()
     module.find('wxPGSortCallback').ignore()
 
-    module.addPyCode(
-        code="""\
-        PG_LABEL = "@!"
-        PG_LABEL_STRING = PG_LABEL
-        PG_NULL_BITMAP = wx.NullBitmap
-        PG_COLOUR_BLACK = wx.BLACK
-        PG_DEFAULT_IMAGE_SIZE = wx.Size(-1, -1)
-        """,
-        order=15)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

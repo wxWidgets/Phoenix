@@ -220,6 +220,9 @@ def run():
            
     c.find('GetGUIInstance').ignore()
 
+    import sys
+    if not sys.platform.startswith('win'):
+        c.find('MSWEnableDarkMode').ignore()
 
     #-------------------------------------------------------
 

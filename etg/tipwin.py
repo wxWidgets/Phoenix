@@ -44,6 +44,10 @@ def run():
     # ignore this method too
     c.find('SetTipWindowPtr').ignore()
 
+    # Ignore the wxTipWindow::Ref class for now
+    c.find('Ref').ignore()
+    c.find('New').ignore()
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

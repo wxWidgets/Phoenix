@@ -100,7 +100,7 @@ toolsURL = 'https://wxwidgets.github.io/wxPython-tools'
 
 
 # MS Edge code and DLLs needed for the wxWEBVIEW_BACKEND_EDGE backend
-MS_edge_version = '1.0.1185.39'
+MS_edge_version = '1.0.3719.77'
 MS_edge_url = 'https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/{}'.format(MS_edge_version)
 
 #---------------------------------------------------------------------------
@@ -450,7 +450,6 @@ def makeOptionParser():
 
         (("j","jobs"),     ("",    "Number of parallel compile jobs to do, if supported.")),
         ("both",           (False, "Build both a debug and release version. (Only used on Windows)")),
-        ("unicode",        (True,  "Build wxPython with unicode support (always on for wx2.9+)")),
         (("v", "verbose"), (False, "Print out more information during the build.")),
         ("nodoc",          (False, "Do not run the default docs generator")),
         ("upload",         (False, "Upload bdist and/or sdist packages to snapshot server.")),
@@ -1510,7 +1509,7 @@ def cmd_build_wx(options, args):
         return
     checkCompiler()
 
-    build_options = ['--wxpython', '--unicode']
+    build_options = ['--wxpython']
 
     if options.jobs:
         build_options.append('--jobs=%s' % options.jobs)
@@ -2184,9 +2183,13 @@ def cmd_sdist(options, args):
 
     # recursively export a git archive of this repo and submodules
     def _archive_submodules(root, dest):
+        # Skip deps/sljit which is a submodule of ext/wxWidgets/3rdparty/pcre
+        # It seems to be oddly configured and not needed?
+        if root == 'deps/sljit':
+            return
         msg('Exporting {}...'.format(root))
         if not os.path.exists(dest):
-            os.path.makedirs(dest)
+            os.makedirs(dest)
         pwd = pushDir(root)
         #runcmd('git archive HEAD | tar -x -C %s' % dest, echoCmd=False)
         archive = opj(TMP, 'export.tar')
@@ -2260,14 +2263,6 @@ def cmd_sdist(options, args):
     cmd_egg_info(options, args, egg_base=PDEST)
     copyFile(opj(PDEST, '{}.egg-info/PKG-INFO'.format(baseName)),
              opj(PDEST, 'PKG-INFO'))
-
-    # (TEMP) apply patch to wxWidgets for building newer libraries
-    msg('Applying patches...')
-    pwd = pushDir(PDEST)
-    runcmd('dos2unix ext/wxWidgets/build/msw/makefile.vc')
-    runcmd('patch -p1 -d ext/wxWidgets -i ../../buildtools/newer_libtiff_pcre.patch')
-    runcmd('unix2dos ext/wxWidgets/build/msw/makefile.vc')
-    del pwd
 
     # build the tarball
     msg('Archiving Phoenix source...')
