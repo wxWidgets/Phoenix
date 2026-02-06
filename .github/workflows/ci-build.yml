@@ -104,7 +104,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-24.04, windows-2022, macos-15-intel, macos-14, windows-11-arm ]
+        os: [ ubuntu-24.04, windows-2025, macos-15-intel, macos-14, windows-11-arm ]
         python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
         architecture: [ 'x86', 'x64', 'arm64' ]
         # Exclude x86 configs on non-Windows OSs
@@ -121,7 +121,7 @@ jobs:
             architecture: x86
           - os: macos-14
             architecture: x64
-          - os: windows-2022
+          - os: windows-2025
             architecture: arm64
           - os: windows-11-arm
             architecture: x86
@@ -169,7 +169,7 @@ jobs:
               echo "CIBW_BUILD_FRONTEND=pip" >> "$GITHUB_ENV"
               echo "CIBW_ENABLE=cpython-prerelease" >> "$GITHUB_ENV"
               echo "MACOSX_DEPLOYMENT_TARGET=11.0" >> "$GITHUB_ENV"
-          elif [ ${{ matrix.os }} == windows-2022 ]; then
+          elif [ ${{ matrix.os }} == windows-2025 ]; then
               if [ ${{ matrix.architecture }} == x64 ]; then
                   short_name=win64
               else
@@ -246,7 +246,7 @@ jobs:
   build-documentation:
     name: Build wxPython documentation
     if: github.event_name == 'push'
-    runs-on: windows-2022
+    runs-on: windows-2025
 
     steps:
       - name: Checkout repo
