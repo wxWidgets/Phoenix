@@ -107,7 +107,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-24.04, windows-2025, macos-15-intel, macos-14, windows-11-arm ]
+        os: [ ubuntu-24.04, windows-2025, macos-15-intel, macos-15, windows-11-arm ]
         python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
         architecture: [ 'x86', 'x64', 'arm64' ]
         # Exclude x86 configs on non-Windows OSs
@@ -120,9 +120,9 @@ jobs:
             architecture: x86
           - os: macos-15-intel
             architecture: arm64
-          - os: macos-14
+          - os: macos-15
             architecture: x86
-          - os: macos-14
+          - os: macos-15
             architecture: x64
           - os: windows-2025
             architecture: arm64
@@ -161,16 +161,10 @@ jobs:
           elif [ ${{ matrix.os }} == macos-15-intel ]; then
               short_name=macos
               echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
-              echo "CIBW_BUILD_VERBOSITY=1" >> "$GITHUB_ENV"
-              echo "CIBW_BUILD_FRONTEND=pip" >> "$GITHUB_ENV"
-              echo "CIBW_ENABLE=cpython-prerelease" >> "$GITHUB_ENV"
-              echo "MACOSX_DEPLOYMENT_TARGET=10.10" >> "$GITHUB_ENV"
-          elif [ ${{ matrix.os }} == macos-14 ]; then
+              echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> "$GITHUB_ENV"
+          elif [ ${{ matrix.os }} == macos-15 ]; then
               short_name=macos
               echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
-              echo "CIBW_BUILD_VERBOSITY=1" >> "$GITHUB_ENV"
-              echo "CIBW_BUILD_FRONTEND=pip" >> "$GITHUB_ENV"
-              echo "CIBW_ENABLE=cpython-prerelease" >> "$GITHUB_ENV"
               echo "MACOSX_DEPLOYMENT_TARGET=11.0" >> "$GITHUB_ENV"
           elif [ ${{ matrix.os }} == windows-2025 ]; then
               if [ ${{ matrix.architecture }} == x64 ]; then
