@@ -2,7 +2,7 @@
 -r install.txt
 appdirs
 setuptools
-sip == 6.15.0
+sip == 6.15.1
 
 requests >= 2.26.0
 cython >= 3.0.10
