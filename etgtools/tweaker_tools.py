@@ -1282,9 +1282,7 @@ public:
 
     int __contains__(const {ItemClass}* obj);
     %MethodCode
-        {ListClass}::compatibility_iterator node;
-        node = sipCpp->Find(({RealItemClass}*)obj);
-        sipRes = node != NULL;
+        sipRes = sipCpp->Member(({RealItemClass}*)obj);
     %End
 
     {ListClass}_iterator* __iter__() /Factory/;
