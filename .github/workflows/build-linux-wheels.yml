@@ -11,7 +11,7 @@ jobs:
   # Build a wxPython source archive, and save it as an artifact for use in the
   # job that builds the wheels.
   build-source-dist:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     outputs:
       VERSION: ${{ steps.generate.outputs.version }}
