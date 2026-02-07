@@ -9,11 +9,11 @@ name: ci-build
 on:
   # Trigger on push or PRs targeting the master branch
   push:
-    branches: [ 'master' ]
+    branches: [ 'wxPy-4.2.x' ]
     tags:
       - 'wxPython-*'
   pull_request:
-    branches: [ 'master' ]
+    branches: [ 'wxPy-4.2.x' ]
 
   # Also allow manual triggering (via web ui)
   workflow_dispatch:
