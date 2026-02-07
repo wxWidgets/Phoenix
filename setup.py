@@ -9,6 +9,7 @@
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
+import inspect
 import sys, os
 import glob
 import stat
@@ -260,9 +261,29 @@ def wx_copy_file(src, dst, preserve_mode=1, preserve_times=1, update=0,
             os.symlink(linkdst, dst)
         return (dst, 1)
 
+def wx_copy_file_new(src, dst, preserve_mode=True, preserve_times=True,
+                     update=False, link=None, verbose=True):
+    if not os.path.islink(src):
+        return orig_copy_file(
+            src, dst, preserve_mode, preserve_times, update, link, verbose)
+    else:
+        # make a new, matching symlink in dst
+        if os.path.isdir(dst):
+            dst = os.path.join(dst, os.path.basename(src))
+        linkdst = os.readlink(src)
+        if verbose:
+            from distutils import log
+            log.info("%s %s -> %s", 'copying symlink', src, dst)
+        if not os.path.exists(dst):
+            os.symlink(linkdst, dst)
+        return (dst, True)
+
 import distutils.file_util
 orig_copy_file = distutils.file_util.copy_file
-distutils.file_util.copy_file = wx_copy_file
+if 'dry_run' not in inspect.signature(orig_copy_file).parameters.keys():
+    distutils.file_util.copy_file = wx_copy_file_new
+else:
+    distutils.file_util.copy_file = wx_copy_file
 
 
 
@@ -271,9 +292,17 @@ def wx_copy_tree(src, dst, preserve_mode=1, preserve_times=1,
     return orig_copy_tree(
         src, dst, preserve_mode, preserve_times, 1, update, verbose, dry_run)
 
+def wx_copy_tree_new(src, dst, preserve_mode=True, preserve_times=True,
+                     preserve_symlinks=False, update=False, verbose=True):
+    return orig_copy_tree(
+        src, dst, preserve_mode, preserve_times, True, update, verbose)
+
 import distutils.dir_util
 orig_copy_tree = distutils.dir_util.copy_tree
-distutils.dir_util.copy_tree = wx_copy_tree
+if 'dry_run' not in inspect.signature(orig_copy_tree).parameters.keys():
+    distutils.dir_util.copy_tree = wx_copy_tree_new
+else:
+    distutils.dir_util.copy_tree = wx_copy_tree
 
 
 # Monkey-patch make_writeable too. Sometimes the link is copied before the
