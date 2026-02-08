@@ -765,15 +765,13 @@ def addWindowVirtuals(klass):
         ('SetValidator',             'void SetValidator( const wxValidator &validator )'),
         ('GetValidator',             'wxValidator* GetValidator()'),
         ('EnableVisibleFocus',       'void EnableVisibleFocus(bool enabled)'),
+        ('CreateAccessible', 'wxAccessible* CreateAccessible()')
 
         ## What about these?
         #bool HasMultiplePages() const
         #void UpdateWindowUI(long flags = wxUPDATE_UI_NONE);
         #void DoUpdateWindowUI(wxUpdateUIEvent& event) ;
     ]
-    if isWindows:
-        # does not compile on GTK and macOS.
-        publicWindowVirtuals.append( ('CreateAccessible', 'wxAccessible* CreateAccessible()') )
 
     protectedWindowVirtuals = [
         ('ProcessEvent',              'bool ProcessEvent(wxEvent & event)'),
