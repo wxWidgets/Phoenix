@@ -114,7 +114,7 @@ jobs:
           WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
         run: |
           cd dist
-          pip wheel -v wxPython-${{ env.VERSION }}.tar.gz
+          pip wheel -v wxpython-${{ env.VERSION }}.tar.gz
 
       - name: Simple smoke test
         run: |
