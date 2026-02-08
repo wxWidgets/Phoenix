@@ -14,13 +14,22 @@ wxPython Changelog
 
 4.2.5
 ------
-* (unreleased)
+* 8-Feb-2026
 
 PyPI:   https://pypi.python.org/pypi/wxPython/4.2.5
 Extras: https://extras.wxPython.org/wxPython4/extras/
 Pip:    ``pip install wxPython==4.2.5``
 
 New and improved in this release:
+* This release was built using the wxWidgets' v3.2.9 release tag.  The only exception is that libtiff and pcre2 bundled with wxWidgets are updated to the versions from the wxWidgets master branch (libtiff 4.7.0 and pcre2 10.44).
+
+* Fix build/wheel installation using setuptools 81+
+
+* Replace md5 with sha256 when validating downloaded waf and doxygen build tools (#2830)
+
+* Add missing attribute _x_maincol to constructor of TreeListMainWindow (#2828)
+
+* Fix wx.svg to work with cython 3.1 generated code
 
 
 
