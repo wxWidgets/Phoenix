@@ -97,13 +97,22 @@ def run():
     # Documented wrongly in 3.1.6 (needs to be fixed in stubs too)
     c = module.find('wxWebViewFactory')
     c.find('GetVersionInfo').ignore()
-    c.find('CreateConfiguration').ignore()
+    c.find('CreateConfiguration').isPureVirtual = True
+    c.find('CreateConfiguration').setCppCode_sip("""\
+        PyErr_Clear();
+        Py_BEGIN_ALLOW_THREADS
+        wxWebViewConfiguration cfg = sipCpp->CreateConfiguration();
+        sipRes = new wxWebViewConfiguration(cfg.GetBackend(), cfg.GetImpl());
+        Py_END_ALLOW_THREADS
+        if (PyErr_Occurred()) sipIsErr = 1;
+    """)
 
     tools.generateStubs('wxUSE_WEBVIEW', module,
                         typeValMap={
                             'wxWebViewNavigationActionFlags': 'wxWEBVIEW_NAV_ACTION_NONE',
                             'wxWebViewZoom': 'wxWEBVIEW_ZOOM_MEDIUM',
                             'wxVersionInfo': 'wxVersionInfo()',
+                            'wxWebViewConfiguration': 'wxWebViewConfiguration("", NULL)',
                             })
 
     c = module.find('wxWebView')
@@ -285,6 +294,7 @@ def run():
 
     c = module.find('wxWebViewConfiguration')
     c.abstract = True
+    c.instanceCode = 'sipCpp = new wxWebViewConfiguration("", NULL);'
  
     c = module.find('wxWebViewWindowFeatures')
     c.abstract = True

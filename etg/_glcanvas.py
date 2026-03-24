@@ -62,17 +62,22 @@ def run():
     #-----------------------------------------------------------------
 
     module.addHeaderCode('#include <wx/glcanvas.h>')
+    module.find('wxGLExtFunction').ignore()
+    module.find('wxGLContext').find('GetProcAddress').ignore()
 
     tools.generateStubs('wxUSE_GLCANVAS', module,
+                        excludes=['wxGLExtFunction'],
                         extraHdrCode='#define wxGLCanvasName wxT("GLCanvas")\n',
                         typeValMap={'wxGLAttributes &': '*this',
                                     'wxGLContextAttrs &': '*this',
+                                    'SwapInterval': '0',
                                     })
 
     c = module.find('wxGLContext')
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
     c.addPrivateCopyCtor()
+    c.find('GetProcAddress').ignore()
 
 
     c = module.find('wxGLAttribsBase')
