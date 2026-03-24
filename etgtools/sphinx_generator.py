@@ -38,7 +38,7 @@ from sphinxtools import templates
 from sphinxtools.utilities import ODict
 from sphinxtools.utilities import convertToPython
 from sphinxtools.utilities import writeSphinxOutput
-from sphinxtools.utilities import findControlImages, makeSummary, pickleItem
+from sphinxtools.utilities import findWidgetScreenshots, makeSummary, pickleItem
 from sphinxtools.utilities import chopDescription, pythonizeType, wx2Sphinx
 from sphinxtools.utilities import pickleClassInfo, pickleFunctionInfo, isNumeric
 from sphinxtools.utilities import underscore2Capitals, countSpaces
@@ -1960,7 +1960,7 @@ class XMLDocString(object):
             self.kind = 'function'
         elif isinstance(xml_item, (extractors.ClassDef, extractors.PyClassDef, extractors.TypedefDef)):
             self.kind = 'class'
-            self.appearance = findControlImages(xml_item)
+            self.appearance = findWidgetScreenshots(xml_item)
             self.class_name = xml_item.pyName if xml_item.pyName else removeWxPrefix(xml_item.name)
             self.isInner = getattr(xml_item, 'isInner', False)
         elif isinstance(xml_item, extractors.EnumDef):

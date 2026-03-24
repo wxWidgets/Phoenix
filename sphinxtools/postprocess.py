@@ -9,11 +9,13 @@
 #---------------------------------------------------------------------------
 
 # Standard library imports
-import sys
 import os
 import re
 import glob
 import random
+from pathlib import Path
+
+from bs4 import BeautifulSoup
 
 # Phoenix-specific imports
 from buildtools.config import Config, writeIfChanged, newer, textfile_open, runcmd
@@ -178,7 +180,7 @@ def buildEnumsAndMethods(sphinxDir):
         for cpp, py in [('`ArrayString`', 'list of strings'),
                         ('`ArrayInt`', 'list of integers'),
                         ('`ArrayDouble`', 'list of floats')]:
-           text = text.replace(cpp, py)
+            text = text.replace(cpp, py)
 
         # Remove lines with "Event macros" in them...
         text = text.replace('Event macros:', '')
@@ -506,17 +508,6 @@ def makeModuleIndex(sphinxDir, file):
 def genGallery():
     print("Generating gallery...")
 
-    link = '<div class="gallery_class">'
-
-    link_template = """\
-    <table><caption align="bottom"><a href="%s"><b>%s</b></a></caption>
-    <tr>
-    <td><a href="%s"><img src="_static/images/widgets/fullsize/%s/%s" border="20" alt="%s"/></a>
-    </td>
-    </tr>
-    </table>
-    """
-
     image_folder = WIDGETS_IMAGES_ROOT
     platforms = ['wxmsw', 'wxgtk', 'wxmac']
 
@@ -554,9 +545,15 @@ def genGallery():
         for plat_index in rand_list:
             platform = platforms[plat_index]
             plat_images = image_files[platform]
+            widget_name = os.path.splitext(html)[0]
 
             if possible_png in plat_images:
-                text += link_template % (html, os.path.splitext(html)[0], html, platform, possible_png, os.path.splitext(html)[0])
+                text += templates.TEMPLATE_GALLERY_FIGURE % (html,
+                                                             widget_name,
+                                                             platform,
+                                                             possible_png,
+                                                             widget_name,
+                                                             widget_name)
                 text += '\n'
                 break
 
@@ -644,7 +641,7 @@ def addJavaScript(text):
 # ----------------------------------------------------------------------- #
 
 def postProcess(folder, options):
-    fileNames = sorted(glob.glob(folder + "/*.html"))
+    extend_dark_css(folder)
 
     enum_files = sorted(glob.glob(folder + '/*.enumeration.html'))
 
@@ -660,8 +657,18 @@ def postProcess(folder, options):
         new = '(<a class="reference internal" href="%s" title="%s"><em>%s</em></a>)' % (html_file, base, base)
         enum_dict['(<em>%s</em>)' % enum] = new
 
-    for filename in fileNames:
+    filenames = sorted(glob.glob(folder + "/*.html"))
+
+    for filename in filenames:
         if "genindex" in filename or "modindex" in filename:
+            with textfile_open(filename, "rt") as fid:
+                text = fid.read()
+
+            newtext = addHeaderImage(text, options)
+
+            with textfile_open(filename, "wt") as fid:
+                fid.write(newtext)
+
             continue
 
         methods_done = attr_done = fn_done = False
@@ -718,13 +725,13 @@ def postProcess(folder, options):
         for old, new in list(enum_dict.items()):
             newtext = newtext.replace(old, new)
 
-        newtext = addJavaScript(newtext)
+        #newtext = addJavaScript(newtext)
 
         basename = os.path.split(filename)[1]
         if basename == 'index.html':
+            newtext = addHeaderImage(newtext, options)
             newtext = changeWelcomeText(newtext, options)
-        else:
-            newtext = removeHeaderImage(newtext, options)
+
         if '1moduleindex' in basename:
             newtext = tweakModuleIndex(newtext)
 
@@ -756,25 +763,47 @@ def changeWelcomeText(text, options):
     return text
 
 
-def removeHeaderImage(text, options):
-    from bs4 import BeautifulSoup
-    soup = BeautifulSoup(text, 'html.parser')
-    tag = soup.find('div', 'headerimage')
-    if tag:
-        tag.extract()
-        text = str(soup)
+def addHeaderImage(text, options):
+    soup = _get_clear_soup(text)
+
+    body_tag = soup.find('div', 'body')
+
+    if body_tag:
+        img_tag = soup.new_tag("img")
+        img_tag["src"] = "_static/images/sphinxdocs/phoenix_top.png"
+        img_tag["alt"] = "Phoenix Logo"
+        body_tag.insert(0, img_tag)
+        div_tag = soup.new_tag("div")
+        div_tag["class"] = "headerimage"
+        img_tag.wrap(div_tag)
+        return soup.prettify(formatter="html")
+
     return text
 
 
 def tweakModuleIndex(text):
-    from bs4 import BeautifulSoup
-    soup = BeautifulSoup(text, 'html.parser')
+    soup = _get_clear_soup(text)
+
     for tag in soup.findAll('a'):
         # Chop off the #anchor if it is identical to the basname of the doc
         href = tag['href'].split('.html#')
         if len(href) == 2 and href[0] == href[1]:
             tag['href'] = href[0] + '.html'
-    return str(soup)
+
+    return soup.prettify(formatter="html")
+
+
+def _get_clear_soup(text):
+    soup = BeautifulSoup(text, "html.parser")
+
+    # Bugfix: BeautifulSoup sometimes wrongly parses tags as
+    # childelements of <link> tags and produces invalid html
+    for link in soup.html.head.findAll("link"):
+        if link.contents:
+            linktag = link.unwrap()
+            soup.html.head.append(linktag)
+
+    return soup
 
 
 def tooltipsOnInheritance(text, class_summary):
@@ -822,3 +851,30 @@ def tooltipsOnInheritance(text, class_summary):
 
     return text
 
+def extend_dark_css(html_path: str) -> bool:
+    """
+    This extends the darkmode css file of the theme with our custom css
+    definitions. This way we don't need to alter the theme more than necessary.
+    """
+    THEME_CSS = Path(html_path, "_static", "pydoctheme_dark.css")
+    CUSTOM_CSS = Path(html_path, "_static", "custom_dark.css")
+    NOTE = "\n/* wxPyhton Phoenix Darkmode Customisations */\n"
+
+    if THEME_CSS.is_file():
+        theme_css = THEME_CSS.read_text(encoding="utf-8")
+        if NOTE.strip() in theme_css:
+            print("Info: Darkmode CSS file is already extended with custom CSS.")
+            return True
+    else:
+        print(f"Warning: File {THEME_CSS.name} not available. Skipping darkmode customisation.")
+        return False
+
+    if CUSTOM_CSS.is_file():
+        custom_css = CUSTOM_CSS.read_text(encoding="utf-8")
+    else:
+        print(f"Warning: File {CUSTOM_CSS.name} not available. Skipping darkmode customisation.")
+        return False
+
+    extended_css = theme_css + NOTE + custom_css
+    THEME_CSS.write_text(extended_css, encoding="utf-8")
+    return True

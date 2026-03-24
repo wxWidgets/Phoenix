@@ -1,0 +1,181 @@
+:root {
+    --custom-style-orange: #d95a00;
+    --custom-link-hover: #B34400;
+    --custom-link-blue: #1769BA;
+    --custom-visited-blue: #104e8b;
+    --seealso-background: #d95a001a;
+    --seealso-border: var(--custom-style-orange);
+}
+
+/* Link styling */
+div.body a {
+    color: var(--custom-link-blue);
+}
+
+div.body a:visited {
+    color: var(--custom-visited-blue);
+}
+
+div.related a, div.footer a {
+    color: var(--custom-style-orange);
+    text-decoration: none;
+}
+
+a[href] {
+    text-decoration: none;
+}
+
+div.body a:hover, div.body a:visited:hover, div.related a:hover,
+div.sphinxsidebar a:hover, div.footer a:hover, table.contentstable a:hover {
+    color: var(--custom-link-hover);
+    text-decoration: none;
+}
+
+.nav-item.nav-item-this a {
+    color: #444;
+}
+
+/* Headerimage */
+.headerimage {
+    margin: 0.5em auto 0.8em auto;
+    max-width: 90%;
+}
+
+.logo {
+    max-width: 220px;
+}
+
+/* Custom headlines */
+div.body h1, div.body h2 {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 0.3em 0.8rem 0.4rem 0.8rem;
+    margin-bottom: 0.5rem;
+    background: #eee;
+    border-radius: 5px;
+}
+
+div.body h1 a, div.body h2 a {
+    line-height: 0;
+}
+
+/* Screenshots of widgets */
+.control-appearance-figures {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: end;
+    column-gap: 1.0em;
+    justify-content: space-around;
+}
+
+.appearance-figure {
+    margin: 0;
+    padding: 0;
+    max-width: 250px;
+    flex-shrink: 1;
+}
+
+.appearance-figure img {
+    max-height: 320px;
+}
+
+.appearance-figure figcaption p {
+    margin: 0;
+    padding: 0;
+}
+
+.appearance-figure figcaption .headerlink {
+    display: none;
+}
+
+figcaption {
+    text-align: center;
+    text-align-last: center;
+}
+
+/* Widget gallery */
+.widget-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: baseline;
+}
+
+.widget-gallery figure {
+    max-width: 200px;
+    margin: 0.8rem 0.6rem 0.8rem 0.6rem;
+    padding: 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Collapsible inheritance diagrams */
+.collapsible-checkbox {
+    display: none;
+}
+
+.collapsible-label {
+    display: block;
+    cursor: pointer;
+}
+
+.collapsible-label:hover {
+    color: var(--custom-link-hover);
+}
+
+.collapsible-label::before {
+    content: ' ';
+    display: inline-block;
+    color: var(--custom-style-orange);
+
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid currentColor;
+    vertical-align: middle;
+    margin-right: .7rem;
+    transform: translateX(4px) translateY(-2px);
+
+    transition: transform .25s ease-out;
+}
+
+.collapsible-checkbox:checked + .collapsible-label::before {
+    transform: rotate(90deg) translateX(-1px) translateY(-4px);
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+}
+
+.collapsible-checkbox:checked + .collapsible-label + .collapsible-content {
+  max-height: 100vh;
+}
+
+/* Overloaded methods */
+.body .overloadsep {
+    border: 0;
+    background-color: var(--custom-style-orange);
+    height: 2px;
+}
+
+/* Tables */
+th, dl.field-list > dt {
+    background-color: #F0F0F0;
+    border-radius: 3px;
+    margin-bottom: 3px;
+}
+
+table.docutils {
+    min-width: 30%;
+}
+
+table.align-default {
+    margin-left: unset;
+}
+
+table figure {
+    padding: 0;
+    margin: 0;
+}

@@ -12,7 +12,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import sys
+import os
 from datetime import datetime
 from buildtools.config import Config
 
@@ -22,12 +23,11 @@ from buildtools.config import Config
 sys.path.append(os.path.abspath('.'))
 sys.path.append(os.path.abspath('..'))
 
-# -- General configuration -----------------------------------------------------
+# -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ["sphinxcontrib.jquery",
-              'sphinx.ext.todo',
+extensions = ['sphinx.ext.todo',
               'sphinx.ext.autodoc',
               'sphinx.ext.autosummary',
               'sphinx.ext.coverage',
@@ -54,8 +54,8 @@ master_doc = 'index'
 toc_object_entries = False
 
 # General information about the project.
-project = u'wxPython Phoenix'
-copyright = u'2012-{}, The wxPython Team'.format(datetime.now().year)
+project = "wxPython Phoenix"
+copyright = f"2012-{datetime.now().year}, The wxPython Team"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -64,7 +64,7 @@ copyright = u'2012-{}, The wxPython Team'.format(datetime.now().year)
 cfg = Config(noWxConfig=True)
 
 # The short X.Y version.
-version = '%s.%s' % (cfg.VER_MAJOR, cfg.VER_MINOR)
+version = f"{cfg.VER_MAJOR}.{cfg.VER_MINOR}"
 # The full version, including alpha/beta/rc tags.
 release = cfg.VERSION
 
@@ -100,33 +100,38 @@ add_module_names = False
 show_authors = True
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+#pygments_style = 'sphinx'
 
 # If true, keep warnings as "system message" paragraphs in the built documents.
 keep_warnings = False
 show_warning_types = True
 supress_warnings = []
 
-# -- Options for HTML output ---------------------------------------------------
+# -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  Major themes that come with
-# Sphinx are currently 'default' and 'sphinxdoc'.
-html_theme = 'phoenix_theme'
+# The theme to use for HTML and HTML Help pages.
+html_theme = "python_docs_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = dict()
+html_theme_options = {
+    "collapsiblesidebar": True,
+    "root_name": "Home",
+    "root_url": "https://wxpython.org/",
+    "root_icon": "images/sphinxdocs/phoenix_small.svg",
+    "root_include_title": True,
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = ['.']
+# html_theme_path = ['.']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-#html_title = None
+html_title = f"wxPython {release} Docs"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
-html_short_title = 'Phoenix Docs'
+html_short_title = 'API Docs'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -135,14 +140,15 @@ html_logo = '_static/images/sphinxdocs/phoenix_main.png'
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = '_static/images/sphinxdocs/phoenix_small.ico'
+html_favicon = '_static/images/sphinxdocs/favicon.ico'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-html_style = 'css/phoenix.css'
+html_css_files = ["custom.css"]
+# html_js_files = []
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -198,7 +204,7 @@ html_show_sourcelink = True
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'PhoenixDocs'
 
-# -- Options for LaTeX output --------------------------------------------------
+# -- Options for LaTeX output ------------------------------------------------
 
 # The paper size ('letter' or 'a4').
 #latex_paper_size = 'letter'
@@ -209,8 +215,8 @@ htmlhelp_basename = 'PhoenixDocs'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'PhoenixDocs.tex', u'wxPython (Phoenix) Documentation',
-   u'The wxPython Team', 'manual'),
+  ('index', 'PhoenixDocs.tex', 'wxPython (Phoenix) Documentation',
+   'The wxPython Team', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -244,10 +250,13 @@ latex_documents = [
 # dict(pdf_compressed = True))
 # would mean that specific document would be compressed
 # regardless of the global pdf_compressed setting.
-pdf_documents = [('index', u'PhoenixDocs', u'wxPython (Phoenix) Documentation', u'The wxPython Team'),]
+pdf_documents = [('index', 'PhoenixDocs',
+                  'wxPython (Phoenix) Documentation',
+                  'The wxPython Team'),]
 
 # A comma-separated list of custom stylesheets. Example:
-# pdf_stylesheets = ['sphinx', 'kerning', 'a4', "C:\\AGW\\agw\\fonts\\sphinx.json"]
+#pdf_stylesheets = ['sphinx', 'kerning', 'a4',
+#                   "C:\\AGW\\agw\\fonts\\sphinx.json"]
 # Create a compressed PDF
 # Use True/False or 1/0
 # Example: compressed=True
@@ -283,3 +292,24 @@ pdf_verbosity = 2
 # if you get "DelayedTable too big" errors
 pdf_splittables = True
 
+# -- Options for the link checker --------------------------------------------
+
+linkcheck_allowed_redirects = {
+    # Microsoft's redirects to learn.microsoft.com
+    r'https://msdn.microsoft.com/.*': 'https://learn.microsoft.com/.*',
+    r'https://docs.microsoft.com/.*': 'https://learn.microsoft.com/.*',
+    r'https://go.microsoft.com/fwlink/\?LinkID=\d+': 'https://learn.microsoft.com/.*',
+    r'http://docs.python.org/.*': 'https://docs.python.org/3/.*',
+    r' http://en.wikipedia.org/wiki/.*': 'https://en.wikipedia.org/wiki/.*'
+}
+
+linkcheck_anchors_ignore = [
+    # ignore anchors that start with a '/', e.g. Wikipedia media files:
+    # https://en.wikipedia.org/wiki/Walrus#/media/File:Pacific_Walrus_-_Bull_(8247646168).jpg
+    # r'\/.*',
+]
+
+linkcheck_ignore = [
+    # The crawler gets "Anchor not found"
+    #r'https://developer.apple.com/documentation/.+?#.*',
+]
