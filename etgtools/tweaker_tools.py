@@ -1878,6 +1878,8 @@ def _generateClassStub(code, klass, typeValMap):
 
     for item in klass:
         dispatchMap = {
+            extractors.EnumDef   : _generateEnumStub,
+            extractors.MemberVarDef: lambda c, i, t: None,  # ignore this type
             extractors.MethodDef : _generateMethodStub,
             extractors.WigCode   : lambda c, i, t: None,  # ignore this type
             }
