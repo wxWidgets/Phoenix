@@ -48,13 +48,13 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: 'recursive'
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.13'
           cache: 'pip'
@@ -76,7 +76,7 @@ jobs:
           python build.py sdist
 
       - name: Save sdist as job artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wxPython-source
           path: dist/wxpython-${{ steps.generate.outputs.version }}.tar.gz
@@ -88,7 +88,7 @@ jobs:
 
       - name: Save demo sdist as job artifact
         if: github.event_name == 'push'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: demo
           path: dist/wxPython-demo-${{ steps.generate.outputs.version }}.tar.gz
@@ -177,18 +177,18 @@ jobs:
           echo "build_opts=$build_opts" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: 'recursive'
 
       - name: download CI source artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: wxPython-source
           path: dist
 
       - name: Set up Python ${{ matrix.python-version }}-${{ matrix.architecture }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '${{ matrix.python-version }}'
           architecture: '${{ matrix.architecture }}'
@@ -205,6 +205,7 @@ jobs:
           ./buildtools/install_depends.sh
 
       - name: Setup MSVC
+        if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: '${{ matrix.architecture }}'
@@ -229,7 +230,7 @@ jobs:
           pip uninstall --yes wxPython
 
       - name: Save wheel as job artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         # Just Windows and MacOS for now, all we care about for Linux at this
         # point is that the build was successful.
         if: runner.os != 'Linux'
@@ -244,13 +245,13 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: 'recursive'
           fetch-depth: 0
 
       - name: Set up Python 3.13
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.13'
           cache: 'pip'
@@ -273,7 +274,7 @@ jobs:
           python build.py setrev dox etg sip build_wx build_py wxlib sphinx bdist_docs docset_py
 
       - name: Save docs as job artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: docs
           path: dist/wxPython-docs*.tar.gz
@@ -294,7 +295,7 @@ jobs:
 
     steps:
     - name: Download all the dists
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         pattern: wxPython-*
         path: dist/
@@ -314,7 +315,7 @@ jobs:
 
     steps:
     - name: Download source distribution
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: wxPython-source
         path: dist
@@ -340,7 +341,7 @@ jobs:
 
     steps:
     - name: Download demo/docs
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         pattern: d*
         path: dist/
@@ -364,7 +365,7 @@ jobs:
 
     steps:
     - name: Download all the dists
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         path: dist/
         merge-multiple: true
