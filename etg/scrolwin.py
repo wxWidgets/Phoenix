@@ -70,6 +70,10 @@ def parseAndTweakModule():
     scrolled.find('ShouldScrollToChildOnFocus').ignore(False)
     scrolled.find('ShouldScrollToChildOnFocus').isVirtual = True
 
+    # Workaround a bug in sip by renaming template args for wxScrolled
+    scrolled.templateParams = ['BASE']
+    scrolled.bases = ['BASE']
+
     # The wxScrolledCanvas typedef will be output normally and SIP will treat
     # it like a class that has a wxScrolled mix-in as one of the base classes.
     # Let's add some more info to them for the doc generators.

@@ -23,8 +23,6 @@ import textwrap
 from typing import NamedTuple, Optional, Tuple, Union
 
 
-isWindows = sys.platform.startswith('win')
-
 magicMethods = {
     'operator!='    : '__ne__',
     'operator=='    : '__eq__',
@@ -771,9 +769,6 @@ def addWindowVirtuals(klass):
         #void UpdateWindowUI(long flags = wxUPDATE_UI_NONE);
         #void DoUpdateWindowUI(wxUpdateUIEvent& event) ;
     ]
-    if isWindows:
-        # does not compile on GTK and macOS.
-        publicWindowVirtuals.append( ('CreateAccessible', 'wxAccessible* CreateAccessible()') )
 
     protectedWindowVirtuals = [
         ('ProcessEvent',              'bool ProcessEvent(wxEvent & event)'),
@@ -819,6 +814,16 @@ def addWindowVirtuals(klass):
     txt = _processItems(klass, 'protected:\n', protectedWindowVirtuals)
     klass.addItem(extractors.WigCode(txt))
     klass.addPublic()
+
+    if klass.name not in ['wxWindow', 'wxProgressDialog', 'wxRichTextCtrl']:
+        klass.addCppMethod('wxAccessible*', 'CreateAccessible', '()', """\
+            #if wxUSE_ACCESSIBILITY
+                return self->CreateAccessible();
+            #else
+                wxPyRaiseNotImplemented();
+                return NULL;
+            #endif
+            """, factory=True)
 
 
 def addSipConvertToSubClassCode(klass):
@@ -1036,6 +1041,18 @@ def addGetIMMethodTemplate(module, klass, fields):
         )
 
 #---------------------------------------------------------------------------
+
+
+def addAccessibilityHeaderCode(module):
+    # This is needed in any module that has wxWindow subclasses so that the
+    # CreateAccessible methods can be compiled correctly.
+    module.addHeaderCode('#include <wx/access.h>')
+    module.addHeaderCode([
+        '#if !wxUSE_ACCESSIBILITY',
+        'class wxAccessible;',
+        '#endif',
+    ])
+
 
 def convertTwoIntegersTemplate(CLASS):
     # Note: The GIL is already acquired where this code is used.
