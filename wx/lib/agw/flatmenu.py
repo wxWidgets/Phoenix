@@ -3860,45 +3860,11 @@ class FlatMenuBar(wx.Panel):
         statusBar.PopStatusText(0)
 
 
-
-class mcPopupWindow(wx.MiniFrame):
-    """ Since Max OS does not support :class:`PopupWindow`, this is an alternative. """
-
-    def __init__(self, parent):
-        """
-        Default class constructor.
-
-        :param `parent`: the :class:`mcPopupWindow` parent window.
-        """
-
-        wx.MiniFrame.__init__(self, parent, style = wx.POPUP_WINDOW)
-        self.SetExtraStyle(wx.WS_EX_TRANSIENT)
-        self._parent = parent
-        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
-
-
-    def OnLeaveWindow(self, event):
-        """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`mcPopupWindow`.
-
-        :param `event`: a :class:`MouseEvent` event to be processed.
-        """
-
-        event.Skip()
-
-
-havePopupWindow = 1
-""" Flag used to indicate whether the platform supports the native :class:`PopupWindow`. """
-
-if wx.Platform == '__WXMAC__':
-    havePopupWindow = 0
-
-
 # ---------------------------------------------------------------------------- #
 # Class ShadowPopupWindow
 # ---------------------------------------------------------------------------- #
 
-class ShadowPopupWindow(wx.PopupWindow if havePopupWindow else mcPopupWindow):
+class ShadowPopupWindow(wx.PopupWindow):
     """ Base class for generic :class:`FlatMenu` derived from :class:`PopupWindow`. """
 
     def __init__(self, parent=None):
