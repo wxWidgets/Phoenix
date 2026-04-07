@@ -4312,8 +4312,8 @@ class FlatMenuBase(ShadowPopupWindow):
         """
 
         # Check that the menu can fully appear in the screen
-        scrWidth  = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
-        scrHeight = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
+        display = wx.Display(wx.Display.GetFromPoint(pos))
+        displayrect = display.GetGeometry()
 
         scrollBarButtons = self.GetRenderer().scrollBarButtons
         scrollBarMenuItems = not scrollBarButtons
@@ -4326,14 +4326,14 @@ class FlatMenuBase(ShadowPopupWindow):
         self._showScrollButtons = False
         pos.y += self._popupPtOffset
 
-        if size.y + pos.y > scrHeight:
+        if size.y + pos.y > displayrect.GetBottom():
             # the menu will be truncated
             if self._parentMenu is None:
                 # try to flip the menu
                 flippedPosy = pos.y - size.y
                 flippedPosy -= self._popupPtOffset
 
-                if flippedPosy >= 0 and flippedPosy + size.y < scrHeight:
+                if flippedPosy >= 0 and flippedPosy + size.y < displayrect.GetHeight():
                     pos.y = flippedPosy
                     return pos
                 else:
@@ -4343,19 +4343,20 @@ class FlatMenuBase(ShadowPopupWindow):
             else:
                 # we are a submenu
                 # try to decrease the y value of the menu position
-                newy = pos.y
-                newy -= (size.y + pos.y) - scrHeight
+                newy = displayrect.GetBottom() - size.y
 
-                if newy + size.y > scrHeight:
+                if newy < displayrect.GetTop():
+                    newy = displayrect.GetTop()
+
+                if size.y > displayrect.GetHeight():
                     # probably the menu size is too high to fit
                     # the screen, we need scrollbuttons
                     self._showScrollButtons = True
-                else:
-                    pos.y = newy
 
-        menuMaxX = pos.x + size.x
+                # in any case show the menu at the new y position
+                pos.y = newy
 
-        if menuMaxX > scrWidth and pos.x < scrWidth:
+        if (pos.x + size.x) > displayrect.GetRight():
 
             if self._parentMenu:
 
@@ -4366,7 +4367,7 @@ class FlatMenuBase(ShadowPopupWindow):
 
             else:
 
-                self._shiftePos  = ((size.x + pos.x) - scrWidth)
+                self._shiftePos  = ((size.x + pos.x) - displayrect.GetWidth())
                 pos.x -= self._shiftePos
 
         else:
