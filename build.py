@@ -1143,6 +1143,17 @@ def cmd_etg(options, args):
         etgfiles.remove(core_file)
         etgfiles.insert(0, core_file)
 
+    # We need two loops:
+    # 1. Cache all type auto conversion rules which get created in etgtools/tweaker_tools.FixWxPrefix
+    # 2. Actually create the sip files
+    # This is needed because each etg file is run in its own python invocation, so
+    # the data is lost between them.
+
+    # First delete the old cache if found
+    cacheFile = opj(cfg.ROOT_DIR, 'sip', 'gen', '__auto_conversion_cache__.json')
+    if os.path.isfile(cacheFile):
+        os.remove(cacheFile)
+    is_newer = {}
     for script in etgfiles:
         sipfile = etg2sip(script)
         deps = [script]
@@ -1156,7 +1167,16 @@ def cmd_etg(options, args):
 
         # run the script only if any dependencies are newer
         if newer_group(deps, sipfile):
+            is_newer[script] = True
+            runcmd('"%s" %s %s' % (PYTHON, script, flags + " --only-cache-auto-conversions"))
+        else:
+            is_newer[script] = False
+    for script in etgfiles:
+        if is_newer[script]:
             runcmd('"%s" %s %s' % (PYTHON, script, flags))
+    # Delete the cache
+    if os.path.isfile(cacheFile):
+        os.remove(cacheFile)
 
 
 def cmd_sphinx(options, args):
