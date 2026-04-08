@@ -4918,6 +4918,8 @@ class FlatMenuItem(object):
 
         return self._label
 
+    GetItemLabelText = GetLabel
+
 
     def GetMenu(self):
         """ Returns the parent menu. """
@@ -4947,6 +4949,9 @@ class FlatMenuItem(object):
         return self._text
 
 
+    GetItemLabel = GetText
+
+
     def GetSubMenu(self):
         """ Returns the sub-menu of this menu item (if any). """
 
@@ -4957,6 +4962,9 @@ class FlatMenuItem(object):
         """ Returns ``True`` if this item is of type ``wx.ITEM_CHECK``, ``False`` otherwise. """
 
         return self._kind == wx.ITEM_CHECK
+
+
+    IsCheck = IsCheckable
 
 
     def IsChecked(self):
@@ -4974,6 +4982,8 @@ class FlatMenuItem(object):
         """ Returns ``True`` if this item is of type ``wx.ITEM_RADIO``, ``False`` otherwise. """
 
         return self._kind == wx.ITEM_RADIO
+
+    IsRadio = IsRadioItem
 
 
     def IsEnabled(self):
@@ -5002,6 +5012,8 @@ class FlatMenuItem(object):
         """
 
         self._normalBmp = bmp
+
+    SetBitmap = SetNormalBitmap
 
 
     def SetDisabledBitmap(self, bmp):
@@ -6650,6 +6662,20 @@ class FlatMenu(FlatMenuBase):
         self._DestroyById(item)
 
 
+    def Enable(self, item, enable = True):
+        """
+        Enables or disables (greys out) a menu item.
+
+        :param `item`: can be either a menu item identifier or a plain :class:`FlatMenuItem`.
+        :param bool `enable`: ``True`` to enable the item, ``False`` to disable it.
+        """
+
+        if not isinstance(item, FlatMenuItem):
+            item = self.FindItemById(item)
+
+        item.Enable(enable)
+
+
     def Insert(self, pos, id, item, helpString="", kind=wx.ITEM_NORMAL):
         """
         Inserts the given `item` before the position `pos`.
@@ -6694,6 +6720,19 @@ class FlatMenu(FlatMenuBase):
         self.UpdateRadioGroup(item)
 
         return item
+
+
+    def IsEnabled(self, item):
+        """
+        Determines whether a menu item is enabled.
+
+        :param `item`: can be either a menu item identifier or a plain :class:`FlatMenuItem`.
+        """
+
+        if not isinstance(item, FlatMenuItem):
+            item = self.FindItemById(item)
+
+        return item.IsEnabled()
 
 
     def UpdateRadioGroup(self, item):
@@ -6772,6 +6811,41 @@ class FlatMenu(FlatMenuBase):
         return self._numCols
 
 
+    def FindChildItem(self, itemId):
+        """
+        Finds the menu item object associated with the given menu item identifier.
+
+        :param integer `itemId`: menu item identifier.
+
+        :return: a tuple containing (item, itemidx), or ``None`` if not found
+        """
+
+        retval = None
+
+        item = self.FindItem(itemId)
+
+        if item:
+            itemidx, _ = self.FindMenuItemPos(itemId, None)
+            retval = (item, itemidx)
+
+        return retval
+
+
+    def FindItemByPosition(self, position):
+        """
+        Finds the menu item object given a position in the menu.
+
+        :param integer `position`: position within the menu.
+
+        :return: The found menu item object, or ``None`` if one was not found.
+        """
+
+        if 0 <= position < len(self._itemsArr):
+            return self._itemsArr[position]
+        else:
+            return None
+
+
     def FindItem(self, itemId, menu=None):
         """
         Finds the menu item object associated with the given menu item identifier and,
@@ -6801,6 +6875,31 @@ class FlatMenu(FlatMenuBase):
                 return parentMenu._itemsArr[idx]
             else:
                 return None
+
+    FindItemById = FindItem
+
+
+    def SetHelpString(self, itemId, helpString):
+        """
+        Sets the help string associated with a menu item
+
+        :param integer: `itemId`: the menu item identifier
+        :param string: `helpString`: the new help string to be set
+        """
+
+        item = self.FindItem(itemId)
+        item.SetHelp(helpString)
+
+    def GetHelpString(self, itemId):
+        """
+        Gets the help string associated with a menu item, or an empty
+        string if not found.
+
+        :param integer: `itemId`: the menu item identifier
+        """
+
+        item = self.FindItem(itemId)
+        return item.GetHelp()
 
 
     def SetItemFont(self, itemId, font=None):
