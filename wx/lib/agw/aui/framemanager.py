@@ -5369,8 +5369,11 @@ class AuiManager(wx.EvtHandler):
                         minimizeToolbar.DeleteTool(item)
             else:
                 # The perspective is referencing a non-existing pane that was added nonetheless. This will
-                # happen with a notebook that ends up containing no pages
-                inexistentPaneIndexes.append(paneIndex)
+                # happen with a notebook that ends up containing no pages.
+                # Notebook control panes (for example "__notebook_0") are expected to not have windows 
+                # at this point because they will be created later by Update(), so we don't delete them.
+                if not p.IsNotebookControl():
+                    inexistentPaneIndexes.append(paneIndex)
                 
         for paneIndex in reversed(inexistentPaneIndexes): # reverse is required when deleting elements by index
             del self._panes[index]
