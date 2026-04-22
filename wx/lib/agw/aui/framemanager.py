@@ -5353,9 +5353,8 @@ class AuiManager(wx.EvtHandler):
             if isinstance(pane.window, auibar.AuiToolBar) and (pane.IsFloatable() or pane.IsDockable()):
                 pane.window.SetGripperVisible(True)
 
-        inexistentPaneIndexes = []
         for paneIndex, p in enumerate(self._panes):
-            if p.window:
+            if not p.IsNotebookControl():
                 if p.IsMinimized():
                     self.MinimizePane(p, False)
                 elif p.minimize_mode & AUI_MINIMIZE_POS_MASK == AUI_MINIMIZE_POS_TOOLBAR:
@@ -5367,15 +5366,7 @@ class AuiManager(wx.EvtHandler):
                     item = minimizeToolbar.FindToolByUserData((ID_RESTORE_FRAME, p.window))
                     if item: # Delete the icon if it was there
                         minimizeToolbar.DeleteTool(item)
-            else:
-                # The perspective is referencing a non-existing pane that was added nonetheless. This will
-                # happen with a notebook that ends up containing no pages
-                inexistentPaneIndexes.append(paneIndex)
-                
-        for paneIndex in reversed(inexistentPaneIndexes): # reverse is required when deleting elements by index
-            del self._panes[index]
-                
-            
+              
         if update:
             self.Update()
 
