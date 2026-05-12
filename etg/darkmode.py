@@ -34,14 +34,36 @@ def run():
 
     c = module.find('wxDarkModeSettings')
     assert isinstance(c, etgtools.ClassDef)
-    ###c.find('GetMenuColour').ignore()
     c.addPrivateCopyCtor()
 
-    # wxDarkModeSettings only exists on MSW
-    import sys
-    if not sys.platform.startswith('win'):
-        c.ignore()
-        module.find('wxMenuColour').ignore()
+    # wxDarkModeSettings and wxMenuColour are MSW-only types. Clear the
+    # auto-detected class include (which would emit an unconditional
+    # #include <wx/msw/darkmode.h> and fail to compile on non-MSW), and
+    # instead add a guarded include plus non-MSW stubs so the wrapper
+    # generates identical code for all platforms. On non-MSW, attempting to
+    # use these types raises NotImplementedError via MSWEnableDarkMode.
+    c.includes = []
+    module.addHeaderCode("""\
+        #ifdef __WXMSW__
+        #include <wx/msw/darkmode.h>
+        #else
+        // Compile-time stubs for non-MSW platforms.
+        enum class wxMenuColour {
+            StandardFg,
+            StandardBg,
+            DisabledFg,
+            HotBg
+        };
+        class wxDarkModeSettings {
+        public:
+            wxDarkModeSettings() {}
+            virtual ~wxDarkModeSettings() {}
+            virtual wxColour GetColour(wxSystemColour index) { return wxNullColour; }
+            virtual wxColour GetMenuColour(wxMenuColour which) { return wxNullColour; }
+            virtual wxPen GetBorderPen() { return wxNullPen; }
+        };
+        #endif // __WXMSW__
+        """)
 
 
     #-----------------------------------------------------------------

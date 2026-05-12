@@ -70,6 +70,13 @@ public:
     void OSXEnableAutomaticTabbing(bool) {}
 #endif
 
+#ifndef __WXMSW__
+    enum {
+        DarkMode_Auto   = 0,
+        DarkMode_Always = 1
+    };
+#endif
+
 #ifdef __WXMAC__
     static long GetMacAboutMenuItemId()               { return s_macAboutMenuItemId; }
     static long GetMacPreferencesMenuItemId()         { return s_macPreferencesMenuItemId; }
