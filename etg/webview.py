@@ -21,12 +21,14 @@ ITEMS  = [ 'wxWebViewHistoryItem',
            'wxWebViewHandler',
            'wxWebViewArchiveHandler',
            'wxWebViewFSHandler',
+           'wxWebViewConfiguration',
+           'wxWebViewFactory',
            'wxWebView',
            'wxWebViewEvent',
-           'wxWebViewFactory',
            'wxWebViewIE',
            'wxWebViewHandlerRequest',
-           'wxWebViewConfiguration',
+           'wxWebViewHandlerResponse',
+           'wxWebViewHandlerResponseData',
            'wxWebViewWindowFeatures',
            ]
 
@@ -99,12 +101,16 @@ def run():
     c.find('GetVersionInfo').ignore()
     c.find('CreateConfiguration').isPureVirtual = True
     c.find('CreateConfiguration').setCppCode_sip("""\
-        PyErr_Clear();
-        Py_BEGIN_ALLOW_THREADS
-        wxWebViewConfiguration cfg = sipCpp->CreateConfiguration();
-        sipRes = new wxWebViewConfiguration(cfg.GetBackend(), cfg.GetImpl());
-        Py_END_ALLOW_THREADS
-        if (PyErr_Occurred()) sipIsErr = 1;
+        #if wxUSE_WEBVIEW
+            PyErr_Clear();
+            Py_BEGIN_ALLOW_THREADS
+            wxWebViewConfiguration cfg = sipCpp->CreateConfiguration();
+            sipRes = new wxWebViewConfiguration(cfg.GetBackend(), cfg.GetImpl());
+            Py_END_ALLOW_THREADS
+            if (PyErr_Occurred()) sipIsErr = 1;
+        #else
+            wxPyRaiseNotImplemented();
+        #endif
     """)
 
     tools.generateStubs('wxUSE_WEBVIEW', module,
@@ -112,7 +118,7 @@ def run():
                             'wxWebViewNavigationActionFlags': 'wxWEBVIEW_NAV_ACTION_NONE',
                             'wxWebViewZoom': 'wxWEBVIEW_ZOOM_MEDIUM',
                             'wxVersionInfo': 'wxVersionInfo()',
-                            'wxWebViewConfiguration': 'wxWebViewConfiguration("", NULL)',
+                            'wxWebViewConfiguration': 'wxWebView::NewConfiguration()',
                             })
 
     c = module.find('wxWebView')
@@ -292,9 +298,18 @@ def run():
     c = module.find('wxWebViewHandlerRequest')
     c.find('GetDataString').ignore()
 
+    c = module.find('wxWebViewHandlerResponse')
+    c.abstract = True
+    for m in c.find('Finish').all():
+        m.ignore()
+
     c = module.find('wxWebViewConfiguration')
     c.abstract = True
-    c.instanceCode = 'sipCpp = new wxWebViewConfiguration("", NULL);'
+    c.instanceCode = """\
+        #if wxUSE_WEBVIEW
+            sipCpp = new wxWebViewConfiguration("", NULL);
+        #endif
+        """
  
     c = module.find('wxWebViewWindowFeatures')
     c.abstract = True
