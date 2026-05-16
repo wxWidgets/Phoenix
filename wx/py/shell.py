@@ -9,7 +9,6 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 import wx
 from wx import stc
 
-import keyword
 import os
 import sys
 import time

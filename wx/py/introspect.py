@@ -7,8 +7,6 @@ import re
 import sys
 import inspect
 import tokenize
-import types
-import wx
 from io import BytesIO
 
 def getAutoCompleteList(command='', locals=None, includeMagic=1,
