@@ -25,6 +25,9 @@ from .pseudo import PseudoFileErr
 from .version import VERSION
 from .magic import magic
 from .path import ls,cd,pwd,sx
+from _pyrepl import _module_completer
+import rlcompleter
+
 
 sys.ps3 = '<-- '  # Input prompt.
 USE_MAGIC=True
@@ -272,6 +275,10 @@ class Shell(editwindow.EditWindow):
 
         # Find out for which keycodes the interpreter will autocomplete.
         self.autoCompleteKeys = self.interp.getAutoCompleteKeys()
+        self._module_completer = _module_completer.ModuleCompleter(locals)
+        self._rl_completer = rlcompleter.Completer(locals)
+        self.Bind(wx.stc.EVT_STC_AUTOCOMP_COMPLETED, self.OnAutoCompCompleted)
+        self._last_completion_command = None
 
         # Keep track of the last non-continuation prompt positions.
         self.promptPosStart = 0
@@ -721,7 +728,12 @@ class Shell(editwindow.EditWindow):
 
         # Only allow these keys after the latest prompt.
         elif key in (wx.WXK_TAB, wx.WXK_DELETE):
-            if self.CanEdit():
+            if not self.CanEdit(): event.Skip()
+            if key==wx.WXK_TAB and self.autoComplete and wx.WXK_TAB in self.autoCompleteKeys:
+                # from shell OnChar, which will not be called for TAB: start auto-completion
+                command = self.GetTextRange(self.promptPosEnd, currpos)
+                self.autoCompleteShow(command)
+            else:
                 event.Skip()
 
         # Don't toggle between insert mode and overwrite mode.
@@ -1174,18 +1186,87 @@ class Shell(editwindow.EditWindow):
                 else:
                     self.run(command, prompt=False, verbose=True)
 
-    def autoCompleteShow(self, command, offset = 0):
+    ############################################################################
+    # new implementation of autoCompleteShow
+    import re
+    _last_identifier_re = re.compile(r".*?([a-z_]?\w*)?$", re.IGNORECASE+re.DOTALL)
+    _last_identifier_dot_re = re.compile(r".*?([a-z_\.]?[\w\.]*)?$", re.IGNORECASE+re.DOTALL)
+    def _get_last_identifier(self, command, include_dot=False):
+        if include_dot:
+            return self._last_identifier_dot_re.match(command).group(1)
+        return self._last_identifier_re.match(command).group(1)
+    def _get_completions(self, command):
+        ret = []
+        while True:
+            a = self._rl_completer.complete(command, len(ret))
+            if not a: break
+            ret.append(a.rsplit(".")[-1])
+        if ret:
+            ret.sort(key=str.casefold)
+            return ret
+        # some hard-coded completions:
+        #last = command.rsplit(" ",1)[-1].rsplit(".",1)[-1]
+        last = self._get_last_identifier(command)
+        print("last", last)
+        completions = []
+        if command.startswith("from"):
+            if not last: return ["import "]
+            completions.append("import ")
+        completions = [c for c in completions if c.startswith(last)]
+        return completions
+
+    def autoCompleteShow(self, command:str, offset = 0):
         """Display auto-completion popup list."""
         self.AutoCompSetAutoHide(self.autoCompleteAutoHide)
         self.AutoCompSetIgnoreCase(self.autoCompleteCaseInsensitive)
-        list = self.interp.getAutoCompleteList(command,
-                    includeMagic=self.autoCompleteIncludeMagic,
-                    includeSingle=self.autoCompleteIncludeSingle,
-                    includeDouble=self.autoCompleteIncludeDouble)
-        if list:
-            options = ' '.join(list)
-            #offset = 0
+        self._last_completion_command = None
+        last = self._get_last_identifier(command)
+        if not last and not command.endswith("."):
+            self.write("\t")
+            return
+        offset = len(last)
+        options = self._module_completer.get_completions(command)
+        if options:
+            options = [m.rsplit(".",1)[-1] for m in options]
+            # some hard-coded extensions:
+            if command.startswith("from ") and not "import" in command:
+                options = [m+" " for m in options]
+
+            if len(options)==1:
+                self.write(options[0][offset:])
+            elif options:
+                options = ' '.join(options)
+                self.AutoCompShow(offset, options)
+            return
+
+        # symbol or statement, not a module
+        # for multi-line inputs, we take the last line only and strip "...     "
+        command_ = command.rsplit("\r",1)[-1].rsplit("\n",1)[-1].rsplit("\t",1)[-1].lstrip(". ")
+        if not command_:
+            self.write("\t")
+            return
+        options = self._get_completions(command_)
+        if not options:
+            command_ = self._get_last_identifier(command_, include_dot=True)
+            options = self._get_completions(command_)
+        if not options:
+            # hard-coded extensions
+            if last=="ra": options = ["range("]
+            if last=="pr": options = ["print("]
+
+        if len(options)==1:
+            self.write(options[0][offset:])
+        elif options:
+            self._last_completion_command = command_
+            options = ' '.join(options)
             self.AutoCompShow(offset, options)
+
+    def OnAutoCompCompleted(self, evt):
+        """If the user has selected a completion ending with '(', display the call tip"""
+        completion = evt.GetString()
+        if completion.endswith("(") and self._last_completion_command:
+            wx.CallAfter(self.autoCallTipShow, self._last_completion_command+completion)
+        evt.Skip()
 
     def autoCallTipShow(self, command, insertcalltip = True, forceCallTip = False):
         """Display argument spec and docstring in a popup window."""
