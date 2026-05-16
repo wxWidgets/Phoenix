@@ -274,7 +274,7 @@ class Shell(editwindow.EditWindow):
         self.buffer = Buffer()
 
         # Find out for which keycodes the interpreter will autocomplete.
-        self.autoCompleteKeys = self.interp.getAutoCompleteKeys()
+        self.autoCompleteKeys = self.interp.getAutoCompleteKeys() + [wx.WXK_TAB]
         self._module_completer = _module_completer.ModuleCompleter(locals)
         self._rl_completer = rlcompleter.Completer(locals)
         self.Bind(wx.stc.EVT_STC_AUTOCOMP_COMPLETED, self.OnAutoCompCompleted)
