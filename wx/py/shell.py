@@ -1258,9 +1258,13 @@ class Shell(editwindow.EditWindow):
             if last=="pr": options = ["print("]
 
         if len(options)==1:
-            self.write(options[0][offset:])
+            completion = options[0]
+            self.write(completion[offset:])
+            if completion.endswith("("):
+                wx.CallAfter(self.autoCallTipShow, command_[:-offset]+completion)
+
         elif options:
-            self._last_completion_command = command_
+            self._last_completion_command = command_[:-offset]
             options = ' '.join(options)
             self.AutoCompShow(offset, options)
 
