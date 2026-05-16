@@ -330,10 +330,13 @@ class Shell(editwindow.EditWindow):
             self.ID_UNDO = wx.NewIdRef()
             self.ID_REDO = wx.NewIdRef()
 
+        self.ID_COPY_HISTORY = wx.NewIdRef()
+
         # Assign handlers for edit events
         self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=self.ID_CUT)
         self.Bind(wx.EVT_MENU, lambda evt: self.Copy(), id=self.ID_COPY)
         self.Bind(wx.EVT_MENU, lambda evt: self.CopyWithPrompts(), id=frame.ID_COPY_PLUS)
+        self.Bind(wx.EVT_MENU, lambda evt: self.CopyHistory(), id=self.ID_COPY_HISTORY)
         self.Bind(wx.EVT_MENU, lambda evt: self.Paste(), id=self.ID_PASTE)
         self.Bind(wx.EVT_MENU, lambda evt: self.PasteAndRun(), id=frame.ID_PASTE_PLUS)
         self.Bind(wx.EVT_MENU, lambda evt: self.SelectAll(), id=self.ID_SELECTALL)
@@ -345,6 +348,7 @@ class Shell(editwindow.EditWindow):
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCut()), id=self.ID_CLEAR)
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCopy()), id=self.ID_COPY)
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCopy()), id=frame.ID_COPY_PLUS)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(bool(self.history)), id=self.ID_COPY_HISTORY)
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanPaste()), id=self.ID_PASTE)
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanPaste()), id=frame.ID_PASTE_PLUS)
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanUndo()), id=self.ID_UNDO)
@@ -1433,6 +1437,13 @@ class Shell(editwindow.EditWindow):
             data = wx.TextDataObject(command)
             self._clip(data)
 
+    def CopyHistory(self):
+        """Copy input history and place it on the clipboard."""
+        if self.history:
+            data = os.linesep.join( reversed(self.history) )
+            data = wx.TextDataObject(data)
+            self._clip(data)
+
     def _clip(self, data):
         if wx.TheClipboard.Open():
             wx.TheClipboard.UsePrimarySelection(False)
@@ -1581,6 +1592,7 @@ class Shell(editwindow.EditWindow):
         menu.Append(self.ID_CUT, "Cut")
         menu.Append(self.ID_COPY, "Copy")
         menu.Append(frame.ID_COPY_PLUS, "Copy With Prompts")
+        menu.Append(self.ID_COPY_HISTORY, "Copy History")
         menu.Append(self.ID_PASTE, "Paste")
         menu.Append(frame.ID_PASTE_PLUS, "Paste And Run")
         menu.Append(self.ID_CLEAR, "Clear")
