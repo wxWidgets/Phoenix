@@ -12,8 +12,11 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 
-        bcb1 = wx.adv.BitmapComboBox(self, pos=(25,25), size=(200,-1))
-        bcb2 = wx.adv.BitmapComboBox(self, pos=(250,25), size=(200,-1))
+        wx.StaticText(self, pos=(25,5),  size=(200,-1), label="default style:")
+        wx.StaticText(self, pos=(250,5), size=(200,-1), label="wx.CB_READONLY style:")
+
+        bcb1 = wx.adv.BitmapComboBox(self, pos=(25,35),  size=(200,-1))
+        bcb2 = wx.adv.BitmapComboBox(self, pos=(250,35), size=(200,-1), style=wx.CB_READONLY)
 
         for bcb in [bcb1, bcb2]:
             for x in range(12):
@@ -24,7 +27,6 @@ class TestPanel(wx.Panel):
                 bmp = img.ConvertToBitmap()
                 bcb.Append('images.%s' % name, bmp, name)
             self.Bind(wx.EVT_COMBOBOX, self.OnCombo, bcb)
-
 
     def OnCombo(self, evt):
         bcb = evt.GetEventObject()
