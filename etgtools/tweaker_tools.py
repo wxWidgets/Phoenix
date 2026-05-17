@@ -1925,6 +1925,8 @@ def _generateMethodStub(code, method, typeValMap):
         decl += '{} {}'.format(method.type, method.name)
     decl += method.argsString
     if method.isPureVirtual:
+        if '=0' not in decl:
+            decl += '=0'
         decl += ';'
     code.hdr.append(decl)
 
