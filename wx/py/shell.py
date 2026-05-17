@@ -1257,6 +1257,7 @@ class Shell(editwindow.EditWindow):
             self.write("\t")
             return
 
+        self._last_completion_command = command_[:-offset]  if offset else  command_
         last_identifier = self._get_last_identifier(command_, include_dot=True)
         options = self._get_completions(last_identifier)
         if options:
@@ -1273,10 +1274,9 @@ class Shell(editwindow.EditWindow):
             completion = options[0]
             self.write(completion[offset:])
             if completion.endswith("("):
-                wx.CallAfter(self.autoCallTipShow, command_[:-offset]+completion)
+                wx.CallAfter(self.autoCallTipShow, self._last_completion_command+completion)
 
         elif options:
-            self._last_completion_command = command_[:-offset]
             options = ' '.join(options)
             self.AutoCompShow(offset, options)
 
