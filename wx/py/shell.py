@@ -1248,10 +1248,14 @@ class Shell(editwindow.EditWindow):
         if not command_:
             self.write("\t")
             return
-        options = self._get_completions(command_)
-        if not options:
-            command_ = self._get_last_identifier(command_, include_dot=True)
+
+        last_identifier = self._get_last_identifier(command_, include_dot=True)
+        options = self._get_completions(last_identifier)
+        if options:
+            command_ = last_identifier
+        else:
             options = self._get_completions(command_)
+
         if not options:
             # hard-coded extensions
             if last=="ra": options = ["range("]
