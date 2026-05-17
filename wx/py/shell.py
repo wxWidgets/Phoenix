@@ -26,7 +26,7 @@ from .magic import magic
 from .path import ls,cd,pwd,sx
 try:
     from _pyrepl import _module_completer
-except ModuleNotFoundError:
+except (ModuleNotFoundError, ImportError):
     _module_completer = None
 import rlcompleter
 
