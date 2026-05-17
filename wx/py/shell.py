@@ -24,7 +24,10 @@ from .pseudo import PseudoFileErr
 from .version import VERSION
 from .magic import magic
 from .path import ls,cd,pwd,sx
-from _pyrepl import _module_completer
+try:
+    from _pyrepl import _module_completer
+except ModuleNotFoundError:
+    _module_completer = None
 import rlcompleter
 
 
@@ -274,7 +277,10 @@ class Shell(editwindow.EditWindow):
 
         # Find out for which keycodes the interpreter will autocomplete.
         self.autoCompleteKeys = self.interp.getAutoCompleteKeys() + [wx.WXK_TAB]
-        self._module_completer = _module_completer.ModuleCompleter(locals)
+        if _module_completer is not None:
+            self._module_completer = _module_completer.ModuleCompleter(locals)
+        else:
+            self._module_completer = None
         self._rl_completer = rlcompleter.Completer(locals)
         self.Bind(wx.stc.EVT_STC_AUTOCOMP_COMPLETED, self.OnAutoCompCompleted)
         self._last_completion_command = None
@@ -1228,19 +1234,21 @@ class Shell(editwindow.EditWindow):
             self.write("\t")
             return
         offset = len(last)
-        options = self._module_completer.get_completions(command)
-        if options:
-            options = [m.rsplit(".",1)[-1] for m in options]
-            # some hard-coded extensions:
-            if command.startswith("from ") and not "import" in command:
-                options = [m+" " for m in options]
 
-            if len(options)==1:
-                self.write(options[0][offset:])
-            elif options:
-                options = ' '.join(options)
-                self.AutoCompShow(offset, options)
-            return
+        if self._module_completer:
+            options = self._module_completer.get_completions(command)
+            if options:
+                options = [m.rsplit(".",1)[-1] for m in options]
+                # some hard-coded extensions:
+                if command.startswith("from ") and not "import" in command:
+                    options = [m+" " for m in options]
+    
+                if len(options)==1:
+                    self.write(options[0][offset:])
+                elif options:
+                    options = ' '.join(options)
+                    self.AutoCompShow(offset, options)
+                return
 
         # symbol or statement, not a module
         # for multi-line inputs, we take the last line only and strip "...     "
