@@ -29,6 +29,7 @@ try:
 except (ModuleNotFoundError, ImportError):
     _module_completer = None
 import rlcompleter
+import warnings
 
 
 sys.ps3 = '<-- '  # Input prompt.
@@ -741,7 +742,8 @@ class Shell(editwindow.EditWindow):
             if key==wx.WXK_TAB and self.autoComplete and wx.WXK_TAB in self.autoCompleteKeys:
                 # from shell OnChar, which will not be called for TAB: start auto-completion
                 command = self.GetTextRange(self.promptPosEnd, currpos)
-                self.autoCompleteShow(command)
+                if not self.autoCompleteShow(command):
+                    event.Skip()  # not handled
             else:
                 event.Skip()
 
@@ -1205,18 +1207,19 @@ class Shell(editwindow.EditWindow):
             return self._last_identifier_dot_re.match(command).group(1)
         return self._last_identifier_re.match(command).group(1)
     def _get_completions(self, command):
-        ret = []
-        while True:
-            a = self._rl_completer.complete(command, len(ret))
-            if not a: break
-            ret.append(a.rsplit(".")[-1])
+        with warnings.catch_warnings(action="ignore"):
+            if "." in command and not "[" in command and not "(" in command:
+                ret = self._rl_completer.attr_matches(command)
+            elif "." in command:
+                ret = []
+            else:
+                ret = self._rl_completer.global_matches(command)
         if ret:
+            ret = [a.rsplit(".")[-1] for a in ret]
             ret.sort(key=str.casefold)
             return ret
         # some hard-coded completions:
-        #last = command.rsplit(" ",1)[-1].rsplit(".",1)[-1]
         last = self._get_last_identifier(command)
-        print("last", last)
         completions = []
         if command.startswith("from"):
             if not last: return ["import "]
@@ -1231,8 +1234,7 @@ class Shell(editwindow.EditWindow):
         self._last_completion_command = None
         last = self._get_last_identifier(command)
         if not last and not command.endswith("."):
-            self.write("\t")
-            return
+            return False
         offset = len(last)
 
         if self._module_completer:
@@ -1248,14 +1250,13 @@ class Shell(editwindow.EditWindow):
                 elif options:
                     options = ' '.join(options)
                     self.AutoCompShow(offset, options)
-                return
+                return True
 
         # symbol or statement, not a module
         # for multi-line inputs, we take the last line only and strip "...     "
         command_ = command.rsplit("\r",1)[-1].rsplit("\n",1)[-1].rsplit("\t",1)[-1].lstrip(". ")
         if not command_:
-            self.write("\t")
-            return
+            return False
 
         self._last_completion_command = command_[:-offset]  if offset else  command_
         last_identifier = self._get_last_identifier(command_, include_dot=True)
@@ -1279,6 +1280,7 @@ class Shell(editwindow.EditWindow):
         elif options:
             options = ' '.join(options)
             self.AutoCompShow(offset, options)
+        return True
 
     def OnAutoCompCompleted(self, evt):
         """If the user has selected a completion ending with '(', display the call tip"""
