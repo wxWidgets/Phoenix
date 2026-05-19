@@ -1770,15 +1770,10 @@ def cmd_build_py(options, args):
             build_options.append('--gtk3')
             wafBuildDir = posixjoin(wafBuildBase, 'gtk3')
 
+    if options.no_magic:
+        build_options.append('--no_magic')
     build_options.append('--python="%s"' % PYTHON)
     build_options.append('--out=%s' % wafBuildDir) # this needs to be the last option
-
-    if not isWindows and not isDarwin and not options.no_magic and not options.use_syswx:
-        # Using $ORIGIN in the rpath will cause the dynamic linker to look
-        # for shared libraries in a folder relative to the loading binary's
-        # location. Here we'll use just $ORIGIN so it should look in the same
-        # folder as the wxPython extension modules.
-        os.environ['LD_RUN_PATH'] = '$ORIGIN'
 
     # Regenerate the _sysconfigdata module?
     if options.regenerate_sysconfig:
