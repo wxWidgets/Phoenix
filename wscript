@@ -193,7 +193,7 @@ def configure(conf):
         conf.env.CXXFLAGS_WXPY = list()
 
         # Check wx-config exists and fetch some values from it
-        rpath = ' --no-rpath' if not conf.options.no_magic else ''
+        rpath = ' --no-rpath'
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs core,net' + rpath,
                        uselib_store='WX', mandatory=True,
@@ -325,6 +325,13 @@ def configure(conf):
         conf.env.LIBPATH_PYEXT = []
         conf.env.LIB_PYEXT = []
 
+        # Use an explicit -Wl,-rpath,$ORIGIN linker flag rather than relying on
+        # LD_RUN_PATH. GNU ld silently ignores LD_RUN_PATH whenever any explicit
+        # -rpath flag appears on the command line (e.g. one injected by pyenv
+        # Python via sysconfig LDFLAGS). Explicit -rpath entries accumulate, so
+        # both the pyenv path and $ORIGIN will be present in the final binary.
+        if not isDarwin and not conf.options.no_magic:
+            conf.env.append_value('LINKFLAGS_WXPY', ['-Wl,-rpath,$ORIGIN'])
 
         # Use the same compilers that wxWidgets used
         if cfg.CC:
