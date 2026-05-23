@@ -306,7 +306,7 @@ jobs:
 
   github-release:
     name: Create GitHub Release and upload source
-    needs: publish-to-pypi
+    needs: [publish-to-pypi, build-documentation]
     runs-on: ubuntu-24.04
 
     permissions:
@@ -319,6 +319,12 @@ jobs:
       with:
         name: wxPython-source
         path: dist
+    - name: Download docs and demo distributions
+      uses: actions/download-artifact@v8
+      with:
+        pattern: d*
+        path: dist
+        merge-multiple: true
     - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ github.token }}
