@@ -320,6 +320,7 @@ def main(wxDir, args):
             wxpy_configure_opts.append("--with-libjpeg=builtin")
             wxpy_configure_opts.append("--with-libpng=builtin")
             wxpy_configure_opts.append("--with-libtiff=builtin")
+            wxpy_configure_opts.append("--with-libwebp=builtin")
             wxpy_configure_opts.append("--with-regex=builtin")
 
 
