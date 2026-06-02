@@ -363,23 +363,30 @@ jobs:
         scp -p dist/* rbot.wxpython@riobu.com:wxpython-extras/htdocs/wxPython4/extras/${{ needs.build-source-dist.outputs.VERSION }}/
 
 
-  upload-wheels-to-snapshot-builds:
-    name: Upload wheels to snapshot-builds on wxpython.org
-    if: github.event_name == 'push'
-    needs: build-wheels
+  create-snapshot-prerelease:
+    name: Create snapshot prerelease on GitHub
+    if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/')
+    needs: [build-source-dist, build-wheels]
     runs-on: ubuntu-24.04
 
+    permissions:
+      contents: write
+
     steps:
-    - name: Download all the dists
+    - name: Download all artifacts
       uses: actions/download-artifact@v8
       with:
         path: dist/
         merge-multiple: true
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.RIOBU_SSH_KEY }}
-        known_hosts: ${{ secrets.RIOBU_KNOWN_HOSTS }}
-    - name: SCP wheels
+    - name: Create snapshot prerelease
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
       run: |
-        scp -p dist/* rbot.wxpython@riobu.com:snapshot-builds/
+        gh release create "$VERSION" \
+          --repo '${{ github.repository }}' \
+          --prerelease \
+          --title "Snapshot Build $VERSION" \
+          --notes "Automated snapshot build from commit ${{ github.sha }}"
+        gh release upload "$VERSION" dist/* \
+          --repo '${{ github.repository }}'
