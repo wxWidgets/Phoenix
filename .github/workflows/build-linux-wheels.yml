@@ -126,27 +126,25 @@ jobs:
           name: wxPython-wheel-${{ matrix.os }}-${{ steps.init.outputs.canonical_id }}
           path: dist/wxpython-*.whl
 
-  upload-wheels-to-extras:
-    name: Upload wheels to extras on wxpython.org
-    needs: build-wheels
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-22.04, ubuntu-24.04 ]
-    runs-on: ${{ matrix.os }}
+  upload-wheels-to-release:
+    name: Upload Linux wheels to GitHub Release
+    needs: [build-source-dist, build-wheels]
+    runs-on: ubuntu-24.04
+
+    permissions:
+      contents: write
 
     steps:
-    - name: Download all the dists
+    - name: Download all wheel artifacts
       uses: actions/download-artifact@v8
       with:
-        pattern: wxPython-wheel-${{ matrix.os }}-*
+        pattern: wxPython-wheel-*
         path: dist/
         merge-multiple: true
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.RIOBU_SSH_KEY }}
-        known_hosts: ${{ secrets.RIOBU_KNOWN_HOSTS }}
-    - name: SCP wheels
+    - name: Upload wheels to existing GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
       run: |
-        scp -p dist/* rbot.wxpython@riobu.com:wxpython-extras/htdocs/wxPython4/extras/linux/gtk3/${{ matrix.os }}/
+        gh release upload "wxPython-$VERSION" dist/* \
+          --repo '${{ github.repository }}'
