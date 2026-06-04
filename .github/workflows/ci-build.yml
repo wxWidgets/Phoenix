@@ -209,6 +209,23 @@ jobs:
         with:
           arch: '${{ matrix.architecture }}'
 
+      - name: Install ccache
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: hendrikmuhs/ccache-action@v1.2.23
+        with:
+          key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+
+      - name: Setup ccache
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        run: |
+          if [ ${{ runner.os }} == 'Linux' ]; then
+              echo "PATH=/usr/lib/ccache:$PATH" >> $GITHUB_ENV
+          elif [ ${{ matrix.os }} == 'macos-15-intel' ]; then
+              echo "PATH=/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
+          elif [ ${{ matrix.os }} == 'macos-15' ]; then
+              echo "PATH=/opt/homebrew/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
+          fi
+
       - name: Build the wxPython wheel
         env:
           WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
