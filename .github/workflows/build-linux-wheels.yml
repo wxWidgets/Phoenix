@@ -63,6 +63,10 @@ jobs:
         exclude:
           - os: ubuntu-26.04
             python-version: 3.10
+          - os: ubuntu-26.04
+            python-version: 3.11
+          - os: ubuntu-26.04
+            python-version: 3.12
 
     env:
       VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
