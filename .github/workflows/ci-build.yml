@@ -142,6 +142,12 @@ jobs:
           # Python interpreter < 3.11 doesn't exist for Windows 11 ARM
           - os: windows-11-arm
             python-version: '3.10'
+          - os: ubuntu-26.04
+            python-version: '3.10'
+        include:
+          - os: ubuntu-26.04
+            python-version: ${{ github.event_name == 'pull_request' && '3.11' }}
+            architecture: 'x64'
 
     env:
       VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
