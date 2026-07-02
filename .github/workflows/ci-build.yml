@@ -144,10 +144,6 @@ jobs:
             python-version: '3.10'
           - os: ubuntu-26.04
             python-version: '3.10'
-        include:
-          - os: ubuntu-26.04
-            python-version: ${{ github.event_name == 'pull_request' && '3.13' }}
-            architecture: 'x64'
 
     env:
       VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
