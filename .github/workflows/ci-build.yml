@@ -169,12 +169,14 @@ jobs:
               short_name=macos
               echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
           elif [ ${{ matrix.os }} == windows-2025 ]; then
+              build_opts="$build_opts --cairo"
               if [ ${{ matrix.architecture }} == x64 ]; then
                   short_name=win64
               else
                   short_name=win32
               fi
           elif [ ${{ matrix.os }} == windows-11-arm ]; then
+              build_opts="$build_opts --cairo"
               short_name=win64
           fi
           echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
