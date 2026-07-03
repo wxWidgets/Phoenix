@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: 'recursive'
           fetch-depth: 0
@@ -27,7 +27,7 @@ jobs:
         run: buildtools/checkout_submodule_refs.sh
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.13'
           cache: 'pip'
@@ -49,7 +49,7 @@ jobs:
           python build.py sdist
 
       - name: Save sdist as job artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wxPython-source
           path: dist/wxpython-${{ steps.generate.outputs.version }}.tar.gz
@@ -60,9 +60,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-22.04, ubuntu-24.04 ]
+        os: [ ubuntu-22.04, ubuntu-24.04, ubuntu-26.04 ]
         python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
         architecture: [ 'x64' ]
+        exclude:
+          - os: ubuntu-26.04
+            python-version: 3.10
+          - os: ubuntu-26.04
+            python-version: 3.11
+          - os: ubuntu-26.04
+            python-version: 3.12
 
     env:
       VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
@@ -79,23 +86,25 @@ jobs:
         run: |
           build_opts=$WXPYTHON_BUILD_ARGS
           short_name=linux
+          os_tag="ubuntu$(echo '${{ matrix.os }}' | sed -E 's/[^0-9]//g')"
           echo "short_name=$short_name" >> "$GITHUB_OUTPUT"
           echo "canonical_id=$short_name-py${{ matrix.python-version }}-${{ matrix.architecture}}" >> "$GITHUB_OUTPUT"
           echo "build_opts=$build_opts" >> "$GITHUB_OUTPUT"
+          echo "os_tag=$os_tag" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: 'recursive'
 
       - name: download CI source artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: wxPython-source
           path: dist
 
       - name: Set up Python ${{ matrix.python-version }}-${{ matrix.architecture }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '${{ matrix.python-version }}'
           architecture: '${{ matrix.architecture }}'
@@ -116,6 +125,12 @@ jobs:
           cd dist
           pip wheel -v wxpython-${{ env.VERSION }}.tar.gz
 
+      - name: Tag wheel filename with OS to avoid collisions across the OS matrix
+        run: |
+          cd dist
+          f=$(echo wxpython-${{ env.VERSION }}-*.whl)
+          mv "$f" "${f/wxpython-${{ env.VERSION }}-/wxpython-${{ env.VERSION }}+${{ steps.init.outputs.os_tag }}-}"
+
       - name: Simple smoke test
         run: |
           cd dist
@@ -124,32 +139,30 @@ jobs:
           pip uninstall --yes wxPython
 
       - name: Save wheel as job artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wxPython-wheel-${{ matrix.os }}-${{ steps.init.outputs.canonical_id }}
           path: dist/wxpython-*.whl
 
-  upload-wheels-to-extras:
-    name: Upload wheels to extras on wxpython.org
-    needs: build-wheels
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-22.04, ubuntu-24.04 ]
-    runs-on: ${{ matrix.os }}
+  upload-wheels-to-release:
+    name: Upload Linux wheels to GitHub Release
+    needs: [build-source-dist, build-wheels]
+    runs-on: ubuntu-24.04
+
+    permissions:
+      contents: write
 
     steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
+    - name: Download all wheel artifacts
+      uses: actions/download-artifact@v8
       with:
-        pattern: wxPython-wheel-${{ matrix.os }}-*
+        pattern: wxPython-wheel-*
         path: dist/
         merge-multiple: true
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.RIOBU_SSH_KEY }}
-        known_hosts: ${{ secrets.RIOBU_KNOWN_HOSTS }}
-    - name: SCP wheels
+    - name: Upload wheels to existing GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
       run: |
-        scp -p dist/* rbot.wxpython@riobu.com:wxpython-extras/htdocs/wxPython4/extras/linux/gtk3/${{ matrix.os }}/
+        gh release upload "wxPython-$VERSION" dist/* \
+          --repo '${{ github.repository }}'
