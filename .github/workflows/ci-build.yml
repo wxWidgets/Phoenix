@@ -213,7 +213,7 @@ jobs:
 
       - name: Setup MSVC
         if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: step-security/msvc-dev-cmd@v1
         with:
           arch: '${{ matrix.architecture }}'
 
@@ -269,7 +269,7 @@ jobs:
           python -m pip install --upgrade pillow numpy comtypes pywin32 cairocffi PyMuPDF
 
       - name: Setup MSVC
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: step-security/msvc-dev-cmd@v1
         with:
           arch: 'x64'
 
