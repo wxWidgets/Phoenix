@@ -21,6 +21,7 @@ ITEMS  = [ 'wxSVGFileDC',
            'wxSVGBitmapHandler',
            'wxSVGBitmapEmbedHandler',
            'wxSVGBitmapFileHandler',
+           'wxSVGAttributes',
 
            ]
 

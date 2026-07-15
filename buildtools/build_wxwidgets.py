@@ -265,7 +265,6 @@ def main(wxDir, args):
                             "--enable-sound",
                             "--enable-graphics_ctx",
                             "--enable-display",
-                            "--enable-geometry",
                             "--enable-debug_flag",
                             "--enable-optimise",
                             "--disable-debugreport",
