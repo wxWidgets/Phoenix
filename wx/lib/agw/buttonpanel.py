@@ -1865,6 +1865,7 @@ class ButtonPanel(wx.Panel):
                 self._mainsizer.Insert(lenChildren-1, self._text, 0, wx.ALIGN_CENTER,
                                        userData=self._text, realIndex=lenChildren)
 
+            self.Thaw()
             return
 
         # We have text, so insert the text and an expandable spacer
@@ -1878,6 +1879,8 @@ class ButtonPanel(wx.Panel):
             self._mainsizer.Insert(lenChildren-1, self._text, 0, wx.ALIGN_CENTER,
                                    userData=self._text, realIndex=lenChildren)
             self._mainsizer.Insert(lenChildren-1, (0, 0), 1, wx.EXPAND)
+
+        self.Thaw()
 
 
     def RemoveText(self):
@@ -2024,6 +2027,8 @@ class ButtonPanel(wx.Panel):
         self._mainsizer.Clear()
         self.ReCreateSizer(bartext)
 
+        self.Thaw()
+
 
     def GetAlignment(self):
         """
@@ -2072,6 +2077,8 @@ class ButtonPanel(wx.Panel):
         # Recreate the sizer accordingly to the new alignment
         self.ReCreateSizer(text)
 
+        self.Thaw()
+
 
     def IsVertical(self):
         """
@@ -2115,9 +2122,6 @@ class ButtonPanel(wx.Panel):
         size = self.GetSize()
         self.SetSize((size.x+1, size.y+1))
         self.SetSize((size.x, size.y))
-
-        if self.IsFrozen():
-            self.Thaw()
 
 
     def ReCreateSizer(self, text=None):
@@ -2171,8 +2175,6 @@ class ButtonPanel(wx.Panel):
             self.SetBarText(text)
 
         self.DoLayout()
-
-        self.Thaw()
 
 
     def DoGetBestSize(self):
