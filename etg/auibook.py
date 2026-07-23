@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+import copy
 
 PACKAGE   = "wx"
 MODULE    = "_aui"
@@ -134,6 +135,12 @@ inline bool operator==(const wxAuiTabContainerButton& a, const wxAuiTabContainer
     
     c = module.find('wxAuiFlatTabArt')
     c.addPrivateCopyCtor()
+    c.addPublic()
+    p = copy.deepcopy(module.find('wxAuiTabArt'))
+    for m in p.allItems():
+        if isinstance(m, etgtools.MethodDef) and m.isPureVirtual:
+            m.isPureVirtual = False
+            c.addItem(m)
     
     
     c = module.find('wxAuiNotebookPosition')
