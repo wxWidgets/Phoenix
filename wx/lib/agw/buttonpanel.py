@@ -263,11 +263,6 @@ BP_USE_GRADIENT = 2
 _DELAY = 3000
 
 
-# Check for the new method in 2.7 (not present in 2.6.3.3)
-if wx.VERSION_STRING < "2.7":
-    wx.Rect.Contains = lambda self, point: wx.Rect.Inside(self, point)
-
-
 def BrightenColour(colour, factor):
     """
     Brighten the input colour by a factor.
@@ -2724,39 +2719,6 @@ class ButtonPanel(wx.Panel):
 
         self._art = art
         self.Refresh()
-
-
-    if wx.VERSION < (2,7,1,1):
-        def Freeze(self):
-            """
-            Freezes the window or, in other words, prevents any updates from taking place
-            on screen, the window is not redrawn at all. :meth:`~ButtonPanel.Thaw` must be called to re-enable
-            window redrawing. Calls to these two functions may be nested.
-
-            :note: This method is useful for visual appearance optimization.
-            """
-
-            self._freezeCount = self._freezeCount + 1
-            wx.Panel.Freeze(self)
-
-
-        def Thaw(self):
-            """
-            Reenables window updating after a previous call to :meth:`~ButtonPanel.Freeze`. To really thaw the
-            control, it must be called exactly the same number of times as :meth:`~ButtonPanel.Freeze`.
-            """
-
-            if self._freezeCount == 0:
-                raise Exception("\nERROR: Thawing Unfrozen ButtonPanel?")
-
-            self._freezeCount = self._freezeCount - 1
-            wx.Panel.Thaw(self)
-
-
-        def IsFrozen(self):
-            """ Returns ``True`` if the window is currently frozen by a call to :meth:`~ButtonPanel.Freeze`. """
-
-            return self._freezeCount != 0
 
 
 if __name__ == '__main__':
