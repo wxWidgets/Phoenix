@@ -11,6 +11,16 @@
 import wx.__version__
 __version__ = wx.__version__.VERSION_STRING
 
+import os
+
+
+# Select platform backend
+__plat__ = '@DEFAULT@'
+if 'WX_API' in os.environ:
+    __plat__ = os.environ['WX_API']
+    if __plat__ not in ['@PLATS@']:
+        raise ImportError(f'invalid WX_API {__plat__}')
+
 
 # Import all items from the core wxPython module so they appear in the wx
 # package namespace.
