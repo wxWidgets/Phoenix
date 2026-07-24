@@ -263,11 +263,6 @@ BP_USE_GRADIENT = 2
 _DELAY = 3000
 
 
-# Check for the new method in 2.7 (not present in 2.6.3.3)
-if wx.VERSION_STRING < "2.7":
-    wx.Rect.Contains = lambda self, point: wx.Rect.Inside(self, point)
-
-
 def BrightenColour(colour, factor):
     """
     Brighten the input colour by a factor.
@@ -1865,6 +1860,7 @@ class ButtonPanel(wx.Panel):
                 self._mainsizer.Insert(lenChildren-1, self._text, 0, wx.ALIGN_CENTER,
                                        userData=self._text, realIndex=lenChildren)
 
+            self.Thaw()
             return
 
         # We have text, so insert the text and an expandable spacer
@@ -1878,6 +1874,8 @@ class ButtonPanel(wx.Panel):
             self._mainsizer.Insert(lenChildren-1, self._text, 0, wx.ALIGN_CENTER,
                                    userData=self._text, realIndex=lenChildren)
             self._mainsizer.Insert(lenChildren-1, (0, 0), 1, wx.EXPAND)
+
+        self.Thaw()
 
 
     def RemoveText(self):
@@ -2024,6 +2022,8 @@ class ButtonPanel(wx.Panel):
         self._mainsizer.Clear()
         self.ReCreateSizer(bartext)
 
+        self.Thaw()
+
 
     def GetAlignment(self):
         """
@@ -2072,6 +2072,8 @@ class ButtonPanel(wx.Panel):
         # Recreate the sizer accordingly to the new alignment
         self.ReCreateSizer(text)
 
+        self.Thaw()
+
 
     def IsVertical(self):
         """
@@ -2115,9 +2117,6 @@ class ButtonPanel(wx.Panel):
         size = self.GetSize()
         self.SetSize((size.x+1, size.y+1))
         self.SetSize((size.x, size.y))
-
-        if self.IsFrozen():
-            self.Thaw()
 
 
     def ReCreateSizer(self, text=None):
@@ -2171,8 +2170,6 @@ class ButtonPanel(wx.Panel):
             self.SetBarText(text)
 
         self.DoLayout()
-
-        self.Thaw()
 
 
     def DoGetBestSize(self):
@@ -2722,39 +2719,6 @@ class ButtonPanel(wx.Panel):
 
         self._art = art
         self.Refresh()
-
-
-    if wx.VERSION < (2,7,1,1):
-        def Freeze(self):
-            """
-            Freezes the window or, in other words, prevents any updates from taking place
-            on screen, the window is not redrawn at all. :meth:`~ButtonPanel.Thaw` must be called to re-enable
-            window redrawing. Calls to these two functions may be nested.
-
-            :note: This method is useful for visual appearance optimization.
-            """
-
-            self._freezeCount = self._freezeCount + 1
-            wx.Panel.Freeze(self)
-
-
-        def Thaw(self):
-            """
-            Reenables window updating after a previous call to :meth:`~ButtonPanel.Freeze`. To really thaw the
-            control, it must be called exactly the same number of times as :meth:`~ButtonPanel.Freeze`.
-            """
-
-            if self._freezeCount == 0:
-                raise Exception("\nERROR: Thawing Unfrozen ButtonPanel?")
-
-            self._freezeCount = self._freezeCount - 1
-            wx.Panel.Thaw(self)
-
-
-        def IsFrozen(self):
-            """ Returns ``True`` if the window is currently frozen by a call to :meth:`~ButtonPanel.Freeze`. """
-
-            return self._freezeCount != 0
 
 
 if __name__ == '__main__':
