@@ -15,6 +15,8 @@ MODULE    = "_aui"
 NAME      = "auibook"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
+INCLUDES = [ 'tabartnative' ]
+
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
 ITEMS  = [ 'wxAuiNotebook',
@@ -32,6 +34,8 @@ ITEMS  = [ 'wxAuiNotebook',
            'wxAuiTabLayoutInfo',
            'wxAuiDockLayoutInfo'
            ]
+
+DEPENDS = tools.getNonEtgFiles(INCLUDES)
 
 #---------------------------------------------------------------------------
 
@@ -161,6 +165,17 @@ inline bool operator==(const wxAuiTabContainerButton& a, const wxAuiTabContainer
             ])
     tools.fixWindowClass(c)
     module.addItem(c)
+
+    module.addPyCode("""\
+        if wx.Port == '__WXGTK__' and 'gtk2' in wx.PlatformInfo:
+            AuiNativeTabArt = AuiGtkTabArt
+        elif wx.Port == '__WXMSW__':
+            AuiNativeTabArt = AuiMSWTabArt
+        else:
+            AuiNativeTabArt = AuiGenericTabArt
+        """)
+
+    module.addInclude(INCLUDES)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
