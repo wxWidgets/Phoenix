@@ -57,6 +57,7 @@ def run():
     c = module.find('wxAuiTabContainer')
     tools.ignoreConstOverloads(c)
     c.find('GetPages').ignore()
+    c.find('SetArtProvider.art').transfer = True
 
     notebook_page_equality_code = """
 #include <wx/aui/auibook.h>

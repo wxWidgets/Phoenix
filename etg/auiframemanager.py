@@ -43,6 +43,7 @@ def run():
     c.find('CalculateHintRect').find('offset').default="wxPoint(0,0)"
     c.find('DrawHintRect').find('offset').default="wxPoint(0,0)"
     c.find('GetAllPanes').findOverload('', isConst=True).ignore()
+    c.find('SetArtProvider.art_provider').transfer = True
 
     c = module.find('wxAuiPaneInfo')
     module.addItem(
