@@ -14,55 +14,66 @@ from . import dispatcher
 from .version import VERSION
 
 
-if 'wxMSW' in wx.PlatformInfo:
-    FACES = { 'times'     : 'Times New Roman',
-              'mono'      : 'Courier New',
-              'helv'      : 'Arial',
-              'lucida'    : 'Lucida Console',
-              'other'     : 'Comic Sans MS',
-              'size'      : 10,
-              'lnsize'    : 8,
-              'backcol'   : '#FFFFFF',
-              'calltipbg' : '#FFFFB8',
-              'calltipfg' : '#404040',
-            }
+def get_faces():
+    
+    try:
+        is_dark = wx.SystemSettings.GetAppearance().IsDark()
+    except wx.PyNoAppError:
+        is_dark = False
+        
+    if 'wxMSW' in wx.PlatformInfo:
+        # Safely evaluate IsDark() inside a try-except fallback block
+        return { 
+            'times'     : 'Times New Roman',
+            'mono'      : 'Courier New',
+            'helv'      : 'Arial',
+            'lucida'    : 'Lucida Console',
+            'other'     : 'Comic Sans MS',
+            'size'      : 10,
+            'lnsize'    : 8,
+            'backcol'   : '#202020' if is_dark else '#FFFFFF',
+            'calltipbg' : '#2D2D2D' if is_dark else '#FFFFB8',
+            'calltipfg' : '#E0E0E0' if is_dark else '#404040',
+        }
 
-elif 'wxGTK' in wx.PlatformInfo and ('gtk2' in wx.PlatformInfo or
-                                     'gtk3' in wx.PlatformInfo):
-    FACES = { 'times'     : 'Serif',
-              'mono'      : 'Monospace',
-              'helv'      : 'Sans',
-              'other'     : 'new century schoolbook',
-              'size'      : 10,
-              'lnsize'    : 9,
-              'backcol'   : '#FFFFFF',
-              'calltipbg' : '#FFFFB8',
-              'calltipfg' : '#404040',
-            }
+    elif 'wxGTK' in wx.PlatformInfo and ('gtk2' in wx.PlatformInfo or 'gtk3' in wx.PlatformInfo):
+        return { 
+            'times'     : 'Serif',
+            'mono'      : 'Monospace',
+            'helv'      : 'Sans',
+            'other'     : 'new century schoolbook',
+            'size'      : 10,
+            'lnsize'    : 9,
+            'backcol'   : '#202020' if is_dark else '#FFFFFF',
+            'calltipbg' : '#2D2D2D' if is_dark else '#FFFFB8',
+            'calltipfg' : '#E0E0E0' if is_dark else '#404040',
+        }
 
-elif 'wxMac' in wx.PlatformInfo:
-    FACES = { 'times'     : 'Lucida Grande',
-              'mono'      : 'Monaco',
-              'helv'      : 'Geneva',
-              'other'     : 'new century schoolbook',
-              'size'      : 12,
-              'lnsize'    : 10,
-              'backcol'   : '#FFFFFF',
-              'calltipbg' : '#FFFFB8',
-              'calltipfg' : '#404040',
-            }
+    elif 'wxMac' in wx.PlatformInfo:
+        return { 
+            'times'     : 'Lucida Grande',
+            'mono'      : 'Monaco',
+            'helv'      : 'Geneva',
+            'other'     : 'new century schoolbook',
+            'size'      : 12,
+            'lnsize'    : 10,
+            'backcol'   : '#202020' if is_dark else '#FFFFFF',
+            'calltipbg' : '#2D2D2D' if is_dark else '#FFFFB8',
+            'calltipfg' : '#E0E0E0' if is_dark else '#404040',
+        }
 
-else: # GTK1, etc.
-    FACES = { 'times'     : 'Times',
-              'mono'      : 'Courier',
-              'helv'      : 'Helvetica',
-              'other'     : 'new century schoolbook',
-              'size'      : 12,
-              'lnsize'    : 10,
-              'backcol'   : '#FFFFFF',
-              'calltipbg' : '#FFFFB8',
-              'calltipfg' : '#404040',
-            }
+    else: # GTK1, etc.
+        return { 
+            'times'     : 'Times',
+            'mono'      : 'Courier',
+            'helv'      : 'Helvetica',
+            'other'     : 'new century schoolbook',
+            'size'      : 12,
+            'lnsize'    : 10,
+            'backcol'   : '#FFFFFF',
+            'calltipbg' : '#FFFFB8',
+            'calltipfg' : '#404040',
+        }
 
 
 class EditWindow(stc.StyledTextCtrl):
@@ -72,6 +83,7 @@ class EditWindow(stc.StyledTextCtrl):
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.CLIP_CHILDREN | wx.SUNKEN_BORDER):
         """Create EditWindow instance."""
+        self.FACES = get_faces()
         stc.StyledTextCtrl.__init__(self, parent, id, pos, size, style)
         self.__config()
         self.Bind(stc.EVT_STC_UPDATEUI, self.OnUpdateUI)
@@ -102,7 +114,7 @@ class EditWindow(stc.StyledTextCtrl):
         self.SetLexer(stc.STC_LEX_PYTHON)
         self.SetKeyWords(0, ' '.join(keyword.kwlist))
 
-        self.setStyles(FACES)
+        self.setStyles(self.FACES)
         self.SetViewWhiteSpace(False)
         self.SetTabWidth(4)
         self.SetUseTabs(False)
@@ -119,8 +131,8 @@ class EditWindow(stc.StyledTextCtrl):
         # Do we want to automatically pop up command argument help?
         self.autoCallTip = True
         self.callTipInsert = True
-        self.CallTipSetBackground(FACES['calltipbg'])
-        self.CallTipSetForeground(FACES['calltipfg'])
+        self.CallTipSetBackground(self.FACES['calltipbg'])
+        self.CallTipSetForeground(self.FACES['calltipfg'])
         self.SetWrapMode(False)
         try:
             self.SetEndAtLastLine(False)
@@ -151,7 +163,7 @@ class EditWindow(stc.StyledTextCtrl):
 
         # Built in styles
         self.StyleSetSpec(stc.STC_STYLE_LINENUMBER,
-                          "back:#C0C0C0,face:%(mono)s,size:%(lnsize)d" % FACES)
+                          "back:#C0C0C0,face:%(mono)s,size:%(lnsize)d" % faces)
         self.StyleSetSpec(stc.STC_STYLE_CONTROLCHAR,
                           "face:%(mono)s" % faces)
         self.StyleSetSpec(stc.STC_STYLE_BRACELIGHT,
