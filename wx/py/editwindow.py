@@ -14,7 +14,11 @@ from . import dispatcher
 from .version import VERSION
 
 
+import wx
+
 if 'wxMSW' in wx.PlatformInfo:
+    is_dark = wx.SystemSettings.GetAppearance().IsDark()
+
     FACES = { 'times'     : 'Times New Roman',
               'mono'      : 'Courier New',
               'helv'      : 'Arial',
@@ -22,9 +26,10 @@ if 'wxMSW' in wx.PlatformInfo:
               'other'     : 'Comic Sans MS',
               'size'      : 10,
               'lnsize'    : 8,
-              'backcol'   : '#FFFFFF',
-              'calltipbg' : '#FFFFB8',
-              'calltipfg' : '#404040',
+              # Conditional formatting for theme states
+              'backcol'   : '#202020' if is_dark else '#FFFFFF',
+              'calltipbg' : '#2D2D2D' if is_dark else '#FFFFB8',
+              'calltipfg' : '#E0E0E0' if is_dark else '#404040',
             }
 
 elif 'wxGTK' in wx.PlatformInfo and ('gtk2' in wx.PlatformInfo or
