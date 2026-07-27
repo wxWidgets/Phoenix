@@ -16,58 +16,68 @@ from .version import VERSION
 
 import wx
 
-if 'wxMSW' in wx.PlatformInfo:
-    is_dark = wx.SystemSettings.GetAppearance().IsDark()
+FACES = None
 
-    FACES = { 'times'     : 'Times New Roman',
-              'mono'      : 'Courier New',
-              'helv'      : 'Arial',
-              'lucida'    : 'Lucida Console',
-              'other'     : 'Comic Sans MS',
-              'size'      : 10,
-              'lnsize'    : 8,
-              # Conditional formatting for theme states
-              'backcol'   : '#202020' if is_dark else '#FFFFFF',
-              'calltipbg' : '#2D2D2D' if is_dark else '#FFFFB8',
-              'calltipfg' : '#E0E0E0' if is_dark else '#404040',
-            }
+def get_faces():
+    if 'wxMSW' in wx.PlatformInfo:
+        # Safely evaluate IsDark() inside a try-except fallback block
+        try:
+            is_dark = wx.SystemSettings.GetAppearance().IsDark()
+        except wx.PyNoAppError:
+            is_dark = False
 
-elif 'wxGTK' in wx.PlatformInfo and ('gtk2' in wx.PlatformInfo or
-                                     'gtk3' in wx.PlatformInfo):
-    FACES = { 'times'     : 'Serif',
-              'mono'      : 'Monospace',
-              'helv'      : 'Sans',
-              'other'     : 'new century schoolbook',
-              'size'      : 10,
-              'lnsize'    : 9,
-              'backcol'   : '#FFFFFF',
-              'calltipbg' : '#FFFFB8',
-              'calltipfg' : '#404040',
-            }
+        return { 
+            'times'     : 'Times New Roman',
+            'mono'      : 'Courier New',
+            'helv'      : 'Arial',
+            'lucida'    : 'Lucida Console',
+            'other'     : 'Comic Sans MS',
+            'size'      : 10,
+            'lnsize'    : 8,
+            # Conditional formatting safely evaluated at runtime
+            'backcol'   : '#202020' if is_dark else '#FFFFFF',
+            'calltipbg' : '#2D2D2D' if is_dark else '#FFFFB8',
+            'calltipfg' : '#E0E0E0' if is_dark else '#404040',
+        }
 
-elif 'wxMac' in wx.PlatformInfo:
-    FACES = { 'times'     : 'Lucida Grande',
-              'mono'      : 'Monaco',
-              'helv'      : 'Geneva',
-              'other'     : 'new century schoolbook',
-              'size'      : 12,
-              'lnsize'    : 10,
-              'backcol'   : '#FFFFFF',
-              'calltipbg' : '#FFFFB8',
-              'calltipfg' : '#404040',
-            }
+    elif 'wxGTK' in wx.PlatformInfo and ('gtk2' in wx.PlatformInfo or 'gtk3' in wx.PlatformInfo):
+        return { 
+            'times'     : 'Serif',
+            'mono'      : 'Monospace',
+            'helv'      : 'Sans',
+            'other'     : 'new century schoolbook',
+            'size'      : 10,
+            'lnsize'    : 9,
+            'backcol'   : '#FFFFFF',
+            'calltipbg' : '#FFFFB8',
+            'calltipfg' : '#404040',
+        }
 
-else: # GTK1, etc.
-    FACES = { 'times'     : 'Times',
-              'mono'      : 'Courier',
-              'helv'      : 'Helvetica',
-              'other'     : 'new century schoolbook',
-              'size'      : 12,
-              'lnsize'    : 10,
-              'backcol'   : '#FFFFFF',
-              'calltipbg' : '#FFFFB8',
-              'calltipfg' : '#404040',
-            }
+    elif 'wxMac' in wx.PlatformInfo:
+        return { 
+            'times'     : 'Lucida Grande',
+            'mono'      : 'Monaco',
+            'helv'      : 'Geneva',
+            'other'     : 'new century schoolbook',
+            'size'      : 12,
+            'lnsize'    : 10,
+            'backcol'   : '#FFFFFF',
+            'calltipbg' : '#FFFFB8',
+            'calltipfg' : '#404040',
+        }
+
+    else: # GTK1, etc.
+        return { 
+            'times'     : 'Times',
+            'mono'      : 'Courier',
+            'helv'      : 'Helvetica',
+            'other'     : 'new century schoolbook',
+            'size'      : 12,
+            'lnsize'    : 10,
+            'backcol'   : '#FFFFFF',
+            'calltipbg' : '#FFFFB8',
+            'calltipfg' : '#404040',
+        }
 
 
 class EditWindow(stc.StyledTextCtrl):
@@ -77,6 +87,8 @@ class EditWindow(stc.StyledTextCtrl):
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.CLIP_CHILDREN | wx.SUNKEN_BORDER):
         """Create EditWindow instance."""
+        global FACES
+        FACES = get_faces()
         stc.StyledTextCtrl.__init__(self, parent, id, pos, size, style)
         self.__config()
         self.Bind(stc.EVT_STC_UPDATEUI, self.OnUpdateUI)

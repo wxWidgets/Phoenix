@@ -595,7 +595,7 @@ class InspectionInfoPanel(wx.stc.StyledTextCtrl):
     def __init__(self, *args, **kw):
         wx.stc.StyledTextCtrl.__init__(self, *args, **kw)
 
-        from wx.py.editwindow import FACES
+        FACES = wx.py.editwindow.get_faces()
         self.StyleSetSpec(wx.stc.STC_STYLE_DEFAULT,
                           "face:%(mono)s,size:%(size)d,back:%(backcol)s" % FACES)
         self.StyleClearAll()
