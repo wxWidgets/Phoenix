@@ -1596,7 +1596,7 @@ def cmd_build_wx(options, args):
         # for shared libraries in a folder relative to the loading binary's
         # location. Here we'll use just $ORIGIN so it should look in the same
         # folder as the wxPython extension modules.
-        os.environ['LD_RUN_PATH'] = '$ORIGIN'
+        build_options.append('--set_rpath_origin')
 
     try:
         # Import and run the wxWidgets build script
