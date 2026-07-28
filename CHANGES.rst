@@ -12,16 +12,69 @@ wxPython Changelog
 
 
 
-4.2.5
+4.3.0
 ------
-* (unreleased)
+* 27-Jul-2026
 
-PyPI:   https://pypi.python.org/pypi/wxPython/4.2.5
+PyPI:   https://pypi.python.org/pypi/wxPython/4.3.0
 Extras: https://extras.wxPython.org/wxPython4/extras/
-Pip:    ``pip install wxPython==4.2.5``
+Pip:    ``pip install wxPython==4.3.0``
+
+Starting with this release wxPython has switched to tracking the wxWidgets
+master branch (version 3.3.x) for the wxWidgets source code, which wxPython is
+built upon, and which is included in the wxPython source archives.
+
+Do note that the wxWidgets 3.3.x releases are API/ABI unstable, so there may
+be API changes/instability between wxPython 4.3.x releases.
 
 New and improved in this release:
+* Fix wx.svg to work with cython 3.1 generated code.
 
+* Populate wx.svg with _nanosvg enum values
+
+* Bugfix in hypertreelist. Add missing attribute _x_maincol to constructor of TreeListMainWindow.
+
+* Replace md5 with sha256 when validating downloaded waf and doxygen build tools
+
+* Migrate to build with wxWidgets 3.3 branch
+
+* Fix compile warning in ListClass __contains__ methods
+
+* Fix build with setuptools 81+
+
+* Modernize/update documentation theme
+
+* Flatmenu: remove the unnecessary "mcPopupWindow" class used only for MacOS
+
+* Add several methods to FlatMenu and FlatMenuItem to mimic wx better
+
+* Make flatmenu's repositioning logic multi-monitor aware
+
+* Remove no-op code from aui for deleting panes created referring to inexistent windows that were created in the process of loading a perspective. Rationale: All panes that refer to inexistent windows created when loading a perspective that is otherwise valid are already removed during update.
+
+* Fix SuperToolTip window too small when footerBmp is used
+
+* Fix incorrect module paths in TipProvider documentation
+
+* Expose MSWEnableDarkMode/wxDarkModeSettings on all platforms at compile time
+
+* show CB_READONLY in BitmapComboBox demo
+
+* Set rpath in link arguments rather than LD_RUN_PATH
+
+* Use builtin libwebp on macOS wxWidgets builds
+
+* Lower macOS deployment target to 10.10 on Intel
+
+* Enable --cairo option when building wheels on Windows
+
+* Add cairo build for Windows ARM64
+
+* Fix unbalanced Freeze/Thaw in ButtonPanel
+
+* Remove support for outdated wxPython version in ButtonPanel
+
+* Add missing transfer attributes for SetArtProvider
 
 
 
