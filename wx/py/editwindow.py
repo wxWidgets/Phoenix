@@ -14,10 +14,6 @@ from . import dispatcher
 from .version import VERSION
 
 
-import wx
-
-FACES = None
-
 def get_faces():
     if 'wxMSW' in wx.PlatformInfo:
         # Safely evaluate IsDark() inside a try-except fallback block
