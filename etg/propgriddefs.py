@@ -32,6 +32,15 @@ def run():
     # customizing the generated code and docstrings.
     module.find('wxPGSortCallback').ignore()
 
+    module.addPyCode(
+        code="""\
+        PG_LABEL = "@!"
+        PG_LABEL_STRING = PG_LABEL
+        PG_NULL_BITMAP = wx.NullBitmap
+        PG_COLOUR_BLACK = wx.BLACK
+        PG_DEFAULT_IMAGE_SIZE = wx.Size(-1, -1)
+        """,
+        order=15)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
