@@ -12,6 +12,23 @@ wxPython Changelog
 
 
 
+4.3.1
+------
+* 29-Jul-2026
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.3.1
+Extras: https://extras.wxPython.org/wxPython4/extras/
+Pip:    ``pip install wxPython==4.3.1``
+
+This is a quick follow-up release to v4.3.0 to fix a couple of significant bugs.
+
+New and improved in this release:
+* Fix setting RPATH to $ORIGIN when building wxWidgets on Linux (fixes wx.richtext import)
+
+* Restore removed wx.propgrid defines
+
+
+
 4.3.0
 ------
 * 27-Jul-2026
