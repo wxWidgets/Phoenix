@@ -26,9 +26,25 @@ class GridWithLabelRenderersMixin(object):
     how the cell renderers work in the main Grid class.
     """
     def __init__(self):
-        self.GetGridRowLabelWindow().Bind(wx.EVT_PAINT, self._onPaintRowLabels)
-        self.GetGridColLabelWindow().Bind(wx.EVT_PAINT, self._onPaintColLabels)
-        self.GetGridCornerLabelWindow().Bind(wx.EVT_PAINT, self._onPaintCornerLabel)
+        # Cache the label windows instead of relying on evt.GetEventObject() in the paint
+        # handlers below. Each handler is bound to exactly one of these windows, so the
+        # window is already known and there is no need to ask SIP to resolve the event's
+        # wxObject* back to a Python wrapper. That resolution is a lookup by C++ pointer
+        # address in SIP's object map, and the map can hand back a stale wrapper of the
+        # wrong Python type if some other, unrelated wxObject was deleted without SIP
+        # being told and a new C++ object happens to be allocated at the same freed
+        # address. Confirmed at least one concrete source of such stale wrappers: unlike
+        # wx.Frame, wx.MenuBar and wx.Menu, a wx.MenuItem's SIP wrapper is not marked
+        # deleted when the item is destroyed as part of its owning wxMenuBar's teardown
+        # (~wxMenuBase's wxClearList()) -- touching the stale wrapper afterwards
+        # dereferences freed memory and crashes the process outright. See
+        # https://discuss.wxpython.org/t/typeerror-when-using-gridwithlabelrenderersmixin/35137
+        self._rowLabelWindow = self.GetGridRowLabelWindow()
+        self._colLabelWindow = self.GetGridColLabelWindow()
+        self._cornerLabelWindow = self.GetGridCornerLabelWindow()
+        self._rowLabelWindow.Bind(wx.EVT_PAINT, self._onPaintRowLabels)
+        self._colLabelWindow.Bind(wx.EVT_PAINT, self._onPaintColLabels)
+        self._cornerLabelWindow.Bind(wx.EVT_PAINT, self._onPaintCornerLabel)
 
         self._rowRenderers = dict()
         self._colRenderers = dict()
@@ -93,7 +109,9 @@ class GridWithLabelRenderersMixin(object):
     #----------------------------------------------------------------
 
     def _onPaintRowLabels(self, evt):
-        window = evt.GetEventObject()
+        # Deliberately using the cached window instead of evt.GetEventObject(); see the
+        # comment in __init__.
+        window = self._rowLabelWindow
         dc = wx.PaintDC(window)
         gridWindow = self.GetGridWindow()
 
@@ -119,7 +137,9 @@ class GridWithLabelRenderersMixin(object):
 
 
     def _onPaintColLabels(self, evt):
-        window = evt.GetEventObject()
+        # Deliberately using the cached window instead of evt.GetEventObject(); see the
+        # comment in __init__.
+        window = self._colLabelWindow
         dc = wx.PaintDC(window)
         gridWindow = self.GetGridWindow()
 
@@ -145,7 +165,9 @@ class GridWithLabelRenderersMixin(object):
 
 
     def _onPaintCornerLabel(self, evt):
-        window = evt.GetEventObject()
+        # Deliberately using the cached window instead of evt.GetEventObject(); see the
+        # comment in __init__.
+        window = self._cornerLabelWindow
         dc = wx.PaintDC(window)
         w, h = window.GetSize()
         rect = wx.Rect(0, 0, w, h)
