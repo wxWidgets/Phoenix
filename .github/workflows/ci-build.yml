@@ -238,6 +238,11 @@ jobs:
           cd dist
           pip install wxpython-*.whl
           python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
+          libs="adv aui dataview glcanvas grid html2 html media propgrid ribbon richtext siplib stc xml xrc"
+          for lib in $libs; do
+            echo $lib
+            python -c "import wx.$lib"
+          done
           pip uninstall --yes wxPython
 
       - name: Save wheel as job artifact

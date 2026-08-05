@@ -212,6 +212,8 @@ def main(wxDir, args):
         "jom"           : (False, "Use jom.exe instead of nmake for MSW builds."),
         "no_dpi_aware"  : (False, "Don't use the DPI_AWARE_MANIFEST."),
         "no_msedge"     : (False, "Do not include the MS Edge backend for wx.html2.WebView. (Windows only)"),
+        "set_rpath_origin"
+                        : (False, "Set RPATH to $ORIGIN when building wxWidgets libraries"),
     }
 
     parser = optparse.OptionParser(usage="usage: %prog [options]", version="%prog 1.0")
@@ -369,6 +371,10 @@ def main(wxDir, args):
         if "CONFIG_SITE" in os.environ:
             env = dict(os.environ)
             del env["CONFIG_SITE"]
+
+        if options.set_rpath_origin:
+            configure_opts.append("--disable-rpath")
+            configure_opts.append(r"LDFLAGS='-Wl,-rpath,\$$ORIGIN'")
 
         print("Configure options: " + repr(configure_opts))
         wxBuilder = builder.AutoconfBuilder()
