@@ -485,6 +485,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         defValueMap = { 'true':  'True',
                         'false': 'False',
                         'NULL':  'None',
+                        'nullptr': 'None',
                         'wxString()': '""',
                         'wxArrayString()' : '[]',
                         'wxArrayInt()' : '[]',
