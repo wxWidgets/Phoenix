@@ -45,6 +45,7 @@ jobs:
 
     outputs:
       VERSION: ${{ steps.generate.outputs.version }}
+      VER_FLAGS: ${{ steps.generate.outputs.ver_flags }}
 
     steps:
       - name: Checkout repo
@@ -72,6 +73,8 @@ jobs:
           python build.py setrev dox etg sip --nodoc
           VERSION=$(python build.py --quiet version)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          VER_FLAGS=$(python -c "from buildtools.version import VER_FLAGS; print(VER_FLAGS)")
+          echo "ver_flags=$VER_FLAGS" >> "$GITHUB_OUTPUT"
 
       - name: Create source distribution (sdist)
         run: |
@@ -360,7 +363,7 @@ jobs:
 
   create-snapshot-prerelease:
     name: Create snapshot prerelease on GitHub
-    if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/')
+    if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/') && needs.build-source-dist.outputs.VER_FLAGS != ''
     needs: [build-source-dist, build-wheels]
     runs-on: ubuntu-24.04
 
