@@ -385,3 +385,19 @@ jobs:
           --notes "Automated snapshot build from commit ${{ github.sha }}"
         gh release upload "$VERSION" dist/* \
           --repo '${{ github.repository }}'
+    - name: Prune old snapshot prereleases
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        mapfile -t old_releases < <(gh release list \
+          --repo '${{ github.repository }}' \
+          --limit 1000 \
+          --json tagName,isPrerelease,createdAt \
+          --jq '[.[] | select(.isPrerelease)] | sort_by(.createdAt) | reverse | .[20:][].tagName')
+        for tag in "${old_releases[@]}"; do
+          echo "Deleting old prerelease: $tag"
+          gh release delete "$tag" \
+            --repo '${{ github.repository }}' \
+            --yes \
+            --cleanup-tag
+        done
