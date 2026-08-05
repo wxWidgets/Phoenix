@@ -18,7 +18,7 @@ def get_faces():
     
     try:
         is_dark = wx.SystemSettings.GetAppearance().IsDark()
-    except wx.PyNoAppError:
+    except:
         is_dark = False
         
     if 'wxMSW' in wx.PlatformInfo:
