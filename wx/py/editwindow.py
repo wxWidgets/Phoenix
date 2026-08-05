@@ -15,13 +15,14 @@ from .version import VERSION
 
 
 def get_faces():
+    
+    try:
+        is_dark = wx.SystemSettings.GetAppearance().IsDark()
+    except wx.PyNoAppError:
+        is_dark = False
+        
     if 'wxMSW' in wx.PlatformInfo:
         # Safely evaluate IsDark() inside a try-except fallback block
-        try:
-            is_dark = wx.SystemSettings.GetAppearance().IsDark()
-        except wx.PyNoAppError:
-            is_dark = False
-
         return { 
             'times'     : 'Times New Roman',
             'mono'      : 'Courier New',
