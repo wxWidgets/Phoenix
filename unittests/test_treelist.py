@@ -15,7 +15,6 @@ class treelist_Tests(wtc.WidgetTestCase):
         wx.dataview.TL_3STATE
         wx.dataview.TL_USER_3STATE
         wx.dataview.TL_DEFAULT_STYLE
-        wx.dataview.TL_STYLE_MASK
 
         wx.dataview.EVT_TREELIST_SELECTION_CHANGED
         wx.dataview.EVT_TREELIST_ITEM_EXPANDING
