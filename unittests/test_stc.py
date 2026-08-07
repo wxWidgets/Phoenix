@@ -173,7 +173,6 @@ class stc_Tests(wtc.WidgetTestCase):
         stc.wxEVT_STC_SAVEPOINTREACHED
         stc.wxEVT_STC_SAVEPOINTLEFT
         stc.wxEVT_STC_ROMODIFYATTEMPT
-        stc.wxEVT_STC_KEY
         stc.wxEVT_STC_DOUBLECLICK
         stc.wxEVT_STC_UPDATEUI
         stc.wxEVT_STC_MODIFIED
@@ -182,7 +181,6 @@ class stc_Tests(wtc.WidgetTestCase):
         stc.wxEVT_STC_NEEDSHOWN
         stc.wxEVT_STC_PAINTED
         stc.wxEVT_STC_USERLISTSELECTION
-        stc.wxEVT_STC_URIDROPPED
         stc.wxEVT_STC_DWELLSTART
         stc.wxEVT_STC_DWELLEND
         stc.wxEVT_STC_START_DRAG
@@ -207,7 +205,6 @@ class stc_Tests(wtc.WidgetTestCase):
         stc.EVT_STC_SAVEPOINTREACHED
         stc.EVT_STC_SAVEPOINTLEFT
         stc.EVT_STC_ROMODIFYATTEMPT
-        stc.EVT_STC_KEY
         stc.EVT_STC_DOUBLECLICK
         stc.EVT_STC_UPDATEUI
         stc.EVT_STC_MODIFIED
@@ -216,7 +213,6 @@ class stc_Tests(wtc.WidgetTestCase):
         stc.EVT_STC_NEEDSHOWN
         stc.EVT_STC_PAINTED
         stc.EVT_STC_USERLISTSELECTION
-        stc.EVT_STC_URIDROPPED
         stc.EVT_STC_DWELLSTART
         stc.EVT_STC_DWELLEND
         stc.EVT_STC_START_DRAG
