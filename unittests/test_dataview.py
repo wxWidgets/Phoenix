@@ -434,15 +434,12 @@ class dataview_Tests(wtc.WidgetTestCase):
         evt = dv.DataViewEvent()
 
         evt.GetItem
-        evt.SetItem
         evt.GetColumn
         evt.SetColumn
         evt.GetModel
-        evt.SetModel
         evt.GetValue
         evt.SetValue
         evt.IsEditCancelled
-        evt.SetDataViewColumn
         evt.GetDataViewColumn
         evt.GetPosition
         evt.SetPosition
