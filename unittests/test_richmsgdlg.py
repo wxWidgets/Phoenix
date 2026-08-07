@@ -1,20 +1,39 @@
+import ctypes
 import unittest
 from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
 
+def _closeMSWTaskDialog(title, attempt=0):
+    # Native TaskDialogIndirect() on MSW isn't a real wx modal dialog, so
+    # EndModal() asserts. Post WM_CLOSE to it instead.
+    WM_CLOSE = 0x0010
+    hwnd = ctypes.windll.user32.FindWindowW(None, title)
+    if hwnd:
+        ctypes.windll.user32.PostMessageW(hwnd, WM_CLOSE, 0, 0)
+    elif attempt < 20:
+        wx.CallLater(50, _closeMSWTaskDialog, title, attempt + 1)
+
+
+def _scheduleDialogClose(dlg, title):
+    if 'wxMSW' in wx.PlatformInfo:
+        wx.CallLater(250, _closeMSWTaskDialog, title)
+    else:
+        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+
+
 class richmsgdlg_Tests(wtc.WidgetTestCase):
 
     def test_richmsgdlg1(self):
         dlg = wx.RichMessageDialog(None, 'Message', 'Caption')
-        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+        _scheduleDialogClose(dlg, 'Caption')
         dlg.ShowModal()
         dlg.Destroy()
 
     def test_richmsgdlg2(self):
         dlg = wx.RichMessageDialog(self.frame, 'Message', 'Caption')
-        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+        _scheduleDialogClose(dlg, 'Caption')
         dlg.ShowModal()
         dlg.Destroy()
 
@@ -35,7 +54,7 @@ class richmsgdlg_Tests(wtc.WidgetTestCase):
         self.assertEqual(dlg.CheckBoxText, "Checkbox")
         self.assertEqual(dlg.DetailedText, "Detailed Text")
 
-        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+        _scheduleDialogClose(dlg, 'Caption')
         dlg.ShowModal()
         dlg.Destroy()
 
