@@ -15,6 +15,7 @@ class iconbndl_Tests(wtc.WidgetTestCase):
         ib.AddIcon(icoFile)
         ib.AddIcon(wx.Icon(icoFile))
         i = ib.GetIcon()
+        i2 = ib.Icon
 
     def test_iconbndl2(self):
         ib = wx.IconBundle(icoFile)
@@ -27,7 +28,6 @@ class iconbndl_Tests(wtc.WidgetTestCase):
     def test_iconbndl4(self):
         ib = wx.IconBundle()
 
-        ib.Icon
         ib.IconCount
 
         wx.NullIconBundle
