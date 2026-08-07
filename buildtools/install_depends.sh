@@ -36,7 +36,7 @@ case $(uname -s) in
                 focal|jammy)
                     extra_deps="$extra_deps libwebkit2gtk-4.0-dev"
                     ;;
-                noble)
+                noble|resolute)
                     extra_deps="$extra_deps libwebkit2gtk-4.1-dev"
                     ;;
             esac
