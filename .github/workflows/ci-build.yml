@@ -264,7 +264,11 @@ jobs:
         run: |
           cd dist
           f=$(echo wxpython-${{ env.VERSION }}-*.whl)
-          mv "$f" "${f/wxpython-${{ env.VERSION }}-/wxpython-${{ env.VERSION }}+${{ steps.init.outputs.os_tag }}-}"
+          sep='+'
+          if [[ "${{ env.VERSION }}" == *+* ]]; then
+              sep='.'
+          fi
+          mv "$f" "${f/wxpython-${{ env.VERSION }}-/wxpython-${{ env.VERSION }}${sep}${{ steps.init.outputs.os_tag }}-}"
 
       - name: Simple smoke test
         run: |
