@@ -12,8 +12,6 @@ class propgridprops_Tests(wtc.WidgetTestCase):
 
 
     def test_propgridprops02(self):
-        pg.PG_PROP_PASSWORD
-
         p1 = pg.StringProperty()
         p2 = pg.StringProperty('label', 'name', 'value')
 
@@ -22,10 +20,6 @@ class propgridprops_Tests(wtc.WidgetTestCase):
 
 
     def test_propgridprops03(self):
-        pg.PG_PROPERTY_VALIDATION_ERROR_MESSAGE
-        pg.PG_PROPERTY_VALIDATION_SATURATE
-        pg.PG_PROPERTY_VALIDATION_WRAP
-
         o = pg.NumericPropertyValidator(pg.NumericPropertyValidator.Signed)
 
         pg.NumericPropertyValidator.Signed
@@ -47,14 +41,10 @@ class propgridprops_Tests(wtc.WidgetTestCase):
 
 
     def test_propgridprops07(self):
-        pg.PG_PROP_USE_CHECKBOX
-        pg.PG_PROP_USE_DCC
         p = pg.BoolProperty()
 
 
     def test_propgridprops08(self):
-        pg.PG_PROP_STATIC_CHOICES
-
         p1 = pg.EnumProperty()
         p2 = pg.EnumProperty(label='label', name='name',
                              labels=['one', 'two', 'three'],
@@ -75,26 +65,13 @@ class propgridprops_Tests(wtc.WidgetTestCase):
                               values=[1, 2, 3])
 
 
-    @unittest.skip('class was removed?')
-    def test_propgridprops11(self):
-        da = pg.PGFileDialogAdapter()
-
-
     def test_propgridprops12(self):
-        pg.PG_PROP_SHOW_FULL_FILENAME
-
         p1 = pg.FileProperty()
         value = '/foo/bar/value'
         p2 = pg.FileProperty('label', 'name', value)
 
         fn = p2.GetFileName()
         assert fn.replace(os.path.sep, '/') == value
-
-
-    @unittest.skip('class was removed?')
-    def test_propgridprops13(self):
-        pg.PG_PROP_NO_ESCAPE
-        da = pg.PGLongStringDialogAdapter()
 
 
     def test_propgridprops14(self):
