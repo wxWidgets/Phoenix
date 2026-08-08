@@ -166,6 +166,8 @@ jobs:
           build_opts=$WXPYTHON_BUILD_ARGS
           if [ ${{ runner.os }} == 'Linux' ]; then
               short_name=linux
+              os_tag="ubuntu$(echo '${{ matrix.os }}' | sed -E 's/[^0-9]//g')"
+              echo "os_tag=$os_tag" >> "$GITHUB_OUTPUT"
           elif [ ${{ matrix.os }} == macos-15-intel ]; then
               short_name=macos
               echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
@@ -255,6 +257,15 @@ jobs:
               cibuildwheel dist/wxpython-${{ env.VERSION }}.tar.gz --output-dir dist
           fi
 
+      - name: Tag Linux wheel filename with OS to avoid collisions
+        # Not manylinux, so it's distro-specific; tag the filename with the
+        # distro to avoid collisions across the OS matrix.
+        if: runner.os == 'Linux'
+        run: |
+          cd dist
+          f=$(echo wxpython-${{ env.VERSION }}-*.whl)
+          mv "$f" "${f/wxpython-${{ env.VERSION }}-/wxpython-${{ env.VERSION }}+${{ steps.init.outputs.os_tag }}-}"
+
       - name: Simple smoke test
         run: |
           cd dist
@@ -269,11 +280,18 @@ jobs:
 
       - name: Save wheel as job artifact
         uses: actions/upload-artifact@v7
-        # Just Windows and MacOS for now, all we care about for Linux at this
-        # point is that the build was successful.
         if: runner.os != 'Linux'
         with:
           name: wxPython-wheel-${{ steps.init.outputs.canonical_id }}
+          path: dist/wxpython-*.whl
+
+      - name: Save Linux wheel as job artifact
+        uses: actions/upload-artifact@v7
+        # Not PEP compliant, so name it outside the "wxPython-*" pattern to
+        # keep it out of the PyPI publish job (still grabbed for snapshots).
+        if: runner.os == 'Linux'
+        with:
+          name: linux-wheel-${{ steps.init.outputs.os_tag }}-py${{ matrix.python-version }}-${{ matrix.architecture }}
           path: dist/wxpython-*.whl
 
   build-documentation:
