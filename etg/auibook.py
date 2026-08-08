@@ -103,6 +103,25 @@ inline bool operator==(const wxAuiTabContainerButton& a, const wxAuiTabContainer
     c.find('GetBestTabCtrlSize').ignore()
     c.find('ShowDropDown').ignore()
 
+    # Replace wxAuiNativeTabArt TypedefDef with ClassDef
+    c = module.find("wxAuiNativeTabArt")
+    assert isinstance(c, etgtools.TypedefDef)
+    module.items.remove(c)
+    c = etgtools.ClassDef(
+        name="wxAuiNativeTabArt",
+        bases=["wxAuiGenericTabArt"],
+        briefDoc=c.briefDoc,
+        items=[
+            etgtools.MethodDef(
+                name="wxAuiNativeTabArt",
+                classname="wxAuiNativeTabArt",
+                isCtor=True,
+                items=[],
+            ),
+        ]
+    )
+    module.addItem(c)
+
     c = module.find('wxAuiNotebookEvent')
     tools.fixEventClass(c)
     module.addPyCode("""\
