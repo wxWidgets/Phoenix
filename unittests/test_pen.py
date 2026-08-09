@@ -90,8 +90,6 @@ class pen_Tests(wtc.WidgetTestCase):
         wx.PENSTYLE_DOT_DASH
         wx.PENSTYLE_USER_DASH
         wx.PENSTYLE_TRANSPARENT
-        wx.PENSTYLE_STIPPLE_MASK_OPAQUE
-        wx.PENSTYLE_STIPPLE_MASK
         wx.PENSTYLE_STIPPLE
         wx.PENSTYLE_BDIAGONAL_HATCH
         wx.PENSTYLE_CROSSDIAG_HATCH
