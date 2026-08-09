@@ -25,10 +25,6 @@ class icon_Tests(wtc.WidgetTestCase):
         i.Height
         i.Handle
 
-        i.SetDepth(32)
-        i.SetWidth(32)
-        i.SetHeight(32)
-
 
 #---------------------------------------------------------------------------
 
