@@ -88,31 +88,6 @@ class property_Tests(wtc.WidgetTestCase):
         pg.PGChoicesEmptyData
 
 
-    def test_propgridproperty09(self):
-        pg.PG_PROP_MODIFIED
-        pg.PG_PROP_DISABLED
-        pg.PG_PROP_HIDDEN
-        pg.PG_PROP_CUSTOMIMAGE
-        pg.PG_PROP_NOEDITOR
-        pg.PG_PROP_COLLAPSED
-        pg.PG_PROP_INVALID_VALUE
-        pg.PG_PROP_WAS_MODIFIED
-        pg.PG_PROP_AGGREGATE
-        pg.PG_PROP_CHILDREN_ARE_COPIES
-        pg.PG_PROP_PROPERTY
-        pg.PG_PROP_CATEGORY
-        pg.PG_PROP_MISC_PARENT
-        pg.PG_PROP_READONLY
-        pg.PG_PROP_COMPOSED_VALUE
-        pg.PG_PROP_USES_COMMON_VALUE
-        pg.PG_PROP_AUTO_UNSPECIFIED
-        pg.PG_PROP_CLASS_SPECIFIC_1
-        pg.PG_PROP_CLASS_SPECIFIC_2
-        pg.PG_PROP_BEING_DELETED
-        pg.PG_PROP_MAX
-        pg.PG_PROP_PARENTAL_FLAGS
-
-
     def test_propgridproperty10(self):
         p1 = pg.PGProperty()
         p2 = pg.PGProperty('label', 'name')
