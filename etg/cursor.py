@@ -90,6 +90,17 @@ def run():
     module.addPyCode('StockCursor = wx.deprecated(Cursor, "Use Cursor instead.")')
     module.addPyCode('CursorFromImage = wx.deprecated(Cursor, "Use Cursor instead.")')
 
+    # wxCursorBundle(const wxCursor&) exists in the real header but is
+    # undocumented, so doxygen/etg never sees it. Add it by hand so a
+    # Cursor can still be used where a CursorBundle is expected.
+    c = module.find('wxCursorBundle')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addCppCtor('(const wxCursor& cursor)',
+        doc="Construct a CursorBundle from a single Cursor.",
+        body="""\
+            return new wxCursorBundle(*cursor);
+            """)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
