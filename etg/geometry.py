@@ -110,6 +110,10 @@ def run():
     c.find('Inflate').ignore()
     c.find('Deflate').ignore()
 
+    # new in 3.3.0, ignore since its auto-conversion shadows and corrupts
+    # the float-sequence ctor. Use wx.Rect2D(*aRect) instead.
+    c.find('wxRect2DDouble').findOverload('wxRect &').ignore()
+
     c.convertFromPyObject = tools.convertFourDoublesTemplate('wxRect2DDouble')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
