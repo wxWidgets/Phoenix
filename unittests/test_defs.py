@@ -19,7 +19,7 @@ class defs_Tests(wtc.WidgetTestCase):
         # was done right.
         self.assertEqual(wx.VSCROLL, -2147483648)
         self.assertEqual(wx.CANCEL_DEFAULT, -2147483648)
-        self.assertEqual(wx.WINDOW_STYLE_MASK, -65536)
+        self.assertEqual(wx.WINDOW_STYLE_MASK, -1114112)
 
 
 #---------------------------------------------------------------------------
