@@ -39,24 +39,6 @@ class propgrid_Tests(wtc.WidgetTestCase):
         pg.PG_EX_NO_TOOLBAR_DIVIDER
         pg.PG_EX_TOOLBAR_SEPARATOR
 
-        pg.PG_VFB_STAY_IN_PROPERTY
-        pg.PG_VFB_BEEP
-        pg.PG_VFB_MARK_CELL
-        pg.PG_VFB_SHOW_MESSAGE
-        pg.PG_VFB_SHOW_MESSAGEBOX
-        pg.PG_VFB_SHOW_MESSAGE_ON_STATUSBAR
-        pg.PG_VFB_DEFAULT
-
-        pg.PG_ACTION_INVALID
-        pg.PG_ACTION_NEXT_PROPERTY
-        pg.PG_ACTION_PREV_PROPERTY
-        pg.PG_ACTION_EXPAND_PROPERTY
-        pg.PG_ACTION_COLLAPSE_PROPERTY
-        pg.PG_ACTION_CANCEL_EDIT
-        pg.PG_ACTION_EDIT
-        pg.PG_ACTION_PRESS_BUTTON
-        pg.PG_ACTION_MAX
-
         pg.PG_DEFAULT_STYLE
         pg.PGMAN_DEFAULT_STYLE
 
