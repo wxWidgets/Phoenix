@@ -85,6 +85,8 @@ class BitmapTests(wtc.WidgetTestCase):
     def test_BitmapMask(self):
         img = wx.Image(pngFile)
         img = img.ConvertToMono(0,0,0)
+        if img.HasAlpha():
+            img.ClearAlpha()
         bmp = wx.Bitmap(img, 1)
         m = wx.Mask()
         m = wx.Mask(bmp)
@@ -95,6 +97,8 @@ class BitmapTests(wtc.WidgetTestCase):
     def test_BitmapMaskWithPalette(self):
         img = wx.Image(pngFile)
         img = img.ConvertToMono(0,0,0)
+        if img.HasAlpha():
+            img.ClearAlpha()
         bmp = wx.Bitmap(img, 1)
         rgb = bytearray(range(256))
         pal = wx.Palette(rgb, rgb, rgb)
