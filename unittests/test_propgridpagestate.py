@@ -13,7 +13,6 @@ class propgridpagestate_Tests(wtc.WidgetTestCase):
 
 
     def test_propgridpagestate02(self):
-        ib = pg.PropertyGridIteratorBase()
         ii = pg.PropertyGridIterator()
 
 
