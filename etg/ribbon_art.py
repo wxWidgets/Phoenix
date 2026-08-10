@@ -7,6 +7,8 @@
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
+import copy
+
 import etgtools
 import etgtools.tweaker_tools as tools
 
@@ -33,12 +35,14 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    baseArtProvider = module.find('wxRibbonArtProvider')
+
     for klass in ['wxRibbonArtProvider',
                   'wxRibbonMSWArtProvider',
                   'wxRibbonAUIArtProvider']:
         c = module.find(klass)
         assert isinstance(c, etgtools.ClassDef)
-        
+
         if c.findItem('Clone'):
             c.find('Clone').factory = True
         else:
@@ -54,6 +58,13 @@ def run():
             etgtools.appendText(m.detailedDoc,
                 ".. note:: The Python version of this method returns the three"
                 "   scheme colours as a tuple of :class:`wx.Colour` objects.")
+
+        if klass == 'wxRibbonMSWArtProvider':
+            p = copy.deepcopy(baseArtProvider)
+            for m in p.allItems():
+                if isinstance(m, etgtools.MethodDef) and m.isPureVirtual and m.name != 'Clone':
+                    m.isPureVirtual = False
+                    c.addItem(m)
 
 
     module.addPyCode("""\
