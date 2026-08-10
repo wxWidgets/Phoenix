@@ -457,7 +457,7 @@ def makeOptionParser():
         ("x64",            (False, "Use and build for the 64bit version of Python on Windows")),
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
         ("pytest_timeout", ("0",   "Timeout, in seconds, for stopping stuck test cases. (Currently not working as expected, so disabled by default.)")),
-        ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
+        ("pytest_jobs",    ("",    "Number of parallel processes py.test should run. Overrides the default (auto) set in pyproject.toml.")),
         ("docker_img",     ("all", "Comma separated list of image tags to use for the build_docker command. Defaults to \"all\"")),
         ("dump_waf_log",   (False, "If the waf build tool fails then using this option will cause waf's configure log to be printed")),
         ("regenerate_sysconfig", (False, "Waf uses Python's sysconfig and related tools to configure the build. In some cases that info can be incorrect, so this option regenerates it. Must have write access to Python's lib folder.")),
@@ -1469,17 +1469,14 @@ def cmd_test(options, args, tests=None):
     cmdTimer = CommandTimer('test')
     pwd = pushDir(phoenixDir())
 
-    # --boxed runs each test in a new process (only for posix *&##$#@$^!!)
-    # -n is the number of processes to run in parallel
-    # --timeout will kill the test process if it gets stuck
+    # -n overrides the default (-nauto) set in pyproject.toml
+    # --timeout overrides the default set in pyproject.toml
     jobs = '-n{}'.format(options.pytest_jobs) if options.pytest_jobs else ''
-    boxed = '--forked' if not isWindows else ''
     sec = options.pytest_timeout
     timeout = '--timeout={}'.format(sec) if sec and sec != "0" else ''
-    cmd = '"{}" -m pytest {} {} {} {} {} '.format(
+    cmd = '"{}" -m pytest {} {} {} {} '.format(
         PYTHON,
         '-v' if options.verbose else '',
-        boxed,
         jobs,
         timeout,
         options.extra_pytest)

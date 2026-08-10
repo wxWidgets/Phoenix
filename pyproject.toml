@@ -92,3 +92,4 @@ enable = ["cpython-prerelease"]
 filterwarnings = [
     "ignore:wx\\.lib\\.pubsub has been deprecated, please migrate your code to use pypubsub, available on PyPI\\.:wx.wxPyDeprecationWarning",
 ]
+addopts = "-nauto"

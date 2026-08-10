@@ -8,7 +8,6 @@ requests >= 2.26.0
 cython >= 3.0.10
 pytest
 pytest-xdist
-pytest-forked
 pytest-timeout
 
 sphinx
