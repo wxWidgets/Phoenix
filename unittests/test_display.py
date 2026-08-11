@@ -14,7 +14,9 @@ class display_Tests(wtc.WidgetTestCase):
         self.assertTrue(c >= 1)
         m = d.GetModes()
         self.assertTrue(isinstance(m, wx.ArrayVideoModes))
-        self.assertTrue(len(m) > 0)
+        if len(m) == 0:
+            # Xvfb (headless CI) doesn't support the XF86VidMode extension.
+            self.skipTest("No video modes reported by the display server")
         vm = m[0]
         self.assertTrue(isinstance(vm, wx.VideoMode))
         self.assertTrue(vm.IsOk())
