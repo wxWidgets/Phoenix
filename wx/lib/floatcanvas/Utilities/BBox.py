@@ -62,7 +62,7 @@ class BBox(np.ndarray):
 
         """
         arr = np.array(data, float)
-        arr.shape = (2,2)
+        arr = arr.reshape(2, 2)
         if arr[0,0] > arr[1,0] or arr[0,1] > arr[1,1]:
             # note: zero sized BB OK.
             raise ValueError("BBox values not aligned: \n minimum values must be less that maximum values")

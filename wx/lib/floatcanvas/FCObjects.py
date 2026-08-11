@@ -573,7 +573,7 @@ class XYObjectMixin:
 
     def SetPoint(self, xy):
         xy = np.array(xy, float)
-        xy.shape = (2,)
+        xy = xy.reshape((2,))
 
         self.XY = xy
         self.CalcBoundingBox()
@@ -597,7 +597,7 @@ class PointsObjectMixin:
 
         """
         Delta = np.asarray(Delta, float)
-        Delta.shape = (2,)
+        Delta = Delta.reshape((2,))
         self.Points += Delta
         self.BoundingBox += Delta
         if self._Canvas:
@@ -631,7 +631,7 @@ class PointsObjectMixin:
         """
         if copy:
             self.Points = np.array(Points, float)
-            self.Points.shape = (-1, 2) # Make sure it is a NX2 array, even if there is only one point
+            self.Points = self.Points.reshape((-1, 2)) # Make sure it is a NX2 array, even if there is only one point
         else:
             self.Points = np.asarray(Points, float)
         self.CalcBoundingBox()
@@ -799,7 +799,7 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
         DrawObject.__init__(self, InForeground)
 
         self.XY = np.array(XY, float)
-        self.XY.shape = (2,) # Make sure it is a length 2 vector
+        self.XY = self.XY.reshape((2,)) # Make sure it is a length 2 vector
         self.Length = Length
         self.Direction = float(Direction)
         self.ArrowHeadSize = ArrowHeadSize
@@ -928,7 +928,7 @@ class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
         DrawObject.__init__(self, InForeground)
 
         self.Points = np.asarray(Points,float)
-        self.Points.shape = (-1,2) # Make sure it is a NX2 array, even if there is only one point
+        self.Points = self.Points.reshape((-1,2)) # Make sure it is a NX2 array, even if there is only one point
         self.ArrowHeadSize = ArrowHeadSize
         self.ArrowHeadAngle = float(ArrowHeadAngle)
 
@@ -1010,7 +1010,7 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
         DrawObject.__init__(self, InForeground)
 
         self.Points = np.array(Points,float)
-        self.Points.shape = (-1,2) # Make sure it is a NX2 array, even if there is only one point
+        self.Points = self.Points.reshape((-1,2)) # Make sure it is a NX2 array, even if there is only one point
         self.CalcBoundingBox()
         self.Diameter = Diameter
 
@@ -1111,7 +1111,7 @@ class Point(XYObjectMixin, ColorOnlyMixin, DrawObject):
         DrawObject.__init__(self, InForeground)
 
         self.XY = np.array(XY, float)
-        self.XY.shape = (2,) # Make sure it is a length 2 vector
+        self.XY = self.XY.reshape((2,)) # Make sure it is a length 2 vector
         self.CalcBoundingBox()
         self.SetColor(Color)
         self.Diameter = Diameter
@@ -1168,7 +1168,7 @@ class SquarePoint(XYObjectMixin, ColorOnlyMixin, DrawObject):
         DrawObject.__init__(self, InForeground)
 
         self.XY = np.array(Point, float)
-        self.XY.shape = (2,) # Make sure it is a length 2 vector
+        self.XY = self.XY.reshape((2,)) # Make sure it is a length 2 vector
         self.CalcBoundingBox()
         self.SetColor(Color)
         self.Size = Size
@@ -1256,9 +1256,9 @@ class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
 
         """
         self.XY = np.array( XY, float)
-        self.XY.shape = (2,)
+        self.XY = self.XY.reshape((2,))
         self.WH = np.array( WH, float)
-        self.WH.shape = (2,)
+        self.WH = self.WH.reshape((2,))
         self.CalcBoundingBox()
 
     def CalcBoundingBox(self):
@@ -1527,7 +1527,7 @@ class Text(TextObjectMixin, DrawObject):
         self.BoundingBox = BBox.asBBox((xy, xy))
 
         self.XY = np.asarray(xy)
-        self.XY.shape = (2,)
+        self.XY = self.XY.reshape((2,))
 
         (self.TextWidth, self.TextHeight) = (None, None)
         self.ShiftFun = self.ShiftFunDict[Position]
@@ -1627,7 +1627,7 @@ class ScaledText(TextObjectMixin, DrawObject):
 
         self.String = String
         self.XY = np.array( XY, float)
-        self.XY.shape = (2,)
+        self.XY = self.XY.reshape((2,))
         self.Size = Size
         self.Color = Color
         self.BackgroundColor = BackgroundColor
@@ -2386,7 +2386,7 @@ class DotGrid:
     def __init__(self, Spacing, Size = 2, Color = "Black", Cross=False, CrossThickness = 1):
 
         self.Spacing = np.array(Spacing, float)
-        self.Spacing.shape = (2,)
+        self.Spacing = self.Spacing.reshape((2,))
         self.Size = Size
         self.Color = Color
         self.Cross = Cross
@@ -2404,11 +2404,11 @@ class DotGrid:
         x = np.arange(minx, maxx+Spacing[0], Spacing[0]) # making sure to get the last point
         y = np.arange(miny, maxy+Spacing[1], Spacing[1]) # an extra is OK
         Points = np.zeros((len(y), len(x), 2), float)
-        x.shape = (1,-1)
-        y.shape = (-1,1)
+        x = x.reshape((1,-1))
+        y = y.reshape((-1,1))
         Points[:,:,0] += x
         Points[:,:,1] += y
-        Points.shape = (-1,2)
+        Points = Points.reshape((-1,2))
 
         return Points
 

@@ -44,8 +44,8 @@ class dcDrawLists_Tests(wtc.WidgetTestCase):
         xs = np.linspace(0, w, w + 1)
         ys = np.sin(xs / w * 2 * np.pi)
         
-        xs.shape = xs.size, 1
-        ys.shape = ys.size, 1
+        xs = xs.reshape(xs.size, 1)
+        ys = ys.reshape(ys.size, 1)
         pts = np.append(xs, ys, 1)
 
         dc.DrawLinesFromBuffer(pts.astype('intc'))

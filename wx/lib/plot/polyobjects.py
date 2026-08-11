@@ -635,7 +635,7 @@ class PolyMarker(PolyPoints):
         shape = [(-2.5 * size, 1.44 * size),
                  (2.5 * size, 1.44 * size), (0.0, -2.88 * size)]
         poly = np.repeat(coords, 3, 0)
-        poly.shape = (len(coords), 3, 2)
+        poly = poly.reshape(len(coords), 3, 2)
         poly += shape
         dc.DrawPolygonList(poly.astype(np.int32))
 
@@ -643,7 +643,7 @@ class PolyMarker(PolyPoints):
         shape = [(-2.5 * size, -1.44 * size),
                  (2.5 * size, -1.44 * size), (0.0, 2.88 * size)]
         poly = np.repeat(coords, 3, 0)
-        poly.shape = (len(coords), 3, 2)
+        poly = poly.reshape(len(coords), 3, 2)
         poly += shape
         dc.DrawPolygonList(poly.astype(np.int32))
 
