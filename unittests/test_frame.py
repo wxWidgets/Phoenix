@@ -51,6 +51,8 @@ class frame_Tests(wtc.WidgetTestCase):
 
 
     def test_frameRestore(self):
+        if wtc.isRunningUnderXVFB():
+            self.skipTest("Maximize/Restore need a window manager, which Xvfb doesn't provide")
         f = wx.Frame(self.frame, title="Title", pos=(50,50), size=(100,100))
         f.Show()
         f.Maximize()

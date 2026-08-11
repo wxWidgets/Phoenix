@@ -4,6 +4,17 @@ import gc, importlib, os
 
 #---------------------------------------------------------------------------
 
+def isRunningUnderXVFB():
+    """
+    Tests running under Xvfb (as used by CI) have no window manager, so
+    window-manager-dependent behavior such as maximizing, iconizing, or
+    becoming active/focused won't work as expected. This can be used to
+    skip or adjust assertions that depend on such behavior.
+    """
+    return os.environ.get('WXPY_TEST_XVFB') == '1'
+
+#---------------------------------------------------------------------------
+
 class WidgetTestCase(unittest.TestCase):
     """
     A testcase that will create an app and frame for various widget test
