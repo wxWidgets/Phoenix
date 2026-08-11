@@ -93,3 +93,5 @@ filterwarnings = [
     "ignore:wx\\.lib\\.pubsub has been deprecated, please migrate your code to use pypubsub, available on PyPI\\.:wx.wxPyDeprecationWarning",
 ]
 addopts = "-nauto"
+timeout = 60
+timeout_method = "thread"

@@ -456,7 +456,7 @@ def makeOptionParser():
         ("cairo",          (False, "Allow Cairo use with wxGraphicsContext (Windows only)")),
         ("x64",            (False, "Use and build for the 64bit version of Python on Windows")),
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
-        ("pytest_timeout", ("0",   "Timeout, in seconds, for stopping stuck test cases. (Currently not working as expected, so disabled by default.)")),
+        ("pytest_timeout", ("",    "Timeout, in seconds, for stopping stuck test cases. Overrides the default set in pyproject.toml; use 0 to disable.")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run. Overrides the default (auto) set in pyproject.toml.")),
         ("docker_img",     ("all", "Comma separated list of image tags to use for the build_docker command. Defaults to \"all\"")),
         ("dump_waf_log",   (False, "If the waf build tool fails then using this option will cause waf's configure log to be printed")),
@@ -1472,8 +1472,7 @@ def cmd_test(options, args, tests=None):
     # -n overrides the default (-nauto) set in pyproject.toml
     # --timeout overrides the default set in pyproject.toml
     jobs = '-n{}'.format(options.pytest_jobs) if options.pytest_jobs else ''
-    sec = options.pytest_timeout
-    timeout = '--timeout={}'.format(sec) if sec and sec != "0" else ''
+    timeout = '--timeout={}'.format(options.pytest_timeout) if options.pytest_timeout else ''
     cmd = '"{}" -m pytest {} {} {} {} '.format(
         PYTHON,
         '-v' if options.verbose else '',
