@@ -1,6 +1,6 @@
 import unittest
 import wx
-import sys, os
+import importlib, os
 
 #---------------------------------------------------------------------------
 
@@ -113,8 +113,7 @@ def mybytes(text):
 class PubsubTestCase(unittest.TestCase):
     """
     A testcase specifically to test wx.lib.pubsub, as pub is a singleton
-    the tearDown removes it from sys.modules to force a reinitialization on
-    each test.
+    the tearDown reloads it to force a reinitialization on each test.
     """
 
     def setUp(self):
@@ -134,11 +133,8 @@ class PubsubTestCase(unittest.TestCase):
                 topicMgr.delTopic('pubsub')
         except:
             pass
+
+        # del sys.modules[...] doesn't force reinit; the package still caches
+        # a 'pub' attribute, so reload in place instead.
+        importlib.reload(self.pub)
         del self.pub
-
-        if 'wx.lib.pubsub.pub' in sys.modules:
-            del sys.modules['wx.lib.pubsub.pub']
-
-        #skeys = sys.modules.keys()
-        #for name in skeys:
-            #del sys.modules[name]
