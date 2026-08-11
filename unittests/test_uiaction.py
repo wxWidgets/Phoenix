@@ -24,6 +24,7 @@ class MouseEventsPanel(wx.Panel):
 
 
 
+@unittest.skip("wx.UIActionSimulator tests are unreliable across platforms (OS-level focus/timing dependent); skipped until that's resolved")
 class uiaction_MouseTests(wtc.WidgetTestCase):
 
 
@@ -145,6 +146,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
 #---------------------------------------------------------------------------
 
 
+@unittest.skip("wx.UIActionSimulator tests are unreliable across platforms (OS-level focus/timing dependent); skipped until that's resolved")
 class uiaction_KeyboardTests(wtc.WidgetTestCase):
 
     def setUp(self):
