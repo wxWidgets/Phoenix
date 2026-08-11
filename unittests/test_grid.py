@@ -87,7 +87,7 @@ class grid_Tests(wtc.WidgetTestCase):
     def test_grid16(self):
         e = wx.grid.GridCellNumberEditor()
 
-    def test_grid17(self):
+    def make_editor(self):
         class MyEditor(wx.grid.GridCellEditor):
             def Clone(self): return MyEditor()
             def BeginEdit(self, row, col, grid): pass
@@ -100,8 +100,11 @@ class grid_Tests(wtc.WidgetTestCase):
         e = MyEditor()
         return e
 
+    def test_grid17(self):
+        self.make_editor()
+
     def test_grid17a(self):
-        e = self.test_grid17()
+        e = self.make_editor()
         e.GetControl
         e.SetControl
 

@@ -84,7 +84,6 @@ class gbsizer_Tests(wtc.WidgetTestCase):
         gbs.Add(5, 25, (1,3))                                       # spacer
         item = wx.GBSizerItem(wx.Panel(self.frame), (1,4), (1,3))
         gbs.Add(item)                                               # item
-        return gbs
 
     def test_gbsizer_sizer2(self):
         gbs = wx.GridBagSizer()
