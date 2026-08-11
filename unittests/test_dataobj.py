@@ -1,4 +1,5 @@
 import unittest
+import pytest
 from unittests import wtc
 import wx
 import os
@@ -287,8 +288,12 @@ class DataObjTests(wtc.WidgetTestCase):
         do = wx.TextDataObject(data)
         self.assertEqual(do.GetText(), data)
         self.assertEqual(do.Text, data)
-        self.assertAlmostEqual(do.GetTextLength(), len(data), delta=1)
-        self.assertAlmostEqual(do.TextLength, len(data), delta=1)
+        with pytest.warns(DeprecationWarning):
+            length = do.GetTextLength()
+        self.assertAlmostEqual(length, len(data), delta=1)
+        with pytest.warns(DeprecationWarning):
+            length = do.TextLength
+        self.assertAlmostEqual(length, len(data), delta=1)
 
 
     def test_TextDataObjectClipboard(self):

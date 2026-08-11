@@ -87,3 +87,8 @@ namespaces = false
 build-frontend = "pip"
 build-verbosity = 1
 enable = ["cpython-prerelease"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:wx\\.lib\\.pubsub has been deprecated, please migrate your code to use pypubsub, available on PyPI\\.:wx.wxPyDeprecationWarning",
+]

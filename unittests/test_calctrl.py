@@ -1,4 +1,5 @@
 import unittest
+import pytest
 from unittests import wtc
 import wx
 import wx.adv
@@ -45,7 +46,8 @@ class calctrl_Tests(wtc.WidgetTestCase):
 
     def test_calctrl4(self):
         cal = wx.adv.CalendarCtrl(self.frame, date=wx.DateTime.Today())
-        d = cal.PyGetDate()
+        with pytest.warns(wx.wxPyDeprecationWarning):
+            d = cal.PyGetDate()
         assert isinstance(d, datetime.datetime)
 
 
@@ -61,7 +63,8 @@ class calctrl_Tests(wtc.WidgetTestCase):
 
     def test_genericcalctrl4(self):
         cal = wx.adv.GenericCalendarCtrl(self.frame, date=wx.DateTime.Today())
-        d = cal.PyGetDate()
+        with pytest.warns(wx.wxPyDeprecationWarning):
+            d = cal.PyGetDate()
         assert isinstance(d, datetime.datetime)
 
 
@@ -69,7 +72,8 @@ class calctrl_Tests(wtc.WidgetTestCase):
     def test_calevt1(self):
         evt = wx.adv.CalendarEvent()
         evt.SetDate(wx.DateTime.Today())
-        d = evt.PyGetDate()
+        with pytest.warns(wx.wxPyDeprecationWarning):
+            d = evt.PyGetDate()
         assert isinstance(d, datetime.datetime)
 
 

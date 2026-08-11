@@ -1,4 +1,5 @@
 import unittest
+import pytest
 from unittests import wtc
 import wx
 
@@ -13,7 +14,8 @@ class MetafileDCTests(wtc.WidgetTestCase):
         # Not testing with output file because the file resource is not released
         # soon enough to be able to delete the file in this test, resulting in
         # permission errors.
-        dc = wx.msw.MetafileDC()
+        with pytest.warns(wx.wxPyDeprecationWarning):
+            dc = wx.msw.MetafileDC()
         dc.DrawLine(0,0, 50,50)
         metafile = dc.Close()
         del dc
