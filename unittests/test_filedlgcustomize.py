@@ -7,6 +7,10 @@ import wx
 
 class filedlgcustomize_Tests(wtc.WidgetTestCase):
 
+    @unittest.skipIf('wxOSX' in wx.PlatformInfo,
+        "ShowModal() hangs on macOS: AppKit rejects the accessory-view "
+        "mutation wxWidgets uses for extra controls (see filedlg.mm "
+        "SetupExtraControls())")
     def test_filedlgcustomize1(self):
         class MyFileDialogCustomizeHook(wx.FileDialogCustomizeHook):
             def __init__(self):
