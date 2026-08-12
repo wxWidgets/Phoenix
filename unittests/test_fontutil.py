@@ -15,7 +15,16 @@ class fontutil_Tests(wtc.WidgetTestCase):
         i2 = wx.NativeFontInfo()
         i2.FromString(st)
         f2 = wx.Font(i2)
-        self.assertTrue(f1 == f2)
+
+        # f1 == f2 is unreliable on macOS: GetFamily() is guessed from
+        # CoreText traits on round-trip and doesn't always match.
+        self.assertEqual(f1.GetPointSize(), f2.GetPointSize())
+        self.assertEqual(f1.GetStyle(), f2.GetStyle())
+        self.assertEqual(f1.GetWeight(), f2.GetWeight())
+        self.assertEqual(f1.GetUnderlined(), f2.GetUnderlined())
+        self.assertEqual(f1.GetStrikethrough(), f2.GetStrikethrough())
+        self.assertEqual(f1.GetEncoding(), f2.GetEncoding())
+        self.assertEqual(f1.GetFaceName(), f2.GetFaceName())
 
     def test_fontutilProperties(self):
         nfi = wx.NativeFontInfo()
