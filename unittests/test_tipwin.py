@@ -14,7 +14,9 @@ class tipwin_Tests(wtc.WidgetTestCase):
         self.waitFor(100)
         w.Show()
         self.waitFor(100)
-        w.Close()
+        # w may have already self-destructed (e.g. lost focus)
+        if w:
+            w.Close()
 
 
 
