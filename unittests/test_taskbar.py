@@ -46,7 +46,7 @@ class taskbar_Tests(wtc.WidgetTestCase):
             def CreatePopupMenu(self):
                 self.flag = True
         tbi = MyTaskBarIcon()
-        evt = wx.adv.TaskBarIconEvent(wx.adv.wxEVT_TASKBAR_RIGHT_DOWN, tbi)
+        evt = wx.adv.TaskBarIconEvent(wx.adv.wxEVT_TASKBAR_CLICK, tbi)
         wx.PostEvent(tbi, evt)
         self.myYield()
         self.assertTrue(tbi.flag)
@@ -61,7 +61,7 @@ class taskbar_Tests(wtc.WidgetTestCase):
             def GetPopupMenu(self):
                 self.flag = True
         tbi = MyTaskBarIcon()
-        evt = wx.adv.TaskBarIconEvent(wx.adv.wxEVT_TASKBAR_RIGHT_DOWN, tbi)
+        evt = wx.adv.TaskBarIconEvent(wx.adv.wxEVT_TASKBAR_CLICK, tbi)
         wx.PostEvent(tbi, evt)
         self.myYield()
         self.assertTrue(tbi.flag)
