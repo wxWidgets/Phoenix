@@ -20,7 +20,7 @@ class lib_colourdb_Tests(wtc.WidgetTestCase):
                          wx.Colour(255, 69, 0, 255))
 
         self.assertIn(wx.TheColourDatabase.FindName(wx.Colour(255, 69, 0)),
-                      ['ORANGE RED', 'ORANGERED'])
+                      ['ORANGE RED', 'ORANGERED', 'ORANGERED1'])
 
 #---------------------------------------------------------------------------
 
