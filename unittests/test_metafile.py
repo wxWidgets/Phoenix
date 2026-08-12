@@ -20,7 +20,7 @@ class MetafileDCTests(wtc.WidgetTestCase):
         metafile = dc.Close()
         del dc
 
-        self.assertTrue(isinstance(metafile, wx.msw.Metafile))
+        self.assertTrue(isinstance(metafile, wx.Metafile))
         metafile.SetClipboard(50,50)
         metafile.Play(wx.ClientDC(self.frame))
         del metafile
