@@ -287,7 +287,7 @@ def main(wxDir, args):
             # find the newest SDK available on this system
             SDK = 'none found'
             for xcodePath in getXcodePaths():
-                possibles = [(major, minor) for major in [10, 11, 12] for minor in range(16)]
+                possibles = [(major, minor) for major in [10, 11, 12, 13, 14, 15, 26, 27] for minor in range(16)]
                 for major, minor in reversed(possibles):
                     sdk = os.path.join(xcodePath, "SDKs/MacOSX{}.{}.sdk".format(major, minor))
                     if os.path.exists(sdk):
