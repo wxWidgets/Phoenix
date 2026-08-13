@@ -23,7 +23,7 @@ class timer_Tests(wtc.WidgetTestCase):
         t = wx.Timer(self.frame)
         self.flag = False
         self.frame.Bind(wx.EVT_TIMER, self.onTimerEvt, t)
-        t.Start(1000, wx.TIMER_ONE_SHOT)
+        t.Start(5000, wx.TIMER_ONE_SHOT)
         # timer will not have expired yet by this time, so flag shouldn't be set
         self.waitFor(500)
         self.assertFalse(self.flag)

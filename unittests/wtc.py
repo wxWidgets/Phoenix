@@ -1,6 +1,6 @@
 import unittest
 import wx
-import importlib, os
+import gc, importlib, os
 
 #---------------------------------------------------------------------------
 
@@ -33,6 +33,10 @@ class WidgetTestCase(unittest.TestCase):
         timer.Start(100)
         self.app.MainLoop()
         del self.app
+
+        # Force-collect any reference cycle keeping the wxApp alive, so it
+        # doesn't get reaped later mid-test and cause a crash.
+        gc.collect()
 
 
     # helper methods

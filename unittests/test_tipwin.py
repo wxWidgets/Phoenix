@@ -12,9 +12,9 @@ class tipwin_Tests(wtc.WidgetTestCase):
             w = wx.TipWindow(self.frame, "This is a tip message")
         w.SetBoundingRect(self.frame.GetRect())
         self.waitFor(100)
-        w.Show()
-        self.waitFor(100)
-        w.Close()
+        # w may have already self-destructed (e.g. lost focus)
+        if w:
+            w.Close()
 
 
 

@@ -1,9 +1,18 @@
 import unittest
 from unittests import wtc
 import wx
-import sys, os
+import signal, sys, os
 
 testscript = os.path.join(os.path.dirname(__file__), 'process_script.py')
+
+#---------------------------------------------------------------------------
+
+def tearDownModule():
+    # wx.Execute() installs a process-wide SIGCHLD handler that outlives
+    # this module's wx.App, and can crash a later test's app (wxWidgets
+    # bug). Reset it so it doesn't leak into other tests in this worker.
+    if hasattr(signal, 'SIGCHLD'):
+        signal.signal(signal.SIGCHLD, signal.SIG_DFL)
 
 #---------------------------------------------------------------------------
 

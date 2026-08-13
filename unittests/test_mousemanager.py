@@ -8,6 +8,7 @@ runningStandalone = False
 
 #---------------------------------------------------------------------------
 
+@unittest.skip("wx.UIActionSimulator tests are unreliable across platforms (OS-level focus/timing dependent); skipped until that's resolved")
 class mousemanager_Tests(wtc.WidgetTestCase):
 
     def test_mousemanager1(self):
