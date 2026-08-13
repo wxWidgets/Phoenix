@@ -74,8 +74,20 @@ class Ticker(wx.Control):
         self.Bind(wx.EVT_TIMER, self.OnTick)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnErase)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroyWindow)
         if start:
             self.Start()
+
+
+    def OnDestroyWindow(self, evt):
+        """
+        Handles the ``wx.EVT_WINDOW_DESTROY`` event for :class:`Ticker`.
+
+        :param `evt`: a :class:`wx.WindowDestroyEvent` event to be processed.
+
+        """
+        self.Stop()
+        evt.Skip()
 
 
     def Stop(self):
