@@ -51,7 +51,7 @@ class odcombo_Tests(wtc.WidgetTestCase):
 
         self.waitFor(100)
         cb.Popup()
-        self.waitFor(100)
+        self.waitFor(200)
         cb.Dismiss()
         self.myYield()
 
