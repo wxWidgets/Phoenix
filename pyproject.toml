@@ -95,3 +95,4 @@ filterwarnings = [
 addopts = "-nauto"
 timeout = 60
 timeout_method = "thread"
+reruns = 2

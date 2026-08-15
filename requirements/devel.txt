@@ -9,6 +9,7 @@ cython >= 3.0.10
 pytest
 pytest-xdist
 pytest-timeout
+pytest-rerunfailures
 
 sphinx
 python-docs-theme
