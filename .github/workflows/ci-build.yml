@@ -164,10 +164,13 @@ jobs:
         id: init
         run: |
           build_opts=$WXPYTHON_BUILD_ARGS
+          echo "XVFB_RUN=" >> $GITHUB_ENV
           if [ ${{ runner.os }} == 'Linux' ]; then
               short_name=linux
               os_tag="ubuntu$(echo '${{ matrix.os }}' | sed -E 's/[^0-9]//g')"
               echo "os_tag=$os_tag" >> "$GITHUB_OUTPUT"
+              echo "XVFB_RUN=dbus-run-session -- xvfb-run -a" >> $GITHUB_ENV
+              echo "WXPY_TEST_XVFB=1" >> $GITHUB_ENV
           elif [ ${{ matrix.os }} == macos-15-intel ]; then
               short_name=macos
               echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
@@ -280,7 +283,10 @@ jobs:
             echo $lib
             python -c "import wx.$lib"
           done
-          pip uninstall --yes wxPython
+
+      - name: Run unittests
+        run: |
+          $XVFB_RUN python build.py test --verbose
 
       - name: Save wheel as job artifact
         uses: actions/upload-artifact@v7
