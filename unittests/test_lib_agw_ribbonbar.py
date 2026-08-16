@@ -93,6 +93,15 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
         rib.SetArtProvider(RB.RibbonMSWArtProvider())
         rib.SetArtProvider(RB.RibbonOSXArtProvider())
 
+    def test_lib_agw_ribbonAUIArtProviderDrawScrollButton(self):
+        art = RB.RibbonAUIArtProvider()
+        bmp = wx.Bitmap(41, 31)
+        dc = wx.MemoryDC(bmp)
+        rect = wx.Rect(0, 0, 41, 31)
+        for direction in (RB.RIBBON_SCROLL_BTN_LEFT, RB.RIBBON_SCROLL_BTN_RIGHT,
+                          RB.RIBBON_SCROLL_BTN_UP, RB.RIBBON_SCROLL_BTN_DOWN):
+            art.DrawScrollButton(dc, self.frame, rect, direction | RB.RIBBON_SCROLL_BTN_NORMAL)
+
     def test_lib_agw_ribbonEvents(self):
         RB.EVT_RIBBONBAR_PAGE_CHANGED
         RB.EVT_RIBBONBAR_PAGE_CHANGING

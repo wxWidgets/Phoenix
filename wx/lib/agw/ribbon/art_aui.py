@@ -610,25 +610,25 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         if result == RIBBON_SCROLL_BTN_LEFT:
             dc.DrawLine(true_rect.GetRight(), true_rect.y, true_rect.GetRight(), true_rect.y + true_rect.height)
-            arrow_points[0] = wx.Point(rect.width / 2 - 2, rect.height / 2)
+            arrow_points[0] = wx.Point(int(rect.width / 2 - 2), int(rect.height / 2))
             arrow_points[1] = arrow_points[0] + wx.Point(5, -5)
             arrow_points[2] = arrow_points[0] + wx.Point(5,  5)
 
         elif result == RIBBON_SCROLL_BTN_RIGHT:
             dc.DrawLine(true_rect.x, true_rect.y, true_rect.x, true_rect.y + true_rect.height)
-            arrow_points[0] = wx.Point(rect.width / 2 + 3, rect.height / 2)
+            arrow_points[0] = wx.Point(int(rect.width / 2 + 3), int(rect.height / 2))
             arrow_points[1] = arrow_points[0] - wx.Point(5, -5)
             arrow_points[2] = arrow_points[0] - wx.Point(5,  5)
 
         elif result == RIBBON_SCROLL_BTN_DOWN:
             dc.DrawLine(true_rect.x, true_rect.y, true_rect.x + true_rect.width, true_rect.y)
-            arrow_points[0] = wx.Point(rect.width / 2, rect.height / 2 + 3)
+            arrow_points[0] = wx.Point(int(rect.width / 2), int(rect.height / 2 + 3))
             arrow_points[1] = arrow_points[0] - wx.Point( 5, 5)
             arrow_points[2] = arrow_points[0] - wx.Point(-5, 5)
 
         elif result == RIBBON_SCROLL_BTN_UP:
             dc.DrawLine(true_rect.x, true_rect.GetBottom(), true_rect.x + true_rect.width, true_rect.GetBottom())
-            arrow_points[0] = wx.Point(rect.width / 2, rect.height / 2 - 2)
+            arrow_points[0] = wx.Point(int(rect.width / 2), int(rect.height / 2 - 2))
             arrow_points[1] = arrow_points[0] + wx.Point( 5, 5)
             arrow_points[2] = arrow_points[0] + wx.Point(-5, 5)
 
