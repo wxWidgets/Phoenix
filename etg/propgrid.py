@@ -108,6 +108,34 @@ def run():
         EVT_PG_COL_END_DRAG = wx.PyEventBinder( wxEVT_PG_COL_END_DRAG, 1 )
         """)
 
+    # wxPG_ACTION_XXX compat aliases are stripped by our Doxygen run (see
+    # #2941), so restore them via module __getattr__ with a DeprecationWarning.
+    module.addPyCode("""\
+        _PG_ACTION_deprecated_aliases = {
+            "PG_ACTION_INVALID"           : PGKeyboardAction.Invalid,
+            "PG_ACTION_NEXT_PROPERTY"     : PGKeyboardAction.NextProperty,
+            "PG_ACTION_PREV_PROPERTY"     : PGKeyboardAction.PrevProperty,
+            "PG_ACTION_EXPAND_PROPERTY"   : PGKeyboardAction.ExpandProperty,
+            "PG_ACTION_COLLAPSE_PROPERTY" : PGKeyboardAction.CollapseProperty,
+            "PG_ACTION_CANCEL_EDIT"       : PGKeyboardAction.CancelEdit,
+            "PG_ACTION_EDIT"              : PGKeyboardAction.Edit,
+            "PG_ACTION_PRESS_BUTTON"      : PGKeyboardAction.PressButton,
+            "PG_ACTION_MAX"               : PGKeyboardAction.PressButton + 1,
+        }
+
+        def __getattr__(name):
+            try:
+                value = _PG_ACTION_deprecated_aliases[name]
+            except KeyError:
+                raise AttributeError(
+                    "module {!r} has no attribute {!r}".format(__name__, name))
+            import warnings
+            warnings.warn(
+                "wx.propgrid.{} is deprecated, use wx.propgrid.PGKeyboardAction instead"
+                .format(name), wx.wxPyDeprecationWarning, stacklevel=2)
+            return value
+        """)
+
 
     # Switch all wxVariant types to wxPGVariant, so the propgrid-specific
     # version of the MappedType will be used for converting to/from Python
