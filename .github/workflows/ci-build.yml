@@ -196,7 +196,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
         with:
-          submodules: 'recursive'
           filter: blob:none
           persist-credentials: false
 
