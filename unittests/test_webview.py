@@ -7,12 +7,19 @@ import wx.html2 as webview
 
 class webview_Tests(wtc.WidgetTestCase):
 
+    def _waitForEdgeWebViewInit(self):
+        # avoid wxWidgets#26491: Edge init is async, crashes if torn down first
+        if 'wxMSW' in wx.PlatformInfo:
+            self.waitFor(5000)
+
     def test_webview1(self):
         wv = webview.WebView.New()
         wv.Create(self.frame)
+        self._waitForEdgeWebViewInit()
 
     def test_webview2(self):
         wv = webview.WebView.New(self.frame)
+        self._waitForEdgeWebViewInit()
 
     def test_webview3(self):
         wv = webview.WebView.New(self.frame)
