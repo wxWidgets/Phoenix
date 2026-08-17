@@ -460,6 +460,51 @@ class dataview_Tests(wtc.WidgetTestCase):
         evt.GetDropEffect
 
 
+    def test_dataviewEvt1b(self):
+        # Constructor for events affecting columns (and possibly also items)
+        dvc = dv.DataViewCtrl(self.frame)
+        col = dvc.AppendTextColumn("one", 0)
+        item = dv.DataViewItem(123)
+
+        evt = dv.DataViewEvent(dv.wxEVT_COMMAND_DATAVIEW_COLUMN_HEADER_CLICK, dvc, col, item)
+        self.assertEqual(evt.GetEventType(), dv.wxEVT_COMMAND_DATAVIEW_COLUMN_HEADER_CLICK)
+        self.assertEqual(evt.GetId(), dvc.GetId())
+        self.assertEqual(evt.GetDataViewColumn(), col)
+        self.assertEqual(evt.GetItem(), item)
+
+        # the item parameter is optional
+        evt2 = dv.DataViewEvent(dv.wxEVT_COMMAND_DATAVIEW_COLUMN_HEADER_CLICK, dvc, col)
+        self.assertEqual(evt2.GetDataViewColumn(), col)
+        self.assertFalse(evt2.GetItem().IsOk())
+
+
+    def test_dataviewEvt1c(self):
+        # Constructor for events affecting only the items
+        dvc = dv.DataViewCtrl(self.frame)
+        item = dv.DataViewItem(456)
+
+        evt = dv.DataViewEvent(dv.wxEVT_COMMAND_DATAVIEW_ITEM_ACTIVATED, dvc, item)
+        self.assertEqual(evt.GetEventType(), dv.wxEVT_COMMAND_DATAVIEW_ITEM_ACTIVATED)
+        self.assertEqual(evt.GetId(), dvc.GetId())
+        self.assertEqual(evt.GetItem(), item)
+        self.assertIsNone(evt.GetDataViewColumn())
+
+
+    def test_dataviewEvt1d(self):
+        # Copy constructor
+        dvc = dv.DataViewCtrl(self.frame)
+        col = dvc.AppendTextColumn("one", 0)
+        item = dv.DataViewItem(789)
+
+        orig = dv.DataViewEvent(dv.wxEVT_COMMAND_DATAVIEW_COLUMN_HEADER_CLICK, dvc, col, item)
+        copy = dv.DataViewEvent(orig)
+
+        self.assertEqual(copy.GetEventType(), orig.GetEventType())
+        self.assertEqual(copy.GetId(), orig.GetId())
+        self.assertEqual(copy.GetDataViewColumn(), orig.GetDataViewColumn())
+        self.assertEqual(copy.GetItem(), orig.GetItem())
+
+
     def test_dataviewEvt2(self):
         dv.wxEVT_COMMAND_DATAVIEW_SELECTION_CHANGED;
         dv.wxEVT_COMMAND_DATAVIEW_ITEM_ACTIVATED;
