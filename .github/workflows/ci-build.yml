@@ -51,10 +51,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
         with:
-          submodules: 'recursive'
+          submodules: false
           fetch-depth: 0
           filter: blob:none
           persist-credentials: false
+
+      - name: Checkout submodules (partial clone)
+        run: git submodule update --init --recursive --filter=blob:none --jobs=4
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -312,10 +315,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
         with:
-          submodules: 'recursive'
+          submodules: false
           fetch-depth: 0
           filter: blob:none
           persist-credentials: false
+
+      - name: Checkout submodules (partial clone)
+        run: git submodule update --init --recursive --filter=blob:none --jobs=4
 
       - name: Set up Python 3.13
         uses: actions/setup-python@v6
