@@ -7282,6 +7282,18 @@ class AuiManager(wx.EvtHandler):
                 if notebookRoot:
                     notebookRoot.Caption(paneInfo.caption)
                     self.RefreshCaptions()
+                    if notebookRoot.IsFloating() and notebookRoot.frame:
+                        # When the notebook is floating, its visible caption bar is drawn by
+                        # the AuiFloatingFrame's own internal AuiManager, from a *copy* of this
+                        # pane's info made when the frame was created (see SetPaneWindow). That
+                        # copy is never told about caption changes, so update it directly and
+                        # refresh/re-sync that inner manager too.
+                        innerMgr = notebookRoot.frame._mgr
+                        innerPane = innerMgr.GetPane(notebook)
+                        if innerPane.IsOk():
+                            innerPane.Caption(paneInfo.caption)
+                            innerMgr.RefreshCaptions()
+                        notebookRoot.frame.SetTitle(paneInfo.caption)
 
         event.Skip()
 
