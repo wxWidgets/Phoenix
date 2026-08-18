@@ -14,6 +14,7 @@
 #----------------------------------------------------------------------
 
 import sys
+import concurrent.futures
 import glob
 import hashlib
 import optparse
@@ -1296,6 +1297,137 @@ def cmd_bdist_docs(options, args):
 
 
 
+def _sipModuleNeedsBuild(cfg, src_name):
+    """Whether sip needs to be re-run for this module."""
+    src_name = src_name.replace('\\', '/')
+    base = os.path.basename(os.path.splitext(src_name)[0])
+    sbf = posixjoin(cfg.ROOT_DIR, cfg.SIPOUT, base) + '.sbf'
+    pycode = base[1:] # remove the leading _
+    pycode = opj(cfg.ROOT_DIR, cfg.PKGDIR, pycode) + '.py'
+
+    etg = loadETG(posixjoin('etg', base + '.py'))
+    sipFiles = getSipFiles(etg.INCLUDES) + [opj(cfg.SIPGEN, base+'.sip')]
+    return newer_group(sipFiles, sbf) or not os.path.exists(pycode)
+
+
+def _buildSipModule(cfg, options, src_name):
+    """Run sip-build for one top-level module and copy changed output into cfg.SIPOUT.
+
+    Safe to call concurrently: uses absolute paths and cwd=, never os.chdir().
+    """
+    tmpdir = tempfile.mkdtemp()
+    tmpdir = tmpdir.replace('\\', '/')
+    src_name = src_name.replace('\\', '/')
+    base = os.path.basename(os.path.splitext(src_name)[0])
+    sbf = posixjoin(cfg.ROOT_DIR, cfg.SIPOUT, base) + '.sbf'
+    pycode = base[1:] # remove the leading _
+    pycode = opj(cfg.ROOT_DIR, cfg.PKGDIR, pycode) + '.py'
+
+    # SIP extracts are used to pull python snippets and put them into the
+    # module's .py file
+    pycode = 'pycode'+base+':'+pycode
+
+    # Write out a pyproject.toml to configure sip
+    pyproject_toml = textwrap.dedent("""\
+        [build-system]
+        requires = ["sip >=6.6.2, <7"]
+        build-backend = "sipbuild.api"
+
+        [project]
+        name = "{base}"
+
+        [tool.sip.bindings.{base}]
+        docstrings = true
+        release-gil = true
+        exceptions = false
+        tracing = {tracing}
+        protected-is-public = false
+        generate-extracts = [\'{extracts}\']
+        pep484-pyi = false
+
+        [tool.sip.project]
+        abi-version = "{abi_version}"
+        sip-files-dir = '{sip_gen_dir}'
+        sip-include-dirs = ['{src_dir}']
+        sip-module = "wx.siplib"
+        """.format(
+            base=base,
+            abi_version=cfg.SIP_ABI,
+            tracing=str(cfg.SIP_TRACE).lower(),
+            extracts=pycode,
+            src_dir=opj(phoenixDir(), 'src'),
+            sip_gen_dir=opj(phoenixDir(), 'sip', 'gen'),
+            )
+    )
+    Path(tmpdir, 'pyproject.toml').write_text(pyproject_toml)
+
+    cmd = 'sip-build --no-compile'
+    runcmd(cmd, cwd=tmpdir)
+
+    # Write out a sip build file (no longer done by sip itself)
+    sip_tmp_out_dir = opj(tmpdir, 'build', base)
+    header = os.path.basename(min(glob.glob(opj(sip_tmp_out_dir, '*.h'))))
+    sources = sorted(os.path.basename(s) for s in glob.glob(opj(sip_tmp_out_dir, '*.cpp')))
+    Path(sbf).write_text(f"sources = {' '.join(sources)}\nheaders = {header}\n")
+    classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }
+
+    def processSrc(src, keepHashLines=False):
+        with open(src, 'rt', encoding="utf-8") as f:
+            srcTxt = f.read()
+            if keepHashLines:
+                # Either just fix the pathnames in the #line lines...
+                srcTxt = srcTxt.replace(sip_tmp_out_dir, cfg.SIPOUT)
+            else:
+                # ...or totally remove them by replacing those lines with ''
+                import re
+                srcTxt = re.sub(r'^\s*#line.*\n', '', srcTxt, flags=re.MULTILINE)
+            className = classesNeedingClassInfo.get(os.path.basename(src))
+            if className:
+                srcTxt = injectClassInfo(className, srcTxt)
+        return srcTxt
+
+    def injectClassInfo(className, srcTxt):
+        # inject wxClassInfo macros into the sip generated wrapper class
+        lines = srcTxt.splitlines()
+        # find the beginning of the class declaration
+        for idx, line in enumerate(lines):
+            if line.startswith('class sip{}'.format(className)):
+                # next line is '{', insert after that
+                lines[idx+2:idx+2] = ['wxDECLARE_ABSTRACT_CLASS(sip{});'.format(className)]
+                break
+        # find the '};' that terminates the class
+        for idx, line in enumerate(lines[idx+2:], idx+2):
+            if line.startswith('};'):
+                lines[idx+1:idx+1] = ['\nwxIMPLEMENT_ABSTRACT_CLASS(sip{0}, {0});'.format(className)]
+                break
+        # join it back up and return
+        return '\n'.join(lines)
+
+
+    # Check each file in tmpdir to see if it is different than the same file
+    # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
+    # ignore it.
+    for src in sorted(glob.glob(sip_tmp_out_dir + '/*')):
+        dest = Path(opj(cfg.SIPOUT, os.path.basename(src)))
+        if not dest.exists():
+            msg('%s is a new file, copying...' % os.path.basename(src))
+            srcTxt = processSrc(src, options.keep_hash_lines)
+            dest.write_text(srcTxt, encoding="utf-8")
+            continue
+
+        srcTxt = processSrc(src, options.keep_hash_lines)
+        destTxt = dest.read_text(encoding="utf-8")
+
+        if srcTxt == destTxt:
+            pass
+        else:
+            msg('%s is changed, copying...' % os.path.basename(src))
+            dest.write_text(srcTxt, encoding="utf-8")
+
+    # Remove tmpdir and its contents
+    shutil.rmtree(tmpdir)
+
+
 def cmd_sip(options, args):
     cmdTimer = CommandTimer('sip')
     cfg = Config()
@@ -1307,134 +1439,17 @@ def cmd_sip(options, args):
         modules.remove(core_file)
         modules.insert(0, core_file)
 
-    for src_name in modules:
-        tmpdir = tempfile.mkdtemp()
-        tmpdir = tmpdir.replace('\\', '/')
-        src_name = src_name.replace('\\', '/')
-        base = os.path.basename(os.path.splitext(src_name)[0])
-        sbf = posixjoin(cfg.ROOT_DIR, cfg.SIPOUT, base) + '.sbf'
-        pycode = base[1:] # remove the leading _
-        pycode = opj(cfg.ROOT_DIR, cfg.PKGDIR, pycode) + '.py'
+    # Each module's output is independent, so build the stale ones in parallel.
+    modules_to_build = [src_name for src_name in modules if _sipModuleNeedsBuild(cfg, src_name)]
 
-        # Check if any of the included files are newer than the .sbf file
-        # produced by the previous run of sip. If not then we don't need to
-        # run sip again.
-        etg = loadETG(posixjoin('etg', base + '.py'))
-        sipFiles = getSipFiles(etg.INCLUDES) + [opj(cfg.SIPGEN, base+'.sip')]
-        if not newer_group(sipFiles, sbf) and os.path.exists(pycode):
-            continue
-
-        # Leave it turned off for now. TODO: Experiment with this...
-        # pyi_extract = posixjoin(cfg.PKGDIR, base[1:]) + '.pyi'
-        pyi_extract = None
-
-        # SIP extracts are used to pull python snippets and put them into the
-        # module's .py file
-        pycode = 'pycode'+base+':'+pycode
-
-        # Write out a pyproject.toml to configure sip
-        pyproject_toml = textwrap.dedent("""\
-            [build-system]
-            requires = ["sip >=6.6.2, <7"]
-            build-backend = "sipbuild.api"
-
-            [project]
-            name = "{base}"
-
-            [tool.sip.bindings.{base}]
-            docstrings = true
-            release-gil = true
-            exceptions = false
-            tracing = {tracing}
-            protected-is-public = false
-            generate-extracts = [\'{extracts}\']
-            pep484-pyi = false
-
-            [tool.sip.project]
-            abi-version = "{abi_version}"
-            sip-files-dir = '{sip_gen_dir}'
-            sip-include-dirs = ['{src_dir}']
-            sip-module = "wx.siplib"
-            """.format(
-                base=base,
-                abi_version=cfg.SIP_ABI,
-                tracing=str(cfg.SIP_TRACE).lower(),
-                extracts=pycode,
-                src_dir=opj(phoenixDir(), 'src'),
-                sip_gen_dir=opj(phoenixDir(), 'sip', 'gen'),
-                )
-        )
-        Path(tmpdir, 'pyproject.toml').write_text(pyproject_toml)
-
-        sip_pwd = pushDir(tmpdir)
-        cmd = 'sip-build --no-compile'
-        runcmd(cmd)
-        del sip_pwd
-
-        # Write out a sip build file (no longer done by sip itself)
-        sip_tmp_out_dir = opj(tmpdir, 'build', base)
-        sip_pwd = pushDir(sip_tmp_out_dir)
-        header = min(glob.glob('*.h'))
-        sources = sorted(glob.glob('*.cpp'))
-        del sip_pwd
-        Path(sbf).write_text(f"sources = {' '.join(sources)}\nheaders = {header}\n")
-        classesNeedingClassInfo = { 'sip_corewxTreeCtrl.cpp' : 'wxTreeCtrl', }
-
-        def processSrc(src, keepHashLines=False):
-            with open(src, 'rt', encoding="utf-8") as f:
-                srcTxt = f.read()
-                if keepHashLines:
-                    # Either just fix the pathnames in the #line lines...
-                    srcTxt = srcTxt.replace(sip_tmp_out_dir, cfg.SIPOUT)
-                else:
-                    # ...or totally remove them by replacing those lines with ''
-                    import re
-                    srcTxt = re.sub(r'^\s*#line.*\n', '', srcTxt, flags=re.MULTILINE)
-                className = classesNeedingClassInfo.get(os.path.basename(src))
-                if className:
-                    srcTxt = injectClassInfo(className, srcTxt)
-            return srcTxt
-
-        def injectClassInfo(className, srcTxt):
-            # inject wxClassInfo macros into the sip generated wrapper class
-            lines = srcTxt.splitlines()
-            # find the beginning of the class declaration
-            for idx, line in enumerate(lines):
-                if line.startswith('class sip{}'.format(className)):
-                    # next line is '{', insert after that
-                    lines[idx+2:idx+2] = ['wxDECLARE_ABSTRACT_CLASS(sip{});'.format(className)]
-                    break
-            # find the '};' that terminates the class
-            for idx, line in enumerate(lines[idx+2:], idx+2):
-                if line.startswith('};'):
-                    lines[idx+1:idx+1] = ['\nwxIMPLEMENT_ABSTRACT_CLASS(sip{0}, {0});'.format(className)]
-                    break
-            # join it back up and return
-            return '\n'.join(lines)
-
-
-        # Check each file in tmpdir to see if it is different than the same file
-        # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
-        # ignore it.
-        for src in sorted(glob.glob(sip_tmp_out_dir + '/*')):
-            dest = Path(opj(cfg.SIPOUT, os.path.basename(src)))
-            if not dest.exists():
-                msg('%s is a new file, copying...' % os.path.basename(src))
-                srcTxt = processSrc(src, options.keep_hash_lines)
-                dest.write_text(srcTxt, encoding="utf-8")
-                continue
-
-            srcTxt = processSrc(src, options.keep_hash_lines)
-            destTxt = dest.read_text(encoding="utf-8")
-
-            if srcTxt == destTxt:
-                pass
-            else:
-                msg('%s is changed, copying...' % os.path.basename(src))
-                dest.write_text(srcTxt, encoding="utf-8")
-
-        # Remove tmpdir and its contents
-        shutil.rmtree(tmpdir)
+    if modules_to_build:
+        maxWorkers = int(options.jobs) if options.jobs else max(2, numCPUs())
+        maxWorkers = min(maxWorkers, len(modules_to_build))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=maxWorkers) as executor:
+            futures = [executor.submit(_buildSipModule, cfg, options, src_name)
+                       for src_name in modules_to_build]
+            for future in concurrent.futures.as_completed(futures):
+                future.result()  # re-raises on failure
 
     # Generate sip module code
     deleteIfExists(cfg.SIPINC)
