@@ -79,6 +79,35 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+[dependency-groups]
+codegen = [
+    "setuptools>=70.1",
+    "sip==6.15.1",
+    "requests>=2.26.0",
+]
+build = [
+    {include-group = "codegen"},
+    "cython>=3.0.10",
+]
+test = [
+    "setuptools>=70.1",
+    "pytest",
+    "pytest-xdist",
+    "pytest-timeout",
+    "pytest-rerunfailures",
+]
+docs = [
+    "sphinx",
+    "python-docs-theme",
+    "doc2dash",
+    "beautifulsoup4",
+]
+devel = [
+    {include-group = "build"},
+    {include-group = "test"},
+    {include-group = "docs"},
+]
+
 [tool.setuptools.packages.find]
 exclude = ["src", "buildtools*", "etgtools", "sphinxtools", "src", "unittests"]
 namespaces = false

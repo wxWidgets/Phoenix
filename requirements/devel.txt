@@ -1,4 +1,8 @@
 # Python packages needed for building and testing wxPython Phoenix
+#
+# Legacy: GitHub Actions CI now installs from pyproject.toml's
+# [dependency-groups] instead. Keep this file's codegen/build/test/docs
+# packages in sync with those groups.
 -r install.txt
 appdirs
 setuptools
