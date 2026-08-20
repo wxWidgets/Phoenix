@@ -256,12 +256,18 @@ jobs:
         env:
           WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
         run: |
+          # Extract first: pip/cibuildwheel unpack the tarball into a random
+          # temp dir each run, which busts ccache since that path leaks into
+          # every compile command.
+          mkdir dist/wxpython-src
+          tar xzf dist/wxpython-${{ env.VERSION }}.tar.gz -C dist/wxpython-src --strip-components=1
+
           if [ -z "$CIBW_BUILD" ]; then
               cd dist
-              pip wheel -v wxpython-${{ env.VERSION }}.tar.gz
+              pip wheel -v ./wxpython-src
           else
               pip install cibuildwheel
-              cibuildwheel dist/wxpython-${{ env.VERSION }}.tar.gz --output-dir dist
+              cibuildwheel dist/wxpython-src --output-dir dist
           fi
 
       - name: Tag Linux wheel filename with OS to avoid collisions
