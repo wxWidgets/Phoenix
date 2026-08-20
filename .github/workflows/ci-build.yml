@@ -140,7 +140,7 @@ jobs:
             architecture: x86
           - os: windows-11-arm
             architecture: x64
-          # Only build oldest and newest Pythons on PRs
+          # Only build oldest and newest Pythons on PRs (keep in sync with ccache section)
           - python-version: ${{ github.event_name == 'pull_request' && '3.11' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.12' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.13' }}
@@ -234,7 +234,7 @@ jobs:
           arch: '${{ matrix.architecture }}'
 
       - name: Install ccache
-        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' }}
+        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.10' || matrix.python-version == '3.14') }}
         uses: hendrikmuhs/ccache-action@v1.2.23
         with:
           key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
@@ -242,7 +242,7 @@ jobs:
           save: ${{ github.event_name != 'pull_request' }}
 
       - name: Setup ccache
-        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' }}
+        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.10' || matrix.python-version == '3.14') }}
         run: |
           if [ ${{ runner.os }} == 'Linux' ]; then
               echo "PATH=/usr/lib/ccache:$PATH" >> $GITHUB_ENV
