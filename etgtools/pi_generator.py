@@ -21,11 +21,13 @@ supports Python 3.5 style type annotations in the interface files so we may
 want to add some type info to that version of the file eventually...
 """
 
+import json
 import sys, os, re
 from typing import Optional, Union
 import etgtools.extractors as extractors
 import etgtools.generators as generators
-from etgtools.generators import nci, Utf8EncodingStream, textfile_open
+from etgtools.generators import nci, Utf8EncodingStream, textfile_open, \
+                                 etgParallelOutputDir, currentEtgScriptId
 from etgtools.tweaker_tools import FixWxPrefix, magicMethods, \
                                    guessTypeInt, guessTypeFloat, guessTypeStr
 
@@ -103,6 +105,15 @@ _FourFloats: TypeAlias = Tuple[float, float, float, float]
 def piIgnored(obj):
     return getattr(obj, 'piIgnored', False)
 
+
+def checkAndWriteHeader(destFile, header, docstring):
+    if not os.path.exists(destFile):
+        # create the file and write the header
+        with textfile_open(destFile, 'wt') as f:
+            f.write(header)
+            if docstring:
+                f.write('\n"""\n%s"""\n' % docstring)
+
 #---------------------------------------------------------------------------
 
 class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
@@ -123,23 +134,29 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         destFile_pi = destFile + '.pi'
         destFile_pyi = destFile + '.pyi'
 
-        def _checkAndWriteHeader(destFile, header, docstring):
-            if not os.path.exists(destFile):
-                # create the file and write the header
-                with textfile_open(destFile, 'wt') as f:
-                    f.write(header)
-                    if docstring:
-                        f.write('\n"""\n%s"""\n' % docstring)
-
         if not SKIP_PI_FILE:
-            _checkAndWriteHeader(destFile_pi, header_pi, module.docstring)
+            checkAndWriteHeader(destFile_pi, header_pi, module.docstring)
             self.writeSection(destFile_pi, 'typing-imports', typing_imports, at_end=False)
             self.writeSection(destFile_pi, module.name, stream.getvalue())
 
         if not SKIP_PYI_FILE:
-            _checkAndWriteHeader(destFile_pyi, header_pyi, module.docstring)
-            self.writeSection(destFile_pyi, 'typing-imports', typing_imports, at_end=False)
-            self.writeSection(destFile_pyi, module.name, stream.getvalue())
+            parallelDir = etgParallelOutputDir()
+            if parallelDir:
+                # Multiple etg scripts may be writing sections into the same
+                # .pyi file concurrently. Rather than race on that shared
+                # file, stash this script's section for build.py to merge in
+                # (in the right order) once every script has finished.
+                outDir = os.path.join(parallelDir, 'pyi')
+                os.makedirs(outDir, exist_ok=True)
+                outFile = os.path.join(outDir, currentEtgScriptId() + '.json')
+                payload = dict(module=module.module, docstring=module.docstring,
+                                section=module.name, text=stream.getvalue())
+                with textfile_open(outFile, 'wt') as f:
+                    json.dump(payload, f)
+            else:
+                checkAndWriteHeader(destFile_pyi, header_pyi, module.docstring)
+                self.writeSection(destFile_pyi, 'typing-imports', typing_imports, at_end=False)
+                self.writeSection(destFile_pyi, module.name, stream.getvalue())
 
 
     def writeSection(self, destFile, sectionName, sectionText, at_end = True):

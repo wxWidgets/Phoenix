@@ -884,7 +884,7 @@ def getVcsRev():
     return svnrev
 
 
-def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True, onError=None, cwd=None):
+def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True, onError=None, cwd=None, env=None):
     """
     Runs a give command-line command, optionally returning the output.
     """
@@ -909,7 +909,7 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True, onError=None, cwd=Non
         otherKwArgs = dict(stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT)
 
-    with subprocess.Popen(cmd, shell=True, env=os.environ, cwd=cwd, **otherKwArgs) as sp:
+    with subprocess.Popen(cmd, shell=True, env=os.environ if env is None else env, cwd=cwd, **otherKwArgs) as sp:
 
         output = None
         if getOutput:
