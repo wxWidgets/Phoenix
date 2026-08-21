@@ -11,6 +11,7 @@
 Just some base classes and stubs for the various generators
 """
 
+import os
 import sys
 
 #---------------------------------------------------------------------------
@@ -40,6 +41,23 @@ class SphinxGenerator(DocsGeneratorBase):
 
 #---------------------------------------------------------------------------
 # helpers
+
+def etgParallelOutputDir():
+    """
+    When build.py runs etg scripts in parallel (--nodoc only), this env var
+    points generators with shared, accumulated output files (eg. the .pyi
+    files and itemToModuleMap.json) at a per-run scratch dir instead, so
+    concurrent etg processes never write to the same file. build.py merges
+    the per-script results back into the real files once all scripts finish.
+    Returns None when running the normal, non-parallel way.
+    """
+    return os.environ.get('WXPY_ETG_PARALLEL_DIR')
+
+
+def currentEtgScriptId():
+    """The basename (no extension) of the etg script currently running, eg. 'accel'."""
+    return os.path.splitext(os.path.basename(sys.argv[0]))[0]
+
 
 def nci(text, numSpaces=0, stripLeading=True):
     """

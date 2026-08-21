@@ -17,6 +17,7 @@ import sys
 import concurrent.futures
 import glob
 import hashlib
+import json
 import optparse
 import os
 import re
@@ -1125,6 +1126,92 @@ def cmd_version(options, args):
     print(cfg.VERSION)
 
 
+def _mergeParallelEtgOutput(parallelDir, scriptsRunInOrder):
+    """
+    Merge the per-script itemToModuleMap.json and .pyi contributions that
+    etg scripts wrote to parallelDir (see etgtools.generators.etgParallelOutputDir)
+    back into the real, shared files. The .pyi sections are applied in
+    scriptsRunInOrder so the result matches what a sequential run would have
+    produced.
+    """
+    from etgtools.item_module_map import ItemModuleMap
+    from etgtools.pi_generator import PiWrapperGenerator, checkAndWriteHeader, \
+                                       header_pyi, typing_imports, phoenixRoot
+
+    mapFile = ItemModuleMap().fileName
+    merged = {}
+    if os.path.isfile(mapFile):
+        with open(mapFile, 'rt', encoding='utf-8') as fid:
+            merged = json.load(fid) or {}
+    for script in scriptsRunInOrder:
+        scriptId = os.path.splitext(os.path.basename(script))[0]
+        partial = opj(parallelDir, 'itemmap', scriptId + '.json')
+        if not os.path.exists(partial):
+            continue
+        with open(partial, 'rt', encoding='utf-8') as fid:
+            merged.update(json.load(fid))
+    with open(mapFile, 'wt', encoding='utf-8') as fid:
+        json.dump(merged, fid, sort_keys=True, indent=0, separators=(',', ':'))
+
+    piGen = PiWrapperGenerator()
+    for script in scriptsRunInOrder:
+        scriptId = os.path.splitext(os.path.basename(script))[0]
+        partial = opj(parallelDir, 'pyi', scriptId + '.json')
+        if not os.path.exists(partial):
+            continue
+        with open(partial, 'rt', encoding='utf-8') as fid:
+            data = json.load(fid)
+        name = data['module']
+        if name.startswith('_'):
+            name = name[1:]
+        destFile_pyi = os.path.join(phoenixRoot, 'wx', name) + '.pyi'
+        checkAndWriteHeader(destFile_pyi, header_pyi, data['docstring'])
+        piGen.writeSection(destFile_pyi, 'typing-imports', typing_imports, at_end=False)
+        piGen.writeSection(destFile_pyi, data['section'], data['text'])
+
+
+def _runEtgBatchParallel(options, scripts, flags):
+    """Run one batch of etg scripts concurrently, then merge their shared-file
+    contributions back in. See _runEtgScriptsParallel for why the full set of
+    scripts to run gets split into batches rather than run as a single one.
+    """
+    if not scripts:
+        return
+    with tempfile.TemporaryDirectory(prefix='etg_parallel_') as parallelDir:
+        env = dict(os.environ, WXPY_ETG_PARALLEL_DIR=parallelDir)
+
+        maxWorkers = int(options.jobs) if options.jobs else max(2, numCPUs())
+        maxWorkers = min(maxWorkers, len(scripts))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=maxWorkers) as executor:
+            futures = [executor.submit(runcmd, '"%s" %s %s' % (PYTHON, script, flags), env=env)
+                       for script in scripts]
+            for future in concurrent.futures.as_completed(futures):
+                future.result()  # re-raises on failure
+
+        _mergeParallelEtgOutput(parallelDir, scripts)
+
+
+def _runEtgScriptsParallel(options, scripts, coreFamily, flags):
+    """
+    Run etg scripts concurrently. Only safe for --nodoc runs: that skips
+    the order-sensitive doc cross-referencing in the sphinx doc generator,
+    leaving the .pyi writer and itemToModuleMap.json as the only shared
+    state, both of which are made parallel-safe via etgParallelOutputDir()
+    (see etgtools/pi_generator.py and etgtools/item_module_map.py) and
+    merged back in afterwards.
+
+    Scripts outside the _core family read wx/core.pyi (FixWxPrefix in
+    etgtools/tweaker_tools.py) to decide how to qualify core class names in
+    their own docstrings, so _core's family is run and merged as its own
+    batch before anything else starts, guaranteeing wx/core.pyi exists and
+    is complete by the time it's needed.
+    """
+    coreScripts = [s for s in scripts if s in coreFamily]
+    otherScripts = [s for s in scripts if s not in coreFamily]
+    _runEtgBatchParallel(options, coreScripts, flags)
+    _runEtgBatchParallel(options, otherScripts, flags)
+
+
 def cmd_etg(options, args):
     cmdTimer = CommandTimer('etg')
     cfg = Config()
@@ -1144,12 +1231,16 @@ def cmd_etg(options, args):
         etgfiles.remove(core_file)
         etgfiles.insert(0, core_file)
 
+    coreFamily = set()
+    toRun = []
     for script in etgfiles:
         sipfile = etg2sip(script)
         deps = [script]
         ns = loadETG(script)
         if hasattr(ns, 'ETGFILES'):
             etgfiles += ns.ETGFILES[1:] # all but itself
+            if script == core_file:
+                coreFamily.update(ns.ETGFILES)
         if hasattr(ns, 'DEPENDS'):
             deps += ns.DEPENDS
         if hasattr(ns, 'OTHERDEPS'):
@@ -1157,6 +1248,17 @@ def cmd_etg(options, args):
 
         # run the script only if any dependencies are newer
         if newer_group(deps, sipfile):
+            toRun.append(script)
+
+    if not toRun:
+        return
+
+    if options.nodoc:
+        _runEtgScriptsParallel(options, toRun, coreFamily, flags)
+    else:
+        # The full doc generator does order-sensitive cross-module lookups,
+        # so it isn't safe to parallelize; run it the original way.
+        for script in toRun:
             runcmd('"%s" %s %s' % (PYTHON, script, flags))
 
 

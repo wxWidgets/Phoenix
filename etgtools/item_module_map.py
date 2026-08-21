@@ -16,12 +16,13 @@ class can easily be adapted to other purposes however, if the need arises.
 """
 
 # Standard library imports
+import os
 import os.path as op
 import json
 
 
 # Phoenix imports
-from .generators import textfile_open
+from .generators import textfile_open, etgParallelOutputDir, currentEtgScriptId
 from sphinxtools.constants import SPHINXROOT
 
 # ---------------------------------------------------------------------------
@@ -53,6 +54,14 @@ class ItemModuleMap(object):
 
     # Methods for reading/writing the data from/to persistent storage.
     def read(self):
+        if etgParallelOutputDir():
+            # Running as one of several concurrent etg processes. Nothing
+            # reads this map back in that mode (see flush() below), so
+            # there's no need to load the real, shared file here.
+            self._items.clear()
+            self._haveReadData = True
+            return
+
         if op.isfile(self.fileName):
             with textfile_open(self.fileName, 'rt') as fid:
                 items = json.load(fid)
@@ -70,6 +79,22 @@ class ItemModuleMap(object):
     def flush(self):
         if not self._haveReadData and not self._items:
             return
+
+        parallelDir = etgParallelOutputDir()
+        if parallelDir:
+            # Don't touch the shared file directly; write this script's own
+            # contributions out separately for build.py to merge in once all
+            # of the concurrently-running etg scripts have finished.
+            if not self._items:
+                return
+            outDir = op.join(parallelDir, 'itemmap')
+            os.makedirs(outDir, exist_ok=True)
+            outFile = op.join(outDir, currentEtgScriptId() + '.json')
+            with textfile_open(outFile, 'wt') as fid:
+                json.dump(self._items, fid, sort_keys=True,
+                          indent=0, separators=(',', ':'))
+            return
+
         with textfile_open(self.fileName, 'wt') as fid:
             # Dump the data to a file in json, using a format that minimizes
             # excess whitespace.
