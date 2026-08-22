@@ -604,6 +604,9 @@ class ParameterList(Node):
                   'This may be a documentation bug in wxWidgets or a side-effect of removing the `wx` prefix from signatures.\n\n'
 
         for arg in arguments:
+            if arg.is_fake:
+                # Made-up name; nothing in the docs XML to match it against.
+                continue
             arg_name = arg.name
             if arg.position_type in (ParameterType.VAR_ARGS, ParameterType.KWARGS):
                 continue

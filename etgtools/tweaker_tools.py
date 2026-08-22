@@ -66,13 +66,14 @@ class Signature:
     """
 
     class Parameter:
-        __slots__ = ('name', 'type_hint', 'default', 'position_type', )
+        __slots__ = ('name', 'type_hint', 'default', 'position_type', 'is_fake', )
         name: str
         type_hint: Optional[str]
         default: Optional[str]
         position_type: ParameterType
+        is_fake: bool
 
-        def __init__(self, name: str, type_hint: Optional[str] = None, default: Optional[str] = None, position_type: ParameterType = ParameterType.DEFAULT) -> None:
+        def __init__(self, name: str, type_hint: Optional[str] = None, default: Optional[str] = None, position_type: ParameterType = ParameterType.DEFAULT, is_fake: bool = False) -> None:
             if name.startswith('**'):
                 name = name[2:]
                 position_type = ParameterType.KWARGS
@@ -85,6 +86,7 @@ class Signature:
             self.type_hint = type_hint
             self.default = default
             self.position_type = position_type
+            self.is_fake = is_fake
 
         @property
         def _position_marking(self) -> str:

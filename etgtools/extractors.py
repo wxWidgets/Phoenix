@@ -316,8 +316,13 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.definition = element.find('definition').text
         self.argsString = element.find('argsstring').text
         self.checkDeprecated()
-        for node in element.findall('param'):
+        for idx, node in enumerate(element.findall('param')):
             p = ParamDef(node)
+            if not p.name and p.type != '...':
+                # wxWidgets gave no name for this param; make one up so the
+                # generated Python signature is syntactically valid.
+                p.name = '_param_%d' % idx
+                p.isNameFake = True
             self.items.append(p)
             # TODO: Look at self.detailedDoc and pull out any matching
             # parameter description items and assign that value as the
@@ -533,7 +538,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                         default = param.default
                         default = defValueMap.get(default, default)
                         default = '|'.join([self.cleanName(x, True) for x in default.split('|')])
-                    params.append(P(s, param_type, default))
+                    params.append(P(s, param_type, default, is_fake=param.isNameFake))
                     if default == 'None':
                         params[-1].make_optional()
         if getattr(self, 'isCtor', False):
@@ -655,6 +660,7 @@ class ParamDef(BaseDef):
         self.transferThis = False     # ownership of 'this' pointer transferred to this arg
         self.keepReference = False    # an extra reference to the arg is held
         self.constrained = False      # limit auto-conversion of similar types (like float -> int)
+        self.isNameFake = False       # name was made up because wxWidgets didn't provide one
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
