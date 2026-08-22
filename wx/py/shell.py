@@ -9,7 +9,6 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 import wx
 from wx import stc
 
-import keyword
 import os
 import sys
 import time
@@ -25,6 +24,13 @@ from .pseudo import PseudoFileErr
 from .version import VERSION
 from .magic import magic
 from .path import ls,cd,pwd,sx
+try:
+    from _pyrepl import _module_completer
+except (ModuleNotFoundError, ImportError):
+    _module_completer = None
+import rlcompleter
+import warnings
+
 
 sys.ps3 = '<-- '  # Input prompt.
 USE_MAGIC=True
@@ -271,7 +277,14 @@ class Shell(editwindow.EditWindow):
         self.buffer = Buffer()
 
         # Find out for which keycodes the interpreter will autocomplete.
-        self.autoCompleteKeys = self.interp.getAutoCompleteKeys()
+        self.autoCompleteKeys = self.interp.getAutoCompleteKeys() + [wx.WXK_TAB]
+        if _module_completer is not None:
+            self._module_completer = _module_completer.ModuleCompleter(locals)
+        else:
+            self._module_completer = None
+        self._rl_completer = rlcompleter.Completer(locals)
+        self.Bind(wx.stc.EVT_STC_AUTOCOMP_COMPLETED, self.OnAutoCompCompleted)
+        self._last_completion_command = None
 
         # Keep track of the last non-continuation prompt positions.
         self.promptPosStart = 0
@@ -324,10 +337,13 @@ class Shell(editwindow.EditWindow):
             self.ID_UNDO = wx.NewIdRef()
             self.ID_REDO = wx.NewIdRef()
 
+        self.ID_COPY_HISTORY = wx.NewIdRef()
+
         # Assign handlers for edit events
         self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=self.ID_CUT)
         self.Bind(wx.EVT_MENU, lambda evt: self.Copy(), id=self.ID_COPY)
         self.Bind(wx.EVT_MENU, lambda evt: self.CopyWithPrompts(), id=frame.ID_COPY_PLUS)
+        self.Bind(wx.EVT_MENU, lambda evt: self.CopyHistory(), id=self.ID_COPY_HISTORY)
         self.Bind(wx.EVT_MENU, lambda evt: self.Paste(), id=self.ID_PASTE)
         self.Bind(wx.EVT_MENU, lambda evt: self.PasteAndRun(), id=frame.ID_PASTE_PLUS)
         self.Bind(wx.EVT_MENU, lambda evt: self.SelectAll(), id=self.ID_SELECTALL)
@@ -339,6 +355,7 @@ class Shell(editwindow.EditWindow):
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCut()), id=self.ID_CLEAR)
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCopy()), id=self.ID_COPY)
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanCopy()), id=frame.ID_COPY_PLUS)
+        self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(bool(self.history)), id=self.ID_COPY_HISTORY)
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanPaste()), id=self.ID_PASTE)
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanPaste()), id=frame.ID_PASTE_PLUS)
         self.Bind(wx.EVT_UPDATE_UI, lambda evt: evt.Enable(self.CanUndo()), id=self.ID_UNDO)
@@ -721,7 +738,13 @@ class Shell(editwindow.EditWindow):
 
         # Only allow these keys after the latest prompt.
         elif key in (wx.WXK_TAB, wx.WXK_DELETE):
-            if self.CanEdit():
+            if not self.CanEdit(): event.Skip()
+            if key==wx.WXK_TAB and self.autoComplete and wx.WXK_TAB in self.autoCompleteKeys:
+                # from shell OnChar, which will not be called for TAB: start auto-completion
+                command = self.GetTextRange(self.promptPosEnd, currpos)
+                if not self.autoCompleteShow(command):
+                    event.Skip()  # not handled
+            else:
                 event.Skip()
 
         # Don't toggle between insert mode and overwrite mode.
@@ -1174,18 +1197,97 @@ class Shell(editwindow.EditWindow):
                 else:
                     self.run(command, prompt=False, verbose=True)
 
-    def autoCompleteShow(self, command, offset = 0):
+    ############################################################################
+    # new implementation of autoCompleteShow
+    import re
+    _last_identifier_re = re.compile(r".*?([a-z_]?\w*)?$", re.IGNORECASE+re.DOTALL)
+    _last_identifier_dot_re = re.compile(r".*?([a-z_\.]?[\w\.]*)?$", re.IGNORECASE+re.DOTALL)
+    def _get_last_identifier(self, command, include_dot=False):
+        if include_dot:
+            return self._last_identifier_dot_re.match(command).group(1)
+        return self._last_identifier_re.match(command).group(1)
+    def _get_completions(self, command):
+        with warnings.catch_warnings(action="ignore"):
+            if "." in command and not "[" in command and not "(" in command:
+                ret = self._rl_completer.attr_matches(command)
+            elif "." in command:
+                ret = []
+            else:
+                ret = self._rl_completer.global_matches(command)
+        if ret:
+            ret = [a.rsplit(".")[-1] for a in ret]
+            ret.sort(key=str.casefold)
+            return ret
+        # some hard-coded completions:
+        last = self._get_last_identifier(command)
+        completions = []
+        if command.startswith("from"):
+            if not last: return ["import "]
+            completions.append("import ")
+        completions = [c for c in completions if c.startswith(last)]
+        return completions
+
+    def autoCompleteShow(self, command:str, offset = 0):
         """Display auto-completion popup list."""
         self.AutoCompSetAutoHide(self.autoCompleteAutoHide)
         self.AutoCompSetIgnoreCase(self.autoCompleteCaseInsensitive)
-        list = self.interp.getAutoCompleteList(command,
-                    includeMagic=self.autoCompleteIncludeMagic,
-                    includeSingle=self.autoCompleteIncludeSingle,
-                    includeDouble=self.autoCompleteIncludeDouble)
-        if list:
-            options = ' '.join(list)
-            #offset = 0
+        self._last_completion_command = None
+        last = self._get_last_identifier(command)
+        if not last and not command.endswith("."):
+            return False
+        offset = len(last)
+
+        if self._module_completer:
+            options = self._module_completer.get_completions(command)
+            if options:
+                options = [m.rsplit(".",1)[-1] for m in options]
+                # some hard-coded extensions:
+                if command.startswith("from ") and not "import" in command:
+                    options = [m+" " for m in options]
+    
+                if len(options)==1:
+                    self.write(options[0][offset:])
+                elif options:
+                    options = ' '.join(options)
+                    self.AutoCompShow(offset, options)
+                return True
+
+        # symbol or statement, not a module
+        # for multi-line inputs, we take the last line only and strip "...     "
+        command_ = command.rsplit("\r",1)[-1].rsplit("\n",1)[-1].rsplit("\t",1)[-1].lstrip(". ")
+        if not command_:
+            return False
+
+        self._last_completion_command = command_[:-offset]  if offset else  command_
+        last_identifier = self._get_last_identifier(command_, include_dot=True)
+        options = self._get_completions(last_identifier)
+        if options:
+            command_ = last_identifier
+        else:
+            options = self._get_completions(command_)
+
+        if not options:
+            # hard-coded extensions
+            if last=="ra": options = ["range("]
+            if last=="pr": options = ["print("]
+
+        if len(options)==1:
+            completion = options[0]
+            self.write(completion[offset:])
+            if completion.endswith("("):
+                wx.CallAfter(self.autoCallTipShow, self._last_completion_command+completion)
+
+        elif options:
+            options = ' '.join(options)
             self.AutoCompShow(offset, options)
+        return True
+
+    def OnAutoCompCompleted(self, evt):
+        """If the user has selected a completion ending with '(', display the call tip"""
+        completion = evt.GetString()
+        if completion.endswith("(") and self._last_completion_command:
+            wx.CallAfter(self.autoCallTipShow, self._last_completion_command+completion)
+        evt.Skip()
 
     def autoCallTipShow(self, command, insertcalltip = True, forceCallTip = False):
         """Display argument spec and docstring in a popup window."""
@@ -1353,6 +1455,13 @@ class Shell(editwindow.EditWindow):
             data = wx.TextDataObject(command)
             self._clip(data)
 
+    def CopyHistory(self):
+        """Copy input history and place it on the clipboard."""
+        if self.history:
+            data = os.linesep.join( reversed(self.history) )
+            data = wx.TextDataObject(data)
+            self._clip(data)
+
     def _clip(self, data):
         if wx.TheClipboard.Open():
             wx.TheClipboard.UsePrimarySelection(False)
@@ -1501,6 +1610,7 @@ class Shell(editwindow.EditWindow):
         menu.Append(self.ID_CUT, "Cut")
         menu.Append(self.ID_COPY, "Copy")
         menu.Append(frame.ID_COPY_PLUS, "Copy With Prompts")
+        menu.Append(self.ID_COPY_HISTORY, "Copy History")
         menu.Append(self.ID_PASTE, "Paste")
         menu.Append(frame.ID_PASTE_PLUS, "Paste And Run")
         menu.Append(self.ID_CLEAR, "Clear")

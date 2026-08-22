@@ -7,8 +7,6 @@ import re
 import sys
 import inspect
 import tokenize
-import types
-import wx
 from io import BytesIO
 
 def getAutoCompleteList(command='', locals=None, includeMagic=1,
@@ -174,35 +172,36 @@ def getCallTip(command='', locals=None):
         pass
     tip1 = ''
     argspec = ''
+    doc = ''
     obj = inspect.unwrap(obj)
     if inspect.isbuiltin(obj):
         # Builtin functions don't have an argspec that we can get.
         pass
-    elif inspect.isfunction(obj):
+    elif callable(obj):
         # tip1 is a string like: "getCallTip(command='', locals=None)"
         try:
-            argspec = str(inspect.signature(obj)) # PY35 or later
-        except AttributeError:
-            argspec = inspect.getfullargspec(obj)
-            argspec = inspect.formatargspec(*argspec)
-        if dropSelf:
-            # The first parameter to a method is a reference to an
-            # instance, usually coded as "self", and is usually passed
-            # automatically by Python; therefore we want to drop it.
-            temp = argspec.split(',')
-            if len(temp) == 1:  # No other arguments.
-                argspec = '()'
-            elif temp[0][:2] == '(*': # first param is like *args, not self
-                pass
-            else:  # Drop the first argument.
-                argspec = '(' + ','.join(temp[1:]).lstrip()
-        tip1 = name + argspec
-    doc = ''
-    if callable(obj):
+            argspec = str(inspect.signature(obj))
+        except ValueError:
+            pass
+        else:
+            if dropSelf:
+                # The first parameter to a method is a reference to an
+                # instance, usually coded as "self", and is usually passed
+                # automatically by Python; therefore we want to drop it.
+                temp = argspec.split(',')
+                if len(temp) == 1:  # No other arguments.
+                    argspec = '()'
+                elif temp[0][:2] == '(*': # first param is like *args, not self
+                    pass
+                else:  # Drop the first argument.
+                    argspec = '(' + ','.join(temp[1:]).lstrip()
+            tip1 = name + argspec
+
         try:
             doc = inspect.getdoc(obj)
         except:
             pass
+
     if doc:
         # tip2 is the first separated line of the docstring, like:
         # "Return call tip text for a command."
@@ -219,6 +218,7 @@ def getCallTip(command='', locals=None):
         tip = '%s%s\n\n%s' % (tip1, tip2, tip3)
     else:
         tip = tip1
+
     # Extract argspec from the signature e.g., (x, /, *, ...) -> int
     m = re.search(r'\((.*)\)', argspec)
     if m:
