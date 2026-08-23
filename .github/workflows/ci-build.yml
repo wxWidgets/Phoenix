@@ -262,12 +262,13 @@ jobs:
           mkdir dist/wxpython-src
           tar xzf dist/wxpython-${{ env.VERSION }}.tar.gz -C dist/wxpython-src --strip-components=1
 
+          cd dist
           if [ -z "$CIBW_BUILD" ]; then
-              cd dist
-              pip wheel -v ./wxpython-src
+              pip install build
+              python -m build --wheel --verbose --outdir . ./wxpython-src
           else
               pip install cibuildwheel
-              cibuildwheel dist/wxpython-src --output-dir dist
+              cibuildwheel ./wxpython-src --output-dir .
           fi
 
       - name: Tag Linux wheel filename with OS to avoid collisions

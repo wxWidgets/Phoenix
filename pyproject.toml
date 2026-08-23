@@ -74,7 +74,7 @@ requires = [
     "setuptools>=70.1",
     "cython >= 3.0.10",
     "requests >= 2.26.0",
-    "sip == 6.12.0",
+    "sip == 6.15.1",
     "typing-extensions; python_version < '3.11'",
 ]
 build-backend = "setuptools.build_meta"
@@ -113,7 +113,7 @@ exclude = ["src", "buildtools*", "etgtools", "sphinxtools", "src", "unittests"]
 namespaces = false
 
 [tool.cibuildwheel]
-build-frontend = "pip"
+build-frontend = "build"
 build-verbosity = 1
 enable = ["cpython-prerelease"]
 

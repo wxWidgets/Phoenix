@@ -121,8 +121,12 @@ jobs:
         env:
           WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
         run: |
+          mkdir dist/wxpython-src
+          tar xzf dist/wxpython-${{ env.VERSION }}.tar.gz -C dist/wxpython-src --strip-components=1
+
+          pip install build
           cd dist
-          pip wheel -v wxpython-${{ env.VERSION }}.tar.gz
+          python -m build --wheel --verbose --outdir . ./wxpython-src
 
       - name: Tag wheel filename with OS to avoid collisions across the OS matrix
         run: |
