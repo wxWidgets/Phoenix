@@ -44,10 +44,12 @@ def run():
     # customizing the generated code and docstrings.
 
     module.addHeaderCode("""\
+        #if wxUSE_WEBVIEW
         #include <wx/webview.h>
         #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
             #include <wx/msw/webview_ie.h>
             #include <wx/msw/webview_edge.h>
+        #endif
         #endif
         """)
     module.addHeaderCode('#include <wx/filesys.h>')
@@ -213,7 +215,7 @@ def run():
     # these methods with a new implementation that does the RightThing using
     # sys.executable.
     c.addCppCode(r"""
-        #if wxUSE_WEBVIEW_IE && defined(__WXMSW__)
+        #if wxUSE_WEBVIEW && wxUSE_WEBVIEW_IE && defined(__WXMSW__)
         #include <wx/msw/webview_ie.h>
         #include <wx/msw/registry.h>
 

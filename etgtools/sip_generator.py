@@ -443,6 +443,9 @@ from .%s import *
         if klass.ignored:
             return
 
+        # For any header filename starting with these prefixes, protect the #include with an #if wxUSE_ guard
+        optional_wx_modules = [ "webview" ]
+
         # Propagate preMethodCode setting to the ctors
         if klass.preMethodCode:
             for item in klass.allItems():
@@ -466,7 +469,15 @@ from .%s import *
         if klass.includes:
             stream.write('%s%%TypeHeaderCode\n' % indent2)
             for inc in klass.includes:
+                header_basename = inc.split('/')[-1].split('.')[0]
+                need_endif = False
+                for module_name in optional_wx_modules:
+                    if header_basename.startswith(module_name):
+                        stream.write('%s  #if wxUSE_%s\n' % (indent2, module_name.upper()))
+                        need_endif = True
                 stream.write('%s    #include <%s>\n' % (indent2, inc))
+                if need_endif:
+                    stream.write('%s  #endif\n' % indent2)
             stream.write('%s%%End\n\n' % indent2)
 
         # C++ code to be written to the Type's header
