@@ -21,7 +21,6 @@ classifiers = [
     "Environment :: Win32 (MS Windows)",
     "Environment :: X11 Applications :: GTK",
     "Intended Audience :: Developers",
-    "License :: OSI Approved",
     "Operating System :: MacOS",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
@@ -39,9 +38,10 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Software Development :: User Interfaces",
 ]
+license = "LGPL-2.0-or-later WITH WxWindows-exception-3.1"
+license-files = ["LICENSE.txt"]
 dynamic = [
     "dependencies",
-    "license",
     "readme",
     "version",
 ]
@@ -71,7 +71,7 @@ Discuss = "https://discuss.wxpython.org/"
 
 [build-system]
 requires = [
-    "setuptools>=70.1",
+    "setuptools>=77",
     "cython >= 3.0.10",
     "requests >= 2.26.0",
     "sip == 6.15.1",
@@ -81,7 +81,7 @@ build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 codegen = [
-    "setuptools>=70.1",
+    "setuptools>=77",
     "sip==6.15.1",
     "requests>=2.26.0",
 ]
@@ -90,7 +90,7 @@ build = [
     "cython>=3.0.10",
 ]
 test = [
-    "setuptools>=70.1",
+    "setuptools>=77",
     "pytest",
     "pytest-xdist",
     "pytest-timeout",

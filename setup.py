@@ -33,7 +33,6 @@ DOCS_BASE='http://docs.wxPython.org'
 
 #----------------------------------------------------------------------
 
-LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 
 LONG_DESCRIPTION = """\
@@ -333,7 +332,6 @@ if __name__ == '__main__':
     setup(version          = cfg.VERSION,
           long_description = LONG_DESCRIPTION,
           long_description_content_type = 'text/x-rst',
-          license          = LICENSE,
           platforms        = PLATFORMS,
           install_requires = INSTALL_REQUIRES,
           zip_safe         = False,
