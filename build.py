@@ -142,7 +142,6 @@ Usage: ./build.py [command(s)] [options]
       sdist_demo    Build a tarball containing just the demo and samples folders
       bdist         Create a binary tarball release of wxPython Phoenix
       bdist_docs    Build a tarball containing the documentation
-      bdist_egg     Build a Python egg.  Requires magic.
       bdist_wheel   Build a Python wheel.  Requires magic.
 
       test          Run the unit test suite
@@ -435,11 +434,10 @@ def makeOptionParser():
 
         ("no_magic",       (False, "Do NOT use the magic that will enable the wxWidgets "
                                    "libraries to be bundled with wxPython. (Such as when "
-                                   "using an uninstalled wx/wxPython from the build dir, "
-                                   "or when distributing wxPython as an egg.)  When using "
-                                   "this flag you should either build with an already "
-                                   "installed wxWidgets, or allow this script to build and "
-                                   "install wxWidgets independently of wxPython.")),
+                                   "using an uninstalled wx/wxPython from the build dir.)  "
+                                   "When using this flag you should either build with an "
+                                   "already installed wxWidgets, or allow this script to "
+                                   "build and install wxWidgets independently of wxPython.")),
 
         ("build_dir",      ("",    "Directory to store wx build files. (Not used on Windows)")),
         ("prefix",         ("",    "Prefix value to pass to the wx build.")),
@@ -2078,19 +2076,6 @@ def _doSimpleSetupCmd(options, args, setupCmd):
     cmd = '"%s" setup.py %s --skip-build  %s %s' % (PYTHON, setupCmd, VERBOSE, options.extra_setup)
     runcmd(cmd)
 
-
-def cmd_bdist_egg(options, args):
-    pdbzip = cmd_build_pdbzip(options, args)
-    _doSimpleSetupCmd(options, args, 'bdist_egg')
-    cfg = Config()
-    if options.upload:
-        filemask = "dist/%s-%s-*.egg" % (baseName, cfg.VERSION)
-        filenames = sorted(glob.glob(filemask))
-        assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
-        uploadPackage(filenames[0], options)
-        if pdbzip:
-            uploadPackage(pdbzip, options, keep=24,
-                          mask='%s-pdb-%s*' % (baseName, cfg.VER_MAJOR))
 
 def cmd_bdist_wheel(options, args):
     pdbzip = cmd_build_pdbzip(options, args)

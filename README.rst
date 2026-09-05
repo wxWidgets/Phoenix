@@ -146,11 +146,10 @@ The build phase of the build.py script will copy the results of the wxWidgets
 and Phoenix builds into the wx folder in the Phoenix source tree. This will
 allow you to run and test Phoenix directly from the source tree without
 installing it, if desired. You just need to set ``PYTHONPATH`` appropriately,
-or you can use ``python setup.py develop`` or ``pip install -e .`` to install
-an .egg-link file in your current Python site-packages folder that will point
-to the folder where you built wxPython Phoenix. When you are finished testing
-you can then use the install or one of the bdist commands like you normally
-would for other Python packages.
+or you can use ``pip install -e .`` to install a link in your current Python
+site-packages folder that will point to the folder where you built wxPython
+Phoenix. When you are finished testing you can then use the install or the
+bdist_wheel command like you normally would for other Python packages.
 
 
 

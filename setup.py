@@ -17,7 +17,6 @@ import stat
 from setuptools                     import setup
 from distutils.command.build        import build as orig_build
 from setuptools.command.install     import install as orig_install
-from setuptools.command.bdist_egg   import bdist_egg as orig_bdist_egg
 from setuptools.command.sdist       import sdist as orig_sdist
 from setuptools.command.bdist_wheel import bdist_wheel as orig_bdist_wheel
 
@@ -112,14 +111,10 @@ class wx_build(orig_build):
 
 def _cleanup_symlinks(cmd):
     # Clean out any libwx* symlinks in the build_lib folder, as they will
-    # turn into copies in the egg since zip files can't handle symlinks.
+    # turn into copies in the wheel since zip files can't handle symlinks.
     # The links are not really needed since the extensions link to the
-    # specific soname, and they could bloat the egg too much if they were
+    # specific soname, and they could bloat the wheel too much if they were
     # left in.
-    #
-    # TODO: can eggs have post-install scripts that would allow us to
-    # restore the links? No.
-    #
     build_lib = cmd.get_finalized_command('build').build_lib
     build_lib = opj(build_lib, 'wx')
     for libname in sorted(glob.glob(opj(build_lib, 'libwx*'))):
@@ -149,32 +144,6 @@ def _cleanup_symlinks(cmd):
                 pass
 
 
-class wx_bdist_egg(orig_bdist_egg):
-    def finalize_options(self):
-        orig_bdist_egg.finalize_options(self)
-
-        # Redo the calculation of the egg's filename since we always have
-        # extension modules, but they are not built by setuptools so it
-        # doesn't know about them.
-        from pkg_resources import Distribution
-        from sysconfig import get_python_version
-        basename = Distribution(
-            None, None, self.ei_cmd.egg_name, self.ei_cmd.egg_version,
-            get_python_version(),
-            self.plat_name
-        ).egg_name()
-        self.egg_output = os.path.join(self.dist_dir, basename+'.egg')
-
-
-    def run(self):
-        # Ensure that there is a basic library build for bdist_egg to pull from.
-        self.run_command("build")
-
-        _cleanup_symlinks(self)
-
-        # Run the default bdist_egg command
-        orig_bdist_egg.run(self)
-
 class wx_bdist_wheel(orig_bdist_wheel):
     def finalize_options(self):
         # Do a bit of monkey-patching to let bdist_wheel know that there
@@ -190,7 +159,7 @@ class wx_bdist_wheel(orig_bdist_wheel):
 
 
     def run(self):
-        # Ensure that there is a basic library build for bdist_egg/wheel to pull from.
+        # Ensure that there is a basic library build for bdist_wheel to pull from.
         self.run_command("build")
 
         _cleanup_symlinks(self)
@@ -229,7 +198,6 @@ class wx_sdist(orig_sdist):
 # Map these new classes to the appropriate distutils command names.
 CMDCLASS = {
     'build'       : wx_build,
-    'bdist_egg'   : wx_bdist_egg,
     'install'     : wx_install,
     'sdist'       : wx_sdist,
     'bdist_wheel' : wx_bdist_wheel,

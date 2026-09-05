@@ -10,16 +10,16 @@
 #----------------------------------------------------------------------
 #---------------------------------------------------------------------------
 # This setup file is placed in the root folder of the source dist tarball,
-# and will be used to help do automated builds from tools like easy_install
-# or pip.  These tools expect to find at least the setup.py in the root
-# folder, so let's accommodate them...
+# and will be used to help do automated builds from tools like pip.  These
+# tools expect to find at least the setup.py in the root folder, so let's
+# accommodate them...
 #---------------------------------------------------------------------------
 
 import os, glob
 
-# Restructure the content of the tarball so things like pip or easy_install
-# know how to build stuff. To be compatible with those tools the main source
-# dir needs to be the root, so move all of Phoenix/* here.
+# Restructure the content of the tarball so things like pip know how to build
+# stuff. To be compatible with those tools the main source dir needs to be the
+# root, so move all of Phoenix/* here.
 SRC = 'Phoenix'
 if os.path.exists(SRC) and os.path.isdir(SRC):
     items = os.listdir(SRC)
