@@ -109,8 +109,8 @@ devel = [
 ]
 
 [tool.setuptools.packages.find]
-exclude = ["src", "buildtools*", "etgtools", "sphinxtools", "src", "unittests"]
-namespaces = false
+include = ["wx", "wx.*"]
+namespaces = true
 
 [tool.cibuildwheel]
 build-frontend = "build"

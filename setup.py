@@ -14,7 +14,7 @@ import sys, os
 import glob
 import stat
 
-from setuptools                     import setup, find_packages
+from setuptools                     import setup
 from distutils.command.build        import build as orig_build
 from setuptools.command.install     import install as orig_install
 from setuptools.command.bdist_egg   import bdist_egg as orig_bdist_egg
@@ -317,8 +317,6 @@ setuptools.command.build_py.make_writable = wx_make_writable
 
 #----------------------------------------------------------------------
 
-WX_PKGLIST = [cfg.PKGDIR] + [cfg.PKGDIR + '.' + pkg for pkg in find_packages('wx')]
-
 HEADERS = None
 BUILD_OPTIONS = { } #'build_base' : cfg.BUILD_BASE }
 #if cfg.WXPORT == 'msw':
@@ -337,7 +335,6 @@ if __name__ == '__main__':
           zip_safe         = False,
           include_package_data = True,
 
-          packages         = WX_PKGLIST,
           ext_package      = cfg.PKGDIR,
 
           options          = { 'build'     : BUILD_OPTIONS },
