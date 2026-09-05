@@ -2095,25 +2095,6 @@ def cmd_bdist_wheel(options, args):
                           mask='%s-pdb-%s*' % (baseName, cfg.VER_MAJOR))
 
 
-def cmd_bdist_wininst(options, args):
-    pdbzip = cmd_build_pdbzip(options, args)
-    _doSimpleSetupCmd(options, args, 'bdist_wininst')
-    cfg = Config()
-    if options.upload:
-        filemask = "dist/%s-%s-*.exe" % (baseName, cfg.VERSION)
-        filenames = sorted(glob.glob(filemask))
-        assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
-        uploadPackage(filenames[0], options)
-        if pdbzip:
-            uploadPackage(pdbzip, options, keep=24,
-                          mask='%s-pdb-%s*' % (baseName, cfg.VER_MAJOR))
-
-
-def cmd_bdist_msi(options, args):
-    cmd_build_pdbzip(options, args)
-    _doSimpleSetupCmd(options, args, 'bdist_msi')
-
-
 def cmd_egg_info(options, args, egg_base=None):
     cmdTimer = CommandTimer('egg_info')
     VERBOSE = '--verbose' if options.verbose else ''
