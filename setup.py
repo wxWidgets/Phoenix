@@ -15,7 +15,7 @@ import glob
 import stat
 
 from setuptools                     import setup
-from distutils.command.build        import build as orig_build
+from setuptools.command.build       import build as orig_build
 from setuptools.command.install     import install as orig_install
 from setuptools.command.sdist       import sdist as orig_sdist
 from setuptools.command.bdist_wheel import bdist_wheel as orig_bdist_wheel
@@ -222,8 +222,7 @@ def wx_copy_file(src, dst, preserve_mode=1, preserve_times=1, update=0,
             dst = os.path.join(dst, os.path.basename(src))
         linkdst = os.readlink(src)
         if verbose >= 1:
-            from distutils import log
-            log.info("%s %s -> %s", 'copying symlink', src, dst)
+            print('copying symlink %s -> %s' % (src, dst))
         if not dry_run and not os.path.exists(dst):
             os.symlink(linkdst, dst)
         return (dst, 1)
@@ -239,8 +238,7 @@ def wx_copy_file_new(src, dst, preserve_mode=True, preserve_times=True,
             dst = os.path.join(dst, os.path.basename(src))
         linkdst = os.readlink(src)
         if verbose:
-            from distutils import log
-            log.info("%s %s -> %s", 'copying symlink', src, dst)
+            print('copying symlink %s -> %s' % (src, dst))
         if not os.path.exists(dst):
             os.symlink(linkdst, dst)
         return (dst, True)
