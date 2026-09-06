@@ -21,8 +21,6 @@ import shutil
 import subprocess
 import platform
 
-from distutils.file_util import copy_file
-from distutils.dir_util  import mkpath
 from setuptools.modified import newer
 
 import distutils.sysconfig
@@ -482,8 +480,8 @@ class Configuration(object):
         for src in moFiles:
             lang = os.path.splitext(os.path.basename(src))[0]
             dest = opj(destdir, lang, 'LC_MESSAGES')
-            mkpath(dest, verbose=verbose)
-            copy_file(src, opj(dest, 'wxstd.mo'), update=1, verbose=verbose)
+            os.makedirs(dest, exist_ok=True)
+            copyIfNewer(src, opj(dest, 'wxstd.mo'), verbose=verbose)
             os.unlink(src)
             self.CLEANUP.append(opj(dest, 'wxstd.mo'))
             self.CLEANUP.append(dest)
@@ -1053,18 +1051,15 @@ def getToolsPlatformName(useLinuxBits=False):
 
 
 def updateLicenseFiles(cfg):
-    from distutils.file_util import copy_file
-    from distutils.dir_util  import mkpath
-
     # Copy the license files from wxWidgets
-    mkpath('license')
+    os.makedirs('license', exist_ok=True)
     for filename in ['preamble.txt', 'licence.txt', 'lgpl.txt', 'gpl.txt']:
-        copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename),
-                      update=1, verbose=1)
+        copyIfNewer(opj(cfg.WXDIR, 'docs', filename), opj('license', filename),
+                    verbose=1)
 
     # Get the sip license too
-    copy_file(opj('sip', 'siplib', 'LICENSE'), opj('license', 'sip-license.txt'),
-              update=1, verbose=1)
+    copyIfNewer(opj('sip', 'siplib', 'LICENSE'), opj('license', 'sip-license.txt'),
+                verbose=1)
 
     # Combine the relevant files into a single LICENSE.txt file
     text = ''
