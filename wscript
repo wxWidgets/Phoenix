@@ -364,8 +364,7 @@ def build(bld):
     thisdir = os.path.abspath(".")
     sys.path.insert(0, thisdir)
 
-    from distutils.file_util import copy_file
-    from buildtools.config   import opj, updateLicenseFiles
+    from buildtools.config import opj, copyIfNewer, updateLicenseFiles
 
     cfg.finishSetup(wx_config=bld.env.wx_config,
                     compiler='mingw32' if isWindows and not bld.env.use_msvc else None)
@@ -386,7 +385,7 @@ def build(bld):
 
     # copy .py files that need to go into the root wx package dir
     for name in ['src/__init__.py', 'src/gizmos.py',]:
-        copy_file(name, cfg.PKGDIR, update=1, verbose=1)
+        copyIfNewer(name, cfg.PKGDIR, verbose=1)
 
     # Create the build tasks for each of our extension modules.
     addRelwithdebugFlags(bld, 'siplib')
@@ -466,18 +465,17 @@ def makeExtCopyRule(bld, name):
 
 # This is the task function to be called by the above rule.
 def copyFileToPkg(task):
-    from distutils.file_util import copy_file
-    from buildtools.config   import opj
+    from buildtools.config import opj, copyFile
     src = task.inputs[0].abspath()
     tgt = task.outputs[0].abspath()
     open(tgt, "wb").close() # essentially just a unix 'touch' command
     tgt = opj(cfg.PKGDIR, os.path.basename(src))
-    copy_file(src, tgt, verbose=1)
+    copyFile(src, tgt, verbose=1)
     if task.env.use_msvc and task.env.msvc_relwithdebug:
         # also copy the .pdb file
         src = src.replace('.pyd', '.pdb')
         tgt = opj(cfg.PKGDIR, os.path.basename(src))
-        copy_file(src, tgt, verbose=1)
+        copyFile(src, tgt, verbose=1)
     return 0
 
 
