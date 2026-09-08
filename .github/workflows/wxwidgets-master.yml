@@ -1,0 +1,134 @@
+#---------------------------------------------------------------------------
+# This workflow builds wxPython against the current tip of the wxWidgets
+# master branch (rather than the pinned ext/wxWidgets submodule revision) so
+# that incompatible changes on either side are caught early. It runs once a
+# day and can also be triggered manually.
+#---------------------------------------------------------------------------
+
+name: wxWidgets-master
+
+on:
+  # Scheduled runs are disabled for now; trigger manually via the web ui.
+  # schedule:
+  #   # Once a day, shortly after 05:00 UTC
+  #   - cron: '0 5 * * *'
+
+  workflow_dispatch:
+
+# Only keep the most recent run
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    # always use bash shell, even on windows
+    shell: bash
+
+env:
+  PYTHONUNBUFFERED: 1
+
+#---------------------------------------------------------------------------
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Linux,   os: ubuntu-24.04 }
+          - { name: macOS,    os: macos-15 }
+          - { name: Windows,  os: windows-2025 }
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: initialize variables
+        run: |
+          echo "XVFB_RUN=" >> $GITHUB_ENV
+          if [ ${{ runner.os }} == 'Linux' ]; then
+              echo "XVFB_RUN=dbus-run-session -- xvfb-run -a" >> $GITHUB_ENV
+              echo "WXPY_TEST_XVFB=1" >> $GITHUB_ENV
+          fi
+
+      - name: Checkout wxPython
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+          fetch-depth: 0
+          filter: blob:none
+          persist-credentials: false
+
+      - name: Checkout nanosvg submodule
+        run: git submodule update --init --recursive --filter=blob:none --jobs=4 ext/nanosvg
+
+      - name: Check out the latest wxWidgets master
+        run: |
+          rm -rf ext/wxWidgets
+          git clone --recurse-submodules --shallow-submodules \
+              https://github.com/wxWidgets/wxWidgets.git ext/wxWidgets
+          cd ext/wxWidgets
+          desc=$(git log -1 --format='%H %ci %s')
+          echo "Building against wxWidgets master: $desc"
+          echo "### wxWidgets master \`$(git rev-parse --short HEAD)\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "$desc" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+          cache: 'pip'
+          cache-dependency-path: pyproject.toml
+          allow-prereleases: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade --group build --group test
+
+      - name: Install Ubuntu dependencies
+        if: runner.os == 'Linux'
+        run: |
+          ./buildtools/install_depends.sh
+
+      - name: Setup MSVC
+        if: runner.os == 'Windows'
+        uses: step-security/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Install ccache
+        if: runner.os != 'Windows'
+        uses: hendrikmuhs/ccache-action@v1.2.23
+        with:
+          key: ${{ github.workflow }}-${{ matrix.os }}
+          max-size: 1.5G
+
+      - name: Setup ccache
+        if: runner.os != 'Windows'
+        run: |
+          if [ ${{ runner.os }} == 'Linux' ]; then
+              echo "PATH=/usr/lib/ccache:$PATH" >> $GITHUB_ENV
+          elif [ ${{ matrix.os }} == 'macos-15' ]; then
+              echo "PATH=/opt/homebrew/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
+          fi
+
+      - name: Build wxWidgets and wxPython
+        run: |
+          $XVFB_RUN python build.py setrev dox etg sip build --nodoc --jobs=4 --verbose
+
+      - name: Simple smoke test
+        run: |
+          $XVFB_RUN python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
+          libs="adv aui dataview glcanvas grid html2 html media propgrid ribbon richtext siplib stc xml xrc"
+          for lib in $libs; do
+            echo $lib
+            $XVFB_RUN python -c "import wx.$lib"
+          done
+
+      - name: Run unittests
+        run: |
+          $XVFB_RUN python build.py test --verbose
