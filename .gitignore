@@ -67,6 +67,7 @@ venv*/
 
 /wx/svg/*.so
 /wx/svg/*.pyd
+/wx/svg/_nanosvg.c
 wx/svg/_version.py
 
 /unittests/lib_pubsub_provider_actual.py
