@@ -82,6 +82,9 @@ class SipWrapperGenerator(generators.WrapperGeneratorBase):
 
 """ % (module.package, module.name))
 
+            if module.name == "_core":
+                stream.write('%MinimumABIVersion "{}"\n\n'.format(cfg.SIP_ABI))
+
             if module.name.startswith('_'):
                 doc = ''
                 if module.docstring:
