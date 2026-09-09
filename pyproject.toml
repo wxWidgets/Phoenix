@@ -108,6 +108,13 @@ devel = [
     {include-group = "docs"},
 ]
 
+[tool.setuptools]
+platforms = ["WIN32", "WIN64", "OSX", "POSIX"]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements/install.txt"] }
+
 [tool.setuptools.packages.find]
 include = ["wx", "wx.*"]
 namespaces = true

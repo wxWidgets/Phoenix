@@ -26,7 +26,6 @@ cfg = Config(noWxConfig=True)
 DESCRIPTION      = 'Wrapper for nanosvg library, plus code for integrating with wxPython'
 LONG_DESCRIPTION = ''
 LICENSE          = "wxWindows Library License (https://opensource.org/licenses/wxwindows.php)"
-PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 
 
 HERE = os.path.abspath(os.path.dirname(__file__))

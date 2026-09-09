@@ -33,8 +33,6 @@ DOCS_BASE='http://docs.wxPython.org'
 
 #----------------------------------------------------------------------
 
-PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
-
 LONG_DESCRIPTION = """\
 Welcome to wxPython's Project Phoenix! Phoenix is the improved next-generation
 wxPython, "better, stronger, faster than he was before." This new
@@ -59,12 +57,6 @@ The utility tools wxdocs and wxdemo will download the appropriate files with wxg
 the respective items. (Documents are launched in the default browser and demo is started
 with python).
 """.format(version=cfg.VERSION, docs_base=DOCS_BASE)
-
-
-with open('requirements/install.txt') as fid:
-    INSTALL_REQUIRES = [line.strip()
-                        for line in fid.readlines()
-                        if not line.startswith('#')]
 
 isDarwin = sys.platform == "darwin"
 
@@ -268,12 +260,5 @@ if __name__ == '__main__':
     setup(version          = cfg.VERSION,
           long_description = LONG_DESCRIPTION,
           long_description_content_type = 'text/x-rst',
-          platforms        = PLATFORMS,
-          install_requires = INSTALL_REQUIRES,
-          zip_safe         = False,
-          include_package_data = True,
-
-          ext_package      = cfg.PKGDIR,
-
           cmdclass         = CMDCLASS,
         )
