@@ -72,10 +72,13 @@ function do_build {
     pip install -U pip
     pip install -U -r requirements.txt
 
-    # Build wxWidgets, Phoenix and a Wheel
-    # Since we're using a source tarball we don't need to do all the code
-    # generation parts, all files should already be present
-    python build.py $FLAG build_wx build_py bdist_wheel
+    # Build wxWidgets and Phoenix. Since we're using a source tarball we don't
+    # need to do the code generation parts, all files should already be present.
+    python build.py $FLAG build_wx build_py
+
+    # Package the built tree into a wheel (the compile is already done).
+    pip wheel --no-deps --no-build-isolation \
+        --config-settings="--build-option=--skip-build" -w dist .
 
     # copy the results back to the host's shared dist folder
     DEST=/dist/linux/$TAG/$DIST_NAME

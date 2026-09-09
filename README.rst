@@ -148,8 +148,8 @@ allow you to run and test Phoenix directly from the source tree without
 installing it, if desired. You just need to set ``PYTHONPATH`` appropriately,
 or you can use ``pip install -e .`` to install a link in your current Python
 site-packages folder that will point to the folder where you built wxPython
-Phoenix. When you are finished testing you can then use the install or the
-bdist_wheel command like you normally would for other Python packages.
+Phoenix. When you are finished testing you can then use ``pip install .`` or
+``python -m build`` like you normally would for other Python packages.
 
 
 

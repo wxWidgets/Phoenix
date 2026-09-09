@@ -139,7 +139,6 @@ Usage: ./build.py [command(s)] [options]
       sdist_demo    Build a tarball containing just the demo and samples folders
       bdist         Create a binary tarball release of wxPython Phoenix
       bdist_docs    Build a tarball containing the documentation
-      bdist_wheel   Build a Python wheel.  Requires magic.
 
       test          Run the unit test suite
       test_*        Run just the one named test module
@@ -2065,31 +2064,6 @@ def cmd_build_pdbzip(options, args):
             os.unlink(name)
         msg('PDB files removed from ./wx')
         return zipname
-
-
-def _doSimpleSetupCmd(options, args, setupCmd):
-    cmdTimer = CommandTimer(setupCmd)
-    VERBOSE = '--verbose' if options.verbose else ''
-    cmd = '"%s" setup.py %s --skip-build  %s %s' % (PYTHON, setupCmd, VERBOSE, options.extra_setup)
-    runcmd(cmd)
-
-
-def cmd_bdist_wheel(options, args):
-    pdbzip = cmd_build_pdbzip(options, args)
-    _doSimpleSetupCmd(options, args, 'bdist_wheel')
-    cfg = Config()
-    if options.upload:
-        filemask = "dist/%s-%s-*.whl" % (baseName, cfg.VERSION)
-        filenames = sorted(glob.glob(filemask))
-        print(f'**** filemask: {filemask}')
-        print(f'**** matched:  {filenames}')
-        print(f'**** all dist: {sorted(glob.glob("dist/*"))}')
-
-        assert len(filenames) == 1, "Unknown files found:"+repr(filenames)
-        uploadPackage(filenames[0], options)
-        if pdbzip:
-            uploadPackage(pdbzip, options, keep=24,
-                          mask='%s-pdb-%s*' % (baseName, cfg.VER_MAJOR))
 
 
 def cmd_egg_info(options, args, egg_base=None):
