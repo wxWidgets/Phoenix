@@ -17,6 +17,9 @@ from invoke import task, run
 
 
 HERE = os.path.abspath(os.path.dirname(__file__))
+FEDORA_HOST = os.path.exists('/etc/fedora-release')
+OPTION_ROOT = '-u root' if FEDORA_HOST else ''
+OPTION_SELINUX = ':Z' if FEDORA_HOST else ''
 
 # Distros that have been promoted to Emeritus status. They can still be selected
 # manually, but will be excluded by default when selecting all images.
@@ -87,9 +90,9 @@ def test_images(ctx, image, gui=False, include_old=False):
     img_type = 'gui' if gui else 'build'
     for img_name in image:
         # test it
-        ctx.run('docker run -it --rm -v {}:/dist '
-                'wxpython4/{}:{} hello.sh'.format(dist, img_type, img_name),
-                pty=True, echo=True)
+        ctx.run('docker run {} -it --rm -v {}:/dist{} '
+                'wxpython4/{}:{} hello.sh'.format(OPTION_ROOT, dist, OPTION_SELINUX,
+                img_type, img_name), pty=True, echo=True)
 
 
 @task(
@@ -143,9 +146,9 @@ def build_wxpython(ctx, image, venv='all', port='gtk3', include_old=False, keep=
     dist=os.path.abspath('../dist')
     rm = '' if keep else '--rm'
     for img_name in image:
-        ctx.run('docker run -it {} -v {}:/dist '
-                'wxpython4/build:{} do-build.sh {} {}'.format(rm, dist, img_name, venv, port),
-                pty=True, echo=True)
+        ctx.run('docker run {} -it {} -v {}:/dist{} '
+                'wxpython4/build:{} do-build.sh {} {}'.format(OPTION_ROOT, rm, dist,
+                 OPTION_SELINUX, img_name, venv, port), pty=True, echo=True)
 
 
 @task(
@@ -168,9 +171,8 @@ def run(ctx, image_tag, cmd=None, gui=False, port=5901, keep=False):
     cmd = '' if cmd is None else cmd
     rm = '' if keep else '--rm'
     ctx.run(
-        'docker run -it {} -v {}:/dist -p {}:5901 wxpython4/{}:{} {}'.format(
-            rm, dist, port, imgtype, image_tag, cmd),
-        pty=True, echo=True)
+        'docker run {} -it {} -v {}:/dist{} -p {}:5901 wxpython4/{}:{} {}'.format(OPTION_ROOT,
+         rm, dist, OPTION_SELINUX, port, imgtype, image_tag, cmd), pty=True, echo=True)
 
 
 def _get_all_distros(gui=False, include_old=False):
