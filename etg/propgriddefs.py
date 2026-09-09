@@ -30,7 +30,10 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    module.find('wxPGSortCallback').ignore()
+    # Newer Doxygen versions only emit this duplicate typedef in propgrid.h.
+    callback = module.findItem('wxPGSortCallback')
+    if callback is not None:
+        callback.ignore()
 
     module.addPyCode(
         code="""\
