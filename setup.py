@@ -1,6 +1,6 @@
 #----------------------------------------------------------------------
 # Name:        setup.py
-# Purpose:     Distutils build script for wxPython (phoenix)
+# Purpose:     Build script for wxPython (phoenix)
 #
 # Author:      Robin Dunn
 #
@@ -26,7 +26,6 @@ from setuptools.command.bdist_wheel import bdist_wheel as orig_bdist_wheel
 sys.path.insert(0, os.path.dirname(__file__))
 
 from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
-import buildtools.version as version
 
 # Create a buildtools.config.Configuration object
 cfg = Config(noWxConfig=True)
@@ -67,7 +66,6 @@ with open('requirements/install.txt') as fid:
                         for line in fid.readlines()
                         if not line.startswith('#')]
 
-isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
 #----------------------------------------------------------------------
@@ -265,14 +263,6 @@ setuptools.command.build_py.make_writable = wx_make_writable
 
 #----------------------------------------------------------------------
 
-HEADERS = None
-BUILD_OPTIONS = { } #'build_base' : cfg.BUILD_BASE }
-#if cfg.WXPORT == 'msw':
-#    BUILD_OPTIONS[ 'compiler' ] = cfg.COMPILER
-
-
-#----------------------------------------------------------------------
-
 
 if __name__ == '__main__':
     setup(version          = cfg.VERSION,
@@ -285,8 +275,5 @@ if __name__ == '__main__':
 
           ext_package      = cfg.PKGDIR,
 
-          options          = { 'build'     : BUILD_OPTIONS },
-
-          headers          = HEADERS,
           cmdclass         = CMDCLASS,
         )
