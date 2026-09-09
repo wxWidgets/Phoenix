@@ -1427,7 +1427,7 @@ def _buildSipModule(cfg, options, src_name):
     # Write out a pyproject.toml to configure sip
     pyproject_toml = textwrap.dedent("""\
         [build-system]
-        requires = ["sip >=6.6.2, <7"]
+        requires = ["sip >=6.10, <7"]
         build-backend = "sipbuild.api"
 
         [project]
