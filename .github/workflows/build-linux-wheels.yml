@@ -61,7 +61,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-22.04, ubuntu-24.04, ubuntu-26.04 ]
-        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
+        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14', '3.15' ]
         architecture: [ 'x64' ]
         exclude:
           - os: ubuntu-26.04
@@ -112,6 +112,7 @@ jobs:
           architecture: '${{ matrix.architecture }}'
           cache: 'pip'
           cache-dependency-path: pyproject.toml
+          allow-prereleases: true
 
       - name: Install Ubuntu dependencies
         run: |

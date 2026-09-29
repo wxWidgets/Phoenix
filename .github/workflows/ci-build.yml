@@ -114,7 +114,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-24.04, ubuntu-26.04, windows-2025, macos-15-intel, macos-15, windows-11-arm ]
-        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
+        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14', '3.15' ]
         architecture: [ 'x64', 'arm64' ]
         exclude:
           - os: ubuntu-24.04
@@ -217,7 +217,7 @@ jobs:
           arch: '${{ matrix.architecture }}'
 
       - name: Install ccache
-        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.10' || matrix.python-version == '3.14') }}
+        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.10' || matrix.python-version == '3.14' || matrix.python-version == '3.15') }}
         uses: hendrikmuhs/ccache-action@v1.2.23
         with:
           key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
@@ -225,7 +225,7 @@ jobs:
           save: ${{ github.event_name != 'pull_request' }}
 
       - name: Setup ccache
-        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.10' || matrix.python-version == '3.14') }}
+        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.10' || matrix.python-version == '3.14' || matrix.python-version == '3.15') }}
         run: |
           if [ ${{ runner.os }} == 'Linux' ]; then
               echo "PATH=/usr/lib/ccache:$PATH" >> $GITHUB_ENV
