@@ -115,37 +115,24 @@ jobs:
       matrix:
         os: [ ubuntu-24.04, ubuntu-26.04, windows-2025, macos-15-intel, macos-15, windows-11-arm ]
         python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
-        architecture: [ 'x86', 'x64', 'arm64' ]
-        # Exclude x86 configs on non-Windows OSs
+        architecture: [ 'x64', 'arm64' ]
         exclude:
           - os: ubuntu-24.04
-            architecture: x86
-          - os: ubuntu-24.04
             architecture: arm64
-          - os: ubuntu-26.04
-            architecture: x86
           - os: ubuntu-26.04
             architecture: arm64
           - os: macos-15-intel
-            architecture: x86
-          - os: macos-15-intel
             architecture: arm64
-          - os: macos-15
-            architecture: x86
           - os: macos-15
             architecture: x64
           - os: windows-2025
             architecture: arm64
-          - os: windows-11-arm
-            architecture: x86
           - os: windows-11-arm
             architecture: x64
           # Only build oldest and newest Pythons on PRs (keep in sync with ccache section)
           - python-version: ${{ github.event_name == 'pull_request' && '3.11' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.12' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.13' }}
-          # Skip Windows x86 builds on PRs
-          - architecture: ${{ github.event_name == 'pull_request' && 'x86' }}
           # Only build windows-11-arm on pushes
           - os: ${{ github.event_name != 'push' && 'windows-11-arm' }}
           # Python interpreter < 3.11 doesn't exist for Windows 11 ARM
@@ -184,11 +171,7 @@ jobs:
               echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"
           elif [ ${{ matrix.os }} == windows-2025 ]; then
               build_opts="$build_opts --cairo --relwithdebug"
-              if [ ${{ matrix.architecture }} == x64 ]; then
-                  short_name=win64
-              else
-                  short_name=win32
-              fi
+              short_name=win64
           elif [ ${{ matrix.os }} == windows-11-arm ]; then
               build_opts="$build_opts --cairo --relwithdebug"
               short_name=win64
