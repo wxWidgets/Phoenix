@@ -15,6 +15,7 @@ wxWidgets API info which we need from them.
 import sys
 import os
 import pprint
+import re
 from typing import Optional
 import xml.etree.ElementTree as ET
 import copy
@@ -511,6 +512,8 @@ class FunctionDef(BaseDef, FixWxPrefix):
                     arg = arg.split('=')[0].strip()
                     default = defValueMap.get(default, default)
                     default = self.fixWxPrefix(default, True)
+                # drop any SIP annotations, like /Transfer/
+                arg = re.sub(r'/\w+(=[^/]*)?/', '', arg).strip()
                 # now grab just the last word, it should be the variable name
                 # The rest will be the type information
                 arg_type, arg = arg.rsplit(None, 1)
@@ -556,7 +559,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
             return_type = returns[0]
         else:
             return_type = f"Tuple[{', '.join(returns)}]"
-        kind = MethodType.STATIC_METHOD if getattr(self, 'isStatic', False) else type(self)._default_method_type
+        kind = MethodType.STATIC_METHOD if getattr(self, 'isStatic', False) else self._default_method_type
         self.signature = Signature(name, *params, return_type=return_type, method_type=kind)
         self.pyArgsString = self.signature.args_string(False)
 
@@ -1521,12 +1524,19 @@ class ModuleDef(BaseDef):
                 one.append(item)
         self.items = one + two + three
 
-        # give everything an isCore flag
+        self.updateIsCore()
+
+
+    def updateIsCore(self):
+        """
+        Give everything an isCore flag. This is done again just before the
+        generators are run, because items copied from other modules while
+        tweaking will still have the flag set for the module they came from.
+        """
         global _globalIsCore
         _globalIsCore = self.module == '_core'
         for item in self.allItems():
             item.isCore = _globalIsCore
-
 
 
     def addHeaderCode(self, code):
@@ -1655,6 +1665,7 @@ class ModuleDef(BaseDef):
         wrapped.
         """
         md = CppMethodDef(type, name, argsString, body, doc, **kw)
+        md._default_method_type = MethodType.FUNCTION
         self.items.append(md)
         return md
 
@@ -1665,6 +1676,7 @@ class ModuleDef(BaseDef):
         wrapped.
         """
         md = CppMethodDef_sip(type, name, argsString, body, doc, **kw)
+        md._default_method_type = MethodType.FUNCTION
         self.items.append(md)
         return md
 

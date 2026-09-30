@@ -263,7 +263,7 @@ class FixWxPrefix(object):
     def fixWxPrefix(self, name, checkIsCore=False):
         # By default remove the wx prefix like normal
         name = removeWxPrefix(name)
-        if not checkIsCore or self.isCore:
+        if not checkIsCore or self.isCore or name.startswith('wx.'):
             return name
 
         # Otherwise, if we're not processing the core module currently then check
@@ -301,7 +301,8 @@ class FixWxPrefix(object):
             elif isinstance(item, ast.AnnAssign):
                 if isinstance(item.target, ast.Name):
                     # Exclude typing TypeAlias's from detection
-                    if not (item.annotation == 'TypeAlias' and item.target.id.startswith('_')):
+                    isTypeAlias = isinstance(item.annotation, ast.Name) and item.annotation.id == 'TypeAlias'
+                    if not (isTypeAlias and item.target.id.startswith('_')):
                         names.append(item.target.id)
 
         names = list()
@@ -326,6 +327,7 @@ class FixWxPrefix(object):
 
         Finally, the 'wx.' prefix is added if needed.
         """
+        name = re.sub(r'\bconstexpr\b', '', name)
         name = re.sub(r'(const(?![\w\d]))', '', name) # remove 'const', but not 'const'raints
         replacements = [' ', '*']
         if not is_expression:
@@ -335,6 +337,9 @@ class FixWxPrefix(object):
         name = name.replace('::', '.')
         if not is_expression:
             name = re.sub(r'[^a-zA-Z0-9_\.]', '', name)
+            # nested names like wxGridCellAttr::wxAttrKind
+            head, *rest = name.split('.')
+            name = '.'.join([head] + [removeWxPrefix(part) for part in rest])
         if not (is_expression and name in ['True', 'False', 'None']) and keyword.iskeyword(name):
             name = f'_{name}' # Python keyword name collision
         name = name.strip()
@@ -360,6 +365,9 @@ class FixWxPrefix(object):
             'Char': 'str',
             'char': 'str',
             'FileName': 'str', # TODO: check conversion
+            'wchar_t': 'str',
+            'ArtID': 'str',
+            'ArtClient': 'str',
             # --Int types
             'byte': 'int',
             'short': 'int',
@@ -371,6 +379,22 @@ class FixWxPrefix(object):
             'time_t': 'int',
             'size_t': 'int',
             'Int32': 'int',
+            'Int64': 'int',
+            'Uint16': 'int',
+            'Uint32': 'int',
+            'Uint64': 'int',
+            'Byte': 'int',
+            'IntPtr': 'int',
+            'UIntPtr': 'int',
+            'Py_ssize_t': 'int',
+            'FileOffset': 'int',
+            'LongLong_t': 'int',
+            'ULongLong_t': 'int',
+            'ULongLong': 'int',
+            'TextPos': 'int',
+            'TextCoord': 'int',
+            'LogLevel': 'int',
+            'EventType': 'int',
             'long': long_type,
             'unsignedlong': long_type,
             'ulong': long_type,
@@ -383,13 +407,27 @@ class FixWxPrefix(object):
             'PyObject': 'Any',
             'WindowID': 'int', # defined in wx/defs.h
             'Coord': 'int', # defined in wx/types.h
+            # --SIP %MappedTypes, see the matching src/*.sip files
+            'PyBuffer': 'Buffer',
+            'MemoryBuffer': 'memoryview',
+            'CharBuffer': 'bytes',
+            'ClientData': 'Any',
+            'PyUserData': 'Any',
+            'Variant': 'Any',
+            'PGVariant': 'Any',
+            'DVCVariant': 'Any',
+            'VariantVector': 'List[Any]',
+            'MessageDialogButtonLabel': 'Union[str, int]',
+            'TreeItemIdValue': 'Any',
         }
+        input_type_map = {
+            'MemoryBuffer': 'Buffer',
+        }
+        # The template brackets would be lost in cleanName, so deal with these first
+        m = re.match(r'^(?:const\s+)?(?:std::vector|wxVector)\s*<\s*(.+?)\s*>[\s&*]*$', type_name.strip())
+        if m:
+            return f'List[{self.cleanType(m.group(1), is_input)}]'
         type_name = self.cleanName(type_name)
-        # Special handling of Vector<type> types -
-        if type_name.startswith('Vector<') and type_name.endswith('>'):
-            # Special handling for 'Vector<type>' types
-            type_name = self.cleanType(type_name[7:-1])
-            return f'List[{type_name}]'
         if type_name.startswith('Array'):
             type_name = self.cleanType(type_name[5:])
             if type_name:
@@ -398,8 +436,18 @@ class FixWxPrefix(object):
                 return 'list'
         allowed_types = self._auto_conversions.get(type_name, ())
         if allowed_types and is_input:
-            allowed_types = (type_name, *(self.cleanType(t) for t in allowed_types))
-            type_name = f"Union[{', '.join(allowed_types)}]"
+            # These are already Python type-hints, so they only need the
+            # wx prefix normalized for the current module.
+            union = [type_name]
+            for t in allowed_types:
+                if t.startswith('wx.'):
+                    t = t[3:]
+                t = self.fixWxPrefix(t, True)
+                if t not in union:
+                    union.append(t)
+            type_name = f"Union[{', '.join(union)}]"
+        if is_input and type_name in input_type_map:
+            return input_type_map[type_name]
         return type_map.get(type_name, type_name)
     
     def parseNameAndType(self, name_string: str, type_string: Optional[str], is_input: bool = False) -> Tuple[str, Optional[str]]:
@@ -954,6 +1002,7 @@ def getDocsGenerator():
 
 def runGenerators(module):
     checkForUnitTestModule(module)
+    module.updateIsCore()
 
     generators = list()
 

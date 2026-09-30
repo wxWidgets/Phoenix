@@ -91,6 +91,7 @@ try:
     from typing import ParamSpec
 except ImportError:
     from typing_extensions import ParamSpec
+from typing_extensions import Buffer
 
 _TwoInts: TypeAlias = Tuple[int, int]
 _ThreeInts: TypeAlias = Tuple[int, int, int]
@@ -101,6 +102,14 @@ _FourFloats: TypeAlias = Tuple[float, float, float, float]
 """
 
 #---------------------------------------------------------------------------
+
+def nciDoc(text, numSpaces=0, stripLeading=True):
+    """
+    Like nci() but for text going into a docstring, where backslashes would
+    otherwise be treated as escape sequences.
+    """
+    return nci(text.replace('\\', '\\\\'), numSpaces, stripLeading)
+
 
 def piIgnored(obj):
     return getattr(obj, 'piIgnored', False)
@@ -357,7 +366,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         indent2 = indent + ' '*4
         if typedef.briefDoc:
             stream.write('%s"""\n' % indent2)
-            stream.write(nci(typedef.briefDoc, len(indent2)))
+            stream.write(nciDoc(typedef.briefDoc, len(indent2)))
             stream.write('%s"""\n' % indent2)
         else:
             stream.write('%spass\n\n' % indent2)
@@ -375,8 +384,34 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         code = pc.code
         if hasattr(pc, 'klass'):
             code = code.replace(pc.klass.pyName+'.', '')
+        elif self.isCore:
+            code = self.fixCoreAssignments(code)
         stream.write('\n')
         stream.write(nci(code, len(indent)))
+
+    @staticmethod
+    def fixCoreAssignments(code):
+        """
+        Some core PyCode injects names with statements like ``wx.BOLD = int(...)``.
+        In core.pyi that would be seen as an attribute assignment on the
+        imported wx module rather than as a declaration of a name in the
+        module itself, so turn those into proper module-level declarations.
+        """
+        declared = set()
+        lines = []
+        for line in code.splitlines(keepends=True):
+            m = re.match(r'^(\s*)wx\.(\w+)\s*=\s*(.*?)\s*$', line)
+            if m:
+                indent, name, value = m.groups()
+                if name in declared:
+                    continue
+                declared.add(name)
+                if re.match(r'^int\(.*\)$', value):
+                    line = f'{indent}{name}: int\n'
+                else:
+                    line = f'{indent}{name} = {value}\n'
+            lines.append(line)
+        return ''.join(lines)
 
     #-----------------------------------------------------------------------
     def generatePyFunction(self, pf, stream, indent=''):
@@ -390,7 +425,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         indent2 = indent + ' '*4
         if pf.briefDoc:
             stream.write('%s"""\n' % indent2)
-            stream.write(nci(pf.briefDoc, len(indent2)))
+            stream.write(nciDoc(pf.briefDoc, len(indent2)))
             stream.write('%s"""\n' % indent2)
         stream.write('%spass\n' % indent2)
 
@@ -409,7 +444,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         indent2 = indent + ' '*4
         if pc.briefDoc:
             stream.write('%s"""\n' % indent2)
-            stream.write(nci(pc.briefDoc, len(indent2)))
+            stream.write(nciDoc(pc.briefDoc, len(indent2)))
             stream.write('%s"""\n' % indent2)
 
         # these are the only kinds of items allowed to be items in a PyClass
@@ -446,7 +481,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             stream.write('    ...\n')
         else:
             stream.write('    """\n')
-            stream.write(nci(function.pyDocstring, 4))
+            stream.write(nciDoc(function.pyDocstring, 4))
             stream.write('    """\n')
 
 
@@ -499,7 +534,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
         # docstring
         stream.write('%s"""\n' % indent2)
-        stream.write(nci(klass.pyDocstring, len(indent2)))
+        stream.write(nciDoc(klass.pyDocstring, len(indent2)))
         stream.write('%s"""\n' % indent2)
 
         # generate nested classes
@@ -668,7 +703,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
                     docstring = ""
             stream.write('%s"""\n' % indent2)
             if docstring.strip():
-                stream.write(nci(docstring, len(indent2)))
+                stream.write(nciDoc(docstring, len(indent2)))
             stream.write('%s"""\n' % indent2)
 
 
@@ -695,7 +730,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         indent2 = indent + ' '*4
 
         stream.write('%s"""\n' % indent2)
-        stream.write(nci(pm.pyDocstring, len(indent2)))
+        stream.write(nciDoc(pm.pyDocstring, len(indent2)))
         stream.write('%s"""\n' % indent2)
 
 
