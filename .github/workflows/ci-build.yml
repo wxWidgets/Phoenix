@@ -80,6 +80,11 @@ jobs:
           VER_FLAGS=$(python -c "from buildtools.version import VER_FLAGS; print(VER_FLAGS)")
           echo "ver_flags=$VER_FLAGS" >> "$GITHUB_OUTPUT"
 
+      - name: Check type stubs
+        run: |
+          python -m pip install --group typecheck
+          python build.py check_stubs
+
       - name: Create source distribution (sdist)
         run: |
           python build.py sdist
@@ -297,6 +302,7 @@ jobs:
           cd dist
           pip install wxpython-*.whl
           python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
+          python -c "import importlib.resources as r; assert all(r.files('wx').joinpath(f).is_file() for f in ['py.typed', 'core.pyi'])"
           libs="adv aui dataview glcanvas grid html2 html media propgrid ribbon richtext siplib stc xml xrc"
           for lib in $libs; do
             echo $lib

@@ -96,6 +96,12 @@ test = [
     "pytest-timeout",
     "pytest-rerunfailures",
 ]
+typecheck = [
+    "mypy==2.3.1",
+    "pyright[nodejs]==1.1.414",
+    "ty==0.0.84",
+    "pyrefly==1.3.2",
+]
 docs = [
     "sphinx",
     "python-docs-theme",
