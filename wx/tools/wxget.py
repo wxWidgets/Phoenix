@@ -47,12 +47,15 @@ def get_docs_demo_url(demo=False):
         pkg = 'demo'
     else:
         pkg = 'docs'
-    base_url = "https://extras.wxpython.org/wxPython4/extras/%s/wxPython-%s-%s.tar.gz"
+    base_url = "https://github.com/wxWidgets/Phoenix/releases/download/%s/wxPython-%s-%s.tar.gz"
     ver = wx.version().split(' ')[0]
     major = ver.split('.')[0]
     if major != '4':
         raise ValueError("wx Versions before 4 not supported!")
-    return base_url % (ver, pkg, ver)
+    # Snapshot prereleases are tagged with the bare version, which is the only
+    # kind of version that carries a "+<hash>" local label.
+    tag = ver if '+' in ver else 'wxPython-%s' % ver
+    return base_url % (tag, pkg, ver)
 
 def get_save_path(url, dest_dir, force=False):
     """ Get the file save location."""
