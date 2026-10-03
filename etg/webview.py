@@ -128,10 +128,16 @@ def run():
     c.find('GetBackendVersionInfo').ignore()
     c.find('NewConfiguration').ignore()
 
+    # The overload taking a parent should be /Factory/ with a /TransferThis/
+    # parent, but sip >= 6.15.2 ignores /TransferThis/ on /Factory/ functions
+    # and makes the result Python-owned, so use /Transfer/ instead.
+    # See https://github.com/Python-SIP/sip/issues/117
     for m in c.find('New').all():
-        m.factory = True
+        if any(p.name == 'parent' for p in m.items):
+            m.transfer = True
+        else:
+            m.factory = True
     c.find('New.id').default = 'wxID_ANY'
-    c.find('New.parent').transferThis = True
 
 
     c.find('RegisterHandler.handler').type = 'wxWebViewHandler*'
