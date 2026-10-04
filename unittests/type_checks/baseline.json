@@ -6,31 +6,30 @@
     "wx/adv.pyi": {
       "assignment": 2,
       "misc": 5,
-      "name-defined": 4,
       "overload-cannot-match": 6
     },
     "wx/aui.pyi": {
       "assignment": 1,
       "misc": 1,
-      "name-defined": 8,
+      "name-defined": 2,
       "valid-type": 1
     },
     "wx/core.pyi": {
       "arg-type": 3,
-      "assignment": 35,
+      "assignment": 20,
       "attr-defined": 1,
       "has-type": 1,
       "import-not-found": 1,
       "misc": 24,
-      "name-defined": 116,
+      "name-defined": 22,
       "no-redef": 5,
-      "overload-cannot-match": 6,
-      "valid-type": 69,
+      "overload-cannot-match": 5,
+      "valid-type": 94,
       "var-annotated": 1
     },
     "wx/dataview.pyi": {
       "assignment": 1,
-      "name-defined": 25
+      "name-defined": 14
     },
     "wx/glcanvas.pyi": {
       "assignment": 1,
@@ -38,13 +37,13 @@
     },
     "wx/grid.pyi": {
       "assignment": 1,
-      "name-defined": 28,
+      "name-defined": 4,
       "no-redef": 6
     },
     "wx/html.pyi": {
       "assignment": 1,
       "misc": 1,
-      "name-defined": 8
+      "name-defined": 2
     },
     "wx/html2.pyi": {
       "assignment": 2,
@@ -55,8 +54,7 @@
       "assignment": 1
     },
     "wx/msw.pyi": {
-      "assignment": 1,
-      "name-defined": 1
+      "assignment": 1
     },
     "wx/propgrid.pyi": {
       "assignment": 6,
@@ -66,13 +64,12 @@
     },
     "wx/ribbon.pyi": {
       "assignment": 2,
-      "misc": 1,
-      "name-defined": 65
+      "misc": 1
     },
     "wx/richtext.pyi": {
       "assignment": 1,
       "misc": 4,
-      "name-defined": 49,
+      "name-defined": 3,
       "overload-cannot-match": 2
     },
     "wx/stc.pyi": {
@@ -83,194 +80,159 @@
       "assignment": 1
     },
     "wx/xrc.pyi": {
-      "assignment": 2,
-      "name-defined": 24,
-      "valid-type": 1
+      "assignment": 2
     }
   },
   "pyrefly": {
     "wx/adv.pyi": {
       "bad-function-definition": 1,
-      "invalid-overload": 1,
-      "unknown-name": 4
+      "invalid-overload": 1
     },
     "wx/aui.pyi": {
       "not-a-type": 1,
-      "unknown-name": 9
+      "unknown-name": 2
     },
     "wx/core.pyi": {
       "bad-argument-type": 4,
-      "bad-function-definition": 33,
+      "bad-function-definition": 18,
       "bad-specialization": 2,
       "invalid-overload": 26,
       "invalid-type-var": 1,
       "missing-attribute": 1,
       "missing-import": 1,
-      "not-a-type": 116,
+      "not-a-type": 135,
       "not-callable": 1,
       "redefinition": 1,
-      "unknown-name": 128,
+      "unknown-name": 22,
       "unsupported-operation": 37
-    },
-    "wx/dataview.pyi": {
-      "unknown-name": 11
     },
     "wx/glcanvas.pyi": {
       "unknown-name": 1
     },
     "wx/grid.pyi": {
-      "unknown-name": 28
+      "unknown-name": 4
     },
     "wx/html.pyi": {
-      "unknown-name": 8
+      "unknown-name": 2
     },
     "wx/html2.pyi": {
       "bad-function-definition": 1
-    },
-    "wx/msw.pyi": {
-      "unknown-name": 1
     },
     "wx/propgrid.pyi": {
       "inconsistent-inheritance": 1,
       "missing-attribute": 71,
       "unknown-name": 2
     },
-    "wx/ribbon.pyi": {
-      "unknown-name": 65
-    },
     "wx/richtext.pyi": {
       "invalid-overload": 5,
       "not-a-type": 7,
-      "unknown-name": 49
+      "unknown-name": 3
     },
     "wx/xrc.pyi": {
-      "bad-function-definition": 1,
-      "not-a-type": 1,
-      "unknown-name": 27
+      "bad-function-definition": 1
     }
   },
   "pyright": {
     "wx/adv.pyi": {
       "reportArgumentType": 1,
       "reportInconsistentOverload": 1,
-      "reportOverlappingOverload": 6,
-      "reportUndefinedVariable": 4
+      "reportOverlappingOverload": 6
     },
     "wx/aui.pyi": {
-      "reportUndefinedVariable": 9
+      "reportUndefinedVariable": 2
     },
     "wx/core.pyi": {
-      "reportArgumentType": 37,
+      "reportArgumentType": 22,
       "reportAttributeAccessIssue": 2,
       "reportCallIssue": 3,
       "reportGeneralTypeIssues": 7,
       "reportInconsistentOverload": 17,
-      "reportInvalidTypeForm": 3,
       "reportMissingImports": 1,
       "reportOperatorIssue": 1,
-      "reportOverlappingOverload": 6,
+      "reportOverlappingOverload": 5,
       "reportRedeclaration": 5,
-      "reportUndefinedVariable": 128
+      "reportUndefinedVariable": 22
     },
     "wx/dataview.pyi": {
-      "reportUndefinedVariable": 25
+      "reportUndefinedVariable": 14
     },
     "wx/glcanvas.pyi": {
       "reportUndefinedVariable": 1
     },
     "wx/grid.pyi": {
-      "reportGeneralTypeIssues": 17,
       "reportRedeclaration": 6,
-      "reportUndefinedVariable": 11
+      "reportUndefinedVariable": 4
     },
     "wx/html.pyi": {
-      "reportUndefinedVariable": 8
+      "reportUndefinedVariable": 2
     },
     "wx/html2.pyi": {
       "reportArgumentType": 1
-    },
-    "wx/msw.pyi": {
-      "reportUndefinedVariable": 1
     },
     "wx/propgrid.pyi": {
       "reportAttributeAccessIssue": 75,
       "reportOverlappingOverload": 2,
       "reportUndefinedVariable": 2
     },
-    "wx/ribbon.pyi": {
-      "reportUndefinedVariable": 65
-    },
     "wx/richtext.pyi": {
       "reportInconsistentOverload": 4,
       "reportOverlappingOverload": 2,
-      "reportUndefinedVariable": 49
+      "reportUndefinedVariable": 3
     },
     "wx/xrc.pyi": {
-      "reportArgumentType": 1,
-      "reportGeneralTypeIssues": 2,
-      "reportUndefinedVariable": 26
+      "reportArgumentType": 1
     }
   },
   "ty": {
     "wx/adv.pyi": {
       "invalid-overload": 1,
       "invalid-parameter-default": 1,
-      "invalid-type-form": 20,
-      "unresolved-reference": 4
+      "invalid-type-form": 20
     },
     "wx/aui.pyi": {
       "invalid-type-form": 5,
-      "unresolved-reference": 9
+      "unresolved-reference": 2
     },
     "wx/core.pyi": {
       "call-non-callable": 1,
       "invalid-argument-type": 5,
       "invalid-overload": 17,
-      "invalid-parameter-default": 32,
-      "invalid-type-form": 1284,
+      "invalid-parameter-default": 18,
+      "invalid-type-form": 1450,
       "missing-argument": 2,
       "unresolved-attribute": 1,
       "unresolved-import": 1,
-      "unresolved-reference": 129
+      "unresolved-reference": 23
     },
     "wx/dataview.pyi": {
       "invalid-type-form": 3,
-      "unresolved-reference": 25
+      "unresolved-reference": 14
     },
     "wx/glcanvas.pyi": {
       "unresolved-reference": 1
     },
     "wx/grid.pyi": {
-      "invalid-type-form": 17,
-      "unresolved-reference": 11
+      "unresolved-reference": 4
     },
     "wx/html.pyi": {
       "invalid-type-form": 2,
-      "unresolved-reference": 8
+      "unresolved-reference": 2
     },
     "wx/html2.pyi": {
       "invalid-parameter-default": 1
-    },
-    "wx/msw.pyi": {
-      "unresolved-reference": 1
     },
     "wx/propgrid.pyi": {
       "invalid-assignment": 4,
       "unresolved-attribute": 73,
       "unresolved-reference": 2
     },
-    "wx/ribbon.pyi": {
-      "unresolved-reference": 65
-    },
     "wx/richtext.pyi": {
       "invalid-overload": 4,
       "invalid-type-form": 81,
-      "unresolved-reference": 49
+      "unresolved-reference": 3
     },
     "wx/xrc.pyi": {
-      "invalid-parameter-default": 1,
-      "invalid-type-form": 2,
-      "unresolved-reference": 26
+      "invalid-parameter-default": 1
     }
   }
 }

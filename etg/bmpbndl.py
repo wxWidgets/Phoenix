@@ -44,7 +44,7 @@ def run():
     # Allow on-the-fly creation of a wx.BitmapBundle from a wx.Bitmap, wx.Icon
     # or a wx.Image
     c.convertFromPyObject = tools.AutoConversionInfo(
-        ('wx.Bitmap', 'wx.Icon', ),
+        ('wx.Bitmap', 'wx.Icon', 'wx.Image'),
         """\
         // Check for type compatibility
         if (!sipIsErr) {

@@ -14,7 +14,8 @@ stage of the ETG scripts.
 
 import enum
 import etgtools as extractors
-from .generators import textfile_open
+from .generators import textfile_open, currentEtgScriptId
+from . import typeinfo
 import keyword
 import re
 import sys, os
@@ -253,7 +254,6 @@ class FixWxPrefix(object):
     in to a "wx.Name" depending on where it is being used from.
     """
 
-    _coreTopLevelNames = None
     _auto_conversions: dict[str, Tuple[str, ...]] = {}
 
     @classmethod
@@ -266,54 +266,21 @@ class FixWxPrefix(object):
         if not checkIsCore or self.isCore or name.startswith('wx.'):
             return name
 
-        # Otherwise, if we're not processing the core module currently then check
-        # if the name is local or if it resides in core. If it does then return
-        # the name as 'wx.Name'
-        if FixWxPrefix._coreTopLevelNames is None:
-            self._getCoreTopLevelNames()
-
+        # Otherwise, if we're not processing the core module currently then
+        # find which module the name comes from. Names from core are returned
+        # as 'wx.Name' and names from other modules as 'wx.module.Name'.
         testName = name
         if '(' in name:
             testName = name[:name.find('(')]
         testName = testName.split('.')[0]
 
-        if testName in FixWxPrefix._coreTopLevelNames:
-            return 'wx.'+name
-        else:
-            return name
-
-    def _getCoreTopLevelNames(self):
-        # Since the real wx.core module may not exist yet, and since actually
-        # executing code at this point is probably a bad idea, try parsing the
-        # core.pyi file and pulling the top level names from it.
-        import ast
-
-        def _processItem(item, names):
-            if isinstance(item, ast.Assign):
-                for t in item.targets:
-                    _processItem(t, names)
-            elif isinstance(item, ast.Name):
-                names.append(item.id)
-            elif isinstance(item, ast.ClassDef):
-                names.append(item.name)
-            elif isinstance(item, ast.FunctionDef):
-                names.append(item.name)
-            elif isinstance(item, ast.AnnAssign):
-                if isinstance(item.target, ast.Name):
-                    # Exclude typing TypeAlias's from detection
-                    isTypeAlias = isinstance(item.annotation, ast.Name) and item.annotation.id == 'TypeAlias'
-                    if not (isTypeAlias and item.target.id.startswith('_')):
-                        names.append(item.target.id)
-
-        names = list()
-        filename = 'wx/core.pyi'
-        with open(filename, 'rt', encoding='utf-8') as f:
-            text = f.read()
-        parseTree = ast.parse(text, filename)
-        for item in parseTree.body:
-            _processItem(item, names)
-
-        FixWxPrefix._coreTopLevelNames = names
+        thisModule = getattr(self, 'pyModule', None)
+        module = typeinfo.moduleOf(testName, thisModule)
+        if module == 'core':
+            return 'wx.' + name
+        if module and module != thisModule:
+            return 'wx.%s.%s' % (module, name)
+        return name
 
     def cleanName(self, name: str, is_expression: bool = False, fix_wx: bool = True) -> str:
         """Process a C++ name for use in Python code. In all cases, this means
@@ -428,18 +395,34 @@ class FixWxPrefix(object):
         if m:
             return f'List[{self.cleanType(m.group(1), is_input)}]'
         type_name = self.cleanName(type_name)
+        head, sep, rest = type_name.partition('.')
+        if head in typeinfo.load()['renames']:
+            type_name = self.fixWxPrefix(typeinfo.load()['renames'][head] + sep + rest, True)
+        typedef = typeinfo.load()['typedefs'].get(type_name)
+        if (typedef and type_name not in type_map and removeWxPrefix(typedef) != type_name
+                and typeinfo.moduleOf(type_name, getattr(self, 'pyModule', None)) is None):
+            return self.cleanType(typedef, is_input)
         if type_name.startswith('Array'):
             type_name = self.cleanType(type_name[5:])
             if type_name:
                 return f'List[{type_name}]'
             else:
                 return 'list'
-        allowed_types = self._auto_conversions.get(type_name, ())
+        lookupName = type_name[3:] if type_name.startswith('wx.') else type_name
+        allowed_types = (self._auto_conversions.get(lookupName) or
+                         typeinfo.load()['autoConversions'].get(lookupName, ()))
         if allowed_types and is_input:
             # These are already Python type-hints, so they only need the
             # wx prefix normalized for the current module.
             union = [type_name]
             for t in allowed_types:
+                m = re.match(r'^Sequence\[(.+)\]$', t)
+                if m:
+                    # A sequence of a C++ type, which accepts what that type does
+                    t = 'Sequence[%s]' % self.cleanType(m.group(1), is_input)
+                    if t not in union:
+                        union.append(t)
+                    continue
                 if t.startswith('wx.'):
                     t = t[3:]
                 t = self.fixWxPrefix(t, True)
@@ -1001,8 +984,12 @@ def getDocsGenerator():
 
 
 def runGenerators(module):
+    module.updateModuleInfo()
+    if '--typeinfo' in sys.argv:
+        # The first pass of build.py's etg command only needs this
+        typeinfo.writeScriptInfo(module, currentEtgScriptId())
+        return
     checkForUnitTestModule(module)
-    module.updateIsCore()
 
     generators = list()
 
@@ -1444,7 +1431,11 @@ del _{ListClass_pyName}___repr__
         klassCode = klassCode.replace('@ConvertToTypeCode@', convertToTypeCode)
     else:
         klassCode = klassCode.replace('@ConvertToTypeCode@', '')
-    return extractors.WigCode(klassCode.format(**locals()))
+    wig = extractors.WigCode(klassCode.format(**locals()))
+    wig.piSequence = dict(name=ListClass_pyName, item=ItemClass, isList=True)
+    if includeConvertToType:
+        FixWxPrefix.register_autoconversion(ListClass_pyName, ('Sequence[%s]' % ItemClass, ))
+    return wig
 
 
 
@@ -1492,7 +1483,7 @@ def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False, getIt
         '''.format(**locals())
 
 
-    return extractors.WigCode('''\
+    wig = extractors.WigCode('''\
 class {ArrayClass}
 {{
 public:
@@ -1534,6 +1525,8 @@ def _{ArrayClass_pyName}___repr__(self):
 del _{ArrayClass_pyName}___repr__
 %End
 '''.format(**locals()))
+    wig.piSequence = dict(name=ArrayClass_pyName, item=ItemClass, isList=False)
+    return wig
 
 
 
@@ -1581,7 +1574,7 @@ def stdVectorWrapperTemplate(VectorClass, ItemClass, module, itemIsPtr=False, ge
         '''.format(**locals())
 
 
-    return extractors.WigCode('''\
+    wig = extractors.WigCode('''\
 class {VectorClass}
 {{
 %TypeHeaderCode
@@ -1632,6 +1625,8 @@ def _{VectorClass_pyName}___repr__(self):
 del _{VectorClass_pyName}___repr__
 %End
 '''.format(**locals()))
+    wig.piSequence = dict(name=VectorClass_pyName, item=ItemClass, isList=False)
+    return wig
 
 
 
@@ -1644,7 +1639,7 @@ def wxArrayPtrWrapperTemplate(ArrayClass, ItemClass, module):
     # Try creating extractor objects from scratch and attach cppMethods to
     # them as needed, etc..
 
-    return extractors.WigCode('''\
+    wig = extractors.WigCode('''\
 class {ArrayClass}
 {{
 public:
@@ -1698,6 +1693,8 @@ def _{ArrayClass_pyName}___repr__(self):
 del _{ArrayClass_pyName}___repr__
 %End
 '''.format(**locals()))
+    wig.piSequence = dict(name=ArrayClass_pyName, item=ItemClass, isList=False)
+    return wig
 
 
 

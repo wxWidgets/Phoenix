@@ -26,9 +26,10 @@ import sys, os, re
 from typing import Optional, Union
 import etgtools.extractors as extractors
 import etgtools.generators as generators
+import etgtools.typeinfo as typeinfo
 from etgtools.generators import nci, Utf8EncodingStream, textfile_open, \
                                  etgParallelOutputDir, currentEtgScriptId
-from etgtools.tweaker_tools import FixWxPrefix, magicMethods, \
+from etgtools.tweaker_tools import FixWxPrefix, magicMethods, removeWxPrefix, \
                                    guessTypeInt, guessTypeFloat, guessTypeStr
 
 
@@ -85,7 +86,7 @@ from __future__ import annotations
 from datetime import datetime, date
 from enum import IntEnum, IntFlag, auto
 from typing import (Any, overload, TypeAlias, Generic,
-    Union, Optional, List, Tuple, Callable
+    Union, Optional, List, Tuple, Callable, Iterator, Sequence
 )
 try:
     from typing import ParamSpec
@@ -127,11 +128,16 @@ def checkAndWriteHeader(destFile, header, docstring):
 
 class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
+    # Turned off while collecting the names a module defines, since stubs for
+    # forward declarations depend on that
+    forwardDeclarations = True
+
     def generate(self, module, destFile=None):
         stream = Utf8EncodingStream()
 
         # process the module object and its child objects
         self.generateModule(module, stream)
+        text = self.addModuleImports(module, stream.getvalue())
 
         # Write the contents of the stream to the destination file
         if not destFile:
@@ -146,7 +152,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if not SKIP_PI_FILE:
             checkAndWriteHeader(destFile_pi, header_pi, module.docstring)
             self.writeSection(destFile_pi, 'typing-imports', typing_imports, at_end=False)
-            self.writeSection(destFile_pi, module.name, stream.getvalue())
+            self.writeSection(destFile_pi, module.name, text)
 
         if not SKIP_PYI_FILE:
             parallelDir = etgParallelOutputDir()
@@ -159,13 +165,26 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
                 os.makedirs(outDir, exist_ok=True)
                 outFile = os.path.join(outDir, currentEtgScriptId() + '.json')
                 payload = dict(module=module.module, docstring=module.docstring,
-                                section=module.name, text=stream.getvalue())
+                                section=module.name, text=text)
                 with textfile_open(outFile, 'wt') as f:
                     json.dump(payload, f)
             else:
                 checkAndWriteHeader(destFile_pyi, header_pyi, module.docstring)
                 self.writeSection(destFile_pyi, 'typing-imports', typing_imports, at_end=False)
-                self.writeSection(destFile_pyi, module.name, stream.getvalue())
+                self.writeSection(destFile_pyi, module.name, text)
+
+
+    def addModuleImports(self, module, text):
+        """
+        Add imports for any other wx modules that names in text are qualified
+        with, other than the ones that the module already imports.
+        """
+        imported = {name.lstrip('_') for name in module.imports}
+        imported.update(['core', typeinfo.pyModuleName(module)])
+        known = typeinfo.load()['names']
+        used = set(re.findall(r'\bwx\.(\w+)\.', text))
+        needed = sorted(m for m in used if m in known and m not in imported)
+        return ''.join('import wx.%s\n' % m for m in needed) + text
 
 
     def writeSection(self, destFile, sectionName, sectionText, at_end = True):
@@ -220,6 +239,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         """
         assert isinstance(module, extractors.ModuleDef)
         self.isCore = module.module == '_core'
+        self.pyModule = typeinfo.pyModuleName(module)
 
         for item in module.imports:
             if item.startswith('_'):
@@ -375,7 +395,39 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
     #-----------------------------------------------------------------------
     def generateWigCode(self, wig, stream, indent=''):
         assert isinstance(wig, extractors.WigCode)
-        # write nothing for this one
+        # The code itself is for SIP, but some of it creates Python classes
+        if hasattr(wig, 'piSequence'):
+            self.generateSequenceClass(wig.piSequence, stream, indent)
+        if not indent and self.forwardDeclarations:
+            # SIP creates an empty class for a forward declaration of a class
+            # that isn't wrapped anywhere
+            for name in re.findall(r'^\s*class\s+(\w+)\s*;', wig.code, re.MULTILINE):
+                name = removeWxPrefix(name)
+                if typeinfo.moduleOf(name, self.pyModule) is None:
+                    stream.write(f'\nclass {name}:\n    pass\n')
+
+
+    def generateSequenceClass(self, seq, stream, indent):
+        """
+        A class made by one of the list or array wrapper templates in
+        tweaker_tools, which act like Python sequences.
+        """
+        item = self.cleanType(seq['item'])
+        itemIn = self.cleanType(seq['item'], is_input=True)
+        methods = [
+            'def __len__(self) -> int: ...',
+            f'def __getitem__(self, index: int) -> {item}: ...',
+            f'def __contains__(self, obj: {itemIn}) -> bool: ...',
+            # The array classes are iterated with __getitem__, but not all
+            # type checkers understand that
+            f'def __iter__(self) -> Iterator[{item}]: ...',
+            f'def index(self, obj: {itemIn}) -> int: ...',
+        ]
+        if not seq['isList']:
+            methods.append(f'def append(self, obj: {itemIn}) -> None: ...')
+        stream.write(f'\n{indent}class {seq["name"]}:\n')
+        for method in methods:
+            stream.write(f'{indent}    {method}\n')
 
 
     #-----------------------------------------------------------------------

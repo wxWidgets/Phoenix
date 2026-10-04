@@ -1524,19 +1524,22 @@ class ModuleDef(BaseDef):
                 one.append(item)
         self.items = one + two + three
 
-        self.updateIsCore()
+        self.updateModuleInfo()
 
 
-    def updateIsCore(self):
+    def updateModuleInfo(self):
         """
-        Give everything an isCore flag. This is done again just before the
-        generators are run, because items copied from other modules while
-        tweaking will still have the flag set for the module they came from.
+        Give everything an isCore flag, and the name of the Python module it
+        goes in. This is done again just before the generators are run,
+        because items copied from other modules while tweaking will still have
+        the values for the module they came from.
         """
         global _globalIsCore
         _globalIsCore = self.module == '_core'
+        pyModule = self.module[1:] if self.module.startswith('_') else self.module
         for item in self.allItems():
             item.isCore = _globalIsCore
+            item.pyModule = pyModule
 
 
     def addHeaderCode(self, code):

@@ -51,6 +51,7 @@ venv*/
 /sip/cpp/*.cpp
 /sip/cpp-*
 /sip/gen/*.sip
+/sip/gen/typeinfo
 /sip/siplib
 
 /wx/*.py
