@@ -26,6 +26,15 @@ The checks are:
      the other checkers, so those lines also need a "# ty: ignore[...]".
      All the checkers must accept the cases without any errors, including
      unused ignores.
+
+The settings for each type checker are in the config files in this folder.
+To run one by hand, from the top of the source tree, use that file and pass
+it the stubs and the cases, for example:
+
+  mypy --config-file unittests/type_checks/mypy.ini wx/*.pyi unittests/type_checks/test_cases
+  pyright --project unittests/type_checks/pyrightconfig.json wx/*.pyi unittests/type_checks/test_cases
+  ty check --config-file unittests/type_checks/ty.toml wx/*.pyi unittests/type_checks/test_cases
+  pyrefly check --config unittests/type_checks/pyrefly.toml wx/*.pyi unittests/type_checks/test_cases
 """
 
 import argparse
@@ -34,7 +43,6 @@ import collections
 import glob
 import json
 import os
-import shutil
 import subprocess
 import sys
 import warnings
@@ -43,11 +51,6 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 BASELINE = os.path.join(HERE, 'baseline.json')
 CASES = os.path.join(HERE, 'test_cases')
-WORKDIR = os.path.join(ROOT, 'build', 'type_checks')
-
-# The oldest Python version supported by wxPython
-PYTHON_VERSION = '3.10'
-
 # Overrides that don't match their base class are mostly part of the C++ API
 # being wrapped, so they are not something that can be fixed in the stubs.
 UNTRACKED = {
@@ -58,51 +61,6 @@ UNTRACKED = {
     'pyrefly': {'bad-override', 'bad-override-param-name',
                 'bad-override-mutable-attribute'},
 }
-
-MYPY_INI = f"""\
-[mypy]
-python_version = {PYTHON_VERSION}
-warn_unused_ignores = True
-no_site_packages = True
-cache_dir = .mypy_cache
-"""
-
-PYRIGHT_CONFIG = {
-    'pythonVersion': PYTHON_VERSION,
-    'typeCheckingMode': 'standard',
-    'reportUnnecessaryTypeIgnoreComment': 'error',
-}
-
-# ty and pyrefly look for their project root by searching upwards for config
-# files, which would find wxPython's pyproject.toml and the source tree's wx
-# folder if they don't find these first.
-TY_TOML = f"""\
-[environment]
-python-version = "{PYTHON_VERSION}"
-
-[rules]
-unused-ignore-comment = "error"
-"""
-
-PYREFLY_TOML = f"""\
-python-version = "{PYTHON_VERSION}"
-search-path = ["."]
-
-[errors]
-unused-ignore = true
-unused-type-ignore = true
-"""
-
-# Only the types matter, not the values, since this is never imported.
-VERSION_PY = """\
-VERSION_STRING    = '0.0.0'
-MAJOR_VERSION     = 0
-MINOR_VERSION     = 0
-RELEASE_NUMBER    = 0
-BUILD_TYPE        = 'release'
-
-VERSION = (MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER, '')
-"""
 
 Error = collections.namedtuple('Error', 'tool file line code message')
 
@@ -133,44 +91,14 @@ def checkSyntax(files):
     return failures
 
 
-def makeWorkDir(stubs):
-    """
-    Assemble a copy of the wx package the way it looks when installed, but
-    with only the parts that matter for type checking. This keeps the checks
-    independent of whatever else may or may not be built in the source tree.
-    """
-    if os.path.exists(WORKDIR):
-        shutil.rmtree(WORKDIR)
-    pkg = os.path.join(WORKDIR, 'wx')
-    os.makedirs(pkg)
-    for name in stubs:
-        shutil.copy(name, pkg)
-    shutil.copy(os.path.join(ROOT, 'wx', 'py.typed'), pkg)
-    shutil.copy(os.path.join(ROOT, 'src', '__init__.py'), pkg)
-    with open(os.path.join(pkg, '__version__.py'), 'w') as f:
-        f.write(VERSION_PY)
-    with open(os.path.join(WORKDIR, 'mypy.ini'), 'w') as f:
-        f.write(MYPY_INI)
-    with open(os.path.join(WORKDIR, 'pyrightconfig.json'), 'w') as f:
-        json.dump(PYRIGHT_CONFIG, f, indent=2)
-    with open(os.path.join(WORKDIR, 'ty.toml'), 'w') as f:
-        f.write(TY_TOML)
-    with open(os.path.join(WORKDIR, 'pyrefly.toml'), 'w') as f:
-        f.write(PYREFLY_TOML)
-    return [os.path.join(pkg, os.path.basename(name)) for name in stubs]
-
-
 def displayName(filename):
-    """Stubs are shown as wx/name.pyi, and other files relative to ROOT"""
-    filename = os.path.abspath(filename)
-    if filename.startswith(WORKDIR + os.sep):
-        return os.path.relpath(filename, WORKDIR).replace(os.sep, '/')
-    return os.path.relpath(filename, ROOT).replace(os.sep, '/')
+    """Files are shown relative to ROOT, like wx/core.pyi"""
+    return os.path.relpath(os.path.join(ROOT, filename), ROOT).replace(os.sep, '/')
 
 
 def runTool(cmd):
     try:
-        proc = subprocess.run(cmd, cwd=WORKDIR, capture_output=True, text=True,
+        proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,
                               encoding='utf-8')
     except FileNotFoundError:
         sys.exit(f'Unable to run {cmd[0]}')
@@ -181,7 +109,7 @@ def runTool(cmd):
 
 
 def runMypy(files):
-    cmd = [sys.executable, '-m', 'mypy', '--config-file', 'mypy.ini',
+    cmd = [sys.executable, '-m', 'mypy', '--config-file', os.path.join(HERE, 'mypy.ini'),
            '--output', 'json', '--no-error-summary'] + files
     proc = runTool(cmd)
     errors = []
@@ -200,7 +128,7 @@ def runMypy(files):
 
 
 def runPyright(files):
-    cmd = [sys.executable, '-m', 'pyright', '--project', 'pyrightconfig.json',
+    cmd = [sys.executable, '-m', 'pyright', '--project', os.path.join(HERE, 'pyrightconfig.json'),
            '--outputjson'] + files
     proc = runTool(cmd)
     try:
@@ -219,7 +147,8 @@ def runPyright(files):
 
 def runTy(files):
     # The GitLab Code Quality format is ty's only JSON output
-    cmd = [sys.executable, '-m', 'ty', 'check', '--output-format', 'gitlab'] + files
+    cmd = [sys.executable, '-m', 'ty', 'check', '--config-file', os.path.join(HERE, 'ty.toml'),
+           '--output-format', 'gitlab'] + files
     proc = runTool(cmd)
     try:
         result = json.loads(proc.stdout)
@@ -232,13 +161,13 @@ def runTy(files):
         code = item['check_name']
         message = item['description'].removeprefix(f'{code}: ')
         location = item['location']
-        errors.append(Error('ty', displayName(os.path.join(WORKDIR, location['path'])),
+        errors.append(Error('ty', displayName(location['path']),
                             location['positions']['begin']['line'], code, message))
     return errors
 
 
 def runPyrefly(files):
-    cmd = [sys.executable, '-m', 'pyrefly', 'check', '--config', 'pyrefly.toml',
+    cmd = [sys.executable, '-m', 'pyrefly', 'check', '--config', os.path.join(HERE, 'pyrefly.toml'),
            '--output-format', 'json'] + files
     proc = runTool(cmd)
     try:
@@ -249,7 +178,7 @@ def runPyrefly(files):
     for item in result['errors']:
         if item['severity'] != 'error':
             continue
-        errors.append(Error('pyrefly', displayName(os.path.join(WORKDIR, item['path'])),
+        errors.append(Error('pyrefly', displayName(item['path']),
                             item['line'], item['name'], item['concise_description']))
     return errors
 
@@ -320,7 +249,6 @@ def main():
         print('\n'.join(failures))
         return 1
 
-    stubs = makeWorkDir(stubs)
     cases = caseFiles()
     errors = []
     for name, run in [('mypy', runMypy), ('pyright', runPyright),

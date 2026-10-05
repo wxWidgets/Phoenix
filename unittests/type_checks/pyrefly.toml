@@ -1,0 +1,10 @@
+# pyrefly settings for the type stub checks, see check_stubs.py
+
+search-path = ["../.."]
+python-version = "3.10"
+# The generated stubs are in .gitignore
+use-ignore-files = false
+
+[errors]
+unused-ignore = true
+unused-type-ignore = true

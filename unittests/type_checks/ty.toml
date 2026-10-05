@@ -1,0 +1,7 @@
+# ty settings for the type stub checks, see check_stubs.py
+
+[environment]
+python-version = "3.10"
+
+[rules]
+unused-ignore-comment = "error"

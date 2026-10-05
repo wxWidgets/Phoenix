@@ -1,8 +1,5 @@
 {
   "mypy": {
-    "wx/__init__.py": {
-      "name-defined": 1
-    },
     "wx/adv.pyi": {
       "assignment": 2,
       "misc": 5,

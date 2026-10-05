@@ -1,0 +1,6 @@
+{
+    "extraPaths": ["../.."],
+    "pythonVersion": "3.10",
+    "typeCheckingMode": "standard",
+    "reportUnnecessaryTypeIgnoreComment": "error"
+}
