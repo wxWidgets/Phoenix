@@ -303,6 +303,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.transferThis = False     # ownership of 'this' pointer transferred to C++
         self.cppCode = None           # Use this code instead of the default wrapper
         self.noArgParser = False      # set the NoargParser annotation
+        self.canReturnNone = False    # a returned pointer can be NULL, for the type hints
         self.preMethodCode = None
 
         self.__dict__.update(kw)
@@ -486,7 +487,10 @@ class FunctionDef(BaseDef, FixWxPrefix):
         params: list[Signature.Parameter] = []
         returns: list[str] = []
         if self.type and self.type != 'void':
-            returns.append(self.cleanType(self.type))
+            returnType = self.cleanType(self.type)
+            if self.canReturnNone:
+                returnType = f'Optional[{returnType}]'
+            returns.append(returnType)
 
         defValueMap = { 'true':  'True',
                         'false': 'False',

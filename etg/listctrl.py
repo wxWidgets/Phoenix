@@ -64,6 +64,9 @@ def run():
         c.find(name).ignore(False)
         c.find(name).isVirtual = True
 
+    # Returning None means that the default attributes are used
+    c.find('OnGetItemAttr').canReturnNone = True
+
     tools.addEnableSystemTheme(c, 'wx.ListCtrl')
 
     # Tweaks to allow passing and using a Python callable object for the sort
