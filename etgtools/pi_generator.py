@@ -21,6 +21,8 @@ supports Python 3.5 style type annotations in the interface files so we may
 want to add some type info to that version of the file eventually...
 """
 
+import ast
+import builtins
 import json
 import sys, os, re
 from typing import Optional, Union
@@ -29,7 +31,7 @@ import etgtools.generators as generators
 import etgtools.typeinfo as typeinfo
 from etgtools.generators import nci, Utf8EncodingStream, textfile_open, \
                                  etgParallelOutputDir, currentEtgScriptId
-from etgtools.tweaker_tools import FixWxPrefix, magicMethods, removeWxPrefix, \
+from etgtools.tweaker_tools import FixWxPrefix, ParameterType, magicMethods, removeWxPrefix, \
                                    guessTypeInt, guessTypeFloat, guessTypeStr
 
 
@@ -83,6 +85,8 @@ header_pyi = """\
 
 typing_imports = """\
 from __future__ import annotations
+import builtins
+import typing
 from datetime import datetime, date
 from enum import IntEnum, IntFlag, auto
 from typing import (Any, overload, TypeAlias, Generic,
@@ -110,6 +114,29 @@ def nciDoc(text, numSpaces=0, stripLeading=True):
     otherwise be treated as escape sequences.
     """
     return nci(text.replace('\\', '\\\\'), numSpaces, stripLeading)
+
+
+_typingNames = {'Any', 'overload', 'TypeAlias', 'Generic', 'Union', 'Optional', 'List',
+                'Tuple', 'Callable', 'Iterator', 'Sequence', 'ParamSpec'}
+
+
+def unionMembers(typeHint):
+    """The types in a Union type hint, or just the type hint itself"""
+    if not (typeHint.startswith('Union[') and typeHint.endswith(']')):
+        return [typeHint]
+    members = []
+    depth = 0
+    start = len('Union[')
+    for i, c in enumerate(typeHint[start:-1], start):
+        if c == '[':
+            depth += 1
+        elif c == ']':
+            depth -= 1
+        elif c == ',' and depth == 0:
+            members.append(typeHint[start:i].strip())
+            start = i + 1
+    members.append(typeHint[start:-1].strip())
+    return members
 
 
 def piIgnored(obj):
@@ -180,7 +207,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         with, other than the ones that the module already imports.
         """
         imported = {name.lstrip('_') for name in module.imports}
-        imported.update(['core', typeinfo.pyModuleName(module)])
+        imported.add('core')
         known = typeinfo.load()['names']
         used = set(re.findall(r'\bwx\.(\w+)\.', text))
         needed = sorted(m for m in used if m in known and m not in imported)
@@ -277,7 +304,91 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             if item.ignored or piIgnored(item):
                 continue
             function = methodMap[item.__class__]
-            function(item, stream)
+            if isinstance(item, (extractors.ClassDef, extractors.PyClassDef)):
+                classStream = Utf8EncodingStream()
+                function(item, classStream)
+                stream.write(self.qualifyShadowedNames(classStream.getvalue()))
+            else:
+                function(item, stream)
+
+
+    def qualifyShadowedNames(self, code):
+        """
+        Names in annotations and default values inside a class body are looked
+        up in the class first, so a method or attribute with the same name as
+        a class, like a Window property in a class with methods that take a
+        Window, hides it. Qualify the hidden names in code, which is the code
+        for a class, with the module they come from, like wx.Window.
+        """
+        try:
+            tree = ast.parse(code)
+        except SyntaxError:
+            return code
+
+        replacements = []
+        for klass in ast.walk(tree):
+            if not isinstance(klass, ast.ClassDef):
+                continue
+            # Only members that aren't types themselves. Nested classes and
+            # type aliases are types that annotations can mean to refer to.
+            hiding = set()
+            for item in klass.body:
+                if isinstance(item, ast.FunctionDef):
+                    hiding.add(item.name)
+                elif isinstance(item, ast.Assign):
+                    hiding.update(t.id for t in item.targets if isinstance(t, ast.Name))
+                elif isinstance(item, ast.AnnAssign) and isinstance(item.target, ast.Name):
+                    if not (isinstance(item.annotation, ast.Name) and item.annotation.id == 'TypeAlias'):
+                        hiding.add(item.target.id)
+
+            # The expressions in the class body that are looked up in it
+            expressions = []
+            for item in klass.body:
+                if isinstance(item, ast.FunctionDef):
+                    args = item.args
+                    for arg in args.posonlyargs + args.args + args.kwonlyargs + [args.vararg, args.kwarg]:
+                        if arg is not None and arg.annotation is not None:
+                            expressions.append(arg.annotation)
+                    expressions += [d for d in args.defaults + args.kw_defaults if d is not None]
+                    if item.returns is not None:
+                        expressions.append(item.returns)
+                elif isinstance(item, ast.AnnAssign):
+                    expressions.append(item.annotation)
+                    if item.value is not None and isinstance(item.annotation, ast.Name) \
+                            and item.annotation.id == 'TypeAlias':
+                        expressions.append(item.value)
+
+            for expression in expressions:
+                for node in ast.walk(expression):
+                    if isinstance(node, ast.Name) and node.id in hiding:
+                        qualified = self._qualifiedName(node.id)
+                        if qualified:
+                            replacements.append((node.lineno, node.col_offset,
+                                                 node.end_col_offset, qualified))
+
+        if not replacements:
+            return code
+        # Positions are byte offsets within each line. Replace from the end, so
+        # the earlier positions stay valid.
+        lines = code.split('\n')
+        for lineno, start, end, qualified in sorted(replacements, reverse=True):
+            line = lines[lineno - 1].encode('utf-8')
+            lines[lineno - 1] = (line[:start] + qualified.encode('utf-8') + line[end:]).decode('utf-8')
+        return '\n'.join(lines)
+
+
+    def _qualifiedName(self, name):
+        """How to refer to a name from the top level of this module, from anywhere"""
+        if name in _typingNames:
+            return 'typing.' + name
+        if hasattr(builtins, name):
+            return 'builtins.' + name
+        module = typeinfo.moduleOf(name, self.pyModule)
+        if module == 'core':
+            return 'wx.' + name
+        if module:
+            return 'wx.%s.%s' % (module, name)
+        return None
 
 
     #-----------------------------------------------------------------------
@@ -452,6 +563,15 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         declared = set()
         lines = []
         for line in code.splitlines(keepends=True):
+            # core_ex.py makes wx refer to the module itself, which type
+            # checkers can't follow, but the package works the same way here
+            if re.match(r'^wx\s*=\s*_sys\.modules\[__name__\]\s*$', line):
+                lines.append('import wx\n')
+                continue
+            # wx._core is the extension module, which has no stub, so type
+            # checkers don't know what this would make wx
+            if re.match(r'^\s*import wx\._core\s*$', line):
+                continue
             m = re.match(r'^(\s*)wx\.(\w+)\s*=\s*(.*?)\s*$', line)
             if m:
                 indent, name, value = m.groups()
@@ -672,35 +792,70 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         assert isinstance(prop, extractors.PyPropertyDef)
         self._generateProperty(klass, prop, stream, indent)
 
+    def _signatures(self, method):
+        """The signatures of the overloads of method that are in the .pyi file"""
+        signatures = []
+        for m in method.all():
+            if m.ignored or piIgnored(m):
+                continue
+            if not m.signature:
+                m.makePyArgsString()
+            signatures.append(m.signature)
+        return signatures
+
+    def _propertyTypes(self, klass, prop):
+        """
+        The type a property returns, and the type it can be set to. These can
+        differ, since the setter may have overloads, or accept other types
+        that are converted automatically.
+        """
+        getType = setType = None
+        getter = self.find_method(klass, prop.getter) if prop.getter else None
+        if getter:
+            # Use the overload that the property can call, with no arguments
+            for sig in self._signatures(getter):
+                if all(p.default for p in sig):
+                    getType = sig.return_type
+                    break
+        setter = self.find_method(klass, prop.setter) if prop.setter else None
+        if setter:
+            # and the overloads that it can call with one argument
+            types = []
+            for sig in self._signatures(setter):
+                params = list(sig)
+                if (params and params[0].type_hint and
+                        params[0].position_type is ParameterType.DEFAULT and
+                        all(p.default for p in params[1:])):
+                    for t in unionMembers(params[0].type_hint):
+                        if t not in types:
+                            types.append(t)
+            if len(types) == 1:
+                setType = types[0]
+            elif types:
+                setType = 'Union[%s]' % ', '.join(types)
+        return getType, setType
+
     def _generateProperty(self, klass: extractors.ClassDef, prop: Union[extractors.PyPropertyDef, extractors.PropertyDef], stream, indent: str):
         if prop.ignored or piIgnored(prop):
             return
-        value_type = ''
-        if prop.getter:
-            getter = self.find_method(klass, prop.getter)
-            if getter and getter.signature:
-                value_type = getter.signature.return_type
-        if prop.setter:
-            setter = self.find_method(klass, prop.setter)
-            if setter and setter.signature:
-                value_type = setter.signature[0].type_hint
+        getType, setType = self._propertyTypes(klass, prop)
         if prop.setter and prop.getter:
-            if value_type:
+            if getType or setType:
                 stream.write(f'{indent}@property\n')
-                stream.write(f'{indent}def {prop.name}(self) -> {value_type}: ...\n')
+                stream.write(f'{indent}def {prop.name}(self) -> {getType or setType}: ...\n')
                 stream.write(f'{indent}@{prop.name}.setter\n')
-                stream.write(f'{indent}def {prop.name}(self, value: {value_type}, /) -> None: ...\n')
+                stream.write(f'{indent}def {prop.name}(self, value: {setType or getType}, /) -> None: ...\n')
             else:
                 stream.write(f'{indent}{prop.name} = property({prop.getter}, {prop.setter})\n')
         elif prop.getter:
-            if value_type:
+            if getType:
                 stream.write(f'{indent}@property\n')
-                stream.write(f'{indent}def {prop.name}(self) -> {value_type}: ...\n')
+                stream.write(f'{indent}def {prop.name}(self) -> {getType}: ...\n')
             else:
                 stream.write(f'{indent}{prop.name} = property({prop.getter})\n')
         elif prop.setter:
             # Can't use the decorator syntax in this situation
-            stream.write(f'{indent}{prop.name} = property(fset={prop.setter})\n') 
+            stream.write(f'{indent}{prop.name} = property(fset={prop.setter})\n')
 
 
     def generateMethod(self, method, stream, indent, name=None, docstring=None, is_overload=False, is_top_level_init=False):

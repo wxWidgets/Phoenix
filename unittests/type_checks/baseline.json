@@ -11,20 +11,18 @@
     "wx/aui.pyi": {
       "assignment": 1,
       "misc": 1,
-      "name-defined": 2,
-      "valid-type": 1
+      "name-defined": 2
     },
     "wx/core.pyi": {
-      "arg-type": 3,
+      "arg-type": 21,
       "assignment": 20,
-      "attr-defined": 1,
+      "attr-defined": 2,
       "has-type": 1,
-      "import-not-found": 1,
       "misc": 24,
       "name-defined": 22,
       "no-redef": 5,
       "overload-cannot-match": 5,
-      "valid-type": 94,
+      "valid-type": 7,
       "var-annotated": 1
     },
     "wx/dataview.pyi": {
@@ -73,6 +71,7 @@
       "overload-cannot-match": 2
     },
     "wx/stc.pyi": {
+      "arg-type": 1,
       "assignment": 1,
       "misc": 1
     },
@@ -89,22 +88,20 @@
       "invalid-overload": 1
     },
     "wx/aui.pyi": {
-      "not-a-type": 1,
       "unknown-name": 2
     },
     "wx/core.pyi": {
-      "bad-argument-type": 4,
+      "bad-argument-type": 8,
       "bad-function-definition": 18,
       "bad-specialization": 2,
       "invalid-overload": 26,
       "invalid-type-var": 1,
-      "missing-attribute": 1,
-      "missing-import": 1,
-      "not-a-type": 135,
+      "missing-attribute": 2,
+      "not-a-type": 15,
       "not-callable": 1,
       "redefinition": 1,
       "unknown-name": 22,
-      "unsupported-operation": 37
+      "unsupported-operation": 1
     },
     "wx/glcanvas.pyi": {
       "unknown-name": 1
@@ -125,7 +122,6 @@
     },
     "wx/richtext.pyi": {
       "invalid-overload": 5,
-      "not-a-type": 7,
       "unknown-name": 3
     },
     "wx/xrc.pyi": {
@@ -142,12 +138,11 @@
       "reportUndefinedVariable": 2
     },
     "wx/core.pyi": {
-      "reportArgumentType": 22,
-      "reportAttributeAccessIssue": 2,
-      "reportCallIssue": 3,
+      "reportArgumentType": 40,
+      "reportAttributeAccessIssue": 3,
+      "reportCallIssue": 1,
       "reportGeneralTypeIssues": 7,
       "reportInconsistentOverload": 17,
-      "reportMissingImports": 1,
       "reportOperatorIssue": 1,
       "reportOverlappingOverload": 5,
       "reportRedeclaration": 5,
@@ -179,6 +174,9 @@
       "reportOverlappingOverload": 2,
       "reportUndefinedVariable": 3
     },
+    "wx/stc.pyi": {
+      "reportArgumentType": 1
+    },
     "wx/xrc.pyi": {
       "reportArgumentType": 1
     }
@@ -186,26 +184,21 @@
   "ty": {
     "wx/adv.pyi": {
       "invalid-overload": 1,
-      "invalid-parameter-default": 1,
-      "invalid-type-form": 20
+      "invalid-parameter-default": 1
     },
     "wx/aui.pyi": {
-      "invalid-type-form": 5,
       "unresolved-reference": 2
     },
     "wx/core.pyi": {
       "call-non-callable": 1,
-      "invalid-argument-type": 5,
+      "invalid-argument-type": 23,
       "invalid-overload": 17,
       "invalid-parameter-default": 18,
-      "invalid-type-form": 1450,
-      "missing-argument": 2,
+      "invalid-type-form": 9,
       "unresolved-attribute": 1,
-      "unresolved-import": 1,
-      "unresolved-reference": 23
+      "unresolved-reference": 24
     },
     "wx/dataview.pyi": {
-      "invalid-type-form": 3,
       "unresolved-reference": 14
     },
     "wx/glcanvas.pyi": {
@@ -215,7 +208,6 @@
       "unresolved-reference": 4
     },
     "wx/html.pyi": {
-      "invalid-type-form": 2,
       "unresolved-reference": 2
     },
     "wx/html2.pyi": {
@@ -228,8 +220,10 @@
     },
     "wx/richtext.pyi": {
       "invalid-overload": 4,
-      "invalid-type-form": 81,
       "unresolved-reference": 3
+    },
+    "wx/stc.pyi": {
+      "invalid-argument-type": 1
     },
     "wx/xrc.pyi": {
       "invalid-parameter-default": 1
