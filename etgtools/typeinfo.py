@@ -18,6 +18,7 @@ pass reads it while generating the code.
 import ast
 import json
 import os
+import sys
 
 phoenixRoot = os.path.abspath(os.path.split(__file__)[0]+'/..')
 TYPEINFO_DIR = os.path.join(phoenixRoot, 'sip', 'gen', 'typeinfo')
@@ -157,8 +158,10 @@ def load():
             with open(MERGED_FILE, encoding='utf-8') as f:
                 _merged = json.load(f)
         else:
-            print('WARNING: %s not found, run "build.py etg" to create it.' %
-                  os.path.relpath(MERGED_FILE, phoenixRoot))
+            # The first pass runs before the file exists, but doesn't need it
+            if '--typeinfo' not in sys.argv:
+                print('WARNING: %s not found, run "build.py etg" to create it.' %
+                      os.path.relpath(MERGED_FILE, phoenixRoot))
             _merged = {}
         _merged.setdefault('names', {})
         _merged.setdefault('renames', {})
