@@ -1165,14 +1165,18 @@ def _mergeParallelEtgOutput(parallelDir, scriptsRunInOrder):
         piGen.writeSection(destFile_pyi, data['section'], data['text'])
 
 
-def _runEtgScripts(options, scripts, flags, env=None):
-    """Run etg scripts concurrently"""
+def _runEtgScripts(options, scripts, flags, env=None, quiet=False):
+    """
+    Run etg scripts concurrently. If quiet, their output is only shown if
+    they fail.
+    """
     if not scripts:
         return
     maxWorkers = int(options.jobs) if options.jobs else max(2, numCPUs())
     maxWorkers = min(maxWorkers, len(scripts))
     with concurrent.futures.ThreadPoolExecutor(max_workers=maxWorkers) as executor:
-        futures = [executor.submit(runcmd, '"%s" %s %s' % (PYTHON, script, flags), env=env)
+        futures = [executor.submit(runcmd, '"%s" %s %s' % (PYTHON, script, flags),
+                                   getOutput=quiet, env=env)
                    for script in scripts]
         for future in concurrent.futures.as_completed(futures):
             future.result()  # re-raises on failure
@@ -1233,13 +1237,15 @@ def cmd_etg(options, args):
     # other, for any scripts that have changed. See etgtools/typeinfo.py
     toRun = [script for script in etgfiles
              if newer_group(allDeps[script], typeinfo.scriptInfoFile(scriptId(script)))]
-    _runEtgScripts(options, toRun, flags + ' --typeinfo')
+    # The second pass runs these scripts too, which will show any warnings
+    _runEtgScripts(options, toRun, flags + ' --typeinfo', quiet=True)
     typeinfo.mergeScriptInfo([scriptId(script) for script in etgfiles])
 
     # The second pass runs the scripts for real, if any of their
     # dependencies, or the type info from the other scripts, are newer
     toRun = [script for script in etgfiles
              if newer_group(allDeps[script] + [typeinfo.MERGED_FILE], etg2sip(script))]
+
     if not toRun:
         return
 
