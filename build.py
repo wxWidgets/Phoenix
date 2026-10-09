@@ -143,6 +143,7 @@ Usage: ./build.py [command(s)] [options]
       test          Run the unit test suite
       test_*        Run just the one named test module
       check_stubs   Check the generated .pyi type stubs with several type checkers
+      stubtest      Compare the .pyi type stubs with the built wx package
 
       clean_wx      Clean the wx parts of the build
       clean_py      Clean the wxPython parts of the build
@@ -1612,6 +1613,12 @@ def cmd_check_stubs(options, args):
     cmdTimer = CommandTimer('check_stubs')
     pwd = pushDir(phoenixDir())
     runcmd('"%s" unittests/type_checks/check_stubs.py' % PYTHON)
+
+
+def cmd_stubtest(options, args):
+    cmdTimer = CommandTimer('stubtest')
+    pwd = pushDir(phoenixDir())
+    runcmd('"%s" unittests/type_checks/check_stubs.py --stubtest' % PYTHON)
 
 
 

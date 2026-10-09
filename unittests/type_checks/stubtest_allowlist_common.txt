@@ -1,0 +1,10 @@
+# Known differences between the stubs and the wx package, found by stubtest,
+# which are listed by hand. See check_stubs.py.
+
+# The __init__ methods of sip's classes only take *args and **kwargs at
+# runtime, so their parameters can't be compared
+wx\..*\.__init__
+
+# Deprecation helpers in core, which are defined in functions, so their names
+# include line numbers
+wx\.core\.\w+@\d+

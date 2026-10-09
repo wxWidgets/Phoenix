@@ -27,6 +27,14 @@ The checks are:
      All the checkers must accept the cases without any errors, including
      unused ignores.
 
+With --stubtest, the stubs are instead compared with the wx package itself,
+using mypy's stubtest, so this needs a built wx. That is whichever wx Python
+imports, either installed or built in place in the source tree. The known
+differences are listed in stubtest_allowlist_common.txt, which is maintained
+by hand, and stubtest_allowlist.txt, which is updated by running with
+--stubtest --update-allowlist. Allowlist entries that no longer match fail
+the check too.
+
 The settings for each type checker are in the config files in this folder.
 To run one by hand, from the top of the source tree, use that file and pass
 it the stubs and the cases, for example:
@@ -43,13 +51,18 @@ import collections
 import glob
 import json
 import os
+import re
+import site
 import subprocess
 import sys
+import sysconfig
 import warnings
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 BASELINE = os.path.join(HERE, 'baseline.json')
+STUBTEST_ALLOWLISTS = [os.path.join(HERE, 'stubtest_allowlist_common.txt'),
+                       os.path.join(HERE, 'stubtest_allowlist.txt')]
 CASES = os.path.join(HERE, 'test_cases')
 # Overrides that don't match their base class are mostly part of the C++ API
 # being wrapped, so they are not something that can be fixed in the stubs.
@@ -229,6 +242,104 @@ def compareBaseline(errors, baseline):
     return not (worse or better)
 
 
+def findRuntimeWx():
+    """The folder containing the wx package that Python imports"""
+    proc = subprocess.run([sys.executable, '-c', 'import wx; print(wx.__file__)'],
+                          capture_output=True, text=True, cwd=HERE)
+    if proc.returncode:
+        sys.exit(f'Unable to import wx, which stubtest needs:\n{proc.stderr}')
+    return os.path.dirname(os.path.dirname(os.path.abspath(proc.stdout.strip())))
+
+
+def isSitePackages(path):
+    paths = site.getsitepackages() + [site.getusersitepackages()]
+    paths += [sysconfig.get_path('purelib'), sysconfig.get_path('platlib')]
+    return any(os.path.normcase(os.path.abspath(path)) == os.path.normcase(os.path.abspath(p))
+               for p in paths)
+
+
+def importableModules(root):
+    """The wx modules that have stubs and can be imported on this platform"""
+    modules = []
+    for name in sorted(glob.glob(os.path.join(root, 'wx', '*.pyi'))):
+        name = os.path.basename(name)[:-4]
+        if name in ('__init__', '__version__', 'siplib'):
+            continue
+        proc = subprocess.run([sys.executable, '-c', f'import wx.{name}'],
+                              capture_output=True, cwd=HERE)
+        if proc.returncode == 0:
+            modules.append(f'wx.{name}')
+    return modules
+
+
+# The categories that the generated allowlist is grouped in, matched against
+# stubtest's messages.
+ALLOWLIST_CATEGORIES = [
+    (r"variable differs from runtime type Literal\[b'",
+     "char* constants, which are bytes at runtime, but are typed as str"),
+    (r"is not a Union|variable differs from runtime type Literal\[-?\d",
+     "Enums, which are typed as a Union of an IntEnum and int, but are classes with int\n"
+     "# members at runtime"),
+    (r"is not present at runtime",
+     "Not present at runtime, at least on this platform"),
+    (r"read-only at runtime",
+     "Read-only at runtime"),
+    (r"", "Other differences"),
+]
+
+
+def runStubtest(update):
+    root = findRuntimeWx()
+    modules = importableModules(root)
+    print(f'Running stubtest with the wx package in {root}...')
+    cmd = [sys.executable, '-m', 'mypy.stubtest', '--concise',
+           '--mypy-config-file', os.path.join(HERE, 'stubtest.ini'),
+           # Most of the C++ API's protected methods aren't in the stubs yet
+           '--ignore-missing-stub',
+           # Operator methods' parameters aren't positional-only in the stubs yet
+           '--ignore-positional-only']
+    allowlists = STUBTEST_ALLOWLISTS[:1] if update else STUBTEST_ALLOWLISTS
+    for name in allowlists:
+        cmd += ['--allowlist', name]
+    env = dict(os.environ)
+    if not isSitePackages(root):
+        # mypy finds installed packages by itself, but needs to be told where
+        # one built in the source tree is
+        env['MYPYPATH'] = root
+    proc = subprocess.run(cmd + modules, capture_output=True, text=True,
+                          encoding='utf-8', cwd=HERE, env=env)
+    if 'No module named' in proc.stderr:
+        sys.exit(f'{proc.stderr.strip()}\n'
+                 'Install the type checkers with: pip install --group typecheck')
+
+    if not update:
+        print(proc.stdout + proc.stderr)
+        print('OK' if proc.returncode == 0 else
+              'FAILED\nIf these differences are expected, run this script with '
+              '--stubtest --update-allowlist and commit the result.')
+        return proc.returncode
+
+    groups = {title: [] for _, title in ALLOWLIST_CATEGORIES}
+    for line in proc.stdout.splitlines():
+        name, _, message = line.partition(' ')
+        if not name.startswith('wx.'):
+            continue
+        for pattern, title in ALLOWLIST_CATEGORIES:
+            if re.search(pattern, message):
+                groups[title].append(name)
+                break
+    with open(STUBTEST_ALLOWLISTS[1], 'w') as f:
+        f.write('# Known differences between the stubs and the wx package, found by\n'
+                '# stubtest. This file is generated by check_stubs.py --stubtest\n'
+                '# --update-allowlist, so edit stubtest_allowlist_common.txt instead.\n')
+        for title, names in groups.items():
+            if names:
+                f.write(f'\n# {title}\n')
+                f.write(''.join(re.escape(name) + '\n' for name in sorted(set(names))))
+    print(f'Updated {os.path.relpath(STUBTEST_ALLOWLISTS[1], ROOT)}')
+    return 0
+
+
 def printErrors(errors):
     for e in errors:
         print(f'    {e.file}:{e.line}: [{e.tool}:{e.code}] {e.message}')
@@ -240,7 +351,13 @@ def main():
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--update-baseline', action='store_true',
                         help='write the current stub error counts to baseline.json')
+    parser.add_argument('--stubtest', action='store_true',
+                        help='compare the stubs with a built wx, instead of the other checks')
+    parser.add_argument('--update-allowlist', action='store_true',
+                        help='with --stubtest, write the differences found to stubtest_allowlist.txt')
     options = parser.parse_args()
+    if options.stubtest:
+        return runStubtest(options.update_allowlist)
 
     stubs = stubFiles()
     print('Checking stub syntax...')
