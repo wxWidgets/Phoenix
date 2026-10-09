@@ -208,7 +208,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         """
         imported = {name.lstrip('_') for name in module.imports}
         imported.add('core')
-        known = typeinfo.load()['names']
+        known = set(typeinfo.load()['names']) | {'siplib'}
         used = set(re.findall(r'\bwx\.(\w+)\.', text))
         needed = sorted(m for m in used if m in known and m not in imported)
         return ''.join('import wx.%s\n' % m for m in needed) + text
@@ -515,7 +515,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             for name in re.findall(r'^\s*class\s+(\w+)\s*;', wig.code, re.MULTILINE):
                 name = removeWxPrefix(name)
                 if typeinfo.moduleOf(name, self.pyModule) is None:
-                    stream.write(f'\nclass {name}:\n    pass\n')
+                    stream.write(f'\nclass {name}(wx.siplib.wrapper):\n    pass\n')
 
 
     def generateSequenceClass(self, seq, stream, indent):
@@ -536,7 +536,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         ]
         if not seq['isList']:
             methods.append(f'def append(self, obj: {itemIn}) -> None: ...')
-        stream.write(f'\n{indent}class {seq["name"]}:\n')
+        stream.write(f'\n{indent}class {seq["name"]}(wx.siplib.wrapper):\n')
         for method in methods:
             stream.write(f'{indent}    {method}\n')
 
@@ -692,6 +692,9 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             for tp in klass.templateParams:
                 if tp in bases:
                     bases.remove(tp)
+            if not bases:
+                # Like at runtime, so the stubs have sip's metaclass too
+                bases = ['wx.siplib.wrapper']
 
         # write class declaration
         klassName = klass.pyName or klass.name

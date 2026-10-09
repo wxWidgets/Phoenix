@@ -1247,7 +1247,7 @@ def cmd_etg(options, args):
              if newer_group(allDeps[script] + [typeinfo.MERGED_FILE], etg2sip(script))]
 
     # Stubs for the package itself go with the stubs the scripts make
-    for name in ['__init__.pyi', '__version__.pyi']:
+    for name in ['__init__.pyi', '__version__.pyi', 'siplib.pyi']:
         copyIfNewer(opj('src', name), opj(cfg.PKGDIR, name))
 
     if not toRun:
