@@ -14,13 +14,11 @@
       "arg-type": 3,
       "assignment": 20,
       "attr-defined": 2,
-      "has-type": 1,
       "misc": 24,
       "name-defined": 18,
-      "no-redef": 5,
+      "no-redef": 4,
       "overload-cannot-match": 5,
-      "valid-type": 7,
-      "var-annotated": 1
+      "valid-type": 7
     },
     "wx/dataview.pyi": {
       "assignment": 1,
@@ -89,15 +87,12 @@
     "wx/core.pyi": {
       "bad-argument-type": 4,
       "bad-function-definition": 18,
-      "bad-specialization": 2,
       "invalid-overload": 26,
-      "invalid-type-var": 1,
       "missing-attribute": 2,
-      "not-a-type": 15,
+      "not-a-type": 7,
       "not-callable": 1,
       "redefinition": 1,
-      "unknown-name": 18,
-      "unsupported-operation": 1
+      "unknown-name": 18
     },
     "wx/glcanvas.pyi": {
       "unknown-name": 1
@@ -139,7 +134,6 @@
       "reportCallIssue": 1,
       "reportGeneralTypeIssues": 7,
       "reportInconsistentOverload": 17,
-      "reportOperatorIssue": 1,
       "reportOverlappingOverload": 5,
       "reportRedeclaration": 5,
       "reportUndefinedVariable": 18
@@ -184,12 +178,12 @@
     },
     "wx/core.pyi": {
       "call-non-callable": 1,
-      "invalid-argument-type": 5,
+      "invalid-argument-type": 4,
       "invalid-overload": 17,
       "invalid-parameter-default": 18,
-      "invalid-type-form": 9,
+      "invalid-type-form": 7,
       "unresolved-attribute": 1,
-      "unresolved-reference": 20
+      "unresolved-reference": 19
     },
     "wx/dataview.pyi": {
       "unresolved-reference": 14

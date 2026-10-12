@@ -8,3 +8,9 @@ assert_type(wx.DEFAULT, int)
 assert_type(wx.SOLID, int)
 assert_type(wx.CROSS_HATCH, int)
 wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.BOLD)
+
+
+# Values from the extension module
+assert_type(wx.Port, str)
+assert_type(wx.PlatformInfo, tuple)
+

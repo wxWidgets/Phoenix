@@ -296,11 +296,7 @@ def run():
     module.addPyCode('import typing', order=10)
     module.addPyCode("""\
         _T = typing.TypeVar('_T')
-        try:
-            _P = typing.ParamSpec('_P')
-        except AttributeError:
-            import typing_extensions
-            _P = typing_extensions.ParamSpec('_P')
+        _P = typing.ParamSpec('_P')
         """)
     module.addPyFunction('CallAfter', '(callableObj: typing.Callable[_P, _T], *args: _P.args, **kw: _P.kwargs) -> None', doc="""\
             Call the specified function after the current and pending event
@@ -352,7 +348,7 @@ def run():
 
             """,
         items = [
-            PyCodeDef('__instances = {}'),
+            PyCodeDef('__instances: dict = {}'),
             PyFunctionDef('__init__', '(self, millis, callableObj: typing.Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs) -> None',
                 doc="""\
                     Constructs a new :class:`wx.CallLater` object.
