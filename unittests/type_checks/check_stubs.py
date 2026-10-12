@@ -276,8 +276,6 @@ def importableModules(root):
 # The categories that the generated allowlist is grouped in, matched against
 # stubtest's messages.
 ALLOWLIST_CATEGORIES = [
-    (r"variable differs from runtime type Literal\[b'",
-     "char* constants, which are bytes at runtime, but are typed as str"),
     (r"is not a Union|variable differs from runtime type Literal\[-?\d",
      "Enums, which are typed as a Union of an IntEnum and int, but are classes with int\n"
      "# members at runtime"),

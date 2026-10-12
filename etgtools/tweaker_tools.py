@@ -395,6 +395,9 @@ class FixWxPrefix(object):
         }
         input_type_map = {
             'MemoryBuffer': 'Buffer',
+            # The ART_* constants are bytes, but str works too
+            'ArtID': 'Union[str, bytes]',
+            'ArtClient': 'Union[str, bytes]',
         }
         # The template brackets would be lost in cleanName, so deal with these first
         m = re.match(r'^(?:const\s+)?(?:std::vector|wxVector)\s*<\s*(.+?)\s*>[\s&*]*$', type_name.strip())
@@ -1821,6 +1824,11 @@ def guessTypeFloat(v):
     if type in ['float', 'double', 'wxDouble']:
         return True
     return False
+
+
+def isCharString(typeName):
+    """Narrow C strings, which SIP converts to bytes"""
+    return re.match(r'^(const)?(unsigned)?char(const)?(\*|\[\d*\])$', typeName.replace(' ', '')) is not None
 
 
 def guessTypeStr(v):

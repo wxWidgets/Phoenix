@@ -14,3 +14,9 @@ wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.BOLD)
 assert_type(wx.Port, str)
 assert_type(wx.PlatformInfo, tuple)
 
+
+# char* constants are bytes, like at runtime
+assert_type(wx.ART_FOLDER, bytes)
+assert_type(wx.ButtonNameStr, bytes)
+wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_TOOLBAR)
+wx.ArtProvider.GetBitmap('wxART_FOLDER', 'wxART_TOOLBAR_C')

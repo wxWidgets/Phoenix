@@ -70,8 +70,8 @@ def collect(module):
     """Gather the type information that module provides for other scripts"""
     from etgtools.generators import Utf8EncodingStream
     from etgtools.pi_generator import PiWrapperGenerator
-    from etgtools.extractors import ClassDef, TypedefDef
-    from etgtools.tweaker_tools import FixWxPrefix, getWrapperGenerator, removeWxPrefix
+    from etgtools.extractors import ClassDef, GlobalVarDef, TypedefDef
+    from etgtools.tweaker_tools import FixWxPrefix, getWrapperGenerator, isCharString, removeWxPrefix
 
     # Generating the .pyi code is the simplest way to find exactly which names
     # this script will add to the module's .pyi file. As in the normal run,
@@ -95,16 +95,21 @@ def collect(module):
                 renames[name] = item.pyName
     # Typedefs inside classes, like value_type, could mean different things in
     # different classes, so only the module level ones are used.
+    # and the constants that are bytes, since SIP converts char* to bytes
+    bytesConstants = []
     for item in module.items:
         if isinstance(item, TypedefDef) and not item.docAsClass:
             if not any(c in item.type for c in '<(['):
                 typedefs[removeWxPrefix(item.name)] = item.type
+        elif isinstance(item, GlobalVarDef) and item.type and isCharString(item.type):
+            bytesConstants.append(item.pyName or removeWxPrefix(item.name))
 
     return {
         'module': pyModuleName(module),
         'names': sorted(set(topLevelNames(stream.getvalue()))),
         'renames': dict(sorted(renames.items())),
         'typedefs': dict(sorted(typedefs.items())),
+        'bytesConstants': sorted(bytesConstants),
         'autoConversions': {name: list(types) for name, types
                             in sorted(FixWxPrefix._auto_conversions.items())},
     }
@@ -128,6 +133,7 @@ def mergeScriptInfo(scriptIds):
     names = {}
     renames = {}
     typedefs = {}
+    bytesConstants = set()
     autoConversions = {}
     for scriptId in scriptIds:
         with open(scriptInfoFile(scriptId), encoding='utf-8') as f:
@@ -135,12 +141,14 @@ def mergeScriptInfo(scriptIds):
         names.setdefault(info['module'], set()).update(info['names'])
         renames.update(info['renames'])
         typedefs.update(info['typedefs'])
+        bytesConstants.update(info['bytesConstants'])
         autoConversions.update(info['autoConversions'])
 
     merged = {
         'names': {m: sorted(n) for m, n in sorted(names.items())},
         'renames': dict(sorted(renames.items())),
         'typedefs': dict(sorted(typedefs.items())),
+        'bytesConstants': sorted(bytesConstants),
         'autoConversions': dict(sorted(autoConversions.items())),
     }
     text = json.dumps(merged, indent=1)
@@ -169,6 +177,7 @@ def load():
         _merged.setdefault('names', {})
         _merged.setdefault('renames', {})
         _merged.setdefault('typedefs', {})
+        _merged.setdefault('bytesConstants', [])
         _merged.setdefault('autoConversions', {})
     return _merged
 
