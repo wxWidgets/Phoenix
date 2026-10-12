@@ -1,5 +1,10 @@
 import sys as _sys
 
+# These come from the extension module, this is just their types
+Port: str
+Platform: str
+PlatformInfo: tuple
+
 # Load version numbers from __version__ and some other initialization tasks...
 if 'wxEVT_NULL' in dir():
     from wx.__version__ import *
@@ -18,7 +23,7 @@ if 'wxEVT_NULL' in dir():
 else:
     Port = ''
     Platform = ''
-    PlatformInfo = []
+    PlatformInfo = ()
 
 # A little trick to make 'wx' be a reference to this module so wx.Names can
 # be used in the python code here.
