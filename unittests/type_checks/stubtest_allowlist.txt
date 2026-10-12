@@ -834,22 +834,10 @@ wx\.richtext\.RichTextVariantArray\.__iter__
 # Read-only at runtime
 wx\.core\.CallLater\.Interval
 wx\.core\.CallLater\.Result
-wx\.core\.ConfigBase\.NextEntry
-wx\.core\.ConfigBase\.NextGroup
 wx\.core\.DC\.BoundingBox
 wx\.core\.DC\.ClippingRect
-wx\.core\.DC\.MultiLineTextExtent
-wx\.core\.DC\.Pixel
-wx\.core\.DC\.TextExtent
-wx\.core\.DataObject\.DataHere
-wx\.core\.DataObjectSimple\.DataHere
-wx\.core\.FileType\.OpenCommand
-wx\.core\.FileType\.PrintCommand
-wx\.core\.GraphicsContext\.TextExtent
 wx\.core\.GraphicsRenderer\.Type
 wx\.core\.ListCtrl\.FocusedItem
-wx\.core\.ListCtrl\.ItemRect
-wx\.core\.Palette\.RGB
 wx\.core\.Point\.IM
 wx\.core\.Point2D\.IM
 wx\.core\.Position\.IM
@@ -860,12 +848,9 @@ wx\.core\.Slider\.Range
 wx\.core\.SpinButton\.Range
 wx\.core\.SpinCtrl\.Range
 wx\.core\.SpinCtrlDouble\.Range
-wx\.core\.StatusBar\.FieldRect
-wx\.core\.TreeCtrl\.BoundingRect
 wx\.dataview\.DataViewCtrl\.Columns
 wx\.propgrid\.PropertyGridInterface\.Items
 wx\.propgrid\.PropertyGridInterface\.Properties
-wx\.stc\.StyledTextCtrl\.RangePointer
 
 # Other differences
 wx\.aui\.AuiMDIChildFrame
