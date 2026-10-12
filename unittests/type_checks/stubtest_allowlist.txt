@@ -453,6 +453,7 @@ wx\.core\.PrintOrientation
 wx\.core\.PrinterError
 wx\.core\.PyApp\.Appearance
 wx\.core\.PyApp\.AppearanceResult
+wx\.core\.PyApp\.DarkMode
 wx\.core\.REMOVE_LEADING_SPACES
 wx\.core\.RasterOperationMode
 wx\.core\.RegionContain

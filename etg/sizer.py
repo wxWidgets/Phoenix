@@ -67,10 +67,8 @@ def run():
     good.type = 'wxPyUserData*'
     good.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetUserData());')
 
-    # these have been deprecated for a while so go ahead and get rid of them
-    c.find('SetWindow').ignore()
+    # this has been deprecated for a while so go ahead and get rid of it
     c.find('SetSizer').ignore()
-    c.find('SetSpacer').ignore()
 
     c.addPrivateCopyCtor()
 

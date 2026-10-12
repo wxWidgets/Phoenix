@@ -71,9 +71,10 @@ public:
 #endif
 
 #ifndef __WXMSW__
-    enum {
+    enum DarkMode {
         DarkMode_Auto   = 0,
-        DarkMode_Always = 1
+        DarkMode_Always = 1,
+        DarkMode_Never  = 2
     };
 #endif
 

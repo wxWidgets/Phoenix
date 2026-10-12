@@ -224,6 +224,11 @@ def run():
     # on non-MSW so the sdist generates identical code regardless of build host.
     m = c.find('MSWEnableDarkMode')
     m.find('settings').transfer = True  # wxApp takes ownership of the pointer
+    # The DarkMode enum is only declared in include/wx/msw/app.h, so on other
+    # platforms it is provided by wxPyApp in src/app_ex.cpp.
+    m.find('flags').type = 'wxPyApp::DarkMode'
+    m.find('flags').default = 'wxPyApp::DarkMode_Auto'
+    m.argsString = m.argsString.replace('DarkMode flags', 'wxPyApp::DarkMode flags')
     m.setCppCode("""\
         #ifdef __WXMSW__
             return self->MSWEnableDarkMode(flags, settings);
@@ -232,18 +237,6 @@ def run():
             return false;
         #endif
         """)
-
-    # DarkMode_Auto and DarkMode_Always live only in include/wx/msw/app.h and
-    # are absent from the interface doxy XML. On non-MSW they are provided as
-    # enum members of wxPyApp in src/app_ex.cpp (included above via
-    # includeCppCode), so the SIP-generated ::wxPyApp::DarkMode_* references
-    # resolve on all platforms.
-    c.addItem(etgtools.WigCode("""\
-        enum {
-            DarkMode_Auto   = 0,
-            DarkMode_Always = 1,
-        };
-        """))
 
     #-------------------------------------------------------
 

@@ -79,6 +79,17 @@ def run():
             #endif
             """)
 
+    c.find('GetHICON').ignore()
+    c.addCppMethod('long', 'GetHICON', '()',
+        doc='MSW-only method to return the native icon handle.',
+        body="""\
+            #ifdef __WXMSW__
+                return HandleToLong(self->GetHICON());
+            #else
+                return 0;
+            #endif
+            """)
+
     # Documented wrongly in 3.1.6
     c.find('GetLogicalSize').type = 'wxSize'
 

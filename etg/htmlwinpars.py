@@ -44,10 +44,6 @@ def run():
 
 
     c = module.find('wxHtmlWinParser')
-    c.find('GetEncodingConverter').ignore()
-    c.find('GetInputEncoding').ignore()
-    c.find('GetOutputEncoding').ignore()
-    c.find('SetInputEncoding').ignore()
 
     tools.fixHtmlSetFonts(c)
 

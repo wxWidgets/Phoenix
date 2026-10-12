@@ -16,7 +16,7 @@
       "attr-defined": 2,
       "has-type": 1,
       "misc": 24,
-      "name-defined": 22,
+      "name-defined": 18,
       "no-redef": 5,
       "overload-cannot-match": 5,
       "valid-type": 7,
@@ -97,7 +97,7 @@
       "not-a-type": 15,
       "not-callable": 1,
       "redefinition": 1,
-      "unknown-name": 22,
+      "unknown-name": 18,
       "unsupported-operation": 1
     },
     "wx/glcanvas.pyi": {
@@ -143,7 +143,7 @@
       "reportOperatorIssue": 1,
       "reportOverlappingOverload": 5,
       "reportRedeclaration": 5,
-      "reportUndefinedVariable": 22
+      "reportUndefinedVariable": 18
     },
     "wx/dataview.pyi": {
       "reportUndefinedVariable": 14
@@ -193,7 +193,7 @@
       "invalid-parameter-default": 18,
       "invalid-type-form": 9,
       "unresolved-attribute": 1,
-      "unresolved-reference": 24
+      "unresolved-reference": 20
     },
     "wx/dataview.pyi": {
       "unresolved-reference": 14

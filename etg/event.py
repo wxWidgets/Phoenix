@@ -508,7 +508,6 @@ def run():
     #---------------------------------------
     # wxShowEvent
     c = module.find('wxShowEvent')
-    c.find('GetShow').ignore()  # deprecated
     c.addProperty('Show IsShown SetShow')
 
     #---------------------------------------

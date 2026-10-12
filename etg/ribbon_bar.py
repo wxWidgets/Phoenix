@@ -38,7 +38,16 @@ def run():
     c = module.find('wxRibbonBar')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
+    # wxRibbonBar overrides AcceptsFocus in a protected section, so it can't
+    # be wrapped as the public virtual that fixWindowClass adds.
+    for item in c.items:
+        if isinstance(item, etgtools.WigCode):
+            item.code = item.code.replace('virtual bool AcceptsFocus() const;\n', '')
     c.find('SetArtProvider.art').transfer = True
+    c.find('GetKeyTipsTriggerKeys').type = 'const std::vector<wxRibbonBar::TriggerKey>&'
+
+    # wxBackstage (new in 3.3.4) is not wrapped yet
+    c.find('SetBackstage').ignore()
 
 
     c = module.find('wxRibbonBarEvent')

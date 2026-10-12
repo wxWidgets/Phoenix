@@ -89,6 +89,7 @@ def run():
     # ignore some overloads that will be ambiguous after wrapping
     c.find('GetChildren').overloads = []
     c.find('GetChildren').noCopy = True
+    c.find('GetAcceleratorTable').overloads = []
     for name in ['GetVirtualSize',
                  'GetPosition',
                  'GetScreenPosition']:
