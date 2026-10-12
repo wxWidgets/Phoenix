@@ -11,7 +11,7 @@
       "name-defined": 2
     },
     "wx/core.pyi": {
-      "arg-type": 21,
+      "arg-type": 3,
       "assignment": 20,
       "attr-defined": 2,
       "has-type": 1,
@@ -68,7 +68,6 @@
       "overload-cannot-match": 2
     },
     "wx/stc.pyi": {
-      "arg-type": 1,
       "assignment": 1,
       "misc": 1
     },
@@ -88,7 +87,7 @@
       "unknown-name": 2
     },
     "wx/core.pyi": {
-      "bad-argument-type": 8,
+      "bad-argument-type": 4,
       "bad-function-definition": 18,
       "bad-specialization": 2,
       "invalid-overload": 26,
@@ -135,7 +134,7 @@
       "reportUndefinedVariable": 2
     },
     "wx/core.pyi": {
-      "reportArgumentType": 40,
+      "reportArgumentType": 22,
       "reportAttributeAccessIssue": 3,
       "reportCallIssue": 1,
       "reportGeneralTypeIssues": 7,
@@ -171,9 +170,6 @@
       "reportOverlappingOverload": 2,
       "reportUndefinedVariable": 3
     },
-    "wx/stc.pyi": {
-      "reportArgumentType": 1
-    },
     "wx/xrc.pyi": {
       "reportArgumentType": 1
     }
@@ -188,7 +184,7 @@
     },
     "wx/core.pyi": {
       "call-non-callable": 1,
-      "invalid-argument-type": 23,
+      "invalid-argument-type": 5,
       "invalid-overload": 17,
       "invalid-parameter-default": 18,
       "invalid-type-form": 9,
@@ -218,9 +214,6 @@
     "wx/richtext.pyi": {
       "invalid-overload": 4,
       "unresolved-reference": 3
-    },
-    "wx/stc.pyi": {
-      "invalid-argument-type": 1
     },
     "wx/xrc.pyi": {
       "invalid-parameter-default": 1

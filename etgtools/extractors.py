@@ -889,6 +889,10 @@ class ClassDef(BaseDef):
         counts.
         """
         def countNonDefaultArgs(m):
+            if isinstance(m, CppMethodDef):
+                # These have their parameters in argsString instead of items
+                args = m.argsString[:m.argsString.rfind(')')].lstrip('(')
+                return sum(1 for arg in args.split(',') if arg.strip() and '=' not in arg)
             count = 0
             for p in m.items:
                 if not p.default and not p.ignored:
@@ -941,11 +945,11 @@ class ClassDef(BaseDef):
                         if m.ignored or m.isStatic:
                             continue
                         if prefix == 'Get':
-                            prop.getter = m.name
                             # Getters must be able to be called with no args, ensure
                             # that item has exactly zero args without a default value
                             if countNonDefaultArgs(m) != 0:
                                 continue
+                            prop.getter = m.name
                             ok = True
                             break
                         elif prefix == 'Set':

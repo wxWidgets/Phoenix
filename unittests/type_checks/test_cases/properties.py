@@ -28,3 +28,9 @@ def shadowedNames(win: wx.Window, button: wx.Button, rect: wx.Rect,
     rect.Contains((1, 2))
     rect.Contains('point')  # type: ignore[call-overload]  # ty: ignore[no-matching-overload]
     assert_type(box.GetRichTextCtrl(), wx.richtext.RichTextCtrl)
+
+
+# Getters that need arguments don't make properties
+def notProperties(dc: wx.DC) -> None:
+    dc.GetPixel(0, 0)
+    dc.Pixel  # type: ignore[attr-defined]  # ty: ignore[unresolved-attribute]

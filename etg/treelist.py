@@ -135,6 +135,11 @@ def run():
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+
+    # The automatic properties don't use getters that return their values
+    # through output parameters, so add this one after they are made
+    module.find('wxTreeListCtrl').addProperty('SortColumn', 'GetSortColumn', 'SetSortColumn')
+
     tools.runGenerators(module)
 
 

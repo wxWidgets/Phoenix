@@ -90,6 +90,12 @@ def run():
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+
+    # The automatic properties don't use getters that return their values
+    # through output parameters, so add this one after they are made
+    for c in [cc, gcc]:
+        c.addProperty('DateRange', 'GetDateRange', 'SetDateRange')
+
     tools.runGenerators(module)
 
 
