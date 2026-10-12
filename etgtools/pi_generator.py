@@ -32,7 +32,7 @@ import etgtools.typeinfo as typeinfo
 from etgtools.generators import nci, Utf8EncodingStream, textfile_open, \
                                  etgParallelOutputDir, currentEtgScriptId
 from etgtools.tweaker_tools import FixWxPrefix, ParameterType, magicMethods, removeWxPrefix, \
-                                   guessTypeInt, guessTypeFloat, guessTypeStr
+                                   guessTypeInt, guessTypeFloat, guessTypeStr, isCharString
 
 
 phoenixRoot = os.path.abspath(os.path.split(__file__)[0]+'/..')
@@ -449,7 +449,9 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             return
         name = globalVar.pyName or globalVar.name
         valTyp = 'Any'
-        if guessTypeInt(globalVar):
+        if globalVar.type and isCharString(globalVar.type):
+            valTyp = 'bytes'
+        elif guessTypeInt(globalVar):
             valTyp = 'int'
         elif guessTypeFloat(globalVar):
             valTyp = 'float'
@@ -703,7 +705,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if not function.signature:
             function.makePyArgsString()
         assert function.signature is not None
-        for line in function.signature.definition_lines():
+        for line in self.definitionLines(function.signature):
             stream.write(f'\n{line}')
         if is_overload:
             stream.write('    ...\n')
@@ -711,6 +713,26 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             stream.write('    """\n')
             stream.write(nciDoc(function.pyDocstring, 4))
             stream.write('    """\n')
+
+
+    def definitionLines(self, signature):
+        """
+        The lines for a function or method definition. Parameters with a bytes
+        constant for their default value are typed str, since they accept
+        either, so those defaults are left out of the stub, where they would
+        look like the wrong type.
+        """
+        bytesDefaults = []
+        for param in signature:
+            default = (param.default or '').split('.')[-1]
+            if (default in typeinfo.load()['bytesConstants'] and
+                    'bytes' not in (param.type_hint or '')):
+                bytesDefaults.append((param, param.default))
+                param.default = '...'
+        lines = signature.definition_lines()
+        for param, default in bytesDefaults:
+            param.default = default
+        return lines
 
 
     def generateParameters(self, parameters, stream, indent):
@@ -958,7 +980,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             for param in method.signature:
                 if param.position_type is ParameterType.DEFAULT:
                     param.position_type = ParameterType.POSITIONAL_ONLY
-        for line in method.signature.definition_lines():
+        for line in self.definitionLines(method.signature):
             stream.write(f'\n{indent}{line}')
         stream.write('\n')
         indent2 = indent + ' '*4
