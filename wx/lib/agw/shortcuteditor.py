@@ -1177,8 +1177,10 @@ class Shortcut(object):
         :param `bitmap`: an instance of :class:`wx.Bitmap`, to display along the shortcut `label`
          in the interface tree;
         :param string `help`: the help string for this shortcut, to display in the interface tree;
-        :param `menuItem`: if this :class:`Shortcut` is derived from a :class:`wx.MenuItem`, the :class:`wx.MenuItem`
-         to which it should be associated;
+        :param `menuItem`: if this :class:`Shortcut` is derived from a :class:`wx.Menu` or :class:`wx.MenuItem`,
+         that object. It is read once, to record its id and (via :meth:`~Shortcut.FromMenuItem`) its label,
+         accelerator, help text and bitmap; it is not kept, since it may be destroyed later with no
+         notification to this object;
         :param integer `accelId`: if this :class:`Shortcut` is derived from an accelerator in a :class:`AcceleratorTable`
          or from a custom, developer-defined shortcut, it represents the ID it is associated with.
         """
@@ -1187,8 +1189,16 @@ class Shortcut(object):
         self.accelerator = accelerator
         self.bitmap = bitmap
         self.help = help
-        self.menuItem = menuItem
         self.accelId = accelId
+
+        # The wx.MenuItem/wx.Menu itself is deliberately not kept: it may be
+        # destroyed (menu rebuilt, item removed) any time after this Shortcut
+        # is built, with no notification to the Python wrapper. Everything
+        # this class needs from it afterwards is captured here instead.
+        self._isMenu = isinstance(menuItem, wx.Menu)
+        self._id = (1 if self._isMenu else menuItem.GetId()) if menuItem is not None else None
+        # Keeps the mnemonic ('&'), unlike self.label (GetItemLabelText()).
+        self._itemLabel = menuItem.GetItemLabel() if (menuItem is not None and not self._isMenu) else None
 
         self.parent = None
         self.topMenu = False
@@ -1471,7 +1481,7 @@ class Shortcut(object):
         retChild = None
 
         while child:
-            if child.menuItem and child.menuItem.GetId() == id:
+            if child._id is not None and child._id == id:
                 return child
             elif child.accelId == id:
                 return child
@@ -1485,10 +1495,8 @@ class Shortcut(object):
     def GetId(self):
         """ Returns this :class:`Shortcut` ID. """
 
-        if self.menuItem is not None:
-            if isinstance(self.menuItem, wx.Menu):
-                return 1
-            return self.menuItem.GetId()
+        if self._id is not None:
+            return self._id
 
         return self.accelId
 
@@ -1513,19 +1521,21 @@ class Shortcut(object):
             child, cookie = self.GetNextChild(item, cookie)
 
 
-    def FromMenuItem(self):
+    def FromMenuItem(self, menuItem):
         """
         Constructs this :class:`Shortcut` starting from a :class:`wx.Menu` or :class:`wx.MenuItem`.
 
         The attributes needed to properly construct a :class:`Shortcut` are the label,
         the accelerator string, the help string (optional) and the bitmap associated
         with it (optional).
+
+        :param `menuItem`: the :class:`wx.Menu` or :class:`wx.MenuItem` this :class:`Shortcut`
+         was built from; only read here, not retained, since it may be destroyed later
+         with no notification to this object.
         """
 
-        if self.menuItem is None:
+        if menuItem is None:
             return
-
-        menuItem = self.menuItem
 
         if isinstance(menuItem, wx.Menu):
             label = menuItem.GetTitle()
@@ -1562,30 +1572,28 @@ class Shortcut(object):
         :param `menuBar`: an instance of :class:`wx.MenuBar`.
         """
 
-        if self.menuItem is None or not self.changed:
+        if self._id is None or not self.changed:
             return
 
-        menuItem = self.menuItem
-
-        if isinstance(menuItem, wx.Menu):
+        if self._isMenu:
 
             if self.accelerator == DISABLED_STRING:
                 label = self.label
             else:
                 label = '%s\t%s'%(self.label, self.accelerator)
 
-            menuBar.SetMenuLabel(menuItem.position, label)
+            menuBar.SetMenuLabel(self.position, label)
 
         else:
 
-            label = menuItem.GetItemLabel()
+            label = self._itemLabel
             if '\t' in label:
                 label = label[0:label.index('\t')]
 
             if self.accelerator != DISABLED_STRING:
                 label = '%s\t%s'%(label, self.accelerator)
 
-            menuBar.SetLabel(menuItem.GetId(), label)
+            menuBar.SetLabel(self._id, label)
 
 
     def ToAcceleratorItem(self, table):
@@ -1600,7 +1608,7 @@ class Shortcut(object):
         :param `table`: a list of tuples, with the above specifications.
         """
 
-        if self.menuItem is not None or not self.changed:
+        if self._id is not None or not self.changed:
             return
 
         if self.GetId() is None:
@@ -2347,7 +2355,7 @@ class ShortcutEditor(wx.Dialog):
                     continue
 
                 shortcutItem = Shortcut(menuItem=menuItem)
-                shortcutItem.FromMenuItem()
+                shortcutItem.FromMenuItem(menuItem)
 
                 item.AppendItem(shortcutItem)
 
@@ -2363,7 +2371,7 @@ class ShortcutEditor(wx.Dialog):
             shortcutItem = Shortcut(menuItem=menu)
             shortcutItem.topMenu = True
             shortcutItem.position = position
-            shortcutItem.FromMenuItem()
+            shortcutItem.FromMenuItem(menu)
 
             position += 1
             self.manager.AppendItem(shortcutItem)
