@@ -80,10 +80,11 @@ Error = collections.namedtuple('Error', 'tool file line code message')
 #---------------------------------------------------------------------------
 
 def stubFiles():
+    """The generated stubs in wx/, and any others in its subpackages"""
     files = sorted(glob.glob(os.path.join(ROOT, 'wx', '*.pyi')))
     if not files:
         sys.exit('No wx/*.pyi files found. Run "python build.py etg" first.')
-    return files
+    return files + sorted(glob.glob(os.path.join(ROOT, 'wx', '*', '**', '*.pyi'), recursive=True))
 
 
 def caseFiles():
@@ -261,14 +262,14 @@ def isSitePackages(path):
 def importableModules(root):
     """The wx modules that have stubs and can be imported on this platform"""
     modules = []
-    for name in sorted(glob.glob(os.path.join(root, 'wx', '*.pyi'))):
-        name = os.path.basename(name)[:-4]
-        if name in ('__init__', '__version__', 'siplib'):
+    for name in sorted(glob.glob(os.path.join(root, 'wx', '**', '*.pyi'), recursive=True)):
+        name = os.path.relpath(name, root)[:-4].replace(os.sep, '.')
+        if name in ('wx.__init__', 'wx.__version__', 'wx.siplib'):
             continue
-        proc = subprocess.run([sys.executable, '-c', f'import wx.{name}'],
+        proc = subprocess.run([sys.executable, '-c', f'import {name}'],
                               capture_output=True, cwd=HERE)
         if proc.returncode == 0:
-            modules.append(f'wx.{name}')
+            modules.append(name)
     return modules
 
 
