@@ -283,6 +283,8 @@ ALLOWLIST_CATEGORIES = [
      "# members at runtime"),
     (r"is not present at runtime",
      "Not present at runtime, at least on this platform"),
+    (r"is not present in stub",
+     "Missing from the stubs"),
     (r"read-only at runtime",
      "Read-only at runtime"),
     (r"", "Other differences"),
@@ -294,9 +296,7 @@ def runStubtest(update):
     modules = importableModules(root)
     print(f'Running stubtest with the wx package in {root}...')
     cmd = [sys.executable, '-m', 'mypy.stubtest', '--concise',
-           '--mypy-config-file', os.path.join(HERE, 'stubtest.ini'),
-           # Most of the C++ API's protected methods aren't in the stubs yet
-           '--ignore-missing-stub']
+           '--mypy-config-file', os.path.join(HERE, 'stubtest.ini')]
     allowlists = STUBTEST_ALLOWLISTS[:1] if update else STUBTEST_ALLOWLISTS
     for name in allowlists:
         cmd += ['--allowlist', name]

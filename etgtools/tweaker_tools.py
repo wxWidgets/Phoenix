@@ -835,8 +835,27 @@ def addWindowVirtuals(klass):
         #('DoGetVirtualSize',    'wxSize DoGetVirtualSize() const'),
     ]
 
+    # How the virtuals that are only declared for SIP look in Python, for the
+    # wx.Window type stub. Its subclasses inherit them there.
+    piSignatures = {
+        'GetMainWindowOfCompositeControl': '(self) -> Optional[Window]',
+        'DoEnable':           '(self, enable: bool) -> None',
+        'DoGetPosition':      '(self) -> Tuple[int, int]',
+        'DoGetSize':          '(self) -> Tuple[int, int]',
+        'DoGetClientSize':    '(self) -> Tuple[int, int]',
+        'DoSetSize':          '(self, x: int, y: int, width: int, height: int, sizeFlags: int) -> None',
+        'DoSetClientSize':    '(self, width: int, height: int) -> None',
+        'DoSetSizeHints':     '(self, minW: int, minH: int, maxW: int, maxH: int, incW: int, incH: int) -> None',
+        'DoMoveWindow':       '(self, x: int, y: int, width: int, height: int) -> None',
+        'DoSetWindowVariant': '(self, variant: WindowVariant) -> None',
+        'GetDefaultBorder':   '(self) -> Border',
+        'DoFreeze':           '(self) -> None',
+        'DoThaw':             '(self) -> None',
+    }
+
     def _processItems(klass, prot, virtuals):
         txt = ''
+        piCode = ''
         for name, decl in virtuals:
             m = klass.findItem(name)
             if m:
@@ -844,14 +863,16 @@ def addWindowVirtuals(klass):
                 m.isVirtual = True
             else:
                 txt += 'virtual %s;\n' % decl
+                if klass.name == 'wxWindow' and name in piSignatures:
+                    piCode += 'def %s%s: ...\n' % (name, piSignatures[name])
         if txt:
             txt = prot + txt
-        return txt
+        wig = extractors.WigCode(txt)
+        wig.piCode = piCode
+        return wig
 
-    txt = _processItems(klass, 'public:\n', publicWindowVirtuals)
-    klass.addItem(extractors.WigCode(txt))
-    txt = _processItems(klass, 'protected:\n', protectedWindowVirtuals)
-    klass.addItem(extractors.WigCode(txt))
+    klass.addItem(_processItems(klass, 'public:\n', publicWindowVirtuals))
+    klass.addItem(_processItems(klass, 'protected:\n', protectedWindowVirtuals))
     klass.addPublic()
 
     if klass.name not in ['wxWindow', 'wxProgressDialog', 'wxRichTextCtrl']:
