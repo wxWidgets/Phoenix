@@ -29,6 +29,7 @@ MERGED_FILE = os.path.join(TYPEINFO_DIR, 'typeinfo.json')
 _merged = None
 _nameSets = None
 _eventClasses = None
+_enumSet = None
 
 #---------------------------------------------------------------------------
 
@@ -70,7 +71,7 @@ def collect(module):
     """Gather the type information that module provides for other scripts"""
     from etgtools.generators import Utf8EncodingStream
     from etgtools.pi_generator import PiWrapperGenerator
-    from etgtools.extractors import ClassDef, GlobalVarDef, TypedefDef
+    from etgtools.extractors import ClassDef, EnumDef, GlobalVarDef, TypedefDef
     from etgtools.tweaker_tools import FixWxPrefix, getWrapperGenerator, isCharString, removeWxPrefix
 
     # Generating the .pyi code is the simplest way to find exactly which names
@@ -95,6 +96,18 @@ def collect(module):
                 renames[name] = item.pyName
     # Typedefs inside classes, like value_type, could mean different things in
     # different classes, so only the module level ones are used.
+    # Enums that aren't scoped also accept ints, so record their names, like
+    # FontWeight or GridCellAttr.AttrKind
+    enums = []
+    def findEnums(items, path):
+        for item in items:
+            if isinstance(item, ClassDef):
+                findEnums(list(item.items) + list(item.innerclasses),
+                          path + [item.pyName or removeWxPrefix(item.name)])
+            elif (isinstance(item, EnumDef) and not item.isScoped and item.name
+                    and '@' not in item.name and not item.ignored):
+                enums.append('.'.join(path + [removeWxPrefix(item.name)]))
+    findEnums(module.items, [])
     # and the constants that are bytes, since SIP converts char* to bytes
     bytesConstants = []
     for item in module.items:
@@ -110,6 +123,7 @@ def collect(module):
         'renames': dict(sorted(renames.items())),
         'typedefs': dict(sorted(typedefs.items())),
         'bytesConstants': sorted(bytesConstants),
+        'enums': sorted(set(enums)),
         'autoConversions': {name: list(types) for name, types
                             in sorted(FixWxPrefix._auto_conversions.items())},
     }
@@ -134,6 +148,7 @@ def mergeScriptInfo(scriptIds):
     renames = {}
     typedefs = {}
     bytesConstants = set()
+    enums = set()
     autoConversions = {}
     for scriptId in scriptIds:
         with open(scriptInfoFile(scriptId), encoding='utf-8') as f:
@@ -142,6 +157,7 @@ def mergeScriptInfo(scriptIds):
         renames.update(info['renames'])
         typedefs.update(info['typedefs'])
         bytesConstants.update(info['bytesConstants'])
+        enums.update(info['enums'])
         autoConversions.update(info['autoConversions'])
 
     merged = {
@@ -149,6 +165,7 @@ def mergeScriptInfo(scriptIds):
         'renames': dict(sorted(renames.items())),
         'typedefs': dict(sorted(typedefs.items())),
         'bytesConstants': sorted(bytesConstants),
+        'enums': sorted(enums),
         'autoConversions': dict(sorted(autoConversions.items())),
     }
     text = json.dumps(merged, indent=1)
@@ -178,6 +195,7 @@ def load():
         _merged.setdefault('renames', {})
         _merged.setdefault('typedefs', {})
         _merged.setdefault('bytesConstants', [])
+        _merged.setdefault('enums', [])
         _merged.setdefault('autoConversions', {})
     return _merged
 
@@ -214,3 +232,17 @@ def eventClasses():
                 for m in pattern.finditer(f.read()):
                     _eventClasses[m.group(1)] = m.group(2)
     return _eventClasses
+
+
+def isEnum(name):
+    """
+    Whether name is an enum that isn't scoped, optionally qualified with
+    the name of its module, like adv.CalendarDateBorder
+    """
+    global _enumSet
+    if _enumSet is None:
+        _enumSet = set(load()['enums'])
+    if name in _enumSet:
+        return True
+    module, _, rest = name.partition('.')
+    return module in load()['names'] and rest in _enumSet

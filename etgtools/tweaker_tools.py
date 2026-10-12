@@ -418,6 +418,9 @@ class FixWxPrefix(object):
             else:
                 return 'list'
         lookupName = type_name[3:] if type_name.startswith('wx.') else type_name
+        if is_input and typeinfo.isEnum(lookupName):
+            # Plain ints and combinations of flags work too
+            return f'Union[{type_name}, int]'
         allowed_types = (self._auto_conversions.get(lookupName) or
                          typeinfo.load()['autoConversions'].get(lookupName, ()))
         if allowed_types and is_input:
