@@ -12,8 +12,8 @@
     },
     "wx/core.pyi": {
       "arg-type": 3,
-      "assignment": 20,
-      "attr-defined": 2,
+      "assignment": 19,
+      "attr-defined": 1,
       "misc": 24,
       "name-defined": 17,
       "no-redef": 4,
@@ -50,8 +50,8 @@
       "assignment": 1
     },
     "wx/propgrid.pyi": {
-      "assignment": 6,
-      "attr-defined": 73,
+      "assignment": 1,
+      "attr-defined": 2,
       "misc": 1,
       "overload-cannot-match": 2
     },
@@ -88,10 +88,9 @@
       "bad-argument-type": 4,
       "bad-function-definition": 18,
       "invalid-overload": 26,
-      "missing-attribute": 2,
+      "missing-attribute": 1,
       "not-a-type": 7,
       "not-callable": 1,
-      "redefinition": 1,
       "unknown-name": 17
     },
     "wx/glcanvas.pyi": {
@@ -108,7 +107,6 @@
     },
     "wx/propgrid.pyi": {
       "inconsistent-inheritance": 1,
-      "missing-attribute": 71,
       "unknown-name": 2
     },
     "wx/richtext.pyi": {
@@ -130,12 +128,12 @@
     },
     "wx/core.pyi": {
       "reportArgumentType": 22,
-      "reportAttributeAccessIssue": 3,
+      "reportAttributeAccessIssue": 2,
       "reportCallIssue": 1,
       "reportGeneralTypeIssues": 7,
       "reportInconsistentOverload": 17,
       "reportOverlappingOverload": 5,
-      "reportRedeclaration": 5,
+      "reportRedeclaration": 4,
       "reportUndefinedVariable": 17
     },
     "wx/dataview.pyi": {
@@ -155,7 +153,7 @@
       "reportArgumentType": 1
     },
     "wx/propgrid.pyi": {
-      "reportAttributeAccessIssue": 75,
+      "reportAttributeAccessIssue": 4,
       "reportOverlappingOverload": 2,
       "reportUndefinedVariable": 2
     },
@@ -182,7 +180,6 @@
       "invalid-overload": 17,
       "invalid-parameter-default": 18,
       "invalid-type-form": 7,
-      "unresolved-attribute": 1,
       "unresolved-reference": 18
     },
     "wx/dataview.pyi": {
@@ -202,7 +199,7 @@
     },
     "wx/propgrid.pyi": {
       "invalid-assignment": 4,
-      "unresolved-attribute": 73,
+      "unresolved-attribute": 2,
       "unresolved-reference": 2
     },
     "wx/richtext.pyi": {

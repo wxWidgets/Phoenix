@@ -89,7 +89,7 @@ import builtins
 import typing
 from datetime import datetime, date
 from enum import IntEnum, IntFlag, auto
-from typing import (Any, overload, TypeAlias, Generic, TypeVar, Protocol,
+from typing import (Any, overload, TypeAlias, Generic, TypeVar, Protocol, ClassVar, final,
     Union, Optional, List, Tuple, Callable, Iterator, Sequence
 )
 try:
@@ -116,7 +116,7 @@ def nciDoc(text, numSpaces=0, stripLeading=True):
     return nci(text.replace('\\', '\\\\'), numSpaces, stripLeading)
 
 
-_typingNames = {'Any', 'overload', 'TypeAlias', 'Generic', 'TypeVar', 'Protocol', 'Union',
+_typingNames = {'Any', 'overload', 'TypeAlias', 'Generic', 'TypeVar', 'Protocol', 'ClassVar', 'final', 'Union',
                 'Optional', 'List', 'Tuple', 'Callable', 'Iterator', 'Sequence', 'ParamSpec'}
 
 
@@ -405,42 +405,43 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         assert isinstance(enum, extractors.EnumDef)
         if enum.ignored or piIgnored(enum):
             return
-        # These enum classes aren't actually accessible from the real wx
-        # module, o we need to prepend _. But we want to make a type alias to
-        # the non-prefixed name, so method signatures can reference it without
-        # any special code, and also allow bare ints as inputs.
+        members = [v.pyName or v.name for v in enum.items if not (v.ignored or piIgnored(v))]
         if '@' in enum.name or not enum.name:
-            # Anonymous enum
-            enum_name = f"_enum_{enum.name.replace('@', '').strip()}"
-            alias = ''
-        else:
-            alias = self.fixWxPrefix(enum.name)
-            enum_name = f'_{alias}'
-        if 'Flags' in enum_name:
-            enum_type = 'IntFlag'
-        else:
-            enum_type = 'IntEnum'
-        # Create the enum definition
-        stream.write(f'\n{indent}class {enum_name}({enum_type}):\n')
-        for v in enum.items:
-            if v.ignored or piIgnored(v):
-                continue
-            name = v.pyName or v.name
-            stream.write(f'{indent}    {name} = auto()\n')
-        # Create the alias if needed
-        if alias:
-            stream.write(f'{indent}{alias}: TypeAlias = Union[{enum_name}, int]\n')
-        # And bring the enum members into global scope.  We can't use
-        # enum.global_enum for this because:
-        #  1. It's only available on Python 3.11+
-        #  2. FixWxPrefix wouldn't be able to pick up the names, since it's
-        #     detecting based on AST parsing, not runtime changes (which
-        #     enum.global_enum performs).
-        for v in enum.items:
-            if v.ignored or piIgnored(v):
-                continue
-            name = v.pyName or v.name
-            stream.write(f'{indent}{name} = {enum_name}.{name}\n')
+            # The values of anonymous enums are just ints
+            for name in members:
+                stream.write(f'{indent}{name}: int\n')
+            return
+
+        name = self.fixWxPrefix(enum.name)
+        if enum.isScoped:
+            # SIP makes scoped enums IntEnums, whose members are only in the class
+            stream.write(f'\n{indent}class {name}(IntEnum):\n')
+            for member in members:
+                stream.write(f'{indent}    {member} = auto()\n')
+            if not members:
+                stream.write(f'{indent}    pass\n')
+            return
+
+        # Other enums are classes derived from int, with sip's metaclass for
+        # enums, which can't be subclassed. Their members are in the class,
+        # and in the enclosing scope.
+        stream.write(f'\n{indent}@final\n')
+        stream.write(f'{indent}class {name}(int, metaclass=wx.siplib.enumtype):\n')
+        # A nested class's name isn't in scope in its own body
+        qualifiedName = name
+        klass = getattr(enum, 'klass', None)
+        while klass is not None:
+            qualifiedName = f'{klass.pyName or removeWxPrefix(klass.name)}.{qualifiedName}'
+            klass = klass.klass if getattr(klass, 'isInner', False) else None
+        for member in members:
+            stream.write(f'{indent}    {member}: ClassVar[{qualifiedName}]\n')
+        if not members:
+            stream.write(f'{indent}    pass\n')
+        for member in members:
+            if indent:
+                stream.write(f'{indent}{member}: ClassVar[{name}]\n')
+            else:
+                stream.write(f'{member}: {name}\n')
 
     #-----------------------------------------------------------------------
     def generateGlobalVar(self, globalVar, stream):
