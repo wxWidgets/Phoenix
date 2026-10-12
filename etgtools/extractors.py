@@ -1389,6 +1389,7 @@ class PyCodeDef(BaseDef):
         super(PyCodeDef, self).__init__()
         self.code = code
         self.order = order
+        self.piOnly = False     # only for the .pyi type stubs, like typing helpers
         self.__dict__.update(kw)
 
 

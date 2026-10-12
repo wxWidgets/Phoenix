@@ -101,12 +101,23 @@ def run():
     """)
 
 
+    # For the type hints, PyEventBinder is generic in the type of the event,
+    # so the handlers given to Bind can be checked.
+    module.addPyCode("""\
+        _EventT = TypeVar('_EventT', bound=Event)
+
+        class _HasGetId(Protocol):
+            def GetId(self) -> int: ...
+        """, piOnly=True)
+
     module.addPyClass('PyEventBinder', ['object'],
+        piBases=['Generic[_EventT]'],
         doc="""\
             Instances of this class are used to bind specific events to event handlers.
             """,
         items=[
             PyFunctionDef('__init__', '(self, evtType, expectedIDs=0)',
+                piArgsString='(self, evtType: Union[int, List[int], Tuple[int, ...]], expectedIDs: int = 0) -> None',
                 body="""\
                     if expectedIDs not in [0, 1, 2]:
                         raise ValueError("Invalid number of expectedIDs")
@@ -119,6 +130,7 @@ def run():
                     """),
 
             PyFunctionDef('Bind', '(self, target, id1, id2, function)',
+                piArgsString='(self, target: EvtHandler, id1: int, id2: int, function: Optional[Callable[[_EventT], object]]) -> None',
                 doc="""Bind this set of event types to target using its Connect() method.""",
                 body="""\
                     for et in self.evtType:
@@ -126,6 +138,7 @@ def run():
                     """),
 
             PyFunctionDef('Unbind', '(self, target, id1, id2, handler=None)',
+                piArgsString='(self, target: EvtHandler, id1: int, id2: int, handler: Optional[Callable[[_EventT], object]] = None) -> bool',
                 doc="""Remove an event binding.""",
                 body="""\
                     success = 0
@@ -135,6 +148,7 @@ def run():
                     """),
 
             PyFunctionDef('_getEvtType', '(self)',
+                piArgsString='(self) -> int',
                 doc="""\
                     Make it easy to get to the default wxEventType typeID for this
                     event binder.
@@ -144,6 +158,7 @@ def run():
             PyPropertyDef('typeId', '_getEvtType'),
 
             PyFunctionDef('__call__', '(self, *args)',
+                piArgsString='(self, *args: Any) -> None',
                 deprecated="Use :meth:`EvtHandler.Bind` instead.",
                 doc="""\
                     For backwards compatibility with the old ``EVT_*`` functions.
@@ -292,7 +307,7 @@ def run():
     c.find('ProcessPendingEvents').releaseGIL()
 
 
-    c.addPyMethod('Bind', '(self, event, handler, source=None, id=wx.ID_ANY, id2=wx.ID_ANY)',
+    m = c.addPyMethod('Bind', '(self, event, handler, source=None, id=wx.ID_ANY, id2=wx.ID_ANY)',
         doc="""\
             Bind an event to an event handler.
 
@@ -326,9 +341,11 @@ def run():
                 id  = source.GetId()
             event.Bind(self, id, id2, handler)
             """)
+    m.piArgsString = ('(self, event: PyEventBinder[_EventT], handler: Optional[Callable[[_EventT], object]], '
+                      'source: Optional[_HasGetId] = None, id: int = ID_ANY, id2: int = ID_ANY) -> None')
 
 
-    c.addPyMethod('Unbind', '(self, event, source=None, id=wx.ID_ANY, id2=wx.ID_ANY, handler=None)',
+    m = c.addPyMethod('Unbind', '(self, event, source=None, id=wx.ID_ANY, id2=wx.ID_ANY, handler=None)',
         doc="""\
             Disconnects the event handler binding for event from `self`.
             Returns ``True`` if successful.
@@ -338,6 +355,9 @@ def run():
                 id  = source.GetId()
             return event.Unbind(self, id, id2, handler)
             """)
+    m.piArgsString = ('(self, event: PyEventBinder[_EventT], source: Optional[_HasGetId] = None, '
+                      'id: int = ID_ANY, id2: int = ID_ANY, '
+                      'handler: Optional[Callable[[_EventT], object]] = None) -> bool')
 
     module.addPyCode('PyEvtHandler = wx.deprecated(EvtHandler, "Use :class:`EvtHandler` instead.")')
 
