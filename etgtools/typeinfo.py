@@ -16,8 +16,10 @@ pass reads it while generating the code.
 """
 
 import ast
+import glob
 import json
 import os
+import re
 import sys
 
 phoenixRoot = os.path.abspath(os.path.split(__file__)[0]+'/..')
@@ -26,6 +28,7 @@ MERGED_FILE = os.path.join(TYPEINFO_DIR, 'typeinfo.json')
 
 _merged = None
 _nameSets = None
+_eventClasses = None
 
 #---------------------------------------------------------------------------
 
@@ -184,3 +187,21 @@ def moduleOf(name, fromModule):
             return m
     others = [m for m, names in _nameSets.items() if name in names]
     return others[0] if len(others) == 1 else None
+
+
+def eventClasses():
+    """
+    The C++ event class for each wxEVT_* event type, from their declarations
+    in the wxWidgets headers, like
+    wxDECLARE_EXPORTED_EVENT(WXDLLIMPEXP_CORE, wxEVT_BUTTON, wxCommandEvent)
+    """
+    global _eventClasses
+    if _eventClasses is None:
+        from buildtools.config import wxDir
+        pattern = re.compile(r'wxDECLARE_(?:EXPORTED_)?EVENT\(\s*(?:\w+\s*,\s*)?(wxEVT_\w+)\s*,\s*(\w+)\s*\)')
+        _eventClasses = {}
+        for filename in glob.glob(os.path.join(wxDir(), 'include', 'wx', '**', '*.h'), recursive=True):
+            with open(filename, encoding='utf-8', errors='replace') as f:
+                for m in pattern.finditer(f.read()):
+                    _eventClasses[m.group(1)] = m.group(2)
+    return _eventClasses

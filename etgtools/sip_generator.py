@@ -324,6 +324,8 @@ from .%s import *
     #-----------------------------------------------------------------------
     def generatePyCode(self, pc, stream, indent=''):
         assert isinstance(pc, extractors.PyCodeDef)
+        if pc.piOnly:
+            return
         if hasattr(pc, 'klass') and isinstance(pc.klass, extractors.ClassDef) and pc.klass.generatingInClass:
             pc.klass.generateAfterClass.append(pc)
         else:

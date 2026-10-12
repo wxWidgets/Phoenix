@@ -89,7 +89,7 @@ import builtins
 import typing
 from datetime import datetime, date
 from enum import IntEnum, IntFlag, auto
-from typing import (Any, overload, TypeAlias, Generic,
+from typing import (Any, overload, TypeAlias, Generic, TypeVar, Protocol,
     Union, Optional, List, Tuple, Callable, Iterator, Sequence
 )
 try:
@@ -116,8 +116,8 @@ def nciDoc(text, numSpaces=0, stripLeading=True):
     return nci(text.replace('\\', '\\\\'), numSpaces, stripLeading)
 
 
-_typingNames = {'Any', 'overload', 'TypeAlias', 'Generic', 'Union', 'Optional', 'List',
-                'Tuple', 'Callable', 'Iterator', 'Sequence', 'ParamSpec'}
+_typingNames = {'Any', 'overload', 'TypeAlias', 'Generic', 'TypeVar', 'Protocol', 'Union',
+                'Optional', 'List', 'Tuple', 'Callable', 'Iterator', 'Sequence', 'ParamSpec'}
 
 
 def unionMembers(typeHint):
@@ -549,8 +549,43 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             code = code.replace(pc.klass.pyName+'.', '')
         elif self.isCore:
             code = self.fixCoreAssignments(code)
+        code = nci(code, len(indent))
+        if not indent:
+            code = self.declareEventBinders(code)
         stream.write('\n')
-        stream.write(nci(code, len(indent)))
+        stream.write(code)
+
+
+    def declareEventBinders(self, code):
+        """
+        Event binders are made with code like EVT_SIZE = wx.PyEventBinder(wxEVT_SIZE).
+        Declare them like EVT_SIZE: PyEventBinder[SizeEvent] instead, using the
+        event class that the wxWidgets headers declare for the event type, so
+        type checkers can check the handlers bound to them.
+        """
+        try:
+            tree = ast.parse(code)
+        except SyntaxError:
+            return code
+        lines = code.split('\n')
+        binder = self.fixWxPrefix('PyEventBinder', True)
+        for node in reversed(tree.body):
+            if not (isinstance(node, ast.Assign) and len(node.targets) == 1
+                    and isinstance(node.targets[0], ast.Name)
+                    and isinstance(node.value, ast.Call) and node.value.args
+                    and ast.unparse(node.value.func).split('.')[-1] == 'PyEventBinder'):
+                continue
+            # The event type, or a list of them
+            arg = node.value.args[0]
+            eventTypes = arg.elts if isinstance(arg, (ast.List, ast.Tuple)) else [arg]
+            classes = {typeinfo.eventClasses().get(ast.unparse(t).split('.')[-1])
+                       for t in eventTypes}
+            eventClass = 'Any'
+            if len(classes) == 1 and None not in classes:
+                eventClass = self.cleanType(classes.pop())
+            lines[node.lineno-1:node.end_lineno] = [
+                f'{node.targets[0].id}: {binder}[{eventClass}]']
+        return '\n'.join(lines)
 
     @staticmethod
     def fixCoreAssignments(code):
@@ -593,7 +628,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             stream.write('%s@wx.deprecated\n' % indent)
         if pf.isStatic:
             stream.write('%s@staticmethod\n' % indent)
-        stream.write('%sdef %s%s:\n' % (indent, pf.name, pf.argsString))
+        stream.write('%sdef %s%s:\n' % (indent, pf.name, getattr(pf, 'piArgsString', pf.argsString)))
         indent2 = indent + ' '*4
         if pf.briefDoc:
             stream.write('%s"""\n' % indent2)
@@ -609,8 +644,9 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if pc.deprecated:
             stream.write('%s@wx.deprecated\n' % indent)
         stream.write('%sclass %s' % (indent, pc.name))
-        if pc.bases:
-            stream.write('(%s):\n' % ', '.join(pc.bases))
+        bases = getattr(pc, 'piBases', pc.bases)
+        if bases:
+            stream.write('(%s):\n' % ', '.join(bases))
         else:
             stream.write(':\n')
         indent2 = indent + ' '*4
