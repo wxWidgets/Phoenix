@@ -168,8 +168,14 @@ class Signature:
         else:
             parameters = self._parameters.values()
         stringizer = str if typed else type(self).Parameter.untyped
+        args = [stringizer(p) for p in parameters]
+        if typed:
+            positionalOnly = [i for i, p in enumerate(parameters)
+                              if p.position_type is ParameterType.POSITIONAL_ONLY]
+            if positionalOnly:
+                args.insert(positionalOnly[-1] + 1, '/')
         return_type = f' -> {self.return_type}' if self.return_type else ''
-        return f"({', '.join(map(stringizer, parameters))}){return_type}"
+        return f"({', '.join(args)}){return_type}"
     
     def signature(self, typed: bool = True) -> str:
         """Get the full signature for the function/method, including method and

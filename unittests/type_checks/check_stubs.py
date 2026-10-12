@@ -296,9 +296,7 @@ def runStubtest(update):
     cmd = [sys.executable, '-m', 'mypy.stubtest', '--concise',
            '--mypy-config-file', os.path.join(HERE, 'stubtest.ini'),
            # Most of the C++ API's protected methods aren't in the stubs yet
-           '--ignore-missing-stub',
-           # Operator methods' parameters aren't positional-only in the stubs yet
-           '--ignore-positional-only']
+           '--ignore-missing-stub']
     allowlists = STUBTEST_ALLOWLISTS[:1] if update else STUBTEST_ALLOWLISTS
     for name in allowlists:
         cmd += ['--allowlist', name]
