@@ -120,6 +120,12 @@ _typingNames = {'Any', 'overload', 'TypeAlias', 'Generic', 'TypeVar', 'Protocol'
                 'Optional', 'List', 'Tuple', 'Callable', 'Iterator', 'Sequence', 'ParamSpec'}
 
 
+def isOperatorMethod(name):
+    """Special methods like __eq__, which Python calls with positional arguments"""
+    return (name.startswith('__') and name.endswith('__') and
+            name not in ('__init__', '__new__', '__call__'))
+
+
 def unionMembers(typeHint):
     """The types in a Union type hint, or just the type hint itself"""
     if not (typeHint.startswith('Union[') and typeHint.endswith(']')):
@@ -527,8 +533,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         itemIn = self.cleanType(seq['item'], is_input=True)
         methods = [
             'def __len__(self) -> int: ...',
-            f'def __getitem__(self, index: int) -> {item}: ...',
-            f'def __contains__(self, obj: {itemIn}) -> bool: ...',
+            f'def __getitem__(self, index: int, /) -> {item}: ...',
+            f'def __contains__(self, obj: {itemIn}, /) -> bool: ...',
             # The array classes are iterated with __getitem__, but not all
             # type checkers understand that
             f'def __iter__(self) -> Iterator[{item}]: ...',
@@ -933,6 +939,11 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             method.signature.method_name = name
         if is_top_level_init and 'parent' in method.signature:
             method.signature['parent'].make_optional()
+        if isOperatorMethod(method.signature.method_name):
+            # SIP only accepts these arguments by position
+            for param in method.signature:
+                if param.position_type is ParameterType.DEFAULT:
+                    param.position_type = ParameterType.POSITIONAL_ONLY
         for line in method.signature.definition_lines():
             stream.write(f'\n{indent}{line}')
         stream.write('\n')
