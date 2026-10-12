@@ -23,3 +23,14 @@ def binding(frame: wx.Frame, button: wx.Button, grid: wx.grid.Grid) -> None:
     frame.Unbind(wx.EVT_SIZE, handler=onSize)
     frame.Bind(wx.EVT_SIZE, onCommand)  # type: ignore[arg-type]  # ty: ignore[invalid-argument-type]
 
+
+# Events made with wx.lib.newevent
+def newEvents(frame: wx.Frame) -> None:
+    from wx.lib.newevent import NewCommandEvent, NewEvent
+    MooEvent, EVT_MOO = NewEvent()
+    GooEvent, EVT_GOO = NewCommandEvent()
+    wx.PostEvent(frame, MooEvent(moo=1))
+    wx.PostEvent(frame, GooEvent(wx.ID_ANY, goo=2))
+    frame.Bind(EVT_MOO, lambda event: print(event.moo))
+    frame.Bind(EVT_GOO, onCommand)
+    frame.Bind(EVT_MOO, onCommand)  # type: ignore[arg-type]  # ty: ignore[invalid-argument-type]
