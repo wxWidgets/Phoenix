@@ -7,15 +7,15 @@
     },
     "wx/aui.pyi": {
       "assignment": 1,
-      "misc": 1,
-      "name-defined": 2
+      "misc": 3,
+      "name-defined": 1
     },
     "wx/core.pyi": {
       "arg-type": 3,
       "assignment": 20,
       "attr-defined": 2,
       "misc": 24,
-      "name-defined": 22,
+      "name-defined": 21,
       "no-redef": 4,
       "overload-cannot-match": 5,
       "valid-type": 7
@@ -82,7 +82,7 @@
       "invalid-overload": 1
     },
     "wx/aui.pyi": {
-      "unknown-name": 2
+      "unknown-name": 1
     },
     "wx/core.pyi": {
       "bad-argument-type": 4,
@@ -92,7 +92,7 @@
       "not-a-type": 7,
       "not-callable": 1,
       "redefinition": 1,
-      "unknown-name": 22
+      "unknown-name": 21
     },
     "wx/glcanvas.pyi": {
       "unknown-name": 1
@@ -126,7 +126,7 @@
       "reportOverlappingOverload": 6
     },
     "wx/aui.pyi": {
-      "reportUndefinedVariable": 2
+      "reportUndefinedVariable": 1
     },
     "wx/core.pyi": {
       "reportArgumentType": 22,
@@ -136,7 +136,7 @@
       "reportInconsistentOverload": 17,
       "reportOverlappingOverload": 5,
       "reportRedeclaration": 5,
-      "reportUndefinedVariable": 22
+      "reportUndefinedVariable": 21
     },
     "wx/dataview.pyi": {
       "reportUndefinedVariable": 14
@@ -174,7 +174,7 @@
       "invalid-parameter-default": 1
     },
     "wx/aui.pyi": {
-      "unresolved-reference": 2
+      "unresolved-reference": 1
     },
     "wx/core.pyi": {
       "call-non-callable": 1,
@@ -183,7 +183,7 @@
       "invalid-parameter-default": 18,
       "invalid-type-form": 7,
       "unresolved-attribute": 1,
-      "unresolved-reference": 23
+      "unresolved-reference": 22
     },
     "wx/dataview.pyi": {
       "unresolved-reference": 14

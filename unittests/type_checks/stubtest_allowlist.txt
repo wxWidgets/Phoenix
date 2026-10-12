@@ -830,6 +830,44 @@ wx\.richtext\.RichTextObjectPtrArrayArray\.__iter__
 wx\.richtext\.RichTextRangeArray\.__iter__
 wx\.richtext\.RichTextVariantArray\.__iter__
 
+# Missing from the stubs
+wx\.core\.MDIChildFrameBase\.Activate
+wx\.core\.MDIChildFrameBase\.GetMDIParent
+wx\.core\.Point2D\.x
+wx\.core\.Point2D\.y
+wx\.core\.PyApp\.DarkMode_Always
+wx\.core\.PyApp\.DarkMode_Auto
+wx\.core\.PyApp\.GetMacAboutMenuItemId
+wx\.core\.PyApp\.GetMacExitMenuItemId
+wx\.core\.PyApp\.GetMacHelpMenuTitleName
+wx\.core\.PyApp\.GetMacPreferencesMenuItemId
+wx\.core\.PyApp\.OnInitGui
+wx\.core\.PyApp\.OnPreInit
+wx\.core\.PyApp\.SetMacAboutMenuItemId
+wx\.core\.PyApp\.SetMacExitMenuItemId
+wx\.core\.PyApp\.SetMacHelpMenuTitleName
+wx\.core\.PyApp\.SetMacPreferencesMenuItemId
+wx\.core\.PyRegionIterator
+wx\.core\.Rect2D\.height
+wx\.core\.Rect2D\.width
+wx\.core\.Rect2D\.x
+wx\.core\.Rect2D\.y
+wx\.core\.wxEVT_CLIPBOARD_CHANGED
+wx\.core\.wxEVT_COLLAPSIBLEHEADER_CHANGED
+wx\.core\.wxWidgets_version
+wx\.dataview\.DataViewBitmapRenderer\.Value
+wx\.dataview\.DataViewCheckIconTextRenderer\.Value
+wx\.dataview\.DataViewChoiceRenderer\.Value
+wx\.dataview\.DataViewDateRenderer\.Value
+wx\.dataview\.DataViewIconTextRenderer\.Value
+wx\.dataview\.DataViewProgressRenderer\.Value
+wx\.dataview\.DataViewSpinRenderer\.Value
+wx\.dataview\.DataViewTextRenderer\.Value
+wx\.dataview\.DataViewToggleRenderer\.Value
+wx\.grid\.PyGridBlocksIterator
+wx\.propgrid\.PropertyGridInterface\.GetValues
+wx\.propgrid\.PropertyGridInterface\.SetValues
+
 # Read-only at runtime
 wx\.core\.CallLater\.Interval
 wx\.core\.CallLater\.Result
@@ -852,7 +890,5 @@ wx\.propgrid\.PropertyGridInterface\.Items
 wx\.propgrid\.PropertyGridInterface\.Properties
 
 # Other differences
-wx\.aui\.AuiMDIChildFrame
 wx\.core\.GetDefaultPyEncoding
-wx\.core\.MDIChildFrame
 wx\.richtext\.SCRIPT_MUL_FACTOR

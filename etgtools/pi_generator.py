@@ -272,6 +272,9 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         """
         assert isinstance(module, extractors.ModuleDef)
         self.isCore = module.module == '_core'
+        # The classes defined the normal way, rather than just for SIP
+        self.classNames = {item.pyName or removeWxPrefix(item.name) for item in module
+                           if isinstance(item, extractors.ClassDef)}
         self.pyModule = typeinfo.pyModuleName(module)
 
         for item in module.imports:
@@ -513,8 +516,19 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
     def generateWigCode(self, wig, stream, indent=''):
         assert isinstance(wig, extractors.WigCode)
         # The code itself is for SIP, but some of it creates Python classes
+        # and methods
         if hasattr(wig, 'piSequence'):
             self.generateSequenceClass(wig.piSequence, stream, indent)
+        for line in getattr(wig, 'piCode', '').splitlines():
+            stream.write(f'{indent}{line}\n')
+        if not indent and not hasattr(wig, 'piSequence'):
+            # Classes that are only defined for SIP
+            for m in re.finditer(r'^\s*class\s+(\w+)\s*(?::\s*(?:public\s+)?(\w+))?[^;{]*\{',
+                                 wig.code, re.MULTILINE):
+                name = removeWxPrefix(m.group(1))
+                if name not in self.classNames:
+                    base = self.fixWxPrefix(m.group(2), True) if m.group(2) else 'wx.siplib.wrapper'
+                    stream.write(f'\nclass {name}({base}):\n    pass\n')
         if not indent and self.forwardDeclarations:
             # SIP creates an empty class for a forward declaration of a class
             # that isn't wrapped anywhere
