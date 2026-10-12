@@ -8048,10 +8048,16 @@ class AuiManager(wx.EvtHandler):
     def RefreshCaptions(self):
         """ Refreshes all pane captions. """
 
+        # Invalidate all captions first and repaint them in a single pass. Every Update() repaints
+        # everything that is invalid in the frame, which is expensive if the frame has large windows
+        refreshed = False
         for part in self._uiparts:
             if part.type == AuiDockUIPart.typeCaption:
                 self._frame.Refresh(True, part.rect)
-                self._frame.Update()
+                refreshed = True
+
+        if refreshed:
+            self._frame.Update()
 
     def CalculateHintRect(self, pane_window, pt, offset):
         """
