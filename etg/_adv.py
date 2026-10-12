@@ -79,7 +79,6 @@ def run():
 
     module.addHeaderCode('#include <wxPython/wxpy_api.h>')
     module.addHeaderCode('#include <wx/help.h>')
-    tools.addAccessibilityHeaderCode(module)
 
     module.addImport('_core')
     module.addPyCode("import wx", order=10)

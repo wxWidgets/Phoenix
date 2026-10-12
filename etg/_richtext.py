@@ -65,7 +65,6 @@ def run():
     # customizing the generated code and docstrings.
 
     module.addHeaderCode('#include <wxPython/wxpy_api.h>')
-    tools.addAccessibilityHeaderCode(module)
     module.addImport('_core')
     module.addPyCode("import wx", order=10)
     module.addImport('_xml')
