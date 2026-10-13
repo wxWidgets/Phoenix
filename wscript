@@ -185,8 +185,11 @@ def configure(conf):
         cfg.finishSetup(conf.env.wx_config, conf.env.debug,
                         'mingw32' if isWindows and not conf.env.use_msvc else None)
 
-        conf.env.CFLAGS = cfg.cflags[:]
-        conf.env.CXXFLAGS = cfg.cxxflags[:]
+        # On Darwin, build.py sets the env flags to wx-config's, which cfg has.
+        envCFLAGS = conf.env.CFLAGS if not isDarwin else []
+        envCXXFLAGS = conf.env.CXXFLAGS if not isDarwin else []
+        conf.env.CFLAGS = cfg.cflags + envCFLAGS
+        conf.env.CXXFLAGS = cfg.cxxflags + envCXXFLAGS
         conf.env.CFLAGS_WX = list()
         conf.env.CXXFLAGS_WX = list()
         conf.env.CFLAGS_WXPY = list()
@@ -299,11 +302,6 @@ def configure(conf):
         conf.env.CFLAGS_WXPY.append('-UNDEBUG')
         conf.env.CXXFLAGS_WXPY.append('-UNDEBUG')
 
-        # Add basic debug info for all builds
-        conf.env.CFLAGS_WXPY.append('-g')
-        conf.env.CXXFLAGS_WXPY.append('-g')
-
-        # And if --debug is set turn on more detailed debug info and turn off optimization
         if conf.env.debug:
             for flags in [conf.env.CFLAGS_PYEXT, conf.env.CXXFLAGS_PYEXT]:
                 flags.extend(['-ggdb', '-O0'])
