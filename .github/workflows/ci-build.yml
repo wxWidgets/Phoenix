@@ -170,6 +170,7 @@ jobs:
               echo "os_tag=$os_tag" >> "$GITHUB_OUTPUT"
               echo "XVFB_RUN=dbus-run-session -- xvfb-run -a" >> $GITHUB_ENV
               echo "WXPY_TEST_XVFB=1" >> $GITHUB_ENV
+              echo "LDFLAGS=-Wl,--strip-debug" >> $GITHUB_ENV
           elif [ ${{ matrix.os }} == macos-15-intel ]; then
               short_name=macos
               echo "CIBW_BUILD=cp$(echo ${{ matrix.python-version }} | sed 's/\.//')-macosx_$(uname -m)" >> "$GITHUB_ENV"

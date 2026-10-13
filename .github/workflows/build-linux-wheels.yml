@@ -114,6 +114,7 @@ jobs:
       - name: Build the wxPython wheel
         env:
           WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
+          LDFLAGS: -Wl,--strip-debug
         run: |
           mkdir dist/wxpython-src
           tar xzf dist/wxpython-${{ env.VERSION }}.tar.gz -C dist/wxpython-src --strip-components=1
