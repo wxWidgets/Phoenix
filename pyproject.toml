@@ -119,6 +119,11 @@ devel = [
 platforms = ["WIN32", "WIN64", "OSX", "POSIX"]
 include-package-data = true
 
+[tool.setuptools.exclude-package-data]
+# MSVC debug info is shipped separately (see build.py build_pdbzip) and would
+# make the Windows wheels too large for PyPI.
+wx = ["*.pdb"]
+
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements/install.txt"] }
 
