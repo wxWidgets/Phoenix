@@ -12,6 +12,77 @@ wxPython Changelog
 
 
 
+4.3.2
+------
+* 12-Oct-2026
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.3.2
+Extras: https://github.com/wxWidgets/Phoenix/releases/tag/wxPython-4.3.2
+Pip:    ``pip install wxPython==4.3.2``
+
+New and improved in this release:
+* Update wxWidgets to v3.3.4 (#2978)
+
+* Officially support and build wheels for Python 3.15 (#2968)
+
+* Stop building Windows 32-bit wheels (#2968)
+
+* Many improvements to the generated type stubs (.pyi files), including checking the handlers given to Bind, enums as classes, char* constants typed as bytes, operator method parameters made positional-only, a type stub for wx.lib.newevent, and adding missing protected virtual methods and SIP-only classes such as wx.Config (#2559, #2733, #2775, #2793, #2801, #2810, #2873, #2932, #2933, #2956, #2957, #2970, #2974, #2975, #2976)
+
+* Don't make automatic properties from getters that need arguments (e.g. wx.DC.Pixel)
+
+* Fix EVT_RICHTEXT_PROPERTIES_CHANGED, which was defined as EVT_RICHTEXT_STYLE_CHANGED
+
+* Restore deprecated wx.propgrid.PG_ACTION constants, which now issue a DeprecationWarning (#2941, #2944)
+
+* Restore wx.FileTypeInfo constructor to as it was in 4.2.x
+
+* Enable creating wx.CursorBundle objects from single wx.Cursor's
+
+* Fix wx.RibbonMSWArtProvider from being abstract
+
+* Fix wx.aui.AuiDefaultTabArt instantiation and add wx.aui.AuiNativeTabArt (#2918, #2923)
+
+* Remove custom wx.ColourPickerCtrl implementation on macOS (#2937, #2938)
+
+* Fix WebView.New(parent) returning a Python-owned window with newer sip versions (#2970)
+
+* Handle nullptr when creating a Python argstring (#2934, #2935)
+
+* Ignore new wxRect2DDouble wxRect constructor - fixes GetIM() roundtrip
+
+* Fix more int/float TypeErrors in wx.lib.agw.ribbon.art_aui (#2924, #2945)
+
+* Fix stale event object in GridWithLabelRenderersMixin paint handlers (#2929)
+
+* Sync floating AuiNotebook caption bar when the active tab changes (#2951)
+
+* Repaint the frame once, not once per pane caption, in AuiManager.RefreshCaptions (#2981)
+
+* Fix stale wx.MenuItem/wx.Menu references retained by ShortcutEditor's Shortcut class (#2960)
+
+* Fix wx.lib.inspection dark mode issues (#2917, #2959)
+
+* Ensure wx.Timer is stopped in wx.lib.ticker when window destroyed
+
+* Remove numpy Python version restriction
+
+* Declare the minimum SIP ABI for generated bindings and require SIP 6.10+; loosen the sip build dependency from an exact pin to a range (#2964, #2968)
+
+* Support building universal2 binaries on newer macOS versions (#2943)
+
+* Modernize the build: remove distutils usage, drop the bdist_egg, bdist_wininst, bdist_msi and build.py bdist_wheel commands, move static metadata to pyproject.toml, use an SPDX license expression, and implement dependency-groups in pyproject.toml (#2952, #2958, #2961, #2962, #2968)
+
+* Run cmd_etg and cmd_sip steps in parallel to speed up the sdist build process (#2950, #2954)
+
+* Download wxdocs/wxdemo archives from GitHub releases (#2971, #2972)
+
+* Build Windows PDB files during CI runs (#2712, #2797, #2798)
+
+* Run the unittests in CI, and many fixes to make the unittests reliable (#2681)
+
+
+
 4.3.1
 ------
 * 29-Jul-2026
