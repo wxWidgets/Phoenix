@@ -41,7 +41,7 @@ fi
 # This function is called to do each build.
 # It is given the Python virtualenv to be used, a tag (gtk2 or gtk3) to be
 # used to help name the target folder, and an optional flag (--gtk3) to be
-# passed on the build.py command line.
+# passed on the build_wxpy.py command line.
 function do_build {
     VENV=$1
     TAG=$2
@@ -74,7 +74,7 @@ function do_build {
 
     # Build wxWidgets and Phoenix. Since we're using a source tarball we don't
     # need to do the code generation parts, all files should already be present.
-    python build.py $FLAG build_wx build_py
+    python build_wxpy.py $FLAG build_wx build_py
 
     # Package the built tree into a wheel (the compile is already done).
     pip wheel --no-deps --no-build-isolation \

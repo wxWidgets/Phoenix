@@ -133,7 +133,7 @@ def build_wxpython(ctx, image, venv='all', port='gtk3', include_old=False, keep=
     Use docker images to build wxPython.
 
     This command requires that there is a wxPython source archive in the ../dist
-    folder, such as one produced by `python build.py sdist` or one from a
+    folder, such as one produced by `python build_wxpy.py sdist` or one from a
     release or snapshot build of wxPython.
     """
     if image == []:

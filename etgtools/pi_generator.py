@@ -192,7 +192,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             if parallelDir:
                 # Multiple etg scripts may be writing sections into the same
                 # .pyi file concurrently. Rather than race on that shared
-                # file, stash this script's section for build.py to merge in
+                # file, stash this script's section for build_wxpy.py to merge in
                 # (in the right order) once every script has finished.
                 outDir = os.path.join(parallelDir, 'pyi')
                 os.makedirs(outDir, exist_ok=True)

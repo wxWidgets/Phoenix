@@ -59,20 +59,20 @@ created in the pre-release snapshot builds. See the notes about it at:
 Next, review the section below about prerequisites.
 
 All aspects of the wxPython Phoenix build are managed through a series of
-commands provided by the build.py script. There is also a setup.py script
+commands provided by the build_wxpy.py script. There is also a setup.py script
 available for builds using setuptools.  The setup.py script assumes that all of
 the code generation steps have already been performed, and so it is suitable
 for use when building from a source snapshot tarball or when using pip. The
-setup.py script will delegate to build.py for the actual build, and build.py
+setup.py script will delegate to build_wxpy.py for the actual build, and build_wxpy.py
 will delegate to setup.py when using pip or building a wheel.
 
-Using the build.py script allows for greater control over the build process
+Using the build_wxpy.py script allows for greater control over the build process
 than setup.py does, including commands for performing the various
 code-generation steps. So developers working on Phoenix itself or building
 from a Git checkout, instead of a source snapshot tarball, should be using
-the build.py script. The build.py script provides a fairly simple
+the build_wxpy.py script. The build_wxpy.py script provides a fairly simple
 command-line interface consisting of commands and options. To see the full
-list run ``python build.py --help``. The most important commands are listed
+list run ``python build_wxpy.py --help``. The most important commands are listed
 below.
 
 **Windows Users NOTE:** If you are building Phoenix on Windows and have a
@@ -81,7 +81,7 @@ need to set the code page in your console window in order to avoid Unicode
 decoding errors. For example::
 
     chcp 1252
-    python build.py <build commands>...
+    python build_wxpy.py <build commands>...
 
 In addition, some tasks within the build currently expect to be able to use
 Cygwin on Windows (https://www.cygwin.com/) to do its work. If you have
@@ -100,7 +100,7 @@ then please continue reading.
 Building wxWidgets
 ------------------
 
-Since build.py will, by default, build both wxWidgets and Phoenix you will
+Since build_wxpy.py will, by default, build both wxWidgets and Phoenix you will
 need the wxWidgets code as well. The source tarballs already include both
 wxWidgets and the Phoenix source code, so if you are getting your copy of the
 source code that way then you are all set. If you are fetching it from GitHub
@@ -114,7 +114,7 @@ This will clone the wxWidgets repo into: ``Phoenix/ext/wxWidgets``. Once the
 submodule is updated, the build script should be able to build wxWidgets.
 
 If you would rather use an already built and installed wxWidgets then that is
-possible as well by changing some options, see ``python build.py --help`` for
+possible as well by changing some options, see ``python build_wxpy.py --help`` for
 details. However be aware that doing so will require a wxWidgets that is
 **very** close to the same age as the Phoenix code, at least for the
 unreleased preview snapshots. In other words, the wxWidgets build should use
@@ -142,7 +142,7 @@ the wx package to a versioned folder, or even move it into your own project
 if desired, all without needing to rebuild the binaries. (Assuming that
 compatible Pythons are being used in all cases of course.)
 
-The build phase of the build.py script will copy the results of the wxWidgets
+The build phase of the build_wxpy.py script will copy the results of the wxWidgets
 and Phoenix builds into the wx folder in the Phoenix source tree. This will
 allow you to run and test Phoenix directly from the source tree without
 installing it, if desired. You just need to set ``PYTHONPATH`` appropriately,
@@ -153,14 +153,14 @@ Phoenix. When you are finished testing you can then use ``pip install .`` or
 
 
 
-Important build.py commands
+Important build_wxpy.py commands
 ---------------------------
 
-The following ``build.py`` commands are required to be able to build Phoenix
+The following ``build_wxpy.py`` commands are required to be able to build Phoenix
 from scratch. In other words, from a pristine source tree with none of the
 generated code present yet. They can be run individually or you can specify
 all of them on a single command line, in the order given. Once a command has
-succeeded in one run of build.py there is no need to run that command again in
+succeeded in one run of build_wxpy.py there is no need to run that command again in
 a later run, unless you've changed something which that command has the
 responsibility to process. Many of the commands require the results of the
 earlier commands, so at least the first time you run the build you will need
@@ -189,7 +189,7 @@ the given order.
 Some other useful commands and options are:
 
 * **clean**: Clean up the build products produced by prior runs of
-  build.py. There are additional clean commands that will let you clean up
+  build_wxpy.py. There are additional clean commands that will let you clean up
   just portions of the build if needed.
 
 * **touch**: Updates the timestamp on all of the etg scripts, so they will
@@ -200,11 +200,11 @@ Some other useful commands and options are:
 
 * **M.N**: This is the Major.Minor version number of the Python that the
   extension modules will be built for, such as "3.11". This allows you to run
-  build.py with a different Python than what you are building for, which is
+  build_wxpy.py with a different Python than what you are building for, which is
   handy for things like buildbots running in a virtualenv for one Python
   that need to be able to run builds for other versions too.
 
-  If build.py is not able to find the correct Python given the M.N on the
+  If build_wxpy.py is not able to find the correct Python given the M.N on the
   command line then you can specify the full path to the python executable you
   want to use with the ``--python`` option.
 
@@ -214,17 +214,17 @@ Some other useful commands and options are:
   etg scripts. If you don't plan on generating the documentation then this
   will speed up the processing of the etg command.
 
-Please see the output of ``python build.py --help`` for information about
+Please see the output of ``python build_wxpy.py --help`` for information about
 commands and options not mentioned here. And, as always, if there is any
-discrepancy between this document and the source code in the build.py script,
+discrepancy between this document and the source code in the build_wxpy.py script,
 then the source code is correct. ;-)
 
-The build.py script will download doxygen, sip and waf for your platform as
+The build_wxpy.py script will download doxygen, sip and waf for your platform as
 needed if they are not already in your Phoenix/bin folder. If prebuilt
-versions of these tools are not available for your platform then build.py
+versions of these tools are not available for your platform then build_wxpy.py
 will bail out with an error message. To continue with the build you will need
 to acquire copies of the tool that will work on your platform and can then
-tell build.py where to find it using an environment variable, as described in
+tell build_wxpy.py where to find it using an environment variable, as described in
 the error message.
 
 
@@ -238,20 +238,20 @@ need to install the requirements first with::
 
 and then use several of the commands listed above.  For example::
 
-    python build.py dox etg --nodoc sip build
+    python build_wxpy.py dox etg --nodoc sip build
 
 Subsequent builds can leave out some of the commands if there were no
 changes which would require those commands to be run again.  For
 example, if you wanted to just rebuild the Phoenix extension modules
 you could do this::
 
-    python build.py build_py
+    python build_wxpy.py build_py
 
 If you've changed one of the etg files and need to regenerate and
 rebuild the source affected by that change, then you can use a command
 like this::
 
-    python build.py etg --nodoc sip build build_py
+    python build_wxpy.py etg --nodoc sip build build_py
 
 
 
@@ -265,7 +265,7 @@ explanation to help a newbie find their way around.
   here. This folder should not be committed to a source repository.
 
 * **buildtools**: This is a Python package containing modules that are used
-  from build.py and setup.py and which assist with configuring and running
+  from build_wxpy.py and setup.py and which assist with configuring and running
   the build.
 
 * **etg**: This is where the "Extractor-Tweaker-Generator" scripts are stored.

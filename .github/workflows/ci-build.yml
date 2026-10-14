@@ -74,8 +74,8 @@ jobs:
       - name: Generate wrapper code
         id: generate
         run: |
-          python build.py setrev dox etg sip --nodoc
-          VERSION=$(python build.py --quiet version)
+          python build_wxpy.py setrev dox etg sip --nodoc
+          VERSION=$(python build_wxpy.py --quiet version)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           VER_FLAGS=$(python -c "from buildtools.version import VER_FLAGS; print(VER_FLAGS)")
           echo "ver_flags=$VER_FLAGS" >> "$GITHUB_OUTPUT"
@@ -83,11 +83,11 @@ jobs:
       - name: Check type stubs
         run: |
           python -m pip install --group typecheck
-          python build.py check_stubs
+          python build_wxpy.py check_stubs
 
       - name: Create source distribution (sdist)
         run: |
-          python build.py sdist
+          python build_wxpy.py sdist
 
       - name: Save sdist as job artifact
         uses: actions/upload-artifact@v7
@@ -98,7 +98,7 @@ jobs:
       - name: Create demo source distribution (sdist_demo)
         if: github.event_name == 'push'
         run: |
-          python build.py sdist_demo
+          python build_wxpy.py sdist_demo
 
       - name: Save demo sdist as job artifact
         if: github.event_name == 'push'
@@ -264,7 +264,7 @@ jobs:
           WXPYTHON_BUILD_ARGS: ${{ steps.init.outputs.build_opts }}
         run: |
           cd dist/wxpython-src
-          python build.py build_pdbzip
+          python build_wxpy.py build_pdbzip
 
       - name: Tag Linux wheel filename with OS to avoid collisions
         # Not manylinux, so it's distro-specific; tag the filename with the
@@ -293,7 +293,7 @@ jobs:
 
       - name: Run unittests
         run: |
-          $XVFB_RUN python build.py test --verbose
+          $XVFB_RUN python build_wxpy.py test --verbose
 
       - name: Compare the type stubs with the wheel
         # The stubs are the same for every build, so one is enough. It needs
@@ -301,7 +301,7 @@ jobs:
         if: matrix.os == 'ubuntu-24.04' && matrix.python-version == '3.14'
         run: |
           python -m pip install --group typecheck
-          $XVFB_RUN python build.py stubtest
+          $XVFB_RUN python build_wxpy.py stubtest
 
       - name: Save wheel as job artifact
         uses: actions/upload-artifact@v7
@@ -365,7 +365,7 @@ jobs:
 
       - name: Build documentation
         run: |
-          python build.py setrev dox etg sip build_wx build_py wxlib sphinx bdist_docs docset_py
+          python build_wxpy.py setrev dox etg sip build_wx build_py wxlib sphinx bdist_docs docset_py
 
       - name: Save docs as job artifact
         uses: actions/upload-artifact@v7

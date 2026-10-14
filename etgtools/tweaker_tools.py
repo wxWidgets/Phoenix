@@ -1014,7 +1014,7 @@ def getDocsGenerator():
 def runGenerators(module):
     module.updateModuleInfo()
     if '--typeinfo' in sys.argv:
-        # The first pass of build.py's etg command only needs this
+        # The first pass of build_wxpy.py's etg command only needs this
         typeinfo.writeScriptInfo(module, currentEtgScriptId())
         return
     checkForUnitTestModule(module)

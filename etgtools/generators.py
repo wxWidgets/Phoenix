@@ -44,10 +44,10 @@ class SphinxGenerator(DocsGeneratorBase):
 
 def etgParallelOutputDir():
     """
-    When build.py runs etg scripts in parallel (--nodoc only), this env var
+    When build_wxpy.py runs etg scripts in parallel (--nodoc only), this env var
     points generators with shared, accumulated output files (eg. the .pyi
     files and itemToModuleMap.json) at a per-run scratch dir instead, so
-    concurrent etg processes never write to the same file. build.py merges
+    concurrent etg processes never write to the same file. build_wxpy.py merges
     the per-script results back into the real files once all scripts finish.
     Returns None when running the normal, non-parallel way.
     """

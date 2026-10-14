@@ -7,7 +7,7 @@
 #---------------------------------------------------------------------------
 """
 Checks for the generated wx/*.pyi type stubs. Run this after the etg step,
-usually with "python build.py check_stubs". The type checkers used are in the
+usually with "python build_wxpy.py check_stubs". The type checkers used are in the
 "typecheck" dependency group (pip install --group typecheck).
 
 The checks are:
@@ -83,7 +83,7 @@ def stubFiles():
     """The generated stubs in wx/, and any others in its subpackages"""
     files = sorted(glob.glob(os.path.join(ROOT, 'wx', '*.pyi')))
     if not files:
-        sys.exit('No wx/*.pyi files found. Run "python build.py etg" first.')
+        sys.exit('No wx/*.pyi files found. Run "python build_wxpy.py etg" first.')
     return files + sorted(glob.glob(os.path.join(ROOT, 'wx', '*', '**', '*.pyi'), recursive=True))
 
 

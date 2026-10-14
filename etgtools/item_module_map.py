@@ -83,7 +83,7 @@ class ItemModuleMap(object):
         parallelDir = etgParallelOutputDir()
         if parallelDir:
             # Don't touch the shared file directly; write this script's own
-            # contributions out separately for build.py to merge in once all
+            # contributions out separately for build_wxpy.py to merge in once all
             # of the concurrently-running etg scripts have finished.
             if not self._items:
                 return

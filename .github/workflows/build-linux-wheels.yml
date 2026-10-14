@@ -40,13 +40,13 @@ jobs:
       - name: Generate wrapper code
         id: generate
         run: |
-          python build.py setrev dox etg sip --nodoc
-          VERSION=$(python build.py --quiet version)
+          python build_wxpy.py setrev dox etg sip --nodoc
+          VERSION=$(python build_wxpy.py --quiet version)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create source distribution (sdist)
         run: |
-          python build.py sdist
+          python build_wxpy.py sdist
 
       - name: Save sdist as job artifact
         uses: actions/upload-artifact@v7

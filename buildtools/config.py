@@ -378,7 +378,7 @@ class Configuration(object):
         myExecfile(versionfile, self.__dict__)
 
         # Include the subversion revision in the version number? REV.txt can
-        # be created using the build.py setrev command. If it doesn't exist
+        # be created using the build_wxpy.py setrev command. If it doesn't exist
         # then the version number is built without a revision number. IOW, it
         # is a release build.  (In theory)
         if os.path.exists('REV.txt'):

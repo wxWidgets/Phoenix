@@ -118,7 +118,7 @@ jobs:
 
       - name: Build wxWidgets and wxPython
         run: |
-          $XVFB_RUN python build.py setrev dox etg sip build --nodoc --jobs=4 --verbose
+          $XVFB_RUN python build_wxpy.py setrev dox etg sip build --nodoc --jobs=4 --verbose
 
       - name: Simple smoke test
         run: |
@@ -131,4 +131,4 @@ jobs:
 
       - name: Run unittests
         run: |
-          $XVFB_RUN python build.py test --verbose
+          $XVFB_RUN python build_wxpy.py test --verbose

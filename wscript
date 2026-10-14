@@ -43,7 +43,7 @@ def options(opt):
                    help='Full path to the wx-config script to be used for this build.')
     opt.add_option('--no_magic', dest='no_magic', action='store_true', default=False,
                    help='Don\'t use linker magic to enable wx libs to be bundled with '
-                   'wxPython.  See build.py for more info.')
+                   'wxPython.  See build_wxpy.py for more info.')
     opt.add_option('--mac_arch', dest='mac_arch', default='', action='store',
                    help='One or more comma separated architecture names to be used for '
                    'the Mac builds. Should be at least a subset of the architectures '
@@ -185,7 +185,7 @@ def configure(conf):
         cfg.finishSetup(conf.env.wx_config, conf.env.debug,
                         'mingw32' if isWindows and not conf.env.use_msvc else None)
 
-        # On Darwin, build.py sets the env flags to wx-config's, which cfg has.
+        # On Darwin, build_wxpy.py sets the env flags to wx-config's, which cfg has.
         envCFLAGS = conf.env.CFLAGS if not isDarwin else []
         envCXXFLAGS = conf.env.CXXFLAGS if not isDarwin else []
         conf.env.CFLAGS = cfg.cflags + envCFLAGS

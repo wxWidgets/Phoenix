@@ -3,7 +3,7 @@
 # still an easy way to specify what data files (non *.py files) should be,
 # or should not be included in the package dirs.
 #
-# See cmd_sdist() in build.py for the actual building of the source dist.
+# See cmd_sdist() in build_wxpy.py for the actual building of the source dist.
 #
 
 recursive-include   wx  **

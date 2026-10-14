@@ -9,7 +9,7 @@
 Each etg script runs in its own process, but the type hints generated for one
 module can depend on things defined by other scripts, such as which Python
 types a class can be automatically converted from, or which module a name
-lives in. So build.py runs the etg scripts in two passes. In the first pass,
+lives in. So build_wxpy.py runs the etg scripts in two passes. In the first pass,
 with --typeinfo on the command line, each script only saves that information
 to its own file. Those files are then merged into one, and the second, normal
 pass reads it while generating the code.
@@ -141,7 +141,7 @@ def writeScriptInfo(module, scriptId):
 def mergeScriptInfo(scriptIds):
     """
     Merge the info files for scriptIds into MERGED_FILE. The file is only
-    rewritten when its contents change, since build.py uses its timestamp to
+    rewritten when its contents change, since build_wxpy.py uses its timestamp to
     decide which scripts need to run again. Returns True if it was rewritten.
     """
     names = {}
@@ -188,7 +188,7 @@ def load():
         else:
             # The first pass runs before the file exists, but doesn't need it
             if '--typeinfo' not in sys.argv:
-                print('WARNING: %s not found, run "build.py etg" to create it.' %
+                print('WARNING: %s not found, run "build_wxpy.py etg" to create it.' %
                       os.path.relpath(MERGED_FILE, phoenixRoot))
             _merged = {}
         _merged.setdefault('names', {})
