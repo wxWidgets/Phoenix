@@ -37,17 +37,13 @@ the ``wx.GraphicsContext`` classes a little better than Cairo's.
    is maintained.
 """
 
-import sys
 import math
 
 import wx
 import wx.lib.wxcairo as wxcairo
 import cairo
 
-if sys.version_info >= (3, 11):
-    from typing import Self
-else:
-    from typing_extensions import Self
+from typing import Self
 
 # Other ideas:
 # 1. TextToPath (or maybe make this part of the Path class

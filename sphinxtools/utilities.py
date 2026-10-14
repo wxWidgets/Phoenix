@@ -10,7 +10,6 @@
 #---------------------------------------------------------------------------
 
 # Standard library imports
-import sys
 import os
 import codecs
 import shutil
@@ -29,10 +28,7 @@ from .constants import CPP_ITEMS, VERSION, VALUE_MAP
 from .constants import RE_KEEP_SPACES, EXTERN_INHERITANCE
 from .constants import DOXYROOT, SPHINXROOT, WIDGETS_IMAGES_ROOT
 
-if sys.version_info >= (3, 11):
-    from typing import Self
-else:
-    from typing_extensions import Self
+from typing import Self
 
 # ----------------------------------------------------------------------- #
 

@@ -13,14 +13,10 @@ A class like :class:`wx.BusyInfo` but which doesn't take up so much space by def
 and which has a nicer look.
 """
 
-import sys
 import wx
 from wx.lib.stattext import GenStaticText as StaticText
 
-if sys.version_info >= (3, 11):
-    from typing import Self
-else:
-    from typing_extensions import Self
+from typing import Self
 
 #---------------------------------------------------------------------------
 

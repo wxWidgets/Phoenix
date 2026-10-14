@@ -119,7 +119,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-24.04, ubuntu-26.04, windows-2025, macos-15-intel, macos-15, windows-11-arm ]
-        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14', '3.15' ]
+        python-version: [ '3.11', '3.12', '3.13', '3.14', '3.15' ]
         architecture: [ 'x64', 'arm64' ]
         exclude:
           - os: ubuntu-24.04
@@ -135,7 +135,6 @@ jobs:
           - os: windows-11-arm
             architecture: x64
           # Only build oldest and newest Pythons on PRs (keep in sync with ccache section)
-          - python-version: ${{ github.event_name == 'pull_request' && '3.11' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.12' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.13' }}
           # Only build windows-11-arm on pushes
@@ -143,11 +142,6 @@ jobs:
           # Release Linux wheels are built by build-linux-wheels.yml instead
           - os: ${{ startsWith(github.ref, 'refs/tags/') && 'ubuntu-24.04' }}
           - os: ${{ startsWith(github.ref, 'refs/tags/') && 'ubuntu-26.04' }}
-          # Python interpreter < 3.11 doesn't exist for Windows 11 ARM
-          - os: windows-11-arm
-            python-version: '3.10'
-          - os: ubuntu-26.04
-            python-version: '3.10'
 
     env:
       VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
@@ -226,7 +220,7 @@ jobs:
           arch: '${{ matrix.architecture }}'
 
       - name: Install ccache
-        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.10' || matrix.python-version == '3.14' || matrix.python-version == '3.15') }}
+        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.11' || matrix.python-version == '3.14' || matrix.python-version == '3.15') }}
         uses: hendrikmuhs/ccache-action@v1.2.23
         with:
           key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
@@ -234,7 +228,7 @@ jobs:
           save: ${{ github.event_name != 'pull_request' }}
 
       - name: Setup ccache
-        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.10' || matrix.python-version == '3.14' || matrix.python-version == '3.15') }}
+        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.11' || matrix.python-version == '3.14' || matrix.python-version == '3.15') }}
         run: |
           if [ ${{ runner.os }} == 'Linux' ]; then
               echo "PATH=/usr/lib/ccache:$PATH" >> $GITHUB_ENV

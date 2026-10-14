@@ -304,7 +304,6 @@ Latest Revision: Andrea Gavana @ 30 Jul 2014, 21.00 GMT
 Version 1.5
 
 """
-import sys
 import wx
 
 from wx.lib.agw.customtreectrl import CustomTreeCtrl
@@ -314,10 +313,7 @@ from wx.lib.agw.customtreectrl import TreeEditTimer as TreeListEditTimer
 from wx.lib.agw.customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED, EVT_TREE_ITEM_HYPERLINK
 
 import time
-if sys.version_info >= (3, 11):
-    from typing import Self
-else:
-    from typing_extensions import Self
+from typing import Self
 
 # Version Info
 __version__ = "1.5"

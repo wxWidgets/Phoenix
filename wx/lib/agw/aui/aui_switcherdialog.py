@@ -158,17 +158,13 @@ Event handler::
 
 """
 
-import sys
 import wx
 
 from . import auibook
 from .aui_utilities import FindFocusDescendant
 from .aui_constants import SWITCHER_TEXT_MARGIN_X, SWITCHER_TEXT_MARGIN_Y
 
-if sys.version_info >= (3, 11):
-    from typing import Self
-else:
-    from typing_extensions import Self
+from typing import Self
 
 # Define a translation function
 _ = wx.GetTranslation

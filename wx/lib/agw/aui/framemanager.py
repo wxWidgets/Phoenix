@@ -95,7 +95,6 @@ is by running the AUI sample (`AUI.py`).
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 __date__ = "31 March 2009"
 
-import sys
 import wx
 # just for isinstance
 from time import time
@@ -117,10 +116,7 @@ from .aui_utilities import Clip, PaneCreateStippleBitmap, GetDockingImage, GetSl
 
 from .aui_constants import *
 
-if sys.version_info >= (3, 11):
-    from typing import Self
-else:
-    from typing_extensions import Self
+from typing import Self
 
 # Define this as a translation function
 _ = wx.GetTranslation

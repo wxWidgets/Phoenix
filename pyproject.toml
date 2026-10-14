@@ -1,7 +1,7 @@
 [project]
 name = "wxPython"
 description = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
-requires-python = ">= 3.10"
+requires-python = ">= 3.11"
 authors = [
     { name = "Robin Dunn", email = "robin@alldunn.com" },
     { name = "Scott Talbert", email = "swt@techie.net" },
@@ -30,7 +30,6 @@ classifiers = [
     "Operating System :: POSIX",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -76,7 +75,6 @@ requires = [
     "cython >= 3.0.10",
     "requests >= 2.26.0",
     "sip >= 6.10, < 7",
-    "typing-extensions; python_version < '3.11'",
 ]
 build-backend = "setuptools.build_meta"
 

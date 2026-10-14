@@ -19,4 +19,3 @@ sphinx
 python-docs-theme
 doc2dash
 beautifulsoup4
-typing-extensions; python_version < '3.11'

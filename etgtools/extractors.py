@@ -25,10 +25,7 @@ from .tweaker_tools import AutoConversionInfo, FixWxPrefix, MethodType, magicMet
                            textfile_open, Signature, removeWxPrefix
 from sphinxtools.utilities import findDescendants
 
-if sys.version_info >= (3, 11):
-    from typing import Self
-else:
-    from typing_extensions import Self
+from typing import Self
 
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,

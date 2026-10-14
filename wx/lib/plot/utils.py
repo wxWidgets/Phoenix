@@ -13,7 +13,6 @@ This is a collection of utilities used by the :mod:`wx.lib.plot` package.
 __docformat__ = "restructuredtext en"
 
 # Standard Library
-import sys
 import functools
 import inspect
 import itertools
@@ -23,10 +22,7 @@ from warnings import warn as _warn
 import wx
 import numpy as np
 
-if sys.version_info >= (3, 11):
-    from typing import Self
-else:
-    from typing_extensions import Self
+from typing import Self
 
 
 class PlotPendingDeprecation(wx.wxPyDeprecationWarning):
