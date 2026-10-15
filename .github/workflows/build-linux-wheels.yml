@@ -37,10 +37,10 @@ jobs:
           sudo apt-get install -y gettext
           python -m pip install --upgrade --group codegen
 
-      - name: Generate wrapper code
+      - name: Determine version
         id: generate
         run: |
-          python build_wxpy.py setrev dox etg sip --nodoc
+          python build_wxpy.py setrev
           VERSION=$(python build_wxpy.py --quiet version)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
