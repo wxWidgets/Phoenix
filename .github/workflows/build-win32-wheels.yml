@@ -1,0 +1,116 @@
+#---------------------------------------------------------------------------
+# Build Windows 32-bit (x86) wheels for an already released version of
+# wxPython, from the sdist published on PyPI. The wheels are saved as job
+# artifacts to be uploaded to PyPI manually.
+#---------------------------------------------------------------------------
+
+name: build-win32-wheels
+
+on:
+  # workflow_dispatch only works for workflows on the default branch, so also
+  # build when this branch is pushed.
+  push:
+    branches: [ 'win32-wheels-*' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHONUNBUFFERED: 1
+  VERSION: '4.3.2'
+  WXPYTHON_BUILD_ARGS: '--release --cairo --relwithdebug'
+
+jobs:
+  build-wheels:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14', '3.15' ]
+
+    runs-on: windows-2025
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+        with:
+          filter: blob:none
+          persist-credentials: false
+
+      - name: Set up Python ${{ matrix.python-version }}-x86
+        uses: actions/setup-python@v6
+        with:
+          python-version: '${{ matrix.python-version }}'
+          architecture: 'x86'
+          cache: 'pip'
+          cache-dependency-path: pyproject.toml
+
+      - name: Download sdist from PyPI
+        run: |
+          mkdir -p dist
+          python - <<'EOF'
+          import hashlib, json, os, urllib.request
+          version = os.environ['VERSION']
+          with urllib.request.urlopen(f'https://pypi.org/pypi/wxPython/{version}/json') as r:
+              sdist = next(u for u in json.load(r)['urls'] if u['packagetype'] == 'sdist')
+          path = os.path.join('dist', sdist['filename'])
+          urllib.request.urlretrieve(sdist['url'], path)
+          with open(path, 'rb') as f:
+              assert hashlib.sha256(f.read()).hexdigest() == sdist['digests']['sha256']
+          print(path)
+          EOF
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade --group test
+
+      - name: Setup MSVC
+        uses: step-security/msvc-dev-cmd@v1
+        with:
+          arch: 'x86'
+
+      - name: Build the wxPython wheel
+        run: |
+          mkdir dist/wxpython-src
+          tar xzf dist/wxpython-${{ env.VERSION }}.tar.gz -C dist/wxpython-src --strip-components=1
+
+          cd dist
+          pip install build
+          python -m build --wheel --verbose --outdir . ./wxpython-src
+
+      - name: Build the PDB zipfile
+        run: |
+          cd dist/wxpython-src
+          python build.py build_pdbzip
+
+      - name: Simple smoke test
+        run: |
+          cd dist
+          pip install wxpython-*.whl
+          python -c "import wx; print(wx); print(wx.version()); print(wx.PlatformInfo)"
+          python -c "import importlib.resources as r; assert all(r.files('wx').joinpath(f).is_file() for f in ['py.typed', 'core.pyi'])"
+          libs="adv aui dataview glcanvas grid html2 html media propgrid ribbon richtext siplib stc xml xrc"
+          for lib in $libs; do
+            echo $lib
+            python -c "import wx.$lib"
+          done
+
+      - name: Run unittests
+        run: |
+          python build.py test --verbose
+
+      - name: Save wheel as job artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: wxPython-wheel-win32-py${{ matrix.python-version }}-x86
+          path: dist/wxpython-*.whl
+
+      - name: Save pdb as job artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: pdb-win32-py${{ matrix.python-version }}-x86
+          path: dist/wxpython-src/dist/wxPython-pdb-*.zip
