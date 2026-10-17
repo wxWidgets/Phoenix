@@ -465,6 +465,7 @@ def run():
     c.find('SetAttr.attr').transfer = True
     c.find('SetRowAttr.attr').transfer = True
     c.find('SetColAttr.attr').transfer = True
+    c.find('SetAttrProvider.attrProvider').transfer = True
 
     module.addPyCode("PyGridTableBase = wx.deprecated(GridTableBase, 'Use GridTableBase instead.')")
 

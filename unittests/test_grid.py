@@ -1,4 +1,6 @@
+import gc
 import unittest
+import weakref
 from unittests import wtc
 import wx
 import wx.grid
@@ -381,6 +383,20 @@ class grid_Tests(wtc.WidgetTestCase):
             assert isinstance(block, wx.grid.GridBlockCoords)
 
         assert count == 2
+
+    def test_grid47(self):
+        # The table owns its attribute provider, so Python must not delete it
+        class Provider(wx.grid.GridCellAttrProvider):
+            pass
+
+        t = wx.grid.GridStringTable(1, 1)
+        p = Provider()
+        ref = weakref.ref(p)
+        t.SetAttrProvider(p)
+        del p
+        gc.collect()
+        assert ref() is not None
+        assert t.GetAttrProvider() is ref()
 
 #---------------------------------------------------------------------------
 
