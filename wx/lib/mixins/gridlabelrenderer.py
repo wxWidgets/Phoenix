@@ -23,7 +23,8 @@ class GridWithLabelRenderersMixin(object):
     """
     This class can be mixed with wx.grid.Grid to add the ability to plugin
     label renderer objects for the row, column and corner labels, similar to
-    how the cell renderers work in the main Grid class.
+    how the cell renderers work in the main Grid class. The labels of frozen
+    rows and columns use the renderers too.
     """
     def __init__(self):
         # Cache the label windows instead of relying on evt.GetEventObject() in the paint
@@ -51,6 +52,15 @@ class GridWithLabelRenderersMixin(object):
         self._cornderRenderer = None
         self._defRowRenderer = None
         self._defColRenderer = None
+
+        # The labels of the frozen rows and columns are in windows of their own, which
+        # exist only while rows or columns are frozen. Hook them when FreezeTo is called.
+        # Wrapping the method on the instance works regardless of the order of the base
+        # classes, so it also applies when wx.grid.Grid comes first.
+        self._frozenRowLabelWindow = None
+        self._frozenColLabelWindow = None
+        self._gridFreezeTo = self.FreezeTo
+        self.FreezeTo = self._freezeTo
 
 
     def SetRowLabelRenderer(self, row, renderer):
@@ -108,19 +118,41 @@ class GridWithLabelRenderersMixin(object):
 
     #----------------------------------------------------------------
 
+    def _freezeTo(self, rows, cols):
+        frozen = self._gridFreezeTo(rows, cols)
+        if frozen:
+            self._frozenRowLabelWindow = self.GetFrozenRowLabelWindow()
+            self._frozenColLabelWindow = self.GetFrozenColLabelWindow()
+            for window, handler in ((self._frozenRowLabelWindow, self._onPaintFrozenRowLabels),
+                                    (self._frozenColLabelWindow, self._onPaintFrozenColLabels)):
+                if window:
+                    # The window is reused if it stays frozen, so make sure to bind only once
+                    window.Unbind(wx.EVT_PAINT, handler=handler)
+                    window.Bind(wx.EVT_PAINT, handler)
+        return frozen
+
+
     def _onPaintRowLabels(self, evt):
         # Deliberately using the cached window instead of evt.GetEventObject(); see the
         # comment in __init__.
         window = self._rowLabelWindow
-        dc = wx.PaintDC(window)
-        gridWindow = self.GetGridWindow()
+        self._drawRowLabels(wx.PaintDC(window), window, self.GetGridWindow())
 
+
+    def _onPaintFrozenRowLabels(self, evt):
+        window = self._frozenRowLabelWindow
+        dc = wx.PaintDC(window)
+        self._drawRowLabels(dc, window, self.GetFrozenRowGridWindow())
+        self._drawFrozenLabelBorder(dc, window, True)
+
+
+    def _drawRowLabels(self, dc, window, gridWindow):
         rows = self.CalcRowLabelsExposed(window.GetUpdateRegion(), gridWindow)
         if rows == [-1]:
             return
 
         offset = self.GetGridWindowOffset(gridWindow)
-        x, y = self.CalcUnscrolledPosition(offset)
+        x, y = self.CalcGridWindowUnscrolledPosition(offset, gridWindow)
         pt = dc.GetDeviceOrigin()
         dc.SetDeviceOrigin(pt.x, pt.y-y)
         for row in rows:
@@ -140,15 +172,23 @@ class GridWithLabelRenderersMixin(object):
         # Deliberately using the cached window instead of evt.GetEventObject(); see the
         # comment in __init__.
         window = self._colLabelWindow
-        dc = wx.PaintDC(window)
-        gridWindow = self.GetGridWindow()
+        self._drawColLabels(wx.PaintDC(window), window, self.GetGridWindow())
 
+
+    def _onPaintFrozenColLabels(self, evt):
+        window = self._frozenColLabelWindow
+        dc = wx.PaintDC(window)
+        self._drawColLabels(dc, window, self.GetFrozenColGridWindow())
+        self._drawFrozenLabelBorder(dc, window, False)
+
+
+    def _drawColLabels(self, dc, window, gridWindow):
         cols = self.CalcColLabelsExposed(window.GetUpdateRegion(), gridWindow)
         if cols == [-1]:
             return
 
         offset = self.GetGridWindowOffset(gridWindow)
-        x, y = self.CalcUnscrolledPosition(offset)
+        x, y = self.CalcGridWindowUnscrolledPosition(offset, gridWindow)
         pt = dc.GetDeviceOrigin()
         dc.SetDeviceOrigin(pt.x-x, pt.y)
         for col in cols:
@@ -175,6 +215,21 @@ class GridWithLabelRenderersMixin(object):
         renderer = self._cornderRenderer or GridDefaultCornerLabelRenderer()
         renderer.Draw(self, dc, rect, -1)
 
+
+
+    def _drawFrozenLabelBorder(self, dc, window, isRow):
+        # Draws the line that separates frozen from scrolled labels, as wxGrid does in
+        # its own handler (which replaces ours). Its colour and width are the defaults
+        # unless wxGrid makes them available.
+        colour, width = wx.SystemSettings.SelectLightDark(wx.BLACK, wx.WHITE), 2
+        if hasattr(self, 'GetGridFrozenBorderColour'):
+            colour, width = self.GetGridFrozenBorderColour(), self.GetGridFrozenBorderPenWidth()
+        w, h = window.GetClientSize()
+        dc.SetPen(wx.Pen(colour, width))
+        if isRow:
+            dc.DrawLine(0, h, w, h)
+        else:
+            dc.DrawLine(w, 0, w, h)
 
 
     # NOTE: These helpers or something like them should probably be publicly
