@@ -378,7 +378,7 @@ class Configuration(object):
         myExecfile(versionfile, self.__dict__)
 
         # Include the subversion revision in the version number? REV.txt can
-        # be created using the build.py setrev command. If it doesn't exist
+        # be created using the build_wxpy.py setrev command. If it doesn't exist
         # then the version number is built without a revision number. IOW, it
         # is a release build.  (In theory)
         if os.path.exists('REV.txt'):
@@ -1038,8 +1038,8 @@ def updateLicenseFiles(cfg):
         copyIfNewer(opj(cfg.WXDIR, 'docs', filename), opj('license', filename),
                     verbose=1)
 
-    # Get the sip license too
-    copyIfNewer(opj('sip', 'siplib', 'LICENSE'), opj('license', 'sip-license.txt'),
+    # Get the sip license too (vendored, since sdist no longer runs sip)
+    copyIfNewer(opj('buildtools', 'sip-license.txt'), opj('license', 'sip-license.txt'),
                 verbose=1)
 
     # Combine the relevant files into a single LICENSE.txt file

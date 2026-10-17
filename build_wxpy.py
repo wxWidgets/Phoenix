@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #----------------------------------------------------------------------
-# Name:        build.py
+# Name:        build_wxpy.py
 # Purpose:     Master build controller script.
 #              This script is used to run through the commands used for the
 #              various stages of building Phoenix, and can also be a front-end
@@ -15,6 +15,7 @@
 
 import sys
 import concurrent.futures
+import copy
 import glob
 import hashlib
 import json
@@ -106,7 +107,7 @@ MS_edge_url = 'https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/{}'.f
 
 def usage():
     print ("""\
-Usage: ./build.py [command(s)] [options]
+Usage: ./build_wxpy.py [command(s)] [options]
 
   Commands:
       N.N NN        Major.Minor version number of the Python to use to run
@@ -461,7 +462,7 @@ def makeOptionParser():
         ("regenerate_sysconfig", (False, "Waf uses Python's sysconfig and related tools to configure the build. In some cases that info can be incorrect, so this option regenerates it. Must have write access to Python's lib folder.")),
         ("no_allmo",       (False, "Skip regenerating the wxWidgets message catalogs")),
         ("no_msedge",      (False, "Do not include the MS Edge backend for wx.html2.WebView. (Windows only)")),
-        ("quiet",          (False, "Silence some of the messages from build.py"))
+        ("quiet",          (False, "Silence some of the messages from build_wxpy.py"))
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -1277,7 +1278,7 @@ def cmd_sphinx(options, args):
 
     textFiles = sorted(glob.glob(sphinxDir + '/*.txt'))
     if not textFiles:
-        raise Exception('No documentation files found. Please run "build.py touch etg" first')
+        raise Exception('No documentation files found. Please run "build_wxpy.py touch etg" first')
 
     # Sort all wx.stc.StyledTextCtrl methods into categories
     stc_categorise_methods()
@@ -1829,6 +1830,14 @@ def copyWxDlls(options):
 
 def cmd_build_py(options, args):
     cmdTimer = CommandTimer('build_py')
+
+    # No longer shipped pre-generated; regenerate here instead.
+    gen_options = copy.copy(options)
+    gen_options.nodoc = True
+    cmd_dox(gen_options, args)
+    cmd_etg(gen_options, args)
+    cmd_sip(gen_options, args)
+
     waf = getWafCmd()
     checkCompiler()
 
@@ -2230,7 +2239,7 @@ def cmd_buildall(options, args):
 
 
 def cmd_sdist(options, args):
-    # Build a source tarball that includes the generated SIP and CPP files.
+    # Generated SIP/C++ code is not included; cmd_build_py regenerates it.
     cmdTimer = CommandTimer('sdist')
     assert os.getcwd() == phoenixDir()
 
@@ -2283,20 +2292,6 @@ def cmd_sdist(options, args):
     for name in ['src/__init__.py', 'src/gizmos.py',]:
         copyFile(name, cfg.PKGDIR, verbose=True)
 
-    # copy Phoenix's generated code into the archive tree
-    msg('Copying generated files...')
-    os.makedirs(posixjoin(PDEST, 'sip', 'siplib'), exist_ok=True)
-    for srcdir in ['cpp', 'gen', 'siplib']:
-        destdir = posixjoin(PDEST, 'sip', srcdir)
-        for name in sorted(glob.glob(posixjoin('sip', srcdir, '*'))):
-            if not os.path.isdir(name):
-                copyFile(name, destdir)
-    sip_h_dir = posixjoin(cfg.PKGDIR, 'include', 'wxPython')
-    copyFile(posixjoin(sip_h_dir, 'sip.h'), posixjoin(PDEST, sip_h_dir))
-    for wc in ['*.py', '*.pi', '*.pyi']:
-        destdir = posixjoin(PDEST, cfg.PKGDIR)
-        for name in sorted(glob.glob(posixjoin(cfg.PKGDIR, wc))):
-            copyFile(name, destdir)
     copyFile('demo/version.py', posixjoin(PDEST, 'demo'))
 
     # Copy the license files from wxWidgets

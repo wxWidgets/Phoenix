@@ -54,7 +54,7 @@ Building wxPython
 
 To perform a build there must be one (and only one) wxPython source tarball
 located in the ``../dist`` folder. This source archive can either be generated
-with the ``build.py dox etg sip sdist`` command, or it can be downloaded from a
+with the ``build_wxpy.py dox etg sip sdist`` command, or it can be downloaded from a
 wxPython release on PyPI, or it can come from the wxPython snapshots server for
 prerelease versions of the software.
 

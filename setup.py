@@ -65,7 +65,7 @@ isDarwin = sys.platform == "darwin"
 
 class wx_build(orig_build):
     """
-    Delegate to build.py for doing the actual build, (including wxWidgets)
+    Delegate to build_wxpy.py for doing the actual build, (including wxWidgets)
     instead of letting distutils do it all.
     """
     user_options = [
@@ -84,15 +84,15 @@ class wx_build(orig_build):
 
     def run(self):
         if not self.skip_build:
-            # Run build.py to do the actual building of the extension modules
+            # Run build_wxpy.py to do the actual building of the extension modules
             msg('WARNING: Building this way assumes that all generated files have been \n'
-                'generated already.  If that is not the case then use build.py directly \n'
+                'generated already.  If that is not the case then use build_wxpy.py directly \n'
                 'to generate the source and perform the build stage.  You can use \n'
                 '--skip-build with the bdist_* or install commands to avoid this \n'
                 'message and the wxWidgets and Phoenix build steps in the future.\n')
 
             # Use the same Python that is running this script.
-            cmd = ['"{}"'.format(sys.executable), '-u', 'build.py', 'build']
+            cmd = ['"{}"'.format(sys.executable), '-u', 'build_wxpy.py', 'build']
             cmd = ' '.join(cmd)
             runcmd(cmd)
 
@@ -214,8 +214,8 @@ class wx_install_lib(orig_install_lib):
 
 class wx_sdist(orig_sdist):
     def run(self):
-        # Use build.py to perform the sdist
-        cmd = ['"{}"'.format(sys.executable), '-u', 'build.py', 'sdist']
+        # Use build_wxpy.py to perform the sdist
+        cmd = ['"{}"'.format(sys.executable), '-u', 'build_wxpy.py', 'sdist']
         cmd = ' '.join(cmd)
         runcmd(cmd)
 
