@@ -1026,6 +1026,7 @@
 "Drag_AllowMove":"wx.",
 "Drag_CopyOnly":"wx.",
 "Drag_DefaultMove":"wx.",
+"DrawFlags":"wx.grid.GridHeaderLabelsRenderer.",
 "DropFilesEvent":"wx.",
 "DropSource":"wx.",
 "DropTarget":"wx.",
