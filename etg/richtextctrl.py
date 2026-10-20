@@ -56,7 +56,7 @@ def run():
         # declaration that addWindowVirtuals would otherwise add can't compile.
         c.addItem(etgtools.MethodDef(
             name='CreateAccessible', type='wxAccessible*', isVirtual=True,
-            protection='protected', className=c.name))
+            protection='protected', className=c.name, factory=True))
     tools.fixWindowClass(c)
     c.bases = ['wxControl']  # wxTextCtrlIface, wxScrollHelper are also bases...
     c.find('GetSelection').findOverload('from').ignore()

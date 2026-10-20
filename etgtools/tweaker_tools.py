@@ -818,7 +818,7 @@ def addWindowVirtuals(klass):
     ]
     if isWindows:
         # does not compile on GTK and macOS.
-        publicWindowVirtuals.append( ('CreateAccessible', 'wxAccessible* CreateAccessible()') )
+        publicWindowVirtuals.append( ('CreateAccessible', 'wxAccessible* CreateAccessible() /Factory/') )
 
     protectedWindowVirtuals = [
         ('ProcessEvent',              'bool ProcessEvent(wxEvent & event)'),
