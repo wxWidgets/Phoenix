@@ -33,16 +33,61 @@ def run():
 
     c = module.find('wxTipWindow')
     assert isinstance(c, etgtools.ClassDef)
+
+    # The C++ ctor is deprecated because of a race with its windowPtr
+    # parameter. We never expose windowPtr, so provide an equivalent ctor
+    # that uses two-step creation instead of calling the deprecated one.
+    c.find('wxTipWindow').findOverload('windowPtr').ignore()
+    c.addCppCtor_sip(
+        argsString="""(
+            wxWindow* parent /TransferThis/,
+            const wxString& text,
+            wxCoord maxLength = 100,
+            wxRect* rectBounds = NULL)
+            """,
+        pyArgsString="(parent, text, maxLength=100, rectBounds=None)",
+        doc="""\
+            Create the tip window and show it immediately.
+
+            The tip window closes and destroys itself when the user clicks the
+            mouse or presses a key, when it loses focus, or when the mouse
+            leaves rectBounds (in screen coordinates) if one is given.
+            """,
+        body="""\
+            sipCpp = new sipwxTipWindow();
+            sipCpp->Create(parent, *text, maxLength, NULL, rectBounds);
+            """)
+
+    c.find('Create.windowPtr').ignore()
+    c.find('Create').setCppCode_sip(
+        "sipRes = sipCpp->Create(parent, *text, maxLength, NULL, rectBounds);")
+
     tools.fixWindowClass(c)
-
-    # We're not going to allow the use of the windowPtr arg in the ctor
-    c.find('wxTipWindow.windowPtr').ignore()
-
-    # TODO: find a way to include the rectBounds parameter while still ignoring windowPtr
-    c.find('wxTipWindow.rectBounds').ignore()
 
     # ignore this method too
     c.find('SetTipWindowPtr').ignore()
+
+    # wxTipWindow::Close() isn't in the interface docs, so without this
+    # Python would get wxWindow::Close, which doesn't close the tip.
+    c.addCppMethod('bool', 'Close', '(bool force=false)',
+        doc="""\
+            Hide and destroy the tip window. The force parameter is ignored,
+            closing a tip window can't be vetoed. Does nothing if the tip
+            window has already been closed.""",
+        body="""\
+            if ( !wxPendingDelete.Member(self) )
+                self->Close();
+            return true;
+            """)
+
+    # The tip may close itself at any moment, but it isn't destroyed until
+    # the next idle time, so also check that it is still shown.
+    c.addPyMethod('__bool__', '(self)',
+        doc="Returns True if the tip window still exists and hasn't been closed.",
+        body="""\
+            import wx.siplib
+            return not wx.siplib.isdeleted(self) and self.IsShown()
+            """)
 
     # Ignore the wxTipWindow::Ref class for now
     c.find('Ref').ignore()
