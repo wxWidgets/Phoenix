@@ -951,6 +951,10 @@ from .%s import *
             # We only write a docstring for the first overload, otherwise
             # SIP appends them all together.
             _needDocstring = False
+        if method.preMethodCode:
+            stream.write('%s%%PreMethodCode\n' % indent)
+            stream.write(nci(method.preMethodCode, len(indent)+4))
+            stream.write('%s%%End\n' % indent)
         stream.write('%s%%MethodCode\n' % indent)
         if not (method.isCtor or method.isDtor):
             stream.write('%sPyErr_Clear();\n' % (indent+' '*4))
