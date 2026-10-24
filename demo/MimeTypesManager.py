@@ -76,80 +76,80 @@ class MimeTypesDemoPanel(wx.Panel):
 
         #------- Icon info
 
-        t = wx.StaticText(self, -1, 'GetIconInfo: ', style = wx.ALIGN_RIGHT )
+        t = wx.StaticText(lbox, -1, 'GetIconInfo: ', style = wx.ALIGN_RIGHT )
         t.SetFont(bfont)
         llsizer.Add(t, (0, 0), (1, 1), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
-        self.icon = wx.StaticBitmap(self, -1, images.NoIcon.GetBitmap())
+        self.icon = wx.StaticBitmap(lbox, -1, images.NoIcon.GetBitmap())
         llsizer.Add(self.icon, (0, 1), (1, 1), wx.ALL | wx.ALIGN_CENTER, 2)
 
-        self.iconsource = wx.TextCtrl(self, -1, value="", size=(125, -1), style = wx.TE_READONLY )
+        self.iconsource = wx.TextCtrl(lbox, -1, value="", size=(125, -1), style = wx.TE_READONLY )
         llsizer.Add(self.iconsource, (0, 2), (1, 1), wx.ALL | wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL, 2)
 
-        self.iconoffset = wx.TextCtrl(self, -1, value="", size=(25,-1), style = wx.TE_READONLY )
+        self.iconoffset = wx.TextCtrl(lbox, -1, value="", size=(25,-1), style = wx.TE_READONLY )
         llsizer.Add(self.iconoffset, (0, 3), (1, 1), wx.ALL | wx.ALIGN_CENTER_VERTICAL, 2)
 
         #------- MIME Type
 
-        t = wx.StaticText(self, -1, 'GetMimeType: ', style = wx.ALIGN_RIGHT )
+        t = wx.StaticText(lbox, -1, 'GetMimeType: ', style = wx.ALIGN_RIGHT )
         t.SetFont(bfont)
         llsizer.Add(t, (1, 0), (1, 1), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
-        self.mimetype = wx.TextCtrl(self, -1, value="", style = wx.TE_READONLY )
+        self.mimetype = wx.TextCtrl(lbox, -1, value="", style = wx.TE_READONLY )
         llsizer.Add(self.mimetype, (1, 1), (1, 3), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
         #------- MIME Types
 
-        t = wx.StaticText(self, -1, 'GetMimeTypes: ', style = wx.ALIGN_RIGHT )
+        t = wx.StaticText(lbox, -1, 'GetMimeTypes: ', style = wx.ALIGN_RIGHT )
         t.SetFont(bfont)
         llsizer.Add(t, (2, 0), (1, 1), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
-        self.mimetypes = wx.TextCtrl(self, -1, value="", style = wx.TE_READONLY )
+        self.mimetypes = wx.TextCtrl(lbox, -1, value="", style = wx.TE_READONLY )
         llsizer.Add(self.mimetypes, (2, 1), (1, 3), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
         #------- Extensions
 
-        t = wx.StaticText(self, -1, 'GetExtensions: ', style = wx.ALIGN_RIGHT )
+        t = wx.StaticText(lbox, -1, 'GetExtensions: ', style = wx.ALIGN_RIGHT )
         t.SetFont(bfont)
         llsizer.Add(t, (3, 0), (1, 1), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
-        self.extensions = wx.TextCtrl(self, -1, value="", style = wx.TE_READONLY )
+        self.extensions = wx.TextCtrl(lbox, -1, value="", style = wx.TE_READONLY )
         llsizer.Add(self.extensions, (3, 1), (1, 3), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
         #------- Description
 
-        t = wx.StaticText(self, -1, 'GetDescription: ', style = wx.ALIGN_RIGHT )
+        t = wx.StaticText(lbox, -1, 'GetDescription: ', style = wx.ALIGN_RIGHT )
         t.SetFont(bfont)
         llsizer.Add(t, (4, 0), (1, 1), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
-        self.description = wx.TextCtrl(self, -1, value="", style = wx.TE_READONLY)
+        self.description = wx.TextCtrl(lbox, -1, value="", style = wx.TE_READONLY)
         llsizer.Add(self.description, (4, 1), (1, 3), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
         #------- Open command
 
-        t = wx.StaticText(self, -1, 'GetOpenCommand: ', style = wx.ALIGN_RIGHT )
+        t = wx.StaticText(lbox, -1, 'GetOpenCommand: ', style = wx.ALIGN_RIGHT )
         t.SetFont(bfont)
         llsizer.Add(t, (5, 0), (1, 1), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
-        self.opencommand = wx.TextCtrl(self, -1, value="", style = wx.TE_READONLY )
+        self.opencommand = wx.TextCtrl(lbox, -1, value="", style = wx.TE_READONLY )
         llsizer.Add(self.opencommand, (5, 1), (1, 3), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
         #------- Print command
 
-        t = wx.StaticText(self, -1, 'GetPrintCommand: ', style = wx.ALIGN_RIGHT )
+        t = wx.StaticText(lbox, -1, 'GetPrintCommand: ', style = wx.ALIGN_RIGHT )
         t.SetFont(bfont)
         llsizer.Add(t, (6, 0), (1, 1), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
-        self.printcommand = wx.TextCtrl(self, -1, value="", style = wx.TE_READONLY )
+        self.printcommand = wx.TextCtrl(lbox, -1, value="", style = wx.TE_READONLY )
         llsizer.Add(self.printcommand, (6, 1), (1, 3), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
         #------- All commands
 
-        t = wx.StaticText(self, -1, 'GetAllCommands: ', style = wx.ALIGN_RIGHT )
+        t = wx.StaticText(lbox, -1, 'GetAllCommands: ', style = wx.ALIGN_RIGHT )
         t.SetFont(bfont)
         llsizer.Add(t, (7, 0), (1, 1), wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 2)
 
-        self.allcommands = wx.TextCtrl(self, -1, value="", style = wx.TE_READONLY | wx.TE_DONTWRAP | wx.TE_MULTILINE )
+        self.allcommands = wx.TextCtrl(lbox, -1, value="", style = wx.TE_READONLY | wx.TE_DONTWRAP | wx.TE_MULTILINE )
 
         # Set the default height to be smaller than normal (for
         # multi-line) so the sizer can then expand it to whatever
@@ -168,11 +168,11 @@ class MimeTypesDemoPanel(wx.Panel):
 
         #------- List box with known MIME types
 
-        t = wx.StaticText(self, -1, 'Known MIME types')
+        t = wx.StaticText(lbox, -1, 'Known MIME types')
         t.SetFont(bfont)
         lrsizer.Add(t, 0, wx.ALL | wx.EXPAND, 4)
 
-        self.mimelist = wx.ListBox(self, -1, choices=[], style = wx.LB_SINGLE)# | wx.LB_SORT)
+        self.mimelist = wx.ListBox(lbox, -1, choices=[], style = wx.LB_SINGLE)# | wx.LB_SORT)
         lrsizer.Add(self.mimelist, 1, wx.ALL | wx.EXPAND | wx.FIXED_MINSIZE, 4)
         self.Bind(wx.EVT_LISTBOX, self.OnListbox, self.mimelist)
 
@@ -180,6 +180,11 @@ class MimeTypesDemoPanel(wx.Panel):
 
         lsizer.Add(llsizer, 1, wx.ALL | wx.EXPAND, 4)
         lsizer.Add(lrsizer, 0, wx.ALL | wx.EXPAND, 4)
+
+        # The box's children would otherwise use its larger font too
+        for child in lbox.GetChildren():
+            if not isinstance(child, wx.StaticText):
+                child.SetFont(self.GetFont())
 
         #----------------------------------------------------------------------------
 

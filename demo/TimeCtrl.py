@@ -56,18 +56,18 @@ class TestPanel( scrolled.ScrolledPanel ):
         grid.Add( self.spinless_ctrl, 0, wx.LEFT )
 
 
-        buttonChange = wx.Button( self, -1, "Change Controls")
-        self.radio12to24 = wx.RadioButton(
-                            self, -1, "Copy 12-hour time to 24-hour control",
-                            wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP
-                            )
+        buttonChange = wx.Button(box_label, -1, "Change Controls")
+        self.radio12to24 = wx.RadioButton(box_label, -1,
+                                          "Copy 12-hour time to 24-hour control",
+                                          style=wx.RB_GROUP)
 
-        self.radio24to12 = wx.RadioButton(
-                            self, -1, "Copy 24-hour time to 12-hour control"
-                            )
+        self.radio24to12 = wx.RadioButton(box_label, -1,
+                                          "Copy 24-hour time to 12-hour control")
 
-        self.radioWx = wx.RadioButton( self, -1, "Set controls to 'now' using wxDateTime")
-        self.radioMx = wx.RadioButton( self, -1, "Set controls to 'now' using mxDateTime")
+        self.radioWx = wx.RadioButton(box_label, -1,
+                                      "Set controls to 'now' using wxDateTime")
+        self.radioMx = wx.RadioButton(box_label, -1,
+                                      "Set controls to 'now' using mxDateTime")
 
         radio_vbox = wx.BoxSizer( wx.VERTICAL )
         radio_vbox.Add( self.radio12to24, 0, wx.ALL, 5 )
@@ -85,20 +85,20 @@ class TestPanel( scrolled.ScrolledPanel ):
 
         box_label = wx.StaticBox( self, -1, "Bounds Control" )
         boundsbox = wx.StaticBoxSizer( box_label, wx.HORIZONTAL )
-        self.set_bounds = wx.CheckBox( self, -1, "Set time bounds:" )
+        self.set_bounds = wx.CheckBox(box_label, -1, "Set time bounds:")
 
-        minlabel = wx.StaticText( self, -1, "minimum time:" )
-        self.min = masked.TimeCtrl( self, -1, name="min", display_seconds = False )
+        minlabel = wx.StaticText(box_label, -1, "minimum time:")
+        self.min = masked.TimeCtrl(box_label, -1, name="min", display_seconds=False)
         self.min.Enable( False )
 
-        maxlabel = wx.StaticText( self, -1, "maximum time:" )
-        self.max = masked.TimeCtrl( self, -1, name="max", display_seconds = False )
+        maxlabel = wx.StaticText(box_label, -1, "maximum time:")
+        self.max = masked.TimeCtrl(box_label, -1, name="max", display_seconds=False)
         self.max.Enable( False )
 
-        self.limit_check = wx.CheckBox( self, -1, "Limit control" )
+        self.limit_check = wx.CheckBox(box_label, -1, "Limit control")
 
-        label = wx.StaticText( self, -1, "Resulting time control:" )
-        self.target_ctrl = masked.TimeCtrl( self, -1, name="new" )
+        label = wx.StaticText(box_label, -1, "Resulting time control:")
+        self.target_ctrl = masked.TimeCtrl(box_label, -1, name="new")
 
         grid2 = wx.FlexGridSizer( cols=2 )
         grid2.Add( (20, 0), 0, wx.ALIGN_LEFT|wx.ALL, 5 )

@@ -21,32 +21,32 @@ class TestPanel(wx.Panel):
         box = wx.StaticBox(self, wx.ID_ANY, "" )
         buttonsizer = wx.StaticBoxSizer(box, wx.HORIZONTAL )
 
-        b1 = wx.Button(self, wx.ID_ANY, "First")
+        b1 = wx.Button(box, wx.ID_ANY, "First")
         buttonsizer.Add(b1, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnFirstPageButton, b1)
 
-        b2 = wx.Button(self,  wx.ID_ANY, "Previous")
+        b2 = wx.Button(box,  wx.ID_ANY, "Previous")
         buttonsizer.Add(b2, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnPreviousPageButton, b2)
 
-        tx1 = wx.StaticText(self, wx.ID_ANY, "   Go to page" )
+        tx1 = wx.StaticText(box, wx.ID_ANY, "   Go to page" )
         buttonsizer.Add(tx1, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
-        tc1 = wx.TextCtrl(self, wx.ID_ANY, "0", size=[30,-1])
+        tc1 = wx.TextCtrl(box, wx.ID_ANY, "0", size=[30,-1])
         buttonsizer.Add( tc1, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
         self.Bind(wx.EVT_TEXT, self.OnGotoPage, tc1)
 
-        b3 = wx.Button(self, wx.ID_ANY, "Next")
+        b3 = wx.Button(box, wx.ID_ANY, "Next")
         buttonsizer.Add(b3, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnNextPageButton, b3)
 
-        b4 = wx.Button(self, wx.ID_ANY, "Last")
+        b4 = wx.Button(box, wx.ID_ANY, "Last")
         buttonsizer.Add(b4, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnLastPageButton, b4)
 
-        tx2 = wx.StaticText(self, wx.ID_ANY, "     Zoom")
+        tx2 = wx.StaticText(box, wx.ID_ANY, "     Zoom")
         buttonsizer.Add(tx2, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=5)
 
-        ch1 = wx.Choice(self, wx.ID_ANY,
+        ch1 = wx.Choice(box, wx.ID_ANY,
                         choices=["Default", "Fit", "FitH", "FitV",
                                  "25%", "50%", "75%", "100%", "125%", "200%", "400%"])
         ch1.SetSelection(0)
@@ -59,39 +59,39 @@ class TestPanel(wx.Panel):
         box = wx.StaticBox(self, wx.ID_ANY, "" )
         rightsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
 
-        b5 = wx.Button(self, wx.ID_ANY, "Load PDF")
+        b5 = wx.Button(box, wx.ID_ANY, "Load PDF")
         rightsizer.Add(b5, proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnLoadButton, b5)
 
-        b6 = wx.Button(self, wx.ID_ANY, "Print")
+        b6 = wx.Button(box, wx.ID_ANY, "Print")
         rightsizer.Add(b6, proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_BUTTON, self.OnPrintButton, b6)
 
-        tx3 = wx.StaticText(self, wx.ID_ANY, "Page mode:")
+        tx3 = wx.StaticText(box, wx.ID_ANY, "Page mode:")
         rightsizer.Add(tx3, proportion=0, flag=wx.ALL, border=5)
 
-        ch2 = wx.Choice(self, wx.ID_ANY,size=[100,-1],
+        ch2 = wx.Choice(box, wx.ID_ANY,size=[100,-1],
                         choices=["None", "Bookmarks", "Thumbs"])
         ch2.SetSelection(0)
         rightsizer.Add(ch2, proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_CHOICE, self.OnPageMode, ch2)
 
-        tx4 = wx.StaticText(self, wx.ID_ANY, "Layout mode:")
+        tx4 = wx.StaticText(box, wx.ID_ANY, "Layout mode:")
         rightsizer.Add(tx4, proportion=0, flag=wx.ALL, border=5)
 
-        ch3 = wx.Choice(self, wx.ID_ANY,size=[100,-1],
+        ch3 = wx.Choice(box, wx.ID_ANY,size=[100,-1],
                         choices=["DontCare", "SinglePage",
                                  "OneColumn", "TwoColumnLeft", "TwoColumnRight" ])
         ch3.SetSelection(0)
         rightsizer.Add(ch3, proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_CHOICE, self.OnLayoutMode, ch3)
 
-        cx1 = wx.CheckBox(self, wx.ID_ANY, "Toolbar")
+        cx1 = wx.CheckBox(box, wx.ID_ANY, "Toolbar")
         cx1.SetValue( True )
         rightsizer.Add( cx1,proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_CHECKBOX, self.OnToolbar, cx1)
 
-        cx2 = wx.CheckBox(self, wx.ID_ANY, "Scrollbars")
+        cx2 = wx.CheckBox(box, wx.ID_ANY, "Scrollbars")
         cx2.SetValue( True )
         rightsizer.Add( cx2,proportion=0, flag=wx.ALL, border=5)
         self.Bind(wx.EVT_CHECKBOX, self.OnScrollbars, cx2)

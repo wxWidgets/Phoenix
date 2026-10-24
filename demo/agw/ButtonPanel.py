@@ -50,30 +50,30 @@ class SettingsPanel(wx.MiniFrame):
         self.coloursizer_staticbox = wx.StaticBox(self.panel, -1, "Colour Options")
         self.bottomsizer_staticbox = wx.StaticBox(self.panel, -1, "Size Options")
         self.stylesizer_staticbox = wx.StaticBox(self.panel, -1, "ButtonPanel Styles")
-        self.defaultstyle = wx.RadioButton(self.panel, -1, "Default Style", style=wx.RB_GROUP)
-        self.gradientstyle = wx.RadioButton(self.panel, -1, "Gradient Style")
-        self.verticalgradient = wx.RadioButton(self.panel, -1, "Vertical Gradient", style=wx.RB_GROUP)
-        self.horizontalgradient = wx.RadioButton(self.panel, -1, "Horizontal Gradient")
+        self.defaultstyle = wx.RadioButton(self.stylesizer_staticbox, -1, "Default Style", style=wx.RB_GROUP)
+        self.gradientstyle = wx.RadioButton(self.stylesizer_staticbox, -1, "Gradient Style")
+        self.verticalgradient = wx.RadioButton(self.stylesizer_staticbox, -1, "Vertical Gradient", style=wx.RB_GROUP)
+        self.horizontalgradient = wx.RadioButton(self.stylesizer_staticbox, -1, "Horizontal Gradient")
 
         b = self.CreateColourBitmap(wx.BLACK)
 
-        self.bakbrush = wx.BitmapButton(self.panel, ID_BackgroundColour, b, size=wx.Size(50,25))
-        self.gradientfrom = wx.BitmapButton(self.panel, ID_GradientFrom, b, size=wx.Size(50,25))
-        self.gradientto = wx.BitmapButton(self.panel, ID_GradientTo, b, size=wx.Size(50,25))
-        self.bordercolour = wx.BitmapButton(self.panel, ID_BorderColour, b, size=wx.Size(50,25))
-        self.captioncolour = wx.BitmapButton(self.panel, ID_CaptionColour, b, size=wx.Size(50,25))
-        self.textbuttoncolour = wx.BitmapButton(self.panel, ID_ButtonTextColour, b, size=wx.Size(50,25))
-        self.selectionbrush = wx.BitmapButton(self.panel, ID_SelectionBrush, b, size=wx.Size(50,25))
-        self.selectionpen = wx.BitmapButton(self.panel, ID_SelectionPen, b, size=wx.Size(50,25))
-        self.separatorcolour = wx.BitmapButton(self.panel, ID_SeparatorColour, b, size=wx.Size(50,25))
+        self.bakbrush = wx.BitmapButton(self.coloursizer_staticbox, ID_BackgroundColour, b, size=wx.Size(50,25))
+        self.gradientfrom = wx.BitmapButton(self.coloursizer_staticbox, ID_GradientFrom, b, size=wx.Size(50,25))
+        self.gradientto = wx.BitmapButton(self.coloursizer_staticbox, ID_GradientTo, b, size=wx.Size(50,25))
+        self.bordercolour = wx.BitmapButton(self.coloursizer_staticbox, ID_BorderColour, b, size=wx.Size(50,25))
+        self.captioncolour = wx.BitmapButton(self.coloursizer_staticbox, ID_CaptionColour, b, size=wx.Size(50,25))
+        self.textbuttoncolour = wx.BitmapButton(self.coloursizer_staticbox, ID_ButtonTextColour, b, size=wx.Size(50,25))
+        self.selectionbrush = wx.BitmapButton(self.coloursizer_staticbox, ID_SelectionBrush, b, size=wx.Size(50,25))
+        self.selectionpen = wx.BitmapButton(self.coloursizer_staticbox, ID_SelectionPen, b, size=wx.Size(50,25))
+        self.separatorcolour = wx.BitmapButton(self.coloursizer_staticbox, ID_SeparatorColour, b, size=wx.Size(50,25))
 
-        self.separatorspin = wx.SpinCtrl(self.panel, -1, "7", min=3, max=20,
+        self.separatorspin = wx.SpinCtrl(self.bottomsizer_staticbox, -1, "7", min=3, max=20,
                                          style=wx.SP_ARROW_KEYS)
-        self.marginspin = wx.SpinCtrl(self.panel, -1, "6", min=3, max=20,
+        self.marginspin = wx.SpinCtrl(self.bottomsizer_staticbox, -1, "6", min=3, max=20,
                                       style=wx.SP_ARROW_KEYS)
-        self.paddingspin = wx.SpinCtrl(self.panel, -1, "6", min=3, max=20,
+        self.paddingspin = wx.SpinCtrl(self.bottomsizer_staticbox, -1, "6", min=3, max=20,
                                        style=wx.SP_ARROW_KEYS)
-        self.borderspin = wx.SpinCtrl(self.panel, -1, "3", min=3, max=7,
+        self.borderspin = wx.SpinCtrl(self.bottomsizer_staticbox, -1, "3", min=3, max=7,
                                       style=wx.SP_ARROW_KEYS)
 
         self.__set_properties()
@@ -162,35 +162,35 @@ class SettingsPanel(wx.MiniFrame):
 
         mainsizer.Add(stylesizer, 0, wx.ALL|wx.EXPAND, 5)
 
-        label_1 = wx.StaticText(self.panel, -1, "Background Brush Colour:")
+        label_1 = wx.StaticText(self.coloursizer_staticbox, -1, "Background Brush Colour:")
         sizer_1.Add(label_1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_1.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_1.Add(self.bakbrush, 0, wx.ADJUST_MINSIZE, 0)
 
         leftsizer.Add(sizer_1, 1, wx.EXPAND, 0)
 
-        label_2 = wx.StaticText(self.panel, -1, "Gradient Colour From:")
+        label_2 = wx.StaticText(self.coloursizer_staticbox, -1, "Gradient Colour From:")
         sizer_2.Add(label_2, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_2.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_2.Add(self.gradientfrom, 0, wx.ADJUST_MINSIZE, 0)
 
         leftsizer.Add(sizer_2, 1, wx.EXPAND, 0)
 
-        label_3 = wx.StaticText(self.panel, -1, "Gradient Colour To:")
+        label_3 = wx.StaticText(self.coloursizer_staticbox, -1, "Gradient Colour To:")
         sizer_3.Add(label_3, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_3.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_3.Add(self.gradientto, 0, wx.ADJUST_MINSIZE, 0)
 
         leftsizer.Add(sizer_3, 1, wx.EXPAND, 0)
 
-        label_4 = wx.StaticText(self.panel, -1, "Border Colour:")
+        label_4 = wx.StaticText(self.coloursizer_staticbox, -1, "Border Colour:")
         sizer_4.Add(label_4, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_4.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_4.Add(self.bordercolour, 0, wx.ADJUST_MINSIZE, 0)
 
         leftsizer.Add(sizer_4, 1, wx.EXPAND, 0)
 
-        label_5 = wx.StaticText(self.panel, -1, "Main Caption Colour:")
+        label_5 = wx.StaticText(self.coloursizer_staticbox, -1, "Main Caption Colour:")
         sizer_5.Add(label_5, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_5.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_5.Add(self.captioncolour, 0, wx.ADJUST_MINSIZE, 0)
@@ -200,28 +200,28 @@ class SettingsPanel(wx.MiniFrame):
         coloursizer.Add(leftsizer, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
         coloursizer.Add((20, 20), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
 
-        label_6 = wx.StaticText(self.panel, -1, "Text Button Colour:")
+        label_6 = wx.StaticText(self.coloursizer_staticbox, -1, "Text Button Colour:")
         sizer_6.Add(label_6, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_6.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_6.Add(self.textbuttoncolour, 0, wx.ADJUST_MINSIZE, 0)
 
         rightsizer.Add(sizer_6, 1, wx.EXPAND, 0)
 
-        label_7 = wx.StaticText(self.panel, -1, "Selection Brush Colour:")
+        label_7 = wx.StaticText(self.coloursizer_staticbox, -1, "Selection Brush Colour:")
         sizer_7.Add(label_7, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_7.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_7.Add(self.selectionbrush, 0, wx.ADJUST_MINSIZE, 0)
 
         rightsizer.Add(sizer_7, 1, wx.EXPAND, 0)
 
-        label_8 = wx.StaticText(self.panel, -1, "Selection Pen Colour:")
+        label_8 = wx.StaticText(self.coloursizer_staticbox, -1, "Selection Pen Colour:")
         sizer_8.Add(label_8, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_8.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_8.Add(self.selectionpen, 0, wx.ADJUST_MINSIZE, 0)
 
         rightsizer.Add(sizer_8, 1, wx.EXPAND, 0)
 
-        label_9 = wx.StaticText(self.panel, -1, "Separator Colour:")
+        label_9 = wx.StaticText(self.coloursizer_staticbox, -1, "Separator Colour:")
         sizer_9.Add(label_9, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_9.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_9.Add(self.separatorcolour, 0, wx.ADJUST_MINSIZE, 0)
@@ -232,28 +232,28 @@ class SettingsPanel(wx.MiniFrame):
 
         mainsizer.Add(coloursizer, 0, wx.ALL|wx.EXPAND, 5)
 
-        label_10 = wx.StaticText(self.panel, -1, "Separator Size:")
+        label_10 = wx.StaticText(self.bottomsizer_staticbox, -1, "Separator Size:")
         sizer_10.Add(label_10, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_10.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_10.Add(self.separatorspin, 0, wx.ALL|wx.ADJUST_MINSIZE, 5)
 
         bottomsizer.Add(sizer_10, 1, wx.EXPAND, 0)
 
-        label_11 = wx.StaticText(self.panel, -1, "Margins Size:")
+        label_11 = wx.StaticText(self.bottomsizer_staticbox, -1, "Margins Size:")
         sizer_11.Add(label_11, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_11.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_11.Add(self.marginspin, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ADJUST_MINSIZE, 5)
 
         bottomsizer.Add(sizer_11, 1, wx.EXPAND, 0)
 
-        label_12 = wx.StaticText(self.panel, -1, "Padding Size:")
+        label_12 = wx.StaticText(self.bottomsizer_staticbox, -1, "Padding Size:")
         sizer_12.Add(label_12, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_12.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_12.Add(self.paddingspin, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ADJUST_MINSIZE, 5)
 
         bottomsizer.Add(sizer_12, 1, wx.EXPAND, 0)
 
-        label_13 = wx.StaticText(self.panel, -1, "Border Size:")
+        label_13 = wx.StaticText(self.bottomsizer_staticbox, -1, "Border Size:")
         sizer_13.Add(label_13, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_13.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         sizer_13.Add(self.borderspin, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ADJUST_MINSIZE, 5)

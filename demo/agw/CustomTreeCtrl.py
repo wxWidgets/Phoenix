@@ -825,7 +825,7 @@ class CustomTreeCtrlDemo(wx.Panel):
                 tags = wx.LEFT|wx.RIGHT|wx.BOTTOM
 
             if style != "TR_DEFAULT_STYLE":
-                check = wx.CheckBox(pnl, -1, style)
+                check = wx.CheckBox(staticboxstyles, -1, style)
                 stylesizer.Add(check, 0, tags, 3)
 
                 if style in ["TR_HAS_BUTTONS", "TR_HAS_VARIABLE_ROW_HEIGHT"]:
@@ -845,7 +845,7 @@ class CustomTreeCtrlDemo(wx.Panel):
                 tags = wx.LEFT|wx.RIGHT|wx.BOTTOM
 
             if count not in [6, 17, 22, 23]:
-                check = wx.CheckBox(pnl, -1, event)
+                check = wx.CheckBox(staticboxevents, -1, event)
                 eventssizer.Add(check, 0, tags, 3)
 
                 if event in ["EVT_TREE_ITEM_EXPANDED", "EVT_TREE_ITEM_EXPANDING", "EVT_TREE_ITEM_COLLAPSED",
@@ -857,71 +857,71 @@ class CustomTreeCtrlDemo(wx.Panel):
                 self.treeevents.append(check)
 
         sizer1 = wx.BoxSizer(wx.HORIZONTAL)
-        label = wx.StaticText(pnl, -1, "Connection Pen")
+        label = wx.StaticText(staticboxcolours, -1, "Connection Pen")
         font = label.GetFont()
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         label.SetFont(font)
-        buttonconnection = wx.Button(pnl, -1, "Choose...")
+        buttonconnection = wx.Button(staticboxcolours, -1, "Choose...")
         buttonconnection.Bind(wx.EVT_BUTTON, self.OnButtonConnection)
         sizer1.Add(label, 0, wx.ALL|wx.ALIGN_CENTER, 5)
         sizer1.Add((1,0), 1, wx.EXPAND)
         sizer1.Add(buttonconnection, 0, wx.ALL, 5)
 
         sizer2 = wx.BoxSizer(wx.HORIZONTAL)
-        label = wx.StaticText(pnl, -1, "Border Pen")
+        label = wx.StaticText(staticboxcolours, -1, "Border Pen")
         font = label.GetFont()
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         label.SetFont(font)
-        buttonborder = wx.Button(pnl, -1, "Choose...")
+        buttonborder = wx.Button(staticboxcolours, -1, "Choose...")
         buttonborder.Bind(wx.EVT_BUTTON, self.OnButtonBorder)
         sizer2.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer2.Add((1,0), 1, wx.EXPAND)
         sizer2.Add(buttonborder, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer3 = wx.BoxSizer(wx.HORIZONTAL)
-        label = wx.StaticText(pnl, -1, "Tree Buttons")
+        label = wx.StaticText(staticboxcolours, -1, "Tree Buttons")
         font = label.GetFont()
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         label.SetFont(font)
-        buttontree = wx.Button(pnl, -1, "Choose...")
+        buttontree = wx.Button(staticboxcolours, -1, "Choose...")
         buttontree.Bind(wx.EVT_BUTTON, self.OnButtonTree)
         sizer3.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer3.Add((1,0), 1, wx.EXPAND)
         sizer3.Add(buttontree, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer4 = wx.BoxSizer(wx.HORIZONTAL)
-        label = wx.StaticText(pnl, -1, "Check/Radio Buttons")
+        label = wx.StaticText(staticboxcolours, -1, "Check/Radio Buttons")
         font = label.GetFont()
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         label.SetFont(font)
-        buttoncr = wx.Button(pnl, -1, "Choose...")
+        buttoncr = wx.Button(staticboxcolours, -1, "Choose...")
         buttoncr.Bind(wx.EVT_BUTTON, self.OnButtonCheckRadio)
         sizer4.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer4.Add((1,0), 1, wx.EXPAND)
         sizer4.Add(buttoncr, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer5 = wx.BoxSizer(wx.HORIZONTAL)
-        radioimage = wx.RadioButton(pnl, -1, "Image Background", style=wx.RB_GROUP)
+        radioimage = wx.RadioButton(staticboxcolours, -1, "Image Background", style=wx.RB_GROUP)
         radioimage.Bind(wx.EVT_RADIOBUTTON, self.OnBackgroundImage)
-        self.imagebutton = wx.Button(pnl, -1, "Choose...")
+        self.imagebutton = wx.Button(staticboxcolours, -1, "Choose...")
         self.imagebutton.Bind(wx.EVT_BUTTON, self.OnChooseImage)
         sizer5.Add(radioimage, 0, wx.ALL|wx.ALIGN_CENTER, 5)
         sizer5.Add((1,0), 1, wx.EXPAND)
         sizer5.Add(self.imagebutton, 0, wx.ALL, 5)
 
         sizer6 = wx.BoxSizer(wx.HORIZONTAL)
-        radiobackground = wx.RadioButton(pnl, -1, "Background Colour")
+        radiobackground = wx.RadioButton(staticboxcolours, -1, "Background Colour")
         radiobackground.Bind(wx.EVT_RADIOBUTTON, self.OnBackgroundColour)
-        self.backbutton = csel.ColourSelect(pnl, -1, "Choose...", wx.WHITE)
+        self.backbutton = csel.ColourSelect(staticboxcolours, -1, "Choose...", wx.WHITE)
         self.backbutton.Bind(csel.EVT_COLOURSELECT, self.OnChooseBackground)
         sizer6.Add(radiobackground, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer6.Add((1,0), 1, wx.EXPAND)
         sizer6.Add(self.backbutton, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
 
-        leftimagelist = wx.CheckBox(pnl, -1, "Use Left ImageList")
+        leftimagelist = wx.CheckBox(staticboxcolours, -1, "Use Left ImageList")
         leftimagelist.Bind(wx.EVT_CHECKBOX, self.OnLeftImageList)
 
-        self.windowposition = wx.CheckBox(pnl, -1, "Use Image Window Left of Label")
+        self.windowposition = wx.CheckBox(staticboxcolours, -1, "Use Image Window Left of Label")
         self.windowposition.Bind(wx.EVT_CHECKBOX, self.OnWindowPos)
 
         colourssizer.Add(sizer1, 0, wx.EXPAND)
@@ -934,10 +934,10 @@ class CustomTreeCtrlDemo(wx.Panel):
         colourssizer.Add(self.windowposition, 0, wx.ALL, 5)
 
         sizera = wx.BoxSizer(wx.HORIZONTAL)
-        self.checknormal = wx.CheckBox(pnl, -1, "Standard Colours")
-        self.focus = csel.ColourSelect(pnl, -1, "Focus",
+        self.checknormal = wx.CheckBox(staticboxthemes, -1, "Standard Colours")
+        self.focus = csel.ColourSelect(staticboxthemes, -1, "Focus",
                                        self.tree.GetHilightFocusColour())
-        self.unfocus = csel.ColourSelect(pnl, -1, "Non-Focus",
+        self.unfocus = csel.ColourSelect(staticboxthemes, -1, "Non-Focus",
                                          self.tree.GetHilightNonFocusColour())
         self.checknormal.Bind(wx.EVT_CHECKBOX, self.OnCheckNormal)
         self.focus.Bind(csel.EVT_COLOURSELECT, self.OnFocusColour)
@@ -950,22 +950,22 @@ class CustomTreeCtrlDemo(wx.Panel):
         sizera.Add(sizera1, 0, wx.ALL|wx.EXPAND, 3)
 
         sizerb = wx.BoxSizer(wx.VERTICAL)
-        self.checkgradient = wx.CheckBox(pnl, -1, "Gradient Theme")
+        self.checkgradient = wx.CheckBox(staticboxthemes, -1, "Gradient Theme")
         self.checkgradient.Bind(wx.EVT_CHECKBOX, self.OnCheckGradient)
         sizerb1 = wx.BoxSizer(wx.HORIZONTAL)
         sizerb1.Add((10, 0))
-        self.radiohorizontal = wx.RadioButton(pnl, -1, "Horizontal", style=wx.RB_GROUP)
+        self.radiohorizontal = wx.RadioButton(staticboxthemes, -1, "Horizontal", style=wx.RB_GROUP)
         self.radiohorizontal.Bind(wx.EVT_RADIOBUTTON, self.OnHorizontal)
         sizerb1.Add(self.radiohorizontal, 0, wx.TOP|wx.BOTTOM, 3)
         sizerb2 = wx.BoxSizer(wx.HORIZONTAL)
         sizerb2.Add((10, 0))
-        self.radiovertical = wx.RadioButton(pnl, -1, "Vertical")
+        self.radiovertical = wx.RadioButton(staticboxthemes, -1, "Vertical")
         self.radiovertical.Bind(wx.EVT_RADIOBUTTON, self.OnVertical)
         sizerb2.Add(self.radiovertical, 0, wx.BOTTOM, 3)
         sizerb3 = wx.BoxSizer(wx.HORIZONTAL)
-        self.firstcolour = csel.ColourSelect(pnl, -1, "First Colour",
+        self.firstcolour = csel.ColourSelect(staticboxthemes, -1, "First Colour",
                                              self.tree.GetFirstGradientColour())
-        self.secondcolour = csel.ColourSelect(pnl, -1, "Second Colour",
+        self.secondcolour = csel.ColourSelect(staticboxthemes, -1, "Second Colour",
                                               self.tree.GetSecondGradientColour())
         self.firstcolour.Bind(csel.EVT_COLOURSELECT, self.OnFirstColour)
         self.secondcolour.Bind(csel.EVT_COLOURSELECT, self.OnSecondColour)
@@ -976,10 +976,10 @@ class CustomTreeCtrlDemo(wx.Panel):
         sizerb.Add(sizerb2, 0)
         sizerb.Add(sizerb3, 0, wx.ALIGN_CENTER)
 
-        self.checkvista = wx.CheckBox(pnl, -1, "Windows Vista Theme")
+        self.checkvista = wx.CheckBox(staticboxthemes, -1, "Windows Vista Theme")
         self.checkvista.Bind(wx.EVT_CHECKBOX, self.OnVista)
 
-        self.dragFullScreen = wx.CheckBox(pnl, -1, "Fullscreen Drag/Drop")
+        self.dragFullScreen = wx.CheckBox(staticboxthemes, -1, "Fullscreen Drag/Drop")
         self.dragFullScreen.Bind(wx.EVT_CHECKBOX, self.OnDragFullScreen)
 
         themessizer.Add(sizera, 0, wx.EXPAND)

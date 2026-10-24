@@ -11,10 +11,10 @@ class TestPanel(wx.Panel):
 
         # Create controls
         sb = wx.StaticBox(self, -1, "Options")
-        searchBtnOpt = wx.CheckBox(self, -1, "Search button")
+        searchBtnOpt = wx.CheckBox(sb, -1, "Search button")
         searchBtnOpt.SetValue(True)
-        cancelBtnOpt = wx.CheckBox(self, -1, "Cancel button")
-        menuBtnOpt   = wx.CheckBox(self, -1, "Search menu")
+        cancelBtnOpt = wx.CheckBox(sb, -1, "Cancel button")
+        menuBtnOpt   = wx.CheckBox(sb, -1, "Search menu")
 
         self.search = wx.SearchCtrl(self, size=(200,-1), style=wx.TE_PROCESS_ENTER)
 

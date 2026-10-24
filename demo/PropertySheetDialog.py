@@ -113,9 +113,9 @@ class MyPropSheetDlg(wx.adv.PropertySheetDialog):
         item0.Add(styleSizer, 0, wx.EXPAND|wx.ALL, 5)
 
         itemSizer2 = wx.BoxSizer( wx.HORIZONTAL )
-        choice2 = wx.Choice(panel, -1, choices=backgroundStyleChoices)
+        choice2 = wx.Choice(staticBox3, -1, choices=backgroundStyleChoices)
 
-        itemSizer2.Add(wx.StaticText(panel, -1, "&Window:"), 0,
+        itemSizer2.Add(wx.StaticText(staticBox3, -1, "&Window:"), 0,
                        wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
         itemSizer2.Add(5, 5, 1, wx.ALL, 0)
         itemSizer2.Add(choice2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
@@ -125,7 +125,7 @@ class MyPropSheetDlg(wx.adv.PropertySheetDialog):
         staticBox1 = wx.StaticBox(panel, -1, "Tile font size:")
         itemSizer5 = wx.StaticBoxSizer( staticBox1, wx.HORIZONTAL )
 
-        spinCtrl = wx.SpinCtrl(panel, -1, "", size=(80, -1))
+        spinCtrl = wx.SpinCtrl(staticBox1, -1, "", size=(80, -1))
         itemSizer5.Add(spinCtrl, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5)
 
         item0.Add(itemSizer5, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 5)

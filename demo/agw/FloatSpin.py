@@ -35,69 +35,69 @@ class FloatSpinDemo(wx.Panel):
         self.sizer_4_staticbox = wx.StaticBox(self.mainpanel, -1, "Example 1")
         self.helptext = wx.StaticText(self.mainpanel, -1, "Welcome to the FloatSpin Demo")
 
-        self.floatspin1 = FS.FloatSpin(self.mainpanel, -1, min_val=0, max_val=1,
+        self.floatspin1 = FS.FloatSpin(self.sizer_4_staticbox, -1, min_val=0, max_val=1,
                                        increment=0.01, value=0.1, agwStyle=FS.FS_LEFT)
         self.floatspin1.SetFormat("%f")
         self.floatspin1.SetDigits(2)
 
-        self.setvalue1 = wx.Button(self.mainpanel, -1, "Set Value")
-        self.textctrlvalue1 = wx.TextCtrl(self.mainpanel, -1, "0.0")
-        self.setdigits1 = wx.Button(self.mainpanel, -1, "Set Digits")
-        self.textctrldigits1 = wx.TextCtrl(self.mainpanel, -1, "2")
-        self.radioformat1 = wx.RadioBox(self.mainpanel, -1, "Set Format",
+        self.setvalue1 = wx.Button(self.sizer_4_staticbox, -1, "Set Value")
+        self.textctrlvalue1 = wx.TextCtrl(self.sizer_4_staticbox, -1, "0.0")
+        self.setdigits1 = wx.Button(self.sizer_4_staticbox, -1, "Set Digits")
+        self.textctrldigits1 = wx.TextCtrl(self.sizer_4_staticbox, -1, "2")
+        self.radioformat1 = wx.RadioBox(self.sizer_4_staticbox, -1, "Set Format",
                                         choices=["%f", "%F", "%e", "%E", "%g", "%G"],
                                         majorDimension=2, style=wx.RA_SPECIFY_COLS)
-        self.setincrement1 = wx.Button(self.mainpanel, -1, "Set Increment")
-        self.textctrlincr1 = wx.TextCtrl(self.mainpanel, -1, "0.01")
-        self.setfont1 = wx.Button(self.mainpanel, -1, "Set Font")
+        self.setincrement1 = wx.Button(self.sizer_4_staticbox, -1, "Set Increment")
+        self.textctrlincr1 = wx.TextCtrl(self.sizer_4_staticbox, -1, "0.01")
+        self.setfont1 = wx.Button(self.sizer_4_staticbox, -1, "Set Font")
 
-        self.floatspin2 = FS.FloatSpin(self.mainpanel, -1, min_val=-10, max_val=100,
+        self.floatspin2 = FS.FloatSpin(self.sizer_5_staticbox, -1, min_val=-10, max_val=100,
                                        increment=0.1, agwStyle=FS.FS_RIGHT)
         self.floatspin2.SetFormat("%e")
         self.floatspin2.SetDigits(4)
 
-        self.setvalue2 = wx.Button(self.mainpanel, -1, "Set Value")
-        self.textctrlvalue2 = wx.TextCtrl(self.mainpanel, -1, "0.0")
-        self.setdigits2 = wx.Button(self.mainpanel, -1, "Set Digits")
-        self.textctrldigits2 = wx.TextCtrl(self.mainpanel, -1, "4")
-        self.radioformat2 = wx.RadioBox(self.mainpanel, -1, "Set Format",
+        self.setvalue2 = wx.Button(self.sizer_5_staticbox, -1, "Set Value")
+        self.textctrlvalue2 = wx.TextCtrl(self.sizer_5_staticbox, -1, "0.0")
+        self.setdigits2 = wx.Button(self.sizer_5_staticbox, -1, "Set Digits")
+        self.textctrldigits2 = wx.TextCtrl(self.sizer_5_staticbox, -1, "4")
+        self.radioformat2 = wx.RadioBox(self.sizer_5_staticbox, -1, "Set Format",
                                         choices=["%f", "%F", "%e", "%E", "%g", "%G"],
                                         majorDimension=2, style=wx.RA_SPECIFY_COLS)
-        self.setincrement2 = wx.Button(self.mainpanel, -1, "Set Increment")
-        self.textctrlincr2 = wx.TextCtrl(self.mainpanel, -1, "0.1")
-        self.setfont2 = wx.Button(self.mainpanel, -1, "Set Font")
+        self.setincrement2 = wx.Button(self.sizer_5_staticbox, -1, "Set Increment")
+        self.textctrlincr2 = wx.TextCtrl(self.sizer_5_staticbox, -1, "0.1")
+        self.setfont2 = wx.Button(self.sizer_5_staticbox, -1, "Set Font")
 
-        self.floatspin3 = FS.FloatSpin(self.mainpanel, -1, min_val=0.01, max_val=0.05,
+        self.floatspin3 = FS.FloatSpin(self.sizer_7_staticbox, -1, min_val=0.01, max_val=0.05,
                                        increment=0.0001, agwStyle=FS.FS_CENTRE)
         self.floatspin3.SetFormat("%f")
         self.floatspin3.SetDigits(5)
 
-        self.setvalue3 = wx.Button(self.mainpanel, -1, "Set Value")
-        self.textctrlvalue3 = wx.TextCtrl(self.mainpanel, -1, "0.01")
-        self.setdigits3 = wx.Button(self.mainpanel, -1, "Set Digits")
-        self.textctrldigits3 = wx.TextCtrl(self.mainpanel, -1, "5")
-        self.radioformat3 = wx.RadioBox(self.mainpanel, -1, "Set Format",
+        self.setvalue3 = wx.Button(self.sizer_7_staticbox, -1, "Set Value")
+        self.textctrlvalue3 = wx.TextCtrl(self.sizer_7_staticbox, -1, "0.01")
+        self.setdigits3 = wx.Button(self.sizer_7_staticbox, -1, "Set Digits")
+        self.textctrldigits3 = wx.TextCtrl(self.sizer_7_staticbox, -1, "5")
+        self.radioformat3 = wx.RadioBox(self.sizer_7_staticbox, -1, "Set Format",
                                         choices=["%f", "%F", "%e", "%E", "%g", "%G"],
                                         majorDimension=2, style=wx.RA_SPECIFY_COLS)
-        self.setincrement3 = wx.Button(self.mainpanel, -1, "Set Increment")
-        self.textctrlincr3 = wx.TextCtrl(self.mainpanel, -1, "0.0001")
-        self.setfont3 = wx.Button(self.mainpanel, -1, "Set Font")
+        self.setincrement3 = wx.Button(self.sizer_7_staticbox, -1, "Set Increment")
+        self.textctrlincr3 = wx.TextCtrl(self.sizer_7_staticbox, -1, "0.0001")
+        self.setfont3 = wx.Button(self.sizer_7_staticbox, -1, "Set Font")
 
-        self.floatspin4 = FS.FloatSpin(self.mainpanel, -1, min_val=-2, max_val=20000,
+        self.floatspin4 = FS.FloatSpin(self.sizer_8_staticbox, -1, min_val=-2, max_val=20000,
                                        increment=0.1, agwStyle=FS.FS_READONLY)
         self.floatspin4.SetFormat("%G")
         self.floatspin4.SetDigits(3)
 
-        self.setvalue4 = wx.Button(self.mainpanel, -1, "Set Value")
-        self.textctrlvalue4 = wx.TextCtrl(self.mainpanel, -1, "0.0")
-        self.setdigits4 = wx.Button(self.mainpanel, -1, "Set Digits")
-        self.textctrldigits4 = wx.TextCtrl(self.mainpanel, -1, "3")
-        self.radioformat4 = wx.RadioBox(self.mainpanel, -1, "Set Format",
+        self.setvalue4 = wx.Button(self.sizer_8_staticbox, -1, "Set Value")
+        self.textctrlvalue4 = wx.TextCtrl(self.sizer_8_staticbox, -1, "0.0")
+        self.setdigits4 = wx.Button(self.sizer_8_staticbox, -1, "Set Digits")
+        self.textctrldigits4 = wx.TextCtrl(self.sizer_8_staticbox, -1, "3")
+        self.radioformat4 = wx.RadioBox(self.sizer_8_staticbox, -1, "Set Format",
                                         choices=["%f", "%F", "%e", "%E", "%g", "%G"],
                                         majorDimension=2, style=wx.RA_SPECIFY_COLS)
-        self.setincrement4 = wx.Button(self.mainpanel, -1, "Set Increment")
-        self.textctrlincr4 = wx.TextCtrl(self.mainpanel, -1, "0.1")
-        self.setfont4 = wx.Button(self.mainpanel, -1, "Set Font")
+        self.setincrement4 = wx.Button(self.sizer_8_staticbox, -1, "Set Increment")
+        self.textctrlincr4 = wx.TextCtrl(self.sizer_8_staticbox, -1, "0.1")
+        self.setfont4 = wx.Button(self.sizer_8_staticbox, -1, "Set Font")
 
         self.valuebuttons = [self.setvalue1, self.setvalue2, self.setvalue3,
                              self.setvalue4]
@@ -163,7 +163,7 @@ class FloatSpinDemo(wx.Panel):
         topleft2 = wx.BoxSizer(wx.VERTICAL)
         panelsizer.Add(self.helptext, 0, wx.ALL|wx.ADJUST_MINSIZE, 10)
         topleft2.Add((0, 1), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
-        label_1 = wx.StaticText(self.mainpanel, -1, "FS_LEFT")
+        label_1 = wx.StaticText(self.sizer_4_staticbox, -1, "FS_LEFT")
         topleft2.Add(label_1, 0, wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|
                      wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         topleft2.Add(self.floatspin1, 0, wx.ALIGN_CENTER_HORIZONTAL|
@@ -194,7 +194,7 @@ class FloatSpinDemo(wx.Panel):
         sizer_4.Add(right1, 1, wx.EXPAND, 0)
         sizer_3.Add(sizer_4, 1, wx.ALL|wx.EXPAND, 5)
         topright2.Add((0, 1), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
-        label_2 = wx.StaticText(self.mainpanel, -1, "FS_RIGHT")
+        label_2 = wx.StaticText(self.sizer_5_staticbox, -1, "FS_RIGHT")
         topright2.Add(label_2, 0, wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|
                       wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         topright2.Add(self.floatspin2, 0, wx.ALIGN_CENTER_HORIZONTAL|
@@ -227,7 +227,7 @@ class FloatSpinDemo(wx.Panel):
         sizer_3.Add(sizer_5, 1, wx.ALL|wx.EXPAND, 5)
         panelsizer.Add(sizer_3, 1, wx.EXPAND, 0)
         bottomleft2.Add((0, 1), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
-        label_3 = wx.StaticText(self.mainpanel, -1, "FS_CENTER")
+        label_3 = wx.StaticText(self.sizer_7_staticbox, -1, "FS_CENTER")
         bottomleft2.Add(label_3, 0, wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|
                         wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         bottomleft2.Add(self.floatspin3, 0, wx.ALIGN_CENTER_HORIZONTAL|
@@ -259,7 +259,7 @@ class FloatSpinDemo(wx.Panel):
         sizer_7.Add(right3, 1, wx.EXPAND, 0)
         sizer_6.Add(sizer_7, 1, wx.ALL|wx.EXPAND, 5)
         bottomright2.Add((0, 1), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
-        label_4 = wx.StaticText(self.mainpanel, -1, "FS_READONLY")
+        label_4 = wx.StaticText(self.sizer_8_staticbox, -1, "FS_READONLY")
         bottomright2.Add(label_4, 0, wx.BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|
                          wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         bottomright2.Add(self.floatspin4, 0, wx.ALIGN_CENTER_HORIZONTAL|

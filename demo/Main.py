@@ -1232,10 +1232,10 @@ class DemoErrorPanel(wx.Panel):
         boxInfoSizer = wx.StaticBoxSizer(boxInfo, wx.VERTICAL ) # Used to center the grid within the box
         boxInfoGrid  = wx.FlexGridSizer( cols=2 )
         textFlags    = wx.ALIGN_RIGHT | wx.LEFT | wx.RIGHT | wx.TOP
-        boxInfoGrid.Add(wx.StaticText(self, -1, "Type: "), 0, textFlags, 5 )
-        boxInfoGrid.Add(wx.StaticText(self, -1, str(demoError.exception_type)) , 0, textFlags, 5 )
-        boxInfoGrid.Add(wx.StaticText(self, -1, "Details: ") , 0, textFlags, 5 )
-        boxInfoGrid.Add(wx.StaticText(self, -1, demoError.exception_details) , 0, textFlags, 5 )
+        boxInfoGrid.Add(wx.StaticText(boxInfo, -1, "Type: "), 0, textFlags, 5 )
+        boxInfoGrid.Add(wx.StaticText(boxInfo, -1, str(demoError.exception_type)) , 0, textFlags, 5 )
+        boxInfoGrid.Add(wx.StaticText(boxInfo, -1, "Details: ") , 0, textFlags, 5 )
+        boxInfoGrid.Add(wx.StaticText(boxInfo, -1, demoError.exception_details) , 0, textFlags, 5 )
         boxInfoSizer.Add(boxInfoGrid, 0, wx.ALIGN_CENTRE | wx.ALL, 5 )
         self.box.Add(boxInfoSizer, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 

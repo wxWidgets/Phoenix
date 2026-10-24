@@ -1134,7 +1134,7 @@ class HyperTreeListDemo(wx.Frame):
                 tags = wx.LEFT|wx.RIGHT|wx.BOTTOM
 
             if style != "TR_DEFAULT_STYLE":
-                check = wx.CheckBox(self.leftpanel, -1, style)
+                check = wx.CheckBox(staticboxstyles, -1, style)
                 stylesizer.Add(check, 0, tags, 3)
 
                 if style in ["TR_HAS_BUTTONS", "TR_HAS_VARIABLE_ROW_HEIGHT"]:
@@ -1148,26 +1148,26 @@ class HyperTreeListDemo(wx.Frame):
 
         flexgridcolumn = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
         flexgridcolumn.AddGrowableCol(0)
-        label = wx.StaticText(self.leftpanel, -1, "Text Font")
+        label = wx.StaticText(staticboxcolumns, -1, "Text Font")
         label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
-        self.buttonfont = wx.Button(self.leftpanel, -1, "Choose...")
+        self.buttonfont = wx.Button(staticboxcolumns, -1, "Choose...")
         self.buttonfont.Bind(wx.EVT_BUTTON, self.OnColumnFont)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add(self.buttonfont, 0)
 
-        label = wx.StaticText(self.leftpanel, -1, "Text Colour")
+        label = wx.StaticText(staticboxcolumns, -1, "Text Colour")
         label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
-        self.columncolour = csel.ColourSelect(self.leftpanel, -1, "Choose...", wx.BLACK)
+        self.columncolour = csel.ColourSelect(staticboxcolumns, -1, "Choose...", wx.BLACK)
         self.columncolour.Bind(csel.EVT_COLOURSELECT, self.OnColumnColour)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add(self.columncolour, 0)
 
-        label = wx.StaticText(self.leftpanel, -1, "Column Background Colour")
+        label = wx.StaticText(staticboxcolumns, -1, "Column Background Colour")
         label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
-        self.columnchoice = wx.Choice(self.leftpanel, -1, choices = ["1","2","3"])
+        self.columnchoice = wx.Choice(staticboxcolumns, -1, choices = ["1","2","3"])
         self.columnchoice.SetSelection(0)
         self.columnchoice.Bind(wx.EVT_CHOICE, self.OnColumnChoiceChanged)
-        self.columnbackgroundcolour = csel.ColourSelect(self.leftpanel, -1, "Choose...", wx.LIGHT_GREY)
+        self.columnbackgroundcolour = csel.ColourSelect(staticboxcolumns, -1, "Choose...", wx.LIGHT_GREY)
         self.columnbackgroundcolour.Bind(csel.EVT_COLOURSELECT, self.OnColumnBackgroundColour)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         hSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -1175,27 +1175,27 @@ class HyperTreeListDemo(wx.Frame):
         hSizer.Add(self.columnbackgroundcolour)
         flexgridcolumn.Add(hSizer)
 
-        label = wx.StaticText(self.leftpanel, -1, "Alignment")
+        label = wx.StaticText(staticboxcolumns, -1, "Alignment")
         label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
-        alignment = wx.Choice(self.leftpanel, -1, choices=["wx.LEFT", "wx.CENTER", "wx.RIGHT"])
+        alignment = wx.Choice(staticboxcolumns, -1, choices=["wx.LEFT", "wx.CENTER", "wx.RIGHT"])
         alignment.Bind(wx.EVT_CHOICE, self.OnColumnAlignment)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add(alignment, 0)
 
-        label = wx.StaticText(self.leftpanel, -1, "Width Options")
+        label = wx.StaticText(staticboxcolumns, -1, "Width Options")
         label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
-        widthoptions = wx.Choice(self.leftpanel, -1, choices=["USEHEADER", "AUTOSIZE"])
+        widthoptions = wx.Choice(staticboxcolumns, -1, choices=["USEHEADER", "AUTOSIZE"])
         widthoptions.Bind(wx.EVT_CHOICE, self.OnColumnWidth)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add(widthoptions, 0)
 
-        columnimages = wx.CheckBox(self.leftpanel, -1, "Images On Columns", style=wx.ALIGN_RIGHT)
+        columnimages = wx.CheckBox(staticboxcolumns, -1, "Images On Columns", style=wx.ALIGN_RIGHT)
         columnimages.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         columnimages.Bind(wx.EVT_CHECKBOX, self.OnColumnImages)
         flexgridcolumn.Add(columnimages, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add((20,20), 0)
 
-        columnimages = wx.CheckBox(self.leftpanel, -1, "Custom Renderer", style=wx.ALIGN_RIGHT)
+        columnimages = wx.CheckBox(staticboxcolumns, -1, "Custom Renderer", style=wx.ALIGN_RIGHT)
         columnimages.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         columnimages.Bind(wx.EVT_CHECKBOX, self.OnCustomRenderer)
         flexgridcolumn.Add(columnimages, 0, wx.ALIGN_CENTER_VERTICAL)
@@ -1211,7 +1211,7 @@ class HyperTreeListDemo(wx.Frame):
                 tags = wx.LEFT|wx.RIGHT|wx.BOTTOM
 
             if count not in [6, 17, 22, 23]:
-                check = wx.CheckBox(self.leftpanel, -1, event)
+                check = wx.CheckBox(staticboxevents, -1, event)
                 eventssizer.Add(check, 0, tags, 3)
 
                 if event in ["EVT_TREE_ITEM_EXPANDED", "EVT_TREE_ITEM_COLLAPSED",
@@ -1223,62 +1223,62 @@ class HyperTreeListDemo(wx.Frame):
                 self.treeevents.append(check)
 
         sizer1 = wx.BoxSizer(wx.HORIZONTAL)
-        label = wx.StaticText(self.leftpanel, -1, "Connection Pen")
+        label = wx.StaticText(staticboxcolours, -1, "Connection Pen")
         font = label.GetFont()
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         label.SetFont(font)
-        buttonconnection = wx.Button(self.leftpanel, -1, "Choose...")
+        buttonconnection = wx.Button(staticboxcolours, -1, "Choose...")
         buttonconnection.Bind(wx.EVT_BUTTON, self.OnButtonConnection)
         sizer1.Add(label, 0, wx.ALL|wx.ALIGN_CENTER, 5)
         sizer1.Add((1,0), 1, wx.EXPAND)
         sizer1.Add(buttonconnection, 0, wx.ALL, 5)
 
         sizer2 = wx.BoxSizer(wx.HORIZONTAL)
-        label = wx.StaticText(self.leftpanel, -1, "Border Pen")
+        label = wx.StaticText(staticboxcolours, -1, "Border Pen")
         font = label.GetFont()
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         label.SetFont(font)
-        buttonborder = wx.Button(self.leftpanel, -1, "Choose...")
+        buttonborder = wx.Button(staticboxcolours, -1, "Choose...")
         buttonborder.Bind(wx.EVT_BUTTON, self.OnButtonBorder)
         sizer2.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer2.Add((1,0), 1, wx.EXPAND)
         sizer2.Add(buttonborder, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer3 = wx.BoxSizer(wx.HORIZONTAL)
-        label = wx.StaticText(self.leftpanel, -1, "Tree Buttons")
+        label = wx.StaticText(staticboxcolours, -1, "Tree Buttons")
         font = label.GetFont()
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         label.SetFont(font)
-        buttontree = wx.Button(self.leftpanel, -1, "Choose...")
+        buttontree = wx.Button(staticboxcolours, -1, "Choose...")
         buttontree.Bind(wx.EVT_BUTTON, self.OnButtonTree)
         sizer3.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer3.Add((1,0), 1, wx.EXPAND)
         sizer3.Add(buttontree, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer4 = wx.BoxSizer(wx.HORIZONTAL)
-        label = wx.StaticText(self.leftpanel, -1, "Check/Radio Buttons")
+        label = wx.StaticText(staticboxcolours, -1, "Check/Radio Buttons")
         font = label.GetFont()
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         label.SetFont(font)
-        buttoncr = wx.Button(self.leftpanel, -1, "Choose...")
+        buttoncr = wx.Button(staticboxcolours, -1, "Choose...")
         buttoncr.Bind(wx.EVT_BUTTON, self.OnButtonCheckRadio)
         sizer4.Add(label, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer4.Add((1,0), 1, wx.EXPAND)
         sizer4.Add(buttoncr, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
 
         sizer5 = wx.BoxSizer(wx.HORIZONTAL)
-        radioimage = wx.RadioButton(self.leftpanel, -1, "Image Background", style=wx.RB_GROUP)
+        radioimage = wx.RadioButton(staticboxcolours, -1, "Image Background", style=wx.RB_GROUP)
         radioimage.Bind(wx.EVT_RADIOBUTTON, self.OnBackgroundImage)
-        self.imagebutton = wx.Button(self.leftpanel, -1, "Choose...")
+        self.imagebutton = wx.Button(staticboxcolours, -1, "Choose...")
         self.imagebutton.Bind(wx.EVT_BUTTON, self.OnChooseImage)
         sizer5.Add(radioimage, 0, wx.ALL|wx.ALIGN_CENTER, 5)
         sizer5.Add((1,0), 1, wx.EXPAND)
         sizer5.Add(self.imagebutton, 0, wx.ALL, 5)
 
         sizer6 = wx.BoxSizer(wx.HORIZONTAL)
-        radiobackground = wx.RadioButton(self.leftpanel, -1, "Background Colour")
+        radiobackground = wx.RadioButton(staticboxcolours, -1, "Background Colour")
         radiobackground.Bind(wx.EVT_RADIOBUTTON, self.OnBackgroundColour)
-        self.backbutton = csel.ColourSelect(self.leftpanel, -1, "Choose...", wx.WHITE)
+        self.backbutton = csel.ColourSelect(staticboxcolours, -1, "Choose...", wx.WHITE)
         self.backbutton.Bind(csel.EVT_COLOURSELECT, self.OnChooseBackground)
         sizer6.Add(radiobackground, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer6.Add((1,0), 1, wx.EXPAND)
@@ -1292,10 +1292,10 @@ class HyperTreeListDemo(wx.Frame):
         colourssizer.Add(sizer6, 0, wx.EXPAND)
 
         sizera = wx.BoxSizer(wx.HORIZONTAL)
-        self.checknormal = wx.CheckBox(self.leftpanel, -1, "Standard Colours")
-        self.focus = csel.ColourSelect(self.leftpanel, -1, "Focus",
+        self.checknormal = wx.CheckBox(staticboxthemes, -1, "Standard Colours")
+        self.focus = csel.ColourSelect(staticboxthemes, -1, "Focus",
                                        self.tree.GetHilightFocusColour())
-        self.unfocus = csel.ColourSelect(self.leftpanel, -1, "Non-Focus",
+        self.unfocus = csel.ColourSelect(staticboxthemes, -1, "Non-Focus",
                                          self.tree.GetHilightNonFocusColour())
         self.checknormal.Bind(wx.EVT_CHECKBOX, self.OnCheckNormal)
         self.focus.Bind(csel.EVT_COLOURSELECT, self.OnFocusColour)
@@ -1308,22 +1308,22 @@ class HyperTreeListDemo(wx.Frame):
         sizera.Add(sizera1, 0, wx.ALL|wx.EXPAND, 3)
 
         sizerb = wx.BoxSizer(wx.VERTICAL)
-        self.checkgradient = wx.CheckBox(self.leftpanel, -1, "Gradient Theme")
+        self.checkgradient = wx.CheckBox(staticboxthemes, -1, "Gradient Theme")
         self.checkgradient.Bind(wx.EVT_CHECKBOX, self.OnCheckGradient)
         sizerb1 = wx.BoxSizer(wx.HORIZONTAL)
         sizerb1.Add((10, 0))
-        self.radiohorizontal = wx.RadioButton(self.leftpanel, -1, "Horizontal", style=wx.RB_GROUP)
+        self.radiohorizontal = wx.RadioButton(staticboxthemes, -1, "Horizontal", style=wx.RB_GROUP)
         self.radiohorizontal.Bind(wx.EVT_RADIOBUTTON, self.OnHorizontal)
         sizerb1.Add(self.radiohorizontal, 0, wx.TOP|wx.BOTTOM, 3)
         sizerb2 = wx.BoxSizer(wx.HORIZONTAL)
         sizerb2.Add((10, 0))
-        self.radiovertical = wx.RadioButton(self.leftpanel, -1, "Vertical")
+        self.radiovertical = wx.RadioButton(staticboxthemes, -1, "Vertical")
         self.radiovertical.Bind(wx.EVT_RADIOBUTTON, self.OnVertical)
         sizerb2.Add(self.radiovertical, 0, wx.BOTTOM, 3)
         sizerb3 = wx.BoxSizer(wx.HORIZONTAL)
-        self.firstcolour = csel.ColourSelect(self.leftpanel, -1, "First Colour",
+        self.firstcolour = csel.ColourSelect(staticboxthemes, -1, "First Colour",
                                              self.tree.GetFirstGradientColour())
-        self.secondcolour = csel.ColourSelect(self.leftpanel, -1, "Second Colour",
+        self.secondcolour = csel.ColourSelect(staticboxthemes, -1, "Second Colour",
                                               self.tree.GetSecondGradientColour())
         self.firstcolour.Bind(csel.EVT_COLOURSELECT, self.OnFirstColour)
         self.secondcolour.Bind(csel.EVT_COLOURSELECT, self.OnSecondColour)
@@ -1334,10 +1334,10 @@ class HyperTreeListDemo(wx.Frame):
         sizerb.Add(sizerb2, 0)
         sizerb.Add(sizerb3, 0, wx.ALIGN_CENTER)
 
-        self.checkvista = wx.CheckBox(self.leftpanel, -1, "Windows Vista Theme")
+        self.checkvista = wx.CheckBox(staticboxthemes, -1, "Windows Vista Theme")
         self.checkvista.Bind(wx.EVT_CHECKBOX, self.OnVista)
 
-        self.dragFullScreen = wx.CheckBox(self.leftpanel, -1, "Fullscreen Drag/Drop")
+        self.dragFullScreen = wx.CheckBox(staticboxthemes, -1, "Fullscreen Drag/Drop")
         self.dragFullScreen.Bind(wx.EVT_CHECKBOX, self.OnDragFullScreen)
 
         themessizer.Add(sizera, 0, wx.EXPAND)

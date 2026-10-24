@@ -61,7 +61,7 @@ class ShapedButtonDemo(wx.Frame):
         recordsizer = wx.StaticBoxSizer(sb0, wx.HORIZONTAL)
 
         # Make A ToolBar-Like Audio Control With Round Buttons/Toggles
-        self.BuildAudioToolBar()
+        self.BuildAudioToolBar(sb0)
 
         recordsizer.Add(self.rewind, 0, wx.LEFT, 3)
         recordsizer.Add(self.play, 0, wx.LEFT, 3)
@@ -96,7 +96,7 @@ class ShapedButtonDemo(wx.Frame):
         sb1 = wx.StaticBox(self.panel, -1, "Some Buttons")
         vsizer1 = wx.StaticBoxSizer(sb1, wx.VERTICAL)
 
-        bsizer = self.BuildNineButtons()
+        bsizer = self.BuildNineButtons(sb1)
         vsizer1.Add((0, 10), 0)
         vsizer1.Add(bsizer, 1, wx.EXPAND)
         vsizer1.Add((0, 10), 0)
@@ -105,7 +105,7 @@ class ShapedButtonDemo(wx.Frame):
         # Make Some Mixed SButton/SToggle With Bitmap And Text Rotation
         sb2 = wx.StaticBox(self.panel, -1, "Other Buttons")
         vsizer2 = wx.StaticBoxSizer(sb2, wx.VERTICAL)
-        btsizer = self.BuildMixedButtons()
+        btsizer = self.BuildMixedButtons(sb2)
         vsizer2.Add((0, 10), 0)
         vsizer2.Add(btsizer, 1, wx.EXPAND)
         vsizer2.Add((0, 10), 0)
@@ -114,7 +114,7 @@ class ShapedButtonDemo(wx.Frame):
         # Build Buttons With Elliptic Shape
         sb3 = wx.StaticBox(self.panel, -1, "Elliptic Buttons")
         vsizer3 = wx.StaticBoxSizer(sb3, wx.VERTICAL)
-        esizer = self.BuildEllipticButtons()
+        esizer = self.BuildEllipticButtons(sb3)
         vsizer3.Add((0, 10), 0)
         vsizer3.Add(esizer, 1, wx.EXPAND)
         vsizer3.Add((0, 10), 0)
@@ -134,12 +134,12 @@ class ShapedButtonDemo(wx.Frame):
         self.CenterOnParent()
 
 
-    def BuildAudioToolBar(self):
+    def BuildAudioToolBar(self, parent):
 
         # The Rewind Button Is A Simple Bitmap Button (SBitmapButton)
         upbmp = wx.Bitmap(os.path.join(bitmapDir, "rewind.png"), wx.BITMAP_TYPE_PNG)
         disbmp = wx.Bitmap(os.path.join(bitmapDir, "rewinddisabled.png"), wx.BITMAP_TYPE_PNG)
-        self.rewind = SBitmapButton(self.panel, -1, upbmp, (48, 48))
+        self.rewind = SBitmapButton(parent, -1, upbmp, (48, 48))
         self.rewind.SetUseFocusIndicator(False)
         self.rewind.SetBitmapDisabled(disbmp)
 
@@ -148,7 +148,7 @@ class ShapedButtonDemo(wx.Frame):
         # The Play Button Is A Toggle Bitmap Button (SBitmapToggleButton)
         upbmp = wx.Bitmap(os.path.join(bitmapDir, "play.png"), wx.BITMAP_TYPE_PNG)
         disbmp = wx.Bitmap(os.path.join(bitmapDir, "playdisabled.png"), wx.BITMAP_TYPE_PNG)
-        self.play = SBitmapToggleButton(self.panel, -1, upbmp, (48, 48))
+        self.play = SBitmapToggleButton(parent, -1, upbmp, (48, 48))
         self.play.SetUseFocusIndicator(False)
         self.play.SetBitmapDisabled(disbmp)
 
@@ -157,7 +157,7 @@ class ShapedButtonDemo(wx.Frame):
         # The Record Button Is A Toggle Bitmap Button (SBitmapToggleButton)
         upbmp = wx.Bitmap(os.path.join(bitmapDir, "record.png"), wx.BITMAP_TYPE_PNG)
         disbmp = wx.Bitmap(os.path.join(bitmapDir, "recorddisabled.png"), wx.BITMAP_TYPE_PNG)
-        self.record = SBitmapToggleButton(self.panel, -1, upbmp, (48, 48))
+        self.record = SBitmapToggleButton(parent, -1, upbmp, (48, 48))
         self.record.SetUseFocusIndicator(False)
         self.record.SetBitmapDisabled(disbmp)
 
@@ -166,7 +166,7 @@ class ShapedButtonDemo(wx.Frame):
         # The Pause Button Is A Toggle Bitmap Button (SBitmapToggleButton)
         upbmp = wx.Bitmap(os.path.join(bitmapDir, "pause.png"), wx.BITMAP_TYPE_PNG)
         disbmp = wx.Bitmap(os.path.join(bitmapDir, "pausedisabled.png"), wx.BITMAP_TYPE_PNG)
-        self.pause = SBitmapToggleButton(self.panel, -1, upbmp, (48, 48))
+        self.pause = SBitmapToggleButton(parent, -1, upbmp, (48, 48))
         self.pause.SetUseFocusIndicator(False)
         self.pause.SetBitmapDisabled(disbmp)
         self.pause.Enable(False)
@@ -176,7 +176,7 @@ class ShapedButtonDemo(wx.Frame):
         # The Stop Button Is A Simple Bitmap Button (SBitmapButton)
         upbmp = wx.Bitmap(os.path.join(bitmapDir, "stop.png"), wx.BITMAP_TYPE_PNG)
         disbmp = wx.Bitmap(os.path.join(bitmapDir, "stopdisabled.png"), wx.BITMAP_TYPE_PNG)
-        self.stop = SBitmapButton(self.panel, -1, upbmp, (48, 48))
+        self.stop = SBitmapButton(parent, -1, upbmp, (48, 48))
         self.stop.SetUseFocusIndicator(False)
         self.stop.SetBitmapDisabled(disbmp)
         self.stop.Enable(False)
@@ -186,14 +186,14 @@ class ShapedButtonDemo(wx.Frame):
         # The FFWD Button Is A Simple Bitmap Button (SBitmapButton)
         upbmp = wx.Bitmap(os.path.join(bitmapDir, "ffwd.png"), wx.BITMAP_TYPE_PNG)
         disbmp = wx.Bitmap(os.path.join(bitmapDir, "ffwddisabled.png"), wx.BITMAP_TYPE_PNG)
-        self.ffwd = SBitmapButton(self.panel, -1, upbmp, (48, 48))
+        self.ffwd = SBitmapButton(parent, -1, upbmp, (48, 48))
         self.ffwd.SetUseFocusIndicator(False)
         self.ffwd.SetBitmapDisabled(disbmp)
 
         self.ffwd.Bind(wx.EVT_BUTTON, self.OnFFWD)
 
 
-    def BuildNineButtons(self):
+    def BuildNineButtons(self, parent):
 
         # We Build 9 Buttons With Different Colours And A Nice Text Rotation
 
@@ -221,7 +221,7 @@ class ShapedButtonDemo(wx.Frame):
 
         for ii in range(9):
 
-            btn = SButton(self.panel, -1, labels[ii])
+            btn = SButton(parent, -1, labels[ii])
             btn.SetButtonColour(colours[ii])
             btn.SetFont(fonts[ii])
             btn.SetLabelColour(lcolours[ii])
@@ -245,7 +245,7 @@ class ShapedButtonDemo(wx.Frame):
         return bsizer
 
 
-    def BuildMixedButtons(self):
+    def BuildMixedButtons(self, parent):
 
         # Here We Build Some Buttons/Toggles With Different Properties
         # Notice That We Put Some Images Also For The "Selected" State
@@ -254,25 +254,25 @@ class ShapedButtonDemo(wx.Frame):
         btsizer = wx.FlexGridSizer(2, 2, 5, 5)
 
         bmp = wx.Bitmap(os.path.join(bitmapDir, "italy.gif"), wx.BITMAP_TYPE_GIF)
-        btn1 = SBitmapButton(self.panel, -1, bmp)
+        btn1 = SBitmapButton(parent, -1, bmp)
         bmp = wx.Bitmap(os.path.join(bitmapDir, "canada.gif"), wx.BITMAP_TYPE_GIF)
         btn1.SetBitmapSelected(bmp)
         btn1.Bind(wx.EVT_BUTTON, self.OnItalyCanada)
 
         bmp = wx.Bitmap(os.path.join(bitmapDir, "stop.png"), wx.BITMAP_TYPE_PNG)
-        btn2 = SBitmapTextToggleButton(self.panel, -1, bmp, "Toggle!")
+        btn2 = SBitmapTextToggleButton(parent, -1, bmp, "Toggle!")
         bmp = wx.Bitmap(os.path.join(bitmapDir, "play.png"), wx.BITMAP_TYPE_PNG)
         btn2.SetBitmapSelected(bmp)
         btn2.Bind(wx.EVT_BUTTON, self.OnTogglePlayStop)
 
-        btn3 = SButton(self.panel, -1, "Rotated")
+        btn3 = SButton(parent, -1, "Rotated")
         btn3.SetButtonColour(wx.CYAN)
         btn3.SetLabelColour(wx.WHITE)
         btn3.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         btn3.SetAngleOfRotation(90)
         btn3.Bind(wx.EVT_BUTTON, self.OnRotated1)
 
-        btn4 = SButton(self.panel, -1, "Button!")
+        btn4 = SButton(parent, -1, "Button!")
         btn4.SetAngleOfRotation(45)
         btn4.Bind(wx.EVT_BUTTON, self.OnRotated1)
 
@@ -289,7 +289,7 @@ class ShapedButtonDemo(wx.Frame):
         return btsizer
 
 
-    def BuildEllipticButtons(self):
+    def BuildEllipticButtons(self, parent):
 
         # Here We Build Elliptic Buttons. Elliptic Buttons Are Somewhat
         # More Hostiles To Handle, Probably Because My Implementation
@@ -297,14 +297,14 @@ class ShapedButtonDemo(wx.Frame):
 
         esizer = wx.FlexGridSizer(2, 2, 5, 5)
 
-        btn1 = SButton(self.panel, -1, "Ellipse 1")
+        btn1 = SButton(parent, -1, "Ellipse 1")
         btn1.SetEllipseAxis(2, 1)
         btn1.SetButtonColour(wx.RED)
         btn1.SetLabelColour(wx.WHITE)
         btn1.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         btn1.Bind(wx.EVT_BUTTON, self.OnEllipse)
 
-        btn2 = SButton(self.panel, -1, "Ellipse 2")
+        btn2 = SButton(parent, -1, "Ellipse 2")
         btn2.SetEllipseAxis(2, 3)
         btn2.SetAngleOfRotation(90)
         btn2.SetLabelColour(wx.BLUE)
@@ -312,14 +312,14 @@ class ShapedButtonDemo(wx.Frame):
         btn2.Bind(wx.EVT_BUTTON, self.OnEllipse)
 
         bmp = wx.Bitmap(os.path.join(bitmapDir, "ffwd.png"), wx.BITMAP_TYPE_PNG)
-        btn3 = SBitmapTextToggleButton(self.panel, -1, bmp, "FFWD")
+        btn3 = SBitmapTextToggleButton(parent, -1, bmp, "FFWD")
         bmp = wx.Bitmap(os.path.join(bitmapDir, "rewind.png"), wx.BITMAP_TYPE_PNG)
         btn3.SetBitmapSelected(bmp)
         btn3.SetEllipseAxis(1.4, 1)
         btn3.Bind(wx.EVT_BUTTON, self.OnFFWDRewind)
 
         bmp = wx.Bitmap(os.path.join(bitmapDir, "round.png"), wx.BITMAP_TYPE_PNG)
-        btn4 = SBitmapButton(self.panel, -1, bmp)
+        btn4 = SBitmapButton(parent, -1, bmp)
         btn4.SetEllipseAxis(1, 1.4)
         btn4.Bind(wx.EVT_BUTTON, self.OnRound)
 

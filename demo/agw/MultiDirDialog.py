@@ -31,9 +31,9 @@ class MultiDirDialogDemo(wx.Panel):
         self.mainPanel = wx.Panel(self)
         self.dialogSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "Dialog Styles")
 
-        self.dd_multiple = wx.CheckBox(self.mainPanel, -1, "MDD.DD_MULTIPLE")
-        self.dd_must = wx.CheckBox(self.mainPanel, -1, "wx.DD_DIR_MUST_EXIST")
-        self.dd_new = wx.CheckBox(self.mainPanel, -1, "wx.DD_NEW_DIR_BUTTON")
+        self.dd_multiple = wx.CheckBox(self.dialogSizer_staticbox, -1, "MDD.DD_MULTIPLE")
+        self.dd_must = wx.CheckBox(self.dialogSizer_staticbox, -1, "wx.DD_DIR_MUST_EXIST")
+        self.dd_new = wx.CheckBox(self.dialogSizer_staticbox, -1, "wx.DD_NEW_DIR_BUTTON")
 
         self.showDialog = wx.Button(self.mainPanel, -1, "Show MultiDirDialog")
 

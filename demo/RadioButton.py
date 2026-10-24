@@ -20,12 +20,12 @@ class TestPanel( wx.Panel ):
 
         # 1st group of controls:
         self.group1_ctrls = []
-        radio1 = wx.RadioButton( panel, -1, " Radio1 ", style = wx.RB_GROUP )
-        radio2 = wx.RadioButton( panel, -1, " Radio2 " )
-        radio3 = wx.RadioButton( panel, -1, " Radio3 " )
-        text1 = wx.TextCtrl( panel, -1, "" )
-        text2 = wx.TextCtrl( panel, -1, "" )
-        text3 = wx.TextCtrl( panel, -1, "" )
+        radio1 = wx.RadioButton(box1_title, -1, " Radio1 ", style=wx.RB_GROUP)
+        radio2 = wx.RadioButton(box1_title, -1, " Radio2 ")
+        radio3 = wx.RadioButton(box1_title, -1, " Radio3 ")
+        text1 = wx.TextCtrl(box1_title, -1, "")
+        text2 = wx.TextCtrl(box1_title, -1, "")
+        text3 = wx.TextCtrl(box1_title, -1, "")
         self.group1_ctrls.append((radio1, text1))
         self.group1_ctrls.append((radio2, text2))
         self.group1_ctrls.append((radio3, text3))
@@ -43,12 +43,12 @@ class TestPanel( wx.Panel ):
 
         # 2nd group of controls:
         self.group2_ctrls = []
-        radio4 = wx.RadioButton( panel, -1, " Radio1 ", style = wx.RB_GROUP )
-        radio5 = wx.RadioButton( panel, -1, " Radio2 " )
-        radio6 = wx.RadioButton( panel, -1, " Radio3 " )
-        text4 = wx.TextCtrl( panel, -1, "" )
-        text5 = wx.TextCtrl( panel, -1, "" )
-        text6 = wx.TextCtrl( panel, -1, "" )
+        radio4 = wx.RadioButton(box2_title, -1, " Radio1 ", style=wx.RB_GROUP)
+        radio5 = wx.RadioButton(box2_title, -1, " Radio2 ")
+        radio6 = wx.RadioButton(box2_title, -1, " Radio3 ")
+        text4 = wx.TextCtrl(box2_title, -1, "")
+        text5 = wx.TextCtrl(box2_title, -1, "")
+        text6 = wx.TextCtrl(box2_title, -1, "")
         self.group2_ctrls.append((radio4, text4))
         self.group2_ctrls.append((radio5, text5))
         self.group2_ctrls.append((radio6, text6))

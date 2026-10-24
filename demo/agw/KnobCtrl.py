@@ -36,8 +36,8 @@ class KnobCtrlDemo(wx.Panel):
         leftbottomsizer_staticbox = wx.StaticBox(self.panel, -1, "Play With Me!")
         lefttopsizer_staticbox = wx.StaticBox(self.panel, -1, "Change My Properties!")
 
-        self.knob1 = KC.KnobCtrl(self.panel, -1, size=(100, 100))
-        self.knob2 = KC.KnobCtrl(self.panel, -1, size=(100, 100))
+        self.knob1 = KC.KnobCtrl(lefttopsizer_staticbox, -1, size=(100, 100))
+        self.knob2 = KC.KnobCtrl(leftbottomsizer_staticbox, -1, size=(100, 100))
 
         self.knob1.SetTags(range(0, 151, 10))
         self.knob1.SetAngularRange(-45, 225)
@@ -47,8 +47,8 @@ class KnobCtrlDemo(wx.Panel):
         self.knob2.SetAngularRange(0, 270)
         self.knob2.SetValue(100)
 
-        self.knobtracker1 = wx.StaticText(self.panel, -1, "Value = 45")
-        self.knobtracker2 = wx.StaticText(self.panel, -1, "Value = 100")
+        self.knobtracker1 = wx.StaticText(lefttopsizer_staticbox, -1, "Value = 45")
+        self.knobtracker2 = wx.StaticText(leftbottomsizer_staticbox, -1, "Value = 100")
 
         knobslider = wx.Slider(self.panel, -1, 4, 1, 10, style=wx.SL_HORIZONTAL|wx.SL_AUTOTICKS|wx.SL_LABELS)
         tickslider = wx.Slider(self.panel, -1, 16, 3, 20, style=wx.SL_HORIZONTAL|wx.SL_AUTOTICKS|wx.SL_LABELS)

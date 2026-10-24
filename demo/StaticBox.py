@@ -21,11 +21,10 @@ class TestPanel(wx.Panel):
         bsizer1.Add(t1, 1, wx.EXPAND|wx.BOTTOM|wx.LEFT|wx.RIGHT, otherBorder+10)
         box1.SetSizer(bsizer1)
 
-        ## The OLD way.
-        box2 = wx.StaticBox(self, -1, "This is a wx.StaticBox using wx.StaticBoxSizer")
-        bsizer2 = wx.StaticBoxSizer(box2, wx.VERTICAL)
+        bsizer2 = wx.StaticBoxSizer(wx.VERTICAL, self, "This is a wx.StaticBox using wx.StaticBoxSizer")
+        box2 = bsizer2.GetStaticBox()
 
-        t = wx.StaticText(self, -1, "Controls placed \"inside\" the box are really its siblings. This method of using wx.StaticBox is deprecated since wxPython 2.9, and can cause issues on some platforms.")
+        t = wx.StaticText(box2, -1, "wx.StaticBoxSizer creates the wx.StaticBox and takes care of its borders. Controls added to the sizer should use the box, from GetStaticBox(), as their parent. Creating them as siblings of the box is deprecated and can cause issues on some platforms.")
         bsizer2.Add(t, 1, wx.EXPAND|wx.TOP|wx.LEFT, 10)
 
 

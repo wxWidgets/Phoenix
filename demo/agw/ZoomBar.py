@@ -38,16 +38,16 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
 
         self.sizer_1_staticbox = wx.StaticBox(self, -1, "ZoomBar Options")
-        self.zoomSpin = wx.SpinCtrl(self, -1, "3", min=1, max=5)
+        self.zoomSpin = wx.SpinCtrl(self.sizer_1_staticbox, -1, "3", min=1, max=5)
 
-        self.colourzoom = wx.ColourPickerCtrl(self, colour=wx.Colour(97, 97, 97))
-        self.buttonSize = masked.NumCtrl(self, value=32, allowNegative=False,
+        self.colourzoom = wx.ColourPickerCtrl(self.sizer_1_staticbox, colour=wx.Colour(97, 97, 97))
+        self.buttonSize = masked.NumCtrl(self.sizer_1_staticbox, value=32, allowNegative=False,
                                          min=32, max=72)
 
-        self.centerZoom = wx.CheckBox(self, -1, "Center Zoom")
-        self.showReflections = wx.CheckBox(self, -1, "Show Reflections")
-        self.showLabels = wx.CheckBox(self, -1, "Show Labels")
-        self.enableButton = wx.Button(self, -1, "Disable First Button")
+        self.centerZoom = wx.CheckBox(self.sizer_1_staticbox, -1, "Center Zoom")
+        self.showReflections = wx.CheckBox(self.sizer_1_staticbox, -1, "Show Reflections")
+        self.showLabels = wx.CheckBox(self.sizer_1_staticbox, -1, "Show Labels")
+        self.enableButton = wx.Button(self.sizer_1_staticbox, -1, "Disable First Button")
 
         self.zbp = ZB.ZoomBar(self, -1)
 
@@ -106,17 +106,17 @@ class TestPanel(wx.Panel):
         sizer_3 = wx.FlexGridSizer(3, 2, 5, 5)
         mainSizer.Add((20, 20), 1, wx.EXPAND, 0)
         centerSizer.Add((20, 20), 1, 0, 0)
-        label_1 = wx.StaticText(self, -1, "Zoom Factor:")
+        label_1 = wx.StaticText(self.sizer_1_staticbox, -1, "Zoom Factor:")
         label_1.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         sizer_3.Add(label_1, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)
         sizer_3.Add(self.zoomSpin, 1, wx.ALIGN_CENTER_VERTICAL, 0)
 
-        label_2 = wx.StaticText(self, -1, "Bar Colour:")
+        label_2 = wx.StaticText(self.sizer_1_staticbox, -1, "Bar Colour:")
         label_2.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         sizer_3.Add(label_2, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)
         sizer_3.Add(self.colourzoom, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
-        label_3 = wx.StaticText(self, -1, "Button Size:")
+        label_3 = wx.StaticText(self.sizer_1_staticbox, -1, "Button Size:")
         label_3.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         sizer_3.Add(label_3, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)
         sizer_3.Add(self.buttonSize, 0, wx.ALIGN_CENTER_VERTICAL, 0)

@@ -82,7 +82,7 @@ class ThumbnailCtrlDemo(ThumbDemoConfig):
     # Following three functions override dummy functions in ThumbDemoConfig
     # to add checkbox for displaying folder path in ThumbnailCtrl widget.
     def DoComboCheckbox(self):
-        self.showcombo = wx.CheckBox(self.panel, -1, "Show folder combobox")
+        self.showcombo = wx.CheckBox(self.customsizer_staticbox, -1, "Show folder combobox")
 
     def DoBindCombo(self):
         self.Bind(wx.EVT_CHECKBOX, self.OnShowComboBox, self.showcombo)

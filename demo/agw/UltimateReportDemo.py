@@ -980,7 +980,7 @@ class TestFrame(wx.Frame):
             else:
                 tags = wx.LEFT|wx.RIGHT|wx.BOTTOM
 
-            check = wx.CheckBox(pnl, -1, styleName)
+            check = wx.CheckBox(staticboxstyles, -1, styleName)
             stylesizer.Add(check, 0, tags, 3)
 
             if self.ulc.list.HasAGWFlag(styleVal):
@@ -997,27 +997,27 @@ class TestFrame(wx.Frame):
             count += 1
 
         sizera = wx.BoxSizer(wx.HORIZONTAL)
-        self.checknormal = wx.CheckBox(pnl, -1, "Standard Colours")
+        self.checknormal = wx.CheckBox(staticboxthemes, -1, "Standard Colours")
         self.checknormal.Bind(wx.EVT_CHECKBOX, self.OnCheckNormal)
         sizera.Add(self.checknormal, 0, wx.ALL, 3)
 
         sizerb = wx.BoxSizer(wx.VERTICAL)
-        self.checkgradient = wx.CheckBox(pnl, -1, "Gradient Theme")
+        self.checkgradient = wx.CheckBox(staticboxthemes, -1, "Gradient Theme")
         self.checkgradient.Bind(wx.EVT_CHECKBOX, self.OnCheckGradient)
         sizerb1 = wx.BoxSizer(wx.HORIZONTAL)
         sizerb1.Add((10, 0))
-        self.radiohorizontal = wx.RadioButton(pnl, -1, "Horizontal", style=wx.RB_GROUP)
+        self.radiohorizontal = wx.RadioButton(staticboxthemes, -1, "Horizontal", style=wx.RB_GROUP)
         self.radiohorizontal.Bind(wx.EVT_RADIOBUTTON, self.OnHorizontal)
         sizerb1.Add(self.radiohorizontal, 0, wx.TOP|wx.BOTTOM, 3)
         sizerb2 = wx.BoxSizer(wx.HORIZONTAL)
         sizerb2.Add((10, 0))
-        self.radiovertical = wx.RadioButton(pnl, -1, "Vertical")
+        self.radiovertical = wx.RadioButton(staticboxthemes, -1, "Vertical")
         self.radiovertical.Bind(wx.EVT_RADIOBUTTON, self.OnVertical)
         sizerb2.Add(self.radiovertical, 0, wx.BOTTOM, 3)
         sizerb3 = wx.BoxSizer(wx.HORIZONTAL)
-        self.firstcolour = csel.ColourSelect(pnl, -1, "First Colour",
+        self.firstcolour = csel.ColourSelect(staticboxthemes, -1, "First Colour",
                                              self.ulc.list.GetFirstGradientColour())
-        self.secondcolour = csel.ColourSelect(pnl, -1, "Second Colour",
+        self.secondcolour = csel.ColourSelect(staticboxthemes, -1, "Second Colour",
                                               self.ulc.list.GetSecondGradientColour())
         self.firstcolour.Bind(csel.EVT_COLOURSELECT, self.OnFirstColour)
         self.secondcolour.Bind(csel.EVT_COLOURSELECT, self.OnSecondColour)
@@ -1028,7 +1028,7 @@ class TestFrame(wx.Frame):
         sizerb.Add(sizerb2, 0)
         sizerb.Add(sizerb3, 0, wx.ALIGN_CENTER)
 
-        self.checkvista = wx.CheckBox(pnl, -1, "Windows Vista Theme")
+        self.checkvista = wx.CheckBox(staticboxthemes, -1, "Windows Vista Theme")
         self.checkvista.Bind(wx.EVT_CHECKBOX, self.OnVista)
 
         themessizer.Add(sizera, 0, wx.EXPAND)

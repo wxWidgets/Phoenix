@@ -15,9 +15,9 @@ class SVGBitmapDisplay(wx.Panel):
     def __init__(self, parent, bmp_size, *args, **kw):
         wx.Panel.__init__(self, parent, *args, **kw)
         self.bmp_size = wx.Size(*bmp_size)
-        self.statbmp = wx.StaticBitmap(self, bitmap=wx.Bitmap(*self.bmp_size))
         label='{}x{}'.format(self.bmp_size.width, self.bmp_size.height)
         sbox = wx.StaticBoxSizer(wx.VERTICAL, self, label)
+        self.statbmp = wx.StaticBitmap(sbox.GetStaticBox(), bitmap=wx.Bitmap(*self.bmp_size))
         sbox.Add(self.statbmp)
         self.SetSizer(sbox)
         if not self.IsDoubleBuffered():

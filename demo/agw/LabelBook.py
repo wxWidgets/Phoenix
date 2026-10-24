@@ -72,29 +72,29 @@ class LabelBookDemo(wx.Frame):
                                          wx.DefaultPosition, wx.DefaultSize, radioList,
                                          2, wx.RA_SPECIFY_ROWS)
 
-        self.border = wx.CheckBox(self.leftpanel, -1, "Draw Book Border")
-        self.onlytext = wx.CheckBox(self.leftpanel, -1, "Show Only Text")
-        self.onlyimages = wx.CheckBox(self.leftpanel, -1, "Show Only Images")
-        self.shadow = wx.CheckBox(self.leftpanel, -1, "Draw Shadows")
-        self.pin = wx.CheckBox(self.leftpanel, -1, "Use Pin Button")
-        self.gradient = wx.CheckBox(self.leftpanel, -1, "Draw Gradient Shading")
-        self.web = wx.CheckBox(self.leftpanel, -1, "Web Highlight")
-        self.fittext = wx.CheckBox(self.leftpanel, -1, "Fit Label Text")
-        self.boldtext = wx.CheckBox(self.leftpanel, -1, "Bold Label Text")
-        self.boldselection = wx.CheckBox(self.leftpanel, -1, "Bold Selected Tab")
+        self.border = wx.CheckBox(self.sizer_3_staticbox, -1, "Draw Book Border")
+        self.onlytext = wx.CheckBox(self.sizer_3_staticbox, -1, "Show Only Text")
+        self.onlyimages = wx.CheckBox(self.sizer_3_staticbox, -1, "Show Only Images")
+        self.shadow = wx.CheckBox(self.sizer_3_staticbox, -1, "Draw Shadows")
+        self.pin = wx.CheckBox(self.sizer_3_staticbox, -1, "Use Pin Button")
+        self.gradient = wx.CheckBox(self.sizer_3_staticbox, -1, "Draw Gradient Shading")
+        self.web = wx.CheckBox(self.sizer_3_staticbox, -1, "Web Highlight")
+        self.fittext = wx.CheckBox(self.sizer_3_staticbox, -1, "Fit Label Text")
+        self.boldtext = wx.CheckBox(self.sizer_3_staticbox, -1, "Bold Label Text")
+        self.boldselection = wx.CheckBox(self.sizer_3_staticbox, -1, "Bold Selected Tab")
 
-        self.textsize = wx.TextCtrl(self.leftpanel, -1, "1.0",style=wx.TE_PROCESS_ENTER)
-        self.background = csel.ColourSelect(self.leftpanel, -1, "Choose...",
+        self.textsize = wx.TextCtrl(self.sizer_4_staticbox, -1, "1.0",style=wx.TE_PROCESS_ENTER)
+        self.background = csel.ColourSelect(self.sizer_4_staticbox, -1, "Choose...",
                                             wx.Colour(132, 164, 213), size=(-1, 20))
-        self.activetab = csel.ColourSelect(self.leftpanel, -1, "Choose...",
+        self.activetab = csel.ColourSelect(self.sizer_4_staticbox, -1, "Choose...",
                                            wx.WHITE, size=(-1, 20))
-        self.tabsborder = csel.ColourSelect(self.leftpanel, -1, "Choose...",
+        self.tabsborder = csel.ColourSelect(self.sizer_4_staticbox, -1, "Choose...",
                                             wx.Colour(0, 0, 204), size=(-1, 20))
-        self.textcolour = csel.ColourSelect(self.leftpanel, -1, "Choose...",
+        self.textcolour = csel.ColourSelect(self.sizer_4_staticbox, -1, "Choose...",
                                             wx.BLACK, size=(-1, 20))
-        self.activetextcolour = csel.ColourSelect(self.leftpanel, -1, "Choose...",
+        self.activetextcolour = csel.ColourSelect(self.sizer_4_staticbox, -1, "Choose...",
                                                   wx.BLACK, size=(-1, 20))
-        self.hilite = csel.ColourSelect(self.leftpanel, -1, "Choose...",
+        self.hilite = csel.ColourSelect(self.sizer_4_staticbox, -1, "Choose...",
                                         wx.Colour(191, 216, 216), size=(-1, 20))
 
         self.SetProperties()
@@ -187,13 +187,13 @@ class LabelBookDemo(wx.Frame):
         sizer_3.Add(self.boldselection, 0, wx.LEFT|wx.BOTTOM, 3)
         leftsizer.Add(sizer_3, 0, wx.ALL|wx.EXPAND, 5)
 
-        lbl = wx.StaticText(self.leftpanel, -1, "Text Font Multiple: ")
-        label1 = wx.StaticText(self.leftpanel, -1, "Tab Area Background Colour: ")
-        label2 = wx.StaticText(self.leftpanel, -1, "Active Tab Colour: ")
-        label3 = wx.StaticText(self.leftpanel, -1, "Tabs Border Colour: ")
-        label4 = wx.StaticText(self.leftpanel, -1, "Text Colour: ")
-        label5 = wx.StaticText(self.leftpanel, -1, "Active Tab Text Colour: ")
-        label6 = wx.StaticText(self.leftpanel, -1, "Tab Highlight Colour: ")
+        lbl = wx.StaticText(self.sizer_4_staticbox, -1, "Text Font Multiple: ")
+        label1 = wx.StaticText(self.sizer_4_staticbox, -1, "Tab Area Background Colour: ")
+        label2 = wx.StaticText(self.sizer_4_staticbox, -1, "Active Tab Colour: ")
+        label3 = wx.StaticText(self.sizer_4_staticbox, -1, "Tabs Border Colour: ")
+        label4 = wx.StaticText(self.sizer_4_staticbox, -1, "Text Colour: ")
+        label5 = wx.StaticText(self.sizer_4_staticbox, -1, "Active Tab Text Colour: ")
+        label6 = wx.StaticText(self.sizer_4_staticbox, -1, "Tab Highlight Colour: ")
 
         gridsizer.Add(lbl, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 3)
         gridsizer.Add(self.textsize, 0)

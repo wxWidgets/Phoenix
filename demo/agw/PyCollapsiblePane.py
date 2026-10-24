@@ -74,7 +74,7 @@ class PyCollapsiblePaneDemo(wx.Panel):
         sboxsizer = wx.StaticBoxSizer(sbox, wx.VERTICAL)
         self.styleCBs = list()
         for styleName in styles:
-            cb = wx.CheckBox(self, -1, styleName)
+            cb = wx.CheckBox(sbox, -1, styleName)
             if styleName == "CP_NO_TLW_RESIZE":
                 cb.SetValue(True)
                 cb.Disable()

@@ -46,13 +46,13 @@ class GenericMessageDialogDemo(wx.Panel):
 
         self.mainPanel = wx.Panel(self)
         self.buttonSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "Buttons Styles")
-        self.ok = wx.CheckBox(self.mainPanel, -1, "wx.OK")
-        self.yes_no = wx.CheckBox(self.mainPanel, -1, "wx.YES_NO")
-        self.cancel = wx.CheckBox(self.mainPanel, -1, "wx.CANCEL")
-        self.yes = wx.CheckBox(self.mainPanel, -1, "wx.YES")
-        self.no = wx.CheckBox(self.mainPanel, -1, "wx.NO")
-        self.no_default = wx.CheckBox(self.mainPanel, -1, "wx.NO_DEFAULT")
-        self.help = wx.CheckBox(self.mainPanel, -1, "wx.HELP")
+        self.ok = wx.CheckBox(self.buttonSizer_staticbox, -1, "wx.OK")
+        self.yes_no = wx.CheckBox(self.buttonSizer_staticbox, -1, "wx.YES_NO")
+        self.cancel = wx.CheckBox(self.buttonSizer_staticbox, -1, "wx.CANCEL")
+        self.yes = wx.CheckBox(self.buttonSizer_staticbox, -1, "wx.YES")
+        self.no = wx.CheckBox(self.buttonSizer_staticbox, -1, "wx.NO")
+        self.no_default = wx.CheckBox(self.buttonSizer_staticbox, -1, "wx.NO_DEFAULT")
+        self.help = wx.CheckBox(self.buttonSizer_staticbox, -1, "wx.HELP")
         self.dialogStyles = wx.RadioBox(self.mainPanel, -1, "Dialog Styles",
                                         choices=["wx.ICON_INFORMATION", "wx.ICON_WARNING",
                                                  "wx.ICON_EXCLAMATION", "wx.ICON_ERROR",
