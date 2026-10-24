@@ -100,8 +100,8 @@ class TestPanel(wx.Panel):
             # Draw the rubber-band rectangle using an overlay so it
             # will manage keeping the rectangle and the former window
             # contents separate.
-            dc = wx.ClientDC(self)
-            odc = wx.DCOverlay(self.overlay, dc)
+            cdc = wx.ClientDC(self)
+            odc = wx.DCOverlay(self.overlay, cdc)
             odc.Clear()
 
             # Mac's DC is already the same as a GCDC, and it causes
@@ -109,7 +109,9 @@ class TestPanel(wx.Panel):
             # wx.GCDC so don't try it.  If you do not need to use a
             # semi-transparent background then you can leave this out.
             if 'wxMac' not in wx.PlatformInfo:
-                dc = wx.GCDC(dc)
+                dc = wx.GCDC(cdc)
+            else:
+                dc = cdc
 
             # Set the pen, for the box's border
             dc.SetPen(wx.Pen(colour=self.overlayPenColor.GetColour(),
@@ -134,7 +136,11 @@ class TestPanel(wx.Panel):
                               evtPos[0] + 2 + self.overlayPenWidth.GetValue(),
                               evtPos[1] - 17)
 
-            del odc  # Make sure the odc is destroyed before the dc is.
+            # The GCDC only flushes its drawing when it is destroyed, and that
+            # must happen before the odc is destroyed so the drawing ends up on
+            # the overlay. And the odc must be destroyed before the cdc is.
+            del dc
+            del odc
             ## print('OnMouseMove')
 
 
