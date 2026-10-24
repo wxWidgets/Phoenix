@@ -187,16 +187,16 @@ class OptionsPanel(wx.Panel):
     def __init__(self, parent, rose):
         wx.Panel.__init__(self, parent)
         self.rose = rose
-        sizer = wx.StaticBoxSizer(wx.StaticBox(self, label='Options'),
-                                  wx.VERTICAL)
-        self.useGCDC = wx.CheckBox(self, label="Use GCDC")
+        sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Options')
+        box = sizer.GetStaticBox()
+        self.useGCDC = wx.CheckBox(box, label="Use GCDC")
         sizer.Add(self.useGCDC, 0, wx.BOTTOM|wx.LEFT, 2)
-        self.useBuffer = wx.CheckBox(self, label="Use buffering")
+        self.useBuffer = wx.CheckBox(box, label="Use buffering")
         sizer.Add(self.useBuffer, 0, wx.BOTTOM|wx.LEFT, 2)
 
         def makeCButton(label):
-            btn = cs.ColourSelect(self, size=(20,22))
-            lbl = wx.StaticText(self, -1, label)
+            btn = cs.ColourSelect(box, size=(20,22))
+            lbl = wx.StaticText(box, -1, label)
             sizer = wx.BoxSizer(wx.HORIZONTAL)
             sizer.Add(btn)
             sizer.Add((4,4))
@@ -267,11 +267,11 @@ class MyFrame(wx.Frame, clroses.rose):
             box = wx.StaticBox(panel, -1, name)
             sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
             for name, min_value, value, max_value in labels:
-                sp = SpinPanel(panel, name, min_value, value, max_value, self.OnSpinback)
+                sp = SpinPanel(box, name, min_value, value, max_value, self.OnSpinback)
                 sizer.Add(sp, 0, wx.EXPAND)
             if statictexts:
                 for name, text in statictexts:
-                    st = wx.StaticText(panel, -1, text)
+                    st = wx.StaticText(box, -1, text)
                     spin_panels[name] = st      # Supposed to be a SpinPanel....
                     sizer.Add(st, 0, wx.EXPAND)
             panel.SetSizer(sizer)
@@ -289,7 +289,7 @@ class MyFrame(wx.Frame, clroses.rose):
         # a higher panel that has the static box stuff.
         self.cmd_panel = wx.Panel(self.side_panel, -1)
         box = wx.StaticBox(self.cmd_panel, -1, 'Command')
-        self.sub_panel = wx.Panel(self.cmd_panel, -1)
+        self.sub_panel = wx.Panel(box, -1)
         sizer = wx.GridSizer(rows=2, cols=2, vgap=4, hgap=4)
         global ctrl_buttons
         border = 'wxMac' in wx.PlatformInfo and 3 or 1
