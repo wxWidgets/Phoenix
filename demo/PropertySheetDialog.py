@@ -82,7 +82,7 @@ class MyPropSheetDlg(wx.adv.PropertySheetDialog):
         itemSizer8.Add(checkBox6, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
         item0.Add(itemSizer8, 0, wx.EXPAND|wx.ALL, 0)
 
-        topSizer.Add( item0, 1, wx.EXPAND|wx.ALIGN_CENTRE|wx.ALL, 5 )
+        topSizer.Add(item0, 1, wx.EXPAND|wx.ALL, 5)
 
         panel.SetSizer(topSizer)
         return panel
@@ -130,7 +130,7 @@ class MyPropSheetDlg(wx.adv.PropertySheetDialog):
 
         item0.Add(itemSizer5, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 5)
 
-        topSizer.Add(item0, 1, wx.EXPAND|wx.ALIGN_CENTRE|wx.ALL, 5 )
+        topSizer.Add(item0, 1, wx.EXPAND|wx.ALL, 5)
         topSizer.AddSpacer(5)
 
         panel.SetSizer(topSizer)

@@ -151,12 +151,12 @@ class SettingsPanel(wx.MiniFrame):
         stylesizer.Add(self.defaultstyle, 0, wx.ALL|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
 
         tophsizer.Add(self.gradientstyle, 0, wx.LEFT|wx.RIGHT|wx.EXPAND|
-                      wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
+                      wx.ADJUST_MINSIZE, 5)
 
         tophsizer2.Add(self.verticalgradient, 0, wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         tophsizer2.Add(self.horizontalgradient, 0, wx.ADJUST_MINSIZE, 0)
 
-        tophsizer.Add(tophsizer2, 1, wx.LEFT|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10)
+        tophsizer.Add(tophsizer2, 1, wx.LEFT|wx.EXPAND, 10)
 
         stylesizer.Add(tophsizer, 1, wx.EXPAND, 0)
 
