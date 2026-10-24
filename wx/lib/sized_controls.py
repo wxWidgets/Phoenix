@@ -372,6 +372,11 @@ class SizedParent:
         :type `child`: :class:`wx.Window` or :class:`wx.Sizer`
         """
 
+        # Dialogs and frames that have this window as their parent are not
+        # laid out in it
+        if isinstance(child, wx.TopLevelWindow):
+            return
+
         sizer = self.GetSizer()
         if sizer:
             # Note: The wx.LogNull is used here to suppress a log message

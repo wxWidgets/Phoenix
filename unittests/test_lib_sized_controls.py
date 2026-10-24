@@ -95,10 +95,25 @@ class sizedDialog_Tests(wtc.WidgetTestCase):
 #---------------------------------------------------------------------------
 
 
+def checkTopLevelChildren(test, panel):
+    btn = wx.Button(panel)
+    dlg = wx.Dialog(panel)
+    frm = wx.Frame(panel)
+    sizer = panel.GetSizer()
+    test.assertIsNotNone(sizer.GetItem(btn))
+    test.assertIsNone(sizer.GetItem(dlg))
+    test.assertIsNone(sizer.GetItem(frm))
+    dlg.Destroy()
+    frm.Destroy()
+
+
 class sizedPanel_Tests(wtc.WidgetTestCase):
 
     def test_panelCtor(self):
         p = sc.SizedPanel(self.frame)
+
+    def test_panelTopLevelChildren(self):
+        checkTopLevelChildren(self, sc.SizedPanel(self.frame))
 
     #def test_panelDefaultCtor(self):
     #    p = sc.SizedPanel()
@@ -112,6 +127,9 @@ class sizedScrolledPanel_Tests(wtc.WidgetTestCase):
 
     def test_panelCtor(self):
         p = sc.SizedScrolledPanel(self.frame)
+
+    def test_panelTopLevelChildren(self):
+        checkTopLevelChildren(self, sc.SizedScrolledPanel(self.frame))
 
     #def test_panelDefaultCtor(self):
     #    p = sc.SizedScrolledPanel()
