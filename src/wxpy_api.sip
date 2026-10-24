@@ -551,29 +551,31 @@ inline PyObject* i_wxPyMethod_Self(PyObject* method) {
 
 
 //--------------------------------------------------------------------------
-// Cleanup and reinitialize the wxModules. This is needed because sometimes an
+// Initialize any new wxModules. This is needed because sometimes an
 // Extension module will first be imported *after* the wx.App has been
 // created, so the wxModules in that extension will not have been registered
-// and initialized because they were not yet in memory.
+// and initialized because they were not yet in memory. If the module system
+// is not initialized yet then they will be picked up when it is.
 
 void i_wxPyReinitializeModules() {
-    if (i_wxPyCheckForApp(false)) {
-        // NOTE: We are intentionally NOT calling wxModule::CleanUpModules
-        // here because that could clear some things that will not be reset
-        // when used again, leading to crashes. For example, in
-        // wxMSWDCImpl::DoGradientFillLinear it is saving a pointer to an API
-        // function in a dyn-loaded DLL. When modules are cleaned up then that
-        // DLL will be unloaded, leaving a dangling function pointer.  We'll
-        // likely end up with multiple instances of some things, but that is
-        // better than the alternative currently.
-        //wxModule::CleanUpModules();
-
-        wxModule::RegisterModules();
-        wxModule::InitializeModules();
-
-        // And since we're not calling CleanUpModules there is no longer any
-        // need to re-init the image handlers.
-        //wxInitAllImageHandlers();
+    if (wxModule::AreInitialized()) {
+        // Only add the modules that are not registered yet. Using
+        // wxModule::RegisterModules and InitializeModules here would create
+        // and initialize a second instance of every module that is already
+        // running (adding duplicate image handlers, HTML tag handlers, etc.)
+        // and drop the original instances from the module list so they are
+        // never cleaned up.
+        for (wxClassInfo::const_iterator it  = wxClassInfo::begin_classinfo(),
+                                         end = wxClassInfo::end_classinfo();
+             it != end; ++it)
+        {
+            const wxClassInfo* classInfo = *it;
+            if ( classInfo->IsKindOf(wxCLASSINFO(wxModule)) &&
+                 classInfo != wxCLASSINFO(wxModule) )
+            {
+                wxModule::AddModuleIfNecessary(classInfo);
+            }
+        }
     }
 }
 

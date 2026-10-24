@@ -66,8 +66,11 @@ def run():
 
     module.addInclude(INCLUDES)
 
+    # Not using wxPGInitResourceModule here because it calls
+    # wxModule::InitializeModules, which drops all the already initialized
+    # modules from the module list.
     module.addInitializerCode("""\
-        wxPGInitResourceModule();
+        wxPyReinitializeModules();
         """)
 
     #-----------------------------------------------------------------

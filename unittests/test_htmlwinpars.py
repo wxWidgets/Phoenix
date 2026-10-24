@@ -10,6 +10,24 @@ class htmlwinpars_Tests(wtc.WidgetTestCase):
     def test_htmlwinpars1(self):
         obj = wx.html.HtmlWinParser()
 
+    def test_htmlwinpars_AddTagHandler(self):
+        count = 0
+        class MyTagHandler(wx.html.HtmlWinTagHandler):
+            def __init__(self):
+                nonlocal count
+                count += 1
+                super().__init__()
+            def GetSupportedTags(self):
+                return 'HTMLWINPARSTESTTAG'
+            def HandleTag(self, tag):
+                return False
+
+        # Adding a tag handler reinitializes the wxModules, which should not
+        # create another instance of the module that creates the handlers
+        wx.html.HtmlWinParser_AddTagHandler(MyTagHandler)
+        obj = wx.html.HtmlWinParser()
+        self.assertEqual(count, 1)
+
     def test_htmlwinpars_AddTagHandlerWrongType(self):
         class WrongTypeTagHandler(wx.html.HtmlTagHandler):
             def GetSupportedTags(self):
