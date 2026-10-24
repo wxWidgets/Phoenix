@@ -29,7 +29,7 @@ class TestSearchCtrl(wx.SearchCtrl):
 
     def OnTextEntered(self, evt):
         text = self.GetValue()
-        if self.doSearch(text):
+        if text and self.doSearch(text):
             self.searches.append(text)
             if len(self.searches) > self.maxSearches:
                 del self.searches[0]
