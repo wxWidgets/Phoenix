@@ -35,8 +35,14 @@ programmer to declare or track control ids or parent containers::
     eventManager.Register(handleEvents, EVT_BUTTON, myButton)
 
 """
+import warnings
 import  wx
-from wx.lib.pubsub import pub # publish / subscribe library
+
+# The deprecation warning for wx.lib.pubsub is meant for application code, not
+# for this module's internal use of it.
+with warnings.catch_warnings():
+    warnings.simplefilter('ignore', wx.wxPyDeprecationWarning)
+    from wx.lib.pubsub import pub # publish / subscribe library
 
 #---------------------------------------------------------------------------
 
