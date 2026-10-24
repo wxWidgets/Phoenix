@@ -91,12 +91,13 @@ def run():
                     // Make sure it succeeded
                     if (!obj) {
                         PyErr_Print();
-                        return;
+                        continue;
                     }
 
                     // now figure out where it's C++ object is...
                     if (! wxPyConvertWrappedPtr(obj, (void **)&thPtr, wxT("wxHtmlWinTagHandler"))) {
-                        return;
+                        Py_DECREF(obj);
+                        continue;
                     }
 
                     // add it,
