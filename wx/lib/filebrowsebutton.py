@@ -161,6 +161,9 @@ class FileBrowseButton(wx.Panel):
         else:
             directory = self.startDirectory
             current = ''
+        # The native dialogs on MSW don't accept relative paths like '.'
+        if directory:
+            directory = os.path.abspath(directory)
         dlg = wx.FileDialog(self, self.dialogTitle, directory, current,
                             self.fileMask, self.fileMode)
 
@@ -356,9 +359,12 @@ class DirBrowseButton(FileBrowseButton):
         if not self.newDirectory:
           style |= wx.DD_DIR_MUST_EXIST
 
+        defaultPath = self.startDirectory
+        if defaultPath:
+            defaultPath = os.path.abspath(defaultPath)
         dialog = self.dialogClass(self,
                                   message = self.dialogTitle,
-                                  defaultPath = self.startDirectory,
+                                  defaultPath = defaultPath,
                                   style = style)
 
         if dialog.ShowModal() == wx.ID_OK:
