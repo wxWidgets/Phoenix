@@ -355,13 +355,18 @@ class PyCollapsiblePane(wx.Panel):
         self._bCollapsed = True
         self._agwStyle = agwStyle
 
-        self._pPane = wx.Panel(self, style=wx.TAB_TRAVERSAL|wx.NO_BORDER)
+        if self.HasAGWFlag(CP_USE_STATICBOX):
+            self._pStaticBox = wx.StaticBox(self)
+            paneParent = self._pStaticBox
+        else:
+            paneParent = self
+
+        self._pPane = wx.Panel(paneParent, style=wx.TAB_TRAVERSAL|wx.NO_BORDER)
         self._pPane.Hide()
 
         if self.HasAGWFlag(CP_USE_STATICBOX):
             # Use a StaticBox instead of a StaticLine, and the button's
             # position will be handled separately so don't put it in the sizer
-            self._pStaticBox = wx.StaticBox(self)
             self.SetButton(wx.Button(self, wx.ID_ANY, self.GetLabel(), style=wx.BU_EXACTFIT))
             self._sz = wx.BoxSizer(wx.VERTICAL)
             self._sz.Add((1,1))  # spacer, size will be reset later
@@ -780,7 +785,9 @@ class PyCollapsiblePane(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.OnButton, self._pButton)
 
         if self._pPane:
-            self._pButton.MoveBeforeInTabOrder(self._pPane)
+            self._pButton.MoveBeforeInTabOrder(self._pPane.GetParent()
+                                               if self.HasAGWFlag(CP_USE_STATICBOX)
+                                               else self._pPane)
         self.InvalidateBestSize()
         self.Layout()
 

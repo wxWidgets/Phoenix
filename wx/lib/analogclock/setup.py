@@ -168,32 +168,33 @@ class _Group_1(_GroupBase):
     def __init__(self, parent, title, group="Hands"):
         _GroupBase.__init__(self, parent, title, group)
 
-        box = wx.StaticBoxSizer(wx.StaticBox(self, label=title), wx.VERTICAL)
+        box = wx.StaticBoxSizer(wx.VERTICAL, self, label=title)
+        self.box = box.GetStaticBox()
 
         sizer = self.sizer = wx.GridBagSizer(vgap=2, hgap=6)
 
-        p = wx.StaticText(self, label="Border:")
+        p = wx.StaticText(self.box, label="Border:")
         sizer.Add(p, pos=(0, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.bc = csel.ColourSelect(self)
+        p = self.bc = csel.ColourSelect(self.box)
         p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(0, 1), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.bw = wx.SpinCtrl(self,
+        p = self.bw = wx.SpinCtrl(self.box,
                                   min=0, max=100, value="75")
         sizer.Add(p, pos=(0, 2), span=(1, 2), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = wx.StaticText(self, label="Fill:")
+        p = wx.StaticText(self.box, label="Fill:")
         sizer.Add(p, pos=(1, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.fc = csel.ColourSelect(self)
+        p = self.fc = csel.ColourSelect(self.box)
         p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(1, 1), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.ls = wx.StaticText(self, label="Size:")
+        p = self.ls = wx.StaticText(self.box, label="Size:")
         sizer.Add(p, pos=(2, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.sz = wx.SpinCtrl(self,
+        p = self.sz = wx.SpinCtrl(self.box,
                                   min=0, max=100, value="75")
         sizer.Add(p, pos=(2, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 
@@ -209,18 +210,21 @@ class _Group_2(_Group_1):
 
         sizer = self.sizer
 
-        p = wx.StaticText(self, label="Offset:")
+        p = wx.StaticText(self.box, label="Offset:")
         sizer.Add(p, pos=(3, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.of = wx.SpinCtrl(self,
+        p = self.of = wx.SpinCtrl(self.box,
                                   min=0, max=100, value="75")
         sizer.Add(p, pos=(3, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = wx.StaticText(self, label="Font:")
+        p = wx.StaticText(self.box, label="Font:")
         sizer.Add(p, pos=(4, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.ft = fsel.FontSelect(self)
+        p = self.ft = fsel.FontSelect(self.box)
         sizer.Add(p, pos=(4, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
+        # FontSelect posts a non-command event to its parent, so it doesn't
+        # propagate up from the box to the binding in _GroupBase.
+        self.box.Bind(fsel.EVT_FONTSELECT, self.OnSelectFont)
 
         self.GetSizer().Layout()
 
@@ -237,10 +241,10 @@ class _Group_3(_Group_1):
             widget.Destroy()
         sizer.Layout()
 
-        p = wx.StaticText(self, label="Shadow:")
+        p = wx.StaticText(self.box, label="Shadow:")
         sizer.Add(p, pos=(2, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.sw = csel.ColourSelect(self)
+        p = self.sw = csel.ColourSelect(self.box)
         p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(2, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 
@@ -252,28 +256,29 @@ class _Group_4(_GroupBase):
     def __init__(self, parent, title, group="Window"):
         _GroupBase.__init__(self, parent, title, group)
 
-        box = wx.StaticBoxSizer(wx.StaticBox(self, label=title), wx.VERTICAL)
+        box = wx.StaticBoxSizer(wx.VERTICAL, self, label=title)
+        self.box = box.GetStaticBox()
 
         sizer = self.sizer = wx.GridBagSizer(2, 6)
 
-        p = wx.StaticText(self, label="Foreground:")
+        p = wx.StaticText(self.box, label="Foreground:")
         sizer.Add(p, pos=(0, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.fg = csel.ColourSelect(self)
+        p = self.fg = csel.ColourSelect(self.box)
         p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(0, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = wx.StaticText(self, label="Background:")
+        p = wx.StaticText(self.box, label="Background:")
         sizer.Add(p, pos=(1, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.bg = csel.ColourSelect(self)
+        p = self.bg = csel.ColourSelect(self.box)
         p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(1, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = wx.StaticText(self, label="Style:")
+        p = wx.StaticText(self.box, label="Style:")
         sizer.Add(p, pos=(2, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
-        p = self.ws = wx.Choice(self, choices=_window_styles)
+        p = self.ws = wx.Choice(self.box, choices=_window_styles)
         sizer.Add(p, pos=(2, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         box.Add(sizer)

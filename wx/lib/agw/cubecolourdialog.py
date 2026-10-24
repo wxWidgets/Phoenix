@@ -2883,10 +2883,10 @@ class CubeColourDialog(wx.Dialog):
         self.alphaSizer_staticbox = wx.StaticBox(self.mainPanel, -1, _("Alpha"))
         self.alphaValueSizer_staticbox = wx.StaticBox(self.mainPanel, -1, _("Alpha"))
 
-        self.rgbBitmap = RGBCube(self.mainPanel)
-        self.hsvBitmap = HSVWheel(self.mainPanel)
-        self.brightCtrl = BrightCtrl(self.mainPanel)
-        self.alphaCtrl = AlphaCtrl(self.mainPanel)
+        self.rgbBitmap = RGBCube(self.rgbSizer_staticbox)
+        self.hsvBitmap = HSVWheel(self.hsvSizer_staticbox)
+        self.brightCtrl = BrightCtrl(self.hsvSizer_staticbox)
+        self.alphaCtrl = AlphaCtrl(self.alphaSizer_staticbox)
 
         self.showAlpha = wx.CheckBox(self.mainPanel, -1, _("Show Alpha Control"))
         self.customColours = CustomPanel(self.mainPanel, self._colourData)
@@ -2898,19 +2898,19 @@ class CubeColourDialog(wx.Dialog):
         self.oldColourPanel = ColourPanel(self.mainPanel, style=wx.SIMPLE_BORDER)
         self.newColourPanel = ColourPanel(self.mainPanel, style=wx.SIMPLE_BORDER)
 
-        self.redSpin = wx.SpinCtrl(self.mainPanel, -1, "180", min=0, max=255,
+        self.redSpin = wx.SpinCtrl(self.rgbValueSizer_staticbox, -1, "180", min=0, max=255,
                                    style=wx.SP_ARROW_KEYS)
-        self.greenSpin = wx.SpinCtrl(self.mainPanel, -1, "180", min=0, max=255,
+        self.greenSpin = wx.SpinCtrl(self.rgbValueSizer_staticbox, -1, "180", min=0, max=255,
                                      style=wx.SP_ARROW_KEYS)
-        self.blueSpin = wx.SpinCtrl(self.mainPanel, -1, "180", min=0, max=255,
+        self.blueSpin = wx.SpinCtrl(self.rgbValueSizer_staticbox, -1, "180", min=0, max=255,
                                     style=wx.SP_ARROW_KEYS)
-        self.hueSpin = wx.SpinCtrl(self.mainPanel, -1, "0", min=0, max=359,
+        self.hueSpin = wx.SpinCtrl(self.hsvValueSizer_staticbox, -1, "0", min=0, max=359,
                                    style=wx.SP_ARROW_KEYS)
-        self.saturationSpin = wx.SpinCtrl(self.mainPanel, -1, "", min=0, max=255,
+        self.saturationSpin = wx.SpinCtrl(self.hsvValueSizer_staticbox, -1, "", min=0, max=255,
                                           style=wx.SP_ARROW_KEYS)
-        self.brightnessSpin = wx.SpinCtrl(self.mainPanel, -1, "", min=0, max=255,
+        self.brightnessSpin = wx.SpinCtrl(self.hsvValueSizer_staticbox, -1, "", min=0, max=255,
                                           style=wx.SP_ARROW_KEYS)
-        self.alphaSpin = wx.SpinCtrl(self.mainPanel, -1, "", min=0, max=255,
+        self.alphaSpin = wx.SpinCtrl(self.alphaValueSizer_staticbox, -1, "", min=0, max=255,
                                      style=wx.SP_ARROW_KEYS)
         self.accessCode = wx.TextCtrl(self.mainPanel, -1, "", style=wx.TE_READONLY)
         self.htmlCode = wx.TextCtrl(self.mainPanel, -1, "", style=wx.TE_READONLY)
@@ -3031,29 +3031,29 @@ class CubeColourDialog(wx.Dialog):
         panelSizer.Add(0, 0, 1, wx.EXPAND)
         panelSizer.Add(accessSizer, 0, wx.TOP, 5)
         mainSizer.Add(panelSizer, (2, 3), (1, 1), wx.ALL|wx.EXPAND, 10)
-        redLabel = wx.StaticText(self.mainPanel, -1, _("Red"))
+        redLabel = wx.StaticText(self.rgbValueSizer_staticbox, -1, _("Red"))
         rgbGridSizer.Add(redLabel, 0)
-        greenLabel = wx.StaticText(self.mainPanel, -1, _("Green"))
+        greenLabel = wx.StaticText(self.rgbValueSizer_staticbox, -1, _("Green"))
         rgbGridSizer.Add(greenLabel, 0)
-        blueLabel = wx.StaticText(self.mainPanel, -1, _("Blue"))
+        blueLabel = wx.StaticText(self.rgbValueSizer_staticbox, -1, _("Blue"))
         rgbGridSizer.Add(blueLabel, 0)
         rgbGridSizer.Add(self.redSpin, 0, wx.EXPAND)
         rgbGridSizer.Add(self.greenSpin, 0, wx.EXPAND)
         rgbGridSizer.Add(self.blueSpin, 0, wx.EXPAND)
         rgbValueSizer.Add(rgbGridSizer, 1, 0, 0)
         mainSizer.Add(rgbValueSizer, (3, 0), (1, 1), wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.EXPAND, 10)
-        hueLabel = wx.StaticText(self.mainPanel, -1, _("Hue"))
+        hueLabel = wx.StaticText(self.hsvValueSizer_staticbox, -1, _("Hue"))
         hsvGridSizer.Add(hueLabel, 0)
-        saturationLabel = wx.StaticText(self.mainPanel, -1, _("Saturation"))
+        saturationLabel = wx.StaticText(self.hsvValueSizer_staticbox, -1, _("Saturation"))
         hsvGridSizer.Add(saturationLabel, 0)
-        brightnessLabel = wx.StaticText(self.mainPanel, -1, _("Brightness"))
+        brightnessLabel = wx.StaticText(self.hsvValueSizer_staticbox, -1, _("Brightness"))
         hsvGridSizer.Add(brightnessLabel, 0)
         hsvGridSizer.Add(self.hueSpin, 0, wx.EXPAND)
         hsvGridSizer.Add(self.saturationSpin, 0, wx.EXPAND)
         hsvGridSizer.Add(self.brightnessSpin, 0, wx.EXPAND)
         hsvValueSizer.Add(hsvGridSizer, 1, wx.EXPAND)
         mainSizer.Add(hsvValueSizer, (3, 1), (1, 1), wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.EXPAND, 10)
-        alphaLabel = wx.StaticText(self.mainPanel, -1, _("Alpha"))
+        alphaLabel = wx.StaticText(self.alphaValueSizer_staticbox, -1, _("Alpha"))
         alphaGridSizer.Add(alphaLabel, 0)
         alphaGridSizer.Add(self.alphaSpin, 0, wx.EXPAND|wx.TOP, 10)
         alphaValueSizer.Add(alphaGridSizer, 1, wx.EXPAND)

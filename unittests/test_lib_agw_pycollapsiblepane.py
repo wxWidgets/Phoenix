@@ -30,6 +30,17 @@ class lib_agw_pycollapsiblepane_Tests(wtc.WidgetTestCase):
         pane.Expand()
         self.assertTrue(pane.IsExpanded())
 
+    def test_lib_agw_pycollapsiblepaneStaticBox(self):
+        pane = PCP.PyCollapsiblePane(self.frame, label='Some Data',
+                                     agwStyle=PCP.CP_USE_STATICBOX|PCP.CP_NO_TLW_RESIZE)
+        self.assertIsInstance(pane.GetPane().GetParent(), wx.StaticBox)
+        wx.TextCtrl(pane.GetPane())
+        pane.SetButton(wx.Button(pane, label='Other Button'))
+        pane.Expand()
+        self.assertTrue(pane.IsExpanded())
+        pane.Collapse()
+        self.assertTrue(pane.IsCollapsed())
+
     def test_lib_agw_pycollapsiblepaneConstantsExist(self):
         PCP.CP_DEFAULT_STYLE
         PCP.CP_GTK_EXPANDER

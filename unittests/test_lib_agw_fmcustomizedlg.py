@@ -22,6 +22,12 @@ class lib_agw_fmcustomizedlg_Tests(wtc.WidgetTestCase):
         # above is to excersize OrderedDict
         self._dlg = FDLG.FMCustomizeDlg(self._mtb)
 
+    def test_lib_agw_fmcustomizedlgStaticBoxChildren(self):
+        mb = FM.FlatMenuBar(self.frame, wx.ID_ANY)
+        dlg = FDLG.FMCustomizeDlg(mb)
+        self.checkStaticBoxSizers(dlg)
+        dlg.Destroy()
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -351,21 +351,22 @@ class FMCustomizeDlg(wx.Dialog):
 
         vsizer.Add(self._menuStyle, 0, wx.EXPAND | wx.ALL, 5)
 
-        self._sbStyle = wx.StaticBoxSizer(wx.StaticBox(options, -1, _("Default style settings")), wx.VERTICAL)
+        self._sbStyle = wx.StaticBoxSizer(wx.VERTICAL, options, _("Default style settings"))
+        sbStyleBox = self._sbStyle.GetStaticBox()
         self._drawVertGradID = wx.NewIdRef()
-        self._verticalGradient = wx.CheckBox(options, self._drawVertGradID, _("Draw vertical gradient"))
+        self._verticalGradient = wx.CheckBox(sbStyleBox, self._drawVertGradID, _("Draw vertical gradient"))
         self._verticalGradient.Bind(wx.EVT_CHECKBOX, self.OnChangeStyle)
         self._sbStyle.Add(self._verticalGradient, 0, wx.EXPAND | wx.ALL, 3)
         self._verticalGradient.SetValue(ArtManager.Get().GetMBVerticalGradient())
 
         self._drawBorderID = wx.NewIdRef()
-        self._drawBorder = wx.CheckBox(options, self._drawBorderID, _("Draw border around menu bar"))
+        self._drawBorder = wx.CheckBox(sbStyleBox, self._drawBorderID, _("Draw border around menu bar"))
         self._drawBorder.Bind(wx.EVT_CHECKBOX, self.OnChangeStyle)
         self._sbStyle.Add(self._drawBorder, 0, wx.EXPAND | wx.ALL, 3)
         self._drawBorder.SetValue(ArtManager.Get().GetMenuBarBorder())
 
         self._shadowUnderTBID = wx.NewIdRef()
-        self._shadowUnderTB =  wx.CheckBox(options, self._shadowUnderTBID, _("Toolbar float over menu bar"))
+        self._shadowUnderTB =  wx.CheckBox(sbStyleBox, self._shadowUnderTBID, _("Toolbar float over menu bar"))
         self._shadowUnderTB.Bind(wx.EVT_CHECKBOX, self.OnChangeStyle)
         self._sbStyle.Add(self._shadowUnderTB, 0, wx.EXPAND | wx.ALL, 3)
         self._shadowUnderTB.SetValue(ArtManager.Get().GetRaiseToolbar())
@@ -373,13 +374,13 @@ class FMCustomizeDlg(wx.Dialog):
         vsizer.Add(self._sbStyle, 0, wx.EXPAND | wx.ALL, 5)
 
         # Misc
-        sb = wx.StaticBoxSizer(wx.StaticBox(options, -1, _("Colour Scheme")), wx.VERTICAL)
+        sb = wx.StaticBoxSizer(wx.VERTICAL, options, _("Colour Scheme"))
         self._colourID = wx.NewIdRef()
 
         colourChoices = ArtManager.Get().GetColourSchemes()
         colourChoices.sort()
 
-        self._colour = wx.ComboBox(options, self._colourID, ArtManager.Get().GetMenuBarColourScheme(), choices=colourChoices,
+        self._colour = wx.ComboBox(sb.GetStaticBox(), self._colourID, ArtManager.Get().GetMenuBarColourScheme(), choices=colourChoices,
                                    style=wx.CB_DROPDOWN | wx.CB_READONLY)
         sb.Add(self._colour, 0, wx.EXPAND)
         vsizer.Add(sb, 0, wx.EXPAND | wx.ALL, 5)

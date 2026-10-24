@@ -35,6 +35,11 @@ class lib_agw_cubecolourdialog_Tests(wtc.WidgetTestCase):
         dlg.ShowModal()
         dlg.Destroy()
 
+    def test_lib_agw_cubecolourdialogStaticBoxChildren(self):
+        dlg = CCD.CubeColourDialog(self.frame)
+        self.checkStaticBoxSizers(dlg)
+        dlg.Destroy()
+
     def test_lib_agw_cubecolourdialogConstantsExist(self):
         # CubeColourDialog agwStyle
         CCD.CCD_SHOW_ALPHA

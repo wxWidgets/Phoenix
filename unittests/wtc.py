@@ -110,6 +110,38 @@ class WidgetTestCase(unittest.TestCase):
         return ns
 
 
+    def checkStaticBoxSizers(self, window):
+        """
+        Check that the windows in each wx.StaticBoxSizer used by window or
+        its children were created as children of the sizer's static box.
+        """
+        def sizerWindows(sizer):
+            for item in sizer.GetChildren():
+                if item.IsWindow():
+                    yield item.GetWindow()
+                elif item.IsSizer():
+                    yield from sizerWindows(item.GetSizer())
+
+        def checkSizer(sizer):
+            if isinstance(sizer, wx.StaticBoxSizer):
+                box = sizer.GetStaticBox()
+                for win in sizerWindows(sizer):
+                    self.assertTrue(box.IsDescendant(win),
+                                    '%r is not a child of %r' % (win, box))
+            for item in sizer.GetChildren():
+                if item.IsSizer():
+                    checkSizer(item.GetSizer())
+
+        def checkWindow(win):
+            if win.GetSizer():
+                checkSizer(win.GetSizer())
+            for child in win.GetChildren():
+                if not child.IsTopLevel():
+                    checkWindow(child)
+
+        checkWindow(window)
+
+
 
 #---------------------------------------------------------------------------
 
