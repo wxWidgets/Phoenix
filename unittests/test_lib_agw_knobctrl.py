@@ -30,6 +30,10 @@ class lib_agw_knobctrl_Tests(wtc.WidgetTestCase):
         self.assertEqual(knobctrl.GetMinValue(), 0)
         self.assertEqual(knobctrl.GetMaxValue(), 150)
 
+    def test_lib_agw_knobctrlZeroSize(self):
+        knobctrl = KC.KnobCtrl(self.frame, size=(0, 0))
+        knobctrl.OnSize(wx.SizeEvent(knobctrl.GetSize()))
+
     def test_lib_agw_knobctrlConstantsExist(self):
         KC.KC_BUFFERED_DC
 
