@@ -1056,21 +1056,25 @@ class SpeedMeter(BufferedWindow):
 
             middleicon = self.GetMiddleIcon()
             middlewidth, middleheight = self.GetMiddleIconDimens()
-            middleicon.SetWidth(int(middlewidth*self.scale))
-            middleicon.SetHeight(int(middleheight*self.scale))
             middleangle = (startangle + endangle)/2.0
 
-            mw = middleicon.GetWidth()
-            mh = middleicon.GetHeight()
+            mw = max(int(middlewidth*self.scale), 1)
+            mh = max(int(middleheight*self.scale), 1)
 
             newx = centerX + 1.5*mw*cos(middleangle) - mw/2.0
             newy = centerY - 1.5*mh*sin(middleangle) - mh/2.0
 
-            dc.DrawIcon(middleicon, int(newx), int(newy))
+            if isinstance(middleicon, wx.Icon):
+                middlebmp = wx.Bitmap()
+                middlebmp.CopyFromIcon(middleicon)
+            else:
+                middlebmp = middleicon
+            if (mw, mh) != (middlewidth, middleheight):
+                image = middlebmp.ConvertToImage()
+                image.Rescale(mw, mh, wx.IMAGE_QUALITY_HIGH)
+                middlebmp = image.ConvertToBitmap()
 
-            # Restore Icon Dimension, If Not Something Strange Happens
-            middleicon.SetWidth(middlewidth)
-            middleicon.SetHeight(middleheight)
+            dc.DrawBitmap(middlebmp, int(newx), int(newy), True)
 
 
         # Requested To Draw The Hand

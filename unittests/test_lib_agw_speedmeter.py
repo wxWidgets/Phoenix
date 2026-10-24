@@ -109,6 +109,23 @@ class lib_agw_speedmeter_Tests(wtc.WidgetTestCase):
         boxSizer.Add(spW, 1, wx.EXPAND)
         boxSizer.Layout()
 
+    def test_lib_agw_speedmeterMiddleIcon(self):
+        bmp = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, size=(32, 32))
+        for icon in (wx.Icon(bmp), bmp):
+            with self.subTest(icon=type(icon).__name__):
+                spW = SM.SpeedMeter(self.frame,
+                                    agwStyle=SM.SM_DRAW_HAND |
+                                    SM.SM_DRAW_MIDDLE_ICON,
+                                    size=(200, 200))
+                spW.SetMiddleIcon(icon)
+                dc = wx.MemoryDC(wx.Bitmap(300, 300))
+                spW.Draw(dc)
+                # Draw at a different scale than the initial size
+                spW.SetSize((300, 300))
+                spW.Draw(dc)
+                del dc
+                spW.Destroy()
+
 
     def test_lib_agw_peakmeterConstantsExist(self):
         SM.SM_BUFFERED_DC
