@@ -112,12 +112,12 @@ Smith, Jones, Williams).  Signs on numbers can be toggled with the minus key.
         # the options!
         controls = [
         #description        mask                    excl format     regexp                              range,list,initial
-       ("Phone No",         "(###) ###-#### x:###", "", 'F^-',     "^\(\d{3}\) \d{3}-\d{4}",           '','',''),
-       ("Social Sec#",      "###-##-####",          "", 'F',        "\d{3}-\d{2}-\d{4}",                '','',''),
+       ("Phone No",         "(###) ###-#### x:###", "", 'F^-',      r"^\(\d{3}\) \d{3}-\d{4}",          '','',''),
+       ("Social Sec#",      "###-##-####",          "", 'F',        r"\d{3}-\d{2}-\d{4}",               '','',''),
        ("Full Name",        "C{14}",                "", 'F_',       '^[A-Z][a-zA-Z]+ [A-Z][a-zA-Z]+',   '','',''),
        ("Last Name Only",   "C{14}",                "", 'F {list}', '^[A-Z][a-zA-Z]+',                  '',('Smith','Jones','Williams'),''),
-       ("Zip plus 4",       "#{5}-#{4}",            "", 'F',        "\d{5}-(\s{4}|\d{4})",              '','',''),
-       ("Customer No",      "\CAA-###",             "", 'F!',       "C[A-Z]{2}-\d{3}",                  '','',''),
+       ("Zip plus 4",       "#{5}-#{4}",            "", 'F',        r"\d{5}-(\s{4}|\d{4})",             '','',''),
+       ("Customer No",      r"\CAA-###",            "", 'F!',       r"C[A-Z]{2}-\d{3}",                 '','',''),
        ("Invoice Total",    "#{9}.##",              "", 'F-_,',     "",                                 '','',''),
        ("Integer",          "#{9}",                 "", 'F-_',      "",                                 '','',''),
        ]
@@ -382,7 +382,7 @@ be selected with PageUp/Down:""")
                                  choiceRequired = True,
                                  mask = "#/##",
                                  formatcodes = "F_",
-                                 validRegex = "^\d\/\d\d?",
+                                 validRegex = r"^\d\/\d\d?",
                                  fields = fieldsDict )
 
 
