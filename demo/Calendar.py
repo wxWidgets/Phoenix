@@ -531,7 +531,7 @@ class PrintCalend:
         self.ptheight = height
 
 def SetToolPath(self, tb, id, bmp, title):
-    tb.AddSimpleTool(id, bmp, title, title)
+    tb.AddTool(id, title, bmp, title)
 
 class SetPrintout(wx.Printout):
     def __init__(self, canvas):
