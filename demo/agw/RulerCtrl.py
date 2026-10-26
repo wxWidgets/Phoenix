@@ -324,8 +324,11 @@ class RulerCtrlDemo(wx.Frame):
 
     def SizeRulers(self):
 
-        dc = wx.MemoryDC()
         width, height = self.stc.GetSize()
+        if width <= 0 or height <= 0:
+            return
+
+        dc = wx.MemoryDC()
         dc.SelectObject(wx.Bitmap(width, height))
         widthMM, heightMM = dc.GetSizeMM()
         dc.SelectObject(wx.NullBitmap)
