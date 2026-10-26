@@ -31,6 +31,24 @@ class lib_agw_buttonpanel_Tests(wtc.WidgetTestCase):
         self.assertTrue(bar.IsStandard())
         self.assertTrue(not bar.IsVertical())
 
+    def test_lib_agw_buttonpanelSetAlignmentWithControl(self):
+        bar = BP.ButtonPanel(self.frame, -1, 'sample text')
+        btn = BP.ButtonInfo(bar, wx.ID_ANY,
+                            wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (32, 32)),
+                            text='Button 1')
+        bar.AddButton(btn)
+        bar.AddSeparator()
+        ctrl = wx.TextCtrl(bar)
+        bar.AddControl(ctrl)
+        bar.DoLayout()
+
+        for alignment in (BP.BP_ALIGN_RIGHT, BP.BP_ALIGN_TOP,
+                          BP.BP_ALIGN_BOTTOM, BP.BP_ALIGN_LEFT):
+            bar.SetAlignment(alignment)
+            self.assertEqual(bar.GetAlignment(), alignment)
+            self.assertEqual(bar.GetBarText(), 'sample text')
+            self.assertIs(ctrl.GetContainingSizer(), bar.GetSizer())
+
     def test_lib_agw_buttonpanelConstantsExist(self):
         # ButtonPanel agwStyle
         BP.BP_DEFAULT_STYLE
