@@ -46,7 +46,11 @@ import  wx
 
 MAXSIZE = sys.maxsize     # (constants should be in upper case)
 MINSIZE = -sys.maxsize-1
-LONGTYPE = int
+
+def _isLong(value):
+    # Python 3 has no separate long type, so a "long" is now an int that
+    # wouldn't fit in a Python 2 int.
+    return isinstance(value, int) and not MINSIZE <= value <= MAXSIZE
 
 #----------------------------------------------------------------------------
 
@@ -483,7 +487,7 @@ class IntCtrl(wx.TextCtrl):
         self.SetLimited(limited)
         self.SetColors(default_color, oob_color)
         self.SetNoneAllowed(allow_none)
-        self.SetLongAllowed(1)
+        self.SetLongAllowed(allow_long)
         self.ChangeValue(value)
 
     def OnText( self, event ):
@@ -749,7 +753,7 @@ class IntCtrl(wx.TextCtrl):
 
         """
         current_value = self.GetValue()
-        if not allow_long and type(current_value) is LONGTYPE:
+        if not allow_long and _isLong(current_value):
             if current_value > 0:
                 self.SetValue(MAXSIZE)
             else:
@@ -806,7 +810,7 @@ class IntCtrl(wx.TextCtrl):
         """
         if value is None and self.IsNoneAllowed():
             return ''
-        elif type(value) == LONGTYPE and not self.IsLongAllowed():
+        elif _isLong(value) and not self.IsLongAllowed():
             raise ValueError (
                 'IntCtrl requires integer value, passed long' )
         elif not isinstance(value, int):
@@ -843,13 +847,7 @@ class IntCtrl(wx.TextCtrl):
             else:
                 return None
         else:
-            try:
-                return int( value )
-            except ValueError:
-                if self.IsLongAllowed() and (LONGTYPE is not int):
-                    return LONGTYPE( value )
-                else:
-                    raise
+            return int(value)
 
 
     def Cut( self ):

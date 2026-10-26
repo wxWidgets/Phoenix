@@ -22,6 +22,28 @@ class IntCtrlTests(wtc.WidgetTestCase):
         t2.SetValue(None)
         assert t2.GetValue() is None
 
+    def test_disallowLongKeepsIntValue(self):
+        t = IC.IntCtrl(self.frame, value=-5, min=-10, max=10, limited=True,
+                       allow_long=True)
+        t.SetLongAllowed(False)
+        self.assertEqual(t.GetValue(), -5)
+        t.SetValue(7)
+        self.assertEqual(t.GetValue(), 7)
+
+    def test_allowLongCtorArg(self):
+        self.assertFalse(IC.IntCtrl(self.frame).IsLongAllowed())
+        self.assertTrue(IC.IntCtrl(self.frame, allow_long=True).IsLongAllowed())
+
+    def test_longValues(self):
+        big = IC.MAXSIZE + 1
+        t = IC.IntCtrl(self.frame, allow_long=True)
+        t.SetValue(big)
+        self.assertEqual(t.GetValue(), big)
+        t.SetLongAllowed(False)
+        self.assertEqual(t.GetValue(), IC.MAXSIZE)
+        with self.assertRaises(ValueError):
+            t.SetValue(big)
+
 
 #---------------------------------------------------------------------------
 
