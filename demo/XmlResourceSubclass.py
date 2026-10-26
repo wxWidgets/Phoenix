@@ -52,8 +52,8 @@ class MyCustomPanel(wx.Panel):
     def OnSize(self, evt):
         if hasattr(self, 't'):
             sz = self.GetSize()
-            w, h = self.t.GetTextExtent(self.t.GetLabel())
-            self.t.SetPosition(((sz.width-w)/2, (sz.height-h)/2))
+            w, h = self.t.GetBestSize()
+            self.t.SetSize((sz.width - w) // 2, (sz.height - h) // 2, w, h)
 
 #----------------------------------------------------------------------
 
