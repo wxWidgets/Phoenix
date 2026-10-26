@@ -52,7 +52,7 @@ check the source for this sample to see how to implement them.
         submenu.Append(2031,"Lanthanium")
         submenu.Append(2032,"Cerium")
         submenu.Append(2033,"Praseodymium")
-        menu2.Append(203, "Lanthanides", submenu)
+        menu2.AppendSubMenu(submenu, "Lanthanides")
         # Append 2nd menu
         menuBar.Append(menu2, "&Elements")
 
@@ -100,7 +100,7 @@ check the source for this sample to see how to implement them.
         menu5.Append(503, "remove the submenu")
         menu6 = wx.Menu()
         menu6.Append(601, "Submenu Item")
-        menu5.Append(504, "submenu", menu6)
+        menu5.Append(wx.MenuItem(menu5, 504, "submenu", subMenu=menu6))
         menu5.Append(505, "remove this menu")
         menu5.Append(506, "this is updated")
         menu5.Append(507, "insert after this...")
@@ -220,10 +220,10 @@ check the source for this sample to see how to implement them.
         #menu.Remove(504)
 
         # this also works
-        menu.RemoveItem(mb.FindItemById(504))
+        menu.Remove(mb.FindItemById(504))
 
         # This doesn't work, as expected since submenuItem is not on menu
-        #menu.RemoveItem(submenuItem)
+        #menu.Remove(submenuItem)
 
 
     def TestRemove2(self, evt):
@@ -255,7 +255,7 @@ check the source for this sample to see how to implement them.
         # now insert the new item
         ID = wx.NewIdRef()
         item = wx.MenuItem(menu, ID, "NewItem " + str(ID))
-        menu.InsertItem(pos, item)
+        menu.Insert(pos, item)
 
 
 #---------------------------------------------------------------------------
