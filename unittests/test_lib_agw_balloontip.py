@@ -24,6 +24,16 @@ class lib_agw_balloontip_Tests(wtc.WidgetTestCase):
         self.assertTrue(tip.GetBalloonShape() == BT.BT_RECTANGLE)
         self.assertTrue(tip.GetBalloonTipStyle() == BT.BT_LEAVE)
 
+    def test_lib_agw_balloontipFrameShape(self):
+        tip = BT.BalloonTip(toptitle='Balloon', message='Hello wxPython',
+                            shape=BT.BT_ROUNDED, tipstyle=BT.BT_BUTTON)
+        frame = BT.BalloonFrame(self.frame, classparent=tip)
+        try:
+            frame.SetBalloonShape()
+            self.assertTrue(frame.hasShape)
+        finally:
+            frame.Destroy()
+
     def test_lib_agw_balloontipConstantsExist(self):
         BT.BT_ROUNDED
         BT.BT_RECTANGLE
