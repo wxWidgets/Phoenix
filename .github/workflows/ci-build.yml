@@ -2,6 +2,11 @@
 # This workflow will build and archive a wxPython source distribution for
 # CI. It will start by building a sdist archive first, and then that will be
 # used in subsequent jobs on each supported platform and Python version.
+#
+# Running it manually with the "release" input checked makes an official
+# release: once everything is built, the publish-to-pypi job waits for
+# approval of the pypi environment, then the wheels and sdist are uploaded to
+# PyPI, and the tag and GitHub Release are created.
 #---------------------------------------------------------------------------
 
 name: ci-build
@@ -10,18 +15,22 @@ on:
   # Trigger on push or PRs targeting the master branch
   push:
     branches: [ 'master' ]
-    tags:
-      - 'wxPython-*'
   pull_request:
     branches: [ 'master' ]
 
   # Also allow manual triggering (via web ui)
   workflow_dispatch:
+    inputs:
+      release:
+        description: 'Make an official release (publishes after approval)'
+        type: boolean
+        default: false
 
-# Cancel the workflow if another instance in the same workflow and PR is triggered
+# Cancel the workflow if another instance in the same workflow and PR is triggered.
+# Releases get their own group so that a push can't cancel one awaiting approval.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ inputs.release && 'release' || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !inputs.release }}
 
 permissions:
   contents: read
@@ -33,7 +42,7 @@ defaults:
 
 env:
   PYTHONUNBUFFERED: 1
-  WXPYTHON_BUILD_ARGS: ${{ startsWith(github.ref, 'refs/tags/') && '--release' || '' }}
+  WXPYTHON_BUILD_ARGS: ${{ inputs.release && '--release' || '' }}
 
 #---------------------------------------------------------------------------
 
@@ -80,6 +89,44 @@ jobs:
           VER_FLAGS=$(python -c "from buildtools.version import VER_FLAGS; print(VER_FLAGS)")
           echo "ver_flags=$VER_FLAGS" >> "$GITHUB_OUTPUT"
 
+      - name: Check that the release tag doesn't exist yet
+        if: inputs.release
+        env:
+          TAG: wxPython-${{ steps.generate.outputs.version }}
+        run: |
+          if git rev-parse -q --verify "refs/tags/$TAG" > /dev/null; then
+              echo "::error::Tag $TAG already exists"
+              exit 1
+          fi
+
+      - name: Extract the release notes from CHANGES.rst
+        if: inputs.release
+        env:
+          VERSION: ${{ steps.generate.outputs.version }}
+        run: |
+          python - > "$RUNNER_TEMP/release-notes.md" <<'EOF'
+          import os, re, sys
+          version = os.environ['VERSION']
+          lines = open('CHANGES.rst', encoding='utf-8').read().splitlines()
+          heads = [i for i in range(len(lines) - 1)
+                   if lines[i].strip() and re.fullmatch('-+', lines[i + 1])]
+          for n, i in enumerate(heads):
+              if lines[i].split()[0] == version:
+                  end = heads[n + 1] if n + 1 < len(heads) else len(lines)
+                  notes = '\n'.join(lines[i + 2:end]).strip()
+                  if notes:
+                      print(notes)
+                      sys.exit()
+          sys.exit(f'::error::No release notes for {version} found in CHANGES.rst')
+          EOF
+
+      - name: Save release notes as job artifact
+        if: inputs.release
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-notes
+          path: ${{ runner.temp }}/release-notes.md
+
       - name: Create source distribution (sdist)
         run: |
           python build_wxpy.py sdist
@@ -91,12 +138,12 @@ jobs:
           path: dist/wxpython-${{ steps.generate.outputs.version }}.tar.gz
 
       - name: Create demo source distribution (sdist_demo)
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || inputs.release
         run: |
           python build_wxpy.py sdist_demo
 
       - name: Save demo sdist as job artifact
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || inputs.release
         uses: actions/upload-artifact@v7
         with:
           name: demo
@@ -133,11 +180,11 @@ jobs:
           - python-version: ${{ github.event_name == 'pull_request' && '3.12' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.13' }}
           - python-version: ${{ github.event_name == 'pull_request' && '3.14' }}
-          # Only build windows-11-arm on pushes
-          - os: ${{ github.event_name != 'push' && 'windows-11-arm' }}
+          # Only build windows-11-arm on pushes and releases
+          - os: ${{ github.event_name != 'push' && !inputs.release && 'windows-11-arm' }}
           # Release Linux wheels are built by build-linux-wheels.yml instead
-          - os: ${{ startsWith(github.ref, 'refs/tags/') && 'ubuntu-24.04' }}
-          - os: ${{ startsWith(github.ref, 'refs/tags/') && 'ubuntu-26.04' }}
+          - os: ${{ inputs.release == true && 'ubuntu-24.04' }}
+          - os: ${{ inputs.release == true && 'ubuntu-26.04' }}
 
     env:
       VERSION: ${{ needs.build-source-dist.outputs.VERSION }}
@@ -216,7 +263,7 @@ jobs:
           arch: '${{ matrix.architecture }}'
 
       - name: Install ccache
-        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.11' || matrix.python-version == '3.15') }}
+        if: ${{ !inputs.release && runner.os != 'Windows' && (matrix.python-version == '3.11' || matrix.python-version == '3.15') }}
         uses: hendrikmuhs/ccache-action@v1.2.23
         with:
           key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
@@ -224,7 +271,7 @@ jobs:
           save: ${{ github.event_name != 'pull_request' }}
 
       - name: Setup ccache
-        if: ${{ !startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows' && (matrix.python-version == '3.11' || matrix.python-version == '3.15') }}
+        if: ${{ !inputs.release && runner.os != 'Windows' && (matrix.python-version == '3.11' || matrix.python-version == '3.15') }}
         run: |
           if [ ${{ runner.os }} == 'Linux' ]; then
               echo "PATH=/usr/lib/ccache:$PATH" >> $GITHUB_ENV
@@ -324,7 +371,7 @@ jobs:
 
   build-documentation:
     name: Build wxPython documentation
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || inputs.release
     runs-on: windows-2025
 
     steps:
@@ -372,8 +419,10 @@ jobs:
 
   publish-to-pypi:
     name: Publish Python distribution to PyPI
-    if: startsWith(github.ref, 'refs/tags/')
-    needs: build-wheels
+    if: inputs.release
+    # Wait for everything to be built so that it can all be checked before
+    # the pypi environment is approved.
+    needs: [build-wheels, build-documentation]
     runs-on: ubuntu-24.04
 
     environment:
@@ -395,13 +444,12 @@ jobs:
 
 
   github-release:
-    name: Create GitHub Release and upload source
-    needs: [publish-to-pypi, build-documentation]
+    name: Create tag and GitHub Release
+    needs: [build-source-dist, publish-to-pypi]
     runs-on: ubuntu-24.04
 
     permissions:
       contents: write
-      id-token: write
 
     steps:
     - name: Download source distribution
@@ -421,19 +469,21 @@ jobs:
         pattern: pdb-*
         path: dist
         merge-multiple: true
-    - name: Create GitHub Release
+    - name: Download release notes
+      uses: actions/download-artifact@v8
+      with:
+        name: release-notes
+        path: notes
+    - name: Create tag and GitHub Release
       env:
         GITHUB_TOKEN: ${{ github.token }}
+        TAG: wxPython-${{ needs.build-source-dist.outputs.VERSION }}
       run: |
-        gh release create '${{ github.ref_name }}' \
+        gh release create "$TAG" dist/* \
           --repo '${{ github.repository }}' \
-          --notes ""
-    - name: Upload source distribution to GitHub Release
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      run: |
-        gh release upload '${{ github.ref_name }}' dist/* \
-          --repo '${{ github.repository }}'
+          --target '${{ github.sha }}' \
+          --title "$TAG" \
+          --notes-file notes/release-notes.md
 
 
   create-snapshot-prerelease:
