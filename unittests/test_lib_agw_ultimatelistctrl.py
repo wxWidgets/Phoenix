@@ -1,10 +1,23 @@
 import unittest
+from unittest import mock
 from unittests import wtc
 import wx
 
 import wx.lib.agw.ultimatelistctrl as ULC
 
 #---------------------------------------------------------------------------
+
+class VirtualList(ULC.UltimateListCtrl):
+
+    def OnGetItemText(self, item, col):
+        return 'Item %d' % item
+
+    def OnGetItemTextColour(self, item, col):
+        return None
+
+    def OnGetItemToolTip(self, item, col):
+        return None
+
 
 class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
 
@@ -19,6 +32,30 @@ class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
 
     def test_lib_agw_ultimatelistctrlCtorVirtual(self):
         ulc = ULC.UltimateListCtrl(self.frame, agwStyle=wx.LC_REPORT|wx.LC_VIRTUAL)
+
+    def test_lib_agw_ultimatelistctrlPaintFarDown(self):
+        # With Cairo, nothing was drawn past y = 2**23, about 335000 rows down
+        ulc = VirtualList(self.frame, size=(300, 200), agwStyle=wx.LC_REPORT | wx.LC_VIRTUAL)
+        ulc.InsertColumn(0, 'First', width=200)
+        ulc.SetItemCount(1000000)
+        # On MSW, the main window isn't sized until the size event is handled
+        ulc.SendSizeEvent()
+        main = ulc._mainWin
+        main.RecalculatePositions(True)
+        main.Scroll(0, main.GetLineY(999990) // ULC.SCROLL_UNIT_Y)
+        main.ResetVisibleLinesRange()
+        self.assertEqual(main.GetVisibleLinesRange()[1], 999999)
+
+        w, h = main.GetClientSize()
+        bmp = wx.Bitmap(w, h)
+        dc = wx.MemoryDC(bmp)
+        with mock.patch.object(wx, 'BufferedPaintDC', lambda win: dc), \
+             mock.patch.object(main, 'IsExposed', return_value=True):
+            main.OnPaint(None)
+        dc.SelectObject(wx.NullBitmap)
+
+        # The text is the only dark thing drawn
+        self.assertLess(min(bmp.ConvertToImage().GetData()), 100)
 
     def test_lib_agw_thumbnailctrlStyles(self):
         ULC.ULC_VRULES

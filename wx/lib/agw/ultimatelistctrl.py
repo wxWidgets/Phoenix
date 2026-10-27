@@ -4331,13 +4331,20 @@ class UltimateListLineData(object):
         return False
 
 
-    def Draw(self, line, dc):
+    def Draw(self, line, dc, origin):
         """
         Draws the line on the specified device context.
 
         :param `line`: an instance of :class:`UltimateListLineData`;
-        :param `dc`: an instance of :class:`wx.DC`.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `origin`: an instance of :class:`wx.Point`, the client position of
+         the start of the scrolled area.
         """
+
+        gi = self._gi
+        rectAll, rectHighlight, rectCheck, rectIcon, rectLabel = [
+            wx.Rect(r.x + origin.x, r.y + origin.y, r.width, r.height)
+            for r in (gi._rectAll, gi._rectHighlight, gi._rectCheck, gi._rectIcon, gi._rectLabel)]
 
         item = self._items[0]
         highlighted = self.IsHighlighted()
@@ -4358,50 +4365,46 @@ class UltimateListLineData(object):
                 if useGradient:
                     if gradientStyle == 0:
                         # horizontal gradient
-                        self.DrawHorizontalGradient(dc, self._gi._rectAll, hasFocus)
+                        self.DrawHorizontalGradient(dc, rectAll, hasFocus)
                     else:
                         # vertical gradient
-                        self.DrawVerticalGradient(dc, self._gi._rectAll, hasFocus)
+                        self.DrawVerticalGradient(dc, rectAll, hasFocus)
                 elif useVista:
                     # Vista selection style
-                    self.DrawVistaRectangle(dc, self._gi._rectAll, hasFocus)
+                    self.DrawVistaRectangle(dc, rectAll, hasFocus)
                 else:
                     if highlighted:
                         flags = wx.CONTROL_SELECTED
                         if self._owner.HasFocus() and wx.Platform == "__WXMAC__":
                             flags |= wx.CONTROL_FOCUSED
 
-                        wx.RendererNative.Get().DrawItemSelectionRect(self._owner, dc, self._gi._rectHighlight, flags)
+                        wx.RendererNative.Get().DrawItemSelectionRect(self._owner, dc, rectHighlight, flags)
                     else:
-                        dc.DrawRectangle(self._gi._rectHighlight)
+                        dc.DrawRectangle(rectHighlight)
 
         else:
 
             if borderOnly:
                 dc.SetBrush(wx.WHITE_BRUSH)
                 dc.SetPen(wx.TRANSPARENT_PEN)
-                dc.DrawRectangle(self._gi._rectAll)
+                dc.DrawRectangle(rectAll)
 
         if item.GetKind() in [1, 2]:
-            rectCheck = self._gi._rectCheck
             self._owner.DrawCheckbox(dc, rectCheck.x, rectCheck.y, item.GetKind(), item.IsChecked(), item.IsEnabled())
 
         if item.HasImage():
             # centre the image inside our rectangle, this looks nicer when items
             # ae aligned in a row
-            rectIcon = self._gi._rectIcon
             self._owner.DrawImage(item.GetImage()[0], dc, rectIcon.x, rectIcon.y, True)
 
         if item.HasText():
-            rectLabel = self._gi._rectLabel
-
             dc.SetClippingRegion(rectLabel)
             dc.DrawText(item.GetText(), rectLabel.x, rectLabel.y)
             dc.DestroyClippingRegion()
 
         if self._owner.HasAGWFlag(ULC_HOT_TRACKING):
             if line == self._owner._newHotCurrent and not drawn:
-                r = wx.Rect(*self._gi._rectAll)
+                r = wx.Rect(*rectAll)
                 dc.SetBrush(wx.TRANSPARENT_BRUSH)
                 dc.SetPen(wx.Pen(wx.Colour("orange")))
                 dc.DrawRoundedRectangle(r, 3)
@@ -4409,7 +4412,7 @@ class UltimateListLineData(object):
         if borderOnly and drawn:
             dc.SetPen(wx.Pen(wx.Colour(0, 191, 255), 2))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            r = wx.Rect(*self._gi._rectAll)
+            r = wx.Rect(*rectAll)
             r.x += 1
             r.y += 1
             r.width -= 1
@@ -4566,8 +4569,7 @@ class UltimateListLineData(object):
             if wnd:
                 xSize, ySize = item.GetWindowSize()
                 wndx = xOld - HEADER_OFFSET_X + width - xSize - 3
-                xa, ya = self._owner.CalcScrolledPosition((0, rect.y))
-                wndx += xa
+                ya = rect.y
                 if rect.height > ySize and not item._expandWin:
                     ya += (rect.height - ySize)//2
 
@@ -4632,7 +4634,7 @@ class UltimateListLineData(object):
 
                 if item._expandWin:
                     wRect = wx.Rect(*itemRect)
-                    wRect.x += xa + 2
+                    wRect.x += 2
                     wRect.width = width - 8
                     wRect.y = ya + 2
                     wRect.height -= 4
@@ -7069,7 +7071,10 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         dc.SetBackgroundMode(wx.TRANSPARENT)
 
-        self.PrepareDC(dc)
+        # Draw in client coordinates instead of using PrepareDC, as the DC
+        # origin offsets can exceed Cairo's 2**23 coordinate limit with many
+        # items, and nothing past it gets drawn (see wxWidgets#25365)
+        dev_x, dev_y = self.CalcScrolledPosition(0, 0)
 
         dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
         dc.SetPen(wx.TRANSPARENT_PEN)
@@ -7087,7 +7092,6 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             self.RecalculatePositions(False)
 
         useVista, useGradient = self._vistaselection, self._usegradients
-        dev_x, dev_y = self.CalcScrolledPosition(0, 0)
 
         dc.SetFont(self.GetFont())
 
@@ -7101,9 +7105,6 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             if visibleTo < self.GetItemCount() - 1:
                 visibleTo += 1
 
-            xOrig = dc.LogicalToDeviceX(0)
-            yOrig = dc.LogicalToDeviceY(0)
-
             # tell the caller cache to cache the data
             if self.IsVirtual():
 
@@ -7116,17 +7117,20 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             no_highlight = self.HasAGWFlag(ULC_NO_HIGHLIGHT)
 
             for line in range(visibleFrom, visibleTo+1):
-                rectLine = self.GetLineRect(line)
+                rectLine = wx.Rect(self.GetLineRect(line))
+                rectLine.Offset(dev_x, dev_y)
 
-                if not self.IsExposed(rectLine.x + xOrig, rectLine.y + yOrig, rectLine.width, rectLine.height):
+                if not self.IsExposed(rectLine):
                     # don't redraw unaffected lines to avoid flicker
                     continue
+
+                rectHL = wx.Rect(self.GetLineHighlightRect(line))
+                rectHL.Offset(dev_x, dev_y)
 
                 theLine = self.GetLine(line)
                 enabled = theLine.GetItem(0, CreateListItem(line, 0)).IsEnabled()
                 oldPN, oldBR = dc.GetPen(), dc.GetBrush()
-                theLine.DrawInReportMode(dc, line, rectLine,
-                                         self.GetLineHighlightRect(line),
+                theLine.DrawInReportMode(dc, line, rectLine, rectHL,
                                          self.IsHighlighted(line) and not no_highlight,
                                          line==self._current, enabled, oldPN, oldBR)
 
@@ -7140,15 +7144,15 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                 dc.SetPen(pen)
                 dc.SetBrush(wx.TRANSPARENT_BRUSH)
                 for i in range(start, visibleTo+1):
-                    lineY = self.GetLineY(i)
-                    dc.DrawLine(0 - dev_x, lineY, clientSize.x - dev_x, lineY)
+                    lineY = self.GetLineY(i) + dev_y
+                    dc.DrawLine(0, lineY, clientSize.x, lineY)
 
                 # Draw last horizontal rule
                 if visibleTo == self.GetItemCount() - 1:
-                    lineY = self.GetLineY(visibleTo) + self.GetLineHeight(visibleTo)
+                    lineY = self.GetLineY(visibleTo) + self.GetLineHeight(visibleTo) + dev_y
                     dc.SetPen(pen)
                     dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                    dc.DrawLine(0 - dev_x, lineY, clientSize.x - dev_x , lineY)
+                    dc.DrawLine(0, lineY, clientSize.x, lineY)
 
             # Draw vertical rules if required
             if self.HasAGWFlag(ULC_VRULES) and not self.IsEmpty():
@@ -7167,17 +7171,17 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                     colWidth = self.GetColumnWidth(col)
                     x += colWidth
 
-                    x_pos = x - dev_x
+                    x_pos = x
                     if col < self.GetColumnCount()-1:
                         x_pos -= 2
 
-                    dc.DrawLine(x_pos, firstItemRect.GetY() - 1 - dev_y, x_pos, lastItemRect.GetBottom() + 1 - dev_y)
+                    dc.DrawLine(x_pos, firstItemRect.GetY() - 1, x_pos, lastItemRect.GetBottom() + 1)
 
 
         else: # !report
 
             for i in range(self.GetItemCount()):
-                self.GetLine(i).Draw(i, dc)
+                self.GetLine(i).Draw(i, dc, wx.Point(dev_x, dev_y))
 
         if wx.Platform not in ["__WXMAC__", "__WXGTK__"]:
             # Don't draw rect outline under Mac at all.
@@ -7185,9 +7189,11 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             if self.HasCurrent():
                 if self._hasFocus and not self.HasAGWFlag(ULC_NO_HIGHLIGHT) and not useVista and not useGradient \
                    and not self.HasAGWFlag(ULC_BORDER_SELECT) and not self.HasAGWFlag(ULC_NO_FULL_ROW_SELECT):
+                    rect = wx.Rect(self.GetLineHighlightRect(self._current))
+                    rect.Offset(dev_x, dev_y)
                     dc.SetPen(wx.BLACK_PEN)
                     dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                    dc.DrawRectangle(self.GetLineHighlightRect(self._current))
+                    dc.DrawRectangle(rect)
 
 
     def OnEraseBackground(self, event):
@@ -7248,7 +7254,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         if not self._waterMark:
             return
 
-        width, height = self.CalcUnscrolledPosition(*self.GetClientSize())
+        width, height = self.GetClientSize()
 
         bitmapW = self._waterMark.GetWidth()
         bitmapH = self._waterMark.GetHeight()
