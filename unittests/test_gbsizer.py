@@ -75,6 +75,12 @@ class gbsizer_Tests(wtc.WidgetTestCase):
         s1[1] = 6
         self.assertTrue((s1.rowspan, s1.colspan) == (5,6))
 
+    def test_gbsizer_floatSeqTruncated(self):
+        gbs = wx.GridBagSizer()
+        item = gbs.Add(wx.Panel(self.frame), (1.9, 2.5), (1.5, 2.9))
+        self.assertEqual(item.GetPos().Get(), (1, 2))
+        self.assertEqual(item.GetSpan().Get(), (1, 2))
+
 
 
     def test_gbsizer_sizer1(self):

@@ -40,6 +40,11 @@ class Colour(wtc.WidgetTestCase):
         self.assertTrue(c.Get(False) == (1,2,3))
 
 
+    def test_seq_ctor_floats(self):
+        c = wx.Colour((1.9, 2.5, 3.1, 4.9))
+        self.assertEqual(c.Get(), (1, 2, 3, 4))
+
+
     def test_numpy_ctor(self):
         import numpy as np
         a = np.array( [1,2,3,4] )

@@ -103,7 +103,6 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 // Macros to work around some of the differences in the Python 3 API
 #if PY_MAJOR_VERSION >= 3
     #define wxPyInt_Check            PyLong_Check
-    #define wxPyInt_AsLong           PyLong_AsLong
     #define wxPyInt_AS_LONG          PyLong_AS_LONG
     #define wxPyInt_AsSize_t         PyLong_AsSize_t
     #define wxPyInt_AsSsize_t        PyLong_AsSsize_t
@@ -113,6 +112,22 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
     #define wxPyInt_FromSsize_t      PyLong_FromSsize_t
     #define wxPyInt_FromUnsignedLong PyLong_FromUnsignedLong
     #define wxPyNumber_Int           PyNumber_Long
+
+    // Python 3.10's PyLong_AsLong stopped accepting floats, which made it
+    // return -1 for them, but wxPython code has always relied on floats being
+    // truncated like Python 2's PyInt_AsLong did.
+    inline long wxPyInt_AsLong(PyObject* obj)
+    {
+        if (PyFloat_Check(obj)) {
+            PyObject* asInt = PyNumber_Long(obj);
+            if (!asInt)
+                return -1;
+            long value = PyLong_AsLong(asInt);
+            Py_DECREF(asInt);
+            return value;
+        }
+        return PyLong_AsLong(obj);
+    }
 #else
     #define wxPyInt_Check            PyInt_Check
     #define wxPyInt_AsLong           PyInt_AsLong

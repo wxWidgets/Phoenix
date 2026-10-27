@@ -47,6 +47,10 @@ class position_Tests(wtc.WidgetTestCase):
         self.assertTrue(p4 == (3,4))
         self.assertTrue(p4 == p1)
 
+    def test_positionFloatSeqTruncated(self):
+        p = wx.Position(3, 4) + (1.9, -1.9)
+        self.assertEqual(p.Get(), (4, 3))
+
 
     def test_GetIM(self):
         # Test the immutable version returned by GetIM

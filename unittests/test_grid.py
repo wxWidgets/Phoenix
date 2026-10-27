@@ -31,6 +31,12 @@ class grid_Tests(wtc.WidgetTestCase):
         c1 = wx.grid.GridCellCoords()
         c2 = wx.grid.GridCellCoords(5,10)
 
+    def test_grid01a(self):
+        g = wx.grid.Grid(self.frame)
+        g.CreateGrid(5, 5)
+        g.SetGridCursor((1.9, 2.5))
+        self.assertEqual(g.GetGridCursorCoords().Get(), (1, 2))
+
 
     def test_grid02(self):
         r = wx.grid.GridCellAutoWrapStringRenderer()

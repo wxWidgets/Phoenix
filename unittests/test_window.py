@@ -16,6 +16,13 @@ class WindowTests(wtc.WidgetTestCase):
         hdl = w.GetHandle()
         self.assertTrue(isinstance(hdl, int))
 
+    def test_windowFloatPosSize(self):
+        w = wx.Window(self.frame, pos=(10.9, 20.5), size=(30.9, 40.5))
+        self.assertEqual(w.GetPosition().Get(), (10, 20))
+        self.assertEqual(w.GetSize().Get(), (30, 40))
+        w.SetPosition((5.5, 6.9))
+        self.assertEqual(w.GetPosition().Get(), (5, 6))
+
 
     def test_windowProperties(self):
         w = wx.Window(self.frame, -1, (10,10), (50,50))

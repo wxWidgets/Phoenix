@@ -52,6 +52,10 @@ class accel_Tests(wtc.WidgetTestCase):
                                     ])
         self.frame.SetAcceleratorTable(tbl)
 
+    def test_accelTableFloats(self):
+        tbl = wx.AcceleratorTable([(wx.ACCEL_CTRL, ord('H'), 234.5)])
+        self.assertTrue(tbl.IsOk())
+
 #---------------------------------------------------------------------------
 
 

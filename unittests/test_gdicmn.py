@@ -39,6 +39,11 @@ class TestPoint(unittest.TestCase):
         a = np.array([123,456])
         p = wx.Point(a)
 
+    def test_float_seq_truncated(self):
+        r = wx.Rect()
+        r.SetPosition((10.9, -20.9))
+        self.assertEqual(r.GetPosition().Get(), (10, -20))
+
 
     def test_DefaultPosition(self):
         wx.DefaultPosition
@@ -176,6 +181,10 @@ class TestSize(unittest.TestCase):
     def test_bogus_ctor(self):
         with self.assertRaises(TypeError):
             s = wx.Size("aa", "bb")
+
+    def test_float_seq_truncated(self):
+        s = wx.Size((10.9, -20.9))
+        self.assertEqual(s.Get(), (10, -20))
 
     def test_DecBy(self):
         s = wx.Size(100,100)
@@ -402,6 +411,10 @@ class TestRect(unittest.TestCase):
         import numpy as np
         r1 = wx.Rect( np.array([1,2,3,4]) )
         self.assertTrue(r1 == (1,2,3,4))
+
+    def test_float_seq_truncated(self):
+        r = wx.Rect((1.9, 2.5, 10.9, -20.9))
+        self.assertEqual(r.Get(), (1, 2, 10, -20))
 
 
     def test_GetIM(self):
