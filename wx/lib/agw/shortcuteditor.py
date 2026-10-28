@@ -964,7 +964,7 @@ class HTMLHelpWindow(wx.Frame):
         xvideo = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
         yvideo = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
 
-        self.SetSize((xvideo/2, yvideo/2))
+        self.SetSize((xvideo // 2, yvideo // 2))
 
         self.html.LoadFile(self.htmlFile)
         self.Show()
@@ -981,25 +981,25 @@ class HTMLHelpWindow(wx.Frame):
         w, h = _html_reload.GetBitmap().GetWidth(), _html_reload.GetBitmap().GetHeight()
         toolbar.SetToolBitmapSize((w, h))
 
-        toolbar.AddTool(wx.ID_BACKWARD, _('Back'), _html_back.GetBitmap(), wx.NullBitmap, shortHelpString=_('Back'),
-                        longHelpString=_('Go to the previous page'))
+        toolbar.AddTool(wx.ID_BACKWARD, _('Back'), _html_back.GetBitmap(), wx.NullBitmap,
+                        shortHelp=_('Back'), longHelp=_('Go to the previous page'))
 
-        toolbar.AddTool(wx.ID_FORWARD, _('Forward'), _html_forward.GetBitmap(), wx.NullBitmap, shortHelpString=_('Forward'),
-                        longHelpString=_('Go to the next page'))
+        toolbar.AddTool(wx.ID_FORWARD, _('Forward'), _html_forward.GetBitmap(), wx.NullBitmap,
+                        shortHelp=_('Forward'), longHelp=_('Go to the next page'))
 
         toolbar.AddSeparator()
 
-        toolbar.AddTool(wx.ID_HOME, _('Home'), _html_home.GetBitmap(), wx.NullBitmap, shortHelpString=_('Home Page'),
-                        longHelpString=_('Go to the home page'))
+        toolbar.AddTool(wx.ID_HOME, _('Home'), _html_home.GetBitmap(), wx.NullBitmap,
+                        shortHelp=_('Home Page'), longHelp=_('Go to the home page'))
 
-        toolbar.AddTool(wx.ID_REFRESH, _('Refresh'), _html_reload.GetBitmap(), wx.NullBitmap, shortHelpString=_('Refresh'),
-                        longHelpString=_('Refresh the current page'))
+        toolbar.AddTool(wx.ID_REFRESH, _('Refresh'), _html_reload.GetBitmap(), wx.NullBitmap,
+                        shortHelp=_('Refresh'), longHelp=_('Refresh the current page'))
 
         toolbar.AddSeparator()
         toolbar.AddStretchableSpace()
 
-        toolbar.AddTool(wx.ID_PRINT, _('Print'), _html_print.GetBitmap(), wx.NullBitmap, shortHelpString=_('Print'),
-                        longHelpString=_('Print the current page'))
+        toolbar.AddTool(wx.ID_PRINT, _('Print'), _html_print.GetBitmap(), wx.NullBitmap,
+                        shortHelp=_('Print'), longHelp=_('Print the current page'))
 
         toolbar.Realize()
 

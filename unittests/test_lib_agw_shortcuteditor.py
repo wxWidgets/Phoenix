@@ -21,6 +21,13 @@ class lib_agw_shortcuteditor_Tests(wtc.WidgetTestCase):
             self.assertTrue(entry.FromString('Ctrl+' + name),
                             'wx does not recognize key name %r' % name)
 
+    def test_lib_agw_shortcuteditorHTMLHelp(self):
+        dlg = SE.ShortcutEditor(self.frame)
+        dlg.OnHTMLHelp(None)
+        self.assertIsNotNone(dlg.htmlWindow)
+        dlg.htmlWindow.Destroy()
+        dlg.Destroy()
+
 #---------------------------------------------------------------------------
 
 
