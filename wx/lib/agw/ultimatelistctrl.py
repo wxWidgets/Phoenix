@@ -9403,7 +9403,13 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         item = self.GetItem(item, item._col)
         item.SetCustomRenderer(renderer)
         self.SetItem(item)
-        self.ResetLineDimensions()
+        if self.HasAGWFlag(ULC_REPORT) and self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT) and not self.IsVirtual():
+            # Only this line's height can change, which moves the lines after
+            # it. Resetting the cached heights of all the lines would make
+            # adding renderers to every line quadratic in GetLineHeight calls.
+            self.GetLine(item._itemId).ResetDimensions()
+            for l in range(item._itemId + 1, self.GetItemCount()):
+                self.GetLine(l).SetY(-1)
         self.Refresh()
 
 

@@ -19,6 +19,24 @@ class VirtualList(ULC.UltimateListCtrl):
         return None
 
 
+class HeightRenderer:
+
+    calls = 0
+
+    def __init__(self, height):
+        self.height = height
+
+    def GetLineHeight(self):
+        HeightRenderer.calls += 1
+        return self.height
+
+    def GetSubItemWidth(self):
+        return 50
+
+    def DrawSubItem(self, dc, rect, line, highlighted, enabled):
+        pass
+
+
 class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
 
     def test_lib_agw_ultimatelistctrlCtorReport(self):
@@ -56,6 +74,26 @@ class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
 
         # The text is the only dark thing drawn
         self.assertLess(min(bmp.ConvertToImage().GetData()), 100)
+
+    def test_lib_agw_ultimatelistctrlCustomRendererHeights(self):
+        # Fill the list before it's shown, like the Windows 7 Explorer demo
+        self.frame.Hide()
+        ulc = ULC.UltimateListCtrl(self.frame, agwStyle=wx.LC_REPORT | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
+        ulc.InsertColumn(0, 'First')
+        count = 200
+        HeightRenderer.calls = 0
+        for i in range(count):
+            index = ulc.InsertStringItem(i, '')
+            ulc.SetItemCustomRenderer(index, 0, HeightRenderer(20 + i % 3 * 10))
+
+        # Setting a renderer used to measure every line again
+        self.assertLess(HeightRenderer.calls, 10 * count)
+
+        main = ulc._mainWin
+        y = main.GetLineY(0)
+        for i in range(count):
+            self.assertEqual(main.GetLineY(i), y)
+            y += main.GetLineHeight(i)
 
     def test_lib_agw_thumbnailctrlStyles(self):
         ULC.ULC_VRULES
