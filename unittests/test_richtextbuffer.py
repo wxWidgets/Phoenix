@@ -197,6 +197,10 @@ class richtextbuffer_Tests(wtc.WidgetTestCase):
         r[1] = 222
         self.assertEqual(r.Get(), (111,222))
 
+    def test_richtextbuffer14f(self):
+        r = wx.richtext.RichTextRange((1.9, 4.5))
+        self.assertEqual(r.Get(), (1, 4))
+
 
     def test_richtextbuffer15(self):
         s1 = wx.richtext.RichTextSelection()

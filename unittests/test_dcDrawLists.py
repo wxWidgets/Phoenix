@@ -152,6 +152,22 @@ class dcDrawLists_Tests(wtc.WidgetTestCase):
         dc.DrawPointList(makeRandomPoints(), pens)
         del dc
 
+    def test_dcDrawListFloats(self):
+        bmp = wx.Bitmap(10, 10)
+        dc = wx.MemoryDC(bmp)
+        dc.SetBackground(wx.BLACK_BRUSH)
+        dc.Clear()
+        dc.DrawPointList([(8.9, 1.5)], wx.WHITE_PEN)
+        dc.DrawRectangleList([(2.9, 3.5, 4.9, 4.9)], wx.TRANSPARENT_PEN, wx.WHITE_BRUSH)
+        dc.SelectObject(wx.NullBitmap)
+
+        # Read the bitmap since GetPixel isn't implemented for wxGCDC on macOS
+        img = bmp.ConvertToImage()
+        self.assertEqual(img.GetRed(8, 1), 255)
+        self.assertEqual(img.GetRed(2, 3), 255)
+        self.assertEqual(img.GetRed(5, 6), 255)
+        self.assertEqual(img.GetRed(6, 7), 0)
+
 
     @unittest.skipIf(not haveNumpy, "Numpy required for this test")
     def test_dcDrawPointArray(self):
