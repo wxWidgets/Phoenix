@@ -5,6 +5,7 @@ import random
 
 import os
 import pytest
+import wx.dataview as dv
 import wx.lib.agw.persist as PM
 
 #---------------------------------------------------------------------------
@@ -82,6 +83,37 @@ class lib_agw_persist_persistencemanager_Tests(wtc.WidgetTestCase):
         self._persistMgr.RegisterAndRestoreAll(self.frame)
 
         self.assertEqual(self._persistMgr.HasRestored(), False)
+
+
+    def makeTreeList(self):
+        tree = dv.TreeListCtrl(self.frame, style=dv.TL_MULTIPLE, name='PersistTreeList')
+        tree.AppendColumn('Name')
+        for i in range(3):
+            parent = tree.AppendItem(tree.GetRootItem(), 'Item %d' % i)
+            for j in range(2):
+                tree.AppendItem(parent, 'Item %d-%d' % (i, j))
+        return tree
+
+
+    def test_persistencemanagerTreeListCtrl(self):
+        self.frame.SetName('PersistTestFrame')
+        for restore in (False, True):
+            tree = self.makeTreeList()
+            second = tree.GetNextSibling(tree.GetFirstChild(tree.GetRootItem()))
+            if not restore:
+                tree.Expand(second)
+                tree.Select(tree.GetFirstChild(second))
+
+            persistMgr = PM.PersistenceManager.Get()
+            persistMgr.SetManagerStyle(PM.PM_SAVE_RESTORE_TREE_LIST_SELECTIONS | PM.PM_PERSIST_CONTROL_VALUE)
+            persistMgr.SetPersistenceFile(self._configFile1)
+            persistMgr.RegisterAndRestoreAll(self.frame)
+            if restore:
+                self.assertTrue(tree.IsExpanded(second))
+                self.assertTrue(tree.IsSelected(tree.GetFirstChild(second)))
+            persistMgr.SaveAndUnregister()
+            tree.Destroy()
+            PM.PersistenceManager.Free()
 
 
     def test_persistencemanagerConstantsExist(self):

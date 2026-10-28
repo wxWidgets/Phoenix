@@ -1236,6 +1236,14 @@ class TreeCtrlHandler(AbstractHandler):
         AbstractHandler.__init__(self, pObject)
 
 
+    def IsRootHidden(self):
+        """ Returns ``True`` if the tree's root item isn't shown. """
+
+        # wx.dataview.TreeListCtrl's root is always hidden and can't be
+        # selected, whatever its style
+        return isinstance(self._window, dv.TreeListCtrl) or self._window.HasFlag(wx.TR_HIDE_ROOT)
+
+
     def GetItemChildren(self, item=None, recursively=False):
         """
         Return the children of item as a list.
@@ -1250,6 +1258,15 @@ class TreeCtrlHandler(AbstractHandler):
                 return []
 
         children = []
+        if isinstance(self._window, dv.TreeListCtrl):
+            child = self._window.GetFirstChild(item)
+            while child.IsOk():
+                children.append(child)
+                if recursively:
+                    children.extend(self.GetItemChildren(child, True))
+                child = self._window.GetNextSibling(child)
+            return children
+
         child, cookie = self._window.GetFirstChild(item)
 
         while child and child.IsOk():
@@ -1301,7 +1318,7 @@ class TreeCtrlHandler(AbstractHandler):
         root = self._window.GetRootItem()
         if not root:
             return []
-        if self._window.HasFlag(wx.TR_HIDE_ROOT):
+        if self.IsRootHidden():
             return self.GetExpansionStateOfChildren(root)
         else:
             return self.GetExpansionStateOfItem(root)
@@ -1319,7 +1336,7 @@ class TreeCtrlHandler(AbstractHandler):
         root = self._window.GetRootItem()
         if not root:
             return
-        if self._window.HasFlag(wx.TR_HIDE_ROOT):
+        if self.IsRootHidden():
             self.SetExpansionStateOfChildren(listOfExpandedItems, root)
         else:
             self.SetExpansionStateOfItem(listOfExpandedItems, root)
@@ -1334,7 +1351,7 @@ class TreeCtrlHandler(AbstractHandler):
         root = self._window.GetRootItem()
         if not root:
             return []
-        if self._window.HasFlag(wx.TR_HIDE_ROOT):
+        if self.IsRootHidden():
             return self.GetSelectionStateOfChildren(root)
         else:
             return self.GetSelectionStateOfItem(root)
@@ -1352,7 +1369,7 @@ class TreeCtrlHandler(AbstractHandler):
         root = self._window.GetRootItem()
         if not root:
             return
-        if self._window.HasFlag(wx.TR_HIDE_ROOT):
+        if self.IsRootHidden():
             self.SetSelectedStateOfChildren(listOfSelectedItems, root)
         else:
             self.SetSelectedStateOfItem(listOfSelectedItems, root)
@@ -1372,7 +1389,7 @@ class TreeCtrlHandler(AbstractHandler):
         root = self._window.GetRootItem()
         if not root:
             return []
-        if self._window.HasFlag(wx.TR_HIDE_ROOT):
+        if self.IsRootHidden():
             return self.GetCheckedStateOfChildren(root)
         else:
             return self.GetCheckedStateOfItem(root)
@@ -1394,7 +1411,7 @@ class TreeCtrlHandler(AbstractHandler):
         root = self._window.GetRootItem()
         if not root:
             return
-        if self._window.HasFlag(wx.TR_HIDE_ROOT):
+        if self.IsRootHidden():
             self.SetCheckedStateOfChildren(listOfCheckedItems, root)
         else:
             self.SetCheckedStateOfItem(listOfCheckedItems, root)
@@ -1555,7 +1572,10 @@ class TreeCtrlHandler(AbstractHandler):
         """
 
         if self.GetItemIdentity(item) in listOfSelectedItems:
-            self._window.SelectItem(item)
+            if isinstance(self._window, dv.TreeListCtrl):
+                self._window.Select(item)
+            else:
+                self._window.SelectItem(item)
 
         self.SetSelectedStateOfChildren(listOfSelectedItems, item)
 
