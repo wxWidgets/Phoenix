@@ -45,7 +45,7 @@ class PixelBitmap:
         if type(Bitmap) == wx.Bitmap:
             self.Bitmap = Bitmap
         elif type(Bitmap) == wx.Image:
-            self.Bitmap = wx.BitmapFromImage(Bitmap)
+            self.Bitmap = wx.Bitmap(Bitmap)
         else:
             raise FC.FloatCanvasError("PixelBitmap takes only a wx.Bitmap or a wx.Image as input")
 
@@ -118,7 +118,7 @@ class DrawFrame(wx.Frame):
                            ])
         Canvas.GridOver = grids
 
-        FloatCanvas.EVT_MOTION(Canvas, self.OnMove )
+        Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
 
         self.Show()
         Canvas.ZoomToBB()
