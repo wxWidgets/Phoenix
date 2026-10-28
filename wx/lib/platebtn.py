@@ -129,9 +129,13 @@ class PlateButton(wx.Control):
         :keyword `style`: Button style
 
         """
-        super(PlateButton, self).__init__(parent, id, pos, size,
-                                          wx.BORDER_NONE|wx.TRANSPARENT_WINDOW,
-                                          name=name)
+        super().__init__()
+        # wx.TRANSPARENT_WINDOW does nothing since wxWidgets 3.3, so use a
+        # transparent background on MSW instead, which must be set up before
+        # the window is created
+        if wx.Platform == '__WXMSW__' and style & PB_STYLE_NOBG:
+            self.SetBackgroundStyle(wx.BG_STYLE_TRANSPARENT)
+        self.Create(parent, id, pos, size, wx.BORDER_NONE, name=name)
 
         # Attributes
         self.InheritAttributes()
