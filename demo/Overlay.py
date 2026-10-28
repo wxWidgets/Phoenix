@@ -100,6 +100,9 @@ class TestPanel(wx.Panel):
             # Draw the rubber-band rectangle using an overlay so it
             # will manage keeping the rectangle and the former window
             # contents separate.
+            # On MSW, the overlay is opaque unless this is called before the
+            # overlay is initialized, which happens again after each Reset.
+            self.overlay.SetOpacity(-1)
             cdc = wx.ClientDC(self)
             odc = wx.DCOverlay(self.overlay, cdc)
             odc.Clear()

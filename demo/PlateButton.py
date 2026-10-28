@@ -226,7 +226,8 @@ class TestPanel(scrolled.ScrolledPanel):
 
 class GradientPanel(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
+        wx.Panel.__init__(self, parent,
+                          style=wx.TAB_TRAVERSAL | wx.FULL_REPAINT_ON_RESIZE)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 
     def OnPaint(self, evt):

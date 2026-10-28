@@ -413,7 +413,10 @@ class Indicator(object):
             maxval = math.log10(maxval)
             minval = math.log10(minval)
 
-        pos = float(value-minval)/abs(maxval - minval)
+        if maxval == minval:
+            pos = 0.0
+        else:
+            pos = float(value - minval) / abs(maxval - minval)
 
         if orient == wx.HORIZONTAL:
             xpos = int(pos*right) - self._img.GetWidth()//2
@@ -1526,6 +1529,10 @@ class RulerCtrl(wx.Panel):
         # See if any of the pixels we need to draw this
         # label is already covered
 
+        # The label is longer than the ruler
+        if strpos < 0:
+            return
+
         if major and self._labelmajor or not major and self._labelminor:
             for ii in range(strlen):
                 if self._bits[strpos+ii]:
@@ -1599,6 +1606,10 @@ class RulerCtrl(wx.Panel):
         else:
             for ii in range(self._length):
                 self._bits[ii] = 0
+
+        if self._length <= 0:
+            self._valid = True
+            return
 
         if not self._log:
 

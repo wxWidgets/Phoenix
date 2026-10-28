@@ -455,9 +455,9 @@ class PersistentFrame2(wx.Frame):
         text = "Row: %d, Col: %d"
         for row in range(30):
             if random.randint(0, 1):
-                idx = listCtrl.InsertItem(sys.maxsize, text%(row+1, 1), 0)
+                idx = listCtrl.InsertItem(listCtrl.GetItemCount(), text % (row + 1, 1), 0)
             else:
-                idx = listCtrl.InsertItem(sys.maxsize, text%(row+1, 1))
+                idx = listCtrl.InsertItem(listCtrl.GetItemCount(), text % (row + 1, 1))
 
             for col in range(1, 6):
                 listCtrl.SetItem(idx, col, text%(row+1, col+1), random.randint(0, 1)-1)

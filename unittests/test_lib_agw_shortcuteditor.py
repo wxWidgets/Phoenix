@@ -15,6 +15,12 @@ class lib_agw_shortcuteditor_Tests(wtc.WidgetTestCase):
         SE.EVT_SHORTCUT_CHANGING
         SE.EVT_SHORTCUT_CHANGED
 
+    def test_lib_agw_shortcuteditorKeyNamesParse(self):
+        for name in SE.KEYMAP.values():
+            entry = wx.AcceleratorEntry()
+            self.assertTrue(entry.FromString('Ctrl+' + name),
+                            'wx does not recognize key name %r' % name)
+
 #---------------------------------------------------------------------------
 
 

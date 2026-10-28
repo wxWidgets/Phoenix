@@ -384,7 +384,7 @@ class BalloonFrame(wx.Frame):
             ypos = position[1] - boxheight + 20
 
         bmp = wx.Bitmap(size.x,size.y)
-        dc = wx.BufferedDC(None, bmp)
+        dc = wx.MemoryDC(bmp)
         dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
         dc.SetPen(wx.Pen(wx.BLACK, 1, wx.PENSTYLE_TRANSPARENT))
@@ -407,6 +407,8 @@ class BalloonFrame(wx.Frame):
         else:
             dc.DrawPolygon(((20, boxheight), (20, boxheight+20), (40, boxheight)))
 
+        # The bitmap can't be used for the region on MSW while it's selected
+        dc.SelectObject(wx.NullBitmap)
         r = wx.Region(bmp, wx.BLACK)
         self.hasShape = self.SetShape(r)
 

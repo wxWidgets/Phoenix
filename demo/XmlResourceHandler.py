@@ -39,7 +39,7 @@ class MyCustomPanel(wx.Panel):
     def OnSize(self, evt):
         sz = self.GetSize()
         w, h = self.t.GetTextExtent(self.t.GetLabel())
-        self.t.SetPosition(((sz.width-w)/2, (sz.height-h)/2))
+        self.t.SetPosition(((sz.width - w) // 2, (sz.height - h) // 2))
 
 
 # To do it the more complex way, (see below) we need to write the
@@ -63,7 +63,7 @@ class PreMyCustomPanel(wx.Panel):
     def OnSize(self, evt):
         sz = self.GetSize()
         w, h = self.t.GetTextExtent(self.t.GetLabel())
-        self.t.SetPosition(((sz.width-w)/2, (sz.height-h)/2))
+        self.t.SetPosition(((sz.width - w) // 2, (sz.height - h) // 2))
 
 #----------------------------------------------------------------------
 

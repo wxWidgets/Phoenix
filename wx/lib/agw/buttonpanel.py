@@ -2127,7 +2127,8 @@ class ButtonPanel(wx.Panel):
          the main caption will not be displayed.
         """
 
-        children = self._mainsizer.GetChildren()
+        oldSizer = self._mainsizer
+        children = list(oldSizer.GetChildren())
         self.RemoveAllButtons()
         self.RemoveAllSeparators()
 
@@ -2161,8 +2162,11 @@ class ButtonPanel(wx.Panel):
                                    child.GetFlag())
                 else:
                     # This is a wxPython control
-                    self.AddControl(child.GetWindow(), child.GetProportion(),
-                                    child.GetFlag(), child.GetBorder())
+                    window = child.GetWindow()
+                    proportion, flag, border = (child.GetProportion(),
+                                                child.GetFlag(), child.GetBorder())
+                    oldSizer.Detach(window)
+                    self.AddControl(window, proportion, flag, border)
 
         self.SetSizer(self._mainsizer)
 

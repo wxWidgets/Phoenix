@@ -2308,7 +2308,7 @@ class wxPythonDemo(wx.Frame):
         perspectiveName = dlg.GetValue()
         menuItems = self.perspectives_menu.GetMenuItems()
         for item in menuItems:
-            if item.GetLabel() == perspectiveName:
+            if item.GetItemLabel() == perspectiveName:
                 wx.MessageBox("The selected perspective name:\n\n%s\n\nAlready exists."%perspectiveName,
                               "Error", style=wx.ICON_ERROR)
                 return
@@ -2329,7 +2329,7 @@ class wxPythonDemo(wx.Frame):
 
         for indx, item in enumerate(menuItems):
             if indx > 0:
-                lst.append(item.GetLabel())
+                lst.append(item.GetItemLabel())
 
         dlg = wx.MultiChoiceDialog(self,
                                    "Please select the perspectives\nyou would like to delete:",
@@ -2344,7 +2344,7 @@ class wxPythonDemo(wx.Frame):
                 if item.IsChecked():
                     loadDefault = True
                     self.perspectives_menu.GetMenuItems()[0].Check(True)
-                self.perspectives_menu.DeleteItem(item)
+                self.perspectives_menu.Delete(item)
                 lst.remove(sel)
 
         if loadDefault:
