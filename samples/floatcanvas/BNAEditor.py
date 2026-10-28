@@ -7,7 +7,6 @@ BNA is a simple text format for storing polygons in lat-long coordinates.
 
 """
 import os, sys
-import sets
 
 import numpy as np
 
@@ -64,7 +63,7 @@ class BNAData:
         self.Names = []
         self.Types = []
 
-        with open(filename,'rU') as file_:
+        with open(filename) as file_:
             for line in file_:
                 if not line:
                     break
@@ -77,7 +76,7 @@ class BNAData:
                 self.Names.append(Name)
                 polygon = np.zeros((num_points,2),float)
                 for i in range(num_points):
-                    polygon[i,:] = map(float, file_.readline().split(','))
+                    polygon[i, :] = [float(x) for x in file_.readline().split(',')]
                 self.PointsData.append(polygon)
 
         return None
@@ -127,11 +126,11 @@ class DrawFrame(wx.Frame):
                                           BackgroundColor = "DARK SLATE BLUE"
                                           ).Canvas
 
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove )
-        FloatCanvas.EVT_LEFT_UP(self.Canvas, self.OnLeftUp )
-        FloatCanvas.EVT_LEFT_DOWN(self.Canvas, self.OnLeftDown)
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp)
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
 
         try:
             self.FileDialog = wx.FileDialog(self, "Pick a BNA file",".","","*", wx.FD_OPEN)
@@ -165,7 +164,7 @@ class DrawFrame(wx.Frame):
 
     def OpenBNA(self, event):
         if self.FileDialog is None:
-            self.FileDialog = wx.FileDialog(self, "Pick a BNA file",style= wx.OPEN)
+            self.FileDialog = wx.FileDialog(self, "Pick a BNA file", style=wx.FD_OPEN)
         dlg = self.FileDialog
         dlg.SetMessage("Pick a BNA file")
         if dlg.ShowModal() == wx.ID_OK:
@@ -289,7 +288,7 @@ class DrawFrame(wx.Frame):
                 Poly.BNAIndex = i
                 AllPolys.append(Poly)
             self.Canvas.ZoomToBB()
-            self.ChangedPolys = sets.Set()
+            self.ChangedPolys = set()
             self.AllPolys = AllPolys
         except:
             #raise
