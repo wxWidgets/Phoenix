@@ -50,19 +50,30 @@ class TestPanel(wx.Panel):
             # Draw the rubber-band rectangle using an overlay so it
             # will manage keeping the rectangle and the former window
             # contents separate.
-            dc = wx.ClientDC(self)
-            odc = wx.DCOverlay(self.overlay, dc)
+            # On MSW, the overlay is opaque unless this is called before the
+            # overlay is initialized, which happens again after each Reset.
+            self.overlay.SetOpacity(-1)
+            cdc = wx.ClientDC(self)
+            odc = wx.DCOverlay(self.overlay, cdc)
             odc.Clear()
 
             # Mac's DC is already the same as a GCDC, and it causes
             # problems with the overlay if we try to use an actual
             # wx.GCDC so don't try it.
             if 'wxMac' not in wx.PlatformInfo:
-                dc = wx.GCDC(dc)
+                dc = wx.GCDC(cdc)
+            else:
+                dc = cdc
 
             dc.SetPen(wx.Pen("black", 2))
             dc.SetBrush(wx.Brush(wx.Colour(0xC0, 0xC0, 0xC0, 0x80)))
             dc.DrawRectangle(rect)
+
+            # The GCDC only flushes its drawing when it is destroyed, and that
+            # must happen before the odc is destroyed so the drawing ends up on
+            # the overlay. And the odc must be destroyed before the cdc is.
+            del dc
+            del odc
 
 
     def OnLeftUp(self, evt):
