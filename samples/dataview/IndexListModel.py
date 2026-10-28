@@ -69,10 +69,12 @@ class TestModel(dv.DataViewIndexListModel):
             item2, item1 = item1, item2
         row1 = self.GetRow(item1)
         row2 = self.GetRow(item2)
+        a = self.data[row1][col]
+        b = self.data[row2][col]
         if col == 0:
-            return cmp(int(self.data[row1][col]), int(self.data[row2][col]))
-        else:
-            return cmp(self.data[row1][col], self.data[row2][col])
+            a = int(a)
+            b = int(b)
+        return (a > b) - (a < b)
 
 
     def DeleteRows(self, rows):
