@@ -51,10 +51,10 @@ class TextDocPrintout(wx.Printout):
         # page/line height
         topLeft, bottomRight = self.margins
         dw, dh = dc.GetSize()
-        self.x1 = topLeft.x * self.logUnitsMM
-        self.y1 = topLeft.y * self.logUnitsMM
-        self.x2 = dc.DeviceToLogicalXRel(dw) - bottomRight.x * self.logUnitsMM
-        self.y2 = dc.DeviceToLogicalYRel(dh) - bottomRight.y * self.logUnitsMM
+        self.x1 = int(topLeft.x * self.logUnitsMM)
+        self.y1 = int(topLeft.y * self.logUnitsMM)
+        self.x2 = int(dc.DeviceToLogicalXRel(dw) - bottomRight.x * self.logUnitsMM)
+        self.y2 = int(dc.DeviceToLogicalYRel(dh) - bottomRight.y * self.logUnitsMM)
 
         # use a 1mm buffer around the inside of the box, and a few
         # pixels between each line
@@ -71,7 +71,7 @@ class TextDocPrintout(wx.Printout):
         dc = self.GetDC()
         self.CalculateScale(dc)
         self.CalculateLayout(dc)
-        self.numPages = len(self.lines) / self.linesPerPage
+        self.numPages = len(self.lines) // self.linesPerPage
         if len(self.lines) % self.linesPerPage != 0:
             self.numPages += 1
 
@@ -90,8 +90,8 @@ class TextDocPrintout(wx.Printout):
 
         # Draw the text lines for this page
         line = (page-1) * self.linesPerPage
-        x = self.x1 + self.logUnitsMM
-        y = self.y1 + self.logUnitsMM
+        x = int(self.x1 + self.logUnitsMM)
+        y = int(self.y1 + self.logUnitsMM)
         while line < (page * self.linesPerPage):
             dc.DrawText(self.lines[line], x, y)
             y += self.lineHeight
