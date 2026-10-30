@@ -6068,6 +6068,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         self._countVirt = 0
         self._lineFrom = None
         self._lineTo = - 1
+        self._lineFromViewY = None
         self._linesPerPage = 0
 
         self._headerWidth = 0
@@ -10526,8 +10527,12 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         if not self.InReportView():
             raise Exception("this is for report mode only")
 
-        if self._lineFrom == -1:
+        # On MSW, wx paints the window after OnScroll resets the range but
+        # before it scrolls, so a range can be computed for the old position
+        viewY = self.GetViewStart()[1]
+        if self._lineFrom == -1 or viewY != self._lineFromViewY:
 
+            self._lineFromViewY = viewY
             count = self.GetItemCount()
 
             if count:

@@ -75,6 +75,29 @@ class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
         # The text is the only dark thing drawn
         self.assertLess(min(bmp.ConvertToImage().GetData()), 100)
 
+    def test_lib_agw_ultimatelistctrlVisibleRangeAfterScroll(self):
+        ulc = VirtualList(self.frame, size=(300, 200), agwStyle=wx.LC_REPORT | wx.LC_VIRTUAL)
+        ulc.InsertColumn(0, 'First', width=200)
+        ulc.SetItemCount(1000)
+        ulc.SendSizeEvent()
+        main = ulc._mainWin
+        main.RecalculatePositions(True)
+        self.assertEqual(main.GetVisibleLinesRange()[0], 0)
+
+        # On MSW, wx's Update() paints the window after OnScroll resets the
+        # visible range, but before the window is scrolled
+        reset = main.ResetVisibleLinesRange
+
+        def resetAndPaint(*args):
+            reset(*args)
+            main.GetVisibleLinesRange()
+
+        evt = wx.ScrollWinEvent(wx.wxEVT_SCROLLWIN_THUMBTRACK, 500, wx.VERTICAL)
+        with mock.patch.object(main, 'ResetVisibleLinesRange', resetAndPaint):
+            main.GetEventHandler().ProcessEvent(evt)
+        self.assertEqual(main.GetViewStart()[1], 500)
+        self.assertEqual(main.GetVisibleLinesRange()[0], 500)
+
     def test_lib_agw_ultimatelistctrlCustomRendererHeights(self):
         # Fill the list before it's shown, like the Windows 7 Explorer demo
         self.frame.Hide()
