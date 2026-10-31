@@ -2268,6 +2268,7 @@ class PlotCanvas(wx.Panel):
         from .polyobjects import PolyLine
         from .polyobjects import PolyMarker
         from .polyobjects import PolyBoxPlot
+        from .polyobjects import PolyBarsBase
 
         for i in range(len(graphics)):
             o = graphics[i]
@@ -2277,7 +2278,7 @@ class PlotCanvas(wx.Panel):
                 pnt = (trhc[0] + legendLHS + legendSymExt[0] / 2.,
                        trhc[1] + s + lineHeight / 2.)
                 o.draw(dc, self.printerScale, coord=np.array([pnt]))
-            elif isinstance(o, PolyLine):
+            elif isinstance(o, (PolyLine, PolyBarsBase)):
                 # draw line with legend
                 pnt1 = (trhc[0] + legendLHS, trhc[1] + s + lineHeight / 2.)
                 pnt2 = (trhc[0] + legendLHS + legendSymExt[0],
