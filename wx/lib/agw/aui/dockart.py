@@ -1035,9 +1035,9 @@ class ModernDockArt(AuiDefaultDockArt):
         draw_text = ChopText(dc, text, variable)
 
         if captionLeft:
-            dc.DrawRotatedText(draw_text, rect.x+(rect.width/2)-(h/2)-diff, rect.y+rect.height-3-caption_offset, 90)
+            dc.DrawRotatedText(draw_text, rect.x + rect.width // 2 - h // 2 - diff, rect.y + rect.height - 3 - caption_offset, 90)
         else:
-            dc.DrawText(draw_text, rect.x+3+caption_offset, rect.y+(rect.height/2)-(h/2)-diff)
+            dc.DrawText(draw_text, rect.x + 3 + caption_offset, rect.y + rect.height // 2 - h // 2 - diff)
 
 
     def DrawCaptionBackground(self, dc, rect, pane):
