@@ -652,34 +652,34 @@ class FlatNotebookDemo(wx.Frame):
         self.book.DeletePage(self.book.GetSelection())
 
 
+    def GetTabNumber(self, message, caption):
+
+        count = self.book.GetPageCount()
+        if count == 0:
+            return -1
+
+        return wx.GetNumberFromUser(message, "Tab:", caption, 0, 0, count - 1, self)
+
+
     def OnSetSelection(self, event):
 
-        dlg = wx.TextEntryDialog(self, "Enter Tab Number to select:", "Set Selection")
-
-        if dlg.ShowModal() == wx.ID_OK:
-
-            val = dlg.GetValue()
-            self.book.SetSelection(int(val))
+        val = self.GetTabNumber("Enter Tab Number to select:", "Set Selection")
+        if val != -1:
+            self.book.SetSelection(val)
 
 
     def OnEnableTab(self, event):
 
-        dlg = wx.TextEntryDialog(self, "Enter Tab Number to enable:", "Enable Tab")
-
-        if dlg.ShowModal() == wx.ID_OK:
-
-            val = dlg.GetValue()
-            self.book.EnableTab(int(val))
+        val = self.GetTabNumber("Enter Tab Number to enable:", "Enable Tab")
+        if val != -1:
+            self.book.EnableTab(val)
 
 
     def OnDisableTab(self, event):
 
-        dlg = wx.TextEntryDialog(self, "Enter Tab Number to disable:", "Disable Tab")
-
-        if dlg.ShowModal() == wx.ID_OK:
-
-            val = dlg.GetValue()
-            self.book.EnableTab(int(val), False)
+        val = self.GetTabNumber("Enter Tab Number to disable:", "Disable Tab")
+        if val != -1:
+            self.book.EnableTab(val, False)
 
 
     def OnEnableDrag(self, event):
@@ -715,19 +715,22 @@ class FlatNotebookDemo(wx.Frame):
     def OnSetAllPagesShapeAngle(self, event):
 
 
-        dlg = wx.TextEntryDialog(self, "Enter an inclination of header borders (0-15):", "Set Angle")
-        if dlg.ShowModal() == wx.ID_OK:
-
-            val = dlg.GetValue()
-            self.book.SetAllPagesShapeAngle(int(val))
+        val = wx.GetNumberFromUser("Enter an inclination of header borders:", "Angle:",
+                                   "Set Angle", 0, 0, 15, self)
+        if val != -1:
+            self.book.SetAllPagesShapeAngle(val)
 
 
     def OnSetPageImage(self, event):
 
-        dlg = wx.TextEntryDialog(self, "Enter an image index (0-%i):"%(self.book.GetImageList().GetImageCount()-1), "Set Image Index")
-        if dlg.ShowModal() == wx.ID_OK:
-            val = dlg.GetValue()
-            self.book.SetPageImage(self.book.GetSelection(), int(val))
+        if self.book.GetSelection() == -1:
+            return
+
+        count = self.book.GetImageList().GetImageCount()
+        val = wx.GetNumberFromUser("Enter an image index:", "Image:", "Set Image Index",
+                                   0, 0, count - 1, self)
+        if val != -1:
+            self.book.SetPageImage(self.book.GetSelection(), val)
 
 
     def OnAdvanceSelectionFwd(self, event):

@@ -351,7 +351,6 @@ class PyAUIFrame(wx.Frame):
         self._mgr.GetPane("grid_content").Show()
         self._mgr.GetPane("test8").Show().Left().Layer(0).Row(0).Position(0)
         self._mgr.GetPane("test10").Show().Bottom().Layer(0).Row(0).Position(0)
-        self._mgr.GetPane("html_content").Show()
 
         perspective_vert = self._mgr.SavePerspective()
 
@@ -361,6 +360,7 @@ class PyAUIFrame(wx.Frame):
 
         self._mgr.GetPane("tbvert").Hide()
         self._mgr.GetPane("grid_content").Hide()
+        self._mgr.GetPane("html_content").Show()
 
         # "commit" all changes made to FrameManager
         self._mgr.Update()

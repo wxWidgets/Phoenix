@@ -1946,8 +1946,10 @@ class AuiFrame(wx.Frame):
                     nb.SetAGWWindowStyleFlag(self._notebook_style)
 
                 if evId == ID_NotebookCloseButtonAll:
-                    # Demonstrate how to remove a close button from a tab
-                    nb.SetCloseButton(2, False)
+                    # Demonstrate how to remove a close button from a tab.
+                    # The manager's own notebooks for tabbed panes keep their style.
+                    if nb.GetAGWWindowStyleFlag() & aui.AUI_NB_CLOSE_ON_ALL_TABS:
+                        nb.SetCloseButton(2, False)
                 elif evId == ID_NotebookDclickUnsplit:
                     nb.SetSashDClickUnsplit(event.IsChecked())
 

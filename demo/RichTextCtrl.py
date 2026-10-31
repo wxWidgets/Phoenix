@@ -317,7 +317,7 @@ class RichTextFrame(wx.Frame):
         handler.SetFontSizeMapping([7,9,11,12,14,22,100])
 
         stream = BytesIO()
-        if not handler.SaveStream(self.rtc.GetBuffer(), stream):
+        if not handler.SaveFile(self.rtc.GetBuffer(), stream):
             return
 
         import wx.html

@@ -2177,7 +2177,7 @@ class FNBRenderer(object):
                 tabWidth += 16 + pc._pParent.GetPadding()
             else:
                 # Default style
-                tabWidth += 16 + pc._pParent.GetPadding() + shapePoints/2
+                tabWidth += 16 + pc._pParent.GetPadding() + shapePoints // 2
 
         return tabWidth
 
@@ -2743,9 +2743,9 @@ class FNBRendererFirefox2(FNBRenderer):
         imageYCoord = (pc.HasAGWFlag(FNB_BOTTOM) and [6] or [8])[0]
 
         if hasImage:
-            textOffset = 2*padding + 16 + shapePoints/2
+            textOffset = 2 * padding + 16 + shapePoints // 2
         else:
-            textOffset = padding + shapePoints/2
+            textOffset = padding + shapePoints // 2
 
         textOffset += 2
 
@@ -3665,7 +3665,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
                 tabWidth += 16 + pc._pParent.GetPadding()
             else:
                 # Default style
-                tabWidth += 16 + pc._pParent.GetPadding() + shapePoints/2
+                tabWidth += 16 + pc._pParent.GetPadding() + shapePoints // 2
 
         return tabWidth
 
@@ -3708,7 +3708,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         # The width of the images are 16 pixels
         padding = pc.GetParent().GetPadding()
         hasImage = pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
-        imageYCoord = FNB_HEIGHT_SPACER/2
+        imageYCoord = FNB_HEIGHT_SPACER // 2
 
         if hasImage:
             textOffset = 2*pc._pParent._nPadding + 16

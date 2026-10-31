@@ -762,19 +762,6 @@ class FlatMenuDemo(wx.Frame):
         self.log.write("Received Flat menu update UI event ID: %d\n"%(event.GetId()))
 
 
-    def GetStringFromUser(self, msg):
-
-        dlg = wx.TextEntryDialog(self, msg, "Enter Text")
-
-        userString = ""
-        if dlg.ShowModal() == wx.ID_OK:
-            userString = dlg.GetValue()
-
-        dlg.Destroy()
-
-        return userString
-
-
     def OnFileOpenDialog(self, evt):
         dlg = wx.FileDialog(self, defaultDir = os.getcwd(),
                             wildcard = "All Files|*", style = wx.FD_OPEN | wx.FD_CHANGE_DIR)
@@ -803,18 +790,19 @@ class FlatMenuDemo(wx.Frame):
 
         if event.GetId() == MENU_REMOVE_MENU:
 
-            idxStr = self.GetStringFromUser("Insert menu index to remove:")
-            if idxStr.strip() != "":
-
-                idx = int(idxStr)
+            count = self._mb.GetMenuCount()
+            if count == 0:
+                return
+            idx = wx.GetNumberFromUser("Insert menu index to remove:", "Index:", "Remove Menu",
+                                       0, 0, count - 1, self)
+            if idx != -1:
                 self._mb.Remove(idx)
 
         elif event.GetId() == MENU_DISABLE_MENU_ITEM:
 
-            idxStr = self.GetStringFromUser("Insert menu item ID to be disabled (10005 - 10011):")
-            if idxStr.strip() != "":
-
-                idx = int(idxStr)
+            idx = wx.GetNumberFromUser("Insert menu item ID to be disabled:", "ID:", "Disable Menu Item",
+                                       MENU_NEW_FILE, MENU_NEW_FILE, MENU_PASTE, self)
+            if idx != -1:
                 mi = self._mb.FindMenuItem(idx)
                 if mi:
                     mi.Enable(False)

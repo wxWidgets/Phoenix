@@ -361,7 +361,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
     def OnPopupOne(self, event):
         self.log.WriteText("Popup one\n")
         print("FindItem:", self.list.FindItem(-1, "Roxette"))
-        print("FindItemData:", self.list.FindItemData(-1, 11))
+        print("FindItem (data):", self.list.FindItem(-1, 11))
 
     def OnPopupTwo(self, event):
         self.log.WriteText("Selected items:\n")

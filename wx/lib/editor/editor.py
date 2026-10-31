@@ -55,7 +55,7 @@ def LineTrimmer(lineOfText):
         return lineOfText
 
 def LineSplitter(text):
-    return map (LineTrimmer, text.split('\n'))
+    return [LineTrimmer(line) for line in text.split('\n')]
 
 
 #----------------------------

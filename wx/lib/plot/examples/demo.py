@@ -271,7 +271,8 @@ def _draw9Objects():
     data = 2.25 * np.random.randn(50) + 3
     heights, bins = np.histogram(data, bins=10)
 
-    hist_fixed_binsize = wxplot.PolyHistogram(heights, bins)
+    hist_fixed_binsize = wxplot.PolyHistogram(heights, bins,
+                                              legend='Fixed binsize')
 
     # Bins can also be arbitrary widths:
     hist_variable_binsize = wxplot.PolyHistogram(
@@ -280,6 +281,7 @@ def _draw9Objects():
         fillcolour=wx.BLUE,
         edgewidth=2,
         edgecolour=wx.RED,
+        legend='Variable binsize',
     )
 
     return wxplot.PlotGraphics(
@@ -297,7 +299,7 @@ def _draw10Objects():
     bar_height = np.array([1, 5, 8, 16, 12, 15, 18, 23, 4, 7, 9, 6])
     bar_location = np.array([0, 2, 4, 6, 8, 10, 11, 12, 16, 20, 30])
     data = list(zip(bar_location, bar_height))
-    bars = [wxplot.PolyBars(data)]
+    bars = [wxplot.PolyBars(data, legend='Count')]
 
     return wxplot.PlotGraphics(bars, "Histogram", "XValue", "Count")
 
