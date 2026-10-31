@@ -97,6 +97,23 @@ class lib_agw_flatnotebook_Tests(wtc.WidgetTestCase):
         FNB.FNB_HIDE_TABS
         FNB.FNB_NAV_BUTTONS_WHEN_NEEDED
 
+    def test_lib_agw_flatnotebookDrawTabs(self):
+        styles = [0, FNB.FNB_VC71, FNB.FNB_VC8, FNB.FNB_FANCY_TABS, FNB.FNB_FF2, FNB.FNB_RIBBON_TABS]
+        for style in styles:
+            nb = FNB.FlatNotebook(self.frame, size=(400, 200), agwStyle=style | FNB.FNB_X_ON_TAB)
+            il = wx.ImageList(16, 16)
+            il.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER, size=(16, 16)))
+            nb.SetImageList(il)
+            nb.AddPage(wx.Panel(nb), "Page1", imageId=0)
+            nb.AddPage(wx.Panel(nb), "Page2", imageId=0)
+            nb.SetSelection(0)
+
+            pc = nb._pages
+            bmp = wx.Bitmap(400, 30)
+            dc = wx.MemoryDC(bmp)
+            pc._mgr.GetRenderer(nb.GetAGWWindowStyleFlag()).DrawTabs(pc, dc)
+            dc.SelectObject(wx.NullBitmap)
+
     def test_lib_agw_flatnotebookEvents(self):
 
         FNB.EVT_FLATNOTEBOOK_PAGE_CHANGED
