@@ -155,8 +155,9 @@ class TestHtmlPanel(wx.Panel):
         dlg = wx.TextEntryDialog(self, "Enter a URL")
 
         if dlg.ShowModal() == wx.ID_OK:
-            url = dlg.GetValue()
-            self.html.LoadPage(url)
+            url = dlg.GetValue().strip()
+            if url:
+                self.html.LoadPage(url)
 
         dlg.Destroy()
 
