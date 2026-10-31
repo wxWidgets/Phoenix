@@ -58,6 +58,27 @@ WM_DESTROY      = 2
 
 #------------------------------------------------------------------------------
 
+class IOleInPlaceActiveObject(myole4ax.IOleWindow):
+    # myole4ax.tlb declares the pointers as a 32-bit long, which would truncate
+    # them on 64-bit Windows
+    _iid_ = myole4ax.IOleInPlaceActiveObject._iid_
+    _methods_ = [
+        comtypes.COMMETHOD([], ct.c_long, 'TranslateAccelerator',
+                           (['in'], ct.c_void_p, 'lpmsg')),
+        comtypes.COMMETHOD([], ct.c_long, 'OnFrameWindowActivate',
+                           (['in'], ct.c_long, 'fActivate')),
+        comtypes.COMMETHOD([], ct.c_long, 'OnDocWindowActivate',
+                           (['in'], ct.c_long, 'fActivate')),
+        comtypes.COMMETHOD([], ct.c_long, 'ResizeBorder',
+                           (['in'], ct.c_void_p, 'prcBorder'),
+                           (['in'], ct.POINTER(myole4ax.IOleInPlaceUIWindow), 'pUIWindow'),
+                           (['in'], ct.c_long, 'fFrameWindow')),
+        comtypes.COMMETHOD([], ct.c_long, 'EnableModeless',
+                           (['in'], ct.c_long, 'fEnable')),
+    ]
+
+#------------------------------------------------------------------------------
+
 class ActiveXCtrl(wx.msw.PyAxBaseWindow):
     """
     A wx.Window for hosting ActiveX controls.  The COM interface of
@@ -107,7 +128,7 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
         # Fetch the interface for IOleInPlaceActiveObject. We'll use this
         # later to call its TranslateAccelerator method so the AX Control can
         # deal with things like tab traversal and such within itself.
-        self.ipao = self._ax.QueryInterface(myole4ax.IOleInPlaceActiveObject)
+        self.ipao = self._ax.QueryInterface(IOleInPlaceActiveObject)
 
         # Use this object as the event sink for the ActiveX events
         self._evt_connections = []
@@ -152,7 +173,7 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
         # wants them to be done. MSWTranslateMessage is called before
         # wxWidgets handles and eats the navigation keys itself.
         try:
-            res = self.ipao.TranslateAccelerator(msg)
+            res = self.ipao.TranslateAccelerator(int(msg))
             if res == hr.S_OK:
                 return True
         except OSError:
