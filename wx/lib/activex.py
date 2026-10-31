@@ -111,12 +111,11 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
 
         # create the control
         atl.AtlAxWinInit()
-        hInstance = kernel32.GetModuleHandleA(None)
         hwnd = user32.CreateWindowExA(0, b"AtlAxWin", axID.encode("ASCII"),
                                       WS_CHILD | WS_VISIBLE
                                       | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
                                       x,y, w,h, parent.GetHandle(), None,
-                                      hInstance, 0)
+                                      None, 0)
         assert hwnd != 0
 
         # get the Interface for the Ax control
