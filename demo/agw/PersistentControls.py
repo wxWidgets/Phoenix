@@ -560,7 +560,7 @@ class PersistentFrame2(wx.Frame):
             name = child.GetName()
 
             if name not in PM.BAD_DEFAULT_NAMES and "wxtreelist" not in name and \
-               "AuiTabCtrl" not in name:
+               "AuiTabCtrl" not in name and PM.HasCtrlHandler(child):
                 self._persistMgr.RegisterAndRestore(child)
 
             if child.GetChildren():

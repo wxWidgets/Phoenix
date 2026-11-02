@@ -39,7 +39,8 @@ class TestPanel(wx.Panel):
                 # sounds can also be loaded from a buffer object
                 with open(opj('data/plan.wav'), 'rb') as fid:
                     data = fid.read()
-                sound = wx.SoundFromData(data)
+                sound = wx.adv.Sound()
+                sound.CreateFromData(data)
 
             self.log.write("before Play...\n")
             sound.Play(wx.adv.SOUND_ASYNC)

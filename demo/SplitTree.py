@@ -63,7 +63,7 @@ class TestValueWindow(gizmos.TreeCompanionWindow):
 
             text = text + tree.GetItemText(itemId)
             pen = wx.Pen(
-                wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DLIGHT),
+                wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT),
                 1, wx.PENSTYLE_SOLID
                 )
 

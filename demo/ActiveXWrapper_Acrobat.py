@@ -99,7 +99,7 @@ class TestPanel(wx.Panel):
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
-    if wxPlatform == '__WXMSW__':
+    if wx.Platform == '__WXMSW__':
         win = TestPanel(nb, log)
         return win
     else:

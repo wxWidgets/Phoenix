@@ -375,7 +375,7 @@ class TreeButtonsDialog(wx.Dialog):
         topsizer.Add(self.listicons, 0, wx.ALL|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
         label_2 = wx.StaticText(self, -1, "Collapsed")
         sizer_1.Add(label_2, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 10)
-        sizer_1.Add((20, 20), 1, wx.ALIGN_RIGHT|wx.ADJUST_MINSIZE, 0)
+        sizer_1.Add((20, 20), 1, wx.ADJUST_MINSIZE, 0)
         sizer_1.Add(self.bitmap_plus, 1, wx.RIGHT|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 10)
         rightsizer.Add(sizer_1, 0, wx.EXPAND, 0)
         label_3 = wx.StaticText(self, -1, "Expanded")
@@ -489,7 +489,7 @@ class CheckDialog(wx.Dialog):
         topsizer.Add(self.listicons, 0, wx.ALL|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
         label_2 = wx.StaticText(self, -1, "Checked")
         sizer_1.Add(label_2, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 10)
-        sizer_1.Add((20, 20), 1, wx.ALIGN_RIGHT|wx.ADJUST_MINSIZE, 0)
+        sizer_1.Add((20, 20), 1, wx.ADJUST_MINSIZE, 0)
         sizer_1.Add(self.bitmap_check, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 10)
         rightsizer.Add(sizer_1, 0, wx.EXPAND, 0)
         label_3 = wx.StaticText(self, -1, "Not Checked")
@@ -1721,7 +1721,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         font = self.itemdict["font"]
 
         if font is None:
-            font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
 
         data.SetInitialFont(font)
 
@@ -2097,7 +2097,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                 keycode = event.GetUnicodeKey()
                 if keycode <= 127:
                     keycode = event.GetKeyCode()
-                keyname = "\"" + unichr(event.GetUnicodeKey()) + "\""
+                keyname = "\"" + chr(event.GetUnicodeKey()) + "\""
                 if keycode < 27:
                     keyname = "Ctrl-%s" % chr(ord('A') + keycode-1)
 
