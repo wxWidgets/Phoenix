@@ -553,6 +553,13 @@ class testSides(wtc.WidgetTestCase):
         self.assertTrue( self.B.Top == 10.0  )
 
 
+class testRectBBox(wtc.WidgetTestCase):
+
+    def testPointInside(self):
+        box = RectBBox([[0, 0], [2, 2]], edges=[[0, 2], [0, 0], [2, 0], [2, 2]])
+        self.assertTrue(box.PointInside((1, 1)))
+        self.assertFalse(box.PointInside((3, 3)))
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

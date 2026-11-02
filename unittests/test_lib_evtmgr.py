@@ -11,6 +11,10 @@ from wx.lib.evtmgr import eventManager
 
 class lib_evtmgr_Tests(wtc.WidgetTestCase):
 
+    def test_lib_evtmgrGetStats(self):
+        stats = eventManager.GetStats()
+        self.assertIn('Adapters: Message', stats)
+
     def test_lib_evtmgrNoDeprecationWarning(self):
         # Use a new interpreter since wx.lib.pubsub has already been imported
         # in this one

@@ -1278,8 +1278,8 @@ class GraphicsContext(GraphicsObject):
         if len(args) == 1:
             stops = args[0]
         elif len(args) == 2:
-            c1 = _makeColour(c1)
-            c2 = _makeColour(c2)
+            c1 = _makeColour(args[0])
+            c2 = _makeColour(args[1])
             stops = GraphicsGradientStops(c1, c2)
         else:
             raise ValueError("Invalid args passed to CreateLinearGradientBrush")
@@ -1303,8 +1303,8 @@ class GraphicsContext(GraphicsObject):
         if len(args) ==1:
             stops = args[0]
         elif len(args) == 2:
-            oColour = _makeColour(oColour)
-            cColour = _makeColour(cColour)
+            oColour = _makeColour(args[0])
+            cColour = _makeColour(args[1])
             stops = GraphicsGradientStops(oColour, cColour)
         else:
             raise ValueError("Invalid args passed to CreateLinearGradientBrush")
@@ -1886,7 +1886,7 @@ def _makeColour(colour):
     tuple, etc.)
     """
     if isinstance(colour, (str, tuple)):
-        return wx.NamedColour(colour)
+        return wx.Colour(colour)
     else:
         return colour
 

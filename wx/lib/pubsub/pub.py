@@ -97,7 +97,7 @@ __all__ = [
     'TOPIC_TREE_FROM_CLASS', 
     'TOPIC_TREE_FROM_STRING',
     'exportTopicTreeSpec', 
-    'instantiateAllDefinedTopics'
+    'instantiateAllDefinedTopics',
 
     'TopicDefnError', 
     'TopicNameError', 

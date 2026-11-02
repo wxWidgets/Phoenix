@@ -102,7 +102,7 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
         elif format == TOPIC_TREE_FROM_STRING:
             self._parse_tree(_get_elem(xml))
         else:
-            raise UnrecognizedSourceFormatError()
+            raise self.UnrecognizedSourceFormatError()
 
     def _parse_tree(self, tree):
         doc_node = tree.find('description')
@@ -129,12 +129,12 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
 
         node_id = node.get('id')
         if node_id is None:
-            raise XmlParserError("topic element must have an id attribute")
+            raise self.XmlParserError("topic element must have an id attribute")
 
         for this in (node.findall('listenerspec/arg')):
             this_id = this.get('id')
             if this_id is None:
-                raise XmlParserError("arg element must have an id attribute")
+                raise self.XmlParserError("arg element must have an id attribute")
 
             this_desc = this.text.strip()
             this_desc = this_desc or "UNDOCUMENTED"

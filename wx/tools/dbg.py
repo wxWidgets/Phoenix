@@ -131,11 +131,11 @@ class Logger:
         self._outstream_stack = []    # for restoration of streams as necessary
 
 
-    def IsEnabled():
+    def IsEnabled(self):
         return self._dbg
 
-    def IsSuspended():
-        return _suspend
+    def IsSuspended(self):
+        return self._suspend
 
 
     def log(self, *args, **kwargs):

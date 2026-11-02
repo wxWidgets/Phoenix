@@ -293,7 +293,6 @@ class RectBBox(BBox):
 
             or any rotation.
         """
-        BBox.BBox(data)
         self.edges = np.asarray(edges)
 
     def ac_leftOf_ab(self, a, b, c):
@@ -303,7 +302,7 @@ class RectBBox(BBox):
         return (ac[0]*ab[1] - ac[1]*ab[0]) <= 0
 
     def PointInside(self, point):
-        for edge in xrange(4):
+        for edge in range(4):
             if self.ac_leftOf_ab(self.edges[edge],
                                  self.edges[(edge+1)%4],
                                  point):
