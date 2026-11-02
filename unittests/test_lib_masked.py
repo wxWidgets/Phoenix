@@ -147,6 +147,19 @@ class MaskedIpAddrCtrlTests(wtc.WidgetTestCase):
         t.Value
 
 
+class TimeCtrlTests(wtc.WidgetTestCase):
+
+    def test_timectrlInvalidString(self):
+        t = m.TimeCtrl(self.frame)
+        with self.assertRaises(ValueError):
+            t.GetWxDateTime('not a time')
+
+    def test_timectrlSetParametersKeepsValue(self):
+        t = m.TimeCtrl(self.frame, value='14:34:56')
+        t.SetParameters(format='24HHMMSS')
+        self.assertEqual(t.GetValue(), '14:34:56')
+
+
 #---------------------------------------------------------------------------
 
 

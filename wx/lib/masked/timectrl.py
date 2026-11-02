@@ -516,6 +516,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 ##        dbg('TimeCtrl::SetParameters(%s)' % repr(kwargs), indent=1)
         maskededit_kwargs = {}
         reset_format = False
+        min, max, limited = self.__min, self.__max, self.__limited
 
         if 'display_seconds' in kwargs:
             kwargs['displaySeconds'] = kwargs['display_seconds']
@@ -614,6 +615,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
             maskededit_kwargs['retainFieldValidation'] = True
 
         if hasattr(self, 'controlInitialized') and self.controlInitialized:
+            value = self.GetValue(as_wxDateTime=True)
             self.SetCtrlParameters(**maskededit_kwargs)   # set appropriate parameters
 
             # Validate initial value and set if appropriate
@@ -768,19 +770,14 @@ class TimeCtrl(BaseMaskedTextCtrl):
             wxdt = wx.DateTime.FromDMY(1, 0, 1970)
 ##            dbg('attempting conversion')
             value = value.strip()    # (parser doesn't like leading spaces)
-            valid = wxdt.ParseTime(value)
+            valid = wxdt.ParseTime(value) != -1
 
             if not valid:
                 # deal with bug/deficiency in wx.DateTime:
-                try:
-                    if wxdt.Format('%p') not in ('AM', 'PM') and checkTime in (5,8):
-                        # couldn't parse the AM/PM field
-                        raise ValueError('cannot convert string "%s" to valid time for the current locale; please use 24hr time instead' % value)
-                    else:
-    ##                dbg(indent=0, suspend=0)
-                        raise ValueError('cannot convert string "%s" to valid time' % value)
-                except:
+                if wxdt.Format('%p') not in ('AM', 'PM'):
+                    # couldn't parse the AM/PM field
                     raise ValueError('cannot convert string "%s" to valid time for the current locale; please use 24hr time instead' % value)
+                raise ValueError('cannot convert string "%s" to valid time' % value)
 
         else:
             if isinstance(value, wx.DateTime):
@@ -818,7 +815,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         Because SetValue can take an mx.DateTime, (if DateTime is importable),
         this is now just an alias.
         """
-        self.SetValue(value)
+        self.SetValue(mxdt)
 
 
     def GetMxDateTime(self, value=None):
@@ -833,7 +830,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
             # mx' DateTime.Parser.TimeFromString() doesn't handle AM/PM:
             wxdt = self.GetWxDateTime(value)
             hour, minute, second = wxdt.GetHour(), wxdt.GetMinute(), wxdt.GetSecond()
-            t = DateTime.DateTime(1970,1,1) + DateTimeDelta(0, hour, minute, second)
+            t = DateTime.DateTime(1970, 1, 1) + DateTime.DateTimeDelta(0, hour, minute, second)
         return t
 
 
