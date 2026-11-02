@@ -885,7 +885,7 @@ class ShellFrameMixin:
                                   default_filename=default,
                                   default_extension="py",
                                   wildcard="*.py",
-                                  flags = wx.SAVE | wx.OVERWRITE_PROMPT)
+                                  flags=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
         if not fileName:
             return
 

@@ -54,11 +54,11 @@ class MagicImageList:
         '''Add an icon to the image list, or get the index if already there'''
         index = self.__magicImageListMapping.get (id (icon))
         if index is None:
-            if isinstance( icon, wxIconPtr ):
-                index = self.__magicImageList.AddIcon( icon )
-            elif isinstance( icon, wx.BitmapPtr ):
+            if isinstance(icon, wx.Icon):
+                index = self.__magicImageList.Add(icon)
+            elif isinstance(icon, wx.Bitmap):
                 if isinstance( mask, wx.Colour ):
-                    index = self.__magicImageList.AddWithColourMask( icon, mask )
+                    index = self.__magicImageList.Add(icon, mask)
                 else:
                     index = self.__magicImageList.Add( icon, mask )
             else:

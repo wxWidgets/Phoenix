@@ -537,7 +537,7 @@ class BPArt(object):
         elif id == BP_BUTTONTEXT_FONT:
             return self._buttontext_font
 
-        return wx.NoneFont
+        return wx.NullFont
 
 
     def SetFont(self, id, font):

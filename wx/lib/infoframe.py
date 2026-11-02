@@ -255,14 +255,9 @@ class PyInformationalMessagesFrame(object):
 
 
     def write(self, string):
-        if not wx.Thread_IsMain():
-            # Acquire the GUI mutex before making GUI calls.  Mutex is released
-            # when locker is deleted at the end of this function.
-            #
-            # TODO: This should be updated to use wx.CallAfter similarly to how
-            # PyOnDemandOutputWindow.write was so it is not necessary
-            # to get the gui mutex
-            locker = wx.MutexGuiLocker()
+        if not wx.IsMainThread():
+            wx.CallAfter(self.write, string)
+            return
 
         if self.Enabled:
             if self.f:
@@ -410,7 +405,7 @@ class PyInformationalMessagesFrame(object):
         self.CloseFile()
         dlg = wx.FileDialog(self.frame,
                           "Choose a new log file", self.dir,"","*",
-                           wx.SAVE | wx.OVERWRITE_PROMPT)
+                           wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
         if dlg.ShowModal() == wx.ID_CANCEL:
             dlg.Destroy()
             return 0
