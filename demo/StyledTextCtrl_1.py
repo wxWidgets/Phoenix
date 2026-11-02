@@ -117,7 +117,7 @@ class MySTC(stc.StyledTextCtrl):
                                   evt.GetPosition(),
                                   evt.GetLinesAdded(),
                                   evt.GetLength(),
-                                  repr(evt.GetText()) ))
+                                  repr(evt.GetString()) ))
 
 
     def transModType(self, modType):

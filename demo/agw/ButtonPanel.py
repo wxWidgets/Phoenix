@@ -532,7 +532,7 @@ class ButtonPanelDemo(wx.Frame):
         submenu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnAlignment, item)
 
-        edit_menu.Append(wx.ID_ANY, "&Alignment", submenu)
+        edit_menu.AppendSubMenu(submenu, "&Alignment")
 
         submenu = wx.Menu()
 
@@ -545,7 +545,7 @@ class ButtonPanelDemo(wx.Frame):
         item.Check(True)
         self.Bind(wx.EVT_MENU, self.OnGradientStyle, item)
 
-        edit_menu.Append(wx.ID_ANY, "&Styles", submenu)
+        edit_menu.AppendSubMenu(submenu, "&Styles")
 
         edit_menu.AppendSeparator()
 

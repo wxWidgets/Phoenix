@@ -303,7 +303,7 @@ class AbortEvent:
         has been set (then AbortedException will cause while to exit)."""
         if timeout:
             self.__ev.wait(timeout)
-        if self.__ev.isSet():
+        if self.__ev.is_set():
             raise AbortedException()
         return None
 

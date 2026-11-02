@@ -122,8 +122,7 @@ class DrawFrame(wx.Frame):
         #Canvas.Draw()
 
     def Plot(self, event = None):
-        x = np.arange(0, 2*np.pi, 0.1)
-        x.shape = (-1,1)
+        x = np.arange(0, 2 * np.pi, 0.1).reshape(-1, 1)
         y = np.sin(x)
         data = np.concatenate((x, y),1)
 

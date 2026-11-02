@@ -481,7 +481,7 @@ class ThumbDemoConfig(wx.Frame):
         sm = wx.Menu()
         sm.Append(self.popupID8, "Sub Item 1")
         sm.Append(self.popupID9, "Sub Item 1")
-        menu.Append(self.popupID7, "Test Submenu", sm)
+        menu.AppendSubMenu(sm, "Test Submenu")
 
         return menu
 

@@ -188,7 +188,7 @@ class FlatNotebookDemo(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnRibbonStyle, item)
         styleMenu.Append(item)
 
-        self._visualMenu.Append(wx.ID_ANY, "Tabs Style", styleMenu)
+        self._visualMenu.AppendSubMenu(styleMenu, "Tabs Style")
 
         item = wx.MenuItem(self._visualMenu, MENU_SELECT_GRADIENT_COLOUR_FROM, "Select fancy tab style 'from' colour",
                            "Select fancy tab style 'from' colour")
