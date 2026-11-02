@@ -134,7 +134,7 @@ class OpSetClipping(DrawOp):
 
     def Do(self, dc, xoffset, yoffset):
         if self._op == DRAWOP_SET_CLIPPING_RECT:
-            dc.SetClippingRegion(self._x1 + xoffset, self._y1 + yoffset, self._x2 + xoffset, self._y2 + yoffset)
+            dc.SetClippingRegion(int(self._x1 + xoffset), int(self._y1 + yoffset), int(self._x2 + xoffset), int(self._y2 + yoffset))
         elif self._op == DRAWOP_DESTROY_CLIPPING_RECT:
             dc.DestroyClippingRegion()
 
@@ -177,7 +177,7 @@ class OpDraw(DrawOp):
         elif self._op == DRAWOP_DRAW_ELLIPTIC_ARC:
             dc.DrawEllipticArc(int(self._x1 + xoffset), int(self._y1 + yoffset), int(self._x2), int(self._y2), self._x3 * 360 / (2 * math.pi), self._y3 * 360 / (2 * math.pi))
         elif self._op == DRAWOP_DRAW_POINT:
-            dc.DrawPoint(self._x1 + xoffset, self._y1 + yoffset)
+            dc.DrawPoint(int(self._x1 + xoffset), int(self._y1 + yoffset))
         elif self._op == DRAWOP_DRAW_TEXT:
             dc.DrawText(self._textString, int(self._x1 + xoffset), int(self._y1 + yoffset))
     def Scale(self, scaleX, scaleY):
@@ -296,7 +296,7 @@ class OpPolyDraw(DrawOp):
         x_proportion = abs(w / oldW)
         y_proportion = abs(h / oldH)
 
-        dc.DrawPolygon([(x_proportion * x, y_proportion * y) for x, y in self._points], x, y)
+        dc.DrawPolygon([(x_proportion * x, y_proportion * y) for x, y in self._points], int(x), int(y))
 
     def GetPerimeterPoint(self, x1, y1, x2, y2, xOffset, yOffset, attachmentMode):
         # First check for situation where the line is vertical,

@@ -63,7 +63,7 @@ class DividedShapeControlPoint(ControlPoint):
         x2 = dividedObject.GetX() + dividedObject.GetWidth() / 2.0
         y2 = y
 
-        dc.DrawLine(x1, y1, x2, y2)
+        dc.DrawLine(int(x1), int(y1), int(x2), int(y2))
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
         """The begin drag left handler."""
@@ -83,7 +83,7 @@ class DividedShapeControlPoint(ControlPoint):
         x2 = dividedObject.GetX() + dividedObject.GetWidth() / 2.0
         y2 = y
 
-        dc.DrawLine(x1, y1, x2, y2)
+        dc.DrawLine(int(x1), int(y1), int(x2), int(y2))
         self._canvas.CaptureMouse()
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):

@@ -164,6 +164,70 @@ class lib_ogl_Tests(wtc.WidgetTestCase):
         aShape.AddConstraint(constraint)
         aShape.Recompute()
 
+    def makeCanvas(self):
+        ogl.OGLInitialize()
+        canvas = ogl.ShapeCanvas(self.frame)
+        diagram = ogl.Diagram()
+        canvas.SetDiagram(diagram)
+        diagram.SetCanvas(canvas)
+        return canvas
+
+    def addShape(self, canvas, shape, x=100.5, y=100.5):
+        shape.SetCanvas(canvas)
+        shape.SetX(x)
+        shape.SetY(y)
+        canvas.GetDiagram().AddShape(shape)
+        shape.Show(True)
+        return shape
+
+    def test_lib_oglDrawShadows(self):
+        canvas = self.makeCanvas()
+        polygon = ogl.PolygonShape()
+        polygon.Create([(0.0, -25.5), (25.5, 0.0), (0.0, 25.5), (-25.5, 0.0)])
+        composite = ogl.CompositeShape()
+        composite.AddChild(ogl.RectangleShape(21, 21))
+        bmp = wx.Bitmap(300, 300)
+        dc = wx.MemoryDC(bmp)
+        for shape in (ogl.RectangleShape(51, 31), ogl.EllipseShape(51, 31),
+                      ogl.CircleShape(51), polygon, composite):
+            self.addShape(canvas, shape)
+            shape.SetShadowMode(ogl.SHADOW_RIGHT)
+            shape.OnDraw(dc)
+        dc.SelectObject(wx.NullBitmap)
+
+    def test_lib_oglDrawLineWithArrows(self):
+        canvas = self.makeCanvas()
+        line = ogl.LineShape()
+        line.SetCanvas(canvas)
+        line.MakeLineControlPoints(2)
+        line.SetEnds(10.5, 10.5, 90.5, 90.5)
+        for arrow in (ogl.ARROW_ARROW, ogl.ARROW_HOLLOW_CIRCLE, ogl.ARROW_FILLED_CIRCLE):
+            line.AddArrow(arrow, ogl.ARROW_POSITION_MIDDLE)
+        canvas.GetDiagram().AddShape(line)
+        line.Show(True)
+        bmp = wx.Bitmap(300, 300)
+        dc = wx.MemoryDC(bmp)
+        line.OnDraw(dc)
+        dc.SelectObject(wx.NullBitmap)
+
+    def test_lib_oglDrawLabelShape(self):
+        canvas = self.makeCanvas()
+        line = ogl.LineShape()
+        line.SetCanvas(canvas)
+        line.MakeLineControlPoints(2)
+        line.SetEnds(10.5, 10.5, 90.5, 90.5)
+        canvas.GetDiagram().AddShape(line)
+        line.SetDrawHandles(True)
+        line.Select(True)
+        region = ogl.ShapeRegion()
+        region.SetSize(51, 21)
+        label = ogl.LabelShape(line, region, 51.5, 21.5)
+        self.addShape(canvas, label)
+        bmp = wx.Bitmap(300, 300)
+        dc = wx.MemoryDC(bmp)
+        label.OnDraw(dc)
+        dc.SelectObject(wx.NullBitmap)
+
     def test_lib_ogl_Constants(self):
         ogl.CONSTRAINT_CENTRED_VERTICALLY
         ogl.CONSTRAINT_CENTRED_HORIZONTALLY
