@@ -6748,7 +6748,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         ld = self.GetLine(line)
         LH = self.GetLineHeight(line)
         wcheck, hcheck = self.GetCheckboxImageSize()
-        rect = wx.Rect(HEADER_OFFSET_X, self.GetLineY(line) + LH/2 - hcheck/2, wcheck, hcheck)
+        rect = wx.Rect(HEADER_OFFSET_X, self.GetLineY(line) + LH // 2 - hcheck // 2, wcheck, hcheck)
         return rect
 
 
@@ -10796,9 +10796,9 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             hLine = self.GetLineHeight()
-            self.Scroll(-1, top + dy/hLine)
+            self.Scroll(-1, top + dy // hLine)
         else:
-            self.Scroll(-1, top + dy/SCROLL_UNIT_Y)
+            self.Scroll(-1, top + dy // SCROLL_UNIT_Y)
 
         if wx.Platform == "__WXMAC__":
             # see comment in MoveToItem() for why we do this

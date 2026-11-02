@@ -433,8 +433,8 @@ class RendererMSOffice2007(RendererBase):
         baseColour = colour
 
         # Define the middle points
-        leftPt = wx.Point(rect.x, rect.y + (rect.height / 2))
-        rightPt = wx.Point(rect.x + rect.width-1, rect.y + (rect.height / 2))
+        leftPt = wx.Point(rect.x, rect.y + rect.height // 2)
+        rightPt = wx.Point(rect.x + rect.width - 1, rect.y + rect.height // 2)
 
         # Define the top region
         top = wx.Rect((rect.GetLeft(), rect.GetTop()), rightPt)
@@ -500,11 +500,11 @@ class RendererMSOffice2007(RendererBase):
 
         factor = artMgr.GetMenuBgFactor()
 
-        leftPt1 = wx.Point(rect.x, rect.y + (rect.height / factor))
-        leftPt2 = wx.Point(rect.x, rect.y + (rect.height / factor)*(factor-1))
+        leftPt1 = wx.Point(rect.x, rect.y + rect.height // factor)
+        leftPt2 = wx.Point(rect.x, rect.y + (rect.height // factor) * (factor - 1))
 
-        rightPt1 = wx.Point(rect.x + rect.width, rect.y + (rect.height / factor))
-        rightPt2 = wx.Point(rect.x + rect.width, rect.y + (rect.height / factor)*(factor-1))
+        rightPt1 = wx.Point(rect.x + rect.width, rect.y + rect.height // factor)
+        rightPt2 = wx.Point(rect.x + rect.width, rect.y + (rect.height // factor) * (factor - 1))
 
         # Define the top region
         topReg = [wx.Point() for ii in range(7)]
@@ -576,11 +576,11 @@ class RendererMSOffice2007(RendererBase):
         # Define the middle points
         factor = artMgr.GetMenuBgFactor()
 
-        leftPt1 = wx.Point(rect.x, rect.y + (rect.height / factor))
-        rightPt1 = wx.Point(rect.x + rect.width, rect.y + (rect.height / factor))
+        leftPt1 = wx.Point(rect.x, rect.y + rect.height // factor)
+        rightPt1 = wx.Point(rect.x + rect.width, rect.y + rect.height // factor)
 
-        leftPt2 = wx.Point(rect.x, rect.y + (rect.height / factor)*(factor-1))
-        rightPt2 = wx.Point(rect.x + rect.width, rect.y + (rect.height / factor)*(factor-1))
+        leftPt2 = wx.Point(rect.x, rect.y + (rect.height // factor) * (factor - 1))
+        rightPt2 = wx.Point(rect.x + rect.width, rect.y + (rect.height // factor) * (factor - 1))
 
         # Define the top region
         topReg = [None]*7
@@ -997,7 +997,7 @@ class ArtManager(wx.EvtHandler):
         # draw the upper triangle
         for i in range(size):
 
-            currCol = wx.Colour(col1.Red() + rf, col1.Green() + gf, col1.Blue() + bf)
+            currCol = wx.Colour(int(col1.Red() + rf), int(col1.Green() + gf), int(col1.Blue() + bf))
             dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.SetPen(wx.Pen(currCol))
 
@@ -1033,7 +1033,7 @@ class ArtManager(wx.EvtHandler):
         # draw the lower triangle
         for i in range(size):
 
-            currCol = wx.Colour(col1.Red() + rf, col1.Green() + gf, col1.Blue() + bf)
+            currCol = wx.Colour(int(col1.Red() + rf), int(col1.Green() + gf), int(col1.Blue() + bf))
             dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.SetPen(wx.Pen(currCol))
 
@@ -1084,8 +1084,8 @@ class ArtManager(wx.EvtHandler):
         :param bool `concave`: ``True`` for a concave effect, ``False`` for a convex one.
         """
 
-        diagonalRectWidth = rect.GetWidth()/4
-        spare = rect.width - 4*diagonalRectWidth
+        diagonalRectWidth = rect.GetWidth() // 4
+        spare = rect.width - 4 * diagonalRectWidth
         leftRect = wx.Rect(rect.x, rect.y, diagonalRectWidth, rect.GetHeight())
         rightRect = wx.Rect(rect.x + 3 * diagonalRectWidth + spare, rect.y, diagonalRectWidth, rect.GetHeight())
 
@@ -1149,8 +1149,8 @@ class ArtManager(wx.EvtHandler):
         greenOffset = float((secondColour.Green() * (100 - percent) / 100) - (firstColour.Green() * percent / 100))
         blueOffset = float((secondColour.Blue() * (100 - percent) / 100) -  (firstColour.Blue() * percent / 100))
 
-        return wx.Colour(firstColour.Red() + redOffset, firstColour.Green() + greenOffset,
-                        firstColour.Blue() + blueOffset)
+        return wx.Colour(int(firstColour.Red() + redOffset), int(firstColour.Green() + greenOffset),
+                         int(firstColour.Blue() + blueOffset))
 
 
     def RandomColour(self):

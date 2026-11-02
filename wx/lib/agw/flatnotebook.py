@@ -1667,7 +1667,7 @@ class TabNavigatorWindow(wx.Dialog):
         # Draw the caption title and place the bitmap
         # get the bitmap optimal position, and draw it
         bmpPt, txtPt = wx.Point(), wx.Point()
-        bmpPt.y = (rect.height - self._bmp.GetHeight())/2
+        bmpPt.y = (rect.height - self._bmp.GetHeight()) // 2
         bmpPt.x = 3
         mem_dc.DrawBitmap(self._bmp, bmpPt.x, bmpPt.y, True)
 
@@ -1678,7 +1678,7 @@ class TabNavigatorWindow(wx.Dialog):
         fontHeight = mem_dc.GetCharHeight()
 
         txtPt.x = bmpPt.x + self._bmp.GetWidth() + 4
-        txtPt.y = (rect.height - fontHeight)/2
+        txtPt.y = (rect.height - fontHeight) // 2
         mem_dc.SetTextForeground(wx.WHITE)
         mem_dc.DrawText("Opened tabs:", txtPt.x, txtPt.y)
         mem_dc.SelectObject(wx.NullBitmap)

@@ -46,9 +46,17 @@ class lib_agw_shapedbuttons_Tests(wtc.WidgetTestCase):
         btn.SetEllipseAxis(2.0, 1.0)
         self.assertEqual(btn.GetEllipseAxis(), (2.0, 1.0))
 
+    @unittest.skipIf(skipIt, 'Requires PIL')
+    def test_lib_agw_shapedbuttonRotatedLabel(self):
+        btn = SB.SBitmapTextButton(self.frame, -1, wx.Bitmap(16, 16), 'Label')
+        btn.SetAngleOfRotation(45)
+        bmp = wx.Bitmap(101, 101)
+        dc = wx.MemoryDC(bmp)
+        btn.DrawLabel(dc, 101, 101)
+        dc.SelectObject(wx.NullBitmap)
+
 
 #---------------------------------------------------------------------------
-
 
 if __name__ == '__main__':
     unittest.main()

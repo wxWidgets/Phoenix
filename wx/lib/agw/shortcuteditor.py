@@ -2492,7 +2492,7 @@ class ShortcutEditor(wx.Dialog):
             total_width += width
 
         self.listShortcut.GetMainWindow()._lineHeight += 5
-        dialogHeight = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)/2
+        dialogHeight = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y) // 2
 
         self.SetSize((total_width+60, dialogHeight))
 

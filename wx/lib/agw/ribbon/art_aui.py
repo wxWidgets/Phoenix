@@ -461,7 +461,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
                 y = tab.rect.y + (tab.rect.height - text_height) // 2
 
                 if icon.IsOk():
-                    dc.DrawBitmap(icon, x - offset, tab.rect.y + (tab.rect.height - icon.GetHeight()) / 2, True)
+                    dc.DrawBitmap(icon, x - offset, tab.rect.y + (tab.rect.height - icon.GetHeight()) // 2, True)
 
                 dc.SetClippingRegion(x, tab.rect.y, width, tab.rect.height)
                 dc.DrawText(label, x, y)

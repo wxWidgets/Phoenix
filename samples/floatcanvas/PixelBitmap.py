@@ -61,12 +61,12 @@ class PixelBitmap:
         if self.Position[0] == 'b':
             XY = (XY[0], h - XY[1] - self.Height)
         elif self.Position[0] == 'c':
-            XY = (XY[0], XY[1] + (h - self.Height)/2)
+            XY = (XY[0], XY[1] + (h - self.Height) // 2)
 
         if self.Position[1] == 'r':
             XY = (w - XY[0] - self.Width, XY[1])
         elif self.Position[1] == 'c':
-            XY = (XY[0] + (w - self.Width)/2, XY[1])
+            XY = (XY[0] + (w - self.Width) // 2, XY[1])
 
         dc.DrawBitmap(self.Bitmap, XY, True)
 

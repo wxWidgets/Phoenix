@@ -203,6 +203,16 @@ class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
         ctrl.SortItems()
         self.assertEqual([ctrl.GetItemText(row) for row in range(3)], ['1', '2', '3'])
 
+    def test_lib_agw_ultimatelistctrlLineCoordinates(self):
+        ctrl = ULC.UltimateListCtrl(self.frame, agwStyle=ULC.ULC_REPORT, size=(200, 100))
+        ctrl.InsertColumn(0, 'col')
+        for row in range(50):
+            ctrl.InsertStringItem(row, str(row))
+        main = ctrl._mainWin
+        main.RecalculatePositions()
+        self.assertIsInstance(main.GetLineCheckboxRect(0), wx.Rect)
+        main.ScrollList(0, 25)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
