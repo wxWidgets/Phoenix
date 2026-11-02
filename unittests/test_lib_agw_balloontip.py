@@ -42,6 +42,14 @@ class lib_agw_balloontip_Tests(wtc.WidgetTestCase):
         BT.BT_BUTTON
 
 
+    def test_lib_agw_balloontipCloseButtonWithoutTitle(self):
+        # wx 3.3 asserts about alignment flags that a sizer would ignore
+        tip = BT.BalloonTip(message='Hello wxPython', tipstyle=BT.BT_BUTTON)
+        target = wx.Window(self.frame)
+        tip.SetTarget(target)
+        frame = BT.BalloonFrame(self.frame, classparent=tip)
+        frame.Destroy()
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

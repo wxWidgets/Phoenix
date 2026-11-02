@@ -274,8 +274,7 @@ class BalloonFrame(wx.Frame):
                 hsizer.Add(self._closebutton, 0, wx.TOP | wx.RIGHT, 5)
             else:
                 hsizer.Add((10,0), 1, wx.EXPAND)
-                hsizer.Add(self._closebutton, 0, wx.ALIGN_RIGHT | wx.TOP
-                           | wx.RIGHT, 5)
+                hsizer.Add(self._closebutton, 0, wx.TOP | wx.RIGHT, 5)
 
         if self._topicon is not None or self._toptitle != "" \
            or self._tipstyle == BT_BUTTON:
