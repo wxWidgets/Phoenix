@@ -10421,7 +10421,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         if self.__func:
             return self.__func(data1, data2)
         else:
-            return cmp(data1, data2)
+            return (data1 > data2) - (data1 < data2)
 
 
     def SortItems(self, func):
@@ -11155,7 +11155,7 @@ class UltimateListCtrl(wx.Control):
          ===============================  =========== ====================================================================================================
          """
 
-        if style & ULC_HAS_VARIABLE_ROW_HEIGHT and not self.HasAGWFlag(ULC_REPORT):
+        if style & ULC_HAS_VARIABLE_ROW_HEIGHT and not style & ULC_REPORT:
             raise Exception("ULC_HAS_VARIABLE_ROW_HEIGHT style can be used only in report mode")
 
         wasInReportView = self.HasAGWFlag(ULC_REPORT)
