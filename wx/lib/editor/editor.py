@@ -404,7 +404,7 @@ class Editor(wx.ScrolledWindow):
 
     def SetScrollTimer(self):
         oneShot = True
-        self.scrollTimer.Start(1000*self.SCROLLDELAY/2, oneShot)
+        self.scrollTimer.Start(int(1000 * self.SCROLLDELAY / 2), oneShot)
         self.Bind(wx.EVT_TIMER, self.OnTimer)
 
     def OnTimer(self, event):

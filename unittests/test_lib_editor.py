@@ -27,6 +27,12 @@ class lib_editor_Tests(wtc.WidgetTestCase):
         ed.OnPaste(None)
         self.assertEqual(ed.GetText(), ['a1', '2b'])
 
+    def test_lib_editorSetScrollTimer(self):
+        ed = editor.Editor(self.frame, -1)
+        ed.SetScrollTimer()
+        self.assertTrue(ed.scrollTimer.IsRunning())
+        ed.scrollTimer.Stop()
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

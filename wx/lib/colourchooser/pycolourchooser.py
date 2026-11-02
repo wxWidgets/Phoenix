@@ -119,7 +119,7 @@ class PyColourChooser(wx.Panel):
     # all instances of the colour chooser
     NO_CUSTOM_COLOURS = 16
     custom_colours = [ (wx.WHITE,
-                        pycolourslider.PyColourSlider.HEIGHT / 2)
+                        pycolourslider.PyColourSlider.HEIGHT // 2)
                      ] * NO_CUSTOM_COLOURS
     last_custom = 0
 
