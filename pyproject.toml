@@ -94,6 +94,7 @@ test = [
     "pytest-xdist",
     "pytest-timeout",
     "pytest-rerunfailures",
+    "pillow",
 ]
 typecheck = [
     "mypy==2.3.1",
