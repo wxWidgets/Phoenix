@@ -56,6 +56,12 @@ def run():
 
     # TODO: Also add wxGenericNotificationMessage
 
+    module.addPyCode("""\
+        EVT_NOTIFICATION_MESSAGE_CLICK = wx.PyEventBinder(wxEVT_NOTIFICATION_MESSAGE_CLICK, 1)
+        EVT_NOTIFICATION_MESSAGE_DISMISSED = wx.PyEventBinder(wxEVT_NOTIFICATION_MESSAGE_DISMISSED, 1)
+        EVT_NOTIFICATION_MESSAGE_ACTION = wx.PyEventBinder(wxEVT_NOTIFICATION_MESSAGE_ACTION, 1)
+        """)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
