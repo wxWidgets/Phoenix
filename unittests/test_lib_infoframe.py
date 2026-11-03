@@ -1,6 +1,8 @@
+import sys
 import tempfile
 import threading
 import unittest
+from unittest import mock
 from unittests import wtc
 import wx
 
@@ -42,6 +44,17 @@ class lib_infoframe_Tests(wtc.WidgetTestCase):
         self.myYield()
         self.assertEqual(errors, [])
         self.assertIn('from another thread', output.text.GetValue())
+
+    def test_lib_infoframeClassInSysModules(self):
+        # Like typing.io and typing.re on Python < 3.13
+        class FakeModule:
+            pass
+
+        output = self.makeOutput()
+        with mock.patch.dict(sys.modules, {'fake_class_module': FakeModule}):
+            output.write('with a class in sys.modules\n')
+            output.DisableOutput()
+        self.assertIsNone(output.frame)
 
 #---------------------------------------------------------------------------
 

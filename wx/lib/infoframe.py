@@ -137,6 +137,7 @@ see the appropriate "stub" file in the wxPython demo.
 import  os
 import  sys
 import  tempfile
+import types
 
 import  wx
 
@@ -324,7 +325,9 @@ class PyInformationalMessagesFrame(object):
 
             if  not hasattr(self,"no__debug__"):
                 for m in sys.modules.values():
-                    if m is not None:# and "__debug__" in m.__dict__:
+                    # Python < 3.13 puts the typing.io and typing.re classes in
+                    # sys.modules, and a class's __dict__ is read-only.
+                    if isinstance(m, types.ModuleType):
                         m.__dict__["__debug__"] = 1
 
             if hasattr(self,"othermenu") and self.othermenu is not None:
@@ -352,7 +355,7 @@ class PyInformationalMessagesFrame(object):
 
         if  not hasattr(self,"no__debug__"):
             for m in sys.modules.values():
-                if m is not None:# and "__debug__" in m.__dict__:
+                if isinstance(m, types.ModuleType):
                     m.__dict__["__debug__"] = 0
 
         if self.frame is not None: # typically True, but, e.g., allows
