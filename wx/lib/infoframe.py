@@ -137,6 +137,7 @@ see the appropriate "stub" file in the wxPython demo.
 import  os
 import  sys
 import  tempfile
+import types
 
 import  wx
 
@@ -255,14 +256,9 @@ class PyInformationalMessagesFrame(object):
 
 
     def write(self, string):
-        if not wx.Thread_IsMain():
-            # Acquire the GUI mutex before making GUI calls.  Mutex is released
-            # when locker is deleted at the end of this function.
-            #
-            # TODO: This should be updated to use wx.CallAfter similarly to how
-            # PyOnDemandOutputWindow.write was so it is not necessary
-            # to get the gui mutex
-            locker = wx.MutexGuiLocker()
+        if not wx.IsMainThread():
+            wx.CallAfter(self.write, string)
+            return
 
         if self.Enabled:
             if self.f:
@@ -329,7 +325,9 @@ class PyInformationalMessagesFrame(object):
 
             if  not hasattr(self,"no__debug__"):
                 for m in sys.modules.values():
-                    if m is not None:# and "__debug__" in m.__dict__:
+                    # Python < 3.13 puts the typing.io and typing.re classes in
+                    # sys.modules, and a class's __dict__ is read-only.
+                    if isinstance(m, types.ModuleType):
                         m.__dict__["__debug__"] = 1
 
             if hasattr(self,"othermenu") and self.othermenu is not None:
@@ -357,7 +355,7 @@ class PyInformationalMessagesFrame(object):
 
         if  not hasattr(self,"no__debug__"):
             for m in sys.modules.values():
-                if m is not None:# and "__debug__" in m.__dict__:
+                if isinstance(m, types.ModuleType):
                     m.__dict__["__debug__"] = 0
 
         if self.frame is not None: # typically True, but, e.g., allows
@@ -410,7 +408,7 @@ class PyInformationalMessagesFrame(object):
         self.CloseFile()
         dlg = wx.FileDialog(self.frame,
                           "Choose a new log file", self.dir,"","*",
-                           wx.SAVE | wx.OVERWRITE_PROMPT)
+                           wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
         if dlg.ShowModal() == wx.ID_CANCEL:
             dlg.Destroy()
             return 0

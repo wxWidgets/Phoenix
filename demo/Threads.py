@@ -34,7 +34,11 @@ class CalcBarThread:
             # We communicate with the UI by sending events to it. There can be
             # no manipulation of UI objects from the worker thread.
             evt = UpdateBarEvent(barNum = self.barNum, value = int(self.val))
-            wx.PostEvent(self.win, evt)
+            try:
+                wx.PostEvent(self.win, evt)
+            except RuntimeError:
+                # The frame can be destroyed along with its parent without being closed
+                break
 
             sleeptime = (random.random() * 2) + 0.5
             time.sleep(sleeptime/4)

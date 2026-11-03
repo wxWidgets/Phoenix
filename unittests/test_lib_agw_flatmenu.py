@@ -101,6 +101,20 @@ class lib_agw_flatmenu_Tests(wtc.WidgetTestCase):
         FM.EVT_FLAT_MENU_SELECTED
 
 
+    def test_lib_agw_flatmenuRendererDrawing(self):
+        renderer = FM.FMRenderer()
+        renderer.scrollBarButtons = True
+        artMgr = FM.ArtManager.Get()
+        raiseToolbar = artMgr.GetRaiseToolbar()
+        self.addCleanup(artMgr.SetRaiseToolbar, raiseToolbar)
+        artMgr.SetRaiseToolbar(True)
+        bmp = wx.Bitmap(101, 101)
+        dc = wx.MemoryDC(bmp)
+        rect = wx.Rect(0, 0, 101, 21)
+        renderer.DrawScrollButton(dc, rect, FM.ControlFocus)
+        renderer.DrawToolBarBg(dc, rect)
+        dc.SelectObject(wx.NullBitmap)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

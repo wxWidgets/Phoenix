@@ -971,8 +971,8 @@ class _InspectionHighlighter(object):
             #for item in sizer.GetChildren():
             #    rh = max(rh, item.Size.height)
             #    cw = max(cw, item.Size.width)
-            cw = (rect.width - sizer.HGap*(sizer.Cols-1)) / sizer.Cols
-            rh = (rect.height - sizer.VGap*(sizer.Rows-1)) / sizer.Rows
+            cw = (rect.width - sizer.HGap * (sizer.Cols - 1)) // sizer.Cols
+            rh = (rect.height - sizer.VGap * (sizer.Rows - 1)) // sizer.Rows
             y = rect.y
             for i in range(sizer.Rows-1):
                 y += rh

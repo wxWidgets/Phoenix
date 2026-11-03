@@ -42,6 +42,16 @@ class InspectionInfoPanel_DarkModeTests(wtc.WidgetTestCase):
         self.assertEqual(panel.StyleGetBackground(stc.STC_STYLE_DEFAULT),
                           wx.Colour('#FFFFFF'))
 
+    def test_lib_inspectionHighlightGridSizer(self):
+        sizer = wx.GridSizer(2, 2, 3, 3)
+        panel = wx.Panel(self.frame, size=(101, 101))
+        for _ in range(4):
+            sizer.Add(wx.Panel(panel))
+        panel.SetSizer(sizer)
+        panel.Layout()
+        highlighter = wx.lib.inspection._InspectionHighlighter()
+        highlighter.HighlightSizer(sizer)
+
 #---------------------------------------------------------------------------
 
 

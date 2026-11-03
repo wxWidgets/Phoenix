@@ -187,6 +187,32 @@ class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
         #wx.EVT_LIST_ITEM_LEFT_CLICK
         #wx.EVT_LIST_END_DRAG
 
+    def test_lib_agw_ultimatelistctrlVariableRowHeightStyle(self):
+        ctrl = ULC.UltimateListCtrl(self.frame, agwStyle=ULC.ULC_LIST)
+        ctrl.SetAGWWindowStyleFlag(ULC.ULC_REPORT | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
+        self.assertTrue(ctrl.HasAGWFlag(ULC.ULC_HAS_VARIABLE_ROW_HEIGHT))
+        with self.assertRaises(Exception):
+            ctrl.SetAGWWindowStyleFlag(ULC.ULC_LIST | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
+
+    def test_lib_agw_ultimatelistctrlSortByData(self):
+        ctrl = ULC.UltimateListCtrl(self.frame, agwStyle=ULC.ULC_REPORT)
+        ctrl.InsertColumn(0, 'col')
+        for row, data in enumerate((3, 1, 2)):
+            ctrl.InsertStringItem(row, str(data))
+            ctrl.SetItemData(row, data)
+        ctrl.SortItems()
+        self.assertEqual([ctrl.GetItemText(row) for row in range(3)], ['1', '2', '3'])
+
+    def test_lib_agw_ultimatelistctrlLineCoordinates(self):
+        ctrl = ULC.UltimateListCtrl(self.frame, agwStyle=ULC.ULC_REPORT, size=(200, 100))
+        ctrl.InsertColumn(0, 'col')
+        for row in range(50):
+            ctrl.InsertStringItem(row, str(row))
+        main = ctrl._mainWin
+        main.RecalculatePositions()
+        self.assertIsInstance(main.GetLineCheckboxRect(0), wx.Rect)
+        main.ScrollList(0, 25)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

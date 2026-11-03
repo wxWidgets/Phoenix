@@ -201,7 +201,7 @@ def colourDialog(parent=None, colourData=None, colour=None):
         dialog.GetColourData().SetChooseFull(1)
 
     if colour is not None:
-        dialog.GetColourData().SetColour(color)
+        dialog.GetColourData().SetColour(colour)
 
     result = DialogResults(dialog.ShowModal())
     result.colourData = dialog.GetColourData()

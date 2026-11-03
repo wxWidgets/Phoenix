@@ -21,7 +21,7 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
 
 
     def GetValue(self):
-        self.log.write('GetValue: {}'.format(value))
+        self.log.write('GetValue: {}'.format(self.value))
         return self.value
 
 

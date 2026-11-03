@@ -1005,8 +1005,8 @@ class FMRenderer(object):
         baseColour = colour
 
         # Define the middle points
-        leftPt = wx.Point(rect.x, rect.y + (rect.height / 2))
-        rightPt = wx.Point(rect.x + rect.width-1, rect.y + (rect.height / 2))
+        leftPt = wx.Point(rect.x, rect.y + rect.height // 2)
+        rightPt = wx.Point(rect.x + rect.width - 1, rect.y + rect.height // 2)
 
         # Define the top region
         top = wx.Rect((rect.GetLeft(), rect.GetTop()), rightPt)
@@ -1647,11 +1647,11 @@ class FMRendererMSOffice2007(FMRenderer):
         # Define the middle points
         factor = artMgr.GetMenuBgFactor()
 
-        leftPt1 = wx.Point(rect.x, rect.y + (rect.height / factor))
-        rightPt1 = wx.Point(rect.x + rect.width, rect.y + (rect.height / factor))
+        leftPt1 = wx.Point(rect.x, rect.y + rect.height // factor)
+        rightPt1 = wx.Point(rect.x + rect.width, rect.y + rect.height // factor)
 
-        leftPt2 = wx.Point(rect.x, rect.y + (rect.height / factor)*(factor-1))
-        rightPt2 = wx.Point(rect.x + rect.width, rect.y + (rect.height / factor)*(factor-1))
+        leftPt2 = wx.Point(rect.x, rect.y + (rect.height // factor) * (factor - 1))
+        rightPt2 = wx.Point(rect.x + rect.width, rect.y + (rect.height // factor) * (factor - 1))
 
         # Define the top region
         topReg = [None]*7

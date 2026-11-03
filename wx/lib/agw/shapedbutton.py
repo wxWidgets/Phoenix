@@ -1247,7 +1247,7 @@ class SBitmapTextButton(SBitmapButton):
             xc, yc = (width//2, height//2)
             xp = xc - (tw//2)* cos(rotangle) - (th//2)*sin(rotangle)
             yp = yc + (tw//2)*sin(rotangle) - (th//2)*cos(rotangle)
-            dc.DrawRotatedText(label, xp, yp , rotangle*180.0/pi)
+            dc.DrawRotatedText(label, int(xp), int(yp), rotangle * 180.0 / pi)
 
 
 #----------------------------------------------------------------------

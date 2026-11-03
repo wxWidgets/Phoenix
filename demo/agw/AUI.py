@@ -1056,10 +1056,10 @@ class AuiFrame(wx.Frame):
         guides_menu.AppendRadioItem(ID_AeroGuides, "Aero-Style Docking Guides")
         guides_menu.AppendRadioItem(ID_WhidbeyGuides, "Whidbey-Style Docking Guides")
 
-        perspectives_menu.Append(wx.ID_ANY, "Frame Perspectives", self._perspectives_menu)
-        perspectives_menu.Append(wx.ID_ANY, "AuiNotebook Perspectives", self._nb_perspectives_menu)
+        perspectives_menu.AppendSubMenu(self._perspectives_menu, "Frame Perspectives")
+        perspectives_menu.AppendSubMenu(self._nb_perspectives_menu, "AuiNotebook Perspectives")
         perspectives_menu.AppendSeparator()
-        perspectives_menu.Append(wx.ID_ANY, "Docking Guides", guides_menu)
+        perspectives_menu.AppendSubMenu(guides_menu, "Docking Guides")
 
         action_menu = wx.Menu()
         action_menu.AppendCheckItem(ID_VetoTree, "Veto Floating Of Tree Pane")
@@ -1078,7 +1078,7 @@ class AuiFrame(wx.Frame):
             self._requestPanes[ids] = pane.name
             attention_menu.Append(ids, pane.caption)
 
-        action_menu.Append(wx.ID_ANY, "Request User Attention For", attention_menu)
+        action_menu.AppendSubMenu(attention_menu, "Request User Attention For")
 
         help_menu = wx.Menu()
         help_menu.Append(wx.ID_ABOUT, "About...")

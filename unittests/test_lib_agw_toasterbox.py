@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 from unittests import wtc
 import wx
 
@@ -36,6 +37,13 @@ class lib_agw_toasterbox_Tests(wtc.WidgetTestCase):
         TB.TB_SCR_TYPE_FADE
 
 
+
+    def test_lib_agw_toasterboxCentering(self):
+        for direction in (wx.VERTICAL, wx.HORIZONTAL, wx.BOTH):
+            box = mock.Mock(_parent=self.frame, _popupsize=(101, 51))
+            TB.ToasterBox.CenterOnParent(box, direction)
+            TB.ToasterBox.CenterOnScreen(box, direction)
+            self.assertEqual(box.SetPopupPosition.call_count, 2)
 
 #---------------------------------------------------------------------------
 

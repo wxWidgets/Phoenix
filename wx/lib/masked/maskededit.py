@@ -2792,7 +2792,7 @@ class MaskedEditMixin:
 ##                    dbg('new value: "%s"' % newvalue)
                     try:
                         self._ChangeValue(newvalue)
-                    except e:
+                    except Exception:
 ##                        dbg('exception raised:', e, 'resetting to initial value')
                         self._SetInitialValue()
 
@@ -3070,7 +3070,7 @@ class MaskedEditMixin:
             if key < 256:
                 char = chr(key) # (must work if we got this far)
             else:
-                char = unichr(event.GetUnicodeKey())
+                char = chr(event.GetUnicodeKey())
 ##                dbg('unicode char:', char)
 
             excludes = str()
@@ -6306,12 +6306,12 @@ class MaskedEditMixin:
         menu.AppendSeparator()
         menu.Append(wx.ID_SELECTALL, "Select All", "")
 
-        wx.EVT_MENU(menu, wx.ID_UNDO, self._OnCtrl_Z)
-        wx.EVT_MENU(menu, wx.ID_CUT, self._OnCtrl_X)
-        wx.EVT_MENU(menu, wx.ID_COPY, self._OnCtrl_C)
-        wx.EVT_MENU(menu, wx.ID_PASTE, self._OnCtrl_V)
-        wx.EVT_MENU(menu, wx.ID_CLEAR, self._OnClear)
-        wx.EVT_MENU(menu, wx.ID_SELECTALL, self._OnCtrl_A)
+        menu.Bind(wx.EVT_MENU, self._OnCtrl_Z, id=wx.ID_UNDO)
+        menu.Bind(wx.EVT_MENU, self._OnCtrl_X, id=wx.ID_CUT)
+        menu.Bind(wx.EVT_MENU, self._OnCtrl_C, id=wx.ID_COPY)
+        menu.Bind(wx.EVT_MENU, self._OnCtrl_V, id=wx.ID_PASTE)
+        menu.Bind(wx.EVT_MENU, self._OnClear, id=wx.ID_CLEAR)
+        menu.Bind(wx.EVT_MENU, self._OnCtrl_A, id=wx.ID_SELECTALL)
 
         # ## WSS: The base control apparently handles
         # enable/disable of wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE
@@ -6320,7 +6320,7 @@ class MaskedEditMixin:
         # so we're keeping track of previous values ourselves.
         # Therefore, we have to override the default update for
         # that item on the menu:
-        wx.EVT_UPDATE_UI(self, wx.ID_UNDO, self._UndoUpdateUI)
+        self.Bind(wx.EVT_UPDATE_UI, self._UndoUpdateUI, id=wx.ID_UNDO)
         self._contextMenu = menu
 
         self.PopupMenu(menu)

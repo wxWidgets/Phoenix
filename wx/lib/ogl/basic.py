@@ -2161,19 +2161,19 @@ class Shape(ShapeEvtHandler):
             dc.SetBrush(wx.BLACK_BRUSH)
 
         # Draw neck
-        dc.DrawLine(root[0], root[1], neck[0], neck[1])
+        dc.DrawLine(int(root[0]), int(root[1]), int(neck[0]), int(neck[1]))
 
         if count > 1:
             # Draw shoulder-to-shoulder line
-            dc.DrawLine(shoulder1[0], shoulder1[1], shoulder2[0], shoulder2[1])
+            dc.DrawLine(int(shoulder1[0]), int(shoulder1[1]), int(shoulder2[0]), int(shoulder2[1]))
         # Draw all the little branches
         for i in range(count):
             pt, stemPt = self.GetBranchingAttachmentPoint(attachment, i)
-            dc.DrawLine(stemPt[0], stemPt[1], pt[0], pt[1])
+            dc.DrawLine(int(stemPt[0]), int(stemPt[1]), int(pt[0]), int(pt[1]))
 
             if self.GetBranchStyle() & BRANCHING_ATTACHMENT_BLOB and count > 1:
                 blobSize = 6.0
-                dc.DrawEllipse(stemPt[0] - blobSize / 2.0, stemPt[1] - blobSize / 2.0, blobSize, blobSize)
+                dc.DrawEllipse(int(stemPt[0] - blobSize / 2.0), int(stemPt[1] - blobSize / 2.0), int(blobSize), int(blobSize))
 
     def OnDrawBranches(self, dc, erase = False):
         """The draw branches handler."""
@@ -3165,7 +3165,7 @@ class PolygonShape(Shape):
                 dc.SetBrush(self._shadowBrush)
             dc.SetPen(TransparentPen)
 
-            dc.DrawPolygon(self._points, self._xpos + self._shadowOffsetX, self._ypos, self._shadowOffsetY)
+            dc.DrawPolygon(self._points, int(self._xpos + self._shadowOffsetX), int(self._ypos + self._shadowOffsetY))
 
         if self._pen:
             if self._pen.GetWidth() == 0:
@@ -3433,9 +3433,7 @@ class EllipseShape(Shape):
             if self._shadowBrush:
                 dc.SetBrush(self._shadowBrush)
             dc.SetPen(TransparentPen)
-            dc.DrawEllipse(self._xpos - self.GetWidth() / 2.0 + self._shadowOffsetX,
-                           self._ypos - self.GetHeight() / 2.0 + self._shadowOffsetY,
-                           self.GetWidth(), self.GetHeight())
+            dc.DrawEllipse(int(self._xpos - self.GetWidth() / 2.0 + self._shadowOffsetX), int(self._ypos - self.GetHeight() / 2.0 + self._shadowOffsetY), int(self.GetWidth()), int(self.GetHeight()))
 
         if self._pen:
             if self._pen.GetWidth() == 0:

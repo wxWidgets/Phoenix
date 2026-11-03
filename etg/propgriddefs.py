@@ -45,6 +45,31 @@ def run():
         """,
         order=15)
 
+    # wx declares these scoped enums as bit flags, but sip makes them IntEnums,
+    # which reject combined values, such as the flags that C++ passes to a Python
+    # override of ValueToString. sip's BaseType=IntFlag would need ABI 13.
+    flagsCode = module.addPyCode(
+        code="""\
+        def _makeFlagsEnum(enumClass):
+            def _missing_(cls, value):
+                names = [m.name for m in cls if m.value and m.value & value == m.value]
+                member = int.__new__(cls, value)
+                member._name_ = '|'.join(names) or str(value)
+                member._value_ = value
+                return member
+            enumClass._missing_ = classmethod(_missing_)
+            enumClass.__or__ = lambda self, other: enumClass(int(self) | int(other))
+            enumClass.__ror__ = enumClass.__or__
+
+        for _flagsEnum in (PGFlags, PGPropertyValuesFlags, PGPropValFormatFlags,
+                           PGSelectPropertyFlags, PGSetValueFlags,
+                           PGSplitterPositionFlags, PGVFBFlags):
+            _makeFlagsEnum(_flagsEnum)
+        del _flagsEnum, _makeFlagsEnum
+        """,
+        order=15)
+    flagsCode.piIgnored = True
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

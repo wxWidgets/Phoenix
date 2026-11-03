@@ -192,7 +192,7 @@ class EventManager:
         Return a dictionary with data about my state.
         """
         stats = {}
-        stats['Adapters: Message'] = reduce(lambda x,y: x+y, [0] + map(len, self.messageAdapterDict.values()))
+        stats['Adapters: Message'] = sum(len(adapters) for adapters in self.messageAdapterDict.values())
         stats['Adapters: Event']   = len(self.eventAdapterDict)
         stats['Topics: Total']     = len(self.__getTopics())
         stats['Topics: Dead']      = len(self.GetDeadTopics())
@@ -217,7 +217,7 @@ class EventManager:
         Return a list of topics relating to dead wxPython
         objects.
         """
-        return filter(self.__isDeadTopic, self.__getTopics())
+        return list(filter(self.__isDeadTopic, self.__getTopics()))
 
 
     def __winString(self, aWin):

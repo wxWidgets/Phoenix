@@ -191,8 +191,7 @@ class TriangleShape1(FC.Polygon, MovingObjectMixin):
         L is the length of one side of the Triangle
         """
 
-        XY = np.asarray(XY)
-        XY.shape = (2,)
+        XY = np.asarray(XY).reshape(2,)
 
         Points = self.CompPoints(XY, L)
 

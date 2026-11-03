@@ -249,9 +249,9 @@ class LabelShape(RectangleShape):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         if self._cornerRadius > 0:
-            dc.DrawRoundedRectangle(x1, y1, self._width, self._height, self._cornerRadius)
+            dc.DrawRoundedRectangle(int(x1), int(y1), int(self._width), int(self._height), self._cornerRadius)
         else:
-            dc.DrawRectangle(x1, y1, self._width, self._height)
+            dc.DrawRectangle(int(x1), int(y1), int(self._width), int(self._height))
 
     def OnDrawContents(self, dc):
         """not implemented???"""
@@ -556,7 +556,7 @@ class LineShape(Shape):
             # Now draw the text
             if region.GetFont():
                 dc.SetFont(region.GetFont())
-                dc.DrawRectangle(xp - w / 2.0, yp - h / 2.0, w, h)
+                dc.DrawRectangle(int(xp - w / 2.0), int(yp - h / 2.0), int(w), int(h))
 
                 if self._pen:
                     dc.SetPen(self._pen)
@@ -589,7 +589,7 @@ class LineShape(Shape):
             dc.SetPen(self.GetBackgroundPen())
             dc.SetBrush(self.GetBackgroundBrush())
 
-            dc.DrawRectangle(xp - w / 2.0, yp - h / 2.0, w, h)
+            dc.DrawRectangle(int(xp - w / 2.0), int(yp - h / 2.0), int(w), int(h))
 
     def GetLabelPosition(self, position):
         """
@@ -896,7 +896,7 @@ class LineShape(Shape):
             else:
                 dc.SetBrush(self._brush)
 
-            dc.DrawEllipse(x1, y1, diameter, diameter)
+            dc.DrawEllipse(int(x1), int(y1), int(diameter), int(diameter))
         elif at == ARROW_SINGLE_OBLIQUE:
             pass
         elif at == ARROW_METAFILE:
@@ -940,7 +940,7 @@ class LineShape(Shape):
                     minX, minY, maxX, maxY = arrow.GetMetaFile().GetBounds()
                     # Make erasing rectangle slightly bigger or you get droppings
                     extraPixels = 4
-                    dc.DrawRectangle(deltaX + x + minX - extraPixels / 2.0, deltaY + y + minY - extraPixels / 2.0, maxX - minX + extraPixels, maxY - minY + extraPixels)
+                    dc.DrawRectangle(int(deltaX + x + minX - extraPixels / 2.0), int(deltaY + y + minY - extraPixels / 2.0), int(maxX - minX + extraPixels), int(maxY - minY + extraPixels))
                 else:
                     arrow.GetMetaFile().Draw(dc, x + deltaX, y + deltaY)
 
@@ -1210,7 +1210,7 @@ class LineShape(Shape):
         if sys.platform[:3] == "win":
             # For some reason, last point isn't drawn under Windows
             pt = points[-1]
-            dc.DrawPoint(pt[0], pt[1])
+            dc.DrawPoint(int(pt[0]), int(pt[1]))
 
         # Problem with pen - if not a solid pen, does strange things
         # to the arrowhead. So make (get) a new pen that's solid.

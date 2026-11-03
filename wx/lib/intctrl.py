@@ -67,6 +67,7 @@ EVT_INT = wx.PyEventBinder(wxEVT_COMMAND_INT_UPDATED, 1)
 # Ctrl-B, etc. However, there are no wxPython or wxWindows
 # symbols for them, so I'm defining codes for Ctrl-X (cut) and
 # Ctrl-V (paste) here for readability:
+WXK_CTRL_C = (ord('C') + 1) - ord('A')
 WXK_CTRL_X = (ord('X')+1) - ord('A')
 WXK_CTRL_V = (ord('V')+1) - ord('A')
 
@@ -865,7 +866,7 @@ class IntCtrl(wx.TextCtrl):
         wx.TheClipboard.Open()
         wx.TheClipboard.SetData(do)
         wx.TheClipboard.Close()
-        if select_len == len(wxTextCtrl.GetValue(self)):
+        if select_len == len(textval):
             if not self.IsNoneAllowed():
                 self.SetValue(0)
                 self.SetInsertionPoint(0)

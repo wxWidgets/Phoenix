@@ -954,7 +954,7 @@ class TestPanel( wx.Panel ):
         #
         # Test some code that *should* fail (but not crash)
         try:
-            if wx.GetApp().GetAssertionMode() == wx.PYAPP_ASSERT_EXCEPTION:
+            if wx.GetApp().GetAssertMode() & wx.APP_ASSERT_EXCEPTION:
                 log.write('Testing exception handling compliancy')
                 a_ = pg.GetPropertyValue( "NotARealProperty" )
                 pg.EnableProperty( "NotAtAllRealProperty", False )

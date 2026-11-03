@@ -43,8 +43,7 @@ except ImportError:
 def _draw1Objects():
     """Sin, Cos, and Points"""
     # 100 points sin function, plotted as green circles
-    data1 = 2. * np.pi * np.arange(-200, 200) / 200.
-    data1.shape = (200, 2)
+    data1 = (2. * np.pi * np.arange(-200, 200) / 200.).reshape(200, 2)
     data1[:, 1] = np.sin(data1[:, 0])
     markers1 = wxplot.PolyMarker(data1,
                                  legend='Green Markers',
@@ -54,8 +53,7 @@ def _draw1Objects():
                                  )
 
     # 50 points cos function, plotted as red line and markers
-    data1 = 2. * np.pi * np.arange(-100, 100) / 100.
-    data1.shape = (100, 2)
+    data1 = (2. * np.pi * np.arange(-100, 100) / 100.).reshape(100, 2)
     data1[:, 1] = np.cos(data1[:, 0])
     lines = wxplot.PolySpline(data1, legend='Red Line', colour='red')
     markers3 = wxplot.PolyMarker(data1,
@@ -85,8 +83,7 @@ def _draw1Objects():
 def _draw2Objects():
     """Sin, Cos, Points, and lines between points"""
     # 100 points sin function, plotted as green dots
-    data1 = 2. * np.pi * np.arange(200) / 200.
-    data1.shape = (100, 2)
+    data1 = (2. * np.pi * np.arange(200) / 200.).reshape(100, 2)
     data1[:, 1] = np.sin(data1[:, 0])
     line1 = wxplot.PolySpline(data1,
                               legend='Green Line',
@@ -95,8 +92,7 @@ def _draw2Objects():
                               style=wx.PENSTYLE_DOT)
 
     # 25 points cos function, plotted as red dot-dash with steps.
-    data1 = 2. * np.pi * np.arange(50) / 50.
-    data1.shape = (25, 2)
+    data1 = (2. * np.pi * np.arange(50) / 50.).reshape(25, 2)
     data1[:, 1] = np.cos(data1[:, 0])
     line2 = wxplot.PolyLine(data1,
                             legend='Red Line',
@@ -155,8 +151,7 @@ def _draw3Objects():
 def _draw4Objects():
     """25,000 point line and markers"""
     # Points
-    data1 = np.random.normal(loc=7.5e5, scale=70000, size=50000)
-    data1.shape = (25000, 2)
+    data1 = np.random.normal(loc=7.5e5, scale=70000, size=50000).reshape(25000, 2)
     markers2 = wxplot.PolyMarker(data1,
                                  legend='Dots',
                                  colour='blue',
@@ -165,8 +160,7 @@ def _draw4Objects():
                                  )
 
     # Line
-    data1 = np.arange(5e5, 1e6, 10)
-    data1.shape = (25000, 2)
+    data1 = np.arange(5e5, 1e6, 10).reshape(25000, 2)
     line1 = wxplot.PolyLine(data1, legend='Wide Line', colour='green', width=4)
 
     return wxplot.PlotGraphics([markers2, line1],

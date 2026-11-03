@@ -428,9 +428,9 @@ class CompositeShape(RectangleShape):
             dc.SetPen(wx.Pen(wx.WHITE, 1, wx.PENSTYLE_TRANSPARENT))
 
             if self._cornerRadius:
-                dc.DrawRoundedRectangle(x1 + self._shadowOffsetX, y1 + self._shadowOffsetY, self._width, self._height, self._cornerRadius)
+                dc.DrawRoundedRectangle(int(x1 + self._shadowOffsetX), int(y1 + self._shadowOffsetY), int(self._width), int(self._height), self._cornerRadius)
             else:
-                dc.DrawRectangle(x1 + self._shadowOffsetX, y1 + self._shadowOffsetY, self._width, self._height)
+                dc.DrawRectangle(int(x1 + self._shadowOffsetX), int(y1 + self._shadowOffsetY), int(self._width), int(self._height))
 
         # For debug purposes /pi
         #dc.DrawRectangle(x1, y1, self._width, self._height)

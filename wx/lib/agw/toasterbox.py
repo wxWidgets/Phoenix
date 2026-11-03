@@ -339,11 +339,11 @@ class ToasterBox(wx.Timer):
         width, height = screenrect.GetWidth(), screenrect.GetHeight()
 
         if direction == wx.VERTICAL:
-            pos = wx.Point(x, (y + (height/2) - (toast_height/2)))
+            pos = wx.Point(x, y + height // 2 - toast_height // 2)
         elif direction == wx.HORIZONTAL:
-            pos = wx.Point((x + (width/2) - (toast_width/2)), y)
+            pos = wx.Point(x + width // 2 - toast_width // 2, y)
         else:
-            pos = wx.Point((x + (width/2) - (toast_width/2)), (y + (height/2) - (toast_height/2)))
+            pos = wx.Point(x + width // 2 - toast_width // 2, y + height // 2 - toast_height // 2)
 
         self.SetPopupPosition(pos)
 
@@ -366,11 +366,11 @@ class ToasterBox(wx.Timer):
         width, height = screenSize.GetWidth(), screenSize.GetHeight()
 
         if direction == wx.VERTICAL:
-            pos = wx.Point(0, (height/2) - (toast_height/2))
+            pos = wx.Point(0, height // 2 - toast_height // 2)
         elif direction == wx.HORIZONTAL:
-            pos = wx.Point((width/2) - (toast_width/2), 0)
+            pos = wx.Point(width // 2 - toast_width // 2, 0)
         else:
-            pos = wx.Point((width/2) - (toast_width/2), (height/2) - (toast_height/2))
+            pos = wx.Point(width // 2 - toast_width // 2, height // 2 - toast_height // 2)
 
         self.SetPopupPosition(pos)
 

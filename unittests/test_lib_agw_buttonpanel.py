@@ -69,6 +69,10 @@ class lib_agw_buttonpanel_Tests(wtc.WidgetTestCase):
         BP.BP_GRADIENT_VERTICAL
         BP.BP_GRADIENT_HORIZONTAL
 
+    def test_lib_agw_buttonpanelArtGetUnknownFont(self):
+        art = BP.BPArt(0)
+        self.assertEqual(art.GetFont(-1), wx.NullFont)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

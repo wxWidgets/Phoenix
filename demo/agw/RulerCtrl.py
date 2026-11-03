@@ -148,7 +148,7 @@ class RulerCtrlDemo(wx.Frame):
         sizex = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
         sizey = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
 
-        self.SetSize((3*sizex/4, 3*sizey/4))
+        self.SetSize((3 * sizex // 4, 3 * sizey // 4))
         self.SendSizeEvent()
         self.CenterOnScreen()
 

@@ -31,6 +31,36 @@ class propgriddefs_Tests(wtc.WidgetTestCase):
         pg.PG_COLOUR_BLACK
         pg.PG_DEFAULT_IMAGE_SIZE
 
+    def test_propgriddefsFlagsEnumsAcceptCombinations(self):
+        flags = pg.PGPropValFormatFlags
+        combined = flags.FullValue | flags.ValueIsCurrent
+        self.assertIsInstance(combined, flags)
+        self.assertEqual(combined, flags.FullValue.value | flags.ValueIsCurrent.value)
+        self.assertIsInstance(flags(combined.value), flags)
+        self.assertIs(flags(flags.FullValue.value), flags.FullValue)
+
+    def test_propgriddefsCombinedFlagsFromCpp(self):
+        seen = []
+
+        class CustomProperty(pg.PGProperty):
+            def __init__(self):
+                super().__init__('custom', 'custom')
+                self.SetValue('value')
+
+            def ValueToString(self, value, flags=pg.PGPropValFormatFlags.Null):
+                seen.append(flags)
+                return 'text'
+
+        grid = pg.PropertyGrid(self.frame)
+        grid.Append(CustomProperty())
+        self.assertEqual(grid.GetPropertyValues(as_strings=True), {'custom': 'text'})
+        self.assertTrue(seen)
+
+    def test_propgriddefsCombinedFlagsToCpp(self):
+        flags = pg.PGPropValFormatFlags
+        prop = pg.StringProperty('name', 'name', 'value')
+        self.assertEqual(prop.ValueToString('value', flags.FullValue | flags.ValueIsCurrent), 'value')
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

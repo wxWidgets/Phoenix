@@ -550,9 +550,9 @@ if __name__ == '__main__':
             gauge3.SetBorderColor(wx.BLACK)
 
             sizer = wx.BoxSizer(wx.VERTICAL)
-            sizer.Add(gauge1, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
-            sizer.Add(gauge2, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
-            sizer.Add(gauge3, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
+            sizer.Add(gauge1, 0, wx.ALL, 20)
+            sizer.Add(gauge2, 0, wx.ALL, 20)
+            sizer.Add(gauge3, 0, wx.ALL, 20)
 
             panel.SetSizer(sizer)
             sizer.Layout()

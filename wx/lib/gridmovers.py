@@ -275,7 +275,7 @@ class GridColMover(wx.EvtHandler):
                     x += evt.X - w
 
                 if x < 1: x = 0
-                else: x /= ux
+                else: x //= ux
 
                 if x != sx:
                     if wx.Platform == '__WXMSW__':
@@ -414,7 +414,7 @@ class GridRowMover(wx.EvtHandler):
                 if y < 1:
                     y = 0
                 else:
-                    y /= uy
+                    y //= uy
 
                 if y != sy:
                     if wx.Platform == '__WXMSW__':
