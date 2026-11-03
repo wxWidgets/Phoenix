@@ -1,5 +1,6 @@
 import gc
 import unittest
+from unittest import mock
 import weakref
 from unittests import wtc
 import wx
@@ -403,6 +404,69 @@ class grid_Tests(wtc.WidgetTestCase):
         gc.collect()
         assert ref() is not None
         assert t.GetAttrProvider() is ref()
+
+
+    def activate_cells(self, editor, cells):
+        g = wx.grid.Grid(self.frame)
+        g.CreateGrid(2, 2)
+        attr = wx.grid.GridCellAttr()
+        attr.SetEditor(editor)
+        g.SetColAttr(1, attr)
+        for row, col in cells:
+            g.SetGridCursor(row, col)
+            g.EnableCellEditControl()
+        return g
+
+    def test_grid48(self):
+        # Results returned from a Python TryActivate used to crash, see #2899
+        class Editor(wx.grid.GridCellActivatableEditor):
+            def Clone(self):
+                return Editor()
+            def TryActivate(self, row, col, grid, actSource):
+                self.newValue = f'changed {row}'
+                return wx.grid.GridActivationResult.DoChange(self.newValue)
+            def DoActivate(self, row, col, grid):
+                grid.SetCellValue(row, col, self.newValue)
+
+        g = self.activate_cells(Editor(), [(0, 1), (1, 1)])
+        assert g.GetCellValue(0, 1) == 'changed 0'
+        assert g.GetCellValue(1, 1) == 'changed 1'
+
+    def test_grid49(self):
+        class Editor(wx.grid.GridCellEditor):
+            calls = 0
+            def Clone(self): return Editor()
+            def BeginEdit(self, row, col, grid): pass
+            def Create(self, parent, id, evtHandler): pass
+            def EndEdit(self, row, col, grid, oldval): return None
+            def ApplyEdit(self, row, col, grid): pass
+            def Reset(self): pass
+            def GetValue(self): return ""
+            def TryActivate(self, row, col, grid, actSource):
+                self.calls += 1
+                return wx.grid.GridActivationResult.DoNothing()
+
+        e = Editor()
+        g = self.activate_cells(e, [(0, 1), (1, 1)])
+        assert e.calls == 2
+        assert not g.IsCellEditControlEnabled()
+
+    def test_grid50(self):
+        # An invalid result is reported and treated as DoNothing
+        class Editor(wx.grid.GridCellActivatableEditor):
+            def Clone(self):
+                return Editor()
+            def TryActivate(self, row, col, grid, actSource):
+                return None
+            def DoActivate(self, row, col, grid):
+                grid.SetCellValue(row, col, 'changed')
+
+        with mock.patch('sys.excepthook') as hook:
+            g = self.activate_cells(Editor(), [(0, 1)])
+        assert hook.call_count == 1
+        assert hook.call_args[0][0] is TypeError
+        assert g.GetCellValue(0, 1) == ''
+        assert not g.IsCellEditControlEnabled()
 
 #---------------------------------------------------------------------------
 

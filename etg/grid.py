@@ -287,8 +287,33 @@ def run():
     c.addPrivateAssignOp()
     c.addPrivateDefaultCtor()
     c.instanceCode = """\
-        wxGridActivationResult result = wxGridActivationResult::DoNothing();
+        static wxGridActivationResult result = wxGridActivationResult::DoNothing();
         sipCpp = &result;
+        """
+
+    # wxGridActivationResult has const members, so SIP's usual virtual handler
+    # can't assign the Python result to sipRes. Copy-construct it and return
+    # early instead, doing the cleanup that the generated code would do.
+    tryActivateCatcherCode = """\
+        PyObject *resObj = sipCallMethod(&sipIsErr, sipMethod, "iiDN", row, col,
+                                         grid, sipType_wxGrid, SIP_NULLPTR,
+                                         new wxGridActivationSource(actSource),
+                                         sipType_wxGridActivationSource, SIP_NULLPTR);
+        if (resObj) {
+            int state = 0;
+            wxGridActivationResult *res = reinterpret_cast<wxGridActivationResult *>(
+                sipForceConvertToType(resObj, sipType_wxGridActivationResult, SIP_NULLPTR,
+                                      SIP_NOT_NONE, &state, &sipIsErr));
+            if (!sipIsErr) {
+                wxGridActivationResult rv(*res);
+                sipReleaseType(res, sipType_wxGridActivationResult, state);
+                Py_DECREF(resObj);
+                Py_DECREF(sipMethod);
+                SIP_RELEASE_GIL(sipGILState)
+                return rv;
+            }
+            Py_DECREF(resObj);
+        }
         """
 
 
@@ -392,10 +417,12 @@ def run():
     c.addPrivateCopyCtor()
     c.find('~wxGridCellEditor').ignore(False)
     c.find('Clone').factory = True
+    c.find('TryActivate').virtualCatcherCode = tryActivateCatcherCode
     tools.fixRefCountedClass(c)
 
 
     c = module.find('wxGridCellActivatableEditor')
+    c.find('TryActivate').virtualCatcherCode = tryActivateCatcherCode
 
 
     c = module.find('wxGridCellChoiceEditor')
