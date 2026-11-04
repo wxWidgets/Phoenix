@@ -37,6 +37,20 @@ class lib_plot_PlotCanvas_Tests(wtc.WidgetTestCase):
                     setattr(p, attr, value)
             assert getattr(p, attr) == (-1, 4)
 
+    def test_lib_plot_pointLabelAfterRedraw(self):
+        p = wxplot.PlotCanvas(self.frame, size=(400, 300))
+        p.enablePointLabel = True
+        drawn = []
+        p.pointLabelFunc = lambda dc, mDataDict: drawn.append(mDataDict['pointXY'])
+        p.Draw(wxplot.PlotGraphics([wxplot.PolyLine([(0, 0), (1, 1), (2, 0)])]))
+        p.UpdatePointLabel({'pointXY': (0, 0)})
+        # Redrawing (e.g. while dragging) wipes the label from the buffer, so
+        # the next update must not draw the old label again to "erase" it.
+        p.Redraw()
+        drawn.clear()
+        p.UpdatePointLabel({'pointXY': (1, 1)})
+        self.assertEqual(drawn, [(1, 1)])
+
 
 class lib_plot_Tests(wtc.WidgetTestCase):
     def test_lib_plot_tempstyle_contextmanager(self):
