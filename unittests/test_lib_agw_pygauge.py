@@ -29,6 +29,16 @@ class lib_agw_pygauge_Tests(wtc.WidgetTestCase):
 
         self.assertEqual(gauge.GetRange(), 120)
 
+    def test_lib_agw_pygaugeSettersRefresh(self):
+        gauge = PG.PyGauge(self.frame, style=wx.GA_HORIZONTAL)
+        refreshes = []
+        gauge.Refresh = lambda *args, **kw: refreshes.append(True)
+
+        gauge.SetValue(50)
+        self.assertEqual(len(refreshes), 1)
+        gauge.SetRange(200)
+        self.assertEqual(len(refreshes), 2)
+
 
 #---------------------------------------------------------------------------
 
