@@ -349,11 +349,32 @@ def run():
             klass.find('EndEdit').ignore()
             pureVirtual = True
 
+        # Like SIP's generated code for virtuals, make a non-virtual call when
+        # self is an instance of a Python subclass. Otherwise calling the base
+        # class EndEdit from an overridden EndEdit calls the override again.
+        derivedBody = f"""\
+            wxString newval;
+            bool rv = sipSelfWasArg
+                ? sipCpp->::{name}::EndEdit(row, col, grid, *oldval, &newval)
+                : sipCpp->EndEdit(row, col, grid, *oldval, &newval);
+            {{
+                wxPyThreadBlocker blocker;
+                if (rv) {{
+                    sipRes = wx2PyString(newval);
+                }}
+                else {{
+                    Py_INCREF(Py_None);
+                    sipRes = Py_None;
+                }}
+            }}
+            """
+
         # The Python version of EndEdit has a different signature than the
         # C++ version, so we need to take care of mapping between them so the
         # C++ compiler still recognizes this as a match for the virtual
         # method in the base class.
-        klass.addCppMethod('PyObject*', 'EndEdit', '(int row, int col, const wxGrid* grid, const wxString& oldval)',
+        addCppMethod = klass.addCppMethod if pureVirtual else klass.addCppMethod_sip
+        addCppMethod('PyObject*', 'EndEdit', '(int row, int col, const wxGrid* grid, const wxString& oldval)',
             cppSignature='bool (int row, int col, const wxGrid* grid, const wxString& oldval, wxString* newval)',
             pyArgsString='(row, col, grid, oldval)',
             isVirtual=True,
@@ -384,7 +405,7 @@ def run():
                     Py_INCREF(Py_None);
                     return Py_None;
                 }
-                """,
+                """ if pureVirtual else derivedBody,
 
             # Code for C++ --> Python calls. This is used when a C++ method
             # call needs to be reflected to a call to the overridden Python

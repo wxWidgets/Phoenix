@@ -468,6 +468,22 @@ class grid_Tests(wtc.WidgetTestCase):
         assert g.GetCellValue(0, 1) == ''
         assert not g.IsCellEditControlEnabled()
 
+    def test_grid51(self):
+        # Calling the base EndEdit from an override used to recurse
+        # infinitely, see #2584
+        class Editor(wx.grid.GridCellNumberEditor):
+            calls = 0
+            def EndEdit(self, row, col, grid, oldval):
+                Editor.calls += 1
+                return super().EndEdit(row, col, grid, oldval)
+
+        editor = Editor()
+        g = self.activate_cells(editor, [(0, 1)])
+        editor.GetControl().SetValue('42')
+        g.DisableCellEditControl()
+        assert Editor.calls == 1
+        assert g.GetCellValue(0, 1) == '42'
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
