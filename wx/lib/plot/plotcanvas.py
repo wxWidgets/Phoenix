@@ -1575,11 +1575,12 @@ class PlotCanvas(wx.Panel):
     @xSpec.setter
     def xSpec(self, value):
         ok_values = ('none', 'min', 'auto')
-        if value not in ok_values and not isinstance(value, (int, float)):
-            if not isinstance(value, (list, tuple)) and len(value != 2):
-                err_str = ("xSpec must be 'none', 'min', 'auto', "
-                           "a number, or sequence of numbers (length 2)")
-                raise TypeError(err_str)
+        if isinstance(value, (list, tuple)) and len(value) == 2:
+            value = tuple(value)
+        elif value not in ok_values and not isinstance(value, (int, float)):
+            err_str = ("xSpec must be 'none', 'min', 'auto', "
+                       "a number, or sequence of numbers (length 2)")
+            raise TypeError(err_str)
         self._xSpec = value
 
     @property
@@ -1611,11 +1612,12 @@ class PlotCanvas(wx.Panel):
     @ySpec.setter
     def ySpec(self, value):
         ok_values = ('none', 'min', 'auto')
-        if value not in ok_values and not isinstance(value, (int, float)):
-            if not isinstance(value, (list, tuple)) and len(value != 2):
-                err_str = ("ySpec must be 'none', 'min', 'auto', "
-                           "a number, or sequence of numbers (length 2)")
-                raise TypeError(err_str)
+        if isinstance(value, (list, tuple)) and len(value) == 2:
+            value = tuple(value)
+        elif value not in ok_values and not isinstance(value, (int, float)):
+            err_str = ("ySpec must be 'none', 'min', 'auto', "
+                       "a number, or sequence of numbers (length 2)")
+            raise TypeError(err_str)
         self._ySpec = value
 
     def GetXMaxRange(self):
