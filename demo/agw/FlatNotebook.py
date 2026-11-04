@@ -204,8 +204,11 @@ class FlatNotebookDemo(wx.Frame):
 
         self._editMenu.AppendSeparator()
 
-        self.Bind(wx.EVT_MENU_RANGE, self.OnSelectColour, id=MENU_SELECT_GRADIENT_COLOUR_FROM,
-                  id2=MENU_SELECT_GRADIENT_COLOUR_BORDER)
+        # IDs from wx.NewIdRef() are not guaranteed to be in ascending order,
+        # so they can't be bound as a range.
+        for menuId in (MENU_SELECT_GRADIENT_COLOUR_FROM, MENU_SELECT_GRADIENT_COLOUR_TO,
+                       MENU_SELECT_GRADIENT_COLOUR_BORDER):
+            self.Bind(wx.EVT_MENU, self.OnSelectColour, id=menuId)
 
         item = wx.MenuItem(self._editMenu, MENU_HIDE_ON_SINGLE_TAB, "Hide Page Container when only one Tab",
                            "Hide Page Container when only one Tab", wx.ITEM_CHECK)
@@ -283,7 +286,9 @@ class FlatNotebookDemo(wx.Frame):
                            wx.ITEM_CHECK)
         self._editMenu.Append(item)
 
-        self.Bind(wx.EVT_MENU_RANGE, self.OnStyle, id=MENU_HIDE_X, id2=MENU_USE_BOTTOM_TABS)
+        for menuId in (MENU_HIDE_X, MENU_HIDE_NAV_BUTTONS, MENU_USE_MOUSE_MIDDLE_BTN,
+                       MENU_DRAW_BORDER, MENU_USE_BOTTOM_TABS):
+            self.Bind(wx.EVT_MENU, self.OnStyle, id=menuId)
 
         item = wx.MenuItem(self._editMenu, MENU_ENABLE_TAB, "Enable Tab", "Enable Tab")
         self.Bind(wx.EVT_MENU, self.OnEnableTab, item)

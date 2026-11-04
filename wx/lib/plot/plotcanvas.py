@@ -1792,6 +1792,9 @@ class PlotCanvas(wx.Panel):
         """
 
         if dc is None:
+            # Redrawing the buffer wipes any point label drawn on it, so it
+            # must not be "erased" again later, which would draw it back.
+            self.last_PointLabel = None
             # sets new dc and clears it
             dc = wx.BufferedDC(wx.ClientDC(self.canvas), self._Buffer)
             bbr = wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID)
