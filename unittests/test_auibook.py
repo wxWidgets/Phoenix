@@ -103,6 +103,28 @@ class auibook_Tests(wtc.WidgetTestCase):
         nb.SetArtProvider(wx.aui.AuiDefaultTabArt())
 
 
+    def test_auibookFindTab(self):
+        nb = wx.aui.AuiNotebook(self.frame)
+        p1 = wx.Panel(nb)
+        p2 = wx.Panel(nb)
+        nb.AddPage(p1, "Tab 1")
+        nb.AddPage(p2, "Tab 2")
+
+        found, ctrl, idx = nb.FindTab(p2)
+        assert found
+        assert isinstance(ctrl, wx.aui.AuiTabCtrl)
+        assert idx == 1
+
+        # wx asserts when the window isn't a page, but with asserts off the
+        # outputs used to be uninitialized and could crash.
+        app = wx.GetApp()
+        app.SetAssertMode(wx.APP_ASSERT_SUPPRESS)
+        try:
+            assert nb.FindTab(self.frame) == (False, None, wx.NOT_FOUND)
+        finally:
+            app.SetAssertMode(wx.APP_ASSERT_EXCEPTION)
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
