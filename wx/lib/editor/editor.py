@@ -151,7 +151,7 @@ class Editor(wx.ScrolledWindow):
 ##-------------------- UpdateView/Cursor code
 
     def OnSize(self, event):
-        self.AdjustScrollbars()
+        self.UpdateView()
         self.SetFocus()
 
     def SetCharDimensions(self):
@@ -174,23 +174,17 @@ class Editor(wx.ScrolledWindow):
                 self.sh = int(self.bh / self.fh)
 
 
-    def UpdateView(self, dc = None):
-        if dc is None:
-            dc = wx.ClientDC(self)
-        if dc.IsOk():
-            self.SetCharDimensions()
-            self.KeepCursorOnScreen()
-            self.DrawSimpleCursor(0,0, dc, True)
-            self.Draw(dc)
+    def UpdateView(self, dc=None):
+        # Scrolling from a paint handler makes GTK3 repaint endlessly, so
+        # adjust the view here and leave all drawing to OnPaint.
+        self.SetCharDimensions()
+        self.KeepCursorOnScreen()
+        self.Refresh()
 
     def OnPaint(self, event):
         dc = wx.PaintDC(self)
-        if self.isDrawing:
-            return
-        self.isDrawing = True
-        self.UpdateView(dc)
-        wx.CallAfter(self.AdjustScrollbars)
-        self.isDrawing = False
+        self.SetCharDimensions()
+        self.Draw(dc)
 
     def OnEraseBackground(self, evt):
         pass
@@ -290,7 +284,18 @@ class Editor(wx.ScrolledWindow):
         szy = self.fh
         x = xp * szx
         y = yp * szy
-        dc.Blit(x,y, szx,szy, dc, x,y, wx.XOR)
+        # Draw the inverted cell directly, as blitting a DC onto itself fails
+        # with GTK3.
+        line = self.sy + yp
+        col = self.sx + xp
+        char = self.lines[line][col:col + 1] if self.IsLine(line) else ''
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        dc.SetBrush(wx.Brush(self.fgColor))
+        dc.DrawRectangle(x, y, szx, szy)
+        if char.strip():
+            dc.SetBackgroundMode(wx.TRANSPARENT)
+            dc.SetTextForeground(self.bgColor)
+            dc.DrawText(char, x, y)
         self.sco_x = xp
         self.sco_y = yp
 
