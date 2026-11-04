@@ -503,8 +503,12 @@ class FlatMenuDemo(wx.Frame):
 
         # Attach menu events to some handlers
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnQuit, id=wx.ID_EXIT)
-        self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnEdit, id=MENU_DISABLE_MENU_ITEM, id2=MENU_REMOVE_MENU)
-        self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnStyle, id=MENU_STYLE_XP, id2=MENU_STYLE_VISTA)
+        # IDs from wx.NewIdRef() are not guaranteed to be in ascending order,
+        # so they can't be bound as a range.
+        for menuId in (MENU_DISABLE_MENU_ITEM, MENU_REMOVE_MENU):
+            self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnEdit, id=menuId)
+        for menuId in (MENU_STYLE_XP, MENU_STYLE_2007, MENU_STYLE_VISTA):
+            self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnStyle, id=menuId)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnFlatMenuCmd, id=MENU_NEW_FILE, id2=20013)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnAbout, id=MENU_HELP)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnStyle, id=MENU_STYLE_MY)
