@@ -44,6 +44,8 @@ def run():
     c.find('DrawHintRect').find('offset').default="wxPoint(0,0)"
     c.find('GetAllPanes').findOverload('', isConst=True).ignore()
     c.find('SetArtProvider.art_provider').transfer = True
+    c.find('GetDockSizeConstraint.widthpct').out = True
+    c.find('GetDockSizeConstraint.heightpct').out = True
 
     c = module.find('wxAuiPaneInfo')
     module.addItem(

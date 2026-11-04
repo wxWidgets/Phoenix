@@ -43,6 +43,10 @@ class MultiSplitterWindow(wx.Panel):
     distance (either horizontally or vertically) from the origin of
     the window just before the sash in the splitter stack.
 
+    Windows are indexed from 0 in the order they appear in the splitter,
+    as set by :meth:`AppendWindow` and :meth:`InsertWindow`, and sash
+    ``idx`` is the one just after window ``idx``.
+
     NOTE: These things are not yet supported:
 
         * Using negative sash positions to indicate a position offset
@@ -147,6 +151,10 @@ class MultiSplitterWindow(wx.Panel):
 
         """
         self._minimumPaneSize = minSize
+        for idx, pos in enumerate(self._sashes[:-1]):
+            if pos != -1 and pos < minSize:
+                self._sashes[idx] = minSize
+        self._SizeWindows()
 
     def GetMinimumPaneSize(self):
         """
@@ -487,6 +495,8 @@ class MultiSplitterWindow(wx.Panel):
         # TODO: check for possibility of unsplit (pane size becomes zero)
 
         # make sure that minsizes are honored
+        if not adjustNeighbor:
+            newPos1 = min(newPos1, self._GetMaxSashPosition(idx))
         newPos1, newPos2 = self._AdjustSashPosition(idx, newPos1, newPos2, adjustNeighbor)
 
         # sanity check
@@ -592,6 +602,18 @@ class MultiSplitterWindow(wx.Panel):
             coord += self._GetSashSize()
         coord += sashPos
         return coord
+
+
+    def _GetMaxSashPosition(self, idx):
+        # Moving a sash without adjusting its neighbor shifts the windows after
+        # it and only resizes the last one, which must keep its minimum size.
+        width, height = self.GetClientSize()
+        size = width if self._orient == wx.HORIZONTAL else height
+        border = self._GetBorderSize()
+        others = sum(pos for i, pos in enumerate(self._sashes[:-1]) if i != idx)
+        used = border + others + self._GetSashSize() * (len(self._windows) - 1)
+        lastMin = max(self._GetWindowMin(self._windows[-1]), self._minimumPaneSize)
+        return size - 2 * border - used - (lastMin + border)
 
 
     def _GetWindowMin(self, window):

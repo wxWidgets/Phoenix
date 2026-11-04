@@ -274,6 +274,7 @@ class PyGauge(wx.Window):
             raise Exception("ERROR:\n Gauge range must be greater than 0.")
 
         self._range = range
+        self.Refresh()
 
 
     def GetValue(self):
@@ -299,6 +300,8 @@ class PyGauge(wx.Window):
         for v in self._value:
             if v < 0 or v > self._range:
                 raise Exception("ERROR:\n Gauge value must be between 0 and its range.")
+
+        self.Refresh()
 
 
     def OnEraseBackground(self, event):

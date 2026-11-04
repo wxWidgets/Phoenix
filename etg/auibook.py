@@ -52,6 +52,16 @@ def run():
     tools.fixBookctrlClass(c)
     c.find('SetArtProvider.art').transfer = True
 
+    # FindTab() leaves ctrl and idx unset when the page isn't found
+    m = c.find('FindTab')
+    m.find('ctrl').out = True
+    m.find('idx').out = True
+    m.setCppCode_sip("""\
+        ctrl = NULL;
+        idx = wxNOT_FOUND;
+        sipRes = sipCpp->FindTab(page, &ctrl, &idx);
+        """)
+
     c.find('GetAllTabCtrls').ignore()
     c.find('GetPagesInDisplayOrder').ignore()
 
