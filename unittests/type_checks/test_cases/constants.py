@@ -15,8 +15,8 @@ assert_type(wx.Port, str)
 assert_type(wx.PlatformInfo, tuple)
 
 
-# char* constants are bytes, like at runtime
-assert_type(wx.ART_FOLDER, bytes)
+# char* constants are bytes, like at runtime, except for the ART_* IDs (#2767)
+assert_type(wx.ART_FOLDER, str)
 assert_type(wx.ButtonNameStr, bytes)
 wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_TOOLBAR)
 wx.ArtProvider.GetBitmap('wxART_FOLDER', 'wxART_TOOLBAR_C')

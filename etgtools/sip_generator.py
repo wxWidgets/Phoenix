@@ -1036,6 +1036,8 @@ from .%s import *
                 annotations.append('PyInt')
             if item.noSetter:
                 annotations.append('NoSetter')
+            if item.encoding:
+                annotations.append(f'Encoding="{item.encoding}"')
 
         if isinstance(item, extractors.TypedefDef):
             if item.noTypeName:

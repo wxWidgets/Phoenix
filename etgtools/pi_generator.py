@@ -450,7 +450,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             return
         name = globalVar.pyName or globalVar.name
         valTyp = 'Any'
-        if globalVar.type and isCharString(globalVar.type):
+        if globalVar.type and isCharString(globalVar.type) and not globalVar.encoding:
             valTyp = 'bytes'
         elif guessTypeInt(globalVar):
             valTyp = 'int'

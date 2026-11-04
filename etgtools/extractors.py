@@ -213,6 +213,7 @@ class VariableDef(BaseDef):
         self.argsString = ''
         self.pyInt = False
         self.noSetter = False
+        self.encoding = None
         self.__dict__.update(**kw)
         if element is not None:
             self.extract(element)

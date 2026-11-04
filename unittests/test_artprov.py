@@ -76,6 +76,36 @@ class artprov_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(bmp, wx.Bitmap))
 
 
+    def test_artprovConstantsAreStr(self):
+        self.assertEqual(wx.ART_MENU, 'wxART_MENU_C')
+        self.assertEqual(wx.ART_FILE_OPEN, 'wxART_FILE_OPEN')
+        for name in dir(wx):
+            if name.startswith('ART_'):
+                self.assertIsInstance(getattr(wx, name), str, name)
+
+
+    def test_artprovCustomProvider(self):
+        # The IDs passed to a Python provider should compare equal to the
+        # wx.ART_* constants used to request the art.
+        calls = []
+        class MyProvider(wx.ArtProvider):
+            def CreateBitmap(self, artid, client, size):
+                calls.append((artid, client))
+                if artid == wx.ART_GO_BACK and client == wx.ART_MENU:
+                    return wx.Bitmap(16, 16)
+                return wx.NullBitmap
+
+        provider = MyProvider()
+        wx.ArtProvider.Push(provider)
+        try:
+            bmp = wx.ArtProvider.GetBitmap(wx.ART_GO_BACK, wx.ART_MENU)
+        finally:
+            wx.ArtProvider.Remove(provider)
+        self.assertIn((wx.ART_GO_BACK, wx.ART_MENU), calls)
+        self.assertTrue(bmp.IsOk())
+        self.assertEqual(bmp.GetSize(), (16, 16))
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

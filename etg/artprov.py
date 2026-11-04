@@ -53,6 +53,12 @@ def run():
     # deprecated and removed
     c.find('Insert').ignore()
 
+    # Make the wxART_* constants str, to match the IDs passed to Python
+    # overrides of the Create* methods.
+    for item in module:
+        if isinstance(item, etgtools.GlobalVarDef) and item.name.startswith('wxART_'):
+            item.encoding = 'UTF-8'
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
