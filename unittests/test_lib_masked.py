@@ -159,6 +159,11 @@ class TimeCtrlTests(wtc.WidgetTestCase):
         t.SetParameters(format='24HHMMSS')
         self.assertEqual(t.GetValue(), '14:34:56')
 
+    def test_timectrlSetTimeSpan(self):
+        t = m.TimeCtrl(self.frame, fmt24hr=True)
+        t.SetValue(wx.TimeSpan(13, 45, 30))
+        self.assertEqual(t.GetValue(), '13:45:30')
+
 
 #---------------------------------------------------------------------------
 
