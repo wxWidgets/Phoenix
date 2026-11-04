@@ -108,13 +108,15 @@ def collect(module):
                     and '@' not in item.name and not item.ignored):
                 enums.append('.'.join(path + [removeWxPrefix(item.name)]))
     findEnums(module.items, [])
-    # and the constants that are bytes, since SIP converts char* to bytes
+    # and the constants that are bytes, since SIP converts char* without an
+    # encoding to bytes
     bytesConstants = []
     for item in module.items:
         if isinstance(item, TypedefDef) and not item.docAsClass:
             if not any(c in item.type for c in '<(['):
                 typedefs[removeWxPrefix(item.name)] = item.type
-        elif isinstance(item, GlobalVarDef) and item.type and isCharString(item.type):
+        elif (isinstance(item, GlobalVarDef) and item.type and
+                isCharString(item.type) and not item.encoding):
             bytesConstants.append(item.pyName or removeWxPrefix(item.name))
 
     return {
