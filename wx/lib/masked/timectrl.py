@@ -783,10 +783,8 @@ class TimeCtrl(BaseMaskedTextCtrl):
             if isinstance(value, wx.DateTime):
                 hour, minute, second = value.GetHour(), value.GetMinute(), value.GetSecond()
             elif isinstance(value, wx.TimeSpan):
-                totalseconds = value.GetSeconds()
-                hour = totalseconds / 3600
-                minute = totalseconds / 60 - (hour * 60)
-                second = totalseconds - ((hour * 3600) + (minute * 60))
+                minutes, second = divmod(value.GetSeconds(), 60)
+                hour, minute = divmod(minutes, 60)
 
             elif accept_mx and isinstance(value, DateTime.DateTimeType):
                 hour, minute, second = value.hour, value.minute, value.second
