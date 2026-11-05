@@ -60,6 +60,20 @@ def run():
 
     tools.fixWindowClass(c)
 
+    # wx only sets skip when it is false on input, so it must start out false
+    for klass in (gpd, c):
+        name = klass.name
+        klass.find('Update').setCppCode_sip(f"""\
+            skip = false;
+            sipRes = sipSelfWasArg ? sipCpp->::{name}::Update(value, *newmsg, &skip)
+                                   : sipCpp->Update(value, *newmsg, &skip);
+            """)
+        klass.find('Pulse').setCppCode_sip(f"""\
+            skip = false;
+            sipRes = sipSelfWasArg ? sipCpp->::{name}::Pulse(*newmsg, &skip)
+                                   : sipCpp->Pulse(*newmsg, &skip);
+            """)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
