@@ -1,3 +1,5 @@
+import os
+import subprocess
 import sys
 import unittest
 from unittests import wtc
@@ -86,6 +88,21 @@ class PyEvents(unittest.TestCase):
             self.assertTrue(evt1.attr == evt2.attr)
 
 
+    def test_PyEventAtInterpreterExit(self):
+        # Module-level events are only destroyed while the interpreter is
+        # finalizing, which needs a separate process to test. See #2442.
+        script = ("import wx\n"
+                  "evt = wx.PyEvent()\n"
+                  "evt.attr = 'hello'\n"
+                  "cmdEvt = wx.PyCommandEvent()\n"
+                  "cmdEvt.attr = 'hello'\n")
+        env = os.environ.copy()
+        paths = [os.path.dirname(os.path.dirname(wx.__file__)),
+                 env.get('PYTHONPATH')]
+        env['PYTHONPATH'] = os.pathsep.join(p for p in paths if p)
+        result = subprocess.run([sys.executable, '-c', script],
+                                env=env, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
 
 
 

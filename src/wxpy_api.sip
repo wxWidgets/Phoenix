@@ -153,11 +153,19 @@ static bool i_wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& c
 //--------------------------------------------------------------------------
 // Deal with the GIL
 
+// Py_IsInitialized() is already false while Py_FinalizeEx() destroys modules,
+// but objects freed then (e.g. a module-level wx.PyEvent) still need the GIL.
+// The finalizing thread keeps its thread state until finalization is done.
+static bool wxPyCanBlockThreads()
+{
+    return Py_IsInitialized() || PyGILState_GetThisThreadState() != NULL;
+}
+
 // Calls from wxWindows back to Python code, or even any PyObject
 // manipulations, PyDECREF's and etc. should be wrapped in calls to these functions:
 static wxPyBlock_t i_wxPyBeginBlockThreads()
 {
-    if (! Py_IsInitialized()) {
+    if (!wxPyCanBlockThreads()) {
         return (wxPyBlock_t)0;
     }
     PyGILState_STATE state = PyGILState_Ensure();
@@ -166,7 +174,7 @@ static wxPyBlock_t i_wxPyBeginBlockThreads()
 
 static void i_wxPyEndBlockThreads(wxPyBlock_t blocked)
 {
-    if (! Py_IsInitialized()) {
+    if (!wxPyCanBlockThreads()) {
         return;
     }
     PyGILState_Release(blocked);
