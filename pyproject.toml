@@ -109,6 +109,7 @@ docs = [
     "beautifulsoup4",
 ]
 devel = [
+    "numpy",  # runtime dependency (requirements/install.txt), needed to run from a source tree
     {include-group = "build"},
     {include-group = "test"},
     {include-group = "docs"},
