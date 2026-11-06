@@ -232,9 +232,10 @@ Example build command-lines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To do a complete build from a totally clean git workspace, you will
-need to install the requirements first with::
+need to install the requirements first (this needs pip 25.1 or newer)
+with::
 
-    python -m pip install -r requirements.txt
+    python -m pip install --group devel
 
 and then use several of the commands listed above.  For example::
 

@@ -70,7 +70,7 @@ function do_build {
 
     # update packages
     pip install -U pip
-    pip install -U -r requirements.txt
+    pip install -U --group devel
 
     # Build wxWidgets and Phoenix. Since we're using a source tarball we don't
     # need to do the code generation parts, all files should already be present.
