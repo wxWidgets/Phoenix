@@ -53,3 +53,12 @@ def bases(doc: wx.xml.XmlDocument, stc: wx.stc.StyledTextCtrl) -> None:
     entry: wx.TextEntry = stc
     assert_type(doc.IsSameAs(wx.Object()), bool)
     assert_type(stc.GetParent(), wx.Window)
+
+
+# A StaticBox can use another window as its label (#2563)
+def staticBoxes(win: wx.Window) -> None:
+    assert_type(wx.HAS_WINDOW_LABEL_IN_STATIC_BOX, int)
+    checkbox = wx.CheckBox(win, label='Enable')
+    wx.StaticBox(win, label='Group')
+    wx.StaticBox(win, wx.ID_ANY, checkbox)
+    assert_type(wx.StaticBox().Create(win, wx.ID_ANY, checkbox), bool)

@@ -17,13 +17,18 @@
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility with wxFileName
         if (!sipIsErr) {
-            if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
-                return TRUE;
-            return FALSE;
+            return PyBytes_Check(sipPy) || PyUnicode_Check(sipPy) ||
+                   PyObject_HasAttrString(sipPy, "__fspath__");
         }
 
         // Code to convert a compatible PyObject to a wxFileName
-        *sipCppPtr = new wxFileName(Py2wxString(sipPy));
+        PyObject* path = PyOS_FSPath(sipPy);
+        if (!path) {
+            *sipIsErr = 1;
+            return 0;
+        }
+        *sipCppPtr = new wxFileName(Py2wxString(path));
+        Py_DECREF(path);
         return sipGetState(sipTransferObj);
     %End
 

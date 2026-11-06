@@ -86,6 +86,7 @@ header_pyi = """\
 typing_imports = """\
 from __future__ import annotations
 import builtins
+import os
 import typing
 from datetime import datetime, date
 from enum import IntEnum, IntFlag, auto

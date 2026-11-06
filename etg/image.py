@@ -55,6 +55,9 @@ def run():
 
     c.find('wxImage').findOverload('wxBitmap').mustHaveApp()
 
+    for name in ['wxImage', 'LoadFile', 'SaveFile']:
+        tools.acceptPathLike(c.find(name), 'name')
+
 
     # Ignore the ctors taking raw data buffers, so we can add in our own
     # versions that are a little smarter (accept any buffer object, check

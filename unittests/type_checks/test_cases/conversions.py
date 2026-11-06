@@ -1,4 +1,5 @@
 import datetime
+import pathlib
 
 import wx
 import wx.adv
@@ -34,3 +35,13 @@ def tuples(grid: wx.grid.Grid) -> None:
 def dates(calendar: wx.adv.CalendarCtrl) -> None:
     calendar.SetDate(datetime.date(2026, 1, 1))
     calendar.SetDate(datetime.datetime(2026, 1, 1, 12, 0))
+
+
+# File system path parameters also accept os.PathLike objects (#2560)
+def paths(win: wx.Window, path: pathlib.Path) -> None:
+    wx.FileDialog(win, defaultDir=path, defaultFile='file.txt')
+    wx.Image(path)
+    wx.Image(path, wx.BITMAP_TYPE_PNG)
+    wx.Bitmap().SaveFile(path, wx.BITMAP_TYPE_PNG)
+    wx.FileSystem.FileNameToURL(path)
+    win.SetLabel(path)  # type: ignore[arg-type]  # ty: ignore[invalid-argument-type]

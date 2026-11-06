@@ -39,17 +39,43 @@ def run():
     c.find('Create.label').default = 'wxEmptyString'
     tools.fixWindowClass(c)
 
-    # TODO: The window-label ctor is only available on MSW and GTK so disable
-    # for now. Maybe replace it with a factory function that returns None on
-    # OSX??
-    c.find('wxStaticBox').findOverload('wxWindow *label').ignore()
-    c.find('Create').findOverload('wxWindow *label').ignore()
+    # The window-label overloads only exist on some platforms (not wxOSX), so
+    # they are created in two steps and raise NotImplementedError elsewhere.
+    # wx.HAS_WINDOW_LABEL_IN_STATIC_BOX tells which, as the docs suggest.
+    module.addHeaderCode("""\
+        #ifdef wxHAS_WINDOW_LABEL_IN_STATIC_BOX
+        #define wxPyHAS_WINDOW_LABEL_IN_STATIC_BOX 1
+        #else
+        #define wxPyHAS_WINDOW_LABEL_IN_STATIC_BOX 0
+        #endif
+        """)
+    module.addItem(etgtools.DefineDef(name='wxPyHAS_WINDOW_LABEL_IN_STATIC_BOX',
+                                      pyName='HAS_WINDOW_LABEL_IN_STATIC_BOX',
+                                      value='1', forcedInt=True))
 
-    # "unfix" the 2nd ctor and Create method so the required parameter lists
-    # are different enough for them to be overloaded.
-    #for name in ['wxStaticBox', 'Create']:
-    #    m = c.find(name).findOverload('wxWindow *label')
-    #    m.find('id').default = ''
+    # fixWindowClass gave id a default, but label has none
+    for name in ['wxStaticBox', 'Create']:
+        c.find(name).findOverload('wxWindow *label').find('id').default = ''
+
+    ctor = c.find('wxStaticBox').findOverload('wxWindow *label')
+    ctor.noDerivedCtor = True
+    ctor.setCppCode_sip("""\
+        #ifdef wxHAS_WINDOW_LABEL_IN_STATIC_BOX
+            sipCpp = new sipwxStaticBox();
+            sipCpp->Create(parent, id, label, *pos, *size, style, *name);
+        #else
+            wxPyRaiseNotImplemented();
+            sipIsErr = 1;
+        #endif
+        """)
+    c.find('Create').findOverload('wxWindow *label').setCppCode_sip("""\
+        #ifdef wxHAS_WINDOW_LABEL_IN_STATIC_BOX
+            sipRes = sipCpp->Create(parent, id, label, *pos, *size, style, *name);
+        #else
+            wxPyRaiseNotImplemented();
+            sipIsErr = 1;
+        #endif
+        """)
 
 
     # This is intentionally not documented, but I think it would be handy to
