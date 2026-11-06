@@ -47,7 +47,7 @@ following classes are supported:
 * wx.RadioButton;
 * wx.ScrolledWindow, wx.lib.scrolledpanel.ScrolledPanel;
 * wx.Slider, KnobCtrl;
-* wx.SpinButton, wx.SpinCtrl, FloatSpin;
+* wx.SpinButton, wx.SpinCtrl, wx.SpinCtrlDouble, FloatSpin;
 * wx.SplitterWindow;
 * wx.TextCtrl, wx.SearchCtrl, wx.lib.expando.ExpandoTextCtrl, wx.lib.masked.Ctrl;
 * wx.ToggleButton, wx.lib.buttons.GenToggleButton, wx.lib.buttons.GenBitmapToggleButton,

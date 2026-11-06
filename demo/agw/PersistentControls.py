@@ -29,7 +29,7 @@ _sampleText1 = "wx.Frame with AUI perspective, wx.MenuBar, wx.ColourDialog, " \
                "wx.FindReplaceDialog, wx.FontDialog, wx.TextEntryDialog, " \
                "wx.ColourPickerCtrl, wx.DirPickerCtrl, wx.FilePickerCtrl, " \
                "AuiToolBar, wx.RadioBox, wx.ToggleButton, wx.ComboBox, " \
-               "wx.Slider, wx.SpinCtrl, FloatSpin\n\n" \
+               "wx.Slider, wx.SpinCtrl, wx.SpinCtrlDouble, FloatSpin\n\n" \
                "PersistenceManager Style: PM.PM_DEFAULT_STYLE\n"
 
 _sampleText2 = "wx.Frame, wx.SplitterWindow, wx.TreeCtrl, wx.Notebook, " \
@@ -242,11 +242,13 @@ class PersistentFrame1(wx.Frame):
         otherPanel2 = wx.Panel(self)
         box3 = wx.BoxSizer(wx.VERTICAL)
 
-        gs1 = wx.FlexGridSizer(2, 3, 5, 10)
+        gs1 = wx.FlexGridSizer(2, 4, 5, 10)
 
         slider = wx.Slider(otherPanel2, -1, 3, 0, 10, style=wx.SL_HORIZONTAL|wx.SL_LABELS,
                            name="Slider1")
         spinctrl = wx.SpinCtrl(otherPanel2, -1, "20", min=0, max=100, name="SpinCtrl1")
+        spinctrldouble = wx.SpinCtrlDouble(otherPanel2, min=0, max=10, initial=2.5, inc=0.1,
+                                           name="SpinCtrlDouble1")
         floatspin = FS.FloatSpin(otherPanel2, -1, value=150, min_val=20, max_val=200, name="FloatSpin1")
         floatspin.SetDigits(2)
 
@@ -256,15 +258,20 @@ class PersistentFrame1(wx.Frame):
         label_3 = wx.StaticText(otherPanel2, -1, "SpinCtrl")
         label_3.SetFont(boldFont)
         gs1.Add(label_3, 0, wx.ALIGN_CENTER_VERTICAL, 0)
+        label_5 = wx.StaticText(otherPanel2, -1, "SpinCtrlDouble")
+        label_5.SetFont(boldFont)
+        gs1.Add(label_5, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         label_4 = wx.StaticText(otherPanel2, -1, "FloatSpin")
         label_4.SetFont(boldFont)
         gs1.Add(label_4, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         gs1.Add(slider, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         gs1.Add(spinctrl, 0, wx.ALIGN_CENTER_VERTICAL, 0)
+        gs1.Add(spinctrldouble, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         gs1.Add(floatspin, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         gs1.AddGrowableCol(0)
         gs1.AddGrowableCol(1)
         gs1.AddGrowableCol(2)
+        gs1.AddGrowableCol(3)
         box3.Add(gs1, 1, wx.EXPAND|wx.ALL, 5)
         otherPanel2.SetSizer(box3)
 
