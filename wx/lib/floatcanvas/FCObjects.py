@@ -2230,6 +2230,8 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         if Width is None:
             self.BmpScale = float(self.bmpHeight) / Height
             self.Width = self.bmpWidth / self.BmpScale
+        else:
+            self.Width = Width
         self.WH = np.array((self.Width, Height), float)
         ##fixme: should this have a y = -1 to shift to y-up?
         self.BmpScale = self.bmpWH / self.WH
