@@ -244,7 +244,7 @@ class CustomWebViewHandler(webview.WebViewHandler):
             <p>It has been loaded {} times.</p>
             </body></html>""".format(self.count)
         stream = BytesIO(content.encode('utf-8'))
-        fsfile = wx.FSFile(stream, uri, 'page1.html', 'text/html', wx.DateTime.Now())
+        fsfile = wx.FSFile(stream, uri, 'text/html', '', wx.DateTime.Now())
         return fsfile
 
 #--------------------------------------------------------------------------
