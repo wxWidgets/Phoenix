@@ -130,10 +130,10 @@ class RowColSizer(wx.Sizer):
         # set the widths and heights lists for this item
         scale = (r2 - r)
         for i in range(r, r2):
-            self.rowHeights[i] = max( self.rowHeights[i], size.height / scale )
+            self.rowHeights[i] = max(self.rowHeights[i], size.height // scale)
         scale = (c2 - c)
         for i in range(c, c2):
-            self.colWidths[i] = max( self.colWidths[i], size.width / scale )
+            self.colWidths[i] = max(self.colWidths[i], size.width // scale)
 
 
     #--------------------------------------------------
@@ -162,14 +162,14 @@ class RowColSizer(wx.Sizer):
 
         # Check for growables
         if self.growableRows and curHeight > minHeight:
-            delta = (curHeight - minHeight) / len(self.growableRows)
+            delta = (curHeight - minHeight) // len(self.growableRows)
             extra = (curHeight - minHeight) % len(self.growableRows)
             for idx in self.growableRows:
                 self.rowHeights[idx] += delta
             self.rowHeights[self.growableRows[0]] += extra
 
         if self.growableCols and curWidth > minWidth:
-            delta = (curWidth - minWidth) / len(self.growableCols)
+            delta = (curWidth - minWidth) // len(self.growableCols)
             extra = (curWidth - minWidth) % len(self.growableCols)
             for idx in self.growableCols:
                 self.colWidths[idx] += delta
@@ -208,12 +208,12 @@ class RowColSizer(wx.Sizer):
             isz = wx.Size(w, h)
         else:
             if flag & wx.ALIGN_CENTER_HORIZONTAL:
-                ipt.x = x + (w - isz.width) / 2
+                ipt.x = x + (w - isz.width) // 2
             elif flag & wx.ALIGN_RIGHT:
                 ipt.x = x + (w - isz.width)
 
             if flag & wx.ALIGN_CENTER_VERTICAL:
-                ipt.y = y + (h - isz.height) / 2
+                ipt.y = y + (h - isz.height) // 2
             elif flag & wx.ALIGN_BOTTOM:
                 ipt.y = y + (h - isz.height)
 

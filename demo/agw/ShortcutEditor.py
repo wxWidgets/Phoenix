@@ -167,6 +167,7 @@ class ShortcutEditorDemo(wx.Frame):
         dlg = SE.ShortcutEditor(self)
         dlg.FromMenuBar(self)
         dlg.FromAcceleratorTable(self.accelTable)
+        self.UpdateAcceleratorNames(dlg)
 
         self.AddTopMenuBitmaps(dlg)
 
@@ -320,8 +321,18 @@ class ShortcutEditorDemo(wx.Frame):
 
         dlg.ToMenuBar(self)
         dlg.ToAcceleratorTable(self)
+        self.UpdateAcceleratorNames(dlg)
 
         dlg.Destroy()
+
+
+    def UpdateAcceleratorNames(self, dlg):
+
+        manager = dlg.GetShortcutManager()
+        self.accelNames = {}
+
+        for label, choice, accel, accelId in self.accelTable:
+            self.accelNames[label] = manager.GetById(accelId).GetAccelerator()
 
 
     def OnMenuShortcuts(self, event):
@@ -342,7 +353,7 @@ class ShortcutEditorDemo(wx.Frame):
 
         for label, choice, accel, ids in self.accelTable:
             if ids == itemId:
-                self.log.write('You have selected the accelerator for %s (%s)'%(label, accel))
+                self.log.write('You have selected the accelerator for %s (%s)' % (label, self.accelNames[label]))
                 break
 
 

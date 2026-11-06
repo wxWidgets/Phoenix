@@ -43,6 +43,16 @@ class filedlg_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(p, list))
         dlg.Destroy()
 
+    def test_filedlgOSXAlwaysShowTypes(self):
+        self.assertEqual(wx.OSX_FILEDIALOG_ALWAYS_SHOW_TYPES,
+                         'osx.openfiledialog.always-show-types')
+        wx.SystemOptions.SetOption(wx.OSX_FILEDIALOG_ALWAYS_SHOW_TYPES, 1)
+        try:
+            self.assertEqual(
+                wx.SystemOptions.GetOptionInt(wx.OSX_FILEDIALOG_ALWAYS_SHOW_TYPES), 1)
+        finally:
+            wx.SystemOptions.SetOption(wx.OSX_FILEDIALOG_ALWAYS_SHOW_TYPES, 0)
+
 #---------------------------------------------------------------------------
 
 
