@@ -339,7 +339,8 @@ class FixWxPrefix(object):
             'String': 'str',
             'Char': 'str',
             'char': 'str',
-            'FileName': 'str', # TODO: check conversion
+            'FileName': 'str',
+            'PyPathString': 'str',
             'wchar_t': 'str',
             'ArtID': 'str',
             'ArtClient': 'str',
@@ -397,6 +398,8 @@ class FixWxPrefix(object):
         }
         input_type_map = {
             'MemoryBuffer': 'Buffer',
+            'FileName': 'Union[str, os.PathLike[str]]',
+            'PyPathString': 'Union[str, os.PathLike[str]]',
         }
         # The template brackets would be lost in cleanName, so deal with these first
         m = re.match(r'^(?:const\s+)?(?:std::vector|wxVector)\s*<\s*(.+?)\s*>[\s&*]*$', type_name.strip())
@@ -943,6 +946,57 @@ def doCommonTweaks(module):
     ignoreAssignmentOperators(module)
     removeWxPrefixes(module)
     addAutoProperties(module)
+    fixPathParams(module)
+
+
+# wxString parameters with these names are file system paths.  Names like
+# 'name' or 'location' are too ambiguous, so use acceptPathLike() for them.
+PATH_PARAM_NAMES = {
+    'basepath', 'bookfile', 'defaultDir', 'defaultDirectory', 'defaultFile',
+    'defaultFilename', 'defaultPath', 'default_filename', 'default_name',
+    'default_path', 'dir', 'directory', 'dirname', 'file', 'fileName',
+    'filePath', 'filemask', 'filename', 'fullpathname', 'globalFilename',
+    'helpFile', 'htmlfile', 'iconFile', 'localFilename', 'path',
+    'richTextFile', 'setfilename', 'shortcutPath', 'tempDir',
+}
+
+# Methods whose 'path' parameters are wxConfig paths, not file system paths
+NON_PATH_METHODS = {'ReadCustomization', 'WriteCustomization'}
+
+
+def _isStringParam(param):
+    return param.type.replace(' ', '') in ('constwxString&', 'wxString')
+
+
+def acceptPathLike(func, *names):
+    """
+    Let the named wxString parameters of func and its overloads also accept
+    os.PathLike objects, like pathlib.Path.
+    """
+    found = set()
+    for f in func.all():
+        for param in f.items:
+            if param.name in names and _isStringParam(param):
+                param.type = 'const wxPyPathString &'
+                found.add(param.name)
+    missing = set(names) - found
+    if missing:
+        raise extractors.ExtractorError('No wxString parameter named {} in {}'.format(
+            ', '.join(sorted(missing)), func.name))
+
+
+def fixPathParams(module):
+    """
+    Let the wxString parameters named in PATH_PARAM_NAMES also accept
+    os.PathLike objects.
+    """
+    for item in module.allItems():
+        if (isinstance(item, extractors.FunctionDef) and
+                not isinstance(item, extractors.CppMethodDef) and
+                item.name not in NON_PATH_METHODS):
+            for param in item.items:
+                if param.name in PATH_PARAM_NAMES and _isStringParam(param):
+                    param.type = 'const wxPyPathString &'
 
 
 def changeTypeNames(module, oldName, newName, skipTypedef=False):

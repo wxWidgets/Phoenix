@@ -60,6 +60,9 @@ def run():
 
     c.find('wxBitmap').findOverload('(const char *const *bits)').ignore()
 
+    for name in ['wxBitmap', 'LoadFile', 'SaveFile']:
+        tools.acceptPathLike(c.find(name), 'name')
+
     c.addCppCtor('(PyObject* listOfBytes)',
         doc="Construct a Bitmap from a list of strings formatted as XPM data.",
         body="""\

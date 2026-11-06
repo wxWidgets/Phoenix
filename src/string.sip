@@ -62,6 +62,52 @@
 };
 
 
+// wxPyPathString is a typedef of wxString, so C++ sees no difference. etg
+// uses it for parameters that are file system paths, and its distinct name
+// lets SIP give them a converter that also accepts os.PathLike objects.
+
+%MappedType wxPyPathString
+{
+    %TypeHeaderCode
+        typedef wxString wxPyPathString;
+    %End
+
+    %ConvertToTypeCode
+        if (!sipIsErr) {
+            return PyBytes_Check(sipPy) || PyUnicode_Check(sipPy) ||
+                   PyObject_HasAttrString(sipPy, "__fspath__");
+        }
+
+        // A str or bytes object is returned as a new reference
+        PyObject* path = PyOS_FSPath(sipPy);
+        if (!path) {
+            *sipIsErr = 1;
+            return 0;
+        }
+        PyObject* uni = path;
+        if (PyBytes_Check(path)) {
+            uni = PyUnicode_FromEncodedObject(path, "utf-8", "strict");
+            Py_DECREF(path);
+            if (!uni) {
+                *sipIsErr = 1;
+                return 0;
+            }
+        }
+        *sipCppPtr = new wxPyPathString();
+        size_t len = PyUnicode_AsWideChar(uni, NULL, 0);
+        if (len) {
+            wxPyUnicode_AsWideChar(uni, wxStringBuffer(**sipCppPtr, len), len);
+        }
+        Py_DECREF(uni);
+        return sipGetState(sipTransferObj);
+    %End
+
+    %ConvertFromTypeCode
+        return wx2PyString(*sipCpp);
+    %End
+};
+
+
 
 // Used just for testing the MappedType code, it can be removed later
 %ModuleCode

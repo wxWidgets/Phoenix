@@ -37,6 +37,10 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    c = module.find('wxAnimation')
+    for name in ['wxAnimation', 'LoadFile']:
+        tools.acceptPathLike(c.find(name), 'name')
+
     c = module.find('wxAnimationCtrl')
     tools.fixWindowClass(c)
 

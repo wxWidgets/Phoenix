@@ -277,8 +277,8 @@ def pythonizeType(ptype, is_param):
     if 'Image.' in ptype:
         ptype = ptype.split('.')[-1]
 
-    if 'FileName' in ptype:
-        ptype = 'string'
+    if 'FileName' in ptype or 'PyPathString' in ptype:
+        ptype = 'string or os.PathLike' if is_param else 'string'
 
     if ptype.endswith('&'):
         ptype = ptype[0:-1]

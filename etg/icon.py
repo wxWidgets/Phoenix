@@ -41,6 +41,9 @@ def run():
     c.find('wxIcon.type').default = 'wxBITMAP_TYPE_ANY'
     c.find('LoadFile.type').default = 'wxBITMAP_TYPE_ANY'
 
+    for name in ['wxIcon', 'LoadFile']:
+        tools.acceptPathLike(c.find(name), 'name')
+
     c.find('ConvertToDisabled').ignore()
 
     c.addCppCtor('(const wxBitmap& bmp)',
