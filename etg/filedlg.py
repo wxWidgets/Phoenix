@@ -37,8 +37,14 @@ def run():
     module.addGlobalStr('wxFileDialogNameStr', c)
     module.find('wxFileSelectorDefaultWildcardStr').ignore()
 
-    # TODO: make this work on non-OSX
-    module.find('wxOSX_FILEDIALOG_ALWAYS_SHOW_TYPES').ignore()
+    # The macro only exists in the macOS headers, so define it the same way
+    # elsewhere for portable code.
+    module.addCppCode("""\
+    #ifndef wxOSX_FILEDIALOG_ALWAYS_SHOW_TYPES
+    #define wxOSX_FILEDIALOG_ALWAYS_SHOW_TYPES wxT("osx.openfiledialog.always-show-types")
+    #endif
+    """)
+    module.addGlobalStr('wxOSX_FILEDIALOG_ALWAYS_SHOW_TYPES', c, wide=True)
 
     # TODO: add this back. We'll need a way to pass it a callable that can be
     # called from a C ExtraControlCreatorFunction function
