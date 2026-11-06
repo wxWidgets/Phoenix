@@ -97,6 +97,7 @@ def run():
         wxPoint operator-(const wxSize& other);
         wxPoint operator*(double d);
         wxPoint operator/(int i);
+        wxPoint operator/(double d /Constrained/);
         """))
 
 
@@ -169,6 +170,7 @@ def run():
         wxSize operator-(const wxSize& other);
         wxSize operator*(double d);
         wxSize operator/(int i);
+        wxSize operator/(double d /Constrained/);
 
         wxPoint operator+(const wxPoint& other);
         wxPoint operator-(const wxPoint& other);
@@ -310,7 +312,7 @@ def run():
     c.addItem(etgtools.WigCode("""\
         wxRealPoint operator+(const wxRealPoint& other);
         wxRealPoint operator-(const wxRealPoint& other);
-        wxRealPoint operator/(int i);
+        wxRealPoint operator/(double d);
         """))
 
     # wxRealPoint::operator* truncates to int before assigning to the new point
