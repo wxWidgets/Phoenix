@@ -1602,6 +1602,7 @@
 "GridTableRequest":"wx.grid.",
 "GridUpdateLocker":"wx.grid.",
 "GridWindow":"wx.grid.",
+"HAS_WINDOW_LABEL_IN_STATIC_BOX":"wx.",
 "HDR_SORT_ICON_DOWN":"wx.",
 "HDR_SORT_ICON_NONE":"wx.",
 "HDR_SORT_ICON_UP":"wx.",
