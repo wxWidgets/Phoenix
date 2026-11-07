@@ -46,6 +46,7 @@ def run():
     # customizing the generated code and docstrings.
 
     module.addHeaderCode('#include <wx/gdicmn.h>')
+    module.addHeaderCode('#include "textextents.h"')
 
     def markCreateFactories(klass):
         """Mark all Create methods as factories"""
@@ -118,6 +119,7 @@ def run():
     m.setCppCode("""\
         wxArrayDouble rval;
         self->GetPartialTextExtents(*text, rval);
+        wxPyFixPartialExtents(*text, rval);
         return new wxArrayDouble(rval);
         """)
 

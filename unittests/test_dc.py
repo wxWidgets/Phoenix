@@ -169,6 +169,15 @@ class dc_Tests(wtc.WidgetTestCase):
         self.assertTrue(len(values) == 5)
 
 
+    def test_dcPartialTextExtentsNonBMP(self):
+        # Characters outside the BMP are surrogate pairs on Windows (#2188)
+        dc = wx.MemoryDC(wx.Bitmap(10, 10))
+        text = 'a\U0001F610b\U0001F610'
+        values = dc.GetPartialTextExtents(text)
+        self.assertEqual(len(values), len(text))
+        self.assertEqual(values, sorted(values))
+
+
     def test_dcPointLists(self):
         dc = wx.ClientDC(self.frame)
         dc.DrawLines([wx.Point(5,5), wx.Point(25,5), wx.Point(25,25), wx.Point(25,5), wx.Point(5,5)])
