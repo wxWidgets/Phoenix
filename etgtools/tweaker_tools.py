@@ -751,14 +751,24 @@ def fixTextClipboardMethods(klass):
     Adds virtual behavior to Copy/Cut/Paste/Undo/Redo methods, and their Can*
     counterparts, of the given class.
 
+    Methods that the class inherits from wxTextEntry are declared in it too.
+    When a virtual method is called on an instance created from Python, SIP
+    calls the implementation of the class that declares it, so without the
+    declaration overrides such as the one that handles multi-line
+    wxTextCtrls would be skipped.
+
     :param ClassDef klass: The class to modify.
     """
+    missing = []
     for name in ('Cut', 'Copy', 'Paste', 'Undo', 'Redo'):
-        for method in (name, "Can{}".format(name)):
+        for method, decl in ((name, 'virtual void {}();'),
+                             ('Can' + name, 'virtual bool {}() const;')):
             try:
                 klass.find(method).isVirtual = True
             except extractors.ExtractorError:
-                pass
+                missing.append(decl.format(method))
+    if missing:
+        klass.addItem(extractors.WigCode('\n'.join(missing)))
 
 
 def fixDialogProperty(klass):

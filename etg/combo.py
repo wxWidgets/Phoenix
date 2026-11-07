@@ -40,6 +40,7 @@ def run():
 
     c = module.find('wxComboCtrl')
     tools.fixWindowClass(c)
+    tools.fixTextClipboardMethods(c)
 
     # These are protected methods that need to be unignored and also add back
     # their virtual flags
