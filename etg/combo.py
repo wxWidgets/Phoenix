@@ -55,6 +55,11 @@ def run():
 
     c.find('SetPopupControl.popup').transfer = True
 
+    # The popup window states taken by IsPopupWindowState are documented but
+    # not declared in the interface header.
+    c.addItem(etgtools.EnumDef(name='@PopupWindowState', protection='public', items=[
+        etgtools.EnumValueDef(name=name) for name in ('Hidden', 'Closing', 'Animating', 'Visible')]))
+
     # from is a reserved word
     c.find('Remove.from').name = 'frm'
     c.find('Replace.from').name = 'frm'

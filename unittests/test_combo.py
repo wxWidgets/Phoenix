@@ -33,6 +33,12 @@ class combo_Tests(wtc.WidgetTestCase):
         frame.Close()
 
 
+    def test_comboPopupWindowState(self):
+        cc = wx.ComboCtrl(self.frame)
+        self.assertTrue(cc.IsPopupWindowState(wx.ComboCtrl.Hidden))
+        for state in (wx.ComboCtrl.Closing, wx.ComboCtrl.Animating, wx.ComboCtrl.Visible):
+            self.assertFalse(cc.IsPopupWindowState(state))
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
