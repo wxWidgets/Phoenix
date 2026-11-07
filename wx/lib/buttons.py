@@ -817,10 +817,14 @@ class GenBitmapButton(GenButton):
         """
 
         self.bmpLabel = bitmap
-        if bitmap is not None and createOthers:
+        if not createOthers:
+            return
+        if bitmap:
             image = bitmap.ConvertToImage()
             imageutils.grayOut(image)
             self.SetBitmapDisabled(wx.Bitmap(image))
+        else:
+            self.SetBitmapDisabled(None)
 
 
     def _GetLabelSize(self):
@@ -840,6 +844,8 @@ class GenBitmapButton(GenButton):
             bmp = self.bmpFocus
         if self.bmpSelected and not self.up:
             bmp = self.bmpSelected
+        if not bmp:
+            return
         bw,bh = bmp.GetWidth(), bmp.GetHeight()
         if not self.up:
             dx = dy = self.labelDelta
@@ -900,7 +906,7 @@ class GenBitmapTextButton(GenBitmapButton):
 
     def DrawLabel(self, dc, width, height, dx=0, dy=0):
         bmp = self.bmpLabel
-        if bmp is not None:     # if the bitmap is used
+        if bmp:     # if the bitmap is used
             if self.bmpDisabled and not self.IsEnabled():
                 bmp = self.bmpDisabled
             if self.bmpFocus and self.hasFocus:
@@ -927,7 +933,7 @@ class GenBitmapTextButton(GenBitmapButton):
             dx = dy = self.labelDelta
 
         pos_x = (width-bw-tw)//2+dx      # adjust for bitmap and text to centre
-        if bmp is not None:
+        if bmp:
             dc.DrawBitmap(bmp, pos_x, (height-bh)//2+dy, hasMask) # draw bitmap if available
             pos_x = pos_x + 2   # extra spacing from bitmap
 

@@ -50,6 +50,22 @@ class lib_buttons_Tests(wtc.WidgetTestCase):
         self.assertEqual(btn.GetBitmapLabel(), bmp)
 
 
+    def test_lib_buttonsNullBitmap(self):
+        bmp = wx.Bitmap(pngFile)
+        dc = wx.MemoryDC(wx.Bitmap(50, 50))
+        for cls in (buttons.GenBitmapButton, buttons.GenBitmapTextButton,
+                    buttons.GenBitmapToggleButton,
+                    buttons.ThemedGenBitmapTextButton):
+            btn = cls(self.frame)
+            btn.DrawLabel(dc, 50, 50)
+            btn.SetBitmapLabel(bmp)
+            self.assertTrue(btn.GetBitmapDisabled().IsOk())
+            btn.SetBitmapLabel(wx.NullBitmap)
+            self.assertIsNone(btn.GetBitmapDisabled())
+            btn.Disable()
+            btn.DrawLabel(dc, 50, 50)
+
+
 
 #---------------------------------------------------------------------------
 
