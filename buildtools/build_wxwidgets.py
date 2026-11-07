@@ -144,9 +144,8 @@ def getoutput(cmd):
     sp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output = None
     output = sp.stdout.read()
-    if sys.version_info > (3,):
-        outputEncoding = 'cp1252' if sys.platform == 'win32' else 'utf-8'
-        output = output.decode(outputEncoding)
+    outputEncoding = 'cp1252' if sys.platform == 'win32' else 'utf-8'
+    output = output.decode(outputEncoding)
     output = output.rstrip()
     rval = sp.wait()
     if rval:
