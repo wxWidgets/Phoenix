@@ -555,6 +555,7 @@ class Thumb(object):
         self._lastmod = lastmod
         self._captionbreaks = []
         self._image = wx.Image(1, 1)
+        self._originalsize = (0, 0)
         self._alpha = None
         self._imagehandler = imagehandler()
         self._bitmap = None
@@ -788,7 +789,7 @@ class Thumb(object):
         """ Returns info for thumbnain in display format. """
         thumbinfo = "Name: " + self.GetFileName() + "\n" \
                     "Size: " + self.GetDisplayFileSize() + "\n" \
-                    "Modified: " + self.GetCreationDate() + "\n" \
+                    "Modified: " + str(self.GetCreationDate()) + "\n" \
                     "Dimensions: " + str(self.GetOriginalSize()) + "\n"
         return thumbinfo
 
@@ -806,7 +807,7 @@ class Thumb(object):
         """ Rotate image using imagehandler. """
         img = self._imagehandler.Rotate(self._image, angle)
         self._image = img
-        self._originalsize = (img.GetWidth, img.GetHeight)
+        self._originalsize = (img.GetWidth(), img.GetHeight())
         self._alpha = img.HasAlpha()
         # Clear _bitmap so thumbnail is recreated after rotate
         self._bitmap = None
@@ -1152,9 +1153,6 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         :param `height`: the desired thumbnail height;
         :param `border`: the spacing between thumbnails.
         """
-
-        if width > 350 or height > 280:
-            return
 
         self._tWidth = width
         self._tHeight = height
