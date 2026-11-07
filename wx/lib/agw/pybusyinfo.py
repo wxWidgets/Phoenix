@@ -43,7 +43,7 @@ For example::
 
     busy = PyBusyInfo("Please wait, working...")
 
-    for i in xrange(10000):
+    for i in range(10000):
         DoACalculation()
 
     del busy
@@ -81,7 +81,7 @@ Usage example::
 
             wx.Yield()
 
-            for indx in xrange(5):
+            for indx in range(5):
                 wx.MilliSleep(1000)
 
             del busy

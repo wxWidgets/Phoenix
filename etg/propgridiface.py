@@ -173,15 +173,12 @@ def run():
     c.addPyMethod('DoDefaultTypeMappings', '(self)',
         doc="Add built-in properties to the map.",
         body="""\
-            import sys
             global _type2property
             if _type2property is not None:
                 return
             _type2property = dict()
 
             _type2property[str] = StringProperty
-            if sys.version_info.major < 2:
-                _type2property[unicode] = StringProperty
             _type2property[int] = IntProperty
             _type2property[float] = FloatProperty
             _type2property[bool] = BoolProperty
