@@ -194,6 +194,13 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
 
         self.assertEqual(self.tc.GetValue(), "This is a test")
 
+        uia.Text(" and a str")
+        self.waitFor(WAIT*2)
+        self.assertEqual(self.tc.GetValue(), "This is a test and a str")
+
+        with self.assertRaises(ValueError):
+            uia.Text("caf\u00e9")
+
 
 #---------------------------------------------------------------------------
 
