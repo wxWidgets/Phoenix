@@ -238,6 +238,18 @@ class dataview_Tests(wtc.WidgetTestCase):
         with self.assertRaises(TypeError):
             m = dv.DataViewIndexListModel()
 
+    def test_dataviewListStoreBitmapBundle(self):
+        # The bundle must be stored as a wxBitmapBundle variant, which the
+        # bitmap renderers accept, not as a PyObject one.
+        bundle = wx.BitmapBundle(wx.Bitmap(pngFile))
+        store = dv.DataViewListStore()
+        store.AppendColumn('wxBitmapBundle')
+        store.AppendItem([bundle])
+        value = store.GetValueByRow(0, 0)
+        self.assertIsInstance(value, wx.BitmapBundle)
+        self.assertIsNot(value, bundle)
+        self.assertEqual(value.GetDefaultSize(), bundle.GetDefaultSize())
+
     def test_dataviewIndexListModel2(self):
         class MyModel(dv.DataViewIndexListModel):
             def GetCount(self): return 0
