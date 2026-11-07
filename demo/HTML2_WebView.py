@@ -44,14 +44,16 @@ class TestPanel(wx.Panel):
                 backend = id
         log.write("Using backend: '{}'\n".format(str(backend, 'ascii')))
 
-        # Create the WebView
-        self.wv = webview.WebView.New(self, backend=backend)
+        # Create the WebView in two steps, since on macOS handlers must be
+        # registered before the native control is created.
+        self.wv = webview.WebView.New(backend)
 
         # Register a virtual FS handler for the "memory" scheme
         memory = wx.MemoryFSHandler()
         wx.FileSystem.AddHandler(memory)
         memory.AddFileWithMimeType('hello', 'Hello!', 'text/plain')
         self.wv.RegisterHandler(wx.html2.WebViewFSHandler('memory'))
+        self.wv.Create(self)
 
         self.Bind(webview.EVT_WEBVIEW_NAVIGATING, self.OnWebViewNavigating, self.wv)
         self.Bind(webview.EVT_WEBVIEW_LOADED, self.OnWebViewLoaded, self.wv)

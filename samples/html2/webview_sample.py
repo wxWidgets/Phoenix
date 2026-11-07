@@ -54,8 +54,9 @@ class WebViewPanel(wx.Panel):
         #  on Windows
         webview.WebView.MSWSetEmulationLevel()
 
-        # Create the webView control
-        self.wv = webview.WebView.New(self)
+        # Create the webView control in two steps, since on macOS handlers
+        # must be registered before the native control is created.
+        self.wv = webview.WebView.New()
 
         # Register a handler for the memory: file system
         self.wv.RegisterHandler(webview.WebViewFSHandler("memory"))
@@ -66,6 +67,7 @@ class WebViewPanel(wx.Panel):
         # And this one is for the custom: file system implemented by the
         # CustomWebViewHandler class below
         self.wv.RegisterHandler(CustomWebViewHandler())
+        self.wv.Create(self)
 
         self.Bind(webview.EVT_WEBVIEW_NAVIGATING, self.OnWebViewNavigating, self.wv)
         self.Bind(webview.EVT_WEBVIEW_NAVIGATED, self.OnWebViewNavigated, self.wv)
