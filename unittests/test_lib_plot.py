@@ -51,6 +51,19 @@ class lib_plot_PlotCanvas_Tests(wtc.WidgetTestCase):
         p.UpdatePointLabel({'pointXY': (1, 1)})
         self.assertEqual(drawn, [(1, 1)])
 
+    def test_lib_plot_zoomRubberBand(self):
+        p = wxplot.PlotCanvas(self.frame, size=(400, 300))
+        p.Draw(wxplot.PlotGraphics([wxplot.PolyLine([(0, 0), (1, 1), (2, 0)])]))
+        self.myYield()
+        before = p._Buffer.ConvertToImage().GetData()
+        p._drawRubberBand((0.5, 0.2), (1.5, 0.8))
+        self.assertTrue(p._rubberBand.width > 0 and p._rubberBand.height > 0)
+        self.myYield()
+        # The box is drawn over the plot on screen, never into the buffer
+        self.assertEqual(p._Buffer.ConvertToImage().GetData(), before)
+        p._clearRubberBand()
+        self.assertIsNone(p._rubberBand)
+
 
 class lib_plot_Tests(wtc.WidgetTestCase):
     def test_lib_plot_tempstyle_contextmanager(self):
