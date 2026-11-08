@@ -82,17 +82,6 @@ def run():
 
 
 
-    # Forward declarations for classes that are referenced but not defined
-    # yet.
-    #
-    # TODO: Remove these when the classes are added for real.
-    # TODO: Add these classes for real :-)
-    module.insertItem(0, etgtools.WigCode("""\
-        // forward declarations
-        class wxExecuteEnv;
-        """))
-
-
     # Add some code for getting the version numbers
     module.addCppCode("""
         #include <wx/version.h>
