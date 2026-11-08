@@ -6,6 +6,8 @@
 
 """
 import os
+import sys
+import tempfile
 import unittest
 from unittests import wtc
 
@@ -260,6 +262,44 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
         assert self.pub.getDefaultTopicMgr().getTopic('root_topic2.sub_topic21') is not None
 
         self.pub.sendMessage(lib_pubsub_provider_my_import_topics.root_topic1)
+
+    def _writeTopicModule(self, directory, name):
+        with open(os.path.join(directory, name + '.py'), 'w') as f:
+            f.write(dedent('''
+                class searchPathRoot:
+                    \'\'\'Root topic from a module outside sys.path.\'\'\'
+                '''))
+
+    def test_module_from_search_path(self):
+        from wx.lib.pubsub.core.topicdefnprovider import TopicDefnDeserialModule
+        with tempfile.TemporaryDirectory() as tmpdir:
+            name = 'lib_pubsub_search_path_a'
+            self._writeTopicModule(tmpdir, name)
+            self.assertNotIn(tmpdir, sys.path)
+            try:
+                deserial = TopicDefnDeserialModule(name, [tmpdir])
+                topicName = deserial.getNextTopic().nameTuple
+            finally:
+                sys.modules.pop(name, None)
+        self.assertEqual(topicName, ('searchPathRoot',))
+
+    def test_module_from_search_path_string(self):
+        from wx.lib.pubsub.core.topicdefnprovider import TopicDefnDeserialModule
+        with tempfile.TemporaryDirectory() as tmpdir:
+            name = 'lib_pubsub_search_path_b'
+            self._writeTopicModule(tmpdir, name)
+            try:
+                deserial = TopicDefnDeserialModule(name, tmpdir)
+                topicName = deserial.getNextTopic().nameTuple
+            finally:
+                sys.modules.pop(name, None)
+        self.assertEqual(topicName, ('searchPathRoot',))
+
+    def test_module_not_found(self):
+        from wx.lib.pubsub.core.topicdefnprovider import TopicDefnDeserialModule
+        with tempfile.TemporaryDirectory() as tmpdir:
+            with self.assertRaises(ImportError):
+                TopicDefnDeserialModule('lib_pubsub_no_such_module', [tmpdir])
 
 
 #---------------------------------------------------------------------------
