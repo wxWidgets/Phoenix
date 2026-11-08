@@ -298,6 +298,10 @@ def run():
     c = module.find('wxRealPoint')
     tools.addAutoProperties(c)
 
+    # Only accept a real wx.Point here, otherwise wx.Point's sequence
+    # convertor grabs tuples meant for the copy constructor and truncates them
+    c.find('wxRealPoint').findOverload('const wxPoint &').find('pt').constrained = True
+
     # take care of the same issues as wxPoint
     tools.ignoreAllOperators(c)
     for f in c.find('operator+=').all() + \

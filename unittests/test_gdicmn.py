@@ -353,16 +353,21 @@ class TestRealPoint(unittest.TestCase):
         p.y += 2
 
 
-    @unittest.skip("Fails: https://github.com/wxWidgets/Phoenix/issues/2070")
     def test_GetIM(self):
         # Test the immutable version returned by GetIM
-        obj = wx.RealPoint(1,2)
+        obj = wx.RealPoint(1.2, 3.4)
         im = obj.GetIM()
         assert isinstance(im, tuple)
         assert im.x == obj.x
         assert im.y == obj.y
         obj2 = wx.RealPoint(im)
         assert obj == obj2
+
+
+    def test_ctorSequence(self):
+        self.assertEqual(wx.RealPoint((1.2, 3.4)), wx.RealPoint(1.2, 3.4))
+        self.assertEqual(wx.RealPoint([1.2, 3.4]), wx.RealPoint(1.2, 3.4))
+        self.assertEqual(wx.RealPoint(wx.Point(1, 2)), wx.RealPoint(1.0, 2.0))
 
 
     def test_floatingMultiply(self):
