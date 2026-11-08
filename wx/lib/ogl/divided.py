@@ -48,8 +48,7 @@ class DividedShapeControlPoint(ControlPoint):
 
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
         """The drag left handler."""
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas().GetBuffer())
+        dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
@@ -67,8 +66,7 @@ class DividedShapeControlPoint(ControlPoint):
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
         """The begin drag left handler."""
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas().GetBuffer())
+        dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 

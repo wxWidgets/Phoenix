@@ -319,6 +319,10 @@ class ShapeCanvas(wx.ScrolledWindow):
                     self._dragState = NoDragging
 
         self.Draw()
+        # Drag outlines are drawn directly on the window, so once a drag or
+        # click is finished show the updated buffer.
+        if evt.LeftUp() or evt.RightUp():
+            self.Refresh(False)
 
     def FindShape(self, x, y, info = None, notObject = None):
         """

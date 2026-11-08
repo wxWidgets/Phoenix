@@ -1338,8 +1338,7 @@ class LineShape(Shape):
     # make it easier to override sizing behaviour.
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
         """The sizing drag left handler."""
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas().GetBuffer())
+        dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
@@ -1368,8 +1367,7 @@ class LineShape(Shape):
 
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
         """The sizing begin drag left handler."""
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas().GetBuffer())
+        dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
 
         if pt._type == CONTROL_POINT_LINE:

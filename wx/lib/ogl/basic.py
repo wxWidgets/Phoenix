@@ -2507,8 +2507,7 @@ class Shape(ShapeEvtHandler):
         """The sizing drag left handler."""
         bound_x, bound_y = self.GetBoundingBoxMin()
 
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas().GetBuffer())
+        dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
@@ -2589,8 +2588,7 @@ class Shape(ShapeEvtHandler):
         """The sizing begin drag left handler."""
         self._canvas.CaptureMouse()
 
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas().GetBuffer())
+        dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
@@ -3293,8 +3291,7 @@ class PolygonShape(Shape):
     # make it easier to override sizing behaviour.
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
         """The sizing drag left handler."""
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas().GetBuffer())
+        dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
@@ -3310,8 +3307,7 @@ class PolygonShape(Shape):
 
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
         """The sizing begin drag left handler."""
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas().GetBuffer())
+        dc = wx.ClientDC(self.GetCanvas())
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
