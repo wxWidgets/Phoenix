@@ -20,6 +20,20 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         self.navcanvas = nc.NavCanvas(self.frame)
         self.navcanvas.Destroy()
 
+    def test_lib_floatcanvas_unbindall(self):
+        fccanvas = fc.FloatCanvas(self.frame)
+        obj = fc.Rectangle((0, 0), (10, 10))
+        fccanvas.AddObject(obj)
+        obj.Bind(fc.EVT_FC_LEFT_DOWN, lambda o: None)
+        obj.Bind(fc.EVT_FC_RIGHT_DOWN, lambda o: None)
+        self.assertIn(obj.HitColor, fccanvas.HitDict[fc.EVT_FC_LEFT_DOWN])
+
+        obj.UnBindAll()
+
+        for hits in fccanvas.HitDict.values():
+            self.assertNotIn(obj.HitColor, hits)
+        fccanvas.Destroy()
+
     def test_lib_floatcanvas_fc_arc(self):
         fccanvas = fc.FloatCanvas(self.frame)
 
