@@ -91,6 +91,21 @@ class calctrl_Tests(wtc.WidgetTestCase):
         wx.adv.wxEVT_CALENDAR_WEEK_CLICKED
 
 
+    def test_calSetAttrSharedObject(self):
+        cal = wx.adv.GenericCalendarCtrl(self.frame)
+        attr = wx.adv.CalendarDateAttr(colText=wx.RED)
+        for day in (2, 5, 2):
+            cal.SetAttr(day, attr)
+        cal.ResetAttr(5)
+        cal.Refresh()
+        cal.Update()
+        self.assertEqual(attr.GetTextColour(), wx.RED)
+        self.assertEqual(cal.GetAttr(2).GetTextColour(), wx.RED)
+        self.assertIsNone(cal.GetAttr(5))
+        attr.SetTextColour(wx.BLUE)
+        self.assertEqual(cal.GetAttr(2).GetTextColour(), wx.RED)
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
