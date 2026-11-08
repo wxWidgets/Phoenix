@@ -246,7 +246,7 @@ class DrawObject:
         ## fixme: this only removes one from each list, there could be more.
         ## + patch by Tim Ansel
         if self._Canvas.HitDict:
-            for Event in self._Canvas.HitDict.itervalues():
+            for Event in self._Canvas.HitDict.values():
                 try:
                     del Event[self.HitColor]
                 except KeyError:

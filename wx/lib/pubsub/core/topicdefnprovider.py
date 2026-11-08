@@ -4,7 +4,10 @@
 """
 
 
-import os, re, inspect, io
+import os, re, inspect, io, sys
+import importlib
+import importlib.machinery
+import importlib.util
 from textwrap import TextWrapper, dedent
 
 from .. import (
@@ -16,6 +19,32 @@ from .topicargspec import (
 )
 from .topictreetraverser import TopicTreeTraverser
 from .topicexc import UnrecognizedSourceFormatError
+
+
+def _loadModule(moduleName, searchPath):
+    try:
+        return importlib.import_module(moduleName)
+    except Exception:
+        if searchPath is None:
+            raise
+    if isinstance(searchPath, str):
+        searchPath = [searchPath]
+    importlib.invalidate_caches()
+    spec = importlib.machinery.PathFinder.find_spec(moduleName, list(searchPath))
+    if spec is None:
+        raise ImportError('No module named %r' % moduleName, name=moduleName)
+    module = importlib.util.module_from_spec(spec)
+    previous = sys.modules.get(moduleName)
+    sys.modules[moduleName] = module
+    try:
+        spec.loader.exec_module(module)
+    except BaseException:
+        if previous is None:
+            sys.modules.pop(moduleName, None)
+        else:
+            sys.modules[moduleName] = previous
+        raise
+    return module
 
 
 class ITopicDefnProvider:
@@ -239,8 +268,7 @@ class TopicDefnDeserialModule(ITopicDefnDeserializer):
     def __init__(self, moduleName, searchPath=None):
         """Load the given named module, searched for in searchPath or, if not
         specified, in sys.path. Give it to a TopicDefnDeserialClass."""
-        from . import imp2
-        module = imp2.load_module(moduleName, searchPath)
+        module = _loadModule(moduleName, searchPath)
         self.__classDeserial = TopicDefnDeserialClass(module)
 
     def getTreeDoc(self):

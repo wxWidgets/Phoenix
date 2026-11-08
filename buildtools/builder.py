@@ -221,7 +221,7 @@ class MSVCProjectBuilder(Builder):
     def __init__(self):
         Builder.__init__(self, commandName="VCExpress.exe", formatName="msvcProject")
         for key in ["VS90COMNTOOLS", "VC80COMNTOOLS", "VC71COMNTOOLS"]:
-            if os.environ.has_key(key):
+            if key in os.environ:
                 self.programDir = os.path.join(os.environ[key], "..", "IDE")
 
         if self.programDir is None:
