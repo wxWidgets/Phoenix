@@ -90,6 +90,20 @@ class image_Tests(wtc.WidgetTestCase):
         img = wx.Image(stream, 'image/png')
         self.assertTrue(img.IsOk())
 
+    def test_imageCtorStreamReleased(self):
+        import gc
+        import weakref
+        class Stream(FileLikeObject):
+            pass
+        with open(pngFile, 'rb') as f:
+            stream = Stream(f.read())
+        ref = weakref.ref(stream)
+        img = wx.Image(stream)
+        self.assertTrue(img.IsOk())
+        del stream, img
+        gc.collect()
+        self.assertIsNone(ref())
+
 
     def test_imageSetData1(self):
         w = h = 10
