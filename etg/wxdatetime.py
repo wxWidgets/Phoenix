@@ -80,10 +80,10 @@ def run():
     ctor.findOverload('hour').ignore() # careful, the one we want to keep has an 'hour' param too
 
     # Add static factories for some of the ctors we ignored
-    c.addCppMethod('wxDateTime*', 'FromTimeT', '(time_t timet)',
+    c.addCppMethod('wxDateTime*', 'FromTimeT', '(const time_t* timet)',
         factory=True, isStatic=True,
         doc="Construct a :class:`DateTime` from a C ``time_t`` value, the number of seconds since the epoch.",
-        body="return new wxDateTime(timet);")
+        body="return new wxDateTime(*timet);")
 
     c.addCppMethod('wxDateTime*', 'FromJDN', '(double jdn)',
         factory=True, isStatic=True,

@@ -119,6 +119,31 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
         tree.SetItemBackgroundColour(root, wx.RED)
         tree.SetItemBackgroundColour(root, wx.GREEN, column=1)
 
+    def test_lib_agw_hypertreelistEllipsizeMainColumn(self):
+        tree = HTL.HyperTreeList(self.frame, agwStyle=HTL.TR_DEFAULT_STYLE|
+                                                      HTL.TR_ELLIPSIZE_LONG_ITEMS)
+        tree.AddColumn("First column", width=150)
+        tree.AddColumn("Second column", width=150)
+        tree.SetMainColumn(1)
+        root = tree.AddRoot('root')
+        tree.SetItemText(root, 'first', 0)
+        self.frame.SendSizeEvent()
+
+        chopped = []
+        def chopText(dc, text, maxsize):
+            chopped.append(origChopText(dc, text, maxsize))
+            return chopped[-1]
+        origChopText = HTL.ChopText
+        HTL.ChopText = chopText
+        try:
+            tree.GetMainWindow().Refresh()
+            tree.GetMainWindow().Update()
+            self.waitFor(50)
+        finally:
+            HTL.ChopText = origChopText
+
+        self.assertIn('root', chopped)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

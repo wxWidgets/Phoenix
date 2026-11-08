@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from textwrap import dedent
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -67,7 +68,117 @@ def run():
         #endif
         """)
 
-    c.find('GeometryStore').abstract = True
+    # The members of GeometryStore are private in the interface header, so
+    # declare them here. As with GridCellEditor.EndEdit, the Restore methods
+    # return the value, or None if it isn't found, instead of using an output
+    # parameter.
+    gs = c.find('GeometryStore')
+    wig = etgtools.WigCode("""\
+        GeometryStore();
+        virtual ~GeometryStore();
+
+        virtual bool SaveValue(const wxString& name, int value) = 0;
+        %Docstring
+            SaveValue(name, value) -> bool
+
+            Save a single field with the given value. Returning ``False``
+            makes SaveGeometry() fail.
+        %End
+
+        virtual bool SaveString(const wxString& name, const wxString& value);
+        %Docstring
+            SaveString(name, value) -> bool
+
+            Save a single field with the given string value. This is only
+            used with the Wayland XDG session management protocol.
+        %End
+
+        virtual SIP_PYOBJECT RestoreValue(const wxString& name) const = 0
+            [bool (const wxString& name, int* value)];
+        %Docstring
+            RestoreValue(name) -> int | None
+
+            Return the value of a single field, or ``None`` if it wasn't found.
+        %End
+        %MethodCode
+            int value;
+            bool rv;
+            Py_BEGIN_ALLOW_THREADS
+            rv = sipCpp->RestoreValue(*name, &value);
+            Py_END_ALLOW_THREADS
+            if (rv)
+                sipRes = PyLong_FromLong(value);
+            else {
+                Py_INCREF(Py_None);
+                sipRes = Py_None;
+            }
+        %End
+        %VirtualCatcherCode
+            PyObject* result = sipCallMethod(&sipIsErr, sipMethod, "N",
+                                             new wxString(name), sipType_wxString, NULL);
+            sipRes = false;
+            if (result && result != Py_None) {
+                long v = PyLong_AsLong(result);
+                if (PyErr_Occurred())
+                    sipIsErr = 1;
+                else {
+                    *value = (int)v;
+                    sipRes = true;
+                }
+            }
+            Py_XDECREF(result);
+            if (sipIsErr)
+                PyErr_Print();
+        %End
+
+        virtual SIP_PYOBJECT RestoreString(const wxString& name) const
+            [bool (const wxString& name, wxString* value)];
+        %Docstring
+            RestoreString(name) -> str | None
+
+            Return the value of a single string field, or ``None`` if it wasn't
+            found. This is only used with the Wayland XDG session management
+            protocol.
+        %End
+        %MethodCode
+            wxString value;
+            bool rv;
+            Py_BEGIN_ALLOW_THREADS
+            rv = sipSelfWasArg
+                ? sipCpp->wxTopLevelWindow::GeometryStore::RestoreString(*name, &value)
+                : sipCpp->RestoreString(*name, &value);
+            Py_END_ALLOW_THREADS
+            if (rv)
+                sipRes = wx2PyString(value);
+            else {
+                Py_INCREF(Py_None);
+                sipRes = Py_None;
+            }
+        %End
+        %VirtualCatcherCode
+            PyObject* result = sipCallMethod(&sipIsErr, sipMethod, "N",
+                                             new wxString(name), sipType_wxString, NULL);
+            sipRes = false;
+            if (result && result != Py_None) {
+                *value = Py2wxString(result);
+                if (PyErr_Occurred())
+                    sipIsErr = 1;
+                else
+                    sipRes = true;
+            }
+            Py_XDECREF(result);
+            if (sipIsErr)
+                PyErr_Print();
+        %End
+        """)
+    wig.piCode = dedent("""\
+        def __init__(self) -> None: ...
+        def SaveValue(self, name: str, value: int) -> bool: ...
+        def SaveString(self, name: str, value: str) -> bool: ...
+        def RestoreValue(self, name: str) -> Optional[int]: ...
+        def RestoreString(self, name: str) -> Optional[str]: ...
+        """)
+    gs.addItem(wig)
 
     c.addProperty('DefaultItem GetDefaultItem SetDefaultItem')
     c.addProperty('Icon GetIcon SetIcon')

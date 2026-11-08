@@ -329,6 +329,12 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
         value << *ptr;
     }
 
+    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxBitmapBundle"))) {
+        wxBitmapBundle* ptr;
+        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxBitmapBundle"));
+        value << *ptr;
+    }
+
     else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxImage"))) {
         wxImage* ptr;
         wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxImage"));
@@ -405,6 +411,12 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
         wxBitmap val;
         val << value;
         obj = wxPyConstructObject(new wxBitmap(val), "wxBitmap", true);
+    }
+
+    else if ( value.IsType("wxBitmapBundle") ) {
+        wxBitmapBundle val;
+        val << value;
+        obj = wxPyConstructObject(new wxBitmapBundle(val), "wxBitmapBundle", true);
     }
 
     else if ( value.IsType("wxImage") ) {

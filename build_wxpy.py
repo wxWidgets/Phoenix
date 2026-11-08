@@ -1917,7 +1917,7 @@ def cmd_build_py(options, args):
 
     # Run waf to perform the builds
     pwd = pushDir(phoenixDir())
-    cmd = '"%s" %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
+    cmd = '"%s" "%s" %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
 
     def _onWafError():
         if options.dump_waf_log:
@@ -1937,7 +1937,7 @@ def cmd_build_py(options, args):
         del build_options[-1]
         wafBuildDir = posixjoin(wafBuildBase, 'release')
         build_options.append('--out=%s' % wafBuildDir)
-        cmd = '"%s" %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
+        cmd = '"%s" "%s" %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
         runcmd(cmd, onError=_onWafError)
 
     copyWxDlls(options)

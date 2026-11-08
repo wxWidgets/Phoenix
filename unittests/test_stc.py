@@ -251,6 +251,21 @@ class stc_Tests(wtc.WidgetTestCase):
         t.ChangeValue
 
 
+    def test_stcSetSelection(self):
+        t = stc.StyledTextCtrl(self.frame)
+        t.SetText('This is some text')
+        t.SetSelection(1, 4)
+        self.assertEqual(t.GetSelection(), (1, 4))
+        self.assertEqual(t.GetCurrentPos(), 4)
+
+        t.SetSelection(4, 1)
+        self.assertEqual(t.GetSelection(), (1, 4))
+        self.assertEqual((t.GetAnchor(), t.GetCurrentPos()), (4, 1))
+
+        t.SetSelection(-1, -1)
+        self.assertEqual(t.GetSelection(), (0, 17))
+
+
 
 #---------------------------------------------------------------------------
 

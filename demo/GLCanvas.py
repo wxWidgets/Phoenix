@@ -200,7 +200,11 @@ class CubeCanvas(MyCanvasBase):
         self.textureID = None
         path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'bmp_source'))
         rd = 'robin.jpg'
-        if os.path.exists(os.path.join(path, rd)):
+        # The texture needs OpenGL 2.0 (GL_CLAMP_TO_EDGE and a size that is not
+        # a power of two), but the Windows software renderer, used over Remote
+        # Desktop or without a vendor driver, only provides OpenGL 1.1.
+        glMajor = int(glGetString(GL_VERSION).split(b'.')[0])
+        if glMajor >= 2 and os.path.exists(os.path.join(path, rd)):
             self.textureID = GenerateTexture(*ReadTexture(os.path.join(path, rd)))
 
 
@@ -210,11 +214,12 @@ class CubeCanvas(MyCanvasBase):
 
         # Draw six faces of a cube.
         glBegin(GL_QUADS)
-        ## glNormal3f( 0.0, 0.0, 1.0)
-        ## glVertex3f( 0.5, 0.5, 0.5)
-        ## glVertex3f(-0.5, 0.5, 0.5)
-        ## glVertex3f(-0.5,-0.5, 0.5)
-        ## glVertex3f( 0.5,-0.5, 0.5)
+        if not self.textureID:
+            glNormal3f(0.0, 0.0, 1.0)
+            glVertex3f(0.5, 0.5, 0.5)
+            glVertex3f(-0.5, 0.5, 0.5)
+            glVertex3f(-0.5, -0.5, 0.5)
+            glVertex3f(0.5, -0.5, 0.5)
 
         glNormal3f( 0.0, 0.0,-1.0)
         glVertex3f(-0.5,-0.5,-0.5)

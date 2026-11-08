@@ -43,7 +43,7 @@ def run():
     module.find('wxInt64').type = 'long long'
     module.find('wxUint64').type = 'unsigned long long'
 
-    # See src/wacky_ints.sip
+    # See src/wacky_ints.sip, which also maps time_t
     module.find('wxIntPtr').ignore()
     module.find('wxUIntPtr').ignore()
 
@@ -75,7 +75,6 @@ def run():
     td = module.find('wxUIntPtr')
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxUChar'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxChar'))
-    module.insertItemAfter(td, etgtools.TypedefDef(type='wxInt64', name='time_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='long long', name='wxFileOffset'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='Py_ssize_t', name='ssize_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned char', name='byte', pyInt=True))

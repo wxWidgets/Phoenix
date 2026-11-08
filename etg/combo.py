@@ -40,6 +40,7 @@ def run():
 
     c = module.find('wxComboCtrl')
     tools.fixWindowClass(c)
+    tools.fixTextClipboardMethods(c)
 
     # These are protected methods that need to be unignored and also add back
     # their virtual flags
@@ -53,6 +54,11 @@ def run():
         c.find(name).isVirtual = True
 
     c.find('SetPopupControl.popup').transfer = True
+
+    # The popup window states taken by IsPopupWindowState are documented but
+    # not declared in the interface header.
+    c.addItem(etgtools.EnumDef(name='@PopupWindowState', protection='public', items=[
+        etgtools.EnumValueDef(name=name) for name in ('Hidden', 'Closing', 'Animating', 'Visible')]))
 
     # from is a reserved word
     c.find('Remove.from').name = 'frm'

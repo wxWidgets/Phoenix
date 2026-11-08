@@ -127,6 +127,12 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         fccanvas.AddObject(obj)
         fccanvas.Destroy()
 
+    def test_lib_floatcanvas_fc_scaledbitmap2Width(self):
+        bmp = wx.Bitmap(pngFile)
+        obj = fc.ScaledBitmap2(bmp, (2, 2), 100, Width=50)
+        self.assertEqual(obj.Width, 50)
+        self.assertEqual(tuple(obj.WH), (50, 100))
+
     def test_lib_floatcanvas_fc_scaledtext(self):
         fccanvas = fc.FloatCanvas(self.frame)
 

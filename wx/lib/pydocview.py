@@ -20,7 +20,6 @@ from wx.lib.rcsizer import RowColSizer
 import os
 import os.path
 import time
-import string
 import pickle
 import tempfile
 import mmap
@@ -91,8 +90,8 @@ class DocFrameMixIn:
         fileMenu.Append(wx.ID_SAVE, _("&Save\tCtrl+S"), _("Saves the active document"))
         fileMenu.Append(wx.ID_SAVEAS, _("Save &As..."), _("Saves the active document with a new name"))
         fileMenu.Append(SAVEALL_ID, _("Save All\tCtrl+Shift+A"), _("Saves the all active documents"))
-        wx.EVT_MENU(self, SAVEALL_ID, self.ProcessEvent)
-        wx.EVT_UPDATE_UI(self, SAVEALL_ID, self.ProcessUpdateUIEvent)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=SAVEALL_ID)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=SAVEALL_ID)
         fileMenu.AppendSeparator()
         fileMenu.Append(wx.ID_PRINT, _("&Print\tCtrl+P"), _("Prints the active document"))
         fileMenu.Append(wx.ID_PREVIEW, _("Print Pre&view"), _("Displays full pages"))
@@ -114,21 +113,21 @@ class DocFrameMixIn:
         #item.SetBitmap(getCutBitmap())
         #editMenu.AppendItem(item)
         editMenu.Append(wx.ID_CUT, _("Cu&t\tCtrl+X"), _("Cuts the selection and puts it on the Clipboard"))
-        wx.EVT_MENU(self, wx.ID_CUT, self.ProcessEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_CUT, self.ProcessUpdateUIEvent)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_CUT)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_CUT)
         editMenu.Append(wx.ID_COPY, _("&Copy\tCtrl+C"), _("Copies the selection and puts it on the Clipboard"))
-        wx.EVT_MENU(self, wx.ID_COPY, self.ProcessEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_COPY, self.ProcessUpdateUIEvent)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_COPY)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_COPY)
         editMenu.Append(wx.ID_PASTE, _("&Paste\tCtrl+V"), _("Inserts Clipboard contents"))
-        wx.EVT_MENU(self, wx.ID_PASTE, self.ProcessEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PASTE, self.ProcessUpdateUIEvent)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PASTE)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PASTE)
         editMenu.Append(wx.ID_CLEAR, _("&Delete"), _("Erases the selection"))
-        wx.EVT_MENU(self, wx.ID_CLEAR, self.ProcessEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLEAR, self.ProcessUpdateUIEvent)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_CLEAR)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_CLEAR)
         editMenu.AppendSeparator()
         editMenu.Append(wx.ID_SELECTALL, _("Select A&ll\tCtrl+A"), _("Selects all available data"))
-        wx.EVT_MENU(self, wx.ID_SELECTALL, self.ProcessEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_SELECTALL, self.ProcessUpdateUIEvent)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_SELECTALL)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_SELECTALL)
         menuBar.Append(editMenu, _("&Edit"))
         if sdi:
             if self.GetDocument() and self.GetDocument().GetCommandProcessor():
@@ -136,22 +135,22 @@ class DocFrameMixIn:
 
         viewMenu = wx.Menu()
         viewMenu.AppendCheckItem(VIEW_TOOLBAR_ID, _("&Toolbar"), _("Shows or hides the toolbar"))
-        wx.EVT_MENU(self, VIEW_TOOLBAR_ID, self.OnViewToolBar)
-        wx.EVT_UPDATE_UI(self, VIEW_TOOLBAR_ID, self.OnUpdateViewToolBar)
+        self.Bind(wx.EVT_MENU, self.OnViewToolBar, id=VIEW_TOOLBAR_ID)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateViewToolBar, id=VIEW_TOOLBAR_ID)
         viewMenu.AppendCheckItem(VIEW_STATUSBAR_ID, _("&Status Bar"), _("Shows or hides the status bar"))
-        wx.EVT_MENU(self, VIEW_STATUSBAR_ID, self.OnViewStatusBar)
-        wx.EVT_UPDATE_UI(self, VIEW_STATUSBAR_ID, self.OnUpdateViewStatusBar)
+        self.Bind(wx.EVT_MENU, self.OnViewStatusBar, id=VIEW_STATUSBAR_ID)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateViewStatusBar, id=VIEW_STATUSBAR_ID)
         menuBar.Append(viewMenu, _("&View"))
 
         helpMenu = wx.Menu()
         helpMenu.Append(wx.ID_ABOUT, _("&About" + " " + wx.GetApp().GetAppName()), _("Displays program information, version number, and copyright"))
         menuBar.Append(helpMenu, _("&Help"))
 
-        wx.EVT_MENU(self, wx.ID_ABOUT, self.OnAbout)
-        wx.EVT_UPDATE_UI(self, wx.ID_ABOUT, self.ProcessUpdateUIEvent)  # Using ID_ABOUT to update the window menu, the window menu items are not triggering
+        self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_ABOUT)  # Using ID_ABOUT to update the window menu, the window menu items are not triggering
 
         if sdi:  # TODO: Is this really needed?
-            wx.EVT_COMMAND_FIND_CLOSE(self, -1, self.ProcessEvent)
+            self.Bind(wx.EVT_FIND_CLOSE, self.ProcessEvent, id=-1)
 
         return menuBar
 
@@ -171,19 +170,19 @@ class DocFrameMixIn:
         Creates the default ToolBar.
         """
         self._toolBar = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
-        self._toolBar.AddSimpleTool(wx.ID_NEW, New.GetBitmap(), _("New"), _("Creates a new document"))
-        self._toolBar.AddSimpleTool(wx.ID_OPEN, Open.GetBitmap(), _("Open"), _("Opens an existing document"))
-        self._toolBar.AddSimpleTool(wx.ID_SAVE, Save.GetBitmap(), _("Save"), _("Saves the active document"))
-        self._toolBar.AddSimpleTool(SAVEALL_ID, SaveAll.GetBitmap(), _("Save All"), _("Saves all the active documents"))
+        self._toolBar.AddTool(wx.ID_NEW, _("New"), New.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("New"), _("Creates a new document"))
+        self._toolBar.AddTool(wx.ID_OPEN, _("Open"), Open.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("Open"), _("Opens an existing document"))
+        self._toolBar.AddTool(wx.ID_SAVE, _("Save"), Save.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("Save"), _("Saves the active document"))
+        self._toolBar.AddTool(SAVEALL_ID, _("Save All"), SaveAll.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("Save All"), _("Saves all the active documents"))
         self._toolBar.AddSeparator()
-        self._toolBar.AddSimpleTool(wx.ID_PRINT, Print.GetBitmap(), _("Print"), _("Displays full pages"))
-        self._toolBar.AddSimpleTool(wx.ID_PREVIEW, PrintPreview.GetBitmap(), _("Print Preview"), _("Prints the active document"))
+        self._toolBar.AddTool(wx.ID_PRINT, _("Print"), Print.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("Print"), _("Prints the active document"))
+        self._toolBar.AddTool(wx.ID_PREVIEW, _("Print Preview"), PrintPreview.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("Print Preview"), _("Displays full pages"))
         self._toolBar.AddSeparator()
-        self._toolBar.AddSimpleTool(wx.ID_CUT, Cut.GetBitmap(), _("Cut"), _("Cuts the selection and puts it on the Clipboard"))
-        self._toolBar.AddSimpleTool(wx.ID_COPY, Copy.GetBitmap(), _("Copy"), _("Copies the selection and puts it on the Clipboard"))
-        self._toolBar.AddSimpleTool(wx.ID_PASTE, Paste.GetBitmap(), _("Paste"), _("Inserts Clipboard contents"))
-        self._toolBar.AddSimpleTool(wx.ID_UNDO, Undo.GetBitmap(), _("Undo"), _("Reverses the last action"))
-        self._toolBar.AddSimpleTool(wx.ID_REDO, Redo.GetBitmap(), _("Redo"), _("Reverses the last undo"))
+        self._toolBar.AddTool(wx.ID_CUT, _("Cut"), Cut.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("Cut"), _("Cuts the selection and puts it on the Clipboard"))
+        self._toolBar.AddTool(wx.ID_COPY, _("Copy"), Copy.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("Copy"), _("Copies the selection and puts it on the Clipboard"))
+        self._toolBar.AddTool(wx.ID_PASTE, _("Paste"), Paste.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("Paste"), _("Inserts Clipboard contents"))
+        self._toolBar.AddTool(wx.ID_UNDO, _("Undo"), Undo.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("Undo"), _("Reverses the last action"))
+        self._toolBar.AddTool(wx.ID_REDO, _("Redo"), Redo.GetBitmap(), wx.NullBitmap, wx.ITEM_NORMAL, _("Redo"), _("Reverses the last undo"))
         self._toolBar.Realize()
         self._toolBar.Show(wx.ConfigBase.Get().ReadInt("ViewToolBar", True))
 
@@ -292,8 +291,8 @@ class DocMDIParentFrameMixIn:
         if wx.GetApp().GetDefaultIcon():
             self.SetIcon(wx.GetApp().GetDefaultIcon())
 
-        wx.EVT_MENU(self, wx.ID_ABOUT, self.OnAbout)
-        wx.EVT_SIZE(self, self.OnSize)
+        self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
+        self.Bind(wx.EVT_SIZE, self.OnSize)
 
         self.InitializePrintData()
 
@@ -323,12 +322,10 @@ class DocMDIParentFrameMixIn:
             self.SetMenuBar(menuBar)  # wxBug: Have to set the menubar at the very end or the automatic MDI "window" menu doesn't get put in the right place when the services add new menus to the menubar
 
 
-    def ProcessEvent(self, event):
+    def _RouteEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        Routes a menu command through the document framework and returns
+        True if it was handled.
         """
         id = event.GetId()
         if id == SAVEALL_ID:
@@ -341,9 +338,7 @@ class DocMDIParentFrameMixIn:
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         id = event.GetId()
         if id == wx.ID_CUT:
@@ -385,35 +380,35 @@ class DocMDIParentFrameMixIn:
         defaultSubVSize = int(frameSize[1] / 2)
         config = wx.ConfigBase.Get()
         if windows & (EMBEDDED_WINDOW_LEFT | EMBEDDED_WINDOW_TOPLEFT | EMBEDDED_WINDOW_BOTTOMLEFT):
-            self._leftEmbWindow = self._CreateEmbeddedWindow(self, (max(minSize,config.ReadInt("MDIEmbedLeftSize", defaultHSize)), -1), wx.LAYOUT_VERTICAL, wx.LAYOUT_LEFT, visible = config.ReadInt("MDIEmbedLeftVisible", 1), sash = wx.SASH_RIGHT)
+            self._leftEmbWindow = self._CreateEmbeddedWindow(self, (max(minSize,config.ReadInt("MDIEmbedLeftSize", defaultHSize)), -1), wx.adv.LAYOUT_VERTICAL, wx.adv.LAYOUT_LEFT, visible = config.ReadInt("MDIEmbedLeftVisible", 1), sash = wx.adv.SASH_RIGHT)
         else:
             self._leftEmbWindow = None
         if windows & EMBEDDED_WINDOW_TOPLEFT:
-            self._topLeftEmbWindow = self._CreateEmbeddedWindow(self._leftEmbWindow, (-1, config.ReadInt("MDIEmbedTopLeftSize", defaultSubVSize)), wx.LAYOUT_HORIZONTAL, wx.LAYOUT_TOP, visible = config.ReadInt("MDIEmbedTopLeftVisible", 1), sash = wx.SASH_BOTTOM)
+            self._topLeftEmbWindow = self._CreateEmbeddedWindow(self._leftEmbWindow, (-1, config.ReadInt("MDIEmbedTopLeftSize", defaultSubVSize)), wx.adv.LAYOUT_HORIZONTAL, wx.adv.LAYOUT_TOP, visible = config.ReadInt("MDIEmbedTopLeftVisible", 1), sash = wx.adv.SASH_BOTTOM)
         else:
             self._topLeftEmbWindow = None
         if windows & EMBEDDED_WINDOW_BOTTOMLEFT:
-            self._bottomLeftEmbWindow = self._CreateEmbeddedWindow(self._leftEmbWindow, (-1, config.ReadInt("MDIEmbedBottomLeftSize", defaultSubVSize)), wx.LAYOUT_HORIZONTAL, wx.LAYOUT_BOTTOM, visible = config.ReadInt("MDIEmbedBottomLeftVisible", 1))
+            self._bottomLeftEmbWindow = self._CreateEmbeddedWindow(self._leftEmbWindow, (-1, config.ReadInt("MDIEmbedBottomLeftSize", defaultSubVSize)), wx.adv.LAYOUT_HORIZONTAL, wx.adv.LAYOUT_BOTTOM, visible = config.ReadInt("MDIEmbedBottomLeftVisible", 1))
         else:
             self._bottomLeftEmbWindow = None
         if windows & (EMBEDDED_WINDOW_RIGHT | EMBEDDED_WINDOW_TOPRIGHT | EMBEDDED_WINDOW_BOTTOMRIGHT):
-            self._rightEmbWindow = self._CreateEmbeddedWindow(self, (max(minSize,config.ReadInt("MDIEmbedRightSize", defaultHSize)), -1), wx.LAYOUT_VERTICAL, wx.LAYOUT_RIGHT, visible = config.ReadInt("MDIEmbedRightVisible", 1), sash = wx.SASH_LEFT)
+            self._rightEmbWindow = self._CreateEmbeddedWindow(self, (max(minSize,config.ReadInt("MDIEmbedRightSize", defaultHSize)), -1), wx.adv.LAYOUT_VERTICAL, wx.adv.LAYOUT_RIGHT, visible = config.ReadInt("MDIEmbedRightVisible", 1), sash = wx.adv.SASH_LEFT)
         else:
             self._rightEmbWindow = None
         if windows & EMBEDDED_WINDOW_TOPRIGHT:
-            self._topRightEmbWindow = self._CreateEmbeddedWindow(self._rightEmbWindow, (-1, config.ReadInt("MDIEmbedTopRightSize", defaultSubVSize)), wx.LAYOUT_HORIZONTAL, wx.LAYOUT_TOP, visible = config.ReadInt("MDIEmbedTopRightVisible", 1), sash = wx.SASH_BOTTOM)
+            self._topRightEmbWindow = self._CreateEmbeddedWindow(self._rightEmbWindow, (-1, config.ReadInt("MDIEmbedTopRightSize", defaultSubVSize)), wx.adv.LAYOUT_HORIZONTAL, wx.adv.LAYOUT_TOP, visible = config.ReadInt("MDIEmbedTopRightVisible", 1), sash = wx.adv.SASH_BOTTOM)
         else:
             self._topRightEmbWindow = None
         if windows & EMBEDDED_WINDOW_BOTTOMRIGHT:
-            self._bottomRightEmbWindow = self._CreateEmbeddedWindow(self._rightEmbWindow, (-1, config.ReadInt("MDIEmbedBottomRightSize", defaultSubVSize)), wx.LAYOUT_HORIZONTAL, wx.LAYOUT_BOTTOM, visible = config.ReadInt("MDIEmbedBottomRightVisible", 1))
+            self._bottomRightEmbWindow = self._CreateEmbeddedWindow(self._rightEmbWindow, (-1, config.ReadInt("MDIEmbedBottomRightSize", defaultSubVSize)), wx.adv.LAYOUT_HORIZONTAL, wx.adv.LAYOUT_BOTTOM, visible = config.ReadInt("MDIEmbedBottomRightVisible", 1))
         else:
             self._bottomRightEmbWindow = None
         if windows & EMBEDDED_WINDOW_TOP:
-            self._topEmbWindow = self._CreateEmbeddedWindow(self, (-1, max(minSize,config.ReadInt("MDIEmbedTopSize", defaultVSize))), wx.LAYOUT_HORIZONTAL, wx.LAYOUT_TOP, visible = config.ReadInt("MDIEmbedTopVisible", 1), sash = wx.SASH_BOTTOM)
+            self._topEmbWindow = self._CreateEmbeddedWindow(self, (-1, max(minSize,config.ReadInt("MDIEmbedTopSize", defaultVSize))), wx.adv.LAYOUT_HORIZONTAL, wx.adv.LAYOUT_TOP, visible = config.ReadInt("MDIEmbedTopVisible", 1), sash = wx.adv.SASH_BOTTOM)
         else:
             self._topEmbWindow = None
         if windows & EMBEDDED_WINDOW_BOTTOM:
-            self._bottomEmbWindow = self._CreateEmbeddedWindow(self, (-1, max(minSize,config.ReadInt("MDIEmbedBottomSize", defaultVSize))), wx.LAYOUT_HORIZONTAL, wx.LAYOUT_BOTTOM, visible = config.ReadInt("MDIEmbedBottomVisible", 1), sash = wx.SASH_TOP)
+            self._bottomEmbWindow = self._CreateEmbeddedWindow(self, (-1, max(minSize,config.ReadInt("MDIEmbedBottomSize", defaultVSize))), wx.adv.LAYOUT_HORIZONTAL, wx.adv.LAYOUT_BOTTOM, visible = config.ReadInt("MDIEmbedBottomVisible", 1), sash = wx.adv.SASH_TOP)
         else:
             self._bottomEmbWindow = None
 
@@ -502,36 +497,36 @@ class DocMDIParentFrameMixIn:
         Creates the embedded window with the specified size, orientation, and alignment.  If the
         window is not visible it will retain the size with which it was last viewed.
         """
-        window = wx.SashLayoutWindow(parent, wx.ID_ANY, style = wx.NO_BORDER | wx.SW_3D)
+        window = wx.adv.SashLayoutWindow(parent, wx.ID_ANY, style = wx.NO_BORDER | wx.adv.SW_3D)
         window.SetDefaultSize(size)
         window.SetOrientation(orientation)
         window.SetAlignment(alignment)
-        if sash is not None:  # wx.SASH_TOP is 0 so check for None instead of just doing "if sash:"
+        if sash is not None:  # wx.adv.SASH_TOP is 0 so check for None instead of just doing "if sash:"
             window.SetSashVisible(sash, True)
         ####
         def OnEmbeddedWindowSashDrag(event):
-            if event.GetDragStatus() == wx.SASH_STATUS_OUT_OF_RANGE:
+            if event.GetDragStatus() == wx.adv.SASH_STATUS_OUT_OF_RANGE:
                 return
             sashWindow = event.GetEventObject()
-            if sashWindow.GetAlignment() == wx.LAYOUT_TOP or sashWindow.GetAlignment() == wx.LAYOUT_BOTTOM:
+            if sashWindow.GetAlignment() == wx.adv.LAYOUT_TOP or sashWindow.GetAlignment() == wx.adv.LAYOUT_BOTTOM:
                 size = wx.Size(-1, event.GetDragRect().height)
             else:
                 size = wx.Size(event.GetDragRect().width, -1)
             event.GetEventObject().SetDefaultSize(size)
             self._LayoutFrame()
             sashWindow.Refresh()
-            if isinstance(sashWindow.GetParent(), wx.SashLayoutWindow):
+            if isinstance(sashWindow.GetParent(), wx.adv.SashLayoutWindow):
                 sashWindow.Show()
                 parentSashWindow = sashWindow.GetParent()  # Force a refresh
                 parentSashWindow.Layout()
                 parentSashWindow.Refresh()
                 parentSashWindow.SetSize((parentSashWindow.GetSize().width + 1, parentSashWindow.GetSize().height + 1))
         ####
-        wx.EVT_SASH_DRAGGED(window, window.GetId(), OnEmbeddedWindowSashDrag)
+        window.Bind(wx.adv.EVT_SASH_DRAGGED, OnEmbeddedWindowSashDrag, id=window.GetId())
         window._sizeBeforeHidden = None
         if not visible:
             window.Show(False)
-            if isinstance(parent, wx.SashLayoutWindow): # It's a window embedded in another sash window so remember its actual size to show it again
+            if isinstance(parent, wx.adv.SashLayoutWindow): # It's a window embedded in another sash window so remember its actual size to show it again
                 window._sizeBeforeHidden = size
         return window
 
@@ -541,7 +536,7 @@ class DocMDIParentFrameMixIn:
         Shows or hides the embedded window specified by the embedded window location constant.
         """
         window.Show(show)
-        if isinstance(window.GetParent(), wx.SashLayoutWindow):  # It is a parent sashwindow with multiple embedded sashwindows
+        if isinstance(window.GetParent(), wx.adv.SashLayoutWindow):  # It is a parent sashwindow with multiple embedded sashwindows
             parentSashWindow = window.GetParent()
             if show:  # Make sure it is visible in case all of the subwindows were hidden
                 parentSashWindow.Show()
@@ -632,6 +627,7 @@ class DocTabbedChildFrame(wx.Panel):
         Removes the current notebook page.
         """
         wx.GetApp().GetTopWindow().RemoveNotebookPage(self)
+        return True
 
 
     def SetFocus(self):
@@ -681,12 +677,18 @@ class DocTabbedChildFrame(wx.Panel):
                     self.SetTitle(title)
 
 
-    def ProcessEvent(event):
+    def ProcessEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        Processes an event, routing menu commands through the document
+        framework before searching the event tables.
+        """
+        return wx.lib.docview._ProcessFrameEvent(self, wx.Panel, event)
+
+
+    def _RouteEvent(self, event):
+        """
+        Routes a menu command through the document framework and returns
+        True if it was handled.
         """
         if not self._childView or not self._childView.ProcessEvent(event):
             if not isinstance(event, wx.CommandEvent) or not self.GetParent() or not self.GetParent().ProcessEvent(event):
@@ -747,37 +749,37 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
         # From docview.MDIParentFrame
         self._docManager = docManager
 
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-        wx.EVT_MENU(self, wx.ID_EXIT, self.OnExit)
-        wx.EVT_MENU_RANGE(self, wx.ID_FILE1, wx.ID_FILE9, self.OnMRUFile)
+        self.Bind(wx.EVT_MENU, self.OnExit, id=wx.ID_EXIT)
+        self.Bind(wx.EVT_MENU_RANGE, self.OnMRUFile, id=wx.ID_FILE1, id2=wx.ID_FILE9)
 
-        wx.EVT_MENU(self, wx.ID_NEW, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_OPEN, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_CLOSE_ALL, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_CLOSE, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_REVERT, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_SAVE, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_SAVEAS, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_UNDO, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_REDO, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PRINT, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PRINT_SETUP, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_PREVIEW, self.ProcessEvent)
-        wx.EVT_MENU(self, wx.ID_ABOUT, self.OnAbout)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_NEW)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_REVERT)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_REDO)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PRINT_SETUP)
+        self.Bind(wx.EVT_MENU, self.ProcessEvent, id=wx.ID_PREVIEW)
+        self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
 
-        wx.EVT_UPDATE_UI(self, wx.ID_NEW, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_OPEN, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLOSE_ALL, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_CLOSE, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_REVERT, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_SAVE, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_SAVEAS, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_UNDO, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_REDO, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PRINT, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PRINT_SETUP, self.ProcessUpdateUIEvent)
-        wx.EVT_UPDATE_UI(self, wx.ID_PREVIEW, self.ProcessUpdateUIEvent)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_NEW)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_REVERT)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_REDO)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PRINT_SETUP)
+        self.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=wx.ID_PREVIEW)
         # End From docview.MDIParentFrame
 
         self.CreateNotebook()
@@ -801,16 +803,16 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
             self._notebook = wx.Listbook(self, wx.ID_ANY, style=wx.LB_LEFT)
         # self._notebook.SetSizer(wx.NotebookSizer(self._notebook))
         if wx.Platform != "__WXMAC__":
-            wx.EVT_NOTEBOOK_PAGE_CHANGED(self, self._notebook.GetId(), self.OnNotebookPageChanged)
+            self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnNotebookPageChanged, id=self._notebook.GetId())
         else:
-            wx.EVT_LISTBOOK_PAGE_CHANGED(self, self._notebook.GetId(), self.OnNotebookPageChanged)
-        wx.EVT_RIGHT_DOWN(self._notebook, self.OnNotebookRightClick)
-        wx.EVT_MIDDLE_DOWN(self._notebook, self.OnNotebookMiddleClick)
+            self.Bind(wx.EVT_LISTBOOK_PAGE_CHANGED, self.OnNotebookPageChanged, id=self._notebook.GetId())
+        self._notebook.Bind(wx.EVT_RIGHT_DOWN, self.OnNotebookRightClick)
+        self._notebook.Bind(wx.EVT_MIDDLE_DOWN, self.OnNotebookMiddleClick)
 
         # wxBug: wx.Listbook does not implement HitTest the same way wx.Notebook
         # does, so for now don't fire MouseOver events.
         if wx.Platform != "__WXMAC__":
-            wx.EVT_MOTION(self._notebook, self.OnNotebookMouseOver)
+            self._notebook.Bind(wx.EVT_MOTION, self.OnNotebookMouseOver)
 
         templates = wx.GetApp().GetDocumentManager().GetTemplates()
         iconList = wx.ImageList(16, 16, initialCount = len(templates))
@@ -819,8 +821,7 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
             icon = template.GetIcon()
             if icon:
                 if icon.GetHeight() != 16 or icon.GetWidth() != 16:
-                    icon.SetHeight(16)
-                    icon.SetWidth(16)
+                    icon = _ScaleIcon(icon, 16)
                     if wx.GetApp().GetDebug():
                         print("Warning: icon for '%s' isn't 16x16, not crossplatform" % template._docTypeName)
                 iconIndex = iconList.Add(icon)
@@ -828,8 +829,7 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
 
         icon = Blank.GetIcon()
         if icon.GetHeight() != 16 or icon.GetWidth() != 16:
-            icon.SetHeight(16)
-            icon.SetWidth(16)
+            icon = _ScaleIcon(icon, 16)
             if wx.GetApp().GetDebug():
                 print("Warning: getBlankIcon isn't 16x16, not crossplatform")
         self._blankIconIndex = iconList.Add(icon)
@@ -903,7 +903,7 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
             menu.Append(id, _("Close"))
             def OnRightMenuSelect(event):
                 doc.DeleteAllViews()
-            wx.EVT_MENU(self, id, OnRightMenuSelect)
+            self.Bind(wx.EVT_MENU, OnRightMenuSelect, id=id)
             if self._notebook.GetPageCount() > 1:
                 id = wx.NewIdRef()
                 menu.Append(id, _("Close All but \"%s\"" % doc.GetPrintableName()))
@@ -913,10 +913,10 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
                             doc = self._notebook.GetPage(i).GetView().GetDocument()
                             if not self.GetDocumentManager().CloseDocument(doc, False):
                                 return
-                wx.EVT_MENU(self, id, OnRightMenuSelect)
+                self.Bind(wx.EVT_MENU, OnRightMenuSelect, id=id)
                 menu.AppendSeparator()
                 tabsMenu = wx.Menu()
-                menu.AppendMenu(wx.ID_ANY, _("Select Tab"), tabsMenu)
+                menu.AppendSubMenu(tabsMenu, _("Select Tab"))
         else:
             y = y - 25  # wxBug: It is offsetting click events in the blank notebook area
             tabsMenu = menu
@@ -929,7 +929,7 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
                 tabsMenu.Append(id, self._notebook.GetPageText(i))
                 def OnRightMenuSelect(event):
                     self._notebook.SetSelection(selectIDs[event.GetId()])
-                wx.EVT_MENU(self, id, OnRightMenuSelect)
+                self.Bind(wx.EVT_MENU, OnRightMenuSelect, id=id)
 
         self._notebook.PopupMenu(menu, wx.Point(x, y))
         menu.Destroy()
@@ -1025,24 +1025,28 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
 
     def ProcessEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        Processes an event, routing menu commands through the document
+        framework before searching the event tables.
+        """
+        return wx.lib.docview._ProcessFrameEvent(self, wx.Frame, event)
+
+
+    def _RouteEvent(self, event):
+        """
+        Routes a menu command through the document framework and returns
+        True if it was handled.
         """
         if wx.GetApp().ProcessEventBeforeWindows(event):
             return True
         if self._docManager and self._docManager.ProcessEvent(event):
             return True
-        return DocMDIParentFrameMixIn.ProcessEvent(self, event)
+        return DocMDIParentFrameMixIn._RouteEvent(self, event)
 
 
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         if wx.GetApp().ProcessUpdateUIEventBeforeWindows(event):
             return True
@@ -1072,7 +1076,7 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
             msgTitle = wx.GetApp().GetAppName()
             if not msgTitle:
                 msgTitle = _("File Error")
-            wx.MessageBox("The file '%s' doesn't exist and couldn't be opened.\nIt has been removed from the most recently used files list" % FileNameFromPath(file),
+            wx.MessageBox("The file '%s' doesn't exist and couldn't be opened.\nIt has been removed from the most recently used files list" % wx.lib.docview.FileNameFromPath(filename),
                           msgTitle,
                           wx.OK | wx.ICON_EXCLAMATION,
                           self)
@@ -1129,11 +1133,11 @@ class DocMDIChildFrame(wx.MDIChildFrame):
         # self.Create(doc, view, frame, id, title, pos, size, style, name)
         self._activeEvent = None
         self._activated = 0
-        wx.EVT_ACTIVATE(self, self.OnActivate)
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_ACTIVATE, self.OnActivate)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         if frame:  # wxBug: For some reason the EVT_ACTIVATE event is not getting triggered for the first mdi client window that is opened so we have to do it manually
-            mdiChildren = filter(lambda x: isinstance(x, wx.MDIChildFrame), frame.GetChildren())
+            mdiChildren = [x for x in frame.GetChildren() if isinstance(x, wx.MDIChildFrame)]
             if len(mdiChildren) == 1:
                 self.Activate()
 
@@ -1179,12 +1183,18 @@ class DocMDIChildFrame(wx.MDIChildFrame):
                     return
 
 
-    def ProcessEvent(event):
+    def ProcessEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        Processes an event, routing menu commands through the document
+        framework before searching the event tables.
+        """
+        return wx.lib.docview._ProcessFrameEvent(self, wx.MDIChildFrame, event)
+
+
+    def _RouteEvent(self, event):
+        """
+        Routes a menu command through the document framework and returns
+        True if it was handled.
         """
         if self._activeEvent == event:
             return False
@@ -1283,7 +1293,7 @@ class DocService(wx.EvtHandler):
 
     def __init__(self):
         """Initializes the DocService."""
-        pass
+        wx.EvtHandler.__init__(self)
 
 
     def GetDocumentManager(self):
@@ -1320,9 +1330,7 @@ class DocService(wx.EvtHandler):
     def ProcessEvent(self, event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         return False
 
@@ -1330,9 +1338,7 @@ class DocService(wx.EvtHandler):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         return False
 
@@ -1383,7 +1389,7 @@ class DocOptionsService(DocService):
     """
 
 
-    def __init__(self, showGeneralOptions=True, supportedModes=wx.lib.docview.DOC_SDI & wx.lib.docview.DOC_MDI):
+    def __init__(self, showGeneralOptions=True, supportedModes=wx.lib.docview.DOC_SDI | wx.lib.docview.DOC_MDI):
         """
         Initializes the options service with the option of suppressing the default
         general options pane that is included with the options service by setting
@@ -1415,7 +1421,7 @@ class DocOptionsService(DocService):
             if toolsMenu.GetMenuItemCount():
                 toolsMenu.AppendSeparator()
             toolsMenu.Append(self._toolOptionsID, _("&Options..."), _("Sets options"))
-            wx.EVT_MENU(frame, self._toolOptionsID, frame.ProcessEvent)
+            frame.Bind(wx.EVT_MENU, frame.ProcessEvent, id=self._toolOptionsID)
 
 
     def ProcessEvent(self, event):
@@ -1438,7 +1444,7 @@ class DocOptionsService(DocService):
         return self._supportedModes
 
 
-    def SetSupportedModes(self, _supportedModessupportedModes):
+    def SetSupportedModes(self, supportedModes):
         """
         Sets the modes supported by the application.  Use docview.DOC_SDI and
         docview.DOC_MDI flags to set if SDI and/or MDI modes are supported.
@@ -1517,11 +1523,10 @@ class OptionsDialog(wx.Dialog):
                     icon = None
                 if icon:
                     if icon.GetHeight() != 16 or icon.GetWidth() != 16:
-                        icon.SetHeight(16)
-                        icon.SetWidth(16)
+                        icon = _ScaleIcon(icon, 16)
                         if wx.GetApp().GetDebug():
-                            print("Warning: icon for '%s' isn't 16x16, not crossplatform" % template._docTypeName)
-                    iconIndex = iconList.AddIcon(icon)
+                            print("Warning: icon for '%s' isn't 16x16, not crossplatform" % optionsPanelClass.__name__)
+                    iconIndex = iconList.Add(icon)
                     self._iconIndexLookup.append((optionsPanel, iconIndex))
 
                 else:
@@ -1531,7 +1536,7 @@ class OptionsDialog(wx.Dialog):
             optionsNotebook.AssignImageList(iconList)
 
             # Add icons to notebook
-            for index in range(0, len(optionsPanelClasses)-1):
+            for index in range(len(optionsPanelClasses)):
                 iconIndex = self._iconIndexLookup[index][1]
                 if iconIndex >= 0:
                     optionsNotebook.SetPageImage(index, iconIndex)
@@ -1620,7 +1625,7 @@ class GeneralOptionsPanel(wx.Panel):
                                   wx.OK | wx.ICON_INFORMATION,
                                   self.GetParent())
                     self._documentInterfaceMessageShown = True
-            wx.EVT_RADIOBOX(self, self._documentRadioBox.GetId(), OnDocumentInterfaceSelect)
+            self.Bind(wx.EVT_RADIOBOX, OnDocumentInterfaceSelect, id=self._documentRadioBox.GetId())
         optionsBorderSizer = wx.BoxSizer(wx.VERTICAL)
         optionsSizer = wx.BoxSizer(wx.VERTICAL)
         if self._AllowModeChanges():
@@ -1686,13 +1691,13 @@ class DocApp(wx.App):
                 fno = tfile.fileno()
                 self._sharedMemory = mmap.mmap(fno, 1024, "shared_memory")
             else:
-                tfile = file(os.path.join(tempfile.gettempdir(), tempfile.gettempprefix() + self.GetAppName() + '-' + wx.GetUserId() + "AGSharedMemory"), 'w+b')
-                tfile.write("*")
-                tfile.seek(1024)
-                tfile.write(" ")
-                tfile.flush()
-                fno = tfile.fileno()
+                path = os.path.join(tempfile.gettempdir(), tempfile.gettempprefix() + self.GetAppName() + '-' + wx.GetUserId() + "AGSharedMemory")
+                # Don't truncate the file, a running instance may have it mapped.
+                fno = os.open(path, os.O_RDWR | os.O_CREAT, 0o600)
+                if os.fstat(fno).st_size < 1024:
+                    os.ftruncate(fno, 1024)
                 self._sharedMemory = mmap.mmap(fno, 1024)
+                os.close(fno)
 
             self._singleInstanceChecker = wx.SingleInstanceChecker(self.GetAppName() + '-' + wx.GetUserId(), tempfile.gettempdir())
             if self._singleInstanceChecker.IsAnotherRunning():
@@ -1701,12 +1706,12 @@ class DocApp(wx.App):
                 while 1:
                     self._sharedMemory.seek(0)
                     marker = self._sharedMemory.read_byte()
-                    if marker == '\0' or marker == '*':        # available buffer
+                    if marker in (0, ord('*')):        # available buffer
                         self._sharedMemory.seek(0)
-                        self._sharedMemory.write_byte('-')     # set writing marker
+                        self._sharedMemory.write_byte(ord('-'))     # set writing marker
                         self._sharedMemory.write(data)  # write files we tried to open to shared memory
                         self._sharedMemory.seek(0)
-                        self._sharedMemory.write_byte('+')     # set finished writing marker
+                        self._sharedMemory.write_byte(ord('+'))     # set finished writing marker
                         self._sharedMemory.flush()
                         break
                     else:
@@ -1746,10 +1751,10 @@ class DocApp(wx.App):
         self._timer.Stop()
 
         self._sharedMemory.seek(0)
-        if self._sharedMemory.read_byte() == '+':  # available data
-            data = self._sharedMemory.read(1024-1)
+        if self._sharedMemory.read_byte() == ord('+'):  # available data
+            data = self._sharedMemory.read(1024 - 1)
             self._sharedMemory.seek(0)
-            self._sharedMemory.write_byte("*")     # finished reading, set buffer free marker
+            self._sharedMemory.write_byte(ord('*'))     # finished reading, set buffer free marker
             self._sharedMemory.flush()
             args = pickle.loads(data)
             for arg in args:
@@ -1819,10 +1824,16 @@ class DocApp(wx.App):
 
     def ProcessEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        Processes an event, routing menu commands through the document
+        framework before searching the event tables.
+        """
+        return wx.lib.docview._ProcessFrameEvent(self, wx.App, event)
+
+
+    def _RouteEvent(self, event):
+        """
+        Routes a menu command through the document framework and returns
+        True if it was handled.
         """
         for service in self._services:
             if service.ProcessEvent(event):
@@ -1833,9 +1844,7 @@ class DocApp(wx.App):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         for service in self._services:
             if service.ProcessUpdateUIEvent(event):
@@ -1883,6 +1892,7 @@ class DocApp(wx.App):
 
         if hasattr(self, "_singleInstanceChecker"):
             del self._singleInstanceChecker
+        return wx.App.OnExit(self)
 
 
     def GetDefaultDocManagerFlags(self):
@@ -1902,13 +1912,12 @@ class DocApp(wx.App):
     def ShowTip(self, frame, tipProvider):
         """
         Shows the tip window, generally this is called when an application starts.
-        A wx.TipProvider must be passed.
+        A wx.adv.TipProvider must be passed.
         """
         config = wx.ConfigBase.Get()
         showTip = config.ReadInt("ShowTipAtStartup", 1)
         if showTip:
-            index = config.ReadInt("TipIndex", 0)
-            showTipResult = wx.ShowTip(wx.GetApp().GetTopWindow(), tipProvider, showAtStartup = showTip)
+            showTipResult = wx.adv.ShowTip(wx.GetApp().GetTopWindow(), tipProvider, showAtStartup = showTip)
             if showTipResult != showTip:
                 config.WriteInt("ShowTipAtStartup", showTipResult)
 
@@ -2002,11 +2011,11 @@ class DocApp(wx.App):
         # if no children exist, then use the default value from registry
         # wxBug:  Only current window is maximized, so need to check every child frame
         parentFrame = wx.GetApp().GetTopWindow()
-        childrenMaximized = filter(lambda child: isinstance(child, wx.MDIChildFrame) and child.IsMaximized(), parentFrame.GetChildren())
+        childrenMaximized = [child for child in parentFrame.GetChildren() if isinstance(child, wx.MDIChildFrame) and child.IsMaximized()]
         if childrenMaximized:
             maximize = True
         else:
-            children = filter(lambda child: isinstance(child, wx.MDIChildFrame), parentFrame.GetChildren())
+            children = [child for child in parentFrame.GetChildren() if isinstance(child, wx.MDIChildFrame)]
             if children:
                 # other windows exist and none are maximized
                 maximize = False
@@ -2019,9 +2028,9 @@ class DocApp(wx.App):
             frame.Maximize(True)
 
 ##        wx.EVT_MAXIMIZE(frame, self.OnMaximize) # wxBug: This doesn't work, need to save MDIChildFrameMaximized state on close of windows instead
-        wx.EVT_CLOSE(frame, self.OnCloseChildWindow)
+        frame.Bind(wx.EVT_CLOSE, self.OnCloseChildWindow)
         if not self._registeredCloseEvent:
-            wx.EVT_CLOSE(parentFrame, self.OnCloseMainWindow) # need to check on this, but only once
+            parentFrame.Bind(wx.EVT_CLOSE, self.OnCloseMainWindow) # need to check on this, but only once
             self._registeredCloseEvent = True
 
         return frame
@@ -2053,11 +2062,11 @@ class DocApp(wx.App):
         maximized.
         """
         children = event.GetEventObject().GetChildren()
-        childrenMaximized = filter(lambda child: isinstance(child, wx.MDIChildFrame)and child.IsMaximized(), children)
+        childrenMaximized = [child for child in children if isinstance(child, wx.MDIChildFrame) and child.IsMaximized()]
         if childrenMaximized:
             self.SaveMDIDocumentFrameMaximizedState(True)
         else:
-            childrenNotMaximized = filter(lambda child: isinstance(child, wx.MDIChildFrame), children)
+            childrenNotMaximized = [child for child in children if isinstance(child, wx.MDIChildFrame)]
 
             if childrenNotMaximized:
                 # other windows exist and none are maximized
@@ -2207,11 +2216,11 @@ class _DocFrameFileDropTarget(wx.FileDropTarget):
         try:
             for file in filenames:
                 self._docManager.CreateDocument(file, wx.lib.docview.DOC_SILENT)
-        except:
+        except Exception as e:
             msgTitle = wx.GetApp().GetAppName()
             if not msgTitle:
                 msgTitle = _("File Error")
-            wx.MessageBox("Could not open '%s'.  '%s'" % (wx.lib.docview.FileNameFromPath(file), sys.exc_value),
+            wx.MessageBox("Could not open '%s'.  '%s'" % (wx.lib.docview.FileNameFromPath(file), e),
                           msgTitle,
                           wx.OK | wx.ICON_EXCLAMATION,
                           self._docManager.FindSuitableParent())
@@ -2244,26 +2253,22 @@ class DocMDIParentFrame(wx.lib.docview.DocMDIParentFrame, DocFrameMixIn, DocMDIP
         self.GetClientWindow().Refresh()
 
 
-    def ProcessEvent(self, event):
+    def _RouteEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        Routes a menu command through the document framework and returns
+        True if it was handled.
         """
         if wx.GetApp().ProcessEventBeforeWindows(event):
             return True
-        if wx.lib.docview.DocMDIParentFrame.ProcessEvent(self, event):
+        if wx.lib.docview.DocMDIParentFrame._RouteEvent(self, event):
             return True
-        return DocMDIParentFrameMixIn.ProcessEvent(self, event)
+        return DocMDIParentFrameMixIn._RouteEvent(self, event)
 
 
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         if wx.GetApp().ProcessUpdateUIEventBeforeWindows(event):
             return True
@@ -2280,21 +2285,19 @@ class DocMDIParentFrame(wx.lib.docview.DocMDIParentFrame, DocFrameMixIn, DocMDIP
         Updates the WindowMenu on Windows platforms.
         """
         if wx.Platform == '__WXMSW__':
-            children = filter(lambda child: isinstance(child, wx.MDIChildFrame), self.GetChildren())
+            children = [child for child in self.GetChildren() if isinstance(child, wx.MDIChildFrame)]
             windowCount = len(children)
             hasWindow = windowCount >= 1
             has2OrMoreWindows = windowCount >= 2
 
             windowMenu = self.GetWindowMenu()
             if windowMenu:
-                windowMenu.Enable(wx.IDM_WINDOWTILE, hasWindow)
-                windowMenu.Enable(wx.IDM_WINDOWTILEHOR, hasWindow)
-                windowMenu.Enable(wx.IDM_WINDOWCASCADE, hasWindow)
-                windowMenu.Enable(wx.IDM_WINDOWICONS, hasWindow)
-                windowMenu.Enable(wx.IDM_WINDOWTILEVERT, hasWindow)
-                wx.IDM_WINDOWPREV = 4006  # wxBug: Not defined for some reason
-                windowMenu.Enable(wx.IDM_WINDOWPREV, has2OrMoreWindows)
-                windowMenu.Enable(wx.IDM_WINDOWNEXT, has2OrMoreWindows)
+                windowMenu.Enable(wx.ID_MDI_WINDOW_TILE_HORZ, hasWindow)
+                windowMenu.Enable(wx.ID_MDI_WINDOW_CASCADE, hasWindow)
+                windowMenu.Enable(wx.ID_MDI_WINDOW_ARRANGE_ICONS, hasWindow)
+                windowMenu.Enable(wx.ID_MDI_WINDOW_TILE_VERT, hasWindow)
+                windowMenu.Enable(wx.ID_MDI_WINDOW_PREV, has2OrMoreWindows)
+                windowMenu.Enable(wx.ID_MDI_WINDOW_NEXT, has2OrMoreWindows)
 
 
 
@@ -2342,9 +2345,9 @@ class DocSDIFrame(wx.lib.docview.DocChildFrame, DocFrameMixIn):
             self._docManager = None
         self.SetDropTarget(_DocFrameFileDropTarget(self._docManager, self))
 
-        wx.EVT_MENU(self, wx.ID_ABOUT, self.OnAbout)
-        wx.EVT_MENU(self, wx.ID_EXIT, self.OnExit)
-        wx.EVT_MENU_RANGE(self, wx.ID_FILE1, wx.ID_FILE9, self.OnMRUFile)
+        self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
+        self.Bind(wx.EVT_MENU, self.OnExit, id=wx.ID_EXIT)
+        self.Bind(wx.EVT_MENU_RANGE, self.OnMRUFile, id=wx.ID_FILE1, id2=wx.ID_FILE9)
 
         self.InitializePrintData()
 
@@ -2387,18 +2390,16 @@ class DocSDIFrame(wx.lib.docview.DocChildFrame, DocFrameMixIn):
             msgTitle = wx.GetApp().GetAppName()
             if not msgTitle:
                 msgTitle = _("File Error")
-            wx.MessageBox("The file '%s' doesn't exist and couldn't be opened.\nIt has been removed from the most recently used files list" % docview.FileNameFromPath(file),
+            wx.MessageBox("The file '%s' doesn't exist and couldn't be opened.\nIt has been removed from the most recently used files list" % wx.lib.docview.FileNameFromPath(filename),
                           msgTitle,
                           wx.OK | wx.ICON_EXCLAMATION,
                           self)
 
 
-    def ProcessEvent(self, event):
+    def _RouteEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        Routes a menu command through the document framework and returns
+        True if it was handled.
         """
         if wx.GetApp().ProcessEventBeforeWindows(event):
             return True
@@ -2419,9 +2420,7 @@ class DocSDIFrame(wx.lib.docview.DocChildFrame, DocFrameMixIn):
     def ProcessUpdateUIEvent(self, event):
         """
         Processes a UI event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         if wx.GetApp().ProcessUpdateUIEventBeforeWindows(event):
             return True
@@ -2483,6 +2482,7 @@ class AboutService(DocService):
         """
         Initializes the AboutService.
         """
+        DocService.__init__(self)
         if aboutDialog:
             self._dlg = aboutDialog
             self._image = None
@@ -2549,6 +2549,7 @@ class FilePropertiesService(DocService):
         """
         Initializes the PropertyService.
         """
+        DocService.__init__(self)
         self._customEventHandlers = []
 
 
@@ -2560,8 +2561,8 @@ class FilePropertiesService(DocService):
         exitMenuItemPos = self.GetMenuItemPos(fileMenu, wx.ID_EXIT)
         fileMenu.InsertSeparator(exitMenuItemPos)
         fileMenu.Insert(exitMenuItemPos, FilePropertiesService.PROPERTIES_ID, _("&Properties"), _("Show file properties"))
-        wx.EVT_MENU(frame, FilePropertiesService.PROPERTIES_ID, self.ProcessEvent)
-        wx.EVT_UPDATE_UI(frame, FilePropertiesService.PROPERTIES_ID, self.ProcessUpdateUIEvent)
+        frame.Bind(wx.EVT_MENU, self.ProcessEvent, id=FilePropertiesService.PROPERTIES_ID)
+        frame.Bind(wx.EVT_UPDATE_UI, self.ProcessUpdateUIEvent, id=FilePropertiesService.PROPERTIES_ID)
 
 
     def ProcessEvent(self, event):
@@ -2862,6 +2863,7 @@ class WindowMenuService(DocService):
         """
         Initializes the WindowMenu and its globals.
         """
+        DocService.__init__(self)
         self._selectWinIds = []
         for i in range(0, 9):
             self._selectWinIds.append(wx.NewIdRef())
@@ -2886,27 +2888,27 @@ class WindowMenuService(DocService):
                 return
 
             item = windowMenu.Append(self.ARRANGE_WINDOWS_ID, _("&Arrange All"), _("Arrange the open windows"))
-            wx.EVT_MENU(frame, self.ARRANGE_WINDOWS_ID, frame.ProcessEvent)
-            wx.EVT_UPDATE_UI(frame, self.ARRANGE_WINDOWS_ID, frame.ProcessUpdateUIEvent)
+            frame.Bind(wx.EVT_MENU, frame.ProcessEvent, id=self.ARRANGE_WINDOWS_ID)
+            frame.Bind(wx.EVT_UPDATE_UI, frame.ProcessUpdateUIEvent, id=self.ARRANGE_WINDOWS_ID)
             windowMenu.AppendSeparator()
 
             for i, id in enumerate(self._selectWinIds):
-                wx.EVT_MENU(frame, id, frame.ProcessEvent)
-            wx.EVT_MENU(frame, self.SELECT_MORE_WINDOWS_ID, frame.ProcessEvent)
+                frame.Bind(wx.EVT_MENU, frame.ProcessEvent, id=id)
+            frame.Bind(wx.EVT_MENU, frame.ProcessEvent, id=self.SELECT_MORE_WINDOWS_ID)
         elif wx.GetApp().GetUseTabbedMDI():
             item = windowMenu.Append(self.SELECT_PREV_WINDOW_ID, _("Previous"), _("Previous Tab"))
-            wx.EVT_MENU(frame, self.SELECT_PREV_WINDOW_ID, frame.ProcessEvent)
-            wx.EVT_UPDATE_UI(frame, self.SELECT_PREV_WINDOW_ID, frame.ProcessUpdateUIEvent)
+            frame.Bind(wx.EVT_MENU, frame.ProcessEvent, id=self.SELECT_PREV_WINDOW_ID)
+            frame.Bind(wx.EVT_UPDATE_UI, frame.ProcessUpdateUIEvent, id=self.SELECT_PREV_WINDOW_ID)
             item = windowMenu.Append(self.SELECT_NEXT_WINDOW_ID, _("Next"), _("Next Tab"))
-            wx.EVT_MENU(frame, self.SELECT_NEXT_WINDOW_ID, frame.ProcessEvent)
-            wx.EVT_UPDATE_UI(frame, self.SELECT_NEXT_WINDOW_ID, frame.ProcessUpdateUIEvent)
+            frame.Bind(wx.EVT_MENU, frame.ProcessEvent, id=self.SELECT_NEXT_WINDOW_ID)
+            frame.Bind(wx.EVT_UPDATE_UI, frame.ProcessUpdateUIEvent, id=self.SELECT_NEXT_WINDOW_ID)
             item = windowMenu.Append(self.CLOSE_CURRENT_WINDOW_ID, _("Close Current\tCtrl+F4"), _("Close Current Tab"))
-            wx.EVT_MENU(frame, self.CLOSE_CURRENT_WINDOW_ID, frame.ProcessEvent)
-            wx.EVT_UPDATE_UI(frame, self.CLOSE_CURRENT_WINDOW_ID, frame.ProcessUpdateUIEvent)
+            frame.Bind(wx.EVT_MENU, frame.ProcessEvent, id=self.CLOSE_CURRENT_WINDOW_ID)
+            frame.Bind(wx.EVT_UPDATE_UI, frame.ProcessUpdateUIEvent, id=self.CLOSE_CURRENT_WINDOW_ID)
             self._sep = None
 
             for i, id in enumerate(self._selectWinIds):
-                wx.EVT_MENU(frame, id, self.OnCtrlKeySelect)
+                frame.Bind(wx.EVT_MENU, self.OnCtrlKeySelect, id=id)
 
         if needWindowMenu:
             helpMenuIndex = menuBar.FindMenu(_("&Help"))
@@ -3049,15 +3051,15 @@ class WindowMenuService(DocService):
             for id in self._selectWinIds:
                 item = windowMenu.FindItemById(id)
                 if item:
-                    windowMenu.DeleteItem(item)
+                    windowMenu.Delete(item)
             if numPages == 0 and self._sep:
-                windowMenu.DeleteItem(self._sep)
+                windowMenu.Delete(self._sep)
                 self._sep = None
 
             if numPages > len(self._selectWinIds):
                 for i in range(len(self._selectWinIds), numPages):
                     self._selectWinIds.append(wx.NewIdRef())
-                    wx.EVT_MENU(currentFrame, self._selectWinIds[i], self.OnCtrlKeySelect)
+                    currentFrame.Bind(wx.EVT_MENU, self.OnCtrlKeySelect, id=self._selectWinIds[i])
 
             for i in range(0, numPages):
                 if i == 0 and not self._sep:
@@ -3157,20 +3159,28 @@ class WindowMenuService(DocService):
         10 open frames in the application.
         """
         frames = self._GetWindowMenuFrameList()  # TODO - make the current window the first one
-        strings = map(lambda frame: frame.GetTitle(), frames)
-        # Should preselect the current window, but not supported by wx.GetSingleChoice
-        res = wx.GetSingleChoiceIndex(_("Select a window to show:"),
-                                      _("Select Window"),
-                                      strings,
-                                      self)
-        if res == -1:
-            return
+        strings = [frame.GetTitle() for frame in frames]
+        dialog = wx.SingleChoiceDialog(wx.GetApp().GetTopWindow(), _("Select a window to show:"),
+                                       _("Select Window"), strings)
+        try:
+            if dialog.ShowModal() != wx.ID_OK:
+                return
+            res = dialog.GetSelection()
+        finally:
+            dialog.Destroy()
         frames[res].SetFocus()
 
 
 
 def getBlankIcon():
     return Blank.GetIcon()
+
+
+def _ScaleIcon(icon, size):
+    bitmap = wx.Bitmap()
+    bitmap.CopyFromIcon(icon)
+    image = bitmap.ConvertToImage().Scale(size, size, wx.IMAGE_QUALITY_HIGH)
+    return wx.Icon(image.ConvertToBitmap())
 
 #----------------------------------------------------------------------------
 # File generated by encode_bitmaps.py

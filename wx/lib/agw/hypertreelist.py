@@ -3374,7 +3374,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
             if self.HasAGWFlag(TR_ELLIPSIZE_LONG_ITEMS):
                 if i == self.GetMainColumn():
-                    maxsize = col_w - text_x - _MARGIN
+                    maxsize = col_w - (text_x - x_colstart) - _MARGIN
                 else:
                     maxsize = col_w - (wcheck + image_w + _MARGIN)
 

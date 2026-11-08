@@ -61,6 +61,41 @@ class lib_docview_Tests(wtc.WidgetTestCase):
             self.assertIs(manager.SelectDocumentType(templates, sort=True), templates[1])
             self.assertIs(manager.SelectViewType(templates, sort=True), templates[1])
 
+    def makeParentFrame(self):
+        manager = docview.DocManager(initialize=False)
+        docview.DocTemplate(manager, 'Text', '*.txt', '', 'txt', 'Text', 'Text',
+                            TextDocument, docview.View)
+        frame = docview.DocParentFrame(manager, self.frame, -1, 'Docs')
+        return manager, frame
+
+    def test_lib_docviewFrameUpdateUIDoesNotRunCommand(self):
+        manager, frame = self.makeParentFrame()
+        frame.ProcessEvent(wx.UpdateUIEvent(wx.ID_NEW))
+        self.assertEqual(manager.GetDocuments(), [])
+
+        frame.ProcessEvent(wx.CommandEvent(wx.wxEVT_MENU, wx.ID_NEW))
+        self.assertEqual(len(manager.GetDocuments()), 1)
+        manager.Clear(force=True)
+
+    def test_lib_docviewFrameDispatchesOtherEvents(self):
+        manager, frame = self.makeParentFrame()
+        sizes = []
+        frame.Bind(wx.EVT_SIZE, lambda event: sizes.append(event.GetSize()))
+        frame.ProcessEvent(wx.SizeEvent(wx.Size(50, 60)))
+        self.assertEqual(sizes, [wx.Size(50, 60)])
+
+        menuId = wx.NewIdRef()
+        commands = []
+        frame.Bind(wx.EVT_MENU, lambda event: commands.append(event.GetId()), id=menuId)
+        frame.ProcessEvent(wx.CommandEvent(wx.wxEVT_MENU, menuId))
+        self.assertEqual(commands, [menuId])
+
+    def test_lib_docviewFrameHandlerBoundToProcessEvent(self):
+        manager, frame = self.makeParentFrame()
+        menuId = wx.NewIdRef()
+        frame.Bind(wx.EVT_MENU, frame.ProcessEvent, id=menuId)
+        frame.ProcessEvent(wx.CommandEvent(wx.wxEVT_MENU, menuId))
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

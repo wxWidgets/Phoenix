@@ -41,6 +41,24 @@ def run():
     c.addPrivateCopyCtor()
     c.addPrivateAssignOp()
 
+    # Accept str as well as bytes, but the simulated keys only cover ASCII.
+    m = c.find('Text')
+    m.ignore()
+    c.addCppMethod('bool', 'Text', '(const wxString* text)',
+        doc="""\
+            Emulate typing in the keys representing the given string.
+
+            Only US ASCII text is accepted. Letters are universally supported,
+            but digits and punctuation may only work with the standard QWERTY
+            (US) keyboard layout.""",
+        body="""\
+            if (!text->IsAscii()) {
+                wxPyErr_SetString(PyExc_ValueError, "only ASCII text can be simulated");
+                return false;
+            }
+            return self->Text(text->ToAscii());
+            """)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

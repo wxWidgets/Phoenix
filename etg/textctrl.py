@@ -46,6 +46,7 @@ def parseAndTweakModule():
 
 
     c = module.find('wxTextCtrl')
+    tools.fixTextClipboardMethods(c)
     module.addGlobalStr('wxTextCtrlNameStr', c)
 
     # Split the HitTest overloads into separately named methods since once

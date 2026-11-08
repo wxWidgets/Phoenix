@@ -27,6 +27,14 @@ class datetime_Tests(wtc.WidgetTestCase):
         d3 = wx.DateTime.FromTimeT(int(time.time()))
         d4 = wx.DateTime.FromDMY(1, wx.DateTime.Mar, 2012, 8, 15, 45, 123)
 
+    def test_datetimeTimeT(self):
+        for ticks in (0, 1643756400, int(time.time())):
+            self.assertEqual(wx.DateTime.FromTimeT(ticks).GetTicks(), ticks)
+        self.assertEqual(wx.DateTime.FromTimeT(1643756400).year, 2022)
+        self.assertEqual(wx.DateTime.FromTimeT(1643756400).Ticks, 1643756400)
+        self.assertAlmostEqual(wx.DateTime.GetTimeNow(), time.time(), delta=5)
+        self.assertEqual(wx.DateTime().SetTimeT(1643756400).GetTicks(), 1643756400)
+
     def test_datetime3(self):
         d1 = wx.DateTime.Today()
         d2 = wx.DateTime.Now()

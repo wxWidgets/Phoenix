@@ -1,12 +1,12 @@
 
         comboCtrl = wx.ComboCtrl(self, wx.ID_ANY, "")
 
-        popupCtrl = ListViewComboPopup()
+        popupCtrl = ListCtrlComboPopup()
 
         # It is important to call SetPopupControl() as soon as possible
         comboCtrl.SetPopupControl(popupCtrl)
 
-        # Populate using wx.ListView methods
-        popupCtrl.InsertItem(popupCtrl.GetItemCount(), "First Item")
-        popupCtrl.InsertItem(popupCtrl.GetItemCount(), "Second Item")
-        popupCtrl.InsertItem(popupCtrl.GetItemCount(), "Third Item")
+        # Populate using the AddItem method of the ListCtrlComboPopup class
+        popupCtrl.AddItem("First Item")
+        popupCtrl.AddItem("Second Item")
+        popupCtrl.AddItem("Third Item")

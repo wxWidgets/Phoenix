@@ -98,6 +98,14 @@ def run():
         if item.name == '~wxApp':
             item.name = '~wxPyApp'
 
+    # The inheritance diagram was made from the wxApp XML, so rename it there
+    # too, otherwise wx.PyApp's diagram is saved as wx.App's.
+    bases = c.nodeBases[0]
+    bases.pop('wxApp')
+    bases['wxPyApp'] = ('wxPyApp', ['wxAppConsole'])
+    c.nodeBases = (bases, ['wxPyApp'])
+    pyAppBases = bases
+
     c.find('ProcessMessage').ignore()
 
     c.addCppMethod('void', 'MacHideApp', '()',
@@ -362,7 +370,7 @@ def run():
             ])
 
 
-    module.addPyClass('App', ['PyApp'],
+    pc = module.addPyClass('App', ['PyApp'],
         doc="""\
             The ``wx.App`` class represents the application and is used to:
 
@@ -585,6 +593,8 @@ def run():
             ])
 
 
+
+    pc.nodeBases = (dict(pyAppBases, App=('App', ['wxPyApp'])), ['App'])
 
     module.addPyClass('PySimpleApp', ['App'], deprecated="Use :class:`App` instead.",
         doc="""This class is deprecated.  Please use :class:`App` instead.""",

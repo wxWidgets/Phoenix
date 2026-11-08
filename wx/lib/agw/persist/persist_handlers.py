@@ -1030,7 +1030,9 @@ class SpinHandler(AbstractHandler):
     This class handles the following wxPython widgets:
 
     - :class:`SpinCtrl`;
-    - :class:`SpinButton`.
+    - :class:`SpinCtrlDouble`;
+    - :class:`SpinButton`;
+    - :class:`~wx.lib.agw.floatspin.FloatSpin`.
     """
 
     def __init__(self, pObject):
@@ -2541,7 +2543,7 @@ HANDLERS = [
     ("RadioButtonHandler", (wx.RadioButton, )),
     ("ScrolledWindowHandler", (wx.ScrolledWindow, scrolled.ScrolledPanel)),
     ("SliderHandler", (wx.Slider, KC.KnobCtrl)),
-    ("SpinHandler", (wx.SpinButton, wx.SpinCtrl, FS.FloatSpin)),
+    ("SpinHandler", (wx.SpinButton, wx.SpinCtrl, wx.SpinCtrlDouble, FS.FloatSpin)),
     ("SplitterHandler", (wx.SplitterWindow, )),
     ("TextCtrlHandler", (wx.TextCtrl, wx.SearchCtrl, expando.ExpandoTextCtrl, masked.TextCtrl,
                         masked.ComboBox, masked.IpAddrCtrl, masked.TimeCtrl, masked.NumCtrl)),

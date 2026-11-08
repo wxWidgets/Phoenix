@@ -116,6 +116,25 @@ class lib_agw_persist_persistencemanager_Tests(wtc.WidgetTestCase):
             PM.PersistenceManager.Free()
 
 
+    def test_persistencemanagerSpinCtrlDouble(self):
+        self.frame.SetName('PersistTestFrame')
+        for restore in (False, True):
+            spin = wx.SpinCtrlDouble(self.frame, min=0, max=10, inc=0.5,
+                                     name='PersistSpinCtrlDouble')
+            if not restore:
+                spin.SetValue(7.5)
+
+            persistMgr = PM.PersistenceManager.Get()
+            persistMgr.SetManagerStyle(PM.PM_PERSIST_CONTROL_VALUE)
+            persistMgr.SetPersistenceFile(self._configFile1)
+            persistMgr.RegisterAndRestoreAll(self.frame)
+            if restore:
+                self.assertEqual(spin.GetValue(), 7.5)
+            persistMgr.SaveAndUnregister()
+            spin.Destroy()
+            PM.PersistenceManager.Free()
+
+
     def test_persistencemanagerConstantsExist(self):
         # PersistenceManager styles
         PM.PM_SAVE_RESTORE_AUI_PERSPECTIVES

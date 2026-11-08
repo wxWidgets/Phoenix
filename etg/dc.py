@@ -33,7 +33,8 @@ ITEMS  = [ 'wxFontMetrics',
            'wxDCTextBgModeChanger',
            ]
 
-OTHERDEPS = [ 'src/dc_ex.cpp', ]
+OTHERDEPS = [ 'src/dc_ex.cpp',
+              'src/textextents.h', ]
 
 #---------------------------------------------------------------------------
 
@@ -45,6 +46,8 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    module.addHeaderCode('#include "textextents.h"')
 
     c = module.find('wxReadOnlyDC')
     assert isinstance(c, etgtools.ClassDef)
@@ -140,6 +143,7 @@ def run():
     m.setCppCode("""\
         wxArrayInt rval;
         self->GetPartialTextExtents(*text, rval);
+        wxPyFixPartialExtents(*text, rval);
         return new wxArrayInt(rval);
         """)
 

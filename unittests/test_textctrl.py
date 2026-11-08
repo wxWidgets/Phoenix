@@ -98,6 +98,19 @@ class textctrl_Tests(wtc.WidgetTestCase):
         t.ShowNativeCaret
         t.HideNativeCaret
 
+
+    def test_textctrlMultiLineClipboard(self):
+        t = wx.TextCtrl(self.frame, value='hello world', style=wx.TE_MULTILINE)
+        t.SetSelection(0, 6)
+        self.assertTrue(t.CanCopy())
+        t.Copy()
+        self.assertTrue(t.CanCut())
+        t.Cut()
+        self.assertEqual(t.GetValue(), 'world')
+        t.Paste()
+        t.Undo()
+        t.Redo()
+
 #---------------------------------------------------------------------------
 
 

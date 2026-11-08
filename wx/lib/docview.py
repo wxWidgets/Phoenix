@@ -69,6 +69,35 @@ def PathOnly(path):
     return os.path.split(path)[0]
 
 
+def _ProcessFrameEvent(window, baseClass, event):
+    """
+    Processes an event sent to one of the framework's windows.
+
+    ProcessEvent is virtual in wxPython, so these windows get every event, not
+    only the commands that the framework routes through views, documents, the
+    document manager and services.  Route menu commands and UI updates that
+    way, and let the base class send everything else to the bound handlers.
+    """
+    key = wx.siplib.unwrapinstance(event)
+    routing = window.__dict__.setdefault('_routingEvents', set())
+    if key in routing:
+        # A handler bound to window.ProcessEvent is being called for the event
+        # that is already being processed.
+        return False
+    routing.add(key)
+    try:
+        if isinstance(event, wx.UpdateUIEvent):
+            processUpdateUIEvent = getattr(window, 'ProcessUpdateUIEvent', None)
+            if processUpdateUIEvent and processUpdateUIEvent(event):
+                return True
+        elif event.GetEventType() == wx.wxEVT_MENU or isinstance(event, wx.FindDialogEvent):
+            if window._RouteEvent(event):
+                return True
+        return baseClass.ProcessEvent(window, event)
+    finally:
+        routing.discard(key)
+
+
 #----------------------------------------------------------------------
 # Document/View Classes
 #----------------------------------------------------------------------
@@ -110,9 +139,7 @@ class Document(wx.EvtHandler):
     def ProcessEvent(self, event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         # TODO: ProcessEvent is virtual now, should this method just go away?
         return False
@@ -1704,9 +1731,7 @@ class DocManager(wx.EvtHandler):
     def ProcessEvent(self, event):
         """
         Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).  Note that the ProcessEvent
-        method is called from the wxPython docview framework directly since
-        wxPython does not have a virtual ProcessEvent function.
+        suitable event handler function(s).
         """
         view = self.GetCurrentView()
         if view:
@@ -2400,8 +2425,15 @@ class DocParentFrame(wx.Frame):
 
     def ProcessEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).
+        Processes an event, routing menu commands through the document
+        manager before searching the event tables.
+        """
+        return _ProcessFrameEvent(self, wx.Frame, event)
+
+
+    def _RouteEvent(self, event):
+        """
+        Routes a menu command through the document manager.
         """
         return self._docManager and self._docManager.ProcessEvent(event)
 
@@ -2505,8 +2537,15 @@ class DocChildFrame(wx.Frame):
 
     def ProcessEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).
+        Processes an event, routing menu commands through the view and the
+        parent frame before searching the event tables.
+        """
+        return _ProcessFrameEvent(self, wx.Frame, event)
+
+
+    def _RouteEvent(self, event):
+        """
+        Routes a menu command through the view and the parent frame.
         """
         if self._childView:
             self._childView.Activate(True)
@@ -2526,8 +2565,8 @@ class DocChildFrame(wx.Frame):
         Processes a UI event, searching event tables and calling zero or more
         suitable event handler function(s).
         """
-        if self.GetParent():
-            self.GetParent().ProcessUpdateUIEvent(event)
+        if hasattr(self.GetParent(), 'ProcessUpdateUIEvent'):
+            return self.GetParent().ProcessUpdateUIEvent(event)
         else:
             return False
 
@@ -2646,8 +2685,15 @@ class DocMDIParentFrame(wx.MDIParentFrame):
 
     def ProcessEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).
+        Processes an event, routing menu commands through the document
+        manager before searching the event tables.
+        """
+        return _ProcessFrameEvent(self, wx.MDIParentFrame, event)
+
+
+    def _RouteEvent(self, event):
+        """
+        Routes a menu command through the document manager.
         """
         return self._docManager and self._docManager.ProcessEvent(event)
 
@@ -2727,7 +2773,7 @@ class DocMDIChildFrame(wx.MDIChildFrame):
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         if frame:  # wxBug: For some reason the EVT_ACTIVATE event is not getting triggered for the first mdi client window that is opened so we have to do it manually
-            mdiChildren = filter(lambda x: isinstance(x, wx.MDIChildFrame), frame.GetChildren())
+            mdiChildren = [x for x in frame.GetChildren() if isinstance(x, wx.MDIChildFrame)]
             if len(mdiChildren) == 1:
                 self.Activate()
 
@@ -2754,8 +2800,15 @@ class DocMDIChildFrame(wx.MDIChildFrame):
 
     def ProcessEvent(self, event):
         """
-        Processes an event, searching event tables and calling zero or more
-        suitable event handler function(s).
+        Processes an event, routing menu commands through the view and the
+        parent frame before searching the event tables.
+        """
+        return _ProcessFrameEvent(self, wx.MDIChildFrame, event)
+
+
+    def _RouteEvent(self, event):
+        """
+        Routes a menu command through the view and the parent frame.
         """
         if self._activeEvent == event:
             return False
@@ -3130,15 +3183,15 @@ class CommandProcessor(wx.Object):
             else:
                 redoAccel = ''
             if undoCommand and undoItem and undoCommand.CanUndo():
-                undoItem.SetText(_("&Undo ") + undoCommand.GetName() + undoAccel)
+                undoItem.SetItemLabel(_("&Undo ") + undoCommand.GetName() + undoAccel)
             #elif undoCommand and not undoCommand.CanUndo():
             #    undoItem.SetText(_("Can't Undo") + undoAccel)
-            else:
-                undoItem.SetText(_("&Undo" + undoAccel))
+            elif undoItem:
+                undoItem.SetItemLabel(_("&Undo") + undoAccel)
             if redoCommand and redoItem:
-                redoItem.SetText(_("&Redo ") + redoCommand.GetName() + redoAccel)
-            else:
-                redoItem.SetText(_("&Redo") + redoAccel)
+                redoItem.SetItemLabel(_("&Redo ") + redoCommand.GetName() + redoAccel)
+            elif redoItem:
+                redoItem.SetItemLabel(_("&Redo") + redoAccel)
 
 
     def CanUndo(self):

@@ -119,6 +119,8 @@ class graphics_Tests(wtc.WidgetTestCase):
 
         ext = gc.GetPartialTextExtents("Hello")
         self.assertEqual(len(ext), 5)
+        ext = gc.GetPartialTextExtents('a\U0001F610b')
+        self.assertEqual(len(ext), 3)
 
         w, h, d, e = gc.GetFullTextExtent("Hello")
         w, h = gc.GetTextExtent("Hello")

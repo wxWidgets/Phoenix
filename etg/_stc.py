@@ -82,6 +82,16 @@ def run():
         m.find('from').name = 'from_'
         m.find('to').name = 'to_'
 
+    # wxStyledTextCtrl::SetSelection uses SetSelectionStart/End, which
+    # collapse the selection when from_ > to_. SCI_SETSEL takes the anchor
+    # and caret in either order.
+    c.find('SetSelection').setCppCode_sip("""\
+        if (from_ == -1 && to_ == -1)
+            sipCpp->SelectAll();
+        else
+            sipCpp->SendMsg(2160 /* SCI_SETSEL */, from_, to_);
+        """)
+
     c.find('GetSelection.from_').out = True
     c.find('GetSelection.to_').out = True
     c.find('PositionToXY.x').out = True
