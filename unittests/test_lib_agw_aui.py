@@ -1,4 +1,6 @@
+import gc
 import unittest
+import weakref
 from unittests import wtc
 import wx
 import os
@@ -31,6 +33,59 @@ class lib_agw_aui_Tests(wtc.WidgetTestCase):
 
     def tearDown(self):
         self._mgr.UnInit()
+
+
+class lib_agw_aui_lifetime_Tests(wtc.WidgetTestCase):
+    # https://github.com/wxWidgets/Phoenix/issues/3024
+
+    def assertCollected(self, ref):
+        self.myYield()
+        gc.collect()
+        self.assertIsNone(ref())
+
+    def test_lib_agw_aui_notebookParentDestroy(self):
+        frame = wx.Frame(self.frame)
+        nb = aui.AuiNotebook(frame)
+        nb.AddPage(wx.Panel(nb), 'page')
+        ref = weakref.ref(nb.GetAuiManager())
+        frame.Destroy()
+        del nb, frame
+        self.assertCollected(ref)
+
+    def test_lib_agw_aui_notebookDestroy(self):
+        nb = aui.AuiNotebook(self.frame)
+        nb.AddPage(wx.Panel(nb), 'page')
+        ref = weakref.ref(nb.GetAuiManager())
+        nb.Destroy()
+        del nb
+        self.assertCollected(ref)
+
+    def test_lib_agw_aui_managedFrameDestroy(self):
+        for uninit in (True, False):
+            frame = wx.Frame(self.frame)
+            mgr = aui.AuiManager(frame)
+            mgr.AddPane(wx.Panel(frame), aui.AuiPaneInfo().CenterPane())
+            mgr.Update()
+            ref = weakref.ref(mgr)
+            if uninit:
+                mgr.UnInit()
+            frame.Destroy()
+            del mgr, frame
+            self.assertCollected(ref)
+
+    def test_lib_agw_aui_managerReuse(self):
+        frame = wx.Frame(self.frame)
+        mgr = aui.AuiManager(frame)
+        frame.Destroy()
+        self.myYield()
+
+        frame = wx.Frame(self.frame)
+        child = wx.Panel(frame)
+        mgr.SetManagedWindow(frame)
+        mgr.AddPane(child, aui.AuiPaneInfo().CenterPane())
+        mgr.Update()
+        self.assertIs(aui.GetManager(child), mgr)
+        mgr.UnInit()
 
 
 class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):

@@ -4021,39 +4021,54 @@ class AuiManager(wx.EvtHandler):
                             AUI_NB_SUB_NOTEBOOK | AUI_NB_TAB_EXTERNAL_MOVE
         self._autoNBStyle -= AUI_NB_DRAW_DND_TAB
 
+        self._BindHandlers()
+
         if managed_window:
             self.SetManagedWindow(managed_window)
 
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
-        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
-        self.Bind(wx.EVT_SIZE, self.OnSize)
-        self.Bind(wx.EVT_SET_CURSOR, self.OnSetCursor)
-        self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
-        self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
-        self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
-        self.Bind(wx.EVT_MOTION, self.OnMotion)
-        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
-        self.Bind(wx.EVT_CHILD_FOCUS, self.OnChildFocus)
-        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.OnCaptureLost)
-        self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
-        self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
-        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+    def _BindHandlers(self):
+        # Bindings to our own methods are references from the C++ event table
+        # that the garbage collector can't see, so they keep the manager alive
+        # until they are removed again in _UnbindHandlers().
+        self._handlers = [
+            (wx.EVT_PAINT, self.OnPaint, None),
+            (wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground, None),
+            (wx.EVT_SIZE, self.OnSize, None),
+            (wx.EVT_SET_CURSOR, self.OnSetCursor, None),
+            (wx.EVT_LEFT_DOWN, self.OnLeftDown, None),
+            (wx.EVT_LEFT_DCLICK, self.OnLeftDClick, None),
+            (wx.EVT_LEFT_UP, self.OnLeftUp, None),
+            (wx.EVT_MOTION, self.OnMotion, None),
+            (wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow, None),
+            (wx.EVT_CHILD_FOCUS, self.OnChildFocus, None),
+            (wx.EVT_MOUSE_CAPTURE_LOST, self.OnCaptureLost, None),
+            (wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer),
+            (wx.EVT_TIMER, self.SlideIn, self._preview_timer),
+            (wx.EVT_WINDOW_DESTROY, self.OnDestroy, None),
+            (wx.EVT_MOVE, self.OnMove, None),
+            (wx.EVT_SYS_COLOUR_CHANGED, self.OnSysColourChanged, None),
+            (EVT_AUI_PANE_BUTTON, self.OnPaneButton, None),
+            (EVT_AUI_RENDER, self.OnRender, None),
+            (EVT_AUI_FIND_MANAGER, self.OnFindManager, None),
+            (EVT_AUI_PANE_MIN_RESTORE, self.OnRestoreMinimizedPane, None),
+            (EVT_AUI_PANE_DOCKED, self.OnPaneDocked, None),
+            (auibook.EVT_AUINOTEBOOK_BEGIN_DRAG, self.OnTabBeginDrag, None),
+            (auibook.EVT_AUINOTEBOOK_END_DRAG, self.OnTabEndDrag, None),
+            (auibook.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnTabPageClose, None),
+            (auibook.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnTabSelected, None),
+        ]
         if '__WXGTK__' in wx.PlatformInfo:
-            self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
+            self._handlers.append((wx.EVT_WINDOW_CREATE, self.DoUpdateEvt, None))
 
-        self.Bind(wx.EVT_MOVE, self.OnMove)
-        self.Bind(wx.EVT_SYS_COLOUR_CHANGED, self.OnSysColourChanged)
+        for event, handler, source in self._handlers:
+            self.Bind(event, handler, source)
 
-        self.Bind(EVT_AUI_PANE_BUTTON, self.OnPaneButton)
-        self.Bind(EVT_AUI_RENDER, self.OnRender)
-        self.Bind(EVT_AUI_FIND_MANAGER, self.OnFindManager)
-        self.Bind(EVT_AUI_PANE_MIN_RESTORE, self.OnRestoreMinimizedPane)
-        self.Bind(EVT_AUI_PANE_DOCKED, self.OnPaneDocked)
-
-        self.Bind(auibook.EVT_AUINOTEBOOK_BEGIN_DRAG, self.OnTabBeginDrag)
-        self.Bind(auibook.EVT_AUINOTEBOOK_END_DRAG, self.OnTabEndDrag)
-        self.Bind(auibook.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnTabPageClose)
-        self.Bind(auibook.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnTabSelected)
+    def _UnbindHandlers(self):
+        for timer in (self._hint_fadetimer, self._preview_timer):
+            timer.Stop()
+        for event, handler, source in self._handlers:
+            self.Unbind(event, source, handler=handler)
+        self._handlers = []
 
     def CreateFloatingFrame(self, parent, pane_info):
         """
@@ -4281,8 +4296,14 @@ class AuiManager(wx.EvtHandler):
 
         self.UnInit()
 
+        if not self._handlers:
+            self._BindHandlers()
+
         self._frame = managed_window
+        self._frame_id = managed_window.GetId()
         self._frame.Bind(wx.EVT_CLOSE, self.OnClose)
+        # Also catch the destruction if UnInit() has already popped us.
+        self._frame.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         self._frame.PushEventHandler(self)
 
         # if the owner is going to manage an MDI parent frame,
@@ -4394,7 +4415,10 @@ class AuiManager(wx.EvtHandler):
         if not self._frame:
             return
 
-        for klass in [self._frame] + list(self._frame.GetChildren()):
+        self._RemoveEventHandlers(self._frame)
+
+    def _RemoveEventHandlers(self, frame):
+        for klass in [frame] + list(frame.GetChildren()):
             handler = klass.GetEventHandler()
             if klass is not handler:
                 if isinstance(handler, AuiManager):
@@ -4413,8 +4437,14 @@ class AuiManager(wx.EvtHandler):
         is called.
         """
 
-        if self._frame == event.GetEventObject():
-            self.UnInit()
+        event.Skip()
+        # A top level window's destroy event is sent after the derived class
+        # destructor has run, so it carries a new wrapper and self._frame is
+        # already dead.
+        win = event.GetEventObject()
+        if win == self._frame or (win.IsTopLevel() and win.GetId() == self._frame_id):
+            self._RemoveEventHandlers(win)
+            self._UnbindHandlers()
 
     def GetArtProvider(self):
         """ Returns the current art provider being used. """
