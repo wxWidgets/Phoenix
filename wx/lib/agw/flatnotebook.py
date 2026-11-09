@@ -2110,7 +2110,7 @@ class FNBRenderer(object):
 
             if not pc.HasAGWFlag(FNB_TABS_BORDER_SIMPLE):
 
-                dc.SetPen(wx.Pen((pc.HasAGWFlag(FNB_VC71) and [wx.Colour(247, 243, 233)] or [pc._tabAreaColour])[0]))
+                dc.SetPen(wx.Pen(pc._GetVC71TabAreaColour() if pc.HasAGWFlag(FNB_VC71) else pc._tabAreaColour))
                 dc.DrawLine(0, 0, 0, clientRect.height+1)
 
                 if pc.HasAGWFlag(FNB_BOTTOM):
@@ -2242,7 +2242,7 @@ class FNBRenderer(object):
         borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
 
         if agwStyle & FNB_VC71:
-            backBrush = wx.Brush(wx.Colour(247, 243, 233))
+            backBrush = wx.Brush(pc._GetVC71TabAreaColour())
         else:
             backBrush = wx.Brush(pc._tabAreaColour)
 
@@ -2252,7 +2252,7 @@ class FNBRenderer(object):
         size = pc.GetSize()
 
         # Background
-        dc.SetTextBackground((agwStyle & FNB_VC71 and [wx.Colour(247, 243, 233)] or [pc.GetBackgroundColour()])[0])
+        dc.SetTextBackground(pc._GetVC71TabAreaColour() if agwStyle & FNB_VC71 else pc.GetBackgroundColour())
         dc.SetTextForeground(pc._activeTextColour)
         dc.SetBrush(backBrush)
 
@@ -2260,7 +2260,7 @@ class FNBRenderer(object):
         if pc.HasAGWFlag(FNB_TABS_BORDER_SIMPLE):
             dc.SetPen(borderPen)
         else:
-            colr = (pc.HasAGWFlag(FNB_VC71) and [wx.Colour(247, 243, 233)] or [pc.GetBackgroundColour()])[0]
+            colr = pc._GetVC71TabAreaColour() if pc.HasAGWFlag(FNB_VC71) else pc.GetBackgroundColour()
             dc.SetPen(wx.Pen(colr))
 
         if pc.HasAGWFlag(FNB_FF2):
@@ -2285,7 +2285,7 @@ class FNBRenderer(object):
             greyLineYVal  = (pc.HasAGWFlag(FNB_BOTTOM) and [0] or [size.y - 2])[0]
             whiteLineYVal = (pc.HasAGWFlag(FNB_BOTTOM) and [3] or [size.y - 3])[0]
 
-            pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
+            pen = wx.Pen(pc._GetVC71ActiveTabColour())
             dc.SetPen(pen)
 
             # Draw thick grey line between the windows area and
@@ -2813,8 +2813,12 @@ class FNBRendererVC71(FNBRenderer):
         borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
         pc = pageContainer
 
-        dc.SetPen((tabIdx == pc.GetSelection() and [wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))] or [borderPen])[0])
-        dc.SetBrush((tabIdx == pc.GetSelection() and [wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))] or [wx.Brush(wx.Colour(247, 243, 233))])[0])
+        if tabIdx == pc.GetSelection():
+            dc.SetPen(wx.Pen(pc._GetVC71ActiveTabColour()))
+            dc.SetBrush(wx.Brush(pc._GetVC71ActiveTabColour()))
+        else:
+            dc.SetPen(borderPen)
+            dc.SetBrush(wx.Brush(pc._GetVC71TabAreaColour()))
 
         if tabIdx == pc.GetSelection():
 
@@ -5032,6 +5036,7 @@ class FlatNotebook(wx.Panel):
         """
 
         self._pages._tabAreaColour = FormatColour(colour)
+        self._pages._customTabAreaColour = True
 
 
     def GetTabAreaColour(self):
@@ -5049,6 +5054,7 @@ class FlatNotebook(wx.Panel):
         """
 
         self._pages._activeTabColour = FormatColour(colour)
+        self._pages._customActiveTabColour = True
 
 
     def GetActiveTabColour(self):
@@ -5120,6 +5126,8 @@ class PageContainer(wx.Panel):
         self._activeTextColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT)
         self._nonActiveTextColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT)
         self._tabAreaColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE)
+        self._customTabAreaColour = False
+        self._customActiveTabColour = False
 
         self._nFrom = 0
         self._isdragging = False
@@ -6066,6 +6074,22 @@ class PageContainer(wx.Panel):
         if page < len(self._pagesInfoVec):
             self._pagesInfoVec[page].SetPageTextColour(colour)
             self.Refresh()
+
+
+    def _GetVC71TabAreaColour(self):
+        """ Returns the tab area colour for the ``FNB_VC71`` style. """
+
+        if self._customTabAreaColour:
+            return self._tabAreaColour
+        return wx.Colour(247, 243, 233)
+
+
+    def _GetVC71ActiveTabColour(self):
+        """ Returns the active tab colour for the ``FNB_VC71`` style. """
+
+        if self._customActiveTabColour:
+            return self._activeTabColour
+        return wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
 
 
     def OnDropTarget(self, x, y, nTabPage, wnd_oldContainer):
