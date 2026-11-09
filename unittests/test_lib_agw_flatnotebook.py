@@ -114,6 +114,22 @@ class lib_agw_flatnotebook_Tests(wtc.WidgetTestCase):
             pc._mgr.GetRenderer(nb.GetAGWWindowStyleFlag()).DrawTabs(pc, dc)
             dc.SelectObject(wx.NullBitmap)
 
+    def test_lib_agw_flatnotebookVC71Colours(self):
+        def tabAreaPixel(colour):
+            nb = FNB.FlatNotebook(self.frame, size=(400, 200), agwStyle=FNB.FNB_VC71)
+            nb.AddPage(wx.Panel(nb), "Page1")
+            if colour:
+                nb.SetTabAreaColour(colour)
+            pc = nb._pages
+            bmp = wx.Bitmap(400, 30)
+            dc = wx.MemoryDC(bmp)
+            pc._mgr.GetRenderer(nb.GetAGWWindowStyleFlag()).DrawTabs(pc, dc)
+            dc.SelectObject(wx.NullBitmap)
+            return bmp.ConvertToImage().GetRed(300, 10)
+
+        self.assertEqual(tabAreaPixel(None), 247)
+        self.assertEqual(tabAreaPixel(wx.Colour(0x27, 0x26, 0x2c)), 0x27)
+
     def test_lib_agw_flatnotebookEvents(self):
 
         FNB.EVT_FLATNOTEBOOK_PAGE_CHANGED

@@ -90,6 +90,20 @@ class image_Tests(wtc.WidgetTestCase):
         img = wx.Image(stream, 'image/png')
         self.assertTrue(img.IsOk())
 
+    def test_imageCtorStreamReleased(self):
+        import gc
+        import weakref
+        class Stream(FileLikeObject):
+            pass
+        with open(pngFile, 'rb') as f:
+            stream = Stream(f.read())
+        ref = weakref.ref(stream)
+        img = wx.Image(stream)
+        self.assertTrue(img.IsOk())
+        del stream, img
+        gc.collect()
+        self.assertIsNone(ref())
+
 
     def test_imageSetData1(self):
         w = h = 10
@@ -296,6 +310,17 @@ class image_Tests(wtc.WidgetTestCase):
     def test_imageClear(self):
         img = wx.Image(100,100)
         img.Clear(255)
+
+    def test_imageHistogramCounts(self):
+        img = wx.Image(4, 4)
+        img.SetRGB(wx.Rect(0, 0, 1, 4), 255, 0, 0)
+        hist = wx.ImageHistogram()
+        self.assertEqual(img.ComputeHistogram(hist), 2)
+        self.assertEqual(hist.GetCount(hist.MakeKey(255, 0, 0)), 4)
+        self.assertEqual(hist.GetCountRGB(0, 0, 0), 12)
+        self.assertEqual(hist.GetCountColour(wx.Colour(255, 0, 0)), 4)
+        self.assertEqual(hist.GetCountColour((0, 0, 0)), 12)
+        self.assertEqual(hist.GetCountRGB(1, 2, 3), 0)
 
 #---------------------------------------------------------------------------
 

@@ -130,11 +130,21 @@ def run():
         sipRes = wxGLCanvas::IsDisplaySupported(attribPtr);
         """)
 
-    # Needs additional work in etgtools to deal with out args in setCppCode
-    c.find('GetEGLVersion').ignore()
+    m = c.find('GetEGLVersion')
+    m.find('major').out = True
+    m.find('minor').out = True
+    m.setCppCode_sip("""\
+        major = minor = 0;
+        #if defined(wxHAS_GLX) || defined(wxHAS_EGL)
+            sipRes = wxGLCanvas::GetEGLVersion(&major, &minor);
+        #else
+            wxPyRaiseNotImplemented();
+            sipIsErr = 1;
+        #endif
+        """)
 
     c.find('GetGLXVersion').setCppCode("""\
-        #if wxHAS_GLX
+        #if defined(wxHAS_GLX) || defined(wxHAS_EGL)
             return wxGLCanvas::GetGLXVersion();
         #else
             wxPyRaiseNotImplemented();
@@ -143,7 +153,7 @@ def run():
         """)
 
     c.find('PreferGLX').setCppCode("""\
-        #if wxHAS_GLX
+        #if defined(wxHAS_GLX) || defined(wxHAS_EGL)
             wxGLCanvas::PreferGLX();
         #else
             wxPyRaiseNotImplemented();

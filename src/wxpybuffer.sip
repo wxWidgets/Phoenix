@@ -78,7 +78,19 @@
 
     // Code to convert a wxMemoryBuffer to a Python object
     %ConvertFromTypeCode
-        return wxPyMakeBuffer(sipCpp->GetData(), sipCpp->GetDataLen());
+        // The buffer is usually a temporary that SIP deletes right after
+        // this, so the memoryview has to be over a copy of the data.
+        if (!sipCpp->GetDataLen()) {
+            Py_INCREF(Py_None);
+            return Py_None;
+        }
+        PyObject* data = PyByteArray_FromStringAndSize(
+            static_cast<const char*>(sipCpp->GetData()), sipCpp->GetDataLen());
+        if (!data)
+            return NULL;
+        PyObject* view = PyMemoryView_FromObject(data);
+        Py_DECREF(data);
+        return view;
     %End
 };
 

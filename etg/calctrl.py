@@ -69,7 +69,15 @@ def run():
         c.find('GetDateRange.upperdate').out = True
         c.find('HitTest.date').out = True
         c.find('HitTest.wd').out = True
-        c.find('SetAttr.attr').transfer = True
+
+        # The control deletes the attr it is given, so give it a copy. That
+        # way one Python attr object can be used for several days, and stays
+        # valid after the control replaces or resets it.
+        m = c.find('SetAttr')
+        m.detailedDoc.append('A copy of `attr` is stored, so later changes '
+                             'to it do not affect the control.')
+        m.setCppCode_sip(
+            "sipCpp->SetAttr(day, attr ? new wxCalendarDateAttr(*attr) : nullptr);")
 
         c.addPyMethod('PyGetDate', '(self)',
             doc="Return the date as a Python datetime.date object.",

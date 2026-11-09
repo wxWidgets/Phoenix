@@ -305,6 +305,24 @@ class Events(wtc.WidgetTestCase):
         assert evt.GetClientObject() == 'hello'
 
 
+    def test_KeptEventIsInvalidated(self):
+        kept = []
+        self.frame.Bind(wx.EVT_MENU, kept.append, id=wx.ID_OPEN)
+
+        # A posted event is delivered as a copy that wx deletes afterwards
+        wx.PostEvent(self.frame, wx.CommandEvent(wx.wxEVT_MENU, wx.ID_OPEN))
+        self.myYield()
+        self.assertEqual(len(kept), 1)
+        with self.assertRaises(RuntimeError):
+            kept[0].GetId()
+
+        # An event created in Python stays usable
+        mine = wx.CommandEvent(wx.wxEVT_MENU, wx.ID_OPEN)
+        self.frame.GetEventHandler().ProcessEvent(mine)
+        self.assertIs(kept[1], mine)
+        self.assertEqual(kept[1].GetId(), wx.ID_OPEN)
+
+
 #---------------------------------------------------------------------------
 
 

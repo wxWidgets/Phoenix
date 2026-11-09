@@ -38,6 +38,29 @@ class process_Tests(wtc.WidgetTestCase):
             self.waitFor(1000)
             self.assertTrue(self.flag)
 
+    def test_processExecuteEnv(self):
+        env = wx.ExecuteEnv()
+        self.assertEqual(env.cwd, '')
+        self.assertEqual(env.env, {})
+        with self.assertRaises(TypeError):
+            env.env = {'FOO': 1}
+        with self.assertRaises(TypeError):
+            env.env = 5
+
+        if 'wxMac' not in wx.PlatformInfo:
+            import tempfile
+            cwd = os.path.realpath(tempfile.mkdtemp())
+            env.cwd = cwd
+            env.env = dict(os.environ, WXPY_TEST_VAR='hello')
+            p = wx.Process()
+            p.Redirect()
+            cmd = '"%s" -c "import os; print(os.getcwd()); print(os.environ[\'WXPY_TEST_VAR\'])"'
+            rv = wx.Execute(cmd % sys.executable, wx.EXEC_SYNC | wx.EXEC_NODISABLE, p, env)
+            self.assertEqual(rv, 0)
+            out = p.GetInputStream().read().decode().split()
+            self.assertEqual([os.path.realpath(out[0]), out[1]], [cwd, 'hello'])
+            os.rmdir(cwd)
+
     # TODO: When the stream classes are wrapped add tests for writing to and
     # reading from the process
 

@@ -69,6 +69,9 @@ def run():
     c = module.find('wxFSFile')
     c.addPrivateCopyCtor()
     c.find('wxFSFile.stream').keepReference = True
+    # The FSFile deletes its stream, so the converted stream must not be
+    # deleted as a temporary after the call.
+    c.find('wxFSFile.stream').transfer = True
 
     c = module.find('wxFilterFSHandler')
     _fixHandlerClass(c)

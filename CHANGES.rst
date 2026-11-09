@@ -12,6 +12,20 @@ wxPython Changelog
 
 
 
+4.3.3
+------
+* (unreleased)
+
+PyPI:   https://pypi.python.org/pypi/wxPython/4.3.3
+Extras: https://github.com/wxWidgets/Phoenix/releases/tag/wxPython-4.3.3
+Pip:    ``pip install wxPython==4.3.3``
+
+New and improved in this release:
+* Event objects that a Python event handler keeps a reference to are now invalidated when the handler returns, because the C++ event usually no longer exists then. Using a kept event later raises RuntimeError instead of silently reading stale or reused memory. Keep the values you need, or a copy made with evt.Clone(), instead (#2034)
+
+
+
+
 4.3.2
 ------
 * 12-Oct-2026

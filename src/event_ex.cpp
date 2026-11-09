@@ -42,7 +42,18 @@ void wxPyCallback::EventThunker(wxEvent& event) {
 
     wxPyThreadBlocker blocker;
     wxString className = event.GetClassInfo()->GetClassName();
-    arg = wxPyConstructObject((void*)&event, className);
+    // A wrapper that already exists belongs to Python code (for example an
+    // event created in Python and passed to ProcessEvent), so it must not be
+    // invalidated below.
+    bool existed = false;
+    const sipTypeDef* td = sipFindType(className.c_str());
+    if (td) {
+        existed = sipGetPyObject(&event, td) != NULL;
+        arg = sipConvertFromType(&event, td, NULL);
+    }
+    else {
+        arg = wxPyConstructObject((void*)&event, className);
+    }
 
     if (!arg) {
         PyErr_Print();
@@ -56,6 +67,14 @@ void wxPyCallback::EventThunker(wxEvent& event) {
             PyErr_Clear();       // Just in case...
         } else {
             PyErr_Print();
+        }
+        // The C++ event usually goes away right after this, so if the handler
+        // kept a reference to the wrapper, disconnect it. Using it later then
+        // raises an exception instead of reading a dead object, and SIP won't
+        // hand it out again for another event created at the same address.
+        if (!existed && Py_REFCNT(arg) > 1) {
+            sipSimpleWrapper* sw = reinterpret_cast<sipSimpleWrapper*>(arg);
+            sipInstanceDestroyedEx(&sw);
         }
         Py_DECREF(tuple);
     }

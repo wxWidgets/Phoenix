@@ -87,7 +87,7 @@ def run():
         }
         // otherwise do the conversion
         *sipCppPtr = new wxPyInputStream(sipPy);
-        return 0; //sipGetState(sipTransferObj);
+        return sipGetState(sipTransferObj);
         """)
 
     # Add Python file-like methods so a wx.InputStream can be used as if it

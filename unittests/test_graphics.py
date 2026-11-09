@@ -185,6 +185,26 @@ class graphics_Tests(wtc.WidgetTestCase):
         gc = wx.GraphicsContext.Create(self.frame)
         b = gc.CreateLinearGradientBrush(0,0, 500, 100, stops)
 
+    def test_gcPenInfoDashes(self):
+        info = (wx.GraphicsPenInfo(wx.BLACK).Style(wx.PENSTYLE_USER_DASH)
+                .Cap(wx.CAP_BUTT).Dashes([4, 4]))
+        self.assertEqual(info.GetDashes(), [4, 4])
+        self.assertEqual(info.GetDashCount(), 2)
+
+        img = wx.Image(100, 10)
+        img.Clear(255)
+        bmp = wx.Bitmap(img)
+        dc = wx.MemoryDC(bmp)
+        gc = wx.GraphicsContext.Create(dc)
+        gc.SetAntialiasMode(wx.ANTIALIAS_NONE)
+        gc.SetPen(gc.CreatePen(info))
+        gc.StrokeLine(0, 5.5, 100, 5.5)
+        del gc
+        dc.SelectObject(wx.NullBitmap)
+        img = bmp.ConvertToImage()
+        row = ''.join('#' if img.GetRed(x, 5) < 128 else '.' for x in range(16))
+        self.assertEqual(row, '####....####....')
+
     def test_gcNullObjects(self):
         wx.NullGraphicsPen
         wx.NullGraphicsBrush

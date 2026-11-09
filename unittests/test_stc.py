@@ -265,6 +265,18 @@ class stc_Tests(wtc.WidgetTestCase):
         t.SetSelection(-1, -1)
         self.assertEqual(t.GetSelection(), (0, 17))
 
+    def test_stcGetStyledText(self):
+        t = stc.StyledTextCtrl(self.frame)
+        t.SetText('The quick brown fox')
+        expected = bytes(b for c in b'The quick brown fox' for b in (c, 0))
+        for _ in range(20):
+            st = t.GetStyledText(0, t.GetLastPosition())
+            junk = [bytearray(64) for _ in range(100)]
+            self.assertEqual(st.tobytes(), expected)
+        t2 = stc.StyledTextCtrl(self.frame)
+        t2.AddStyledText(st)
+        self.assertEqual(t2.GetText(), 'The quick brown fox')
+
 
 
 #---------------------------------------------------------------------------

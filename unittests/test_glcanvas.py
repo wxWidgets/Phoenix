@@ -47,6 +47,18 @@ class glcanvas_Tests(wtc.WidgetTestCase):
         wx.glcanvas.GLCanvas.IsDisplaySupported(attribs)
 
 
+    @unittest.skipIf('wxGTK' not in wx.PlatformInfo, 'GLX/EGL are only used with wxGTK')
+    def test_glcanvasBackendVersions(self):
+        cvs = wx.glcanvas.GLCanvas(self.frame)
+        usingEGL, major, minor = wx.glcanvas.GLCanvas.GetEGLVersion()
+        glxVersion = wx.glcanvas.GLCanvas.GetGLXVersion()
+        if usingEGL:
+            self.assertGreaterEqual(major, 1)
+            self.assertEqual(glxVersion, 0)
+        else:
+            self.assertEqual((major, minor), (0, 0))
+
+
 #---------------------------------------------------------------------------
 
 

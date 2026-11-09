@@ -21,6 +21,7 @@ ITEMS  = [ 'utils_8h.xml',
            'wxWindowDisabler',
            'wxBusyCursor',
            'wxVersionInfo',
+           'wxExecuteEnv',
            ]
 
 #---------------------------------------------------------------------------
@@ -67,9 +68,62 @@ def run():
 
     # ignore all the environment related functions
     for item in module.allItems():
-        if 'Env' in item.name:
+        if 'Env' in item.name and item.name != 'wxExecuteEnv':
             item.ignore()
     module.find('wxGetenv').ignore()
+
+    c = module.find('wxExecuteEnv')
+    c.find('env').ignore()
+    c.addCppMethod('PyObject*', 'GetEnv', '()', isConst=True,
+        doc="Returns the environment variables for the new process as a dict.",
+        body="""\
+            wxPyThreadBlocker blocker;
+            PyObject* dict = PyDict_New();
+            if (!dict)
+                return NULL;
+            for (const auto& item : self->env) {
+                PyObject* key = wx2PyString(item.first);
+                PyObject* value = wx2PyString(item.second);
+                int rv = key && value ? PyDict_SetItem(dict, key, value) : -1;
+                Py_XDECREF(key);
+                Py_XDECREF(value);
+                if (rv < 0) {
+                    Py_DECREF(dict);
+                    return NULL;
+                }
+            }
+            return dict;
+            """)
+    c.addCppMethod('void', 'SetEnv', '(PyObject* env)',
+        doc="""\
+            Sets the environment variables for the new process from a mapping
+            of str to str, such as a dict. If it is empty the new process
+            inherits the environment of this one, otherwise it gets only these
+            variables.""",
+        body="""\
+            wxPyThreadBlocker blocker;
+            PyObject* items = PyMapping_Items(env);
+            if (!items) {
+                PyErr_SetString(PyExc_TypeError,
+                                "env must be a mapping of str to str");
+                return;
+            }
+            wxEnvVariableHashMap newEnv;
+            for (Py_ssize_t i = 0; i < PyList_GET_SIZE(items); ++i) {
+                PyObject* key = PyTuple_GET_ITEM(PyList_GET_ITEM(items, i), 0);
+                PyObject* value = PyTuple_GET_ITEM(PyList_GET_ITEM(items, i), 1);
+                if (!PyUnicode_Check(key) || !PyUnicode_Check(value)) {
+                    PyErr_SetString(PyExc_TypeError,
+                                    "environment names and values must be str");
+                    Py_DECREF(items);
+                    return;
+                }
+                newEnv[Py2wxString(key)] = Py2wxString(value);
+            }
+            Py_DECREF(items);
+            self->env = newEnv;
+            """)
+    c.addProperty('env GetEnv SetEnv')
 
     # Keep just the first wxExecute overload
     f = module.find('wxExecute')
