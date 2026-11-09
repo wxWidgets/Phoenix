@@ -135,7 +135,7 @@ def run():
     m.find('minor').out = True
     m.setCppCode_sip("""\
         major = minor = 0;
-        #if wxHAS_GLX
+        #if defined(wxHAS_GLX) || defined(wxHAS_EGL)
             sipRes = wxGLCanvas::GetEGLVersion(&major, &minor);
         #else
             wxPyRaiseNotImplemented();
@@ -144,7 +144,7 @@ def run():
         """)
 
     c.find('GetGLXVersion').setCppCode("""\
-        #if wxHAS_GLX
+        #if defined(wxHAS_GLX) || defined(wxHAS_EGL)
             return wxGLCanvas::GetGLXVersion();
         #else
             wxPyRaiseNotImplemented();
@@ -153,7 +153,7 @@ def run():
         """)
 
     c.find('PreferGLX').setCppCode("""\
-        #if wxHAS_GLX
+        #if defined(wxHAS_GLX) || defined(wxHAS_EGL)
             wxGLCanvas::PreferGLX();
         #else
             wxPyRaiseNotImplemented();
