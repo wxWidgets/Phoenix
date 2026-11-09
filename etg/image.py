@@ -656,6 +656,25 @@ def run():
     c.find('FindFirstUnusedColour.g').out = True
     c.find('FindFirstUnusedColour.b').out = True
 
+    c.addCppMethod('unsigned long', 'GetCount', '(unsigned long key)', isConst=True,
+        briefDoc="Returns the pixel count for the given key, which can be made "
+                 "with :meth:`MakeKey`, or 0 if that colour is not in the image.",
+        body="""\
+            wxImageHistogram::const_iterator it = self->find(key);
+            return it == self->end() ? 0 : it->second.value;
+            """)
+    c.addPyMethod('GetCountRGB', '(self, r, g, b)',
+        doc="Returns the pixel count for the given RGB values.",
+        body="return self.GetCount(self.MakeKey(r, g, b))",
+        piArgsString='(self, r: int, g: int, b: int) -> int')
+    c.addPyMethod('GetCountColour', '(self, colour)',
+        doc="Returns the pixel count for the given colour.",
+        body="""\
+            colour = wx.Colour(colour)
+            return self.GetCount(self.MakeKey(colour.red, colour.green, colour.blue))
+            """,
+        piArgsString='(self, colour: Union[Colour, _ThreeInts, _FourInts, str, None]) -> int')
+
 
 
     #-------------------------------------------------------
