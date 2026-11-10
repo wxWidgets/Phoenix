@@ -36,6 +36,19 @@ class lib_agw_shapedbuttons_Tests(wtc.WidgetTestCase):
         self.assertEqual(btn.GetBitmapLabel(), bmp)
 
     @unittest.skipIf(skipIt, 'Requires PIL')
+    def test_lib_agw_shapedbuttonColour(self):
+        btn = SB.SButton(self.frame, label='label')
+        white = btn._mainbuttonup.GetRed(100, 100)
+        self.assertEqual(white, SB.UpButton.GetImage().GetRed(100, 100))
+
+        btn.SetButtonColour(wx.Colour(255, 0, 0))
+        self.assertEqual(btn.GetButtonColour(), wx.Colour(255, 0, 0))
+        for img in (btn._mainbuttonup, btn._mainbuttondown):
+            self.assertGreater(img.GetRed(100, 100), 0)
+            self.assertEqual(img.GetGreen(100, 100), 0)
+            self.assertEqual(img.GetBlue(100, 100), 0)
+
+    @unittest.skipIf(skipIt, 'Requires PIL')
     def test_lib_agw_shapedbutton2(self):
 
         btn = SB.SButton(self.frame, label='label')
