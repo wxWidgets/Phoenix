@@ -87,6 +87,13 @@ class lib_agw_aui_lifetime_Tests(wtc.WidgetTestCase):
         self.assertIs(aui.GetManager(child), mgr)
         mgr.UnInit()
 
+    def test_lib_agw_aui_managerLiveResizeDefault(self):
+        frame = wx.Frame(self.frame)
+        mgr = aui.AuiManager(frame)
+        self.assertTrue(aui.AuiManager_HasLiveResize(mgr))
+        mgr.UnInit()
+        frame.Destroy()
+
 
 class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
 

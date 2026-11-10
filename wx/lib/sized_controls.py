@@ -235,10 +235,10 @@ def SetSizerProp(self, prop, value):
         else:
             row, col = divmod( itemnum, cols )
 
-        if lprop == "expand" and not sizer.IsColGrowable(col):
-            sizer.AddGrowableCol(col)
+        if lprop == "expand" and flag & wx.EXPAND and not sizer.IsColGrowable(col):
+            sizer.AddGrowableCol(col, 1)
         elif lprop == "proportion" and int(value) != 0 and not sizer.IsRowGrowable(row):
-            sizer.AddGrowableRow(row)
+            sizer.AddGrowableRow(row, int(value))
 
     item.SetFlag(flag)
 

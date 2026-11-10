@@ -6,7 +6,6 @@
 import wx
 import os
 import sys
-import time
 import wx.lib.agw.scrolledthumbnail as TC
 from wx.lib.agw.scrolledthumbnail import (ScrolledThumbnail,
                                           Thumb,
@@ -85,9 +84,7 @@ class ScrolledThumbnailDemo (ThumbDemoConfig):
             if os.path.splitext(f)[1] in [".jpg", ".gif", ".png"]:
                 statinfo = os.stat(os.path.join(dir, f))
                 size = statinfo.st_size
-                modtime = statinfo.st_mtime
-                TIME_FMT = '%d %b %Y, %H:%M:%S'
-                lastmod = time.strftime(TIME_FMT, time.localtime(modtime))
+                lastmod = statinfo.st_mtime
                 thumbs.append(Thumb(dir, f, caption=f, size=size, lastmod=lastmod,
                                     imagehandler=NativeImageHandler))
         self.scroll.ShowThumbs(thumbs)

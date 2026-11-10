@@ -3955,7 +3955,7 @@ class AuiManager(wx.EvtHandler):
 
 
          Default value for `agwFlags` is:
-         ``AUI_MGR_DEFAULT`` = ``AUI_MGR_ALLOW_FLOATING`` | ``AUI_MGR_TRANSPARENT_HINT`` | ``AUI_MGR_HINT_FADE`` | ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``
+         ``AUI_MGR_DEFAULT`` = ``AUI_MGR_ALLOW_FLOATING`` | ``AUI_MGR_TRANSPARENT_HINT`` | ``AUI_MGR_HINT_FADE`` | ``AUI_MGR_NO_VENETIAN_BLINDS_FADE`` | ``AUI_MGR_LIVE_RESIZE``
 
          .. note::
 

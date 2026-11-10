@@ -175,6 +175,7 @@ Version 1.0
 
 import io
 import os
+import time
 import wx
 import zlib
 from math import radians
@@ -345,6 +346,9 @@ THUMB_OUTLINE_RECT = 2
 """ Only the maximum image rectangle outlined on selection. """
 THUMB_OUTLINE_IMAGE = 4
 """ Only the image rectangle outlined on selection. """
+
+TIME_FMT = '%d %b %Y, %H:%M:%S'
+""" Time format string for the :class:`Thumb` representation on screen. """
 
 # ThumbnailCtrl Events:
 # wxEVT_THUMBNAILS_SEL_CHANGED: Event Fired When You Change Thumb Selection
@@ -544,7 +548,8 @@ class Thumb(object):
         :param `filename`: a file containing an image;
         :param `caption`: the thumbnail caption string;
         :param `size`: the file size;
-        :param `lastmod`: the file last modification time.
+        :param `lastmod`: the file last modification time, in seconds since the
+         epoch like `os.stat().st_mtime`, or a string to display as it is.
         """
 
         self._filename = filename
@@ -712,6 +717,15 @@ class Thumb(object):
         return self._lastmod
 
 
+    def GetDisplayCreationDate(self):
+        """ Returns the printable file last modification date. """
+
+        lastmod = self.GetCreationDate()
+        if isinstance(lastmod, (int, float)) and lastmod:
+            return time.strftime(TIME_FMT, time.localtime(lastmod))
+        return str(lastmod)
+
+
     def GetOriginalSize(self):
         """ Returns a tuple containing the original image width and height, in pixels. """
 
@@ -789,7 +803,7 @@ class Thumb(object):
         """ Returns info for thumbnain in display format. """
         thumbinfo = "Name: " + self.GetFileName() + "\n" \
                     "Size: " + self.GetDisplayFileSize() + "\n" \
-                    "Modified: " + str(self.GetCreationDate()) + "\n" \
+                    "Modified: " + self.GetDisplayCreationDate() + "\n" \
                     "Dimensions: " + str(self.GetOriginalSize()) + "\n"
         return thumbinfo
 

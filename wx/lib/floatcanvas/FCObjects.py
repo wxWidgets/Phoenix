@@ -2387,8 +2387,7 @@ class DotGrid:
     """
     def __init__(self, Spacing, Size = 2, Color = "Black", Cross=False, CrossThickness = 1):
 
-        self.Spacing = np.array(Spacing, float)
-        self.Spacing = self.Spacing.reshape((2,))
+        self.Spacing = np.broadcast_to(np.asarray(Spacing, float), (2,)).copy()
         self.Size = Size
         self.Color = Color
         self.Cross = Cross

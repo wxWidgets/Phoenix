@@ -115,6 +115,16 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         fccanvas.AddObject(obj)
         fccanvas.Destroy()
 
+    def test_lib_floatcanvas_dotGrid(self):
+        self.assertEqual(list(fc.DotGrid(10).Spacing), [10, 10])
+        self.assertEqual(list(fc.DotGrid((1, 0.5)).Spacing), [1, 0.5])
+        fccanvas = fc.FloatCanvas(self.frame)
+        fccanvas.GridUnder = fc.DotGrid(1, Cross=True)
+        fccanvas.AddRectangle((0, 0), (10, 10))
+        fccanvas.ZoomToBB()
+        fccanvas.Draw(Force=True)
+        fccanvas.Destroy()
+
     def test_lib_floatcanvas_fc_recteclips(self):
         fccanvas = fc.FloatCanvas(self.frame)
 
@@ -205,6 +215,47 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
 
         fc.EVT_FC_ENTER_OBJECT
         fc.EVT_FC_LEAVE_OBJECT
+
+    def test_lib_floatcanvas_rubberBandBox(self):
+        from wx.lib.floatcanvas.Utilities import GUI
+        fccanvas = fc.FloatCanvas(self.frame, size=(200, 200))
+        rects = []
+        mode = GUI.RubberBandBox(rects.append)
+        fccanvas.SetMode(mode)
+        fccanvas.Draw(Force=True)
+        self.myYield()
+        before = fccanvas._Buffer.ConvertToImage().GetData()
+
+        def mouse(eventType, pos):
+            evt = wx.MouseEvent(eventType)
+            evt.SetPosition(pos)
+            return evt
+
+        mode.OnLeftDown(mouse(wx.wxEVT_LEFT_DOWN, (60, 50)))
+        mode.OnMove(mouse(wx.wxEVT_MOTION, (20, 10)))
+        self.assertEqual(mode.RBRect, ((60, 50), (-40, -40)))
+
+        bmp = wx.Bitmap(200, 200)
+        dc = wx.MemoryDC(bmp)
+        dc.SetBackground(wx.Brush(wx.Colour(0, 0, 255)))
+        dc.Clear()
+        mode.DrawOnTop(dc)
+        dc.SelectObject(wx.NullBitmap)
+        img = bmp.ConvertToImage()
+        self.assertNotEqual((img.GetRed(20, 30), img.GetGreen(20, 30), img.GetBlue(20, 30)),
+                            (0, 0, 255))
+        self.assertEqual((img.GetRed(40, 30), img.GetGreen(40, 30), img.GetBlue(40, 30)),
+                         (0, 0, 255))
+
+        self.myYield()
+        # The box is drawn over the canvas on screen, never into the buffer
+        self.assertEqual(fccanvas._Buffer.ConvertToImage().GetData(), before)
+
+        mode.OnLeftUp(mouse(wx.wxEVT_LEFT_UP, (20, 10)))
+        self.myYield()
+        self.assertIsNone(mode.RBRect)
+        self.assertEqual(len(rects), 1)
+        fccanvas.Destroy()
 
 #---------------------------------------------------------------------------
 

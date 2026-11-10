@@ -7834,7 +7834,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                             button[1].x = x + 5
                             button[1].y = button[0].y
                             button[2].x = x
-                            button[2].y = button[0].y + 6
+                            button[2].y = button[0].y + 5
                         else:
                             button[0].x = x - 3
                             button[0].y = y_mid - 5

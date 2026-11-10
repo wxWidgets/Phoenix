@@ -32,6 +32,7 @@
 #
 
 import  locale
+import types
 import  wx
 
 def cmp(a, b):
@@ -745,6 +746,11 @@ class CheckListCtrlMixin(object):
         # Monkey-patch in a new InsertItem so we can also set the image ID for the item
         self._origInsertItem = self.InsertItem
         self.InsertItem = self.__InsertItem_
+
+        # wx.ListCtrl has its own CheckItem for its native checkboxes, which
+        # wins when wx.ListCtrl comes first in the base classes
+        if type(self).CheckItem == wx.ListCtrl.CheckItem:
+            self.CheckItem = types.MethodType(CheckListCtrlMixin.CheckItem, self)
 
 
     def __InsertItem_(self, *args, **kw):

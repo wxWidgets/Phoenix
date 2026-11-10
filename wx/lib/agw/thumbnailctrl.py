@@ -151,10 +151,9 @@ Version 1.0
 
 import wx
 import os
-import time
 
 from wx.lib.agw.scrolledthumbnail import (ScrolledThumbnail, EVT_THUMBNAILS_CHAR,
-PILImageHandler, NativeImageHandler, Thumb)
+PILImageHandler, NativeImageHandler, Thumb, TIME_FMT)
 
 # Image File Name Extensions: Am I Missing Some Extensions Here?
 extensions = [".jpeg", ".jpg", ".bmp", ".png", ".ico", ".tiff", ".ani", ".cur", ".gif",
@@ -197,9 +196,6 @@ THUMB_OUTLINE_IMAGE = 4
 
 # Options For Filtering Files -- Not used, provided for backward-compatiblity
 THUMB_FILTER_IMAGES = 1
-
-TIME_FMT = '%d %b %Y, %H:%M:%S'
-""" Time format string for the :class:`Thumb` representation on screen. """
 
 
 # ---------------------------------------------------------------------------- #
@@ -307,6 +303,7 @@ class ThumbnailCtrl(wx.Panel):
 
         self._combochoices = []
         self._showcombo = False
+        self._showfilenames = True
         self._subsizer = subsizer
 
         self._combo.Bind(wx.EVT_COMBOBOX, self.OnComboBox)
@@ -436,9 +433,7 @@ class ThumbnailCtrl(wx.Panel):
             stats = os.stat(fullfile)
             size = stats[6]
 
-            lastmod = time.strftime(TIME_FMT, time.localtime(stats[8]))
-
-            thumbs.append(Thumb(folder, files, caption, size, lastmod,
+            thumbs.append(Thumb(folder, files, caption, size, stats.st_mtime,
                                 imagehandler=self._imagehandler))
 
         return self.ShowThumbs(thumbs)

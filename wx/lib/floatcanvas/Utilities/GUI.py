@@ -63,16 +63,17 @@ class RubberBandBox(GUIMode.GUIBase):
             Cornerx, Cornery = event.GetPosition()
             w, h = ( Cornerx - x, Cornery - y)
             if abs(w) > self.Tol and abs(h) > self.Tol:
-                # draw the RB box
-                dc = wx.ClientDC(self.Canvas)
-                dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
-                dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                dc.SetLogicalFunction(wx.XOR)
-                if self.RBRect:
-                    dc.DrawRectangle(*self.RBRect)
-                self.RBRect = ((x, y), (w, h) )
-                dc.DrawRectangle(*self.RBRect)
+                self.RBRect = ((x, y), (w, h))
+                self.Canvas.Refresh(eraseBackground=False)
         self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
+
+    def UpdateScreen(self):
+        if self.RBRect:
+            self.Canvas.Refresh(eraseBackground=False)
+
+    def DrawOnTop(self, dc):
+        if self.RBRect:
+            self._DrawRubberBand(dc, *self.RBRect)
 
     def OnLeftDown(self, event):
         # Start drawing
@@ -89,3 +90,4 @@ class RubberBandBox(GUIMode.GUIBase):
                               )
                 wx.CallAfter(self.CallBack, world_rect)
         self.RBRect = None
+        self.Canvas.Refresh(eraseBackground=False)

@@ -115,6 +115,36 @@ class sizedPanel_Tests(wtc.WidgetTestCase):
     def test_panelTopLevelChildren(self):
         checkTopLevelChildren(self, sc.SizedPanel(self.frame))
 
+    def test_panelExpandFalse(self):
+        p = sc.SizedPanel(self.frame)
+        p.SetSizerType('form')
+        wx.StaticText(p, label='Name')
+        wx.TextCtrl(p).SetSizerProps(expand=False)
+        self.assertFalse(p.GetSizer().IsColGrowable(1))
+
+    def test_panelExpandWithGrowableCol(self):
+        p = sc.SizedPanel(self.frame)
+        p.SetSizerType('grid', {'cols': 2, 'growable_col': (0, 1)})
+        c0 = wx.TextCtrl(p)
+        c0.SetSizerProps(expand=True)
+        c1 = wx.TextCtrl(p)
+        c1.SetSizerProps(expand=True)
+        p.SetSize((400, 100))
+        p.Layout()
+        self.assertEqual(c0.GetSize().width, c1.GetSize().width)
+
+    def test_panelProportion(self):
+        p = sc.SizedPanel(self.frame)
+        p.SetSizerType('grid', {'cols': 1})
+        # Small children, so the extra space decides their heights
+        r0 = wx.Window(p, size=(10, 10))
+        r0.SetSizerProps(expand=True, proportion=1)
+        r1 = wx.Window(p, size=(10, 10))
+        r1.SetSizerProps(expand=True, proportion=3)
+        p.SetSize((200, 400))
+        p.Layout()
+        self.assertGreater(r1.GetSize().height, 2 * r0.GetSize().height)
+
     #def test_panelDefaultCtor(self):
     #    p = sc.SizedPanel()
     #    p.Create(self.frame)
