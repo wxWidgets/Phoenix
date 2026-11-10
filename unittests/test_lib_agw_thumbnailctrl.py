@@ -1,4 +1,5 @@
 import os
+import time
 import unittest
 from unittests import wtc
 import wx
@@ -33,8 +34,17 @@ class lib_agw_thumbnailctrl_Tests(wtc.WidgetTestCase):
 
     def test_lib_agw_thumbnailctrlShowDir(self):
         tnc = TNC.ThumbnailCtrl(self.frame, -1, imagehandler=TNC.NativeImageHandler)
-        tnc.ShowDir(os.path.dirname(os.path.abspath(__file__)))
-        self.assertIn('toucan.png', [item.GetFileName() for item in tnc._scrolled._items])
+        folder = os.path.dirname(os.path.abspath(__file__))
+        tnc.ShowDir(folder)
+        thumbs = {item.GetFileName(): item for item in tnc._scrolled._items}
+        self.assertIn('toucan.png', thumbs)
+
+        thumb = thumbs['toucan.png']
+        stats = os.stat(os.path.join(folder, 'toucan.png'))
+        self.assertEqual(thumb.GetFileSize(), stats.st_size)
+        self.assertEqual(thumb.GetCreationDate(), stats.st_mtime)
+        self.assertIn('Modified: ' + time.strftime(TNC.TIME_FMT, time.localtime(stats.st_mtime)),
+                      thumb.GetInfo())
 
     def test_lib_agw_thumbnailctrlLargeThumbSize(self):
         st = ST.ScrolledThumbnail(self.frame, -1, imagehandler=ST.NativeImageHandler)
