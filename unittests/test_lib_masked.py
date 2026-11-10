@@ -49,6 +49,14 @@ class MaskedTextCtrlTests(wtc.WidgetTestCase):
         t.StringSelection
         t.Value
 
+    def test_textctrlAutoComplete(self):
+        t = m.TextCtrl(self.frame)
+        choices = ['apple', 'banana', 'blueberry', 'cherry']
+        self.assertEqual(t._autoComplete(1, choices, 'b', False, None), (1, True))
+        self.assertEqual(t._autoComplete(-1, choices, 'b', False, None), (2, True))
+        self.assertEqual(t._autoComplete(1, choices, 'b', False, 1), (2, True))
+        self.assertEqual(t._autoComplete(-1, choices, 'b', False, 2), (1, True))
+
 
 #---------------------------------------------------------------------------
 

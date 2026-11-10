@@ -4255,15 +4255,15 @@ class MaskedEditMixin:
             match = None
 ##            dbg('searching for "%s"' % value)
             if current_index is None:
-                indices = range(len(choices))
+                indices = list(range(len(choices)))
                 if direction == -1:
                     indices.reverse()
             else:
                 if direction == 1:
-                    indices = range(current_index +1, len(choices)) + range(current_index+1)
+                    indices = list(range(current_index + 1, len(choices))) + list(range(current_index + 1))
 ##                    dbg('range(current_index+1 (%d), len(choices) (%d)) + range(%d):' % (current_index+1, len(choices), current_index+1), indices)
                 else:
-                    indices = range(current_index-1, -1, -1) + range(len(choices)-1, current_index-1, -1)
+                    indices = list(range(current_index - 1, -1, -1)) + list(range(len(choices) - 1, current_index - 1, -1))
 ##                    dbg('range(current_index-1 (%d), -1) + range(len(choices)-1 (%d)), current_index-1 (%d):' % (current_index-1, len(choices)-1, current_index-1), indices)
 ####            dbg('indices:', indices)
             for index in indices:
