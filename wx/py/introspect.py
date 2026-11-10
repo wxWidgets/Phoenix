@@ -45,16 +45,16 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
                          '__get__',       # Not found in `dir(method)` in 3.11
                          ]
         attributes += [attr for attr in special_attrs \
-                       if hasattr(obj, attr)]
+                       if _safe_hasattr(obj, attr)]
     if includeMagic:
         try: attributes += obj._getAttributeNames()
         except: pass
         # Special code to allow traits to be caught by autocomplete
-        if hasattr(obj,'trait_get'):
+        if _safe_hasattr(obj, 'trait_get'):
             try:
                 for i in obj.trait_get():
                     if i not in attributes:
-                        if hasattr(obj, i):
+                        if _safe_hasattr(obj, i):
                             attributes += i
             except:
                 pass
@@ -74,7 +74,7 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
                 attributes += attrlist
             else:
                 attributes += [attr for attr in attrlist \
-                               if attr not in obj_dir and hasattr(obj, attr)]
+                               if attr not in obj_dir and _safe_hasattr(obj, attr)]
 
     # Remove duplicates from the attribute list.
     for item in attributes:
@@ -92,8 +92,16 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
         attributes = filter(lambda item: item[:2]!='__', attributes)
     return attributes
 
+def _safe_hasattr(obj, name):
+    # hasattr() only handles AttributeError, but a __getattr__ can raise
+    # anything, e.g. OSError from ctypes.windll before Python 3.12
+    try:
+        return hasattr(obj, name)
+    except Exception:
+        return False
+
 def hasattrAlwaysReturnsTrue(obj):
-    return hasattr(obj, 'bogu5_123_aTTri8ute')
+    return _safe_hasattr(obj, 'bogu5_123_aTTri8ute')
 
 def getAllAttributeNames(obj):
     """Return dict of all attributes, including inherited, for an object.
