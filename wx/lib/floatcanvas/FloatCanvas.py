@@ -563,12 +563,12 @@ class FloatCanvas(wx.Panel):
             dc.DrawBitmap(self._ForegroundBuffer,0,0)
         else:
             dc.DrawBitmap(self._Buffer,0,0)
-        ## this was so that rubber band boxes and the like could get drawn here
-        ##  but it looks like a wx.ClientDC is a better bet still.
-        #try:
-        #    self.GUIMode.DrawOnTop(dc)
-        #except AttributeError:
-        #    pass
+        # Rubber band boxes and the like are drawn here, over the buffer, as
+        # XOR drawing on a wx.ClientDC doesn't erase with GTK3 and drawing on
+        # one has no effect at all on macOS or with GTK3 on Wayland
+        draw_on_top = getattr(self.GUIMode, 'DrawOnTop', None)
+        if draw_on_top is not None:
+            draw_on_top(dc)
 
     def Draw(self, Force=False):
         """

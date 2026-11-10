@@ -121,6 +121,22 @@ class GUIBase(object):
         """
         pass
 
+    def DrawOnTop(self, dc):
+        """
+        Called by the canvas's paint handler to draw things, such as a rubber
+        band box, over the canvas without drawing them into its buffer.
+        """
+        pass
+
+    def _DrawRubberBand(self, dc, xy, wh):
+        (x, y), (w, h) = xy, wh
+        rect = (int(min(x, x + w)), int(min(y, y + h)), int(abs(w)), int(abs(h)))
+        dc.SetBrush(wx.TRANSPARENT_BRUSH)
+        dc.SetPen(wx.Pen('BLACK', 2))
+        dc.DrawRectangle(*rect)
+        dc.SetPen(wx.Pen('WHITE', 2, wx.PENSTYLE_SHORT_DASH))
+        dc.DrawRectangle(*rect)
+
 
 ## some mix-ins for use with the other modes:
 class ZoomWithMouseWheel():
@@ -328,6 +344,7 @@ class GUIZoomIn(ZoomWithMouseWheel, GUIBase):
     def OnLeftUp(self, event):
         if event.LeftUp() and not self.StartRBBox is None:
             self.PrevRBBox = None
+            self.Canvas.Refresh(eraseBackground=False)
             EndRBBox = event.GetPosition()
             StartRBBox = self.StartRBBox
             # if mouse has moved less that ten pixels, don't use the box.
@@ -351,27 +368,20 @@ class GUIZoomIn(ZoomWithMouseWheel, GUIBase):
             wh[0] = max(wh[0], int(wh[1]*self.Canvas.AspectRatio))
             wh[1] = int(wh[0] / self.Canvas.AspectRatio)
             xy_c = (xy0 + xy1) / 2
-            dc = wx.ClientDC(self.Canvas)
-            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.SetLogicalFunction(wx.XOR)
-            if self.PrevRBBox:
-                dc.DrawRectangle(*self.PrevRBBox)
-            self.PrevRBBox = ( xy_c - wh/2, wh )
-            dc.DrawRectangle( *self.PrevRBBox )
+            self.PrevRBBox = (xy_c - wh / 2, wh)
+            self.Canvas.Refresh(eraseBackground=False)
 
     def UpdateScreen(self):
         """
         Update gets called if the screen has been repainted in the middle of a zoom in
         so the Rubber Band Box can get updated
         """
-        #if False:
         if self.PrevRBBox is not None:
-            dc = wx.ClientDC(self.Canvas)
-            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.SetLogicalFunction(wx.XOR)
-            dc.DrawRectangle(*self.PrevRBBox)
+            self.Canvas.Refresh(eraseBackground=False)
+
+    def DrawOnTop(self, dc):
+        if self.PrevRBBox is not None:
+            self._DrawRubberBand(dc, *self.PrevRBBox)
 
     def OnRightDown(self, event):
         self.Canvas.Zoom(1/1.5, event.GetPosition(), centerCoords="Pixel")
