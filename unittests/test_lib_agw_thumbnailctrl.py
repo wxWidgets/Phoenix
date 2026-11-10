@@ -31,6 +31,11 @@ class lib_agw_thumbnailctrl_Tests(wtc.WidgetTestCase):
         self.assertEqual(thumb.GetOriginalSize(), (thumb.GetImage().GetWidth(),
                                                    thumb.GetImage().GetHeight()))
 
+    def test_lib_agw_thumbnailctrlShowDir(self):
+        tnc = TNC.ThumbnailCtrl(self.frame, -1, imagehandler=TNC.NativeImageHandler)
+        tnc.ShowDir(os.path.dirname(os.path.abspath(__file__)))
+        self.assertIn('toucan.png', [item.GetFileName() for item in tnc._scrolled._items])
+
     def test_lib_agw_thumbnailctrlLargeThumbSize(self):
         st = ST.ScrolledThumbnail(self.frame, -1, imagehandler=ST.NativeImageHandler)
         st.SetThumbSize(400, 300, 4)

@@ -307,6 +307,7 @@ class ThumbnailCtrl(wx.Panel):
 
         self._combochoices = []
         self._showcombo = False
+        self._showfilenames = True
         self._subsizer = subsizer
 
         self._combo.Bind(wx.EVT_COMBOBOX, self.OnComboBox)
