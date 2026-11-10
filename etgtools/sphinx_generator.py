@@ -39,7 +39,7 @@ from sphinxtools.utilities import ODict
 from sphinxtools.utilities import convertToPython
 from sphinxtools.utilities import writeSphinxOutput
 from sphinxtools.utilities import findWidgetScreenshots, makeSummary, pickleItem
-from sphinxtools.utilities import chopDescription, pythonizeType, wx2Sphinx
+from sphinxtools.utilities import chopDescription, pythonizeType, pythonizeTypeHint, wx2Sphinx
 from sphinxtools.utilities import pickleClassInfo, pickleFunctionInfo, isNumeric
 from sphinxtools.utilities import underscore2Capitals, countSpaces
 from sphinxtools.utilities import formatContributedSnippets
@@ -521,6 +521,20 @@ class ParameterList(Node):
             name = pdef.name
             parameter = Parameter(self, pdef)
             self.py_parameters[name] = parameter
+
+        # Methods added by the etg scripts have no parameters from the XML, so
+        # use the type hints from their signature
+        if not self.py_parameters and isinstance(xml_item, extractors.CppMethodDef):
+            if xml_item.signature is None:
+                xml_item.makePyArgsString()
+            for arg in xml_item.signature:
+                if (arg.is_fake or arg.name == 'self' or
+                        arg.position_type in (ParameterType.VAR_ARGS, ParameterType.KWARGS)):
+                    continue
+                pdef = extractors.ParamDef(name=arg.name)
+                parameter = Parameter(self, pdef)
+                parameter.type = pythonizeTypeHint(arg.type_hint or '')
+                self.py_parameters[arg.name] = parameter
 
 
     # -----------------------------------------------------------------------

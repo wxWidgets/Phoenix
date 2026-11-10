@@ -206,15 +206,66 @@ def replaceCppItems(line):
                     eval(item)
                     item = item.replace('*', 'x')
                 except:
-                    # Avoid replacing standalone '&&' and similar
-                    for cpp in CPP_ITEMS[0:2]:
-                        item = item.replace(cpp, '')
+                    # Remove pointer and reference markers, but keep the ones
+                    # between words, as in "width*height*4"
+                    item = re.sub(r'(?<!\w)[*&]|[*&](?!\w)', '', item)
 
         newstr.append(item)
 
     newstr = ''.join(newstr)
     newstr = newstr.replace(' *)', ' )')
     return newstr
+
+
+# ----------------------------------------------------------------------- #
+
+def _splitTypeArgs(args):
+    parts, depth, start = [], 0, 0
+    for i, ch in enumerate(args):
+        if ch == '[':
+            depth += 1
+        elif ch == ']':
+            depth -= 1
+        elif ch == ',' and depth == 0:
+            parts.append(args[start:i].strip())
+            start = i + 1
+    parts.append(args[start:].strip())
+    return parts
+
+
+def pythonizeTypeHint(hint):
+    """
+    Converts a type hint from a method signature, as used in the stubs, into
+    the style used for the `:type:` ReST role.
+
+    :param string `hint`: a type hint like ``Union[Size, _TwoInts]``.
+
+    :rtype: `string`
+    """
+
+    hint = hint.strip()
+    while hint.startswith('Optional[') and hint.endswith(']'):
+        hint = hint[len('Optional['):-1].strip()
+
+    if hint.startswith('Union[') and hint.endswith(']'):
+        members = [m for m in _splitTypeArgs(hint[len('Union['):-1])
+                   if not m.startswith('_') and m != 'None']
+        if len(members) > 1 and 'int' in members:
+            # An enum type, which also accepts plain ints
+            members.remove('int')
+        return ' or '.join(pythonizeTypeHint(m) for m in members)
+
+    if hint == 'str':
+        return 'string'
+    if hint == 'List[int]':
+        return 'list of integers'
+    if hint in ('int', 'float', 'bool', 'Any', 'Buffer'):
+        return hint
+    # pythonizeType adds the module, as in "wx.grid.Grid", to a bare class name
+    parts = hint.split('.')
+    while len(parts) > 1 and parts[0].islower():
+        parts.pop(0)
+    return pythonizeType('.'.join(parts), is_param=True)
 
 
 # ----------------------------------------------------------------------- #
@@ -231,6 +282,9 @@ def pythonizeType(ptype, is_param):
 
     :rtype: `string`
     """
+
+    if re.fullmatch(r'\s*(const\s+)?char\s*\*\s*', ptype):
+        return 'string'
 
     if 'size_t' in ptype:
         ptype = 'int'
