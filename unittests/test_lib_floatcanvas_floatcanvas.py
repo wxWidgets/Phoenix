@@ -115,6 +115,16 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         fccanvas.AddObject(obj)
         fccanvas.Destroy()
 
+    def test_lib_floatcanvas_dotGrid(self):
+        self.assertEqual(list(fc.DotGrid(10).Spacing), [10, 10])
+        self.assertEqual(list(fc.DotGrid((1, 0.5)).Spacing), [1, 0.5])
+        fccanvas = fc.FloatCanvas(self.frame)
+        fccanvas.GridUnder = fc.DotGrid(1, Cross=True)
+        fccanvas.AddRectangle((0, 0), (10, 10))
+        fccanvas.ZoomToBB()
+        fccanvas.Draw(Force=True)
+        fccanvas.Destroy()
+
     def test_lib_floatcanvas_fc_recteclips(self):
         fccanvas = fc.FloatCanvas(self.frame)
 
