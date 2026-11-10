@@ -200,41 +200,45 @@ class IntValidator(wx.Validator):
         elif key == WXK_CTRL_V:   # (see comments at top of file)
             # Only allow paste if number:
             paste_text = ctrl._getClipboardContents()
-            new_text = textval[:sel_start] + paste_text + textval[sel_to:]
-            if new_text == '' and allow_none:
-                new_value = None
-                set_to_none = 1
+            if paste_text is None:
+                # Nothing on the clipboard can be pasted as text, e.g. an image
+                allow_event = 0
             else:
-                try:
-                    # Convert the resulting strings, verifying they
-                    # are legal integers and will fit in proper
-                    # size if ctrl limited to int. (if not,
-                    # disallow event.)
-                    new_value = ctrl._fromGUI(new_text)
+                new_text = textval[:sel_start] + paste_text + textval[sel_to:]
+                if new_text == '' and allow_none:
+                    new_value = None
+                    set_to_none = 1
+                else:
+                    try:
+                        # Convert the resulting strings, verifying they
+                        # are legal integers and will fit in proper
+                        # size if ctrl limited to int. (if not,
+                        # disallow event.)
+                        new_value = ctrl._fromGUI(new_text)
 
-                    if paste_text:
-                        paste_value = ctrl._fromGUI(paste_text)
-                    else:
-                        paste_value = 0
+                        if paste_text:
+                            paste_value = ctrl._fromGUI(paste_text)
+                        else:
+                            paste_value = 0
 
-                    new_pos = sel_start + len(str(paste_value))
+                        new_pos = sel_start + len(str(paste_value))
 
-                    # if resulting value is 0, truncate and highlight value:
-                    if new_value == 0 and len(new_text) > 1:
-                        set_to_zero = 1
+                        # if resulting value is 0, truncate and highlight value:
+                        if new_value == 0 and len(new_text) > 1:
+                            set_to_zero = 1
 
-                    elif paste_value == 0:
-                        # Disallow pasting a leading zero with nothing selected:
-                        if( select_len == 0
-                            and value is not None
-                            and ( (value >= 0 and pos == 0)
-                                  or (value < 0 and pos in [0,1]) ) ):
-                            allow_event = 0
+                        elif paste_value == 0:
+                            # Disallow pasting a leading zero with nothing selected:
+                            if( select_len == 0
+                                and value is not None
+                                and ( (value >= 0 and pos == 0)
+                                      or (value < 0 and pos in [0,1]) ) ):
+                                allow_event = 0
 
-                    paste = 1
+                        paste = 1
 
-                except ValueError:
-                    allow_event = 0
+                    except ValueError:
+                        allow_event = 0
 
 
         elif key < wx.WXK_SPACE or key > 255:
