@@ -23,6 +23,8 @@ Pip:    ``pip install wxPython==4.3.3``
 New and improved in this release:
 * Event objects that a Python event handler keeps a reference to are now invalidated when the handler returns, because the C++ event usually no longer exists then. Using a kept event later raises RuntimeError instead of silently reading stale or reused memory. Keep the values you need, or a copy made with evt.Clone(), instead (#2034)
 
+* Remove wx.lib.flashwin, wx.lib.flashwin_old and the Flash demo. Adobe stopped distributing Flash Player at the end of 2020 and it has since been removed from Windows, so these modules could no longer be imported there (#1477)
+
 
 
 
