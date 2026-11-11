@@ -50,6 +50,32 @@ class lib_agw_balloontip_Tests(wtc.WidgetTestCase):
         frame = BT.BalloonFrame(self.frame, classparent=tip)
         frame.Destroy()
 
+    def waitFor(self, ms):
+        for _ in range(ms // 50):
+            wx.MilliSleep(50)
+            self.myYield()
+
+    def test_lib_agw_balloontipEndDelay(self):
+        tip = BT.BalloonTip(message='Hello wxPython', tipstyle=BT.BT_BUTTON)
+        tip.SetEndDelay(100)
+        tip.SetTarget(wx.Button(self.frame, label='target'))
+        tip.NotifyTimer(None)
+        self.assertTrue(tip.BalloonFrame)
+        self.waitFor(600)
+        self.assertFalse(tip.BalloonFrame)
+
+    def test_lib_agw_balloontipTargetDestroyed(self):
+        tip = BT.BalloonTip(message='Hello wxPython', tipstyle=BT.BT_BUTTON)
+        tip.SetEndDelay(200)
+        target = wx.Button(self.frame, label='target')
+        tip.SetTarget(target)
+        tip.NotifyTimer(None)
+        # Don't let a timer that wasn't stopped crash the rest of the tests
+        self.addCleanup(lambda: tip.destroytime.Stop())
+        target.Destroy()
+        # The timer belongs to the destroyed target, so it must not fire
+        self.assertFalse(tip.destroytime.IsRunning())
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
