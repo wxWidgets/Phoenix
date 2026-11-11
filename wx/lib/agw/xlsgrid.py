@@ -20,7 +20,7 @@
 #
 # 3. There is currently no support for strikethrough fonts, although xlrd correctly
 #    reports this format. The issue is a bug in wxWidgets itself which doesn't
-#    allow the creation of strikethrough fonts (http://trac.wxwidgets.org/ticket/9907).
+#    allow the creation of strikethrough fonts (https://github.com/wxWidgets/wxWidgets/issues/9907).
 #
 # For all kind of problems, requests of enhancements and bug reports, please write
 # to me at:
@@ -200,7 +200,7 @@ TODOs
    to be fixed in wxPython 2.9.2.1);
 3. There is currently no support for strikethrough fonts, although `xlrd` correctly
    reports this format. The issue is a bug in wxWidgets itself which doesn't
-   allow the creation of strikethrough fonts (http://trac.wxwidgets.org/ticket/9907).
+   allow the creation of strikethrough fonts (https://github.com/wxWidgets/wxWidgets/issues/9907).
 
 
 Supported Platforms
@@ -654,7 +654,7 @@ class XLSText(object):
         :note: There is currently no support for strikethrough fonts, although
          `xlrd` correctly reports this format. The issue is a bug in wxWidgets
          itself which doesn't allow the creation of strikethrough fonts. See
-         (http://trac.wxwidgets.org/ticket/9907).
+         (https://github.com/wxWidgets/wxWidgets/issues/9907).
         """
 
         style, bold, underline = wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False

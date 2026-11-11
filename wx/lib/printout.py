@@ -929,11 +929,15 @@ class PrintTable(object):
             frame.SetSize(self.preview_frame_size)
         frame.Show(True)
 
-    def Print(self):
+    def Print(self, prompt=True):
+        """
+        Print the table. Pass prompt=False to print to the current printer
+        without showing the print dialog.
+        """
         pdd = wx.PrintDialogData(self.printData)
         printer = wx.Printer(pdd)
         printout = SetPrintout(self)
-        if not printer.Print(self.parentFrame, printout):
+        if not printer.Print(self.parentFrame, printout, prompt):
             if wx.Printer.GetLastError() == wx.PRINTER_ERROR:
                 wx.MessageBox("There was a problem printing.\n"
                               "Perhaps your current printer is not set correctly?",
@@ -1051,8 +1055,8 @@ class PrintGrid(object):
     def Preview(self):
         self.table.Preview()
 
-    def Print(self):
-        self.table.Print()
+    def Print(self, prompt=True):
+        self.table.Print(prompt)
 
 
 class SetPrintout(wx.Printout):

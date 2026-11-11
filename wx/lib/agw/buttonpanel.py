@@ -648,7 +648,7 @@ class BPArt(object):
         :param string `text`: the button label.
         """
 
-        bmpxsize, bmpysize = buttonBitmap.GetWidth(), buttonBitmap.GetHeight()
+        bmpxsize, bmpysize = buttonBitmap.GetLogicalSize()
         dx = dy = focus = 0
 
         borderw = self._caption_border_size
@@ -1411,8 +1411,7 @@ class ButtonInfo(Control):
         :return: An instance of :class:`wx.Size`.
         """
 
-        xsize = self.GetBitmap().GetWidth()
-        ysize = self.GetBitmap().GetHeight()
+        xsize, ysize = self.GetBitmap().GetLogicalSize()
 
         if self.HasText():
             # We have text in the button

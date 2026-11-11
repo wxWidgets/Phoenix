@@ -126,6 +126,14 @@ class lib_agw_speedmeter_Tests(wtc.WidgetTestCase):
                 del dc
                 spW.Destroy()
 
+    def test_lib_agw_speedmeterHiDPIBuffer(self):
+        spW = SM.SpeedMeter(self.frame, size=(200, 200))
+        # As on a 200% display
+        spW.GetDPIScaleFactor = lambda: 2.0
+        spW.OnSize(wx.SizeEvent(spW.GetSize()))
+        self.assertEqual(spW._Buffer.GetScaleFactor(), 2.0)
+        self.assertEqual(spW._Buffer.GetLogicalSize(), spW.GetClientSize())
+
 
     def test_lib_agw_peakmeterConstantsExist(self):
         SM.SM_BUFFERED_DC

@@ -1,5 +1,6 @@
 import unittest
 import sys
+from unittest import mock
 from unittests import wtc
 import wx
 
@@ -212,6 +213,39 @@ class lib_agw_customtreectrl_Tests(wtc.WidgetTestCase):
         CT.EVT_TREE_SEL_CHANGING
         CT.EVT_TREE_SET_INFO
         CT.EVT_TREE_STATE_IMAGE_CLICK
+
+    def test_lib_agw_customtreectrlDragImageFails(self):
+        tree = CT.CustomTreeCtrl(self.frame, size=(200, 200))
+        root = tree.AddRoot('root')
+        child = tree.AppendItem(root, 'child')
+        tree.ExpandAll()
+        self.myYield()
+        tree.Bind(CT.EVT_TREE_BEGIN_DRAG, lambda evt: evt.Allow())
+        rect = tree.GetBoundingRect(child, textOnly=True)
+        pos = (rect.x + 2, rect.y + rect.height // 2)
+
+        def mouse(evtType, leftDown):
+            evt = wx.MouseEvent(evtType)
+            evt.SetPosition(pos)
+            evt.SetLeftDown(leftDown)
+            tree.OnMouse(evt)
+
+        def drag():
+            mouse(wx.wxEVT_LEFT_DOWN, True)
+            for _ in range(3):
+                mouse(wx.wxEVT_MOTION, True)
+
+        drag()
+        mouse(wx.wxEVT_LEFT_UP, False)
+        self.assertFalse(tree._isDragging)
+        # A second drag whose drag image can't be created
+        with mock.patch.object(CT, 'DragImage', side_effect=RuntimeError('no image')):
+            with self.assertRaises(RuntimeError):
+                drag()
+        # The rest of that drag must still work without a drag image
+        mouse(wx.wxEVT_MOTION, True)
+        mouse(wx.wxEVT_LEFT_UP, False)
+        self.assertFalse(tree._isDragging)
 
 #---------------------------------------------------------------------------
 

@@ -1792,6 +1792,7 @@ class PlotCanvas(wx.Panel):
         If it's not, the offscreen buffer is used
         """
 
+        refresh = dc is None and not wx.ClientDC.CanBeUsedForDrawing(self.canvas)
         if dc is None:
             # Redrawing the buffer wipes any point label drawn on it, so it
             # must not be "erased" again later, which would draw it back.
@@ -1954,6 +1955,10 @@ class PlotCanvas(wx.Panel):
         dc.DestroyClippingRegion()
 
         self._adjustScrollbars()
+        if refresh:
+            # Drawing on a wx.ClientDC has no effect on macOS and GTK3
+            # Wayland, so the buffer has to be shown by the paint handler
+            self.canvas.Refresh()
 
     def Redraw(self, dc=None):
         """Redraw the existing plot."""
@@ -1977,6 +1982,8 @@ class PlotCanvas(wx.Panel):
         dc.SetTextForeground(self.GetForegroundColour())
         dc.SetTextBackground(self.GetBackgroundColour())
         self.last_draw = None
+        if not wx.ClientDC.CanBeUsedForDrawing(self.canvas):
+            self.canvas.Refresh()
 
     def Zoom(self, Center, Ratio):
         """

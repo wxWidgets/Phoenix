@@ -31,6 +31,20 @@ class lib_agw_buttonpanel_Tests(wtc.WidgetTestCase):
         self.assertTrue(bar.IsStandard())
         self.assertTrue(not bar.IsVertical())
 
+    def test_lib_agw_buttonpanelScaledBitmap(self):
+        # Like a macOS @2x image: 48x48 pixels drawn at 24x24 where the
+        # platform uses DPI-independent pixels
+        scaled = wx.Bitmap(48, 48)
+        scaled.SetScaleFactor(2)
+        plain = wx.Bitmap(*scaled.GetLogicalSize())
+        bar = BP.ButtonPanel(self.frame, -1, 'sample text')
+        sizes = []
+        for bmp in (scaled, plain):
+            btn = BP.ButtonInfo(bar, wx.ID_ANY, bmp, text='Button')
+            bar.AddButton(btn)
+            sizes.append(btn.GetBestSize())
+        self.assertEqual(sizes[0], sizes[1])
+
     def test_lib_agw_buttonpanelSetAlignmentWithControl(self):
         bar = BP.ButtonPanel(self.frame, -1, 'sample text')
         btn = BP.ButtonInfo(bar, wx.ID_ANY,

@@ -2769,58 +2769,58 @@ def GetIntroText():
     "<p>The wxPython AUI version fixes the following bugs or implement the following" \
     " missing features (the list is not exhaustive): " \
     "<p><ul>" \
-    "<li>Visual Studio 2005 style docking: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=596'>" \
-    "http://www.kirix.com/forums/viewtopic.php?f=16&t=596</a></li>" \
-    "<li>Dock and Pane Resizing: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=582'>" \
-    "http://www.kirix.com/forums/viewtopic.php?f=16&t=582</a></li> " \
-    "<li>Patch concerning dock resizing: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=610'>" \
-    "http://www.kirix.com/forums/viewtopic.php?f=16&t=610</a></li> " \
-    "<li>Patch to effect wxAuiToolBar orientation switch: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=641'>" \
-    "http://www.kirix.com/forums/viewtopic.php?f=16&t=641</a></li> " \
-    "<li>AUI: Core dump when loading a perspective in wxGTK (MSW OK): <a href='http://www.kirix.com/forums/viewtopic.php?f=15&t=627</li>'>" \
-    "http://www.kirix.com/forums/viewtopic.php?f=15&t=627</li></a>" \
-    "<li>wxAuiNotebook reordered AdvanceSelection(): <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=617'>"\
-    "http://www.kirix.com/forums/viewtopic.php?f=16&t=617</a></li> " \
-    "<li>Vertical Toolbar Docking Issue: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=181'>" \
-    "http://www.kirix.com/forums/viewtopic.php?f=16&t=181</a></li> " \
-    "<li>Patch to show the resize hint on mouse-down in aui: <a href='http://trac.wxwidgets.org/ticket/9612'>" \
-    "http://trac.wxwidgets.org/ticket/9612</a></li> " \
-    "<li>The Left/Right and Top/Bottom Docks over draw each other: <a href='http://trac.wxwidgets.org/ticket/3516'>" \
-    "http://trac.wxwidgets.org/ticket/3516</a></li>" \
-    "<li>MinSize() not honoured: <a href='http://trac.wxwidgets.org/ticket/3562'>" \
-    "http://trac.wxwidgets.org/ticket/3562</a></li> " \
-    "<li>Layout problem with wxAUI: <a href='http://trac.wxwidgets.org/ticket/3597'>" \
-    "http://trac.wxwidgets.org/ticket/3597</a></li>" \
-    "<li>Resizing children ignores current window size: <a href='http://trac.wxwidgets.org/ticket/3908'>" \
-    "http://trac.wxwidgets.org/ticket/3908</a></li> " \
-    "<li>Resizing panes under Vista does not repaint background: <a href='http://trac.wxwidgets.org/ticket/4325'>" \
-    "http://trac.wxwidgets.org/ticket/4325</a></li> " \
-    "<li>Resize sash resizes in response to click: <a href='http://trac.wxwidgets.org/ticket/4547'>" \
-    "http://trac.wxwidgets.org/ticket/4547</a></li> " \
-    "<li>'Illegal' resizing of the AuiPane? (wxPython): <a href='http://trac.wxwidgets.org/ticket/4599'>" \
-    "http://trac.wxwidgets.org/ticket/4599</a></li> " \
-    "<li>Floating wxAUIPane Resize Event doesn't update its position: <a href='http://trac.wxwidgets.org/ticket/9773'>" \
-    "http://trac.wxwidgets.org/ticket/9773</a></li>" \
-    "<li>Don't hide floating panels when we maximize some other panel: <a href='http://trac.wxwidgets.org/ticket/4066'>"\
-    "http://trac.wxwidgets.org/ticket/4066</a></li>" \
-    "<li>wxAUINotebook incorrect ALLOW_ACTIVE_PANE handling: <a href='http://trac.wxwidgets.org/ticket/4361'>" \
-    "http://trac.wxwidgets.org/ticket/4361</a></li> " \
-    "<li>Page changing veto doesn't work, (patch supplied): <a href='http://trac.wxwidgets.org/ticket/4518'>" \
-    "http://trac.wxwidgets.org/ticket/4518</a></li> " \
-    "<li>Show and DoShow are mixed around in wxAuiMDIChildFrame: <a href='http://trac.wxwidgets.org/ticket/4567'>"\
-    "http://trac.wxwidgets.org/ticket/4567</a></li> " \
-    "<li>wxAuiManager & wxToolBar - ToolBar Of Size Zero: <a href='http://trac.wxwidgets.org/ticket/9724'>" \
-    "http://trac.wxwidgets.org/ticket/9724</a></li> " \
-    "<li>wxAuiNotebook doesn't behave properly like a container as far as...: <a href='http://trac.wxwidgets.org/ticket/9911'>" \
-    "http://trac.wxwidgets.org/ticket/9911</a></li>" \
-    "<li>Serious layout bugs in wxAUI: <a href='http://trac.wxwidgets.org/ticket/10620'>" \
-    "http://trac.wxwidgets.org/ticket/10620</a></li>" \
-    "<li>wAuiDefaultTabArt::Clone() should just use copy constructor: <a href='http://trac.wxwidgets.org/ticket/11388'>" \
-    "http://trac.wxwidgets.org/ticket/11388</a></li>" \
-    "<li>Drop down button for check tool on wxAuiToolbar: <a href='http://trac.wxwidgets.org/ticket/11139'>" \
-    "http://trac.wxwidgets.org/ticket/11139</a></li>" \
-    "<li>Rename a wxAuiNotebook tab with double-click: <a href='http://trac.wxwidgets.org/ticket/10847'>" \
-    "http://trac.wxwidgets.org/ticket/10847</a></li>" \
+    "<li>Visual Studio 2005 style docking: <a href='https://web.archive.org/web/20180129092639/http://www.kirix.com/forums/viewtopic.php?f=16&t=596'>" \
+    "https://web.archive.org/web/20180129092639/http://www.kirix.com/forums/viewtopic.php?f=16&t=596</a></li>" \
+    "<li>Dock and Pane Resizing: <a href='https://web.archive.org/web/20180129092727/http://www.kirix.com/forums/viewtopic.php?f=16&t=582'>" \
+    "https://web.archive.org/web/20180129092727/http://www.kirix.com/forums/viewtopic.php?f=16&t=582</a></li> " \
+    "<li>Patch concerning dock resizing: <a href='https://web.archive.org/web/20180129093159/http://www.kirix.com/forums/viewtopic.php?f=16&t=610'>" \
+    "https://web.archive.org/web/20180129093159/http://www.kirix.com/forums/viewtopic.php?f=16&t=610</a></li> " \
+    "<li>Patch to effect wxAuiToolBar orientation switch: <a href='https://web.archive.org/web/20180129093326/http://www.kirix.com/forums/viewtopic.php?f=16&t=641'>" \
+    "https://web.archive.org/web/20180129093326/http://www.kirix.com/forums/viewtopic.php?f=16&t=641</a></li> " \
+    "<li>AUI: Core dump when loading a perspective in wxGTK (MSW OK): <a href='https://web.archive.org/web/20180129092722/http://www.kirix.com/forums/viewtopic.php?f=15&t=627'>" \
+    "https://web.archive.org/web/20180129092722/http://www.kirix.com/forums/viewtopic.php?f=15&t=627</a></li> " \
+    "<li>wxAuiNotebook reordered AdvanceSelection(): <a href='https://web.archive.org/web/20180129093211/http://www.kirix.com/forums/viewtopic.php?f=16&t=617'>"\
+    "https://web.archive.org/web/20180129093211/http://www.kirix.com/forums/viewtopic.php?f=16&t=617</a></li> " \
+    "<li>Vertical Toolbar Docking Issue: <a href='https://web.archive.org/web/20180129093135/http://www.kirix.com/forums/viewtopic.php?f=16&t=181'>" \
+    "https://web.archive.org/web/20180129093135/http://www.kirix.com/forums/viewtopic.php?f=16&t=181</a></li> " \
+    "<li>Patch to show the resize hint on mouse-down in aui: <a href='https://github.com/wxWidgets/wxWidgets/issues/9612'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/9612</a></li> " \
+    "<li>The Left/Right and Top/Bottom Docks over draw each other: <a href='https://github.com/wxWidgets/wxWidgets/issues/3516'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/3516</a></li>" \
+    "<li>MinSize() not honoured: <a href='https://github.com/wxWidgets/wxWidgets/issues/3562'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/3562</a></li> " \
+    "<li>Layout problem with wxAUI: <a href='https://github.com/wxWidgets/wxWidgets/issues/3597'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/3597</a></li>" \
+    "<li>Resizing children ignores current window size: <a href='https://github.com/wxWidgets/wxWidgets/issues/3908'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/3908</a></li> " \
+    "<li>Resizing panes under Vista does not repaint background: <a href='https://github.com/wxWidgets/wxWidgets/issues/4325'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/4325</a></li> " \
+    "<li>Resize sash resizes in response to click: <a href='https://github.com/wxWidgets/wxWidgets/issues/4547'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/4547</a></li> " \
+    "<li>'Illegal' resizing of the AuiPane? (wxPython): <a href='https://github.com/wxWidgets/wxWidgets/issues/4599'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/4599</a></li> " \
+    "<li>Floating wxAUIPane Resize Event doesn't update its position: <a href='https://github.com/wxWidgets/wxWidgets/issues/9773'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/9773</a></li>" \
+    "<li>Don't hide floating panels when we maximize some other panel: <a href='https://github.com/wxWidgets/wxWidgets/issues/4066'>"\
+    "https://github.com/wxWidgets/wxWidgets/issues/4066</a></li>" \
+    "<li>wxAUINotebook incorrect ALLOW_ACTIVE_PANE handling: <a href='https://github.com/wxWidgets/wxWidgets/issues/4361'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/4361</a></li> " \
+    "<li>Page changing veto doesn't work, (patch supplied): <a href='https://github.com/wxWidgets/wxWidgets/issues/4518'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/4518</a></li> " \
+    "<li>Show and DoShow are mixed around in wxAuiMDIChildFrame: <a href='https://github.com/wxWidgets/wxWidgets/issues/4567'>"\
+    "https://github.com/wxWidgets/wxWidgets/issues/4567</a></li> " \
+    "<li>wxAuiManager & wxToolBar - ToolBar Of Size Zero: <a href='https://github.com/wxWidgets/wxWidgets/issues/9724'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/9724</a></li> " \
+    "<li>wxAuiNotebook doesn't behave properly like a container as far as...: <a href='https://github.com/wxWidgets/wxWidgets/issues/9911'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/9911</a></li>" \
+    "<li>Serious layout bugs in wxAUI: <a href='https://github.com/wxWidgets/wxWidgets/issues/10620'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/10620</a></li>" \
+    "<li>wAuiDefaultTabArt::Clone() should just use copy constructor: <a href='https://github.com/wxWidgets/wxWidgets/issues/11388'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/11388</a></li>" \
+    "<li>Drop down button for check tool on wxAuiToolbar: <a href='https://github.com/wxWidgets/wxWidgets/issues/11139'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/11139</a></li>" \
+    "<li>Rename a wxAuiNotebook tab with double-click: <a href='https://github.com/wxWidgets/wxWidgets/issues/10847'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/10847</a></li>" \
     "</ul>" \
     "<p>Plus the following features:" \
     "<p><ul>" \
@@ -2914,16 +2914,16 @@ def GetIntroText():
     "of the <i>wx.aui.AuiToolBar</i> that draws a background gradient and this break the window design when " \
     "putting it within a control that has margin between the borders and the toolbar (example: put " \
     "<i>wx.aui.AuiToolBar</i> within a <i>wx.StaticBoxSizer</i> that has a plain background);</li>" \
-    "<li><i>AuiToolBar</i> allow item alignment: <a href='http://trac.wxwidgets.org/ticket/10174'> " \
-    "http://trac.wxwidgets.org/ticket/10174</a>;</li>" \
-    "<li><i>AUIToolBar</i> <i>DrawButton()</i> improvement: <a href='http://trac.wxwidgets.org/ticket/10303'>" \
-    "http://trac.wxwidgets.org/ticket/10303</a>;</li>" \
-    "<li><i>AuiToolBar</i> automatically assign new id for tools: <a href='http://trac.wxwidgets.org/ticket/10173'>" \
-    "http://trac.wxwidgets.org/ticket/10173</a>;</li>" \
-    "<li><i>AuiToolBar</i> Allow right-click on any kind of button: <a href='http://trac.wxwidgets.org/ticket/10079'>" \
-    "http://trac.wxwidgets.org/ticket/10079</a>;</li>" \
-    "<li><i>AuiToolBar</i> idle update only when visible: <a href='http://trac.wxwidgets.org/ticket/10075'>" \
-    "http://trac.wxwidgets.org/ticket/10075</a>;</li>" \
+    "<li><i>AuiToolBar</i> allow item alignment: <a href='https://github.com/wxWidgets/wxWidgets/issues/10174'> " \
+    "https://github.com/wxWidgets/wxWidgets/issues/10174</a>;</li>" \
+    "<li><i>AUIToolBar</i> <i>DrawButton()</i> improvement: <a href='https://github.com/wxWidgets/wxWidgets/issues/10303'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/10303</a>;</li>" \
+    "<li><i>AuiToolBar</i> automatically assign new id for tools: <a href='https://github.com/wxWidgets/wxWidgets/issues/10173'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/10173</a>;</li>" \
+    "<li><i>AuiToolBar</i> Allow right-click on any kind of button: <a href='https://github.com/wxWidgets/wxWidgets/issues/10079'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/10079</a>;</li>" \
+    "<li><i>AuiToolBar</i> idle update only when visible: <a href='https://github.com/wxWidgets/wxWidgets/issues/10075'>" \
+    "https://github.com/wxWidgets/wxWidgets/issues/10075</a>;</li>" \
     "<li>Ability of creating <i>AuiToolBar</i> tools with [counter]clockwise rotation. This allows to propose a " \
     "variant of the minimizing functionality with a rotated button which keeps the caption of the pane as label;</li>" \
     "<li>Allow setting the alignment of all tools in a toolbar that is expanded.</li>" \

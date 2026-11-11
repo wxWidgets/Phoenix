@@ -771,7 +771,7 @@ class BalloonTip(object):
             del self.showtime
 
         self.destroytime = wx.Timer(self._widget)
-        self._widget.Bind(wx.EVT_TIMER, self.NotifyTimer, self.destroytime)
+        self._widget.Bind(wx.EVT_TIMER, self.DestroyTimer, self.destroytime)
         self.destroytime.Start(self._enddelaytime)
 
 
@@ -1076,6 +1076,17 @@ class BalloonTip(object):
 
         :param `event`: a :class:`wx.WindowDestroyEvent` event to be processed.
         """
+
+        event.Skip()
+        # This is also sent when one of the target's children is destroyed
+        if event.GetEventObject() is not self._widget:
+            return
+
+        # The timers belong to the target, so they must not fire once it's gone
+        for name in ("showtime", "destroytime", "taskbartime"):
+            timer = getattr(self, name, None)
+            if timer:
+                timer.Stop()
 
         if hasattr(self, "BalloonFrame"):
             if self.BalloonFrame:

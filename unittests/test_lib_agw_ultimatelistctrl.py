@@ -213,6 +213,35 @@ class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
         self.assertIsInstance(main.GetLineCheckboxRect(0), wx.Rect)
         main.ScrollList(0, 25)
 
+    @unittest.skipIf('wxMac' in wx.PlatformInfo, 'wxMac always uses white or black selected text')
+    def test_lib_agw_ultimatelistctrlSelectedTextColour(self):
+        ctrl = ULC.UltimateListCtrl(self.frame, agwStyle=ULC.ULC_REPORT)
+        ctrl.InsertColumn(0, 'col')
+        ctrl.InsertStringItem(0, 'item')
+        ctrl.SetForegroundColour(wx.BLACK)
+        main = ctrl._mainWin
+        highlight = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
+        normal = ctrl.GetForegroundColour()
+
+        class Renderer:
+            # Fills the selection with a colour close to one of the two text colours
+            def __init__(self, nearest):
+                self.fill = wx.Colour(*(int(c * 0.9 + 128 * 0.1) for c in nearest.Get(False)))
+
+            def DrawItemSelectionRect(self, win, dc, rect, flags):
+                dc.SetBrush(wx.Brush(self.fill))
+                dc.SetPen(wx.TRANSPARENT_PEN)
+                dc.DrawRectangle(rect)
+
+        for nearest, expected in ((highlight, normal), (normal, highlight)):
+            with self.subTest(nearest=nearest), \
+                 mock.patch('wx.RendererNative.Get', return_value=Renderer(nearest)):
+                main._selectedTextColours.clear()
+                dc = wx.MemoryDC(wx.Bitmap(10, 10))
+                main.GetLine(0).SetAttributes(dc, None, True)
+                self.assertEqual(dc.GetTextForeground(), expected)
+                del dc
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@
 #
 #    License: wxWidgets license
 #
-# http:#www.kirix.com/en/community/opensource/wxaui/about_wxaui.html
+# https://web.archive.org/web/20060421152837/http://www.kirix.com/en/community/opensource/wxaui/about_wxaui.html
 #
 # Current wxAUI Version Tracked: wxWidgets 2.9.4 SVN HEAD
 #

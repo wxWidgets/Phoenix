@@ -421,12 +421,50 @@ class PolyLine(PolyPoints):
         pen.SetCap(wx.CAP_BUTT)
         dc.SetPen(pen)
         if coord is None:
-            if len(self.scaled):  # bugfix for Mac OS X
+            if drawstyle == 'line' and len(self.scaled) > 1:
+                self._drawSegments(dc, int(width) + 1)
+            elif len(self.scaled):  # bugfix for Mac OS X
                 for c1, c2 in zip(self.scaled, self.scaled[1:]):
                     self._path(dc, c1, c2, drawstyle)
         else:
             coord = [(int(c[0]), int(c[1])) for c in coord]
             dc.DrawLines(coord)  # draw legend line
+
+    def _drawSegments(self, dc, margin):
+        """
+        Draw straight lines between consecutive points, leaving out the ones
+        that can't change what is drawn.
+
+        Consecutive points in the same pixel column are reduced to the first,
+        lowest, highest and last of them, which cover the same pixels, and
+        lines entirely outside the clipping box (plus `margin`) are skipped.
+
+        :param dc: The DC to draw on.
+        :type dc: :class:`wx.DC`
+        :param margin: How far outside the clipping box a line can be drawn.
+        :type margin: int
+        """
+        pts = self.scaled.astype(np.int32)
+        x, y = pts[:, 0], pts[:, 1]
+        starts = np.flatnonzero(np.r_[True, x[1:] != x[:-1]])
+        if len(starts) < len(pts):
+            ends = np.r_[starts[1:], len(pts)] - 1
+            runs = np.repeat(np.arange(len(starts)), ends - starts + 1)
+            # Sorted by run and then y, so each run's lowest y comes first
+            order = np.lexsort((y, runs))
+            keep = np.unique(np.r_[starts, order[starts], order[ends], ends])
+            pts = pts[keep]
+
+        lines = np.hstack((pts[:-1], pts[1:]))
+        ok, left, top, w, h = dc.GetClippingBox()
+        if ok and w > 0 and h > 0:
+            lo = np.array((left, top)) - margin
+            hi = np.array((left + w, top + h)) + margin
+            outside = (((lines[:, 0:2] < lo) & (lines[:, 2:4] < lo))
+                       | ((lines[:, 0:2] > hi) & (lines[:, 2:4] > hi)))
+            lines = lines[~outside.any(axis=1)]
+        if len(lines):
+            dc.DrawLineList(lines)
 
     def getSymExtent(self, printerScale):
         """

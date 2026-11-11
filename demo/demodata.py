@@ -168,7 +168,6 @@ _treeList = [
 
     # controls coming from other libraries
     ('More Windows/Controls', [
-        'ActiveX_FlashWindow',
         'ActiveX_IEHtmlWindow',
         'ActiveX_PDFWindow',
         'BitmapComboBox',
