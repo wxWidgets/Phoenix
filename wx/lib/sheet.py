@@ -41,10 +41,10 @@ class CTextCellEditor(wx.TextCtrl):
         evt.Skip()                                  # Continue event
 
 #---------------------------------------------------------------------------
-class CCellEditor(wx.grid.PyGridCellEditor):
+class CCellEditor(wx.grid.GridCellEditor):
     """ Custom cell editor """
     def __init__(self, grid):
-        wx.grid.PyGridCellEditor.__init__(self)
+        wx.grid.GridCellEditor.__init__(self)
         self._grid = grid                           # Save a reference to the grid
 
     def Create(self, parent, id, evtHandler):
@@ -71,7 +71,7 @@ class CCellEditor(wx.grid.PyGridCellEditor):
         """
         super(CCellEditor, self).Show(show, attr)
 
-    def PaintBackground(self, rect, attr):
+    def PaintBackground(self, dc, rect, attr):
         """ Draws the part of the cell not occupied by the edit control.  The
             base class version just fills it with background colour from the
             attribute.
@@ -80,7 +80,7 @@ class CCellEditor(wx.grid.PyGridCellEditor):
             to do something out of the ordinary.
         """
         # Call base class method.
-        super(CCellEditor, self).PaintBackground(rect, attr)
+        super(CCellEditor, self).PaintBackground(dc, rect, attr)
 
     def BeginEdit(self, row, col, grid):
         """ Fetch the value from the table and prepare edit control to begin editing.
@@ -94,19 +94,22 @@ class CCellEditor(wx.grid.PyGridCellEditor):
         # replaces the contents.
         self._tc.SetSelection(0, self._tc.GetLastPosition())
 
-    def EndEdit(self, row, col, grid):
-        """ Commit editing the current cell. Returns True if the value has changed.
-            If necessary, the control may be destroyed. Must Override.
+    def EndEdit(self, row, col, grid, oldVal):
+        """ End editing the current cell. Returns the new value if it has
+            changed, or None if not. Must Override.
         """
-        changed = False                             # Assume value not changed
-        val = self._tc.GetValue()                   # Get value in edit control
-        if val != self._startValue:                 # Compare
-            changed = True                          # If different then changed is True
-            grid.GetTable().SetValue(row, col, val) # Update the table
+        val = self._tc.GetValue()
+        if val != oldVal:
+            return val
+        return None
+
+    def ApplyEdit(self, row, col, grid):
+        """ Store the new value in the table. Only called after EndEdit()
+            returned a value. Must Override.
+        """
+        grid.GetTable().SetValue(row, col, self._tc.GetValue())
         self._startValue = ''                       # Clear the class' start value
         self._tc.SetValue('')                       # Clear contents of the edit control
-
-        return changed
 
     def Reset(self):
         """ Reset the value in the control back to its starting value. Must Override. """
@@ -162,7 +165,7 @@ class CCellEditor(wx.grid.PyGridCellEditor):
 
     def Clone(self):
         """ Create a new object which is the copy of this one. Must Override. """
-        return CCellEditor()
+        return CCellEditor(self._grid)
 
 #---------------------------------------------------------------------------
 class CSheet(wx.grid.Grid):
