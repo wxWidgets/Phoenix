@@ -104,31 +104,31 @@ Current wxAUI Version Tracked: wxWidgets 2.9.5 (SVN HEAD)
 The wxPython AUI version fixes the following bugs or implement the following
 missing features (the list is not exhaustive):
 
-- Visual Studio 2005 style docking: http://www.kirix.com/forums/viewtopic.php?f=16&t=596
-- Dock and Pane Resizing: http://www.kirix.com/forums/viewtopic.php?f=16&t=582
-- Patch concerning dock resizing: http://www.kirix.com/forums/viewtopic.php?f=16&t=610
-- Patch to effect wxAuiToolBar orientation switch: http://www.kirix.com/forums/viewtopic.php?f=16&t=641
-- AUI: Core dump when loading a perspective in wxGTK (MSW OK): http://www.kirix.com/forums/viewtopic.php?f=15&t=627
-- wxAuiNotebook reordered AdvanceSelection(): http://www.kirix.com/forums/viewtopic.php?f=16&t=617
-- Vertical Toolbar Docking Issue: http://www.kirix.com/forums/viewtopic.php?f=16&t=181
-- Patch to show the resize hint on mouse-down in aui: http://trac.wxwidgets.org/ticket/9612
-- The Left/Right and Top/Bottom Docks over draw each other: http://trac.wxwidgets.org/ticket/3516
-- MinSize() not honoured: http://trac.wxwidgets.org/ticket/3562
-- Layout problem with wxAUI: http://trac.wxwidgets.org/ticket/3597
-- Resizing children ignores current window size: http://trac.wxwidgets.org/ticket/3908
-- Resizing panes under Vista does not repaint background: http://trac.wxwidgets.org/ticket/4325
-- Resize sash resizes in response to click: http://trac.wxwidgets.org/ticket/4547
-- "Illegal" resizing of the AuiPane? (wxPython): http://trac.wxwidgets.org/ticket/4599
-- Floating wxAUIPane Resize Event doesn't update its position: http://trac.wxwidgets.org/ticket/9773
-- Don't hide floating panels when we maximize some other panel: http://trac.wxwidgets.org/ticket/4066
-- wxAUINotebook incorrect ALLOW_ACTIVE_PANE handling: http://trac.wxwidgets.org/ticket/4361
-- Page changing veto doesn't work, (patch supplied): http://trac.wxwidgets.org/ticket/4518
-- Show and DoShow are mixed around in wxAuiMDIChildFrame: http://trac.wxwidgets.org/ticket/4567
-- wxAuiManager & wxToolBar - ToolBar Of Size Zero: http://trac.wxwidgets.org/ticket/9724
-- wxAuiNotebook doesn't behave properly like a container as far as...: http://trac.wxwidgets.org/ticket/9911
-- Serious layout bugs in wxAUI: http://trac.wxwidgets.org/ticket/10620
-- wAuiDefaultTabArt::Clone() should just use copy constructor: http://trac.wxwidgets.org/ticket/11388
-- Drop down button for check tool on wxAuiToolbar: http://trac.wxwidgets.org/ticket/11139
+- Visual Studio 2005 style docking: https://web.archive.org/web/20180129092639/http://www.kirix.com/forums/viewtopic.php?f=16&t=596
+- Dock and Pane Resizing: https://web.archive.org/web/20180129092727/http://www.kirix.com/forums/viewtopic.php?f=16&t=582
+- Patch concerning dock resizing: https://web.archive.org/web/20180129093159/http://www.kirix.com/forums/viewtopic.php?f=16&t=610
+- Patch to effect wxAuiToolBar orientation switch: https://web.archive.org/web/20180129093326/http://www.kirix.com/forums/viewtopic.php?f=16&t=641
+- AUI: Core dump when loading a perspective in wxGTK (MSW OK): https://web.archive.org/web/20180129092722/http://www.kirix.com/forums/viewtopic.php?f=15&t=627
+- wxAuiNotebook reordered AdvanceSelection(): https://web.archive.org/web/20180129093211/http://www.kirix.com/forums/viewtopic.php?f=16&t=617
+- Vertical Toolbar Docking Issue: https://web.archive.org/web/20180129093135/http://www.kirix.com/forums/viewtopic.php?f=16&t=181
+- Patch to show the resize hint on mouse-down in aui: https://github.com/wxWidgets/wxWidgets/issues/9612
+- The Left/Right and Top/Bottom Docks over draw each other: https://github.com/wxWidgets/wxWidgets/issues/3516
+- MinSize() not honoured: https://github.com/wxWidgets/wxWidgets/issues/3562
+- Layout problem with wxAUI: https://github.com/wxWidgets/wxWidgets/issues/3597
+- Resizing children ignores current window size: https://github.com/wxWidgets/wxWidgets/issues/3908
+- Resizing panes under Vista does not repaint background: https://github.com/wxWidgets/wxWidgets/issues/4325
+- Resize sash resizes in response to click: https://github.com/wxWidgets/wxWidgets/issues/4547
+- "Illegal" resizing of the AuiPane? (wxPython): https://github.com/wxWidgets/wxWidgets/issues/4599
+- Floating wxAUIPane Resize Event doesn't update its position: https://github.com/wxWidgets/wxWidgets/issues/9773
+- Don't hide floating panels when we maximize some other panel: https://github.com/wxWidgets/wxWidgets/issues/4066
+- wxAUINotebook incorrect ALLOW_ACTIVE_PANE handling: https://github.com/wxWidgets/wxWidgets/issues/4361
+- Page changing veto doesn't work, (patch supplied): https://github.com/wxWidgets/wxWidgets/issues/4518
+- Show and DoShow are mixed around in wxAuiMDIChildFrame: https://github.com/wxWidgets/wxWidgets/issues/4567
+- wxAuiManager & wxToolBar - ToolBar Of Size Zero: https://github.com/wxWidgets/wxWidgets/issues/9724
+- wxAuiNotebook doesn't behave properly like a container as far as...: https://github.com/wxWidgets/wxWidgets/issues/9911
+- Serious layout bugs in wxAUI: https://github.com/wxWidgets/wxWidgets/issues/10620
+- wAuiDefaultTabArt::Clone() should just use copy constructor: https://github.com/wxWidgets/wxWidgets/issues/11388
+- Drop down button for check tool on wxAuiToolbar: https://github.com/wxWidgets/wxWidgets/issues/11139
 
 Plus the following features:
 
@@ -225,11 +225,11 @@ Plus the following features:
       of the :class:`~auibar.AuiToolBar` that draws a background gradient and this break the window design when
       putting it within a control that has margin between the borders and the toolbar (example: put
       :class:`~auibar.AuiToolBar` within a :class:`StaticBoxSizer` that has a plain background);
-  (b) `AuiToolBar` allow item alignment: http://trac.wxwidgets.org/ticket/10174;
-  (c) `AUIToolBar` `DrawButton()` improvement: http://trac.wxwidgets.org/ticket/10303;
-  (d) `AuiToolBar` automatically assign new id for tools: http://trac.wxwidgets.org/ticket/10173;
-  (e) `AuiToolBar` Allow right-click on any kind of button: http://trac.wxwidgets.org/ticket/10079;
-  (f) `AuiToolBar` idle update only when visible: http://trac.wxwidgets.org/ticket/10075;
+  (b) `AuiToolBar` allow item alignment: https://github.com/wxWidgets/wxWidgets/issues/10174;
+  (c) `AUIToolBar` `DrawButton()` improvement: https://github.com/wxWidgets/wxWidgets/issues/10303;
+  (d) `AuiToolBar` automatically assign new id for tools: https://github.com/wxWidgets/wxWidgets/issues/10173;
+  (e) `AuiToolBar` Allow right-click on any kind of button: https://github.com/wxWidgets/wxWidgets/issues/10079;
+  (f) `AuiToolBar` idle update only when visible: https://github.com/wxWidgets/wxWidgets/issues/10075;
   (g) Ability of creating `AuiToolBar` tools with [counter]clockwise rotation. This allows to propose a
       variant of the minimizing functionality with a rotated button which keeps the caption of the pane
       as label;

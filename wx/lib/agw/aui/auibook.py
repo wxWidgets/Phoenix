@@ -4746,7 +4746,7 @@ class AuiNotebook(wx.Panel):
         .. warning::
 
            Due to a bug on MSW, for disabled pages :func:`FindWindowAtPoint`
-           returns the wrong window. See http://trac.wxwidgets.org/ticket/2942
+           returns the wrong window. See https://github.com/wxWidgets/wxWidgets/issues/2942
 
         """
 
@@ -4798,7 +4798,7 @@ class AuiNotebook(wx.Panel):
         if isinstance(win1, AuiNotebook) or isinstance(win2, AuiNotebook):
             # This is a bug on MSW, for disabled pages wx.FindWindowAtPoint
             # returns the wrong window.
-            # See http://trac.wxwidgets.org/ticket/2942
+            # See https://github.com/wxWidgets/wxWidgets/issues/2942
             return
 
         tab_frame1, tab_frame2 = self.GetTabFrameFromWindow(win1), self.GetTabFrameFromWindow(win2)
