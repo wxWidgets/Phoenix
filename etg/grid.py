@@ -711,9 +711,7 @@ def run():
     c = module.find('wxGridUpdateLocker')
     c.addPrivateCopyCtor()
 
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
 
     #-----------------------------------------------------------------

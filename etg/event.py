@@ -650,21 +650,18 @@ def run():
     #---------------------------------------
     # wxEventBlocker
     c = module.find('wxEventBlocker')
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
     #---------------------------------------
     # wxPropagationDisabler
     c = module.find('wxPropagationDisabler')
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
     c.addPrivateCopyCtor()
 
     #---------------------------------------
     # wxPropagateOnce
     c = module.find('wxPropagateOnce')
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
     c.addPrivateCopyCtor()
 
     #-----------------------------------------------------------------

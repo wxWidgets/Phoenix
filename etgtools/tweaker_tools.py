@@ -771,6 +771,23 @@ def fixTextClipboardMethods(klass):
         klass.addItem(extractors.WigCode('\n'.join(missing)))
 
 
+def addContextManagerMethods(klass, exitBody='return False'):
+    """
+    Adds __enter__ and __exit__ methods to the class, so it can be used in a
+    with statement. __enter__ returns self and __exit__ runs exitBody, which
+    must not suppress exceptions. The type hints are only used in the stubs.
+
+    :param ClassDef klass: The class to modify.
+    :param str exitBody: The body of the __exit__ method.
+    """
+    klass.addPyMethod('__enter__', '(self)', 'return self',
+                      piArgsString='(self) -> Self')
+    klass.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', exitBody,
+                      piArgsString='(self, exc_type: Optional[type[BaseException]], '
+                                   'exc_val: Optional[BaseException], '
+                                   'exc_tb: Optional[TracebackType]) -> None')
+
+
 def fixDialogProperty(klass):
     """
     Fix classes derived from EditorDialogProperty to ensure that their

@@ -44,8 +44,7 @@ def run():
     c.mustHaveApp()
     c.addPrivateCopyCtor()
     # add context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'pass')
+    tools.addContextManagerMethods(c, exitBody='pass')
 
 
     module.find('wxQsort').ignore()
@@ -136,8 +135,7 @@ def run():
     c = module.find('wxBusyCursor')
     c.mustHaveApp()
     # add context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'pass')
+    tools.addContextManagerMethods(c, exitBody='pass')
 
     f = module.find('wxNewId')
     f.clearDeprecated()
