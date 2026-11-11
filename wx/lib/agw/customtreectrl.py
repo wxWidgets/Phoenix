@@ -8878,8 +8878,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
                         self.SetItemHilight(self._oldSelection, False)
                         self.RefreshLine(self._oldSelection)
 
-                if self._dragImage:
-                    del self._dragImage
+                # Stays None, not undefined, if creating the new image fails
+                self._dragImage = None
 
                 # Create the custom draw image from the icons and the text of the item
                 self._dragImage = DragImage(self, self._current)
@@ -8889,7 +8889,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         elif event.Dragging() and self._isDragging:
 
-            self._dragImage.Move(self.CalcScrolledPosition(*pt))
+            if self._dragImage:
+                self._dragImage.Move(self.CalcScrolledPosition(*pt))
 
             if self._dragFullScreen is True:
                 # Don't highlight target items if dragging full-screen.
