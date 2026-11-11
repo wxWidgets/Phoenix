@@ -10398,16 +10398,19 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
     def OnCompareItems(self, line1, line2):
         """
-        Returns whether 2 lines have the same index.
+        Compares two lines when sorting with :meth:`~UltimateListMainWindow.SortItems`.
 
         Override this function in the derived class to change the sort order of the items
         in the :class:`UltimateListCtrl`. The function should return a negative, zero or positive
         value if the first line is less than, equal to or greater than the second one.
 
-        :param `line1`: an instance of :class:`UltimateListItem`;
-        :param `line2`: another instance of :class:`UltimateListItem`.
+        :param `line1`: an instance of :class:`UltimateListLineData`;
+        :param `line2`: another instance of :class:`UltimateListLineData`.
 
-        :note: The base class version compares lines by their index.
+        :note: The base class version passes the data of the two lines' items (see
+         :meth:`UltimateListCtrl.SetItemData() <UltimateListCtrl.SetItemData>`) to the
+         function given to :meth:`~UltimateListMainWindow.SortItems`, or compares the
+         data directly if no function was given.
         """
 
         item = UltimateListItem()
@@ -10427,21 +10430,20 @@ class UltimateListMainWindow(wx.ScrolledWindow):
     def SortItems(self, func):
         """
         Call this function to sort the items in the :class:`UltimateListCtrl`. Sorting is done
-        using the specified function `func`. This function must have the
-        following prototype::
+        using the specified function `func`, which is called with the data of two items
+        (see :meth:`UltimateListCtrl.SetItemData() <UltimateListCtrl.SetItemData>`) each
+        time they must be compared::
 
-            def OnCompareItems(self, line1, line2):
+            def CompareItems(data1, data2):
+                return (data1 > data2) - (data1 < data2)
 
-                DoSomething(line1, line2)
-                # function code
+        It should return 0 if the items are equal, a negative value if the first item
+        is less than the second one and a positive value if the first one is greater
+        than the second one.
 
-
-        It is called each time when the two items must be compared and should return 0
-        if the items are equal, negative value if the first item is less than the second
-        one and positive value if the first one is greater than the second one.
-
-        :param `func`: the method to use to sort the items. The default is to use the
-         :meth:`~UltimateListMainWindow.OnCompareItems` method.
+        :param `func`: the function to use to compare the items' data, or ``None`` to
+         compare the data directly. To compare the items in another way, override
+         :meth:`~UltimateListMainWindow.OnCompareItems` instead.
         """
 
         self.HighlightAll(False)
@@ -12248,21 +12250,19 @@ class UltimateListCtrl(wx.Control):
     def SortItems(self, func=None):
         """
         Call this function to sort the items in the :class:`UltimateListCtrl`. Sorting is done
-        using the specified function `func`. This function must have the
-        following prototype::
+        using the specified function `func`, which is called with the data of two items
+        (see :meth:`~UltimateListCtrl.SetItemData`) each time they must be compared::
 
-            def OnCompareItems(self, line1, line2):
+            def CompareItems(data1, data2):
+                return (data1 > data2) - (data1 < data2)
 
-                DoSomething(line1, line2)
-                # function code
+        It should return 0 if the items are equal, a negative value if the first item
+        is less than the second one and a positive value if the first one is greater
+        than the second one.
 
-
-        It is called each time when the two items must be compared and should return 0
-        if the items are equal, negative value if the first item is less than the second
-        one and positive value if the first one is greater than the second one.
-
-        :param `func`: the method to use to sort the items. The default is to use the
-         :meth:`UltimateListMainWindow.OnCompareItems() <UltimateListMainWindow.OnCompareItems>` method.
+        :param `func`: the function to use to compare the items' data, or ``None`` to
+         compare the data directly. To compare the items in another way, override
+         :meth:`UltimateListMainWindow.OnCompareItems() <UltimateListMainWindow.OnCompareItems>`.
         """
 
         self._mainWin.SortItems(func)
