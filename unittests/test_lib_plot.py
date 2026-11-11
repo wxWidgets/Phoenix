@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
+from unittest import mock
 from unittests import wtc
 import wx
 import numpy as np
@@ -64,6 +65,17 @@ class lib_plot_PlotCanvas_Tests(wtc.WidgetTestCase):
         self.assertEqual(p._Buffer.ConvertToImage().GetData(), before)
         p._clearRubberBand()
         self.assertIsNone(p._rubberBand)
+
+    def test_lib_plot_refreshWithoutClientDC(self):
+        p = wxplot.PlotCanvas(self.frame, size=(400, 300))
+        graphics = wxplot.PlotGraphics([wxplot.PolyLine([(0, 0), (1, 1)])])
+        # As on macOS and GTK3 Wayland, where drawing on a wx.ClientDC does nothing
+        with mock.patch('wx.ClientDC.CanBeUsedForDrawing', return_value=False), \
+             mock.patch.object(p.canvas, 'Refresh') as refresh:
+            p.Draw(graphics)
+            self.assertEqual(refresh.call_count, 1)
+            p.Clear()
+            self.assertEqual(refresh.call_count, 2)
 
 
 class RecordingDC:
