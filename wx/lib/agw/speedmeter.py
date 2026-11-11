@@ -391,7 +391,8 @@ class BufferedWindow(wx.Window):
         self.Width = max(self.Width, 1)
         self.Height = max(self.Height, 1)
 
-        self._Buffer = wx.Bitmap(self.Width, self.Height)
+        self._Buffer = wx.Bitmap()
+        self._Buffer.CreateWithLogicalSize(self.Width, self.Height, self.GetDPIScaleFactor())
         if self._isWindowCreated:
             self.UpdateDrawing()
 

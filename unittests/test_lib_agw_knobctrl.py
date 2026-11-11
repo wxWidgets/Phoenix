@@ -34,6 +34,16 @@ class lib_agw_knobctrl_Tests(wtc.WidgetTestCase):
         knobctrl = KC.KnobCtrl(self.frame, size=(0, 0))
         knobctrl.OnSize(wx.SizeEvent(knobctrl.GetSize()))
 
+    def test_lib_agw_knobctrlHiDPIBuffer(self):
+        knobctrl = KC.KnobCtrl(self.frame, size=(200, 200))
+        box = knobctrl._region.GetBox()
+        # As on a 200% display
+        knobctrl.GetDPIScaleFactor = lambda: 2.0
+        knobctrl.OnSize(wx.SizeEvent(knobctrl.GetSize()))
+        self.assertEqual(knobctrl._Buffer.GetScaleFactor(), 2.0)
+        self.assertEqual(knobctrl._Buffer.GetLogicalSize(), knobctrl.GetClientSize())
+        self.assertEqual(knobctrl._region.GetBox(), box)
+
     def test_lib_agw_knobctrlConstantsExist(self):
         KC.KC_BUFFERED_DC
 

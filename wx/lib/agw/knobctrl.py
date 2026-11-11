@@ -310,7 +310,8 @@ class BufferedWindow(wx.Window):
         self.Width = max(self.Width, 1)
         self.Height = max(self.Height, 1)
 
-        self._Buffer = wx.Bitmap(self.Width, self.Height)
+        self._Buffer = wx.Bitmap()
+        self._Buffer.CreateWithLogicalSize(self.Width, self.Height, self.GetDPIScaleFactor())
 
         memory = wx.MemoryDC()
         memory.SelectObject(self._Buffer)
@@ -321,7 +322,10 @@ class BufferedWindow(wx.Window):
         minradius = min(0.9*self.Width/2.0, 0.9*self.Height/2.0)
         memory.DrawCircle(self.Width//2, self.Height//2, int(minradius))
         memory.SelectObject(wx.NullBitmap)
-        self._region = wx.Region(self._Buffer, self.GetBackgroundColour())
+        # A region made from the buffer is in its physical pixels
+        scale = self._Buffer.GetWidth() / self._Buffer.GetLogicalWidth()
+        x, y, w, h = wx.Region(self._Buffer, self.GetBackgroundColour()).GetBox()
+        self._region = wx.Region(round(x / scale), round(y / scale), round(w / scale), round(h / scale))
         self._minradius = minradius
 
         self.UpdateDrawing()
