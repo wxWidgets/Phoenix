@@ -4293,8 +4293,15 @@ class UltimateListLineData(object):
                         colText = wx.WHITE
                     else:
                         colText = wx.BLACK
-                else:
+                elif self._owner._usegradients or self._owner._vistaselection:
                     colText = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
+                else:
+                    # The same flags as the DrawItemSelectionRect() calls in Draw()
+                    # and DrawInReportMode()
+                    flags = wx.CONTROL_SELECTED
+                    if self._owner._hasFocus and self._owner.InReportView():
+                        flags |= wx.CONTROL_FOCUSED
+                    colText = self._owner.GetSelectedTextColour(flags)
             else:
                 if attr and attr.HasTextColour():
                     colText = attr.GetTextColour()
@@ -6040,6 +6047,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                       max((b >> 1) - 20, 0))
         backcolour = wx.Colour(backcolour[0], backcolour[1], backcolour[2])
         self._highlightUnfocusedBrush2 = wx.Brush(backcolour)
+        self._selectedTextColours = {}
 
         self.SetScrollbars(0, 0, 0, 0, 0, 0)
 
@@ -6416,6 +6424,36 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """ Returns the brush to use for the item highlighting. """
 
         return (self._hasFocus and [self._highlightBrush] or [self._highlightUnfocusedBrush])[0]
+
+
+    def GetSelectedTextColour(self, flags):
+        """
+        Returns the colour for the text of a selected item whose background is
+        drawn by :meth:`wx.RendererNative.DrawItemSelectionRect` with `flags`.
+
+        This is ``wx.SYS_COLOUR_HIGHLIGHTTEXT`` or the list's foreground colour,
+        whichever contrasts more with that background.
+
+        :param `flags`: the flags passed to :meth:`wx.RendererNative.DrawItemSelectionRect`.
+        """
+
+        highlight = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
+        normal = self.GetListCtrl().GetForegroundColour()
+        key = (flags, highlight.GetRGB(), normal.GetRGB(), self.GetBackgroundColour().GetRGB())
+        if key not in self._selectedTextColours:
+            # Themed MSW draws a pale selection that white highlight text is
+            # unreadable on, so look at what the renderer actually draws
+            bmp = wx.Bitmap(8, 8)
+            dc = wx.MemoryDC(bmp)
+            dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
+            dc.Clear()
+            wx.RendererNative.Get().DrawItemSelectionRect(self, dc, wx.Rect(0, 0, 8, 8), flags)
+            luminance = dc.GetPixel(4, 4).GetLuminance()
+            dc.SelectObject(wx.NullBitmap)
+            self._selectedTextColours[key] = (abs(normal.GetLuminance() - luminance)
+                                              > abs(highlight.GetLuminance() - luminance))
+
+        return normal if self._selectedTextColours[key] else highlight
 
 
     # get the line data for the given index
