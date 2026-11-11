@@ -1,6 +1,9 @@
 
 #ifdef __WXGTK__
 #include <gtk/gtk.h>
+#ifdef GDK_WINDOWING_BROADWAY
+#include <gdk/gdkbroadway.h>
+#endif
 #endif
 
 #ifdef __WXMAC__
@@ -306,10 +309,18 @@ int wxPyApp::MainLoop()
 bool wxPyApp::IsDisplayAvailable()
 {
 #ifdef __WXGTK__
-    GdkDisplay* display;
-    display = gdk_display_open(NULL);
+    if (gdk_display_get_default())
+        return true;
+    GdkDisplay* display = gdk_display_open(NULL);
     if (display == NULL)
         return false;
+#ifdef GDK_WINDOWING_BROADWAY
+    // GTK 3 never closes a Broadway display's connection, and every
+    // connection gets every input event, so all input would arrive twice.
+    // Keep it open instead; it's the default display, so GTK will use it.
+    if (GDK_IS_BROADWAY_DISPLAY(display))
+        return true;
+#endif
     gdk_display_close(display);
     return true;
 #endif
