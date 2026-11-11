@@ -63,7 +63,7 @@ Usage example::
             title.SetForegroundColour("blue")
 
             self.cp = cp = PCP.PyCollapsiblePane(panel, label="Some Data",
-                                                 style=wx.CP_DEFAULT_STYLE | wx.CP_NO_TLW_RESIZE)
+                                                 agwStyle=wx.CP_DEFAULT_STYLE | wx.CP_NO_TLW_RESIZE)
 
             self.MakePaneContent(cp.GetPane())
 
@@ -884,7 +884,7 @@ if __name__ == '__main__':
             title.SetFont(wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
             title.SetForegroundColour("blue")
 
-            self.cp = cp = PyCollapsiblePane(panel, label='Some Data', style=wx.CP_DEFAULT_STYLE|wx.CP_NO_TLW_RESIZE)
+            self.cp = cp = PyCollapsiblePane(panel, label='Some Data', agwStyle=wx.CP_DEFAULT_STYLE | wx.CP_NO_TLW_RESIZE)
 
             self.MakePaneContent(cp.GetPane())
 
