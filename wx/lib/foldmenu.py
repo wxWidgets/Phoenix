@@ -4,7 +4,6 @@
 #
 
 import wx
-from wx.lib.evtmgr import eventManager
 
 class FoldOutWindow(wx.PopupWindow):
     def __init__(self,parent,style=0):
@@ -25,7 +24,7 @@ class FoldOutWindow(wx.PopupWindow):
     def AddButton(self,bitmap,handler=None):
         id=wx.NewIdRef()
         btn=wx.BitmapButton(self,id,bitmap)
-        self.sizer.Add(btn, 1, wx.ALIGN_CENTER|wx.ALL|wx.EXPAND, 2)
+        self.sizer.Add(btn, 1, wx.ALL | wx.EXPAND, 2)
         self.Bind(wx.EVT_BUTTON, self.OnBtnClick, btn)
         self.sizer.Fit(self)
         self.Layout()
@@ -56,7 +55,7 @@ class FoldOutWindow(wx.PopupWindow):
 
     def evLeave(self,event):
         if self.inWindow:
-            if not self.rect.Inside(self.ClientToScreen(event.GetPosition())):
+            if not self.rect.Contains(self.ClientToScreen(event.GetPosition())):
                 self.Hide()
 
         event.Skip()
@@ -84,6 +83,6 @@ class FoldOutMenu(wx.BitmapButton):
         pos=self.GetPosition()
         sz=self.GetSize()
         pos.x=pos.x+sz.width
-        pos.y=pos.y+sz.height/2
+        pos.y = pos.y + sz.height // 2
         self.popwin.Position(pos,sz)
         self.popwin.Popup()
