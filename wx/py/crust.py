@@ -90,19 +90,27 @@ class Crust(wx.SplitterWindow):
 
     def _CheckShouldSplit(self):
         if self._shouldsplit:
-            self.SplitHorizontally(self.shell, self.notebook, -self.sashoffset)
-            self.lastsashpos = self.GetSashPosition()
+            self._SplitTools()
         else:
             self.lastsashpos = -1
         self.issplit = self.IsSplit()
+
+    def _SplitTools(self):
+        # An offset that doesn't fit, for example one saved with a taller
+        # window, would leave no room for the tools
+        height = self.GetSize().height
+        minimum = self.GetMinimumPaneSize()
+        if not minimum <= self.sashoffset <= height - minimum:
+            self.sashoffset = height // 2
+        self.SplitHorizontally(self.shell, self.notebook, -self.sashoffset)
+        self.lastsashpos = self.GetSashPosition()
 
     def ToggleTools(self):
         """Toggle the display of the filling and other tools"""
         if self.issplit:
             self.Unsplit()
         else:
-            self.SplitHorizontally(self.shell, self.notebook, -self.sashoffset)
-            self.lastsashpos = self.GetSashPosition()
+            self._SplitTools()
         self.issplit = self.IsSplit()
 
     def ToolsShown(self):
@@ -133,8 +141,10 @@ class Crust(wx.SplitterWindow):
         pos = config.ReadInt('Sash/CrustPos', 400)
         wx.CallAfter(self.SetSashPosition, pos)
         def _updateSashPosValue():
-            sz = self.GetSize()
-            self.sashoffset = sz.height - self.GetSashPosition()
+            # The sash position means nothing while the tools are hidden
+            if self.IsSplit():
+                sz = self.GetSize()
+                self.sashoffset = sz.height - self.GetSashPosition()
         wx.CallAfter(_updateSashPosValue)
         zoom = config.ReadInt('View/Zoom/Display', -99)
         if zoom != -99:

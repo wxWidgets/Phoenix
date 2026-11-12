@@ -1,6 +1,8 @@
 import unittest
 from unittest import mock
 
+import pytest
+
 import wx
 import wx.stc as stc
 import wx.lib.inspection
@@ -51,6 +53,31 @@ class InspectionInfoPanel_DarkModeTests(wtc.WidgetTestCase):
         panel.Layout()
         highlighter = wx.lib.inspection._InspectionHighlighter()
         highlighter.HighlightSizer(sizer)
+
+
+class InspectionFrame_FillingTests(wtc.WidgetTestCase):
+
+    @pytest.fixture(autouse=True)
+    def configFile(self, tmp_path):
+        self._configFile = str(tmp_path / 'wit.ini')
+
+    def test_lib_inspectionShowFilling(self):
+        config = wx.FileConfig(localFilename=self._configFile,
+                               style=wx.CONFIG_USE_LOCAL_FILE)
+        frame = wx.lib.inspection.InspectionFrame(parent=self.frame,
+                                                  size=(850, 700),
+                                                  config=config)
+        frame.Show()
+        for _ in range(3):
+            self.myYield()
+        frame.OnToggleFilling(None)
+        self.myYield()
+        crust = frame.crust
+        self.assertTrue(crust.ToolsShown())
+        self.assertGreaterEqual(crust.notebook.GetSize().height,
+                                crust.GetMinimumPaneSize())
+        frame.Destroy()
+        self.myYield()
 
 #---------------------------------------------------------------------------
 

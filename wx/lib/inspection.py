@@ -378,6 +378,15 @@ class InspectionFrame(wx.Frame):
 
 
     def OnToggleFilling(self, evt):
+        if not self.crust.ToolsShown():
+            # Make room for both the shell and the tools below it
+            needed = 3 * self.crust.GetMinimumPaneSize()
+            if self.crust.GetSize().height < needed:
+                pane = self.mgr.GetPane('crust')
+                pane.MinSize((-1, needed))
+                # Update() only lays out the panes later
+                self.mgr.DoUpdate()
+                pane.MinSize((-1, -1))
         self.crust.ToggleTools()
 
 
