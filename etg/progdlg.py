@@ -70,6 +70,32 @@ def run():
                 not item.isDtor):
             c.addItem(copy.deepcopy(item))
 
+    # On MSW, ~wxProgressDialog waits for the native task dialog's thread to
+    # end and then enables the windows the dialog disabled. Destroy() would
+    # only delete it later, inside the next modal dialog's event loop, and
+    # that dialog would then not be modal any more. This must be the virtual
+    # that fixWindowClass() declares, as SIP would call that one instead.
+    m = etgtools.MethodDef(
+        protection='public', type='bool', name='Destroy', argsString='()',
+        briefDoc="""\
+            Destroys the dialog. On Windows the dialog is deleted right away,
+            so that the windows it disabled are enabled again before the next
+            dialog is shown, rather than later like with other top-level
+            windows.""",
+        className=c.name)
+    m.setCppCode_sip("""\
+        Py_BEGIN_ALLOW_THREADS
+        #ifdef __WXMSW__
+            delete sipCpp;
+            sipRes = true;
+        #else
+            sipRes = sipSelfWasArg ? sipCpp->::wxProgressDialog::Destroy()
+                                   : sipCpp->Destroy();
+        #endif
+        Py_END_ALLOW_THREADS
+        """)
+    c.addItem(m)
+
     tools.fixWindowClass(c)
 
     # wx only sets skip when it is false on input, so it must start out false
