@@ -893,7 +893,8 @@ class ClassDef(BaseDef):
                 return sum(1 for arg in args.split(',') if arg.strip() and '=' not in arg)
             count = 0
             for p in m.items:
-                if not p.default and not p.ignored:
+                # Output parameters are returned, not passed, in Python
+                if not p.default and not p.ignored and not p.out:
                     count += 1
             return count
 
@@ -947,8 +948,17 @@ class ClassDef(BaseDef):
                             # that item has exactly zero args without a default value
                             if countNonDefaultArgs(m) != 0:
                                 continue
-                            prop.getter = m.name
                             ok = True
+                            # A getter with output parameters returns a tuple,
+                            # which the setter can't take, so prefer a getter
+                            # that returns the value directly
+                            if any(p.out for p in m.items):
+                                if not prop.getter:
+                                    prop.getter = m.name
+                                    prop.readOnly = True
+                                continue
+                            prop.getter = m.name
+                            prop.readOnly = False
                             break
                         elif prefix == 'Set':
                             prop.setter = m.name
@@ -970,6 +980,8 @@ class ClassDef(BaseDef):
             # properties must have at least a getter
             if not prop.getter:
                 continue
+            if getattr(prop, 'readOnly', False):
+                prop.setter = None
             starts_with_number = False
             try:
                 int(name[0])
@@ -1007,6 +1019,9 @@ class ClassDef(BaseDef):
             p = PropertyDef(name, getter, setter, **kw)
         else:
             p = PropertyDef(*args, **kw)
+        # Replace one with the same name, like an automatic property
+        self.items = [item for item in self.items
+                      if not (type(item) is PropertyDef and item.name == p.name)]
         self.items.append(p)
         return p
 

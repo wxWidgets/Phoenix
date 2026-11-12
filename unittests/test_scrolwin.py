@@ -25,6 +25,10 @@ class scrolwin_Tests(wtc.WidgetTestCase):
         # also test the Point overloads
         self.assertEqual(w.CalcScrolledPosition( (0,0) ),  (-3*rate,-3*rate)) # pixels
         self.assertEqual(w.CalcUnscrolledPosition( (0,0) ),(3*rate,3*rate))   # pixels
+        # properties for getters that return their values through output parameters
+        self.assertEqual(w.ViewStart, (3, 3))
+        self.assertEqual(w.ViewStartPixels, (3 * rate, 3 * rate))
+        self.assertEqual(w.ScrollPixelsPerUnit, (rate, rate))
 
         vs = w.GetVirtualSize()
         assert isinstance(vs, wx.Size)

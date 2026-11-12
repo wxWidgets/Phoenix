@@ -2,7 +2,7 @@
   "mypy": {
     "wx/adv.pyi": {
       "assignment": 2,
-      "misc": 5,
+      "misc": 4,
       "overload-cannot-match": 6
     },
     "wx/aui.pyi": {
