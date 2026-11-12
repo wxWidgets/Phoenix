@@ -38,11 +38,18 @@ programmer to declare or track control ids or parent containers::
 import warnings
 import  wx
 
-# The deprecation warning for wx.lib.pubsub is meant for application code, not
-# for this module's internal use of it.
-with warnings.catch_warnings():
-    warnings.simplefilter('ignore', wx.wxPyDeprecationWarning)
-    from wx.lib.pubsub import pub # publish / subscribe library
+try:
+    from pubsub.core import Publisher
+except ImportError:
+    # The deprecation warning for wx.lib.pubsub is meant for application code,
+    # not for this module's internal use of it.
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore', wx.wxPyDeprecationWarning)
+        from wx.lib.pubsub.core import Publisher
+
+# A publisher of our own, so that the application's use of the default one,
+# like pub.unsubAll(), doesn't affect the event manager's topics
+pub = Publisher()
 
 #---------------------------------------------------------------------------
 
