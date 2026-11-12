@@ -908,11 +908,12 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 value = 0
 
         sel_start, sel_to = self.GetSelection()
-        if self.IsLimited() and self._min is not None and value < self._min:
+        limited = self.IsLimited() and value is not None
+        if limited and self._min is not None and value < self._min:
 ##            dbg('Set to min value:', self._min)
             self._ChangeValue(self._toGUI(self._min))
 
-        elif self.IsLimited() and self._max is not None and value > self._max:
+        elif limited and self._max is not None and value > self._max:
 ##            dbg('Setting to max value:', self._max)
             self._ChangeValue(self._toGUI(self._max))
         else:
@@ -978,7 +979,8 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         is to ensure limits are imposed if limitOnFieldChange is enabled.
         """
 ##        dbg('NumCtrl::_OnFieldChange', indent=1)
-        if self._limitOnFieldChange and not (self._min <= self.GetValue() <= self._max):
+        value = self.GetValue()
+        if self._limitOnFieldChange and value is not None and not (self._min <= value <= self._max):
             self._disallowValue()
 ##            dbg('oob - field change disallowed',indent=0)
             return False
@@ -992,9 +994,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         On loss of focus, if limitOnFieldChange is set, ensure value conforms to limits.
         """
 ##        dbg('NumCtrl::_LostFocus', indent=1)
-        if self._limitOnFieldChange:
+        value = self.GetValue()
+        if self._limitOnFieldChange and value is not None:
 ##            dbg("limiting on loss of focus")
-            value = self.GetValue()
             if self._min is not None and value < self._min:
 ##                dbg('Set to min value:', self._min)
                 self._SetValue(self._toGUI(self._min))
@@ -1027,7 +1029,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##        dbg('cleansed value: "%s"' % numvalue)
         replacement = None
 
-        if numvalue == "":
+        if numvalue == "" or (self._allowNone and value == self._template):
             if self._allowNone:
 ##                dbg('calling base BaseMaskedTextCtrl._SetValue(self, "%s")' % value)
                 BaseMaskedTextCtrl._SetValue(self, value)
@@ -1071,12 +1073,14 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 # a limits check and see if the value is otherwise ok...
 
 ##                dbg('self._isNeg?', self._isNeg)
-                if int_str == '-' and self._oldvalue < 0 and not self._typedSign:
+                # An empty control's value is None, which can't be compared
+                oldvalue = 0 if self._oldvalue is None else self._oldvalue
+                if int_str == '-' and oldvalue < 0 and not self._typedSign:
 ##                    dbg('just a negative sign; old value < 0; setting replacement of 0')
                     replacement = 0
                     self._isNeg = False
                 elif int_str[:2] == '-0':
-                    if self._oldvalue < 0:
+                    if oldvalue < 0:
 ##                        dbg('-0; setting replacement of 0')
                         replacement = 0
                         self._isNeg = False
@@ -1090,7 +1094,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##                        dbg(indent=0)
                         return
 
-                elif int_str == '-' and (self._oldvalue >= 0 or self._typedSign):
+                elif int_str == '-' and (oldvalue >= 0 or self._typedSign):
                     if not self._limited or (self._min < -1 and self._max >= -1):
 ##                        dbg('just a negative sign; setting replacement of -1')
                         replacement = -1
@@ -1720,7 +1724,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         # So, to ensure consistency and to prevent spurious ValueErrors,
         # we make the following test, and react accordingly:
         #
-        if value.strip() == '':
+        # The empty template of a control with a fraction still has its
+        # fraction's default zeros, but no number has a blank integer part.
+        if value.strip() == '' or (self._fractionWidth and value == self._template):
             if not self.IsNoneAllowed():
 ##                dbg('empty value; not allowed,returning 0', indent = 0)
                 if self._fractionWidth:
