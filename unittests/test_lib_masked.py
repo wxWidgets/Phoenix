@@ -141,6 +141,18 @@ class MaskedNumCtrlTests(wtc.WidgetTestCase):
             t.SetValue(None)
             self.assertIsNone(t.GetValue())
 
+    def test_numctrlSetFocus(self):
+        # Like TAB traversal, SetFocus() selects the integer part
+        other = wx.TextCtrl(self.frame)
+        t = m.NumCtrl(self.frame, fractionWidth=2, integerWidth=4,
+                      allowNegative=False)
+        other.SetFocus()
+        self.myYield()
+        t.SetFocus()
+        self.myYield()
+        if t.HasFocus():
+            self.assertEqual(t.GetSelection(), (0, 4))
+
     def test_numctrlTypeOverSelection(self):
         for removeFirst in (False, True):
             t = m.NumCtrl(self.frame, value=123)
