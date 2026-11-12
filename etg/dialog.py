@@ -52,9 +52,7 @@ def run():
     # Release the GIL for potentially blocking or long-running functions
     c.find('ShowModal').releaseGIL()
 
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Destroy()')
+    tools.addContextManagerMethods(c, exitBody='self.Destroy()')
 
     c.find('GetContentWindow').isVirtual = True
 

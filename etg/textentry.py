@@ -56,6 +56,9 @@ def parseAndTweakModule():
 def run():
     module = parseAndTweakModule()
     tools.doCommonTweaks(module)
+    # A Selection property here would hide the one from wxItemContainer in
+    # classes that derive from both, like wx.adv.OwnerDrawnComboBox
+    module.find('wxTextEntry').find('Selection').ignore()
     tools.runGenerators(module)
 
 

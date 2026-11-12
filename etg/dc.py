@@ -292,9 +292,7 @@ def run():
     c.addPyCode('DC.GetCGContext = wx.deprecated(DC.GetCGContext, "Use GetHandle instead.")')
     c.addPyCode('DC.GetGdkDrawable = wx.deprecated(DC.GetGdkDrawable, "Use GetHandle instead.")')
 
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Destroy()')
+    tools.addContextManagerMethods(c, exitBody='self.Destroy()')
 
 
     # This file contains implementations of functions for quickly drawing
@@ -517,63 +515,49 @@ def run():
     c = module.find('wxDCClipper')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
 
     #-----------------------------------------------------------------
     c = module.find('wxDCBrushChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
 
     #-----------------------------------------------------------------
     c = module.find('wxDCPenChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
 
     #-----------------------------------------------------------------
     c = module.find('wxDCTextColourChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
 
     #-----------------------------------------------------------------
     c = module.find('wxDCFontChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
 
     #-----------------------------------------------------------------
     c = module.find('wxDCTextBgColourChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
 
     #-----------------------------------------------------------------
     c = module.find('wxDCTextBgModeChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
 
     #-----------------------------------------------------------------

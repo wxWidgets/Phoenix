@@ -42,6 +42,19 @@ class progdlg_Tests(wtc.WidgetTestCase):
 
         dlg.Destroy()
 
+    def test_progdlgDestroy(self):
+        dlg = wx.ProgressDialog("Progress dialog example",
+                                "An informative message",
+                                parent=self.frame,
+                                maximum=10,
+                                style=wx.PD_APP_MODAL | wx.PD_AUTO_HIDE)
+        dlg.Update(10)
+        self.assertTrue(dlg.Destroy())
+        if 'wxMSW' in wx.PlatformInfo:
+            # Deleted right away, so that the windows it disabled are enabled
+            # again before the next modal dialog disables them
+            self.assertTrue(wx.siplib.isdeleted(dlg))
+
     def test_progdlgSkip(self):
         dlg = wx.GenericProgressDialog("Progress dialog example",
                                        "An informative message",

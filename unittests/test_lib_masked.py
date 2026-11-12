@@ -87,6 +87,31 @@ class MaskedNumCtrlTests(wtc.WidgetTestCase):
         t.StringSelection
         t.Value
 
+    def test_numctrlAllowNoneWithFraction(self):
+        t = m.NumCtrl(self.frame, allowNone=True, fractionWidth=2)
+        t.SetValue(None)
+        self.assertIsNone(t.GetValue())
+        t.SetValue(1.5)
+        self.assertEqual(t.GetValue(), 1.5)
+        t.Clear()
+        self.assertIsNone(t.GetValue())
+        t.SetValue(0)
+        self.assertEqual(t.GetValue(), 0.0)
+
+        t = m.NumCtrl(self.frame, fractionWidth=2)
+        t.Clear()
+        self.assertEqual(t.GetValue(), 0.0)
+
+    def test_numctrlAllowNoneLimited(self):
+        for kw in ({}, {'fractionWidth': 1}):
+            t = m.NumCtrl(self.frame, value=None, allowNone=True, min=1, max=100,
+                          limited=True, **kw)
+            self.assertIsNone(t.GetValue())
+            t.SetValue(50)
+            self.assertEqual(t.GetValue(), 50)
+            t.SetValue(None)
+            self.assertIsNone(t.GetValue())
+
 
 #---------------------------------------------------------------------------
 

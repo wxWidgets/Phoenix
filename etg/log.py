@@ -121,8 +121,7 @@ def run():
     c.find('FormatTime').ignore()
 
     c = module.find('wxLogNull')
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
 
     #-----------------------------------------------------------------

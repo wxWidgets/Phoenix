@@ -90,6 +90,7 @@ import os
 import typing
 from datetime import datetime, date
 from enum import IntEnum, IntFlag, auto
+from types import TracebackType
 from typing import (Any, overload, TypeAlias, Generic, TypeVar, Protocol, ClassVar, final,
     Union, Optional, List, Tuple, Callable, Iterator, Sequence
 )
@@ -97,7 +98,7 @@ try:
     from typing import ParamSpec
 except ImportError:
     from typing_extensions import ParamSpec
-from typing_extensions import Buffer
+from typing_extensions import Buffer, Self
 
 _TwoInts: TypeAlias = Tuple[int, int]
 _ThreeInts: TypeAlias = Tuple[int, int, int]

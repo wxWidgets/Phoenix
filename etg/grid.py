@@ -711,9 +711,7 @@ def run():
     c = module.find('wxGridUpdateLocker')
     c.addPrivateCopyCtor()
 
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    tools.addContextManagerMethods(c)
 
 
     #-----------------------------------------------------------------
@@ -789,6 +787,9 @@ def run():
     #-----------------------------------------------------------------
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+    # GetNonDefaultAlignment's result depends on the values passed in to it,
+    # which Python code can't pass, so don't make it a property
+    module.find('wxGridCellAttr').find('NonDefaultAlignment').ignore()
     tools.runGenerators(module)
 
 
