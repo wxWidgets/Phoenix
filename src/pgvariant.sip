@@ -23,6 +23,30 @@ PyObject* wxPGVariant_out_helper(const wxVariant& value);
 
 
 %ModuleCode
+// Only a sequence of integers becomes a wxArrayInt, as other numbers would be
+// truncated
+static bool wxPGCheckIntSequence(PyObject* obj)
+{
+    if (!PySequence_Check(obj) || PyBytes_Check(obj) || PyUnicode_Check(obj))
+        return false;
+
+    Py_ssize_t len = PySequence_Length(obj);
+    if (len < 0) {
+        PyErr_Clear();
+        return false;
+    }
+    for (Py_ssize_t i = 0; i < len; i++) {
+        PyObject* item = PySequence_GetItem(obj, i);
+        bool isInt = item && PyIndex_Check(item);
+        Py_XDECREF(item);
+        if (!isInt) {
+            PyErr_Clear();
+            return false;
+        }
+    }
+    return true;
+}
+
 wxVariant wxPGVariant_in_helper(PyObject* obj)
 {
     wxVariant value;
@@ -58,7 +82,7 @@ wxVariant wxPGVariant_in_helper(PyObject* obj)
         value << *ptr;
     }
 
-    else if (wxPyCheckNumberSequence(obj)) {
+    else if (wxPGCheckIntSequence(obj)) {
         wxArrayInt* ptr;
         ptr = (wxArrayInt*)sipConvertToType(obj, sipType_wxArrayInt, NULL, 0, &state, &isErr);
         if (!isErr) {
