@@ -51,6 +51,18 @@ class lib_agw_thumbnailctrl_Tests(wtc.WidgetTestCase):
         st.SetThumbSize(400, 300, 4)
         self.assertEqual(st.GetThumbSize(), (400, 300, 4))
 
+    def test_lib_agw_thumbnailctrlBitmapCache(self):
+        thumb = ST.Thumb(os.path.dirname(__file__), 'toucan.png', imagehandler=ST.NativeImageHandler)
+        thumb.LoadImage()
+        bmp = thumb.GetBitmap(48, 48)
+        self.assertGreater(bmp.GetWidth(), 1)
+        self.assertIs(thumb.GetBitmap(48, 48), bmp)
+
+        # A new image or size makes a new bitmap
+        thumb.SetImage(wx.Image(20, 10))
+        self.assertEqual(thumb.GetBitmap(48, 48).GetSize(), (20, 10))
+        self.assertEqual(thumb.GetBitmap(10, 10).GetSize(), (10, 5))
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
