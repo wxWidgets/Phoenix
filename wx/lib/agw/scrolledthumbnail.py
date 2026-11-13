@@ -660,12 +660,17 @@ class Thumb(object):
         :param `height`: the associated bitmap height.
         """
 
+        # Scaling the whole image for every paint makes scrolling slow, so keep
+        # the bitmap until the image or the size changes. The loading thread
+        # can replace the image at any time.
+        image = self._image
         if self._bitmap:
-            if self._bitmap.GetWidth() == width and self._bitmap.GetHeight() == height:
-                return self._bitmap
+            cachedImage, cachedSize, bmp = self._bitmap
+            if cachedImage is image and cachedSize == (width, height):
+                return bmp
 
-        img = self.GetThumbnail(width, height)
-        bmp = img.ConvertToBitmap()
+        bmp = self.GetThumbnail(width, height).ConvertToBitmap()
+        self._bitmap = (image, (width, height), bmp)
 
         return bmp
 

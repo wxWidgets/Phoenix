@@ -113,6 +113,21 @@ class lib_agw_customtreectrl_Tests(wtc.WidgetTestCase):
         else:
             self.assertEqual(len(tree.GetChildren()), 0)
 
+    def test_lib_agw_customtreectrlItemWindowNoTabTraversal(self):
+        # wxMSW would pass the keys to IsDialogMessage() while the tree has
+        # the focus, which eats Alt+letter menu shortcuts
+        tree = CT.CustomTreeCtrl(self.frame, agwStyle=CT.TR_DEFAULT_STYLE|CT.TR_HAS_VARIABLE_ROW_HEIGHT)
+        root = tree.AddRoot('root item')
+        tree.AppendItem(root, 'c1', wnd=wx.TextCtrl(tree))
+        self.assertFalse(tree.HasFlag(wx.TAB_TRAVERSAL))
+
+        # Unless the application asks for it
+        tree = CT.CustomTreeCtrl(self.frame, style=wx.TAB_TRAVERSAL,
+                                 agwStyle=CT.TR_DEFAULT_STYLE|CT.TR_HAS_VARIABLE_ROW_HEIGHT)
+        root = tree.AddRoot('root item')
+        tree.AppendItem(root, 'c1', wnd=wx.TextCtrl(tree))
+        self.assertTrue(tree.HasFlag(wx.TAB_TRAVERSAL))
+
     def test_lib_agw_customtreectrlConstantsExist(self):
         CT.TR_NO_BUTTONS
         CT.TR_SINGLE

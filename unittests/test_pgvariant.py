@@ -70,6 +70,14 @@ class pgvariant_Tests(wtc.WidgetTestCase):
         d1 = (123,456)
         assert pg.testPGVariantTypeName(d1) == 'wxArrayInt'
 
+    @unittest.skipIf(not hasattr(pg, 'testPGVariantTypemap'), '')
+    def test_pgvariantFloatSequence(self):
+        # Not truncated by converting it to a wxArrayInt
+        for d1 in [(0.25, 0.75), [1, 2.5]]:
+            assert pg.testPGVariantTypeName(d1) == 'PyObject'
+            d2 = pg.testPGVariantTypemap(d1)
+            assert d2 == d1
+
 
 
     @unittest.skipIf(not hasattr(pg, 'testPGVariantTypemap'), '')

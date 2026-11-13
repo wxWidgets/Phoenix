@@ -2,7 +2,7 @@ import unittest
 import warnings
 from unittests import wtc
 import wx
-from wx.lib.mixins.listctrl import CheckListCtrlMixin
+from wx.lib.mixins.listctrl import CheckListCtrlMixin, TextEditMixin
 
 #---------------------------------------------------------------------------
 
@@ -16,6 +16,12 @@ class CheckListCtrl(wx.ListCtrl, CheckListCtrlMixin):
 
     def OnCheckItem(self, index, flag):
         self.checked.append((index, flag))
+
+
+class EditableListCtrl(wx.ListCtrl, TextEditMixin):
+    def __init__(self, parent):
+        wx.ListCtrl.__init__(self, parent, style=wx.LC_REPORT)
+        TextEditMixin.__init__(self)
 
 
 class lib_mixins_listctrl_Tests(wtc.WidgetTestCase):
@@ -45,6 +51,34 @@ class lib_mixins_listctrl_Tests(wtc.WidgetTestCase):
         lc.CheckItem(0)
         self.assertTrue(lc.overridden)
         self.assertTrue(lc.IsChecked(0))
+
+    def test_lib_mixins_listctrlTextEditFirstClickSelects(self):
+        lc = EditableListCtrl(self.frame)
+        lc.SetSize((300, 200))
+        lc.InsertColumn(0, 'name')
+        lc.InsertItem(0, 'only item')
+        self.myYield()
+        # Where the item rect is relative to depends on the platform
+        y = next(y for y in range(100) if lc.HitTest((5, y))[0] == 0)
+        evt = wx.MouseEvent(wx.wxEVT_LEFT_DOWN)
+        evt.SetPosition((5, y))
+
+        # Clicking an unselected row lets the list control select it
+        evt.Skip(False)
+        lc.OnLeftDown(evt)
+        self.myYield()
+        self.assertTrue(evt.GetSkipped())
+        self.assertFalse(lc.editor.IsShown())
+
+        # Clicking it again once it's selected starts editing
+        lc.Select(0)
+        self.myYield()
+        evt.Skip(False)
+        lc.OnLeftDown(evt)
+        self.myYield()
+        self.assertFalse(evt.GetSkipped())
+        self.assertTrue(lc.editor.IsShown())
+        lc.CloseEditor()
 
 #---------------------------------------------------------------------------
 

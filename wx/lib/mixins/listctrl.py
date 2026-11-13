@@ -534,7 +534,9 @@ class TextEditMixin:
         x,y = evt.GetPosition()
         row,flags = self.HitTest((x,y))
 
-        if row != self.curRow: # self.curRow keeps track of the current row
+        # self.curRow keeps track of the current row, but it starts out as 0
+        # before any row is selected, so check that the row is selected too
+        if row != self.curRow or not self.IsSelected(row):
             evt.Skip()
             return
 

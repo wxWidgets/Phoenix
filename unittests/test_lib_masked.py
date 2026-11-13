@@ -5,7 +5,36 @@ import wx.lib.masked as m
 
 #---------------------------------------------------------------------------
 
+def typeOverSelection(ctrl, selected, char, removeFirst):
+    """
+    Select the text selected and type char over it. With removeFirst, the
+    selected text is removed before EVT_CHAR, like the native control does in
+    wxGTK.
+    """
+    start = wx.TextEntry.GetValue(ctrl).index(selected)
+    end = start + len(selected)
+    ctrl._SetSelection(start, end)
+    down = wx.KeyEvent(wx.wxEVT_KEY_DOWN)
+    down.SetKeyCode(ord(char.upper()))
+    ctrl._OnKeyDown(down)
+    if removeFirst:
+        wx.TextEntry.Remove(ctrl, start, end)
+    evt = wx.KeyEvent(wx.wxEVT_CHAR)
+    evt.SetKeyCode(ord(char))
+    evt.SetUnicodeKey(ord(char))
+    ctrl._OnChar(evt)
+
+#---------------------------------------------------------------------------
+
 class MaskedComboBoxTests(wtc.WidgetTestCase):
+
+    def test_ComboBoxTypeOverSelection(self):
+        for removeFirst in (False, True):
+            c = m.ComboBox(self.frame, mask='###', choices=['123', '456'],
+                           value='123')
+            typeOverSelection(c, '12', '9', removeFirst)
+            self.myYield()
+            self.assertEqual(c.GetValue(), '9 3')
 
     def test_ComboBoxCtors(self):
         c = m.ComboBox(self.frame, value='value', choices="one two three four".split())
@@ -111,6 +140,36 @@ class MaskedNumCtrlTests(wtc.WidgetTestCase):
             self.assertEqual(t.GetValue(), 50)
             t.SetValue(None)
             self.assertIsNone(t.GetValue())
+
+    def test_numctrlLimitedWithGroupAndDecimalChars(self):
+        t = m.NumCtrl(self.frame, value=0.5, min=0.1, max=5.0, limited=True,
+                      groupChar='.', decimalChar=',', fractionWidth=2)
+        self.assertEqual(t.GetValue(), 0.5)
+        self.assertEqual(wx.TextCtrl.GetValue(t).strip(), '0,50')
+
+    def test_numctrlSetFocus(self):
+        # Like TAB traversal, SetFocus() selects the integer part
+        other = wx.TextCtrl(self.frame)
+        t = m.NumCtrl(self.frame, fractionWidth=2, integerWidth=4,
+                      allowNegative=False)
+        other.SetFocus()
+        self.myYield()
+        t.SetFocus()
+        self.myYield()
+        if t.HasFocus():
+            self.assertEqual(t.GetSelection(), (0, 4))
+
+    def test_numctrlTypeOverSelection(self):
+        for removeFirst in (False, True):
+            t = m.NumCtrl(self.frame, value=123)
+            typeOverSelection(t, '23', '5', removeFirst)
+            self.myYield()
+            self.assertEqual(t.GetValue(), 15)
+
+            t = m.NumCtrl(self.frame, value=1234.5, fractionWidth=2)
+            typeOverSelection(t, '23', '9', removeFirst)
+            self.myYield()
+            self.assertEqual(t.GetValue(), 194.5)
 
 
 #---------------------------------------------------------------------------

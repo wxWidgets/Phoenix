@@ -2356,10 +2356,14 @@ class TreeListMainWindow(CustomTreeCtrl):
         self._dragTimer = wx.Timer(self)
         self._findTimer = None
 
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
-        self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
+        # CustomTreeCtrl already binds EVT_PAINT and EVT_MOUSE_EVENTS to our
+        # OnPaint() and OnMouse(); binding them again ran OnMouse() twice for
+        # every event that it skips
         self.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
         self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda evt: None)
+        # CustomTreeCtrl handles the event itself, which would keep it from
+        # reaching the HyperTreeList, where the application binds it
+        self.Unbind(wx.EVT_TREE_ITEM_GETTOOLTIP, handler=self.OnGetToolTip)
 
         # Sets the focus to ourselves: this is useful if you have items
         # with associated widgets.

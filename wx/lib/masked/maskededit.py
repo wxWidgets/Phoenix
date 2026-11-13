@@ -1752,6 +1752,7 @@ class MaskedEditMixin:
         # doesn't modify the base control's internal state:
         self.modified = False
         self._previous_mask = None
+        self._keyDownState = None
 
         # Validate legitimate set of parameters:
         valid_parameters = list(MaskedEditMixin.valid_ctrl_params) + list(Field.valid_params)
@@ -2993,6 +2994,7 @@ class MaskedEditMixin:
             self._OnChar(event)
             return
         # else allow regular EVT_CHAR key processing
+        self._keyDownState = (self._GetValue(), self._GetSelection())
         event.Skip()
 
 
@@ -3005,6 +3007,25 @@ class MaskedEditMixin:
 
         # Get keypress value, adjusted by control options (e.g. convert to upper etc)
         key = event.GetKeyCode()
+
+        # wxGTK only sends EVT_CHAR for a key that replaces a selection after
+        # the native control has removed the selected text, so put it back.
+        # While a key is handled, a wxGTK combobox also sends EVT_CHAR for text
+        # inserted by ChangeValue(), which must be let through.
+        if self._keyDownState == 'restoring':
+            event.Skip()
+            return
+        keyDownState, self._keyDownState = self._keyDownState, None
+        if keyDownState and event.GetEventType() == wx.wxEVT_CHAR:
+            value, (sel_start, sel_to) = keyDownState
+            if sel_start != sel_to and self._GetValue() != value:
+                self._keyDownState = 'restoring'
+                try:
+                    wx.TextEntry.ChangeValue(self, value)
+                finally:
+                    self._keyDownState = None
+                self._SetSelection(sel_start, sel_to)
+
         orig_pos = self._GetInsertionPoint()
         orig_value = self._GetValue()
 ##        dbg('keycode = ', key)

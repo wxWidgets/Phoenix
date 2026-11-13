@@ -134,6 +134,40 @@ class lib_agw_speedmeter_Tests(wtc.WidgetTestCase):
         self.assertEqual(spW._Buffer.GetScaleFactor(), 2.0)
         self.assertEqual(spW._Buffer.GetLogicalSize(), spW.GetClientSize())
 
+    def test_lib_agw_speedmeterScaleNotFromZero(self):
+        # A scale from -5 to 35 looks the same as one from 0 to 40, for the
+        # same position of the value within it
+        def draw(offset, value, direction, agwStyle):
+            spW = SM.SpeedMeter(self.frame, agwStyle=agwStyle)
+            spW.SetClientSize((200, 200))
+            spW.SetAngleRange(-pi/2, pi/2)
+            spW.SetIntervals([offset + x for x in (0, 10, 20, 30, 40)])
+            spW.SetIntervalColours(['red', 'green', 'blue', 'yellow'])
+            spW.SetTicks([''] * 5)
+            spW.SetDirection(direction)
+            spW.SetSpeedValue(offset + value)
+            bmp = wx.Bitmap(200, 200)
+            dc = wx.MemoryDC(bmp)
+            spW.Draw(dc)
+            dc.SelectObject(wx.NullBitmap)
+            spW.Destroy()
+            return bytes(bmp.ConvertToImage().GetData())
+
+        for agwStyle in (SM.SM_DRAW_HAND | SM.SM_DRAW_SECTORS,
+                         SM.SM_DRAW_HAND | SM.SM_DRAW_PARTIAL_FILLER,
+                         SM.SM_DRAW_HAND | SM.SM_DRAW_SECTORS |
+                         SM.SM_DRAW_PARTIAL_FILLER):
+            for direction in ('Advance', 'Reverse'):
+                for value in (0, 15, 40):
+                    with self.subTest(agwStyle=agwStyle, direction=direction,
+                                      value=value):
+                        a = draw(-5, value, direction, agwStyle)
+                        b = draw(0, value, direction, agwStyle)
+                        # Allow for rounding differences
+                        differ = sum(a[i:i+3] != b[i:i+3]
+                                     for i in range(0, len(a), 3))
+                        self.assertLess(differ, 30)
+
 
     def test_lib_agw_peakmeterConstantsExist(self):
         SM.SM_BUFFERED_DC

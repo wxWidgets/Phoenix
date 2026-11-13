@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 import unittest
+import warnings
 from unittests import wtc
 import wx
 
@@ -36,6 +37,34 @@ class lib_evtmgr_Tests(wtc.WidgetTestCase):
             received.append(evt.GetEventObject())
 
         eventManager.Register(listener, wx.EVT_BUTTON, btn)
+        evt = wx.CommandEvent(wx.wxEVT_BUTTON, btn.GetId())
+        evt.SetEventObject(btn)
+        btn.GetEventHandler().ProcessEvent(evt)
+        eventManager.DeregisterListener(listener)
+        self.assertEqual(received, [btn])
+
+    def test_lib_evtmgrOwnPublisher(self):
+        # The application clearing the default publisher's subscriptions
+        # mustn't disconnect the event manager's listeners
+        publishers = []
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore', wx.wxPyDeprecationWarning)
+            from wx.lib.pubsub import pub
+        publishers.append(pub)
+        try:
+            from pubsub import pub
+            publishers.append(pub)
+        except ImportError:
+            pass
+
+        btn = wx.Button(self.frame)
+        received = []
+        def listener(evt):
+            received.append(evt.GetEventObject())
+
+        eventManager.Register(listener, wx.EVT_BUTTON, btn)
+        for pub in publishers:
+            pub.unsubAll()
         evt = wx.CommandEvent(wx.wxEVT_BUTTON, btn.GetId())
         evt.SetEventObject(btn)
         btn.GetEventHandler().ProcessEvent(evt)

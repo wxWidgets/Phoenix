@@ -889,7 +889,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 # ensure latest decimal char is in "numeric value" so it won't be removed
                 # when going to the GUI:
                 text = text.replace('.', self._decimalChar)
-            newtext = self._toGUI(text)
+            # The limits are applied below; a value set in the constructor
+            # isn't there yet, so the text can be the default 0
+            newtext = self._toGUI(text, apply_limits=False)
 ##            dbg('calling wx.TextCtrl.ChangeValue(self, %s)' % newtext)
             wx.TextCtrl.ChangeValue(self, newtext)
 

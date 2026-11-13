@@ -123,6 +123,19 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
         return "<BaseMaskedTextCtrl: %s>" % self.GetValue()
 
 
+    def SetFocus(self):
+        """
+        Sets the focus to the control and, like TAB traversal, puts the
+        insertion point in its first field, or selects that field.
+        """
+        hadFocus = self.HasFocus()
+        wx.TextCtrl.SetFocus(self)
+        if not hadFocus and self._mask:
+            # _OnFocus() adjusts a whole selection, which is what TAB gives
+            # and what wxGTK gives here too, but wxMSW keeps the old caret
+            self.SelectAll()
+
+
     def _GetSelection(self):
         """
         Allow mixin to get the text selection of this control.
