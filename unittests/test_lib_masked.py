@@ -141,6 +141,12 @@ class MaskedNumCtrlTests(wtc.WidgetTestCase):
             t.SetValue(None)
             self.assertIsNone(t.GetValue())
 
+    def test_numctrlLimitedWithGroupAndDecimalChars(self):
+        t = m.NumCtrl(self.frame, value=0.5, min=0.1, max=5.0, limited=True,
+                      groupChar='.', decimalChar=',', fractionWidth=2)
+        self.assertEqual(t.GetValue(), 0.5)
+        self.assertEqual(wx.TextCtrl.GetValue(t).strip(), '0,50')
+
     def test_numctrlSetFocus(self):
         # Like TAB traversal, SetFocus() selects the integer part
         other = wx.TextCtrl(self.frame)
