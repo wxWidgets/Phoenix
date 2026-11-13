@@ -18,6 +18,19 @@ class lib_agw_aui_tabart_Tests(wtc.WidgetTestCase):
         ta.VC71TabArt()
         ta.VC8TabArt()
 
+    def test_lib_agw_aui_tabartClone(self):
+        font = wx.Font(wx.FontInfo(13).Bold())
+        for cls in (ta.AuiDefaultTabArt, ta.AuiSimpleTabArt, ta.VC71TabArt,
+                    ta.FF2TabArt, ta.VC8TabArt, ta.ChromeTabArt):
+            art = cls()
+            art.SetNormalFont(font)
+            art.SetSelectedFont(font)
+            clone = art.Clone()
+            self.assertIs(type(clone), cls)
+            self.assertIsNot(clone, art)
+            self.assertEqual(clone.GetNormalFont(), font)
+            self.assertEqual(clone.GetSelectedFont(), font)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

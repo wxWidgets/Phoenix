@@ -1609,18 +1609,6 @@ class VC71TabArt(AuiDefaultTabArt):
         AuiDefaultTabArt.__init__(self)
 
 
-    def Clone(self):
-        """ Clones the art object. """
-
-        art = type(self)()
-        art.SetNormalFont(self.GetNormalFont())
-        art.SetSelectedFont(self.GetSelectedFont())
-        art.SetMeasuringFont(self.GetMeasuringFont())
-
-        art = CopyAttributes(art, self)
-        return art
-
-
     def DrawTab(self, dc, wnd, page, in_rect, close_button_state, paint_control=False):
         """
         Draws a single tab.
@@ -1827,18 +1815,6 @@ class FF2TabArt(AuiDefaultTabArt):
         """ Default class constructor. """
 
         AuiDefaultTabArt.__init__(self)
-
-
-    def Clone(self):
-        """ Clones the art object. """
-
-        art = type(self)()
-        art.SetNormalFont(self.GetNormalFont())
-        art.SetSelectedFont(self.GetSelectedFont())
-        art.SetMeasuringFont(self.GetMeasuringFont())
-
-        art = CopyAttributes(art, self)
-        return art
 
 
     def GetTabSize(self, dc, wnd, caption, bitmap, active, close_button_state, control):
@@ -2122,18 +2098,6 @@ class VC8TabArt(AuiDefaultTabArt):
         """ Default class constructor. """
 
         AuiDefaultTabArt.__init__(self)
-
-
-    def Clone(self):
-        """ Clones the art object. """
-
-        art = type(self)()
-        art.SetNormalFont(self.GetNormalFont())
-        art.SetSelectedFont(self.GetSelectedFont())
-        art.SetMeasuringFont(self.GetMeasuringFont())
-
-        art = CopyAttributes(art, self)
-        return art
 
 
     def SetSizingInfo(self, tab_ctrl_size, tab_count, minMaxTabWidth):
@@ -2522,18 +2486,6 @@ class ChromeTabArt(AuiDefaultTabArt):
         self._leftInactiveBmp = bmps[3]
         self._centerInactiveBmp = bmps[4]
         self._rightInactiveBmp = bmps[5]
-
-
-    def Clone(self):
-        """ Clones the art object. """
-
-        art = type(self)()
-        art.SetNormalFont(self.GetNormalFont())
-        art.SetSelectedFont(self.GetSelectedFont())
-        art.SetMeasuringFont(self.GetMeasuringFont())
-
-        art = CopyAttributes(art, self)
-        return art
 
 
     def SetSizingInfo(self, tab_ctrl_size, tab_count, minMaxTabWidth):
