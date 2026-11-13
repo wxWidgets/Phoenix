@@ -3216,6 +3216,8 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         # Set the separator pen default colour
         self._separatorPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
 
+        self._tabTraversal = style & wx.TAB_TRAVERSAL
+
         # Create our container... at last!
         wx.ScrolledWindow.__init__(self, parent, id, pos, size, style | wx.HSCROLL | wx.VSCROLL, name)
 
@@ -9600,6 +9602,22 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         self.Refresh()
 
         return True
+
+
+    def AddChild(self, child):
+        """
+        Adds a child window, like an item window, to the tree. Called by
+        wxWidgets when a child window is created.
+
+        :param `child`: the child window, an instance of :class:`wx.Window`.
+        """
+
+        wx.ScrolledWindow.AddChild(self, child)
+        # A child that can take the focus makes wxWidgets add wx.TAB_TRAVERSAL,
+        # and then wxMSW passes the keys to IsDialogMessage() while the tree
+        # has the focus, which eats Alt+letter menu shortcuts
+        if not self._tabTraversal and self.HasFlag(wx.TAB_TRAVERSAL):
+            self.ToggleWindowStyle(wx.TAB_TRAVERSAL)
 
 
     def OnGetToolTip(self, event):
