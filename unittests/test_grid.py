@@ -205,6 +205,28 @@ class grid_Tests(wtc.WidgetTestCase):
             def SetValue(self, row, col, value): pass
         t = MyTable()
 
+    def test_gridTableNotOwnedOutlivesWrapper(self):
+        class MyTable(wx.grid.GridTableBase):
+            def GetNumberRows(self): return 1
+            def GetNumberCols(self): return 1
+            def GetValue(self, row, col): return ""
+            def SetValue(self, row, col, value): pass
+
+        # The grid is destroyed later than the dialog's wrapper, which holds
+        # the only reference to the table
+        dlg = wx.Dialog(self.frame)
+        dlg.grid = wx.grid.Grid(dlg)
+        dlg.table = MyTable()
+        dlg.grid.SetTable(dlg.table)
+        tableRef = weakref.ref(dlg.table)
+        dlg.Destroy()
+        del dlg
+        gc.collect()
+        self.assertIsNotNone(tableRef())
+        self.myYield()
+        gc.collect()
+        self.assertIsNone(tableRef())
+
 
     def test_grid29(self):
         t = wx.grid.GridStringTable()

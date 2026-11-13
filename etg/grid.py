@@ -652,8 +652,21 @@ def run():
         body="""\
             val = self._SetTable(table, takeOwnership, selmode)
             if takeOwnership:
-                import wx.siplib
-                wx.siplib.transferto(table, self)
+                import wx.siplib as siplib
+                siplib.transferto(table, self)
+            # The grid uses a table that it doesn't own until it's destroyed,
+            # which can be after its Python wrapper and the application's last
+            # reference to the table are gone. A handler bound to the grid
+            # keeps the table alive until then.
+            keeper = getattr(self, '_tableKeeper', None)
+            if keeper is not None:
+                self.Unbind(wx.EVT_WINDOW_DESTROY, self, handler=keeper)
+                self._tableKeeper = None
+            if val and not takeOwnership and table is not None:
+                def keeper(evt, table=table):
+                    evt.Skip()
+                self.Bind(wx.EVT_WINDOW_DESTROY, keeper, self)
+                self._tableKeeper = keeper
             return val
         """)
 
