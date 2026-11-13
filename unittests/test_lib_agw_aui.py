@@ -122,6 +122,34 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         tb.SetCustomOverflowItems(prepend_items, append_items)
         tb.Realize()
 
+    def test_lib_agw_aui_ToolbarLongHelp(self):
+        frame = wx.Frame(self.frame)
+        statusbar = frame.CreateStatusBar()
+        statusbar.SetStatusText('idle')
+        mgr = aui.AuiManager(frame)
+        tb = aui.AuiToolBar(frame)
+        bmp = wx.ArtProvider.GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(16, 16))
+        tb.AddTool(101, "Test", bmp, wx.NullBitmap, aui.ITEM_NORMAL, "Tooltip", "Long help")
+        tb.Realize()
+        mgr.AddPane(tb, aui.AuiPaneInfo().Name("tb").ToolbarPane().Top())
+        mgr.Update()
+        frame.Show()
+        self.myYield()
+
+        for floating in (False, True):
+            with self.subTest(floating=floating):
+                if floating:
+                    mgr.GetPane("tb").Float()
+                    mgr.Update()
+                    self.myYield()
+                tb.SetHoverItem(tb.FindTool(101))
+                self.assertEqual(statusbar.GetStatusText(), "Long help")
+                tb.SetHoverItem(None)
+                self.assertEqual(statusbar.GetStatusText(), "idle")
+
+        mgr.UnInit()
+        frame.Destroy()
+
 
     def test_lib_agw_auiEvents(self):
         aui.EVT_AUI_PANE_BUTTON

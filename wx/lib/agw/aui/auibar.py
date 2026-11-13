@@ -1586,6 +1586,7 @@ class AuiToolBar(wx.Control):
         self._custom_overflow_append = []
 
         self._items = []
+        self._helpItem = None
 
         self.SetMargins(5, 5, 2, 2)
         self.SetFont(wx.NORMAL_FONT)
@@ -2562,6 +2563,10 @@ class AuiToolBar(wx.Control):
         :param `pitem`: an instance of :class:`AuiToolBarItem`.
         """
 
+        if pitem is not self._helpItem:
+            self._helpItem = pitem
+            self.GiveHelp(pitem)
+
         former_hover = None
 
         for item in self._items:
@@ -2577,6 +2582,26 @@ class AuiToolBar(wx.Control):
         if former_hover != pitem:
             self.Refresh(False)
             self.Update()
+
+
+    def GiveHelp(self, pitem):
+        """
+        Shows the long help string of a toolbar item in the status bar of the
+        frame, or restores the status bar text when `pitem` is ``None``.
+
+        :param `pitem`: an instance of :class:`AuiToolBarItem`, or ``None``.
+        """
+
+        frame = wx.GetTopLevelParent(self)
+        # A floating toolbar's frame has no status bar, so use the frame that
+        # the toolbar belongs to
+        if hasattr(frame, "GetOwnerManager"):
+            managed = frame.GetOwnerManager().GetManagedWindow()
+            if managed:
+                frame = wx.GetTopLevelParent(managed)
+
+        if isinstance(frame, wx.Frame):
+            frame.DoGiveHelp(pitem.long_help if pitem else "", pitem is not None)
 
 
     def SetPressedItem(self, pitem):
