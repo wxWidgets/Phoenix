@@ -144,6 +144,28 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
 
         self.assertIn('root', chopped)
 
+    def test_lib_agw_hypertreelistItemToolTip(self):
+        tree = HTL.HyperTreeList(self.frame, size=(300, 200),
+                                 agwStyle=wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT)
+        tree.AddColumn('Main')
+        root = tree.AddRoot('root')
+        item = tree.AppendItem(root, 'item')
+        calls = []
+        def onGetToolTip(evt):
+            calls.append(evt.GetItem())
+            evt.SetToolTip('tip for ' + tree.GetItemText(evt.GetItem()))
+        tree.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, onGetToolTip)
+        self.myYield()
+
+        main = tree.GetMainWindow()
+        rect = main.GetBoundingRect(item)
+        evt = wx.MouseEvent(wx.wxEVT_MOTION)
+        evt.SetPosition(rect.GetPosition() + (5, rect.height // 2))
+        evt.SetEventObject(main)
+        main.GetEventHandler().ProcessEvent(evt)
+        self.assertEqual(calls, [item])
+        self.assertEqual(main.GetToolTipText(), 'tip for item')
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
