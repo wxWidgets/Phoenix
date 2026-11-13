@@ -638,7 +638,8 @@ class SpeedMeter(BufferedWindow):
             if self._agwStyle & SM_DRAW_SECTORS or self._agwStyle & SM_DRAW_PARTIAL_SECTORS:
                 colours.reverse()
 
-            currentvalue = end - currentvalue
+            # Mirror the value within the scale
+            currentvalue = start + end - currentvalue
 
         # This Because DrawArc Does Not Draw Last Point
         offset = 0.1*self.scale/180.0
@@ -717,7 +718,7 @@ class SpeedMeter(BufferedWindow):
             if self._agwStyle & SM_DRAW_SECTORS:
                 if self._agwStyle & SM_DRAW_PARTIAL_FILLER:
                     if direction == "Advance":
-                        if current > currentvalue:
+                        if current > currentvalue - start:
                             x, y = self.CircleCoords(radius, angle, centerX, centerY)
                         else:
                             x, y = self.CircleCoords(sectorradius, angle, centerX, centerY)
