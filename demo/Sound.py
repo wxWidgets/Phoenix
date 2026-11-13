@@ -22,33 +22,28 @@ class TestPanel(wx.Panel):
 
 
     def OnButton1(self, evt):
-        try:
-            sound = wx.adv.Sound(opj('data/anykey.wav'))
-            self.log.write("before Play...\n")
-            sound.Play(wx.adv.SOUND_SYNC)
-            self.log.write("...after Play\n")
-        except NotImplementedError as v:
-            wx.MessageBox(str(v), "Exception Message")
+        sound = wx.adv.Sound(opj('data/anykey.wav'))
+        self.log.write("before Play...\n")
+        sound.Play(wx.adv.SOUND_SYNC)
+        self.log.write("...after Play\n")
 
 
     def OnButton2(self, evt):
-        try:
-            if True:
-                sound = wx.adv.Sound(opj('data/plan.wav'))
-            else:
-                # sounds can also be loaded from a buffer object
-                with open(opj('data/plan.wav'), 'rb') as fid:
-                    data = fid.read()
-                sound = wx.adv.Sound()
-                sound.CreateFromData(data)
+        if True:
+            sound = wx.adv.Sound(opj('data/plan.wav'))
+        else:
+            # sounds can also be loaded from a buffer object
+            with open(opj('data/plan.wav'), 'rb') as fid:
+                data = fid.read()
+            sound = wx.adv.Sound()
+            sound.CreateFromData(data)
 
-            self.log.write("before Play...\n")
-            sound.Play(wx.adv.SOUND_ASYNC)
-            self.sound = sound  # save a reference (This shouldn't be needed, but there seems to be a bug...)
-            # wx.YieldIfNeeded()
-            self.log.write("...after Play\n")
-        except NotImplementedError as v:
-            wx.MessageBox(str(v), "Exception Message")
+        self.log.write("before Play...\n")
+        sound.Play(wx.adv.SOUND_ASYNC)
+        # On Windows, a sound loaded from a buffer can't be deleted while
+        # it's playing, so keep a reference to it
+        self.sound = sound
+        self.log.write("...after Play\n")
 
 
     def OnSelectSound(self, evt):
@@ -57,15 +52,9 @@ class TestPanel(wx.Panel):
                             wildcard="WAV files (*.wav)|*.wav",
                             style=wx.FD_OPEN)
         if dlg.ShowModal() == wx.ID_OK:
-            try:
-                #sound = wx.adv.Sound(dlg.GetPath(), wx.SOUND_SYNC)
-                #sound.Play()
-
-                # another way to do it.
-                wx.adv.Sound.PlaySound(dlg.GetPath(), wx.adv.SOUND_SYNC)
-
-            except NotImplementedError as v:
-                wx.MessageBox(str(v), "Exception Message")
+            # A shortcut for creating a wx.adv.Sound and playing it
+            ok = wx.adv.Sound.PlaySound(dlg.GetPath(), wx.adv.SOUND_SYNC)
+            self.log.write("PlaySound returned %s\n" % ok)
         dlg.Destroy()
 
 
