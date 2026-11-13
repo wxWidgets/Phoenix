@@ -150,6 +150,32 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         mgr.UnInit()
         frame.Destroy()
 
+    def test_lib_agw_aui_FloatingToolbarSize(self):
+        frame = wx.Frame(self.frame, size=(600, 400))
+        mgr = aui.AuiManager(frame)
+        tb = aui.AuiToolBar(frame)
+        bmp = wx.ArtProvider.GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(16, 16))
+        for i in range(4):
+            tb.AddSimpleTool(-1, "Test", bmp)
+        tb.Realize()
+        mgr.AddPane(tb, aui.AuiPaneInfo().Name("tb").ToolbarPane().Top())
+        mgr.Update()
+        frame.Show()
+        self.myYield()
+
+        mgr.GetPane("tb").Float()
+        mgr.Update()
+        for _ in range(5):
+            self.myYield()
+        floating = tb.GetTopLevelParent()
+        self.assertIsNot(floating, frame)
+        # The floating frame fits the toolbar
+        self.assertLess(floating.GetClientSize().height,
+                        2 * tb.GetBestSize().height + 30)
+
+        mgr.UnInit()
+        frame.Destroy()
+
 
     def test_lib_agw_auiEvents(self):
         aui.EVT_AUI_PANE_BUTTON

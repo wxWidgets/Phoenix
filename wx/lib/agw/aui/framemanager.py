@@ -2910,7 +2910,9 @@ class AuiFloatingFrame(wx.MiniFrame):
 
             pane.floating_size = size
 
-            self.SetClientSize(size)
+            # wxGTK forgets the client size of a mini frame without
+            # wx.RESIZE_BORDER, like a toolbar's, when it's shown
+            self.SetSize(self.ClientToWindowSize(size))
 
         self._owner_mgr._panes[indx] = pane
 
