@@ -18,6 +18,25 @@
 
 #ifdef ISOLATION_AWARE_ENABLED
 
+// Is comctl32.dll already redirected to version 6 by the active context or
+// the process's own manifest, as for python.exe?
+static bool wxPyHaveCommonControls6()
+{
+    // ACTIVATION_CONTEXT_SECTION_KEYED_DATA_FLAG_FOUND_IN_SYSTEM_DEFAULT, not
+    // in the SDK headers. The system default context redirects comctl32.dll
+    // to version 5.82, so a match found only there doesn't count.
+    const ULONG foundInSystemDefault = 0x00000002;
+
+    ACTCTX_SECTION_KEYED_DATA data;
+    wxZeroMemory(data);
+    data.cbSize = sizeof(data);
+    if (!FindActCtxSectionString(FIND_ACTCTX_SECTION_KEY_RETURN_FLAGS, NULL,
+                                 ACTIVATION_CONTEXT_SECTION_DLL_REDIRECTION,
+                                 wxT("comctl32.dll"), &data))
+        return false;
+    return !(data.ulFlags & foundInSystemDefault);
+}
+
 static ULONG_PTR wxPySetActivationContext()
 {
 
@@ -26,6 +45,11 @@ static ULONG_PTR wxPySetActivationContext()
     info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     GetVersionEx(&info);
     if (info.dwMajorVersion < 5)
+        return 0;
+
+    // Our context is never deactivated, so it would stay on top of a host
+    // application's own one and make the host's DeactivateActCtx fail
+    if (wxPyHaveCommonControls6())
         return 0;
 
     ULONG_PTR cookie = 0;

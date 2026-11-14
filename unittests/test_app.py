@@ -1,3 +1,6 @@
+import os
+import subprocess
+import sys
 import unittest
 import wx
 ##import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
@@ -66,6 +69,33 @@ class App(unittest.TestCase):
         app = MyApp()
         app.MainLoop()
         self.assertTrue(app.callAfter_called)
+
+    @unittest.skipIf(sys.platform != 'win32', 'activation contexts are Windows-only')
+    def test_importInHostActivationContext(self):
+        # Like an MFC host calling into Python: it activates a context around
+        # the call and deactivates it afterwards, which fails if importing wx
+        # left its own context on top
+        code = """if 1:
+            import ctypes
+            from ctypes import wintypes
+            k32 = ctypes.WinDLL('kernel32', use_last_error=True)
+            k32.GetCurrentActCtx.argtypes = [ctypes.POINTER(wintypes.HANDLE)]
+            k32.ActivateActCtx.argtypes = [wintypes.HANDLE, ctypes.POINTER(ctypes.c_size_t)]
+            k32.DeactivateActCtx.argtypes = [wintypes.DWORD, ctypes.c_size_t]
+            ctx = wintypes.HANDLE()
+            k32.GetCurrentActCtx(ctypes.byref(ctx))
+            cookie = ctypes.c_size_t()
+            assert k32.ActivateActCtx(ctx, ctypes.byref(cookie))
+            import wx
+            assert k32.DeactivateActCtx(0, cookie.value)
+            """
+        env = dict(os.environ)
+        env['PYTHONPATH'] = os.pathsep.join(
+            [os.path.dirname(os.path.dirname(wx.__file__))] +
+            ([env['PYTHONPATH']] if env.get('PYTHONPATH') else []))
+        result = subprocess.run([sys.executable, '-c', code], env=env,
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
 
 #---------------------------------------------------------------------------
 
