@@ -58,7 +58,7 @@ class PseudoFile:
         pass
 
     def isatty(self):
-        pass
+        return False
 
 
 class PseudoFileIn(PseudoFile):
@@ -72,7 +72,7 @@ class PseudoFileIn(PseudoFile):
             self.readlines = readlines
 
     def isatty(self):
-        return 1
+        return False
 
 
 class PseudoFileOut(PseudoFile):
@@ -84,7 +84,7 @@ class PseudoFileOut(PseudoFile):
             raise ValueError('write must be callable')
 
     def isatty(self):
-        return 1
+        return False
 
 
 class PseudoFileErr(PseudoFile):
@@ -96,4 +96,4 @@ class PseudoFileErr(PseudoFile):
             raise ValueError('write must be callable')
 
     def isatty(self):
-        return 1
+        return False
