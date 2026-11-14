@@ -332,6 +332,21 @@ class dataview_Tests(wtc.WidgetTestCase):
 
 
 
+    def test_dataviewCtrlSelectionsList(self):
+        dlc = dv.DataViewListCtrl(self.frame, style=dv.DV_MULTIPLE)
+        dlc.AppendTextColumn('one')
+        for n in range(5):
+            dlc.AppendItem([str(n)])
+        for row in (1, 2, 3):
+            dlc.SelectRow(row)
+        expected = sorted(int(dlc.RowToItem(row).GetID()) for row in (1, 2, 3))
+
+        # The temporary array is gone before the items are used
+        items = list(dlc.GetSelections())
+        junk = [bytearray(64) for _ in range(100)]
+        self.assertEqual(sorted(int(item.GetID()) for item in items), expected)
+
+
     #-------------------------------------------------------
     def test_dataviewListCtrl1(self):
         dlc = dv.DataViewListCtrl()
