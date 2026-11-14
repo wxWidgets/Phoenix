@@ -39,6 +39,24 @@ Currently (September, 2024), only 2 developers (@swt2c, @RobinD42) can merge
 pull requests, or assign others to review pull requests.
 
 
+Linux wheels
+------------
+
+Each `release <https://github.com/wxWidgets/Phoenix/releases>`_ includes
+wheels for some Ubuntu LTS releases, named for the release they were built on,
+such as ``ubuntu2404``. They use the system's GTK and other libraries, so
+``import wx`` fails with an ``ImportError`` naming a ``.so`` file if one of
+them is missing. Installing these packages brings in all of them:
+
+* Ubuntu 22.04::
+
+    sudo apt install libcurl4 libnotify4 libpcre2-32-0 libsdl2-2.0-0 libtiff5 libwebkit2gtk-4.0-37 libxtst6
+
+* Ubuntu 24.04 and 26.04::
+
+    sudo apt install libcurl4t64 libnotify4 libpcre2-32-0 libsdl2-2.0-0 libtiff6 libwebkit2gtk-4.1-0 libxtst6
+
+
 How to build wxPython Phoenix
 -----------------------------
 
