@@ -451,7 +451,7 @@ class pdfViewer(wx.ScrolledWindow):
             for pageno in range(self.frompage, self.topage+1):
                 scale = self.scales[pageno]
                 pagegap = self.page_gaps[pageno]
-                self.xpageoffset = 0 - self.x0
+                self.xpageoffset = -self.page_x0
                 self.ypageoffset = (self.cumYpagespixels[pageno] - self.Ypagespixels[pageno] -
                                     self.page_y0)
     
