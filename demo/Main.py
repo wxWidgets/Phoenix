@@ -1539,7 +1539,7 @@ class wxPythonDemo(wx.Frame):
         self.log = wx.TextCtrl(pnl, -1,
                               style = wx.TE_MULTILINE|wx.TE_READONLY|wx.HSCROLL)
         if wx.Platform == "__WXMAC__":
-            self.log.MacCheckSpelling(False)
+            self.log.EnableProofCheck(wx.TextProofOptions.Disable())
 
         # Set the wxWindows log target to be this textctrl
         #wx.Log.SetActiveTarget(wx.LogTextCtrl(self.log))

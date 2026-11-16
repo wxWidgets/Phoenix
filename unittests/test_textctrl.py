@@ -111,6 +111,17 @@ class textctrl_Tests(wtc.WidgetTestCase):
         t.Undo()
         t.Redo()
 
+    def test_textctrlProofCheck(self):
+        opts = wx.TextProofOptions.Default().Language('fr').GrammarCheck()
+        self.assertTrue(opts.IsSpellCheckEnabled())
+        self.assertTrue(opts.IsGrammarCheckEnabled())
+        self.assertFalse(wx.TextProofOptions.Disable().AnyChecksEnabled())
+        # Whether checking is available depends on the platform, the control
+        # and on GTK the build
+        t = wx.TextCtrl(self.frame, style=wx.TE_RICH2)
+        self.assertIsInstance(t.EnableProofCheck(wx.TextProofOptions.Disable()), bool)
+        self.assertFalse(t.GetProofCheckOptions().AnyChecksEnabled())
+
 #---------------------------------------------------------------------------
 
 

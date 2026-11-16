@@ -9,6 +9,9 @@
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
+import os
+import xml.etree.ElementTree as ET
+
 import etgtools
 import etgtools.tweaker_tools as tools
 
@@ -19,7 +22,8 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'wxTextAttr',
+ITEMS  = [ 'wxTextProofOptions',
+           'wxTextAttr',
            'wxTextCtrl',
            'wxTextUrlEvent',
            'wxTextSearch',
@@ -37,6 +41,41 @@ def parseAndTweakModule():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    # wxGTK builds without gspell have no spell checking and no
+    # wxTextProofOptions, so give them one that never enables any checks
+    module.addHeaderCode("""\
+        #include <wx/textctrl.h>
+        #if !wxUSE_SPELLCHECK
+        class wxTextProofOptions
+        {
+        public:
+            static wxTextProofOptions Default() { return wxTextProofOptions().SpellCheck(true); }
+            static wxTextProofOptions Disable() { return wxTextProofOptions(); }
+            wxTextProofOptions& SpellCheck(bool enable = true) { m_EnableSpellCheck = enable; return *this; }
+            wxTextProofOptions& GrammarCheck(bool enable = true) { m_EnableGrammarCheck = enable; return *this; }
+            wxTextProofOptions& Language(const wxString& lang) { m_lang = lang; return *this; }
+            bool IsSpellCheckEnabled() const { return m_EnableSpellCheck; }
+            bool IsGrammarCheckEnabled() const { return m_EnableGrammarCheck; }
+            const wxString& GetLang() const { return m_lang; }
+            bool AnyChecksEnabled() const { return m_EnableSpellCheck || m_EnableGrammarCheck; }
+        private:
+            wxTextProofOptions() : m_EnableSpellCheck(false), m_EnableGrammarCheck(false) { }
+            wxString m_lang;
+            bool m_EnableSpellCheck;
+            bool m_EnableGrammarCheck;
+        };
+        #endif
+        """)
+
+    # The interface header has no "public:" in this class, so Doxygen calls
+    # all of its methods private and they weren't extracted
+    c = module.find('wxTextProofOptions')
+    c.noDefCtor = True
+    xml = ET.parse(os.path.join(etgtools.XMLSRC, 'classwx_text_proof_options.xml'))
+    for node in xml.getroot().findall('compounddef/sectiondef/memberdef[@kind="function"]'):
+        node.set('prot', 'public')
+        c.addItem(etgtools.MethodDef(node, c.name, klass=c))
+
     c = module.find('wxTextAttr')
     assert isinstance(c, etgtools.ClassDef)
     c.find('operator=').ignore()
@@ -47,6 +86,26 @@ def parseAndTweakModule():
 
     c = module.find('wxTextCtrl')
     tools.fixTextClipboardMethods(c)
+
+    # Not virtual, since there's nothing to override without spell checking
+    m = c.find('EnableProofCheck')
+    m.isVirtual = False
+    m.setCppCode("""\
+        #if wxUSE_SPELLCHECK
+            return self->EnableProofCheck(*options);
+        #else
+            return false;
+        #endif
+        """)
+    m = c.find('GetProofCheckOptions')
+    m.isVirtual = False
+    m.setCppCode_sip("""\
+        #if wxUSE_SPELLCHECK
+            sipRes = new wxTextProofOptions(sipCpp->GetProofCheckOptions());
+        #else
+            sipRes = new wxTextProofOptions(wxTextProofOptions::Disable());
+        #endif
+        """)
     module.addGlobalStr('wxTextCtrlNameStr', c)
 
     # Split the HitTest overloads into separately named methods since once
@@ -130,11 +189,6 @@ def parseAndTweakModule():
         #endif
         """)
 
-    # TODO: add support for wxTextProofOptions (only supported on MSW/GTK3)
-    # so will need stubs on other platforms.
-    c.find('EnableProofCheck').ignore()
-    c.find('GetProofCheckOptions').ignore()
-    
     c.find('GTKGetTextBuffer').ignore()
     c.find('GTKGetEditable').ignore()
     c.find('GTKSetPangoMarkup').ignore()
