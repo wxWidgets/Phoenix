@@ -263,9 +263,8 @@ class Editor(wx.ScrolledWindow):
         if not dc:
             dc = wx.ClientDC(self)
 
-        if (self.LinesInFile())<self.cy: #-1 ?
-            self.cy = self.LinesInFile()-1
-        s = self.lines[self.cy]
+        if self.cy >= self.LinesInFile():
+            self.cy = max(0, self.LinesInFile() - 1)
 
         x = self.cx - self.sx
         y = self.cy - self.sy
@@ -537,7 +536,7 @@ class Editor(wx.ScrolledWindow):
             self.sy = self.cy = 0
         elif eventType == wx.wxEVT_SCROLLWIN_BOTTOM:
             self.sy = self.LinesInFile() - self.sh
-            self.cy = self.LinesInFile()
+            self.cy = self.LinesInFile() - 1
         else:
             self.sy = event.GetPosition()
 

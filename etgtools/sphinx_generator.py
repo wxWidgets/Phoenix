@@ -1622,7 +1622,18 @@ class XRef(Node):
         else:
             text = ':ref:`%s`' % wx2Sphinx(stripped)[1]
 
-        return space_before + text + space_after + convertToPython(tail)
+        tail = convertToPython(tail)
+        if (tail[:1].isalnum() and not original[-1:].isspace()
+                and text.rstrip().endswith('`')):
+            if original.endswith(')'):
+                # A suffix after a function, like "Show()s", which ReST only
+                # accepts after an escaped space
+                return space_before + text.rstrip() + '\\ ' + tail
+            # Doxygen ends a reference's quoted text at a line break, so the
+            # space before the rest of it is lost
+            return space_before + text.rstrip() + ' ' + tail
+
+        return space_before + text + space_after + tail
 
 
 # ----------------------------------------------------------------------- #

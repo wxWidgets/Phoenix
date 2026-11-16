@@ -2131,7 +2131,8 @@ class PlotCanvas(wx.Panel):
                 minX, minY = np.minimum(self._zoomCorner1, self._zoomCorner2)
                 maxX, maxY = np.maximum(self._zoomCorner1, self._zoomCorner2)
                 self.last_PointLabel = None  # reset pointLabel
-                if self.last_draw is not None:
+                # A box without width or height has nothing to zoom to
+                if self.last_draw is not None and minX < maxX and minY < maxY:
                     self._Draw(self.last_draw[0],
                                xAxis=(minX, maxX),
                                yAxis=(minY, maxY),

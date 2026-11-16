@@ -96,6 +96,29 @@ class WindowTests(wtc.WidgetTestCase):
 
         self.assertEqual(wx.FindWindowById(self.frame.GetId()),  self.frame)
 
+    def test_windowPushEventHandlerTempProxy(self):
+        import gc
+        import wx.grid
+
+        class Handler(wx.EvtHandler):
+            def TryBefore(self, evt):
+                if evt.GetEventType() == wx.wxEVT_LEFT_DOWN:
+                    self.hits = getattr(self, 'hits', 0) + 1
+                return False
+
+        # The grid's internal windows are created in C++, so their proxies
+        # are temporary ones
+        g = wx.grid.Grid(self.frame)
+        g.GetGridWindow().PushEventHandler(Handler())
+        gc.collect()
+        win = g.GetGridWindow()
+        handler = win.GetEventHandler()
+        self.assertIsInstance(handler, Handler)
+        evt = wx.MouseEvent(wx.wxEVT_LEFT_DOWN)
+        handler.ProcessEvent(evt)
+        self.assertEqual(handler.hits, 1)
+        self.assertIs(win.PopEventHandler(), handler)
+
     def test_windowCoordConvFunctions(self):
         w = wx.Window(self.frame, -1, (10,10), (50,50))
         a = w.ClientToScreen(0, 0)

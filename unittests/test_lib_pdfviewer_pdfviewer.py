@@ -49,6 +49,30 @@ class lib_pdfviewer_pdfviewer_Tests(wtc.WidgetTestCase):
         self.viewer.LoadFile(samplePdf)
         self.waitFor(500)
 
+    @unittest.skipIf(not havePyPDF,  "PyMuPDF or PyPDF2 required")
+    def test_lib_pdfviewer_renderScrolledRight(self):
+        viewer = pdfViewer(self.frame, wx.ID_ANY, wx.DefaultPosition,
+                           wx.DefaultSize, wx.HSCROLL | wx.VSCROLL)
+        self.frame.SetClientSize((400, 400))
+        viewer.LoadFile(samplePdf)
+        viewer.SetZoom(2.0)
+        self.waitFor(100)
+        viewer.Scroll(5, 3)
+        viewer.Render()
+
+        def visible():
+            w, h = viewer.winwidth, viewer.winheight
+            bmp = wx.Bitmap(w, h)
+            dc = wx.MemoryDC(bmp)
+            dc.Blit(0, 0, w, h, viewer.pdc, viewer.xshift, viewer.yshift)
+            dc.SelectObject(wx.NullBitmap)
+            return bmp.ConvertToImage().GetData()
+
+        before = visible()
+        viewer.page_buffer_valid = False
+        viewer.Render()
+        self.assertTrue(visible() == before, "the page moved")
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

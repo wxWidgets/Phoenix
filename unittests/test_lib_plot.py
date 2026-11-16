@@ -66,6 +66,29 @@ class lib_plot_PlotCanvas_Tests(wtc.WidgetTestCase):
         p._clearRubberBand()
         self.assertIsNone(p._rubberBand)
 
+    def test_lib_plot_zoomEmptyBox(self):
+        p = wxplot.PlotCanvas(self.frame, size=(400, 300))
+        p.enableZoom = True
+        graphics = wxplot.PlotGraphics([wxplot.PolyLine([(0, 0), (1, 1), (2, 4)])])
+
+        def mouse(kind, x, y):
+            evt = wx.MouseEvent(kind)
+            evt.SetPosition(wx.Point(x, y))
+            evt.SetLeftDown(kind != wx.wxEVT_LEFT_UP)
+            evt.SetEventObject(p.canvas)
+            p.canvas.GetEventHandler().ProcessEvent(evt)
+
+        # A drag straight down or straight across gives a box without width
+        # or height
+        for end in [(150, 200), (250, 100)]:
+            p.Draw(graphics)
+            xAxis, yAxis = p.last_draw[1].copy(), p.last_draw[2].copy()
+            mouse(wx.wxEVT_LEFT_DOWN, 150, 100)
+            mouse(wx.wxEVT_MOTION, *end)
+            mouse(wx.wxEVT_LEFT_UP, *end)
+            np.testing.assert_array_equal(p.last_draw[1], xAxis)
+            np.testing.assert_array_equal(p.last_draw[2], yAxis)
+
     def test_lib_plot_refreshWithoutClientDC(self):
         p = wxplot.PlotCanvas(self.frame, size=(400, 300))
         graphics = wxplot.PlotGraphics([wxplot.PolyLine([(0, 0), (1, 1)])])

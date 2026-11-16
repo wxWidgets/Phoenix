@@ -307,12 +307,25 @@ def run():
     c.find('FindWindowByLabel.parent').default='NULL'
     c.find('FindWindowByName.parent').default='NULL'
 
-    # Transfer ownership of the wx.EvtHandler when pushing/popping them...
-    c.find('PushEventHandler.handler').transfer = True
-    c.find('PopEventHandler').transferBack = True
+    # Transfer ownership of the wx.EvtHandler when pushing/setting it. A
+    # handler created in Python is kept alive until the C++ handler is
+    # deleted, rather than until this window's proxy goes away, since that
+    # may be a temporary one (like the proxies for the internal windows of a
+    # wx.grid.Grid), and the handler's Python overrides would be lost with it.
+    for name in ['PushEventHandler', 'SetEventHandler']:
+        c.find(name).setCppCode_sip(f"""\
+            sipCpp->{name}(handler);
+            PyObject* wrapper = sipConvertFromType(handler, sipType_wxEvtHandler, NULL);
+            if (wrapper && wrapper != Py_None &&
+                    sipIsDerivedClass((sipSimpleWrapper*)wrapper))
+                sipTransferTo(wrapper, Py_None);
+            else
+                sipTransferTo(wrapper, sipSelf);
+            Py_XDECREF(wrapper);
+            """)
 
-    # ...and for Set/RemoveEventHandler too
-    c.find('SetEventHandler.handler').transfer = True
+    # ...and transfer it back when popping/removing it
+    c.find('PopEventHandler').transferBack = True
     c.find('RemoveEventHandler.handler').transferBack = True
 
 

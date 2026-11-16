@@ -93,7 +93,8 @@ def run():
 
 
     module.addItem(
-        tools.wxArrayWrapperTemplate('wxDataViewItemArray', 'wxDataViewItem', module))
+        tools.wxArrayWrapperTemplate('wxDataViewItemArray', 'wxDataViewItem', module,
+                                     getItemCopy=True))
     module.addPyCode("NullDataViewItem = DataViewItem()")
 
 

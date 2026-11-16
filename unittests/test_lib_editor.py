@@ -46,6 +46,18 @@ class lib_editor_Tests(wtc.WidgetTestCase):
         self.assertEqual(colourAt(1), ed.fgColor)
         self.assertEqual(colourAt(0), ed.bgColor)
 
+    def test_lib_editorScrollToBottom(self):
+        ed = editor.Editor(self.frame, -1, size=(300, 200))
+        bmp = wx.Bitmap(300, 200)
+        for lines in ([], ['one'], ['line %d' % i for i in range(5)]):
+            ed.SetText(lines)
+            ed.SetCharDimensions()
+            ed.OnScroll(wx.ScrollWinEvent(wx.wxEVT_SCROLLWIN_BOTTOM, 0, wx.VERTICAL))
+            self.assertEqual(ed.cy, max(0, len(lines) - 1))
+            dc = wx.MemoryDC(bmp)
+            ed.Draw(dc)
+            dc.SelectObject(wx.NullBitmap)
+
     def test_lib_editorSetScrollTimer(self):
         ed = editor.Editor(self.frame, -1)
         ed.SetScrollTimer()
