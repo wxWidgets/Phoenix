@@ -26,6 +26,13 @@ class animate_Tests(wtc.WidgetTestCase):
         anictrl.Play()
         self.waitFor(500)
 
+    def test_animateSetAnimation(self):
+        anictrl = wx.adv.AnimationCtrl(self.frame)
+        self.assertFalse(anictrl.GetAnimation().IsOk())
+        # A wx.Animation is converted to a wx.AnimationBundle
+        anictrl.SetAnimation(wx.adv.Animation(gifFile))
+        self.assertTrue(anictrl.GetAnimation().IsOk())
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
