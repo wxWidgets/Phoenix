@@ -87,6 +87,40 @@ static void wxPyClearActivationContext(ULONG_PTR cookie)
 
 #endif // __WXMSW__
 
+#include <wx/calctrl.h>
+#include <wx/collpane.h>
+#include <wx/filectrl.h>
+
+// Find the SIP type for the most derived wrapped class of an object, from its
+// wxRTTI info. Some ports #define a public class to a port-specific one
+// (wxCalendarCtrl is wxGtkCalendarCtrl in wxGTK), whose name SIP doesn't
+// know, so those are looked up by the public name.
+static const sipTypeDef* wxPyFindSubClassType(const wxClassInfo* info)
+{
+    static const struct {
+        const char* rttiName;
+        const char* sipName;
+    } aliases[] = {
+        { wxSTRINGIZE(wxCalendarCtrl), "wxCalendarCtrl" },
+        { wxSTRINGIZE(wxCollapsiblePane), "wxCollapsiblePane" },
+        { wxSTRINGIZE(wxFileCtrl), "wxFileCtrl" },
+    };
+
+    for ( ; info; info = info->GetBaseClass1() ) {
+        wxString name = info->GetClassName();
+        for (const auto& alias : aliases) {
+            if (name == alias.rttiName) {
+                name = alias.sipName;
+                break;
+            }
+        }
+        const sipTypeDef* type = sipFindType(name.c_str());
+        if (type)
+            return type;
+    }
+    return NULL;
+}
+
 void wxPyPreInit(PyObject* moduleDict)
 {
 #ifdef ISOLATION_AWARE_ENABLED

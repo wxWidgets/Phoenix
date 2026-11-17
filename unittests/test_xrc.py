@@ -257,6 +257,25 @@ class xrc_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(panel, xrcfactorytest.MyCustomPanel))
 
 
+    def test_xrcPortSpecificClasses(self):
+        # In wxGTK these are wxGtkCalendarCtrl and wxGtkFileCtrl, which
+        # wxPython doesn't wrap by those names
+        import wx.adv
+        resource = b'''<?xml version="1.0"?>
+            <resource>
+                <object class="wxPanel" name="MyPanel">
+                    <object class="wxCalendarCtrl" name="calendar"/>
+                    <object class="wxFileCtrl" name="filectrl"/>
+                </object>
+            </resource>'''
+        xmlres = xrc.XmlResource()
+        xmlres.LoadFromBuffer(resource)
+        panel = xmlres.LoadPanel(self.frame, "MyPanel")
+
+        self.assertIsInstance(xrc.XRCCTRL(panel, 'calendar'), wx.adv.CalendarCtrl)
+        self.assertIsInstance(xrc.XRCCTRL(panel, 'filectrl'), wx.FileCtrl)
+
+
 
 #---------------------------------------------------------------------------
 

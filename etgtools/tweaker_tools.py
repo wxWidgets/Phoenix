@@ -920,18 +920,7 @@ def addSipConvertToSubClassCode(klass):
     """
     klass.addItem(extractors.WigCode("""\
     %ConvertToSubClassCode
-        const wxClassInfo* info   = sipCpp->GetClassInfo();
-        wxString           name   = info->GetClassName();
-        bool               exists = sipFindType(name.c_str()) != NULL;
-        while (info && !exists) {
-            info = info->GetBaseClass1();
-            name = info->GetClassName();
-            exists = sipFindType(name.c_str()) != NULL;
-        }
-        if (info)
-            sipType = sipFindType(name.c_str());
-        else
-            sipType = NULL;
+        sipType = wxPyFindSubClassType(sipCpp->GetClassInfo());
     %End
     """))
 
