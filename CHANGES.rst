@@ -25,6 +25,8 @@ New and improved in this release:
 
 * Remove wx.lib.flashwin, wx.lib.flashwin_old and the Flash demo. Adobe stopped distributing Flash Player at the end of 2020 and it has since been removed from Windows, so these modules could no longer be imported there (#1477)
 
+* Update the cairo DLL bundled with the Windows wheels from 1.15.12 to 1.18.6, built with vcpkg. The old build failed to write any PDF file, with CAIRO_STATUS_NO_MEMORY (#3035). The ARM64 wheels now include the DLL too; it was missing from them before, so wx.lib.wxcairo couldn't find cairo there
+
 
 
 

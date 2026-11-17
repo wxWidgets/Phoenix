@@ -103,6 +103,13 @@ toolsURL = 'https://wxwidgets.github.io/wxPython-tools'
 MS_edge_version = '1.0.3719.77'
 MS_edge_url = 'https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/{}'.format(MS_edge_version)
 
+# Cairo DLLs and headers for MSW builds, from a release made by the
+# build-msw-cairo workflow in the wxPython-tools repo
+MSW_cairo_tag = 'cairo-1.18.6-vcpkg0df93a05b9'
+MSW_cairo_SHA256 = 'fb7c67ec70dca4e0ec81c1fec4c81870233da290fe8b72df59fd4daf6336e1c0'
+MSW_cairo_url = (f'https://github.com/wxWidgets/wxPython-tools/releases/download/'
+                 f'{MSW_cairo_tag}/msw-{MSW_cairo_tag}.zip')
+
 #---------------------------------------------------------------------------
 
 def usage():
@@ -717,6 +724,44 @@ def getMSWebView2():
         from zipfile import ZipFile
         with ZipFile(opj(dest, fname)) as zip:
             zip.extractall(dest)
+
+
+def getMSWCairo():
+    # Setting CAIRO_ROOT in the environment overrides the download, for
+    # example to try out a new build of cairo
+    if os.environ.get('CAIRO_ROOT'):
+        return os.environ['CAIRO_ROOT']
+
+    dest = opj(phoenixDir(), 'build', 'msw-cairo')
+    fname = opj(dest, os.path.basename(MSW_cairo_url))
+    if not os.path.exists(fname):
+        if os.path.exists(dest):
+            shutil.rmtree(dest)
+        os.makedirs(dest)
+
+        msg(f'Downloading {MSW_cairo_url}...')
+        try:
+            import requests
+            resp = requests.get(MSW_cairo_url)
+            resp.raise_for_status()
+        except Exception:
+            traceback.print_exc()
+            sys.exit(1)
+        data = resp.content
+
+        sha256 = hashlib.sha256(data).hexdigest()
+        if sha256 != MSW_cairo_SHA256:
+            msg(f'ERROR: SHA256 mismatch for {MSW_cairo_url}, got "{sha256}"\n'
+                f'       expected "{MSW_cairo_SHA256}"')
+            sys.exit(1)
+
+        from zipfile import ZipFile
+        with ZipFile(BytesIO(data)) as zip:
+            zip.extractall(dest)
+        # Saved last, so that an interrupted extraction is redone next time
+        Path(fname).write_bytes(data)
+
+    return opj(dest, 'msw-cairo')
 
 
 class CommandTimer(object):
@@ -1652,8 +1697,7 @@ def cmd_build_wx(options, args):
 
         if options.cairo:
             build_options.append('--cairo')
-            cairo_root = os.path.join(phoenixDir(), 'packaging', 'msw-cairo')
-            os.environ['CAIRO_ROOT'] = cairo_root
+            os.environ['CAIRO_ROOT'] = getMSWCairo()
 
         if options.jom:
             build_options.append('--jom')
@@ -1783,8 +1827,7 @@ def copyWxDlls(options):
 
         # Also copy the cairo DLLs if needed
         if options.cairo:
-            cairo_root = os.path.join(phoenixDir(), 'packaging', 'msw-cairo')
-            dlls += sorted(glob.glob(os.path.join(cairo_root, arch, 'bin', '*.dll')))
+            dlls += sorted(glob.glob(os.path.join(getMSWCairo(), arch, 'bin', '*.dll')))
 
         # And the webview2 (MS EDGE) DLL
         wv2_root = os.path.join(phoenixDir(), 'packaging', 'msw-webview2')
