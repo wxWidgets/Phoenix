@@ -48,7 +48,7 @@ from sphinxtools.utilities import textfile_open
 
 from sphinxtools.constants import VERSION, REMOVED_LINKS, SECTIONS
 from sphinxtools.constants import MAGIC_METHODS, MODULENAME_REPLACE
-from sphinxtools.constants import IGNORE
+from sphinxtools.constants import IGNORE, SECTION_ENUMS
 from sphinxtools.constants import SPHINXROOT, DOXYROOT
 from sphinxtools.constants import SNIPPETROOT, TABLEROOT, OVERVIEW_IMAGES_ROOT
 from sphinxtools.constants import DOCSTRING_KEY
@@ -1544,7 +1544,11 @@ class XRef(Node):
         if stripped in IGNORE:
             return space_before + text + space_after + tail
 
-        if ' ' in stripped or 'overview' in values:
+        section = refid.split('_1')[-1]
+        if section in SECTION_ENUMS:
+            text = ':ref:`%s <%s>`' % (stripped, SECTION_ENUMS[section])
+
+        elif ' ' in stripped or 'overview' in values:
             if 'classwx_' in refid:
                 ref = 1000
                 if '_1' in refid:

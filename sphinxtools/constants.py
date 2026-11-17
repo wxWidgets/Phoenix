@@ -26,6 +26,13 @@ IGNORE = ['wxPython', 'wxWidgets', 'wxOSX', 'wxMGL', 'wxDFB', 'wxMAC', 'wxGTK', 
           'XPM', 'HTML', 'MIME', 'C++', 'XDG', 'A4', 'A5', 'KDE', 'GNOME', 'XFCE', 'CSS', 'IE', 'FONT',
           'SIZE', 'COLOR', 'NOT', 'DOES']
 
+# Doxygen sections that document an enum, which the links to them should go to
+SECTION_ENUMS = {'propgrid_window_styles': 'wx.propgrid.PG_WINDOW_STYLES',
+                 'propgrid_iterator_flags': 'wx.propgrid.PG_ITERATOR_FLAGS',
+                 'propgrid_vfbflags': 'wx.propgrid.PGVFBFlags',
+                 'propgrid_keyboard_actions': 'wx.propgrid.PGKeyboardAction',
+                 }
+
 # C++ stuff to Python/ReST stuff
 VALUE_MAP = {'true':  '``True``',
              'false': '``False``',
