@@ -276,6 +276,28 @@ class xrc_Tests(wtc.WidgetTestCase):
         self.assertIsInstance(xrc.XRCCTRL(panel, 'filectrl'), wx.FileCtrl)
 
 
+    def test_xrcAnimationCtrl(self):
+        import wx.adv
+        # wx.xrc used to have empty stand-ins for these classes, which were
+        # returned instead of the real ones when it was imported after wx.adv
+        self.assertFalse(hasattr(xrc, 'AnimationCtrl'))
+        self.assertFalse(hasattr(xrc, 'Animation'))
+
+        resource = b'''<?xml version="1.0"?>
+            <resource>
+                <object class="wxPanel" name="MyPanel">
+                    <object class="wxAnimationCtrl" name="animation"/>
+                </object>
+            </resource>'''
+        xmlres = xrc.XmlResource()
+        xmlres.LoadFromBuffer(resource)
+        panel = xmlres.LoadPanel(self.frame, "MyPanel")
+
+        ctrl = xrc.XRCCTRL(panel, 'animation')
+        self.assertIsInstance(ctrl, wx.adv.AnimationCtrl)
+        self.assertIsInstance(ctrl.GetAnimation(), wx.adv.Animation)
+
+
 
 #---------------------------------------------------------------------------
 
