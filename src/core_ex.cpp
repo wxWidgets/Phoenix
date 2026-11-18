@@ -87,6 +87,96 @@ static void wxPyClearActivationContext(ULONG_PTR cookie)
 
 #endif // __WXMSW__
 
+#include <wx/calctrl.h>
+#include <wx/collpane.h>
+#include <wx/filectrl.h>
+#include <wx/tracker.h>
+
+#include <unordered_map>
+
+// Find the SIP type for the most derived wrapped class of an object, from its
+// wxRTTI info. Some ports #define a public class to a port-specific one
+// (wxCalendarCtrl is wxGtkCalendarCtrl in wxGTK), whose name SIP doesn't
+// know, so those are looked up by the public name.
+static const sipTypeDef* wxPyFindSubClassType(const wxClassInfo* info)
+{
+    static const struct {
+        const char* rttiName;
+        const char* sipName;
+    } aliases[] = {
+        { wxSTRINGIZE(wxCalendarCtrl), "wxCalendarCtrl" },
+        { wxSTRINGIZE(wxCollapsiblePane), "wxCollapsiblePane" },
+        { wxSTRINGIZE(wxFileCtrl), "wxFileCtrl" },
+    };
+
+    for ( ; info; info = info->GetBaseClass1() ) {
+        wxString name = info->GetClassName();
+        for (const auto& alias : aliases) {
+            if (name == alias.rttiName) {
+                name = alias.sipName;
+                break;
+            }
+        }
+        const sipTypeDef* type = sipFindType(name.c_str());
+        if (type)
+            return type;
+    }
+    return NULL;
+}
+
+// SIP is told when an object created from Python is deleted, but not when
+// one created by C++ code (by XRC, for example) is. Its wrapper would then
+// stay in SIP's object map, and be handed out again, with the old type, for
+// a new object at the same address. Event handlers are trackable, so tell
+// SIP when they go away.
+class wxPyWrapperTracker;
+static std::unordered_map<sipSimpleWrapper*, wxPyWrapperTracker*> wxPyWrapperTrackers;
+
+class wxPyWrapperTracker : public wxTrackerNode
+{
+public:
+    wxPyWrapperTracker(wxEvtHandler* handler, sipSimpleWrapper* wrapper)
+        : m_handler(handler), m_wrapper(wrapper) { }
+
+    void OnObjectDestroy() override
+    {
+        // The handler may outlive Python
+        if (Py_IsInitialized() || PyGILState_GetThisThreadState() != NULL) {
+            wxPyThreadBlocker blocker;
+            wxPyWrapperTrackers.erase(m_wrapper);
+            sipInstanceDestroyedEx(&m_wrapper);
+        }
+        delete this;
+    }
+
+    wxEvtHandler* m_handler;
+    sipSimpleWrapper* m_wrapper;
+};
+
+static void wxPyTrackWrappedEvtHandler(void* cpp)
+{
+    sipSimpleWrapper* wrapper = (sipSimpleWrapper*)sipGetPyObject(cpp, sipType_wxEvtHandler);
+    if (!wrapper || wxPyWrapperTrackers.count(wrapper))
+        return;
+    wxEvtHandler* handler = (wxEvtHandler*)sipGetCppPtr(wrapper, sipType_wxEvtHandler);
+    if (!handler)
+        return;
+    wxPyWrapperTracker* tracker = new wxPyWrapperTracker(handler, wrapper);
+    handler->AddNode(tracker);
+    wxPyWrapperTrackers[wrapper] = tracker;
+}
+
+static void wxPyUntrackWrapper(sipSimpleWrapper* wrapper)
+{
+    auto it = wxPyWrapperTrackers.find(wrapper);
+    if (it == wxPyWrapperTrackers.end())
+        return;
+    wxPyWrapperTracker* tracker = it->second;
+    wxPyWrapperTrackers.erase(it);
+    tracker->m_handler->RemoveNode(tracker);
+    delete tracker;
+}
+
 void wxPyPreInit(PyObject* moduleDict)
 {
 #ifdef ISOLATION_AWARE_ENABLED
@@ -238,4 +328,8 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
     Py_DECREF(PlatformInfo);
     PyDict_SetItemString(moduleDict, "PlatformInfo", PlatformInfoTuple);
 
+    sipRegisterEventHandler(sipEventWrappedInstance, sipType_wxEvtHandler,
+                            (void*)wxPyTrackWrappedEvtHandler);
+    sipRegisterEventHandler(sipEventCollectingWrapper, sipType_wxEvtHandler,
+                            (void*)wxPyUntrackWrapper);
 }

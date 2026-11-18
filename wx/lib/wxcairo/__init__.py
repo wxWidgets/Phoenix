@@ -22,13 +22,14 @@ function in this module will return an instance of the Cairo Context class
 that is ready for drawing, using the native cairo surface type for the current
 platform.
 
-.. note:: Be sure to import ``wx.lib.wxcairo`` before importing the ``cairo``
-   module.
+If both are installed, PyCairo is used, except on Windows. When cairocffi is
+used, it is made to stand in for PyCairo, so be sure to import
+``wx.lib.wxcairo`` before importing the ``cairo`` module.
 
 To use Cairo with wxPython you will need to have a few dependencies
 installed.  On Linux and other unix-like systems you may already have
 them, or can easily get them with your system's package manager.  Just
-check if libcairo and either cairocffi or pycairo packages are installed.
+check if libcairo and either pycairo or cairocffi packages are installed.
 
 On Mac you can get Cairo from MacPorts or similar tools.  Make sure that
 the quartz option is turned on so those Mac-specific APIs will be included in
@@ -50,26 +51,37 @@ other location by setting the CAIRO environment variable.
 
 #----------------------------------------------------------------------------
 
+import importlib
+
 import wx
 
-# Import our glue functions for either cairocffi or pycairo, depending on
-# which is installed.
-try:
-    # Use cairocffi first if it is available
-    from .wx_cairocffi import _ContextFromDC, _FontFaceFromFont
-    import cairo
-except ImportError:
-    try:
-        # otherwise use pycairo
-        from .wx_pycairo import _ContextFromDC, _FontFaceFromFont
-        import cairo
-    except ImportError:
-        # or provide some exception raising stubs instead
-        def _ContextFromDC(dc):
-            raise NotImplementedError("Cairo wrappers not found")
+# Import our glue functions for either pycairo or cairocffi, depending on
+# which is installed. PyCairo comes first, as other packages that use Cairo,
+# such as PyGObject, only work with it. On Windows cairocffi comes first: it
+# uses the Cairo DLLs included with wxPython, while PyCairo has its own copy
+# of Cairo built in, so wx_pycairo can't make a font face from the HFONT.
+_glueModules = ['wx_pycairo', 'wx_cairocffi']
+if 'wxMSW' in wx.PlatformInfo:
+    _glueModules.reverse()
 
-        def _FontFaceFromFont(font):
-            raise NotImplementedError("Cairo wrappers not found")
+cairo = None
+for _name in _glueModules:
+    try:
+        _glue = importlib.import_module('.' + _name, __name__)
+    except (ImportError, OSError, RuntimeError):
+        # OSError and RuntimeError mean the Cairo shared library wasn't found
+        continue
+    _ContextFromDC = _glue._ContextFromDC
+    _FontFaceFromFont = _glue._FontFaceFromFont
+    import cairo
+    break
+else:
+    # or provide some exception raising stubs instead
+    def _ContextFromDC(dc):
+        raise NotImplementedError("Cairo wrappers not found")
+
+    def _FontFaceFromFont(font):
+        raise NotImplementedError("Cairo wrappers not found")
 
 #----------------------------------------------------------------------------
 
@@ -96,6 +108,8 @@ def BitmapFromImageSurface(surface):
     """
     Create a :class:`wx.Bitmap` from a Cairo ``ImageSurface``.
     """
+    if cairo is None:
+        raise NotImplementedError("Cairo wrappers not found")
     format = surface.get_format()
     if format not in [cairo.FORMAT_ARGB32, cairo.FORMAT_RGB24]:
         raise TypeError("Unsupported format")
@@ -118,6 +132,8 @@ def ImageSurfaceFromBitmap(bitmap):
     """
     Create a Cairo ``ImageSurface`` from a :class:`wx.Bitmap`
     """
+    if cairo is None:
+        raise NotImplementedError("Cairo wrappers not found")
     width, height = bitmap.GetSize()
     if bitmap.ConvertToImage().HasAlpha():
         format = cairo.FORMAT_ARGB32

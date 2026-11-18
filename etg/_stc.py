@@ -163,6 +163,8 @@ def run():
                    'OSXEnableAutomaticDashSubstitution',
                    'OSXDisableAllSmartSubstitutions',
                    'OSXEnableNewLineReplacement',
+                   'EnableProofCheck',
+                   'GetProofCheckOptions',
                    ]
     import textctrl
     mod = textctrl.parseAndTweakModule()

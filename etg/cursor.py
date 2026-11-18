@@ -102,6 +102,30 @@ def run():
             return new wxCursorBundle(*cursor);
             """)
 
+    # Also convert a wx.Cursor automatically, as wxCursorBundle's implicit
+    # ctor does in C++, so wx.SetCursor(wx.Cursor(...)) still works
+    c.convertFromPyObject = tools.AutoConversionInfo(
+        ('wx.Cursor', ),
+        """\
+        if (!sipIsErr) {
+            return sipCanConvertToType(sipPy, sipType_wxCursor, SIP_NO_CONVERTORS) ||
+                   sipCanConvertToType(sipPy, sipType_wxCursorBundle, SIP_NO_CONVERTORS);
+        }
+
+        if (sipCanConvertToType(sipPy, sipType_wxCursor, SIP_NO_CONVERTORS)) {
+            int state = 0;
+            wxCursor* cursor = reinterpret_cast<wxCursor*>(
+                sipConvertToType(sipPy, sipType_wxCursor, sipTransferObj, SIP_NO_CONVERTORS, &state, sipIsErr));
+            *sipCppPtr = new wxCursorBundle(*cursor);
+            sipReleaseType(cursor, sipType_wxCursor, state);
+            return sipGetState(sipTransferObj);
+        }
+
+        *sipCppPtr = reinterpret_cast<wxCursorBundle*>(
+            sipConvertToType(sipPy, sipType_wxCursorBundle, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
+        return 0;
+        """)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

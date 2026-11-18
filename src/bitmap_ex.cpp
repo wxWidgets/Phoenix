@@ -276,14 +276,16 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
 
             CHECK_BUFFERSIZE(stride * height);
 
-            if (useAlpha && depth == 32) {
+            // wxNativePixelData is 24-bit only on MSW, so use the alpha
+            // version for every 32-bit bitmap, as above
+            if (depth == 32) {
                 MAKE_PIXDATA(wxAlphaPixelData);
                 for (int y=0; y<height; y++) {
                     p.MoveTo(pixData, 0, y);
                     bufptr = (wxUint32*)dataRow;
                     for (int x=0; x<width; x++) {
                         value =
-                            (p.Alpha() << 24) |
+                            ((useAlpha ? p.Alpha() : wxALPHA_OPAQUE) << 24) |
                             (p.Red() << 16) |
                             (p.Green() << 8) |
                             (p.Blue());
@@ -294,7 +296,7 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
                     dataRow += stride;
                 }
             }
-            else // if (!useAlpha /*depth == 24*/)
+            else
             {
                 MAKE_PIXDATA(wxNativePixelData);
                 for (int y=0; y<height; y++) {

@@ -257,6 +257,85 @@ class xrc_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(panel, xrcfactorytest.MyCustomPanel))
 
 
+    def test_xrcPortSpecificClasses(self):
+        # In wxGTK these are wxGtkCalendarCtrl and wxGtkFileCtrl, which
+        # wxPython doesn't wrap by those names
+        import wx.adv
+        resource = b'''<?xml version="1.0"?>
+            <resource>
+                <object class="wxPanel" name="MyPanel">
+                    <object class="wxCalendarCtrl" name="calendar"/>
+                    <object class="wxFileCtrl" name="filectrl"/>
+                </object>
+            </resource>'''
+        xmlres = xrc.XmlResource()
+        xmlres.LoadFromBuffer(resource)
+        panel = xmlres.LoadPanel(self.frame, "MyPanel")
+
+        self.assertIsInstance(xrc.XRCCTRL(panel, 'calendar'), wx.adv.CalendarCtrl)
+        self.assertIsInstance(xrc.XRCCTRL(panel, 'filectrl'), wx.FileCtrl)
+
+
+    def test_xrcAnimationCtrl(self):
+        import wx.adv
+        # wx.xrc used to have empty stand-ins for these classes, which were
+        # returned instead of the real ones when it was imported after wx.adv
+        self.assertFalse(hasattr(xrc, 'AnimationCtrl'))
+        self.assertFalse(hasattr(xrc, 'Animation'))
+
+        resource = b'''<?xml version="1.0"?>
+            <resource>
+                <object class="wxPanel" name="MyPanel">
+                    <object class="wxAnimationCtrl" name="animation"/>
+                </object>
+            </resource>'''
+        xmlres = xrc.XmlResource()
+        xmlres.LoadFromBuffer(resource)
+        panel = xmlres.LoadPanel(self.frame, "MyPanel")
+
+        ctrl = xrc.XRCCTRL(panel, 'animation')
+        self.assertIsInstance(ctrl, wx.adv.AnimationCtrl)
+        self.assertIsInstance(ctrl.GetAnimation(), wx.adv.Animation)
+
+    def test_xrcReloadWhileHoldingOldControls(self):
+        # Wrappers of controls created by XRC used to outlive them, and be
+        # handed out again for new controls at the same address
+        resource = b'''\
+            <resource>
+                <object class="wxPanel" name="MyPanel">
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <object class="wxButton" name="button"><label>b</label></object>
+                        </object>
+                        <object class="sizeritem">
+                            <object class="wxTextCtrl" name="text"/>
+                        </object>
+                        <object class="sizeritem">
+                            <object class="wxStaticText" name="label"><label>l</label></object>
+                        </object>
+                        <object class="sizeritem">
+                            <object class="wxCheckBox" name="check"><label>c</label></object>
+                        </object>
+                    </object>
+                </object>
+            </resource>'''
+        expected = {'button': wx.Button, 'text': wx.TextCtrl,
+                    'label': wx.StaticText, 'check': wx.CheckBox}
+        xmlres = xrc.XmlResource()
+        xmlres.LoadFromBuffer(resource)
+        old = []
+        for i in range(50):
+            panel = xmlres.LoadPanel(self.frame, "MyPanel")
+            ctrls = {name: xrc.XRCCTRL(panel, name) for name in expected}
+            for name, cls in expected.items():
+                self.assertIs(type(ctrls[name]), cls)
+            panel.Destroy()
+            for ctrl in ctrls.values():
+                self.assertFalse(ctrl)
+            old.append(ctrls)
+
+
 
 #---------------------------------------------------------------------------
 

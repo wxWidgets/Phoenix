@@ -106,6 +106,18 @@ wx.grid.Grid.RowToRect = _RowToRect
 
 #----------------------------------------------------------------------------
 
+def _LabelClick(grid, evt, row, col):
+    # Like wx.grid.Grid itself, only select the column or row if no handler
+    # of the label click event took care of it.
+    clickEvt = wx.grid.GridEvent(grid.GetId(), wx.grid.wxEVT_GRID_LABEL_LEFT_CLICK,
+                                 grid, row, col, evt.X, evt.Y, kbd=evt)
+    if not grid.GetEventHandler().ProcessEvent(clickEvt):
+        if col != wx.NOT_FOUND:
+            grid.SelectCol(col, evt.ControlDown())
+        else:
+            grid.SelectRow(row, evt.ControlDown())
+
+
 class ColDragWindow(wx.Window):
     def __init__(self,parent,image,dragCol):
         wx.Window.__init__(self,parent,-1, style=wx.SIMPLE_BORDER)
@@ -346,9 +358,7 @@ class GridColMover(wx.EvtHandler):
                 col = self.grid.XToCol(px+sx)
 
                 if col != wx.NOT_FOUND:
-                    self.grid.SelectCol(col,evt.ControlDown())
-
-                return
+                    _LabelClick(self.grid, evt, -1, col)
             else:
                 bCol = self.colWin.GetInsertionColumn()
                 dCol = self.colWin.GetMoveColumn()
@@ -492,8 +502,7 @@ class GridRowMover(wx.EvtHandler):
                 row = self.grid.YToRow(py + sy)
 
                 if row != wx.NOT_FOUND:
-                    self.grid.SelectRow(row,evt.ControlDown())
-                return
+                    _LabelClick(self.grid, evt, row, -1)
             else:
                 bRow = self.rowWin.GetInsertionRow()
                 dRow = self.rowWin.GetMoveRow()

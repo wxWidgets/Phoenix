@@ -103,10 +103,18 @@ class FillingTree(wx.TreeCtrl):
 
     def objHasChildren(self, obj):
         """Return true if object has children."""
-        if self.objGetChildren(obj):
+        # Don't get the attribute values here: that would run the property
+        # getters of every child of an expanded item, and some of them can
+        # assert or even crash for objects in the wrong state.
+        if (isinstance(obj, dict)
+            or 'BTrees' in str(type(obj))
+            and hasattr(obj, 'keys')):
+            return bool(obj)
+        if isinstance(obj, (list, tuple)) and obj:
             return True
-        else:
-            return False
+        if type(obj) not in COMMONTYPES:
+            return bool(introspect.getAttributeNames(obj))
+        return False
 
     def objGetChildren(self, obj):
         """Return dictionary with attributes or contents of object."""

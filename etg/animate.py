@@ -94,6 +94,32 @@ def run():
     module.insertItemBefore(c, item)
 
 
+    # Allow passing a wx.Animation where a wx.AnimationBundle is expected, as
+    # wxAnimationBundle's implicit ctor allows in C++
+    c = module.find('wxAnimationBundle')
+    c.convertFromPyObject = tools.AutoConversionInfo(
+        ('wx.Animation', ),
+        """\
+        if (!sipIsErr) {
+            return sipCanConvertToType(sipPy, sipType_wxAnimation, SIP_NO_CONVERTORS) ||
+                   sipCanConvertToType(sipPy, sipType_wxAnimationBundle, SIP_NO_CONVERTORS);
+        }
+
+        if (sipCanConvertToType(sipPy, sipType_wxAnimation, SIP_NO_CONVERTORS)) {
+            int state = 0;
+            wxAnimation* anim = reinterpret_cast<wxAnimation*>(
+                sipConvertToType(sipPy, sipType_wxAnimation, sipTransferObj, SIP_NO_CONVERTORS, &state, sipIsErr));
+            *sipCppPtr = new wxAnimationBundle(*anim);
+            sipReleaseType(anim, sipType_wxAnimation, state);
+            return sipGetState(sipTransferObj);
+        }
+
+        *sipCppPtr = reinterpret_cast<wxAnimationBundle*>(
+            sipConvertToType(sipPy, sipType_wxAnimationBundle, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
+        return 0;
+        """)
+
+
     #-----------------------------------------------------------------
     module.addItem(tools.wxListWrapperTemplate('wxAnimationDecoderList', 'wxAnimationDecoder', module,
                                                header_extra='#include <wx/animate.h>'))

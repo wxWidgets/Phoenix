@@ -4864,7 +4864,9 @@ class HyperTreeList(wx.Control):
             self._header_win.SetSize(0, 0, 0, 0)
 
         if self._main_win and has_header:
-            self._main_win.SetSize(0, self._headerHeight + 1, w, h - self._headerHeight - 1)
+            # A negative height warns on GTK, and -1 means "don't change it"
+            mainHeight = max(0, h - self._headerHeight - 1)
+            self._main_win.SetSize(0, self._headerHeight + 1, w, mainHeight)
         else:
             self._main_win.SetSize(0, 0, w, h)
 

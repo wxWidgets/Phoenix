@@ -74,11 +74,11 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
 
-    c.addPyMethod('AddButton', '(self, label, id=-2)',
+    c.addPyMethod('AddButton', '(self, label, id=wx.ID_ANY)',
         doc='A simple wrapper around the PGMultiButton.Add method, for backwards compatibility.',
         body="self.Add(label, id)")
 
-    c.addPyMethod('AddBitmapButton', '(self, bitmap, id=-2)',
+    c.addPyMethod('AddBitmapButton', '(self, bitmap, id=wx.ID_ANY)',
         doc='A simple wrapper around the PGMultiButton.Add method, for backwards compatibility.',
         body="self.Add(bitmap, id)")
 

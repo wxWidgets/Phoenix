@@ -31,17 +31,18 @@ if os.name == 'nt':
         _cairo_path = op.abspath(op.dirname(wx.__file__))
     os.environ['PATH'] = _cairo_path + os.pathsep + _save_path
 
-import cairocffi
-from cairocffi import cairo as cairo_c
-from cairocffi import ffi
+try:
+    import cairocffi
+    from cairocffi import cairo as cairo_c
+    from cairocffi import ffi
+finally:
+    # Now restore the original PATH, even if cairocffi isn't installed
+    if os.name == 'nt':
+        os.environ['PATH'] = _save_path
 
 # Make it so subsequent `import cairo` statements still work as if it
 # was really PyCairo
 cairocffi.install_as_pycairo()
-
-# Now restore the original PATH
-if os.name == 'nt':
-    os.environ['PATH'] = _save_path
 
 
 #----------------------------------------------------------------------------

@@ -453,6 +453,9 @@ def makeOptionParser():
         ("extra_setup",    ("",    "Extra args to pass on setup.py's command line.")),
         ("extra_make",     ("",    "Extra args to pass on [n]make's command line.")),
         ("extra_waf",      ("",    "Extra args to pass on waf's command line.")),
+        ("extra_configure", ("",   "Extra args to pass on wxWidgets' configure command line, such as "
+                                   "--with-libpng=builtin. Use with --force_config when they change. "
+                                   "(Not used on Windows)")),
         ("extra_pytest",   ("",    "Extra args to pass on py.test's command line.")),
 
         (("j","jobs"),     ("",    "Number of parallel compile jobs to do, if supported.")),
@@ -1752,6 +1755,9 @@ def cmd_build_wx(options, args):
                 build_options.append('--gtk2')
             if options.gtk3:
                 build_options.append('--gtk3')
+
+        if options.extra_configure:
+            build_options.append('--features=%s' % options.extra_configure)
 
         # Change to what will be the wxWidgets build folder
         # (Note, this needs to be after any testing for file/path existence, etc.

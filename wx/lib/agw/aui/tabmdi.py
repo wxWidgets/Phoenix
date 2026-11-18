@@ -148,8 +148,9 @@ class AuiMDIParentFrame(wx.Frame):
 
             # if the event was not handled this frame will handle it,
             # which is why we need the protection code at the beginning
-            # of this method
-            res = self.GetEventHandler().ProcessEvent(event)
+            # of this method. GetEventHandler() would be this frame, so
+            # call the base class.
+            res = wx.Frame.ProcessEvent(self, event)
 
         self._pLastEvt = None
 

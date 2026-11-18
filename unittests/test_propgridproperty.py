@@ -1,6 +1,7 @@
 import unittest
 from unittests import wtc
 
+import wx
 import wx.propgrid as pg
 
 #---------------------------------------------------------------------------
@@ -41,6 +42,22 @@ class property_Tests(wtc.WidgetTestCase):
     def test_propgridproperty06(self):
         c = pg.PGCell()
 
+
+
+    def test_propgridpropertyEmptyCell(self):
+        # These used to crash for a cell without data
+        prop = pg.IntProperty('x')
+        for c in (pg.PGCell(), prop.GetCell(0)):
+            self.assertEqual(c.GetText(), '')
+            self.assertFalse(c.GetFgCol().IsOk())
+            self.assertFalse(c.GetBgCol().IsOk())
+            self.assertFalse(c.GetFont().IsOk())
+            self.assertFalse(c.GetBitmap().IsOk())
+        c = pg.PGCell()
+        c.MergeFrom(pg.PGCell())
+        c.MergeFrom(pg.PGCell('text', fgCol=wx.RED))
+        self.assertEqual(c.GetText(), 'text')
+        self.assertEqual(c.GetFgCol(), wx.RED)
 
     # def test_propgridproperty07(self):
     #     attrs = pg.PGAttributeStorage()

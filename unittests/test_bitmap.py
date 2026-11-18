@@ -1,3 +1,4 @@
+import struct
 import unittest
 from unittests import wtc
 import wx
@@ -154,6 +155,18 @@ class BitmapTests(wtc.WidgetTestCase):
         buf = makeBuf(w,h,4)
         bmp = wx.Bitmap(w,h,32)
         bmp.CopyToBuffer(buf, wx.BitmapBufferFormat_ARGB32)
+
+    def test_bitmapCopyToBufferRGB32(self):
+        # A 32-bit bitmap without alpha used to fail on MSW
+        w = h = 10
+        bmp = wx.Bitmap(w, h, 32)
+        dc = wx.MemoryDC(bmp)
+        dc.SetBackground(wx.Brush(wx.Colour(10, 20, 30)))
+        dc.Clear()
+        del dc
+        buf = makeBuf(w, h, 4)
+        bmp.CopyToBuffer(buf, wx.BitmapBufferFormat_RGB32)
+        self.assertEqual(struct.unpack_from('=I', buf, 0)[0], 0xFF0A141E)
 
 
     def test_bitmapBufferFactory1(self):

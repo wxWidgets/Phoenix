@@ -45,6 +45,13 @@ def run():
     # We only need one of these
     c.find('GetFileSystem').ignore()
 
+    # These drop the rows' cached HTML. Without them here, calling them on a
+    # Python subclass would only run the wxVarVScrollHelper versions.
+    c.addItem(etgtools.WigCode("""\
+        virtual void RefreshRow(size_t line);
+        virtual void RefreshRows(size_t from, size_t to);
+        """))
+
     # let sip know that these pure virtuals have been implemented in this class
     c.addItem(etgtools.WigCode("""\
         protected:

@@ -218,6 +218,54 @@ class pdcFloodFillOp : public pdcOp
         wxFloodFillStyle m_style;
 };
 
+class pdcGradientFillLinearOp : public pdcOp
+{
+    public:
+        pdcGradientFillLinearOp(const wxRect& rect, const wxColour& initialColour,
+                                const wxColour& destColour, wxDirection direction)
+            {m_rect=rect; m_initial=initialColour; m_dest=destColour; m_direction=direction;}
+        virtual void DrawToDC(wxDC *dc, bool grey=false)
+        {
+            if (!grey) {
+                dc->GradientFillLinear(m_rect, m_initial, m_dest, m_direction);
+                return;
+            }
+            // MakeColourGrey returns a static, so copy the first one
+            wxColour initial = MakeColourGrey(m_initial);
+            dc->GradientFillLinear(m_rect, initial, MakeColourGrey(m_dest), m_direction);
+        }
+        virtual void Translate(wxCoord dx, wxCoord dy)
+            {m_rect.Offset(dx, dy);}
+    protected:
+        wxRect m_rect;
+        wxColour m_initial, m_dest;
+        wxDirection m_direction;
+};
+
+class pdcGradientFillConcentricOp : public pdcOp
+{
+    public:
+        pdcGradientFillConcentricOp(const wxRect& rect, const wxColour& initialColour,
+                                    const wxColour& destColour, const wxPoint& circleCenter)
+            {m_rect=rect; m_initial=initialColour; m_dest=destColour; m_center=circleCenter;}
+        virtual void DrawToDC(wxDC *dc, bool grey=false)
+        {
+            if (!grey) {
+                dc->GradientFillConcentric(m_rect, m_initial, m_dest, m_center);
+                return;
+            }
+            wxColour initial = MakeColourGrey(m_initial);
+            dc->GradientFillConcentric(m_rect, initial, MakeColourGrey(m_dest), m_center);
+        }
+        // The center is relative to the rect, so it doesn't move
+        virtual void Translate(wxCoord dx, wxCoord dy)
+            {m_rect.Offset(dx, dy);}
+    protected:
+        wxRect m_rect;
+        wxColour m_initial, m_dest;
+        wxPoint m_center;
+};
+
 class pdcCrossHairOp : public pdcOp
 {
     public:
@@ -685,6 +733,19 @@ public:
         { DrawRectangle(pt.x, pt.y, sz.x, sz.y); }
     void DrawRectangle(const wxRect& rect)
         { DrawRectangle(rect.x, rect.y, rect.width, rect.height); }
+
+    void GradientFillLinear(const wxRect& rect, const wxColour& initialColour,
+                            const wxColour& destColour, wxDirection nDirection = wxEAST)
+        {AddToList(new pdcGradientFillLinearOp(rect, initialColour, destColour, nDirection));}
+    void GradientFillConcentric(const wxRect& rect, const wxColour& initialColour,
+                                const wxColour& destColour, const wxPoint& circleCenter)
+        {AddToList(new pdcGradientFillConcentricOp(rect, initialColour, destColour, circleCenter));}
+    void GradientFillConcentric(const wxRect& rect, const wxColour& initialColour,
+                                const wxColour& destColour)
+        {
+            GradientFillConcentric(rect, initialColour, destColour,
+                                   wxPoint(rect.GetWidth() / 2, rect.GetHeight() / 2));
+        }
 
     void DrawRoundedRectangle(wxCoord x, wxCoord y, wxCoord width, wxCoord height,
                               double radius)

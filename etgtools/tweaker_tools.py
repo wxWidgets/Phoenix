@@ -920,18 +920,7 @@ def addSipConvertToSubClassCode(klass):
     """
     klass.addItem(extractors.WigCode("""\
     %ConvertToSubClassCode
-        const wxClassInfo* info   = sipCpp->GetClassInfo();
-        wxString           name   = info->GetClassName();
-        bool               exists = sipFindType(name.c_str()) != NULL;
-        while (info && !exists) {
-            info = info->GetBaseClass1();
-            name = info->GetClassName();
-            exists = sipFindType(name.c_str()) != NULL;
-        }
-        if (info)
-            sipType = sipFindType(name.c_str());
-        else
-            sipType = NULL;
+        sipType = wxPyFindSubClassType(sipCpp->GetClassInfo());
     %End
     """))
 
@@ -1340,6 +1329,35 @@ def convertFourDoublesTemplate(CLASS):
 #---------------------------------------------------------------------------
 # Templates for creating wrappers for type-specific wxList and wxArray classes
 
+# A __getitem__ overload for slices, used in all of the templates below. It
+# gets each item with the class's integer __getitem__, so they're wrapped the
+# same way as when they're indexed one at a time.
+GETSLICE_METHOD = """\
+    SIP_PYLIST __getitem__(SIP_PYSLICE slice);
+    %MethodCode
+        Py_ssize_t start, stop, step;
+        Py_ssize_t size = PyObject_Size(sipSelf);
+        if (size < 0 || PySlice_Unpack(slice, &start, &stop, &step) < 0) {
+            sipError = sipErrorFail;
+        }
+        else {
+            Py_ssize_t count = PySlice_AdjustIndices(size, &start, &stop, step);
+            sipRes = PyList_New(count);
+            for (Py_ssize_t i = 0; sipRes && i < count; ++i) {
+                PyObject* index = PyLong_FromSsize_t(start + i * step);
+                PyObject* item = index ? PyObject_GetItem(sipSelf, index) : NULL;
+                Py_XDECREF(index);
+                if (!item)
+                    Py_CLEAR(sipRes);
+                else
+                    PyList_SET_ITEM(sipRes, i, item);
+            }
+            if (!sipRes)
+                sipError = sipErrorFail;
+        }
+    %End
+"""
+
 
 def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None,
                           includeConvertToType=False, fakeListClassName=None,
@@ -1353,6 +1371,7 @@ def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None,
     else:
         TypeDef = ""
 
+    getsliceMeth = GETSLICE_METHOD
     moduleName = module.module
     ListClass_pyName = removeWxPrefix(ListClass)
 
@@ -1429,6 +1448,7 @@ public:
         }}
     %End
 
+{getsliceMeth}
     int __contains__(const {ItemClass}* obj);
     %MethodCode
         sipRes = sipCpp->Member(({RealItemClass}*)obj);
@@ -1534,6 +1554,7 @@ del _{ListClass_pyName}___repr__
 
 
 def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False, getItemCopy=False):
+    getsliceMeth = GETSLICE_METHOD
     moduleName = module.module
     ArrayClass_pyName = removeWxPrefix(ArrayClass)
     itemRef = '*' if itemIsPtr else '&'
@@ -1588,6 +1609,7 @@ public:
 
     {getitemMeth}
 
+{getsliceMeth}
     int __contains__({ItemClass}{itemRef} obj);
     %MethodCode
         int idx = sipCpp->Index({itemDeref}obj, false);
@@ -1625,6 +1647,7 @@ del _{ArrayClass_pyName}___repr__
 
 
 def stdVectorWrapperTemplate(VectorClass, ItemClass, module, itemIsPtr=False, getItemCopy=False, typeHeaderHelper=""):
+    getsliceMeth = GETSLICE_METHOD
     moduleName = module.module
     VectorClass_pyName = removeWxPrefix(VectorClass)
     itemRef = '*' if itemIsPtr else '&'
@@ -1686,6 +1709,7 @@ public:
 
     {getitemMeth}
 
+{getsliceMeth}
     int __contains__({ItemClass}{itemRef} obj);
     %MethodCode
         auto it = std::find(sipCpp->begin(), sipCpp->end(), {itemDeref}obj);
@@ -1726,6 +1750,7 @@ del _{VectorClass_pyName}___repr__
 
 # Same as the above, but for use with  WX_DEFINE_ARRAY_PTR
 def wxArrayPtrWrapperTemplate(ArrayClass, ItemClass, module):
+    getsliceMeth = GETSLICE_METHOD
     moduleName = module.module
     ArrayClass_pyName = removeWxPrefix(ArrayClass)
 
@@ -1756,6 +1781,7 @@ public:
         }}
     %End
 
+{getsliceMeth}
     int __contains__({ItemClass}* obj);
     %MethodCode
         int idx = sipCpp->Index(obj, false);

@@ -52,6 +52,15 @@ def run():
     c = module.find('wxPGCell')
     tools.ignoreConstOverloads(c)
 
+    # A cell without data, such as a new one or one of a property that isn't
+    # in a grid yet, would crash these
+    for name, typ in [('GetText', 'wxString'), ('GetBitmap', 'wxBitmapBundle'),
+                      ('GetFgCol', 'wxColour'), ('GetFont', 'wxFont'),
+                      ('GetBgCol', 'wxColour')]:
+        c.find(name).setCppCode_sip(
+            'sipRes = new %s(sipCpp->GetData() ? sipCpp->%s() : %s());' % (typ, name, typ))
+    c.find('MergeFrom').setCppCode_sip('if (srcCell->GetData())\n    sipCpp->MergeFrom(*srcCell);')
+
 
     #---------------------------------------------------------
     c = module.find('wxPGCellRenderer')

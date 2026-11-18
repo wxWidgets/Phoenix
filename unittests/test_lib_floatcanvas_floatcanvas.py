@@ -42,6 +42,20 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         fccanvas.AddObject(obj)
         fccanvas.Destroy()
 
+    def test_lib_floatcanvas_fc_ellipseDrawn(self):
+        import numpy as np
+        obj = fc.Ellipse((-25, -25), (50, 50), LineColor='black')
+        bmp = wx.Bitmap(100, 100)
+        dc = wx.MemoryDC(bmp)
+        dc.SetBackground(wx.WHITE_BRUSH)
+        dc.Clear()
+        # Flip the y axis, as the canvas does
+        obj._Draw(dc, lambda xy: np.array(xy) * (1, -1) + 50,
+                  lambda wh: np.array(wh, dtype=float) * (1, -1))
+        dc.SelectObject(wx.NullBitmap)
+        data = bytes(bmp.ConvertToImage().GetData())
+        self.assertTrue(any(red < 128 for red in data[::3]))
+
     def test_lib_floatcanvas_fc_arrow(self):
         fccanvas = fc.FloatCanvas(self.frame)
 

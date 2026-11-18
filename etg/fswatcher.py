@@ -54,6 +54,10 @@ def run():
 
     c = module.find('wxFileSystemWatcher')
     assert isinstance(c, etgtools.ClassDef)
+    for name in ['Add', 'AddTree']:
+        c.find(name).detailedDoc.append(
+            'The `events` filter is a combination of the :ref:`wx.FSWFlags` '
+            'values, for example ``wx.FSW_EVENT_CREATE | wx.FSW_EVENT_DELETE``.')
 
 
     c = module.find('wxFileSystemWatcherEvent')

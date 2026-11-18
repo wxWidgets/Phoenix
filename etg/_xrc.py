@@ -54,6 +54,9 @@ def run():
     module.addHeaderCode('#include <wxPython/wxpy_api.h>')
     module.addImport('_core')
     module.addImport('_xml')
+    # For wxAnimation and wxAnimationCtrl. Declaring them here instead would
+    # make stand-in types that SIP can pick over the real ones.
+    module.addImport('_adv')
     module.addPyCode('''\
     import wx
     ID_NONE = wx.ID_NONE  # Needed for some parameter defaults in this module
@@ -69,12 +72,6 @@ def run():
     module.addHeaderCode('#include <wx/xrc/xmlres.h>')
     module.addHeaderCode('#include <wx/fs_mem.h>')
     module.addHeaderCode('#include "wxpybuffer.h"')
-
-    module.insertItem(0, etgtools.WigCode("""\
-        // forward declarations
-        class wxAnimation;
-        class wxAnimationCtrl;
-        """))
 
     #-----------------------------------------------------------------
 

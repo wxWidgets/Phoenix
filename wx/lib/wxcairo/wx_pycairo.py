@@ -21,6 +21,10 @@ import cairo
 import ctypes
 import ctypes.util
 
+# cairocffi.install_as_pycairo() makes `import cairo` give cairocffi
+if not hasattr(cairo, 'CAPI'):
+    raise ImportError("The cairo module is not PyCairo")
+
 
 #----------------------------------------------------------------------------
 
@@ -110,9 +114,16 @@ def _FontFaceFromFont(font):
         fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
 
     elif 'wxMSW' in wx.PlatformInfo:
-        fontfaceptr = voidp( cairoLib.cairo_win32_font_face_create_for_hfont(
-            ctypes.c_ulong(int(font.GetHFONT()))) )
-        fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
+        # PyCairo has its own Cairo built in on Windows, with no API to make a
+        # font face from the HFONT, and objects from another copy of Cairo
+        # can't be mixed with it. So this only matches the face name, slant
+        # and weight.
+        slant = {wx.FONTSTYLE_ITALIC: cairo.FONT_SLANT_ITALIC,
+                 wx.FONTSTYLE_SLANT: cairo.FONT_SLANT_OBLIQUE}.get(
+                     font.GetStyle(), cairo.FONT_SLANT_NORMAL)
+        weight = (cairo.FONT_WEIGHT_BOLD if font.GetNumericWeight() >= wx.FONTWEIGHT_BOLD
+                  else cairo.FONT_WEIGHT_NORMAL)
+        fontface = cairo.ToyFontFace(font.GetFaceName(), slant, weight)
 
     elif 'wxGTK' in wx.PlatformInfo:
         # wow, this is a hell of a lot of steps...
@@ -422,7 +433,8 @@ def _loadPycairoAPI():
 
 # Load these at import time.  That seems a bit better than doing it at
 # first use...
-_findCairoLib()
+if 'wxMSW' not in wx.PlatformInfo:
+    _findCairoLib()
 _loadPycairoAPI()
 
 if 'wxMac' in wx.PlatformInfo:
@@ -437,9 +449,6 @@ if 'wxMac' in wx.PlatformInfo:
     font_face_create = cairoLib.cairo_quartz_font_face_create_for_cgfont
     font_face_create.argtypes = [ctypes.c_void_p]
     font_face_create.restype = ctypes.c_void_p
-
-elif 'wxMSW' in wx.PlatformInfo:
-    cairoLib.cairo_win32_font_face_create_for_hfont.restype = ctypes.c_void_p
 
 elif 'wxGTK' in wx.PlatformInfo:
     gdkLib = _findGDKLib()
