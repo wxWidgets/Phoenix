@@ -12,3 +12,9 @@ class VirtualListCtrl(wx.ListCtrl):
 
 def callers(ctrl: wx.ListCtrl) -> None:
     assert_type(ctrl.OnGetItemAttr(0), Optional[wx.ItemAttr])
+
+
+# Slicing a wrapped list or array gives a Python list (#737)
+def sequences(win: wx.Window) -> None:
+    assert_type(win.GetChildren()[0], wx.Window)
+    assert_type(win.GetChildren()[1:], list[wx.Window])

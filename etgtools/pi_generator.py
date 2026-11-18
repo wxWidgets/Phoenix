@@ -552,7 +552,10 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         itemIn = self.cleanType(seq['item'], is_input=True)
         methods = [
             'def __len__(self) -> int: ...',
+            '@overload',
             f'def __getitem__(self, index: int, /) -> {item}: ...',
+            '@overload',
+            f'def __getitem__(self, index: slice, /) -> list[{item}]: ...',
             f'def __contains__(self, obj: {itemIn}, /) -> bool: ...',
             # The array classes are iterated with __getitem__, but not all
             # type checkers understand that

@@ -45,6 +45,17 @@ class WindowList(wtc.WidgetTestCase): #unittest.TestCase):
         children = self.frames[4].GetChildren()
         self.assertEqual(len(children), 5)
 
+    def test_WindowList_slice(self):
+        children = self.frames[4].GetChildren()
+        items = list(children)
+        self.assertEqual(children[1:3], items[1:3])
+        self.assertEqual(children[::-2], items[::-2])
+        self.assertEqual(children[-2:], items[-2:])
+        self.assertEqual(children[10:], [])
+        self.assertIs(children[1:2][0], items[1])
+        with self.assertRaises(ValueError):
+            children[::0]
+
     def test_WindowList_repr(self):
         TLWs = wx.GetTopLevelWindows()
         self.assertTrue(repr(TLWs).startswith("WindowList:"))

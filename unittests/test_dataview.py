@@ -36,6 +36,13 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.assertFalse(dv.NullDataViewItem)
 
 
+    def test_dataviewItemArraySlice(self):
+        items = dv.DataViewItemArray()
+        for i in (1, 2, 3):
+            items.append(dv.DataViewItem(i))
+        self.assertEqual([int(i.GetID()) for i in items[1:]], [2, 3])
+        self.assertEqual([int(i.GetID()) for i in items[::-1]], [3, 2, 1])
+
     def test_dataviewItem6(self):
         dvi1 = dv.DataViewItem(111)
         dvi2 = dv.DataViewItem(222)
