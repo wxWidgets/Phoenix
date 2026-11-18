@@ -1292,6 +1292,10 @@ class Ellipse(RectEllipse):
                                     ScaleWorldToPixel,
                                     HTdc)
         WH[np.abs(WH) < self.MinSize] = self.MinSize
+        # The y axis is flipped, so the height is usually negative, and the
+        # cairo renderer (used by wx.DC on GTK 3) draws no ellipse for that
+        XY = XY + np.minimum(WH, 0)
+        WH = np.abs(WH)
         if not( self.DisappearWhenSmall and np.abs(WH).min() <=  self.MinSize) : # don't try to draw it too tiny
             dc.DrawEllipse(XY, WH)
             if HTdc and self.HitAble:
