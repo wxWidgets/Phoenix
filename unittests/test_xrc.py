@@ -297,6 +297,44 @@ class xrc_Tests(wtc.WidgetTestCase):
         self.assertIsInstance(ctrl, wx.adv.AnimationCtrl)
         self.assertIsInstance(ctrl.GetAnimation(), wx.adv.Animation)
 
+    def test_xrcReloadWhileHoldingOldControls(self):
+        # Wrappers of controls created by XRC used to outlive them, and be
+        # handed out again for new controls at the same address
+        resource = b'''\
+            <resource>
+                <object class="wxPanel" name="MyPanel">
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <object class="wxButton" name="button"><label>b</label></object>
+                        </object>
+                        <object class="sizeritem">
+                            <object class="wxTextCtrl" name="text"/>
+                        </object>
+                        <object class="sizeritem">
+                            <object class="wxStaticText" name="label"><label>l</label></object>
+                        </object>
+                        <object class="sizeritem">
+                            <object class="wxCheckBox" name="check"><label>c</label></object>
+                        </object>
+                    </object>
+                </object>
+            </resource>'''
+        expected = {'button': wx.Button, 'text': wx.TextCtrl,
+                    'label': wx.StaticText, 'check': wx.CheckBox}
+        xmlres = xrc.XmlResource()
+        xmlres.LoadFromBuffer(resource)
+        old = []
+        for i in range(50):
+            panel = xmlres.LoadPanel(self.frame, "MyPanel")
+            ctrls = {name: xrc.XRCCTRL(panel, name) for name in expected}
+            for name, cls in expected.items():
+                self.assertIs(type(ctrls[name]), cls)
+            panel.Destroy()
+            for ctrl in ctrls.values():
+                self.assertFalse(ctrl)
+            old.append(ctrls)
+
 
 
 #---------------------------------------------------------------------------
