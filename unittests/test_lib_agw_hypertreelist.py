@@ -166,6 +166,18 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
         self.assertEqual(calls, [item])
         self.assertEqual(main.GetToolTipText(), 'tip for item')
 
+    def test_lib_agw_hypertreelistSmallerThanHeader(self):
+        tree = HTL.HyperTreeList(self.frame, size=(200, 200))
+        tree.AddColumn('column')
+        main = tree.GetMainWindow()
+        self.assertGreater(main.GetSize().height, 0)
+        # Exactly the header's height would make the main window's height -1,
+        # which SetSize() takes as "don't change it"
+        for height in (tree._headerHeight, tree._headerHeight // 2):
+            tree.SetClientSize((200, height))
+            tree.DoHeaderLayout()
+            self.assertEqual(main.GetSize().height, 0)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
