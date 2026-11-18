@@ -44,15 +44,43 @@ class InspectionInfoPanel_DarkModeTests(wtc.WidgetTestCase):
         self.assertEqual(panel.StyleGetBackground(stc.STC_STYLE_DEFAULT),
                           wx.Colour('#FFFFFF'))
 
-    def test_lib_inspectionHighlightGridSizer(self):
-        sizer = wx.GridSizer(2, 2, 3, 3)
+    def highlightSizer(self, sizer):
         panel = wx.Panel(self.frame, size=(101, 101))
         for _ in range(4):
             sizer.Add(wx.Panel(panel))
         panel.SetSizer(sizer)
         panel.Layout()
+
         highlighter = wx.lib.inspection._InspectionHighlighter()
+        highlighter.highlightTime = 1
+        pending = []
+        doHighlight = highlighter.DoHighlight
+        doUnhighlight = highlighter.DoUnhighlight
+
+        def countHighlight(*args, **kw):
+            pending.append(None)
+            return doHighlight(*args, **kw)
+
+        def countUnhighlight(*args, **kw):
+            pending.pop()
+            return doUnhighlight(*args, **kw)
+
+        highlighter.DoHighlight = countHighlight
+        highlighter.DoUnhighlight = countUnhighlight
         highlighter.HighlightSizer(sizer)
+        self.assertTrue(pending)
+
+        # Let the highlights be removed while the frame exists. On macOS an
+        # overlay that outlives its window crashes when it's deleted.
+        sw = wx.StopWatch()
+        while pending and sw.Time() < 5000:
+            wx.MilliSleep(10)
+            self.myYield()
+        self.assertFalse(pending)
+        self.assertFalse(self.frame.IsFrozen())
+
+    def test_lib_inspectionHighlightGridSizer(self):
+        self.highlightSizer(wx.GridSizer(2, 2, 3, 3))
 
 
 class InspectionFrame_FillingTests(wtc.WidgetTestCase):
