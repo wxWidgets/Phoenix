@@ -98,6 +98,14 @@ class CursorTests(wtc.WidgetTestCase):
         self.assertTrue(wx.HOURGLASS_CURSOR.IsOk())
         self.assertTrue(wx.CROSS_CURSOR.IsOk())
 
+    def test_CursorToCursorBundle(self):
+        # A wx.Cursor is converted to a wx.CursorBundle
+        cursor = wx.Cursor(wx.CURSOR_HAND)
+        wx.SetCursor(cursor)
+        wx.SetCursor(wx.NullCursor)
+        self.frame.SetCursorBundle(cursor)
+        self.assertTrue(self.frame.GetCursor().IsOk())
+
 
 #---------------------------------------------------------------------------
 
