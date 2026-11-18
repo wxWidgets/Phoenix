@@ -220,7 +220,8 @@ class PieCtrlLegend(wx.Window):
         """
 
         w, h = self.GetSize()
-        self._background = wx.Bitmap(w, h)
+        # The legend has no width when there are no parts
+        self._background = wx.Bitmap(max(1, w), max(1, h))
         self._backgroundDC.SelectObject(self._background)
 
         if self.IsTransparent():
@@ -337,7 +338,7 @@ class PieCtrlLegend(wx.Window):
         pdc = wx.PaintDC(self)
 
         w, h = self.GetSize()
-        bmp = wx.Bitmap(w, h)
+        bmp = wx.Bitmap(max(1, w), max(1, h))
         mdc = wx.MemoryDC()
         mdc.SelectObject(bmp)
 
@@ -378,7 +379,8 @@ class PieCtrlLegend(wx.Window):
         if w != maxwidth or h != dy:
             self.SetSize((maxwidth, dy))
 
-        pdc.Blit(0, 0, w, h, mdc, 0, 0)
+        if w > 0 and h > 0:
+            pdc.Blit(0, 0, w, h, mdc, 0, 0)
 
 
 #----------------------------------------------------------------------

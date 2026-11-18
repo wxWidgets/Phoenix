@@ -1,4 +1,6 @@
+import sys
 import unittest
+from unittest import mock
 from unittests import wtc
 import wx
 
@@ -10,6 +12,17 @@ class lib_agw_piectrl_Tests(wtc.WidgetTestCase):
 
     def test_lib_agw_piectrlCtor(self):
         pie = PC.PieCtrl(self.frame)
+
+
+    def test_lib_agw_piectrlEmpty(self):
+        # Exceptions in paint handlers are printed with sys.excepthook
+        with mock.patch.object(sys, 'excepthook') as excepthook:
+            pie = PC.PieCtrl(self.frame, size=(200, 200))
+            for _ in range(2):
+                self.myUpdate(pie)
+                self.myUpdate(pie.GetLegend())
+            pie.GetLegend().RecreateBackground(wx.ClientDC(pie))
+        self.assertFalse(excepthook.called)
 
 
     def test_lib_agw_piectrlMethods(self):
