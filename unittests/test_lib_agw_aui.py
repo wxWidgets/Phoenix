@@ -94,6 +94,30 @@ class lib_agw_aui_lifetime_Tests(wtc.WidgetTestCase):
         mgr.UnInit()
         frame.Destroy()
 
+    def test_lib_agw_aui_mdiParentFrameEvents(self):
+        frame = aui.AuiMDIParentFrame(self.frame, title='MDI')
+        child = aui.AuiMDIChildFrame(frame, title='child')
+        calls = []
+        frame.Bind(wx.EVT_MENU, lambda evt: calls.append('parent'), id=wx.ID_ABOUT)
+        frame.Bind(wx.EVT_CLOSE, lambda evt: (calls.append('close'), evt.Skip()))
+
+        evt = wx.CommandEvent(wx.wxEVT_MENU, wx.ID_ABOUT)
+        self.assertTrue(frame.GetEventHandler().ProcessEvent(evt))
+        self.assertEqual(calls, ['parent'])
+
+        # The active child gets command events first
+        child.Bind(wx.EVT_MENU, lambda evt: calls.append('child'), id=wx.ID_ABOUT)
+        del calls[:]
+        frame.GetEventHandler().ProcessEvent(evt)
+        self.assertEqual(calls, ['child'])
+
+        del calls[:]
+        frame.Close()
+        self.assertEqual(calls, ['close'])
+        self.myYield()
+        self.assertFalse(frame)
+
+
 
 class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
 
