@@ -1,6 +1,7 @@
 import unittest
 from unittests import wtc
 
+import wx
 import wx.propgrid as pg
 
 #---------------------------------------------------------------------------
@@ -73,6 +74,14 @@ class propgrideditors_Tests(wtc.WidgetTestCase):
     def test_propgrideditors10(self):
         pgrid = pg.PropertyGrid(self.frame)
         mb = pg.PGMultiButton(pgrid, (100,25))
+
+    def test_propgrideditorsMultiButtonAdd(self):
+        pgrid = pg.PropertyGrid(self.frame)
+        mb = pg.PGMultiButton(pgrid, (100, 25))
+        mb.AddButton('...')
+        mb.AddBitmapButton(wx.ArtProvider.GetBitmap(wx.ART_FOLDER))
+        self.assertEqual(mb.GetCount(), 2)
+        self.assertNotEqual(mb.GetButtonId(0), mb.GetButtonId(1))
 
 
     def test_propgrideditors11(self):
