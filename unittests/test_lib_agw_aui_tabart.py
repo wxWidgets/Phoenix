@@ -31,6 +31,13 @@ class lib_agw_aui_tabart_Tests(wtc.WidgetTestCase):
             self.assertEqual(clone.GetNormalFont(), font)
             self.assertEqual(clone.GetSelectedFont(), font)
 
+    def test_lib_agw_aui_tabartUniformBitmapSize(self):
+        import wx.lib.agw.aui as aui
+        nb = aui.AuiNotebook(self.frame)
+        nb.SetUniformBitmapSize((16, 16))
+        nb.AddPage(wx.Panel(nb), 'page')
+        self.assertGreater(nb.GetTabCtrlHeight(), 16)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

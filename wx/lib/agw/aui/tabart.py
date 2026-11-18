@@ -847,8 +847,7 @@ class AuiDefaultTabArt(object):
         measure_bmp_isok = measure_bmp.IsOk()
         for page in pages:
 
-            if not measure_bmp_isok:
-                bmp = page.bitmap
+            bmp = measure_bmp if measure_bmp_isok else page.bitmap
 
             # we don't use the caption text because we don't
             # want tab heights to be different in the case
