@@ -198,6 +198,40 @@ def run():
                 ]),
 
 
+            MethodDef(type='void', name='GradientFillLinear',
+                items=[ ParamDef(type='const wxRect &', name='rect'),
+                        ParamDef(type='const wxColour &', name='initialColour'),
+                        ParamDef(type='const wxColour &', name='destColour'),
+                        ParamDef(type='wxDirection', name='nDirection', default='wxEAST')],
+                briefDoc="""\
+                    Fill the area specified by rect with a linear gradient,
+                    starting from initialColour and eventually fading to
+                    destColour. The nDirection specifies the direction of the
+                    colour change, default is to use initialColour on the left
+                    part of the rectangle and destColour on the right one.
+                    """),
+
+
+            MethodDef(type='void', name='GradientFillConcentric',
+                items=[ ParamDef(type='const wxRect &', name='rect'),
+                        ParamDef(type='const wxColour &', name='initialColour'),
+                        ParamDef(type='const wxColour &', name='destColour')],
+                briefDoc="""\
+                    Fill the area specified by rect with a radial gradient,
+                    starting from initialColour at the centre of the circle and
+                    fading to destColour on the circle outside. The circle is
+                    placed at the centre of rect, or at circleCenter, which is
+                    relative to rect.
+                    """,
+                overloads=[
+                    MethodDef(type='void', name='GradientFillConcentric',
+                        items=[ ParamDef(type='const wxRect &', name='rect'),
+                                ParamDef(type='const wxColour &', name='initialColour'),
+                                ParamDef(type='const wxColour &', name='destColour'),
+                                ParamDef(type='const wxPoint &', name='circleCenter')]),
+                ]),
+
+
             MethodDef(type='void', name='DrawLine',
                 items=[ ParamDef(type='wxCoord', name='x1'),
                         ParamDef(type='wxCoord', name='y1'),
