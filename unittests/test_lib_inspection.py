@@ -82,6 +82,17 @@ class InspectionInfoPanel_DarkModeTests(wtc.WidgetTestCase):
     def test_lib_inspectionHighlightGridSizer(self):
         self.highlightSizer(wx.GridSizer(2, 2, 3, 3))
 
+    def test_lib_inspectionHighlightCustomSizer(self):
+        class CustomSizer(wx.Sizer):
+            def CalcMin(self):
+                return wx.Size(101, 101)
+
+            def RepositionChildren(self, minSize):
+                for item in self.GetChildren():
+                    item.SetDimension(self.GetPosition(), wx.Size(50, 50))
+
+        self.highlightSizer(CustomSizer())
+
 
 class InspectionFrame_FillingTests(wtc.WidgetTestCase):
 
