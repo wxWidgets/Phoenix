@@ -43,6 +43,15 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.assertEqual([int(i.GetID()) for i in items[1:]], [2, 3])
         self.assertEqual([int(i.GetID()) for i in items[::-1]], [3, 2, 1])
 
+    def test_dataviewRendererSetMode(self):
+        dvtc = dv.DataViewTreeCtrl(self.frame)
+        renderer = dvtc.GetColumn(0).GetRenderer()
+        self.assertEqual(renderer.GetMode(), dv.DATAVIEW_CELL_EDITABLE)
+        renderer.SetMode(dv.DATAVIEW_CELL_INERT)
+        self.assertEqual(renderer.GetMode(), dv.DATAVIEW_CELL_INERT)
+        renderer.Mode = dv.DATAVIEW_CELL_ACTIVATABLE
+        self.assertEqual(renderer.Mode, dv.DATAVIEW_CELL_ACTIVATABLE)
+
     def test_dataviewItem6(self):
         dvi1 = dv.DataViewItem(111)
         dvi2 = dv.DataViewItem(222)

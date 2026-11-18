@@ -249,6 +249,13 @@ def run():
     c.abstract = True
     c.find('GetView').ignore(False)
 
+    # Every port has it, but it's missing from the interface docs
+    c.insertItemAfter(c.find('GetMode'), etgtools.MethodDef(
+        type='void', name='SetMode',
+        items=[etgtools.ParamDef(type='wxDataViewCellMode', name='mode')],
+        briefDoc="Sets the cell mode, for example ``DATAVIEW_CELL_INERT`` to stop "
+                 "the cells of this renderer from being edited."))
+
     # TODO: This is only available when wxUSE_ACCESSIBILITY is set to 1
     c.find('GetAccessibleDescription').ignore()
 
