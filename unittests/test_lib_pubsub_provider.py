@@ -295,6 +295,26 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
                 sys.modules.pop(name, None)
         self.assertEqual(topicName, ('searchPathRoot',))
 
+    def test_module_written_after_import_cache(self):
+        from wx.lib.pubsub.core.topicdefnprovider import TopicDefnDeserialModule
+        with tempfile.TemporaryDirectory() as tmpdir:
+            name = 'lib_pubsub_written_late'
+            sys.path.insert(0, tmpdir)
+            try:
+                with self.assertRaises(ImportError):
+                    TopicDefnDeserialModule(name)
+                # Python caches the directory's contents until its mtime
+                # changes, which may not happen right away on every platform
+                stat = os.stat(tmpdir)
+                self._writeTopicModule(tmpdir, name)
+                os.utime(tmpdir, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+                deserial = TopicDefnDeserialModule(name)
+                topicName = deserial.getNextTopic().nameTuple
+            finally:
+                sys.path.remove(tmpdir)
+                sys.modules.pop(name, None)
+        self.assertEqual(topicName, ('searchPathRoot',))
+
     def test_module_not_found(self):
         from wx.lib.pubsub.core.topicdefnprovider import TopicDefnDeserialModule
         with tempfile.TemporaryDirectory() as tmpdir:
