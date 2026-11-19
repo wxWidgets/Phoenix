@@ -1,4 +1,5 @@
 import gc
+import sys
 import unittest
 from unittest import mock
 import weakref
@@ -489,6 +490,10 @@ class grid_Tests(wtc.WidgetTestCase):
         assert hook.call_args[0][0] is TypeError
         assert g.GetCellValue(0, 1) == ''
         assert not g.IsCellEditControlEnabled()
+        # Python keeps the reported exception, don't leave it to later tests
+        for name in ('last_exc', 'last_type', 'last_value', 'last_traceback'):
+            if hasattr(sys, name):
+                delattr(sys, name)
 
     def test_grid51(self):
         # Calling the base EndEdit from an override used to recurse
