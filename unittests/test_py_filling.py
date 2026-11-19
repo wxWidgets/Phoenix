@@ -1,4 +1,6 @@
+import sys
 import unittest
+from unittest import mock
 from unittests import wtc
 import wx
 
@@ -29,6 +31,20 @@ class py_filling_Tests(wtc.WidgetTestCase):
                 return child
             child, cookie = tree.GetNextChild(parent, cookie)
         self.fail('no child %r' % text)
+
+    def test_py_fillingDestroyedEarly(self):
+        # Filling splits itself and restores its sash position with timers
+        with mock.patch.object(sys, 'excepthook') as excepthook:
+            config = wx.FileConfig(appName='test_py_filling', localFilename='',
+                                   style=wx.CONFIG_USE_LOCAL_FILE)
+            fill = filling.Filling(self.frame)
+            fill.LoadSettings(config)
+            fill.Destroy()
+            sw = wx.StopWatch()
+            while sw.Time() < 400:
+                wx.MilliSleep(10)
+                self.myYield()
+        self.assertFalse(excepthook.called)
 
     def test_py_fillingExpandDoesNotEvaluateGrandchildren(self):
         # Expanding an item used to get the attribute values of each of its
