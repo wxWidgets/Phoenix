@@ -1,4 +1,6 @@
+import sys
 import unittest
+from unittest import mock
 from unittests import wtc
 import wx
 
@@ -39,6 +41,20 @@ class lib_agw_cubecolourdialog_Tests(wtc.WidgetTestCase):
         dlg = CCD.CubeColourDialog(self.frame)
         self.checkStaticBoxSizers(dlg)
         dlg.Destroy()
+
+    def test_lib_agw_cubecolourdialogDestroyedEarly(self):
+        # The dialog initializes itself with CallAfter
+        with mock.patch.object(sys, 'excepthook') as excepthook:
+            dlg = CCD.CubeColourDialog(self.frame)
+            dlg.Destroy()
+            # Idle time deletes it, before the CallAfter runs
+            evtLoop = self.app.GetTraits().CreateEventLoop()
+            activator = wx.EventLoopActivator(evtLoop)
+            evtLoop.ProcessIdle()
+            self.assertFalse(dlg)
+            self.app.ProcessPendingEvents()
+            del activator
+        self.assertFalse(excepthook.called)
 
     def test_lib_agw_cubecolourdialogConstantsExist(self):
         # CubeColourDialog agwStyle
