@@ -5429,7 +5429,9 @@ class MaskedEditMixin:
                         require_digit_at = self._fields[0]._extent[0]
 ##                    dbg('require_digit_at:', require_digit_at)
 ##                    dbg("value[rda]: '%s'" % value[require_digit_at])
-                    if value[require_digit_at] not in list(string.digits):
+                    # The value is shorter while text is replaced on GTK
+                    if (require_digit_at >= len(value)
+                            or value[require_digit_at] not in string.digits):
                         valid = False
                         return valid
                 # else...

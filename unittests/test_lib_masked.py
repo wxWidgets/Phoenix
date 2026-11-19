@@ -1,4 +1,6 @@
+import sys
 import unittest
+from unittest import mock
 from unittests import wtc
 import wx
 import wx.lib.masked as m
@@ -161,15 +163,17 @@ class MaskedNumCtrlTests(wtc.WidgetTestCase):
 
     def test_numctrlTypeOverSelection(self):
         for removeFirst in (False, True):
-            t = m.NumCtrl(self.frame, value=123)
-            typeOverSelection(t, '23', '5', removeFirst)
-            self.myYield()
-            self.assertEqual(t.GetValue(), 15)
+            with mock.patch.object(sys, 'excepthook') as excepthook:
+                t = m.NumCtrl(self.frame, value=123)
+                typeOverSelection(t, '23', '5', removeFirst)
+                self.myYield()
+                self.assertEqual(t.GetValue(), 15)
 
-            t = m.NumCtrl(self.frame, value=1234.5, fractionWidth=2)
-            typeOverSelection(t, '23', '9', removeFirst)
-            self.myYield()
-            self.assertEqual(t.GetValue(), 194.5)
+                t = m.NumCtrl(self.frame, value=1234.5, fractionWidth=2)
+                typeOverSelection(t, '23', '9', removeFirst)
+                self.myYield()
+                self.assertEqual(t.GetValue(), 194.5)
+            self.assertFalse(excepthook.called)
 
 
 #---------------------------------------------------------------------------
