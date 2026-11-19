@@ -76,12 +76,16 @@ class WidgetTestCase(unittest.TestCase):
 
     def closeDialogs(self):
         """
-        Close dialogs by calling their EndModal method
+        Close dialogs, by calling EndModal for modal ones
         """
         #self.myYield()
         for w in wx.GetTopLevelWindows():
             if isinstance(w, wx.Dialog):
-                w.EndModal(wx.ID_CANCEL)
+                if w.IsModal():
+                    w.EndModal(wx.ID_CANCEL)
+                else:
+                    # Such as the generic about box on GTK and macOS
+                    w.Close()
 
 
     def waitFor(self, milliseconds):

@@ -299,7 +299,8 @@ class Filling(wx.SplitterWindow):
                                 static=static)
         self.text = FillingText(parent=self, static=static)
 
-        wx.CallLater(25, self.SplitVertically, self.tree, self.text, 200)
+        # These timers can fire after the window is destroyed
+        wx.CallLater(25, lambda: self and self.SplitVertically(self.tree, self.text, 200))
 
         self.SetMinimumPaneSize(1)
 
@@ -322,7 +323,7 @@ class Filling(wx.SplitterWindow):
         pos = config.ReadInt('Sash/FillingPos', 200)
         if not self.IsSplit():
             self.SplitVertically(self.tree, self.text)
-        wx.CallLater(250, self.SetSashPosition, pos)
+        wx.CallLater(250, lambda: self and self.SetSashPosition(pos))
         zoom = config.ReadInt('View/Zoom/Filling', -99)
         if zoom != -99:
             self.text.SetZoom(zoom)

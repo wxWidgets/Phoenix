@@ -99,8 +99,8 @@ class Canvas(wx.Window):
         self.Bind(wx.EVT_PAINT, self.onPaint)
 
     def MakeNewBuffer(self):
-        size = self.GetClientSize()
-        self.buffer = BitmapBuffer(size[0], size[1],
+        width, height = self.GetClientSize()
+        self.buffer = BitmapBuffer(max(1, width), max(1, height),
                                    self.GetBackgroundColour())
 
     def onSize(self, event):

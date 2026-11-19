@@ -890,6 +890,8 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         self._checktext = False
         self._dropShadow = True
 
+        self._cols = 1
+        self._rows = 0
         self._tCaptionHeight = []
         self._selectedarray = []
         self._tTextHeight = 16

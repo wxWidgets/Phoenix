@@ -997,7 +997,7 @@ class _InspectionHighlighter(object):
 
         # Anything else is probably a custom sizer, just highlight the items
         else:
-            del dc, odc
+            del dc, dco
             for item in sizer.GetChildren():
                 self.HighlightSizerItem(item, sizer, 1)
 

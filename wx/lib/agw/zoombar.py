@@ -1123,6 +1123,10 @@ class ZoomBar(wx.Control):
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
+        # It's also called by a timer, which may fire after the bar is gone
+        if not self:
+            return
+
         if self.GetScreenRect().Contains(wx.GetMousePosition()):
             return
 

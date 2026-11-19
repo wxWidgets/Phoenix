@@ -1,4 +1,6 @@
+import sys
 import unittest
+from unittest import mock
 from unittests import wtc
 import wx
 
@@ -229,6 +231,19 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
 
         fc.EVT_FC_ENTER_OBJECT
         fc.EVT_FC_LEAVE_OBJECT
+
+    def test_lib_floatcanvas_destroyedAfterSize(self):
+        # A size event starts a timer that redraws the canvas
+        with mock.patch.object(sys, 'excepthook') as excepthook:
+            fccanvas = fc.FloatCanvas(self.frame, size=(200, 200))
+            fccanvas.SetSize((150, 150))
+            self.myYield()
+            fccanvas.Destroy()
+            sw = wx.StopWatch()
+            while sw.Time() < 200:
+                wx.MilliSleep(10)
+                self.myYield()
+        self.assertFalse(excepthook.called)
 
     def test_lib_floatcanvas_rubberBandBox(self):
         from wx.lib.floatcanvas.Utilities import GUI

@@ -53,6 +53,9 @@ jobs:
           if [ ${{ runner.os }} == 'Linux' ]; then
               echo "XVFB_RUN=dbus-run-session -- xvfb-run -a" >> $GITHUB_ENV
               echo "WXPY_TEST_XVFB=1" >> $GITHUB_ENV
+              # Otherwise wx reads the dark mode setting from the desktop portal, and
+              # starting it on the test session bus floods the log with warnings
+              echo "GTK_THEME=Adwaita" >> $GITHUB_ENV
           fi
 
       - name: Checkout wxPython

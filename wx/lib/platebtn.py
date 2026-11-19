@@ -348,6 +348,8 @@ class PlateButton(wx.Control):
 
     def __LeaveWindow(self):
         """Handle updating the buttons state when the mouse cursor leaves"""
+        if not self:
+            return
         if (self._style & PB_STYLE_TOGGLE) and self._pressed:
             self._SetState(PLATE_PRESSED)
         else:
@@ -567,7 +569,7 @@ class PlateButton(wx.Control):
         if evt.GetKeyCode() == wx.WXK_SPACE:
             self._SetState(PLATE_PRESSED)
             self.__PostEvent()
-            wx.CallLater(100, self._SetState, PLATE_HIGHLIGHT)
+            wx.CallLater(100, lambda: self and self._SetState(PLATE_HIGHLIGHT))
         else:
             evt.Skip()
 

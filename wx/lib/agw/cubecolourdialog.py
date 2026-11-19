@@ -3087,6 +3087,10 @@ class CubeColourDialog(wx.Dialog):
     def InitDialog(self):
         """ Initialize the :class:`CubeColourDialog`. """
 
+        # It's called with CallAfter, so the dialog may be gone already
+        if not self:
+            return
+
         hsvRect = self.hsvBitmap.GetClientRect()
         self._centre = wx.Point(hsvRect.x + hsvRect.width//2, hsvRect.y + hsvRect.height//2)
 
@@ -3101,7 +3105,7 @@ class CubeColourDialog(wx.Dialog):
         self.SetSpinVals()
 
         self._initOver = True
-        wx.CallAfter(self.Refresh)
+        wx.CallAfter(lambda: self and self.Refresh())
 
 
     def CalcSlopes(self):

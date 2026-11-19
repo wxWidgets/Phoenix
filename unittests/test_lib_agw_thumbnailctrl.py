@@ -1,6 +1,8 @@
 import os
+import sys
 import time
 import unittest
+from unittest import mock
 from unittests import wtc
 import wx
 
@@ -50,6 +52,15 @@ class lib_agw_thumbnailctrl_Tests(wtc.WidgetTestCase):
         st = ST.ScrolledThumbnail(self.frame, -1, imagehandler=ST.NativeImageHandler)
         st.SetThumbSize(400, 300, 4)
         self.assertEqual(st.GetThumbSize(), (400, 300, 4))
+
+    def test_lib_agw_thumbnailctrlPaintBeforeSize(self):
+        # On macOS it can be painted before it gets a size event
+        with mock.patch.object(ST.ScrolledThumbnail, 'OnResize', lambda self, evt: None), \
+                mock.patch.object(sys, 'excepthook') as excepthook:
+            st = ST.ScrolledThumbnail(self.frame, -1, size=(200, 200),
+                                      imagehandler=ST.NativeImageHandler)
+            self.myUpdate(st)
+        self.assertFalse(excepthook.called)
 
     def test_lib_agw_thumbnailctrlBitmapCache(self):
         thumb = ST.Thumb(os.path.dirname(__file__), 'toucan.png', imagehandler=ST.NativeImageHandler)

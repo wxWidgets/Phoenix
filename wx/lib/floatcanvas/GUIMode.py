@@ -261,7 +261,8 @@ class GUIMove(ZoomWithMouseWheel, GUIBase):
             self.MoveTimer.Start(30, oneShot=True)
 
     def OnMoveTimer(self, event=None):
-        self.Canvas.Draw()
+        if self.Canvas:
+            self.Canvas.Draw()
 
     def UpdateScreen(self):
         ## The screen has been re-drawn, so StartMove needs to be reset.
