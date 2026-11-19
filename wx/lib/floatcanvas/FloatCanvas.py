@@ -546,6 +546,9 @@ class FloatCanvas(wx.Panel):
 
     def OnSizeTimer(self, event=None):
         """On size timer handler."""
+        # The timer can fire after the canvas is destroyed
+        if not self:
+            return
         self.MakeNewBuffers()
         self.Draw()
 
