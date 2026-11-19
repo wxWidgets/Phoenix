@@ -134,4 +134,4 @@ jobs:
 
       - name: Run unittests
         run: |
-          $XVFB_RUN python build_wxpy.py test --verbose
+          $XVFB_RUN python build_wxpy.py test --verbose --extra_pytest=--rerun-show-tracebacks

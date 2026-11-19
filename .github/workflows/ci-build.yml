@@ -338,7 +338,7 @@ jobs:
 
       - name: Run unittests
         run: |
-          $XVFB_RUN python build_wxpy.py test --verbose
+          $XVFB_RUN python build_wxpy.py test --verbose --extra_pytest=--rerun-show-tracebacks
 
       - name: Check the generated type stubs
         # The stubs are the same for every build, so one is enough. It needs
