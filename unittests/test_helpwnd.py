@@ -22,6 +22,10 @@ class helpwnd_Tests(wtc.WidgetTestCase):
         self.frame.SendSizeEvent()
         self.waitFor(50)
 
+        # The window uses the controller's help data, and tells the
+        # controller when it's destroyed, so it must go first
+        hw.Destroy()
+
 
 #---------------------------------------------------------------------------
 
