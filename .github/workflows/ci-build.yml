@@ -207,6 +207,9 @@ jobs:
               echo "os_tag=$os_tag" >> "$GITHUB_OUTPUT"
               echo "XVFB_RUN=dbus-run-session -- xvfb-run -a" >> $GITHUB_ENV
               echo "WXPY_TEST_XVFB=1" >> $GITHUB_ENV
+              # Otherwise wx reads the dark mode setting from the desktop portal, and
+              # starting it on the test session bus floods the log with warnings
+              echo "GTK_THEME=Adwaita" >> $GITHUB_ENV
               echo "LDFLAGS=-Wl,--strip-debug" >> $GITHUB_ENV
           elif [ ${{ matrix.os }} == macos-15-intel ]; then
               short_name=macos
