@@ -25,12 +25,14 @@ def _loadModule(moduleName, searchPath):
     try:
         return importlib.import_module(moduleName)
     except Exception:
-        if searchPath is None:
-            raise
+        pass
     if isinstance(searchPath, str):
         searchPath = [searchPath]
+    elif searchPath is not None:
+        searchPath = list(searchPath)
+    # A None searchPath searches sys.path again, now without stale caches
     importlib.invalidate_caches()
-    spec = importlib.machinery.PathFinder.find_spec(moduleName, list(searchPath))
+    spec = importlib.machinery.PathFinder.find_spec(moduleName, searchPath)
     if spec is None:
         raise ImportError('No module named %r' % moduleName, name=moduleName)
     module = importlib.util.module_from_spec(spec)
