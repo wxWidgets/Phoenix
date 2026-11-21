@@ -49,9 +49,17 @@ class odcombo_Tests(wtc.WidgetTestCase):
         self.assertEqual(cb.GetSelection(), 2)
         self.assertEqual(cb.GetString(1), 'two')
 
-        self.waitFor(100)
+        def drawn():
+            return (cb._OnDrawBackground_Called and cb._OnDrawItem_Called
+                    and cb._OnMeasureItemWidth_Called and cb._OnMeasureItem_Called)
+
         cb.Popup()
-        self.waitFor(500)
+        # A busy CI machine can take several seconds to draw the popup
+        for _ in range(200):
+            if drawn():
+                break
+            wx.MilliSleep(50)
+            self.myYield()
         cb.Dismiss()
         self.myYield()
 
