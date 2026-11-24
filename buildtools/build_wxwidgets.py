@@ -8,10 +8,8 @@
 import os
 import re
 import sys
-import glob
 import optparse
 import platform
-import shutil
 import types
 import subprocess
 
@@ -90,49 +88,6 @@ def getWxRelease(wxRoot=None):
     return versionText
 
 
-def getFrameworkName(options):
-    # the name of the framework is based on the wx port being built
-    name = "wxOSX"
-    if options.osx_cocoa:
-        name += "Cocoa"
-    else:
-        name += "Carbon"
-    return name
-
-
-def getPrefixInFramework(options, wxRoot=None):
-    # the path inside the framework that is the wx --prefix
-    fwPrefix = os.path.join(
-        os.path.abspath(options.mac_framework_prefix),
-        "%s.framework/Versions/%s" % (getFrameworkName(options), getWxRelease(wxRoot)))
-    return fwPrefix
-
-
-def macFixupInstallNames(destdir, prefix, buildDir=None):
-    # When an installdir is used then the install_names embedded in
-    # the dylibs are not correct.  Reset the IDs and the dependencies
-    # to use just the prefix.
-    print("**** macFixupInstallNames(%s, %s, %s)" % (destdir, prefix, buildDir))
-    pwd = os.getcwd()
-    os.chdir(destdir+prefix+'/lib')
-    dylibs = sorted(glob.glob('*.dylib'))     # ('*[0-9].[0-9].[0-9].[0-9]*.dylib')
-    for lib in dylibs:
-        cmd = 'install_name_tool -id %s/lib/%s %s/lib/%s' % \
-              (prefix,lib,  destdir+prefix,lib)
-        print(cmd)
-        run(cmd)
-        for dep in dylibs:
-            if buildDir is not None:
-                cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s/lib/%s' % \
-                      (buildDir,dep,  prefix,dep,  destdir+prefix,lib)
-            else:
-                cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s/lib/%s' % \
-                      (destdir+prefix,dep,  prefix,dep,  destdir+prefix,lib)
-            print(cmd)
-            run(cmd)
-    os.chdir(pwd)
-
-
 def run(cmd):
     global verbose
     if verbose:
@@ -179,31 +134,24 @@ def main(wxDir, args):
         toolkit = "autoconf"
 
     defJobs = str(numCPUs())
-    defFwPrefix = '/Library/Frameworks'
-
     option_dict = {
         "clean"         : (False, "Clean all files from the build directory"),
         "debug"         : (False, "Build the library in debug symbols"),
         "builddir"      : ("", "Directory where the build will be performed for autoconf builds."),
-        "prefix"        : ("", "Configured prefix to use for autoconf builds. Defaults to installdir if set. Ignored for framework builds."),
+        "prefix"        : ("", "Configured prefix to use for autoconf builds. Defaults to installdir if set."),
         "jobs"          : (defJobs, "Number of jobs to run at one time in make. Default: %s" % defJobs),
         "install"       : (False, "Install the toolkit to the installdir directory, or the default dir."),
         "installdir"    : ("", "Directory where built wxWidgets will be installed"),
         "gtk2"          : (False, "On Linux build for gtk2 (default gtk3"),
         "gtk3"          : (True,  "On Linux build for gtk3"),
-        "mac_distdir"   : (None, "If set on Mac, will create an installer package in the specified dir."),
         "mac_universal_binary"
                         : ("", "Comma separated list of architectures to include in the Mac universal binary"),
-        "mac_framework" : (False, "Install the Mac build as a framework"),
-        "mac_framework_prefix"
-                        : (defFwPrefix, "Prefix where the framework should be installed. Default: %s" % defFwPrefix),
         "cairo"         : (False, "Enable dynamically loading the Cairo lib for wxGraphicsContext on MSW"),
         "no_config"     : (False, "Turn off configure step on autoconf builds"),
         "config_only"   : (False, "Only run the configure step and then exit"),
         "rebake"        : (False, "Regenerate Bakefile and autoconf files"),
         "wxpython"      : (False, "Build the wxWidgets library with all options needed by wxPython"),
         "osx_cocoa"     : (False, "Build the Cocoa port"),
-        "osx_carbon"    : (False, "Build the Carbon port"),
         "shared"        : (False, "Build wx as a dynamic library"),
         "extra_make"    : ("", "Extra args to pass on [n]make's command line."),
         "features"      : ("", "A comma-separated list of wxUSE_XYZ defines on Win, or a list of configure flags on unix."),
@@ -249,8 +197,6 @@ def main(wxDir, args):
 
         if options.osx_cocoa:
             configure_opts.append("--with-osx_cocoa")
-        elif options.osx_carbon:
-            configure_opts.append("--with-osx_carbon")
 
         if options.gtk2:
             options.gtk3 = False
@@ -324,12 +270,11 @@ def main(wxDir, args):
             wxpy_configure_opts.append("--with-regex=builtin")
 
 
-        if not options.mac_framework:
-            if installDir and not prefixDir:
-                prefixDir = installDir
-            if prefixDir:
-                prefixDir = os.path.abspath(prefixDir)
-                configure_opts.append("--prefix=" + prefixDir)
+        if installDir and not prefixDir:
+            prefixDir = installDir
+        if prefixDir:
+            prefixDir = os.path.abspath(prefixDir)
+            configure_opts.append("--prefix=" + prefixDir)
 
 
         if options.wxpython:
@@ -344,26 +289,6 @@ def main(wxDir, args):
         if options.rebake:
             retval = run("make -f autogen.mk")
             exitIfError(retval, "Error running autogen.mk")
-
-        if options.mac_framework:
-            # TODO: Should options.install be automatically turned on if the
-            # mac_framework flag is given?
-
-            # framework builds always need to be monolithic
-            if not "--enable-monolithic" in configure_opts:
-                configure_opts.append("--enable-monolithic")
-
-            # The --prefix given to configure will be the framework prefix
-            # plus the framework specific dir structure.
-            prefixDir = getPrefixInFramework(options)
-            configure_opts.append("--prefix=" + prefixDir)
-
-            # the framework build adds symlinks above the installDir + prefixDir folder
-            # so we need to wipe from the framework root instead of inside the prefixDir.
-            frameworkRootDir = os.path.abspath(os.path.join(installDir + prefixDir, "..", ".."))
-            if os.path.exists(frameworkRootDir):
-                if os.path.exists(frameworkRootDir):
-                    shutil.rmtree(frameworkRootDir)
 
         # Workaround OpenSUSE libdir issue by unsetting CONFIG_SITE envvar
         env = None
@@ -502,164 +427,6 @@ def main(wxDir, args):
         if installDir:
             extra = ['DESTDIR='+installDir]
         wxBuilder.install(dir=buildDir, options=extra)
-
-    if options.install and options.mac_framework:
-
-        def renameLibrary(libname, frameworkname):
-            reallib = libname
-            links = []
-            while os.path.islink(reallib):
-                links.append(reallib)
-                reallib = "lib/" + os.readlink(reallib)
-
-            #print("reallib is %s" % reallib)
-            run("mv -f %s lib/%s.dylib" % (reallib, frameworkname))
-
-            for link in links:
-                run("ln -s -f %s.dylib %s" % (frameworkname, link))
-
-        frameworkRootDir = prefixDir
-        if installDir:
-            print("installDir = %s" % installDir)
-            frameworkRootDir = installDir + prefixDir
-        os.chdir(frameworkRootDir)
-        build_string = ""
-        if options.debug:
-            build_string = "d"
-
-        fwname = getFrameworkName(options)
-        version = getoutput("bin/wx-config --release")
-        version_full = getoutput("bin/wx-config --version")
-        basename = getoutput("bin/wx-config --basename")
-        configname = getoutput("bin/wx-config --selected-config")
-
-        os.makedirs("Resources")
-        wxplist = dict(
-            CFBundleDevelopmentRegion="English",
-            CFBundleIdentifier='org.wxwidgets.wxosxcocoa',
-            CFBundleName=fwname,
-            CFBundleVersion=version_full,
-            CFBundleExecutable=fwname,
-            CFBundleGetInfoString="%s %s" % (fwname, version_full),
-            CFBundlePackageType="FMWK",
-            CFBundleSignature="WXCO",
-            CFBundleShortVersionString=version_full,
-            CFBundleInfoDictionaryVersion="6.0",
-        )
-
-        import plistlib
-        plistlib.writePlist(wxplist, os.path.join(frameworkRootDir, "Resources", "Info.plist"))
-
-        # we make wx the "actual" library file and link to it from libwhatever.dylib
-        # so that things can link to wx and survive minor version changes
-        renameLibrary("lib/lib%s-%s.dylib" % (basename, version), fwname)
-        run("ln -s -f lib/%s.dylib %s" % (fwname, fwname))
-
-        run("ln -s -f include Headers")
-
-        for lib in ["GL", "STC", "Gizmos", "Gizmos_xrc"]:
-            libfile = "lib/lib%s_%s-%s.dylib" % (basename, lib.lower(), version)
-            if os.path.exists(libfile):
-                frameworkDir = "framework/wx%s/%s" % (lib, version)
-                if not os.path.exists(frameworkDir):
-                    os.makedirs(frameworkDir)
-                renameLibrary(libfile, "wx" + lib)
-                run("ln -s -f ../../../%s %s/wx%s" % (libfile, frameworkDir, lib))
-
-        for lib in sorted(glob.glob("lib/*.dylib")):
-            if not os.path.islink(lib):
-                corelibname = "lib/lib%s-%s.0.dylib" % (basename, version)
-                run("install_name_tool -id %s %s" % (os.path.join(prefixDir, lib), lib))
-                run("install_name_tool -change %s %s %s" % (os.path.join(frameworkRootDir, corelibname), os.path.join(prefixDir, corelibname), lib))
-
-        os.chdir("include")
-
-        header_template = """
-#ifndef __WX_FRAMEWORK_HEADER__
-#define __WX_FRAMEWORK_HEADER__
-
-%s
-
-#endif // __WX_FRAMEWORK_HEADER__
-"""
-        headers = ""
-        header_dir = "wx-%s/wx" % version
-        for include in sorted(glob.glob(header_dir + "/*.h")):
-            headers += "#include <wx/" + os.path.basename(include) + ">\n"
-
-        with open("%s.h" % fwname, "w") as framework_header:
-            framework_header.write(header_template % headers)
-
-        run("ln -s -f %s wx" % header_dir)
-        os.chdir("wx-%s/wx" % version)
-        run("ln -s -f ../../../lib/wx/include/%s/wx/setup.h setup.h" % configname)
-
-        os.chdir(os.path.join(frameworkRootDir, ".."))
-        run("ln -s -f %s Current" % getWxRelease())
-        os.chdir("..")
-        run("ln -s -f Versions/Current/Headers Headers")
-        run("ln -s -f Versions/Current/Resources Resources")
-        run("ln -s -f Versions/Current/%s %s" % (fwname, fwname))
-
-        # sanity check to ensure the symlink works
-        os.chdir("Versions/Current")
-
-        # put info about the framework into wx-config
-        os.chdir(frameworkRootDir)
-        text = open('lib/wx/config/%s' % configname).read()
-        text = text.replace("MAC_FRAMEWORK=", "MAC_FRAMEWORK=%s" % getFrameworkName(options))
-        if options.mac_framework_prefix not in ['/Library/Frameworks',
-                                                '/System/Library/Frameworks']:
-            text = text.replace("MAC_FRAMEWORK_PREFIX=",
-                         "MAC_FRAMEWORK_PREFIX=%s" % options.mac_framework_prefix)
-        open('lib/wx/config/%s' % configname, 'w').write(text)
-
-        # The framework is finished!
-        print("wxWidgets framework created at: " +
-              os.path.join( installDir,
-                            options.mac_framework_prefix,
-                            '%s.framework' % fwname))
-
-
-    # adjust the install_name if needed
-    if sys.platform.startswith("darwin") and \
-           options.install and \
-           options.installdir and \
-           not options.mac_framework and \
-           not options.wxpython:  # wxPython's build will do this later if needed
-        if not prefixDir:
-            prefixDir = '/usr/local'
-        macFixupInstallNames(options.installdir, prefixDir)#, buildDir)
-
-    # make a package if a destdir was set.
-    if options.mac_framework and \
-            options.install and \
-            options.installdir and \
-            options.mac_distdir:
-
-        if os.path.exists(options.mac_distdir):
-            shutil.rmtree(options.mac_distdir)
-
-        packagedir = os.path.join(options.mac_distdir, "packages")
-        os.makedirs(packagedir)
-        basename = os.path.basename(prefixDir.split(".")[0])
-        packageName = basename + "-" + getWxRelease()
-        packageMakerPath = getXcodePaths()[0]+"/usr/bin/packagemaker "
-        args = []
-        args.append("--root %s" % options.installdir)
-        args.append("--id org.wxwidgets.%s" % basename.lower())
-        args.append("--title %s" % packageName)
-        args.append("--version %s" % getWxRelease())
-        args.append("--out %s" % os.path.join(packagedir, packageName + ".pkg"))
-        cmd = packageMakerPath + ' '.join(args)
-        print("cmd = %s" % cmd)
-        run(cmd)
-
-        os.chdir(options.mac_distdir)
-
-        run('hdiutil create -srcfolder %s -volname "%s" -imagekey zlib-level=9 %s.dmg' % (packagedir, packageName, packageName))
-
-        shutil.rmtree(packagedir)
 
 if __name__ == '__main__':
     exitWithException = False  # use sys.exit instead

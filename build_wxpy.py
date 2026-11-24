@@ -427,8 +427,6 @@ def makeOptionParser():
         ("gtk2",           (False, "On Linux build for gtk2 (default gtk3)")),
         ("gtk3",           (True,  "On Linux build for gtk3")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
-        ("osx_carbon",     (False, "Build the OSX Carbon port on Mac (unsupported)")),
-        ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
         ("mac_arch",       ("",    "Comma separated list of architectures to build on Mac")),
 
         ("use_syswx",      (False, "Try to use an installed wx rather than building the "
@@ -1707,15 +1705,9 @@ def cmd_build_wx(options, args):
 
     else:
         # Platform is something other than MSW
-        if options.osx_carbon:
-            options.osx_cocoa = False
-
         BUILD_DIR = getBuildDir(options)
         DESTDIR = options.destdir
         PREFIX = options.prefix
-        if options.mac_framework and isDarwin:
-            # TODO:  Don't hard-code this path
-            PREFIX = "/Library/Frameworks/wx.framework/Versions/%s" %  wxversion2
         if PREFIX:
             build_options.append('--prefix=%s' % PREFIX)
 
@@ -1746,9 +1738,6 @@ def cmd_build_wx(options, args):
         #if options.install:
         #    build_options.append('--installdir=%s' % DESTDIR)
         #    build_options.append("--install")
-
-        if options.mac_framework and isDarwin:
-            build_options.append("--mac_framework")
 
         if not isDarwin:
             if options.gtk2:
