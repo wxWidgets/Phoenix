@@ -437,7 +437,7 @@ def makeOptionParser():
         ("no_config",      (False, "Skip the wxWidgets configure step if the build dir "
                                    "has already been configured.")),
         ("use_autoconf",   (False, "Build wxWidgets with configure and make instead of "
-                                   "CMake. (Not used on Windows; always on for macOS for now)")),
+                                   "CMake. (Not used on Windows)")),
 
         ("no_magic",       (False, "Do NOT use the magic that will enable the wxWidgets "
                                    "libraries to be bundled with wxPython. (Such as when "
@@ -1686,7 +1686,7 @@ def cmd_build_wx(options, args):
         return
     checkCompiler()
 
-    if isDarwin or options.use_autoconf and not isWindows:
+    if options.use_autoconf and not isWindows:
         buildWxWithAutoconf(options)
     else:
         buildWxWithCMake(options)
@@ -1706,9 +1706,9 @@ def buildWxWithCMake(options):
             cairoRoot = getMSWCairo()
 
     BUILD_DIR = getBuildDir(options)
-    # Using $ORIGIN in the rpath will cause the dynamic linker to look for
-    # the wx libraries in the same folder as the loading binary, which is
-    # where they will be in the wxPython package.
+    # Using $ORIGIN (@loader_path on macOS) in the rpath will cause the
+    # dynamic linker to look for the wx libraries in the same folder as the
+    # loading binary, which is where they will be in the wxPython package.
     rpathOrigin = not isWindows and not options.no_magic
     settings = wxcmake.getSettings(wxDir(), BUILD_DIR,
                                    debug=options.debug,
@@ -1717,6 +1717,7 @@ def buildWxWithCMake(options):
                                    cairoRoot=cairoRoot,
                                    noMSEdge=options.no_msedge,
                                    rpathOrigin=rpathOrigin,
+                                   macArch=options.mac_arch,
                                    prefix=options.prefix)
     extraArgs = shlex.split(options.extra_configure)
 
@@ -2115,7 +2116,7 @@ def cmd_install_wx(options, args):
         return
 
     BUILD_DIR = getBuildDir(options)
-    if not options.use_autoconf and not isDarwin:
+    if not options.use_autoconf:
         from buildtools import wxcmake
         wxcmake.install(BUILD_DIR, options.destdir)
         return

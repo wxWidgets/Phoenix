@@ -17,6 +17,7 @@ import sys
 from buildtools.config import msg, phoenixDir, writeIfChanged
 
 isWindows = sys.platform.startswith('win')
+isDarwin = sys.platform == 'darwin'
 
 # Ninja Multi-Config needs 3.17 and CMAKE_MSVC_DEBUG_INFORMATION_FORMAT 3.25.
 MIN_CMAKE_VERSION = (3, 25)
@@ -84,7 +85,8 @@ def _wxCMakeHas(wxDir, filename, text):
 
 def _needsVersionScript(wxDir):
     # wx < 3.4: the symbols get no version, unlike with configure.
-    return not isWindows and not _wxCMakeHas(wxDir, 'init.cmake', 'version-script')
+    return (not isWindows and not isDarwin and
+            not _wxCMakeHas(wxDir, 'init.cmake', 'version-script'))
 
 
 def _writeVersionScript(wxDir, buildDir):
@@ -101,7 +103,7 @@ def _writeVersionScript(wxDir, buildDir):
 
 def getSettings(wxDir, buildDir, debug=False, gtk2=False, mswArch=None,
                 cairoRoot=None, noMSEdge=False, rpathOrigin=False,
-                prefix=None):
+                macArch=None, prefix=None):
     """
     Return the CMake cache values for the wxWidgets build wxPython needs. The
     wxUSE_ values set to ON or OFF here are also checked in the generated
@@ -176,19 +178,32 @@ def getSettings(wxDir, buildDir, debug=False, gtk2=False, mswArch=None,
     settings['CMAKE_CXX_FLAGS'] = (optimise + os.environ.get('CXXFLAGS', '')).strip()
     ldflags = os.environ.get('LDFLAGS', '')
 
-    settings.update({
-        'wxBUILD_TOOLKIT':      'gtk2' if gtk2 else 'gtk3',
-        'wxUSE_LIBMSPACK':      'OFF',
-        'wxUSE_LIBSDL':         'ON',
-        # wx < 3.4: not on by default.
-        'wxUSE_PRIVATE_FONTS':  'ON',
-    })
-    # wx < 3.4: libGLU is linked to the GL library without being used.
-    ldflags += ' -Wl,--as-needed'
-    if _needsVersionScript(wxDir):
-        ldflags += ' -Wl,--version-script,' + os.path.join(buildDir, 'version-script')
+    if isDarwin:
+        if macArch == 'default':
+            macArch = 'arm64,x86_64'
+        settings['CMAKE_OSX_ARCHITECTURES'] = (
+            macArch.replace(',', ';') if macArch
+            else os.environ.get('CMAKE_OSX_ARCHITECTURES', ''))
+        settings['CMAKE_OSX_DEPLOYMENT_TARGET'] = \
+            os.environ.get('MACOSX_DEPLOYMENT_TARGET', '10.10')
+        for lib in ['LIBJPEG', 'LIBPNG', 'LIBTIFF', 'LIBWEBP', 'REGEX']:
+            settings['wxUSE_' + lib] = 'builtin'
+        rpath = '@loader_path'
+    else:
+        settings.update({
+            'wxBUILD_TOOLKIT':      'gtk2' if gtk2 else 'gtk3',
+            'wxUSE_LIBMSPACK':      'OFF',
+            'wxUSE_LIBSDL':         'ON',
+            # wx < 3.4: not on by default.
+            'wxUSE_PRIVATE_FONTS':  'ON',
+        })
+        # wx < 3.4: libGLU is linked to the GL library without being used.
+        ldflags += ' -Wl,--as-needed'
+        if _needsVersionScript(wxDir):
+            ldflags += ' -Wl,--version-script,' + os.path.join(buildDir, 'version-script')
+        rpath = '$ORIGIN'
     settings['CMAKE_BUILD_WITH_INSTALL_RPATH'] = 'ON' if rpathOrigin else 'OFF'
-    settings['CMAKE_INSTALL_RPATH'] = '$ORIGIN' if rpathOrigin else ''
+    settings['CMAKE_INSTALL_RPATH'] = rpath if rpathOrigin else ''
     settings['CMAKE_SHARED_LINKER_FLAGS'] = ldflags.strip()
     return settings
 

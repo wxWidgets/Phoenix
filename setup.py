@@ -58,8 +58,6 @@ the respective items. (Documents are launched in the default browser and demo is
 with python).
 """.format(version=cfg.VERSION, docs_base=DOCS_BASE)
 
-isDarwin = sys.platform == "darwin"
-
 #----------------------------------------------------------------------
 # Classes used in place of some setuptools command classes.
 
@@ -112,16 +110,11 @@ def _cleanup_symlinks(cmd):
     for libname in sorted(glob.glob(opj(build_lib, 'libwx*'))):
 
         if os.path.islink(libname):
-            if isDarwin:
-                # On Mac the name used by the extension module is the real
-                # file, so we can just get rid of all the links.
-                os.unlink(libname)
-
-            elif canGetSOName():
-                # On linux the soname used in the extension modules may
-                # be (probably is) one of the symlinks, so we have to be
-                # more tricky here. If the named file is a link and it is
-                # the soname, then remove the link and rename the
+            if canGetSOName():
+                # The soname (install name on macOS) used in the extension
+                # modules may be (probably is) one of the symlinks, so we
+                # have to be more tricky here. If the named file is a link
+                # and it is the soname, then remove the link and rename the
                 # linked-to file to this name.
                 soname = getSOName(libname)
                 if soname == os.path.basename(libname):

@@ -361,13 +361,13 @@ yourself. There are likely some other things that may not have been mentioned
 here, if you find something else that should be mentioned then please submit
 a PR for updating this document.
 
-On Windows and Linux wxWidgets is built with `CMake <https://cmake.org/>`_
-3.25 or newer and `Ninja <https://ninja-build.org/>`_. Pip installs them
+On all platforms wxWidgets is built with `CMake <https://cmake.org/>`_ 3.25
+or newer and `Ninja <https://ninja-build.org/>`_. Pip installs them
 automatically when it builds wxPython from a source archive. To use
 build_wxpy.py directly, install them with ``pip install --group build``, or
-``pip install cmake ninja``, or use your system's packages. On Linux the
-``--use_autoconf`` option of build_wxpy.py builds wxWidgets with configure and
-make instead, as previous versions did.
+``pip install cmake ninja``, or use your system's packages. On Linux and macOS
+the ``--use_autoconf`` option of build_wxpy.py builds wxWidgets with configure
+and make instead, as previous versions did.
 
 
 **Windows**

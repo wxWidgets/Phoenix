@@ -1016,11 +1016,19 @@ _haveObjDump = None
 def canGetSOName():
     global _haveObjDump
     if _haveObjDump is None:
-        _haveObjDump = findCmd('objdump') is not None
+        _haveObjDump = findCmd('otool' if sys.platform == 'darwin' else 'objdump') is not None
     return _haveObjDump
 
 
 def getSOName(filename):
+    if sys.platform == 'darwin':
+        # Use the install name, which is what the files linking to this one
+        # refer to, like the soname on Linux.
+        output = runcmd('otool -D %s' % filename, True).strip().splitlines()
+        if len(output) > 1:
+            return os.path.basename(output[-1].strip())
+        return None
+
     output = runcmd('objdump -p %s' % filename, True)
     result = re.search(r'^\s+SONAME\s+(.+)$', output, re.MULTILINE)
     if result:
