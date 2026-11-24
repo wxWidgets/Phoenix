@@ -432,9 +432,12 @@ def makeOptionParser():
                                    "one in this source tree.  The wx-config in {prefix}/bin "
                                    "or the first found on the PATH determines which wx is "
                                    "used.  Implies --no_magic.")),
-        ("force_config",   (False, "Run configure when building even if the script "
-                                   "determines it's not necessary.")),
-        ("no_config",      (False, "Turn off configure step on autoconf builds")),
+        ("force_config",   (False, "Configure wxWidgets from scratch, (with CMake's --fresh "
+                                   "option,) even if the script determines it's not necessary.")),
+        ("no_config",      (False, "Skip the wxWidgets configure step if the build dir "
+                                   "has already been configured.")),
+        ("use_autoconf",   (False, "Build wxWidgets with configure and make instead of "
+                                   "CMake. (Not used on Windows; always on for macOS for now)")),
 
         ("no_magic",       (False, "Do NOT use the magic that will enable the wxWidgets "
                                    "libraries to be bundled with wxPython. (Such as when "
@@ -448,11 +451,12 @@ def makeOptionParser():
         ("destdir",        ("",    "Installation root for wxWidgets, files will go to {destdir}/{prefix}")),
 
         ("extra_setup",    ("",    "Extra args to pass on setup.py's command line.")),
-        ("extra_make",     ("",    "Extra args to pass on [n]make's command line.")),
+        ("extra_make",     ("",    "Extra args to pass on the command line of the tool "
+                                   "building wxWidgets, (ninja, or make with --use_autoconf.)")),
         ("extra_waf",      ("",    "Extra args to pass on waf's command line.")),
-        ("extra_configure", ("",   "Extra args to pass on wxWidgets' configure command line, such as "
-                                   "--with-libpng=builtin, or on its CMake command line on Windows. "
-                                   "Use with --force_config when they change.")),
+        ("extra_configure", ("",   "Extra args to pass on wxWidgets' CMake command line, such as "
+                                   "-DwxUSE_LIBPNG=builtin, (or configure's with --use_autoconf, such "
+                                   "as --with-libpng=builtin.) Use with --force_config when they change.")),
         ("extra_pytest",   ("",    "Extra args to pass on py.test's command line.")),
 
         (("j","jobs"),     ("",    "Number of parallel compile jobs to do, if supported.")),
@@ -1682,10 +1686,10 @@ def cmd_build_wx(options, args):
         return
     checkCompiler()
 
-    if isWindows:
-        buildWxWithCMake(options)
-    else:
+    if isDarwin or options.use_autoconf and not isWindows:
         buildWxWithAutoconf(options)
+    else:
+        buildWxWithCMake(options)
 
     if not options.no_allmo:
         make_allmo()
@@ -1702,10 +1706,17 @@ def buildWxWithCMake(options):
             cairoRoot = getMSWCairo()
 
     BUILD_DIR = getBuildDir(options)
+    # Using $ORIGIN in the rpath will cause the dynamic linker to look for
+    # the wx libraries in the same folder as the loading binary, which is
+    # where they will be in the wxPython package.
+    rpathOrigin = not isWindows and not options.no_magic
     settings = wxcmake.getSettings(wxDir(), BUILD_DIR,
+                                   debug=options.debug,
+                                   gtk2=options.gtk2,
                                    mswArch=MSVC_ARCH,
                                    cairoRoot=cairoRoot,
                                    noMSEdge=options.no_msedge,
+                                   rpathOrigin=rpathOrigin,
                                    prefix=options.prefix)
     extraArgs = shlex.split(options.extra_configure)
 
@@ -1735,6 +1746,8 @@ def buildWxWithAutoconf(options):
     if PREFIX:
         build_options.append('--prefix=%s' % PREFIX)
 
+    from buildtools import wxcmake
+    wxcmake.removeOtherBuild(BUILD_DIR, 'CMakeCache.txt', 'CMake')
     if not os.path.exists(BUILD_DIR):
         os.makedirs(BUILD_DIR)
     if  isDarwin:
@@ -2101,8 +2114,13 @@ def cmd_install_wx(options, args):
         msg('Magic is in use, wxWidgets will be installed with wxPython')
         return
 
-    # Otherwise, run 'make install' in the wx build folder
     BUILD_DIR = getBuildDir(options)
+    if not options.use_autoconf and not isDarwin:
+        from buildtools import wxcmake
+        wxcmake.install(BUILD_DIR, options.destdir)
+        return
+
+    # Otherwise, run 'make install' in the wx build folder
     DESTDIR = '' if not options.destdir else 'DESTDIR=' + options.destdir
     pwd = pushDir(BUILD_DIR)
     runcmd("make install %s %s" % (DESTDIR, options.extra_make))

@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import sys
 
-from buildtools.config import msg
+from buildtools.config import msg, phoenixDir, writeIfChanged
 
 isWindows = sys.platform.startswith('win')
 
@@ -70,7 +70,37 @@ def findNinja():
     return ninja
 
 
-def getSettings(wxDir, buildDir, mswArch=None, cairoRoot=None, noMSEdge=False,
+def getWxVersion(wxDir):
+    text = open(os.path.join(wxDir, 'include', 'wx', 'version.h')).read()
+    def _get(name):
+        return int(re.search(r'#define\s+%s\s+(\d+)' % name, text).group(1))
+    return _get('wxMAJOR_VERSION'), _get('wxMINOR_VERSION')
+
+
+def _wxCMakeHas(wxDir, filename, text):
+    path = os.path.join(wxDir, 'build', 'cmake', filename)
+    return text in open(path).read()
+
+
+def _needsVersionScript(wxDir):
+    # wx < 3.4: the symbols get no version, unlike with configure.
+    return not isWindows and not _wxCMakeHas(wxDir, 'init.cmake', 'version-script')
+
+
+def _writeVersionScript(wxDir, buildDir):
+    """
+    Write the version script that configure uses to give all the symbols the
+    WXU_x.y version.
+    """
+    major, minor = getWxVersion(wxDir)
+    text = open(os.path.join(wxDir, 'version-script.in')).read()
+    text = text.replace('@WX_VERSION_TAG@', 'WXU_%d.%d' % (major, minor))
+    # The libraries are relinked when this file is newer than them.
+    writeIfChanged(os.path.join(buildDir, 'version-script'), text)
+
+
+def getSettings(wxDir, buildDir, debug=False, gtk2=False, mswArch=None,
+                cairoRoot=None, noMSEdge=False, rpathOrigin=False,
                 prefix=None):
     """
     Return the CMake cache values for the wxWidgets build wxPython needs. The
@@ -101,6 +131,8 @@ def getSettings(wxDir, buildDir, mswArch=None, cairoRoot=None, noMSEdge=False,
     }
     if prefix:
         settings['CMAKE_INSTALL_PREFIX'] = os.path.abspath(prefix)
+    elif not isWindows:
+        settings['CMAKE_INSTALL_PREFIX'] = '/usr/local'
 
     if isWindows:
         settings.update({
@@ -135,6 +167,30 @@ def getSettings(wxDir, buildDir, mswArch=None, cairoRoot=None, noMSEdge=False,
             settings['CAIRO_LIBRARIES'] = os.path.join(cairoRoot, mswArch or 'x86',
                                                        'bin', 'libcairo-2.dll')
         return settings
+
+    # Use the same optimization as configure --enable-optimise, without the
+    # stripping (-s) or debug info (-g) that wxWidgets adds to Release builds.
+    settings['CMAKE_BUILD_TYPE'] = 'Debug' if debug else ''
+    optimise = '' if debug else '-O2 '
+    settings['CMAKE_C_FLAGS'] = (optimise + os.environ.get('CFLAGS', '')).strip()
+    settings['CMAKE_CXX_FLAGS'] = (optimise + os.environ.get('CXXFLAGS', '')).strip()
+    ldflags = os.environ.get('LDFLAGS', '')
+
+    settings.update({
+        'wxBUILD_TOOLKIT':      'gtk2' if gtk2 else 'gtk3',
+        'wxUSE_LIBMSPACK':      'OFF',
+        'wxUSE_LIBSDL':         'ON',
+        # wx < 3.4: not on by default.
+        'wxUSE_PRIVATE_FONTS':  'ON',
+    })
+    # wx < 3.4: libGLU is linked to the GL library without being used.
+    ldflags += ' -Wl,--as-needed'
+    if _needsVersionScript(wxDir):
+        ldflags += ' -Wl,--version-script,' + os.path.join(buildDir, 'version-script')
+    settings['CMAKE_BUILD_WITH_INSTALL_RPATH'] = 'ON' if rpathOrigin else 'OFF'
+    settings['CMAKE_INSTALL_RPATH'] = '$ORIGIN' if rpathOrigin else ''
+    settings['CMAKE_SHARED_LINKER_FLAGS'] = ldflags.strip()
+    return settings
 
 
 def parseCMakeArgs(args):
@@ -176,6 +232,26 @@ def checkSetupH(buildDir, settings):
               'the CMake output above for why:\n    ' + '\n    '.join(errors))
 
 
+def removeOtherBuild(buildDir, marker, kind):
+    """
+    Remove a build dir made by the other build system, so that its files
+    don't get mixed in. Only build dirs in Phoenix's build folder are removed.
+    """
+    if not os.path.exists(os.path.join(buildDir, marker)):
+        return
+    ourBuild = os.path.realpath(os.path.join(phoenixDir(), 'build'))
+    try:
+        ours = os.path.commonpath([os.path.realpath(buildDir), ourBuild]) == ourBuild
+    except ValueError:
+        # On different drives
+        ours = False
+    if not ours:
+        _fail('%s has a %s build of wxWidgets. Remove it, or use another '
+              '--build_dir.' % (buildDir, kind))
+    msg('Removing the %s build in %s' % (kind, buildDir))
+    shutil.rmtree(buildDir)
+
+
 def _run(cmd, cwd=None):
     msg(shlex.join(cmd))
     if subprocess.run(cmd, cwd=cwd).returncode != 0:
@@ -185,9 +261,13 @@ def _run(cmd, cwd=None):
 def configure(wxDir, buildDir, settings, extraArgs=(), fresh=False):
     cmake = findCMake()
     ninja = findNinja()
+    removeOtherBuild(buildDir, 'config.status', 'configure')
     os.makedirs(buildDir, exist_ok=True)
+    if _needsVersionScript(wxDir):
+        _writeVersionScript(wxDir, buildDir)
 
-    cmd = [cmake, '-S', wxDir, '-B', buildDir, '-G', 'Ninja Multi-Config',
+    generator = 'Ninja Multi-Config' if isWindows else 'Ninja'
+    cmd = [cmake, '-S', wxDir, '-B', buildDir, '-G', generator,
            '-DCMAKE_MAKE_PROGRAM=' + ninja]
     if fresh:
         cmd.append('--fresh')
@@ -214,3 +294,13 @@ def build(buildDir, configs=(None,), jobs=None, verbose=False, extraArgs=()):
             cmd += ['--'] + list(extraArgs)
         _run(cmd)
 
+
+def install(buildDir, destdir=None):
+    cmake = findCMake()
+    env = dict(os.environ)
+    if destdir:
+        env['DESTDIR'] = destdir
+    cmd = [cmake, '--install', buildDir]
+    msg(shlex.join(cmd))
+    if subprocess.run(cmd, env=env).returncode != 0:
+        _fail('Command failed: ' + shlex.join(cmd))
