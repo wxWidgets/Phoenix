@@ -14,7 +14,6 @@ import types
 import subprocess
 
 from buildtools import builder
-from buildtools.config import getVisCVersion
 
 # builder object
 wxBuilder = None
@@ -26,7 +25,6 @@ contribDir = None
 options = None
 configure_opts = None
 exitWithException = True
-nmakeCommand = 'nmake.exe'
 
 verbose = False
 
@@ -116,7 +114,6 @@ def main(wxDir, args):
     global options
     global configure_opts
     global wxBuilder
-    global nmakeCommand
 
     wxRootDir = wxDir
 
@@ -125,13 +122,8 @@ def main(wxDir, args):
 
     VERSION = tuple([int(i) for i in getWxRelease().split('.')[:2]])
 
-    if sys.platform.startswith("win"):
-        contribDir = os.path.join(wxRootDir, "contrib", "build")
-
-    if sys.platform.startswith("win"):
-        toolkit = "msvc"
-    else:
-        toolkit = "autoconf"
+    # wxWidgets is built with CMake on Windows, see wxcmake.py
+    toolkit = "autoconf"
 
     defJobs = str(numCPUs())
     option_dict = {
@@ -146,19 +138,15 @@ def main(wxDir, args):
         "gtk3"          : (True,  "On Linux build for gtk3"),
         "mac_universal_binary"
                         : ("", "Comma separated list of architectures to include in the Mac universal binary"),
-        "cairo"         : (False, "Enable dynamically loading the Cairo lib for wxGraphicsContext on MSW"),
         "no_config"     : (False, "Turn off configure step on autoconf builds"),
         "config_only"   : (False, "Only run the configure step and then exit"),
         "rebake"        : (False, "Regenerate Bakefile and autoconf files"),
         "wxpython"      : (False, "Build the wxWidgets library with all options needed by wxPython"),
         "osx_cocoa"     : (False, "Build the Cocoa port"),
         "shared"        : (False, "Build wx as a dynamic library"),
-        "extra_make"    : ("", "Extra args to pass on [n]make's command line."),
-        "features"      : ("", "A comma-separated list of wxUSE_XYZ defines on Win, or a list of configure flags on unix."),
+        "extra_make"    : ("", "Extra args to pass on make's command line."),
+        "features"      : ("", "A list of configure flags."),
         "verbose"       : (False, "Print commands as they are run, (to aid with debugging this script)"),
-        "jom"           : (False, "Use jom.exe instead of nmake for MSW builds."),
-        "no_dpi_aware"  : (False, "Don't use the DPI_AWARE_MANIFEST."),
-        "no_msedge"     : (False, "Do not include the MS Edge backend for wx.html2.WebView. (Windows only)"),
         "set_rpath_origin"
                         : (False, "Set RPATH to $ORIGIN when building wxWidgets libraries"),
     }
@@ -314,96 +302,6 @@ def main(wxDir, args):
             print("Exiting after configure")
             return
 
-    elif toolkit in ["msvc", "msvcProject"]:
-        flags = {}
-        buildDir = os.path.abspath(os.path.join(wxRootDir, "build", "msw"))
-
-        print("Updating wx/msw/setup.h")
-
-        if options.cairo:
-            if not os.environ.get("CAIRO_ROOT"):
-                print("WARNING: Expected CAIRO_ROOT set in the environment!")
-            flags["wxUSE_CAIRO"] = "1"
-
-        if options.wxpython:
-            flags["wxDIALOG_UNIT_COMPATIBILITY "] = "0"
-            flags["wxUSE_DEBUGREPORT"] = "0"
-            flags["wxUSE_DIALUP_MANAGER"] = "0"
-            flags["wxUSE_GRAPHICS_CONTEXT"] = "1"
-            flags["wxUSE_DISPLAY"] = "1"
-            flags["wxUSE_GLCANVAS"] = "1"
-            flags["wxUSE_POSTSCRIPT"] = "1"
-            flags["wxUSE_AFM_FOR_POSTSCRIPT"] = "0"
-            flags["wxUSE_DATEPICKCTRL_GENERIC"] = "1"
-            flags["wxUSE_IFF"] = "1"
-            flags["wxUSE_ACCESSIBILITY"] = "1"
-            flags["wxUSE_WINRT"] = "0"
-            flags["wxUSE_UIACTIONSIMULATOR"] = "1"
-            if not options.no_msedge:
-                flags["wxUSE_WEBVIEW_EDGE"] = "1"
-
-
-        mswIncludeDir = os.path.join(wxRootDir, "include", "wx", "msw")
-        setupFile = os.path.join(mswIncludeDir, "setup.h")
-        with open(setupFile, "rb") as f:
-            setupText = f.read()
-            setupText = setupText.decode('utf-8')
-
-        for flag in flags:
-            setupText, subsMade = re.subn(flag + r"\s+?\d", "%s %s" % (flag, flags[flag]), setupText)
-            if subsMade == 0:
-                print("Flag %s wasn't found in setup.h!" % flag)
-                sys.exit(1)
-
-        with open(setupFile, "wb") as f:
-            setupText = setupText.encode('utf-8')
-            f.write(setupText)
-
-        args = []
-        if toolkit == "msvc":
-            print("setting build options...")
-            args.append("-f makefile.vc")
-
-            if options.wxpython:
-                args.append("OFFICIAL_BUILD=1")
-                args.append("COMPILER_VERSION=%s" % getVisCVersion())
-                args.append("SHARED=1")
-                args.append("MONOLITHIC=0")
-                args.append("USE_OPENGL=1")
-                args.append("USE_GDIPLUS=1")
-
-                if not options.debug:
-                    args.append("BUILD=release")
-                else:
-                    args.append("BUILD=debug")
-
-            if options.shared:
-                args.append("SHARED=1")
-
-            if options.cairo:
-                args.append(
-                    "CPPFLAGS=/I%s" %
-                     os.path.join(os.environ.get("CAIRO_ROOT", ""), 'include\\cairo'))
-
-            if options.jom:
-                nmakeCommand = 'jom.exe'
-
-            if options.no_dpi_aware:
-                args.append("USE_DPI_AWARE_MANIFEST=0")
-
-
-            wxBuilder = builder.MSVCBuilder(commandName=nmakeCommand)
-
-        if toolkit == "msvcProject":
-            args = []
-            if options.shared or options.wxpython:
-                args.append("wx_dll.dsw")
-            else:
-                args.append("wx.dsw")
-
-            # TODO:
-            wxBuilder = builder.MSVCProjectBuilder()
-
 
     if not wxBuilder:
         print("Builder not available for your specified platform/compiler.")
@@ -418,8 +316,7 @@ def main(wxDir, args):
     if options.extra_make:
         args.append(options.extra_make)
 
-    if not sys.platform.startswith("win"):
-        args.append("--jobs=" + options.jobs)
+    args.append("--jobs=" + options.jobs)
     exitIfError(wxBuilder.build(dir=buildDir, options=args), "Error building")
 
     if options.install:

@@ -43,7 +43,7 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macSetLoaderNames, \
                                getVcsRev, runcmd, getSipFiles, \
-                               getVisCVersion, getToolsPlatformName, updateLicenseFiles, \
+                               getToolsPlatformName, updateLicenseFiles, \
                                TemporaryDirectory, getMSVCInfo, generateVersionFiles
 
 import buildtools.version as version
@@ -404,10 +404,9 @@ def getMSWSettings(options):
     msw.CPU = os.environ.get('CPU')
     if msw.CPU in ['AMD64', 'X64', 'ARM64'] or PYTHON_ARCH == '64bit':
         msw.dllArch = 'arm64' if msw.CPU == 'ARM64' else 'x64'
-        msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_%s_dll" % (getVisCVersion(), msw.dllArch))
+        msw.dllDir = posixjoin(getBuildDir(options), "lib", "vc_%s_dll" % msw.dllArch)
     else:
-        msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_dll" % getVisCVersion())
-    msw.buildDir = posixjoin(wxDir(), "build", "msw")
+        msw.dllDir = posixjoin(getBuildDir(options), "lib", "vc_dll")
 
     msw.dll_type = "u"
     if options.debug:
@@ -444,7 +443,7 @@ def makeOptionParser():
                                    "already installed wxWidgets, or allow this script to "
                                    "build and install wxWidgets independently of wxPython.")),
 
-        ("build_dir",      ("",    "Directory to store wx build files. (Not used on Windows)")),
+        ("build_dir",      ("",    "Directory to store wx build files.")),
         ("prefix",         ("",    "Prefix value to pass to the wx build.")),
         ("destdir",        ("",    "Installation root for wxWidgets, files will go to {destdir}/{prefix}")),
 
@@ -452,8 +451,8 @@ def makeOptionParser():
         ("extra_make",     ("",    "Extra args to pass on [n]make's command line.")),
         ("extra_waf",      ("",    "Extra args to pass on waf's command line.")),
         ("extra_configure", ("",   "Extra args to pass on wxWidgets' configure command line, such as "
-                                   "--with-libpng=builtin. Use with --force_config when they change. "
-                                   "(Not used on Windows)")),
+                                   "--with-libpng=builtin, or on its CMake command line on Windows. "
+                                   "Use with --force_config when they change.")),
         ("extra_pytest",   ("",    "Extra args to pass on py.test's command line.")),
 
         (("j","jobs"),     ("",    "Number of parallel compile jobs to do, if supported.")),
@@ -463,7 +462,6 @@ def makeOptionParser():
         ("upload",         (False, "Upload bdist and/or sdist packages to snapshot server.")),
         ("cairo",          (False, "Allow Cairo use with wxGraphicsContext (Windows only)")),
         ("x64",            (False, "Use and build for the 64bit version of Python on Windows")),
-        ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
         ("pytest_timeout", ("",    "Timeout, in seconds, for stopping stuck test cases. Overrides the default set in pyproject.toml; use 0 to disable.")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run. Overrides the default (auto) set in pyproject.toml.")),
         ("docker_img",     ("all", "Comma separated list of image tags to use for the build_docker command. Defaults to \"all\"")),
@@ -1684,82 +1682,108 @@ def cmd_build_wx(options, args):
         return
     checkCompiler()
 
+    if isWindows:
+        buildWxWithCMake(options)
+    else:
+        buildWxWithAutoconf(options)
+
+    if not options.no_allmo:
+        make_allmo()
+
+
+def buildWxWithCMake(options):
+    from buildtools import wxcmake
+
+    cairoRoot = None
+    if isWindows:
+        if not options.no_msedge:
+            getMSWebView2()
+        if options.cairo:
+            cairoRoot = getMSWCairo()
+
+    BUILD_DIR = getBuildDir(options)
+    settings = wxcmake.getSettings(wxDir(), BUILD_DIR,
+                                   mswArch=MSVC_ARCH,
+                                   cairoRoot=cairoRoot,
+                                   noMSEdge=options.no_msedge,
+                                   prefix=options.prefix)
+    extraArgs = shlex.split(options.extra_configure)
+
+    if not (options.no_config and os.path.exists(opj(BUILD_DIR, 'CMakeCache.txt'))):
+        wxcmake.configure(wxDir(), BUILD_DIR, settings, extraArgs,
+                          fresh=options.force_config)
+
+    configs = [None]
+    if isWindows:
+        if options.both:
+            configs = ['Debug', 'Release']
+        else:
+            configs = ['Debug' if options.debug else 'Release']
+    wxcmake.build(BUILD_DIR, configs, jobs=options.jobs, verbose=options.verbose,
+                  extraArgs=shlex.split(options.extra_make))
+
+
+def buildWxWithAutoconf(options):
     build_options = ['--wxpython']
 
     if options.jobs:
         build_options.append('--jobs=%s' % options.jobs)
 
-    if isWindows:
-        # Windows-specific pre build stuff
-        if not options.no_msedge:
-            getMSWebView2()
+    BUILD_DIR = getBuildDir(options)
+    DESTDIR = options.destdir
+    PREFIX = options.prefix
+    if PREFIX:
+        build_options.append('--prefix=%s' % PREFIX)
+
+    if not os.path.exists(BUILD_DIR):
+        os.makedirs(BUILD_DIR)
+    if  isDarwin:
+        if options.osx_cocoa:
+            build_options.append("--osx_cocoa")
+
+        if options.mac_arch:
+            build_options.append("--mac_universal_binary=%s" % options.mac_arch)
+
+    if options.no_config:
+        build_options.append('--no_config')
+    elif not options.force_config:
+        dependencies = [ os.path.join(wxDir(), 'Makefile.in'),
+                         os.path.join(wxDir(), 'configure'),
+                         os.path.join(wxDir(), 'setup.h.in'),
+                         os.path.join(wxDir(), 'version-script.in'),
+                         os.path.join(wxDir(), 'wx-config.in'),
+                         ]
+        for dep in dependencies:
+            if newer(dep, os.path.join(BUILD_DIR, "Makefile")):
+                break
         else:
-            build_options.append('--no_msedge')
+            build_options.append("--no_config")
 
-        if options.cairo:
-            build_options.append('--cairo')
-            os.environ['CAIRO_ROOT'] = getMSWCairo()
+    #if options.install:
+    #    build_options.append('--installdir=%s' % DESTDIR)
+    #    build_options.append("--install")
 
-        if options.jom:
-            build_options.append('--jom')
+    if not isDarwin:
+        if options.gtk2:
+            build_options.append('--gtk2')
+        if options.gtk3:
+            build_options.append('--gtk3')
 
-    else:
-        # Platform is something other than MSW
-        BUILD_DIR = getBuildDir(options)
-        DESTDIR = options.destdir
-        PREFIX = options.prefix
-        if PREFIX:
-            build_options.append('--prefix=%s' % PREFIX)
+    if options.extra_configure:
+        build_options.append('--features=%s' % options.extra_configure)
 
-        if not os.path.exists(BUILD_DIR):
-            os.makedirs(BUILD_DIR)
-        if  isDarwin:
-            if options.osx_cocoa:
-                build_options.append("--osx_cocoa")
+    # Change to what will be the wxWidgets build folder
+    # (Note, this needs to be after any testing for file/path existence, etc.
+    # because they may be specified as relative paths.)
+    pwd = pushDir(BUILD_DIR)
 
-            if options.mac_arch:
-                build_options.append("--mac_universal_binary=%s" % options.mac_arch)
-
-        if options.no_config:
-            build_options.append('--no_config')
-        elif not options.force_config:
-            dependencies = [ os.path.join(wxDir(), 'Makefile.in'),
-                             os.path.join(wxDir(), 'configure'),
-                             os.path.join(wxDir(), 'setup.h.in'),
-                             os.path.join(wxDir(), 'version-script.in'),
-                             os.path.join(wxDir(), 'wx-config.in'),
-                             ]
-            for dep in dependencies:
-                if newer(dep, os.path.join(BUILD_DIR, "Makefile")):
-                    break
-            else:
-                build_options.append("--no_config")
-
-        #if options.install:
-        #    build_options.append('--installdir=%s' % DESTDIR)
-        #    build_options.append("--install")
-
-        if not isDarwin:
-            if options.gtk2:
-                build_options.append('--gtk2')
-            if options.gtk3:
-                build_options.append('--gtk3')
-
-        if options.extra_configure:
-            build_options.append('--features=%s' % options.extra_configure)
-
-        # Change to what will be the wxWidgets build folder
-        # (Note, this needs to be after any testing for file/path existence, etc.
-        # because they may be specified as relative paths.)
-        pwd = pushDir(BUILD_DIR)
-
-    if options.debug or (isWindows and options.both):
+    if options.debug:
         build_options.append('--debug')
 
     if options.extra_make:
         build_options.append('--extra_make="%s"' % options.extra_make)
 
-    if not isWindows and not isDarwin and not options.no_magic and not options.use_syswx:
+    if not isDarwin and not options.no_magic and not options.use_syswx:
         # Using $ORIGIN in the rpath will cause the dynamic linker to look
         # for shared libraries in a folder relative to the loading binary's
         # location. Here we'll use just $ORIGIN so it should look in the same
@@ -1773,19 +1797,10 @@ def cmd_build_wx(options, args):
         print('wxWidgets build options: ' + str(build_options))
         wxbuild.main(wxDir(), build_options)
 
-        # build again without the --debug flag?
-        if isWindows and options.both:
-            build_options.remove('--debug')
-            print('wxWidgets build options: ' + str(build_options))
-            wxbuild.main(wxDir(), build_options)
-
     except Exception:
         print("ERROR: failed building wxWidgets")
         traceback.print_exc()
         sys.exit(1)
-
-    if not options.no_allmo:
-        make_allmo()
 
 
 def make_allmo():
@@ -1931,6 +1946,7 @@ def cmd_build_py(options, args):
         build_options.append("--mac_arch=%s" % options.mac_arch)
     if isWindows:
         build_options.append('--msvc_arch=%s' % MSVC_ARCH)
+        build_options.append('--wx_build_dir=%s' % BUILD_DIR)
     if not isWindows:
         build_options.append('--wx_config=%s' % WX_CONFIG)
     if options.jobs:
@@ -2144,26 +2160,7 @@ def cmd_egg_info(options, args, egg_base=None):
 
 def cmd_clean_wx(options, args):
     cmdTimer = CommandTimer('clean_wx')
-    if isWindows:
-        if options.both:
-            options.debug = True
-        msw = getMSWSettings(options)
-        deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
-        delFiles(sorted(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion2_nodot, msw.dll_type)))))
-        delFiles(sorted(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion3_nodot, msw.dll_type)))))
-        if PYTHON_ARCH == '64bit':
-            deleteIfExists(opj(msw.buildDir, 'vc%s_%s_msw%sdll' % (getVisCVersion(), msw.dllArch, msw.dll_type)))
-        else:
-            deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll' % (getVisCVersion(), msw.dll_type)))
-
-        if options.both:
-            options.debug = False
-            options.both = False
-            cmd_clean_wx(options, args)
-            options.both = True
-    else:
-        BUILD_DIR = getBuildDir(options)
-        deleteIfExists(BUILD_DIR)
+    deleteIfExists(getBuildDir(options))
 
 
 def cmd_clean_py(options, args):
