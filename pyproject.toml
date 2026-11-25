@@ -75,6 +75,8 @@ requires = [
     "cython >= 3.0.10",
     "requests >= 2.26.0",
     "sip >= 6.10, < 7",
+    "cmake >= 3.25",
+    "ninja",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -87,6 +89,8 @@ codegen = [
 build = [
     {include-group = "codegen"},
     "cython>=3.0.10",
+    "cmake>=3.25",
+    "ninja",
 ]
 test = [
     "setuptools>=77",

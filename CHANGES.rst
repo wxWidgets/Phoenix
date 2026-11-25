@@ -27,6 +27,8 @@ New and improved in this release:
 
 * Update the cairo DLL bundled with the Windows wheels from 1.15.12 to 1.18.6, built with vcpkg. The old build failed to write any PDF file, with CAIRO_STATUS_NO_MEMORY (#3035). The ARM64 wheels now include the DLL too; it was missing from them before, so wx.lib.wxcairo couldn't find cairo there
 
+* Build wxWidgets with CMake and Ninja, instead of nmake on Windows and configure and make on Linux and macOS. This fixes building on Windows with a non-UTF-8 code page (#2909). CMake 3.25 or newer and Ninja are now needed to build wxPython; pip installs them automatically when building from the source archive. On Linux and macOS, build_wxpy.py --use_autoconf still builds wxWidgets with configure for now. The wxWidgets DLL names on Windows no longer include the compiler version, e.g. wxmsw334u_core_vc_x64.dll instead of wxmsw334u_core_vc140_x64.dll
+
 
 
 

@@ -110,6 +110,9 @@ class Configuration(object):
 
         self.WXPLAT2 = None
         self.WXDIR = wxDir()
+        # Where wxWidgets is built on Windows. build_wxpy.py passes the
+        # actual location to waf, which passes it to finishSetup().
+        self.WX_BUILD_DIR = opj(phoenixDir(), 'build', 'wxbld')
 
         self.includes = [phoenixDir() + '/sip/siplib',  # to get our version of sip.h
                          phoenixDir() + '/wx/include',  # for the wxPython API
@@ -138,9 +141,12 @@ class Configuration(object):
         self.finishSetup()
 
 
-    def finishSetup(self, wx_config=None, debug=None, compiler=None):
+    def finishSetup(self, wx_config=None, debug=None, compiler=None, wx_build_dir=None):
         if wx_config is not None:
             self.WX_CONFIG = wx_config
+
+        if wx_build_dir is not None:
+            self.WX_BUILD_DIR = wx_build_dir
 
         if debug is not None:
             self.debug = debug
@@ -158,12 +164,12 @@ class Configuration(object):
 
             if os.environ.get('CPU', None) in ['AMD64', 'X64', 'ARM64']:
                 arch_str = 'arm64' if os.environ['CPU'] == 'ARM64' else 'x64'
-                self.VCDLL = 'vc%s_%s_dll' % (getVisCVersion(), arch_str)
+                self.VCDLL = 'vc_%s_dll' % arch_str
             else:
-                self.VCDLL = 'vc%s_dll' % getVisCVersion()
+                self.VCDLL = 'vc_dll'
 
             self.includes += ['include',
-                              opj(self.WXDIR, 'lib', self.VCDLL, 'msw'  + self.libFlag()),
+                              opj(self.WX_BUILD_DIR, 'lib', self.VCDLL, 'msw'  + self.libFlag()),
                               opj(self.WXDIR, 'include'),
                               opj(self.WXDIR, 'contrib', 'include'),
                               ]
@@ -180,7 +186,7 @@ class Configuration(object):
                                   ('wxUSE_DPI_AWARE_MANIFEST', '2') ]
 
             self.libs = []
-            self.libdirs = [ opj(self.WXDIR, 'lib', self.VCDLL) ]
+            self.libdirs = [ opj(self.WX_BUILD_DIR, 'lib', self.VCDLL) ]
             if self.MONOLITHIC:
                 self.libs += makeLibName('')
             else:
@@ -1010,11 +1016,19 @@ _haveObjDump = None
 def canGetSOName():
     global _haveObjDump
     if _haveObjDump is None:
-        _haveObjDump = findCmd('objdump') is not None
+        _haveObjDump = findCmd('otool' if sys.platform == 'darwin' else 'objdump') is not None
     return _haveObjDump
 
 
 def getSOName(filename):
+    if sys.platform == 'darwin':
+        # Use the install name, which is what the files linking to this one
+        # refer to, like the soname on Linux.
+        output = runcmd('otool -D %s' % filename, True).strip().splitlines()
+        if len(output) > 1:
+            return os.path.basename(output[-1].strip())
+        return None
+
     output = runcmd('objdump -p %s' % filename, True)
     result = re.search(r'^\s+SONAME\s+(.+)$', output, re.MULTILINE)
     if result:

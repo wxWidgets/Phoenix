@@ -59,6 +59,8 @@ def options(opt):
                    'are: "x86", "x64", or "arm64"')
     opt.add_option('--msvc_relwithdebug', dest='msvc_relwithdebug', action='store_true', default=False,
                    help='Turn on debug info for release builds for MSVC builds.')
+    opt.add_option('--wx_build_dir', dest='wx_build_dir', default='', action='store',
+                   help='The directory where wxWidgets was built for MSVC builds.')
 
 
 
@@ -95,6 +97,7 @@ def configure(conf):
     conf.env.msvc_relwithdebug = conf.options.msvc_relwithdebug
 
     conf.env.use_msvc = conf.options.use_msvc
+    conf.env.wx_build_dir = conf.options.wx_build_dir
 
     # Ensure that the headers in siplib and Phoenix's src dir can be found
     conf.env.INCLUDES_WXPY = ['sip/siplib', 'wx/include', 'src']
@@ -102,7 +105,7 @@ def configure(conf):
     if conf.options.use_msvc:
         # Windows/MSVC specific stuff
 
-        cfg.finishSetup(debug=conf.env.debug)
+        cfg.finishSetup(debug=conf.env.debug, wx_build_dir=conf.env.wx_build_dir or None)
 
         conf.env.INCLUDES_WX = cfg.includes
         conf.env.DEFINES_WX = cfg.wafDefines
@@ -365,7 +368,8 @@ def build(bld):
     from buildtools.config import opj, copyIfNewer, updateLicenseFiles
 
     cfg.finishSetup(wx_config=bld.env.wx_config,
-                    compiler='mingw32' if isWindows and not bld.env.use_msvc else None)
+                    compiler='mingw32' if isWindows and not bld.env.use_msvc else None,
+                    wx_build_dir=bld.env.wx_build_dir or None)
 
     if not isWindows:
         cmd = ' '.join(bld.env.CC) + ' --version'
